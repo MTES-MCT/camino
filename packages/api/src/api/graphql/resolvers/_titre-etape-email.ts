@@ -1,9 +1,10 @@
 import { IEtapeType, ITitreEtape, IUtilisateur } from '../../../types'
 
-import { emailsSend, IEmail } from '../../../tools/api-mailjet/emails'
+import { emailsSend } from '../../../tools/api-mailjet/emails'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes'
 import { utilisateursTitresGet } from '../../../database/queries/utilisateurs'
 import { titreUrlGet } from '../../../business/utils/urls-get'
+import { EmailAdministration } from '../../../tools/api-mailjet/types'
 
 const emailForAdministrationContentFormat = (
   etapeNom: string,
@@ -48,34 +49,34 @@ const emailsForAdministrationsGet = (
   if (demarcheTypeId === 'oct' && titreTypeId === 'arm') {
     // lorsque la demande est déposée
     if (etapeStatusUpdated(etape, 'mdp', 'fai', oldEtape)) {
-      emails.push(IEmail.PTMG)
-      emails.push(IEmail.ONF)
+      emails.push(EmailAdministration.PTMG)
+      emails.push(EmailAdministration.ONF)
 
       title = 'Nouvelle demande déposée'
 
       // lorsque le PTMG déclare le dossier complet
     } else if (etapeStatusUpdated(etape, 'mcp', 'com', oldEtape)) {
-      emails.push(IEmail.ONF)
+      emails.push(EmailAdministration.ONF)
 
       title = 'Nouveau dossier complet'
 
       // lorsque la demande est complète
     } else if (etapeStatusUpdated(etape, 'mcr', 'fav', oldEtape)) {
-      emails.push(IEmail.DGTM)
+      emails.push(EmailAdministration.DGTM)
 
       title = 'Nouvelle demande complète'
     }
   } else if (demarcheTypeId === 'oct' && titreTypeId === 'axm') {
     if (etapeStatusUpdated(etape, 'mdp', 'fai', oldEtape)) {
-      emails.push(IEmail.DGTM)
+      emails.push(EmailAdministration.DGTM)
 
       title = 'Nouvelle demande déposée'
     } else if (etapeStatusUpdated(etape, 'cps', 'fav', oldEtape)) {
-      emails.push(IEmail.DGTM)
+      emails.push(EmailAdministration.DGTM)
 
       title = 'Confirmation de l’accord du propriétaire du sol'
     } else if (etapeStatusUpdated(etape, 'rca', 'fai', oldEtape)) {
-      emails.push(IEmail.DGTM)
+      emails.push(EmailAdministration.DGTM)
 
       title = 'Réception de compléments'
     }
