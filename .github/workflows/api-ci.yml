@@ -1,9 +1,9 @@
-name: CI
+name: api/ci
 on:
-  pull_request:
   push:
-    branches:
-      - develop
+concurrency:
+  group: environment-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -33,25 +33,26 @@ jobs:
           node-version: '16.12'
       - name: Npm install
         run: |
+          npm set-script prepare ""
           npm ci
-          npm run ci:lint
-          npm run build
+          npm run ci:lint --workspace=packages/api
+          npm run build --workspace=packages/api
         env:
           CI: true
       - name: Unit tests
-        run: npm run ci:test-unit
+        run: npm run ci:test-unit --workspace=packages/api
         env:
           PGHOST: localhost
           PGPORT: 5432
           PGUSER: postgres
           PGPASSWORD: password
       - name: Code coverage
-        run: npm run ci:codecov
+        run: npm run ci:codecov --workspace=packages/api
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - name: Integration tests
         #Installation d’une version de knex-db-manager qui seed la bdd séquentiellement
-        run: npm run ci:test-integration
+        run: npm run ci:test-integration --workspace=packages/api
         env:
           PGHOST: localhost
           PGPORT: 5432
@@ -67,7 +68,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Build Docker image
-        run: docker build -t caminofr/camino-api:develop .
+        run: docker build -t caminofr/camino-api:develop packages/api
       - name: Push Docker image to the Docker Hub
         run: |
           docker login --username "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"
