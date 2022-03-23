@@ -1,0 +1,203 @@
+<template>
+  <Accordion
+    class="mb"
+    :opened="opened"
+    :slot-default="true"
+    :slot-buttons="true"
+    @close="close"
+    @toggle="toggle"
+  >
+    <template #title>
+      <h4 class="mb-0">
+        {{ entrepriseNameFind(entreprise) }}
+      </h4>
+      <Tag v-if="entreprise.operateur" :color="'bg-info'" :mini="true">
+        Opérateur
+      </Tag>
+    </template>
+
+    <template #buttons>
+      <router-link
+        :to="{ name: 'entreprise', params: { id: entreprise.id } }"
+        class="btn-alt py-s px-m"
+        tag="button"
+      >
+        <i
+          class="icon-24 icon-window-link"
+          @click="eventTrack('titre-entreprise_acceder')"
+        />
+      </router-link>
+    </template>
+
+    <div v-if="content" class="px-m pt-m">
+      <div v-if="entreprise.legalSiren" class="large-blobs">
+        <div class="large-blob-1-4">
+          <h5>Siren</h5>
+        </div>
+        <div class="large-blob-3-4">
+          <p>{{ entreprise.legalSiren }}</p>
+        </div>
+      </div>
+
+      <div v-if="entreprise.legalForme" class="large-blobs">
+        <div class="large-blob-1-4">
+          <h5>Forme juridique</h5>
+        </div>
+        <div class="large-blob-3-4">
+          <p>{{ entreprise.legalForme }}</p>
+        </div>
+      </div>
+
+      <div
+        v-if="entreprise.etablissements && entreprise.etablissements.length"
+        class="large-blobs"
+      >
+        <div class="large-blob-1-4">
+          <h5>
+            Établissement{{ entreprise.etablissements.length > 1 ? 's' : '' }}
+          </h5>
+        </div>
+        <div class="large-blob-3-4">
+          <ul class="list-sans">
+            <li v-for="e in entreprise.etablissements" :key="e.id">
+              <h6 class="inline-block">
+                {{ dateFormat(e.dateDebut) }}
+              </h6>
+              : {{ e.nom }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div v-if="entreprise.adresse" class="large-blobs">
+        <div class="large-blob-1-4">
+          <h5>Adresse</h5>
+        </div>
+        <div class="large-blob-3-4">
+          <p>
+            {{ entreprise.adresse }}
+            <br />{{ entreprise.codePostal }}
+            {{ entreprise.commune }}
+          </p>
+        </div>
+      </div>
+      <div v-if="entreprise.telephone" class="large-blobs">
+        <div class="large-blob-1-4">
+          <h5>Téléphone</h5>
+        </div>
+        <div class="large-blob-3-4">
+          <p class="word-break">
+            {{ entreprise.telephone }}
+          </p>
+        </div>
+      </div>
+      <div v-if="entreprise.email" class="large-blobs">
+        <div class="large-blob-1-4">
+          <h5>Email</h5>
+        </div>
+        <div class="large-blob-3-4">
+          <p class="word-break">
+            <a
+              :href="`mailto:${entreprise.email}`"
+              class="btn small bold py-xs px-s rnd"
+            >
+              {{ entreprise.email }}
+            </a>
+          </p>
+        </div>
+      </div>
+      <div v-if="entreprise.url" class="large-blobs">
+        <div class="large-blob-1-4">
+          <h5>Site</h5>
+        </div>
+        <div class="large-blob-3-4">
+          <p class="word-break">
+            <a :href="entreprise.url" class="btn small bold py-xs px-s rnd">
+              {{ entreprise.url }}
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </Accordion>
+</template>
+
+<script>
+import { dateFormat } from '@/utils'
+import Accordion from '../_ui/accordion.vue'
+import Tag from '../_ui/tag.vue'
+
+export default {
+  components: {
+    Accordion,
+    Tag
+  },
+
+  props: {
+    entreprise: {
+      type: Object,
+      default: () => {}
+    }
+  },
+
+  emits: ['titre-event-track'],
+
+  data() {
+    return {
+      opened: false
+    }
+  },
+
+  computed: {
+    content() {
+      return (
+        this.entreprise.legalSiren ||
+        this.entreprise.legalForme ||
+        this.entreprise.etablissements.length ||
+        this.entreprise.adresse ||
+        this.entreprise.codePostal ||
+        this.entreprise.commune ||
+        this.entreprise.telephone ||
+        this.entreprise.email ||
+        this.entreprise.url
+      )
+    }
+  },
+
+  methods: {
+    entrepriseNameFind(entreprise) {
+      return (
+        entreprise.nom ||
+        // trouve l'établissement le plus récent
+        entreprise.etablissements.reduce(
+          (res, e) => (res && res.dateDebut > e.dateDebut ? res : e),
+          null
+        ).nom
+      )
+    },
+
+    close() {
+      this.opened = false
+    },
+
+    toggle() {
+      this.opened = !this.opened
+      if (this.opened) {
+        this.eventTrack('titre-entreprise_consulter')
+      }
+    },
+
+    eventTrack(action) {
+      this.$emit('titre-event-track', {
+        categorie: 'titre-sections',
+        action,
+        nom: this.$route.params.id
+      })
+    },
+
+    dateFormat(date) {
+      return dateFormat(date)
+    }
+  }
+}
+</script>

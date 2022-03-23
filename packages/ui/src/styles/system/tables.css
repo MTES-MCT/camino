@@ -1,0 +1,95 @@
+/*
+    Table
+-------------------------------
+*/
+
+table,
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  border: none;
+}
+
+.table {
+  display: table;
+}
+
+tr,
+.tr {
+  border-bottom-color: var(--border-color);
+  border-bottom-width: var(--unit-px);
+  border-bottom-style: dotted;
+}
+
+.tr {
+  display: table-row;
+}
+
+th,
+.th,
+.th button {
+  text-align: left;
+  font-weight: 700;
+  letter-spacing: -0.02rem;
+  typescale: -1 1;
+  color: var(--color-neutral);
+}
+
+td,
+th,
+.td,
+.th {
+  vertical-align: top;
+  overflow-wrap: break-word;
+  padding-bottom: var(--unit-s);
+  padding-top: calc(var(--unit-s) - var(--unit-px));
+}
+
+.th,
+.td {
+  display: table-cell;
+}
+
+td:not(:first-child),
+th:not(:first-child),
+.td:not(:first-child),
+.th:not(:first-child) {
+  padding-left: var(--unit-s);
+}
+
+td:not(:last-child),
+th:not(:last-child),
+.td:not(:last-child),
+.th:not(:last-child) {
+  padding-right: var(--unit-s);
+}
+
+.table-striped tr:nth-child(even) {
+  background-color: var(--color-alt);
+}
+
+.table-sans tr {
+  border-bottom: var(--unit-px) dotted var(--border-bg);
+}
+
+.table-xs td,
+.table-xs th {
+  padding-top: var(--unit-xs);
+  padding-bottom: calc(var(--unit-xs) - var(--unit-px));
+}
+
+.table-xxs td,
+.table-xxs th {
+  padding-top: var(--unit-xxs);
+  padding-bottom: calc(var(--unit-xxs) - var(--unit-px));
+}
+
+.table-fixed {
+  display: table;
+  table-layout: fixed;
+}
+
+.tr-link:hover {
+  background-color: var(--color-alt);
+}

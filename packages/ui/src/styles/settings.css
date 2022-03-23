@@ -1,0 +1,87 @@
+/* system.css / settings
+-------------------------------
+http://francoisromain.github.io/postcss-structure
+*/
+
+:root {
+  /* Colors        ------------------------------- */
+  --color-text: #666;
+  --color-bg: white;
+  --color-transparent: rgb(248 247 243 / 0%);
+  --color-inverse: #3d3d35;
+  --color-neutral: #c6c4bc;
+  --color-alt: #f0efe8;
+  --color-hilite: #b5d1d1;
+  --color-error: #e82239;
+  --color-warning: #ff891c;
+  --color-info: #76b6bd;
+  --color-success: #6ea040;
+
+  /* Basée sur le DSFR (https://vue-dsfr.netlify.app/) */
+  --dsfr-bf500: #000091;
+  --dsfr-g600: #6a6a6a;
+  --dsfr-color-hover: rgb(0 0 221 / 100%);
+
+  /* Base units    ------------------------------- */
+
+  /* font-size: 1rem = 16 px */
+  --base-font-size: 1rem;
+
+  /* base: 1.5rem = 24 px */
+  --unit: 1.5rem;
+
+  /* line: 0.0625rem = 1px */
+  --unit-px: calc(var(--unit) / 24);
+
+  /* xxs: 0.1875rem = 3px */
+  --unit-xxs: calc(var(--unit) / 8);
+
+  /* xs: 0.375rem = 6px */
+  --unit-xs: calc(var(--unit) / 4);
+
+  /* s: 0.75rem = 12px */
+  --unit-s: calc(var(--unit) / 2);
+
+  /* m: 1.125rem = 18px */
+  --unit-m: calc(var(--unit) * 3 / 4);
+
+  /* l: 2.25rem = 36 px */
+  --unit-l: calc(var(--unit) * 3 / 2);
+
+  /* xl: 3rem = 48px */
+  --unit-xl: calc(var(--unit) * 2);
+
+  /* xxl: 3.75rem = 60 px */
+  --unit-xxl: calc(var(--unit) * 2.5);
+  --unit-infinity: 9999px;
+
+  /* Lists         ------------------------------- */
+  --list-postfix: ',';
+  --list-prefix: '―';
+
+  /* Grid          ------------------------------- */
+
+  /*
+  postcss-grid-system configuration
+  https://github.com/francoisromain/postcss-grid-system#configuration
+  */
+
+  /* width of a single bloc in rem */
+  --col-width: 20.5rem;
+
+  /* width of the gutter in rem */
+  --gutter: var(--unit);
+
+  /* padding of the main container in rem */
+  --container-padding: var(--unit);
+
+  /* hr */
+  --border-color: var(--color-neutral);
+  --border-width: var(--unit-px);
+}
+
+/* media queries: x * col-width + gutter */
+@custom-media --viewport-mobile (min-width: 22em);
+@custom-media --viewport-tablet (min-width: 42.5em);
+@custom-media --viewport-desktop (min-width: 63em);
+@custom-media --viewport-large (min-width: 83.5em);

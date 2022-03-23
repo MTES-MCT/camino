@@ -1,0 +1,242 @@
+/*
+    Typography
+-------------------------------
+*/
+
+@typescale {
+  scale: 1.33;
+  font-size: var(--base-font-size);
+  line-height: var(--unit);
+}
+
+h1,
+h2,
+h3,
+h4,
+h6,
+ul,
+ol,
+dl,
+blockquote,
+p,
+address,
+table,
+fieldset,
+figure,
+pre {
+  margin-bottom: var(--unit);
+}
+
+.h0 {
+  typescale: 5 3;
+  color: var(--color-info);
+}
+
+h1,
+.h1 {
+  typescale: 3 1.5;
+}
+
+h2,
+.h2 {
+  typescale: 2 1.5;
+}
+
+h3,
+.h3 {
+  typescale: 1 1;
+}
+
+h4,
+.h4 {
+  typescale: 0 1;
+}
+
+h5,
+.h5 {
+  margin-top: var(--unit-xs);
+  typescale: -0.75 0.75;
+}
+
+h6,
+.h6,
+small,
+.small {
+  typescale: -0.75 0.75;
+}
+
+h5,
+.h5,
+h6,
+.h6 {
+  margin-bottom: var(--unit-s);
+}
+
+.h0,
+h1,
+h2,
+h3,
+h4,
+h6,
+h5 {
+  font-weight: 700;
+  letter-spacing: -0.02rem;
+}
+
+h5 {
+  color: var(--color-neutral);
+}
+
+.btn-border:hover h5 {
+  color: var(--color-bg);
+}
+
+blockquote {
+  typescale: 0.5 1;
+  font-style: italic;
+  padding: var(--unit-s);
+  quotes: '«\00A0''\00A0»';
+}
+
+blockquote::before,
+blockquote::after {
+  typescale: 3 0;
+  color: var(--color-neutral);
+  vertical-align: sub;
+}
+
+blockquote::before {
+  content: open-quote;
+}
+
+blockquote::after {
+  content: close-quote;
+}
+
+blockquote:last-child {
+  margin-bottom: 0;
+}
+
+hr {
+  clear: both;
+  border: 0;
+  height: 0;
+  border-top-width: var(--border-width);
+  border-top-style: dotted;
+  border-top-color: var(--border-color);
+  margin-bottom: calc(var(--unit) - var(--border-width));
+}
+
+a {
+  color: var(--color-inverse);
+
+  &:visited {
+    color: var(--color-inverse);
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    color: var(--color-text);
+  }
+
+  &.active {
+    color: var(--color-neutral);
+  }
+}
+
+a.color-bg {
+  color: var(--color-bg);
+
+  &:visited {
+    color: var(--color-bg);
+  }
+
+  &:hover,
+  &:active,
+  &:focus {
+    color: var(--color-bg);
+  }
+
+  &.active {
+    color: var(--color-neutral);
+  }
+}
+
+b,
+strong,
+.strong,
+.bold {
+  font-weight: 700;
+  letter-spacing: -0.02rem;
+}
+
+i,
+.italic {
+  font-style: italic;
+}
+
+.lower {
+  text-transform: lowercase;
+}
+
+.cap-first {
+  display: inline-block;
+}
+
+.cap-first::first-letter {
+  text-transform: uppercase;
+}
+
+.caps {
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+}
+
+.line-through {
+  color: var(--color-neutral);
+  text-decoration: line-through;
+}
+
+.underline {
+  border-bottom: 1px solid;
+}
+
+.text-decoration-none,
+.text-decoration-none a {
+  text-decoration: none;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.nobreak {
+}
+
+.truncate {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: right;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mono {
+  font-family: 'Lucida Sans Typewriter', monaco, 'Lucida Console', monospace;
+}
+
+dt {
+  display: inline-block;
+}

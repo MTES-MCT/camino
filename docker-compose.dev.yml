@@ -1,0 +1,88 @@
+version: '3'
+
+services:
+  api:
+    container_name: camino_api_app
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    depends_on:
+      - db
+    environment:
+      VIRTUAL_HOST: ${API_URL}
+      VIRTUAL_PORT: ${API_PORT}
+      LETSENCRYPT_HOST: ${API_URL}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      PGHOST: db
+    expose:
+      - ${API_PORT}
+    volumes:
+      - files:/app/files
+      - ./.env:/app/.env
+      - ./app.log:/app/app.log
+    networks:
+      - default
+      - nginx-proxy
+    restart: unless-stopped
+  cron:
+    container_name: camino_api_cron
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    command: node ./dist/src/cron.js
+    depends_on:
+      - db
+    environment:
+      PGHOST: db
+    volumes:
+      - files:/app/files
+      - ./.env:/app/.env
+    networks:
+      - default
+      - nginx-proxy
+    restart: unless-stopped
+  db:
+    container_name: camino_api_db
+    image: postgis/postgis:12-3.2
+    environment:
+      PGUSER: ${PGUSER}
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+    expose:
+      - ${PGPORT}
+    volumes:
+      - data:/var/lib/postgresql/data
+    networks:
+      - default
+    restart: unless-stopped
+  ui:
+    container_name: camino_ui_app
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    environment:
+      VIRTUAL_HOST: ${UI_URL}
+      VIRTUAL_PORT: ${UI_PORT}
+      LETSENCRYPT_HOST: ${UI_URL}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      UI_PORT: ${UI_PORT}
+      API_URL: http://api:${API_PORT}
+      API_MATOMO_URL: ${API_MATOMO_URL}
+      API_MATOMO_ID: ${API_MATOMO_ID}
+      API_SENTRY_URL: ${API_SENTRY_URL}
+      ENV: ${ENV}
+    expose:
+      - ${UI_PORT}
+    networks:
+      - default
+      - nginx-proxy
+    restart: always
+
+volumes:
+  data: {}
+  files:
+
+networks:
+  nginx-proxy:
+    external: true
