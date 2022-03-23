@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Le cadastre minier numérique ouvert",
   "workspaces": [
-    "packages/api"
+    "packages/api",
+    "packages/ui"
   ],
   "private": true,
   "repository": {
@@ -16,9 +17,18 @@
   },
   "homepage": "https://github.com/MTES-MCT/camino#readme",
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "test": "npm run test -w packages/api && npm run test -w packages/ui"
+  },
+  "lint-staged": {
+    "packages/ui/*.{js,ts,vue}": "eslint --cache --fix",
+    "packages/ui/*.css": "stylelint --fix",
+    "packages/ui/*.{js,css}": "prettier --write",
+    "packages/api/*.{js,ts}": "eslint --cache --fix",
+    "packages/api/*.{ts,js,graphql}": "prettier --write"
   },
   "devDependencies": {
-    "husky": "^7.0.4"
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.6"
   }
 }

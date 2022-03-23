@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Automated Storybook Snapshots Ui/Pill Error 1`] = `
+<span
+  class="cap-first small bold"
+>
+  <span
+    class="bg-error color-bg pill py-xs px-s"
+  >
+    
+    Hello
+    
+  </span>
+</span>
+`;
+
+exports[`Automated Storybook Snapshots Ui/Pill Primary 1`] = `
+<span
+  class="cap-first small bold"
+>
+  <span
+    class="bg-neutral color-bg pill py-xs px-s"
+  >
+    
+    Hello
+    
+  </span>
+</span>
+`;

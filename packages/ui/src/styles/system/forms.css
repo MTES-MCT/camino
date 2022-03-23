@@ -1,0 +1,159 @@
+/*
+      Forms
+-------------------------------
+*/
+
+@import 'choices.js/public/assets/styles/choices.css';
+
+input[type='text'],
+input[type='email'],
+input[type='search'],
+input[type='password'],
+input[type='tel'],
+input[type='number'],
+input[type='date'],
+input[type='url'],
+select,
+textarea,
+.choices__inner,
+.input {
+  width: 100%;
+  border: 0 none;
+  background-color: var(--color-alt);
+  height: auto;
+  color: inherit;
+  &:not(.choices__input) {
+    box-shadow: 0 2px 0 0 var(--dsfr-g600);
+  }
+
+}
+
+.choices{
+  box-shadow: 0 2px 0 0 var(--dsfr-g600);
+}
+
+select,
+.choices__inner {
+  background-image: svg-load('../icons/svgs/24-chevron-b.svg',
+    fill='#666'
+  );
+  background-position: right var(--unit-s) center;
+  background-repeat: no-repeat;
+
+  /* for FF: http://stackoverflow.com/a/18317228/2112538 */
+  -moz-appearance: none;
+  text-indent: 0.01px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+textarea {
+  /* http://stackoverflow.com/a/5196591/2112538 */
+  vertical-align: top;
+  resize: vertical;
+  height: auto;
+}
+
+textarea:not(.choices__input):focus,
+input:not(.choices__input):focus,
+select:not(.choices__input):focus,
+.choices.is-focused {
+  border-right: var(--unit-s) solid var(--dsfr-bf500);
+}
+
+input[type='text'].bg-bg,
+input[type='email'].bg-bg,
+input[type='search'].bg-bg,
+input[type='password'].bg-bg,
+input[type='tel'].bg-bg,
+input[type='number'].bg-bg,
+input[type='date'].bg-bg,
+input[type='url'].bg-bg,
+select.bg-bg,
+textarea.bg-bg {
+  background-color: var(--color-bg);
+}
+
+input.success {
+  border-right: var(--unit-s) solid var(--color-success);
+}
+
+input.error {
+  border-right: var(--unit-s) solid var(--color-error);
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled,
+.input-disabled {
+  background-color: color-mod(var(--color-alt) alpha(50%));
+}
+
+input.bg-bg:disabled,
+textarea.bg-bg:disabled,
+select.bg-bg:disabled {
+  background-color: color-mod(var(--color-bg) alpha(50%));
+}
+
+*::placeholder {
+  font-style: italic;
+  color: var(--color-neutral);
+}
+
+[type='file'] {
+  display: none;
+}
+
+.choices[data-type*=select-multiple] .choices__button,
+.choices[data-type*=text] .choices__button {
+  border-left: 1px solid white;
+}
+
+.choices__list--multiple .choices__item,
+.choices__list--multiple .choices__item.is-highlighted {
+  background-color: var(--color-inverse);
+  border: 1px solid var(--color-inverse);
+  font-weight: bold;
+}
+
+
+.choices[data-type*=select-one]::after {
+  display: none;
+}
+
+.choices[data-type*=select-one] .choices__inner {
+  padding-bottom: 0;
+  padding: var(--unit-s);
+}
+
+.choices__list--single {
+  padding: 0;
+}
+
+.choices[data-type*=select-one] .choices__button {
+  margin-right: 40px;
+}
+
+.choices__button {
+  background-image: svg-load('../icons/svgs/24-close.svg',
+    fill=none,
+    stroke= '#666',
+    stroke-linecap=round,
+    stroke-linejoin=round,
+    stroke-width=1.25px
+  );
+}
+
+.choices__button:hover {
+  background-image: svg-load('../icons/svgs/24-close.svg',
+    fill=none,
+    stroke= 'white',
+    stroke-linecap=round,
+    stroke-linejoin=round,
+    stroke-width=1.25px
+  );
+}
+
+.choices__list--dropdown .choices__item--selectable.is-highlighted {
+  background-color: var(--color-alt);
+}

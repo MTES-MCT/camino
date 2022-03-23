@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  api:
+    container_name: camino_api_app
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    depends_on:
+      - db
+    environment:
+      PGHOST: db
+    expose:
+      - ${API_PORT}:${API_PORT}
+    volumes:
+      - ./.env:/packages/api/.env
+
+  cron:
+    container_name: camino_api_cron
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    command: node ./packages/api/dist/src/cron.js
+    depends_on:
+      - db
+    environment:
+      PGHOST: db
+    volumes:
+      - ./.env:/packages/api/.env
+
+  db:
+    container_name: camino_api_db
+    image: postgis/postgis:12-3.2
+    environment:
+      PGUSER: ${PGUSER}
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+    expose:
+      - ${PGPORT}
+  ui:
+    container_name: camino_ui_app
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    environment:
+      UI_PORT: ${UI_PORT}
+      API_URL: ${API_URL}
+      API_MATOMO_URL: ${API_MATOMO_URL}
+      API_MATOMO_ID: ${API_MATOMO_ID}
+      ENV: ${ENV}
+    ports:
+      - ${UI_PORT}:${UI_PORT}
+

@@ -22,7 +22,6 @@
   "scripts": {
     "bim": "npm i && npm run build && npm run db:recreate && npm run db:import",
     "build": "rm -rf dist && tsc && mkdir -p ./dist/src/api/graphql && cp -r ./src/api/graphql/schemas ./dist/src/api/graphql",
-    "commit": "lint-staged && git-cz",
     "daily": "node ./dist/src/scripts/daily.js",
     "monthly": "node ./dist/src/scripts/monthly.js",
     "db:dump": "pg_dump --host=localhost --username=postgres --clean --if-exists --format=c --no-owner --no-privileges --dbname=camino --file=./backups/camino.sql",
@@ -152,7 +151,6 @@
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-tsdoc": "^0.2.14",
     "jest": "^27.5.1",
-    "lint-staged": "^12.3.6",
     "nodemon": "^2.0.15",
     "npm-check-updates": "^12.5.3",
     "pg-escape": "^0.2.0",
@@ -218,10 +216,6 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  },
-  "lint-staged": {
-    "*.{js,ts}": "eslint --cache --fix",
-    "*.{ts,js,graphql}": "prettier --write"
   },
   "release": {
     "branches": [

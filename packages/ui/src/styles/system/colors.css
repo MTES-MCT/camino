@@ -1,0 +1,92 @@
+/*
+    Colors
+-------------------------------
+*/
+
+.color-bg {
+  color: var(--color-bg);
+}
+
+.color-text {
+  color: var(--color-text);
+}
+
+.color-hilite {
+  color: var(--color-hilite);
+}
+
+.color-alt {
+  color: var(--color-alt);
+}
+
+.color-neutral {
+  color: var(--color-neutral);
+}
+
+.color-info {
+  color: var(--color-info);
+}
+
+.color-error {
+  color: var(--color-error);
+}
+
+.color-warning {
+  color: var(--color-warning);
+}
+
+.color-success {
+  color: var(--color-success);
+}
+
+.color-inverse {
+  color: var(--color-inverse);
+}
+
+.bg-bg {
+  background-color: var(--color-bg);
+}
+
+.bg-hilite {
+  background-color: var(--color-hilite);
+}
+
+.bg-alt {
+  background-color: var(--color-alt);
+}
+
+.bg-neutral {
+  background-color: var(--color-neutral);
+}
+
+.bg-inverse {
+  background-color: var(--color-inverse);
+}
+
+.bg-info {
+  background: var(--color-info);
+}
+
+.bg-error {
+  background: var(--color-error);
+}
+
+.bg-warning {
+  background: var(--color-warning);
+}
+
+.bg-success {
+  background: var(--color-success);
+}
+
+.bg-bg-alpha {
+  background-color: color-mod(var(--color-bg) alpha(50%));
+}
+
+.bg-alt-alpha {
+  background-color: color-mod(var(--color-alt) alpha(50%));
+}
+
+.bg-inverse-alpha {
+  background-color: color-mod(var(--color-inverse) alpha(50%));
+}
