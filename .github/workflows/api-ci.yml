@@ -2,7 +2,7 @@ name: api/ci
 on:
   push:
 concurrency:
-  group: environment-${{ github.ref }}
+  group: api-ci-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   test:
@@ -31,6 +31,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '16.12'
+          cache: 'npm'
       - name: Npm install
         run: |
           npm set-script prepare ""

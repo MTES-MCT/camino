@@ -1,4 +1,4 @@
-name: Release Docker images
+name: api/Release Docker images
 on:
   release:
     types: [published]
@@ -9,7 +9,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Build Docker image
-        run: docker build -t caminofr/camino-api:$VERSION -t caminofr/camino-api:latest -t caminofr/camino-api:master .
+        run: docker build -t caminofr/camino-api:$VERSION -t caminofr/camino-api:latest -t caminofr/camino-api:master packages/api
         env:
           VERSION: ${{ github.event.release.tag_name }}
       - name: Build and Push Docker image to the Docker Hub
@@ -35,7 +35,7 @@ jobs:
         env:
           CI: true
       - name: Build Docker image
-        run: docker build -f Dockerfile.docs -t caminofr/camino-api-docs .
+        run: docker build -f Dockerfile.docs -t caminofr/camino-api-docs packages/api
       - name: Push Docker image to the Docker Hub
         run: |
           docker login --username "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"

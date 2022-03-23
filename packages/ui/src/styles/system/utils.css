@@ -1,0 +1,219 @@
+/*
+    Utils
+-------------------------------
+*/
+
+/*
+http://cssmojo.com/the-very-latest-clearfix-reloaded/
+*/
+
+.clearfix::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.dot {
+  display: inline-block;
+  width: var(--unit-m);
+  height: var(--unit-m);
+  border: 3px solid var(--color-bg);
+  vertical-align: text-bottom;
+}
+
+.hide {
+  display: none;
+  visibility: hidden;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.pointer-none {
+  pointer-events: none;
+}
+
+.word-break {
+  word-break: break-all;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+.overflow-scroll-x {
+  overflow-x: auto;
+}
+
+.overflow-scroll-y {
+  overflow-y: auto;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.flex-grow-0 {
+  flex-grow: 0;
+}
+
+.flex-start {
+  align-items: flex-start;
+}
+
+.flex-end {
+  align-items: flex-end;
+}
+
+.flex-center {
+  align-items: center;
+}
+
+.flex-self-start {
+  align-self: flex-start;
+}
+
+.flex-self-end {
+  align-self: flex-end;
+}
+
+.flex-direction-column {
+  flex-direction: column;
+}
+
+.flex-align-items-stretch {
+  align-items: stretch;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.flex-right {
+  margin-left: auto;
+}
+
+.flex-bottom {
+  margin-top: auto;
+}
+
+.relative {
+  position: relative;
+}
+
+.fixed {
+  position: fixed;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.sticky {
+  position: sticky;
+}
+
+.center {
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.full {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.full-x {
+  width: 100%;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+.full-x- {
+  width: 99%;
+}
+
+.full-y {
+  height: 100%;
+}
+
+.text-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.align-y-top {
+  vertical-align: text-top;
+}
+
+.min-width-3 {
+  min-width: calc(3 * var(--unit));
+}
+
+.min-width-5 {
+  min-width: calc(5 * var(--unit));
+}
+
+.min-width-6 {
+  min-width: calc(6 * var(--unit));
+}
+
+.min-width-8 {
+  min-width: calc(8 * var(--unit));
+}
+
+.min-width-9 {
+  min-width: calc(9 * var(--unit));
+}
+
+.min-width-10 {
+  min-width: calc(10 * var(--unit));
+}
+
+.min-width-12 {
+  min-width: calc(12 * var(--unit));
+}
+
+.min-width-full {
+  min-width: 100%;
+}
+
+.max-width-1 {
+  max-width: var(--unit);
+}
+
+.h-0 {
+  height: 0;
+  overflow: hidden;
+}
+
+.b-0 {
+  bottom: 0;
+}
+
+.z-2 {
+  z-index: 2;
+}
+
+/* stylelint-disable-next-line selector-class-pattern */
+.z--100 {
+  z-index: -100;
+}

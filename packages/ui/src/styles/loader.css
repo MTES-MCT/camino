@@ -1,0 +1,38 @@
+.loader {
+  border: var(--color-bg) 6px solid;
+  width: calc(var(--unit) * 2);
+  height: calc(var(--unit) * 2);
+  margin: auto;
+  border-radius: 100%;
+  animation: grow 1.5s infinite;
+}
+
+@keyframes grow {
+  0% {
+    opacity: 1;
+    transform: scale(0);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+.loader-file {
+  position: relative;
+  width: 128px;
+  height: 24px;
+  border: var(--color-bg) 6px solid;
+}
+
+.loader-file-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background: var(--color-bg);
+}

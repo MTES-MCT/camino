@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  app:
+    container_name: camino_ui_app
+    image: caminofr/camino-ui:latest
+    environment:
+      VIRTUAL_HOST: ${URL}
+      VIRTUAL_PORT: ${PORT}
+      LETSENCRYPT_HOST: ${URL}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      PORT: ${PORT}
+      API_URL: ${API_URL}
+      API_MATOMO_URL: ${API_MATOMO_URL}
+      API_MATOMO_ID: ${API_MATOMO_ID}
+      API_SENTRY_URL: ${API_SENTRY_URL}
+      ENV: ${ENV}
+    expose:
+      - ${PORT}
+    networks:
+      - default
+      - nginx-proxy
+    restart: always
+
+networks:
+  nginx-proxy:
+    external: true
