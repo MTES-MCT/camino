@@ -69,7 +69,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Build Docker image
-        run: docker build -t caminofr/camino-api:develop packages/api
+        run: docker build -t caminofr/camino-api:develop -f Dockerfile.api .
       - name: Push Docker image to the Docker Hub
         run: |
           docker login --username "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"

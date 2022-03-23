@@ -1,0 +1,25 @@
+#https://github.com/fabriziocucci/vuejs.org/blob/7f9aa12833c085b97a826df3ba240f7d9e069e1b/src/v2/cookbook/dockerize-vuejs-app.md
+
+FROM node:16.12-alpine as build-stage
+LABEL maintainer=francois.romain@beta.gouv.fr
+
+WORKDIR /app
+
+COPY package*.json /app/
+COPY packages/ui/package.json /app/packages/ui/package.json
+# On désactive husky
+RUN npm set-script prepare ""
+RUN npm ci
+
+COPY ./ /app/
+RUN npm run build -w packages/ui
+
+FROM node:16.12-alpine as production-stage
+
+COPY --from=build-stage /app/package*.json ./
+COPY --from=build-stage /app/packages/ui/package.json ./packages/ui/package.json
+RUN npm set-script prepare "" && npm ci --only=prod
+COPY --from=build-stage /app/packages/ui/dist ./packages/ui/dist
+COPY --from=build-stage /app/packages/ui/index.js ./packages/ui/index.js
+
+CMD ["npm", "start", "-w", "packages/ui"]

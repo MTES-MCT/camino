@@ -1,0 +1,29 @@
+FROM node:16.12-alpine as build-stage
+WORKDIR /app
+
+COPY package*.json /app/
+COPY packages/api/package.json /app/packages/api/package.json
+
+# On désactive husky
+RUN npm set-script prepare ""
+RUN npm ci --only=prod
+
+COPY ./ /app/
+RUN npm run build -w packages/api
+
+FROM node:16.12-alpine as production-stage
+
+# redirige les logs sur le collecteur de logs docker
+# cf le Dockerfile de nginx
+# https://github.com/nginxinc/docker-nginx/blob/8921999083def7ba43a06fabd5f80e4406651353/mainline/jessie/Dockerfile#L21-L23
+RUN ln -sf /dev/stdout ./app.log
+
+COPY --from=build-stage /app/package.json ./
+COPY --from=build-stage /app/packages/api/package.json ./packages/api/
+COPY --from=build-stage /app/packages/api/dist/ ./packages/api/dist/
+COPY --from=build-stage /app/node_modules ./node_modules/
+# nous avons besoin des sources pour lancer certains scripts manuellement
+COPY --from=build-stage /app/packages/api/src ./packages/api/src/
+COPY --from=build-stage /app/packages/api/tsconfig.json ./packages/api/
+
+CMD ["npm", "start", "-w", "packages/api"]

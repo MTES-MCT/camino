@@ -9,7 +9,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
       - name: Build Docker image
-        run: docker build -t caminofr/camino-api:$VERSION -t caminofr/camino-api:latest -t caminofr/camino-api:master packages/api
+        run: docker build -t caminofr/camino-api:$VERSION -t caminofr/camino-api:latest -t caminofr/camino-api:master -f Dockerfile.api .
         env:
           VERSION: ${{ github.event.release.tag_name }}
       - name: Build and Push Docker image to the Docker Hub
@@ -31,11 +31,11 @@ jobs:
       - name: Generate docs
         run: |
           npm ci
-          npm run docs
+          npm run docs -w packages/api
         env:
           CI: true
       - name: Build Docker image
-        run: docker build -f Dockerfile.docs -t caminofr/camino-api-docs packages/api
+        run: docker build -f Dockerfile.api.docs -t caminofr/camino-api-docs .
       - name: Push Docker image to the Docker Hub
         run: |
           docker login --username "$DOCKER_USERNAME" --password "$DOCKER_PASSWORD"

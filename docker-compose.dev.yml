@@ -1,19 +1,21 @@
 version: '3'
 
 services:
-  app:
+  api:
     container_name: camino_api_app
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.api
     depends_on:
       - db
     environment:
-      VIRTUAL_HOST: ${URL}
-      VIRTUAL_PORT: ${PORT}
-      LETSENCRYPT_HOST: ${URL}
+      VIRTUAL_HOST: ${API_URL}
+      VIRTUAL_PORT: ${API_PORT}
+      LETSENCRYPT_HOST: ${API_URL}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       PGHOST: db
     expose:
-      - ${PORT}
+      - ${API_PORT}
     volumes:
       - files:/app/files
       - ./.env:/app/.env
@@ -24,7 +26,9 @@ services:
     restart: unless-stopped
   cron:
     container_name: camino_api_cron
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.api
     command: node ./dist/src/cron.js
     depends_on:
       - db
@@ -52,6 +56,28 @@ services:
     networks:
       - default
     restart: unless-stopped
+  ui:
+    container_name: camino_ui_app
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
+    environment:
+      VIRTUAL_HOST: ${UI_URL}
+      VIRTUAL_PORT: ${UI_PORT}
+      LETSENCRYPT_HOST: ${UI_URL}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      UI_PORT: ${UI_PORT}
+      API_URL: http://api:${API_PORT}
+      API_MATOMO_URL: ${API_MATOMO_URL}
+      API_MATOMO_ID: ${API_MATOMO_ID}
+      API_SENTRY_URL: ${API_SENTRY_URL}
+      ENV: ${ENV}
+    expose:
+      - ${UI_PORT}
+    networks:
+      - default
+      - nginx-proxy
+    restart: always
 
 volumes:
   data: {}
