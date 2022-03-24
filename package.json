@@ -1,6 +1,10 @@
 {
   "name": "camino",
-  "version": "1.0.0",
+  "version": "0.38.0",
+  "engines": {
+    "node": ">=16.12.0",
+    "npm": ">=7.24.0"
+  },
   "description": "Le cadastre minier numérique ouvert",
   "workspaces": [
     "packages/api",
@@ -29,6 +33,34 @@
   },
   "devDependencies": {
     "husky": "^7.0.4",
-    "lint-staged": "^12.3.6"
+    "lint-staged": "^12.3.6",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "semantic-release": "^19.0.2"
+  },
+  "release": {
+    "branches": [
+      "master"
+    ],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/github",
+      "@semantic-release/npm",
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "./packages/api"
+        }
+      ],
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "./packages/ui"
+        }
+      ],
+      "@semantic-release/git"
+    ]
   }
 }

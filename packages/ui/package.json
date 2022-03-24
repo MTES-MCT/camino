@@ -3,20 +3,6 @@
   "version": "0.34.0",
   "description": "Interface web de Camino, le cadastre minier numérique ouvert",
   "private": true,
-  "license": "AGPL-3.0-or-later",
-  "engines": {
-    "node": ">=16.12.0",
-    "npm": ">=7.24.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/MTES-MCT/camino-ui"
-  },
-  "author": {
-    "name": "François Romain",
-    "email": "francoisromain@gmail.com",
-    "url": "https://francoisromain.com"
-  },
   "scripts": {
     "build": "vite build --emptyOutDir",
     "dev": "vite",
@@ -49,8 +35,6 @@
     "@juggle/resize-observer": "^3.3.1",
     "@mapbox/stylelint-processor-arbitrary-tags": "^0.4.0",
     "@rollup/plugin-inject": "^4.0.4",
-    "@semantic-release/changelog": "^6.0.1",
-    "@semantic-release/git": "^10.0.1",
     "@sentry/browser": "^6.18.2",
     "@sentry/integrations": "^6.18.2",
     "@storybook/addon-actions": "^6.4.19",
@@ -123,7 +107,6 @@
     "postcss-typescale": "^0.2.3",
     "prettier": "^2.6.0",
     "rbush": "^3.0.1",
-    "semantic-release": "^19.0.2",
     "snarkdown": "^2.0.0",
     "standard-version": "^9.3.2",
     "stylelint": "^14.6.0",
@@ -230,19 +213,6 @@
     "ignoreFiles": [
       "./dist/**/*",
       "src/styles/system/forms.css"
-    ]
-  },
-  "release": {
-    "branches": [
-      "master"
-    ],
-    "plugins": [
-      "@semantic-release/commit-analyzer",
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/changelog",
-      "@semantic-release/github",
-      "@semantic-release/npm",
-      "@semantic-release/git"
     ]
   }
 }
