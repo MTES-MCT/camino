@@ -211,11 +211,11 @@ const titresRechercher = apiGraphQLFetch(
         elements {
           id
           nom
-          domaine{
+          domaine {
             id
           }
-          type{
-            type{
+          type {
+            type {
               id
             }
           }
