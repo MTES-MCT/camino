@@ -1,6 +1,6 @@
 <template>
   <pure-button
-    :menu-active="menu.component && menu.component.name === 'UserMenu'"
+    :menu-active="menuActive"
     :user="user"
     @onConnectionClicked="popupOpen"
     @onUserClicked="goToUser"
@@ -18,8 +18,8 @@ export default {
     user() {
       return this.$store.state.user.element
     },
-    menu() {
-      return this.$store.state.menu
+    menuActive() {
+      return (this.$store.state.menu?.component?.name ?? '') === 'UserMenu'
     }
   },
 
