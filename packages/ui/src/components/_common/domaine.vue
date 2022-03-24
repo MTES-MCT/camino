@@ -7,6 +7,7 @@
 <script>
 import Pill from '../_ui/pill.vue'
 
+//TODO tchoutchou
 export default {
   components: {
     Pill

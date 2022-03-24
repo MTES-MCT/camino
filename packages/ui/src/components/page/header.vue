@@ -1,19 +1,7 @@
 <template>
   <div class="tablet-blobs header-blobs mb">
-    <div class="tablet-blob-1-3 flex">
-      <div v-if="!apiError && loaded" class="flex-right">
-        <div class="mt-m tablet-mb-m flex">
-          <div class="ml-xs flex">
-            <UserButton />
-          </div>
-          <div class="ml-xs">
-            <MenuButton />
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <div class="tablet-blob-2-3 pt-m">
+    <div class="tablet-blob-1-3 pt-m">
       <router-link :to="{ name: 'homepage' }" class="flex text-decoration-none">
         <img src="/img/logo-rf.svg" class="logo mr" />
         <div>
@@ -26,17 +14,36 @@
         </div>
       </router-link>
     </div>
+
+    <div class="tablet-blob-1-3 pt-m">
+      <QuickAccessTitre/>
+    </div>
+
+    <div class="tablet-blob-1-3 flex">
+      <div v-if="!apiError && loaded" class="flex-right">
+        <div class="mt-m tablet-mb-m flex">
+          <div class="ml-xs flex">
+            <UserButton />
+          </div>
+          <div class="ml-xs">
+            <MenuButton />
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import UserButton from '../user/button.vue'
 import MenuButton from '../menu/button.vue'
+import QuickAccessTitre from "@/components/page/quick-access-titre.vue";
 
 export default {
   name: 'PageHeader',
 
   components: {
+    QuickAccessTitre,
     UserButton,
     MenuButton
   },

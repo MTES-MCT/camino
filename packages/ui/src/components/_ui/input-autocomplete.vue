@@ -39,6 +39,10 @@ export default {
     removeItemButton: {
       type: Boolean,
       default: true
+    },
+    callbackOnCreateTemplates: {
+      type: Function,
+      default: undefined
     }
   },
   emits: ['update:selected', 'opened', 'search'],
@@ -87,6 +91,9 @@ export default {
       loadingText: 'Chargement...',
       noResultsText: 'Aucun résultat',
       noChoicesText: 'Veuillez saisir votre recherche',
+      placeholderValue: this.placeholder,
+      searchPlaceholderValue: this.placeholder,
+      callbackOnCreateTemplates: this.callbackOnCreateTemplates,
       itemSelectText: 'Choisir',
       addItemText: value => {
         return `Appuyez sur Entrée pour ajouter <b>"${value}"</b>`
@@ -124,18 +131,7 @@ export default {
   methods: {
     optionsSet() {
       if (this.options.length && this.autocompleter) {
-        const newOptions = []
-
-        if (this.placeholder) {
-          newOptions.push({
-            [this.valueProp]: '',
-            [this.labelProp]: this.placeholder,
-            selected: !this.selected || !this.selected.length,
-            disabled: true,
-            placeholder: true
-          })
-        }
-        newOptions.push(
+        const newOptions = [
           ...this.options.map(o => ({
             ...o,
             selected: this.selected.includes(o[this.valueProp]),
@@ -143,7 +139,8 @@ export default {
               .map(o => o[this.valueProp])
               .includes(o[this.valueProp])
           }))
-        )
+        ]
+
         this.autocompleter.clearStore()
         this.autocompleter.setChoices(
           newOptions,
