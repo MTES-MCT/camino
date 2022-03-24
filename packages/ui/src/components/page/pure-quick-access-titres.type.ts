@@ -1,8 +1,10 @@
+import {DomaineId} from "@/../../common/types";
+
 export interface Titre {
   id: string
   nom: string
   domaine: {
-    id: 'c' | 'f' | 'g' | 'h' | 'i' | 'm' | 'r' | 's' | 'w'
+    id : DomaineId
   }
   type: {
     type: {

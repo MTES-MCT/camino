@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Automated Storybook Snapshots Common/Domaine All Domaines 1`] = ``;
+
+exports[`Automated Storybook Snapshots Common/Domaine Empty 1`] = `
+<span
+  class="cap-first small bold mono"
+>
+  <span
+    class="bg-domaine-m color-bg pill py-xs px-s"
+  >
+    
+    m
+    
+  </span>
+</span>
+`;
+
+exports[`Automated Storybook Snapshots Common/Domaine Simple 1`] = `
+<span
+  class="cap-first small bold mono"
+>
+  <span
+    class="bg-domaine-w color-bg pill py-xs px-s"
+  >
+    
+    w
+    
+  </span>
+</span>
+`;

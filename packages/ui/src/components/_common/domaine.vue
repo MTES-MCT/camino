@@ -4,16 +4,14 @@
   </Pill>
 </template>
 
-<script>
+<script setup lang="ts">
 import Pill from '../_ui/pill.vue'
+import {DomaineId} from "@/../../common/types";
+import { withDefaults} from 'vue'
 
-// TODO tchoutchou
-export default {
-  components: {
-    Pill
-  },
-  props: {
-    domaineId: { type: String, default: 'm' }
-  }
-}
+
+withDefaults(defineProps<{
+  domaineId: DomaineId
+}>(), {domaineId: 'm'})
+
 </script>
