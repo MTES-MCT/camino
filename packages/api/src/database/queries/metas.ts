@@ -4,7 +4,6 @@ import {
   IFields,
   IDocumentRepertoire,
   IDomaine,
-  IDefinition,
   ITitreTypeType,
   ITitreStatut,
   IDemarcheType,
@@ -51,7 +50,6 @@ import TitresTypesTypes from '../models/titres-types-types'
 import Unites from '../models/unites'
 import EtapesStatuts from '../models/etapes-statuts'
 import SubstancesLegalesCodes from '../models/substances-legales-codes'
-import Definitions from '../models/definition'
 import AdministrationsTypes from '../models/administrations-types'
 
 import {
@@ -636,11 +634,6 @@ const etapeStatutUpdate = async (id: string, props: Partial<IEtapeStatut>) =>
 const substancesLegalesCodesGet = async () =>
   SubstancesLegalesCodes.query().orderBy('ordre')
 
-const definitionsGet = async () => Definitions.query().orderBy('ordre')
-
-const definitionUpdate = async (id: string, props: Partial<IDefinition>) =>
-  Definitions.query().patchAndFetchById(id, props)
-
 const administrationsTypesGet = async () =>
   AdministrationsTypes.query().orderBy('ordre')
 
@@ -682,8 +675,6 @@ export {
   etapesStatutsGet,
   etapeStatutUpdate,
   substancesLegalesCodesGet,
-  definitionsGet,
-  definitionUpdate,
   administrationsTypesGet,
   administrationTypeUpdate,
   permissionUpdate,

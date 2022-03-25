@@ -1,5 +1,4 @@
 import {
-  definitions,
   domaines,
   demarchesStatuts,
   demarchesTypes,
@@ -29,20 +28,6 @@ const state = {
 }
 
 const actions = {
-  async get({ dispatch, commit }) {
-    commit('loadingAdd', 'definitions', { root: true })
-
-    try {
-      const data = await definitions()
-
-      commit('set', data)
-    } catch (e) {
-      dispatch('apiError', e, { root: true })
-    } finally {
-      commit('loadingRemove', 'definitions', { root: true })
-    }
-  },
-
   async entreesGet({ state, dispatch, commit }, slug) {
     commit('loadingAdd', 'definition', { root: true })
 

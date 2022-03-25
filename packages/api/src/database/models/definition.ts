@@ -1,7 +1,6 @@
-import { IDefinition } from '../../types'
 import { Model } from 'objection'
 
-interface Definitions extends IDefinition {}
+interface Definitions {}
 
 class Definitions extends Model {
   public static tableName = 'definitions'
