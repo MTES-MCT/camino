@@ -24,6 +24,7 @@ import snarkdown from 'snarkdown'
 import DefinitionEntree from './definition-entree.vue'
 import MapPattern from '../_map/pattern.vue'
 
+// TODO 2022-03-25: disconnect from store
 export default {
   name: 'Definition',
 
