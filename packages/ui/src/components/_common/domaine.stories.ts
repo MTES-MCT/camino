@@ -1,49 +1,36 @@
-import { Meta, Story } from '@storybook/vue3'
+import { Meta } from '@storybook/vue3'
 import Domaine from './domaine.vue'
-import {DomaineId, DOMAINES_IDS} from "@/../../common/types";
+import { DOMAINES_IDS } from 'camino-common/src/domaines'
 
 const meta: Meta = {
   title: 'Common/Domaine',
   component: Domaine,
   argTypes: {
-    domaineId: { name: 'string', required: false },
+    domaineId: { name: 'string', required: false }
   }
 }
 export default meta
 
-type Props = {
-  domaineId: DomaineId
-}
-
-const Template: Story<Props> = (args: Props) => ({
+export const Default = () => ({
   components: { Domaine },
-  setup() {
-    return { args }
-  },
-  template: '<Domaine v-bind="args"/>',
+  template: '<Domaine />'
 })
+Default.args = {}
 
-export const Simple = Template.bind({})
-Simple.args = {
-  domaineId: "w"
-}
-export const Empty = Template.bind({})
-Empty.args = {
-}
-
-//FIXME pas de storyshot
-export const AllDomaines = ({domaineIds}: { domaineIds: DomaineId[]}) => ({
+export const AllDomaines = () => ({
   components: { Domaine },
-  setup() {
-    return { domaineIds }
-  },
   template: `
-      <div v-for="item in domaineIds" :key="item" style="display: inline">
-        <Domaine :domaine-id="item"/>
-      </div>
-  `,
+    <div style="height:100%;width:100%;background:white">
+    <table>
+      <tr>
+        <th>Domaine</th>
+        <th>Rendu</th>
+      </tr>
+      ${DOMAINES_IDS.map(
+        domaine =>
+          `<tr><td>${domaine}</td><td><Domaine domaine-id="${domaine}" /></td></tr>`
+      ).join('')}
+    </table>
+    </div>
+  `
 })
-
-AllDomaines.args = {
-  domaineIds: DOMAINES_IDS
-}

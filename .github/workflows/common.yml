@@ -1,0 +1,26 @@
+name: common/ci
+on:
+  push:
+concurrency:
+  group: common-ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.12'
+          cache: 'npm'
+      - name: Npm install
+        run: |
+          npm set-script prepare ""
+          npm ci
+          npm run lint --workspace=packages/common
+        env:
+          CI: true
+      - name: Unit tests
+        run: npm run test --workspace=packages/common
