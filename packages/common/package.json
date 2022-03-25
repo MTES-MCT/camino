@@ -14,7 +14,8 @@
   "homepage": "https://github.com/MTES-MCT/camino#readme",
   "scripts": {
     "test": "ava",
-    "lint": "prettier --write src && eslint --fix --ext .ts src"
+    "format": "prettier --write src",
+    "lint": "eslint --fix"
   },
   "devDependencies": {
     "ava": "^4.1.0",
@@ -27,6 +28,12 @@
     "require": [
       "ts-node/register"
     ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "none",
+    "arrowParens": "avoid"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",
