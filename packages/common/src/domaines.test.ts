@@ -1,10 +1,7 @@
 import test from "ava";
+import { Domaines, DOMAINES_IDS } from "./domaines";
 
-test("foo", (t) => {
-  t.pass();
-});
-
-test("bar", async (t) => {
-  const bar = Promise.resolve("bar");
-  t.is(await bar, "bar");
+test("domaine", (t) => {
+  const domaine = DOMAINES_IDS[0];
+  t.is(Domaines.c, Domaines[domaine]);
 });
