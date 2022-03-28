@@ -21,12 +21,10 @@ const search = async (searchTerm: string): Promise<void> => {
     intervalle: 10,
     noms: searchTerm
   })
-  console.log('searched', searchTitres)
   titres.value.splice(0, titres.value.length, ...searchTitres.elements)
 }
 
 const onSelectedTitre = (titre: Titre) => {
-  console.log('selectedTitre', titre)
   router.push({ name: 'titre', params: { id: titre.id } })
 }
 </script>

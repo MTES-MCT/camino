@@ -15,7 +15,6 @@ export const Default = () => ({
   components: { Domaine },
   template: '<Domaine />'
 })
-Default.args = {}
 
 export const AllDomaines = () => ({
   components: { Domaine },
@@ -26,7 +25,7 @@ export const AllDomaines = () => ({
         <th>Domaine</th>
         <th>Rendu</th>
       </tr>
-      ${DOMAINES_IDS.map(
+      ${Object.values(DOMAINES_IDS).map(
         domaine =>
           `<tr><td>${domaine}</td><td><Domaine domaine-id="${domaine}" /></td></tr>`
       ).join('')}

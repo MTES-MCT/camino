@@ -8,13 +8,16 @@
     @selectItem="emit('onSelectedTitre', $event)"
     @onInput="debounce(() => emit('onSearch', $event.input))"
   >
-    <template #list-item-text="slot">
-      <h4 class="mb">
-        <Domaine :domaine-id="slot.item.domaine.id" class="mr-s" /><span
-          class="cap-first"
-          >{{ slot.itemProjection(slot.item) }}</span
-        >
-      </h4>
+    <template #list-item-text="slot" >
+      <div class="flex flex-center">
+        <Domaine :domaine-id="slot.item.domaine.id" class="mr-s" />
+        <span class="cap-first bold">
+          {{ slot.itemProjection(slot.item) }}
+        </span>
+        <span class="ml-xs">
+          ({{ titreTypeGetById(slot.item.type.type.id) }})
+        </span>
+      </div>
     </template>
   </SimpleTypeahead>
 </template>
@@ -25,6 +28,7 @@ import 'vue3-simple-typeahead/dist/vue3-simple-typeahead.css'
 import SimpleTypeahead from 'vue3-simple-typeahead'
 import { Titre } from './pure-quick-access-titres.type'
 import Domaine from '@/components/_common/domaine.vue'
+import {TitresTypesTypes, TitresTypesTypesId} from "camino-common/src/titresTypesTypes";
 
 const emit = defineEmits<{
   (e: 'onSelectedTitre', titre: Titre): void
@@ -40,6 +44,8 @@ const createDebounce = () => {
     }, delayMs)
   }
 }
+
+const titreTypeGetById = (id: TitresTypesTypesId) => TitresTypesTypes[id].nom
 
 const debounce = createDebounce()
 

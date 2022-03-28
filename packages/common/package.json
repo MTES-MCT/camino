@@ -3,15 +3,6 @@
   "version": "1.0.0",
   "description": "Le cadastre minier numérique ouvert",
   "private": true,
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MTES-MCT/camino.git"
-  },
-  "license": "AGPL-3.0-or-later",
-  "bugs": {
-    "url": "https://github.com/MTES-MCT/camino/issues"
-  },
-  "homepage": "https://github.com/MTES-MCT/camino#readme",
   "scripts": {
     "test": "ava",
     "format": "prettier --write src",
@@ -58,13 +49,6 @@
       "no-return-await": "error",
       "default-param-last": 0,
       "no-unused-vars": 0,
-      "no-restricted-syntax": [
-        "error",
-        {
-          "message": "leftJoinRelation is deprecated. Use leftJoinRelated instead.",
-          "selector": "Identifier[name='leftJoinRelation']"
-        }
-      ],
       "@typescript-eslint/explicit-function-return-type": 0,
       "@typescript-eslint/explicit-module-boundary-types": 0,
       "@typescript-eslint/no-empty-interface": 0,

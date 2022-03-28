@@ -6,13 +6,13 @@
 
 <script setup lang="ts">
 import Pill from '../_ui/pill.vue'
-import { DomaineId } from 'camino-common/src/domaines'
+import { DomaineId, DOMAINES_IDS } from 'camino-common/src/domaines'
 import { withDefaults } from 'vue'
 
 withDefaults(
   defineProps<{
     domaineId?: DomaineId
   }>(),
-  { domaineId: 'm' }
+  { domaineId: DOMAINES_IDS.METAUX }
 )
 </script>

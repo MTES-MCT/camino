@@ -1,17 +1,21 @@
 import { Definition } from './definition'
 
-export const TITRES_TYPES_TYPES_IDS = [
-  'ap',
-  'ar',
-  'ax',
-  'cx',
-  'in',
-  'pc',
-  'pr',
-  'px'
-] as const
-export type TitresTypesTypesIds = typeof TITRES_TYPES_TYPES_IDS[number]
-export const Domaines: { [key in TitresTypesTypesIds]: Definition<key> } = {
+export const TITRES_TYPES_TYPES_IDS = {
+  AUTORISATION_DE_PROSPECTION: 'ap',
+  AUTORISATION_DE_RECHERCHE: 'ar',
+  AUTORISATION_D_EXPLOITATION: 'ax',
+  CONCESSION: 'cx',
+  INDETERMINE: 'in',
+  PERMIS_EXCLUSIF_DE_CARRIERES: 'pc',
+  PERMIS_EXCLUSIF_DE_RECHERCHES: 'pr',
+  PERMIS_D_EXPLOITATION: 'px'
+} as const
+export type TitresTypesTypesId =
+  typeof TITRES_TYPES_TYPES_IDS[keyof typeof TITRES_TYPES_TYPES_IDS]
+
+export const TitresTypesTypes: {
+  [key in TitresTypesTypesId]: Definition<key>
+} = {
   ap: {
     id: 'ap',
     nom: 'autorisation de prospections préalables',

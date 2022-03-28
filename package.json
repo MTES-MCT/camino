@@ -63,6 +63,12 @@
           "pkgRoot": "./packages/ui"
         }
       ],
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "./packages/common"
+        }
+      ],
       "@semantic-release/git"
     ]
   }

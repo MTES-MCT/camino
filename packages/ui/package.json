@@ -12,8 +12,7 @@
     "test:watch": "cross-env NODE_ENV=test jest --watch --verbose",
     "test:simple": "cross-env NODE_ENV=test jest --verbose",
     "lint": "prettier --write src && eslint --fix --ext .js,.ts,.vue src",
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "storybook": "start-storybook -p 6006"
   },
   "@comment dependencies": {
     "eslint": "eslint et eslint-plugin-vue, bloqués à 0.7.x https://github.com/vuejs/eslint-config-standard/issues/10",

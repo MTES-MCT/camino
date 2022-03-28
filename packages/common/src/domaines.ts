@@ -1,18 +1,18 @@
 import { Definition } from './definition'
 
-export const DOMAINES_IDS = [
-  'c',
-  'f',
-  'g',
-  'h',
-  'i',
-  'm',
-  'r',
-  's',
-  'w'
-] as const
+export const DOMAINES_IDS = {
+  METAUX: 'm',
+  CARRIERES: 'c',
+  FOSSILES: 'f',
+  GEOTHERMIE: 'g',
+  HYDROCARBURE: 'h',
+  RADIOACTIF: 'r',
+  SOUTERRAIN: 's',
+  GRANULATS_MARINS: 'w',
+  INDETERMINE: 'i'
+} as const
 
-export type DomaineId = typeof DOMAINES_IDS[number]
+export type DomaineId = typeof DOMAINES_IDS[keyof typeof DOMAINES_IDS]
 
 export const Domaines: { [key in DomaineId]: Definition<key> } = {
   c: {
