@@ -1,4 +1,4 @@
-FROM node:16.12-alpine as build-stage
+FROM node:17.8-alpine as build-stage
 WORKDIR /app
 
 COPY package*.json /app/
@@ -11,7 +11,7 @@ RUN npm ci --only=prod
 COPY ./ /app/
 RUN npm run build -w packages/api
 
-FROM node:16.12-alpine as production-stage
+FROM node:17.8-alpine as production-stage
 
 # redirige les logs sur le collecteur de logs docker
 # cf le Dockerfile de nginx
