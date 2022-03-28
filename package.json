@@ -2,8 +2,8 @@
   "name": "camino",
   "version": "0.38.0",
   "engines": {
-    "node": ">=16.12.0",
-    "npm": ">=7.24.0"
+    "node": ">=17.8.0",
+    "npm": ">=8.5.5"
   },
   "description": "Le cadastre minier numérique ouvert",
   "workspaces": [
