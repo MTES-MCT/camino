@@ -21,10 +21,6 @@ const state = {
   element: null,
   metas: {
     domaines: [],
-    version: null,
-    /* global npmVersion */
-    // @ts-ignore
-    versionUi: `${npmVersion}`,
     tiles,
     entreprisesTitresCreation: []
   },

@@ -95,23 +95,14 @@
         </li>
       </ul>
 
-      <p class="h6 flex-bottom">
+      <p class="h6 flex-bottom flex-self-end">
         <a
-          href="https://github.com/MTES-MCT/camino-ui/blob/master/CHANGELOG.md"
+          href="https://github.com/MTES-MCT/camino/blob/master/CHANGELOG.md"
           target="_blank"
           rel="noopener noreferrer"
           class="text-decoration-none"
         >
-          UI v.{{ versionUi }}
-        </a>
-        |
-        <a
-          href="https://github.com/MTES-MCT/camino-api/blob/master/CHANGELOG.md"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="text-decoration-none"
-        >
-          API v.{{ versionApi }}
+          Version {{ version }}
         </a>
       </p>
     </div>
@@ -136,12 +127,10 @@ export default {
   },
 
   computed: {
-    versionApi() {
-      return this.$store.state.user.metas.version
-    },
-
-    versionUi() {
-      return this.$store.state.user.metas.versionUi
+    version() {
+      /* global npmVersion */
+      // @ts-ignore
+      return `${npmVersion}`
     },
 
     newsletterForm() {
