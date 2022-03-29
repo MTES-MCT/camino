@@ -24,7 +24,6 @@ const Glossaire = () => import('../components/glossaire.vue')
 const Error = () => import('../components/error.vue')
 const UserPasswordInit = () => import('../components/user/password-init.vue')
 const UserAdd = () => import('../components/user/add.vue')
-const Definition = () => import('../components/glossaire/definition.vue')
 const Contacts = () => import('../components/content/contacts.vue')
 const About = () => import('../components/content/about.vue')
 const Accessibilite = () => import('../components/content/accessibilite.vue')
@@ -173,7 +172,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: ':slug',
         name: 'definition',
-        component: Definition
+        component: Glossaire
       }
     ]
   },

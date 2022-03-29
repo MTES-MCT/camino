@@ -8,7 +8,7 @@
     @selectItem="emit('onSelectedTitre', $event)"
     @onInput="debounce(() => emit('onSearch', $event.input))"
   >
-    <template #list-item-text="slot" >
+    <template #list-item-text="slot">
       <div class="flex flex-center">
         <Domaine :domaine-id="slot.item.domaine.id" class="mr-s" />
         <span class="cap-first bold">
@@ -28,7 +28,10 @@ import 'vue3-simple-typeahead/dist/vue3-simple-typeahead.css'
 import SimpleTypeahead from 'vue3-simple-typeahead'
 import { Titre } from './pure-quick-access-titres.type'
 import Domaine from '@/components/_common/domaine.vue'
-import {TitresTypesTypes, TitresTypesTypesId} from "camino-common/src/titresTypesTypes";
+import {
+  TitresTypesTypes,
+  TitresTypesTypesId
+} from 'camino-common/src/titresTypesTypes'
 
 const emit = defineEmits<{
   (e: 'onSelectedTitre', titre: Titre): void

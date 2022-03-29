@@ -77,8 +77,8 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Push Docker image to the Docker Hub
         run: | 
-        docker push caminofr/camino-api:develop
-        docker push caminofr/camino-api:${GITHUB_SHA}
+          docker push caminofr/camino-api:develop
+          docker push caminofr/camino-api:${GITHUB_SHA}
 
   doc:
     if: github.ref == 'refs/heads/develop'
