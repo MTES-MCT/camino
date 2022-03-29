@@ -1,0 +1,37 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Automated Storybook Snapshots Pages/PureQuickAccessTitre Empty 1`] = `
+<div
+  class="simple-typeahead"
+  data-v-04d98098=""
+  id="quick-access-titre_wrapper"
+>
+  <input
+    autocomplete="off"
+    class="simple-typeahead-input"
+    data-v-04d98098=""
+    id="quick-access-titre"
+    placeholder="Navigation rapide des titres"
+    type="text"
+  />
+  <!---->
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Pages/PureQuickAccessTitre Simple 1`] = `
+<div
+  class="simple-typeahead"
+  data-v-04d98098=""
+  id="quick-access-titre_wrapper"
+>
+  <input
+    autocomplete="off"
+    class="simple-typeahead-input"
+    data-v-04d98098=""
+    id="quick-access-titre"
+    placeholder="Navigation rapide des titres"
+    type="text"
+  />
+  <!---->
+</div>
+`;

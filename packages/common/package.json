@@ -1,0 +1,63 @@
+{
+  "name": "camino-common",
+  "version": "1.0.0",
+  "description": "Le cadastre minier numérique ouvert",
+  "private": true,
+  "scripts": {
+    "test": "ava",
+    "format": "prettier --write src",
+    "lint": "eslint --fix"
+  },
+  "devDependencies": {
+    "ava": "^4.1.0",
+    "ts-node": "^10.7.0"
+  },
+  "ava": {
+    "extensions": [
+      "ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "none",
+    "arrowParens": "avoid"
+  },
+  "eslintConfig": {
+    "parser": "@typescript-eslint/parser",
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/eslint-recommended",
+      "plugin:@typescript-eslint/recommended",
+      "standard",
+      "prettier"
+    ],
+    "env": {
+      "node": true
+    },
+    "plugins": [
+      "jest",
+      "@typescript-eslint"
+    ],
+    "rules": {
+      "newline-before-return": 1,
+      "no-use-before-define": 0,
+      "no-redeclare": 0,
+      "no-return-await": "error",
+      "default-param-last": 0,
+      "no-unused-vars": 0,
+      "@typescript-eslint/explicit-function-return-type": 0,
+      "@typescript-eslint/explicit-module-boundary-types": 0,
+      "@typescript-eslint/no-empty-interface": 0,
+      "@typescript-eslint/no-explicit-any": 0,
+      "@typescript-eslint/no-non-null-assertion": 0,
+      "@typescript-eslint/no-var-requires": 0,
+      "@typescript-eslint/no-unused-vars": [
+        "error"
+      ]
+    }
+  }
+}

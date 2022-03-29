@@ -31,7 +31,7 @@ if (hasEntreprises) {
 } else {
   store.commit('titres/reset')
   store.dispatch('titres/init')
-  router.push({name: 'titres'})
+  router.push({ name: 'titres' })
 }
 
 const getEntreprisesTitres = async () => {

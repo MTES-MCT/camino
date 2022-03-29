@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import 'dotenvp/config'
 
 import { apiGeoGet } from '../tools/api-geo'
 

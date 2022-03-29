@@ -4,15 +4,15 @@
   </Pill>
 </template>
 
-<script>
+<script setup lang="ts">
 import Pill from '../_ui/pill.vue'
+import { DomaineId, DOMAINES_IDS } from 'camino-common/src/domaines'
+import { withDefaults } from 'vue'
 
-export default {
-  components: {
-    Pill
-  },
-  props: {
-    domaineId: { type: String, default: 'm' }
-  }
-}
+withDefaults(
+  defineProps<{
+    domaineId?: DomaineId
+  }>(),
+  { domaineId: DOMAINES_IDS.METAUX }
+)
 </script>

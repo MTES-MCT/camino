@@ -1,9 +1,12 @@
-import 'dotenv/config'
+import dotenv from 'dotenv'
+import path, { resolve } from 'path'
+
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import path from 'path'
 import npmPackage from './package.json'
 import inject from '@rollup/plugin-inject'
+
+dotenv.config({ path: resolve(process.cwd(), '../../.env') })
 
 export default defineConfig({
   plugins: [vue()],

@@ -268,10 +268,6 @@ h6.color {
     min-height: calc(24 * var(--unit));
   }
 
-  .header-blobs {
-    flex-direction: row-reverse;
-  }
-
   .messages {
     width: calc(2 * var(--col-width) - var(--gutter));
   }

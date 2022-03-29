@@ -18,8 +18,8 @@ services:
       - ${API_PORT}
     volumes:
       - files:/app/files
-      - ./.env:/app/.env
-      - ./app.log:/app/app.log
+      - ./.env:/.env
+      - ./app.log:/app.log
     networks:
       - default
       - nginx-proxy
@@ -35,8 +35,8 @@ services:
     environment:
       PGHOST: db
     volumes:
-      - files:/app/files
-      - ./.env:/app/.env
+      - files:/files
+      - ./.env:/.env
     networks:
       - default
       - nginx-proxy

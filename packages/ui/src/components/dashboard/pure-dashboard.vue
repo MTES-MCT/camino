@@ -21,7 +21,6 @@
 </template>
 
 <script setup lang="ts">
-
 import { onMounted, ref } from 'vue'
 import TableAuto from '../_ui/table-auto.vue'
 import Error from '@/components/error.vue'

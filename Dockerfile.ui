@@ -6,6 +6,7 @@ LABEL maintainer=francois.romain@beta.gouv.fr
 WORKDIR /app
 
 COPY package*.json /app/
+COPY packages/common/package.json /app/packages/common/package.json
 COPY packages/ui/package.json /app/packages/ui/package.json
 # On désactive husky
 RUN npm set-script prepare ""

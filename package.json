@@ -8,6 +8,7 @@
   "description": "Le cadastre minier numérique ouvert",
   "workspaces": [
     "packages/api",
+    "packages/common",
     "packages/ui"
   ],
   "private": true,
@@ -22,14 +23,16 @@
   "homepage": "https://github.com/MTES-MCT/camino#readme",
   "scripts": {
     "prepare": "husky install",
-    "test": "npm run test -w packages/api && npm run test -w packages/ui"
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces"
   },
   "lint-staged": {
-    "packages/ui/*.{js,ts,vue}": "eslint --cache --fix",
-    "packages/ui/*.css": "stylelint --fix",
-    "packages/ui/*.{js,css}": "prettier --write",
-    "packages/api/*.{js,ts}": "eslint --cache --fix",
-    "packages/api/*.{ts,js,graphql}": "prettier --write"
+    "packages/ui/**/*.{js,ts,vue}": "eslint --cache --fix",
+    "packages/ui/**/*.css": "stylelint --fix",
+    "packages/ui/**/*.{js,css}": "prettier --write",
+    "packages/api/**/*.{js,ts}": "eslint --cache --fix",
+    "packages/api/**/*.{ts,js,graphql}": "prettier --write",
+    "packages/common/**/*.ts": ["npm run lint -w packages/common", "npm run format -w packages/common"]
   },
   "devDependencies": {
     "husky": "^7.0.4",
@@ -58,6 +61,12 @@
         "@semantic-release/npm",
         {
           "pkgRoot": "./packages/ui"
+        }
+      ],
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "./packages/common"
         }
       ],
       "@semantic-release/git"
