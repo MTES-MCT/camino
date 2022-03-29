@@ -25,10 +25,12 @@ export const AllDomaines = () => ({
         <th>Domaine</th>
         <th>Rendu</th>
       </tr>
-      ${Object.values(DOMAINES_IDS).map(
-        domaine =>
-          `<tr><td>${domaine}</td><td><Domaine domaine-id="${domaine}" /></td></tr>`
-      ).join('')}
+      ${Object.values(DOMAINES_IDS)
+        .map(
+          domaine =>
+            `<tr><td>${domaine}</td><td><Domaine domaine-id="${domaine}" /></td></tr>`
+        )
+        .join('')}
     </table>
     </div>
   `

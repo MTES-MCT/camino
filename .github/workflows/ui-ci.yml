@@ -19,6 +19,8 @@ jobs:
         run: |
           npm set-script prepare ""
           npm ci
+          npm run build --workspace=packages/ui
+          npm run lint:check --workspace=packages/ui
           npm test --workspace=packages/ui
         env:
           CODECOV_TOKEN:  ${{ secrets.CODECOV_TOKEN }}
