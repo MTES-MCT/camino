@@ -8,6 +8,25 @@
     box-shadow 0.25s, fill 0.25s;
 }
 
+.btn-menu,.btn-menu:visited {
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  display: inline-block;
+  color: var(--color-text);
+  background-color: var(--color-transparent);
+}
+
+.btn-menu.active {
+  color: var(--color-neutral);
+  background-color: var(--color-transparent);
+}
+
+.btn-menu:hover, .btn-menu {
+  color: var(--color-inverse);
+  background-color: var(--color-transparent);
+}
+
 @button default {
   button-border-width: 0;
   button-color: var(--color-text) var(--color-bg) var(--color-bg);
@@ -73,12 +92,6 @@
   button-class: active disabled false;
 }
 
-.btn-menu {
-  button-color: var(--color-text) var(--color-neutral) var(--color-inverse);
-  button-background: var(--color-transparent) var(--color-transparent)
-    var(--color-transparent);
-  button-class: active disabled true;
-}
 
 .btn,
 .btn-alt,
