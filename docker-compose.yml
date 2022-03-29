@@ -3,19 +3,19 @@ version: '3'
 services:
   api:
     container_name: camino_api_app
-    image: caminofr/camino-api
+    image: caminofr/camino-api:${CAMINO_TAG}
     depends_on:
       - db
     environment:
-      VIRTUAL_HOST: ${API_URL}
+      VIRTUAL_HOST: ${API_HOST}
       VIRTUAL_PORT: ${API_PORT}
-      LETSENCRYPT_HOST: ${API_URL}
+      LETSENCRYPT_HOST: ${API_HOST}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       PGHOST: db
     expose:
-      - ${PORT}
+      - ${API_PORT}
     volumes:
-      - files:/files
+      - ./files:/packages/api/files
       - ./.env:/.env
       - ./app.log:/app.log
     networks:
@@ -24,14 +24,14 @@ services:
     restart: unless-stopped
   cron:
     container_name: camino_api_cron
-    image: caminofr/camino-api
-    command: node ./dist/src/cron.js
+    image: caminofr/camino-api:${CAMINO_TAG}
+    command: ["node", "./packages/api/dist/src/cron.js"]
     depends_on:
       - db
     environment:
       PGHOST: db
     volumes:
-      - files:/files
+      - ./files:/packages/api/files
       - ./.env:/.env
     networks:
       - default
@@ -50,29 +50,29 @@ services:
     networks:
       - default
     volumes:
-      - data:/var/lib/postgresql/data
+      - ./postgresql:/var/lib/postgresql/data
     restart: unless-stopped
   docs:
     container_name: camino_api_docs
     image: caminofr/camino-api-docs
     environment:
-      VIRTUAL_HOST: ${UI_URL}
-      VIRTUAL_PORT: ${UI_PORT}
-      LETSENCRYPT_HOST: ${UI_URL}
+      VIRTUAL_HOST: ${DOC_HOST}
+      VIRTUAL_PORT: ${DOC_PORT}
+      LETSENCRYPT_HOST: ${DOC_HOST}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
     expose:
-      - ${PORT}
+      - ${DOC_PORT}
     networks:
       - default
       - nginx-proxy
     restart: unless-stopped
   ui:
     container_name: camino_ui_app
-    image: caminofr/camino-ui:latest
+    image: caminofr/camino-ui:${CAMINO_TAG}
     environment:
-      VIRTUAL_HOST: ${UI_URL}
+      VIRTUAL_HOST: ${UI_HOST}
       VIRTUAL_PORT: ${UI_PORT}
-      LETSENCRYPT_HOST: ${UI_URL}
+      LETSENCRYPT_HOST: ${UI_HOST}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       UI_PORT: ${UI_PORT}
       API_URL: http://api:${API_PORT}
@@ -86,10 +86,8 @@ services:
       - default
       - nginx-proxy
     restart: always
-volumes:
-  data: {}
-  files:
 
 networks:
   nginx-proxy:
     external: true
+
