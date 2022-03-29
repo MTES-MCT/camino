@@ -47,7 +47,7 @@ jobs:
           PGUSER: postgres
           PGPASSWORD: password
       - name: Code coverage
-        run: npm run ci:codecov --workspace=packages/api
+        run: npm run codecov --workspace=packages/api
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - name: Integration tests

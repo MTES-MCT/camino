@@ -5,7 +5,7 @@ import FiltresStatuts from '../_common/filtres/statuts.vue'
 import FiltresTypes from '../_common/filtres/types.vue'
 
 import { elementsFormat } from '../../utils/index'
-import { titresFiltres, titresRechercher } from '@/api/titres'
+import { titresFiltres, titresRechercherByNom } from '@/api/titres'
 
 const filtres = [
   {
@@ -15,7 +15,7 @@ const filtres = [
     elements: [],
     name: 'Noms',
     lazy: true,
-    search: value => titresRechercher({ noms: value, intervalle: 100 }),
+    search: value => titresRechercherByNom({ noms: value, intervalle: 100 }),
     load: value => titresFiltres({ titresIds: value })
   },
   {

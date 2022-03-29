@@ -35,7 +35,7 @@
     "ci:lint": "prettier --check . && eslint .",
     "ci:test-unit": "cross-env jest --testPathIgnorePatterns=tests --ci --runInBand --detectOpenHandles --forceExit --testTimeout=20000",
     "ci:test-integration": "cross-env JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest --testPathIgnorePatterns=src --runInBand --detectOpenHandles --ci --forceExit --testTimeout=20000",
-    "ci:codecov": "codecov"
+    "codecov": "codecov"
   },
   "@comment dependencies": {
     "modules esm": "crypto-random-string, p-queue, @sindresorhus/slugify, email-regex, decamelize, dateformat, node-fetch à ne pas updater tant que on ne compile pas pour es2020: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c. Pas simple de migrer ts-node.",
