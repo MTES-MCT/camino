@@ -9,8 +9,6 @@ import { fragmentAdministrations } from './fragments/administrations'
 const userMetas = apiGraphQLFetch(
   gql`
     query MetasUser {
-      version
-
       domaines {
         id
         nom
