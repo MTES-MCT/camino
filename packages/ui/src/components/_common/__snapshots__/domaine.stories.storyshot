@@ -15,6 +15,24 @@ exports[`Automated Storybook Snapshots Common/Domaine All Domaines 1`] = `
     </tr>
     <tr>
       <td>
+        m
+      </td>
+      <td>
+        <span
+          class="cap-first small bold mono"
+        >
+          <span
+            class="bg-domaine-m color-bg pill py-xs px-s"
+          >
+            
+            m
+            
+          </span>
+        </span>
+      </td>
+    </tr>
+    <tr>
+      <td>
         c
       </td>
       <td>
@@ -87,42 +105,6 @@ exports[`Automated Storybook Snapshots Common/Domaine All Domaines 1`] = `
     </tr>
     <tr>
       <td>
-        i
-      </td>
-      <td>
-        <span
-          class="cap-first small bold mono"
-        >
-          <span
-            class="bg-domaine-i color-bg pill py-xs px-s"
-          >
-            
-            i
-            
-          </span>
-        </span>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        m
-      </td>
-      <td>
-        <span
-          class="cap-first small bold mono"
-        >
-          <span
-            class="bg-domaine-m color-bg pill py-xs px-s"
-          >
-            
-            m
-            
-          </span>
-        </span>
-      </td>
-    </tr>
-    <tr>
-      <td>
         r
       </td>
       <td>
@@ -170,6 +152,24 @@ exports[`Automated Storybook Snapshots Common/Domaine All Domaines 1`] = `
           >
             
             w
+            
+          </span>
+        </span>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        i
+      </td>
+      <td>
+        <span
+          class="cap-first small bold mono"
+        >
+          <span
+            class="bg-domaine-i color-bg pill py-xs px-s"
+          >
+            
+            i
             
           </span>
         </span>
