@@ -1,25 +1,29 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import store from '../store'
 
-const Dashboard = () => import('../components/dashboard.vue')
-const Titre = () => import('../components/titre.vue')
-const Titres = () => import('../components/titres.vue')
-const Demarches = () => import('../components/demarches.vue')
-const Travaux = () => import('../components/travaux.vue')
-const Utilisateur = () => import('../components/utilisateur.vue')
-const Utilisateurs = () => import('../components/utilisateurs.vue')
-const Entreprise = () => import('../components/entreprise.vue')
-const Entreprises = () => import('../components/entreprises.vue')
-const Administration = () => import('../components/administration.vue')
-const Administrations = () => import('../components/administrations.vue')
+import Dashboard from '../components/dashboard.vue'
+import Titre from '../components/titre.vue'
+import Titres from '../components/titres.vue'
+import Demarches from '../components/demarches.vue'
+import Etape from '../components/etape.vue'
+import Activite from '../components/activite.vue'
+import Activites from '../components/activites.vue'
+import TitreCreation from '../components/titre-creation.vue'
+import EtapeEdition from '../components/etape-edition.vue'
+import ActiviteEdition from '../components/activite-edition.vue'
+import Travaux from '../components/travaux.vue'
+const Utilisateur = import('../components/utilisateur.vue')
+const Utilisateurs = import('../components/utilisateurs.vue')
+const Entreprise = import('../components/entreprise.vue')
+const Entreprises = import('../components/entreprises.vue')
+const Administration = import('../components/administration.vue')
+const Administrations = import('../components/administrations.vue')
 const Meta = () => import('../components/meta.vue')
 const MetaTitre = () => import('../components/meta-titre.vue')
 const MetaDemarche = () => import('../components/meta-demarche.vue')
 const MetaEtape = () => import('../components/meta-etape.vue')
 const MetaActivite = () => import('../components/meta-activite.vue')
 const Metas = () => import('../components/metas.vue')
-const Activite = () => import('../components/activite.vue')
-const Activites = () => import('../components/activites.vue')
 const Glossaire = () => import('../components/glossaire.vue')
 const Error = () => import('../components/error.vue')
 const UserPasswordInit = () => import('../components/user/password-init.vue')
@@ -37,10 +41,6 @@ const Statistiques = () => import('../components/statistiques.vue')
 const StatistiquesGuyane = () => import('../components/statistiques/guyane.vue')
 const StatistiquesGranulatsMarins = () =>
   import('../components/statistiques/granulats-marins.vue')
-const TitreCreation = () => import('../components/titre-creation.vue')
-const Etape = () => import('../components/etape.vue')
-const EtapeEdition = () => import('../components/etape-edition.vue')
-const ActiviteEdition = () => import('../components/activite-edition.vue')
 const Journaux = () => import('../components/journaux.vue')
 
 const routes: RouteRecordRaw[] = [

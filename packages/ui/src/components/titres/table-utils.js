@@ -5,7 +5,7 @@ import CaminoDomaine from '../_common/domaine.vue'
 import TitreNom from '../_common/titre-nom.vue'
 import TitreTypeTypeNom from '../_common/titre-type-type-nom.vue'
 import CoordonneesIcone from '../_common/coordonnees-icone.vue'
-import ActivitesPills from '../activites/pills.vue'
+import ActivitesPills from '../_common/pills.vue'
 import Statut from '../_common/statut.vue'
 
 const titresColonnes = [

@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Statut from '../_common/statut.vue'
+import Statut from './statut.vue'
 
 export default {
   components: { Statut },
