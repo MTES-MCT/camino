@@ -94,7 +94,7 @@
 <script>
 import Loader from './_ui/loader.vue'
 import Perimetre from './_common/perimetre.vue'
-import ActivitesPills from './activites/pills.vue'
+import ActivitesPills from './_common/pills.vue'
 
 import TitreHeader from './titre/header.vue'
 import TitreInfos from './titre/infos.vue'
