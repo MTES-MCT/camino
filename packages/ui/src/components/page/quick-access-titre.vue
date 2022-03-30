@@ -22,6 +22,7 @@ const titres = ref<Titre[]>([])
 const matomo = inject('matomo', null)
 const search = async (searchTerm: string): Promise<void> => {
   const intervalle = 10
+
   let searchTitres = await titresRechercherByNom({
     intervalle,
     noms: searchTerm

@@ -3,12 +3,12 @@
 exports[`Automated Storybook Snapshots UI/SimpleTypeahead Multiple 1`] = `
 <div
   class="simple-typeahead"
-  id="simple_typeahead_193_wrapper"
+  id="multiple_wrapper"
 >
   <input
     autocomplete="off"
     class="simple-typeahead-input"
-    id="simple_typeahead_193"
+    id="multiple"
     placeholder="placeholder"
     type="text"
   />
@@ -19,12 +19,12 @@ exports[`Automated Storybook Snapshots UI/SimpleTypeahead Multiple 1`] = `
 exports[`Automated Storybook Snapshots UI/SimpleTypeahead Simple 1`] = `
 <div
   class="simple-typeahead"
-  id="simple_typeahead_704_wrapper"
+  id="simple_wrapper"
 >
   <input
     autocomplete="off"
     class="simple-typeahead-input"
-    id="simple_typeahead_704"
+    id="simple"
     placeholder="placeholder"
     type="text"
   />

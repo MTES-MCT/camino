@@ -34,12 +34,14 @@ const Template: Story<Props> = (args: Props) => ({
 
 export const Simple = Template.bind({})
 Simple.args = {
+  id: 'simple',
   items: [{ titre: 'titreItem' }],
   placeholder: 'placeholder',
   minInputLength: 3
 }
 export const Multiple = Template.bind({})
 Multiple.args = {
+  id: 'multiple',
   items: [
     { titre: 'titreItem1' },
     { titre: 'titreItem2' },
