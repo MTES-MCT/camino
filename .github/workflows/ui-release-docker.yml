@@ -9,7 +9,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build Docker image
-        run: docker build -t caminofr/camino-ui:$VERSION -t caminofr/camino-ui:latest -t caminofr/camino-ui:master packages/ui
+        run: docker build -t caminofr/camino-ui:$VERSION -t caminofr/camino-ui:latest -t caminofr/camino-ui:master -t -t caminofr/camino-ui:${GITHUB_SHA} packages/ui
         env:
           VERSION: ${{ github.event.release.tag_name }}
       - name: Login to Docker Hub
