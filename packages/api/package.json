@@ -1,6 +1,6 @@
 {
   "name": "camino-api",
-  "version": "0.38.0",
+  "version": "1.0.0",
   "description": "Camino api",
   "private": true,
   "main": "dist/src/index.js",
