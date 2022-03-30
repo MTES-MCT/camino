@@ -83,6 +83,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '17.8'
+          cache: 'npm'
       - name: Generate docs
         run: |
           npm ci
