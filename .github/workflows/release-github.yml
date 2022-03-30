@@ -1,8 +1,8 @@
 name: Release Github
 on:
   push:
-    branches:
-      - master
+    tags:
+      - release-candidate
 jobs:
   release-github:
     runs-on: ubuntu-latest
