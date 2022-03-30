@@ -1,7 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 import {
   IAdministrationType,
-  IDefinition,
   IDemarcheStatut,
   IDemarcheType,
   IDevise,
@@ -25,8 +24,6 @@ import { debug } from '../../../config/index'
 import {
   administrationsTypesGet,
   administrationTypeUpdate,
-  definitionsGet,
-  definitionUpdate,
   demarchesStatutsGet,
   demarcheStatutUpdate,
   demarchesTypesGet,
@@ -372,25 +369,6 @@ const etapesStatuts = async () => {
 const version = () => npmPackage.version
 
 /**
- * Retourne les définitions
- *
- * @returns un tableau de définitions
- */
-const definitions = async () => {
-  try {
-    const definitions = await definitionsGet()
-
-    return definitions
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-/**
  * Retourne les types d'administrations
  *
  * @returns un tableau de types d'administrations
@@ -466,37 +444,6 @@ const phasesStatuts = async () => {
     const phasesStatuts = await phasesStatutsGet()
 
     return phasesStatuts
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-const definitionModifier = async (
-  { definition }: { definition: IDefinition },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!permissionCheck(user?.permissionId, ['super'])) {
-      throw new Error('droits insuffisants')
-    }
-
-    if (definition.ordre) {
-      const definitions = await definitionsGet()
-
-      await ordreUpdate(definition, definitions, definitionUpdate)
-    }
-
-    await definitionUpdate(definition.id!, definition)
-
-    const definitions = await definitionsGet()
-
-    return definitions
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -994,12 +941,10 @@ export {
   types,
   unites,
   version,
-  definitions,
   administrationsTypes,
   regions,
   departements,
   domaineModifier,
-  definitionModifier,
   titreTypeTypeModifier,
   demarcheTypeModifier,
   demarcheStatutModifier,

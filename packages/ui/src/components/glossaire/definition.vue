@@ -24,6 +24,7 @@ import snarkdown from 'snarkdown'
 import DefinitionEntree from './definition-entree.vue'
 import MapPattern from '../_map/pattern.vue'
 
+// TODO 2022-03-25: disconnect from store
 export default {
   name: 'Definition',
 
@@ -45,18 +46,16 @@ export default {
   },
 
   watch: {
-    '$route.params.slug': function (slug) {
-      this.entreesGet(slug)
-    }
+    slug: 'entreesGet'
   },
 
   async created() {
-    await this.entreesGet(this.slug)
+    await this.entreesGet()
   },
 
   methods: {
-    async entreesGet(slug) {
-      await this.$store.dispatch('definitions/entreesGet', slug)
+    async entreesGet() {
+      await this.$store.dispatch('definitions/entreesGet', this.slug)
     }
   }
 }

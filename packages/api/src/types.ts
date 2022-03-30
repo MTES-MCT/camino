@@ -1043,17 +1043,6 @@ interface ITokenUser {
 
 type IFormat = 'xlsx' | 'csv' | 'ods' | 'geojson' | 'json' | 'pdf' | 'zip'
 
-interface IDefinition {
-  id: string
-  nom: string
-  ordre: number
-  slug?: string
-  table?: string
-  description?: string | null
-  couleur?: string
-  elements?: IDefinition[]
-}
-
 interface ITitreDemande {
   nom: string
   typeId: string
@@ -1181,7 +1170,6 @@ export {
   IEntrepriseColonneId,
   IAdministrationColonneId,
   IColonne,
-  IDefinition,
   IContenuId,
   IPropsTitreEtapesIds,
   IHeritageProps,

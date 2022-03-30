@@ -1,5 +1,4 @@
 import {
-  definitions,
   domaines,
   titresTypesTypes,
   titresStatuts,
@@ -9,7 +8,6 @@ import {
   etapesStatuts,
   phasesStatuts,
   domaineModifier,
-  definitionModifier,
   titreTypeTypeModifier,
   titreStatutModifier,
   demarcheTypeModifier,
@@ -93,18 +91,6 @@ import {
 const labelGet = entity => (entity ? `${entity.id} - ${entity.nom}` : '')
 
 const metasIndex = {
-  definitions: {
-    get: definitions,
-    update: definitionModifier,
-    nom: 'Définitions',
-    colonnes: [
-      { id: 'id', nom: 'Id' },
-      { id: 'nom', nom: 'nom', type: String },
-      { id: 'slug', nom: 'slug', type: String },
-      { id: 'description', nom: 'Description', type: String, optional: true },
-      { id: 'ordre', nom: 'Ordre', type: Number }
-    ]
-  },
   domaines: {
     get: domaines,
     update: domaineModifier,

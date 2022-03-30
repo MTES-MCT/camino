@@ -97,24 +97,6 @@ const fragmentDomaine = gql`
     ordre
   }
 `
-
-const fragmentDefinition = gql`
-  fragment definition on Definition {
-    id
-    nom
-    slug
-    description
-    couleur
-    ordre
-    elements {
-      id
-      nom
-      description
-      couleur
-    }
-  }
-`
-
 const fragmentPhaseStatut = gql`
   fragment phaseStatut on PhaseStatut {
     id
@@ -289,7 +271,6 @@ export {
   fragmentDemarcheStatut,
   fragmentTitreType,
   fragmentDomaine,
-  fragmentDefinition,
   fragmentPhaseStatut,
   fragmentAdministrationType,
   fragmentDocumentType,

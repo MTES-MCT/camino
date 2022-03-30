@@ -1,7 +1,6 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 import {
-  fragmentDefinition,
   fragmentDomaine,
   fragmentTitreTypeType,
   fragmentTitreStatut,
@@ -26,28 +25,6 @@ import {
   fragmentEtapeTypeJustificatifType,
   fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType
 } from './fragments/metas'
-
-const definitions = apiGraphQLFetch(
-  gql`
-    query Definitions {
-      definitions {
-        ...definition
-      }
-    }
-
-    ${fragmentDefinition}
-  `
-)
-
-const definitionModifier = apiGraphQLFetch(gql`
-  mutation DefinitionModifier($element: InputDefinition!) {
-    definitionModifier(definition: $element) {
-      ...definition
-    }
-  }
-
-  ${fragmentDefinition}
-`)
 
 const domaines = apiGraphQLFetch(
   gql`
@@ -852,8 +829,6 @@ const etapeTypeJustificatifTypeSupprimer = apiGraphQLFetch(gql`
 `)
 
 export {
-  definitions,
-  definitionModifier,
   domaines,
   domaineModifier,
   titresTypesTypes,

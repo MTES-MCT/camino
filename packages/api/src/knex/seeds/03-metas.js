@@ -2,7 +2,6 @@ const seeding = require('../seeding')
 
 /* eslint-disable camelcase */
 
-const definitions = require('../../../sources/definitions.json')
 const domaines = require('../../../sources/domaines.json')
 const titresTypesTypes = require('../../../sources/titres-types-types.json')
 const titresTypes = require('../../../sources/titres-types.json')
@@ -29,7 +28,6 @@ const permissions = require('../../../sources/permissions.json')
 
 const seed = (module.exports = seeding(async ({ insert }) => {
   await Promise.all([
-    insert('definitions', definitions),
     insert('domaines', domaines),
     insert('titresTypesTypes', titresTypesTypes),
     insert('titresStatuts', titresStatuts),
