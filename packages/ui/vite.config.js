@@ -3,10 +3,13 @@ import path, { resolve } from 'path'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import npmPackage from './package.json'
 import inject from '@rollup/plugin-inject'
 
 dotenv.config({ path: resolve(process.cwd(), '../../.env') })
+
+const commitHash = process.env.GIT_SHA
+  ? process.env.GIT_SHA
+  : require('child_process').execSync('git rev-parse --short HEAD').toString()
 
 export default defineConfig({
   plugins: [vue()],
@@ -20,7 +23,7 @@ export default defineConfig({
   // suite à l’ajout de la lib jsondiffpatch, il faut injecter process
   // => https://github.com/avkonst/hookstate/issues/118
   define: {
-    npmVersion: JSON.stringify(npmPackage.version),
+    applicationVersion: JSON.stringify(commitHash),
     // mode dev
     'process.env': {}
   },
