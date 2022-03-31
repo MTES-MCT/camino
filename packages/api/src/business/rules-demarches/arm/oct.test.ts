@@ -3,6 +3,7 @@ import { demarcheEtatsValidate } from '../_utils.test'
 describe('vérifie l’arbre d’octroi d’ARM', () => {
   const octEtatsValidate = demarcheEtatsValidate('oct', 'arm', '2020-01-01')
 
+  //  MOVED to oct.machine.test.ts
   test.each(['mfr', 'pfd', 'dae', 'rde'])(
     'peut créer une étape "%s" si il n’existe pas d’autres étapes',
     typeId => {
@@ -10,6 +11,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     }
   )
 
+  //  MOVED to oct.machine.test.ts
   test.each(['mcd', 'mcb'])(
     'ne peut pas créer une étape "%s" si il n’existe pas d’autres étapes',
     typeId => {
@@ -19,18 +21,21 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     }
   )
 
+  //  MOVED to oct.machine.test.ts
   test('peut créer une étape "mdp" juste après une "mfr"', () => {
     expect(
       octEtatsValidate([{ typeId: 'mfr', statutId: 'fai' }, { typeId: 'mdp' }])
     ).toHaveLength(0)
   })
 
+  //  MOVED to oct.machine.test.ts
   test('ne peut pas créer une étape "mdp" juste après une "mfr" en construction', () => {
     expect(
       octEtatsValidate([{ typeId: 'mfr', statutId: 'aco' }, { typeId: 'mdp' }])
     ).toEqual(['l’étape "mdp" n’est pas possible juste après "mfr"'])
   })
 
+  //  MOVED to oct.machine.test.ts
   test('ne peut pas créer une étape "mcp" sans "mdp"', () => {
     expect(
       octEtatsValidate([
@@ -41,6 +46,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ).toEqual(['l’étape "mcp" n’est pas possible juste après "mfr", "pfd"'])
   })
 
+  //  MOVED to oct.machine.test.ts
   test('ne peut pas créer 2 "mfr"', () => {
     expect(
       octEtatsValidate([
@@ -51,6 +57,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ).toEqual(['l’étape "mfr" existe déjà'])
   })
 
+  //  MOVED to oct.machine.test.ts
   test('ne peut pas créer une étape "mfr" si il y a déjà une "mfr"', () => {
     expect(
       octEtatsValidate([
@@ -61,6 +68,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ).toEqual(['l’étape "mfr" existe déjà'])
   })
 
+  //  MOVED to oct.machine.test
+  //  renamed to 'ne peut pas déplacer une étape "mdp" sans "mfr"'
   test('ne peut pas déplacer une étape "mfr" après une "mdp"', () => {
     expect(
       octEtatsValidate([
@@ -70,6 +79,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ).toEqual(['l’étape "mdp" n’est pas possible juste après '])
   })
 
+  //  MOVED to oct.machine.test
   test.each(['rde', 'dae'])(
     'peut créer une étape "%s" juste après une "mdp" et que le titre est mécanisé avec franchissement d’eau',
     typeId => {
@@ -88,6 +98,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     }
   )
 
+  //  MOVED to oct.machine.test
   test('peut créer une étape "mcp" après une "mdp"', () => {
     expect(
       octEtatsValidate([
@@ -98,6 +109,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ).toHaveLength(0)
   })
 
+  //  MOVED to oct.machine.test
   test('peut créer une "des" après "mdp"', () => {
     expect(
       octEtatsValidate([
@@ -108,6 +120,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ).toHaveLength(0)
   })
 
+  //  MOVED to oct.machine.test
   test('ne peut pas créer deux "des"', () => {
     expect(
       octEtatsValidate([
@@ -119,6 +132,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ).toEqual(['l’étape "des" ne peut-être effecutée 2 fois d’affilée'])
   })
 
+  //  MOVED to oct.machine.test
   test('ne peut pas créer une "css" après une "des"', () => {
     expect(
       octEtatsValidate([
@@ -130,6 +144,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ).toEqual(['l’étape "css" n’est plus possible après "des"'])
   })
 
+  //  MOVED to oct.machine.test
   test('peut créer une "des" si le titre est en attente de "pfc"', () => {
     expect(
       octEtatsValidate(
@@ -155,6 +170,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ).toHaveLength(0)
   })
 
+  //  MOVED to oct.machine.test
   test('ne peut pas créer une "mno" après la "aca" si le titre n’est pas mécanisé', () => {
     expect(
       octEtatsValidate([
@@ -172,6 +188,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ).toEqual(['l’étape "mnb" n’est pas possible juste après "aca"'])
   })
 
+  //  MOVED to oct.machine.test
   test('peut créer une "mnd" apres une "aca" défavorable', () => {
     expect(
       octEtatsValidate([
@@ -189,6 +206,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       ])
     ).toHaveLength(0)
   })
+  //  MOVED to oct.machine.test
   test('peut créer une "mod" si il n’y a pas de sca', () => {
     expect(
       octEtatsValidate([
@@ -206,7 +224,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       ])
     ).toHaveLength(0)
   })
-
+  //  MOVED to oct.machine.test
   test('peut créer une "mcp" après une "pfd" et "mdp"', () => {
     expect(
       octEtatsValidate([
@@ -217,7 +235,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       ])
     ).toHaveLength(0)
   })
-
+  //  MOVED to oct.machine.test
   test('peut créer une "sca" après une "aof" et "rde"', () => {
     expect(
       octEtatsValidate(
@@ -241,6 +259,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ).toHaveLength(0)
   })
 
+  //  MOVED to oct.machine.test
   test('peut créer une "mnb" après une "aca" favorable', () => {
     expect(
       octEtatsValidate(
@@ -269,6 +288,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ).toHaveLength(0)
   })
 
+  //  MOVED to oct.machine.test
   test('les étapes sont vérifiées dans le bon ordre', () => {
     expect(
       octEtatsValidate(
@@ -291,6 +311,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ).toHaveLength(0)
   })
 
+  //  MOVED to oct.machine.test
   test('peut réaliser une saisine de la CARM après un récépissé de la déclaration sur l’eau défavorable', () => {
     expect(
       octEtatsValidate(
