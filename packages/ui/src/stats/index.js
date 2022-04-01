@@ -11,10 +11,10 @@ const defaultOptions = {
   heartBeatTimerInterval: 60
 }
 
-const install = (app, setupOptions = {}) => {
+const install = (setupOptions = {}) => {
   const options = Object.assign({}, defaultOptions, setupOptions)
 
-  bootstrap(options)
+  return bootstrap(options)
     .then(() => {
       const matomo = window.Piwik.getTracker(
         `${options.host}/${options.trackerFileName}.php`,
@@ -23,9 +23,6 @@ const install = (app, setupOptions = {}) => {
 
       matomo.customVariableVisitUser = visitUser(matomo)
       matomo.customVariablePageTitre = pageTitre(matomo)
-
-      // bind matomo to Vue
-      app.config.globalProperties.$matomo = matomo
 
       if (options.requireConsent) {
         matomo.requireConsent()
@@ -77,8 +74,11 @@ const install = (app, setupOptions = {}) => {
           }
         })
       }
+      return matomo
     })
-    .catch(e => {})
+    .catch(e => {
+      console.error('error during matomo initialization', e)
+    })
 }
 
 export default install

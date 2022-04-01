@@ -8,9 +8,9 @@
     "dev": "vite",
     "dev:update": "npm-check-updates && npm install && npm audit fix",
     "start": "node ./index.js",
-    "test": "cross-env NODE_ENV=test && jest --verbose && codecov",
+    "codecov": "codecov",
+    "test": "cross-env NODE_ENV=test && jest --verbose",
     "test:watch": "cross-env NODE_ENV=test jest --watch --verbose",
-    "test:simple": "cross-env NODE_ENV=test jest --verbose",
     "lint": "prettier --write src && eslint --fix --ext .js,.ts,.vue src",
     "lint:check": "prettier --check src && eslint src",
     "storybook": "start-storybook -p 6006"
@@ -27,8 +27,7 @@
     "connect-history-api-fallback": "^1.6.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "http-proxy-middleware": "^2.0.4",
-    "vue3-simple-typeahead": "^1.0.5"
+    "http-proxy-middleware": "^2.0.4"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.17.0",

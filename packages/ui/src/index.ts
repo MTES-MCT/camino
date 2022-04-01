@@ -43,14 +43,14 @@ if (import.meta.env.PROD) {
     })
     .catch(e => console.error('erreur : Sentry :', e))
 
-  fetch('/matomoOptions')
+  const matomo = fetch('/matomoOptions')
     .then(response => response.json())
     .then(options => {
       if (!options || !options.host || !options.siteId)
         throw new Error('host et/ou siteId manquant(s)')
-      VueMatomo(app, {
-        host: options.host,
-        siteId: options.siteId,
+      return VueMatomo({
+        host: 'https://stats.data.gouv.fr',
+        siteId: 70,
         router,
         store,
         requireConsent: false,
@@ -62,7 +62,8 @@ if (import.meta.env.PROD) {
       })
     })
     .catch(e => console.error('erreur : matomo :', e))
-
+  app.provide('matomo', matomo)
+  app.config.globalProperties.$matomo = matomo
   const eventSource = new EventSource('/stream/version')
 
   eventSource.addEventListener('version', event => {

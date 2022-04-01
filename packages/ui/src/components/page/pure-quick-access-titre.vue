@@ -3,29 +3,24 @@
     id="quick-access-titre"
     placeholder="Navigation rapide des titres"
     :items="titres"
-    :item-projection="itemProjection"
     :min-input-length="3"
     @selectItem="emit('onSelectedTitre', $event)"
-    @onInput="debounce(() => emit('onSearch', $event.input))"
+    @onInput="debounce(() => emit('onSearch', $event))"
   >
-    <template #list-item-text="slot">
+    <template #default="{ item }">
       <div class="flex flex-center">
-        <Domaine :domaine-id="slot.item.domaine.id" class="mr-s" />
+        <Domaine :domaine-id="item.domaine.id" class="mr-s" />
         <span class="cap-first bold">
-          {{ slot.itemProjection(slot.item) }}
+          {{ item.nom }}
         </span>
-        <span class="ml-xs">
-          ({{ titreTypeGetById(slot.item.type.type.id) }})
-        </span>
+        <span class="ml-xs"> ({{ titreTypeGetById(item.type.type.id) }}) </span>
       </div>
     </template>
   </SimpleTypeahead>
 </template>
 
 <script setup lang="ts">
-import 'vue3-simple-typeahead/dist/vue3-simple-typeahead.css'
-// @ts-ignore
-import SimpleTypeahead from 'vue3-simple-typeahead'
+import SimpleTypeahead from '@/components/_ui/simple-typeahead.vue'
 import { Titre } from './pure-quick-access-titres.type'
 import Domaine from '@/components/_common/domaine.vue'
 import {
@@ -55,6 +50,4 @@ const debounce = createDebounce()
 defineProps<{
   titres: Titre[]
 }>()
-
-const itemProjection = (item: Titre) => item.nom
 </script>

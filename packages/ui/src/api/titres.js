@@ -204,7 +204,7 @@ const titres = apiGraphQLFetch(
   `
 )
 
-const titresRechercher = apiGraphQLFetch(
+const titresRechercherByNom = apiGraphQLFetch(
   gql`
     query Titres($intervalle: Int, $noms: String) {
       titres(intervalle: $intervalle, noms: $noms) {
@@ -223,7 +223,29 @@ const titresRechercher = apiGraphQLFetch(
       }
     }
   `,
-  'titresRechercher'
+  'titresRechercherByNom'
+)
+
+export const titresRechercherByReferences = apiGraphQLFetch(
+  gql`
+    query Titres($intervalle: Int, $references: String) {
+      titres(intervalle: $intervalle, references: $references) {
+        elements {
+          id
+          nom
+          domaine {
+            id
+          }
+          type {
+            type {
+              id
+            }
+          }
+        }
+      }
+    }
+  `,
+  'titresRechercherByReferences'
 )
 
 const titresFiltres = apiGraphQLFetch(
@@ -273,6 +295,6 @@ export {
   titreCreer,
   titreModifier,
   titreSupprimer,
-  titresRechercher,
+  titresRechercherByNom,
   titresFiltres
 }
