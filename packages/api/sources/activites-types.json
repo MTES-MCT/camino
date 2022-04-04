@@ -1560,12 +1560,6 @@
             "nom": "Volume de granulats marins extrait (m3)",
             "type": "number",
             "description": "Volume de granulats marins extrait, en mètre cube, au cours de l'année."
-          },
-          {
-            "id": "masseGranulatsExtrait",
-            "nom": "Masse de granulats marins extraite (t)",
-            "type": "number",
-            "description": "Masse de granulats marins extraite, en tonne, au cours de l'année."
           }
         ]
       },

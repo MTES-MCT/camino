@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex flex-direction-column">
     <inputNumber
       v-if="element.type === 'number'"
       v-model="contenu[element.id]"
@@ -14,6 +14,13 @@
       class="p-s"
       placeholder="…"
     />
+
+    <div
+      v-if="element.id === 'volumeGranulatsExtrait' && contenu[element.id]"
+      class="flex-self-end pt-xxs"
+    >
+      Soit l’équivalent de {{ masseGranulatsExtraitValeur }} tonnes
+    </div>
 
     <InputDate
       v-else-if="element.type === 'date'"
@@ -111,6 +118,7 @@ import InputDate from '../_ui/input-date.vue'
 import InputNumber from '../_ui/input-number.vue'
 import SectionElementMultipleEdit from './section-element-multiple-edit.vue'
 import SectionElementFileEdit from './section-element-file-edit.vue'
+import numberFormat from '@/utils/number-format'
 
 export default {
   components: {
@@ -128,6 +136,10 @@ export default {
   computed: {
     valeurs() {
       return this.element.valeurs
+    },
+
+    masseGranulatsExtraitValeur() {
+      return numberFormat(this.contenu[this.element.id] * 1.5)
     }
   },
 

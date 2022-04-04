@@ -97,15 +97,13 @@ describe('teste la construction des emails lors du dépôt d’une activité', (
     })
 
     test.each`
-      contenu                                                                                      | positive
-      ${undefined}                                                                                 | ${false}
-      ${{}}                                                                                        | ${false}
-      ${{ renseignementsProduction: undefined }}                                                   | ${false}
-      ${{ renseignementsProduction: {} }}                                                          | ${false}
-      ${{ renseignementsProduction: { masseGranulatsExtrait: 0, volumeGranulatsExtrait: 0 } }}     | ${false}
-      ${{ renseignementsProduction: { masseGranulatsExtrait: 222, volumeGranulatsExtrait: 0 } }}   | ${true}
-      ${{ renseignementsProduction: { masseGranulatsExtrait: 0, volumeGranulatsExtrait: 232 } }}   | ${true}
-      ${{ renseignementsProduction: { masseGranulatsExtrait: 222, volumeGranulatsExtrait: 232 } }} | ${true}
+      contenu                                                          | positive
+      ${undefined}                                                     | ${false}
+      ${{}}                                                            | ${false}
+      ${{ renseignementsProduction: undefined }}                       | ${false}
+      ${{ renseignementsProduction: {} }}                              | ${false}
+      ${{ renseignementsProduction: { volumeGranulatsExtrait: 0 } }}   | ${false}
+      ${{ renseignementsProduction: { volumeGranulatsExtrait: 232 } }} | ${true}
     `('teste la production des WRP', ({ contenu, positive }) => {
       expect(productionCheck('wrp', contenu)).toEqual(!!positive)
     })
