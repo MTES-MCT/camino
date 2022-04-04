@@ -9,7 +9,7 @@ exports[`Automated Storybook Snapshots Pages/PureQuickAccessTitre Empty 1`] = `
     autocomplete="off"
     class="simple-typeahead-input"
     id="quick-access-titre"
-    placeholder="Navigation rapide des titres"
+    placeholder="Rechercher un titre"
     type="text"
   />
   <!--v-if-->
@@ -25,7 +25,7 @@ exports[`Automated Storybook Snapshots Pages/PureQuickAccessTitre Simple 1`] = `
     autocomplete="off"
     class="simple-typeahead-input"
     id="quick-access-titre"
-    placeholder="Navigation rapide des titres"
+    placeholder="Rechercher un titre"
     type="text"
   />
   <!--v-if-->

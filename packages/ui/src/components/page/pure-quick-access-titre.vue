@@ -1,7 +1,7 @@
 <template>
   <SimpleTypeahead
     id="quick-access-titre"
-    placeholder="Navigation rapide des titres"
+    placeholder="Rechercher un titre"
     :items="titres"
     :min-input-length="3"
     @selectItem="emit('onSelectedTitre', $event)"
