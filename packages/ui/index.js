@@ -14,7 +14,6 @@ const express = require('express')
 const history = require('connect-history-api-fallback')
 const compression = require('compression')
 const { createProxyMiddleware } = require('http-proxy-middleware')
-const { version } = require('./package.json')
 
 const app = express()
 const port = process.env.UI_PORT
@@ -76,7 +75,7 @@ const sendVersion = context => {
   context.writeHead(200, headers)
   context.write(`id: ${Date.now()}\n`)
   context.write(`event: version\n`)
-  context.write(`data: ${version}\n\n`)
+  context.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
 }
 
 app.get('/stream/version', async (req, res) => {

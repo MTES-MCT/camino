@@ -72,6 +72,7 @@ services:
     container_name: camino_ui_app
     image: caminofr/camino-ui:${CAMINO_TAG}
     environment:
+      APPLICATION_VERSION: ${CAMINO_TAG}
       VIRTUAL_HOST: ${UI_HOST}
       VIRTUAL_PORT: ${UI_PORT}
       LETSENCRYPT_HOST: ${UI_HOST}
