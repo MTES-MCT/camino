@@ -97,7 +97,7 @@
 
       <p class="h6 flex-bottom flex-self-end">
         <a
-          href="https://github.com/MTES-MCT/camino/blob/master/CHANGELOG.md"
+          href="https://github.com/MTES-MCT/camino/releases"
           target="_blank"
           rel="noopener noreferrer"
           class="text-decoration-none"
@@ -128,9 +128,9 @@ export default {
 
   computed: {
     version() {
-      /* global npmVersion */
+      /* global applicationVersion */
       // @ts-ignore
-      return `${npmVersion}`
+      return `${applicationVersion}`
     },
 
     newsletterForm() {

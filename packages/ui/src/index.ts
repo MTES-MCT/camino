@@ -36,9 +36,9 @@ if (import.meta.env.PROD) {
           }),
           new SentryIntegrations.RewriteFrames()
         ],
-        /* global npmVersion */
+        /* global applicationVersion */
         // @ts-ignore
-        release: `camino-ui-${npmVersion}`
+        release: `camino-ui-${applicationVersion}`
       })
     })
     .catch(e => console.error('erreur : Sentry :', e))
@@ -67,7 +67,7 @@ if (import.meta.env.PROD) {
   const eventSource = new EventSource('/stream/version')
 
   eventSource.addEventListener('version', event => {
-    if (event.data !== npmVersion) {
+    if (event.data !== applicationVersion) {
       eventSource.close()
       window.location.reload()
     }

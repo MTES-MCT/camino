@@ -76,8 +76,6 @@ import { demarcheDefinitionFind } from '../../../business/rules-demarches/defini
 import { userSuper } from '../../../database/user-super'
 import { titresEtapesHeritageContenuUpdate } from '../../../business/processes/titres-etapes-heritage-contenu-update'
 
-import npmPackage from '../../../../package.json'
-
 const devises = async () => devisesGet()
 
 const geoSystemes = async () => geoSystemesGet()
@@ -366,7 +364,7 @@ const etapesStatuts = async () => {
   }
 }
 
-const version = () => npmPackage.version
+const version = () => process.env.APPLICATION_VERSION
 
 /**
  * Retourne les types d'administrations

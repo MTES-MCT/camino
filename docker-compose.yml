@@ -7,6 +7,7 @@ services:
     depends_on:
       - db
     environment:
+      APPLICATION_VERSION: ${CAMINO_TAG}
       VIRTUAL_HOST: ${API_HOST}
       VIRTUAL_PORT: ${API_PORT}
       LETSENCRYPT_HOST: ${API_HOST}
@@ -29,6 +30,7 @@ services:
     depends_on:
       - db
     environment:
+      APPLICATION_VERSION: ${CAMINO_TAG}
       PGHOST: db
     volumes:
       - ./files:/packages/api/files
