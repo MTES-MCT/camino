@@ -2,12 +2,21 @@ import { activites } from '../api/titres-activites'
 import { activitesMetas } from '../api/metas-activites'
 import { listeActionsBuild, listeMutations } from './_liste-build'
 
+export const anneesGet = currentYear => {
+  const annees = []
+  for (let i = currentYear; i >= 1997; i--) {
+    annees.push({ id: i, nom: i })
+  }
+
+  return annees
+}
+
 const state = {
   elements: [],
   total: 0,
   metas: {
     types: [],
-    annees: [],
+    annees: anneesGet(new Date().getFullYear()),
     statuts: [],
     titresDomaines: [],
     titresTypes: [],
@@ -81,9 +90,6 @@ const mutations = Object.assign({}, listeMutations, {
       } else if (id === 'activitesStatuts') {
         metaId = 'statuts'
         paramId = 'statutsIds'
-      } else if (id === 'activitesAnnees') {
-        metaId = 'annees'
-        paramId = 'annees'
       } else if (id === 'domaines') {
         metaId = 'titresDomaines'
         paramId = 'titresDomainesIds'

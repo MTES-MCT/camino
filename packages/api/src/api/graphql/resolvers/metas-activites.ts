@@ -12,20 +12,20 @@ import { debug } from '../../../config/index'
 import { fieldsBuild } from './_fields-build'
 import { userGet } from '../../../database/queries/utilisateurs'
 import {
-  activitesTypesGet,
   activitesStatutsGet,
-  activiteTypeUpdate,
   activiteStatutUpdate,
-  activiteTypeTitreTypeCreate,
-  activitesTypesTitresTypesGet,
-  activiteTypeTitreTypeDelete,
   activitesTypesDocumentsTypesGet,
-  activiteTypeDocumentTypeCreate,
-  activiteTypeDocumentTypeUpdate,
-  activiteTypeDocumentTypeDelete,
-  activiteTypePaysCreate,
+  activitesTypesGet,
   activitesTypesPaysGet,
-  activiteTypePaysDelete
+  activitesTypesTitresTypesGet,
+  activiteTypeDocumentTypeCreate,
+  activiteTypeDocumentTypeDelete,
+  activiteTypeDocumentTypeUpdate,
+  activiteTypePaysCreate,
+  activiteTypePaysDelete,
+  activiteTypeTitreTypeCreate,
+  activiteTypeTitreTypeDelete,
+  activiteTypeUpdate
 } from '../../../database/queries/metas-activites'
 import { permissionCheck } from '../../../business/permission'
 import { ordreUpdate } from './_ordre-update'
@@ -36,12 +36,9 @@ const activitesTypes = async (
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
-    const activitesTypes = await activitesTypesGet({ fields }, user)
-
-    return activitesTypes
+    return await activitesTypesGet({ fields })
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -80,14 +77,14 @@ const activiteTypeModifier = async (
     const fields = fieldsBuild(info)
 
     if (activiteType.ordre) {
-      const activitesTypes = await activitesTypesGet({ fields }, user)
+      const activitesTypes = await activitesTypesGet({ fields })
 
       await ordreUpdate(activiteType, activitesTypes, activiteTypeUpdate)
     }
 
     await activiteTypeUpdate(activiteType.id!, activiteType)
 
-    const activitesTypes = await activitesTypesGet({ fields }, user)
+    const activitesTypes = await activitesTypesGet({ fields })
 
     return activitesTypes
   } catch (e) {

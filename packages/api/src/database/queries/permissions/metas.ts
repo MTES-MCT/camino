@@ -15,8 +15,6 @@ import DemarchesTypes from '../../models/demarches-types'
 import EtapesTypes from '../../models/etapes-types'
 import TitresEtapes from '../../models/titres-etapes'
 import TitresTypesDemarchesTypesEtapesTypes from '../../models/titres-types--demarches-types-etapes-types'
-import TitresActivites from '../../models/titres-activites'
-import ActivitesTypes from '../../models/activites-types'
 import Permissions from '../../models/permissions'
 
 import { titresDemarchesAdministrationsModificationQuery } from './titres'
@@ -244,43 +242,6 @@ const etapesTypesQueryModify = (
   // fileCreate('dev/tmp/etapes-types.sql', format(q.toKnexQuery().toString()))
 }
 
-const activitesTypesQueryModify = (
-  q: QueryBuilder<ActivitesTypes, ActivitesTypes | ActivitesTypes[]>,
-  user: IUtilisateur | null | undefined
-) => {
-  if (
-    permissionCheck(user?.permissionId, ['entreprise']) &&
-    user?.entreprises?.length
-  ) {
-    const entreprisesIds = user.entreprises.map(e => e.id)
-
-    q.where(b => {
-      b.whereExists(
-        TitresActivites.query()
-          .alias('titresActivitesTitulaires')
-          .joinRelated('titre.titulaires')
-          .whereRaw('?? = ??', [
-            'titresActivitesTitulaires.typeId',
-            'activitesTypes.id'
-          ])
-          .whereIn('titre:titulaires.id', entreprisesIds)
-      )
-      b.orWhereExists(
-        TitresActivites.query()
-          .alias('titresActivitesAmodiataires')
-          .joinRelated('titre.amodiataires')
-          .whereRaw('?? = ??', [
-            'titresActivitesAmodiataires.typeId',
-            'activitesTypes.id'
-          ])
-          .whereIn('titre:amodiataires.id', entreprisesIds)
-      )
-    })
-  } else if (permissionCheck(user?.permissionId, ['defaut'])) {
-    q.where(false)
-  }
-}
-
 export const demarchesCreationQuery = (
   q: QueryBuilder<DemarchesTypes, DemarchesTypes | DemarchesTypes[]>,
   user: IUtilisateur | null | undefined,
@@ -344,7 +305,6 @@ const permissionsQueryModify = (
 }
 
 export {
-  activitesTypesQueryModify,
   demarchesTypesQueryModify,
   domainesQueryModify,
   administrationsEtapesTypesPropsQuery,

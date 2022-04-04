@@ -20,7 +20,6 @@ const activitesMetas = apiGraphQLFetch(
       activitesStatuts {
         ...activiteStatut
       }
-      activitesAnnees
 
       domaines {
         id
