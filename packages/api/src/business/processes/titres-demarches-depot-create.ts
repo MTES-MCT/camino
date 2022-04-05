@@ -9,11 +9,11 @@ import { titreEtapeAdministrationsEmailsSend } from '../../api/graphql/resolvers
 import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot-demande-date-find'
 import { demarcheDefinitionFind } from '../rules-demarches/definitions'
 import { titreUrlGet } from '../utils/urls-get'
+import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
 import {
-  emailsWithTemplateSend,
-  IEmail,
-  IEmailTemplateId
-} from '../../tools/api-mailjet/emails'
+  EmailTemplateId,
+  EmailAdministration
+} from '../../tools/api-mailjet/types'
 
 const emailConfirmationDepotSend = async (
   emails: string[],
@@ -26,12 +26,11 @@ const emailConfirmationDepotSend = async (
 ) => {
   await emailsWithTemplateSend(
     emails,
-    'Confirmation du dépôt d’une demande',
-    IEmailTemplateId.DEMARCHE_CONFIRMATION_DEPOT,
+    EmailTemplateId.DEMARCHE_CONFIRMATION_DEPOT,
     {
       ...params,
-      emailONF: IEmail.ONF,
-      emailDGTM: IEmail.DGTM
+      emailONF: EmailAdministration.ONF,
+      emailDGTM: EmailAdministration.DGTM
     }
   )
 }

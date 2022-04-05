@@ -9,6 +9,9 @@ import { titreActivitesBuild } from '../rules/titre-activites-build'
 import { titresGet } from '../../database/queries/titres'
 import { activitesTypesGet } from '../../database/queries/metas-activites'
 import { userSuper } from '../../database/user-super'
+import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
+import { activitesUrlGet } from '../utils/urls-get'
+import { EmailTemplateId } from '../../tools/api-mailjet/types'
 
 const titresActivitesUpdate = async (titresIds?: string[]) => {
   console.info()
@@ -26,7 +29,8 @@ const titresActivitesUpdate = async (titresIds?: string[]) => {
           }
         },
         communes: { departement: { region: { pays: { id: {} } } } },
-        activites: { id: {} }
+        activites: { id: {} },
+        titulaires: { utilisateurs: { id: {} } }
       }
     },
     userSuper
@@ -80,6 +84,34 @@ const titresActivitesUpdate = async (titresIds?: string[]) => {
 
   if (titresActivitesCreated.length) {
     await titresActivitesUpsert(titresActivitesCreated)
+
+    const emails = new Set<string>()
+    for (const activite of titresActivitesCreated) {
+      const titre = titres.find(({ id }) => id === activite.titreId)
+
+      if (!titre) {
+        console.error(`titre inconnu : ${activite.titreId}`)
+        continue
+      }
+      titre.titulaires?.forEach(titulaire =>
+        titulaire.utilisateurs?.forEach(({ email }) => {
+          if (email) {
+            emails.add(email)
+          }
+        })
+      )
+    }
+
+    // envoi d’email aux opérateurs pour les prévenir de l’ouverture des déclarations
+    if (emails.size) {
+      await emailsWithTemplateSend(
+        [...emails],
+        EmailTemplateId.ACTIVITES_NOUVELLES,
+        {
+          activitesUrl: activitesUrlGet({ statutsIds: ['abs', 'enc'] })
+        }
+      )
+    }
 
     const log = {
       type: 'titre / activités (création) ->',
