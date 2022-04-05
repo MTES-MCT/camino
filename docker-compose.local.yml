@@ -43,12 +43,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.ui
+      args:
+        GIT_SHA: unused
     environment:
       UI_PORT: ${UI_PORT}
       API_URL: ${API_URL}
       API_MATOMO_URL: ${API_MATOMO_URL}
       API_MATOMO_ID: ${API_MATOMO_ID}
       ENV: ${ENV}
+      APPLICATION_VERSION: unused
     ports:
       - ${UI_PORT}:${UI_PORT}
 

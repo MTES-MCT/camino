@@ -2,7 +2,7 @@ export default function (options) {
   const { host, trackerFileName } = options
   const filename = `${host}/${trackerFileName}.js`
 
-  const scriptPromise = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const script = document.createElement('script')
     script.async = true
     script.defer = true
@@ -13,13 +13,9 @@ export default function (options) {
 
     script.onload = resolve
     script.onerror = reject
-  })
-
-  scriptPromise.catch(error => {
+  }).catch(error => {
     console.info(
       `Warning: ${error.target.src}. If the file exists, you may have a tracking blocker enabled.`
     )
   })
-
-  return scriptPromise
 }
