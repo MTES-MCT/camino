@@ -4,8 +4,7 @@ import {
   IActiviteTypeDocumentType,
   IActiviteTypePays,
   IActiviteTypeTitreType,
-  IFields,
-  IUtilisateur
+  IFields
 } from '../../types'
 
 import options from './_options'
@@ -17,21 +16,13 @@ import ActivitesTypesTitresTypes from '../models/activites-types--titres-types'
 import ActivitesStatuts from '../models/activites-statuts'
 import ActivitesTypesDocumentsTypes from '../models/activites-types--documents-types'
 import ActivitesTypesPays from '../models/activites-types--pays'
-import { activitesTypesQueryModify } from './permissions/metas'
 
-const activitesTypesGet = async (
-  { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
-) => {
+const activitesTypesGet = async ({ fields }: { fields?: IFields }) => {
   const graph = fields
     ? graphBuild(fields, 'activitesTypes', fieldsFormat)
     : options.activitesTypes.graph
 
-  const q = ActivitesTypes.query().withGraphFetched(graph).modify('orderAsc')
-
-  activitesTypesQueryModify(q, user)
-
-  return q
+  return ActivitesTypes.query().withGraphFetched(graph).modify('orderAsc')
 }
 
 const activitesStatutsGet = async () => ActivitesStatuts.query()

@@ -159,30 +159,6 @@ const titreActiviteGet = async (
     .first()
 }
 
-/**
- * Retourne les années des activités
- *
- * @param userId - utilisateur
- * @returns une liste d'année(s)
- *
- */
-
-const titresActivitesAnneesGet = async (
-  user: IUtilisateur | null | undefined
-) => {
-  if (!user?.permissionId) return []
-
-  const q = TitresActivites.query()
-
-  titresActivitesQueryModify(q, user, false)
-
-  q.select('annee')
-  q.groupBy('annee')
-  q.orderBy('annee', 'desc')
-
-  return q
-}
-
 const titresActivitesColonnes = {
   titre: {
     id: 'titre.nom',
@@ -421,6 +397,5 @@ export {
   titresActivitesUpsert,
   titresActivitesGet,
   titreActiviteUpdate,
-  titresActivitesAnneesGet,
   titreActiviteDelete
 }

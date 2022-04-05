@@ -23,7 +23,6 @@ import {
   titreActiviteDelete,
   titreActiviteGet,
   titreActiviteUpdate as titreActiviteUpdateQuery,
-  titresActivitesAnneesGet,
   titresActivitesCount,
   titresActivitesGet
 } from '../../../database/queries/titres-activites'
@@ -198,32 +197,6 @@ const activites = async (
       colonne,
       total
     }
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-/**
- * Retourne les années des activités
- *
- * @param context - contexte utilisateur
- * @returns une liste d'année(s)
- *
- */
-
-const activitesAnnees = async (_: never, context: IToken) => {
-  try {
-    const user = await userGet(context.user?.id)
-    const titreActivites = await titresActivitesAnneesGet(user)
-
-    if (!titreActivites || !titreActivites.length) return []
-    const annees = titreActivites.map(ta => ta.annee)
-
-    return annees
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -436,7 +409,6 @@ const activiteSupprimer = async ({ id }: { id: string }, context: IToken) => {
 export {
   activite,
   activites,
-  activitesAnnees,
   activiteModifier,
   activiteSupprimer,
   activiteDeposer

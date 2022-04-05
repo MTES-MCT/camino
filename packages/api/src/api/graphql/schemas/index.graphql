@@ -113,9 +113,6 @@ type Query {
     titresTerritoires: String
   ): Activites
 
-  "Années des activités"
-  activitesAnnees: [Int]
-
   "Types d'activités"
   activitesTypes: [ActiviteType]
 

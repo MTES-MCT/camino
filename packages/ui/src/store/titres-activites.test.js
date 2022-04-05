@@ -1,4 +1,4 @@
-import titresActivites from './titres-activites'
+import titresActivites, { anneesGet } from './titres-activites'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
 
@@ -19,7 +19,6 @@ describe("état d'une activité", () => {
     titresActivites.state = {
       metas: {
         types: [],
-        annees: [],
         statuts: [],
         titresDomaines: [],
         titresTypes: [],
@@ -28,7 +27,6 @@ describe("état d'une activité", () => {
       definitions: [
         { id: 'typesIds', type: 'strings', values: [] },
         { id: 'statutsIds', type: 'strings', values: [] },
-        { id: 'annees', type: 'numbers', values: [] },
         { id: 'titresTypesIds', type: 'strings', values: [] },
         { id: 'titresDomainesIds', type: 'strings', values: [] },
         { id: 'titresStatutsIds', type: 'strings', values: [] }
@@ -47,7 +45,6 @@ describe("état d'une activité", () => {
     const activitesTypes = [
       { id: 'grp', nom: "rapport trimestriel d'activité" }
     ]
-    const activitesAnnees = [2020, 2019]
     const activitesStatuts = [
       { id: 'abs', nom: 'absent', couleur: 'error' },
       { id: 'enc', nom: 'en construction', couleur: 'warning' },
@@ -69,7 +66,6 @@ describe("état d'une activité", () => {
 
     store.commit('titresActivites/metasSet', {
       activitesTypes,
-      activitesAnnees,
       activitesStatuts,
       domaines,
       statuts,
@@ -79,10 +75,6 @@ describe("état d'une activité", () => {
 
     expect(store.state.titresActivites.metas).toEqual({
       types: activitesTypes,
-      annees: [
-        { id: 2020, nom: 2020 },
-        { id: 2019, nom: 2019 }
-      ],
       statuts: activitesStatuts,
       titresDomaines: domaines,
       titresTypes: types,
@@ -96,10 +88,21 @@ describe("état d'une activité", () => {
         type: 'strings',
         values: ['abs', 'enc', 'dep', 'fer']
       },
-      { id: 'annees', type: 'numbers', values: [2020, 2019] },
       { id: 'titresTypesIds', type: 'strings', values: ['cx', 'pr'] },
       { id: 'titresDomainesIds', type: 'strings', values: ['m', 'w'] },
       { id: 'titresStatutsIds', type: 'strings', values: ['val', 'ech'] }
+    ])
+  })
+
+  test('anneesGet', () => {
+    expect(anneesGet(2003)).toEqual([
+      { id: 2003, nom: 2003 },
+      { id: 2002, nom: 2002 },
+      { id: 2001, nom: 2001 },
+      { id: 2000, nom: 2000 },
+      { id: 1999, nom: 1999 },
+      { id: 1998, nom: 1998 },
+      { id: 1997, nom: 1997 }
     ])
   })
 })

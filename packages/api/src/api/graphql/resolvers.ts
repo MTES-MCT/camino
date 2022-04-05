@@ -177,7 +177,6 @@ import {
 import {
   activite,
   activites,
-  activitesAnnees,
   activiteModifier,
   activiteSupprimer,
   activiteDeposer
@@ -241,7 +240,6 @@ export default {
   statistiquesGranulatsMarins,
   activite,
   activites,
-  activitesAnnees,
   administrationsTypes,
   regions,
   departements,
