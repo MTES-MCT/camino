@@ -150,10 +150,7 @@ export const productionCheck = (
   } else if (activiteTypeId === 'wrp') {
     const production = contenu?.renseignementsProduction
 
-    return (
-      !!production?.volumeGranulatsExtrait ||
-      !!production?.masseGranulatsExtrait
-    )
+    return !!production?.volumeGranulatsExtrait
   }
 
   return true

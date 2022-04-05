@@ -37,8 +37,7 @@ const statistiquesGranulatsMarinsActivitesFind = (
     {
       rapportProductionCount: 0,
       activitesDeposesQuantiteCount: 0,
-      volumeGranulatsExtrait: 0,
-      masseGranulatsExtrait: 0
+      volumeGranulatsExtrait: 0
     }
   )
 
@@ -142,7 +141,7 @@ const statistiquesGranulatsMarinsAnneeBuild = (
   )
   const statistiquesActivites = statistiquesGranulatsMarinsActivitesFind(
     titresActivitesAnneeFiltered,
-    ['volumeGranulatsExtrait', 'masseGranulatsExtrait']
+    ['volumeGranulatsExtrait']
   )
 
   const activitesDeposesRatio = statistiquesActivites.rapportProductionCount
@@ -160,12 +159,7 @@ const statistiquesGranulatsMarinsAnneeBuild = (
     titresPxw,
     titresCxw,
     volume: Math.floor(statistiquesActivites.volumeGranulatsExtrait),
-    // ne pas indiquer un tonnage produit nul ou incohérent par rapport au volume produit.
-    // Si l'on ne dispose pas de la donnée tonnage (pour les années antérieures à 2019), appliquer la règle de trois suivante : 1m3 => 1,53 tonne.
-    masse:
-      annee < 2019
-        ? Math.floor(statistiquesActivites.volumeGranulatsExtrait * 1.53)
-        : Math.floor(statistiquesActivites.masseGranulatsExtrait),
+    masse: Math.floor(statistiquesActivites.volumeGranulatsExtrait * 1.5),
     activitesDeposesQuantite:
       statistiquesActivites.activitesDeposesQuantiteCount,
     activitesDeposesRatio,

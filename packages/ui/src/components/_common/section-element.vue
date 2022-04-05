@@ -33,6 +33,11 @@
 
       <p v-else class="cap-first" :class="{ 'mb-s': element.description }">
         {{ valeur }}
+        <span
+          v-if="element.id === 'volumeGranulatsExtrait' && contenu[element.id]"
+        >
+          m3. Soit l’équivalent de {{ masseGranulatsExtraitValeur }} tonnes.
+        </span>
       </p>
       <!-- eslint-disable vue/no-v-html -->
       <p v-if="element.description" class="h6">
@@ -45,6 +50,7 @@
 <script>
 import { valeurFind } from '../../utils/contenu'
 import SectionElementMultiple from './section-element-multiple.vue'
+import numberFormat from '@/utils/number-format'
 
 export default {
   name: 'SectionElement',
@@ -58,6 +64,10 @@ export default {
   computed: {
     valeur() {
       return valeurFind(this.element, this.contenu)
+    },
+
+    masseGranulatsExtraitValeur() {
+      return numberFormat(this.contenu[this.element.id] * 1.5)
     }
   },
 
