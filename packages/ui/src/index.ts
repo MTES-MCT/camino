@@ -17,13 +17,13 @@ import store from './store'
 
 window.ResizeObserver = window.ResizeObserver || resizeObserverPolyfill
 
-const app = createApp(App)
-sync(store, router)
-
-if (import.meta.env.PROD) {
-  fetch('/sentryOptions')
-    .then(response => response.json())
-    .then(options => {
+Promise.resolve().then(async () => {
+  const app = createApp(App)
+  sync(store, router)
+  if (import.meta.env.PROD) {
+    try {
+      const sentryResponse = await fetch('/sentryOptions')
+      const options = await sentryResponse.json()
       if (!options.dsn) throw new Error('dsn manquant')
       Sentry.init({
         dsn: options.dsn,
@@ -40,17 +40,18 @@ if (import.meta.env.PROD) {
         // @ts-ignore
         release: `camino-ui-${applicationVersion}`
       })
-    })
-    .catch(e => console.error('erreur : Sentry :', e))
-
-  const matomo = fetch('/matomoOptions')
-    .then(response => response.json())
-    .then(options => {
+    } catch (e) {
+      console.error('erreur : Sentry :', e)
+    }
+    try {
+      const response = await fetch('/matomoOptions')
+      const options = await response.json()
       if (!options || !options.host || !options.siteId)
         throw new Error('host et/ou siteId manquant(s)')
-      return VueMatomo({
-        host: 'https://stats.data.gouv.fr',
-        siteId: 70,
+
+      const matomo = await VueMatomo({
+        host: options.host,
+        siteId: options.siteId,
         router,
         store,
         requireConsent: false,
@@ -60,22 +61,22 @@ if (import.meta.env.PROD) {
         enableHeartBeatTimer: true,
         enableLinkTracking: true
       })
-    })
-    .catch(e => console.error('erreur : matomo :', e))
-  app.provide('matomo', matomo)
-  app.config.globalProperties.$matomo = matomo
-  const eventSource = new EventSource('/stream/version')
-
-  eventSource.addEventListener('version', event => {
-    if (event.data !== applicationVersion) {
-      eventSource.close()
-      window.location.reload()
+      app.provide('matomo', matomo)
+      app.config.globalProperties.$matomo = matomo
+    } catch (e) {
+      console.error('erreur : matomo :', e)
     }
-  })
-}
 
-app.use(router)
+    const eventSource = new EventSource('/stream/version')
 
-app.use(store)
-
-app.mount('app-root')
+    eventSource.addEventListener('version', event => {
+      if (event.data !== applicationVersion) {
+        eventSource.close()
+        window.location.reload()
+      }
+    })
+  }
+  app.use(router)
+  app.use(store)
+  app.mount('app-root')
+})
