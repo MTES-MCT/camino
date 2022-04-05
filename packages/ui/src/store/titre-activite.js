@@ -59,7 +59,7 @@ const actions = {
     }
   },
 
-  async depose({ commit, dispatch }, { id, route }) {
+  async depose({ commit, dispatch }, { id }) {
     try {
       commit('popupMessagesRemove', null, { root: true })
       commit('popupLoad', null, { root: true })
@@ -69,7 +69,6 @@ const actions = {
 
       commit('popupClose', null, { root: true })
 
-      await dispatch('reloadRoute', route)
       dispatch(
         'messageAdd',
         { value: `la demande a été déposée`, type: 'success' },

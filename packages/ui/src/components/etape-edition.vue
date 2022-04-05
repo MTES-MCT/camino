@@ -78,11 +78,12 @@
       <div class="tablet-blob-1-3" />
       <FormSaveBtn
         ref="save-btn"
-        :help-visible="helpVisible"
         :alertes="alertes"
-        :disabled="!isFormComplete"
-        class="tablet-blob-2-3 flex flex-center"
-        @click="save"
+        :can-save="isFormComplete"
+        :can-depose="complete"
+        :show-depose="etapeIsDemandeEnConstruction"
+        @save="save"
+        @depose="depose"
       />
     </div>
   </div>
@@ -268,6 +269,14 @@ export default {
           action: 'titre-etape-enregistrer',
           nom: this.editedEtape.id
         })
+      }
+    },
+
+    async depose() {
+      if (this.complete) {
+        await this.save()
+
+        // TODO ouvrir la popup de depot, attention au routeur
       }
     },
 

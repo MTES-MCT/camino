@@ -32,10 +32,9 @@ const actions = {
       commit('popupLoad', null, { root: true })
       commit('loadingAdd', 'titreEtapeDepose', { root: true })
 
-      const data = await etapeDeposer({ id: etapeId })
+      await etapeDeposer({ id: etapeId })
 
       commit('popupClose', null, { root: true })
-      await dispatch('reload', { name: 'titre', id: data.slug }, { root: true })
       dispatch(
         'messageAdd',
         { value: `la demande a été déposée`, type: 'success' },

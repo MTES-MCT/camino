@@ -1,6 +1,5 @@
 import { activite, activiteModifier } from '../api/titres-activites'
 import { documentsRequiredAdd } from '../utils/documents'
-import router from '../router'
 
 const state = {
   element: null
@@ -38,8 +37,6 @@ const actions = {
             .map(({ id }) => id)
         }
       })
-
-      await router.back()
 
       await dispatch(
         'messageAdd',

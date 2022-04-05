@@ -52,6 +52,7 @@
       :contenu="activite.contenu"
       :sections="activite.sections"
       @contenu-update="activite.contenu = $event"
+      @complete-update="sectionsComplete = $event"
     />
 
     <DocumentsEdit
@@ -62,18 +63,22 @@
       document-popup-title="documentPopupTitle"
       :parent-type-id="activite.type.id"
       :documents-types="activite.type.documentsTypes"
+      @complete-update="documentsComplete = $event"
     />
 
     <div class="tablet-blobs mb">
       <div class="tablet-blob-1-3" />
-      <div class="tablet-blob-2-3">
+      <div class="tablet-blob-1-3">
+        <button class="btn btn-secondary" @click="save">Enregistrer</button>
+      </div>
+      <div class="tablet-blob-1-3">
         <button
-          id="cmn-etape-edit-button-enregistrer"
           ref="save-button"
           class="btn btn-primary"
-          @click="save"
+          :disabled="!sectionsComplete || !documentsComplete"
+          @click="activiteDepotPopupOpen"
         >
-          Enregistrer
+          Enregistrer et déposer
         </button>
       </div>
     </div>
@@ -86,13 +91,17 @@ import Loader from './_ui/loader.vue'
 import HelpTooltip from './_ui/help-tooltip.vue'
 import SectionsEdit from './_common/sections-edit.vue'
 import DocumentsEdit from './document/multi-edit.vue'
+import DeposePopup from './activite/depose-popup.vue'
+import router from '@/router'
 
 export default {
   components: { Loader, SectionsEdit, DocumentsEdit, HelpTooltip },
 
   data() {
     return {
-      events: { saveKeyUp: true }
+      events: { saveKeyUp: true },
+      documentsComplete: false,
+      sectionsComplete: false
     }
   },
 
@@ -145,6 +154,25 @@ export default {
   },
 
   methods: {
+    async activiteDepotPopupOpen() {
+      if (this.documentsComplete && this.sectionsComplete) {
+        await this.$store.dispatch('titreActiviteEdition/update', this.activite)
+
+        this.$store.commit('popupOpen', {
+          component: DeposePopup,
+          props: {
+            activite: this.activite,
+            onDepotDone: () => this.$router.back()
+          }
+        })
+
+        this.eventTrack({
+          categorie: 'titre-activite',
+          action: 'titre-activite_depot',
+          nom: this.$route.params.id
+        })
+      }
+    },
     async init() {
       await this.$store.dispatch('titreActiviteEdition/init', this.activiteId)
     },
@@ -157,6 +185,8 @@ export default {
         action: 'activite-enregistrer',
         nom: this.activite.nom
       })
+
+      await router.back()
     },
 
     eventTrack(event) {
