@@ -64,7 +64,12 @@ const titreStatutIdFind = (
           return false
         }
 
-        if (d.statutId !== DemarchesStatutsTypes.Depose) {
+        if (
+          ![
+            DemarchesStatutsTypes.EnConstruction,
+            DemarchesStatutsTypes.Depose
+          ].includes(d.statutId)
+        ) {
           return false
         }
 

@@ -1,14 +1,14 @@
 import { ITitreDemarche } from '../../../types'
 
-const titreDemarchesIndefini = [
+const titreDemarchesIndefini: ITitreDemarche[] = [
   { statutId: 'ind', type: { id: 'oct' } }
 ] as ITitreDemarche[]
 
-const titreDemarchesValide = [
+const titreDemarchesValide: ITitreDemarche[] = [
   {
     id: 'm-pr-saint-pierre-2014-oct01',
     titreId: 'm-pr-saint-pierre-2014',
-    type: { id: 'oct' },
+    type: { id: 'oct', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'acc',
     ordre: 1,
@@ -25,13 +25,13 @@ const titreDemarchesValide = [
       }
     ]
   }
-] as ITitreDemarche[]
+]
 
-const titreDemarchesEchu = [
+const titreDemarchesEchu: ITitreDemarche[] = [
   {
     id: 'm-pr-saint-pierre-1914-oct01',
     titreId: 'm-pr-saint-pierre-1914',
-    type: { id: 'oct' },
+    type: { id: 'oct', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'acc',
     ordre: 1,
@@ -48,68 +48,68 @@ const titreDemarchesEchu = [
       }
     ]
   }
-] as ITitreDemarche[]
+]
 
-const titreDemarchesOctroiInstruction = [
+const titreDemarchesOctroiInstruction: ITitreDemarche[] = [
   {
     id: 'm-pr-saint-pierre-2014-oct01',
     titreId: 'm-pr-saint-pierre-2014',
-    type: { id: 'oct' },
+    type: { id: 'oct', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'ins',
     ordre: 1
   }
-] as ITitreDemarche[]
+]
 
-const titreDemarchesOctroiDepose = [
+const titreDemarchesOctroiDepose: ITitreDemarche[] = [
   {
     id: 'm-pr-saint-pierre-2014-oct01',
     titreId: 'm-pr-saint-pierre-2014',
-    type: { id: 'oct' },
+    type: { id: 'oct', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'dep',
     ordre: 1
   }
-] as ITitreDemarche[]
+]
 
-const titreDemarchesOctroiRejete = [
+const titreDemarchesOctroiRejete: ITitreDemarche[] = [
   {
     id: 'm-pr-saint-pierre-2014-oct01',
     titreId: 'm-pr-saint-pierre-2014',
-    type: { id: 'oct' },
+    type: { id: 'oct', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'rej',
     ordre: 1
   }
-] as ITitreDemarche[]
+]
 
-const titreDemarchesOctroiClasse = [
+const titreDemarchesOctroiClasse: ITitreDemarche[] = [
   {
     id: 'm-pr-saint-pierre-2014-oct01',
     titreId: 'm-pr-saint-pierre-2014',
-    type: { id: 'oct' },
+    type: { id: 'oct', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'cls',
     ordre: 1
   }
-] as ITitreDemarche[]
+]
 
-const titreDemarchesOctroiRetire = [
+const titreDemarchesOctroiRetire: ITitreDemarche[] = [
   {
     id: 'm-pr-saint-pierre-2014-oct01',
     titreId: 'm-pr-saint-pierre-2014',
-    type: { id: 'oct' },
+    type: { id: 'oct', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'des',
     ordre: 1
   }
-] as ITitreDemarche[]
+]
 
-const titreDemarchesInstruction = [
+const titreDemarchesInstruction: ITitreDemarche[] = [
   {
     id: 'm-pr-saint-pierre-2014-mut01',
     titreId: 'm-pr-saint-pierre-2014',
-    type: { id: 'mut' },
+    type: { id: 'mut', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'mut',
     statutId: 'ins',
     ordre: 1
@@ -117,27 +117,35 @@ const titreDemarchesInstruction = [
   {
     id: 'm-pr-saint-pierre-2014-oct01',
     titreId: 'm-pr-saint-pierre-2014',
-    type: { id: 'oct' },
+    type: { id: 'oct', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'acc',
     ordre: 1
   }
-] as ITitreDemarche[]
+]
 
-const titrePERDemarchesProlongation = [
+const titrePERDemarchesProlongation: ITitreDemarche[] = [
   {
     id: 'm-pr-saint-pierre-2014-pro01',
     titreId: 'm-pr-saint-pierre-2014',
-    type: { id: 'pr1' },
+    type: { id: 'pr1', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'pr1',
-    statutId: 'dep',
+    statutId: 'eco',
     ordre: 1,
-    etapes: [{ date: '2020-01-01', typeId: 'mfr', statutId: 'fai' }]
+    etapes: [
+      {
+        date: '2020-01-01',
+        typeId: 'mfr',
+        statutId: 'fai',
+        id: 'id',
+        titreDemarcheId: 'm-pr-saint-pierre-2014-pro01'
+      }
+    ]
   },
   {
     id: 'm-pr-saint-pierre-2014-oct01',
     titreId: 'm-pr-saint-pierre-2014',
-    type: { id: 'oct' },
+    type: { id: 'oct', nom: 'unused', ordre: 2, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'acc',
     ordre: 1,
@@ -154,7 +162,7 @@ const titrePERDemarchesProlongation = [
       }
     ]
   }
-] as ITitreDemarche[]
+]
 
 export {
   titreDemarchesIndefini,
