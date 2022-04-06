@@ -6,8 +6,6 @@ import {
 import { etapeSaveFormat, pointsBuild } from '../utils/titre-etape-save'
 import { etapeHeritageBuild } from '../utils/titre-etape-heritage-build'
 
-import router from '../router'
-
 import {
   etape,
   etapeCreer,
@@ -233,7 +231,6 @@ const actions = {
 
       const etapeEditFormatted = etapeSaveFormat(etape)
       etapeEditFormatted.titreDemarcheId = state.metas.demarche.id
-
       let data
       if (etapeEditFormatted.id) {
         data = await etapeModifier({ etape: etapeEditFormatted })
@@ -241,22 +238,7 @@ const actions = {
         data = await etapeCreer({ etape: etapeEditFormatted })
       }
 
-      const tabId =
-        state.metas.demarche?.type?.travaux === true ? 'travaux' : 'demarches'
-
-      const routerOptions = {
-        name: 'titre',
-        params: { id: data.slug }
-      }
-
-      if (etape.id) {
-        routerOptions.hash = `#${etape.id}`
-      }
-
-      await router.push(routerOptions)
-
-      commit('titre/open', { section: 'etapes', id: etape.id }, { root: true })
-      commit('titre/openTab', tabId, { root: true })
+      return data.id
     } catch (e) {
       dispatch('apiError', e, { root: true })
     } finally {

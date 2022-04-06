@@ -1,0 +1,245 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Automated Storybook Snapshots Components/Etape/PureFormSaveBtn Completude De La Demande Complete 1`] = `
+<div
+  class="flex flex-direction-column full-x"
+>
+  <ul
+    class="bg-warning color-bg list-none p-s bold"
+  >
+    
+    <li
+      class="flex"
+    >
+      alerte 
+      <a
+        class="ml-s"
+        href="google.com"
+        target="_blank"
+      >
+        <i
+          class="icon-24 icon-window-link"
+        />
+      </a>
+    </li>
+    
+  </ul>
+  <div
+    class="tablet-blobs mr-xxs"
+  >
+    <div
+      class="tablet-blob-1-3"
+    />
+    <div
+      class="tablet-blob-1-3"
+    />
+    <div
+      class="tablet-blob-1-3"
+    >
+      <button
+        class="btn btn-primary"
+      >
+         Enregistrer 
+      </button>
+    </div>
+    <div
+      class="tablet-blob-1-3"
+    >
+      <!--v-if-->
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/Etape/PureFormSaveBtn Completude De La Demande Imcomplete 1`] = `
+<div
+  class="flex flex-direction-column full-x"
+>
+  <ul
+    class="bg-warning color-bg list-none p-s bold"
+  >
+    
+    <li
+      class="flex"
+    >
+      alerte 
+      <a
+        class="ml-s"
+        href="google.com"
+        target="_blank"
+      >
+        <i
+          class="icon-24 icon-window-link"
+        />
+      </a>
+    </li>
+    
+  </ul>
+  <div
+    class="tablet-blobs mr-xxs"
+  >
+    <div
+      class="tablet-blob-1-3"
+    />
+    <div
+      class="tablet-blob-1-3"
+    />
+    <div
+      class="tablet-blob-1-3"
+    >
+      <button
+        class="btn btn-primary"
+        disabled=""
+      >
+         Enregistrer 
+      </button>
+    </div>
+    <div
+      class="tablet-blob-1-3"
+    >
+      <!--v-if-->
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/Etape/PureFormSaveBtn Demande En Construction Complete 1`] = `
+<div
+  class="flex flex-direction-column full-x"
+>
+  <ul
+    class="bg-warning color-bg list-none p-s bold"
+  >
+    
+    <li
+      class="flex"
+    >
+      alerte 
+      <a
+        class="ml-s"
+        href="google.com"
+        target="_blank"
+      >
+        <i
+          class="icon-24 icon-window-link"
+        />
+      </a>
+    </li>
+    
+  </ul>
+  <div
+    class="tablet-blobs mr-xxs"
+  >
+    <div
+      class="tablet-blob-1-3"
+    />
+    <!--v-if-->
+    <div
+      class="tablet-blob-1-3"
+    >
+      <button
+        class="btn btn-secondary"
+      >
+         Enregistrer 
+      </button>
+    </div>
+    <div
+      class="tablet-blob-1-3"
+    >
+      <button
+        class="btn btn-primary"
+      >
+         Enregistrer et déposer 
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/Etape/PureFormSaveBtn Demande En Construction Incomplete 1`] = `
+<div
+  class="flex flex-direction-column full-x"
+>
+  <ul
+    class="bg-warning color-bg list-none p-s bold"
+  >
+    
+    <li
+      class="flex"
+    >
+      alerte 
+      <a
+        class="ml-s"
+        href="google.com"
+        target="_blank"
+      >
+        <i
+          class="icon-24 icon-window-link"
+        />
+      </a>
+    </li>
+    
+  </ul>
+  <div
+    class="tablet-blobs mr-xxs"
+  >
+    <div
+      class="tablet-blob-1-3"
+    />
+    <!--v-if-->
+    <div
+      class="tablet-blob-1-3"
+    >
+      <button
+        class="btn btn-secondary"
+      >
+         Enregistrer 
+      </button>
+    </div>
+    <div
+      class="tablet-blob-1-3"
+    >
+      <button
+        class="btn btn-primary"
+        disabled=""
+      >
+         Enregistrer et déposer 
+      </button>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/Etape/PureFormSaveBtn Sans Message 1`] = `
+<div
+  class="flex flex-direction-column full-x"
+>
+  <!--v-if-->
+  <div
+    class="tablet-blobs mr-xxs"
+  >
+    <div
+      class="tablet-blob-1-3"
+    />
+    <!--v-if-->
+    <div
+      class="tablet-blob-1-3"
+    >
+      <button
+        class="btn btn-secondary"
+      >
+         Enregistrer 
+      </button>
+    </div>
+    <div
+      class="tablet-blob-1-3"
+    >
+      <button
+        class="btn btn-primary"
+      >
+         Enregistrer et déposer 
+      </button>
+    </div>
+  </div>
+</div>
+`;

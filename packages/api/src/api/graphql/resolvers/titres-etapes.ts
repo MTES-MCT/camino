@@ -347,7 +347,7 @@ const etapeCreer = async (
     )
     etape.contenu = contenu
 
-    const etapeUpdated = await titreEtapeUpsert(
+    let etapeUpdated: ITitreEtape = await titreEtapeUpsert(
       etape,
       user!,
       titreDemarche.titreId
@@ -378,9 +378,9 @@ const etapeCreer = async (
       titreDemarche.titreId
     )
     const fields = fieldsBuild(info)
-    const titreUpdated = await titreGet(titreDemarche.titreId, { fields }, user)
+    etapeUpdated = await titreEtapeGet(etapeUpdated.id, { fields }, user)
 
-    return titreFormat(titreUpdated!)
+    return titreEtapeFormat(etapeUpdated!)
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -532,7 +532,7 @@ const etapeModifier = async (
       )
     }
 
-    const etapeUpdated = await titreEtapeUpsert(
+    let etapeUpdated: ITitreEtape = await titreEtapeUpsert(
       etape,
       user!,
       titreDemarche.titreId
@@ -584,9 +584,9 @@ const etapeModifier = async (
     )
 
     const fields = fieldsBuild(info)
-    const titreUpdated = await titreGet(titreDemarche.titreId, { fields }, user)
+    etapeUpdated = await titreEtapeGet(etapeUpdated.id, { fields }, user)
 
-    return titreFormat(titreUpdated!)
+    return titreEtapeFormat(etapeUpdated!)
   } catch (e) {
     if (debug) {
       console.error(e)

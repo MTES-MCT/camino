@@ -417,8 +417,8 @@ export default {
         this.etape.type.id !== 'mfr' ||
         (this.substancesLength > 0 &&
           (this.dureeOptionalCheck ||
-            this.etape.duree.ans ||
-            this.etape.duree.mois))
+            !!this.etape.duree.ans ||
+            !!this.etape.duree.mois))
       )
     }
   },

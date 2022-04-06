@@ -78,11 +78,12 @@
       <div class="tablet-blob-1-3" />
       <FormSaveBtn
         ref="save-btn"
-        :help-visible="helpVisible"
         :alertes="alertes"
-        :disabled="!isFormComplete"
-        class="tablet-blob-2-3 flex flex-center"
-        @click="save"
+        :can-save="isFormComplete"
+        :can-depose="complete"
+        :show-depose="etapeIsDemandeEnConstruction"
+        @save="save"
+        @depose="depose"
       />
     </div>
   </div>
@@ -93,7 +94,8 @@ import { cap, dateFormat } from '@/utils'
 import Loader from './_ui/loader.vue'
 import InputDate from './_ui/input-date.vue'
 import Edit from './etape/edit.vue'
-import FormSaveBtn from './etape/form-save-btn.vue'
+import FormSaveBtn from './etape/pure-form-save-btn.vue'
+import DeposePopup from './etape/depose-popup.vue'
 
 export default {
   components: { Loader, Edit, InputDate, FormSaveBtn },
@@ -255,19 +257,67 @@ export default {
       return this.promptMsg
     },
 
-    async save() {
+    async reroute(titreEtapeId) {
+      const tabId =
+        this.demarcheType?.travaux === true ? 'travaux' : 'demarches'
+
+      this.$store.commit('titre/open', { section: 'etapes', id: titreEtapeId })
+      this.$store.commit('titre/openTab', tabId)
+
+      await this.$router.push({
+        name: 'titre',
+        params: { id: this.titre.id },
+        hash: `#${titreEtapeId}`
+      })
+    },
+
+    async save(reroute = true) {
       this.isFormDirty = false
 
       if (this.isFormComplete) {
-        await this.$store.dispatch('titreEtapeEdition/upsert', {
-          etape: this.editedEtape
-        })
+        const titreEtapeId = await this.$store.dispatch(
+          'titreEtapeEdition/upsert',
+          {
+            etape: this.editedEtape
+          }
+        )
+
+        if (reroute) {
+          await this.reroute(titreEtapeId)
+        }
 
         this.eventTrack({
           categorie: 'titre-etape',
           action: 'titre-etape-enregistrer',
-          nom: this.editedEtape.id
+          nom: titreEtapeId
         })
+
+        return titreEtapeId
+      }
+
+      return undefined
+    },
+
+    async depose() {
+      if (this.complete) {
+        const etapeId = await this.save(false)
+
+        if (etapeId) {
+          this.$store.commit('popupOpen', {
+            component: DeposePopup,
+            props: {
+              etapeId,
+              onDepotDone: async () => {
+                await this.reroute(etapeId)
+                this.eventTrack({
+                  categorie: 'titre-etape',
+                  action: 'titre-etape_depot',
+                  nom: this.$route.params.id
+                })
+              }
+            }
+          })
+        }
       }
     },
 

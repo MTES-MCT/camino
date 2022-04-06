@@ -44,7 +44,8 @@ export default {
         component: DeposePopup,
         props: {
           activite: this.activite,
-          route: this.route
+          onDepotDone: () =>
+            this.$store.dispatch(`titreActivite/get`, this.activite.id)
         }
       })
 

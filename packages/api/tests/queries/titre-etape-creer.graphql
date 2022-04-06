@@ -1,10 +1,9 @@
 mutation EtapeCreer($etape: InputEtapeCreation!) {
   etapeCreer(etape: $etape) {
-    ...titre
+    ...etape
   }
 }
 
-fragment titre on Titre {
-  nom
+fragment etape on Etape {
   id
 }

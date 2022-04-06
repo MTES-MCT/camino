@@ -3,12 +3,6 @@ import * as api from '../api/titres-activites'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
 
-import router from '../router'
-
-jest.mock('../router', () => ({
-  back: jest.fn()
-}))
-
 jest.mock('../api/titres-activites', () => ({
   activiteModifier: jest.fn(),
   activite: jest.fn()
@@ -76,8 +70,6 @@ describe("état d'une activité", () => {
         documentIds: ['toto']
       }
     })
-
-    expect(router.back).toHaveBeenCalled()
   })
 
   test("erreur dans l'api lors de l'enregistrement d'une activité", async () => {
