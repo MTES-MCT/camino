@@ -12,12 +12,12 @@ import TitreCreation from '../components/titre-creation.vue'
 import EtapeEdition from '../components/etape-edition.vue'
 import ActiviteEdition from '../components/activite-edition.vue'
 import Travaux from '../components/travaux.vue'
-const Utilisateur = import('../components/utilisateur.vue')
-const Utilisateurs = import('../components/utilisateurs.vue')
-const Entreprise = import('../components/entreprise.vue')
-const Entreprises = import('../components/entreprises.vue')
-const Administration = import('../components/administration.vue')
-const Administrations = import('../components/administrations.vue')
+const Utilisateur = () => import('../components/utilisateur.vue')
+const Utilisateurs = () => import('../components/utilisateurs.vue')
+const Entreprise = () => import('../components/entreprise.vue')
+const Entreprises = () => import('../components/entreprises.vue')
+const Administration = () => import('../components/administration.vue')
+const Administrations = () => import('../components/administrations.vue')
 const Meta = () => import('../components/meta.vue')
 const MetaTitre = () => import('../components/meta-titre.vue')
 const MetaDemarche = () => import('../components/meta-demarche.vue')
