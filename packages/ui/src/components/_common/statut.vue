@@ -4,17 +4,15 @@
   </Pill>
 </template>
 
-<script>
+<script setup lang="ts">
 import Pill from '../_ui/pill.vue'
+import { withDefaults } from 'vue'
 
-export default {
-  components: {
-    Pill
-  },
-
-  props: {
-    color: { type: String, default: 'neutral' },
-    nom: { type: String, default: 'indéfini' }
-  }
-}
+withDefaults(
+  defineProps<{
+    color?: string
+    nom?: string
+  }>(),
+  { color: 'neutral', nom: 'indéfini' }
+)
 </script>
