@@ -1,0 +1,181 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Automated Storybook Snapshots Components/Etape/PureFormSaveBtn Completude De La Demande Complete 1`] = `
+<div
+  class="flex flex-direction-column full-x"
+>
+  <ul
+    class="bg-warning color-bg list-none p-s bold"
+  >
+    
+    <li
+      class="flex"
+    >
+      alerte 
+      <a
+        class="ml-s"
+        href="google.com"
+        target="_blank"
+      >
+        <i
+          class="icon-24 icon-window-link"
+        />
+      </a>
+    </li>
+    
+  </ul>
+  <div
+    class="flex flex-center"
+  >
+    <button
+      class="btn btn-primary"
+    >
+       Enregistrer 
+    </button>
+    <!--v-if-->
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/Etape/PureFormSaveBtn Completude De La Demande Imcomplete 1`] = `
+<div
+  class="flex flex-direction-column full-x"
+>
+  <ul
+    class="bg-warning color-bg list-none p-s bold"
+  >
+    
+    <li
+      class="flex"
+    >
+      alerte 
+      <a
+        class="ml-s"
+        href="google.com"
+        target="_blank"
+      >
+        <i
+          class="icon-24 icon-window-link"
+        />
+      </a>
+    </li>
+    
+  </ul>
+  <div
+    class="flex flex-center"
+  >
+    <button
+      class="btn btn-primary"
+      disabled=""
+    >
+       Enregistrer 
+    </button>
+    <!--v-if-->
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/Etape/PureFormSaveBtn Demande En Construction Complete 1`] = `
+<div
+  class="flex flex-direction-column full-x"
+>
+  <ul
+    class="bg-warning color-bg list-none p-s bold"
+  >
+    
+    <li
+      class="flex"
+    >
+      alerte 
+      <a
+        class="ml-s"
+        href="google.com"
+        target="_blank"
+      >
+        <i
+          class="icon-24 icon-window-link"
+        />
+      </a>
+    </li>
+    
+  </ul>
+  <div
+    class="flex flex-center"
+  >
+    <button
+      class="btn btn-secondary"
+    >
+       Enregistrer 
+    </button>
+    <button
+      class="btn btn-primary"
+    >
+       Enregistrer et déposer 
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/Etape/PureFormSaveBtn Demande En Construction Incomplete 1`] = `
+<div
+  class="flex flex-direction-column full-x"
+>
+  <ul
+    class="bg-warning color-bg list-none p-s bold"
+  >
+    
+    <li
+      class="flex"
+    >
+      alerte 
+      <a
+        class="ml-s"
+        href="google.com"
+        target="_blank"
+      >
+        <i
+          class="icon-24 icon-window-link"
+        />
+      </a>
+    </li>
+    
+  </ul>
+  <div
+    class="flex flex-center"
+  >
+    <button
+      class="btn btn-secondary"
+    >
+       Enregistrer 
+    </button>
+    <button
+      class="btn btn-primary"
+      disabled=""
+    >
+       Enregistrer et déposer 
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/Etape/PureFormSaveBtn Sans Message 1`] = `
+<div
+  class="flex flex-direction-column full-x"
+>
+  <!--v-if-->
+  <div
+    class="flex flex-center"
+  >
+    <button
+      class="btn btn-secondary"
+    >
+       Enregistrer 
+    </button>
+    <button
+      class="btn btn-primary"
+    >
+       Enregistrer et déposer 
+    </button>
+  </div>
+</div>
+`;

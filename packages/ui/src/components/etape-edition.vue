@@ -94,7 +94,7 @@ import { cap, dateFormat } from '@/utils'
 import Loader from './_ui/loader.vue'
 import InputDate from './_ui/input-date.vue'
 import Edit from './etape/edit.vue'
-import FormSaveBtn from './etape/form-save-btn.vue'
+import FormSaveBtn from './etape/pure-form-save-btn.vue'
 
 export default {
   components: { Loader, Edit, InputDate, FormSaveBtn },
