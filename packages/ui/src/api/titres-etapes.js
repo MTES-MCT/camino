@@ -125,7 +125,7 @@ const etapeHeritage = apiGraphQLFetch(gql`
 const etapeCreer = apiGraphQLFetch(gql`
   mutation EtapeCreer($etape: InputEtapeCreation!) {
     etapeCreer(etape: $etape) {
-      slug
+      id
     }
   }
 `)
@@ -133,7 +133,7 @@ const etapeCreer = apiGraphQLFetch(gql`
 const etapeModifier = apiGraphQLFetch(gql`
   mutation EtapeModifier($etape: InputEtapeModification!) {
     etapeModifier(etape: $etape) {
-      slug
+      id
     }
   }
 `)

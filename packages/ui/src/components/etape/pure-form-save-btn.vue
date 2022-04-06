@@ -11,23 +11,29 @@
         </a>
       </li>
     </ul>
-    <div class="flex flex-center">
-      <button
-        class="btn"
-        :class="[showDepose ? 'btn-secondary' : 'btn-primary']"
-        :disabled="!canSave"
-        @click="emit('save')"
-      >
-        Enregistrer
-      </button>
-      <button
-        v-if="showDepose"
-        class="btn btn-primary"
-        :disabled="!canDepose"
-        @click="emit('depose')"
-      >
-        Enregistrer et déposer
-      </button>
+    <div class="tablet-blobs mr-xxs">
+      <div class="tablet-blob-1-3"></div>
+      <div v-if="!showDepose" class="tablet-blob-1-3"></div>
+      <div class="tablet-blob-1-3">
+        <button
+          class="btn"
+          :class="[showDepose ? 'btn-secondary' : 'btn-primary']"
+          :disabled="!canSave"
+          @click="emit('save')"
+        >
+          Enregistrer
+        </button>
+      </div>
+      <div class="tablet-blob-1-3">
+        <button
+          v-if="showDepose"
+          class="btn btn-primary"
+          :disabled="!canDepose"
+          @click="emit('depose')"
+        >
+          Enregistrer et déposer
+        </button>
+      </div>
     </div>
   </div>
 </template>

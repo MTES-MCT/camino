@@ -95,6 +95,7 @@ import Loader from './_ui/loader.vue'
 import InputDate from './_ui/input-date.vue'
 import Edit from './etape/edit.vue'
 import FormSaveBtn from './etape/pure-form-save-btn.vue'
+import DeposePopup from './etape/depose-popup.vue'
 
 export default {
   components: { Loader, Edit, InputDate, FormSaveBtn },
@@ -256,27 +257,67 @@ export default {
       return this.promptMsg
     },
 
-    async save() {
+    async reroute(titreEtapeId) {
+      const tabId =
+        this.demarcheType?.travaux === true ? 'travaux' : 'demarches'
+
+      this.$store.commit('titre/open', { section: 'etapes', id: titreEtapeId })
+      this.$store.commit('titre/openTab', tabId)
+
+      await this.$router.push({
+        name: 'titre',
+        params: { id: this.titre.id },
+        hash: `#${titreEtapeId}`
+      })
+    },
+
+    async save(reroute = true) {
       this.isFormDirty = false
 
       if (this.isFormComplete) {
-        await this.$store.dispatch('titreEtapeEdition/upsert', {
-          etape: this.editedEtape
-        })
+        const titreEtapeId = await this.$store.dispatch(
+          'titreEtapeEdition/upsert',
+          {
+            etape: this.editedEtape
+          }
+        )
+
+        if (reroute) {
+          await this.reroute(titreEtapeId)
+        }
 
         this.eventTrack({
           categorie: 'titre-etape',
           action: 'titre-etape-enregistrer',
-          nom: this.editedEtape.id
+          nom: titreEtapeId
         })
+
+        return titreEtapeId
       }
+
+      return undefined
     },
 
     async depose() {
       if (this.complete) {
-        await this.save()
+        const etapeId = await this.save(false)
 
-        // TODO ouvrir la popup de depot, attention au routeur
+        if (etapeId) {
+          this.$store.commit('popupOpen', {
+            component: DeposePopup,
+            props: {
+              etapeId,
+              onDepotDone: async () => {
+                await this.reroute(etapeId)
+                this.eventTrack({
+                  categorie: 'titre-etape',
+                  action: 'titre-etape_depot',
+                  nom: this.$route.params.id
+                })
+              }
+            }
+          })
+        }
       }
     },
 

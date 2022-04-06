@@ -7,16 +7,14 @@ import CommonDeposePopup from '../_common/depose-popup.vue'
 import { useStore } from 'vuex'
 
 const props = defineProps<{
-  etape: any
+  etapeId: string
   onDepotDone: () => void
 }>()
 
 const store = useStore()
 
 const depose = async () => {
-  await store.dispatch('titreEtape/depose', {
-    id: props.etape.id
-  })
+  await store.dispatch('titreEtape/depose', props.etapeId)
   props.onDepotDone()
 }
 </script>

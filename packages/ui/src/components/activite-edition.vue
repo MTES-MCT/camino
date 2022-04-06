@@ -162,14 +162,15 @@ export default {
           component: DeposePopup,
           props: {
             activite: this.activite,
-            onDepotDone: () => this.$router.back()
+            onDepotDone: () => {
+              this.$router.back()
+              this.eventTrack({
+                categorie: 'titre-activite',
+                action: 'titre-activite_depot',
+                nom: this.$route.params.id
+              })
+            }
           }
-        })
-
-        this.eventTrack({
-          categorie: 'titre-activite',
-          action: 'titre-activite_depot',
-          nom: this.$route.params.id
         })
       }
     },
