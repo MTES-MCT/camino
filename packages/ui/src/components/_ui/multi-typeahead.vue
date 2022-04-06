@@ -10,7 +10,7 @@
       />
 
       <input
-        :id="inputId"
+        :id="id"
         v-model="input"
         class="simple-typeahead-input"
         type="text"
@@ -47,27 +47,29 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
+import { withDefaults } from '@vue/runtime-core'
 import Chip from './chip.vue'
 
 type Props = {
   id?: string
   placeholder: string
-  items: { id: string }[]
+  items: unknown[]
+  initialItems: unknown[]
   minInputLength: number
   itemChipLabel: (item: unknown) => string
   itemKey: (item: unknown) => string
 }
-const props = defineProps<Props>()
+const props = withDefaults(defineProps<Props>(), {
+  initialItems: () => [],
+  id: `simple_typeahead_${(Math.random() * 1000).toFixed()}`
+})
 
 const emit = defineEmits<{
   (e: 'onInput', searchTerm: string): void
   (e: 'selectItems', items: unknown[]): void
 }>()
 
-const selectedItems = ref<unknown[]>([])
-
-const inputId =
-  props.id || `simple_typeahead_${(Math.random() * 1000).toFixed()}`
+const selectedItems = ref<unknown[]>([...props.initialItems])
 const input = ref<string>('')
 const isInputFocused = ref<boolean>(false)
 const currentSelectionIndex = ref<number>(0)
@@ -142,7 +144,7 @@ const selectCurrentSelection = () => {
 const selectItem = (item: unknown) => {
   input.value = ''
   currentSelectionIndex.value = 0
-  document.getElementById(inputId)?.blur()
+  document.getElementById(props.id)?.blur()
   selectedItems.value.push(item)
 
   emit('selectItems', selectedItems.value)
@@ -156,7 +158,7 @@ const unselectItem = (item: unknown) => {
   emit('selectItems', selectedItems.value)
 }
 
-const wrapperId = computed(() => `${inputId}_wrapper`)
+const wrapperId = computed(() => `${props.id}_wrapper`)
 const isListVisible = computed(
   () =>
     isInputFocused.value &&
