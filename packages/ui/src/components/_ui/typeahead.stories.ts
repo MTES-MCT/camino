@@ -1,10 +1,10 @@
-import MultiTypeahead from './multi-typeahead.vue'
+import Typeahead from './typeahead.vue'
 import { Meta, Story } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
-  title: 'UI/MultiTypeahead',
-  component: MultiTypeahead,
+  title: 'UI/Typeahead',
+  component: Typeahead,
   argTypes: {}
 }
 export default meta
@@ -14,40 +14,42 @@ type Props = {
   id?: string
   items: Item[]
   placeholder: string
+  type: 'multiple' | 'single'
   minInputLength: number
-  initialItems?: Item[]
+  overrideItems?: Item[]
   itemChipLabel: (item: Item) => string
   itemKey: (item: Item) => string
 }
 
 const Template: Story<Props> = (args: Props) => ({
-  components: { MultiTypeahead },
+  components: { Typeahead },
   setup() {
     return { args }
   },
-  template: `<MultiTypeahead v-bind="args" @onInput='onInput' @selectItems='selectItems'>
+  template: `<Typeahead v-bind="args" @onInput='onInput' @selectItems='selectItems' style="width: 800px">
   <template #default="{item}" >
       {{ item.titre }}
   </template>
-  </MultiTypeahead>`,
+  </Typeahead>`,
   methods: {
     selectItems: action('selectItems'),
     onInput: action('onInput')
   }
 })
 
-export const Multi = Template.bind({})
-Multi.args = {
-  id: 'multi',
+export const Single = Template.bind({})
+Single.args = {
+  id: 'ello',
   items: [{ id: 'id1', titre: 'titreItem' }],
   placeholder: 'placeholder',
   minInputLength: 3,
+  type: 'single',
   itemChipLabel: item => item.titre,
   itemKey: item => item.id
 }
 export const Multiple = Template.bind({})
 Multiple.args = {
-  id: 'multiple',
+  id: 'plop',
   items: [
     { id: 'idTitreItem1', titre: 'titreItem1' },
     { id: 'idTitreItem2', titre: 'titreItem2' },
@@ -67,11 +69,12 @@ Multiple.args = {
   ],
   placeholder: 'placeholder',
   minInputLength: 3,
+  type: 'multiple',
   itemChipLabel: item => item.titre,
   itemKey: item => item.id
 }
-export const WithInitialItems = Template.bind({})
-WithInitialItems.args = {
+export const MultipleWithInitialItems = Template.bind({})
+MultipleWithInitialItems.args = {
   id: 'multiple',
   items: [
     { id: 'idTitreItem1', titre: 'titreItem1' },
@@ -90,13 +93,14 @@ WithInitialItems.args = {
     { id: 'idTitreItem14', titre: 'titreItem14' },
     { id: 'idTitreItem15', titre: 'titreItem15' }
   ],
-  initialItems: [
+  overrideItems: [
     { id: 'idTitreItem1', titre: 'titreItem1' },
     { id: 'idTitreItemNotInItems', titre: 'Not In items' },
     { id: 'idTitreItem2', titre: 'titreItem2' }
   ],
   placeholder: 'placeholder',
   minInputLength: 3,
+  type: 'multiple',
   itemChipLabel: item => item.titre,
   itemKey: item => item.id
 }

@@ -1,18 +1,20 @@
 <template>
-  <div :id="wrapperId" class="simple-typeahead">
-    <div class="flex simple-typeahead-wrapper">
+  <div :id="wrapperId" class="typeahead">
+    <div class="flex typeahead-wrapper p-xs">
       <Chip
         v-for="item in selectedItems"
         :key="itemKey(item)"
         :nom="itemChipLabel(item)"
-        class="mr-xs"
+        class="mr-xs mb-xs mt-xs"
         @onDelete="unselectItem(item)"
       />
 
       <input
+        v-if="type === 'multiple' || selectedItems.length === 0"
         :id="id"
+        ref="myTypeaheadInput"
         v-model="input"
-        class="simple-typeahead-input"
+        class="typeahead-input"
         type="text"
         :placeholder="placeholder"
         autocomplete="off"
@@ -25,19 +27,19 @@
       />
     </div>
 
-    <div v-if="isListVisible" class="simple-typeahead-list">
+    <div v-if="isListVisible" class="typeahead-list">
       <div
         v-for="(item, index) in notSelectedItems"
         :key="index"
-        class="simple-typeahead-list-item"
+        class="typeahead-list-item"
         :class="{
-          'simple-typeahead-list-item-active': currentSelectionIndex === index
+          'typeahead-list-item-active': currentSelectionIndex === index
         }"
         @mousedown.prevent
         @click="selectItem(item)"
         @mouseenter="currentSelectionIndex = index"
       >
-        <span class="simple-typeahead-list-item-text">
+        <span class="typeahead-list-item-text">
           <slot :item="item"></slot>
         </span>
       </div>
@@ -46,30 +48,42 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { withDefaults } from '@vue/runtime-core'
 import Chip from './chip.vue'
 
 type Props = {
   id?: string
   placeholder: string
+  type: 'single' | 'multiple'
   items: unknown[]
-  initialItems: unknown[]
+  overrideItems?: unknown[]
   minInputLength: number
   itemChipLabel: (item: unknown) => string
   itemKey: (item: unknown) => string
 }
+
+const myTypeaheadInput = ref<HTMLInputElement | null>(null)
+
 const props = withDefaults(defineProps<Props>(), {
-  initialItems: () => [],
-  id: `simple_typeahead_${(Math.random() * 1000).toFixed()}`
+  overrideItems: () => [],
+  id: `typeahead_${(Math.random() * 1000).toFixed()}`
 })
 
 const emit = defineEmits<{
   (e: 'onInput', searchTerm: string): void
   (e: 'selectItems', items: unknown[]): void
+  (e: 'selectItem', item: unknown): void
 }>()
 
-const selectedItems = ref<unknown[]>([...props.initialItems])
+watch(
+  () => props.overrideItems,
+  newItems => {
+    console.log('new overrideItems', newItems)
+    selectedItems.value = [...newItems]
+  }
+)
+const selectedItems = ref<unknown[]>([...props.overrideItems])
 const input = ref<string>('')
 const isInputFocused = ref<boolean>(false)
 const currentSelectionIndex = ref<number>(0)
@@ -107,10 +121,10 @@ const onArrowUp = () => {
 const scrollSelectionIntoView = () => {
   setTimeout(() => {
     const listNode = document.querySelector<HTMLElement>(
-      `#${wrapperId.value} .simple-typeahead-list`
+      `#${wrapperId.value} .typeahead-list`
     )
     const activeNode = document.querySelector<HTMLElement>(
-      `#${wrapperId.value} .simple-typeahead-list-item.simple-typeahead-list-item-active`
+      `#${wrapperId.value} .typeahead-list-item.typeahead-list-item-active`
     )
 
     if (listNode && activeNode) {
@@ -140,13 +154,20 @@ const selectCurrentSelection = () => {
   if (currentSelection.value) {
     selectItem(currentSelection.value)
   }
+  myTypeaheadInput?.value?.focus?.()
 }
 const selectItem = (item: unknown) => {
   input.value = ''
   currentSelectionIndex.value = 0
   document.getElementById(props.id)?.blur()
-  selectedItems.value.push(item)
 
+  if (props.type === 'multiple') {
+    selectedItems.value.push(item)
+  } else {
+    selectedItems.value = [item]
+  }
+
+  emit('selectItem', item)
   emit('selectItems', selectedItems.value)
 }
 
@@ -156,6 +177,7 @@ const unselectItem = (item: unknown) => {
     i => props.itemKey(i) !== itemKey
   )
   emit('selectItems', selectedItems.value)
+  emit('selectItem', undefined)
 }
 
 const wrapperId = computed(() => `${props.id}_wrapper`)
@@ -182,31 +204,32 @@ const notSelectedItems = computed(() => {
 </script>
 
 <style scoped>
-.simple-typeahead {
+.typeahead {
   position: relative;
   width: 100%;
 }
-.simple-typeahead-wrapper {
+.typeahead-wrapper {
   border: 0 none;
   background-color: var(--color-alt);
   height: auto;
   color: inherit;
   box-shadow: 0 2px 0 0 var(--dsfr-g600);
-  padding: 10px;
+  flex-wrap: wrap;
 }
-.simple-typeahead-input {
+.typeahead-input {
   margin-bottom: 0;
 
+  width: auto;
   appearance: none;
   border: 0;
   box-shadow: 0 0 0 0 !important;
 }
 
-.simple-typeahead-input:focus {
+.typeahead-input:focus {
   border-right: 0 !important;
 }
 
-.simple-typeahead .simple-typeahead-list {
+.typeahead .typeahead-list {
   position: absolute;
   width: 100%;
   border: none;
@@ -215,7 +238,7 @@ const notSelectedItems = computed(() => {
   border-bottom: 0.1rem solid #d1d1d1;
   z-index: 9;
 }
-.simple-typeahead .simple-typeahead-list .simple-typeahead-list-item {
+.typeahead .typeahead-list .typeahead-list-item {
   cursor: pointer;
   background-color: #fafafa;
   padding: 0.6rem 1rem;
@@ -224,15 +247,11 @@ const notSelectedItems = computed(() => {
   border-right: 0.1rem solid #d1d1d1;
 }
 
-.simple-typeahead
-  .simple-typeahead-list
-  .simple-typeahead-list-item:last-child {
+.typeahead .typeahead-list .typeahead-list-item:last-child {
   border-bottom: none;
 }
 
-.simple-typeahead
-  .simple-typeahead-list
-  .simple-typeahead-list-item.simple-typeahead-list-item-active {
+.typeahead .typeahead-list .typeahead-list-item.typeahead-list-item-active {
   background-color: #e1e1e1;
 }
 </style>

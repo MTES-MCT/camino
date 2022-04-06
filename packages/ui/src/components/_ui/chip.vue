@@ -1,5 +1,5 @@
 <template>
-  <button :class="color" class="chip p-xxs pl-m pr-m" @click="emit('onDelete')">
+  <button :class="color" class="chip pl-m pr-m" @click="emit('onDelete')">
     {{ nom }} <span>x</span>
   </button>
 </template>
