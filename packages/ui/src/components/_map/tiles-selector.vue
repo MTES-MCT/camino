@@ -1,7 +1,7 @@
 <template>
   <Accordion
     :opened="opened"
-    :slot-default="true"
+    :slotDefault="true"
     @close="close"
     @toggle="toggle"
   >

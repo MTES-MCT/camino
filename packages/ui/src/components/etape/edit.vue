@@ -6,15 +6,15 @@
       :step="stepType"
       :opened="opened['type']"
       :complete="typeComplete"
-      :en-construction="enConstruction"
+      :enConstruction="enConstruction"
       @toggle="toggle('type')"
     >
       <TypeEdit
         v-model:etape="etape"
-        :user-is-admin="userIsAdmin"
-        :etapes-types="etapesTypes"
-        :etape-type="etapeType"
-        :etape-is-demande-en-construction="etapeIsDemandeEnConstruction"
+        :userIsAdmin="userIsAdmin"
+        :etapesTypes="etapesTypes"
+        :etapeType="etapeType"
+        :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction"
         @type-update="typeUpdate"
         @complete-update="typeCompleteUpdate"
       />
@@ -26,15 +26,15 @@
       :step="stepFondamentales"
       :opened="opened['fondamentales']"
       :complete="stepFondamentalesComplete"
-      :en-construction="enConstruction"
+      :enConstruction="enConstruction"
       @toggle="toggle('fondamentales')"
     >
       <FondamentalesEdit
         v-model:etape="etape"
-        :domaine-id="domaineId"
-        :titre-type-id="titreTypeId"
-        :user-is-admin="userIsAdmin"
-        :user-is-super="userIsSuper"
+        :domaineId="domaineId"
+        :titreTypeId="titreTypeId"
+        :userIsAdmin="userIsAdmin"
+        :userIsSuper="userIsSuper"
         :substances="substances"
         @complete-update="fondamentalesCompleteUpdate"
       />
@@ -46,13 +46,13 @@
       :step="stepPoints"
       :opened="opened['points']"
       :complete="stepPerimetreComplete"
-      :en-construction="enConstruction"
+      :enConstruction="enConstruction"
       @toggle="toggle('points')"
     >
       <PointsEdit
         v-model:etape="etape"
         v-model:events="events"
-        :show-title="false"
+        :showTitle="false"
         @complete-update="perimetreCompleteUpdate"
       />
     </Accordion>
@@ -63,7 +63,7 @@
       :step="stepSections"
       :opened="opened['sections']"
       :complete="stepSectionsComplete"
-      :en-construction="enConstruction"
+      :enConstruction="enConstruction"
       @toggle="toggle('sections')"
     >
       <SectionsEdit
@@ -80,17 +80,17 @@
       :step="stepDocuments"
       :opened="opened['documents']"
       :complete="stepDocumentsComplete"
-      :en-construction="enConstruction"
+      :enConstruction="enConstruction"
       @toggle="toggle('documents')"
     >
       <DocumentsEdit
         v-model:documents="etape.documents"
-        :add-action="{ name: 'titreEtapeEdition/documentAdd' }"
-        :remove-action="{ name: 'titreEtapeEdition/documentRemove' }"
+        :addAction="{ name: 'titreEtapeEdition/documentAdd' }"
+        :removeAction="{ name: 'titreEtapeEdition/documentRemove' }"
         repertoire="demarches"
-        :document-popup-title="documentPopupTitle"
-        :parent-type-id="etapeType.id"
-        :documents-types="documentsTypes"
+        :documentPopupTitle="documentPopupTitle"
+        :parentTypeId="etapeType.id"
+        :documentsTypes="documentsTypes"
         @complete-update="documentsCompleteUpdate"
       />
     </Accordion>
@@ -101,12 +101,12 @@
       :step="stepJustificatifs"
       :opened="opened['justificatifs']"
       :complete="stepJustificatifsComplete"
-      :en-construction="enConstruction"
+      :enConstruction="enConstruction"
       @toggle="toggle('justificatifs')"
     >
       <JustificatifsEdit
         v-model:justificatifs="etape.justificatifs"
-        :justificatifs-types="etape.type.justificatifsTypes"
+        :justificatifsTypes="etape.type.justificatifsTypes"
         :entreprises="entreprises"
         @complete-update="justificatifsCompleteUpdate"
       />
@@ -118,7 +118,7 @@
       :step="stepDecisionsAnnexes"
       :opened="opened['decisionsAnnexes']"
       :complete="stepDecisionsAnnexesComplete"
-      :en-construction="enConstruction"
+      :enConstruction="enConstruction"
       @toggle="toggle('decisionsAnnexes')"
     >
       <DecisionsAnnexesEdit

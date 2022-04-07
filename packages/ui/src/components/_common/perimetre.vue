@@ -40,9 +40,9 @@
       :class="{ 'width-full': isMain }"
       :geojson="geojsonMultiPolygon"
       :points="points"
-      :domaine-id="domaineId"
-      :titre-type-id="titreTypeId"
-      :is-main="isMain"
+      :domaineId="domaineId"
+      :titreTypeId="titreTypeId"
+      :isMain="isMain"
     />
 
     <div

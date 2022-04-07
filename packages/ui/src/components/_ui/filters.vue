@@ -2,8 +2,8 @@
   <Accordion
     ref="accordion"
     :opened="opened"
-    :slot-sub="!!labels.length"
-    :slot-default="true"
+    :slotSub="!!labels.length"
+    :slotDefault="true"
     class="mb-s"
     @toggle="toggle"
   >

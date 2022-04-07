@@ -3,8 +3,8 @@
     :id="etape.id"
     :opened="opened"
     class="mb-s"
-    :slot-default="hasSections || hasFondamentales || hasDocuments"
-    :slot-buttons="etape.modification"
+    :slotDefault="hasSections || hasFondamentales || hasDocuments"
+    :slotButtons="etape.modification"
     @close="close"
     @toggle="toggle"
   >
@@ -59,9 +59,9 @@
         <Perimetre
           v-if="etape.points && etape.points.length"
           :etape="etape"
-          :domaine-id="domaineId"
-          :titre-type-id="titreTypeType.id"
-          :geojson-multi-polygon="etape.geojsonMultiPolygon"
+          :domaineId="domaineId"
+          :titreTypeId="titreTypeType.id"
+          :geojsonMultiPolygon="etape.geojsonMultiPolygon"
           :incertitude="!!etape.incertitudes?.points"
         />
         <hr class="mx--" />
@@ -82,12 +82,12 @@
       <div v-if="etape.documents?.length">
         <h4>Documents</h4>
         <Documents
-          :bouton-suppression="false"
-          :bouton-modification="false"
+          :boutonSuppression="false"
+          :boutonModification="false"
           :documents="etape.documents"
           :etiquette="etape.modification"
-          :parent-id="etape.id"
-          :parent-type-id="etape.type.id"
+          :parentId="etape.id"
+          :parentTypeId="etape.type.id"
           repertoire="demarches"
           :title="documentPopupTitle"
         />
@@ -98,13 +98,13 @@
       <div v-if="etape.justificatifs?.length">
         <h4>Justificatifs</h4>
         <Documents
-          :bouton-dissociation="false"
-          :bouton-modification="false"
-          :bouton-suppression="false"
+          :boutonDissociation="false"
+          :boutonModification="false"
+          :boutonSuppression="false"
           :documents="etape.justificatifs"
           :etiquette="etape.modification"
-          :parent-id="etape.id"
-          :parent-type-id="etape.type.id"
+          :parentId="etape.id"
+          :parentTypeId="etape.type.id"
           repertoire="'entreprises'"
           :title="documentPopupTitle"
         />
@@ -120,7 +120,7 @@
           :key="s.id"
           :section="s"
           :contenu="etape.decisionsAnnexesContenu[s.id] || {}"
-          :etape-id="etape.id"
+          :etapeId="etape.id"
         />
 
         <hr class="mx--" />

@@ -15,9 +15,9 @@
           'tablet-blob-2-3': element.nom,
           'tablet-blob-1': !element.nom
         }"
-        :prop-id="element.id"
-        :section-id="sectionId"
-        :is-array="element.type === 'checkboxes'"
+        :propId="element.id"
+        :sectionId="sectionId"
+        :isArray="element.type === 'checkboxes'"
       >
         <template #write>
           <SectionElementEdit

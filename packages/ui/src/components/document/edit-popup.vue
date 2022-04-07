@@ -39,7 +39,7 @@
     <SectionsEdit
       v-model:document="document"
       :repertoire="repertoire"
-      :user-is-admin="userIsAdmin"
+      :userIsAdmin="userIsAdmin"
     />
 
     <template #footer>

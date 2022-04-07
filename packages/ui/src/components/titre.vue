@@ -15,20 +15,20 @@
 
     <Perimetre
       v-if="titre.geojsonMultiPolygon && titre.points"
-      :titre-id="titre.id"
-      :domaine-id="titre.domaine.id"
-      :titre-type-id="titre.type.type.id"
+      :titreId="titre.id"
+      :domaineId="titre.domaine.id"
+      :titreTypeId="titre.type.type.id"
       :points="titre.points"
-      :is-main="true"
-      :tab-id="geoTabId"
-      :geojson-multi-polygon="titre.geojsonMultiPolygon"
+      :isMain="true"
+      :tabId="geoTabId"
+      :geojsonMultiPolygon="titre.geojsonMultiPolygon"
       @tab-update="geoTabUpdate"
     />
 
     <TitreTerritoires
       :pays="titre.pays"
       :forets="titre.forets"
-      :sdom-zones="titre.sdomZones"
+      :sdomZones="titre.sdomZones"
       :surface="titre.surface"
     />
 
@@ -58,8 +58,8 @@
             <ActivitesPills
               v-if="tab.id === 'activites'"
               class="inline-block ml-s"
-              :activites-absentes="titre.activitesAbsentes"
-              :activites-en-construction="titre.activitesEnConstruction"
+              :activitesAbsentes="titre.activitesAbsentes"
+              :activitesEnConstruction="titre.activitesEnConstruction"
             />
           </button>
         </div>
@@ -70,24 +70,24 @@
     <TitreDemarches
       v-if="tabId === 'demarches'"
       :demarches="demarches"
-      :tab-id="tabId"
+      :tabId="tabId"
       @event-track="eventTrack"
     />
 
     <TitreActivitesList
       v-if="tabId === 'activites'"
       :activites="titre.activites"
-      :titre-id="titre.id"
+      :titreId="titre.id"
     />
 
     <TitreDemarches
       v-if="tabId === 'travaux'"
       :demarches="travaux"
-      :tab-id="tabId"
+      :tabId="tabId"
       @titre-event-track="eventTrack"
     />
 
-    <Journaux v-if="tabId === 'journaux'" :titre-id="titre.id" />
+    <Journaux v-if="tabId === 'journaux'" :titreId="titre.id" />
   </div>
 </template>
 

@@ -22,11 +22,11 @@
       v-for="demarche in demarches"
       :key="demarche.id"
       :demarche="demarche"
-      :domaine-id="titre.domaine.id"
-      :titre-type="titre.type"
-      :titre-nom="titre.nom"
-      :titre-id="titre.id"
-      :tab-id="tabId"
+      :domaineId="titre.domaine.id"
+      :titreType="titre.type"
+      :titreNom="titre.nom"
+      :titreId="titre.id"
+      :tabId="tabId"
       @event-track="eventTrack"
     />
   </div>

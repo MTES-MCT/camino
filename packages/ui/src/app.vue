@@ -1,5 +1,5 @@
 <template>
-  <Page :slot-popup="!!popup.component" :slot-loader="loading">
+  <Page :slotPopup="!!popup.component" :slotLoader="loading">
     <template v-if="false" #banner>
       <div class="banner">
         <div class="container py-m">

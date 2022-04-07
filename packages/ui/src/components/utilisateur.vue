@@ -23,7 +23,7 @@
       </button>
     </div>
 
-    <Accordion class="mb" :slot-sub="true" :slot-buttons="true">
+    <Accordion class="mb" :slotSub="true" :slotButtons="true">
       <template #title>
         <span class="cap-first"> Profil </span>
       </template>

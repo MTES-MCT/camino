@@ -185,8 +185,8 @@
 
     <div class="line-neutral width-full mb" />
     <GuyaneActivite
-      :statistique-guyane="statistiques[tabActive]"
-      :en-construction="tabs.find(t => t.id === tabActive).enConstruction"
+      :statistiqueGuyane="statistiques[tabActive]"
+      :enConstruction="tabs.find(t => t.id === tabActive).enConstruction"
       class="mb-xxl"
     />
     <div class="line-neutral width-full mb-xl" />
@@ -248,7 +248,7 @@
                 labelLine: 'Surface des autorisations de recherche (ha)'
               })
             "
-            :suggested-max="suggestedMaxTitres"
+            :suggestedMax="suggestedMaxTitres"
           />
         </div>
       </div>
@@ -274,7 +274,7 @@
                 labelLine: 'Surface des permis de recherches (ha)'
               })
             "
-            :suggested-max="suggestedMaxTitres"
+            :suggestedMax="suggestedMaxTitres"
           />
         </div>
       </div>
@@ -300,7 +300,7 @@
                 labelLine: 'Surface des autorisations de recherche (ha)'
               })
             "
-            :suggested-max="suggestedMaxTitres"
+            :suggestedMax="suggestedMaxTitres"
           />
         </div>
       </div>
@@ -326,7 +326,7 @@
                 labelLine: 'Surface des permis d\'exploitation (ha)'
               })
             "
-            :suggested-max="suggestedMaxTitres"
+            :suggestedMax="suggestedMaxTitres"
           />
         </div>
       </div>
@@ -352,7 +352,7 @@
                 labelLine: 'Surface des concessions (ha)'
               })
             "
-            :suggested-max="suggestedMaxTitres"
+            :suggestedMax="suggestedMaxTitres"
           />
         </div>
       </div>

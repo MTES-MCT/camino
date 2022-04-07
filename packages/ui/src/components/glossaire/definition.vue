@@ -2,8 +2,8 @@
   <div>
     <MapPattern
       v-if="definition.id === 'tty'"
-      :domaines-ids="['h']"
-      :types-ids="entrees.map(t => t.id)"
+      :domainesIds="['h']"
+      :typesIds="entrees.map(t => t.id)"
     />
     <h2>{{ definition.nom }}</h2>
     <!-- eslint-disable-next-line vue/no-v-html -->

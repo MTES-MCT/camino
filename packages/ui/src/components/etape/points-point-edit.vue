@@ -24,8 +24,8 @@
       v-for="geoSysteme in geoSystemes"
       :key="`${point.id}-${geoSysteme.id}`"
       v-model:point-references="point.references"
-      :geo-systeme="geoSysteme"
-      :geo-systeme-opposable-id="geoSystemeOpposableId"
+      :geoSysteme="geoSysteme"
+      :geoSystemeOpposableId="geoSystemeOpposableId"
     />
   </div>
 </template>

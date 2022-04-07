@@ -4,8 +4,8 @@
 
     <HeritageEdit
       v-model:prop="etape.heritageProps.points"
-      prop-id="points"
-      :is-array="true"
+      propId="points"
+      :isArray="true"
     >
       <template #write>
         <button
@@ -143,14 +143,14 @@
                 <PointEdit
                   v-if="!point.lot"
                   v-model:point="contourPoints[pointIndex]"
-                  :geo-systeme-opposable-id="etape.geoSystemeOpposableId"
-                  :geo-systeme-ids="etape.geoSystemeIds"
+                  :geoSystemeOpposableId="etape.geoSystemeOpposableId"
+                  :geoSystemeIds="etape.geoSystemeIds"
                 />
                 <PointsLotEdit
                   v-else
                   v-model:point="contourPoints[pointIndex]"
-                  :geo-systeme-opposable-id="etape.geoSystemeOpposableId"
-                  :geo-systeme-ids="etape.geoSystemeIds"
+                  :geoSystemeOpposableId="etape.geoSystemeOpposableId"
+                  :geoSystemeIds="etape.geoSystemeIds"
                   :events="events"
                 />
               </div>
@@ -236,7 +236,7 @@
     <HeritageEdit
       v-model:prop="etape.heritageProps.surface"
       class="tablet-blob-2-3"
-      prop-id="surface"
+      propId="surface"
     >
       <template #write>
         <inputNumber

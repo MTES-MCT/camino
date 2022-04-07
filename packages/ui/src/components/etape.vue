@@ -16,11 +16,11 @@
 
     <Preview
       :etape="etape"
-      :demarche-type="demarcheType"
-      :titre-type-type="titreTypeType"
-      :domaine-id="domaineId"
-      :titre-nom="titre.nom"
-      :titre-id="titre.id"
+      :demarcheType="demarcheType"
+      :titreTypeType="titreTypeType"
+      :domaineId="domaineId"
+      :titreNom="titre.nom"
+      :titreId="titre.id"
       :opened="opened"
     />
   </div>

@@ -5,7 +5,7 @@
     <h1>
       {{ nom }}
     </h1>
-    <Accordion class="mb-xxl" :slot-sub="true" :slot-buttons="true">
+    <Accordion class="mb-xxl" :slotSub="true" :slotButtons="true">
       <template #title>
         <span class="cap-first"> Profil </span>
       </template>
@@ -139,15 +139,15 @@
         <div v-if="entreprise.documents.length">
           <h4 class="px-m pt mb-0">Documents</h4>
           <Documents
-            :bouton-modification="entreprise.modification"
-            :bouton-suppression="
+            :boutonModification="entreprise.modification"
+            :boutonSuppression="
               entreprise.modification &&
               permissionsCheck(user, ['super', 'admin', 'editeur'])
             "
             :route="route"
             :documents="entreprise.documents"
             :etiquette="entreprise.modification"
-            :parent-id="entreprise.id"
+            :parentId="entreprise.id"
             :title="nom"
             repertoire="entreprises"
             class="px-m"
