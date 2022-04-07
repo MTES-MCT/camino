@@ -2,8 +2,8 @@
   <Accordion
     class="mb"
     :opened="opened"
-    :slot-default="true"
-    :slot-buttons="true"
+    :slotDefault="true"
+    :slotButtons="true"
     @close="close"
     @toggle="toggle"
   >

@@ -3,12 +3,12 @@
     v-if="options?.length"
     :selected="selected"
     :options="formattedOptions"
-    value-prop="id"
-    label-prop="label"
-    :max-items="1"
-    :options-disabled="optionsDisabled"
+    valueProp="id"
+    labelProp="label"
+    :maxItems="1"
+    :optionsDisabled="optionsDisabled"
     :placeholder="placeholder"
-    :remove-item-button="removeItemButton"
+    :removeItemButton="removeItemButton"
     @update:selected="$emit('update:entityId', $event)"
   />
 </template>

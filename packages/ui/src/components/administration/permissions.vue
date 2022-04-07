@@ -97,10 +97,7 @@
               :key="titreType.id"
             >
               <td>
-                <CaminoDomaine
-                  :domaine-id="titreType.domaine.id"
-                  class="mt-s"
-                />
+                <CaminoDomaine :domaineId="titreType.domaine.id" class="mt-s" />
               </td>
               <td>
                 <span class="small bold cap-first mt-s">{{
@@ -295,7 +292,7 @@
             >
               <td>
                 <CaminoDomaine
-                  :domaine-id="ttts.titreType.domaine.id"
+                  :domaineId="ttts.titreType.domaine.id"
                   class="mt-s"
                 />
               </td>
@@ -521,7 +518,7 @@
             >
               <td>
                 <CaminoDomaine
-                  :domaine-id="ttet.titreType.domaine.id"
+                  :domaineId="ttet.titreType.domaine.id"
                   class="mt-s"
                 />
               </td>

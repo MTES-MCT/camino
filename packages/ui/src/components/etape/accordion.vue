@@ -1,10 +1,5 @@
 <template>
-  <Accordion
-    class="mb-s"
-    :opened="opened"
-    :slot-default="true"
-    @toggle="toggle"
-  >
+  <Accordion class="mb-s" :opened="opened" :slotDefault="true" @toggle="toggle">
     <template #title>
       <div class="flex flex-center">
         <h2 class="cap-first mb-0">{{ step.name }}</h2>

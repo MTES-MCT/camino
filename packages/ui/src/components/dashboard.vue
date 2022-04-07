@@ -1,8 +1,8 @@
 <template>
   <PureDashboard
     v-if="hasEntreprises"
-    :get-entreprises-titres="getEntreprisesTitres"
-    :display-activites="activites"
+    :getEntreprisesTitres="getEntreprisesTitres"
+    :displayActivites="activites"
   />
   <div v-else>Loading</div>
 </template>

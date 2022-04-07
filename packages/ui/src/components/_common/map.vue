@@ -1,18 +1,18 @@
 <template>
   <div class="bg-alt">
-    <MapPattern :domaines-ids="[domaineId]" :types-ids="[titreTypeId]" />
+    <MapPattern :domainesIds="[domaineId]" :typesIds="[titreTypeId]" />
 
     <Mapo
       ref="map"
-      :tiles-layer="tilesLayer"
-      :geojson-layers="geojsonLayers"
-      :marker-layers="markerLayers"
+      :tilesLayer="tilesLayer"
+      :geojsonLayers="geojsonLayers"
+      :markerLayers="markerLayers"
       :bounds="bounds"
       :legends="legends"
       class="map map-detail mb-s"
     />
 
-    <MapWarningBrgm :zoom="zoom" :tiles-id="tilesId" />
+    <MapWarningBrgm :zoom="zoom" :tilesId="tilesId" />
 
     <div :class="{ container: isMain }">
       <div class="tablet-blobs">
@@ -47,7 +47,7 @@
           <MapTilesSelector
             v-if="isMain"
             :tiles="tiles"
-            :tiles-id="tilesId"
+            :tilesId="tilesId"
             class="flex-grow mb-s"
             @params-update="preferencesUpdate"
           />

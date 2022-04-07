@@ -2,8 +2,8 @@
   <Accordion
     :opened="opened"
     sub="true"
-    :slot-default="true"
-    :slot-buttons="true"
+    :slotDefault="true"
+    :slotButtons="true"
     @close="close"
     @toggle="toggle"
   >
@@ -67,13 +67,13 @@
 
       <Documents
         v-if="activite.documents && activite.documents.length"
-        :bouton-suppression="activite.modification"
-        :bouton-modification="activite.modification"
+        :boutonSuppression="activite.modification"
+        :boutonModification="activite.modification"
         :route="route"
         :documents="activite.documents"
         :etiquette="activite.modification"
-        :parent-id="activite.id"
-        :parent-type-id="activite.type.id"
+        :parentId="activite.id"
+        :parentTypeId="activite.type.id"
         :title="documentPopupTitle"
         repertoire="activites"
         class="px-m"

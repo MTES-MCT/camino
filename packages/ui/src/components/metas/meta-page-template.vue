@@ -13,7 +13,7 @@
   <div class="line-neutral width-full mb-m" />
 
   <div class="mb-xxl">
-    <DefinitionEdit :definitions-tree="definitionsTree" />
+    <DefinitionEdit :definitionsTree="definitionsTree" />
   </div>
 </template>
 

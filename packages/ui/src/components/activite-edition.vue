@@ -57,12 +57,12 @@
 
     <DocumentsEdit
       v-model:documents="activite.documents"
-      :add-action="{ name: 'titreActiviteEdition/documentAdd' }"
-      :remove-action="{ name: 'titreActiviteEdition/documentRemove' }"
+      :addAction="{ name: 'titreActiviteEdition/documentAdd' }"
+      :removeAction="{ name: 'titreActiviteEdition/documentRemove' }"
       repertoire="activites"
-      document-popup-title="documentPopupTitle"
-      :parent-type-id="activite.type.id"
-      :documents-types="activite.type.documentsTypes"
+      documentPopupTitle="documentPopupTitle"
+      :parentTypeId="activite.type.id"
+      :documentsTypes="activite.type.documentsTypes"
       @complete-update="documentsComplete = $event"
     />
 

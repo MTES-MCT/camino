@@ -107,7 +107,7 @@
     <div v-else-if="element.type === 'file'">
       <SectionElementFileEdit
         v-model:contenu="contenu"
-        :element-id="element.id"
+        :elementId="element.id"
       />
     </div>
   </div>

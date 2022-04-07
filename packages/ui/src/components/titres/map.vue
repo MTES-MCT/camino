@@ -2,18 +2,18 @@
   <div class="width-full bg-alt">
     <Mapo
       ref="map"
-      :tiles-layer="tilesLayer"
-      :geojson-layers="geojsonLayers"
-      :marker-layers="markerLayers"
-      :canvas-markers="canvasMarkers"
+      :tilesLayer="tilesLayer"
+      :geojsonLayers="geojsonLayers"
+      :markerLayers="markerLayers"
+      :canvasMarkers="canvasMarkers"
       :legends="legends"
       class="map map-view mb-s"
       @map-update="titresPreferencesUpdate"
     />
 
-    <MapPattern :domaines-ids="domainesIds" :types-ids="typesIds" />
+    <MapPattern :domainesIds="domainesIds" :typesIds="typesIds" />
 
-    <MapWarningBrgm :zoom="preferences.zoom" :tiles-id="tilesId" />
+    <MapWarningBrgm :zoom="preferences.zoom" :tilesId="tilesId" />
 
     <div class="container overflow-auto">
       <div class="desktop-blobs">
@@ -73,7 +73,7 @@
 
           <MapTilesSelector
             :tiles="tiles"
-            :tiles-id="tilesId"
+            :tilesId="tilesId"
             class="flex-grow mb-s"
             @params-update="userPreferencesUpdate"
           />

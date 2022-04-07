@@ -22,7 +22,7 @@
             <MetaInput
               v-model:element="element"
               :colonne="colonne"
-              :join-table="joinTable"
+              :joinTable="joinTable"
               class="blob-1-2"
             >
             </MetaInput>

@@ -15,7 +15,7 @@
       :key="activite.id"
       :activite="activite"
       :route="route"
-      :initial-opened="true"
+      :initialOpened="true"
       class="mb"
     />
   </div>

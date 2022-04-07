@@ -192,7 +192,7 @@
             labelLine: 'Tonnage'
           })
         "
-        :suggested-max="suggestedMaxProduction"
+        :suggestedMax="suggestedMaxProduction"
       />
     </div>
 
@@ -206,8 +206,8 @@
     </select>
 
     <GranulatsMarinsActivite
-      :statistique-granulats-marins="statistiques[anneeActive]"
-      :en-construction="annees.find(t => t.id === anneeActive).enConstruction"
+      :statistiqueGranulatsMarins="statistiques[anneeActive]"
+      :enConstruction="annees.find(t => t.id === anneeActive).enConstruction"
       class="mb-xxl"
     />
     <div class="line-neutral width-full mb-xl" />
@@ -241,7 +241,7 @@
                 labelLine: 'Surface des permis de recherches (ha)'
               })
             "
-            :suggested-max="suggestedMaxTitres('titresPrw')"
+            :suggestedMax="suggestedMaxTitres('titresPrw')"
           />
         </div>
       </div>
@@ -268,7 +268,7 @@
                   labelLine: 'Surface des permis d\'exploitation (ha)'
                 })
               "
-              :suggested-max="suggestedMaxTitres('titresPxw')"
+              :suggestedMax="suggestedMaxTitres('titresPxw')"
             />
           </div>
         </div>
@@ -295,7 +295,7 @@
                 labelLine: 'Surfaces des concessions (ha)'
               })
             "
-            :suggested-max="suggestedMaxTitres('titresCxw')"
+            :suggestedMax="suggestedMaxTitres('titresCxw')"
           />
         </div>
       </div>
@@ -321,7 +321,7 @@
                 labelLine: 'Surfaces des concessions (ha)'
               })
             "
-            :suggested-max="suggestedMaxTitres('concessionsValides')"
+            :suggestedMax="suggestedMaxTitres('concessionsValides')"
           />
         </div>
       </div>

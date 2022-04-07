@@ -3,13 +3,13 @@
     id="quick-access-titre"
     placeholder="Rechercher un titre"
     :items="titres"
-    :min-input-length="3"
+    :minInputLength="3"
     @selectItem="emit('onSelectedTitre', $event)"
     @onInput="debounce(() => emit('onSearch', $event))"
   >
     <template #default="{ item }">
       <div class="flex flex-center">
-        <Domaine :domaine-id="item.domaine.id" class="mr-s" />
+        <Domaine :domaineId="item.domaine.id" class="mr-s" />
         <span class="cap-first bold">
           {{ item.nom }}
         </span>

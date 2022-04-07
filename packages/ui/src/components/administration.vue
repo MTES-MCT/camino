@@ -5,7 +5,7 @@
     <h1>
       {{ administration.abreviation }}
     </h1>
-    <Accordion class="mb-xxl" :slot-sub="true" :slot-buttons="true">
+    <Accordion class="mb-xxl" :slotSub="true" :slotButtons="true">
       <template #title>
         <span class="cap-first">{{ administration.nom }}</span>
       </template>
@@ -164,7 +164,7 @@
       <h2>Emails</h2>
       <AdministrationActiviteTypeEmail
         :administration="administration"
-        :activites-types="activitesTypes"
+        :activitesTypes="activitesTypes"
         @emailUpdate="activiteTypeEmailUpdate"
         @emailDelete="activiteTypeEmailDelete"
       />

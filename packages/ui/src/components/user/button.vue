@@ -1,6 +1,6 @@
 <template>
   <pure-button
-    :menu-active="menuActive"
+    :menuActive="menuActive"
     :user="user"
     @onConnectionClicked="popupOpen"
     @onUserClicked="goToUser"

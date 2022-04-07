@@ -5,9 +5,9 @@
         <EntityInputAutocomplete
           v-model:entity-id="entity.id"
           :options="options"
-          :options-disabled="optionsDisabled"
+          :optionsDisabled="optionsDisabled"
           :placeholder="placeholder"
-          :remove-item-button="false"
+          :removeItemButton="false"
         />
       </div>
       <button class="btn py-s px-m rnd-xs" @click="entityRemove(n)">
@@ -18,11 +18,11 @@
   </div>
 
   <EntityInputAutocomplete
-    :entity-id="entitySelected"
+    :entityId="entitySelected"
     :options="options"
-    :options-disabled="optionsDisabled"
+    :optionsDisabled="optionsDisabled"
     :placeholder="placeholder"
-    :remove-item-button="false"
+    :removeItemButton="false"
     @update:entity-id="entityAdd"
   />
 </template>

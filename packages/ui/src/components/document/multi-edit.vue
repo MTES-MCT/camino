@@ -2,12 +2,12 @@
   <Documents
     v-if="documents.length"
     :documents="documents"
-    :bouton-modification="true"
-    :bouton-suppression="true"
-    :add-action="addAction"
-    :remove-action="removeAction"
-    :manquant-show="true"
-    :help-show="true"
+    :boutonModification="true"
+    :boutonSuppression="true"
+    :addAction="addAction"
+    :removeAction="removeAction"
+    :manquantShow="true"
+    :helpShow="true"
     :repertoire="repertoire"
     :title="documentPopupTitle"
   />
@@ -27,9 +27,9 @@
     :title="documentPopupTitle"
     :repertoire="repertoire"
     class="btn py-s px-m rnd-xs mt--s mb-s full-x"
-    :parent-type-id="parentTypeId"
+    :parentTypeId="parentTypeId"
     :large="true"
-    :documents-types="documentsTypes"
+    :documentsTypes="documentsTypes"
   />
 </template>
 

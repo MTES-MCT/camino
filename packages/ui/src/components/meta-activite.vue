@@ -1,5 +1,5 @@
 <template>
-  <Metas title="Activité" :definitions-tree="definitionsTree" />
+  <Metas title="Activité" :definitionsTree="definitionsTree" />
 </template>
 
 <script lang="ts">

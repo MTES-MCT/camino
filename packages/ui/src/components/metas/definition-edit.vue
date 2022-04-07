@@ -69,9 +69,9 @@
       >
         <span class="separator" />
         <DefinitionEdit
-          :definitions-tree="definitionChild"
-          :foreign-keys="foreignKeysNew"
-          :root-component="false"
+          :definitionsTree="definitionChild"
+          :foreignKeys="foreignKeysNew"
+          :rootComponent="false"
         />
       </div>
     </div>

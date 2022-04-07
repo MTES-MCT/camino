@@ -11,11 +11,11 @@
 
     <div class="tablet-blob-3-4">
       <Perimetre
-        :domaine-id="domaineId"
-        :titre-type-id="titreTypeId"
+        :domaineId="domaineId"
+        :titreTypeId="titreTypeId"
         :points="etape.points"
-        :geojson-multi-polygon="geojsonMultiPolygon"
-        :tab-id="tabId"
+        :geojsonMultiPolygon="geojsonMultiPolygon"
+        :tabId="tabId"
         @tab-update="tabUpdate"
       />
     </div>
