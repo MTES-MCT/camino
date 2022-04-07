@@ -161,6 +161,38 @@ describe('administrationsQueryModify', () => {
     }
   )
 
+  test("un admin de région peut voir les mails de la préfecture d'un départument associé", async () => {
+    const mockDreal = {
+      id: 'dre-nouvelle-aquitaine-01',
+      typeId: 'dre',
+      nom: 'Nouvelle-Aquitaine',
+      regionId: '75'
+    }
+    const prefectureDordogne = 'pre-24322-01'
+    const prefectureCorseDuSud = 'pre-2A004-01'
+
+    const mockUser = {
+      id: idGenerate(),
+      permissionId: 'admin',
+      administrations: [mockDreal],
+      email: 'email' + idGenerate(),
+      motDePasse: 'motdepasse'
+    } as IUtilisateur
+
+    await Utilisateurs.query().insertGraph(
+      mockUser,
+      options.utilisateurs.update
+    )
+    let q = administrationsQueryModify(Administrations.query(), mockUser)
+
+    let res = await q.findById(prefectureDordogne)
+    expect(res.emailsModification).toBe(true)
+
+    q = administrationsQueryModify(Administrations.query(), mockUser)
+    res = await q.findById(prefectureCorseDuSud)
+    expect(res.emailsModification).toBe(null)
+  })
+
   test.each`
     permission   | emailsModification
     ${'admin'}   | ${true}
