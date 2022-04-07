@@ -23,7 +23,10 @@ const departementsQuery = (
   Departements.query()
     .select(raw('true'))
     .leftJoin('administrations as adm', 'departements.regionId', 'adm.regionId')
-    .where('departements.id', `${administrationAlias}.departementId`)
+    .whereRaw('?? = ??', [
+      'departements.id',
+      `${administrationAlias}.departementId`
+    ])
     .whereIn('adm.id', administrationsIds)
 
 const emailsLectureQuery = (
