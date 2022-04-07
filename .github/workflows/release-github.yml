@@ -1,7 +1,7 @@
 name: Release Github
 on:
   push:
-    tags:
+    branches:
       - release-candidate
 jobs:
   release-github:
@@ -14,11 +14,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 'lts/*'
+          node-version: '17.8'
           cache: 'npm'
       - name: Install dependencies
         run: npm ci
       - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.VMAUBERT_PERSONAL_TOKEN }}
         run: npx semantic-release
