@@ -40,7 +40,9 @@
         @mouseenter="currentSelectionIndex = index"
       >
         <span class="typeahead-list-item-text">
-          <slot :item="item"></slot>
+          <slot :item="item">
+            {{ itemChipLabel(item) }}
+          </slot>
         </span>
       </div>
     </div>
@@ -79,7 +81,6 @@ const emit = defineEmits<{
 watch(
   () => props.overrideItems,
   newItems => {
-    console.log('new overrideItems', newItems)
     selectedItems.value = [...newItems]
   }
 )
@@ -220,6 +221,7 @@ const notSelectedItems = computed(() => {
   margin-bottom: 0;
 
   width: auto;
+  flex-grow: 1;
   appearance: none;
   border: 0;
   box-shadow: 0 0 0 0 !important;

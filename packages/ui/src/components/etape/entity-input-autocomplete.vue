@@ -1,6 +1,6 @@
 <template>
   <InputAutocomplete
-    v-if="options?.length"
+    v-if="options && options.length"
     :selected="selected"
     :options="formattedOptions"
     valueProp="id"

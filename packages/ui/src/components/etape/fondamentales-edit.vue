@@ -9,7 +9,7 @@
       <HeritageEdit
         v-model:prop="etape.heritageProps.duree"
         class="tablet-blob-2-3"
-        propId="duree"
+        prop-id="duree"
       >
         <template #write>
           <div class="blobs-mini">
@@ -60,7 +60,7 @@
         <HeritageEdit
           v-model:prop="etape.heritageProps.dateDebut"
           class="tablet-blob-2-3"
-          propId="dateDebut"
+          prop-id="dateDebut"
         >
           <template #write>
             <InputDate v-model="etape.dateDebut" class="mb-s" />
@@ -92,7 +92,7 @@
         <HeritageEdit
           v-model:prop="etape.heritageProps.dateFin"
           class="tablet-blob-2-3"
-          propId="dateFin"
+          prop-id="dateFin"
         >
           <template #write>
             <InputDate v-model="etape.dateFin" class="mb-s" />
@@ -120,30 +120,18 @@
       <p class="h6 italic">Optionnel</p>
       <HeritageEdit
         v-model:prop="etape.heritageProps.titulaires"
-        propId="titulaires"
-        :isArray="true"
+        prop-id="titulaires"
+        :is-array="true"
       >
         <template #write>
-          <AutocompleteGroup
-            :entities="etape.titulaires"
-            :options="entreprises"
-            :optionsDisabled="entreprisesDisabled"
+          <AutocompleteEntreprise
+            :all-entities="entreprises"
+            :selected-entities="entreprisesTitulaires"
+            :non-selectable-entities="entreprisesDisabled"
             placeholder="Sélectionner un titulaire"
-          >
-            <template #default="{ entity }">
-              <div v-if="entity && entity.id" class="h6 mb">
-                <label>
-                  <input
-                    v-model="entity.operateur"
-                    type="checkbox"
-                    class="mr-xs"
-                  />
-                  Opérateur
-                </label>
-              </div>
-            </template>
-          </AutocompleteGroup>
-          <div v-if="titulairesLength" class="h6">
+            @onEntreprisesUpdate="titulairesUpdate"
+          />
+          <div v-if="titulairesLength" class="h6 mt-s">
             <label>
               <input
                 v-model="etape.incertitudes.titulaires"
@@ -182,30 +170,18 @@
 
         <HeritageEdit
           v-model:prop="etape.heritageProps.amodiataires"
-          propId="amodiataires"
-          :isArray="true"
+          prop-id="amodiataires"
+          :is-array="true"
         >
           <template #write>
-            <AutocompleteGroup
-              :entities="etape.amodiataires || []"
-              :options="entreprises"
-              :optionsDisabled="entreprisesDisabled"
+            <AutocompleteEntreprise
+              :all-entities="entreprises"
+              :selected-entities="entreprisesAmodiataires"
+              :non-selectable-entities="entreprisesDisabled"
               placeholder="Sélectionner un amodiataire"
-            >
-              <template #default="{ entity }">
-                <div v-if="entity && entity.id" class="h6 mb">
-                  <label>
-                    <input
-                      v-model="entity.operateur"
-                      type="checkbox"
-                      class="mr-xs"
-                    />
-                    Opérateur
-                  </label>
-                </div>
-              </template>
-            </AutocompleteGroup>
-            <div v-if="amodiatairesLength" class="h6">
+              @onEntreprisesUpdate="amodiatairesUpdate"
+            />
+            <div v-if="amodiatairesLength" class="h6 mt-s">
               <label>
                 <input
                   v-model="etape.incertitudes.amodiataires"
@@ -245,8 +221,8 @@
     <h3 class="mb-s">Substances</h3>
     <HeritageEdit
       v-model:prop="etape.heritageProps.substances"
-      propId="substances"
-      :isArray="true"
+      prop-id="substances"
+      :is-array="true"
     >
       <template #write>
         <div v-for="(substance, n) in etape.substances" :key="n">
@@ -333,7 +309,7 @@ import InputDate from '../_ui/input-date.vue'
 import InputNumber from '../_ui/input-number.vue'
 import HeritageEdit from './heritage-edit.vue'
 import PropDuree from './prop-duree.vue'
-import AutocompleteGroup from './autocomplete-group.vue'
+import AutocompleteEntreprise from './autocomplete-entreprise.vue'
 
 import { etablissementNameFind } from '@/utils/entreprise'
 
@@ -345,7 +321,7 @@ export default {
     Tag,
     TagList,
     PropDuree,
-    AutocompleteGroup
+    AutocompleteEntreprise
   },
 
   props: {
@@ -366,6 +342,18 @@ export default {
           this.etape.titulaires.find(t => t.id === entr.id)
         )
       })
+    },
+    entreprisesTitulaires() {
+      return this.etape.titulaires.map(titulaire => ({
+        ...this.entreprises.find(({ id }) => id === titulaire.id),
+        operateur: titulaire.operateur ?? false
+      }))
+    },
+    entreprisesAmodiataires() {
+      return this.etape.amodiataires.map(amodiataire => ({
+        ...this.entreprises.find(({ id }) => id === amodiataire.id),
+        operateur: amodiataire.operateur ?? false
+      }))
     },
 
     isArm() {
@@ -460,18 +448,27 @@ export default {
   },
 
   methods: {
-    titulaireAdd() {
-      this.etape.titulaires.push({ id: '' })
+    titulairesUpdate(titulaires) {
+      const newTitulaires = titulaires.map(titulaire => ({
+        id: titulaire.id,
+        operateur: titulaire.operateur
+      }))
+      this.etape.titulaires.splice(
+        0,
+        this.etape.titulaires.length,
+        ...newTitulaires
+      )
     },
-
-    titulaireRemove(index) {
-      this.etape.titulaires.splice(index, 1)
+    amodiatairesUpdate(amodiataires) {
+      this.etape.amodiataires.splice(
+        0,
+        this.etape.amodiataires.length,
+        amodiataires.map(amodiataire => ({
+          id: amodiataire.id,
+          operateur: amodiataire.operateur
+        }))
+      )
     },
-
-    amodiataireRemove(index) {
-      this.etape.amodiataires?.splice(index, 1)
-    },
-
     substanceAdd() {
       this.etape.substances.push({ id: '' })
     },

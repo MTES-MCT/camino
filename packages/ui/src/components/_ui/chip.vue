@@ -16,7 +16,7 @@ withDefaults(
 )
 
 const emit = defineEmits<{
-  onDelete: () => void
+  (e: 'onDelete'): void
 }>()
 </script>
 

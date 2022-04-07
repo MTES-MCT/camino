@@ -50,7 +50,6 @@ const createDebounce = () => {
 
 const overrideItems = ref<Titre[]>([])
 const selectItem = (item: Titre) => {
-  console.log()
   overrideItems.value = []
   emit('onSelectedTitre', item)
 }
