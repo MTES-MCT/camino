@@ -1,0 +1,109 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Automated Storybook Snapshots Components/Etape/AutoCompleteEntreprise Default 1`] = `
+<div>
+  
+  
+  <div
+    class="typeahead"
+    id="typeahead_227_wrapper"
+  >
+    <div
+      class="flex typeahead-wrapper p-xs"
+    >
+      
+      
+      <input
+        autocomplete="off"
+        class="typeahead-input"
+        id="typeahead_227"
+        placeholder="placeholder"
+        type="text"
+      />
+    </div>
+    <!--v-if-->
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/Etape/AutoCompleteEntreprise With Entities Already Present 1`] = `
+<div>
+  
+  <div>
+    <div
+      class="flex mb-s flex-center"
+    >
+      <div
+        class="h4"
+        style="flex: 0 1 15em;"
+      >
+        optionNom10
+      </div>
+      <label
+        style="flex-basis: auto; user-select: none;"
+      >
+        <input
+          class="mr-xs"
+          type="checkbox"
+        />
+         Opérateur 
+      </label>
+      <button
+        class="btn py-s px-m rnd-xs"
+      >
+        <i
+          class="icon-24 icon-minus"
+        />
+      </button>
+    </div>
+  </div>
+  <div>
+    <div
+      class="flex mb-s flex-center"
+    >
+      <div
+        class="h4"
+        style="flex: 0 1 15em;"
+      >
+        optionNom2
+      </div>
+      <label
+        style="flex-basis: auto; user-select: none;"
+      >
+        <input
+          class="mr-xs"
+          type="checkbox"
+        />
+         Opérateur 
+      </label>
+      <button
+        class="btn py-s px-m rnd-xs"
+      >
+        <i
+          class="icon-24 icon-minus"
+        />
+      </button>
+    </div>
+  </div>
+  
+  <div
+    class="typeahead"
+    id="typeahead_227_wrapper"
+  >
+    <div
+      class="flex typeahead-wrapper p-xs"
+    >
+      
+      
+      <input
+        autocomplete="off"
+        class="typeahead-input"
+        id="typeahead_227"
+        placeholder="placeholder"
+        type="text"
+      />
+    </div>
+    <!--v-if-->
+  </div>
+</div>
+`;

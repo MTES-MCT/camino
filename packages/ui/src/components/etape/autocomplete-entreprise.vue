@@ -1,42 +1,43 @@
 <template>
-  <div v-for="entity in mySelectedEntities || []" :key="entity.id">
-    <div class="flex mb-s flex-center">
-      <div class="h4" style="flex: 0 1 15em">
-        {{ entity.nom }}
+  <div>
+    <div v-for="entity in mySelectedEntities || []" :key="entity.id">
+      <div class="flex mb-s flex-center">
+        <div class="h4" style="flex: 0 1 15em">
+          {{ entity.nom }}
+        </div>
+
+        <label style="flex: auto; user-select: none">
+          <input
+            :checked="entity.operateur"
+            type="checkbox"
+            class="mr-xs"
+            @change="toggleOperator(entity)"
+          />
+          Opérateur
+        </label>
+
+        <button
+          class="btn py-s px-m rnd-xs"
+          style=""
+          @click="removeEntity(entity)"
+        >
+          <i class="icon-24 icon-minus" />
+        </button>
       </div>
-
-      <label style="flex: auto; user-select: none">
-        <input
-          :checked="entity.operateur"
-          type="checkbox"
-          class="mr-xs"
-          @change="toggleOperator(entity)"
-        />
-        Opérateur
-      </label>
-
-      <button
-        class="btn py-s px-m rnd-xs"
-        style=""
-        @click="removeEntity(entity)"
-      >
-        <i class="icon-24 icon-minus" />
-      </button>
     </div>
+    <Typeahead
+      :placeholder="placeholder"
+      type="single"
+      :items="selectableEntities"
+      :override-items="overrideItems"
+      :min-input-length="3"
+      :item-chip-label="item => item.nom"
+      :item-key="item => item.id"
+      @selectItem="addEntity"
+      @onInput="inputValue = $event"
+    >
+    </Typeahead>
   </div>
-
-  <Typeahead
-    :placeholder="placeholder"
-    type="single"
-    :items="selectableEntities"
-    :override-items="overrideItems"
-    :min-input-length="3"
-    :item-chip-label="item => item.nom"
-    :item-key="item => item.id"
-    @selectItem="addEntity"
-    @onInput="inputValue = $event"
-  >
-  </Typeahead>
 </template>
 
 <script setup lang="ts">
@@ -46,8 +47,8 @@ import { AutoCompleteEntreprise } from '@/components/etape/autocomplete-entrepri
 
 const props = withDefaults(
   defineProps<{
-    nonSelectableEntities: AutoCompleteEntreprise[]
-    selectedEntities: AutoCompleteEntreprise[]
+    nonSelectableEntities?: AutoCompleteEntreprise[]
+    selectedEntities?: AutoCompleteEntreprise[]
     allEntities: AutoCompleteEntreprise[]
     placeholder: string
   }>(),

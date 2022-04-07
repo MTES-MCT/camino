@@ -2,7 +2,7 @@
 
 exports[`Automated Storybook Snapshots UI/Chip Default 1`] = `
 <button
-  class="bg-neutral chip p-xxs pl-m pr-m"
+  class="bg-neutral chip pl-m pr-m"
 >
   Ma chip 
   <span>
@@ -13,7 +13,7 @@ exports[`Automated Storybook Snapshots UI/Chip Default 1`] = `
 
 exports[`Automated Storybook Snapshots UI/Chip With Color 1`] = `
 <button
-  class="bg-success chip p-xxs pl-m pr-m"
+  class="bg-success chip pl-m pr-m"
 >
   Ma chip 
   <span>

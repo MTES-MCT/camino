@@ -1,7 +1,7 @@
 import AutoCompleteEntrepriseComponent from './autocomplete-entreprise.vue'
 import { Meta, Story } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
-import { AutoCompleteEntreprise } from '@/components/etape/autocomplete-entreprise.type'
+import { AutoCompleteEntreprise } from './autocomplete-entreprise.type'
 
 const meta: Meta = {
   title: 'Components/Etape/AutoCompleteEntreprise',

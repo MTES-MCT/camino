@@ -2,32 +2,44 @@
 
 exports[`Automated Storybook Snapshots Pages/PureQuickAccessTitre Empty 1`] = `
 <div
-  class="simple-typeahead"
+  class="typeahead"
   id="quick-access-titre_wrapper"
 >
-  <input
-    autocomplete="off"
-    class="simple-typeahead-input"
-    id="quick-access-titre"
-    placeholder="Rechercher un titre"
-    type="text"
-  />
+  <div
+    class="flex typeahead-wrapper p-xs"
+  >
+    
+    
+    <input
+      autocomplete="off"
+      class="typeahead-input"
+      id="quick-access-titre"
+      placeholder="Rechercher un titre"
+      type="text"
+    />
+  </div>
   <!--v-if-->
 </div>
 `;
 
 exports[`Automated Storybook Snapshots Pages/PureQuickAccessTitre Simple 1`] = `
 <div
-  class="simple-typeahead"
+  class="typeahead"
   id="quick-access-titre_wrapper"
 >
-  <input
-    autocomplete="off"
-    class="simple-typeahead-input"
-    id="quick-access-titre"
-    placeholder="Rechercher un titre"
-    type="text"
-  />
+  <div
+    class="flex typeahead-wrapper p-xs"
+  >
+    
+    
+    <input
+      autocomplete="off"
+      class="typeahead-input"
+      id="quick-access-titre"
+      placeholder="Rechercher un titre"
+      type="text"
+    />
+  </div>
   <!--v-if-->
 </div>
 `;
