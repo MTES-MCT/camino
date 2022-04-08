@@ -4,16 +4,16 @@
     placeholder="Rechercher un titre"
     type="single"
     :items="titres"
-    :override-items="overrideItems"
-    :min-input-length="3"
-    :item-key="item => item.id"
-    :item-chip-label="item => item.nom"
+    :overrideItems="overrideItems"
+    :minInputLength="3"
+    :itemKey="item => item.id"
+    :itemChipLabel="item => item.nom"
     @selectItem="selectItem"
     @onInput="debounce(() => emit('onSearch', $event))"
   >
     <template #default="{ item }">
       <div class="flex flex-center">
-        <Domaine :domaine-id="item.domaine.id" class="mr-s" />
+        <Domaine :domaineId="item.domaine.id" class="mr-s" />
         <span class="cap-first bold">
           {{ item.nom }}
         </span>

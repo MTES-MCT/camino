@@ -9,7 +9,7 @@
       <HeritageEdit
         v-model:prop="etape.heritageProps.duree"
         class="tablet-blob-2-3"
-        prop-id="duree"
+        propId="duree"
       >
         <template #write>
           <div class="blobs-mini">
@@ -60,7 +60,7 @@
         <HeritageEdit
           v-model:prop="etape.heritageProps.dateDebut"
           class="tablet-blob-2-3"
-          prop-id="dateDebut"
+          propId="dateDebut"
         >
           <template #write>
             <InputDate v-model="etape.dateDebut" class="mb-s" />
@@ -92,7 +92,7 @@
         <HeritageEdit
           v-model:prop="etape.heritageProps.dateFin"
           class="tablet-blob-2-3"
-          prop-id="dateFin"
+          propId="dateFin"
         >
           <template #write>
             <InputDate v-model="etape.dateFin" class="mb-s" />
@@ -120,14 +120,14 @@
       <p class="h6 italic">Optionnel</p>
       <HeritageEdit
         v-model:prop="etape.heritageProps.titulaires"
-        prop-id="titulaires"
-        :is-array="true"
+        propId="titulaires"
+        :isArray="true"
       >
         <template #write>
           <AutocompleteEntreprise
-            :all-entities="entreprises"
-            :selected-entities="entreprisesTitulaires"
-            :non-selectable-entities="entreprisesDisabled"
+            :allEntities="entreprises"
+            :selectedEntities="entreprisesTitulaires"
+            :nonSelectableEntities="entreprisesDisabled"
             placeholder="Sélectionner un titulaire"
             @onEntreprisesUpdate="titulairesUpdate"
           />
@@ -170,14 +170,14 @@
 
         <HeritageEdit
           v-model:prop="etape.heritageProps.amodiataires"
-          prop-id="amodiataires"
-          :is-array="true"
+          propId="amodiataires"
+          :isArray="true"
         >
           <template #write>
             <AutocompleteEntreprise
-              :all-entities="entreprises"
-              :selected-entities="entreprisesAmodiataires"
-              :non-selectable-entities="entreprisesDisabled"
+              :allEntities="entreprises"
+              :selectedEntities="entreprisesAmodiataires"
+              :nonSelectableEntities="entreprisesDisabled"
               placeholder="Sélectionner un amodiataire"
               @onEntreprisesUpdate="amodiatairesUpdate"
             />
@@ -221,8 +221,8 @@
     <h3 class="mb-s">Substances</h3>
     <HeritageEdit
       v-model:prop="etape.heritageProps.substances"
-      prop-id="substances"
-      :is-array="true"
+      propId="substances"
+      :isArray="true"
     >
       <template #write>
         <div v-for="(substance, n) in etape.substances" :key="n">
