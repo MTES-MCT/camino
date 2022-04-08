@@ -3,90 +3,108 @@
     <h5>{{ filter.name }}</h5>
     <hr class="mb-s" />
 
-    <InputAutocomplete
-      v-if="options?.length || lazyLoaded"
-      :selected="values"
-      :options="options"
-      valueProp="id"
-      labelProp="nom"
-      class="p-s"
-      @opened="$emit('opened', $event)"
-      @update:selected="updateHandler"
-      @search="search"
+    <Typeahead
+      :id="'filters_autocomplete_' + filter.name"
+      :placeholder="filter.name"
+      type="multiple"
+      :items="items"
+      :override-items="overrideItems"
+      :min-input-length="filter.lazy ? 3 : 1"
+      :item-chip-label="item => item.nom"
+      :item-key="item => item.id"
+      @selectItems="updateHandler"
+      @onInput="search"
     />
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import InputAutocomplete from './input-autocomplete.vue'
+<script setup lang="ts">
+import Typeahead from '@/components/_ui/typeahead.vue'
+import { onMounted, ref, watch } from 'vue'
 
-export default defineComponent({
-  components: { InputAutocomplete },
+type Element = { id: string; nom: string }
+const props = defineProps<{
+  filter: {
+    id: string
+    value: string[]
+    elements: Element[]
+    name: string
+    lazy: boolean
+    type: 'autocomplete'
+    search: (input: string) => Promise<{ elements: Element[] }>
+    load: (ids: string[]) => Promise<{ elements: Element[] }>
+  }
+}>()
 
-  props: {
-    filter: {
-      type: Object,
-      default: () => ({})
+const emit = defineEmits<{
+  (e: 'onSelectItems', items: Element[]): void
+}>()
+
+const selectedItems = ref<Element[]>([])
+const items = ref<Element[]>(props.filter.elements)
+const allKnownItems = ref<Record<string, Element>>({})
+const overrideItems = ref<Element[]>([])
+
+watch(
+  () => props.filter.value,
+  newValues => {
+    if (newValues) {
+      overrideItems.value =
+        newValues
+          .map(id => allKnownItems.value[id])
+          .filter(
+            (elem: Element | undefined): elem is Element => elem !== undefined
+          ) ?? []
     }
   },
+  { deep: true, immediate: true }
+)
 
-  emits: ['opened', 'search'],
-
-  data: () => ({
-    lazyLoaded: false
-  }),
-
-  computed: {
-    values() {
-      return this.filter.value || []
-    },
-    options() {
-      return this.filter.elements
+onMounted(async () => {
+  if (props.filter.lazy && props.filter.value?.length) {
+    const result = await props.filter.load(props.filter.value)
+    overrideItems.value = result.elements
+    for (const element of result.elements) {
+      allKnownItems.value[element.id] = element
     }
-  },
-  async created() {
-    if (
-      this.filter.type === 'autocomplete' &&
-      this.filter.lazy &&
-      this.filter.value?.length
-    ) {
-      const result = await this.filter.load(this.filter.value)
-      this.filter.elements = result.elements
-    }
-    if (this.filter.lazy) {
-      this.lazyLoaded = true
-    }
-  },
-  methods: {
-    updateHandler(e: string[]) {
-      this.filter.value = e
-      if (this.filter.lazy) {
-        this.filter.elements = this.filter.elements.filter(e =>
-          this.filter.value.includes(e.id)
-        )
-      }
-    },
-
-    async search(value: string) {
-      if (this.filter.lazy) {
-        const result = await this.filter.search(value)
-
-        // Si les options déjà selectionnées ne sont plus disponibles dans la nouvelle
-        // liste d’options, on les ajoute à la nouvelle liste pour conserver notre sélection
-        const options = [...result.elements]
-        this.filter.value?.forEach((optionId: string) => {
-          if (!options || !options.some(o => o.id === optionId)) {
-            const oldOption = this.filter.elements.find(
-              (o: { id: string }) => o.id === optionId
-            )
-            options.push(oldOption)
-          }
-        })
-
-        this.filter.elements = options
-      }
-    }
+    // TODO 2022-04-08: ceci est pour le composant parent, pour la traduction notamment (sinon, pour un titreId par exemple, le label est son ID au lieu du nom du titre).
+    // C'est étrange, il va falloir corriger tout ça un jour
+    props.filter.elements = [...Object.values(allKnownItems.value)]
+  }
+  for (const element of props.filter.elements) {
+    allKnownItems.value[element.id] = element
+  }
+  // TODO 2022-04-08 sometimes this stuff is an empty string, sometimes it's an object...
+  if (Array.isArray(props?.filter?.value)) {
+    overrideItems.value = props?.filter?.value
+      .map(id => allKnownItems.value[id])
+      .filter(
+        (elem: Element | undefined): elem is Element => elem !== undefined
+      )
   }
 })
+
+const updateHandler = (e: Element[]) => {
+  selectedItems.value = e
+  // TODO 2022-04-08: ceci est pour le composant parent, une fois refactoré, utiliser uniquement le emit
+  props.filter.value = e.map(({ id }) => id)
+  emit('onSelectItems', e)
+}
+
+const search = async (value: string) => {
+  if (props.filter.lazy) {
+    const result = await props.filter.search(value)
+    items.value = [...result.elements]
+    for (const element of result.elements) {
+      allKnownItems.value[element.id] = element
+    }
+    // TODO 2022-04-08: ceci est pour le composant parent, pour la traduction notamment (sinon, pour un titreId par exemple, le label est son ID au lieu du nom du titre).
+    // C'est étrange, il va falloir corriger tout ça un jour
+    props.filter.elements = [...Object.values(allKnownItems.value)]
+  } else {
+    items.value = props.filter.elements.filter(item =>
+      item.nom.toLowerCase().includes(value.toLowerCase())
+    )
+  }
+}
 </script>

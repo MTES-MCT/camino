@@ -23,7 +23,7 @@
         @blur="onBlur"
         @keydown.down.prevent="onArrowDown"
         @keydown.up.prevent="onArrowUp"
-        @keydown.enter.tab.prevent="selectCurrentSelection"
+        @keyup.enter.prevent="selectCurrentSelection"
       />
     </div>
 
@@ -151,10 +151,12 @@ const scrollSelectionIntoView = () => {
     }
   })
 }
-const selectCurrentSelection = () => {
+const selectCurrentSelection = (event: InputEvent) => {
   if (currentSelection.value) {
     selectItem(currentSelection.value)
+    event.stopPropagation()
   }
+
   myTypeaheadInput?.value?.focus?.()
 }
 const selectItem = (item: unknown) => {

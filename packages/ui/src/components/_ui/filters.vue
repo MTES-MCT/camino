@@ -188,7 +188,11 @@ export default {
 
     inputsErase() {
       this.inputs.forEach(filter => {
-        filter.value = ''
+        if (Array.isArray(filter.value)) {
+          filter.value.splice(0, filter.value.length)
+        } else {
+          filter.value = ''
+        }
       })
     },
 

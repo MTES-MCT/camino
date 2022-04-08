@@ -26,6 +26,7 @@
       </div>
     </div>
     <Typeahead
+      id="autocomplete_entreprise"
       :placeholder="placeholder"
       type="single"
       :items="selectableEntities"

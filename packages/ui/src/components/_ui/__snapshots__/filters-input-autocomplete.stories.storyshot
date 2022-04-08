@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Automated Storybook Snapshots Ui/FiltersInputAutoComplete Default 1`] = `
+<div
+  class="mb"
+>
+  <h5>
+    Items
+  </h5>
+  <hr
+    class="mb-s"
+  />
+  <div
+    class="typeahead"
+    id="filters_autocomplete_Items_wrapper"
+  >
+    <div
+      class="flex typeahead-wrapper p-xs"
+    >
+      
+      
+      <input
+        autocomplete="off"
+        class="typeahead-input"
+        id="filters_autocomplete_Items"
+        placeholder="Items"
+        type="text"
+      />
+    </div>
+    <!--v-if-->
+  </div>
+</div>
+`;

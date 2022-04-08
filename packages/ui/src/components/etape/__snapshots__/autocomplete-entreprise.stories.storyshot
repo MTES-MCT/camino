@@ -6,7 +6,7 @@ exports[`Automated Storybook Snapshots Components/Etape/AutoCompleteEntreprise D
   
   <div
     class="typeahead"
-    id="typeahead_227_wrapper"
+    id="autocomplete_entreprise_wrapper"
   >
     <div
       class="flex typeahead-wrapper p-xs"
@@ -16,7 +16,7 @@ exports[`Automated Storybook Snapshots Components/Etape/AutoCompleteEntreprise D
       <input
         autocomplete="off"
         class="typeahead-input"
-        id="typeahead_227"
+        id="autocomplete_entreprise"
         placeholder="placeholder"
         type="text"
       />
@@ -88,7 +88,7 @@ exports[`Automated Storybook Snapshots Components/Etape/AutoCompleteEntreprise W
   
   <div
     class="typeahead"
-    id="typeahead_227_wrapper"
+    id="autocomplete_entreprise_wrapper"
   >
     <div
       class="flex typeahead-wrapper p-xs"
@@ -98,7 +98,7 @@ exports[`Automated Storybook Snapshots Components/Etape/AutoCompleteEntreprise W
       <input
         autocomplete="off"
         class="typeahead-input"
-        id="typeahead_227"
+        id="autocomplete_entreprise"
         placeholder="placeholder"
         type="text"
       />
