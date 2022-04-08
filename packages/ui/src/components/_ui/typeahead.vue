@@ -24,6 +24,7 @@
         @keydown.down.prevent="onArrowDown"
         @keydown.up.prevent="onArrowUp"
         @keyup.enter.prevent="selectCurrentSelection"
+        @keydown.delete="deleteLastSelected"
       />
     </div>
 
@@ -159,6 +160,14 @@ const selectCurrentSelection = (event: InputEvent) => {
 
   myTypeaheadInput?.value?.focus?.()
 }
+
+const deleteLastSelected = () => {
+  if (input.value === '') {
+    selectedItems.value.pop()
+    emit('selectItems', selectedItems.value)
+  }
+}
+
 const selectItem = (item: unknown) => {
   input.value = ''
   currentSelectionIndex.value = 0
