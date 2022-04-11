@@ -38,7 +38,6 @@
             <FiltersInputAutocomplete
               v-if="input.type === 'autocomplete'"
               :filter="input"
-              @opened="selectOpened = $event"
             />
             <FiltersInput v-else :filter="input" />
           </template>
@@ -110,8 +109,6 @@ export default {
 
   emits: ['toggle', 'validate'],
 
-  data: () => ({ selectOpened: false }),
-
   computed: {
     inputs() {
       return this.filters.filter(
@@ -181,7 +178,7 @@ export default {
 
   methods: {
     keyup(e) {
-      if ((e.which || e.keyCode) === 13 && this.opened && !this.selectOpened) {
+      if ((e.which || e.keyCode) === 13 && this.opened) {
         this.validate()
       }
     },
