@@ -131,8 +131,8 @@
             placeholder="Sélectionner un titulaire"
             @onEntreprisesUpdate="titulairesUpdate"
           />
-          <div v-if="titulairesLength" class="h6 mt-s">
-            <label>
+          <div class="h6 mt-s">
+            <label v-if="titulairesLength">
               <input
                 v-model="etape.incertitudes.titulaires"
                 type="checkbox"
@@ -181,8 +181,8 @@
               placeholder="Sélectionner un amodiataire"
               @onEntreprisesUpdate="amodiatairesUpdate"
             />
-            <div v-if="amodiatairesLength" class="h6 mt-s">
-              <label>
+            <div class="h6 mt-s">
+              <label v-if="amodiatairesLength">
                 <input
                   v-model="etape.incertitudes.amodiataires"
                   type="checkbox"
@@ -460,13 +460,14 @@ export default {
       )
     },
     amodiatairesUpdate(amodiataires) {
+      const newAmodiataires = amodiataires.map(amodiataire => ({
+        id: amodiataire.id,
+        operateur: amodiataire.operateur
+      }))
       this.etape.amodiataires.splice(
         0,
         this.etape.amodiataires.length,
-        amodiataires.map(amodiataire => ({
-          id: amodiataire.id,
-          operateur: amodiataire.operateur
-        }))
+        ...newAmodiataires
       )
     },
     substanceAdd() {

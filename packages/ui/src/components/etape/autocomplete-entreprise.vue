@@ -31,7 +31,7 @@
       type="single"
       :items="selectableEntities"
       :overrideItems="overrideItems"
-      :minInputLength="3"
+      :minInputLength="2"
       :itemChipLabel="item => item.nom"
       :itemKey="item => item.id"
       @selectItem="addEntity"

@@ -74,7 +74,7 @@ onMounted(async () => {
   for (const element of props.filter.elements) {
     allKnownItems.value[element.id] = element
   }
-  // TODO 2022-04-08 sometimes this stuff is an empty string, sometimes it's an object...
+  // TODO 2022-04-08 des fois, ceci est une chaine vide, des fois un objet. Il faudra supprimer tout ça une fois les composants parents refactorés
   if (Array.isArray(props?.filter?.value)) {
     overrideItems.value = props?.filter?.value
       .map(id => allKnownItems.value[id])
