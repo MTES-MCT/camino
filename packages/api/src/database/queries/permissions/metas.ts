@@ -177,6 +177,7 @@ const etapesTypesQueryModify = (
         b.orWhere(c => {
           const d = TitresEtapes.query()
             .where({ titreDemarcheId })
+            .where('archive', false)
             .whereRaw('?? = ??', ['typeId', 'etapesTypes.id'])
 
           if (titreEtapeId) {
