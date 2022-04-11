@@ -47,7 +47,7 @@ defineProps<{
 }>()
 
 const emit = defineEmits<{
-  save: () => void
-  depose: () => void
+  (e: 'save'): void
+  (e: 'depose'): void
 }>()
 </script>

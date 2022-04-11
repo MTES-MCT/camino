@@ -18,7 +18,7 @@ initStoryshots({
       stories2snapsConverter.getSnapshotFileName(context)
     )
 
-    const waitTime = 1
+    const waitTime = 50
     const storyElement = story.render()
     const wrapper = mount(storyElement)
     setTimeout(() => {

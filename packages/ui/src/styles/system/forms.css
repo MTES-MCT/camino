@@ -3,8 +3,6 @@
 -------------------------------
 */
 
-@import 'choices.js/public/assets/styles/choices.css';
-
 input[type='text'],
 input[type='email'],
 input[type='search'],
@@ -15,36 +13,13 @@ input[type='date'],
 input[type='url'],
 select,
 textarea,
-.choices__inner,
 .input {
   width: 100%;
   border: 0 none;
   background-color: var(--color-alt);
   height: auto;
   color: inherit;
-  &:not(.choices__input) {
-    box-shadow: 0 2px 0 0 var(--dsfr-g600);
-  }
-
-}
-
-.choices{
   box-shadow: 0 2px 0 0 var(--dsfr-g600);
-}
-
-select,
-.choices__inner {
-  background-image: svg-load('../icons/svgs/24-chevron-b.svg',
-    fill='#666'
-  );
-  background-position: right var(--unit-s) center;
-  background-repeat: no-repeat;
-
-  /* for FF: http://stackoverflow.com/a/18317228/2112538 */
-  -moz-appearance: none;
-  text-indent: 0.01px;
-  text-overflow: ellipsis;
-  overflow: hidden;
 }
 
 textarea {
@@ -54,10 +29,9 @@ textarea {
   height: auto;
 }
 
-textarea:not(.choices__input):focus,
-input:not(.choices__input):focus,
-select:not(.choices__input):focus,
-.choices.is-focused {
+textarea:focus,
+input:focus,
+select:focus {
   border-right: var(--unit-s) solid var(--dsfr-bf500);
 }
 
@@ -102,58 +76,4 @@ select.bg-bg:disabled {
 
 [type='file'] {
   display: none;
-}
-
-.choices[data-type*=select-multiple] .choices__button,
-.choices[data-type*=text] .choices__button {
-  border-left: 1px solid white;
-}
-
-.choices__list--multiple .choices__item,
-.choices__list--multiple .choices__item.is-highlighted {
-  background-color: var(--color-inverse);
-  border: 1px solid var(--color-inverse);
-  font-weight: bold;
-}
-
-
-.choices[data-type*=select-one]::after {
-  display: none;
-}
-
-.choices[data-type*=select-one] .choices__inner {
-  padding-bottom: 0;
-  padding: var(--unit-s);
-}
-
-.choices__list--single {
-  padding: 0;
-}
-
-.choices[data-type*=select-one] .choices__button {
-  margin-right: 40px;
-}
-
-.choices__button {
-  background-image: svg-load('../icons/svgs/24-close.svg',
-    fill=none,
-    stroke= '#666',
-    stroke-linecap=round,
-    stroke-linejoin=round,
-    stroke-width=1.25px
-  );
-}
-
-.choices__button:hover {
-  background-image: svg-load('../icons/svgs/24-close.svg',
-    fill=none,
-    stroke= 'white',
-    stroke-linecap=round,
-    stroke-linejoin=round,
-    stroke-width=1.25px
-  );
-}
-
-.choices__list--dropdown .choices__item--selectable.is-highlighted {
-  background-color: var(--color-alt);
 }

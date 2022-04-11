@@ -2,9 +2,13 @@
   <SimpleTypeahead
     id="quick-access-titre"
     placeholder="Rechercher un titre"
+    type="single"
     :items="titres"
+    :overrideItems="overrideItems"
     :minInputLength="3"
-    @selectItem="emit('onSelectedTitre', $event)"
+    :itemKey="item => item.id"
+    :itemChipLabel="item => item.nom"
+    @selectItem="selectItem"
     @onInput="debounce(() => emit('onSearch', $event))"
   >
     <template #default="{ item }">
@@ -20,13 +24,14 @@
 </template>
 
 <script setup lang="ts">
-import SimpleTypeahead from '@/components/_ui/simple-typeahead.vue'
+import SimpleTypeahead from '@/components/_ui/typeahead.vue'
 import { Titre } from './pure-quick-access-titres.type'
 import Domaine from '@/components/_common/domaine.vue'
 import {
   TitresTypesTypes,
   TitresTypesTypesId
 } from 'camino-common/src/titresTypesTypes'
+import { ref } from 'vue'
 
 const emit = defineEmits<{
   (e: 'onSelectedTitre', titre: Titre): void
@@ -41,6 +46,12 @@ const createDebounce = () => {
       fnc()
     }, delayMs)
   }
+}
+
+const overrideItems = ref<Titre[]>([])
+const selectItem = (item: Titre) => {
+  overrideItems.value = []
+  emit('onSelectedTitre', item)
 }
 
 const titreTypeGetById = (id: TitresTypesTypesId) => TitresTypesTypes[id].nom
