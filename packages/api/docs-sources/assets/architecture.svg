@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="921px" preserveAspectRatio="none" style="width:557px;height:921px;background:#FFFFFF;" version="1.1" viewBox="0 0 557 921" width="557px" zoomAndPan="magnify"><defs/><g><!--MD5=[a0b8db3a31e1ae33e91c4ae6290abb22]
+cluster Externes--><g id="cluster_Externes"><path d="M452.5,310.5 L523.5,310.5 A3.75,3.75 0 0 1 526,313 L533,332.7969 L547.5,332.7969 A2.5,2.5 0 0 1 550,335.2969 L550,574 A2.5,2.5 0 0 1 547.5,576.5 L452.5,576.5 A2.5,2.5 0 0 1 450,574 L450,313 A2.5,2.5 0 0 1 452.5,310.5 " style="stroke:#000000;stroke-width:1.5;fill:none;"/><line style="stroke:#000000;stroke-width:1.5;fill:none;" x1="450" x2="533" y1="332.7969" y2="332.7969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="70" x="454" y="325.4951">Externes</text></g><!--MD5=[a251cab66b6246413bbd31d8282522ce]
+cluster Gouvernement--><g id="cluster_Gouvernement"><path d="M8.5,310.5 L127.5,310.5 A3.75,3.75 0 0 1 130,313 L137,332.7969 L165.5,332.7969 A2.5,2.5 0 0 1 168,335.2969 L168,912 A2.5,2.5 0 0 1 165.5,914.5 L8.5,914.5 A2.5,2.5 0 0 1 6,912 L6,313 A2.5,2.5 0 0 1 8.5,310.5 " style="stroke:#000000;stroke-width:1.5;fill:none;"/><line style="stroke:#000000;stroke-width:1.5;fill:none;" x1="6" x2="137" y1="332.7969" y2="332.7969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="118" x="10" y="325.4951">Gouvernement</text></g><!--MD5=[319459dd39e1a3d7faf276cf500fb86c]
+cluster Camino--><g id="cluster_Camino"><path d="M210.5,120.5 L269.5,120.5 A3.75,3.75 0 0 1 272,123 L279,142.7969 L428.5,142.7969 A2.5,2.5 0 0 1 431,145.2969 L431,743 A2.5,2.5 0 0 1 428.5,745.5 L210.5,745.5 A2.5,2.5 0 0 1 208,743 L208,123 A2.5,2.5 0 0 1 210.5,120.5 " style="stroke:#000000;stroke-width:1.5;fill:none;"/><line style="stroke:#000000;stroke-width:1.5;fill:none;" x1="208" x2="279" y1="142.7969" y2="142.7969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="58" x="212" y="135.4951">Camino</text></g><!--MD5=[8c1934be4febfaef4a9f4ab6ed25d16c]
+entity Sentry--><g id="elem_Sentry"><rect fill="#F1F1F1" height="46.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="84" x="458" y="337.5"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="522" y="342.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="520" y="344.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="520" y="348.5"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="44" x="473" y="370.4951">Sentry</text></g><!--MD5=[581adf54b155a040bf7b536f279324e0]
+entity Mailjet--><g id="elem_Mailjet"><rect fill="#F1F1F1" height="46.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="83" x="458.5" y="522.5"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="521.5" y="527.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="519.5" y="529.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="519.5" y="533.5"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="43" x="473.5" y="555.4951">Mailjet</text></g><!--MD5=[2cd49e4f1bbe02e16c374407e72acfe4]
+entity Matomo--><g id="elem_Matomo"><rect fill="#F1F1F1" height="46.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="96" x="32" y="337.5"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="108" y="342.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="106" y="344.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="106" y="348.5"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="56" x="47" y="370.4951">Matomo</text></g><!--MD5=[54a0bd70917f4235b84b8ddb209c8dda]
+entity Cerbere--><g id="elem_Cerbere"><rect fill="#F1F1F1" height="46.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="96" x="14" y="522.5"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="90" y="527.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="88" y="529.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="88" y="533.5"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="56" x="29" y="555.4951">Cerbere</text></g><!--MD5=[6df8c37eff84032735dfece3f0b5166f]
+entity Insee--><g id="elem_Insee"><rect fill="#F1F1F1" height="46.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="78" x="65" y="691.5"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="123" y="696.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="121" y="698.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="121" y="702.5"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="38" x="80" y="724.4951">Insee</text></g><!--MD5=[26a0c43ac3f82932659208e3c4ccf5b1]
+entity Administrations--><g id="elem_Administrations"><rect fill="#F1F1F1" height="46.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="146" x="14" y="860.5"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="140" y="865.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="138" y="867.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="138" y="871.5"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="106" x="29" y="893.4951">Administrations</text></g><!--MD5=[7fbd20eab0f047d95d8cf961cd333b40]
+entity Postgres--><g id="elem_Postgres"><path d="M216,533 C216,523 257,523 257,523 C257,523 298,523 298,533 L298,558.2969 C298,568.2969 257,568.2969 257,568.2969 C257,568.2969 216,568.2969 216,558.2969 L216,533 " fill="#F1F1F1" style="stroke:#181818;stroke-width:0.5;"/><path d="M216,533 C216,543 257,543 257,543 C257,543 298,543 298,533 " fill="none" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="62" x="226" y="559.9951">Postgres</text></g><!--MD5=[114d66ff7365acba36678bac2de568f6]
+entity GeoApi--><g id="elem_GeoApi"><rect fill="#F1F1F1" height="46.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="90" x="333" y="522.5"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="403" y="527.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="401" y="529.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="401" y="533.5"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="50" x="348" y="555.4951">GeoApi</text></g><!--MD5=[c42ed81cef7fdd2e33758127945b9a5b]
+entity UI--><g id="elem_UI"><path d="M231.3963,156.5939 C233.5599,149.9566 239.0087,149.203 242.8921,155.0045 C246.9365,150.1302 252.3887,150.2017 255.4455,156.1502 C258.1534,149.5396 262.3803,148.6609 267.0702,154.2637 C270.5427,147.3214 275.6838,148.2351 279.8736,153.5121 C282.9004,148.3633 288.6941,148.4552 291.9259,153.264 C295.3325,148.0623 301.1382,148.1243 303.6243,154.2174 C307.6823,148.6459 311.3009,149.1821 314.8392,154.741 C319.1256,147.9598 323.7672,149.2001 327.6478,155.1493 C331.1006,149.4669 336.0223,149.1766 339.8878,154.6983 C343.2598,149.7408 348.4563,149.0156 351.5741,154.9705 C355.2362,149.7602 361.4409,149.4357 363.8304,156.2659 C368.2018,150.8356 371.6496,151.3308 375.1383,157.1529 C383.1468,159.3981 386.3601,164.4891 380.6893,171.8876 C386.5548,178.9782 383.6613,184.4093 375.7906,187.0668 C372.1704,193.369 367.1951,194.8613 362.4692,188.2032 C359.4915,193.4282 355.6936,193.0833 352.4166,188.5102 C349.0483,195.2754 342.798,195.6241 338.4866,189.532 C335.3298,194.9103 330.9078,194.8934 327.7467,189.5363 C324.8553,196.3889 320.2758,197.2168 315.0423,192.0021 C310.8069,197.5635 306.6764,197.9337 302.7092,191.7212 C299.2933,197.3544 293.8707,198.5676 290.0953,192.0958 C286.281,197.0068 280.9158,196.3881 278.141,190.9007 C274.3591,195.7505 269.7699,194.8299 267.6799,189.2101 C263.4104,195.3958 259.1557,195.5683 254.5599,189.5611 C250.0709,195.3734 245.3415,195.6802 241.9855,188.4672 C237.7602,194.4312 233.397,193.1194 230.2893,187.3528 C221.8416,184.7144 219.7468,177.4778 226.4853,171.2516 C220.2738,165.0329 223.5768,158.1116 231.3963,156.5939 " fill="#F1F1F1" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="131" x="236.5" y="175.4951">Interface utilisateur</text></g><!--MD5=[645d8587175d8f7ad110cd370775931d]
+entity API--><g id="elem_API"><rect fill="#F1F1F1" height="46.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="126" x="239" y="337.5"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="345" y="342.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="343" y="344.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="343" y="348.5"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="86" x="254" y="370.4951">Serveur web</text></g><!--MD5=[d1918f31dea6862af21d869c45218abf]
+entity CRON--><g id="elem_CRON"><rect fill="#F1F1F1" height="46.2969" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="73" x="216.5" y="691.5"/><rect fill="#F1F1F1" height="10" style="stroke:#181818;stroke-width:0.5;" width="15" x="269.5" y="696.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="267.5" y="698.5"/><rect fill="#F1F1F1" height="2" style="stroke:#181818;stroke-width:0.5;" width="4" x="267.5" y="702.5"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="33" x="231.5" y="724.4951">Cron</text></g><!--MD5=[53a4e3a0b3b1434cfa6c5de089f495ac]
+entity Utilisateurs--><g id="elem_Utilisateurs"><ellipse cx="302" cy="14" fill="#FFFFFF" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"/><path d="M302,22 L302,49 M289,30 L315,30 M302,49 L289,64 M302,49 L315,64 " fill="none" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="76" x="264" y="78.4951">Utilisateurs</text></g><!--MD5=[7551b6bdc17c8bd5ceea88153d3d9033]
+link Sentry to Mailjet--><!--MD5=[ae8f55762476804eff771228f9347183]
+link Matomo to Cerbere--><!--MD5=[1f07374256f45ba37bb50a9f0e92dc3c]
+link Cerbere to Insee--><!--MD5=[5e61de9a20d27b14bf65047e72460c94]
+link Insee to Administrations--><!--MD5=[2a606f92fdd05c1fe5dd6caf7c834332]
+link UI to API--><g id="link_UI_API"><path d="M302,193.7977 C302,228.6489 302,294.2802 302,331.9597 " fill="none" id="UI-to-API" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="302,337.3092,306,328.3092,302,332.3092,298,328.3092,302,337.3092" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[a0d09ea99ee7199dcf9c6d96f0709cd4]
+link Postgres to CRON--><!--MD5=[133de154cbb1ae1d4142c9399328e425]
+link Utilisateurs to UI--><g id="link_Utilisateurs_UI"><path d="M302,81.6042 C302,100.9387 302,124.034 302,141.8377 " fill="none" id="Utilisateurs-to-UI" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="302,147.1831,306,138.1831,302,142.1831,298,138.1831,302,147.1831" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[4695ed91f423ba1c16633039bbdaf4fd]
+link API to Postgres--><g id="link_API_Postgres"><path d="M296.3917,383.5563 C288.1278,417.5301 272.6997,480.9568 263.8015,517.5385 " fill="none" id="API-to-Postgres" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="262.5376,522.7343,268.5516,514.9348,263.7194,517.876,260.7782,513.0439,262.5376,522.7343" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[88f0b14e516fd0c23d7377c0856eda79]
+link API to GeoApi--><g id="link_API_GeoApi"><path d="M311.3846,383.7918 C319.6559,404.2787 332.0584,434.8971 343,461.5 C350.6789,480.1702 359.4122,501.1304 366.234,517.4429 " fill="none" id="API-to-GeoApi" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="368.2865,522.3485,368.5028,512.502,366.3566,517.7359,361.1227,515.5898,368.2865,522.3485" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[59a7c2fc74aa7946f4a71cc4df2178ec]
+link API to Cerbere--><g id="link_API_Cerbere"><path d="M238.7267,369.4739 C205.5693,376.7996 165.9523,389.9697 137,413.5 C103.3561,440.8432 81.9837,487.5428 71.0026,517.4371 " fill="none" id="API-to-Cerbere" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="69.2007,522.4496,76.0094,515.3333,70.8921,517.7444,68.4811,512.6271,69.2007,522.4496" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[be3be348efb594e7dc6aeb4925ce228d]
+link API to Insee--><g id="link_API_Insee"><path d="M238.6014,376.5827 C201.9416,390.1097 163,413.7227 163,453 C163,453 163,453 163,630 C163,651.9376 149.4662,672.2446 135.3625,687.4508 " fill="none" id="API-to-Insee" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="131.7724,691.2048,140.8836,687.4649,135.2281,687.5912,135.1018,681.9358,131.7724,691.2048" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[391497ebdc0f9cec0cc95c8724811338]
+link API to Matomo--><g id="link_API_Matomo"><path d="M238.7411,360.5 C205.3804,360.5 164.9119,360.5 133.1852,360.5 " fill="none" id="API-to-Matomo" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="128.1707,360.5,137.1707,364.5,133.1707,360.5,137.1707,356.5,128.1707,360.5" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="74" x="146.5" y="353.5669">statistiques</text></g><!--MD5=[2adc23712abfb26ece49e8e3b807ce47]
+link UI to Sentry--><g id="link_UI_Sentry"><path d="M326.2787,193.7977 C363.1927,229.2203 433.243,296.4403 472.1654,333.79 " fill="none" id="UI-to-Sentry" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="475.8327,337.3092,472.1083,328.1917,472.225,333.8473,466.5693,333.964,475.8327,337.3092" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="46" x="407" y="267.5669">erreurs</text></g><!--MD5=[08795052adbafbd514547914777e66fb]
+link CRON to Administrations--><g id="link_CRON_Administrations"><path d="M230.2665,737.6444 C199.8048,768.6566 145.8457,823.5908 113.5525,856.4677 " fill="none" id="CRON-to-Administrations" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="109.7247,860.3646,118.885,856.7468,113.2284,856.7975,113.1776,851.1409,109.7247,860.3646" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[fa0a36884de025b4a4408b2c57899acf]
+link CRON to Insee--><g id="link_CRON_Insee"><path d="M216.1433,714.5 C193.5655,714.5 170.9876,714.5 148.4098,714.5 " fill="none" id="CRON-to-Insee" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="143.2871,714.5,152.2871,718.5,148.2871,714.5,152.2871,710.5,143.2871,714.5" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[3c65e303467f427a981473c1f270161b]
+link API to Sentry--><g id="link_API_Sentry"><path d="M365.1928,360.5 C393.6283,360.5 426.6186,360.5 452.846,360.5 " fill="none" id="API-to-Sentry" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="457.9979,360.5,448.9979,356.5,452.9979,360.5,448.9979,364.5,457.9979,360.5" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="46" x="388.5" y="353.5669">erreurs</text></g><!--MD5=[0ba011d2d4c3974e08ce490fd64f800b]
+link API to Mailjet--><g id="link_API_Mailjet"><path d="M326.6765,383.5563 C363.5333,417.9932 432.7779,482.6915 471.6585,519.0193 " fill="none" id="API-to-Mailjet" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="475.3243,522.4444,471.479,513.3772,471.6709,519.0308,466.0173,519.2227,475.3243,522.4444" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="73" x="408" y="457.5669">envoie mail</text></g><!--MD5=[0dfe3024d1bbb522efd1eb12cd5f29f9]
+reverse link Matomo to UI--><g id="link_Matomo_UI"><path d="M110.945,334.0156 C154.5319,296.7115 233.3065,229.2917 274.7784,193.7977 " fill="none" id="Matomo-backto-UI" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="107.0966,337.3092,116.5351,334.4959,110.8952,334.058,111.3332,328.4181,107.0966,337.3092" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="74" x="204" y="267.5669">statistiques</text></g><!--MD5=[f6ddbb5a89d657b0d36597fc8f44c97d]
+@startuml
+
+actor "Utilisateurs" #White
+
+package Externes {
+  component Sentry
+  component Mailjet
+  Sentry -[hidden]d-> Mailjet
+}
+package Gouvernement {
+  component Matomo
+  component Cerbere
+  component Insee
+  component Administrations
+
+  Matomo -[hidden]d->Cerbere
+  Cerbere -[hidden]d->Insee
+  Insee -[hidden]d->Administrations
+}
+
+package Camino {
+  cloud "Interface utilisateur" as UI {
+  }
+  component "Serveur web" as API {
+  }
+
+  database Postgres
+  component "Cron" as CRON {
+
+  }
+  component GeoApi
+  UI - -> API
+  Postgres -[hidden]d-> CRON
+}
+
+
+Utilisateurs - -> UI
+
+API - -> Postgres
+API - -> GeoApi
+API -> Cerbere
+API -> Insee
+API -> Matomo: statistiques
+UI -> Sentry: erreurs
+CRON -> Administrations
+CRON -> Insee
+API -> Sentry: erreurs
+API -> Mailjet: envoie mail
+Matomo <- UI: statistiques
+@enduml
+
+PlantUML version 1.2022.3(Tue Mar 29 16:10:57 UTC 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: ANSI_X3.4-1968
+Language: en
+Country: US
+--></g></svg>

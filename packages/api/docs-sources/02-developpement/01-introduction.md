@@ -1,6 +1,6 @@
 # Développement de l'API de Camino
 
-> [github.com/MTES-MCT/camino-api](https://github.com/MTES-MCT/camino-api)
+> [github.com/MTES-MCT/camino](https://github.com/MTES-MCT/camino)
 
 ## Technologies
 
@@ -27,7 +27,7 @@
 
 ### Configuration et imports des données
 
-- Cloner ce repo : `git clone https://github.com/MTES-MCT/camino-api.git`.
+- Cloner ce repo : `git clone https://github.com/MTES-MCT/camino.git`.
 - Renommer le fichier `.env-example` en `.env` et le compléter.
 - Créer une base de données PostgreSQL correspondant au fichier `.env`.
 - Copier le fichier [Camino database](https://github.com/MTES-MCT/camino-database/raw/master/camino-public.sql) dans le répertoire `/backups`.
@@ -36,30 +36,30 @@
 
 ```bash
 # installe les dépendances
-npm install
+npm ci
 
 # importe les données depuis /backups/camino-public.sql
-npm run db:public-import
+npm run db:public-import -w packages/api
 
 # crée un utilisateur admin selon les paramètres ADMIN_EMAIL et ADMIN_PASSWORD du fichier .env
-npm run db:user
+npm run db:user -w packages/api
 ```
 
 ### Développement
 
 ```bash
 # démarre le serveur avec nodemon
-npm run dev
+npm run dev -w packages/api
 ```
 
 ### Production
 
 ```bash
 # compile l'application avec typescript
-npm run build
+npm run build -w packages/api
 
 # démarre le serveur
-npm run start
+npm run start -w packages/api
 ```
 
 ---
@@ -112,4 +112,4 @@ npm run start
 
 ## Contribution
 
-Voir [contributing.md](https://github.com/MTES-MCT/camino-api/blob/master/contributing.md) (en anglais) pour plus d'infos.
+Voir [contributing.md](https://github.com/MTES-MCT/camino/blob/master/contributing.md) (en anglais) pour plus d'infos.

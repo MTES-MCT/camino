@@ -11,7 +11,7 @@
       {
         "kind": "OBJECT",
         "name": "Query",
-        "description": "# Query\n## _Requêtes en lecture_\n\n- [Comment tester l'API Camino ?](https://github.com/MTES-MCT/camino-api/tree/master/manual/api)\n\n_Query_ un type _racine_ de GraphQL.\n\nCertaines requêtes sont __publiques__.\n\nCertaines requêtes sont __protégées__ et nécessitent une authentification par token (jwt). Elles sont signalées par une étoile __*__.\n\nEnfin, certaines requêtes sont __semi-publiques__ et retournent un résultat plus ou moins riche selon le niveau de permission de l'utilisateur authentifié. Elles sont signalées par un plus __+__.",
+        "description": "# Query\n## _Requêtes en lecture_\n\n- [Comment tester l'API Camino ?](https://github.com/MTES-MCT/camino/tree/master/packages/api/manual/api)\n\n_Query_ un type _racine_ de GraphQL.\n\nCertaines requêtes sont __publiques__.\n\nCertaines requêtes sont __protégées__ et nécessitent une authentification par token (jwt). Elles sont signalées par une étoile __*__.\n\nEnfin, certaines requêtes sont __semi-publiques__ et retournent un résultat plus ou moins riche selon le niveau de permission de l'utilisateur authentifié. Elles sont signalées par un plus __+__.",
         "fields": [
           {
             "name": "version",
@@ -6057,7 +6057,7 @@
       {
         "kind": "OBJECT",
         "name": "Mutation",
-        "description": "# Mutation\n## _Requêtes en écriture_\n\n- [Comment tester l'API Camino ?](https://github.com/MTES-MCT/camino-api/tree/master/manual/api)\n\n_Mutation_ un type _racine_ de GraphQL.\n\nCes requêtes sont __protégées__. Elles nécessitent une authentification par token (jwt) et un niveau de permission suffisant. Elle sont signalées par une étoile __*__.",
+        "description": "# Mutation\n## _Requêtes en écriture_\n\n- [Comment tester l'API Camino ?](https://github.com/MTES-MCT/camino/tree/master/packages/api/manual/api)\n\n_Mutation_ un type _racine_ de GraphQL.\n\nCes requêtes sont __protégées__. Elles nécessitent une authentification par token (jwt) et un niveau de permission suffisant. Elle sont signalées par une étoile __*__.",
         "fields": [
           {
             "name": "utilisateurConnecter",

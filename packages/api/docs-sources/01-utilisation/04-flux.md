@@ -74,4 +74,4 @@ Les instructions sont disponibles sur cette page : [https://github.com/MTES-MCT/
   - Type : `GeoJSON`
   - URI : `https://api.camino.beta.gouv.fr/titres?format=geojson` (ou une URL plus spécifique, selon les instructions ci-dessus)
 
-![camino qgis data sources manager](https://raw.githubusercontent.com/MTES-MCT/camino-api/master/docs-sources/assets/flux/camino-qgis-data-source-manager.jpg)
+![camino qgis data sources manager](../assets/flux/camino-qgis-data-source-manager.jpg)

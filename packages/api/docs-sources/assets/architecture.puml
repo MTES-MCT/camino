@@ -1,0 +1,50 @@
+@startuml
+
+actor "Utilisateurs" #White
+
+package Externes {
+  component Sentry
+  component Mailjet
+  Sentry -[hidden]d-> Mailjet
+}
+package Gouvernement {
+  component Matomo
+  component Cerbere
+  component Insee
+  component Administrations
+
+  Matomo -[hidden]d->Cerbere
+  Cerbere -[hidden]d->Insee
+  Insee -[hidden]d->Administrations
+}
+
+package Camino {
+  cloud "Interface utilisateur" as UI {
+  }
+  component "Serveur web" as API {
+  }
+
+  database Postgres
+  component "Cron" as CRON {
+
+  }
+  component GeoApi
+  UI --> API
+  Postgres -[hidden]d-> CRON
+}
+
+
+Utilisateurs --> UI
+
+API --> Postgres
+API --> GeoApi
+API -> Cerbere
+API -> Insee
+API -> Matomo: statistiques
+UI -> Sentry: erreurs
+CRON -> Administrations
+CRON -> Insee
+API -> Sentry: erreurs
+API -> Mailjet: envoie mail
+Matomo <- UI: statistiques
+@enduml
