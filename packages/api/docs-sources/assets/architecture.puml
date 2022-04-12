@@ -1,17 +1,24 @@
 @startuml
+!include <tupadr3/common>
 
-actor "Utilisateurs" #White
+!include <office/Databases/database>
+!include <office/Servers/application_server>
+!include <office/Concepts/application_web>
+!include <office/Devices/device_laptop>
+!include <office/Servers/3rd_party_mail_server>
+
+OFF_DEVICE_LAPTOP(Utilisateurs, Utilisateurs)
 
 package Externes {
-  component Sentry
-  component Mailjet
+  OFF_APPLICATION_SERVER(Sentry, Sentry)
+  OFF_3RD_PARTY_MAIL_SERVER(Mailjet, Mailjet)
   Sentry -[hidden]d-> Mailjet
 }
 package Gouvernement {
-  component Matomo
-  component Cerbere
-  component Insee
-  component Administrations
+  OFF_APPLICATION_SERVER(Matomo, Matomo)
+  OFF_APPLICATION_SERVER(Cerbere, Cerbere)
+  OFF_APPLICATION_SERVER(Insee, Insee)
+  OFF_APPLICATION_SERVER(Administrations, Administrations)
 
   Matomo -[hidden]d->Cerbere
   Cerbere -[hidden]d->Insee
@@ -19,16 +26,12 @@ package Gouvernement {
 }
 
 package Camino {
-  cloud "Interface utilisateur" as UI {
-  }
-  component "Serveur web" as API {
-  }
+  OFF_APPLICATION_WEB(UI, Interface)
+  OFF_APPLICATION_SERVER(API,Serveur)
+  OFF_DATABASE(Postgres,Postgres)
 
-  database Postgres
-  component "Cron" as CRON {
-
-  }
-  component GeoApi
+  OFF_APPLICATION_SERVER(CRON,Cron)
+  OFF_APPLICATION_SERVER(GeoApi,GeoApi)
   UI --> API
   Postgres -[hidden]d-> CRON
 }
