@@ -1,6 +1,17 @@
 <template>
   <div>
-    <h1>Mes titres</h1>
+    <div class="desktop-blobs">
+      <div class="desktop-blob-2-3">
+        <h1 class="mt-xs mb-m">Mes Titres</h1>
+      </div>
+
+      <div class="desktop-blob-1-3">
+        <button class="btn btn-primary small flex" @click="titreDemandeOpen">
+          <span class="mt-xxs">Demander un titre…</span>
+          <i class="icon-24 icon-plus flex-right" />
+        </button>
+      </div>
+    </div>
     <div v-if="status === 'LOADING'" class="loaders fixed p">
       <div class="loader" />
     </div>
@@ -29,6 +40,7 @@ import {
   titresLignesBuild
 } from '@/components/titres/table-utils'
 import { Row } from '../_ui/table-auto.type'
+import { useRouter } from 'vue-router'
 
 const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
 const entrepriseTitres = ref<Row[]>([])
@@ -41,6 +53,12 @@ const props = defineProps<{
 const columns = titresColonnes.filter(({ id }) =>
   props.displayActivites ? true : id !== 'activites'
 )
+
+const router = useRouter()
+
+const titreDemandeOpen = () => {
+  router.push({ name: 'titre-creation' })
+}
 
 onMounted(async () => {
   try {
