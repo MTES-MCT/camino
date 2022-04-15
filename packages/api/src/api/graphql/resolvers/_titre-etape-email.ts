@@ -7,6 +7,7 @@ import { titreUrlGet } from '../../../business/utils/urls-get'
 import { EmailAdministration } from '../../../tools/api-mailjet/types'
 
 const emailForAdministrationContentFormat = (
+  titreTypeId: string,
   etapeNom: string,
   titreId: string,
   user: IUtilisateur
@@ -14,7 +15,9 @@ const emailForAdministrationContentFormat = (
   const titreUrl = titreUrlGet(titreId)
 
   return `
-  <h3>L’étape « ${etapeNom} » d’une demande d’ARM vient d’être réalisée.</h3>
+  <h3>L’étape « ${etapeNom} » d’une demande d’${
+    titreTypeId === 'arm' ? 'ARM' : 'AEX'
+  } vient d’être réalisée.</h3>
   
   <hr>
   
@@ -34,7 +37,8 @@ const etapeStatusUpdated = (
   (!oldEtape || oldEtape.statutId !== statusId) &&
   etape.statutId === statusId
 
-const emailsForAdministrationsGet = (
+// VisibleForTesting
+export const emailsForAdministrationsGet = (
   etape: ITitreEtape,
   etapeType: IEtapeType,
   demarcheTypeId: string,
@@ -88,6 +92,7 @@ const emailsForAdministrationsGet = (
 
   const subject = `${etapeType.nom} | ${title}`
   const content = emailForAdministrationContentFormat(
+    titreTypeId,
     etapeType.nom,
     titreId,
     user
