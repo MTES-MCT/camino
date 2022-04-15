@@ -9,7 +9,6 @@
   >
     <template #title>
       <h5>
-        {{ dateFormat(activite.date) }} |
         <span class="cap-first"
           ><span v-if="activite.periode && activite.periode.nom"
             >{{ activite.periode.nom }}
