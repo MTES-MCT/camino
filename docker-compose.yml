@@ -56,7 +56,7 @@ services:
     restart: unless-stopped
   docs:
     container_name: camino_api_docs
-    image: caminofr/camino-api-docs
+    image: caminofr/camino-api-docs:${CAMINO_TAG}
     environment:
       VIRTUAL_HOST: ${DOC_HOST}
       VIRTUAL_PORT: ${DOC_PORT}
