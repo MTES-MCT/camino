@@ -25,7 +25,7 @@
     "dev:monthly": "ts-node --transpile-only ./src/scripts/monthly.ts",
     "dev:schema": "node src/dev/api/graphql-dsl-to-query-convert.js",
     "dev:update": "npm-check-updates -u && npm install && npm audit fix",
-    "docs": "rm -rf docs && typedoc src --sourcefile-url-prefix \"https://github.com/MTES-MCT/camino-api/blob/master/\"",
+    "docs": "rm -rf docs && typedoc src --media docs-sources/assets/ --sourcefile-url-prefix \"https://github.com/MTES-MCT/camino/blob/master/\"",
     "documents:check": "node ./dist/src/scripts/documents-check.js",
     "lint": "prettier --write . && eslint --fix .",
     "start": "node ./dist/src/index.js",
