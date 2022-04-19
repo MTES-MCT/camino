@@ -2,7 +2,7 @@
 
 L'Api Camino fonctionne avec une base de données PostgreSQL.
 
-![camino database schema](../assets/database/camino-db.svg)
+![camino database schema](media://database/camino-db.svg)
 
 ## Chargement des données
 

@@ -68,10 +68,10 @@ Les instructions sont disponibles sur cette page : [https://github.com/MTES-MCT/
 1. Dans le menu _Couches_, sélectionner _Gestionnaire des sources de données_, puis choisir l'option _Vecteur_.
 2. Dans la popup, utiliser les réglages suivants :
 
-- type de source : `Protocole : HTTP(S), cloud, etc.`
-- encodage : `UTF-8`
-- Protocole :
-  - Type : `GeoJSON`
-  - URI : `https://api.camino.beta.gouv.fr/titres?format=geojson` (ou une URL plus spécifique, selon les instructions ci-dessus)
+- type de source : `Protocole : HTTP(S), cloud, etc.`
+- encodage : `UTF-8`
+- Protocole :
+  - Type : `GeoJSON`
+  - URI : `https://api.camino.beta.gouv.fr/titres?format=geojson` (ou une URL plus spécifique, selon les instructions ci-dessus)
 
-![camino qgis data sources manager](../assets/flux/camino-qgis-data-source-manager.jpg)
+![camino qgis data sources manager](media://flux/camino-qgis-data-source-manager.jpg)
