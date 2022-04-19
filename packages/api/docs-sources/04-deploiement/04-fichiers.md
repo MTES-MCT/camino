@@ -21,25 +21,8 @@ scp -r <user>@<ip>:/srv/tmp/files/* files
 
 ## Sur le serveur
 
-### Copier les fichiers depuis le volume
+### Copier les fichiers
 
 ```bash
-docker cp camino_api_app:/app/files/. /srv/tmp/files/
-```
-
-### Copier les fichiers vers le volume
-
-```bash
-# désarchive les fichiers
-tar -zxvf /srv/tmp/files.tar.gz
-
-# copie les fichiers vers le volume
-docker cp /srv/tmp/files/. camino_api_app:/app/files/
-```
-
-### Inspecter le volume
-
-```bash
-# crée un container avec l'image Docker busybox pour inspecter le contenu du volume
-docker run -it --rm -v camino-api_files:/vol busybox ls -l /vol
+sudo cp /srv/www/camino/files/ /srv/tmp/files/
 ```

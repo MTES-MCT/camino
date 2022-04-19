@@ -1,41 +1,11 @@
 # configuration des scripts de déploiement
 
-## Déploiement de l'API
+## Déploiement
 
-Créer un fichier `/srv/scripts/api-deploy` contenant:
-
-```bash
-#!/bin/bash
-# api-deploy
-# deploie camino-api depuis le docker hub
-
-cd /srv/www/camino-api
-docker-compose pull && docker-compose up -d
-cd -
-```
-
-Rendre le fichier éxécutable
+Dans /srv/www/camino, lancer
 
 ```bash
-sudo chmod +x /srv/scripts/api-deploy
+CAMINO_TAG=camino_git_sha docker-compose up -d
 ```
 
-## Déploiement de l'UI
-
-Créer un fichier `/srv/scripts/ui-deploy` contenant:
-
-```bash
-#!/bin/bash
-# ui-deploy
-# deploie camino-ui depuis le docker hub
-
-cd /srv/www/camino-ui
-docker-compose pull && docker-compose up -d
-cd -
-```
-
-Rendre le fichier éxécutable
-
-```bash
-sudo chmod +x /srv/scripts/ui-deploy
-```
+ou camino_git_sha est le sha associé à la release
