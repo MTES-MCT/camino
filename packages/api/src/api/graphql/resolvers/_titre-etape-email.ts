@@ -79,10 +79,6 @@ export const emailsForAdministrationsGet = (
       emails.push(EmailAdministration.DGTM)
 
       title = 'Confirmation de l’accord du propriétaire du sol'
-    } else if (etapeStatusUpdated(etape, 'rca', 'fai', oldEtape)) {
-      emails.push(EmailAdministration.DGTM)
-
-      title = 'Réception de compléments'
     }
   }
 
