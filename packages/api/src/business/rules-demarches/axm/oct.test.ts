@@ -237,4 +237,29 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
       ])
     ).toHaveLength(0)
   })
+
+  test.each([
+    { typeId: 'dex', statutId: 'fav' },
+    { typeId: 'sas', statutId: 'fai' }
+  ])(
+    'la %s est possible après une apo favorable avec réserve',
+    ({ typeId, statutId }) => {
+      expect(
+        octEtatsValidate([
+          { typeId: 'mfr', date: '2020-01-01' },
+          { typeId: 'dae', statutId: 'exe', date: '2020-01-01' },
+          { typeId: 'mdp', date: '2020-01-02' },
+          { typeId: 'asl', statutId: 'fav', date: '2020-01-02' },
+          { typeId: 'mcr', statutId: 'fav', date: '2020-01-03' },
+          { typeId: 'scl', date: '2020-01-04' },
+          { typeId: 'ama', date: '2020-01-05' },
+          { typeId: 'ssr', date: '2020-01-04' },
+          { typeId: 'cps', date: '2020-01-05' },
+          { typeId: 'apd', date: '2020-01-06' },
+          { typeId: 'apo', statutId: 'fre', date: '2020-01-08' },
+          { typeId, statutId, date: '2020-01-09' }
+        ])
+      ).toHaveLength(0)
+    }
+  )
 })
