@@ -1,4 +1,4 @@
-import { DemarchesStatutsTypes, ITitreDemarche } from '../../types'
+import { DemarchesStatutsTypesIds, ITitreDemarche } from '../../types'
 
 import { titreDateFinFind } from './titre-date-fin-find'
 
@@ -70,8 +70,8 @@ const titreStatutIdFind = (
 
           if (
             ![
-              DemarchesStatutsTypes.EnConstruction,
-              DemarchesStatutsTypes.Depose
+              DemarchesStatutsTypesIds.EnConstruction,
+              DemarchesStatutsTypesIds.Depose
             ].includes(d.statutId)
           ) {
             return false

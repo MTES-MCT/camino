@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "build": "vite build --emptyOutDir",
+    "predev": "find ../common/src -name '*.js*' -delete",
     "dev": "vite",
     "dev:update": "npm-check-updates && npm install && npm audit fix",
     "start": "node ./index.js",

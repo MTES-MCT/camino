@@ -142,9 +142,9 @@ describe('trie les étapes', () => {
 
   test('tri selon l’arbre si les étapes ont la même date', () => {
     const etapes = [
-      { typeId: 'mcr', date: '2020-01-01', ordre: 18 },
-      { typeId: 'vfd', date: '2020-01-01', ordre: 23 },
-      { typeId: 'eof', date: '2020-01-01', ordre: 36 }
+      { typeId: 'pfd', date: '2020-01-01', statutId: 'fai' },
+      { typeId: 'mfr', date: '2020-01-01', statutId: 'fai' },
+      { typeId: 'mdp', date: '2020-01-01', statutId: 'fai' }
     ] as ITitreEtape[]
 
     const result = titreEtapesSortAscByDate(
@@ -152,27 +152,21 @@ describe('trie les étapes', () => {
       { id: 'oct' } as IDemarcheType,
       'arm'
     )
-    expect(result[0].typeId).toEqual('vfd')
-    expect(result[1].typeId).toEqual('mcr')
-    expect(result[2].typeId).toEqual('eof')
+    expect(result[0].typeId).toEqual('mfr')
+    expect(result[1].typeId).toEqual('mdp')
+    expect(result[2].typeId).toEqual('pfd')
   })
 
-  test("loggue une erreur si le type d'étape est absent dans la définition", () => {
+  test("retourne une erreur si le type d'étape est absent dans la définition", () => {
     const etapes = [
-      { typeId: 'mcr', date: '2020-01-01', ordre: 18 },
-      { typeId: 'bof', date: '2020-01-01', ordre: 23 },
-      { typeId: 'vfd', date: '2020-01-01', ordre: 36 }
+      { typeId: 'mcr', date: '2020-01-01', statutId: 'fai' },
+      { typeId: 'bof', date: '2020-01-01', statutId: 'fai' },
+      { typeId: 'vfd', date: '2020-01-01', statutId: 'fai' }
     ] as ITitreEtape[]
 
-    const result = titreEtapesSortAscByDate(
-      etapes,
-      { id: 'oct' } as IDemarcheType,
-      'arm'
-    )
-    expect(console.error).toHaveBeenCalledTimes(2)
-    expect(result[0].typeId).toEqual('vfd')
-    expect(result[1].typeId).toEqual('bof')
-    expect(result[2].typeId).toEqual('mcr')
+    expect(() =>
+      titreEtapesSortAscByDate(etapes, { id: 'oct' } as IDemarcheType, 'arm')
+    ).toThrowErrorMatchingInlineSnapshot(`"l'état bof est inconnu"`)
   })
 
   test('sur un otroi d’ARM la rcm est après la mcp', () => {
@@ -194,26 +188,5 @@ describe('trie les étapes', () => {
     )
     expect(result[0].typeId).toEqual('mcp')
     expect(result[1].typeId).toEqual('rcm')
-  })
-
-  test('sur un otroi d’ARM la mnv est après la aco', () => {
-    const etapes = [
-      { typeId: 'aco', date: '2020-01-01' },
-      { typeId: 'mnv', date: '2020-01-01' }
-    ] as ITitreEtape[]
-
-    const result = titreEtapesSortAscByDate(
-      etapes,
-      {
-        id: 'oct',
-        etapesTypes: [
-          { id: 'mnv', ordre: 2101, titreTypeId: 'arm' },
-          { id: 'aco', ordre: 2100, titreTypeId: 'arm' }
-        ]
-      } as IDemarcheType,
-      'arm'
-    )
-    expect(result[0].typeId).toEqual('aco')
-    expect(result[1].typeId).toEqual('mnv')
   })
 })

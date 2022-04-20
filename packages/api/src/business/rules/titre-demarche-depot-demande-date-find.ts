@@ -5,7 +5,13 @@ import { ITitreEtape } from '../../types'
 // sinon
 // retourne la date de la première étape
 
-const titreDemarcheDepotDemandeDateFind = (titreEtapes: ITitreEtape[]) => {
+const titreDemarcheDepotDemandeDateFind = (
+  titreEtapes: Pick<ITitreEtape, 'date' | 'typeId'>[] | undefined
+): undefined | string => {
+  if (!titreEtapes || titreEtapes.length === 0) {
+    return undefined
+  }
+
   const titreEtapeDemande = titreEtapes.find(te => te.typeId === 'mdp')
 
   if (titreEtapeDemande) {

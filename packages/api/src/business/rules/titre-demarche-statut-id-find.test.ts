@@ -1,7 +1,7 @@
 import {
   ITitreEtape,
   TitreEtapesTravauxTypes as Travaux,
-  DemarchesStatutsTypes as Demarches
+  DemarchesStatutsTypesIds as Demarches
 } from '../../types'
 
 import { titreDemarcheStatutIdFind } from './titre-demarche-statut-id-find'

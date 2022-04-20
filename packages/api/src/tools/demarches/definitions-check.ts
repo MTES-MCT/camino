@@ -1,6 +1,9 @@
 import {
   demarchesDefinitions,
-  IEtapeTypeIdCondition
+  IDemarcheDefinition,
+  IEtapeTypeIdCondition,
+  isDemarcheDefinitionRestriction,
+  DemarcheDefinitionRestriction
 } from '../../business/rules-demarches/definitions'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches'
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate'
@@ -35,7 +38,15 @@ const etapesTypesIdsGet = async (titreTypeId: string, demarcheTypeId: string) =>
 
 const tdeValidate = async () => {
   const errors = [] as string[]
-  for (const demarcheDefinition of demarchesDefinitions) {
+
+  const definitionsWithRestrictions = demarchesDefinitions.filter(
+    (
+      demarcheDefinition: IDemarcheDefinition
+    ): demarcheDefinition is DemarcheDefinitionRestriction =>
+      isDemarcheDefinitionRestriction(demarcheDefinition)
+  )
+
+  for (const demarcheDefinition of definitionsWithRestrictions) {
     for (const demarcheTypeId of demarcheDefinition.demarcheTypeIds) {
       const demarcheEtatsEtapeTypeIds = Object.keys(
         demarcheDefinition.restrictions
@@ -80,7 +91,7 @@ const tdeValidate = async () => {
   }
 
   // on vérifie qu’il existe un bloc dans l’arbre par étapes définies dans TDE
-  for (const demarcheDefinition of demarchesDefinitions) {
+  for (const demarcheDefinition of definitionsWithRestrictions) {
     for (const demarcheTypeId of demarcheDefinition.demarcheTypeIds) {
       const demarcheEtatsEtapeTypeIds = Object.keys(
         demarcheDefinition.restrictions

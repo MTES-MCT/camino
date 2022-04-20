@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`vérifie l’arbre d’octroi d’ARM ne peut pas créer 2 "mfr" 1`] = `"Error: cannot execute step: '{\\"typeId\\":\\"mfr\\",\\"statutId\\":\\"fai\\",\\"date\\":\\"2020-01-03\\"}' after '[\\"mfr_fai\\",\\"mdp_dep\\"]'. The event {\\"type\\":\\"FAIRE_DEMANDE\\",\\"mecanise\\":false,\\"franchissements\\":0} should be one of 'MODIFIER_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,CLASSER_SANS_SUITE,PAYER_FRAIS_DE_DOSSIER'"`;
+exports[`vérifie l’arbre d’octroi d’ARM ne peut pas créer 2 "mfr" 1`] = `"Error: cannot execute step: '{\\"typeId\\":\\"mfr\\",\\"statutId\\":\\"fai\\",\\"date\\":\\"2020-01-03\\"}' after '[\\"mfr_fai\\",\\"mdp_dep\\"]'. The event {\\"type\\":\\"FAIRE_DEMANDE\\",\\"mecanise\\":false,\\"franchissements\\":null} should be one of 'MODIFIER_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,CLASSER_SANS_SUITE,PAYER_FRAIS_DE_DOSSIER'"`;
 
 exports[`vérifie l’arbre d’octroi d’ARM ne peut pas créer deux "des" 1`] = `"Error: cannot execute step: '{\\"typeId\\":\\"des\\",\\"statutId\\":\\"fai\\",\\"date\\":\\"2020-01-04\\"}' after '[\\"mfr_fai\\",\\"mdp_dep\\",\\"des_fai\\"]'. The event {\\"type\\":\\"DESISTER_PAR_LE_DEMANDEUR\\"} should be one of 'VALIDER_FRAIS_DE_DOSSIER'"`;
 
@@ -12,6 +12,6 @@ exports[`vérifie l’arbre d’octroi d’ARM ne peut pas créer une étape "{ 
 
 exports[`vérifie l’arbre d’octroi d’ARM ne peut pas créer une étape "{ typeId: 'mcd', statutId: 'fai' }" si il n’existe pas d’autres étapes 1`] = `"Error: cannot execute step: '{\\"typeId\\":\\"mcd\\",\\"statutId\\":\\"fai\\"}' after '[]'. The event {\\"type\\":\\"DEMANDER_COMPLEMENTS_DAE\\"} should be one of 'FAIRE_DEMANDE'"`;
 
-exports[`vérifie l’arbre d’octroi d’ARM ne peut pas créer une étape "mcp" sans "mdp" 1`] = `"Error: cannot execute step: '{\\"typeId\\":\\"mcp\\",\\"statutId\\":\\"com\\",\\"date\\":\\"2022-04-16\\"}' after '[\\"mfr_fai\\"]'. The event {\\"type\\":\\"ACCEPTER_COMPLETUDE\\"} should be one of 'DEPOSER_DEMANDE,MODIFIER_DEMANDE,DESISTER_PAR_LE_DEMANDEUR,CLASSER_SANS_SUITE'"`;
+exports[`vérifie l’arbre d’octroi d’ARM ne peut pas créer une étape "mcp" sans "mdp" 1`] = `"Error: cannot execute step: '{\\"typeId\\":\\"mcp\\",\\"statutId\\":\\"com\\",\\"date\\":\\"2022-04-16\\"}' after '[\\"mfr_fai\\"]'. The event {\\"type\\":\\"ACCEPTER_COMPLETUDE\\"} should be one of 'DEPOSER_DEMANDE'"`;
 
 exports[`vérifie l’arbre d’octroi d’ARM ne peut pas déplacer une étape "mdp" sans "mfr" 1`] = `"Error: cannot execute step: '{\\"typeId\\":\\"mdp\\",\\"statutId\\":\\"dep\\",\\"date\\":\\"2020-02-02\\"}' after '[]'. The event {\\"type\\":\\"DEPOSER_DEMANDE\\"} should be one of 'FAIRE_DEMANDE'"`;

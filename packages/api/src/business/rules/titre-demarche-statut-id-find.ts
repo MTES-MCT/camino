@@ -1,11 +1,20 @@
 import {
   ITitreEtape,
-  DemarchesStatutsTypes as DemarchesStatuts,
-  TitreEtapesTravauxTypes as Travaux
+  DemarchesStatutsTypesIds as DemarchesStatuts,
+  TitreEtapesTravauxTypes as Travaux,
+  DemarcheStatutId
 } from '../../types'
 
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
+import {
+  demarcheDefinitionFind,
+  isDemarcheDefinitionMachine
+} from '../rules-demarches/definitions'
+import {
+  demarcheStatut,
+  toMachineEtapes
+} from '../rules-demarches/machine-helper'
 
 const titreEtapesDecisivesCommunesTypes = ['css', 'rtd', 'abd', 'and']
 
@@ -279,7 +288,7 @@ const titreDemarcheTravauxStatutIdFind = (
   const titreEtapesRecent = titreEtapesSortDescByOrdre(titreDemarcheEtapes)[0]
 
   const statuts: {
-    [travauxEtapeType: string]: DemarchesStatuts
+    [travauxEtapeType: string]: DemarcheStatutId
   } = {
     [Travaux.DemandeAutorisationOuverture]: DemarchesStatuts.Depose,
     [Travaux.DeclarationOuverture]: DemarchesStatuts.Depose,
@@ -346,7 +355,7 @@ const titreDemarcheTravauxStatutIdFind = (
  * @param titreTypeId - id du type de titre
  */
 
-const titreDemarcheStatutIdFind = (
+export const titreDemarcheStatutIdFind = (
   demarcheTypeId: string,
   titreDemarcheEtapes: ITitreEtape[],
   titreTypeId: string
@@ -358,6 +367,16 @@ const titreDemarcheStatutIdFind = (
   // si la démarche est pour des travaux
   if (titreDemarchesTravauxTypes.includes(demarcheTypeId)) {
     return titreDemarcheTravauxStatutIdFind(titreDemarcheEtapes, demarcheTypeId)
+  }
+
+  const demarcheDefinition = demarcheDefinitionFind(
+    titreTypeId,
+    demarcheTypeId,
+    titreDemarcheEtapes
+  )
+
+  if (isDemarcheDefinitionMachine(demarcheDefinition)) {
+    return demarcheStatut(toMachineEtapes(titreDemarcheEtapes))
   }
 
   //  si la démarche fait l’objet d’une demande
@@ -379,5 +398,3 @@ const titreDemarcheStatutIdFind = (
   //  sinon, le statut est indéterminé
   return DemarchesStatuts.Indetermine
 }
-
-export { titreDemarcheStatutIdFind }

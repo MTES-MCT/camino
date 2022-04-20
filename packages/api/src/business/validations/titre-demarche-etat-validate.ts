@@ -3,14 +3,19 @@ import { ITitre, ITitreEtape, IDemarcheType, ITitreDemarche } from '../../types'
 
 import {
   demarcheDefinitionFind,
-  IDemarcheDefinitionRestrictions
+  IDemarcheDefinitionRestrictions,
+  isDemarcheDefinitionMachine
 } from '../rules-demarches/definitions'
 import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find'
 import { titreContenuFormat } from '../../database/models/_format/titre-contenu'
 import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort'
 import { titreEtapeEtatValidate } from './titre-etape-etat-validate'
-import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot-demande-date-find'
 import { objectClone } from '../../tools/index'
+import {
+  isEtapesOk,
+  orderMachine,
+  toMachineEtapes
+} from '../rules-demarches/machine-helper'
 
 const titreDemarcheEtapesBuild = (
   titreEtape: ITitreEtape,
@@ -111,25 +116,14 @@ const titreDemarcheUpdatedEtatValidate = (
     suppression,
     titreDemarcheEtapes
   )
-
   const demarcheDefinition = demarcheDefinitionFind(
     titre.typeId,
     demarcheType.id,
-    titreDemarcheDepotDemandeDateFind(titreDemarcheEtapesNew)
+    titreDemarcheEtapesNew
   )
 
   // pas de validation pour les démarches qui n'ont pas d'arbre d’instructions
   if (!demarcheDefinition) return []
-
-  // vérifie que toutes les étapes existent dans l’arbre
-  const etapeTypeIdsValid = Object.keys(demarcheDefinition.restrictions)
-
-  const etapeInconnue = titreDemarcheEtapesNew.find(
-    etape => !etapeTypeIdsValid.includes(etape.typeId!)
-  )
-  if (etapeInconnue) {
-    return [`l’étape ${etapeInconnue.typeId} n’existe pas dans l’arbre`]
-  }
 
   // vérifie que la démarche existe dans le titre
   const titreDemarche = titre.demarches?.find(d => d.typeId === demarcheType.id)
@@ -164,14 +158,49 @@ const titreDemarcheUpdatedEtatValidate = (
       te => te.statutId !== 'aco'
     )
   }
-  // On vérifie que la nouvelle démarche respecte son arbre d’instructions
-  const titreDemarchesErrors = titreDemarcheEtatValidate(
-    demarcheDefinition.restrictions,
-    demarcheType,
-    titreDemarche,
-    titreDemarcheEtapesNew,
-    titre
-  )
+
+  const titreDemarchesErrors: string[] = []
+
+  // vérifie que toutes les étapes existent dans l’arbre
+  if (isDemarcheDefinitionMachine(demarcheDefinition)) {
+    // TODO 2022-04-22
+    // - [ ] utiliser la machine pour calculer le statut de la démarche (lancer le daily après pour vérifier les modifications en prod)
+    //   - [ ] Prise en compte des statuts d'étapes pour le calcul des étapes possibles
+    //   - [x] Changer la machine à état pour classer sans suite dès le classement sans suite, et pas après la notification du demandeur
+    //   - [x] Prendre en compte la VFC lors de desistement et CSS
+    // - [x] vérifier le calcul de l’ordre des étapes déjà existant
+    // - [x] renommer les trucs dans oct.machine.ts (uniformisation...)
+    //
+    // PR mergeable ici ^
+    // - ajouter les « responsables » sur les étapes (ex: onf, ptmg)
+    // - gérer les notifications via les responsables ?
+    // - récupérer les titres où la personne connectée est en « attente »
+
+    const ok = isEtapesOk(orderMachine(toMachineEtapes(titreDemarcheEtapesNew)))
+    if (!ok) {
+      titreDemarchesErrors.push('la démarche n’est pas valide')
+    }
+  } else {
+    const etapeTypeIdsValid = Object.keys(demarcheDefinition.restrictions)
+
+    const etapeInconnue = titreDemarcheEtapesNew.find(
+      etape => !etapeTypeIdsValid.includes(etape.typeId!)
+    )
+    if (etapeInconnue) {
+      return [`l’étape ${etapeInconnue.typeId} n’existe pas dans l’arbre`]
+    }
+
+    // On vérifie que la nouvelle démarche respecte son arbre d’instructions
+    titreDemarchesErrors.push(
+      ...titreDemarcheEtatValidate(
+        demarcheDefinition.restrictions,
+        demarcheType,
+        titreDemarche,
+        titreDemarcheEtapesNew,
+        titre
+      )
+    )
+  }
 
   return titreDemarchesErrors
 }
