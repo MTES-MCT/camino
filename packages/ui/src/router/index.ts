@@ -284,12 +284,10 @@ router.isReady().then(async () => {})
 
 router.beforeEach(async (to, from, next) => {
   if (!store.getters['user/isLoaded']) {
-    const ticket =
-      router.currentRoute.value.query.authentification === 'cerbere' &&
-      router.currentRoute.value.query.ticket
+    const ticket = to.query.authentification === 'cerbere' && to.query.ticket
 
     if (ticket) {
-      const query = { ...router.currentRoute.value.query }
+      const query = { ...to.query }
 
       delete query.ticket
       delete query.authentification
