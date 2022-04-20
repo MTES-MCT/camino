@@ -291,7 +291,7 @@ export default {
       this.$store.commit('popupOpen', {
         component: DeposePopup,
         props: {
-          etape: this.etape,
+          etapeId: this.etape.id,
           onDepotDone: () => this.$store.dispatch(`titre/get`, this.titreId)
         }
       })
