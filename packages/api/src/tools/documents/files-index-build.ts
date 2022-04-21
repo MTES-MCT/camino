@@ -4,7 +4,9 @@ import { basename } from 'path'
 import { Index } from '../../types'
 
 const filesIndexBuild = () => {
-  const filesNames = execSync('find ./files | grep pdf').toString().split('\n')
+  const filesNames = execSync('find ./packages/api/files | grep pdf')
+    .toString()
+    .split('\n')
 
   return filesNames.reduce((res: Index<string>, fileName) => {
     if (fileName) {
