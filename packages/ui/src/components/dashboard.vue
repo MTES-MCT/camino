@@ -1,5 +1,5 @@
 <template>
-  <PureDashboard
+  <PureEntrepriseDashboard
     v-if="hasEntreprises"
     :getEntreprisesTitres="getEntreprisesTitres"
     :displayActivites="activites"
@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import PureDashboard from '@/components/dashboard/pure-dashboard.vue'
+import PureEntrepriseDashboard from '@/components/dashboard/pure-entreprise-dashboard.vue'
 
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Automated Storybook Snapshots Components/PureDashboard Loading 1`] = `
+exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Loading 1`] = `
 <div>
   <div
     class="desktop-blobs"
@@ -43,7 +43,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Loading 1`] = `
 </div>
 `;
 
-exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
+exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok 1`] = `
 <div>
   <div
     class="desktop-blobs"
@@ -75,9 +75,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
     </div>
   </div>
   <!--v-if-->
-  <div
-    class="width-full-p"
-  >
+  <div>
     <div
       class="overflow-scroll-x mb"
     >
@@ -214,7 +212,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
             <span
               class="bold"
             >
-              220222
+              Aachen
             </span>
           </div>
           <div
@@ -238,7 +236,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
             <span
               class="small bold cap-first"
             >
-              autorisation de recherches
+              concession
             </span>
           </div>
           <div
@@ -248,10 +246,10 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
               class="cap-first small bold"
             >
               <span
-                class="bg-warning color-bg pill py-xs px-s"
+                class="bg-neutral color-bg pill py-xs px-s"
               >
                 
-                demande initiale
+                échu
                 
               </span>
             </span>
@@ -283,7 +281,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
                     class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
                   >
                     
-                    or
+                    fer
                     
                   </span>
                 </span>
@@ -312,7 +310,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
               <li
                 class="h6"
               >
-                NINOR
+                Société des Mines Aachen
               </li>
               
             </ul>
@@ -327,7 +325,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
               <li
                 class="h6"
               >
-                Guyane
+                Grand Est
               </li>
               
             </ul>
@@ -342,7 +340,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
               <li
                 class="h6"
               >
-                Guyane
+                Moselle
               </li>
               
             </ul>
@@ -354,6 +352,11 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
               class="list-prefix mb--xs"
             >
               
+              <li
+                class="h6"
+              >
+                RNTM : 57TM0014
+              </li>
               
             </ul>
           </div>
@@ -418,8 +421,36 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
             <div
               class="mb--s"
             >
-              <!--v-if-->
-              <!--v-if-->
+              <span
+                class="mr-xs inline-block"
+              >
+                <span
+                  class="cap-first small bold"
+                >
+                  <span
+                    class="bg-error color-bg pill py-xs px-s"
+                  >
+                    
+                    1
+                    
+                  </span>
+                </span>
+              </span>
+              <span
+                class="mr-xs inline-block"
+              >
+                <span
+                  class="cap-first small bold"
+                >
+                  <span
+                    class="bg-warning color-bg pill py-xs px-s"
+                  >
+                    
+                    3
+                    
+                  </span>
+                </span>
+              </span>
             </div>
           </div>
           <div
@@ -450,13 +481,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
           <div
             class="td"
           >
-            <div
-              class="p-xs"
-            >
-              <i
-                class="icon-16 icon-globe"
-              />
-            </div>
+            <!--v-if-->
           </div>
           <div
             class="td min-width-10"
@@ -533,7 +558,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
 </div>
 `;
 
-exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activities 1`] = `
+exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok Without Activities 1`] = `
 <div>
   <div
     class="desktop-blobs"
@@ -565,9 +590,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
     </div>
   </div>
   <!--v-if-->
-  <div
-    class="width-full-p"
-  >
+  <div>
     <div
       class="overflow-scroll-x mb"
     >
@@ -694,7 +717,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
             <span
               class="bold"
             >
-              220222
+              Aachen
             </span>
           </div>
           <div
@@ -718,7 +741,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
             <span
               class="small bold cap-first"
             >
-              autorisation de recherches
+              concession
             </span>
           </div>
           <div
@@ -728,10 +751,10 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
               class="cap-first small bold"
             >
               <span
-                class="bg-warning color-bg pill py-xs px-s"
+                class="bg-neutral color-bg pill py-xs px-s"
               >
                 
-                demande initiale
+                échu
                 
               </span>
             </span>
@@ -753,7 +776,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
                     class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
                   >
                     
-                    or
+                    fer
                     
                   </span>
                 </span>
@@ -782,7 +805,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
               <li
                 class="h6"
               >
-                NINOR
+                Société des Mines Aachen
               </li>
               
             </ul>
@@ -797,7 +820,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
               <li
                 class="h6"
               >
-                Guyane
+                Grand Est
               </li>
               
             </ul>
@@ -812,7 +835,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
               <li
                 class="h6"
               >
-                Guyane
+                Moselle
               </li>
               
             </ul>
@@ -824,6 +847,11 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
               class="list-prefix mb--xs"
             >
               
+              <li
+                class="h6"
+              >
+                RNTM : 57TM0014
+              </li>
               
             </ul>
           </div>
@@ -910,13 +938,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
           <div
             class="td"
           >
-            <div
-              class="p-xs"
-            >
-              <i
-                class="icon-16 icon-globe"
-              />
-            </div>
+            <!--v-if-->
           </div>
           <div
             class="td min-width-10"
@@ -993,7 +1015,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
 </div>
 `;
 
-exports[`Automated Storybook Snapshots Components/PureDashboard With Error 1`] = `
+exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard With Error 1`] = `
 <div>
   <div
     class="desktop-blobs"
