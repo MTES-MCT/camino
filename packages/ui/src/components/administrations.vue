@@ -4,101 +4,171 @@
     :filtres="filtres"
     :colonnes="colonnes"
     :lignes="lignes"
-    :elements="administrations"
+    :elements="lignes"
     :params="params"
     :metas="metas"
-    :total="total"
-    :initialized="initialized"
+    :total="administrations.length"
+    :initialized="true"
     @params-update="paramsUpdate"
   >
-    <template v-if="administrations.length" #downloads>
-      <Downloads
-        :formats="['csv', 'xlsx', 'ods']"
-        section="administrations"
-        class="flex-right full-x"
-      />
-    </template>
   </Liste>
 </template>
 
-<script>
+<script setup lang="ts">
+// TODO 2022-04-25
+// - delete les champs en trop dans la table administrations
+// - supprimer le fichier source
+// - les administrations_types des métas (? car utilisation de l’API par d’autres gens)
+// - garder l’api qui retourne les administrations avec leur administrations
+// - virer les modifications des metas
+// - virer les modifications des administrations
 import Liste from './_common/liste.vue'
-import Downloads from './_common/downloads.vue'
-
-import filtres from './administrations/filtres'
 import {
-  administrationsColonnes,
-  administrationsLignesBuild
-} from './administrations/table'
+  ADMINISTRATION_TYPES,
+  Administrations,
+  AdministrationTypeId,
+  sortedAdministrationTypes
+} from 'camino-common/src/administrations'
+import { elementsFormat } from '@/utils'
+import { computed, ref } from 'vue'
+import Tag from '@/components/_ui/tag.vue'
+import { markRaw } from '@vue/reactivity'
 
-export default {
-  name: 'Administrations',
-
-  components: { Liste, Downloads },
-
-  data() {
-    return {
-      filtres,
-      colonnes: administrationsColonnes
-    }
+const colonnes = [
+  {
+    id: 'abreviation',
+    name: 'Abréviation'
   },
-
-  computed: {
-    user() {
-      return this.$store.state.user.element
-    },
-
-    administrations() {
-      return this.$store.state.administrations.elements
-    },
-
-    total() {
-      return this.$store.state.administrations.total
-    },
-
-    params() {
-      return this.$store.state.administrations.params
-    },
-
-    metas() {
-      return this.$store.state.administrations.metas
-    },
-
-    lignes() {
-      return administrationsLignesBuild(this.administrations)
-    },
-
-    initialized() {
-      return this.$store.state.administrations.initialized
-    }
+  {
+    id: 'nom',
+    name: 'Nom'
   },
+  {
+    id: 'type',
+    name: 'Type'
+  }
+] as const
+const filtres = [
+  {
+    id: 'noms',
+    type: 'input',
+    value: '',
+    name: 'Nom',
+    placeholder: `Nom de l'administration`
+  },
+  {
+    id: 'typesIds',
+    name: 'Types',
+    type: 'checkboxes',
+    value: [],
+    elements: [],
+    elementsFormat
+  }
+]
+type ColonneId = typeof colonnes[number]['id']
+const metas = {
+  types: sortedAdministrationTypes
+}
 
-  watch: {
-    user: 'init',
+const params = ref<{
+  table: { page: 0; colonne: ColonneId; ordre: 'asc' | 'desc' }
+  filtres: unknown
+}>({
+  table: {
+    page: 0,
+    colonne: 'abreviation',
+    ordre: 'asc'
+  },
+  filtres
+})
 
-    '$route.query': {
-      handler: function () {
-        this.$store.dispatch('administrations/routeUpdate')
+const listState = ref<{ noms: string; typesIds: AdministrationTypeId[] }>({
+  noms: '',
+  typesIds: []
+})
+
+const administrations = Object.values(Administrations)
+
+const lignes = computed(() => {
+  return [...administrations]
+    .filter(a => {
+      if (listState.value.noms.length) {
+        if (
+          !a.id.toLowerCase().includes(listState.value.noms) &&
+          !a.nom.toLowerCase().includes(listState.value.noms) &&
+          !a.abreviation.toLowerCase().includes(listState.value.noms)
+        ) {
+          return false
+        }
       }
-    }
-  },
 
-  async created() {
-    await this.init()
-  },
+      if (listState.value.typesIds.length) {
+        if (!listState.value.typesIds.includes(a.type_id)) {
+          return false
+        }
+      }
 
-  unmounted() {
-    this.$store.commit('administrations/reset')
-  },
+      return true
+    })
+    .sort((a, b) => {
+      let first: string
+      let second: string
+      if (params.value.table.colonne === 'type') {
+        first = ADMINISTRATION_TYPES[a.type_id].nom
+        second = ADMINISTRATION_TYPES[b.type_id].nom
+      } else {
+        first = a[params.value.table.colonne]
+        second = b[params.value.table.colonne]
+      }
 
-  methods: {
-    async init() {
-      await this.$store.dispatch('administrations/init')
-    },
+      if (params.value.table.ordre === 'asc') {
+        return first.localeCompare(second)
+      }
+      return second.localeCompare(first)
+    })
+    .map(administration => {
+      const type = ADMINISTRATION_TYPES[administration.type_id]
 
-    async paramsUpdate(options) {
-      await this.$store.dispatch(`administrations/paramsSet`, options)
-    }
+      const columns = {
+        abreviation: { value: administration.abreviation },
+        nom: { value: administration.nom, class: 'h6' },
+        type: {
+          component: markRaw(Tag),
+          props: { mini: true },
+          class: 'mb--xs',
+          value: type.nom,
+          slot: true
+        }
+      }
+
+      return {
+        id: administration.id,
+        link: { name: 'administration', params: { id: administration.id } },
+        columns
+      }
+    })
+})
+
+type ParamsFiltre = {
+  section: 'filtres'
+  params: { noms: string; typesIds: AdministrationTypeId[] }
+}
+type ParamsTable = {
+  section: 'table'
+  params: { colonne: ColonneId; ordre: 'asc' | 'desc' }
+}
+
+const isParamsFiltre = (
+  options: ParamsFiltre | ParamsTable
+): options is ParamsFiltre => options.section === 'filtres'
+
+const paramsUpdate = (options: ParamsFiltre | ParamsTable) => {
+  if (isParamsFiltre(options)) {
+    listState.value.noms = options.params.noms.toLowerCase()
+    listState.value.typesIds = options.params.typesIds
+  } else {
+    params.value.table.ordre = options.params.ordre
+    params.value.table.colonne = options.params.colonne
   }
 }
 </script>

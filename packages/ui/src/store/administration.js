@@ -15,7 +15,6 @@ const state = {
   element: null,
   metas: {
     domaines: [],
-    types: [],
     regions: [],
     departements: [],
     titresStatuts: [],
@@ -273,9 +272,7 @@ const actions = {
 const mutations = {
   metasSet(state, data) {
     Object.keys(data).forEach(id => {
-      if (id === 'administrationsTypes') {
-        state.metas.types = data[id]
-      } else if (id === 'statuts') {
+      if (id === 'statuts') {
         state.metas.titresStatuts = data[id]
       } else {
         state.metas[id] = data[id]

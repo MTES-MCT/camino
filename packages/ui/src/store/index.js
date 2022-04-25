@@ -18,7 +18,6 @@ import utilisateurs from './utilisateurs'
 import entreprise from './entreprise'
 import entreprises from './entreprises'
 import administration from './administration'
-import administrations from './administrations'
 import metas from './metas'
 import meta from './meta'
 import user from './user'
@@ -43,7 +42,6 @@ const modules = {
   entreprise,
   entreprises,
   administration,
-  administrations,
   meta,
   metas,
   user,

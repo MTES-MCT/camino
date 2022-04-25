@@ -3,15 +3,10 @@ import { apiGraphQLFetch } from './_client'
 
 import { fragmentAdministration } from './fragments/administration'
 import { fragmentAdministrations } from './fragments/administrations'
-import { fragmentAdministrationType } from './fragments/metas'
 
 const administrationMetas = apiGraphQLFetch(
   gql`
     query AdministrationMetas {
-      administrationsTypes {
-        ...administrationType
-      }
-
       regions {
         id
         nom
@@ -27,8 +22,6 @@ const administrationMetas = apiGraphQLFetch(
         nom
       }
     }
-
-    ${fragmentAdministrationType}
   `
 )
 
@@ -69,18 +62,6 @@ const administration = apiGraphQLFetch(gql`
 
   ${fragmentAdministration}
 `)
-
-const administrationsMetas = apiGraphQLFetch(
-  gql`
-    query AdministrationsMetas {
-      administrationsTypes {
-        id
-        nom
-        ordre
-      }
-    }
-  `
-)
 
 const administrations = apiGraphQLFetch(gql`
   query Administrations(
@@ -202,7 +183,6 @@ const administrationTitreTypeEtapeTypeUpdate = apiGraphQLFetch(gql`
 export {
   administrationMetas,
   administration,
-  administrationsMetas,
   administrations,
   administrationModifier,
   administrationTitreTypeUpdate,

@@ -19,8 +19,6 @@ import {
   deviseModifier,
   unites,
   uniteModifier,
-  administrationsTypes,
-  administrationTypeModifier,
   permissions,
   permissionModifier,
   documentsTypes,
@@ -562,16 +560,6 @@ const metasIndex = {
         nom: "Ratio de l'unité de référence",
         type: Number
       }
-    ]
-  },
-  'administrations-types': {
-    get: administrationsTypes,
-    update: administrationTypeModifier,
-    nom: 'Types des administrations',
-    colonnes: [
-      { id: 'id', nom: 'Id' },
-      { id: 'nom', nom: 'Nom', type: String },
-      { id: 'ordre', nom: 'Ordre', type: Number }
     ]
   },
   permissions: {

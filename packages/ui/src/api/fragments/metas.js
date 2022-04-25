@@ -158,14 +158,6 @@ const fragmentEtapeStatut = gql`
   }
 `
 
-const fragmentAdministrationType = gql`
-  fragment administrationType on AdministrationType {
-    id
-    nom
-    ordre
-  }
-`
-
 const fragmentReferenceType = gql`
   fragment referenceType on ReferenceType {
     id
@@ -272,7 +264,6 @@ export {
   fragmentTitreType,
   fragmentDomaine,
   fragmentPhaseStatut,
-  fragmentAdministrationType,
   fragmentDocumentType,
   fragmentReferenceType,
   fragmentGeoSysteme,
