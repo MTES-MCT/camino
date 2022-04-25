@@ -12,10 +12,10 @@ const contenuFilesCheck = async (filePath: string) => {
   // c’est peut-être un fichier d’un contenu d’étape
 
   const split = filePath.split('/')
-  if (split[2] !== 'demarches') {
+  if (split[0] !== 'demarches') {
     return false
   }
-  const etapeId = split[3]
+  const etapeId = split[1]
   const etape = await titreEtapeGet(
     etapeId,
     { fields: { type: { id: {} } } },
@@ -28,12 +28,13 @@ const contenuFilesCheck = async (filePath: string) => {
     )
     const contenuFiles = contenuFilesGet(etape.contenu, sections)
 
-    return contenuFiles.includes(split[4])
+    return contenuFiles.includes(split[2])
   }
 
   return false
 }
-const filesDocumentCheck = async (
+
+export const filesDocumentCheck = async (
   documentsIndex: IndexFile,
   filesIndex: Index<string>
 ) => {
@@ -117,5 +118,3 @@ const filesDocumentCheck = async (
     )
   }
 }
-
-export { filesDocumentCheck }
