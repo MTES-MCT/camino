@@ -4,11 +4,11 @@ import { IAdministration } from '../../types'
 
 import AdministrationsTitresTypesEtapesTypes from './administrations-titres-types-etapes-types'
 import AdministrationsTitresTypesTitresStatuts from './administrations-titres-types-titres-statuts'
-import AdministrationsTypes from './administrations-types'
 import TitresTypes from './titres-types'
 import Utilisateurs from './utilisateurs'
 import Titres from './titres'
 import ActivitesTypes from './activites-types'
+import { fillAdministrationInPlace } from './_format/administration'
 import Departements from './departements'
 import Regions from './regions'
 
@@ -19,37 +19,16 @@ class Administrations extends Model {
 
   public static jsonSchema = {
     type: 'object',
-    required: ['id', 'nom', 'typeId'],
+    required: ['id'],
 
     properties: {
       id: { type: 'string', maxLength: 64 },
-      typeId: { type: 'string' },
-      nom: { type: 'string' },
-      service: { type: ['string', 'null'] },
-      url: { type: ['string', 'null'] },
-      email: { type: ['string', 'null'] },
-      telephone: { type: ['string', 'null'] },
-      adresse1: { type: ['string', 'null'] },
-      adresse2: { type: ['string', 'null'] },
-      codePostal: { type: ['string', 'null'] },
-      commune: { type: ['string', 'null'] },
-      cedex: { type: ['string', 'null'] },
       departementId: { type: ['string', 'null'] },
-      regionId: { type: ['string', 'null'] },
-      abreviation: { type: ['string', 'null'] }
+      regionId: { type: ['string', 'null'] }
     }
   }
 
   static relationMappings = () => ({
-    type: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: AdministrationsTypes,
-      join: {
-        from: 'administrations.typeId',
-        to: 'administrationsTypes.id'
-      }
-    },
-
     titresTypes: {
       relation: Model.ManyToManyRelation,
       modelClass: TitresTypes,
@@ -167,6 +146,10 @@ class Administrations extends Model {
       }
     }
   })
+
+  $afterFind() {
+    fillAdministrationInPlace(this)
+  }
 }
 
 export default Administrations

@@ -6,7 +6,6 @@ const state = {
   total: 0,
   metas: {
     permission: [],
-    administration: [],
     entreprise: []
   },
   definitions: [
@@ -66,11 +65,6 @@ const mutations = Object.assign({}, listeMutations, {
         paramId = 'entrepriseIds'
 
         // l'API renvoie les entreprises dans une propriété 'elements'
-        data[id] = data[id].elements
-      } else if (id === 'administrations') {
-        metaId = 'administration'
-        paramId = 'administrationIds'
-
         data[id] = data[id].elements
       }
 

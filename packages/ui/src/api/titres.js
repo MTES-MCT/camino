@@ -15,12 +15,6 @@ const titreMetas = apiGraphQLFetch(
       referencesTypes {
         ...referenceType
       }
-      administrations {
-        elements {
-          id
-          nom
-        }
-      }
     }
 
     ${fragmentReferenceType}

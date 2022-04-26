@@ -42,6 +42,7 @@ import {
   utilisateursColonnes,
   utilisateursLignesBuild
 } from './utilisateurs/table'
+import { sortedAdministrations } from 'camino-common/src/administrations'
 
 export default {
   name: 'Utilisateurs',
@@ -70,7 +71,10 @@ export default {
     },
 
     metas() {
-      return this.$store.state.utilisateurs.metas
+      return {
+        ...this.$store.state.utilisateurs.metas,
+        administration: sortedAdministrations
+      }
     },
 
     params() {

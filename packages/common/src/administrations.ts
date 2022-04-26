@@ -1,4 +1,6 @@
 import { Definition } from './definition'
+import { RegionId } from './region'
+import { DepartementId } from './departement'
 
 export const ADMINISTRATION_TYPE_IDS = {
   AUTORITE: 'aut',
@@ -202,8 +204,8 @@ export interface Administration<T = AdministrationId> {
   code_postal: string
   commune: string
   cedex?: string
-  region_id?: string
-  departement_id?: string
+  region_id?: RegionId
+  departement_id?: DepartementId
 }
 
 export const Administrations: {
@@ -1980,3 +1982,7 @@ export const Administrations: {
     departement_id: '976'
   }
 }
+
+export const sortedAdministrations = Object.values(Administrations).sort(
+  (a, b) => a.abreviation.localeCompare(b.abreviation)
+)

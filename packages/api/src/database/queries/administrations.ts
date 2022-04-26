@@ -1,20 +1,15 @@
-import { QueryBuilder } from 'objection'
-
 import {
-  IAdministration,
-  IAdministrationColonneId,
-  IAdministrationTitreType,
-  IAdministrationTitreTypeTitreStatut,
-  IAdministrationTitreTypeEtapeType,
   IAdministrationActiviteType,
   IAdministrationActiviteTypeEmail,
+  IAdministrationTitreType,
+  IAdministrationTitreTypeEtapeType,
+  IAdministrationTitreTypeTitreStatut,
   IFields,
   IUtilisateur
 } from '../../types'
 
 import graphBuild from './graph/build'
 import { fieldsFormat } from './graph/fields-format'
-import { stringSplit } from './_utils'
 import options from './_options'
 
 import Administrations from '../models/administrations'
@@ -24,45 +19,6 @@ import AdministrationsTitresTypesTitresStatuts from '../models/administrations-t
 import AdministrationsTitresTypesEtapesTypes from '../models/administrations-titres-types-etapes-types'
 import AdministrationsActivitesTypes from '../models/administrations-activites-types'
 import AdministrationsActivitesTypesEmails from '../models/administrations-activites-types-emails'
-
-const administrationsFiltersQueryModify = (
-  {
-    noms,
-    typesIds,
-    administrationsIds
-  }: {
-    noms?: string | null
-    typesIds?: string[] | null
-    administrationsIds?: string[] | null
-  },
-  q: QueryBuilder<Administrations, Administrations[]>
-) => {
-  if (administrationsIds) {
-    q.whereIn('administrations.id', administrationsIds)
-  }
-
-  if (noms) {
-    const nomsArray = stringSplit(noms)
-
-    if (nomsArray) {
-      const fields = ['administrations.id', 'administrations.nom']
-
-      nomsArray.forEach(s => {
-        q.where(b => {
-          fields.forEach(f => {
-            b.orWhereRaw(`lower(??) like ?`, [f, `%${s.toLowerCase()}%`])
-          })
-        })
-      })
-    }
-  }
-
-  if (typesIds) {
-    q.leftJoinRelated('type')
-
-    q.whereIn('type.id', typesIds)
-  }
-}
 
 const administrationsQueryBuild = (
   { fields }: { fields?: IFields },
@@ -89,89 +45,12 @@ const administrationGet = async (
   return q.findById(id)
 }
 
-const administrationsCount = async (
-  {
-    noms,
-    typesIds,
-    administrationsIds
-  }: {
-    noms?: string | null
-    typesIds?: string[] | null
-    administrationsIds?: string[] | null
-  },
-  { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
-) => {
-  const q = administrationsQueryBuild({ fields }, user)
-
-  administrationsFiltersQueryModify({ noms, typesIds, administrationsIds }, q)
-
-  if (!q) return 0
-
-  return q.resultSize()
-}
-
 const administrationsGet = async (
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  {
-    page,
-    intervalle,
-    ordre,
-    colonne,
-    noms,
-    typesIds,
-    administrationsIds
-  }: {
-    page?: number | null
-    intervalle?: number | null
-    ordre?: 'asc' | 'desc' | null
-    colonne?: IAdministrationColonneId | null
-    noms?: string | null
-    typesIds?: string[] | null
-    administrationsIds?: string[] | null
-  },
   { fields }: { fields?: IFields },
   user: IUtilisateur | null | undefined
 ) => {
-  const q = administrationsQueryBuild({ fields }, user)
-
-  administrationsFiltersQueryModify({ noms, typesIds, administrationsIds }, q)
-
-  // type: { id: 'type:type.nom', relation: 'type.type' }
-  if (colonne && colonne === 'type') {
-    q.leftJoinRelated('type')
-    q.groupBy('administrations.id')
-    q.groupBy('type.nom')
-
-    q.orderBy('type.nom', ordre || 'asc')
-  } else if (colonne && colonne === 'nom') {
-    q.orderBy('administrations.nom', ordre || 'asc')
-  } else if (colonne && colonne === 'abreviation') {
-    q.orderBy('administrations.abreviation', ordre || 'asc')
-  } else {
-    q.orderBy('administrations.nom')
-  }
-
-  if (page && intervalle) {
-    q.offset((page - 1) * intervalle)
-  }
-
-  if (intervalle) {
-    q.limit(intervalle)
-  }
-
-  return q
+  return administrationsQueryBuild({ fields }, user)
 }
-
-const administrationsUpsert = async (administrations: IAdministration[]) =>
-  Administrations.query()
-    .withGraphFetched(options.administrations.graph)
-    .upsertGraph(administrations, options.administrations.update)
-
-const administrationUpdate = async (
-  id: string,
-  administration: Partial<IAdministration>
-) => Administrations.query().patch(administration).findById(id)
 
 const administrationTitreTypeUpsert = async (
   administrationTitreType: IAdministrationTitreType
@@ -266,9 +145,6 @@ const administrationActiviteTypeEmailDelete = async (
 export {
   administrationGet,
   administrationsGet,
-  administrationsCount,
-  administrationsUpsert,
-  administrationUpdate,
   administrationTitreTypeUpsert,
   administrationTitreTypeDelete,
   administrationTitreTypeTitreStatutUpsert,

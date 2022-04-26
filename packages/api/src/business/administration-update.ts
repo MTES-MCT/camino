@@ -1,4 +1,3 @@
-import { administrationsUpdate } from './processes/administrations-update'
 import { titresAdministrationsGestionnairesUpdate } from './processes/titres-administrations-gestionnaires-update'
 import { titresEtapesAdministrationsLocalesUpdate } from './processes/titres-etapes-administrations-locales-update'
 import { logsUpdate } from './_logs-update'
@@ -8,10 +7,6 @@ const administrationUpdate = async (administrationId: string) => {
     console.info()
     console.info('- - -')
     console.info(`mise à jour d'une administration : ${administrationId}`)
-
-    const administrationsUpdated = await administrationsUpdate([
-      administrationId
-    ])
 
     const {
       titresAdministrationsGestionnairesCreated = [],
@@ -27,8 +22,7 @@ const administrationUpdate = async (administrationId: string) => {
       titresAdministrationsGestionnairesCreated,
       titresAdministrationsGestionnairesDeleted,
       titresEtapesAdministrationsLocalesCreated,
-      titresEtapesAdministrationsLocalesDeleted,
-      administrationsUpdated
+      titresEtapesAdministrationsLocalesDeleted
     })
 
     return administrationId

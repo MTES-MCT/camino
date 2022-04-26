@@ -1,5 +1,8 @@
 /* eslint-disable no-undef */
 import { FileUpload } from 'graphql-upload'
+import { AdministrationId } from 'camino-common/src/administrations'
+import { Departement } from 'camino-common/src/departement'
+import { Region } from 'camino-common/src/region'
 
 enum DemarchesStatutsTypes {
   Accepte = 'acc',
@@ -233,7 +236,7 @@ interface IAdministrationType {
 }
 
 interface IAdministration {
-  id: string
+  id: AdministrationId
   typeId: string
   nom: string
   type?: IAdministrationType
@@ -247,7 +250,9 @@ interface IAdministration {
   commune?: string | null
   cedex?: string | null
   departementId?: string | null
+  departement?: Departement
   regionId?: string | null
+  region?: Region
   abreviation?: string | null
   titresTypes?: (ITitreType & IAdministrationTitreType)[] | null
   titresTypesTitresStatuts?: IAdministrationTitreTypeTitreStatut[] | null

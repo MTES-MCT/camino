@@ -23,6 +23,7 @@ import slugify from '@sindresorhus/slugify'
 import cryptoRandomString from 'crypto-random-string'
 import SDOMZones from './sdom-zones'
 import TitresActivites from './titres-activites'
+import { fillAdministrations } from './_format/administration'
 
 export interface DBTitre extends ITitre {
   archive: boolean
@@ -273,6 +274,9 @@ class Titres extends Model {
         this.demarches
       )
     }
+    fillAdministrations(this.administrationsGestionnaires)
+    fillAdministrations(this.administrationsLocales)
+    fillAdministrations(this.titresAdministrations)
   }
 
   public $parseJson(json: Pojo) {

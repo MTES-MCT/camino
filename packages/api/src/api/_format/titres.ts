@@ -164,6 +164,14 @@ const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
     })
   }
 
+  console.log(
+    'hello',
+    fields,
+    't',
+    t.administrationsLocales,
+    t.administrationsGestionnaires,
+    t.administrations
+  )
   if (fields.administrations) {
     const hasAdministrations =
       t.administrationsGestionnaires?.length || t.administrationsLocales?.length

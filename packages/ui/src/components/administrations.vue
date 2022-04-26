@@ -16,10 +16,10 @@
 
 <script setup lang="ts">
 // TODO 2022-04-25
-// - delete les champs en trop dans la table administrations
+// - delete les champs en trop dans la table administrations (et les récupérer depuis le common)
 // - supprimer le fichier source
 // - les administrations_types des métas (? car utilisation de l’API par d’autres gens)
-// - garder l’api qui retourne les administrations avec leur administrations
+// - garder l’api qui retourne les administrations avec leurs jointures
 // - virer les modifications des metas
 // - virer les modifications des administrations
 import Liste from './_common/liste.vue'

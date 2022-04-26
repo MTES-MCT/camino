@@ -1,15 +1,11 @@
 // https://etablissements-publics.api.gouv.fr
 import PQueue from 'p-queue'
-import { join } from 'path'
 import fetch from 'node-fetch'
-import makeDir from 'make-dir'
 
 import { IAdministration } from '../../types'
 
 import errorLog from '../error-log'
-import fileCreate from '../file-create'
 
-const CACHE_DIR = 'api-cache/administration/'
 const MAX_CALLS_MINUTE = 200
 
 const { API_ADMINISTRATION_URL } = process.env
@@ -68,34 +64,7 @@ const organismeFetch = async (departementId: string, nom: string) => {
 
 const organismeDepartementCall = async (departementId: string, nom: string) => {
   try {
-    let result
-
-    if (process.env.NODE_ENV === 'development') {
-      await makeDir(CACHE_DIR)
-      const cacheFilePath = join(
-        CACHE_DIR,
-        `organisme-${departementId}-${nom}on`
-      )
-
-      try {
-        result = require(`../../../${cacheFilePath}`) as IOrganisme
-        console.info(
-          `API Administration: lecture de l'organisme depuis le cache, département: ${departementId}, type: ${nom}`
-        )
-      } catch (e) {
-        console.info(
-          `API Administration: pas de fichier de cache ${cacheFilePath}`
-        )
-
-        result = await organismeFetch(departementId, nom)
-
-        await fileCreate(cacheFilePath, JSON.stringify(result, null, 2))
-      }
-    } else {
-      result = await organismeFetch(departementId, nom)
-    }
-
-    return result
+    return await organismeFetch(departementId, nom)
   } catch (err: any) {
     const error = err.error ? `${err.error}: ${err.error_description}` : err
     errorLog(`API administrations ${departementId} ${nom}:`, error)
@@ -171,4 +140,4 @@ const organismesDepartementsGet = async (
   return organismesDepartements.filter(o => o) as IAdministration[]
 }
 
-export { organismeDepartementGet, organismesDepartementsGet }
+export { organismesDepartementsGet }

@@ -83,18 +83,10 @@ const utilisateursTitres = {
   graph: `[utilisateur]`
 }
 
-const administrationsRelateTrue = [
-  'administrationsTypes',
-  'departement',
-  'region'
-]
-
 const administrations = {
-  graph: `[utilisateurs.permission, titresTypes.${titresTypes.graph}, titresTypesTitresStatuts, titresTypesEtapesTypes, type, departement, region]`,
+  graph: `[utilisateurs.permission, titresTypes.${titresTypes.graph}, titresTypesTitresStatuts, titresTypesEtapesTypes]`,
   update: {
-    insertMissing: true,
-    relate: administrationsRelateTrue,
-    unrelate: administrationsRelateTrue
+    insertMissing: true
   }
 }
 
@@ -120,7 +112,6 @@ const titresEtapesRelateFalse = [
   'amodiataires.utilisateurs',
   'amodiataires.utilisateurs.permission',
   'administrations.titresTypes',
-  'administrations.type',
   'administrations.utilisateurs',
   'administrations.utilisateurs.permission',
   'substances.legales',
@@ -215,7 +206,6 @@ const activitesTypesRelateFalse = [
   'frequence.trimestres',
   'frequence.trimestres.mois',
   'frequence.annees',
-  'administrations.type',
   ...titresTypesRelateFalse.map(k => `type.titresTypes.${k}`)
 ]
 
@@ -310,7 +300,10 @@ const titresRelateFalse = [
   'administrationsLocales.utilisateurs.permission',
   'surfaceEtape',
   ...titresActivitesRelateFalse.map(k => `activites.${k}`),
-  ...titresDemarchesRelateFalse.map(k => `demarches.${k}`)
+  ...titresDemarchesRelateFalse.map(k => `demarches.${k}`),
+  'titresAdministrations.region',
+  'titresAdministrations.departement',
+  'titresAdministrations.type'
 ]
 
 const titres = {

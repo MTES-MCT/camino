@@ -2,7 +2,6 @@ import {
   Index,
   IArea,
   ITitreAdministrationLocale,
-  IAdministration,
   IEntrepriseEtablissement,
   IEntreprise
 } from '../types'
@@ -44,7 +43,6 @@ const logsUpdate = ({
   entreprisesUpdated,
   etablissementsUpdated,
   etablissementsDeleted,
-  administrationsUpdated,
   utilisateursUpdated
 }: {
   titresEtapesOrdreUpdated?: string[]
@@ -83,7 +81,6 @@ const logsUpdate = ({
   entreprisesUpdated?: IEntreprise[]
   etablissementsUpdated?: IEntrepriseEtablissement[]
   etablissementsDeleted?: string[]
-  administrationsUpdated?: IAdministration[]
   utilisateursUpdated?: string[]
 }) => {
   console.info()
@@ -297,12 +294,6 @@ const logsUpdate = ({
   if (etablissementsDeleted?.length) {
     console.info(
       `suppression: ${etablissementsDeleted.length} établissement(s) d'entreprise(s)`
-    )
-  }
-
-  if (administrationsUpdated?.length) {
-    console.info(
-      `mise à jour: ${administrationsUpdated.length} administration(s)`
     )
   }
 

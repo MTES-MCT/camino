@@ -2,7 +2,6 @@ import { GraphQLResolveInfo } from 'graphql'
 
 import {
   IAdministrationActiviteType,
-  IAdministrationColonneId,
   IAdministrationTitreType,
   IAdministrationTitreTypeEtapeType,
   IAdministrationTitreTypeTitreStatut,
@@ -14,8 +13,6 @@ import { debug } from '../../../config/index'
 import {
   administrationGet,
   administrationsGet,
-  administrationsCount,
-  administrationUpdate,
   administrationTitreTypeDelete,
   administrationTitreTypeUpsert,
   administrationTitreTypeTitreStatutUpsert,
@@ -52,6 +49,7 @@ const administration = async (
       return null
     }
 
+    // return { ...administrationFormat(administration), ...Administrations[administration.id] }
     return administrationFormat(administration)
   } catch (e) {
     if (debug) {
@@ -62,116 +60,20 @@ const administration = async (
   }
 }
 
-const administrations = async (
-  {
-    page,
-    intervalle,
-    ordre,
-    colonne,
-    noms,
-    typesIds
-  }: {
-    page?: number | null
-    intervalle?: number | null
-    ordre?: 'asc' | 'desc' | null
-    colonne?: IAdministrationColonneId | null
-    noms?: string | null
-    typesIds?: string[] | null
-  },
-  context: IToken,
-  info: GraphQLResolveInfo
-) => {
+const administrations = async (context: IToken, info: GraphQLResolveInfo) => {
   try {
     const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
-    const [administrations, total] = await Promise.all([
-      administrationsGet(
-        { page, intervalle, ordre, colonne, noms, typesIds },
-        { fields: fields.elements },
-        user
-      ),
-      administrationsCount(
-        { noms, typesIds },
-        { fields: fields.elements },
-        user
-      )
-    ])
-
-    if (!administrations.length) return { elements: [], total: 0 }
-
-    return {
-      elements: administrations.map(administrationFormat),
-      page,
-      intervalle,
-      ordre,
-      colonne,
-      total
-    }
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-const administrationModifier = async (
-  {
-    administration
-  }: {
-    administration: {
-      id: string
-      typeId: string
-      nom: string
-      abreviation: string
-      service?: string
-      url?: string
-      email?: string
-      telephone?: string
-      adresse1?: string
-      adresse2?: string
-      codePostal?: string
-      commune?: string
-      cedex?: string
-      departementId?: string
-      regionId?: string
-    }
-  },
-  context: IToken,
-  info: GraphQLResolveInfo
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    const administrationOld = await administrationGet(
-      administration.id,
-      { fields: {} },
+    const administrations = await administrationsGet(
+      { fields: fields.elements },
       user
     )
 
-    if (!administrationOld) throw new Error("l'administration n'existe pas")
+    if (!administrations.length) return []
 
-    if (!administrationOld.modification) throw new Error('droits insuffisants')
-
-    const errors = []
-
-    if (administration.email && !emailCheck(administration.email)) {
-      errors.push('adresse email invalide')
-    }
-
-    if (errors.length) {
-      throw new Error(errors.join(', '))
-    }
-
-    await administrationUpdate(administration.id, administration)
-
-    const administrationId = await administrationUpdateTask(administration.id)
-
-    const fields = fieldsBuild(info)
-
-    return await administrationGet(administrationId, { fields }, user)
+    return administrations.map(administrationFormat)
+    // .map((a: IAdministration) => ({...a, ...Administrations[a.id]}))
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -456,7 +358,6 @@ const administrationActiviteTypeEmailSupprimer = async (
 export {
   administration,
   administrations,
-  administrationModifier,
   administrationTitreTypeModifier,
   administrationTitreTypeTitreStatutModifier,
   administrationTitreTypeEtapeTypeModifier,

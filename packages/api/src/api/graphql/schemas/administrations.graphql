@@ -6,15 +6,6 @@
 # import * from 'metas-activites.graphql'
 # import * from 'territoires.graphql'
 
-type Administrations {
-  elements: [Administration]
-  intervalle: Int
-  page: Int
-  colonne: String
-  ordre: String
-  total: Int
-}
-
 type Administration {
   id: ID!
   nom: String
@@ -49,24 +40,6 @@ type ActiviteTypeEmail {
   id: ID
   nom: String
   email: String
-}
-
-input InputAdministration {
-  id: ID!
-  typeId: ID!
-  nom: String!
-  abreviation: String!
-  service: String
-  url: String
-  email: String
-  telephone: String
-  adresse1: String
-  adresse2: String
-  codePostal: String
-  commune: String
-  cedex: String
-  departementId: ID
-  regionId: ID
 }
 
 input InputAdministrationTitreType {

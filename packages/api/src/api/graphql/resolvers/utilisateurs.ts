@@ -516,7 +516,10 @@ const utilisateurModifier = async (
 
     const fields = fieldsBuild(info)
 
+    console.log('avant upsert', utilisateur)
+    console.log('les fields', fields)
     const utilisateurUpdated = await utilisateurUpsert(utilisateur, { fields })
+    console.log('après upsert')
 
     newsletterSubscriberUpdate(
       utilisateurUpdated.email!,

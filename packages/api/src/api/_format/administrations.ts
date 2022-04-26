@@ -6,7 +6,6 @@ import { utilisateurFormat } from './utilisateurs'
 /**
  * Formate une administration en fonction du profil de l'utilisateur
  *
- * @param user - Utilisateur
  * @param administration - Administration à formater
  * @returns Une administration formatée
  *
