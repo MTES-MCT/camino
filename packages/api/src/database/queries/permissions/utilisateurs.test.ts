@@ -1,15 +1,17 @@
 import { IAdministration, IUtilisateur } from '../../../types'
 
 import { dbManager } from '../../../../tests/db-manager'
-import Administrations from '../../models/administrations'
 import Utilisateurs from '../../models/utilisateurs'
 import { utilisateursGet } from '../utilisateurs'
+import { Administrations } from 'camino-common/src/administrations'
+import options from '../_options'
 
 console.info = jest.fn()
 console.error = jest.fn()
 const knex = dbManager.getKnex()
 beforeAll(async () => {
   await dbManager.populateDb(knex)
+  await Utilisateurs.query().insertGraph(mockUser, options.utilisateurs.update)
 })
 
 afterAll(async () => {
@@ -17,11 +19,7 @@ afterAll(async () => {
   await dbManager.closeKnex(knex)
 })
 
-const mockAdministration = {
-  id: 'administrationId',
-  typeId: 'ope',
-  nom: 'administrationNom'
-} as IAdministration
+const mockAdministration = Administrations['aut-97300-01']
 
 const mockUser = {
   id: 'utilisateurId',
@@ -29,7 +27,7 @@ const mockUser = {
   nom: 'utilisateurNom',
   email: 'utilisateurEmail',
   motDePasse: 'utilisateurMotdepasse',
-  administrations: [mockAdministration]
+  administrations: [{ id: mockAdministration.id }]
 } as IUtilisateur
 
 describe('utilisateursQueryModify', () => {
@@ -44,15 +42,10 @@ describe('utilisateursQueryModify', () => {
   `(
     "Vérifie l'écriture de la requête sur un utilisateur",
     async ({ permissionId, voit }) => {
-      await Utilisateurs.query().delete()
-      await Administrations.query().delete()
-
-      await Utilisateurs.query().insertGraph(mockUser)
-
       const user = {
         id: 'userId',
         permissionId,
-        administrations: [mockAdministration]
+        administrations: [mockAdministration] as unknown as IAdministration[]
       } as IUtilisateur
 
       const utilisateurs = await utilisateursGet(
