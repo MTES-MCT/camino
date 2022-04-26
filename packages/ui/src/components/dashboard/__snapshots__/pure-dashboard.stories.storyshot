@@ -95,9 +95,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
               class="btn-menu full-x p-0"
             >
               Nom 
-              <i
-                class="icon-24 right icon-chevron-b"
-              />
+              <!--v-if-->
             </button>
           </div>
           <div
@@ -127,7 +125,9 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
               class="btn-menu full-x p-0"
             >
               Statut 
-              <!--v-if-->
+              <i
+                class="icon-24 right icon-chevron-b"
+              />
             </button>
           </div>
           <div
@@ -585,9 +585,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
               class="btn-menu full-x p-0"
             >
               Nom 
-              <i
-                class="icon-24 right icon-chevron-b"
-              />
+              <!--v-if-->
             </button>
           </div>
           <div
@@ -617,7 +615,9 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
               class="btn-menu full-x p-0"
             >
               Statut 
-              <!--v-if-->
+              <i
+                class="icon-24 right icon-chevron-b"
+              />
             </button>
           </div>
           <div

@@ -5,7 +5,7 @@
 <script>
 import AutoTable from '../_ui/table-auto.vue'
 
-import { titresColonnes, titresLignesBuild } from './table-utils.js'
+import { titresColonnes, titresLignesBuild } from './table-utils'
 
 export default {
   name: 'Titres',

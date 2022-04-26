@@ -19,6 +19,7 @@
       v-if="status === 'LOADED'"
       :columns="columns"
       :rows="entrepriseTitres"
+      :initialSort="{ column: 'statut', order: 'asc' }"
       class="width-full-p"
     />
     <Error
@@ -34,19 +35,20 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import TableAuto from '../_ui/table-auto.vue'
+import { TableAutoRow } from '../_ui/table-auto.type'
 import Error from '@/components/error.vue'
 import {
+  Entreprise,
   titresColonnes,
   titresLignesBuild
 } from '@/components/titres/table-utils'
-import { Row } from '../_ui/table-auto.type'
 import { useRouter } from 'vue-router'
 
 const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
-const entrepriseTitres = ref<Row[]>([])
+const entrepriseTitres = ref<TableAutoRow[]>([])
 const props = defineProps<{
   // TODO 2022-03-22: type the graphql
-  getEntreprisesTitres: () => Promise<unknown[]>
+  getEntreprisesTitres: () => Promise<Entreprise[]>
   displayActivites: boolean
 }>()
 
