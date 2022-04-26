@@ -33,8 +33,7 @@ describe("état de l'utilisateur consulté", () => {
       element: null,
       metas: {
         permissions: [],
-        entreprises: [],
-        administrations: []
+        entreprises: []
       },
       metasLoaded: false
     }
@@ -83,8 +82,7 @@ describe("état de l'utilisateur consulté", () => {
         { id: 'w', nom: 'granulats' },
         { id: 'c', nom: 'carrières' }
       ],
-      entreprises: { elements: ['ent-1'] },
-      administrations: { elements: ['adm-1'] }
+      entreprises: { elements: ['ent-1'] }
     })
 
     await store.dispatch('utilisateur/init')
@@ -95,8 +93,7 @@ describe("état de l'utilisateur consulté", () => {
         { id: 'w', nom: 'granulats' },
         { id: 'c', nom: 'carrières' }
       ],
-      entreprises: ['ent-1'],
-      administrations: ['adm-1']
+      entreprises: ['ent-1']
     })
     expect(mutations.loadingRemove).toHaveBeenCalled()
 

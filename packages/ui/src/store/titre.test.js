@@ -64,12 +64,10 @@ describe('état du titre sélectionné', () => {
   })
 
   test('récupère les métas pour éditer un titre', async () => {
-    const apiMock = api.titreMetas.mockResolvedValueOnce({
-      referencesTypes: [
-        { id: 'ifr', nom: 'Ifremer' },
-        { id: 'dge', nom: 'DGEC' }
-      ]
-    })
+    const apiMock = api.titreMetas.mockResolvedValueOnce([
+      { id: 'ifr', nom: 'Ifremer' },
+      { id: 'dge', nom: 'DGEC' }
+    ])
 
     await store.dispatch('titre/init')
 

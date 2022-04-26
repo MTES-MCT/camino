@@ -18,7 +18,6 @@ jest.mock('./utilisateurs', () => ({ utilisateurs: jest.fn() }))
 jest.mock('./entreprises', () => ({ entreprises: jest.fn() }))
 jest.mock('./entreprise', () => ({ entreprise: jest.fn() }))
 jest.mock('./administration', () => ({ administration: jest.fn() }))
-jest.mock('./administrations', () => ({ administrations: jest.fn() }))
 jest.mock('./user', () => ({ user: jest.fn() }))
 jest.mock('./titre-activite', () => ({ titreActivite: jest.fn() }))
 jest.mock('./titre-activite-edition', () => ({
