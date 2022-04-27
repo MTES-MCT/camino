@@ -212,7 +212,7 @@ export default {
     },
 
     type() {
-      const typeId = this.administration?.type_id
+      const typeId = this.administration?.typeId
 
       if (typeId) {
         return ADMINISTRATION_TYPES[typeId].nom

@@ -5,7 +5,6 @@ import Pays from './pays'
 import Frequences from './frequences'
 import Administrations from './administrations'
 import DocumentsTypes from './documents-types'
-import { fillAdministrations } from './_format/administration'
 
 interface ActivitesTypes extends IActiviteType {}
 
@@ -107,10 +106,6 @@ class ActivitesTypes extends Model {
       }
     }
   })
-
-  $afterFind() {
-    fillAdministrations(this.administrations)
-  }
 
   public static modifiers: Modifiers = {
     orderAsc: builder => {

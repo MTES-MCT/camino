@@ -1,6 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql'
 import {
-  IAdministrationType,
   IDemarcheStatut,
   IDemarcheType,
   IDevise,
@@ -22,8 +21,6 @@ import {
 import { debug } from '../../../config/index'
 
 import {
-  administrationsTypesGet,
-  administrationTypeUpdate,
   demarchesStatutsGet,
   demarcheStatutUpdate,
   demarchesTypesGet,
@@ -75,6 +72,7 @@ import { ordreUpdate } from './_ordre-update'
 import { demarcheDefinitionFind } from '../../../business/rules-demarches/definitions'
 import { userSuper } from '../../../database/user-super'
 import { titresEtapesHeritageContenuUpdate } from '../../../business/processes/titres-etapes-heritage-contenu-update'
+import { sortedAdministrationTypes } from 'camino-common/src/administrations'
 
 const devises = async () => devisesGet()
 
@@ -371,11 +369,9 @@ const version = () => process.env.APPLICATION_VERSION
  *
  * @returns un tableau de types d'administrations
  */
-const administrationsTypes = async () => {
+const administrationsTypes = () => {
   try {
-    const administrationsTypes = await administrationsTypesGet()
-
-    return administrationsTypes
+    return sortedAdministrationTypes
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -745,41 +741,6 @@ const uniteModifier = async ({ unite }: { unite: IUnite }, context: IToken) => {
   }
 }
 
-const administrationTypeModifier = async (
-  { administrationType }: { administrationType: IAdministrationType },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!permissionCheck(user?.permissionId, ['super'])) {
-      throw new Error('droits insuffisants')
-    }
-
-    if (administrationType.ordre) {
-      const administrationsTypes = await administrationsTypesGet()
-
-      await ordreUpdate(
-        administrationType,
-        administrationsTypes,
-        administrationTypeUpdate
-      )
-    }
-
-    await administrationTypeUpdate(administrationType.id!, administrationType)
-
-    const administrationsTypes = await administrationsTypesGet()
-
-    return administrationsTypes
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
 const permissionModifier = async (
   { permission }: { permission: IPermission },
   context: IToken
@@ -951,7 +912,6 @@ export {
   etapeStatutModifier,
   deviseModifier,
   uniteModifier,
-  administrationTypeModifier,
   permissionModifier,
   documentTypeCreer,
   documentTypeModifier,

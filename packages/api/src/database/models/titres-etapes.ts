@@ -21,7 +21,6 @@ import Communes from './communes'
 import Forets from './forets'
 import SDOMZones from './sdom-zones'
 import Journaux from './journaux'
-import { fillAdministrations } from './_format/administration'
 
 export interface DBTitresEtapes extends ITitreEtape {
   archive: boolean
@@ -251,8 +250,6 @@ class TitresEtapes extends Model {
     if (context.fetchHeritage && this.heritageContenu) {
       this.heritageContenu = await heritageContenuFormat(this.heritageContenu)
     }
-
-    fillAdministrations(this.administrations)
 
     return this
   }

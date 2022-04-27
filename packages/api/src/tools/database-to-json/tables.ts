@@ -11,7 +11,6 @@ const tables = [
     name: 'activites_types__titres_types',
     orderBy: ['titre_type_id', 'activite_type_id']
   },
-  { name: 'administrations', orderBy: ['id'] },
   {
     name: 'administrations__activites_types',
     orderBy: ['activite_type_id', 'administration_id']
@@ -28,7 +27,6 @@ const tables = [
     name: 'administrations__titres_types__titres_statuts',
     orderBy: ['administration_id', 'titre_type_id', 'titre_statut_id']
   },
-  { name: 'administrations_types', orderBy: ['id'] },
   { name: 'annees', orderBy: ['id'] },
   // la table 'caches' n'est pas utile dans les json
   // { name: 'caches',orderBy: ['id'] },

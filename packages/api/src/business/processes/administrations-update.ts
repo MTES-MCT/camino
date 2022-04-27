@@ -8,7 +8,7 @@ export const administrationsUpdate = async () => {
 
   // mise à jour de l'administrations grâce à l'API Administration
   const departementsIds = Object.values(Administrations)
-    .map(a => a.departement_id)
+    .map(a => a.departementId)
     .filter(
       (a: DepartementId | undefined): a is DepartementId => a !== undefined
     )

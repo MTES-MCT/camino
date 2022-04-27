@@ -15,13 +15,6 @@
 </template>
 
 <script setup lang="ts">
-// TODO 2022-04-25
-// - delete les champs en trop dans la table administrations (et les récupérer depuis le common)
-// - supprimer le fichier source
-// - les administrations_types des métas (? car utilisation de l’API par d’autres gens)
-// - garder l’api qui retourne les administrations avec leurs jointures
-// - virer les modifications des metas
-// - virer les modifications des administrations
 import Liste from './_common/liste.vue'
 import {
   ADMINISTRATION_TYPES,
@@ -103,7 +96,7 @@ const lignes = computed(() => {
       }
 
       if (listState.value.typesIds.length) {
-        if (!listState.value.typesIds.includes(a.type_id)) {
+        if (!listState.value.typesIds.includes(a.typeId)) {
           return false
         }
       }
@@ -114,8 +107,8 @@ const lignes = computed(() => {
       let first: string
       let second: string
       if (params.value.table.colonne === 'type') {
-        first = ADMINISTRATION_TYPES[a.type_id].nom
-        second = ADMINISTRATION_TYPES[b.type_id].nom
+        first = ADMINISTRATION_TYPES[a.typeId].nom
+        second = ADMINISTRATION_TYPES[b.typeId].nom
       } else {
         first = a[params.value.table.colonne]
         second = b[params.value.table.colonne]
@@ -127,7 +120,7 @@ const lignes = computed(() => {
       return second.localeCompare(first)
     })
     .map(administration => {
-      const type = ADMINISTRATION_TYPES[administration.type_id]
+      const type = ADMINISTRATION_TYPES[administration.typeId]
 
       const columns = {
         abreviation: { value: administration.abreviation },

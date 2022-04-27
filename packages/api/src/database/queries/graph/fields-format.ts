@@ -225,6 +225,12 @@ const fieldsFormat = (fields: IFields, parent: string) => {
     }
   }
 
+  if (['administration', 'administrations'].includes(parent)) {
+    delete fields.type
+    delete fields.departement
+    delete fields.region
+  }
+
   return fields
 }
 

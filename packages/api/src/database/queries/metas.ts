@@ -13,7 +13,6 @@ import {
   IEtapeStatut,
   IDevise,
   IUnite,
-  IAdministrationType,
   IPermission,
   IGeoSysteme,
   IDocumentType,
@@ -50,7 +49,6 @@ import TitresTypesTypes from '../models/titres-types-types'
 import Unites from '../models/unites'
 import EtapesStatuts from '../models/etapes-statuts'
 import SubstancesLegalesCodes from '../models/substances-legales-codes'
-import AdministrationsTypes from '../models/administrations-types'
 
 import {
   domainesQueryModify,
@@ -634,14 +632,6 @@ const etapeStatutUpdate = async (id: string, props: Partial<IEtapeStatut>) =>
 const substancesLegalesCodesGet = async () =>
   SubstancesLegalesCodes.query().orderBy('ordre')
 
-const administrationsTypesGet = async () =>
-  AdministrationsTypes.query().orderBy('ordre')
-
-const administrationTypeUpdate = async (
-  id: string,
-  props: Partial<IAdministrationType>
-) => AdministrationsTypes.query().patchAndFetchById(id, props)
-
 export {
   domaineGet,
   domainesGet,
@@ -675,8 +665,6 @@ export {
   etapesStatutsGet,
   etapeStatutUpdate,
   substancesLegalesCodesGet,
-  administrationsTypesGet,
-  administrationTypeUpdate,
   permissionUpdate,
   geoSystemeUpdate,
   documentTypeCreate,

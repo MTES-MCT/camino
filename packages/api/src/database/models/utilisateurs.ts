@@ -4,7 +4,6 @@ import { IUtilisateur } from '../../types'
 import Permissions from './permissions'
 import Entreprises from './entreprises'
 import Administrations from './administrations'
-import { fillAdministrations } from './_format/administration'
 
 interface Utilisateurs extends IUtilisateur {}
 
@@ -70,10 +69,6 @@ class Utilisateurs extends Model {
       }
     }
   })
-
-  $afterFind() {
-    fillAdministrations(this.administrations)
-  }
 
   public $parseJson(json: Pojo) {
     delete json.modification

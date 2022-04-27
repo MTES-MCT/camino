@@ -67,20 +67,8 @@ const administrationsQueryModify = (
   const administrationsIds = user?.administrations?.map(a => a.id) || []
   const administrationsIdsReplace = administrationsIds.map(() => '?')
 
-  // Propriété "membre"
-  // TODO: vérifier si utile et utilisé, particulièrement en frontend.
   if (permissionCheck(user?.permissionId, ['super'])) {
     q.select(raw('true').as('modification'))
-  } else if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur']) &&
-    user?.administrations?.length
-  ) {
-    q.select(
-      raw(
-        `(case when ?? in (${administrationsIdsReplace}) then true else false end)`,
-        ['administrations.id', ...administrationsIds]
-      ).as('membre')
-    )
   }
 
   if (

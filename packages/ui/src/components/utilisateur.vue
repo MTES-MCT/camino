@@ -174,7 +174,7 @@
             <div class="tablet-blob-3-4">
               <ul class="list-prefix">
                 <li v-for="a in utilisateur.administrations" :key="a.id">
-                  {{ `${a.nom}${a.service ? ` - ${a.service}` : ''}` }}
+                  {{ `${a.abreviation}${a.service ? ` - ${a.service}` : ''}` }}
                 </li>
               </ul>
             </div>

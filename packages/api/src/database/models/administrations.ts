@@ -8,7 +8,6 @@ import TitresTypes from './titres-types'
 import Utilisateurs from './utilisateurs'
 import Titres from './titres'
 import ActivitesTypes from './activites-types'
-import { fillAdministrationInPlace } from './_format/administration'
 import Departements from './departements'
 import Regions from './regions'
 
@@ -146,10 +145,6 @@ class Administrations extends Model {
       }
     }
   })
-
-  $afterFind() {
-    fillAdministrationInPlace(this)
-  }
 }
 
 export default Administrations

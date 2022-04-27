@@ -49,7 +49,6 @@ const administration = async (
       return null
     }
 
-    // return { ...administrationFormat(administration), ...Administrations[administration.id] }
     return administrationFormat(administration)
   } catch (e) {
     if (debug) {
@@ -60,20 +59,20 @@ const administration = async (
   }
 }
 
-const administrations = async (context: IToken, info: GraphQLResolveInfo) => {
+const administrations = async (
+  _: unknown,
+  context: IToken,
+  info: GraphQLResolveInfo
+) => {
   try {
     const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
-    const administrations = await administrationsGet(
-      { fields: fields.elements },
-      user
-    )
+    const administrations = await administrationsGet({ fields }, user)
 
     if (!administrations.length) return []
 
     return administrations.map(administrationFormat)
-    // .map((a: IAdministration) => ({...a, ...Administrations[a.id]}))
   } catch (e) {
     if (debug) {
       console.error(e)
