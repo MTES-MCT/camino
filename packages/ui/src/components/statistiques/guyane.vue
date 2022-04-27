@@ -297,7 +297,7 @@
                 line: 'surface',
                 labelX: 'annee',
                 labelBar: 'Autorisations d\'exploitation',
-                labelLine: 'Surface des autorisations de recherche (ha)'
+                labelLine: 'Surface des autorisations d’exploitation (ha)'
               })
             "
             :suggestedMax="suggestedMaxTitres"
