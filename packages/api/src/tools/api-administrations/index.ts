@@ -2,10 +2,13 @@
 import PQueue from 'p-queue'
 import fetch from 'node-fetch'
 
-import { IAdministration } from '../../types'
-
 import errorLog from '../error-log'
 import { DepartementId } from 'camino-common/src/departement'
+import {
+  Administration,
+  AdministrationId,
+  AdministrationTypeId
+} from 'camino-common/src/administrations'
 
 const MAX_CALLS_MINUTE = 200
 
@@ -74,50 +77,58 @@ const organismeDepartementCall = async (departementId: string, nom: string) => {
   }
 }
 
-const organismeFormat = (e: IOrganisme, departementId: string) => {
+const organismeFormat = (e: IOrganisme, departementId: DepartementId) => {
   if (!e.features.length) return null
 
   const { properties: p } = e.features[0]
   const { adresses } = p
 
-  let organisme
-  try {
-    const [adresseA, adresseB] = adresses
+  const [adresseA, adresseB] = adresses
 
-    const adresse1 = adresseA.lignes
-      .reduce((acc: string[], line) => {
-        if (line.length <= 100) {
-          acc.push(line)
-        }
+  const adresse1 = adresseA.lignes
+    .reduce((acc: string[], line) => {
+      if (line.length <= 100) {
+        acc.push(line)
+      }
 
-        return acc
-      }, [])
-      .join(', ')
+      return acc
+    }, [])
+    .join(', ')
 
-    const adresse2 = adresseB ? adresseB.lignes.join(', ') : null
-
-    organisme = {
-      id: p.id.replace(/prefecture|paris_ppp/, 'pre'),
-      typeId: p.pivotLocal.replace(/prefecture|paris_ppp/, 'pre'),
-      nom: p.nom,
-      adresse1,
-      adresse2,
-      codePostal: adresses[0].codePostal,
-      commune: adresses[0].commune,
-      telephone: p.telephone,
-      email: p.email && p.email.match('@') ? p.email : null,
-      url: p.url || null,
-      departementId
-    } as IAdministration
-  } catch (error) {
-    console.error(p, organisme)
-    throw error
+  const organisme: Administration = {
+    id: p.id.replace(/prefecture|paris_ppp/, 'pre') as AdministrationId,
+    typeId: p.pivotLocal.replace(
+      /prefecture|paris_ppp/,
+      'pre'
+    ) as AdministrationTypeId,
+    nom: p.nom,
+    abreviation: p.nom,
+    adresse1,
+    codePostal: adresses[0].codePostal,
+    commune: adresses[0].commune,
+    telephone: p.telephone,
+    departementId
+  }
+  const adresse2 = adresseB ? adresseB.lignes.join(', ') : null
+  if (adresse2) {
+    organisme.adresse2 = adresse2
+  }
+  const email = p.email && p.email.match('@') ? p.email : null
+  if (email) {
+    organisme.email = email
+  }
+  const url = p.url || null
+  if (url) {
+    organisme.url = url
   }
 
   return organisme
 }
 
-const organismeDepartementGet = async (departementId: string, nom: string) => {
+const organismeDepartementGet = async (
+  departementId: DepartementId,
+  nom: string
+) => {
   const organisme = await organismeDepartementCall(departementId, nom)
 
   return organisme ? organismeFormat(organisme, departementId) : null
@@ -125,7 +136,7 @@ const organismeDepartementGet = async (departementId: string, nom: string) => {
 
 const organismesDepartementsGet = async (
   departementsIdsNoms: { departementId: DepartementId; nom: string }[]
-) => {
+): Promise<Administration[]> => {
   const administrationsOrganismesRequests = departementsIdsNoms.map(
     ({ departementId, nom }) =>
       () =>
@@ -138,7 +149,7 @@ const organismesDepartementsGet = async (
     administrationsOrganismesRequests
   )
 
-  return organismesDepartements.filter(o => o) as IAdministration[]
+  return organismesDepartements.filter((o): o is Administration => !!o)
 }
 
 export { organismesDepartementsGet }
