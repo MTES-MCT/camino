@@ -23,6 +23,8 @@ export const fillAdministrationInPlace = (
   const adminis = Administrations[administration.id]
 
   for (const key in Object.keys(adminis)) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     administration[key] = adminis[key]
   }
 
@@ -32,6 +34,8 @@ export const fillAdministrationInPlace = (
     const departement = Departements[adminis.departement_id]
     if (administration.departement) {
       for (const key in Object.keys(departement)) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         administration.departement[key] = departement[key]
       }
     }
@@ -40,6 +44,8 @@ export const fillAdministrationInPlace = (
     const region = Regions[adminis.region_id]
     if (administration.region) {
       for (const key in Object.keys(region)) {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         administration.region[key] = region[key]
       }
     }

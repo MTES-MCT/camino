@@ -1,14 +1,17 @@
 import { organismesDepartementsGet } from '../../tools/api-administrations/index'
 import { Administrations } from 'camino-common/src/administrations'
+import { DepartementId } from 'camino-common/src/departement'
 
-const administrationsUpdate = async () => {
+export const administrationsUpdate = async () => {
   console.info()
   console.info('administrations…')
 
   // mise à jour de l'administrations grâce à l'API Administration
   const departementsIds = Object.values(Administrations)
     .map(a => a.departement_id)
-    .filter((a: string | undefined): a is string => a !== undefined)
+    .filter(
+      (a: DepartementId | undefined): a is DepartementId => a !== undefined
+    )
     .map(departementId => ({
       departementId,
       nom: departementId === '75' ? 'paris_ppp' : 'prefecture'
@@ -22,5 +25,3 @@ const administrationsUpdate = async () => {
 
   // TODO 2022-04-26 mettre à jour la liste des administration
 }
-
-export { administrationsUpdate }

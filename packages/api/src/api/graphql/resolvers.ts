@@ -166,7 +166,6 @@ import {
 import {
   administration,
   administrations,
-  administrationModifier,
   administrationTitreTypeModifier,
   administrationTitreTypeTitreStatutModifier,
   administrationTitreTypeEtapeTypeModifier,
@@ -298,7 +297,6 @@ export default {
   entrepriseModifier,
   entrepriseTitreTypeModifier,
   entreprisesTitresCreation,
-  administrationModifier,
   administrationTitreTypeModifier,
   administrationTitreTypeTitreStatutModifier,
   administrationTitreTypeEtapeTypeModifier,

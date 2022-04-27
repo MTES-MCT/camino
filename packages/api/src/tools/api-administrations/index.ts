@@ -5,6 +5,7 @@ import fetch from 'node-fetch'
 import { IAdministration } from '../../types'
 
 import errorLog from '../error-log'
+import { DepartementId } from 'camino-common/src/departement'
 
 const MAX_CALLS_MINUTE = 200
 
@@ -123,7 +124,7 @@ const organismeDepartementGet = async (departementId: string, nom: string) => {
 }
 
 const organismesDepartementsGet = async (
-  departementsIdsNoms: { departementId: string; nom: string }[]
+  departementsIdsNoms: { departementId: DepartementId; nom: string }[]
 ) => {
   const administrationsOrganismesRequests = departementsIdsNoms.map(
     ({ departementId, nom }) =>
