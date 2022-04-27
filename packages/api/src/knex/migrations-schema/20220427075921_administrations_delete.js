@@ -14,6 +14,10 @@ exports.up = async knex => {
     table.dropColumn('cedex')
   })
 
+  await knex.schema.table('administrations', table => {
+    table.string('type_id').index().notNullable()
+  })
+
   return knex.schema.dropTable('administrations_types')
 }
 

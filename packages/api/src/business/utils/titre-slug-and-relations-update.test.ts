@@ -5,14 +5,12 @@ import { dbManager } from '../../../tests/db-manager'
 import { ITitre } from '../../types'
 import Titres from '../../database/models/titres'
 import { objectClone } from '../../tools'
-const knex = dbManager.getKnex()
 beforeAll(async () => {
-  await dbManager.populateDb(knex)
+  await dbManager.populateDb()
 })
 
 afterAll(async () => {
-  await dbManager.truncateDb(knex)
-  await dbManager.closeKnex(knex)
+  await dbManager.closeKnex()
 })
 
 const titreAdd = async (titre: ITitre) =>

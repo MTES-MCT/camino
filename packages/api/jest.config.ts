@@ -51,12 +51,13 @@ const config: Config.InitialOptions = {
   globalSetup: './tests/setup.ts',
 
   // A path to a module which exports an async function that is triggered once after all test suites
-  globalTeardown: './tests/teardown.ts',
+  // globalTeardown: './tests/teardown.ts',
 
   // A set of global variables that need to be available in all test environments
   globals: {
     'ts-jest': {
-      isolatedModules: true
+      isolatedModules: true,
+      diagnostics: false
     }
   },
   // extensionsToTreatAsEsm: ['.ts'],
@@ -155,13 +156,13 @@ const config: Config.InitialOptions = {
   // timers: "real",
 
   // A map from regular expressions to paths to transformers
-  // transform: {
-  //   '^.+\\.tsx?$': 'babel-jest'
-  // },
+  transform: {
+    '^.+\\.ts?$': 'ts-jest'
+  },
   maxWorkers: 1,
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  transformIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/knex/*'],
+  transformIgnorePatterns: ['<rootDir>/node_modules/'],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,

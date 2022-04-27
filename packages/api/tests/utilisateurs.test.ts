@@ -8,17 +8,17 @@ import { IUtilisateur } from '../src/types'
 
 console.info = jest.fn()
 console.error = jest.fn()
-const knex = dbManager.getKnex()
-beforeEach(async () => {
-  await dbManager.populateDb(knex)
+let knex
+beforeAll(async () => {
+  knex = await dbManager.populateDb()
 })
 
 afterEach(async () => {
-  await dbManager.truncateDb(knex)
+  await dbManager.reseedDb()
 })
 
 afterAll(async () => {
-  await dbManager.closeKnex(knex)
+  await dbManager.closeKnex()
 })
 
 describe('utilisateurModifier', () => {

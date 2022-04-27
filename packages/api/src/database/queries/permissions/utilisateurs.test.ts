@@ -8,15 +8,13 @@ import options from '../_options'
 
 console.info = jest.fn()
 console.error = jest.fn()
-const knex = dbManager.getKnex()
 beforeAll(async () => {
-  await dbManager.populateDb(knex)
+  await dbManager.populateDb()
   await Utilisateurs.query().insertGraph(mockUser, options.utilisateurs.update)
 })
 
 afterAll(async () => {
-  await dbManager.truncateDb(knex)
-  await dbManager.closeKnex(knex)
+  await dbManager.closeKnex()
 })
 
 const mockAdministration = Administrations['aut-97300-01']

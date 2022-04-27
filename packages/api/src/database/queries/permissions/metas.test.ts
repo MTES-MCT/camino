@@ -6,18 +6,16 @@ import Titres from '../../models/titres'
 import { IDemarcheType, IUtilisateur } from '../../../types'
 import AdministrationsTitresTypes from '../../models/administrations-titres-types'
 import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts'
-import Administrations from '../../models/administrations'
+import { Administrations } from 'camino-common/src/administrations'
 
 console.info = jest.fn()
 console.error = jest.fn()
-const knex = dbManager.getKnex()
 beforeAll(async () => {
-  await dbManager.populateDb(knex)
+  await dbManager.populateDb()
 })
 
 afterAll(async () => {
-  await dbManager.truncateDb(knex)
-  await dbManager.closeKnex(knex)
+  await dbManager.closeKnex()
 })
 
 describe('metas permissions queries', () => {
@@ -61,9 +59,7 @@ describe('metas permissions queries', () => {
           etapesModificationInterdit: false
         })
 
-        const administration = await Administrations.query().findById(
-          administrationId
-        )
+        const administration = Administrations[administrationId]
 
         const q = DemarchesTypes.query()
         demarchesTypesQueryModify(

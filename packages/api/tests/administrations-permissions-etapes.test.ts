@@ -21,17 +21,15 @@ jest.mock('../src/tools/file-delete', () => ({
 }))
 console.info = jest.fn()
 console.error = jest.fn()
-const knex = dbManager.getKnex()
 beforeAll(async () => {
-  await dbManager.populateDb(knex)
+  await dbManager.populateDb()
 
   await TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes.query().delete()
   await TitresTypesDemarchesTypesEtapesTypesDocumentsTypes.query().delete()
 })
 
 afterAll(async () => {
-  await dbManager.truncateDb(knex)
-  await dbManager.closeKnex(knex)
+  await dbManager.closeKnex()
 })
 
 describe('Visibilité des étapes', () => {

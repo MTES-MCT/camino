@@ -18,10 +18,11 @@ class Administrations extends Model {
 
   public static jsonSchema = {
     type: 'object',
-    required: ['id'],
+    required: ['id', 'typeId'],
 
     properties: {
       id: { type: 'string', maxLength: 64 },
+      typeId: { type: 'string' },
       departementId: { type: ['string', 'null'] },
       regionId: { type: ['string', 'null'] }
     }
