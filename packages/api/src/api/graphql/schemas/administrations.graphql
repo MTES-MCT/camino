@@ -6,15 +6,6 @@
 # import * from 'metas-activites.graphql'
 # import * from 'territoires.graphql'
 
-type Administrations {
-  elements: [Administration]
-  intervalle: Int
-  page: Int
-  colonne: String
-  ordre: String
-  total: Int
-}
-
 type Administration {
   id: ID!
   nom: String
@@ -30,7 +21,6 @@ type Administration {
   commune: String
   cedex: String
   utilisateurs: [Utilisateur]
-  membre: Boolean
   emailsModification: Boolean
   emailsLecture: Boolean
   gestionnaireTitres: [Titre]
@@ -40,33 +30,33 @@ type Administration {
   titresTypesEtapesTypes: [TitreTypeEtapeType]
   activitesTypes: [ActiviteType]
   activitesTypesEmails: [ActiviteTypeEmail]
-  departement: Departement
-  region: Region
+  departement: AdministrationDepartement
+  region: AdministrationRegion
   modification: Boolean
+}
+
+"Département"
+type AdministrationDepartement {
+  "Id du département composé de 2 ou 3 chiffres (code INSEE)"
+  id: ID!
+
+  "Nom du département"
+  nom: String!
+}
+
+"Région"
+type AdministrationRegion {
+  "Id de la région composé de 2 chiffres (code INSEE)"
+  id: ID!
+
+  "Nom de la région"
+  nom: String!
 }
 
 type ActiviteTypeEmail {
   id: ID
   nom: String
   email: String
-}
-
-input InputAdministration {
-  id: ID!
-  typeId: ID!
-  nom: String!
-  abreviation: String!
-  service: String
-  url: String
-  email: String
-  telephone: String
-  adresse1: String
-  adresse2: String
-  codePostal: String
-  commune: String
-  cedex: String
-  departementId: ID
-  regionId: ID
 }
 
 input InputAdministrationTitreType {

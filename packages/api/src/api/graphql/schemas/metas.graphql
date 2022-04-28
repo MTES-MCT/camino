@@ -435,12 +435,6 @@ input InputUnite {
   referenceUniteRatio: Float
 }
 
-input InputAdministrationType {
-  id: ID!
-  nom: String
-  ordre: Int
-}
-
 input InputDocumentType {
   id: ID!
   nom: String

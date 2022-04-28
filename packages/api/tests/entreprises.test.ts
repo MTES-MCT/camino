@@ -38,17 +38,16 @@ const entreprisesEtablissementsFetchMock = mocked(
   entreprisesEtablissementsFetch,
   true
 )
-const knex = dbManager.getKnex()
-beforeEach(async () => {
-  await dbManager.populateDb(knex)
+beforeAll(async () => {
+  await dbManager.populateDb()
 })
 
 afterEach(async () => {
-  await dbManager.truncateDb(knex)
+  await dbManager.reseedDb()
 })
 
 afterAll(async () => {
-  await dbManager.closeKnex(knex)
+  await dbManager.closeKnex()
 })
 
 describe('entrepriseCreer', () => {

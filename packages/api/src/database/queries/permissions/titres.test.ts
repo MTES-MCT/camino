@@ -23,17 +23,19 @@ import AdministrationsTitresTypes from '../../models/administrations-titres-type
 import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts'
 import Administrations from '../../models/administrations'
 import { userSuper } from '../../user-super'
+import {
+  ADMINISTRATION_IDS,
+  Administrations as CommonAdministrations
+} from 'camino-common/src/administrations'
 
 console.info = jest.fn()
 console.error = jest.fn()
-const knex = dbManager.getKnex()
 beforeAll(async () => {
-  await dbManager.populateDb(knex)
+  await dbManager.populateDb()
 })
 
 afterAll(async () => {
-  await dbManager.truncateDb(knex)
-  await dbManager.closeKnex(knex)
+  await dbManager.closeKnex()
 })
 
 describe('titresQueryModify', () => {
@@ -264,19 +266,19 @@ describe('titresQueryModify', () => {
 
   describe('titresTravauxCreationQuery', () => {
     test.each`
-      administrationId          | gestionnaire | travauxCreation
-      ${'dre-ile-de-france-01'} | ${false}     | ${false}
-      ${'dea-guadeloupe-01'}    | ${false}     | ${false}
-      ${'min-mtes-dgec-01'}     | ${false}     | ${false}
-      ${'pre-42218-01'}         | ${false}     | ${false}
-      ${'ope-ptmg-973-01'}      | ${false}     | ${false}
-      ${'dre-ile-de-france-01'} | ${true}      | ${true}
-      ${'dea-guadeloupe-01'}    | ${true}      | ${true}
-      ${'min-mtes-dgec-01'}     | ${true}      | ${false}
-      ${'pre-42218-01'}         | ${true}      | ${false}
-      ${'ope-ptmg-973-01'}      | ${true}      | ${false}
+      administrationId                           | gestionnaire | travauxCreation
+      ${'dre-ile-de-france-01'}                  | ${false}     | ${false}
+      ${'dea-guadeloupe-01'}                     | ${false}     | ${false}
+      ${'min-mtes-dgec-01'}                      | ${false}     | ${false}
+      ${'pre-42218-01'}                          | ${false}     | ${false}
+      ${'ope-ptmg-973-01'}                       | ${false}     | ${false}
+      ${'dre-ile-de-france-01'}                  | ${true}      | ${true}
+      ${ADMINISTRATION_IDS['DEAL - GUADELOUPE']} | ${true}      | ${true}
+      ${'min-mtes-dgec-01'}                      | ${true}      | ${false}
+      ${'pre-42218-01'}                          | ${true}      | ${false}
+      ${'ope-ptmg-973-01'}                       | ${true}      | ${false}
     `(
-      'Vérifie si le $administrationId peut créer des travaux',
+      'Vérifie si le $administrationId, gestionnaire $gestionnaire peut créer des travaux ($travauxCreation)',
       async ({ administrationId, gestionnaire, travauxCreation }) => {
         const titreId = idGenerate()
 
@@ -299,9 +301,7 @@ describe('titresQueryModify', () => {
 
         await AdministrationsTitresTypesTitresStatuts.query().delete()
 
-        const administration = await Administrations.query().findById(
-          administrationId
-        )
+        const administration = CommonAdministrations[administrationId]
 
         const q = Titres.query()
         titresTravauxCreationQuery(q, {

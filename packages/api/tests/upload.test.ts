@@ -4,15 +4,13 @@ import { dbManager } from './db-manager'
 jest.mock('tus-node-server')
 
 console.info = jest.fn()
-const knex = dbManager.getKnex()
 describe('téléversement de fichier par rest (tus)', () => {
   beforeAll(async () => {
-    await dbManager.populateDb(knex)
+    await dbManager.populateDb()
   })
 
   afterAll(async () => {
-    await dbManager.truncateDb(knex)
-    await dbManager.closeKnex(knex)
+    await dbManager.closeKnex()
   })
 
   describe('permission de téléverser', () => {

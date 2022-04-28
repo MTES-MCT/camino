@@ -215,14 +215,7 @@ type Query {
   administration(id: ID!): Administration
 
   "Liste des administrations"
-  administrations(
-    intervalle: Int
-    page: Int
-    colonne: String
-    ordre: String
-    noms: String
-    typesIds: [ID]
-  ): Administrations
+  administrations: [Administration]
 
   "Statistiques"
   statistiquesGlobales: StatistiquesGlobales
@@ -385,9 +378,6 @@ type Mutation {
   "Modifie une entreprise"
   entrepriseModifier(entreprise: InputEntrepriseModification!): Entreprise
 
-  "Modifie une administration"
-  administrationModifier(administration: InputAdministration!): Administration
-
   administrationTitreTypeModifier(
     administrationTitreType: InputAdministrationTitreType!
   ): Administration
@@ -441,10 +431,6 @@ type Mutation {
   deviseModifier(devise: InputDevise!): [Devise]
 
   uniteModifier(unite: InputUnite!): [Unite]
-
-  administrationTypeModifier(
-    administrationType: InputAdministrationType!
-  ): [AdministrationType]
 
   permissionModifier(permission: InputPermission!): [Permission]
 

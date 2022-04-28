@@ -175,11 +175,11 @@ const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
         ...(t.administrationsLocales || [])
       ]) as IAdministration[]
 
-      t.administrations = administrations.sort(
+      t.administrations = administrations.map(administrationFormat)
+
+      t.administrations = t.administrations.sort(
         (a, b) => a.type!.ordre - b.type!.ordre
       )
-
-      t.administrations = t.administrations.map(administrationFormat)
 
       delete t.administrationsGestionnaires
       delete t.administrationsLocales

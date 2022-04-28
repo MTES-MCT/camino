@@ -1,5 +1,12 @@
 /* eslint-disable no-undef */
 import { FileUpload } from 'graphql-upload'
+import {
+  AdministrationId,
+  AdministrationType,
+  AdministrationTypeId
+} from 'camino-common/src/administrations'
+import { Departement, DepartementId } from 'camino-common/src/departement'
+import { Region } from 'camino-common/src/region'
 
 enum DemarchesStatutsTypes {
   Accepte = 'acc',
@@ -100,7 +107,6 @@ type ITitreActiviteColonneId = 'titreNom' | 'titulaire' | 'periode' | 'statut'
 
 type IUtilisateursColonneId = 'nom' | 'prenom' | 'email' | 'permission' | 'lien'
 type IEntrepriseColonneId = 'nom' | 'siren'
-type IAdministrationColonneId = 'abreviation' | 'nom' | 'type'
 type ICouleur = 'error' | 'info' | 'neutral' | 'success' | 'warning'
 
 interface IActiviteStatut {
@@ -226,17 +232,11 @@ interface IActiviteType {
   modification?: boolean | null
 }
 
-interface IAdministrationType {
-  id: string
-  nom: string
-  ordre: number
-}
-
 interface IAdministration {
-  id: string
-  typeId: string
+  id: AdministrationId
+  typeId: AdministrationTypeId
   nom: string
-  type?: IAdministrationType
+  type?: AdministrationType
   service?: string | null
   url?: string | null
   email?: string | null
@@ -246,8 +246,10 @@ interface IAdministration {
   codePostal?: string | null
   commune?: string | null
   cedex?: string | null
-  departementId?: string | null
+  departementId?: DepartementId | null
+  departement?: Departement
   regionId?: string | null
+  region?: Region
   abreviation?: string | null
   titresTypes?: (ITitreType & IAdministrationTitreType)[] | null
   titresTypesTitresStatuts?: IAdministrationTitreTypeTitreStatut[] | null
@@ -257,7 +259,6 @@ interface IAdministration {
   gestionnaireTitres?: ITitre[] | null
   localeTitres?: ITitre[] | null
   associee?: boolean | null
-  membre?: boolean
   emailsModification?: boolean
   emailsLecture?: boolean
   modification?: boolean | null
@@ -1073,7 +1074,6 @@ export {
   ISectionElement,
   ISectionElementType,
   IAdministration,
-  IAdministrationType,
   IAnnee,
   ICommune,
   IArea,
@@ -1168,7 +1168,6 @@ export {
   ITitreActiviteColonneId,
   IUtilisateursColonneId,
   IEntrepriseColonneId,
-  IAdministrationColonneId,
   IColonne,
   IContenuId,
   IPropsTitreEtapesIds,

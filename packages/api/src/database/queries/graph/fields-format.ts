@@ -25,13 +25,6 @@ const graphTitreAdministrationsFormat = (fields: IFields, type: string) => {
   fields[`administrations${type}`] = {
     ...fields.administrations
   }
-
-  if (
-    !fields.administrations.type &&
-    Object.keys(fields.administrations).length !== 0
-  ) {
-    fields[`administrations${type}`].type = { id: {} }
-  }
 }
 
 // ajoute des propriétés requises par /database/queries/_format
@@ -109,15 +102,13 @@ const fieldsFormat = (fields: IFields, parent: string) => {
 
   if (fields.administrations) {
     if (isParentTitre) {
-      // ajoute la propriété `type` sur les administrations
       graphTitreAdministrationsFormat(fields, 'Locales')
       graphTitreAdministrationsFormat(fields, 'Gestionnaires')
       delete fields.administrations
-    } else if (
-      !fields.administrations.type &&
-      Object.keys(fields.administrations).length !== 0
-    ) {
-      fields.administrations.type = { id: {} }
+    } else {
+      delete fields.administrations.type
+      delete fields.administrations.departement
+      delete fields.administrations.region
     }
   }
 
@@ -159,6 +150,10 @@ const fieldsFormat = (fields: IFields, parent: string) => {
 
     if (!fields.type.administrations) {
       fields.type.administrations = { id: {} }
+    } else {
+      delete fields.type.administrations.type
+      delete fields.type.administrations.departement
+      delete fields.type.administrations.region
     }
 
     if (!fields.type.documentsTypes) {
@@ -228,6 +223,12 @@ const fieldsFormat = (fields: IFields, parent: string) => {
     if (!fields.sdomZones) {
       fields.sdomZones = { id: {} }
     }
+  }
+
+  if (['administration', 'administrations'].includes(parent)) {
+    delete fields.type
+    delete fields.departement
+    delete fields.region
   }
 
   return fields

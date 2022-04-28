@@ -10,12 +10,6 @@
         <span class="cap-first">{{ administration.nom }}</span>
       </template>
 
-      <template v-if="administration.modification" #buttons>
-        <button class="btn py-s px-m" @click="editPopupOpen">
-          <i class="icon-24 icon-pencil" />
-        </button>
-      </template>
-
       <template #sub>
         <div class="px-m pt-m border-b-s">
           <div class="tablet-blobs">
@@ -24,7 +18,7 @@
             </div>
             <div class="tablet-blob-3-4">
               <p class="word-break">
-                {{ administration.type.nom }}
+                {{ type }}
               </p>
             </div>
           </div>
@@ -183,7 +177,6 @@
 import Accordion from './_ui/accordion.vue'
 import Loader from './_ui/loader.vue'
 import Table from './_ui/table.vue'
-import AdministrationEditPopup from './administration/edit-popup.vue'
 import AdministrationPermission from './administration/permissions.vue'
 import AdministrationActiviteTypeEmail from './administration/activites-types-emails.vue'
 
@@ -192,6 +185,10 @@ import {
   utilisateursLignesBuild
 } from './utilisateurs/table'
 import { permissionsCheck } from '@/utils'
+import {
+  ADMINISTRATION_TYPES,
+  Administrations
+} from 'camino-common/src/administrations'
 
 export default {
   components: {
@@ -210,7 +207,18 @@ export default {
 
   computed: {
     administration() {
-      return this.$store.state.administration.element
+      const element = this.$store.state.administration.element
+      return { ...element, ...Administrations[this.$route.params.id] }
+    },
+
+    type() {
+      const typeId = this.administration?.typeId
+
+      if (typeId) {
+        return ADMINISTRATION_TYPES[typeId].nom
+      }
+
+      return ''
     },
 
     utilisateurs() {
@@ -226,7 +234,7 @@ export default {
     },
 
     loaded() {
-      return !!this.administration
+      return !!this.$store.state.administration.element
     },
 
     activitesTypes() {
@@ -256,32 +264,6 @@ export default {
     async get() {
       await this.$store.dispatch('administration/init')
       await this.$store.dispatch('administration/get', this.$route.params.id)
-    },
-
-    editPopupOpen() {
-      const administration = {
-        id: this.administration.id,
-        typeId: this.administration.type.id,
-        nom: this.administration.nom,
-        abreviation: this.administration.abreviation,
-        service: this.administration.service,
-        url: this.administration.url,
-        email: this.administration.email,
-        telephone: this.administration.telephone,
-        adresse1: this.administration.adresse1,
-        adresse2: this.administration.adresse2,
-        codePostal: this.administration.codePostal,
-        commune: this.administration.commune,
-        cedex: this.administration.cedex,
-        departementId:
-          this.administration.departement && this.administration.departement.id,
-        regionId: this.administration.region && this.administration.region.id
-      }
-
-      this.$store.commit('popupOpen', {
-        component: AdministrationEditPopup,
-        props: { administration }
-      })
     },
 
     permissionsCheck(user, permissions) {

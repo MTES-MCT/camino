@@ -8,13 +8,10 @@ import { knexSnakeCaseMappers, Model } from 'objection'
 
 class DbManager {
   private readonly dbName: string
+  private knexInstance = null
 
   public constructor() {
-    // jest hack to get a global instance called only once
-    this.dbName = process.env.DB_NAME
-      ? process.env.DB_NAME
-      : `a${idGenerate().toLowerCase()}`
-    process.env.DB_NAME = this.dbName
+    this.dbName = `a${idGenerate().toLowerCase()}`
   }
 
   private static getPgUser() {
@@ -25,7 +22,7 @@ class DbManager {
     return process.env.PGPASSWORD ?? 'password'
   }
 
-  public async init(): Promise<void> {
+  private async init(): Promise<void> {
     const globalConnection = `postgres://${DbManager.getPgUser()}:${DbManager.getPgPassword()}@localhost/postgres`
     const globalClient = new Client(globalConnection)
     await globalClient.connect()
@@ -37,13 +34,13 @@ class DbManager {
     }
     await globalClient.end()
 
-    const knex = this.getKnex()
-    await knex.migrate.latest()
-    await DbManager.injectSeed(knex)
-    await this.closeKnex(knex)
+    this.knexInstance = this.getKnex()
+    Model.knex(this.knexInstance)
+    knexInstanceSet(this.knexInstance)
+    await this.knexInstance.migrate.latest()
   }
 
-  public getKnex() {
+  private getKnex() {
     const knexConfig = {
       client: 'pg',
       connection: {
@@ -65,26 +62,24 @@ class DbManager {
     return knex(knexConfig)
   }
 
-  public async populateDb(knex: Knex<any, unknown[]>): Promise<void> {
-    this.setGlobally(knex)
-    await DbManager.truncateSchema(knex)
-    await DbManager.injectSeed(knex)
+  public async populateDb(): Promise<Knex<any, unknown>> {
+    await this.init()
+    await this.injectSeed()
+
+    return this.knexInstance
   }
 
-  public async truncateDb(knex: Knex<any, unknown[]>): Promise<void> {
-    await DbManager.truncateSchema(knex)
+  public async reseedDb(): Promise<void> {
+    await this.truncateSchema()
+    await this.injectSeed()
   }
 
-  public async closeKnex(knex: Knex<any, unknown[]>): Promise<void> {
-    await knex.destroy()
+  public async closeKnex(): Promise<void> {
+    await this.knexInstance.destroy()
+    await this.end()
   }
 
-  public setGlobally(knex: Knex<any, unknown[]>): void {
-    Model.knex(knex)
-    knexInstanceSet(knex)
-  }
-
-  public async end(): Promise<void> {
+  private async end(): Promise<void> {
     const globalConnection = 'postgres://postgres:password@localhost/postgres'
     const globalClient = new Client(globalConnection)
     await globalClient.connect()
@@ -92,17 +87,17 @@ class DbManager {
     await globalClient.end()
   }
 
-  private static async injectSeed(knex: Knex<any, unknown[]>) {
-    await knex.transaction(async trx => trx.seed.run())
+  private async injectSeed() {
+    await this.knexInstance.transaction(async trx => trx.seed.run())
   }
 
-  private static async truncateSchema(knex: Knex<any, unknown[]>) {
+  private async truncateSchema() {
     const tables =
-      (await knex('pg_tables')
+      (await this.knexInstance('pg_tables')
         .select('tablename')
         .where('schemaname', 'public')) ?? []
 
-    await knex.raw(
+    await this.knexInstance.raw(
       `TRUNCATE TABLE "${tables
         .filter(table => table.tablename !== 'knex_migrations')
         .map(table => table.tablename)

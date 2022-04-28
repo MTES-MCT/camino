@@ -1,7 +1,6 @@
 import {
   administration,
   administrationMetas,
-  administrationModifier,
   administrationTitreTypeUpdate,
   administrationTitreTypeTitreStatutUpdate,
   administrationTitreTypeEtapeTypeUpdate,
@@ -15,7 +14,6 @@ const state = {
   element: null,
   metas: {
     domaines: [],
-    types: [],
     regions: [],
     departements: [],
     titresStatuts: [],
@@ -65,31 +63,6 @@ const actions = {
       dispatch('apiError', e, { root: true })
     } finally {
       commit('loadingRemove', 'administration', { root: true })
-    }
-  },
-
-  async update({ commit, dispatch }, administration) {
-    try {
-      commit('popupMessagesRemove', null, { root: true })
-      commit('popupLoad', null, { root: true })
-      commit('loadingAdd', 'administrationUpdate', { root: true })
-      const data = await administrationModifier({ administration })
-
-      commit('popupClose', null, { root: true })
-      await dispatch(
-        'reload',
-        { name: 'administration', id: data.id },
-        { root: true }
-      )
-      dispatch(
-        'messageAdd',
-        { value: `l'administration a été mise à jour`, type: 'success' },
-        { root: true }
-      )
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'administrationUpdate', { root: true })
     }
   },
 
@@ -273,9 +246,7 @@ const actions = {
 const mutations = {
   metasSet(state, data) {
     Object.keys(data).forEach(id => {
-      if (id === 'administrationsTypes') {
-        state.metas.types = data[id]
-      } else if (id === 'statuts') {
+      if (id === 'statuts') {
         state.metas.titresStatuts = data[id]
       } else {
         state.metas[id] = data[id]

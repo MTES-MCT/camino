@@ -7,14 +7,12 @@ import {
 
 console.info = jest.fn()
 console.error = jest.fn()
-const knex = dbManager.getKnex()
 beforeAll(async () => {
-  await dbManager.populateDb(knex)
+  await dbManager.populateDb()
 })
 
 afterAll(async () => {
-  await dbManager.truncateDb(knex)
-  await dbManager.closeKnex(knex)
+  await dbManager.closeKnex()
 })
 
 describe('Visibilité des démarches', () => {
@@ -25,7 +23,7 @@ describe('Visibilité des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${true}
   `(
-    "un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre ARM : $visible",
+    "un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre ARM : $visible",
     async ({ administrationId, visible }) =>
       visibleCheck(administrationId, visible, 'demarches', 'arm', false)
   )
@@ -38,7 +36,7 @@ describe('Visibilité des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${true}
   `(
-    "un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre AXM : $visible",
+    "un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre AXM : $visible",
     async ({ administrationId, visible }) =>
       visibleCheck(administrationId, visible, 'demarches', 'axm', false)
   )
@@ -49,7 +47,7 @@ describe('Visibilité des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${true}
   `(
-    "un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre CXM : $visible",
+    "un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre CXM : $visible",
     async ({ administrationId, visible }) =>
       visibleCheck(administrationId, visible, 'demarches', 'cxm', false)
   )
@@ -60,7 +58,7 @@ describe('Visibilité des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${true}
   `(
-    "un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre PRM : $visible",
+    "un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre PRM : $visible",
     async ({ administrationId, visible }) =>
       visibleCheck(administrationId, visible, 'demarches', 'prm', false)
   )
@@ -71,7 +69,7 @@ describe('Visibilité des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${true}
   `(
-    "un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre PXM : $visible",
+    "un utilisateur admin de l’administration $administrationId peut voir les démarches d'un titre PXM : $visible",
     async ({ administrationId, visible }) =>
       visibleCheck(administrationId, visible, 'demarches', 'pxm', false)
   )
@@ -84,7 +82,7 @@ describe('Création des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${false}
   `(
-    "un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre ARM : $creer",
+    "un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre ARM : $creer",
     async ({ administrationId, creer }) =>
       creationCheck(administrationId, creer, 'demarches', 'arm')
   )
@@ -96,7 +94,7 @@ describe('Création des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${false}
   `(
-    "un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre AXM : $creer",
+    "un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre AXM : $creer",
     async ({ administrationId, creer }) =>
       creationCheck(administrationId, creer, 'demarches', 'axm')
   )
@@ -107,7 +105,7 @@ describe('Création des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${false}
   `(
-    "un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre CXM : $creer",
+    "un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre CXM : $creer",
     async ({ administrationId, creer }) =>
       creationCheck(administrationId, creer, 'demarches', 'cxm')
   )
@@ -118,7 +116,7 @@ describe('Création des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${false}
   `(
-    "un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre PRM : $creer",
+    "un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre PRM : $creer",
     async ({ administrationId, creer }) =>
       creationCheck(administrationId, creer, 'demarches', 'prm')
   )
@@ -129,7 +127,7 @@ describe('Création des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${false}
   `(
-    "un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre PXM : $creer",
+    "un utilisateur admin de l’administration $administrationId peut créer des démarches d'un titre PXM : $creer",
     async ({ administrationId, creer }) =>
       creationCheck(administrationId, creer, 'demarches', 'pxm')
   )
@@ -142,7 +140,7 @@ describe('Modification des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${false}
   `(
-    "un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre ARM : $modifier",
+    "un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre ARM : $modifier",
     async ({ administrationId, modifier }) =>
       modificationCheck(administrationId, modifier, 'demarches', 'arm')
   )
@@ -154,7 +152,7 @@ describe('Modification des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${false}
   `(
-    "un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre AXM : $modifier",
+    "un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre AXM : $modifier",
     async ({ administrationId, modifier }) =>
       modificationCheck(administrationId, modifier, 'demarches', 'axm')
   )
@@ -165,7 +163,7 @@ describe('Modification des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${false}
   `(
-    "un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre CXM : $modifier",
+    "un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre CXM : $modifier",
     async ({ administrationId, modifier }) =>
       modificationCheck(administrationId, modifier, 'demarches', 'cxm')
   )
@@ -176,7 +174,7 @@ describe('Modification des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${false}
   `(
-    "un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre PRM : $modifier",
+    "un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre PRM : $modifier",
     async ({ administrationId, modifier }) =>
       modificationCheck(administrationId, modifier, 'demarches', 'prm')
   )
@@ -187,7 +185,7 @@ describe('Modification des démarches', () => {
     ${'min-mtes-dgaln-01'} | ${true}
     ${'min-dajb-01'}       | ${false}
   `(
-    "un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre PXM : $modifier",
+    "un utilisateur admin de l’administration $administrationId peut modifier des démarches d'un titre PXM : $modifier",
     async ({ administrationId, modifier }) =>
       modificationCheck(administrationId, modifier, 'demarches', 'pxm')
   )

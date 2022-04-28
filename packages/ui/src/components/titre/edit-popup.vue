@@ -76,7 +76,7 @@
       >
         <select v-model="administration.id" class="p-s mr-s">
           <option v-for="a in administrations" :key="a.id" :value="a.id">
-            {{ a.nom }}
+            {{ a.abreviation }}
           </option>
         </select>
         <div class="flex-right">
@@ -130,6 +130,7 @@
 import Popup from '../_ui/popup.vue'
 
 import TitreTypeSelect from '../_common/titre-type-select.vue'
+import { sortedAdministrations } from 'camino-common/src/administrations'
 
 export default {
   name: 'CaminoDemarcheEditPopup',
@@ -171,7 +172,7 @@ export default {
     },
 
     administrations() {
-      return this.$store.state.titre.metas.administrations
+      return sortedAdministrations
     },
 
     complete() {

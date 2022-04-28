@@ -239,7 +239,7 @@ const titresEtapesAdministrationsLocalesUpdate = async (
     userSuper
   )
 
-  const administrations = await administrationsGet({}, {}, userSuper)
+  const administrations = await administrationsGet({}, userSuper)
 
   // parcourt les étapes à partir des titres
   // car on a besoin de titre.domaineId

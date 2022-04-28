@@ -193,48 +193,28 @@
         <div v-if="utilisateurIsAdministration">
           <hr />
           <h3 class="mb-s">Administrations</h3>
-          <div
-            v-for="(administration, n) in utilisateur.administrations"
-            :key="n"
-          >
-            <div
-              v-if="administrationsDisabledIds.includes(administration.id)"
-              class="p-s bg-alt mb-s"
+
+          <div class="flex full-x mb">
+            <select
+              id="cmn-utilisateur-edit-popup-administration-select"
+              v-model="utilisateur.administrations[0]"
+              class="p-s mr-s"
             >
-              {{ administrationNameFind(administration.id) }}
-            </div>
-            <div v-else class="flex full-x mb">
-              <select
-                id="cmn-utilisateur-edit-popup-administration-select"
-                v-model="utilisateur.administrations[n]"
-                class="p-s mr-s"
-                :class="{
-                  '': !administrationsDisabledIds.includes(administration.id)
-                }"
-                :disabled="
-                  administrationsDisabledIds.includes(administration.id)
-                "
+              <option
+                v-for="a in administrations"
+                :key="a.id"
+                :value="{ id: a.id }"
               >
-                <option
-                  v-for="a in administrationsFiltered"
-                  :key="a.id"
-                  :value="{ id: a.id }"
-                  :disabled="
-                    utilisateur.administrations.find(({ id }) => id === a.id) ||
-                    administrationsDisabledIds.includes(a.id)
-                  "
-                >
-                  {{ `${a.abreviation}` }}
-                </option>
-              </select>
-              <div class="flex-right">
-                <button
-                  class="btn py-s px-m rnd-xs"
-                  @click="administrationRemove(n)"
-                >
-                  <i class="icon-24 icon-minus" />
-                </button>
-              </div>
+                {{ `${a.abreviation}` }}
+              </option>
+            </select>
+            <div class="flex-right">
+              <button
+                class="btn py-s px-m rnd-xs"
+                @click="administrationRemove(n)"
+              >
+                <i class="icon-24 icon-minus" />
+              </button>
             </div>
           </div>
 
@@ -300,6 +280,7 @@
 import { permissionsCheck } from '@/utils'
 import Popup from '../_ui/popup.vue'
 import Loader from '../_ui/loader.vue'
+import { sortedAdministrations } from 'camino-common/src/administrations'
 
 export default {
   name: 'CaminoUtilisateurEditPopup',
@@ -347,7 +328,7 @@ export default {
     },
 
     administrations() {
-      return this.$store.state.utilisateur.metas.administrations
+      return sortedAdministrations
     },
 
     user() {
@@ -400,24 +381,6 @@ export default {
       return ['admin', 'editeur', 'lecteur'].includes(
         this.utilisateur.permissionId
       )
-    },
-
-    administrationsDisabledIds() {
-      return this.administrations.reduce((res, a) => {
-        if (!a.membre && !this.permissionsCheck(this.user, ['super'])) {
-          res.push(a.id)
-        }
-
-        return res
-      }, [])
-    },
-
-    administrationsFiltered() {
-      const a = this.permissionsCheck(this.user, ['super'])
-        ? this.administrations
-        : this.administrations.filter(a => a.membre)
-
-      return a
     }
   },
 

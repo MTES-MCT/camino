@@ -2,16 +2,10 @@ import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
 import { fragmentAdministration } from './fragments/administration'
-import { fragmentAdministrations } from './fragments/administrations'
-import { fragmentAdministrationType } from './fragments/metas'
 
 const administrationMetas = apiGraphQLFetch(
   gql`
     query AdministrationMetas {
-      administrationsTypes {
-        ...administrationType
-      }
-
       regions {
         id
         nom
@@ -27,8 +21,6 @@ const administrationMetas = apiGraphQLFetch(
         nom
       }
     }
-
-    ${fragmentAdministrationType}
   `
 )
 
@@ -63,55 +55,6 @@ const administrationPermissionsMetas = apiGraphQLFetch(
 const administration = apiGraphQLFetch(gql`
   query Administration($id: ID!) {
     administration(id: $id) {
-      ...administration
-    }
-  }
-
-  ${fragmentAdministration}
-`)
-
-const administrationsMetas = apiGraphQLFetch(
-  gql`
-    query AdministrationsMetas {
-      administrationsTypes {
-        id
-        nom
-        ordre
-      }
-    }
-  `
-)
-
-const administrations = apiGraphQLFetch(gql`
-  query Administrations(
-    $intervalle: Int
-    $page: Int
-    $colonne: String
-    $ordre: String
-    $noms: String
-    $typesIds: [ID]
-  ) {
-    administrations(
-      intervalle: $intervalle
-      page: $page
-      colonne: $colonne
-      ordre: $ordre
-      noms: $noms
-      typesIds: $typesIds
-    ) {
-      elements {
-        ...administrations
-      }
-      total
-    }
-  }
-
-  ${fragmentAdministrations}
-`)
-
-const administrationModifier = apiGraphQLFetch(gql`
-  mutation AdministrationModifier($administration: InputAdministration!) {
-    administrationModifier(administration: $administration) {
       ...administration
     }
   }
@@ -202,9 +145,6 @@ const administrationTitreTypeEtapeTypeUpdate = apiGraphQLFetch(gql`
 export {
   administrationMetas,
   administration,
-  administrationsMetas,
-  administrations,
-  administrationModifier,
   administrationTitreTypeUpdate,
   administrationTitreTypeTitreStatutUpdate,
   administrationTitreTypeEtapeTypeUpdate,

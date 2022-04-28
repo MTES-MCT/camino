@@ -13,12 +13,12 @@ import {
 } from '../../src/types'
 
 import { objectClone } from '../../src/tools/index'
+import {
+  Administration,
+  Administrations
+} from 'camino-common/src/administrations'
 
 interface ISources {
-  administrations: {
-    path: string
-    data: IAdministration[]
-  }
   titresTypes: {
     path: string
     data: ITitreType[]
@@ -40,7 +40,6 @@ interface ISources {
 }
 
 const sources = {
-  administrations: { path: '../../sources/administrations.json', data: [] },
   titresTypes: { path: '../../sources/titres-types.json', data: [] },
   titresStatuts: { path: '../../sources/titres-statuts.json', data: [] },
   administrations__titresTypes: {
@@ -105,59 +104,60 @@ Object.keys(sources).forEach(name => {
   element.data = jsonKeysCaseChange(readFile(element.path))
 })
 
-const administrationsWithRelations = sources.administrations.data.map(
-  (a: IAdministration) => {
-    a.titresTypes = sources.administrations__titresTypes.data
-      .filter(att => att.administrationId === a.id)
-      .map(att => {
-        const titreType = objectClone(
-          sources.titresTypes.data.find(tt => att.titreTypeId === tt.id)!
-        ) as ITitreType & IAdministrationTitreType
+const administrationsWithRelations = Object.values(
+  Administrations
+).map<IAdministration>((a: Administration) => {
+  const dbadmin: IAdministration = { ...a }
+  dbadmin.titresTypes = sources.administrations__titresTypes.data
+    .filter(att => att.administrationId === a.id)
+    .map(att => {
+      const titreType = objectClone(
+        sources.titresTypes.data.find(tt => att.titreTypeId === tt.id)!
+      ) as ITitreType & IAdministrationTitreType
 
-        titreType.administrationId = att.administrationId
-        titreType.titreTypeId = att.titreTypeId
+      titreType.administrationId = att.administrationId
+      titreType.titreTypeId = att.titreTypeId
 
-        if (att.associee) {
-          titreType.associee = true
-        }
+      if (att.associee) {
+        titreType.associee = true
+      }
 
-        if (att.gestionnaire) {
-          titreType.gestionnaire = true
-        }
+      if (att.gestionnaire) {
+        titreType.gestionnaire = true
+      }
 
-        return titreType
+      return titreType
+    })
+
+  dbadmin.titresTypesTitresStatuts =
+    sources.administrations__titresTypes__titresStatuts.data
+      .filter(attts => attts.administrationId === a.id)
+      .map(attts => {
+        attts.titreType = sources.titresTypes.data.find(
+          tt => tt.id === attts.titreTypeId
+        )
+        attts.titreStatut = sources.titresStatuts.data.find(
+          ts => ts.id === attts.titreStatutId
+        )
+
+        return attts
       })
 
-    a.titresTypesTitresStatuts =
-      sources.administrations__titresTypes__titresStatuts.data
-        .filter(attts => attts.administrationId === a.id)
-        .map(attts => {
-          attts.titreType = sources.titresTypes.data.find(
-            tt => tt.id === attts.titreTypeId
-          )
-          attts.titreStatut = sources.titresStatuts.data.find(
-            ts => ts.id === attts.titreStatutId
-          )
+  dbadmin.titresTypesEtapesTypes =
+    sources.administrations__titresTypes__etapesTypes.data
+      .filter(attet => attet.administrationId === a.id)
+      .map(attet => {
+        attet.titreType = sources.titresTypes.data.find(
+          tt => tt.id === attet.titreTypeId
+        )
+        attet.etapeType = sources.etapesTypes.data.find(
+          te => te.id === attet.etapeTypeId
+        )
 
-          return attts
-        })
+        return attet
+      })
 
-    a.titresTypesEtapesTypes =
-      sources.administrations__titresTypes__etapesTypes.data
-        .filter(attet => attet.administrationId === a.id)
-        .map(attet => {
-          attet.titreType = sources.titresTypes.data.find(
-            tt => tt.id === attet.titreTypeId
-          )
-          attet.etapeType = sources.etapesTypes.data.find(
-            te => te.id === attet.etapeTypeId
-          )
-
-          return attet
-        })
-
-    return a
-  }
-)
+  return dbadmin
+})
 
 export { administrationsWithRelations }

@@ -1,4 +1,3 @@
-import { administrationsUpdate } from './processes/administrations-update'
 import { entreprisesUpdate } from './processes/entreprises-update'
 import { titresEtapesAreasUpdate } from './processes/titres-etapes-areas-update'
 import { logsUpdate } from './_logs-update'
@@ -9,18 +8,12 @@ const monthly = async () => {
     console.info('- - -')
     console.info('mise à jour mensuelle')
 
-    // 1.
     const {
       entreprisesUpdated = [],
       etablissementsUpdated = [],
       etablissementsDeleted = []
     } = await entreprisesUpdate()
 
-    // 2.
-    // mise à jour des administrations grâce à l'API Administration
-    const administrationsUpdated = await administrationsUpdate()
-
-    // 3.
     // mise à jour des forêts et des communes
     const { titresCommunes, titresForets, titresSDOMZones } =
       await titresEtapesAreasUpdate()
@@ -44,7 +37,6 @@ const monthly = async () => {
       entreprisesUpdated,
       etablissementsUpdated,
       etablissementsDeleted,
-      administrationsUpdated,
       communesUpdated,
       titresEtapesCommunesUpdated,
       titresEtapesCommunesDeleted,

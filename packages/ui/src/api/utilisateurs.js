@@ -4,7 +4,6 @@ import { apiGraphQLFetch } from './_client'
 import { fragmentUtilisateur } from './fragments/utilisateur'
 import { fragmentPermission, fragmentTitreType } from './fragments/metas'
 import { fragmentEntreprises } from './fragments/entreprises'
-import { fragmentAdministrations } from './fragments/administrations'
 
 const userMetas = apiGraphQLFetch(
   gql`
@@ -40,19 +39,11 @@ const utilisateurMetas = apiGraphQLFetch(
           ...entreprises
         }
       }
-
-      administrations {
-        elements {
-          ...administrations
-        }
-      }
     }
 
     ${fragmentPermission}
 
     ${fragmentEntreprises}
-
-    ${fragmentAdministrations}
   `
 )
 

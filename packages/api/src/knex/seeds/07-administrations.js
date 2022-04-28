@@ -1,10 +1,15 @@
 const seeding = require('../seeding')
-
-const administrations = require('../../../sources/administrations.json')
-const administrationsTypes = require('../../../sources/administrations-types.json')
+const { sortedAdministrations } = require('camino-common/src/administrations')
 
 const seed = seeding(async ({ insert }) => {
-  await insert('administrationsTypes', administrationsTypes)
+  const administrations = sortedAdministrations.map(
+    ({ id, typeId, regionId, departementId }) => ({
+      id,
+      typeId,
+      regionId,
+      departementId
+    })
+  )
   await insert('administrations', administrations)
 })
 

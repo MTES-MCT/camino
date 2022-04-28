@@ -16,7 +16,6 @@ describe('liste des utilisateurs', () => {
     utilisateurs.state = {
       metas: {
         permission: [],
-        administration: [],
         entreprise: []
       },
       definitions: [
@@ -60,26 +59,15 @@ describe('liste des utilisateurs', () => {
       total: 4
     }
 
-    const administrations = {
-      elements: [
-        {
-          id: 'dre-nouvelle-aquitaine-01',
-          nom: "Direction régionale de l'environnement, de l'aménagement et du logement (DREAL) - Nouvelle-Aquitaine - Siège de Poitiers"
-        },
-        { id: 'ope-onf-973-01', nom: 'Office national des forêts' }
-      ]
-    }
     store.commit('utilisateurs/metasSet', {
       permissions,
       entreprises,
-      administrations,
       truc: {}
     })
 
     expect(store.state.utilisateurs.metas).toEqual({
       permission: permissions,
-      entreprise: entreprises.elements,
-      administration: administrations.elements
+      entreprise: entreprises.elements
     })
 
     expect(store.state.utilisateurs.definitions).toEqual([
@@ -87,7 +75,7 @@ describe('liste des utilisateurs', () => {
       {
         id: 'administrationIds',
         type: 'strings',
-        values: ['dre-nouvelle-aquitaine-01', 'ope-onf-973-01']
+        values: []
       },
       {
         id: 'entrepriseIds',

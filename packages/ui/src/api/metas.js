@@ -11,7 +11,6 @@ import {
   fragmentEtapeStatut,
   fragmentDevise,
   fragmentUnite,
-  fragmentAdministrationType,
   fragmentPermission,
   fragmentDocumentType,
   fragmentReferenceType,
@@ -249,18 +248,6 @@ const devises = apiGraphQLFetch(
   `
 )
 
-const administrationsTypes = apiGraphQLFetch(
-  gql`
-    query AdministrationsTypes {
-      administrationsTypes {
-        ...administrationType
-      }
-    }
-
-    ${fragmentAdministrationType}
-  `
-)
-
 const deviseModifier = apiGraphQLFetch(gql`
   mutation DeviseModifier($element: InputDevise!) {
     deviseModifier(devise: $element) {
@@ -269,16 +256,6 @@ const deviseModifier = apiGraphQLFetch(gql`
   }
 
   ${fragmentDevise}
-`)
-
-const administrationTypeModifier = apiGraphQLFetch(gql`
-  mutation AdministrationTypeModifier($element: InputAdministrationType!) {
-    administrationTypeModifier(administrationType: $element) {
-      ...administrationType
-    }
-  }
-
-  ${fragmentAdministrationType}
 `)
 
 const permissions = apiGraphQLFetch(
@@ -851,8 +828,6 @@ export {
   deviseModifier,
   unites,
   uniteModifier,
-  administrationsTypes,
-  administrationTypeModifier,
   permissionModifier,
   documentsTypes,
   documentTypeCreer,
