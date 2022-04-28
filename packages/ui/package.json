@@ -167,6 +167,7 @@
       "postcss-grid-fluid": {},
       "postcss-button": {},
       "postcss-inline-svg": {},
+      "postcss-custom-media": {},
       "postcss-color-mod-function": {},
       "pixrem": {
         "html": false

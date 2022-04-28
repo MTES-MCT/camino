@@ -1,6 +1,6 @@
 <template>
-  <div class="tablet-blobs mb flex-align-items-stretch">
-    <div class="tablet-blob-1-3 pt-m">
+  <div class="mb header-container">
+    <div class="pt-m">
       <router-link :to="{ name: 'homepage' }" class="flex text-decoration-none">
         <img src="/img/logo-rf.svg" alt="logo" class="logo mr" />
         <div>
@@ -14,11 +14,11 @@
       </router-link>
     </div>
 
-    <div class="tablet-blob-1-3 pt-m flex" style="align-self: center">
+    <div class="pt-m search" style="align-self: center">
       <QuickAccessTitre />
     </div>
 
-    <div class="tablet-blob-1-3 flex">
+    <div class="pt-m flex">
       <div v-if="!apiError && loaded" class="flex-right">
         <div class="mt-m tablet-mb-m flex">
           <div class="ml-xs flex">
@@ -58,3 +58,38 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+@import '@/styles/settings.css';
+
+@media (--viewport-tablet) {
+  .header-container {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media (--viewport-desktop) {
+  .header-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .search {
+    grid-row-start: 2;
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+}
+
+@media (--viewport-large) {
+  .header-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .search {
+    grid-row-start: 1;
+    grid-column-start: 2;
+    grid-column-end: 2;
+  }
+}
+</style>
