@@ -6,7 +6,9 @@
   "main": "dist/src/index.js",
   "scripts": {
     "bim": "npm i && npm run build && npm run db:recreate && npm run db:import",
-    "build": "rm -rf dist && tsc && mkdir -p ./dist/src/api/graphql && cp -r ./src/api/graphql/schemas ./dist/src/api/graphql",
+    "build": "npm run build:api && npm run build:common",
+    "build:api": "rm -rf dist && tsc && mkdir -p ./dist/src/api/graphql && cp -r ./src/api/graphql/schemas ./dist/src/api/graphql",
+    "build:common": "cd ../common/ && tsc",
     "daily": "node ./dist/src/scripts/daily.js",
     "monthly": "node ./dist/src/scripts/monthly.js",
     "db:dump": "pg_dump --host=localhost --username=postgres --clean --if-exists --format=c --no-owner --no-privileges --dbname=camino --file=./backups/camino.sql",
