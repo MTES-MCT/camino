@@ -4,17 +4,24 @@
     :getEntreprisesTitres="getEntreprisesTitres"
     :displayActivites="activites"
   />
-  <div v-if="isONF">Tableau ONF</div>
+  <PureONFDashboard
+    v-else-if="isONF"
+    :getOnfTitres="getOnfTitres"
+    :displayActivites="false"
+  />
   <div v-else>Loading</div>
 </template>
 
 <script setup lang="ts">
 import PureEntrepriseDashboard from '@/components/dashboard/pure-entreprise-dashboard.vue'
+import PureONFDashboard from '@/components/dashboard/pure-onf-dashboard.vue'
 
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { titres } from '@/api/titres'
 import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
+import { DOMAINES_IDS } from 'camino-common/src/domaines'
+import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/titresTypesTypes'
 
 const store = useStore()
 const router = useRouter()
@@ -45,5 +52,15 @@ if (hasEntreprises) {
 
 const getEntreprisesTitres = async () => {
   return (await titres({ entreprisesIds: entreprisesIds })).elements
+}
+
+const getOnfTitres = async () => {
+  return (
+    await titres({
+      domainesIds: [DOMAINES_IDS.METAUX],
+      typesIds: [TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE],
+      statutsIds: ['dmi', 'mod', 'val']
+    })
+  ).elements
 }
 </script>
