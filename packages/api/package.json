@@ -31,7 +31,7 @@
     "start": "node ./dist/src/index.js",
     "test": "cross-env jest --testPathIgnorePatterns=tests --runInBand --detectOpenHandles --forceExit",
     "test:unit": "cross-env jest --testPathIgnorePatterns=tests --runInBand --detectOpenHandles --watch",
-    "test:integration": "cross-env JWT_SECRET=secret-tests jest --testPathIgnorePatterns=src --runInBand --detectOpenHandles --watch --testTimeout=20000",
+    "test:integration": "cross-env JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest --testPathIgnorePatterns=src --runInBand --detectOpenHandles --watch --testTimeout=20000",
     "ci:lint": "prettier --check . && eslint .",
     "ci:test-unit": "cross-env jest --testPathIgnorePatterns=tests --ci --runInBand --detectOpenHandles --forceExit --testTimeout=20000",
     "ci:test-integration": "cross-env JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest --testPathIgnorePatterns=src --runInBand --detectOpenHandles --ci --forceExit --testTimeout=20000",

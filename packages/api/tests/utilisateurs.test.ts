@@ -5,6 +5,7 @@ import request from 'supertest'
 import jwt from 'jsonwebtoken'
 import { dbManager } from './db-manager'
 import { IUtilisateur } from '../src/types'
+import { Administrations } from 'camino-common/src/administrations'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -232,18 +233,7 @@ describe('utilisateursCreer', () => {
   })
 
   test("en tant qu'admin', peut être associé à une administrations", async () => {
-    await knex('administrations_types').insert({
-      id: 'adm',
-      nom: 'admin',
-      ordre: 1
-    })
-
-    await knex('administrations').insert({
-      id: 'administration',
-      nom: 'admin',
-      typeId: 'adm'
-    })
-
+    const administration = Administrations['aut-97300-01']
     const res = await graphQLCall(
       utilisateurCreerQuery,
       {
@@ -253,7 +243,7 @@ describe('utilisateursCreer', () => {
           email: 'test@camino.local',
           motDePasse: 'mot-de-passe',
           permissionId: 'admin',
-          administrations: [{ id: 'administration' }]
+          administrations: [{ id: administration.id }]
         }
       },
       'super'

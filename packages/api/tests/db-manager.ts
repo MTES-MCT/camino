@@ -93,7 +93,7 @@ class DbManager {
 
   private async truncateSchema() {
     const tables =
-      (await knex('pg_tables')
+      (await this.knexInstance('pg_tables')
         .select('tablename')
         .where('schemaname', 'public')) ?? []
 
