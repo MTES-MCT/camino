@@ -9,12 +9,17 @@
 </template>
 
 <script setup lang="ts">
-import { Column, InitialSort, Row, TableSortEvent } from './table-auto.type'
+import {
+  Column,
+  InitialSort,
+  TableAutoRow,
+  TableSortEvent
+} from './table-auto.type'
 import Table from './table.vue'
 import { reactive, watch } from 'vue'
 
 const props = defineProps<{
-  rows: Row[]
+  rows: TableAutoRow[]
   columns: Column[]
   initialSort?: InitialSort
 }>()
@@ -23,7 +28,7 @@ const sort = reactive<TableSortEvent>({
   column: props?.initialSort?.column ?? props.columns[0].id,
   order: props?.initialSort?.order ?? 'asc'
 })
-const myRows = reactive<Row[]>([...props.rows])
+const myRows = reactive<TableAutoRow[]>([...props.rows])
 handleChange(sort)
 watch(
   () => props.rows,
@@ -34,17 +39,28 @@ watch(
   { deep: true }
 )
 function handleChange(event: TableSortEvent) {
-  myRows.sort((row1, row2) => {
+  const column = props.columns.find(column => column.id === event.column)
+  let sortFunction = (row1: TableAutoRow, row2: TableAutoRow): number => {
     const value1 = row1.columns[event.column].value
     const value2 = row2.columns[event.column].value
-    if (value1 < value2) {
-      return event.order === 'asc' ? -1 : 1
-    }
-    if (value1 > value2) {
-      return event.order === 'asc' ? 1 : -1
+    if (value1 && value2) {
+      if (value1 < value2) {
+        return event.order === 'asc' ? -1 : 1
+      }
+      if (value1 > value2) {
+        return event.order === 'asc' ? 1 : -1
+      }
     }
     return 0
-  })
+  }
+  if (column?.sort !== undefined) {
+    sortFunction = (row1: TableAutoRow, row2: TableAutoRow) => {
+      const sorted = column?.sort?.(row1, row2) ?? 0
+
+      return event.order === 'asc' ? sorted : -sorted
+    }
+  }
+  myRows.sort(sortFunction)
   sort.column = event.column
   sort.order = event.order
 }

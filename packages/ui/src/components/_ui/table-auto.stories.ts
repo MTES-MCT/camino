@@ -5,7 +5,7 @@ import TitreNom from '../_common/titre-nom.vue'
 import CaminoDomaine from '../_common/domaine.vue'
 import TitreTypeTypeNom from '../_common/titre-type-type-nom.vue'
 import Statut from '../_common/statut.vue'
-import { Column, InitialSort, Row } from './table-auto.type'
+import { Column, InitialSort, TableAutoRow } from './table-auto.type'
 
 const meta: Meta = {
   title: 'Ui/TableAuto',
@@ -19,7 +19,7 @@ const meta: Meta = {
 export default meta
 
 type Props = {
-  rows: Row[]
+  rows: TableAutoRow[]
   columns: Column[]
   initialSort?: InitialSort
 }
@@ -50,7 +50,7 @@ const columns: Column[] = [
   }
 ]
 
-const rows: Row[] = [0, 1, 2, 3].map(row => {
+const rows: TableAutoRow[] = [0, 1, 2, 3].map(row => {
   return {
     id: `elementId${row}`,
     link: {

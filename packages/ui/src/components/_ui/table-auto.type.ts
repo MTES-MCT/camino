@@ -10,22 +10,19 @@ export interface InitialSort {
   order: SortOrder
 }
 
-export interface Column {
-  id: string
-  name: string
-  class?: string[]
-}
-
-interface TextColumnData {
-  value: string
-}
-interface ComponentColumnData {
+export interface ComponentColumnData {
   component: unknown
   // eslint-disable-next-line no-unused-vars
   props: { [key in string]: unknown }
+  class?: string
+  value: string | string[] | number | undefined
+}
+
+export interface TextColumnData {
   value: string
 }
-export interface Row {
+
+export interface TableAutoRow {
   id: string
   link: {
     name: string
@@ -38,4 +35,11 @@ export interface Row {
     // eslint-disable-next-line no-unused-vars
     [key in string]: ComponentColumnData | TextColumnData
   }
+}
+
+export interface Column {
+  id: string
+  name: string
+  class?: string[]
+  sort?: (firstElement: TableAutoRow, secondElement: TableAutoRow) => number
 }
