@@ -2,7 +2,7 @@
   <div>
     <div class="desktop-blobs">
       <div class="desktop-blob-2-3">
-        <h1 class="mt-xs mb-m">Mes Titres</h1>
+        <h1 class="mt-xs mb-m">Tableau de bord ONF</h1>
       </div>
     </div>
     <div v-if="status === 'LOADING'" class="loaders fixed p">
@@ -28,12 +28,15 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import TableAuto from '../_ui/table-auto.vue'
-import { TableAutoRow } from '../_ui/table-auto.type'
+import { Column, TableAutoRow } from '../_ui/table-auto.type'
 import Error from '@/components/error.vue'
 import {
   Entreprise,
-  titresColonnes,
-  titresLignesBuild
+  nomColumn,
+  referencesColumn,
+  statutColumn,
+  titresLignesBuild,
+  titulairesColumn
 } from '@/components/titres/table-utils'
 
 const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
@@ -44,9 +47,12 @@ const props = defineProps<{
   displayActivites: boolean
 }>()
 
-const columns = titresColonnes.filter(({ id }) =>
-  props.displayActivites ? true : id !== 'activites'
-)
+const columns: Column[] = [
+  nomColumn,
+  statutColumn,
+  referencesColumn,
+  titulairesColumn
+]
 
 onMounted(async () => {
   try {

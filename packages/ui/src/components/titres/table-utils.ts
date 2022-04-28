@@ -73,7 +73,7 @@ const STATUTS = [
 type DemandeStatut = typeof STATUTS[number]
 
 // eslint-disable-next-line no-unused-vars
-const ordreStatut: { [key in DemandeStatut]: number } = {
+export const ordreStatut: { [key in DemandeStatut]: number } = {
   'demande initiale': 0,
   'modification en instance': 1,
   valide: 2,
@@ -86,12 +86,37 @@ export const isDemandeStatut = (
 ): entry is DemandeStatut => {
   return STATUTS.includes(entry)
 }
+
+export const nomColumn: Column = {
+  id: 'nom',
+  name: 'Nom',
+  class: ['min-width-8']
+}
+export const statutColumn: Column = {
+  id: 'statut',
+  name: 'Statut',
+  class: ['nowrap', 'min-width-5'],
+  sort: (statut1: TableAutoRow, statut2: TableAutoRow) => {
+    const row1Statut = statut1.columns.statut.value
+    const row2Statut = statut2.columns.statut.value
+    if (isDemandeStatut(row1Statut) && isDemandeStatut(row2Statut)) {
+      return ordreStatut[row1Statut] - ordreStatut[row2Statut]
+    }
+    return 0
+  }
+}
+export const referencesColumn: Column = {
+  id: 'references',
+  name: 'Références',
+  class: ['min-width-8']
+}
+export const titulairesColumn: Column = {
+  id: 'titulaires',
+  name: 'Titulaires',
+  class: ['min-width-10']
+}
 const titresColonnes: Column[] = [
-  {
-    id: 'nom',
-    name: 'Nom',
-    class: ['min-width-8']
-  },
+  nomColumn,
   {
     id: 'domaine',
     name: ''
@@ -101,19 +126,7 @@ const titresColonnes: Column[] = [
     name: 'Type',
     class: ['min-width-8']
   },
-  {
-    id: 'statut',
-    name: 'Statut',
-    class: ['nowrap', 'min-width-5'],
-    sort: (statut1: TableAutoRow, statut2: TableAutoRow) => {
-      const row1Statut = statut1.columns.statut.value
-      const row2Statut = statut2.columns.statut.value
-      if (isDemandeStatut(row1Statut) && isDemandeStatut(row2Statut)) {
-        return ordreStatut[row1Statut] - ordreStatut[row2Statut]
-      }
-      return 0
-    }
-  },
+  statutColumn,
   {
     id: 'activites',
     name: 'Activités',
@@ -136,11 +149,7 @@ const titresColonnes: Column[] = [
     id: 'coordonnees',
     name: 'Carte'
   },
-  {
-    id: 'titulaires',
-    name: 'Titulaires',
-    class: ['min-width-10']
-  },
+  titulairesColumn,
   {
     id: 'regions',
     name: 'Régions',
@@ -151,11 +160,7 @@ const titresColonnes: Column[] = [
     name: 'Départements',
     class: ['min-width-8']
   },
-  {
-    id: 'references',
-    name: 'Références',
-    class: ['min-width-8']
-  }
+  referencesColumn
 ]
 
 const titresLignesBuild = (
