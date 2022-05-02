@@ -51,8 +51,8 @@ const titreFields = {
   points: { id: {} },
   communes: { departement: { region: { pays: { id: {} } } } },
   forets: { id: {} },
-  administrationsLocales: { type: { id: {} } },
-  administrationsGestionnaires: { type: { id: {} } }
+  administrationsLocales: { id: {} },
+  administrationsGestionnaires: { id: {} }
 }
 
 interface ITitreInput {
