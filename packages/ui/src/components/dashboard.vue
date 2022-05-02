@@ -54,13 +54,6 @@ const getEntreprisesTitres = async () => {
   return (await titres({ entreprisesIds: entreprisesIds })).elements
 }
 
-const getOnfTitres = async () => {
-  return (
-    await titres({
-      domainesIds: [DOMAINES_IDS.METAUX],
-      typesIds: [TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE],
-      statutsIds: ['dmi', 'mod', 'val']
-    })
-  ).elements
-}
+const getOnfTitres = async () => (await fetch('/apiUrl/titresONF')).json()
+
 </script>

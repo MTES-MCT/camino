@@ -12,7 +12,7 @@
       v-if="status === 'LOADED'"
       :columns="columns"
       :rows="onfTitres"
-      :initialSort="{ column: 'statut', order: 'asc' }"
+      :initialSort="{ column: initialColumnId, order: 'asc' }"
       class="width-full-p"
     />
     <Error
@@ -28,38 +28,71 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import TableAuto from '../_ui/table-auto.vue'
-import { Column, TableAutoRow } from '../_ui/table-auto.type'
+import { ComponentColumnData, TableAutoRow, TextColumnData } from '../_ui/table-auto.type'
 import Error from '@/components/error.vue'
 import {
-  Entreprise,
   nomColumn,
+  nomCell,
   referencesColumn,
   statutColumn,
-  titresLignesBuild,
-  titulairesColumn
+  titulairesColumn, statutCell, referencesCell, titulairesCell
 } from '@/components/titres/table-utils'
+import { CommonTitreONF } from 'camino-common/src/titres'
+
 
 const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
 const onfTitres = ref<TableAutoRow[]>([])
 const props = defineProps<{
-  // TODO 2022-03-22: type the graphql
-  getOnfTitres: () => Promise<Entreprise[]>
-  displayActivites: boolean
+  getOnfTitres: () => Promise<CommonTitreONF[]>
 }>()
 
-const columns: Column[] = [
+const columns = [
   nomColumn,
   statutColumn,
   referencesColumn,
-  titulairesColumn
-]
+  titulairesColumn,
+  {
+    id: 'dateCompletudePTMG',
+    name: 'Date complétude PTMG',
+  },
+  {
+    id: 'dateReceptionONF',
+    name: 'Date réception ONF',
+  }
+
+] as const
+
+const initialColumnId = columns[1].id
+
+type Columns = typeof columns[number]['id']
+
+const dateCell = (date: string) => ({ value: date })
+
+const titresLignesBuild = (titres: CommonTitreONF[]): TableAutoRow<Columns>[] => {
+  return titres.map(titre => {
+    const columns: {[key in Columns]: ComponentColumnData | TextColumnData} = {
+      nom: nomCell(titre),
+      statut: statutCell(titre),
+      references: referencesCell(titre),
+      titulaires: titulairesCell(titre),
+      dateCompletudePTMG: dateCell(titre.dateCompletudePTMG),
+      dateReceptionONF: dateCell(titre.dateReceptionONF)
+    }
+    return {
+      id: titre.id,
+      link: { name: 'titre', params: { id: titre.slug } },
+      columns
+    }
+  })
+}
 
 onMounted(async () => {
   try {
     const titres = await props.getOnfTitres()
-    onfTitres.value.push(...titresLignesBuild(titres, props.displayActivites))
+    onfTitres.value.push(...titresLignesBuild(titres))
     status.value = 'LOADED'
   } catch (e) {
+    console.log('error', e)
     status.value = 'ERROR'
   }
 })

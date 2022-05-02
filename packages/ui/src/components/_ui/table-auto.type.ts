@@ -22,7 +22,7 @@ export interface TextColumnData {
   value: string
 }
 
-export interface TableAutoRow {
+export interface TableAutoRow<T extends string = string> {
   id: string
   link: {
     name: string
@@ -31,14 +31,14 @@ export interface TableAutoRow {
     }
   }
   columns: {
-    // TODO 2022-03-17: type this with the row definition. And why eslint, why
+    // why eslint, why
     // eslint-disable-next-line no-unused-vars
-    [key in string]: ComponentColumnData | TextColumnData
+    [key in T]: ComponentColumnData | TextColumnData
   }
 }
 
-export interface Column {
-  id: string
+export interface Column<T = string> {
+  id: T
   name: string
   class?: string[]
   sort?: (firstElement: TableAutoRow, secondElement: TableAutoRow) => number

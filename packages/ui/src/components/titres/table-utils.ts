@@ -87,12 +87,12 @@ export const isDemandeStatut = (
   return STATUTS.includes(entry)
 }
 
-export const nomColumn: Column = {
+export const nomColumn: Column<'nom'> = {
   id: 'nom',
   name: 'Nom',
   class: ['min-width-8']
 }
-export const statutColumn: Column = {
+export const statutColumn: Column<'statut'> = {
   id: 'statut',
   name: 'Statut',
   class: ['nowrap', 'min-width-5'],
@@ -105,12 +105,12 @@ export const statutColumn: Column = {
     return 0
   }
 }
-export const referencesColumn: Column = {
+export const referencesColumn: Column<'references'> = {
   id: 'references',
   name: 'Références',
   class: ['min-width-8']
 }
-export const titulairesColumn: Column = {
+export const titulairesColumn: Column<'titulaires'> = {
   id: 'titulaires',
   name: 'Titulaires',
   class: ['min-width-10']
@@ -163,6 +163,38 @@ const titresColonnes: Column[] = [
   referencesColumn
 ]
 
+export const nomCell = (titre: {nom: string}): ComponentColumnData => ({ component: markRaw(TitreNom), props: { nom: titre.nom }, value: titre.nom })
+export const statutCell = (titre: { statut: { nom: string, couleur: string}}) : ComponentColumnData => ({
+  component: markRaw(Statut),
+  props: {
+    color: titre.statut.couleur,
+    nom: titre.statut.nom
+  },
+  value: titre.statut.nom
+})
+
+export const referencesCell = (titre: { references?: {nom: string, type: { nom: string}}[]}) => {
+  const references = titre.references?.map(ref => `${ref.type.nom} : ${ref.nom}`)
+
+  return ({
+    component: List,
+    props: {
+      elements: references,
+      mini: true
+    },
+    class: 'mb--xs',
+    value: references
+  })
+}
+export const titulairesCell =  (titre: {titulaires?: {nom: string}[]}) => ({
+  component: markRaw(List),
+  props: {
+    elements: titre.titulaires?.map(({ nom }) => nom),
+    mini: true
+  },
+  class: 'mb--xs',
+  value: titre.titulaires?.map(({ nom }) => nom).join(', ')
+})
 const titresLignesBuild = (
   titres: Entreprise[],
   activitesCol: boolean,
@@ -184,16 +216,8 @@ const titresLignesBuild = (
         ),
       []
     )
-    const references = titre.references?.map(
-      ref => `${ref.type.nom} : ${ref.nom}`
-    )
-    // eslint-disable-next-line no-unused-vars
     const columns: { [key in string]: ComponentColumnData | TextColumnData } = {
-      nom: {
-        component: markRaw(TitreNom),
-        props: { nom: titre.nom },
-        value: titre.nom
-      },
+      nom: nomCell(titre),
       domaine: {
         component: markRaw(CaminoDomaine),
         props: { domaineId: titre.domaine.id },
@@ -209,29 +233,14 @@ const titresLignesBuild = (
         props: { nom: titre.type.type.nom },
         value: titre.type.type.nom
       },
-      statut: {
-        component: markRaw(Statut),
-        props: {
-          color: titre.statut.couleur,
-          nom: titre.statut.nom
-        },
-        value: titre.statut.nom
-      },
+      statut: statutCell(titre),
       substances: {
         component: markRaw(TagList),
         props: { elements: titre.substances?.map(s => s.nom) },
         class: 'mb--xs',
         value: titre.substances?.map(s => s.nom).join(', ')
       },
-      titulaires: {
-        component: markRaw(List),
-        props: {
-          elements: titre.titulaires?.map(({ nom }) => nom),
-          mini: true
-        },
-        class: 'mb--xs',
-        value: titre.titulaires?.map(({ nom }) => nom).join(', ')
-      },
+      titulaires: titulairesCell(titre),
       regions: {
         component: markRaw(List),
         props: {
@@ -250,15 +259,7 @@ const titresLignesBuild = (
         class: 'mb--xs',
         value: departements
       },
-      references: {
-        component: List,
-        props: {
-          elements: references,
-          mini: true
-        },
-        class: 'mb--xs',
-        value: references
-      }
+      references: referencesCell(titre)
     }
 
     if (activitesCol) {
