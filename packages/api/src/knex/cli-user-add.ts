@@ -7,8 +7,7 @@ const run = async () => {
   const user = {
     id: 'admin',
     email: process.env.ADMIN_EMAIL,
-    permissionId: 'super',
-    motDePasse: process.env.ADMIN_PASSWORD
+    permissionId: 'super'
   } as IUtilisateur
 
   try {
