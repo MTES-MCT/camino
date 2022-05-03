@@ -55,5 +55,4 @@ const getEntreprisesTitres = async () => {
 }
 
 const getOnfTitres = async () => (await fetch('/apiUrl/titresONF')).json()
-
 </script>

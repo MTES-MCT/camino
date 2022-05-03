@@ -163,8 +163,14 @@ const titresColonnes: Column[] = [
   referencesColumn
 ]
 
-export const nomCell = (titre: {nom: string}): ComponentColumnData => ({ component: markRaw(TitreNom), props: { nom: titre.nom }, value: titre.nom })
-export const statutCell = (titre: { statut: { nom: string, couleur: string}}) : ComponentColumnData => ({
+export const nomCell = (titre: { nom: string }): ComponentColumnData => ({
+  component: markRaw(TitreNom),
+  props: { nom: titre.nom },
+  value: titre.nom
+})
+export const statutCell = (titre: {
+  statut: { nom: string; couleur: string }
+}): ComponentColumnData => ({
   component: markRaw(Statut),
   props: {
     color: titre.statut.couleur,
@@ -173,10 +179,14 @@ export const statutCell = (titre: { statut: { nom: string, couleur: string}}) : 
   value: titre.statut.nom
 })
 
-export const referencesCell = (titre: { references?: {nom: string, type: { nom: string}}[]}) => {
-  const references = titre.references?.map(ref => `${ref.type.nom} : ${ref.nom}`)
+export const referencesCell = (titre: {
+  references?: { nom: string; type: { nom: string } }[]
+}) => {
+  const references = titre.references?.map(
+    ref => `${ref.type.nom} : ${ref.nom}`
+  )
 
-  return ({
+  return {
     component: List,
     props: {
       elements: references,
@@ -184,9 +194,9 @@ export const referencesCell = (titre: { references?: {nom: string, type: { nom: 
     },
     class: 'mb--xs',
     value: references
-  })
+  }
 }
-export const titulairesCell =  (titre: {titulaires?: {nom: string}[]}) => ({
+export const titulairesCell = (titre: { titulaires?: { nom: string }[] }) => ({
   component: markRaw(List),
   props: {
     elements: titre.titulaires?.map(({ nom }) => nom),

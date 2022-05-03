@@ -28,17 +28,23 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import TableAuto from '../_ui/table-auto.vue'
-import { ComponentColumnData, TableAutoRow, TextColumnData } from '../_ui/table-auto.type'
+import {
+  ComponentColumnData,
+  TableAutoRow,
+  TextColumnData
+} from '../_ui/table-auto.type'
 import Error from '@/components/error.vue'
 import {
   nomColumn,
   nomCell,
   referencesColumn,
   statutColumn,
-  titulairesColumn, statutCell, referencesCell, titulairesCell
+  titulairesColumn,
+  statutCell,
+  referencesCell,
+  titulairesCell
 } from '@/components/titres/table-utils'
 import { CommonTitreONF } from 'camino-common/src/titres'
-
 
 const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
 const onfTitres = ref<TableAutoRow[]>([])
@@ -53,13 +59,12 @@ const columns = [
   titulairesColumn,
   {
     id: 'dateCompletudePTMG',
-    name: 'Date complétude PTMG',
+    name: 'Date complétude PTMG'
   },
   {
     id: 'dateReceptionONF',
-    name: 'Date réception ONF',
+    name: 'Date réception ONF'
   }
-
 ] as const
 
 const initialColumnId = columns[1].id
@@ -68,16 +73,19 @@ type Columns = typeof columns[number]['id']
 
 const dateCell = (date: string) => ({ value: date })
 
-const titresLignesBuild = (titres: CommonTitreONF[]): TableAutoRow<Columns>[] => {
+const titresLignesBuild = (
+  titres: CommonTitreONF[]
+): TableAutoRow<Columns>[] => {
   return titres.map(titre => {
-    const columns: {[key in Columns]: ComponentColumnData | TextColumnData} = {
-      nom: nomCell(titre),
-      statut: statutCell(titre),
-      references: referencesCell(titre),
-      titulaires: titulairesCell(titre),
-      dateCompletudePTMG: dateCell(titre.dateCompletudePTMG),
-      dateReceptionONF: dateCell(titre.dateReceptionONF)
-    }
+    const columns: { [key in Columns]: ComponentColumnData | TextColumnData } =
+      {
+        nom: nomCell(titre),
+        statut: statutCell(titre),
+        references: referencesCell(titre),
+        titulaires: titulairesCell(titre),
+        dateCompletudePTMG: dateCell(titre.dateCompletudePTMG),
+        dateReceptionONF: dateCell(titre.dateReceptionONF)
+      }
     return {
       id: titre.id,
       link: { name: 'titre', params: { id: titre.slug } },

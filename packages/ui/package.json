@@ -142,10 +142,7 @@
       "vue/valid-v-bind-sync": 0,
       "vue/no-multiple-template-root": ["warn"],
       "vue/attribute-hyphenation": ["error", "never"],
-      "no-unused-vars": 0,
-      "@typescript-eslint/no-unused-vars": [
-        "error"
-      ]
+      "no-unused-vars": 0
     },
     "parserOptions": {
       "parser": "@typescript-eslint/parser"
