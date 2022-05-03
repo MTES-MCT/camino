@@ -93,6 +93,9 @@ export const titresONF = async (req: express.Request, res: CustomResponse) => {
         const dateReceptionONF =
           octARM.etapes.find(etape => etape.typeId === 'mcr')?.date || ''
 
+        const dateCARM =
+          octARM.etapes.find(etape => etape.typeId === 'sca')?.date || ''
+
         return {
           id: titre.id,
           slug: titre.slug,
@@ -101,7 +104,8 @@ export const titresONF = async (req: express.Request, res: CustomResponse) => {
           references,
           titulaires: titre.titulaires,
           dateCompletudePTMG,
-          dateReceptionONF
+          dateReceptionONF,
+          dateCARM
         }
       })
       .filter(

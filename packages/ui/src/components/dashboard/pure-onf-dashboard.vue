@@ -66,6 +66,10 @@ const columns = [
   {
     id: 'dateReceptionONF',
     name: 'Date réception ONF'
+  },
+  {
+    id: 'dateCARM',
+    name: 'Date CARM'
   }
 ] as const
 
@@ -90,7 +94,8 @@ const titresLignesBuild = (
         references: referencesCell(titre),
         titulaires: titulairesCell(titre),
         dateCompletudePTMG: dateCell(titre.dateCompletudePTMG),
-        dateReceptionONF: dateCell(titre.dateReceptionONF)
+        dateReceptionONF: dateCell(titre.dateReceptionONF),
+        dateCARM: dateCell(titre.dateCARM)
       }
     return {
       id: titre.id,

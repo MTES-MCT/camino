@@ -6,8 +6,9 @@ export interface CommonTitreONF {
     nom: string
     couleur: string
   }
-  references: {nom: string, type: { nom: string}}[]
-  titulaires: {nom: string}[]
+  references: { nom: string; type: { nom: string } }[]
+  titulaires: { nom: string }[]
   dateCompletudePTMG: string
   dateReceptionONF: string
+  dateCARM: string
 }
