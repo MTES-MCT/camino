@@ -3,13 +3,16 @@ import { graphQLCall, queryImport } from './_utils/index'
 import { titreDemarcheCreate } from '../src/database/queries/titres-demarches'
 import { titreCreate } from '../src/database/queries/titres'
 import { IPermissionId } from '../src/types'
-import { administrations } from './__mocks__/administrations'
 import { titreEtapePropsIds } from '../src/business/utils/titre-etape-heritage-props-find'
 import Titres from '../src/database/models/titres'
 import TitresTypesDemarchesTypesEtapesTypes from '../src/database/models/titres-types--demarches-types-etapes-types'
 import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../src/database/models/titres-types--demarches-types-etapes-types-justificatifs-types'
 import TitresTypesDemarchesTypesEtapesTypesDocumentsTypes from '../src/database/models/titres-types--demarches-types-etapes-types-documents-types'
 import { documentCreate } from '../src/database/queries/documents'
+import {
+  ADMINISTRATION_IDS,
+  Administrations
+} from 'camino-common/src/administrations'
 
 jest.mock('../src/tools/dir-create', () => ({
   __esModule: true,
@@ -58,8 +61,12 @@ const demarcheCreate = async () => {
       typeId: 'arm',
       propsTitreEtapesIds: {},
       administrationsGestionnaires: [
-        administrations.ptmg,
-        administrations.dgtmGuyane
+        {
+          ...Administrations[
+            ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+          ]
+        },
+        { ...Administrations[ADMINISTRATION_IDS['DGTM - GUYANE']] }
       ]
     },
     {}
@@ -199,7 +206,7 @@ describe('etapeCreer', () => {
         }
       },
       'admin',
-      administrations.ptmg.id
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
     expect(res.body.errors[0].message).toBe(
@@ -239,7 +246,7 @@ describe('etapeCreer', () => {
         }
       },
       'admin',
-      administrations.ptmg.id
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -265,7 +272,7 @@ describe('etapeCreer', () => {
         }
       },
       'admin',
-      administrations.ptmg.id
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
     expect(res.body.errors[0].message).toBe(

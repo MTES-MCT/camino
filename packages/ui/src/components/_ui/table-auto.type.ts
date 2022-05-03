@@ -12,7 +12,6 @@ export interface InitialSort {
 
 export interface ComponentColumnData {
   component: unknown
-  // eslint-disable-next-line no-unused-vars
   props: { [key in string]: unknown }
   class?: string
   value: string | string[] | number | undefined
@@ -31,8 +30,6 @@ export interface TableAutoRow<T extends string = string> {
     }
   }
   columns: {
-    // why eslint, why
-    // eslint-disable-next-line no-unused-vars
     [key in T]: ComponentColumnData | TextColumnData
   }
 }

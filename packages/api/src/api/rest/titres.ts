@@ -68,7 +68,6 @@ export const titresONF = async (req: express.Request, res: CustomResponse) => {
             !!reference.type && !!reference.type.nom && !!reference.nom
         )
         if (titre.references.length !== references.length) {
-          // TODO 2022-05-02 ajouter des tests
           throw new Error('le type de référence n’est pas chargé')
         }
 
@@ -83,18 +82,18 @@ export const titresONF = async (req: express.Request, res: CustomResponse) => {
         const octARM = titre.demarches.find(
           demarche => demarche.typeId === 'oct'
         )
-        if (!octARM || !octARM.etapes) {
+        if (octARM && !octARM.etapes) {
           throw new Error('les étapes ne sont pas chargées')
         }
 
         const dateCompletudePTMG =
-          octARM.etapes.find(etape => etape.typeId === 'mcp')?.date || ''
-        // TODO 2022-05-02 vérifier que c’est bien la MCR
+          octARM?.etapes?.find(etape => etape.typeId === 'mcp')?.date || ''
+
         const dateReceptionONF =
-          octARM.etapes.find(etape => etape.typeId === 'mcr')?.date || ''
+          octARM?.etapes?.find(etape => etape.typeId === 'mcr')?.date || ''
 
         const dateCARM =
-          octARM.etapes.find(etape => etape.typeId === 'sca')?.date || ''
+          octARM?.etapes?.find(etape => etape.typeId === 'sca')?.date || ''
 
         return {
           id: titre.id,

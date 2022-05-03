@@ -72,7 +72,6 @@ const STATUTS = [
 
 type DemandeStatut = typeof STATUTS[number]
 
-// eslint-disable-next-line no-unused-vars
 export const ordreStatut: { [key in DemandeStatut]: number } = {
   'demande initiale': 0,
   'modification en instance': 1,

@@ -59,6 +59,7 @@ const restCatcher =
     try {
       await expressCall(req, res, next)
     } catch (e) {
+      console.log('catching error', e)
       next(e)
     }
   }

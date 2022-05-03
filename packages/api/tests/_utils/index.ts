@@ -11,6 +11,7 @@ import {
   utilisateurGet
 } from '../../src/database/queries/utilisateurs'
 import { userSuper } from '../../src/database/user-super'
+import { AdministrationId } from 'camino-common/src/administrations'
 
 const queryImport = (nom: string) =>
   fs
@@ -38,6 +39,16 @@ const restUploadCall = async (permissionId?: IPermissionId) => {
   const req = request(app).post('/televersement')
 
   return cookiesSet(req, permissionId)
+}
+
+export const restCall = async (
+  path: string,
+  permissionId: IPermissionId,
+  administrationId?: AdministrationId
+): request.Test => {
+  const req = request(app).get(path)
+
+  return cookiesSet(req, permissionId, administrationId)
 }
 
 const cookiesSet = async (

@@ -21,7 +21,6 @@ import titreUpdateTask from '../../../business/titre-update'
 
 import { titreUpdationValidate } from '../../../business/validations/titre-updation-validate'
 import { domaineGet } from '../../../database/queries/metas'
-import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
 
 const titre = async (
   { id }: { id: string },
@@ -135,15 +134,6 @@ const titres = async (
       )
     ])
 
-    if (
-      user?.administrations?.find(
-        ({ id }) => id === ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
-      ) &&
-      fields.datePTMG
-    ) {
-      // REQUETE
-    }
-
     const titresFormatted = titres && titresFormat(titres, fields)
 
     return {
@@ -162,14 +152,6 @@ const titres = async (
     throw e
   }
 }
-
-// const titresONF (){
-//       if( user?.administrations?.find(({id}) => id === ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']) && fields.datePTMG ){
-//           //REQUETE
-//
-//           titresGet({ids: titreIds}, {demarches: {etapes: {}}, user)
-//       }
-// }
 
 const titreCreer = async (
   { titre }: { titre: ITitre },

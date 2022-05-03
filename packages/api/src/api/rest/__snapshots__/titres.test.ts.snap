@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`titresONF teste la récupération des données pour l'ONF 1`] = `
+Object {
+  "dateCARM": "2018-03-10",
+  "dateCompletudePTMG": "2018-02-01",
+  "dateReceptionONF": "2018-02-10",
+  "id": Any<String>,
+  "nom": "mon titre",
+  "references": Array [
+    Object {
+      "nom": "ONF",
+      "titreId": Any<String>,
+      "type": Object {
+        "id": "onf",
+        "nom": "ONF",
+      },
+      "typeId": "onf",
+    },
+  ],
+  "slug": Any<String>,
+  "statut": Object {
+    "couleur": "success",
+    "description": "Titres et autorisations sur lesquels peuvent être mis en oeuvre un projet minier, à compter de la date d'octroi et jusqu’à l’échéance fixée. Le domaine minier est fermé pour les substances et usages visés.",
+    "id": "val",
+    "nom": "valide",
+    "ordre": 3,
+  },
+  "titulaires": Array [
+    Object {
+      "adresse": null,
+      "archive": false,
+      "categorie": null,
+      "cedex": null,
+      "codePostal": null,
+      "commune": null,
+      "dateCreation": null,
+      "email": null,
+      "id": "plop",
+      "legalEtranger": null,
+      "legalForme": null,
+      "legalSiren": null,
+      "modification": true,
+      "nom": "Mon Entreprise",
+      "operateur": null,
+      "paysId": null,
+      "telephone": null,
+      "url": null,
+    },
+  ],
+}
+`;
+
+exports[`titresONF teste la récupération des données pour l'ONF 2`] = `
+Object {
+  "dateCARM": "",
+  "dateCompletudePTMG": "",
+  "dateReceptionONF": "",
+  "id": Any<String>,
+  "nom": "mon titre simple",
+  "references": Array [],
+  "slug": Any<String>,
+  "statut": Object {
+    "couleur": "success",
+    "description": "Titres et autorisations sur lesquels peuvent être mis en oeuvre un projet minier, à compter de la date d'octroi et jusqu’à l’échéance fixée. Le domaine minier est fermé pour les substances et usages visés.",
+    "id": "val",
+    "nom": "valide",
+    "ordre": 3,
+  },
+  "titulaires": Array [],
+}
+`;
