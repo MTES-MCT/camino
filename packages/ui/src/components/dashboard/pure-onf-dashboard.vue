@@ -46,7 +46,8 @@ import {
 } from '@/components/titres/table-utils'
 import { CommonTitreONF } from 'camino-common/src/titres'
 import { markRaw } from '@vue/reactivity'
-import Date from '../_ui/date.vue'
+import DateComponent from '../_ui/date.vue'
+import { datesDiffInDays } from 'camino-common/src/date'
 
 const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
 const onfTitres = ref<TableAutoRow[]>([])
@@ -70,6 +71,27 @@ const columns = [
   {
     id: 'dateCARM',
     name: 'Date CARM'
+  },
+  {
+    id: 'delaiJourONFCARM',
+    name: 'Délai jour CARM ONF',
+    sort: (firstElement: TableAutoRow, secondElement: TableAutoRow) => {
+      const row1Number = firstElement.columns.delaiJourONFCARM.value
+      const row2Number = secondElement.columns.delaiJourONFCARM.value
+      if (typeof row1Number === 'string' && typeof row2Number === 'string') {
+        const number1 = Number.parseInt(row1Number, 10)
+        const number2 = Number.parseInt(row2Number, 10)
+
+        if (Number.isNaN(number1)) {
+          return -1
+        }
+        if (Number.isNaN(number2)) {
+          return 1
+        }
+        return number1 - number2
+      }
+      return 0
+    }
   }
 ] as const
 
@@ -78,7 +100,7 @@ const initialColumnId = columns[1].id
 type Columns = typeof columns[number]['id']
 
 const dateCell = (date: string) => ({
-  component: markRaw(Date),
+  component: markRaw(DateComponent),
   props: { date },
   value: date
 })
@@ -87,6 +109,13 @@ const titresLignesBuild = (
   titres: CommonTitreONF[]
 ): TableAutoRow<Columns>[] => {
   return titres.map(titre => {
+    let delai = ''
+    if (titre.dateCARM !== '' && titre.dateReceptionONF !== '') {
+      delai = datesDiffInDays(
+        new Date(titre.dateReceptionONF),
+        new Date(titre.dateCARM)
+      ).toString(10)
+    }
     const columns: { [key in Columns]: ComponentColumnData | TextColumnData } =
       {
         nom: nomCell(titre),
@@ -95,7 +124,8 @@ const titresLignesBuild = (
         titulaires: titulairesCell(titre),
         dateCompletudePTMG: dateCell(titre.dateCompletudePTMG),
         dateReceptionONF: dateCell(titre.dateReceptionONF),
-        dateCARM: dateCell(titre.dateCARM)
+        dateCARM: dateCell(titre.dateCARM),
+        delaiJourONFCARM: { value: delai }
       }
     return {
       id: titre.id,

@@ -75,7 +75,9 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok 1`]
     </div>
   </div>
   <!--v-if-->
-  <div>
+  <div
+    class="width-full-p"
+  >
     <div
       class="overflow-scroll-x mb"
     >
@@ -212,167 +214,6 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok 1`]
             <span
               class="bold"
             >
-              Aachen
-            </span>
-          </div>
-          <div
-            class="td"
-          >
-            <span
-              class="cap-first small bold mono"
-            >
-              <span
-                class="bg-domaine-m color-bg pill py-xs px-s"
-              >
-                
-                m
-                
-              </span>
-            </span>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <span
-              class="small bold cap-first"
-            >
-              concession
-            </span>
-          </div>
-          <div
-            class="td nowrap min-width-5"
-          >
-            <span
-              class="cap-first small bold"
-            >
-              <span
-                class="bg-neutral color-bg pill py-xs px-s"
-              >
-                
-                échu
-                
-              </span>
-            </span>
-          </div>
-          <div
-            class="td min-width-5"
-          >
-            <div
-              class="mb--s"
-            >
-              <!--v-if-->
-              <!--v-if-->
-            </div>
-          </div>
-          <div
-            class="td min-width-6"
-          >
-            <ul
-              class="list-inline mb--xs"
-            >
-              
-              <li
-                class="mr-xs mb-xs"
-              >
-                <span
-                  class="bold cap-first small lh-2"
-                >
-                  <span
-                    class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
-                  >
-                    
-                    fer
-                    
-                  </span>
-                </span>
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td"
-          >
-            <div
-              class="p-xs"
-            >
-              <i
-                class="icon-16 icon-globe"
-              />
-            </div>
-          </div>
-          <div
-            class="td min-width-10"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                Société des Mines Aachen
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                Grand Est
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                Moselle
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                RNTM : 57TM0014
-              </li>
-              
-            </ul>
-          </div>
-          
-        </router-link>
-        <router-link
-          class="tr tr-link text-decoration-none"
-          to="[object Object]"
-        >
-          
-          <div
-            class="td min-width-8"
-          >
-            <span
-              class="bold"
-            >
               Amadis 5
             </span>
           </div>
@@ -421,36 +262,8 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok 1`]
             <div
               class="mb--s"
             >
-              <span
-                class="mr-xs inline-block"
-              >
-                <span
-                  class="cap-first small bold"
-                >
-                  <span
-                    class="bg-error color-bg pill py-xs px-s"
-                  >
-                    
-                    1
-                    
-                  </span>
-                </span>
-              </span>
-              <span
-                class="mr-xs inline-block"
-              >
-                <span
-                  class="cap-first small bold"
-                >
-                  <span
-                    class="bg-warning color-bg pill py-xs px-s"
-                  >
-                    
-                    3
-                    
-                  </span>
-                </span>
-              </span>
+              <!--v-if-->
+              <!--v-if-->
             </div>
           </div>
           <div
@@ -550,6 +363,167 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok 1`]
           </div>
           
         </router-link>
+        <router-link
+          class="tr tr-link text-decoration-none"
+          to="[object Object]"
+        >
+          
+          <div
+            class="td min-width-8"
+          >
+            <span
+              class="bold"
+            >
+              Aachen
+            </span>
+          </div>
+          <div
+            class="td"
+          >
+            <span
+              class="cap-first small bold mono"
+            >
+              <span
+                class="bg-domaine-m color-bg pill py-xs px-s"
+              >
+                
+                m
+                
+              </span>
+            </span>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <span
+              class="small bold cap-first"
+            >
+              autorisation de recherches
+            </span>
+          </div>
+          <div
+            class="td nowrap min-width-5"
+          >
+            <span
+              class="cap-first small bold"
+            >
+              <span
+                class="bg-neutral color-bg pill py-xs px-s"
+              >
+                
+                échu
+                
+              </span>
+            </span>
+          </div>
+          <div
+            class="td min-width-5"
+          >
+            <div
+              class="mb--s"
+            >
+              <!--v-if-->
+              <!--v-if-->
+            </div>
+          </div>
+          <div
+            class="td min-width-6"
+          >
+            <ul
+              class="list-inline mb--xs"
+            >
+              
+              <li
+                class="mr-xs mb-xs"
+              >
+                <span
+                  class="bold cap-first small lh-2"
+                >
+                  <span
+                    class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
+                  >
+                    
+                    fer
+                    
+                  </span>
+                </span>
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td"
+          >
+            <div
+              class="p-xs"
+            >
+              <i
+                class="icon-16 icon-globe"
+              />
+            </div>
+          </div>
+          <div
+            class="td min-width-10"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                NINOR
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                Grand Est
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                Moselle
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                RNTM : 57TM0014
+              </li>
+              
+            </ul>
+          </div>
+          
+        </router-link>
         
       </div>
     </div>
@@ -590,7 +564,9 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok Wit
     </div>
   </div>
   <!--v-if-->
-  <div>
+  <div
+    class="width-full-p"
+  >
     <div
       class="overflow-scroll-x mb"
     >
@@ -717,157 +693,6 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok Wit
             <span
               class="bold"
             >
-              Aachen
-            </span>
-          </div>
-          <div
-            class="td"
-          >
-            <span
-              class="cap-first small bold mono"
-            >
-              <span
-                class="bg-domaine-m color-bg pill py-xs px-s"
-              >
-                
-                m
-                
-              </span>
-            </span>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <span
-              class="small bold cap-first"
-            >
-              concession
-            </span>
-          </div>
-          <div
-            class="td nowrap min-width-5"
-          >
-            <span
-              class="cap-first small bold"
-            >
-              <span
-                class="bg-neutral color-bg pill py-xs px-s"
-              >
-                
-                échu
-                
-              </span>
-            </span>
-          </div>
-          <div
-            class="td min-width-6"
-          >
-            <ul
-              class="list-inline mb--xs"
-            >
-              
-              <li
-                class="mr-xs mb-xs"
-              >
-                <span
-                  class="bold cap-first small lh-2"
-                >
-                  <span
-                    class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
-                  >
-                    
-                    fer
-                    
-                  </span>
-                </span>
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td"
-          >
-            <div
-              class="p-xs"
-            >
-              <i
-                class="icon-16 icon-globe"
-              />
-            </div>
-          </div>
-          <div
-            class="td min-width-10"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                Société des Mines Aachen
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                Grand Est
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                Moselle
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                RNTM : 57TM0014
-              </li>
-              
-            </ul>
-          </div>
-          
-        </router-link>
-        <router-link
-          class="tr tr-link text-decoration-none"
-          to="[object Object]"
-        >
-          
-          <div
-            class="td min-width-8"
-          >
-            <span
-              class="bold"
-            >
               Amadis 5
             </span>
           </div>
@@ -1001,6 +826,157 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok Wit
                 class="h6"
               >
                 DEAL : X21-09
+              </li>
+              
+            </ul>
+          </div>
+          
+        </router-link>
+        <router-link
+          class="tr tr-link text-decoration-none"
+          to="[object Object]"
+        >
+          
+          <div
+            class="td min-width-8"
+          >
+            <span
+              class="bold"
+            >
+              Aachen
+            </span>
+          </div>
+          <div
+            class="td"
+          >
+            <span
+              class="cap-first small bold mono"
+            >
+              <span
+                class="bg-domaine-m color-bg pill py-xs px-s"
+              >
+                
+                m
+                
+              </span>
+            </span>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <span
+              class="small bold cap-first"
+            >
+              autorisation de recherches
+            </span>
+          </div>
+          <div
+            class="td nowrap min-width-5"
+          >
+            <span
+              class="cap-first small bold"
+            >
+              <span
+                class="bg-neutral color-bg pill py-xs px-s"
+              >
+                
+                échu
+                
+              </span>
+            </span>
+          </div>
+          <div
+            class="td min-width-6"
+          >
+            <ul
+              class="list-inline mb--xs"
+            >
+              
+              <li
+                class="mr-xs mb-xs"
+              >
+                <span
+                  class="bold cap-first small lh-2"
+                >
+                  <span
+                    class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
+                  >
+                    
+                    fer
+                    
+                  </span>
+                </span>
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td"
+          >
+            <div
+              class="p-xs"
+            >
+              <i
+                class="icon-16 icon-globe"
+              />
+            </div>
+          </div>
+          <div
+            class="td min-width-10"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                NINOR
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                Grand Est
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                Moselle
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                RNTM : 57TM0014
               </li>
               
             </ul>
