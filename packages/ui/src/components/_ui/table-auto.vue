@@ -51,6 +51,14 @@ function handleChange(event: TableSortEvent) {
         return event.order === 'asc' ? 1 : -1
       }
     }
+
+    if (value1) {
+      return event.order === 'asc' ? -1 : 1
+    }
+
+    if (value2) {
+      return event.order === 'asc' ? 1 : -1
+    }
     return 0
   }
   if (column?.sort !== undefined) {

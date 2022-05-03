@@ -1,6 +1,5 @@
 import { dbManager } from './db-manager'
 import { graphQLCall, queryImport } from './_utils/index'
-import { administrations } from './__mocks__/administrations'
 import {
   titreWithActiviteGrp,
   titrePublicLecture,
@@ -10,6 +9,10 @@ import {
   titreActivites
 } from './__mocks__/titres'
 import { titreCreate } from '../src/database/queries/titres'
+import {
+  ADMINISTRATION_IDS,
+  Administrations
+} from 'camino-common/src/administrations'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -100,7 +103,7 @@ describe('titre', () => {
       titreQuery,
       { id: 'titre-id' },
       'admin',
-      administrations.dgtmGuyane.id
+      ADMINISTRATION_IDS['DGTM - GUYANE']
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -133,7 +136,7 @@ describe('titre', () => {
       titreQuery,
       { id: 'titre-id' },
       'admin',
-      administrations.onf.id
+      ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -167,7 +170,7 @@ describe('titre', () => {
       titreQuery,
       { id: 'titre-id' },
       'admin',
-      administrations.dgtmGuyane.id
+      ADMINISTRATION_IDS['DGTM - GUYANE']
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -182,7 +185,7 @@ describe('titre', () => {
       titreQuery,
       { id: 'titre-id' },
       'admin',
-      administrations.cacem.id
+      ADMINISTRATION_IDS.CACEM
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -231,7 +234,7 @@ describe('titreCreer', () => {
       titreCreerQuery,
       { titre: { nom: 'titre', typeId: 'axm', domaineId: 'm' } },
       'admin',
-      administrations.ptmg.id
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
     expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
@@ -242,7 +245,7 @@ describe('titreCreer', () => {
       titreCreerQuery,
       { titre: { nom: 'titre', typeId: 'arm', domaineId: 'm' } },
       'admin',
-      administrations.dgtmGuyane.id
+      ADMINISTRATION_IDS['DGTM - GUYANE']
     )
 
     expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
@@ -253,7 +256,7 @@ describe('titreCreer', () => {
       titreCreerQuery,
       { titre: { nom: 'titre', typeId: 'arm', domaineId: 'm' } },
       'admin',
-      administrations.ptmg.id
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -276,8 +279,12 @@ describe('titreModifier', () => {
         typeId: 'arm',
         propsTitreEtapesIds: {},
         administrationsGestionnaires: [
-          administrations.ptmg,
-          administrations.dgtmGuyane
+          {
+            ...Administrations[
+              ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+            ]
+          },
+          { ...Administrations[ADMINISTRATION_IDS['DGTM - GUYANE']] }
         ]
       },
       {}
@@ -331,7 +338,7 @@ describe('titreModifier', () => {
         titre: { id, nom: 'mon titre modifié', typeId: 'arm', domaineId: 'm' }
       },
       'admin',
-      administrations.ptmg.id
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
     expect(res.body).toMatchObject({
@@ -354,8 +361,12 @@ describe('titreModifier', () => {
         statutId: 'ech',
         propsTitreEtapesIds: {},
         administrationsGestionnaires: [
-          administrations.ptmg,
-          administrations.dgtmGuyane
+          {
+            ...Administrations[
+              ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+            ]
+          },
+          { ...Administrations[ADMINISTRATION_IDS['DGTM - GUYANE']] }
         ]
       },
       {}
@@ -372,7 +383,7 @@ describe('titreModifier', () => {
         }
       },
       'admin',
-      administrations.ptmg.id
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
     expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
@@ -385,7 +396,7 @@ describe('titreModifier', () => {
         titre: { id, nom: 'mon titre modifié', typeId: 'arm', domaineId: 'm' }
       },
       'admin',
-      administrations.dgtmGuyane.id
+      ADMINISTRATION_IDS['DGTM - GUYANE']
     )
 
     expect(res.body.errors[0].message).toMatch(/droits insuffisants/)

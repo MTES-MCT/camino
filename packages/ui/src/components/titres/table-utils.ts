@@ -72,8 +72,7 @@ const STATUTS = [
 
 type DemandeStatut = typeof STATUTS[number]
 
-// eslint-disable-next-line no-unused-vars
-const ordreStatut: { [key in DemandeStatut]: number } = {
+export const ordreStatut: { [key in DemandeStatut]: number } = {
   'demande initiale': 0,
   'modification en instance': 1,
   valide: 2,
@@ -86,12 +85,37 @@ export const isDemandeStatut = (
 ): entry is DemandeStatut => {
   return STATUTS.includes(entry)
 }
+
+export const nomColumn: Column<'nom'> = {
+  id: 'nom',
+  name: 'Nom',
+  class: ['min-width-8']
+}
+export const statutColumn: Column<'statut'> = {
+  id: 'statut',
+  name: 'Statut',
+  class: ['nowrap', 'min-width-5'],
+  sort: (statut1: TableAutoRow, statut2: TableAutoRow) => {
+    const row1Statut = statut1.columns.statut.value
+    const row2Statut = statut2.columns.statut.value
+    if (isDemandeStatut(row1Statut) && isDemandeStatut(row2Statut)) {
+      return ordreStatut[row1Statut] - ordreStatut[row2Statut]
+    }
+    return 0
+  }
+}
+export const referencesColumn: Column<'references'> = {
+  id: 'references',
+  name: 'Références',
+  class: ['min-width-8']
+}
+export const titulairesColumn: Column<'titulaires'> = {
+  id: 'titulaires',
+  name: 'Titulaires',
+  class: ['min-width-10']
+}
 const titresColonnes: Column[] = [
-  {
-    id: 'nom',
-    name: 'Nom',
-    class: ['min-width-8']
-  },
+  nomColumn,
   {
     id: 'domaine',
     name: ''
@@ -101,19 +125,7 @@ const titresColonnes: Column[] = [
     name: 'Type',
     class: ['min-width-8']
   },
-  {
-    id: 'statut',
-    name: 'Statut',
-    class: ['nowrap', 'min-width-5'],
-    sort: (statut1: TableAutoRow, statut2: TableAutoRow) => {
-      const row1Statut = statut1.columns.statut.value
-      const row2Statut = statut2.columns.statut.value
-      if (isDemandeStatut(row1Statut) && isDemandeStatut(row2Statut)) {
-        return ordreStatut[row1Statut] - ordreStatut[row2Statut]
-      }
-      return 0
-    }
-  },
+  statutColumn,
   {
     id: 'activites',
     name: 'Activités',
@@ -136,11 +148,7 @@ const titresColonnes: Column[] = [
     id: 'coordonnees',
     name: 'Carte'
   },
-  {
-    id: 'titulaires',
-    name: 'Titulaires',
-    class: ['min-width-10']
-  },
+  titulairesColumn,
   {
     id: 'regions',
     name: 'Régions',
@@ -151,13 +159,51 @@ const titresColonnes: Column[] = [
     name: 'Départements',
     class: ['min-width-8']
   },
-  {
-    id: 'references',
-    name: 'Références',
-    class: ['min-width-8']
-  }
+  referencesColumn
 ]
 
+export const nomCell = (titre: { nom: string }): ComponentColumnData => ({
+  component: markRaw(TitreNom),
+  props: { nom: titre.nom },
+  value: titre.nom
+})
+export const statutCell = (titre: {
+  statut: { nom: string; couleur: string }
+}): ComponentColumnData => ({
+  component: markRaw(Statut),
+  props: {
+    color: titre.statut.couleur,
+    nom: titre.statut.nom
+  },
+  value: titre.statut.nom
+})
+
+export const referencesCell = (titre: {
+  references?: { nom: string; type: { nom: string } }[]
+}) => {
+  const references = titre.references?.map(
+    ref => `${ref.type.nom} : ${ref.nom}`
+  )
+
+  return {
+    component: List,
+    props: {
+      elements: references,
+      mini: true
+    },
+    class: 'mb--xs',
+    value: references
+  }
+}
+export const titulairesCell = (titre: { titulaires?: { nom: string }[] }) => ({
+  component: markRaw(List),
+  props: {
+    elements: titre.titulaires?.map(({ nom }) => nom),
+    mini: true
+  },
+  class: 'mb--xs',
+  value: titre.titulaires?.map(({ nom }) => nom).join(', ')
+})
 const titresLignesBuild = (
   titres: Entreprise[],
   activitesCol: boolean,
@@ -179,16 +225,8 @@ const titresLignesBuild = (
         ),
       []
     )
-    const references = titre.references?.map(
-      ref => `${ref.type.nom} : ${ref.nom}`
-    )
-    // eslint-disable-next-line no-unused-vars
     const columns: { [key in string]: ComponentColumnData | TextColumnData } = {
-      nom: {
-        component: markRaw(TitreNom),
-        props: { nom: titre.nom },
-        value: titre.nom
-      },
+      nom: nomCell(titre),
       domaine: {
         component: markRaw(CaminoDomaine),
         props: { domaineId: titre.domaine.id },
@@ -204,29 +242,14 @@ const titresLignesBuild = (
         props: { nom: titre.type.type.nom },
         value: titre.type.type.nom
       },
-      statut: {
-        component: markRaw(Statut),
-        props: {
-          color: titre.statut.couleur,
-          nom: titre.statut.nom
-        },
-        value: titre.statut.nom
-      },
+      statut: statutCell(titre),
       substances: {
         component: markRaw(TagList),
         props: { elements: titre.substances?.map(s => s.nom) },
         class: 'mb--xs',
         value: titre.substances?.map(s => s.nom).join(', ')
       },
-      titulaires: {
-        component: markRaw(List),
-        props: {
-          elements: titre.titulaires?.map(({ nom }) => nom),
-          mini: true
-        },
-        class: 'mb--xs',
-        value: titre.titulaires?.map(({ nom }) => nom).join(', ')
-      },
+      titulaires: titulairesCell(titre),
       regions: {
         component: markRaw(List),
         props: {
@@ -245,15 +268,7 @@ const titresLignesBuild = (
         class: 'mb--xs',
         value: departements
       },
-      references: {
-        component: List,
-        props: {
-          elements: references,
-          mini: true
-        },
-        class: 'mb--xs',
-        value: references
-      }
+      references: referencesCell(titre)
     }
 
     if (activitesCol) {

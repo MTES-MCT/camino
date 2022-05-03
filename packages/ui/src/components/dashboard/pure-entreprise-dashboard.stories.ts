@@ -1,10 +1,10 @@
-import PureDashboard from './pure-dashboard.vue'
+import PureEntrepriseDashboard from './pure-entreprise-dashboard.vue'
 import { Meta, Story } from '@storybook/vue3'
 import { Entreprise } from '@/components/titres/table-utils'
 
 const meta: Meta = {
-  title: 'Components/PureDashboard',
-  component: PureDashboard,
+  title: 'Components/PureEntrepriseDashboard',
+  component: PureEntrepriseDashboard,
   argTypes: {
     getEntreprisesTitres: { name: 'function', required: true },
     displayActivites: { name: 'boolean' }
@@ -19,12 +19,12 @@ type Props = {
 
 const entreprises: Entreprise[] = [
   {
-    id: 'nrBiyeRZbRlaNUhvhSOsXEEX',
-    slug: 'm-ar-220222-2022',
-    nom: '220222',
+    id: 'jp25TIfyQiXM987fAGc2DX4N',
+    slug: 'm-cx-aachen-1810',
+    nom: 'Aachen',
     type: {
-      id: 'arm',
-      typeId: 'ar',
+      id: 'cxm',
+      typeId: 'cx',
       domaineId: 'm',
       type: {
         id: 'ar',
@@ -36,18 +36,18 @@ const entreprises: Entreprise[] = [
       nom: 'minéraux et métaux'
     },
     coordonnees: {
-      x: -52.375533070510286,
-      y: 4.066841449742672
+      x: 6.049336777414595,
+      y: 49.45057350532248
     },
     statut: {
-      id: 'dmi',
-      nom: 'demande initiale',
-      couleur: 'warning'
+      id: 'ech',
+      nom: 'échu',
+      couleur: 'neutral'
     },
     substances: [
       {
-        id: 'auru',
-        nom: 'or'
+        id: 'ferx',
+        nom: 'fer'
       }
     ],
     activitesEnConstruction: null,
@@ -62,17 +62,24 @@ const entreprises: Entreprise[] = [
       {
         regions: [
           {
-            nom: 'Guyane',
+            nom: 'Grand Est',
             departements: [
               {
-                nom: 'Guyane'
+                nom: 'Moselle'
               }
             ]
           }
         ]
       }
     ],
-    references: []
+    references: [
+      {
+        type: {
+          nom: 'RNTM'
+        },
+        nom: '57TM0014'
+      }
+    ]
   },
   {
     id: 'mlWyShEGu8v7eYmsUhfiAMbs',
@@ -90,10 +97,6 @@ const entreprises: Entreprise[] = [
     domaine: {
       id: 'm',
       nom: 'minéraux et métaux'
-    },
-    coordonnees: {
-      x: -53.90095961691949,
-      y: 5.067649535503341
     },
     statut: {
       id: 'val',
@@ -146,11 +149,11 @@ const entreprises: Entreprise[] = [
 ]
 
 const Template: Story<Props> = (args: Props) => ({
-  components: { PureDashboard },
+  components: { PureEntrepriseDashboard },
   setup() {
     return { args }
   },
-  template: '<PureDashboard v-bind="args" />'
+  template: '<PureEntrepriseDashboard v-bind="args" />'
 })
 
 export const Ok = Template.bind({})

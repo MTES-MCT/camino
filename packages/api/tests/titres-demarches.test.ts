@@ -1,9 +1,12 @@
 import { dbManager } from './db-manager'
 import { graphQLCall, queryImport } from './_utils/index'
 import { titreCreate } from '../src/database/queries/titres'
-import { administrations } from './__mocks__/administrations'
 import { titreEtapeUpsert } from '../src/database/queries/titres-etapes'
 import { userSuper } from '../src/database/user-super'
+import {
+  ADMINISTRATION_IDS,
+  Administrations
+} from 'camino-common/src/administrations'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -104,7 +107,7 @@ describe('demarcheCreer', () => {
       demarcheCreerQuery,
       { demarche: { titreId, typeId: 'oct' } },
       'admin',
-      administrations.ptmg.id
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -118,7 +121,13 @@ describe('demarcheCreer', () => {
         domaineId: 'm',
         typeId: 'arm',
         statutId: 'ech',
-        administrationsGestionnaires: [administrations.ptmg],
+        administrationsGestionnaires: [
+          {
+            ...Administrations[
+              ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+            ]
+          }
+        ],
         propsTitreEtapesIds: {}
       },
       {}
@@ -128,7 +137,7 @@ describe('demarcheCreer', () => {
       demarcheCreerQuery,
       { demarche: { titreId: titre.id, typeId: 'oct' } },
       'admin',
-      administrations.ptmg.id
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
@@ -186,7 +195,7 @@ describe('demarcheModifier', () => {
       demarcheModifierQuery,
       { demarche: { id: demarcheId, titreId, typeId: 'pro' } },
       'admin',
-      administrations.ptmg.id
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -200,7 +209,7 @@ describe('demarcheModifier', () => {
       demarcheModifierQuery,
       { demarche: { id: demarcheId, titreId, typeId: 'pro' } },
       'admin',
-      administrations.dgtmGuyane.id
+      ADMINISTRATION_IDS['DGTM - GUYANE']
     )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
@@ -304,8 +313,12 @@ const demarcheCreate = async () => {
       domaineId: 'm',
       typeId: 'arm',
       administrationsGestionnaires: [
-        administrations.ptmg,
-        administrations.dgtmGuyane
+        {
+          ...Administrations[
+            ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+          ]
+        },
+        { ...Administrations[ADMINISTRATION_IDS['DGTM - GUYANE']] }
       ],
       propsTitreEtapesIds: {}
     },

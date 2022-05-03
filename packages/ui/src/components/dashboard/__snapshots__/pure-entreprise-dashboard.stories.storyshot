@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Automated Storybook Snapshots Components/PureDashboard Loading 1`] = `
+exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Loading 1`] = `
 <div>
   <div
     class="desktop-blobs"
@@ -43,7 +43,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Loading 1`] = `
 </div>
 `;
 
-exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
+exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok 1`] = `
 <div>
   <div
     class="desktop-blobs"
@@ -214,162 +214,6 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
             <span
               class="bold"
             >
-              220222
-            </span>
-          </div>
-          <div
-            class="td"
-          >
-            <span
-              class="cap-first small bold mono"
-            >
-              <span
-                class="bg-domaine-m color-bg pill py-xs px-s"
-              >
-                
-                m
-                
-              </span>
-            </span>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <span
-              class="small bold cap-first"
-            >
-              autorisation de recherches
-            </span>
-          </div>
-          <div
-            class="td nowrap min-width-5"
-          >
-            <span
-              class="cap-first small bold"
-            >
-              <span
-                class="bg-warning color-bg pill py-xs px-s"
-              >
-                
-                demande initiale
-                
-              </span>
-            </span>
-          </div>
-          <div
-            class="td min-width-5"
-          >
-            <div
-              class="mb--s"
-            >
-              <!--v-if-->
-              <!--v-if-->
-            </div>
-          </div>
-          <div
-            class="td min-width-6"
-          >
-            <ul
-              class="list-inline mb--xs"
-            >
-              
-              <li
-                class="mr-xs mb-xs"
-              >
-                <span
-                  class="bold cap-first small lh-2"
-                >
-                  <span
-                    class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
-                  >
-                    
-                    or
-                    
-                  </span>
-                </span>
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td"
-          >
-            <div
-              class="p-xs"
-            >
-              <i
-                class="icon-16 icon-globe"
-              />
-            </div>
-          </div>
-          <div
-            class="td min-width-10"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                NINOR
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                Guyane
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                Guyane
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              
-            </ul>
-          </div>
-          
-        </router-link>
-        <router-link
-          class="tr tr-link text-decoration-none"
-          to="[object Object]"
-        >
-          
-          <div
-            class="td min-width-8"
-          >
-            <span
-              class="bold"
-            >
               Amadis 5
             </span>
           </div>
@@ -450,13 +294,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
           <div
             class="td"
           >
-            <div
-              class="p-xs"
-            >
-              <i
-                class="icon-16 icon-globe"
-              />
-            </div>
+            <!--v-if-->
           </div>
           <div
             class="td min-width-10"
@@ -525,6 +363,167 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
           </div>
           
         </router-link>
+        <router-link
+          class="tr tr-link text-decoration-none"
+          to="[object Object]"
+        >
+          
+          <div
+            class="td min-width-8"
+          >
+            <span
+              class="bold"
+            >
+              Aachen
+            </span>
+          </div>
+          <div
+            class="td"
+          >
+            <span
+              class="cap-first small bold mono"
+            >
+              <span
+                class="bg-domaine-m color-bg pill py-xs px-s"
+              >
+                
+                m
+                
+              </span>
+            </span>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <span
+              class="small bold cap-first"
+            >
+              autorisation de recherches
+            </span>
+          </div>
+          <div
+            class="td nowrap min-width-5"
+          >
+            <span
+              class="cap-first small bold"
+            >
+              <span
+                class="bg-neutral color-bg pill py-xs px-s"
+              >
+                
+                échu
+                
+              </span>
+            </span>
+          </div>
+          <div
+            class="td min-width-5"
+          >
+            <div
+              class="mb--s"
+            >
+              <!--v-if-->
+              <!--v-if-->
+            </div>
+          </div>
+          <div
+            class="td min-width-6"
+          >
+            <ul
+              class="list-inline mb--xs"
+            >
+              
+              <li
+                class="mr-xs mb-xs"
+              >
+                <span
+                  class="bold cap-first small lh-2"
+                >
+                  <span
+                    class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
+                  >
+                    
+                    fer
+                    
+                  </span>
+                </span>
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td"
+          >
+            <div
+              class="p-xs"
+            >
+              <i
+                class="icon-16 icon-globe"
+              />
+            </div>
+          </div>
+          <div
+            class="td min-width-10"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                NINOR
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                Grand Est
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                Moselle
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                RNTM : 57TM0014
+              </li>
+              
+            </ul>
+          </div>
+          
+        </router-link>
         
       </div>
     </div>
@@ -533,7 +532,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok 1`] = `
 </div>
 `;
 
-exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activities 1`] = `
+exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok Without Activities 1`] = `
 <div>
   <div
     class="desktop-blobs"
@@ -694,152 +693,6 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
             <span
               class="bold"
             >
-              220222
-            </span>
-          </div>
-          <div
-            class="td"
-          >
-            <span
-              class="cap-first small bold mono"
-            >
-              <span
-                class="bg-domaine-m color-bg pill py-xs px-s"
-              >
-                
-                m
-                
-              </span>
-            </span>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <span
-              class="small bold cap-first"
-            >
-              autorisation de recherches
-            </span>
-          </div>
-          <div
-            class="td nowrap min-width-5"
-          >
-            <span
-              class="cap-first small bold"
-            >
-              <span
-                class="bg-warning color-bg pill py-xs px-s"
-              >
-                
-                demande initiale
-                
-              </span>
-            </span>
-          </div>
-          <div
-            class="td min-width-6"
-          >
-            <ul
-              class="list-inline mb--xs"
-            >
-              
-              <li
-                class="mr-xs mb-xs"
-              >
-                <span
-                  class="bold cap-first small lh-2"
-                >
-                  <span
-                    class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
-                  >
-                    
-                    or
-                    
-                  </span>
-                </span>
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td"
-          >
-            <div
-              class="p-xs"
-            >
-              <i
-                class="icon-16 icon-globe"
-              />
-            </div>
-          </div>
-          <div
-            class="td min-width-10"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                NINOR
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                Guyane
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                Guyane
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              
-            </ul>
-          </div>
-          
-        </router-link>
-        <router-link
-          class="tr tr-link text-decoration-none"
-          to="[object Object]"
-        >
-          
-          <div
-            class="td min-width-8"
-          >
-            <span
-              class="bold"
-            >
               Amadis 5
             </span>
           </div>
@@ -910,13 +763,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
           <div
             class="td"
           >
-            <div
-              class="p-xs"
-            >
-              <i
-                class="icon-16 icon-globe"
-              />
-            </div>
+            <!--v-if-->
           </div>
           <div
             class="td min-width-10"
@@ -985,6 +832,157 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
           </div>
           
         </router-link>
+        <router-link
+          class="tr tr-link text-decoration-none"
+          to="[object Object]"
+        >
+          
+          <div
+            class="td min-width-8"
+          >
+            <span
+              class="bold"
+            >
+              Aachen
+            </span>
+          </div>
+          <div
+            class="td"
+          >
+            <span
+              class="cap-first small bold mono"
+            >
+              <span
+                class="bg-domaine-m color-bg pill py-xs px-s"
+              >
+                
+                m
+                
+              </span>
+            </span>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <span
+              class="small bold cap-first"
+            >
+              autorisation de recherches
+            </span>
+          </div>
+          <div
+            class="td nowrap min-width-5"
+          >
+            <span
+              class="cap-first small bold"
+            >
+              <span
+                class="bg-neutral color-bg pill py-xs px-s"
+              >
+                
+                échu
+                
+              </span>
+            </span>
+          </div>
+          <div
+            class="td min-width-6"
+          >
+            <ul
+              class="list-inline mb--xs"
+            >
+              
+              <li
+                class="mr-xs mb-xs"
+              >
+                <span
+                  class="bold cap-first small lh-2"
+                >
+                  <span
+                    class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
+                  >
+                    
+                    fer
+                    
+                  </span>
+                </span>
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td"
+          >
+            <div
+              class="p-xs"
+            >
+              <i
+                class="icon-16 icon-globe"
+              />
+            </div>
+          </div>
+          <div
+            class="td min-width-10"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                NINOR
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                Grand Est
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                Moselle
+              </li>
+              
+            </ul>
+          </div>
+          <div
+            class="td min-width-8"
+          >
+            <ul
+              class="list-prefix mb--xs"
+            >
+              
+              <li
+                class="h6"
+              >
+                RNTM : 57TM0014
+              </li>
+              
+            </ul>
+          </div>
+          
+        </router-link>
         
       </div>
     </div>
@@ -993,7 +991,7 @@ exports[`Automated Storybook Snapshots Components/PureDashboard Ok Without Activ
 </div>
 `;
 
-exports[`Automated Storybook Snapshots Components/PureDashboard With Error 1`] = `
+exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard With Error 1`] = `
 <div>
   <div
     class="desktop-blobs"

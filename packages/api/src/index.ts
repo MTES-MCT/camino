@@ -12,6 +12,7 @@ import './init'
 import compression from 'compression'
 import cors from 'cors'
 import express from 'express'
+import rateLimit from 'express-rate-limit'
 import * as Sentry from '@sentry/node'
 
 import { port, url } from './config/index'
@@ -43,14 +44,23 @@ filesInit().then(() => {
       app.use(Sentry.Handlers.requestHandler())
     }
 
+    const limiter = rateLimit({
+      windowMs: 60 * 1000, // 1 minute
+      max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+      standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+      legacyHeaders: false // Disable the `X-RateLimit-*` headers
+    })
+
     app.use(
       cors({ credentials: true, exposedHeaders: ['Content-disposition'] }),
       compression(),
+      limiter,
       cookieParser(),
       authJwt,
       authJwtError,
       authBasic
     )
+
     app.use(rest)
 
     app.use('/televersement', uploadAllowedMiddleware, restUpload())

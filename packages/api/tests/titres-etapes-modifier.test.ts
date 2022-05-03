@@ -1,13 +1,16 @@
 import { IPermissionId } from '../src/types'
 import { dbManager } from './db-manager'
 import { graphQLCall, queryImport } from './_utils/index'
-import { administrations } from './__mocks__/administrations'
 import { titreDemarcheCreate } from '../src/database/queries/titres-demarches'
 import { titreCreate } from '../src/database/queries/titres'
 import { titreEtapeCreate } from '../src/database/queries/titres-etapes'
 import { titreEtapePropsIds } from '../src/business/utils/titre-etape-heritage-props-find'
 import Titres from '../src/database/models/titres'
 import { userSuper } from '../src/database/user-super'
+import {
+  ADMINISTRATION_IDS,
+  Administrations
+} from 'camino-common/src/administrations'
 
 jest.mock('../src/tools/dir-create', () => ({
   __esModule: true,
@@ -46,8 +49,12 @@ async function etapeCreate() {
       typeId: 'arm',
       propsTitreEtapesIds: {},
       administrationsGestionnaires: [
-        administrations.ptmg,
-        administrations.dgtmGuyane
+        {
+          ...Administrations[
+            ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+          ]
+        },
+        { ...Administrations[ADMINISTRATION_IDS['DGTM - GUYANE']] }
       ]
     },
     {}
@@ -186,7 +193,7 @@ describe('etapeModifier', () => {
         }
       },
       'admin',
-      administrations.ptmg.id
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
     expect(res.body.errors[0].message).toBe(
@@ -208,7 +215,7 @@ describe('etapeModifier', () => {
         }
       },
       'admin',
-      administrations.ptmg.id
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -233,7 +240,7 @@ describe('etapeModifier', () => {
         }
       },
       'admin',
-      administrations.ptmg.id
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
     expect(res.body.errors[0].message).toBe(

@@ -1,5 +1,8 @@
-import { administrations } from './administrations'
 import { IAdministration, ITitre } from '../../src/types'
+import {
+  Administrations,
+  ADMINISTRATION_IDS
+} from 'camino-common/src/administrations'
 
 const titreWithActiviteGrp = {
   id: 'titre-id',
@@ -8,7 +11,9 @@ const titreWithActiviteGrp = {
   typeId: 'axm',
   publicLecture: true,
   propsTitreEtapesIds: { administrations: 'titre-id-demarche-id-dpu' },
-  administrationsGestionnaires: [administrations.ptmg],
+  administrationsGestionnaires: [
+    Administrations[ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']]
+  ],
   activites: [
     {
       titreId: 'titre-id',
@@ -85,7 +90,9 @@ const titreEtapesPubliques = {
   domaineId: 'm',
   typeId: 'arm',
   publicLecture: true,
-  administrationsGestionnaires: [administrations.onf],
+  administrationsGestionnaires: [
+    Administrations[ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]
+  ],
   propsTitreEtapesIds: { administrations: 'titre-id-demarche-id-dpu' },
   demarches: [
     {

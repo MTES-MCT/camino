@@ -13,6 +13,7 @@ import {
   entreprises
 } from '../api/rest/index'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers'
+import { titresONF } from '../api/rest/titres'
 
 const contentTypes = {
   csv: 'text/csv',
@@ -43,7 +44,27 @@ type IRestResolver = (
 
 const rest = express.Router()
 
-const restify =
+type ExpressRoute = (
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction
+) => Promise<void>
+const restCatcher =
+  (expressCall: ExpressRoute) =>
+  async (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    try {
+      await expressCall(req, res, next)
+    } catch (e) {
+      console.log('catching error', e)
+      next(e)
+    }
+  }
+
+const restDownload =
   (resolver: IRestResolver) =>
   async (
     req: express.Request,
@@ -99,15 +120,16 @@ const restify =
     }
   }
 
-rest.get('/titres/:id', restify(titre))
-rest.get('/titres', restify(titres))
-rest.get('/demarches', restify(demarches))
-rest.get('/activites', restify(activites))
-rest.get('/utilisateurs', restify(utilisateurs))
-rest.get('/entreprises', restify(entreprises))
-rest.get('/fichiers/:documentId', restify(fichier))
-rest.get('/etape/zip/:etapeId', restify(etapeTelecharger))
-rest.get('/etape/:etapeId/:fichierNom', restify(etapeFichier))
+rest.get('/titres/:id', restDownload(titre))
+rest.get('/titres', restDownload(titres))
+rest.get('/titresONF', restCatcher(titresONF))
+rest.get('/demarches', restDownload(demarches))
+rest.get('/activites', restDownload(activites))
+rest.get('/utilisateurs', restDownload(utilisateurs))
+rest.get('/entreprises', restDownload(entreprises))
+rest.get('/fichiers/:documentId', restDownload(fichier))
+rest.get('/etape/zip/:etapeId', restDownload(etapeTelecharger))
+rest.get('/etape/:etapeId/:fichierNom', restDownload(etapeFichier))
 
 rest.use(
   (
