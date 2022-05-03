@@ -20,12 +20,10 @@ const port = process.env.UI_PORT
 const apiUrl = process.env.API_URL
 const apiMatomoUrl = process.env.API_MATOMO_URL
 
-const typeformUrl = '*.typeform.com'
-
 const staticFileMiddleware = express.static(path.join(__dirname, 'dist'), {
   setHeaders: (res, path, stat) => {
     res.set({
-      'Content-Security-Policy': `default-src 'none'; script-src 'self' ${apiMatomoUrl} ${typeformUrl}; style-src 'self' ${typeformUrl}; object-src 'self'; frame-src 'self' ${typeformUrl}; connect-src 'self' sentry.io ${apiMatomoUrl}; img-src data: 'self' a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org  a.tile.openstreetmap.fr b.tile.openstreetmap.fr c.tile.openstreetmap.fr geoservices.brgm.fr wxs.ign.fr datacarto.geoguyane.fr; base-uri 'none'; form-action 'self'; frame-ancestors 'none';`,
+      'Content-Security-Policy': `default-src 'none'; script-src 'self' ${apiMatomoUrl}; style-src 'self'; object-src 'self'; frame-src 'self'; connect-src 'self' sentry.io ${apiMatomoUrl}; img-src data: 'self' a.tile.openstreetmap.org b.tile.openstreetmap.org c.tile.openstreetmap.org  a.tile.openstreetmap.fr b.tile.openstreetmap.fr c.tile.openstreetmap.fr geoservices.brgm.fr wxs.ign.fr datacarto.geoguyane.fr; base-uri 'none'; form-action 'self'; frame-ancestors 'none';`,
       'X-Frame-Options': 'DENY',
       'X-Content-Type-Options': 'nosniff',
       'X-XSS-Protection': '1; mode=block',
