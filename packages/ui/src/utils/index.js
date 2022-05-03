@@ -1,7 +1,7 @@
 const TODAY = new Date().toISOString().slice(0, 10)
 
 const dateFormat = dateString => {
-  if (typeof dateString !== 'string') {
+  if (typeof dateString !== 'string' || !dateString) {
     return ''
   }
 

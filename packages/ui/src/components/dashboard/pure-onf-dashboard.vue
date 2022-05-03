@@ -45,6 +45,8 @@ import {
   titulairesCell
 } from '@/components/titres/table-utils'
 import { CommonTitreONF } from 'camino-common/src/titres'
+import { markRaw } from '@vue/reactivity'
+import Date from '../_ui/date.vue'
 
 const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
 const onfTitres = ref<TableAutoRow[]>([])
@@ -71,7 +73,11 @@ const initialColumnId = columns[1].id
 
 type Columns = typeof columns[number]['id']
 
-const dateCell = (date: string) => ({ value: date })
+const dateCell = (date: string) => ({
+  component: markRaw(Date),
+  props: { date },
+  value: date
+})
 
 const titresLignesBuild = (
   titres: CommonTitreONF[]
