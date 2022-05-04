@@ -2,8 +2,10 @@ import { ITitreDemarche, ITitrePhase } from '../../types'
 
 import titreDemarcheDateFinAndDureeFind from './titre-demarche-date-fin-duree-find'
 import { titreDemarchePhaseCheck } from './titre-demarche-phase-check'
-import titreEtapesSortDesc from '../utils/titre-etapes-sort-desc'
-import titreEtapesSortAsc from '../utils/titre-etapes-sort-asc'
+import {
+  titreEtapesSortAscByOrdre,
+  titreEtapesSortDescByOrdre
+} from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find'
 
@@ -111,7 +113,7 @@ const titrePhaseDateDebutFind = (
   // - la démarche est un octroi
   if (['oct', 'vut', 'vct'].includes(titreDemarche.typeId)) {
     // retourne une étape de publication si celle-ci possède une date de début
-    const etapePublicationHasDateDebut = titreEtapesSortDesc(
+    const etapePublicationHasDateDebut = titreEtapesSortDescByOrdre(
       titreDemarche.etapes!
     ).find(
       titreEtape =>
@@ -135,7 +137,7 @@ const titrePhaseDateDebutFind = (
   }
 
   // retourne la première étape de publication de la démarche
-  const titreEtapePublicationFirst = titreEtapesSortAsc(
+  const titreEtapePublicationFirst = titreEtapesSortAscByOrdre(
     titreDemarche.etapes!
   ).find(te => titreEtapePublicationCheck(te.typeId, titreTypeId))
 

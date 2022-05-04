@@ -1,11 +1,11 @@
 import { ITitreDemarche, Index } from '../../../types'
 
-import titreEtapesSortAscByDate from '../../../business/utils/titre-etapes-sort-asc-by-date'
+import { titreEtapesSortDescByOrdre } from '../../../business/utils/titre-etapes-sort'
 
 const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
   if (!titreDemarche.etapes?.length) return null
 
-  const etapes = titreEtapesSortAscByDate(titreDemarche.etapes).reverse()
+  const etapes = titreEtapesSortDescByOrdre(titreDemarche.etapes)
 
   return etapes
     .filter(e => e.statutId !== 'aco')
@@ -38,9 +38,9 @@ const titresDemarchesFormatTable = (titresDemarches: ITitreDemarche[]) =>
     const etapesTypesStatuts = etapesDatesStatutsBuild(titreDemarche)
 
     const etapeWithPoints = titreDemarche.etapes
-      ? titreEtapesSortAscByDate(titreDemarche.etapes)
-          .reverse()
-          .find(etape => etape.points?.length)
+      ? titreEtapesSortDescByOrdre(titreDemarche.etapes).find(
+          etape => etape.points?.length
+        )
       : undefined
 
     const titreDemarcheNew = {

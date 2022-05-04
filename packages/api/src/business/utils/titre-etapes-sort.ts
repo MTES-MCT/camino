@@ -5,9 +5,16 @@ import {
   IDemarcheDefinitionRestrictions
 } from '../rules-demarches/definitions'
 import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot-demande-date-find'
+// classe les étapes selon leur ordre inverse: 3, 2, 1.
+export const titreEtapesSortDescByOrdre = (titreEtapes: ITitreEtape[]) =>
+  titreEtapes.slice().sort((a, b) => b.ordre! - a.ordre!)
+
+// classe les étapes selon leur ordre: 1, 2, 3, …
+export const titreEtapesSortAscByOrdre = (titreEtapes: ITitreEtape[]) =>
+  titreEtapes.slice().sort((a, b) => a.ordre! - b.ordre!)
 
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
-const titreEtapesSortAscByDate = (
+export const titreEtapesSortAscByDate = (
   titreEtapes: ITitreEtape[],
   demarcheType?: IDemarcheType | null,
   titreTypeId?: string
@@ -106,5 +113,3 @@ const titreEtapesSortAscByDate = (
     return a.ordre! - b.ordre!
   })
 }
-
-export default titreEtapesSortAscByDate

@@ -6,6 +6,7 @@ import { titreEtapeUpsert } from '../../database/queries/titres-etapes'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches'
 import { titreEtapeHeritagePropsFind } from '../utils/titre-etape-heritage-props-find'
 import { userSuper } from '../../database/user-super'
+import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 
 const titresEtapesHeritagePropsUpdate = async (
   user: IUtilisateur,
@@ -38,36 +39,34 @@ const titresEtapesHeritagePropsUpdate = async (
   const titresEtapesIdsUpdated = [] as string[]
 
   titresDemarches.forEach(titreDemarche => {
-    const titreEtapes = titreDemarche.etapes
-      ?.reverse()
-      .filter(e => e.type!.fondamentale)
+    const titreEtapes = titreEtapesSortAscByOrdre(
+      titreDemarche.etapes?.filter(e => e.type!.fondamentale) ?? []
+    )
 
-    if (titreEtapes) {
-      titreEtapes.forEach((titreEtape: ITitreEtape, index: number) => {
-        const titreEtapePrecedente = index > 0 ? titreEtapes[index - 1] : null
+    titreEtapes.forEach((titreEtape: ITitreEtape, index: number) => {
+      const titreEtapePrecedente = index > 0 ? titreEtapes[index - 1] : null
 
-        const { hasChanged, titreEtape: newTitreEtape } =
-          titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)
+      const { hasChanged, titreEtape: newTitreEtape } =
+        titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)
 
-        if (hasChanged) {
-          queue.add(async () => {
-            await titreEtapeUpsert(newTitreEtape, user, titreDemarche.titreId)
+      if (hasChanged) {
+        queue.add(async () => {
+          await titreEtapeUpsert(newTitreEtape, user, titreDemarche.titreId)
 
-            const log = {
-              type: 'titre / démarche / étape : héritage des propriétés (mise à jour) ->',
-              value: `${titreEtape.id}`
-            }
+          const log = {
+            type: 'titre / démarche / étape : héritage des propriétés (mise à jour) ->',
+            value: `${titreEtape.id}`
+          }
 
-            console.info(log.type, log.value)
+          console.info(log.type, log.value)
 
-            titresEtapesIdsUpdated.push(titreEtape.id)
-          })
+          titresEtapesIdsUpdated.push(titreEtape.id)
+        })
 
-          // met à jour l'étape pour l'itération suivante
-          titreEtapes[index] = newTitreEtape
-        }
-      })
-    }
+        // met à jour l'étape pour l'itération suivante
+        titreEtapes[index] = newTitreEtape
+      }
+    })
   })
 
   await queue.onIdle()

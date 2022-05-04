@@ -1,8 +1,10 @@
 import { ITitreDemarche } from '../../types'
 
 import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc'
-import titreEtapesSortDesc from '../utils/titre-etapes-sort-desc'
-import titreEtapesSortAsc from '../utils/titre-etapes-sort-asc'
+import {
+  titreEtapesSortDescByOrdre,
+  titreEtapesSortAscByOrdre
+} from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
 
 const titreDemarcheDateDebutFind = (
@@ -10,7 +12,7 @@ const titreDemarcheDateDebutFind = (
   titreTypeId: string
 ) => {
   // retourne la dernière étape de publication si celle-ci possède une date de début
-  const etapePublicationHasDateDebut = titreEtapesSortDesc(
+  const etapePublicationHasDateDebut = titreEtapesSortDescByOrdre(
     titreDemarche.etapes!
   ).find(
     titreEtape =>
@@ -25,7 +27,7 @@ const titreDemarcheDateDebutFind = (
   }
 
   // retourne la première étape de publication de la démarche
-  const titreEtapePublicationFirst = titreEtapesSortAsc(
+  const titreEtapePublicationFirst = titreEtapesSortAscByOrdre(
     titreDemarche.etapes!
   ).find(te => titreEtapePublicationCheck(te.typeId, titreTypeId))
 

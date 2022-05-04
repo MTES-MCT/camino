@@ -1,34 +1,76 @@
 import { IDemarcheType, IEtapeType, ITitreEtape } from '../../types'
 
-import titreEtapesSortAscByDate from './titre-etapes-sort-asc-by-date'
 import {
-  titreEtapesSortedAsc,
-  titreEtapesSortedDesc,
-  titreEtapesSortedAscResult,
-  titreEtapesMemesDatesOrdreDesc,
-  titreEtapesMemesDatesOrdreAscResult,
-  titreEtapesMemesDatesOrdreEtapesTypesDesc,
-  titreEtapesMemesDatesOrdreEtapesTypesAscResult,
-  titreEtapesMemesDatesMemeOrdreDesc,
-  titreEtapesMemesDatesMemeOrdreAscResult,
-  etapesTypes
-} from './__mocks__/titre-etapes-asc-sort-by-date-etapes'
+  titreEtapesSortAscByDate,
+  titreEtapesSortAscByOrdre,
+  titreEtapesSortDescByOrdre
+} from './titre-etapes-sort'
+
+const titreEtapesSortedDescResult = [
+  { typeId: 'dpu', ordre: 2, date: '1988-03-11' },
+  { typeId: 'dex', ordre: 1, date: '1988-03-06' }
+] as ITitreEtape[]
+
+const titreEtapesSortedAsc = [
+  { typeId: 'dex', ordre: 1, date: '1988-03-06' },
+  { typeId: 'dpu', ordre: 2, date: '1988-03-11' }
+] as ITitreEtape[]
+
+const titreEtapesSortedDesc = titreEtapesSortedAsc.slice().reverse()
+
+const etapesTypes = [
+  { id: 'dex', nom: 'dex', ordre: 100, titreTypeId: 'titre-type-id' },
+  { id: 'dpu', nom: 'dpu', ordre: 200, titreTypeId: 'titre-type-id' }
+] as IEtapeType[]
 
 console.error = jest.fn()
 describe('trie les étapes', () => {
+  test('des étapes organisées par ordre décroissant sont triées par ordre croissant', () => {
+    expect(titreEtapesSortAscByOrdre(titreEtapesSortedDesc)).toMatchObject(
+      titreEtapesSortedAsc
+    )
+  })
+
+  test('des étapes organisées par ordre croissant restent triées par ordre croissant', () => {
+    expect(titreEtapesSortAscByOrdre(titreEtapesSortedAsc)).toMatchObject(
+      titreEtapesSortedAsc
+    )
+  })
+
+  test('des étapes organisées par ordre croissant sont triées par ordre décroissant', () => {
+    expect(titreEtapesSortDescByOrdre(titreEtapesSortedAsc)).toMatchObject(
+      titreEtapesSortedDescResult
+    )
+  })
+
+  test('des étapes organisées par ordre décroissant restent triées par ordre décroissant', () => {
+    expect(titreEtapesSortDescByOrdre(titreEtapesSortedDesc)).toMatchObject(
+      titreEtapesSortedDescResult
+    )
+  })
+
   test('des étapes organisées par date décroissante sont triées par date croissante', () => {
     expect(titreEtapesSortAscByDate(titreEtapesSortedDesc)).toMatchObject(
-      titreEtapesSortedAscResult
+      titreEtapesSortedAsc
     )
   })
 
   test('des étapes organisées par date croissante restent triées par date croissante', () => {
     expect(titreEtapesSortAscByDate(titreEtapesSortedAsc)).toMatchObject(
-      titreEtapesSortedAscResult
+      titreEtapesSortedAsc
     )
   })
 
   test('des étapes avec les mêmes dates organisées par ordre décroissant sont triées par ordre croissant', () => {
+    const titreEtapesMemesDatesOrdreDesc = [
+      { typeId: 'dpu', ordre: 2, date: '1988-03-06' },
+      { typeId: 'dex', ordre: 1, date: '1988-03-06' }
+    ] as ITitreEtape[]
+
+    const titreEtapesMemesDatesOrdreAscResult = titreEtapesMemesDatesOrdreDesc
+      .slice()
+      .reverse()
+
     expect(
       titreEtapesSortAscByDate(
         titreEtapesMemesDatesOrdreDesc,
@@ -39,6 +81,11 @@ describe('trie les étapes', () => {
   })
 
   test('des étapes avec les mêmes dates sont triées par ordre de type croissant', () => {
+    const titreEtapesMemesDatesOrdreEtapesTypesDesc = [
+      { typeId: 'dpu', ordre: 2, date: '1988-03-06' },
+      { typeId: 'dex', ordre: 2, date: '1988-03-06' },
+      { typeId: 'xxx', ordre: 2, date: '1988-03-06' }
+    ] as ITitreEtape[]
     expect(
       titreEtapesSortAscByDate(
         titreEtapesMemesDatesOrdreEtapesTypesDesc,
@@ -48,7 +95,11 @@ describe('trie les étapes', () => {
         } as IDemarcheType,
         'titre-type-id'
       )
-    ).toMatchObject(titreEtapesMemesDatesOrdreEtapesTypesAscResult)
+    ).toMatchObject([
+      { typeId: 'dex', ordre: 2, date: '1988-03-06' },
+      { typeId: 'dpu', ordre: 2, date: '1988-03-06' },
+      { typeId: 'xxx', ordre: 2, date: '1988-03-06' }
+    ])
   })
 
   test('des étapes avec les mêmes dates sont triées par ordre de type croissant', () => {
@@ -77,11 +128,16 @@ describe('trie les étapes', () => {
   })
 
   test('des étapes avec les mêmes dates sont triées par ordre croissant', () => {
+    const titreEtapesMemesDatesMemeOrdreDesc = [
+      { typeId: 'dex', ordre: 2, date: '1988-03-06' },
+      { typeId: 'dex', ordre: 1, date: '1988-03-06' }
+    ] as ITitreEtape[]
+
     expect(
       titreEtapesSortAscByDate(titreEtapesMemesDatesMemeOrdreDesc, {
         etapesTypes
       } as IDemarcheType)
-    ).toMatchObject(titreEtapesMemesDatesMemeOrdreAscResult)
+    ).toMatchObject(titreEtapesMemesDatesMemeOrdreDesc.slice().reverse())
   })
 
   test('tri selon l’arbre si les étapes ont la même date', () => {

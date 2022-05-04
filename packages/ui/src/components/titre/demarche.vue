@@ -56,7 +56,7 @@
     </div>
 
     <TitreEtape
-      v-for="etape in demarche.etapes"
+      v-for="etape in etapes"
       :key="etape.id"
       :etape="etape"
       :demarcheType="demarche.type"
@@ -106,6 +106,10 @@ export default {
       return this.tabId && this.tabId === 'travaux'
         ? 'titre-travaux'
         : 'titre-demarche'
+    },
+
+    etapes() {
+      return this.demarche.etapes.slice().sort((a, b) => b.ordre - a.ordre)
     }
   },
 

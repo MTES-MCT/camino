@@ -6,7 +6,7 @@ import { ITitreDemarche, ITitreEtape, IPropId, IContenuId } from '../../types'
 
 import { propValueFind } from '../utils/prop-value-find'
 import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc'
-import titreEtapesSortDesc from '../utils/titre-etapes-sort-desc'
+import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 
 const etapeAmodiataireFind = (
   titreEtape: ITitreEtape,
@@ -80,26 +80,28 @@ const titreDemarchePropTitreEtapeFind = (
   titreStatutId: string,
   titreDemarches: ITitreDemarche[]
 ) =>
-  titreEtapesSortDesc(titreDemarcheEtapes).find((titreEtape: ITitreEtape) => {
-    const isEtapeValide = etapeValideCheck(
-      titreEtape,
-      titreDemarcheTypeId,
-      titreStatutId,
-      propId
-    )
+  titreEtapesSortDescByOrdre(titreDemarcheEtapes).find(
+    (titreEtape: ITitreEtape) => {
+      const isEtapeValide = etapeValideCheck(
+        titreEtape,
+        titreDemarcheTypeId,
+        titreStatutId,
+        propId
+      )
 
-    if (!isEtapeValide) return false
+      if (!isEtapeValide) return false
 
-    const prop = propValueFind(titreEtape, propId)
+      const prop = propValueFind(titreEtape, propId)
 
-    if (prop === null) return false
+      if (prop === null) return false
 
-    if (propId === 'amodiataires') {
-      return etapeAmodiataireFind(titreEtape, titreDemarches)
+      if (propId === 'amodiataires') {
+        return etapeAmodiataireFind(titreEtape, titreDemarches)
+      }
+
+      return true
     }
-
-    return true
-  }) || null
+  ) || null
 
 // retourne la première étape valide qui contient l'élément dans la section
 const titreDemarcheContenuTitreEtapeFind = (
@@ -108,7 +110,7 @@ const titreDemarcheContenuTitreEtapeFind = (
   titreDemarcheTypeId: string,
   titreStatutId: string
 ) =>
-  titreEtapesSortDesc(titreDemarcheEtapes).find(
+  titreEtapesSortDescByOrdre(titreDemarcheEtapes).find(
     titreEtape =>
       etapeValideCheck(titreEtape, titreDemarcheTypeId, titreStatutId) &&
       // détermine si l'étape contient la section et l'élément
