@@ -1,6 +1,6 @@
 import { ITitreEtape } from '../../types'
 
-import titreEtapesSortAsc from '../utils/titre-etapes-sort-asc'
+import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
 
 const demarchesTypesPhases = ['oct', 'pro', 'pr1', 'pr2', 'pre', 'vut', 'vct']
@@ -35,8 +35,8 @@ const titreDemarchePhaseCheck = (
   // on trie les étapes de façon ascendante pour le cas où
   // il existe une étape de publication et une étape rectificative,
   // on prend alors en compte l'originale
-  const etapePublicationFirst = titreEtapesSortAsc(titreEtapes!).find(etape =>
-    titreEtapePublicationCheck(etape.typeId, titreTypeId)
+  const etapePublicationFirst = titreEtapesSortAscByOrdre(titreEtapes!).find(
+    etape => titreEtapePublicationCheck(etape.typeId, titreTypeId)
   )
 
   return etapePublicationFirst

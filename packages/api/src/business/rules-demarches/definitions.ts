@@ -95,8 +95,7 @@ const demarcheDefinitionFind = (
   date?: string
 ) =>
   demarchesDefinitions
-    .sort((a, b) => a.dateDebut.localeCompare(b.dateDebut))
-    .reverse()
+    .sort((a, b) => b.dateDebut.localeCompare(a.dateDebut))
     .find(
       d =>
         (!date || d.dateDebut < date) &&

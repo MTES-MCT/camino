@@ -4,7 +4,7 @@ import {
   TitreEtapesTravauxTypes as Travaux
 } from '../../types'
 
-import titreEtapesSortDesc from '../utils/titre-etapes-sort-desc'
+import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
 
 const titreEtapesDecisivesCommunesTypes = ['css', 'rtd', 'abd', 'and']
@@ -112,7 +112,7 @@ const titreDemarcheUnilateralStatutIdFind = (
     return DemarchesStatuts.Indetermine
 
   // l'étape la plus récente
-  const titreEtapeRecent = titreEtapesSortDesc(
+  const titreEtapeRecent = titreEtapesSortDescByOrdre(
     titreEtapesDecisivesUnilaterale
   )[0]
 
@@ -174,7 +174,9 @@ const titreDemarcheDemandeStatutIdFind = (
   if (!titreEtapesDecisivesDemande.length) return DemarchesStatuts.Indetermine
 
   // l'étape la plus récente
-  const titreEtapeRecent = titreEtapesSortDesc(titreEtapesDecisivesDemande)[0]
+  const titreEtapeRecent = titreEtapesSortDescByOrdre(
+    titreEtapesDecisivesDemande
+  )[0]
 
   // calcule le statut de démarche pour les étapes communes
   const statutId = titresDemarcheCommunesStatutIdFind(titreEtapeRecent)
@@ -192,7 +194,7 @@ const titreDemarcheDemandeStatutIdFind = (
 
   if (titreEtapesPublication.length) {
     // si l'étape de publication la plus récente est
-    const titreEtapePublicationRecent = titreEtapesSortDesc(
+    const titreEtapePublicationRecent = titreEtapesSortDescByOrdre(
       titreEtapesPublication
     )[0]
 
@@ -274,7 +276,7 @@ const titreDemarcheTravauxStatutIdFind = (
   if (titreDemarcheEtapes.length === 0) {
     return DemarchesStatuts.Indetermine
   }
-  const titreEtapesRecent = titreEtapesSortDesc(titreDemarcheEtapes)[0]
+  const titreEtapesRecent = titreEtapesSortDescByOrdre(titreDemarcheEtapes)[0]
 
   const statuts: {
     [travauxEtapeType: string]: DemarchesStatuts

@@ -1,4 +1,4 @@
-import { Model, Modifiers, Pojo, QueryContext } from 'objection'
+import { Model, Pojo, QueryContext } from 'objection'
 
 import { ITitreEtape, ITitrePoint } from '../../types'
 
@@ -221,12 +221,6 @@ class TitresEtapes extends Model {
       }
     }
   })
-
-  public static modifiers: Modifiers = {
-    orderDesc: builder => {
-      builder.orderBy('ordre', 'desc')
-    }
-  }
 
   async $beforeInsert(context: QueryContext) {
     if (!this.id) {

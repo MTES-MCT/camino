@@ -1,7 +1,7 @@
 import { ITitreDemarche } from '../../types'
 
 import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc'
-import titreEtapesSortAsc from '../utils/titre-etapes-sort-asc'
+import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 
 const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]) => {
   // trouve la démarche génératrice du titre
@@ -22,7 +22,7 @@ const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]) => {
   // dans la démarche génératrice, trouve
   // - la demande déposée
   // - ou l'enregistrement de la demande (pour les anciennes ARM)
-  const titreEtapesSorted = titreEtapesSortAsc(titreDemarche.etapes!)
+  const titreEtapesSorted = titreEtapesSortAscByOrdre(titreDemarche.etapes!)
   const titreEtape = titreEtapesSorted.find(
     te => te.typeId === 'mdp' || te.typeId === 'men'
   )

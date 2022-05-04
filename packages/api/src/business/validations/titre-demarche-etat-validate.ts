@@ -7,7 +7,7 @@ import {
 } from '../rules-demarches/definitions'
 import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find'
 import { titreContenuFormat } from '../../database/models/_format/titre-contenu'
-import titreEtapesSortAscByDate from '../utils/titre-etapes-sort-asc-by-date'
+import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort'
 import { titreEtapeEtatValidate } from './titre-etape-etat-validate'
 import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot-demande-date-find'
 import { objectClone } from '../../tools/index'

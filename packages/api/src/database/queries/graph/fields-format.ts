@@ -1,4 +1,4 @@
-const fieldsOrderDesc = ['etablissements', 'demarches', 'etapes', 'activites']
+const fieldsOrderDesc = ['etablissements', 'demarches', 'activites']
 const fieldsOrderAsc = [
   'domaines',
   'points',

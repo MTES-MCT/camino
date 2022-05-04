@@ -9,6 +9,10 @@ import {
   titreEtapeHeritageContenuFind
 } from '../utils/titre-etape-heritage-contenu-find'
 import { userSuper } from '../../database/user-super'
+import {
+  titreEtapesSortAscByOrdre,
+  titreEtapesSortDescByOrdre
+} from '../utils/titre-etapes-sort'
 
 const titresEtapesHeritageContenuUpdate = async (
   user: IUtilisateur,
@@ -39,14 +43,15 @@ const titresEtapesHeritageContenuUpdate = async (
       const etapeSectionsDictionary = etapeSectionsDictionaryBuild(
         titreDemarche.etapes
       )
-
-      const titreEtapes = titreDemarche.etapes
-        ?.filter(e => etapeSectionsDictionary[e.id])
-        .reverse()
+      const titreEtapes = titreEtapesSortAscByOrdre(
+        titreDemarche.etapes?.filter(e => etapeSectionsDictionary[e.id]) ?? []
+      )
 
       if (titreEtapes) {
         titreEtapes.forEach((titreEtape: ITitreEtape, index: number) => {
-          const titreEtapesFiltered = titreEtapes.slice(0, index).reverse()
+          const titreEtapesFiltered = titreEtapesSortDescByOrdre(
+            titreEtapes.slice(0, index)
+          )
 
           const { contenu, heritageContenu, hasChanged } =
             titreEtapeHeritageContenuFind(

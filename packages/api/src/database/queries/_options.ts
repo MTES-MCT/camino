@@ -178,7 +178,7 @@ const titresDemarches = {
      statut,
      phase.${titresDemarchesPhases.graph},
      titreType,
-     etapes(orderDesc).${titresEtapes.graph},
+     etapes.${titresEtapes.graph},
      parents.^1,
      enfants.^1
   ]`,

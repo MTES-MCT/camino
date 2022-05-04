@@ -1,7 +1,9 @@
 import { ITitreDemarche, ITitreEtape } from '../../types'
 
-import titreEtapesSortAsc from '../utils/titre-etapes-sort-asc'
-import titreEtapesSortDesc from '../utils/titre-etapes-sort-desc'
+import {
+  titreEtapesSortAscByOrdre,
+  titreEtapesSortDescByOrdre
+} from '../utils/titre-etapes-sort'
 
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find'
 import { dateAddMonths, datesSubtract } from '../../tools/date'
@@ -78,7 +80,8 @@ const titreDemarcheDateFinAndDureeFind = (
   )
 
 const titreDemarcheOctroiDateDebutFind = (titreEtapes: ITitreEtape[]) => {
-  const titreEtapesSorted = titreEtapes && titreEtapesSortDesc(titreEtapes)
+  const titreEtapesSorted =
+    titreEtapes && titreEtapesSortDescByOrdre(titreEtapes)
 
   // chercher dans les étapes de publication et décisives s'il y a une date de debut
   const titreEtapeHasDateDebut = titreEtapesSorted.find(
@@ -103,8 +106,9 @@ const titreDemarcheOctroiDateDebutFind = (titreEtapes: ITitreEtape[]) => {
 
   // sinon, la date de fin est calculée
   // en ajoutant la durée cumulée à la date de la première étape de publication
-  const titreEtapeDpuFirst = titreEtapesSortAsc(titreEtapes).find(titreEtape =>
-    ['dpu', 'dup', 'def', 'sco', 'aco'].includes(titreEtape.typeId)
+  const titreEtapeDpuFirst = titreEtapesSortAscByOrdre(titreEtapes).find(
+    titreEtape =>
+      ['dpu', 'dup', 'def', 'sco', 'aco'].includes(titreEtape.typeId)
   )
 
   if (titreEtapeDpuFirst) {
@@ -113,8 +117,8 @@ const titreDemarcheOctroiDateDebutFind = (titreEtapes: ITitreEtape[]) => {
 
   // si on ne trouve pas de dpu, la date de fin est calculée
   // en ajoutant la date de la première étape décisive
-  const titreEtapeDexFirst = titreEtapesSortAsc(titreEtapes).find(titreEtape =>
-    ['dex', 'dux', 'ihi'].includes(titreEtape.typeId)
+  const titreEtapeDexFirst = titreEtapesSortAscByOrdre(titreEtapes).find(
+    titreEtape => ['dex', 'dux', 'ihi'].includes(titreEtape.typeId)
   )
 
   return titreEtapeDexFirst ? titreEtapeDexFirst.date : null
@@ -185,7 +189,7 @@ const titreDemarcheNormaleDateFinAndDureeFind = (
   //   ou decision de publication au JORF (dpu)
   //   ou publication au recueil des actes administratifs de la préfecture (rpu)
   // - qui possède une date de fin ou durée
-  const titreEtapesSorted = titreEtapesSortDesc(titreEtapes)
+  const titreEtapesSorted = titreEtapesSortDescByOrdre(titreEtapes)
   const titreEtapeHasDateFinOrDuree = titreEtapesSorted.find(
     ({ typeId, dateFin, duree }) =>
       ['dpu', 'dup', 'rpu', 'dex', 'dux', 'def', 'sco', 'aco'].includes(

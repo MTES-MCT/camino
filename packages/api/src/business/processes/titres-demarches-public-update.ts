@@ -4,6 +4,7 @@ import { titreDemarcheUpdate } from '../../database/queries/titres-demarches'
 import { titreDemarchePublicFind } from '../rules/titre-demarche-public-find'
 import { titresGet } from '../../database/queries/titres'
 import { userSuper } from '../../database/user-super'
+import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 
 type ITitreDemarchePatch = {
   publicLecture: boolean
@@ -36,7 +37,9 @@ const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
 
   titres.forEach(titre => {
     titre.demarches!.forEach(titreDemarche => {
-      const titreDemarcheEtapes = titreDemarche.etapes?.reverse() || []
+      const titreDemarcheEtapes = titreEtapesSortAscByOrdre(
+        titreDemarche.etapes ?? []
+      )
 
       const demarcheTypeEtapesTypes = titreDemarche.type!.etapesTypes!.filter(
         et => et.titreTypeId === titre.typeId

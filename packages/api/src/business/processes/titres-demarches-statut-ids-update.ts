@@ -4,6 +4,7 @@ import { titresGet } from '../../database/queries/titres'
 import { titreDemarcheUpdate } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find'
+import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 
 // met à jour le statut des démarches d'un titre
 const titresDemarchesStatutIdUpdate = async (titresIds?: string[]) => {
@@ -23,7 +24,9 @@ const titresDemarchesStatutIdUpdate = async (titresIds?: string[]) => {
 
   titres.forEach(titre => {
     titre.demarches!.forEach(titreDemarche => {
-      const titreDemarcheEtapes = titreDemarche.etapes?.reverse() || []
+      const titreDemarcheEtapes = titreEtapesSortAscByOrdre(
+        titreDemarche.etapes ?? []
+      )
 
       const statutId = titreDemarcheStatutIdFind(
         titreDemarche.typeId,

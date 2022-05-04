@@ -11,7 +11,7 @@ import {
 } from '../../types'
 
 import titreDemarcheSortAsc from './titre-elements-sort-asc'
-import titreEtapesSortAsc from './titre-etapes-sort-asc'
+import { titreEtapesSortAscByOrdre } from './titre-etapes-sort'
 import titreDemarcheOctroiDateDebutFind from '../rules/titre-demarche-octroi-date-debut-find'
 import { titresGet, titreUpdate } from '../../database/queries/titres'
 import { userSuper } from '../../database/user-super'
@@ -60,7 +60,7 @@ const titreEtapeSlugFind = (
   etapes: ITitreEtape[]
 ) => {
   const titreEtapeTypeOrder =
-    titreEtapesSortAsc(
+    titreEtapesSortAscByOrdre(
       etapes.filter(e => e.typeId === titreEtape.typeId)
     ).findIndex(e => e === titreEtape) + 1
 

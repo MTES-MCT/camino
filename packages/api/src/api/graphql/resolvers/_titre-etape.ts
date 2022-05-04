@@ -25,6 +25,10 @@ import {
 } from '../../../business/utils/titre-etape-heritage-contenu-find'
 import { etapeTypeSectionsFormat } from '../../_format/etapes-types'
 import { apiGeoGet } from '../../../tools/api-geo'
+import {
+  titreEtapesSortAscByOrdre,
+  titreEtapesSortDescByOrdre
+} from '../../../business/utils/titre-etapes-sort'
 
 const titreEtapePointsCalc = <
   T extends {
@@ -75,9 +79,9 @@ const titreEtapeHeritagePropsBuild = (
   date: string,
   titreEtapes?: ITitreEtape[] | null
 ) => {
-  const titreEtapesFiltered =
-    titreEtapes?.filter(e => e.type?.fondamentale && e.date < date).reverse() ||
-    []
+  const titreEtapesFiltered = titreEtapesSortAscByOrdre(
+    titreEtapes?.filter(e => e.type?.fondamentale && e.date < date) ?? []
+  )
 
   const heritageProps = titreEtapePropsIds.reduce((acc: IHeritageProps, id) => {
     acc[id] = { actif: !!titreEtapesFiltered.length }
@@ -133,10 +137,11 @@ const titreEtapeHeritageContenuBuild = (
     sectionsSpecifiques: sections
   } as ITitreEtape
 
-  let titreEtapesFiltered = titreEtapes.filter(te => te.date < date).reverse()
+  let titreEtapesFiltered = titreEtapesSortDescByOrdre(
+    titreEtapes.filter(te => te.date < date)
+  )
 
-  titreEtapesFiltered.push(titreEtape)
-  titreEtapesFiltered = titreEtapesFiltered.reverse()
+  titreEtapesFiltered.splice(0, 0, titreEtape)
 
   const etapeSectionsDictionary =
     etapeSectionsDictionaryBuild(titreEtapesFiltered)
