@@ -48,7 +48,7 @@ const authBasic = async (
           return
         }
 
-        req.user = { id: user.id }
+        ;(req as any).user = { id: user.id }
       }
     }
   } catch (e) {

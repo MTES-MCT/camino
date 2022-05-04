@@ -1,81 +1,87 @@
 <template>
-  <Loader v-if="!loaded" />
-  <template v-else>
-    <div class="tablet-blobs">
-      <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-        <h4>{{ title }}</h4>
+  <div>
+    <Loader v-if="!loaded" />
+    <template v-else>
+      <div class="tablet-blobs">
+        <div class="tablet-blob-1-3 tablet-pt-s pb-s">
+          <h4>{{ title }}</h4>
+        </div>
+
+        <div class="mb tablet-blob-2-3" :class="{ flex: hasButtonPlus }">
+          <select
+            :value="elementSelected?.id"
+            class="p-s"
+            @change="selectChange"
+          >
+            <option
+              v-for="element in elements"
+              :key="element.id"
+              :value="element.id"
+            >
+              {{ labelGet(element) }}
+            </option>
+          </select>
+
+          <span class="ml-m">
+            <ButtonPlus v-if="hasButtonPlus" @click="elementCreate" />
+          </span>
+        </div>
       </div>
 
-      <div class="mb tablet-blob-2-3" :class="{ flex: hasButtonPlus }">
-        <select :value="elementSelected?.id" class="p-s" @change="selectChange">
-          <option
-            v-for="element in elements"
-            :key="element.id"
-            :value="element.id"
-          >
-            {{ labelGet(element) }}
-          </option>
-        </select>
-
-        <span class="ml-m">
-          <ButtonPlus v-if="hasButtonPlus" @click="elementCreate" />
-        </span>
-      </div>
-    </div>
-
-    <div v-if="elementSelected" class="mb-xl">
-      <div
-        v-if="rootComponent || definitionsTree.joinTable"
-        class="rnd-s border p-m"
-      >
-        <div class="tablet-blobs">
-          <div
-            v-for="colonne of colonnesToEdit"
-            :key="colonne.id"
-            class="tablet-blob-1-2"
-          >
-            <div class="tablet-blobs mb-s">
-              <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-                <h5>
-                  {{ colonne.nom }}
-                </h5>
-              </div>
-              <div class="tablet-blob-2-3">
-                <MetaLabelOrInput
-                  :colonne="colonne"
-                  :element="elementToEdit"
-                  @update="update"
-                >
-                </MetaLabelOrInput>
+      <div v-if="elementSelected" class="mb-xl">
+        <div
+          v-if="rootComponent || definitionsTree.joinTable"
+          class="rnd-s border p-m"
+        >
+          <div class="tablet-blobs">
+            <div
+              v-for="colonne of colonnesToEdit"
+              :key="colonne.id"
+              class="tablet-blob-1-2"
+            >
+              <div class="tablet-blobs mb-s">
+                <div class="tablet-blob-1-3 tablet-pt-s pb-s">
+                  <h5>
+                    {{ colonne.nom }}
+                  </h5>
+                </div>
+                <div class="tablet-blob-2-3">
+                  <MetaLabelOrInput
+                    :colonne="colonne"
+                    :element="elementToEdit"
+                    @update="update"
+                  >
+                  </MetaLabelOrInput>
+                </div>
               </div>
             </div>
           </div>
+          <div class="flex blobs pr-m">
+            <button
+              v-if="definition.delete"
+              class="btn py-s px-m btn rnd-xs p-s flex-right"
+              title="supprimer"
+              @click="elementDelete(elementToEdit)"
+            >
+              <i class="icon-24 icon-trash" />
+            </button>
+          </div>
         </div>
-        <div class="flex blobs pr-m">
-          <button
-            v-if="definition.delete"
-            class="btn py-s px-m btn rnd-xs p-s flex-right"
-            title="supprimer"
-            @click="elementDelete(elementToEdit)"
-          >
-            <i class="icon-24 icon-trash" />
-          </button>
+        <div
+          v-for="definitionChild of definitionsTree.definitions"
+          :key="definitionChild.joinTable"
+          class="pl-l"
+        >
+          <span class="separator" />
+          <DefinitionEdit
+            :definitionsTree="definitionChild"
+            :foreignKeys="foreignKeysNew"
+            :rootComponent="false"
+          />
         </div>
       </div>
-      <div
-        v-for="definitionChild of definitionsTree.definitions"
-        :key="definitionChild.joinTable"
-        class="pl-l"
-      >
-        <span class="separator" />
-        <DefinitionEdit
-          :definitionsTree="definitionChild"
-          :foreignKeys="foreignKeysNew"
-          :rootComponent="false"
-        />
-      </div>
-    </div>
-  </template>
+    </template>
+  </div>
 </template>
 
 <script lang="ts">

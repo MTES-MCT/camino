@@ -1,5 +1,5 @@
 import express from 'express'
-import expressJwt from 'express-jwt'
+import { expressjwt, ExpressJwtRequest } from 'express-jwt'
 import jwt from 'jsonwebtoken'
 import { userByRefreshTokenGet } from '../database/queries/utilisateurs'
 import {
@@ -8,7 +8,7 @@ import {
   userTokensDelete
 } from '../api/graphql/resolvers/utilisateurs'
 
-const authJwt = expressJwt({
+const authJwt = expressjwt({
   credentialsRequired: false,
   getToken: (req: express.Request) => {
     return req.cookies?.accessToken || null
@@ -21,6 +21,10 @@ interface Error {
   status?: number
   name?: string
   message?: string
+}
+
+export function isAuthRequest(req: express.Request): req is ExpressJwtRequest {
+  return 'auth' in req
 }
 
 // attrape les erreurs d'expiration du token
@@ -45,8 +49,9 @@ const authJwtError = async (
     }
 
     cookieSet('accessToken', accessTokenGet(user), res)
+
     // il faut mettre l’utilisateur dans la requête car suite à l’erreur, authJwt ne l’a pas fait
-    req.user = user
+    ;(req as ExpressJwtRequest).auth = user
     next()
   }
 }

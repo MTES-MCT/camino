@@ -80,7 +80,6 @@
             <router-link
               :to="{ name: 'entreprise', params: { id: e.id } }"
               class="btn-border small p-s rnd-xs mr-xs"
-              tag="button"
             >
               <span class="mr-xs">{{
                 e.legalSiren ? `${e.nom} (${e.legalSiren})` : e.nom
@@ -107,7 +106,6 @@
             <router-link
               :to="{ name: 'entreprise', params: { id: e.id } }"
               class="btn-border small p-s rnd-xs mr-xs"
-              tag="button"
             >
               <span class="mr-xs">{{
                 e.legalSiren ? `${e.nom} (${e.legalSiren})` : e.nom

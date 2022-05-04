@@ -1,4 +1,4 @@
-import { IFormat, Index, IUser } from '../types'
+import { IFormat, Index } from '../types'
 
 import express from 'express'
 import { join } from 'path'
@@ -14,6 +14,7 @@ import {
 } from '../api/rest/index'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers'
 import { titresONF } from '../api/rest/titres'
+import { isAuthRequest } from './auth-jwt'
 
 const contentTypes = {
   csv: 'text/csv',
@@ -72,44 +73,46 @@ const restDownload =
     next: express.NextFunction
   ) => {
     try {
-      const user = req.user as unknown as IUser | undefined
-      const result = await resolver(
-        { query: req.query, params: req.params },
-        user?.id
-      )
+      if (isAuthRequest(req)) {
+        const user = req.auth
+        const result = await resolver(
+          { query: req.query, params: req.params },
+          user.id
+        )
 
-      if (!result) {
-        throw new Error('erreur: aucun résultat')
-      }
-
-      const { nom, format, contenu, filePath, buffer } = result
-
-      res.header(
-        'Content-disposition',
-        `inline; filename=${encodeURIComponent(nom)}`
-      )
-      res.header('Content-Type', contentTypes[format])
-
-      if (filePath || buffer) {
-        res.header('x-sent', 'true')
-        res.header('x-timestamp', Date.now().toString())
-        const options = {
-          dotfiles: 'deny',
-          root: join(process.cwd(), 'files')
+        if (!result) {
+          throw new Error('erreur: aucun résultat')
         }
 
-        if (filePath) {
-          res.sendFile(filePath, options, err => {
-            if (err) console.error(`erreur de téléchargement ${err}`)
-            res.status(404).end()
-          })
+        const { nom, format, contenu, filePath, buffer } = result
+
+        res.header(
+          'Content-disposition',
+          `inline; filename=${encodeURIComponent(nom)}`
+        )
+        res.header('Content-Type', contentTypes[format])
+
+        if (filePath || buffer) {
+          res.header('x-sent', 'true')
+          res.header('x-timestamp', Date.now().toString())
+          const options = {
+            dotfiles: 'deny',
+            root: join(process.cwd(), 'files')
+          }
+
+          if (filePath) {
+            res.sendFile(filePath, options, err => {
+              if (err) console.error(`erreur de téléchargement ${err}`)
+              res.status(404).end()
+            })
+          }
+          if (buffer) {
+            res.header('Content-Length', `${buffer.length}`)
+            res.send(buffer)
+          }
+        } else {
+          res.send(contenu)
         }
-        if (buffer) {
-          res.header('Content-Length', `${buffer.length}`)
-          res.send(buffer)
-        }
-      } else {
-        res.send(contenu)
       }
     } catch (e) {
       if (debug) {
