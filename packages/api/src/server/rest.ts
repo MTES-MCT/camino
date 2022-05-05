@@ -2,6 +2,7 @@ import { IFormat, Index } from '../types'
 
 import express from 'express'
 import { join } from 'path'
+import { constants } from 'http2'
 
 import { debug } from '../config/index'
 import {
@@ -103,7 +104,7 @@ const restDownload =
           if (filePath) {
             res.sendFile(filePath, options, err => {
               if (err) console.error(`erreur de téléchargement ${err}`)
-              res.status(404).end()
+              res.status(constants.HTTP_STATUS_NOT_FOUND).end()
             })
           }
           if (buffer) {
@@ -142,7 +143,7 @@ rest.use(
     next: express.NextFunction
   ) => {
     if (err) {
-      res.status(500)
+      res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
       res.send({ error: err.message })
 
       return

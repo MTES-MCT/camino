@@ -3,6 +3,8 @@ import { Server, FileStore } from 'tus-node-server'
 import { graphqlUploadExpress } from 'graphql-upload'
 import { permissionCheck } from '../business/permission'
 import { userGet } from '../database/queries/utilisateurs'
+import { constants } from 'http2'
+import { isAuthRequest } from './auth-jwt'
 
 // Téléversement REST
 const uploadAllowedMiddleware = async (
@@ -10,16 +12,20 @@ const uploadAllowedMiddleware = async (
   res: express.Response,
   next: express.NextFunction
 ) => {
-  const userId = (req as any).user?.id
+  if (!isAuthRequest(req)) {
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else {
+    const userId = req.auth.id
 
-  const user = await userGet(userId)
+    const user = await userGet(userId)
 
-  if (!user || permissionCheck(user.permissionId, ['defaut'])) {
-    res.sendStatus(403)
+    if (!user || permissionCheck(user.permissionId, ['defaut'])) {
+      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
 
-    return
+      return
+    }
+    next()
   }
-  next()
 }
 
 const restUpload = () => {

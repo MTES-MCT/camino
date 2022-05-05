@@ -7,6 +7,7 @@ import {
   cookieSet,
   userTokensDelete
 } from '../api/graphql/resolvers/utilisateurs'
+import { constants } from 'http2'
 
 const authJwt = expressjwt({
   credentialsRequired: false,
@@ -43,7 +44,7 @@ const authJwtError = async (
 
     if (!user || !refreshToken) {
       userTokensDelete(res)
-      res.status(401).send('invalid token...')
+      res.status(constants.HTTP_STATUS_UNAUTHORIZED).send('invalid token...')
 
       return
     }

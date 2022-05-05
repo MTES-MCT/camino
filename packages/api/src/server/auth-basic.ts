@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs'
 import { debug } from '../config/index'
 import { emailCheck } from '../tools/email-check'
 import { userByEmailGet } from '../database/queries/utilisateurs'
+import { constants } from 'http2'
 
 const userCredentialsCheck = async (email: string, motDePasse: string) => {
   email = email.toLowerCase()
@@ -42,7 +43,7 @@ const authBasic = async (
         )
 
         if (!user) {
-          res.status(401)
+          res.status(constants.HTTP_STATUS_UNAUTHORIZED)
           res.send('Identifiants incorrects')
 
           return
