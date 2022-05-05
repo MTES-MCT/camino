@@ -1,12 +1,13 @@
 {
   "upgrade": true,
   "reject": [
-    "eslint",
-    "eslint-plugin-vue",
-    "eslint-plugin-promise",
     "postcss-button",
     "postcss-grid-fluid" ,
     "postcss-typescale",
-    "graphql-react"
+    "graphql-react",
+    "jest",
+    "jest-util",
+    "babel-jest",
+    "ts-jest"
   ]
 }
