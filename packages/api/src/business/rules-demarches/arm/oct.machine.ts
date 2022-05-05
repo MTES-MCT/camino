@@ -379,7 +379,7 @@ type Mecanisation =
     }
   | { mecanise: false }
 
-interface Context {
+export interface OctARMContext {
   mecanisation: Mecanisation
   franchissementCoursEau: number | null
   visibilite: 'confidentielle' | 'publique'
@@ -391,13 +391,13 @@ interface Context {
 const validationFraisApresDesistementOuClassementSansSuite = [
   {
     target: 'demandeDeposeeOuEnInstruction.pasRde.validationDesFraisDossier',
-    cond: (context: Context) => {
+    cond: (context: OctARMContext) => {
       return !context.paiementFraisDossierValide
     }
   },
   {
     target: 'validationDuPaiementDesFraisDeDossierComplementaires',
-    cond: (context: Context) => {
+    cond: (context: OctARMContext) => {
       return (
         context.paiementFraisDossierValide &&
         context.mecanisation.mecanise &&
@@ -407,7 +407,7 @@ const validationFraisApresDesistementOuClassementSansSuite = [
   },
   {
     target: 'fini',
-    cond: (context: Context) => {
+    cond: (context: OctARMContext) => {
       return (
         context.paiementFraisDossierValide &&
         (!context.mecanisation.mecanise ||
@@ -417,7 +417,7 @@ const validationFraisApresDesistementOuClassementSansSuite = [
   }
 ]
 
-export const armOctMachine = createMachine<Context, XStateEvent>({
+export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
   id: 'oct',
   initial: 'demandeEnConstruction',
   context: {
@@ -439,7 +439,7 @@ export const armOctMachine = createMachine<Context, XStateEvent>({
       target: 'desistementDuDemandeur',
       cond: context =>
         context.demarcheStatut === DemarchesStatutsTypesIds.EnInstruction,
-      actions: assign<Context, { type: 'DESISTER_PAR_LE_DEMANDEUR' }>({
+      actions: assign<OctARMContext, { type: 'DESISTER_PAR_LE_DEMANDEUR' }>({
         demarcheStatut: DemarchesStatutsTypesIds.Desiste
       })
     },
@@ -447,7 +447,7 @@ export const armOctMachine = createMachine<Context, XStateEvent>({
       target: 'decisionDeClassementSansSuite',
       cond: context =>
         context.demarcheStatut === DemarchesStatutsTypesIds.EnInstruction,
-      actions: assign<Context, { type: 'CLASSER_SANS_SUITE' }>({
+      actions: assign<OctARMContext, { type: 'CLASSER_SANS_SUITE' }>({
         demarcheStatut: DemarchesStatutsTypesIds.ClasseSansSuite
       })
     }
@@ -457,7 +457,7 @@ export const armOctMachine = createMachine<Context, XStateEvent>({
       on: {
         FAIRE_DEMANDE: {
           target: 'demandeFaite',
-          actions: assign<Context, FaireDemandeEvent>({
+          actions: assign<OctARMContext, FaireDemandeEvent>({
             mecanisation: (_context, event) => {
               return event.mecanise
                 ? {
@@ -477,7 +477,7 @@ export const armOctMachine = createMachine<Context, XStateEvent>({
       on: {
         DEPOSER_DEMANDE: {
           target: 'demandeDeposeeOuEnInstruction',
-          actions: assign<Context, { type: 'DEPOSER_DEMANDE' }>({
+          actions: assign<OctARMContext, { type: 'DEPOSER_DEMANDE' }>({
             demarcheStatut: DemarchesStatutsTypesIds.EnInstruction
           })
         }
@@ -566,7 +566,7 @@ export const armOctMachine = createMachine<Context, XStateEvent>({
                   {
                     target: 'recevabiliteDeLaDemande',
                     actions: assign<
-                      Context,
+                      OctARMContext,
                       { type: 'VALIDER_FRAIS_DE_DOSSIER' }
                     >({
                       paiementFraisDossierValide: true
@@ -649,7 +649,7 @@ export const armOctMachine = createMachine<Context, XStateEvent>({
                         DEMANDER_INFORMATION_AVIS_ONF:
                           'demandeInformationAvisONF'
                       },
-                      entry: assign<Context>({ expertiseONFFaite: true })
+                      entry: assign<OctARMContext>({ expertiseONFFaite: true })
                     },
                     demandeInformationAvisONF: {
                       on: {
@@ -724,7 +724,7 @@ export const armOctMachine = createMachine<Context, XStateEvent>({
               on: {
                 RECEVOIR_COMPLEMENTS_RDE: {
                   target: 'enCours',
-                  actions: assign<Context, RecevoirComplementsRde>({
+                  actions: assign<OctARMContext, RecevoirComplementsRde>({
                     franchissementCoursEau: (_context, event) => {
                       return event.franchissements
                     }
@@ -773,7 +773,7 @@ export const armOctMachine = createMachine<Context, XStateEvent>({
       on: {
         FAIRE_SAISINE_CARM: {
           target: 'avisCommissionAutorisationDeRecherchesMinieres',
-          actions: assign<Context, { type: 'FAIRE_SAISINE_CARM' }>({
+          actions: assign<OctARMContext, { type: 'FAIRE_SAISINE_CARM' }>({
             visibilite: 'publique'
           })
         }
@@ -793,7 +793,10 @@ export const armOctMachine = createMachine<Context, XStateEvent>({
         ],
         RENDRE_AVIS_DEFAVORABLE_CARM: {
           target: 'notificationDuDemandeurAvisDefavorableCARM',
-          actions: assign<Context, { type: 'RENDRE_AVIS_DEFAVORABLE_CARM' }>({
+          actions: assign<
+            OctARMContext,
+            { type: 'RENDRE_AVIS_DEFAVORABLE_CARM' }
+          >({
             demarcheStatut: DemarchesStatutsTypesIds.Rejete
           })
         },
@@ -841,7 +844,7 @@ export const armOctMachine = createMachine<Context, XStateEvent>({
           {
             target: 'signatureAutorisationDeRechercheMiniere',
             actions: assign<
-              Context,
+              OctARMContext,
               { type: 'VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES' }
             >({
               mecanisation: {
@@ -857,7 +860,7 @@ export const armOctMachine = createMachine<Context, XStateEvent>({
           {
             target: '#fini',
             actions: assign<
-              Context,
+              OctARMContext,
               { type: 'VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES' }
             >({
               mecanisation: {
@@ -879,7 +882,7 @@ export const armOctMachine = createMachine<Context, XStateEvent>({
           {
             target: 'avenantARM',
             actions: assign<
-              Context,
+              OctARMContext,
               { type: 'SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE' }
             >({
               demarcheStatut: DemarchesStatutsTypesIds.Accepte
@@ -889,7 +892,7 @@ export const armOctMachine = createMachine<Context, XStateEvent>({
           {
             target: 'notificationSignatureARM',
             actions: assign<
-              Context,
+              OctARMContext,
               { type: 'SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE' }
             >({
               demarcheStatut: DemarchesStatutsTypesIds.Accepte

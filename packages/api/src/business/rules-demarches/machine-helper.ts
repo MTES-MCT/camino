@@ -9,9 +9,11 @@ import {
   DBEtat,
   EVENTS,
   eventToEtat,
-  Event
+  Event,
+  OctARMContext,
+  XStateEvent
 } from './arm/oct.machine'
-import { interpret } from 'xstate'
+import { interpret, State } from 'xstate'
 import { DemarcheStatutId, ITitreEtape } from '../../types'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 
@@ -160,10 +162,17 @@ export const nextEtapes = (etapes: readonly Etape[]): DBEtat[] => {
   return possibleEvents.map(eventToEtat)
 }
 
-export const isEtapesOk = (etapes: readonly Etape[]): boolean => {
+export const isEtapesOk = (
+  etapes: readonly Etape[],
+  initialState: State<OctARMContext, XStateEvent> | null = null
+): boolean => {
   const service = interpret(armOctMachine)
 
-  service.start()
+  if (initialState === null) {
+    service.start()
+  } else {
+    service.start(initialState)
+  }
   for (let i = 0; i < etapes.length; i++) {
     const etapeAFaire = etapes[i]
     const event = eventFrom(etapeAFaire)

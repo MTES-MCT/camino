@@ -75,6 +75,8 @@ import {
 } from '../../../business/rules-demarches/machine-helper'
 import { UNITES } from 'camino-common/src/unites'
 import { permissionCheck } from 'camino-common/src/permissions'
+import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort'
+import TitresDemarches from '../../../database/models/titres-demarches'
 
 const devises = async () => devisesGet()
 
@@ -213,6 +215,34 @@ const demarchesStatuts = async () => {
     throw e
   }
 }
+// VISIBLE_FOR_TESTING
+export const etapesFromMachine = (
+  titreDemarche: Pick<TitresDemarches, 'etapes'>,
+  titreEtapeId: string | undefined,
+  date: string,
+  etapesTypes: IEtapeType[]
+) => {
+  if (!titreDemarche.etapes) throw new Error('les étapes ne sont pas chargées')
+  const sortedEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes)
+  const etapesAvant = []
+  if (titreEtapeId) {
+    const index = sortedEtapes.findIndex(etape => etape.id === titreEtapeId)
+    etapesAvant.push(...toMachineEtapes(sortedEtapes.slice(0, index)))
+  } else {
+    etapesAvant.push(
+      ...toMachineEtapes(sortedEtapes.filter(etape => etape.date < date))
+    )
+  }
+
+  const dbEtats = nextEtapes(etapesAvant)
+  // TODO 2022-05-05 si il y'a des étapes après, il faut refiltrer les nextEtapes pour savoir quelles sont les vraies possibilités
+  // dbEtats.filter()
+  etapesTypes = etapesTypes.filter(et =>
+    dbEtats.map(({ etat }) => etat).includes(et.id)
+  )
+
+  return etapesTypes
+}
 
 const demarcheEtapesTypesGet = async (
   {
@@ -241,7 +271,6 @@ const demarcheEtapesTypesGet = async (
   )
 
   if (!titreDemarche) throw new Error("la démarche n'existe pas")
-  if (!titreDemarche.etapes) throw new Error('les étapes ne sont pas chargées')
 
   const titre = titreDemarche.titre!
 
@@ -276,22 +305,18 @@ const demarcheEtapesTypesGet = async (
   )
 
   // dans un premier temps on récupère toutes les étapes possibles pour cette démarche
-  let etapesTypes: EtapesTypes[] = await etapesTypesGet(
+  let etapesTypes: IEtapeType[] = await etapesTypesGet(
     { titreDemarcheId, titreEtapeId },
     { fields, uniqueCheck: !demarcheDefinition },
     user
   )
 
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {
-    const etapesAvant = toMachineEtapes(
-      titreDemarche.etapes.filter(etape => etape.date <= date)
-    )
-
-    const dbEtats = nextEtapes(etapesAvant)
-    // TODO 2022-05-05 si il y'a des étapes après, il faut refiltrer les nextEtapes pour savoir quelles sont les vraies possibilités
-    // dbEtats.filter()
-    etapesTypes = etapesTypes.filter(et =>
-      dbEtats.map(({ etat }) => etat).includes(et.id)
+    etapesTypes = etapesFromMachine(
+      titreDemarche,
+      titreEtapeId,
+      date,
+      etapesTypes
     )
   } else {
     etapesTypes.filter(etapeType =>
