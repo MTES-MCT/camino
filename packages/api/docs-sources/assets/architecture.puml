@@ -10,19 +10,21 @@
 OFF_DEVICE_LAPTOP(Utilisateurs, Utilisateurs)
 
 package Externes {
-  OFF_APPLICATION_SERVER(Sentry, Sentry)
   OFF_3RD_PARTY_MAIL_SERVER(Mailjet, Mailjet)
-  Sentry -[hidden]d-> Mailjet
+'  Sentry -[hidden]d-> Mailjet
 }
 package Gouvernement {
+  OFF_APPLICATION_SERVER(Sentry, Sentry)
   OFF_APPLICATION_SERVER(Matomo, Matomo)
   OFF_APPLICATION_SERVER(Cerbere, Cerbere)
   OFF_APPLICATION_SERVER(Insee, Insee)
   OFF_APPLICATION_SERVER(Administrations, Administrations)
 
+  Sentry -[hidden]d-> Matomo
   Matomo -[hidden]d->Cerbere
   Cerbere -[hidden]d->Insee
   Insee -[hidden]d->Administrations
+ 
 }
 
 package Camino {
