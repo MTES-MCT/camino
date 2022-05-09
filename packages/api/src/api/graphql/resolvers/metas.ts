@@ -216,7 +216,7 @@ const demarchesStatuts = async () => {
   }
 }
 // VISIBLE_FOR_TESTING
-export const etapesFromMachine = (
+export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
   titreDemarche: Pick<TitresDemarches, 'etapes'>,
   titreEtapeId: string | undefined,
   date: string,
@@ -312,7 +312,7 @@ const demarcheEtapesTypesGet = async (
   )
 
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {
-    etapesTypes = etapesFromMachine(
+    etapesTypes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
       titreDemarche,
       titreEtapeId,
       date,

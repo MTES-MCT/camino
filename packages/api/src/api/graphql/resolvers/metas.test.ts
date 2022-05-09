@@ -1,8 +1,8 @@
-import { etapesFromMachine } from './metas'
+import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape } from './metas'
 import TitresDemarches from '../../../database/models/titres-demarches'
 import { IEtapeType } from '../../../types'
 
-describe('etapesFromMachine', function () {
+describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   const demarche: Pick<TitresDemarches, 'etapes'> = {
     etapes: [
       {
@@ -22,7 +22,8 @@ describe('etapesFromMachine', function () {
         statutId: 'fai',
         ordre: 1,
         date: '2019-09-23',
-        slug: 'demarcheSlug-mfr01'
+        slug: 'demarcheSlug-mfr01',
+        contenu: { arm: { mecanise: true, franchissements: 19 } }
       },
       {
         id: 'etapeId5',
@@ -162,6 +163,7 @@ describe('etapesFromMachine', function () {
     ]
   }
 
+  // TODO 2022-05-09 sortir EtapeType de la base et le mettre dans le common
   const etapesTypes: IEtapeType[] = [
     {
       id: 'mfr',
@@ -1516,21 +1518,65 @@ describe('etapesFromMachine', function () {
   ]
 
   test('modifie une étape existante', () => {
-    expect(1).toBe(2)
+    const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+      demarche,
+      'etapeId3',
+      '2019-10-11',
+      etapesTypes
+    )
+    expect(etapes).toHaveLength(8)
+    expect(etapes.map(({ id }) => id)).toStrictEqual([
+      'mcd',
+      'mcb',
+      'dae',
+      'mod',
+      'pfd',
+      'css',
+      'rde',
+      'des'
+    ])
+  })
+
+  test('modifie une étape existante à la même date devrait permettre de recréer la même étape', () => {
+    for (const etape of demarche.etapes) {
+      const etapesTypesPossibles =
+        etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+          demarche,
+          etape.id,
+          etape.date,
+          etapesTypes
+        )
+      expect(etapesTypesPossibles.length).toBeGreaterThan(0)
+      expect(etapesTypesPossibles.map(({ id }) => id)).toContain(etape.typeId)
+    }
   })
 
   test('ajoute une nouvelle étape à la fin', () => {
-    const etapes = etapesFromMachine(
+    const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
       demarche,
       undefined,
       '2022-05-05',
       etapesTypes
     )
     expect(etapes).toHaveLength(1)
-    expect(etapes[0].id).toBe('mns')
+    expect(etapes[0].id).toBe('aco')
   })
 
   test('ajoute une nouvelle étape en plein milieu', () => {
-    expect(1).toBe(2)
+    const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+      demarche,
+      undefined,
+      '2019-12-04',
+      etapesTypes
+    )
+    expect(etapes).toHaveLength(6)
+    expect(etapes.map(({ id }) => id)).toStrictEqual([
+      'mcb',
+      'mod',
+      'vfd',
+      'css',
+      'rde',
+      'des'
+    ])
   })
 })
