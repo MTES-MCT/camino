@@ -15,8 +15,8 @@ import {
 const titreDemarcheAnnulationDateFinFind = (titreEtapes: ITitreEtape[]) => {
   // si l’étape valide l’annulation
   const etapeAnnulationValideCheck = (te: ITitreEtape) =>
-    // si on a une décision expresse (dex) ou unilatérale (dux)
-    ['dex', 'dux'].includes(te.typeId) ||
+    // si on a une décision expresse (dex) ou unilatérale (dux) ou implicite (dim)
+    ['dex', 'dux', 'dim'].includes(te.typeId) ||
     // si l’ARM a une signature de l’avenant à l’autorisation de recherche minière fait
     (te.typeId === 'aco' && te.statutId === 'fai')
 
