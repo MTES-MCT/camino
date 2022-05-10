@@ -5,25 +5,8 @@ concurrency:
   group: api-ci-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  test:
+  unit-test:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgis/postgis:12-3.2
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: camino_tests
-          PGUSER: postgres
-          PGPASSWORD: password
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          # Maps tcp port 5432 on service container to the host
-          - 5432:5432
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -36,31 +19,61 @@ jobs:
         run: |
           npm set-script prepare ""
           npm ci
-          npm run ci:lint --workspace=packages/api
         env:
           CI: true
       - name: Unit tests
         run: npm run ci:test-unit --workspace=packages/api
-        env:
-          PGHOST: localhost
-          PGPORT: 5432
-          PGUSER: postgres
-          PGPASSWORD: password
       - name: Code coverage
         run: npm run codecov --workspace=packages/api
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-      - name: Integration tests
-        #Installation d’une version de knex-db-manager qui seed la bdd séquentiellement
-        run: npm run ci:test-integration --workspace=packages/api
-        env:
-          PGHOST: localhost
-          PGPORT: 5432
-          PGUSER: postgres
-          PGPASSWORD: password
+  integration-test:
+      runs-on: ubuntu-latest
+      services:
+        postgres:
+          image: postgis/postgis:12-3.2
+          env:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: camino_tests
+            PGUSER: postgres
+            PGPASSWORD: password
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+          ports:
+            # Maps tcp port 5432 on service container to the host
+            - 5432:5432
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+        - name: Use Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: '17.8'
+            cache: 'npm'
+        - name: Npm install
+          run: |
+            npm set-script prepare ""
+            npm ci
+          env:
+            CI: true
+        - name: Integration tests
+          run: npm run ci:test-integration --workspace=packages/api
+          env:
+            PGHOST: localhost
+            PGPORT: 5432
+            PGUSER: postgres
+            PGPASSWORD: password
+        - name: Code coverage
+          run: npm run codecov --workspace=packages/api
+          env:
+            CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   build:
-    needs: test
+    needs: [unit-test, integration-test]
     runs-on: ubuntu-latest
 
     steps:
@@ -78,7 +91,7 @@ jobs:
         run: docker push caminofr/camino-api:${GITHUB_SHA}
 
   doc:
-    needs: test
+    needs: [unit-test, integration-test]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
