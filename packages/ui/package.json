@@ -8,7 +8,7 @@
     "dev": "vite",
     "dev:update": "npm-check-updates && npm install && npm audit fix",
     "start": "node ./index.js",
-    "codecov": "codecov",
+    "codecov": "codecov --flags ui",
     "test": "cross-env NODE_ENV=test && jest --verbose",
     "test:watch": "cross-env NODE_ENV=test jest --watch --verbose",
     "lint": "prettier --write src && eslint --fix --ext .js,.ts,.vue src",

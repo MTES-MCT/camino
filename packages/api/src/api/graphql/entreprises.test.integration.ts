@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock'
-
 import { ITitreEtapeJustificatif } from '../../types'
 import { dbManager } from '../../../tests/db-manager'
 import { graphQLCall, queryImport } from '../../../tests/_utils/index'
@@ -32,9 +30,9 @@ jest.mock('../../tools/api-insee/fetch', () => ({
   entreprisesEtablissementsFetch: jest.fn()
 }))
 
-const tokenInitializeMock = mocked(tokenInitialize, true)
-const entrepriseFetchMock = mocked(entreprisesFetch, true)
-const entreprisesEtablissementsFetchMock = mocked(
+const tokenInitializeMock = jest.mocked(tokenInitialize, true)
+const entrepriseFetchMock = jest.mocked(entreprisesFetch, true)
+const entreprisesEtablissementsFetchMock = jest.mocked(
   entreprisesEtablissementsFetch,
   true
 )

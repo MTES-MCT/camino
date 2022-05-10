@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock'
-
 import { IGeometry } from '../../types'
 
 import { titresEtapesAreasUpdate } from './titres-etapes-areas-update'
@@ -56,10 +54,10 @@ jest.mock('../../tools/api-geo/index', () => ({
 console.info = jest.fn()
 console.error = jest.fn()
 
-const titresEtapesGetMock = mocked(titresEtapesGet, true)
-const foretsGetMock = mocked(foretsGet, true)
-const communesGetMock = mocked(communesGet, true)
-const geoAreaGeojsonGetMock = mocked(apiGeoGet, true)
+const titresEtapesGetMock = jest.mocked(titresEtapesGet, true)
+const foretsGetMock = jest.mocked(foretsGet, true)
+const communesGetMock = jest.mocked(communesGet, true)
+const geoAreaGeojsonGetMock = jest.mocked(apiGeoGet, true)
 
 describe('mise à jour de toutes les territoires des étapes', () => {
   test('ajoute 2 communes et 1 forêt dans une étape et dans la liste de communes et des forêts', async () => {

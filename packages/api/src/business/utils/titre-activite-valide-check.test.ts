@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock'
-
 import { ITitreDemarche } from '../../types'
 
 import { titreActiviteValideCheck } from './titre-activite-valide-check'
@@ -10,7 +8,7 @@ jest.mock('./titre-valide-check', () => ({
   titreValideCheck: jest.fn()
 }))
 
-const titreValideCheckMock = mocked(titreValideCheck, true)
+const titreValideCheckMock = jest.mocked(titreValideCheck, true)
 
 describe('validité des activités', () => {
   test("retourne faux si la date de l'activité est après aujourd'hui", () => {

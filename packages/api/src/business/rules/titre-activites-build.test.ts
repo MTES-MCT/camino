@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock'
 import {
   IActiviteType,
   ITitreActivite,
@@ -19,7 +18,7 @@ import {
 
 jest.mock('../../database/cache/metas', () => ({ metasGet: jest.fn() }))
 
-const metasGetMock = mocked(metasGet, true)
+const metasGetMock = jest.mocked(metasGet, true)
 
 describe("construction des activités d'un titre", () => {
   const aujourdhui = '2021-01-01'

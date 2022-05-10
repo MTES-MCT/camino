@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock'
-
 import { titresEtapesAdministrationsLocalesUpdate } from './titres-etapes-administrations-locales-update'
 import {
   titresEtapesAdministrationsCreate,
@@ -32,9 +30,9 @@ jest.mock('../../database/queries/administrations', () => ({
   administrationsGet: jest.fn()
 }))
 
-const titresGetMock = mocked(titresGet, true)
+const titresGetMock = jest.mocked(titresGet, true)
 
-const administrationsGetMock = mocked(administrationsGet, true)
+const administrationsGetMock = jest.mocked(administrationsGet, true)
 
 console.info = jest.fn()
 

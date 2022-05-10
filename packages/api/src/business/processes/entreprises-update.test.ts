@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock'
-
 import { entreprisesUpdate } from './entreprises-update'
 import { entreprisesGet } from '../../database/queries/entreprises'
 import { entreprisesEtablissementsGet } from '../../database/queries/entreprises-etablissements'
@@ -52,13 +50,13 @@ jest.mock('../../tools/api-insee/index', () => ({
   apiInseeEntreprisesEtablissementsGet: jest.fn()
 }))
 
-const entreprisesGetMock = mocked(entreprisesGet, true)
-const entreprisesEtablissementsGetMock = mocked(
+const entreprisesGetMock = jest.mocked(entreprisesGet, true)
+const entreprisesEtablissementsGetMock = jest.mocked(
   entreprisesEtablissementsGet,
   true
 )
-const apiInseeEntreprisesGetMock = mocked(apiInseeEntreprisesGet, true)
-const apiInseeEntreprisesEtablissementsGetMock = mocked(
+const apiInseeEntreprisesGetMock = jest.mocked(apiInseeEntreprisesGet, true)
+const apiInseeEntreprisesEtablissementsGetMock = jest.mocked(
   apiInseeEntreprisesEtablissementsGet,
   true
 )

@@ -1,6 +1,5 @@
 import { FileUpload } from 'graphql-upload'
 import { ReadStream } from 'fs'
-import { mocked } from 'jest-mock'
 
 import { IContenu, IContenuElement, ISection, ITitreEtape } from '../../types'
 
@@ -19,19 +18,19 @@ jest.mock('../../tools/dir-create', () => ({
   __esModule: true,
   default: jest.fn()
 }))
-const dirCreateMock = mocked(dirCreate, true)
+const dirCreateMock = jest.mocked(dirCreate, true)
 
 jest.mock('../../tools/file-stream-create', () => ({
   __esModule: true,
   default: jest.fn()
 }))
-const fileStreamCreateMock = mocked(fileStreamCreate, true)
+const fileStreamCreateMock = jest.mocked(fileStreamCreate, true)
 
 jest.mock('../../tools/file-delete', () => ({
   __esModule: true,
   default: jest.fn()
 }))
-const fileDeleteMock = mocked(fileDelete, true)
+const fileDeleteMock = jest.mocked(fileDelete, true)
 
 jest.mock('crypto-random-string', () => () => 'prefix')
 

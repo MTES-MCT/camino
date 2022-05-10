@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock'
-
 import { titreCoordonneesFind } from './titre-coordonnees-find'
 import { geojsonCenter } from '../../tools/geojson'
 
@@ -9,7 +7,7 @@ jest.mock('../../tools/geojson', () => ({
   geojsonCenter: jest.fn()
 }))
 
-const geojsonCenterMock = mocked(geojsonCenter, true)
+const geojsonCenterMock = jest.mocked(geojsonCenter, true)
 
 describe("coordonnées d'un titre", () => {
   test("retourne les coordonnées d'un titre", () => {

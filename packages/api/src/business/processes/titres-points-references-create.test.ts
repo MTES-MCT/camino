@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock'
-
 import { titresPointsReferencesCreate } from './titres-points-references-create'
 import {
   titresPointsGet,
@@ -12,7 +10,7 @@ jest.mock('../../database/queries/titres-points', () => ({
   titresPointsGet: jest.fn()
 }))
 
-const titresPointsGetMock = mocked(titresPointsGet, true)
+const titresPointsGetMock = jest.mocked(titresPointsGet, true)
 
 console.info = jest.fn()
 

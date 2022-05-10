@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock'
 import { titreCoordonneesFind } from '../utils/titre-coordonnees-find'
 import { titresGet } from '../../database/queries/titres'
 import Titres from '../../database/models/titres'
@@ -13,8 +12,8 @@ jest.mock('../utils/titre-coordonnees-find', () => ({
   titreCoordonneesFind: jest.fn()
 }))
 
-const titresGetMock = mocked(titresGet, true)
-const titreCoordonneesFindMock = mocked(titreCoordonneesFind, true)
+const titresGetMock = jest.mocked(titresGet, true)
+const titreCoordonneesFindMock = jest.mocked(titreCoordonneesFind, true)
 
 console.info = jest.fn()
 

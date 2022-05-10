@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock'
-
 import { ITitreActivite } from '../../types'
 
 import { titresActivitesUpdate } from './titres-activites-update'
@@ -55,13 +53,13 @@ jest.mock('../../tools/api-mailjet/emails', () => ({
   emailsWithTemplateSend: jest.fn().mockImplementation(a => a)
 }))
 
-const titresGetMock = mocked(titresGet, true)
-const activitesTypesGetMock = mocked(activitesTypesGet, true)
-const titreActiviteTypeCheckMock = mocked(titreActiviteTypeCheck, true)
-const anneesBuildMock = mocked(anneesBuild, true)
-const titreActivitesBuildMock = mocked(titreActivitesBuild, true)
-const emailsSendMock = mocked(emailsSend, true)
-const emailsWithTemplateSendMock = mocked(emailsWithTemplateSend, true)
+const titresGetMock = jest.mocked(titresGet, true)
+const activitesTypesGetMock = jest.mocked(activitesTypesGet, true)
+const titreActiviteTypeCheckMock = jest.mocked(titreActiviteTypeCheck, true)
+const anneesBuildMock = jest.mocked(anneesBuild, true)
+const titreActivitesBuildMock = jest.mocked(titreActivitesBuild, true)
+const emailsSendMock = jest.mocked(emailsSend, true)
+const emailsWithTemplateSendMock = jest.mocked(emailsWithTemplateSend, true)
 
 console.info = jest.fn()
 
