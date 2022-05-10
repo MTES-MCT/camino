@@ -42,6 +42,7 @@ describe("date de fin d'une démarche d'annulation", () => {
   )
 
   test("retourne null si l'étape n'a ni date, ni date de fin", () => {
+    // TODO 2022-05-10, c'est étrange, on va à l'encontre de typescript ici. Soit le typage est faux, soit le test ne sert à rien
     const titreDemarcheAnnulationEtapesSansDate: ITitreEtape[] = [
       {
         id: 'h-cx-courdemanges-1988-ret01-dex01',
@@ -49,6 +50,8 @@ describe("date de fin d'une démarche d'annulation", () => {
         typeId: 'dex',
         statutId: 'acc',
         ordre: 1,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         date: null
       }
     ]

@@ -109,7 +109,9 @@ describe('titre', () => {
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data.titre.demarches[0].etapes).toHaveLength(8)
     expect(
-      res.body.data.titre.demarches[0].etapes.map(({ id }) => ({ id }))
+      res.body.data.titre.demarches[0].etapes.map(({ id }: { id: string }) => ({
+        id
+      }))
     ).toEqual(
       expect.arrayContaining([
         { id: 'titre-id-demarche-id-aof' },
@@ -136,7 +138,9 @@ describe('titre', () => {
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data.titre.demarches[0].etapes.length).toEqual(9)
     expect(
-      res.body.data.titre.demarches[0].etapes.map(({ id }) => ({ id }))
+      res.body.data.titre.demarches[0].etapes.map(({ id }: { id: string }) => ({
+        id
+      }))
     ).toEqual(
       expect.arrayContaining([
         { id: 'titre-id-demarche-id-aof' },

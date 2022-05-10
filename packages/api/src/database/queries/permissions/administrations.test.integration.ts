@@ -184,11 +184,12 @@ describe('administrationsQueryModify', () => {
     let q = administrationsQueryModify(Administrations.query(), mockUser)
 
     let res = await q.findById(prefectureDordogne)
-    expect(res.emailsModification).toBe(true)
+    expect(res).not.toBeUndefined()
+    expect(res?.emailsModification).toBe(true)
 
     q = administrationsQueryModify(Administrations.query(), mockUser)
     res = await q.findById(prefectureCorseDuSud)
-    expect(res.emailsModification).toBe(null)
+    expect(res?.emailsModification).toBe(null)
   })
 
   test.each`

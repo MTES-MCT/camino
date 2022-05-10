@@ -39,14 +39,17 @@ const etapeStatusUpdated = (
 
 // VisibleForTesting
 export const emailsForAdministrationsGet = (
-  etape: ITitreEtape,
-  etapeType: IEtapeType,
+  etape: ITitreEtape | undefined,
+  etapeType: IEtapeType | undefined,
   demarcheTypeId: string,
   titreId: string,
   titreTypeId: string,
   user: IUtilisateur,
   oldEtape?: ITitreEtape
 ): { subject: string; content: string; emails: string[] } | null => {
+  if (!etape) {
+    return null
+  }
   const emails = [] as string[]
   let title = ''
 
@@ -86,10 +89,10 @@ export const emailsForAdministrationsGet = (
     return null
   }
 
-  const subject = `${etapeType.nom} | ${title}`
+  const subject = `${etapeType?.nom} | ${title}`
   const content = emailForAdministrationContentFormat(
     titreTypeId,
-    etapeType.nom,
+    etapeType?.nom ?? '',
     titreId,
     user
   )

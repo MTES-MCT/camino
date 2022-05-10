@@ -10,10 +10,11 @@ import jwt from 'jsonwebtoken'
 import { dbManager } from '../../../tests/db-manager'
 import { IUtilisateur } from '../../types'
 import { Administrations } from 'camino-common/src/administrations'
+import { Knex } from 'knex'
 
 console.info = jest.fn()
 console.error = jest.fn()
-let knex
+let knex: Knex<any, unknown[]>
 beforeAll(async () => {
   knex = await dbManager.populateDb()
 })

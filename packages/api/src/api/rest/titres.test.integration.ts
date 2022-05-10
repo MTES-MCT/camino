@@ -10,7 +10,8 @@ import {
 } from 'camino-common/src/administrations'
 import { ITitreDemarche, ITitreEtape } from '../../types'
 import { entreprisesUpsert } from '../../database/queries/entreprises'
-let knex
+import { Knex } from 'knex'
+let knex: Knex<any, unknown[]>
 beforeAll(async () => {
   knex = await dbManager.populateDb()
 })

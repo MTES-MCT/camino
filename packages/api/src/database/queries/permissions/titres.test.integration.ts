@@ -25,6 +25,7 @@ import Administrations from '../../models/administrations'
 import { userSuper } from '../../user-super'
 import {
   ADMINISTRATION_IDS,
+  AdministrationId,
   Administrations as CommonAdministrations
 } from 'camino-common/src/administrations'
 
@@ -279,7 +280,15 @@ describe('titresQueryModify', () => {
       ${'ope-ptmg-973-01'}                       | ${true}      | ${false}
     `(
       'Vérifie si le $administrationId, gestionnaire $gestionnaire peut créer des travaux ($travauxCreation)',
-      async ({ administrationId, gestionnaire, travauxCreation }) => {
+      async ({
+        administrationId,
+        gestionnaire,
+        travauxCreation
+      }: {
+        administrationId: AdministrationId
+        gestionnaire: boolean
+        travauxCreation: boolean
+      }) => {
         const titreId = idGenerate()
 
         await Titres.query().insert({

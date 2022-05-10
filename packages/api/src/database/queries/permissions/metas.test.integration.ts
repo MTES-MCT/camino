@@ -6,7 +6,10 @@ import Titres from '../../models/titres'
 import { IDemarcheType, IUtilisateur } from '../../../types'
 import AdministrationsTitresTypes from '../../models/administrations-titres-types'
 import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts'
-import { Administrations } from 'camino-common/src/administrations'
+import {
+  AdministrationId,
+  Administrations
+} from 'camino-common/src/administrations'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -29,7 +32,13 @@ describe('metas permissions queries', () => {
       ${'ope-ptmg-973-01'}      | ${false}
     `(
       'l’administration $administrationId peut créer des travaux',
-      async ({ administrationId, travauxCreation }) => {
+      async ({
+        administrationId,
+        travauxCreation
+      }: {
+        administrationId: AdministrationId
+        travauxCreation: boolean
+      }) => {
         const titreId = idGenerate()
 
         await Titres.query().insert({

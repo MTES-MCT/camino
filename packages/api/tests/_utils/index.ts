@@ -45,7 +45,7 @@ export const restCall = async (
   path: string,
   permissionId: IPermissionId,
   administrationId?: AdministrationId
-): request.Test => {
+): Promise<request.Test> => {
   const req = request(app).get(path)
 
   return cookiesSet(req, permissionId, administrationId)
@@ -55,7 +55,7 @@ const cookiesSet = async (
   req: request.Test,
   permissionId?: IPermissionId,
   administrationId?: string
-) => {
+): Promise<request.Test> => {
   let token
   if (permissionId) {
     token = await userTokenGenerate(permissionId, administrationId)

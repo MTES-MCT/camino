@@ -97,7 +97,9 @@ describe("administrations d'une étape", () => {
     titresGetMock.mockResolvedValue(
       titresEtapesAdministrationLocalesInexistante
     )
-    administrationsGetMock.mockResolvedValue([{ id: '0' }] as Administrations[])
+    administrationsGetMock.mockResolvedValue([
+      { id: '0' }
+    ] as unknown as Administrations[])
     const {
       titresEtapesAdministrationsLocalesCreated,
       titresEtapesAdministrationsLocalesDeleted
