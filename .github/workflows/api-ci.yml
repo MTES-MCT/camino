@@ -23,10 +23,10 @@ jobs:
           CI: true
       - name: Unit tests
         run: npm run ci:test-unit --workspace=packages/api
-      - name: Code coverage
-        run: npm run codecov --workspace=packages/api
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: api-unit, api
   integration-test:
       runs-on: ubuntu-latest
       services:
@@ -67,10 +67,10 @@ jobs:
             PGPORT: 5432
             PGUSER: postgres
             PGPASSWORD: password
-        - name: Code coverage
-          run: npm run codecov --workspace=packages/api
-          env:
-            CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        - uses: codecov/codecov-action@v2
+          with:
+            token: ${{ secrets.CODECOV_TOKEN }}
+            flags: api-integration, api
 
   build:
     needs: [unit-test, integration-test]
