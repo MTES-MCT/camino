@@ -1,15 +1,20 @@
-import { app } from './app'
-import { graphQLCall, queryImport, tokenCreate } from './_utils/index'
-import { userAdd } from '../src/knex/user-add'
+import { app } from '../../../tests/app'
+import {
+  graphQLCall,
+  queryImport,
+  tokenCreate
+} from '../../../tests/_utils/index'
+import { userAdd } from '../../knex/user-add'
 import request from 'supertest'
 import jwt from 'jsonwebtoken'
-import { dbManager } from './db-manager'
-import { IUtilisateur } from '../src/types'
+import { dbManager } from '../../../tests/db-manager'
+import { IUtilisateur } from '../../types'
 import { Administrations } from 'camino-common/src/administrations'
+import { Knex } from 'knex'
 
 console.info = jest.fn()
 console.error = jest.fn()
-let knex
+let knex: Knex<any, unknown[]>
 beforeAll(async () => {
   knex = await dbManager.populateDb()
 })

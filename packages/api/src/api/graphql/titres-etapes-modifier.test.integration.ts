@@ -1,28 +1,28 @@
-import { IPermissionId } from '../src/types'
-import { dbManager } from './db-manager'
-import { graphQLCall, queryImport } from './_utils/index'
-import { titreDemarcheCreate } from '../src/database/queries/titres-demarches'
-import { titreCreate } from '../src/database/queries/titres'
-import { titreEtapeCreate } from '../src/database/queries/titres-etapes'
-import { titreEtapePropsIds } from '../src/business/utils/titre-etape-heritage-props-find'
-import Titres from '../src/database/models/titres'
-import { userSuper } from '../src/database/user-super'
+import { IPermissionId } from '../../types'
+import { dbManager } from '../../../tests/db-manager'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index'
+import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
+import { titreCreate } from '../../database/queries/titres'
+import { titreEtapeCreate } from '../../database/queries/titres-etapes'
+import { titreEtapePropsIds } from '../../business/utils/titre-etape-heritage-props-find'
+import Titres from '../../database/models/titres'
+import { userSuper } from '../../database/user-super'
 import {
   ADMINISTRATION_IDS,
   Administrations
 } from 'camino-common/src/administrations'
 
-jest.mock('../src/tools/dir-create', () => ({
+jest.mock('../../tools/dir-create', () => ({
   __esModule: true,
   default: jest.fn()
 }))
 
-jest.mock('../src/tools/file-stream-create', () => ({
+jest.mock('../../tools/file-stream-create', () => ({
   __esModule: true,
   default: jest.fn()
 }))
 
-jest.mock('../src/tools/file-delete', () => ({
+jest.mock('../../tools/file-delete', () => ({
   __esModule: true,
   default: jest.fn()
 }))

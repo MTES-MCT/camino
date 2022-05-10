@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock'
-
 import {
   IContenu,
   IEtapeType,
@@ -348,7 +346,7 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
 })
 
 describe('construit le dictionnaire les sections', () => {
-  const etapeTypeSectionsFormatMock = mocked(etapeTypeSectionsFormat, true)
+  const etapeTypeSectionsFormatMock = jest.mocked(etapeTypeSectionsFormat, true)
 
   test('retourne un dictionnaire vide', () => {
     const dictionary = etapeSectionsDictionaryBuild([])

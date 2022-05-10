@@ -1,15 +1,15 @@
-import { graphQLCall, queryImport } from './_utils/index'
-import { ITitreEtapeJustificatif } from '../src/types'
-import { documentCreate, documentGet } from '../src/database/queries/documents'
-import { entrepriseUpsert } from '../src/database/queries/entreprises'
-import { titreCreate } from '../src/database/queries/titres'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index'
+import { ITitreEtapeJustificatif } from '../../types'
+import { documentCreate, documentGet } from '../../database/queries/documents'
+import { entrepriseUpsert } from '../../database/queries/entreprises'
+import { titreCreate } from '../../database/queries/titres'
 import {
   titreEtapeCreate,
   titresEtapesJustificatifsUpsert
-} from '../src/database/queries/titres-etapes'
-import { userSuper } from '../src/database/user-super'
-import { dbManager } from './db-manager'
-import { titreDemarcheCreate } from '../src/database/queries/titres-demarches'
+} from '../../database/queries/titres-etapes'
+import { userSuper } from '../../database/user-super'
+import { dbManager } from '../../../tests/db-manager'
+import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
 
 console.info = jest.fn()
 console.error = jest.fn()

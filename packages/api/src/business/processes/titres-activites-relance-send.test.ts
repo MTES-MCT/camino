@@ -1,5 +1,3 @@
-import { mocked } from 'ts-jest/utils'
-
 import { titresActivitesGet } from '../../database/queries/titres-activites'
 
 import TitresActivites from '../../database/models/titres-activites'
@@ -21,8 +19,8 @@ jest.mock('../../tools/api-mailjet/emails', () => ({
   emailsWithTemplateSend: jest.fn().mockImplementation(a => a)
 }))
 
-const titresActivitesGetMock = mocked(titresActivitesGet, true)
-const emailsWithTemplateSendMock = mocked(emailsWithTemplateSend, true)
+const titresActivitesGetMock = jest.mocked(titresActivitesGet, true)
+const emailsWithTemplateSendMock = jest.mocked(emailsWithTemplateSend, true)
 
 console.info = jest.fn()
 

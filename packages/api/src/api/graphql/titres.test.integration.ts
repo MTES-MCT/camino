@@ -1,5 +1,5 @@
-import { dbManager } from './db-manager'
-import { graphQLCall, queryImport } from './_utils/index'
+import { dbManager } from '../../../tests/db-manager'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index'
 import {
   titreWithActiviteGrp,
   titrePublicLecture,
@@ -7,8 +7,8 @@ import {
   titreEtapesPubliques,
   titreDemarchesPubliques,
   titreActivites
-} from './__mocks__/titres'
-import { titreCreate } from '../src/database/queries/titres'
+} from '../../../tests/__mocks__/titres'
+import { titreCreate } from '../../database/queries/titres'
 import {
   ADMINISTRATION_IDS,
   Administrations
@@ -109,7 +109,9 @@ describe('titre', () => {
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data.titre.demarches[0].etapes).toHaveLength(8)
     expect(
-      res.body.data.titre.demarches[0].etapes.map(({ id }) => ({ id }))
+      res.body.data.titre.demarches[0].etapes.map(({ id }: { id: string }) => ({
+        id
+      }))
     ).toEqual(
       expect.arrayContaining([
         { id: 'titre-id-demarche-id-aof' },
@@ -136,7 +138,9 @@ describe('titre', () => {
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data.titre.demarches[0].etapes.length).toEqual(9)
     expect(
-      res.body.data.titre.demarches[0].etapes.map(({ id }) => ({ id }))
+      res.body.data.titre.demarches[0].etapes.map(({ id }: { id: string }) => ({
+        id
+      }))
     ).toEqual(
       expect.arrayContaining([
         { id: 'titre-id-demarche-id-aof' },

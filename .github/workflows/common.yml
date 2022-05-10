@@ -23,4 +23,8 @@ jobs:
         env:
           CI: true
       - name: Unit tests
-        run: npm run test --workspace=packages/common
+        run: npm run ci:test --workspace=packages/common
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: common

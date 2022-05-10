@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock'
-
 import { ITitreAdministrationGestionnaire } from '../../types'
 
 import { titresAdministrationsGestionnairesUpdate } from './titres-administrations-gestionnaires-update'
@@ -36,17 +34,17 @@ jest.mock('../rules/titre-administrations-gestionnaires-build', () => ({
   default: jest.fn()
 }))
 
-const titresGetMock = mocked(titresGet, true)
-const administrationsGetMock = mocked(administrationsGet, true)
-const titreAdministrationsGestionnairesBuildMock = mocked(
+const titresGetMock = jest.mocked(titresGet, true)
+const administrationsGetMock = jest.mocked(administrationsGet, true)
+const titreAdministrationsGestionnairesBuildMock = jest.mocked(
   titreAdministrationsGestionnairesBuild,
   true
 )
-const titresAdministrationsGestionnairesCreateMock = mocked(
+const titresAdministrationsGestionnairesCreateMock = jest.mocked(
   titresAdministrationsGestionnairesCreate,
   true
 )
-const titreAdministrationGestionnaireDeleteMock = mocked(
+const titreAdministrationGestionnaireDeleteMock = jest.mocked(
   titreAdministrationGestionnaireDelete,
   true
 )

@@ -1,21 +1,22 @@
-import { dbManager } from './db-manager'
+import { dbManager } from '../../../tests/db-manager'
 import {
   creationCheck,
   modificationCheck,
   visibleCheck
-} from './_utils/administrations-permissions'
-import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../src/database/models/titres-types--demarches-types-etapes-types-justificatifs-types'
-import TitresTypesDemarchesTypesEtapesTypesDocumentsTypes from '../src/database/models/titres-types--demarches-types-etapes-types-documents-types'
+} from '../../../tests/_utils/administrations-permissions'
+import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../../database/models/titres-types--demarches-types-etapes-types-justificatifs-types'
+import TitresTypesDemarchesTypesEtapesTypesDocumentsTypes from '../../database/models/titres-types--demarches-types-etapes-types-documents-types'
 
-jest.mock('../src/tools/dir-create', () => ({
+jest.mock('../../tools/dir-create', () => ({
   __esModule: true,
   default: jest.fn()
 }))
-jest.mock('../src/tools/file-stream-create', () => ({
+
+jest.mock('../../tools/file-stream-create', () => ({
   __esModule: true,
   default: jest.fn()
 }))
-jest.mock('../src/tools/file-delete', () => ({
+jest.mock('../../tools/file-delete', () => ({
   __esModule: true,
   default: jest.fn()
 }))

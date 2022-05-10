@@ -8,7 +8,7 @@ import { knexSnakeCaseMappers, Model } from 'objection'
 
 class DbManager {
   private readonly dbName: string
-  private knexInstance = null
+  private knexInstance: null | Knex<any, unknown[]> = null
 
   public constructor() {
     this.dbName = `a${idGenerate().toLowerCase()}`
@@ -62,9 +62,19 @@ class DbManager {
     return knex(knexConfig)
   }
 
+  private static checkKnexInstance(
+    knex: null | Knex<any, unknown[]>
+  ): asserts knex is Knex<any, unknown[]> {
+    if (knex === null) {
+      throw new Error('populateDb should be called first')
+    }
+  }
+
   public async populateDb(): Promise<Knex<any, unknown>> {
     await this.init()
     await this.injectSeed()
+
+    DbManager.checkKnexInstance(this.knexInstance)
 
     return this.knexInstance
   }
@@ -75,6 +85,7 @@ class DbManager {
   }
 
   public async closeKnex(): Promise<void> {
+    DbManager.checkKnexInstance(this.knexInstance)
     await this.knexInstance.destroy()
     await this.end()
   }
@@ -88,10 +99,12 @@ class DbManager {
   }
 
   private async injectSeed() {
+    DbManager.checkKnexInstance(this.knexInstance)
     await this.knexInstance.transaction(async trx => trx.seed.run())
   }
 
   private async truncateSchema() {
+    DbManager.checkKnexInstance(this.knexInstance)
     const tables =
       (await this.knexInstance('pg_tables')
         .select('tablename')

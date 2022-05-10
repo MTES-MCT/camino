@@ -1,8 +1,8 @@
-import { dbManager } from './db-manager'
-import { graphQLCall, queryImport } from './_utils/index'
-import { titreCreate } from '../src/database/queries/titres'
-import { titreEtapeUpsert } from '../src/database/queries/titres-etapes'
-import { userSuper } from '../src/database/user-super'
+import { dbManager } from '../../../tests/db-manager'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index'
+import { titreCreate } from '../../database/queries/titres'
+import { titreEtapeUpsert } from '../../database/queries/titres-etapes'
+import { userSuper } from '../../database/user-super'
 import {
   ADMINISTRATION_IDS,
   Administrations

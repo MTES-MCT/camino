@@ -52,8 +52,8 @@ describe('teste les requêtes sur les démarches', () => {
       expect(archiveDemarche?.archive).toBe(true)
       expect(archiveDemarche?.etapes).toHaveLength(3)
 
-      for (const etape of archiveDemarche!.etapes) {
-        expect(etape.archive).toBe(true)
+      for (const etape of archiveDemarche?.etapes ?? []) {
+        expect((etape as TitresEtapes).archive).toBe(true)
       }
     })
   })

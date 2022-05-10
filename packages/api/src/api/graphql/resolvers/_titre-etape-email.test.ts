@@ -1,5 +1,6 @@
 import { emailsForAdministrationsGet } from './_titre-etape-email'
 import { ITitreEtape, IUtilisateur } from '../../../types'
+import { userSuper } from '../../../database/user-super'
 
 test('envoie un email sur une étape non existante', () => {
   const actual = emailsForAdministrationsGet(
@@ -8,7 +9,7 @@ test('envoie un email sur une étape non existante', () => {
     '',
     '',
     '',
-    undefined,
+    userSuper,
     undefined
   )
 
@@ -48,7 +49,12 @@ const etape: ITitreEtape = {
     publicLecture: true,
     entreprisesLecture: true
   },
-  statut: { id: 'fai', nom: 'fait', description: null, couleur: 'success' },
+  statut: {
+    id: 'fai',
+    nom: 'fait',
+    description: undefined,
+    couleur: 'success'
+  },
   justificatifs: [],
   substances: [],
   documents: [],

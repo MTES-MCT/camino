@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock'
 import { titresPublicUpdate } from './titres-public-update'
 import { titresGet } from '../../database/queries/titres'
 
@@ -13,7 +12,7 @@ jest.mock('../../database/queries/titres', () => ({
   titresGet: jest.fn()
 }))
 
-const titresGetMock = mocked(titresGet, true)
+const titresGetMock = jest.mocked(titresGet, true)
 
 console.info = jest.fn()
 

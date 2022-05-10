@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "format": "prettier --write src",
-    "lint": "eslint --fix"
+    "lint": "eslint --fix",
+    "ci:test": "jest --coverage"
   },
   "devDependencies": {
     "@types/jest": "^27.4.1",

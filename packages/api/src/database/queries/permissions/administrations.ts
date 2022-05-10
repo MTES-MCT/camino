@@ -61,7 +61,7 @@ const emailsLectureQuery = (
 const administrationsQueryModify = (
   q: QueryBuilder<Administrations, Administrations | Administrations[]>,
   user: IUtilisateur | null | undefined
-) => {
+): QueryBuilder<Administrations, Administrations | Administrations[]> => {
   q.select('administrations.*')
 
   const administrationsIds = user?.administrations?.map(a => a.id) || []

@@ -1,40 +1,38 @@
-import { mocked } from 'jest-mock'
-
-import { ITitreEtapeJustificatif } from '../src/types'
-import { dbManager } from './db-manager'
-import { graphQLCall, queryImport } from './_utils/index'
+import { ITitreEtapeJustificatif } from '../../types'
+import { dbManager } from '../../../tests/db-manager'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index'
 import {
   entreprisesEtablissementsFetch,
   entreprisesFetch,
   tokenInitialize
-} from '../src/tools/api-insee/fetch'
+} from '../../tools/api-insee/fetch'
 import {
   entreprise,
   entrepriseAndEtablissements
-} from './__mocks__/fetch-insee-api'
-import { entrepriseUpsert } from '../src/database/queries/entreprises'
-import { titreCreate } from '../src/database/queries/titres'
-import { documentCreate } from '../src/database/queries/documents'
+} from '../../../tests/__mocks__/fetch-insee-api'
+import { entrepriseUpsert } from '../../database/queries/entreprises'
+import { titreCreate } from '../../database/queries/titres'
+import { documentCreate } from '../../database/queries/documents'
 import {
   titreEtapeCreate,
   titresEtapesJustificatifsUpsert
-} from '../src/database/queries/titres-etapes'
-import { titreDemarcheCreate } from '../src/database/queries/titres-demarches'
-import { userSuper } from '../src/database/user-super'
+} from '../../database/queries/titres-etapes'
+import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
+import { userSuper } from '../../database/user-super'
 
 console.info = jest.fn()
 console.error = jest.fn()
 
-jest.mock('../src/tools/api-insee/fetch', () => ({
+jest.mock('../../tools/api-insee/fetch', () => ({
   __esModule: true,
   tokenInitialize: jest.fn(),
   entreprisesFetch: jest.fn(),
   entreprisesEtablissementsFetch: jest.fn()
 }))
 
-const tokenInitializeMock = mocked(tokenInitialize, true)
-const entrepriseFetchMock = mocked(entreprisesFetch, true)
-const entreprisesEtablissementsFetchMock = mocked(
+const tokenInitializeMock = jest.mocked(tokenInitialize, true)
+const entrepriseFetchMock = jest.mocked(entreprisesFetch, true)
+const entreprisesEtablissementsFetchMock = jest.mocked(
   entreprisesEtablissementsFetch,
   true
 )

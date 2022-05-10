@@ -1,4 +1,3 @@
-import { mocked } from 'jest-mock'
 import { IEtapeType } from '../../types'
 
 import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate'
@@ -8,7 +7,7 @@ jest.mock('../utils/titre-etape-demarche-etape-type-find', () => ({
   titreEtapeDemarcheEtapeTypeFind: jest.fn()
 }))
 
-const titreEtapeDemarcheEtapeTypeFindMock = mocked(
+const titreEtapeDemarcheEtapeTypeFindMock = jest.mocked(
   titreEtapeDemarcheEtapeTypeFind,
   true
 )

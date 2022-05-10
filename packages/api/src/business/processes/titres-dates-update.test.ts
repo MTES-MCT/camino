@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock'
-
 import { titresDatesUpdate } from './titres-dates-update'
 import { titreDateFinFind } from '../rules/titre-date-fin-find'
 import { titreDateDebutFind } from '../rules/titre-date-debut-find'
@@ -24,10 +22,10 @@ jest.mock('../rules/titre-date-demande-find', () => ({
   titreDateDemandeFind: jest.fn()
 }))
 
-const titresGetMock = mocked(titresGet, true)
-const titreDateFinFindMock = mocked(titreDateFinFind, true)
-const titreDateDebutFindMock = mocked(titreDateDebutFind, true)
-const titreDateDemandeFindMock = mocked(titreDateDemandeFind, true)
+const titresGetMock = jest.mocked(titresGet, true)
+const titreDateFinFindMock = jest.mocked(titreDateFinFind, true)
+const titreDateDebutFindMock = jest.mocked(titreDateDebutFind, true)
+const titreDateDemandeFindMock = jest.mocked(titreDateDemandeFind, true)
 
 console.info = jest.fn()
 

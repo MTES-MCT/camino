@@ -1,5 +1,5 @@
-import { restUploadCall } from './_utils'
-import { dbManager } from './db-manager'
+import { restUploadCall } from '../../../tests/_utils'
+import { dbManager } from '../../../tests/db-manager'
 
 jest.mock('tus-node-server')
 

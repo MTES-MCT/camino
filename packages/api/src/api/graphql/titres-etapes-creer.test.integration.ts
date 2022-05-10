@@ -1,28 +1,28 @@
-import { dbManager } from './db-manager'
-import { graphQLCall, queryImport } from './_utils/index'
-import { titreDemarcheCreate } from '../src/database/queries/titres-demarches'
-import { titreCreate } from '../src/database/queries/titres'
-import { IPermissionId } from '../src/types'
-import { titreEtapePropsIds } from '../src/business/utils/titre-etape-heritage-props-find'
-import Titres from '../src/database/models/titres'
-import TitresTypesDemarchesTypesEtapesTypes from '../src/database/models/titres-types--demarches-types-etapes-types'
-import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../src/database/models/titres-types--demarches-types-etapes-types-justificatifs-types'
-import TitresTypesDemarchesTypesEtapesTypesDocumentsTypes from '../src/database/models/titres-types--demarches-types-etapes-types-documents-types'
-import { documentCreate } from '../src/database/queries/documents'
+import { dbManager } from '../../../tests/db-manager'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index'
+import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
+import { titreCreate } from '../../database/queries/titres'
+import { IPermissionId } from '../../types'
+import { titreEtapePropsIds } from '../../business/utils/titre-etape-heritage-props-find'
+import Titres from '../../database/models/titres'
+import TitresTypesDemarchesTypesEtapesTypes from '../../database/models/titres-types--demarches-types-etapes-types'
+import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../../database/models/titres-types--demarches-types-etapes-types-justificatifs-types'
+import TitresTypesDemarchesTypesEtapesTypesDocumentsTypes from '../../database/models/titres-types--demarches-types-etapes-types-documents-types'
+import { documentCreate } from '../../database/queries/documents'
 import {
   ADMINISTRATION_IDS,
   Administrations
 } from 'camino-common/src/administrations'
 
-jest.mock('../src/tools/dir-create', () => ({
+jest.mock('../../tools/dir-create', () => ({
   __esModule: true,
   default: jest.fn()
 }))
-jest.mock('../src/tools/file-stream-create', () => ({
+jest.mock('../../tools/file-stream-create', () => ({
   __esModule: true,
   default: jest.fn()
 }))
-jest.mock('../src/tools/file-delete', () => ({
+jest.mock('../../tools/file-delete', () => ({
   __esModule: true,
   default: jest.fn()
 }))

@@ -1,6 +1,6 @@
-import { dbManager } from './db-manager'
-import { graphQLCall, queryImport } from './_utils/index'
-import Utilisateurs from '../src/database/models/utilisateurs'
+import { dbManager } from '../../../tests/db-manager'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index'
+import Utilisateurs from '../../database/models/utilisateurs'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -69,15 +69,19 @@ describe('utilisateurConnecter', () => {
 
     expect(res.body.errors).toBeUndefined()
     const setCookies = res.get('Set-Cookie')
-    expect(setCookies.find(c => c.startsWith('accessToken'))).toBeDefined()
-    expect(setCookies.find(c => c.startsWith('refreshToken'))).toBeDefined()
+    expect(
+      setCookies.find((c: string) => c.startsWith('accessToken'))
+    ).toBeDefined()
+    expect(
+      setCookies.find((c: string) => c.startsWith('refreshToken'))
+    ).toBeDefined()
 
     const userInDB = await Utilisateurs.query()
       .findById(res.body.data.utilisateurConnecter.id)
       .execute()
 
-    expect(setCookies.find(c => c.startsWith('refreshToken'))).toContain(
-      userInDB!.refreshToken
-    )
+    expect(
+      setCookies.find((c: string) => c.startsWith('refreshToken'))
+    ).toContain(userInDB!.refreshToken)
   })
 })

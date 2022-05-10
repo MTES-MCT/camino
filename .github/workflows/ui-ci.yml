@@ -21,10 +21,12 @@ jobs:
           npm ci
           npm run lint:check --workspace=packages/ui
           npm test --workspace=packages/ui
-          npm run codecov --workspace=packages/ui
         env:
-          CODECOV_TOKEN:  ${{ secrets.CODECOV_TOKEN }}
           CI: true
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ui
 
   build:
     needs: test

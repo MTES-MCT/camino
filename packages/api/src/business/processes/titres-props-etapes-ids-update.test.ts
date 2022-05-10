@@ -1,5 +1,4 @@
 import { ITitreEtape } from '../../types'
-import { mocked } from 'jest-mock'
 
 import { titresPropsEtapesIdsUpdate } from './titres-props-etapes-ids-update'
 import { titrePropTitreEtapeFind } from '../rules/titre-prop-etape-find'
@@ -15,8 +14,8 @@ jest.mock('../rules/titre-prop-etape-find', () => ({
   titrePropTitreEtapeFind: jest.fn()
 }))
 
-const titresGetMock = mocked(titresGet, true)
-const titrePropTitreEtapeFindMock = mocked(titrePropTitreEtapeFind, true)
+const titresGetMock = jest.mocked(titresGet, true)
+const titrePropTitreEtapeFindMock = jest.mocked(titrePropTitreEtapeFind, true)
 
 console.info = jest.fn()
 

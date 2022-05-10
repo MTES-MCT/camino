@@ -1,5 +1,3 @@
-import { mocked } from 'jest-mock'
-
 import { titresActivitesPropsUpdate } from './titres-activites-props-update'
 import { titresActivitesUpsert } from '../../database/queries/titres-activites'
 import { titresGet } from '../../database/queries/titres'
@@ -22,9 +20,9 @@ jest.mock('../utils/titre-valide-check', () => ({
   titreValideCheck: jest.fn()
 }))
 
-const titresActivitesUpsertMock = mocked(titresActivitesUpsert, true)
-const titresGetMock = mocked(titresGet, true)
-const titreValideCheckMock = mocked(titreValideCheck, true)
+const titresActivitesUpsertMock = jest.mocked(titresActivitesUpsert, true)
+const titresGetMock = jest.mocked(titresGet, true)
+const titreValideCheckMock = jest.mocked(titreValideCheck, true)
 
 console.info = jest.fn()
 

@@ -1,7 +1,6 @@
 import fs from 'fs'
 import decamelize from 'decamelize'
 import camelcase from 'camelcase'
-import { mocked } from 'jest-mock'
 
 import {
   IDemarcheType,
@@ -36,8 +35,11 @@ jest.mock('../utils/props-titre-etapes-ids-find', () => ({
   contenusTitreEtapesIdsFind: jest.fn()
 }))
 
-const titreContenuFormatMock = mocked(titreContenuFormat, true)
-const contenusTitreEtapesIdsFindMock = mocked(contenusTitreEtapesIdsFind, true)
+const titreContenuFormatMock = jest.mocked(titreContenuFormat, true)
+const contenusTitreEtapesIdsFindMock = jest.mocked(
+  contenusTitreEtapesIdsFind,
+  true
+)
 
 const elementsGet = <T>(fileName: string): T[] => {
   fileName = decamelize(fileName, { separator: '-' })

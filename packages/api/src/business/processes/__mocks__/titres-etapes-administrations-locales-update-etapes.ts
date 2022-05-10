@@ -140,7 +140,7 @@ const titresEtapesAdministrationLocalesExistante = [
       }
     ]
   }
-] as Titres[]
+] as unknown as Titres[]
 
 const titresArm = [
   {
