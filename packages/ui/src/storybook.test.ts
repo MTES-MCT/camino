@@ -9,6 +9,7 @@ initStoryshots({
   framework: 'vue3',
   suite: 'Automated Storybook Snapshots',
   configPath: '.storybook',
+  storyKindRegex: /^((?!.*?NoStoryshots).)*$/,
   stories2snapsConverter: new Stories2SnapsConverter({
     snapshotExtension: '.storyshot',
     storiesExtensions: ['.js', '.ts', '.mdx']
