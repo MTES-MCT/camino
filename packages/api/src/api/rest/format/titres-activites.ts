@@ -45,6 +45,7 @@ const titresActivitesFormatTable = (activites: ITitreActivite[]) =>
       titre_id: activite.titre!.slug,
       type: activite.type!.nom,
       statut: activite.statut!.nom,
+      titulaires: activite.titre?.titulaires?.map(({ nom }) => nom).join(';'),
       annee: activite.annee,
       periode: activite.periode!.nom,
       periode_id: activite.periodeId,
