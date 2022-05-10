@@ -6,11 +6,17 @@ COPY packages/common/package.json /app/packages/common/package.json
 COPY packages/api/package.json /app/packages/api/package.json
 
 # On désactive husky
-RUN npm set-script prepare ""
-RUN npm ci --only=prod
+RUN npm set-script prepare "" && \
+    npm ci
 
 COPY ./ /app/
-RUN npm run build -w packages/api
+RUN npm run build -w packages/api && \
+    rm -rf /app/node_modules/ && \
+    rm -rf /app/packages/api/node_modules/ && \
+    rm -rf /app/packages/ui/node_modules/ && \
+    rm -rf /app/packages/common/node_modules/ && \
+    npm set-script prepare "" && \
+    npm ci --only=prod
 
 FROM node:17.8-alpine as production-stage
 

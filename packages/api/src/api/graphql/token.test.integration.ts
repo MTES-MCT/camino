@@ -69,15 +69,19 @@ describe('utilisateurConnecter', () => {
 
     expect(res.body.errors).toBeUndefined()
     const setCookies = res.get('Set-Cookie')
-    expect(setCookies.find(c => c.startsWith('accessToken'))).toBeDefined()
-    expect(setCookies.find(c => c.startsWith('refreshToken'))).toBeDefined()
+    expect(
+      setCookies.find((c: string) => c.startsWith('accessToken'))
+    ).toBeDefined()
+    expect(
+      setCookies.find((c: string) => c.startsWith('refreshToken'))
+    ).toBeDefined()
 
     const userInDB = await Utilisateurs.query()
       .findById(res.body.data.utilisateurConnecter.id)
       .execute()
 
-    expect(setCookies.find(c => c.startsWith('refreshToken'))).toContain(
-      userInDB!.refreshToken
-    )
+    expect(
+      setCookies.find((c: string) => c.startsWith('refreshToken'))
+    ).toContain(userInDB!.refreshToken)
   })
 })
