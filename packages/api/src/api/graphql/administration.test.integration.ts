@@ -1,6 +1,6 @@
-import { graphQLCall, queryImport } from './_utils/index'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index'
 
-import { dbManager } from './db-manager'
+import { dbManager } from '../../../tests/db-manager'
 import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
 
 console.info = jest.fn()

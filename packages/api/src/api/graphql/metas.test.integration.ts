@@ -1,5 +1,5 @@
-import { dbManager } from './db-manager'
-import { graphQLCall, queryImport } from './_utils/index'
+import { dbManager } from '../../../tests/db-manager'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index'
 
 console.info = jest.fn()
 console.error = jest.fn()

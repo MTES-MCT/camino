@@ -1,9 +1,9 @@
-import { dbManager } from './db-manager'
+import { dbManager } from '../../../tests/db-manager'
 import {
   visibleCheck,
   creationCheck,
   modificationCheck
-} from './_utils/administrations-permissions'
+} from '../../../tests/_utils/administrations-permissions'
 
 console.info = jest.fn()
 console.error = jest.fn()

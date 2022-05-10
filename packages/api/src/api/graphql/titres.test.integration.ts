@@ -1,5 +1,5 @@
-import { dbManager } from './db-manager'
-import { graphQLCall, queryImport } from './_utils/index'
+import { dbManager } from '../../../tests/db-manager'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index'
 import {
   titreWithActiviteGrp,
   titrePublicLecture,
@@ -7,8 +7,8 @@ import {
   titreEtapesPubliques,
   titreDemarchesPubliques,
   titreActivites
-} from './__mocks__/titres'
-import { titreCreate } from '../src/database/queries/titres'
+} from '../../../tests/__mocks__/titres'
+import { titreCreate } from '../../database/queries/titres'
 import {
   ADMINISTRATION_IDS,
   Administrations

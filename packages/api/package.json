@@ -31,12 +31,12 @@
     "documents:check": "node ./dist/src/scripts/documents-check.js",
     "lint": "prettier --write . && eslint --fix .",
     "start": "node ./dist/src/index.js",
-    "test": "cross-env JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest --testPathIgnorePatterns=tests --runInBand --detectOpenHandles --forceExit",
-    "test:unit": "cross-env jest JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret --testPathIgnorePatterns=tests --runInBand --detectOpenHandles --watch",
-    "test:integration": "cross-env JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest --testPathIgnorePatterns=src --runInBand --detectOpenHandles --watch --testTimeout=20000",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "jest -c jest.config.ts",
+    "test:integration": "JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest -c jest.config.integration.ts --runInBand",
     "ci:lint": "prettier --check . && eslint .",
-    "ci:test-unit": "cross-env JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest --testPathIgnorePatterns=tests --ci --runInBand --detectOpenHandles --forceExit --testTimeout=20000",
-    "ci:test-integration": "cross-env JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest --testPathIgnorePatterns=src --runInBand --detectOpenHandles --ci --forceExit --testTimeout=20000",
+    "ci:test-unit": "jest -c jest.config.ts --ci --collect-coverage",
+    "ci:test-integration": "JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest -c jest.config.integration.ts --runInBand --ci --collect-coverage",
     "codecov": "codecov"
   },
   "@comment dependencies": {
