@@ -5,39 +5,19 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import Loader from '../_ui/loader.vue'
 import PureGlobales from './pure-globales.vue'
+import { statistiquesGlobales } from '@/api/statistiques'
+import { onMounted, ref } from 'vue'
 
-export default {
-  name: 'CaminoStatistiques',
+const loaded = ref(false)
+const statistiques = ref(null)
 
-  components: { PureGlobales, Loader },
-
-  data() {
-    return {
-      loaded: false
-    }
-  },
-
-  computed: {
-    statistiques() {
-      return this.$store.state.statistiques.globales
-    }
-  },
-
-  async created() {
-    await this.get()
-  },
-
-  methods: {
-    async get() {
-      await this.$store.dispatch('statistiques/get', 'globales')
-
-      if (!this.loaded) {
-        this.loaded = true
-      }
-    }
-  }
-}
+onMounted(async () => {
+  try {
+    statistiques.value = await statistiquesGlobales()
+    loaded.value = true
+  } catch (e) {}
+})
 </script>

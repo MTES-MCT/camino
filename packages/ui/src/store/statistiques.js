@@ -1,5 +1,4 @@
 import {
-  statistiquesGlobales,
   statistiquesGuyane,
   statistiquesGranulatsMarins
 } from '../api/statistiques'
@@ -16,9 +15,7 @@ const actions = {
       commit('loadingAdd', 'statistiquesGet', { root: true })
 
       let data
-      if (section === 'globales') {
-        data = await statistiquesGlobales()
-      } else if (section === 'guyane') {
+      if (section === 'guyane') {
         data = await statistiquesGuyane()
       } else if (section === 'granulatsMarins') {
         data = await statistiquesGranulatsMarins()
