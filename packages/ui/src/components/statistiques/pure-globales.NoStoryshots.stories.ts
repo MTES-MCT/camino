@@ -23,6 +23,12 @@ const Template: Story<Props> = (args: Props) => ({
 export const Default = Template.bind({})
 Default.args = {
   statistiques: {
+    utilisateurs: {
+      rattachesAUneAdministration: 12,
+      rattachesAUneEntreprise: 15,
+      visiteursAuthentifies: 8,
+      total: 59
+    },
     titresActivitesBeneficesEntreprise: 678,
     titresActivitesBeneficesAdministration: 339,
     recherches: [

@@ -6,6 +6,13 @@ type QuantiteParMois {
   quantite: Int
 }
 
+type UtilisateursStatistique {
+  rattachesAUneAdministration: Int
+  rattachesAUneEntreprise: Int
+  visiteursAuthentifies: Int
+  total: Int
+}
+
 type StatistiquesGlobales {
   titresActivitesBeneficesEntreprise: Int
   titresActivitesBeneficesAdministration: Int
@@ -17,6 +24,7 @@ type StatistiquesGlobales {
   demarches: Int
   signalements: Int
   reutilisations: Int
+  utilisateurs: UtilisateursStatistique
 }
 
 type StatistiquesGuyane {

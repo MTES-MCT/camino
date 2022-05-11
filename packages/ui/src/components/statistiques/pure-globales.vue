@@ -46,52 +46,40 @@
         />
       </div>
     </div>
-  </div>
-  <div id="users" class="mb-xxl">
-    <h2 class="mt">Engagement général sur le site</h2>
-    <span class="separator" />
-    <p class="mb-xl">
-      Les données retenues ici témoignent du comportement général des
-      utilisateurs sur le site et de leur engagement auprès du service
-    </p>
     <div class="tablet-float-blobs clearfix">
       <div class="tablet-float-blob-1-3">
         <div class="mb-xl mt">
           <p class="h0 text-center">
-            {{ numberFormatInternal(recherches) }}
+            {{ numberFormatInternal(statistiques.utilisateurs.total) }}
           </p>
-          <p class="bold text-center">recherches effectuées le mois dernier</p>
-          <p>
-            Le nombre de recherches mensuelles est l'indicateur clé de
-            l'utilisation du service de "cadastre minier"
+          <p class="bold text-center">utilisateurs enregistrés</p>
+        </div>
+        <div class="mb-xl mt">
+          <p class="h0 text-center">
+            {{
+              numberFormatInternal(
+                statistiques.utilisateurs.rattachesAUneEntreprise
+              )
+            }}
           </p>
+          <p class="bold text-center">utilisateurs ayant une entreprise</p>
         </div>
 
-        <div class="mb-xl">
+        <div class="mb-xl mt">
           <p class="h0 text-center">
-            {{ Math.round(statistiques.actions) }}
+            {{
+              numberFormatInternal(
+                statistiques.utilisateurs.rattachesAUneAdministration
+              )
+            }}
           </p>
           <p class="bold text-center">
-            nombre moyen d'actions effectuées par utilisateur
+            utilisateurs appartenant à une administration
           </p>
-        </div>
-
-        <div class="mb-xl">
-          <p class="h0 text-center">{{ statistiques.sessionDuree }} min</p>
-          <p class="bold text-center">temps de session moyen par utilisateur</p>
         </div>
       </div>
       <div class="tablet-float-blob-2-3 mb-xxl">
-        <LineChart
-          :data="
-            statsLineFormatInternal({
-              stats: statistiques['recherches'],
-              labelY: 'recherches',
-              labelX: 'mois',
-              id: 'quantite'
-            })
-          "
-        />
+        <PieChart :data="utilisateurs" />
       </div>
     </div>
   </div>
@@ -218,6 +206,7 @@
 
 <script setup lang="ts">
 import LineChart from '../_charts/line.vue'
+import PieChart from '../_charts/pie.vue'
 import { numberFormat } from '@/utils/number-format'
 import { statsLineFormat } from './_utils'
 import { computed } from 'vue'
@@ -228,6 +217,28 @@ const props = defineProps<{ statistiques: Statistiques }>()
 const recherches = computed(() => {
   const recherchesStats = props.statistiques.recherches
   return recherchesStats[recherchesStats.length - 1].quantite
+})
+
+const utilisateurs = computed(() => {
+  return {
+    labels: ['Entreprises', 'Administrations', 'Défaut'],
+    datasets: [
+      {
+        label: 'Utilisateurs',
+        data: [
+          props.statistiques.utilisateurs.rattachesAUneEntreprise,
+          props.statistiques.utilisateurs.rattachesAUneAdministration,
+          props.statistiques.utilisateurs.visiteursAuthentifies
+        ],
+        backgroundColor: [
+          'rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)'
+        ],
+        hoverOffset: 4
+      }
+    ]
+  }
 })
 
 const titresModifies = computed(() => {

@@ -3,6 +3,13 @@ export interface QuantiteParMois {
   quantite: number
 }
 
+export interface StatistiquesUtilisateurs {
+  rattachesAUneEntreprise: number
+  rattachesAUneAdministration: number
+  visiteursAuthentifies: number
+  total: number
+}
+
 export interface Statistiques {
   titresActivitesBeneficesEntreprise: number
   titresActivitesBeneficesAdministration: number
@@ -14,4 +21,5 @@ export interface Statistiques {
   demarches: number
   signalements: number
   reutilisations: number
+  utilisateurs: StatistiquesUtilisateurs
 }
