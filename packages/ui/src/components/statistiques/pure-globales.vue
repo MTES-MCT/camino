@@ -46,6 +46,10 @@
         />
       </div>
     </div>
+  </div>
+  <div id="utilisateurs" class="mb-xxl content">
+    <h2>Les utilisateurs de Camino</h2>
+    <span class="separator" />
     <div class="tablet-float-blobs clearfix">
       <div class="tablet-float-blob-1-3">
         <div class="mb-xl mt">
@@ -67,11 +71,7 @@
 
         <div class="mb-xl mt">
           <p class="h0 text-center">
-            {{
-              numberFormatInternal(
-                statistiques.utilisateurs.rattachesAUneAdministration
-              )
-            }}
+            {{ numberFormatInternal(utilisateursAdmin) }}
           </p>
           <p class="bold text-center">
             utilisateurs appartenant à une administration
@@ -83,7 +83,23 @@
       </div>
     </div>
   </div>
-
+  <div id="administrations" class="mb-xxl content">
+    <h2>Les administrations de Camino</h2>
+    <span class="separator" />
+    <div class="tablet-float-blobs clearfix">
+      <div class="tablet-float-blob-1-3">
+        <div class="mb-xl mt">
+          <p class="h0 text-center">
+            {{ numberFormatInternal(utilisateursAdmin) }}
+          </p>
+          <p class="bold text-center">utilisateurs ayant une administration</p>
+        </div>
+      </div>
+      <div class="tablet-float-blob-2-3 mb-xxl">
+        <PieChart :data="utilisateursAdminChart" />
+      </div>
+    </div>
+  </div>
   <div id="amelioration" class="mb-xxl content">
     <h2>Amélioration continue et accès aux données publiques</h2>
     <span class="separator" />
@@ -211,12 +227,36 @@ import { numberFormat } from '@/utils/number-format'
 import { statsLineFormat } from './_utils'
 import { computed } from 'vue'
 import { Statistiques } from 'camino-common/src/statistiques'
+import {
+  ADMINISTRATION_TYPE_IDS,
+  ADMINISTRATION_TYPE_IDS_ARRAY,
+  ADMINISTRATION_TYPES,
+  AdministrationTypeId,
+  sortedAdministrationTypes
+} from 'camino-common/src/administrations'
 
 const props = defineProps<{ statistiques: Statistiques }>()
 
 const recherches = computed(() => {
   const recherchesStats = props.statistiques.recherches
   return recherchesStats[recherchesStats.length - 1].quantite
+})
+
+const utilisateursAdmin = computed(() => {
+  return Object.keys(
+    props.statistiques.utilisateurs.rattachesAUnTypeDAdministration
+  )
+    .filter((value: string): value is AdministrationTypeId =>
+      ADMINISTRATION_TYPE_IDS_ARRAY.includes(value)
+    )
+    .reduce(
+      (value: number, adminTypeId: AdministrationTypeId) =>
+        value +
+        props.statistiques.utilisateurs.rattachesAUnTypeDAdministration[
+          adminTypeId
+        ],
+      0
+    )
 })
 
 const utilisateurs = computed(() => {
@@ -227,13 +267,39 @@ const utilisateurs = computed(() => {
         label: 'Utilisateurs',
         data: [
           props.statistiques.utilisateurs.rattachesAUneEntreprise,
-          props.statistiques.utilisateurs.rattachesAUneAdministration,
+          utilisateursAdmin.value,
           props.statistiques.utilisateurs.visiteursAuthentifies
         ],
         backgroundColor: [
           'rgb(255, 99, 132)',
           'rgb(54, 162, 235)',
           'rgb(255, 205, 86)'
+        ],
+        hoverOffset: 4
+      }
+    ]
+  }
+})
+
+const labelsAdministrations = sortedAdministrationTypes.map(admin => admin.nom)
+const utilisateursAdminChart = computed(() => {
+  const data = sortedAdministrationTypes.map(
+    admin =>
+      props.statistiques.utilisateurs.rattachesAUnTypeDAdministration[admin.id]
+  )
+  return {
+    labels: labelsAdministrations,
+    datasets: [
+      {
+        label: 'Administrations',
+        data: data,
+        backgroundColor: [
+          'rgba(255, 99, 132)',
+          'rgba(54, 162, 235)',
+          'rgba(255, 206, 86)',
+          'rgba(75, 192, 192)',
+          'rgba(153, 102, 255)',
+          'rgba(255, 159, 64)'
         ],
         hoverOffset: 4
       }

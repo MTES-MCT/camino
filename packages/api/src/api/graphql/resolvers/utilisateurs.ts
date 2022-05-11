@@ -43,6 +43,7 @@ import {
   newsletterSubscriberUpdate
 } from '../../../tools/api-mailjet/newsletter'
 import { userSuper } from '../../../database/user-super'
+import dateFormat from 'dateformat'
 
 const TOKEN_TTL = '5m'
 
@@ -382,7 +383,8 @@ const utilisateurCreer = async (
     const utilisateurUpdated = await utilisateurCreate(
       {
         id: await userIdGenerate(),
-        ...utilisateur
+        ...utilisateur,
+        dateCreation: dateFormat(new Date(), 'dd-mm-yyyy')
       } as IUtilisateur,
       { fields: {} }
     )

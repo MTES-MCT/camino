@@ -2,7 +2,18 @@ import { Definition } from './definition'
 import { RegionId } from './region'
 import { DepartementId } from './departement'
 
-export const ADMINISTRATION_TYPE_IDS = {
+export const ADMINISTRATION_TYPE_IDS_ARRAY = [
+  'aut',
+  'dea',
+  'dre',
+  'min',
+  'ope',
+  'pre'
+] as const
+
+export type AdministrationTypeId = typeof ADMINISTRATION_TYPE_IDS_ARRAY[number]
+
+export const ADMINISTRATION_TYPE_IDS: Record<string, AdministrationTypeId> = {
   AUTORITE: 'aut',
   DEAL: 'dea',
   DREAL: 'dre',
@@ -10,9 +21,6 @@ export const ADMINISTRATION_TYPE_IDS = {
   OPERATEUR: 'ope',
   PREFECTURE: 'pre'
 } as const
-
-export type AdministrationTypeId =
-  typeof ADMINISTRATION_TYPE_IDS[keyof typeof ADMINISTRATION_TYPE_IDS]
 
 export type AdministrationType<T = AdministrationTypeId> = Omit<
   Definition<T>,

@@ -1,11 +1,15 @@
+import { AdministrationTypeId } from './administrations'
+
 export interface QuantiteParMois {
   mois: string
   quantite: number
 }
 
+type StatistiquesAdministrationsType = Record<AdministrationTypeId, number>
+
 export interface StatistiquesUtilisateurs {
   rattachesAUneEntreprise: number
-  rattachesAUneAdministration: number
+  rattachesAUnTypeDAdministration: StatistiquesAdministrationsType
   visiteursAuthentifies: number
   total: number
 }

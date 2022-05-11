@@ -6,8 +6,17 @@ type QuantiteParMois {
   quantite: Int
 }
 
+type UtilisateursAdministrationsStatistique {
+  aut: Int
+  dea: Int
+  dre: Int
+  min: Int
+  ope: Int
+  pre: Int
+}
+
 type UtilisateursStatistique {
-  rattachesAUneAdministration: Int
+  rattachesAUnTypeDAdministration: UtilisateursAdministrationsStatistique
   rattachesAUneEntreprise: Int
   visiteursAuthentifies: Int
   total: Int

@@ -1002,6 +1002,7 @@ interface IUtilisateur {
   id: string
   email?: string | null
   motDePasse?: string | null
+  dateCreation: string
   nom?: string | null
   prenom?: string | null
   telephoneFixe?: string | null

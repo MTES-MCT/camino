@@ -66,7 +66,11 @@ const statistiquesGlobales = async (): Promise<Statistiques> => {
               entrepriseOuAdmin = true
             }
             if (user.administrations?.length) {
-              previousValue.rattachesAUneAdministration++
+              for (const administration of user.administrations) {
+                previousValue.rattachesAUnTypeDAdministration[
+                  administration.typeId
+                ]++
+              }
               entrepriseOuAdmin = true
             }
             if (!entrepriseOuAdmin) {
@@ -78,7 +82,14 @@ const statistiquesGlobales = async (): Promise<Statistiques> => {
           return previousValue
         },
         {
-          rattachesAUneAdministration: 0,
+          rattachesAUnTypeDAdministration: {
+            aut: 0,
+            dea: 0,
+            dre: 0,
+            min: 0,
+            ope: 0,
+            pre: 0
+          },
           rattachesAUneEntreprise: 0,
           total: 0,
           visiteursAuthentifies: 0

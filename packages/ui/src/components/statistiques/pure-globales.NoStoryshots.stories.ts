@@ -23,12 +23,6 @@ const Template: Story<Props> = (args: Props) => ({
 export const Default = Template.bind({})
 Default.args = {
   statistiques: {
-    utilisateurs: {
-      rattachesAUneAdministration: 12,
-      rattachesAUneEntreprise: 15,
-      visiteursAuthentifies: 8,
-      total: 59
-    },
     titresActivitesBeneficesEntreprise: 678,
     titresActivitesBeneficesAdministration: 339,
     recherches: [
@@ -64,6 +58,19 @@ Default.args = {
     telechargements: 139,
     demarches: 366,
     signalements: 352,
-    reutilisations: 6
+    reutilisations: 6,
+    utilisateurs: {
+      rattachesAUnTypeDAdministration: {
+        aut: 5,
+        dea: 8,
+        dre: 38,
+        min: 26,
+        ope: 24,
+        pre: 8
+      },
+      rattachesAUneEntreprise: 128,
+      visiteursAuthentifies: 124,
+      total: 361
+    }
   }
 }

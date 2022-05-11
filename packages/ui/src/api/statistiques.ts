@@ -21,7 +21,14 @@ export const statistiquesGlobales = apiGraphQLFetch(gql`
       signalements
       reutilisations
       utilisateurs {
-        rattachesAUneAdministration
+        rattachesAUnTypeDAdministration {
+          aut
+          dea
+          dre
+          min
+          ope
+          pre
+        }
         rattachesAUneEntreprise
         visiteursAuthentifies
         total
