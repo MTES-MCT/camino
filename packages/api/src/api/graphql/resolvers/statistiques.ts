@@ -6,10 +6,11 @@ import { debug } from '../../../config/index'
 import { titresActivitesGet } from '../../../database/queries/titres-activites'
 import { userSuper } from '../../../database/user-super'
 import { matomoData } from '../../../tools/api-matomo/index'
+import { Statistiques } from 'camino-common/src/statistiques'
 
 const ACTIVITE_ANNEE_DEBUT = 2018
 
-const statistiquesGlobales = async () => {
+const statistiquesGlobales = async (): Promise<Statistiques> => {
   try {
     const titresActivites = await titresActivitesGet({}, {}, userSuper)
 

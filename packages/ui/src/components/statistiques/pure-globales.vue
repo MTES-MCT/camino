@@ -221,7 +221,7 @@ import LineChart from '../_charts/line.vue'
 import { numberFormat } from '@/utils/number-format'
 import { statsLineFormat } from './_utils'
 import { computed } from 'vue'
-import { Statistiques } from './pure-globales.types'
+import { Statistiques } from 'camino-common/src/statistiques'
 
 const props = defineProps<{ statistiques: Statistiques }>()
 

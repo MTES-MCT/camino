@@ -1,6 +1,6 @@
 export interface QuantiteParMois {
   mois: string
-  quantite: string
+  quantite: number
 }
 
 export interface Statistiques {
@@ -8,10 +8,10 @@ export interface Statistiques {
   titresActivitesBeneficesAdministration: number
   recherches: QuantiteParMois[]
   titresModifies: QuantiteParMois[]
-  actions: string
-  sessionDuree: string
-  telechargements: string
-  demarches: string
-  signalements: string
-  reutilisations: string
+  actions: number
+  sessionDuree: number
+  telechargements: number
+  demarches: number
+  signalements: number
+  reutilisations: number
 }
