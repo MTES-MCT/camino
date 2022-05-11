@@ -4,7 +4,6 @@ import {
 } from '../api/statistiques'
 
 const state = {
-  globales: {},
   guyane: {},
   granulatsMarins: {}
 }
