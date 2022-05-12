@@ -1,6 +1,8 @@
 name: ui/ci
 on:
   push:
+    branches-ignore:
+      - release-candidate
 concurrency:
   group: ui-ci-${{ github.ref }}
   cancel-in-progress: true
