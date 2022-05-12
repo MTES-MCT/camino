@@ -3,13 +3,49 @@
     "id": "aac",
     "nom": "avis de direction régionale des affaires culturelles",
     "description": "Avis sur la situation archéologique du site en question.",
-    "ordre": 81
+    "ordre": 81,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "aaf",
     "nom": "avis de la direction d'alimentation de l'agriculture et de la forêt",
     "description": "Avis pour un titre minier.",
-    "ordre": 79
+    "ordre": 79,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "abd",
@@ -18,13 +54,37 @@
     "ordre": 111,
     "fondamentale": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "abs",
     "nom": "avis DGTM service milieux naturels, biodiversité, sites et paysages (MNBST)",
     "description": "Avis du MNBST sur la notice d’impact pour les titres miniers et les autorisations d'exploitation.",
-    "ordre": 76
+    "ordre": 76,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "aca",
@@ -33,20 +93,70 @@
     "fondamentale": true,
     "unique": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "ajo",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "acd",
     "nom": "avis du conseil départemental de l'environnement et des risques sanitaires et technologiques (Coderst)",
     "ordre": 137,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "acg",
     "nom": "avis du conseil général de l'économie (CGE)",
     "description": "Le conseil général de l'économie donne un avis sur la demande et sur son instruction au ministre chargé des mines. Cet avis n'est pas conforme.",
-    "ordre": 96
+    "ordre": 96,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 3
+      }
+    ]
   },
   {
     "id": "acl",
@@ -54,7 +164,17 @@
     "description": "Avis de la collectivité locale dans le cadre de l’instruction d’un titre ou d'une demande relative à la police des mines.",
     "ordre": 68,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "aco",
@@ -63,13 +183,37 @@
     "ordre": 125,
     "fondamentale": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "aec",
     "nom": "avis de la direction des entreprises, de la concurrence, de la consommation, du travail et de l'emploi",
     "description": "Avis facultatif sur la situation économique de l’entreprise.",
-    "ordre": 85
+    "ordre": 85,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "aep",
@@ -77,25 +221,97 @@
     "description": "Avis du président d’EPCI dans le cadre de l’instruction d’un titre ou d'une demande relative à la police des mines.",
     "ordre": 67,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 3
+      }
+    ]
   },
   {
     "id": "afp",
     "nom": "avis de la direction régionale des finances publiques",
     "description": "Avis délivré sur la régularité fiscale de l’entreprise.",
-    "ordre": 84
+    "ordre": 84,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "agn",
     "nom": "avis de la gendarmerie nationale",
     "description": "Avis sur l'instruction d'un titre minier  ou d'une demande relative à la police des mines ",
-    "ordre": 83
+    "ordre": 83,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "aim",
     "nom": "avis de l'Ifremer",
     "description": "Avis de l’institut français de recherche pour l’exploitation en mer (IFREMER) dans le cadre d’autorisation en mer.",
-    "ordre": 74
+    "ordre": 74,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "ama",
@@ -103,13 +319,49 @@
     "description": "Avis du maire, dans le cadre de l’instruction d’un titre ou d'une demande relative à la police des mines.",
     "ordre": 66,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 3
+      }
+    ]
   },
   {
     "id": "ami",
     "nom": "avis du parc naturel marin",
     "description": "Avis du parc naturel marin dans le cadre d’autorisation en mer.",
-    "ordre": 75
+    "ordre": 75,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "and",
@@ -118,7 +370,21 @@
     "ordre": 112,
     "fondamentale": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "acc",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "rej",
+        "ordre": 3
+      }
+    ]
   },
   {
     "id": "ane",
@@ -127,7 +393,25 @@
     "ordre": 48,
     "fondamentale": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "enc",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fai",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "pro",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "ter",
+        "ordre": 3
+      }
+    ]
   },
   {
     "id": "anf",
@@ -136,66 +420,252 @@
     "ordre": 47,
     "fondamentale": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "enc",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fai",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "pro",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "ter",
+        "ordre": 3
+      }
+    ]
   },
   {
     "id": "aof",
     "nom": "avis de l'Office national des forêts",
     "description": "Avis délivré par l’ONF dans le cadre de l’instruction d’un titre minier.\n",
-    "ordre": 60
+    "ordre": 60,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "aop",
     "nom": "avis de l'Institut national de l'origine et de la qualité",
-    "ordre": 61
+    "ordre": 61,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "apd",
     "nom": "Avis et rapport du directeur régional chargé de l'environnement, de l'aménagement et du logement",
     "description": "Étape par laquelle le DREAL ou le DEAL rend un avis sur la demande. Cet avis tient compte du rapport rédigé par le service instructeur de la DREAL ou de la DEAL qui s'appuie sur les avis émis par les chefs des services civils et de l'autorité militaire intéressés sur la demande.",
-    "ordre": 69
+    "ordre": 69,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 3
+      }
+    ]
   },
   {
     "id": "ape",
     "nom": "avis du Conseil d'Etat",
     "description": "Le conseil d’État donne au premier ministre et au ministre chargé des mines un avis sur la demande et sur son instruction. Cet avis n'est pas conforme mais si la décision s'écarte de l'avis donné, elle doit être validée en conseil des ministres.",
-    "ordre": 99
+    "ordre": 99,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 3
+      }
+    ]
   },
   {
     "id": "api",
     "nom": "avis de l'état major orpaillage et pêche illicite (EMOPI)",
     "description": "Avis pour tous les titres miniers en Guyane.",
-    "ordre": 82
+    "ordre": 82,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "apl",
     "nom": "avis d'un service administratif local",
-    "ordre": 62
+    "ordre": 62,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 3
+      }
+    ]
   },
   {
     "id": "apm",
     "nom": "avis de l'autorité militaire",
     "description": "Avis de l’autorité militaire, délivré dans le cadre de l’instruction d’un titre minier ou d'une demande relative à la police des mines.",
-    "ordre": 63
+    "ordre": 63,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 3
+      }
+    ]
   },
   {
     "id": "apn",
     "nom": "avis du parc national",
     "description": "Avis du parc national dans le cadre de l’instruction d’un titre ou d'une demande relative à la police des mines.",
-    "ordre": 71
+    "ordre": 71,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "apo",
     "nom": "avis de la commission départementale des mines (CDM)",
     "description": "L’avis de cette commission est consultatif et donne lieu à des votes des différents membres des collèges. Les représentants des administrations participent également.",
-    "ordre": 87
+    "ordre": 87,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "ajo",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 5
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 4
+      }
+    ]
   },
   {
     "id": "app",
     "nom": "avis du préfet",
     "description": "Le préfet émet un avis à l’issue de l’instruction du dossier, prenant en compte les avis délivrés par les services déconcentrés et éventuellement, l’avis de la commission des mines en Guyane.",
     "ordre": 90,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 3
+      }
+    ]
   },
   {
     "id": "apu",
@@ -204,66 +674,204 @@
     "ordre": 42,
     "unique": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "acc",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "rej",
+        "ordre": 3
+      }
+    ]
   },
   {
     "id": "apw",
     "nom": "avis du préfet maritime",
     "description": "Avis pour les titres miniers en mer.",
-    "ordre": 91
+    "ordre": 91,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 3
+      }
+    ]
   },
   {
     "id": "ari",
     "nom": "avis de la réunion interservice",
-    "ordre": 73
+    "ordre": 73,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "ars",
     "nom": "avis de l'agence régionale de santé",
     "description": "Avis concernant leur respect de la réglementation sanitaire dans le cadre de l'instruction d'un titre minier ou d'une demande relative à la police des mines.",
-    "ordre": 80
+    "ordre": 80,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "asl",
     "nom": "décision du propriétaire du sol",
     "ordre": 5,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "ass",
     "nom": "avis de la caisse générale de sécurité sociale",
     "description": "Avis émis par le service de la sécurité sociale sur la situation sociale de l'entreprise.",
-    "ordre": 78
+    "ordre": 78,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "auc",
     "nom": "avis DGTM service aménagement, urbanisme, construction, logement (AUCL)",
     "description": "Avis de l’AUCL sur la notice d’impact pour les titres miniers et les autorisations d’exploitation. ",
-    "ordre": 77
+    "ordre": 77,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 3
+      },
+      {
+        "etape_statut_id": "dre",
+        "ordre": 4
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fre",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "cac",
     "nom": "consultation des administrations centrales",
-    "ordre": 92
+    "ordre": 92,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "cim",
     "nom": "concertation interministérielle",
     "description": "Concertation prévue dans le cadre des exploitations de granulats marins par les ministères concernés.",
-    "ordre": 93
+    "ordre": 93,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "cod",
     "nom": "saisine du conseil départemental de l'environnement et des risques sanitaires et technologiques  (Coderst)",
     "ordre": 64,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "cps",
     "nom": "confirmation de l'accord du propriétaire du sol",
     "ordre": 55,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "css",
@@ -271,7 +879,13 @@
     "ordre": 102,
     "unique": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "dae",
@@ -293,7 +907,17 @@
       }
     ],
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "exe",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "req",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "dec",
@@ -301,7 +925,13 @@
     "ordre": 2,
     "unique": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "def",
@@ -312,7 +942,17 @@
     "unique": true,
     "date_fin": "2018-10-22",
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "acc",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "rej",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "des",
@@ -321,7 +961,13 @@
     "ordre": 12,
     "unique": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "dex",
@@ -329,7 +975,17 @@
     "ordre": 103,
     "fondamentale": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "acc",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "rej",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "dim",
@@ -338,7 +994,17 @@
     "ordre": 101,
     "fondamentale": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "acc",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "rej",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "dpu",
@@ -347,7 +1013,17 @@
     "ordre": 104,
     "fondamentale": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "acc",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "rej",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "dup",
@@ -356,7 +1032,13 @@
     "ordre": 106,
     "fondamentale": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "dux",
@@ -365,13 +1047,20 @@
     "ordre": 105,
     "fondamentale": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "duy",
     "nom": "décision administrative",
     "description": "Refus ou acceptation à l’issue d’une instruction.",
-    "ordre": 235
+    "ordre": 235,
+    "etapesStatuts": []
   },
   {
     "id": "ede",
@@ -398,6 +1087,16 @@
             "description": "Prénom et nom de l'agent chargé de l'expertise"
           }
         ]
+      }
+    ],
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
       }
     ]
   },
@@ -426,13 +1125,29 @@
           }
         ]
       }
+    ],
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      }
     ]
   },
   {
     "id": "eof",
     "nom": "expertise de l'Office national des forêts",
     "description": "Expertise effectuée par l’ONF dans le cadre d’une demande d’autorisation de recherches minières (ARM).",
-    "ordre": 59
+    "ordre": 59,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "epc",
@@ -440,7 +1155,13 @@
     "description": "L’enquête publique dure un mois. Il est possible de la prolonger. ",
     "ordre": 53,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "ter",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "epu",
@@ -448,13 +1169,29 @@
     "description": "L’enquête publique requise pour l’octroi des concessions minières et des permis d’exploitations dans les départements d’outre-mer a lieu après constat de recevabilité du dossier.",
     "ordre": 51,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "pro",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "esb",
     "nom": "expertise DREAL ou DGTM service biodiversité",
     "description": "Instruction de demande sur la réglementation ayant trait à la biodiversité par les services de la DGTM.",
-    "ordre": 58
+    "ordre": 58,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "ide",
@@ -464,7 +1201,13 @@
     "unique": true,
     "acceptation_auto": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "ihi",
@@ -475,7 +1218,13 @@
     "unique": true,
     "date_fin": "2018-12-31",
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mca",
@@ -505,7 +1254,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mcb",
@@ -535,7 +1290,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mcd",
@@ -565,7 +1326,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mcm",
@@ -595,7 +1362,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mco",
@@ -624,14 +1397,30 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mcp",
     "nom": "complétude de la demande",
     "description": "Phase d’examen qui permet d’établir que toutes les pièces exigées par la réglementation sont bien fournies par le demandeur. Cet examen ne préjuge pas de la décision qui sera apportée par l’administration. ",
     "ordre": 40,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "com",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "inc",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "mcr",
@@ -639,7 +1428,17 @@
     "description": "Acte de l’administration établissant que l’examen de complétude a été mené à bien. Le constat de recevabilité donne lieu à un rapport de la part de l’administration qui constate que le dossier de demande est complet. ",
     "ordre": 41,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mcs",
@@ -669,7 +1468,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mdp",
@@ -679,7 +1484,13 @@
     "unique": true,
     "acceptation_auto": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mec",
@@ -687,7 +1498,13 @@
     "description": "Annonce à un demandeur qu’une demande concurrente à la sienne a été déposée.",
     "ordre": 49,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "men",
@@ -698,7 +1515,13 @@
     "acceptation_auto": true,
     "date_fin": "2018-01-01",
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "meo",
@@ -706,7 +1529,13 @@
     "ordre": 45,
     "unique": true,
     "date_fin": "2020-01-01",
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mfr",
@@ -717,7 +1546,17 @@
     "unique": true,
     "acceptation_auto": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "aco",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fai",
+        "ordre": 2
+      }
+    ]
   },
   {
     "id": "mia",
@@ -725,7 +1564,13 @@
     "nom": "demande d'informations (avis de l'Office national des forêts)",
     "description": "après une aof",
     "ordre": 33,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mid",
@@ -733,7 +1578,13 @@
     "nom": "demande d'informations (expertise DGTM / DATE)",
     "description": "après une edm",
     "ordre": 31,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mie",
@@ -741,14 +1592,26 @@
     "nom": "demande d'informations (avis du DREAL, DEAL ou DGTM)",
     "description": "après une adp",
     "ordre": 32,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mif",
     "nom": "demande d'informations",
     "description": "Étape à l'initiative du service instructeur pour obtenir des informations qui ne sont pas de nature à interrompre le décompte du délai dans lequel une décision doit être prise. \n",
     "ordre": 28,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mim",
@@ -756,7 +1619,13 @@
     "nom": "demande d'informations (recevabilité de la demande)",
     "description": "après une mcr",
     "ordre": 29,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mio",
@@ -764,7 +1633,13 @@
     "nom": "demande d'informations (expertise de l'Office national des forêts)",
     "description": "après une eof",
     "ordre": 30,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mna",
@@ -787,7 +1662,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mnb",
@@ -810,7 +1691,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mnc",
@@ -833,7 +1720,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mnd",
@@ -856,7 +1749,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mni",
@@ -879,7 +1778,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mno",
@@ -901,7 +1806,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mns",
@@ -924,7 +1835,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mnv",
@@ -947,7 +1864,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mod",
@@ -956,7 +1879,13 @@
     "ordre": 14,
     "fondamentale": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "mom",
@@ -966,7 +1895,13 @@
     "ordre": 15,
     "fondamentale": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "ncl",
@@ -974,7 +1909,13 @@
     "description": "Notification de la décision aux collectivités locales.",
     "ordre": 121,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "nis",
@@ -994,6 +1935,12 @@
             "description": "Informations internes importantes pour la compréhension du suivi de l'instruction de la démarche"
           }
         ]
+      }
+    ],
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
       }
     ]
   },
@@ -1015,6 +1962,12 @@
             "description": "Informations complémentaires accompagnant la notification de la décision au préfet"
           }
         ]
+      }
+    ],
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
       }
     ]
   },
@@ -1046,7 +1999,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "pfd",
@@ -1075,13 +2034,29 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "pnr",
     "nom": "avis du parc naturel régional",
     "description": "Avis du parc naturel régional dans le cadre de l’instruction d’un titre ou d'une demande relative à la police des mines.",
-    "ordre": 72
+    "ordre": 72,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "ppc",
@@ -1089,7 +2064,13 @@
     "description": "La durée de la participation du public doit être au moins égale 15 jours. L’administration doit tenir compte pour sa décision des avis recueillis lors de la participation du public.",
     "ordre": 52,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "ter",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "ppu",
@@ -1097,14 +2078,30 @@
     "description": "La participation du public est obligatoire pour l’octroi des permis exclusifs de recherches (PER) et les prolongations de concessions minières. La législation ne prévoit pas à quel moment elle intervient. Il a été décidé pour les titres miniers qu’elle aurait lieu dès la déclaration de recevabilité du dossier. ",
     "ordre": 50,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "pro",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "pqr",
     "nom": "publication dans un journal local ou national",
     "ordre": 109,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rca",
@@ -1113,7 +2110,13 @@
     "description": "après une mcr",
     "ordre": 26,
     "fondamentale": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rcb",
@@ -1122,7 +2125,13 @@
     "description": "après une rde",
     "ordre": 25,
     "fondamentale": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rcd",
@@ -1131,12 +2140,28 @@
     "description": "après une dae",
     "ordre": 24,
     "fondamentale": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rcg",
     "nom": "rapport du conseil général de l'économie (CGE)",
-    "ordre": 95
+    "ordre": 95,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rcm",
@@ -1145,7 +2170,13 @@
     "description": "après une mcp",
     "ordre": 23,
     "fondamentale": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rco",
@@ -1153,7 +2184,13 @@
     "description": "Étape par laquelle le service instructeur accuse réception des compléments transmis par le demandeur. Cette étape permet la reprise du décompte du délai dans lequel une décision doit être prise.",
     "ordre": 22,
     "fondamentale": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rcs",
@@ -1162,7 +2199,13 @@
     "description": "après une sca",
     "ordre": 27,
     "fondamentale": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rde",
@@ -1205,7 +2248,17 @@
       }
     ],
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "ria",
@@ -1214,7 +2267,13 @@
     "description": "après une aof",
     "ordre": 39,
     "fondamentale": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rid",
@@ -1223,7 +2282,13 @@
     "description": "après une edm",
     "ordre": 37,
     "fondamentale": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rie",
@@ -1232,7 +2297,13 @@
     "description": "après une adp",
     "ordre": 38,
     "fondamentale": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rif",
@@ -1240,7 +2311,13 @@
     "description": "Étape par laquelle le service instructeur reçoit l'information demandée.",
     "ordre": 34,
     "fondamentale": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rim",
@@ -1249,7 +2326,13 @@
     "description": "après une mcr",
     "ordre": 35,
     "fondamentale": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rio",
@@ -1258,12 +2341,28 @@
     "description": "après une eof",
     "ordre": 36,
     "fondamentale": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rpe",
     "nom": "rapport du Conseil d’État",
-    "ordre": 98
+    "ordre": 98,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 2
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "rpu",
@@ -1272,7 +2371,13 @@
     "ordre": 108,
     "fondamentale": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 3
+      }
+    ]
   },
   {
     "id": "rtd",
@@ -1281,26 +2386,50 @@
     "ordre": 110,
     "fondamentale": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "sas",
     "nom": "saisine de l'autorité signataire",
-    "ordre": 100
+    "ordre": 100,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "sca",
     "nom": "saisine de la commission des autorisations de recherches minières (CARM)",
     "ordre": 88,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "scg",
     "nom": "saisine du conseil général de l'économie (CGE)",
     "description": "Étape par laquelle le service instructeur transmet la demande, les différents avis et une proposition de décision du ministre chargé des mines au conseil général de l'économie pour avis.",
     "ordre": 94,
-    "acceptation_auto": true
+    "acceptation_auto": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "scl",
@@ -1308,7 +2437,13 @@
     "description": "Consultation pour avis, des collectivités locales dans le cadre de l’instruction d’un titre ou d’une autorisation.",
     "ordre": 65,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "sco",
@@ -1318,20 +2453,38 @@
     "fondamentale": true,
     "unique": true,
     "public_lecture": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "spe",
     "nom": "saisine du Conseil d'Etat",
     "description": "Le service instructeur transmet la demande, les différents avis et une proposition de décision du premier ministre et du ministre chargé des mines au conseil d’État pour avis.",
     "ordre": 97,
-    "acceptation_auto": true
+    "acceptation_auto": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "spo",
     "nom": "saisine de la commission départementale des mines (CDM)",
     "description": "Dans les seuls départements d’Outre-mer (Guadeloupe, Guyane, Réunion, Martinique et Mayotte) une commission dédiée à l’examen des demandes minières se réunit comportant les différentes parties prenantes. Cette commission donne un avis consultatif sur le rapport des services déconcentrés. Pour l’instant, cette commission se réunit uniquement en Guyane.",
-    "ordre": 86
+    "ordre": 86,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "spp",
@@ -1339,13 +2492,25 @@
     "description": "L’administration centrale transmet la demande au préfet pour qu’il engage son instruction locale.\n",
     "ordre": 11,
     "unique": true,
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "ssr",
     "nom": "saisine des services",
     "description": "Demande de consultation dans le cadre d’un titre minier des chefs de service civils et de l’autorité militaire. Les intéressés ont un mois pour répondre. Au-delà de ce délai,  le silence vaut accord.\n",
-    "ordre": 54
+    "ordre": 54,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "vfc",
@@ -1368,7 +2533,13 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "vfd",
@@ -1391,225 +2562,543 @@
         ]
       }
     ],
-    "entreprises_lecture": true
+    "entreprises_lecture": true,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "wab",
     "nom": "Abandon de la demande",
-    "ordre": 1034
+    "ordre": 1034,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wac",
     "nom": "avis de direction régionale des affaires culturelles - DRAC",
-    "ordre": 1017
+    "ordre": 1017,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wad",
     "nom": "avis de la direction départementale des territoires et de la mer - DDT(M)",
-    "ordre": 1014
+    "ordre": 1014,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wae",
     "nom": "avis de l'autorité environnementale",
-    "ordre": 1011
+    "ordre": 1011,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wai",
     "nom": "avis des autres instances",
-    "ordre": 1019
+    "ordre": 1019,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wal",
     "nom": "avis d'un service administratif local",
-    "ordre": 1013
+    "ordre": 1013,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wam",
     "nom": "avis de l'autorité militaire",
-    "ordre": 1015
+    "ordre": 1015,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wao",
     "nom": "arrêté d'ouverture des travaux miniers",
     "description": "Arrêté d'ouverture des travaux miniers",
-    "ordre": 1028
+    "ordre": 1028,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wap",
     "nom": "avis du préfet maritime",
-    "ordre": 1018
+    "ordre": 1018,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "war",
     "nom": "avis de réception",
-    "ordre": 1009
+    "ordre": 1009,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "was",
     "nom": "avis de l'agence régionale de santé - ARS",
-    "ordre": 1016
+    "ordre": 1016,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wat",
     "nom": "avis du conseil départemental de l'environnement et des risques sanitaires et technologiques (Coderst)",
-    "ordre": 1026
+    "ordre": 1026,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wau",
     "nom": "Avis du demandeur sur les prescriptions proposées",
-    "ordre": 1027
+    "ordre": 1027,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wce",
     "nom": "clôture de l'enquête publique",
-    "ordre": 1023
+    "ordre": 1023,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "ter",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wco",
     "nom": "Réception de compléments",
-    "ordre": 204
+    "ordre": 204,
+    "etapesStatuts": []
   },
   {
     "id": "wda",
     "nom": "Donné acte de la déclaration (DOTM)",
-    "ordre": 1033
+    "ordre": 1033,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wdc",
     "nom": "demande de compléments (AOTM ou DOTM)",
-    "ordre": 1005
+    "ordre": 1005,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wdd",
     "nom": "dépot de la demande",
-    "ordre": 1004
+    "ordre": 1004,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wde",
     "nom": "demande de compléments (DADT)",
-    "ordre": 1006
+    "ordre": 1006,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wdm",
     "nom": "décision de l'administration",
-    "ordre": 1035
+    "ordre": 1035,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "acc",
+        "ordre": null
+      },
+      {
+        "etape_statut_id": "rej",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "wdt",
     "nom": "avis de la DDT(M)",
     "description": "avis de la Direction Départementale des Territoires et de la Mer",
-    "ordre": 209
+    "ordre": 209,
+    "etapesStatuts": []
   },
   {
     "id": "wfa",
     "nom": "Demande d'autorisation d'ouverture de travaux miniers (AOTM)",
-    "ordre": 1001
+    "ordre": 1001,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wfd",
     "nom": "Déclaration d'arrêt définitif de travaux (DADT)",
-    "ordre": 1003
+    "ordre": 1003,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wfo",
     "nom": "Déclaration d'ouverture de travaux miniers (DOTM)",
-    "ordre": 1002
+    "ordre": 1002,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wfr",
     "nom": "Demande d'autorisation d'ouverture de travaux miniers (DAOTM)",
-    "ordre": 201
+    "ordre": 201,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "dep",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "wmm",
     "nom": "memoire en réponse de l'exploitant (par rapport à l'avis de l'AE)",
-    "ordre": 1021
+    "ordre": 1021,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wmr",
     "nom": "mémoire en réponse de l'exploitant",
     "description": "mémoire en réponse de l'exploitant à l'avis d'autorité environnementale.",
-    "ordre": 228
+    "ordre": 228,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "dep",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "wmt",
     "nom": "memoire de fin de travaux",
-    "ordre": 1032
+    "ordre": 1032,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "woe",
     "nom": "ouverture de l'enquête publique",
-    "ordre": 1022
+    "ordre": 1022,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      },
+      {
+        "etape_statut_id": "pro",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "wpa",
     "nom": "publication de décision au recueil des actes administratifs",
-    "ordre": 1028
+    "ordre": 1028,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wpb",
     "nom": "porter-à-connaissance",
     "description": "Porter-à-connaissance",
-    "ordre": 1029
+    "ordre": 1029,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wpc",
     "nom": "Arrêté de prescriptions complémentaires",
-    "ordre": 1031
+    "ordre": 1031,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wpo",
     "nom": "Arrêté de second donner acte",
-    "ordre": 1037
+    "ordre": 1037,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "acc",
+        "ordre": 1
+      }
+    ]
   },
   {
     "id": "wpp",
     "nom": "Arrêté préfectoral de premier donner acte (DADT)",
-    "ordre": 1030
+    "ordre": 1030,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wps",
     "nom": "Arrêté préfectoral de sursis à statuer",
-    "ordre": 1020
+    "ordre": 1020,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wrc",
     "nom": "reception de compléments",
-    "ordre": 1007
+    "ordre": 1007,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wrd",
     "nom": "Rapport de la Dreal",
-    "ordre": 1029
+    "ordre": 1029,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wre",
     "nom": "Recevabilité",
-    "ordre": 1008
+    "ordre": 1008,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wrl",
     "nom": "Avis et rapport du directeur régional chargé de l'environnement, de l'aménagement et du logement",
-    "ordre": 1024
+    "ordre": 1024,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wrt",
     "nom": "récolement",
-    "ordre": 1036
+    "ordre": 1036,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "def",
+        "ordre": 1
+      },
+      {
+        "etape_statut_id": "fav",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wse",
     "nom": "saisine de l'autorité environnementale",
-    "ordre": 1010
+    "ordre": 1010,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wss",
     "nom": "saisine des services de l'Etat",
-    "ordre": 1012
+    "ordre": 1012,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   },
   {
     "id": "wtp",
     "nom": "Transmission du projet de prescriptions au demandeur",
-    "ordre": 1025
+    "ordre": 1025,
+    "etapesStatuts": [
+      {
+        "etape_statut_id": "fai",
+        "ordre": null
+      }
+    ]
   }
 ]

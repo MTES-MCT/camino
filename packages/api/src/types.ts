@@ -7,6 +7,7 @@ import {
 } from 'camino-common/src/administrations'
 import { Departement, DepartementId } from 'camino-common/src/departement'
 import { Region } from 'camino-common/src/region'
+import { EtapeStatutId } from 'camino-common/src/etapesStatus'
 
 enum DemarchesStatutsTypes {
   Accepte = 'acc',
@@ -840,7 +841,7 @@ interface ITitreEtape {
   slug?: string
   typeId: string
   type?: IEtapeType | null
-  statutId: string
+  statutId: EtapeStatutId
   statut?: IEtapeStatut | null
   ordre?: number | null
   date: string

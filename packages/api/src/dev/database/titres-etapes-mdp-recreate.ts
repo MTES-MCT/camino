@@ -1,6 +1,5 @@
 import '../../init'
 
-import EtapesTypesEtapesStatuts from '../../database/models/etapes-types--etapes-statuts'
 import EtapesTypes from '../../database/models/etapes-types'
 import TitresTypesDemarchesTypesEtapesTypes from '../../database/models/titres-types--demarches-types-etapes-types'
 import TitresEtapes from '../../database/models/titres-etapes'
@@ -22,12 +21,6 @@ const main = async () => {
     acceptationAuto: true,
     publicLecture: true,
     entreprisesLecture: true
-  })
-
-  await EtapesTypesEtapesStatuts.query().insertGraph({
-    etapeTypeId: 'mdp',
-    etapeStatutId: 'fai',
-    ordre: 1
   })
 
   await EtapesTypesDocumentsTypes.query().insertGraph({
@@ -214,12 +207,6 @@ const main = async () => {
     }
   ])
 
-  await EtapesTypesEtapesStatuts.query().insertGraph({
-    etapeTypeId: 'mfr',
-    etapeStatutId: 'fai',
-    ordre: 2
-  })
-
   const mfrEtapes = await TitresEtapes.query()
     .where('typeId', 'mfr')
     .where('statutId', 'dep')
@@ -291,9 +278,6 @@ const main = async () => {
 
   // on supprime la section « demande »
   await EtapesTypes.query().patch({ sections: null }).where('id', 'mfr')
-
-  // Suppression de l’ancien statut « dep » sur les demandes
-  await EtapesTypesEtapesStatuts.query().deleteById(['mfr', 'dep'])
 
   process.exit(0)
 }
