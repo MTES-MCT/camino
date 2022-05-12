@@ -1,7 +1,25 @@
+# Il faut synchroniser cet types à la main avec ce qu'il y'a dans common/src/statistiques.ts
+# la conversion à la volée de graphql est embêtante sinon
 "Statistiques"
 type QuantiteParMois {
   mois: String
-  quantite: String
+  quantite: Int
+}
+
+type UtilisateursAdministrationsStatistique {
+  aut: Int
+  dea: Int
+  dre: Int
+  min: Int
+  ope: Int
+  pre: Int
+}
+
+type UtilisateursStatistique {
+  rattachesAUnTypeDAdministration: UtilisateursAdministrationsStatistique
+  rattachesAUneEntreprise: Int
+  visiteursAuthentifies: Int
+  total: Int
 }
 
 type StatistiquesGlobales {
@@ -9,12 +27,13 @@ type StatistiquesGlobales {
   titresActivitesBeneficesAdministration: Int
   recherches: [QuantiteParMois]
   titresModifies: [QuantiteParMois]
-  actions: String
-  sessionDuree: String
-  telechargements: String
-  demarches: String
-  signalements: String
-  reutilisations: String
+  actions: Float
+  sessionDuree: Int
+  telechargements: Int
+  demarches: Int
+  signalements: Int
+  reutilisations: Int
+  utilisateurs: UtilisateursStatistique
 }
 
 type StatistiquesGuyane {

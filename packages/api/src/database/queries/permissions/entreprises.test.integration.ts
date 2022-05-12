@@ -36,13 +36,14 @@ describe('entreprisesQueryModify', () => {
         nom: 'monEntrepriseNom'
       } as IEntreprise
 
-      const mockUser = {
+      const mockUser: Omit<IUtilisateur, 'permission'> = {
         id: '109f95',
         permissionId: permission,
         entreprises: [mockEntreprise1],
         email: 'email',
-        motDePasse: 'motdepasse'
-      } as IUtilisateur
+        motDePasse: 'motdepasse',
+        dateCreation: '2022-05-12'
+      }
 
       await Utilisateurs.query().insertGraph(mockUser)
 

@@ -4,7 +4,6 @@ import { createApp } from 'vue'
 import { createStore } from 'vuex'
 
 jest.mock('../api/statistiques', () => ({
-  statistiquesGlobales: jest.fn(),
   statistiquesGuyane: jest.fn(),
   statistiquesGranulatsMarins: jest.fn()
 }))
@@ -15,24 +14,10 @@ describe('page de statistiques', () => {
   let actions
   let mutations
   let store
-  let statistiquesGlobales
   let statistiquesGuyane
   let statistiquesGranulatsMarins
 
   beforeEach(() => {
-    statistiquesGlobales = {
-      titresActivitesBeneficesEntreprise: 4800,
-      titresActivitesBeneficesAdministration: 2400,
-      nbSearchArray: [],
-      nbMajTitresArray: [],
-      nbAction: 60,
-      timeSession: '14min',
-      nbDonwload: 110,
-      nbDemarche: 400,
-      nbErreur: 210,
-      loaded: true
-    }
-
     statistiquesGuyane = {
       exemple: 'truc'
     }
@@ -53,7 +38,6 @@ describe('page de statistiques', () => {
     }
 
     statistiques.state = {
-      globales: {},
       guyane: {},
       granulatsMarins: {}
     }
@@ -73,17 +57,6 @@ describe('page de statistiques', () => {
 
     const app = createApp({})
     app.use(store)
-  })
-
-  test('récupère les statistiques globales', async () => {
-    const apiMock =
-      api.statistiquesGlobales.mockResolvedValue(statistiquesGlobales)
-    await store.dispatch('statistiques/get', 'globales')
-
-    expect(mutations.loadingAdd).toHaveBeenCalled()
-    expect(apiMock).toHaveBeenCalled()
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-    expect(store.state.statistiques.globales).toEqual(statistiquesGlobales)
   })
 
   test('récupère les statistiques de guyane', async () => {
@@ -112,16 +85,5 @@ describe('page de statistiques', () => {
     )
 
     await store.dispatch('statistiques/get', 'pour avoir 100% de coverage')
-  })
-
-  test("retourne une erreur si l'api ne répond pas", async () => {
-    const apiMock = api.statistiquesGlobales.mockRejectedValue(
-      new Error('erreur api')
-    )
-    await store.dispatch('statistiques/get', 'globales')
-
-    expect(apiMock).toHaveBeenCalled()
-    expect(actions.apiError).toHaveBeenCalled()
-    expect(store.state.statistiques.loaded).toBeFalsy()
   })
 })

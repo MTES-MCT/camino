@@ -1,6 +1,6 @@
 import Cerbere from 'cerbere'
-
 import { IUtilisateur } from '../../types'
+
 const config = {
   cerbereUrl:
     'https://authentification.din.developpement-durable.gouv.fr/cas/public',
@@ -50,12 +50,14 @@ const login = async (ticket: string) => {
 
     const cerbereProfile = cerbereProfileFormat(attributes)
 
-    const cerbereUtilisateur = {
+    const cerbereUtilisateur: Omit<IUtilisateur, 'id' | 'permission'> = {
       email: cerbereProfile.email,
       prenom: cerbereProfile.prenom,
       nom: cerbereProfile.nom,
-      telephoneFixe: cerbereProfile.telephoneFixe
-    } as IUtilisateur
+      telephoneFixe: cerbereProfile.telephoneFixe,
+      dateCreation: '2022-05-12',
+      permissionId: 'defaut'
+    }
 
     return cerbereUtilisateur
   } catch (err: any) {

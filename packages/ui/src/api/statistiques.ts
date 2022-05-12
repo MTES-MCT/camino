@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
-const statistiquesGlobales = apiGraphQLFetch(gql`
+export const statistiquesGlobales = apiGraphQLFetch(gql`
   query StatistiquesGlobales {
     statistiquesGlobales {
       titresActivitesBeneficesEntreprise
@@ -20,11 +20,24 @@ const statistiquesGlobales = apiGraphQLFetch(gql`
       demarches
       signalements
       reutilisations
+      utilisateurs {
+        rattachesAUnTypeDAdministration {
+          aut
+          dea
+          dre
+          min
+          ope
+          pre
+        }
+        rattachesAUneEntreprise
+        visiteursAuthentifies
+        total
+      }
     }
   }
 `)
 
-const statistiquesGuyane = apiGraphQLFetch(gql`
+export const statistiquesGuyane = apiGraphQLFetch(gql`
   query StatistiquesGuyane {
     statistiquesGuyane {
       surfaceExploration
@@ -68,7 +81,7 @@ const statistiquesGuyane = apiGraphQLFetch(gql`
     }
   }
 `)
-const statistiquesGranulatsMarins = apiGraphQLFetch(gql`
+export const statistiquesGranulatsMarins = apiGraphQLFetch(gql`
   query StatistiquesGranulatsMarins {
     statistiquesGranulatsMarins {
       annees {
@@ -103,5 +116,3 @@ const statistiquesGranulatsMarins = apiGraphQLFetch(gql`
     }
   }
 `)
-
-export { statistiquesGlobales, statistiquesGuyane, statistiquesGranulatsMarins }

@@ -19,7 +19,7 @@ import { entreprisesTitresQuery } from './entreprises'
 
 const titresDemarchesQueryModify = (
   q: QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>,
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
   q.select('titresDemarches.*')
     .where('titresDemarches.archive', false)
@@ -154,7 +154,7 @@ export const titreDemarcheSuppressionSelectQuery = (
 
 const titreEtapesCreationQuery = (
   demarcheAlias: string,
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
   if (permissionCheck(user?.permissionId, ['super'])) {
     return raw('true')

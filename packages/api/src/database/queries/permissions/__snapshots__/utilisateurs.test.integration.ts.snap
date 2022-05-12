@@ -1,0 +1,286 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 1`] = `
+Object {
+  "administrations": Array [
+    Object {
+      "activitesTypes": Array [],
+      "departementId": null,
+      "id": "aut-97300-01",
+      "regionId": null,
+      "titresTypes": Array [
+        Object {
+          "archive": null,
+          "associee": true,
+          "contenuIds": Array [
+            Object {
+              "elementId": "mecanise",
+              "sectionId": "arm",
+            },
+            Object {
+              "elementId": "franchissements",
+              "sectionId": "arm",
+            },
+          ],
+          "domaineId": "m",
+          "gestionnaire": null,
+          "id": "arm",
+          "typeId": "ar",
+        },
+      ],
+      "typeId": "aut",
+    },
+  ],
+  "dateCreation": "2022-05-12",
+  "email": "utilisateurEmail",
+  "entreprises": Array [],
+  "entreprisesCreation": true,
+  "id": "utilisateurId",
+  "modification": true,
+  "motDePasse": "utilisateurMotdepasse",
+  "newsletter": null,
+  "nom": "utilisateurNom",
+  "permission": Object {
+    "id": "editeur",
+    "nom": "Éditeur",
+    "ordre": 3,
+  },
+  "permissionId": "editeur",
+  "permissionModification": true,
+  "preferences": null,
+  "prenom": null,
+  "refreshToken": null,
+  "suppression": true,
+  "telephoneFixe": null,
+  "telephoneMobile": null,
+  "utilisateursCreation": true,
+}
+`;
+
+exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 2`] = `
+Object {
+  "administrations": Array [
+    Object {
+      "activitesTypes": Array [],
+      "departementId": null,
+      "id": "aut-97300-01",
+      "regionId": null,
+      "titresTypes": Array [
+        Object {
+          "archive": null,
+          "associee": true,
+          "contenuIds": Array [
+            Object {
+              "elementId": "mecanise",
+              "sectionId": "arm",
+            },
+            Object {
+              "elementId": "franchissements",
+              "sectionId": "arm",
+            },
+          ],
+          "domaineId": "m",
+          "gestionnaire": null,
+          "id": "arm",
+          "typeId": "ar",
+        },
+      ],
+      "typeId": "aut",
+    },
+  ],
+  "dateCreation": "2022-05-12",
+  "email": "utilisateurEmail",
+  "entreprises": Array [],
+  "entreprisesCreation": true,
+  "id": "utilisateurId",
+  "modification": true,
+  "motDePasse": "utilisateurMotdepasse",
+  "newsletter": null,
+  "nom": "utilisateurNom",
+  "permission": Object {
+    "id": "editeur",
+    "nom": "Éditeur",
+    "ordre": 3,
+  },
+  "permissionId": "editeur",
+  "permissionModification": true,
+  "preferences": null,
+  "prenom": null,
+  "refreshToken": null,
+  "suppression": true,
+  "telephoneFixe": null,
+  "telephoneMobile": null,
+  "utilisateursCreation": true,
+}
+`;
+
+exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 3`] = `
+Object {
+  "administrations": Array [
+    Object {
+      "activitesTypes": Array [],
+      "departementId": null,
+      "id": "aut-97300-01",
+      "regionId": null,
+      "titresTypes": Array [
+        Object {
+          "archive": null,
+          "associee": true,
+          "contenuIds": Array [
+            Object {
+              "elementId": "mecanise",
+              "sectionId": "arm",
+            },
+            Object {
+              "elementId": "franchissements",
+              "sectionId": "arm",
+            },
+          ],
+          "domaineId": "m",
+          "gestionnaire": null,
+          "id": "arm",
+          "typeId": "ar",
+        },
+      ],
+      "typeId": "aut",
+    },
+  ],
+  "dateCreation": "2022-05-12",
+  "email": "utilisateurEmail",
+  "entreprises": Array [],
+  "entreprisesCreation": true,
+  "id": "utilisateurId",
+  "modification": false,
+  "motDePasse": "utilisateurMotdepasse",
+  "newsletter": null,
+  "nom": "utilisateurNom",
+  "permission": Object {
+    "id": "editeur",
+    "nom": "Éditeur",
+    "ordre": 3,
+  },
+  "permissionId": "editeur",
+  "permissionModification": false,
+  "preferences": null,
+  "prenom": null,
+  "refreshToken": null,
+  "suppression": false,
+  "telephoneFixe": null,
+  "telephoneMobile": null,
+  "utilisateursCreation": false,
+}
+`;
+
+exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 4`] = `
+Object {
+  "administrations": Array [
+    Object {
+      "activitesTypes": Array [],
+      "departementId": null,
+      "id": "aut-97300-01",
+      "regionId": null,
+      "titresTypes": Array [
+        Object {
+          "archive": null,
+          "associee": true,
+          "contenuIds": Array [
+            Object {
+              "elementId": "mecanise",
+              "sectionId": "arm",
+            },
+            Object {
+              "elementId": "franchissements",
+              "sectionId": "arm",
+            },
+          ],
+          "domaineId": "m",
+          "gestionnaire": null,
+          "id": "arm",
+          "typeId": "ar",
+        },
+      ],
+      "typeId": "aut",
+    },
+  ],
+  "dateCreation": "2022-05-12",
+  "email": "utilisateurEmail",
+  "entreprises": Array [],
+  "entreprisesCreation": false,
+  "id": "utilisateurId",
+  "modification": false,
+  "motDePasse": "utilisateurMotdepasse",
+  "newsletter": null,
+  "nom": "utilisateurNom",
+  "permission": Object {
+    "id": "editeur",
+    "nom": "Éditeur",
+    "ordre": 3,
+  },
+  "permissionId": "editeur",
+  "permissionModification": false,
+  "preferences": null,
+  "prenom": null,
+  "refreshToken": null,
+  "suppression": false,
+  "telephoneFixe": null,
+  "telephoneMobile": null,
+  "utilisateursCreation": false,
+}
+`;
+
+exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 5`] = `
+Object {
+  "administrations": Array [
+    Object {
+      "activitesTypes": Array [],
+      "departementId": null,
+      "id": "aut-97300-01",
+      "regionId": null,
+      "titresTypes": Array [
+        Object {
+          "archive": null,
+          "associee": true,
+          "contenuIds": Array [
+            Object {
+              "elementId": "mecanise",
+              "sectionId": "arm",
+            },
+            Object {
+              "elementId": "franchissements",
+              "sectionId": "arm",
+            },
+          ],
+          "domaineId": "m",
+          "gestionnaire": null,
+          "id": "arm",
+          "typeId": "ar",
+        },
+      ],
+      "typeId": "aut",
+    },
+  ],
+  "dateCreation": "2022-05-12",
+  "email": "utilisateurEmail",
+  "entreprises": Array [],
+  "entreprisesCreation": false,
+  "id": "utilisateurId",
+  "modification": false,
+  "motDePasse": "utilisateurMotdepasse",
+  "newsletter": null,
+  "nom": "utilisateurNom",
+  "permission": Object {
+    "id": "editeur",
+    "nom": "Éditeur",
+    "ordre": 3,
+  },
+  "permissionId": "editeur",
+  "permissionModification": false,
+  "preferences": null,
+  "prenom": null,
+  "refreshToken": null,
+  "suppression": false,
+  "telephoneFixe": null,
+  "telephoneMobile": null,
+  "utilisateursCreation": false,
+}
+`;

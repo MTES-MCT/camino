@@ -9,7 +9,7 @@ import { userSuper } from '../../database/user-super'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 
 const titresEtapesHeritagePropsUpdate = async (
-  user: IUtilisateur,
+  user: Omit<IUtilisateur, 'permission'>,
   titresDemarchesIds?: string[]
 ) => {
   console.info()

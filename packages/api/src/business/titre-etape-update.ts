@@ -26,7 +26,7 @@ import { titresEtapesDepotCreate } from './processes/titres-demarches-depot-crea
 const titreEtapeUpdate = async (
   titreEtapeId: string | null,
   titreDemarcheId: string,
-  user: IUtilisateur
+  user: Omit<IUtilisateur, 'permission'>
 ) => {
   try {
     console.info()

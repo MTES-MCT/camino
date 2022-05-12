@@ -62,7 +62,7 @@ const entreprisesFiltersQueryModify = (
 
 const entreprisesQueryBuild = (
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
   const graph = fields
     ? graphBuild(fields, 'entreprises', fieldsFormat)
@@ -121,7 +121,7 @@ const entreprisesGet = async (
     archive?: boolean | null
   },
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
   const q = entreprisesQueryBuild({ fields }, user)
 

@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
 
 import { cacheGet, cacheUpsert } from '../../database/queries/caches'
+import { Statistiques } from 'camino-common/src/statistiques'
 
 interface IMatomoSectionData {
   label: string
@@ -28,15 +29,16 @@ interface IMatomoResult {
   }
 }
 
-interface IMatomoCache {
-  recherches: { mois: string; quantite: string }[]
-  titresModifies: { mois: string; quantite: number }[]
-  actions: string
-  sessionDuree: string
-  telechargements: string
-  signalements: number
-  reutilisations: number
-}
+type IMatomoCache = Pick<
+  Statistiques,
+  | 'recherches'
+  | 'titresModifies'
+  | 'actions'
+  | 'sessionDuree'
+  | 'telechargements'
+  | 'signalements'
+  | 'reutilisations'
+>
 
 const matomoMainDataGet = async (duree: number) => {
   // Datas de la page 'Récapitulatif' des visites dans matomo
@@ -64,7 +66,7 @@ const matomoMainDataGet = async (duree: number) => {
   const recherches = monthsArray.map(key => {
     return {
       mois: key,
-      quantite: (matomoVisitData[key].nb_searches || 0).toString()
+      quantite: matomoVisitData[key].nb_searches || 0
     }
   })
 
@@ -73,14 +75,14 @@ const matomoMainDataGet = async (duree: number) => {
 
   // nombre d'action du dernier mois
   const actions = dataCurrent.nb_actions_per_visit
-    ? dataCurrent.nb_actions_per_visit.toString()
-    : '0'
+    ? dataCurrent.nb_actions_per_visit
+    : 0
   // temps de session du dernier mois
   const sessionDuree = timeFormat(dataCurrent.avg_time_on_site)
   // nombre de téléchargements du dernier mois
   const telechargements = dataCurrent.nb_downloads
-    ? dataCurrent.nb_downloads.toString()
-    : '0'
+    ? dataCurrent.nb_downloads
+    : 0
 
   return { recherches, actions, sessionDuree, telechargements }
 }
@@ -236,7 +238,7 @@ const matomoCacheInit = async () => {
 
   const titresModifies = matomoResults[3]
 
-  const matomoCacheValue = {
+  const matomoCacheValue: IMatomoCache = {
     recherches,
     titresModifies,
     actions,
@@ -244,7 +246,7 @@ const matomoCacheInit = async () => {
     telechargements,
     signalements,
     reutilisations
-  } as IMatomoCache
+  }
 
   await cacheUpsert({
     id: 'matomo',
@@ -264,12 +266,14 @@ const matomoData = async () => {
   return matomoCache.valeur as IMatomoCache
 }
 
-const timeFormat = (time: string) => {
+export const timeFormat = (time: string) => {
   // si le temps ne présente que des secondes, l'afficher ainsi
   // sinon, ne garder que les minutes
   const index = time.search('min')
 
-  return index === -1 ? time : time.substring(0, index).replace(' ', '')
+  return index === -1
+    ? 0
+    : Number.parseInt(time.substring(0, index).replace(' ', ''), 10)
 }
 
 const getPath = (

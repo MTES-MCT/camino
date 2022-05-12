@@ -33,7 +33,7 @@ import TitresEtapes from '../models/titres-etapes'
  */
 const titresQueryBuild = (
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined,
+  user: Omit<IUtilisateur, 'permission'> | null | undefined,
   demandeEnCours?: boolean | null
 ) => {
   const graph = fields
@@ -59,7 +59,7 @@ const titresQueryBuild = (
 const titreGet = async (
   id: string,
   { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean },
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ): Promise<DBTitre | undefined> => {
   const q = titresQueryBuild({ fields }, user)
 
@@ -159,7 +159,7 @@ const titresGet = async (
     demandeEnCours?: boolean | null
   } = {},
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
   const q = titresQueryBuild({ fields }, user, demandeEnCours)
 

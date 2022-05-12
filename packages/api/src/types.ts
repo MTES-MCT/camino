@@ -1002,6 +1002,7 @@ interface IUtilisateur {
   id: string
   email?: string | null
   motDePasse?: string | null
+  dateCreation: string
   nom?: string | null
   prenom?: string | null
   telephoneFixe?: string | null
@@ -1029,7 +1030,10 @@ interface IUtilisateurTitre {
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
-type IUtilisateurCreation = PartialBy<Omit<IUtilisateur, 'id'>, 'permissionId'>
+type IUtilisateurCreation = PartialBy<
+  Omit<IUtilisateur, 'id' | 'permission'>,
+  'permissionId'
+>
 
 interface IToken {
   user?: ITokenUser

@@ -6,10 +6,15 @@ import { debug } from '../../../config/index'
 import { titresActivitesGet } from '../../../database/queries/titres-activites'
 import { userSuper } from '../../../database/user-super'
 import { matomoData } from '../../../tools/api-matomo/index'
+import {
+  Statistiques,
+  StatistiquesUtilisateurs
+} from 'camino-common/src/statistiques'
+import Utilisateurs from '../../../database/models/utilisateurs'
 
 const ACTIVITE_ANNEE_DEBUT = 2018
 
-const statistiquesGlobales = async () => {
+const statistiquesGlobales = async (): Promise<Statistiques> => {
   try {
     const titresActivites = await titresActivitesGet({}, {}, userSuper)
 
@@ -45,8 +50,54 @@ const statistiquesGlobales = async () => {
         dateSaisie.slice(0, 4) === new Date().getFullYear().toString()
       )
     }).length
+    // TODO 2022-05-11 serait plus performant avec plusieurs petites requêtes sql ?
+    const utilisateursInDb = await Utilisateurs.query().withGraphFetched({
+      entreprises: {},
+      administrations: {}
+    })
+
+    const utilisateurs: StatistiquesUtilisateurs =
+      utilisateursInDb.reduce<StatistiquesUtilisateurs>(
+        (previousValue, user) => {
+          if (user.email !== null) {
+            let entrepriseOuAdmin = false
+            if (user.entreprises?.length) {
+              previousValue.rattachesAUneEntreprise++
+              entrepriseOuAdmin = true
+            }
+            if (user.administrations?.length) {
+              for (const administration of user.administrations) {
+                previousValue.rattachesAUnTypeDAdministration[
+                  administration.typeId
+                ]++
+              }
+              entrepriseOuAdmin = true
+            }
+            if (!entrepriseOuAdmin) {
+              previousValue.visiteursAuthentifies++
+            }
+            previousValue.total++
+          }
+
+          return previousValue
+        },
+        {
+          rattachesAUnTypeDAdministration: {
+            aut: 0,
+            dea: 0,
+            dre: 0,
+            min: 0,
+            ope: 0,
+            pre: 0
+          },
+          rattachesAUneEntreprise: 0,
+          total: 0,
+          visiteursAuthentifies: 0
+        }
+      )
 
     return {
+      utilisateurs,
       titresActivitesBeneficesEntreprise,
       titresActivitesBeneficesAdministration,
       recherches,

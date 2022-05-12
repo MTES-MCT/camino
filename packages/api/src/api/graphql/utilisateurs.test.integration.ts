@@ -8,7 +8,6 @@ import { userAdd } from '../../knex/user-add'
 import request from 'supertest'
 import jwt from 'jsonwebtoken'
 import { dbManager } from '../../../tests/db-manager'
-import { IUtilisateur } from '../../types'
 import { Administrations } from 'camino-common/src/administrations'
 import { Knex } from 'knex'
 
@@ -50,8 +49,9 @@ describe('utilisateurModifier', () => {
       nom: 'test',
       email: 'test@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut'
-    } as IUtilisateur)
+      permissionId: 'defaut',
+      dateCreation: '2022-05-12'
+    })
 
     const token = tokenCreate({ id: 'test' })
 
@@ -86,8 +86,9 @@ describe('utilisateurModifier', () => {
       nom: 'test1',
       email: 'test1@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut'
-    } as IUtilisateur)
+      permissionId: 'defaut',
+      dateCreation: '2022-05-12'
+    })
 
     await userAdd(knex, {
       id: 'test2',
@@ -95,8 +96,9 @@ describe('utilisateurModifier', () => {
       nom: 'test2',
       email: 'test2@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut'
-    } as IUtilisateur)
+      permissionId: 'defaut',
+      dateCreation: '2022-05-12'
+    })
 
     const res = await graphQLCall(
       utilisateurModifierQuery,
@@ -321,8 +323,9 @@ describe('utilisateurSupprimer', () => {
       nom: 'test',
       email: 'test@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut'
-    } as IUtilisateur)
+      permissionId: 'defaut',
+      dateCreation: '2022-05-12'
+    })
 
     const token = tokenCreate({ id: 'test' })
 
@@ -349,8 +352,9 @@ describe('utilisateurSupprimer', () => {
       nom: 'test',
       email: 'user-to-delete@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut'
-    } as IUtilisateur)
+      permissionId: 'defaut',
+      dateCreation: '2022-05-12'
+    })
 
     const res = await graphQLCall(utilisateurSupprimerQuery, { id }, 'super')
 
@@ -397,8 +401,9 @@ describe('utilisateurEmailModifier', () => {
       nom: 'test',
       email: oldUserEmail,
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut'
-    } as IUtilisateur)
+      permissionId: 'defaut',
+      dateCreation: '2022-05-12'
+    })
     const token = tokenCreate({ id: userId })
 
     const req = request(app).post('/').send({
