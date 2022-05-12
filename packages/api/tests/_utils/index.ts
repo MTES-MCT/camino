@@ -12,6 +12,7 @@ import {
 } from '../../src/database/queries/utilisateurs'
 import { userSuper } from '../../src/database/user-super'
 import { AdministrationId } from 'camino-common/src/administrations'
+import dateFormat from 'dateformat'
 
 const queryImport = (nom: string) =>
   fs
@@ -98,6 +99,7 @@ const userTokenGenerate = async (
         nom: `nom-${permissionId}`,
         email: `${id}@camino.local`,
         motDePasse: 'mot-de-passe',
+        dateCreation: dateFormat(new Date(), 'yyyy-mm-dd'),
         permissionId,
         administrations
       } as IUtilisateur,

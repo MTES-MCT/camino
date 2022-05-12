@@ -50,7 +50,8 @@ describe('utilisateurModifier', () => {
       nom: 'test',
       email: 'test@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut'
+      permissionId: 'defaut',
+      dateCreation: '2022-05-12'
     } as IUtilisateur)
 
     const token = tokenCreate({ id: 'test' })
@@ -86,7 +87,8 @@ describe('utilisateurModifier', () => {
       nom: 'test1',
       email: 'test1@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut'
+      permissionId: 'defaut',
+      dateCreation: '2022-05-12'
     } as IUtilisateur)
 
     await userAdd(knex, {
@@ -95,7 +97,8 @@ describe('utilisateurModifier', () => {
       nom: 'test2',
       email: 'test2@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut'
+      permissionId: 'defaut',
+      dateCreation: '2022-05-12'
     } as IUtilisateur)
 
     const res = await graphQLCall(
@@ -321,7 +324,8 @@ describe('utilisateurSupprimer', () => {
       nom: 'test',
       email: 'test@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut'
+      permissionId: 'defaut',
+      dateCreation: '2022-05-12'
     } as IUtilisateur)
 
     const token = tokenCreate({ id: 'test' })
@@ -349,7 +353,8 @@ describe('utilisateurSupprimer', () => {
       nom: 'test',
       email: 'user-to-delete@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut'
+      permissionId: 'defaut',
+      dateCreation: '2022-05-12'
     } as IUtilisateur)
 
     const res = await graphQLCall(utilisateurSupprimerQuery, { id }, 'super')
@@ -397,7 +402,8 @@ describe('utilisateurEmailModifier', () => {
       nom: 'test',
       email: oldUserEmail,
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut'
+      permissionId: 'defaut',
+      dateCreation: '2022-05-12'
     } as IUtilisateur)
     const token = tokenCreate({ id: userId })
 
