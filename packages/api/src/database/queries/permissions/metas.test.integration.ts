@@ -3,7 +3,7 @@ import DemarchesTypes from '../../models/demarches-types'
 import { demarchesTypesQueryModify } from './metas'
 import { idGenerate } from '../../models/_format/id-create'
 import Titres from '../../models/titres'
-import { IDemarcheType, IUtilisateur } from '../../../types'
+import { IDemarcheType } from '../../../types'
 import AdministrationsTitresTypes from '../../models/administrations-titres-types'
 import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts'
 import {
@@ -73,13 +73,8 @@ describe('metas permissions queries', () => {
         const q = DemarchesTypes.query()
         demarchesTypesQueryModify(
           q,
-          {
-            permissionId: 'admin',
-            administrations: [administration!]
-          } as unknown as IUtilisateur,
-          {
-            titreId
-          }
+          { permissionId: 'admin', administrations: [administration!] },
+          { titreId }
         )
 
         const demarchesTypes = (await q) as unknown as IDemarcheType[]

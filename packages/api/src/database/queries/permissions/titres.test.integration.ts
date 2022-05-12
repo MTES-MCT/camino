@@ -2,8 +2,7 @@ import {
   IEntreprise,
   IPermissionId,
   ITitre,
-  ITitreDemarche,
-  IUtilisateur
+  ITitreDemarche
 } from '../../../types'
 
 import { dbManager } from '../../../../tests/db-manager'
@@ -315,8 +314,8 @@ describe('titresQueryModify', () => {
         const q = Titres.query()
         titresTravauxCreationQuery(q, {
           permissionId: 'admin',
-          administrations: [administration!]
-        } as unknown as IUtilisateur)
+          administrations: [administration]
+        })
 
         const titre = (await q.first()) as ITitre
 
@@ -343,8 +342,9 @@ describe('titresQueryModify', () => {
 
         const q = Titres.query()
         titresTravauxCreationQuery(q, {
-          permissionId
-        } as unknown as IUtilisateur)
+          permissionId,
+          administrations: []
+        })
 
         const titre = (await q.first()) as ITitre
 

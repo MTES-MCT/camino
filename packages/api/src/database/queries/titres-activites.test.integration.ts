@@ -55,7 +55,8 @@ describe('teste les requêtes sur les activités', () => {
       motDePasse: 'utilisateurMotdepasse',
       administrations: [
         { id: 'min-mtes-dgaln-01', typeId: 'min', nom: 'dgaln' }
-      ]
+      ],
+      dateCreation: '2022-05-12'
     }
 
     const actual = await titresActivitesGet(

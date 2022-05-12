@@ -106,7 +106,7 @@ const titresActivitesFiltersQueryModify = (
 
 const titreActivitesQueryBuild = (
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
   const graph = fields
     ? graphBuild(fieldsTitreAdd(fields), 'activite', fieldsFormat)
@@ -246,7 +246,7 @@ const titresActivitesGet = async (
     titresStatutsIds?: string[] | null
   },
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
   const q = titreActivitesQueryBuild({ fields }, user)
 

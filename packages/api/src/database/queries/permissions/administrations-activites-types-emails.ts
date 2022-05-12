@@ -7,7 +7,7 @@ import { emailsLectureQuery } from './administrations'
 
 const administrationsActivitesTypesEmailsQueryModify = (
   q: QueryBuilder<ActivitesTypes, ActivitesTypes | ActivitesTypes[]>,
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
   q.select('activitesTypes.*')
   q.joinRelated('administrationsEmails')

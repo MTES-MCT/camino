@@ -8,7 +8,6 @@ import { userAdd } from '../../knex/user-add'
 import request from 'supertest'
 import jwt from 'jsonwebtoken'
 import { dbManager } from '../../../tests/db-manager'
-import { IUtilisateur } from '../../types'
 import { Administrations } from 'camino-common/src/administrations'
 import { Knex } from 'knex'
 
@@ -52,7 +51,7 @@ describe('utilisateurModifier', () => {
       motDePasse: 'mot-de-passe',
       permissionId: 'defaut',
       dateCreation: '2022-05-12'
-    } as IUtilisateur)
+    })
 
     const token = tokenCreate({ id: 'test' })
 
@@ -89,7 +88,7 @@ describe('utilisateurModifier', () => {
       motDePasse: 'mot-de-passe',
       permissionId: 'defaut',
       dateCreation: '2022-05-12'
-    } as IUtilisateur)
+    })
 
     await userAdd(knex, {
       id: 'test2',
@@ -99,7 +98,7 @@ describe('utilisateurModifier', () => {
       motDePasse: 'mot-de-passe',
       permissionId: 'defaut',
       dateCreation: '2022-05-12'
-    } as IUtilisateur)
+    })
 
     const res = await graphQLCall(
       utilisateurModifierQuery,
@@ -326,7 +325,7 @@ describe('utilisateurSupprimer', () => {
       motDePasse: 'mot-de-passe',
       permissionId: 'defaut',
       dateCreation: '2022-05-12'
-    } as IUtilisateur)
+    })
 
     const token = tokenCreate({ id: 'test' })
 
@@ -355,7 +354,7 @@ describe('utilisateurSupprimer', () => {
       motDePasse: 'mot-de-passe',
       permissionId: 'defaut',
       dateCreation: '2022-05-12'
-    } as IUtilisateur)
+    })
 
     const res = await graphQLCall(utilisateurSupprimerQuery, { id }, 'super')
 
@@ -404,7 +403,7 @@ describe('utilisateurEmailModifier', () => {
       motDePasse: 'mot-de-passe',
       permissionId: 'defaut',
       dateCreation: '2022-05-12'
-    } as IUtilisateur)
+    })
     const token = tokenCreate({ id: userId })
 
     const req = request(app).post('/').send({

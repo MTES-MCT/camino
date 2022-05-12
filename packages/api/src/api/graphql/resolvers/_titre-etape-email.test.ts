@@ -83,16 +83,12 @@ const etapeType = {
   publicLecture: true,
   entreprisesLecture: true
 }
-const user: IUtilisateur = {
+const user: Omit<IUtilisateur, 'permission'> = {
   id: 'super',
   email: 'camino@beta.gouv.fr',
   nom: 'Camino',
   permissionId: 'super',
-  permission: {
-    id: 'super',
-    nom: 'super',
-    ordre: 1
-  }
+  dateCreation: '2022-05-12'
 }
 
 test("envoie un email sur un octroi d'AEX", () => {

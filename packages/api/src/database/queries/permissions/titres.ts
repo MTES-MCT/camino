@@ -72,7 +72,10 @@ const titresDemarchesAdministrationsModificationQuery = (
 
 export const titresTravauxCreationQuery = (
   q: QueryBuilder<Titres, Titres | Titres[]>,
-  user: IUtilisateur | null | undefined
+  user:
+    | Pick<IUtilisateur, 'permissionId' | 'administrations'>
+    | null
+    | undefined
 ) => {
   const demarchesTypesQuery = DemarchesTypes.query().where('travaux', true)
   demarchesCreationQuery(demarchesTypesQuery, user, {
@@ -164,7 +167,7 @@ export const titresSuppressionSelectQuery = (
 
 const titresQueryModify = (
   q: QueryBuilder<Titres, Titres | Titres[]>,
-  user: IUtilisateur | null | undefined,
+  user: Omit<IUtilisateur, 'permission'> | null | undefined,
   demandeEnCours?: boolean | null
 ) => {
   q.select('titres.*').where('titres.archive', false)

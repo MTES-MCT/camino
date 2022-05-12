@@ -245,7 +245,10 @@ const etapesTypesQueryModify = (
 
 export const demarchesCreationQuery = (
   q: QueryBuilder<DemarchesTypes, DemarchesTypes | DemarchesTypes[]>,
-  user: IUtilisateur | null | undefined,
+  user:
+    | Pick<IUtilisateur, 'permissionId' | 'administrations'>
+    | null
+    | undefined,
   { titreId, titreIdAlias }: { titreId?: string; titreIdAlias?: string }
 ) => {
   let demarchesCreation = raw('false')
@@ -278,9 +281,12 @@ export const demarchesCreationQuery = (
 
 const demarchesTypesQueryModify = (
   q: QueryBuilder<DemarchesTypes, DemarchesTypes | DemarchesTypes[]>,
-  user: IUtilisateur | null | undefined,
+  user:
+    | Pick<IUtilisateur, 'permissionId' | 'administrations'>
+    | null
+    | undefined,
   { titreId, titreIdAlias }: { titreId?: string; titreIdAlias?: string } = {}
-) => {
+): void => {
   q.select('demarchesTypes.*')
 
   // propriété 'demarchesCreation' selon le profil de l'utilisateur

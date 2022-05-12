@@ -30,7 +30,7 @@ const departementsQuery = (
     .whereIn('adm.id', administrationsIds)
 
 const emailsLectureQuery = (
-  user: IUtilisateur | null | undefined,
+  user: Omit<IUtilisateur, 'permission'> | null | undefined,
   administrationAlias: string,
   administrationsIds: string[],
   administrationsIdsReplace: string[]
@@ -60,7 +60,7 @@ const emailsLectureQuery = (
 
 const administrationsQueryModify = (
   q: QueryBuilder<Administrations, Administrations | Administrations[]>,
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ): QueryBuilder<Administrations, Administrations | Administrations[]> => {
   q.select('administrations.*')
 

@@ -24,7 +24,7 @@ import Journaux from '../../models/journaux'
 import { journauxQueryModify } from './journaux'
 
 const titreEtapeModificationQueryBuild = (
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
   if (permissionCheck(user?.permissionId, ['super'])) {
     return raw('true')
@@ -111,7 +111,7 @@ const specifiquesAdd = (
  */
 const titresEtapesQueryModify = (
   q: QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]>,
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
   q.select('titresEtapes.*')
     .where('titresEtapes.archive', false)

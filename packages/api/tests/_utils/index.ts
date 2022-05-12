@@ -11,7 +11,10 @@ import {
   utilisateurGet
 } from '../../src/database/queries/utilisateurs'
 import { userSuper } from '../../src/database/user-super'
-import { AdministrationId } from 'camino-common/src/administrations'
+import {
+  AdministrationId,
+  Administrations
+} from 'camino-common/src/administrations'
 import dateFormat from 'dateformat'
 
 const queryImport = (nom: string) =>
@@ -88,8 +91,10 @@ const userTokenGenerate = async (
   if (!userInDb) {
     const administrations = []
 
-    if (administrationId) {
-      administrations.push({ id: administrationId })
+    if (administrationId && administrationId in Administrations) {
+      administrations.push(
+        Administrations[administrationId as AdministrationId]
+      )
     }
 
     await utilisateurCreate(
@@ -102,7 +107,7 @@ const userTokenGenerate = async (
         dateCreation: dateFormat(new Date(), 'yyyy-mm-dd'),
         permissionId,
         administrations
-      } as IUtilisateur,
+      },
       {}
     )
   }

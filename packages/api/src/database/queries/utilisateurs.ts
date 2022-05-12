@@ -39,7 +39,7 @@ const userGet = async (userId?: string) => {
 
 const utilisateursQueryBuild = (
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
   const graph = fields
     ? graphBuild(fields, 'utilisateur', fieldsFormat)
@@ -138,7 +138,7 @@ const userByRefreshTokenGet = async (refreshToken: string) => {
 const utilisateurGet = async (
   id: string,
   { fields }: { fields?: IFields } = {},
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
   const q = utilisateursQueryBuild({ fields }, user)
 
@@ -198,7 +198,7 @@ const utilisateursGet = async (
     emails?: string | null
   },
   { fields }: { fields?: IFields } = {},
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
   const q = utilisateursQueryBuild({ fields }, user)
 
@@ -257,7 +257,7 @@ const utilisateursCount = async (
     emails?: string | null
   },
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
   const q = utilisateursQueryBuild({ fields }, user)
 
@@ -270,7 +270,7 @@ const utilisateursCount = async (
 }
 
 const utilisateurCreate = async (
-  utilisateur: IUtilisateur,
+  utilisateur: Omit<IUtilisateur, 'permission'>,
   { fields }: { fields?: IFields }
 ) =>
   Utilisateurs.query()

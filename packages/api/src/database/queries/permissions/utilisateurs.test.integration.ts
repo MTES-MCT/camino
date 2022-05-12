@@ -19,14 +19,21 @@ afterAll(async () => {
 
 const mockAdministration = Administrations['aut-97300-01']
 
-const mockUser = {
+const mockUser: Omit<IUtilisateur, 'permission'> = {
   id: 'utilisateurId',
   permissionId: 'editeur',
   nom: 'utilisateurNom',
   email: 'utilisateurEmail',
   motDePasse: 'utilisateurMotdepasse',
-  administrations: [{ id: mockAdministration.id }]
-} as IUtilisateur
+  administrations: [
+    {
+      id: mockAdministration.id,
+      nom: mockAdministration.nom,
+      typeId: mockAdministration.typeId
+    }
+  ],
+  dateCreation: '2022-05-12'
+}
 
 describe('utilisateursQueryModify', () => {
   test.each`
@@ -40,19 +47,24 @@ describe('utilisateursQueryModify', () => {
   `(
     "Vérifie l'écriture de la requête sur un utilisateur",
     async ({ permissionId, voit }) => {
-      const user = {
+      const user: Omit<IUtilisateur, 'permission'> = {
         id: 'userId',
         permissionId,
-        administrations: [mockAdministration] as unknown as IAdministration[]
-      } as IUtilisateur
+        administrations: [mockAdministration] as unknown as IAdministration[],
+        dateCreation: '2022-05-12'
+      }
 
       const utilisateurs = await utilisateursGet(
         { noms: mockUser.nom },
         {},
         user
       )
-
-      expect(utilisateurs).toMatchObject(voit ? [mockUser] : [])
+      if (voit) {
+        expect(utilisateurs).toHaveLength(1)
+        expect(utilisateurs[0]).toMatchSnapshot()
+      } else {
+        expect(utilisateurs).toHaveLength(0)
+      }
     }
   )
 })

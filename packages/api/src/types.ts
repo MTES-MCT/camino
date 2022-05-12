@@ -1030,7 +1030,10 @@ interface IUtilisateurTitre {
 
 type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
-type IUtilisateurCreation = PartialBy<Omit<IUtilisateur, 'id'>, 'permissionId'>
+type IUtilisateurCreation = PartialBy<
+  Omit<IUtilisateur, 'id' | 'permission'>,
+  'permissionId'
+>
 
 interface IToken {
   user?: ITokenUser
