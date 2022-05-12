@@ -648,13 +648,7 @@ const metasIndex = {
         type: Date,
         class: ['min-width-12']
       },
-      { id: 'delaiMois', nom: 'Délai', type: Number },
-      {
-        id: 'satisfactionUrl',
-        nom: 'Url voxusagers',
-        type: String,
-        optional: true
-      }
+      { id: 'delaiMois', nom: 'Délai', type: Number }
     ]
   },
   'activites-statuts': {

@@ -21,7 +21,6 @@ type ActiviteType {
   sections: Json!
   pays: [Pays!]
   documentsTypes: [DocumentType]
-  satisfactionUrl: String
   lectureInterdit: Boolean
   modificationInterdit: Boolean
 }
@@ -57,7 +56,6 @@ input InputActiviteType {
   delaiMois: Int
   frequenceId: ID
   sections: Json
-  satisfactionUrl: String
 }
 
 input InputActiviteTypeTitreType {

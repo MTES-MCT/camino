@@ -227,7 +227,6 @@ interface IActiviteType {
   frequence?: IFrequence | null
   pays?: IPays[] | null
   administrations?: IAdministration[] | null
-  satisfactionUrl: string
   email?: string | null
   modification?: boolean | null
 }
