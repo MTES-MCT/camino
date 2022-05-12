@@ -49,7 +49,8 @@ describe("statut d'une démarche", () => {
     ).toEqual('acc')
   })
 
-  test("une démarche d'octroi d'un titre ARM dont l'étape de def la plus récente est acceptée a le statut “accepté”", () => {
+  // TODO 2022-05-12 l'étape de def n'existe pas sur un octroi d'ARM (def: décision de l'Office national des forêts)
+  test.skip("une démarche d'octroi d'un titre ARM dont l'étape de def la plus récente est acceptée a le statut “accepté”", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
@@ -86,7 +87,29 @@ describe("statut d'une démarche", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([{ typeId: 'sco', statutId: 'fai' }]),
+        etapesBuild([
+          {
+            typeId: 'mfr',
+            statutId: 'fai',
+            date: '2019-12-10',
+            contenu: { arm: { mecanise: true, franchissements: 3 } }
+          },
+          { typeId: 'mdp', statutId: 'fai', date: '2019-12-11' },
+          { typeId: 'pfd', statutId: 'fai', date: '2019-12-13' },
+          { typeId: 'dae', statutId: 'exe', date: '2020-01-14' },
+          { typeId: 'mcp', statutId: 'com', date: '2020-01-23' },
+          { typeId: 'vfd', statutId: 'fai', date: '2020-02-05' },
+          { typeId: 'mcr', statutId: 'fav', date: '2020-02-06' },
+          { typeId: 'eof', statutId: 'fai', date: '2020-02-07' },
+          { typeId: 'aof', statutId: 'fav', date: '2020-02-08' },
+          { typeId: 'rde', statutId: 'fav', date: '2020-02-11' },
+          { typeId: 'sca', statutId: 'fai', date: '2020-06-15' },
+          { typeId: 'aca', statutId: 'fav', date: '2020-06-17' },
+          { typeId: 'mnb', statutId: 'fai', date: '2020-07-09' },
+          { typeId: 'pfc', statutId: 'fai', date: '2020-07-16' },
+          { typeId: 'vfc', statutId: 'fai', date: '2020-07-17' },
+          { typeId: 'sco', statutId: 'fai', date: '2020-09-28' }
+        ]),
         'arm'
       )
     ).toEqual('acc')
@@ -145,7 +168,10 @@ describe("statut d'une démarche", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([{ typeId: 'mdp', statutId: 'fai' }]),
+        etapesBuild([
+          { typeId: 'mfr', statutId: 'fai' },
+          { typeId: 'mdp', statutId: 'fai' }
+        ]),
         'arm'
       )
     ).toEqual('ins')
@@ -153,11 +179,21 @@ describe("statut d'une démarche", () => {
 
   test("une démarche d'octroi d'un titre ARM dont l'étape de mcp a le statut “en instruction”", () => {
     expect(
-      titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'mcp' }]), 'arm')
+      titreDemarcheStatutIdFind(
+        'oct',
+        etapesBuild([
+          { typeId: 'mfr', statutId: 'fai' },
+          { typeId: 'mdp', statutId: 'fai' },
+          { typeId: 'pfd', statutId: 'fai' },
+          { typeId: 'mcp', statutId: 'fai' }
+        ]),
+        'arm'
+      )
     ).toEqual('ins')
   })
 
-  test("une démarche d'octroi d'un titre ARM dont la dernière étape de def est acceptée a le statut “accepté”", () => {
+  // TODO 2022-05-12 l'étape de def n'existe pas sur un octroi d'ARM (def: décision de l'Office national des forêts)
+  test.skip("une démarche d'octroi d'un titre ARM dont la dernière étape de def est acceptée a le statut “accepté”", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
@@ -167,7 +203,8 @@ describe("statut d'une démarche", () => {
     ).toEqual('acc')
   })
 
-  test("une démarche d'octroi d'un titre ARM dont la dernière étape de def est rejetée a le statut “rejeté”", () => {
+  // TODO 2022-05-12 l'étape de def n'existe pas sur un octroi d'ARM (def: décision de l'Office national des forêts)
+  test.skip("une démarche d'octroi d'un titre ARM dont la dernière étape de def est rejetée a le statut “rejeté”", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
@@ -229,7 +266,18 @@ describe("statut d'une démarche", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([{ typeId: 'aca', statutId: 'def' }]),
+        etapesBuild([
+          { typeId: 'mfr', statutId: 'fai', date: '2021-02-25' },
+          { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
+          { typeId: 'pfd', statutId: 'fai', date: '2020-09-03' },
+          { typeId: 'mcp', statutId: 'com', date: '2021-02-27' },
+          { typeId: 'vfd', statutId: 'fai', date: '2021-03-10' },
+          { typeId: 'mcr', statutId: 'fav', date: '2021-03-11' },
+          { typeId: 'eof', statutId: 'fai', date: '2021-03-17' },
+          { typeId: 'aof', statutId: 'fav', date: '2021-09-23' },
+          { typeId: 'sca', statutId: 'fai', date: '2021-09-24' },
+          { typeId: 'aca', statutId: 'def', date: '2021-09-25' }
+        ]),
         'arm'
       )
     ).toEqual('rej')
@@ -239,7 +287,18 @@ describe("statut d'une démarche", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([{ typeId: 'aca', statutId: 'acc' }]),
+        etapesBuild([
+          { typeId: 'mfr', statutId: 'fai', date: '2021-02-25' },
+          { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
+          { typeId: 'pfd', statutId: 'fai', date: '2020-09-03' },
+          { typeId: 'mcp', statutId: 'com', date: '2021-02-27' },
+          { typeId: 'vfd', statutId: 'fai', date: '2021-03-10' },
+          { typeId: 'mcr', statutId: 'fav', date: '2021-03-11' },
+          { typeId: 'eof', statutId: 'fai', date: '2021-03-17' },
+          { typeId: 'aof', statutId: 'fav', date: '2021-09-23' },
+          { typeId: 'sca', statutId: 'fai', date: '2021-09-24' },
+          { typeId: 'aca', statutId: 'fav', date: '2021-09-25' }
+        ]),
         'arm'
       )
     ).toEqual('ins')

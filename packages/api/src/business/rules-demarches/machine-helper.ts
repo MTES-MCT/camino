@@ -14,7 +14,11 @@ import {
   XStateEvent
 } from './arm/oct.machine'
 import { interpret, State } from 'xstate'
-import { DemarcheStatutId, ITitreEtape } from '../../types'
+import {
+  DemarchesStatutsTypesIds,
+  DemarcheStatutId,
+  ITitreEtape
+} from '../../types'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 
 export const orderMachine = (etapes: readonly Etape[]): readonly Etape[] => {
@@ -133,6 +137,15 @@ export const demarcheStatut = (etapes: readonly Etape[]): DemarcheStatutId => {
   for (let i = 0; i < etapes.length; i++) {
     const etapeAFaire = etapes[i]
     const event = eventFrom(etapeAFaire)
+    if (!service.state.can(event)) {
+      console.error(
+        `impossible de trouver le demarcheStatus, cette liste d'étapes '${JSON.stringify(
+          etapes
+        )}' est incohérente à l'étape ${i + 1}`
+      )
+
+      return DemarchesStatutsTypesIds.Indetermine
+    }
 
     service.send(event)
   }
