@@ -1,12 +1,7 @@
 import { titresActivitesGet } from '../../database/queries/titres-activites'
 
 import TitresActivites from '../../database/models/titres-activites'
-import {
-  ACTIVITES_DELAI_RELANCE_JOURS,
-  titresActivitesRelanceSend
-} from './titres-activites-relance-send'
-import { dateAddDays, dateAddMonths } from '../../tools/date'
-import dateFormat from 'dateformat'
+import { titresActivitesRelanceSend } from './titres-activites-relance-send'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
 import { EmailTemplateId } from '../../tools/api-mailjet/types'
 
@@ -28,9 +23,7 @@ describe('relance les opérateurs des activités qui vont se fermer automatiquem
   test('envoie un email aux opérateurs', async () => {
     const delaiMois = 3
 
-    const today = dateFormat(new Date(), 'yyyy-mm-dd')
-    let date = dateAddDays(today, ACTIVITES_DELAI_RELANCE_JOURS)
-    date = dateAddMonths(date, -delaiMois)
+    const date = '2022-01-01'
 
     const email = 'toto.huhu@foo.com'
 
@@ -43,7 +36,9 @@ describe('relance les opérateurs des activités qui vont se fermer automatiquem
         }
       }
     ] as TitresActivites[])
-    const titresActivites = await titresActivitesRelanceSend()
+    const titresActivites = await titresActivitesRelanceSend(
+      new Date('2022-03-18')
+    )
 
     expect(emailsWithTemplateSendMock).toBeCalledWith(
       [email],

@@ -44,11 +44,15 @@ describe('test les utilitaires de date', () => {
     date            | months | result
     ${'2020-01-01'} | ${1}   | ${'2020-02-01'}
     ${'2020-01-01'} | ${12}  | ${'2021-01-01'}
+    ${'2020-01-01'} | ${3}   | ${'2020-04-01'}
+    ${'2020-01-30'} | ${3}   | ${'2020-04-30'}
+    ${'2020-01-31'} | ${3}   | ${'2020-05-01'}
+    ${'2020-12-01'} | ${3}   | ${'2021-03-01'}
   `(
-    'ajoute des mois à une date',
+    'ajoute $months mois à la date $date',
     ({
-      date,
       months,
+      date,
       result
     }: {
       date: string
@@ -58,6 +62,12 @@ describe('test les utilitaires de date', () => {
       expect(dateAddMonths(date, months)).toBe(result)
     }
   )
+
+  test("la méthode dateAddMonths n'est pas idempotente", () => {
+    const date = '2022-05-30'
+
+    expect(dateAddMonths(dateAddMonths(date, -3), 3)).toBe('2022-06-02')
+  })
 
   test.each`
     dateFin         | dateDebut       | months

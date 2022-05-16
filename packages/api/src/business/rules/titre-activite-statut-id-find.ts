@@ -1,16 +1,6 @@
 import { ITitreActivite } from '../../types'
-import dateFormat from 'dateformat'
+import { dateAddMonths } from '../../tools/date'
 
-const titreActiviteDateDelaiFind = (
-  date: string,
-  delaiMois: number
-): string => {
-  const dateCreation = new Date(date)
-  const dateDelai = new Date(date)
-  dateDelai.setMonth(dateCreation.getMonth() + delaiMois)
-
-  return dateFormat(dateDelai, 'yyyy-mm-dd')
-}
 /**
  * Trouve le statut d'une activité
  * @param titreActivite - activité
@@ -18,14 +8,14 @@ const titreActiviteDateDelaiFind = (
  * @returns statut d'activité
  */
 
-const titreActiviteStatutIdFind = (
+export const titreActiviteStatutIdFind = (
   titreActivite: ITitreActivite,
   aujourdhui: string
 ) => {
   // si l'activité a un statut différent de "déposé" ou "fermé"
 
   if (!['dep', 'fer'].includes(titreActivite.statutId)) {
-    const dateDelai = titreActiviteDateDelaiFind(
+    const dateDelai = dateAddMonths(
       titreActivite.date,
       titreActivite.type!.delaiMois
     )
@@ -43,5 +33,3 @@ const titreActiviteStatutIdFind = (
   // sinon retourne le statut de l'activité
   return titreActivite.statutId
 }
-
-export { titreActiviteStatutIdFind, titreActiviteDateDelaiFind }

@@ -2,15 +2,14 @@ import dateFormat from 'dateformat'
 
 import { titresActivitesGet } from '../../database/queries/titres-activites'
 import { userSuper } from '../../database/user-super'
-import { dateAddDays } from '../../tools/date'
-import { titreActiviteDateDelaiFind } from '../rules/titre-activite-statut-id-find'
+import { dateAddDays, dateAddMonths } from '../../tools/date'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
 import { activitesUrlGet } from '../utils/urls-get'
 import { EmailTemplateId } from '../../tools/api-mailjet/types'
 
 export const ACTIVITES_DELAI_RELANCE_JOURS = 14
 
-const titresActivitesRelanceSend = async () => {
+const titresActivitesRelanceSend = async (aujourdhui = new Date()) => {
   console.info()
   console.info('relance des activités des titres…')
 
@@ -27,13 +26,15 @@ const titresActivitesRelanceSend = async () => {
     userSuper
   )
 
-  const aujourdhui = dateFormat(new Date(), 'yyyy-mm-dd')
+  const aujourdhuiFormatted = dateFormat(aujourdhui, 'yyyy-mm-dd')
 
-  const dateDelai = dateAddDays(aujourdhui, ACTIVITES_DELAI_RELANCE_JOURS)
+  const dateDelai = dateAddDays(
+    aujourdhuiFormatted,
+    ACTIVITES_DELAI_RELANCE_JOURS
+  )
 
-  // FIXME 3 mois
   const titresActivitesRelanceToSend = activites.filter(
-    ({ date }) => dateDelai === titreActiviteDateDelaiFind(date, 3)
+    ({ date }) => dateDelai === dateAddMonths(date, 3)
   )
 
   if (titresActivitesRelanceToSend.length) {
@@ -58,7 +59,7 @@ const titresActivitesRelanceSend = async () => {
           activitesUrl: activitesUrlGet({
             typesIds,
             statutsIds,
-            annees: [new Date().getFullYear() - 1]
+            annees: [aujourdhui.getFullYear() - 1]
           })
         }
       )
