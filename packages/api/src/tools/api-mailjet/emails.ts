@@ -74,11 +74,13 @@ const emailsWithTemplateSend = async (
   emails: string[],
   templateId: EmailTemplateId,
   params: Record<string, string>
-) =>
+) => {
+  console.log('plop')
   mailjetSend(emails, {
     'Mj-TemplateID': templateId,
     'Mj-TemplateLanguage': true,
     Vars: params
   })
+}
 
 export { emailsSend, emailsWithTemplateSend }
