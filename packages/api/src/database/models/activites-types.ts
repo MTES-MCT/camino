@@ -23,7 +23,6 @@ class ActivitesTypes extends Model {
       frequenceId: { type: 'string', maxLength: 3 },
       dateDebut: { type: 'string' },
       delaiMois: { type: 'integer' },
-      satisfactionUrl: { type: 'string' },
       ordre: { type: 'integer' }
     }
   }

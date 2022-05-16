@@ -74,7 +74,7 @@ ${listHtml}
 }
 
 const titreActiviteEmailFormat = (
-  { contenu, titreId, dateSaisie, sections, type }: ITitreActivite,
+  { contenu, titreId, dateSaisie, sections }: ITitreActivite,
   emailTitle: string,
   user: IUtilisateur
 ) => {
@@ -92,7 +92,7 @@ const titreActiviteEmailFormat = (
 <hr>
 `
 
-  let body =
+  const body =
     sections && contenu
       ? sections.reduce(
           (res, section) => `
@@ -103,11 +103,6 @@ ${sectionHtmlBuild(section, contenu)}
           ''
         )
       : ''
-  const satisfactionUrl = type?.satisfactionUrl
-  body += `<hr><a
-        href="${satisfactionUrl}"
-      >Je donne mon avis sur cette démarche
-      </a>`
 
   return `
 ${header}

@@ -17,7 +17,6 @@ entity "**activites_types**" {
   *""frequence_id"": //character varying(3) [FK]//
   *""date_debut"": //character varying(255) //
   ""delai_mois"": //integer //
-  ""satisfaction_url"": //character varying(255) //
   *""ordre"": //integer //
   ""description"": //text //
 }
@@ -44,18 +43,7 @@ entity "**activites_types__titres_types**" {
 entity "**administrations**" {
   + ""id"": //character varying(64) [PK]//
   --
-  *""type_id"": //character varying(255) [FK]//
-  *""nom"": //character varying(255) //
-  ""abreviation"": //character varying(255) //
-  ""service"": //character varying(255) //
-  ""url"": //character varying(1024) //
-  ""email"": //character varying(255) //
-  ""telephone"": //character varying(255) //
-  ""adresse1"": //character varying(255) //
-  ""adresse2"": //character varying(255) //
-  ""code_postal"": //character varying(255) //
-  ""commune"": //character varying(255) //
-  ""cedex"": //character varying(255) //
+  *""type_id"": //character varying(255) //
   ""departement_id"": //character varying(255) [FK]//
   ""region_id"": //character varying(255) [FK]//
 }
@@ -103,13 +91,6 @@ entity "**administrations__titres_types__titres_statuts**" {
   ""etapes_modification_interdit"": //boolean //
 }
 
-entity "**administrations_types**" {
-  + ""id"": //character varying(64) [PK]//
-  --
-  *""nom"": //character varying(255) //
-  ""ordre"": //integer //
-}
-
 entity "**annees**" {
   + ""id"": //integer [PK]//
   --
@@ -128,16 +109,6 @@ entity "**communes**" {
   --
   *""nom"": //character varying(255) //
   *""departement_id"": //character varying(3) [FK]//
-}
-
-entity "**definitions**" {
-  + ""id"": //character varying(3) [PK]//
-  --
-  *""nom"": //character varying(255) //
-  *""slug"": //character varying(255) //
-  ""table"": //character varying(255) //
-  *""ordre"": //integer //
-  ""description"": //text //
 }
 
 entity "**demarches_statuts**" {
@@ -755,6 +726,7 @@ entity "**utilisateurs**" {
   *""permission_id"": //character varying(12) [FK]//
   ""preferences"": //json //
   ""newsletter"": //boolean //
+  *""date_creation"": //character varying(255) //
 }
 
 entity "**utilisateurs__administrations**" {
@@ -804,8 +776,6 @@ entity "**utilisateurs__titres**" {
 "**administrations**"   }--  "**departements**"
 
 "**administrations**"   }--  "**regions**"
-
-"**administrations**"   }--  "**administrations_types**"
 
 "**administrations__activites_types**"   }--  "**activites_types**"
 

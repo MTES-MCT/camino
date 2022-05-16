@@ -37,7 +37,6 @@ const fragmentActiviteType = gql`
     documentsTypes {
       ...documentType
     }
-    satisfactionUrl
     description
   }
 
