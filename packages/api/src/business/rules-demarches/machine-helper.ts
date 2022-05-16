@@ -46,6 +46,8 @@ const etapesAnterieures: readonly Etat[] = [
   ETATS.RecepisseDeDeclarationLoiSurLEau
 ]
 
+export const isEtapeOrderingNeeded = (etat: Etat): boolean =>  etapesAnterieures.includes(etat)
+
 const findSolution = (
   etapes: readonly Etape[],
   temp: Etape[] = []
@@ -172,12 +174,23 @@ export const nextEtapes = (etapes: readonly Etape[]): DBEtat[] => {
     }
   )
 
-  return possibleEvents.map(eventToEtat)
+  const etats = possibleEvents.map(eventToEtat)
+
+  console.log('ya une mdp?', etapes.map(({typeId}) => typeId))
+  if( !etapes.some(e => e.typeId === 'mdp')){
+    etats.push(...etapesAnterieures.map((etat) => ({etat})))
+  }
+
+  return etats
 }
 
+/**
+ * Cette function ne doit JAMAIS appeler orderMachine, car c'est orderMachine qui se sert de cette fonction.
+ * Cette function ne fait que vérifier si les étapes qu'on lui donne sont valides dans l'ordre
+ */
 export const isEtapesOk = (
-  etapes: readonly Etape[],
-  initialState: State<OctARMContext, XStateEvent> | null = null
+    sortedEtapes: readonly Etape[],
+    initialState: State<OctARMContext, XStateEvent> | null = null
 ): boolean => {
   const service = interpret(armOctMachine)
 
@@ -186,8 +199,8 @@ export const isEtapesOk = (
   } else {
     service.start(initialState)
   }
-  for (let i = 0; i < etapes.length; i++) {
-    const etapeAFaire = etapes[i]
+  for (let i = 0; i < sortedEtapes.length; i++) {
+    const etapeAFaire = sortedEtapes[i]
     const event = eventFrom(etapeAFaire)
 
     if (!service.state.can(event)) {
@@ -201,3 +214,5 @@ export const isEtapesOk = (
 
   return true
 }
+
+

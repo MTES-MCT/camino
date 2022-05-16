@@ -1,5 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 import {
+  IContenu,
   IDemarcheStatut,
   IDemarcheType,
   IDocumentRepertoire,
@@ -70,13 +71,16 @@ import { sortedAdministrationTypes } from 'camino-common/src/administrations'
 import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
 import EtapesTypes from '../../../database/models/etapes-types'
 import {
-  nextEtapes,
+  isEtapeOrderingNeeded,
+  isEtapesOk,
+  nextEtapes, orderMachine, toMachineEtape,
   toMachineEtapes
 } from '../../../business/rules-demarches/machine-helper'
 import { UNITES } from 'camino-common/src/unites'
 import { permissionCheck } from 'camino-common/src/permissions'
 import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort'
 import TitresDemarches from '../../../database/models/titres-demarches'
+import {Etape, ETATS} from "../../../business/rules-demarches/arm/oct.machine";
 
 const devises = async () => devisesGet()
 
@@ -224,22 +228,48 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
 ) => {
   if (!titreDemarche.etapes) throw new Error('les étapes ne sont pas chargées')
   const sortedEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes)
-  const etapesAvant = []
+  const etapesAvant: Etape[] = []
+  const etapesApres: Etape[] = []
+  let contenu: undefined | IContenu
   if (titreEtapeId) {
     const index = sortedEtapes.findIndex(etape => etape.id === titreEtapeId)
+    contenu = sortedEtapes[index].contenu ?? undefined
     etapesAvant.push(...toMachineEtapes(sortedEtapes.slice(0, index)))
+    etapesApres.push(...toMachineEtapes(sortedEtapes.slice(index + 1)))
   } else {
     etapesAvant.push(
       ...toMachineEtapes(sortedEtapes.filter(etape => etape.date < date))
     )
+    etapesApres.push(...toMachineEtapes(sortedEtapes.slice(etapesAvant.length)))
   }
 
-  const dbEtats = nextEtapes(etapesAvant)
-  // TODO 2022-05-05 si il y'a des étapes après, il faut refiltrer les nextEtapes pour savoir quelles sont les vraies possibilités
-  // dbEtats.filter()
+//simple
+  const dbEtats = nextEtapes(etapesAvant).filter(et => {
+    const newEtapes = [...etapesAvant]
+    const newEtape: Etape = { typeId: et.etat, statutId: et.statut ?? 'fai', date, contenu }
+    newEtapes.push(newEtape)
+    newEtapes.push(...etapesApres)
+
+      return isEtapesOk(newEtapes)
+  })
+
+
+  //les relous
+   const dbEtats = [casRelous - ].filter(et => {
+      const newEtapes = [...etapesAvant]
+      const newEtape: Etape = { typeId: et.etat, statutId: et.statut ?? 'fai', date, contenu }
+      newEtapes.push(newEtape)
+      newEtapes.push(...etapesApres)
+
+        return isEtapesOk(orderMachine(newEtapes))
+    })
+
+
   etapesTypes = etapesTypes.filter(et =>
     dbEtats.map(({ etat }) => etat).includes(et.id)
   )
+
+
 
   return etapesTypes
 }

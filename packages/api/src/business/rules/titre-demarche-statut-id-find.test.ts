@@ -49,12 +49,11 @@ describe("statut d'une démarche", () => {
     ).toEqual('acc')
   })
 
-  // TODO 2022-05-12 l'étape de def n'existe pas sur un octroi d'ARM (def: décision de l'Office national des forêts)
-  test.skip("une démarche d'octroi d'un titre ARM dont l'étape de def la plus récente est acceptée a le statut “accepté”", () => {
+  test("une démarche d'octroi d'un titre ARM dont l'étape de def la plus récente est acceptée a le statut “accepté”", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([{ typeId: 'def', statutId: 'acc' }]),
+        etapesBuild([{ typeId: 'def', statutId: 'acc', date: '2010-01-01' }]),
         'arm'
       )
     ).toEqual('acc')
@@ -109,6 +108,15 @@ describe("statut d'une démarche", () => {
           { typeId: 'pfc', statutId: 'fai', date: '2020-07-16' },
           { typeId: 'vfc', statutId: 'fai', date: '2020-07-17' },
           { typeId: 'sco', statutId: 'fai', date: '2020-09-28' }
+        ]),
+        'arm'
+      )
+    ).toEqual('acc')
+    expect(
+      titreDemarcheStatutIdFind(
+        'oct',
+        etapesBuild([
+          { typeId: 'sco', statutId: 'fai', date: '2010-09-28' }
         ]),
         'arm'
       )
@@ -192,23 +200,21 @@ describe("statut d'une démarche", () => {
     ).toEqual('ins')
   })
 
-  // TODO 2022-05-12 l'étape de def n'existe pas sur un octroi d'ARM (def: décision de l'Office national des forêts)
-  test.skip("une démarche d'octroi d'un titre ARM dont la dernière étape de def est acceptée a le statut “accepté”", () => {
+  test("une démarche d'octroi d'un titre ARM dont la dernière étape de def est acceptée a le statut “accepté”", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([{ typeId: 'def', statutId: 'acc' }]),
+        etapesBuild([{ typeId: 'def', statutId: 'acc', date: '2010-01-01' }]),
         'arm'
       )
     ).toEqual('acc')
   })
 
-  // TODO 2022-05-12 l'étape de def n'existe pas sur un octroi d'ARM (def: décision de l'Office national des forêts)
-  test.skip("une démarche d'octroi d'un titre ARM dont la dernière étape de def est rejetée a le statut “rejeté”", () => {
+  test("une démarche d'octroi d'un titre ARM dont la dernière étape de def est rejetée a le statut “rejeté”", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([{ typeId: 'def', statutId: 'rej' }]),
+        etapesBuild([{ typeId: 'def', statutId: 'rej', date: '2010-01-12' }]),
         'arm'
       )
     ).toEqual('rej')
