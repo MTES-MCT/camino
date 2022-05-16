@@ -16,6 +16,8 @@ const utilisateursQueryModify = (
 ) => {
   q.select('utilisateurs.*')
 
+  q.whereNotNull('email')
+
   if (
     permissionCheck(user?.permissionId, ['editeur', 'lecteur']) &&
     user?.administrations?.length

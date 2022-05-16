@@ -59,21 +59,18 @@ const statistiquesGlobales = async (): Promise<Statistiques> => {
     const utilisateurs: StatistiquesUtilisateurs =
       utilisateursInDb.reduce<StatistiquesUtilisateurs>(
         (previousValue, user) => {
-          if (user.email !== null) {
-            let entrepriseOuAdmin = false
-            if (user.entreprises?.length) {
-              previousValue.rattachesAUneEntreprise++
-              entrepriseOuAdmin = true
-            }
+          if (user.email) {
+            // TODO 2022-05-16: restreindre le fait qu'un utilisateur ayant une administration ne PEUT PAS avoir d'entreprise
+            // également, un utilisateur ne peut être que dans UNE administration
             if (user.administrations?.length) {
               for (const administration of user.administrations) {
                 previousValue.rattachesAUnTypeDAdministration[
                   administration.typeId
                 ]++
               }
-              entrepriseOuAdmin = true
-            }
-            if (!entrepriseOuAdmin) {
+            } else if (user.entreprises?.length) {
+              previousValue.rattachesAUneEntreprise++
+            } else {
               previousValue.visiteursAuthentifies++
             }
             previousValue.total++
