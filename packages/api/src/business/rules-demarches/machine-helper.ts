@@ -1,7 +1,5 @@
 import {
   Etape,
-  Etat,
-  ETATS,
   eventFrom,
   armOctMachine,
   isEtat,
@@ -40,14 +38,6 @@ export const orderMachine = (etapes: readonly Etape[]): readonly Etape[] => {
   return solution
 }
 
-const etapesAnterieures: readonly Etat[] = [
-  ETATS.PaiementDesFraisDeDossier,
-  ETATS.DecisionAutoriteEnvironnementale,
-  ETATS.RecepisseDeDeclarationLoiSurLEau
-]
-
-export const isEtapeOrderingNeeded = (etat: Etat): boolean =>  etapesAnterieures.includes(etat)
-
 const findSolution = (
   etapes: readonly Etape[],
   temp: Etape[] = []
@@ -59,12 +49,8 @@ const findSolution = (
   const etape = etapes[0]
   // Une étape en conflit avec une autre peut être:
   // - une étape à la même date
-  // - dans le cas des étapes antérieures (pouvant être fait AVANT le dépôt de la demande)
   const etapesAvecConflitPotentiel = etapes.filter(
-    ({ date, typeId }) =>
-      date === etape.date ||
-      etapesAnterieures.includes(etape.typeId) ||
-      etapesAnterieures.includes(typeId)
+    ({ date }) => date === etape.date
   )
 
   if (etapesAvecConflitPotentiel.length) {
@@ -176,11 +162,6 @@ export const nextEtapes = (etapes: readonly Etape[]): DBEtat[] => {
 
   const etats = possibleEvents.map(eventToEtat)
 
-  console.log('ya une mdp?', etapes.map(({typeId}) => typeId))
-  if( !etapes.some(e => e.typeId === 'mdp')){
-    etats.push(...etapesAnterieures.map((etat) => ({etat})))
-  }
-
   return etats
 }
 
@@ -189,8 +170,8 @@ export const nextEtapes = (etapes: readonly Etape[]): DBEtat[] => {
  * Cette function ne fait que vérifier si les étapes qu'on lui donne sont valides dans l'ordre
  */
 export const isEtapesOk = (
-    sortedEtapes: readonly Etape[],
-    initialState: State<OctARMContext, XStateEvent> | null = null
+  sortedEtapes: readonly Etape[],
+  initialState: State<OctARMContext, XStateEvent> | null = null
 ): boolean => {
   const service = interpret(armOctMachine)
 
@@ -214,5 +195,3 @@ export const isEtapesOk = (
 
   return true
 }
-
-

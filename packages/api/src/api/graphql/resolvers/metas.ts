@@ -71,16 +71,15 @@ import { sortedAdministrationTypes } from 'camino-common/src/administrations'
 import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
 import EtapesTypes from '../../../database/models/etapes-types'
 import {
-  isEtapeOrderingNeeded,
   isEtapesOk,
-  nextEtapes, orderMachine, toMachineEtape,
+  nextEtapes,
   toMachineEtapes
 } from '../../../business/rules-demarches/machine-helper'
 import { UNITES } from 'camino-common/src/unites'
 import { permissionCheck } from 'camino-common/src/permissions'
 import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort'
 import TitresDemarches from '../../../database/models/titres-demarches'
-import {Etape, ETATS} from "../../../business/rules-demarches/arm/oct.machine";
+import { Etape } from '../../../business/rules-demarches/arm/oct.machine'
 
 const devises = async () => devisesGet()
 
@@ -243,33 +242,23 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
     etapesApres.push(...toMachineEtapes(sortedEtapes.slice(etapesAvant.length)))
   }
 
-//simple
   const dbEtats = nextEtapes(etapesAvant).filter(et => {
     const newEtapes = [...etapesAvant]
-    const newEtape: Etape = { typeId: et.etat, statutId: et.statut ?? 'fai', date, contenu }
+    const newEtape: Etape = {
+      typeId: et.etat,
+      statutId: et.statut ?? 'fai',
+      date,
+      contenu
+    }
     newEtapes.push(newEtape)
     newEtapes.push(...etapesApres)
 
-      return isEtapesOk(newEtapes)
+    return isEtapesOk(newEtapes)
   })
-
-
-  //les relous
-   const dbEtats = [casRelous - ].filter(et => {
-      const newEtapes = [...etapesAvant]
-      const newEtape: Etape = { typeId: et.etat, statutId: et.statut ?? 'fai', date, contenu }
-      newEtapes.push(newEtape)
-      newEtapes.push(...etapesApres)
-
-        return isEtapesOk(orderMachine(newEtapes))
-    })
-
 
   etapesTypes = etapesTypes.filter(et =>
     dbEtats.map(({ etat }) => etat).includes(et.id)
   )
-
-
 
   return etapesTypes
 }
