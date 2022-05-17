@@ -78,7 +78,7 @@ describe("statut d'un titre", () => {
     ).toEqual('mod')
   })
 
-  test.only("le statut d'un titre PER M ou W avec une prolongation2 déposée est “mod”", () => {
+  test("le statut d'un titre PER M ou W avec une prolongation2 déposée est “mod”", () => {
     expect(
       titreStatutIdFind(
         aujourdhui,
