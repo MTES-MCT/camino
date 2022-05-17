@@ -115,9 +115,7 @@ describe("statut d'une démarche", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([
-          { typeId: 'sco', statutId: 'fai', date: '2010-09-28' }
-        ]),
+        etapesBuild([{ typeId: 'sco', statutId: 'fai', date: '2010-09-28' }]),
         'arm'
       )
     ).toEqual('acc')

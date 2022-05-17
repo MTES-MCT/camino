@@ -25,9 +25,14 @@ declare global {
 expect.extend({
   canOnlyTransitionTo(service, events: Event[]) {
     events.sort()
-    const passEvents = EVENTS.filter(event => {
-      return service.state.can(event)
-    })
+    const passEvents: Event[] = service.state.nextEvents.filter(
+      (nextEvent: string): nextEvent is Event => {
+        // TODO 2022-05-18: il faut vérifier pour les événements avec DATA (ACCEPTER_RDE,...) toutes les possibilité (pour pouvoir utiliser service.state.can())
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        return EVENTS.includes(nextEvent)
+      }
+    )
     passEvents.sort()
     if (
       passEvents.length !== events.length ||
@@ -66,6 +71,7 @@ export const interpretMachine = (etapes: readonly Etape[]) => {
         )}'. The event ${JSON.stringify(
           event
         )} should be one of '${service.state.nextEvents.filter(nextEvent => {
+          // TODO 2022-05-18: il faut vérifier pour les événements avec DATA (ACCEPTER_RDE,...) toutes les possibilité (pour pouvoir utiliser service.state.can())
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore
           return EVENTS.includes(nextEvent) && service.state.can(nextEvent)

@@ -19,6 +19,7 @@ import {
 } from '../../types'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 
+// TODO 2022-05-18: il faudrait que le orderMachine retourne la solution la plus longue possible quand il n'y a pas de solution, pour aider au debug
 export const orderMachine = (etapes: readonly Etape[]): readonly Etape[] => {
   if (isEtapesOk(etapes)) {
     return etapes

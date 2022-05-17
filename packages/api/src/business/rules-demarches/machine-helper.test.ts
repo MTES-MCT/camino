@@ -15,7 +15,6 @@ describe('nextEtapes', () => {
     ])
   })
   test('retourne les premières étapes possibles', () => {
-      
     // TODO 2022-05-05 on ne veut pas autoriser les étapes étranges, comme la dae, rde et pfd
     expect(nextEtapes([])).toStrictEqual([{ etat: 'mfr' }])
   })

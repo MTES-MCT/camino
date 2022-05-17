@@ -52,7 +52,9 @@ const writeEtapesForTest = async () => {
           'kcJzw0h3dJEwPhSUgDXq0smA',
           // rde sans franchissement ? soit pas de franchissement lors du mfr, soit pas de rde
           'FWVRSGQx2IpHjcVj1LwgRf0o',
-          'Dtd3Zuj4m7ZszvUDPoKJi1Of'
+          'Dtd3Zuj4m7ZszvUDPoKJi1Of',
+          // réception de compléments de RDE après avoir reçu la RDE
+          '7hNXLy0HAJuIy69r2P8elLii'
         ].includes(demarche.titreId)
       ) {
         console.log(`${demarche.titreId} ne respecte pas le cacoo`)

@@ -1,9 +1,17 @@
-import { Etat, Etape, armOctMachine, Status } from './oct.machine'
+import {
+  Etat,
+  Etape,
+  armOctMachine,
+  Status,
+  ETATS,
+  STATUS
+} from './oct.machine'
 import { interpret } from 'xstate'
 import {
   interpretMachine,
   orderAndInterpretMachine
 } from '../machine-test-helper'
+
 const etapesProd = require('./oct.cas.json')
 
 describe('vérifie l’arbre d’octroi d’ARM', () => {
@@ -84,10 +92,13 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
     expect(service).canOnlyTransitionTo([
       'ACCEPTER_COMPLETUDE',
+      'ACCEPTER_RDE',
       'CLASSER_SANS_SUITE',
+      'DEMANDER_COMPLEMENTS_RDE',
       'DESISTER_PAR_LE_DEMANDEUR',
       'REFUSER_COMPLETUDE',
-      'MODIFIER_DEMANDE'
+      'MODIFIER_DEMANDE',
+      'REFUSER_RDE'
     ])
   })
 
@@ -105,16 +116,27 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ])
 
     expect(service).canOnlyTransitionTo([
+      'ACCEPTER_RDE',
       'CLASSER_SANS_SUITE',
-      'DESISTER_PAR_LE_DEMANDEUR',
       'DEMANDER_COMPLEMENTS_COMPLETUDE',
-      'MODIFIER_DEMANDE'
+      'DEMANDER_COMPLEMENTS_RDE',
+      'DESISTER_PAR_LE_DEMANDEUR',
+      'MODIFIER_DEMANDE',
+      'REFUSER_RDE'
     ])
   })
 
   test.each([
-    { typeId: 'mcd', statutId: 'fai' },
-    { typeId: 'mcb', statutId: 'fai' }
+    {
+      typeId: ETATS.DemandeDeComplementsDecisionAutoriteEnvironnementale,
+      statutId: STATUS.FAIT,
+      date: '2020-01-01'
+    },
+    {
+      typeId: ETATS.DemandeDeComplementsRecepisseDeDeclarationLoiSurLEau,
+      statutId: STATUS.FAIT,
+      date: '2020-01-01'
+    }
   ])(
     'ne peut pas créer une étape "%s" si il n’existe pas d’autres étapes',
     (etape: Etape) => {
@@ -160,8 +182,11 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   })
 
   test.each([
-    { typeId: 'rde', statutId: 'fav' },
-    { typeId: 'dae', statutId: 'exe' }
+    {
+      typeId: ETATS.RecepisseDeDeclarationLoiSurLEau,
+      statutId: STATUS.FAVORABLE
+    },
+    { typeId: ETATS.DecisionAutoriteEnvironnementale, statutId: STATUS.EXEMPTE }
   ])(
     'peut créer une étape "%s" juste après une "mdp" et que le titre est mécanisé avec franchissement d’eau',
     ({ typeId, statutId }: { typeId: Etat; statutId: Status }) => {
@@ -359,7 +384,12 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: '2021-05-20',
         contenu: { arm: { mecanise: true, franchissements: 3 } }
       },
-      { typeId: 'rde', statutId: 'fav', date: '2021-04-09' }
+      {
+        typeId: 'rde',
+        statutId: 'fav',
+        date: '2021-04-09',
+        contenu: { arm: { franchissements: 3 } }
+      }
     ])
   })
 
@@ -380,7 +410,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       { typeId: 'edm', statutId: 'fav', date: '2021-04-30' },
       { typeId: 'eof', statutId: 'fai', date: '2021-03-17' },
       { typeId: 'mcb', statutId: 'fai', date: '2021-03-16' },
-      { typeId: 'mcr', statutId: 'fav', date: '2021-03-10' },
+      { typeId: 'mcr', statutId: 'fav', date: '2021-03-11' },
       { typeId: 'vfd', statutId: 'fai', date: '2021-03-10' },
       { typeId: 'mcp', statutId: 'com', date: '2021-02-26' },
       { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
@@ -578,8 +608,9 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ])
   })
 
-  test.each(etapesProd)('cas réel N°$id', ({ etapes }: { etapes: Etape[] }) => {
+  // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
+  test.each(etapesProd as any[])('cas réel N°$id', demarche => {
     // ici les étapes sont déjà ordonnées
-    interpretMachine(etapes)
+    interpretMachine(demarche.etapes as Etape[])
   })
 })
