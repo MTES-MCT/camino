@@ -74,6 +74,7 @@
           :section="s"
           :contenu="etape.contenu ? etape.contenu[s.id] : {}"
           :date="etape.date"
+          @file-download="fileDownload($event)"
         />
 
         <hr class="mx--" />
@@ -121,6 +122,7 @@
           :section="s"
           :contenu="etape.decisionsAnnexesContenu[s.id] || {}"
           :etapeId="etape.id"
+          @file-download="fileDownload($event)"
         />
 
         <hr class="mx--" />
@@ -326,6 +328,10 @@ export default {
       if (this.$matomo) {
         this.$matomo.trackEvent(event.categorie, event.action, event.nom)
       }
+    },
+
+    fileDownload(fileName) {
+      this.$store.dispatch('download', `/etape/${this.etape.id}/${fileName}`)
     }
   }
 }
