@@ -20,7 +20,6 @@
       <router-link
         :to="{ name: 'entreprise', params: { id: entreprise.id } }"
         class="btn-alt py-s px-m"
-        tag="button"
       >
         <i
           class="icon-24 icon-window-link"
