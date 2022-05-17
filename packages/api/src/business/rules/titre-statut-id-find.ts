@@ -51,34 +51,39 @@ const titreStatutIdFind = (
   }
 
   // si le titre est un PER M ou W
-  // et qu'une démarche de prolongation est déposée et a été déposée avant l'échéance de l'octroi
+  // et qu'une démarche de prolongation est déposée et a été déposée avant l'échéance de l'octroi ou d’une prolongation précédente
   // -> le statut du titre est modification en instance (survie provisoire)
   if (['prm', 'prw'].includes(titreTypeId)) {
     const octroi = titreDemarches.find(d => d.typeId === 'oct')
 
-    const dateFinOctroi = octroi ? titreDateFinFind([octroi]) : null
-    if (
-      dateFinOctroi &&
-      titreDemarches.some(d => {
-        if (!['pr1', 'pr2'].includes(d.typeId)) {
-          return false
-        }
+    if (octroi) {
+      const dateFin = titreDateFinFind(
+        titreDemarches.filter(({ typeId }) => ['oct', 'pr1'].includes(typeId))
+      )
 
-        if (
-          ![
-            DemarchesStatutsTypes.EnConstruction,
-            DemarchesStatutsTypes.Depose
-          ].includes(d.statutId)
-        ) {
-          return false
-        }
+      if (
+        dateFin &&
+        titreDemarches.some(d => {
+          if (!['pr1', 'pr2'].includes(d.typeId)) {
+            return false
+          }
 
-        const demandeProlongation = d.etapes?.find(e => e.typeId === 'mfr')
+          if (
+            ![
+              DemarchesStatutsTypes.EnConstruction,
+              DemarchesStatutsTypes.Depose
+            ].includes(d.statutId)
+          ) {
+            return false
+          }
 
-        return demandeProlongation && demandeProlongation.date < dateFinOctroi
-      })
-    ) {
-      return 'mod'
+          const demandeProlongation = d.etapes?.find(e => e.typeId === 'mfr')
+
+          return demandeProlongation && demandeProlongation.date < dateFin
+        })
+      ) {
+        return 'mod'
+      }
     }
   }
 

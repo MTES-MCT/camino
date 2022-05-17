@@ -77,4 +77,72 @@ describe("statut d'un titre", () => {
       titreStatutIdFind(aujourdhui, titrePERDemarchesProlongation, 'prm')
     ).toEqual('mod')
   })
+
+  test("le statut d'un titre PER M ou W avec une prolongation2 déposée est “mod”", () => {
+    expect(
+      titreStatutIdFind(
+        aujourdhui,
+        [
+          {
+            id: 'm-pr-saint-pierre-2014-pro01',
+            titreId: 'm-pr-saint-pierre-2014',
+            type: { id: 'pr2', nom: 'unused', ordre: 1, etapesTypes: [] },
+            typeId: 'pr2',
+            statutId: 'eco',
+            ordre: 3,
+            etapes: [
+              {
+                date: '2020-06-01',
+                typeId: 'mfr',
+                statutId: 'fai',
+                id: 'id',
+                titreDemarcheId: 'm-pr-saint-pierre-2014-pro02'
+              }
+            ]
+          },
+          {
+            id: 'm-pr-saint-pierre-2014-pro01',
+            titreId: 'm-pr-saint-pierre-2014',
+            type: { id: 'pr1', nom: 'unused', ordre: 1, etapesTypes: [] },
+            typeId: 'pr1',
+            statutId: 'acc',
+            ordre: 2,
+            etapes: [
+              {
+                date: '2020-01-01',
+                typeId: 'dex',
+                statutId: 'acc',
+                id: 'id',
+                titreDemarcheId: 'm-pr-saint-pierre-2014-pro01',
+                ordre: 1,
+                dateDebut: null,
+                dateFin: '2020-10-01'
+              }
+            ]
+          },
+          {
+            id: 'm-pr-saint-pierre-2014-oct01',
+            titreId: 'm-pr-saint-pierre-2014',
+            type: { id: 'oct', nom: 'unused', ordre: 2, etapesTypes: [] },
+            typeId: 'oct',
+            statutId: 'acc',
+            ordre: 1,
+            etapes: [
+              {
+                id: 'm-pr-saint-pierre-2014-oct01-dex01',
+                titreDemarcheId: 'm-pr-saint-pierre-2014-oct01',
+                typeId: 'dex',
+                statutId: 'acc',
+                ordre: 1,
+                date: '1014-04-01',
+                dateDebut: null,
+                dateFin: '2020-04-01'
+              }
+            ]
+          }
+        ],
+        'prm'
+      )
+    ).toEqual('mod')
+  })
 })
