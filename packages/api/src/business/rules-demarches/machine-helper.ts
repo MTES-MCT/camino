@@ -157,7 +157,18 @@ export const nextEtapes = (etapes: readonly Etape[]): DBEtat[] => {
     (nextEvent: string): nextEvent is Event => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      return EVENTS.includes(nextEvent) && service.state.can(nextEvent)
+
+      if (EVENTS.includes(nextEvent)) {
+        if (nextEvent === 'ACCEPTER_RDE') {
+          return [{ type: 'ACCEPTER_RDE', franchissements: 2 }].some(e =>
+            service.state.can(e)
+          )
+        }
+
+        return service.state.can(nextEvent)
+      }
+      
+return false
     }
   )
 

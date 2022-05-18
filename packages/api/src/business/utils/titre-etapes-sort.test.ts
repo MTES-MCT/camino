@@ -152,9 +152,9 @@ describe('trie les étapes', () => {
       { id: 'oct' } as IDemarcheType,
       'arm'
     )
-    expect(result[0].typeId).toEqual('mfr')
-    expect(result[1].typeId).toEqual('mdp')
-    expect(result[2].typeId).toEqual('pfd')
+    expect(result[0].typeId).toEqual('pfd')
+    expect(result[1].typeId).toEqual('mfr')
+    expect(result[2].typeId).toEqual('mdp')
   })
 
   test("retourne une erreur si le type d'étape est absent dans la définition", () => {
