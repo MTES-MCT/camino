@@ -428,8 +428,6 @@ type Mutation {
 
   activiteStatutModifier(activiteStatut: InputActiviteStatut!): [ActiviteStatut]
 
-  deviseModifier(devise: InputDevise!): [Devise]
-
   uniteModifier(unite: InputUnite!): [Unite]
 
   permissionModifier(permission: InputPermission!): [Permission]

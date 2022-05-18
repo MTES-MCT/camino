@@ -35,7 +35,6 @@ const tables = [
   { name: 'demarches_statuts', orderBy: ['id'] },
   { name: 'demarches_types', orderBy: ['id'] },
   { name: 'departements', orderBy: ['id'] },
-  { name: 'devises', orderBy: ['id'] },
   { name: 'documents', orderBy: ['id'] },
   { name: 'documents_types', orderBy: ['id'] },
   { name: 'domaines', orderBy: ['id'] },

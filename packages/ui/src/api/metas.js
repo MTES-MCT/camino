@@ -236,28 +236,6 @@ const uniteModifier = apiGraphQLFetch(gql`
   ${fragmentUnite}
 `)
 
-const devises = apiGraphQLFetch(
-  gql`
-    query Devises {
-      devises {
-        ...devise
-      }
-    }
-
-    ${fragmentDevise}
-  `
-)
-
-const deviseModifier = apiGraphQLFetch(gql`
-  mutation DeviseModifier($element: InputDevise!) {
-    deviseModifier(devise: $element) {
-      ...devise
-    }
-  }
-
-  ${fragmentDevise}
-`)
-
 const permissions = apiGraphQLFetch(
   gql`
     query Permissions {
@@ -824,8 +802,6 @@ export {
   etapeStatutModifier,
   substancesLegales,
   permissions,
-  devises,
-  deviseModifier,
   unites,
   uniteModifier,
   permissionModifier,
