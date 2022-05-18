@@ -70,7 +70,7 @@ type PointReference {
   slug: String
 
   "Code du système de référence géodésique"
-  geoSysteme: GeoSysteme
+  geoSystemeId: String
 
   "Coordonnées du point dans le système géodésique"
   coordonnees: Coordonnees

@@ -28,7 +28,7 @@
                 {{ labels[0] }}
               </h5>
               <p class="h6 italic mb-0">
-                {{ geoSysteme.unite.nom }}
+                {{ geoSystemeUniteNom }}
               </p>
             </div>
             <div class="blob-packed-1-2 full-y border-l pl-s pt-xs">
@@ -36,7 +36,7 @@
                 {{ labels[1] }}
               </h5>
               <p class="h6 italic mb-0">
-                {{ geoSysteme.unite.nom }}
+                {{ geoSystemeUniteNom }}
               </p>
             </div>
           </div>
@@ -99,6 +99,7 @@
 import { etapeGroupesBuild } from '../../utils/titre-etape-edit'
 import Tag from '../_ui/tag.vue'
 import pointReference from './point-reference.vue'
+import { Unites } from 'camino-common/src/unites'
 
 export default {
   components: { Tag, pointReference },
@@ -135,8 +136,12 @@ export default {
       )
     },
 
+    geoSystemeUniteNom() {
+      return Unites[this.geoSysteme.uniteId].nom
+    },
+
     labels() {
-      return this.geoSysteme.unite.id === 'met'
+      return this.geoSysteme.uniteId === 'met'
         ? ['X', 'Y']
         : ['Longitude', 'Latitude']
     }

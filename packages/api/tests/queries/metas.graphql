@@ -14,9 +14,6 @@ query {
   unites {
     ...unite
   }
-  geoSystemes {
-    ...geosysteme
-  }
 }
 
 fragment type on TitreTypeType {
@@ -43,15 +40,4 @@ fragment devise on Devise {
 fragment unite on Unite {
   id
   nom
-}
-
-fragment geosysteme on GeoSysteme {
-  id
-  nom
-  zone
-  unite {
-    id
-    nom
-    symbole
-  }
 }

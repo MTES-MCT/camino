@@ -9,7 +9,7 @@
     </div>
 
     <h5>
-      Coordonnées en {{ etapeGeoSysteme.nom }} ({{ etapeGeoSysteme.unite.nom }})
+      Coordonnées en {{ etapeGeoSysteme.nom }} ({{ etapeGeoSystemeUniteNom }})
     </h5>
     <textarea
       class="p-s mb-s mono"
@@ -38,6 +38,9 @@
 </template>
 
 <script>
+import { GeoSystemes } from 'camino-common/src/geoSystemes'
+import { Unites } from 'camino-common/src/unites'
+
 export default {
   props: {
     point: { type: Object, default: () => ({}) },
@@ -50,9 +53,11 @@ export default {
     etapeGeoSysteme() {
       const geoSystemeId = this.geoSystemeOpposableId || this.geoSystemeIds[0]
 
-      return this.$store.state.titreEtapeEdition.metas.geoSystemes.find(
-        ({ id }) => id === geoSystemeId
-      )
+      return GeoSystemes[geoSystemeId]
+    },
+
+    etapeGeoSystemeUniteNom() {
+      return Unites[this.etapeGeoSysteme.uniteId].nom
     }
   },
 

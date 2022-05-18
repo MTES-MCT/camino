@@ -2,7 +2,6 @@ import { Model, Modifiers, Pojo, QueryContext } from 'objection'
 
 import { ITitrePointReference } from '../../types'
 import { idGenerate } from './_format/id-create'
-import GeoSystemes from './geo-systemes'
 
 interface TitresPointsReferences extends ITitrePointReference {}
 
@@ -28,17 +27,6 @@ class TitresPointsReferences extends Model {
       opposable: { type: ['boolean', 'null'] }
     }
   }
-
-  static relationMappings = () => ({
-    geoSysteme: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: GeoSystemes,
-      join: {
-        from: 'titresPointsReferences.geoSystemeId',
-        to: 'geoSystemes.id'
-      }
-    }
-  })
 
   public static jsonAttributes = []
 

@@ -167,7 +167,7 @@ const etapeHeritage = async (
             titulaires: { id: {} },
             amodiataires: { id: {} },
             substances: { legales: { code: { id: {} } } },
-            points: { references: { geoSysteme: { unite: { id: {} } } } }
+            points: { references: { id: {} } }
           }
         }
       },

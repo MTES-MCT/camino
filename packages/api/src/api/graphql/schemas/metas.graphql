@@ -451,15 +451,6 @@ input InputReferenceType {
   nom: String
 }
 
-input InputGeoSysteme {
-  id: ID!
-  nom: String
-  ordre: Int
-  zone: String
-  uniteId: String
-  definitionProj4: String
-}
-
 input InputTitreTypeModification {
   id: ID!
   contenuIds: Json

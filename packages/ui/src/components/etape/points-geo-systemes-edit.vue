@@ -55,6 +55,8 @@
 </template>
 
 <script>
+import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
+
 export default {
   props: {
     etape: { type: Object, default: () => ({}) }
@@ -62,7 +64,7 @@ export default {
 
   computed: {
     geoSystemes() {
-      return this.$store.state.titreEtapeEdition.metas.geoSystemes
+      return sortedGeoSystemes
     }
   },
 

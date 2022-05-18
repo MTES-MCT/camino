@@ -39,7 +39,6 @@ describe('étapes', () => {
         demarche: {},
         etapesTypes: [],
         unites: [],
-        geoSystemes: [],
         substances: [],
         entreprises: []
       },

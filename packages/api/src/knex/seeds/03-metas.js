@@ -19,7 +19,6 @@ const etapesTypes_etapesStatuts = require('../../../sources/etapes-types--etapes
 const etapesTypes_documentsTypes = require('../../../sources/etapes-types--documents-types.json')
 const etapesTypes_justificatifsTypes = require('../../../sources/etapes-types--justificatifs-types.json')
 const entreprises_documentsTypes = require('../../../sources/entreprises--documents-types.json')
-const geoSystemes = require('../../../sources/geo-systemes.json')
 const unites = require('../../../sources/unites.json')
 const documentsTypes = require('../../../sources/documents-types.json')
 const referencesTypes = require('../../../sources/references-types.json')
@@ -40,10 +39,7 @@ const seed = (module.exports = seeding(async ({ insert }) => {
     insert('referencesTypes', referencesTypes),
     insert('permissions', permissions)
   ])
-  await Promise.all([
-    insert('geoSystemes', geoSystemes),
-    insert('titresTypes', titresTypes)
-  ])
+  await Promise.all([insert('titresTypes', titresTypes)])
   await Promise.all([
     insert('titresTypes__titresStatuts', titresTypes_titresStatuts),
     insert('titresTypes__demarchesTypes', titresTypes__demarchesTypes),

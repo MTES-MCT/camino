@@ -7,7 +7,7 @@ const heritagePropsFormat = async (heritageProps: IHeritageProps) => {
     if (heritageProps[propId]?.etapeId) {
       const fields = { type: { id: {} }, statut: { id: {} } } as IFields
       if (propId === 'points') {
-        fields.points = { references: { geoSysteme: { unite: { id: {} } } } }
+        fields.points = { references: { id: {} } }
       } else if (propId === 'substances') {
         fields.substances = { legales: { code: { id: {} } } }
       } else if (['titulaires', 'amodiataires'].includes(propId)) {

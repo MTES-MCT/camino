@@ -8,7 +8,6 @@ import {
   IEtapeStatut,
   IEtapeType,
   IFields,
-  IGeoSysteme,
   IPermission,
   IPhaseStatut,
   IReferenceType,
@@ -34,8 +33,6 @@ import {
   etapeStatutUpdate,
   etapesTypesGet,
   etapeTypeUpdate,
-  geoSystemesGet,
-  geoSystemeUpdate,
   permissionGet,
   permissionsGet,
   permissionUpdate,
@@ -71,10 +68,11 @@ import { demarcheDefinitionFind } from '../../../business/rules-demarches/defini
 import { userSuper } from '../../../database/user-super'
 import { titresEtapesHeritageContenuUpdate } from '../../../business/processes/titres-etapes-heritage-contenu-update'
 import { sortedAdministrationTypes } from 'camino-common/src/administrations'
+import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
 
 const devises = async () => devisesGet()
 
-const geoSystemes = async () => geoSystemesGet()
+const geoSystemes = () => sortedGeoSystemes
 
 const unites = async () => unitesGet()
 
@@ -749,37 +747,6 @@ const permissionModifier = async (
   }
 }
 
-const geoSystemeModifier = async (
-  { geoSysteme }: { geoSysteme: IGeoSysteme },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!permissionCheck(user?.permissionId, ['super'])) {
-      throw new Error('droits insuffisants')
-    }
-
-    if (geoSysteme.ordre) {
-      const geoSystemes = await geoSystemesGet()
-
-      await ordreUpdate(geoSysteme, geoSystemes, geoSystemeUpdate)
-    }
-
-    await geoSystemeUpdate(geoSysteme.id!, geoSysteme)
-
-    const geoSystemes = await geoSystemesGet()
-
-    return geoSystemes
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
 const documentTypeCreer = async (
   { documentType }: { documentType: IDocumentType },
   context: IToken
@@ -888,6 +855,5 @@ export {
   documentTypeCreer,
   documentTypeModifier,
   referenceTypeModifier,
-  geoSystemeModifier,
   pays
 }

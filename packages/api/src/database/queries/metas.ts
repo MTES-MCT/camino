@@ -13,7 +13,6 @@ import {
   IEtapeStatut,
   IUnite,
   IPermission,
-  IGeoSysteme,
   IDocumentType,
   IReferenceType,
   ITitreType,
@@ -39,7 +38,6 @@ import DocumentsTypes from '../models/documents-types'
 import DemarchesStatuts from '../models/demarches-statuts'
 import Domaines from '../models/domaines'
 import EtapesTypes from '../models/etapes-types'
-import GeoSystemes from '../models/geo-systemes'
 import Permissions from '../models/permissions'
 import ReferencesTypes from '../models/references-types'
 import TitresStatuts from '../models/titres-statuts'
@@ -82,9 +80,6 @@ const permissionsGet = async (
 
 const permissionUpdate = async (id: string, props: Partial<IPermission>) =>
   Permissions.query().patchAndFetchById(id, props)
-
-const geoSystemeUpdate = async (id: string, props: Partial<IGeoSysteme>) =>
-  GeoSystemes.query().patchAndFetchById(id, props)
 
 const documentTypeCreate = async (documentType: IDocumentType) =>
   DocumentsTypes.query().insertGraphAndFetch(documentType)
@@ -605,14 +600,6 @@ const documentsTypesGet = async ({
 const documentTypeGet = async (id: string) =>
   DocumentsTypes.query().findById(id)
 
-const geoSystemesGet = async () =>
-  GeoSystemes.query()
-    .withGraphFetched(options.geoSystemes.graph)
-    .orderBy('ordre')
-
-const geoSystemeGet = async (id: string) =>
-  GeoSystemes.query().findById(id).withGraphFetched(options.geoSystemes.graph)
-
 const unitesGet = async () => Unites.query().orderBy('id')
 
 const uniteUpdate = async (id: string, props: Partial<IUnite>) =>
@@ -648,8 +635,6 @@ export {
   devisesGet,
   documentsTypesGet,
   documentTypeGet,
-  geoSystemesGet,
-  geoSystemeGet,
   unitesGet,
   uniteUpdate,
   referencesTypesGet,
@@ -661,7 +646,6 @@ export {
   etapeStatutUpdate,
   substancesLegalesCodesGet,
   permissionUpdate,
-  geoSystemeUpdate,
   documentTypeCreate,
   documentTypeUpdate,
   referenceTypeUpdate,

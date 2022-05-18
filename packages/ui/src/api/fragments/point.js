@@ -1,25 +1,15 @@
 import gql from 'graphql-tag'
-import { fragmentUnite } from './metas'
 
 const fragmentPointReference = gql`
   fragment pointReference on PointReference {
     id
-    geoSysteme {
-      id
-      nom
-      zone
-      unite {
-        ...unite
-      }
-    }
+    geoSystemeId
     coordonnees {
       x
       y
     }
     opposable
   }
-
-  ${fragmentUnite}
 `
 
 const fragmentPoint = gql`

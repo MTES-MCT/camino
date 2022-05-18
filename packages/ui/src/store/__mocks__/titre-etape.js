@@ -1,8 +1,4 @@
 const titreEtapeMetas = {
-  geoSystemes: [
-    { id: 'ifr', nom: 'Ifremer' },
-    { id: 'dge', nom: 'DGEC' }
-  ],
   unites: [],
   substances: [],
   entreprises: {
@@ -22,10 +18,6 @@ const titreEtapeMetasRes = {
   etapesTypes: [
     { id: 'w', nom: 'granulats' },
     { id: 'c', nom: 'carrières' }
-  ],
-  geoSystemes: [
-    { id: 'ifr', nom: 'Ifremer' },
-    { id: 'dge', nom: 'DGEC' }
   ],
   unites: [],
   substances: [],

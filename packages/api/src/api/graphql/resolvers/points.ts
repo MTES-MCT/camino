@@ -16,7 +16,6 @@ import {
   titreEtapePointsCalc,
   titreEtapeSdomZonesGet
 } from './_titre-etape'
-import { geoSystemes } from '../../../database/cache/geo-systemes'
 import {
   geojsonFeatureMultiPolygon,
   geojsonSurface
@@ -29,6 +28,7 @@ import { titreGet, titresGet } from '../../../database/queries/titres'
 import { userSuper } from '../../../database/user-super'
 import { permissionCheck } from '../../../business/permission'
 import intersect from '@turf/intersect'
+import { assertGeoSystemeId, GeoSystemes } from 'camino-common/src/geoSystemes'
 
 const stream2buffer = async (stream: Stream): Promise<Buffer> => {
   return new Promise<Buffer>((resolve, reject) => {
@@ -86,10 +86,9 @@ const pointsImporter = async (
       throw new Error('seul les fichiers geojson ou shape sont acceptés')
     }
 
-    const geoSysteme = geoSystemes.find(({ id }) => id === geoSystemeId)
-    if (!geoSysteme) {
-      throw new Error(`système géographique inconnu : EPSG:${geoSystemeId}`)
-    }
+    assertGeoSystemeId(geoSystemeId)
+
+    const geoSysteme = GeoSystemes[geoSystemeId]
 
     const { createReadStream } = await file
     const buffer = await stream2buffer(createReadStream())

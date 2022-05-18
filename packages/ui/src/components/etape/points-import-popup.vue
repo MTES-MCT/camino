@@ -47,6 +47,7 @@
 <script>
 import InputFile from '../_ui/input-file.vue'
 import Popup from '../_ui/popup.vue'
+import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
 
 export default {
   components: {
@@ -70,7 +71,7 @@ export default {
     },
 
     geoSystemes() {
-      return this.$store.state.titreEtapeEdition.metas.geoSystemes
+      return sortedGeoSystemes
     }
   },
 
