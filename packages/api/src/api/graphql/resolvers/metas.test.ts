@@ -775,38 +775,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
     },
     {
-      id: 'mid',
-      nom: "demande d'informations (expertise DGTM / DATE)",
-      description: 'après une edm',
-      ordre: 31,
-      fondamentale: null,
-      unique: null,
-      acceptationAuto: null,
-      dateDebut: null,
-      dateFin: null,
-      sections: null,
-      publicLecture: false,
-      entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
-    },
-    {
-      id: 'rid',
-      nom: "réception d'information (expertise DGTM / DATE)",
-      description: 'après une edm',
-      ordre: 37,
-      fondamentale: true,
-      unique: null,
-      acceptationAuto: null,
-      dateDebut: null,
-      dateFin: null,
-      sections: null,
-      publicLecture: false,
-      entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
-    },
-    {
       id: 'ede',
       nom: 'expertise DREAL ou DGTM service eau',
       description:

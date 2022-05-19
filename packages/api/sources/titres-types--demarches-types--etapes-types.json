@@ -4858,12 +4858,6 @@
   },
   {
     "titre_type_id": "arm",
-    "ordre": 1198,
-    "demarche_type_id": "oct",
-    "etape_type_id": "mid"
-  },
-  {
-    "titre_type_id": "arm",
     "ordre": 1008,
     "demarche_type_id": "oct",
     "etape_type_id": "mim"
@@ -5088,12 +5082,6 @@
     "ordre": 1499,
     "demarche_type_id": "oct",
     "etape_type_id": "ria"
-  },
-  {
-    "titre_type_id": "arm",
-    "ordre": 1199,
-    "demarche_type_id": "oct",
-    "etape_type_id": "rid"
   },
   {
     "titre_type_id": "arm",

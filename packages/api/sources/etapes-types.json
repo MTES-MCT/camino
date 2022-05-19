@@ -728,14 +728,6 @@
     "entreprises_lecture": true
   },
   {
-    "id": "mid",
-    "parent_id": "mif",
-    "nom": "demande d'informations (expertise DGTM / DATE)",
-    "description": "après une edm",
-    "ordre": 31,
-    "entreprises_lecture": true
-  },
-  {
     "id": "mie",
     "parent_id": "mif",
     "nom": "demande d'informations (avis du DREAL, DEAL ou DGTM)",
@@ -1213,15 +1205,6 @@
     "nom": "réception d'information (avis de l'Office national des forêts)",
     "description": "après une aof",
     "ordre": 39,
-    "fondamentale": true,
-    "entreprises_lecture": true
-  },
-  {
-    "id": "rid",
-    "parent_id": "rif",
-    "nom": "réception d'information (expertise DGTM / DATE)",
-    "description": "après une edm",
-    "ordre": 37,
     "fondamentale": true,
     "entreprises_lecture": true
   },

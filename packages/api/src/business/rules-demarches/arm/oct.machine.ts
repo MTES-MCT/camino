@@ -47,8 +47,6 @@ export const ETATS = {
   ReceptionInformationExpertiseONF: 'rio',
   ReceptionExpertiseServiceEau: 'ede',
   ReceptionExpertiseServiceMines: 'edm',
-  DemandeInformationServiceMines: 'mid',
-  ReceptionInformationServiceMines: 'rid',
   NotificationSignatureARM: 'mns',
   AvenantARM: 'aco',
   NotificationAvenantARM: 'mnv'
@@ -157,8 +155,6 @@ export type XStateEvent =
   | { type: 'RECEVOIR_INFORMATION_EXPERTISE_ONF' }
   | { type: 'RECEVOIR_EXPERTISE_SERVICE_EAU' }
   | { type: 'RECEVOIR_EXPERTISE_SERVICE_MINES' }
-  | { type: 'DEMANDER_INFORMATION_EXPERTISE_SERVICE_MINES' }
-  | { type: 'RECEVOIR_INFORMATION_EXPERTISE_SERVICE_MINES' }
   | { type: 'NOTIFIER_DEMANDEUR_SIGNATURE_ARM' }
   | { type: 'FAIRE_AVENANT_ARM' }
   | { type: 'NOTIFIER_AVENANT_ARM' }
@@ -335,12 +331,6 @@ const trad: { [_key in Event]: DBEtat } = {
   },
   RECEVOIR_EXPERTISE_SERVICE_EAU: {
     etat: ETATS.ReceptionExpertiseServiceEau
-  },
-  DEMANDER_INFORMATION_EXPERTISE_SERVICE_MINES: {
-    etat: ETATS.DemandeInformationServiceMines
-  },
-  RECEVOIR_INFORMATION_EXPERTISE_SERVICE_MINES: {
-    etat: ETATS.ReceptionInformationServiceMines
   },
   RECEVOIR_EXPERTISE_SERVICE_MINES: {
     etat: ETATS.ReceptionExpertiseServiceMines
