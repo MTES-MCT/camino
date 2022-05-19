@@ -25,6 +25,8 @@ describe('statuts', () => {
       { id: 'ech', nom: 'échu', couleur: 'neutral' },
       { id: 'ind', nom: 'indéterminé', couleur: 'warning' }
     ])
+
+    expect(res.body.data).toMatchSnapshot()
   })
 
   test('ne peut pas voir tous les statuts (utilisateur anonyme)', async () => {

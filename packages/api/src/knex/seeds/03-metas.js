@@ -20,7 +20,6 @@ const etapesTypes_documentsTypes = require('../../../sources/etapes-types--docum
 const etapesTypes_justificatifsTypes = require('../../../sources/etapes-types--justificatifs-types.json')
 const entreprises_documentsTypes = require('../../../sources/entreprises--documents-types.json')
 const geoSystemes = require('../../../sources/geo-systemes.json')
-const devises = require('../../../sources/devises.json')
 const unites = require('../../../sources/unites.json')
 const documentsTypes = require('../../../sources/documents-types.json')
 const referencesTypes = require('../../../sources/references-types.json')
@@ -37,7 +36,6 @@ const seed = (module.exports = seeding(async ({ insert }) => {
     insert('demarchesStatuts', demarchesStatuts),
     insert('etapesStatuts', etapesStatuts),
     insert('documentsTypes', documentsTypes),
-    insert('devises', devises),
     insert('unites', unites),
     insert('referencesTypes', referencesTypes),
     insert('permissions', permissions)

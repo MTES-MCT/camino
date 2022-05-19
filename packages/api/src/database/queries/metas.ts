@@ -11,7 +11,6 @@ import {
   IPhaseStatut,
   IEtapeType,
   IEtapeStatut,
-  IDevise,
   IUnite,
   IPermission,
   IGeoSysteme,
@@ -36,7 +35,6 @@ import graphBuild from './graph/build'
 import { fieldsFormat } from './graph/fields-format'
 
 import DemarchesTypes from '../models/demarches-types'
-import Devises from '../models/devises'
 import DocumentsTypes from '../models/documents-types'
 import DemarchesStatuts from '../models/demarches-statuts'
 import Domaines from '../models/domaines'
@@ -68,6 +66,7 @@ import EtapesTypesJustificatifsTypes from '../models/etapes-types--justificatifs
 import TitresTypesDemarchesTypesEtapesTypesDocumentsTypes from '../models/titres-types--demarches-types-etapes-types-documents-types'
 import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../models/titres-types--demarches-types-etapes-types-justificatifs-types'
 import Titres from '../models/titres'
+import { sortedDevises } from 'camino-common/src/devise'
 
 const permissionsGet = async (
   _a: never,
@@ -553,10 +552,7 @@ const etapeTypeGet = async (id: string, { fields }: { fields?: IFields }) => {
 const etapeTypeUpdate = async (id: string, props: Partial<IEtapeType>) =>
   EtapesTypes.query().patchAndFetchById(id, props)
 
-const devisesGet = async () => Devises.query().orderBy('id')
-
-const deviseUpdate = async (id: string, props: Partial<IDevise>) =>
-  Devises.query().patchAndFetchById(id, props)
+const devisesGet = () => sortedDevises
 
 const documentsTypesGet = async ({
   repertoire,
@@ -650,7 +646,6 @@ export {
   etapeTypeGet,
   etapeTypeUpdate,
   devisesGet,
-  deviseUpdate,
   documentsTypesGet,
   documentTypeGet,
   geoSystemesGet,

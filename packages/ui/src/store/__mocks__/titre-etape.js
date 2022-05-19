@@ -4,7 +4,6 @@ const titreEtapeMetas = {
     { id: 'dge', nom: 'DGEC' }
   ],
   unites: [],
-  devises: [],
   substances: [],
   entreprises: {
     elements: [
@@ -29,7 +28,6 @@ const titreEtapeMetasRes = {
     { id: 'dge', nom: 'DGEC' }
   ],
   unites: [],
-  devises: [],
   substances: [],
   entreprises: [
     { id: 'ent-1', nom: '1' },
@@ -48,7 +46,6 @@ const titreEtapeMetasRes2 = {
     { id: 'dge', nom: 'DGEC' }
   ],
   unites: [],
-  devises: [],
   substances: [],
   entreprises: [
     { id: 'ent-1', nom: '1' },

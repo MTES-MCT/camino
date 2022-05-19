@@ -55,7 +55,6 @@ import {
 
 import {
   devises,
-  deviseModifier,
   demarchesTypes,
   demarcheTypeModifier,
   demarchesStatuts,
@@ -310,7 +309,6 @@ export default {
   phaseStatutModifier,
   etapeTypeModifier,
   etapeStatutModifier,
-  deviseModifier,
   uniteModifier,
   permissionModifier,
   documentTypeCreer,

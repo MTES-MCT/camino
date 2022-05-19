@@ -1,0 +1,394 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`statuts peut voir tous les statuts (utilisateur super) 1`] = `
+Object {
+  "devises": Array [
+    Object {
+      "id": "EUR",
+      "nom": "Euros",
+    },
+    Object {
+      "id": "XPF",
+      "nom": "Francs Pacifique",
+    },
+    Object {
+      "id": "FRF",
+      "nom": "Francs",
+    },
+  ],
+  "domaines": Array [
+    Object {
+      "id": "m",
+      "nom": "minéraux et métaux",
+    },
+    Object {
+      "id": "w",
+      "nom": "granulats marins",
+    },
+    Object {
+      "id": "c",
+      "nom": "carrières",
+    },
+    Object {
+      "id": "h",
+      "nom": "hydrocarbures liquides ou gazeux",
+    },
+    Object {
+      "id": "f",
+      "nom": "combustibles fossiles",
+    },
+    Object {
+      "id": "r",
+      "nom": "éléments radioactifs",
+    },
+    Object {
+      "id": "g",
+      "nom": "géothermie",
+    },
+    Object {
+      "id": "s",
+      "nom": "stockages souterrains",
+    },
+    Object {
+      "id": "i",
+      "nom": "indéterminé",
+    },
+  ],
+  "geoSystemes": Array [
+    Object {
+      "id": "2154",
+      "nom": "RGF93 / Lambert-93",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "France - onshore et offshore - continentale et Corse.",
+    },
+    Object {
+      "id": "2972",
+      "nom": "RGFG95 / UTM zone 22N",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "Guyane française - onshore et offshore.",
+    },
+    Object {
+      "id": "5490",
+      "nom": "RGAF09 / UTM zone 20N",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "Antilles françaises onshore et offshore à l'ouest du méridien 60° Ouest - Guadeloupe (incluant Grande Terre, Basse Terre, Marie Galante, Les Saintes, Iles de la Petite Terre, La Desirade, St Barthélemy, partie nord de St Martin) et Martinique.",
+    },
+    Object {
+      "id": "4171",
+      "nom": "RGF93",
+      "unite": Object {
+        "id": "deg",
+        "nom": "degré",
+        "symbole": "º",
+      },
+      "zone": "France - onshore et offshore - continentale et Corse.",
+    },
+    Object {
+      "id": "4624",
+      "nom": "RGFG95",
+      "unite": Object {
+        "id": "deg",
+        "nom": "degré",
+        "symbole": "º",
+      },
+      "zone": "French Guiana - onshore and offshore.",
+    },
+    Object {
+      "id": "4326",
+      "nom": "WGS84",
+      "unite": Object {
+        "id": "deg",
+        "nom": "degré",
+        "symbole": "º",
+      },
+      "zone": "Monde",
+    },
+    Object {
+      "id": "4230",
+      "nom": "ED50",
+      "unite": Object {
+        "id": "deg",
+        "nom": "degré",
+        "symbole": "º",
+      },
+      "zone": "Europe",
+    },
+    Object {
+      "id": "4275",
+      "nom": "NTF (Greenwich)",
+      "unite": Object {
+        "id": "deg",
+        "nom": "degré",
+        "symbole": "º",
+      },
+      "zone": "France - onshore - continentale et Corse.",
+    },
+    Object {
+      "id": "4807",
+      "nom": "NTF (Paris)",
+      "unite": Object {
+        "id": "gon",
+        "nom": "grade",
+        "symbole": "gon",
+      },
+      "zone": "France - onshore - continentale et Corse.",
+    },
+    Object {
+      "id": "27561",
+      "nom": "NTF (Paris) / Lambert Nord France",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "France - continentale au nord de  53,5 grades North (48°09'N).",
+    },
+    Object {
+      "id": "27563",
+      "nom": "NTF (Paris) / Lambert Sud france",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "France - continentale au sud de 50,5 grades nord (45°27'N).",
+    },
+    Object {
+      "id": "27571",
+      "nom": "NTF (Paris) / Lambert zone I",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "France - continentale au nord de 53,5 grades nord (48°09'N).",
+    },
+    Object {
+      "id": "27572",
+      "nom": "NTF (Paris) / Lambert zone II",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "France - continentale entre 45°27'N et 48°09'N.",
+    },
+    Object {
+      "id": "27573",
+      "nom": "NTF (Paris) / Lambert zone III",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "France - continentale au sud de 50,5 grades nord (45°27'N).",
+    },
+    Object {
+      "id": "3949",
+      "nom": "RGF93 / CC49",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "France - continentale entre 48°N et 50°N.",
+    },
+    Object {
+      "id": "32620",
+      "nom": "WGS84 / UTM zone 20N",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "Hémisphère Nord - entre 66°W et 60°W",
+    },
+    Object {
+      "id": "32621",
+      "nom": "WGS84 / UTM zone 21N",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "Hémisphère Nord - entre 60°W et 54°W",
+    },
+    Object {
+      "id": "32622",
+      "nom": "WGS84 / UTM zone 22N",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "Hémisphère Nord - entre 54°W et 48°W",
+    },
+    Object {
+      "id": "32630",
+      "nom": "WGS84 / UTM zone 30N",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "Hémisphère Nord - entre 6°W et 0°W",
+    },
+    Object {
+      "id": "2970",
+      "nom": "Guadeloupe 1948 / UTM zone 20N",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "Guadeloupe - onshore - Basse-Terre, Grande-Terre, La Desirade, Marie-Galante, Les Saintes.",
+    },
+    Object {
+      "id": "3313",
+      "nom": "RGFG95 / UTM zone 21N",
+      "unite": Object {
+        "id": "met",
+        "nom": "mètre",
+        "symbole": "m",
+      },
+      "zone": "Guyane française - onshore et offshore.",
+    },
+  ],
+  "statuts": Array [
+    Object {
+      "couleur": "warning",
+      "id": "dmi",
+      "nom": "demande initiale",
+    },
+    Object {
+      "couleur": "neutral",
+      "id": "dmc",
+      "nom": "demande classée",
+    },
+    Object {
+      "couleur": "success",
+      "id": "val",
+      "nom": "valide",
+    },
+    Object {
+      "couleur": "warning",
+      "id": "mod",
+      "nom": "modification en instance",
+    },
+    Object {
+      "couleur": "neutral",
+      "id": "ech",
+      "nom": "échu",
+    },
+    Object {
+      "couleur": "warning",
+      "id": "ind",
+      "nom": "indéterminé",
+    },
+  ],
+  "types": Array [
+    Object {
+      "id": "ap",
+      "nom": "autorisation de prospections préalables",
+    },
+    Object {
+      "id": "ar",
+      "nom": "autorisation de recherches",
+    },
+    Object {
+      "id": "pr",
+      "nom": "permis exclusif de recherches",
+    },
+    Object {
+      "id": "ax",
+      "nom": "autorisation d'exploitation",
+    },
+    Object {
+      "id": "pc",
+      "nom": "permis exclusif de carrières",
+    },
+    Object {
+      "id": "px",
+      "nom": "permis d'exploitation",
+    },
+    Object {
+      "id": "cx",
+      "nom": "concession",
+    },
+    Object {
+      "id": "in",
+      "nom": "indéterminé",
+    },
+  ],
+  "unites": Array [
+    Object {
+      "id": "deg",
+      "nom": "degré",
+    },
+    Object {
+      "id": "gon",
+      "nom": "grade",
+    },
+    Object {
+      "id": "km3",
+      "nom": "kilomètre cube",
+    },
+    Object {
+      "id": "m3a",
+      "nom": "mètre cube par an",
+    },
+    Object {
+      "id": "m3x",
+      "nom": "mètre cube",
+    },
+    Object {
+      "id": "met",
+      "nom": "mètre",
+    },
+    Object {
+      "id": "mgr",
+      "nom": "gramme",
+    },
+    Object {
+      "id": "mkc",
+      "nom": "quintal",
+    },
+    Object {
+      "id": "mkg",
+      "nom": "kilogramme",
+    },
+    Object {
+      "id": "mtc",
+      "nom": "centaine de tonnes",
+    },
+    Object {
+      "id": "mtk",
+      "nom": "millier de tonnes",
+    },
+    Object {
+      "id": "mtt",
+      "nom": "tonne",
+    },
+    Object {
+      "id": "txa",
+      "nom": "tonnes par an",
+    },
+    Object {
+      "id": "vmd",
+      "nom": "100 000 mètres cubes",
+    },
+  ],
+}
+`;

@@ -15,8 +15,6 @@ import {
   phaseStatutModifier,
   etapeTypeModifier,
   etapeStatutModifier,
-  devises,
-  deviseModifier,
   unites,
   uniteModifier,
   permissions,
@@ -532,15 +530,6 @@ const metasIndex = {
       { id: 'description', nom: 'Description', type: String, optional: true }
     ],
     ids: ['etapeTypeId', 'documentTypeId']
-  },
-  devises: {
-    get: devises,
-    update: deviseModifier,
-    nom: 'Devises',
-    colonnes: [
-      { id: 'id', nom: 'Id' },
-      { id: 'nom', nom: 'Nom', type: String }
-    ]
   },
   unites: {
     get: unites,

@@ -26,7 +26,6 @@ const state = {
   metas: {
     demarche: null,
     etapesTypes: [],
-    devises: [],
     unites: [],
     geoSystemes: [],
     substances: [],
@@ -362,7 +361,6 @@ const mutations = {
     state.metas = {
       demarche: null,
       etapesTypes: [],
-      devises: [],
       unites: [],
       geoSystemes: [],
       substances: [],

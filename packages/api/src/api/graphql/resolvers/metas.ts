@@ -2,7 +2,6 @@ import { GraphQLResolveInfo } from 'graphql'
 import {
   IDemarcheStatut,
   IDemarcheType,
-  IDevise,
   IDocumentRepertoire,
   IDocumentType,
   IDomaine,
@@ -26,7 +25,6 @@ import {
   demarchesTypesGet,
   demarcheTypeUpdate,
   devisesGet,
-  deviseUpdate,
   documentsTypesGet,
   documentTypeCreate,
   documentTypeUpdate,
@@ -694,31 +692,6 @@ const etapeStatutModifier = async (
   }
 }
 
-const deviseModifier = async (
-  { devise }: { devise: IDevise },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!permissionCheck(user?.permissionId, ['super'])) {
-      throw new Error('droits insuffisants')
-    }
-
-    await deviseUpdate(devise.id!, devise)
-
-    const devises = await devisesGet()
-
-    return devises
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
 const uniteModifier = async ({ unite }: { unite: IUnite }, context: IToken) => {
   try {
     const user = await userGet(context.user?.id)
@@ -910,7 +883,6 @@ export {
   phaseStatutModifier,
   etapeTypeModifier,
   etapeStatutModifier,
-  deviseModifier,
   uniteModifier,
   permissionModifier,
   documentTypeCreer,
