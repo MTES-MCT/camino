@@ -635,6 +635,19 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ])
   })
 
+  test('ne peut pas faire une "mfr" non mécanisée avec un franchissement d’eau', () => {
+    expect(() =>
+      orderAndInterpretMachine([
+        {
+          typeId: 'mfr',
+          statutId: 'fai',
+          date: '2019-12-10',
+          contenu: { arm: { mecanise: false, franchissements: 3 } }
+        }
+      ])
+    ).toThrowErrorMatchingSnapshot()
+  })
+
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
   test.each(etapesProd as any[])('cas réel N°$id', demarche => {
     // ici les étapes sont déjà ordonnées

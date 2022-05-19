@@ -10,7 +10,8 @@ import {
   isStatus,
   OctARMContext,
   toPotentialXStateEvent,
-  XStateEvent
+  XStateEvent,
+  xStateEventToEtape
 } from './arm/oct.machine'
 import { interpret, State } from 'xstate'
 import {
@@ -21,12 +22,8 @@ import {
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 
 // TODO 2022-05-18: il faudrait que le orderMachine retourne la solution la plus longue possible quand il n'y a pas de solution, pour aider au debug
+// orderMachine devrait retourner un tuple {ok: bool, etapes: Etape[]} pour éviter de faire isEtapesOk(orderMachine( qui ne sert à rien car orderMachine sait si les étapes sont ok
 export const orderMachine = (etapes: readonly Etape[]): readonly Etape[] => {
-  if (isEtapesOk(etapes)) {
-    return etapes
-  } else {
-    console.log("no solution found, that's strange")
-  }
   const sortedEtapes = etapes
     .slice()
     .sort((a, b) => a.date.localeCompare(b.date))
@@ -165,6 +162,30 @@ export const nextEtapes = (etapes: readonly Etape[]): DBEtat[] => {
   return possibleEvents.map(eventToEtat)
 }
 
+export const possibleNextEtapes = (
+  etapes: readonly Etape[]
+): Omit<Etape, 'date'>[] => {
+  const service = interpret(armOctMachine)
+
+  service.start()
+  for (let i = 0; i < etapes.length; i++) {
+    const etapeAFaire = etapes[i]
+    const event = eventFrom(etapeAFaire)
+    service.send(event)
+  }
+
+  return service.state.nextEvents
+    .filter(isEvent)
+    .flatMap(event => {
+      const events = toPotentialXStateEvent(event)
+
+      return events
+        .filter(event => service.state.can(event))
+        .map(xStateEventToEtape)
+    })
+    .filter(event => event !== undefined)
+}
+
 /**
  * Cette function ne doit JAMAIS appeler orderMachine, car c'est orderMachine qui se sert de cette fonction.
  * Cette function ne fait que vérifier si les étapes qu'on lui donne sont valides dans l'ordre
@@ -173,6 +194,13 @@ export const isEtapesOk = (
   sortedEtapes: readonly Etape[],
   initialState: State<OctARMContext, XStateEvent> | null = null
 ): boolean => {
+  if (sortedEtapes.length) {
+    for (let i = 1; i < sortedEtapes.length; i++) {
+      if (sortedEtapes[i - 1].date > sortedEtapes[i].date) {
+        return false
+      }
+    }
+  }
   const service = interpret(armOctMachine)
 
   if (initialState === null) {

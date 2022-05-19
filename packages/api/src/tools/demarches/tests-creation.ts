@@ -7,7 +7,6 @@ import { Etape } from '../../business/rules-demarches/arm/oct.machine'
 import { writeFileSync } from 'fs'
 import {
   isEtapesOk,
-  orderMachine,
   toMachineEtape
 } from '../../business/rules-demarches/machine-helper'
 
@@ -52,9 +51,7 @@ const writeEtapesForTest = async () => {
           'kcJzw0h3dJEwPhSUgDXq0smA',
           // rde sans franchissement ? soit pas de franchissement lors du mfr, soit pas de rde
           'FWVRSGQx2IpHjcVj1LwgRf0o',
-          'Dtd3Zuj4m7ZszvUDPoKJi1Of',
-          // réception de compléments de RDE après avoir reçu la RDE
-          '7hNXLy0HAJuIy69r2P8elLii'
+          'Dtd3Zuj4m7ZszvUDPoKJi1Of'
         ].includes(demarche.titreId)
       ) {
         console.log(`${demarche.titreId} ne respecte pas le cacoo`)
@@ -66,23 +63,24 @@ const writeEtapesForTest = async () => {
     })
     .map((demarche, index) => {
       const etapes: Etape[] =
-        demarche?.etapes?.map(etape => {
-          if (etape?.contenu?.arm) {
-            etape.contenu = { arm: etape.contenu?.arm }
-          } else {
-            delete etape.contenu
-          }
+        demarche?.etapes
+          ?.sort((a, b) => (a.ordre ?? 0) - (b.ordre ?? 0))
+          ?.map(etape => {
+            if (etape?.contenu?.arm) {
+              etape.contenu = { arm: etape.contenu?.arm }
+            } else {
+              delete etape.contenu
+            }
 
-          return toMachineEtape(etape)
-        }) ?? []
-      const etapesOrdonnees = orderMachine(etapes)
-      if (!isEtapesOk(etapesOrdonnees)) {
+            return toMachineEtape(etape)
+          }) ?? []
+      if (!isEtapesOk(etapes)) {
         console.log(
           `https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche "${demarche.typeId}"`
         )
       }
 
-      const etapesAnonymes = etapesOrdonnees.map((etape, index) => {
+      const etapesAnonymes = etapes.map((etape, index) => {
         return { ...etape, date: index.toString() }
       })
 

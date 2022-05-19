@@ -1,6 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql'
 import {
-  IContenu,
   IDemarcheStatut,
   IDemarcheType,
   IDocumentRepertoire,
@@ -72,7 +71,7 @@ import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
 import EtapesTypes from '../../../database/models/etapes-types'
 import {
   isEtapesOk,
-  nextEtapes,
+  possibleNextEtapes,
   toMachineEtapes
 } from '../../../business/rules-demarches/machine-helper'
 import { UNITES } from 'camino-common/src/unites'
@@ -224,15 +223,13 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
   titreEtapeId: string | undefined,
   date: string,
   etapesTypes: IEtapeType[]
-) => {
+): IEtapeType[] => {
   if (!titreDemarche.etapes) throw new Error('les étapes ne sont pas chargées')
   const sortedEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes)
   const etapesAvant: Etape[] = []
   const etapesApres: Etape[] = []
-  let contenu: undefined | IContenu
   if (titreEtapeId) {
     const index = sortedEtapes.findIndex(etape => etape.id === titreEtapeId)
-    contenu = sortedEtapes[index].contenu ?? undefined
     etapesAvant.push(...toMachineEtapes(sortedEtapes.slice(0, index)))
     etapesApres.push(...toMachineEtapes(sortedEtapes.slice(index + 1)))
   } else {
@@ -242,23 +239,18 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
     etapesApres.push(...toMachineEtapes(sortedEtapes.slice(etapesAvant.length)))
   }
 
-  // TODO 2022-05-19: on devrait utiliser un morceau de nextEtapes (une liste d'étapes liée à un event)
-  const dbEtats = nextEtapes(etapesAvant).filter(et => {
+  const etapesPossibles = possibleNextEtapes(etapesAvant).filter(et => {
     const newEtapes = [...etapesAvant]
-    const newEtape: Etape = {
-      typeId: et.etat,
-      statutId: et.statut ?? 'fai',
-      date,
-      contenu
-    }
-    newEtapes.push(newEtape)
+
+    const items = { ...et, date }
+    newEtapes.push(items)
     newEtapes.push(...etapesApres)
 
     return isEtapesOk(newEtapes)
   })
 
   etapesTypes = etapesTypes.filter(et =>
-    dbEtats.map(({ etat }) => etat).includes(et.id)
+    etapesPossibles.map(({ typeId }) => typeId).includes(et.id)
   )
 
   return etapesTypes

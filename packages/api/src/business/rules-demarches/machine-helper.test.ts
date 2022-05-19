@@ -1,4 +1,4 @@
-import { nextEtapes, toMachineEtape } from './machine-helper'
+import { isEtapesOk, nextEtapes, toMachineEtape } from './machine-helper'
 
 describe('nextEtapes', () => {
   test('retourne les prochaines étapes possibles', () => {
@@ -14,6 +14,17 @@ describe('nextEtapes', () => {
       { etat: 'pfd' }
     ])
   })
+
+  test('peut faire une mfr après une dae', () => {
+    expect(
+      nextEtapes([{ typeId: 'dae', statutId: 'exe', date: '2020-02-02' }])
+    ).toStrictEqual([
+      { etat: 'mfr' },
+      { etat: 'pfd' },
+      { etat: 'rde', statut: 'def' },
+      { etat: 'rde', statut: 'fav' }
+    ])
+  })
   test('retourne les premières étapes possibles', () => {
     expect(nextEtapes([])).toStrictEqual([
       { etat: 'rde', statut: 'def' },
@@ -23,6 +34,18 @@ describe('nextEtapes', () => {
       { etat: 'dae', statut: 'req' },
       { etat: 'dae', statut: 'exe' }
     ])
+  })
+})
+
+describe('isEtapesOk', () => {
+  // On n'est pas certain de notre base de données, si ça impacte les perf,
+  test('refuse si les étapes ne sont pas temporellement dans le bon ordre', () => {
+    expect(
+      isEtapesOk([
+        { typeId: 'mfr', statutId: 'fai', date: '2021-02-26' },
+        { typeId: 'mdp', statutId: 'fai', date: '2021-02-10' }
+      ])
+    ).toBe(false)
   })
 })
 

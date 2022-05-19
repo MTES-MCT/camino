@@ -21,7 +21,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mfr',
         statutId: 'fai',
         ordre: 1,
-        date: '2019-09-23',
+        date: '2019-09-19',
         slug: 'demarcheSlug-mfr01',
         contenu: { arm: { mecanise: true, franchissements: 19 } }
       },
@@ -121,7 +121,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mdp',
         statutId: 'fai',
         ordre: 2,
-        date: '2019-11-21',
+        date: '2019-09-20',
         slug: 'demarcheSlug-mdp01'
       },
       {
@@ -1429,7 +1429,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         )
       if (etapesTypesPossibles.length === 0) {
         console.log(
-          `pas d'étapes possibles à l'étape ${etape}. Devrait contenir AU MOINS la même étape`
+          `pas d'étapes possibles à l'étape ${JSON.stringify(
+            etape
+          )}. Devrait contenir AU MOINS la même étape`
         )
       }
       expect(etapesTypesPossibles.length).toBeGreaterThan(0)
@@ -1458,7 +1460,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     expect(etapes.map(({ id }) => id)).toStrictEqual(['mcb', 'mod'])
   })
 
-  test('peut faire une dae et pfd AVANT la mfr', () => {
+  test('peut faire une dae, une rde et pfd AVANT la mfr', () => {
     const demarche = {
       etapes: [
         {
@@ -1484,6 +1486,35 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       '2019-12-04',
       etapesTypes
     )
-    expect(etapes.map(({ id }) => id)).toStrictEqual(['dae', 'pfd'])
+    expect(etapes.map(({ id }) => id)).toStrictEqual(['dae', 'pfd', 'rde'])
+  })
+
+  test('peut faire que une pfd AVANT la mfr non mecanisee', () => {
+    const demarche = {
+      etapes: [
+        {
+          id: 'idMfr',
+          titreDemarcheId: '',
+          typeId: 'mfr',
+          statutId: 'fai',
+          date: '2022-05-16',
+          contenu: { arm: { mecanise: false } }
+        },
+        {
+          id: 'idMdp',
+          titreDemarcheId: '',
+          typeId: 'mdp',
+          statutId: 'fai',
+          date: '2022-05-17'
+        }
+      ]
+    }
+    const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+      demarche,
+      undefined,
+      '2019-12-04',
+      etapesTypes
+    )
+    expect(etapes.map(({ id }) => id)).toStrictEqual(['pfd'])
   })
 })

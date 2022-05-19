@@ -195,7 +195,7 @@ const creationCheck = async (
         } else if (e.type === 'text') {
           value = 'text'
         } else if (e.type === 'number' || e.type === 'integer') {
-          value = 3
+          value = 0
         } else if (e.type === 'select') {
           value = 'fakeId'
         }
@@ -215,7 +215,7 @@ const creationCheck = async (
           typeId: etapeTypeId,
           statutId: 'fai',
           titreDemarcheId,
-          date: '',
+          date: '2022-01-01',
           duree: 10,
           heritageProps: titreEtapePropsIds.reduce(
             (acc, prop) => {

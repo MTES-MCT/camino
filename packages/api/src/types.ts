@@ -133,6 +133,7 @@ type IContenuValeur =
   | boolean
   | IContenuElement[]
   | { file: FileUpload }
+  | null
 
 interface IContenuElement {
   [elementId: string]: IContenuValeur

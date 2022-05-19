@@ -355,6 +355,29 @@ export const eventToEtat = (event: Event): DBEtat => {
   return trad[event]
 }
 
+export const xStateEventToEtape = (event: XStateEvent): Omit<Etape, 'date'> => {
+  const dbEtat = trad[event.type]
+  let contenu
+  switch (event.type) {
+    case 'FAIRE_DEMANDE': {
+      contenu = {
+        arm: {
+          mecanise: event.mecanise,
+          franchissements: event.franchissements
+        }
+      }
+      break
+    }
+    case 'ACCEPTER_RDE':
+    case 'REFUSER_RDE':
+    case 'RECEVOIR_COMPLEMENTS_RDE': {
+      contenu = { arm: { franchissements: event.franchissements } }
+    }
+  }
+
+  return { typeId: dbEtat.etat, statutId: dbEtat.statut ?? 'fai', contenu }
+}
+
 export const eventFrom = (etape: Etape): XStateEvent => {
   const entries = Object.entries(trad).filter(
     (entry): entry is [Event, DBEtat] => EVENTS.includes(entry[0])
@@ -492,17 +515,21 @@ const validationFraisApresDesistementOuClassementSansSuite = [
     }
   }
 ]
-const actionAccepterRDE = assign<OctARMContext, AccepterRDE>({
-  franchissementCoursEau: (_context, event) => {
-    return event.franchissements
-  }
-})
 
 const actionMecanisation = assign<OctARMContext>({
   mecanisation: _context => {
     return { mecanise: true, paiementFraisDossierComplementaireValide: false }
   }
 })
+
+const actionsAccepterOuRefuserRDE = [
+  assign<OctARMContext, AccepterRDE | RefuserRDE>({
+    franchissementCoursEau: (_context, event) => {
+      return event.franchissements
+    }
+  }),
+  actionMecanisation
+]
 
 export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
   id: 'oct',
@@ -578,6 +605,10 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                               isMecanise(context.mecanisation) &&
                               !event.mecanise
                             ) {
+                              return false
+                            }
+
+                            if (!event.mecanise && event.franchissements) {
                               return false
                             }
 
@@ -841,18 +872,14 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                   cond: (context, event) =>
                     context.franchissementCoursEau !== 0 ||
                     (event.franchissements ?? 0) > 0,
-                  actions: assign<OctARMContext, RefuserRDE>({
-                    franchissementCoursEau: (_context, event) => {
-                      return event.franchissements
-                    }
-                  })
+                  actions: actionsAccepterOuRefuserRDE
                 },
                 ACCEPTER_RDE: {
                   target: 'faite',
                   cond: (context, event) =>
                     context.franchissementCoursEau !== 0 ||
                     (event.franchissements ?? 0) > 0,
-                  actions: actionAccepterRDE
+                  actions: actionsAccepterOuRefuserRDE
                 },
                 DEMANDER_COMPLEMENTS_RDE: 'demandeDeComplements'
               }
@@ -869,12 +896,13 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                 },
                 REFUSER_RDE: {
                   target: 'faite',
-                  cond: context => (context.franchissementCoursEau ?? 0) > 0
+                  cond: context => (context.franchissementCoursEau ?? 0) > 0,
+                  actions: actionsAccepterOuRefuserRDE
                 },
                 ACCEPTER_RDE: {
                   target: 'faite',
                   cond: context => (context.franchissementCoursEau ?? 0) > 0,
-                  actions: actionAccepterRDE
+                  actions: actionsAccepterOuRefuserRDE
                 },
                 DEMANDER_COMPLEMENTS_RDE: 'demandeDeComplements'
               }
@@ -899,7 +927,8 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                   cond: (context, event) =>
                     (isInconnu(context.mecanisation) ||
                       isMecanise(context.mecanisation)) &&
-                    (event.franchissements ?? 0) > 0
+                    (event.franchissements ?? 0) > 0,
+                  actions: actionsAccepterOuRefuserRDE
                 },
                 ACCEPTER_RDE: {
                   target: 'faite',
@@ -907,7 +936,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                     (isInconnu(context.mecanisation) ||
                       isMecanise(context.mecanisation)) &&
                     (event.franchissements ?? 0) > 0,
-                  actions: actionAccepterRDE
+                  actions: actionsAccepterOuRefuserRDE
                 }
               },
               type: 'final'
@@ -939,11 +968,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
             isMecanise(context.mecanisation) &&
             !context.franchissementCoursEau &&
             (event.franchissements ?? 0) > 0,
-          actions: assign<OctARMContext, RefuserRDE>({
-            franchissementCoursEau: (_context, event) => {
-              return event.franchissements
-            }
-          })
+          actions: actionsAccepterOuRefuserRDE
         },
         ACCEPTER_RDE: {
           target: 'saisineCommissionAutorisationsDeRecherchesMinieres',
@@ -951,7 +976,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
             isMecanise(context.mecanisation) &&
             !context.franchissementCoursEau &&
             (event.franchissements ?? 0) > 0,
-          actions: actionAccepterRDE
+          actions: actionsAccepterOuRefuserRDE
         }
       }
     },
