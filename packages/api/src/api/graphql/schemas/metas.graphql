@@ -229,7 +229,6 @@ type GeoSysteme {
   ordre: Int!
   zone: String!
   uniteId: String
-  unite: Unite!
   definitionProj4: String!
 }
 

@@ -19,7 +19,9 @@ export const GEO_SYSTEME_IDS = {
   WGS84: '4326',
   RGFG95: '4624',
   'NTF (Paris)': '4807',
-  'RGAF09 / UTM zone 20N': '5490'
+  'RGAF09 / UTM zone 20N': '5490',
+  'Mayotte 2004 / UTM zone 38S': '4471',
+  'Réunion ': '2975'
 } as const
 
 export interface GeoSysteme<T = GeoSystemeId> {
@@ -217,6 +219,24 @@ export const GeoSystemes: { [key in GeoSystemeId]: GeoSysteme<key> } = {
     zone: "Antilles françaises onshore et offshore à l'ouest du méridien 60° Ouest - Guadeloupe (incluant Grande Terre, Basse Terre, Marie Galante, Les Saintes, Iles de la Petite Terre, La Desirade, St Barthélemy, partie nord de St Martin) et Martinique.",
     definitionProj4:
       '+proj=utm +zone=20 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs '
+  },
+  '4471': {
+    id: '4471',
+    nom: 'Mayotte 2004 / UTM zone 38S',
+    ordre: 22,
+    uniteId: 'met',
+    zone: 'Mayotte - onshore et offshore',
+    definitionProj4:
+      '+proj=utm +zone=38 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs '
+  },
+  '2975': {
+    id: '2975',
+    nom: 'Réunion / UTM zone 40S',
+    ordre: 23,
+    uniteId: 'met',
+    zone: 'Réuinon',
+    definitionProj4:
+      '+proj=utm +zone=40 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs '
   }
 }
 
