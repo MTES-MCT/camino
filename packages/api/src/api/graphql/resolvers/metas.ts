@@ -242,6 +242,7 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
     etapesApres.push(...toMachineEtapes(sortedEtapes.slice(etapesAvant.length)))
   }
 
+  // TODO 2022-05-19: on devrait utiliser un morceau de nextEtapes (une liste d'étapes liée à un event)
   const dbEtats = nextEtapes(etapesAvant).filter(et => {
     const newEtapes = [...etapesAvant]
     const newEtape: Etape = {

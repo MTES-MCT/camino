@@ -164,8 +164,8 @@ const titreDemarcheUpdatedEtatValidate = (
   // vérifie que toutes les étapes existent dans l’arbre
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {
     // TODO 2022-04-22
-    // - [ ] utiliser la machine pour calculer le statut de la démarche (lancer le daily après pour vérifier les modifications en prod)
-    //   - [ ] Prise en compte des statuts d'étapes pour le calcul des étapes possibles
+    // - [x] utiliser la machine pour calculer le statut de la démarche (lancer le daily après pour vérifier les modifications en prod)
+    //   - [x] Prise en compte des statuts d'étapes pour le calcul des étapes possibles
     //   - [x] Changer la machine à état pour classer sans suite dès le classement sans suite, et pas après la notification du demandeur
     //   - [x] Prendre en compte la VFC lors de desistement et CSS
     // - [x] vérifier le calcul de l’ordre des étapes déjà existant

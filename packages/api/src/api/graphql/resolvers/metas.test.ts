@@ -1460,7 +1460,9 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           etapesTypes
         )
       if (etapesTypesPossibles.length === 0) {
-        console.log('boom', etape.typeId)
+        console.log(
+          `pas d'étapes possibles à l'étape ${etape}. Devrait contenir AU MOINS la même étape`
+        )
       }
       expect(etapesTypesPossibles.length).toBeGreaterThan(0)
       expect(etapesTypesPossibles.map(({ id }) => id)).toContain(etape.typeId)
@@ -1478,7 +1480,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     expect(etapes[0].id).toBe('mnv')
   })
 
-  test.only('ajoute une nouvelle étape en plein milieu', () => {
+  test('ajoute une nouvelle étape en plein milieu', () => {
     const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
       demarche,
       undefined,
@@ -1488,7 +1490,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     expect(etapes.map(({ id }) => id)).toStrictEqual(['mcb', 'mod'])
   })
 
-  test('peut faire une dae, rde et pfd AVANT la mfr', () => {
+  test('peut faire une dae et pfd AVANT la mfr', () => {
     const demarche = {
       etapes: [
         {
@@ -1496,7 +1498,8 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           titreDemarcheId: '',
           typeId: 'mfr',
           statutId: 'fai',
-          date: '2022-05-16'
+          date: '2022-05-16',
+          contenu: { arm: { mecanise: true } }
         },
         {
           id: 'idMdp',
@@ -1513,7 +1516,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       '2019-12-04',
       etapesTypes
     )
-    // expect(etapes).toHaveLength(2)
-    expect(etapes.map(({ id }) => id)).toStrictEqual(['mcb', 'mod'])
+    expect(etapes.map(({ id }) => id)).toStrictEqual(['dae', 'pfd'])
   })
 })

@@ -529,6 +529,39 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ])
   })
 
+  test('ne peut pas faire de mfr non mécanisée après une dae', () => {
+    expect(() =>
+      orderAndInterpretMachine([
+        { typeId: 'dae', statutId: 'exe', date: '2021-02-23' },
+        {
+          typeId: 'mfr',
+          statutId: 'fai',
+          date: '2021-02-25',
+          contenu: { arm: { mecanise: false } }
+        }
+      ])
+    ).toThrowErrorMatchingSnapshot()
+  })
+
+  test('ne peut pas faire de mfr non mécanisée après une rde', () => {
+    expect(() =>
+      orderAndInterpretMachine([
+        {
+          typeId: 'rde',
+          statutId: 'fav',
+          date: '2021-02-23',
+          contenu: { arm: { franchissements: 1 } }
+        },
+        {
+          typeId: 'mfr',
+          statutId: 'fai',
+          date: '2021-02-25',
+          contenu: { arm: { mecanise: false } }
+        }
+      ])
+    ).toThrowErrorMatchingSnapshot()
+  })
+
   test('peut réaliser une validation des frais de dossier complémentaire après un désistement', () => {
     orderAndInterpretMachine([
       { typeId: 'vfc', statutId: 'fai', date: '2021-10-04' },
