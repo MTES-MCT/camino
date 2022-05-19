@@ -134,7 +134,6 @@ const tables = [
   },
   { name: 'titres_types_types', orderBy: ['id'] },
   { name: 'trimestres', orderBy: ['id'] },
-  { name: 'unites', orderBy: ['id'] },
   { name: 'utilisateurs', orderBy: ['id'] },
   {
     name: 'utilisateurs__administrations',

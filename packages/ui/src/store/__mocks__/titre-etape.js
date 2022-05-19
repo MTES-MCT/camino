@@ -1,5 +1,4 @@
 const titreEtapeMetas = {
-  unites: [],
   substances: [],
   entreprises: {
     elements: [
@@ -19,7 +18,6 @@ const titreEtapeMetasRes = {
     { id: 'w', nom: 'granulats' },
     { id: 'c', nom: 'carrières' }
   ],
-  unites: [],
   substances: [],
   entreprises: [
     { id: 'ent-1', nom: '1' },
@@ -33,7 +31,6 @@ const titreEtapeMetasRes = {
 }
 
 const titreEtapeMetasRes2 = {
-  unites: [],
   substances: [],
   entreprises: [
     { id: 'ent-1', nom: '1' },

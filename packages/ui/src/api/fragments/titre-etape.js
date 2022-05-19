@@ -8,8 +8,7 @@ import { fragmentPays } from './pays'
 import {
   fragmentDemarcheType,
   fragmentDocumentType,
-  fragmentTitreType,
-  fragmentUnite
+  fragmentTitreType
 } from './metas'
 
 import { fragmentDocument } from './documents'

@@ -8,6 +8,7 @@ import {
 import { Departement, DepartementId } from 'camino-common/src/departement'
 import { Region } from 'camino-common/src/region'
 import { GeoSystemeId } from 'camino-common/src/geoSystemes'
+import { UniteId } from 'camino-common/src/unites'
 import { PermissionId } from 'camino-common/src/permissions'
 
 enum DemarchesStatutsTypes {
@@ -957,15 +958,6 @@ interface ITitreTypeDemarcheTypeEtapeType {
   justificatifsTypes?: IDocumentType[] | null
 }
 
-interface IUnite {
-  id: string
-  nom: string
-  symbole: string
-  referenceUniteRatio?: number
-  referenceUniteId?: string | null
-  referenceUnite?: IUnite | null
-}
-
 interface IUser extends IUtilisateur {
   sections: Index<boolean>
 }
@@ -1128,7 +1120,6 @@ export {
   ITitreTypeDemarcheTypeEtapeTypeJustificatifType,
   ITitreEntreprise,
   ITrimestre,
-  IUnite,
   IUser,
   IUtilisateur,
   IUtilisateurTitre,

@@ -15,8 +15,6 @@ import {
   phaseStatutModifier,
   etapeTypeModifier,
   etapeStatutModifier,
-  unites,
-  uniteModifier,
   permissions,
   permissionModifier,
   documentsTypes,
@@ -528,26 +526,6 @@ const metasIndex = {
       { id: 'description', nom: 'Description', type: String, optional: true }
     ],
     ids: ['etapeTypeId', 'documentTypeId']
-  },
-  unites: {
-    get: unites,
-    update: uniteModifier,
-    nom: 'Unités',
-    colonnes: [
-      { id: 'id', nom: 'Id' },
-      { id: 'symbole', nom: 'Symbole', type: String },
-      { id: 'nom', nom: 'Nom', type: String },
-      {
-        id: 'referenceUniteId',
-        nom: "Id de l'unité de référence",
-        type: String
-      },
-      {
-        id: 'referenceUniteRatio',
-        nom: "Ratio de l'unité de référence",
-        type: Number
-      }
-    ]
   },
   permissions: {
     get: permissions,

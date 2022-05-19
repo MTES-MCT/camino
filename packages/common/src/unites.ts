@@ -125,3 +125,5 @@ export const Unites: { [key in UniteId]: Unite<key> } = {
     referenceUniteRatio: 100000
   }
 }
+
+export const UNITES = Object.values(Unites)

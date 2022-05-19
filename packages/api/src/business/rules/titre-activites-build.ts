@@ -86,8 +86,8 @@ const titreActiviteSectionsBuild = (
   date: string,
   titreDemarches: ITitreDemarche[],
   titreTypeId: string
-) =>
-  sections.reduce((newSections: ISection[], s) => {
+) => {
+  return sections.reduce((newSections: ISection[], s) => {
     let elements = [] as ISectionElement[]
 
     if (s.elements) {
@@ -140,6 +140,7 @@ const titreActiviteSectionsBuild = (
 
     return newSections
   }, [])
+}
 
 const titreActiviteFind = (
   activiteTypeId: string,

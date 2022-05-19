@@ -38,7 +38,6 @@ describe('étapes', () => {
       metas: {
         demarche: {},
         etapesTypes: [],
-        unites: [],
         substances: [],
         entreprises: []
       },

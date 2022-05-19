@@ -13,8 +13,7 @@ import {
   IReferenceType,
   ITitreStatut,
   ITitreTypeType,
-  IToken,
-  IUnite
+  IToken
 } from '../../../types'
 import { debug } from '../../../config/index'
 
@@ -43,9 +42,7 @@ import {
   titresStatutsGet,
   titreStatutUpdate,
   titresTypesTypesGet,
-  titreTypeTypeUpdate,
-  unitesGet,
-  uniteUpdate
+  titreTypeTypeUpdate
 } from '../../../database/queries/metas'
 
 import { userGet } from '../../../database/queries/utilisateurs'
@@ -68,13 +65,14 @@ import { userSuper } from '../../../database/user-super'
 import { titresEtapesHeritageContenuUpdate } from '../../../business/processes/titres-etapes-heritage-contenu-update'
 import { sortedAdministrationTypes } from 'camino-common/src/administrations'
 import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
+import { UNITES } from 'camino-common/src/unites'
 import { permissionCheck } from 'camino-common/src/permissions'
 
 const devises = async () => devisesGet()
 
 const geoSystemes = () => sortedGeoSystemes
 
-const unites = async () => unitesGet()
+const unites = () => UNITES
 
 const documentsTypes = async ({
   repertoire,
@@ -690,28 +688,6 @@ const etapeStatutModifier = async (
   }
 }
 
-const uniteModifier = async ({ unite }: { unite: IUnite }, context: IToken) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!permissionCheck(user?.permissionId, ['super'])) {
-      throw new Error('droits insuffisants')
-    }
-
-    await uniteUpdate(unite.id!, unite)
-
-    const unites = await unitesGet()
-
-    return unites
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
 const permissionModifier = async (
   { permission }: { permission: IPermission },
   context: IToken
@@ -850,7 +826,6 @@ export {
   phaseStatutModifier,
   etapeTypeModifier,
   etapeStatutModifier,
-  uniteModifier,
   permissionModifier,
   documentTypeCreer,
   documentTypeModifier,
