@@ -92,13 +92,10 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
     expect(service).canOnlyTransitionTo([
       'ACCEPTER_COMPLETUDE',
-      'ACCEPTER_RDE',
       'CLASSER_SANS_SUITE',
-      'DEMANDER_COMPLEMENTS_RDE',
       'DESISTER_PAR_LE_DEMANDEUR',
       'REFUSER_COMPLETUDE',
-      'MODIFIER_DEMANDE',
-      'REFUSER_RDE'
+      'MODIFIER_DEMANDE'
     ])
   })
 
@@ -116,13 +113,10 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ])
 
     expect(service).canOnlyTransitionTo([
-      'ACCEPTER_RDE',
       'CLASSER_SANS_SUITE',
       'DEMANDER_COMPLEMENTS_COMPLETUDE',
-      'DEMANDER_COMPLEMENTS_RDE',
       'DESISTER_PAR_LE_DEMANDEUR',
-      'MODIFIER_DEMANDE',
-      'REFUSER_RDE'
+      'MODIFIER_DEMANDE'
     ])
   })
 

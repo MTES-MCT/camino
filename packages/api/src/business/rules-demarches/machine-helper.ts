@@ -1,14 +1,15 @@
 import {
-  Etape,
-  eventFrom,
   armOctMachine,
-  isEtat,
-  isStatus,
   DBEtat,
-  EVENTS,
-  eventToEtat,
+  Etape,
   Event,
+  eventFrom,
+  eventToEtat,
+  isEtat,
+  isEvent,
+  isStatus,
   OctARMContext,
+  toPotentialXStateEvent,
   XStateEvent
 } from './arm/oct.machine'
 import { interpret, State } from 'xstate'
@@ -153,28 +154,15 @@ export const nextEtapes = (etapes: readonly Etape[]): DBEtat[] => {
     service.send(event)
   }
 
-  const possibleEvents: Event[] = service.state.nextEvents.filter(
-    (nextEvent: string): nextEvent is Event => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+  const possibleEvents: Event[] = service.state.nextEvents
+    .filter(isEvent)
+    .filter(event => {
+      const events = toPotentialXStateEvent(event)
 
-      if (EVENTS.includes(nextEvent)) {
-        if (nextEvent === 'ACCEPTER_RDE') {
-          return [{ type: 'ACCEPTER_RDE', franchissements: 2 }].some(e =>
-            service.state.can(e)
-          )
-        }
+      return events.some(event => service.state.can(event))
+    })
 
-        return service.state.can(nextEvent)
-      }
-      
-return false
-    }
-  )
-
-  const etats = possibleEvents.map(eventToEtat)
-
-  return etats
+  return possibleEvents.map(eventToEtat)
 }
 
 /**

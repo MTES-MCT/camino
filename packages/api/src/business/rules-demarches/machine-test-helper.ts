@@ -2,8 +2,9 @@ import {
   Etape,
   Event,
   eventFrom,
-  EVENTS,
-  armOctMachine
+  armOctMachine,
+  isEvent,
+  toPotentialXStateEvent
 } from './arm/oct.machine'
 import { interpret } from 'xstate'
 import { orderMachine } from './machine-helper'
@@ -25,14 +26,14 @@ declare global {
 expect.extend({
   canOnlyTransitionTo(service, events: Event[]) {
     events.sort()
-    const passEvents: Event[] = service.state.nextEvents.filter(
-      (nextEvent: string): nextEvent is Event => {
-        // TODO 2022-05-18: il faut vérifier pour les événements avec DATA (ACCEPTER_RDE,...) toutes les possibilité (pour pouvoir utiliser service.state.can())
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        return EVENTS.includes(nextEvent)
-      }
-    )
+    const passEvents: Event[] = service.state.nextEvents
+      .filter(isEvent)
+      .filter((event: Event) => {
+        const events = toPotentialXStateEvent(event)
+
+        return events.some(event => service.state.can(event))
+      })
+
     passEvents.sort()
     if (
       passEvents.length !== events.length ||
@@ -70,12 +71,13 @@ export const interpretMachine = (etapes: readonly Etape[]) => {
           etapes.slice(0, i).map(etape => etape.typeId + '_' + etape.statutId)
         )}'. The event ${JSON.stringify(
           event
-        )} should be one of '${service.state.nextEvents.filter(nextEvent => {
-          // TODO 2022-05-18: il faut vérifier pour les événements avec DATA (ACCEPTER_RDE,...) toutes les possibilité (pour pouvoir utiliser service.state.can())
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          return EVENTS.includes(nextEvent) && service.state.can(nextEvent)
-        })}'`
+        )} should be one of '${service.state.nextEvents
+          .filter(isEvent)
+          .filter((event: Event) => {
+            const events = toPotentialXStateEvent(event)
+
+            return events.some(event => service.state.can(event))
+          })}'`
       )
     }
     service.send(event)

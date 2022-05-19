@@ -165,6 +165,36 @@ export type XStateEvent =
 
 export type Event = XStateEvent['type']
 
+export const isEvent = (event: string): event is Event => {
+  return EVENTS.includes(event)
+}
+
+export const toPotentialXStateEvent = (event: Event): XStateEvent[] => {
+  switch (event) {
+    case 'FAIRE_DEMANDE': {
+      return [
+        { type: event, mecanise: false, franchissements: null },
+        { type: event, mecanise: true, franchissements: null },
+        { type: event, mecanise: true, franchissements: 0 },
+        { type: event, mecanise: true, franchissements: 2 }
+      ]
+    }
+    case 'ACCEPTER_RDE':
+    case 'REFUSER_RDE':
+    case 'RECEVOIR_COMPLEMENTS_RDE': {
+      return [
+        { type: event, franchissements: 0 },
+        { type: event, franchissements: 3 }
+      ]
+    }
+    default:
+      // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return [{ type: event }]
+  }
+}
+
 export type DBEtat = { etat: Etat; statut?: Status }
 const trad: { [_key in Event]: DBEtat } = {
   FAIRE_DEMANDE: { etat: ETATS.Demande },
