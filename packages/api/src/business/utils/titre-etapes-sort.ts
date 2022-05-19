@@ -42,7 +42,9 @@ export const titreEtapesSortAscByDate = (
     const etapes = orderMachine(toMachineEtapes(titreEtapes))
     if (!isEtapesOk(etapes)) {
       console.error(
-        `impossible de trouver un ordre où ces étapes sont valides ${etapes}`
+        `impossible de trouver un ordre pour la démarche '${
+          titreEtapes[0]?.titreDemarcheId
+        }' où ces étapes sont valides ${JSON.stringify(etapes)}`
       )
     }
 
