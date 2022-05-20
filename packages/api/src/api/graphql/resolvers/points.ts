@@ -128,8 +128,7 @@ const pointsImporter = async (
                   id: '',
                   titrePointId: '',
                   coordonnees: { x: point[0], y: point[1] },
-                  geoSystemeId: geoSysteme.id,
-                  geoSysteme
+                  geoSystemeId: geoSysteme.id
                 }
               ]
             })

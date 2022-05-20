@@ -33,10 +33,6 @@ const titreEtapeMetasRes = {
 }
 
 const titreEtapeMetasRes2 = {
-  geoSystemes: [
-    { id: 'ifr', nom: 'Ifremer' },
-    { id: 'dge', nom: 'DGEC' }
-  ],
   unites: [],
   substances: [],
   entreprises: [

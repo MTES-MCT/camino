@@ -7,7 +7,7 @@ import {
 } from 'camino-common/src/administrations'
 import { Departement, DepartementId } from 'camino-common/src/departement'
 import { Region } from 'camino-common/src/region'
-import { GeoSysteme, GeoSystemeId } from 'camino-common/src/geoSystemes'
+import { GeoSystemeId } from 'camino-common/src/geoSystemes'
 
 enum DemarchesStatutsTypes {
   Accepte = 'acc',
@@ -919,7 +919,6 @@ interface ITitrePointReference {
   slug?: string
   titrePointId: string
   geoSystemeId: GeoSystemeId
-  geoSysteme?: GeoSysteme | null
   coordonnees: ICoordonnees
   opposable?: boolean | null
 }

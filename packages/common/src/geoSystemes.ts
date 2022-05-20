@@ -247,7 +247,7 @@ export const sortedGeoSystemes = Object.values(GeoSystemes).sort(
 export function assertGeoSystemeId(
   geoSystemeId: string
 ): asserts geoSystemeId is GeoSystemeId {
-  if (!sortedGeoSystemes.includes(geoSystemeId)) {
+  if (!Object.values(GEO_SYSTEME_IDS).includes(geoSystemeId)) {
     throw new Error(`système géographique inconnu : EPSG:${geoSystemeId}`)
   }
 }

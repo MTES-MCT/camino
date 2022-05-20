@@ -7,9 +7,7 @@ const referencesBuild = references =>
       { pointGeoSystemesIndex, pointReferences },
       { geoSystemeId, coordonnees, id }
     ) => {
-      const geoSysteme = GeoSystemes[geoSystemeId]
-
-      pointGeoSystemesIndex[geoSystemeId] = geoSysteme
+      pointGeoSystemesIndex[geoSystemeId] = GeoSystemes[geoSystemeId]
 
       pointReferences[geoSystemeId] = { ...coordonnees }
 
@@ -25,7 +23,7 @@ const referencesBuild = references =>
 const geoSystemeOpposableIdFind = references => {
   const referenceOpposable = references.find(r => r.opposable)
 
-  return referenceOpposable ? referenceOpposable.geoSysteme.id : ''
+  return referenceOpposable ? referenceOpposable.geoSystemeId : undefined
 }
 
 const groupeBuild = (points, geoSystemeOpposableId) =>
