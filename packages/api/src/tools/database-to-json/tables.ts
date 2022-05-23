@@ -57,7 +57,6 @@ const tables = [
   },
   { name: 'forets', orderBy: ['id'] },
   { name: 'frequences', orderBy: ['id'] },
-  { name: 'geo_systemes', orderBy: ['id'] },
   { name: 'globales', orderBy: ['id'] },
   { name: 'mois', orderBy: ['id'] },
   { name: 'pays', orderBy: ['id'] },

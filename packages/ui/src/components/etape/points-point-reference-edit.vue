@@ -15,7 +15,7 @@
       </p>
     </div>
     <div class="mb tablet-blob-1-3">
-      <h5>X ({{ geoSysteme.unite.nom }})</h5>
+      <h5>X ({{ geoSystemeUniteNom }})</h5>
       <inputNumber
         v-model="pointReference.x"
         :negative="true"
@@ -23,7 +23,7 @@
       />
     </div>
     <div class="mb tablet-blob-1-3">
-      <h5>Y ({{ geoSysteme.unite.nom }})</h5>
+      <h5>Y ({{ geoSystemeUniteNom }})</h5>
       <inputNumber
         v-model="pointReference.y"
         :negative="true"
@@ -35,6 +35,7 @@
 
 <script>
 import InputNumber from '../_ui/input-number.vue'
+import { Unites } from 'camino-common/src/unites'
 
 export default {
   components: { InputNumber },
@@ -50,6 +51,9 @@ export default {
       return this.pointReferences[this.geoSysteme.id]
         ? this.pointReferences[this.geoSysteme.id]
         : { id: undefined, x: 0, y: 0 }
+    },
+    geoSystemeUniteNom() {
+      return Unites[this.geoSysteme.uniteId].nom
     }
   }
 }

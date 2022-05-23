@@ -32,6 +32,7 @@
 
 <script>
 import PointReferenceEdit from './points-point-reference-edit.vue'
+import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
 
 export default {
   components: { PointReferenceEdit },
@@ -44,8 +45,8 @@ export default {
 
   computed: {
     geoSystemes() {
-      return this.$store.state.titreEtapeEdition.metas.geoSystemes.filter(
-        ({ id }) => this.geoSystemeIds.includes(id)
+      return sortedGeoSystemes.filter(({ id }) =>
+        this.geoSystemeIds.includes(id)
       )
     }
   }

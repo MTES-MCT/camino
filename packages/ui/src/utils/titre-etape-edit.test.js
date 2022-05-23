@@ -1,4 +1,5 @@
 import { etapeEditFormat } from './titre-etape-edit'
+import { GEO_SYSTEME_IDS } from 'camino-common/src/geoSystemes'
 
 // dateFormat
 describe('etapeEditFormat', () => {
@@ -37,7 +38,7 @@ describe('etapeEditFormat', () => {
             references: [
               {
                 opposable: true,
-                geoSysteme: { id: 'geo-systeme-id' },
+                geoSystemeId: GEO_SYSTEME_IDS.WGS84,
                 coordonnees: { x: 1.5, y: 1 },
                 id: 'ref'
               }
@@ -52,8 +53,8 @@ describe('etapeEditFormat', () => {
       duree: { ans: null, mois: null },
       amodiataires: [],
       titulaires: [],
-      geoSystemeIds: ['geo-systeme-id'],
-      geoSystemeOpposableId: 'geo-systeme-id',
+      geoSystemeIds: [GEO_SYSTEME_IDS.WGS84],
+      geoSystemeOpposableId: GEO_SYSTEME_IDS.WGS84,
       groupes: [
         [
           [
@@ -61,7 +62,9 @@ describe('etapeEditFormat', () => {
               id: 'point-id-111',
               description: undefined,
               nom: undefined,
-              references: { 'geo-systeme-id': { id: 'ref', x: 1.5, y: 1 } },
+              references: {
+                [GEO_SYSTEME_IDS.WGS84]: { id: 'ref', x: 1.5, y: 1 }
+              },
               lot: undefined,
               subsidiaire: undefined
             }
@@ -92,7 +95,7 @@ describe('etapeEditFormat', () => {
             point: 1,
             references: [
               {
-                geoSysteme: { id: 'geo-systeme-id' },
+                geoSystemeId: GEO_SYSTEME_IDS.WGS84,
                 coordonnees: { x: 1.5, y: 1 },
                 id: 'ref'
               }
@@ -106,7 +109,7 @@ describe('etapeEditFormat', () => {
             lot: 1,
             references: [
               {
-                geoSysteme: { id: 'geo-systeme-id' },
+                geoSystemeId: GEO_SYSTEME_IDS.WGS84,
                 coordonnees: { x: 1.5, y: 3 },
                 id: 'ref3'
               }
@@ -120,7 +123,8 @@ describe('etapeEditFormat', () => {
             lot: 1,
             references: [
               {
-                geoSysteme: { id: 'geo-systeme-id' },
+                geoSystemeId: GEO_SYSTEME_IDS.WGS84,
+
                 coordonnees: { x: 1.5, y: 4 },
                 id: 'ref2'
               }
@@ -139,8 +143,8 @@ describe('etapeEditFormat', () => {
       duree: { ans: 20, mois: 0 },
       amodiataires: [],
       titulaires: [{ id: 'titulaire-id', operateur: undefined }],
-      geoSystemeIds: ['geo-systeme-id'],
-      geoSystemeOpposableId: '',
+      geoSystemeIds: [GEO_SYSTEME_IDS.WGS84],
+      geoSystemeOpposableId: undefined,
       groupes: [
         [
           [
@@ -148,7 +152,9 @@ describe('etapeEditFormat', () => {
               id: 'point-id-111',
               description: undefined,
               nom: undefined,
-              references: { 'geo-systeme-id': { id: 'ref', x: 1.5, y: 1 } },
+              references: {
+                [GEO_SYSTEME_IDS.WGS84]: { id: 'ref', x: 1.5, y: 1 }
+              },
               lot: undefined,
               subsidiaire: undefined
             },

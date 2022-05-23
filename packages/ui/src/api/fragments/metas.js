@@ -165,22 +165,6 @@ const fragmentReferenceType = gql`
   }
 `
 
-const fragmentGeoSysteme = gql`
-  fragment geoSysteme on GeoSysteme {
-    id
-    nom
-    ordre
-    zone
-    uniteId
-    definitionProj4
-    unite {
-      ...unite
-    }
-  }
-
-  ${fragmentUnite}
-`
-
 const fragmentTitreTypeTitreStatut = gql`
   fragment titreTypeTitreStatut on TitreTypeTitreStatut {
     titreTypeId
@@ -266,7 +250,6 @@ export {
   fragmentPhaseStatut,
   fragmentDocumentType,
   fragmentReferenceType,
-  fragmentGeoSysteme,
   fragmentTitreTypeTitreStatut,
   fragmentTitreTypeDemarcheType,
   fragmentTitreTypeDemarcheTypeEtapeType,

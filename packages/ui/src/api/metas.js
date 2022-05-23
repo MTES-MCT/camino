@@ -14,7 +14,6 @@ import {
   fragmentPermission,
   fragmentDocumentType,
   fragmentReferenceType,
-  fragmentGeoSysteme,
   fragmentTitreType,
   fragmentTitreTypeTitreStatut,
   fragmentTitreTypeDemarcheType,
@@ -322,28 +321,6 @@ const pays = apiGraphQLFetch(
     }
   `
 )
-
-const geoSystemes = apiGraphQLFetch(
-  gql`
-    query GeoSystemes {
-      geoSystemes {
-        ...geoSysteme
-      }
-    }
-
-    ${fragmentGeoSysteme}
-  `
-)
-
-const geoSystemeModifier = apiGraphQLFetch(gql`
-  mutation GeoSystemeModifier($element: InputGeoSysteme!) {
-    geoSystemeModifier(geoSysteme: $element) {
-      ...geoSysteme
-    }
-  }
-
-  ${fragmentGeoSysteme}
-`)
 
 const titresTypes = apiGraphQLFetch(
   gql`
@@ -811,8 +788,6 @@ export {
   referencesTypes,
   referenceTypeModifier,
   pays,
-  geoSystemes,
-  geoSystemeModifier,
   titresTypes,
   titreTypeModifier,
   titreTypeCreer,

@@ -87,7 +87,6 @@ import {
   documentTypeCreer,
   documentTypeModifier,
   referenceTypeModifier,
-  geoSystemeModifier,
   pays
 } from './resolvers/metas'
 
@@ -314,7 +313,6 @@ export default {
   documentTypeCreer,
   documentTypeModifier,
   referenceTypeModifier,
-  geoSystemeModifier,
   titreTypeModifier,
   titreTypeCreer,
   titreTypeSupprimer,

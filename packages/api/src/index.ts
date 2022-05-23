@@ -30,8 +30,10 @@ import { databaseInit } from './database/init'
 import { consoleOverride, appLogger } from './config/logger'
 import cookieParser from 'cookie-parser'
 import { filesInit } from './config/files'
+import { geoSystemesInit } from './config/proj4'
 
 consoleOverride(appLogger)
+geoSystemesInit()
 filesInit().then(() => {
   databaseInit().then(() => {
     const app = express()

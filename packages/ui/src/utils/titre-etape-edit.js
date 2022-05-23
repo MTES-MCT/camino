@@ -1,17 +1,18 @@
 import { cloneAndClean } from './index'
+import { GeoSystemes } from 'camino-common/src/geoSystemes'
 
 const referencesBuild = references =>
   references.reduce(
     (
       { pointGeoSystemesIndex, pointReferences },
-      { geoSysteme, coordonnees, id }
+      { geoSystemeId, coordonnees, id }
     ) => {
-      pointGeoSystemesIndex[geoSysteme.id] = geoSysteme
+      pointGeoSystemesIndex[geoSystemeId] = GeoSystemes[geoSystemeId]
 
-      pointReferences[geoSysteme.id] = { ...coordonnees }
+      pointReferences[geoSystemeId] = { ...coordonnees }
 
       if (id) {
-        pointReferences[geoSysteme.id].id = id
+        pointReferences[geoSystemeId].id = id
       }
 
       return { pointGeoSystemesIndex, pointReferences }
@@ -22,7 +23,7 @@ const referencesBuild = references =>
 const geoSystemeOpposableIdFind = references => {
   const referenceOpposable = references.find(r => r.opposable)
 
-  return referenceOpposable ? referenceOpposable.geoSysteme.id : ''
+  return referenceOpposable ? referenceOpposable.geoSystemeId : undefined
 }
 
 const groupeBuild = (points, geoSystemeOpposableId) =>

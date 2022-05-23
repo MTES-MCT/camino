@@ -49,9 +49,5 @@ fragment geosysteme on GeoSysteme {
   id
   nom
   zone
-  unite {
-    id
-    nom
-    symbole
-  }
+  uniteId
 }

@@ -2,12 +2,8 @@ const substances = {
   graph: `legales.[code, domaine]`
 }
 
-const geoSystemes = {
-  graph: `unite`
-}
-
 const points = {
-  graph: `references.geoSysteme.${geoSystemes.graph}`
+  graph: `references`
 }
 
 const communes = {
@@ -115,8 +111,6 @@ const titresEtapesRelateFalse = [
   'administrations.utilisateurs',
   'administrations.utilisateurs.permission',
   'substances.legales',
-  'points.references.geoSysteme',
-  'points.references.geoSysteme.unite',
   ...documentsRelateFalse.map(k => `documents.${k}`),
   ...documentsRelateFalse.map(k => `justificatifs.${k}`)
 ]
@@ -262,8 +256,6 @@ const titresRelateFalse = [
   ...titresTypesRelateFalse.map(k => `domaine.titresTypes.${k}`),
   'points',
   'points.references',
-  'points.references.geoSysteme',
-  'points.references.geoSysteme.unite',
   'pays',
   'pays.departement',
   'pays.departement.region',
@@ -349,7 +341,6 @@ export default {
   entreprises,
   entreprisesEtablissements,
   etapesTypes,
-  geoSystemes,
   pays,
   points,
   substances,

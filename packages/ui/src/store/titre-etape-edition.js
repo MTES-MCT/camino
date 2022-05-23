@@ -27,7 +27,6 @@ const state = {
     demarche: null,
     etapesTypes: [],
     unites: [],
-    geoSystemes: [],
     substances: [],
     entreprises: [],
     documentsTypes: [],

@@ -221,10 +221,7 @@ fragment point on Point {
 
 fragment pointReference on PointReference {
   id
-  geoSysteme {
-    id
-    nom
-  }
+  geoSystemeId
   coordonnees {
     x
     y

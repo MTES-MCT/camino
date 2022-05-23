@@ -23,8 +23,6 @@ import {
   documentTypeModifier,
   referencesTypes,
   referenceTypeModifier,
-  geoSystemes,
-  geoSystemeModifier,
   titresTypes,
   titreTypeModifier,
   titreTypeCreer,
@@ -580,23 +578,6 @@ const metasIndex = {
     colonnes: [
       { id: 'id', nom: 'Id' },
       { id: 'nom', nom: 'Nom', type: String }
-    ]
-  },
-  'geo-systemes': {
-    get: geoSystemes,
-    update: geoSystemeModifier,
-    nom: 'Systèmes géographiques',
-    colonnes: [
-      { id: 'id', nom: 'Id' },
-      { id: 'nom', nom: 'Nom', type: String },
-      { id: 'ordre', nom: 'Ordre', type: Number },
-      {
-        id: 'uniteId',
-        nom: "Id de l'unité",
-        type: Array,
-        elements: ['met', 'deg', 'gon']
-      },
-      { id: 'definitionProj4', nom: 'Définition proj 4', type: String }
     ]
   },
   pays: {

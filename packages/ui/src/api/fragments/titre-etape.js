@@ -79,8 +79,6 @@ const fragmentHeritageEtape = gql`
   ${fragmentPoint}
 
   ${fragmentTitreSubstance}
-
-  ${fragmentUnite}
 `
 
 const fragmentHeritageProps = gql`
@@ -200,8 +198,6 @@ const fragmentTitreEtape = gql`
   ${fragmentTitreSubstance}
 
   ${fragmentPays}
-
-  ${fragmentUnite}
 
   ${fragmentDocument}
 
@@ -367,8 +363,6 @@ const fragmentEtape = gql`
   ${fragmentTitreSubstance}
 
   ${fragmentPays}
-
-  ${fragmentUnite}
 
   ${fragmentDocument}
 

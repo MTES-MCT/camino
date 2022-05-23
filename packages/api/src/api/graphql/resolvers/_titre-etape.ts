@@ -13,7 +13,6 @@ import {
 } from '../../../types'
 
 import { geoConvert } from '../../../tools/geo-convert'
-import { geoSystemes } from '../../../database/cache/geo-systemes'
 
 import {
   titreEtapeHeritagePropsFind,
@@ -29,6 +28,7 @@ import {
   titreEtapesSortAscByOrdre,
   titreEtapesSortDescByOrdre
 } from '../../../business/utils/titre-etapes-sort'
+import { GeoSystemes } from 'camino-common/src/geoSystemes'
 
 const titreEtapePointsCalc = <
   T extends {
@@ -66,13 +66,9 @@ const pointReferenceFind = (
 const uniteRatioFind = (pointReference: ITitrePointReference | 0) => {
   if (!pointReference || !pointReference.geoSystemeId) return 1
 
-  const geoSysteme = geoSystemes.find(
-    ({ id }) => pointReference.geoSystemeId === id
-  )
+  const geoSysteme = GeoSystemes[pointReference.geoSystemeId]
 
-  return geoSysteme && geoSysteme.unite && geoSysteme.unite.id === 'gon'
-    ? 0.9
-    : 1
+  return geoSysteme.uniteId === 'gon' ? 0.9 : 1
 }
 
 const titreEtapeHeritagePropsBuild = (

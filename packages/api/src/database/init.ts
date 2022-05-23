@@ -1,6 +1,5 @@
 import { metasInit } from './cache/metas'
 import { globalesInit } from './cache/globales'
-import { geoSystemesInit } from './cache/geo-systemes'
 import { knex } from '../knex'
 import { utilisateursCount } from './queries/utilisateurs'
 import { userSuper } from './user-super'
@@ -16,7 +15,6 @@ const databaseInit = async () => {
 const cacheInit = async () => {
   await metasInit()
   await globalesInit()
-  await geoSystemesInit()
 }
 
 const createAdminUserAtStartup = async () => {

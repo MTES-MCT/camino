@@ -229,7 +229,6 @@ type GeoSysteme {
   ordre: Int!
   zone: String!
   uniteId: String
-  unite: Unite!
   definitionProj4: String!
 }
 
@@ -449,15 +448,6 @@ input InputPermission {
 input InputReferenceType {
   id: ID!
   nom: String
-}
-
-input InputGeoSysteme {
-  id: ID!
-  nom: String
-  ordre: Int
-  zone: String
-  uniteId: String
-  definitionProj4: String
 }
 
 input InputTitreTypeModification {

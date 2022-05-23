@@ -1,12 +1,19 @@
 import { geoConvert } from './geo-convert'
+import { GEO_SYSTEME_IDS } from 'camino-common/src/geoSystemes'
 
 describe('teste la conversion des projections', () => {
   test.each`
-    epsgId    | x                     | newX
-    ${'4326'} | ${1234}               | ${1234}
-    ${'4326'} | ${1.199826706437144}  | ${1.199826706437144}
-    ${'4326'} | ${49.869381812347456} | ${49.869381812347456}
-  `('teste geoConvert', ({ epsgId, x, newX }) => {
-    expect(geoConvert(epsgId, { x, y: 1 })).toEqual({ x: newX, y: 1 })
-  })
+    x
+    ${1234}
+    ${1.199826706437144}
+    ${49.869381812347456}
+  `(
+    'la conversion vers le système géo par défaut ne fait pas de conversion',
+    ({ x }) => {
+      expect(geoConvert(GEO_SYSTEME_IDS.WGS84, { x, y: 1 })).toEqual({
+        x,
+        y: 1
+      })
+    }
+  )
 })
