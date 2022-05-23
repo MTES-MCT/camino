@@ -400,7 +400,12 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     orderAndInterpretMachine([
       { typeId: 'sca', statutId: 'fai', date: '2021-09-24' },
       { typeId: 'aof', statutId: 'def', date: '2021-09-23' },
-      { typeId: 'rde', statutId: 'def', date: '2021-09-22' },
+      {
+        typeId: 'rde',
+        statutId: 'def',
+        date: '2021-09-22',
+        contenu: { arm: { franchissements: 3 } }
+      },
       { typeId: 'edm', statutId: 'fav', date: '2021-04-30' },
       { typeId: 'eof', statutId: 'fai', date: '2021-03-17' },
       { typeId: 'mcb', statutId: 'fai', date: '2021-03-16' },

@@ -430,6 +430,7 @@ export const eventFrom = (etape: Etape): XStateEvent => {
 type MecanisationConnuMecanise = {
   mecanise: true
   paiementFraisDossierComplementaireValide: boolean
+  franchissementCoursEau: number
 }
 
 type MecanisationConnuNonMecanise = { mecanise: false }
@@ -441,7 +442,6 @@ type MecanisationInconnu = MecanisationConnu | 'inconnu'
 
 export interface OctARMContext {
   mecanisation: MecanisationInconnu
-  franchissementCoursEau: number | null
   visibilite: 'confidentielle' | 'publique'
   expertiseONFFaite: boolean
   demarcheStatut: DemarcheStatutId
@@ -517,18 +517,39 @@ const validationFraisApresDesistementOuClassementSansSuite = [
 ]
 
 const actionMecanisation = assign<OctARMContext>({
-  mecanisation: _context => {
-    return { mecanise: true, paiementFraisDossierComplementaireValide: false }
+  mecanisation: context => {
+    if (isMecanise(context.mecanisation)) {
+      return context.mecanisation
+    }
+
+    return {
+      mecanise: true,
+      paiementFraisDossierComplementaireValide: false,
+      franchissementCoursEau: 0
+    }
   }
 })
 
-const actionsAccepterOuRefuserRDE = [
-  assign<OctARMContext, AccepterRDE | RefuserRDE>({
-    franchissementCoursEau: (_context, event) => {
-      return event.franchissements
+const actionAccepterOuRefuserRDE = [
+  assign<OctARMContext, AccepterRDE | RefuserRDE | RecevoirComplementsRde>({
+    mecanisation: (context, event) => {
+      if (event.franchissements === null || event.franchissements < 1) {
+        throw new Error('cas impossible')
+      }
+      if (isMecanise(context.mecanisation)) {
+        return {
+          ...context.mecanisation,
+          franchissementCoursEau: event.franchissements
+        }
+      }
+
+      return {
+        mecanise: true,
+        paiementFraisDossierComplementaireValide: false,
+        franchissementCoursEau: event.franchissements
+      }
     }
-  }),
-  actionMecanisation
+  })
 ]
 
 export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
@@ -536,7 +557,6 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
   initial: 'demandeEnConstructionOuDeposeeOuEnInstruction',
   context: {
     mecanisation: 'inconnu',
-    franchissementCoursEau: null,
     expertiseONFFaite: false,
     visibilite: 'confidentielle',
     demarcheStatut: DemarchesStatutsTypesIds.EnConstruction,
@@ -587,17 +607,28 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                         FAIRE_DEMANDE: {
                           target: 'demandeFaite',
                           actions: assign<OctARMContext, FaireDemandeEvent>({
-                            franchissementCoursEau: (_context, event) => {
-                              return event.franchissements
-                            },
-                            mecanisation: (_context, event) => {
-                              return event.mecanise
-                                ? {
-                                    mecanise: true,
-                                    paiementFraisDossierComplementaireValide:
-                                      false
-                                  }
-                                : { mecanise: false }
+                            mecanisation: (context, event) => {
+                              if (
+                                isMecanise(context.mecanisation) &&
+                                context.mecanisation.franchissementCoursEau >
+                                  0 &&
+                                (event.franchissements === null ||
+                                  event.franchissements === 0)
+                              ) {
+                                throw new Error(
+                                  "pas le droit d'avoir pas de franchissements alors qu'une rde a été faite"
+                                )
+                              } else {
+                                return event.mecanise
+                                  ? {
+                                      mecanise: true,
+                                      paiementFraisDossierComplementaireValide:
+                                        false,
+                                      franchissementCoursEau:
+                                        event.franchissements ?? 0
+                                    }
+                                  : { mecanise: false }
+                              }
                             }
                           }),
                           cond: (context, event) => {
@@ -612,11 +643,16 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                               return false
                             }
 
-                            return (
-                              context.franchissementCoursEau === null ||
-                              ((context.franchissementCoursEau ?? 0) > 0 &&
-                                event.mecanise)
-                            )
+                            if (
+                              isMecanise(context.mecanisation) &&
+                              context.mecanisation.franchissementCoursEau > 0 &&
+                              (event.franchissements === null ||
+                                event.franchissements === 0)
+                            ) {
+                              return false
+                            }
+
+                            return true
                           }
                         }
                       }
@@ -864,22 +900,20 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                 target: 'exemptee',
                 cond: context =>
                   isNonMecanise(context.mecanisation) ||
-                  !context.franchissementCoursEau
+                  (isMecanise(context.mecanisation) &&
+                    !context.mecanisation.franchissementCoursEau) ||
+                  isInconnu(context.mecanisation)
               },
               on: {
                 REFUSER_RDE: {
                   target: 'faite',
-                  cond: (context, event) =>
-                    context.franchissementCoursEau !== 0 ||
-                    (event.franchissements ?? 0) > 0,
-                  actions: actionsAccepterOuRefuserRDE
+                  cond: (context, event) => (event.franchissements ?? 0) > 0,
+                  actions: actionAccepterOuRefuserRDE
                 },
                 ACCEPTER_RDE: {
                   target: 'faite',
-                  cond: (context, event) =>
-                    context.franchissementCoursEau !== 0 ||
-                    (event.franchissements ?? 0) > 0,
-                  actions: actionsAccepterOuRefuserRDE
+                  cond: (context, event) => (event.franchissements ?? 0) > 0,
+                  actions: actionAccepterOuRefuserRDE
                 },
                 DEMANDER_COMPLEMENTS_RDE: 'demandeDeComplements'
               }
@@ -888,21 +922,21 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
               on: {
                 RECEVOIR_COMPLEMENTS_RDE: {
                   target: 'enCours',
-                  actions: assign<OctARMContext, RecevoirComplementsRde>({
-                    franchissementCoursEau: (_context, event) => {
-                      return event.franchissements
-                    }
-                  })
+                  actions: actionAccepterOuRefuserRDE
                 },
                 REFUSER_RDE: {
                   target: 'faite',
-                  cond: context => (context.franchissementCoursEau ?? 0) > 0,
-                  actions: actionsAccepterOuRefuserRDE
+                  cond: context =>
+                    isMecanise(context.mecanisation) &&
+                    context.mecanisation.franchissementCoursEau > 0,
+                  actions: actionAccepterOuRefuserRDE
                 },
                 ACCEPTER_RDE: {
                   target: 'faite',
-                  cond: context => (context.franchissementCoursEau ?? 0) > 0,
-                  actions: actionsAccepterOuRefuserRDE
+                  cond: context =>
+                    isMecanise(context.mecanisation) &&
+                    context.mecanisation.franchissementCoursEau > 0,
+                  actions: actionAccepterOuRefuserRDE
                 },
                 DEMANDER_COMPLEMENTS_RDE: 'demandeDeComplements'
               }
@@ -910,7 +944,9 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
             exemptee: {
               always: {
                 target: 'enCours',
-                cond: context => (context.franchissementCoursEau ?? 0) > 0
+                cond: context =>
+                  isMecanise(context.mecanisation) &&
+                  context.mecanisation.franchissementCoursEau > 0
               },
               on: {
                 DEMANDER_COMPLEMENTS_RDE: {
@@ -928,7 +964,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                     (isInconnu(context.mecanisation) ||
                       isMecanise(context.mecanisation)) &&
                     (event.franchissements ?? 0) > 0,
-                  actions: actionsAccepterOuRefuserRDE
+                  actions: actionAccepterOuRefuserRDE
                 },
                 ACCEPTER_RDE: {
                   target: 'faite',
@@ -936,7 +972,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                     (isInconnu(context.mecanisation) ||
                       isMecanise(context.mecanisation)) &&
                     (event.franchissements ?? 0) > 0,
-                  actions: actionsAccepterOuRefuserRDE
+                  actions: actionAccepterOuRefuserRDE
                 }
               },
               type: 'final'
@@ -960,23 +996,24 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
             'demandeEnConstructionOuDeposeeOuEnInstruction.pasRde.avisONFRendu'
           ],
           cond: context =>
-            isMecanise(context.mecanisation) && !context.franchissementCoursEau
+            isMecanise(context.mecanisation) &&
+            !context.mecanisation.franchissementCoursEau
         },
         REFUSER_RDE: {
           target: 'saisineCommissionAutorisationsDeRecherchesMinieres',
           cond: (context, event) =>
             isMecanise(context.mecanisation) &&
-            !context.franchissementCoursEau &&
+            !context.mecanisation.franchissementCoursEau &&
             (event.franchissements ?? 0) > 0,
-          actions: actionsAccepterOuRefuserRDE
+          actions: actionAccepterOuRefuserRDE
         },
         ACCEPTER_RDE: {
           target: 'saisineCommissionAutorisationsDeRecherchesMinieres',
           cond: (context, event) =>
             isMecanise(context.mecanisation) &&
-            !context.franchissementCoursEau &&
+            !context.mecanisation.franchissementCoursEau &&
             (event.franchissements ?? 0) > 0,
-          actions: actionsAccepterOuRefuserRDE
+          actions: actionAccepterOuRefuserRDE
         }
       }
     },
@@ -1048,9 +1085,15 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
               OctARMContext,
               { type: 'VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES' }
             >({
-              mecanisation: {
-                mecanise: true,
-                paiementFraisDossierComplementaireValide: true
+              mecanisation: context => {
+                if (!isMecanise(context.mecanisation)) {
+                  throw new Error('cas impossible')
+                }
+
+                return {
+                  ...context.mecanisation,
+                  paiementFraisDossierComplementaireValide: true
+                }
               }
             }),
             cond: context =>
@@ -1064,9 +1107,15 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
               OctARMContext,
               { type: 'VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES' }
             >({
-              mecanisation: {
-                mecanise: true,
-                paiementFraisDossierComplementaireValide: true
+              mecanisation: context => {
+                if (!isMecanise(context.mecanisation)) {
+                  throw new Error('cas impossible')
+                }
+
+                return {
+                  ...context.mecanisation,
+                  paiementFraisDossierComplementaireValide: true
+                }
               }
             }),
             cond: context =>
