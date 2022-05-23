@@ -9,7 +9,7 @@ const contenuNumbersCheck = (sections: ISection[], contenu: IContenu) => {
         element.type === 'number' &&
         contenu[section.id] &&
         contenu[section.id][element.id] &&
-        contenu[section.id][element.id] < 0
+        contenu[section.id][element.id]! < 0
       ) {
         errors.push(
           `le champ "${element.id}" ne peut pas avoir une valeur négative`

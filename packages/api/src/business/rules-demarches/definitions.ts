@@ -36,9 +36,9 @@ type IDemarcheDefinition =
   | DemarcheDefinitionMachine
 
 export const isDemarcheDefinitionRestriction = (
-  dd: IDemarcheDefinition
+  dd: IDemarcheDefinition | undefined
 ): dd is DemarcheDefinitionRestriction => {
-  return 'restrictions' in dd
+  return dd !== undefined && 'restrictions' in dd
 }
 export const isDemarcheDefinitionMachine = (
   dd: IDemarcheDefinition | undefined

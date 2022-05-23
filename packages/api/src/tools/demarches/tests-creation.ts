@@ -51,7 +51,9 @@ const writeEtapesForTest = async () => {
           'kcJzw0h3dJEwPhSUgDXq0smA',
           // rde sans franchissement ? soit pas de franchissement lors du mfr, soit pas de rde
           'FWVRSGQx2IpHjcVj1LwgRf0o',
-          'Dtd3Zuj4m7ZszvUDPoKJi1Of'
+          'Dtd3Zuj4m7ZszvUDPoKJi1Of',
+          // reception de complements de rde sans franchissements de cours d'eau (null au lieu de 0 ou plus)
+          'vvxX7ntbBKLCbUf2DqxKuVmf'
         ].includes(demarche.titreId)
       ) {
         console.log(`${demarche.titreId} ne respecte pas le cacoo`)
@@ -74,7 +76,13 @@ const writeEtapesForTest = async () => {
 
             return toMachineEtape(etape)
           }) ?? []
-      if (!isEtapesOk(etapes)) {
+      try {
+        if (!isEtapesOk(etapes)) {
+          console.log(
+            `https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche "${demarche.typeId}"`
+          )
+        }
+      } catch (e) {
         console.log(
           `https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche "${demarche.typeId}"`
         )

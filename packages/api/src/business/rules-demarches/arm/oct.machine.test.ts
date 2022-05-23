@@ -11,6 +11,7 @@ import {
   interpretMachine,
   orderAndInterpretMachine
 } from '../machine-test-helper'
+import { IContenu } from '../../../types'
 
 const etapesProd = require('./oct.cas.json')
 
@@ -178,12 +179,21 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test.each([
     {
       typeId: ETATS.RecepisseDeDeclarationLoiSurLEau,
-      statutId: STATUS.FAVORABLE
+      statutId: STATUS.FAVORABLE,
+      contenu: { arm: { franchissements: 1 } }
     },
     { typeId: ETATS.DecisionAutoriteEnvironnementale, statutId: STATUS.EXEMPTE }
   ])(
     'peut créer une étape "%s" juste après une "mdp" et que le titre est mécanisé avec franchissement d’eau',
-    ({ typeId, statutId }: { typeId: Etat; statutId: Status }) => {
+    ({
+      typeId,
+      statutId,
+      contenu
+    }: {
+      typeId: Etat
+      statutId: Status
+      contenu?: IContenu
+    }) => {
       orderAndInterpretMachine([
         {
           typeId: 'mfr',
@@ -192,7 +202,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
           contenu: { arm: { mecanise: true, franchissements: 1 } }
         },
         { typeId: 'mdp', statutId: 'dep', date: '2020-01-02' },
-        { typeId, statutId, date: '2020-01-03' }
+        { typeId, statutId, contenu, date: '2020-01-03' }
       ])
     }
   )
@@ -327,7 +337,12 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       { typeId: 'pfd', date: '2020-07-10', statutId: 'fai' },
       { typeId: 'mdp', date: '2020-07-17', statutId: 'fai' },
       { typeId: 'mcp', date: '2020-07-17', statutId: 'com' },
-      { typeId: 'rde', date: '2020-07-30', statutId: 'fav' },
+      {
+        typeId: 'rde',
+        date: '2020-07-30',
+        statutId: 'fav',
+        contenu: { arm: { franchissements: 3 } }
+      },
       { typeId: 'vfd', date: '2020-07-31', statutId: 'fai' },
       { typeId: 'mcr', date: '2020-07-31', statutId: 'fav' },
       { typeId: 'eof', date: '2020-08-10', statutId: 'fai' },
@@ -344,7 +359,12 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       { typeId: 'mnb', statutId: 'fai', date: '2020-07-09' },
       { typeId: 'aca', statutId: 'fav', date: '2020-06-17' },
       { typeId: 'sca', statutId: 'fai', date: '2020-06-15' },
-      { typeId: 'rde', statutId: 'fav', date: '2020-02-11' },
+      {
+        typeId: 'rde',
+        statutId: 'fav',
+        date: '2020-02-11',
+        contenu: { arm: { franchissements: 3 } }
+      },
       { typeId: 'aof', statutId: 'fav', date: '2020-02-08' },
       { typeId: 'eof', statutId: 'fai', date: '2020-02-07' },
       { typeId: 'mcr', statutId: 'fav', date: '2020-02-06' },

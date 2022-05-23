@@ -68,7 +68,6 @@ import { userSuper } from '../../../database/user-super'
 import { titresEtapesHeritageContenuUpdate } from '../../../business/processes/titres-etapes-heritage-contenu-update'
 import { sortedAdministrationTypes } from 'camino-common/src/administrations'
 import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
-import EtapesTypes from '../../../database/models/etapes-types'
 import {
   isEtapesOk,
   possibleNextEtapes,

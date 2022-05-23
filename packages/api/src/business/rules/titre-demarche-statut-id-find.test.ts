@@ -101,7 +101,12 @@ describe("statut d'une démarche", () => {
           { typeId: 'mcr', statutId: 'fav', date: '2020-02-06' },
           { typeId: 'eof', statutId: 'fai', date: '2020-02-07' },
           { typeId: 'aof', statutId: 'fav', date: '2020-02-08' },
-          { typeId: 'rde', statutId: 'fav', date: '2020-02-11' },
+          {
+            typeId: 'rde',
+            statutId: 'fav',
+            date: '2020-02-11',
+            contenu: { arm: { franchissements: 3 } }
+          },
           { typeId: 'sca', statutId: 'fai', date: '2020-06-15' },
           { typeId: 'aca', statutId: 'fav', date: '2020-06-17' },
           { typeId: 'mnb', statutId: 'fai', date: '2020-07-09' },

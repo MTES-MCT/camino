@@ -113,7 +113,8 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         statutId: 'fav',
         ordre: 6,
         date: '2019-12-04',
-        slug: 'demarcheSlug-rde01'
+        slug: 'demarcheSlug-rde01',
+        contenu: { arm: { franchissements: 19 } }
       },
       {
         id: 'etapeId2',
@@ -1469,7 +1470,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           typeId: 'mfr',
           statutId: 'fai',
           date: '2022-05-16',
-          contenu: { arm: { mecanise: true } }
+          contenu: { arm: { mecanise: true, franchissements: 2 } }
         },
         {
           id: 'idMdp',
