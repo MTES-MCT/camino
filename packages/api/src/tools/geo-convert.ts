@@ -1,8 +1,11 @@
 import proj4 from 'proj4'
 import { ICoordonnees } from '../types'
-import { GEO_SYSTEME_IDS } from 'camino-common/src/geoSystemes'
+import { GEO_SYSTEME_IDS, GeoSystemeId } from 'camino-common/src/geoSystemes'
 
-const geoConvert = (epsgId: string, coords: ICoordonnees): ICoordonnees => {
+const geoConvert = (
+  epsgId: GeoSystemeId,
+  coords: ICoordonnees
+): ICoordonnees => {
   const fromProjection = `EPSG:${epsgId}`
   const toProjection = `EPSG:${GEO_SYSTEME_IDS.WGS84}`
 
