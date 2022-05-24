@@ -4,7 +4,7 @@
 
 .blobs {
   clear: both;
-  margin-right: calc(var(--gutter)*-1);
+  margin-right: calc(var(--gutter) * -1);
   display: flex;
   flex-flow: row wrap;
   align-items: flex-start;
@@ -12,7 +12,7 @@
 }
 
 .blobs::after {
-  content: "";
+  content: '';
   display: table;
   clear: both;
 }
@@ -59,7 +59,7 @@
 
 .blobs-mini {
   clear: both;
-  margin-right: calc(var(--unit-s)*-1);
+  margin-right: calc(var(--unit-s) * -1);
   display: flex;
   flex-flow: row wrap;
   align-items: flex-start;
@@ -67,7 +67,7 @@
 }
 
 .blobs-mini::after {
-  content: "";
+  content: '';
   display: table;
   clear: both;
 }
@@ -90,14 +90,14 @@
 @media (min-width: 22em) {
   .mobile-blobs {
     clear: both;
-    margin-right: calc(var(--gutter)*-1);
+    margin-right: calc(var(--gutter) * -1);
     display: flex;
     flex-flow: row wrap;
     align-items: flex-start;
     align-content: flex-start;
   }
   .mobile-blobs::after {
-    content: "";
+    content: '';
     display: table;
     clear: both;
   }
@@ -146,14 +146,14 @@
 @media (min-width: 42.5em) {
   .tablet-blobs {
     clear: both;
-    margin-right: calc(var(--gutter)*-1);
+    margin-right: calc(var(--gutter) * -1);
     display: flex;
     flex-flow: row wrap;
     align-items: flex-start;
     align-content: flex-start;
   }
   .tablet-blobs::after {
-    content: "";
+    content: '';
     display: table;
     clear: both;
   }
@@ -207,14 +207,14 @@
 @media (min-width: 63em) {
   .desktop-blobs {
     clear: both;
-    margin-right: calc(var(--gutter)*-1);
+    margin-right: calc(var(--gutter) * -1);
     display: flex;
     flex-flow: row wrap;
     align-items: flex-start;
     align-content: flex-start;
   }
   .desktop-blobs::after {
-    content: "";
+    content: '';
     display: table;
     clear: both;
   }
@@ -263,14 +263,14 @@
 @media (min-width: 83.5em) {
   .large-blobs {
     clear: both;
-    margin-right: calc(var(--gutter)*-1);
+    margin-right: calc(var(--gutter) * -1);
     display: flex;
     flex-flow: row wrap;
     align-items: flex-start;
     align-content: flex-start;
   }
   .large-blobs::after {
-    content: "";
+    content: '';
     display: table;
     clear: both;
   }

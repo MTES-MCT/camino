@@ -27,8 +27,8 @@ html {
   background-color: var(--color-bg);
   color: var(--color-inverse);
   font-family: system-ui;
-  font-size: calc(var(--base-font-size)*1);
-  line-height: calc(var(--unit)*1);
+  font-size: calc(var(--base-font-size) * 1);
+  line-height: calc(var(--unit) * 1);
 }
 
 body,
@@ -80,8 +80,8 @@ textarea,
 select,
 optgroup {
   font: inherit;
-  font-size: calc(var(--base-font-size)*1);
-  line-height: calc(var(--unit)*1);
+  font-size: calc(var(--base-font-size) * 1);
+  line-height: calc(var(--unit) * 1);
   text-align: left;
 }
 

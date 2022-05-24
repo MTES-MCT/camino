@@ -40,6 +40,6 @@ const user: User = {
 }
 export const Connected = Template.bind({})
 Connected.args = {
-  user: user,
+  user,
   menuActive: false
 }

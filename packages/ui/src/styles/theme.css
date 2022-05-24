@@ -20,8 +20,8 @@ html {
 }
 
 .title {
-  font-size: calc(var(--base-font-size)*2.03999);
-  line-height: calc(var(--unit)*1.5);
+  font-size: calc(var(--base-font-size) * 2.03999);
+  line-height: calc(var(--unit) * 1.5);
 }
 
 .map:not(.leaflet-pseudo-fullscreen) {
@@ -133,8 +133,8 @@ html {
 }
 
 .lead {
-  font-size: calc(var(--base-font-size)*1.33);
-  line-height: calc(var(--unit)*1.25);
+  font-size: calc(var(--base-font-size) * 1.33);
+  line-height: calc(var(--unit) * 1.25);
   margin: var(--unit-xl) var(--unit);
   color: var(--color-info);
   font-style: italic;

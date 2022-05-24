@@ -51,7 +51,7 @@ if (hasEntreprises) {
 }
 
 const getEntreprisesTitres = async () => {
-  return (await titres({ entreprisesIds: entreprisesIds })).elements
+  return (await titres({ entreprisesIds })).elements
 }
 
 const getOnfTitres = async () => (await fetch('/apiUrl/titresONF')).json()

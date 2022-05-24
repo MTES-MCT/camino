@@ -1,9 +1,6 @@
 {
   "upgrade": true,
   "reject": [
-    "postcss-button",
-    "postcss-grid-fluid" ,
-    "postcss-typescale",
     "graphql-react",
     "jest",
     "jest-util",

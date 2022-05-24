@@ -10,7 +10,7 @@ import {
 } from '../api/metas'
 
 const definitionsIndex = {
-  domaines: domaines,
+  domaines,
   'titre-minier': '',
   'autorisation-miniere': '',
   'demarches-statuts': demarchesStatuts,

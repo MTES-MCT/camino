@@ -102,7 +102,7 @@
     "rbush": "^3.0.1",
     "snarkdown": "^2.0.0",
     "standard-version": "^9.3.2",
-    "stylelint": "^14.8.2",
+    "stylelint": "^14.8.4",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^25.0.0",
     "ts-jest": "^27.1.4",
@@ -184,27 +184,6 @@
       "stylelint-config-standard",
       "stylelint-config-prettier"
     ],
-    "rules": {
-      "property-no-unknown": [
-        true,
-        {
-          "ignoreProperties": [
-            "typescale",
-            "gf",
-            "/button-/"
-          ]
-        }
-      ],
-      "function-no-unknown": [
-        true,
-        {
-          "ignoreFunctions": [
-            "color-mod",
-            "alpha"
-          ]
-        }
-      ]
-    },
     "ignoreFiles": [
       "./dist/**/*",
       "src/styles/system/forms.css"

@@ -477,8 +477,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 .leaflet-container .leaflet-control-attribution,
 .leaflet-container .leaflet-control-scale {
-  font-size: calc(var(--base-font-size)*0.75188);
-  line-height: calc(var(--unit)*1);
+  font-size: calc(var(--base-font-size) * 0.75188);
+  line-height: calc(var(--unit) * 1);
 }
 
 .leaflet-left .leaflet-control-scale {

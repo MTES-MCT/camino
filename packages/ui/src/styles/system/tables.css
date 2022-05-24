@@ -32,8 +32,8 @@ th,
   text-align: left;
   font-weight: 700;
   letter-spacing: -0.02rem;
-  font-size: calc(var(--base-font-size)*0.75188);
-  line-height: calc(var(--unit)*1);
+  font-size: calc(var(--base-font-size) * 0.75188);
+  line-height: calc(var(--unit) * 1);
   color: var(--color-neutral);
 }
 
