@@ -163,13 +163,11 @@
 }
 
 .shadow {
-  box-shadow: var(--unit-xs) var(--unit-xs) var(--unit)
-    color-mod(var(--color-neutral) alpha(0.25));
+  box-shadow: var(--unit-xs) var(--unit-xs) var(--unit) var(--color-neutral-transparent);
 }
 
 .shadow-inset {
-  box-shadow: inset var(--unit-xs) var(--unit-xs) var(--unit)
-    color-mod(var(--color-neutral) alpha(0.25));
+  box-shadow: inset var(--unit-xs) var(--unit-xs) var(--unit) var(--color-neutral);
 }
 
 .ribbon {

@@ -3,12 +3,6 @@
 -------------------------------
 */
 
-@typescale {
-  scale: 1.33;
-  font-size: var(--base-font-size);
-  line-height: var(--unit);
-}
-
 h1,
 h2,
 h3,
@@ -28,41 +22,48 @@ pre {
 }
 
 .h0 {
-  typescale: 5 3;
+  font-size: calc(var(--base-font-size)*4.16158);
+  line-height: calc(var(--unit)*3);
   color: var(--color-info);
 }
 
 h1,
 .h1 {
-  typescale: 3 1.5;
+  font-size: calc(var(--base-font-size)*2.35264);
+  line-height: calc(var(--unit)*1.5);
 }
 
 h2,
 .h2 {
-  typescale: 2 1.5;
+  font-size: calc(var(--base-font-size)*1.7689);
+  line-height: calc(var(--unit)*1.5);
 }
 
 h3,
 .h3 {
-  typescale: 1 1;
+  font-size: calc(var(--base-font-size)*1.33);
+  line-height: calc(var(--unit)*1);
 }
 
 h4,
 .h4 {
-  typescale: 0 1;
+  font-size: calc(var(--base-font-size)*1);
+  line-height: calc(var(--unit)*1);
 }
 
 h5,
 .h5 {
   margin-top: var(--unit-xs);
-  typescale: -0.75 0.75;
+  font-size: calc(var(--base-font-size)*0.80744);
+  line-height: calc(var(--unit)*0.75);
 }
 
 h6,
 .h6,
 small,
 .small {
-  typescale: -0.75 0.75;
+  font-size: calc(var(--base-font-size)*0.80744);
+  line-height: calc(var(--unit)*0.75);
 }
 
 h5,
@@ -92,7 +93,8 @@ h5 {
 }
 
 blockquote {
-  typescale: 0.5 1;
+  font-size: calc(var(--base-font-size)*1.15326);
+  line-height: calc(var(--unit)*1);
   font-style: italic;
   padding: var(--unit-s);
   quotes: '«\00A0''\00A0»';
@@ -100,7 +102,8 @@ blockquote {
 
 blockquote::before,
 blockquote::after {
-  typescale: 3 0;
+  font-size: calc(var(--base-font-size)*2.35264);
+  line-height: calc(var(--unit)*0);
   color: var(--color-neutral);
   vertical-align: sub;
 }

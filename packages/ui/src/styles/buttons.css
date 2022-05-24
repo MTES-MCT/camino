@@ -29,69 +29,211 @@
   background-color: var(--color-transparent);
 }
 
-@button default {
-  button-border-width: 0;
-  button-color: var(--color-text) var(--color-bg) var(--color-bg);
-  button-background: var(--color-alt) var(--color-neutral) var(--color-neutral);
-  button-class: active disabled true;
+.btn,.btn:visited {
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  display: inline-block;
+  color: var(--color-text);
+  background-color: var(--color-alt);
 }
 
-.btn {
-  button: default;
+.btn:active,.active .btn {
+  color: var(--color-bg);
+  background-color: var(--color-neutral);
 }
 
-.btn-primary {
-  button-border: var(--unit-px) var(--dsfr-bf500) var(--color-neutral)
-    var(--dsfr-color-hover);
-  button-color: var(--color-bg) var(--color-bg) var(--color-bg);
-  button-background: var(--dsfr-bf500) var(--color-neutral)
-    var(--dsfr-color-hover);
-  button-class: active disabled true;
+.btn:hover,.active:hover .btn {
+  color: var(--color-bg);
+  background-color: var(--color-neutral);
+}
+
+.btn:disabled,.btn:disabled:active,.btn:disabled:hover,.disabled .btn,.disabled:active .btn,.disabled:hover .btn {
+  opacity: 0.25;
+  cursor: default;
+  color: var(--color-text);
+  background-color: var(--color-alt);
+  box-shadow: inset 0 0 0 0 grey;
+}
+
+.btn-primary,.btn-primary:visited {
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  display: inline-block;
+  color: var(--color-bg);
+  background-color: var(--dsfr-bf500);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--dsfr-bf500);
   border-radius: var(--unit-xs);
   padding: var(--unit-s);
   width: 100%;
 }
 
-.btn-secondary {
-  button-border: var(--unit-px) var(--dsfr-bf500) var(--color-neutral)
-    var(--dsfr-color-hover);
-  button-color: var(--dsfr-bf500) var(--dsfr-bf500) var(--dsfr-bf500);
-  button-background: var(--color-bg) var(--color-neutral) var(--color-alt);
-  button-class: active disabled true;
+.btn-primary:active,.active .btn-primary {
+  color: var(--color-bg);
+  background-color: var(--color-neutral);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--color-neutral);
+}
+
+.btn-primary:hover,.active:hover .btn-primary {
+  color: var(--color-bg);
+  background-color: var(--dsfr-color-hover);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--dsfr-color-hover);
+}
+
+.btn-primary:disabled,.btn-primary:disabled:active,.btn-primary:disabled:hover,.disabled .btn-primary,.disabled:active .btn-primary,.disabled:hover .btn-primary {
+  opacity: 0.25;
+  cursor: default;
+  color: var(--color-bg);
+  background-color: var(--dsfr-bf500);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--dsfr-bf500);
+}
+
+.btn-secondary,.btn-secondary:visited {
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  display: inline-block;
+  color: var(--dsfr-bf500);
+  background-color: var(--color-bg);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--dsfr-bf500);
   border-radius: var(--unit-xs);
   padding: var(--unit-s);
   width: 100%;
 }
 
-.btn-border {
-  button-border: var(--unit-px) var(--color-alt) var(--color-neutral)
-    var(--color-neutral);
-  button-color: var(--color-text) var(--color-bg) var(--color-bg);
-  button-background: var(--color-bg) var(--color-neutral) var(--color-neutral);
-  button-class: active disabled true;
+.btn-secondary:active,.active .btn-secondary {
+  color: var(--dsfr-bf500);
+  background-color: var(--color-neutral);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--color-neutral);
 }
 
-.btn-tab {
-  button-border: var(--unit-px) var(--color-alt) var(--color-neutral)
-    var(--color-neutral);
-  button-color: var(--color-text) var(--color-bg) var(--color-bg);
-  button-background: var(--color-transparent) var(--color-neutral)
-    var(--color-neutral);
-  button-class: active disabled;
+.btn-secondary:hover,.active:hover .btn-secondary {
+  color: var(--dsfr-bf500);
+  background-color: var(--color-alt);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--dsfr-color-hover);
 }
 
-.btn-alt {
-  button-color: var(--color-text) var(--color-bg) var(--color-bg);
-  button-background: var(--color-transparent) var(--color-neutral)
-    var(--color-neutral);
-  button-class: active disabled false;
+.btn-secondary:disabled,.btn-secondary:disabled:active,.btn-secondary:disabled:hover,.disabled .btn-secondary,.disabled:active .btn-secondary,.disabled:hover .btn-secondary {
+  opacity: 0.25;
+  cursor: default;
+  color: var(--dsfr-bf500);
+  background-color: var(--color-bg);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--dsfr-bf500);
 }
 
-.btn-flash {
-  button-color: var(--color-bg) var(--color-bg) var(--color-bg);
-  button-background: var(--color-neutral) var(--color-inverse)
-    var(--color-neutral);
-  button-class: active disabled false;
+.btn-border,.btn-border:visited {
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  display: inline-block;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--color-alt);
+}
+
+.btn-border:active,.active .btn-border {
+  color: var(--color-bg);
+  background-color: var(--color-neutral);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--color-neutral);
+}
+
+.btn-border:hover,.active:hover .btn-border {
+  color: var(--color-bg);
+  background-color: var(--color-neutral);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--color-neutral);
+}
+
+.btn-border:disabled,.btn-border:disabled:active,.btn-border:disabled:hover,.disabled .btn-border,.disabled:active .btn-border,.disabled:hover .btn-border {
+  opacity: 0.25;
+  cursor: default;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--color-alt);
+}
+
+.btn-tab,.btn-tab:visited {
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  display: inline-block;
+  color: var(--color-text);
+  background-color: var(--color-transparent);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--color-alt);
+}
+
+.btn-tab:active,.active .btn-tab {
+  color: var(--color-bg);
+  background-color: var(--color-neutral);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--color-neutral);
+}
+
+.btn-tab:hover,.active:hover .btn-tab {
+  color: var(--color-bg);
+  background-color: var(--color-neutral);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--color-neutral);
+}
+
+.btn-tab:disabled,.btn-tab:disabled:active,.btn-tab:disabled:hover,.disabled .btn-tab,.disabled:active .btn-tab,.disabled:hover .btn-tab {
+  opacity: 0.25;
+  cursor: default;
+  color: var(--color-text);
+  background-color: var(--color-transparent);
+  box-shadow: inset 0 0 0 var(--unit-px) var(--color-alt);
+}
+
+.btn-alt,.btn-alt:visited {
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  display: inline-block;
+  color: var(--color-text);
+  background-color: var(--color-transparent);
+}
+
+.btn-alt:active,.btn-alt.active {
+  color: var(--color-bg);
+  background-color: var(--color-neutral);
+}
+
+.btn-alt:hover,.btn-alt.active:hover {
+  color: var(--color-bg);
+  background-color: var(--color-neutral);
+}
+
+.btn-alt:disabled,.btn-alt:disabled:active,.btn-alt:disabled:hover,.btn-alt.disabled,.btn-alt.disabled:active,.btn-alt.disabled:hover {
+  opacity: 0.25;
+  cursor: default;
+  color: var(--color-text);
+  background-color: var(--color-transparent);
+  box-shadow: inset 0 0 0 0 grey;
+}
+
+.btn-flash,.btn-flash:visited {
+  cursor: pointer;
+  text-decoration: none;
+  border: none;
+  display: inline-block;
+  color: var(--color-bg);
+  background-color: var(--color-neutral);
+}
+
+.btn-flash:active,.btn-flash.active {
+  color: var(--color-bg);
+  background-color: var(--color-inverse);
+}
+
+.btn-flash:hover,.btn-flash.active:hover {
+  color: var(--color-bg);
+  background-color: var(--color-neutral);
+}
+
+.btn-flash:disabled,.btn-flash:disabled:active,.btn-flash:disabled:hover,.btn-flash.disabled,.btn-flash.disabled:active,.btn-flash.disabled:hover {
+  opacity: 0.25;
+  cursor: default;
+  color: var(--color-bg);
+  background-color: var(--color-neutral);
+  box-shadow: inset 0 0 0 0 grey;
 }
 
 .btn,
@@ -107,3 +249,8 @@
 .btn-icon {
   line-height: 1rem;
 }
+
+/*
+      Buttons
+-------------------------------
+*/

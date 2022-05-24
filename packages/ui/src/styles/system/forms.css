@@ -60,13 +60,13 @@ input:disabled,
 textarea:disabled,
 select:disabled,
 .input-disabled {
-  background-color: color-mod(var(--color-alt) alpha(50%));
+  background-color: var(--color-alt-transparent);
 }
 
 input.bg-bg:disabled,
 textarea.bg-bg:disabled,
 select.bg-bg:disabled {
-  background-color: color-mod(var(--color-bg) alpha(50%));
+  background-color: var(--color-bg-transparent);
 }
 
 *::placeholder {

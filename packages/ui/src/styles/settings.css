@@ -7,10 +7,14 @@ http://francoisromain.github.io/postcss-structure
   /* Colors        ------------------------------- */
   --color-text: #666;
   --color-bg: white;
+  --color-bg-transparent: rgba(255, 255, 255, 70%);
   --color-transparent: rgb(248 247 243 / 0%);
   --color-inverse: #3d3d35;
+  --color-inverse-transparent: rgba(61, 61, 52, 50%);
   --color-neutral: #c6c4bc;
+  --color-neutral-transparent: rgba(198, 196, 188, 25%);
   --color-alt: #f0efe8;
+  --color-alt-transparent: rgba(241, 240, 233, 50%);
   --color-hilite: #b5d1d1;
   --color-error: #e82239;
   --color-warning: #ff891c;
@@ -60,11 +64,6 @@ http://francoisromain.github.io/postcss-structure
   --list-prefix: '―';
 
   /* Grid          ------------------------------- */
-
-  /*
-  postcss-grid-system configuration
-  https://github.com/francoisromain/postcss-grid-system#configuration
-  */
 
   /* width of a single bloc in rem */
   --col-width: 20.5rem;

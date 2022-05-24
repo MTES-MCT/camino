@@ -477,7 +477,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 .leaflet-container .leaflet-control-attribution,
 .leaflet-container .leaflet-control-scale {
-  typescale: -1 1;
+  font-size: calc(var(--base-font-size)*0.75188);
+  line-height: calc(var(--unit)*1);
 }
 
 .leaflet-left .leaflet-control-scale {
@@ -560,7 +561,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .leaflet-popup-content-wrapper,
 .leaflet-popup-tip {
   background: white;
-  box-shadow: 4px 4px 8px color-mod(var(--color-inverse) alpha(25%));
+  box-shadow: 4px 4px 8px var(--color-inverse-transparent);
 }
 
 .leaflet-container a.leaflet-popup-close-button {

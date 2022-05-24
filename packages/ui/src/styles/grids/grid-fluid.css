@@ -1,219 +1,322 @@
 /*
-      postcss-grid-fluid
--------------------------------
-
-https://github.com/francoisromain/postcss-grid-fluid
+    grid-fluid
 */
 
-@gf {
-  gutter: var(--gutter);
+.blobs {
+  clear: both;
+  margin-right: calc(var(--gutter)*-1);
   display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  align-content: flex-start;
 }
 
-.blobs {
-  gf: row;
+.blobs::after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 .blob-1 {
-  gf: blob 1;
+  margin-right: var(--gutter);
+  flex: 0 1 calc(100% - var(--gutter));
 }
 
 .blob-1-2 {
-  gf: blob 1/2;
+  margin-right: var(--gutter);
+  flex: 0 1 calc(50% - var(--gutter));
 }
 
 .blob-1-3 {
-  gf: blob 1/3;
+  margin-right: var(--gutter);
+  flex: 0 1 calc(33.33333% - var(--gutter));
 }
 
 .blob-2-3 {
-  gf: blob 2/3;
+  margin-right: var(--gutter);
+  flex: 0 1 calc(66.66667% - var(--gutter));
 }
 
 .blob-1-4 {
-  gf: blob 1/4;
+  margin-right: var(--gutter);
+  flex: 0 1 calc(25% - var(--gutter));
 }
 
 .blob-3-4 {
-  gf: blob 3/4;
+  margin-right: var(--gutter);
+  flex: 0 1 calc(75% - var(--gutter));
 }
 
 .blob-1-6 {
-  gf: blob 1/6;
+  margin-right: var(--gutter);
+  flex: 0 1 calc(16.66667% - var(--gutter));
 }
 
 .blob-5-6 {
-  gf: blob 5/6;
+  margin-right: var(--gutter);
+  flex: 0 1 calc(83.33333% - var(--gutter));
 }
 
 .blobs-mini {
-  gf: row var(--unit-s);
+  clear: both;
+  margin-right: calc(var(--unit-s)*-1);
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+.blobs-mini::after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 .blob-mini-1-3 {
-  gf: blob 1/3 var(--unit-s);
+  margin-right: var(--unit-s);
+  flex: 0 1 calc(33.33333% - var(--unit-s));
 }
 
 .blob-mini-2-3 {
-  gf: blob 2/3 var(--unit-s);
+  margin-right: var(--unit-s);
+  flex: 0 1 calc(66.66667% - var(--unit-s));
 }
 
 .blob-mini-1-2 {
-  gf: blob 1/2 var(--unit-s);
+  margin-right: var(--unit-s);
+  flex: 0 1 calc(50% - var(--unit-s));
 }
 
-@media (--viewport-mobile) {
+@media (min-width: 22em) {
   .mobile-blobs {
-    gf: row;
+    clear: both;
+    margin-right: calc(var(--gutter)*-1);
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+  }
+  .mobile-blobs::after {
+    content: "";
+    display: table;
+    clear: both;
   }
 
   .mobile-blob-1 {
-    gf: blob 1;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(100% - var(--gutter));
   }
 
   .mobile-blob-1-2 {
-    gf: blob 1/2;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(50% - var(--gutter));
   }
 
   .mobile-blob-1-3 {
-    gf: blob 1/3;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(33.33333% - var(--gutter));
   }
 
   .mobile-blob-2-3 {
-    gf: blob 2/3;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(66.66667% - var(--gutter));
   }
 
   .mobile-blob-1-4 {
-    gf: blob 1/4;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(25% - var(--gutter));
   }
 
   .mobile-blob-3-4 {
-    gf: blob 3/4;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(75% - var(--gutter));
   }
 
   .mobile-blob-1-6 {
-    gf: blob 1/6;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(16.66667% - var(--gutter));
   }
 
   .mobile-blob-5-6 {
-    gf: blob 5/6;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(83.33333% - var(--gutter));
   }
 }
 
-@media (--viewport-tablet) {
+@media (min-width: 42.5em) {
   .tablet-blobs {
-    gf: row;
+    clear: both;
+    margin-right: calc(var(--gutter)*-1);
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+  }
+  .tablet-blobs::after {
+    content: "";
+    display: table;
+    clear: both;
   }
 
   .tablet-blob-1 {
-    gf: blob 1;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(100% - var(--gutter));
   }
 
   .tablet-blob-1-2 {
-    gf: blob 1/2;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(50% - var(--gutter));
   }
 
   .tablet-blob-1-3 {
-    gf: blob 1/3;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(33.33333% - var(--gutter));
   }
 
   .tablet-blob-2-3 {
-    gf: blob 2/3;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(66.66667% - var(--gutter));
   }
 
   .tablet-blob-1-4 {
-    gf: blob 1/4;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(25% - var(--gutter));
   }
 
   .tablet-blob-3-4 {
-    gf: blob 3/4;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(75% - var(--gutter));
   }
 
   .tablet-blob-1-6 {
-    gf: blob 1/6;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(16.66667% - var(--gutter));
   }
 
   .tablet-blob-5-6 {
-    gf: blob 5/6;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(83.33333% - var(--gutter));
   }
 
   .tablet-blob-3-8 {
-    gf: blob 3/8;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(37.5% - var(--gutter));
   }
 }
 
-@media (--viewport-desktop) {
+@media (min-width: 63em) {
   .desktop-blobs {
-    gf: row;
+    clear: both;
+    margin-right: calc(var(--gutter)*-1);
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+  }
+  .desktop-blobs::after {
+    content: "";
+    display: table;
+    clear: both;
   }
 
   .desktop-blob-1 {
-    gf: blob 1;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(100% - var(--gutter));
   }
 
   .desktop-blob-1-2 {
-    gf: blob 1/2;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(50% - var(--gutter));
   }
 
   .desktop-blob-1-3 {
-    gf: blob 1/3;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(33.33333% - var(--gutter));
   }
 
   .desktop-blob-2-3 {
-    gf: blob 2/3;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(66.66667% - var(--gutter));
   }
 
   .desktop-blob-1-4 {
-    gf: blob 1/4;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(25% - var(--gutter));
   }
 
   .desktop-blob-3-4 {
-    gf: blob 3/4;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(75% - var(--gutter));
   }
 
   .desktop-blob-1-6 {
-    gf: blob 1/6;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(16.66667% - var(--gutter));
   }
 
   .desktop-blob-5-6 {
-    gf: blob 5/6;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(83.33333% - var(--gutter));
   }
 }
 
-@media (--viewport-large) {
+@media (min-width: 83.5em) {
   .large-blobs {
-    gf: row;
+    clear: both;
+    margin-right: calc(var(--gutter)*-1);
+    display: flex;
+    flex-flow: row wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+  }
+  .large-blobs::after {
+    content: "";
+    display: table;
+    clear: both;
   }
 
   .large-blob-1 {
-    gf: blob 1;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(100% - var(--gutter));
   }
 
   .large-blob-1-2 {
-    gf: blob 1/2;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(50% - var(--gutter));
   }
 
   .large-blob-1-3 {
-    gf: blob 1/3;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(33.33333% - var(--gutter));
   }
 
   .large-blob-2-3 {
-    gf: blob 2/3;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(66.66667% - var(--gutter));
   }
 
   .large-blob-1-4 {
-    gf: blob 1/4;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(25% - var(--gutter));
   }
 
   .large-blob-3-4 {
-    gf: blob 3/4;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(75% - var(--gutter));
   }
 
   .large-blob-1-6 {
-    gf: blob 1/6;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(16.66667% - var(--gutter));
   }
 
   .large-blob-5-6 {
-    gf: blob 5/6;
+    margin-right: var(--gutter);
+    flex: 0 1 calc(83.33333% - var(--gutter));
   }
 }
+
+/*
+      grid-fluid
+-------------------------------
+ */
