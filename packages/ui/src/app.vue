@@ -1,19 +1,8 @@
 <template>
-  <Page :slotPopup="!!popup.component" :slotLoader="loading">
-    <template v-if="false" #banner>
-      <div class="banner">
-        <div class="container py-m">
-          <p class="mb-0">
-            <span class="bold">8 avril 2021</span> : Aenean eu leo quam.
-            Pellentesque ornare sem lacinia quam venenatis vestibulum.
-          </p>
-        </div>
-      </div>
-    </template>
-
-    <template v-if="menu.component" #menu>
-      <component :is="menu.component" />
-    </template>
+  <div class="page relative">
+    <Transition name="slide" mode="out-in">
+      <component :is="menu.component" v-if="menu.component" />
+    </Transition>
 
     <header class="header">
       <div class="container">
@@ -34,36 +23,48 @@
       </div>
     </footer>
 
-    <template #messages>
+    <div class="messages">
       <Messages id="cmn-app-messages" :messages="messages" />
-    </template>
+    </div>
 
-    <template v-if="popup.component" #popup>
-      <component :is="popup.component" v-bind="popup.props" />
-    </template>
+    <Transition name="fade">
+      <div
+        v-if="!!popup.component"
+        class="absolute full bg-inverse-alpha z-2"
+      />
+    </Transition>
 
-    <template v-if="loading || fileLoading.total" #loader>
-      <div class="loaders fixed p">
-        <div v-if="loading" class="loader" />
-        <div v-if="fileLoading.total">
-          <div class="relative loader-file">
-            <div
-              class="loader-file-bar"
-              :style="{
-                right: `${
-                  100 - 100 * (fileLoading.loaded / fileLoading.total)
-                }%`
-              }"
-            />
+    <Transition name="slide-top">
+      <component
+        :is="popup.component"
+        v-bind="popup.props"
+        v-if="popup.component"
+      />
+    </Transition>
+
+    <Transition name="fade">
+      <template v-if="loading || fileLoading.total">
+        <div class="loaders fixed p">
+          <div v-if="loading" class="loader" />
+          <div v-if="fileLoading.total">
+            <div class="relative loader-file">
+              <div
+                class="loader-file-bar"
+                :style="{
+                  right: `${
+                    100 - 100 * (fileLoading.loaded / fileLoading.total)
+                  }%`
+                }"
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </template>
-  </Page>
+      </template>
+    </Transition>
+  </div>
 </template>
 
 <script>
-import Page from './components/_ui/page.vue'
 import Messages from './components/_ui/messages.vue'
 import PageHeader from './components/page/header.vue'
 import PageFooter from './components/page/footer.vue'
@@ -73,7 +74,6 @@ export default {
   name: 'App',
 
   components: {
-    Page,
     Messages,
     PageHeader,
     PageFooter,
