@@ -9,14 +9,14 @@ import {
   ISectionElement
 } from '../../types'
 
-import { metasGet } from '../../database/cache/metas'
 import { titreEtapePropFind } from './titre-etape-prop-find'
 import { titreActiviteValideCheck } from '../utils/titre-activite-valide-check'
 import {
   SubstanceFiscale,
   SubstancesFiscale
 } from 'camino-common/src/substance'
-import { Unites } from 'camino-common/src/unites'
+import { UNITES, Unites } from 'camino-common/src/unites'
+import { sortedDevises } from 'camino-common/src/devise'
 
 const onlyUnique = <T>(value: T, index: number, self: T[]): boolean => {
   return self.indexOf(value) === index
@@ -61,7 +61,13 @@ const titreActiviteSectionElementsFormat = (
       if (e.valeurs) {
         element.valeurs = e.valeurs
       } else if (e.valeursMetasNom) {
-        element.valeurs = metasGet(e.valeursMetasNom)
+        switch (e.valeursMetasNom) {
+          case 'devises':
+            element.valeurs = sortedDevises
+            break
+          case 'unites':
+            element.valeurs = UNITES
+        }
       }
 
       newElements.push(element)
