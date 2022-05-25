@@ -42,6 +42,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       const errors = titreEtapeCompleteValidate(
         titreEtape,
         titreType,
+        'oct',
         [],
         [],
         null,
@@ -90,6 +91,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       const errors = titreEtapeCompleteValidate(
         titreEtape,
         titreType,
+        'oct',
         [],
         [],
         null,
@@ -116,6 +118,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
     const errors = titreEtapeCompleteValidate(
       titreEtape,
       'arm',
+      'oct',
       [],
       [
         { id: 'doe', optionnel: true, nom: 'doe' },
@@ -163,6 +166,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       const errors = titreEtapeCompleteValidate(
         titreEtape,
         titreType,
+        'oct',
         [],
         [],
         null,

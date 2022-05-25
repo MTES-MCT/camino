@@ -10,13 +10,13 @@ const pointsImporter = apiGraphQLFetch(gql`
   query PointsImporter(
     $file: FileUpload!
     $geoSystemeId: String!
-    $titreId: String!
+    $demarcheId: String!
     $etapeTypeId: String!
   ) {
     pointsImporter(
       fileUpload: $file
       geoSystemeId: $geoSystemeId
-      titreId: $titreId
+      demarcheId: $demarcheId
       etapeTypeId: $etapeTypeId
     ) {
       points {
@@ -37,12 +37,12 @@ const pointsImporter = apiGraphQLFetch(gql`
 const perimetreInformations = apiGraphQLFetch(gql`
   query PerimetreInformations(
     $points: [InputPoint]!
-    $titreId: String!
+    $demarcheId: String!
     $etapeTypeId: String!
   ) {
     perimetreInformations(
       points: $points
-      titreId: $titreId
+      demarcheId: $demarcheId
       etapeTypeId: $etapeTypeId
     ) {
       ...perimetreInformations
