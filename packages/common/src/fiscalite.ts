@@ -13,15 +13,20 @@ export const fiscaliteVisible = (
     | undefined
     | null,
   entrepriseId: string
-) => {
-  return (
-    user &&
-    (permissionCheck(user.permissionId, [
-      'super',
-      'admin',
-      'editeur',
-      'lecteur'
-    ]) ||
-      user.entreprises?.map(({ id }) => id).includes(entrepriseId))
-  )
+): boolean => {
+  if (user) {
+    if (
+      permissionCheck(user.permissionId, [
+        'super',
+        'admin',
+        'editeur',
+        'lecteur'
+      ]) ||
+      user.entreprises?.map(({ id }) => id).includes(entrepriseId)
+    ) {
+      return true
+    }
+  }
+
+  return false
 }

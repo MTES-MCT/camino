@@ -89,7 +89,9 @@ const redevanceCommunaleMinesAurifiereGet = async (
     orNet: { [annee: string]: number }
   }[],
   annees: number[]
-) => {
+): Promise<{
+  [entrepriseId: string]: { [annee: string]: number | null }
+} | null> => {
   // construction de l’objet qui permet de dire à Openfisca ce que l’on souhaite récupérer
   const redevanceCommunaleDesMinesAurifereKg = annees.reduce((acc, annee) => {
     acc[annee] = null

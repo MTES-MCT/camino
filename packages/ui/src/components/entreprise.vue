@@ -231,15 +231,10 @@ export default {
   data() {
     return {
       utilisateursColonnes,
-      // FIXME
-      // getFiscaliteEntreprise: async () => (await fetch('/apiUrl/titresONF')).json()
       getFiscaliteEntreprise: async () =>
-        Promise.resolve({
-          redevanceCommunale: 1600.071,
-          redevanceDepartementale: 330.98,
-          taxeAurifereGuyane: 4100.027,
-          totalInvestissementsDeduits: 0
-        })
+        (
+          await fetch(`/apiUrl/entreprises/${this.entreprise.id}/fiscalite`)
+        ).json()
     }
   },
 
