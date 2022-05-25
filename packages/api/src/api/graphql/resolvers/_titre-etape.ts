@@ -250,15 +250,17 @@ const titreEtapeSdomZonesGet = async (geoJson: IGeoJson) => {
 const documentTypeIdsBySdomZonesGet = (
   sdomZones: ISDOMZone[] | null | undefined,
   titreTypeId: string,
+  demarcheTypeId: string,
   etapeTypeId: string
 ) => {
   const documentTypeIds: string[] = []
   if (
     etapeTypeId === 'mfr' &&
+    demarcheTypeId === 'oct' &&
     titreTypeId === 'axm' &&
     sdomZones?.find(z => z.id === '2')
   ) {
-    // Pour les AXM dans la zone 2 du SDOM les 2 documents suivants sont obligatoires:
+    // Pour les demandes d’octroi d’AXM dans la zone 2 du SDOM les documents suivants sont obligatoires:
     // Notice d’impact renforcée
     // Justificatif d’adhésion à la charte des bonnes pratiques
     // Justification d’existence du gisement

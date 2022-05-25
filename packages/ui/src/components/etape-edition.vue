@@ -282,16 +282,17 @@ export default {
           }
         )
 
-        if (reroute) {
-          await this.reroute(titreEtapeId)
+        if (titreEtapeId) {
+          if (reroute) {
+            await this.reroute(titreEtapeId)
+          }
+
+          this.eventTrack({
+            categorie: 'titre-etape',
+            action: 'titre-etape-enregistrer',
+            nom: titreEtapeId
+          })
         }
-
-        this.eventTrack({
-          categorie: 'titre-etape',
-          action: 'titre-etape-enregistrer',
-          nom: titreEtapeId
-        })
-
         return titreEtapeId
       }
 

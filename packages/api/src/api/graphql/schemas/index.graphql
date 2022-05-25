@@ -233,14 +233,14 @@ type Query {
   pointsImporter(
     fileUpload: FileUpload!
     geoSystemeId: String!
-    titreId: String!
+    demarcheId: String!
     etapeTypeId: String!
   ): PointsImport
 
   "Calcule les informations relatives au périmètre d’une nouvelle étape"
   perimetreInformations(
     points: [InputPoint]!
-    titreId: String!
+    demarcheId: String!
     etapeTypeId: String!
   ): PerimetreInformations
 

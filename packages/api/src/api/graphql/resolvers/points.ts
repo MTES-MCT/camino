@@ -29,6 +29,7 @@ import { userSuper } from '../../../database/user-super'
 import { permissionCheck } from '../../../business/permission'
 import intersect from '@turf/intersect'
 import { assertGeoSystemeId, GeoSystemes } from 'camino-common/src/geoSystemes'
+import { titreDemarcheGet } from '../../../database/queries/titres-demarches'
 
 const stream2buffer = async (stream: Stream): Promise<Buffer> => {
   return new Promise<Buffer>((resolve, reject) => {
@@ -54,16 +55,16 @@ interface IPerimetreInformations {
   sdomZones: ISDOMZone[]
 }
 
-const pointsImporter = async (
+export const pointsImporter = async (
   {
     fileUpload,
     geoSystemeId,
-    titreId,
+    demarcheId,
     etapeTypeId
   }: {
     fileUpload: { file: FileUpload }
     geoSystemeId: string
-    titreId: string
+    demarcheId: string
     etapeTypeId: string
   },
   context: IToken
@@ -140,7 +141,7 @@ const pointsImporter = async (
     return await perimetreInformations(
       {
         points: points as ITitrePoint[],
-        titreId,
+        demarcheId,
         etapeTypeId
       },
       context
@@ -158,6 +159,7 @@ const sdomZonesInformationsGet = async (
   etapePoints: ITitrePoint[],
   etapeSdomZones: ISDOMZone[],
   titreTypeId: string,
+  demarcheTypeId: string,
   etapeTypeId: string,
   titrePoints: ITitrePoint[],
   titreSdomZones: ISDOMZone[],
@@ -233,20 +235,21 @@ const sdomZonesInformationsGet = async (
   const documentTypeIds = documentTypeIdsBySdomZonesGet(
     etapeSdomZones,
     titreTypeId,
+    demarcheTypeId,
     etapeTypeId
   )
 
   return { surface, documentTypeIds, alertes }
 }
 
-const perimetreInformations = async (
+export const perimetreInformations = async (
   {
     points,
-    titreId,
+    demarcheId,
     etapeTypeId
   }: {
     points: ITitrePoint[] | undefined | null
-    titreId: string
+    demarcheId: string
     etapeTypeId: string
   },
   context: IToken
@@ -270,8 +273,18 @@ const perimetreInformations = async (
       sdomZones = await titreEtapeSdomZonesGet(geojsonFeatures)
     }
 
+    const demarche = await titreDemarcheGet(
+      demarcheId,
+      { fields: { id: {} } },
+      userSuper
+    )
+
+    if (!demarche) {
+      throw new Error('droits insuffisants')
+    }
+
     const titre = await titreGet(
-      titreId,
+      demarche.titreId,
       {
         fields: { sdomZones: { id: {} }, points: { id: {} } }
       },
@@ -282,6 +295,7 @@ const perimetreInformations = async (
       titreEtapePoints,
       sdomZones,
       titre!.typeId,
+      demarche.typeId,
       etapeTypeId,
       titre!.points || [],
       titre!.sdomZones || [],
@@ -299,7 +313,7 @@ const perimetreInformations = async (
   }
 }
 
-const titreEtapePerimetreInformations = async (
+export const titreEtapePerimetreInformations = async (
   {
     titreEtapeId
   }: {
@@ -335,6 +349,7 @@ const titreEtapePerimetreInformations = async (
       etape.points || [],
       sdomZones,
       etape.demarche!.titre!.typeId,
+      etape.demarche!.typeId,
       etape.typeId,
       etape.demarche!.titre!.points || [],
       etape.demarche!.titre!.sdomZones || [],
@@ -350,10 +365,4 @@ const titreEtapePerimetreInformations = async (
 
     throw e
   }
-}
-
-export {
-  pointsImporter,
-  perimetreInformations,
-  titreEtapePerimetreInformations
 }

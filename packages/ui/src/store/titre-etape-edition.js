@@ -172,7 +172,7 @@ const actions = {
 
       const { alertes } = await perimetreInformations({
         points: [],
-        titreId: state.metas.demarche.titre.id,
+        titreId: state.metas.demarche.id,
         etapeTypeId: typeId
       })
       commit('metasSet', {
@@ -252,7 +252,7 @@ const actions = {
         await pointsImporter({
           file,
           geoSystemeId,
-          titreId: state.metas.demarche.titre.id,
+          demarcheId: state.metas.demarche.id,
           etapeTypeId: state.element.type.id
         })
       const etape = etapePointsFormat(state.element, points)
@@ -299,7 +299,7 @@ const actions = {
         const { surface, documentTypeIds, alertes } =
           await perimetreInformations({
             points,
-            titreId: state.metas.demarche.titre.id,
+            titreId: state.metas.demarche.id,
             etapeTypeId: etape.type.id
           })
         state.element.surface = surface

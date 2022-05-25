@@ -108,6 +108,7 @@ const titreEtapeUpdationValidate = (
       ...titreEtapeCompleteValidate(
         titreEtape,
         titre.typeId,
+        titreDemarche.typeId,
         sections,
         documentsTypes,
         documents,
@@ -128,6 +129,7 @@ const titreEtapeUpdationValidate = (
 const titreEtapeCompleteValidate = (
   titreEtape: ITitreEtape,
   titreTypeId: string,
+  demarcheTypeId: string,
   sections: ISection[],
   documentsTypes: IDocumentType[],
   documents: IDocument[] | null | undefined,
@@ -157,6 +159,7 @@ const titreEtapeCompleteValidate = (
     const documentTypeIds = documentTypeIdsBySdomZonesGet(
       sdomZones,
       titreTypeId,
+      demarcheTypeId,
       titreEtape.typeId
     )
 
