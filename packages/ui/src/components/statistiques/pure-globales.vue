@@ -292,7 +292,7 @@ const utilisateursAdminChart = computed(() => {
     datasets: [
       {
         label: 'Administrations',
-        data: data,
+        data,
         backgroundColor: [
           'rgba(255, 99, 132)',
           'rgba(54, 162, 235)',

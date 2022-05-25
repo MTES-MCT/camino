@@ -25,19 +25,19 @@
 }
 
 .leaflet-marker-cluster-xs {
-  box-shadow: 0 0 0 var(--unit-xxs) color-mod(var(--color-bg) alpha(100%));
+  box-shadow: 0 0 0 var(--unit-xxs) var(--color-bg);
 }
 
 .leaflet-marker-cluster-s {
-  box-shadow: 0 0 0 var(--unit-xs) color-mod(var(--color-bg) alpha(95%));
+  box-shadow: 0 0 0 var(--unit-xs) var(--color-bg-transparent);
 }
 
 .leaflet-marker-cluster-m {
-  box-shadow: 0 0 0 var(--unit-s) color-mod(var(--color-bg) alpha(85%));
+  box-shadow: 0 0 0 var(--unit-s) var(--color-bg-transparent);
 }
 
 .leaflet-marker-cluster-l {
-  box-shadow: 0 0 0 var(--unit-m) color-mod(var(--color-bg) alpha(70%));
+  box-shadow: 0 0 0 var(--unit-m) var(--color-bg-transparent);
 }
 
 .bg-domaine-c {

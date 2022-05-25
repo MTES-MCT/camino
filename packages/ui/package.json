@@ -17,7 +17,6 @@
   "@comment dependencies": {
     "eslint": "eslint et eslint-plugin-vue, bloqués à 0.7.x https://github.com/vuejs/eslint-config-standard/issues/10",
     "typescript": "bloqué à 4.4.x https://github.com/xjamundx/eslint-plugin-promise/issues/218",
-    "postcss-plugins": "la mise à jour des plugins suivants génèrent des problèmes de style: postcss-button, postcss-grid-fluid et postcss-typescale",
     "graphql-react": "faut configurer Jest pour qu’il puisse interpréter les .mjs",
     "jest": "jest, jest-util, ts-jest et babel-jest bloqués en 27.x.x https://github.com/vuejs/vue-jest/issues/467"
   },
@@ -36,11 +35,11 @@
     "@rollup/plugin-inject": "^4.0.4",
     "@sentry/browser": "^6.19.7",
     "@sentry/integrations": "^6.19.7",
-    "@storybook/addon-actions": "^6.4.22",
-    "@storybook/addon-controls": "^6.4.22",
+    "@storybook/addon-actions": "^6.5.4",
+    "@storybook/addon-controls": "^6.5.4",
     "@storybook/addon-postcss": "^2.0.0",
-    "@storybook/addon-storyshots": "^6.4.22",
-    "@storybook/vue3": "^6.4.22",
+    "@storybook/addon-storyshots": "^6.5.4",
+    "@storybook/vue3": "^6.5.4",
     "@types/jest": "^27.5.0",
     "@types/leaflet": "^1.7.9",
     "@types/leaflet.markercluster": "^1.4.6",
@@ -92,23 +91,18 @@
     "leaflet-markers-canvas": "^0.2.2",
     "leaflet.markercluster": "^1.5.3",
     "npm-check-updates": "^12.5.11",
-    "pixrem": "^5.0.0",
-    "postcss-button": "^0.3.17",
+    "postcss": "^8.4.14",
     "postcss-calc": "^8.2.4",
-    "postcss-color-mod-function": "^3.0.3",
-    "postcss-grid-fluid": "^0.3.4",
-    "postcss-grid-system": "^0.5.2",
     "postcss-import": "14.1.0",
     "postcss-inline-svg": "5.0.0",
     "postcss-loader": "^6.2.1",
     "postcss-normalize": "^10.0.1",
     "postcss-preset-env": "^7.5.0",
-    "postcss-typescale": "^0.2.3",
     "prettier": "^2.6.2",
     "rbush": "^3.0.1",
     "snarkdown": "^2.0.0",
     "standard-version": "^9.3.2",
-    "stylelint": "^14.8.2",
+    "stylelint": "^14.8.4",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^25.0.0",
     "ts-jest": "^27.1.4",
@@ -139,8 +133,13 @@
     "rules": {
       "vue/no-mutating-props": 0,
       "vue/valid-v-bind-sync": 0,
-      "vue/no-multiple-template-root": ["warn"],
-      "vue/attribute-hyphenation": ["error", "never"],
+      "vue/no-multiple-template-root": [
+        "warn"
+      ],
+      "vue/attribute-hyphenation": [
+        "error",
+        "never"
+      ],
       "vue/v-on-event-hyphenation": 0,
       "no-unused-vars": 0,
       "vue/multi-word-component-names": 0
@@ -164,16 +163,8 @@
     "plugins": {
       "postcss-import": {},
       "postcss-normalize": {},
-      "postcss-typescale": {},
-      "postcss-grid-system": {},
-      "postcss-grid-fluid": {},
-      "postcss-button": {},
       "postcss-inline-svg": {},
       "postcss-custom-media": {},
-      "postcss-color-mod-function": {},
-      "pixrem": {
-        "html": false
-      },
       "postcss-preset-env": {
         "stage": 0
       },
@@ -193,27 +184,6 @@
       "stylelint-config-standard",
       "stylelint-config-prettier"
     ],
-    "rules": {
-      "property-no-unknown": [
-        true,
-        {
-          "ignoreProperties": [
-            "typescale",
-            "gf",
-            "/button-/"
-          ]
-        }
-      ],
-      "function-no-unknown": [
-        true,
-        {
-          "ignoreFunctions": [
-            "color-mod",
-            "alpha"
-          ]
-        }
-      ]
-    },
     "ignoreFiles": [
       "./dist/**/*",
       "src/styles/system/forms.css"
