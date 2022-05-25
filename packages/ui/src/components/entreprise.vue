@@ -136,6 +136,13 @@
           </div>
         </div>
 
+        <div v-if="fiscaliteVisible">
+          <h4 class="px-m pt mb-0">Fiscalité</h4>
+          <EntrepriseFiscalite
+            :getFiscaliteEntreprise="getFiscaliteEntreprise"
+          />
+        </div>
+
         <div v-if="entreprise.documents.length">
           <h4 class="px-m pt mb-0">Documents</h4>
           <Documents
@@ -201,11 +208,13 @@ import DocumentAddButton from './document/button-add.vue'
 import Documents from './documents/list.vue'
 import { dateFormat, permissionsCheck } from '../utils/index'
 import EntreprisePermission from './entreprise/permissions.vue'
+import EntrepriseFiscalite from './entreprise/pure-entreprise-fiscalite.vue'
 
 import {
   utilisateursColonnes,
   utilisateursLignesBuild
 } from './utilisateurs/table'
+import { fiscaliteVisible } from 'camino-common/src/fiscalite'
 
 export default {
   components: {
@@ -215,12 +224,22 @@ export default {
     TitresTable,
     DocumentAddButton,
     Documents,
-    EntreprisePermission
+    EntreprisePermission,
+    EntrepriseFiscalite
   },
 
   data() {
     return {
-      utilisateursColonnes
+      utilisateursColonnes,
+      // FIXME
+      // getFiscaliteEntreprise: async () => (await fetch('/apiUrl/titresONF')).json()
+      getFiscaliteEntreprise: async () =>
+        Promise.resolve({
+          redevanceCommunale: 1600.071,
+          redevanceDepartementale: 330.98,
+          taxeAurifereGuyane: 4100.027,
+          totalInvestissementsDeduits: 0
+        })
     }
   },
 
@@ -274,6 +293,13 @@ export default {
         id: this.entreprise.id,
         name: 'entreprise'
       }
+    },
+
+    fiscaliteVisible() {
+      return (
+        permissionsCheck(this.user, ['super', 'admin', 'editeur', 'lecteur']) ||
+        this.user.entreprises?.map(({ id }) => id).includes(this.entreprise.id)
+      )
     }
   },
 
