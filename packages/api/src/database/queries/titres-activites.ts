@@ -20,7 +20,7 @@ import {
   titresActivitesQueryModify,
   titresActivitesPropsQueryModify
 } from './permissions/titres-activites'
-import { permissionCheck } from '../../business/permission'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 /**
  * Modifie la requête en fonction des paramètres de filtre

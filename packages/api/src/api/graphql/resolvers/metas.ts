@@ -50,7 +50,6 @@ import {
 
 import { userGet } from '../../../database/queries/utilisateurs'
 
-import { permissionCheck } from '../../../business/permission'
 import { fieldsBuild } from './_fields-build'
 import {
   etapeTypeFormat,
@@ -69,6 +68,7 @@ import { userSuper } from '../../../database/user-super'
 import { titresEtapesHeritageContenuUpdate } from '../../../business/processes/titres-etapes-heritage-contenu-update'
 import { sortedAdministrationTypes } from 'camino-common/src/administrations'
 import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const devises = async () => devisesGet()
 

@@ -6,8 +6,6 @@ import { knex } from '../../../knex'
 // import fileCreate from '../../../tools/file-create'
 // import { format } from 'sql-formatter'
 
-import { permissionCheck } from '../../../business/permission'
-
 import Titres from '../../models/titres'
 import Documents from '../../models/documents'
 import TitresActivites from '../../models/titres-activites'
@@ -18,6 +16,7 @@ import {
   administrationsActivitesModify
 } from './administrations'
 import { entreprisesTitresQuery } from './entreprises'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const activiteStatuts = [
   {

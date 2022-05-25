@@ -2,9 +2,10 @@ import { IAdministration, IUtilisateur } from '../../types'
 
 import { userGet } from '../../database/queries/utilisateurs'
 
-import { permissionAdministrationsCheck, permissionCheck } from '../permission'
+import { permissionAdministrationsCheck } from '../permission'
 
 import { diffFind } from '../../tools/index'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 /**
  * Valide la mise à jour d'un utilisateur

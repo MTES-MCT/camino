@@ -1,8 +1,6 @@
 import { raw, QueryBuilder, RawBuilder } from 'objection'
 
-import { IPermissionId, IUtilisateur } from '../../../types'
-
-import { permissionCheck } from '../../../business/permission'
+import { IUtilisateur } from '../../../types'
 
 import Titres from '../../models/titres'
 import TitresEtapes from '../../models/titres-etapes'
@@ -16,6 +14,7 @@ import {
 import { administrationsEtapesTypesPropsQuery } from './metas'
 import { administrationsTitresQuery } from './administrations'
 import { entreprisesTitresQuery } from './entreprises'
+import { PermissionId, permissionCheck } from 'camino-common/src/permissions'
 
 const titresDemarchesQueryModify = (
   q: QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>,
@@ -130,7 +129,7 @@ const titreDemarcheModificationSelectQuery = (
 
 export const titreDemarcheSuppressionSelectQuery = (
   demarcheAlias: string,
-  permissionId: IPermissionId | null | undefined
+  permissionId: PermissionId | null | undefined
 ): RawBuilder => {
   if (permissionCheck(permissionId, ['super'])) {
     return raw('true')

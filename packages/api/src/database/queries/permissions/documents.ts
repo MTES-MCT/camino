@@ -2,12 +2,11 @@ import { QueryBuilder, raw } from 'objection'
 
 import { IUtilisateur } from '../../../types'
 
-import { permissionCheck } from '../../../business/permission'
-
 import Documents from '../../models/documents'
 import TitresEtapesJustificatifs from '../../models/titres-etapes-justificatifs'
 import EtapesTypesDocumentsTypes from '../../models/etapes-types--documents-types'
 import ActivitesTypesDocumentsTypes from '../../models/activites-types--documents-types'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const documentsQueryModify = (
   q: QueryBuilder<Documents, Documents | Documents[]>,

@@ -52,7 +52,6 @@ import {
   contenuFilesPathGet,
   sectionsContenuAndFilesGet
 } from '../../../business/utils/contenu-element-file-process'
-import { permissionCheck } from '../../../business/permission'
 import dateFormat from 'dateformat'
 import {
   documentCreate,
@@ -67,6 +66,7 @@ import { geojsonFeatureMultiPolygon } from '../../../tools/geojson'
 import { idGenerate } from '../../../database/models/_format/id-create'
 import fileRename from '../../../tools/file-rename'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const statutIdAndDateGet = (
   etape: ITitreEtape,

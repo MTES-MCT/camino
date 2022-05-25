@@ -296,10 +296,7 @@ export default {
     },
 
     fiscaliteVisible() {
-      return (
-        permissionsCheck(this.user, ['super', 'admin', 'editeur', 'lecteur']) ||
-        this.user.entreprises?.map(({ id }) => id).includes(this.entreprise.id)
-      )
+      return fiscaliteVisible(this.user, this.entreprise.id)
     }
   },
 

@@ -2,8 +2,6 @@ import { raw, QueryBuilder } from 'objection'
 
 import { IUtilisateur } from '../../../types'
 
-import { permissionCheck } from '../../../business/permission'
-
 import Documents from '../../models/documents'
 import TitresEtapes from '../../models/titres-etapes'
 import Entreprises from '../../models/entreprises'
@@ -22,6 +20,7 @@ import { titresDemarchesQueryModify } from './titres-demarches'
 import TitresDemarches from '../../models/titres-demarches'
 import Journaux from '../../models/journaux'
 import { journauxQueryModify } from './journaux'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const titreEtapeModificationQueryBuild = (
   user: Omit<IUtilisateur, 'permission'> | null | undefined

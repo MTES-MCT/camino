@@ -8,6 +8,7 @@ import {
 import { Departement, DepartementId } from 'camino-common/src/departement'
 import { Region } from 'camino-common/src/region'
 import { GeoSystemeId } from 'camino-common/src/geoSystemes'
+import { PermissionId } from 'camino-common/src/permissions'
 
 enum DemarchesStatutsTypes {
   Accepte = 'acc',
@@ -512,16 +513,8 @@ interface IPeriode {
   frequence: IFrequence
 }
 
-type IPermissionId =
-  | 'super'
-  | 'admin'
-  | 'editeur'
-  | 'lecteur'
-  | 'entreprise'
-  | 'defaut'
-
 interface IPermission {
-  id: IPermissionId
+  id: PermissionId
   nom: string
   ordre: number
 }
@@ -986,7 +979,7 @@ interface IUtilisateur {
   prenom?: string | null
   telephoneFixe?: string | null
   telephoneMobile?: string | null
-  permissionId: IPermissionId
+  permissionId: PermissionId
   // TODO: définir une interface IUtilisateurPreferences
   preferences?: any | null
   permission: IPermission
@@ -1089,7 +1082,6 @@ export {
   IMois,
   IPays,
   IPermission,
-  IPermissionId,
   IPeriode,
   IPhaseStatut,
   IReferenceType,

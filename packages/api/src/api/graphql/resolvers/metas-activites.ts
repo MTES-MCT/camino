@@ -27,8 +27,8 @@ import {
   activiteTypeTitreTypeDelete,
   activiteTypeUpdate
 } from '../../../database/queries/metas-activites'
-import { permissionCheck } from '../../../business/permission'
 import { ordreUpdate } from './_ordre-update'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const activitesTypes = async (
   _: never,

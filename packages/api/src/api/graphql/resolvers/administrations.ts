@@ -30,9 +30,9 @@ import administrationUpdateTask from '../../../business/administration-update'
 import { fieldsBuild } from './_fields-build'
 
 import { administrationFormat } from '../../_format/administrations'
-import { permissionCheck } from '../../../business/permission'
 import { emailCheck } from '../../../tools/email-check'
 import { userGet } from '../../../database/queries/utilisateurs'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const administration = async (
   { id }: { id: string },

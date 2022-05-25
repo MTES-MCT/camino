@@ -1,11 +1,9 @@
 import { QueryBuilder, raw, RawBuilder } from 'objection'
 
-import { IAdministration, IPermissionId, IUtilisateur } from '../../../types'
+import { IAdministration, IUtilisateur } from '../../../types'
 
 // import sqlFormatter from 'sql-formatter'
 // import fileCreate from '../../../tools/file-create'
-
-import { permissionCheck } from '../../../business/permission'
 
 import Titres from '../../models/titres'
 import TitresDemarches from '../../models/titres-demarches'
@@ -29,6 +27,7 @@ import Administrations from '../../models/administrations'
 import UtilisateursTitres from '../../models/utilisateurs--titres'
 import DemarchesTypes from '../../models/demarches-types'
 import { demarchesCreationQuery } from './metas'
+import { PermissionId, permissionCheck } from 'camino-common/src/permissions'
 
 const titresDemarchesAdministrationsModificationQuery = (
   administrations: IAdministration[] | undefined | null,
@@ -162,7 +161,7 @@ export const titresModificationSelectQuery = (
 }
 
 export const titresSuppressionSelectQuery = (
-  permissionId: IPermissionId | undefined
+  permissionId: PermissionId | undefined
 ): boolean => permissionCheck(permissionId, ['super'])
 
 const titresQueryModify = (

@@ -2,13 +2,12 @@ import { QueryBuilder } from 'objection'
 
 import { IUtilisateur } from '../../../types'
 
-import { permissionCheck } from '../../../business/permission'
-
 import Journaux from '../../models/journaux'
 import { utilisateursQueryModify } from './utilisateurs'
 import Utilisateurs from '../../models/utilisateurs'
 import { titresQueryModify } from './titres'
 import Titres from '../../models/titres'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 export const journauxQueryModify = (
   q: QueryBuilder<Journaux, Journaux | Journaux[]>,

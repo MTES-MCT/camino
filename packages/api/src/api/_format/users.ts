@@ -1,6 +1,6 @@
 import { IUtilisateur, IUser } from '../../types'
 
-import { permissionCheck } from '../../business/permission'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const userFormat = (utilisateur: IUtilisateur | null) => {
   if (!utilisateur) return null

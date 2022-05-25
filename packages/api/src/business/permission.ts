@@ -1,9 +1,4 @@
-import { IUtilisateur, IPermissionId } from '../types'
-
-export const permissionCheck = (
-  permissionId: IPermissionId | null | undefined,
-  permissions: IPermissionId[]
-) => !!(permissionId && permissions.includes(permissionId))
+import { IUtilisateur } from '../types'
 
 export const permissionAdministrationsCheck = (
   user: IUtilisateur | undefined,

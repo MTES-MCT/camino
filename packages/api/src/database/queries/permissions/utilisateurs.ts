@@ -3,12 +3,12 @@ import { raw, QueryBuilder } from 'objection'
 import { IUtilisateur } from '../../../types'
 
 import { knex } from '../../../knex'
-import { permissionCheck } from '../../../business/permission'
 
 import Utilisateurs from '../../models/utilisateurs'
 import Administrations from '../../models/administrations'
 import Entreprises from '../../models/entreprises'
 import { entreprisesQueryModify } from './entreprises'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const utilisateursQueryModify = (
   q: QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>,

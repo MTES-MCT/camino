@@ -1,9 +1,4 @@
-import {
-  IEntreprise,
-  IPermissionId,
-  ITitre,
-  ITitreDemarche
-} from '../../../types'
+import { IEntreprise, ITitre, ITitreDemarche } from '../../../types'
 
 import { dbManager } from '../../../../tests/db-manager'
 
@@ -27,6 +22,7 @@ import {
   AdministrationId,
   Administrations as CommonAdministrations
 } from 'camino-common/src/administrations'
+import { PermissionId } from 'camino-common/src/permissions'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -365,7 +361,7 @@ describe('titresQueryModify', () => {
         permissionId,
         modification
       }: {
-        permissionId: IPermissionId
+        permissionId: PermissionId
         modification: boolean
       }) => {
         await Titres.query().insert({
@@ -476,7 +472,7 @@ describe('titresQueryModify', () => {
         permissionId,
         suppression
       }: {
-        permissionId: IPermissionId | undefined
+        permissionId: PermissionId | undefined
         suppression: boolean
       }) => {
         expect(titresSuppressionSelectQuery(permissionId)).toBe(suppression)
