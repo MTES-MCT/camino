@@ -1,19 +1,17 @@
 <template>
-  <div class="flex">
-    <div
-      style="position: relative"
-      :style="{ 'margin-left': loaded ? '0' : '10px' }"
-    >
-      <div v-if="loaded">
-        <slot></slot>
-      </div>
-      <div v-else class="spinner"></div>
+  <div style="position: relative">
+    <slot v-if="data.status === 'LOADED'" :item="data.value" />
+    <div v-else-if="data.status === 'ERROR'" class="color-error">
+      {{ data.message }}
     </div>
+    <div v-else class="spinner"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{ loaded: boolean }>()
+import { AsyncData } from '@/api/client-rest'
+
+defineProps<{ data: AsyncData<any> }>()
 </script>
 <style scoped>
 @keyframes spinner {
@@ -22,20 +20,16 @@ defineProps<{ loaded: boolean }>()
   }
 }
 
-.spinner:before {
-  content: '';
+.spinner {
   position: absolute;
   box-sizing: border-box;
   top: 50%;
-  left: 0%;
   width: 20px;
   height: 20px;
-  margin-top: -10px;
-  margin-left: -10px;
   border-radius: 50%;
   border: 2px solid transparent;
-  border-top-color: #07d;
-  border-bottom-color: #07d;
+  border-top-color: var(--dsfr-bf500);
+  border-bottom-color: var(--dsfr-bf500);
   animation: spinner 0.8s ease infinite;
 }
 </style>

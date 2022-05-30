@@ -3,37 +3,32 @@
     Cotisations:
     <div class="fiscalite-table">
       <div>a. Redevance communale:</div>
-      <LoadingElement :loaded="status === 'LOADED'">{{
-        currencyFormat(fiscalite.redevanceCommunale)
+      <LoadingElement v-slot="{ item }" :data="data" class="fiscalite-value">{{
+        currencyFormat(item.redevanceCommunale)
       }}</LoadingElement>
       <div>b. Redevance départementale</div>
-      <LoadingElement :loaded="status === 'LOADED'">{{
-        currencyFormat(fiscalite.redevanceDepartementale)
+      <LoadingElement v-slot="{ item }" :data="data" class="fiscalite-value">{{
+        currencyFormat(item.redevanceDepartementale)
       }}</LoadingElement>
       <div>c. Taxe minière sur l’or de Guyane</div>
-      <LoadingElement :loaded="status === 'LOADED'">{{
-        currencyFormat(fiscalite.taxeAurifereGuyane)
+      <LoadingElement v-slot="{ item }" :data="data" class="fiscalite-value">{{
+        currencyFormat(item.taxeAurifereGuyane)
       }}</LoadingElement>
       <div>d. Montant total des investissements déduits (1)</div>
-      <LoadingElement :loaded="status === 'LOADED'">{{
-        currencyFormat(fiscalite.totalInvestissementsDeduits)
+      <LoadingElement v-slot="{ item }" :data="data" class="fiscalite-value">{{
+        currencyFormat(item.totalInvestissementsDeduits)
       }}</LoadingElement>
       <div>e. Montant net de taxe minière sur l’or de Guyane (c-d)</div>
-      <LoadingElement :loaded="status === 'LOADED'">{{
-        currencyFormat(montantNetTaxeAurifere)
+      <LoadingElement v-slot="{ item }" :data="data" class="fiscalite-value">{{
+        currencyFormat(montantNetTaxeAurifere(item))
       }}</LoadingElement>
       <div>f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%</div>
-      <LoadingElement :loaded="status === 'LOADED'">{{
-        currencyFormat(fraisGestion)
+      <LoadingElement v-slot="{ item }" :data="data" class="fiscalite-value">{{
+        currencyFormat(fraisGestion(item))
       }}</LoadingElement>
       <div>Somme à payer auprès du comptable (2)</div>
-      <LoadingElement :loaded="status === 'LOADED'">{{
-        currencyFormat(
-          fiscalite.redevanceCommunale +
-            fiscalite.redevanceDepartementale +
-            montantNetTaxeAurifere +
-            fraisGestion
-        )
+      <LoadingElement v-slot="{ item }" :data="data" class="fiscalite-value">{{
+        currencyFormat(sommeAPayer(item))
       }}</LoadingElement>
     </div>
   </div>
@@ -43,39 +38,41 @@
 import { onMounted, ref } from 'vue'
 import { Fiscalite } from 'camino-common/src/fiscalite'
 import LoadingElement from '@/components/_ui/loader-element.vue'
+import { AsyncData } from '@/api/client-rest'
 
 const props = defineProps<{
   getFiscaliteEntreprise: () => Promise<Fiscalite>
 }>()
-const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
 
-const fiscalite = ref<Fiscalite>({
-  redevanceCommunale: 0,
-  redevanceDepartementale: 0,
-  taxeAurifereGuyane: 0,
-  totalInvestissementsDeduits: 0
-})
-const montantNetTaxeAurifere = ref<number>(0)
-const fraisGestion = ref<number>(0)
+const data = ref<AsyncData<Fiscalite>>({ status: 'LOADING' })
 
 onMounted(async () => {
   try {
     const fiscaliteData = await props.getFiscaliteEntreprise()
-    fiscalite.value = fiscaliteData
-    montantNetTaxeAurifere.value =
-      fiscaliteData.taxeAurifereGuyane -
-      fiscaliteData.totalInvestissementsDeduits
-    fraisGestion.value =
-      (fiscaliteData.redevanceDepartementale +
-        fiscaliteData.redevanceCommunale +
-        montantNetTaxeAurifere.value) *
-      0.08
-    status.value = 'LOADED'
-  } catch (e) {
+
+    data.value = { status: 'LOADED', value: fiscaliteData }
+  } catch (e: any) {
     console.log('error', e)
-    status.value = 'ERROR'
+    data.value = {
+      status: 'ERROR',
+      message: e.message ?? 'something wrong happened'
+    }
   }
 })
+
+const fraisGestion = (fiscalite: Fiscalite) =>
+  fiscalite.redevanceDepartementale +
+  fiscalite.redevanceCommunale +
+  montantNetTaxeAurifere(fiscalite) * 0.08
+
+const montantNetTaxeAurifere = (fiscalite: Fiscalite) =>
+  fiscalite.taxeAurifereGuyane - fiscalite.totalInvestissementsDeduits
+
+const sommeAPayer = (fiscalite: Fiscalite) =>
+  fiscalite.redevanceCommunale +
+  fiscalite.redevanceDepartementale +
+  montantNetTaxeAurifere(fiscalite) +
+  fraisGestion(fiscalite)
 
 const currencyFormat = (number: number) =>
   Intl.NumberFormat('FR-fr', {
@@ -88,5 +85,9 @@ const currencyFormat = (number: number) =>
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-row-gap: var(--unit-xs);
+}
+.fiscalite-value {
+  text-align: right;
+  font-weight: bold;
 }
 </style>
