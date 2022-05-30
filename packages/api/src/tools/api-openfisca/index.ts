@@ -1,80 +1,79 @@
 import fetch from 'node-fetch'
 
-import errorLog from '../error-log'
-
 /*
  eslint-disable camelcase
 */
 
-interface IOpenfiscaBody {
+type plopEntry = 'quantite_aurifere_kg' | 'surface_communale' | 'surface_totale'
+type plopRequest =
+  | 'redevance_communale_des_mines_aurifere_kg'
+  | 'redevance_departementale_des_mines_aurifere_kg'
+  | 'taxe_guyane'
+
+type Entries = Partial<Record<plopEntry, { [annee: string]: number | null }>>
+type Request = Partial<Record<plopRequest, { [annee: string]: null }>>
+
+type Article = Entries & Request
+
+export interface OpenfiscaRequest {
   articles: {
-    [titreId_substance_commune: string]: {
-      quantite_aurifere_kg?: {
-        [annee: string]: number | null
-      }
-      surface_communale?: {
-        [annee: string]: number | null
-      }
-      redevance_communale_des_mines_aurifere_kg?: {
-        [annee: string]: number | null
-      }
-      surface_totale?: {
-        [annee: string]: number | null
-      }
-    }
+    [titreId_substance_commune: string]: Article
   }
-  titres?: {
+  titres: {
     [titreId: string]: {
-      commune_principale_exploitation: {
+      commune_principale_exploitation?: {
         [annee: string]: string | null
       }
-      operateur: {
+      operateur?: {
         [annee: string]: string | null
       }
       categorie: {
         [annee: string]: string | null
       }
-      investissement: {
+      investissement?: {
         [annee: string]: string | null
       }
       articles: string[]
     }
   }
-  communes?: {
+  communes: {
     [communeId: string]: {
       articles: string[]
     }
   }
 }
 
-const apiOpenfiscaFetch = async (body: IOpenfiscaBody) => {
-  try {
-    const apiOpenfiscaUrl = process.env.API_OPENFISCA_URL
-    if (!apiOpenfiscaUrl) {
-      throw new Error(
-        "impossible de se connecter à l'API Openfisca car la variable d'environnement est absente"
-      )
-    }
-
-    const response = await fetch(`${apiOpenfiscaUrl}/calculate`, {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    })
-
-    const result = (await response.json()) as IOpenfiscaBody
-
-    if (response.status >= 400) {
-      throw result
-    }
-
-    return result
-  } catch (e: any) {
-    const properties = JSON.stringify(body)
-    errorLog(`apiOpenfiscaFetch ${properties}`, e.error || e.message || e)
-
-    return null
+export interface OpenfiscaResponse {
+  articles: {
+    [titreId_substance_commune: string]: Partial<
+      Record<plopRequest, { [annee: string]: number }>
+    >
   }
+}
+
+export const apiOpenfiscaFetch = async (
+  body: OpenfiscaRequest
+): Promise<OpenfiscaResponse> => {
+  const apiOpenfiscaUrl = process.env.API_OPENFISCA_URL
+  if (!apiOpenfiscaUrl) {
+    throw new Error(
+      "impossible de se connecter à l'API Openfisca car la variable d'environnement est absente"
+    )
+  }
+
+  const response = await fetch(`${apiOpenfiscaUrl}/calculate`, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  })
+
+  const result = (await response.json()) as OpenfiscaResponse
+
+  if (!response.ok) {
+    throw new Error(`Le serveur Openfisca a retourné une erreur: ${result}`)
+  }
+
+  return result
 }
 
 /**
@@ -99,7 +98,7 @@ const redevanceCommunaleMinesAurifiereGet = async (
     return acc
   }, {} as { [annee: string]: null })
 
-  const societes: IOpenfiscaBody = entreprises.reduce(
+  const societes: OpenfiscaRequest = entreprises.reduce(
     (acc, entreprise) => {
       // conversion des grammes en kilogrammes
       const orNetKg = Object.keys(entreprise.orNet).reduce(
@@ -118,7 +117,7 @@ const redevanceCommunaleMinesAurifiereGet = async (
 
       return acc
     },
-    { articles: {} } as IOpenfiscaBody
+    { articles: {} } as OpenfiscaRequest
   )
 
   const result = (await apiOpenfiscaFetch(societes))?.articles

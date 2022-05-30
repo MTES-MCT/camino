@@ -9,7 +9,11 @@ export interface Fiscalite {
 
 export const fiscaliteVisible = (
   user:
-    | { entreprises?: { id: string }[] | null; permissionId: PermissionId }
+    | {
+        entreprises?: { id: string }[] | null
+        permissionId?: PermissionId
+        permission?: { id: PermissionId }
+      }
     | undefined
     | null,
   entrepriseId: string
@@ -22,6 +26,13 @@ export const fiscaliteVisible = (
         'editeur',
         'lecteur'
       ]) ||
+      (user.permission &&
+        permissionCheck(user.permission.id, [
+          'super',
+          'admin',
+          'editeur',
+          'lecteur'
+        ])) ||
       user.entreprises?.map(({ id }) => id).includes(entrepriseId)
     ) {
       return true

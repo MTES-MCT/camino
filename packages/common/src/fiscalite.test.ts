@@ -15,6 +15,7 @@ test.each`
   ${{ permissionId: 'editeur' }}                                                | ${true}
   ${{ permissionId: 'lecteur' }}                                                | ${true}
   ${{ permissionId: 'super' }}                                                  | ${true}
+  ${{ permission: { id: 'super' } }}                                            | ${true}
 `(
   'fiscaliteVisible',
   ({
@@ -22,7 +23,11 @@ test.each`
     visible
   }: {
     user:
-      | { entreprises?: { id: string }[] | null; permissionId: PermissionId }
+      | {
+          entreprises?: { id: string }[] | null
+          permissionId?: PermissionId
+          permission?: { id: PermissionId }
+        }
       | undefined
       | null
     visible: boolean
