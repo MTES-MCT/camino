@@ -1,4 +1,5 @@
 import { IActiviteType, ITitreDemarche } from '../../../types'
+import { SubstancesFiscale } from 'camino-common/src/substance'
 
 const activiteTypeGra = {
   id: 'gra',
@@ -56,19 +57,39 @@ const titreActivitesGra = [
         id: 'substancesFiscales',
         elements: [
           {
-            id: 'auru',
-            nom: 'Or',
+            id: SubstancesFiscale.auru.id,
+            nom: SubstancesFiscale.auru.nom,
             type: 'number',
-            description: '<b>kg (kilogramme)</b> métal précieux',
-            uniteId: 'mkg'
+            description: '<b>g (gramme)</b> contenu dans les minerais',
+            referenceUniteRatio: 0.001,
+            uniteId: SubstancesFiscale.auru.uniteId
           },
           {
-            id: 'sela',
-            nom: 'Sel',
+            id: SubstancesFiscale.naca.id,
+            nom: SubstancesFiscale.naca.nom,
             type: 'number',
-            description: '<b>t (tonne)</b> Sel',
-            referenceUniteRatio: 0.001,
-            uniteId: 'mtn'
+            description:
+              '<b>x 1000 t (millier de tonnes)</b> extrait par abattage net livré',
+            referenceUniteRatio: 1000000,
+            uniteId: SubstancesFiscale.naca.uniteId
+          },
+          {
+            description:
+              '<b>x 1000 t (millier de tonnes)</b> extrait en dissolution par sondage et livré raffiné',
+            id: SubstancesFiscale.nacb.id,
+            nom: SubstancesFiscale.nacb.nom,
+            referenceUniteRatio: 1000000,
+            type: 'number',
+            uniteId: SubstancesFiscale.nacb.uniteId
+          },
+          {
+            description:
+              '<b>x 1000 t (millier de tonnes)</b> extrait en dissolution par sondage et livré en dissolution',
+            id: SubstancesFiscale.nacc.id,
+            nom: SubstancesFiscale.nacc.nom,
+            referenceUniteRatio: 1000000,
+            type: 'number',
+            uniteId: SubstancesFiscale.nacc.uniteId
           }
         ]
       }
@@ -206,28 +227,14 @@ const titreDemarches = [
             id: 'auru',
             legales: [
               {
-                fiscales: [
-                  {
-                    id: 'auru',
-                    nom: 'Or',
-                    description: 'métal précieux',
-                    unite: { nom: 'kilogramme', symbole: 'kg' },
-                    uniteId: 'mkg'
-                  },
-                  {
-                    id: 'sela',
-                    nom: 'Sel',
-                    description: 'Sel',
-                    uniteId: 'mtn',
-                    unite: {
-                      nom: 'tonne',
-                      referenceUniteRatio: 0.001,
-                      symbole: 't'
-                    }
-                  },
-                  null
-                ]
-              }
+                id: 'auru',
+                nom: 'Or'
+              },
+              {
+                id: 'nacl',
+                nom: 'Sel'
+              },
+              null
             ]
           }
         ]

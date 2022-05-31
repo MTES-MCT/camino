@@ -6,21 +6,28 @@ import {
   ITitreActivite,
   ISubstance,
   ISection,
-  ISubstanceFiscale,
   ISectionElement
 } from '../../types'
 
 import { metasGet } from '../../database/cache/metas'
 import { titreEtapePropFind } from './titre-etape-prop-find'
 import { titreActiviteValideCheck } from '../utils/titre-activite-valide-check'
+import {
+  SubstanceFiscale,
+  SubstancesFiscale
+} from 'camino-common/src/substance'
+import { Unites } from 'camino-common/src/unites'
 
 const substancesFiscalesFind = (substances: ISubstance[]) =>
   substances
     .flatMap(s => s.legales)
-    .flatMap(s => s.fiscales)
-    .reduce((acc: ISubstanceFiscale[], s) => {
+    .reduce((acc: SubstanceFiscale[], s) => {
       if (s && !acc.map(({ id }) => id).includes(s.id)) {
-        acc.push(s)
+        acc.push(
+          ...Object.values(SubstancesFiscale).filter(
+            substance => substance.substanceLegaleId === s.id
+          )
+        )
       }
 
       return acc
@@ -101,18 +108,17 @@ const titreActiviteSectionsBuild = (
         const substancesFiscales = substancesFiscalesFind(substances)
 
         elements = substancesFiscales.map(sf => {
+          const unite = Unites[sf.uniteId]
           const element = {
             id: sf.id,
             nom: `${sf.nom}`,
             type: 'number',
-            description: `<b>${sf.unite!.symbole} (${sf.unite!.nom})</b> ${
-              sf.description
-            }`,
+            description: `<b>${unite.symbole} (${unite.nom})</b> ${sf.description}`,
             uniteId: sf.uniteId
           } as ISectionElement
 
-          if (sf.unite!.referenceUniteRatio) {
-            element.referenceUniteRatio = sf.unite!.referenceUniteRatio
+          if (unite.referenceUniteRatio) {
+            element.referenceUniteRatio = unite.referenceUniteRatio
           }
 
           return element
