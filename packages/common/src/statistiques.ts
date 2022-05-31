@@ -11,7 +11,6 @@ export interface StatistiquesUtilisateurs {
   rattachesAUneEntreprise: number
   rattachesAUnTypeDAdministration: StatistiquesAdministrationsType
   visiteursAuthentifies: number
-  total: number
 }
 
 export interface Statistiques {

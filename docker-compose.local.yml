@@ -38,6 +38,8 @@ services:
       POSTGRES_DB: ${PGDATABASE}
     expose:
       - ${PGPORT}
+    ports:
+      - ${PGPORT}:${PGPORT}
   ui:
     container_name: camino_ui_app
     build:
