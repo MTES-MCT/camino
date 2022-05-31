@@ -48,13 +48,13 @@
     </div>
   </div>
   <div id="utilisateurs" class="mb-xxl content">
-    <h2>Les utilisateurs de Camino</h2>
+    <h2>Les profils des utilisateurs de Camino</h2>
     <span class="separator" />
     <div class="tablet-float-blobs clearfix">
       <div class="tablet-float-blob-1-3">
         <div class="mb-xl mt">
           <p class="h0 text-center">
-            {{ numberFormatInternal(statistiques.utilisateurs.total) }}
+            {{ numberFormatInternal(totalUtilisateurs) }}
           </p>
           <p class="bold text-center">utilisateurs enregistrés</p>
         </div>
@@ -66,7 +66,9 @@
               )
             }}
           </p>
-          <p class="bold text-center">utilisateurs ayant une entreprise</p>
+          <p class="bold text-center">
+            utilisateurs rattachés à un compte Entreprise
+          </p>
         </div>
 
         <div class="mb-xl mt">
@@ -74,17 +76,22 @@
             {{ numberFormatInternal(utilisateursAdmin) }}
           </p>
           <p class="bold text-center">
-            utilisateurs appartenant à une administration
+            utilisateurs rattachés à un compte Administration
           </p>
         </div>
       </div>
-      <div class="tablet-float-blob-2-3 mb-xxl">
-        <PieChart :data="utilisateurs" />
+      <div
+        class="tablet-float-blob-2-3 mb-xxl flex"
+        style="justify-content: center"
+      >
+        <div style="width: 70%">
+          <PieChart :data="utilisateurs" />
+        </div>
       </div>
     </div>
   </div>
   <div id="administrations" class="mb-xxl content">
-    <h2>Les administrations de Camino</h2>
+    <h2>Les administrations utilisatrices de Camino</h2>
     <span class="separator" />
     <div class="tablet-float-blobs clearfix">
       <div class="tablet-float-blob-1-3">
@@ -92,11 +99,15 @@
           <p class="h0 text-center">
             {{ numberFormatInternal(utilisateursAdmin) }}
           </p>
-          <p class="bold text-center">utilisateurs ayant une administration</p>
+          <p class="bold text-center">
+            utilisateurs rattachés à un compte Administration
+          </p>
         </div>
       </div>
-      <div class="tablet-float-blob-2-3 mb-xxl">
-        <PieChart :data="utilisateursAdminChart" />
+      <div class="tablet-float-blob-2-3 flex" style="justify-content: center">
+        <div style="width: 70%">
+          <PieChart :data="utilisateursAdminChart" />
+        </div>
       </div>
     </div>
   </div>
@@ -228,9 +239,7 @@ import { statsLineFormat } from './_utils'
 import { computed } from 'vue'
 import { Statistiques } from 'camino-common/src/statistiques'
 import {
-  ADMINISTRATION_TYPE_IDS,
   ADMINISTRATION_TYPE_IDS_ARRAY,
-  ADMINISTRATION_TYPES,
   AdministrationTypeId,
   sortedAdministrationTypes
 } from 'camino-common/src/administrations'
@@ -249,6 +258,7 @@ const utilisateursAdmin = computed(() => {
     .filter((value: string): value is AdministrationTypeId =>
       ADMINISTRATION_TYPE_IDS_ARRAY.includes(value)
     )
+    .filter(value => value !== 'ope')
     .reduce(
       (value: number, adminTypeId: AdministrationTypeId) =>
         value +
@@ -257,6 +267,14 @@ const utilisateursAdmin = computed(() => {
         ],
       0
     )
+})
+
+const totalUtilisateurs = computed(() => {
+  return (
+    utilisateursAdmin.value +
+    props.statistiques.utilisateurs.rattachesAUneEntreprise +
+    props.statistiques.utilisateurs.visiteursAuthentifies
+  )
 })
 
 const utilisateurs = computed(() => {
@@ -281,9 +299,12 @@ const utilisateurs = computed(() => {
   }
 })
 
-const labelsAdministrations = sortedAdministrationTypes.map(admin => admin.nom)
+const adminSansOperateurs = sortedAdministrationTypes.filter(
+  ({ id }) => id !== 'ope'
+)
+const labelsAdministrations = adminSansOperateurs.map(admin => admin.nom)
 const utilisateursAdminChart = computed(() => {
-  const data = sortedAdministrationTypes.map(
+  const data = adminSansOperateurs.map(
     admin =>
       props.statistiques.utilisateurs.rattachesAUnTypeDAdministration[admin.id]
   )

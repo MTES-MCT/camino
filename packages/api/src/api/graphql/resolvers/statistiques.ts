@@ -2,10 +2,10 @@ import { ITitre } from '../../../types'
 
 import { titreEtapePropFind } from '../../../business/rules/titre-etape-prop-find'
 import { titreValideCheck } from '../../../business/utils/titre-valide-check'
-import { debug } from '../../../config/index'
+import { debug } from '../../../config'
 import { titresActivitesGet } from '../../../database/queries/titres-activites'
 import { userSuper } from '../../../database/user-super'
-import { matomoData } from '../../../tools/api-matomo/index'
+import { matomoData } from '../../../tools/api-matomo'
 import {
   Statistiques,
   StatistiquesUtilisateurs
@@ -73,7 +73,6 @@ const statistiquesGlobales = async (): Promise<Statistiques> => {
             } else {
               previousValue.visiteursAuthentifies++
             }
-            previousValue.total++
           }
 
           return previousValue
@@ -88,7 +87,6 @@ const statistiquesGlobales = async (): Promise<Statistiques> => {
             pre: 0
           },
           rattachesAUneEntreprise: 0,
-          total: 0,
           visiteursAuthentifies: 0
         }
       )
