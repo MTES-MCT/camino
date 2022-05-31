@@ -18,20 +18,19 @@ import {
 } from 'camino-common/src/substance'
 import { Unites } from 'camino-common/src/unites'
 
-const substancesFiscalesFind = (substances: ISubstance[]) =>
-  substances
-    .flatMap(s => s.legales)
-    .reduce((acc: SubstanceFiscale[], s) => {
-      if (s && !acc.map(({ id }) => id).includes(s.id)) {
-        acc.push(
-          ...Object.values(SubstancesFiscale).filter(
-            substance => substance.substanceLegaleId === s.id
-          )
-        )
-      }
+const onlyUnique = <T>(value: T, index: number, self: T[]): boolean => {
+  return self.indexOf(value) === index
+}
 
-      return acc
-    }, [])
+const substancesFiscalesFind = (substances: ISubstance[]): SubstanceFiscale[] =>
+  substances
+    .flatMap(s => s.legales.filter(legal => legal !== null).map(({ id }) => id))
+    .filter(onlyUnique)
+    .flatMap(id =>
+      Object.values(SubstancesFiscale).filter(
+        substance => substance.substanceLegaleId === id
+      )
+    )
 
 const titreActiviteSectionElementsFormat = (
   elements: ISectionElement[],
