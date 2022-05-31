@@ -172,7 +172,7 @@ const actions = {
 
       const { alertes } = await perimetreInformations({
         points: [],
-        titreId: state.metas.demarche.id,
+        demarcheId: state.metas.demarche.id,
         etapeTypeId: typeId
       })
       commit('metasSet', {
@@ -299,7 +299,7 @@ const actions = {
         const { surface, documentTypeIds, alertes } =
           await perimetreInformations({
             points,
-            titreId: state.metas.demarche.id,
+            demarcheId: state.metas.demarche.id,
             etapeTypeId: etape.type.id
           })
         state.element.surface = surface
