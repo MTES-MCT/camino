@@ -12,13 +12,15 @@
     "test:watch": "cross-env NODE_ENV=test jest --watch --verbose",
     "lint": "prettier --write src && eslint --fix --ext .js,.ts,.vue src",
     "lint:check": "prettier --check src && eslint src",
-    "storybook": "start-storybook -p 6006"
+    "storybook": "start-storybook -p 6006",
+    "storybook:build": "build-storybook"
   },
   "@comment dependencies": {
     "eslint": "eslint et eslint-plugin-vue, bloqués à 0.7.x https://github.com/vuejs/eslint-config-standard/issues/10",
     "typescript": "bloqué à 4.4.x https://github.com/xjamundx/eslint-plugin-promise/issues/218",
     "graphql-react": "faut configurer Jest pour qu’il puisse interpréter les .mjs",
-    "jest": "jest, jest-util, ts-jest et babel-jest bloqués en 27.x.x https://github.com/vuejs/vue-jest/issues/467"
+    "jest": "jest, jest-util, ts-jest et babel-jest bloqués en 27.x.x https://github.com/vuejs/vue-jest/issues/467",
+    "@mdx-js/preact": "dépendance transitive à @storybook/builder-vite -> https://github.com/storybookjs/builder-vite/issues/406"
   },
   "dependencies": {
     "compression": "^1.7.4",
@@ -31,6 +33,7 @@
     "@babel/eslint-parser": "^7.17.0",
     "@babel/preset-env": "^7.17.10",
     "@juggle/resize-observer": "^3.3.1",
+    "@mdx-js/preact": "^1.6.22",
     "@rollup/plugin-inject": "^4.0.4",
     "@sentry/browser": "^6.19.7",
     "@sentry/integrations": "^6.19.7",
@@ -38,6 +41,7 @@
     "@storybook/addon-controls": "^6.5.4",
     "@storybook/addon-postcss": "^2.0.0",
     "@storybook/addon-storyshots": "^6.5.4",
+    "@storybook/builder-vite": "^0.1.36",
     "@storybook/vue3": "^6.5.4",
     "@types/jest": "^27.5.0",
     "@types/leaflet": "^1.7.9",
