@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`construit le corps de la requête pour openFisca avec activiteés 1`] = `
+exports[`construit le corps de la requête pour openFisca avec activités 1`] = `
 Object {
   "articles": Object {
     "titre2-auru-97310": Object {

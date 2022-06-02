@@ -1,6 +1,31 @@
-import { bodyBuilder } from './entreprises'
+import { bodyBuilder, responseExtractor } from './entreprises'
 
 const entreprise = { categorie: 'PME', nom: 'ma companie' }
+
+describe("extrait la réponse venant d'openFisca", () => {
+  test('récupère les bonnes valeurs', () => {
+    expect(
+      responseExtractor(
+        {
+          articles: {
+            'titre2-auru-97310': {
+              redevance_communale_des_mines_aurifere_kg: { '2022': 6604.6 },
+              redevance_departementale_des_mines_aurifere_kg: {
+                '2022': 1318.54
+              }
+            }
+          }
+        },
+        2022
+      )
+    ).toStrictEqual({
+      redevanceCommunale: 6604.6,
+      redevanceDepartementale: 1318.54,
+      taxeAurifereGuyane: 0,
+      totalInvestissementsDeduits: 0
+    })
+  })
+})
 
 describe('construit le corps de la requête pour openFisca', () => {
   test('sans activités', () => {
@@ -11,7 +36,7 @@ describe('construit le corps de la requête pour openFisca', () => {
     })
   })
 
-  test('avec activiteés', () => {
+  test('avec activités', () => {
     const activites = [
       { titreId: 'titre2', contenu: { substancesFiscales: { auru: 39.715 } } },
       { titreId: 'titre3', contenu: { substancesFiscales: { auru: 0 } } },

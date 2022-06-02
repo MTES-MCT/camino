@@ -4,7 +4,11 @@ import express from 'express'
 import { IEntreprise, IUser } from '../../types'
 import { Fiscalite, fiscaliteVisible } from 'camino-common/src/fiscalite'
 import { constants } from 'http2'
-import { apiOpenfiscaFetch, OpenfiscaRequest } from '../../tools/api-openfisca'
+import {
+  apiOpenfiscaFetch,
+  OpenfiscaRequest,
+  OpenfiscaResponse
+} from '../../tools/api-openfisca'
 import { titresGet } from '../../database/queries/titres'
 import { titresActivitesGet } from '../../database/queries/titres-activites'
 import { entrepriseGet } from '../../database/queries/entreprises'
@@ -24,6 +28,9 @@ export const bodyBuilder = (
   annee: number,
   entreprise: Pick<IEntreprise, 'categorie' | 'nom'>
 ) => {
+  // console.log('activites', JSON.stringify(activites.map(({titreId, contenu}) => ({titreId, contenu}))))
+  // console.log('titres', JSON.stringify(titres.map(({substances, communes, id}) => ({substances, communes, id}))));
+  // console.log('entreprise', {categorie: entreprise.categorie, nom: entreprise.nom})
   const anneePrecedente = annee - 1
   const body: OpenfiscaRequest = {
     articles: {},
@@ -46,6 +53,10 @@ export const bodyBuilder = (
 
     if (titre.substances.length > 0 && activite.contenu) {
       // TODO Laure, on fait bien les calculs que sur la substance principale ?
+      // Pour le titre m-px-saint-pierre-2013 il n'y a pas d'ordre aux substances, il y'a or et substances connexes
+      // d'après le code, il y'a un tri par ordre alphabétique, pas terrible non ?
+      // plus inquiétant, cette étape à 11 substances non triées : EZtUs2fefrDZUw0wLAUK42p8
+
       const mainSubstance = titre.substances[0]
       const production = activite.contenu.substancesFiscales[mainSubstance.id]
 
@@ -118,6 +129,30 @@ export const bodyBuilder = (
   return body
 }
 
+// VisibleForTesting
+export const responseExtractor = (result: OpenfiscaResponse, annee: number) => {
+  const redevances: Fiscalite = Object.values(result.articles).reduce(
+    (acc, article) => {
+      // TODO Sandra, remplacer redevance_communale_des_mines_aurifere_kg par redevance_communale_des_mines_substance_unite
+      acc.redevanceCommunale +=
+        article.redevance_communale_des_mines_aurifere_kg?.[annee] ?? 0
+      acc.redevanceDepartementale +=
+        article.redevance_departementale_des_mines_aurifere_kg?.[annee] ?? 0
+
+      // TODO Sandra, taxeAurifereGuyane et totalInvestissementsDeduits
+      return acc
+    },
+    {
+      redevanceCommunale: 0,
+      redevanceDepartementale: 0,
+      taxeAurifereGuyane: 0,
+      totalInvestissementsDeduits: 0
+    }
+  )
+
+  return redevances
+}
+
 export const fiscalite = async (
   req: express.Request<{ entrepriseId?: string }>,
   res: CustomResponse
@@ -168,24 +203,7 @@ export const fiscalite = async (
     if (Object.keys(body.articles).length > 0) {
       const result = await apiOpenfiscaFetch(body)
 
-      const redevances: Fiscalite = Object.values(result.articles).reduce(
-        (acc, article) => {
-          // TODO Sandra, remplacer redevance_communale_des_mines_aurifere_kg par redevance_communale_des_mines_substance_unite
-          acc.redevanceCommunale +=
-            article.redevance_communale_des_mines_aurifere_kg?.[annee] ?? 0
-          acc.redevanceDepartementale +=
-            article.redevance_departementale_des_mines_aurifere_kg?.[annee] ?? 0
-
-          // TODO Sandra, taxeAurifereGuyane et totalInvestissementsDeduits
-          return acc
-        },
-        {
-          redevanceCommunale: 0,
-          redevanceDepartementale: 0,
-          taxeAurifereGuyane: 0,
-          totalInvestissementsDeduits: 0
-        }
-      )
+      const redevances = responseExtractor(result, annee)
 
       console.log(JSON.stringify(result))
       console.log('redevanceCommunaleMinesAurifere', redevances)
