@@ -52,7 +52,6 @@ onMounted(async () => {
 
     data.value = { status: 'LOADED', value: fiscaliteData }
   } catch (e: any) {
-    console.log('error', e)
     data.value = {
       status: 'ERROR',
       message: e.message ?? 'something wrong happened'
@@ -83,11 +82,13 @@ const currencyFormat = (number: number) =>
 <style scoped>
 .fiscalite-table {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: fit-content(100%) fit-content(100%);
   grid-row-gap: var(--unit-xs);
+  grid-column-gap: var(--unit-l);
 }
+
 .fiscalite-value {
-  text-align: right;
+  justify-self: end;
   font-weight: bold;
 }
 </style>

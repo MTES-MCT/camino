@@ -207,10 +207,14 @@ export const fiscalite = async (
 
       console.log(JSON.stringify(result))
       console.log('redevanceCommunaleMinesAurifere', redevances)
-
       res.json(redevances)
     } else {
-      res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+      res.json({
+        redevanceCommunale: 0,
+        redevanceDepartementale: 0,
+        taxeAurifereGuyane: 0,
+        totalInvestissementsDeduits: 0
+      })
     }
   }
 }

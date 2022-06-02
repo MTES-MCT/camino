@@ -1,7 +1,8 @@
 import { fiscaliteVisible } from './fiscalite'
 import { PermissionId } from './permissions'
 
-test.each`
+// unskip une fois l'accès aux utilisateurs autorisé
+test.skip.each`
   user                                                                          | visible
   ${null}                                                                       | ${false}
   ${undefined}                                                                  | ${false}

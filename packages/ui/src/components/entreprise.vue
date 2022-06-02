@@ -136,13 +136,6 @@
           </div>
         </div>
 
-        <div v-if="fiscaliteVisible">
-          <h4 class="px-m pt mb-0">Fiscalité</h4>
-          <EntrepriseFiscalite
-            :getFiscaliteEntreprise="getFiscaliteEntreprise"
-          />
-        </div>
-
         <div v-if="entreprise.documents.length">
           <h4 class="px-m pt mb-0">Documents</h4>
           <Documents
@@ -163,6 +156,11 @@
       </template>
     </Accordion>
 
+    <div v-if="fiscaliteVisible" class="mb-xxl">
+      <div class="line-neutral width-full mb-xxl" />
+      <h3>Fiscalité</h3>
+      <EntrepriseFiscalite :getFiscaliteEntreprise="getFiscaliteEntreprise" />
+    </div>
     <div v-if="utilisateurs && utilisateurs.length" class="mb-xxl">
       <div class="line-neutral width-full mb-xxl" />
       <h3>Utilisateurs</h3>
@@ -231,10 +229,18 @@ export default {
   data() {
     return {
       utilisateursColonnes,
-      getFiscaliteEntreprise: async () =>
-        (
-          await fetch(`/apiUrl/entreprises/${this.entreprise.id}/fiscalite`)
-        ).json()
+      getFiscaliteEntreprise: async () => {
+        const res = await fetch(
+          `/apiUrl/entreprises/${this.entreprise.id}/fiscalite`
+        )
+
+        if (!res.ok) {
+          const response = await res.json()
+          throw new Error(response?.error ?? response)
+        }
+
+        return res.json()
+      }
     }
   },
 

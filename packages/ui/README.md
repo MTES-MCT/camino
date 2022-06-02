@@ -19,7 +19,6 @@
 - [Eslint](https://eslint.org/)
 - [Prettier](https://prettier.io/)
 - [Standardjs](https://standardjs.com/)
-- [Stylelint](https://stylelint.io/)
 - [Docker](https://www.docker.com/products/docker-engine)
 - [Standard version](https://github.com/conventional-changelog/standard-version)
 - [Commitizen](http://commitizen.github.io/cz-cli/)

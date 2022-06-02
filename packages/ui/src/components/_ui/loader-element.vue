@@ -1,8 +1,10 @@
 <template>
-  <div style="position: relative">
+  <div class="top-level">
     <slot v-if="data.status === 'LOADED'" :item="data.value" />
-    <div v-else-if="data.status === 'ERROR'" class="color-error">
-      {{ data.message }}
+    <div v-else-if="data.status === 'ERROR'">
+      <HelpTooltip icon="icon-error-warning">
+        {{ data.message }}
+      </HelpTooltip>
     </div>
     <div v-else class="spinner"></div>
   </div>
@@ -10,10 +12,16 @@
 
 <script setup lang="ts">
 import { AsyncData } from '@/api/client-rest'
+import HelpTooltip from '@/components/_ui/help-tooltip.vue'
 
 defineProps<{ data: AsyncData<any> }>()
 </script>
 <style scoped>
+.top-level {
+  position: relative;
+  min-width: var(--unit);
+  min-height: var(--unit);
+}
 @keyframes spinner {
   to {
     transform: rotate(360deg);
@@ -23,9 +31,8 @@ defineProps<{ data: AsyncData<any> }>()
 .spinner {
   position: absolute;
   box-sizing: border-box;
-  top: 50%;
-  width: 20px;
-  height: 20px;
+  width: var(--unit);
+  height: var(--unit);
   border-radius: 50%;
   border: 2px solid transparent;
   border-top-color: var(--dsfr-bf500);

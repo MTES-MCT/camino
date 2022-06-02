@@ -134,34 +134,6 @@
   /* border: solid var(--unit-xxs) var(--color-bg); */
 }
 
-.tooltip {
-  position: relative;
-}
-
-.tooltip .tooltip-content {
-  width: 250px;
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  text-align: center;
-  border: var(--border-width) solid var(--border-color);
-  border-radius: var(--unit-s);
-
-  position: absolute;
-  left: 150%;
-  z-index: 1;
-  padding: var(--unit-s);
-}
-
-.tooltip .tooltip span::after,
-.tooltip .tooltip-content {
-  visibility: hidden;
-}
-
-.tooltip:hover .tooltip span::after,
-.tooltip:hover .tooltip-content {
-  visibility: visible;
-}
-
 .shadow {
   box-shadow: var(--unit-xs) var(--unit-xs) var(--unit)
     var(--color-neutral-transparent);
