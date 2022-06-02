@@ -25,7 +25,7 @@ const titresActivitesUpdate = async (titresIds?: string[]) => {
           type: { id: {} },
           phase: { id: {} },
           etapes: {
-            substances: { legales: { fiscales: { unite: { id: {} } } } }
+            substances: { legales: { id: {} } }
           }
         },
         communes: { departement: { region: { pays: { id: {} } } } },

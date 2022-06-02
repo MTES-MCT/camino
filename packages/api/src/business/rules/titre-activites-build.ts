@@ -6,25 +6,31 @@ import {
   ITitreActivite,
   ISubstance,
   ISection,
-  ISubstanceFiscale,
   ISectionElement
 } from '../../types'
 
 import { metasGet } from '../../database/cache/metas'
 import { titreEtapePropFind } from './titre-etape-prop-find'
 import { titreActiviteValideCheck } from '../utils/titre-activite-valide-check'
+import {
+  SubstanceFiscale,
+  SubstancesFiscale
+} from 'camino-common/src/substance'
+import { Unites } from 'camino-common/src/unites'
 
-const substancesFiscalesFind = (substances: ISubstance[]) =>
+const onlyUnique = <T>(value: T, index: number, self: T[]): boolean => {
+  return self.indexOf(value) === index
+}
+
+const substancesFiscalesFind = (substances: ISubstance[]): SubstanceFiscale[] =>
   substances
-    .flatMap(s => s.legales)
-    .flatMap(s => s.fiscales)
-    .reduce((acc: ISubstanceFiscale[], s) => {
-      if (s && !acc.map(({ id }) => id).includes(s.id)) {
-        acc.push(s)
-      }
-
-      return acc
-    }, [])
+    .flatMap(s => s.legales.filter(legal => legal !== null).map(({ id }) => id))
+    .filter(onlyUnique)
+    .flatMap(id =>
+      Object.values(SubstancesFiscale).filter(
+        substance => substance.substanceLegaleId === id
+      )
+    )
 
 const titreActiviteSectionElementsFormat = (
   elements: ISectionElement[],
@@ -101,18 +107,17 @@ const titreActiviteSectionsBuild = (
         const substancesFiscales = substancesFiscalesFind(substances)
 
         elements = substancesFiscales.map(sf => {
+          const unite = Unites[sf.uniteId]
           const element = {
             id: sf.id,
             nom: `${sf.nom}`,
             type: 'number',
-            description: `<b>${sf.unite!.symbole} (${sf.unite!.nom})</b> ${
-              sf.description
-            }`,
+            description: `<b>${unite.symbole} (${unite.nom})</b> ${sf.description}`,
             uniteId: sf.uniteId
           } as ISectionElement
 
-          if (sf.unite!.referenceUniteRatio) {
-            element.referenceUniteRatio = sf.unite!.referenceUniteRatio
+          if (unite.referenceUniteRatio) {
+            element.referenceUniteRatio = unite.referenceUniteRatio
           }
 
           return element

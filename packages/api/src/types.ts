@@ -641,16 +641,6 @@ interface ISubstanceLegale {
   substanceLegaleCodeId?: string | null
   domaine?: IDomaine | null
   code?: ISubstanceLegaleCode | null
-  fiscales?: ISubstanceFiscale[] | null
-}
-
-interface ISubstanceFiscale {
-  id: string
-  nom: string
-  description: string
-  substanceLegaleId: string
-  uniteId: string
-  unite?: IUnite | null
 }
 
 interface ISubstance {
@@ -1119,7 +1109,6 @@ export {
   ISubstance,
   ISubstanceLegale,
   ISubstanceLegaleCode,
-  ISubstanceFiscale,
   ITitreSubstance,
   ITitre,
   ITitreActivite,
