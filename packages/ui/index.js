@@ -52,7 +52,7 @@ app.use(
 
 app.use('/sentryOptions', (req, res) =>
   res.json({
-    dsn: process.env.API_SENTRY_URL,
+    dsn: process.env.SENTRY_DSN,
     environment: process.env.ENV
   })
 )

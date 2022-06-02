@@ -1,6 +1,8 @@
 name: api/ci
 on:
   push:
+    branches-ignore:
+      - release-candidate
 concurrency:
   group: api-ci-${{ github.ref }}
   cancel-in-progress: true

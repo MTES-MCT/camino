@@ -1,6 +1,8 @@
 name: common/ci
 on:
   push:
+    branches-ignore:
+      - release-candidate
 concurrency:
   group: common-ci-${{ github.ref }}
   cancel-in-progress: true

@@ -38,9 +38,9 @@ filesInit().then(() => {
   databaseInit().then(() => {
     const app = express()
 
-    if (process.env.SENTRY_DSN) {
+    if (process.env.API_SENTRY_URL) {
       Sentry.init({
-        dsn: process.env.SENTRY_DSN,
+        dsn: process.env.API_SENTRY_URL,
         environment: process.env.ENV === 'prod' ? 'production' : process.env.ENV
       })
       app.use(Sentry.Handlers.requestHandler())
@@ -69,7 +69,7 @@ filesInit().then(() => {
 
     app.use('/', graphqlUpload, graphql)
 
-    if (process.env.SENTRY_DSN) {
+    if (process.env.API_SENTRY_URL) {
       app.use(Sentry.Handlers.errorHandler())
     }
 
