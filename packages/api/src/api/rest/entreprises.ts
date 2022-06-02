@@ -1,18 +1,121 @@
 import { userGet } from '../../database/queries/utilisateurs'
 
 import express from 'express'
-import { IUser } from '../../types'
+import { IEntreprise, IUser } from '../../types'
 import { Fiscalite, fiscaliteVisible } from 'camino-common/src/fiscalite'
 import { constants } from 'http2'
 import { apiOpenfiscaFetch, OpenfiscaRequest } from '../../tools/api-openfisca'
 import { titresGet } from '../../database/queries/titres'
 import { titresActivitesGet } from '../../database/queries/titres-activites'
 import { entrepriseGet } from '../../database/queries/entreprises'
+import TitresActivites from '../../database/models/titres-activites'
+import Titres from '../../database/models/titres'
 
 type Send<T = express.Response> = (body?: Fiscalite) => T
 
 interface CustomResponse extends express.Response {
   json: Send<this>
+}
+
+// VisibleForTesting
+export const bodyBuilder = (
+  activites: Pick<TitresActivites, 'titreId' | 'contenu'>[],
+  titres: Pick<Titres, 'substances' | 'communes' | 'id'>[],
+  annee: number,
+  entreprise: Pick<IEntreprise, 'categorie' | 'nom'>
+) => {
+  const anneePrecedente = annee - 1
+  const body: OpenfiscaRequest = {
+    articles: {},
+    titres: {},
+    communes: {}
+  }
+
+  for (const activite of activites) {
+    const titre = titres.find(({ id }) => id === activite.titreId)
+
+    if (!titre) {
+      throw new Error(`le titre ${activite.titreId} n’est pas chargé`)
+    }
+
+    if (!titre.substances) {
+      throw new Error(
+        `les substances du titre ${activite.titreId} ne sont pas chargées`
+      )
+    }
+
+    if (titre.substances.length > 0 && activite.contenu) {
+      // TODO Laure, on fait bien les calculs que sur la substance principale ?
+      const mainSubstance = titre.substances[0]
+      const production = activite.contenu.substancesFiscales[mainSubstance.id]
+
+      if (typeof production === 'number' && production > 0) {
+        if (!titre.communes) {
+          throw new Error(
+            `les communes du titre ${titre.id} ne sont pas chargées`
+          )
+        }
+
+        const surfaceTotale = titre.communes.reduce(
+          (value, commune) => value + (commune.surface ?? 0),
+          0
+        )
+
+        for (const commune of titre.communes) {
+          const articleId = `${titre.id}-${mainSubstance.id}-${commune.id}`
+
+          body.articles[articleId] = {
+            surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
+            surface_totale: { [anneePrecedente]: surfaceTotale },
+            // TODO Sandra, substance
+            quantite_aurifere_kg: { [anneePrecedente]: production },
+            redevance_communale_des_mines_aurifere_kg: {
+              [annee]: null
+            },
+            redevance_departementale_des_mines_aurifere_kg: {
+              [annee]: null
+            }
+            // TODO taxe guyane
+            // TODO Sandra - elle ne fonctionne pas via OPENFISCA
+            // TODO Laure - on calcule cette taxe que pour les titres Guyannais ?
+          }
+
+          if (!Object.prototype.hasOwnProperty.call(body.titres, titre.id)) {
+            body.titres[titre.id] = {
+              commune_principale_exploitation: {
+                [anneePrecedente]: commune.id
+              },
+              operateur: {
+                // TODO Sandra : ça sert à quoi ?
+                [anneePrecedente]: entreprise.nom
+              },
+              // TODO Sandra, ça vient d’où ?
+              investissement: {
+                [anneePrecedente]: '1'
+              },
+              categorie: {
+                [anneePrecedente]:
+                  entreprise.categorie === 'PME' ? 'pme' : 'autre'
+              },
+              articles: [articleId]
+            }
+          } else {
+            body.titres[titre.id].articles.push(articleId)
+          }
+
+          if (
+            !Object.prototype.hasOwnProperty.call(body.communes, commune.id)
+          ) {
+            body.communes[commune.id] = { articles: [articleId] }
+          } else {
+            body.communes[commune.id].articles.push(articleId)
+          }
+        }
+      }
+    }
+  }
+
+  return body
 }
 
 export const fiscalite = async (
@@ -60,95 +163,7 @@ export const fiscalite = async (
       user
     )
 
-    const body: OpenfiscaRequest = {
-      articles: {},
-      titres: {},
-      communes: {}
-    }
-
-    for (const activite of activites) {
-      const titre = titres.find(({ id }) => id === activite.titreId)
-
-      if (!titre) {
-        throw new Error(`le titre ${activite.titreId} n’est pas chargé`)
-      }
-
-      if (!titre.substances) {
-        throw new Error(
-          `les substances du titre ${activite.titreId} ne sont pas chargées`
-        )
-      }
-
-      if (titre.substances.length > 0 && activite.contenu) {
-        // TODO Laure, on fait bien les calculs que sur la substance principale ?
-        const mainSubstance = titre.substances[0]
-        const production = activite.contenu.substancesFiscales[mainSubstance.id]
-
-        if (typeof production === 'number' && production > 0) {
-          if (!titre.communes) {
-            throw new Error(
-              `les communes du titre ${titre.id} ne sont pas chargées`
-            )
-          }
-
-          const surfaceTotale = titre.communes.reduce(
-            (value, commune) => value + (commune.surface ?? 0),
-            0
-          )
-
-          for (const commune of titre.communes) {
-            const articleId = `${titre.id}-${mainSubstance.id}-${commune.id}`
-
-            body.articles[articleId] = {
-              surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
-              surface_totale: { [anneePrecedente]: surfaceTotale },
-              // TODO Sandra, substance
-              quantite_aurifere_kg: { [anneePrecedente]: production },
-              redevance_communale_des_mines_aurifere_kg: {
-                [annee]: null
-              },
-              redevance_departementale_des_mines_aurifere_kg: {
-                [annee]: null
-              }
-              // TODO taxe guyane
-              // TODO Sandra - elle ne fonctionne pas via OPENFISCA
-              // TODO Laure - on calcule cette taxe que pour les titres Guyannais ?
-            }
-
-            if (!Object.prototype.hasOwnProperty.call(body.titres, titre.id)) {
-              body.titres[titre.id] = {
-                commune_principale_exploitation: {
-                  [anneePrecedente]: commune.id
-                },
-                operateur: {
-                  // TODO Sandra : ça sert à quoi ?
-                  [anneePrecedente]: entreprise.nom
-                },
-                // TODO Sandra, ça vient d’où ?
-                investissement: {
-                  [anneePrecedente]: '1'
-                },
-                categorie: {
-                  [anneePrecedente]:
-                    entreprise.categorie === 'PME' ? 'pme' : 'autre'
-                },
-                articles: [articleId]
-              }
-            } else {
-              body.titres[titre.id].articles.push(articleId)
-            }
-
-            if (
-              !Object.prototype.hasOwnProperty.call(body.communes, commune.id)
-            ) {
-              body.communes[commune.id] = { articles: [articleId] }
-            } else {
-              body.communes[commune.id].articles.push(articleId)
-            }
-          }
-        }
-      }
-    }
+    const body = bodyBuilder(activites, titres, annee, entreprise)
 
     if (Object.keys(body.articles).length > 0) {
       const result = await apiOpenfiscaFetch(body)
