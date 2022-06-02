@@ -69,7 +69,6 @@ const tables = [
     name: 'substances__substances_legales',
     orderBy: ['substance_id', 'substance_legale_id']
   },
-  { name: 'substances_fiscales', orderBy: ['id'] },
   { name: 'substances_legales', orderBy: ['id'] },
   { name: 'substances_legales_codes', orderBy: ['id'] },
   { name: 'titres', orderBy: ['id'] },
