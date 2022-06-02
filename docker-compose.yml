@@ -1,11 +1,15 @@
 version: '3'
 
 services:
+  openfisca:
+    image: caminofr/camino-openfisca:${CAMINO_TAG}
+    restart: unless-stopped
   api:
     container_name: camino_api_app
     image: caminofr/camino-api:${CAMINO_TAG}
     depends_on:
       - db
+      - openfisca
     environment:
       APPLICATION_VERSION: ${CAMINO_TAG}
       VIRTUAL_HOST: ${API_HOST}
