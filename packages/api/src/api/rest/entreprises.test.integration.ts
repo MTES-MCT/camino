@@ -1,4 +1,13 @@
+import { dbManager } from '../../../tests/db-manager'
 import { restCall } from '../../../tests/_utils'
+
+beforeAll(async () => {
+  await dbManager.populateDb()
+})
+
+afterAll(async () => {
+  await dbManager.closeKnex()
+})
 
 describe('fiscalite', () => {
   test('un utilisateur defaut n’a pas les droits', async () => {
