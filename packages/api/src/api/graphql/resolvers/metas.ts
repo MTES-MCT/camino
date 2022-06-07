@@ -330,7 +330,7 @@ const demarcheEtapesTypesGet = async (
       etapesTypes
     )
   } else {
-    etapesTypes.filter(etapeType =>
+    etapesTypes = etapesTypes.filter(etapeType =>
       etapeTypeIsValidCheck(
         etapeType,
         date,

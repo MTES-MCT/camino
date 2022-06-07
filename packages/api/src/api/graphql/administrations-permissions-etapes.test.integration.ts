@@ -119,7 +119,7 @@ describe('Visibilité des étapes', () => {
 })
 
 describe('Création des étapes', () => {
-  test.only.each`
+  test.each`
     administrationId
     ${'ope-onf-973-01'}
     ${'min-mtes-dgaln-01'}
