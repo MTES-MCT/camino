@@ -4,8 +4,6 @@ import { IUtilisateur } from '../../../types'
 
 import { knex } from '../../../knex'
 
-import { permissionCheck } from '../../../business/permission'
-
 import Administrations from '../../models/administrations'
 import Utilisateurs from '../../models/utilisateurs'
 import Titres from '../../models/titres'
@@ -15,6 +13,7 @@ import { utilisateursQueryModify } from './utilisateurs'
 import { administrationsActivitesTypesEmailsQueryModify } from './administrations-activites-types-emails'
 import Departements from '../../models/departements'
 import ActivitesTypes from '../../models/activites-types'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const departementsQuery = (
   administrationsIds: string[],

@@ -4,8 +4,6 @@ import { IUtilisateur } from '../../../types'
 
 import { knex } from '../../../knex'
 
-import { permissionCheck } from '../../../business/permission'
-
 import Entreprises from '../../models/entreprises'
 import Utilisateurs from '../../models/utilisateurs'
 import Titres from '../../models/titres'
@@ -14,6 +12,7 @@ import Documents from '../../models/documents'
 import { titresQueryModify } from './titres'
 import { utilisateursQueryModify } from './utilisateurs'
 import { documentsQueryModify } from './documents'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 // import fileCreate from '../../../tools/file-create'
 // import { format } from 'sql-formatter'

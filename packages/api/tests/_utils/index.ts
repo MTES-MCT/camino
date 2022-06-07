@@ -3,7 +3,7 @@ import path from 'path'
 import jwt from 'jsonwebtoken'
 import request from 'supertest'
 
-import { Index, IPermissionId, IUtilisateur } from '../../src/types'
+import { Index, IUtilisateur } from '../../src/types'
 
 import { app } from '../app'
 import {
@@ -16,6 +16,7 @@ import {
   Administrations
 } from 'camino-common/src/administrations'
 import dateFormat from 'dateformat'
+import { PermissionId } from 'camino-common/src/permissions'
 
 const queryImport = (nom: string) =>
   fs
@@ -31,7 +32,7 @@ const graphQLCall = async (
   variables: Index<
     string | boolean | Index<string | boolean | Index<string>[] | any>
   >,
-  permissionId?: IPermissionId,
+  permissionId?: PermissionId,
   administrationId?: string
 ) => {
   const req = request(app).post('/').send({ query, variables })
@@ -39,7 +40,7 @@ const graphQLCall = async (
   return cookiesSet(req, permissionId, administrationId)
 }
 
-const restUploadCall = async (permissionId?: IPermissionId) => {
+const restUploadCall = async (permissionId?: PermissionId) => {
   const req = request(app).post('/televersement')
 
   return cookiesSet(req, permissionId)
@@ -47,7 +48,7 @@ const restUploadCall = async (permissionId?: IPermissionId) => {
 
 export const restCall = async (
   path: string,
-  permissionId: IPermissionId,
+  permissionId: PermissionId,
   administrationId?: AdministrationId
 ): Promise<request.Test> => {
   const req = request(app).get(path)
@@ -57,7 +58,7 @@ export const restCall = async (
 
 const cookiesSet = async (
   req: request.Test,
-  permissionId?: IPermissionId,
+  permissionId?: PermissionId,
   administrationId?: string
 ): Promise<request.Test> => {
   let token
@@ -73,7 +74,7 @@ const cookiesSet = async (
 }
 
 const userTokenGenerate = async (
-  permissionId: IPermissionId,
+  permissionId: PermissionId,
   administrationId?: string
 ) => {
   let id = 'super'

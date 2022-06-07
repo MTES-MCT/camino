@@ -2,7 +2,6 @@ import { dbManager } from '../../../tests/db-manager'
 import { graphQLCall, queryImport } from '../../../tests/_utils/index'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
 import { titreCreate } from '../../database/queries/titres'
-import { IPermissionId } from '../../types'
 import { titreEtapePropsIds } from '../../business/utils/titre-etape-heritage-props-find'
 import Titres from '../../database/models/titres'
 import TitresTypesDemarchesTypesEtapesTypes from '../../database/models/titres-types--demarches-types-etapes-types'
@@ -13,6 +12,7 @@ import {
   ADMINISTRATION_IDS,
   Administrations
 } from 'camino-common/src/administrations'
+import { PermissionId } from 'camino-common/src/permissions'
 
 jest.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -83,9 +83,9 @@ const demarcheCreate = async () => {
 describe('etapeCreer', () => {
   const etapeCreerQuery = queryImport('titre-etape-creer')
 
-  test.each([undefined, 'editeur' as IPermissionId])(
+  test.each([undefined, 'editeur' as PermissionId])(
     'ne peut pas créer une étape (utilisateur %s)',
-    async (permissionId: IPermissionId | undefined) => {
+    async (permissionId: PermissionId | undefined) => {
       const res = await graphQLCall(
         etapeCreerQuery,
         { etape: { typeId: '', statutId: '', titreDemarcheId: '', date: '' } },

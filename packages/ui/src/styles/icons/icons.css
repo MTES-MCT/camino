@@ -48,7 +48,8 @@
 }
 
 .icon-close {
-  background-image: svg-load('./svgs/24-close.svg',
+  background-image: svg-load(
+    './svgs/24-close.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -60,7 +61,8 @@
 .btn-flash .icon-close,
 .btn-flash:hover .icon-close,
 .btn-alt:hover .icon-close {
-  background-image: svg-load('./svgs/24-close.svg',
+  background-image: svg-load(
+    './svgs/24-close.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -74,9 +76,7 @@
 }
 
 .icon-plus {
-  background-image: svg-load('./svgs/24-plus.svg',
-    fill='#666'
-  );
+  background-image: svg-load('./svgs/24-plus.svg', fill= '#666');
 }
 
 .btn-alt .icon-plus,
@@ -84,13 +84,12 @@
 .btn:hover .icon-plus,
 .btn-alt:hover .icon-plus,
 .btn-border:hover .icon-plus {
-  background-image: svg-load('./svgs/24-plus.svg',
-    fill='white'
-  );
+  background-image: svg-load('./svgs/24-plus.svg', fill= 'white');
 }
 
 .icon-check {
-  background-image: svg-load('./svgs/24-check.svg',
+  background-image: svg-load(
+    './svgs/24-check.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -100,7 +99,8 @@
 }
 
 .btn:hover .icon-check {
-  background-image: svg-load('./svgs/24-check.svg',
+  background-image: svg-load(
+    './svgs/24-check.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -110,27 +110,30 @@
 }
 
 .icon-refresh {
-  background-image: svg-load('./svgs/24-refresh.svg',
-  fill=none,
-  stroke= '#666',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
+  background-image: svg-load(
+    './svgs/24-refresh.svg',
+    fill=none,
+    stroke= '#666',
+    stroke-linecap=round,
+    stroke-linejoin=round,
+    stroke-width=1.25px
   );
 }
 
 .btn:hover .icon-refresh {
-  background-image: svg-load('./svgs/24-refresh.svg',
-  fill=none,
-  stroke= 'white',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
+  background-image: svg-load(
+    './svgs/24-refresh.svg',
+    fill=none,
+    stroke= 'white',
+    stroke-linecap=round,
+    stroke-linejoin=round,
+    stroke-width=1.25px
   );
 }
 
 .icon-cross {
-  background-image: svg-load('./svgs/24-cross.svg',
+  background-image: svg-load(
+    './svgs/24-cross.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -140,7 +143,8 @@
 }
 
 .btn:hover .icon-cross {
-  background-image: svg-load('./svgs/24-cross.svg',
+  background-image: svg-load(
+    './svgs/24-cross.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -150,7 +154,8 @@
 }
 
 .icon-square {
-  background-image: svg-load('./svgs/24-square.svg',
+  background-image: svg-load(
+    './svgs/24-square.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -160,7 +165,8 @@
 }
 
 .btn:hover .icon-square {
-  background-image: svg-load('./svgs/24-square.svg',
+  background-image: svg-load(
+    './svgs/24-square.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -170,48 +176,37 @@
 }
 
 .icon-minus {
-  background-image: svg-load('./svgs/24-minus.svg',
-    fill='#666'
-  );
+  background-image: svg-load('./svgs/24-minus.svg', fill= '#666');
 }
 
 .btn:hover .icon-minus,
 .btn-border:hover .icon-minus {
-  background-image: svg-load('./svgs/24-minus.svg',
-    fill='white'
-  );
+  background-image: svg-load('./svgs/24-minus.svg', fill= 'white');
 }
 
 .icon-chevron-b {
-  background-image: svg-load('./svgs/24-chevron-b.svg',
-    fill='#666'
-  );
+  background-image: svg-load('./svgs/24-chevron-b.svg', fill= '#666');
 }
 
 .btn-border:hover .icon-chevron-b,
 .btn:hover .icon-chevron-b,
 .btn-alt:hover .icon-chevron-b {
-  background-image: svg-load('./svgs/24-chevron-b.svg',
-    fill='white'
-  );
+  background-image: svg-load('./svgs/24-chevron-b.svg', fill= 'white');
 }
 
 .icon-chevron-t {
-  background-image: svg-load('./svgs/24-chevron-t.svg',
-    fill='#666'
-  );
+  background-image: svg-load('./svgs/24-chevron-t.svg', fill= '#666');
 }
 
 .btn-border:hover .icon-chevron-t,
 .btn:hover .icon-chevron-t,
 .btn-alt:hover .icon-chevron-t {
-  background-image: svg-load('./svgs/24-chevron-t.svg',
-    fill='white'
-  );
+  background-image: svg-load('./svgs/24-chevron-t.svg', fill= 'white');
 }
 
 .icon-file {
-  background-image: svg-load('./svgs/16-file.svg',
+  background-image: svg-load(
+    './svgs/16-file.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -221,7 +216,8 @@
 }
 
 .icon-file-plus {
-  background-image: svg-load('./svgs/24-file-plus.svg',
+  background-image: svg-load(
+    './svgs/24-file-plus.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -231,7 +227,8 @@
 }
 
 .btn:hover .icon-file-plus {
-  background-image: svg-load('./svgs/24-file-plus.svg',
+  background-image: svg-load(
+    './svgs/24-file-plus.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -241,7 +238,8 @@
 }
 
 .icon-file-link {
-  background-image: svg-load('./svgs/24-file-link.svg',
+  background-image: svg-load(
+    './svgs/24-file-link.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -251,7 +249,8 @@
 }
 
 .btn:hover .icon-file-link {
-  background-image: svg-load('./svgs/24-file-link.svg',
+  background-image: svg-load(
+    './svgs/24-file-link.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -261,7 +260,8 @@
 }
 
 .icon-unlink {
-  background-image: svg-load('./svgs/24-unlink.svg',
+  background-image: svg-load(
+    './svgs/24-unlink.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -271,7 +271,8 @@
 }
 
 .btn:hover .icon-unlink {
-  background-image: svg-load('./svgs/24-unlink.svg',
+  background-image: svg-load(
+    './svgs/24-unlink.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -281,7 +282,8 @@
 }
 
 .icon-file-chevron-b {
-  background-image: svg-load('./svgs/24-file-chevron-b.svg',
+  background-image: svg-load(
+    './svgs/24-file-chevron-b.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -292,7 +294,8 @@
 
 .btn-border:hover .icon-file-chevron-b,
 .btn-alt:hover .icon-file-chevron-b {
-  background-image: svg-load('./svgs/24-file-chevron-b.svg',
+  background-image: svg-load(
+    './svgs/24-file-chevron-b.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -302,7 +305,8 @@
 }
 
 .icon-file-chevron-t {
-  background-image: svg-load('./svgs/24-file-chevron-t.svg',
+  background-image: svg-load(
+    './svgs/24-file-chevron-t.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -313,7 +317,8 @@
 
 .btn-border:hover .icon-file-chevron-t,
 .btn-alt:hover .icon-file-chevron-t {
-  background-image: svg-load('./svgs/24-file-chevron-t.svg',
+  background-image: svg-load(
+    './svgs/24-file-chevron-t.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -323,20 +328,17 @@
 }
 
 .icon-download {
-  background-image: svg-load('./svgs/24-download.svg',
-    fill='#666'
-  );
+  background-image: svg-load('./svgs/24-download.svg', fill= '#666');
 }
 
 .btn-border:hover .icon-download,
 .btn-alt:hover .icon-download {
-  background-image: svg-load('./svgs/24-download.svg',
-    fill='white'
-  );
+  background-image: svg-load('./svgs/24-download.svg', fill= 'white');
 }
 
 .icon-view {
-  background-image: svg-load('./svgs/24-view.svg',
+  background-image: svg-load(
+    './svgs/24-view.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -346,7 +348,8 @@
 }
 
 .icon-link {
-  background-image: svg-load('./svgs/24-link.svg',
+  background-image: svg-load(
+    './svgs/24-link.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -356,7 +359,8 @@
 }
 
 .btn-border:hover .icon-link {
-  background-image: svg-load('./svgs/24-link.svg',
+  background-image: svg-load(
+    './svgs/24-link.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -366,7 +370,8 @@
 }
 
 .icon-login {
-  background-image: svg-load('./svgs/24-login.svg',
+  background-image: svg-load(
+    './svgs/24-login.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -376,7 +381,8 @@
 }
 
 .btn-alt:hover .icon-login {
-  background-image: svg-load('./svgs/24-login.svg',
+  background-image: svg-load(
+    './svgs/24-login.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -386,8 +392,9 @@
 }
 
 .icon-user {
-  background-image: svg-load('./svgs/24-user.svg',
-    fill='#666',
+  background-image: svg-load(
+    './svgs/24-user.svg',
+    fill= '#666',
     stroke-linecap=round,
     stroke-linejoin=round
   );
@@ -395,7 +402,8 @@
 
 .btn-border:hover .icon-user,
 .active .btn-border .icon-user {
-  background-image: svg-load('./svgs/24-user.svg',
+  background-image: svg-load(
+    './svgs/24-user.svg',
     fill=white,
     stroke-linecap=round,
     stroke-linejoin=round
@@ -403,20 +411,17 @@
 }
 
 .icon-menu {
-  background-image: svg-load('./svgs/24-menu.svg',
-    fill='#666'
-  );
+  background-image: svg-load('./svgs/24-menu.svg', fill= '#666');
 }
 
 .btn-border:hover .icon-menu,
 .active .btn-border .icon-menu {
-  background-image: svg-load('./svgs/24-menu.svg',
-    fill='white'
-  );
+  background-image: svg-load('./svgs/24-menu.svg', fill= 'white');
 }
 
 .icon-pencil {
-  background-image: svg-load('./svgs/24-pencil.svg',
+  background-image: svg-load(
+    './svgs/24-pencil.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -429,7 +434,8 @@
 .btn:hover .icon-pencil,
 .btn-alt:hover .icon-pencil,
 .btn-border:hover .icon-pencil {
-  background-image: svg-load('./svgs/24-pencil.svg',
+  background-image: svg-load(
+    './svgs/24-pencil.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -439,7 +445,8 @@
 }
 
 .icon-at {
-  background-image: svg-load('./svgs/24-at.svg',
+  background-image: svg-load(
+    './svgs/24-at.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -449,7 +456,8 @@
 }
 
 .btn-alt:hover .icon-at {
-  background-image: svg-load('./svgs/24-at.svg',
+  background-image: svg-load(
+    './svgs/24-at.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -459,7 +467,8 @@
 }
 
 .icon-key {
-  background-image: svg-load('./svgs/24-key.svg',
+  background-image: svg-load(
+    './svgs/24-key.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -469,7 +478,8 @@
 }
 
 .btn-alt:hover .icon-key {
-  background-image: svg-load('./svgs/24-key.svg',
+  background-image: svg-load(
+    './svgs/24-key.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -479,7 +489,8 @@
 }
 
 .icon-trash {
-  background-image: svg-load('./svgs/24-trash.svg',
+  background-image: svg-load(
+    './svgs/24-trash.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -491,7 +502,8 @@
 .btn:hover .icon-trash,
 .btn-alt:hover .icon-trash,
 .btn-border:hover .icon-trash {
-  background-image: svg-load('./svgs/24-trash.svg',
+  background-image: svg-load(
+    './svgs/24-trash.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -511,33 +523,26 @@
 }
 
 .icon-globe {
-  background-image: svg-load('./svgs/globe-3.svg',
-    fill='#666'
-  );
+  background-image: svg-load('./svgs/globe-3.svg', fill= '#666');
 }
 
 .span-tab .icon-globe,
 .btn-tab:hover .icon-globe {
-  background-image: svg-load('./svgs/globe-3.svg',
-    fill='white'
-  );
+  background-image: svg-load('./svgs/globe-3.svg', fill= 'white');
 }
 
 .icon-list {
-  background-image: svg-load('./svgs/list-bullets.svg',
-    fill='#666'
-  );
+  background-image: svg-load('./svgs/list-bullets.svg', fill= '#666');
 }
 
 .span-tab .icon-list,
 .btn-tab:hover .icon-list {
-  background-image: svg-load('./svgs/list-bullets.svg',
-    fill='white'
-  );
+  background-image: svg-load('./svgs/list-bullets.svg', fill= 'white');
 }
 
 .icon-map {
-  background-image: svg-load('./svgs/map-pin-2.svg',
+  background-image: svg-load(
+    './svgs/map-pin-2.svg',
     fill=none,
     stroke= '#76b6bd',
     stroke-linecap=round,
@@ -547,7 +552,8 @@
 }
 
 .icon-dashboard {
-  background-image: svg-load('./svgs/window-speedtest.svg',
+  background-image: svg-load(
+    './svgs/window-speedtest.svg',
     fill=none,
     stroke= '#76b6bd',
     stroke-linecap=round,
@@ -557,7 +563,8 @@
 }
 
 .icon-api {
-  background-image: svg-load('./svgs/cloud-setting.svg',
+  background-image: svg-load(
+    './svgs/cloud-setting.svg',
     fill=none,
     stroke= '#76b6bd',
     stroke-linecap=round,
@@ -567,7 +574,8 @@
 }
 
 .icon-user-check {
-  background-image: svg-load('./svgs/business-check.svg',
+  background-image: svg-load(
+    './svgs/business-check.svg',
     fill=none,
     stroke= '#76b6bd',
     stroke-linecap=round,
@@ -577,7 +585,8 @@
 }
 
 .icon-ngo {
-  background-image: svg-load('./svgs/group-global.svg',
+  background-image: svg-load(
+    './svgs/group-global.svg',
     fill=none,
     stroke= '#76b6bd',
     stroke-linecap=round,
@@ -587,7 +596,8 @@
 }
 
 .icon-business {
-  background-image: svg-load('./svgs/building-2.svg',
+  background-image: svg-load(
+    './svgs/building-2.svg',
     fill=none,
     stroke= '#76b6bd',
     stroke-linecap=round,
@@ -597,46 +607,35 @@
 }
 
 .icon-markers-clusters {
-  background-image: svg-load('./svgs/24-markers-grouped.svg',
-    fill='#666'
-  );
+  background-image: svg-load('./svgs/24-markers-grouped.svg', fill= '#666');
 }
 
 .icon-markers-markers {
-  background-image: svg-load('./svgs/24-markers-ungrouped.svg',
-    fill='#666'
-  );
+  background-image: svg-load('./svgs/24-markers-ungrouped.svg', fill= '#666');
 }
 
 .icon-markers-none {
-  background-image: svg-load('./svgs/24-markers-none.svg',
-    fill='#666'
-  );
+  background-image: svg-load('./svgs/24-markers-none.svg', fill= '#666');
 }
 
 .active .icon-markers-clusters,
-.btn-border:hover .icon-markers-clusters{
-  background-image: svg-load('./svgs/24-markers-grouped.svg',
-    fill='white'
-  );
+.btn-border:hover .icon-markers-clusters {
+  background-image: svg-load('./svgs/24-markers-grouped.svg', fill= 'white');
 }
 
 .active .icon-markers-markers,
-.btn-border:hover .icon-markers-markers{
-  background-image: svg-load('./svgs/24-markers-ungrouped.svg',
-    fill='white'
-  );
+.btn-border:hover .icon-markers-markers {
+  background-image: svg-load('./svgs/24-markers-ungrouped.svg', fill= 'white');
 }
 
 .active .icon-markers-none,
-.btn-border:hover .icon-markers-none{
-  background-image: svg-load('./svgs/24-markers-none.svg',
-    fill='white'
-  );
+.btn-border:hover .icon-markers-none {
+  background-image: svg-load('./svgs/24-markers-none.svg', fill= 'white');
 }
 
 .icon-pattern {
-  background-image: svg-load('./svgs/24-pattern.svg',
+  background-image: svg-load(
+    './svgs/24-pattern.svg',
     fill= '#666',
     stroke=none,
     stroke-linecap=round,
@@ -646,8 +645,9 @@
 }
 
 .active .icon-pattern,
-.btn-border:hover .icon-pattern{
-  background-image: svg-load('./svgs/24-pattern.svg',
+.btn-border:hover .icon-pattern {
+  background-image: svg-load(
+    './svgs/24-pattern.svg',
     fill= 'white',
     stroke=none,
     stroke-linecap=round,
@@ -657,7 +657,8 @@
 }
 
 .icon-window-link {
-  background-image: svg-load('./svgs/24-window-link.svg',
+  background-image: svg-load(
+    './svgs/24-window-link.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -667,7 +668,8 @@
 }
 
 .btn-alt:hover .icon-window-link {
-  background-image: svg-load('./svgs/24-window-link.svg',
+  background-image: svg-load(
+    './svgs/24-window-link.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -677,7 +679,8 @@
 }
 
 .icon-move-down {
-  background-image: svg-load('./svgs/24-move-down.svg',
+  background-image: svg-load(
+    './svgs/24-move-down.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -687,7 +690,8 @@
 }
 
 .btn-border:hover .icon-move-down {
-  background-image: svg-load('./svgs/24-move-down.svg',
+  background-image: svg-load(
+    './svgs/24-move-down.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -697,7 +701,8 @@
 }
 
 .icon-move-up {
-  background-image: svg-load('./svgs/24-move-up.svg',
+  background-image: svg-load(
+    './svgs/24-move-up.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -707,7 +712,8 @@
 }
 
 .btn-border:hover .icon-move-up {
-  background-image: svg-load('./svgs/24-move-up.svg',
+  background-image: svg-load(
+    './svgs/24-move-up.svg',
     fill=none,
     stroke= 'white',
     stroke-linecap=round,
@@ -717,7 +723,8 @@
 }
 
 .icon-announcement {
-  background-image: svg-load('./svgs/48-announcement.svg',
+  background-image: svg-load(
+    './svgs/48-announcement.svg',
     fill=none,
     stroke= '#666',
     stroke-linecap=round,
@@ -727,17 +734,15 @@
 }
 
 .icon-help {
-  background-image: svg-load('./svgs/info.svg',
+  background-image: svg-load(
+    './svgs/info.svg',
     fill= '#666',
     stroke-width=1.25px
   );
 }
 
-
 .btn-alt:hover .icon-help {
-  background-image: svg-load('./svgs/info.svg',
-  stroke-width=1.25px
-  );
+  background-image: svg-load('./svgs/info.svg', stroke-width=1.25px);
 }
 
 .icon-map-legend {
@@ -747,25 +752,33 @@
 }
 
 .icon-map-legend-sdom-zone-0 {
-  background-image: svg-load('./svgs/map-legend-sdom-zone.svg',
-    fill='#0000ff'
+  background-image: svg-load(
+    './svgs/map-legend-sdom-zone.svg',
+    fill= '#0000ff'
   );
 }
 
 .icon-map-legend-sdom-zone-0-potentielle {
-  background-image: svg-load('./svgs/map-legend-sdom-zone.svg',
-  fill='url(#texture_diagonal)'
+  background-image: svg-load(
+    './svgs/map-legend-sdom-zone.svg',
+    fill= 'url(#texture_diagonal)'
   );
 }
 
 .icon-map-legend-sdom-zone-1 {
-  background-image: svg-load('./svgs/map-legend-sdom-zone.svg',
-  fill='#00ff7f'
+  background-image: svg-load(
+    './svgs/map-legend-sdom-zone.svg',
+    fill= '#00ff7f'
   );
 }
 
 .icon-map-legend-sdom-zone-2 {
-  background-image: svg-load('./svgs/map-legend-sdom-zone.svg',
-  fill='#ffaa00'
+  background-image: svg-load(
+    './svgs/map-legend-sdom-zone.svg',
+    fill= '#ffaa00'
   );
+}
+
+.icon-error-warning {
+  background-image: svg-load('./svgs/24-error-warning.svg', fill= '#ffaa00');
 }

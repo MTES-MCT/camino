@@ -13,7 +13,6 @@ import {
   utilisateurTitreCreate
 } from '../../../database/queries/utilisateurs'
 import { titreDemandeEntreprisesGet } from '../../../database/queries/entreprises'
-import { permissionCheck } from '../../../business/permission'
 import { domaineGet, etapeTypeGet } from '../../../database/queries/metas'
 import { titreCreate, titreGet } from '../../../database/queries/titres'
 import { titreDemarcheCreate } from '../../../database/queries/titres-demarches'
@@ -24,6 +23,7 @@ import titreDemarcheUpdateTask from '../../../business/titre-demarche-update'
 import titreEtapeUpdateTask from '../../../business/titre-etape-update'
 import { userSuper } from '../../../database/user-super'
 import { specifiquesGet } from './titres-etapes'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const titreDemandeCreer = async (
   { titreDemande }: { titreDemande: ITitreDemande },

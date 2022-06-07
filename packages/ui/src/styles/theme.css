@@ -308,8 +308,4 @@ h6.color {
     height: calc(100% - 8 * var(--unit));
     flex: 1 1 auto;
   }
-
-  /* stylelint-disable-next-line block-no-empty */
-  .loaders {
-  }
 }

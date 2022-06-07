@@ -1,6 +1,6 @@
 import { IUtilisateur, IUtilisateurCreation } from '../../types'
-import { permissionCheck } from '../../business/permission'
 import { emailCheck } from '../../tools/email-check'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const utilisateurEditionCheck = (
   utilisateur: IUtilisateur | IUtilisateurCreation

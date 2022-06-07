@@ -1,135 +1,78 @@
 import fetch from 'node-fetch'
 
-import errorLog from '../error-log'
+type InputAttribute =
+  | 'quantite_aurifere_kg'
+  | 'surface_communale'
+  | 'surface_totale'
+type OutputAttribute =
+  | 'redevance_communale_des_mines_aurifere_kg'
+  | 'redevance_departementale_des_mines_aurifere_kg'
+  | 'taxe_guyane'
 
-/*
- eslint-disable camelcase
-*/
+type Entries = Partial<
+  Record<InputAttribute, { [annee: string]: number | null }>
+>
+type Request = Partial<Record<OutputAttribute, { [annee: string]: null }>>
 
-interface IOpenfiscaBody {
+type Article = Entries & Request
+
+export interface OpenfiscaRequest {
   articles: {
-    [titreId_substance_commune: string]: {
-      quantite_aurifere_kg?: {
-        [annee: string]: number | null
-      }
-      surface_communale?: {
-        [annee: string]: number | null
-      }
-      redevance_communale_des_mines_aurifere_kg?: {
-        [annee: string]: number | null
-      }
-      surface_totale?: {
-        [annee: string]: number | null
-      }
-    }
+    [titreId_substance_commune: string]: Article
   }
-  titres?: {
+  titres: {
     [titreId: string]: {
-      commune_principale_exploitation: {
+      commune_principale_exploitation?: {
         [annee: string]: string | null
       }
-      operateur: {
+      operateur?: {
         [annee: string]: string | null
       }
       categorie: {
         [annee: string]: string | null
       }
-      investissement: {
+      investissement?: {
         [annee: string]: string | null
       }
       articles: string[]
     }
   }
-  communes?: {
+  communes: {
     [communeId: string]: {
       articles: string[]
     }
   }
 }
 
-const apiOpenfiscaFetch = async (body: IOpenfiscaBody) => {
-  try {
-    const apiOpenfiscaUrl = process.env.API_OPENFISCA_URL
-    if (!apiOpenfiscaUrl) {
-      throw new Error(
-        "impossible de se connecter à l'API Openfisca car la variable d'environnement est absente"
-      )
-    }
-
-    const response = await fetch(`${apiOpenfiscaUrl}/calculate`, {
-      method: 'post',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    })
-
-    const result = (await response.json()) as IOpenfiscaBody
-
-    if (response.status >= 400) {
-      throw result
-    }
-
-    return result
-  } catch (e: any) {
-    const properties = JSON.stringify(body)
-    errorLog(`apiOpenfiscaFetch ${properties}`, e.error || e.message || e)
-
-    return null
+export interface OpenfiscaResponse {
+  articles: {
+    [titreId_substance_commune: string]: Partial<
+      Record<OutputAttribute, { [annee: string]: number }>
+    >
   }
 }
 
-/**
- * Calcule la redevance communale des mines aurifères
- * @param entreprises - liste des entreprises avec leur production d’or net en gramme par année
- * @param annees - liste des années sur lesquelles on souhaite calculer la redevance
- * @return la redevance à payer par entreprise et par année
- */
-const redevanceCommunaleMinesAurifiereGet = async (
-  entreprises: {
-    id: string
-    orNet: { [annee: string]: number }
-  }[],
-  annees: number[]
-) => {
-  // construction de l’objet qui permet de dire à Openfisca ce que l’on souhaite récupérer
-  const redevanceCommunaleDesMinesAurifereKg = annees.reduce((acc, annee) => {
-    acc[annee] = null
-
-    return acc
-  }, {} as { [annee: string]: null })
-
-  const societes: IOpenfiscaBody = entreprises.reduce(
-    (acc, entreprise) => {
-      // conversion des grammes en kilogrammes
-      const orNetKg = Object.keys(entreprise.orNet).reduce(
-        (orNetKg, annee) => ({
-          ...orNetKg,
-          [annee]: entreprise.orNet[annee] / 1000
-        }),
-        {}
-      )
-
-      acc.articles[entreprise.id] = {
-        quantite_aurifere_kg: orNetKg,
-        redevance_communale_des_mines_aurifere_kg:
-          redevanceCommunaleDesMinesAurifereKg
-      }
-
-      return acc
-    },
-    { articles: {} } as IOpenfiscaBody
-  )
-
-  const result = (await apiOpenfiscaFetch(societes))?.articles
-
-  if (result) {
-    return Object.keys(result).reduce((acc, societe) => {
-      acc[societe] = result[societe].redevance_communale_des_mines_aurifere_kg!
-
-      return acc
-    }, {} as { [entrepriseId: string]: { [annee: string]: number | null } })
+export const apiOpenfiscaFetch = async (
+  body: OpenfiscaRequest
+): Promise<OpenfiscaResponse> => {
+  const apiOpenfiscaUrl = process.env.API_OPENFISCA_URL
+  if (!apiOpenfiscaUrl) {
+    throw new Error(
+      "impossible de se connecter à l'API Openfisca car la variable d'environnement est absente"
+    )
   }
 
-  return null
-}
+  const response = await fetch(`${apiOpenfiscaUrl}/calculate`, {
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  })
 
-export { redevanceCommunaleMinesAurifiereGet }
+  const result = (await response.json()) as OpenfiscaResponse
+
+  if (!response.ok) {
+    throw new Error(`Le serveur Openfisca a retourné une erreur: ${result}`)
+  }
+
+  return result
+}

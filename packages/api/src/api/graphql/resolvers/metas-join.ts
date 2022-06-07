@@ -15,8 +15,6 @@ import { debug } from '../../../config/index'
 
 import { userGet } from '../../../database/queries/utilisateurs'
 
-import { permissionCheck } from '../../../business/permission'
-
 import {
   titresTypesGet,
   titreTypeUpdate,
@@ -66,6 +64,7 @@ import {
 import { titresEtapesHeritageContenuUpdate } from '../../../business/processes/titres-etapes-heritage-contenu-update'
 import { GraphQLResolveInfo } from 'graphql'
 import { fieldsBuild } from './_fields-build'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const titresTypes = async (
   _: never,

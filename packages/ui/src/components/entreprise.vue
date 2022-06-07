@@ -156,6 +156,11 @@
       </template>
     </Accordion>
 
+    <div v-if="fiscaliteVisible" class="mb-xxl">
+      <div class="line-neutral width-full mb-xxl" />
+      <h3>Fiscalité</h3>
+      <EntrepriseFiscalite :getFiscaliteEntreprise="getFiscaliteEntreprise" />
+    </div>
     <div v-if="utilisateurs && utilisateurs.length" class="mb-xxl">
       <div class="line-neutral width-full mb-xxl" />
       <h3>Utilisateurs</h3>
@@ -201,11 +206,13 @@ import DocumentAddButton from './document/button-add.vue'
 import Documents from './documents/list.vue'
 import { dateFormat, permissionsCheck } from '../utils/index'
 import EntreprisePermission from './entreprise/permissions.vue'
+import EntrepriseFiscalite from './entreprise/pure-entreprise-fiscalite.vue'
 
 import {
   utilisateursColonnes,
   utilisateursLignesBuild
 } from './utilisateurs/table'
+import { fiscaliteVisible } from 'camino-common/src/fiscalite'
 
 export default {
   components: {
@@ -215,12 +222,25 @@ export default {
     TitresTable,
     DocumentAddButton,
     Documents,
-    EntreprisePermission
+    EntreprisePermission,
+    EntrepriseFiscalite
   },
 
   data() {
     return {
-      utilisateursColonnes
+      utilisateursColonnes,
+      getFiscaliteEntreprise: async () => {
+        const res = await fetch(
+          `/apiUrl/entreprises/${this.entreprise.id}/fiscalite`
+        )
+
+        if (!res.ok) {
+          const response = await res.json()
+          throw new Error(response?.error ?? response)
+        }
+
+        return res.json()
+      }
     }
   },
 
@@ -274,6 +294,10 @@ export default {
         id: this.entreprise.id,
         name: 'entreprise'
       }
+    },
+
+    fiscaliteVisible() {
+      return fiscaliteVisible(this.user, this.entreprise.id)
     }
   },
 

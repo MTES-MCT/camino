@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`construit le corps de la requête pour openFisca avec activités 1`] = `
+Object {
+  "articles": Object {
+    "titre2-auru-97310": Object {
+      "quantite_aurifere_kg": Object {
+        "2021": 39.715,
+      },
+      "redevance_communale_des_mines_aurifere_kg": Object {
+        "2022": null,
+      },
+      "redevance_departementale_des_mines_aurifere_kg": Object {
+        "2022": null,
+      },
+      "surface_communale": Object {
+        "2021": 19805494,
+      },
+      "surface_totale": Object {
+        "2021": 19805494,
+      },
+    },
+  },
+  "communes": Object {
+    "97310": Object {
+      "articles": Array [
+        "titre2-auru-97310",
+      ],
+    },
+  },
+  "titres": Object {
+    "titre2": Object {
+      "articles": Array [
+        "titre2-auru-97310",
+      ],
+      "categorie": Object {
+        "2021": "pme",
+      },
+      "commune_principale_exploitation": Object {
+        "2021": "97310",
+      },
+      "investissement": Object {
+        "2021": "1",
+      },
+      "operateur": Object {
+        "2021": "ma companie",
+      },
+    },
+  },
+}
+`;

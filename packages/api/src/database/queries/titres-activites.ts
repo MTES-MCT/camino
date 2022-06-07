@@ -20,7 +20,7 @@ import {
   titresActivitesQueryModify,
   titresActivitesPropsQueryModify
 } from './permissions/titres-activites'
-import { permissionCheck } from '../../business/permission'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 /**
  * Modifie la requête en fonction des paramètres de filtre
@@ -50,7 +50,8 @@ const titresActivitesFiltersQueryModify = (
     titresTerritoires,
     titresTypesIds,
     titresDomainesIds,
-    titresStatutsIds
+    titresStatutsIds,
+    titresIds
   }: {
     typesIds?: string[] | null
     statutsIds?: string[] | null
@@ -63,6 +64,7 @@ const titresActivitesFiltersQueryModify = (
     titresTypesIds?: string[] | null
     titresDomainesIds?: string[] | null
     titresStatutsIds?: string[] | null
+    titresIds?: string[] | null
   },
   q: QueryBuilder<TitresActivites, TitresActivites[]>
 ) => {
@@ -76,6 +78,10 @@ const titresActivitesFiltersQueryModify = (
 
   if (statutsIds) {
     q.whereIn('titresActivites.statutId', statutsIds)
+  }
+
+  if (titresIds) {
+    q.whereIn('titresActivites.titreId', titresIds)
   }
 
   titresFiltersQueryModify(
@@ -227,7 +233,8 @@ const titresActivitesGet = async (
     titresTerritoires,
     titresTypesIds,
     titresDomainesIds,
-    titresStatutsIds
+    titresStatutsIds,
+    titresIds
   }: {
     page?: number | null
     intervalle?: number | null
@@ -244,6 +251,7 @@ const titresActivitesGet = async (
     titresTypesIds?: string[] | null
     titresDomainesIds?: string[] | null
     titresStatutsIds?: string[] | null
+    titresIds?: string[] | null
   },
   { fields }: { fields?: IFields },
   user: Omit<IUtilisateur, 'permission'> | null | undefined
@@ -262,7 +270,8 @@ const titresActivitesGet = async (
       titresTerritoires,
       titresTypesIds,
       titresDomainesIds,
-      titresStatutsIds
+      titresStatutsIds,
+      titresIds
     },
     q
   )

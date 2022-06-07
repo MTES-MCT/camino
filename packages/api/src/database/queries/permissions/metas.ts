@@ -6,8 +6,6 @@ import { knex } from '../../../knex'
 // import fileCreate from '../../../tools/file-create'
 // import { format } from 'sql-formatter'
 
-import { permissionCheck } from '../../../business/permission'
-
 import AdministrationsTitresTypes from '../../models/administrations-titres-types'
 import Domaines from '../../models/domaines'
 import TitresTypes from '../../models/titres-types'
@@ -23,6 +21,7 @@ import {
   administrationsTitresTypesEtapesTypesModify,
   administrationsTitresQuery
 } from './administrations'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 // récupère les types d'étapes qui ont
 // - les autorisations sur le titre

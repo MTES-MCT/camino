@@ -8,8 +8,8 @@ import {
   titreDemarcheSuppressionSelectQuery,
   titresDemarchesQueryModify
 } from './titres-demarches'
-import { IPermissionId } from '../../../types'
 import TitresEtapes from '../../models/titres-etapes'
+import { PermissionId } from 'camino-common/src/permissions'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -39,7 +39,7 @@ describe('titresDemarchesQueryModify', () => {
         permissionId,
         suppression
       }: {
-        permissionId: IPermissionId | undefined
+        permissionId: PermissionId | undefined
         suppression: boolean
       }) => {
         const titreId = idGenerate()
@@ -93,7 +93,7 @@ describe('titresDemarchesQueryModify', () => {
         permissionId,
         suppression
       }: {
-        permissionId: IPermissionId | undefined
+        permissionId: PermissionId | undefined
         suppression: boolean
       }) => {
         const titreId = idGenerate()

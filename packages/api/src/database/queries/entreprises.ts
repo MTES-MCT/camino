@@ -16,10 +16,10 @@ import { stringSplit } from './_utils'
 import Entreprises from '../models/entreprises'
 import { entreprisesQueryModify } from './permissions/entreprises'
 import EntreprisesTitresTypes from '../models/entreprises-titres-types'
-import { permissionCheck } from '../../business/permission'
 import { fieldsEntreprisesTitresCreationAdd } from './graph/fields-add'
 import { utilisateurGet } from './utilisateurs'
 import { titresCreationQuery } from './permissions/metas'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const entreprisesFiltersQueryModify = (
   {

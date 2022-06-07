@@ -14,6 +14,7 @@ import {
 } from '../api/rest/index'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers'
 import { titresONF } from '../api/rest/titres'
+import { fiscalite } from '../api/rest/entreprises'
 
 const contentTypes = {
   csv: 'text/csv',
@@ -126,6 +127,7 @@ rest.get('/titresONF', restCatcher(titresONF))
 rest.get('/demarches', restDownload(demarches))
 rest.get('/activites', restDownload(activites))
 rest.get('/utilisateurs', restDownload(utilisateurs))
+rest.get('/entreprises/:entrepriseId/fiscalite', restCatcher(fiscalite))
 rest.get('/entreprises', restDownload(entreprises))
 rest.get('/fichiers/:documentId', restDownload(fichier))
 rest.get('/etape/zip/:etapeId', restDownload(etapeTelecharger))

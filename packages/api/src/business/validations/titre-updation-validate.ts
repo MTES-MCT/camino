@@ -1,5 +1,5 @@
 import { ITitre, IUtilisateur } from '../../types'
-import { permissionCheck } from '../permission'
+import { permissionCheck } from 'camino-common/src/permissions'
 
 const titreUpdationValidate = async (
   titreNew: ITitre,
