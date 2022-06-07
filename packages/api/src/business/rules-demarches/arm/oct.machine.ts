@@ -530,27 +530,51 @@ const actionMecanisation = assign<OctARMContext>({
   }
 })
 
-const actionAccepterOuRefuserRDE = [
-  assign<OctARMContext, AccepterRDE | RefuserRDE | RecevoirComplementsRde>({
-    mecanisation: (context, event) => {
-      if (event.franchissements === null || event.franchissements < 1) {
-        throw new Error('cas impossible')
-      }
-      if (isMecanise(context.mecanisation)) {
-        return {
-          ...context.mecanisation,
-          franchissementCoursEau: event.franchissements
-        }
-      }
-
+const actionAccepterOuRefuserRDE = assign<
+  OctARMContext,
+  AccepterRDE | RefuserRDE
+>({
+  mecanisation: (context, event) => {
+    if (event.franchissements === null || event.franchissements < 1) {
+      throw new Error('cas impossible')
+    }
+    if (isMecanise(context.mecanisation)) {
       return {
-        mecanise: true,
-        paiementFraisDossierComplementaireValide: false,
+        ...context.mecanisation,
         franchissementCoursEau: event.franchissements
       }
     }
-  })
-]
+
+    return {
+      mecanise: true,
+      paiementFraisDossierComplementaireValide: false,
+      franchissementCoursEau: event.franchissements
+    }
+  }
+})
+
+const actionRecevoirComplementsRde = assign<
+  OctARMContext,
+  RecevoirComplementsRde
+>({
+  mecanisation: (context, event) => {
+    if (event.franchissements === null) {
+      throw new Error('cas impossible')
+    }
+    if (isMecanise(context.mecanisation)) {
+      return {
+        ...context.mecanisation,
+        franchissementCoursEau: event.franchissements
+      }
+    }
+
+    return {
+      mecanise: true,
+      paiementFraisDossierComplementaireValide: false,
+      franchissementCoursEau: event.franchissements
+    }
+  }
+})
 
 export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
   id: 'oct',
@@ -922,7 +946,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
               on: {
                 RECEVOIR_COMPLEMENTS_RDE: {
                   target: 'enCours',
-                  actions: actionAccepterOuRefuserRDE
+                  actions: actionRecevoirComplementsRde
                 },
                 REFUSER_RDE: {
                   target: 'faite',

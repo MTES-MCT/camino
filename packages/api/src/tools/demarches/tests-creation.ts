@@ -39,30 +39,6 @@ const writeEtapesForTest = async () => {
 
       return (date ?? '') > demarcheDefinition.dateDebut
     })
-    .filter(demarche => {
-      if (
-        [
-          // Trés bizarre
-          'KUjfw8g45vJ8Jgthwkf3YIpN',
-          // rajouter la pfd en prod
-          'rivW6W2OsA2PWIysYGZzd2SO',
-          'SPvat9xMCgLHmN8fMT3k53CT',
-          'gvlDYw1s8d22iMj8F5sM7IAS',
-          'kcJzw0h3dJEwPhSUgDXq0smA',
-          // rde sans franchissement ? soit pas de franchissement lors du mfr, soit pas de rde
-          'FWVRSGQx2IpHjcVj1LwgRf0o',
-          'Dtd3Zuj4m7ZszvUDPoKJi1Of',
-          // reception de complements de rde sans franchissements de cours d'eau (null au lieu de 0 ou plus)
-          'vvxX7ntbBKLCbUf2DqxKuVmf'
-        ].includes(demarche.titreId)
-      ) {
-        console.log(`${demarche.titreId} ne respecte pas le cacoo`)
-
-        return false
-      }
-
-      return true
-    })
     .map((demarche, index) => {
       const etapes: Etape[] =
         demarche?.etapes
