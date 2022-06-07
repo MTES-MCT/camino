@@ -3,6 +3,7 @@ import { ISection, ISectionElement } from '../../types'
 import { objectClone } from '../../tools/index'
 import { sortedDevises } from 'camino-common/src/devise'
 import { UNITES } from 'camino-common/src/unites'
+import { exhaustiveCheck } from '../../tools/exhaustive-type-check'
 
 const titreSectionElementFormat = (element: ISectionElement) => {
   if (element.valeursMetasNom) {
@@ -12,6 +13,9 @@ const titreSectionElementFormat = (element: ISectionElement) => {
         break
       case 'unites':
         element.valeurs = UNITES
+        break
+      default:
+        exhaustiveCheck(element.valeursMetasNom)
     }
 
     delete element.valeursMetasNom

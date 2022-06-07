@@ -17,6 +17,7 @@ import {
 } from 'camino-common/src/substance'
 import { UNITES, Unites } from 'camino-common/src/unites'
 import { sortedDevises } from 'camino-common/src/devise'
+import { exhaustiveCheck } from '../../tools/exhaustive-type-check'
 
 const onlyUnique = <T>(value: T, index: number, self: T[]): boolean => {
   return self.indexOf(value) === index
@@ -67,6 +68,9 @@ const titreActiviteSectionElementsFormat = (
             break
           case 'unites':
             element.valeurs = UNITES
+            break
+          default:
+            exhaustiveCheck(e.valeursMetasNom)
         }
       }
 
