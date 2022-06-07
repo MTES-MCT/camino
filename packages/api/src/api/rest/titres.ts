@@ -9,6 +9,14 @@ import { DOMAINES_IDS } from 'camino-common/src/domaines'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/titresTypesTypes'
 import { ITitre, IUser, ITitreReference } from '../../types'
 import { CommonTitreONF } from 'camino-common/src/titres'
+import {
+  toMachineEtapes,
+  whoIsBlocking
+} from '../../business/rules-demarches/machine-helper'
+import {
+  demarcheDefinitionFind,
+  isDemarcheDefinitionMachine
+} from '../../business/rules-demarches/definitions'
 
 type Send<T = express.Response> = (body?: CommonTitreONF[]) => T
 
@@ -82,18 +90,32 @@ export const titresONF = async (req: express.Request, res: CustomResponse) => {
         const octARM = titre.demarches.find(
           demarche => demarche.typeId === 'oct'
         )
-        if (octARM && !octARM.etapes) {
+
+        if (!octARM) {
+          return null
+        }
+
+        if (!octARM.etapes) {
           throw new Error('les étapes ne sont pas chargées')
         }
 
         const dateCompletudePTMG =
-          octARM?.etapes?.find(etape => etape.typeId === 'mcp')?.date || ''
+          octARM.etapes.find(etape => etape.typeId === 'mcp')?.date || ''
 
         const dateReceptionONF =
-          octARM?.etapes?.find(etape => etape.typeId === 'mcr')?.date || ''
+          octARM.etapes.find(etape => etape.typeId === 'mcr')?.date || ''
 
         const dateCARM =
-          octARM?.etapes?.find(etape => etape.typeId === 'sca')?.date || ''
+          octARM.etapes.find(etape => etape.typeId === 'sca')?.date || ''
+
+        const hasMachine = isDemarcheDefinitionMachine(
+          demarcheDefinitionFind(titre.typeId, octARM.typeId, octARM.etapes)
+        )
+        const blockedByMe: boolean =
+          hasMachine &&
+          whoIsBlocking(toMachineEtapes(octARM.etapes)).includes(
+            ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+          )
 
         return {
           id: titre.id,
@@ -104,7 +126,8 @@ export const titresONF = async (req: express.Request, res: CustomResponse) => {
           titulaires: titre.titulaires,
           dateCompletudePTMG,
           dateReceptionONF,
-          dateCARM
+          dateCARM,
+          enAttenteDeONF: blockedByMe
         }
       })
       .filter(

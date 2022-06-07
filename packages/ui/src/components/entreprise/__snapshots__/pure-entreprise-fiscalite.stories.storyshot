@@ -1,0 +1,332 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Loading 1`] = `
+<div>
+   Cotisations: 
+  <div
+    class="fiscalite-table"
+  >
+    <div>
+      a. Redevance communale:
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      <div
+        class="spinner"
+      />
+    </div>
+    <div>
+      b. Redevance départementale
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      <div
+        class="spinner"
+      />
+    </div>
+    <div>
+      c. Taxe minière sur l’or de Guyane
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      <div
+        class="spinner"
+      />
+    </div>
+    <div>
+      d. Montant total des investissements déduits (1)
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      <div
+        class="spinner"
+      />
+    </div>
+    <div>
+      e. Montant net de taxe minière sur l’or de Guyane (c-d)
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      <div
+        class="spinner"
+      />
+    </div>
+    <div>
+      f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      <div
+        class="spinner"
+      />
+    </div>
+    <div>
+      Somme à payer auprès du comptable (2)
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      <div
+        class="spinner"
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Ok 1`] = `
+<div>
+   Cotisations: 
+  <div
+    class="fiscalite-table"
+  >
+    <div>
+      a. Redevance communale:
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      
+      1 600,07 €
+      
+    </div>
+    <div>
+      b. Redevance départementale
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      
+      330,98 €
+      
+    </div>
+    <div>
+      c. Taxe minière sur l’or de Guyane
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      
+      4 100,03 €
+      
+    </div>
+    <div>
+      d. Montant total des investissements déduits (1)
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      
+      0,00 €
+      
+    </div>
+    <div>
+      e. Montant net de taxe minière sur l’or de Guyane (c-d)
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      
+      4 100,03 €
+      
+    </div>
+    <div>
+      f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      
+      2 259,05 €
+      
+    </div>
+    <div>
+      Somme à payer auprès du comptable (2)
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      
+      8 290,13 €
+      
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite With Error 1`] = `
+<div>
+   Cotisations: 
+  <div
+    class="fiscalite-table"
+  >
+    <div>
+      a. Redevance communale:
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      <div>
+        <div
+          class="tooltip"
+        >
+          <h6
+            class="tooltip-content"
+          >
+            
+            because reasons
+            
+          </h6>
+          <i
+            class="icon-24 icon-error-warning"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      b. Redevance départementale
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      <div>
+        <div
+          class="tooltip"
+        >
+          <h6
+            class="tooltip-content"
+          >
+            
+            because reasons
+            
+          </h6>
+          <i
+            class="icon-24 icon-error-warning"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      c. Taxe minière sur l’or de Guyane
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      <div>
+        <div
+          class="tooltip"
+        >
+          <h6
+            class="tooltip-content"
+          >
+            
+            because reasons
+            
+          </h6>
+          <i
+            class="icon-24 icon-error-warning"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      d. Montant total des investissements déduits (1)
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      <div>
+        <div
+          class="tooltip"
+        >
+          <h6
+            class="tooltip-content"
+          >
+            
+            because reasons
+            
+          </h6>
+          <i
+            class="icon-24 icon-error-warning"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      e. Montant net de taxe minière sur l’or de Guyane (c-d)
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      <div>
+        <div
+          class="tooltip"
+        >
+          <h6
+            class="tooltip-content"
+          >
+            
+            because reasons
+            
+          </h6>
+          <i
+            class="icon-24 icon-error-warning"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      <div>
+        <div
+          class="tooltip"
+        >
+          <h6
+            class="tooltip-content"
+          >
+            
+            because reasons
+            
+          </h6>
+          <i
+            class="icon-24 icon-error-warning"
+          />
+        </div>
+      </div>
+    </div>
+    <div>
+      Somme à payer auprès du comptable (2)
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      <div>
+        <div
+          class="tooltip"
+        >
+          <h6
+            class="tooltip-content"
+          >
+            
+            because reasons
+            
+          </h6>
+          <i
+            class="icon-24 icon-error-warning"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

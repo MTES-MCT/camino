@@ -2,19 +2,32 @@
   <div>
     <div class="desktop-blobs">
       <div class="desktop-blob-2-3">
-        <h1 class="mt-xs mb-m">Tableau de bord ONF</h1>
+        <h1 class="mt-xs mb-xxl">Tableau de bord ONF</h1>
       </div>
     </div>
     <div v-if="status === 'LOADING'" class="loaders fixed p">
       <div class="loader" />
     </div>
-    <TableAuto
-      v-if="status === 'LOADED'"
-      :columns="columns"
-      :rows="onfTitres"
-      :initialSort="{ column: initialColumnId, order: 'asc' }"
-      class="width-full-p"
-    />
+    <div v-if="status === 'LOADED'">
+      <template v-if="onfTitresBloques.length">
+        <div class="line-neutral width-full mb-l"></div>
+        <h3>ARM en attente</h3>
+        <TableAuto
+          class="mb-xxl"
+          :columns="columns.slice(0, 5)"
+          :rows="onfTitresBloques"
+          :initialSort="{ column: initialColumnId, order: 'asc' }"
+        />
+      </template>
+      <div class="line-neutral width-full mb-l"></div>
+      <h3>ARM en cours d’instruction</h3>
+      <TableAuto
+        :columns="columns"
+        :rows="onfTitres"
+        :initialSort="{ column: initialColumnId, order: 'asc' }"
+        class="width-full-p"
+      />
+    </div>
     <Error
       v-if="status === 'ERROR'"
       :message="{
@@ -51,6 +64,7 @@ import { datesDiffInDays } from 'camino-common/src/date'
 
 const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
 const onfTitres = ref<TableAutoRow[]>([])
+const onfTitresBloques = ref<TableAutoRow[]>([])
 const props = defineProps<{
   getOnfTitres: () => Promise<CommonTitreONF[]>
 }>()
@@ -138,7 +152,12 @@ const titresLignesBuild = (
 onMounted(async () => {
   try {
     const titres = await props.getOnfTitres()
-    onfTitres.value.push(...titresLignesBuild(titres))
+    onfTitres.value.push(
+      ...titresLignesBuild(titres.filter(titre => !titre.enAttenteDeONF))
+    )
+    onfTitresBloques.value.push(
+      ...titresLignesBuild(titres.filter(titre => titre.enAttenteDeONF))
+    )
     status.value = 'LOADED'
   } catch (e) {
     console.log('error', e)

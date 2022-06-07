@@ -1,353 +1,570 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Automated Storybook Snapshots Components/PureONFDashboard Loading 1`] = `
-<div
-  displayactivites="true"
->
+<div>
   <div
-    class="desktop-blobs"
+    displayactivites="true"
   >
     <div
-      class="desktop-blob-2-3"
+      class="desktop-blobs"
     >
-      <h1
-        class="mt-xs mb-m"
+      <div
+        class="desktop-blob-2-3"
       >
-        Tableau de bord ONF
-      </h1>
+        <h1
+          class="mt-xs mb-xxl"
+        >
+          Tableau de bord ONF
+        </h1>
+      </div>
     </div>
-  </div>
-  <div
-    class="loaders fixed p"
-  >
     <div
-      class="loader"
-    />
+      class="loaders fixed p"
+    >
+      <div
+        class="loader"
+      />
+    </div>
+    <!--v-if-->
+    <!--v-if-->
   </div>
-  <!--v-if-->
-  <!--v-if-->
 </div>
 `;
 
 exports[`Automated Storybook Snapshots Components/PureONFDashboard Ok 1`] = `
-<div
-  displayactivites="true"
->
+<div>
   <div
-    class="desktop-blobs"
+    displayactivites="true"
   >
     <div
-      class="desktop-blob-2-3"
-    >
-      <h1
-        class="mt-xs mb-m"
-      >
-        Tableau de bord ONF
-      </h1>
-    </div>
-  </div>
-  <!--v-if-->
-  <div
-    class="width-full-p"
-  >
-    <div
-      class="overflow-scroll-x mb"
+      class="desktop-blobs"
     >
       <div
-        class="table"
+        class="desktop-blob-2-3"
       >
-        <div
-          class="tr"
+        <h1
+          class="mt-xs mb-xxl"
         >
-          
-          <div
-            class="th nowrap min-width-8"
-          >
-            <button
-              class="btn-menu full-x p-0"
-            >
-              Nom 
-              <!--v-if-->
-            </button>
-          </div>
-          <div
-            class="th nowrap nowrap min-width-5"
-          >
-            <button
-              class="btn-menu full-x p-0"
-            >
-              Statut 
-              <i
-                class="icon-24 right icon-chevron-b"
-              />
-            </button>
-          </div>
-          <div
-            class="th nowrap min-width-8"
-          >
-            <button
-              class="btn-menu full-x p-0"
-            >
-              Références 
-              <!--v-if-->
-            </button>
-          </div>
-          <div
-            class="th nowrap min-width-10"
-          >
-            <button
-              class="btn-menu full-x p-0"
-            >
-              Titulaires 
-              <!--v-if-->
-            </button>
-          </div>
-          <div
-            class="th nowrap"
-          >
-            <button
-              class="btn-menu full-x p-0"
-            >
-              Date complétude PTMG 
-              <!--v-if-->
-            </button>
-          </div>
-          <div
-            class="th nowrap"
-          >
-            <button
-              class="btn-menu full-x p-0"
-            >
-              Date réception ONF 
-              <!--v-if-->
-            </button>
-          </div>
-          <div
-            class="th nowrap"
-          >
-            <button
-              class="btn-menu full-x p-0"
-            >
-              Date CARM 
-              <!--v-if-->
-            </button>
-          </div>
-          <div
-            class="th nowrap"
-          >
-            <button
-              class="btn-menu full-x p-0"
-            >
-              Délai jour CARM ONF 
-              <!--v-if-->
-            </button>
-          </div>
-          
-        </div>
-        
-        <router-link
-          class="tr tr-link text-decoration-none"
-          to="[object Object]"
-        >
-          
-          <div
-            class="td min-width-8"
-          >
-            <span
-              class="bold"
-            >
-              first-name
-            </span>
-          </div>
-          <div
-            class="td nowrap min-width-5"
-          >
-            <span
-              class="cap-first small bold"
-            >
-              <span
-                class="bg-warning color-bg pill py-xs px-s"
-              >
-                
-                demande initiale
-                
-              </span>
-            </span>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              
-            </ul>
-          </div>
-          <div
-            class="td min-width-10"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                Titulaire1
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td"
-          >
-            <div />
-          </div>
-          <div
-            class="td"
-          >
-            <div />
-          </div>
-          <div
-            class="td"
-          >
-            <div />
-          </div>
-          <div
-            class="td"
-          >
-            <!--v-if-->
-          </div>
-          
-        </router-link>
-        <router-link
-          class="tr tr-link text-decoration-none"
-          to="[object Object]"
-        >
-          
-          <div
-            class="td min-width-8"
-          >
-            <span
-              class="bold"
-            >
-              Second Nom de titre
-            </span>
-          </div>
-          <div
-            class="td nowrap min-width-5"
-          >
-            <span
-              class="cap-first small bold"
-            >
-              <span
-                class="bg-warning color-bg pill py-xs px-s"
-              >
-                
-                demande initiale
-                
-              </span>
-            </span>
-          </div>
-          <div
-            class="td min-width-8"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                ONF : 2010-001
-              </li>
-              <li
-                class="h6"
-              >
-                PTMG : 2010-000
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td min-width-10"
-          >
-            <ul
-              class="list-prefix mb--xs"
-            >
-              
-              <li
-                class="h6"
-              >
-                Titulaire3
-              </li>
-              
-            </ul>
-          </div>
-          <div
-            class="td"
-          >
-            <div>
-              23 / 03 / 2022
-            </div>
-          </div>
-          <div
-            class="td"
-          >
-            <div>
-              24 / 03 / 2022
-            </div>
-          </div>
-          <div
-            class="td"
-          >
-            <div>
-              12 / 04 / 2022
-            </div>
-          </div>
-          <div
-            class="td"
-          >
-            <span
-              class=""
-            >
-              19
-            </span>
-          </div>
-          
-        </router-link>
-        
+          Tableau de bord ONF
+        </h1>
       </div>
     </div>
+    <!--v-if-->
+    <div>
+      
+      <div
+        class="line-neutral width-full mb-l"
+      />
+      <h3>
+        ARM en attente
+      </h3>
+      <div
+        class="mb-xxl"
+      >
+        <div
+          class="overflow-scroll-x mb"
+        >
+          <div
+            class="table"
+          >
+            <div
+              class="tr"
+            >
+              
+              <div
+                class="th nowrap min-width-8"
+              >
+                <button
+                  class="btn-menu full-x p-0"
+                >
+                  Nom 
+                  <!--v-if-->
+                </button>
+              </div>
+              <div
+                class="th nowrap nowrap min-width-5"
+              >
+                <button
+                  class="btn-menu full-x p-0"
+                >
+                  Statut 
+                  <i
+                    class="icon-24 right icon-chevron-b"
+                  />
+                </button>
+              </div>
+              <div
+                class="th nowrap min-width-8"
+              >
+                <button
+                  class="btn-menu full-x p-0"
+                >
+                  Références 
+                  <!--v-if-->
+                </button>
+              </div>
+              <div
+                class="th nowrap min-width-10"
+              >
+                <button
+                  class="btn-menu full-x p-0"
+                >
+                  Titulaires 
+                  <!--v-if-->
+                </button>
+              </div>
+              <div
+                class="th nowrap"
+              >
+                <button
+                  class="btn-menu full-x p-0"
+                >
+                  Date complétude PTMG 
+                  <!--v-if-->
+                </button>
+              </div>
+              
+            </div>
+            
+            <router-link
+              class="tr tr-link text-decoration-none"
+              to="[object Object]"
+            >
+              
+              <div
+                class="td min-width-8"
+              >
+                <span
+                  class="bold"
+                >
+                  first-name
+                </span>
+              </div>
+              <div
+                class="td nowrap min-width-5"
+              >
+                <span
+                  class="cap-first small bold"
+                >
+                  <span
+                    class="bg-warning color-bg pill py-xs px-s"
+                  >
+                    
+                    demande initiale
+                    
+                  </span>
+                </span>
+              </div>
+              <div
+                class="td min-width-8"
+              >
+                <ul
+                  class="list-prefix mb--xs"
+                >
+                  
+                  
+                </ul>
+              </div>
+              <div
+                class="td min-width-10"
+              >
+                <ul
+                  class="list-prefix mb--xs"
+                >
+                  
+                  <li
+                    class="h6"
+                  >
+                    Titulaire1
+                  </li>
+                  
+                </ul>
+              </div>
+              <div
+                class="td"
+              >
+                <div
+                  style="white-space: nowrap;"
+                />
+              </div>
+              
+            </router-link>
+            <router-link
+              class="tr tr-link text-decoration-none"
+              to="[object Object]"
+            >
+              
+              <div
+                class="td min-width-8"
+              >
+                <span
+                  class="bold"
+                >
+                  Second Nom de titre
+                </span>
+              </div>
+              <div
+                class="td nowrap min-width-5"
+              >
+                <span
+                  class="cap-first small bold"
+                >
+                  <span
+                    class="bg-warning color-bg pill py-xs px-s"
+                  >
+                    
+                    demande initiale
+                    
+                  </span>
+                </span>
+              </div>
+              <div
+                class="td min-width-8"
+              >
+                <ul
+                  class="list-prefix mb--xs"
+                >
+                  
+                  <li
+                    class="h6"
+                  >
+                    ONF : 2010-001
+                  </li>
+                  <li
+                    class="h6"
+                  >
+                    PTMG : 2010-000
+                  </li>
+                  
+                </ul>
+              </div>
+              <div
+                class="td min-width-10"
+              >
+                <ul
+                  class="list-prefix mb--xs"
+                >
+                  
+                  <li
+                    class="h6"
+                  >
+                    Titulaire3
+                  </li>
+                  
+                </ul>
+              </div>
+              <div
+                class="td"
+              >
+                <div
+                  style="white-space: nowrap;"
+                >
+                  23 / 03 / 2022
+                </div>
+              </div>
+              
+            </router-link>
+            <router-link
+              class="tr tr-link text-decoration-none"
+              to="[object Object]"
+            >
+              
+              <div
+                class="td min-width-8"
+              >
+                <span
+                  class="bold"
+                >
+                  Quatrième Nom de titre
+                </span>
+              </div>
+              <div
+                class="td nowrap min-width-5"
+              >
+                <span
+                  class="cap-first small bold"
+                >
+                  <span
+                    class="bg-warning color-bg pill py-xs px-s"
+                  >
+                    
+                    demande initiale
+                    
+                  </span>
+                </span>
+              </div>
+              <div
+                class="td min-width-8"
+              >
+                <ul
+                  class="list-prefix mb--xs"
+                >
+                  
+                  <li
+                    class="h6"
+                  >
+                    ONF : 2010-001
+                  </li>
+                  <li
+                    class="h6"
+                  >
+                    PTMG : 2010-000
+                  </li>
+                  
+                </ul>
+              </div>
+              <div
+                class="td min-width-10"
+              >
+                <ul
+                  class="list-prefix mb--xs"
+                >
+                  
+                  <li
+                    class="h6"
+                  >
+                    Titulaire 8
+                  </li>
+                  
+                </ul>
+              </div>
+              <div
+                class="td"
+              >
+                <div
+                  style="white-space: nowrap;"
+                >
+                  23 / 03 / 2022
+                </div>
+              </div>
+              
+            </router-link>
+            
+          </div>
+        </div>
+      </div>
+      
+      <div
+        class="line-neutral width-full mb-l"
+      />
+      <h3>
+        ARM en cours d’instruction
+      </h3>
+      <div
+        class="width-full-p"
+      >
+        <div
+          class="overflow-scroll-x mb"
+        >
+          <div
+            class="table"
+          >
+            <div
+              class="tr"
+            >
+              
+              <div
+                class="th nowrap min-width-8"
+              >
+                <button
+                  class="btn-menu full-x p-0"
+                >
+                  Nom 
+                  <!--v-if-->
+                </button>
+              </div>
+              <div
+                class="th nowrap nowrap min-width-5"
+              >
+                <button
+                  class="btn-menu full-x p-0"
+                >
+                  Statut 
+                  <i
+                    class="icon-24 right icon-chevron-b"
+                  />
+                </button>
+              </div>
+              <div
+                class="th nowrap min-width-8"
+              >
+                <button
+                  class="btn-menu full-x p-0"
+                >
+                  Références 
+                  <!--v-if-->
+                </button>
+              </div>
+              <div
+                class="th nowrap min-width-10"
+              >
+                <button
+                  class="btn-menu full-x p-0"
+                >
+                  Titulaires 
+                  <!--v-if-->
+                </button>
+              </div>
+              <div
+                class="th nowrap"
+              >
+                <button
+                  class="btn-menu full-x p-0"
+                >
+                  Date complétude PTMG 
+                  <!--v-if-->
+                </button>
+              </div>
+              <div
+                class="th nowrap"
+              >
+                <button
+                  class="btn-menu full-x p-0"
+                >
+                  Date réception ONF 
+                  <!--v-if-->
+                </button>
+              </div>
+              <div
+                class="th nowrap"
+              >
+                <button
+                  class="btn-menu full-x p-0"
+                >
+                  Date CARM 
+                  <!--v-if-->
+                </button>
+              </div>
+              <div
+                class="th nowrap"
+              >
+                <button
+                  class="btn-menu full-x p-0"
+                >
+                  Délai jour CARM ONF 
+                  <!--v-if-->
+                </button>
+              </div>
+              
+            </div>
+            
+            <router-link
+              class="tr tr-link text-decoration-none"
+              to="[object Object]"
+            >
+              
+              <div
+                class="td min-width-8"
+              >
+                <span
+                  class="bold"
+                >
+                  third-name
+                </span>
+              </div>
+              <div
+                class="td nowrap min-width-5"
+              >
+                <span
+                  class="cap-first small bold"
+                >
+                  <span
+                    class="bg-warning color-bg pill py-xs px-s"
+                  >
+                    
+                    demande initiale
+                    
+                  </span>
+                </span>
+              </div>
+              <div
+                class="td min-width-8"
+              >
+                <ul
+                  class="list-prefix mb--xs"
+                >
+                  
+                  
+                </ul>
+              </div>
+              <div
+                class="td min-width-10"
+              >
+                <ul
+                  class="list-prefix mb--xs"
+                >
+                  
+                  <li
+                    class="h6"
+                  >
+                    Titulaire1
+                  </li>
+                  
+                </ul>
+              </div>
+              <div
+                class="td"
+              >
+                <div
+                  style="white-space: nowrap;"
+                />
+              </div>
+              <div
+                class="td"
+              >
+                <div
+                  style="white-space: nowrap;"
+                />
+              </div>
+              <div
+                class="td"
+              >
+                <div
+                  style="white-space: nowrap;"
+                />
+              </div>
+              <div
+                class="td"
+              >
+                <!--v-if-->
+              </div>
+              
+            </router-link>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--v-if-->
   </div>
-  <!--v-if-->
 </div>
 `;
 
 exports[`Automated Storybook Snapshots Components/PureONFDashboard With Error 1`] = `
-<div
-  displayactivites="true"
->
+<div>
   <div
-    class="desktop-blobs"
+    displayactivites="true"
   >
     <div
-      class="desktop-blob-2-3"
+      class="desktop-blobs"
     >
-      <h1
-        class="mt-xs mb-m"
+      <div
+        class="desktop-blob-2-3"
       >
-        Tableau de bord ONF
-      </h1>
+        <h1
+          class="mt-xs mb-xxl"
+        >
+          Tableau de bord ONF
+        </h1>
+      </div>
     </div>
-  </div>
-  <!--v-if-->
-  <!--v-if-->
-  <div
-    class="mb p-s color-bg bg-error"
-  >
-    Le serveur est inaccessible, veuillez réessayer plus tard
+    <!--v-if-->
+    <!--v-if-->
+    <div
+      class="mb p-s color-bg bg-error"
+    >
+      Le serveur est inaccessible, veuillez réessayer plus tard
+    </div>
   </div>
 </div>
 `;

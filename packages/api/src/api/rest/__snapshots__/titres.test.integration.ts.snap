@@ -2,9 +2,10 @@
 
 exports[`titresONF teste la récupération des données pour l'ONF 1`] = `
 Object {
-  "dateCARM": "2018-03-10",
-  "dateCompletudePTMG": "2018-02-01",
-  "dateReceptionONF": "2018-02-10",
+  "dateCARM": "",
+  "dateCompletudePTMG": "2022-03-10",
+  "dateReceptionONF": "",
+  "enAttenteDeONF": true,
   "id": Any<String>,
   "nom": "mon titre",
   "references": Array [
@@ -56,9 +57,20 @@ Object {
   "dateCARM": "",
   "dateCompletudePTMG": "",
   "dateReceptionONF": "",
+  "enAttenteDeONF": false,
   "id": Any<String>,
-  "nom": "mon titre simple",
-  "references": Array [],
+  "nom": "mon titre",
+  "references": Array [
+    Object {
+      "nom": "ONF",
+      "titreId": Any<String>,
+      "type": Object {
+        "id": "onf",
+        "nom": "ONF",
+      },
+      "typeId": "onf",
+    },
+  ],
   "slug": Any<String>,
   "statut": Object {
     "couleur": "success",
@@ -67,6 +79,27 @@ Object {
     "nom": "valide",
     "ordre": 3,
   },
-  "titulaires": Array [],
+  "titulaires": Array [
+    Object {
+      "adresse": null,
+      "archive": false,
+      "categorie": null,
+      "cedex": null,
+      "codePostal": null,
+      "commune": null,
+      "dateCreation": null,
+      "email": null,
+      "id": "plop",
+      "legalEtranger": null,
+      "legalForme": null,
+      "legalSiren": null,
+      "modification": true,
+      "nom": "Mon Entreprise",
+      "operateur": null,
+      "paysId": null,
+      "telephone": null,
+      "url": null,
+    },
+  ],
 }
 `;

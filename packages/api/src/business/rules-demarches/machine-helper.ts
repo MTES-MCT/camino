@@ -9,11 +9,12 @@ import {
   isEvent,
   isStatus,
   OctARMContext,
+  tags,
   toPotentialXStateEvent,
   XStateEvent,
   xStateEventToEtape
 } from './arm/oct.machine'
-import { interpret, State } from 'xstate'
+import { interpret, State, StateFrom } from 'xstate'
 import {
   DemarchesStatutsTypesIds,
   DemarcheStatutId,
@@ -118,70 +119,104 @@ export const toMachineEtape = (dbEtape: ITitreEtape): Etape => {
 }
 
 export const demarcheStatut = (etapes: readonly Etape[]): DemarcheStatutId => {
-  const service = interpret(armOctMachine)
+  const value = goTo(etapes)
+  if (!value.valid) {
+    console.error(
+      `impossible de trouver le demarcheStatus, cette liste d'étapes '${JSON.stringify(
+        etapes
+      )}' est incohérente à l'étape ${value.etapeIndex + 1}`
+    )
 
-  service.start()
-  for (let i = 0; i < etapes.length; i++) {
-    const etapeAFaire = etapes[i]
-    const event = eventFrom(etapeAFaire)
-    if (!service.state.can(event)) {
-      console.error(
-        `impossible de trouver le demarcheStatus, cette liste d'étapes '${JSON.stringify(
-          etapes
-        )}' est incohérente à l'étape ${i + 1}`
-      )
-
-      return DemarchesStatutsTypesIds.Indetermine
-    }
-
-    service.send(event)
+    return DemarchesStatutsTypesIds.Indetermine
+  } else {
+    return value.state.context.demarcheStatut
   }
-  service.stop()
-
-  return service.state.context.demarcheStatut
 }
 
 export const nextEtapes = (etapes: readonly Etape[]): DBEtat[] => {
-  const service = interpret(armOctMachine)
+  const state = assertGoTo(etapes)
 
-  service.start()
-  for (let i = 0; i < etapes.length; i++) {
-    const etapeAFaire = etapes[i]
-    const event = eventFrom(etapeAFaire)
-    service.send(event)
-  }
-
-  const possibleEvents: Event[] = service.state.nextEvents
+  const possibleEvents: Event[] = state.nextEvents
     .filter(isEvent)
     .filter(event => {
       const events = toPotentialXStateEvent(event)
 
-      return events.some(event => service.state.can(event))
+      return events.some(event => state.can(event))
     })
 
   return possibleEvents.map(eventToEtat)
 }
 
-export const possibleNextEtapes = (
-  etapes: readonly Etape[]
-): Omit<Etape, 'date'>[] => {
+type Intervenant = keyof typeof tags['responsable']
+
+const intervenants = Object.keys(tags.responsable) as Array<
+  keyof typeof tags.responsable
+>
+
+const goTo = (
+  etapes: readonly Etape[],
+  initialState: State<OctARMContext, XStateEvent> | null = null
+):
+  | { valid: false; etapeIndex: number }
+  | { valid: true; state: StateFrom<typeof armOctMachine> } => {
   const service = interpret(armOctMachine)
 
-  service.start()
+  if (initialState === null) {
+    service.start()
+  } else {
+    service.start(initialState)
+  }
   for (let i = 0; i < etapes.length; i++) {
     const etapeAFaire = etapes[i]
     const event = eventFrom(etapeAFaire)
+    if (!service.state.can(event)) {
+      service.stop()
+
+      return { valid: false, etapeIndex: i }
+    }
     service.send(event)
   }
 
-  return service.state.nextEvents
+  service.stop()
+
+  return { valid: true, state: service.state }
+}
+
+const assertGoTo = (
+  etapes: readonly Etape[],
+  initialState: State<OctARMContext, XStateEvent> | null = null
+) => {
+  const value = goTo(etapes, initialState)
+  if (!value.valid) {
+    throw new Error(
+      `Les étapes '${JSON.stringify(
+        etapes
+      )}' sont invalides à partir de l’étape ${value.etapeIndex}`
+    )
+  } else {
+    return value.state
+  }
+}
+
+export const whoIsBlocking = (etapes: readonly Etape[]): Intervenant[] => {
+  const state = assertGoTo(etapes)
+
+  const responsables: string[] = [...state.tags]
+
+  return intervenants.filter(r => responsables.includes(tags.responsable[r]))
+}
+
+export const possibleNextEtapes = (
+  etapes: readonly Etape[]
+): Omit<Etape, 'date'>[] => {
+  const state = assertGoTo(etapes)
+
+  return state.nextEvents
     .filter(isEvent)
     .flatMap(event => {
       const events = toPotentialXStateEvent(event)
 
-      return events
-        .filter(event => service.state.can(event))
-        .map(xStateEventToEtape)
+      return events.filter(event => state.can(event)).map(xStateEventToEtape)
     })
     .filter(event => event !== undefined)
 }
@@ -201,25 +236,7 @@ export const isEtapesOk = (
       }
     }
   }
-  const service = interpret(armOctMachine)
+  const result = goTo(sortedEtapes, initialState)
 
-  if (initialState === null) {
-    service.start()
-  } else {
-    service.start(initialState)
-  }
-  for (let i = 0; i < sortedEtapes.length; i++) {
-    const etapeAFaire = sortedEtapes[i]
-    const event = eventFrom(etapeAFaire)
-
-    if (!service.state.can(event)) {
-      service.stop()
-
-      return false
-    }
-    service.send(event)
-  }
-  service.stop()
-
-  return true
+  return result.valid
 }

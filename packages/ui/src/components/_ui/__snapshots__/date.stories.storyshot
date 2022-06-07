@@ -1,13 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Automated Storybook Snapshots UI/Date Default 1`] = `
-<div>
+<div
+  style="white-space: nowrap;"
+>
   03 / 05 / 2022
 </div>
 `;
 
 exports[`Automated Storybook Snapshots UI/Date Une Date Etrange 1`] = `
-<div>
+<div
+  style="white-space: nowrap;"
+>
   undefined / undefined / Une date
 </div>
 `;

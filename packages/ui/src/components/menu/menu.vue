@@ -14,6 +14,16 @@
                 Mes titres
               </router-link>
             </li>
+            <li v-if="isONF">
+              <router-link
+                id="cmn-menu-menu-a-dashboard"
+                :to="{ name: 'dashboard' }"
+                class="btn-menu text-decoration-none bold"
+                @click="eventTrack('dashboard')"
+              >
+                Tableau de bord ONF
+              </router-link>
+            </li>
             <li>
               <router-link
                 id="cmn-menu-menu-a-titres"
@@ -153,6 +163,9 @@ export default {
 
     hasEntreprises() {
       return this.$store.getters['user/hasEntreprises']
+    },
+    isONF() {
+      return this.$store.getters['user/isONF']
     },
 
     sections() {
