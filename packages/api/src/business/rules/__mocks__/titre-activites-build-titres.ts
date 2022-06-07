@@ -1,5 +1,6 @@
 import { IActiviteType, ITitreDemarche } from '../../../types'
 import { SubstancesFiscale } from 'camino-common/src/substance'
+import { UNITE_IDS, UNITES, Unites } from 'camino-common/src/unites'
 
 const activiteTypeGra = {
   id: 'gra',
@@ -174,10 +175,7 @@ const titreActivitesGrp = [
             nom: 'Nom champs 3',
             type: 'checkboxes',
             description: 'Description champs 3',
-            valeurs: [
-              { id: 'mkg', nom: 'kilogramme' },
-              { id: 'lit', nom: 'Litres' }
-            ]
+            valeurs: UNITES
           }
         ],
         nom: 'Renseignements'

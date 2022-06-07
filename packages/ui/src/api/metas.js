@@ -10,7 +10,6 @@ import {
   fragmentEtapeType,
   fragmentEtapeStatut,
   fragmentDevise,
-  fragmentUnite,
   fragmentPermission,
   fragmentDocumentType,
   fragmentReferenceType,
@@ -212,28 +211,6 @@ const substancesLegales = apiGraphQLFetch(
     }
   `
 )
-
-const unites = apiGraphQLFetch(
-  gql`
-    query unites {
-      unites {
-        ...unite
-      }
-    }
-
-    ${fragmentUnite}
-  `
-)
-
-const uniteModifier = apiGraphQLFetch(gql`
-  mutation UniteModifier($element: InputUnite!) {
-    uniteModifier(unite: $element) {
-      ...unite
-    }
-  }
-
-  ${fragmentUnite}
-`)
 
 const permissions = apiGraphQLFetch(
   gql`
@@ -779,8 +756,6 @@ export {
   etapeStatutModifier,
   substancesLegales,
   permissions,
-  unites,
-  uniteModifier,
   permissionModifier,
   documentsTypes,
   documentTypeCreer,

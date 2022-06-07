@@ -26,7 +26,6 @@ const state = {
   metas: {
     demarche: null,
     etapesTypes: [],
-    unites: [],
     substances: [],
     entreprises: [],
     documentsTypes: [],
@@ -360,8 +359,6 @@ const mutations = {
     state.metas = {
       demarche: null,
       etapesTypes: [],
-      unites: [],
-      geoSystemes: [],
       substances: [],
       entreprises: [],
       documentsTypes: [],

@@ -11,7 +11,6 @@ import {
   IPhaseStatut,
   IEtapeType,
   IEtapeStatut,
-  IUnite,
   IPermission,
   IDocumentType,
   IReferenceType,
@@ -42,7 +41,6 @@ import Permissions from '../models/permissions'
 import ReferencesTypes from '../models/references-types'
 import TitresStatuts from '../models/titres-statuts'
 import TitresTypesTypes from '../models/titres-types-types'
-import Unites from '../models/unites'
 import EtapesStatuts from '../models/etapes-statuts'
 import SubstancesLegalesCodes from '../models/substances-legales-codes'
 
@@ -600,11 +598,6 @@ const documentsTypesGet = async ({
 const documentTypeGet = async (id: string) =>
   DocumentsTypes.query().findById(id)
 
-const unitesGet = async () => Unites.query().orderBy('id')
-
-const uniteUpdate = async (id: string, props: Partial<IUnite>) =>
-  Unites.query().patchAndFetchById(id, props)
-
 const referencesTypesGet = async () => ReferencesTypes.query().orderBy('nom')
 
 const etapesStatutsGet = async () => EtapesStatuts.query()
@@ -635,8 +628,6 @@ export {
   devisesGet,
   documentsTypesGet,
   documentTypeGet,
-  unitesGet,
-  uniteUpdate,
   referencesTypesGet,
   phasesStatutsGet,
   phaseStatutUpdate,

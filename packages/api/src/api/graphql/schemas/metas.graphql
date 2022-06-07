@@ -426,14 +426,6 @@ input InputDevise {
   nom: String
 }
 
-input InputUnite {
-  id: ID!
-  nom: String
-  symbole: String
-  referenceUniteId: ID
-  referenceUniteRatio: Float
-}
-
 input InputDocumentType {
   id: ID!
   nom: String

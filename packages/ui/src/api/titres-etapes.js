@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
-import { fragmentDevise, fragmentUnite } from './fragments/metas'
+import { fragmentDevise } from './fragments/metas'
 import { fragmentSubstance } from './fragments/substance'
 import { fragmentEtape, fragmentEtapeHeritage } from './fragments/titre-etape'
 import { fragmentEtapeMetasEntreprises } from './fragments/entreprises'
@@ -63,10 +63,6 @@ const titreEtapeMetas = apiGraphQLFetch(
         ...devise
       }
 
-      unites {
-        ...unite
-      }
-
       substances {
         ...substance
       }
@@ -77,8 +73,6 @@ const titreEtapeMetas = apiGraphQLFetch(
         }
       }
     }
-
-    ${fragmentUnite}
 
     ${fragmentDevise}
 

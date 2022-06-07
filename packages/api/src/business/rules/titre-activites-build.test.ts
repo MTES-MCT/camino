@@ -1,12 +1,6 @@
-import {
-  IActiviteType,
-  ITitreActivite,
-  ITitreDemarche,
-  IUnite
-} from '../../types'
+import { IActiviteType, ITitreActivite, ITitreDemarche } from '../../types'
 
 import { titreActivitesBuild } from './titre-activites-build'
-import { metasGet } from '../../database/cache/metas'
 
 import {
   titreActivitesGra,
@@ -15,10 +9,6 @@ import {
   activiteTypeGrp,
   titreDemarches
 } from './__mocks__/titre-activites-build-titres'
-
-jest.mock('../../database/cache/metas', () => ({ metasGet: jest.fn() }))
-
-const metasGetMock = jest.mocked(metasGet, true)
 
 describe("construction des activités d'un titre", () => {
   const aujourdhui = '2021-01-01'
@@ -86,11 +76,6 @@ describe("construction des activités d'un titre", () => {
   })
 
   test('crée des activités', () => {
-    metasGetMock.mockReturnValue([
-      { id: 'mkg', nom: 'kilogramme' },
-      { id: 'lit', nom: 'Litres' }
-    ] as IUnite[])
-
     const titreActivitesA = titreActivitesBuild(
       activiteTypeGra,
       [2018],

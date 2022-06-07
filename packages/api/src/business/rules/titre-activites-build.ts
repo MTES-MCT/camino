@@ -9,14 +9,15 @@ import {
   ISectionElement
 } from '../../types'
 
-import { metasGet } from '../../database/cache/metas'
 import { titreEtapePropFind } from './titre-etape-prop-find'
 import { titreActiviteValideCheck } from '../utils/titre-activite-valide-check'
 import {
   SubstanceFiscale,
   SubstancesFiscale
 } from 'camino-common/src/substance'
-import { Unites } from 'camino-common/src/unites'
+import { UNITES, Unites } from 'camino-common/src/unites'
+import { sortedDevises } from 'camino-common/src/devise'
+import { exhaustiveCheck } from '../../tools/exhaustive-type-check'
 
 const onlyUnique = <T>(value: T, index: number, self: T[]): boolean => {
   return self.indexOf(value) === index
@@ -61,7 +62,16 @@ const titreActiviteSectionElementsFormat = (
       if (e.valeurs) {
         element.valeurs = e.valeurs
       } else if (e.valeursMetasNom) {
-        element.valeurs = metasGet(e.valeursMetasNom)
+        switch (e.valeursMetasNom) {
+          case 'devises':
+            element.valeurs = sortedDevises
+            break
+          case 'unites':
+            element.valeurs = UNITES
+            break
+          default:
+            exhaustiveCheck(e.valeursMetasNom)
+        }
       }
 
       newElements.push(element)
@@ -86,8 +96,8 @@ const titreActiviteSectionsBuild = (
   date: string,
   titreDemarches: ITitreDemarche[],
   titreTypeId: string
-) =>
-  sections.reduce((newSections: ISection[], s) => {
+) => {
+  return sections.reduce((newSections: ISection[], s) => {
     let elements = [] as ISectionElement[]
 
     if (s.elements) {
@@ -140,6 +150,7 @@ const titreActiviteSectionsBuild = (
 
     return newSections
   }, [])
+}
 
 const titreActiviteFind = (
   activiteTypeId: string,

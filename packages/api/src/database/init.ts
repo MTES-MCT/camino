@@ -1,4 +1,3 @@
-import { metasInit } from './cache/metas'
 import { globalesInit } from './cache/globales'
 import { knex } from '../knex'
 import { utilisateursCount } from './queries/utilisateurs'
@@ -13,7 +12,6 @@ const databaseInit = async () => {
 }
 
 const cacheInit = async () => {
-  await metasInit()
   await globalesInit()
 }
 

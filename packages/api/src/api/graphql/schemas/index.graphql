@@ -428,8 +428,6 @@ type Mutation {
 
   activiteStatutModifier(activiteStatut: InputActiviteStatut!): [ActiviteStatut]
 
-  uniteModifier(unite: InputUnite!): [Unite]
-
   permissionModifier(permission: InputPermission!): [Permission]
 
   documentTypeCreer(documentType: InputDocumentType!): [DocumentType]

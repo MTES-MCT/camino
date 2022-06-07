@@ -1,11 +1,22 @@
 import { ISection, ISectionElement } from '../../types'
 
-import { metasGet } from '../../database/cache/metas'
 import { objectClone } from '../../tools/index'
+import { sortedDevises } from 'camino-common/src/devise'
+import { UNITES } from 'camino-common/src/unites'
+import { exhaustiveCheck } from '../../tools/exhaustive-type-check'
 
 const titreSectionElementFormat = (element: ISectionElement) => {
   if (element.valeursMetasNom) {
-    element.valeurs = metasGet(element.valeursMetasNom)
+    switch (element.valeursMetasNom) {
+      case 'devises':
+        element.valeurs = sortedDevises
+        break
+      case 'unites':
+        element.valeurs = UNITES
+        break
+      default:
+        exhaustiveCheck(element.valeursMetasNom)
+    }
 
     delete element.valeursMetasNom
   }
