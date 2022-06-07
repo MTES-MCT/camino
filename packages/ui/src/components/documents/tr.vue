@@ -70,7 +70,8 @@
         :download="document.nom"
         target="_blank"
       >
-        <i class="icon-24 icon-download" />
+        <!-- TODO 2022-06-07: l'icone ne change plus de couleur au hover, est-ce qu'on veut toujours ça ? Est-ce qu'on peut être plus malin et appliquer un filtre sur le svg (opacité,...)-->
+        <Icon name="download" size="L" />
       </a>
       <a
         v-if="document.url"
@@ -120,9 +121,11 @@ import Tag from '../_ui/tag.vue'
 import DocumentEditPopup from '../document/edit-popup.vue'
 import DocumentRemovePopup from '../document/remove-popup.vue'
 import HelpTooltip from '../_ui/help-tooltip.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     Tag,
     HelpTooltip
   },

@@ -14,7 +14,8 @@
     "lint": "prettier --write src && eslint --fix --ext .js,.ts,.vue src",
     "lint:check": "prettier --check src && eslint src",
     "storybook": "start-storybook -p 6006",
-    "storybook:build": "build-storybook"
+    "storybook:build": "build-storybook",
+    "generate-icon-types": "ts-node --transpile-only scripts/generateIconTypes.ts"
   },
   "@comment dependencies": {
     "eslint": "eslint et eslint-plugin-vue, bloqués à 0.7.x https://github.com/vuejs/eslint-config-standard/issues/10",
