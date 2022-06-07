@@ -1,16 +1,18 @@
 import { IContenuValeur, ITitreEtape } from '../../types'
 
 import { restrictionsArmRet } from './arm/ret'
-import { restrictionsArmOct } from './arm/oct'
 import { restrictionsArmRenPro } from './arm/ren-pro'
 import { restrictionsAxmOct } from './axm/oct'
 import { etatsDefinitionPrmOct } from './prm/oct'
+import { AnyStateMachine } from 'xstate'
+import { armOctMachine } from './arm/oct.machine'
+import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot-demande-date-find'
 
 interface IEtapeTypeIdCondition {
   etapeTypeId?: string
   statutId?: string
   titre?: ITitreCondition
-  contextCheck?: (etapes: ITitreEtape[]) => boolean
+  contextCheck?: (_etapes: ITitreEtape[]) => boolean
 }
 
 interface IDemarcheDefinitionRestrictions {
@@ -29,12 +31,32 @@ interface IDemarcheDefinitionRestrictionsElements
   extends IDemarcheDefinitionRestrictionsProps {
   etapeTypeId?: string
 }
+type IDemarcheDefinition =
+  | DemarcheDefinitionRestriction
+  | DemarcheDefinitionMachine
 
-interface IDemarcheDefinition {
+export const isDemarcheDefinitionRestriction = (
+  dd: IDemarcheDefinition | undefined
+): dd is DemarcheDefinitionRestriction => {
+  return dd !== undefined && 'restrictions' in dd
+}
+export const isDemarcheDefinitionMachine = (
+  dd: IDemarcheDefinition | undefined
+): dd is DemarcheDefinitionMachine => {
+  return dd !== undefined && 'machine' in dd
+}
+
+interface DemarcheDefinitionCommon {
   titreTypeId: string
   demarcheTypeIds: string[]
-  restrictions: IDemarcheDefinitionRestrictions
   dateDebut: string
+}
+export interface DemarcheDefinitionRestriction
+  extends DemarcheDefinitionCommon {
+  restrictions: IDemarcheDefinitionRestrictions
+}
+export interface DemarcheDefinitionMachine extends DemarcheDefinitionCommon {
+  machine: AnyStateMachine
 }
 
 type IContenuOperation = {
@@ -59,7 +81,7 @@ const demarchesDefinitions: IDemarcheDefinition[] = [
   {
     titreTypeId: 'arm',
     demarcheTypeIds: ['oct'],
-    restrictions: restrictionsArmOct,
+    machine: armOctMachine,
     dateDebut: '2019-10-31'
   },
   {
@@ -92,9 +114,11 @@ const demarchesDefinitions: IDemarcheDefinition[] = [
 const demarcheDefinitionFind = (
   titreTypeId: string,
   demarcheTypeId: string,
-  date?: string
-) =>
-  demarchesDefinitions
+  titreEtapes?: Pick<ITitreEtape, 'date' | 'typeId'>[]
+) => {
+  const date = titreDemarcheDepotDemandeDateFind(titreEtapes ?? [])
+
+  return demarchesDefinitions
     .sort((a, b) => b.dateDebut.localeCompare(a.dateDebut))
     .find(
       d =>
@@ -102,6 +126,7 @@ const demarcheDefinitionFind = (
         d.titreTypeId === titreTypeId &&
         d.demarcheTypeIds.includes(demarcheTypeId)
     )
+}
 
 export {
   demarchesDefinitions,

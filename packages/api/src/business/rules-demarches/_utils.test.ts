@@ -14,12 +14,15 @@ import {
 } from '../../types'
 
 import { titreDemarcheEtatValidate } from '../validations/titre-demarche-etat-validate'
-import { demarcheDefinitionFind } from './definitions'
+import {
+  demarcheDefinitionFind,
+  isDemarcheDefinitionRestriction
+} from './definitions'
 import { titreContenuFormat } from '../../database/models/_format/titre-contenu'
 import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find'
 
 test('teste EtatsValidate', () => {
-  const octEtatsValidate = demarcheEtatsValidate('oct', 'arm', '2021-01-01')
+  const octEtatsValidate = demarcheEtatsValidate('oct', 'axm', '2021-01-01')
 
   expect(octEtatsValidate).toBeTruthy()
   expect(octEtatsValidate([], {})).toHaveLength(0)
@@ -96,11 +99,15 @@ const demarcheEtatsValidate = (
     contenusTitreEtapesIdsFindMock.mockReturnValue({})
     titreContenuFormatMock.mockReturnValue(titre.contenu as IContenu)
 
-    const demarcheDefinitionRestrictions = demarcheDefinitionFind(
+    const demarcheDefinitions = demarcheDefinitionFind(
       titreTypeId,
       demarcheTypeId,
-      date
-    )!.restrictions
+      [{ typeId: 'mfr', date }]
+    )
+    if (!isDemarcheDefinitionRestriction(demarcheDefinitions)) {
+      throw new Error('cette démarche n’a pas de restrictions')
+    }
+    const demarcheDefinitionRestrictions = demarcheDefinitions!.restrictions
 
     const titreDemarche = { typeId: demarcheTypeId } as ITitreDemarche
     titre = {

@@ -131,14 +131,12 @@ const etapeTypeIsValidCheck = (
   titreEtape.typeId = etapeType.id
   titreEtape.date = date
 
-  const etapeTypeIsValid = !titreDemarcheUpdatedEtatValidate(
+  return !titreDemarcheUpdatedEtatValidate(
     demarcheType,
     titre,
     titreEtape,
     titreDemarcheEtapes
   ).length
-
-  return etapeTypeIsValid
 }
 
 export {

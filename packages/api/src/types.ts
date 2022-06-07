@@ -11,19 +11,22 @@ import { GeoSystemeId } from 'camino-common/src/geoSystemes'
 import { UniteId } from 'camino-common/src/unites'
 import { PermissionId } from 'camino-common/src/permissions'
 
-enum DemarchesStatutsTypes {
-  Accepte = 'acc',
-  ClasseSansSuite = 'cls',
-  Depose = 'dep',
-  Desiste = 'des',
-  EnConstruction = 'eco',
-  Indetermine = 'ind',
-  Initie = 'ini',
-  EnInstruction = 'ins',
-  Rejete = 'rej',
-  Termine = 'ter',
-  FinPoliceMines = 'fpm'
-}
+const DemarchesStatutsTypesIds = {
+  Accepte: 'acc',
+  ClasseSansSuite: 'cls',
+  Depose: 'dep',
+  Desiste: 'des',
+  EnConstruction: 'eco',
+  Indetermine: 'ind',
+  Initie: 'ini',
+  EnInstruction: 'ins',
+  Rejete: 'rej',
+  Termine: 'ter',
+  FinPoliceMines: 'fpm'
+} as const
+
+export type DemarcheStatutId =
+  typeof DemarchesStatutsTypesIds[keyof typeof DemarchesStatutsTypesIds]
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -130,6 +133,7 @@ type IContenuValeur =
   | boolean
   | IContenuElement[]
   | { file: FileUpload }
+  | null
 
 interface IContenuElement {
   [elementId: string]: IContenuValeur
@@ -1031,7 +1035,7 @@ interface IJournaux {
 
 export {
   TitreEtapesTravauxTypes,
-  DemarchesStatutsTypes,
+  DemarchesStatutsTypesIds,
   Index,
   IFields,
   IFormat,

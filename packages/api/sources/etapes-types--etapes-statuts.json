@@ -875,11 +875,6 @@
     "ordre": 1
   },
   {
-    "etape_type_id": "mid",
-    "etape_statut_id": "fai",
-    "ordre": 1
-  },
-  {
     "etape_type_id": "mie",
     "etape_statut_id": "fai",
     "ordre": 1
@@ -1056,11 +1051,6 @@
   },
   {
     "etape_type_id": "ria",
-    "etape_statut_id": "fai",
-    "ordre": 1
-  },
-  {
-    "etape_type_id": "rid",
     "etape_statut_id": "fai",
     "ordre": 1
   },

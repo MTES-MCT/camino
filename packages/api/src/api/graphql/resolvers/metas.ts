@@ -60,13 +60,24 @@ import {
   regionsGet
 } from '../../../database/queries/territoires'
 import { ordreUpdate } from './_ordre-update'
-import { demarcheDefinitionFind } from '../../../business/rules-demarches/definitions'
+import {
+  demarcheDefinitionFind,
+  isDemarcheDefinitionMachine
+} from '../../../business/rules-demarches/definitions'
 import { userSuper } from '../../../database/user-super'
 import { titresEtapesHeritageContenuUpdate } from '../../../business/processes/titres-etapes-heritage-contenu-update'
 import { sortedAdministrationTypes } from 'camino-common/src/administrations'
 import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
+import {
+  isEtapesOk,
+  possibleNextEtapes,
+  toMachineEtapes
+} from '../../../business/rules-demarches/machine-helper'
 import { UNITES } from 'camino-common/src/unites'
 import { permissionCheck } from 'camino-common/src/permissions'
+import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort'
+import TitresDemarches from '../../../database/models/titres-demarches'
+import { Etape } from '../../../business/rules-demarches/arm/oct.machine'
 
 const devises = async () => devisesGet()
 
@@ -82,9 +93,7 @@ const documentsTypes = async ({
   typeId?: string
 }) => {
   try {
-    const documentsTypes = await documentsTypesGet({ repertoire, typeId })
-
-    return documentsTypes
+    return await documentsTypesGet({ repertoire, typeId })
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -141,9 +150,7 @@ const domaines = async (
     const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
-    const domaines = await domainesGet(null as never, { fields }, user)
-
-    return domaines
+    return await domainesGet(null as never, { fields }, user)
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -155,9 +162,7 @@ const domaines = async (
 
 const types = async () => {
   try {
-    const types = await titresTypesTypesGet()
-
-    return types
+    return await titresTypesTypesGet()
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -202,9 +207,7 @@ const demarchesTypes = async (
 
 const demarchesStatuts = async () => {
   try {
-    const demarchesStatuts = await demarchesStatutsGet()
-
-    return demarchesStatuts
+    return await demarchesStatutsGet()
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -212,6 +215,44 @@ const demarchesStatuts = async () => {
 
     throw e
   }
+}
+// VISIBLE_FOR_TESTING
+export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
+  titreDemarche: Pick<TitresDemarches, 'etapes'>,
+  titreEtapeId: string | undefined,
+  date: string,
+  etapesTypes: IEtapeType[]
+): IEtapeType[] => {
+  if (!titreDemarche.etapes) throw new Error('les étapes ne sont pas chargées')
+  const sortedEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes)
+  const etapesAvant: Etape[] = []
+  const etapesApres: Etape[] = []
+  if (titreEtapeId) {
+    const index = sortedEtapes.findIndex(etape => etape.id === titreEtapeId)
+    etapesAvant.push(...toMachineEtapes(sortedEtapes.slice(0, index)))
+    etapesApres.push(...toMachineEtapes(sortedEtapes.slice(index + 1)))
+  } else {
+    etapesAvant.push(
+      ...toMachineEtapes(sortedEtapes.filter(etape => etape.date < date))
+    )
+    etapesApres.push(...toMachineEtapes(sortedEtapes.slice(etapesAvant.length)))
+  }
+
+  const etapesPossibles = possibleNextEtapes(etapesAvant).filter(et => {
+    const newEtapes = [...etapesAvant]
+
+    const items = { ...et, date }
+    newEtapes.push(items)
+    newEtapes.push(...etapesApres)
+
+    return isEtapesOk(newEtapes)
+  })
+
+  etapesTypes = etapesTypes.filter(et =>
+    etapesPossibles.map(({ typeId }) => typeId).includes(et.id)
+  )
+
+  return etapesTypes
 }
 
 const demarcheEtapesTypesGet = async (
@@ -269,20 +310,27 @@ const demarcheEtapesTypesGet = async (
 
   // si il existe un arbre d’instructions pour cette démarche,
   // on laisse l’arbre traiter l’unicité des étapes
-  const uniqueCheck = !demarcheDefinitionFind(
+  const demarcheDefinition = demarcheDefinitionFind(
     titre.typeId,
     titreDemarche.typeId
-  )?.restrictions
+  )
 
   // dans un premier temps on récupère toutes les étapes possibles pour cette démarche
-  const etapesTypes = await etapesTypesGet(
+  let etapesTypes: IEtapeType[] = await etapesTypesGet(
     { titreDemarcheId, titreEtapeId },
-    { fields, uniqueCheck },
+    { fields, uniqueCheck: !demarcheDefinition },
     user
   )
 
-  const etapesTypesFormatted = etapesTypes
-    .filter(etapeType =>
+  if (isDemarcheDefinitionMachine(demarcheDefinition)) {
+    etapesTypes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+      titreDemarche,
+      titreEtapeId,
+      date,
+      etapesTypes
+    )
+  } else {
+    etapesTypes = etapesTypes.filter(etapeType =>
       etapeTypeIsValidCheck(
         etapeType,
         date,
@@ -292,9 +340,11 @@ const demarcheEtapesTypesGet = async (
         titreEtape
       )
     )
-    .map(et => etapeTypeFormat(et, undefined, undefined, undefined))
+  }
 
-  return etapesTypesFormatted
+  return etapesTypes.map(et =>
+    etapeTypeFormat(et, undefined, undefined, undefined)
+  )
 }
 
 const etapesTypes = async (
@@ -344,9 +394,7 @@ const etapesTypes = async (
 
 const etapesStatuts = async () => {
   try {
-    const etapesStatuts = await etapesStatutsGet()
-
-    return etapesStatuts
+    return await etapesStatutsGet()
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -377,9 +425,7 @@ const administrationsTypes = () => {
 
 const pays = async () => {
   try {
-    const pays = await paysGet()
-
-    return pays
+    return await paysGet()
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -396,9 +442,7 @@ const pays = async () => {
  */
 const departements = async () => {
   try {
-    const departements = await departementsGet()
-
-    return departements
+    return await departementsGet()
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -415,9 +459,7 @@ const departements = async () => {
  */
 const regions = async () => {
   try {
-    const regions = await regionsGet()
-
-    return regions
+    return await regionsGet()
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -429,9 +471,7 @@ const regions = async () => {
 
 const phasesStatuts = async () => {
   try {
-    const phasesStatuts = await phasesStatutsGet()
-
-    return phasesStatuts
+    return await phasesStatutsGet()
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -463,9 +503,7 @@ const domaineModifier = async (
 
     await domaineUpdate(domaine.id!, domaine)
 
-    const domaines = await domainesGet(null as never, { fields }, user)
-
-    return domaines
+    return await domainesGet(null as never, { fields }, user)
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -494,9 +532,7 @@ const titreTypeTypeModifier = async (
 
     await titreTypeTypeUpdate(titreType.id!, titreType)
 
-    const titresTypesTypes = await titresTypesTypesGet()
-
-    return titresTypesTypes
+    return await titresTypesTypesGet()
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -525,9 +561,7 @@ const titreStatutModifier = async (
 
     await titreStatutUpdate(titreStatut.id!, titreStatut)
 
-    const titresStatut = await titresStatutsGet(user)
-
-    return titresStatut
+    return await titresStatutsGet(user)
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -559,9 +593,7 @@ const demarcheTypeModifier = async (
 
     await demarcheTypeUpdate(demarcheType.id!, demarcheType)
 
-    const demarchesTypes = await demarchesTypesGet({}, { fields }, user)
-
-    return demarchesTypes
+    return await demarchesTypesGet({}, { fields }, user)
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -590,9 +622,7 @@ const demarcheStatutModifier = async (
 
     await demarcheStatutUpdate(demarcheStatut.id!, demarcheStatut)
 
-    const demarchesStatuts = await demarchesStatutsGet()
-
-    return demarchesStatuts
+    return await demarchesStatutsGet()
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -615,9 +645,7 @@ const phaseStatutModifier = async (
 
     await phaseStatutUpdate(phaseStatut.id!, phaseStatut)
 
-    const phasesStatuts = await phasesStatutsGet()
-
-    return phasesStatuts
+    return await phasesStatutsGet()
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -651,9 +679,7 @@ const etapeTypeModifier = async (
 
     await titresEtapesHeritageContenuUpdate(user)
 
-    const etapesTypes = await etapesTypesGet({}, { fields }, user)
-
-    return etapesTypes
+    return await etapesTypesGet({}, { fields }, user)
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -676,9 +702,7 @@ const etapeStatutModifier = async (
 
     await etapeStatutUpdate(etapeStatut.id!, etapeStatut)
 
-    const etapesStatuts = await etapesStatutsGet()
-
-    return etapesStatuts
+    return await etapesStatutsGet()
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -711,9 +735,7 @@ const permissionModifier = async (
 
     await permissionUpdate(permission.id!, permission)
 
-    const permissions = await permissionsGet(null as never, null as never, user)
-
-    return permissions
+    return await permissionsGet(null as never, null as never, user)
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -736,9 +758,7 @@ const documentTypeCreer = async (
 
     await documentTypeCreate(documentType)
 
-    const documentTypes = await documentsTypesGet({})
-
-    return documentTypes
+    return await documentsTypesGet({})
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -761,9 +781,7 @@ const documentTypeModifier = async (
 
     await documentTypeUpdate(documentType.id!, documentType)
 
-    const documentTypes = await documentsTypesGet({})
-
-    return documentTypes
+    return await documentsTypesGet({})
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -785,9 +803,7 @@ const referenceTypeModifier = async (
 
     await referenceTypeUpdate(referenceType.id!, referenceType)
 
-    const referenceTypes = await referencesTypesGet()
-
-    return referenceTypes
+    return await referencesTypesGet()
   } catch (e) {
     if (debug) {
       console.error(e)

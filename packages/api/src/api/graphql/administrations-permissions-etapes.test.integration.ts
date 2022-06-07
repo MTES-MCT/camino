@@ -39,7 +39,7 @@ describe('Visibilité des étapes', () => {
     ${'ope-onf-973-01'}    | ${true} | ${'mcr'}
     ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
   `(
-    "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre ARM : $visible",
+    "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre ARM : $visible",
     async ({ administrationId, visible, etapeTypeId }) =>
       visibleCheck(
         administrationId,
@@ -57,7 +57,7 @@ describe('Visibilité des étapes', () => {
     ${'dea-guyane-01'}     | ${true} | ${'mcr'}
     ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
   `(
-    "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre AXM : $visible",
+    "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre AXM : $visible",
     async ({ administrationId, visible, etapeTypeId }) =>
       visibleCheck(
         administrationId,
@@ -73,7 +73,7 @@ describe('Visibilité des étapes', () => {
     administrationId       | visible | etapeTypeId
     ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
   `(
-    "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre CXM : $visible",
+    "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre CXM : $visible",
     async ({ administrationId, visible, etapeTypeId }) =>
       visibleCheck(
         administrationId,
@@ -89,7 +89,7 @@ describe('Visibilité des étapes', () => {
     administrationId       | visible | etapeTypeId
     ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
   `(
-    "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre PRM : $visible",
+    "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre PRM : $visible",
     async ({ administrationId, visible, etapeTypeId }) =>
       visibleCheck(
         administrationId,
@@ -105,7 +105,7 @@ describe('Visibilité des étapes', () => {
     administrationId       | visible | etapeTypeId
     ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
   `(
-    "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre PXM : $visible",
+    "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre PXM : $visible",
     async ({ administrationId, visible, etapeTypeId }) =>
       visibleCheck(
         administrationId,
@@ -120,51 +120,51 @@ describe('Visibilité des étapes', () => {
 
 describe('Création des étapes', () => {
   test.each`
-    administrationId       | creer   | etapeTypeId
-    ${'ope-onf-973-01'}    | ${true} | ${'mcr'}
-    ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
+    administrationId
+    ${'ope-onf-973-01'}
+    ${'min-mtes-dgaln-01'}
   `(
-    'un utilisateur admin de l’administration $administrationId peut créer une étape $etapeTypeId sur un titre ARM : $creer',
-    async ({ administrationId, creer }) =>
-      creationCheck(administrationId, creer, 'etapes', 'arm')
+    'un utilisateur admin de l’administration $administrationId peut créer une étape mfr sur un titre ARM',
+    async ({ administrationId }) =>
+      creationCheck(administrationId, true, 'etapes', 'arm')
   )
 
   test.each`
-    administrationId       | creer   | etapeTypeId
-    ${'ope-onf-973-01'}    | ${true} | ${'mcr'}
-    ${'dea-guyane-01'}     | ${true} | ${'mcr'}
-    ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
+    administrationId
+    ${'ope-onf-973-01'}
+    ${'dea-guyane-01'}
+    ${'min-mtes-dgaln-01'}
   `(
-    'un utilisateur admin de l’administration $administrationId peut créer une étape $etapeTypeId sur un titre AXM : $creer',
-    async ({ administrationId, creer }) =>
-      creationCheck(administrationId, creer, 'etapes', 'axm')
+    'un utilisateur admin de l’administration $administrationId peut créer une étape mfr sur un titre AXM',
+    async ({ administrationId }) =>
+      creationCheck(administrationId, true, 'etapes', 'axm')
   )
 
   test.each`
-    administrationId       | creer   | etapeTypeId
-    ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
+    administrationId
+    ${'min-mtes-dgaln-01'}
   `(
-    'un utilisateur admin de l’administration $administrationId peut créer une étape $etapeTypeId sur un titre CXM : $creer',
-    async ({ administrationId, creer }) =>
-      creationCheck(administrationId, creer, 'etapes', 'cxm')
+    'un utilisateur admin de l’administration $administrationId peut créer une étape $etapeTypeId sur un titre CXM',
+    async ({ administrationId }) =>
+      creationCheck(administrationId, true, 'etapes', 'cxm')
   )
 
   test.each`
-    administrationId       | creer   | etapeTypeId
-    ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
+    administrationId
+    ${'min-mtes-dgaln-01'}
   `(
-    'un utilisateur admin de l’administration $administrationId peut créer une étape $etapeTypeId sur un titre PRM : $creer',
-    async ({ administrationId, creer }) =>
-      creationCheck(administrationId, creer, 'etapes', 'prm')
+    'un utilisateur admin de l’administration $administrationId peut créer une étape mfr sur un titre PRM',
+    async ({ administrationId }) =>
+      creationCheck(administrationId, true, 'etapes', 'prm')
   )
 
   test.each`
-    administrationId       | creer   | etapeTypeId
-    ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
+    administrationId
+    ${'min-mtes-dgaln-01'}
   `(
-    'un utilisateur admin de l’administration $administrationId peut créer une étape $etapeTypeId sur un titre PXM : $creer',
-    async ({ administrationId, creer }) =>
-      creationCheck(administrationId, creer, 'etapes', 'pxm')
+    'un utilisateur admin de l’administration $administrationId peut créer une étape mfr sur un titre PXM',
+    async ({ administrationId }) =>
+      creationCheck(administrationId, true, 'etapes', 'pxm')
   )
 })
 
@@ -174,7 +174,7 @@ describe('Modification des étapes', () => {
     ${'ope-onf-973-01'}    | ${true}  | ${'mcr'}
     ${'min-mtes-dgaln-01'} | ${true}  | ${'mcr'}
   `(
-    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre ARM : $modifier',
+    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre ARM : $modifier',
     async ({ administrationId, modifier, etapeTypeId }) =>
       modificationCheck(
         administrationId,
@@ -192,7 +192,7 @@ describe('Modification des étapes', () => {
     ${'dea-guyane-01'}     | ${true}  | ${'mcr'}
     ${'min-mtes-dgaln-01'} | ${true}  | ${'mcr'}
   `(
-    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre AXM : $modifier',
+    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre AXM : $modifier',
     async ({ administrationId, modifier, etapeTypeId }) =>
       modificationCheck(
         administrationId,
@@ -208,7 +208,7 @@ describe('Modification des étapes', () => {
     administrationId       | modifier | etapeTypeId
     ${'min-mtes-dgaln-01'} | ${true}  | ${'mcr'}
   `(
-    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre CXM : $modifier',
+    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre CXM : $modifier',
     async ({ administrationId, modifier, etapeTypeId }) =>
       modificationCheck(
         administrationId,
@@ -224,7 +224,7 @@ describe('Modification des étapes', () => {
     administrationId       | modifier | etapeTypeId
     ${'min-mtes-dgaln-01'} | ${true}  | ${'mcr'}
   `(
-    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre PRM : $modifier',
+    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre PRM : $modifier',
     async ({ administrationId, modifier, etapeTypeId }) =>
       modificationCheck(
         administrationId,
@@ -240,7 +240,7 @@ describe('Modification des étapes', () => {
     administrationId       | modifier | etapeTypeId
     ${'min-mtes-dgaln-01'} | ${true}  | ${'mcr'}
   `(
-    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre PXM : $modifier',
+    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre PXM : $modifier',
     async ({ administrationId, modifier, etapeTypeId }) =>
       modificationCheck(
         administrationId,

@@ -6,7 +6,6 @@ import { userSuper } from '../../database/user-super'
 import dateFormat from 'dateformat'
 import titreEtapeUpdateTask from '../titre-etape-update'
 import { titreEtapeAdministrationsEmailsSend } from '../../api/graphql/resolvers/_titre-etape-email'
-import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot-demande-date-find'
 import { demarcheDefinitionFind } from '../rules-demarches/definitions'
 import { titreUrlGet } from '../utils/urls-get'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
@@ -173,7 +172,7 @@ export const titresEtapesDepotCreate = async (demarcheId: string) => {
   const demarcheDefinition = demarcheDefinitionFind(
     titreDemarche.titre!.typeId,
     titreDemarche.typeId,
-    titreDemarcheDepotDemandeDateFind(titreDemarche.etapes!)
+    titreDemarche.etapes
   )
   // On peut déposer automatiquement seulement les démarches qui possèdent un arbre d’instructions
   if (!demarcheDefinition) return false
