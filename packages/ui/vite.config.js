@@ -1,17 +1,16 @@
-import dotenv from 'dotenv'
-import path, { resolve } from 'path'
+const dotenv = require('dotenv')
+const path = require('path')
+const { defineConfig } = require('vite')
+const vue = require('@vitejs/plugin-vue')
+const inject = require('@rollup/plugin-inject')
 
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import inject from '@rollup/plugin-inject'
-
-dotenv.config({ path: resolve(process.cwd(), '../../.env') })
+dotenv.config({ path: path.resolve(process.cwd(), '../../.env') })
 
 const commitHash = process.env.GIT_SHA
   ? process.env.GIT_SHA
   : require('child_process').execSync('git rev-parse --short HEAD').toString()
 
-export default defineConfig({
+module.exports = defineConfig({
   plugins: [vue()],
   root: 'src',
   resolve: {

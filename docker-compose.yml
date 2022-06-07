@@ -92,7 +92,21 @@ services:
     networks:
       - default
       - nginx-proxy
-    restart: always
+    restart: unless-stopped
+  storybook:
+    container_name: camino_ui_storybook
+    image: caminofr/camino-ui-storybook:${CAMINO_TAG}
+    environment:
+      VIRTUAL_HOST: ${STORYBOOK_HOST}
+      VIRTUAL_PORT: ${STORYBOOK_PORT}
+      LETSENCRYPT_HOST: ${STORYBOOK_HOST}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+    expose:
+      - ${STORYBOOK_PORT}
+    networks:
+      - default
+      - nginx-proxy
+    restart: unless-stopped
 
 networks:
   nginx-proxy:

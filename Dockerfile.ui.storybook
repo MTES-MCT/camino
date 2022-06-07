@@ -1,0 +1,2 @@
+FROM nginx
+COPY packages/ui/storybook-static /usr/share/nginx/html
