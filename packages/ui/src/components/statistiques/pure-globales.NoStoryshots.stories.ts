@@ -69,8 +69,7 @@ Default.args = {
         pre: 8
       },
       rattachesAUneEntreprise: 128,
-      visiteursAuthentifies: 124,
-      total: 361
+      visiteursAuthentifies: 124
     }
   }
 }

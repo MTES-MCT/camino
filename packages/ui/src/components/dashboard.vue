@@ -19,25 +19,17 @@ import PureONFDashboard from '@/components/dashboard/pure-onf-dashboard.vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { titres } from '@/api/titres'
-import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
-import { DOMAINES_IDS } from 'camino-common/src/domaines'
-import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/titresTypesTypes'
 
 const store = useStore()
 const router = useRouter()
 
 const user = store.state.user.element
-const activites = user?.sections?.activites ?? false
+const activites: boolean = user?.sections?.activites ?? false
 
 const entreprisesIds: string[] = []
 const hasEntreprises: boolean = store.getters['user/hasEntreprises']
 
-const isONF: boolean =
-  store.getters['user/userIsAdmin'] &&
-  user.administrations.find(
-    ({ id }: { id: string }) =>
-      id === ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
-  )
+const isONF: boolean = store.getters['user/isONF']
 if (hasEntreprises) {
   // TODO 2022-03-17: type the store
   const entreprises = store.getters['user/user']?.entreprises ?? []

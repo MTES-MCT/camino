@@ -34,7 +34,8 @@ const onfs: CommonTitreONF[] = [
     ],
     dateCompletudePTMG: '',
     dateReceptionONF: '',
-    dateCARM: ''
+    dateCARM: '',
+    enAttenteDeONF: true
   },
   {
     id: 'secondId',
@@ -58,7 +59,52 @@ const onfs: CommonTitreONF[] = [
     ],
     dateCompletudePTMG: '2022-03-23',
     dateReceptionONF: '2022-03-24',
-    dateCARM: '2022-04-12'
+    dateCARM: '2022-04-12',
+    enAttenteDeONF: true
+  },
+  {
+    id: 'thirdId',
+    slug: 'third-id-slug',
+    nom: 'third-name',
+    statut: {
+      nom: 'demande initiale',
+      couleur: 'warning'
+    },
+    references: [],
+    titulaires: [
+      {
+        nom: 'Titulaire1'
+      }
+    ],
+    dateCompletudePTMG: '',
+    dateReceptionONF: '',
+    dateCARM: '',
+    enAttenteDeONF: false
+  },
+  {
+    id: 'fourthId',
+    slug: 'fourth-slug',
+    nom: 'Quatrième Nom de titre',
+    statut: {
+      nom: 'demande initiale',
+      couleur: 'warning'
+    },
+    references: [
+      {
+        nom: '2010-001',
+        type: { nom: 'ONF' }
+      },
+      { nom: '2010-000', type: { nom: 'PTMG' } }
+    ],
+    titulaires: [
+      {
+        nom: 'Titulaire 8'
+      }
+    ],
+    dateCompletudePTMG: '2022-03-23',
+    dateReceptionONF: '2022-03-24',
+    dateCARM: '2022-04-12',
+    enAttenteDeONF: true
   }
 ]
 
@@ -67,7 +113,7 @@ const Template: Story<Props> = (args: Props) => ({
   setup() {
     return { args }
   },
-  template: '<PureONFDashboard v-bind="args" />'
+  template: '<div><PureONFDashboard v-bind="args" /></div>'
 })
 
 export const Ok = Template.bind({})

@@ -4,6 +4,7 @@ import {
   DemarcheStatutId,
   IContenu
 } from '../../../types'
+import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
 
 export const ETATS = {
   Demande: 'mfr',
@@ -530,6 +531,13 @@ const actionMecanisation = assign<OctARMContext>({
   }
 })
 
+export const tags = {
+  responsable: {
+    [ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']]: 'responsablePTMG',
+    [ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]: 'responsableONF'
+  }
+} as const
+
 const actionAccepterOuRefuserRDE = assign<
   OctARMContext,
   AccepterRDE | RefuserRDE
@@ -768,7 +776,8 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
               on: {
                 REFUSER_COMPLETUDE: 'refusTemporaireCompletude',
                 ACCEPTER_COMPLETUDE: 'validationDesFraisDossier'
-              }
+              },
+              tags: [tags.responsable['ope-ptmg-973-01']]
             },
             refusTemporaireCompletude: {
               on: {
@@ -781,6 +790,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
               }
             },
             validationDesFraisDossier: {
+              tags: [tags.responsable['ope-onf-973-01']],
               on: {
                 VALIDER_FRAIS_DE_DOSSIER: [
                   {
@@ -820,6 +830,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
               }
             },
             recevabiliteDeLaDemande: {
+              tags: [tags.responsable['ope-onf-973-01']],
               on: {
                 DEMANDER_INFORMATION_MCR:
                   'demandeInformationPourLaRecevabilite',
@@ -1100,6 +1111,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
       }
     },
     validationDuPaiementDesFraisDeDossierComplementaires: {
+      tags: [tags.responsable['ope-onf-973-01']],
       id: 'validationDuPaiementDesFraisDeDossierComplementaires',
       on: {
         VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: [

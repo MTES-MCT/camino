@@ -1,4 +1,10 @@
-import { isEtapesOk, nextEtapes, toMachineEtape } from './machine-helper'
+import {
+  isEtapesOk,
+  nextEtapes,
+  toMachineEtape,
+  whoIsBlocking
+} from './machine-helper'
+import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
 
 describe('nextEtapes', () => {
   test('retourne les prochaines étapes possibles', () => {
@@ -106,5 +112,41 @@ describe('toMachineEtape', () => {
     ).toThrowErrorMatchingInlineSnapshot(
       `"le status ffi est inconnu, {\\"id\\":\\"id\\",\\"typeId\\":\\"mfr\\",\\"statutId\\":\\"ffi\\",\\"date\\":\\"2022-01-01\\",\\"titreDemarcheId\\":\\"idDemarche\\"}"`
     )
+  })
+})
+
+describe('whoIsBlocking', () => {
+  test('on attend le PTMG pour la recevabilité d’une demande d’ARM', () => {
+    expect(
+      whoIsBlocking([
+        { typeId: 'mfr', statutId: 'fai', date: '2021-02-01' },
+        { typeId: 'mdp', statutId: 'fai', date: '2021-02-02' },
+        { typeId: 'pfd', statutId: 'fai', date: '2021-02-03' }
+      ])
+    ).toStrictEqual([ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']])
+  })
+
+  test("on attend l'ONF pour la validation du paiement des frais de dossier", () => {
+    expect(
+      whoIsBlocking([
+        { typeId: 'mfr', statutId: 'fai', date: '2021-02-01' },
+        { typeId: 'mdp', statutId: 'fai', date: '2021-02-02' },
+        { typeId: 'pfd', statutId: 'fai', date: '2021-02-03' },
+        { typeId: 'mcp', statutId: 'com', date: '2021-02-04' }
+      ])
+    ).toStrictEqual([ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']])
+  })
+
+  test('on attend personne', () => {
+    expect(
+      whoIsBlocking([
+        { typeId: 'mfr', statutId: 'fai', date: '2021-02-01' },
+        { typeId: 'mdp', statutId: 'fai', date: '2021-02-02' },
+        { typeId: 'pfd', statutId: 'fai', date: '2021-02-03' },
+        { typeId: 'mcp', statutId: 'com', date: '2021-02-04' },
+        { typeId: 'vfd', statutId: 'fai', date: '2021-02-05' },
+        { typeId: 'mcr', statutId: 'fai', date: '2021-02-06' }
+      ])
+    ).toStrictEqual([])
   })
 })

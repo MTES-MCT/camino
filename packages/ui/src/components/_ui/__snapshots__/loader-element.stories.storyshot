@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Automated Storybook Snapshots UI/LoaderElement All 1`] = `
+<div>
+  <div
+    class="top-level"
+  >
+    <div
+      class="spinner"
+    />
+  </div>
+  <div
+    class="top-level"
+  >
+    
+    chargé
+    
+  </div>
+  <div
+    class="top-level"
+  >
+    <div>
+      <div
+        class="tooltip"
+      >
+        <h6
+          class="tooltip-content"
+        >
+          
+          Erreur
+          
+        </h6>
+        <i
+          class="icon-24 icon-error-warning"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

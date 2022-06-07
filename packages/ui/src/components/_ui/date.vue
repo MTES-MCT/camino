@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="white-space: nowrap">
     {{ dateValue }}
   </div>
 </template>

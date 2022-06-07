@@ -16,6 +16,7 @@ import { permissionsCheck } from '../utils'
 import tiles from '../utils/map-tiles'
 
 import router from '../router'
+import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
 
 const state = {
   element: null,
@@ -327,6 +328,15 @@ const getters = {
 
   userIsAdmin(state) {
     return permissionsCheck(state.element, ['super', 'admin', 'editeur'])
+  },
+
+  isONF(state, getters) {
+    return (
+      getters.userIsAdmin &&
+      state.element.administrations.find(
+        ({ id }) => id === ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+      )
+    )
   },
 
   userIsSuper(state) {

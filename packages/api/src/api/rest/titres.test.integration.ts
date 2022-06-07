@@ -11,6 +11,7 @@ import {
 import { ITitreDemarche, ITitreEtape } from '../../types'
 import { entreprisesUpsert } from '../../database/queries/entreprises'
 import { Knex } from 'knex'
+
 let knex: Knex<any, unknown[]>
 beforeAll(async () => {
   knex = await dbManager.populateDb()
@@ -40,6 +41,51 @@ const titreEtapesCreate = async (
 
   return etapesCrees
 }
+
+async function createTitreWithEtapes(
+  etapes: Omit<ITitreEtape, 'id' | 'titreDemarcheId'>[],
+  entreprises: any
+) {
+  const titre = await titreCreate(
+    {
+      nom: 'mon titre',
+      domaineId: 'm',
+      typeId: 'arm',
+      statutId: 'val',
+      propsTitreEtapesIds: {},
+      administrationsGestionnaires: [
+        {
+          ...Administrations[ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]
+        }
+      ],
+      references: [
+        {
+          titreId: 'onfTitreId',
+          typeId: 'onf',
+          nom: 'ONF',
+          type: { nom: 'onf', id: 'onf' }
+        }
+      ]
+    },
+    {}
+  )
+
+  const titreDemarche = await titreDemarcheCreate({
+    titreId: titre.id,
+    typeId: 'oct'
+  })
+  const etapesCrees = await titreEtapesCreate(titreDemarche, etapes)
+
+  await knex('titresTitulaires').insert({
+    titreEtapeId: etapesCrees[0].id,
+    entrepriseId: entreprises[0].id
+  })
+
+  await knex('titres')
+    .update({ propsTitreEtapesIds: { titulaires: etapesCrees[0].id } })
+    .where('id', titre.id)
+}
+
 describe('titresONF', () => {
   test("teste la récupération des données pour l'ONF", async () => {
     const entreprises = await entreprisesUpsert([
@@ -55,49 +101,23 @@ describe('titresONF', () => {
       },
       {}
     )
-    const titre = await titreCreate(
-      {
-        nom: 'mon titre',
-        domaineId: 'm',
-        typeId: 'arm',
-        statutId: 'val',
-        propsTitreEtapesIds: {},
-        administrationsGestionnaires: [
-          {
-            ...Administrations[ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]
-          }
-        ],
-        references: [
-          {
-            titreId: 'onfTitreId',
-            typeId: 'onf',
-            nom: 'ONF',
-            type: { nom: 'onf', id: 'onf' }
-          }
-        ]
-      },
-      {}
+    await createTitreWithEtapes(
+      [
+        { typeId: 'mfr', statutId: 'fai', date: '2022-01-01', ordre: 0 },
+        { typeId: 'mdp', statutId: 'fai', date: '2022-02-01', ordre: 1 },
+        { typeId: 'pfd', statutId: 'fai', date: '2022-02-10', ordre: 2 },
+        { typeId: 'mcp', statutId: 'com', date: '2022-03-10', ordre: 3 }
+      ],
+      entreprises
     )
-    const titreDemarche = await titreDemarcheCreate({
-      titreId: titre.id,
-      typeId: 'oct'
-    })
-
-    const etapesCrees = await titreEtapesCreate(titreDemarche, [
-      { typeId: 'mfr', statutId: 'fai', date: '2018-01-01' },
-      { typeId: 'mcp', statutId: 'fai', date: '2018-02-01' },
-      { typeId: 'mcr', statutId: 'fai', date: '2018-02-10' },
-      { typeId: 'sca', statutId: 'fai', date: '2018-03-10' }
-    ])
-
-    await knex('titresTitulaires').insert({
-      titreEtapeId: etapesCrees[0].id,
-      entrepriseId: entreprises[0].id
-    })
-
-    await knex('titres')
-      .update({ propsTitreEtapesIds: { titulaires: etapesCrees[0].id } })
-      .where('id', titre.id)
+    await createTitreWithEtapes(
+      [
+        { typeId: 'mfr', statutId: 'fai', date: '2022-01-01', ordre: 0 },
+        { typeId: 'mdp', statutId: 'fai', date: '2022-02-01', ordre: 1 },
+        { typeId: 'pfd', statutId: 'fai', date: '2022-02-10', ordre: 2 }
+      ],
+      entreprises
+    )
 
     const tested = await restCall(
       '/titresONF',
@@ -114,7 +134,8 @@ describe('titresONF', () => {
     })
     expect(tested.body[1]).toMatchSnapshot({
       id: expect.any(String),
-      slug: expect.any(String)
+      slug: expect.any(String),
+      references: [{ titreId: expect.any(String) }]
     })
   })
 })

@@ -11,4 +11,5 @@ export interface CommonTitreONF {
   dateCompletudePTMG: string
   dateReceptionONF: string
   dateCARM: string
+  enAttenteDeONF: boolean
 }

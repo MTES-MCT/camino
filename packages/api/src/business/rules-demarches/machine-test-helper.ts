@@ -59,6 +59,7 @@ export const interpretMachine = (etapes: readonly Etape[]) => {
   const service = interpret(armOctMachine)
 
   service.start()
+
   for (let i = 0; i < etapes.length; i++) {
     const etapeAFaire = etapes[i]
     const event = eventFrom(etapeAFaire)
