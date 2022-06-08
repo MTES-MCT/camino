@@ -37,10 +37,10 @@ exports[`Automated Storybook Snapshots Page/Administrations Default 1`] = `
       >
         <svg
           aria-labelledby="chevron-bas"
-          class="component-icon"
           fill="#666"
           height="24px"
           role="application"
+          style="display: block;"
           tabindex="-1"
           viewBox="0 0 24 24"
           width="24px"
@@ -49,7 +49,6 @@ exports[`Automated Storybook Snapshots Page/Administrations Default 1`] = `
           <svg
             aria-hidden="true"
             style="position: absolute; width: 0px; height: 0px; overflow: hidden;"
-            version="1.1"
             xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
           >
@@ -172,10 +171,11 @@ exports[`Automated Storybook Snapshots Page/Administrations Default 1`] = `
                 Abréviation 
                 <svg
                   aria-labelledby="chevron-bas"
-                  class="component-icon right"
+                  class="right"
                   fill="#666"
                   height="24px"
                   role="application"
+                  style="display: block;"
                   tabindex="-1"
                   viewBox="0 0 24 24"
                   width="24px"
@@ -184,7 +184,6 @@ exports[`Automated Storybook Snapshots Page/Administrations Default 1`] = `
                   <svg
                     aria-hidden="true"
                     style="position: absolute; width: 0px; height: 0px; overflow: hidden;"
-                    version="1.1"
                     xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink"
                   >

@@ -1,13 +1,13 @@
 <template>
   <svg
-    class="component-icon"
+    style="display: block"
     xmlns="http://www.w3.org/2000/svg"
     :width="heightAndWidth"
     :height="heightAndWidth"
     viewBox="0 0 24 24"
     :aria-labelledby="name"
     role="application"
-    :fill="computedColor"
+    :fill="color"
     tabindex="-1"
   >
     <IconSprite />
@@ -18,17 +18,18 @@
 <script setup lang="ts">
 import IconSprite from './iconSprite.vue'
 import { Icon } from './iconSpriteType'
-import { computed } from 'vue'
+import { computed, withDefaults } from 'vue'
 
-const props = defineProps<{
-  name: Icon
-  size: 'S' | 'M' | 'L' | 'XL'
-  color?: string
-}>()
-
-const computedColor = computed(() => {
-  return props.color ? props.color : '#666'
-})
+const props = withDefaults(
+  defineProps<{
+    name: Icon
+    size: 'S' | 'M' | 'L' | 'XL'
+    color?: string
+  }>(),
+  {
+    color: '#666'
+  }
+)
 
 const heightAndWidth = computed(() => {
   switch (props.size) {

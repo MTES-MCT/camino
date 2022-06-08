@@ -21,10 +21,11 @@ exports[`Automated Storybook Snapshots Ui/TableAuto Simple 1`] = `
             Nom 
             <svg
               aria-labelledby="chevron-bas"
-              class="component-icon right"
+              class="right"
               fill="#666"
               height="24px"
               role="application"
+              style="display: block;"
               tabindex="-1"
               viewBox="0 0 24 24"
               width="24px"
@@ -33,7 +34,6 @@ exports[`Automated Storybook Snapshots Ui/TableAuto Simple 1`] = `
               <svg
                 aria-hidden="true"
                 style="position: absolute; width: 0px; height: 0px; overflow: hidden;"
-                version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
               >
@@ -433,10 +433,11 @@ exports[`Automated Storybook Snapshots Ui/TableAuto Sorted By Status Asc 1`] = `
             Statut 
             <svg
               aria-labelledby="chevron-haut"
-              class="component-icon right"
+              class="right"
               fill="#666"
               height="24px"
               role="application"
+              style="display: block;"
               tabindex="-1"
               viewBox="0 0 24 24"
               width="24px"
@@ -445,7 +446,6 @@ exports[`Automated Storybook Snapshots Ui/TableAuto Sorted By Status Asc 1`] = `
               <svg
                 aria-hidden="true"
                 style="position: absolute; width: 0px; height: 0px; overflow: hidden;"
-                version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
               >

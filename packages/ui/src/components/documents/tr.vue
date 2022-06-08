@@ -70,8 +70,7 @@
         :download="document.nom"
         target="_blank"
       >
-        <!-- TODO 2022-06-07: l'icone ne change plus de couleur au hover, est-ce qu'on veut toujours ça ? Est-ce qu'on peut être plus malin et appliquer un filtre sur le svg (opacité,...)-->
-        <Icon name="download" size="L" />
+        <Icon name="download" size="M" />
       </a>
       <a
         v-if="document.url"

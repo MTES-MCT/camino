@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="tablet-blobs tablet-flex-direction-reverse">
-      <div class="tablet-blob-1-2 flex mb-s">
+      <div class="tablet-blob-1-2 flex">
         <Download
           v-if="points.length && titreId"
           :section="`titres/${titreId}`"
