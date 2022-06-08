@@ -1,4 +1,4 @@
-export interface CommonTitreONF {
+export interface CommonTitre {
   id: string
   slug: string
   nom: string
@@ -8,6 +8,13 @@ export interface CommonTitreONF {
   }
   references: { nom: string; type: { nom: string } }[]
   titulaires: { nom: string }[]
+}
+
+export interface CommonTitrePTMG extends CommonTitre {
+  enAttenteDePTMG: boolean
+}
+
+export interface CommonTitreONF extends CommonTitre {
   dateCompletudePTMG: string
   dateReceptionONF: string
   dateCARM: string

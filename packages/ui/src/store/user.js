@@ -338,6 +338,14 @@ const getters = {
       )
     )
   },
+  isPTMG(state, getters) {
+    return (
+      getters.userIsAdmin &&
+      state.element.administrations.find(
+        ({ id }) => id === ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      )
+    )
+  },
 
   userIsSuper(state) {
     return permissionsCheck(state.element, ['super'])

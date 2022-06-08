@@ -15,6 +15,37 @@ import { Knex } from 'knex'
 let knex: Knex<any, unknown[]>
 beforeAll(async () => {
   knex = await dbManager.populateDb()
+
+  const entreprises = await entreprisesUpsert([
+    { id: 'plop', nom: 'Mon Entreprise' }
+  ])
+  await titreCreate(
+    {
+      nom: 'mon titre simple',
+      domaineId: 'm',
+      typeId: 'arm',
+      statutId: 'val',
+      propsTitreEtapesIds: {}
+    },
+    {}
+  )
+  await createTitreWithEtapes(
+    [
+      { typeId: 'mfr', statutId: 'fai', date: '2022-01-01', ordre: 0 },
+      { typeId: 'mdp', statutId: 'fai', date: '2022-02-01', ordre: 1 },
+      { typeId: 'pfd', statutId: 'fai', date: '2022-02-10', ordre: 2 },
+      { typeId: 'mcp', statutId: 'com', date: '2022-03-10', ordre: 3 }
+    ],
+    entreprises
+  )
+  await createTitreWithEtapes(
+    [
+      { typeId: 'mfr', statutId: 'fai', date: '2022-01-01', ordre: 0 },
+      { typeId: 'mdp', statutId: 'fai', date: '2022-02-01', ordre: 1 },
+      { typeId: 'pfd', statutId: 'fai', date: '2022-02-10', ordre: 2 }
+    ],
+    entreprises
+  )
 })
 
 afterAll(async () => {
@@ -88,41 +119,33 @@ async function createTitreWithEtapes(
 
 describe('titresONF', () => {
   test("teste la récupération des données pour l'ONF", async () => {
-    const entreprises = await entreprisesUpsert([
-      { id: 'plop', nom: 'Mon Entreprise' }
-    ])
-    await titreCreate(
-      {
-        nom: 'mon titre simple',
-        domaineId: 'm',
-        typeId: 'arm',
-        statutId: 'val',
-        propsTitreEtapesIds: {}
-      },
-      {}
-    )
-    await createTitreWithEtapes(
-      [
-        { typeId: 'mfr', statutId: 'fai', date: '2022-01-01', ordre: 0 },
-        { typeId: 'mdp', statutId: 'fai', date: '2022-02-01', ordre: 1 },
-        { typeId: 'pfd', statutId: 'fai', date: '2022-02-10', ordre: 2 },
-        { typeId: 'mcp', statutId: 'com', date: '2022-03-10', ordre: 3 }
-      ],
-      entreprises
-    )
-    await createTitreWithEtapes(
-      [
-        { typeId: 'mfr', statutId: 'fai', date: '2022-01-01', ordre: 0 },
-        { typeId: 'mdp', statutId: 'fai', date: '2022-02-01', ordre: 1 },
-        { typeId: 'pfd', statutId: 'fai', date: '2022-02-10', ordre: 2 }
-      ],
-      entreprises
-    )
-
     const tested = await restCall(
       '/titresONF',
       'admin',
       ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+    )
+
+    expect(tested.statusCode).toBe(200)
+    expect(tested.body).toHaveLength(2)
+    expect(tested.body[0]).toMatchSnapshot({
+      id: expect.any(String),
+      slug: expect.any(String),
+      references: [{ titreId: expect.any(String) }]
+    })
+    expect(tested.body[1]).toMatchSnapshot({
+      id: expect.any(String),
+      slug: expect.any(String),
+      references: [{ titreId: expect.any(String) }]
+    })
+  })
+})
+
+describe('titresPTMG', () => {
+  test('teste la récupération des données pour le PTMG', async () => {
+    const tested = await restCall(
+      '/titresPTMG',
+      'admin',
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
     expect(tested.statusCode).toBe(200)

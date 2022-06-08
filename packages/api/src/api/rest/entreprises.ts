@@ -14,12 +14,7 @@ import { titresActivitesGet } from '../../database/queries/titres-activites'
 import { entrepriseGet } from '../../database/queries/entreprises'
 import TitresActivites from '../../database/models/titres-activites'
 import Titres from '../../database/models/titres'
-
-type Send<T = express.Response> = (body?: Fiscalite) => T
-
-interface CustomResponse extends express.Response {
-  json: Send<this>
-}
+import { CustomResponse } from './express-type'
 
 // VisibleForTesting
 export const bodyBuilder = (
@@ -155,7 +150,7 @@ export const responseExtractor = (result: OpenfiscaResponse, annee: number) => {
 
 export const fiscalite = async (
   req: express.Request<{ entrepriseId?: string }>,
-  res: CustomResponse
+  res: CustomResponse<Fiscalite>
 ) => {
   const userId = (req.user as unknown as IUser | undefined)?.id
 
