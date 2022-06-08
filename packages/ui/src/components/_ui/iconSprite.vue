@@ -6,10 +6,17 @@
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
   >
-    <symbol id="icon-check" viewBox="0 0 24 24">
-      <title>check</title>
-      <path d="M18 6.999l-7 9.5-5-4" />
-      <path d="M2.5 2.499h19v19h-19z" />
+    <symbol id="icon-chevron-bas" viewBox="0 0 24 24">
+      <title>chevron-bas</title>
+      <path
+        d="M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z"
+      />
+    </symbol>
+    <symbol id="icon-chevron-haut" viewBox="0 0 24 24">
+      <title>chevron-haut</title>
+      <path
+        d="M12 10.828l-4.95 4.95-1.414-1.414L12 8l6.364 6.364-1.414 1.414z"
+      />
     </symbol>
     <symbol id="icon-download" viewBox="0 0 24 24">
       <title>download</title>
