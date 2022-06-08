@@ -93,11 +93,18 @@ const actions = {
     console.error(error)
   },
 
-  pageError({ commit }) {
-    commit('errorUpdate', {
-      type: 'error',
-      value: `Erreur: page introuvable`
-    })
+  pageError({ commit, getters }) {
+    if (getters['user/user'] !== null) {
+      commit('errorUpdate', {
+        type: 'error',
+        value: `Erreur: page introuvable`
+      })
+    } else {
+      commit('errorUpdate', {
+        type: 'info',
+        value: `Vous n'avez pas accès à cette page, veuillez vous connecter.`
+      })
+    }
   },
 
   errorRemove({ state, commit }) {
