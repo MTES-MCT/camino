@@ -4,24 +4,14 @@
       <div class="tablet-blobs mb flex-align-items-stretch">
         <div class="tablet-blob-1-4 border-l pl-s">
           <ul class="list-sans mb-0">
-            <li v-if="hasEntreprises">
+            <li v-if="dashboardLabel">
               <router-link
                 id="cmn-menu-menu-a-dashboard"
                 :to="{ name: 'dashboard' }"
                 class="btn-menu text-decoration-none bold"
                 @click="eventTrack('dashboard')"
               >
-                Mes titres
-              </router-link>
-            </li>
-            <li v-if="isONF">
-              <router-link
-                id="cmn-menu-menu-a-dashboard"
-                :to="{ name: 'dashboard' }"
-                class="btn-menu text-decoration-none bold"
-                @click="eventTrack('dashboard')"
-              >
-                Tableau de bord ONF
+                {{ dashboardLabel }}
               </router-link>
             </li>
             <li>
@@ -167,9 +157,25 @@ export default {
     isONF() {
       return this.$store.getters['user/isONF']
     },
+    isPTMG() {
+      return this.$store.getters['user/isPTMG']
+    },
 
     sections() {
       return this.user && this.user.sections ? this.user.sections : {}
+    },
+
+    dashboardLabel() {
+      if (this.hasEntreprises) {
+        return 'Mes titres'
+      }
+      if (this.isONF) {
+        return 'Tableau de bord ONF'
+      }
+      if (this.isPTMG) {
+        return 'Tableau de bord PTMG'
+      }
+      return null
     },
 
     menu() {
