@@ -126,10 +126,13 @@ export default {
   methods: {
     async login() {
       if (this.complete) {
-        await this.$store.dispatch('user/login', {
+        const logged = await this.$store.dispatch('user/login', {
           email: this.email,
           motDePasse: this.motDePasse
         })
+        if (logged && window.location.pathname === '/') {
+          await this.$router.push({ name: 'dashboard' })
+        }
       }
     },
 

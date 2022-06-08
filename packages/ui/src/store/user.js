@@ -83,9 +83,13 @@ const actions = {
 
       await dispatch('init')
       dispatch('errorRemove', null, { root: true })
+
+      return true
     } catch (e) {
       commit('reset')
       commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
+
+      return false
     } finally {
       commit('loadingRemove', 'userLogin', { root: true })
     }

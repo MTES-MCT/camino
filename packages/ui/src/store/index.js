@@ -66,6 +66,14 @@ const state = {
   }
 }
 
+function isOnPristineLandingPage(query) {
+  return (
+    query.centre === '46.227103425310766,2.499999999999991' &&
+    query.vueId === 'carte' &&
+    Object.keys(query).length === 3
+  )
+}
+
 const actions = {
   apiError({ commit }, error) {
     if (error.message === 'aborted') return
@@ -170,9 +178,13 @@ const actions = {
     )
 
     if (status === 'updated') {
-      router.push({ query })
+      await router.push({ query })
     } else if (status === 'created') {
-      router.replace({ query })
+      await router.replace({ query })
+    }
+
+    if (isOnPristineLandingPage(query)) {
+      history.replaceState({}, null, '/')
     }
   }
 }
