@@ -136,7 +136,7 @@
           class="btn-border rnd-xs flex-right py-s px-m mb-m"
           @click="demandeDownload"
         >
-          <i class="icon-24 icon-download" />
+          <Icon size="M" name="download" />
         </button>
       </div>
     </div>
@@ -155,9 +155,11 @@ import Statut from '../_common/statut.vue'
 import RemovePopup from './remove.vue'
 import DeposePopup from './depose-popup.vue'
 import HelpTooltip from '../_ui/help-tooltip.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     HelpTooltip,
     Accordion,
     Tag,

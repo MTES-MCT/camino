@@ -88,7 +88,7 @@
                   class="btn-border py-s px-m rnd-r-xs"
                   @click="justificatifDownload(eId, index)"
                 >
-                  <i class="icon-24 icon-download" />
+                  <Icon size="M" name="download" />
                 </button>
               </div>
             </div>
@@ -105,9 +105,10 @@ import { dateFormat } from '@/utils'
 import DocumentEditPopup from '../document/edit-popup.vue'
 import Tag from '../_ui/tag.vue'
 import HelpTooltip from '../_ui/help-tooltip.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
-  components: { Tag, HelpTooltip },
+  components: { Icon, Tag, HelpTooltip },
   props: {
     justificatifs: { type: Array, required: true },
     justificatifsTypes: { type: Array, required: true },

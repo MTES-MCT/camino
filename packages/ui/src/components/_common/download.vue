@@ -2,13 +2,15 @@
   <button class="flex" @click="download">
     <span class="mt-xxs">{{ format }}</span>
     <div class="flex-right pl-xs">
-      <i class="icon-24 icon-download" />
+      <Icon size="M" name="download" />
     </div>
   </button>
 </template>
 
 <script>
+import Icon from '@/components/_ui/icon.vue'
 export default {
+  components: { Icon },
   props: {
     section: { type: String, required: true },
 

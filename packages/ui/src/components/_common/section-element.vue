@@ -20,7 +20,7 @@
           class="btn-border py-xs px-s rnd-xs flex-right mt--xs"
           @click="fileDownload(contenu[element.id])"
         >
-          <i class="icon-24 icon-download" />
+          <Icon size="M" name="download" />
         </button>
       </div>
 
@@ -51,10 +51,11 @@
 import { valeurFind } from '../../utils/contenu'
 import SectionElementMultiple from './section-element-multiple.vue'
 import numberFormat from '@/utils/number-format'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   name: 'SectionElement',
-  components: { SectionElementMultiple },
+  components: { Icon, SectionElementMultiple },
   props: {
     element: { type: Object, required: true },
     contenu: { type: Object, required: true }
