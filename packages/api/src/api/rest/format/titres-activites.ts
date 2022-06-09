@@ -5,12 +5,24 @@ import {
   ISection,
   ITitreActivite
 } from '../../../types'
+import {
+  isSubstanceFiscale,
+  SubstancesFiscale
+} from 'camino-common/src/substance'
+import { UniteId, Unites } from 'camino-common/src/unites'
 
 const titreActiviteContenuFormat = (contenu: IContenu, sections: ISection[]) =>
   sections.reduce((resSections: Index<IContenuValeur>, section) => {
     const r = section.elements!.reduce(
       (resElements: Index<IContenuValeur>, element) => {
-        const key = `${section.id}_${element.id}`
+        let key = `${section.id}_${element.id}`
+
+        if (section.id === 'substancesFiscales') {
+          if (isSubstanceFiscale(element.id)) {
+            const uniteId: UniteId = SubstancesFiscale[element.id].uniteId
+            key += ` (${Unites[uniteId].nom})`
+          }
+        }
         const value = contenu[section.id]
           ? contenu[section.id][element.id]
           : undefined

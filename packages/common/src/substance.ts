@@ -48,6 +48,11 @@ export interface SubstanceFiscale<T = SubstanceFiscaleId> {
   description: string
 }
 
+export const isSubstanceFiscale = (
+  substance: string
+): substance is SubstanceFiscaleId => {
+  return Object.values(SUBSTANCES_FISCALES_IDS).includes(substance)
+}
 export const SubstancesFiscale: {
   [key in SubstanceFiscaleId]: SubstanceFiscale<key>
 } = {
