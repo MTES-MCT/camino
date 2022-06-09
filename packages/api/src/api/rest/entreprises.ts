@@ -15,6 +15,7 @@ import { entrepriseGet } from '../../database/queries/entreprises'
 import TitresActivites from '../../database/models/titres-activites'
 import Titres from '../../database/models/titres'
 import { CustomResponse } from './express-type'
+import {SubstancesFiscales} from "camino-common/src/substance";
 
 // VisibleForTesting
 export const bodyBuilder = (
@@ -48,6 +49,15 @@ export const bodyBuilder = (
       // Pour le titre m-px-saint-pierre-2013 il n'y a pas d'ordre aux substances, il y'a or et substances connexes
       // d'après le code, il y'a un tri par ordre alphabétique, pas terrible non ?
       // plus inquiétant, cette étape à 11 substances non triées : EZtUs2fefrDZUw0wLAUK42p8
+
+      const substanceLegalesWithFiscales = titre.substances
+      .flatMap(s => s.legales)
+      .filter(s => SubstancesFiscales.some(({substanceLegaleId}) => substanceLegaleId === s.id))
+
+      if(substanceLegalesWithFiscales.length > 1){
+        console.error('BOOM, titre avec plusieurs substances ', titre.id)
+      }
+
 
       const mainSubstance = titre.substances[0]
       const production = activite.contenu.substancesFiscales[mainSubstance.id]
@@ -149,6 +159,11 @@ export const fiscalite = async (
   req: express.Request<{ entrepriseId?: string }>,
   res: CustomResponse<Fiscalite>
 ) => {
+  // TODO 2022-06-09:
+  // regarder si on a des activités multi substances avec plusieurs productions --> c'est bon
+  // récupérer les investissements dans les rapports trimestriels
+  // retourner les infos de guyane que si il y'a au moins un titre guyanais (ne pas requêter openfisca pour les investissements dans ce cas là)
+
   const userId = (req.user as unknown as IUser | undefined)?.id
 
   const user = await userGet(userId)

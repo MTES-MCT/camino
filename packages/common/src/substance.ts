@@ -293,3 +293,6 @@ export const SubstancesFiscale: {
     description: 'contenu dans les minerais'
   }
 }
+
+
+export const SubstancesFiscales = Object.values(SubstancesFiscale)
