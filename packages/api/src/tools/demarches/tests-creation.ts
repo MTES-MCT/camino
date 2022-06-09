@@ -1,79 +1,34 @@
 import '../../init'
+import {titresGet} from "../../database/queries/titres";
+import {userSuper} from "../../database/user-super";
+import {SubstancesFiscales} from "camino-common/src/substance";
+import {titresActivitesGet} from "../../database/queries/titres-activites";
 
-import { titresDemarchesGet } from '../../database/queries/titres-demarches'
-import { userSuper } from '../../database/user-super'
-import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find'
-import { Etape } from '../../business/rules-demarches/arm/oct.machine'
-import { writeFileSync } from 'fs'
-import {
-  isEtapesOk,
-  toMachineEtape
-} from '../../business/rules-demarches/machine-helper'
+
 
 const writeEtapesForTest = async () => {
-  const demarcheDefinition = {
-    titreTypeId: 'arm',
-    demarcheTypeIds: ['oct'],
-    dateDebut: '2019-10-31'
-  }
-  const demarches = await titresDemarchesGet(
-    {
-      titresTypesIds: [demarcheDefinition.titreTypeId.slice(0, 2)],
-      titresDomainesIds: [demarcheDefinition.titreTypeId.slice(2)],
-      typesIds: demarcheDefinition.demarcheTypeIds
-    },
-    {
-      fields: {
-        titre: { id: {}, demarches: { etapes: { id: {} } } },
-        etapes: { id: {} },
-        type: { etapesTypes: { etapesStatuts: { id: {} } } }
-      }
-    },
-    userSuper
-  )
 
-  const toutesLesEtapes = demarches
-    .filter(demarche => demarche.etapes?.length)
-    .filter(demarche => {
-      const date = titreDemarcheDepotDemandeDateFind(demarche.etapes!)
 
-      return (date ?? '') > demarcheDefinition.dateDebut
-    })
-    .map((demarche, index) => {
-      const etapes: Etape[] =
-        demarche?.etapes
-          ?.sort((a, b) => (a.ordre ?? 0) - (b.ordre ?? 0))
-          ?.map(etape => {
-            if (etape?.contenu?.arm) {
-              etape.contenu = { arm: etape.contenu?.arm }
-            } else {
-              delete etape.contenu
-            }
+    const activites = await titresActivitesGet(
+        {
+            typesIds: ['grx', 'gra', 'wrp'],
+            statutsIds: ['dep'],
+            annees: [2021]
+        },
+        { fields: { titre: { substances: { legales: {id: {}} }}} },
+        userSuper
+    )
 
-            return toMachineEtape(etape)
-          }) ?? []
-      try {
-        if (!isEtapesOk(etapes)) {
-          console.warn(
-            `https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche "${demarche.typeId}"`
-          )
+    activites.forEach((activites, i) => {
+        const substanceLegalesWithFiscales = (activites.titre?.substances ?? [])
+            .flatMap(s => s.legales)
+            .filter(s => SubstancesFiscales.some(({substanceLegaleId}) => substanceLegaleId === s.id))
+
+        if(substanceLegalesWithFiscales.length > 1){
+            console.error('BOOM, titre avec plusieurs substances ', activites.titre?.id, i)
         }
-      } catch (e) {
-        console.error(
-          `https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche "${demarche.typeId}"`
-        )
-      }
-
-      const etapesAnonymes = etapes.map((etape, index) => {
-        return { ...etape, date: index.toString() }
-      })
-
-      return { id: index, etapes: etapesAnonymes }
     })
-  writeFileSync(
-    'src/business/rules-demarches/arm/oct.cas.json',
-    JSON.stringify(toutesLesEtapes)
-  )
+
 }
 
 writeEtapesForTest()
