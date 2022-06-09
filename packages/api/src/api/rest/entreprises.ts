@@ -15,7 +15,7 @@ import { entrepriseGet } from '../../database/queries/entreprises'
 import TitresActivites from '../../database/models/titres-activites'
 import Titres from '../../database/models/titres'
 import { CustomResponse } from './express-type'
-import {SubstancesFiscales} from "camino-common/src/substance";
+import { SubstancesFiscales } from 'camino-common/src/substance'
 
 // VisibleForTesting
 export const bodyBuilder = (
@@ -51,77 +51,93 @@ export const bodyBuilder = (
       // plus inquiétant, cette étape à 11 substances non triées : EZtUs2fefrDZUw0wLAUK42p8
 
       const substanceLegalesWithFiscales = titre.substances
-      .flatMap(s => s.legales)
-      .filter(s => SubstancesFiscales.some(({substanceLegaleId}) => substanceLegaleId === s.id))
-
-      if(substanceLegalesWithFiscales.length > 1){
-        console.error('BOOM, titre avec plusieurs substances ', titre.id)
-      }
-
-
-      const mainSubstance = titre.substances[0]
-      const production = activite.contenu.substancesFiscales[mainSubstance.id]
-
-      if (typeof production === 'number' && production > 0) {
-        if (!titre.communes) {
-          throw new Error(
-            `les communes du titre ${titre.id} ne sont pas chargées`
+        .flatMap(s => s.legales)
+        .filter(s =>
+          SubstancesFiscales.some(
+            ({ substanceLegaleId }) => substanceLegaleId === s.id
           )
-        }
-
-        const surfaceTotale = titre.communes.reduce(
-          (value, commune) => value + (commune.surface ?? 0),
-          0
         )
 
-        for (const commune of titre.communes) {
-          const articleId = `${titre.id}-${mainSubstance.id}-${commune.id}`
+      if (substanceLegalesWithFiscales.length > 1) {
+        // TODO on fait quoi ? On calcule quand même ?
+        console.error(
+          'BOOM, titre avec plusieurs substances légales possédant plusieurs substances fiscales ',
+          titre.id
+        )
+      }
 
-          body.articles[articleId] = {
-            surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
-            surface_totale: { [anneePrecedente]: surfaceTotale },
-            // TODO Sandra, substance
-            quantite_aurifere_kg: { [anneePrecedente]: production },
-            redevance_communale_des_mines_aurifere_kg: {
-              [annee]: null
-            },
-            redevance_departementale_des_mines_aurifere_kg: {
-              [annee]: null
-            }
-            // TODO taxe guyane
-            // TODO Sandra - elle ne fonctionne pas via OPENFISCA
-            // TODO Laure - on calcule cette taxe que pour les titres Guyannais ?
+      const substancesFiscales = substanceLegalesWithFiscales.flatMap(
+        ({ id }) =>
+          SubstancesFiscales.filter(
+            ({ substanceLegaleId }) => substanceLegaleId === id
+          )
+      )
+
+      for (const substancesFiscale of substancesFiscales) {
+        const production =
+          activite.contenu.substancesFiscales[substancesFiscale.id]
+
+        if (typeof production === 'number' && production > 0) {
+          if (!titre.communes) {
+            throw new Error(
+              `les communes du titre ${titre.id} ne sont pas chargées`
+            )
           }
 
-          if (!Object.prototype.hasOwnProperty.call(body.titres, titre.id)) {
-            body.titres[titre.id] = {
-              commune_principale_exploitation: {
-                [anneePrecedente]: commune.id
-              },
-              operateur: {
-                // TODO Sandra : ça sert à quoi ?
-                [anneePrecedente]: entreprise.nom
-              },
-              // TODO Sandra, ça vient d’où ?
-              investissement: {
-                [anneePrecedente]: '1'
-              },
-              categorie: {
-                [anneePrecedente]:
-                  entreprise.categorie === 'PME' ? 'pme' : 'autre'
-              },
-              articles: [articleId]
-            }
-          } else {
-            body.titres[titre.id].articles.push(articleId)
-          }
+          const surfaceTotale = titre.communes.reduce(
+            (value, commune) => value + (commune.surface ?? 0),
+            0
+          )
 
-          if (
-            !Object.prototype.hasOwnProperty.call(body.communes, commune.id)
-          ) {
-            body.communes[commune.id] = { articles: [articleId] }
-          } else {
-            body.communes[commune.id].articles.push(articleId)
+          for (const commune of titre.communes) {
+            const articleId = `${titre.id}-${substancesFiscale.id}-${commune.id}`
+
+            body.articles[articleId] = {
+              surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
+              surface_totale: { [anneePrecedente]: surfaceTotale },
+              // TODO Sandra, substance
+              quantite_aurifere_kg: { [anneePrecedente]: production },
+              redevance_communale_des_mines_aurifere_kg: {
+                [annee]: null
+              },
+              redevance_departementale_des_mines_aurifere_kg: {
+                [annee]: null
+              }
+              // TODO taxe guyane
+              // TODO Sandra - elle ne fonctionne pas via OPENFISCA
+              // TODO Laure - on calcule cette taxe que pour les titres Guyannais ?
+            }
+
+            if (!Object.prototype.hasOwnProperty.call(body.titres, titre.id)) {
+              body.titres[titre.id] = {
+                commune_principale_exploitation: {
+                  [anneePrecedente]: commune.id
+                },
+                operateur: {
+                  // TODO Sandra : ça sert à quoi ?
+                  [anneePrecedente]: entreprise.nom
+                },
+                // TODO C'est dans les rapports trimestriels (GRP)
+                investissement: {
+                  [anneePrecedente]: '1'
+                },
+                categorie: {
+                  [anneePrecedente]:
+                    entreprise.categorie === 'PME' ? 'pme' : 'autre'
+                },
+                articles: [articleId]
+              }
+            } else {
+              body.titres[titre.id].articles.push(articleId)
+            }
+
+            if (
+              !Object.prototype.hasOwnProperty.call(body.communes, commune.id)
+            ) {
+              body.communes[commune.id] = { articles: [articleId] }
+            } else {
+              body.communes[commune.id].articles.push(articleId)
+            }
           }
         }
       }
