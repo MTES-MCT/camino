@@ -532,6 +532,18 @@ const etapeModifier = async (
       )
     }
 
+    // il y a un index d’unicité sur la colonne ordre de titres_substances
+    // on ne peut pas échanger la position de 2 substances via le upsertGraph de Objection, même avec une transaction
+    // https://github.com/Vincit/objection.js/issues/1809)
+    const maxOrdre =
+      etape.substances?.reduce(
+        (maxOrdre, substance) => Math.max(maxOrdre, substance.ordre ?? 0),
+        0
+      ) ?? 0
+    etape.substances?.forEach(substance => {
+      if (substance.ordre) substance.ordre += maxOrdre
+    })
+
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(
       etape,
       user!,
