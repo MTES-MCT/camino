@@ -21,13 +21,7 @@
           :class="{ 'rnd-br-s': !opened }"
           @click="toggle"
         >
-          <i
-            class="icon-24"
-            :class="{
-              [iconOpenedClass]: !opened,
-              [iconClosedClass]: opened
-            }"
-          />
+          <Icon size="M" :name="opened ? 'chevron-haut' : 'chevron-bas'" />
         </button>
         <div v-else class="py-s px-m">
           <i class="icon-24" />
@@ -49,10 +43,7 @@
         <slot name="title" />
       </div>
       <div class="flex flex-right flex-end">
-        <i
-          class="icon-24"
-          :class="{ [iconOpenedClass]: !opened, [iconClosedClass]: opened }"
-        />
+        <Icon size="M" :name="opened ? 'chevron-haut' : 'chevron-bas'" />
       </div>
     </button>
 
@@ -73,14 +64,11 @@
 </template>
 
 <script>
+import Icon from '@/components/_ui/icon.vue'
 export default {
   name: 'UiSytemAccordion',
-
+  components: { Icon },
   props: {
-    iconOpenedClass: { type: String, default: 'icon-chevron-b' },
-
-    iconClosedClass: { type: String, default: 'icon-chevron-t' },
-
     opened: { type: Boolean, default: false },
 
     slotSub: { type: Boolean, default: false },

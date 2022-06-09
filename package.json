@@ -34,6 +34,11 @@
     "packages/common/**/*.ts": [
       "npm run lint -w packages/common",
       "npm run format -w packages/common"
+    ],
+    "packages/ui/src/components/_ui/iconSprite.vue": [
+      "npm run -w packages/ui generate-icon-types",
+      "npm run -w packages/ui lint src/components/_ui/iconSpriteType.ts",
+      "git add packages/ui/src/components/_ui/iconSpriteType.ts"
     ]
   },
   "devDependencies": {

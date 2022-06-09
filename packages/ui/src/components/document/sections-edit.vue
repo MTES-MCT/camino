@@ -64,7 +64,7 @@
               class="btn-border py-s px-m my--xs rnd-r-xs"
               @click="fileDownload"
             >
-              <i class="icon-24 icon-download" />
+              <Icon size="M" name="download" />
             </button>
           </div>
         </div>
@@ -209,9 +209,10 @@
 import InputDate from '../_ui/input-date.vue'
 import InputFile from '../_ui/input-file.vue'
 import Messages from '../_ui/messages.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
-  components: { Messages, InputFile, InputDate },
+  components: { Icon, Messages, InputFile, InputDate },
 
   props: {
     document: { type: Object, required: true },

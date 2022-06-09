@@ -12,13 +12,11 @@
           >
             <button class="btn-menu full-x p-0">
               {{ col.name || (column === col.id ? '' : '–') }}
-              <i
+              <Icon
                 v-if="column === col.id"
-                class="icon-24 right"
-                :class="{
-                  'icon-chevron-b': order === 'asc',
-                  'icon-chevron-t': order === 'desc'
-                }"
+                class="right"
+                size="M"
+                :name="order === 'asc' ? 'chevron-bas' : 'chevron-haut'"
               />
             </button>
           </div>
@@ -66,9 +64,10 @@
 </template>
 
 <script>
+import Icon from '@/components/_ui/icon.vue'
 export default {
   name: 'UiTable',
-
+  components: { Icon },
   props: {
     rows: { type: Array, required: true },
     columns: { type: Array, required: true },

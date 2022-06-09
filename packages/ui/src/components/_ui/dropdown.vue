@@ -13,10 +13,7 @@
           <slot name="title" />
         </div>
         <div class="flex flex-right flex-end">
-          <i
-            class="icon-24"
-            :class="{ [iconOpenedClass]: !opened, [iconClosedClass]: opened }"
-          />
+          <Icon size="M" :name="opened ? 'chevron-haut' : 'chevron-bas'" />
         </div>
       </button>
 
@@ -32,14 +29,11 @@
 </template>
 
 <script>
+import Icon from '@/components/_ui/icon.vue'
 export default {
   name: 'UiSytemDropdown',
-
+  components: { Icon },
   props: {
-    iconOpenedClass: { type: String, default: 'icon-chevron-b' },
-
-    iconClosedClass: { type: String, default: 'icon-chevron-t' },
-
     opened: { type: Boolean, default: false }
   },
 

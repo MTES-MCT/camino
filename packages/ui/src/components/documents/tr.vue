@@ -70,7 +70,7 @@
         :download="document.nom"
         target="_blank"
       >
-        <i class="icon-24 icon-download" />
+        <Icon name="download" size="M" />
       </a>
       <a
         v-if="document.url"
@@ -120,9 +120,11 @@ import Tag from '../_ui/tag.vue'
 import DocumentEditPopup from '../document/edit-popup.vue'
 import DocumentRemovePopup from '../document/remove-popup.vue'
 import HelpTooltip from '../_ui/help-tooltip.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     Tag,
     HelpTooltip
   },
