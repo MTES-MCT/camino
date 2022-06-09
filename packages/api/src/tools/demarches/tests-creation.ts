@@ -7,8 +7,7 @@ const writeEtapesForTest = async () => {
   const activites = await titresActivitesGet(
     {
       typesIds: ['grx', 'gra', 'wrp'],
-      statutsIds: ['dep'],
-      annees: [2021]
+      statutsIds: ['dep']
     },
     { fields: { titre: { substances: { legales: { id: {} } } } } },
     userSuper
