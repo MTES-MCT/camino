@@ -7,7 +7,7 @@ Object {
   "dateReceptionONF": "",
   "enAttenteDeONF": true,
   "id": Any<String>,
-  "nom": "mon titre",
+  "nom": "titre1",
   "references": Array [
     Object {
       "nom": "ONF",
@@ -59,7 +59,7 @@ Object {
   "dateReceptionONF": "",
   "enAttenteDeONF": false,
   "id": Any<String>,
-  "nom": "mon titre",
+  "nom": "titre2",
   "references": Array [
     Object {
       "nom": "ONF",
@@ -108,7 +108,7 @@ exports[`titresPTMG teste la récupération des données pour le PTMG 1`] = `
 Object {
   "enAttenteDePTMG": false,
   "id": Any<String>,
-  "nom": "mon titre",
+  "nom": "titre1",
   "references": Array [
     Object {
       "nom": "ONF",
@@ -157,7 +157,7 @@ exports[`titresPTMG teste la récupération des données pour le PTMG 2`] = `
 Object {
   "enAttenteDePTMG": true,
   "id": Any<String>,
-  "nom": "mon titre",
+  "nom": "titre2",
   "references": Array [
     Object {
       "nom": "ONF",

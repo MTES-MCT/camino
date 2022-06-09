@@ -105,7 +105,7 @@ async function titresArmAvecOctroi(
   )
   const titresAutorisesIds = titresAutorises.map(({ id }) => id)
   const titres = await titresGet(
-    { ...filters, ids: titresAutorisesIds },
+    { ...filters, ids: titresAutorisesIds, colonne: 'nom' },
     {
       fields: {
         statut: { id: {} },

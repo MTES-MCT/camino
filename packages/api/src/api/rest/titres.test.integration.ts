@@ -4,10 +4,7 @@ import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes'
 import { userSuper } from '../../database/user-super'
 import { restCall } from '../../../tests/_utils'
-import {
-  ADMINISTRATION_IDS,
-  Administrations
-} from 'camino-common/src/administrations'
+import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
 import { ITitreDemarche, ITitreEtape } from '../../types'
 import { entreprisesUpsert } from '../../database/queries/entreprises'
 import { Knex } from 'knex'
@@ -30,6 +27,7 @@ beforeAll(async () => {
     {}
   )
   await createTitreWithEtapes(
+    'titre1',
     [
       { typeId: 'mfr', statutId: 'fai', date: '2022-01-01', ordre: 0 },
       { typeId: 'mdp', statutId: 'fai', date: '2022-02-01', ordre: 1 },
@@ -39,6 +37,7 @@ beforeAll(async () => {
     entreprises
   )
   await createTitreWithEtapes(
+    'titre2',
     [
       { typeId: 'mfr', statutId: 'fai', date: '2022-01-01', ordre: 0 },
       { typeId: 'mdp', statutId: 'fai', date: '2022-02-01', ordre: 1 },
@@ -74,21 +73,18 @@ const titreEtapesCreate = async (
 }
 
 async function createTitreWithEtapes(
+  nomTitre: string,
   etapes: Omit<ITitreEtape, 'id' | 'titreDemarcheId'>[],
   entreprises: any
 ) {
   const titre = await titreCreate(
     {
-      nom: 'mon titre',
+      nom: nomTitre,
       domaineId: 'm',
       typeId: 'arm',
       statutId: 'val',
       propsTitreEtapesIds: {},
-      administrationsGestionnaires: [
-        {
-          ...Administrations[ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]
-        }
-      ],
+      administrationsGestionnaires: [],
       references: [
         {
           titreId: 'onfTitreId',
