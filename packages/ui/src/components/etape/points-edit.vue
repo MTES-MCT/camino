@@ -97,7 +97,7 @@
                         pointMoveDown(groupeIndex, contourIndex, pointIndex)
                       "
                     >
-                      <i class="icon-24 icon-move-down" />
+                      <Icon size="M" name="move-down" />
                     </button>
                     <button
                       v-if="
@@ -118,7 +118,7 @@
                         pointMoveUp(groupeIndex, contourIndex, pointIndex)
                       "
                     >
-                      <i class="icon-24 icon-move-up" />
+                      <Icon size="M" name="move-up" />
                     </button>
                     <button
                       :class="{

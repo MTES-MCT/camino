@@ -487,47 +487,6 @@
   );
 }
 
-.icon-move-down {
-  background-image: svg-load('./svgs/24-move-down.svg',
-  fill=none,
-  stroke= '#666',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
-.btn-border:hover .icon-move-down {
-  background-image: svg-load('./svgs/24-move-down.svg',
-  fill=none,
-  stroke= 'white',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
-.icon-move-up {
-  background-image: svg-load('./svgs/24-move-up.svg',
-  fill=none,
-  stroke= '#666',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
-.btn-border:hover .icon-move-up {
-  background-image: svg-load('./svgs/24-move-up.svg',
-  fill=none,
-  stroke= 'white',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
-
 .icon-map-legend {
   height: calc(var(--unit) * 1);
   width: calc(var(--unit) * 2);

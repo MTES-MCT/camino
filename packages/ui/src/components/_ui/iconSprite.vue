@@ -57,6 +57,18 @@
       <title>minus</title>
       <path d="M5 11h14v2H5z" />
     </symbol>
+    <symbol id="icon-move-down" viewBox="0 0 24 24">
+      <title>move-down</title>
+      <path
+        d="M13 16.172l5.364-5.364 1.414 1.414L12 20l-7.778-7.778 1.414-1.414L11 16.172V4h2v12.172z"
+      />
+    </symbol>
+    <symbol id="icon-move-up" viewBox="0 0 24 24">
+      <title>move-up</title>
+      <path
+        d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"
+      />
+    </symbol>
     <symbol id="icon-plus" viewBox="0 0 24 24">
       <title>plus</title>
       <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z" />

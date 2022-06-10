@@ -242,7 +242,7 @@
               class="btn-border py-s px-m rnd-l-xs"
               @click="substanceMoveDown(n)"
             >
-              <i class="icon-24 icon-move-down" />
+              <Icon size="M" name="move-down" />
             </button>
             <button
               v-if="substancesLength && n > 0 && etape.substances[n].id"
@@ -252,7 +252,7 @@
               class="btn-border py-s px-m"
               @click="substanceMoveUp(n)"
             >
-              <i class="icon-24 icon-move-up" />
+              <Icon size="M" name="move-up" />
             </button>
             <button
               :class="{

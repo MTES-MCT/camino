@@ -10,6 +10,8 @@ export const icons = [
   'error-warning',
   'help',
   'minus',
+  'move-down',
+  'move-up',
   'plus',
   'refresh',
   'x'
