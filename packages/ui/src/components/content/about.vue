@@ -88,7 +88,7 @@
       <div class="desktop-blobs">
         <div class="desktop-blob-1-3">
           <div class="p-l">
-            <i class="icon-128 icon-business" />
+            <img class="logo" :src="business" alt="les entreprises" />
           </div>
 
           <h3>Les entreprises</h3>
@@ -104,7 +104,11 @@
 
         <div class="desktop-blob-1-3">
           <div class="p-l">
-            <i class="icon-128 icon-ngo" />
+            <img
+              class="logo"
+              :src="ngo"
+              alt="Les ONG, les citoyens et leurs élus"
+            />
           </div>
 
           <h3>Les ONG, les citoyens et leurs élus</h3>
@@ -119,7 +123,7 @@
 
         <div class="desktop-blob-1-3">
           <div class="p-l">
-            <i class="icon-128 icon-user-check" />
+            <img class="logo" :src="userCheck" alt="Les agents publics" />
           </div>
 
           <h3>Les agents publics</h3>
@@ -154,7 +158,7 @@
       <div class="desktop-blobs">
         <div class="desktop-blob-1-3">
           <div class="p-l">
-            <i class="icon-128 icon-map" />
+            <img class="logo" :src="map" alt="carte interactive" />
           </div>
           <h3>Une carte interactive</h3>
 
@@ -166,7 +170,7 @@
 
         <div class="desktop-blob-1-3">
           <div class="p-l">
-            <i class="icon-128 icon-dashboard" />
+            <img class="logo" :src="dashboard" alt="tableau de bord" />
           </div>
 
           <h3>Des tableaux de bord</h3>
@@ -180,7 +184,7 @@
 
         <div class="desktop-blob-1-3">
           <div class="p-l">
-            <i class="icon-128 icon-api" />
+            <img class="logo" :src="api" alt="une API ouverte" />
           </div>
 
           <h3>Une API ouverte</h3>
@@ -320,3 +324,21 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import map from './map-pin-2.svg'
+import dashboard from './window-speedtest.svg'
+import api from './cloud-setting.svg'
+import business from './building-2.svg'
+import ngo from './group-global.svg'
+import userCheck from './business-check.svg'
+</script>
+<style scoped>
+.logo {
+  width: calc(var(--unit) * 5);
+  height: calc(var(--unit) * 5);
+  display: inline-block;
+  vertical-align: middle;
+  background-repeat: no-repeat;
+}
+</style>

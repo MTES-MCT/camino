@@ -26,14 +26,6 @@
   background-repeat: no-repeat;
 }
 
-.icon-128 {
-  width: calc(var(--unit) * 5);
-  height: calc(var(--unit) * 5);
-  display: inline-block;
-  vertical-align: middle;
-  background-repeat: no-repeat;
-}
-
 .icon-file {
   background-image: svg-load('./svgs/16-file.svg',
   fill=none,
@@ -344,66 +336,6 @@
 .btn-tab:hover .icon-list {
   background-image: svg-load('./svgs/list-bullets.svg',
   fill='white'
-  );
-}
-
-.icon-map {
-  background-image: svg-load('./svgs/map-pin-2.svg',
-  fill=none,
-  stroke= '#76b6bd',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1px
-  );
-}
-
-.icon-dashboard {
-  background-image: svg-load('./svgs/window-speedtest.svg',
-  fill=none,
-  stroke= '#76b6bd',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1px
-  );
-}
-
-.icon-api {
-  background-image: svg-load('./svgs/cloud-setting.svg',
-  fill=none,
-  stroke= '#76b6bd',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1px
-  );
-}
-
-.icon-user-check {
-  background-image: svg-load('./svgs/business-check.svg',
-  fill=none,
-  stroke= '#76b6bd',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1px
-  );
-}
-
-.icon-ngo {
-  background-image: svg-load('./svgs/group-global.svg',
-  fill=none,
-  stroke= '#76b6bd',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1px
-  );
-}
-
-.icon-business {
-  background-image: svg-load('./svgs/building-2.svg',
-  fill=none,
-  stroke= '#76b6bd',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1px
   );
 }
 
