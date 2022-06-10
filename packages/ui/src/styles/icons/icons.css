@@ -527,15 +527,6 @@
   );
 }
 
-.icon-announcement {
-  background-image: svg-load('./svgs/48-announcement.svg',
-  fill=none,
-  stroke= '#666',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=2px
-  );
-}
 
 .icon-map-legend {
   height: calc(var(--unit) * 1);
