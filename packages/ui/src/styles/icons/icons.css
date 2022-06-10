@@ -34,19 +34,6 @@
   background-repeat: no-repeat;
 }
 
-.icon-minus {
-  background-image: svg-load('./svgs/24-minus.svg',
-  fill='#666'
-  );
-}
-
-.btn:hover .icon-minus,
-.btn-border:hover .icon-minus {
-  background-image: svg-load('./svgs/24-minus.svg',
-  fill='white'
-  );
-}
-
 .icon-file {
   background-image: svg-load('./svgs/16-file.svg',
   fill=none,

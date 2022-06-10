@@ -134,6 +134,17 @@ exports[`Automated Storybook Snapshots UI/LoaderElement All 1`] = `
               />
             </symbol>
             <symbol
+              id="icon-minus"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                minus
+              </title>
+              <path
+                d="M5 11h14v2H5z"
+              />
+            </symbol>
+            <symbol
               id="icon-plus"
               viewBox="0 0 24 24"
             >

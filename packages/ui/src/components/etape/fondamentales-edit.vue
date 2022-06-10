@@ -261,7 +261,7 @@
               class="btn py-s px-m rnd-r-xs"
               @click="substanceRemove(n)"
             >
-              <i class="icon-24 icon-minus" />
+              <Icon name="minus" size="M" />
             </button>
           </div>
         </div>

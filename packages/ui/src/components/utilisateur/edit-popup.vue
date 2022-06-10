@@ -173,7 +173,7 @@
                   class="btn py-s px-m rnd-xs"
                   @click="entrepriseRemove(n)"
                 >
-                  <i class="icon-24 icon-minus" />
+                  <Icon name="minus" size="M" />
                 </button>
               </div>
             </div>
@@ -213,7 +213,7 @@
                 class="btn py-s px-m rnd-xs"
                 @click="administrationRemove(n)"
               >
-                <i class="icon-24 icon-minus" />
+                <Icon name="minus" size="M" />
               </button>
             </div>
           </div>

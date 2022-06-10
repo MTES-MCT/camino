@@ -48,7 +48,7 @@
         />
         <div class="flex-right">
           <button class="btn py-s px-m rnd-xs" @click="referenceRemove(index)">
-            <i class="icon-24 icon-minus" />
+            <Icon name="minus" size="M" />
           </button>
         </div>
       </div>
@@ -84,7 +84,7 @@
             class="btn py-s px-m rnd-xs"
             @click="administrationRemove(index)"
           >
-            <i class="icon-24 icon-minus" />
+            <Icon name="minus" size="M" />
           </button>
         </div>
       </div>

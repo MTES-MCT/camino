@@ -62,7 +62,7 @@
                   class="btn p-xs rnd-xs"
                   @click="remove(element)"
                 >
-                  <i class="icon-24 icon-minus" />
+                  <Icon name="minus" size="M" />
                 </button>
               </td>
             </tr>
@@ -79,9 +79,11 @@ import metasIndex from '../store/metas-definitions'
 import MetaLabelOrInput from './metas/meta-label-or-input.vue'
 import MetaInput from './metas/meta-input.vue'
 import ButtonPlus from './_ui/button-plus.vue'
+import Icon from './_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     Loader,
     MetaLabelOrInput,
     MetaInput,

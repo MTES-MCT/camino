@@ -53,6 +53,10 @@
         d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
       />
     </symbol>
+    <symbol id="icon-minus" viewBox="0 0 24 24">
+      <title>minus</title>
+      <path d="M5 11h14v2H5z" />
+    </symbol>
     <symbol id="icon-plus" viewBox="0 0 24 24">
       <title>plus</title>
       <path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z" />

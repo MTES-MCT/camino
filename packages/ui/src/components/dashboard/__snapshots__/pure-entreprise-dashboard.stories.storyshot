@@ -130,6 +130,17 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Loadin
               />
             </symbol>
             <symbol
+              id="icon-minus"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                minus
+              </title>
+              <path
+                d="M5 11h14v2H5z"
+              />
+            </symbol>
+            <symbol
               id="icon-plus"
               viewBox="0 0 24 24"
             >
@@ -309,6 +320,17 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok 1`]
               </title>
               <path
                 d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
+              />
+            </symbol>
+            <symbol
+              id="icon-minus"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                minus
+              </title>
+              <path
+                d="M5 11h14v2H5z"
               />
             </symbol>
             <symbol
@@ -505,6 +527,17 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok 1`]
                     </title>
                     <path
                       d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
+                    />
+                  </symbol>
+                  <symbol
+                    id="icon-minus"
+                    viewBox="0 0 24 24"
+                  >
+                    <title>
+                      minus
+                    </title>
+                    <path
+                      d="M5 11h14v2H5z"
                     />
                   </symbol>
                   <symbol
@@ -1079,6 +1112,17 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok Wit
               />
             </symbol>
             <symbol
+              id="icon-minus"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                minus
+              </title>
+              <path
+                d="M5 11h14v2H5z"
+              />
+            </symbol>
+            <symbol
               id="icon-plus"
               viewBox="0 0 24 24"
             >
@@ -1272,6 +1316,17 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok Wit
                     </title>
                     <path
                       d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
+                    />
+                  </symbol>
+                  <symbol
+                    id="icon-minus"
+                    viewBox="0 0 24 24"
+                  >
+                    <title>
+                      minus
+                    </title>
+                    <path
+                      d="M5 11h14v2H5z"
                     />
                   </symbol>
                   <symbol
@@ -1813,6 +1868,17 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard With E
               </title>
               <path
                 d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
+              />
+            </symbol>
+            <symbol
+              id="icon-minus"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                minus
+              </title>
+              <path
+                d="M5 11h14v2H5z"
               />
             </symbol>
             <symbol

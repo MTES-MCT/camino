@@ -51,7 +51,7 @@
                   class="btn-border py-s px-m rnd-xs"
                   @click="groupeRemove(groupeIndex)"
                 >
-                  <i class="icon-24 icon-minus" />
+                  <Icon name="minus" size="M" />
                 </button>
               </div>
             </div>
@@ -71,7 +71,7 @@
                     class="btn-border py-s px-m rnd-xs"
                     @click="contourRemove(groupeIndex, contourIndex)"
                   >
-                    <i class="icon-24 icon-minus" />
+                    <Icon name="minus" size="M" />
                   </button>
                 </div>
               </div>
@@ -135,7 +135,7 @@
                         pointRemove(groupeIndex, contourIndex, pointIndex)
                       "
                     >
-                      <i class="icon-24 icon-minus" />
+                      <Icon name="minus" size="M" />
                     </button>
                   </div>
                 </div>

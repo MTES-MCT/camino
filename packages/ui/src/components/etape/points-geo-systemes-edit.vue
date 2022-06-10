@@ -24,7 +24,7 @@
           class="btn py-s px-m rnd-xs"
           @click="geoSystemeRemove(etapeGeoSystemeIndex)"
         >
-          <i class="icon-24 icon-minus" />
+          <Icon name="minus" size="M" />
         </button>
       </div>
 

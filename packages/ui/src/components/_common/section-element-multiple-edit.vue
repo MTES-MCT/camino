@@ -10,7 +10,7 @@
           <h4 class="mt-s">{{ index + 1 }}</h4>
           <div class="flex-right">
             <button class="btn px-m py-s rnd-xs" @click="elementRemove(index)">
-              <i class="icon-24 icon-minus" />
+              <Icon size="M" name="minus" />
             </button>
           </div>
         </div>
