@@ -34,26 +34,6 @@
   background-repeat: no-repeat;
 }
 
-.icon-check {
-  background-image: svg-load('./svgs/24-check.svg',
-  fill=none,
-  stroke= '#666',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
-.btn:hover .icon-check {
-  background-image: svg-load('./svgs/24-check.svg',
-  fill=none,
-  stroke= 'white',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
 .icon-refresh {
   background-image: svg-load('./svgs/24-refresh.svg',
   fill=none,
@@ -66,46 +46,6 @@
 
 .btn:hover .icon-refresh {
   background-image: svg-load('./svgs/24-refresh.svg',
-  fill=none,
-  stroke= 'white',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
-.icon-cross {
-  background-image: svg-load('./svgs/24-cross.svg',
-  fill=none,
-  stroke= '#666',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
-.btn:hover .icon-cross {
-  background-image: svg-load('./svgs/24-cross.svg',
-  fill=none,
-  stroke= 'white',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
-.icon-square {
-  background-image: svg-load('./svgs/24-square.svg',
-  fill=none,
-  stroke= '#666',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
-.btn:hover .icon-square {
-  background-image: svg-load('./svgs/24-square.svg',
   fill=none,
   stroke= 'white',
   stroke-linecap=round,

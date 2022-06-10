@@ -68,11 +68,12 @@
                     titreTypeNew.gestionnaire = !titreTypeNew.gestionnaire
                   "
                 >
-                  <i
+                  <Icon
                     v-if="titreTypeNew.gestionnaire"
-                    class="icon-24 icon-check"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -81,8 +82,8 @@
                   :disabled="!titreTypeNew.titreTypeTypeId"
                   @click="titreTypeNew.associee = !titreTypeNew.associee"
                 >
-                  <i v-if="titreTypeNew.associee" class="icon-24 icon-check" />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-if="titreTypeNew.associee" name="checkbox" size="M" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -116,8 +117,12 @@
                     )
                   "
                 >
-                  <i v-if="titreType.gestionnaire" class="icon-24 icon-check" />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon
+                    v-if="titreType.gestionnaire"
+                    name="checkbox"
+                    size="M"
+                  />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -132,8 +137,8 @@
                     )
                   "
                 >
-                  <i v-if="titreType.associee" class="icon-24 icon-check" />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-if="titreType.associee" name="checkbox" size="M" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td />
@@ -233,11 +238,12 @@
                       !titreTypeTitreStatutNew.titresModificationInterdit
                   "
                 >
-                  <i
+                  <Icon
                     v-if="titreTypeTitreStatutNew.titresModificationInterdit"
-                    class="icon-24 icon-cross"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -252,11 +258,12 @@
                       !titreTypeTitreStatutNew.demarchesModificationInterdit
                   "
                 >
-                  <i
+                  <Icon
                     v-if="titreTypeTitreStatutNew.demarchesModificationInterdit"
-                    class="icon-24 icon-cross"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -271,11 +278,12 @@
                       !titreTypeTitreStatutNew.etapesModificationInterdit
                   "
                 >
-                  <i
+                  <Icon
                     v-if="titreTypeTitreStatutNew.etapesModificationInterdit"
-                    class="icon-24 icon-cross"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -322,11 +330,12 @@
                     )
                   "
                 >
-                  <i
+                  <Icon
                     v-if="ttts.titresModificationInterdit"
-                    class="icon-24 icon-cross"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -343,11 +352,12 @@
                     )
                   "
                 >
-                  <i
+                  <Icon
                     v-if="ttts.demarchesModificationInterdit"
-                    class="icon-24 icon-cross"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -364,11 +374,12 @@
                     )
                   "
                 >
-                  <i
+                  <Icon
                     v-if="ttts.etapesModificationInterdit"
-                    class="icon-24 icon-cross"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td />
@@ -459,11 +470,12 @@
                       !titreTypeEtapeTypeNew.lectureInterdit
                   "
                 >
-                  <i
+                  <Icon
                     v-if="titreTypeEtapeTypeNew.lectureInterdit"
-                    class="icon-24 icon-cross"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -478,11 +490,12 @@
                       !titreTypeEtapeTypeNew.modificationInterdit
                   "
                 >
-                  <i
+                  <Icon
                     v-if="titreTypeEtapeTypeNew.modificationInterdit"
-                    class="icon-24 icon-cross"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -497,11 +510,12 @@
                       !titreTypeEtapeTypeNew.creationInterdit
                   "
                 >
-                  <i
+                  <Icon
                     v-if="titreTypeEtapeTypeNew.creationInterdit"
-                    class="icon-24 icon-cross"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -546,8 +560,8 @@
                     )
                   "
                 >
-                  <i v-if="ttet.lectureInterdit" class="icon-24 icon-cross" />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-if="ttet.lectureInterdit" name="checkbox" size="M" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -564,11 +578,12 @@
                     )
                   "
                 >
-                  <i
+                  <Icon
                     v-if="ttet.modificationInterdit"
-                    class="icon-24 icon-cross"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -585,8 +600,8 @@
                     )
                   "
                 >
-                  <i v-if="ttet.creationInterdit" class="icon-24 icon-cross" />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-if="ttet.creationInterdit" name="checkbox" size="M" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td />
@@ -643,11 +658,12 @@
                       !activiteTypeNew.lectureInterdit
                   "
                 >
-                  <i
+                  <Icon
                     v-if="activiteTypeNew.lectureInterdit"
-                    class="icon-24 icon-cross"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -659,11 +675,12 @@
                       !activiteTypeNew.modificationInterdit
                   "
                 >
-                  <i
+                  <Icon
                     v-if="activiteTypeNew.modificationInterdit"
-                    class="icon-24 icon-cross"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -694,11 +711,12 @@
                     )
                   "
                 >
-                  <i
+                  <Icon
                     v-if="activiteType.lectureInterdit"
-                    class="icon-24 icon-cross"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -713,11 +731,12 @@
                     )
                   "
                 >
-                  <i
+                  <Icon
                     v-if="activiteType.modificationInterdit"
-                    class="icon-24 icon-cross"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td />
@@ -733,9 +752,11 @@
 import CaminoDomaine from '../_common/domaine.vue'
 import Statut from '../_common/statut.vue'
 import ButtonPlus from '../_ui/button-plus.vue'
+import Icon from '../_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     CaminoDomaine,
     Statut,
     ButtonPlus
