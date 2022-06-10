@@ -218,10 +218,10 @@
         class="flex-right btn-border pill p-s tooltip"
         @click="surfaceRefresh"
       >
-        <h6 class="tooltip-content">
-          Recalculer automatiquement la surface à partir du périmètre
-        </h6>
-        <i class="icon-24 icon-refresh" />
+        <HelpTooltip icon="refresh"
+          >Recalculer automatiquement la surface à partir du
+          périmètre</HelpTooltip
+        >
       </button>
     </div>
     <HeritageEdit
@@ -265,9 +265,11 @@ import PointsImportPopup from './points-import-popup.vue'
 import Points from '../_common/points.vue'
 import InputNumber from '../_ui/input-number.vue'
 import Icon from '@/components/_ui/icon.vue'
+import HelpTooltip from '@/components/_ui/help-tooltip.vue'
 
 export default {
   components: {
+    HelpTooltip,
     Icon,
     GeoSystemeEdit,
     PointEdit,

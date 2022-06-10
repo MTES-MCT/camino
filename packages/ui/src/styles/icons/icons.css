@@ -34,26 +34,6 @@
   background-repeat: no-repeat;
 }
 
-.icon-refresh {
-  background-image: svg-load('./svgs/24-refresh.svg',
-  fill=none,
-  stroke= '#666',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
-.btn:hover .icon-refresh {
-  background-image: svg-load('./svgs/24-refresh.svg',
-  fill=none,
-  stroke= 'white',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
 .icon-minus {
   background-image: svg-load('./svgs/24-minus.svg',
   fill='#666'
@@ -570,20 +550,6 @@
   );
 }
 
-.icon-help {
-  background-image: svg-load('./svgs/info.svg',
-  fill= '#666',
-  stroke-width=1.25px
-  );
-}
-
-
-.btn-alt:hover .icon-help {
-  background-image: svg-load('./svgs/info.svg',
-  stroke-width=1.25px
-  );
-}
-
 .icon-map-legend {
   height: calc(var(--unit) * 1);
   width: calc(var(--unit) * 2);
@@ -611,11 +577,5 @@
 .icon-map-legend-sdom-zone-2 {
   background-image: svg-load('./svgs/map-legend-sdom-zone.svg',
   fill='#ffaa00'
-  );
-}
-
-.icon-error-warning {
-  background-image: svg-load('./svgs/24-error-warning.svg',
-  fill= '#ffaa00'
   );
 }

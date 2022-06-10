@@ -173,6 +173,26 @@ exports[`Automated Storybook Snapshots Components/PureONFDashboard Ok 1`] = `
                         />
                       </symbol>
                       <symbol
+                        id="icon-error-warning"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-7v2h2v-2h-2zm0-8v6h2V7h-2z"
+                          fill="rgba(231,76,60,1)"
+                        />
+                      </symbol>
+                      <symbol
+                        id="icon-help"
+                        viewBox="0 0 24 24"
+                      >
+                        <title>
+                          help
+                        </title>
+                        <path
+                          d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
+                        />
+                      </symbol>
+                      <symbol
                         id="icon-plus"
                         viewBox="0 0 24 24"
                       >
@@ -181,6 +201,17 @@ exports[`Automated Storybook Snapshots Components/PureONFDashboard Ok 1`] = `
                         </title>
                         <path
                           d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"
+                        />
+                      </symbol>
+                      <symbol
+                        id="icon-refresh"
+                        viewBox="0 0 24 24"
+                      >
+                        <title>
+                          refresh
+                        </title>
+                        <path
+                          d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
                         />
                       </symbol>
                       <symbol
@@ -573,6 +604,26 @@ exports[`Automated Storybook Snapshots Components/PureONFDashboard Ok 1`] = `
                         />
                       </symbol>
                       <symbol
+                        id="icon-error-warning"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-7v2h2v-2h-2zm0-8v6h2V7h-2z"
+                          fill="rgba(231,76,60,1)"
+                        />
+                      </symbol>
+                      <symbol
+                        id="icon-help"
+                        viewBox="0 0 24 24"
+                      >
+                        <title>
+                          help
+                        </title>
+                        <path
+                          d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
+                        />
+                      </symbol>
+                      <symbol
                         id="icon-plus"
                         viewBox="0 0 24 24"
                       >
@@ -581,6 +632,17 @@ exports[`Automated Storybook Snapshots Components/PureONFDashboard Ok 1`] = `
                         </title>
                         <path
                           d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"
+                        />
+                      </symbol>
+                      <symbol
+                        id="icon-refresh"
+                        viewBox="0 0 24 24"
+                      >
+                        <title>
+                          refresh
+                        </title>
+                        <path
+                          d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
                         />
                       </symbol>
                       <symbol

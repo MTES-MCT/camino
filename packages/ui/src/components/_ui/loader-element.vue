@@ -2,7 +2,7 @@
   <div class="top-level">
     <slot v-if="data.status === 'LOADED'" :item="data.value" />
     <div v-else-if="data.status === 'ERROR'">
-      <HelpTooltip icon="icon-error-warning">
+      <HelpTooltip icon="error-warning">
         {{ data.message }}
       </HelpTooltip>
     </div>
