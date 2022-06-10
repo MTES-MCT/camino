@@ -34,28 +34,6 @@
   background-repeat: no-repeat;
 }
 
-.icon-close {
-  background-image: svg-load('./svgs/24-close.svg',
-  fill=none,
-  stroke= '#666',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
-.btn-flash .icon-close,
-.btn-flash:hover .icon-close,
-.btn-alt:hover .icon-close {
-  background-image: svg-load('./svgs/24-close.svg',
-  fill=none,
-  stroke= 'white',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
 .icon-x {
   background-image: svg-load('./svgs/16-x.svg', fill= 'white');
 }

@@ -129,6 +129,17 @@ exports[`Automated Storybook Snapshots Components/PureONFDashboard Ok 1`] = `
                         />
                       </symbol>
                       <symbol
+                        id="icon-close"
+                        viewBox="0 0 24 24"
+                      >
+                        <title>
+                          close
+                        </title>
+                        <path
+                          d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
+                        />
+                      </symbol>
+                      <symbol
                         id="icon-download"
                         viewBox="0 0 24 24"
                       >
@@ -471,6 +482,17 @@ exports[`Automated Storybook Snapshots Components/PureONFDashboard Ok 1`] = `
                         </title>
                         <path
                           d="M12 10.828l-4.95 4.95-1.414-1.414L12 8l6.364 6.364-1.414 1.414z"
+                        />
+                      </symbol>
+                      <symbol
+                        id="icon-close"
+                        viewBox="0 0 24 24"
+                      >
+                        <title>
+                          close
+                        </title>
+                        <path
+                          d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
                         />
                       </symbol>
                       <symbol
