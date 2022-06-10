@@ -84,8 +84,8 @@
       class="btn small rnd-xs py-s px-m full-x mb flex"
       @click="referenceAdd"
     >
-      <span class="mt-xxs">Ajouter une référence</span
-      ><i class="icon-24 icon-plus flex-right" />
+      <span class="mt-xxs">Ajouter une référence</span>
+      <Icon name="plus" size="M" class="flex-right" />
     </button>
 
     <hr />
@@ -113,9 +113,10 @@
 import { permissionsCheck } from '@/utils'
 
 import TitreTypeSelect from './_common/titre-type-select.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
-  components: { TitreTypeSelect },
+  components: { Icon, TitreTypeSelect },
 
   data() {
     return {

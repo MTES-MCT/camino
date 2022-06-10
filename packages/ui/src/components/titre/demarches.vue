@@ -13,7 +13,7 @@
           >Ajouter une démarche
           {{ tabId === 'travaux' ? 'de travaux' : '' }}</span
         >
-        <i class="icon-24 icon-plus flex-right" />
+        <Icon name="plus" size="M" class="flex-right" />
       </button>
       <div class="line width-full mb-xxl" />
     </div>
@@ -35,9 +35,11 @@
 <script>
 import TitreDemarche from './demarche.vue'
 import EditPopup from './demarche-edit-popup.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     TitreDemarche
   },
 

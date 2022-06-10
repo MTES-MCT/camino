@@ -271,8 +271,8 @@
           class="btn small rnd-xs py-s px-m full-x flex mb-s"
           @click="substanceAdd"
         >
-          <span class="mt-xxs">Ajouter une substance</span
-          ><i class="icon-24 icon-plus flex-right" />
+          <span class="mt-xxs">Ajouter une substance</span>
+          <Icon name="plus" size="M" class="flex-right" />
         </button>
 
         <div v-if="substancesLength" class="h6">
@@ -312,9 +312,11 @@ import PropDuree from './prop-duree.vue'
 import AutocompleteEntreprise from './autocomplete-entreprise.vue'
 
 import { etablissementNameFind } from '@/utils/entreprise'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     InputDate,
     InputNumber,
     HeritageEdit,

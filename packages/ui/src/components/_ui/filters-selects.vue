@@ -26,14 +26,16 @@
       class="btn small rnd-xs py-s px-m full-x flex mb-s"
       @click="valueAdd"
     >
-      <span class="mt-xxs">{{ filter.buttonAdd }}</span
-      ><i class="icon-24 icon-plus flex-right" />
+      <span class="mt-xxs">{{ filter.buttonAdd }}</span>
+      <Icon name="plus" size="M" class="flex-right" />
     </button>
   </div>
 </template>
 
 <script>
+import Icon from '@/components/_ui/icon.vue'
 export default {
+  components: { Icon },
   props: {
     filter: {
       type: Object,

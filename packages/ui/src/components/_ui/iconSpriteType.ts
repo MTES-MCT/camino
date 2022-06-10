@@ -5,6 +5,7 @@ export const icons = [
   'chevron-haut',
   'close',
   'download',
+  'plus',
   'x'
 ] as const
 export type Icon = typeof icons[number]

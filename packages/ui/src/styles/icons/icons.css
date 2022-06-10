@@ -34,22 +34,6 @@
   background-repeat: no-repeat;
 }
 
-.icon-plus {
-  background-image: svg-load('./svgs/24-plus.svg',
-  fill='#666'
-  );
-}
-
-.btn-alt .icon-plus,
-.btn-primary .icon-plus,
-.btn:hover .icon-plus,
-.btn-alt:hover .icon-plus,
-.btn-border:hover .icon-plus {
-  background-image: svg-load('./svgs/24-plus.svg',
-  fill='white'
-  );
-}
-
 .icon-check {
   background-image: svg-load('./svgs/24-check.svg',
   fill=none,

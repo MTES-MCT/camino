@@ -18,7 +18,7 @@
         @click="addPopupOpen"
       >
         <span class="mt-xxs">Ajouter un utilisateur</span>
-        <i class="icon-24 icon-plus flex-right" />
+        <Icon name="plus" size="M" class="flex-right" />
       </button>
     </template>
 
@@ -43,11 +43,12 @@ import {
   utilisateursLignesBuild
 } from './utilisateurs/table'
 import { sortedAdministrations } from 'camino-common/src/administrations'
+import Icon from './_ui/icon.vue'
 
 export default {
   name: 'Utilisateurs',
 
-  components: { Liste, Downloads },
+  components: { Icon, Liste, Downloads },
 
   data() {
     return {

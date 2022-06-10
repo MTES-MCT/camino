@@ -185,8 +185,8 @@
             class="btn small rnd-xs py-s px-m full-x flex mb"
             @click="entrepriseAdd"
           >
-            <span class="mt-xxs">Ajouter une entreprise</span
-            ><i class="icon-24 icon-plus flex-right" />
+            <span class="mt-xxs">Ajouter une entreprise</span>
+            <Icon name="plus" size="M" class="flex-right" />
           </button>
         </div>
 
@@ -227,8 +227,8 @@
             class="btn small rnd-xs py-s px-m full-x flex mb"
             @click="administrationAdd"
           >
-            <span class="mt-xxs">Ajouter une administration</span
-            ><i class="icon-24 icon-plus flex-right" />
+            <span class="mt-xxs">Ajouter une administration</span>
+            <Icon name="plus" size="M" class="flex-right" />
           </button>
         </div>
       </div>
@@ -281,11 +281,12 @@ import { permissionsCheck } from '@/utils'
 import Popup from '../_ui/popup.vue'
 import Loader from '../_ui/loader.vue'
 import { sortedAdministrations } from 'camino-common/src/administrations'
+import Icon from '../_ui/icon.vue'
 
 export default {
   name: 'CaminoUtilisateurEditPopup',
 
-  components: { Popup, Loader },
+  components: { Icon, Popup, Loader },
 
   props: {
     utilisateur: {

@@ -60,8 +60,8 @@
         class="btn rnd-xs py-s px-m full-x mb flex h6"
         @click="referenceAdd"
       >
-        <span class="mt-xxs">Ajouter une référence</span
-        ><i class="icon-24 icon-plus flex-right" />
+        <span class="mt-xxs">Ajouter une référence</span>
+        <Icon name="plus" size="M" class="flex-right" />
       </button>
     </div>
 
@@ -97,8 +97,8 @@
         class="btn rnd-xs py-s px-m full-x mb flex h6"
         @click="administrationAdd"
       >
-        <span class="mt-xxs">Ajouter une administration</span
-        ><i class="icon-24 icon-plus flex-right" />
+        <span class="mt-xxs">Ajouter une administration</span>
+        <Icon name="plus" size="M" class="flex-right" />
       </button>
     </div>
 
@@ -131,11 +131,13 @@ import Popup from '../_ui/popup.vue'
 
 import TitreTypeSelect from '../_common/titre-type-select.vue'
 import { sortedAdministrations } from 'camino-common/src/administrations'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   name: 'CaminoDemarcheEditPopup',
 
   components: {
+    Icon,
     Popup,
     TitreTypeSelect
   },

@@ -12,8 +12,8 @@
           class="btn small rnd-xs py-s px-m full-x flex mb-s"
           @click="pointsImport"
         >
-          <span class="mt-xxs">Importer depuis un fichier…</span
-          ><i class="icon-24 icon-file-plus flex-right" />
+          <span class="mt-xxs">Importer depuis un fichier…</span>
+          <Icon name="plus" size="M" class="flex-right" />
         </button>
 
         <GeoSystemeEdit v-model:etape="etape" />
@@ -159,19 +159,9 @@
                 class="btn-border rnd-s py-s px-m full-x mb-xs flex small"
                 @click="pointAdd(groupeIndex, contourIndex)"
               >
-                <span class="mt-xxs">Ajouter un point</span
-                ><i class="icon-24 icon-plus flex-right" />
+                <span class="mt-xxs">Ajouter un point</span>
+                <Icon name="plus" size="M" class="flex-right" />
               </button>
-
-              <!--              Désactivation de cette fonctionnalité pour vérifier dans un premier temps
-                                si les utilisateurs se plaignent de sa disparition-->
-              <!--              <button>-->
-              <!--                class="btn-border rnd-s py-s px-m full-x mb-xs flex small"-->
-              <!--                @click="lotAdd(groupeIndex, contourIndex)"-->
-              <!--              >-->
-              <!--                <span class="mt-xxs">Ajouter un lot de points</span-->
-              <!--                ><i class="icon-24 icon-plus flex-right" />-->
-              <!--              </button>-->
             </div>
             <button
               v-if="groupeContours.length && groupeContours[0].length"
@@ -183,7 +173,8 @@
                 {{
                   groupeContours.length >= 1 ? 'une lacune' : 'un contour'
                 }}</span
-              ><i class="icon-24 icon-plus flex-right" />
+              >
+              <Icon name="plus" size="M" class="flex-right" />
             </button>
           </div>
 
@@ -196,8 +187,8 @@
             class="btn rnd-s py-s px-m full-x mb-s flex h6"
             @click="groupeAdd"
           >
-            <span class="mt-xxs">Ajouter un groupe</span
-            ><i class="icon-24 icon-plus flex-right" />
+            <span class="mt-xxs">Ajouter un groupe</span>
+            <Icon name="plus" size="M" class="flex-right" />
           </button>
 
           <div class="h6">
@@ -273,9 +264,11 @@ import HeritageEdit from './heritage-edit.vue'
 import PointsImportPopup from './points-import-popup.vue'
 import Points from '../_common/points.vue'
 import InputNumber from '../_ui/input-number.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     GeoSystemeEdit,
     PointEdit,
     PointsLotEdit,
