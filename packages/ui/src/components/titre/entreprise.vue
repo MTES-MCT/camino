@@ -21,8 +21,9 @@
         :to="{ name: 'entreprise', params: { id: entreprise.id } }"
         class="btn-alt py-s px-m"
       >
-        <i
-          class="icon-24 icon-window-link"
+        <Icon
+          name="external-link"
+          size="M"
           @click="eventTrack('titre-entreprise_acceder')"
         />
       </router-link>
@@ -125,9 +126,11 @@
 import { dateFormat } from '@/utils'
 import Accordion from '../_ui/accordion.vue'
 import Tag from '../_ui/tag.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     Accordion,
     Tag
   },

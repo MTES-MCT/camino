@@ -8,6 +8,7 @@ export const icons = [
   'close',
   'download',
   'error-warning',
+  'external-link',
   'help',
   'minus',
   'move-down',

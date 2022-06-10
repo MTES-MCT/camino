@@ -107,9 +107,23 @@ exports[`Automated Storybook Snapshots Ui/TableAuto Simple 1`] = `
                   id="icon-error-warning"
                   viewBox="0 0 24 24"
                 >
+                  <title>
+                    error-warning
+                  </title>
                   <path
                     d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-7v2h2v-2h-2zm0-8v6h2V7h-2z"
                     fill="rgba(231,76,60,1)"
+                  />
+                </symbol>
+                <symbol
+                  id="icon-external-link"
+                  viewBox="0 0 24 24"
+                >
+                  <title>
+                    external-link
+                  </title>
+                  <path
+                    d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z"
                   />
                 </symbol>
                 <symbol
@@ -638,9 +652,23 @@ exports[`Automated Storybook Snapshots Ui/TableAuto Sorted By Status Asc 1`] = `
                   id="icon-error-warning"
                   viewBox="0 0 24 24"
                 >
+                  <title>
+                    error-warning
+                  </title>
                   <path
                     d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-7v2h2v-2h-2zm0-8v6h2V7h-2z"
                     fill="rgba(231,76,60,1)"
+                  />
+                </symbol>
+                <symbol
+                  id="icon-external-link"
+                  viewBox="0 0 24 24"
+                >
+                  <title>
+                    external-link
+                  </title>
+                  <path
+                    d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z"
                   />
                 </symbol>
                 <symbol
