@@ -16,8 +16,6 @@ export const IconAllSize = () => ({
         <tr><th>Name</th><th>Size</th></tr>
         <tr><td>s</td><td><Icon size="S" name="download" /></td></tr>
         <tr><td>m</td><td><Icon size="M" name="download" /></td></tr>
-        <tr><td>l</td><td><Icon size="L" name="download" /></td></tr>
-        <tr><td>xl</td><td><Icon size="XL" name="download" /></td></tr>
       </table>
     </div>
         `

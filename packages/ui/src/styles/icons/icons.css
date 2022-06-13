@@ -19,13 +19,6 @@
   background-position: top center;
 }
 
-.icon-48 {
-  width: var(--unit-xl);
-  height: var(--unit-xl);
-  display: block;
-  background-repeat: no-repeat;
-}
-
 .icon-file {
   background-image: svg-load('./svgs/16-file.svg',
   fill=none,
