@@ -59,10 +59,6 @@ const titreEtapeMetas = apiGraphQLFetch(
         }
       }
 
-      devises {
-        ...devise
-      }
-
       substances {
         ...substance
       }
@@ -73,8 +69,6 @@ const titreEtapeMetas = apiGraphQLFetch(
         }
       }
     }
-
-    ${fragmentDevise}
 
     ${fragmentSubstance}
 

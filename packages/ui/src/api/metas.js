@@ -9,7 +9,6 @@ import {
   fragmentPhaseStatut,
   fragmentEtapeType,
   fragmentEtapeStatut,
-  fragmentDevise,
   fragmentPermission,
   fragmentDocumentType,
   fragmentReferenceType,

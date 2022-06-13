@@ -65,13 +65,6 @@ const fragmentUnite = gql`
   }
 `
 
-const fragmentDevise = gql`
-  fragment devise on Devise {
-    id
-    nom
-  }
-`
-
 const fragmentDemarcheType = gql`
   fragment demarcheType on DemarcheType {
     id
@@ -242,7 +235,6 @@ export {
   fragmentEtapeStatut,
   fragmentPermission,
   fragmentUnite,
-  fragmentDevise,
   fragmentDemarcheType,
   fragmentDemarcheStatut,
   fragmentTitreType,
