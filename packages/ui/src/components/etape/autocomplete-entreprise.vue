@@ -21,7 +21,7 @@
           style=""
           @click="removeEntity(entity)"
         >
-          <i class="icon-24 icon-minus" />
+          <Icon name="minus" size="M" />
         </button>
       </div>
     </div>
@@ -45,6 +45,7 @@
 import Typeahead from '@/components/_ui/typeahead.vue'
 import { computed, ref, watch, withDefaults } from 'vue'
 import { AutoCompleteEntreprise } from '@/components/etape/autocomplete-entreprise.type'
+import Icon from '@/components/_ui/icon.vue'
 
 const props = withDefaults(
   defineProps<{

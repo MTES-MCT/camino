@@ -8,7 +8,7 @@
       <div class="desktop-blob-1-3">
         <button class="btn btn-primary small flex" @click="titreDemandeOpen">
           <span class="mt-xxs">Demander un titre…</span>
-          <i class="icon-24 icon-plus flex-right" />
+          <Icon name="plus" size="M" class="flex-right" />
         </button>
       </div>
     </div>
@@ -43,6 +43,7 @@ import {
   titresLignesBuild
 } from '@/components/titres/table-utils'
 import { useRouter } from 'vue-router'
+import Icon from '@/components/_ui/icon.vue'
 
 const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
 const entrepriseTitres = ref<TableAutoRow[]>([])

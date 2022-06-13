@@ -16,7 +16,7 @@
         @click="addPopupOpen"
       >
         <span class="mt-xxs">Ajouter une entreprise</span>
-        <i class="icon-24 icon-plus flex-right" />
+        <Icon name="plus" size="M" class="flex-right" />
       </button>
     </template>
 
@@ -40,11 +40,12 @@ import {
   entreprisesColonnes,
   entreprisesLignesBuild
 } from './entreprises/table'
+import Icon from './_ui/icon.vue'
 
 export default {
   name: 'Entreprises',
 
-  components: { Liste, Downloads },
+  components: { Icon, Liste, Downloads },
 
   data() {
     return {

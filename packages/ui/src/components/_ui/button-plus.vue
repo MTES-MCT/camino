@@ -1,11 +1,9 @@
 <template>
   <button class="btn rnd-xs p-s">
-    <i class="icon-24 icon-plus" />
+    <Icon name="plus" size="M" />
   </button>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({})
+<script setup lang="ts">
+import Icon from '@/components/_ui/icon.vue'
 </script>

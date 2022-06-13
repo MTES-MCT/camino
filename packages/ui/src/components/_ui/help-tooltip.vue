@@ -3,12 +3,17 @@
     <h6 class="tooltip-content">
       <slot />
     </h6>
-    <i class="icon-24" :class="icon ? icon : 'icon-help'" />
+    <Icon :name="icon" size="M" />
   </div>
 </template>
 
 <script setup lang="ts">
-defineProps<{ icon?: string }>()
+import { withDefaults } from 'vue'
+
+import { Icon as IconType } from './iconSpriteType'
+import Icon from './icon.vue'
+
+withDefaults(defineProps<{ icon?: IconType }>(), { icon: 'help' })
 </script>
 
 <style scoped>

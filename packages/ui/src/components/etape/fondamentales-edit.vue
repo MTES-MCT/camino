@@ -242,7 +242,7 @@
               class="btn-border py-s px-m rnd-l-xs"
               @click="substanceMoveDown(n)"
             >
-              <i class="icon-24 icon-move-down" />
+              <Icon size="M" name="move-down" />
             </button>
             <button
               v-if="substancesLength && n > 0 && etape.substances[n].id"
@@ -252,7 +252,7 @@
               class="btn-border py-s px-m"
               @click="substanceMoveUp(n)"
             >
-              <i class="icon-24 icon-move-up" />
+              <Icon size="M" name="move-up" />
             </button>
             <button
               :class="{
@@ -261,7 +261,7 @@
               class="btn py-s px-m rnd-r-xs"
               @click="substanceRemove(n)"
             >
-              <i class="icon-24 icon-minus" />
+              <Icon name="minus" size="M" />
             </button>
           </div>
         </div>
@@ -271,8 +271,8 @@
           class="btn small rnd-xs py-s px-m full-x flex mb-s"
           @click="substanceAdd"
         >
-          <span class="mt-xxs">Ajouter une substance</span
-          ><i class="icon-24 icon-plus flex-right" />
+          <span class="mt-xxs">Ajouter une substance</span>
+          <Icon name="plus" size="M" class="flex-right" />
         </button>
 
         <div v-if="substancesLength" class="h6">
@@ -312,9 +312,11 @@ import PropDuree from './prop-duree.vue'
 import AutocompleteEntreprise from './autocomplete-entreprise.vue'
 
 import { etablissementNameFind } from '@/utils/entreprise'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     InputDate,
     InputNumber,
     HeritageEdit,

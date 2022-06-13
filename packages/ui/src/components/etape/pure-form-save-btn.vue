@@ -7,7 +7,7 @@
       <li v-for="alerte in alertes" :key="alerte" class="flex">
         {{ alerte.message }}
         <a v-if="alerte.url" :href="alerte.url" target="_blank" class="ml-s">
-          <i class="icon-24 icon-window-link" />
+          <Icon name="external-link" size="M" />
         </a>
       </li>
     </ul>
@@ -39,6 +39,8 @@
 </template>
 
 <script lang="ts" setup>
+import Icon from '@/components/_ui/icon.vue'
+
 defineProps<{
   alertes: { message: string; url: string }[]
   canSave: boolean

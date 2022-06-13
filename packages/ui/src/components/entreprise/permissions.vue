@@ -55,11 +55,12 @@
                     titreTypeNew.titresCreation = !titreTypeNew.titresCreation
                   "
                 >
-                  <i
+                  <Icon
                     v-if="titreTypeNew.titresCreation"
-                    class="icon-24 icon-check"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td>
@@ -89,11 +90,12 @@
                     )
                   "
                 >
-                  <i
+                  <Icon
                     v-if="titreType.titresCreation"
-                    class="icon-24 icon-check"
+                    name="checkbox"
+                    size="M"
                   />
-                  <i v-else class="icon-24 icon-square" />
+                  <Icon v-else name="checkbox-blank" size="M" />
                 </button>
               </td>
               <td />
@@ -108,9 +110,11 @@
 <script>
 import CaminoDomaine from '../_common/domaine.vue'
 import ButtonPlus from '../../components/_ui/button-plus.vue'
+import Icon from '../_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     CaminoDomaine,
     ButtonPlus
   },

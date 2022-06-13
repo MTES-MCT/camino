@@ -23,7 +23,7 @@ import { computed, withDefaults } from 'vue'
 const props = withDefaults(
   defineProps<{
     name: Icon
-    size: 'S' | 'M' | 'L' | 'XL'
+    size: 'S' | 'M'
     color?: string
   }>(),
   {
@@ -37,10 +37,6 @@ const heightAndWidth = computed(() => {
       return '16px'
     case 'M':
       return '24px'
-    case 'L':
-      return '48px'
-    case 'XL':
-      return '128px'
   }
   return '24px'
 })

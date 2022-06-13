@@ -12,8 +12,8 @@
           class="btn small rnd-xs py-s px-m full-x flex mb-s"
           @click="pointsImport"
         >
-          <span class="mt-xxs">Importer depuis un fichier…</span
-          ><i class="icon-24 icon-file-plus flex-right" />
+          <span class="mt-xxs">Importer depuis un fichier…</span>
+          <Icon name="plus" size="M" class="flex-right" />
         </button>
 
         <GeoSystemeEdit v-model:etape="etape" />
@@ -51,7 +51,7 @@
                   class="btn-border py-s px-m rnd-xs"
                   @click="groupeRemove(groupeIndex)"
                 >
-                  <i class="icon-24 icon-minus" />
+                  <Icon name="minus" size="M" />
                 </button>
               </div>
             </div>
@@ -71,7 +71,7 @@
                     class="btn-border py-s px-m rnd-xs"
                     @click="contourRemove(groupeIndex, contourIndex)"
                   >
-                    <i class="icon-24 icon-minus" />
+                    <Icon name="minus" size="M" />
                   </button>
                 </div>
               </div>
@@ -97,7 +97,7 @@
                         pointMoveDown(groupeIndex, contourIndex, pointIndex)
                       "
                     >
-                      <i class="icon-24 icon-move-down" />
+                      <Icon size="M" name="move-down" />
                     </button>
                     <button
                       v-if="
@@ -118,7 +118,7 @@
                         pointMoveUp(groupeIndex, contourIndex, pointIndex)
                       "
                     >
-                      <i class="icon-24 icon-move-up" />
+                      <Icon size="M" name="move-up" />
                     </button>
                     <button
                       :class="{
@@ -135,7 +135,7 @@
                         pointRemove(groupeIndex, contourIndex, pointIndex)
                       "
                     >
-                      <i class="icon-24 icon-minus" />
+                      <Icon name="minus" size="M" />
                     </button>
                   </div>
                 </div>
@@ -159,19 +159,9 @@
                 class="btn-border rnd-s py-s px-m full-x mb-xs flex small"
                 @click="pointAdd(groupeIndex, contourIndex)"
               >
-                <span class="mt-xxs">Ajouter un point</span
-                ><i class="icon-24 icon-plus flex-right" />
+                <span class="mt-xxs">Ajouter un point</span>
+                <Icon name="plus" size="M" class="flex-right" />
               </button>
-
-              <!--              Désactivation de cette fonctionnalité pour vérifier dans un premier temps
-                                si les utilisateurs se plaignent de sa disparition-->
-              <!--              <button>-->
-              <!--                class="btn-border rnd-s py-s px-m full-x mb-xs flex small"-->
-              <!--                @click="lotAdd(groupeIndex, contourIndex)"-->
-              <!--              >-->
-              <!--                <span class="mt-xxs">Ajouter un lot de points</span-->
-              <!--                ><i class="icon-24 icon-plus flex-right" />-->
-              <!--              </button>-->
             </div>
             <button
               v-if="groupeContours.length && groupeContours[0].length"
@@ -183,7 +173,8 @@
                 {{
                   groupeContours.length >= 1 ? 'une lacune' : 'un contour'
                 }}</span
-              ><i class="icon-24 icon-plus flex-right" />
+              >
+              <Icon name="plus" size="M" class="flex-right" />
             </button>
           </div>
 
@@ -196,8 +187,8 @@
             class="btn rnd-s py-s px-m full-x mb-s flex h6"
             @click="groupeAdd"
           >
-            <span class="mt-xxs">Ajouter un groupe</span
-            ><i class="icon-24 icon-plus flex-right" />
+            <span class="mt-xxs">Ajouter un groupe</span>
+            <Icon name="plus" size="M" class="flex-right" />
           </button>
 
           <div class="h6">
@@ -227,10 +218,10 @@
         class="flex-right btn-border pill p-s tooltip"
         @click="surfaceRefresh"
       >
-        <h6 class="tooltip-content">
-          Recalculer automatiquement la surface à partir du périmètre
-        </h6>
-        <i class="icon-24 icon-refresh" />
+        <HelpTooltip icon="refresh"
+          >Recalculer automatiquement la surface à partir du
+          périmètre</HelpTooltip
+        >
       </button>
     </div>
     <HeritageEdit
@@ -273,9 +264,13 @@ import HeritageEdit from './heritage-edit.vue'
 import PointsImportPopup from './points-import-popup.vue'
 import Points from '../_common/points.vue'
 import InputNumber from '../_ui/input-number.vue'
+import Icon from '@/components/_ui/icon.vue'
+import HelpTooltip from '@/components/_ui/help-tooltip.vue'
 
 export default {
   components: {
+    HelpTooltip,
+    Icon,
     GeoSystemeEdit,
     PointEdit,
     PointsLotEdit,

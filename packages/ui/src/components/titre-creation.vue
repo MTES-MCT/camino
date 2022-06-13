@@ -71,7 +71,7 @@
       />
       <div class="flex-right">
         <button class="btn py-s px-m rnd-xs" @click="referenceRemove(index)">
-          <i class="icon-24 icon-minus" />
+          <Icon name="minus" size="M" />
         </button>
       </div>
     </div>
@@ -84,8 +84,8 @@
       class="btn small rnd-xs py-s px-m full-x mb flex"
       @click="referenceAdd"
     >
-      <span class="mt-xxs">Ajouter une référence</span
-      ><i class="icon-24 icon-plus flex-right" />
+      <span class="mt-xxs">Ajouter une référence</span>
+      <Icon name="plus" size="M" class="flex-right" />
     </button>
 
     <hr />
@@ -113,9 +113,10 @@
 import { permissionsCheck } from '@/utils'
 
 import TitreTypeSelect from './_common/titre-type-select.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
-  components: { TitreTypeSelect },
+  components: { Icon, TitreTypeSelect },
 
   data() {
     return {

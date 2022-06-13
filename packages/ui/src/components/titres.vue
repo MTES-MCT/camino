@@ -12,7 +12,7 @@
           @click="titreDemandeOpen"
         >
           <span class="mt-xxs">Demander un titre…</span>
-          <i class="icon-24 icon-plus flex-right" />
+          <Icon name="plus" size="M" class="flex-right" color="white" />
         </button>
       </div>
     </div>
@@ -68,11 +68,12 @@ import Downloads from './_common/downloads.vue'
 import Table from './titres/table-pagination.vue'
 import Map from './titres/map.vue'
 import Filtres from './titres/filtres.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   name: 'Titres',
 
-  components: { Filtres, Downloads, Map, Table },
+  components: { Icon, Filtres, Downloads, Map, Table },
 
   data() {
     return {

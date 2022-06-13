@@ -17,7 +17,7 @@
         </select>
 
         <button class="btn py-s px-m rnd-xs" @click="valueRemove(n)">
-          <i class="icon-24 icon-minus" />
+          <Icon name="minus" size="M" />
         </button>
       </div>
       <div v-if="value.typeId">
@@ -69,17 +69,18 @@
       class="btn rnd-xs py-s px-m full-x flex mb-s h6"
       @click="valueAdd"
     >
-      <span class="mt-xxs">Ajouter un type d'étape</span
-      ><i class="icon-24 icon-plus flex-right" />
+      <span class="mt-xxs">Ajouter un type d'étape</span>
+      <Icon name="plus" size="M" class="flex-right" />
     </button>
   </div>
 </template>
 
 <script>
 import InputDate from '../_ui/input-date.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
-  components: { InputDate },
+  components: { Icon, InputDate },
 
   props: {
     filter: { type: Object, required: true }

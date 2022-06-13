@@ -21,12 +21,12 @@
             :class="{ 'pr-xs': !opened, 'pr-s': opened }"
             @click="labelRemove(label)"
             >{{ label.name }} : {{ label.valueName || label.value }}
-            <span v-if="!opened" class="inline-block align-y-top ml-xs"
-              ><i class="icon-16 icon-x" /></span
+            <span v-if="!opened" class="inline-block align-y-top ml-xs">
+              <Icon size="S" name="x" color="white" /> </span
           ></span>
         </div>
         <button class="flex-right btn-alt p-m" @click="labelsReset">
-          <i class="icon-24 icon-close" />
+          <Icon size="M" name="close" />
         </button>
       </div>
     </template>
@@ -90,9 +90,11 @@ import FiltersInput from './filters-input.vue'
 import FiltersCheckboxes from './filters-checkboxes.vue'
 import FiltersSelects from './filters-selects.vue'
 import FiltersInputAutocomplete from './filters-input-autocomplete.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     Accordion,
     FiltersInput,
     FiltersCheckboxes,

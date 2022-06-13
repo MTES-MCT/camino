@@ -24,7 +24,7 @@
           class="btn py-s px-m rnd-xs"
           @click="geoSystemeRemove(etapeGeoSystemeIndex)"
         >
-          <i class="icon-24 icon-minus" />
+          <Icon name="minus" size="M" />
         </button>
       </div>
 
@@ -48,16 +48,18 @@
       class="btn small rnd-xs py-s px-m full-x flex mb-s"
       @click="geoSystemeAdd"
     >
-      <span class="mt-xxs">Ajouter un système géographique</span
-      ><i class="icon-24 icon-plus flex-right" />
+      <span class="mt-xxs">Ajouter un système géographique</span>
+      <Icon name="plus" size="M" class="flex-right" />
     </button>
   </div>
 </template>
 
 <script>
 import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
+  components: { Icon },
   props: {
     etape: { type: Object, default: () => ({}) }
   },
