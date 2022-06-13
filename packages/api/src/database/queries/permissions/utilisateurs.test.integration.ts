@@ -21,7 +21,7 @@ const mockAdministration = Administrations['aut-97300-01']
 
 const mockUser: Omit<IUtilisateur, 'permission'> = {
   id: 'utilisateurId',
-  permissionId: 'editeur',
+  role: 'editeur',
   nom: 'utilisateurNom',
   email: 'utilisateurEmail',
   motDePasse: 'utilisateurMotdepasse',
@@ -49,7 +49,7 @@ describe('utilisateursQueryModify', () => {
     async ({ permissionId, voit }) => {
       const user: Omit<IUtilisateur, 'permission'> = {
         id: 'userId',
-        permissionId,
+        role: permissionId,
         administrations: [mockAdministration] as unknown as IAdministration[],
         dateCreation: '2022-05-12'
       }

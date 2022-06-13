@@ -47,9 +47,7 @@ fragment utilisateur on Utilisateur {
   administrations {
     ...administration
   }
-  permission {
-    ...permission
-  }
+  role
 }
 
 fragment administration on Administration {
@@ -64,9 +62,4 @@ fragment administration on Administration {
   codePostal
   commune
   cedex
-}
-
-fragment permission on Permission {
-  id
-  nom
 }

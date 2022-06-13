@@ -11,7 +11,6 @@ import {
   IPhaseStatut,
   IEtapeType,
   IEtapeStatut,
-  IPermission,
   IDocumentType,
   IReferenceType,
   ITitreType,
@@ -37,7 +36,6 @@ import DocumentsTypes from '../models/documents-types'
 import DemarchesStatuts from '../models/demarches-statuts'
 import Domaines from '../models/domaines'
 import EtapesTypes from '../models/etapes-types'
-import Permissions from '../models/permissions'
 import ReferencesTypes from '../models/references-types'
 import TitresStatuts from '../models/titres-statuts'
 import TitresTypesTypes from '../models/titres-types-types'
@@ -47,8 +45,7 @@ import SubstancesLegalesCodes from '../models/substances-legales-codes'
 import {
   domainesQueryModify,
   etapesTypesQueryModify,
-  demarchesTypesQueryModify,
-  permissionsQueryModify
+  demarchesTypesQueryModify
 } from './permissions/metas'
 
 import PhasesStatuts from '../models/phases-statuts'
@@ -64,21 +61,6 @@ import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../models/ti
 import Titres from '../models/titres'
 import { sortedDevises } from 'camino-common/src/devise'
 
-const permissionsGet = async (
-  _a: never,
-  _b: never,
-  user: IUtilisateur | null | undefined
-) => {
-  const q = Permissions.query().orderBy('ordre')
-
-  permissionsQueryModify(q, user)
-
-  return q
-}
-
-const permissionUpdate = async (id: string, props: Partial<IPermission>) =>
-  Permissions.query().patchAndFetchById(id, props)
-
 const documentTypeCreate = async (documentType: IDocumentType) =>
   DocumentsTypes.query().insertGraphAndFetch(documentType)
 
@@ -89,8 +71,6 @@ const referenceTypeUpdate = async (
   id: string,
   props: Partial<IReferenceType>
 ) => ReferencesTypes.query().patchAndFetchById(id, props)
-
-const permissionGet = async (id: string) => Permissions.query().findById(id)
 
 const titresTypesTypesGet = async () =>
   TitresTypesTypes.query().orderBy('ordre')
@@ -631,12 +611,9 @@ export {
   referencesTypesGet,
   phasesStatutsGet,
   phaseStatutUpdate,
-  permissionsGet,
-  permissionGet,
   etapesStatutsGet,
   etapeStatutUpdate,
   substancesLegalesCodesGet,
-  permissionUpdate,
   documentTypeCreate,
   documentTypeUpdate,
   referenceTypeUpdate,

@@ -1,13 +1,5 @@
 import gql from 'graphql-tag'
 
-const fragmentPermission = gql`
-  fragment permission on Permission {
-    id
-    nom
-    ordre
-  }
-`
-
 const fragmentTitreTypeType = gql`
   fragment titreTypeType on TitreTypeType {
     id
@@ -233,7 +225,6 @@ export {
   fragmentTitreStatut,
   fragmentEtapeType,
   fragmentEtapeStatut,
-  fragmentPermission,
   fragmentUnite,
   fragmentDemarcheType,
   fragmentDemarcheStatut,

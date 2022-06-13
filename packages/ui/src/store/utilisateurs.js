@@ -5,13 +5,12 @@ const state = {
   elements: [],
   total: 0,
   metas: {
-    permission: [],
     entreprise: []
   },
   definitions: [
     { id: 'noms', type: 'string' },
     { id: 'emails', type: 'string' },
-    { id: 'permissionIds', type: 'strings', values: [] },
+    { id: 'roles', type: 'strings', values: [] },
     { id: 'administrationIds', type: 'strings', values: [] },
     { id: 'entrepriseIds', type: 'strings', values: [] },
     { id: 'page', type: 'number', min: 0 },
@@ -19,7 +18,7 @@ const state = {
     {
       id: 'colonne',
       type: 'string',
-      values: ['nom', 'prenom', 'email', 'permission', 'lien']
+      values: ['nom', 'prenom', 'email', 'role', 'lien']
     },
     {
       id: 'ordre',
@@ -31,7 +30,7 @@ const state = {
     filtres: {
       noms: '',
       emails: '',
-      permissionIds: [],
+      roles: [],
       administrationIds: [],
       entrepriseIds: []
     },
@@ -57,10 +56,7 @@ const mutations = Object.assign({}, listeMutations, {
     Object.keys(data).forEach(id => {
       let metaId
       let paramId
-      if (id === 'permissions') {
-        metaId = 'permission'
-        paramId = 'permissionIds'
-      } else if (id === 'entreprises') {
+      if (id === 'entreprises') {
         metaId = 'entreprise'
         paramId = 'entrepriseIds'
 

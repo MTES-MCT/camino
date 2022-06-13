@@ -20,15 +20,15 @@ import { titresDemarchesQueryModify } from './titres-demarches'
 import TitresDemarches from '../../models/titres-demarches'
 import Journaux from '../../models/journaux'
 import { journauxQueryModify } from './journaux'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 const titreEtapeModificationQueryBuild = (
   user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (permissionCheck(user?.role, ['super'])) {
     return raw('true')
   } else if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur']) &&
+    permissionCheck(user?.role, ['admin', 'editeur']) &&
     user?.administrations?.length
   ) {
     const administrationsIds = user.administrations.map(a => a.id) || []
@@ -43,7 +43,7 @@ const titreEtapeModificationQueryBuild = (
       ])
       .whereRaw('?? = ??', ['t_d_e.etapeTypeId', 'titresEtapes.typeId'])
   } else if (
-    permissionCheck(user?.permissionId, ['entreprise']) &&
+    permissionCheck(user?.role, ['entreprise']) &&
     user?.entreprises?.length
   ) {
     return entreprisesEtapesTypesPropsQuery(
@@ -118,14 +118,14 @@ const titresEtapesQueryModify = (
 
   q = specifiquesAdd(q)
 
-  if (!user || !permissionCheck(user.permissionId, ['super'])) {
+  if (!user || !permissionCheck(user.role, ['super'])) {
     q.where(b => {
       b.orWhere('type.publicLecture', true)
 
       // étapes visibles pour les admins
       if (
         user?.administrations?.length &&
-        permissionCheck(user.permissionId, ['admin', 'editeur', 'lecteur'])
+        permissionCheck(user.role, ['admin', 'editeur', 'lecteur'])
       ) {
         const administrationsIds = user.administrations.map(a => a.id) || []
 
@@ -143,7 +143,7 @@ const titresEtapesQueryModify = (
         )
       } else if (
         user?.entreprises?.length &&
-        permissionCheck(user?.permissionId, ['entreprise'])
+        permissionCheck(user?.role, ['entreprise'])
       ) {
         const entreprisesIds = user.entreprises.map(a => a.id)
 

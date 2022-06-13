@@ -17,9 +17,7 @@ const fragmentUtilisateur = gql`
     administrations {
       ...administrations
     }
-    permission {
-      ...permission
-    }
+    role
     newsletter
 
     modification
@@ -41,8 +39,6 @@ const fragmentUtilisateur = gql`
   ${fragmentEntreprises}
 
   ${fragmentAdministrations}
-
-  ${fragmentPermission}
 `
 
 export { fragmentUtilisateur }

@@ -16,7 +16,7 @@ import {
   Administrations
 } from 'camino-common/src/administrations'
 import dateFormat from 'dateformat'
-import { PermissionId } from 'camino-common/src/permissions'
+import { Role } from 'camino-common/src/roles'
 
 const queryImport = (nom: string) =>
   fs
@@ -32,7 +32,7 @@ const graphQLCall = async (
   variables: Index<
     string | boolean | Index<string | boolean | Index<string>[] | any>
   >,
-  permissionId?: PermissionId,
+  permissionId?: Role,
   administrationId?: string
 ) => {
   const req = request(app).post('/').send({ query, variables })
@@ -40,7 +40,7 @@ const graphQLCall = async (
   return cookiesSet(req, permissionId, administrationId)
 }
 
-const restUploadCall = async (permissionId?: PermissionId) => {
+const restUploadCall = async (permissionId?: Role) => {
   const req = request(app).post('/televersement')
 
   return cookiesSet(req, permissionId)
@@ -48,7 +48,7 @@ const restUploadCall = async (permissionId?: PermissionId) => {
 
 export const restCall = async (
   path: string,
-  permissionId: PermissionId,
+  permissionId: Role,
   administrationId?: AdministrationId
 ): Promise<request.Test> => {
   const req = request(app).get(path)
@@ -58,7 +58,7 @@ export const restCall = async (
 
 const cookiesSet = async (
   req: request.Test,
-  permissionId?: PermissionId,
+  permissionId?: Role,
   administrationId?: string
 ): Promise<request.Test> => {
   let token
@@ -74,7 +74,7 @@ const cookiesSet = async (
 }
 
 const userTokenGenerate = async (
-  permissionId: PermissionId,
+  permissionId: Role,
   administrationId?: string
 ) => {
   let id = 'super'
@@ -106,7 +106,7 @@ const userTokenGenerate = async (
         email: `${id}@camino.local`,
         motDePasse: 'mot-de-passe',
         dateCreation: dateFormat(new Date(), 'yyyy-mm-dd'),
-        permissionId,
+        role: permissionId,
         administrations
       },
       {}

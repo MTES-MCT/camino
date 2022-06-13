@@ -16,12 +16,11 @@ const utilisateursFiltres = [
     placeholder: 'prenom.nom@domaine.fr, ...'
   },
   {
-    id: 'permissionIds',
-    name: 'Permissions',
+    id: 'roles',
+    name: 'Rôles',
     type: 'checkboxes',
     value: [],
-    elements: [],
-    elementsFormat
+    elements: []
   },
   {
     id: 'administrationIds',

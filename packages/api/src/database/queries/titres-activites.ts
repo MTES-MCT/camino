@@ -20,7 +20,7 @@ import {
   titresActivitesQueryModify,
   titresActivitesPropsQueryModify
 } from './permissions/titres-activites'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 /**
  * Modifie la requête en fonction des paramètres de filtre
@@ -125,7 +125,7 @@ const titreActivitesQueryBuild = (
 
   // dans titresActivitesPropsQueryModify quand on est une administration on utilise les 3 colonnes suivantes pour une sous requête.
   if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur']) &&
+    permissionCheck(user?.role, ['admin', 'editeur']) &&
     user?.administrations?.length
   ) {
     q.groupBy(

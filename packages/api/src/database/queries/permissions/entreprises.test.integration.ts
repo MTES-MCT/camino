@@ -38,7 +38,7 @@ describe('entreprisesQueryModify', () => {
 
       const mockUser: Omit<IUtilisateur, 'permission'> = {
         id: '109f95',
-        permissionId: permission,
+        role: permission,
         entreprises: [mockEntreprise1],
         email: 'email',
         motDePasse: 'motdepasse',

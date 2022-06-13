@@ -191,9 +191,6 @@ type Query {
   activitesTypesDocumentsTypes: [ActiviteTypeDocumentType]
   activitesTypesPays: [ActiviteTypePays]
 
-  "Liste des permissions utilisateurs"
-  permissions: [Permission]
-
   "Entreprise en fonction de son id"
   entreprise(id: ID!): Entreprise
 
@@ -427,8 +424,6 @@ type Mutation {
   activiteTypeModifier(activiteType: InputActiviteType!): [ActiviteType]
 
   activiteStatutModifier(activiteStatut: InputActiviteStatut!): [ActiviteStatut]
-
-  permissionModifier(permission: InputPermission!): [Permission]
 
   documentTypeCreer(documentType: InputDocumentType!): [DocumentType]
 

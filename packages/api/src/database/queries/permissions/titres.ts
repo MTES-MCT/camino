@@ -27,7 +27,7 @@ import Administrations from '../../models/administrations'
 import UtilisateursTitres from '../../models/utilisateurs--titres'
 import DemarchesTypes from '../../models/demarches-types'
 import { demarchesCreationQuery } from './metas'
-import { PermissionId, permissionCheck } from 'camino-common/src/permissions'
+import { Role, permissionCheck } from 'camino-common/src/roles'
 
 const titresDemarchesAdministrationsModificationQuery = (
   administrations: IAdministration[] | undefined | null,
@@ -71,10 +71,7 @@ const titresDemarchesAdministrationsModificationQuery = (
 
 export const titresTravauxCreationQuery = (
   q: QueryBuilder<Titres, Titres | Titres[]>,
-  user:
-    | Pick<IUtilisateur, 'permissionId' | 'administrations'>
-    | null
-    | undefined
+  user: Pick<IUtilisateur, 'role' | 'administrations'> | null | undefined
 ) => {
   const demarchesTypesQuery = DemarchesTypes.query().where('travaux', true)
   demarchesCreationQuery(demarchesTypesQuery, user, {
@@ -140,14 +137,11 @@ export const titresConfidentielSelect = (
 
 export const titresModificationSelectQuery = (
   q: QueryBuilder<Titres, Titres | Titres[]>,
-  user:
-    | Pick<IUtilisateur, 'permissionId' | 'administrations'>
-    | null
-    | undefined
+  user: Pick<IUtilisateur, 'role' | 'administrations'> | null | undefined
 ): QueryBuilder<Administrations> | RawBuilder => {
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (permissionCheck(user?.role, ['super'])) {
     return raw('true')
-  } else if (permissionCheck(user?.permissionId, ['admin', 'editeur'])) {
+  } else if (permissionCheck(user?.role, ['admin', 'editeur'])) {
     const administrationsIds = user?.administrations?.map(a => a.id) ?? []
 
     return administrationsTitresQuery(administrationsIds, 'titres', {
@@ -161,7 +155,7 @@ export const titresModificationSelectQuery = (
 }
 
 export const titresSuppressionSelectQuery = (
-  permissionId: PermissionId | undefined
+  permissionId: Role | undefined
 ): boolean => permissionCheck(permissionId, ['super'])
 
 const titresQueryModify = (
@@ -176,13 +170,13 @@ const titresQueryModify = (
   // - ou l'utilisateur n'est pas super
   // alors il ne voit que les titres publics et ceux auxquels son entité est reliée
 
-  if (!user || !permissionCheck(user?.permissionId, ['super'])) {
+  if (!user || !permissionCheck(user?.role, ['super'])) {
     q.where(b => {
       b.where('titres.publicLecture', true)
 
       // si l'utilisateur est `entreprise`
       if (
-        permissionCheck(user?.permissionId, ['entreprise']) &&
+        permissionCheck(user?.role, ['entreprise']) &&
         user?.entreprises?.length
       ) {
         const entreprisesIds = user.entreprises.map(e => e.id)
@@ -199,7 +193,7 @@ const titresQueryModify = (
 
       // si l'utilisateur est `administration`
       else if (
-        permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur']) &&
+        permissionCheck(user?.role, ['admin', 'editeur', 'lecteur']) &&
         user?.administrations?.length
       ) {
         // titres dont l'administration de l'utilisateur est
@@ -221,10 +215,10 @@ const titresQueryModify = (
     // fileCreate('test.sql', sqlFormatter.format(q.toKnexQuery().toString()))
   }
 
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (permissionCheck(user?.role, ['super'])) {
     q.select(raw('true').as('demarchesCreation'))
   } else if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur']) &&
+    permissionCheck(user?.role, ['admin', 'editeur']) &&
     user?.administrations?.length
   ) {
     const administrationsIds = user.administrations.map(a => a.id) || []
@@ -248,9 +242,7 @@ const titresQueryModify = (
 
   q.select(titresModificationSelectQuery(q, user).as('modification'))
 
-  q.select(
-    raw(`${titresSuppressionSelectQuery(user?.permissionId)}`).as('suppression')
-  )
+  q.select(raw(`${titresSuppressionSelectQuery(user?.role)}`).as('suppression'))
 
   titresTravauxCreationQuery(q, user)
 
@@ -266,7 +258,7 @@ const titresQueryModify = (
   }
 
   if (
-    permissionCheck(user?.permissionId, ['entreprise']) &&
+    permissionCheck(user?.role, ['entreprise']) &&
     user?.entreprises?.length
   ) {
     if (demandeEnCours) {
@@ -280,12 +272,7 @@ const titresQueryModify = (
   // masque les administrations associées
   if (
     !user ||
-    !permissionCheck(user?.permissionId, [
-      'super',
-      'admin',
-      'editeur',
-      'lecteur'
-    ])
+    !permissionCheck(user?.role, ['super', 'admin', 'editeur', 'lecteur'])
   ) {
     q.modifyGraph('administrationsGestionnaires', b => {
       b.whereRaw('?? is not true', ['associee'])

@@ -7,7 +7,7 @@ import { utilisateursQueryModify } from './utilisateurs'
 import Utilisateurs from '../../models/utilisateurs'
 import { titresQueryModify } from './titres'
 import Titres from '../../models/titres'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 export const journauxQueryModify = (
   q: QueryBuilder<Journaux, Journaux | Journaux[]>,
@@ -16,7 +16,7 @@ export const journauxQueryModify = (
   q.select('journaux.*')
 
   // Les journaux sont uniquement visibles par les super
-  if (!user || !permissionCheck(user.permissionId, ['super'])) {
+  if (!user || !permissionCheck(user.role, ['super'])) {
     q.where(false)
   }
 

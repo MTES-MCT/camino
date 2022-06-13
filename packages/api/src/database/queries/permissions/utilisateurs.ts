@@ -8,7 +8,7 @@ import Utilisateurs from '../../models/utilisateurs'
 import Administrations from '../../models/administrations'
 import Entreprises from '../../models/entreprises'
 import { entreprisesQueryModify } from './entreprises'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 const utilisateursQueryModify = (
   q: QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>,
@@ -19,7 +19,7 @@ const utilisateursQueryModify = (
   q.whereNotNull('utilisateurs.email')
 
   if (
-    permissionCheck(user?.permissionId, ['editeur', 'lecteur']) &&
+    permissionCheck(user?.role, ['editeur', 'lecteur']) &&
     user?.administrations?.length
   ) {
     // un utilisateur 'editeur' ou 'lecteur'
@@ -35,7 +35,7 @@ const utilisateursQueryModify = (
       ).whereIn('administrations.id', administrationsIds)
     )
   } else if (
-    permissionCheck(user?.permissionId, ['entreprise']) &&
+    permissionCheck(user?.role, ['entreprise']) &&
     user?.entreprises?.length
   ) {
     // un utilisateur entreprise
@@ -50,7 +50,7 @@ const utilisateursQueryModify = (
         >
       ).whereIn('entreprises.id', entreprisesIds)
     )
-  } else if (user && permissionCheck(user?.permissionId, ['defaut'])) {
+  } else if (user && permissionCheck(user?.role, ['defaut'])) {
     // un utilisateur "defaut" ne voit que son propre profil
     q.where('id', user.id)
   } else if (!user) {
@@ -58,13 +58,13 @@ const utilisateursQueryModify = (
     q.where(false)
   }
 
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (permissionCheck(user?.role, ['super'])) {
     q.select(raw('true').as('modification'))
     q.select(raw('true').as('suppression'))
     q.select(raw('true').as('permissionModification'))
   } else if (
     user &&
-    permissionCheck(user?.permissionId, ['admin']) &&
+    permissionCheck(user?.role, ['admin']) &&
     user.administrations?.length
   ) {
     // restreint le droit d'édition d'un utilisateur
@@ -123,13 +123,13 @@ const utilisateursQueryModify = (
     q.select(raw('false').as('permissionModification'))
   }
 
-  if (permissionCheck(user?.permissionId, ['super', 'admin', 'editeur'])) {
+  if (permissionCheck(user?.role, ['super', 'admin', 'editeur'])) {
     q.select(raw('true').as('entreprisesCreation'))
   } else {
     q.select(raw('false').as('entreprisesCreation'))
   }
 
-  if (permissionCheck(user?.permissionId, ['super', 'admin'])) {
+  if (permissionCheck(user?.role, ['super', 'admin'])) {
     q.select(raw('true').as('utilisateursCreation'))
   } else {
     q.select(raw('false').as('utilisateursCreation'))

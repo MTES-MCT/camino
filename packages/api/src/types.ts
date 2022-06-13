@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import { FileUpload } from 'graphql-upload'
 import {
   AdministrationId,
@@ -8,8 +7,7 @@ import {
 import { Departement, DepartementId } from 'camino-common/src/departement'
 import { Region } from 'camino-common/src/region'
 import { GeoSystemeId } from 'camino-common/src/geoSystemes'
-import { UniteId } from 'camino-common/src/unites'
-import { PermissionId } from 'camino-common/src/permissions'
+import { Role } from 'camino-common/src/roles'
 
 const DemarchesStatutsTypesIds = {
   Accepte: 'acc',
@@ -111,7 +109,7 @@ type ITitreDemarcheColonneId =
 
 type ITitreActiviteColonneId = 'titreNom' | 'titulaire' | 'periode' | 'statut'
 
-type IUtilisateursColonneId = 'nom' | 'prenom' | 'email' | 'permission' | 'lien'
+type IUtilisateursColonneId = 'nom' | 'prenom' | 'email' | 'role' | 'lien'
 type IEntrepriseColonneId = 'nom' | 'siren'
 type ICouleur = 'error' | 'info' | 'neutral' | 'success' | 'warning'
 
@@ -322,12 +320,6 @@ interface IDepartement {
   communes?: ICommune[] | null
 }
 
-interface IDevise {
-  id: string
-  nom: string
-  ordre: number
-}
-
 export const DOCUMENTS_REPERTOIRES = [
   'demarches',
   'activites',
@@ -516,12 +508,6 @@ interface IPeriode {
   id: number
   nom: string
   frequence: IFrequence
-}
-
-interface IPermission {
-  id: PermissionId
-  nom: string
-  ordre: number
 }
 
 interface IPhaseStatut {
@@ -975,10 +961,9 @@ interface IUtilisateur {
   prenom?: string | null
   telephoneFixe?: string | null
   telephoneMobile?: string | null
-  permissionId: PermissionId
+  role: Role
   // TODO: définir une interface IUtilisateurPreferences
   preferences?: any | null
-  permission: IPermission
   administrations?: IAdministration[] | null
   entreprises?: IEntreprise[] | null
   modification?: boolean | null
@@ -996,12 +981,7 @@ interface IUtilisateurTitre {
   utilisateur?: IUtilisateur | null
 }
 
-type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
-
-type IUtilisateurCreation = PartialBy<
-  Omit<IUtilisateur, 'id' | 'permission'>,
-  'permissionId'
->
+type IUtilisateurCreation = Omit<IUtilisateur, 'id'>
 
 interface IToken {
   user?: ITokenUser
@@ -1058,7 +1038,6 @@ export {
   IDemarcheStatut,
   IDemarcheType,
   IDepartement,
-  IDevise,
   IDocumentType,
   IDocumentRepertoire,
   IDomaine,
@@ -1077,7 +1056,6 @@ export {
   IGlobale,
   IMois,
   IPays,
-  IPermission,
   IPeriode,
   IPhaseStatut,
   IReferenceType,

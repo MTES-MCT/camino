@@ -123,8 +123,8 @@
               <h5>Permissions</h5>
             </div>
             <div class="tablet-blob-3-4">
-              <Pill v-if="utilisateur.permission" class="mb">
-                {{ utilisateur.permission.nom }}
+              <Pill v-if="utilisateur.role" class="mb">
+                {{ utilisateur.role }}
               </Pill>
               <p v-else>–</p>
             </div>
@@ -258,10 +258,6 @@ export default {
       utilisateur.administrations = utilisateur.administrations.map(
         ({ id }) => ({ id })
       )
-
-      utilisateur.permissionId = utilisateur.permission.id
-
-      delete utilisateur.permission
 
       delete utilisateur.sections
       delete utilisateur.modification

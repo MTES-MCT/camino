@@ -5,7 +5,7 @@ import { userGet } from '../../database/queries/utilisateurs'
 import { permissionAdministrationsCheck } from '../permission'
 
 import { diffFind } from '../../tools/index'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 /**
  * Valide la mise à jour d'un utilisateur
@@ -64,7 +64,7 @@ const utilisateurUpdationValidate = async (
         return ['droits admin insuffisants pour modifier les administrations']
       }
       // sinon, si le user modifie les permissions de l'utilisateur
-    } else if (utilisateurOld.permissionId !== utilisateur.permissionId) {
+    } else if (utilisateurOld.role !== utilisateur.role) {
       // et qu'il n'a pas les droits sur toutes les administrations de ce dernier
       if (
         utilisateur.administrations &&
@@ -79,11 +79,7 @@ const utilisateurUpdationValidate = async (
   }
 
   if (
-    permissionCheck(utilisateur.permissionId, [
-      'admin',
-      'editeur',
-      'lecteur'
-    ]) &&
+    permissionCheck(utilisateur.role, ['admin', 'editeur', 'lecteur']) &&
     !utilisateur.administrations?.length
   ) {
     return ["l'utilisateur doit être associé à une administration"]

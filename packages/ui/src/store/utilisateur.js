@@ -14,7 +14,6 @@ import router from '../router'
 const state = {
   element: null,
   metas: {
-    permissions: [],
     entreprises: []
   },
   metasLoaded: false

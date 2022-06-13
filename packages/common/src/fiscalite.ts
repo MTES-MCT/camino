@@ -1,4 +1,4 @@
-import { permissionCheck, PermissionId } from './permissions'
+import { permissionCheck, Role } from './roles'
 
 export interface Fiscalite {
   redevanceCommunale: number
@@ -11,18 +11,14 @@ export const fiscaliteVisible = (
   user:
     | {
         entreprises?: { id: string }[] | null
-        permissionId?: PermissionId
-        permission?: { id: PermissionId }
+        role?: Role
       }
     | undefined
     | null,
   _entrepriseId: string
 ): boolean => {
   if (user) {
-    if (
-      permissionCheck(user.permissionId, ['super']) ||
-      (user.permission && permissionCheck(user.permission.id, ['super']))
-    ) {
+    if (permissionCheck(user.role, ['super'])) {
       return true
     }
   }

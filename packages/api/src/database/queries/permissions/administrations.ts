@@ -13,7 +13,7 @@ import { utilisateursQueryModify } from './utilisateurs'
 import { administrationsActivitesTypesEmailsQueryModify } from './administrations-activites-types-emails'
 import Departements from '../../models/departements'
 import ActivitesTypes from '../../models/activites-types'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 const departementsQuery = (
   administrationsIds: string[],
@@ -35,15 +35,15 @@ const emailsLectureQuery = (
   administrationsIdsReplace: string[]
 ) => {
   if (
-    permissionCheck(user?.permissionId, ['super']) ||
+    permissionCheck(user?.role, ['super']) ||
     (user?.administrations?.some(a => a.typeId === 'min') &&
-      permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur']))
+      permissionCheck(user?.role, ['admin', 'editeur', 'lecteur']))
   ) {
     // Utilisateur super ou membre de ministère (admin ou éditeur) : tous les droits
     return raw('true')
   } else if (
     user?.administrations?.length &&
-    permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur'])
+    permissionCheck(user?.role, ['admin', 'editeur', 'lecteur'])
   ) {
     return raw(
       `((??) OR (${administrationAlias}.id IN (${administrationsIdsReplace})))`,
@@ -66,20 +66,20 @@ const administrationsQueryModify = (
   const administrationsIds = user?.administrations?.map(a => a.id) || []
   const administrationsIdsReplace = administrationsIds.map(() => '?')
 
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (permissionCheck(user?.role, ['super'])) {
     q.select(raw('true').as('modification'))
   }
 
   if (
-    permissionCheck(user?.permissionId, ['super']) ||
+    permissionCheck(user?.role, ['super']) ||
     (user?.administrations?.some(a => a.typeId === 'min') &&
-      permissionCheck(user?.permissionId, ['admin', 'editeur']))
+      permissionCheck(user?.role, ['admin', 'editeur']))
   ) {
     // Utilisateur super ou membre de ministère (admin ou éditeur) : tous les droits
     q.select(raw('true').as('emailsModification'))
   } else if (
     user?.administrations?.length &&
-    permissionCheck(user?.permissionId, ['admin', 'editeur'])
+    permissionCheck(user?.role, ['admin', 'editeur'])
   ) {
     // Membre d'une DREAL/DEAL vis-à-vis de la DREAL elle-même,
     // ou d'un DREAL/DEAL vis-à-vis d'une administration qui dépend d'elles

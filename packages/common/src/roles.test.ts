@@ -1,4 +1,4 @@
-import { permissionCheck } from './permissions'
+import { permissionCheck } from './roles'
 
 test('permissionCheck', () => {
   expect(permissionCheck(null, [])).toBe(false)

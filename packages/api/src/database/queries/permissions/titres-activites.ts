@@ -16,7 +16,7 @@ import {
   administrationsActivitesModify
 } from './administrations'
 import { entreprisesTitresQuery } from './entreprises'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 const activiteStatuts = [
   {
@@ -40,7 +40,7 @@ const titreActivitesCount = (
   q.groupBy('titres.id')
 
   if (
-    permissionCheck(user?.permissionId, [
+    permissionCheck(user?.role, [
       'super',
       'admin',
       'editeur',
@@ -65,9 +65,9 @@ const titreActivitesCount = (
       )
     })
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       if (
-        permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur']) &&
+        permissionCheck(user?.role, ['admin', 'editeur', 'lecteur']) &&
         user?.administrations?.length
       ) {
         const administrationsIds = user.administrations.map(e => e.id)
@@ -96,7 +96,7 @@ const titreActivitesCount = (
             .whereRaw('?? is not true', ['a_at.lectureInterdit'])
         )
       } else if (
-        permissionCheck(user?.permissionId, ['entreprise']) &&
+        permissionCheck(user?.role, ['entreprise']) &&
         user?.entreprises?.length
       ) {
         const entreprisesIds = user.entreprises.map(e => e.id)
@@ -118,7 +118,7 @@ const titreActivitesCount = (
       titresActivitesCountQuery.as('activitesCountJoin'),
       raw('?? = ??', ['activitesCountJoin.titreId', 'titres.id'])
     )
-  } else if (!user || permissionCheck(user?.permissionId, ['defaut'])) {
+  } else if (!user || permissionCheck(user?.role, ['defaut'])) {
     // les utilisateurs non-authentifiés ou défaut ne peuvent voir aucune activité
     activiteStatuts.forEach(({ name }) => {
       q.select(raw('0').as(name))
@@ -144,7 +144,7 @@ const titresActivitesQueryModify = (
   q.leftJoinRelated('titre')
 
   if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur']) &&
+    permissionCheck(user?.role, ['admin', 'editeur', 'lecteur']) &&
     user?.administrations?.length
   ) {
     const administrationsIds = user.administrations!.map(a => a.id)
@@ -157,7 +157,7 @@ const titresActivitesQueryModify = (
       }).modify(administrationsActivitesModify, { lecture: true })
     )
   } else if (
-    permissionCheck(user?.permissionId, ['entreprise']) &&
+    permissionCheck(user?.role, ['entreprise']) &&
     user?.entreprises?.length
   ) {
     // vérifie que l'utilisateur a les permissions sur les titres
@@ -169,7 +169,7 @@ const titresActivitesQueryModify = (
         isAmodiataire: true
       })
     )
-  } else if (!permissionCheck(user?.permissionId, ['super'])) {
+  } else if (!permissionCheck(user?.role, ['super'])) {
     // sinon, aucune activité n'est visible
     q.where(false)
   }
@@ -190,13 +190,13 @@ const titresActivitesPropsQueryModify = (
 ) => {
   q.select('titresActivites.*')
 
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (permissionCheck(user?.role, ['super'])) {
     q.select(raw('true').as('modification'))
   } else if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur']) &&
+    permissionCheck(user?.role, ['admin', 'editeur', 'lecteur']) &&
     user?.administrations?.length
   ) {
-    if (permissionCheck(user?.permissionId, ['admin', 'editeur'])) {
+    if (permissionCheck(user?.role, ['admin', 'editeur'])) {
       const administrationsIds = user.administrations!.map(a => a.id)
 
       q.select(
@@ -215,7 +215,7 @@ const titresActivitesPropsQueryModify = (
       q.select(raw('false').as('modification'))
     }
   } else if (
-    permissionCheck(user?.permissionId, ['entreprise']) &&
+    permissionCheck(user?.role, ['entreprise']) &&
     user?.entreprises?.length
   ) {
     // vérifie que l'utilisateur a les droits d'édition sur l'activité
@@ -229,7 +229,7 @@ const titresActivitesPropsQueryModify = (
     )
   }
 
-  if (!permissionCheck(user?.permissionId, ['super'])) {
+  if (!permissionCheck(user?.role, ['super'])) {
     q.select(raw('false').as('suppression'))
   }
 

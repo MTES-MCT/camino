@@ -73,7 +73,7 @@ describe('metas permissions queries', () => {
         const q = DemarchesTypes.query()
         demarchesTypesQueryModify(
           q,
-          { permissionId: 'admin', administrations: [administration!] },
+          { role: 'admin', administrations: [administration!] },
           { titreId }
         )
 

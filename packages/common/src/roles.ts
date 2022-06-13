@@ -1,10 +1,12 @@
-export type PermissionId =
-  | 'super'
-  | 'admin'
-  | 'editeur'
-  | 'lecteur'
-  | 'entreprise'
-  | 'defaut'
+export const ROLES = [
+  'super',
+  'admin',
+  'editeur',
+  'lecteur',
+  'entreprise',
+  'defaut'
+] as const
+export type Role = typeof ROLES[keyof typeof ROLES]
 
 // TODO 2022-06-02: vu les usages, pourquoi ne pas avoir des fonctions de plus haut niveau comme :
 // - isSuper(user)
@@ -12,7 +14,5 @@ export type PermissionId =
 // - isEntreprise(user)
 // plutôt que passer un tableau de permission
 // en plus, on pourrait avoir une interface user commun ça pourrait être cool ?
-export const permissionCheck = (
-  permissionId: PermissionId | null | undefined,
-  permissions: PermissionId[]
-) => !!(permissionId && permissions.includes(permissionId))
+export const permissionCheck = (role: Role | null | undefined, roles: Role[]) =>
+  !!(role && roles.includes(role))

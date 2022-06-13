@@ -24,8 +24,4 @@ fragment utilisateur on Utilisateur {
       legalSiret
     }
   }
-  permission {
-    id
-    nom
-  }
 }

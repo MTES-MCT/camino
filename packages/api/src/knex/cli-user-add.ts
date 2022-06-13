@@ -8,7 +8,7 @@ const run = async () => {
     await userAdd(knex, {
       id: 'admin',
       email: process.env.ADMIN_EMAIL,
-      permissionId: 'super',
+      role: 'super',
       dateCreation: dateFormat(new Date(), 'yyyy-mm-dd')
     })
   } catch (e) {

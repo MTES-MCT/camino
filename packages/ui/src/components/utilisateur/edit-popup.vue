@@ -117,24 +117,19 @@
         <hr />
         <div class="tablet-blobs">
           <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-            <h5>Permissions</h5>
+            <h5>Rôles</h5>
           </div>
           <div class="mb tablet-blob-2-3">
             <ul class="list-inline mb-0 tablet-pt-s">
-              <li
-                v-for="permission in permissions"
-                :key="permission.id"
-                class="mb-xs"
-              >
+              <li v-for="role in roles" :key="role" class="mb-xs">
                 <button
-                  :id="`cmn-utilisateur-edit-popup-permission-button-${permission.id}`"
                   :class="{
-                    active: utilisateur.permissionId === permission.id
+                    active: utilisateur.role === role
                   }"
                   class="btn-flash small py-xs px-s pill cap-first mr-xs"
-                  @click="permissionToggle(permission)"
+                  @click="roleToggle(role)"
                 >
-                  {{ permission.nom }}
+                  {{ role }}
                 </button>
               </li>
             </ul>
@@ -282,6 +277,7 @@ import Popup from '../_ui/popup.vue'
 import Loader from '../_ui/loader.vue'
 import { sortedAdministrations } from 'camino-common/src/administrations'
 import Icon from '../_ui/icon.vue'
+import { ROLES } from 'camino-common/src/roles'
 
 export default {
   name: 'CaminoUtilisateurEditPopup',
@@ -320,8 +316,8 @@ export default {
       return this.$store.state.popup.messages
     },
 
-    permissions() {
-      return this.$store.state.utilisateur.metas.permissions
+    roles() {
+      return ROLES
     },
 
     entreprises() {
@@ -459,8 +455,8 @@ export default {
       this.$store.commit('popupMessagesRemove')
     },
 
-    permissionToggle(permission) {
-      this.utilisateur.permissionId = permission.id
+    roleToggle(role) {
+      this.utilisateur.role = role
     },
 
     entrepriseAdd() {
@@ -477,12 +473,6 @@ export default {
 
     administrationRemove(index) {
       this.utilisateur.administrations.splice(index, 1)
-    },
-
-    administrationNameFind(id) {
-      const administration = this.administrations.find(a => a.id === id)
-
-      return administration.abreviation
     },
 
     permissionsCheck(user, permissions) {

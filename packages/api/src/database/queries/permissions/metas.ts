@@ -13,7 +13,6 @@ import DemarchesTypes from '../../models/demarches-types'
 import EtapesTypes from '../../models/etapes-types'
 import TitresEtapes from '../../models/titres-etapes'
 import TitresTypesDemarchesTypesEtapesTypes from '../../models/titres-types--demarches-types-etapes-types'
-import Permissions from '../../models/permissions'
 
 import { titresDemarchesAdministrationsModificationQuery } from './titres'
 import {
@@ -21,7 +20,7 @@ import {
   administrationsTitresTypesEtapesTypesModify,
   administrationsTitresQuery
 } from './administrations'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 // récupère les types d'étapes qui ont
 // - les autorisations sur le titre
@@ -99,10 +98,10 @@ const titresTypesQueryModify = (
 ) => {
   q.select('titresTypes.*')
 
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (permissionCheck(user?.role, ['super'])) {
     q.select(raw('true').as('titresCreation'))
   } else if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur']) &&
+    permissionCheck(user?.role, ['admin', 'editeur']) &&
     user?.administrations?.length
   ) {
     const administrationsIds = user.administrations.map(e => e.id)
@@ -190,10 +189,10 @@ const etapesTypesQueryModify = (
   }
 
   // types d'étapes visibles pour les entreprises et utilisateurs déconnectés ou défaut
-  if (!user || permissionCheck(user?.permissionId, ['defaut', 'entreprise'])) {
+  if (!user || permissionCheck(user?.role, ['defaut', 'entreprise'])) {
     q.where(b => {
       // types d'étapes visibles en tant que titulaire ou amodiataire
-      if (permissionCheck(user?.permissionId, ['entreprise'])) {
+      if (permissionCheck(user?.role, ['entreprise'])) {
         b.orWhere('td.entreprisesLecture', true)
       }
 
@@ -203,10 +202,10 @@ const etapesTypesQueryModify = (
   }
 
   // propriété 'etapesCreation' en fonction du profil de l'utilisateur
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (permissionCheck(user?.role, ['super'])) {
     q.select(raw('true').as('etapesCreation'))
   } else if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur']) &&
+    permissionCheck(user?.role, ['admin', 'editeur', 'lecteur']) &&
     user?.administrations?.length
   ) {
     if (titreDemarcheId) {
@@ -223,7 +222,7 @@ const etapesTypesQueryModify = (
     } else {
       q.select(raw('false').as('etapesCreation'))
     }
-  } else if (permissionCheck(user?.permissionId, ['entreprise'])) {
+  } else if (permissionCheck(user?.role, ['entreprise'])) {
     if (titreEtapeId && user?.entreprises?.length) {
       const etapesCreationQuery = entreprisesEtapesTypesPropsQuery(
         user.entreprises.map(({ id }) => id)
@@ -244,17 +243,14 @@ const etapesTypesQueryModify = (
 
 export const demarchesCreationQuery = (
   q: QueryBuilder<DemarchesTypes, DemarchesTypes | DemarchesTypes[]>,
-  user:
-    | Pick<IUtilisateur, 'permissionId' | 'administrations'>
-    | null
-    | undefined,
+  user: Pick<IUtilisateur, 'role' | 'administrations'> | null | undefined,
   { titreId, titreIdAlias }: { titreId?: string; titreIdAlias?: string }
 ) => {
   let demarchesCreation = raw('false')
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (permissionCheck(user?.role, ['super'])) {
     demarchesCreation = raw('true')
   } else if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur']) &&
+    permissionCheck(user?.role, ['admin', 'editeur', 'lecteur']) &&
     user?.administrations?.length &&
     (titreId || titreIdAlias)
   ) {
@@ -280,10 +276,7 @@ export const demarchesCreationQuery = (
 
 const demarchesTypesQueryModify = (
   q: QueryBuilder<DemarchesTypes, DemarchesTypes | DemarchesTypes[]>,
-  user:
-    | Pick<IUtilisateur, 'permissionId' | 'administrations'>
-    | null
-    | undefined,
+  user: Pick<IUtilisateur, 'role' | 'administrations'> | null | undefined,
   { titreId, titreIdAlias }: { titreId?: string; titreIdAlias?: string } = {}
 ): void => {
   q.select('demarchesTypes.*')
@@ -292,30 +285,11 @@ const demarchesTypesQueryModify = (
   demarchesCreationQuery(q, user, { titreId, titreIdAlias })
 }
 
-const permissionsQueryModify = (
-  q: QueryBuilder<Permissions, Permissions | Permissions[]>,
-  user: IUtilisateur | null | undefined
-) => {
-  // le super peut voir toutes les permissions sans restriction
-  if (permissionCheck(user?.permissionId, ['super'])) {
-    return q
-  }
-
-  // on retourne les permissions à partir de l'ordre suivant (éditeur)
-  if (permissionCheck(user?.permissionId, ['admin'])) {
-    return q.where('ordre', '>=', user!.permission.ordre + 1)
-  }
-
-  // un utilisateur ni super ni admin nepeut voir aucune permission
-  return q.where(false)
-}
-
 export {
   demarchesTypesQueryModify,
   domainesQueryModify,
   administrationsEtapesTypesPropsQuery,
   entreprisesEtapesTypesPropsQuery,
   etapesTypesQueryModify,
-  permissionsQueryModify,
   titresCreationQuery
 }

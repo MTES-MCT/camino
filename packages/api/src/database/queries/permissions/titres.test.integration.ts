@@ -22,7 +22,7 @@ import {
   AdministrationId,
   Administrations as CommonAdministrations
 } from 'camino-common/src/administrations'
-import { PermissionId } from 'camino-common/src/permissions'
+import { Role } from 'camino-common/src/roles'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -309,7 +309,7 @@ describe('titresQueryModify', () => {
 
         const q = Titres.query()
         titresTravauxCreationQuery(q, {
-          permissionId: 'admin',
+          role: 'admin',
           administrations: [administration]
         })
 
@@ -338,7 +338,7 @@ describe('titresQueryModify', () => {
 
         const q = Titres.query()
         titresTravauxCreationQuery(q, {
-          permissionId,
+          role: permissionId,
           administrations: []
         })
 
@@ -361,7 +361,7 @@ describe('titresQueryModify', () => {
         permissionId,
         modification
       }: {
-        permissionId: PermissionId
+        permissionId: Role
         modification: boolean
       }) => {
         await Titres.query().insert({
@@ -387,7 +387,7 @@ describe('titresQueryModify', () => {
         const q = Titres.query()
         q.select(
           titresModificationSelectQuery(q, {
-            permissionId,
+            role: permissionId,
             administrations: [administration!]
           }).as('modification')
         )
@@ -417,7 +417,7 @@ describe('titresQueryModify', () => {
       const q = Titres.query()
       q.select(
         titresModificationSelectQuery(q, {
-          permissionId: 'admin',
+          role: 'admin',
           administrations: [administration!]
         }).as('modification')
       )
@@ -445,7 +445,7 @@ describe('titresQueryModify', () => {
         const q = Titres.query()
         q.select(
           titresModificationSelectQuery(q, {
-            permissionId
+            role: permissionId
           }).as('modification')
         )
 
@@ -472,7 +472,7 @@ describe('titresQueryModify', () => {
         permissionId,
         suppression
       }: {
-        permissionId: PermissionId | undefined
+        permissionId: Role | undefined
         suppression: boolean
       }) => {
         expect(titresSuppressionSelectQuery(permissionId)).toBe(suppression)

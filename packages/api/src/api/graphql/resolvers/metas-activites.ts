@@ -28,7 +28,7 @@ import {
   activiteTypeUpdate
 } from '../../../database/queries/metas-activites'
 import { ordreUpdate } from './_ordre-update'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 const activitesTypes = async (
   _: never,
@@ -70,7 +70,7 @@ const activiteTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 
@@ -103,7 +103,7 @@ const activiteStatutModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 
@@ -125,7 +125,7 @@ const activitesTypesTitresTypes = async (_: never, context: IToken) => {
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 
@@ -148,7 +148,7 @@ const activiteTypeTitreTypeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 
@@ -173,7 +173,7 @@ const activiteTypeTitreTypeSupprimer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 
@@ -198,7 +198,7 @@ const activitesTypesDocumentsTypes = async (_: never, context: IToken) => {
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 
@@ -223,7 +223,7 @@ const activiteTypeDocumentTypeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 
@@ -250,7 +250,7 @@ const activiteTypeDocumentTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 
@@ -281,7 +281,7 @@ const activiteTypeDocumentTypeSupprimer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 
@@ -306,7 +306,7 @@ const activitesTypesPays = async (_: never, context: IToken) => {
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 
@@ -329,7 +329,7 @@ const activiteTypePaysCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 
@@ -354,7 +354,7 @@ const activiteTypePaysSupprimer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 

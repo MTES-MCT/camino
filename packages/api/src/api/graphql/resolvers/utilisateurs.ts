@@ -43,7 +43,7 @@ import {
 } from '../../../tools/api-mailjet/newsletter'
 import { userSuper } from '../../../database/user-super'
 import dateFormat from 'dateformat'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 const TOKEN_TTL = '5m'
 
@@ -329,8 +329,7 @@ const utilisateurCreer = async (
       !context.user ||
       (context.user.email !== utilisateur.email &&
         !user?.utilisateursCreation) ||
-      (!permissionCheck(user?.permissionId, ['super']) &&
-        utilisateur.permissionId === 'super')
+      (!permissionCheck(user?.role, ['super']) && utilisateur.role === 'super')
     )
       throw new Error('droits insuffisants')
 
@@ -351,24 +350,18 @@ const utilisateurCreer = async (
     }
 
     if (
-      !utilisateur.permissionId ||
+      !utilisateur.role ||
       !user ||
-      !permissionCheck(user?.permissionId, ['super', 'admin'])
+      !permissionCheck(user?.role, ['super', 'admin'])
     ) {
-      utilisateur.permissionId = 'defaut'
+      utilisateur.role = 'defaut'
     }
 
-    if (
-      !permissionCheck(utilisateur?.permissionId, [
-        'admin',
-        'editeur',
-        'lecteur'
-      ])
-    ) {
+    if (!permissionCheck(utilisateur?.role, ['admin', 'editeur', 'lecteur'])) {
       utilisateur.administrations = []
     }
 
-    if (!permissionCheck(utilisateur?.permissionId, ['entreprise'])) {
+    if (!permissionCheck(utilisateur?.role, ['entreprise'])) {
       utilisateur.entreprises = []
     }
 
@@ -462,17 +455,16 @@ const utilisateurModifier = async (
 
     utilisateur.email = utilisateur.email!.toLowerCase()
 
-    const isSuper = permissionCheck(user?.permissionId, ['super'])
-    const isAdmin = permissionCheck(user?.permissionId, ['admin'])
+    const isSuper = permissionCheck(user?.role, ['super'])
+    const isAdmin = permissionCheck(user?.role, ['admin'])
 
     if (
       !user ||
       (!user.utilisateursCreation &&
         (user.id !== utilisateur.id || user.email !== utilisateur.email)) ||
-      (utilisateur.permissionId &&
+      (utilisateur.role &&
         !isSuper &&
-        (!isAdmin ||
-          permissionCheck(utilisateur.permissionId, ['super', 'admin'])))
+        (!isAdmin || permissionCheck(utilisateur.role, ['super', 'admin'])))
     ) {
       throw new Error('droits insuffisants')
     }
@@ -502,17 +494,11 @@ const utilisateurModifier = async (
       throw new Error(errors.join(', '))
     }
 
-    if (
-      !permissionCheck(utilisateur.permissionId, [
-        'admin',
-        'editeur',
-        'lecteur'
-      ])
-    ) {
+    if (!permissionCheck(utilisateur.role, ['admin', 'editeur', 'lecteur'])) {
       utilisateur.administrations = []
     }
 
-    if (!permissionCheck(utilisateur?.permissionId, ['entreprise'])) {
+    if (!permissionCheck(utilisateur?.role, ['entreprise'])) {
       utilisateur.entreprises = []
     }
 
@@ -555,7 +541,7 @@ const utilisateurSupprimer = async (
     utilisateur.motDePasse = 'suppression'
     utilisateur.telephoneFixe = ''
     utilisateur.telephoneMobile = ''
-    utilisateur.permissionId = 'defaut'
+    utilisateur.role = 'defaut'
     utilisateur.entreprises = []
     utilisateur.administrations = []
 
@@ -590,8 +576,7 @@ const utilisateurMotDePasseModifier = async (
 
     if (
       !user ||
-      (!permissionCheck(user?.permissionId, ['super', 'admin']) &&
-        user.id !== id)
+      (!permissionCheck(user?.role, ['super', 'admin']) && user.id !== id)
     ) {
       throw new Error('droits insuffisants')
     }
@@ -612,7 +597,7 @@ const utilisateurMotDePasseModifier = async (
       throw new Error('aucun utilisateur enregistré avec cet id')
     }
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       const valid = bcrypt.compareSync(motDePasse, utilisateur.motDePasse!)
 
       if (!valid) {

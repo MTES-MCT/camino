@@ -16,8 +16,8 @@ const utilisateursColonnes = [
     name: 'Email'
   },
   {
-    id: 'permissions',
-    name: 'Permissions',
+    id: 'role',
+    name: 'Rôle',
     class: ['min-width-6']
   },
   {
@@ -54,8 +54,8 @@ const utilisateursLignesBuild = utilisateurs =>
       prenom: { value: utilisateur.prenom || '–' },
       nom: { value: utilisateur.nom || '–' },
       email: { value: utilisateur.email || '–', class: ['h6'] },
-      permissions: {
-        value: (utilisateur.permission && utilisateur.permission.nom) || '–',
+      role: {
+        value: utilisateur.role,
         class: [
           'bg-neutral',
           'color-bg',

@@ -1,6 +1,6 @@
 import { IUtilisateur, IUtilisateurCreation } from '../../types'
 import { emailCheck } from '../../tools/email-check'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 const utilisateurEditionCheck = (
   utilisateur: IUtilisateur | IUtilisateurCreation
@@ -12,11 +12,7 @@ const utilisateurEditionCheck = (
   }
 
   if (
-    !permissionCheck(utilisateur?.permissionId, [
-      'admin',
-      'editeur',
-      'lecteur'
-    ]) &&
+    !permissionCheck(utilisateur?.role, ['admin', 'editeur', 'lecteur']) &&
     utilisateur.administrations &&
     utilisateur.administrations.length
   ) {
@@ -26,7 +22,7 @@ const utilisateurEditionCheck = (
   }
 
   if (
-    !permissionCheck(utilisateur?.permissionId, ['entreprise']) &&
+    !permissionCheck(utilisateur?.role, ['entreprise']) &&
     utilisateur.entreprises &&
     utilisateur.entreprises.length
   ) {

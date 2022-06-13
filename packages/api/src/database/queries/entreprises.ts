@@ -19,7 +19,7 @@ import EntreprisesTitresTypes from '../models/entreprises-titres-types'
 import { fieldsEntreprisesTitresCreationAdd } from './graph/fields-add'
 import { utilisateurGet } from './utilisateurs'
 import { titresCreationQuery } from './permissions/metas'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 const entreprisesFiltersQueryModify = (
   {
@@ -185,11 +185,11 @@ const titreDemandeEntreprisesGet = async (
 ) => {
   if (!user) return []
 
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (permissionCheck(user?.role, ['super'])) {
     return entreprisesGet({ archive: false }, { fields }, user)
   }
 
-  if (permissionCheck(user?.permissionId, ['admin', 'editeur'])) {
+  if (permissionCheck(user?.role, ['admin', 'editeur'])) {
     if (!user.administrations) return []
 
     const titresCreation = await titresCreationQuery(
@@ -201,7 +201,7 @@ const titreDemandeEntreprisesGet = async (
     return entreprisesGet({ archive: false }, { fields }, user)
   }
 
-  if (permissionCheck(user?.permissionId, ['entreprise'])) {
+  if (permissionCheck(user?.role, ['entreprise'])) {
     const utilisateur = await utilisateurGet(
       user.id,
       { fields: { entreprises: fieldsEntreprisesTitresCreationAdd(fields) } },

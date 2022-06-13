@@ -32,7 +32,7 @@ import { fieldsBuild } from './_fields-build'
 import { administrationFormat } from '../../_format/administrations'
 import { emailCheck } from '../../../tools/email-check'
 import { userGet } from '../../../database/queries/utilisateurs'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 const administration = async (
   { id }: { id: string },
@@ -92,7 +92,7 @@ const administrationTitreTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 
@@ -139,7 +139,7 @@ const administrationTitreTypeTitreStatutModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 
@@ -187,7 +187,7 @@ const administrationTitreTypeEtapeTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 
@@ -233,7 +233,7 @@ const administrationActiviteTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!permissionCheck(user?.role, ['super'])) {
       throw new Error('droits insuffisants')
     }
 

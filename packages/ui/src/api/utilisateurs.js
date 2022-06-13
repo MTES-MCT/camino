@@ -2,7 +2,7 @@ import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
 import { fragmentUtilisateur } from './fragments/utilisateur'
-import { fragmentPermission, fragmentTitreType } from './fragments/metas'
+import { fragmentTitreType } from './fragments/metas'
 import { fragmentEntreprises } from './fragments/entreprises'
 
 const userMetas = apiGraphQLFetch(
@@ -30,18 +30,12 @@ const userMetas = apiGraphQLFetch(
 const utilisateurMetas = apiGraphQLFetch(
   gql`
     query UtilisateurMetas {
-      permissions {
-        ...permission
-      }
-
       entreprises {
         elements {
           ...entreprises
         }
       }
     }
-
-    ${fragmentPermission}
 
     ${fragmentEntreprises}
   `

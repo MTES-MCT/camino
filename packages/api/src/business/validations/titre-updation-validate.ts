@@ -1,5 +1,5 @@
 import { ITitre, IUtilisateur } from '../../types'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 const titreUpdationValidate = async (
   titreNew: ITitre,
@@ -23,7 +23,7 @@ const titreUpdationValidate = async (
   }
 
   // Seuls les utilisateurs super ont le droit de modifier les administrations directement liées sur le titre
-  if (!user || !permissionCheck(user.permissionId, ['super'])) {
+  if (!user || !permissionCheck(user.role, ['super'])) {
     const titreAdministrationsIdsOld = titreOld.titresAdministrations
       ? titreOld.titresAdministrations.map(({ id }) => id)
       : []

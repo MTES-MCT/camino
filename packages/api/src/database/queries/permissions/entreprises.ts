@@ -12,7 +12,7 @@ import Documents from '../../models/documents'
 import { titresQueryModify } from './titres'
 import { utilisateursQueryModify } from './utilisateurs'
 import { documentsQueryModify } from './documents'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { permissionCheck } from 'camino-common/src/roles'
 
 // import fileCreate from '../../../tools/file-create'
 // import { format } from 'sql-formatter'
@@ -23,10 +23,10 @@ const entreprisesQueryModify = (
 ) => {
   q.select('entreprises.*')
 
-  if (permissionCheck(user?.permissionId, ['super', 'admin', 'editeur'])) {
+  if (permissionCheck(user?.role, ['super', 'admin', 'editeur'])) {
     q.select(raw('true').as('modification'))
   } else if (
-    permissionCheck(user?.permissionId, ['entreprise']) &&
+    permissionCheck(user?.role, ['entreprise']) &&
     user?.entreprises?.length
   ) {
     const utilisateurEntreprise = Utilisateurs.query().leftJoin(

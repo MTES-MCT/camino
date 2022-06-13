@@ -14,7 +14,7 @@ import {
 import { administrationsEtapesTypesPropsQuery } from './metas'
 import { administrationsTitresQuery } from './administrations'
 import { entreprisesTitresQuery } from './entreprises'
-import { PermissionId, permissionCheck } from 'camino-common/src/permissions'
+import { Role, permissionCheck } from 'camino-common/src/roles'
 
 const titresDemarchesQueryModify = (
   q: QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>,
@@ -24,7 +24,7 @@ const titresDemarchesQueryModify = (
     .where('titresDemarches.archive', false)
     .leftJoinRelated('[titre, type]')
 
-  if (!user || !permissionCheck(user.permissionId, ['super'])) {
+  if (!user || !permissionCheck(user.role, ['super'])) {
     q.whereExists(
       titresQueryModify(
         (
@@ -41,7 +41,7 @@ const titresDemarchesQueryModify = (
       b.orWhere('titresDemarches.publicLecture', true)
 
       if (
-        permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur']) &&
+        permissionCheck(user?.role, ['admin', 'editeur', 'lecteur']) &&
         user?.administrations?.length
       ) {
         const administrationsIds = user.administrations.map(e => e.id)
@@ -57,7 +57,7 @@ const titresDemarchesQueryModify = (
 
         b.orWhereExists(administrationTitre)
       } else if (
-        permissionCheck(user?.permissionId, ['entreprise']) &&
+        permissionCheck(user?.role, ['entreprise']) &&
         user?.entreprises?.length
       ) {
         const entreprisesIds = user.entreprises.map(e => e.id)
@@ -78,10 +78,9 @@ const titresDemarchesQueryModify = (
 
   q.modify(titreDemarcheModificationSelectQuery, 'titresDemarches', user)
   q.select(
-    titreDemarcheSuppressionSelectQuery(
-      'titresDemarches',
-      user?.permissionId
-    ).as('suppression')
+    titreDemarcheSuppressionSelectQuery('titresDemarches', user?.role).as(
+      'suppression'
+    )
   )
 
   q.select(
@@ -110,10 +109,10 @@ const titreDemarcheModificationSelectQuery = (
   user: IUtilisateur | null | undefined
 ): void => {
   let modificationQuery = raw('false')
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (permissionCheck(user?.role, ['super'])) {
     modificationQuery = raw('true')
   } else if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur']) &&
+    permissionCheck(user?.role, ['admin', 'editeur']) &&
     user?.administrations?.length
   ) {
     modificationQuery = titresDemarchesAdministrationsModificationQuery(
@@ -129,7 +128,7 @@ const titreDemarcheModificationSelectQuery = (
 
 export const titreDemarcheSuppressionSelectQuery = (
   demarcheAlias: string,
-  permissionId: PermissionId | null | undefined
+  permissionId: Role | null | undefined
 ): RawBuilder => {
   if (permissionCheck(permissionId, ['super'])) {
     return raw('true')
@@ -155,10 +154,10 @@ const titreEtapesCreationQuery = (
   demarcheAlias: string,
   user: Omit<IUtilisateur, 'permission'> | null | undefined
 ) => {
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (permissionCheck(user?.role, ['super'])) {
     return raw('true')
   } else if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur']) &&
+    permissionCheck(user?.role, ['admin', 'editeur']) &&
     user?.administrations?.length
   ) {
     const administrationsIds = user.administrations.map(e => e.id)

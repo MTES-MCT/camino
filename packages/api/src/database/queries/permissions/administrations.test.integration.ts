@@ -92,7 +92,7 @@ describe('administrationsQueryModify', () => {
 
       const mockUser: Omit<IUtilisateur, 'permission'> = {
         id: idGenerate(),
-        permissionId: permission,
+        role: permission,
         administrations: [mockAdministration],
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
@@ -131,7 +131,7 @@ describe('administrationsQueryModify', () => {
 
       const mockUser: Omit<IUtilisateur, 'permission'> = {
         id: idGenerate(),
-        permissionId: permission,
+        role: permission,
         administrations: [mockDreal],
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
@@ -160,7 +160,7 @@ describe('administrationsQueryModify', () => {
 
     const mockUser: Omit<IUtilisateur, 'permission'> = {
       id: idGenerate(),
-      permissionId: 'admin',
+      role: 'admin',
       administrations: [mockDreal],
       email: 'email' + idGenerate(),
       motDePasse: 'motdepasse',
@@ -195,7 +195,7 @@ describe('administrationsQueryModify', () => {
 
       const mockUser: Omit<IUtilisateur, 'permission'> = {
         id: idGenerate(),
-        permissionId: permission,
+        role: permission,
         administrations: [mockMin],
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
@@ -242,7 +242,7 @@ describe('administrationsQueryModify', () => {
 
       const mockUser: Omit<IUtilisateur, 'permission'> = {
         id: idGenerate(),
-        permissionId: permission,
+        role: permission,
         administrations: [mockAdministration],
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
@@ -291,7 +291,7 @@ describe('administrationsQueryModify', () => {
 
     const mockUser: Omit<IUtilisateur, 'permission'> = {
       id: idGenerate(),
-      permissionId: 'super',
+      role: 'super',
       administrations: [mockAdministration],
       email: 'email' + idGenerate(),
       motDePasse: 'motdepasse',

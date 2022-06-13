@@ -9,7 +9,6 @@ import {
   fragmentPhaseStatut,
   fragmentEtapeType,
   fragmentEtapeStatut,
-  fragmentPermission,
   fragmentDocumentType,
   fragmentReferenceType,
   fragmentTitreType,
@@ -210,28 +209,6 @@ const substancesLegales = apiGraphQLFetch(
     }
   `
 )
-
-const permissions = apiGraphQLFetch(
-  gql`
-    query Permissions {
-      permissions {
-        ...permission
-      }
-    }
-
-    ${fragmentPermission}
-  `
-)
-
-const permissionModifier = apiGraphQLFetch(gql`
-  mutation permissionModifier($element: InputPermission!) {
-    permissionModifier(permission: $element) {
-      ...permission
-    }
-  }
-
-  ${fragmentPermission}
-`)
 
 const documentsTypes = apiGraphQLFetch(
   gql`
@@ -754,8 +731,6 @@ export {
   etapesStatuts,
   etapeStatutModifier,
   substancesLegales,
-  permissions,
-  permissionModifier,
   documentsTypes,
   documentTypeCreer,
   documentTypeModifier,
