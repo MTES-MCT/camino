@@ -144,13 +144,6 @@ entity "**departements**" {
   ""cheflieu_id"": //character varying(5) //
 }
 
-entity "**devises**" {
-  + ""id"": //character varying(3) [PK]//
-  --
-  *""nom"": //character varying(255) //
-  ""ordre"": //integer //
-}
-
 entity "**documents**" {
   + ""id"": //character varying(255) [PK]//
   --
@@ -290,16 +283,6 @@ entity "**frequences**" {
   ""periodes_nom"": //character varying(255) //
 }
 
-entity "**geo_systemes**" {
-  + ""id"": //character varying(5) [PK]//
-  --
-  *""nom"": //character varying(255) //
-  ""ordre"": //integer //
-  *""unite_id"": //character varying(3) [FK]//
-  ""zone"": //character varying(255) //
-  ""definition_proj4"": //character varying(255) //
-}
-
 entity "**globales**" {
   + ""id"": //character varying(255) [PK]//
   --
@@ -344,13 +327,6 @@ entity "**pays**" {
   --
   *""nom"": //character varying(255) //
   ""timezone"": //character varying(255) //
-}
-
-entity "**permissions**" {
-  + ""id"": //character varying(12) [PK]//
-  --
-  *""nom"": //character varying(255) //
-  ""ordre"": //integer //
 }
 
 entity "**phases_statuts**" {
@@ -402,16 +378,6 @@ entity "**substances__substances_legales**" {
   + ""substance_id"": //character varying(255) [PK][FK]//
   + ""substance_legale_id"": //character varying(255) [PK][FK]//
   --
-}
-
-entity "**substances_fiscales**" {
-  + ""id"": //character varying(4) [PK]//
-  --
-  *""substance_legale_id"": //character varying(255) [FK]//
-  *""unite_id"": //character varying(255) [FK]//
-  ""redevance_unite_id"": //character varying(255) [FK]//
-  *""nom"": //character varying(255) //
-  ""description"": //character varying(2048) //
 }
 
 entity "**substances_legales**" {
@@ -704,15 +670,6 @@ entity "**trimestres**" {
   ""frequence_id"": //character varying(3) [FK]//
 }
 
-entity "**unites**" {
-  + ""id"": //character varying(3) [PK]//
-  --
-  *""nom"": //character varying(255) //
-  *""symbole"": //character varying(255) //
-  ""reference_unite_id"": //character varying(3) //
-  ""reference_unite_ratio"": //real //
-}
-
 entity "**utilisateurs**" {
   + ""id"": //character varying(255) [PK]//
   --
@@ -723,7 +680,7 @@ entity "**utilisateurs**" {
   ""telephone_fixe"": //character varying(255) //
   ""telephone_mobile"": //character varying(255) //
   ""refresh_token"": //character varying(255) //
-  *""permission_id"": //character varying(12) [FK]//
+  *""role"": //character varying(12) //
   ""preferences"": //json //
   ""newsletter"": //boolean //
   *""date_creation"": //character varying(255) //
@@ -879,8 +836,6 @@ entity "**utilisateurs__titres**" {
 
 "**etapes_types__justificatifs_types**"   }--  "**etapes_types**"
 
-"**geo_systemes**"   }--  "**unites**"
-
 "**journaux**"   }--  "**titres**"
 
 "**mois**"   }--  "**frequences**"
@@ -896,12 +851,6 @@ entity "**utilisateurs__titres**" {
 "**substances__substances_legales**"   }--  "**substances_legales**"
 
 "**substances__substances_legales**"   }--  "**substances_legales**"
-
-"**substances_fiscales**"   }--  "**unites**"
-
-"**substances_fiscales**"   }--  "**substances_legales**"
-
-"**substances_fiscales**"   }--  "**unites**"
 
 "**substances_legales**"   }--  "**domaines**"
 
@@ -1029,6 +978,10 @@ entity "**utilisateurs__titres**" {
 
 "**titres_substances**"   }--  "**titres_etapes**"
 
+"**titres_substances**"   }--  "**titres_etapes**"
+
+"**titres_substances**"   }--  "**titres_etapes**"
+
 "**titres_titulaires**"   }--  "**entreprises**"
 
 "**titres_titulaires**"   }--  "**entreprises**"
@@ -1130,8 +1083,6 @@ entity "**utilisateurs__titres**" {
 "**titres_types__titres_statuts**"   }--  "**titres_types**"
 
 "**trimestres**"   }--  "**frequences**"
-
-"**utilisateurs**"   }--  "**permissions**"
 
 "**utilisateurs__administrations**"   }--  "**administrations**"
 
