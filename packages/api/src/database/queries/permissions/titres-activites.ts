@@ -109,7 +109,7 @@ const titreActivitesCount = (
       titresActivitesCountQuery.as('activitesCountJoin'),
       raw('?? = ??', ['activitesCountJoin.titreId', 'titres.id'])
     )
-  } else if (!user || isDefault(user)) {
+  } else if (isDefault(user)) {
     // les utilisateurs non-authentifiés ou défaut ne peuvent voir aucune activité
     activiteStatuts.forEach(({ name }) => {
       q.select(raw('0').as(name))
