@@ -18,8 +18,7 @@ const visitUser = matomo => user => {
     }
 
     if (user.role) {
-      // TODO 2022-06-14 est-ce qu’on rename ?
-      matomo.setCustomVariable(5, 'permissionId', user.role, 'visit')
+      matomo.setCustomVariable(5, 'role', user.role, 'visit')
     }
   }
 }
