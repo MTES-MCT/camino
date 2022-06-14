@@ -70,9 +70,7 @@ const titreDemandeCreer = async (
     }
 
     if (
-      isSuper(
-        user || isAdministrationAdmin(user) || isAdministrationEditeur(user)
-      )
+      isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
     ) {
       const domaine = await domaineGet(
         titreDemande.domaineId,
