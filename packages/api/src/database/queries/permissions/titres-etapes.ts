@@ -121,7 +121,7 @@ const titresEtapesQueryModify = (
 
   q = specifiquesAdd(q)
 
-  if (!user || !isSuper(user)) {
+  if (!isSuper(user)) {
     q.where(b => {
       b.orWhere('type.publicLecture', true)
 
