@@ -1,4 +1,6 @@
 import { elementsFormat } from '../../utils/index'
+import { ROLES } from 'camino-common/src/roles'
+import { sortedAdministrations } from 'camino-common/src/administrations'
 
 const utilisateursFiltres = [
   {
@@ -20,17 +22,16 @@ const utilisateursFiltres = [
     name: 'Rôles',
     type: 'checkboxes',
     value: [],
-    elements: []
+    elements: ROLES.map(r => ({ id: r, nom: r }))
   },
   {
     id: 'administrationIds',
     name: 'Administrations',
     type: 'select',
     value: [],
-    elements: [],
+    elements: sortedAdministrations,
     buttonAdd: 'Ajouter une administration',
-    elementName: 'abreviation',
-    elementsFormat
+    elementName: 'abreviation'
   },
   {
     id: 'entrepriseIds',

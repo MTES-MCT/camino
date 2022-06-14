@@ -42,9 +42,7 @@ import {
   utilisateursColonnes,
   utilisateursLignesBuild
 } from './utilisateurs/table'
-import { sortedAdministrations } from 'camino-common/src/administrations'
 import Icon from './_ui/icon.vue'
-import { ROLES } from 'camino-common/src/roles'
 
 export default {
   name: 'Utilisateurs',
@@ -74,9 +72,7 @@ export default {
 
     metas() {
       return {
-        ...this.$store.state.utilisateurs.metas,
-        administration: sortedAdministrations,
-        roles: ROLES
+        ...this.$store.state.utilisateurs.metas
       }
     },
 
