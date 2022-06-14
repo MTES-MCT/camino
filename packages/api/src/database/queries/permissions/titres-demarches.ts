@@ -30,7 +30,7 @@ const titresDemarchesQueryModify = (
     .where('titresDemarches.archive', false)
     .leftJoinRelated('[titre, type]')
 
-  if (!user || !isSuper(user)) {
+  if (!isSuper(user)) {
     q.whereExists(
       titresQueryModify(
         (
