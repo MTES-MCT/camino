@@ -15,6 +15,7 @@ test('role check', () => {
   expect(isAdministration({ role: 'editeur' })).toBe(true)
   expect(isAdministration({ role: 'lecteur' })).toBe(true)
   expect(isAdministration({ role: 'super' })).toBe(false)
+  expect(isAdministration(undefined)).toBe(false)
   expect(isAdministrationAdmin({ role: 'admin' })).toBe(true)
   expect(isAdministrationEditeur({ role: 'editeur' })).toBe(true)
   expect(isAdministrationLecteur({ role: 'lecteur' })).toBe(true)
