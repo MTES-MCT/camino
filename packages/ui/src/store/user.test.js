@@ -449,13 +449,16 @@ describe("état de l'utilisateur connecté", () => {
     ${'editeur'}    | ${true}
     ${'entreprise'} | ${false}
     ${undefined}    | ${false}
-  `('ajoute un utilisateur au store avec le role $role et vérifie si il est admin $isAdmin', ({ role, isAdmin }) => {
-    store.commit('user/set', {
-      id: 66,
-      prenom: 'rene',
-      nom: 'lataupe',
-      role
-    })
-    expect(store.getters['user/userIsAdmin']).toEqual(isAdmin)
-  })
+  `(
+    'ajoute un utilisateur au store avec le role $role et vérifie si il est admin $isAdmin',
+    ({ role, isAdmin }) => {
+      store.commit('user/set', {
+        id: 66,
+        prenom: 'rene',
+        nom: 'lataupe',
+        role
+      })
+      expect(store.getters['user/userIsAdmin']).toEqual(isAdmin)
+    }
+  )
 })

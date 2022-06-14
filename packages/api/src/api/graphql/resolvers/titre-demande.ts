@@ -24,7 +24,6 @@ import titreEtapeUpdateTask from '../../../business/titre-etape-update'
 import { userSuper } from '../../../database/user-super'
 import { specifiquesGet } from './titres-etapes'
 import {
-  isAdministration,
   isAdministrationAdmin,
   isAdministrationEditeur,
   isEntreprise,
@@ -38,7 +37,14 @@ const titreDemandeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!(isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user) || isEntreprise(user))) {
+    if (
+      !(
+        isSuper(user) ||
+        isAdministrationAdmin(user) ||
+        isAdministrationEditeur(user) ||
+        isEntreprise(user)
+      )
+    ) {
       throw new Error('permissions insuffisantes')
     }
 
@@ -70,7 +76,9 @@ const titreDemandeCreer = async (
     }
 
     if (
-      isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
+      isSuper(user) ||
+      isAdministrationAdmin(user) ||
+      isAdministrationEditeur(user)
     ) {
       const domaine = await domaineGet(
         titreDemande.domaineId,
