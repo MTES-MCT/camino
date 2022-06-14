@@ -50,7 +50,7 @@ const login = async (ticket: string) => {
 
     const cerbereProfile = cerbereProfileFormat(attributes)
 
-    const cerbereUtilisateur: Omit<IUtilisateur, 'id' | 'permission'> = {
+    const cerbereUtilisateur: Omit<IUtilisateur, 'id'> = {
       email: cerbereProfile.email,
       prenom: cerbereProfile.prenom,
       nom: cerbereProfile.nom,

@@ -22,7 +22,7 @@ import AdministrationsActivitesTypesEmails from '../models/administrations-activ
 
 const administrationsQueryBuild = (
   { fields }: { fields?: IFields },
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   const graph = fields
     ? graphBuild(fields, 'administrations', fieldsFormat)
@@ -38,7 +38,7 @@ const administrationsQueryBuild = (
 const administrationGet = async (
   id: string,
   { fields }: { fields?: IFields },
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   const q = administrationsQueryBuild({ fields }, user)
 
@@ -47,7 +47,7 @@ const administrationGet = async (
 
 const administrationsGet = async (
   { fields }: { fields?: IFields },
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   return administrationsQueryBuild({ fields }, user)
 }

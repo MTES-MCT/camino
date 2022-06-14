@@ -268,10 +268,7 @@ const activiteDeposer = async (
     if (entrepriseIds?.length) {
       utilisateurs = await utilisateursGet(
         {
-          entrepriseIds,
-          noms: undefined,
-          administrationIds: undefined,
-          permissionIds: undefined
+          entrepriseIds
         },
         { fields: {} },
         userSuper

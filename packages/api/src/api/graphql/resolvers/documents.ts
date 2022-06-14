@@ -30,7 +30,7 @@ import { entrepriseGet } from '../../../database/queries/entreprises'
 import { userGet } from '../../../database/queries/utilisateurs'
 import { userSuper } from '../../../database/user-super'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find'
-import { permissionCheck } from 'camino-common/src/roles'
+import { isEntreprise } from 'camino-common/src/roles'
 
 const errorEtapesAssocieesUpdate = (
   etapesAssociees: ITitreEtape[],
@@ -160,7 +160,7 @@ const documentCreer = async (
       await fileRename(pathFrom, pathTo)
     }
 
-    if (document.publicLecture || permissionCheck(user.role, ['entreprise'])) {
+    if (document.publicLecture || isEntreprise(user)) {
       document.entreprisesLecture = true
     }
 
@@ -210,7 +210,7 @@ const documentModifier = async (
       throw new Error(e.join(', '))
     }
 
-    if (document.publicLecture || permissionCheck(user.role, ['entreprise'])) {
+    if (document.publicLecture || isEntreprise(user)) {
       document.entreprisesLecture = true
     }
 

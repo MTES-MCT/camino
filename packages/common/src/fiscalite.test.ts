@@ -25,7 +25,7 @@ test.skip.each`
     user:
       | {
           entreprises?: { id: string }[] | null
-          role?: Role
+          role: Role
         }
       | undefined
       | null

@@ -28,7 +28,7 @@ import TitresSDOMZones from '../models/titres--sdom-zones'
 
 const titresEtapesQueryBuild = (
   { fields }: { fields?: IFields },
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   const graph = fields
     ? graphBuild(fields, 'etapes', fieldsFormat)
@@ -47,7 +47,7 @@ const titresEtapesQueryBuild = (
 const titreEtapeGet = async (
   titreEtapeId: string,
   { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean },
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   const q = titresEtapesQueryBuild({ fields }, user)
 
@@ -73,7 +73,7 @@ const titresEtapesGet = async (
     titresDemarchesIds?: string[] | null
   } = {},
   { fields }: { fields?: IFields },
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   const q = titresEtapesQueryBuild({ fields }, user)
 
@@ -96,7 +96,7 @@ const titresEtapesGet = async (
 
 const titreEtapeCreate = async (
   titreEtape: Omit<ITitreEtape, 'id'>,
-  user: Omit<IUtilisateur, 'permission'>,
+  user: IUtilisateur,
   titreId: string
 ) => {
   const newValue = await TitresEtapes.query()
@@ -111,7 +111,7 @@ const titreEtapeCreate = async (
 const titreEtapeUpdate = async (
   id: string,
   titreEtape: Partial<DBTitresEtapes>,
-  user: Omit<IUtilisateur, 'permission'>,
+  user: IUtilisateur,
   titreId: string
 ) => {
   return patchJournalCreate<TitresEtapes>(
@@ -125,7 +125,7 @@ const titreEtapeUpdate = async (
 
 const titreEtapeUpsert = async (
   titreEtape: Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id'>,
-  user: Omit<IUtilisateur, 'permission'>,
+  user: IUtilisateur,
   titreId: string
 ) =>
   upsertJournalCreate<TitresEtapes>(

@@ -170,7 +170,7 @@ describe('utilisateursCreer', () => {
           nom: 'test',
           email: 'test@camino.local',
           motDePasse: 'mot-de-passe',
-          permissionId: 'super'
+          role: 'super'
         }
       },
       'defaut'
@@ -209,7 +209,7 @@ describe('utilisateursCreer', () => {
           nom: 'test',
           email: 'test@camino.local',
           motDePasse: 'mot-de-passe',
-          permissionId: 'super'
+          role: 'super'
         }
       },
       'super'
@@ -249,7 +249,7 @@ describe('utilisateursCreer', () => {
           nom: 'test',
           email: 'test@camino.local',
           motDePasse: 'mot-de-passe',
-          permissionId: 'admin',
+          role: 'admin',
           administrations: [{ id: administration.id }]
         }
       },
@@ -293,7 +293,7 @@ describe('utilisateursCreer', () => {
           nom: 'test',
           email: 'test@camino.local',
           motDePasse: 'mot-de-passe',
-          permissionId: 'entreprise',
+          role: 'entreprise',
           entreprises: [{ id: 'entreprise' }]
         }
       },

@@ -4,7 +4,6 @@ import {
   IUtilisateur,
   IFields,
   IUtilisateursColonneId,
-  Index,
   IColonne,
   IUtilisateurTitre
 } from '../../types'
@@ -17,6 +16,7 @@ import { stringSplit } from './_utils'
 import Utilisateurs from '../models/utilisateurs'
 import { utilisateursQueryModify } from './permissions/utilisateurs'
 import UtilisateursTitres from '../models/utilisateurs--titres'
+import { Role } from 'camino-common/src/roles'
 
 const userGet = async (userId?: string) => {
   if (!userId) return null
@@ -27,8 +27,7 @@ const userGet = async (userId?: string) => {
     {
       fields: {
         administrations: { id: {} },
-        entreprises: { id: {} },
-        permission: { id: {} }
+        entreprises: { id: {} }
       }
     },
     user
@@ -39,7 +38,7 @@ const userGet = async (userId?: string) => {
 
 const utilisateursQueryBuild = (
   { fields }: { fields?: IFields },
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   const graph = fields
     ? graphBuild(fields, 'utilisateur', fieldsFormat)
@@ -57,14 +56,14 @@ const utilisateursFiltersQueryModify = (
     ids,
     entrepriseIds,
     administrationIds,
-    permissionIds,
+    roles,
     noms,
     emails
   }: {
     ids?: string[]
     entrepriseIds?: string[]
     administrationIds?: string[]
-    permissionIds?: string[]
+    roles?: Role[]
     noms?: string | null
     emails?: string | null
   },
@@ -74,8 +73,8 @@ const utilisateursFiltersQueryModify = (
     q.whereIn('id', ids)
   }
 
-  if (permissionIds) {
-    q.whereIn('permissionId', permissionIds)
+  if (roles) {
+    q.whereIn('role', roles as string[])
   }
 
   if (administrationIds) {
@@ -138,7 +137,7 @@ const userByRefreshTokenGet = async (refreshToken: string) => {
 const utilisateurGet = async (
   id: string,
   { fields }: { fields?: IFields } = {},
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   const q = utilisateursQueryBuild({ fields }, user)
 
@@ -148,17 +147,14 @@ const utilisateurGet = async (
 // lien = administration ou entreprise(s) en relation avec l'utilisateur :
 // on trie sur la concaténation du nom de l'administration
 // avec l'aggrégation ordonnée(STRING_AGG) des noms des entreprises
-const utilisateursColonnes = {
-  nom: {
-    id: 'nom'
-  },
-  prenom: {
-    id: 'prenom'
-  },
-  email: {
-    id: 'email'
-  },
-  permissions: { id: 'permissionId' },
+const utilisateursColonnes: Record<
+  IUtilisateursColonneId,
+  IColonne<string | RawBuilder>
+> = {
+  nom: { id: 'nom' },
+  prenom: { id: 'prenom' },
+  email: { id: 'email' },
+  role: { id: 'role' },
   lien: {
     id: raw(`CONCAT(
       "administrations"."nom",
@@ -171,8 +167,7 @@ const utilisateursColonnes = {
     relation: '[administrations, entreprises]',
     groupBy: ['utilisateurs.id', 'administrations.id']
   }
-} as Index<IColonne<string | RawBuilder>>
-
+}
 const utilisateursGet = async (
   {
     intervalle,
@@ -182,7 +177,7 @@ const utilisateursGet = async (
     ids,
     entrepriseIds,
     administrationIds,
-    permissionIds,
+    roles,
     noms,
     emails
   }: {
@@ -193,12 +188,12 @@ const utilisateursGet = async (
     ids?: string[]
     entrepriseIds?: string[]
     administrationIds?: string[]
-    permissionIds?: string[]
+    roles?: Role[]
     noms?: string | null
     emails?: string | null
   },
   { fields }: { fields?: IFields } = {},
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   const q = utilisateursQueryBuild({ fields }, user)
 
@@ -207,7 +202,7 @@ const utilisateursGet = async (
       ids,
       entrepriseIds,
       administrationIds,
-      permissionIds,
+      roles,
       noms,
       emails
     },
@@ -245,24 +240,24 @@ const utilisateursCount = async (
     ids,
     entrepriseIds,
     administrationIds,
-    permissionIds,
+    roles,
     noms,
     emails
   }: {
     ids?: string[]
     entrepriseIds?: string[]
     administrationIds?: string[]
-    permissionIds?: string[]
+    roles?: Role[]
     noms?: string | null
     emails?: string | null
   },
   { fields }: { fields?: IFields },
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   const q = utilisateursQueryBuild({ fields }, user)
 
   utilisateursFiltersQueryModify(
-    { ids, entrepriseIds, administrationIds, permissionIds, noms, emails },
+    { ids, entrepriseIds, administrationIds, roles, noms, emails },
     q
   )
 
@@ -270,7 +265,7 @@ const utilisateursCount = async (
 }
 
 const utilisateurCreate = async (
-  utilisateur: Omit<IUtilisateur, 'permission'>,
+  utilisateur: IUtilisateur,
   { fields }: { fields?: IFields }
 ) =>
   Utilisateurs.query()

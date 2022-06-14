@@ -25,7 +25,7 @@ afterAll(async () => {
 describe('titresDemarchesQueryModify', () => {
   describe('titreDemarcheSuppressionSelectQuery', () => {
     test.each`
-      permissionId    | suppression
+      role            | suppression
       ${'super'}      | ${true}
       ${'admin'}      | ${true}
       ${'editeur'}    | ${true}
@@ -34,12 +34,12 @@ describe('titresDemarchesQueryModify', () => {
       ${'default'}    | ${false}
       ${undefined}    | ${false}
     `(
-      'un utilisateur $permissionId peut supprimer une démarche qui n’a pas d’étape',
+      'un utilisateur $user peut supprimer $suppression une démarche qui n’a pas d’étape',
       async ({
-        permissionId,
+        role,
         suppression
       }: {
-        permissionId: Role | undefined
+        role: Role | undefined
         suppression: boolean
       }) => {
         const titreId = idGenerate()
@@ -68,7 +68,7 @@ describe('titresDemarchesQueryModify', () => {
         q.select(
           titreDemarcheSuppressionSelectQuery(
             'titresDemarches',
-            permissionId
+            role ? { id: 'id', dateCreation: '', role } : undefined
           ).as('suppression')
         )
         const titreDemarche = await q.findById(titreDemarcheId)
@@ -79,7 +79,7 @@ describe('titresDemarchesQueryModify', () => {
     )
 
     test.each`
-      permissionId    | suppression
+      role            | suppression
       ${'super'}      | ${true}
       ${'admin'}      | ${false}
       ${'editeur'}    | ${false}
@@ -88,12 +88,12 @@ describe('titresDemarchesQueryModify', () => {
       ${'default'}    | ${false}
       ${undefined}    | ${false}
     `(
-      'un utilisateur $permissionId peut supprimer une démarche qui a au moins une étape',
+      'un utilisateur $role peut supprimer une démarche qui a au moins une étape',
       async ({
-        permissionId,
+        role,
         suppression
       }: {
-        permissionId: Role | undefined
+        role: Role | undefined
         suppression: boolean
       }) => {
         const titreId = idGenerate()
@@ -130,7 +130,7 @@ describe('titresDemarchesQueryModify', () => {
         q.select(
           titreDemarcheSuppressionSelectQuery(
             'titresDemarches',
-            permissionId
+            role ? { id: '', dateCreation: '', role } : undefined
           ).as('suppression')
         )
 

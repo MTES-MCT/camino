@@ -15,7 +15,7 @@ describe('téléversement de fichier par rest (tus)', () => {
 
   describe('permission de téléverser', () => {
     test.each`
-      permission      | code
+      role            | code
       ${'admin'}      | ${200}
       ${'super'}      | ${200}
       ${'editeur'}    | ${200}
@@ -23,9 +23,9 @@ describe('téléversement de fichier par rest (tus)', () => {
       ${'entreprise'} | ${200}
       ${'defaut'}     | ${403}
     `(
-      'retourne le code $code pour un utilisateur "$permission"',
-      async ({ permission, code }) => {
-        const res = await restUploadCall(permission)
+      'retourne le code $code pour un utilisateur "$role"',
+      async ({ role, code }) => {
+        const res = await restUploadCall(role)
         expect(res.statusCode).toBe(code)
       }
     )

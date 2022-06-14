@@ -83,7 +83,7 @@ describe('etapeModifier', () => {
 
   test.each([undefined, 'editeur' as Role])(
     'ne peut pas modifier une étape (utilisateur %s)',
-    async (permissionId: Role | undefined) => {
+    async (role: Role | undefined) => {
       const res = await graphQLCall(
         etapeModifierQuery,
         {
@@ -95,7 +95,7 @@ describe('etapeModifier', () => {
             date: ''
           }
         },
-        permissionId
+        role
       )
 
       expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
@@ -254,12 +254,8 @@ describe('etapeSupprimer', () => {
 
   test.each([undefined, 'admin' as Role])(
     'ne peut pas supprimer une étape (utilisateur %s)',
-    async (permissionId: Role | undefined) => {
-      const res = await graphQLCall(
-        etapeSupprimerQuery,
-        { id: '' },
-        permissionId
-      )
+    async (role: Role | undefined) => {
+      const res = await graphQLCall(etapeSupprimerQuery, { id: '' }, role)
 
       expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
     }

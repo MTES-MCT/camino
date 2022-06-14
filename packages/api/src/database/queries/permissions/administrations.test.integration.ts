@@ -80,19 +80,19 @@ describe('administrationsTitresQuery', () => {
 
 describe('administrationsQueryModify', () => {
   test.each`
-    permission   | emailsModification
+    role         | emailsModification
     ${'super'}   | ${true}
     ${'admin'}   | ${false}
     ${'editeur'} | ${false}
     ${'lecteur'} | ${false}
   `(
     "pour une préfecture, emailsModification est 'true' pour un utilisateur super, 'false' pour tous ses membres",
-    async ({ permission, emailsModification }) => {
+    async ({ role, emailsModification }) => {
       const mockAdministration = CommonAdministrations['pre-01053-01']
 
-      const mockUser: Omit<IUtilisateur, 'permission'> = {
+      const mockUser: IUtilisateur = {
         id: idGenerate(),
-        role: permission,
+        role,
         administrations: [mockAdministration],
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
@@ -118,7 +118,7 @@ describe('administrationsQueryModify', () => {
   )
 
   test.each`
-    permission   | emailsModification
+    role         | emailsModification
     ${'super'}   | ${true}
     ${'admin'}   | ${true}
     ${'editeur'} | ${true}
@@ -126,12 +126,12 @@ describe('administrationsQueryModify', () => {
     ${'defaut'}  | ${false}
   `(
     "pour une DREAL/DEAL, emailsModification est 'true' pour ses membres admins et éditeurs, pour les utilisateurs supers, 'false' pour ses autres membres",
-    async ({ permission, emailsModification }) => {
+    async ({ role, emailsModification }) => {
       const mockDreal = CommonAdministrations['dre-ile-de-france-01']
 
-      const mockUser: Omit<IUtilisateur, 'permission'> = {
+      const mockUser: IUtilisateur = {
         id: idGenerate(),
-        role: permission,
+        role,
         administrations: [mockDreal],
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
@@ -158,7 +158,7 @@ describe('administrationsQueryModify', () => {
     const prefectureDordogne = 'pre-24322-01'
     const prefectureCorseDuSud = 'pre-2A004-01'
 
-    const mockUser: Omit<IUtilisateur, 'permission'> = {
+    const mockUser: IUtilisateur = {
       id: idGenerate(),
       role: 'admin',
       administrations: [mockDreal],
@@ -183,19 +183,19 @@ describe('administrationsQueryModify', () => {
   })
 
   test.each`
-    permission   | emailsModification
+    role         | emailsModification
     ${'admin'}   | ${true}
     ${'editeur'} | ${true}
     ${'lecteur'} | ${false}
     ${'defaut'}  | ${false}
   `(
     "pour un membre de ministère, emailsModification est 'true' pour ses membres admins et éditeurs, 'false' pour ses lecteurs",
-    async ({ permission, emailsModification }) => {
+    async ({ role, emailsModification }) => {
       const mockMin = CommonAdministrations['min-dajb-01']
 
-      const mockUser: Omit<IUtilisateur, 'permission'> = {
+      const mockUser: IUtilisateur = {
         id: idGenerate(),
-        role: permission,
+        role,
         administrations: [mockMin],
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
@@ -221,7 +221,7 @@ describe('administrationsQueryModify', () => {
   )
 
   test.each`
-    permission   | emailsLecture
+    role         | emailsLecture
     ${'super'}   | ${true}
     ${'admin'}   | ${true}
     ${'editeur'} | ${true}
@@ -229,7 +229,7 @@ describe('administrationsQueryModify', () => {
     ${'defaut'}  | ${false}
   `(
     "pour une préfecture, emailsLecture est 'true' pour un utilisateur super et pour tous ses membres",
-    async ({ permission, emailsLecture }) => {
+    async ({ role, emailsLecture }) => {
       const mockAdministration = CommonAdministrations['pre-01053-01']
 
       const email = `${idGenerate()}@bar.com`
@@ -240,9 +240,9 @@ describe('administrationsQueryModify', () => {
         activiteTypeId: 'grx'
       })
 
-      const mockUser: Omit<IUtilisateur, 'permission'> = {
+      const mockUser: IUtilisateur = {
         id: idGenerate(),
-        role: permission,
+        role,
         administrations: [mockAdministration],
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
@@ -289,7 +289,7 @@ describe('administrationsQueryModify', () => {
       activiteTypeId: 'grx'
     })
 
-    const mockUser: Omit<IUtilisateur, 'permission'> = {
+    const mockUser: IUtilisateur = {
       id: idGenerate(),
       role: 'super',
       administrations: [mockAdministration],

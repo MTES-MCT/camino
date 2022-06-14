@@ -9,7 +9,6 @@ import {
   titresConfidentielSelect,
   titresModificationSelectQuery,
   titresQueryModify,
-  titresSuppressionSelectQuery,
   titresTravauxCreationQuery,
   titresVisibleByEntrepriseQuery
 } from './titres'
@@ -319,13 +318,13 @@ describe('titresQueryModify', () => {
       }
     )
     test.each`
-      permissionId    | travauxCreation
+      role            | travauxCreation
       ${'super'}      | ${true}
       ${'entreprise'} | ${false}
       ${'default'}    | ${false}
     `(
-      'Vérifie si un profil $permissionId peut créer des travaux',
-      async ({ permissionId, travauxCreation }) => {
+      'Vérifie si un profil $role peut créer des travaux',
+      async ({ role, travauxCreation }) => {
         const titreId = idGenerate()
 
         await Titres.query().insert({
@@ -338,7 +337,7 @@ describe('titresQueryModify', () => {
 
         const q = Titres.query()
         titresTravauxCreationQuery(q, {
-          role: permissionId,
+          role,
           administrations: []
         })
 
@@ -351,19 +350,13 @@ describe('titresQueryModify', () => {
 
   describe('titresModificationSelectQuery', () => {
     test.each`
-      permissionId | modification
+      role         | modification
       ${'admin'}   | ${true}
       ${'editeur'} | ${true}
       ${'lecteur'} | ${false}
     `(
-      'un utilisateur $permissionId d’une administration gestionnaire peut modifier un titre',
-      async ({
-        permissionId,
-        modification
-      }: {
-        permissionId: Role
-        modification: boolean
-      }) => {
+      'un utilisateur $role d’une administration gestionnaire peut modifier un titre',
+      async ({ role, modification }: { role: Role; modification: boolean }) => {
         await Titres.query().insert({
           nom: idGenerate(),
           statutId: 'val',
@@ -387,7 +380,7 @@ describe('titresQueryModify', () => {
         const q = Titres.query()
         q.select(
           titresModificationSelectQuery(q, {
-            role: permissionId,
+            role,
             administrations: [administration!]
           }).as('modification')
         )
@@ -428,14 +421,14 @@ describe('titresQueryModify', () => {
     })
 
     test.each`
-      permissionId    | modification
+      role            | modification
       ${'super'}      | ${true}
       ${'lecteur'}    | ${false}
       ${'entreprise'} | ${false}
       ${'default'}    | ${false}
     `(
-      'Vérifie si un profil $permissionId peut modifier un titre',
-      async ({ permissionId, modification }) => {
+      'Vérifie si un profil $role peut modifier un titre',
+      async ({ role, modification }) => {
         await Titres.query().insert({
           nom: idGenerate(),
           statutId: 'val',
@@ -445,37 +438,13 @@ describe('titresQueryModify', () => {
         const q = Titres.query()
         q.select(
           titresModificationSelectQuery(q, {
-            role: permissionId
+            role
           }).as('modification')
         )
 
         const titre = await q.first()
 
         expect(titre?.modification).toBe(modification)
-      }
-    )
-  })
-
-  describe('titresSuppressionSelectQuery', () => {
-    test.each`
-      permissionId    | suppression
-      ${'super'}      | ${true}
-      ${'admin'}      | ${false}
-      ${'editeur'}    | ${false}
-      ${'lecteur'}    | ${false}
-      ${'entreprise'} | ${false}
-      ${'default'}    | ${false}
-      ${undefined}    | ${false}
-    `(
-      'un utilisateur $permissionId peut supprimer un titre',
-      async ({
-        permissionId,
-        suppression
-      }: {
-        permissionId: Role | undefined
-        suppression: boolean
-      }) => {
-        expect(titresSuppressionSelectQuery(permissionId)).toBe(suppression)
       }
     )
   })

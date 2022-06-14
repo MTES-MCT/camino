@@ -20,7 +20,14 @@ import {
   administrationsTitresTypesEtapesTypesModify,
   administrationsTitresQuery
 } from './administrations'
-import { permissionCheck } from 'camino-common/src/roles'
+import {
+  isAdministration,
+  isAdministrationAdmin,
+  isAdministrationEditeur,
+  isDefault,
+  isEntreprise,
+  isSuper
+} from 'camino-common/src/roles'
 
 // récupère les types d'étapes qui ont
 // - les autorisations sur le titre
@@ -98,10 +105,10 @@ const titresTypesQueryModify = (
 ) => {
   q.select('titresTypes.*')
 
-  if (permissionCheck(user?.role, ['super'])) {
+  if (isSuper(user)) {
     q.select(raw('true').as('titresCreation'))
   } else if (
-    permissionCheck(user?.role, ['admin', 'editeur']) &&
+    (isAdministrationAdmin(user) || isAdministrationEditeur(user)) &&
     user?.administrations?.length
   ) {
     const administrationsIds = user.administrations.map(e => e.id)
@@ -189,10 +196,10 @@ const etapesTypesQueryModify = (
   }
 
   // types d'étapes visibles pour les entreprises et utilisateurs déconnectés ou défaut
-  if (!user || permissionCheck(user?.role, ['defaut', 'entreprise'])) {
+  if (!user || isDefault(user) || isEntreprise(user)) {
     q.where(b => {
       // types d'étapes visibles en tant que titulaire ou amodiataire
-      if (permissionCheck(user?.role, ['entreprise'])) {
+      if (isEntreprise(user)) {
         b.orWhere('td.entreprisesLecture', true)
       }
 
@@ -202,12 +209,9 @@ const etapesTypesQueryModify = (
   }
 
   // propriété 'etapesCreation' en fonction du profil de l'utilisateur
-  if (permissionCheck(user?.role, ['super'])) {
+  if (isSuper(user)) {
     q.select(raw('true').as('etapesCreation'))
-  } else if (
-    permissionCheck(user?.role, ['admin', 'editeur', 'lecteur']) &&
-    user?.administrations?.length
-  ) {
+  } else if (isAdministration(user) && user?.administrations?.length) {
     if (titreDemarcheId) {
       const administrationsIds = user.administrations.map(a => a.id) || []
 
@@ -222,7 +226,7 @@ const etapesTypesQueryModify = (
     } else {
       q.select(raw('false').as('etapesCreation'))
     }
-  } else if (permissionCheck(user?.role, ['entreprise'])) {
+  } else if (isEntreprise(user)) {
     if (titreEtapeId && user?.entreprises?.length) {
       const etapesCreationQuery = entreprisesEtapesTypesPropsQuery(
         user.entreprises.map(({ id }) => id)
@@ -247,10 +251,10 @@ export const demarchesCreationQuery = (
   { titreId, titreIdAlias }: { titreId?: string; titreIdAlias?: string }
 ) => {
   let demarchesCreation = raw('false')
-  if (permissionCheck(user?.role, ['super'])) {
+  if (isSuper(user)) {
     demarchesCreation = raw('true')
   } else if (
-    permissionCheck(user?.role, ['admin', 'editeur', 'lecteur']) &&
+    isAdministration(user) &&
     user?.administrations?.length &&
     (titreId || titreIdAlias)
   ) {

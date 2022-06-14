@@ -2,7 +2,7 @@ import express from 'express'
 import { Server, FileStore } from 'tus-node-server'
 import { graphqlUploadExpress } from 'graphql-upload'
 import { userGet } from '../database/queries/utilisateurs'
-import { permissionCheck } from 'camino-common/src/roles'
+import { isDefault } from 'camino-common/src/roles'
 
 // Téléversement REST
 const uploadAllowedMiddleware = async (
@@ -14,7 +14,7 @@ const uploadAllowedMiddleware = async (
 
   const user = await userGet(userId)
 
-  if (!user || permissionCheck(user.role, ['defaut'])) {
+  if (isDefault(user)) {
     res.sendStatus(403)
 
     return

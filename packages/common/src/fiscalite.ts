@@ -1,4 +1,4 @@
-import { permissionCheck, Role } from './roles'
+import { isSuper, Role } from './roles'
 
 export interface Fiscalite {
   redevanceCommunale: number
@@ -11,14 +11,14 @@ export const fiscaliteVisible = (
   user:
     | {
         entreprises?: { id: string }[] | null
-        role?: Role
+        role: Role
       }
     | undefined
     | null,
   _entrepriseId: string
 ): boolean => {
   if (user) {
-    if (permissionCheck(user.role, ['super'])) {
+    if (isSuper(user)) {
       return true
     }
   }

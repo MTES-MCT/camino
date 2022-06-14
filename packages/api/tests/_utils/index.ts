@@ -32,38 +32,38 @@ const graphQLCall = async (
   variables: Index<
     string | boolean | Index<string | boolean | Index<string>[] | any>
   >,
-  permissionId?: Role,
+  role?: Role,
   administrationId?: string
 ) => {
   const req = request(app).post('/').send({ query, variables })
 
-  return cookiesSet(req, permissionId, administrationId)
+  return cookiesSet(req, role, administrationId)
 }
 
-const restUploadCall = async (permissionId?: Role) => {
+const restUploadCall = async (role?: Role) => {
   const req = request(app).post('/televersement')
 
-  return cookiesSet(req, permissionId)
+  return cookiesSet(req, role)
 }
 
 export const restCall = async (
   path: string,
-  permissionId: Role,
+  role: Role,
   administrationId?: AdministrationId
 ): Promise<request.Test> => {
   const req = request(app).get(path)
 
-  return cookiesSet(req, permissionId, administrationId)
+  return cookiesSet(req, role, administrationId)
 }
 
 const cookiesSet = async (
   req: request.Test,
-  permissionId?: Role,
+  role?: Role,
   administrationId?: string
 ): Promise<request.Test> => {
   let token
-  if (permissionId) {
-    token = await userTokenGenerate(permissionId, administrationId)
+  if (role) {
+    token = await userTokenGenerate(role, administrationId)
   }
 
   if (token) {
@@ -73,14 +73,11 @@ const cookiesSet = async (
   return req
 }
 
-const userTokenGenerate = async (
-  permissionId: Role,
-  administrationId?: string
-) => {
+const userTokenGenerate = async (role: Role, administrationId?: string) => {
   let id = 'super'
 
-  if (permissionId !== 'super') {
-    id = `${permissionId}-user`
+  if (role !== 'super') {
+    id = `${role}-user`
 
     if (administrationId) {
       id += `-${administrationId}`
@@ -101,12 +98,12 @@ const userTokenGenerate = async (
     await utilisateurCreate(
       {
         id,
-        prenom: `prenom-${permissionId}`,
-        nom: `nom-${permissionId}`,
+        prenom: `prenom-${role}`,
+        nom: `nom-${role}`,
         email: `${id}@camino.local`,
         motDePasse: 'mot-de-passe',
         dateCreation: dateFormat(new Date(), 'yyyy-mm-dd'),
-        role: permissionId,
+        role,
         administrations
       },
       {}

@@ -1,7 +1,6 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
-import { fragmentDevise } from './fragments/metas'
 import { fragmentSubstance } from './fragments/substance'
 import { fragmentEtape, fragmentEtapeHeritage } from './fragments/titre-etape'
 import { fragmentEtapeMetasEntreprises } from './fragments/entreprises'

@@ -19,7 +19,12 @@ import EntreprisesTitresTypes from '../models/entreprises-titres-types'
 import { fieldsEntreprisesTitresCreationAdd } from './graph/fields-add'
 import { utilisateurGet } from './utilisateurs'
 import { titresCreationQuery } from './permissions/metas'
-import { permissionCheck } from 'camino-common/src/roles'
+import {
+  isSuper,
+  isEntreprise,
+  isAdministrationAdmin,
+  isAdministrationEditeur
+} from 'camino-common/src/roles'
 
 const entreprisesFiltersQueryModify = (
   {
@@ -62,7 +67,7 @@ const entreprisesFiltersQueryModify = (
 
 const entreprisesQueryBuild = (
   { fields }: { fields?: IFields },
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   const graph = fields
     ? graphBuild(fields, 'entreprises', fieldsFormat)
@@ -121,7 +126,7 @@ const entreprisesGet = async (
     archive?: boolean | null
   },
   { fields }: { fields?: IFields },
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   const q = entreprisesQueryBuild({ fields }, user)
 
@@ -185,11 +190,11 @@ const titreDemandeEntreprisesGet = async (
 ) => {
   if (!user) return []
 
-  if (permissionCheck(user?.role, ['super'])) {
+  if (isSuper(user)) {
     return entreprisesGet({ archive: false }, { fields }, user)
   }
 
-  if (permissionCheck(user?.role, ['admin', 'editeur'])) {
+  if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     if (!user.administrations) return []
 
     const titresCreation = await titresCreationQuery(
@@ -201,7 +206,7 @@ const titreDemandeEntreprisesGet = async (
     return entreprisesGet({ archive: false }, { fields }, user)
   }
 
-  if (permissionCheck(user?.role, ['entreprise'])) {
+  if (isEntreprise(user)) {
     const utilisateur = await utilisateurGet(
       user.id,
       { fields: { entreprises: fieldsEntreprisesTitresCreationAdd(fields) } },

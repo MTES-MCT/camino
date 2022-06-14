@@ -64,7 +64,7 @@ import {
 import { titresEtapesHeritageContenuUpdate } from '../../../business/processes/titres-etapes-heritage-contenu-update'
 import { GraphQLResolveInfo } from 'graphql'
 import { fieldsBuild } from './_fields-build'
-import { permissionCheck } from 'camino-common/src/roles'
+import { isSuper } from 'camino-common/src/roles'
 
 const titresTypes = async (
   _: never,
@@ -74,7 +74,7 @@ const titresTypes = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -99,7 +99,7 @@ const titreTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -124,7 +124,7 @@ const titreTypeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -149,7 +149,7 @@ const titreTypeSupprimer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -173,7 +173,7 @@ const titresTypesTitresStatuts = async (_: never, context: IToken) => {
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -196,7 +196,7 @@ const titreTypeTitreStatutModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -225,7 +225,7 @@ const titreTypeTitreStatutCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -250,7 +250,7 @@ const titreTypeTitreStatutSupprimer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -275,7 +275,7 @@ const titresTypesDemarchesTypes = async (_: never, context: IToken) => {
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -298,7 +298,7 @@ const titreTypeDemarcheTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -327,7 +327,7 @@ const titreTypeDemarcheTypeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -352,7 +352,7 @@ const titreTypeDemarcheTypeSupprimer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -382,7 +382,7 @@ const titresTypesDemarchesTypesEtapesTypes = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -408,7 +408,7 @@ const titreTypeDemarcheTypeEtapeTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!user || !permissionCheck(user.role, ['super'])) {
+    if (!user || !isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -443,7 +443,7 @@ const titreTypeDemarcheTypeEtapeTypeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!user || !permissionCheck(user.role, ['super'])) {
+    if (!user || !isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -473,7 +473,7 @@ const titreTypeDemarcheTypeEtapeTypeSupprimer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -532,7 +532,7 @@ const titresTypesDemarchesTypesEtapesTypesDocumentsTypes = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -560,7 +560,7 @@ const titreTypeDemarcheTypeEtapeTypeDocumentTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -596,7 +596,7 @@ const titreTypeDemarcheTypeEtapeTypeDocumentTypeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -628,7 +628,7 @@ const titreTypeDemarcheTypeEtapeTypeDocumentTypeSupprimer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -661,7 +661,7 @@ const titresTypesDemarchesTypesEtapesTypesJustificatifsTypes = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -689,7 +689,7 @@ const titreTypeDemarcheTypeEtapeTypeJustificatifTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -725,7 +725,7 @@ const titreTypeDemarcheTypeEtapeTypeJustificatifTypeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -757,7 +757,7 @@ const titreTypeDemarcheTypeEtapeTypeJustificatifTypeSupprimer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -787,7 +787,7 @@ const etapesTypesEtapesStatuts = async (_: never, context: IToken) => {
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -810,7 +810,7 @@ const etapeTypeEtapeStatutModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -839,7 +839,7 @@ const etapeTypeEtapeStatutCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -864,7 +864,7 @@ const etapeTypeEtapeStatutSupprimer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -891,7 +891,7 @@ const etapesTypesDocumentsTypes = async (_: never, context: IToken) => {
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -914,7 +914,7 @@ const etapeTypeDocumentTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -943,7 +943,7 @@ const etapeTypeDocumentTypeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -968,7 +968,7 @@ const etapeTypeDocumentTypeSupprimer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -1006,7 +1006,7 @@ const etapesTypesJustificatifsTypes = async (_: never, context: IToken) => {
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -1032,7 +1032,7 @@ const etapeTypeJustificatifTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -1081,7 +1081,7 @@ const etapeTypeJustificatifTypeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -1125,7 +1125,7 @@ const etapeTypeJustificatifTypeSupprimer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.role, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 

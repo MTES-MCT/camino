@@ -28,7 +28,11 @@ import { titreGet, titresGet } from '../../../database/queries/titres'
 import { userSuper } from '../../../database/user-super'
 import intersect from '@turf/intersect'
 import { assertGeoSystemeId, GeoSystemes } from 'camino-common/src/geoSystemes'
-import { permissionCheck } from 'camino-common/src/roles'
+import {
+  isSuper,
+  isAdministrationAdmin,
+  isAdministrationEditeur
+} from 'camino-common/src/roles'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches'
 
 const stream2buffer = async (stream: Stream): Promise<Buffer> => {
@@ -189,7 +193,9 @@ const sdomZonesInformationsGet = async (
     }
 
     if (
-      permissionCheck(user.role, ['super', 'admin', 'editeur']) &&
+      (isSuper(user) ||
+        isAdministrationAdmin(user) ||
+        isAdministrationEditeur(user)) &&
       points?.length > 2
     ) {
       // vérifie qu’il n’existe pas de demandes de titres en cours sur ce périmètre

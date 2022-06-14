@@ -23,7 +23,13 @@ import titreDemarcheUpdateTask from '../../../business/titre-demarche-update'
 import titreEtapeUpdateTask from '../../../business/titre-etape-update'
 import { userSuper } from '../../../database/user-super'
 import { specifiquesGet } from './titres-etapes'
-import { permissionCheck } from 'camino-common/src/roles'
+import {
+  isAdministration,
+  isAdministrationAdmin,
+  isAdministrationEditeur,
+  isEntreprise,
+  isSuper
+} from 'camino-common/src/roles'
 
 const titreDemandeCreer = async (
   { titreDemande }: { titreDemande: ITitreDemande },
@@ -32,14 +38,11 @@ const titreDemandeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (
-      !user ||
-      !permissionCheck(user.role, ['super', 'admin', 'editeur', 'entreprise'])
-    ) {
+    if (!user || !(isSuper(user) || isAdministration(user))) {
       throw new Error('permissions insuffisantes')
     }
 
-    if (permissionCheck(user.role, ['entreprise'])) {
+    if (isEntreprise(user)) {
       if (titreDemande.references?.length) {
         throw new Error('permissions insuffisantes')
       }
@@ -66,7 +69,11 @@ const titreDemandeCreer = async (
       }
     }
 
-    if (permissionCheck(user.role, ['super', 'admin', 'editeur'])) {
+    if (
+      isSuper(
+        user || isAdministrationAdmin(user) || isAdministrationEditeur(user)
+      )
+    ) {
       const domaine = await domaineGet(
         titreDemande.domaineId,
         { fields: { titresTypes: { id: {} } } },

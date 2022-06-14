@@ -52,7 +52,7 @@ const entreprisesRelateFalse = [
 ]
 
 const entreprises = {
-  graph: `[utilisateurs.permission, etablissements(orderDesc), documents.${documents.graph}, titresTypes.${titresTypes.graph}]`,
+  graph: `[utilisateurs, etablissements(orderDesc), documents.${documents.graph}, titresTypes.${titresTypes.graph}]`,
   update: {
     insertMissing: true,
     relate: entreprisesRelateTrue,
@@ -60,14 +60,14 @@ const entreprises = {
   }
 }
 
-const utilisateursRelateTrue = ['permission', 'administrations', 'entreprises']
+const utilisateursRelateTrue = ['administrations', 'entreprises']
 
 const utilisateursRelateFalse = [
   ...entreprisesRelateFalse.map(k => `entreprises.${k}`)
 ]
 
 const utilisateurs = {
-  graph: `[permission, administrations.[titresTypes, activitesTypes], entreprises.etablissements]`,
+  graph: `[administrations.[titresTypes, activitesTypes], entreprises.etablissements]`,
   update: {
     relate: utilisateursRelateTrue,
     unrelate: utilisateursRelateTrue,
@@ -80,7 +80,7 @@ const utilisateursTitres = {
 }
 
 const administrations = {
-  graph: `[utilisateurs.permission, titresTypes.${titresTypes.graph}, titresTypesTitresStatuts, titresTypesEtapesTypes]`,
+  graph: `[utilisateur, titresTypes.${titresTypes.graph}, titresTypesTitresStatuts, titresTypesEtapesTypes]`,
   update: {
     insertMissing: true
   }
@@ -101,15 +101,12 @@ const titresEtapesRelateTrue = [
 const titresEtapesRelateFalse = [
   'titulaires.etablissements',
   'titulaires.utilisateurs',
-  'titulaires.utilisateurs.permission',
   'titulaires.documents',
   'titulaires.documents.type',
   'amodiataires.etablissements',
   'amodiataires.utilisateurs',
-  'amodiataires.utilisateurs.permission',
   'administrations.titresTypes',
   'administrations.utilisateurs',
-  'administrations.utilisateurs.permission',
   'substances.legales',
   ...documentsRelateFalse.map(k => `documents.${k}`),
   ...documentsRelateFalse.map(k => `justificatifs.${k}`)
@@ -271,22 +268,18 @@ const titresRelateFalse = [
   'titulaires',
   'titulaires.etablissements',
   'titulaires.utilisateurs',
-  'titulaires.utilisateurs.permission',
   'titulaires.documents',
   'titulaires.documents.type',
   'amodiataires',
   'amodiataires.etablissements',
   'amodiataires.utilisateurs',
-  'amodiataires.utilisateurs.permission',
   'administrationsGestionnaires.titresTypes',
   'administrationsGestionnaires.type',
   'administrationsGestionnaires.utilisateurs',
-  'administrationsGestionnaires.utilisateurs.permission',
   'administrationsLocales',
   'administrationsLocales.titresTypes',
   'administrationsLocales.type',
   'administrationsLocales.utilisateurs',
-  'administrationsLocales.utilisateurs.permission',
   'surfaceEtape',
   ...titresActivitesRelateFalse.map(k => `activites.${k}`),
   ...titresDemarchesRelateFalse.map(k => `demarches.${k}`),
