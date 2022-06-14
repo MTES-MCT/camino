@@ -12,7 +12,7 @@ type Utilisateur {
   telephoneFixe: String
   administrations: [Administration]
   entreprises: [Entreprise]
-  role: String
+  role: ID
   preferences: Json
   newsletter: Boolean
 
