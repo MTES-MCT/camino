@@ -421,20 +421,10 @@ input InputEtapeStatut {
   ordre: Int
 }
 
-input InputDevise {
-  id: ID!
-  nom: String
-}
-
 input InputDocumentType {
   id: ID!
   nom: String
   description: String
-}
-
-input InputPermission {
-  id: ID!
-  nom: String
 }
 
 input InputReferenceType {

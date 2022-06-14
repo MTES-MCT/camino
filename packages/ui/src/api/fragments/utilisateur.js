@@ -1,5 +1,4 @@
 import gql from 'graphql-tag'
-import { fragmentPermission } from './metas'
 import { fragmentEntreprises } from './entreprises'
 import { fragmentAdministrations } from './administrations'
 

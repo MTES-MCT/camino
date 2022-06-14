@@ -42,7 +42,7 @@ describe("état de l'utilisateur connecté", () => {
       id: 66,
       prenom: 'rene',
       nom: 'lataupe',
-      permission: 'admin',
+      role: 'admin',
       entreprise: 'macdo',
       email: 'rene@la.taupe'
     }
@@ -129,7 +129,7 @@ describe("état de l'utilisateur connecté", () => {
       prenom: 'rene',
       nom: 'lataupe',
       email: 'rene@la.taupe',
-      permission: 'admin',
+      role: 'admin',
       entreprise: 'macdo'
     })
     expect(apiMock).toHaveBeenCalled()
@@ -157,7 +157,7 @@ describe("état de l'utilisateur connecté", () => {
       prenom: 'rene',
       nom: 'lataupe',
       email: 'rene@la.taupe',
-      permission: 'admin',
+      role: 'admin',
       entreprise: 'macdo'
     })
   })
@@ -212,7 +212,7 @@ describe("état de l'utilisateur connecté", () => {
       prenom: 'rene',
       nom: 'lataupe',
       email: 'rene@la.taupe',
-      permission: 'admin',
+      role: 'admin',
       entreprise: 'macdo'
     })
   })
@@ -413,14 +413,14 @@ describe("état de l'utilisateur connecté", () => {
       id: 66,
       prenom: 'rene',
       nom: 'lataupe',
-      permission: 'admin'
+      role: 'admin'
     })
 
     expect(store.state.user.element).toEqual({
       id: 66,
       prenom: 'rene',
       nom: 'lataupe',
-      permission: 'admin'
+      role: 'admin'
     })
     expect(store.state.user.element.entreprise).toBeUndefined()
   })
@@ -443,18 +443,18 @@ describe("état de l'utilisateur connecté", () => {
   })
 
   test.each`
-    permissionId    | isAdmin
+    role            | isAdmin
     ${'super'}      | ${true}
     ${'admin'}      | ${true}
     ${'editeur'}    | ${true}
     ${'entreprise'} | ${false}
     ${undefined}    | ${false}
-  `('ajoute des jours à une date', ({ permissionId, isAdmin }) => {
+  `('ajoute des jours à une date', ({ role, isAdmin }) => {
     store.commit('user/set', {
       id: 66,
       prenom: 'rene',
       nom: 'lataupe',
-      permission: { id: permissionId }
+      role
     })
     expect(store.getters['user/userIsAdmin']).toEqual(isAdmin)
   })

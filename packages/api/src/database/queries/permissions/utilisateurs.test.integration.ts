@@ -19,7 +19,7 @@ afterAll(async () => {
 
 const mockAdministration = Administrations['aut-97300-01']
 
-const mockUser: Omit<IUtilisateur, 'permission'> = {
+const mockUser: IUtilisateur = {
   id: 'utilisateurId',
   role: 'editeur',
   nom: 'utilisateurNom',
@@ -37,7 +37,7 @@ const mockUser: Omit<IUtilisateur, 'permission'> = {
 
 describe('utilisateursQueryModify', () => {
   test.each`
-    permissionId    | voit
+    role            | voit
     ${'super'}      | ${true}
     ${'admin'}      | ${true}
     ${'editeur'}    | ${true}
@@ -46,10 +46,10 @@ describe('utilisateursQueryModify', () => {
     ${'defaut'}     | ${false}
   `(
     "Vérifie l'écriture de la requête sur un utilisateur",
-    async ({ permissionId, voit }) => {
-      const user: Omit<IUtilisateur, 'permission'> = {
+    async ({ role, voit }) => {
+      const user: IUtilisateur = {
         id: 'userId',
-        role: permissionId,
+        role,
         administrations: [mockAdministration] as unknown as IAdministration[],
         dateCreation: '2022-05-12'
       }

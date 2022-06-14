@@ -183,7 +183,7 @@ export default {
   methods: {
     async save() {
       if (this.complete) {
-        if (!this.utilisateur.permissionId) {
+        if (!this.utilisateur.role) {
           this.utilisateur.role = 'defaut'
         }
 

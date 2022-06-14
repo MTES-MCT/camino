@@ -18,10 +18,7 @@
         </p>
         <hr />
       </div>
-      <div
-        v-if="permissionsCheck(user, ['super', 'admin'])"
-        class="tablet-blobs"
-      >
+      <div v-if="formIsVisible" class="tablet-blobs">
         <div class="mb tablet-blob-1-3 tablet-pt-s pb-s">
           <h5>Email</h5>
         </div>
@@ -272,12 +269,17 @@
 </template>
 
 <script>
-import { permissionsCheck } from '@/utils'
 import Popup from '../_ui/popup.vue'
 import Loader from '../_ui/loader.vue'
 import { sortedAdministrations } from 'camino-common/src/administrations'
 import Icon from '../_ui/icon.vue'
-import { ROLES } from 'camino-common/src/roles'
+import {
+  isAdministration,
+  isAdministrationAdmin,
+  isEntreprise,
+  isSuper,
+  ROLES
+} from 'camino-common/src/roles'
 
 export default {
   name: 'CaminoUtilisateurEditPopup',
@@ -371,13 +373,11 @@ export default {
     },
 
     utilisateurIsEntreprise() {
-      return ['entreprise'].includes(this.utilisateur.permissionId)
+      return isEntreprise(this.utilisateur)
     },
 
     utilisateurIsAdministration() {
-      return ['admin', 'editeur', 'lecteur'].includes(
-        this.utilisateur.permissionId
-      )
+      return isAdministration(this.utilisateur)
     }
   },
 
@@ -424,8 +424,8 @@ export default {
         }
 
         if (this.action === 'create') {
-          if (!utilisateur.permissionId) {
-            utilisateur.permissionId = 'defaut'
+          if (!utilisateur.role) {
+            utilisateur.role = 'defaut'
           }
 
           await this.$store.dispatch('utilisateur/add', utilisateur)
@@ -475,8 +475,8 @@ export default {
       this.utilisateur.administrations.splice(index, 1)
     },
 
-    permissionsCheck(user, permissions) {
-      return permissionsCheck(user, permissions)
+    formIsVisible(user) {
+      return isSuper(user) || isAdministrationAdmin(user)
     }
   }
 }

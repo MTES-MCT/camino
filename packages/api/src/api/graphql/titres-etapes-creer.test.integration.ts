@@ -85,11 +85,11 @@ describe('etapeCreer', () => {
 
   test.each([undefined, 'editeur' as Role])(
     'ne peut pas créer une étape (utilisateur %s)',
-    async (permissionId: Role | undefined) => {
+    async (role: Role | undefined) => {
       const res = await graphQLCall(
         etapeCreerQuery,
         { etape: { typeId: '', statutId: '', titreDemarcheId: '', date: '' } },
-        permissionId
+        role
       )
 
       expect(res.body.errors[0].message).toBe("la démarche n'existe pas")

@@ -335,7 +335,7 @@ const utilisateurCreer = async (
       !context.user ||
       (context.user.email !== utilisateur.email &&
         !user?.utilisateursCreation) ||
-      (!isSuper(user) && utilisateur.role === 'super')
+      (!isSuper(user) && isSuper(utilisateur))
     )
       throw new Error('droits insuffisants')
 

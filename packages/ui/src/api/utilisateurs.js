@@ -62,7 +62,7 @@ const utilisateurs = apiGraphQLFetch(
       $ordre: String
       $entrepriseIds: [ID]
       $administrationIds: [ID]
-      $permissionIds: [ID]
+      $roles: [ID]
       $noms: String
       $emails: String
     ) {
@@ -73,7 +73,7 @@ const utilisateurs = apiGraphQLFetch(
         ordre: $ordre
         entrepriseIds: $entrepriseIds
         administrationIds: $administrationIds
-        permissionIds: $permissionIds
+        roles: $roles
         noms: $noms
         emails: $emails
       ) {

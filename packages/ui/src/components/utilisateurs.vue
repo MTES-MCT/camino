@@ -134,7 +134,7 @@ export default {
         component: UtilisateurEditPopup,
         props: {
           utilisateur: {
-            permissionId: 'defaut',
+            role: 'defaut',
             entreprises: [],
             administrations: []
           },

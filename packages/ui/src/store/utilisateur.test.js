@@ -32,7 +32,6 @@ describe("état de l'utilisateur consulté", () => {
     utilisateur.state = {
       element: null,
       metas: {
-        permissions: [],
         entreprises: []
       },
       metasLoaded: false
@@ -78,10 +77,6 @@ describe("état de l'utilisateur consulté", () => {
 
   test('récupère les métas pour éditer un utilisateur', async () => {
     const apiMock = api.utilisateurMetas.mockResolvedValue({
-      permissions: [
-        { id: 'w', nom: 'granulats' },
-        { id: 'c', nom: 'carrières' }
-      ],
       entreprises: { elements: ['ent-1'] }
     })
 
@@ -89,10 +84,6 @@ describe("état de l'utilisateur consulté", () => {
 
     expect(apiMock).toHaveBeenCalled()
     expect(store.state.utilisateur.metas).toEqual({
-      permissions: [
-        { id: 'w', nom: 'granulats' },
-        { id: 'c', nom: 'carrières' }
-      ],
       entreprises: ['ent-1']
     })
     expect(mutations.loadingRemove).toHaveBeenCalled()

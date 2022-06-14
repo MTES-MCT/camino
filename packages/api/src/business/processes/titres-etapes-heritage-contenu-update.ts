@@ -15,7 +15,7 @@ import {
 } from '../utils/titre-etapes-sort'
 
 const titresEtapesHeritageContenuUpdate = async (
-  user: Omit<IUtilisateur, 'permission'>,
+  user: IUtilisateur,
   titresDemarchesIds?: string[]
 ) => {
   console.info()

@@ -110,10 +110,14 @@
 </template>
 
 <script>
-import { permissionsCheck } from '@/utils'
-
 import TitreTypeSelect from './_common/titre-type-select.vue'
 import Icon from '@/components/_ui/icon.vue'
+import {
+  isAdministrationAdmin,
+  isAdministrationEditeur,
+  isEntreprise,
+  isSuper
+} from 'camino-common/src/roles'
 
 export default {
   components: { Icon, TitreTypeSelect },
@@ -138,15 +142,19 @@ export default {
     },
 
     entrepriseCheck() {
-      return permissionsCheck(this.user, ['entreprise'])
+      return isEntreprise(this.user)
     },
 
     domaines() {
-      if (permissionsCheck(this.user, ['super', 'admin', 'editeur'])) {
+      if (
+        isSuper(this.user) ||
+        isAdministrationAdmin(this.user) ||
+        isAdministrationEditeur(this.user)
+      ) {
         return this.$store.state.user.metas.domaines
       }
 
-      if (permissionsCheck(this.user, ['entreprise'])) {
+      if (isEntreprise(this.user)) {
         return this.entreprise.titresTypes.reduce((domaines, tt) => {
           if (!domaines.find(({ id }) => tt.domaine.id === id)) {
             tt.domaine.titresTypes = []

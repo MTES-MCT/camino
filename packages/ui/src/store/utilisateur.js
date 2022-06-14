@@ -236,7 +236,6 @@ const mutations = {
 
   metasReset(state) {
     state.metas = {
-      permissions: [],
       entreprises: [],
       administrations: []
     }

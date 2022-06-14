@@ -140,10 +140,7 @@
           <h4 class="px-m pt mb-0">Documents</h4>
           <Documents
             :boutonModification="entreprise.modification"
-            :boutonSuppression="
-              entreprise.modification &&
-              permissionsCheck(user, ['super', 'admin', 'editeur'])
-            "
+            :boutonSuppression="canDeleteDocument(entreprise, user)"
             :route="route"
             :documents="entreprise.documents"
             :etiquette="entreprise.modification"
@@ -187,7 +184,7 @@
       <TitresTable :titres="amodiataireTitres" />
     </div>
 
-    <div v-if="permissionsCheck(user, ['super'])" class="mb-xxl">
+    <div v-if="isSuper(user)" class="mb-xxl">
       <div class="line-neutral width-full mb-xxl" />
       <h2>Permissions</h2>
 
@@ -204,7 +201,7 @@ import TitresTable from './titres/table.vue'
 import EntrepriseEditPopup from './entreprise/edit-popup.vue'
 import DocumentAddButton from './document/button-add.vue'
 import Documents from './documents/list.vue'
-import { dateFormat, permissionsCheck } from '../utils/index'
+import { dateFormat } from '../utils/index'
 import EntreprisePermission from './entreprise/permissions.vue'
 import EntrepriseFiscalite from './entreprise/pure-entreprise-fiscalite.vue'
 
@@ -213,6 +210,11 @@ import {
   utilisateursLignesBuild
 } from './utilisateurs/table'
 import { fiscaliteVisible } from 'camino-common/src/fiscalite'
+import {
+  isAdministrationAdmin,
+  isAdministrationEditeur,
+  isSuper
+} from 'camino-common/src/roles'
 
 export default {
   components: {
@@ -345,8 +347,17 @@ export default {
       return dateFormat(date)
     },
 
-    permissionsCheck(user, permissions) {
-      return permissionsCheck(user, permissions)
+    isSuper(user) {
+      return isSuper(user)
+    },
+
+    canDeleteDocument(entreprise, user) {
+      return (
+        entreprise.modification &&
+        (isSuper(user) ||
+          isAdministrationAdmin(user) ||
+          isAdministrationEditeur(user))
+      )
     }
   }
 }

@@ -12,11 +12,11 @@ import {
   utilisateurDeconnecter
 } from '../api/utilisateurs'
 
-import { permissionsCheck } from '../utils'
 import tiles from '../utils/map-tiles'
 
 import router from '../router'
 import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
+import { isAdministration, isSuper } from 'camino-common/src/roles'
 
 const state = {
   element: null,
@@ -331,7 +331,7 @@ const getters = {
   },
 
   userIsAdmin(state) {
-    return permissionsCheck(state.element, ['super', 'admin', 'editeur'])
+    return isAdministration(state.element)
   },
 
   isONF(state, getters) {
@@ -352,7 +352,7 @@ const getters = {
   },
 
   userIsSuper(state) {
-    return permissionsCheck(state.element, ['super'])
+    return isSuper(state.element)
   }
 }
 
