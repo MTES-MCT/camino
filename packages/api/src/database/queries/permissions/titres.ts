@@ -263,7 +263,7 @@ const titresQueryModify = (
   }
 
   // masque les administrations associées
-  if (!user || !(isSuper(user) || isAdministrationEditeur(user))) {
+  if (!(isSuper(user) || isAdministrationEditeur(user)) {
     q.modifyGraph('administrationsGestionnaires', b => {
       b.whereRaw('?? is not true', ['associee'])
     })
