@@ -23,7 +23,7 @@ const titreUpdationValidate = async (
   }
 
   // Seuls les utilisateurs super ont le droit de modifier les administrations directement liées sur le titre
-  if (!user || !isSuper(user)) {
+  if (!isSuper(user)) {
     const titreAdministrationsIdsOld = titreOld.titresAdministrations
       ? titreOld.titresAdministrations.map(({ id }) => id)
       : []
