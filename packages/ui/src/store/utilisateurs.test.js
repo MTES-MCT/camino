@@ -53,10 +53,7 @@ describe('liste des utilisateurs', () => {
       total: 4
     }
 
-    store.commit('utilisateurs/metasSet', {
-      entreprises,
-      truc: {}
-    })
+    store.commit('utilisateurs/metasSet', entreprises)
 
     expect(store.state.utilisateurs.metas).toEqual({
       entreprise: entreprises.elements
@@ -72,7 +69,7 @@ describe('liste des utilisateurs', () => {
       {
         id: 'entrepriseIds',
         type: 'strings',
-        values: ['fr-513863217', 'fr-821136710']
+        values: []
       }
     ])
   })
