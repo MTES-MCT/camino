@@ -196,7 +196,7 @@ const etapesTypesQueryModify = (
   }
 
   // types d'étapes visibles pour les entreprises et utilisateurs déconnectés ou défaut
-  if (!user || isDefault(user) || isEntreprise(user)) {
+  if (isDefault(user) || isEntreprise(user)) {
     q.where(b => {
       // types d'étapes visibles en tant que titulaire ou amodiataire
       if (isEntreprise(user)) {
