@@ -80,7 +80,7 @@ const utilisateursTitres = {
 }
 
 const administrations = {
-  graph: `[utilisateur, titresTypes.${titresTypes.graph}, titresTypesTitresStatuts, titresTypesEtapesTypes]`,
+  graph: `[utilisateurs, titresTypes.${titresTypes.graph}, titresTypesTitresStatuts, titresTypesEtapesTypes]`,
   update: {
     insertMissing: true
   }

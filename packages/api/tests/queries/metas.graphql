@@ -8,6 +8,15 @@ query {
   statuts {
     ...statut
   }
+  devises {
+    ...devise
+  }
+  unites {
+    ...unite
+  }
+  geoSystemes {
+    ...geosysteme
+  }
 }
 
 fragment type on TitreTypeType {
@@ -24,4 +33,21 @@ fragment statut on TitreStatut {
   id
   nom
   couleur
+}
+
+fragment devise on Devise {
+  id
+  nom
+}
+
+fragment unite on Unite {
+  id
+  nom
+}
+
+fragment geosysteme on GeoSysteme {
+  id
+  nom
+  zone
+  uniteId
 }

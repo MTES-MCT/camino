@@ -653,7 +653,7 @@ const etapeTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!isSuper(user)) {
+    if (!user || !isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 

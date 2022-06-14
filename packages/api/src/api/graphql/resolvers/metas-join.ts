@@ -408,7 +408,7 @@ const titreTypeDemarcheTypeEtapeTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!isSuper(user)) {
+    if (!user || !isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -443,7 +443,7 @@ const titreTypeDemarcheTypeEtapeTypeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!isSuper(user)) {
+    if (!user || !isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 

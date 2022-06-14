@@ -38,12 +38,11 @@ const titreDemandeCreer = async (
     const user = await userGet(context.user?.id)
 
     if (
-      !(
-        isSuper(user) ||
-        isAdministrationAdmin(user) ||
-        isAdministrationEditeur(user) ||
-        isEntreprise(user)
-      )
+      !user ||
+      (!isSuper(user) &&
+        !isAdministrationAdmin(user) &&
+        !isAdministrationEditeur(user) &&
+        !isEntreprise(user))
     ) {
       throw new Error('permissions insuffisantes')
     }
