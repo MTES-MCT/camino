@@ -449,7 +449,7 @@ describe("état de l'utilisateur connecté", () => {
     ${'editeur'}    | ${true}
     ${'entreprise'} | ${false}
     ${undefined}    | ${false}
-  `('ajoute des jours à une date', ({ role, isAdmin }) => {
+  `('ajoute un utilisateur au store avec le role $role et vérifie si il est admin $isAdmin', ({ role, isAdmin }) => {
     store.commit('user/set', {
       id: 66,
       prenom: 'rene',
