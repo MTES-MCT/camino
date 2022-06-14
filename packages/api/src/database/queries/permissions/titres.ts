@@ -172,7 +172,7 @@ const titresQueryModify = (
   // - ou l'utilisateur n'est pas super
   // alors il ne voit que les titres publics et ceux auxquels son entité est reliée
 
-  if (!user || !isSuper(user)) {
+  if (!isSuper(user)) {
     q.where(b => {
       b.where('titres.publicLecture', true)
 
