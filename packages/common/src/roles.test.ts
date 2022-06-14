@@ -11,6 +11,7 @@ import {
 test('role check', () => {
   expect(isSuper({ role: 'super' })).toBe(true)
   expect(isSuper({ role: 'entreprise' })).toBe(false)
+  expect(isSuper(undefined)).toBe(false)
   expect(isAdministration({ role: 'admin' })).toBe(true)
   expect(isAdministration({ role: 'editeur' })).toBe(true)
   expect(isAdministration({ role: 'lecteur' })).toBe(true)
