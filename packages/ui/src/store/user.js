@@ -16,7 +16,12 @@ import tiles from '../utils/map-tiles'
 
 import router from '../router'
 import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
-import { isAdministration, isSuper } from 'camino-common/src/roles'
+import {
+  isAdministration,
+  isAdministrationAdmin,
+  isAdministrationEditeur,
+  isSuper
+} from 'camino-common/src/roles'
 
 const state = {
   element: null,
@@ -331,7 +336,11 @@ const getters = {
   },
 
   userIsAdmin(state) {
-    return isAdministration(state.element)
+    return (
+      isSuper(state.element) ||
+      isAdministrationAdmin(state.element) ||
+      isAdministrationEditeur(state.element)
+    )
   },
 
   isONF(state, getters) {

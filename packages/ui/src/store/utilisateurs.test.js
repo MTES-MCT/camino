@@ -63,7 +63,7 @@ describe('liste des utilisateurs', () => {
     })
 
     expect(store.state.utilisateurs.definitions).toEqual([
-      { id: 'roles', type: 'strings', values: ['admin', 'editeur'] },
+      { id: 'roles', type: 'strings', values: [] },
       {
         id: 'administrationIds',
         type: 'strings',
