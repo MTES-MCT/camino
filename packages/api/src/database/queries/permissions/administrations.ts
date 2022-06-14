@@ -75,14 +75,13 @@ const administrationsQueryModify = (
   if (
     isSuper(user) ||
     (user?.administrations?.some(a => a.typeId === 'min') &&
-      isAdministrationAdmin(user)) ||
-    isAdministrationEditeur(user)
+      (isAdministrationAdmin(user) || isAdministrationEditeur(user)))
   ) {
     // Utilisateur super ou membre de ministère (admin ou éditeur) : tous les droits
     q.select(raw('true').as('emailsModification'))
   } else if (
-    (user?.administrations?.length && isAdministrationAdmin(user)) ||
-    isAdministrationEditeur(user)
+    user?.administrations?.length &&
+    (isAdministrationAdmin(user) || isAdministrationEditeur(user))
   ) {
     // Membre d'une DREAL/DEAL vis-à-vis de la DREAL elle-même,
     // ou d'un DREAL/DEAL vis-à-vis d'une administration qui dépend d'elles
