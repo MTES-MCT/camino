@@ -24,7 +24,7 @@ const documentsQueryModify = (
     q.leftJoinRelated('activite.titre.[titulaires, amodiataires]')
   }
 
-  if (!user || isDefault(user) || isEntreprise(user)) {
+  if (isDefault(user) || isEntreprise(user)) {
     q.where(b => {
       b.orWhere('documents.publicLecture', true)
 
