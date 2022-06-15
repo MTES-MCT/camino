@@ -10,18 +10,36 @@
       <LoadingElement v-slot="{ item }" :data="data" class="fiscalite-value">{{
         currencyFormat(item.redevanceDepartementale)
       }}</LoadingElement>
-      <div>c. Taxe minière sur l’or de Guyane</div>
-      <LoadingElement v-slot="{ item }" :data="data" class="fiscalite-value">{{
-        currencyFormat(item.taxeAurifereGuyane)
-      }}</LoadingElement>
-      <div>d. Montant total des investissements déduits (1)</div>
-      <LoadingElement v-slot="{ item }" :data="data" class="fiscalite-value">{{
-        currencyFormat(item.totalInvestissementsDeduits)
-      }}</LoadingElement>
-      <div>e. Montant net de taxe minière sur l’or de Guyane (c-d)</div>
-      <LoadingElement v-slot="{ item }" :data="data" class="fiscalite-value">{{
-        currencyFormat(montantNetTaxeAurifere(item))
-      }}</LoadingElement>
+      <template
+        v-if="data.status === 'LOADED' && isFiscaliteGuyane(data.value)"
+      >
+        <div>c. Taxe minière sur l’or de Guyane</div>
+        <LoadingElement
+          v-slot="{ item }"
+          :data="data"
+          class="fiscalite-value"
+          >{{ currencyFormat(item.guyane.taxeAurifereBrute) }}</LoadingElement
+        >
+        <div>
+          d. Investissements déductibles de la taxe perçue pour la région de
+          Guyane
+        </div>
+        <LoadingElement
+          v-slot="{ item }"
+          :data="data"
+          class="fiscalite-value"
+          >{{
+            currencyFormat(item.guyane.totalInvestissementsDeduits)
+          }}</LoadingElement
+        >
+        <div>e. Montant net de taxe minière sur l’or de Guyane (c-d)</div>
+        <LoadingElement
+          v-slot="{ item }"
+          :data="data"
+          class="fiscalite-value"
+          >{{ currencyFormat(montantNetTaxeAurifere(item)) }}</LoadingElement
+        >
+      </template>
       <div>f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%</div>
       <LoadingElement v-slot="{ item }" :data="data" class="fiscalite-value">{{
         currencyFormat(fraisGestion(item))
@@ -36,7 +54,7 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { Fiscalite } from 'camino-common/src/fiscalite'
+import { Fiscalite, isFiscaliteGuyane } from 'camino-common/src/fiscalite'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { AsyncData } from '@/api/client-rest'
 
@@ -60,12 +78,13 @@ onMounted(async () => {
 })
 
 const fraisGestion = (fiscalite: Fiscalite) =>
-  fiscalite.redevanceDepartementale +
-  fiscalite.redevanceCommunale +
-  montantNetTaxeAurifere(fiscalite) * 0.08
+  (fiscalite.redevanceDepartementale +
+    fiscalite.redevanceCommunale +
+    montantNetTaxeAurifere(fiscalite)) *
+  0.08
 
 const montantNetTaxeAurifere = (fiscalite: Fiscalite) =>
-  fiscalite.taxeAurifereGuyane - fiscalite.totalInvestissementsDeduits
+  isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.taxeAurifere : 0
 
 const sommeAPayer = (fiscalite: Fiscalite) =>
   fiscalite.redevanceCommunale +

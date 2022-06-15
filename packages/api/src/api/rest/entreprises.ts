@@ -2,7 +2,12 @@ import { userGet } from '../../database/queries/utilisateurs'
 
 import express from 'express'
 import { IEntreprise, IUser } from '../../types'
-import { Fiscalite, fiscaliteVisible } from 'camino-common/src/fiscalite'
+import {
+  Fiscalite,
+  FiscaliteFrance,
+  FiscaliteGuyane,
+  fiscaliteVisible
+} from 'camino-common/src/fiscalite'
 import { constants } from 'http2'
 import {
   apiOpenfiscaFetch,
@@ -20,7 +25,7 @@ import { SubstancesFiscales } from 'camino-common/src/substance'
 // VisibleForTesting
 export const bodyBuilder = (
   activites: Pick<TitresActivites, 'titreId' | 'contenu'>[],
-  titres: Pick<Titres, 'substances' | 'communes' | 'id'>[],
+  titres: Pick<Titres, 'substances' | 'communes' | 'id' | 'pays'>[],
   annee: number,
   entreprise: Pick<IEntreprise, 'categorie' | 'nom'>
 ) => {
@@ -38,6 +43,14 @@ export const bodyBuilder = (
       throw new Error(`le titre ${activite.titreId} n’est pas chargé`)
     }
 
+    if (!titre.pays?.length) {
+      throw new Error(
+        `les pays du titre ${activite.titreId} ne sont pas chargés`
+      )
+    }
+
+    const titreGuyannais = titre.pays.some(pays => pays.id === 'GF')
+
     if (!titre.substances) {
       throw new Error(
         `les substances du titre ${activite.titreId} ne sont pas chargées`
@@ -45,10 +58,11 @@ export const bodyBuilder = (
     }
 
     if (titre.substances.length > 0 && activite.contenu) {
-      // TODO Laure, on fait bien les calculs que sur la substance principale ?
-      // Pour le titre m-px-saint-pierre-2013 il n'y a pas d'ordre aux substances, il y'a or et substances connexes
-      // d'après le code, il y'a un tri par ordre alphabétique, pas terrible non ?
-      // plus inquiétant, cette étape à 11 substances non triées : EZtUs2fefrDZUw0wLAUK42p8
+      if (!titre.substances[0].legales) {
+        throw new Error(
+          `les substances légales des substances du titre ${activite.titreId} ne sont pas chargées`
+        )
+      }
 
       const substanceLegalesWithFiscales = titre.substances
         .flatMap(s => s.legales)
@@ -103,9 +117,12 @@ export const bodyBuilder = (
               redevance_departementale_des_mines_aurifere_kg: {
                 [annee]: null
               }
-              // TODO taxe guyane
-              // TODO Sandra - elle ne fonctionne pas via OPENFISCA
-              // TODO Laure - on calcule cette taxe que pour les titres Guyannais ?
+            }
+
+            if (substancesFiscale.id === 'auru' && titreGuyannais) {
+              body.articles[articleId].taxe_guyane_brute = { [annee]: null }
+              body.articles[articleId].taxe_guyane_deduction = { [annee]: null }
+              body.articles[articleId].taxe_guyane = { [annee]: null }
             }
 
             if (!Object.prototype.hasOwnProperty.call(body.titres, titre.id)) {
@@ -114,12 +131,11 @@ export const bodyBuilder = (
                   [anneePrecedente]: commune.id
                 },
                 operateur: {
-                  // TODO Sandra : ça sert à quoi ?
                   [anneePrecedente]: entreprise.nom
                 },
                 // TODO C'est dans les rapports trimestriels (GRP)
                 investissement: {
-                  [anneePrecedente]: '1'
+                  [anneePrecedente]: '10000'
                 },
                 categorie: {
                   [anneePrecedente]:
@@ -147,39 +163,58 @@ export const bodyBuilder = (
   return body
 }
 
+type Reduced =
+  | { guyane: true; fiscalite: FiscaliteGuyane }
+  | { guyane: false; fiscalite: FiscaliteFrance }
 // VisibleForTesting
-export const responseExtractor = (result: OpenfiscaResponse, annee: number) => {
-  const redevances: Fiscalite = Object.values(result.articles).reduce(
+export const responseExtractor = (
+  result: OpenfiscaResponse,
+  annee: number
+): Fiscalite => {
+  const redevances: Reduced = Object.values(result.articles).reduce<Reduced>(
     (acc, article) => {
       // TODO Sandra, remplacer redevance_communale_des_mines_aurifere_kg par redevance_communale_des_mines_substance_unite
-      acc.redevanceCommunale +=
+      acc.fiscalite.redevanceCommunale +=
         article.redevance_communale_des_mines_aurifere_kg?.[annee] ?? 0
-      acc.redevanceDepartementale +=
+      acc.fiscalite.redevanceDepartementale +=
         article.redevance_departementale_des_mines_aurifere_kg?.[annee] ?? 0
 
-      // TODO Sandra, taxeAurifereGuyane et totalInvestissementsDeduits
+      if (!acc.guyane && 'taxe_guyane_brute' in article) {
+        acc = {
+          guyane: true,
+          fiscalite: {
+            ...acc.fiscalite,
+            guyane: {
+              taxeAurifereBrute: 0,
+              taxeAurifere: 0,
+              totalInvestissementsDeduits: 0
+            }
+          }
+        }
+      }
+      if (acc.guyane) {
+        acc.fiscalite.guyane.taxeAurifereBrute +=
+          article.taxe_guyane_brute?.[annee] ?? 0
+        acc.fiscalite.guyane.totalInvestissementsDeduits +=
+          article.taxe_guyane_deduction?.[annee] ?? 0
+        acc.fiscalite.guyane.taxeAurifere += article.taxe_guyane?.[annee] ?? 0
+      }
+
       return acc
     },
     {
-      redevanceCommunale: 0,
-      redevanceDepartementale: 0,
-      taxeAurifereGuyane: 0,
-      totalInvestissementsDeduits: 0
+      guyane: false,
+      fiscalite: { redevanceCommunale: 0, redevanceDepartementale: 0 }
     }
   )
 
-  return redevances
+  return redevances.fiscalite
 }
 
 export const fiscalite = async (
   req: express.Request<{ entrepriseId?: string }>,
   res: CustomResponse<Fiscalite>
 ) => {
-  // TODO 2022-06-09:
-  // regarder si on a des activités multi substances avec plusieurs productions --> c'est bon
-  // récupérer les investissements dans les rapports trimestriels
-  // retourner les infos de guyane que si il y'a au moins un titre guyanais (ne pas requêter openfisca pour les investissements dans ce cas là)
-
   const userId = (req.user as unknown as IUser | undefined)?.id
 
   const user = await userGet(userId)
@@ -204,7 +239,12 @@ export const fiscalite = async (
 
     const titres = await titresGet(
       { entreprisesIds: [entrepriseId] },
-      { fields: { substances: { id: {} }, communes: { id: {} } } },
+      {
+        fields: {
+          substances: { legales: { id: {} } },
+          communes: { departement: { region: { pays: { id: {} } } } }
+        }
+      },
       user
     )
 
@@ -234,9 +274,7 @@ export const fiscalite = async (
     } else {
       res.json({
         redevanceCommunale: 0,
-        redevanceDepartementale: 0,
-        taxeAurifereGuyane: 0,
-        totalInvestissementsDeduits: 0
+        redevanceDepartementale: 0
       })
     }
   }
