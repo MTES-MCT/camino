@@ -4,6 +4,7 @@ export const ROLES = [
   'editeur',
   'lecteur',
   'entreprise',
+  'bureau d’études',
   'defaut'
 ] as const
 export type Role = typeof ROLES[number]
@@ -23,6 +24,8 @@ export const isAdministrationLecteur = (user: User) =>
   userPermissionCheck(user, 'lecteur')
 export const isEntreprise = (user: User) =>
   userPermissionCheck(user, 'entreprise')
+export const isBureauDEtudes = (user: User) =>
+  userPermissionCheck(user, 'bureau d’études')
 export const isDefault = (user: User) =>
   !user || userPermissionCheck(user, 'defaut')
 

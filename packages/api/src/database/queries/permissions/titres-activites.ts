@@ -18,7 +18,6 @@ import {
   isAdministration,
   isAdministrationAdmin,
   isAdministrationEditeur,
-  isDefault,
   isEntreprise,
   isSuper
 } from 'camino-common/src/roles'
@@ -109,7 +108,7 @@ const titreActivitesCount = (
       titresActivitesCountQuery.as('activitesCountJoin'),
       raw('?? = ??', ['activitesCountJoin.titreId', 'titres.id'])
     )
-  } else if (isDefault(user)) {
+  } else {
     // les utilisateurs non-authentifiés ou défaut ne peuvent voir aucune activité
     activiteStatuts.forEach(({ name }) => {
       q.select(raw('0').as(name))

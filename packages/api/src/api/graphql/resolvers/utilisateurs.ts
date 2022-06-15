@@ -48,7 +48,8 @@ import {
   Role,
   isEntreprise,
   isAdministration,
-  isAdministrationAdmin
+  isAdministrationAdmin,
+  isBureauDEtudes
 } from 'camino-common/src/roles'
 
 const TOKEN_TTL = '5m'
@@ -367,7 +368,7 @@ const utilisateurCreer = async (
       utilisateur.administrations = []
     }
 
-    if (!isEntreprise(utilisateur)) {
+    if (!isEntreprise(utilisateur) || !isBureauDEtudes(utilisateur)) {
       utilisateur.entreprises = []
     }
 
@@ -500,7 +501,7 @@ const utilisateurModifier = async (
       utilisateur.administrations = []
     }
 
-    if (!isEntreprise(utilisateur)) {
+    if (!isEntreprise(utilisateur) || !isBureauDEtudes(utilisateur)) {
       utilisateur.entreprises = []
     }
 

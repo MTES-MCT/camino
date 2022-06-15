@@ -66,7 +66,7 @@ import { geojsonFeatureMultiPolygon } from '../../../tools/geojson'
 import { idGenerate } from '../../../database/models/_format/id-create'
 import fileRename from '../../../tools/file-rename'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find'
-import { isEntreprise } from 'camino-common/src/roles'
+import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 
 const statutIdAndDateGet = (
   etape: ITitreEtape,
@@ -81,7 +81,7 @@ const statutIdAndDateGet = (
     }
 
     result.statutId = 'fai'
-    if (isEntreprise(user)) {
+    if (isEntreprise(user) || isBureauDEtudes(user)) {
       result.date = dateFormat(new Date(), 'yyyy-mm-dd')
     }
   } else if (etape.typeId === 'mfr' && !etape.statutId) {

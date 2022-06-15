@@ -1,6 +1,10 @@
 import { IUtilisateur, IUtilisateurCreation } from '../../types'
 import { emailCheck } from '../../tools/email-check'
-import { isAdministration, isEntreprise } from 'camino-common/src/roles'
+import {
+  isAdministration,
+  isBureauDEtudes,
+  isEntreprise
+} from 'camino-common/src/roles'
 
 const utilisateurEditionCheck = (
   utilisateur: IUtilisateur | IUtilisateurCreation
@@ -23,6 +27,7 @@ const utilisateurEditionCheck = (
 
   if (
     !isEntreprise(utilisateur) &&
+    !isBureauDEtudes(utilisateur) &&
     utilisateur.entreprises &&
     utilisateur.entreprises.length
   ) {

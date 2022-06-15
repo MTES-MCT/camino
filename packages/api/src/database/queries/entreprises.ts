@@ -23,7 +23,8 @@ import {
   isSuper,
   isEntreprise,
   isAdministrationAdmin,
-  isAdministrationEditeur
+  isAdministrationEditeur,
+  isBureauDEtudes
 } from 'camino-common/src/roles'
 
 const entreprisesFiltersQueryModify = (
@@ -206,7 +207,7 @@ const titreDemandeEntreprisesGet = async (
     return entreprisesGet({ archive: false }, { fields }, user)
   }
 
-  if (isEntreprise(user)) {
+  if (isEntreprise(user) || isBureauDEtudes(user)) {
     const utilisateur = await utilisateurGet(
       user.id,
       { fields: { entreprises: fieldsEntreprisesTitresCreationAdd(fields) } },

@@ -24,6 +24,8 @@ import {
   isAdministration,
   isAdministrationAdmin,
   isAdministrationEditeur,
+  isAdministrationLecteur,
+  isBureauDEtudes,
   isDefault,
   isEntreprise,
   isSuper
@@ -196,10 +198,10 @@ const etapesTypesQueryModify = (
   }
 
   // types d'étapes visibles pour les entreprises et utilisateurs déconnectés ou défaut
-  if (isDefault(user) || isEntreprise(user)) {
+  if (isDefault(user) || isEntreprise(user) || isBureauDEtudes(user)) {
     q.where(b => {
       // types d'étapes visibles en tant que titulaire ou amodiataire
-      if (isEntreprise(user)) {
+      if (isEntreprise(user) || isBureauDEtudes(user)) {
         b.orWhere('td.entreprisesLecture', true)
       }
 
@@ -226,7 +228,7 @@ const etapesTypesQueryModify = (
     } else {
       q.select(raw('false').as('etapesCreation'))
     }
-  } else if (isEntreprise(user)) {
+  } else if (isEntreprise(user) || isBureauDEtudes(user)) {
     if (titreEtapeId && user?.entreprises?.length) {
       const etapesCreationQuery = entreprisesEtapesTypesPropsQuery(
         user.entreprises.map(({ id }) => id)
@@ -254,8 +256,10 @@ export const demarchesCreationQuery = (
   if (isSuper(user)) {
     demarchesCreation = raw('true')
   } else if (
-    isAdministration(user) &&
-    user?.administrations?.length &&
+    (isAdministrationEditeur(user) ||
+      isAdministrationLecteur(user) ||
+      isAdministrationAdmin(user)) &&
+    user.administrations?.length &&
     (titreId || titreIdAlias)
   ) {
     const titresModificationQuery =
@@ -280,7 +284,10 @@ export const demarchesCreationQuery = (
 
 const demarchesTypesQueryModify = (
   q: QueryBuilder<DemarchesTypes, DemarchesTypes | DemarchesTypes[]>,
-  user: Pick<IUtilisateur, 'role' | 'administrations'> | null | undefined,
+  user:
+    | Pick<IUtilisateur, 'role' | 'administrations' | 'id'>
+    | null
+    | undefined,
   { titreId, titreIdAlias }: { titreId?: string; titreIdAlias?: string } = {}
 ): void => {
   q.select('demarchesTypes.*')

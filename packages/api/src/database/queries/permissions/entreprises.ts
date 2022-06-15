@@ -15,6 +15,7 @@ import { documentsQueryModify } from './documents'
 import {
   isAdministrationAdmin,
   isAdministrationEditeur,
+  isBureauDEtudes,
   isEntreprise,
   isSuper
 } from 'camino-common/src/roles'
@@ -31,7 +32,7 @@ const entreprisesQueryModify = (
     isAdministrationEditeur(user)
   ) {
     q.select(raw('true').as('modification'))
-  } else if (isEntreprise(user) && user?.entreprises?.length) {
+  } else if (isEntreprise(user) || isBureauDEtudes(user)) {
     const utilisateurEntreprise = Utilisateurs.query().leftJoin(
       'utilisateurs__entreprises as u_e',
       b => {
