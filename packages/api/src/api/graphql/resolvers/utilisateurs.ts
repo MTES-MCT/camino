@@ -368,7 +368,7 @@ const utilisateurCreer = async (
       utilisateur.administrations = []
     }
 
-    if (!isEntreprise(utilisateur) || !isBureauDEtudes(utilisateur)) {
+    if (!isEntreprise(utilisateur) && !isBureauDEtudes(utilisateur)) {
       utilisateur.entreprises = []
     }
 
