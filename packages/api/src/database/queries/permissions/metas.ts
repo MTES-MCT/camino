@@ -284,10 +284,7 @@ export const demarchesCreationQuery = (
 
 const demarchesTypesQueryModify = (
   q: QueryBuilder<DemarchesTypes, DemarchesTypes | DemarchesTypes[]>,
-  user:
-    | Pick<IUtilisateur, 'role' | 'administrations' | 'id'>
-    | null
-    | undefined,
+  user: Pick<IUtilisateur, 'role' | 'administrations'> | null | undefined,
   { titreId, titreIdAlias }: { titreId?: string; titreIdAlias?: string } = {}
 ): void => {
   q.select('demarchesTypes.*')

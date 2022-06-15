@@ -428,7 +428,7 @@ describe('titresQueryModify', () => {
       ${'default'}    | ${false}
     `(
       'Vérifie si un profil $role peut modifier un titre',
-      async ({ role, modification }) => {
+      async ({ role, modification }: { role: Role; modification: boolean }) => {
         await Titres.query().insert({
           nom: idGenerate(),
           statutId: 'val',
@@ -438,7 +438,8 @@ describe('titresQueryModify', () => {
         const q = Titres.query()
         q.select(
           titresModificationSelectQuery(q, {
-            role
+            role,
+            administrations: undefined
           }).as('modification')
         )
 

@@ -88,7 +88,8 @@ const user: IUtilisateur = {
   email: 'camino@beta.gouv.fr',
   nom: 'Camino',
   role: 'super',
-  dateCreation: '2022-05-12'
+  dateCreation: '2022-05-12',
+  administrations: undefined
 }
 
 test("envoie un email sur un octroi d'AEX", () => {

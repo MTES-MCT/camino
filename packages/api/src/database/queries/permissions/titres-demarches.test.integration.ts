@@ -68,7 +68,9 @@ describe('titresDemarchesQueryModify', () => {
         q.select(
           titreDemarcheSuppressionSelectQuery(
             'titresDemarches',
-            role ? { id: 'id', dateCreation: '', role } : undefined
+            role
+              ? { id: 'id', dateCreation: '', role, administrations: undefined }
+              : undefined
           ).as('suppression')
         )
         const titreDemarche = await q.findById(titreDemarcheId)
@@ -130,7 +132,9 @@ describe('titresDemarchesQueryModify', () => {
         q.select(
           titreDemarcheSuppressionSelectQuery(
             'titresDemarches',
-            role ? { id: '', dateCreation: '', role } : undefined
+            role
+              ? { id: '', dateCreation: '', role, administrations: undefined }
+              : undefined
           ).as('suppression')
         )
 

@@ -42,7 +42,10 @@ const utilisateursQueryModify = (
         >
       ).whereIn('administrations.id', administrationsIds)
     )
-  } else if (isEntreprise(user) || isBureauDEtudes(user)) {
+  } else if (
+    (isEntreprise(user) || isBureauDEtudes(user)) &&
+    user.entreprises?.length
+  ) {
     // un utilisateur entreprise
     // ne voit que les utilisateurs de son entreprise
     const entreprisesIds = user.entreprises.map(e => e.id)

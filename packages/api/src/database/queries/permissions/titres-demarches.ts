@@ -60,7 +60,10 @@ const titresDemarchesQueryModify = (
         )
 
         b.orWhereExists(administrationTitre)
-      } else if (isEntreprise(user) || isBureauDEtudes(user)) {
+      } else if (
+        (isEntreprise(user) || isBureauDEtudes(user)) &&
+        user.entreprises?.length
+      ) {
         const entreprisesIds = user.entreprises.map(e => e.id)
 
         b.orWhere(c => {

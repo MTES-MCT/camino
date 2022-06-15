@@ -178,7 +178,10 @@ const titresQueryModify = (
       b.where('titres.publicLecture', true)
 
       // si l'utilisateur est `entreprise`
-      if (isEntreprise(user) || isBureauDEtudes(user)) {
+      if (
+        (isEntreprise(user) || isBureauDEtudes(user)) &&
+        user.entreprises?.length
+      ) {
         const entreprisesIds = user.entreprises.map(e => e.id)
 
         b.orWhere(c => {
@@ -254,7 +257,10 @@ const titresQueryModify = (
     )
   }
 
-  if (isEntreprise(user) || isBureauDEtudes(user)) {
+  if (
+    (isEntreprise(user) || isBureauDEtudes(user)) &&
+    user.entreprises?.length
+  ) {
     if (demandeEnCours) {
       q.modify(
         titresConfidentielSelect,
