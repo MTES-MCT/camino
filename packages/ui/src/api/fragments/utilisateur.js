@@ -1,5 +1,4 @@
 import gql from 'graphql-tag'
-import { fragmentPermission } from './metas'
 import { fragmentEntreprises } from './entreprises'
 import { fragmentAdministrations } from './administrations'
 
@@ -17,9 +16,7 @@ const fragmentUtilisateur = gql`
     administrations {
       ...administrations
     }
-    permission {
-      ...permission
-    }
+    role
     newsletter
 
     modification
@@ -41,8 +38,6 @@ const fragmentUtilisateur = gql`
   ${fragmentEntreprises}
 
   ${fragmentAdministrations}
-
-  ${fragmentPermission}
 `
 
 export { fragmentUtilisateur }

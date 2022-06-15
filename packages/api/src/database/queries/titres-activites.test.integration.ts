@@ -47,9 +47,8 @@ describe('teste les requêtes sur les activités', () => {
     })
 
     const adminDGALN: IUtilisateur = {
-      permission: { id: 'admin', nom: 'admin', ordre: 1 },
       id: 'utilisateurId',
-      permissionId: 'admin',
+      role: 'admin',
       nom: 'utilisateurNom',
       email: 'utilisateurEmail',
       motDePasse: 'utilisateurMotdepasse',

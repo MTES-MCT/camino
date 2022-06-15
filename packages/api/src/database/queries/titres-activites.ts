@@ -20,7 +20,10 @@ import {
   titresActivitesQueryModify,
   titresActivitesPropsQueryModify
 } from './permissions/titres-activites'
-import { permissionCheck } from 'camino-common/src/permissions'
+import {
+  isAdministrationAdmin,
+  isAdministrationEditeur
+} from 'camino-common/src/roles'
 
 /**
  * Modifie la requête en fonction des paramètres de filtre
@@ -112,7 +115,7 @@ const titresActivitesFiltersQueryModify = (
 
 const titreActivitesQueryBuild = (
   { fields }: { fields?: IFields },
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   const graph = fields
     ? graphBuild(fieldsTitreAdd(fields), 'activite', fieldsFormat)
@@ -125,7 +128,7 @@ const titreActivitesQueryBuild = (
 
   // dans titresActivitesPropsQueryModify quand on est une administration on utilise les 3 colonnes suivantes pour une sous requête.
   if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur']) &&
+    (isAdministrationAdmin(user) || isAdministrationEditeur(user)) &&
     user?.administrations?.length
   ) {
     q.groupBy(
@@ -254,7 +257,7 @@ const titresActivitesGet = async (
     titresIds?: string[] | null
   },
   { fields }: { fields?: IFields },
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   const q = titreActivitesQueryBuild({ fields }, user)
 

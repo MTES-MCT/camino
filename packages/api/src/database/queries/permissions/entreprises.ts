@@ -12,23 +12,26 @@ import Documents from '../../models/documents'
 import { titresQueryModify } from './titres'
 import { utilisateursQueryModify } from './utilisateurs'
 import { documentsQueryModify } from './documents'
-import { permissionCheck } from 'camino-common/src/permissions'
-
-// import fileCreate from '../../../tools/file-create'
-// import { format } from 'sql-formatter'
+import {
+  isAdministrationAdmin,
+  isAdministrationEditeur,
+  isEntreprise,
+  isSuper
+} from 'camino-common/src/roles'
 
 const entreprisesQueryModify = (
   q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>,
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   q.select('entreprises.*')
 
-  if (permissionCheck(user?.permissionId, ['super', 'admin', 'editeur'])) {
-    q.select(raw('true').as('modification'))
-  } else if (
-    permissionCheck(user?.permissionId, ['entreprise']) &&
-    user?.entreprises?.length
+  if (
+    isSuper(user) ||
+    isAdministrationAdmin(user) ||
+    isAdministrationEditeur(user)
   ) {
+    q.select(raw('true').as('modification'))
+  } else if (isEntreprise(user) && user?.entreprises?.length) {
     const utilisateurEntreprise = Utilisateurs.query().leftJoin(
       'utilisateurs__entreprises as u_e',
       b => {
@@ -69,8 +72,6 @@ const entreprisesQueryModify = (
       user
     )
   })
-
-  // fileCreate('test.sql', format(q.toKnexQuery().toString()))
 
   return q
 }

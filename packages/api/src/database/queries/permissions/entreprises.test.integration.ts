@@ -18,7 +18,7 @@ afterAll(async () => {
 
 describe('entreprisesQueryModify', () => {
   test.each`
-    permission      | modification
+    role            | modification
     ${'super'}      | ${true}
     ${'admin'}      | ${true}
     ${'editeur'}    | ${true}
@@ -27,7 +27,7 @@ describe('entreprisesQueryModify', () => {
     ${'defaut'}     | ${false}
   `(
     "Vérifie l'écriture de la requête sur le droit 'modification' d'une entreprise",
-    async ({ permission, modification }) => {
+    async ({ role, modification }) => {
       await Utilisateurs.query().delete()
       await Entreprises.query().delete()
 
@@ -36,9 +36,9 @@ describe('entreprisesQueryModify', () => {
         nom: 'monEntrepriseNom'
       } as IEntreprise
 
-      const mockUser: Omit<IUtilisateur, 'permission'> = {
+      const mockUser: IUtilisateur = {
         id: '109f95',
-        permissionId: permission,
+        role,
         entreprises: [mockEntreprise1],
         email: 'email',
         motDePasse: 'motdepasse',

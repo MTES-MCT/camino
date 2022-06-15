@@ -15,11 +15,10 @@ describe('liste des utilisateurs', () => {
   beforeEach(() => {
     utilisateurs.state = {
       metas: {
-        permission: [],
         entreprise: []
       },
       definitions: [
-        { id: 'permissionIds', type: 'strings', values: [] },
+        { id: 'roles', type: 'strings', values: [] },
         { id: 'administrationIds', type: 'strings', values: [] },
         { id: 'entrepriseIds', type: 'strings', values: [] }
       ]
@@ -42,11 +41,6 @@ describe('liste des utilisateurs', () => {
   })
 
   test('enregistre les métas', () => {
-    const permissions = [
-      { id: 'admin', nom: 'Admin' },
-      { id: 'editeur', nom: 'Éditeur' }
-    ]
-
     const entreprisesElements = [
       {
         id: 'fr-513863217',
@@ -59,19 +53,14 @@ describe('liste des utilisateurs', () => {
       total: 4
     }
 
-    store.commit('utilisateurs/metasSet', {
-      permissions,
-      entreprises,
-      truc: {}
-    })
+    store.commit('utilisateurs/metasSet', entreprises)
 
     expect(store.state.utilisateurs.metas).toEqual({
-      permission: permissions,
       entreprise: entreprises.elements
     })
 
     expect(store.state.utilisateurs.definitions).toEqual([
-      { id: 'permissionIds', type: 'strings', values: ['admin', 'editeur'] },
+      { id: 'roles', type: 'strings', values: [] },
       {
         id: 'administrationIds',
         type: 'strings',
@@ -80,7 +69,7 @@ describe('liste des utilisateurs', () => {
       {
         id: 'entrepriseIds',
         type: 'strings',
-        values: ['fr-513863217', 'fr-821136710']
+        values: []
       }
     ])
   })

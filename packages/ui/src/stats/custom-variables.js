@@ -17,8 +17,8 @@ const visitUser = matomo => user => {
       })
     }
 
-    if (user.permission) {
-      matomo.setCustomVariable(5, 'permissionId', user.permission.id, 'visit')
+    if (user.role) {
+      matomo.setCustomVariable(5, 'role', user.role, 'visit')
     }
   }
 }

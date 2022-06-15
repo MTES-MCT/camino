@@ -13,7 +13,12 @@ import { utilisateursQueryModify } from './utilisateurs'
 import { administrationsActivitesTypesEmailsQueryModify } from './administrations-activites-types-emails'
 import Departements from '../../models/departements'
 import ActivitesTypes from '../../models/activites-types'
-import { permissionCheck } from 'camino-common/src/permissions'
+import {
+  isAdministration,
+  isAdministrationAdmin,
+  isAdministrationEditeur,
+  isSuper
+} from 'camino-common/src/roles'
 
 const departementsQuery = (
   administrationsIds: string[],
@@ -29,22 +34,19 @@ const departementsQuery = (
     .whereIn('adm.id', administrationsIds)
 
 const emailsLectureQuery = (
-  user: Omit<IUtilisateur, 'permission'> | null | undefined,
+  user: IUtilisateur | null | undefined,
   administrationAlias: string,
   administrationsIds: string[],
   administrationsIdsReplace: string[]
 ) => {
   if (
-    permissionCheck(user?.permissionId, ['super']) ||
+    isSuper(user) ||
     (user?.administrations?.some(a => a.typeId === 'min') &&
-      permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur']))
+      isAdministration(user))
   ) {
     // Utilisateur super ou membre de ministère (admin ou éditeur) : tous les droits
     return raw('true')
-  } else if (
-    user?.administrations?.length &&
-    permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur'])
-  ) {
+  } else if (user?.administrations?.length && isAdministration(user)) {
     return raw(
       `((??) OR (${administrationAlias}.id IN (${administrationsIdsReplace})))`,
       [
@@ -59,27 +61,27 @@ const emailsLectureQuery = (
 
 const administrationsQueryModify = (
   q: QueryBuilder<Administrations, Administrations | Administrations[]>,
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ): QueryBuilder<Administrations, Administrations | Administrations[]> => {
   q.select('administrations.*')
 
   const administrationsIds = user?.administrations?.map(a => a.id) || []
   const administrationsIdsReplace = administrationsIds.map(() => '?')
 
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (isSuper(user)) {
     q.select(raw('true').as('modification'))
   }
 
   if (
-    permissionCheck(user?.permissionId, ['super']) ||
+    isSuper(user) ||
     (user?.administrations?.some(a => a.typeId === 'min') &&
-      permissionCheck(user?.permissionId, ['admin', 'editeur']))
+      (isAdministrationAdmin(user) || isAdministrationEditeur(user)))
   ) {
     // Utilisateur super ou membre de ministère (admin ou éditeur) : tous les droits
     q.select(raw('true').as('emailsModification'))
   } else if (
     user?.administrations?.length &&
-    permissionCheck(user?.permissionId, ['admin', 'editeur'])
+    (isAdministrationAdmin(user) || isAdministrationEditeur(user))
   ) {
     // Membre d'une DREAL/DEAL vis-à-vis de la DREAL elle-même,
     // ou d'un DREAL/DEAL vis-à-vis d'une administration qui dépend d'elles

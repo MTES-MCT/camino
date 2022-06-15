@@ -49,7 +49,7 @@ describe('utilisateurModifier', () => {
       nom: 'test',
       email: 'test@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut',
+      role: 'defaut',
       dateCreation: '2022-05-12'
     })
 
@@ -86,7 +86,7 @@ describe('utilisateurModifier', () => {
       nom: 'test1',
       email: 'test1@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut',
+      role: 'defaut',
       dateCreation: '2022-05-12'
     })
 
@@ -96,7 +96,7 @@ describe('utilisateurModifier', () => {
       nom: 'test2',
       email: 'test2@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut',
+      role: 'defaut',
       dateCreation: '2022-05-12'
     })
 
@@ -170,7 +170,7 @@ describe('utilisateursCreer', () => {
           nom: 'test',
           email: 'test@camino.local',
           motDePasse: 'mot-de-passe',
-          permissionId: 'super'
+          role: 'super'
         }
       },
       'defaut'
@@ -209,7 +209,7 @@ describe('utilisateursCreer', () => {
           nom: 'test',
           email: 'test@camino.local',
           motDePasse: 'mot-de-passe',
-          permissionId: 'super'
+          role: 'super'
         }
       },
       'super'
@@ -249,7 +249,7 @@ describe('utilisateursCreer', () => {
           nom: 'test',
           email: 'test@camino.local',
           motDePasse: 'mot-de-passe',
-          permissionId: 'admin',
+          role: 'admin',
           administrations: [{ id: administration.id }]
         }
       },
@@ -277,8 +277,8 @@ describe('utilisateursCreer', () => {
       'super'
     )
 
-    expect(res.body.errors[0].message).toMatch(
-      /les permissions de cet utilisateur ne permettent pas de l'associer à une entreprise/
+    expect(res.body.errors[0].message).toBe(
+      "le rôle de cet utilisateur ne permet pas de l'associer à une entreprise"
     )
   })
 
@@ -293,7 +293,7 @@ describe('utilisateursCreer', () => {
           nom: 'test',
           email: 'test@camino.local',
           motDePasse: 'mot-de-passe',
-          permissionId: 'entreprise',
+          role: 'entreprise',
           entreprises: [{ id: 'entreprise' }]
         }
       },
@@ -323,7 +323,7 @@ describe('utilisateurSupprimer', () => {
       nom: 'test',
       email: 'test@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut',
+      role: 'defaut',
       dateCreation: '2022-05-12'
     })
 
@@ -352,7 +352,7 @@ describe('utilisateurSupprimer', () => {
       nom: 'test',
       email: 'user-to-delete@camino.local',
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut',
+      role: 'defaut',
       dateCreation: '2022-05-12'
     })
 
@@ -401,7 +401,7 @@ describe('utilisateurEmailModifier', () => {
       nom: 'test',
       email: oldUserEmail,
       motDePasse: 'mot-de-passe',
-      permissionId: 'defaut',
+      role: 'defaut',
       dateCreation: '2022-05-12'
     })
     const token = tokenCreate({ id: userId })

@@ -142,10 +142,10 @@ Retourne la liste des utilisateurs
 
 - `format` : format des données (`json`, `csv`, `xlsx` ou `ods`)
 - `ordre` : tri par ordre (`asc` : ascendant ou `desc` : descendant)
-- `colonne` : colonne sur laquelle se fait le tri (`nom`, `prenom`, `email`, `permission` ou `lien`)
+- `colonne` : colonne sur laquelle se fait le tri (`nom`, `prenom`, `email`, `role` ou `lien`)
 - `entrepriseIds` : liste d'entreprises des utilisateurs
 - `administrationIds` : liste d'administrations des utilisateurs
-- `permissionIds` : liste de permissions des utilisateurs
+- `roles` : liste de roles des utilisateurs
 - `noms` : noms des utilisateurs
 - `emails` : emails des utilisateurs
 

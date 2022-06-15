@@ -83,11 +83,11 @@ const etapeType = {
   publicLecture: true,
   entreprisesLecture: true
 }
-const user: Omit<IUtilisateur, 'permission'> = {
+const user: IUtilisateur = {
   id: 'super',
   email: 'camino@beta.gouv.fr',
   nom: 'Camino',
-  permissionId: 'super',
+  role: 'super',
   dateCreation: '2022-05-12'
 }
 

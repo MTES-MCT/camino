@@ -12,7 +12,7 @@ import {
   ADMINISTRATION_IDS,
   Administrations
 } from 'camino-common/src/administrations'
-import { PermissionId } from 'camino-common/src/permissions'
+import { Role } from 'camino-common/src/roles'
 
 jest.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -83,13 +83,13 @@ const demarcheCreate = async () => {
 describe('etapeCreer', () => {
   const etapeCreerQuery = queryImport('titre-etape-creer')
 
-  test.each([undefined, 'editeur' as PermissionId])(
+  test.each([undefined, 'editeur' as Role])(
     'ne peut pas créer une étape (utilisateur %s)',
-    async (permissionId: PermissionId | undefined) => {
+    async (role: Role | undefined) => {
       const res = await graphQLCall(
         etapeCreerQuery,
         { etape: { typeId: '', statutId: '', titreDemarcheId: '', date: '' } },
-        permissionId
+        role
       )
 
       expect(res.body.errors[0].message).toBe("la démarche n'existe pas")

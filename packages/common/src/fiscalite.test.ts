@@ -1,22 +1,21 @@
 import { fiscaliteVisible } from './fiscalite'
-import { PermissionId } from './permissions'
+import { Role } from './roles'
 
 // unskip une fois l'accès aux utilisateurs autorisé
 test.skip.each`
-  user                                                                          | visible
-  ${null}                                                                       | ${false}
-  ${undefined}                                                                  | ${false}
-  ${{ permissionId: 'defaut' }}                                                 | ${false}
-  ${{ permissionId: 'entreprise' }}                                             | ${false}
-  ${{ permissionId: 'entreprise', entreprises: [] }}                            | ${false}
-  ${{ permissionId: 'entreprise', entreprises: [{ id: '1' }] }}                 | ${false}
-  ${{ permissionId: 'entreprise', entreprises: [{ id: '1234' }] }}              | ${true}
-  ${{ permissionId: 'entreprise', entreprises: [{ id: '1' }, { id: '1234' }] }} | ${true}
-  ${{ permissionId: 'admin' }}                                                  | ${true}
-  ${{ permissionId: 'editeur' }}                                                | ${true}
-  ${{ permissionId: 'lecteur' }}                                                | ${true}
-  ${{ permissionId: 'super' }}                                                  | ${true}
-  ${{ permission: { id: 'super' } }}                                            | ${true}
+  user                                                                  | visible
+  ${null}                                                               | ${false}
+  ${undefined}                                                          | ${false}
+  ${{ role: 'defaut' }}                                                 | ${false}
+  ${{ role: 'entreprise' }}                                             | ${false}
+  ${{ role: 'entreprise', entreprises: [] }}                            | ${false}
+  ${{ role: 'entreprise', entreprises: [{ id: '1' }] }}                 | ${false}
+  ${{ role: 'entreprise', entreprises: [{ id: '1234' }] }}              | ${true}
+  ${{ role: 'entreprise', entreprises: [{ id: '1' }, { id: '1234' }] }} | ${true}
+  ${{ role: 'admin' }}                                                  | ${true}
+  ${{ role: 'editeur' }}                                                | ${true}
+  ${{ role: 'lecteur' }}                                                | ${true}
+  ${{ role: 'super' }}                                                  | ${true}
 `(
   'fiscaliteVisible',
   ({
@@ -26,8 +25,7 @@ test.skip.each`
     user:
       | {
           entreprises?: { id: string }[] | null
-          permissionId?: PermissionId
-          permission?: { id: PermissionId }
+          role: Role
         }
       | undefined
       | null

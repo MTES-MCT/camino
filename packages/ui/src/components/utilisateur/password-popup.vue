@@ -4,7 +4,7 @@
       <h2>Modification du mot de passe</h2>
     </template>
 
-    <div v-if="!permissionsCheck(user, 'super')">
+    <div v-if="needOldPassword(user)">
       <div class="tablet-blobs">
         <div class="mb tablet-blob-1-3 tablet-pt-s pb-s">
           <h5>Mot de passe actuel</h5>
@@ -76,8 +76,8 @@
 </template>
 
 <script>
-import { permissionsCheck } from '@/utils'
 import Popup from '../_ui/popup.vue'
+import { isSuper } from 'camino-common/src/roles'
 
 export default {
   name: 'CaminoUtilisateurPasswordPopup',
@@ -118,7 +118,7 @@ export default {
       return (
         this.motDePasseNouveau1 &&
         this.motDePasseNouveau2 &&
-        (this.permissionsCheck(this.user, 'super') || this.motDePasse)
+        (isSuper(this.user) || this.motDePasse)
       )
     }
   },
@@ -163,12 +163,8 @@ export default {
       this.$store.commit('popupMessagesRemove')
     },
 
-    permissionToggle(permission) {
-      this.utilisateur.permission = permission
-    },
-
-    permissionsCheck(user, permissions) {
-      return permissionsCheck(user, permissions)
+    needOldPassword(user) {
+      return !isSuper(user)
     }
   }
 }

@@ -1,40 +1,27 @@
 import { IUtilisateur, IUser } from '../../types'
 
-import { permissionCheck } from 'camino-common/src/permissions'
+import {
+  isAdministration,
+  isEntreprise,
+  isSuper
+} from 'camino-common/src/roles'
 
-const userFormat = (utilisateur: IUtilisateur | null) => {
+export const userFormat = (utilisateur: IUtilisateur | null) => {
   if (!utilisateur) return null
 
   const user = utilisateur as IUser
 
-  const hasPermissions = permissionCheck(user?.permissionId, [
-    'super',
-    'admin',
-    'editeur',
-    'lecteur',
-    'entreprise'
-  ])
+  const hasPermissions =
+    isSuper(user) || isAdministration(user) || isEntreprise(user)
 
   user.sections = {
-    travaux: permissionCheck(user?.permissionId, [
-      'admin',
-      'editeur',
-      'lecteur',
-      'super'
-    ]),
+    travaux: isSuper(user) || isAdministration(user),
     activites: hasPermissions,
-    administrations: permissionCheck(user?.permissionId, [
-      'super',
-      'admin',
-      'editeur',
-      'lecteur'
-    ]),
+    administrations: isSuper(user) || isAdministration(user),
     utilisateurs: hasPermissions,
-    metas: permissionCheck(user?.permissionId, ['super']),
-    journaux: permissionCheck(user?.permissionId, ['super'])
+    metas: isSuper(user),
+    journaux: isSuper(user)
   }
 
   return user
 }
-
-export { userFormat }

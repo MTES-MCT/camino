@@ -50,7 +50,7 @@
       </div>
     </div>
 
-    <template v-if="permissionsCheck(user, ['super'])">
+    <template v-if="isSuper(user)">
       <hr />
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
@@ -81,8 +81,8 @@
 </template>
 
 <script>
-import { permissionsCheck } from '@/utils'
 import Popup from '../_ui/popup.vue'
+import { isSuper } from 'camino-common/src/roles'
 
 export default {
   name: 'CaminoEntrepriseEditPopup',
@@ -145,8 +145,8 @@ export default {
       this.$store.commit('popupMessagesRemove')
     },
 
-    permissionsCheck(user, permissions) {
-      return permissionsCheck(user, permissions)
+    isSuper(user) {
+      return isSuper(user)
     }
   }
 }

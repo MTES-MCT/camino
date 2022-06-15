@@ -1,17 +1,19 @@
 import { utilisateurs, utilisateurMetas } from '../api/utilisateurs'
-import { listeActionsBuild, listeMutations } from './_liste-build'
+import {
+  listeActionsBuild,
+  listeMutationsWithDefaultState
+} from './_liste-build'
 
-const state = {
+const getDefaultState = () => ({
   elements: [],
   total: 0,
   metas: {
-    permission: [],
     entreprise: []
   },
   definitions: [
     { id: 'noms', type: 'string' },
     { id: 'emails', type: 'string' },
-    { id: 'permissionIds', type: 'strings', values: [] },
+    { id: 'roles', type: 'strings', values: [] },
     { id: 'administrationIds', type: 'strings', values: [] },
     { id: 'entrepriseIds', type: 'strings', values: [] },
     { id: 'page', type: 'number', min: 0 },
@@ -19,7 +21,7 @@ const state = {
     {
       id: 'colonne',
       type: 'string',
-      values: ['nom', 'prenom', 'email', 'permission', 'lien']
+      values: ['nom', 'prenom', 'email', 'role', 'lien']
     },
     {
       id: 'ordre',
@@ -31,7 +33,7 @@ const state = {
     filtres: {
       noms: '',
       emails: '',
-      permissionIds: [],
+      roles: [],
       administrationIds: [],
       entrepriseIds: []
     },
@@ -43,7 +45,9 @@ const state = {
     }
   },
   initialized: false
-}
+})
+
+const state = getDefaultState()
 
 const actions = listeActionsBuild(
   'utilisateurs',
@@ -52,34 +56,15 @@ const actions = listeActionsBuild(
   utilisateurMetas
 )
 
-const mutations = Object.assign({}, listeMutations, {
-  metasSet(state, data) {
-    Object.keys(data).forEach(id => {
-      let metaId
-      let paramId
-      if (id === 'permissions') {
-        metaId = 'permission'
-        paramId = 'permissionIds'
-      } else if (id === 'entreprises') {
-        metaId = 'entreprise'
-        paramId = 'entrepriseIds'
-
-        // l'API renvoie les entreprises dans une propriété 'elements'
-        data[id] = data[id].elements
-      }
-
-      if (metaId) {
-        state.metas[metaId] = data[id]
-      }
-
-      if (paramId) {
-        const definition = state.definitions.find(p => p.id === paramId)
-
-        definition.values = data[id].map(e => e.id)
-      }
-    })
+const mutations = Object.assign(
+  {},
+  listeMutationsWithDefaultState(getDefaultState),
+  {
+    metasSet(state, data) {
+      state.metas.entreprise = data.elements
+    }
   }
-})
+)
 
 export default {
   namespaced: true,

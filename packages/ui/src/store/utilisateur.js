@@ -14,7 +14,6 @@ import router from '../router'
 const state = {
   element: null,
   metas: {
-    permissions: [],
     entreprises: []
   },
   metasLoaded: false
@@ -237,7 +236,6 @@ const mutations = {
 
   metasReset(state) {
     state.metas = {
-      permissions: [],
       entreprises: [],
       administrations: []
     }

@@ -8,7 +8,7 @@ import { titresDemarchesGet } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 
 const titresEtapesOrdreUpdate = async (
-  user: Omit<IUtilisateur, 'permission'>,
+  user: IUtilisateur,
   titresDemarchesIds?: string[]
 ) => {
   console.info()

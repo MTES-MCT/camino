@@ -6,20 +6,17 @@ import Documents from '../../models/documents'
 import TitresEtapesJustificatifs from '../../models/titres-etapes-justificatifs'
 import EtapesTypesDocumentsTypes from '../../models/etapes-types--documents-types'
 import ActivitesTypesDocumentsTypes from '../../models/activites-types--documents-types'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { isDefault, isEntreprise } from 'camino-common/src/roles'
 
 const documentsQueryModify = (
   q: QueryBuilder<Documents, Documents | Documents[]>,
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   q.select('documents.*')
 
   q.joinRelated('type')
 
-  if (
-    permissionCheck(user?.permissionId, ['entreprise']) &&
-    user?.entreprises?.length
-  ) {
+  if (isEntreprise(user) && user?.entreprises?.length) {
     // repertoire = etapes
     q.leftJoinRelated('etape.demarche.titre.[titulaires, amodiataires]')
 
@@ -27,11 +24,7 @@ const documentsQueryModify = (
     q.leftJoinRelated('activite.titre.[titulaires, amodiataires]')
   }
 
-  if (
-    !user ||
-    permissionCheck(user?.permissionId, ['defaut']) ||
-    permissionCheck(user?.permissionId, ['entreprise'])
-  ) {
+  if (isDefault(user) || isEntreprise(user)) {
     q.where(b => {
       b.orWhere('documents.publicLecture', true)
 
@@ -42,10 +35,7 @@ const documentsQueryModify = (
         c.whereNull('documents.titreActiviteId')
       })
 
-      if (
-        permissionCheck(user?.permissionId, ['entreprise']) &&
-        user?.entreprises?.length
-      ) {
+      if (isEntreprise(user) && user?.entreprises?.length) {
         b.orWhere(c => {
           c.where('documents.entreprisesLecture', true)
 

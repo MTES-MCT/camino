@@ -10,7 +10,7 @@ const emailForAdministrationContentFormat = (
   titreTypeId: string,
   etapeNom: string,
   titreId: string,
-  user: Omit<IUtilisateur, 'permission'>
+  user: IUtilisateur
 ) => {
   const titreUrl = titreUrlGet(titreId)
 
@@ -44,7 +44,7 @@ export const emailsForAdministrationsGet = (
   demarcheTypeId: string,
   titreId: string,
   titreTypeId: string,
-  user: Omit<IUtilisateur, 'permission'>,
+  user: IUtilisateur,
   oldEtape?: ITitreEtape
 ): { subject: string; content: string; emails: string[] } | null => {
   if (!etape) {
@@ -106,7 +106,7 @@ const titreEtapeAdministrationsEmailsSend = async (
   demarcheTypeId: string,
   titreId: string,
   titreTypeId: string,
-  user: Omit<IUtilisateur, 'permission'>,
+  user: IUtilisateur,
   oldEtape?: ITitreEtape
 ) => {
   const emailsForAdministrations = emailsForAdministrationsGet(

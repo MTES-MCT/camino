@@ -19,12 +19,5 @@ fragment utilisateur on Utilisateur {
     id
     nom
   }
-  permission {
-    ...permission
-  }
-}
-
-fragment permission on Permission {
-  id
-  nom
+  role
 }

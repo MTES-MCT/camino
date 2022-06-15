@@ -3,12 +3,6 @@
 # import * from 'entreprises.graphql'
 # import * from 'metas.graphql'
 
-type Permission {
-  id: ID!
-  nom: String
-  ordre: Int!
-}
-
 type Utilisateur {
   id: ID!
   email: String
@@ -18,7 +12,7 @@ type Utilisateur {
   telephoneFixe: String
   administrations: [Administration]
   entreprises: [Entreprise]
-  permission: Permission
+  role: ID
   preferences: Json
   newsletter: Boolean
 
@@ -57,7 +51,7 @@ input InputUtilisateurModification {
   prenom: String!
   telephoneMobile: String
   telephoneFixe: String
-  permissionId: ID
+  role: ID
   entreprises: [InputId]
   administrations: [InputId]
   newsletter: Boolean
@@ -71,7 +65,7 @@ input InputUtilisateurCreation {
   prenom: String!
   telephoneMobile: String
   telephoneFixe: String
-  permissionId: ID
+  role: ID
   entreprises: [InputId]
   administrations: [InputId]
   newsletter: Boolean

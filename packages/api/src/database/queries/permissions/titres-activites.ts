@@ -3,8 +3,6 @@ import { raw, QueryBuilder } from 'objection'
 import { IUtilisateur } from '../../../types'
 
 import { knex } from '../../../knex'
-// import fileCreate from '../../../tools/file-create'
-// import { format } from 'sql-formatter'
 
 import Titres from '../../models/titres'
 import Documents from '../../models/documents'
@@ -16,7 +14,14 @@ import {
   administrationsActivitesModify
 } from './administrations'
 import { entreprisesTitresQuery } from './entreprises'
-import { permissionCheck } from 'camino-common/src/permissions'
+import {
+  isAdministration,
+  isAdministrationAdmin,
+  isAdministrationEditeur,
+  isDefault,
+  isEntreprise,
+  isSuper
+} from 'camino-common/src/roles'
 
 const activiteStatuts = [
   {
@@ -35,19 +40,11 @@ const activiteStatuts = [
 
 const titreActivitesCount = (
   q: QueryBuilder<Titres, Titres | Titres[]>,
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   q.groupBy('titres.id')
 
-  if (
-    permissionCheck(user?.permissionId, [
-      'super',
-      'admin',
-      'editeur',
-      'lecteur',
-      'entreprise'
-    ])
-  ) {
+  if (isSuper(user) || isAdministration(user) || isEntreprise(user)) {
     const titresActivitesCountQuery = TitresActivites.query()
       .alias('activitesCount')
       .select('activitesCount.titreId')
@@ -65,11 +62,8 @@ const titreActivitesCount = (
       )
     })
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
-      if (
-        permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur']) &&
-        user?.administrations?.length
-      ) {
+    if (!isSuper(user)) {
+      if (isAdministration(user) && user?.administrations?.length) {
         const administrationsIds = user.administrations.map(e => e.id)
 
         // l'utilisateur fait partie d'une administrations qui a les droits sur le titre
@@ -95,10 +89,7 @@ const titreActivitesCount = (
             })
             .whereRaw('?? is not true', ['a_at.lectureInterdit'])
         )
-      } else if (
-        permissionCheck(user?.permissionId, ['entreprise']) &&
-        user?.entreprises?.length
-      ) {
+      } else if (isEntreprise(user) && user?.entreprises?.length) {
         const entreprisesIds = user.entreprises.map(e => e.id)
 
         titresActivitesCountQuery.whereExists(
@@ -118,7 +109,7 @@ const titreActivitesCount = (
       titresActivitesCountQuery.as('activitesCountJoin'),
       raw('?? = ??', ['activitesCountJoin.titreId', 'titres.id'])
     )
-  } else if (!user || permissionCheck(user?.permissionId, ['defaut'])) {
+  } else if (isDefault(user)) {
     // les utilisateurs non-authentifiés ou défaut ne peuvent voir aucune activité
     activiteStatuts.forEach(({ name }) => {
       q.select(raw('0').as(name))
@@ -134,7 +125,7 @@ const titreActivitesCount = (
 
 const titresActivitesQueryModify = (
   q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>,
-  user: Omit<IUtilisateur, 'permission'> | null | undefined,
+  user: IUtilisateur | null | undefined,
   select = true
 ) => {
   if (select) {
@@ -143,10 +134,7 @@ const titresActivitesQueryModify = (
 
   q.leftJoinRelated('titre')
 
-  if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur']) &&
-    user?.administrations?.length
-  ) {
+  if (isAdministration(user) && user?.administrations?.length) {
     const administrationsIds = user.administrations!.map(a => a.id)
 
     q.whereExists(
@@ -156,10 +144,7 @@ const titresActivitesQueryModify = (
         isLocale: true
       }).modify(administrationsActivitesModify, { lecture: true })
     )
-  } else if (
-    permissionCheck(user?.permissionId, ['entreprise']) &&
-    user?.entreprises?.length
-  ) {
+  } else if (isEntreprise(user) && user?.entreprises?.length) {
     // vérifie que l'utilisateur a les permissions sur les titres
     const entreprisesIds = user.entreprises.map(e => e.id)
 
@@ -169,7 +154,7 @@ const titresActivitesQueryModify = (
         isAmodiataire: true
       })
     )
-  } else if (!permissionCheck(user?.permissionId, ['super'])) {
+  } else if (!isSuper(user)) {
     // sinon, aucune activité n'est visible
     q.where(false)
   }
@@ -186,17 +171,14 @@ const titresActivitesQueryModify = (
 
 const titresActivitesPropsQueryModify = (
   q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>,
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   q.select('titresActivites.*')
 
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (isSuper(user)) {
     q.select(raw('true').as('modification'))
-  } else if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur']) &&
-    user?.administrations?.length
-  ) {
-    if (permissionCheck(user?.permissionId, ['admin', 'editeur'])) {
+  } else if (isAdministration(user) && user?.administrations?.length) {
+    if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
       const administrationsIds = user.administrations!.map(a => a.id)
 
       q.select(
@@ -214,10 +196,7 @@ const titresActivitesPropsQueryModify = (
     } else {
       q.select(raw('false').as('modification'))
     }
-  } else if (
-    permissionCheck(user?.permissionId, ['entreprise']) &&
-    user?.entreprises?.length
-  ) {
+  } else if (isEntreprise(user) && user?.entreprises?.length) {
     // vérifie que l'utilisateur a les droits d'édition sur l'activité
     // l'activité doit avoir un statut `absente ou `en cours`
     q.select(
@@ -229,7 +208,7 @@ const titresActivitesPropsQueryModify = (
     )
   }
 
-  if (!permissionCheck(user?.permissionId, ['super'])) {
+  if (!isSuper(user)) {
     q.select(raw('false').as('suppression'))
   }
 

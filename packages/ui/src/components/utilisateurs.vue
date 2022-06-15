@@ -42,7 +42,6 @@ import {
   utilisateursColonnes,
   utilisateursLignesBuild
 } from './utilisateurs/table'
-import { sortedAdministrations } from 'camino-common/src/administrations'
 import Icon from './_ui/icon.vue'
 
 export default {
@@ -73,8 +72,7 @@ export default {
 
     metas() {
       return {
-        ...this.$store.state.utilisateurs.metas,
-        administration: sortedAdministrations
+        ...this.$store.state.utilisateurs.metas
       }
     },
 
@@ -132,7 +130,7 @@ export default {
         component: UtilisateurEditPopup,
         props: {
           utilisateur: {
-            permissionId: 'defaut',
+            role: 'defaut',
             entreprises: [],
             administrations: []
           },

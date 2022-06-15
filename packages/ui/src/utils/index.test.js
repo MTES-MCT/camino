@@ -2,7 +2,6 @@ import {
   dateFormat,
   textNumberFormat,
   textToNumberFormat,
-  permissionsCheck,
   cloneAndClean,
   elementsFormat,
   paramsBuild
@@ -53,25 +52,6 @@ describe('textNumberFormat et textToNumberFormat', () => {
     'formate %s avec les options %o en nombre %i',
     (input, options, resText, resNumber) => {
       expect(textToNumberFormat(resText)).toEqual(resNumber)
-    }
-  )
-})
-
-// permissionsCheck
-describe('permissionsCheck', () => {
-  const cases = [
-    [
-      { permission: { id: 'admin' } },
-      ['admin', 'defaut', 'editeur', 'entreprise', 'lecteur', 'super'],
-      true
-    ],
-    [{ permission: { id: 'super' } }, ['admin', 'super'], true]
-  ]
-
-  test.each(cases)(
-    'vérifie que %o appartient à la liste des permissions %o',
-    (userPermissionId, permissions, res) => {
-      expect(permissionsCheck(userPermissionId, permissions)).toBe(res)
     }
   )
 })

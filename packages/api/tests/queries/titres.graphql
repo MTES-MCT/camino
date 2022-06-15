@@ -192,14 +192,7 @@ fragment utilisateur on Utilisateur {
   prenom
   telephoneMobile
   telephoneFixe
-  permission {
-    ...permission
-  }
-}
-
-fragment permission on Permission {
-  id
-  nom
+  role
 }
 
 fragment point on Point {

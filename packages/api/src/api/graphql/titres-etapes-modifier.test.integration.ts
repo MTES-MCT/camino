@@ -10,7 +10,7 @@ import {
   ADMINISTRATION_IDS,
   Administrations
 } from 'camino-common/src/administrations'
-import { PermissionId } from 'camino-common/src/permissions'
+import { Role } from 'camino-common/src/roles'
 
 jest.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -81,9 +81,9 @@ async function etapeCreate() {
 describe('etapeModifier', () => {
   const etapeModifierQuery = queryImport('titre-etape-modifier')
 
-  test.each([undefined, 'editeur' as PermissionId])(
+  test.each([undefined, 'editeur' as Role])(
     'ne peut pas modifier une étape (utilisateur %s)',
-    async (permissionId: PermissionId | undefined) => {
+    async (role: Role | undefined) => {
       const res = await graphQLCall(
         etapeModifierQuery,
         {
@@ -95,7 +95,7 @@ describe('etapeModifier', () => {
             date: ''
           }
         },
-        permissionId
+        role
       )
 
       expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
@@ -252,14 +252,10 @@ describe('etapeModifier', () => {
 describe('etapeSupprimer', () => {
   const etapeSupprimerQuery = queryImport('titre-etape-supprimer')
 
-  test.each([undefined, 'admin' as PermissionId])(
+  test.each([undefined, 'admin' as Role])(
     'ne peut pas supprimer une étape (utilisateur %s)',
-    async (permissionId: PermissionId | undefined) => {
-      const res = await graphQLCall(
-        etapeSupprimerQuery,
-        { id: '' },
-        permissionId
-      )
+    async (role: Role | undefined) => {
+      const res = await graphQLCall(etapeSupprimerQuery, { id: '' }, role)
 
       expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
     }

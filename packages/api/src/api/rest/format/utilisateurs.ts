@@ -1,6 +1,6 @@
 import { IUtilisateur } from '../../../types'
 
-const utilisateursFormatTable = (utilisateurs: IUtilisateur[]) =>
+export const utilisateursFormatTable = (utilisateurs: IUtilisateur[]) =>
   utilisateurs.map(utilisateur => {
     const lien = utilisateur.administrations?.length
       ? utilisateur.administrations.map(a => a.nom)
@@ -8,15 +8,11 @@ const utilisateursFormatTable = (utilisateurs: IUtilisateur[]) =>
       ? utilisateur.entreprises.map(a => a.nom)
       : []
 
-    const utilisateurNew = {
+    return {
       nom: utilisateur.nom,
       prenom: utilisateur.prenom,
       email: utilisateur.email,
-      permission: utilisateur.permission.nom,
+      role: utilisateur.role,
       lien: lien.join(',')
     }
-
-    return utilisateurNew
   })
-
-export { utilisateursFormatTable }

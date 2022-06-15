@@ -1,6 +1,6 @@
 import { IUtilisateur, IUtilisateurCreation } from '../../types'
 import { emailCheck } from '../../tools/email-check'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { isAdministration, isEntreprise } from 'camino-common/src/roles'
 
 const utilisateurEditionCheck = (
   utilisateur: IUtilisateur | IUtilisateurCreation
@@ -12,26 +12,22 @@ const utilisateurEditionCheck = (
   }
 
   if (
-    !permissionCheck(utilisateur?.permissionId, [
-      'admin',
-      'editeur',
-      'lecteur'
-    ]) &&
+    !isAdministration(utilisateur) &&
     utilisateur.administrations &&
     utilisateur.administrations.length
   ) {
     errors.push(
-      "les permissions de cet utilisateur ne permettent pas de l'associer à une administration"
+      "le rôle de cet utilisateur ne permet pas de l'associer à une administration"
     )
   }
 
   if (
-    !permissionCheck(utilisateur?.permissionId, ['entreprise']) &&
+    !isEntreprise(utilisateur) &&
     utilisateur.entreprises &&
     utilisateur.entreprises.length
   ) {
     errors.push(
-      "les permissions de cet utilisateur ne permettent pas de l'associer à une entreprise"
+      "le rôle de cet utilisateur ne permet pas de l'associer à une entreprise"
     )
   }
 

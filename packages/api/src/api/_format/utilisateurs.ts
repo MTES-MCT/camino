@@ -1,7 +1,7 @@
 import { IUtilisateur } from '../../types'
 import { administrationFormat } from './administrations'
 
-const utilisateurFormat = (utilisateur: IUtilisateur) => {
+export const utilisateurFormat = (utilisateur: IUtilisateur) => {
   // TODO: devrait formater les entreprises  de l'utilisateur
 
   if (utilisateur.administrations) {
@@ -11,5 +11,3 @@ const utilisateurFormat = (utilisateur: IUtilisateur) => {
 
   return utilisateur
 }
-
-export { utilisateurFormat }

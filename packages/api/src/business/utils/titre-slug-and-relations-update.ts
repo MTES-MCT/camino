@@ -93,12 +93,12 @@ interface ITitreRelation {
     | ((
         id: string,
         element: { slug: string },
-        user: Omit<IUtilisateur, 'permission'>
+        user: IUtilisateur
       ) => Promise<any>)
     | ((
         id: string,
         element: { slug: string },
-        user: Omit<IUtilisateur, 'permission'>,
+        user: IUtilisateur,
         titreId: string
       ) => Promise<any>)
   relations?: ITitreRelation[]

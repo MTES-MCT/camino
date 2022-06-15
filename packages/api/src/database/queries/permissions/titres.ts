@@ -27,7 +27,13 @@ import Administrations from '../../models/administrations'
 import UtilisateursTitres from '../../models/utilisateurs--titres'
 import DemarchesTypes from '../../models/demarches-types'
 import { demarchesCreationQuery } from './metas'
-import { PermissionId, permissionCheck } from 'camino-common/src/permissions'
+import {
+  isAdministration,
+  isAdministrationAdmin,
+  isAdministrationEditeur,
+  isEntreprise,
+  isSuper
+} from 'camino-common/src/roles'
 
 const titresDemarchesAdministrationsModificationQuery = (
   administrations: IAdministration[] | undefined | null,
@@ -71,10 +77,7 @@ const titresDemarchesAdministrationsModificationQuery = (
 
 export const titresTravauxCreationQuery = (
   q: QueryBuilder<Titres, Titres | Titres[]>,
-  user:
-    | Pick<IUtilisateur, 'permissionId' | 'administrations'>
-    | null
-    | undefined
+  user: Pick<IUtilisateur, 'role' | 'administrations'> | null | undefined
 ) => {
   const demarchesTypesQuery = DemarchesTypes.query().where('travaux', true)
   demarchesCreationQuery(demarchesTypesQuery, user, {
@@ -140,14 +143,11 @@ export const titresConfidentielSelect = (
 
 export const titresModificationSelectQuery = (
   q: QueryBuilder<Titres, Titres | Titres[]>,
-  user:
-    | Pick<IUtilisateur, 'permissionId' | 'administrations'>
-    | null
-    | undefined
+  user: Pick<IUtilisateur, 'role' | 'administrations'> | null | undefined
 ): QueryBuilder<Administrations> | RawBuilder => {
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (isSuper(user)) {
     return raw('true')
-  } else if (permissionCheck(user?.permissionId, ['admin', 'editeur'])) {
+  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     const administrationsIds = user?.administrations?.map(a => a.id) ?? []
 
     return administrationsTitresQuery(administrationsIds, 'titres', {
@@ -160,13 +160,9 @@ export const titresModificationSelectQuery = (
   return raw('false')
 }
 
-export const titresSuppressionSelectQuery = (
-  permissionId: PermissionId | undefined
-): boolean => permissionCheck(permissionId, ['super'])
-
 const titresQueryModify = (
   q: QueryBuilder<Titres, Titres | Titres[]>,
-  user: Omit<IUtilisateur, 'permission'> | null | undefined,
+  user: IUtilisateur | null | undefined,
   demandeEnCours?: boolean | null
 ) => {
   q.select('titres.*').where('titres.archive', false)
@@ -176,15 +172,12 @@ const titresQueryModify = (
   // - ou l'utilisateur n'est pas super
   // alors il ne voit que les titres publics et ceux auxquels son entité est reliée
 
-  if (!user || !permissionCheck(user?.permissionId, ['super'])) {
+  if (!isSuper(user)) {
     q.where(b => {
       b.where('titres.publicLecture', true)
 
       // si l'utilisateur est `entreprise`
-      if (
-        permissionCheck(user?.permissionId, ['entreprise']) &&
-        user?.entreprises?.length
-      ) {
+      if (isEntreprise(user) && user?.entreprises?.length) {
         const entreprisesIds = user.entreprises.map(e => e.id)
 
         b.orWhere(c => {
@@ -198,10 +191,7 @@ const titresQueryModify = (
       }
 
       // si l'utilisateur est `administration`
-      else if (
-        permissionCheck(user?.permissionId, ['admin', 'editeur', 'lecteur']) &&
-        user?.administrations?.length
-      ) {
+      else if (isAdministration(user) && user?.administrations?.length) {
         // titres dont l'administration de l'utilisateur est
         // - administrationsGestionnaire
         // - ou administrationsLocale
@@ -221,10 +211,10 @@ const titresQueryModify = (
     // fileCreate('test.sql', sqlFormatter.format(q.toKnexQuery().toString()))
   }
 
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (isSuper(user)) {
     q.select(raw('true').as('demarchesCreation'))
   } else if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur']) &&
+    (isAdministrationAdmin(user) || isAdministrationEditeur(user)) &&
     user?.administrations?.length
   ) {
     const administrationsIds = user.administrations.map(a => a.id) || []
@@ -248,9 +238,7 @@ const titresQueryModify = (
 
   q.select(titresModificationSelectQuery(q, user).as('modification'))
 
-  q.select(
-    raw(`${titresSuppressionSelectQuery(user?.permissionId)}`).as('suppression')
-  )
+  q.select(raw(`${isSuper(user)}`).as('suppression'))
 
   titresTravauxCreationQuery(q, user)
 
@@ -265,10 +253,7 @@ const titresQueryModify = (
     )
   }
 
-  if (
-    permissionCheck(user?.permissionId, ['entreprise']) &&
-    user?.entreprises?.length
-  ) {
+  if (isEntreprise(user) && user?.entreprises?.length) {
     if (demandeEnCours) {
       q.modify(
         titresConfidentielSelect,
@@ -278,15 +263,7 @@ const titresQueryModify = (
   }
 
   // masque les administrations associées
-  if (
-    !user ||
-    !permissionCheck(user?.permissionId, [
-      'super',
-      'admin',
-      'editeur',
-      'lecteur'
-    ])
-  ) {
+  if (!(isSuper(user) || isAdministration(user))) {
     q.modifyGraph('administrationsGestionnaires', b => {
       b.whereRaw('?? is not true', ['associee'])
     })

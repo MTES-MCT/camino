@@ -32,6 +32,7 @@ import { utilisateursFormatTable } from './format/utilisateurs'
 import { entreprisesFormatTable } from './format/entreprises'
 
 import { matomo } from '../../tools/matomo'
+import { isRole } from 'camino-common/src/roles'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -416,7 +417,8 @@ interface IUtilisateursQueryInput {
   ordre?: 'asc' | 'desc' | null
   entrepriseIds?: string
   administrationIds?: string
-  permissionIds?: string
+  //  TODO 2022-06-14: utiliser un tableau de string plutôt qu'une chaine séparée par des ','
+  roles?: string
   noms?: string | null
   emails?: string | null
 }
@@ -429,7 +431,7 @@ const utilisateurs = async (
       ordre,
       entrepriseIds,
       administrationIds,
-      permissionIds,
+      roles,
       noms,
       emails
     }
@@ -446,7 +448,7 @@ const utilisateurs = async (
       ordre,
       entrepriseIds: entrepriseIds?.split(','),
       administrationIds: administrationIds?.split(','),
-      permissionIds: permissionIds?.split(','),
+      roles: roles?.split(',').filter(isRole) ?? [],
       noms,
       emails
     },

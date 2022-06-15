@@ -30,10 +30,7 @@
 
       <template v-if="utilisateur.modification" #buttons>
         <button
-          v-if="
-            (user && user.id === utilisateur.id) ||
-            permissionsCheck(user, 'super')
-          "
+          v-if="(user && user.id === utilisateur.id) || isSuper(user)"
           id="cmn-utilisateur-button-password-popup"
           class="btn-alt py-s px-m"
           title="changer de mot de passe"
@@ -123,8 +120,8 @@
               <h5>Permissions</h5>
             </div>
             <div class="tablet-blob-3-4">
-              <Pill v-if="utilisateur.permission" class="mb">
-                {{ utilisateur.permission.nom }}
+              <Pill v-if="utilisateur.role" class="mb">
+                {{ utilisateur.role }}
               </Pill>
               <p v-else>–</p>
             </div>
@@ -185,7 +182,7 @@
 </template>
 
 <script>
-import { cloneAndClean, permissionsCheck } from '../utils/index'
+import { cloneAndClean } from '../utils/index'
 import Accordion from './_ui/accordion.vue'
 import Pill from './_ui/pill.vue'
 import Loader from './_ui/loader.vue'
@@ -193,6 +190,7 @@ import UtilisateurEditPopup from './utilisateur/edit-popup.vue'
 import UtilisateurRemovePopup from './utilisateur/remove-popup.vue'
 import UtilisateurPasswordPopup from './utilisateur/password-popup.vue'
 import UtilisateurEmailPopup from './utilisateur/email-popup.vue'
+import { isSuper } from 'camino-common/src/roles'
 
 export default {
   components: {
@@ -259,10 +257,6 @@ export default {
         ({ id }) => ({ id })
       )
 
-      utilisateur.permissionId = utilisateur.permission.id
-
-      delete utilisateur.permission
-
       delete utilisateur.sections
       delete utilisateur.modification
       delete utilisateur.suppression
@@ -300,8 +294,8 @@ export default {
       })
     },
 
-    permissionsCheck(user, permissions) {
-      return permissionsCheck(user, permissions)
+    isSuper(user) {
+      return isSuper(user)
     }
   }
 }

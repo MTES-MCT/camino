@@ -20,15 +20,21 @@ import { titresDemarchesQueryModify } from './titres-demarches'
 import TitresDemarches from '../../models/titres-demarches'
 import Journaux from '../../models/journaux'
 import { journauxQueryModify } from './journaux'
-import { permissionCheck } from 'camino-common/src/permissions'
+import {
+  isAdministration,
+  isAdministrationAdmin,
+  isAdministrationEditeur,
+  isEntreprise,
+  isSuper
+} from 'camino-common/src/roles'
 
 const titreEtapeModificationQueryBuild = (
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
-  if (permissionCheck(user?.permissionId, ['super'])) {
+  if (isSuper(user)) {
     return raw('true')
   } else if (
-    permissionCheck(user?.permissionId, ['admin', 'editeur']) &&
+    (isAdministrationAdmin(user) || isAdministrationEditeur(user)) &&
     user?.administrations?.length
   ) {
     const administrationsIds = user.administrations.map(a => a.id) || []
@@ -42,10 +48,7 @@ const titreEtapeModificationQueryBuild = (
         'titresEtapes.titreDemarcheId'
       ])
       .whereRaw('?? = ??', ['t_d_e.etapeTypeId', 'titresEtapes.typeId'])
-  } else if (
-    permissionCheck(user?.permissionId, ['entreprise']) &&
-    user?.entreprises?.length
-  ) {
+  } else if (isEntreprise(user) && user?.entreprises?.length) {
     return entreprisesEtapesTypesPropsQuery(
       user.entreprises.map(({ id }) => id)
     ).whereRaw('?? = ??', ['titresEtapes.id', 'e_te.id'])
@@ -110,7 +113,7 @@ const specifiquesAdd = (
  */
 const titresEtapesQueryModify = (
   q: QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]>,
-  user: Omit<IUtilisateur, 'permission'> | null | undefined
+  user: IUtilisateur | null | undefined
 ) => {
   q.select('titresEtapes.*')
     .where('titresEtapes.archive', false)
@@ -118,15 +121,12 @@ const titresEtapesQueryModify = (
 
   q = specifiquesAdd(q)
 
-  if (!user || !permissionCheck(user.permissionId, ['super'])) {
+  if (!isSuper(user)) {
     q.where(b => {
       b.orWhere('type.publicLecture', true)
 
       // étapes visibles pour les admins
-      if (
-        user?.administrations?.length &&
-        permissionCheck(user.permissionId, ['admin', 'editeur', 'lecteur'])
-      ) {
+      if (user?.administrations?.length && isAdministration(user)) {
         const administrationsIds = user.administrations.map(a => a.id) || []
 
         b.orWhereExists(
@@ -141,10 +141,7 @@ const titresEtapesQueryModify = (
             'titresEtapes.typeId'
           )
         )
-      } else if (
-        user?.entreprises?.length &&
-        permissionCheck(user?.permissionId, ['entreprise'])
-      ) {
+      } else if (user?.entreprises?.length && isEntreprise(user)) {
         const entreprisesIds = user.entreprises.map(a => a.id)
 
         b.orWhere(c => {

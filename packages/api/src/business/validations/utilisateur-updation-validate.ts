@@ -2,27 +2,37 @@ import { IAdministration, IUtilisateur } from '../../types'
 
 import { userGet } from '../../database/queries/utilisateurs'
 
-import { permissionAdministrationsCheck } from '../permission'
-
 import { diffFind } from '../../tools/index'
-import { permissionCheck } from 'camino-common/src/permissions'
+import {
+  isAdministration,
+  isAdministrationAdmin,
+  isSuper
+} from 'camino-common/src/roles'
+
+const userHasAdministration = (
+  user: IUtilisateur | undefined,
+  administrationId: string
+) =>
+  !!(
+    user &&
+    user.administrations &&
+    user.administrations.length &&
+    administrationId &&
+    user.administrations.some(ua => administrationId === ua.id)
+  )
 
 /**
  * Valide la mise à jour d'un utilisateur
  *
  * @param user - utilisateur qui fait la modification
  * @param utilisateur - utilisateur modifié
- * @param isAdmin - si la permission de l'utilisateur qui fait la modification est `admin`
- * @param isSuper- si la permission de l'utilisateur qui fait la modification est `super`
  *
  * @returns une liste de messages d'erreur si l'utilisateur n'a pas le droit de faire les modifications
  */
 
 const utilisateurUpdationValidate = async (
   user: IUtilisateur,
-  utilisateur: IUtilisateur,
-  isAdmin: boolean,
-  isSuper: boolean
+  utilisateur: IUtilisateur
 ) => {
   const utilisateurOld = await userGet(utilisateur.id)
 
@@ -32,7 +42,7 @@ const utilisateurUpdationValidate = async (
     return ["un utilisateur ne peut être affecté qu'à une seule administration"]
   }
 
-  if (!isSuper) {
+  if (!isSuper(user)) {
     // récupère la liste des administrations modifiées (suppression et ajout)
     const administrationsIdsDiff = diffFind(
       'id',
@@ -41,7 +51,7 @@ const utilisateurUpdationValidate = async (
     ) as IAdministration[]
 
     // si le user n'est pas admin
-    if (!isAdmin) {
+    if (!isAdministrationAdmin(user)) {
       //   ni les administrations
       if (administrationsIdsDiff.length) {
         return ['droits insuffisants pour modifier les administrations']
@@ -57,19 +67,19 @@ const utilisateurUpdationValidate = async (
       // si le user n'a pas les droits sur toutes ces administrations
       if (
         !administrationsIdsDiff.every(administration =>
-          permissionAdministrationsCheck(user, [administration.id])
+          userHasAdministration(user, administration.id)
         )
       ) {
         // alors il ne peut modifier les administrations
         return ['droits admin insuffisants pour modifier les administrations']
       }
       // sinon, si le user modifie les permissions de l'utilisateur
-    } else if (utilisateurOld.permissionId !== utilisateur.permissionId) {
+    } else if (utilisateurOld.role !== utilisateur.role) {
       // et qu'il n'a pas les droits sur toutes les administrations de ce dernier
       if (
         utilisateur.administrations &&
         !utilisateur.administrations.every(({ id }) =>
-          permissionAdministrationsCheck(user, [id])
+          userHasAdministration(user, id)
         )
       ) {
         // alors il ne peut modifier les permissions
@@ -78,14 +88,7 @@ const utilisateurUpdationValidate = async (
     }
   }
 
-  if (
-    permissionCheck(utilisateur.permissionId, [
-      'admin',
-      'editeur',
-      'lecteur'
-    ]) &&
-    !utilisateur.administrations?.length
-  ) {
+  if (isAdministration(utilisateur) && !utilisateur.administrations?.length) {
     return ["l'utilisateur doit être associé à une administration"]
   }
 

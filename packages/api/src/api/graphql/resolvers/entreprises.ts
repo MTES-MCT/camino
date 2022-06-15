@@ -24,7 +24,7 @@ import { entrepriseFormat } from '../../_format/entreprises'
 import { emailCheck } from '../../../tools/email-check'
 import { apiInseeEntrepriseAndEtablissementsGet } from '../../../tools/api-insee/index'
 import { userGet } from '../../../database/queries/utilisateurs'
-import { permissionCheck } from 'camino-common/src/permissions'
+import { isSuper } from 'camino-common/src/roles'
 
 const entreprise = async (
   { id }: { id: string },
@@ -272,7 +272,7 @@ const entrepriseTitreTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 

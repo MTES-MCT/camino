@@ -124,7 +124,7 @@
 
           <div
             v-if="
-              permissionsCheck(user, ['super']) &&
+              isSuper(user) &&
               (administration.region || administration.departement)
             "
             class="tablet-blobs"
@@ -164,7 +164,7 @@
       />
     </div>
 
-    <div v-if="permissionsCheck(user, ['super'])" class="mb-xxl">
+    <div v-if="isSuper(user)" class="mb-xxl">
       <div class="line-neutral width-full mb-xxl" />
       <h2>Permissions</h2>
 
@@ -184,11 +184,11 @@ import {
   utilisateursColonnes,
   utilisateursLignesBuild
 } from './utilisateurs/table'
-import { permissionsCheck } from '@/utils'
 import {
   ADMINISTRATION_TYPES,
   Administrations
 } from 'camino-common/src/administrations'
+import { isSuper } from 'camino-common/src/roles'
 
 export default {
   components: {
@@ -266,8 +266,8 @@ export default {
       await this.$store.dispatch('administration/get', this.$route.params.id)
     },
 
-    permissionsCheck(user, permissions) {
-      return permissionsCheck(user, permissions)
+    isSuper(user) {
+      return isSuper(user)
     },
 
     async activiteTypeEmailUpdate({ administrationId, activiteTypeId, email }) {

@@ -8,7 +8,6 @@ import {
   IEtapeStatut,
   IEtapeType,
   IFields,
-  IPermission,
   IPhaseStatut,
   IReferenceType,
   ITitreStatut,
@@ -32,9 +31,6 @@ import {
   etapeStatutUpdate,
   etapesTypesGet,
   etapeTypeUpdate,
-  permissionGet,
-  permissionsGet,
-  permissionUpdate,
   phasesStatutsGet,
   phaseStatutUpdate,
   referencesTypesGet,
@@ -74,7 +70,12 @@ import {
   toMachineEtapes
 } from '../../../business/rules-demarches/machine-helper'
 import { UNITES } from 'camino-common/src/unites'
-import { permissionCheck } from 'camino-common/src/permissions'
+import {
+  isAdministrationAdmin,
+  isEntreprise,
+  isSuper,
+  isAdministrationEditeur
+} from 'camino-common/src/roles'
 import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort'
 import TitresDemarches from '../../../database/models/titres-demarches'
 import { Etape } from '../../../business/rules-demarches/arm/oct.machine'
@@ -107,7 +108,11 @@ const documentsVisibilites = async (_: never, context: IToken) => {
   const user = await userGet(context.user?.id)
   if (!user) return []
 
-  if (permissionCheck(user.permissionId, ['super', 'admin', 'editeur'])) {
+  if (
+    isSuper(user) ||
+    isAdministrationAdmin(user) ||
+    isAdministrationEditeur(user)
+  ) {
     return [
       { id: 'admin', nom: 'Administrations uniquement' },
       { id: 'entreprise', nom: 'Administrations et entreprises titulaires' },
@@ -115,7 +120,7 @@ const documentsVisibilites = async (_: never, context: IToken) => {
     ]
   }
 
-  if (permissionCheck(user.permissionId, ['entreprise'])) {
+  if (isEntreprise(user)) {
     return [
       { id: 'entreprise', nom: 'Administrations et entreprises titulaires' }
     ]
@@ -125,21 +130,6 @@ const documentsVisibilites = async (_: never, context: IToken) => {
 }
 
 const referencesTypes = async () => referencesTypesGet()
-const permission = async ({ id }: { id: string }) => permissionGet(id)
-
-const permissions = async (_: never, context: IToken) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    return permissionsGet(null as never, null as never, user)
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
 
 const domaines = async (
   _: never,
@@ -489,7 +479,7 @@ const domaineModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -520,7 +510,7 @@ const titreTypeTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -549,7 +539,7 @@ const titreStatutModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -579,7 +569,7 @@ const demarcheTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -610,7 +600,7 @@ const demarcheStatutModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -639,7 +629,7 @@ const phaseStatutModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -663,7 +653,7 @@ const etapeTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!user || !permissionCheck(user.permissionId, ['super'])) {
+    if (!user || !isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -696,46 +686,13 @@ const etapeStatutModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
     await etapeStatutUpdate(etapeStatut.id!, etapeStatut)
 
     return await etapesStatutsGet()
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-const permissionModifier = async (
-  { permission }: { permission: IPermission },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!permissionCheck(user?.permissionId, ['super'])) {
-      throw new Error('droits insuffisants')
-    }
-
-    if (permission.ordre) {
-      const permissions = await permissionsGet(
-        null as never,
-        null as never,
-        user
-      )
-
-      await ordreUpdate(permission, permissions, permissionUpdate)
-    }
-
-    await permissionUpdate(permission.id!, permission)
-
-    return await permissionsGet(null as never, null as never, user)
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -752,7 +709,7 @@ const documentTypeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -775,7 +732,7 @@ const documentTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -797,7 +754,7 @@ const referenceTypeModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
 
@@ -823,8 +780,6 @@ export {
   etapesTypes,
   etapesStatuts,
   geoSystemes,
-  permission,
-  permissions,
   phasesStatuts,
   referencesTypes,
   statuts,
@@ -842,7 +797,6 @@ export {
   phaseStatutModifier,
   etapeTypeModifier,
   etapeStatutModifier,
-  permissionModifier,
   documentTypeCreer,
   documentTypeModifier,
   referenceTypeModifier,

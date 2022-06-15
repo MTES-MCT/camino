@@ -43,7 +43,13 @@ import {
 } from '../../../tools/api-mailjet/newsletter'
 import { userSuper } from '../../../database/user-super'
 import dateFormat from 'dateformat'
-import { permissionCheck } from 'camino-common/src/permissions'
+import {
+  isSuper,
+  Role,
+  isEntreprise,
+  isAdministration,
+  isAdministrationAdmin
+} from 'camino-common/src/roles'
 
 const TOKEN_TTL = '5m'
 
@@ -91,7 +97,7 @@ const utilisateurs = async (
     ordre,
     entrepriseIds,
     administrationIds,
-    permissionIds,
+    roles,
     noms,
     emails
   }: {
@@ -101,7 +107,7 @@ const utilisateurs = async (
     ordre?: 'asc' | 'desc' | null
     entrepriseIds?: string[]
     administrationIds?: string[]
-    permissionIds?: string[]
+    roles?: Role[]
     noms?: string | null
     emails?: string | null
   },
@@ -121,7 +127,7 @@ const utilisateurs = async (
           ordre,
           entrepriseIds,
           administrationIds,
-          permissionIds,
+          roles,
           noms,
           emails
         },
@@ -132,7 +138,7 @@ const utilisateurs = async (
         {
           entrepriseIds,
           administrationIds,
-          permissionIds,
+          roles,
           noms,
           emails
         },
@@ -329,8 +335,7 @@ const utilisateurCreer = async (
       !context.user ||
       (context.user.email !== utilisateur.email &&
         !user?.utilisateursCreation) ||
-      (!permissionCheck(user?.permissionId, ['super']) &&
-        utilisateur.permissionId === 'super')
+      (!isSuper(user) && isSuper(utilisateur))
     )
       throw new Error('droits insuffisants')
 
@@ -351,24 +356,18 @@ const utilisateurCreer = async (
     }
 
     if (
-      !utilisateur.permissionId ||
+      !utilisateur.role ||
       !user ||
-      !permissionCheck(user?.permissionId, ['super', 'admin'])
+      !(isSuper(user) || isAdministrationAdmin(user))
     ) {
-      utilisateur.permissionId = 'defaut'
+      utilisateur.role = 'defaut'
     }
 
-    if (
-      !permissionCheck(utilisateur?.permissionId, [
-        'admin',
-        'editeur',
-        'lecteur'
-      ])
-    ) {
+    if (!isAdministration(utilisateur)) {
       utilisateur.administrations = []
     }
 
-    if (!permissionCheck(utilisateur?.permissionId, ['entreprise'])) {
+    if (!isEntreprise(utilisateur)) {
       utilisateur.entreprises = []
     }
 
@@ -462,29 +461,24 @@ const utilisateurModifier = async (
 
     utilisateur.email = utilisateur.email!.toLowerCase()
 
-    const isSuper = permissionCheck(user?.permissionId, ['super'])
-    const isAdmin = permissionCheck(user?.permissionId, ['admin'])
+    const isAdmin = isAdministrationAdmin(user)
 
     if (
       !user ||
       (!user.utilisateursCreation &&
         (user.id !== utilisateur.id || user.email !== utilisateur.email)) ||
-      (utilisateur.permissionId &&
-        !isSuper &&
+      (utilisateur.role &&
+        !isSuper(user) &&
         (!isAdmin ||
-          permissionCheck(utilisateur.permissionId, ['super', 'admin'])))
+          isSuper(utilisateur) ||
+          isAdministrationAdmin(utilisateur)))
     ) {
       throw new Error('droits insuffisants')
     }
 
     const errors = utilisateurEditionCheck(utilisateur)
 
-    const errorsValidate = await utilisateurUpdationValidate(
-      user,
-      utilisateur,
-      isAdmin,
-      isSuper
-    )
+    const errorsValidate = await utilisateurUpdationValidate(user, utilisateur)
 
     if (errorsValidate.length) {
       errors.push(...errorsValidate)
@@ -502,17 +496,11 @@ const utilisateurModifier = async (
       throw new Error(errors.join(', '))
     }
 
-    if (
-      !permissionCheck(utilisateur.permissionId, [
-        'admin',
-        'editeur',
-        'lecteur'
-      ])
-    ) {
+    if (!isAdministration(utilisateur)) {
       utilisateur.administrations = []
     }
 
-    if (!permissionCheck(utilisateur?.permissionId, ['entreprise'])) {
+    if (!isEntreprise(utilisateur)) {
       utilisateur.entreprises = []
     }
 
@@ -555,7 +543,7 @@ const utilisateurSupprimer = async (
     utilisateur.motDePasse = 'suppression'
     utilisateur.telephoneFixe = ''
     utilisateur.telephoneMobile = ''
-    utilisateur.permissionId = 'defaut'
+    utilisateur.role = 'defaut'
     utilisateur.entreprises = []
     utilisateur.administrations = []
 
@@ -590,8 +578,7 @@ const utilisateurMotDePasseModifier = async (
 
     if (
       !user ||
-      (!permissionCheck(user?.permissionId, ['super', 'admin']) &&
-        user.id !== id)
+      (!(isSuper(user) || isAdministrationAdmin(user)) && user.id !== id)
     ) {
       throw new Error('droits insuffisants')
     }
@@ -612,7 +599,7 @@ const utilisateurMotDePasseModifier = async (
       throw new Error('aucun utilisateur enregistré avec cet id')
     }
 
-    if (!permissionCheck(user?.permissionId, ['super'])) {
+    if (!isSuper(user)) {
       const valid = bcrypt.compareSync(motDePasse, utilisateur.motDePasse!)
 
       if (!valid) {

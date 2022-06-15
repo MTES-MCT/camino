@@ -15,8 +15,6 @@ import {
   phaseStatutModifier,
   etapeTypeModifier,
   etapeStatutModifier,
-  permissions,
-  permissionModifier,
   documentsTypes,
   documentTypeModifier,
   referencesTypes,
@@ -526,16 +524,6 @@ const metasIndex = {
       { id: 'description', nom: 'Description', type: String, optional: true }
     ],
     ids: ['etapeTypeId', 'documentTypeId']
-  },
-  permissions: {
-    get: permissions,
-    update: permissionModifier,
-    nom: 'Permissions',
-    colonnes: [
-      { id: 'id', nom: 'Id' },
-      { id: 'nom', nom: 'Nom', type: String },
-      { id: 'ordre', nom: 'Ordre', type: Number }
-    ]
   },
   'documents-types': {
     get: documentsTypes,

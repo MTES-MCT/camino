@@ -183,8 +183,8 @@ export default {
   methods: {
     async save() {
       if (this.complete) {
-        if (!this.utilisateur.permissionId) {
-          this.utilisateur.permissionId = 'defaut'
+        if (!this.utilisateur.role) {
+          this.utilisateur.role = 'defaut'
         }
 
         await this.$store.dispatch('user/add', {

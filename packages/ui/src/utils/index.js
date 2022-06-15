@@ -35,9 +35,6 @@ const textToNumberFormat = text => {
   return Number.isNaN(number) ? null : number
 }
 
-const permissionsCheck = (user, permissions) =>
-  !!(user && user.permission && permissions.includes(user.permission.id))
-
 const typenameOmit = (key, value) => (key === '__typename' ? undefined : value)
 
 const cloneAndClean = json => JSON.parse(JSON.stringify(json), typenameOmit)
@@ -70,7 +67,6 @@ const cap = string => string[0].toUpperCase() + string.slice(1)
 
 export {
   dateFormat,
-  permissionsCheck,
   textNumberFormat,
   textToNumberFormat,
   cloneAndClean,

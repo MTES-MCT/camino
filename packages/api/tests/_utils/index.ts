@@ -16,7 +16,7 @@ import {
   Administrations
 } from 'camino-common/src/administrations'
 import dateFormat from 'dateformat'
-import { PermissionId } from 'camino-common/src/permissions'
+import { Role } from 'camino-common/src/roles'
 
 const queryImport = (nom: string) =>
   fs
@@ -32,38 +32,38 @@ const graphQLCall = async (
   variables: Index<
     string | boolean | Index<string | boolean | Index<string>[] | any>
   >,
-  permissionId?: PermissionId,
+  role?: Role,
   administrationId?: string
 ) => {
   const req = request(app).post('/').send({ query, variables })
 
-  return cookiesSet(req, permissionId, administrationId)
+  return cookiesSet(req, role, administrationId)
 }
 
-const restUploadCall = async (permissionId?: PermissionId) => {
+const restUploadCall = async (role?: Role) => {
   const req = request(app).post('/televersement')
 
-  return cookiesSet(req, permissionId)
+  return cookiesSet(req, role)
 }
 
 export const restCall = async (
   path: string,
-  permissionId: PermissionId,
+  role: Role,
   administrationId?: AdministrationId
 ): Promise<request.Test> => {
   const req = request(app).get(path)
 
-  return cookiesSet(req, permissionId, administrationId)
+  return cookiesSet(req, role, administrationId)
 }
 
 const cookiesSet = async (
   req: request.Test,
-  permissionId?: PermissionId,
+  role?: Role,
   administrationId?: string
 ): Promise<request.Test> => {
   let token
-  if (permissionId) {
-    token = await userTokenGenerate(permissionId, administrationId)
+  if (role) {
+    token = await userTokenGenerate(role, administrationId)
   }
 
   if (token) {
@@ -73,14 +73,11 @@ const cookiesSet = async (
   return req
 }
 
-const userTokenGenerate = async (
-  permissionId: PermissionId,
-  administrationId?: string
-) => {
+const userTokenGenerate = async (role: Role, administrationId?: string) => {
   let id = 'super'
 
-  if (permissionId !== 'super') {
-    id = `${permissionId}-user`
+  if (role !== 'super') {
+    id = `${role}-user`
 
     if (administrationId) {
       id += `-${administrationId}`
@@ -101,12 +98,12 @@ const userTokenGenerate = async (
     await utilisateurCreate(
       {
         id,
-        prenom: `prenom-${permissionId}`,
-        nom: `nom-${permissionId}`,
+        prenom: `prenom-${role}`,
+        nom: `nom-${role}`,
         email: `${id}@camino.local`,
         motDePasse: 'mot-de-passe',
         dateCreation: dateFormat(new Date(), 'yyyy-mm-dd'),
-        permissionId,
+        role,
         administrations
       },
       {}

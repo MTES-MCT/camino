@@ -1,7 +1,6 @@
 import { Model, Pojo } from 'objection'
 
 import { IUtilisateur } from '../../types'
-import Permissions from './permissions'
 import Entreprises from './entreprises'
 import Administrations from './administrations'
 
@@ -12,7 +11,7 @@ class Utilisateurs extends Model {
 
   public static jsonSchema = {
     type: 'object',
-    required: ['id', 'email', 'motDePasse', 'permissionId'],
+    required: ['id', 'email', 'motDePasse', 'role'],
 
     properties: {
       id: { type: 'string', minLength: 1, maxLength: 64 },
@@ -26,7 +25,7 @@ class Utilisateurs extends Model {
       prenom: { type: ['string', 'null'] },
       telephoneFixe: { type: ['string', 'null'] },
       telephoneMobile: { type: ['string', 'null'] },
-      permissionId: { type: 'string', maxLength: 12 },
+      role: { type: 'string' },
       preferences: { type: ['object', 'null'] },
       refreshToken: { type: ['string', 'null'] },
       newsletter: { type: ['boolean', 'null'] }
@@ -34,15 +33,6 @@ class Utilisateurs extends Model {
   }
 
   static relationMappings = () => ({
-    permission: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: Permissions,
-      join: {
-        from: 'utilisateurs.permissionId',
-        to: 'permissions.id'
-      }
-    },
-
     entreprises: {
       relation: Model.ManyToManyRelation,
       modelClass: Entreprises,
