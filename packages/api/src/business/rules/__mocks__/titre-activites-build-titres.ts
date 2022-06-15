@@ -1,6 +1,6 @@
 import { IActiviteType, ITitreDemarche } from '../../../types'
 import { SubstancesFiscale } from 'camino-common/src/substance'
-import { UNITE_IDS, UNITES, Unites } from 'camino-common/src/unites'
+import { UNITES } from 'camino-common/src/unites'
 
 const activiteTypeGra = {
   id: 'gra',
