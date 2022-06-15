@@ -23,6 +23,8 @@ jobs:
           npm ci
         env:
           CI: true
+      - name: Lint
+        run: npm run ci:lint --workspace=packages/api
       - name: Unit tests
         run: npm run ci:test-unit --workspace=packages/api
       - uses: codecov/codecov-action@v2
