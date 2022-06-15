@@ -28,7 +28,6 @@ const createAdminUserAtStartup = async () => {
       id: 'admin',
       email: process.env.ADMIN_EMAIL,
       role: 'super',
-      administrations: undefined,
       dateCreation: dateFormat(new Date(), 'yyyy-mm-dd')
     })
   }

@@ -50,8 +50,7 @@ describe('utilisateurModifier', () => {
       email: 'test@camino.local',
       motDePasse: 'mot-de-passe',
       role: 'defaut',
-      dateCreation: '2022-05-12',
-      administrations: undefined
+      dateCreation: '2022-05-12'
     })
 
     const token = tokenCreate({ id: 'test' })
@@ -88,8 +87,7 @@ describe('utilisateurModifier', () => {
       email: 'test1@camino.local',
       motDePasse: 'mot-de-passe',
       role: 'defaut',
-      dateCreation: '2022-05-12',
-      administrations: undefined
+      dateCreation: '2022-05-12'
     })
 
     await userAdd(knex, {
@@ -99,8 +97,7 @@ describe('utilisateurModifier', () => {
       email: 'test2@camino.local',
       motDePasse: 'mot-de-passe',
       role: 'defaut',
-      dateCreation: '2022-05-12',
-      administrations: undefined
+      dateCreation: '2022-05-12'
     })
 
     const res = await graphQLCall(
@@ -327,8 +324,7 @@ describe('utilisateurSupprimer', () => {
       email: 'test@camino.local',
       motDePasse: 'mot-de-passe',
       role: 'defaut',
-      dateCreation: '2022-05-12',
-      administrations: undefined
+      dateCreation: '2022-05-12'
     })
 
     const token = tokenCreate({ id: 'test' })
@@ -357,8 +353,7 @@ describe('utilisateurSupprimer', () => {
       email: 'user-to-delete@camino.local',
       motDePasse: 'mot-de-passe',
       role: 'defaut',
-      dateCreation: '2022-05-12',
-      administrations: undefined
+      dateCreation: '2022-05-12'
     })
 
     const res = await graphQLCall(utilisateurSupprimerQuery, { id }, 'super')
@@ -407,8 +402,7 @@ describe('utilisateurEmailModifier', () => {
       email: oldUserEmail,
       motDePasse: 'mot-de-passe',
       role: 'defaut',
-      dateCreation: '2022-05-12',
-      administrations: undefined
+      dateCreation: '2022-05-12'
     })
     const token = tokenCreate({ id: userId })
 
