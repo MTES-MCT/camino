@@ -7,6 +7,8 @@ type InputAttribute =
 type OutputAttribute =
   | 'redevance_communale_des_mines_aurifere_kg'
   | 'redevance_departementale_des_mines_aurifere_kg'
+  | 'taxe_guyane_brute'
+  | 'taxe_guyane_deduction'
   | 'taxe_guyane'
 
 type Entries = Partial<
