@@ -21,9 +21,7 @@ describe("extrait la réponse venant d'openFisca", () => {
       )
     ).toStrictEqual({
       redevanceCommunale: 6604.6,
-      redevanceDepartementale: 1318.54,
-      taxeAurifereGuyane: 0,
-      totalInvestissementsDeduits: 0
+      redevanceDepartementale: 1318.54
     })
   })
 })
@@ -47,7 +45,9 @@ describe('construit le corps de la requête pour openFisca', () => {
     ]
     const titres = [
       {
-        substances: [{ id: 'auru', nom: 'or', legales: [] }],
+        substances: [
+          { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] }
+        ],
         communes: [
           {
             id: '97310',
@@ -56,11 +56,12 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 1006827
           }
         ],
+        pays: [{ id: 'GF', nom: 'unused' }],
         id: 'titreSansActivite'
       },
       {
         substances: [
-          { id: 'auru', nom: 'or', legales: [] },
+          { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] },
           { id: 'suco', nom: 'substances connexes', legales: [] }
         ],
         communes: [
@@ -71,11 +72,12 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 6036587
           }
         ],
+        pays: [{ id: 'GF', nom: 'unused' }],
         id: 'titre1'
       },
       {
         substances: [
-          { id: 'auru', nom: 'or', legales: [] },
+          { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] },
           { id: 'suco', nom: 'substances connexes', legales: [] }
         ],
         communes: [
@@ -86,13 +88,15 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 19805494
           }
         ],
+        pays: [{ id: 'GF', nom: 'unused' }],
         id: 'titre2'
       },
       {
         substances: [
-          { id: 'auru', nom: 'or', legales: [] },
+          { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] },
           { id: 'suco', nom: 'substances connexes', legales: [] }
         ],
+        pays: [{ id: 'GF', nom: 'unused' }],
         communes: [
           {
             id: '97310',
@@ -105,9 +109,10 @@ describe('construit le corps de la requête pour openFisca', () => {
       },
       {
         substances: [
-          { id: 'auru', nom: 'or', legales: [] },
+          { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] },
           { id: 'suco', nom: 'substances connexes', legales: [] }
         ],
+        pays: [{ id: 'GF', nom: 'unused' }],
         communes: [
           {
             id: '97310',
@@ -120,9 +125,10 @@ describe('construit le corps de la requête pour openFisca', () => {
       },
       {
         substances: [
-          { id: 'suco', nom: 'substances connexes', legales: [] },
-          { id: 'auru', nom: 'or', legales: [] }
+          { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] },
+          { id: 'suco', nom: 'substances connexes', legales: [] }
         ],
+        pays: [{ id: 'GF', nom: 'unused' }],
         communes: [
           {
             id: '97311',
