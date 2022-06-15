@@ -277,8 +277,8 @@ describe('utilisateursCreer', () => {
       'super'
     )
 
-    expect(res.body.errors[0].message).toMatch(
-      /les permissions de cet utilisateur ne permettent pas de l'associer à une entreprise/
+    expect(res.body.errors[0].message).toBe(
+      "le rôle de cet utilisateur ne permet pas de l'associer à une entreprise"
     )
   })
 

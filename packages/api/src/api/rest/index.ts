@@ -32,7 +32,7 @@ import { utilisateursFormatTable } from './format/utilisateurs'
 import { entreprisesFormatTable } from './format/entreprises'
 
 import { matomo } from '../../tools/matomo'
-import { Role } from 'camino-common/src/roles'
+import { isRole } from 'camino-common/src/roles'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -448,7 +448,7 @@ const utilisateurs = async (
       ordre,
       entrepriseIds: entrepriseIds?.split(','),
       administrationIds: administrationIds?.split(','),
-      roles: (roles?.split(',') as Role[]) ?? [],
+      roles: roles?.split(',').filter(isRole) ?? [],
       noms,
       emails
     },

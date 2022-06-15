@@ -5,7 +5,9 @@ import {
   isAdministrationEditeur,
   isAdministrationAdmin,
   isAdministrationLecteur,
-  isDefault
+  isDefault,
+  isRole,
+  ROLES
 } from './roles'
 
 test('role check', () => {
@@ -27,4 +29,15 @@ test('role check', () => {
   expect(isDefault(null)).toBe(true)
   expect(isDefault({ role: 'defaut' })).toBe(true)
   expect(isDefault({ role: 'entreprise' })).toBe(false)
+})
+
+test('isRole', () => {
+  for (const role of ROLES) {
+    expect(isRole(role)).toBe(true)
+  }
+  expect(isRole('unRole')).toBe(false)
+  expect(isRole('unAutreRole')).toBe(false)
+  expect(isRole('')).toBe(false)
+  expect(isRole(undefined)).toBe(false)
+  expect(isRole(null)).toBe(false)
 })
