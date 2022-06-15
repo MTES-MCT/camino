@@ -74,7 +74,8 @@ import {
   isAdministrationAdmin,
   isEntreprise,
   isSuper,
-  isAdministrationEditeur
+  isAdministrationEditeur,
+  isBureauDEtudes
 } from 'camino-common/src/roles'
 import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort'
 import TitresDemarches from '../../../database/models/titres-demarches'
@@ -104,6 +105,7 @@ const documentsTypes = async ({
   }
 }
 
+// TODO: 2022-06-15 à supprimer de l’API
 const documentsVisibilites = async (_: never, context: IToken) => {
   const user = await userGet(context.user?.id)
   if (!user) return []
@@ -120,7 +122,7 @@ const documentsVisibilites = async (_: never, context: IToken) => {
     ]
   }
 
-  if (isEntreprise(user)) {
+  if (isEntreprise(user) || isBureauDEtudes(user)) {
     return [
       { id: 'entreprise', nom: 'Administrations et entreprises titulaires' }
     ]

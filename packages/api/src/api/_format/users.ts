@@ -2,6 +2,7 @@ import { IUtilisateur, IUser } from '../../types'
 
 import {
   isAdministration,
+  isBureauDEtudes,
   isEntreprise,
   isSuper
 } from 'camino-common/src/roles'
@@ -11,14 +12,15 @@ export const userFormat = (utilisateur: IUtilisateur | null) => {
 
   const user = utilisateur as IUser
 
-  const hasPermissions =
-    isSuper(user) || isAdministration(user) || isEntreprise(user)
-
   user.sections = {
     travaux: isSuper(user) || isAdministration(user),
-    activites: hasPermissions,
+    activites: isSuper(user) || isAdministration(user) || isEntreprise(user),
     administrations: isSuper(user) || isAdministration(user),
-    utilisateurs: hasPermissions,
+    utilisateurs:
+      isSuper(user) ||
+      isAdministration(user) ||
+      isEntreprise(user) ||
+      isBureauDEtudes(user),
     metas: isSuper(user),
     journaux: isSuper(user)
   }

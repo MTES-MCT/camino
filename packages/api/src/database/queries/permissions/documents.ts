@@ -6,7 +6,11 @@ import Documents from '../../models/documents'
 import TitresEtapesJustificatifs from '../../models/titres-etapes-justificatifs'
 import EtapesTypesDocumentsTypes from '../../models/etapes-types--documents-types'
 import ActivitesTypesDocumentsTypes from '../../models/activites-types--documents-types'
-import { isDefault, isEntreprise } from 'camino-common/src/roles'
+import {
+  isBureauDEtudes,
+  isDefault,
+  isEntreprise
+} from 'camino-common/src/roles'
 
 const documentsQueryModify = (
   q: QueryBuilder<Documents, Documents | Documents[]>,
@@ -16,7 +20,7 @@ const documentsQueryModify = (
 
   q.joinRelated('type')
 
-  if (isEntreprise(user) && user?.entreprises?.length) {
+  if (isEntreprise(user) || isBureauDEtudes(user)) {
     // repertoire = etapes
     q.leftJoinRelated('etape.demarche.titre.[titulaires, amodiataires]')
 
@@ -24,7 +28,7 @@ const documentsQueryModify = (
     q.leftJoinRelated('activite.titre.[titulaires, amodiataires]')
   }
 
-  if (isDefault(user) || isEntreprise(user)) {
+  if (isDefault(user) || isEntreprise(user) || isBureauDEtudes(user)) {
     q.where(b => {
       b.orWhere('documents.publicLecture', true)
 
@@ -35,7 +39,7 @@ const documentsQueryModify = (
         c.whereNull('documents.titreActiviteId')
       })
 
-      if (isEntreprise(user) && user?.entreprises?.length) {
+      if (isEntreprise(user) || isBureauDEtudes(user)) {
         b.orWhere(c => {
           c.where('documents.entreprisesLecture', true)
 

@@ -7,7 +7,8 @@ import {
   isAdministrationLecteur,
   isDefault,
   isRole,
-  ROLES
+  ROLES,
+  isBureauDEtudes
 } from './roles'
 
 test('role check', () => {
@@ -25,6 +26,8 @@ test('role check', () => {
   expect(isAdministrationLecteur({ role: 'admin' })).toBe(false)
   expect(isEntreprise({ role: 'entreprise' })).toBe(true)
   expect(isEntreprise({ role: 'defaut' })).toBe(false)
+  expect(isBureauDEtudes({ role: 'bureau d’études' })).toBe(true)
+  expect(isBureauDEtudes({ role: 'defaut' })).toBe(false)
   expect(isDefault(undefined)).toBe(true)
   expect(isDefault(null)).toBe(true)
   expect(isDefault({ role: 'defaut' })).toBe(true)

@@ -24,6 +24,7 @@ import {
   isAdministration,
   isAdministrationAdmin,
   isAdministrationEditeur,
+  isBureauDEtudes,
   isEntreprise,
   isSuper
 } from 'camino-common/src/roles'
@@ -48,7 +49,10 @@ const titreEtapeModificationQueryBuild = (
         'titresEtapes.titreDemarcheId'
       ])
       .whereRaw('?? = ??', ['t_d_e.etapeTypeId', 'titresEtapes.typeId'])
-  } else if (isEntreprise(user) && user?.entreprises?.length) {
+  } else if (
+    (isEntreprise(user) || isBureauDEtudes(user)) &&
+    user.entreprises?.length
+  ) {
     return entreprisesEtapesTypesPropsQuery(
       user.entreprises.map(({ id }) => id)
     ).whereRaw('?? = ??', ['titresEtapes.id', 'e_te.id'])
@@ -141,7 +145,10 @@ const titresEtapesQueryModify = (
             'titresEtapes.typeId'
           )
         )
-      } else if (user?.entreprises?.length && isEntreprise(user)) {
+      } else if (
+        (isEntreprise(user) || isBureauDEtudes(user)) &&
+        user.entreprises?.length
+      ) {
         const entreprisesIds = user.entreprises.map(a => a.id)
 
         b.orWhere(c => {

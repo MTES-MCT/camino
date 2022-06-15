@@ -19,7 +19,8 @@ import {
   isAdministration,
   isEntreprise,
   isAdministrationAdmin,
-  isAdministrationEditeur
+  isAdministrationEditeur,
+  isBureauDEtudes
 } from 'camino-common/src/roles'
 
 const titresDemarchesQueryModify = (
@@ -59,7 +60,10 @@ const titresDemarchesQueryModify = (
         )
 
         b.orWhereExists(administrationTitre)
-      } else if (isEntreprise(user) && user?.entreprises?.length) {
+      } else if (
+        (isEntreprise(user) || isBureauDEtudes(user)) &&
+        user.entreprises?.length
+      ) {
         const entreprisesIds = user.entreprises.map(e => e.id)
 
         b.orWhere(c => {

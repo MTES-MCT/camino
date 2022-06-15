@@ -22,10 +22,10 @@ exports.up = async knex => {
         titreEtapeSubstances.titreEtapeId
       )
       const sorted = entries.sort((entry1, entry2) => {
-        if (mostImportantSubstances.include(entry1.substanceId)) {
+        if (mostImportantSubstances.includes(entry1.substanceId)) {
           return -1
         }
-        if (mostImportantSubstances.include(entry2.substanceId)) {
+        if (mostImportantSubstances.includes(entry2.substanceId)) {
           return 1
         }
 

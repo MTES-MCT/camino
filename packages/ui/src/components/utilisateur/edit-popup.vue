@@ -133,7 +133,7 @@
           </div>
         </div>
 
-        <div v-if="utilisateurIsEntreprise">
+        <div v-if="utilisateurIsEntrepriseOuBureauDEtude">
           <hr />
           <h3 class="mb-s">Entreprises</h3>
           <div v-for="(entreprise, n) in utilisateur.entreprises" :key="n">
@@ -276,6 +276,7 @@ import Icon from '../_ui/icon.vue'
 import {
   isAdministration,
   isAdministrationAdmin,
+  isBureauDEtudes,
   isEntreprise,
   isSuper,
   ROLES
@@ -350,7 +351,10 @@ export default {
         return false
       }
 
-      if (this.utilisateurIsEntreprise && !this.utilisateurEntreprisesLength) {
+      if (
+        this.utilisateurIsEntrepriseOuBureauDEtude &&
+        !this.utilisateurEntreprisesLength
+      ) {
         return false
       }
 
@@ -372,8 +376,8 @@ export default {
       return this.utilisateur.administrations.filter(({ id }) => id).length
     },
 
-    utilisateurIsEntreprise() {
-      return isEntreprise(this.utilisateur)
+    utilisateurIsEntrepriseOuBureauDEtude() {
+      return isEntreprise(this.utilisateur) || isBureauDEtudes(this.utilisateur)
     },
 
     utilisateurIsAdministration() {
@@ -415,7 +419,7 @@ export default {
           utilisateur.administrations = []
         }
 
-        if (this.utilisateurIsEntreprise) {
+        if (this.utilisateurIsEntrepriseOuBureauDEtude) {
           utilisateur.entreprises = utilisateur.entreprises.filter(
             ({ id }) => id
           )

@@ -7,6 +7,10 @@ exports.up = async knex => {
     table.renameColumn('permission_id', 'role')
   })
 
+  await knex.schema.alterTable('utilisateurs', function (t) {
+    t.string('role', 255).notNullable().alter()
+  })
+
   return knex.schema.dropTable('permissions')
 }
 

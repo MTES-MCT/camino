@@ -26,6 +26,7 @@ import { specifiquesGet } from './titres-etapes'
 import {
   isAdministrationAdmin,
   isAdministrationEditeur,
+  isBureauDEtudes,
   isEntreprise,
   isSuper
 } from 'camino-common/src/roles'
@@ -42,12 +43,13 @@ const titreDemandeCreer = async (
       (!isSuper(user) &&
         !isAdministrationAdmin(user) &&
         !isAdministrationEditeur(user) &&
-        !isEntreprise(user))
+        !isEntreprise(user) &&
+        !isBureauDEtudes(user))
     ) {
       throw new Error('permissions insuffisantes')
     }
 
-    if (isEntreprise(user)) {
+    if (isEntreprise(user) || isBureauDEtudes(user)) {
       if (titreDemande.references?.length) {
         throw new Error('permissions insuffisantes')
       }

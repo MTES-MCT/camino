@@ -6,7 +6,7 @@ import { idGenerate } from '../database/models/_format/id-create'
 
 export const userAdd = async (
   knex: Knex,
-  user: IUtilisateur
+  user: Omit<IUtilisateur, 'administrations'>
 ): Promise<void> => {
   const password = idGenerate()
   const errors = []

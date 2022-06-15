@@ -45,7 +45,11 @@
   </div>
 
   <div
-    v-if="titreDemande.typeId && titreDemande.entrepriseId && !entrepriseCheck"
+    v-if="
+      titreDemande.typeId &&
+      titreDemande.entrepriseId &&
+      !entrepriseOuBureauDEtudeCheck
+    "
   >
     <h3 class="mb-s">Références</h3>
     <p class="h6 italic">Optionnel</p>
@@ -115,6 +119,7 @@ import Icon from '@/components/_ui/icon.vue'
 import {
   isAdministrationAdmin,
   isAdministrationEditeur,
+  isBureauDEtudes,
   isEntreprise,
   isSuper
 } from 'camino-common/src/roles'
@@ -141,8 +146,8 @@ export default {
       return this.entreprises.find(e => e.id === this.titreDemande.entrepriseId)
     },
 
-    entrepriseCheck() {
-      return isEntreprise(this.user)
+    entrepriseOuBureauDEtudeCheck() {
+      return isEntreprise(this.user) || isBureauDEtudes(this.user)
     },
 
     domaines() {
@@ -154,7 +159,7 @@ export default {
         return this.$store.state.user.metas.domaines
       }
 
-      if (isEntreprise(this.user)) {
+      if (isEntreprise(this.user) || isBureauDEtudes(this.user)) {
         return this.entreprise.titresTypes.reduce((domaines, tt) => {
           if (!domaines.find(({ id }) => tt.domaine.id === id)) {
             tt.domaine.titresTypes = []

@@ -7,6 +7,7 @@ test.skip.each`
   ${null}                                                               | ${false}
   ${undefined}                                                          | ${false}
   ${{ role: 'defaut' }}                                                 | ${false}
+  ${{ role: 'bureau d’études' }}                                        | ${false}
   ${{ role: 'entreprise' }}                                             | ${false}
   ${{ role: 'entreprise', entreprises: [] }}                            | ${false}
   ${{ role: 'entreprise', entreprises: [{ id: '1' }] }}                 | ${false}
