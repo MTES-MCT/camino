@@ -24,7 +24,6 @@ import {
   isAdministration,
   isAdministrationAdmin,
   isAdministrationEditeur,
-  isAdministrationLecteur,
   isBureauDEtudes,
   isDefault,
   isEntreprise,
@@ -256,9 +255,7 @@ export const demarchesCreationQuery = (
   if (isSuper(user)) {
     demarchesCreation = raw('true')
   } else if (
-    (isAdministrationEditeur(user) ||
-      isAdministrationLecteur(user) ||
-      isAdministrationAdmin(user)) &&
+    isAdministration(user) &&
     user.administrations?.length &&
     (titreId || titreIdAlias)
   ) {
