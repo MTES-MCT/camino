@@ -350,17 +350,15 @@ const getters = {
   isONF(state, getters) {
     return (
       getters.userIsAdmin &&
-      state.element.administrations.find(
-        ({ id }) => id === ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
-      )
+      state.element.administrationId ===
+        ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
     )
   },
   isPTMG(state, getters) {
     return (
       getters.userIsAdmin &&
-      state.element.administrations.find(
-        ({ id }) => id === ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
-      )
+      state.element.administrationId ===
+        ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
   },
   isDREAL(state, getters) {

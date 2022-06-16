@@ -22,37 +22,6 @@ const dupFind = (key: string, ...arrays: Index<any>[][]) =>
     arrays.pop() as Index<any>[]
   )
 
-interface IIndexCount {
-  [key: string]: Index<any>[]
-}
-
-const diffFind = (key: string, ...arrays: (Index<any>[] | null)[]) => {
-  const indexCount = arrays.reduce(
-    (indexCount: IIndexCount, array: Index<any>[] | null) =>
-      array
-        ? array.reduce((indexCount, index) => {
-            if (!indexCount[index[key]]) {
-              indexCount[index[key]] = []
-            }
-
-            indexCount[index[key]].push(index)
-
-            return indexCount
-          }, indexCount)
-        : indexCount,
-    {}
-  )
-
-  return Object.keys(indexCount).reduce((arrayDiff: Index<any>[], key) => {
-    // on ne garde que les éléments uniques
-    if (indexCount[key].length === 1) {
-      arrayDiff.push(indexCount[key][0])
-    }
-
-    return arrayDiff
-  }, [])
-}
-
 const objectsDiffer = (a: Index<any> | any, b: Index<any> | any): boolean => {
   const comparator = (a: Index<any> | any, b: Index<any> | any) =>
     Object.keys(a).find(k => {
@@ -78,4 +47,4 @@ const objectsDiffer = (a: Index<any> | any, b: Index<any> | any): boolean => {
 
 const objectClone = (obj: any) => deserialize(serialize(obj))
 
-export { objectClone, dupRemove, dupFind, diffFind, objectsDiffer }
+export { objectClone, dupRemove, dupFind, objectsDiffer }

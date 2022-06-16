@@ -69,7 +69,12 @@ describe('titresDemarchesQueryModify', () => {
           titreDemarcheSuppressionSelectQuery(
             'titresDemarches',
             role
-              ? { id: 'id', dateCreation: '', role, administrations: undefined }
+              ? {
+                  id: 'id',
+                  dateCreation: '',
+                  role,
+                  administrationId: undefined
+                }
               : undefined
           ).as('suppression')
         )
@@ -133,7 +138,7 @@ describe('titresDemarchesQueryModify', () => {
           titreDemarcheSuppressionSelectQuery(
             'titresDemarches',
             role
-              ? { id: '', dateCreation: '', role, administrations: undefined }
+              ? { id: '', dateCreation: '', role, administrationId: undefined }
               : undefined
           ).as('suppression')
         )

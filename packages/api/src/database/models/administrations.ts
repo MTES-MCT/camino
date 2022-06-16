@@ -66,11 +66,7 @@ class Administrations extends Model {
       modelClass: Utilisateurs,
       join: {
         from: 'administrations.id',
-        through: {
-          from: 'utilisateurs__administrations.administrationId',
-          to: 'utilisateurs__administrations.utilisateurId'
-        },
-        to: 'utilisateurs.id'
+        to: 'utilisateurs.administrationId'
       }
     },
 

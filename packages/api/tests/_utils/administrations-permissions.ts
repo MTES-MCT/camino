@@ -19,6 +19,7 @@ import {
 import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritage-props-find'
 import { etapeTypeSectionsFormat } from '../../src/api/_format/etapes-types'
 import { Role } from 'camino-common/src/roles'
+import { AdministrationId } from 'camino-common/src/administrations'
 
 const visibleCheck = async (
   administrationId: string,
@@ -368,7 +369,7 @@ const titreCreerSuper = async (administrationId: string, titreTypeId: string) =>
 const demarcheCreerProfil = async (
   titreId: string,
   profil: Role,
-  administrationId?: string
+  administrationId?: AdministrationId
 ) =>
   graphQLCall(
     queryImport('titre-demarche-creer'),

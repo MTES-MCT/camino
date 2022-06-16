@@ -966,7 +966,7 @@ interface IUtilisateur {
   role: Role
   // TODO: définir une interface IUtilisateurPreferences
   preferences?: any | null
-  administrations: IAdministration[] | null | undefined
+  administrationId: AdministrationId | undefined | null
   entreprises?: IEntreprise[] | null
   modification?: boolean | null
   suppression?: boolean | null

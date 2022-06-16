@@ -14,12 +14,10 @@ import {
 } from './titres'
 import AdministrationsTitresTypes from '../../models/administrations-titres-types'
 import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts'
-import Administrations from '../../models/administrations'
 import { userSuper } from '../../user-super'
 import {
   ADMINISTRATION_IDS,
-  AdministrationId,
-  Administrations as CommonAdministrations
+  AdministrationId
 } from 'camino-common/src/administrations'
 import { Role } from 'camino-common/src/roles'
 
@@ -304,12 +302,10 @@ describe('titresQueryModify', () => {
 
         await AdministrationsTitresTypesTitresStatuts.query().delete()
 
-        const administration = CommonAdministrations[administrationId]
-
         const q = Titres.query()
         titresTravauxCreationQuery(q, {
           role: 'admin',
-          administrations: [administration]
+          administrationId
         })
 
         const titre = (await q.first()) as ITitre
@@ -338,7 +334,7 @@ describe('titresQueryModify', () => {
         const q = Titres.query()
         titresTravauxCreationQuery(q, {
           role,
-          administrations: []
+          administrationId: undefined
         })
 
         const titre = (await q.first()) as ITitre
@@ -373,15 +369,12 @@ describe('titresQueryModify', () => {
         })
 
         await AdministrationsTitresTypesTitresStatuts.query().delete()
-        const administration = await Administrations.query().findById(
-          administrationId
-        )
 
         const q = Titres.query()
         q.select(
           titresModificationSelectQuery(q, {
             role,
-            administrations: [administration!]
+            administrationId
           }).as('modification')
         )
 
@@ -403,15 +396,12 @@ describe('titresQueryModify', () => {
       const administrationId = 'ope-ptmg-973-01'
 
       await AdministrationsTitresTypesTitresStatuts.query().delete()
-      const administration = await Administrations.query().findById(
-        administrationId
-      )
 
       const q = Titres.query()
       q.select(
         titresModificationSelectQuery(q, {
           role: 'admin',
-          administrations: [administration!]
+          administrationId
         }).as('modification')
       )
 
@@ -439,7 +429,7 @@ describe('titresQueryModify', () => {
         q.select(
           titresModificationSelectQuery(q, {
             role,
-            administrations: undefined
+            administrationId: undefined
           }).as('modification')
         )
 

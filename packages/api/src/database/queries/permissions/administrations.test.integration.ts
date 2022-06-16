@@ -56,7 +56,7 @@ describe('administrationsTitresQuery', () => {
       })
 
       const administrationQuery = administrationsTitresQuery(
-        ['ope-brgm-01'],
+        'ope-brgm-01',
         'titres',
         {
           isGestionnaire: true,
@@ -93,7 +93,7 @@ describe('administrationsQueryModify', () => {
       const mockUser: IUtilisateur = {
         id: idGenerate(),
         role,
-        administrations: [mockAdministration],
+        administrationId: mockAdministration.id,
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
         dateCreation: '2022-05-12'
@@ -132,7 +132,7 @@ describe('administrationsQueryModify', () => {
       const mockUser: IUtilisateur = {
         id: idGenerate(),
         role,
-        administrations: [mockDreal],
+        administrationId: mockDreal.id,
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
         dateCreation: '2022-05-12'
@@ -161,7 +161,7 @@ describe('administrationsQueryModify', () => {
     const mockUser: IUtilisateur = {
       id: idGenerate(),
       role: 'admin',
-      administrations: [mockDreal],
+      administrationId: mockDreal.id,
       email: 'email' + idGenerate(),
       motDePasse: 'motdepasse',
       dateCreation: '2022-05-12'
@@ -196,7 +196,7 @@ describe('administrationsQueryModify', () => {
       const mockUser: IUtilisateur = {
         id: idGenerate(),
         role,
-        administrations: [mockMin],
+        administrationId: mockMin.id,
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
         dateCreation: '2022-05-12'
@@ -243,7 +243,7 @@ describe('administrationsQueryModify', () => {
       const mockUser: IUtilisateur = {
         id: idGenerate(),
         role,
-        administrations: [mockAdministration],
+        administrationId: mockAdministration.id,
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
         dateCreation: '2022-05-12'
@@ -292,7 +292,7 @@ describe('administrationsQueryModify', () => {
     const mockUser: IUtilisateur = {
       id: idGenerate(),
       role: 'super',
-      administrations: [mockAdministration],
+      administrationId: mockAdministration.id,
       email: 'email' + idGenerate(),
       motDePasse: 'motdepasse',
       dateCreation: '2022-05-12'

@@ -10,7 +10,7 @@ type Utilisateur {
   prenom: String
   telephoneMobile: String
   telephoneFixe: String
-  administrations: [Administration]
+  administrationId: ID
   entreprises: [Entreprise]
   role: ID
   preferences: Json
@@ -53,7 +53,7 @@ input InputUtilisateurModification {
   telephoneFixe: String
   role: ID
   entreprises: [InputId]
-  administrations: [InputId]
+  administrationId: ID
   newsletter: Boolean
   preferences: Json
 }
@@ -67,7 +67,7 @@ input InputUtilisateurCreation {
   telephoneFixe: String
   role: ID
   entreprises: [InputId]
-  administrations: [InputId]
+  administrationId: ID
   newsletter: Boolean
   preferences: Json
 }

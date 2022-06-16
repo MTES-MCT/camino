@@ -13,16 +13,8 @@ const administrationsActivitesTypesEmailsQueryModify = (
   q.joinRelated('administrationsEmails')
   q.select('administrations__activites_types__emails.email')
 
-  const administrationsIds = user?.administrations?.map(a => a.id) || []
-  const administrationsIdsReplace = administrationsIds.map(() => '?')
-
   q.whereRaw(`?? = ?`, [
-    emailsLectureQuery(
-      user,
-      'administrations_emails',
-      administrationsIds,
-      administrationsIdsReplace
-    ),
+    emailsLectureQuery(user, 'administrations_emails'),
     true
   ])
 

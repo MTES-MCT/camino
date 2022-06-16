@@ -1,4 +1,10 @@
 import List from '../_ui/list.vue'
+import {
+  isAdministration,
+  isBureauDEtudes,
+  isEntreprise
+} from 'camino-common/src/roles'
+import { Administrations } from 'camino-common/src/administrations'
 
 const utilisateursColonnes = [
   {
@@ -31,9 +37,9 @@ const utilisateursLignesBuild = utilisateurs =>
   utilisateurs.map(utilisateur => {
     let elements
 
-    if (utilisateur.administrations && utilisateur.administrations.length) {
-      elements = utilisateur.administrations.map(({ nom }) => nom)
-    } else if (utilisateur.entreprises && utilisateur.entreprises.length) {
+    if (isAdministration(utilisateur)) {
+      elements = [Administrations[utilisateur.administrationId].abreviation]
+    } else if (isEntreprise(utilisateur) || isBureauDEtudes(utilisateur)) {
       elements = utilisateur.entreprises.map(({ nom }) => nom)
     }
 

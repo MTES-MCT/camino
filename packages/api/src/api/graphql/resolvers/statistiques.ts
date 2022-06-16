@@ -11,6 +11,8 @@ import {
   StatistiquesUtilisateurs
 } from 'camino-common/src/statistiques'
 import Utilisateurs from '../../../database/models/utilisateurs'
+import { isAdministration } from 'camino-common/src/roles'
+import { Administrations } from 'camino-common/src/administrations'
 
 const ACTIVITE_ANNEE_DEBUT = 2018
 
@@ -52,8 +54,7 @@ const statistiquesGlobales = async (): Promise<Statistiques> => {
     }).length
     // TODO 2022-05-11 serait plus performant avec plusieurs petites requêtes sql ?
     const utilisateursInDb = await Utilisateurs.query().withGraphFetched({
-      entreprises: {},
-      administrations: {}
+      entreprises: {}
     })
 
     const utilisateurs: StatistiquesUtilisateurs =
@@ -61,13 +62,10 @@ const statistiquesGlobales = async (): Promise<Statistiques> => {
         (previousValue, user) => {
           if (user.email) {
             // TODO 2022-05-16: restreindre le fait qu'un utilisateur ayant une administration ne PEUT PAS avoir d'entreprise
-            // également, un utilisateur ne peut être que dans UNE administration
-            if (user.administrations?.length) {
-              for (const administration of user.administrations) {
-                previousValue.rattachesAUnTypeDAdministration[
-                  administration.typeId
-                ]++
-              }
+            if (isAdministration(user)) {
+              previousValue.rattachesAUnTypeDAdministration[
+                Administrations[user.administrationId].typeId
+              ]++
             } else if (user.entreprises?.length) {
               previousValue.rattachesAUneEntreprise++
             } else {

@@ -60,14 +60,14 @@ const entreprises = {
   }
 }
 
-const utilisateursRelateTrue = ['administrations', 'entreprises']
+const utilisateursRelateTrue = ['entreprises']
 
 const utilisateursRelateFalse = [
   ...entreprisesRelateFalse.map(k => `entreprises.${k}`)
 ]
 
 const utilisateurs = {
-  graph: `[administrations.[titresTypes, activitesTypes], entreprises.etablissements]`,
+  graph: `[administration.[titresTypes, activitesTypes], entreprises.etablissements]`,
   update: {
     relate: utilisateursRelateTrue,
     unrelate: utilisateursRelateTrue,

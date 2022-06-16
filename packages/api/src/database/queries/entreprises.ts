@@ -196,10 +196,8 @@ const titreDemandeEntreprisesGet = async (
   }
 
   if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    if (!user.administrations) return []
-
     const titresCreation = await titresCreationQuery(
-      user.administrations?.map(a => a.id)
+      user.administrationId
     ).first()
 
     if (!titresCreation) return []

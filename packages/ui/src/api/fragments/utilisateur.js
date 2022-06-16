@@ -1,8 +1,7 @@
 import gql from 'graphql-tag'
 import { fragmentEntreprises } from './entreprises'
-import { fragmentAdministrations } from './administrations'
 
-const fragmentUtilisateur = gql`
+export const fragmentUtilisateur = gql`
   fragment utilisateur on Utilisateur {
     id
     nom
@@ -13,9 +12,7 @@ const fragmentUtilisateur = gql`
     entreprises {
       ...entreprises
     }
-    administrations {
-      ...administrations
-    }
+    administrationId
     role
     newsletter
 
@@ -36,8 +33,4 @@ const fragmentUtilisateur = gql`
   }
 
   ${fragmentEntreprises}
-
-  ${fragmentAdministrations}
 `
-
-export { fragmentUtilisateur }

@@ -26,7 +26,6 @@ const userGet = async (userId?: string) => {
   const q = utilisateursQueryBuild(
     {
       fields: {
-        administrations: { id: {} },
         entreprises: { id: {} }
       }
     },
@@ -78,9 +77,7 @@ const utilisateursFiltersQueryModify = (
   }
 
   if (administrationIds) {
-    q.whereIn('administrations.id', administrationIds).leftJoinRelated(
-      'administrations'
-    )
+    q.whereIn('administrationId', administrationIds)
   }
 
   if (entrepriseIds) {
@@ -157,15 +154,15 @@ const utilisateursColonnes: Record<
   role: { id: 'role' },
   lien: {
     id: raw(`CONCAT(
-      "administrations"."nom",
+      "administration"."nom",
       STRING_AGG(
         "entreprises"."nom",
         ' ; '
         order by "entreprises"."nom"
       )
     )`),
-    relation: '[administrations, entreprises]',
-    groupBy: ['utilisateurs.id', 'administrations.id']
+    relation: '[administration, entreprises]',
+    groupBy: ['utilisateurs.id', 'administration.id']
   }
 }
 const utilisateursGet = async (

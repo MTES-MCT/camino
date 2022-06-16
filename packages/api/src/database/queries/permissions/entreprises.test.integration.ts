@@ -43,7 +43,7 @@ describe('entreprisesQueryModify', () => {
         email: 'email',
         motDePasse: 'motdepasse',
         dateCreation: '2022-05-12',
-        administrations: undefined
+        administrationId: undefined
       }
 
       await Utilisateurs.query().insertGraph(mockUser)

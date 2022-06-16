@@ -6,10 +6,7 @@ import Titres from '../../models/titres'
 import { IDemarcheType } from '../../../types'
 import AdministrationsTitresTypes from '../../models/administrations-titres-types'
 import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts'
-import {
-  AdministrationId,
-  Administrations
-} from 'camino-common/src/administrations'
+import { AdministrationId } from 'camino-common/src/administrations'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -68,12 +65,10 @@ describe('metas permissions queries', () => {
           etapesModificationInterdit: false
         })
 
-        const administration = Administrations[administrationId]
-
         const q = DemarchesTypes.query()
         demarchesTypesQueryModify(
           q,
-          { role: 'admin', administrations: [administration!] },
+          { role: 'admin', administrationId },
           { titreId }
         )
 

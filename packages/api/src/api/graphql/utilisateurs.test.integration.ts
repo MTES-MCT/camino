@@ -230,7 +230,7 @@ describe('utilisateursCreer', () => {
           nom: 'test',
           email: 'test@camino.local',
           motDePasse: 'mot-de-passe',
-          administrations: [{ id: 'administration' }]
+          administrationId: Administrations['aut-97300-01'].id
         }
       },
       'defaut'
@@ -250,7 +250,7 @@ describe('utilisateursCreer', () => {
           email: 'test@camino.local',
           motDePasse: 'mot-de-passe',
           role: 'admin',
-          administrations: [{ id: administration.id }]
+          administrationId: administration.id
         }
       },
       'super'

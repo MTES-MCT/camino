@@ -184,44 +184,15 @@
 
         <div v-if="utilisateurIsAdministration">
           <hr />
-          <h3 class="mb-s">Administrations</h3>
+          <h3 class="mb-s">Administration</h3>
 
           <div class="flex full-x mb">
-            <select
-              id="cmn-utilisateur-edit-popup-administration-select"
-              v-model="utilisateur.administrations[0]"
-              class="p-s mr-s"
-            >
-              <option
-                v-for="a in administrations"
-                :key="a.id"
-                :value="{ id: a.id }"
-              >
+            <select v-model="utilisateur.administrationId" class="p-s mr-s">
+              <option v-for="a in administrations" :key="a.id" :value="a.id">
                 {{ `${a.abreviation}` }}
               </option>
             </select>
-            <div class="flex-right">
-              <button
-                class="btn py-s px-m rnd-xs"
-                @click="administrationRemove(n)"
-              >
-                <Icon name="minus" size="M" />
-              </button>
-            </div>
           </div>
-
-          <button
-            v-if="
-              !utilisateur.administrations.some(({ id }) => id === '') &&
-              utilisateurAdministrationsLength < 1
-            "
-            id="cmn-utilisateur-edit-popup-administration-button-ajouter"
-            class="btn small rnd-xs py-s px-m full-x flex mb"
-            @click="administrationAdd"
-          >
-            <span class="mt-xxs">Ajouter une administration</span>
-            <Icon name="plus" size="M" class="flex-right" />
-          </button>
         </div>
       </div>
 
@@ -360,7 +331,7 @@ export default {
 
       if (
         this.utilisateurIsAdministration &&
-        !this.utilisateurAdministrationsLength
+        !this.utilisateur.administrationId
       ) {
         return false
       }
@@ -370,10 +341,6 @@ export default {
 
     utilisateurEntreprisesLength() {
       return this.utilisateur.entreprises.filter(({ id }) => id).length
-    },
-
-    utilisateurAdministrationsLength() {
-      return this.utilisateur.administrations.filter(({ id }) => id).length
     },
 
     utilisateurIsEntrepriseOuBureauDEtude() {
@@ -411,12 +378,8 @@ export default {
         delete utilisateur.entreprisesCreation
         delete utilisateur.utilisateursCreation
 
-        if (this.utilisateurIsAdministration) {
-          utilisateur.administrations = utilisateur.administrations.filter(
-            ({ id }) => id
-          )
-        } else {
-          utilisateur.administrations = []
+        if (!this.utilisateurIsAdministration) {
+          utilisateur.administrationId = undefined
         }
 
         if (this.utilisateurIsEntrepriseOuBureauDEtude) {
@@ -469,14 +432,6 @@ export default {
 
     entrepriseRemove(index) {
       this.utilisateur.entreprises.splice(index, 1)
-    },
-
-    administrationAdd() {
-      this.utilisateur.administrations.push({ id: '' })
-    },
-
-    administrationRemove(index) {
-      this.utilisateur.administrations.splice(index, 1)
     },
 
     formIsVisible(user) {

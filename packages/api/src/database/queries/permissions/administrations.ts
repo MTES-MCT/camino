@@ -4,7 +4,8 @@ import { IUtilisateur } from '../../../types'
 
 import { knex } from '../../../knex'
 
-import Administrations from '../../models/administrations'
+// eslint-disable-next-line import/no-named-default
+import { default as AdministrationsModel } from '../../models/administrations'
 import Utilisateurs from '../../models/utilisateurs'
 import Titres from '../../models/titres'
 
@@ -19,9 +20,13 @@ import {
   isAdministrationEditeur,
   isSuper
 } from 'camino-common/src/roles'
+import {
+  AdministrationId,
+  Administrations
+} from 'camino-common/src/administrations'
 
 const departementsQuery = (
-  administrationsIds: string[],
+  administrationsId: AdministrationId,
   administrationAlias: string
 ) =>
   Departements.query()
@@ -31,42 +36,40 @@ const departementsQuery = (
       'departements.id',
       `${administrationAlias}.departementId`
     ])
-    .whereIn('adm.id', administrationsIds)
+    .where('adm.id', administrationsId)
 
 const emailsLectureQuery = (
   user: IUtilisateur | null | undefined,
-  administrationAlias: string,
-  administrationsIds: string[],
-  administrationsIdsReplace: string[]
+  administrationAlias: string
 ) => {
   if (
     isSuper(user) ||
-    (user?.administrations?.some(a => a.typeId === 'min') &&
-      isAdministration(user))
+    (isAdministration(user) &&
+      Administrations[user.administrationId].typeId === 'min')
   ) {
     // Utilisateur super ou membre de ministère (admin ou éditeur) : tous les droits
     return raw('true')
-  } else if (user?.administrations?.length && isAdministration(user)) {
-    return raw(
-      `((??) OR (${administrationAlias}.id IN (${administrationsIdsReplace})))`,
-      [
-        departementsQuery(administrationsIds, administrationAlias),
-        ...administrationsIds
-      ]
-    )
+  } else if (isAdministration(user)) {
+    return raw(`((??) OR (${administrationAlias}.id = ?))`, [
+      departementsQuery(user.administrationId, administrationAlias),
+      user.administrationId
+    ])
   }
 
   return raw('false')
 }
 
 const administrationsQueryModify = (
-  q: QueryBuilder<Administrations, Administrations | Administrations[]>,
+  q: QueryBuilder<
+    AdministrationsModel,
+    AdministrationsModel | AdministrationsModel[]
+  >,
   user: IUtilisateur | null | undefined
-): QueryBuilder<Administrations, Administrations | Administrations[]> => {
+): QueryBuilder<
+  AdministrationsModel,
+  AdministrationsModel | AdministrationsModel[]
+> => {
   q.select('administrations.*')
-
-  const administrationsIds = user?.administrations?.map(a => a.id) || []
-  const administrationsIdsReplace = administrationsIds.map(() => '?')
 
   if (isSuper(user)) {
     q.select(raw('true').as('modification'))
@@ -74,25 +77,22 @@ const administrationsQueryModify = (
 
   if (
     isSuper(user) ||
-    (user?.administrations?.some(a => a.typeId === 'min') &&
-      (isAdministrationAdmin(user) || isAdministrationEditeur(user)))
+    ((isAdministrationAdmin(user) || isAdministrationEditeur(user)) &&
+      Administrations[user.administrationId].typeId === 'min')
   ) {
     // Utilisateur super ou membre de ministère (admin ou éditeur) : tous les droits
     q.select(raw('true').as('emailsModification'))
-  } else if (
-    user?.administrations?.length &&
-    (isAdministrationAdmin(user) || isAdministrationEditeur(user))
-  ) {
+  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     // Membre d'une DREAL/DEAL vis-à-vis de la DREAL elle-même,
     // ou d'un DREAL/DEAL vis-à-vis d'une administration qui dépend d'elles
     // Admin ou éditeur : modifications
     // Admin, éditeur ou lecteur : lecture
     q.select(
       raw(
-        `((??) OR (administrations.id IN (${administrationsIdsReplace}) AND administrations.type_id IN (?,?)))`,
+        `((??) OR (administrations.id = ? AND administrations.type_id IN (?,?)))`,
         [
-          departementsQuery(administrationsIds, 'administrations'),
-          ...administrationsIds,
+          departementsQuery(user.administrationId, 'administrations'),
+          user.administrationId,
           'dre',
           'dea'
         ]
@@ -100,14 +100,7 @@ const administrationsQueryModify = (
     )
   }
 
-  q.select(
-    emailsLectureQuery(
-      user,
-      'administrations',
-      administrationsIds,
-      administrationsIdsReplace
-    ).as('emailsLecture')
-  )
+  q.select(emailsLectureQuery(user, 'administrations').as('emailsLecture'))
 
   q.modifyGraph('activitesTypesEmails', a =>
     administrationsActivitesTypesEmailsQueryModify(
@@ -144,8 +137,11 @@ const administrationsQueryModify = (
 }
 
 const administrationsTitresTypesModify = (
-  q: QueryBuilder<Administrations, Administrations | Administrations[]>,
-  administrationsIds: string[],
+  q: QueryBuilder<
+    AdministrationsModel,
+    AdministrationsModel | AdministrationsModel[]
+  >,
+  administrationsId: AdministrationId,
   titreAlias: string,
   {
     isGestionnaire,
@@ -155,7 +151,7 @@ const administrationsTitresTypesModify = (
   q.leftJoin('administrations__titresTypes as a_tt', b => {
     b.on(knex.raw('?? = ??', ['a_tt.administrationId', 'administrations.id']))
     b.andOn(knex.raw('?? = ??', ['a_tt.titreTypeId', `${titreAlias}.typeId`]))
-    b.andOnIn('administrations.id', administrationsIds)
+    b.andOn('administrations.id', administrationsId)
     if (isGestionnaire || isAssociee) {
       b.andOn(c => {
         if (isGestionnaire) {
@@ -170,8 +166,11 @@ const administrationsTitresTypesModify = (
 }
 
 const administrationsLocalesModify = (
-  q: QueryBuilder<Administrations, Administrations | Administrations[]>,
-  administrationsIds: string[],
+  q: QueryBuilder<
+    AdministrationsModel,
+    AdministrationsModel | AdministrationsModel[]
+  >,
+  administrationsId: AdministrationId,
   titreAlias: string
 ) => {
   q.leftJoin('titresAdministrationsLocales as t_al', b => {
@@ -182,12 +181,15 @@ const administrationsLocalesModify = (
         't_al.titreEtapeId'
       ])
     )
-    b.onIn('t_al.administrationId', administrationsIds)
+    b.on('t_al.administrationId', administrationsId)
   })
 }
 
 const administrationsActivitesModify = (
-  q: QueryBuilder<Administrations, Administrations | Administrations[]>,
+  q: QueryBuilder<
+    AdministrationsModel,
+    AdministrationsModel | AdministrationsModel[]
+  >,
 
   { lecture, modification }: { lecture?: boolean; modification?: boolean }
 ) => {
@@ -209,7 +211,7 @@ const administrationsActivitesModify = (
 }
 
 const administrationsTitresQuery = (
-  administrationsIds: string[],
+  administrationId: AdministrationId,
   titreAlias: string,
   {
     isGestionnaire,
@@ -217,20 +219,20 @@ const administrationsTitresQuery = (
     isLocale
   }: { isGestionnaire?: boolean; isAssociee?: boolean; isLocale?: boolean } = {}
 ) => {
-  const q = Administrations.query().whereIn(
+  const q = AdministrationsModel.query().where(
     'administrations.id',
-    administrationsIds
+    administrationId
   )
 
   if (isGestionnaire || isAssociee) {
-    q.modify(administrationsTitresTypesModify, administrationsIds, titreAlias, {
+    q.modify(administrationsTitresTypesModify, administrationId, titreAlias, {
       isGestionnaire,
       isAssociee
     })
   }
 
   if (isLocale) {
-    q.modify(administrationsLocalesModify, administrationsIds, titreAlias)
+    q.modify(administrationsLocalesModify, administrationId, titreAlias)
   }
 
   q.where(c => {
@@ -247,11 +249,17 @@ const administrationsTitresQuery = (
 }
 
 const administrationsTitresTypesTitresStatutsModify = (
-  q: QueryBuilder<Administrations, Administrations | Administrations[]>,
+  q: QueryBuilder<
+    AdministrationsModel,
+    AdministrationsModel | AdministrationsModel[]
+  >,
   type: 'titres' | 'demarches' | 'etapes',
   titreAlias: string,
   conditionsAdd?: (
-    b: QueryBuilder<Administrations, Administrations | Administrations[]>
+    b: QueryBuilder<
+      AdministrationsModel,
+      AdministrationsModel | AdministrationsModel[]
+    >
   ) => void
 ) => {
   q.leftJoin('administrations__titresTypes__titresStatuts as a_tt_ts', b => {
@@ -278,7 +286,10 @@ const administrationsTitresTypesTitresStatutsModify = (
 // l'utilisateur est dans au moins une administration
 // qui n'a pas de restriction 'creationInterdit' sur ce type d'étape / type de titre
 const administrationsTitresTypesEtapesTypesModify = (
-  q: QueryBuilder<Administrations, Administrations | Administrations[]>,
+  q: QueryBuilder<
+    AdministrationsModel,
+    AdministrationsModel | AdministrationsModel[]
+  >,
   type: 'lecture' | 'modification' | 'creation',
   titreTypeIdColumn: string,
   etapeTypeIdColumn: string

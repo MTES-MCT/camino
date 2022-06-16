@@ -34,14 +34,9 @@ const titreEtapeModificationQueryBuild = (
 ) => {
   if (isSuper(user)) {
     return raw('true')
-  } else if (
-    (isAdministrationAdmin(user) || isAdministrationEditeur(user)) &&
-    user?.administrations?.length
-  ) {
-    const administrationsIds = user.administrations.map(a => a.id) || []
-
+  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     return administrationsEtapesTypesPropsQuery(
-      administrationsIds,
+      user.administrationId,
       'modification'
     )
       .whereRaw('?? = ??', [
@@ -130,11 +125,9 @@ const titresEtapesQueryModify = (
       b.orWhere('type.publicLecture', true)
 
       // étapes visibles pour les admins
-      if (user?.administrations?.length && isAdministration(user)) {
-        const administrationsIds = user.administrations.map(a => a.id) || []
-
+      if (isAdministration(user)) {
         b.orWhereExists(
-          administrationsTitresQuery(administrationsIds, 'demarche:titre', {
+          administrationsTitresQuery(user.administrationId, 'demarche:titre', {
             isGestionnaire: true,
             isAssociee: true,
             isLocale: true

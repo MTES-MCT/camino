@@ -1,7 +1,6 @@
 import { IAdministration } from '../../types'
 
 import { titresFormat } from './titres'
-import { utilisateurFormat } from './utilisateurs'
 import {
   Administrations,
   ADMINISTRATION_TYPES
@@ -24,9 +23,6 @@ const administrationFormat = (administration: IAdministration) => {
 
   administration.localeTitres =
     administration.localeTitres && titresFormat(administration.localeTitres)
-
-  administration.utilisateurs =
-    administration.utilisateurs?.map(utilisateurFormat)
 
   const adminis = Administrations[administration.id]
   administration.type = ADMINISTRATION_TYPES[adminis.typeId]

@@ -136,10 +136,6 @@ const tables = [
   { name: 'trimestres', orderBy: ['id'] },
   { name: 'utilisateurs', orderBy: ['id'] },
   {
-    name: 'utilisateurs__administrations',
-    orderBy: ['utilisateur_id', 'administration_id']
-  },
-  {
     name: 'utilisateurs__entreprises',
     orderBy: ['utilisateur_id', 'entreprise_id']
   }

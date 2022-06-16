@@ -162,17 +162,17 @@
             </div>
           </div>
 
-          <div v-if="utilisateur.administrations.length" class="tablet-blobs">
+          <div v-if="administration" class="tablet-blobs">
             <div class="tablet-blob-1-4">
               <h5>Administration</h5>
             </div>
 
             <div class="tablet-blob-3-4">
-              <ul class="list-prefix">
-                <li v-for="a in utilisateur.administrations" :key="a.id">
-                  {{ `${a.abreviation}${a.service ? ` - ${a.service}` : ''}` }}
-                </li>
-              </ul>
+              {{
+                `${administration.abreviation}${
+                  administration.service ? ` - ${administration.service}` : ''
+                }`
+              }}
             </div>
           </div>
         </div>
@@ -190,7 +190,8 @@ import UtilisateurEditPopup from './utilisateur/edit-popup.vue'
 import UtilisateurRemovePopup from './utilisateur/remove-popup.vue'
 import UtilisateurPasswordPopup from './utilisateur/password-popup.vue'
 import UtilisateurEmailPopup from './utilisateur/email-popup.vue'
-import { isSuper } from 'camino-common/src/roles'
+import { isAdministration, isSuper } from 'camino-common/src/roles'
+import { Administrations } from 'camino-common/src/administrations'
 
 export default {
   components: {
@@ -206,6 +207,11 @@ export default {
       return this.$store.state.utilisateur.element
     },
 
+    administration() {
+      return isAdministration(this.utilisateur)
+        ? Administrations[this.utilisateur.administrationId]
+        : null
+    },
     user() {
       return this.$store.state.user.element
     },
@@ -252,10 +258,6 @@ export default {
       utilisateur.entreprises = utilisateur.entreprises.map(({ id }) => ({
         id
       }))
-
-      utilisateur.administrations = utilisateur.administrations.map(
-        ({ id }) => ({ id })
-      )
 
       delete utilisateur.sections
       delete utilisateur.modification

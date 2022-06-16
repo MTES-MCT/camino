@@ -35,7 +35,6 @@ import { globales } from '../../../database/cache/globales'
 import { utilisateurUpdationValidate } from '../../../business/validations/utilisateur-updation-validate'
 import { emailCheck } from '../../../tools/email-check'
 import { utilisateurEditionCheck } from '../../_permissions/utilisateur'
-import { utilisateurFormat } from '../../_format/utilisateurs'
 import { userFormat } from '../../_format/users'
 import {
   newsletterSubscriberCheck,
@@ -80,7 +79,7 @@ const utilisateur = async (
     const fields = fieldsBuild(info)
     const utilisateur = await utilisateurGet(id, { fields }, user)
 
-    return utilisateur && utilisateurFormat(utilisateur)
+    return utilisateur
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -149,7 +148,7 @@ const utilisateurs = async (
     ])
 
     return {
-      elements: utilisateurs.map(utilisateurFormat),
+      elements: utilisateurs,
       page,
       intervalle,
       ordre,
@@ -365,7 +364,7 @@ const utilisateurCreer = async (
     }
 
     if (!isAdministration(utilisateur)) {
-      utilisateur.administrations = []
+      utilisateur.administrationId = undefined
     }
 
     if (!isEntreprise(utilisateur) && !isBureauDEtudes(utilisateur)) {
@@ -498,7 +497,7 @@ const utilisateurModifier = async (
     }
 
     if (!isAdministration(utilisateur)) {
-      utilisateur.administrations = []
+      utilisateur.administrationId = undefined
     }
 
     if (!isEntreprise(utilisateur) && !isBureauDEtudes(utilisateur)) {
@@ -514,7 +513,7 @@ const utilisateurModifier = async (
       !!utilisateurUpdated.newsletter
     )
 
-    return utilisateurFormat(utilisateurUpdated)
+    return utilisateurUpdated
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -546,7 +545,7 @@ const utilisateurSupprimer = async (
     utilisateur.telephoneMobile = ''
     utilisateur.role = 'defaut'
     utilisateur.entreprises = []
-    utilisateur.administrations = []
+    utilisateur.administrationId = undefined
 
     const utilisateurUpdated = await utilisateurUpsert(utilisateur, {})
 

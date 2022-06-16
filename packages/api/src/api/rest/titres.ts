@@ -44,7 +44,7 @@ export const titresONF = async (
 
   const onf = ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
 
-  if (!user?.administrations?.some(({ id }) => id === onf)) {
+  if (user?.administrationId !== onf) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
     const titresAvecOctroiArm = await titresArmAvecOctroi(user, onf)
@@ -192,7 +192,7 @@ export const titresPTMG = async (
 
   const administrationId = ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
 
-  if (!user?.administrations?.some(({ id }) => id === administrationId)) {
+  if (user?.administrationId !== administrationId) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
     const titresFormated: CommonTitrePTMG[] = (
