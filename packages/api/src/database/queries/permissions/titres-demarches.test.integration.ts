@@ -10,6 +10,7 @@ import {
 } from './titres-demarches'
 import TitresEtapes from '../../models/titres-etapes'
 import { Role } from 'camino-common/src/roles'
+import { Administrations } from 'camino-common/src/administrations'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -73,7 +74,7 @@ describe('titresDemarchesQueryModify', () => {
                   id: 'id',
                   dateCreation: '',
                   role,
-                  administrationId: undefined
+                  administrationId: Administrations['dea-guyane-01'].id
                 }
               : undefined
           ).as('suppression')

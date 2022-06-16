@@ -3,7 +3,6 @@ import { raw, QueryBuilder } from 'objection'
 import { IUtilisateur } from '../../../types'
 
 import Utilisateurs from '../../models/utilisateurs'
-import Administrations from '../../models/administrations'
 import Entreprises from '../../models/entreprises'
 import { entreprisesQueryModify } from './entreprises'
 import {
@@ -27,14 +26,7 @@ const utilisateursQueryModify = (
   if (isAdministrationEditeur(user) || isAdministrationLecteur(user)) {
     // un utilisateur 'editeur' ou 'lecteur'
     // ne voit que les utilisateurs de son administration
-    q.whereExists(
-      (
-        Utilisateurs.relatedQuery('administrations') as QueryBuilder<
-          Administrations,
-          Administrations | Administrations[]
-        >
-      ).where('administrations.id', user.administrationId)
-    )
+    q.where('utilisateurs.administrationId', user.administrationId)
   } else if (
     (isEntreprise(user) || isBureauDEtudes(user)) &&
     user.entreprises?.length

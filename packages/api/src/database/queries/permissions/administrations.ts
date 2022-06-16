@@ -151,7 +151,7 @@ const administrationsTitresTypesModify = (
   q.leftJoin('administrations__titresTypes as a_tt', b => {
     b.on(knex.raw('?? = ??', ['a_tt.administrationId', 'administrations.id']))
     b.andOn(knex.raw('?? = ??', ['a_tt.titreTypeId', `${titreAlias}.typeId`]))
-    b.andOn('administrations.id', administrationsId)
+    b.andOn(knex.raw('?? = ?', ['administrations.id', administrationsId]))
     if (isGestionnaire || isAssociee) {
       b.andOn(c => {
         if (isGestionnaire) {
@@ -181,7 +181,7 @@ const administrationsLocalesModify = (
         't_al.titreEtapeId'
       ])
     )
-    b.on('t_al.administrationId', administrationsId)
+    b.on(knex.raw('?? = ?', ['t_al.administrationId', administrationsId]))
   })
 }
 

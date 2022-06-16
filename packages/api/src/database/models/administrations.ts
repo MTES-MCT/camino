@@ -62,7 +62,7 @@ class Administrations extends Model {
     },
 
     utilisateurs: {
-      relation: Model.ManyToManyRelation,
+      relation: Model.HasManyRelation,
       modelClass: Utilisateurs,
       join: {
         from: 'administrations.id',
