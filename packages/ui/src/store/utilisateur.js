@@ -236,20 +236,13 @@ const mutations = {
 
   metasReset(state) {
     state.metas = {
-      entreprises: [],
-      administrations: []
+      entreprises: []
     }
     state.metasLoaded = false
   },
 
   metasSet(state, data) {
-    Object.keys(data).forEach(id => {
-      if (id === 'entreprises') {
-        state.metas[id] = data[id].elements
-      } else {
-        state.metas[id] = data[id]
-      }
-    })
+    state.metas.entreprises = data.elements
 
     state.metasLoaded = true
   }
