@@ -160,6 +160,9 @@ export default {
     isPTMG() {
       return this.$store.getters['user/isPTMG']
     },
+    isDREAL() {
+      return this.$store.getters['user/isDREAL']
+    },
 
     sections() {
       return this.user && this.user.sections ? this.user.sections : {}
@@ -174,6 +177,9 @@ export default {
       }
       if (this.isPTMG) {
         return 'Tableau de bord PTMG'
+      }
+      if (this.isDREAL) {
+        return 'Tableau de bord'
       }
       return null
     },

@@ -1,3 +1,6 @@
+import { DomaineId } from './domaines'
+import { TitresTypesTypesId } from './titresTypesTypes'
+
 export interface CommonTitre {
   id: string
   slug: string
@@ -12,6 +15,13 @@ export interface CommonTitre {
 
 export interface CommonTitrePTMG extends CommonTitre {
   enAttenteDePTMG: boolean
+}
+
+export interface CommonTitreDREAL extends CommonTitre {
+  domaineId: DomaineId
+  typeId: TitresTypesTypesId
+  activitesAbsentes: number
+  activitesEnConstruction: number
 }
 
 export interface CommonTitreONF extends CommonTitre {

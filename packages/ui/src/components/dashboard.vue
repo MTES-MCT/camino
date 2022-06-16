@@ -6,6 +6,7 @@
   />
   <PureONFDashboard v-else-if="isONF" :getOnfTitres="getOnfTitres" />
   <PurePTMGDashboard v-else-if="isPTMG" :getPtmgTitres="getPtmgTitres" />
+  <PureDREALDashboard v-else-if="isDREAL" :getDrealTitres="getDrealTitres" />
   <div v-else>Loading</div>
 </template>
 
@@ -13,6 +14,7 @@
 import PureEntrepriseDashboard from '@/components/dashboard/pure-entreprise-dashboard.vue'
 import PureONFDashboard from '@/components/dashboard/pure-onf-dashboard.vue'
 import PurePTMGDashboard from '@/components/dashboard/pure-ptmg-dashboard.vue'
+import PureDREALDashboard from '@/components/dashboard/pure-dreal-dashboard.vue'
 
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
@@ -29,16 +31,17 @@ const hasEntreprises: boolean = store.getters['user/hasEntreprises']
 
 const isONF: boolean = store.getters['user/isONF']
 const isPTMG: boolean = store.getters['user/isPTMG']
+const isDREAL: boolean = store.getters['user/isDREAL']
 if (hasEntreprises) {
   // TODO 2022-03-17: type the store
   const entreprises = store.getters['user/user']?.entreprises ?? []
   entreprisesIds.push(
     ...entreprises.map((entreprise: { id: string }) => entreprise.id)
   )
-} else if (!isONF && !isPTMG) {
+} else if (!isONF && !isPTMG && !isDREAL) {
   store.commit('titres/reset')
   store.dispatch('titres/init')
-  router.push({ name: 'titres' })
+  router.replace({ name: 'titres' })
 }
 
 const getEntreprisesTitres = async () => {
@@ -47,4 +50,5 @@ const getEntreprisesTitres = async () => {
 
 const getOnfTitres = async () => (await fetch('/apiUrl/titresONF')).json()
 const getPtmgTitres = async () => (await fetch('/apiUrl/titresPTMG')).json()
+const getDrealTitres = async () => (await fetch('/apiUrl/titresDREAL')).json()
 </script>
