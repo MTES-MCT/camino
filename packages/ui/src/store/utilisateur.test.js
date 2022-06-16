@@ -77,7 +77,7 @@ describe("état de l'utilisateur consulté", () => {
 
   test('récupère les métas pour éditer un utilisateur', async () => {
     const apiMock = api.utilisateurMetas.mockResolvedValue({
-      entreprises: { elements: ['ent-1'] }
+      elements: ['ent-1']
     })
 
     await store.dispatch('utilisateur/init')
