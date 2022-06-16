@@ -17,6 +17,19 @@ query {
   geoSystemes {
     ...geosysteme
   }
+  pays {
+    ...pays
+  }
+  regions {
+    id
+    nom
+    paysId
+  }
+  departements {
+    id
+    nom
+    regionId
+  }
 }
 
 fragment type on TitreTypeType {

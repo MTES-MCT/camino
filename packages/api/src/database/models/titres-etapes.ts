@@ -2,8 +2,6 @@ import { Model, Pojo, QueryContext } from 'objection'
 
 import { ITitreEtape, ITitrePoint } from '../../types'
 
-import { paysFormat } from './_format/pays'
-
 import {
   heritagePropsFormat,
   heritageContenuFormat
@@ -235,8 +233,6 @@ class TitresEtapes extends Model {
   }
 
   async $afterFind(context: any) {
-    this.pays = paysFormat(this.communes || [])
-
     if (context.fetchHeritage && this.heritageProps) {
       this.heritageProps = await heritagePropsFormat(this.heritageProps)
     }
@@ -249,10 +245,6 @@ class TitresEtapes extends Model {
   }
 
   public $formatDatabaseJson(json: Pojo) {
-    if (json.pays) {
-      delete json.pays
-    }
-
     delete json.modification
     delete json.suppression
     delete json.deposable

@@ -5,9 +5,6 @@ type Pays {
 
   "Nom du pays"
   nom: String!
-
-  "Liste des régions"
-  regions: [Region]
 }
 
 "Région"
@@ -18,8 +15,8 @@ type Region {
   "Nom de la région"
   nom: String!
 
-  "Liste des départements"
-  departements: [Departement]
+  "Id du pays"
+  paysId: ID
 }
 
 "Département"
@@ -30,8 +27,8 @@ type Departement {
   "Nom du département"
   nom: String!
 
-  "Liste des communes"
-  communes: [Commune]
+  "Id de la région"
+  regionId: ID
 }
 
 "Commune"
@@ -44,6 +41,9 @@ type Commune {
 
   "Surface couverte par le titre"
   surface: Int
+
+  "Id du département"
+  departementId: ID
 }
 
 "Forêt"
