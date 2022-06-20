@@ -8,7 +8,10 @@ import CoordonneesIcone from '../_common/coordonnees-icone.vue'
 import ActivitesPills from '../_common/pills.vue'
 import Statut from '../_common/statut.vue'
 import { DomaineId } from 'camino-common/src/domaines'
-import { TitresTypesTypesId } from 'camino-common/src/titresTypesTypes'
+import {
+  TitresTypesTypes,
+  TitresTypesTypesId
+} from 'camino-common/src/titresTypesTypes'
 import {
   Column,
   ComponentColumnData,
@@ -91,6 +94,30 @@ export const nomColumn: Column<'nom'> = {
   name: 'Nom',
   class: ['min-width-8']
 }
+export const domaineColumn: Column<'domaine'> = {
+  id: 'domaine',
+  name: ''
+}
+export const typeColumn: Column<'type'> = {
+  id: 'type',
+  name: 'Type',
+  class: ['min-width-8']
+}
+
+export const activiteColumn: Column<'activites'> = {
+  id: 'activites',
+  name: 'Activités',
+  class: ['min-width-5'],
+  sort: (statut1: TableAutoRow, statut2: TableAutoRow) => {
+    const row1Statut = statut1.columns.activites.value
+    const row2Statut = statut2.columns.activites.value
+    if (typeof row1Statut === 'number' && typeof row2Statut === 'number') {
+      return row1Statut - row2Statut
+    }
+    return 0
+  }
+}
+
 export const statutColumn: Column<'statut'> = {
   id: 'statut',
   name: 'Statut',
@@ -116,29 +143,10 @@ export const titulairesColumn: Column<'titulaires'> = {
 }
 const titresColonnes: Column[] = [
   nomColumn,
-  {
-    id: 'domaine',
-    name: ''
-  },
-  {
-    id: 'type',
-    name: 'Type',
-    class: ['min-width-8']
-  },
+  domaineColumn,
+  typeColumn,
   statutColumn,
-  {
-    id: 'activites',
-    name: 'Activités',
-    class: ['min-width-5'],
-    sort: (statut1: TableAutoRow, statut2: TableAutoRow) => {
-      const row1Statut = statut1.columns.activites.value
-      const row2Statut = statut2.columns.activites.value
-      if (typeof row1Statut === 'number' && typeof row2Statut === 'number') {
-        return row1Statut - row2Statut
-      }
-      return 0
-    }
-  },
+  activiteColumn,
   {
     id: 'substances',
     name: 'Substances',
@@ -204,6 +212,28 @@ export const titulairesCell = (titre: { titulaires?: { nom: string }[] }) => ({
   class: 'mb--xs',
   value: titre.titulaires?.map(({ nom }) => nom).join(', ')
 })
+export const domaineCell = (titre: { domaineId: DomaineId }) => ({
+  component: markRaw(CaminoDomaine),
+  props: { domaineId: titre.domaineId },
+  value: titre.domaineId
+})
+
+export const typeCell = (titre: { typeId: TitresTypesTypesId }) => ({
+  component: markRaw(TitreTypeTypeNom),
+  props: { nom: TitresTypesTypes[titre.typeId].nom },
+  value: TitresTypesTypes[titre.typeId].nom
+})
+export const activitesCell = (titre: {
+  activitesAbsentes: number | null
+  activitesEnConstruction: number | null
+}) => ({
+  component: markRaw(ActivitesPills),
+  props: {
+    activitesAbsentes: titre.activitesAbsentes,
+    activitesEnConstruction: titre.activitesEnConstruction
+  },
+  value: (titre?.activitesAbsentes ?? 0) + (titre?.activitesEnConstruction ?? 0)
+})
 const titresLignesBuild = (
   titres: Entreprise[],
   activitesCol: boolean,
@@ -227,21 +257,13 @@ const titresLignesBuild = (
     )
     const columns: { [key in string]: ComponentColumnData | TextColumnData } = {
       nom: nomCell(titre),
-      domaine: {
-        component: markRaw(CaminoDomaine),
-        props: { domaineId: titre.domaine.id },
-        value: titre.domaine.id
-      },
+      domaine: domaineCell({ domaineId: titre.domaine.id }),
       coordonnees: {
         component: markRaw(CoordonneesIcone),
         props: { coordonnees: titre.coordonnees },
         value: titre.coordonnees ? '·' : ''
       },
-      type: {
-        component: markRaw(TitreTypeTypeNom),
-        props: { nom: titre.type.type.nom },
-        value: titre.type.type.nom
-      },
+      type: typeCell({ typeId: titre.type.type.id }),
       statut: statutCell(titre),
       substances: {
         component: markRaw(TagList),
@@ -272,16 +294,7 @@ const titresLignesBuild = (
     }
 
     if (activitesCol) {
-      columns.activites = {
-        component: markRaw(ActivitesPills),
-        props: {
-          activitesAbsentes: titre.activitesAbsentes,
-          activitesEnConstruction: titre.activitesEnConstruction
-        },
-        value:
-          (titre?.activitesAbsentes ?? 0) +
-          (titre?.activitesEnConstruction ?? 0)
-      }
+      columns.activites = activitesCell(titre)
     }
 
     return {

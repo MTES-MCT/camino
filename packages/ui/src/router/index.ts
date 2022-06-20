@@ -256,7 +256,7 @@ const routes: RouteRecordRaw[] = [
   {
     name: 'homepage',
     path: '/',
-    redirect: { name: 'dashboard' }
+    redirect: { name: 'dashboard', replace: true }
   },
   {
     path: '/:pathMatch(.*)*',

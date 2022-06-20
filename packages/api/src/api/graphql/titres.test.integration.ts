@@ -1,18 +1,11 @@
 import { dbManager } from '../../../tests/db-manager'
 import { graphQLCall, queryImport } from '../../../tests/_utils/index'
-import {
-  titreWithActiviteGrp,
-  titrePublicLecture,
-  titrePublicLectureFalse,
-  titreEtapesPubliques,
-  titreDemarchesPubliques,
-  titreActivites
-} from '../../../tests/__mocks__/titres'
 import { titreCreate } from '../../database/queries/titres'
 import {
   ADMINISTRATION_IDS,
   Administrations
 } from 'camino-common/src/administrations'
+import { IAdministration, ITitre } from '../../types'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -28,10 +21,273 @@ afterAll(async () => {
   await dbManager.closeKnex()
 })
 
+const titrePublicLectureFalse: ITitre = {
+  id: 'titre-id',
+  nom: 'mon titre',
+  domaineId: 'm',
+  typeId: 'arm',
+  publicLecture: false,
+  propsTitreEtapesIds: {}
+}
+
+const titreDemarchesPubliques: ITitre = {
+  id: 'titre-id',
+  nom: 'mon titre',
+  domaineId: 'm',
+  typeId: 'arm',
+  publicLecture: true,
+  propsTitreEtapesIds: {},
+  demarches: [
+    {
+      id: 'titre-id-demarche-oct',
+      titreId: 'titre-id',
+      typeId: 'oct',
+      publicLecture: true
+    },
+    {
+      id: 'titre-id-demarche-pro',
+      titreId: 'titre-id',
+      typeId: 'pro',
+      publicLecture: false
+    }
+  ]
+}
+const titreEtapesPubliques: ITitre = {
+  id: 'titre-id',
+  nom: 'mon titre',
+  domaineId: 'm',
+  typeId: 'arm',
+  publicLecture: true,
+  administrationsGestionnaires: [
+    Administrations[ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]
+  ],
+  propsTitreEtapesIds: { administrations: 'titre-id-demarche-id-dpu' },
+  demarches: [
+    {
+      id: 'titre-id-demarche-id',
+      titreId: 'titre-id',
+      typeId: 'oct',
+      statutId: 'acc',
+      publicLecture: true,
+      etapes: [
+        {
+          id: 'titre-id-demarche-id-aof',
+          typeId: 'aof',
+          ordre: 8,
+          titreDemarcheId: 'titre-id-demarche-id',
+          statutId: 'acc',
+          date: '2020-02-02'
+        },
+        {
+          id: 'titre-id-demarche-id-eof',
+          typeId: 'eof',
+          ordre: 7,
+          titreDemarcheId: 'titre-id-demarche-id',
+          statutId: 'acc',
+          date: '2020-02-02'
+        },
+        {
+          id: 'titre-id-demarche-id-edm',
+          typeId: 'edm',
+          ordre: 6,
+          titreDemarcheId: 'titre-id-demarche-id',
+          statutId: 'acc',
+          date: '2020-02-02'
+        },
+        {
+          id: 'titre-id-demarche-id-ede',
+          typeId: 'ede',
+          ordre: 5,
+          titreDemarcheId: 'titre-id-demarche-id',
+          statutId: 'acc',
+          date: '2020-02-02'
+        },
+        {
+          id: 'titre-id-demarche-id-pfd',
+          typeId: 'pfd',
+          ordre: 4,
+          titreDemarcheId: 'titre-id-demarche-id',
+          statutId: 'acc',
+          date: '2020-02-02'
+        },
+        {
+          id: 'titre-id-demarche-id-pfc',
+          typeId: 'pfc',
+          ordre: 3,
+          titreDemarcheId: 'titre-id-demarche-id',
+          statutId: 'acc',
+          date: '2020-02-02'
+        },
+        {
+          id: 'titre-id-demarche-id-vfd',
+          typeId: 'vfd',
+          ordre: 2,
+          titreDemarcheId: 'titre-id-demarche-id',
+          statutId: 'acc',
+          date: '2020-02-02'
+        },
+        {
+          id: 'titre-id-demarche-id-vfc',
+          typeId: 'vfc',
+          ordre: 1,
+          titreDemarcheId: 'titre-id-demarche-id',
+          statutId: 'acc',
+          date: '2020-02-02'
+        },
+        {
+          id: 'titre-id-demarche-id-dpu',
+          typeId: 'dpu',
+          ordre: 0,
+          titreDemarcheId: 'titre-id-demarche-id',
+          statutId: 'acc',
+          date: '2020-02-02',
+          administrations: [{ id: 'dea-guyane-01' }] as IAdministration[]
+        }
+      ]
+    }
+  ]
+}
+
+const titreWithActiviteGrp = {
+  id: 'titre-id',
+  nom: 'mon titre',
+  domaineId: 'm',
+  typeId: 'axm',
+  publicLecture: true,
+  propsTitreEtapesIds: { administrations: 'titre-id-demarche-id-dpu' },
+  administrationsGestionnaires: [
+    Administrations[ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']]
+  ],
+  activites: [
+    {
+      titreId: 'titre-id',
+      id: 'titre-id-grp-2020-03',
+      date: '2020-10-01',
+      typeId: 'grp',
+      statutId: 'abs',
+      periodeId: 3,
+      annee: 2020,
+      utilisateurId: null,
+      sections: [
+        {
+          id: 'renseignements',
+          elements: [
+            {
+              id: 'orBrut',
+              nom: 'Or brut extrait (g)',
+              type: 'number',
+              description: 'Masse d’or brut'
+            },
+            {
+              id: 'orExtrait',
+              nom: 'Or extrait (g)',
+              type: 'number',
+              description: "Masse d'or brut extrait au cours du trimestre."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  demarches: [
+    {
+      id: 'titre-id-demarche-id',
+      titreId: 'titre-id',
+      typeId: 'oct',
+      publicLecture: true,
+      etapes: [
+        {
+          id: 'titre-id-demarche-id-dpu',
+          typeId: 'dpu',
+          ordre: 0,
+          titreDemarcheId: 'titre-id-demarche-id',
+          statutId: 'acc',
+          date: '2020-02-02',
+          administrations: [{ id: 'dea-guyane-01' }] as IAdministration[]
+        }
+      ]
+    }
+  ]
+} as ITitre
+
+const titreActivites = {
+  id: 'titre-id',
+  nom: 'mon titre',
+  domaineId: 'm',
+  typeId: 'arm',
+  publicLecture: true,
+  activites: [
+    {
+      id: 'titre-id-activites-oct',
+      titreId: 'titre-id',
+      typeId: 'grp',
+      date: '2020-01-01',
+      statutId: 'dep',
+      periodeId: 1,
+      annee: 2020,
+      sections: [
+        {
+          id: 'renseignements',
+          elements: [
+            {
+              id: 'orBrut',
+              nom: 'Or brut extrait (g)',
+              type: 'number',
+              dateDebut: '2018-01-01',
+              description: 'Masse d’or brut'
+            },
+            {
+              id: 'orExtrait',
+              nom: 'Or extrait (g)',
+              type: 'number',
+              description: "Masse d'or brut extrait au cours du trimestre."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      id: 'titre-id-activites-pro',
+      titreId: 'titre-id',
+      typeId: 'gra',
+      date: '2020-01-01',
+      statutId: 'dep',
+      periodeId: 1,
+      annee: 2020,
+      sections: [
+        {
+          id: 'renseignements',
+          elements: [
+            {
+              id: 'orBrut',
+              nom: 'Or brut extrait (g)',
+              type: 'number',
+              description: 'Masse d’or brut'
+            },
+            {
+              id: 'orExtrait',
+              nom: 'Or extrait (g)',
+              type: 'number',
+              description: "Masse d'or brut extrait au cours du trimestre."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+} as ITitre
 describe('titre', () => {
   const titreQuery = queryImport('titre')
 
   test('peut voir un titre qui est en "lecture publique" (utilisateur anonyme)', async () => {
+    const titrePublicLecture: ITitre = {
+      id: 'titre-id',
+      nom: 'mon titre',
+      domaineId: 'm',
+      typeId: 'arm',
+      publicLecture: true,
+      propsTitreEtapesIds: {}
+    }
     await titreCreate(titrePublicLecture, {})
     const res = await graphQLCall(titreQuery, { id: 'titre-id' })
 

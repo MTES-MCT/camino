@@ -17,7 +17,7 @@ type Props = {
   displayActivites: boolean
 }
 
-const entreprises: Entreprise[] = [
+const titres: Entreprise[] = [
   {
     id: 'jp25TIfyQiXM987fAGc2DX4N',
     slug: 'm-cx-aachen-1810',
@@ -158,13 +158,13 @@ const Template: Story<Props> = (args: Props) => ({
 
 export const Ok = Template.bind({})
 Ok.args = {
-  getEntreprisesTitres: () => Promise.resolve(entreprises),
+  getEntreprisesTitres: () => Promise.resolve(titres),
   displayActivites: true
 }
 
 export const OkWithoutActivities = Template.bind({})
 OkWithoutActivities.args = {
-  getEntreprisesTitres: () => Promise.resolve(entreprises),
+  getEntreprisesTitres: () => Promise.resolve(titres),
   displayActivites: false
 }
 export const Loading = Template.bind({})

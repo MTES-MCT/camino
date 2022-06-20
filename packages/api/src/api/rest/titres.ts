@@ -11,7 +11,11 @@ import { constants } from 'http2'
 import { DOMAINES_IDS } from 'camino-common/src/domaines'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/titresTypesTypes'
 import { ITitre, IUser, ITitreReference, ITitreDemarche } from '../../types'
-import { CommonTitreONF, CommonTitrePTMG } from 'camino-common/src/titres'
+import {
+  CommonTitreDREAL,
+  CommonTitreONF,
+  CommonTitrePTMG
+} from 'camino-common/src/titres'
 import {
   toMachineEtapes,
   whoIsBlocking
@@ -40,7 +44,7 @@ export const titresONF = async (
 
   const onf = ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
 
-  if (!user?.administrations?.find(({ id }) => id === onf)) {
+  if (!user?.administrations?.some(({ id }) => id === onf)) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
     const titresAvecOctroiArm = await titresArmAvecOctroi(user, onf)
@@ -188,7 +192,7 @@ export const titresPTMG = async (
 
   const administrationId = ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
 
-  if (!user?.administrations?.find(({ id }) => id === administrationId)) {
+  if (!user?.administrations?.some(({ id }) => id === administrationId)) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
     const titresFormated: CommonTitrePTMG[] = (
@@ -207,4 +211,112 @@ export const titresPTMG = async (
 
     res.json(titresFormated)
   }
+}
+
+type DrealTitreSanitize = NotNullableKeys<
+  Required<Pick<ITitre, 'slug' | 'titulaires' | 'statut' | 'type'>>
+> &
+  Pick<
+    ITitre,
+    | 'typeId'
+    | 'id'
+    | 'nom'
+    | 'domaineId'
+    | 'activitesEnConstruction'
+    | 'activitesAbsentes'
+  >
+
+interface TitreDrealAvecReferences {
+  titre: DrealTitreSanitize
+  references: MyTitreRef[]
+}
+export const titresDREAL = async (
+  req: express.Request,
+  res: CustomResponse<CommonTitreDREAL[]>
+) => {
+  const userId = (req.user as unknown as IUser | undefined)?.id
+
+  const user = await userGet(userId)
+
+  const filters = {
+    statutsIds: ['dmi', 'mod', 'val']
+  }
+
+  const titres = await titresGet(
+    { ...filters, colonne: 'nom' },
+    {
+      fields: {
+        statut: { id: {} },
+        type: { id: {} },
+        references: { type: { id: {} } },
+        titulaires: { id: {} },
+        activites: { id: {} }
+      }
+    },
+    user
+  )
+
+  const titresFormated: CommonTitreDREAL[] = titres
+    .map((titre: ITitre): TitreDrealAvecReferences | null => {
+      if (titre.slug === undefined) {
+        return null
+      }
+      if (!titre.statut) {
+        throw new Error('le statut du titre n’est pas chargé')
+      }
+
+      if (!titre.type) {
+        throw new Error('les types de titres ne sont pas chargées')
+      }
+
+      if (!titre.titulaires) {
+        throw new Error('les titulaires ne sont pas chargés')
+      }
+
+      if (!titre.references) {
+        throw new Error('les références ne sont pas chargées')
+      }
+
+      if (!titre.activites) {
+        throw new Error('les activités ne sont pas chargées')
+      }
+
+      const references = titre.references.filter(
+        (reference: ITitreReference): reference is MyTitreRef =>
+          !!reference.type && !!reference.type.nom && !!reference.nom
+      )
+      if (titre.references.length !== references.length) {
+        throw new Error('le type de référence n’est pas chargé')
+      }
+
+      return { titre: titre as DrealTitreSanitize, references }
+    })
+    .filter(
+      (
+        titre: TitreDrealAvecReferences | null
+      ): titre is TitreDrealAvecReferences => titre !== null
+    )
+    .map(({ titre, references }) => {
+      return {
+        id: titre.id,
+        slug: titre.slug,
+        nom: titre.nom,
+        statut: titre.statut,
+        typeId: titre.type.typeId,
+        references,
+        domaineId: titre.domaineId,
+        titulaires: titre.titulaires,
+        // pour une raison inconnue les chiffres sortent parfois en tant que string...., par exemple pour les titres
+        activitesEnConstruction:
+          typeof titre.activitesEnConstruction === 'string'
+            ? parseInt(titre.activitesEnConstruction, 10)
+            : titre.activitesEnConstruction ?? 0,
+        activitesAbsentes:
+          typeof titre.activitesAbsentes === 'string'
+            ? parseInt(titre.activitesAbsentes, 10)
+            : titre.activitesAbsentes ?? 0
+      }
+    })
+
+  res.json(titresFormated)
 }

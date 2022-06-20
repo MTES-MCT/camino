@@ -8,6 +8,8 @@ import { Departement, DepartementId } from 'camino-common/src/departement'
 import { Region } from 'camino-common/src/region'
 import { GeoSystemeId } from 'camino-common/src/geoSystemes'
 import { Role } from 'camino-common/src/roles'
+import { DomaineId } from 'camino-common/src/domaines'
+import { TitresTypesTypesId } from 'camino-common/src/titresTypesTypes'
 
 const DemarchesStatutsTypesIds = {
   Accepte: 'acc',
@@ -644,7 +646,7 @@ interface ITitre {
   id: string
   slug?: string
   nom: string
-  domaineId: string
+  domaineId: DomaineId
   domaine?: IDomaine | null
   typeId: string
   type?: ITitreType | null
@@ -918,7 +920,7 @@ interface ICache {
 interface ITitreType {
   id: string
   domaineId: string
-  typeId: string
+  typeId: TitresTypesTypesId
   archive?: boolean | null
   type: ITitreTypeType
   demarchesTypes?: IDemarcheType[] | null
@@ -931,7 +933,7 @@ interface ITitreType {
 }
 
 interface ITitreTypeType {
-  id: string
+  id: TitresTypesTypesId
   nom: string
   ordre: number
 }
@@ -999,7 +1001,7 @@ type IFormat = 'xlsx' | 'csv' | 'ods' | 'geojson' | 'json' | 'pdf' | 'zip'
 interface ITitreDemande {
   nom: string
   typeId: string
-  domaineId: string
+  domaineId: DomaineId
   entrepriseId: string
   references?: ITitreReference[]
 }

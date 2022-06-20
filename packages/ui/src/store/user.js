@@ -15,7 +15,11 @@ import {
 import tiles from '../utils/map-tiles'
 
 import router from '../router'
-import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
+import {
+  ADMINISTRATION_IDS,
+  ADMINISTRATION_TYPES,
+  Administrations
+} from 'camino-common/src/administrations'
 import {
   isAdministration,
   isAdministrationAdmin,
@@ -356,6 +360,16 @@ const getters = {
       getters.userIsAdmin &&
       state.element.administrations.find(
         ({ id }) => id === ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      )
+    )
+  },
+  isDREAL(state, getters) {
+    return (
+      getters.userIsAdmin &&
+      state.element.administrations.find(({ id }) =>
+        [ADMINISTRATION_TYPES.dea.id, ADMINISTRATION_TYPES.dre.id].includes(
+          Administrations[id].typeId
+        )
       )
     )
   },
