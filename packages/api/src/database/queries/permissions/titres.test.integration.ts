@@ -51,7 +51,7 @@ describe('titresQueryModify', () => {
 
         const etapeId = idGenerate()
 
-        const mockTitre = {
+        const mockTitre: Omit<ITitre, 'id'> = {
           nom: 'titre1',
           domaineId: 'm',
           typeId: 'arm',
@@ -215,7 +215,7 @@ describe('titresQueryModify', () => {
 
         const id = idGenerate()
 
-        const mockTitre = {
+        const mockTitre: ITitre = {
           id,
           nom: 'titre1',
           domaineId: 'm',

@@ -1001,7 +1001,7 @@ type IFormat = 'xlsx' | 'csv' | 'ods' | 'geojson' | 'json' | 'pdf' | 'zip'
 interface ITitreDemande {
   nom: string
   typeId: string
-  domaineId: string
+  domaineId: DomaineId
   entrepriseId: string
   references?: ITitreReference[]
 }

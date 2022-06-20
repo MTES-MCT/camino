@@ -1,5 +1,5 @@
 import { dbManager } from '../../../../tests/db-manager'
-import { IUtilisateur, IAdministration } from '../../../types'
+import { IUtilisateur, IAdministration, ITitre } from '../../../types'
 
 import AdministrationsTitresTypes from '../../models/administrations-titres-types'
 import Titres from '../../models/titres'
@@ -44,7 +44,7 @@ describe('administrationsTitresQuery', () => {
         domaineId: 'm',
         statutId: 'ech',
         typeId: 'arm'
-      }
+      } as ITitre
 
       await Titres.query().insertGraph(mockTitre)
 
