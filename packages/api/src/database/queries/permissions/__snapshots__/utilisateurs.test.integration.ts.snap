@@ -2,35 +2,34 @@
 
 exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 1`] = `
 Object {
-  "administrations": Array [
-    Object {
-      "activitesTypes": Array [],
-      "departementId": null,
-      "id": "aut-97300-01",
-      "regionId": null,
-      "titresTypes": Array [
-        Object {
-          "archive": null,
-          "associee": true,
-          "contenuIds": Array [
-            Object {
-              "elementId": "mecanise",
-              "sectionId": "arm",
-            },
-            Object {
-              "elementId": "franchissements",
-              "sectionId": "arm",
-            },
-          ],
-          "domaineId": "m",
-          "gestionnaire": null,
-          "id": "arm",
-          "typeId": "ar",
-        },
-      ],
-      "typeId": "aut",
-    },
-  ],
+  "administration": Object {
+    "activitesTypes": Array [],
+    "departementId": null,
+    "id": "aut-97300-01",
+    "regionId": null,
+    "titresTypes": Array [
+      Object {
+        "archive": null,
+        "associee": true,
+        "contenuIds": Array [
+          Object {
+            "elementId": "mecanise",
+            "sectionId": "arm",
+          },
+          Object {
+            "elementId": "franchissements",
+            "sectionId": "arm",
+          },
+        ],
+        "domaineId": "m",
+        "gestionnaire": null,
+        "id": "arm",
+        "typeId": "ar",
+      },
+    ],
+    "typeId": "aut",
+  },
+  "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",
   "entreprises": Array [],
@@ -54,35 +53,34 @@ Object {
 
 exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 2`] = `
 Object {
-  "administrations": Array [
-    Object {
-      "activitesTypes": Array [],
-      "departementId": null,
-      "id": "aut-97300-01",
-      "regionId": null,
-      "titresTypes": Array [
-        Object {
-          "archive": null,
-          "associee": true,
-          "contenuIds": Array [
-            Object {
-              "elementId": "mecanise",
-              "sectionId": "arm",
-            },
-            Object {
-              "elementId": "franchissements",
-              "sectionId": "arm",
-            },
-          ],
-          "domaineId": "m",
-          "gestionnaire": null,
-          "id": "arm",
-          "typeId": "ar",
-        },
-      ],
-      "typeId": "aut",
-    },
-  ],
+  "administration": Object {
+    "activitesTypes": Array [],
+    "departementId": null,
+    "id": "aut-97300-01",
+    "regionId": null,
+    "titresTypes": Array [
+      Object {
+        "archive": null,
+        "associee": true,
+        "contenuIds": Array [
+          Object {
+            "elementId": "mecanise",
+            "sectionId": "arm",
+          },
+          Object {
+            "elementId": "franchissements",
+            "sectionId": "arm",
+          },
+        ],
+        "domaineId": "m",
+        "gestionnaire": null,
+        "id": "arm",
+        "typeId": "ar",
+      },
+    ],
+    "typeId": "aut",
+  },
+  "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",
   "entreprises": Array [],
@@ -106,35 +104,34 @@ Object {
 
 exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 3`] = `
 Object {
-  "administrations": Array [
-    Object {
-      "activitesTypes": Array [],
-      "departementId": null,
-      "id": "aut-97300-01",
-      "regionId": null,
-      "titresTypes": Array [
-        Object {
-          "archive": null,
-          "associee": true,
-          "contenuIds": Array [
-            Object {
-              "elementId": "mecanise",
-              "sectionId": "arm",
-            },
-            Object {
-              "elementId": "franchissements",
-              "sectionId": "arm",
-            },
-          ],
-          "domaineId": "m",
-          "gestionnaire": null,
-          "id": "arm",
-          "typeId": "ar",
-        },
-      ],
-      "typeId": "aut",
-    },
-  ],
+  "administration": Object {
+    "activitesTypes": Array [],
+    "departementId": null,
+    "id": "aut-97300-01",
+    "regionId": null,
+    "titresTypes": Array [
+      Object {
+        "archive": null,
+        "associee": true,
+        "contenuIds": Array [
+          Object {
+            "elementId": "mecanise",
+            "sectionId": "arm",
+          },
+          Object {
+            "elementId": "franchissements",
+            "sectionId": "arm",
+          },
+        ],
+        "domaineId": "m",
+        "gestionnaire": null,
+        "id": "arm",
+        "typeId": "ar",
+      },
+    ],
+    "typeId": "aut",
+  },
+  "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",
   "entreprises": Array [],
@@ -158,35 +155,34 @@ Object {
 
 exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 4`] = `
 Object {
-  "administrations": Array [
-    Object {
-      "activitesTypes": Array [],
-      "departementId": null,
-      "id": "aut-97300-01",
-      "regionId": null,
-      "titresTypes": Array [
-        Object {
-          "archive": null,
-          "associee": true,
-          "contenuIds": Array [
-            Object {
-              "elementId": "mecanise",
-              "sectionId": "arm",
-            },
-            Object {
-              "elementId": "franchissements",
-              "sectionId": "arm",
-            },
-          ],
-          "domaineId": "m",
-          "gestionnaire": null,
-          "id": "arm",
-          "typeId": "ar",
-        },
-      ],
-      "typeId": "aut",
-    },
-  ],
+  "administration": Object {
+    "activitesTypes": Array [],
+    "departementId": null,
+    "id": "aut-97300-01",
+    "regionId": null,
+    "titresTypes": Array [
+      Object {
+        "archive": null,
+        "associee": true,
+        "contenuIds": Array [
+          Object {
+            "elementId": "mecanise",
+            "sectionId": "arm",
+          },
+          Object {
+            "elementId": "franchissements",
+            "sectionId": "arm",
+          },
+        ],
+        "domaineId": "m",
+        "gestionnaire": null,
+        "id": "arm",
+        "typeId": "ar",
+      },
+    ],
+    "typeId": "aut",
+  },
+  "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",
   "entreprises": Array [],
@@ -210,35 +206,34 @@ Object {
 
 exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 5`] = `
 Object {
-  "administrations": Array [
-    Object {
-      "activitesTypes": Array [],
-      "departementId": null,
-      "id": "aut-97300-01",
-      "regionId": null,
-      "titresTypes": Array [
-        Object {
-          "archive": null,
-          "associee": true,
-          "contenuIds": Array [
-            Object {
-              "elementId": "mecanise",
-              "sectionId": "arm",
-            },
-            Object {
-              "elementId": "franchissements",
-              "sectionId": "arm",
-            },
-          ],
-          "domaineId": "m",
-          "gestionnaire": null,
-          "id": "arm",
-          "typeId": "ar",
-        },
-      ],
-      "typeId": "aut",
-    },
-  ],
+  "administration": Object {
+    "activitesTypes": Array [],
+    "departementId": null,
+    "id": "aut-97300-01",
+    "regionId": null,
+    "titresTypes": Array [
+      Object {
+        "archive": null,
+        "associee": true,
+        "contenuIds": Array [
+          Object {
+            "elementId": "mecanise",
+            "sectionId": "arm",
+          },
+          Object {
+            "elementId": "franchissements",
+            "sectionId": "arm",
+          },
+        ],
+        "domaineId": "m",
+        "gestionnaire": null,
+        "id": "arm",
+        "typeId": "ar",
+      },
+    ],
+    "typeId": "aut",
+  },
+  "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",
   "entreprises": Array [],

@@ -36,7 +36,7 @@ export const isAdministration = (
   isAdministrationEditeur(user) ||
   isAdministrationLecteur(user)
 export const isAdministrationAdmin = (user: User): user is UserAdmin =>
-  userPermissionCheck(user, 'admin') && !!user?.administrationId
+  userPermissionCheck(user, 'admin')
 export const isAdministrationEditeur = (user: User): user is UserEditeur =>
   userPermissionCheck(user, 'editeur')
 export const isAdministrationLecteur = (user: User): user is UserLecteur =>

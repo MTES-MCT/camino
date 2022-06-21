@@ -17,10 +17,7 @@ fragment utilisateur on Utilisateur {
   nom
   email
   prenom
-  administrations {
-    id
-    nom
-  }
+  administrationId
   entreprises {
     id
     nom
