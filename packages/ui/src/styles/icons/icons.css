@@ -18,57 +18,6 @@
   background-repeat: no-repeat;
   background-position: top center;
 }
-
-.icon-login {
-  background-image: svg-load('./svgs/24-login.svg',
-  fill=none,
-  stroke= '#666',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
-.btn-alt:hover .icon-login {
-  background-image: svg-load('./svgs/24-login.svg',
-  fill=none,
-  stroke= 'white',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
-.icon-user {
-  background-image: svg-load('./svgs/24-user.svg',
-  fill='#666',
-  stroke-linecap=round,
-  stroke-linejoin=round
-  );
-}
-
-.btn-border:hover .icon-user,
-.active .btn-border .icon-user {
-  background-image: svg-load('./svgs/24-user.svg',
-  fill=white,
-  stroke-linecap=round,
-  stroke-linejoin=round
-  );
-}
-
-.icon-menu {
-  background-image: svg-load('./svgs/24-menu.svg',
-  fill='#666'
-  );
-}
-
-.btn-border:hover .icon-menu,
-.active .btn-border .icon-menu {
-  background-image: svg-load('./svgs/24-menu.svg',
-  fill='white'
-  );
-}
-
 .icon-pencil {
   background-image: svg-load('./svgs/24-pencil.svg',
   fill=none,
