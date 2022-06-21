@@ -19,26 +19,6 @@
   background-position: top center;
 }
 
-.icon-link {
-  background-image: svg-load('./svgs/24-link.svg',
-  fill=none,
-  stroke= '#666',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
-.btn-border:hover .icon-link {
-  background-image: svg-load('./svgs/24-link.svg',
-  fill=none,
-  stroke= 'white',
-  stroke-linecap=round,
-  stroke-linejoin=round,
-  stroke-width=1.25px
-  );
-}
-
 .icon-login {
   background-image: svg-load('./svgs/24-login.svg',
   fill=none,

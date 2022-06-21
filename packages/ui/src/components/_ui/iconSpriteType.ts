@@ -12,6 +12,7 @@ export const icons = [
   'file',
   'file-add',
   'help',
+  'link',
   'minus',
   'move-down',
   'move-up',
