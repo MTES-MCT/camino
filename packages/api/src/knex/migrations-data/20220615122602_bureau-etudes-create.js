@@ -1,6 +1,6 @@
 exports.up = knex =>
   knex('utilisateurs')
-    .whereIn('id', ['40bf91', '65ed69'])
+    .whereIn('id', ['c7142a', '38cbc5', '24414c', '40bf91', '95177f'])
     .update({ role: 'bureau d’études' })
 
 exports.down = () => ({})
