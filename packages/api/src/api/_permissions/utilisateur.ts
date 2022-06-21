@@ -15,11 +15,7 @@ const utilisateurEditionCheck = (
     errors.push('adresse email invalide')
   }
 
-  if (
-    !isAdministration(utilisateur) &&
-    utilisateur.administrations &&
-    utilisateur.administrations.length
-  ) {
+  if (!isAdministration(utilisateur) && utilisateur.administrationId) {
     errors.push(
       "le rôle de cet utilisateur ne permet pas de l'associer à une administration"
     )

@@ -28,7 +28,8 @@ class Utilisateurs extends Model {
       role: { type: 'string' },
       preferences: { type: ['object', 'null'] },
       refreshToken: { type: ['string', 'null'] },
-      newsletter: { type: ['boolean', 'null'] }
+      newsletter: { type: ['boolean', 'null'] },
+      administrationId: { type: ['string', 'null'] }
     }
   }
 
@@ -46,15 +47,11 @@ class Utilisateurs extends Model {
       }
     },
 
-    administrations: {
-      relation: Model.ManyToManyRelation,
+    administration: {
+      relation: Model.BelongsToOneRelation,
       modelClass: Administrations,
       join: {
-        from: 'utilisateurs.id',
-        through: {
-          from: 'utilisateurs__administrations.utilisateurId',
-          to: 'utilisateurs__administrations.administrationId'
-        },
+        from: 'utilisateurs.administrationId',
         to: 'administrations.id'
       }
     }

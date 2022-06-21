@@ -11,10 +11,7 @@ import {
   utilisateurGet
 } from '../../src/database/queries/utilisateurs'
 import { userSuper } from '../../src/database/user-super'
-import {
-  AdministrationId,
-  Administrations
-} from 'camino-common/src/administrations'
+import { AdministrationId } from 'camino-common/src/administrations'
 import dateFormat from 'dateformat'
 import { Role } from 'camino-common/src/roles'
 
@@ -33,7 +30,7 @@ const graphQLCall = async (
     string | boolean | Index<string | boolean | Index<string>[] | any>
   >,
   role?: Role,
-  administrationId?: string
+  administrationId?: AdministrationId
 ) => {
   const req = request(app).post('/').send({ query, variables })
 
@@ -59,7 +56,7 @@ export const restCall = async (
 const cookiesSet = async (
   req: request.Test,
   role?: Role,
-  administrationId?: string
+  administrationId?: AdministrationId
 ): Promise<request.Test> => {
   let token
   if (role) {
@@ -73,7 +70,10 @@ const cookiesSet = async (
   return req
 }
 
-const userTokenGenerate = async (role: Role, administrationId?: string) => {
+const userTokenGenerate = async (
+  role: Role,
+  administrationId?: AdministrationId
+) => {
   let id = 'super'
 
   if (role !== 'super') {
@@ -87,14 +87,6 @@ const userTokenGenerate = async (role: Role, administrationId?: string) => {
   const userInDb = await utilisateurGet(id, undefined, userSuper)
 
   if (!userInDb) {
-    const administrations = []
-
-    if (administrationId && administrationId in Administrations) {
-      administrations.push(
-        Administrations[administrationId as AdministrationId]
-      )
-    }
-
     await utilisateurCreate(
       {
         id,
@@ -104,7 +96,7 @@ const userTokenGenerate = async (role: Role, administrationId?: string) => {
         motDePasse: 'mot-de-passe',
         dateCreation: dateFormat(new Date(), 'yyyy-mm-dd'),
         role,
-        administrations
+        administrationId
       },
       {}
     )

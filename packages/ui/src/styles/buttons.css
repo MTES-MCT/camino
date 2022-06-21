@@ -23,6 +23,13 @@
   background-color: var(--color-transparent);
 }
 
+.btn-menu.disabled,
+.btn-menu.disabled:hover {
+  cursor: default;
+  color: var(--color-neutral);
+  background-color: var(--color-transparent);
+}
+
 .btn-menu:hover,
 .btn-menu {
   color: var(--color-inverse);

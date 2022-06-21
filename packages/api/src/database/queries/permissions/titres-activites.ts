@@ -62,12 +62,10 @@ const titreActivitesCount = (
     })
 
     if (!isSuper(user)) {
-      if (isAdministration(user) && user?.administrations?.length) {
-        const administrationsIds = user.administrations.map(e => e.id)
-
+      if (isAdministration(user)) {
         // l'utilisateur fait partie d'une administrations qui a les droits sur le titre
         titresActivitesCountQuery.whereExists(
-          administrationsTitresQuery(administrationsIds, 'titre', {
+          administrationsTitresQuery(user.administrationId, 'titre', {
             isGestionnaire: true,
             isAssociee: true,
             isLocale: true
@@ -133,11 +131,9 @@ const titresActivitesQueryModify = (
 
   q.leftJoinRelated('titre')
 
-  if (isAdministration(user) && user?.administrations?.length) {
-    const administrationsIds = user.administrations!.map(a => a.id)
-
+  if (isAdministration(user)) {
     q.whereExists(
-      administrationsTitresQuery(administrationsIds, 'titre', {
+      administrationsTitresQuery(user.administrationId, 'titre', {
         isGestionnaire: true,
         isAssociee: true,
         isLocale: true
@@ -176,12 +172,10 @@ const titresActivitesPropsQueryModify = (
 
   if (isSuper(user)) {
     q.select(raw('true').as('modification'))
-  } else if (isAdministration(user) && user?.administrations?.length) {
+  } else if (isAdministration(user)) {
     if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-      const administrationsIds = user.administrations!.map(a => a.id)
-
       q.select(
-        administrationsTitresQuery(administrationsIds, 'titre', {
+        administrationsTitresQuery(user.administrationId, 'titre', {
           isGestionnaire: true,
           isLocale: true
         })

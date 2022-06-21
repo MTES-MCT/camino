@@ -57,7 +57,7 @@ const login = async (ticket: string) => {
       telephoneFixe: cerbereProfile.telephoneFixe,
       dateCreation: '2022-05-12',
       role: 'defaut',
-      administrations: undefined
+      administrationId: undefined
     }
 
     return cerbereUtilisateur

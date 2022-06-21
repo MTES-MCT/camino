@@ -95,7 +95,8 @@ describe('etapeModifier', () => {
             date: ''
           }
         },
-        role
+        role,
+        'ope-onf-973-01'
       )
 
       expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
@@ -255,7 +256,12 @@ describe('etapeSupprimer', () => {
   test.each([undefined, 'admin' as Role])(
     'ne peut pas supprimer une étape (utilisateur %s)',
     async (role: Role | undefined) => {
-      const res = await graphQLCall(etapeSupprimerQuery, { id: '' }, role)
+      const res = await graphQLCall(
+        etapeSupprimerQuery,
+        { id: '' },
+        role,
+        'ope-onf-973-01'
+      )
 
       expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
     }

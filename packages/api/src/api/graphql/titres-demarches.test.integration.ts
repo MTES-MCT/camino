@@ -59,7 +59,8 @@ describe('demarcheCreer', () => {
     const res = await graphQLCall(
       demarcheCreerQuery,
       { demarche: { titreId: titre.id, typeId: 'dpu' } },
-      'editeur'
+      'editeur',
+      'ope-onf-973-01'
     )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
@@ -88,7 +89,8 @@ describe('demarcheCreer', () => {
     const res = await graphQLCall(
       demarcheCreerQuery,
       { demarche: { titreId: 'unknown', typeId: 'oct' } },
-      'admin'
+      'admin',
+      'ope-onf-973-01'
     )
 
     expect(res.body.errors[0].message).toBe("le titre n'existe pas")
@@ -159,7 +161,8 @@ describe('demarcheModifier', () => {
     const res = await graphQLCall(
       demarcheModifierQuery,
       { demarche: { id: 'toto', titreId: '', typeId: '' } },
-      'editeur'
+      'editeur',
+      'ope-onf-973-01'
     )
 
     expect(res.body.errors[0].message).toBe('la démarche n’existe pas')
@@ -277,7 +280,8 @@ describe('demarcheSupprimer', () => {
     const res = await graphQLCall(
       demarcheSupprimerQuery,
       { id: 'toto' },
-      'admin'
+      'admin',
+      'ope-onf-973-01'
     )
 
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")

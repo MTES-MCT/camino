@@ -131,8 +131,7 @@ export default {
         props: {
           utilisateur: {
             role: 'defaut',
-            entreprises: [],
-            administrations: []
+            entreprises: []
           },
           action: 'create'
         }

@@ -1,3 +1,5 @@
+import { AdministrationId } from './administrations'
+import { isNotNullNorUndefined } from './typescript-tools'
 export const ROLES = [
   'super',
   'admin',
@@ -8,22 +10,19 @@ export const ROLES = [
   'defaut'
 ] as const
 export type Role = typeof ROLES[number]
-type UserEntreprise = { role: 'entreprise' }
-type UserBureaudEtudes = { role: 'bureau d’études' }
-type UserAdmin = { role: 'admin' }
-type UserLecteur = { role: 'lecteur' }
-type UserEditeur = { role: 'editeur' }
-type UserSuper = { role: 'super' }
-type UserDefaut = { role: 'defaut' }
+type UserEntreprise = { role: 'entreprise'; administrationId: undefined }
+type UserBureaudEtudes = {
+  role: 'bureau d’études'
+  administrationId: undefined
+}
+type UserAdmin = { role: 'admin'; administrationId: AdministrationId }
+type UserLecteur = { role: 'lecteur'; administrationId: AdministrationId }
+type UserEditeur = { role: 'editeur'; administrationId: AdministrationId }
+type UserSuper = { role: 'super'; administrationId: undefined }
+type UserDefaut = { role: 'defaut'; administrationId: undefined }
 
 type User =
-  | UserSuper
-  | UserAdmin
-  | UserEditeur
-  | UserLecteur
-  | UserEntreprise
-  | UserBureaudEtudes
-  | UserDefaut
+  | { role: Role; administrationId: undefined | null | AdministrationId }
   | undefined
   | null
 
@@ -37,11 +36,14 @@ export const isAdministration = (
   isAdministrationEditeur(user) ||
   isAdministrationLecteur(user)
 export const isAdministrationAdmin = (user: User): user is UserAdmin =>
-  userPermissionCheck(user, 'admin')
+  userPermissionCheck(user, 'admin') &&
+  isNotNullNorUndefined(user?.administrationId)
 export const isAdministrationEditeur = (user: User): user is UserEditeur =>
-  userPermissionCheck(user, 'editeur')
+  userPermissionCheck(user, 'editeur') &&
+  isNotNullNorUndefined(user?.administrationId)
 export const isAdministrationLecteur = (user: User): user is UserLecteur =>
-  userPermissionCheck(user, 'lecteur')
+  userPermissionCheck(user, 'lecteur') &&
+  isNotNullNorUndefined(user?.administrationId)
 export const isEntreprise = (user: User): user is UserEntreprise =>
   userPermissionCheck(user, 'entreprise')
 export const isBureauDEtudes = (user: User): user is UserBureaudEtudes =>

@@ -1,4 +1,5 @@
 import { isSuper, Role } from './roles'
+import { AdministrationId } from './administrations'
 
 export interface Fiscalite {
   redevanceCommunale: number
@@ -12,6 +13,7 @@ export const fiscaliteVisible = (
     | {
         entreprises?: { id: string }[] | null
         role: Role
+        administrationId: AdministrationId | undefined | null
       }
     | undefined
     | null,

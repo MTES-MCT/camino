@@ -29,6 +29,7 @@ import {
   isEntreprise,
   isSuper
 } from 'camino-common/src/roles'
+import { AdministrationId } from 'camino-common/src/administrations'
 
 // récupère les types d'étapes qui ont
 // - les autorisations sur le titre
@@ -38,7 +39,7 @@ import {
 // - 'demarchesModification.id': id de la démarche
 // - 't_d_e.etapeTypeId': id du type d'étape'
 const administrationsEtapesTypesPropsQuery = (
-  administrationsIds: string[],
+  administrationId: AdministrationId,
   type: 'modification' | 'creation'
 ) =>
   TitresTypesDemarchesTypesEtapesTypes.query()
@@ -62,7 +63,7 @@ const administrationsEtapesTypesPropsQuery = (
       )
     })
     .whereExists(
-      administrationsTitresQuery(administrationsIds, 'titresModification', {
+      administrationsTitresQuery(administrationId, 'titresModification', {
         isGestionnaire: true,
         isLocale: true
       })
@@ -93,11 +94,11 @@ const entreprisesEtapesTypesPropsQuery = (entreprisesIds: string[]) =>
     .whereRaw('?? is true', ['titulaires:titresTypesJoin.titresCreation'])
     .first()
 
-const titresCreationQuery = (administrationsIds: string[]) =>
+const titresCreationQuery = (administrationId: AdministrationId) =>
   AdministrationsTitresTypes.query()
     .alias('a_tt')
     .select(raw('true'))
-    .whereIn('a_tt.administrationId', administrationsIds)
+    .where('a_tt.administrationId', administrationId)
     .where('a_tt.gestionnaire', true)
 
 const titresTypesQueryModify = (
@@ -108,14 +109,9 @@ const titresTypesQueryModify = (
 
   if (isSuper(user)) {
     q.select(raw('true').as('titresCreation'))
-  } else if (
-    (isAdministrationAdmin(user) || isAdministrationEditeur(user)) &&
-    user?.administrations?.length
-  ) {
-    const administrationsIds = user.administrations.map(e => e.id)
-
+  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     q.select(
-      titresCreationQuery(administrationsIds)
+      titresCreationQuery(user.administrationId)
         .as('titresCreation')
         .whereRaw('?? = ??', ['a_tt.titreTypeId', `titresTypes.id`])
     )
@@ -212,12 +208,10 @@ const etapesTypesQueryModify = (
   // propriété 'etapesCreation' en fonction du profil de l'utilisateur
   if (isSuper(user)) {
     q.select(raw('true').as('etapesCreation'))
-  } else if (isAdministration(user) && user?.administrations?.length) {
+  } else if (isAdministration(user)) {
     if (titreDemarcheId) {
-      const administrationsIds = user.administrations.map(a => a.id) || []
-
       const etapesCreationQuery = administrationsEtapesTypesPropsQuery(
-        administrationsIds,
+        user.administrationId,
         titreEtapeId ? 'modification' : 'creation'
       )
         .where('demarchesModification.id', titreDemarcheId)
@@ -248,20 +242,16 @@ const etapesTypesQueryModify = (
 
 export const demarchesCreationQuery = (
   q: QueryBuilder<DemarchesTypes, DemarchesTypes | DemarchesTypes[]>,
-  user: Pick<IUtilisateur, 'role' | 'administrations'> | null | undefined,
+  user: Pick<IUtilisateur, 'role' | 'administrationId'> | null | undefined,
   { titreId, titreIdAlias }: { titreId?: string; titreIdAlias?: string }
 ) => {
   let demarchesCreation = raw('false')
   if (isSuper(user)) {
     demarchesCreation = raw('true')
-  } else if (
-    isAdministration(user) &&
-    user.administrations?.length &&
-    (titreId || titreIdAlias)
-  ) {
+  } else if (isAdministration(user) && (titreId || titreIdAlias)) {
     const titresModificationQuery =
       titresDemarchesAdministrationsModificationQuery(
-        user.administrations,
+        user.administrationId,
         'demarchesTypes'
       )
     if (titreId) {
@@ -281,7 +271,7 @@ export const demarchesCreationQuery = (
 
 const demarchesTypesQueryModify = (
   q: QueryBuilder<DemarchesTypes, DemarchesTypes | DemarchesTypes[]>,
-  user: Pick<IUtilisateur, 'role' | 'administrations'> | null | undefined,
+  user: Pick<IUtilisateur, 'role' | 'administrationId'> | null | undefined,
   { titreId, titreIdAlias }: { titreId?: string; titreIdAlias?: string } = {}
 ): void => {
   q.select('demarchesTypes.*')

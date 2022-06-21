@@ -32,6 +32,11 @@ test.skip.each`
       | null
     visible: boolean
   }) => {
-    expect(fiscaliteVisible(user, '1234')).toEqual(visible)
+    expect(
+      fiscaliteVisible(
+        user ? { ...user, administrationId: undefined } : user,
+        '1234'
+      )
+    ).toEqual(visible)
   }
 )

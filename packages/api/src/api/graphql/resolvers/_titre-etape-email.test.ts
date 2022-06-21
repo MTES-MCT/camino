@@ -89,7 +89,7 @@ const user: IUtilisateur = {
   nom: 'Camino',
   role: 'super',
   dateCreation: '2022-05-12',
-  administrations: undefined
+  administrationId: undefined
 }
 
 test("envoie un email sur un octroi d'AEX", () => {

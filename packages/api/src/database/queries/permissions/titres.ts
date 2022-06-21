@@ -1,6 +1,6 @@
 import { QueryBuilder, raw, RawBuilder } from 'objection'
 
-import { IAdministration, IUtilisateur } from '../../../types'
+import { IUtilisateur } from '../../../types'
 
 // import sqlFormatter from 'sql-formatter'
 // import fileCreate from '../../../tools/file-create'
@@ -23,7 +23,7 @@ import {
 } from './administrations'
 import { entreprisesQueryModify, entreprisesTitresQuery } from './entreprises'
 import TitresEtapes from '../../models/titres-etapes'
-import Administrations from '../../models/administrations'
+import AdministrationsModel from '../../models/administrations'
 import UtilisateursTitres from '../../models/utilisateurs--titres'
 import DemarchesTypes from '../../models/demarches-types'
 import { demarchesCreationQuery } from './metas'
@@ -35,15 +35,17 @@ import {
   isEntreprise,
   isSuper
 } from 'camino-common/src/roles'
+import {
+  AdministrationId,
+  Administrations
+} from 'camino-common/src/administrations'
 
 const titresDemarchesAdministrationsModificationQuery = (
-  administrations: IAdministration[] | undefined | null,
+  administrationId: AdministrationId,
   demarcheTypeAlias: string
 ) => {
-  const administrationsIds = administrations?.map(a => a.id) || []
-
   const administrationQuery = administrationsTitresQuery(
-    administrationsIds,
+    administrationId,
     'titresModification',
     {
       isGestionnaire: true,
@@ -56,11 +58,7 @@ const titresDemarchesAdministrationsModificationQuery = (
     'demarches',
     'titresModification',
     b => {
-      if (
-        administrations?.find(administration =>
-          ['dre', 'dea'].includes(administration.typeId)
-        )
-      ) {
+      if (['dre', 'dea'].includes(Administrations[administrationId].typeId)) {
         // Les DREALs peuvent créer des travaux
         b.orWhere(`${demarcheTypeAlias}.travaux`, true)
       } else {
@@ -78,7 +76,7 @@ const titresDemarchesAdministrationsModificationQuery = (
 
 export const titresTravauxCreationQuery = (
   q: QueryBuilder<Titres, Titres | Titres[]>,
-  user: Pick<IUtilisateur, 'role' | 'administrations'> | null | undefined
+  user: Pick<IUtilisateur, 'role' | 'administrationId'> | null | undefined
 ) => {
   const demarchesTypesQuery = DemarchesTypes.query().where('travaux', true)
   demarchesCreationQuery(demarchesTypesQuery, user, {
@@ -144,14 +142,12 @@ export const titresConfidentielSelect = (
 
 export const titresModificationSelectQuery = (
   q: QueryBuilder<Titres, Titres | Titres[]>,
-  user: Pick<IUtilisateur, 'role' | 'administrations'> | null | undefined
-): QueryBuilder<Administrations> | RawBuilder => {
+  user: Pick<IUtilisateur, 'role' | 'administrationId'> | null | undefined
+): QueryBuilder<AdministrationsModel> | RawBuilder => {
   if (isSuper(user)) {
     return raw('true')
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    const administrationsIds = user?.administrations?.map(a => a.id) ?? []
-
-    return administrationsTitresQuery(administrationsIds, 'titres', {
+    return administrationsTitresQuery(user.administrationId, 'titres', {
       isGestionnaire: true
     })
       .modify(administrationsTitresTypesTitresStatutsModify, 'titres', 'titres')
@@ -195,15 +191,14 @@ const titresQueryModify = (
       }
 
       // si l'utilisateur est `administration`
-      else if (isAdministration(user) && user?.administrations?.length) {
+      else if (isAdministration(user)) {
         // titres dont l'administration de l'utilisateur est
         // - administrationsGestionnaire
         // - ou administrationsLocale
         // - ou administration associée
-        const administrationsIds = user.administrations.map(a => a.id)
 
         b.orWhereExists(
-          administrationsTitresQuery(administrationsIds, 'titres', {
+          administrationsTitresQuery(user.administrationId, 'titres', {
             isGestionnaire: true,
             isAssociee: true,
             isLocale: true
@@ -217,14 +212,9 @@ const titresQueryModify = (
 
   if (isSuper(user)) {
     q.select(raw('true').as('demarchesCreation'))
-  } else if (
-    (isAdministrationAdmin(user) || isAdministrationEditeur(user)) &&
-    user?.administrations?.length
-  ) {
-    const administrationsIds = user.administrations.map(a => a.id) || []
-
+  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     q.select(
-      administrationsTitresQuery(administrationsIds, 'titres', {
+      administrationsTitresQuery(user.administrationId, 'titres', {
         isGestionnaire: true,
         isLocale: true
       })
@@ -323,7 +313,10 @@ const titresQueryModify = (
 
   q.modifyGraph('titresAdministrations', b => {
     administrationsQueryModify(
-      b as QueryBuilder<Administrations, Administrations | Administrations[]>,
+      b as QueryBuilder<
+        AdministrationsModel,
+        AdministrationsModel | AdministrationsModel[]
+      >,
       user
     )
   })

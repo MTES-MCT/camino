@@ -111,7 +111,7 @@ type ITitreDemarcheColonneId =
 
 type ITitreActiviteColonneId = 'titreNom' | 'titulaire' | 'periode' | 'statut'
 
-type IUtilisateursColonneId = 'nom' | 'prenom' | 'email' | 'role' | 'lien'
+type IUtilisateursColonneId = 'nom' | 'prenom' | 'email' | 'role'
 type IEntrepriseColonneId = 'nom' | 'siren'
 type ICouleur = 'error' | 'info' | 'neutral' | 'success' | 'warning'
 
@@ -966,7 +966,7 @@ interface IUtilisateur {
   role: Role
   // TODO: définir une interface IUtilisateurPreferences
   preferences?: any | null
-  administrations: IAdministration[] | null | undefined
+  administrationId: AdministrationId | undefined | null
   entreprises?: IEntreprise[] | null
   modification?: boolean | null
   suppression?: boolean | null

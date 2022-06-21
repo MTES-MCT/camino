@@ -44,22 +44,6 @@ fragment utilisateur on Utilisateur {
   prenom
   telephoneMobile
   telephoneFixe
-  administrations {
-    ...administration
-  }
+  administrationId
   role
-}
-
-fragment administration on Administration {
-  id
-  nom
-  service
-  url
-  email
-  telephone
-  adresse1
-  adresse2
-  codePostal
-  commune
-  cedex
 }

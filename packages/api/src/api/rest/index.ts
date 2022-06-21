@@ -15,7 +15,6 @@ import { userGet, utilisateursGet } from '../../database/queries/utilisateurs'
 import { titreFormat, titresFormat } from '../_format/titres'
 import { titreDemarcheFormat } from '../_format/titres-demarches'
 import { titreActiviteFormat } from '../_format/titres-activites'
-import { utilisateurFormat } from '../_format/utilisateurs'
 import { entrepriseFormat } from '../_format/entreprises'
 
 import { tableConvert } from './_convert'
@@ -456,16 +455,14 @@ const utilisateurs = async (
     user
   )
 
-  const utilisateursFormatted = utilisateurs.map(utilisateurFormat)
-
   let contenu
 
   if (['csv', 'xlsx', 'ods'].includes(format)) {
-    const elements = utilisateursFormatTable(utilisateursFormatted)
+    const elements = utilisateursFormatTable(utilisateurs)
 
     contenu = tableConvert('utilisateurs', elements, format)
   } else {
-    contenu = JSON.stringify(utilisateursFormatted, null, 2)
+    contenu = JSON.stringify(utilisateurs, null, 2)
   }
 
   return contenu

@@ -52,9 +52,7 @@ describe('teste les requêtes sur les activités', () => {
       nom: 'utilisateurNom',
       email: 'utilisateurEmail',
       motDePasse: 'utilisateurMotdepasse',
-      administrations: [
-        { id: 'min-mtes-dgaln-01', typeId: 'min', nom: 'dgaln' }
-      ],
+      administrationId: 'min-mtes-dgaln-01',
       dateCreation: '2022-05-12'
     }
 

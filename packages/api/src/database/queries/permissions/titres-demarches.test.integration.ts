@@ -10,6 +10,7 @@ import {
 } from './titres-demarches'
 import TitresEtapes from '../../models/titres-etapes'
 import { Role } from 'camino-common/src/roles'
+import { Administrations } from 'camino-common/src/administrations'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -69,7 +70,12 @@ describe('titresDemarchesQueryModify', () => {
           titreDemarcheSuppressionSelectQuery(
             'titresDemarches',
             role
-              ? { id: 'id', dateCreation: '', role, administrations: undefined }
+              ? {
+                  id: 'id',
+                  dateCreation: '',
+                  role,
+                  administrationId: Administrations['dea-guyane-01'].id
+                }
               : undefined
           ).as('suppression')
         )
@@ -133,7 +139,7 @@ describe('titresDemarchesQueryModify', () => {
           titreDemarcheSuppressionSelectQuery(
             'titresDemarches',
             role
-              ? { id: '', dateCreation: '', role, administrations: undefined }
+              ? { id: '', dateCreation: '', role, administrationId: undefined }
               : undefined
           ).as('suppression')
         )

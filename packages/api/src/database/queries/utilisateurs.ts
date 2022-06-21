@@ -1,4 +1,4 @@
-import { raw, RawBuilder, QueryBuilder } from 'objection'
+import { RawBuilder, QueryBuilder } from 'objection'
 
 import {
   IUtilisateur,
@@ -26,7 +26,6 @@ const userGet = async (userId?: string) => {
   const q = utilisateursQueryBuild(
     {
       fields: {
-        administrations: { id: {} },
         entreprises: { id: {} }
       }
     },
@@ -78,9 +77,7 @@ const utilisateursFiltersQueryModify = (
   }
 
   if (administrationIds) {
-    q.whereIn('administrations.id', administrationIds).leftJoinRelated(
-      'administrations'
-    )
+    q.whereIn('administrationId', administrationIds)
   }
 
   if (entrepriseIds) {
@@ -154,19 +151,7 @@ const utilisateursColonnes: Record<
   nom: { id: 'nom' },
   prenom: { id: 'prenom' },
   email: { id: 'email' },
-  role: { id: 'role' },
-  lien: {
-    id: raw(`CONCAT(
-      "administrations"."nom",
-      STRING_AGG(
-        "entreprises"."nom",
-        ' ; '
-        order by "entreprises"."nom"
-      )
-    )`),
-    relation: '[administrations, entreprises]',
-    groupBy: ['utilisateurs.id', 'administrations.id']
-  }
+  role: { id: 'role' }
 }
 const utilisateursGet = async (
   {
@@ -210,15 +195,6 @@ const utilisateursGet = async (
   )
 
   if (colonne) {
-    if (utilisateursColonnes[colonne].relation) {
-      q.leftJoinRelated(utilisateursColonnes[colonne].relation!)
-      const groupBy = utilisateursColonnes[colonne].groupBy as string[]
-      if (groupBy) {
-        groupBy.forEach(gb => {
-          q.groupBy(gb as string)
-        })
-      }
-    }
     q.orderBy(utilisateursColonnes[colonne].id, ordre || 'asc')
   } else {
     q.orderBy('utilisateurs.nom', 'asc')

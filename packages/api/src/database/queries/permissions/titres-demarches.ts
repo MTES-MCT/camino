@@ -47,10 +47,9 @@ const titresDemarchesQueryModify = (
     q.where(b => {
       b.orWhere('titresDemarches.publicLecture', true)
 
-      if (isAdministration(user) && user?.administrations?.length) {
-        const administrationsIds = user.administrations.map(e => e.id)
+      if (isAdministration(user)) {
         const administrationTitre = administrationsTitresQuery(
-          administrationsIds,
+          user.administrationId,
           'titre',
           {
             isGestionnaire: true,
@@ -115,12 +114,9 @@ const titreDemarcheModificationSelectQuery = (
   let modificationQuery = raw('false')
   if (isSuper(user)) {
     modificationQuery = raw('true')
-  } else if (
-    (isAdministrationAdmin(user) || isAdministrationEditeur(user)) &&
-    user?.administrations?.length
-  ) {
+  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     modificationQuery = titresDemarchesAdministrationsModificationQuery(
-      user.administrations,
+      user.administrationId,
       'type'
     ).whereRaw('?? = ??', ['titresModification.id', 'titresDemarches.titreId'])
 
@@ -160,14 +156,9 @@ const titreEtapesCreationQuery = (
 ) => {
   if (isSuper(user)) {
     return raw('true')
-  } else if (
-    (isAdministrationAdmin(user) || isAdministrationEditeur(user)) &&
-    user?.administrations?.length
-  ) {
-    const administrationsIds = user.administrations.map(e => e.id)
-
+  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     return (
-      administrationsEtapesTypesPropsQuery(administrationsIds, 'creation')
+      administrationsEtapesTypesPropsQuery(user.administrationId, 'creation')
         // filtre selon la démarche
         .whereRaw('?? = ??', [
           'demarchesModification.id',

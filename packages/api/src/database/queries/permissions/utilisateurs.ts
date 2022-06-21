@@ -2,10 +2,7 @@ import { raw, QueryBuilder } from 'objection'
 
 import { IUtilisateur } from '../../../types'
 
-import { knex } from '../../../knex'
-
 import Utilisateurs from '../../models/utilisateurs'
-import Administrations from '../../models/administrations'
 import Entreprises from '../../models/entreprises'
 import { entreprisesQueryModify } from './entreprises'
 import {
@@ -26,22 +23,10 @@ const utilisateursQueryModify = (
 
   q.whereNotNull('utilisateurs.email')
 
-  if (
-    (isAdministrationEditeur(user) || isAdministrationLecteur(user)) &&
-    user?.administrations?.length
-  ) {
+  if (isAdministrationEditeur(user) || isAdministrationLecteur(user)) {
     // un utilisateur 'editeur' ou 'lecteur'
     // ne voit que les utilisateurs de son administration
-    const administrationsIds = user.administrations.map(e => e.id)
-
-    q.whereExists(
-      (
-        Utilisateurs.relatedQuery('administrations') as QueryBuilder<
-          Administrations,
-          Administrations | Administrations[]
-        >
-      ).whereIn('administrations.id', administrationsIds)
-    )
+    q.where('utilisateurs.administrationId', user.administrationId)
   } else if (
     (isEntreprise(user) || isBureauDEtudes(user)) &&
     user.entreprises?.length
@@ -70,11 +55,7 @@ const utilisateursQueryModify = (
     q.select(raw('true').as('modification'))
     q.select(raw('true').as('suppression'))
     q.select(raw('true').as('permissionModification'))
-  } else if (
-    user &&
-    isAdministrationAdmin(user) &&
-    user.administrations?.length
-  ) {
+  } else if (user && isAdministrationAdmin(user)) {
     // restreint le droit d'édition d'un utilisateur
     // aux roles inférieures d'admin
     const rolesPublic = ['entreprise', 'defaut']
@@ -83,13 +64,6 @@ const utilisateursQueryModify = (
     // roles des administrations
     const rolesAdmin = ['editeur', 'lecteur']
     const rolesAdminReplace = rolesAdmin.map(() => '?')
-
-    const administrationsIds = user.administrations.map(e => e.id)
-
-    q.leftJoin('utilisateurs__administrations as u_a', b => {
-      b.on(knex.raw('?? = ??', ['u_a.utilisateur_id', 'utilisateurs.id']))
-      b.andOnIn('u_a.administration_id', administrationsIds)
-    })
 
     const permissionModificationSuppression = (alias: string) =>
       q.select(
@@ -106,7 +80,7 @@ const utilisateursQueryModify = (
             ...rolesPublic,
             'utilisateurs.role',
             ...rolesAdmin,
-            'u_a.administration_id'
+            'utilisateurs.administrationId'
           ]
         ).as(alias)
       )

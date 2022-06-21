@@ -1,4 +1,4 @@
-import { IAdministration, IUtilisateur } from '../../../types'
+import { IUtilisateur } from '../../../types'
 
 import { dbManager } from '../../../../tests/db-manager'
 import Utilisateurs from '../../models/utilisateurs'
@@ -25,13 +25,7 @@ const mockUser: IUtilisateur = {
   nom: 'utilisateurNom',
   email: 'utilisateurEmail',
   motDePasse: 'utilisateurMotdepasse',
-  administrations: [
-    {
-      id: mockAdministration.id,
-      nom: mockAdministration.nom,
-      typeId: mockAdministration.typeId
-    }
-  ],
+  administrationId: mockAdministration.id,
   dateCreation: '2022-05-12'
 }
 
@@ -50,7 +44,7 @@ describe('utilisateursQueryModify', () => {
       const user: IUtilisateur = {
         id: 'userId',
         role,
-        administrations: [mockAdministration] as unknown as IAdministration[],
+        administrationId: mockAdministration.id,
         dateCreation: '2022-05-12'
       }
 

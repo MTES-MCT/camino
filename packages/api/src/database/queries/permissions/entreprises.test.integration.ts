@@ -5,6 +5,7 @@ import { dbManager } from '../../../../tests/db-manager'
 import Entreprises from '../../models/entreprises'
 import Utilisateurs from '../../models/utilisateurs'
 import { entreprisesQueryModify } from './entreprises'
+import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -18,16 +19,17 @@ afterAll(async () => {
 
 describe('entreprisesQueryModify', () => {
   test.each`
-    role            | modification
-    ${'super'}      | ${true}
-    ${'admin'}      | ${true}
-    ${'editeur'}    | ${true}
-    ${'lecteur'}    | ${false}
-    ${'entreprise'} | ${true}
-    ${'defaut'}     | ${false}
+    user                                                                                       | modification
+    ${{ role: 'super' }}                                                                       | ${true}
+    ${{ role: 'admin', administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'] }}   | ${true}
+    ${{ role: 'editeur', administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'] }} | ${true}
+    ${{ role: 'lecteur', administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'] }} | ${false}
+    ${{ role: 'entreprise' }}                                                                  | ${true}
+    ${{ role: 'bureau d’études' }}                                                             | ${true}
+    ${{ role: 'defaut' }}                                                                      | ${false}
   `(
     "Vérifie l'écriture de la requête sur le droit 'modification' d'une entreprise",
-    async ({ role, modification }) => {
+    async ({ user, modification }) => {
       await Utilisateurs.query().delete()
       await Entreprises.query().delete()
 
@@ -38,12 +40,12 @@ describe('entreprisesQueryModify', () => {
 
       const mockUser: IUtilisateur = {
         id: '109f95',
-        role,
+        role: user.role,
         entreprises: [mockEntreprise1],
         email: 'email',
         motDePasse: 'motdepasse',
         dateCreation: '2022-05-12',
-        administrations: undefined
+        administrationId: user.administrationId
       }
 
       await Utilisateurs.query().insertGraph(mockUser)

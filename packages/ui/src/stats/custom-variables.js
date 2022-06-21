@@ -1,14 +1,14 @@
+import { isAdministration } from 'camino-common/src/roles'
+
 const visitUser = matomo => user => {
   if (user) {
-    if (user.administrations && user.administrations.length) {
-      user.administrations.forEach(administration => {
-        matomo.setCustomVariable(
-          1,
-          'administrationId',
-          administration.id,
-          'visit'
-        )
-      })
+    if (isAdministration(user)) {
+      matomo.setCustomVariable(
+        1,
+        'administrationId',
+        user.administrationId,
+        'visit'
+      )
     }
 
     if (user.entreprises && user.entreprises.length) {

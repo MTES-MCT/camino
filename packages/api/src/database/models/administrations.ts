@@ -62,15 +62,11 @@ class Administrations extends Model {
     },
 
     utilisateurs: {
-      relation: Model.ManyToManyRelation,
+      relation: Model.HasManyRelation,
       modelClass: Utilisateurs,
       join: {
         from: 'administrations.id',
-        through: {
-          from: 'utilisateurs__administrations.administrationId',
-          to: 'utilisateurs__administrations.utilisateurId'
-        },
-        to: 'utilisateurs.id'
+        to: 'utilisateurs.administrationId'
       }
     },
 

@@ -6,5 +6,5 @@ export const userSuper: IUtilisateur = {
   nom: 'Camino',
   role: 'super',
   dateCreation: '2022-05-12',
-  administrations: undefined
+  administrationId: undefined
 }
