@@ -111,7 +111,7 @@ type ITitreDemarcheColonneId =
 
 type ITitreActiviteColonneId = 'titreNom' | 'titulaire' | 'periode' | 'statut'
 
-type IUtilisateursColonneId = 'nom' | 'prenom' | 'email' | 'role' | 'lien'
+type IUtilisateursColonneId = 'nom' | 'prenom' | 'email' | 'role'
 type IEntrepriseColonneId = 'nom' | 'siren'
 type ICouleur = 'error' | 'info' | 'neutral' | 'success' | 'warning'
 
