@@ -9,6 +9,7 @@ export const icons = [
   'download',
   'error-warning',
   'external-link',
+  'file',
   'help',
   'minus',
   'move-down',

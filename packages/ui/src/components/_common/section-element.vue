@@ -9,7 +9,7 @@
     >
       <div v-if="element.type === 'file'" class="flex h6 pb-xs">
         <span class="mt-xs flex bold">
-          <i class="icon-16 icon-file mr-xs" />
+          <Icon size="S" name="file" class="mr-xs" />
           {{
             contenu[element.id] ? contenu[element.id].slice(5) : 'Aucun fichier'
           }}
