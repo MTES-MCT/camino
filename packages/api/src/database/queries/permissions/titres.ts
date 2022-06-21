@@ -23,8 +23,7 @@ import {
 } from './administrations'
 import { entreprisesQueryModify, entreprisesTitresQuery } from './entreprises'
 import TitresEtapes from '../../models/titres-etapes'
-// eslint-disable-next-line import/no-named-default
-import { default as AdministrationsModel } from '../../models/administrations'
+import AdministrationsModel from '../../models/administrations'
 import UtilisateursTitres from '../../models/utilisateurs--titres'
 import DemarchesTypes from '../../models/demarches-types'
 import { demarchesCreationQuery } from './metas'

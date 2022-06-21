@@ -4,8 +4,7 @@ import { IUtilisateur } from '../../../types'
 
 import { knex } from '../../../knex'
 
-// eslint-disable-next-line import/no-named-default
-import { default as AdministrationsModel } from '../../models/administrations'
+import AdministrationsModel from '../../models/administrations'
 import Utilisateurs from '../../models/utilisateurs'
 import Titres from '../../models/titres'
 
