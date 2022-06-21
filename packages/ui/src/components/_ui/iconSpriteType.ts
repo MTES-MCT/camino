@@ -10,6 +10,7 @@ export const icons = [
   'error-warning',
   'external-link',
   'file',
+  'file-add',
   'help',
   'minus',
   'move-down',
