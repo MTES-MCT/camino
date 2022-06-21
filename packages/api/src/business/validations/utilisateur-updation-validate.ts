@@ -33,7 +33,10 @@ const utilisateurUpdationValidate = async (
     // si le user n'est pas admin
     if (!isAdministrationAdmin(user)) {
       //   ni les administrations
-      if (utilisateurOld.administrationId !== utilisateur.administrationId) {
+      if (
+        (utilisateurOld.administrationId || utilisateur.administrationId) &&
+        utilisateurOld.administrationId !== utilisateur.administrationId
+      ) {
         return ['droits insuffisants pour modifier les administrations']
       }
 

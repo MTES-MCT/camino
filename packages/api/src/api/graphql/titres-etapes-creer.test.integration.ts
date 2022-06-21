@@ -89,7 +89,8 @@ describe('etapeCreer', () => {
       const res = await graphQLCall(
         etapeCreerQuery,
         { etape: { typeId: '', statutId: '', titreDemarcheId: '', date: '' } },
-        role
+        role,
+        'ope-onf-973-01'
       )
 
       expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
@@ -100,7 +101,8 @@ describe('etapeCreer', () => {
     const res = await graphQLCall(
       etapeCreerQuery,
       { etape: { typeId: '', statutId: '', titreDemarcheId: '', date: '' } },
-      'admin'
+      'admin',
+      'ope-onf-973-01'
     )
 
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
