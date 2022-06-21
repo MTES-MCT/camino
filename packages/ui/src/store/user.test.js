@@ -1,6 +1,7 @@
 import { createStore } from 'vuex'
 import { createApp } from 'vue'
 import * as api from '../api/utilisateurs'
+import { Administrations } from 'camino-common/src/administrations'
 
 import user from './user'
 import tiles from '../utils/map-tiles'
@@ -443,20 +444,21 @@ describe("état de l'utilisateur connecté", () => {
   })
 
   test.each`
-    role            | isAdmin
-    ${'super'}      | ${true}
-    ${'admin'}      | ${true}
-    ${'editeur'}    | ${true}
-    ${'entreprise'} | ${false}
-    ${undefined}    | ${false}
+    role            | isAdmin  | administrationId
+    ${'super'}      | ${true}  | ${undefined}
+    ${'admin'}      | ${true}  | ${Administrations['dea-guadeloupe-01'].id}
+    ${'editeur'}    | ${true}  | ${Administrations['dea-guadeloupe-01'].id}
+    ${'entreprise'} | ${false} | ${undefined}
+    ${undefined}    | ${false} | ${undefined}
   `(
     'ajoute un utilisateur au store avec le role $role et vérifie si il est admin $isAdmin',
-    ({ role, isAdmin }) => {
+    ({ role, isAdmin, administrationId }) => {
       store.commit('user/set', {
         id: 66,
         prenom: 'rene',
         nom: 'lataupe',
-        role
+        role,
+        administrationId
       })
       expect(store.getters['user/userIsAdmin']).toEqual(isAdmin)
     }
