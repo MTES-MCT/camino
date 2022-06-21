@@ -25,7 +25,7 @@ import {
 } from 'camino-common/src/administrations'
 
 const departementsQuery = (
-  administrationsId: AdministrationId,
+  administrationId: AdministrationId,
   administrationAlias: string
 ) =>
   Departements.query()
@@ -35,7 +35,7 @@ const departementsQuery = (
       'departements.id',
       `${administrationAlias}.departementId`
     ])
-    .where('adm.id', administrationsId)
+    .where('adm.id', administrationId)
 
 const emailsLectureQuery = (
   user: IUtilisateur | null | undefined,
@@ -140,7 +140,7 @@ const administrationsTitresTypesModify = (
     AdministrationsModel,
     AdministrationsModel | AdministrationsModel[]
   >,
-  administrationsId: AdministrationId,
+  administrationId: AdministrationId,
   titreAlias: string,
   {
     isGestionnaire,
@@ -150,7 +150,7 @@ const administrationsTitresTypesModify = (
   q.leftJoin('administrations__titresTypes as a_tt', b => {
     b.on(knex.raw('?? = ??', ['a_tt.administrationId', 'administrations.id']))
     b.andOn(knex.raw('?? = ??', ['a_tt.titreTypeId', `${titreAlias}.typeId`]))
-    b.andOn(knex.raw('?? = ?', ['administrations.id', administrationsId]))
+    b.andOn(knex.raw('?? = ?', ['administrations.id', administrationId]))
     if (isGestionnaire || isAssociee) {
       b.andOn(c => {
         if (isGestionnaire) {
@@ -169,7 +169,7 @@ const administrationsLocalesModify = (
     AdministrationsModel,
     AdministrationsModel | AdministrationsModel[]
   >,
-  administrationsId: AdministrationId,
+  administrationId: AdministrationId,
   titreAlias: string
 ) => {
   q.leftJoin('titresAdministrationsLocales as t_al', b => {
@@ -180,7 +180,7 @@ const administrationsLocalesModify = (
         't_al.titreEtapeId'
       ])
     )
-    b.on(knex.raw('?? = ?', ['t_al.administrationId', administrationsId]))
+    b.on(knex.raw('?? = ?', ['t_al.administrationId', administrationId]))
   })
 }
 
