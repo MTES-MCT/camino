@@ -1,5 +1,5 @@
 import { AdministrationId } from './administrations'
-
+import { isNotNullNorUndefined } from './typescript-tools'
 export const ROLES = [
   'super',
   'admin',
@@ -36,11 +36,14 @@ export const isAdministration = (
   isAdministrationEditeur(user) ||
   isAdministrationLecteur(user)
 export const isAdministrationAdmin = (user: User): user is UserAdmin =>
-  userPermissionCheck(user, 'admin')
+  userPermissionCheck(user, 'admin') &&
+  isNotNullNorUndefined(user?.administrationId)
 export const isAdministrationEditeur = (user: User): user is UserEditeur =>
-  userPermissionCheck(user, 'editeur')
+  userPermissionCheck(user, 'editeur') &&
+  isNotNullNorUndefined(user?.administrationId)
 export const isAdministrationLecteur = (user: User): user is UserLecteur =>
-  userPermissionCheck(user, 'lecteur')
+  userPermissionCheck(user, 'lecteur') &&
+  isNotNullNorUndefined(user?.administrationId)
 export const isEntreprise = (user: User): user is UserEntreprise =>
   userPermissionCheck(user, 'entreprise')
 export const isBureauDEtudes = (user: User): user is UserBureaudEtudes =>

@@ -29,6 +29,7 @@ const utilisateursColonnes = [
   {
     id: 'lien',
     name: 'Lien',
+    noSort: true,
     class: ['min-width-6']
   }
 ]

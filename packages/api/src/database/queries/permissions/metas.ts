@@ -39,7 +39,7 @@ import { AdministrationId } from 'camino-common/src/administrations'
 // - 'demarchesModification.id': id de la démarche
 // - 't_d_e.etapeTypeId': id du type d'étape'
 const administrationsEtapesTypesPropsQuery = (
-  administrationsId: AdministrationId,
+  administrationId: AdministrationId,
   type: 'modification' | 'creation'
 ) =>
   TitresTypesDemarchesTypesEtapesTypes.query()
@@ -63,7 +63,7 @@ const administrationsEtapesTypesPropsQuery = (
       )
     })
     .whereExists(
-      administrationsTitresQuery(administrationsId, 'titresModification', {
+      administrationsTitresQuery(administrationId, 'titresModification', {
         isGestionnaire: true,
         isLocale: true
       })
@@ -94,11 +94,11 @@ const entreprisesEtapesTypesPropsQuery = (entreprisesIds: string[]) =>
     .whereRaw('?? is true', ['titulaires:titresTypesJoin.titresCreation'])
     .first()
 
-const titresCreationQuery = (administrationsId: AdministrationId) =>
+const titresCreationQuery = (administrationId: AdministrationId) =>
   AdministrationsTitresTypes.query()
     .alias('a_tt')
     .select(raw('true'))
-    .where('a_tt.administrationId', administrationsId)
+    .where('a_tt.administrationId', administrationId)
     .where('a_tt.gestionnaire', true)
 
 const titresTypesQueryModify = (

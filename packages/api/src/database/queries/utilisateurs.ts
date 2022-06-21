@@ -1,4 +1,4 @@
-import { raw, RawBuilder, QueryBuilder } from 'objection'
+import { RawBuilder, QueryBuilder } from 'objection'
 
 import {
   IUtilisateur,
@@ -151,19 +151,7 @@ const utilisateursColonnes: Record<
   nom: { id: 'nom' },
   prenom: { id: 'prenom' },
   email: { id: 'email' },
-  role: { id: 'role' },
-  lien: {
-    id: raw(`CONCAT(
-      "administration"."nom",
-      STRING_AGG(
-        "entreprises"."nom",
-        ' ; '
-        order by "entreprises"."nom"
-      )
-    )`),
-    relation: '[administration, entreprises]',
-    groupBy: ['utilisateurs.id', 'administration.id']
-  }
+  role: { id: 'role' }
 }
 const utilisateursGet = async (
   {
@@ -207,15 +195,6 @@ const utilisateursGet = async (
   )
 
   if (colonne) {
-    if (utilisateursColonnes[colonne].relation) {
-      q.leftJoinRelated(utilisateursColonnes[colonne].relation!)
-      const groupBy = utilisateursColonnes[colonne].groupBy as string[]
-      if (groupBy) {
-        groupBy.forEach(gb => {
-          q.groupBy(gb as string)
-        })
-      }
-    }
     q.orderBy(utilisateursColonnes[colonne].id, ordre || 'asc')
   } else {
     q.orderBy('utilisateurs.nom', 'asc')

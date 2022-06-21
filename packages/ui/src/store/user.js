@@ -347,27 +347,28 @@ const getters = {
     )
   },
 
-  isONF(state, getters) {
+  isONF(state) {
     return (
-      getters.userIsAdmin &&
+      (isAdministrationAdmin(state.element) ||
+        isAdministrationEditeur(state.element)) &&
       state.element.administrationId ===
         ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
     )
   },
-  isPTMG(state, getters) {
+  isPTMG(state) {
     return (
-      getters.userIsAdmin &&
+      (isAdministrationAdmin(state.element) ||
+        isAdministrationEditeur(state.element)) &&
       state.element.administrationId ===
         ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
   },
-  isDREAL(state, getters) {
+  isDREAL(state) {
     return (
-      getters.userIsAdmin &&
-      state.element.administrations.find(({ id }) =>
-        [ADMINISTRATION_TYPES.dea.id, ADMINISTRATION_TYPES.dre.id].includes(
-          Administrations[id].typeId
-        )
+      (isAdministrationAdmin(state.element) ||
+        isAdministrationEditeur(state.element)) &&
+      [ADMINISTRATION_TYPES.dea.id, ADMINISTRATION_TYPES.dre.id].includes(
+        Administrations[state.element.administrationId].typeId
       )
     )
   },

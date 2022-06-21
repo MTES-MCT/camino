@@ -10,10 +10,13 @@
             :class="col.class"
             @click="sort(col.id)"
           >
-            <button class="btn-menu full-x p-0">
+            <button
+              class="btn-menu full-x p-0"
+              :class="{ disabled: col.noSort }"
+            >
               {{ col.name || (column === col.id ? '' : '–') }}
               <Icon
-                v-if="column === col.id"
+                v-if="!col.noSort && column === col.id"
                 class="right"
                 size="M"
                 :name="order === 'asc' ? 'chevron-bas' : 'chevron-haut'"
@@ -87,11 +90,13 @@ export default {
     },
 
     sort(colId) {
-      if (this.column === colId) {
-        const order = this.order === 'asc' ? 'desc' : 'asc'
-        this.update({ order, column: this.column })
-      } else {
-        this.update({ column: colId, order: this.order })
+      if (!this.columns.find(c => c.id === colId).noSort) {
+        if (this.column === colId) {
+          const order = this.order === 'asc' ? 'desc' : 'asc'
+          this.update({ order, column: this.column })
+        } else {
+          this.update({ column: colId, order: this.order })
+        }
       }
     },
 

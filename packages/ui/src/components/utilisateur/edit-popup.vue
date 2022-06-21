@@ -344,11 +344,11 @@ export default {
     },
 
     utilisateurIsEntrepriseOuBureauDEtude() {
-      return isEntreprise(this.utilisateur) || isBureauDEtudes(this.utilisateur)
+      return ['entreprise', 'bureau d’études'].includes(this.utilisateur.role)
     },
 
     utilisateurIsAdministration() {
-      return isAdministration(this.utilisateur)
+      return ['admin', 'editeur', 'lecteur'].includes(this.utilisateur.role)
     }
   },
 
