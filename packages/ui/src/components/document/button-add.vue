@@ -1,14 +1,16 @@
 <template>
   <button class="flex small" @click="addPopupOpen">
     <span v-if="large" class="mt-xxs mr-s">Ajouter un document</span>
-    <i class="icon-24 icon-file-plus flex-right" />
+    <Icon size="M" name="file-add" class="flex-right" />
   </button>
 </template>
 
 <script>
 import DocumentEditPopup from './edit-popup.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
+  components: { Icon },
   props: {
     route: { type: Object, default: null },
     action: { type: Object, default: null },

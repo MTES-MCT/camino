@@ -8,15 +8,17 @@
       alt="Url"
       @click="menuToggle"
     >
-      <i class="icon-24 icon-menu" />
+      <Icon size="M" name="menu" />
     </button>
   </div>
 </template>
 
 <script>
 import MainMenu from './menu.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
+  components: { Icon },
   data() {
     return {
       popupVisible: false

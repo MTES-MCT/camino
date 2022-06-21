@@ -89,7 +89,7 @@
         rel="noopener noreferrer"
         alt="Url"
       >
-        <i class="icon-24 icon-link" />
+        <Icon size="M" name="link" />
       </a>
       <a
         v-if="document.uri"
@@ -108,7 +108,7 @@
         rel="noopener noreferrer"
         alt="Uri"
       >
-        <i class="icon-24 icon-link" />
+        <Icon size="M" name="link" />
       </a>
     </td>
   </tr>

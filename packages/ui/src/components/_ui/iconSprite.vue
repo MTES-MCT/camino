@@ -54,11 +54,33 @@
         d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z"
       />
     </symbol>
+    <symbol id="icon-file" viewBox="0 0 24 24">
+      <title>file</title>
+      <path
+        d="M9 2.003V2h10.998C20.55 2 21 2.455 21 2.992v18.016a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 20.993V8l6-5.997zM5.83 8H9V4.83L5.83 8zM11 4v5a1 1 0 0 1-1 1H5v10h14V4h-8z"
+      />
+    </symbol>
+    <symbol id="icon-file-add" viewBox="0 0 24 24">
+      <title>file-add</title>
+      <path
+        d="M15 4H5v16h14V8h-4V4zM3 2.992C3 2.444 3.447 2 3.999 2H16l5 5v13.993A1 1 0 0 1 20.007 22H3.993A1 1 0 0 1 3 21.008V2.992zM11 11V8h2v3h3v2h-3v3h-2v-3H8v-2h3z"
+      />
+    </symbol>
     <symbol id="icon-help" viewBox="0 0 24 24">
       <title>help</title>
       <path
         d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
       />
+    </symbol>
+    <symbol id="icon-link" viewBox="0 0 24 24">
+      <title>link</title>
+      <path
+        d="M18.364 15.536L16.95 14.12l1.414-1.414a5 5 0 1 0-7.071-7.071L9.879 7.05 8.464 5.636 9.88 4.222a7 7 0 0 1 9.9 9.9l-1.415 1.414zm-2.828 2.828l-1.415 1.414a7 7 0 0 1-9.9-9.9l1.415-1.414L7.05 9.88l-1.414 1.414a5 5 0 1 0 7.071 7.071l1.414-1.414 1.415 1.414zm-.708-10.607l1.415 1.415-7.071 7.07-1.415-1.414 7.071-7.07z"
+      />
+    </symbol>
+    <symbol id="icon-menu" viewBox="0 0 24 24">
+      <title>menu</title>
+      <path d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z" />
     </symbol>
     <symbol id="icon-minus" viewBox="0 0 24 24">
       <title>minus</title>
