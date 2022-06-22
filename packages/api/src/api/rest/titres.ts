@@ -4,7 +4,9 @@ import { userGet } from '../../database/queries/utilisateurs'
 
 import {
   ADMINISTRATION_IDS,
-  AdministrationId
+  ADMINISTRATION_TYPE_IDS,
+  AdministrationId,
+  Administrations
 } from 'camino-common/src/administrations'
 import express from 'express'
 import { constants } from 'http2'
@@ -28,6 +30,7 @@ import { CustomResponse } from './express-type'
 import { userSuper } from '../../database/user-super'
 import Utilisateurs from '../../database/models/utilisateurs'
 import { NotNullableKeys } from 'camino-common/src/typescript-tools'
+import { isAdministration } from 'camino-common/src/roles'
 
 type MyTitreRef = { type: NonNullable<ITitreReference['type']> } & Omit<
   ITitreReference,
@@ -238,9 +241,12 @@ export const titresDREAL = async (
 
   const user = await userGet(userId)
 
-  const administrationId = ADMINISTRATION_IDS['DGTM - GUYANE']
-
-  if (user?.administrationId !== administrationId) {
+  if (
+    !isAdministration(user) ||
+    ![ADMINISTRATION_TYPE_IDS.DEAL, ADMINISTRATION_TYPE_IDS.DREAL].includes(
+      Administrations[user.administrationId].typeId
+    )
+  ) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
     const filters = {
@@ -262,6 +268,12 @@ export const titresDREAL = async (
     )
 
     const titresFormated: CommonTitreDREAL[] = titres
+      .filter(
+        ({ modification, demarchesCreation, travauxCreation }) =>
+          (modification ?? false) ||
+          (demarchesCreation ?? false) ||
+          (travauxCreation ?? false)
+      )
       .map((titre: ITitre): TitreDrealAvecReferences | null => {
         if (titre.slug === undefined) {
           return null
