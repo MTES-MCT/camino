@@ -1,10 +1,4 @@
-import {
-  ISDOMZone,
-  ITitrePoint,
-  IToken,
-  IUtilisateur,
-  SDOMZoneId
-} from '../../../types'
+import { ISDOMZone, ITitrePoint, SDOMZoneId, Context } from '../../../types'
 
 import { debug } from '../../../config/index'
 import { FileUpload } from 'graphql-upload'
@@ -22,7 +16,6 @@ import {
 } from '../../../tools/geojson'
 import { Feature } from '@turf/helpers'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes'
-import { userGet } from '../../../database/queries/utilisateurs'
 import { etapeTypeGet } from '../../../database/queries/metas'
 import { titreGet, titresGet } from '../../../database/queries/titres'
 import { userSuper } from '../../../database/user-super'
@@ -31,7 +24,8 @@ import { assertGeoSystemeId, GeoSystemes } from 'camino-common/src/geoSystemes'
 import {
   isSuper,
   isAdministrationAdmin,
-  isAdministrationEditeur
+  isAdministrationEditeur,
+  User
 } from 'camino-common/src/roles'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches'
 
@@ -71,7 +65,7 @@ export const pointsImporter = async (
     demarcheId: string
     etapeTypeId: string
   },
-  context: IToken
+  context: Context
 ): Promise<
   IPerimetreInformations & {
     points: Omit<ITitrePoint, 'id' | 'titreEtapeId'>[]
@@ -168,7 +162,7 @@ const sdomZonesInformationsGet = async (
   titrePoints: ITitrePoint[],
   titreSdomZones: ISDOMZone[],
   titreId: string,
-  user: IUtilisateur
+  user: User
 ) => {
   const etapeType = await etapeTypeGet(etapeTypeId, { fields: { id: {} } })
   // si c’est une étape fondamentale on récupère les informations directement sur l’étape
@@ -258,11 +252,9 @@ export const perimetreInformations = async (
     demarcheId: string
     etapeTypeId: string
   },
-  context: IToken
+  { user }: Context
 ): Promise<IPerimetreInformations & { points: ITitrePoint[] }> => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!user) {
       throw new Error('droits insuffisants')
     }
@@ -325,11 +317,9 @@ export const titreEtapePerimetreInformations = async (
   }: {
     titreEtapeId: string
   },
-  context: IToken
+  { user }: Context
 ): Promise<IPerimetreInformations> => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!user) {
       throw new Error('droits insuffisants')
     }

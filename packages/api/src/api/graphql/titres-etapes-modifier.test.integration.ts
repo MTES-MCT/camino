@@ -10,7 +10,7 @@ import {
   ADMINISTRATION_IDS,
   Administrations
 } from 'camino-common/src/administrations'
-import { Role } from 'camino-common/src/roles'
+import { isAdministrationRole, Role } from 'camino-common/src/roles'
 
 jest.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -95,8 +95,9 @@ describe('etapeModifier', () => {
             date: ''
           }
         },
-        role,
-        'ope-onf-973-01'
+        role && isAdministrationRole(role)
+          ? { role, administrationId: 'ope-onf-973-01' }
+          : undefined
       )
 
       expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
@@ -115,7 +116,7 @@ describe('etapeModifier', () => {
           date: ''
         }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
@@ -153,7 +154,7 @@ describe('etapeModifier', () => {
           }
         }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -173,7 +174,7 @@ describe('etapeModifier', () => {
           date: '2018-01-01'
         }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -193,8 +194,10 @@ describe('etapeModifier', () => {
           date: '2018-01-01'
         }
       },
-      'admin',
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      }
     )
 
     expect(res.body.errors[0].message).toBe(
@@ -215,8 +218,10 @@ describe('etapeModifier', () => {
           date: '2018-01-01'
         }
       },
-      'admin',
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      }
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -240,8 +245,10 @@ describe('etapeModifier', () => {
           contenu: { deal: { motifs: 'motif', agent: 'agent' } }
         }
       },
-      'admin',
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      }
     )
 
     expect(res.body.errors[0].message).toBe(
@@ -259,8 +266,9 @@ describe('etapeSupprimer', () => {
       const res = await graphQLCall(
         etapeSupprimerQuery,
         { id: '' },
-        role,
-        'ope-onf-973-01'
+        role && isAdministrationRole(role)
+          ? { role, administrationId: 'ope-onf-973-01' }
+          : undefined
       )
 
       expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
@@ -268,7 +276,11 @@ describe('etapeSupprimer', () => {
   )
 
   test('ne peut pas supprimer une étape inexistante (utilisateur super)', async () => {
-    const res = await graphQLCall(etapeSupprimerQuery, { id: 'toto' }, 'super')
+    const res = await graphQLCall(
+      etapeSupprimerQuery,
+      { id: 'toto' },
+      userSuper
+    )
 
     expect(res.body.errors[0].message).toBe("l'étape n'existe pas")
   })
@@ -278,7 +290,7 @@ describe('etapeSupprimer', () => {
     const res = await graphQLCall(
       etapeSupprimerQuery,
       { id: titreEtapeId },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors).toBeUndefined()

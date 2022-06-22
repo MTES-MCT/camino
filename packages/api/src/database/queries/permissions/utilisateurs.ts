@@ -1,7 +1,5 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types'
-
 import Utilisateurs from '../../models/utilisateurs'
 import Entreprises from '../../models/entreprises'
 import { entreprisesQueryModify } from './entreprises'
@@ -12,12 +10,13 @@ import {
   isBureauDEtudes,
   isDefault,
   isEntreprise,
-  isSuper
+  isSuper,
+  User
 } from 'camino-common/src/roles'
 
 export const utilisateursQueryModify = (
   q: QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>,
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   q.select('utilisateurs.*')
 
@@ -29,7 +28,7 @@ export const utilisateursQueryModify = (
     q.where('utilisateurs.administrationId', user.administrationId)
   } else if (
     (isEntreprise(user) || isBureauDEtudes(user)) &&
-    user.entreprises?.length
+    user.entreprises.length
   ) {
     // un utilisateur entreprise
     // ne voit que les utilisateurs de son entreprise
@@ -105,6 +104,7 @@ export const utilisateursQueryModify = (
     q.select(raw('false').as('permissionModification'))
   }
 
+  // TODO 2022-06-23 bouger ça dans le common
   if (
     isSuper(user) ||
     isAdministrationAdmin(user) ||

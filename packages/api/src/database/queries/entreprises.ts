@@ -3,7 +3,6 @@ import { raw, QueryBuilder } from 'objection'
 import {
   IEntreprise,
   IFields,
-  IUtilisateur,
   IEntrepriseColonneId,
   IEntrepriseTitreType
 } from '../../types'
@@ -24,7 +23,8 @@ import {
   isEntreprise,
   isAdministrationAdmin,
   isAdministrationEditeur,
-  isBureauDEtudes
+  isBureauDEtudes,
+  User
 } from 'camino-common/src/roles'
 
 const entreprisesFiltersQueryModify = (
@@ -68,7 +68,7 @@ const entreprisesFiltersQueryModify = (
 
 const entreprisesQueryBuild = (
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const graph = fields
     ? graphBuild(fields, 'entreprises', fieldsFormat)
@@ -90,7 +90,7 @@ const entreprisesCount = async (
     archive?: boolean | null
   },
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const q = entreprisesQueryBuild({ fields }, user)
 
@@ -103,7 +103,7 @@ const entreprisesCount = async (
 const entrepriseGet = async (
   id: string,
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const q = entreprisesQueryBuild({ fields }, user)
 
@@ -127,7 +127,7 @@ const entreprisesGet = async (
     archive?: boolean | null
   },
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const q = entreprisesQueryBuild({ fields }, user)
 
@@ -187,7 +187,7 @@ const entrepriseTitreTypeDelete = async (
 
 const titreDemandeEntreprisesGet = async (
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   if (!user) return []
 

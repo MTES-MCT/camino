@@ -1,17 +1,14 @@
 import dateFormat from 'dateformat'
 
 import {
-  IToken,
   ITitreDemande,
   ITitreEtape,
   ISection,
-  ITitreEntreprise
+  ITitreEntreprise,
+  Context
 } from '../../../types'
 import { debug } from '../../../config/index'
-import {
-  userGet,
-  utilisateurTitreCreate
-} from '../../../database/queries/utilisateurs'
+import { utilisateurTitreCreate } from '../../../database/queries/utilisateurs'
 import { titreDemandeEntreprisesGet } from '../../../database/queries/entreprises'
 import { domaineGet, etapeTypeGet } from '../../../database/queries/metas'
 import {
@@ -44,11 +41,9 @@ export const titreDemandeCreer = async (
   {
     titreDemande
   }: { titreDemande: ITitreDemande & { titreFromIds?: string[] } },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (
       !user ||
       (!isSuper(user) &&

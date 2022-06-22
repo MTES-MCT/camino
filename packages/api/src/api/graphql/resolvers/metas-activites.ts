@@ -1,16 +1,15 @@
 import { GraphQLResolveInfo } from 'graphql'
 import {
+  Context,
   IActiviteStatut,
   IActiviteType,
   IActiviteTypeDocumentType,
   IActiviteTypePays,
-  IActiviteTypeTitreType,
-  IToken
+  IActiviteTypeTitreType
 } from '../../../types'
 
 import { debug } from '../../../config/index'
 import { fieldsBuild } from './_fields-build'
-import { userGet } from '../../../database/queries/utilisateurs'
 import {
   activitesStatutsGet,
   activiteStatutUpdate,
@@ -32,7 +31,7 @@ import { isSuper } from 'camino-common/src/roles'
 
 const activitesTypes = async (
   _: never,
-  context: IToken,
+  _context: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
@@ -64,12 +63,10 @@ const activitesStatuts = async () => {
 
 const activiteTypeModifier = async (
   { activiteType }: { activiteType: IActiviteType },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -98,11 +95,9 @@ const activiteTypeModifier = async (
 
 const activiteStatutModifier = async (
   { activiteStatut }: { activiteStatut: IActiviteStatut },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -121,10 +116,8 @@ const activiteStatutModifier = async (
   }
 }
 
-const activitesTypesTitresTypes = async (_: never, context: IToken) => {
+const activitesTypesTitresTypes = async (_: never, { user }: Context) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -143,11 +136,9 @@ const activitesTypesTitresTypes = async (_: never, context: IToken) => {
 
 const activiteTypeTitreTypeCreer = async (
   { activiteTypeTitreType }: { activiteTypeTitreType: IActiviteTypeTitreType },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -168,11 +159,9 @@ const activiteTypeTitreTypeCreer = async (
 
 const activiteTypeTitreTypeSupprimer = async (
   { activiteTypeTitreType }: { activiteTypeTitreType: IActiviteTypeTitreType },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -194,10 +183,8 @@ const activiteTypeTitreTypeSupprimer = async (
   }
 }
 
-const activitesTypesDocumentsTypes = async (_: never, context: IToken) => {
+const activitesTypesDocumentsTypes = async (_: never, { user }: Context) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -218,11 +205,9 @@ const activiteTypeDocumentTypeCreer = async (
   {
     activiteTypeDocumentType
   }: { activiteTypeDocumentType: IActiviteTypeDocumentType },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -245,11 +230,9 @@ const activiteTypeDocumentTypeModifier = async (
   {
     activiteTypeDocumentType
   }: { activiteTypeDocumentType: IActiviteTypeDocumentType },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -276,11 +259,9 @@ const activiteTypeDocumentTypeSupprimer = async (
   {
     activiteTypeDocumentType
   }: { activiteTypeDocumentType: IActiviteTypeDocumentType },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -302,10 +283,8 @@ const activiteTypeDocumentTypeSupprimer = async (
   }
 }
 
-const activitesTypesPays = async (_: never, context: IToken) => {
+const activitesTypesPays = async (_: never, { user }: Context) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -324,11 +303,9 @@ const activitesTypesPays = async (_: never, context: IToken) => {
 
 const activiteTypePaysCreer = async (
   { activiteTypePays }: { activiteTypePays: IActiviteTypePays },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -349,11 +326,9 @@ const activiteTypePaysCreer = async (
 
 const activiteTypePaysSupprimer = async (
   { activiteTypePays }: { activiteTypePays: IActiviteTypePays },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }

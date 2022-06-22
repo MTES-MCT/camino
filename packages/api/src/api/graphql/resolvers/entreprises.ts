@@ -1,8 +1,8 @@
 import {
+  Context,
   IEntreprise,
   IEntrepriseColonneId,
-  IEntrepriseTitreType,
-  IToken
+  IEntrepriseTitreType
 } from '../../../types'
 import { GraphQLResolveInfo } from 'graphql'
 
@@ -23,16 +23,14 @@ import { fieldsBuild } from './_fields-build'
 import { entrepriseFormat } from '../../_format/entreprises'
 import { emailCheck } from '../../../tools/email-check'
 import { apiInseeEntrepriseAndEtablissementsGet } from '../../../tools/api-insee/index'
-import { userGet } from '../../../database/queries/utilisateurs'
 import { isSuper } from 'camino-common/src/roles'
 
 const entreprise = async (
   { id }: { id: string },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
     const entreprise = await entrepriseGet(id, { fields }, user)
@@ -51,12 +49,10 @@ const entreprise = async (
 
 const entreprisesTitresCreation = async (
   _: never,
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     const fields = fieldsBuild(info)
 
     const entreprises = await titreDemandeEntreprisesGet({ fields }, user)
@@ -92,11 +88,10 @@ const entreprises = async (
     etapeUniquement?: boolean | null
     titresCreation?: boolean | null
   },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
     let entreprises = [] as IEntreprise[]
@@ -169,12 +164,10 @@ const entreprises = async (
 
 const entrepriseCreer = async (
   { entreprise }: { entreprise: { legalSiren: string; paysId: string } },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!user?.entreprisesCreation) throw new Error('droits insuffisants')
 
     const errors = []
@@ -225,12 +218,10 @@ const entrepriseModifier = async (
   }: {
     entreprise: { id: string; url?: string; telephone?: string; email?: string }
   },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!user?.entreprisesCreation) throw new Error('droits insuffisants')
 
     const errors = []
@@ -266,12 +257,10 @@ const entrepriseModifier = async (
 
 const entrepriseTitreTypeModifier = async (
   { entrepriseTitreType }: { entrepriseTitreType: IEntrepriseTitreType },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }

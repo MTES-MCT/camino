@@ -1,8 +1,0 @@
-mutation UtilisateurEmailModifier($emailToken: String!) {
-  utilisateurEmailModifier(emailToken: $emailToken) {
-    id
-    email
-    nom
-    prenom
-  }
-}

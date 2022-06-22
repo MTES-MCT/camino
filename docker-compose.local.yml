@@ -18,7 +18,7 @@ services:
       - openfisca
     environment:
       PGHOST: db
-    expose:
+    ports:
       - ${API_PORT}:${API_PORT}
     volumes:
       - ./.env:/.env
@@ -44,8 +44,6 @@ services:
       POSTGRES_USER: ${PGUSER}
       POSTGRES_PASSWORD: ${PGPASSWORD}
       POSTGRES_DB: ${PGDATABASE}
-    expose:
-      - ${PGPORT}
     ports:
       - ${PGPORT}:${PGPORT}
   ui:
@@ -66,4 +64,59 @@ services:
       APPLICATION_VERSION: unused
     ports:
       - ${UI_PORT}:${UI_PORT}
+  oauth2:
+    container_name: camino_oauth2
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.3.0
+    environment:
+      OAUTH2_PROXY_PROVIDER: 'keycloak-oidc'
+      OAUTH2_PROXY_CLIENT_ID: 'camino-web'
+      OAUTH2_PROXY_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+      OAUTH2_PROXY_COOKIE_SECRET: ${OAUTH2_COOKIE_SECRET}
+      OAUTH2_PROXY_OIDC_ISSUER_URL: http://host.docker.internal:${KEYCLOAK_PORT}/realms/camino
+      OAUTH2_PROXY_REDIRECT_URL: http://localhost:${OAUTH_PORT}
+      OAUTH2_PROXY_HTTP_ADDRESS: 0.0.0.0:${OAUTH_PORT}
+      OAUTH2_PROXY_UPSTREAMS: http://host.docker.internal:${UI_PORT}
+      OAUTH2_PROXY_EMAIL_DOMAINS: "*"
+      OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: true
+      OAUTH2_PROXY_PASS_ACCESS_TOKEN: true
+      OAUTH2_PROXY_SKIP_AUTH_ROUTES: "/*"
+      # l'url de logout de keycloak, utilisé par utilisateur.vue pour se déconnect de oauth2_proxy ET keycloak
+      OAUTH2_PROXY_WHITELIST_DOMAINS: localhost:${KEYCLOAK_PORT},localhost:${OAUTH_PORT}
+      OAUTH2_PROXY_PASS_AUTHORIZATION_HEADER: true
+      OAUTH2_PROXY_COOKIE_REFRESH: 15m
+      #Dev env vars
+      OAUTH2_PROXY_INSECURE_OIDC_ALLOW_UNVERIFIED_EMAIL: true
+      OAUTH2_PROXY_COOKIE_SECURE: false
+      OAUTH2_PROXY_SKIP_OIDC_DISCOVERY: true
+      OAUTH2_PROXY_LOGIN_URL: http://localhost:${KEYCLOAK_PORT}/realms/camino/protocol/openid-connect/auth
+      OAUTH2_PROXY_REDEEM_URL: http://host.docker.internal:${KEYCLOAK_PORT}/realms/camino/protocol/openid-connect/token
+      OAUTH2_PROXY_OIDC_JWKS_URL: http://host.docker.internal:${KEYCLOAK_PORT}/realms/camino/protocol/openid-connect/certs
+      OAUTH2_PROXY_INSECURE_OIDC_SKIP_ISSUER_VERIFICATION: true
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - ${OAUTH_PORT}:${OAUTH_PORT}
+  keycloak:
+    container_name: camino_keycloak
+    image: quay.io/keycloak/keycloak:18.0.2
+    depends_on:
+      - db
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      API_MAILJET_KEY: ${API_MAILJET_KEY}
+      API_MAILJET_SECRET: ${API_MAILJET_SECRET}
+      API_MAILJET_EMAIL: ${API_MAILJET_EMAIL}
+      KC_DB: "postgres"
+      KC_DB_URL: jdbc:postgresql://db:${PGPORT}/${PGDATABASE}
+      KC_DB_SCHEMA: keycloak
+      KC_DB_PASSWORD: "${PGPASSWORD}"
+      KC_DB_USERNAME: "${PGUSER}"
+    volumes:
+      - $PWD/keycloak-config.json:/opt/keycloak/data/import/camino.json
+    command:
+      - '/opt/keycloak/bin/kc.sh build && /opt/keycloak/bin/kc.sh import --file /opt/keycloak/data/import/camino.json --override true && /opt/keycloak/bin/kc.sh start-dev'
+    entrypoint: "/bin/bash -c"
+    ports:
+      - ${KEYCLOAK_PORT}:${KEYCLOAK_PORT}
 

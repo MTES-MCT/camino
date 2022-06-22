@@ -2,6 +2,7 @@ import { graphQLCall, queryImport } from '../../../tests/_utils/index'
 
 import { dbManager } from '../../../tests/db-manager'
 import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
+import { userSuper } from '../../database/user-super'
 import { Domaines, DOMAINES_IDS } from 'camino-common/src/domaines'
 
 console.info = jest.fn()
@@ -20,14 +21,18 @@ describe('administrationTitreTypeModifier', () => {
   )
 
   test("ne peut pas modifier les types de titres d'une administration (anonyme)", async () => {
-    const res = await graphQLCall(administrationTitreTypeModifierQuery, {
-      administrationTitreType: {
-        administrationId: ADMINISTRATION_IDS.BRGM,
-        titreTypeId: 'arm',
-        gestionnaire: true,
-        associee: false
-      }
-    })
+    const res = await graphQLCall(
+      administrationTitreTypeModifierQuery,
+      {
+        administrationTitreType: {
+          administrationId: ADMINISTRATION_IDS.BRGM,
+          titreTypeId: 'arm',
+          gestionnaire: true,
+          associee: false
+        }
+      },
+      undefined
+    )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
   })
@@ -43,7 +48,7 @@ describe('administrationTitreTypeModifier', () => {
           associee: false
         }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body).toMatchObject({
@@ -75,14 +80,18 @@ describe('administrationTitreTypeModifier', () => {
   )
 
   test("ne peut pas modifier les types de titres d'une administration (anonyme)", async () => {
-    const res = await graphQLCall(administrationTitreTypeModifierQuery, {
-      administrationTitreType: {
-        administrationId: ADMINISTRATION_IDS.BRGM,
-        titreTypeId: 'arm',
-        gestionnaire: true,
-        associee: false
-      }
-    })
+    const res = await graphQLCall(
+      administrationTitreTypeModifierQuery,
+      {
+        administrationTitreType: {
+          administrationId: ADMINISTRATION_IDS.BRGM,
+          titreTypeId: 'arm',
+          gestionnaire: true,
+          associee: false
+        }
+      },
+      undefined
+    )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
   })
@@ -98,7 +107,7 @@ describe('administrationTitreTypeModifier', () => {
           associee: false
         }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body).toMatchObject({
@@ -141,7 +150,8 @@ describe('administrationTitreTypeTitreStatutModifier', () => {
           demarchesModificationInterdit: true,
           etapesModificationInterdit: true
         }
-      }
+      },
+      undefined
     )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
@@ -160,7 +170,7 @@ describe('administrationTitreTypeTitreStatutModifier', () => {
           etapesModificationInterdit: true
         }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body).toMatchObject({
@@ -200,7 +210,8 @@ describe('administrationTitreTypeEtapeTypeModifier', () => {
           modificationInterdit: true,
           creationInterdit: true
         }
-      }
+      },
+      undefined
     )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
@@ -219,7 +230,7 @@ describe('administrationTitreTypeEtapeTypeModifier', () => {
           creationInterdit: true
         }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body).toMatchObject({

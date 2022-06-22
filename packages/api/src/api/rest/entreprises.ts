@@ -1,7 +1,7 @@
-import { userGet } from '../../database/queries/utilisateurs'
+import { userByEmailGet } from '../../database/queries/utilisateurs'
 
 import express from 'express'
-import { IEntreprise, IUser } from '../../types'
+import { formatUser, IEntreprise, IUser } from '../../types'
 import { Fiscalite, fiscaliteVisible } from 'camino-common/src/fiscalite'
 import { constants } from 'http2'
 import {
@@ -93,7 +93,7 @@ export const bodyBuilder = (
               },
               operateur: {
                 // TODO Sandra : ça sert à quoi ?
-                [anneePrecedente]: entreprise.nom
+                [anneePrecedente]: entreprise.nom ?? ''
               },
               // TODO Sandra, ça vient d’où ?
               investissement: {
@@ -152,64 +152,70 @@ export const fiscalite = async (
   req: express.Request<{ entrepriseId?: string }>,
   res: CustomResponse<Fiscalite>
 ) => {
-  const userId = (req.user as unknown as IUser | undefined)?.id
+  const userEmail = (req.user as unknown as IUser | undefined)?.email
 
-  const user = await userGet(userId)
-
-  const entrepriseId = req.params.entrepriseId
-
-  if (!entrepriseId || !fiscaliteVisible(user, entrepriseId)) {
+  const userInBdd = await userByEmailGet(userEmail)
+  let user = null
+  if (!userInBdd) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
-    const entreprise = await entrepriseGet(
-      entrepriseId,
-      { fields: { id: {} } },
-      user
-    )
-    if (!entreprise) {
-      throw new Error(`l’entreprise ${entrepriseId} est inconnue`)
-    }
+    user = formatUser(userInBdd)
 
-    // TODO gérer l’année
-    const annee = 2022
-    const anneePrecedente = annee - 1
+    const entrepriseId = req.params.entrepriseId
 
-    const titres = await titresGet(
-      { entreprisesIds: [entrepriseId] },
-      { fields: { substances: { id: {} }, communes: { id: {} } } },
-      user
-    )
-
-    const activites = await titresActivitesGet(
-      // TODO Laure, est-ce qu’il faut faire les WRP ?
-      {
-        typesIds: ['grx', 'gra', 'wrp'],
-        // TODO Laure, que les déposées ? Pas les « en construction » ?
-        statutsIds: ['dep'],
-        annees: [anneePrecedente],
-        titresIds: titres.map(({ id }) => id)
-      },
-      { fields: { id: {} } },
-      user
-    )
-
-    const body = bodyBuilder(activites, titres, annee, entreprise)
-
-    if (Object.keys(body.articles).length > 0) {
-      const result = await apiOpenfiscaFetch(body)
-
-      const redevances = responseExtractor(result, annee)
-
-      console.log(JSON.stringify(result))
-      console.log('redevanceCommunaleMinesAurifere', redevances)
-      res.json(redevances)
+    if (!entrepriseId || !fiscaliteVisible(user, entrepriseId)) {
+      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
-      res.json({
-        redevanceCommunale: 0,
-        redevanceDepartementale: 0,
-        taxeAurifereGuyane: 0,
-        totalInvestissementsDeduits: 0
-      })
+      const entreprise = await entrepriseGet(
+        entrepriseId,
+        { fields: { id: {} } },
+        user
+      )
+      if (!entreprise) {
+        throw new Error(`l’entreprise ${entrepriseId} est inconnue`)
+      }
+
+      // TODO gérer l’année
+      const annee = 2022
+      const anneePrecedente = annee - 1
+
+      const titres = await titresGet(
+        { entreprisesIds: [entrepriseId] },
+        { fields: { substances: { id: {} }, communes: { id: {} } } },
+        user
+      )
+
+      const activites = await titresActivitesGet(
+        // TODO Laure, est-ce qu’il faut faire les WRP ?
+        {
+          typesIds: ['grx', 'gra', 'wrp'],
+          // TODO Laure, que les déposées ? Pas les « en construction » ?
+          statutsIds: ['dep'],
+          annees: [anneePrecedente],
+          titresIds: titres.map(({ id }) => id)
+        },
+        { fields: { id: {} } },
+        user
+      )
+
+      const body = bodyBuilder(activites, titres, annee, entreprise)
+
+      if (Object.keys(body.articles).length > 0) {
+        const result = await apiOpenfiscaFetch(body)
+
+        const redevances = responseExtractor(result, annee)
+
+        console.log(JSON.stringify(result))
+        console.log('redevanceCommunaleMinesAurifere', redevances)
+        res.json(redevances)
+      } else {
+        res.json({
+          redevanceCommunale: 0,
+          redevanceDepartementale: 0,
+          taxeAurifereGuyane: 0,
+          totalInvestissementsDeduits: 0
+        })
+      }
     }
   }
 }

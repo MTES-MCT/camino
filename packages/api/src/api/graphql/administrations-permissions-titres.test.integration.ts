@@ -4,9 +4,15 @@ import {
   creationCheck,
   modificationCheck
 } from '../../../tests/_utils/administrations-permissions'
+import Utilisateurs from '../../database/models/utilisateurs'
 
 console.info = jest.fn()
 console.error = jest.fn()
+
+beforeEach(async () => {
+  await Utilisateurs.query().delete()
+})
+
 beforeAll(async () => {
   await dbManager.populateDb()
 })

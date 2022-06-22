@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { ITitre, ITitreColonneId, IToken } from '../../../types'
+import { Context, ITitre, ITitreColonneId } from '../../../types'
 
 import { debug } from '../../../config/index'
 import { titreFormat, titresFormat } from '../../_format/titres'
@@ -15,7 +15,6 @@ import {
   titreUpsert,
   titreArchive
 } from '../../../database/queries/titres'
-import { userGet } from '../../../database/queries/utilisateurs'
 
 import titreUpdateTask from '../../../business/titre-update'
 
@@ -29,11 +28,10 @@ import { linkTitres } from '../../../database/queries/titres-titres'
 
 const titre = async (
   { id }: { id: string },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
     const titre = await titreGet(id, { fields, fetchHeritage: true }, user)
@@ -88,11 +86,10 @@ const titres = async (
     territoires: string
     demandeEnCours: boolean | null
   },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info).elements
 
     const [titres, total] = await Promise.all([
@@ -164,12 +161,10 @@ const titres = async (
  */
 const titreCreer = async (
   { titre }: { titre: ITitre },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     const domaine = await domaineGet(
       titre.domaineId,
       { fields: { titresTypes: { id: {} } } },
@@ -201,12 +196,10 @@ const titreCreer = async (
 
 const titreModifier = async (
   { titre }: { titre: ITitre & { titreFromIds?: string[] } },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     const titreOld = await titreGet(
       titre.id,
       { fields: { titresAdministrations: { id: {} }, demarches: { id: {} } } },
@@ -282,9 +275,7 @@ const titreModifier = async (
   }
 }
 
-const titreSupprimer = async ({ id }: { id: string }, context: IToken) => {
-  const user = await userGet(context.user?.id)
-
+const titreSupprimer = async ({ id }: { id: string }, { user }: Context) => {
   const titreOld = await titreGet(
     id,
     {

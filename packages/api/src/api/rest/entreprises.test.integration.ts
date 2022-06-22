@@ -11,7 +11,9 @@ afterAll(async () => {
 
 describe('fiscalite', () => {
   test('un utilisateur defaut n’a pas les droits', async () => {
-    const tested = await restCall('/entreprises/1234/fiscalite', 'defaut')
+    const tested = await restCall('/entreprises/1234/fiscalite', {
+      role: 'defaut'
+    })
 
     expect(tested.statusCode).toBe(403)
   })

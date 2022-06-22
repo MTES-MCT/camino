@@ -1,7 +1,5 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types'
-
 import Documents from '../../models/documents'
 import TitresEtapes from '../../models/titres-etapes'
 import Entreprises from '../../models/entreprises'
@@ -26,12 +24,11 @@ import {
   isAdministrationEditeur,
   isBureauDEtudes,
   isEntreprise,
-  isSuper
+  isSuper,
+  User
 } from 'camino-common/src/roles'
 
-const titreEtapeModificationQueryBuild = (
-  user: IUtilisateur | null | undefined
-) => {
+const titreEtapeModificationQueryBuild = (user: User) => {
   if (isSuper(user)) {
     return raw('true')
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
@@ -112,7 +109,7 @@ const specifiquesAdd = (
  */
 const titresEtapesQueryModify = (
   q: QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]>,
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   q.select('titresEtapes.*')
     .where('titresEtapes.archive', false)

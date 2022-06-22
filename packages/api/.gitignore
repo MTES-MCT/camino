@@ -32,3 +32,5 @@ node_modules
 /dev/tmp
 cron.log
 .eslintcache
+
+keycloak.json

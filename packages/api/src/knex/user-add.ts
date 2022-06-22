@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs'
 import { IUtilisateur } from '../types'
 import { idGenerate } from '../database/models/_format/id-create'
 
+// TODO 2022-06-23 fixme
 export const userAdd = async (
   knex: Knex,
   user: Omit<IUtilisateur, 'administrationId'>

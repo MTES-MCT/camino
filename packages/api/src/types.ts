@@ -6,12 +6,20 @@ import {
 import { DepartementId } from 'camino-common/src/departement'
 import { RegionId } from 'camino-common/src/region'
 import { GeoSystemeId } from 'camino-common/src/geoSystemes'
-import { Role } from 'camino-common/src/roles'
+import {
+  BaseUserNotNull,
+  isAdministrationRole,
+  isEntrepriseOrBureauDetudeRole,
+  Role,
+  User,
+  UserNotNull
+} from 'camino-common/src/roles'
 import { DomaineId } from 'camino-common/src/domaines'
 import { TitreTypeTypeId } from 'camino-common/src/titresTypesTypes'
 import { PaysId } from 'camino-common/src/pays'
 import { TitreTypeId } from 'camino-common/src/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/demarchesTypes'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 const DemarchesStatutsTypesIds = {
   Accepte: 'acc',
@@ -347,7 +355,7 @@ interface IEntrepriseEtablissement {
 
 interface IEntreprise {
   id: string
-  nom: string
+  nom?: string
   paysId?: string | null
   legalSiren?: string | null
   legalEtranger?: string | null
@@ -945,7 +953,7 @@ interface IUtilisateur {
   role: Role
   // TODO: définir une interface IUtilisateurPreferences
   preferences?: any | null
-  administrationId: AdministrationId | undefined | null
+  administrationId?: AdministrationId | null
   entreprises?: IEntreprise[] | null
   modification?: boolean | null
   suppression?: boolean | null
@@ -956,6 +964,57 @@ interface IUtilisateur {
   refreshToken?: string | null
 }
 
+export const formatUser = (userInBdd: IUtilisateur): UserNotNull => {
+  if (!isNotNullNorUndefined(userInBdd.email)) {
+    throw new Error('l’email est obligatoire')
+  }
+
+  if (!isNotNullNorUndefined(userInBdd.id)) {
+    throw new Error('l’id est obligatoire')
+  }
+
+  if (!isNotNullNorUndefined(userInBdd.nom)) {
+    throw new Error('le nom est obligatoire')
+  }
+
+  if (!isNotNullNorUndefined(userInBdd.prenom)) {
+    throw new Error('le prénom est obligatoire')
+  }
+  const baseUser: Omit<BaseUserNotNull, 'role'> = {
+    id: userInBdd.id,
+    nom: userInBdd.nom,
+    prenom: userInBdd.prenom,
+    email: userInBdd.email,
+    entreprisesCreation: userInBdd.entreprisesCreation ?? false,
+    utilisateursCreation: userInBdd.utilisateursCreation ?? false
+  }
+  if (isAdministrationRole(userInBdd.role)) {
+    if (!isNotNullNorUndefined(userInBdd.administrationId)) {
+      throw new Error("l'administration est obligatoire pour un admin")
+    }
+
+    return {
+      ...baseUser,
+      role: userInBdd.role,
+      administrationId: userInBdd.administrationId
+    }
+  }
+
+  if (isEntrepriseOrBureauDetudeRole(userInBdd.role)) {
+    if (!isNotNullNorUndefined(userInBdd.entreprises)) {
+      throw new Error('les entreprises doivent être chargées')
+    }
+
+    return {
+      ...baseUser,
+      role: userInBdd.role,
+      entreprises: userInBdd.entreprises
+    }
+  }
+
+  return { ...baseUser, role: userInBdd.role }
+}
+
 interface IUtilisateurTitre {
   utilisateurId: string
   titreId: string
@@ -963,17 +1022,7 @@ interface IUtilisateurTitre {
 }
 
 type IUtilisateurCreation = Omit<IUtilisateur, 'id'>
-
-interface IToken {
-  user?: ITokenUser
-  res?: any
-}
-
-interface ITokenUser {
-  id?: string
-  email?: string
-  iat?: number
-}
+export type Context = { user: User }
 
 type IFormat = 'xlsx' | 'csv' | 'ods' | 'geojson' | 'json' | 'pdf' | 'zip'
 
@@ -1085,8 +1134,6 @@ export {
   IUtilisateurTitre,
   IUtilisateurCreation,
   IPropId,
-  IToken,
-  ITokenUser,
   ITitreColonneId,
   ITitreDemarcheColonneId,
   ITitreActiviteColonneId,

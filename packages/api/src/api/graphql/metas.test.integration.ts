@@ -15,7 +15,7 @@ describe('statuts', () => {
   const metasQuery = queryImport('metas')
 
   test('peut voir tous les statuts (utilisateur super)', async () => {
-    const res = await graphQLCall(metasQuery, {}, 'super')
+    const res = await graphQLCall(metasQuery, {}, { role: 'super' })
 
     expect(res.body.data.statuts).toEqual([
       { id: 'dmi', nom: 'demande initiale', couleur: 'warning' },
@@ -30,7 +30,7 @@ describe('statuts', () => {
   })
 
   test('ne peut pas voir tous les statuts (utilisateur anonyme)', async () => {
-    const res = await graphQLCall(metasQuery, {})
+    const res = await graphQLCall(metasQuery, {}, undefined)
 
     expect(res.body.data.statuts).toEqual([
       { id: 'dmi', nom: 'demande initiale', couleur: 'warning' },

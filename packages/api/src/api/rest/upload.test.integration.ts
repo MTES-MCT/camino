@@ -1,5 +1,6 @@
-import { restUploadCall } from '../../../tests/_utils'
+import { restUploadCall, TestUser } from '../../../tests/_utils'
 import { dbManager } from '../../../tests/db-manager'
+import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
 
 jest.mock('tus-node-server')
 
@@ -15,17 +16,17 @@ describe('téléversement de fichier par rest (tus)', () => {
 
   describe('permission de téléverser', () => {
     test.each`
-      role            | code
-      ${'admin'}      | ${200}
-      ${'super'}      | ${200}
-      ${'editeur'}    | ${200}
-      ${'lecteur'}    | ${200}
-      ${'entreprise'} | ${200}
-      ${'defaut'}     | ${403}
+      user                                                                          | code
+      ${{ role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }}   | ${200}
+      ${{ role: 'super' }}                                                          | ${200}
+      ${{ role: 'editeur', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }} | ${200}
+      ${{ role: 'lecteur', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }} | ${200}
+      ${{ role: 'entreprise', entreprises: [] }}                                    | ${200}
+      ${{ role: 'defaut' }}                                                         | ${403}
     `(
-      'retourne le code $code pour un utilisateur "$role"',
-      async ({ role, code }) => {
-        const res = await restUploadCall(role)
+      'retourne le code $code pour un utilisateur "$user"',
+      async ({ user, code }: { user: TestUser; code: string }) => {
+        const res = await restUploadCall(user)
         expect(res.statusCode).toBe(code)
       }
     )

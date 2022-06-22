@@ -1,7 +1,5 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types'
-
 import { knex } from '../../../knex'
 
 import Entreprises from '../../models/entreprises'
@@ -17,12 +15,13 @@ import {
   isAdministrationEditeur,
   isBureauDEtudes,
   isEntreprise,
-  isSuper
+  isSuper,
+  User
 } from 'camino-common/src/roles'
 
 const entreprisesQueryModify = (
   q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>,
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   q.select('entreprises.*')
 

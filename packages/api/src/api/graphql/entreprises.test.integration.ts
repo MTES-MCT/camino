@@ -52,9 +52,13 @@ describe('entrepriseCreer', () => {
   const entrepriseCreerQuery = queryImport('entreprise-creer')
 
   test('ne peut pas créer une entreprise (utilisateur anonyme)', async () => {
-    const res = await graphQLCall(entrepriseCreerQuery, {
-      entreprise: { legalSiren: 'test', paysId: 'fr' }
-    })
+    const res = await graphQLCall(
+      entrepriseCreerQuery,
+      {
+        entreprise: { legalSiren: 'test', paysId: 'fr' }
+      },
+      undefined
+    )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
   })
@@ -69,7 +73,7 @@ describe('entrepriseCreer', () => {
     const res = await graphQLCall(
       entrepriseCreerQuery,
       { entreprise: { legalSiren: '729800706', paysId: 'fr' } },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body).toMatchObject({
@@ -86,13 +90,13 @@ describe('entrepriseCreer', () => {
     await graphQLCall(
       entrepriseCreerQuery,
       { entreprise: { legalSiren: '729800706', paysId: 'fr' } },
-      'super'
+      { role: 'super' }
     )
 
     const res = await graphQLCall(
       entrepriseCreerQuery,
       { entreprise: { legalSiren: '729800706', paysId: 'fr' } },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body.errors[0].message).toBe(
@@ -107,7 +111,7 @@ describe('entrepriseCreer', () => {
     const res = await graphQLCall(
       entrepriseCreerQuery,
       { entreprise: { legalSiren: 'invalid', paysId: 'fr' } },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body.errors[0].message).toBe(
@@ -119,7 +123,7 @@ describe('entrepriseCreer', () => {
     const res = await graphQLCall(
       entrepriseCreerQuery,
       { entreprise: { legalSiren: '729800706', paysId: 'en' } },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body.errors[0].message).toBe(
@@ -137,7 +141,7 @@ describe('entrepriseCreer', () => {
     const res = await graphQLCall(
       entrepriseCreerQuery,
       { entreprise: { legalSiren: '729800706', paysId: 'fr' } },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body).toMatchObject({
@@ -165,16 +169,20 @@ describe('entrepriseModifier', () => {
     const res = await graphQLCall(
       queryImport('entreprise-creer'),
       { entreprise: { legalSiren: '729800706', paysId: 'fr' } },
-      'super'
+      { role: 'super' }
     )
 
     entrepriseId = res.body.data.entrepriseCreer.id
   })
 
   test('ne peut pas modifier une entreprise (utilisateur anonyme)', async () => {
-    const res = await graphQLCall(entrepriseModifierQuery, {
-      entreprise: { id: entrepriseId, email: 'toto@gmail.com' }
-    })
+    const res = await graphQLCall(
+      entrepriseModifierQuery,
+      {
+        entreprise: { id: entrepriseId, email: 'toto@gmail.com' }
+      },
+      undefined
+    )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
   })
@@ -183,7 +191,7 @@ describe('entrepriseModifier', () => {
     const res = await graphQLCall(
       entrepriseModifierQuery,
       { entreprise: { id: entrepriseId, email: 'toto@gmail.com' } },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body).toMatchObject({
@@ -198,7 +206,7 @@ describe('entrepriseModifier', () => {
     const res = await graphQLCall(
       entrepriseModifierQuery,
       { entreprise: { id: entrepriseId, email: 'totogmail.com' } },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body.errors[0].message).toBe('adresse email invalide')
@@ -208,7 +216,7 @@ describe('entrepriseModifier', () => {
     const res = await graphQLCall(
       entrepriseModifierQuery,
       { entreprise: { id: 'id-inconnu' } },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body.errors[0].message).toBe('entreprise inconnue')
@@ -218,7 +226,7 @@ describe('entrepriseModifier', () => {
     const res = await graphQLCall(
       entrepriseModifierQuery,
       { entreprise: { id: entrepriseId, archive: true } },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body).toMatchObject({
@@ -277,7 +285,7 @@ describe('entreprise', () => {
     const res = await graphQLCall(
       entrepriseQuery,
       { id: entrepriseId },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -300,7 +308,7 @@ describe('entreprise', () => {
     const res = await graphQLCall(
       entrepriseQuery,
       { id: entrepriseId },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -322,14 +330,22 @@ describe('entreprises', () => {
       })
     }
 
-    let res = await graphQLCall(entreprisesQuery, { archive: false }, 'super')
+    let res = await graphQLCall(
+      entreprisesQuery,
+      { archive: false },
+      { role: 'super' }
+    )
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data.entreprises.elements).toHaveLength(4)
 
-    res = await graphQLCall(entreprisesQuery, { archive: true }, 'super')
+    res = await graphQLCall(
+      entreprisesQuery,
+      { archive: true },
+      { role: 'super' }
+    )
     expect(res.body.data.entreprises.elements).toHaveLength(6)
 
-    res = await graphQLCall(entreprisesQuery, {}, 'super')
+    res = await graphQLCall(entreprisesQuery, {}, { role: 'super' })
     expect(res.body.data.entreprises.elements).toHaveLength(10)
   })
 })

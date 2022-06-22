@@ -1,25 +1,40 @@
 import express from 'express'
 import { Server, FileStore } from 'tus-node-server'
 import { graphqlUploadExpress } from 'graphql-upload'
-import { userGet } from '../database/queries/utilisateurs'
-import { isDefault } from 'camino-common/src/roles'
+import { userByEmailGet } from '../database/queries/utilisateurs'
+import { isDefault, UserNotNull } from 'camino-common/src/roles'
+import { formatUser } from '../types'
+
+interface IAuthRequestHttp extends express.Request {
+  user?: {
+    email?: string
+  }
+}
 
 // Téléversement REST
 const uploadAllowedMiddleware = async (
-  req: express.Request,
+  req: IAuthRequestHttp,
   res: express.Response,
   next: express.NextFunction
 ) => {
-  const userId = (req as any).user?.id
+  try {
+    let user: UserNotNull | undefined
+    if (req.user?.email) {
+      const userInBdd = await userByEmailGet(req.user.email)
+      if (userInBdd) {
+        user = formatUser(userInBdd)
+      }
+    }
 
-  const user = await userGet(userId)
+    if (isDefault(user)) {
+      res.sendStatus(403)
 
-  if (isDefault(user)) {
-    res.sendStatus(403)
-
-    return
+      return
+    }
+    next()
+  } catch (e: any) {
+    res.status(500).send(e.message)
   }
-  next()
 }
 
 const restUpload = () => {

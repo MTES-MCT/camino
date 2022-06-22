@@ -9,8 +9,9 @@ import {
   titresDemarchesQueryModify
 } from './titres-demarches'
 import TitresEtapes from '../../models/titres-etapes'
-import { Role } from 'camino-common/src/roles'
+import { User } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/administrations'
+import { testBlankUser, TestUser } from '../../../../tests/_utils'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -26,23 +27,17 @@ afterAll(async () => {
 describe('titresDemarchesQueryModify', () => {
   describe('titreDemarcheSuppressionSelectQuery', () => {
     test.each`
-      role            | suppression
-      ${'super'}      | ${true}
-      ${'admin'}      | ${true}
-      ${'editeur'}    | ${true}
-      ${'lecteur'}    | ${false}
-      ${'entreprise'} | ${false}
-      ${'default'}    | ${false}
-      ${undefined}    | ${false}
+      user                                                                          | suppression
+      ${{ role: 'super' }}                                                          | ${true}
+      ${{ role: 'admin', administrationId: Administrations['dea-guyane-01'].id }}   | ${true}
+      ${{ role: 'editeur', administrationId: Administrations['dea-guyane-01'].id }} | ${true}
+      ${{ role: 'lecteur', administrationId: Administrations['dea-guyane-01'].id }} | ${false}
+      ${{ role: 'entreprise' }}                                                     | ${false}
+      ${{ role: 'default' }}                                                        | ${false}
+      ${undefined}                                                                  | ${false}
     `(
       'un utilisateur $user peut supprimer $suppression une démarche qui n’a pas d’étape',
-      async ({
-        role,
-        suppression
-      }: {
-        role: Role | undefined
-        suppression: boolean
-      }) => {
+      async ({ user, suppression }: { user: User; suppression: boolean }) => {
         const titreId = idGenerate()
         await Titres.query().insert([
           {
@@ -67,17 +62,9 @@ describe('titresDemarchesQueryModify', () => {
         ])
         const q = TitresDemarches.query()
         q.select(
-          titreDemarcheSuppressionSelectQuery(
-            'titresDemarches',
-            role
-              ? {
-                  id: 'id',
-                  dateCreation: '',
-                  role,
-                  administrationId: Administrations['dea-guyane-01'].id
-                }
-              : undefined
-          ).as('suppression')
+          titreDemarcheSuppressionSelectQuery('titresDemarches', user).as(
+            'suppression'
+          )
         )
         const titreDemarche = await q.findById(titreDemarcheId)
 
@@ -86,24 +73,35 @@ describe('titresDemarchesQueryModify', () => {
       }
     )
 
-    test.each`
-      role            | suppression
-      ${'super'}      | ${true}
-      ${'admin'}      | ${false}
-      ${'editeur'}    | ${false}
-      ${'lecteur'}    | ${false}
-      ${'entreprise'} | ${false}
-      ${'default'}    | ${false}
-      ${undefined}    | ${false}
-    `(
+    test.each<[TestUser | undefined, boolean]>([
+      [{ role: 'super' }, true],
+      [
+        {
+          role: 'admin',
+          administrationId: Administrations['dea-guyane-01'].id
+        },
+        false
+      ],
+      [
+        {
+          role: 'editeur',
+          administrationId: Administrations['dea-guyane-01'].id
+        },
+        false
+      ],
+      [
+        {
+          role: 'lecteur',
+          administrationId: Administrations['dea-guyane-01'].id
+        },
+        false
+      ],
+      [{ role: 'entreprise', entreprises: [] }, false],
+      [{ role: 'defaut' }, false],
+      [undefined, false]
+    ])(
       'un utilisateur $role peut supprimer une démarche qui a au moins une étape',
-      async ({
-        role,
-        suppression
-      }: {
-        role: Role | undefined
-        suppression: boolean
-      }) => {
+      async (user, suppression) => {
         const titreId = idGenerate()
         await Titres.query().insert([
           {
@@ -138,8 +136,11 @@ describe('titresDemarchesQueryModify', () => {
         q.select(
           titreDemarcheSuppressionSelectQuery(
             'titresDemarches',
-            role
-              ? { id: '', dateCreation: '', role, administrationId: undefined }
+            user
+              ? {
+                  ...testBlankUser,
+                  ...user
+                }
               : undefined
           ).as('suppression')
         )

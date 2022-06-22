@@ -4,8 +4,7 @@ import {
   IAdministrationTitreType,
   IAdministrationTitreTypeEtapeType,
   IAdministrationTitreTypeTitreStatut,
-  IFields,
-  IUtilisateur
+  IFields
 } from '../../types'
 
 import graphBuild from './graph/build'
@@ -19,10 +18,11 @@ import AdministrationsTitresTypesTitresStatuts from '../models/administrations-t
 import AdministrationsTitresTypesEtapesTypes from '../models/administrations-titres-types-etapes-types'
 import AdministrationsActivitesTypes from '../models/administrations-activites-types'
 import AdministrationsActivitesTypesEmails from '../models/administrations-activites-types-emails'
+import { User } from 'camino-common/src/roles'
 
 const administrationsQueryBuild = (
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const graph = fields
     ? graphBuild(fields, 'administrations', fieldsFormat)
@@ -38,7 +38,7 @@ const administrationsQueryBuild = (
 const administrationGet = async (
   id: string,
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const q = administrationsQueryBuild({ fields }, user)
 
@@ -47,7 +47,7 @@ const administrationGet = async (
 
 const administrationsGet = async (
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   return administrationsQueryBuild({ fields }, user)
 }

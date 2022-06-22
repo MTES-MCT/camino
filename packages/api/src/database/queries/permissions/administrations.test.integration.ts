@@ -1,5 +1,10 @@
 import { dbManager } from '../../../../tests/db-manager'
-import { IUtilisateur, IAdministration, ITitre } from '../../../types'
+import {
+  IUtilisateur,
+  IAdministration,
+  ITitre,
+  formatUser
+} from '../../../types'
 
 import AdministrationsTitresTypes from '../../models/administrations-titres-types'
 import Titres from '../../models/titres'
@@ -13,6 +18,7 @@ import {
 } from './administrations'
 import { idGenerate } from '../../models/_format/id-create'
 import options from '../_options'
+import { testBlankUser, TestUser } from '../../../../tests/_utils'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -79,21 +85,18 @@ describe('administrationsTitresQuery', () => {
 })
 
 describe('administrationsQueryModify', () => {
-  test.each`
-    role         | emailsModification
-    ${'super'}   | ${true}
-    ${'admin'}   | ${false}
-    ${'editeur'} | ${false}
-    ${'lecteur'} | ${false}
-  `(
+  test.each<[TestUser, boolean]>([
+    [{ role: 'super' }, true],
+    [{ role: 'admin', administrationId: 'pre-01053-01' }, false],
+    [{ role: 'editeur', administrationId: 'pre-01053-01' }, false],
+    [{ role: 'lecteur', administrationId: 'pre-01053-01' }, false]
+  ])(
     "pour une préfecture, emailsModification est 'true' pour un utilisateur super, 'false' pour tous ses membres",
-    async ({ role, emailsModification }) => {
-      const mockAdministration = CommonAdministrations['pre-01053-01']
-
+    async (user, emailsModification) => {
       const mockUser: IUtilisateur = {
+        ...testBlankUser,
+        ...user,
         id: idGenerate(),
-        role,
-        administrationId: mockAdministration.id,
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
         dateCreation: '2022-05-12'
@@ -105,8 +108,8 @@ describe('administrationsQueryModify', () => {
       )
 
       const q = administrationsQueryModify(
-        Administrations.query().where('id', mockAdministration.id),
-        mockUser
+        Administrations.query().where('id', 'pre-01053-01'),
+        formatUser(mockUser)
       )
       const res = (await q.first()) as IAdministration
       if (!emailsModification) {
@@ -117,22 +120,19 @@ describe('administrationsQueryModify', () => {
     }
   )
 
-  test.each`
-    role         | emailsModification
-    ${'super'}   | ${true}
-    ${'admin'}   | ${true}
-    ${'editeur'} | ${true}
-    ${'lecteur'} | ${false}
-    ${'defaut'}  | ${false}
-  `(
+  test.each<[TestUser, boolean]>([
+    [{ role: 'super' }, true],
+    [{ role: 'admin', administrationId: 'dre-ile-de-france-01' }, true],
+    [{ role: 'editeur', administrationId: 'dre-ile-de-france-01' }, true],
+    [{ role: 'lecteur', administrationId: 'dre-ile-de-france-01' }, false],
+    [{ role: 'defaut' }, false]
+  ])(
     "pour une DREAL/DEAL, emailsModification est 'true' pour ses membres admins et éditeurs, pour les utilisateurs supers, 'false' pour ses autres membres",
-    async ({ role, emailsModification }) => {
-      const mockDreal = CommonAdministrations['dre-ile-de-france-01']
-
+    async (user, emailsModification) => {
       const mockUser: IUtilisateur = {
+        ...testBlankUser,
         id: idGenerate(),
-        role,
-        administrationId: mockDreal.id,
+        ...user,
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
         dateCreation: '2022-05-12'
@@ -143,8 +143,11 @@ describe('administrationsQueryModify', () => {
         options.utilisateurs.update
       )
 
-      const q = administrationsQueryModify(Administrations.query(), mockUser)
-      const res = (await q.findById(mockDreal.id)) as IAdministration
+      const q = administrationsQueryModify(
+        Administrations.query(),
+        formatUser(mockUser)
+      )
+      const res = (await q.findById('dre-ile-de-france-01')) as IAdministration
       if (!emailsModification) {
         expect(res.emailsModification).toBeFalsy()
       } else {
@@ -159,6 +162,7 @@ describe('administrationsQueryModify', () => {
     const prefectureCorseDuSud = 'pre-2A004-01'
 
     const mockUser: IUtilisateur = {
+      ...testBlankUser,
       id: idGenerate(),
       role: 'admin',
       administrationId: mockDreal.id,
@@ -171,32 +175,35 @@ describe('administrationsQueryModify', () => {
       mockUser,
       options.utilisateurs.update
     )
-    let q = administrationsQueryModify(Administrations.query(), mockUser)
+    let q = administrationsQueryModify(
+      Administrations.query(),
+      formatUser(mockUser)
+    )
 
     let res = await q.findById(prefectureDordogne)
     expect(res).not.toBeUndefined()
     expect(res?.emailsModification).toBe(true)
 
-    q = administrationsQueryModify(Administrations.query(), mockUser)
+    q = administrationsQueryModify(
+      Administrations.query(),
+      formatUser(mockUser)
+    )
     res = await q.findById(prefectureCorseDuSud)
     expect(res?.emailsModification).toBe(false)
   })
 
-  test.each`
-    role         | emailsModification
-    ${'admin'}   | ${true}
-    ${'editeur'} | ${true}
-    ${'lecteur'} | ${false}
-    ${'defaut'}  | ${false}
-  `(
+  test.each<[TestUser, boolean]>([
+    [{ role: 'admin', administrationId: 'min-dajb-01' }, true],
+    [{ role: 'editeur', administrationId: 'min-dajb-01' }, true],
+    [{ role: 'lecteur', administrationId: 'min-dajb-01' }, false],
+    [{ role: 'defaut' }, false]
+  ])(
     "pour un membre $role de ministère, emailsModification est '$emailsModification'",
-    async ({ role, emailsModification }) => {
-      const mockMin = CommonAdministrations['min-dajb-01']
-
+    async (user, emailsModification) => {
       const mockUser: IUtilisateur = {
+        ...testBlankUser,
         id: idGenerate(),
-        role,
-        administrationId: mockMin.id,
+        ...user,
         email: 'email' + idGenerate(),
         motDePasse: 'motdepasse',
         dateCreation: '2022-05-12'
@@ -208,10 +215,10 @@ describe('administrationsQueryModify', () => {
       )
 
       const q = administrationsQueryModify(
-        Administrations.query().where('id', mockMin.id),
-        mockUser
+        Administrations.query().where('id', 'min-dajb-01'),
+        formatUser(mockUser)
       )
-      const res = (await q.findById(mockMin.id)) as IAdministration
+      const res = (await q.findById('min-dajb-01')) as IAdministration
       if (!emailsModification) {
         expect(res.emailsModification).toBeFalsy()
       } else {
@@ -238,9 +245,9 @@ describe('administrationsQueryModify', () => {
     })
 
     const mockUser: IUtilisateur = {
+      ...testBlankUser,
       id: idGenerate(),
       role: 'super',
-      administrationId: mockAdministration.id,
       email: 'email' + idGenerate(),
       motDePasse: 'motdepasse',
       dateCreation: '2022-05-12'
@@ -253,7 +260,7 @@ describe('administrationsQueryModify', () => {
 
     const q = administrationsQueryModify(
       Administrations.query().where('id', mockAdministration.id),
-      mockUser
+      formatUser(mockUser)
     )
     const res = (await q
       .withGraphFetched({ activitesTypesEmails: {} })

@@ -4,9 +4,16 @@ import {
   creationCheck,
   modificationCheck
 } from '../../../tests/_utils/administrations-permissions'
+import Utilisateurs from '../../database/models/utilisateurs'
 
 console.info = jest.fn()
 console.error = jest.fn()
+
+// TODO 2022-06-27 we have a strange behavior between tests
+beforeEach(async () => {
+  await Utilisateurs.query().delete()
+})
+
 beforeAll(async () => {
   await dbManager.populateDb()
 })

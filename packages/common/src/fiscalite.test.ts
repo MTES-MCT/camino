@@ -1,5 +1,5 @@
 import { fiscaliteVisible } from './fiscalite'
-import { Role } from './roles'
+import { UserNotNull } from './roles'
 
 // unskip une fois l'accès aux utilisateurs autorisé
 test.skip.each`
@@ -23,20 +23,9 @@ test.skip.each`
     user,
     visible
   }: {
-    user:
-      | {
-          entreprises?: { id: string }[] | null
-          role: Role
-        }
-      | undefined
-      | null
+    user: UserNotNull | undefined | null
     visible: boolean
   }) => {
-    expect(
-      fiscaliteVisible(
-        user ? { ...user, administrationId: undefined } : user,
-        '1234'
-      )
-    ).toEqual(visible)
+    expect(fiscaliteVisible(user, '1234')).toEqual(visible)
   }
 )

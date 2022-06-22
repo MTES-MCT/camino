@@ -3,14 +3,18 @@ import {
   ITitreColonneId,
   ITitreDemarcheColonneId,
   ITitreActiviteColonneId,
-  IUtilisateursColonneId
+  IUtilisateursColonneId,
+  formatUser
 } from '../../types'
 
 import { titreGet, titresGet } from '../../database/queries/titres'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches'
 import { titresActivitesGet } from '../../database/queries/titres-activites'
 import { entreprisesGet } from '../../database/queries/entreprises'
-import { userGet, utilisateursGet } from '../../database/queries/utilisateurs'
+import {
+  userByEmailGet,
+  utilisateursGet
+} from '../../database/queries/utilisateurs'
 
 import { titreFormat, titresFormat } from '../_format/titres'
 import { titreDemarcheFormat } from '../_format/titres-demarches'
@@ -63,33 +67,39 @@ interface ITitreInput {
 
 const titre = async (
   { query: { format = 'json' }, params: { id } }: ITitreInput,
-  userId?: string
+  userEmail?: string
 ) => {
-  const user = await userGet(userId)
-
-  formatCheck(['geojson', 'json'], format)
-
-  const titre = await titreGet(id!, { fields: titreFields }, user)
-
-  if (!titre) {
-    return null
-  }
-
-  const titreFormatted = titreFormat(titre)
-  let contenu
-
-  if (format === 'geojson') {
-    const titreGeojson = titreGeojsonFormat(titreFormatted)
-
-    contenu = JSON.stringify(titreGeojson, null, 2)
+  const userInBdd = await userByEmailGet(userEmail)
+  let user = null
+  if (!userInBdd) {
+    throw new Error("pas d'utilisateur en bdd")
   } else {
-    contenu = JSON.stringify(titreFormatted, null, 2)
-  }
+    user = formatUser(userInBdd)
 
-  return {
-    nom: fileNameCreate(titre.id, format),
-    format,
-    contenu
+    formatCheck(['geojson', 'json'], format)
+
+    const titre = await titreGet(id!, { fields: titreFields }, user)
+
+    if (!titre) {
+      return null
+    }
+
+    const titreFormatted = titreFormat(titre)
+    let contenu
+
+    if (format === 'geojson') {
+      const titreGeojson = titreGeojsonFormat(titreFormatted)
+
+      contenu = JSON.stringify(titreGeojson, null, 2)
+    } else {
+      contenu = JSON.stringify(titreFormatted, null, 2)
+    }
+
+    return {
+      nom: fileNameCreate(titre.id, format),
+      format,
+      contenu
+    }
   }
 }
 
@@ -125,80 +135,86 @@ const titres = async (
       perimetre
     }
   }: { query: ITitresQueryInput },
-  userId?: string
+  userEmail?: string
 ) => {
-  const user = await userGet(userId)
+  const userInBdd = await userByEmailGet(userEmail)
+  let user = null
+  if (!userInBdd) {
+    throw new Error("pas d'utilisateur en bdd")
+  } else {
+    user = formatUser(userInBdd)
 
-  formatCheck(['json', 'xlsx', 'csv', 'ods', 'geojson'], format)
+    formatCheck(['json', 'xlsx', 'csv', 'ods', 'geojson'], format)
 
-  const titres = await titresGet(
-    {
-      ordre,
-      colonne,
-      typesIds: typesIds?.split(','),
-      domainesIds: domainesIds?.split(','),
-      statutsIds: statutsIds?.split(','),
-      ids: titresIds ? stringSplit(titresIds) : null,
+    const titres = await titresGet(
+      {
+        ordre,
+        colonne,
+        typesIds: typesIds?.split(','),
+        domainesIds: domainesIds?.split(','),
+        statutsIds: statutsIds?.split(','),
+        ids: titresIds ? stringSplit(titresIds) : null,
       entreprisesIds: entreprisesIds ? stringSplit(entreprisesIds) : null,
-      substancesLegalesIds: substancesLegalesIds
+        substancesLegalesIds: substancesLegalesIds
         ? stringSplit(substancesLegalesIds)
         : null,
-      references,
-      territoires,
-      perimetre
-    },
-    { fields: titreFields },
-    user
-  )
+        references,
+        territoires,
+        perimetre
+      },
+      { fields: titreFields },
+      user
+    )
 
-  const titresFormatted = titresFormat(titres)
+    const titresFormatted = titresFormat(titres)
 
-  let contenu
+    let contenu
 
-  if (format === 'geojson') {
-    const elements = titresGeojsonFormat(titresFormatted)
+    if (format === 'geojson') {
+      const elements = titresGeojsonFormat(titresFormatted)
 
-    contenu = JSON.stringify(elements, null, 2)
-  } else if (['csv', 'xlsx', 'ods'].includes(format)) {
-    const elements = titresTableFormat(titresFormatted)
+      contenu = JSON.stringify(elements, null, 2)
+    } else if (['csv', 'xlsx', 'ods'].includes(format)) {
+      const elements = titresTableFormat(titresFormatted)
 
-    contenu = tableConvert('titres', elements, format)
-  } else {
-    contenu = JSON.stringify(titresFormatted, null, 2)
-  }
+      contenu = tableConvert('titres', elements, format)
+    } else {
+      contenu = JSON.stringify(titresFormatted, null, 2)
+    }
 
-  if (matomo) {
-    const url = Object.entries({
-      format,
-      ordre,
-      colonne,
-      typesIds,
-      domainesIds,
-      statutsIds,
-      substancesLegalesIds,
-      titresIds,
-      entreprisesIds,
-      references,
-      territoires
-    })
-      .filter(param => param[1] !== undefined)
-      .map(param => param.join('='))
-      .join('&')
-
-    matomo.track({
-      url: `${process.env.API_MATOMO_URL}/matomo.php?${url}`,
-      e_c: 'camino-api',
-      e_a: `titres-flux-${format}`
-    })
-  }
-
-  return contenu
-    ? {
-        nom: fileNameCreate(`titres-${titres.length}`, format),
+    if (matomo) {
+      const url = Object.entries({
         format,
-        contenu
-      }
-    : null
+        ordre,
+        colonne,
+        typesIds,
+        domainesIds,
+        statutsIds,
+        substancesLegalesIds,
+        titresIds,
+        entreprisesIds,
+        references,
+        territoires
+      })
+        .filter(param => param[1] !== undefined)
+        .map(param => param.join('='))
+        .join('&')
+
+      matomo.track({
+        url: `${process.env.API_MATOMO_URL}/matomo.php?${url}`,
+        e_c: 'camino-api',
+        e_a: `titres-flux-${format}`
+      })
+    }
+
+    return contenu
+      ? {
+          nom: fileNameCreate(`titres-${titres.length}`, format),
+          format,
+          contenu
+        }
+      : null
+  }
 }
 
 interface ITitresDemarchesQueryInput {
@@ -241,79 +257,85 @@ const demarches = async (
       travaux
     }
   }: { query: ITitresDemarchesQueryInput },
-  userId?: string
+  userEmail?: string
 ) => {
-  const user = await userGet(userId)
+  const userInBdd = await userByEmailGet(userEmail)
+  let user = null
+  if (!userInBdd) {
+    throw new Error("pas d'utilisateur en bdd")
+  } else {
+    user = formatUser(userInBdd)
 
-  formatCheck(['json', 'csv', 'ods', 'xlsx'], format)
+    formatCheck(['json', 'csv', 'ods', 'xlsx'], format)
 
-  const titresDemarches = await titresDemarchesGet(
-    {
-      ordre,
-      colonne,
-      typesIds: typesIds?.split(','),
-      statutsIds: statutsIds?.split(','),
-      etapesInclues: etapesInclues ? JSON.parse(etapesInclues) : null,
-      etapesExclues: etapesExclues ? JSON.parse(etapesExclues) : null,
-      titresTypesIds: titresTypesIds?.split(','),
-      titresDomainesIds: titresDomainesIds?.split(','),
-      titresStatutsIds: titresStatutsIds?.split(','),
-      titresNoms,
-      titresEntreprises,
-      titresSubstances,
-      titresReferences,
-      titresTerritoires,
-      travaux: travaux ? travaux === 'true' : undefined
-    },
-    {
-      fields: {
-        type: { etapesTypes: { etapesStatuts: { id: {} } } },
-        statut: { id: {} },
-        titre: {
-          id: {},
-          titulaires: { id: {} },
-          amodiataires: { id: {} },
-          references: { id: {} }
-        },
-        etapes: {
-          forets: { id: {} },
-          communes: { id: {} },
-          points: { id: {} },
-          type: {
-            etapesStatuts: { id: {} }
+    const titresDemarches = await titresDemarchesGet(
+      {
+        ordre,
+        colonne,
+        typesIds: typesIds?.split(','),
+        statutsIds: statutsIds?.split(','),
+        etapesInclues: etapesInclues ? JSON.parse(etapesInclues) : null,
+        etapesExclues: etapesExclues ? JSON.parse(etapesExclues) : null,
+        titresTypesIds: titresTypesIds?.split(','),
+        titresDomainesIds: titresDomainesIds?.split(','),
+        titresStatutsIds: titresStatutsIds?.split(','),
+        titresNoms,
+        titresEntreprises,
+        titresSubstances,
+        titresReferences,
+        titresTerritoires,
+        travaux: travaux ? travaux === 'true' : undefined
+      },
+      {
+        fields: {
+          type: { etapesTypes: { etapesStatuts: { id: {} } } },
+          statut: { id: {} },
+          titre: {
+            id: {},
+            titulaires: { id: {} },
+            amodiataires: { id: {} },
+            references: { id: {} }
+          },
+          etapes: {
+            forets: { id: {} },
+            communes: { id: {} },
+            points: { id: {} },
+            type: {
+              etapesStatuts: { id: {} }
+            }
           }
         }
-      }
-    },
-    user
-  )
+      },
+      user
+    )
 
-  const demarchesFormatted = titresDemarches.map(titreDemarche =>
-    titreDemarcheFormat(titreDemarche)
-  )
+    const demarchesFormatted = titresDemarches.map(titreDemarche =>
+      titreDemarcheFormat(titreDemarche)
+    )
 
-  let contenu = ''
+    let contenu = ''
 
-  if (['csv', 'xlsx', 'ods'].includes(format)) {
-    const elements = titresDemarchesFormatTable(demarchesFormatted)
+    if (['csv', 'xlsx', 'ods'].includes(format)) {
+      const elements = titresDemarchesFormatTable(demarchesFormatted)
 
-    contenu = tableConvert('demarches', elements, format)
-  } else {
-    contenu = JSON.stringify(demarchesFormatted, null, 2)
+      contenu = tableConvert('demarches', elements, format)
+    } else {
+      contenu = JSON.stringify(demarchesFormatted, null, 2)
+    }
+
+    return contenu
+      ? {
+          nom: fileNameCreate(
+            `${travaux === 'true' ? 'travaux' : 'demarches'}-${
+              titresDemarches.length
+            }`,
+            format
+          ),
+          format,
+          contenu
+        }
+      : null
   }
-
-  return contenu
-    ? {
-        nom: fileNameCreate(
-          `${travaux === 'true' ? 'travaux' : 'demarches'}-${
-            titresDemarches.length
-          }`,
-          format
-        ),
-        format,
-        contenu
-      }
-    : null
 }
 
 interface ITitresActivitesQueryInput {
@@ -352,65 +374,71 @@ const activites = async (
       titresStatutsIds
     }
   }: { query: ITitresActivitesQueryInput },
-  userId?: string
+  userEmail?: string
 ) => {
-  const user = await userGet(userId)
-
-  formatCheck(['json', 'xlsx', 'csv', 'ods'], format)
-
-  const titresActivites = await titresActivitesGet(
-    {
-      ordre,
-      colonne,
-      typesIds: typesIds?.split(','),
-      statutsIds: statutsIds?.split(','),
-      annees: annees?.split(',').map(a => Number(a)),
-      titresNoms,
-      titresEntreprises,
-      titresSubstances,
-      titresReferences,
-      titresTerritoires,
-      titresTypesIds: titresTypesIds?.split(','),
-      titresDomainesIds: titresDomainesIds?.split(','),
-      titresStatutsIds: titresStatutsIds?.split(',')
-    },
-    {
-      fields: {
-        type: {
-          frequence: {
-            annees: { id: {} },
-            trimestres: { id: {} },
-            mois: { id: {} }
-          }
-        },
-        statut: { id: {} },
-        titre: { id: {} }
-      }
-    },
-    user
-  )
-
-  const titresActivitesFormatted = titresActivites.map(a =>
-    titreActiviteFormat(a)
-  )
-
-  let contenu
-
-  if (['csv', 'xlsx', 'ods'].includes(format)) {
-    const elements = titresActivitesFormatTable(titresActivitesFormatted)
-
-    contenu = tableConvert('activites', elements, format)
+  const userInBdd = await userByEmailGet(userEmail)
+  let user = null
+  if (!userInBdd) {
+    throw new Error("pas d'utilisateur en bdd")
   } else {
-    contenu = JSON.stringify(titresActivitesFormatted, null, 2)
-  }
+    user = formatUser(userInBdd)
 
-  return contenu
-    ? {
-        nom: fileNameCreate(`activites-${titresActivites.length}`, format),
-        format,
-        contenu
-      }
-    : null
+    formatCheck(['json', 'xlsx', 'csv', 'ods'], format)
+
+    const titresActivites = await titresActivitesGet(
+      {
+        ordre,
+        colonne,
+        typesIds: typesIds?.split(','),
+        statutsIds: statutsIds?.split(','),
+        annees: annees?.split(',').map(a => Number(a)),
+        titresNoms,
+        titresEntreprises,
+        titresSubstances,
+        titresReferences,
+        titresTerritoires,
+        titresTypesIds: titresTypesIds?.split(','),
+        titresDomainesIds: titresDomainesIds?.split(','),
+        titresStatutsIds: titresStatutsIds?.split(',')
+      },
+      {
+        fields: {
+          type: {
+            frequence: {
+              annees: { id: {} },
+              trimestres: { id: {} },
+              mois: { id: {} }
+            }
+          },
+          statut: { id: {} },
+          titre: { id: {} }
+        }
+      },
+      user
+    )
+
+    const titresActivitesFormatted = titresActivites.map(a =>
+      titreActiviteFormat(a)
+    )
+
+    let contenu
+
+    if (['csv', 'xlsx', 'ods'].includes(format)) {
+      const elements = titresActivitesFormatTable(titresActivitesFormatted)
+
+      contenu = tableConvert('activites', elements, format)
+    } else {
+      contenu = JSON.stringify(titresActivitesFormatted, null, 2)
+    }
+
+    return contenu
+      ? {
+          nom: fileNameCreate(`activites-${titresActivites.length}`, format),
+          format,
+          contenu
+        }
+      : null
+  }
 }
 
 interface IUtilisateursQueryInput {
@@ -438,43 +466,49 @@ const utilisateurs = async (
       emails
     }
   }: { query: IUtilisateursQueryInput },
-  userId?: string
+  userEmail?: string
 ) => {
-  const user = await userGet(userId)
-
-  formatCheck(['json', 'csv', 'ods', 'xlsx'], format)
-
-  const utilisateurs = await utilisateursGet(
-    {
-      colonne,
-      ordre,
-      entrepriseIds: entrepriseIds?.split(','),
-      administrationIds: administrationIds?.split(','),
-      roles: roles?.split(',').filter(isRole) ?? [],
-      noms,
-      emails
-    },
-    {},
-    user
-  )
-
-  let contenu
-
-  if (['csv', 'xlsx', 'ods'].includes(format)) {
-    const elements = utilisateursFormatTable(utilisateurs)
-
-    contenu = tableConvert('utilisateurs', elements, format)
+  const userInBdd = await userByEmailGet(userEmail)
+  let user = null
+  if (!userInBdd) {
+    throw new Error("pas d'utilisateur en bdd")
   } else {
-    contenu = JSON.stringify(utilisateurs, null, 2)
-  }
+    user = formatUser(userInBdd)
 
-  return contenu
-    ? {
-        nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, format),
-        format,
-        contenu
-      }
-    : null
+    formatCheck(['json', 'csv', 'ods', 'xlsx'], format)
+
+    const utilisateurs = await utilisateursGet(
+      {
+        colonne,
+        ordre,
+        entrepriseIds: entrepriseIds?.split(','),
+        administrationIds: administrationIds?.split(','),
+        roles: roles?.split(',').filter(isRole) ?? [],
+        noms,
+        emails
+      },
+      {},
+      user
+    )
+
+    let contenu
+
+    if (['csv', 'xlsx', 'ods'].includes(format)) {
+      const elements = utilisateursFormatTable(utilisateurs)
+
+      contenu = tableConvert('utilisateurs', elements, format)
+    } else {
+      contenu = JSON.stringify(utilisateurs, null, 2)
+    }
+
+    return contenu
+      ? {
+          nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, format),
+          format,
+          contenu
+        }
+      : null
+  }
 }
 
 interface IEntreprisesQueryInput {
@@ -484,33 +518,39 @@ interface IEntreprisesQueryInput {
 
 const entreprises = async (
   { query: { format = 'json', noms } }: { query: IEntreprisesQueryInput },
-  userId?: string
+  userEmail?: string
 ) => {
-  const user = await userGet(userId)
-
-  formatCheck(['json', 'csv', 'xlsx', 'ods'], format)
-
-  const entreprises = await entreprisesGet({ noms }, {}, user)
-
-  const entreprisesFormatted = entreprises.map(entrepriseFormat)
-
-  let contenu
-
-  if (['csv', 'xlsx', 'ods'].includes(format)) {
-    const elements = entreprisesFormatTable(entreprisesFormatted)
-
-    contenu = tableConvert('entreprises', elements, format)
+  const userInBdd = await userByEmailGet(userEmail)
+  let user = null
+  if (!userInBdd) {
+    throw new Error("pas d'utilisateur en bdd")
   } else {
-    contenu = JSON.stringify(entreprisesFormatted, null, 2)
-  }
+    user = formatUser(userInBdd)
 
-  return contenu
-    ? {
-        nom: fileNameCreate(`entreprises-${entreprises.length}`, format),
-        format,
-        contenu
-      }
-    : null
+    formatCheck(['json', 'csv', 'xlsx', 'ods'], format)
+
+    const entreprises = await entreprisesGet({ noms }, {}, user)
+
+    const entreprisesFormatted = entreprises.map(entrepriseFormat)
+
+    let contenu
+
+    if (['csv', 'xlsx', 'ods'].includes(format)) {
+      const elements = entreprisesFormatTable(entreprisesFormatted)
+
+      contenu = tableConvert('entreprises', elements, format)
+    } else {
+      contenu = JSON.stringify(entreprisesFormatted, null, 2)
+    }
+
+    return contenu
+      ? {
+          nom: fileNameCreate(`entreprises-${entreprises.length}`, format),
+          format,
+          contenu
+        }
+      : null
+  }
 }
 
 export { titre, titres, demarches, activites, utilisateurs, entreprises }

@@ -115,11 +115,10 @@ async function createTitreWithEtapes(
 
 describe('titresONF', () => {
   test("teste la récupération des données pour l'ONF", async () => {
-    const tested = await restCall(
-      '/titresONF',
-      'admin',
-      ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
-    )
+    const tested = await restCall('/titresONF', {
+      role: 'admin',
+      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+    })
 
     expect(tested.statusCode).toBe(200)
     expect(tested.body).toHaveLength(2)
@@ -138,11 +137,10 @@ describe('titresONF', () => {
 
 describe('titresPTMG', () => {
   test('teste la récupération des données pour le PTMG', async () => {
-    const tested = await restCall(
-      '/titresPTMG',
-      'admin',
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
-    )
+    const tested = await restCall('/titresPTMG', {
+      role: 'admin',
+      administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+    })
 
     expect(tested.statusCode).toBe(200)
     expect(tested.body).toHaveLength(2)

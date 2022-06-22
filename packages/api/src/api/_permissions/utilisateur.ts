@@ -1,9 +1,8 @@
 import { IUtilisateur, IUtilisateurCreation } from '../../types'
 import { emailCheck } from '../../tools/email-check'
 import {
-  isAdministration,
-  isBureauDEtudes,
-  isEntreprise
+  isAdministrationRole,
+  isEntrepriseOrBureauDetudeRole
 } from 'camino-common/src/roles'
 
 const utilisateurEditionCheck = (
@@ -15,15 +14,14 @@ const utilisateurEditionCheck = (
     errors.push('adresse email invalide')
   }
 
-  if (!isAdministration(utilisateur) && utilisateur.administrationId) {
+  if (!isAdministrationRole(utilisateur.role) && utilisateur.administrationId) {
     errors.push(
       "le rôle de cet utilisateur ne permet pas de l'associer à une administration"
     )
   }
 
   if (
-    !isEntreprise(utilisateur) &&
-    !isBureauDEtudes(utilisateur) &&
+    !isEntrepriseOrBureauDetudeRole(utilisateur.role) &&
     utilisateur.entreprises &&
     utilisateur.entreprises.length
   ) {
