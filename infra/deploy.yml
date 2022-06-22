@@ -12,6 +12,7 @@
         mode: u=rwx,g=rwx,o=r
       become: True
   roles:
+    - role: nginx
     - role: devAndPreprod
       when: not prod
     - role: prod
