@@ -1,6 +1,0 @@
-#!/bin/bash
-# files-restore
-# restore les fichiers dans le volume Docker a partir de la derniere sauvegarde
-
-docker cp /srv/backups/files/. camino_api_app:/packages/api/files/
-

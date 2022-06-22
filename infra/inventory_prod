@@ -1,2 +1,2 @@
 [servers]
-camino.beta.gouv.fr ansible_port=212 ansible_python_interpreter=/usr/bin/python3
+camino.beta.gouv.fr prod=True ansible_port=212 ansible_python_interpreter=/usr/bin/python3

@@ -1,0 +1,40 @@
+---
+- name: Ajoute le script de backup
+  template:
+    src: backup
+    dest: /srv/scripts/
+    mode: u=rwx,g=rx,o=r
+    owner: git
+    group: users
+  become: True
+- name: Ajoute le job de backup de la prod
+  ansible.builtin.cron:
+    name: "backup"
+    minute: "0"
+    hour: "2"
+    job: "/srv/scripts/backup"
+    user: git
+  become: True
+- name: Transfert des données de la prod vers les autres environnements
+  block:
+    - name: Install rsync
+      ansible.builtin.apt:
+        name: rsync
+        state: present
+      become: True
+    - name: Ajoute le script pour pouvoir transférer les données de la prod vers les autres environnements
+      template:
+        src: transfer_data_to_dev_and_preprod
+        dest: /srv/scripts/
+        mode: u=rwx,g=rx,o=r
+        owner: git
+        group: users
+      become: True
+    - name: Ajoute le job de copie des données de la prod vers les autres environnements
+      ansible.builtin.cron:
+        name: "transfer_data"
+        minute: "0"
+        hour: "5"
+        job: "/srv/scripts/transfer_data_to_dev_and_preprod"
+        user: git
+      become: True

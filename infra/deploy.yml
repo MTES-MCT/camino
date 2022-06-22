@@ -1,20 +1,8 @@
 ---
 - hosts: servers
-  tasks:
-    - file: path=/srv/backups/files/ state=directory mode=u=rwx,g=rx,o=rx owner=git group=users
-      become: True
-    - file: path=/srv/www/camino/ state=directory mode=u=rwx,g=rx,o=rx owner=git group=users
-      become: True
-    - name: scripts
-      block:
-        - ansible.builtin.copy:
-            src: scripts
-            dest: /srv
-          become: True
-        - ansible.builtin.file:
-            path: /srv/scripts/
-            mode: u=rwx,g=rx,o=r
-            owner: git
-            group: users
-            recurse: True
-          become: True
+  roles:
+    - role: devAndPreprod
+      when: not prod
+    - role: prod
+      when: prod
+

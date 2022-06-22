@@ -1,0 +1,7 @@
+#!/bin/bash
+
+scp /srv/backups/camino.sql -p 212 preprod.camino.beta.gouv.fr:/srv/backups/camino_prod.sql
+rsync -e 'ssh 212' /srv/www/camino/files preprod.camino.beta.gouv.fr:/srv/backups/camino_prod/
+
+scp /srv/backups/camino.sql -p 212 dev.camino.beta.gouv.fr:/srv/backups/camino_prod.sql
+rsync -e 'ssh 212' /srv/www/camino/files dev.camino.beta.gouv.fr:/srv/backups/camino_prod/

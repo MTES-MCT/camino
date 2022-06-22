@@ -1,9 +1,0 @@
-#!/bin/bash
-# restore
-
-# restaure la base de donnees
-/srv/scripts/database-restore
-
-# restaure les fichiers
-/srv/scripts/files-restore
-

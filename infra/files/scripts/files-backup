@@ -1,5 +1,0 @@
-#!/bin/bash
-# files-backup
-# sauvegarde les fichiers depuis le volume Docker
-
-docker cp camino_api_app:/packages/api/files/. /srv/backups/files/

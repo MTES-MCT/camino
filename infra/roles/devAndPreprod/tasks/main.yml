@@ -1,0 +1,9 @@
+---
+- name: Ajoute le script pour pouvoir mettre les donnée de production sur cet environnement
+  copy:
+    src: apply-prod
+    dest: /srv/scripts/
+    mode: u=rwx,g=rx,o=r
+    owner: git
+    group: users
+  become: True

@@ -1,7 +1,0 @@
-#!/bin/bash
-# backups-archive
-# cree une archive a partir du dossier `files` et du fichier `camino.sql`
-
-cd /srv/backups
-tar -zcvf /srv/backups/`date +%Y%m%d"_"%H%M%S`-camino.tar.gz files/* camino.sql
-cd -
