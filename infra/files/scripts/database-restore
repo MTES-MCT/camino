@@ -1,0 +1,7 @@
+#!/bin/bash
+# database-restore
+# restaure la base de donnees dans le conteneur Docker a partir de la derniere sauvegarde
+
+docker exec -i camino_api_db pg_restore --clean --if-exists --no-owner --no-privileges --dbname=camino < /srv/backups/camino.sql
+
+

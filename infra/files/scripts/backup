@@ -1,0 +1,11 @@
+#!/bin/bash
+# backup
+
+# sauvegarde la base de donnees
+/srv/scripts/database-backup
+
+# sauvegarde les fichiers
+/srv/scripts/files-backup
+
+# cree un fichier d'archive
+/srv/scripts/backups-archive

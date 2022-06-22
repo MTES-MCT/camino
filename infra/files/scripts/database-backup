@@ -1,0 +1,9 @@
+#!/bin/bash
+# database-backup
+# sauvegarde la base de donnees depuis le conteneur Docker
+
+rm -rf /srv/backups/camino.sql
+
+docker exec camino_api_db pg_dump --clean --if-exists  --format=c --no-owner --no-privileges --dbname=camino > /srv/backups/camino.sql
+
+sudo chown git:users /srv/backups/camino.sql
