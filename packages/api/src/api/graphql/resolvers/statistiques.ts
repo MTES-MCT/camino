@@ -1,4 +1,4 @@
-import { ITitre } from '../../../types.js'
+import { formatUser, ITitre } from '../../../types.js'
 
 import { titreEtapePropFind } from '../../../business/rules/titre-etape-prop-find.js'
 import { titreValideCheck } from '../../../business/utils/titre-valide-check.js'
@@ -10,7 +10,10 @@ import {
   StatistiquesUtilisateurs
 } from 'camino-common/src/statistiques.js'
 import Utilisateurs from '../../../database/models/utilisateurs.js'
-import { isAdministration } from 'camino-common/src/roles.js'
+import {
+  isAdministration,
+  isEntrepriseOrBureauDetudeRole
+} from 'camino-common/src/roles.js'
 import { Administrations } from 'camino-common/src/static/administrations.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
@@ -59,16 +62,16 @@ const statistiquesGlobales = async (): Promise<Statistiques> => {
       entreprises: {}
     })
 
-    const utilisateurs: StatistiquesUtilisateurs =
-      utilisateursInDb.reduce<StatistiquesUtilisateurs>(
+    const utilisateurs: StatistiquesUtilisateurs = utilisateursInDb
+      .map(formatUser)
+      .reduce<StatistiquesUtilisateurs>(
         (previousValue, user) => {
           if (user.email) {
-            // TODO 2022-05-16: restreindre le fait qu'un utilisateur ayant une administration ne PEUT PAS avoir d'entreprise
             if (isAdministration(user)) {
               previousValue.rattachesAUnTypeDAdministration[
                 Administrations[user.administrationId].typeId
               ]++
-            } else if (user.entreprises?.length) {
+            } else if (isEntrepriseOrBureauDetudeRole(user.role)) {
               previousValue.rattachesAUneEntreprise++
             } else {
               previousValue.visiteursAuthentifies++

@@ -16,11 +16,6 @@ import {
 } from '../../src/database/queries/metas.js'
 import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritage-props-find.js'
 import { etapeTypeSectionsFormat } from '../../src/api/_format/etapes-types.js'
-import { Role } from 'camino-common/src/roles.js'
-import {
-  AdministrationId,
-  sortedAdministrations
-} from 'camino-common/src/static/administrations.js'
 import {
   idGenerate,
   newDemarcheId
@@ -32,6 +27,11 @@ import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTy
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { expect } from 'vitest'
+import {
+  AdministrationId,
+  sortedAdministrations
+} from 'camino-common/src/static/administrations.js'
+import { TestUser } from 'camino-common/src/tests-utils.js'
 export const visibleCheck = async (
   administrationId: AdministrationId,
   visible: boolean,
@@ -65,8 +65,10 @@ export const visibleCheck = async (
   const res = await graphQLCall(
     titreQuery,
     { id: titre.id },
-    'admin',
-    administration.id
+    {
+      role: 'admin',
+      administrationId: administration.id
+    }
   )
 
   expect(res.body.errors).toBeUndefined()
@@ -123,8 +125,10 @@ export const creationCheck = async (
       {
         titre
       },
-      'admin',
-      administration.id
+      {
+        role: 'admin',
+        administrationId: administration.id
+      }
     )
 
     if (creer) {
@@ -138,8 +142,10 @@ export const creationCheck = async (
     const titreCreated = await titreCreerSuper(administrationId, titreTypeId)
     const res = await demarcheCreerProfil(
       titreCreated.body.data.titreCreer.id,
-      'admin',
-      administration.id
+      {
+        role: 'admin',
+        administrationId: administration.id
+      }
     )
 
     if (creer) {
@@ -153,7 +159,7 @@ export const creationCheck = async (
 
     const demarcheCreated = await demarcheCreerProfil(
       titreCreated.body.data.titreCreer.id,
-      'super'
+      { role: 'super' }
     )
 
     expect(demarcheCreated.body.errors).toBeUndefined()
@@ -295,7 +301,9 @@ export const creationCheck = async (
           ]
         }
       },
-      'super'
+      {
+        role: 'super'
+      }
     )
 
     if (creer) {
@@ -339,8 +347,10 @@ export const modificationCheck = async (
   const res = await graphQLCall(
     queryImport('titre'),
     { id: titre.id },
-    'admin',
-    administration.id
+    {
+      role: 'admin',
+      administrationId: administration.id
+    }
   )
 
   if (cible === 'titres') {
@@ -389,19 +399,16 @@ const titreCreerSuper = async (administrationId: string, titreTypeId: string) =>
         typeId: titreTypeId!
       }
     },
-    'super'
+    {
+      role: 'super'
+    }
   )
 
-const demarcheCreerProfil = async (
-  titreId: string,
-  profil: Role,
-  administrationId?: AdministrationId
-) =>
+const demarcheCreerProfil = async (titreId: string, user: TestUser) =>
   graphQLCall(
     queryImport('titre-demarche-creer'),
     { demarche: { titreId, typeId: 'oct' } },
-    profil!,
-    administrationId
+    user
   )
 
 const titreBuild = (

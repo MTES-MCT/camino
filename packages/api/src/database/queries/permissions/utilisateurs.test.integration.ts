@@ -6,7 +6,7 @@ import { utilisateursGet } from '../utilisateurs.js'
 import { Administrations } from 'camino-common/src/static/administrations.js'
 import options from '../_options.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
-import { Role } from 'camino-common/src/roles.js'
+import { testBlankUser, TestUser } from 'camino-common/src/tests-utils.js'
 console.info = vi.fn()
 console.error = vi.fn()
 beforeAll(async () => {
@@ -25,33 +25,25 @@ const mockUser: IUtilisateur = {
   role: 'editeur',
   nom: 'utilisateurNom',
   email: 'utilisateurEmail',
-  motDePasse: 'utilisateurMotdepasse',
   administrationId: mockAdministration.id,
   dateCreation: '2022-05-12'
 }
 
 describe('utilisateursQueryModify', () => {
-  test.each<[Role, boolean]>([
-    ['super', true],
-    ['admin', true],
-    ['editeur', true],
-    ['lecteur', true],
-    ['entreprise', true],
-    ['defaut', false]
+  test.each<[TestUser, boolean]>([
+    [{ role: 'super' }, true],
+    [{ role: 'admin', administrationId: mockAdministration.id }, true],
+    [{ role: 'editeur', administrationId: mockAdministration.id }, true],
+    [{ role: 'lecteur', administrationId: mockAdministration.id }, true],
+    [{ role: 'entreprise', entreprises: [] }, true],
+    [{ role: 'defaut' }, false]
   ])(
     "Vérifie l'écriture de la requête sur un utilisateur",
-    async (role, voit) => {
-      const user: IUtilisateur = {
-        id: 'userId',
-        role,
-        administrationId: mockAdministration.id,
-        dateCreation: '2022-05-12'
-      }
-
+    async (user, voit) => {
       const utilisateurs = await utilisateursGet(
         { noms: mockUser.nom },
         {},
-        user
+        { ...user, ...testBlankUser }
       )
       if (voit) {
         expect(utilisateurs).toHaveLength(1)

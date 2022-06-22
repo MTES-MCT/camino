@@ -2,6 +2,7 @@ import {
   IFormat,
   ITitreColonneId,
   ITitreDemarcheColonneId,
+  IUtilisateursColonneId,
   ITitreActiviteColonneId
 } from '../../types.js'
 
@@ -9,7 +10,7 @@ import { titreGet, titresGet } from '../../database/queries/titres.js'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
 import { titresActivitesGet } from '../../database/queries/titres-activites.js'
 import { entreprisesGet } from '../../database/queries/entreprises.js'
-import { userGet } from '../../database/queries/utilisateurs.js'
+import { utilisateursGet } from '../../database/queries/utilisateurs.js'
 
 import { titreFormat, titresFormat } from '../_format/titres.js'
 import { titreDemarcheFormat } from '../_format/titres-demarches.js'
@@ -30,6 +31,8 @@ import { entreprisesFormatTable } from './format/entreprises.js'
 
 import { matomo } from '../../tools/matomo.js'
 import { stringSplit } from '../../database/queries/_utils.js'
+import { isRole, User } from 'camino-common/src/roles.js'
+import { utilisateursFormatTable } from './format/utilisateurs.js'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -62,10 +65,8 @@ interface ITitreInput {
 
 export const titre = async (
   { query: { format = 'json' }, params: { id } }: ITitreInput,
-  userId?: string
+  user: User
 ) => {
-  const user = await userGet(userId)
-
   formatCheck(['geojson', 'json'], format)
 
   const titre = await titreGet(id!, { fields: titreFields }, user)
@@ -124,10 +125,8 @@ export const titres = async (
       perimetre
     }
   }: { query: ITitresQueryInput },
-  userId?: string
+  user: User
 ) => {
-  const user = await userGet(userId)
-
   formatCheck(['json', 'xlsx', 'csv', 'ods', 'geojson'], format)
 
   const titres = await titresGet(
@@ -239,10 +238,8 @@ export const demarches = async (
       travaux
     }
   }: { query: ITitresDemarchesQueryInput },
-  userId?: string
+  user: User
 ) => {
-  const user = await userGet(userId)
-
   formatCheck(['json', 'csv', 'ods', 'xlsx'], format)
 
   const titresDemarches = await titresDemarchesGet(
@@ -348,10 +345,8 @@ export const activites = async (
       titresStatutsIds
     }
   }: { query: ITitresActivitesQueryInput },
-  userId?: string
+  user: User
 ) => {
-  const user = await userGet(userId)
-
   formatCheck(['json', 'xlsx', 'csv', 'ods'], format)
 
   const titresActivites = await titresActivitesGet(
@@ -402,6 +397,68 @@ export const activites = async (
     : null
 }
 
+interface IUtilisateursQueryInput {
+  format?: IFormat
+  colonne?: IUtilisateursColonneId | null
+  ordre?: 'asc' | 'desc' | null
+  entrepriseIds?: string
+  administrationIds?: string
+  //  TODO 2022-06-14: utiliser un tableau de string plutôt qu'une chaine séparée par des ','
+  roles?: string
+  noms?: string | null
+  emails?: string | null
+}
+
+export const utilisateurs = async (
+  {
+    query: {
+      format = 'json',
+      colonne,
+      ordre,
+      entrepriseIds,
+      administrationIds,
+      roles,
+      noms,
+      emails
+    }
+  }: { query: IUtilisateursQueryInput },
+  user: User
+) => {
+  formatCheck(['json', 'csv', 'ods', 'xlsx'], format)
+
+  const utilisateurs = await utilisateursGet(
+    {
+      colonne,
+      ordre,
+      entrepriseIds: entrepriseIds?.split(','),
+      administrationIds: administrationIds?.split(','),
+      roles: roles?.split(',').filter(isRole) ?? [],
+      noms,
+      emails
+    },
+    {},
+    user
+  )
+
+  let contenu
+
+  if (['csv', 'xlsx', 'ods'].includes(format)) {
+    const elements = utilisateursFormatTable(utilisateurs)
+
+    contenu = tableConvert('utilisateurs', elements, format)
+  } else {
+    contenu = JSON.stringify(utilisateurs, null, 2)
+  }
+
+  return contenu
+    ? {
+        nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, format),
+        format,
+        contenu
+      }
+    : null
+}
+
 interface IEntreprisesQueryInput {
   format?: IFormat
   noms?: string | null
@@ -409,10 +466,8 @@ interface IEntreprisesQueryInput {
 
 export const entreprises = async (
   { query: { format = 'json', noms } }: { query: IEntreprisesQueryInput },
-  userId?: string
+  user: User
 ) => {
-  const user = await userGet(userId)
-
   formatCheck(['json', 'csv', 'xlsx', 'ods'], format)
 
   const entreprises = await entreprisesGet({ noms }, {}, user)

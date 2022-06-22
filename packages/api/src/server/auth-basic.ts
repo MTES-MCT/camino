@@ -5,27 +5,6 @@ import bcrypt from 'bcryptjs'
 import { emailCheck } from '../tools/email-check.js'
 import { userByEmailGet } from '../database/queries/utilisateurs.js'
 
-const userCredentialsCheck = async (email: string, motDePasse: string) => {
-  email = email.toLowerCase()
-  if (!emailCheck(email)) {
-    throw new Error('adresse email invalide')
-  }
-
-  let user
-
-  try {
-    user = await userByEmailGet(email, {})
-
-    if (!user) return null
-  } catch (e: any) {
-    throw new Error(`Erreur technique : ${e.message}, email ${email} invalide`)
-  }
-
-  const valid = bcrypt.compareSync(motDePasse, user.motDePasse!)
-
-  return valid ? user : null
-}
-
 const userQGISCredentialsCheck = async (email: string, qgisToken: string) => {
   email = email.toLowerCase()
   if (!emailCheck(email)) {
@@ -35,7 +14,7 @@ const userQGISCredentialsCheck = async (email: string, qgisToken: string) => {
   let user
 
   try {
-    user = await userByEmailGet(email, {})
+    user = await userByEmailGet(email)
 
     if (!user) return null
   } catch (e: any) {
@@ -54,6 +33,7 @@ export const authBasic = async (
   next: express.NextFunction
 ) => {
   try {
+    // basic auth est activé que pour la route titres_qgis
     if (req.url.includes('titres_qgis')) {
       const credentials = req.headers.authorization
         ? basicAuth.parse(req.headers.authorization)
@@ -81,28 +61,11 @@ export const authBasic = async (
         return
       }
 
-      req.user = { id: user.id }
+      // on fait comme si le JWT avait été déchiffré pour que l’utilisateur soit chargé par userLoader
+      req.user = { email: user.email }
       next()
 
       return
-    }
-    if (req.headers.authorization) {
-      const credentials = basicAuth.parse(req.headers.authorization)
-      if (credentials) {
-        const user = await userCredentialsCheck(
-          credentials.name,
-          credentials.pass
-        )
-
-        if (!user) {
-          res.status(401)
-          res.send('Identifiants incorrects')
-
-          return
-        }
-
-        req.user = { id: user.id }
-      }
     }
   } catch (e) {
     console.error(e)

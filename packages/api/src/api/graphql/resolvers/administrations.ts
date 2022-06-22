@@ -5,7 +5,7 @@ import {
   IAdministrationTitreTypeEtapeType,
   IAdministrationTitreTypeTitreStatut,
   IAdministrationActiviteTypeEmail,
-  IToken
+  Context
 } from '../../../types.js'
 
 import {
@@ -25,24 +25,21 @@ import { fieldsBuild } from './_fields-build.js'
 
 import { administrationFormat } from '../../_format/administrations.js'
 import { emailCheck } from '../../../tools/email-check.js'
-import { userGet } from '../../../database/queries/utilisateurs.js'
 import { isSuper } from 'camino-common/src/roles.js'
 import {
-  canEditEmails,
   canReadActivitesTypesEmails,
-  canReadAdministrations
+  canReadAdministrations,
+  canEditEmails
 } from 'camino-common/src/permissions/administrations.js'
 import administrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails.js'
 import { isAdministrationId } from 'camino-common/src/static/administrations.js'
 
 const administration = async (
   { id }: { id: string },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!canReadAdministrations(user)) {
       return null
     }
@@ -64,11 +61,9 @@ const administration = async (
 
 export const administrationActivitesTypesEmails = async (
   { id }: { id: string },
-  context: IToken
+  { user }: Context
 ): Promise<IAdministrationActiviteTypeEmail[]> => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (isAdministrationId(id)) {
       if (!canReadActivitesTypesEmails(user, id)) {
         throw new Error('droit insuffisant')
@@ -89,12 +84,10 @@ export const administrationActivitesTypesEmails = async (
 
 const administrations = async (
   _: unknown,
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!canReadAdministrations(user)) {
       return []
     }
@@ -118,12 +111,10 @@ const administrationTitreTypeTitreStatutModifier = async (
   }: {
     administrationTitreTypeTitreStatut: IAdministrationTitreTypeTitreStatut
   },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -164,12 +155,10 @@ const administrationTitreTypeEtapeTypeModifier = async (
   }: {
     administrationTitreTypeEtapeType: IAdministrationTitreTypeEtapeType
   },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -208,12 +197,10 @@ const administrationActiviteTypeModifier = async (
   {
     administrationActiviteType
   }: { administrationActiviteType: IAdministrationActiviteType },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -248,11 +235,10 @@ const administrationActiviteTypeEmailCreer = async (
   {
     administrationActiviteTypeEmail
   }: { administrationActiviteTypeEmail: IAdministrationActiviteTypeEmail },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     const administration = await administrationGet(
       administrationActiviteTypeEmail.administrationId,
       { fields: { id: {} } },
@@ -293,11 +279,10 @@ const administrationActiviteTypeEmailSupprimer = async (
   {
     administrationActiviteTypeEmail
   }: { administrationActiviteTypeEmail: IAdministrationActiviteTypeEmail },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     const administration = await administrationGet(
       administrationActiviteTypeEmail.administrationId,
       { fields: { id: {} } },

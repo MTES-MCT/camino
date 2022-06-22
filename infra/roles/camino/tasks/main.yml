@@ -22,6 +22,22 @@
     group: users
     backup: True
   become: True
+- name: Installe le jar keycloak france connect
+  ansible.builtin.copy:
+    src: keycloak-franceconnect-4.1.0.jar
+    dest: /srv/www/camino/keycloak-franceconnect-4.1.0.jar
+    mode: u=rwx,g=rw,o=r
+    owner: git
+    group: users
+  become: True
+- name: Installe le jar keycloak bcrypt
+  ansible.builtin.copy:
+    src: keycloak-bcrypt-1.5.1.jar
+    dest: /srv/www/camino/keycloak-bcrypt-1.5.1.jar
+    mode: u=rwx,g=rw,o=r
+    owner: git
+    group: users
+  become: True
 - name: Daily
   block:
     - name: Ajoute le script pour pouvoir lancer le daily

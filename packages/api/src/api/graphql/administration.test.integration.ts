@@ -1,6 +1,7 @@
 import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
 
 import { dbManager } from '../../../tests/db-manager.js'
+import { userSuper } from '../../database/user-super.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { beforeAll, afterAll, test, expect, describe, vi } from 'vitest'
 
@@ -31,7 +32,8 @@ describe('administrationTitreTypeTitreStatutModifier', () => {
           demarchesModificationInterdit: true,
           etapesModificationInterdit: true
         }
-      }
+      },
+      undefined
     )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
@@ -50,7 +52,7 @@ describe('administrationTitreTypeTitreStatutModifier', () => {
           etapesModificationInterdit: true
         }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body).toMatchObject({
@@ -90,7 +92,8 @@ describe('administrationTitreTypeEtapeTypeModifier', () => {
           modificationInterdit: true,
           creationInterdit: true
         }
-      }
+      },
+      undefined
     )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
@@ -109,7 +112,7 @@ describe('administrationTitreTypeEtapeTypeModifier', () => {
           creationInterdit: true
         }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body).toMatchObject({

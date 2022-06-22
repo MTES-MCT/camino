@@ -214,14 +214,14 @@ export const referencesCell = (titre: {
     value: references
   }
 }
-export const titulairesCell = (titre: { titulaires?: { nom: string }[] }) => ({
+export const titulairesCell = (titre: { titulaires?: { nom?: string }[] }) => ({
   component: markRaw(List),
   props: {
-    elements: titre.titulaires?.map(({ nom }) => nom),
+    elements: titre.titulaires?.map(({ nom }) => nom ?? ''),
     mini: true
   },
   class: 'mb--xs',
-  value: titre.titulaires?.map(({ nom }) => nom).join(', ')
+  value: titre.titulaires?.map(({ nom }) => nom ?? '').join(', ')
 })
 export const domaineCell = (titre: { domaineId: DomaineId }) => ({
   component: markRaw(CaminoDomaine),

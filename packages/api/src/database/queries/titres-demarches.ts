@@ -7,7 +7,6 @@ import {
   IColonne,
   IFields,
   Index,
-  IUtilisateur,
   DemarcheId
 } from '../../types.js'
 
@@ -22,6 +21,7 @@ import TitresDemarches, {
 import { titresDemarchesQueryModify } from './permissions/titres-demarches.js'
 import { titresFiltersQueryModify } from './_titres-filters.js'
 import TitresEtapes from '../models/titres-etapes.js'
+import { User } from 'camino-common/src/roles'
 
 const etapesIncluesExcluesBuild = (
   q: QueryBuilder<TitresDemarches, TitresDemarches[]>,
@@ -146,7 +146,7 @@ const titresDemarchesFiltersQueryModify = (
 
 const titresDemarchesQueryBuild = (
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const graph = fields
     ? graphBuild(fieldsTitreAdd(fields), 'demarches', fieldsFormat)
@@ -192,7 +192,7 @@ const titresDemarchesCount = async (
     travaux?: boolean | null
   } = {},
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const q = titresDemarchesQueryBuild({ fields }, user)
 
@@ -269,7 +269,7 @@ const titresDemarchesGet = async (
     travaux?: boolean | null
   } = {},
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const q = titresDemarchesQueryBuild({ fields }, user)
 
@@ -331,7 +331,7 @@ const titresDemarchesGet = async (
 const titreDemarcheGet = async (
   titreDemarcheId: string,
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const q = titresDemarchesQueryBuild({ fields }, user)
 

@@ -10,6 +10,7 @@ import {
   ADMINISTRATION_IDS
 } from 'camino-common/src/static/administrations'
 import { User } from 'camino-common/src/roles'
+import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Administration/ActivitesTypesEmails',
@@ -58,7 +59,8 @@ EmailLectureAndModificationVisible.args = {
     administrationId:
       ADMINISTRATION_IDS[
         "DAJ - MINISTÈRE DE L'ECONOMIE, DES FINANCES ET DE LA RELANCE"
-      ]
+      ],
+    ...testBlankUser
   },
   activitesTypesEmails
 }
@@ -69,7 +71,8 @@ EmailLectureAndModificationSurAdministrationVisible.args = {
   administration: Administrations[ADMINISTRATION_IDS['DREAL - BRETAGNE']],
   user: {
     role: 'admin',
-    administrationId: ADMINISTRATION_IDS['DREAL - BRETAGNE']
+    administrationId: ADMINISTRATION_IDS['DREAL - BRETAGNE'],
+    ...testBlankUser
   },
   activitesTypesEmails
 }

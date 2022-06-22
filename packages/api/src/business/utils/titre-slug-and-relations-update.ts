@@ -7,8 +7,7 @@ import {
   ITitreDemarche,
   ITitreEtape,
   ITitrePoint,
-  ITitrePointReference,
-  IUtilisateur
+  ITitrePointReference
 } from '../../types.js'
 
 import titreDemarcheSortAsc from './titre-elements-sort-asc.js'
@@ -24,6 +23,7 @@ import {
   titrePointUpdate
 } from '../../database/queries/titres-points.js'
 import { titreActiviteUpdate } from '../../database/queries/titres-activites.js'
+import { UserNotNull } from 'camino-common/src/roles'
 import {
   getDomaineId,
   getTitreTypeType
@@ -100,12 +100,12 @@ interface ITitreRelation<T extends string | DemarcheId = string> {
     | ((
         id: T,
         element: { slug: string },
-        user: IUtilisateur
+        user: UserNotNull
       ) => Promise<{ id: T }>)
     | ((
         id: T,
         element: { slug: string },
-        user: IUtilisateur,
+        user: UserNotNull,
         titreId: string
       ) => Promise<{ id: T }>)
   relations?: ITitreRelation[]

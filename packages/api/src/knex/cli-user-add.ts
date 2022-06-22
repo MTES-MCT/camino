@@ -1,16 +1,14 @@
-import { getCurrent } from 'camino-common/src/date.js'
 import '../init.js'
-import { knex } from '../knex.js'
-import { userAdd } from './user-add.js'
 
+// FIXME
 const run = async () => {
   try {
-    await userAdd(knex, {
-      id: 'admin',
-      email: process.env.ADMIN_EMAIL,
-      role: 'super',
-      dateCreation: getCurrent()
-    })
+    // await userAdd(knex, {
+    //   id: 'admin',
+    //   email: process.env.ADMIN_EMAIL,
+    //   role: 'super',
+    //   dateCreation: dateFormat(new Date(), 'yyyy-mm-dd')
+    // })
   } catch (e) {
     console.error(e)
   } finally {

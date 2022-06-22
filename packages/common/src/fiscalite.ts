@@ -1,7 +1,7 @@
-import { EntrepriseId } from './entreprise.js'
 import { isAdministration, isEntreprise, isSuper, User } from './roles.js'
 import { DomaineId, DOMAINES_IDS } from './static/domaines.js'
 import { CommonTitre } from './titres.js'
+import { EntrepriseId } from './entreprise.js'
 import { getDomaineId } from './static/titresTypes.js'
 
 export type Fiscalite = FiscaliteGuyane | FiscaliteFrance

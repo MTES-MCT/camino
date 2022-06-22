@@ -1,6 +1,7 @@
 import { Meta, Story } from '@storybook/vue3'
 import { Infos, Props } from './infos'
 import { Section, TitreLink, TitreLinks } from 'camino-common/src/titres'
+import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Titre/Infos',
@@ -92,7 +93,7 @@ export const Default: Story = () => (
       substances: ['auru', 'scoc'],
       references: [{ nom: '2023/01', referenceTypeId: 'ifr' }]
     }}
-    user={{ role: 'super', administrationId: undefined }}
+    user={{ role: 'super', ...testBlankUser }}
     apiClient={apiClient}
   ></Infos>
 )
@@ -111,7 +112,7 @@ export const Empty: Story = () => (
       substances: [],
       references: []
     }}
-    user={{ role: 'super', administrationId: undefined }}
+    user={{ role: 'super', ...testBlankUser }}
     apiClient={{
       loadLinkableTitres: () => () => Promise.resolve([]),
       loadTitreLinks: () => Promise.resolve({ aval: [], amont: [] }),

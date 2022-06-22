@@ -22,10 +22,7 @@ export const documentsClean = async () => {
     try {
       const { mtime } = fs.statSync(path)
       if (datesDiffInDays(mtime, new Date()) >= 1) {
-        await documentSupprimer(
-          { id: document.id },
-          { user: { id: userSuper.id } }
-        )
+        await documentSupprimer({ id: document.id }, { user: userSuper })
         console.info(`document ${path} supprimé`)
       }
     } catch (e) {}

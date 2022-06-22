@@ -5,8 +5,7 @@ import {
   IFields,
   Index,
   ITitre,
-  ITitreColonneId,
-  IUtilisateur
+  ITitreColonneId
 } from '../../types.js'
 
 import options from './_options.js'
@@ -19,6 +18,7 @@ import { titresQueryModify } from './permissions/titres.js'
 import { titresFiltersQueryModify } from './_titres-filters.js'
 import TitresDemarches from '../models/titres-demarches.js'
 import TitresEtapes from '../models/titres-etapes.js'
+import { User } from 'camino-common/src/roles'
 
 /**
  * Construit la requête pour récupérer certains champs de titres filtrés
@@ -31,7 +31,7 @@ import TitresEtapes from '../models/titres-etapes.js'
  */
 const titresQueryBuild = (
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined,
+  user: User,
   demandeEnCours?: boolean | null
 ) => {
   const graph = fields
@@ -57,7 +57,7 @@ const titresQueryBuild = (
 const titreGet = async (
   id: string,
   { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean },
-  user: IUtilisateur | null | undefined
+  user: User
 ): Promise<DBTitre | undefined> => {
   const q = titresQueryBuild({ fields }, user)
 
@@ -133,7 +133,7 @@ const titresGet = async (
     demandeEnCours?: boolean | null
   } = {},
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ): Promise<ITitre[]> => {
   const q = titresQueryBuild({ fields }, user, demandeEnCours)
 
@@ -247,7 +247,7 @@ const titresCount = async (
     demandeEnCours?: boolean | null
   } = {},
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const q = titresQueryBuild({ fields }, user, demandeEnCours)
 

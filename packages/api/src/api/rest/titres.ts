@@ -1,7 +1,5 @@
 import { titreGet, titresGet } from '../../database/queries/titres.js'
 
-import { userGet } from '../../database/queries/utilisateurs.js'
-
 import {
   ADMINISTRATION_IDS,
   ADMINISTRATION_TYPE_IDS,
@@ -12,7 +10,7 @@ import express from 'express'
 import { constants } from 'http2'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
-import { ITitre, ITitreDemarche, IUtilisateur } from '../../types.js'
+import { ITitre, ITitreDemarche } from '../../types.js'
 import {
   CommonTitreDREAL,
   CommonTitreONF,
@@ -26,12 +24,10 @@ import {
 } from '../../business/rules-demarches/definitions.js'
 import { CustomResponse } from './express-type.js'
 import { userSuper } from '../../database/user-super.js'
-import Utilisateurs from '../../database/models/utilisateurs.js'
 import {
   NotNullableKeys,
   onlyUnique
 } from 'camino-common/src/typescript-tools.js'
-import { isAdministration } from 'camino-common/src/roles.js'
 import TitresTitres from '../../database/models/titres--titres.js'
 import { titreAdministrationsGet } from '../_format/titres.js'
 import { canLinkTitres } from 'camino-common/src/permissions/titres.js'
@@ -45,6 +41,7 @@ import {
   EtapeTypeId
 } from 'camino-common/src/static/etapesTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
+import { isAdministration, User } from 'camino-common/src/roles.js'
 import {
   canCreateDemarche,
   canCreateTravaux
@@ -62,42 +59,48 @@ export const titresONF = async (
   req: express.Request,
   res: CustomResponse<CommonTitreONF[]>
 ) => {
-  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
+  const user = req.user as User
 
-  const user = await userGet(userId)
-
-  const onf = ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
-
-  if (user?.administrationId !== onf) {
+  if (!user) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
-    const titresAvecOctroiArm = await titresArmAvecOctroi(user, onf)
-    res.json(
-      titresAvecOctroiArm.map(({ titre, references, octARM, blockedByMe }) => {
-        const dateCompletudePTMG =
-          octARM.etapes.find(etape => etape.typeId === 'mcp')?.date || ''
+    const onf = ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
 
-        const dateReceptionONF =
-          octARM.etapes.find(etape => etape.typeId === 'mcr')?.date || ''
+    if (!isAdministration(user) || user.administrationId !== onf) {
+      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    } else {
+      const titresAvecOctroiArm = await titresArmAvecOctroi(user, onf)
+      res.json(
+        titresAvecOctroiArm.map(
+          ({ titre, references, octARM, blockedByMe }) => {
+            const dateCompletudePTMG =
+              octARM.etapes.find(etape => etape.typeId === 'mcp')?.date || ''
 
-        const dateCARM =
-          octARM.etapes.find(etape => etape.typeId === 'sca')?.date || ''
+            const dateReceptionONF =
+              octARM.etapes.find(etape => etape.typeId === 'mcr')?.date || ''
 
-        return {
-          id: titre.id,
-          slug: titre.slug,
-          nom: titre.nom,
-          titreStatutId: titre.titreStatutId,
-          typeId: titre.typeId,
-          references,
-          titulaires: titre.titulaires,
-          dateCompletudePTMG,
-          dateReceptionONF,
-          dateCARM,
-          enAttenteDeONF: blockedByMe
-        }
-      })
-    )
+            const dateCARM =
+              octARM.etapes.find(etape => etape.typeId === 'sca')?.date || ''
+
+            return {
+              id: titre.id,
+              slug: titre.slug,
+              nom: titre.nom,
+              titreStatutId: titre.titreStatutId,
+              typeId: titre.typeId,
+              references,
+              titulaires: titre.titulaires.map(entreprise => ({
+                nom: entreprise.nom ?? ''
+              })),
+              dateCompletudePTMG,
+              dateReceptionONF,
+              dateCARM,
+              enAttenteDeONF: blockedByMe
+            }
+          }
+        )
+      )
+    }
   }
 }
 
@@ -117,7 +120,7 @@ type TitreArmAvecOctroi = {
 }
 
 async function titresArmAvecOctroi(
-  user: null | Utilisateurs | undefined,
+  user: User,
   administrationId: AdministrationId
 ) {
   const filters = {
@@ -209,31 +212,36 @@ export const titresPTMG = async (
   req: express.Request,
   res: CustomResponse<CommonTitrePTMG[]>
 ) => {
-  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
+  const user = req.user as User
 
-  const user = await userGet(userId)
-
-  const administrationId = ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
-
-  if (user?.administrationId !== administrationId) {
+  if (!user) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
-    const titresFormated: CommonTitrePTMG[] = (
-      await titresArmAvecOctroi(user, administrationId)
-    ).map(({ titre, references, blockedByMe }) => {
-      return {
-        id: titre.id,
-        slug: titre.slug,
-        nom: titre.nom,
-        typeId: titre.typeId,
-        titreStatutId: titre.titreStatutId,
-        references,
-        titulaires: titre.titulaires,
-        enAttenteDePTMG: blockedByMe
-      }
-    })
+    const administrationId =
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
 
-    res.json(titresFormated)
+    if (!isAdministration(user) || user.administrationId !== administrationId) {
+      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    } else {
+      const titresFormated: CommonTitrePTMG[] = (
+        await titresArmAvecOctroi(user, administrationId)
+      ).map(({ titre, references, blockedByMe }) => {
+        return {
+          id: titre.id,
+          slug: titre.slug,
+          nom: titre.nom,
+          typeId: titre.typeId,
+          titreStatutId: titre.titreStatutId,
+          references,
+          titulaires: titre.titulaires.map(entreprise => ({
+            nom: entreprise.nom ?? ''
+          })),
+          enAttenteDePTMG: blockedByMe
+        }
+      })
+
+      res.json(titresFormated)
+    }
   }
 }
 
@@ -256,197 +264,199 @@ export const titresDREAL = async (
   req: express.Request,
   res: CustomResponse<CommonTitreDREAL[]>
 ) => {
-  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
+  const user = req.user as User
 
-  const user = await userGet(userId)
-
-  if (
-    !isAdministration(user) ||
-    ![ADMINISTRATION_TYPE_IDS.DEAL, ADMINISTRATION_TYPE_IDS.DREAL].includes(
-      Administrations[user.administrationId].typeId
-    )
-  ) {
+  if (!user) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
-    const filters = {
-      statutsIds: ['dmi', 'mod']
-    }
+    if (
+      isAdministration(user) &&
+      [ADMINISTRATION_TYPE_IDS.DEAL, ADMINISTRATION_TYPE_IDS.DREAL].includes(
+        Administrations[user.administrationId].typeId
+      )
+    ) {
+      const filters = {
+        statutsIds: ['dmi', 'mod']
+      }
 
-    const titresAutorises = await titresGet(
-      filters,
-      {
-        fields: { pointsEtape: { id: {} } }
-      },
-      user
-    )
-    const titresAutorisesIds = titresAutorises
-      .filter(titre => {
-        if (!titre.titreStatutId) {
-          throw new Error('le statut du titre est obligatoire')
-        }
-
-        if (titre.administrationsLocales === undefined) {
-          throw new Error('les administrations locales doivent être chargées')
-        }
-
-        return (
-          (titre.modification ?? false) ||
-          canCreateDemarche(
-            user,
-            titre.typeId,
-            titre.titreStatutId,
-            titre.administrationsLocales ?? []
-          ) ||
-          canCreateTravaux(
-            user,
-            titre.typeId,
-            titre.administrationsLocales ?? []
-          )
-        )
-      })
-      .map(({ id }) => id)
-    const titres = await titresGet(
-      { ...filters, ids: titresAutorisesIds, colonne: 'nom' },
-      {
-        fields: {
-          type: { id: {} },
-          titulaires: { id: {} },
-          activites: { id: {} },
-          demarches: { etapes: { id: {} } }
-        }
-      },
-      userSuper
-    )
-
-    const titresFormated: CommonTitreDREAL[] = titres
-      .map((titre: ITitre): TitreDrealAvecReferences | null => {
-        if (titre.slug === undefined) {
-          return null
-        }
-
-        if (!titre.type) {
-          throw new Error('les types de titres ne sont pas chargées')
-        }
-
-        if (!titre.titulaires) {
-          throw new Error('les titulaires ne sont pas chargés')
-        }
-
-        if (!titre.references) {
-          throw new Error('les références ne sont pas chargées')
-        }
-
-        if (!titre.activites) {
-          throw new Error('les activités ne sont pas chargées')
-        }
-
-        const references = titre.references
-
-        if (!titre.demarches) {
-          throw new Error('les démarches ne sont pas chargées')
-        }
-
-        const demarcheLaPlusRecente = titre.demarches.sort(
-          ({ ordre: ordreA }, { ordre: ordreB }) =>
-            (ordreA ?? 0) - (ordreB ?? 0)
-        )[titre.demarches?.length - 1]
-        let enAttenteDeDREAL = false
-        const prochainesEtapes: EtapeTypeId[] = []
-        let derniereEtape: {
-          etapeTypeId: EtapeTypeId
-          date: CaminoDate
-        } | null = null
-        if (demarcheLaPlusRecente) {
-          if (!demarcheLaPlusRecente.etapes) {
-            throw new Error('les étapes ne sont pas chargées')
+      const titresAutorises = await titresGet(
+        filters,
+        {
+          fields: { pointsEtape: { id: {} } }
+        },
+        user
+      )
+      const titresAutorisesIds = titresAutorises
+        .filter(titre => {
+          if (!titre.titreStatutId) {
+            throw new Error('le statut du titre est obligatoire')
           }
-          if (
-            demarcheLaPlusRecente.statutId ===
-            DemarchesStatutsIds.EnConstruction
-          ) {
-            return null
-          } else {
-            const etapesDerniereDemarche = toMachineEtapes(
-              demarcheLaPlusRecente.etapes
-            )
-            derniereEtape =
-              etapesDerniereDemarche[etapesDerniereDemarche.length - 1]
-            const dd = demarcheDefinitionFind(
+
+          if (titre.administrationsLocales === undefined) {
+            throw new Error('les administrations locales doivent être chargées')
+          }
+
+          return (
+            (titre.modification ?? false) ||
+            canCreateDemarche(
+              user,
               titre.typeId,
-              demarcheLaPlusRecente.typeId,
-              demarcheLaPlusRecente.etapes,
-              demarcheLaPlusRecente.id
+              titre.titreStatutId,
+              titre.administrationsLocales ?? []
+            ) ||
+            canCreateTravaux(
+              user,
+              titre.typeId,
+              titre.administrationsLocales ?? []
             )
-            if (isDemarcheDefinitionMachine(dd)) {
-              try {
-                enAttenteDeDREAL = dd.machine
-                  .whoIsBlocking(etapesDerniereDemarche)
-                  .includes(user.administrationId)
-                const nextEtapes = dd.machine.possibleNextEtapes(
-                  etapesDerniereDemarche
-                )
-                prochainesEtapes.push(
-                  ...nextEtapes
-                    .map(etape => etape.etapeTypeId)
-                    .filter(onlyUnique)
-                    .filter(etape => !etapesAMasquer.includes(etape))
-                )
-              } catch (e) {
-                console.error(
-                  `Impossible de traiter le titre ${titre.id} car la démarche ${demarcheLaPlusRecente.typeId} n'est pas valide`,
-                  e
-                )
+          )
+        })
+        .map(({ id }) => id)
+      const titres = await titresGet(
+        { ...filters, ids: titresAutorisesIds, colonne: 'nom' },
+        {
+          fields: {
+            type: { id: {} },
+            titulaires: { id: {} },
+            activites: { id: {} },
+            demarches: { etapes: { id: {} } }
+          }
+        },
+        userSuper
+      )
+
+      const titresFormated: CommonTitreDREAL[] = titres
+        .map((titre: ITitre): TitreDrealAvecReferences | null => {
+          if (titre.slug === undefined) {
+            return null
+          }
+
+          if (!titre.type) {
+            throw new Error('les types de titres ne sont pas chargées')
+          }
+
+          if (!titre.titulaires) {
+            throw new Error('les titulaires ne sont pas chargés')
+          }
+
+          if (!titre.references) {
+            throw new Error('les références ne sont pas chargées')
+          }
+
+          if (!titre.activites) {
+            throw new Error('les activités ne sont pas chargées')
+          }
+
+          const references = titre.references
+
+          if (!titre.demarches) {
+            throw new Error('les démarches ne sont pas chargées')
+          }
+
+          const demarcheLaPlusRecente = titre.demarches.sort(
+            ({ ordre: ordreA }, { ordre: ordreB }) =>
+              (ordreA ?? 0) - (ordreB ?? 0)
+          )[titre.demarches?.length - 1]
+          let enAttenteDeDREAL = false
+          const prochainesEtapes: EtapeTypeId[] = []
+          let derniereEtape: {
+            etapeTypeId: EtapeTypeId
+            date: CaminoDate
+          } | null = null
+          if (demarcheLaPlusRecente) {
+            if (!demarcheLaPlusRecente.etapes) {
+              throw new Error('les étapes ne sont pas chargées')
+            }
+            if (
+              demarcheLaPlusRecente.statutId ===
+              DemarchesStatutsIds.EnConstruction
+            ) {
+              return null
+            } else {
+              const etapesDerniereDemarche = toMachineEtapes(
+                demarcheLaPlusRecente.etapes
+              )
+              derniereEtape =
+                etapesDerniereDemarche[etapesDerniereDemarche.length - 1]
+              const dd = demarcheDefinitionFind(
+                titre.typeId,
+                demarcheLaPlusRecente.typeId,
+                demarcheLaPlusRecente.etapes,
+                demarcheLaPlusRecente.id
+              )
+              if (isDemarcheDefinitionMachine(dd)) {
+                try {
+                  enAttenteDeDREAL = dd.machine
+                    .whoIsBlocking(etapesDerniereDemarche)
+                    .includes(user.administrationId)
+                  const nextEtapes = dd.machine.possibleNextEtapes(
+                    etapesDerniereDemarche
+                  )
+                  prochainesEtapes.push(
+                    ...nextEtapes
+                      .map(etape => etape.etapeTypeId)
+                      .filter(onlyUnique)
+                      .filter(etape => !etapesAMasquer.includes(etape))
+                  )
+                } catch (e) {
+                  console.error(
+                    `Impossible de traiter le titre ${titre.id} car la démarche ${demarcheLaPlusRecente.typeId} n'est pas valide`,
+                    e
+                  )
+                }
               }
             }
           }
-        }
 
-        return {
-          titre: titre as DrealTitreSanitize,
-          references,
-          enAttenteDeDREAL,
-          derniereEtape,
-          prochainesEtapes
-        }
-      })
-      .filter(
-        (
-          titre: TitreDrealAvecReferences | null
-        ): titre is TitreDrealAvecReferences => titre !== null
-      )
-      .map(
-        ({
-          titre,
-          references,
-          enAttenteDeDREAL,
-          derniereEtape,
-          prochainesEtapes
-        }) => {
           return {
-            id: titre.id,
-            slug: titre.slug,
-            nom: titre.nom,
-            titreStatutId: titre.titreStatutId,
-            typeId: titre.typeId,
+            titre: titre as DrealTitreSanitize,
             references,
-            titulaires: titre.titulaires,
-            // pour une raison inconnue les chiffres sortent parfois en tant que string...., par exemple pour les titres
-            activitesEnConstruction:
-              typeof titre.activitesEnConstruction === 'string'
-                ? parseInt(titre.activitesEnConstruction, 10)
-                : titre.activitesEnConstruction ?? 0,
-            activitesAbsentes:
-              typeof titre.activitesAbsentes === 'string'
-                ? parseInt(titre.activitesAbsentes, 10)
-                : titre.activitesAbsentes ?? 0,
             enAttenteDeDREAL,
             derniereEtape,
             prochainesEtapes
           }
-        }
-      )
+        })
+        .filter(
+          (
+            titre: TitreDrealAvecReferences | null
+          ): titre is TitreDrealAvecReferences => titre !== null
+        )
+        .map(
+          ({
+            titre,
+            references,
+            enAttenteDeDREAL,
+            derniereEtape,
+            prochainesEtapes
+          }) => {
+            return {
+              id: titre.id,
+              slug: titre.slug,
+              nom: titre.nom,
+              titreStatutId: titre.titreStatutId,
+              typeId: titre.typeId,
+              references,
+              titulaires: titre.titulaires,
+              // pour une raison inconnue les chiffres sortent parfois en tant que string...., par exemple pour les titres
+              activitesEnConstruction:
+                typeof titre.activitesEnConstruction === 'string'
+                  ? parseInt(titre.activitesEnConstruction, 10)
+                  : titre.activitesEnConstruction ?? 0,
+              activitesAbsentes:
+                typeof titre.activitesAbsentes === 'string'
+                  ? parseInt(titre.activitesAbsentes, 10)
+                  : titre.activitesAbsentes ?? 0,
+              enAttenteDeDREAL,
+              derniereEtape,
+              prochainesEtapes
+            }
+          }
+        )
 
-    res.json(titresFormated)
+      res.json(titresFormated)
+    } else {
+      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    }
   }
 }
 const isStringArray = (stuff: any): stuff is string[] => {
@@ -458,9 +468,7 @@ export const postTitreLiaisons = async (
   req: express.Request<{ id?: string }>,
   res: CustomResponse<TitreLinks>
 ) => {
-  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
-
-  const user = await userGet(userId)
+  const user = req.user as User
 
   const titreId: string | undefined = req.params.id
   const titreFromIds = req.body
@@ -515,9 +523,7 @@ export const getTitreLiaisons = async (
   req: express.Request<{ id?: string }>,
   res: CustomResponse<TitreLinks>
 ) => {
-  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
-
-  const user = await userGet(userId)
+  const user = req.user as User
 
   const titreId: string | undefined = req.params.id
 
@@ -539,7 +545,7 @@ export const getTitreLiaisons = async (
 const titreLinksGet = async (
   titreId: string,
   link: 'titreToId' | 'titreFromId',
-  user: IUtilisateur | null | undefined
+  user: User
 ): Promise<TitreLink[]> => {
   const titresTitres = await TitresTitres.query().where(
     link === 'titreToId' ? 'titreFromId' : 'titreToId',

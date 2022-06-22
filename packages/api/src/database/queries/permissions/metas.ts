@@ -1,7 +1,5 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types.js'
-
 import { knex } from '../../../knex.js'
 // import fileCreate from '../../../tools/file-create'
 // import { format } from 'sql-formatter'
@@ -18,7 +16,8 @@ import {
 import {
   isBureauDEtudes,
   isDefault,
-  isEntreprise
+  isEntreprise,
+  User
 } from 'camino-common/src/roles.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { TITRES_TYPES_IDS_DEMAT } from 'camino-common/src/permissions/titres.js'
@@ -87,7 +86,7 @@ const entreprisesEtapesTypesPropsQuery = (entreprisesIds: string[]) =>
 
 const etapesTypesQueryModify = (
   q: QueryBuilder<EtapesTypes, EtapesTypes | EtapesTypes[]>,
-  user: IUtilisateur | null | undefined,
+  user: User,
   {
     titreDemarcheId,
     titreEtapeId,

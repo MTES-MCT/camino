@@ -13,7 +13,7 @@ import {
 } from './titres.js'
 import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts.js'
 import { userSuper } from '../../user-super.js'
-import { Role } from 'camino-common/src/roles.js'
+import { AdministrationRole } from 'camino-common/src/roles.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
@@ -21,6 +21,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { testBlankUser, TestUser } from 'camino-common/src/tests-utils'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -260,7 +261,7 @@ describe('titresQueryModify', () => {
   })
 
   describe('titresModificationSelectQuery', () => {
-    test.each<[Role, boolean]>([
+    test.each<[AdministrationRole, boolean]>([
       ['admin', true],
       ['editeur', true],
       ['lecteur', false]
@@ -281,6 +282,7 @@ describe('titresQueryModify', () => {
         q.select(
           titresModificationSelectQuery(q, {
             role,
+            ...testBlankUser,
             administrationId
           }).as('modification')
         )
@@ -303,6 +305,10 @@ describe('titresQueryModify', () => {
       const q = Titres.query()
       q.select(
         titresModificationSelectQuery(q, {
+          email: '',
+          id: '',
+          nom: '',
+          prenom: '',
           role: 'admin',
           administrationId
         }).as('modification')
@@ -313,14 +319,14 @@ describe('titresQueryModify', () => {
       expect(titre?.modification).toBeFalsy()
     })
 
-    test.each<[Role, boolean]>([
-      ['super', true],
-      ['lecteur', false],
-      ['entreprise', false],
-      ['defaut', false]
+    test.each<[TestUser, boolean]>([
+      [userSuper, true],
+      [{ role: 'entreprise', entreprises: [] }, false],
+      [{ role: 'lecteur', administrationId: 'dea-guyane-01' }, false],
+      [{ role: 'defaut' }, false]
     ])(
       'Vérifie si un profil $role peut modifier un titre',
-      async (role, modification) => {
+      async (user, modification) => {
         await Titres.query().insert({
           nom: idGenerate(),
           titreStatutId: 'val',
@@ -328,10 +334,9 @@ describe('titresQueryModify', () => {
         })
         const q = Titres.query()
         q.select(
-          titresModificationSelectQuery(q, {
-            role,
-            administrationId: undefined
-          }).as('modification')
+          titresModificationSelectQuery(q, { ...user, ...testBlankUser }).as(
+            'modification'
+          )
         )
 
         const titre = await q.first()

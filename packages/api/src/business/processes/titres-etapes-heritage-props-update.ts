@@ -1,13 +1,14 @@
-import { ITitreEtape, IUtilisateur } from '../../types.js'
+import { ITitreEtape } from '../../types.js'
 
 import { titreEtapeUpsert } from '../../database/queries/titres-etapes.js'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
 import { titreEtapeHeritagePropsFind } from '../utils/titre-etape-heritage-props-find.js'
 import { userSuper } from '../../database/user-super.js'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
+import { UserNotNull } from 'camino-common/src/roles'
 
 export const titresEtapesHeritagePropsUpdate = async (
-  user: IUtilisateur,
+  user: UserNotNull,
   titresDemarchesIds?: string[]
 ) => {
   console.info()

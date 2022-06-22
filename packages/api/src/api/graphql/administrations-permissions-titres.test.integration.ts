@@ -4,12 +4,17 @@ import {
   creationCheck,
   modificationCheck
 } from '../../../tests/_utils/administrations-permissions.js'
+import Utilisateurs from '../../database/models/utilisateurs'
 
-import { afterAll, beforeAll, describe, test, vi } from 'vitest'
+import { afterAll, beforeEach, beforeAll, describe, test, vi } from 'vitest'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
+
+beforeEach(async () => {
+  await Utilisateurs.query().delete()
+})
 beforeAll(async () => {
   await dbManager.populateDb()
 })

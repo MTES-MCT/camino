@@ -20,6 +20,5 @@ export const fragmentUtilisateur = gql`
     modification
     suppression
     permissionModification
-    utilisateursCreation
   }
 `

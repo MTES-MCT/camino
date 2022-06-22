@@ -60,13 +60,11 @@ services:
     container_name: camino_ui_app
     image: caminofr/camino-ui:${CAMINO_TAG}
     environment:
-      VIRTUAL_HOST: ${UI_HOST}
-      VIRTUAL_PORT: ${UI_PORT}
-      LETSENCRYPT_HOST: ${UI_HOST}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      APPLICATION_VERSION: ${CAMINO_TAG}
       UI_PORT: ${UI_PORT}
       API_URL: http://api:${API_PORT}
       API_MATOMO_URL: ${API_MATOMO_URL}
+      ENV: ${ENV}
     expose:
       - ${UI_PORT}
     networks:
@@ -87,6 +85,72 @@ services:
       - default
       - nginx-proxy
     restart: unless-stopped
+  oauth2:
+    container_name: camino_oauth2
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.3.0
+    depends_on:
+      - ui
+      - keycloak
+    environment:
+      VIRTUAL_HOST: ${OAUTH_HOST}
+      VIRTUAL_PORT: ${OAUTH_PORT}
+      LETSENCRYPT_HOST: ${OAUTH_HOST}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      OAUTH2_PROXY_PROVIDER: 'keycloak-oidc'
+      OAUTH2_PROXY_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      OAUTH2_PROXY_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+      OAUTH2_PROXY_COOKIE_SECRET: ${OAUTH2_COOKIE_SECRET}
+      OAUTH2_PROXY_OIDC_ISSUER_URL: https://${KEYCLOAK_HOST}/realms/Camino
+      OAUTH2_PROXY_REDIRECT_URL: https://${OAUTH_HOST}
+      OAUTH2_PROXY_HTTP_ADDRESS: 0.0.0.0:${OAUTH_PORT}
+      OAUTH2_PROXY_UPSTREAMS: http://ui:${UI_PORT}
+      OAUTH2_PROXY_EMAIL_DOMAINS: "*"
+      OAUTH2_PROXY_SKIP_PROVIDER_BUTTON: true
+      OAUTH2_PROXY_PASS_ACCESS_TOKEN: true
+      OAUTH2_PROXY_SKIP_AUTH_ROUTES: "/*"
+      # nécessaire pour garder le basic auth
+      OAUTH2_PROXY_PASS_BASIC_AUTH: true
+      OAUTH2_PROXY_SKIP_AUTH_STRIP_HEADERS: false
+      # l’access token de keycloak a une durée de vie de 5min
+      OAUTH2_PROXY_COOKIE_REFRESH: 4m
+      # l'url de logout de keycloak, utilisé par utilisateur.vue pour se déconnect de oauth2_proxy ET keycloak
+      OAUTH2_PROXY_WHITELIST_DOMAINS: ${KEYCLOAK_HOST},${OAUTH_HOST}
+      OAUTH2_PROXY_PASS_AUTHORIZATION_HEADER: true
+    expose:
+      - ${OAUTH_PORT}
+    restart: unless-stopped
+    networks:
+      - default
+      - nginx-proxy
+  keycloak:
+    container_name: camino_keycloak
+    image: quay.io/keycloak/keycloak:19.0.3
+    depends_on:
+      - db
+    environment:
+      KC_DB: "postgres"
+      KC_DB_URL: jdbc:postgresql://db:${PGPORT}/${PGDATABASE}
+      KC_DB_SCHEMA: keycloak
+      KC_DB_PASSWORD: "${PGPASSWORD}"
+      KC_DB_USERNAME: "${PGUSER}"
+      KC_HOSTNAME:  ${KEYCLOAK_HOST}
+      KC_PROXY: "edge"
+      VIRTUAL_HOST: ${KEYCLOAK_HOST}
+      VIRTUAL_PORT: ${KEYCLOAK_PORT}
+      LETSENCRYPT_HOST: ${KEYCLOAK_HOST}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+    volumes:
+      # A Synchroniser avec ansible infra/roles/camino/tasks
+      - ./keycloak-franceconnect-4.1.0.jar:/opt/keycloak/providers/keycloak-franceconnect-4.1.0.jar
+      # FROM https://github.com/leroyguillaume/keycloak-bcrypt
+      - ./keycloak-bcrypt-1.5.1.jar:/opt/keycloak/providers/keycloak-bcrypt-1.5.1.jar
+    command: "start"
+    expose:
+      - ${KEYCLOAK_PORT}
+    restart: unless-stopped
+    networks:
+      - default
+      - nginx-proxy
 
 networks:
   nginx-proxy:

@@ -58,7 +58,7 @@ describe('documentSupprimer', () => {
     const res = await graphQLCall(
       documentSupprimerQuery,
       { id: 'toto' },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body.errors[0].message).toBe('aucun document avec cette id')
@@ -79,7 +79,7 @@ describe('documentSupprimer', () => {
     const res = await graphQLCall(
       documentSupprimerQuery,
       { id: documentId },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -133,7 +133,7 @@ describe('documentSupprimer', () => {
     const res = await graphQLCall(
       documentSupprimerQuery,
       { id: documentId },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body.errors[0].message).toBe(
@@ -182,7 +182,7 @@ describe('documentSupprimer', () => {
     const res = await graphQLCall(
       documentSupprimerQuery,
       { id: documentId },
-      'super'
+      { role: 'super' }
     )
 
     expect(res.body.errors).toBeUndefined()

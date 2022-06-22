@@ -1,12 +1,4 @@
-import { userGet } from '../../database/queries/utilisateurs.js'
-
 import express from 'express'
-import {
-  ICommune,
-  IContenuValeur,
-  IEntreprise,
-  IUtilisateur
-} from '../../types.js'
 import {
   Fiscalite,
   FiscaliteFrance,
@@ -14,6 +6,7 @@ import {
   fiscaliteVisible,
   isFiscaliteGuyane
 } from 'camino-common/src/fiscalite.js'
+import { ICommune, IContenuValeur, IEntreprise } from '../../types'
 import { constants } from 'http2'
 import {
   apiOpenfiscaCalculate,
@@ -39,6 +32,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { CaminoAnnee, isAnnee } from 'camino-common/src/date.js'
 import { EntrepriseId } from 'camino-common/src/entreprise.js'
+import { User } from 'camino-common/src/roles'
 
 const conversion = (
   substanceFiscale: SubstanceFiscale,
@@ -238,7 +232,7 @@ export const bodyBuilder = (
                   },
                   surface_totale: { [anneePrecedente]: surfaceTotale },
                   operateur: {
-                    [anneePrecedente]: entreprise.nom
+                    [anneePrecedente]: entreprise.nom ?? ''
                   },
                   investissement: {
                     [anneePrecedente]: investissement.toString(10)
@@ -359,95 +353,96 @@ export const fiscalite = async (
   req: express.Request<{ entrepriseId?: EntrepriseId; annee?: CaminoAnnee }>,
   res: CustomResponse<Fiscalite>
 ) => {
-  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
-
-  const user = await userGet(userId)
-
-  const entrepriseId = req.params.entrepriseId
-  const caminoAnnee = req.params.annee
-
-  if (!entrepriseId) {
-    console.warn(`l'entrepriseId est obligatoire`)
+  const user = req.user as User
+  if (!user) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
-  } else if (!caminoAnnee || !isAnnee(caminoAnnee)) {
-    console.warn(`l'année ${caminoAnnee} n'est pas correcte`)
-    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
   } else {
-    const entreprise = await entrepriseGet(
-      entrepriseId,
-      { fields: { id: {} } },
-      user
-    )
-    if (!entreprise) {
-      throw new Error(`l’entreprise ${entrepriseId} est inconnue`)
-    }
+    const entrepriseId = req.params.entrepriseId
+    const caminoAnnee = req.params.annee
 
-    const annee = Number.parseInt(caminoAnnee, 10)
-    const anneePrecedente = annee - 1
-
-    const titres = await titresGet(
-      { entreprisesIds: [entrepriseId] },
-      {
-        fields: {
-          titulaires: { id: {} },
-          amodiataires: { id: {} },
-          substancesEtape: { id: {} },
-          communes: { id: {} }
-        }
-      },
-      user
-    )
-
-    // TODO 2022-09-26 feature https://trello.com/c/VnlFB6Z1/294-featfiscalit%C3%A9-masquer-la-section-fiscalit%C3%A9-de-la-fiche-entreprise-pour-les-autres-domaines-que-m
-    if (!fiscaliteVisible(user, entrepriseId, titres)) {
-      console.warn(
-        `la fiscalité n'est pas visible pour l'utilisateur ${user} et l'entreprise ${entrepriseId}`
-      )
+    if (!entrepriseId) {
+      console.warn(`l'entrepriseId est obligatoire`)
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    } else if (!caminoAnnee || !isAnnee(caminoAnnee)) {
+      console.warn(`l'année ${caminoAnnee} n'est pas correcte`)
+      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
     } else {
-      const activites = await titresActivitesGet(
-        // TODO 2022-07-25 Laure, est-ce qu’il faut faire les WRP ?
-        {
-          typesIds: ['grx', 'gra', 'wrp'],
-          // TODO 2022-07-25 Laure, que les déposées ? Pas les « en construction » ?
-          statutsIds: ['dep'],
-          annees: [anneePrecedente],
-          titresIds: titres.map(({ id }) => id)
-        },
+      const entreprise = await entrepriseGet(
+        entrepriseId,
         { fields: { id: {} } },
         user
       )
-      const activitesTrimestrielles = await titresActivitesGet(
+      if (!entreprise) {
+        throw new Error(`l’entreprise ${entrepriseId} est inconnue`)
+      }
+
+      const annee = Number.parseInt(caminoAnnee, 10)
+      const anneePrecedente = annee - 1
+
+      const titres = await titresGet(
+        { entreprisesIds: [entrepriseId] },
         {
-          typesIds: ['grp'],
-          statutsIds: ['dep'],
-          annees: [anneePrecedente],
-          titresIds: titres.map(({ id }) => id)
+          fields: {
+            titulaires: { id: {} },
+            amodiataires: { id: {} },
+            substancesEtape: { id: {} },
+            communes: { id: {} }
+          }
         },
-        { fields: { id: {} } },
         user
       )
 
-      const body = bodyBuilder(
-        activites,
-        activitesTrimestrielles,
-        titres,
-        annee,
-        [entreprise]
-      )
-      console.info('body', JSON.stringify(body))
-      if (Object.keys(body.articles).length > 0) {
-        const result = await apiOpenfiscaCalculate(body)
-        console.info('result', JSON.stringify(result))
-
-        const redevances = responseExtractor(result, annee)
-
-        res.json(redevances)
+      // TODO 2022-09-26 feature https://trello.com/c/VnlFB6Z1/294-featfiscalit%C3%A9-masquer-la-section-fiscalit%C3%A9-de-la-fiche-entreprise-pour-les-autres-domaines-que-m
+      if (!fiscaliteVisible(user, entrepriseId, titres)) {
+        console.warn(
+          `la fiscalité n'est pas visible pour l'utilisateur ${user} et l'entreprise ${entrepriseId}`
+        )
+        res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
       } else {
-        res.json({
-          redevanceCommunale: 0,
-          redevanceDepartementale: 0
-        })
+        const activites = await titresActivitesGet(
+          // TODO 2022-07-25 Laure, est-ce qu’il faut faire les WRP ?
+          {
+            typesIds: ['grx', 'gra', 'wrp'],
+            // TODO 2022-07-25 Laure, que les déposées ? Pas les « en construction » ?
+            statutsIds: ['dep'],
+            annees: [anneePrecedente],
+            titresIds: titres.map(({ id }) => id)
+          },
+          { fields: { id: {} } },
+          user
+        )
+        const activitesTrimestrielles = await titresActivitesGet(
+          {
+            typesIds: ['grp'],
+            statutsIds: ['dep'],
+            annees: [anneePrecedente],
+            titresIds: titres.map(({ id }) => id)
+          },
+          { fields: { id: {} } },
+          user
+        )
+
+        const body = bodyBuilder(
+          activites,
+          activitesTrimestrielles,
+          titres,
+          annee,
+          [entreprise]
+        )
+        console.info('body', JSON.stringify(body))
+        if (Object.keys(body.articles).length > 0) {
+          const result = await apiOpenfiscaCalculate(body)
+          console.info('result', JSON.stringify(result))
+
+          const redevances = responseExtractor(result, annee)
+
+          res.json(redevances)
+        } else {
+          res.json({
+            redevanceCommunale: 0,
+            redevanceDepartementale: 0
+          })
+        }
       }
     }
   }

@@ -20,7 +20,7 @@ describe('fiscalite', () => {
     })
     const tested = await restCall(
       `/entreprises/${entreprise.id}/fiscalite/2022`,
-      'defaut'
+      { role: 'defaut' }
     )
 
     expect(tested.statusCode).toBe(403)

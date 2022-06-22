@@ -1,5 +1,6 @@
 import { TitreTypeSelect, Props } from './titre-type-select'
 import { Meta, Story } from '@storybook/vue3'
+import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/common/TitreTypeSelect',
@@ -24,10 +25,10 @@ const Template: Story<Props> = (args: Props) => ({
 
 export const Default = Template.bind({})
 Default.args = {
-  user: { role: 'super', administrationId: null }
+  user: { role: 'super', ...testBlankUser }
 }
 
 export const Entreprise = Template.bind({})
 Entreprise.args = {
-  user: { role: 'entreprise', administrationId: null }
+  user: { role: 'entreprise', entreprises: [], ...testBlankUser }
 }

@@ -1,20 +1,16 @@
-import { IToken } from '../../../types.js'
-
 import {
-  userGet,
   utilisateurTitreCreate,
   utilisateurTitreDelete
 } from '../../../database/queries/utilisateurs.js'
 
 import { titreGet } from '../../../database/queries/titres.js'
+import { Context } from '../../../types.js'
 
 const utilisateurTitreAbonner = async (
   { titreId, abonner }: { titreId: string; abonner: boolean },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!user) {
       throw new Error('droits insuffisants')
     }

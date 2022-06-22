@@ -4,7 +4,7 @@
 
     <hr />
 
-    <p>Renseignez au moins le mot de passe, le prénom et le nom.</p>
+    <p>Renseignez au moins le prénom et le nom.</p>
 
     <hr />
 
@@ -16,24 +16,6 @@
         <div class="py-s mb-xs">
           {{ utilisateur.email }}
         </div>
-      </div>
-    </div>
-
-    <hr />
-
-    <div class="tablet-blobs">
-      <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-        <h5>Mot de passe</h5>
-      </div>
-      <div class="mb tablet-blob-2-3">
-        <input
-          id="cmn-user-add-input-mot-de-passe"
-          v-model="utilisateur.motDePasse"
-          type="password"
-          class="p-s mb-s"
-          placeholder="Mot de passe"
-        />
-        <p class="h6 mb-0">8 caractères minimum.</p>
       </div>
     </div>
 
@@ -166,7 +148,6 @@ export default {
         this.utilisateur.nom &&
         this.utilisateur.prenom &&
         this.utilisateur.email &&
-        this.utilisateur.motDePasse &&
         this.cgu
       )
     }

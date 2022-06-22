@@ -11,23 +11,17 @@ class Utilisateurs extends Model {
 
   public static jsonSchema = {
     type: 'object',
-    required: ['id', 'email', 'motDePasse', 'role'],
+    required: ['id', 'email', 'role'],
 
     properties: {
       id: { type: 'string', minLength: 1, maxLength: 64 },
       email: { type: ['string', 'null'] },
-      motDePasse: {
-        type: 'string',
-        minLength: 8,
-        maxLength: 255
-      },
       nom: { type: ['string', 'null'] },
       prenom: { type: ['string', 'null'] },
       telephoneFixe: { type: ['string', 'null'] },
       telephoneMobile: { type: ['string', 'null'] },
       role: { type: 'string' },
       preferences: { type: ['object', 'null'] },
-      refreshToken: { type: ['string', 'null'] },
       administrationId: { type: ['string', 'null'] }
     }
   }
@@ -60,7 +54,6 @@ class Utilisateurs extends Model {
     delete json.modification
     delete json.suppression
     delete json.permissionModification
-    delete json.utilisateursCreation
 
     json = super.$parseJson(json)
 
@@ -71,7 +64,6 @@ class Utilisateurs extends Model {
     delete json.modification
     delete json.suppression
     delete json.permissionModification
-    delete json.utilisateursCreation
 
     json = super.$formatDatabaseJson(json)
 

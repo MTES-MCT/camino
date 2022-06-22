@@ -13,7 +13,7 @@ export interface CommonTitre {
   typeId: TitreTypeId
   titreStatutId: TitreStatutId
   references: TitreReference[]
-  titulaires: { nom: string }[]
+  titulaires: { nom?: string }[]
 }
 
 export interface CommonTitrePTMG extends CommonTitre {

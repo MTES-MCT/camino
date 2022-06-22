@@ -3,12 +3,10 @@ import express from 'express'
 import { graphql } from '../src/server/graphql.js'
 import { authJwt } from '../src/server/auth-jwt.js'
 import { restUpload, uploadAllowedMiddleware } from '../src/server/upload.js'
-import cookieParser from 'cookie-parser'
 import { rest } from '../src/server/rest.js'
 
 const app = express()
 app.disable('x-powered-by')
-app.use(cookieParser())
 app.use(authJwt)
 app.use(express.urlencoded({ extended: true }), express.json(), rest)
 

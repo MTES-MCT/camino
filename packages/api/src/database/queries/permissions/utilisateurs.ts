@@ -1,7 +1,5 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types.js'
-
 import Utilisateurs from '../../models/utilisateurs.js'
 import Entreprises from '../../models/entreprises.js'
 import { entreprisesQueryModify } from './entreprises.js'
@@ -12,12 +10,13 @@ import {
   isBureauDEtudes,
   isDefault,
   isEntreprise,
-  isSuper
+  isSuper,
+  User
 } from 'camino-common/src/roles.js'
 
 export const utilisateursQueryModify = (
   q: QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>,
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   q.select('utilisateurs.*')
 
@@ -29,7 +28,7 @@ export const utilisateursQueryModify = (
     q.where('utilisateurs.administrationId', user.administrationId)
   } else if (
     (isEntreprise(user) || isBureauDEtudes(user)) &&
-    user.entreprises?.length
+    user.entreprises.length
   ) {
     // un utilisateur entreprise
     // ne voit que les utilisateurs de son entreprise
@@ -50,6 +49,8 @@ export const utilisateursQueryModify = (
     // un utilisateur non-authentifié ne voit aucun utilisateur
     q.where(false)
   }
+
+  // TODO à supprimer et à mettre dans le common
 
   if (isSuper(user)) {
     q.select(raw('true').as('modification'))
@@ -103,12 +104,6 @@ export const utilisateursQueryModify = (
     q.select(raw('false').as('modification'))
     q.select(raw('false').as('suppression'))
     q.select(raw('false').as('permissionModification'))
-  }
-
-  if (isSuper(user) || isAdministrationAdmin(user)) {
-    q.select(raw('true').as('utilisateursCreation'))
-  } else {
-    q.select(raw('false').as('utilisateursCreation'))
   }
 
   q.modifyGraph('entreprises', u =>

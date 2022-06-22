@@ -73,14 +73,14 @@ const apiGraphQLFetch = (query, cacheKey) => async variables => {
   try {
     return await graphQLCall(apiUrl, query, variables, cacheKey)
   } catch (e) {
-    if (e.status === 401 || e.message === 'HTTP 401 status.') {
-      // la session a été invalidée par un administrateur
-      // ne sachant pas si il voit des informations confidentielles actuellement,
-      // il est préférable de rafraichir totalement la page
-      window.location.reload()
-    } else {
-      errorThrow(e)
-    }
+    // if (e.status === 401 || e.message === 'HTTP 401 status.') {
+    //   // la session a été invalidée par un administrateur
+    //   // ne sachant pas si il voit des informations confidentielles actuellement,
+    //   // il est préférable de rafraichir totalement la page
+    //   // window.location.reload()
+    // } else {
+    errorThrow(e)
+    // }
   }
 }
 

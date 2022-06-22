@@ -12,7 +12,7 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
   "entreprises": [],
   "id": "utilisateurId",
   "modification": true,
-  "motDePasse": "utilisateurMotdepasse",
+  "motDePasse": null,
   "nom": "utilisateurNom",
   "permissionModification": true,
   "preferences": null,
@@ -23,7 +23,6 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
   "suppression": true,
   "telephoneFixe": null,
   "telephoneMobile": null,
-  "utilisateursCreation": true,
 }
 `;
 
@@ -39,7 +38,7 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
   "entreprises": [],
   "id": "utilisateurId",
   "modification": true,
-  "motDePasse": "utilisateurMotdepasse",
+  "motDePasse": null,
   "nom": "utilisateurNom",
   "permissionModification": true,
   "preferences": null,
@@ -50,7 +49,6 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
   "suppression": true,
   "telephoneFixe": null,
   "telephoneMobile": null,
-  "utilisateursCreation": true,
 }
 `;
 
@@ -66,7 +64,7 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
   "entreprises": [],
   "id": "utilisateurId",
   "modification": false,
-  "motDePasse": "utilisateurMotdepasse",
+  "motDePasse": null,
   "nom": "utilisateurNom",
   "permissionModification": false,
   "preferences": null,
@@ -77,7 +75,6 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
   "suppression": false,
   "telephoneFixe": null,
   "telephoneMobile": null,
-  "utilisateursCreation": false,
 }
 `;
 
@@ -93,7 +90,7 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
   "entreprises": [],
   "id": "utilisateurId",
   "modification": false,
-  "motDePasse": "utilisateurMotdepasse",
+  "motDePasse": null,
   "nom": "utilisateurNom",
   "permissionModification": false,
   "preferences": null,
@@ -104,7 +101,6 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
   "suppression": false,
   "telephoneFixe": null,
   "telephoneMobile": null,
-  "utilisateursCreation": false,
 }
 `;
 
@@ -120,7 +116,7 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
   "entreprises": [],
   "id": "utilisateurId",
   "modification": false,
-  "motDePasse": "utilisateurMotdepasse",
+  "motDePasse": null,
   "nom": "utilisateurNom",
   "permissionModification": false,
   "preferences": null,
@@ -131,6 +127,5 @@ exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un ut
   "suppression": false,
   "telephoneFixe": null,
   "telephoneMobile": null,
-  "utilisateursCreation": false,
 }
 `;

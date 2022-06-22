@@ -7082,12 +7082,6 @@ exports[`Storybook Tests > Components/Ui/Icons > AllIcons 1`] = `
       <th>Component</th>
     </tr>
     <tr>
-      <td>at</td>
-      <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"at\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-          <use href=\\"#icon-at\\"></use>
-        </svg></td>
-    </tr>
-    <tr>
       <td>checkbox</td>
       <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-checkbox\\"></use>

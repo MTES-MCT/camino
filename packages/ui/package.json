@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "build": "vue-tsc --noEmit && vite build --emptyOutDir",
-    "dev": "vite",
+    "dev": "vite --host",
     "dev:update": "npm-check-updates && npm install && npm audit fix",
     "start": "node ./index.js",
     "test": "vitest --environment jsdom --root src/",

@@ -1,14 +1,12 @@
 import { Knex } from 'knex'
 import emailRegex from 'email-regex'
-import bcrypt from 'bcryptjs'
 import { IUtilisateur } from '../types.js'
-import { idGenerate } from '../database/models/_format/id-create.js'
 
+// TODO 2022-06-23 fixme
 export const userAdd = async (
   knex: Knex,
   user: Omit<IUtilisateur, 'administrationId'>
 ): Promise<void> => {
-  const password = idGenerate()
   const errors = []
 
   if (!user.email) {
@@ -18,12 +16,9 @@ export const userAdd = async (
   }
 
   if (!errors.length) {
-    user.motDePasse = bcrypt.hashSync(password, 10)
-
     await knex('utilisateurs').insert(user)
 
     console.info('Utilisateur créé')
-    console.info(`utilisateur crée avec le mot de passe ${password}`)
   } else {
     console.info('Aucun user créé:', errors.join(', '))
   }
