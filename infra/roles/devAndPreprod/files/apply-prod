@@ -1,6 +1,6 @@
 #!/bin/bash
 
 docker exec -i camino_api_app "rm -rf /packages/api/files/*"
-docker cp /srv/backups/camino_prod/. camino_api_app:/packages/api/files/
+docker cp /srv/backups/camino_prod/files/. camino_api_app:/packages/api/files/
 docker exec -i camino_api_db pg_restore --clean --if-exists --no-owner --no-privileges --dbname=camino < /srv/backups/camino_prod.sql
 

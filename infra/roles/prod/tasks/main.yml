@@ -6,6 +6,7 @@
     mode: u=rwx,g=rx,o=r
     owner: git
     group: users
+    backup: yes
   become: True
 - name: Ajoute le job de backup de la prod
   ansible.builtin.cron:
