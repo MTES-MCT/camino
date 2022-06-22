@@ -1,6 +1,12 @@
 #!/bin/bash
 
-docker exec -i camino_api_app "rm -rf /packages/api/files/*"
-docker cp /srv/backups/camino_prod/files/. camino_api_app:/packages/api/files/
+echo 'Mise en place des fichiers de prod'
+rsync --delete -r /srv/backups/camino_prod/files/ /srv/www/camino/files
+echo "Arrêt de l'api"
+docker stop camino_api_app
+echo "Insertion du dump de la BDD"
+docker exec -i camino_api_db dropdb --username=postgres camino
+docker exec -i camino_api_db createdb  --username=postgres camino
 docker exec -i camino_api_db pg_restore --clean --if-exists --no-owner --no-privileges --dbname=camino < /srv/backups/camino_prod.sql
-
+echo "Redémarrage de l'api"
+docker restart camino_api_app

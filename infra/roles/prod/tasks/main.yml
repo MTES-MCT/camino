@@ -18,11 +18,6 @@
   become: True
 - name: Transfert des données de la prod vers les autres environnements
   block:
-    - name: Install rsync
-      ansible.builtin.apt:
-        name: rsync
-        state: present
-      become: True
     - name: Ajoute le script pour pouvoir transférer les données de la prod vers les autres environnements
       template:
         src: transfer_data_to_dev_and_preprod
