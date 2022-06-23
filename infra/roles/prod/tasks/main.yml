@@ -1,6 +1,6 @@
 ---
 - name: Ajoute le script de backup
-  template:
+  ansible.builtin.template:
     src: backup
     dest: /srv/scripts/
     mode: u=rwx,g=rx,o=r
@@ -19,7 +19,7 @@
 - name: Transfert des données de la prod vers les autres environnements
   block:
     - name: Ajoute le script pour pouvoir transférer les données de la prod vers les autres environnements
-      template:
+      ansible.builtin.template:
         src: transfer_data_to_dev_and_preprod
         dest: /srv/scripts/
         mode: u=rwx,g=rx,o=r

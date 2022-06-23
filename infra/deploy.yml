@@ -13,8 +13,9 @@
       become: True
   roles:
     - role: nginx
+    - role: camino
     - role: devAndPreprod
-      when: not prod
+      when: env != 'prod'
     - role: prod
-      when: prod
+      when: env == 'prod'
 

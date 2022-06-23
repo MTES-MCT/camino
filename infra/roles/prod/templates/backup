@@ -22,7 +22,7 @@ chown git:users -R /srv/backups/files
 FILE_SUFFIX=camino.tar.gz
 FILE_PATH=/srv/backups/`date +%Y%m%d"_"%H%M%S`-$FILE_SUFFIX
 
-FTP_URL="ftp://{{FTP_USER}}:{{FTP_PASSWORD}}@{{FTP_HOST}}/"
+FTP_URL="ftp://{{ ftp_user }}:{{ ftp_password }}@{{ ftp_host }}/"
 
 echo $FILE_PATH
 cd /srv/backups
