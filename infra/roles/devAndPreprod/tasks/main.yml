@@ -1,0 +1,26 @@
+---
+- name: Ajoute le script pour pouvoir mettre les données de production sur cet environnement
+  copy:
+    src: apply-prod
+    dest: /srv/scripts/
+    mode: u=rwx,g=rx,o=r
+    owner: git
+    group: users
+  become: True
+- name: Ajoute l'utilisateur "prod"
+  ansible.builtin.user:
+    name: prod
+    group: users
+    home: /srv/backups
+  become: True
+- name: Donne les droits à la home de l'utilisateur "prod"
+  file:
+    path: /srv/backups
+    owner: prod
+  become: True
+- name: Autorize la prod à se connecter à cet utilisateur
+  ansible.posix.authorized_key:
+    user: prod
+    state: present
+    key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDD7mv4+VawmpFwFvwzyp4Iqt7xK+mO5WdgXBpaPbzBKL6kfv8nO5q2wf595T9mtmOX4RX2SFWozk0rL977sVPRONM5AVL0dqykp7PEdKQ9eaK9ZwK7e9vPqpJqwwCOJr40rX8Ztki6G75b3F7IZPEtf6keQQv6QGsTb2+Hn4Jr1rWBSOptcVxeyABXcV/UkaB+4PQ5aIP/ANGtskwtas/IrYi51VRxh8F/we8NeWdIuiJFheLQTXETrOMKzR9mnR1HA7TDD2IDEvEP2pZpFXvyRoVSyPQU3Mqosdb6TeVEtky92yOi0mH5I+ANe0fKirAZ3ntN1tWpXR7UBL7Kcz7T git@camino-prod
+  become: True

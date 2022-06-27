@@ -1,0 +1,73 @@
+ENV={{ env }}
+
+# node
+NODE_ENV=production
+API_PORT=4000
+UI_PORT=8080
+DOC_PORT=80
+STORYBOOK_PORT=80
+
+# url du serveur (docker-compose)
+API_HOST=api.{{ base_host }}
+API_URL=https://api.{{ base_host }}
+
+UI_HOST={{ base_host }}
+UI_URL=https://{{ base_host }}
+
+DOC_HOST=docs.{{ base_host }}
+DOC_URL=https://docs.{{ base_host }}
+
+API_OPENFISCA_URL="http://openfisca:8000"
+
+STORYBOOK_HOST=storybook.{{ base_host }}
+
+# certificat ssh (docker-compose)
+LETSENCRYPT_EMAIL=camino@beta.gouv.fr
+
+# postgres
+PGHOST=localhost
+PGPORT=5432
+PGDATABASE=camino
+PGUSER={{ pg_user }}
+PGPASSWORD={{ pg_password }}
+
+# tokens jwt
+JWT_SECRET={{ jwt_secret }}
+JWT_SECRET_REFRESH={{ jwt_secret_refresh }}
+
+# admin
+ADMIN_EMAIL=camino@beta.gouv.fr
+
+
+# API Mailjet
+API_MAILJET_EMAIL=camino@beta.gouv.fr
+API_MAILJET_KEY={{ mailjet_key }}
+API_MAILJET_SECRET={{ mailjet_secret }}
+API_MAILJET_SERVER=in-v3.mailjet.com
+API_MAILJET_CONTACTS_LIST_ID={{ mailjet_contact_list_id }}
+
+# UI Sentry
+SENTRY_DSN={{ ui_sentry_dns }}
+
+
+# API Géo
+API_GEO_URL={{ api_geo_url }}
+
+# API Administration
+API_ADMINISTRATION_URL="https://etablissements-publics.api.gouv.fr"
+
+# API Insee
+API_INSEE_KEY={{ api_insee_key }}
+API_INSEE_SECRET={{ api_insee_secret }}
+API_INSEE_URL="https://api.insee.fr"
+
+# API Cerbère
+API_CERBERE="https://authentification.din.developpement-durable.gouv.fr/cas/public/login"
+
+# API Matomo
+API_MATOMO_URL={{ matomo_url }}
+API_MATOMO_ID={{ matomo_id }}
+API_MATOMO_TOKEN={{ matomo_token }}
+API_MATOMO_MONTHS=24
+
+API_SENTRY_URL={{ api_sentry_url }}

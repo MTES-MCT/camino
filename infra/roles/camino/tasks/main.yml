@@ -1,0 +1,24 @@
+---
+- name: Met en place le docker-compose
+  ansible.builtin.copy:
+    src: ../../../../docker-compose.yml
+    dest: /srv/www/camino/docker-compose.yml
+    owner: git
+    group: users
+    mode: u=rw,g=r,o=r
+  become: True
+- name: Ajoute les variables liées au bon environnement
+  ansible.builtin.include_vars:
+    file: "{{ env }}.yml"
+- name: Ajoute les variables chiffrées liées au bon environnement
+  ansible.builtin.include_vars:
+    file: "{{ env }}_crypt.yml"
+- name: Installe le fichier d'environnement
+  ansible.builtin.template:
+    src: env
+    dest: /srv/www/camino/.env
+    mode: u=rw,g=r,o=r
+    owner: git
+    group: users
+    backup: True
+  become: True

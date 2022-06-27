@@ -1,0 +1,31 @@
+---
+- name: Met en place le docker-compose
+  ansible.builtin.copy:
+    src: docker-compose.yml
+    dest: /srv/www/nginx-proxy/docker-compose.yml
+    owner: git
+    group: users
+    mode: u=rw,g=r,o=r
+  become: True
+- name: Ajoute le fichier de template nginx
+  ansible.builtin.copy:
+    src: nginx.tmpl
+    dest: /srv/www/nginx-proxy/nginx.tmpl
+    owner: git
+    group: users
+    mode: u=rw,g=r,o=r
+  become: True
+
+- name: Install python-pip
+  ansible.builtin.apt:
+    name: python3-pip
+    state: present
+  become: True
+- name: Install docker support for python
+  ansible.builtin.pip:
+    name:
+      - docker
+      - docker-compose
+- name: Create and start services
+  community.docker.docker_compose:
+    project_src: /srv/www/nginx-proxy

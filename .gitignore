@@ -4,3 +4,4 @@ node_modules
 .env
 /.cache
 packages/ui/storybook-static/
+.vault

@@ -1,0 +1,21 @@
+---
+- hosts: servers
+  tasks:
+    - name: Install rsync
+      ansible.builtin.apt:
+        name: rsync
+        state: present
+      become: True
+    - file:
+        path: /srv/www/camino/files
+        group: users
+        mode: u=rwx,g=rwx,o=r
+      become: True
+  roles:
+    - role: nginx
+    - role: camino
+    - role: devAndPreprod
+      when: env != 'prod'
+    - role: prod
+      when: env == 'prod'
+

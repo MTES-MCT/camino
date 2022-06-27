@@ -1,0 +1,4 @@
+---
+base_host: dev.camino.beta.gouv.fr
+mailjet_contact_list_id: 19822
+matomo_url: https://stats.preprod.camino.beta.gouv.fr
