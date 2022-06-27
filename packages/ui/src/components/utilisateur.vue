@@ -36,7 +36,7 @@
           title="changer de mot de passe"
           @click="passwordPopupOpen"
         >
-          <i class="icon-24 icon-key" />
+          <Icon size="M" name="key" />
         </button>
 
         <button

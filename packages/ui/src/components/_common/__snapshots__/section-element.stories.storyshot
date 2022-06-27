@@ -172,6 +172,17 @@ exports[`Automated Storybook Snapshots Components/common/SectionElement Aucun Fi
               />
             </symbol>
             <symbol
+              id="icon-key"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                key
+              </title>
+              <path
+                d="M10.758 11.828l7.849-7.849 1.414 1.414-1.414 1.415 2.474 2.474-1.414 1.415-2.475-2.475-1.414 1.414 2.121 2.121-1.414 1.415-2.121-2.122-2.192 2.192a5.002 5.002 0 0 1-7.708 6.294 5 5 0 0 1 6.294-7.708zm-.637 6.293A3 3 0 1 0 5.88 13.88a3 3 0 0 0 4.242 4.242z"
+              />
+            </symbol>
+            <symbol
               id="icon-link"
               viewBox="0 0 24 24"
             >
@@ -495,6 +506,17 @@ exports[`Automated Storybook Snapshots Components/common/SectionElement Un Fichi
               />
             </symbol>
             <symbol
+              id="icon-key"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                key
+              </title>
+              <path
+                d="M10.758 11.828l7.849-7.849 1.414 1.414-1.414 1.415 2.474 2.474-1.414 1.415-2.475-2.475-1.414 1.414 2.121 2.121-1.414 1.415-2.121-2.122-2.192 2.192a5.002 5.002 0 0 1-7.708 6.294 5 5 0 0 1 6.294-7.708zm-.637 6.293A3 3 0 1 0 5.88 13.88a3 3 0 0 0 4.242 4.242z"
+              />
+            </symbol>
+            <symbol
               id="icon-link"
               viewBox="0 0 24 24"
             >
@@ -751,6 +773,17 @@ exports[`Automated Storybook Snapshots Components/common/SectionElement Un Fichi
               </title>
               <path
                 d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
+              />
+            </symbol>
+            <symbol
+              id="icon-key"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                key
+              </title>
+              <path
+                d="M10.758 11.828l7.849-7.849 1.414 1.414-1.414 1.415 2.474 2.474-1.414 1.415-2.475-2.475-1.414 1.414 2.121 2.121-1.414 1.415-2.121-2.122-2.192 2.192a5.002 5.002 0 0 1-7.708 6.294 5 5 0 0 1 6.294-7.708zm-.637 6.293A3 3 0 1 0 5.88 13.88a3 3 0 0 0 4.242 4.242z"
               />
             </symbol>
             <symbol
