@@ -17,6 +17,7 @@ export const icons = [
   'minus',
   'move-down',
   'move-up',
+  'pencil',
   'plus',
   'refresh',
   'x'

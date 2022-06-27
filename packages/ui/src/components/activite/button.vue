@@ -7,7 +7,7 @@
     <div v-if="buttonText" class="my-xxs">
       {{ buttonText }}
     </div>
-    <i v-else class="icon-24 icon-pencil" />
+    <Icon v-else size="M" name="pencil" />
   </button>
   <button
     v-if="activite.statut.id === 'enc'"
@@ -22,8 +22,10 @@
 
 <script>
 import DeposePopup from './depose-popup.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
+  components: { Icon },
   props: {
     activite: { type: Object, default: () => ({}) },
     route: { type: Object, required: true }

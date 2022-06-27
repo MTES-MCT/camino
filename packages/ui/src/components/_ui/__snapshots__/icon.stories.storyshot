@@ -213,6 +213,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               />
             </symbol>
             <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
+              />
+            </symbol>
+            <symbol
               id="icon-plus"
               viewBox="0 0 24 24"
             >
@@ -449,6 +460,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               </title>
               <path
                 d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"
+              />
+            </symbol>
+            <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
               />
             </symbol>
             <symbol
@@ -691,6 +713,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               />
             </symbol>
             <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
+              />
+            </symbol>
+            <symbol
               id="icon-plus"
               viewBox="0 0 24 24"
             >
@@ -927,6 +960,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               </title>
               <path
                 d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"
+              />
+            </symbol>
+            <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
               />
             </symbol>
             <symbol
@@ -1169,6 +1213,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               />
             </symbol>
             <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
+              />
+            </symbol>
+            <symbol
               id="icon-plus"
               viewBox="0 0 24 24"
             >
@@ -1405,6 +1460,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               </title>
               <path
                 d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"
+              />
+            </symbol>
+            <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
               />
             </symbol>
             <symbol
@@ -1647,6 +1713,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               />
             </symbol>
             <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
+              />
+            </symbol>
+            <symbol
               id="icon-plus"
               viewBox="0 0 24 24"
             >
@@ -1883,6 +1960,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               </title>
               <path
                 d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"
+              />
+            </symbol>
+            <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
               />
             </symbol>
             <symbol
@@ -2125,6 +2213,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               />
             </symbol>
             <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
+              />
+            </symbol>
+            <symbol
               id="icon-plus"
               viewBox="0 0 24 24"
             >
@@ -2361,6 +2460,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               </title>
               <path
                 d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"
+              />
+            </symbol>
+            <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
               />
             </symbol>
             <symbol
@@ -2603,6 +2713,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               />
             </symbol>
             <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
+              />
+            </symbol>
+            <symbol
               id="icon-plus"
               viewBox="0 0 24 24"
             >
@@ -2839,6 +2960,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               </title>
               <path
                 d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"
+              />
+            </symbol>
+            <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
               />
             </symbol>
             <symbol
@@ -3081,6 +3213,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               />
             </symbol>
             <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
+              />
+            </symbol>
+            <symbol
               id="icon-plus"
               viewBox="0 0 24 24"
             >
@@ -3317,6 +3460,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               </title>
               <path
                 d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"
+              />
+            </symbol>
+            <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
               />
             </symbol>
             <symbol
@@ -3559,6 +3713,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               />
             </symbol>
             <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
+              />
+            </symbol>
+            <symbol
               id="icon-plus"
               viewBox="0 0 24 24"
             >
@@ -3798,6 +3963,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               />
             </symbol>
             <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
+              />
+            </symbol>
+            <symbol
               id="icon-plus"
               viewBox="0 0 24 24"
             >
@@ -3833,6 +4009,256 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
           </svg>
           <use
             href="#icon-move-up"
+          />
+        </svg>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        pencil
+      </td>
+      <td>
+        <svg
+          aria-labelledby="pencil"
+          fill="#666"
+          height="24px"
+          role="application"
+          style="display: block;"
+          tabindex="-1"
+          viewBox="0 0 24 24"
+          width="24px"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <svg
+            aria-hidden="true"
+            style="position: absolute; width: 0px; height: 0px; overflow: hidden;"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+          >
+            <symbol
+              id="icon-checkbox-blank"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                checkbox-blank
+              </title>
+              <path
+                d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5z"
+              />
+            </symbol>
+            <symbol
+              id="icon-checkbox"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                checkbox
+              </title>
+              <path
+                d="M4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zm1 2v14h14V5H5zm6.003 11L6.76 11.757l1.414-1.414 2.829 2.829 5.656-5.657 1.415 1.414L11.003 16z"
+              />
+            </symbol>
+            <symbol
+              id="icon-chevron-bas"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                chevron-bas
+              </title>
+              <path
+                d="M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z"
+              />
+            </symbol>
+            <symbol
+              id="icon-chevron-haut"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                chevron-haut
+              </title>
+              <path
+                d="M12 10.828l-4.95 4.95-1.414-1.414L12 8l6.364 6.364-1.414 1.414z"
+              />
+            </symbol>
+            <symbol
+              id="icon-close"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                close
+              </title>
+              <path
+                d="M12 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95L7.05 5.636z"
+              />
+            </symbol>
+            <symbol
+              id="icon-download"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                download
+              </title>
+              <path
+                d="M3 19h18v2H3v-2zm10-5.828L19.071 7.1l1.414 1.414L12 17 3.515 8.515 4.929 7.1 11 13.17V2h2v11.172z"
+              />
+            </symbol>
+            <symbol
+              id="icon-error-warning"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                error-warning
+              </title>
+              <path
+                d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-7v2h2v-2h-2zm0-8v6h2V7h-2z"
+                fill="rgba(231,76,60,1)"
+              />
+            </symbol>
+            <symbol
+              id="icon-external-link"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                external-link
+              </title>
+              <path
+                d="M10 6v2H5v11h11v-5h2v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h6zm11-3v8h-2V6.413l-7.793 7.794-1.414-1.414L17.585 5H13V3h8z"
+              />
+            </symbol>
+            <symbol
+              id="icon-file"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                file
+              </title>
+              <path
+                d="M9 2.003V2h10.998C20.55 2 21 2.455 21 2.992v18.016a.993.993 0 0 1-.993.992H3.993A1 1 0 0 1 3 20.993V8l6-5.997zM5.83 8H9V4.83L5.83 8zM11 4v5a1 1 0 0 1-1 1H5v10h14V4h-8z"
+              />
+            </symbol>
+            <symbol
+              id="icon-file-add"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                file-add
+              </title>
+              <path
+                d="M15 4H5v16h14V8h-4V4zM3 2.992C3 2.444 3.447 2 3.999 2H16l5 5v13.993A1 1 0 0 1 20.007 22H3.993A1 1 0 0 1 3 21.008V2.992zM11 11V8h2v3h3v2h-3v3h-2v-3H8v-2h3z"
+              />
+            </symbol>
+            <symbol
+              id="icon-help"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                help
+              </title>
+              <path
+                d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2a8 8 0 1 0 0-16 8 8 0 0 0 0 16zM11 7h2v2h-2V7zm0 4h2v6h-2v-6z"
+              />
+            </symbol>
+            <symbol
+              id="icon-link"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                link
+              </title>
+              <path
+                d="M18.364 15.536L16.95 14.12l1.414-1.414a5 5 0 1 0-7.071-7.071L9.879 7.05 8.464 5.636 9.88 4.222a7 7 0 0 1 9.9 9.9l-1.415 1.414zm-2.828 2.828l-1.415 1.414a7 7 0 0 1-9.9-9.9l1.415-1.414L7.05 9.88l-1.414 1.414a5 5 0 1 0 7.071 7.071l1.414-1.414 1.415 1.414zm-.708-10.607l1.415 1.415-7.071 7.07-1.415-1.414 7.071-7.07z"
+              />
+            </symbol>
+            <symbol
+              id="icon-menu"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                menu
+              </title>
+              <path
+                d="M3 4h18v2H3V4zm0 7h18v2H3v-2zm0 7h18v2H3v-2z"
+              />
+            </symbol>
+            <symbol
+              id="icon-minus"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                minus
+              </title>
+              <path
+                d="M5 11h14v2H5z"
+              />
+            </symbol>
+            <symbol
+              id="icon-move-down"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                move-down
+              </title>
+              <path
+                d="M13 16.172l5.364-5.364 1.414 1.414L12 20l-7.778-7.778 1.414-1.414L11 16.172V4h2v12.172z"
+              />
+            </symbol>
+            <symbol
+              id="icon-move-up"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                move-up
+              </title>
+              <path
+                d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"
+              />
+            </symbol>
+            <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
+              />
+            </symbol>
+            <symbol
+              id="icon-plus"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                plus
+              </title>
+              <path
+                d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"
+              />
+            </symbol>
+            <symbol
+              id="icon-refresh"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                refresh
+              </title>
+              <path
+                d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+              />
+            </symbol>
+            <symbol
+              id="icon-x"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                x
+              </title>
+              <path
+                d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-11.414L9.172 7.757 7.757 9.172 10.586 12l-2.829 2.828 1.415 1.415L12 13.414l2.828 2.829 1.415-1.415L13.414 12l2.829-2.828-1.415-1.415L12 10.586z"
+              />
+            </symbol>
+          </svg>
+          <use
+            href="#icon-pencil"
           />
         </svg>
       </td>
@@ -4034,6 +4460,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               </title>
               <path
                 d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"
+              />
+            </symbol>
+            <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
               />
             </symbol>
             <symbol
@@ -4276,6 +4713,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               />
             </symbol>
             <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
+              />
+            </symbol>
+            <symbol
               id="icon-plus"
               viewBox="0 0 24 24"
             >
@@ -4512,6 +4960,17 @@ exports[`Automated Storybook Snapshots Ui/Icons All Icons 1`] = `
               </title>
               <path
                 d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"
+              />
+            </symbol>
+            <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
               />
             </symbol>
             <symbol
@@ -4771,6 +5230,17 @@ exports[`Automated Storybook Snapshots Ui/Icons Icon All Size 1`] = `
               />
             </symbol>
             <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
+              />
+            </symbol>
+            <symbol
               id="icon-plus"
               viewBox="0 0 24 24"
             >
@@ -5007,6 +5477,17 @@ exports[`Automated Storybook Snapshots Ui/Icons Icon All Size 1`] = `
               </title>
               <path
                 d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"
+              />
+            </symbol>
+            <symbol
+              id="icon-pencil"
+              viewBox="0 0 24 24"
+            >
+              <title>
+                pencil
+              </title>
+              <path
+                d="M15.728 9.686l-1.414-1.414L5 17.586V19h1.414l9.314-9.314zm1.414-1.414l1.414-1.414-1.414-1.414-1.414 1.414 1.414 1.414zM7.242 21H3v-4.243L16.435 3.322a1 1 0 0 1 1.414 0l2.829 2.829a1 1 0 0 1 0 1.414L7.243 21z"
               />
             </symbol>
             <symbol

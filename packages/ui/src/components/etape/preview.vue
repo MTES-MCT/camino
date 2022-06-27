@@ -44,7 +44,7 @@
       </button>
 
       <button class="btn py-s px-m mr-px" @click="etapeEdit">
-        <i class="icon-24 icon-pencil" />
+        <Icon size="M" name="pencil" />
       </button>
 
       <button class="btn py-s px-m mr-px" @click="removePopupOpen">

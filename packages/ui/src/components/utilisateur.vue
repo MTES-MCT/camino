@@ -55,7 +55,7 @@
           title="modifier le compte utilisateur"
           @click="editPopupOpen"
         >
-          <i class="icon-24 icon-pencil" />
+          <Icon size="M" name="pencil" />
         </button>
 
         <button
@@ -192,9 +192,11 @@ import UtilisateurPasswordPopup from './utilisateur/password-popup.vue'
 import UtilisateurEmailPopup from './utilisateur/email-popup.vue'
 import { isAdministration, isSuper } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/administrations'
+import Icon from './_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     Accordion,
     Pill,
     Loader

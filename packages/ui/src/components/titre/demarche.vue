@@ -39,7 +39,7 @@
             :class="{ 'rnd-l-xs': !demarche.etapesCreation }"
             @click="editPopupOpen"
           >
-            <i class="icon-24 icon-pencil" />
+            <Icon size="M" name="pencil" />
           </button>
           <button
             v-if="demarche.suppression"
@@ -79,9 +79,11 @@ import Statut from '../_common/statut.vue'
 import TitreEtape from '../etape/preview.vue'
 import EditPopup from './demarche-edit-popup.vue'
 import RemovePopup from './demarche-remove-popup.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     Statut,
     TitreEtape
   },

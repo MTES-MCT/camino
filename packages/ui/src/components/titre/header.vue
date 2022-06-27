@@ -40,7 +40,7 @@
               :class="{ 'rnd-r-xs': !titre.suppression }"
               @click="editPopupOpen"
             >
-              <i class="icon-24 icon-pencil" />
+              <Icon size="M" name="pencil" />
             </button>
             <button
               v-if="titre.suppression"
@@ -61,8 +61,10 @@
 <script>
 import EditPopup from './edit-popup.vue'
 import RemovePopup from './remove-popup.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
+  components: { Icon },
   props: {
     titre: {
       type: Object,
