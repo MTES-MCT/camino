@@ -41,10 +41,10 @@
             class="p-m btn-tab rnd-t-s"
             @click="vueClick(v.id)"
           >
-            <i :class="`icon-${v.icon}`" class="icon-24" />
+            <Icon :name="v.icon" size="M" />
           </button>
           <div v-else class="p-m span-tab rnd-t-s">
-            <i :class="`icon-${v.icon}`" class="icon-24" />
+            <Icon :name="v.icon" size="M" />
           </div>
         </div>
         <div class="pl-m pt-m h5 bold">

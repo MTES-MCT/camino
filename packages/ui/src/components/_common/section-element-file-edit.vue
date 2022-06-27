@@ -12,7 +12,7 @@
         class="btn-border py-s px-m my--xs rnd-xs flex-right"
         @click="fileRemove"
       >
-        <i class="icon-24 icon-trash" />
+        <Icon size="M" name="delete" />
       </button>
     </div>
   </div>
@@ -28,9 +28,10 @@
 
 <script>
 import InputFile from '../_ui/input-file.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
-  components: { InputFile },
+  components: { Icon, InputFile },
 
   props: {
     contenu: { type: [Object], required: true },

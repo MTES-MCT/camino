@@ -53,7 +53,7 @@
         }"
         @click="removePopupOpen"
       >
-        <i class="icon-24 icon-trash" />
+        <Icon size="M" name="delete" />
       </button>
       <a
         v-if="document.fichier || document.fichierNouveau"

@@ -72,7 +72,7 @@
                 class="btn-border py-s px-m my--xs rnd-xs flex-right"
                 @click="activiteTypeEmailDelete(activiteType)"
               >
-                <i class="icon-24 icon-trash" />
+                <Icon name="delete" size="M" />
               </button>
             </td>
           </tr>
@@ -86,9 +86,11 @@
 import ButtonPlus from '../_ui/button-plus.vue'
 import emailValidator from 'email-validator'
 import { defineComponent } from 'vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default defineComponent({
   components: {
+    Icon,
     ButtonPlus
   },
 

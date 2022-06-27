@@ -63,7 +63,7 @@
               title="supprimer"
               @click="elementDelete(elementToEdit)"
             >
-              <i class="icon-24 icon-trash" />
+              <Icon size="M" name="delete" />
             </button>
           </div>
         </div>
@@ -91,10 +91,12 @@ import MetaCreatePopup from './meta-create-popup.vue'
 import MetaLabelOrInput from '@/components/metas/meta-label-or-input.vue'
 import ButtonPlus from '@/components/_ui/button-plus.vue'
 import Loader from '@/components/_ui/loader.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default defineComponent({
   name: 'DefinitionEdit',
   components: {
+    Icon,
     MetaLabelOrInput,
     ButtonPlus,
     Loader

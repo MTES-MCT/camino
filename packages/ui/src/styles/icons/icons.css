@@ -19,42 +19,6 @@
   background-position: top center;
 }
 
-.icon-24-dot.blink {
-  animation: blinker 0.2s ease infinite;
-}
-
-@keyframes blinker {
-  50% {
-    background-image: svg-load('./svgs/24-dot.svg', fill= 'white');
-  }
-}
-
-.icon-globe {
-  background-image: svg-load('./svgs/globe-3.svg',
-  fill='#666'
-  );
-}
-
-.span-tab .icon-globe,
-.btn-tab:hover .icon-globe {
-  background-image: svg-load('./svgs/globe-3.svg',
-  fill='white'
-  );
-}
-
-.icon-list {
-  background-image: svg-load('./svgs/list-bullets.svg',
-  fill='#666'
-  );
-}
-
-.span-tab .icon-list,
-.btn-tab:hover .icon-list {
-  background-image: svg-load('./svgs/list-bullets.svg',
-  fill='white'
-  );
-}
-
 .icon-markers-clusters {
   background-image: svg-load('./svgs/24-markers-grouped.svg',
   fill='#666'

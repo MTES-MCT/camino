@@ -47,7 +47,7 @@
               class="btn rnd-r-xs py-s px-m"
               @click="removePopupOpen"
             >
-              <i class="icon-24 icon-trash" />
+              <Icon size="M" name="delete" />
             </button>
           </div>
         </div>
