@@ -384,6 +384,17 @@ exports[`Automated Storybook Snapshots Components/PurePTMGDashboard Ok 1`] = `
                         />
                       </symbol>
                       <symbol
+                        id="icon-pattern"
+                        viewBox="0 0 24 24"
+                      >
+                        <title>
+                          pattern
+                        </title>
+                        <path
+                          d="M14.567 21h-4.242L3 13.675V9.433L14.567 21zM21 10.393v4.243L9.364 3h4.243L21 10.393zM3 17.849L6.151 21H3v-3.151zM5.053 3L21 18.947V21h-2.19L3 5.19V3h2.053zM21 6.151L17.849 3H21v3.151z"
+                        />
+                      </symbol>
+                      <symbol
                         id="icon-pencil"
                         viewBox="0 0 24 24"
                       >
@@ -979,6 +990,17 @@ exports[`Automated Storybook Snapshots Components/PurePTMGDashboard Ok 1`] = `
                         </title>
                         <path
                           d="M13 7.828V20h-2V7.828l-5.364 5.364-1.414-1.414L12 4l7.778 7.778-1.414 1.414L13 7.828z"
+                        />
+                      </symbol>
+                      <symbol
+                        id="icon-pattern"
+                        viewBox="0 0 24 24"
+                      >
+                        <title>
+                          pattern
+                        </title>
+                        <path
+                          d="M14.567 21h-4.242L3 13.675V9.433L14.567 21zM21 10.393v4.243L9.364 3h4.243L21 10.393zM3 17.849L6.151 21H3v-3.151zM5.053 3L21 18.947V21h-2.19L3 5.19V3h2.053zM21 6.151L17.849 3H21v3.151z"
                         />
                       </symbol>
                       <symbol

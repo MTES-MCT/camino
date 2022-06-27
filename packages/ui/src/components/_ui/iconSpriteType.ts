@@ -25,6 +25,7 @@ export const icons = [
   'minus',
   'move-down',
   'move-up',
+  'pattern',
   'pencil',
   'plus',
   'refresh',

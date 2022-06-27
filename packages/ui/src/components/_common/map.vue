@@ -40,7 +40,7 @@
               title="affiche / masque la trame"
               @click="patternVisible = !patternVisible"
             >
-              <i class="icon-24 icon-pattern" />
+              <Icon size="M" name="pattern" />
             </button>
           </div>
 
