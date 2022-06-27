@@ -19,45 +19,6 @@
   background-position: top center;
 }
 
-.icon-markers-clusters {
-  background-image: svg-load('./svgs/24-markers-grouped.svg',
-  fill='#666'
-  );
-}
-
-.icon-markers-markers {
-  background-image: svg-load('./svgs/24-markers-ungrouped.svg',
-  fill='#666'
-  );
-}
-
-.icon-markers-none {
-  background-image: svg-load('./svgs/24-markers-none.svg',
-  fill='#666'
-  );
-}
-
-.active .icon-markers-clusters,
-.btn-border:hover .icon-markers-clusters{
-  background-image: svg-load('./svgs/24-markers-grouped.svg',
-  fill='white'
-  );
-}
-
-.active .icon-markers-markers,
-.btn-border:hover .icon-markers-markers{
-  background-image: svg-load('./svgs/24-markers-ungrouped.svg',
-  fill='white'
-  );
-}
-
-.active .icon-markers-none,
-.btn-border:hover .icon-markers-none{
-  background-image: svg-load('./svgs/24-markers-none.svg',
-  fill='white'
-  );
-}
-
 .icon-pattern {
   background-image: svg-load('./svgs/24-pattern.svg',
   fill= '#666',

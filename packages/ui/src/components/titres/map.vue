@@ -48,7 +48,7 @@
                 title="regroupe les marqueurs"
                 @click="markerLayersIdSet('clusters')"
               >
-                <i class="icon-24 icon-markers-clusters" />
+                <Icon size="M" name="marker-cluster" />
               </button>
             </div>
             <div :class="{ active: markerLayersId === 'markers' }">
@@ -57,7 +57,7 @@
                 title="affiche les marqueurs"
                 @click="markerLayersIdSet('markers')"
               >
-                <i class="icon-24 icon-markers-markers" />
+                <Icon size="M" name="marker-ungrouped" />
               </button>
             </div>
             <div :class="{ active: markerLayersId === 'none' }" class="mr-s">
@@ -66,7 +66,7 @@
                 title="affiche les contours uniquement"
                 @click="markerLayersIdSet('none')"
               >
-                <i class="icon-24 icon-markers-none" />
+                <Icon size="M" name="marker-none" />
               </button>
             </div>
           </div>
@@ -95,9 +95,11 @@ import {
   leafletTilesLegendGet
 } from '../_map/leaflet.js'
 import { clustersBuild, layersBuild, zones } from './map.js'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     MapWarningBrgm,
     Mapo,
     MapTilesSelector,
