@@ -46,7 +46,7 @@
           title="changer d'email"
           @click="emailPopupOpen"
         >
-          <i class="icon-24 icon-at" />
+          <Icon size="M" name="at" />
         </button>
 
         <button
