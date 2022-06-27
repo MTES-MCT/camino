@@ -7,6 +7,7 @@ export const icons = [
   'chevron-bas',
   'chevron-haut',
   'close',
+  'delete',
   'download',
   'error-warning',
   'external-link',
