@@ -1,5 +1,5 @@
 <template>
-  <div v-if="coordonnees" class="p-xs"><Icon size="M" name="globe" /></div>
+  <div v-if="coordonnees" class="p-xs"><Icon size="S" name="globe" /></div>
 </template>
 
 <script>
