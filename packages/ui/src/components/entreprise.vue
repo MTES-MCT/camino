@@ -19,7 +19,7 @@
           class="btn py-s px-m mr-px"
         />
         <button class="btn py-s px-m" @click="editPopupOpen">
-          <i class="icon-24 icon-pencil" />
+          <Icon size="M" name="pencil" />
         </button>
       </template>
 
@@ -215,9 +215,11 @@ import {
   isAdministrationEditeur,
   isSuper
 } from 'camino-common/src/roles'
+import Icon from './_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     Accordion,
     Loader,
     Table,

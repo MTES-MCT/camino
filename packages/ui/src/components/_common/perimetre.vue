@@ -24,10 +24,10 @@
             class="p-m btn-tab rnd-t-s"
             @click="tabUpdate(tab.id)"
           >
-            <i :class="`icon-${tab.icon}`" class="icon-24" />
+            <Icon :name="tab.icon" size="M" />
           </button>
           <div v-else class="p-m span-tab rnd-t-s">
-            <i :class="`icon-${tab.icon}`" class="icon-24" />
+            <Icon :name="tab.icon" size="M" />
           </div>
         </div>
       </div>
@@ -63,9 +63,11 @@
 import Map from './map.vue'
 import Points from './points.vue'
 import Download from './download.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     Map,
     Points,
     Download

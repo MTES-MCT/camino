@@ -36,7 +36,7 @@
           title="changer de mot de passe"
           @click="passwordPopupOpen"
         >
-          <i class="icon-24 icon-key" />
+          <Icon size="M" name="key" />
         </button>
 
         <button
@@ -46,7 +46,7 @@
           title="changer d'email"
           @click="emailPopupOpen"
         >
-          <i class="icon-24 icon-at" />
+          <Icon size="M" name="at" />
         </button>
 
         <button
@@ -55,7 +55,7 @@
           title="modifier le compte utilisateur"
           @click="editPopupOpen"
         >
-          <i class="icon-24 icon-pencil" />
+          <Icon size="M" name="pencil" />
         </button>
 
         <button
@@ -64,7 +64,7 @@
           title="supprimer le compte utilisateur"
           @click="removePopupOpen"
         >
-          <i class="icon-24 icon-trash" />
+          <Icon size="M" name="delete" />
         </button>
       </template>
 
@@ -192,9 +192,11 @@ import UtilisateurPasswordPopup from './utilisateur/password-popup.vue'
 import UtilisateurEmailPopup from './utilisateur/email-popup.vue'
 import { isAdministration, isSuper } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/administrations'
+import Icon from './_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     Accordion,
     Pill,
     Loader

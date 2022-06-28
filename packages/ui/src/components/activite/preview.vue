@@ -34,7 +34,7 @@
         title="supprimer l'activité'"
         @click="activiteRemovePopupOpen"
       >
-        <i class="icon-24 icon-trash" />
+        <Icon size="M" name="delete" />
       </button>
       <ActiviteButton
         v-if="activite.modification"
@@ -91,9 +91,11 @@ import Statut from '../_common/statut.vue'
 import Documents from '../documents/list.vue'
 import { dateFormat } from '@/utils'
 import RemovePopup from './remove-popup.vue'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
   components: {
+    Icon,
     ActiviteButton,
     Accordion,
     Section,

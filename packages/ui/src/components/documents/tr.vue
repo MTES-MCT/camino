@@ -43,7 +43,7 @@
         class="btn rnd-l-xs py-s px-m my--xs mr-px"
         @click="editPopupOpen"
       >
-        <i class="icon-24 icon-pencil" />
+        <Icon size="M" name="pencil" />
       </button>
       <button
         v-if="boutonSuppression"
@@ -53,7 +53,7 @@
         }"
         @click="removePopupOpen"
       >
-        <i class="icon-24 icon-trash" />
+        <Icon size="M" name="delete" />
       </button>
       <a
         v-if="document.fichier || document.fichierNouveau"

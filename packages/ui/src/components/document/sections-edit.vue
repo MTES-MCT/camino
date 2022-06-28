@@ -58,7 +58,7 @@
               class="btn-border py-s px-m my--xs rnd-l-xs"
               @click="fileRemove"
             >
-              <i class="icon-24 icon-trash" />
+              <Icon size="M" name="delete" />
             </button>
             <button
               class="btn-border py-s px-m my--xs rnd-r-xs"

@@ -82,7 +82,7 @@
                   class="btn-border py-s px-m rnd-l-xs"
                   @click="justificatifRemove(eId, index)"
                 >
-                  <i class="icon-24 icon-trash" />
+                  <Icon size="M" name="delete" />
                 </button>
                 <button
                   class="btn-border py-s px-m rnd-r-xs"

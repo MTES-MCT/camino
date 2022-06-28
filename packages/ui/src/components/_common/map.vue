@@ -30,7 +30,7 @@
               title="affiche / masque les marqueurs"
               @click="markersVisible = !markersVisible"
             >
-              <i class="icon-24 icon-markers-markers" />
+              <Icon size="M" name="marker-ungrouped" />
             </button>
           </div>
 
@@ -40,7 +40,7 @@
               title="affiche / masque la trame"
               @click="patternVisible = !patternVisible"
             >
-              <i class="icon-24 icon-pattern" />
+              <Icon size="M" name="pattern" />
             </button>
           </div>
 
@@ -70,9 +70,10 @@ import {
   leafletDivIconBuild,
   leafletTilesLegendGet
 } from '../_map/leaflet.js'
+import Icon from '@/components/_ui/icon.vue'
 
 export default {
-  components: { MapPattern, MapWarningBrgm, Mapo, MapTilesSelector },
+  components: { Icon, MapPattern, MapWarningBrgm, Mapo, MapTilesSelector },
 
   props: {
     geojson: { type: Object, required: true },
