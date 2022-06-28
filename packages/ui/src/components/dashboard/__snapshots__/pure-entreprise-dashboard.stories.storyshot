@@ -1516,12 +1516,12 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok 1`]
               <svg
                 aria-labelledby="globe"
                 fill="#666"
-                height="24px"
+                height="16px"
                 role="application"
                 style="display: block;"
                 tabindex="-1"
                 viewBox="0 0 24 24"
-                width="24px"
+                width="16px"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <svg
@@ -3030,12 +3030,12 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok Wit
               <svg
                 aria-labelledby="globe"
                 fill="#666"
-                height="24px"
+                height="16px"
                 role="application"
                 style="display: block;"
                 tabindex="-1"
                 viewBox="0 0 24 24"
-                width="24px"
+                width="16px"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <svg

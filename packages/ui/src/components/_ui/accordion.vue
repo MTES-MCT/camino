@@ -23,7 +23,7 @@
         >
           <Icon size="M" :name="opened ? 'chevron-haut' : 'chevron-bas'" />
         </button>
-        <div v-else class="py-s px-m" />
+        <div v-else class="py-s" style="width: calc(2.5 * var(--unit))" />
       </div>
     </div>
 
