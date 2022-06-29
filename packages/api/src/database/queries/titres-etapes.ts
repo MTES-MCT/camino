@@ -8,6 +8,7 @@ import {
   ITitreForet,
   ITitreSDOMZone
 } from '../../types'
+import { knex } from '../../knex'
 
 import options from './_options'
 import graphBuild from './graph/build'
@@ -147,6 +148,14 @@ const titresEtapesCommunesUpdate = async (
     insertMissing: true
   })
 
+export const titreEtapeMaxSubstanceOrdre = async (titreEtapeId: string) => {
+  const result = await knex('titresSubstances')
+    .max('ordre as maxId')
+    .where({ titreEtapeId })
+    .first()
+
+  return typeof result?.maxId === 'number' ? result.maxId : 0
+}
 const titreEtapeCommuneDelete = async (
   titreEtapeId: string,
   communeId: string

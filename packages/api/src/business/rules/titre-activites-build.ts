@@ -25,7 +25,9 @@ const onlyUnique = <T>(value: T, index: number, self: T[]): boolean => {
 
 const substancesFiscalesFind = (substances: ISubstance[]): SubstanceFiscale[] =>
   substances
-    .flatMap(s => s.legales.filter(legal => legal !== null).map(({ id }) => id))
+    .flatMap(
+      s => s?.legales?.filter(legal => legal !== null).map(({ id }) => id) ?? []
+    )
     .filter(onlyUnique)
     .flatMap(id =>
       Object.values(SubstancesFiscale).filter(
