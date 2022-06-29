@@ -137,7 +137,7 @@ const titreEtapeUtilisateursEmailsSend = async (
   const utilisateursEmails = [] as string[]
 
   const utilisateursTitres = await utilisateursTitresGet(titreId, {
-    fields: { utilisateur: { id: {} } }
+    fields: { utilisateur: { id: {}, entreprises: { id: {} } } }
   })
 
   const utilisateurs = utilisateursTitres
