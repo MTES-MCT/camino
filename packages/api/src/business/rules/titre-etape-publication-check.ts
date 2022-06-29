@@ -2,11 +2,12 @@ interface IDemarchePublicationIndex {
   [id: string]: string[]
 }
 
-const demarcheEtapesTypesPublication = {
+const demarcheEtapesTypesPublication: IDemarchePublicationIndex = {
   arm: ['def', 'sco', 'aco'],
   axm: ['dex', 'rpu'],
+  cxm: ['dex'],
   prm: ['rpu']
-} as IDemarchePublicationIndex
+}
 
 /**
  * Vérifie si l'étape est une étape de publication

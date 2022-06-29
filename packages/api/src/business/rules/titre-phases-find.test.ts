@@ -237,7 +237,7 @@ describe("phases d'une démarche", () => {
     const tested = titrePhasesFind(demarches, aujourdhui, titreTypeId)
     expect(tested).toStrictEqual([
       {
-        dateDebut: '1970-09-17',
+        dateDebut: '1970-09-09',
         dateFin: '2018-12-31',
         statutId: 'ech',
         titreDemarcheId: 'demarcheId1'
@@ -363,7 +363,7 @@ describe("phases d'une démarche", () => {
     const tested = titrePhasesFind(demarches, aujourdhui, titreTypeId)
     expect(tested).toStrictEqual([
       {
-        dateDebut: '1970-09-17',
+        dateDebut: '1970-09-09',
         dateFin: '2018-12-31',
         statutId: 'ech',
         titreDemarcheId: 'demarcheId1'
