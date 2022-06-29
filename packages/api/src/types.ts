@@ -635,7 +635,7 @@ interface ISubstance {
   symbole?: string | null
   gerep?: number | null
   description?: string | null
-  legales: ISubstanceLegale[]
+  legales?: ISubstanceLegale[]
 }
 
 interface ITitreSubstance extends ISubstance {
