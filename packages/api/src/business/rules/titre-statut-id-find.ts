@@ -1,6 +1,7 @@
 import { DemarchesStatutsTypesIds, ITitreDemarche } from '../../types'
 
 import { titreDateFinFind } from './titre-date-fin-find'
+import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc'
 
 const titreStatutIdFind = (
   aujourdhui: string,
@@ -39,6 +40,21 @@ const titreStatutIdFind = (
   // si une démarche a le statut en instruction
   // -> le statut du titre est modification en instance
   if (titreDemarches.find(d => d.statutId === 'ins')) {
+    return 'mod'
+  }
+
+  // si la dernière démarche est une renonciation et a une étape de saisie
+  // -> le statut du titre est modification en instance
+  const titreDemarchesSorted = titreDemarchesSortAsc(titreDemarches)
+
+  const titreDemarche = titreDemarchesSorted[titreDemarchesSorted.length - 1]
+
+  // console.log(titreDemarche.typeId, titreDemarches.length, titreDemarche.statutId)
+  if (
+    titreDemarche.typeId === 'ren' &&
+    titreDemarche.statutId === 'dep' &&
+    (titreDemarche?.etapes?.length ?? 0) > 0
+  ) {
     return 'mod'
   }
 

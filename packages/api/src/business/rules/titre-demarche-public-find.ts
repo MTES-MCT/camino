@@ -135,6 +135,16 @@ const titreDemarchePublicLectureFind = (
     return true
   }
 
+  // Si le type de titre est CXW et que le type de démarche est renonciation
+  // et que la demande à été déposée
+  if (
+    titreTypeId === 'cxw' &&
+    demarcheTypeId === 'ren' &&
+    titreEtape.typeId === 'mdp'
+  ) {
+    return true
+  }
+
   // public pour tous des titres non énergétiques M, W, C avec une des étapes suivantes :
   // avis de concurrence au JOUE (ane)
   // avis de concurrence au JORF (anf)
