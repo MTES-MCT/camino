@@ -45,7 +45,8 @@ const documentsQueryModify = (
 
           // si l'utilisateur est `entreprise`,
           // titres dont il est titulaire ou amodiataire
-          const entreprisesIds = user.entreprises!.map(e => e.id)
+          // TODO 2022-06-29: Ceci ne devrait plus être nécessaire une fois la PR sur keycloak mergée
+          const entreprisesIds = user.entreprises?.map(e => e.id) ?? []
 
           c.where(d => {
             d.orWhere(e => {
