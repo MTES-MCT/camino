@@ -51,7 +51,7 @@ export default [
     type: 'wms',
     url: 'https://datacarto.geoguyane.fr/wms/SDOM_GUYANE',
     layers:
-      'ZONE2activiteminiereautoriseesouscontrainte,ZONE1activiteminiereinterditesaufexploitationsouterraineetrecherchesaeriennes,ZONE0activiteminiereinterdite,Zone0potentielle,LimitesdescommunesdeGuyane',
+      'ZONE2activiteminiereautoriseesouscontrainte,ZONE1activiteminiereinterditesaufexploitationsouterraineetrecherchesaeriennes,ZONE0activiteminiereinterdite,Zone0potentielle',
     attribution: 'GéoGuyane',
     version: '1.3.0'
   }
