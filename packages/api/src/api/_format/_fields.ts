@@ -8,7 +8,6 @@ const titreActiviteFormatFields = {
 const titreEtapeFormatFields = {
   geojsonMultiPolygon: {},
   geojsonPoints: {},
-  pays: {},
   sections: {}
 } as IFields
 
@@ -20,7 +19,6 @@ const titreFormatFields = {
   surface: {},
   geojsonMultiPolygon: {},
   geojsonPoints: {},
-  pays: {},
   demarches: titreDemarcheFormatFields,
   activites: titreActiviteFormatFields,
   administrations: {}

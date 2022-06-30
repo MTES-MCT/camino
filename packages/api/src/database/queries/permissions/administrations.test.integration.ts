@@ -153,7 +153,7 @@ describe('administrationsQueryModify', () => {
     }
   )
 
-  test("un admin de région peut voir les mails de la préfecture d'un départument associé", async () => {
+  test("un admin de région peut voir les mails de la préfecture d'un département associé", async () => {
     const mockDreal = CommonAdministrations['dre-nouvelle-aquitaine-01']
     const prefectureDordogne = 'pre-24322-01'
     const prefectureCorseDuSud = 'pre-2A004-01'

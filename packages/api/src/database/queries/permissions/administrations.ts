@@ -11,7 +11,6 @@ import Titres from '../../models/titres'
 import { titresQueryModify } from './titres'
 import { utilisateursQueryModify } from './utilisateurs'
 import { administrationsActivitesTypesEmailsQueryModify } from './administrations-activites-types-emails'
-import Departements from '../../models/departements'
 import ActivitesTypes from '../../models/activites-types'
 import {
   isAdministration,
@@ -23,11 +22,13 @@ import {
   AdministrationId,
   Administrations
 } from 'camino-common/src/administrations'
+import { Departements } from 'camino-common/src/departement'
 
 const departementsQuery = (
   administrationId: AdministrationId,
   administrationAlias: string
 ) =>
+  // FIXME je ne comprends pas ce truc
   Departements.query()
     .select(raw('true'))
     .leftJoin('administrations as adm', 'departements.regionId', 'adm.regionId')
@@ -49,10 +50,20 @@ const emailsLectureQuery = (
     // Utilisateur super ou membre de ministère (admin ou éditeur) : tous les droits
     return raw('true')
   } else if (isAdministration(user)) {
-    return raw(`((??) OR (${administrationAlias}.id = ?))`, [
-      departementsQuery(user.administrationId, administrationAlias),
-      user.administrationId
-    ])
+    // FIXME
+    // const administration = Administrations[user.administrationId]
+    // if (administration.departementId) {
+    //   const departement = Departements[administration.departementId]
+    //   const region = Regions[departement.regionId]
+    // }
+
+    return raw(
+      `((${administrationAlias}.departementId = ?) OR (${administrationAlias}.id = ?))`,
+      [
+        departementsQuery(user.administrationId, administrationAlias),
+        user.administrationId
+      ]
+    )
   }
 
   return raw('false')

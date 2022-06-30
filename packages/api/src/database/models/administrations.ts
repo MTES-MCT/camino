@@ -8,8 +8,6 @@ import TitresTypes from './titres-types'
 import Utilisateurs from './utilisateurs'
 import Titres from './titres'
 import ActivitesTypes from './activites-types'
-import Departements from './departements'
-import Regions from './regions'
 
 interface Administrations extends IAdministration {}
 
@@ -121,24 +119,6 @@ class Administrations extends Model {
           extra: ['email']
         },
         to: 'activitesTypes.id'
-      }
-    },
-
-    departement: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: Departements,
-      join: {
-        from: 'administrations.departementId',
-        to: 'departements.id'
-      }
-    },
-
-    region: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: Regions,
-      join: {
-        from: 'administrations.regionId',
-        to: 'regions.id'
       }
     }
   })

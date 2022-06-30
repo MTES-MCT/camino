@@ -47,7 +47,6 @@ import {
   etapeTypeJustificatifTypeModifier,
   etapeTypeJustificatifTypeCreer,
   etapeTypeJustificatifTypeSupprimer,
-  pays,
   titresTypesDemarchesTypesEtapesTypesDocumentsTypes,
   titreTypeDemarcheTypeEtapeTypeDocumentTypeCreer,
   titreTypeDemarcheTypeEtapeTypeDocumentTypeModifier,
@@ -77,6 +76,7 @@ import {
   activiteTypePaysCreer,
   activiteTypePaysSupprimer
 } from '../api/metas-activites'
+import { PaysList } from 'camino-common/src/pays'
 
 const labelGet = entity => (entity ? `${entity.id} - ${entity.nom}` : '')
 
@@ -546,15 +546,6 @@ const metasIndex = {
       { id: 'nom', nom: 'Nom', type: String }
     ]
   },
-  pays: {
-    get: pays,
-    nom: 'Pays',
-    labelGet,
-    colonnes: [
-      { id: 'id', nom: 'Id' },
-      { id: 'nom', nom: 'Nom', type: String }
-    ]
-  },
   'activites-types': {
     get: activitesTypes,
     update: activiteTypeModifier,
@@ -666,8 +657,8 @@ const metasIndex = {
       {
         id: 'paysId',
         nom: 'Pays',
-        type: 'entities',
-        entities: 'pays'
+        type: 'elements',
+        entities: Object.keys(PaysList)
       }
     ],
     ids: ['activiteTypeId', 'paysId']

@@ -11,9 +11,9 @@ import {
 } from './entreprises'
 
 import { fragmentPoint } from './point'
-import { fragmentPays } from './pays'
 
 import { fragmentGeojsonPoints, fragmentGeojsonMultiPolygon } from './geojson'
+import { fragmentCommune } from '@/api/fragments/commune'
 
 const fragmentTitre = gql`
   fragment titre on Titre {
@@ -70,8 +70,8 @@ const fragmentTitre = gql`
     geojsonMultiPolygon {
       ...geojsonMultiPolygon
     }
-    pays {
-      ...pays
+    communes {
+      ...commune
     }
     demarches {
       ...titreDemarche
@@ -117,7 +117,7 @@ const fragmentTitre = gql`
 
   ${fragmentGeojsonMultiPolygon}
 
-  ${fragmentPays}
+  ${fragmentCommune}
 
   ${fragmentTitreType}
 `
@@ -155,13 +155,8 @@ const fragmentTitres = gql`
     amodiataires {
       ...titresEntreprises
     }
-    pays {
-      regions {
-        nom
-        departements {
-          nom
-        }
-      }
+    communes {
+      departementId
     }
     references {
       type {

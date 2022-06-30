@@ -26,7 +26,7 @@
     />
 
     <TitreTerritoires
-      :pays="titre.pays"
+      :communes="titre.communes"
       :forets="titre.forets"
       :sdomZones="titre.sdomZones"
       :surface="titre.surface"
