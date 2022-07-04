@@ -121,3 +121,4 @@ export const Regions: { [key in RegionId]: Region<key> } = {
     paysId: 'FR'
   }
 }
+export const regions = Object.values(Regions)

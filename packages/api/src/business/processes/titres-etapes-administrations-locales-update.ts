@@ -231,7 +231,7 @@ const titresEtapesAdministrationsLocalesUpdate = async (
         demarches: {
           etapes: {
             administrations: { titresTypes: { id: {} } },
-            communes: { departement: { id: {} } }
+            communes: { id: {} }
           }
         }
       }

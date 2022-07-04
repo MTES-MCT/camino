@@ -160,12 +160,14 @@ const titresColonnes: Column[] = [
   {
     id: 'regions',
     name: 'Régions',
-    class: ['min-width-8']
+    class: ['min-width-8'],
+    noSort: true
   },
   {
     id: 'departements',
     name: 'Départements',
-    class: ['min-width-8']
+    class: ['min-width-8'],
+    noSort: true
   },
   referencesColumn
 ]

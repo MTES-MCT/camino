@@ -39,4 +39,5 @@ export interface Column<T = string> {
   name: string
   class?: string[]
   sort?: (firstElement: TableAutoRow, secondElement: TableAutoRow) => number
+  noSort?: boolean
 }

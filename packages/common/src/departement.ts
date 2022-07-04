@@ -624,3 +624,5 @@ const departementIds = Object.values(DEPARTEMENT_IDS)
 export const isDepartementId = (
   departementId: string | null | undefined
 ): departementId is DepartementId => departementIds.includes(departementId)
+
+export const departements = Object.values(Departements)

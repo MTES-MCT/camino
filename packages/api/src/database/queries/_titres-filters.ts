@@ -5,6 +5,8 @@ import { stringSplit } from './_utils'
 import Titres from '../models/titres'
 import TitresDemarches from '../models/titres-demarches'
 import TitresActivites from '../models/titres-activites'
+import { DepartementId, departements } from 'camino-common/src/departement'
+import { regions } from 'camino-common/src/region'
 
 type ITitreTableName = 'titres' | 'titre'
 type ITitreRootName = 'titres' | 'titresDemarches' | 'titresActivites'
@@ -248,56 +250,42 @@ const titresFiltersQueryModify = (
   if (territoires) {
     const territoiresArray = stringSplit(territoires)
 
-    let fieldsLike = [
-      'communes:departement:region.nom',
-      'communes:departement.nom',
-      'communes.nom'
-    ]
+    const departementIds: DepartementId[] = territoiresArray.flatMap(
+      territoire => {
+        const resultRegion = regions
+          .filter(({ nom }) =>
+            nom.toLowerCase().includes(territoire.toLowerCase())
+          )
+          .flatMap(({ id }) =>
+            departements
+              .filter(({ regionId }) => id === regionId)
+              .map(({ id }) => id)
+          )
 
-    if (name === 'titre') {
-      fieldsLike = fieldsLike.map(field => fieldFormat(name, field))
-    }
+        const resultDepartement = departements
+          .filter(
+            ({ nom, id }) =>
+              nom.toLowerCase().includes(territoire.toLowerCase()) ||
+              id === territoire
+          )
+          .map(({ id }) => id)
 
-    let fieldsExact = [
-      'communes:departement:region.paysId',
-      'communes.departementId',
-      'communes.id'
-    ]
-    if (name === 'titre') {
-      fieldsExact = fieldsExact.map(field => fieldFormat(name, field))
-    }
+        return resultRegion.concat(resultDepartement)
+      }
+    )
 
-    q.leftJoinRelated(jointureFormat(name, 'communes.departement.region'))
+    q.leftJoinRelated(jointureFormat(name, 'communes'))
       .where(b => {
         territoiresArray.forEach(t => {
-          fieldsLike.forEach(f => {
-            b.orWhereRaw(`lower(??) like ?`, [f, `%${t.toLowerCase()}%`])
-          })
-
-          fieldsExact.forEach(f => {
-            b.orWhereRaw(`?? = ?`, [f, t])
-          })
+          b.orWhereRaw(`lower(??) like ?`, [
+            fieldFormat(name, 'communes.nom'),
+            `%${t.toLowerCase()}%`
+          ])
+          b.orWhereRaw(`?? = ?`, [fieldFormat(name, 'communes.id'), t])
         })
       })
-
+      .orWhereIn(fieldFormat(name, 'communes.departementId'), departementIds)
       .groupBy(`${root}.id`)
-      .havingRaw(
-        `(${territoiresArray
-          .map(
-            () =>
-              'count(*) filter (where ' +
-              [
-                ...fieldsLike.map(() => 'lower(??) like ?'),
-                ...fieldsExact.map(() => `lower(??) = ?`)
-              ].join(' or ') +
-              ') > 0'
-          )
-          .join(') and (')})`,
-        territoiresArray.flatMap(t => [
-          ...fieldsLike.flatMap(f => [f, `%${t.toLowerCase()}%`]),
-          ...fieldsExact.flatMap(f => [f, t.toLowerCase()])
-        ])
-      )
   }
 }
 
