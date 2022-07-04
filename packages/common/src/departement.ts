@@ -619,3 +619,8 @@ export const Departements: { [key in DepartementId]: Departement<key> } = {
     regionId: '06'
   }
 }
+
+const departementIds = Object.values(DEPARTEMENT_IDS)
+export const isDepartementId = (
+  departementId: string | null | undefined
+): departementId is DepartementId => departementIds.includes(departementId)

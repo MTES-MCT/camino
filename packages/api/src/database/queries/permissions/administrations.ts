@@ -20,24 +20,12 @@ import {
 } from 'camino-common/src/roles'
 import {
   AdministrationId,
-  Administrations
+  Administrations,
+  sortedAdministrations
 } from 'camino-common/src/administrations'
 import { Departements } from 'camino-common/src/departement'
 
-const departementsQuery = (
-  administrationId: AdministrationId,
-  administrationAlias: string
-) =>
-  // FIXME je ne comprends pas ce truc
-  Departements.query()
-    .select(raw('true'))
-    .leftJoin('administrations as adm', 'departements.regionId', 'adm.regionId')
-    .whereRaw('?? = ??', [
-      'departements.id',
-      `${administrationAlias}.departementId`
-    ])
-    .where('adm.id', administrationId)
-
+// TODO 2022-07-04: peut être déplacé dans le common en fonction pure de gestion des droits
 const emailsLectureQuery = (
   user: IUtilisateur | null | undefined,
   administrationAlias: string
@@ -50,19 +38,29 @@ const emailsLectureQuery = (
     // Utilisateur super ou membre de ministère (admin ou éditeur) : tous les droits
     return raw('true')
   } else if (isAdministration(user)) {
-    // FIXME
-    // const administration = Administrations[user.administrationId]
-    // if (administration.departementId) {
-    //   const departement = Departements[administration.departementId]
-    //   const region = Regions[departement.regionId]
-    // }
+    const administration = Administrations[user.administrationId]
+
+    const administrationIds: AdministrationId[] = []
+
+    if (administration.regionId) {
+      const departementIds = Object.values(Departements)
+        .filter(({ regionId }) => regionId === administration.regionId)
+        .map(({ id }) => id)
+      // On récupère toutes les administrations départementales qui sont de la même région que l’administration régionale de l’utilisateur
+      administrationIds.push(
+        ...sortedAdministrations
+          .filter(({ departementId }) => departementIds.includes(departementId))
+          .map(({ id }) => id)
+      )
+    }
+
+    administrationIds.push(user.administrationId)
 
     return raw(
-      `((${administrationAlias}.departementId = ?) OR (${administrationAlias}.id = ?))`,
-      [
-        departementsQuery(user.administrationId, administrationAlias),
-        user.administrationId
-      ]
+      `${administrationAlias}.id IN (${administrationIds
+        .map(() => '?')
+        .join(',')})`,
+      administrationIds
     )
   }
 
@@ -97,17 +95,31 @@ const administrationsQueryModify = (
     // ou d'un DREAL/DEAL vis-à-vis d'une administration qui dépend d'elles
     // Admin ou éditeur : modifications
     // Admin, éditeur ou lecteur : lecture
-    q.select(
-      raw(
-        `((??) OR (administrations.id = ? AND administrations.type_id IN (?,?)))`,
-        [
-          departementsQuery(user.administrationId, 'administrations'),
-          user.administrationId,
-          'dre',
-          'dea'
-        ]
-      ).as('emailsModification')
-    )
+
+    const administration = Administrations[user.administrationId]
+    if (administration.regionId) {
+      const departementIds = Object.values(Departements)
+        .filter(({ regionId }) => regionId === administration.regionId)
+        .map(({ id }) => id)
+      // On récupère toutes les administrations départementales qui sont de la même région que l’administration régionale de l’utilisateur
+      const administrationIds = sortedAdministrations
+        .filter(({ departementId }) => departementIds.includes(departementId))
+        .map(({ id }) => id)
+
+      if (administration.typeId === 'dre' || administration.typeId === 'dea') {
+        administrationIds.push(user.administrationId)
+      }
+      if (administrationIds.length) {
+        q.select(
+          raw(
+            `administrations.id IN (${administrationIds
+              .map(() => '?')
+              .join(',')})`,
+            administrationIds
+          ).as('emailsModification')
+        )
+      }
+    }
   }
 
   q.select(emailsLectureQuery(user, 'administrations').as('emailsLecture'))

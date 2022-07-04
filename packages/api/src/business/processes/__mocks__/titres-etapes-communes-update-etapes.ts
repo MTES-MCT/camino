@@ -1,11 +1,12 @@
 import Communes from '../../../database/models/communes'
 import Forets from '../../../database/models/forets'
 import TitresEtapes from '../../../database/models/titres-etapes'
+import { DEPARTEMENT_IDS } from 'camino-common/src/departement'
 
 const commune1 = {
   id: '1',
   nom: 'commune1',
-  departementId: 'departement',
+  departementId: DEPARTEMENT_IDS.Sarthe,
   surface: 0
 } as Communes
 
@@ -18,7 +19,7 @@ const foret1 = {
 const commune1SurfaceChangee = {
   id: '1',
   nom: 'commune1SurfaceChangee',
-  departementId: 'departement',
+  departementId: DEPARTEMENT_IDS.Sarthe,
   surface: 10
 }
 
@@ -31,7 +32,7 @@ const foret1SurfaceChangee = {
 const commune2 = {
   id: '2',
   nom: 'commune2',
-  departementId: 'departement',
+  departementId: DEPARTEMENT_IDS.Sarthe,
   surface: 4
 } as Communes
 

@@ -179,7 +179,7 @@ describe('administrationsQueryModify', () => {
 
     q = administrationsQueryModify(Administrations.query(), mockUser)
     res = await q.findById(prefectureCorseDuSud)
-    expect(res?.emailsModification).toBe(null)
+    expect(res?.emailsModification).toBe(false)
   })
 
   test.each`
@@ -189,7 +189,7 @@ describe('administrationsQueryModify', () => {
     ${'lecteur'} | ${false}
     ${'defaut'}  | ${false}
   `(
-    "pour un membre de ministère, emailsModification est 'true' pour ses membres admins et éditeurs, 'false' pour ses lecteurs",
+    "pour un membre $role de ministère, emailsModification est '$emailsModification'",
     async ({ role, emailsModification }) => {
       const mockMin = CommonAdministrations['min-dajb-01']
 
@@ -225,10 +225,9 @@ describe('administrationsQueryModify', () => {
     ${'super'}   | ${true}
     ${'admin'}   | ${true}
     ${'editeur'} | ${true}
-    ${'lecteur'} | ${true}
     ${'defaut'}  | ${false}
   `(
-    "pour une préfecture, emailsLecture est 'true' pour un utilisateur super et pour tous ses membres",
+    "pour une préfecture, emailsLecture est '$emailsLecture' pour un utilisateur $role et pour tous ses membres",
     async ({ role, emailsLecture }) => {
       const mockAdministration = CommonAdministrations['pre-01053-01']
 
@@ -261,13 +260,13 @@ describe('administrationsQueryModify', () => {
       const res = (await q
         .withGraphFetched({ activitesTypesEmails: {} })
         .first()) as IAdministration
-      if (!emailsLecture) {
-        expect(res.emailsLecture).toBeFalsy()
-        expect(res.activitesTypesEmails).toHaveLength(0)
-      } else {
+      if (emailsLecture) {
         expect(res.emailsLecture).toBeTruthy()
         expect(res.activitesTypesEmails?.length).toBeTruthy()
         expect(res.activitesTypesEmails![0].email).toBe(email)
+      } else {
+        expect(res.emailsLecture).toBeFalsy()
+        expect(res.activitesTypesEmails).toHaveLength(0)
       }
     }
   )

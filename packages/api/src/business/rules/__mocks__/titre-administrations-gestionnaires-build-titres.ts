@@ -1,4 +1,5 @@
 import { IAdministration, ITitre } from '../../../types'
+import { DEPARTEMENT_IDS } from 'camino-common/src/departement'
 
 const administrations = [
   {
@@ -18,7 +19,7 @@ const administrations = [
   },
   {
     id: 'ope-onf-973-01',
-    departementId: '973',
+    departementId: DEPARTEMENT_IDS.Guyane,
     titresTypes: [{ id: 'axm', domaineId: 'm', gestionnaire: false }]
   },
   {

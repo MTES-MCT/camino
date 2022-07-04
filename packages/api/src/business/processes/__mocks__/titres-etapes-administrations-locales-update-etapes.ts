@@ -1,5 +1,6 @@
 import Administrations from '../../../database/models/administrations'
 import Titres from '../../../database/models/titres'
+import { DEPARTEMENT_IDS } from 'camino-common/src/departement'
 
 const administrations = [
   { id: 'gestionnaire', domaines: [{ id: 'm' }], titresTypes: [] },
@@ -7,10 +8,14 @@ const administrations = [
   { id: 'deal-02', regionId: '02', titresTypes: [] },
   {
     id: 'dea-guyane-01',
-    departementId: '973',
+    departementId: DEPARTEMENT_IDS.Guyane,
     titresTypes: [{ id: 'arm', associee: true }]
   },
-  { id: 'ope-onf-973-01', departementId: '973', titresTypes: [] },
+  {
+    id: 'ope-onf-973-01',
+    departementId: DEPARTEMENT_IDS.Guyane,
+    titresTypes: []
+  },
   { id: 'xxxx', departementId: 'xxxx', titresTypes: [] }
 ] as Administrations[]
 
@@ -157,7 +162,7 @@ const titresArm = [
             statutId: 'acc',
             ordre: 2,
             date: '1988-03-11',
-            communes: [{ departementId: '973' }]
+            communes: [{ departementId: DEPARTEMENT_IDS.Guyane }]
           }
         ]
       }
@@ -180,7 +185,7 @@ const titresAxm = [
             statutId: 'acc',
             ordre: 2,
             date: '1988-03-11',
-            communes: [{ departementId: '973' }]
+            communes: [{ departementId: DEPARTEMENT_IDS.Guyane }]
           }
         ]
       }

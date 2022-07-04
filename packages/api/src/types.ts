@@ -352,7 +352,7 @@ interface IEntrepriseEtablissement {
 interface IEntreprise {
   id: string
   nom: string
-  paysId?: PaysId | null
+  paysId?: string | null
   legalSiren?: string | null
   legalEtranger?: string | null
   legalForme?: string | null
