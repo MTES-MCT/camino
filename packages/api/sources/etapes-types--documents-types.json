@@ -1301,11 +1301,6 @@
   },
   {
     "etape_type_id": "wmt",
-    "document_type_id": "plg",
-    "optionnel": true
-  },
-  {
-    "etape_type_id": "wmt",
     "document_type_id": "prg",
     "optionnel": true
   },
