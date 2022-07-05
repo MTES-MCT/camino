@@ -16,7 +16,6 @@ import Types from './titres-types'
 import Forets from './forets'
 
 import { titreInsertFormat } from './_format/titre-insert'
-import { paysFormat } from './_format/pays'
 import { titreContenuFormat } from './_format/titre-contenu'
 import { idGenerate } from './_format/id-create'
 import slugify from '@sindresorhus/slugify'
@@ -265,8 +264,6 @@ class Titres extends Model {
   }
 
   $afterFind() {
-    this.pays = paysFormat(this.communes || [])
-
     if (this.contenusTitreEtapesIds) {
       this.contenu = titreContenuFormat(
         this.contenusTitreEtapesIds,

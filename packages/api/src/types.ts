@@ -10,6 +10,7 @@ import { GeoSystemeId } from 'camino-common/src/geoSystemes'
 import { Role } from 'camino-common/src/roles'
 import { DomaineId } from 'camino-common/src/domaines'
 import { TitresTypesTypesId } from 'camino-common/src/titresTypesTypes'
+import { PaysId, Pays } from 'camino-common/src/pays'
 
 const DemarchesStatutsTypesIds = {
   Accepte: 'acc',
@@ -217,7 +218,7 @@ interface IActiviteTypeDocumentType {
 
 interface IActiviteTypePays {
   activiteTypeId: string
-  paysId: string
+  paysId: PaysId
 }
 
 interface IActiviteType {
@@ -232,7 +233,7 @@ interface IActiviteType {
   documentsTypes: IDocumentType[]
   sections: ISection[]
   frequence?: IFrequence | null
-  pays?: IPays[] | null
+  pays?: Pays[] | null
   administrations?: IAdministration[] | null
   email?: string | null
   modification?: boolean | null
@@ -282,8 +283,8 @@ interface IArea {
 }
 
 interface ICommune extends IArea {
-  departement?: IDepartement | null
-  departementId?: string | null
+  departement?: Departement | null
+  departementId?: DepartementId | null
 }
 
 interface ICoordonnees {
@@ -312,14 +313,6 @@ interface IDemarcheType {
   titreTypeId?: string | null
   demarchesCreation?: boolean | null
   travaux?: boolean
-}
-
-interface IDepartement {
-  id: string
-  nom: string
-  region?: IRegion | null
-  regionId?: string | null
-  communes?: ICommune[] | null
 }
 
 export const DOCUMENTS_REPERTOIRES = [
@@ -495,12 +488,6 @@ interface IMois extends IPeriode {
   trimestre?: ITrimestre | null
 }
 
-interface IPays {
-  id: string
-  nom: string
-  regions?: IRegion[] | null
-}
-
 interface IForet {
   id: string
   nom: string
@@ -521,13 +508,6 @@ interface IPhaseStatut {
 interface IReferenceType {
   id: string
   nom: string
-}
-
-interface IRegion {
-  id: string
-  nom: string
-  pays?: IPays | null
-  departements?: IDepartement[] | null
 }
 
 interface ITitreTypeEtapeType {
@@ -678,7 +658,7 @@ interface ITitre {
   sdomZones?: ISDOMZone[] | null
   demarches?: ITitreDemarche[]
   activites?: ITitreActivite[] | null
-  pays?: IPays[] | null
+  pays?: Pays[] | null
   modification?: boolean | null
   suppression?: boolean | null
   publicLecture?: boolean | null
@@ -837,7 +817,7 @@ interface ITitreEtape {
   forets?: IForet[] | null
   sdomZones?: ISDOMZone[] | null
   incertitudes?: ITitreIncertitudes | null
-  pays?: IPays[] | null
+  pays?: Pays[] | null
   contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null
@@ -1039,7 +1019,6 @@ export {
   ICoordonnees,
   IDemarcheStatut,
   IDemarcheType,
-  IDepartement,
   IDocumentType,
   IDocumentRepertoire,
   IDomaine,
@@ -1057,11 +1036,9 @@ export {
   IGeometry,
   IGlobale,
   IMois,
-  IPays,
   IPeriode,
   IPhaseStatut,
   IReferenceType,
-  IRegion,
   ITitreTypeTitreStatut,
   ITitreTypeDemarcheType,
   IActiviteTypeTitreType,

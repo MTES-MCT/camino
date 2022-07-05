@@ -1,7 +1,6 @@
 import { Model, Modifiers } from 'objection'
 import { IActiviteType } from '../../types'
 import TitresTypes from './titres-types'
-import Pays from './pays'
 import Frequences from './frequences'
 import Administrations from './administrations'
 import DocumentsTypes from './documents-types'
@@ -38,19 +37,6 @@ class ActivitesTypes extends Model {
           to: 'activitesTypes__titresTypes.titreTypeId'
         },
         to: 'titresTypes.id'
-      }
-    },
-
-    pays: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Pays,
-      join: {
-        from: 'activitesTypes.id',
-        through: {
-          from: 'activitesTypes__pays.activiteTypeId',
-          to: 'activitesTypes__pays.paysId'
-        },
-        to: 'pays.id'
       }
     },
 

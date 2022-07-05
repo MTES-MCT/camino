@@ -264,17 +264,6 @@ const referenceTypeModifier = apiGraphQLFetch(gql`
   ${fragmentReferenceType}
 `)
 
-const pays = apiGraphQLFetch(
-  gql`
-    query pays {
-      pays {
-        id
-        nom
-      }
-    }
-  `
-)
-
 const titresTypes = apiGraphQLFetch(
   gql`
     query TitresTypes {
@@ -736,7 +725,6 @@ export {
   documentTypeModifier,
   referencesTypes,
   referenceTypeModifier,
-  pays,
   titresTypes,
   titreTypeModifier,
   titreTypeCreer,

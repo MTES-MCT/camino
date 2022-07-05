@@ -19,7 +19,6 @@ type ActiviteType {
   frequenceId: ID!
   frequence: Frequence!
   sections: Json!
-  pays: [Pays!]
   documentsTypes: [DocumentType]
   lectureInterdit: Boolean
   modificationInterdit: Boolean

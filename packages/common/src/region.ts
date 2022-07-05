@@ -1,3 +1,5 @@
+import { PaysId } from './pays'
+
 export const REGION_IDS = {
   Guadeloupe: '01',
   Martinique: '02',
@@ -22,7 +24,7 @@ export const REGION_IDS = {
 export interface Region<T = RegionId> {
   id: T
   nom: string
-  pays_id: string
+  paysId: PaysId
 }
 
 export type RegionId = typeof REGION_IDS[keyof typeof REGION_IDS]
@@ -31,91 +33,92 @@ export const Regions: { [key in RegionId]: Region<key> } = {
   '01': {
     id: '01',
     nom: 'Guadeloupe',
-    pays_id: 'GP'
+    paysId: 'GP'
   },
   '02': {
     id: '02',
     nom: 'Martinique',
-    pays_id: 'MQ'
+    paysId: 'MQ'
   },
   '03': {
     id: '03',
     nom: 'Guyane',
-    pays_id: 'GF'
+    paysId: 'GF'
   },
   '04': {
     id: '04',
     nom: 'La Réunion',
-    pays_id: 'RE'
+    paysId: 'RE'
   },
   '06': {
     id: '06',
     nom: 'Mayotte',
-    pays_id: 'YT'
+    paysId: 'YT'
   },
   '11': {
     id: '11',
     nom: 'Île-de-France',
-    pays_id: 'FR'
+    paysId: 'FR'
   },
   '24': {
     id: '24',
     nom: 'Centre-Val de Loire',
-    pays_id: 'FR'
+    paysId: 'FR'
   },
   '27': {
     id: '27',
     nom: 'Bourgogne-Franche-Comté',
-    pays_id: 'FR'
+    paysId: 'FR'
   },
   '28': {
     id: '28',
     nom: 'Normandie',
-    pays_id: 'FR'
+    paysId: 'FR'
   },
   '32': {
     id: '32',
     nom: 'Hauts-de-France',
-    pays_id: 'FR'
+    paysId: 'FR'
   },
   '44': {
     id: '44',
     nom: 'Grand Est',
-    pays_id: 'FR'
+    paysId: 'FR'
   },
   '52': {
     id: '52',
     nom: 'Pays de la Loire',
-    pays_id: 'FR'
+    paysId: 'FR'
   },
   '53': {
     id: '53',
     nom: 'Bretagne',
-    pays_id: 'FR'
+    paysId: 'FR'
   },
   '75': {
     id: '75',
     nom: 'Nouvelle-Aquitaine',
-    pays_id: 'FR'
+    paysId: 'FR'
   },
   '76': {
     id: '76',
     nom: 'Occitanie',
-    pays_id: 'FR'
+    paysId: 'FR'
   },
   '84': {
     id: '84',
     nom: 'Auvergne-Rhône-Alpes',
-    pays_id: 'FR'
+    paysId: 'FR'
   },
   '93': {
     id: '93',
     nom: "Provence-Alpes-Côte d'Azur",
-    pays_id: 'FR'
+    paysId: 'FR'
   },
   '94': {
     id: '94',
     nom: 'Corse',
-    pays_id: 'FR'
+    paysId: 'FR'
   }
 }
+export const regions = Object.values(Regions)

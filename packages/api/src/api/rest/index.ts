@@ -49,7 +49,7 @@ const titreFields = {
   amodiataires: { id: {} },
   surfaceEtape: { id: {} },
   points: { id: {} },
-  communes: { departement: { region: { pays: { id: {} } } } },
+  communes: { id: {} },
   forets: { id: {} },
   administrationsLocales: { id: {} },
   administrationsGestionnaires: { id: {} }

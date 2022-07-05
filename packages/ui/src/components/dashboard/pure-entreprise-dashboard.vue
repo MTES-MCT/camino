@@ -38,7 +38,7 @@ import TableAuto from '../_ui/table-auto.vue'
 import { TableAutoRow } from '../_ui/table-auto.type'
 import Error from '@/components/error.vue'
 import {
-  Entreprise,
+  TitreEntreprise,
   titresColonnes,
   titresLignesBuild
 } from '@/components/titres/table-utils'
@@ -49,7 +49,7 @@ const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
 const entrepriseTitres = ref<TableAutoRow[]>([])
 const props = defineProps<{
   // TODO 2022-03-22: type the graphql
-  getEntreprisesTitres: () => Promise<Entreprise[]>
+  getEntreprisesTitres: () => Promise<TitreEntreprise[]>
   displayActivites: boolean
 }>()
 

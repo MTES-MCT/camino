@@ -80,7 +80,7 @@ type Titre {
   administrations: [Administration]
 
   "Territoires du titre dans son dernier état de validité"
-  pays: [Pays]
+  communes: [Commune]
 
   "Date de début d'un titre"
   dateDebut: String

@@ -1230,7 +1230,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok 1`]
             class="th nowrap min-width-8"
           >
             <button
-              class="btn-menu full-x p-0"
+              class="btn-menu full-x p-0 disabled"
             >
               Régions 
               <!--v-if-->
@@ -1240,7 +1240,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok 1`]
             class="th nowrap min-width-8"
           >
             <button
-              class="btn-menu full-x p-0"
+              class="btn-menu full-x p-0 disabled"
             >
               Départements 
               <!--v-if-->
@@ -2764,7 +2764,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok Wit
             class="th nowrap min-width-8"
           >
             <button
-              class="btn-menu full-x p-0"
+              class="btn-menu full-x p-0 disabled"
             >
               Régions 
               <!--v-if-->
@@ -2774,7 +2774,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseDashboard Ok Wit
             class="th nowrap min-width-8"
           >
             <button
-              class="btn-menu full-x p-0"
+              class="btn-menu full-x p-0 disabled"
             >
               Départements 
               <!--v-if-->

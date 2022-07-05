@@ -1,4 +1,5 @@
 import { bodyBuilder, responseExtractor } from './entreprises'
+import { DEPARTEMENT_IDS } from 'camino-common/src/departement'
 
 const entreprise = { categorie: 'PME', nom: 'ma companie' }
 
@@ -48,7 +49,12 @@ describe('construit le corps de la requête pour openFisca', () => {
       {
         substances: [{ id: 'auru', nom: 'or', legales: [] }],
         communes: [
-          { id: '97310', nom: 'Roura', departementId: '973', surface: 1006827 }
+          {
+            id: '97310',
+            nom: 'Roura',
+            departementId: DEPARTEMENT_IDS.Guyane,
+            surface: 1006827
+          }
         ],
         id: 'titreSansActivite'
       },
@@ -58,7 +64,12 @@ describe('construit le corps de la requête pour openFisca', () => {
           { id: 'suco', nom: 'substances connexes', legales: [] }
         ],
         communes: [
-          { id: '97310', nom: 'Roura', departementId: '973', surface: 6036587 }
+          {
+            id: '97310',
+            nom: 'Roura',
+            departementId: DEPARTEMENT_IDS.Guyane,
+            surface: 6036587
+          }
         ],
         id: 'titre1'
       },
@@ -68,7 +79,12 @@ describe('construit le corps de la requête pour openFisca', () => {
           { id: 'suco', nom: 'substances connexes', legales: [] }
         ],
         communes: [
-          { id: '97310', nom: 'Roura', departementId: '973', surface: 19805494 }
+          {
+            id: '97310',
+            nom: 'Roura',
+            departementId: DEPARTEMENT_IDS.Guyane,
+            surface: 19805494
+          }
         ],
         id: 'titre2'
       },
@@ -78,7 +94,12 @@ describe('construit le corps de la requête pour openFisca', () => {
           { id: 'suco', nom: 'substances connexes', legales: [] }
         ],
         communes: [
-          { id: '97310', nom: 'Roura', departementId: '973', surface: 5143845 }
+          {
+            id: '97310',
+            nom: 'Roura',
+            departementId: DEPARTEMENT_IDS.Guyane,
+            surface: 5143845
+          }
         ],
         id: 'titre3'
       },
@@ -88,7 +109,12 @@ describe('construit le corps de la requête pour openFisca', () => {
           { id: 'suco', nom: 'substances connexes', legales: [] }
         ],
         communes: [
-          { id: '97310', nom: 'Roura', departementId: '973', surface: 7676552 }
+          {
+            id: '97310',
+            nom: 'Roura',
+            departementId: DEPARTEMENT_IDS.Guyane,
+            surface: 7676552
+          }
         ],
         id: 'titre4'
       },
@@ -101,7 +127,7 @@ describe('construit le corps de la requête pour openFisca', () => {
           {
             id: '97311',
             nom: 'Saint-Laurent-du-Maroni',
-            departementId: '973',
+            departementId: DEPARTEMENT_IDS.Guyane,
             surface: 35604009
           }
         ],

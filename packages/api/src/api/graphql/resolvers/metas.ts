@@ -50,11 +50,6 @@ import {
 } from '../../_format/etapes-types'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes'
-import {
-  departementsGet,
-  paysGet,
-  regionsGet
-} from '../../../database/queries/territoires'
 import { ordreUpdate } from './_ordre-update'
 import {
   demarcheDefinitionFind,
@@ -80,6 +75,9 @@ import {
 import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort'
 import TitresDemarches from '../../../database/models/titres-demarches'
 import { Etape } from '../../../business/rules-demarches/arm/oct.machine'
+import { Pays, PaysList } from 'camino-common/src/pays'
+import { Departement, Departements } from 'camino-common/src/departement'
+import { Region, Regions } from 'camino-common/src/region'
 
 const devises = async () => devisesGet()
 
@@ -415,51 +413,11 @@ const administrationsTypes = () => {
   }
 }
 
-const pays = async () => {
-  try {
-    return await paysGet()
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+const pays = (): Pays[] => Object.values(PaysList)
 
-    throw e
-  }
-}
+const departements = (): Departement[] => Object.values(Departements)
 
-/**
- * Retourne les départements
- *
- * @returns un tableau de départements
- */
-const departements = async () => {
-  try {
-    return await departementsGet()
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-/**
- * Retourne les régions
- *
- * @returns un tableau de régions
- */
-const regions = async () => {
-  try {
-    return await regionsGet()
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
+const regions = (): Region[] => Object.values(Regions)
 
 const phasesStatuts = async () => {
   try {

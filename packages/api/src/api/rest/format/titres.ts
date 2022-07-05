@@ -1,6 +1,14 @@
 import decamelize from 'decamelize'
 
-import { ITitre, Index, IContenuValeur, IPays, IContenu } from '../../../types'
+import {
+  ITitre,
+  Index,
+  IContenuValeur,
+  IContenu,
+  ICommune
+} from '../../../types'
+import { Departements } from 'camino-common/src/departement'
+import { Regions } from 'camino-common/src/region'
 
 const titreContenuTableFormat = (contenu?: IContenu | null) =>
   contenu
@@ -21,9 +29,11 @@ const titreContenuTableFormat = (contenu?: IContenu | null) =>
       )
     : {}
 
-const titresTableFormat = (titres: ITitre[]) =>
+export const titresTableFormat = (titres: ITitre[]) =>
   titres.map(titre => {
-    const { communes, departements, regions } = titreTerritoiresFind(titre)
+    const { communes, departements, regions } = titreTerritoiresFind(
+      titre.communes!
+    )
 
     const titreReferences = titre.references
       ? titre.references.reduce((titreReferences: Index<string>, reference) => {
@@ -82,7 +92,9 @@ const titresTableFormat = (titres: ITitre[]) =>
   })
 
 const titreGeojsonPropertiesFormat = (titre: ITitre) => {
-  const { communes, departements, regions } = titreTerritoiresFind(titre)
+  const { communes, departements, regions } = titreTerritoiresFind(
+    titre.communes!
+  )
 
   const separator = ', '
 
@@ -122,7 +134,7 @@ const titreGeojsonPropertiesFormat = (titre: ITitre) => {
   }
 }
 
-const titreGeojsonFormat = (titre: ITitre) => ({
+export const titreGeojsonFormat = (titre: ITitre) => ({
   type: 'FeatureCollection',
   properties: titreGeojsonPropertiesFormat(titre),
   features: titre.geojsonPoints
@@ -130,7 +142,7 @@ const titreGeojsonFormat = (titre: ITitre) => ({
     : titre.geojsonMultiPolygon
 })
 
-const titresGeojsonFormat = (titres: ITitre[]) => ({
+export const titresGeojsonFormat = (titres: ITitre[]) => ({
   type: 'FeatureCollection',
   features: titres.map(titre => ({
     type: 'Feature',
@@ -139,69 +151,32 @@ const titresGeojsonFormat = (titres: ITitre[]) => ({
   }))
 })
 
-const titreTerritoiresFind = (titre: ITitre) =>
-  titre.pays!.reduce(
-    (
-      {
-        communes,
-        departements,
-        regions
-      }: { communes: string[]; departements: string[]; regions: string[] },
-      pay: IPays
-    ) => {
-      const { payRegions, payDepartements, payCommunes } = pay.regions!.reduce(
-        (
-          {
-            payRegions,
-            payDepartements,
-            payCommunes
-          }: {
-            payRegions: string[]
-            payDepartements: string[]
-            payCommunes: string[]
-          },
-          region
-        ) => {
-          const { regionDepartements, regionCommunes } =
-            region.departements!.reduce(
-              (
-                {
-                  regionDepartements,
-                  regionCommunes
-                }: { regionDepartements: string[]; regionCommunes: string[] },
-                departement
-              ) => {
-                regionDepartements.push(departement.nom)
-                regionCommunes.push(
-                  ...departement.communes!.map(
-                    commune =>
-                      `${commune.nom} (${
-                        Math.round(commune.surface! / 100) / 10000
-                      })`
-                  )
-                )
-
-                return { regionDepartements, regionCommunes }
-              },
-              { regionDepartements: [], regionCommunes: [] }
-            )
-
-          payRegions.push(region.nom)
-          payDepartements.push(...regionDepartements)
-          payCommunes.push(...regionCommunes)
-
-          return { payRegions, payDepartements, payCommunes }
-        },
-        { payRegions: [], payDepartements: [], payCommunes: [] }
+// FOR TESTING
+export const titreTerritoiresFind = (
+  communes: Pick<ICommune, 'nom' | 'departementId' | 'surface'>[]
+): { communes: string[]; departements: string[]; regions: string[] } =>
+  communes.reduce(
+    ({ communes, departements, regions }, commune) => {
+      communes.push(
+        `${commune.nom} (${Math.round(commune.surface! / 100) / 10000})`
       )
 
-      regions.push(...payRegions)
-      departements.push(...payDepartements)
-      communes.push(...payCommunes)
+      const departement = Departements[commune.departementId!]
+
+      if (!departements.includes(departement.nom)) {
+        departements.push(departement.nom)
+
+        const region = Regions[departement.regionId]
+        if (!regions.includes(region.nom)) {
+          regions.push(region.nom)
+        }
+      }
 
       return { communes, departements, regions }
     },
-    { communes: [], departements: [], regions: [] }
+    { communes: [], departements: [], regions: [] } as {
+      communes: string[]
+      departements: string[]
+      regions: string[]
+    }
   )
-
-export { titresGeojsonFormat, titreGeojsonFormat, titresTableFormat }

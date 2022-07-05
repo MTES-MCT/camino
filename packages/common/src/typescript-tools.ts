@@ -5,3 +5,7 @@ export const isNotNullNorUndefined = <T>(
 ): value is T => {
   return value !== null && value !== undefined
 }
+
+export const onlyUnique = <T>(value: T, index: number, self: T[]): boolean => {
+  return self.indexOf(value) === index
+}

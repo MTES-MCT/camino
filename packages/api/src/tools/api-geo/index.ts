@@ -10,6 +10,7 @@ import {
 } from '../../types'
 import errorLog from '../error-log'
 import { check } from '@placemarkio/check-geojson'
+import { isDepartementId } from 'camino-common/src/departement'
 
 const apiGeoFetch = async (geojson: IGeoJson, areasTypes: IAreaType[]) => {
   try {
@@ -70,7 +71,17 @@ const apiGeoGet = async (
 
   if (apiGeoResult.communes) {
     areas.communes = apiGeoResult.communes.map(area => {
-      return { ...areaFormat(area), departementId: area.departement as string }
+      const departement = area.departement as string
+      if (!isDepartementId(departement)) {
+        throw new Error(
+          `Un département inconnu est remonté par geoApi ${departement}`
+        )
+      } else {
+        return {
+          ...areaFormat(area),
+          departementId: departement
+        }
+      }
     })
   }
 

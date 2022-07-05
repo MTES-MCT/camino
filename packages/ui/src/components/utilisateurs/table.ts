@@ -5,8 +5,9 @@ import {
   isEntreprise
 } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/administrations'
+import { Column } from '@/components/_ui/table-auto.type'
 
-const utilisateursColonnes = [
+export const utilisateursColonnes: Column[] = [
   {
     id: 'nom',
     name: 'Nom',
@@ -34,14 +35,16 @@ const utilisateursColonnes = [
   }
 ]
 
-const utilisateursLignesBuild = utilisateurs =>
-  utilisateurs.map(utilisateur => {
+export const utilisateursLignesBuild = (utilisateurs: any) =>
+  utilisateurs.map((utilisateur: any) => {
     let elements
 
     if (isAdministration(utilisateur)) {
       elements = [Administrations[utilisateur.administrationId].abreviation]
     } else if (isEntreprise(utilisateur) || isBureauDEtudes(utilisateur)) {
-      elements = utilisateur.entreprises.map(({ nom }) => nom)
+      elements = (utilisateur as any).entreprises.map(
+        ({ nom }: { nom: any }) => nom
+      )
     }
 
     const lien =
@@ -82,5 +85,3 @@ const utilisateursLignesBuild = utilisateurs =>
       columns
     }
   })
-
-export { utilisateursColonnes, utilisateursLignesBuild }

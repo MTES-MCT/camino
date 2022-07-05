@@ -3,6 +3,7 @@ const path = require('path')
 const { defineConfig } = require('vite')
 const vue = require('@vitejs/plugin-vue')
 const inject = require('@rollup/plugin-inject')
+const { visualizer } = require('rollup-plugin-visualizer')
 
 dotenv.config({ path: path.resolve(process.cwd(), '../../.env') })
 
@@ -11,7 +12,7 @@ const commitHash = process.env.GIT_SHA
   : require('child_process').execSync('git rev-parse --short HEAD').toString()
 
 module.exports = defineConfig({
-  plugins: [vue()],
+  plugins: [vue(), visualizer()],
   root: 'src',
   resolve: {
     alias: {

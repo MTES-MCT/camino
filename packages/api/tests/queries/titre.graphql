@@ -50,21 +50,10 @@ fragment titre on Titre {
   geojsonMultiPolygon {
     ...geojsonMultiPolygon
   }
-  pays {
+  communes {
     id
     nom
-    regions {
-      id
-      nom
-      departements {
-        id
-        nom
-        communes {
-          id
-          nom
-        }
-      }
-    }
+    departementId
   }
   demarches {
     ...demarche

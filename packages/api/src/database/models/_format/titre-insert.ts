@@ -3,7 +3,7 @@ import { Pojo } from 'objection'
 const titreInsertFormat = (json: Pojo) => {
   delete json.geojsonMultiPolygon
   delete json.geojsonPoints
-  delete json.pays
+  delete json.communes
   delete json.surface
   delete json.contenu
   delete json.modification

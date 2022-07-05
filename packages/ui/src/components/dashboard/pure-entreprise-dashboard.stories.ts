@@ -1,6 +1,7 @@
 import PureEntrepriseDashboard from './pure-entreprise-dashboard.vue'
 import { Meta, Story } from '@storybook/vue3'
-import { Entreprise } from '@/components/titres/table-utils'
+import { TitreEntreprise } from '@/components/titres/table-utils'
+import { DEPARTEMENT_IDS } from 'camino-common/src/departement'
 
 const meta: Meta = {
   title: 'Components/PureEntrepriseDashboard',
@@ -13,11 +14,11 @@ const meta: Meta = {
 export default meta
 
 type Props = {
-  getEntreprisesTitres: () => Promise<Entreprise[]>
+  getEntreprisesTitres: () => Promise<TitreEntreprise[]>
   displayActivites: boolean
 }
 
-const titres: Entreprise[] = [
+const titres: TitreEntreprise[] = [
   {
     id: 'jp25TIfyQiXM987fAGc2DX4N',
     slug: 'm-cx-aachen-1810',
@@ -58,20 +59,7 @@ const titres: Entreprise[] = [
         nom: 'NINOR'
       }
     ],
-    pays: [
-      {
-        regions: [
-          {
-            nom: 'Grand Est',
-            departements: [
-              {
-                nom: 'Moselle'
-              }
-            ]
-          }
-        ]
-      }
-    ],
+    communes: [{ departementId: DEPARTEMENT_IDS.Moselle }],
     references: [
       {
         type: {
@@ -117,20 +105,7 @@ const titres: Entreprise[] = [
         nom: "CHAMB'OR"
       }
     ],
-    pays: [
-      {
-        regions: [
-          {
-            nom: 'Guyane',
-            departements: [
-              {
-                nom: 'Guyane'
-              }
-            ]
-          }
-        ]
-      }
-    ],
+    communes: [{ departementId: DEPARTEMENT_IDS.Guyane }],
     references: [
       {
         type: {
@@ -169,7 +144,7 @@ OkWithoutActivities.args = {
 }
 export const Loading = Template.bind({})
 Loading.args = {
-  getEntreprisesTitres: () => new Promise<Entreprise[]>(resolve => {}),
+  getEntreprisesTitres: () => new Promise<TitreEntreprise[]>(resolve => {}),
   displayActivites: true
 }
 export const WithError = Template.bind({})

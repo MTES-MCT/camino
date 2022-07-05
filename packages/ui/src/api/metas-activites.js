@@ -195,16 +195,6 @@ const activitesTypesPays = apiGraphQLFetch(
   `
 )
 
-const activiteTypePaysModifier = apiGraphQLFetch(gql`
-  mutation ActiviteTypePaysModifier($element: InputActiviteTypePays!) {
-    activiteTypePaysModifier(activiteTypePays: $element) {
-      ...activiteTypePays
-    }
-  }
-
-  ${fragmentActiviteTypePays}
-`)
-
 const activiteTypePaysCreer = apiGraphQLFetch(gql`
   mutation ActiviteTypePaysCreer($element: InputActiviteTypePays!) {
     activiteTypePaysCreer(activiteTypePays: $element) {
@@ -241,6 +231,5 @@ export {
   activiteTypeDocumentTypeSupprimer,
   activitesTypesPays,
   activiteTypePaysCreer,
-  activiteTypePaysModifier,
   activiteTypePaysSupprimer
 }

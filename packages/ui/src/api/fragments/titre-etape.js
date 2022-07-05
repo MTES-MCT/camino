@@ -4,7 +4,6 @@ import { fragmentTitreEntreprises } from './entreprises'
 import { fragmentTitreSubstance } from './substance'
 import { fragmentPoint } from './point'
 import { fragmentGeojsonMultiPolygon } from './geojson'
-import { fragmentPays } from './pays'
 import {
   fragmentDemarcheType,
   fragmentDocumentType,
@@ -12,6 +11,7 @@ import {
 } from './metas'
 
 import { fragmentDocument } from './documents'
+import { fragmentCommune } from '@/api/fragments/commune'
 
 const fragmentIncertitudes = gql`
   fragment incertitudes on Incertitudes {
@@ -174,8 +174,8 @@ const fragmentTitreEtape = gql`
     heritageProps {
       ...heritageProps
     }
-    pays {
-      ...pays
+    communes {
+      ...commune
     }
     contenu
     heritageContenu
@@ -196,7 +196,7 @@ const fragmentTitreEtape = gql`
 
   ${fragmentTitreSubstance}
 
-  ${fragmentPays}
+  ${fragmentCommune}
 
   ${fragmentDocument}
 
@@ -336,8 +336,8 @@ const fragmentEtape = gql`
     heritageProps {
       ...heritageProps
     }
-    pays {
-      ...pays
+    communes {
+      ...commune
     }
     contenu
     heritageContenu
@@ -361,7 +361,7 @@ const fragmentEtape = gql`
 
   ${fragmentTitreSubstance}
 
-  ${fragmentPays}
+  ${fragmentCommune}
 
   ${fragmentDocument}
 

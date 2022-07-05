@@ -7,10 +7,6 @@ const fragmentActiviteType = gql`
     nom
     dateDebut
     delaiMois
-    pays {
-      id
-      nom
-    }
     ordre
     frequenceId
     frequence {

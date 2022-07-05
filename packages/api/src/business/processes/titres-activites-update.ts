@@ -28,7 +28,7 @@ const titresActivitesUpdate = async (titresIds?: string[]) => {
             substances: { legales: { id: {} } }
           }
         },
-        communes: { departement: { region: { pays: { id: {} } } } },
+        communes: { id: {} },
         activites: { id: {} },
         titulaires: { utilisateurs: { id: {} } }
       }
@@ -38,7 +38,6 @@ const titresActivitesUpdate = async (titresIds?: string[]) => {
 
   const activitesTypes = await activitesTypesGet({
     fields: {
-      pays: { id: {} },
       frequence: {
         mois: { id: {} },
         trimestres: { mois: { id: {} } },
