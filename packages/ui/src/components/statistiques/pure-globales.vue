@@ -277,7 +277,11 @@ const totalUtilisateurs = computed(() => {
 
 const utilisateurs = computed(() => {
   return {
-    labels: ['Entreprises', 'Administrations', 'Défaut'],
+    labels: [
+      'Utilisateurs avec un compte "Entreprise"',
+      'Utilisateurs avec un compte "Administration"',
+      'Utilisateurs par défaut'
+    ],
     datasets: [
       {
         label: 'Utilisateurs',
