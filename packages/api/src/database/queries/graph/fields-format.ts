@@ -83,7 +83,7 @@ const fieldsFormat = (fields: IFields, parent: string) => {
     }
   })
 
-  if (fields.communes && (isParentTitre || parent === 'etapes')) {
+  if (isParentTitre || parent === 'etapes') {
     fields.communes = { id: {} }
   }
 
