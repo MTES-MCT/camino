@@ -267,7 +267,6 @@ interface IAdministration {
   localeTitres?: ITitre[] | null
   associee?: boolean | null
   emailsModification?: boolean
-  emailsLecture?: boolean
   modification?: boolean | null
   activitesTypesEmails?: (IActiviteType & { email: string })[]
 }

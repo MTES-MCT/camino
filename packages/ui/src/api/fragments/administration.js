@@ -5,22 +5,8 @@ const fragmentAdministration = gql`
   fragment administration on Administration {
     id
     emailsModification
-    emailsLecture
-    activitesTypesEmails {
-      id
-      nom
-      email
-    }
     utilisateurs {
       ...utilisateur
-    }
-    departement {
-      id
-      nom
-    }
-    region {
-      id
-      nom
     }
     titresTypes {
       id

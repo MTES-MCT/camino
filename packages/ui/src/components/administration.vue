@@ -100,33 +100,30 @@
             </div>
           </div>
 
-          <div v-if="administration.departement" class="tablet-blobs">
+          <div v-if="departement" class="tablet-blobs">
             <div class="tablet-blob-1-4">
               <h5>Département</h5>
             </div>
             <div class="tablet-blob-3-4">
               <p>
-                {{ administration.departement.nom }}
+                {{ departement.nom }}
               </p>
             </div>
           </div>
 
-          <div v-if="administration.region" class="tablet-blobs">
+          <div v-if="region" class="tablet-blobs">
             <div class="tablet-blob-1-4">
               <h5>Région</h5>
             </div>
             <div class="tablet-blob-3-4">
               <p>
-                {{ administration.region.nom }}
+                {{ region.nom }}
               </p>
             </div>
           </div>
 
           <div
-            v-if="
-              isSuper(user) &&
-              (administration.region || administration.departement)
-            "
+            v-if="isSuper(user) && (region || departement)"
             class="tablet-blobs"
           >
             <div class="tablet-blob-1-4" />
@@ -153,12 +150,13 @@
       />
     </div>
 
-    <div v-if="administration.emailsLecture">
+    <div v-if="canRead">
       <div class="line-neutral width-full mb-xxl" />
       <h2>Emails</h2>
       <AdministrationActiviteTypeEmail
         :administration="administration"
         :activitesTypes="activitesTypes"
+        :activitesTypesEmails="activitesTypesEmails"
         @emailUpdate="activiteTypeEmailUpdate"
         @emailDelete="activiteTypeEmailDelete"
       />
@@ -189,6 +187,9 @@ import {
   Administrations
 } from 'camino-common/src/administrations'
 import { isSuper } from 'camino-common/src/roles'
+import { canReadActivitesTypesEmails } from 'camino-common/src/permissions/administrations'
+import { Departements } from 'camino-common/src/departement'
+import { Regions } from 'camino-common/src/region'
 
 export default {
   components: {
@@ -206,11 +207,19 @@ export default {
   },
 
   computed: {
+    canRead() {
+      return (
+        this.activitesTypes.length &&
+        canReadActivitesTypesEmails(this.user, this.administration.id)
+      )
+    },
     administration() {
       const element = this.$store.state.administration.element
       return { ...element, ...Administrations[this.$route.params.id] }
     },
-
+    activitesTypesEmails() {
+      return this.$store.state.administration.activitesTypesEmails
+    },
     type() {
       const typeId = this.administration?.typeId
 
@@ -239,6 +248,16 @@ export default {
 
     activitesTypes() {
       return this.$store.state.administration.metas.activitesTypes
+    },
+    departement() {
+      return this.administration.departementId
+        ? Departements[this.administration.departementId]
+        : undefined
+    },
+    region() {
+      return this.administration.regionId
+        ? Regions[this.administration.regionId]
+        : undefined
     }
   },
 

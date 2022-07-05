@@ -10,10 +10,7 @@ import Titres from '../../models/titres'
 
 import { titresQueryModify } from './titres'
 import { utilisateursQueryModify } from './utilisateurs'
-import { administrationsActivitesTypesEmailsQueryModify } from './administrations-activites-types-emails'
-import ActivitesTypes from '../../models/activites-types'
 import {
-  isAdministration,
   isAdministrationAdmin,
   isAdministrationEditeur,
   isSuper
@@ -24,48 +21,6 @@ import {
   sortedAdministrations
 } from 'camino-common/src/administrations'
 import { Departements } from 'camino-common/src/departement'
-
-// TODO 2022-07-04: peut être déplacé dans le common en fonction pure de gestion des droits
-const emailsLectureQuery = (
-  user: IUtilisateur | null | undefined,
-  administrationAlias: string
-) => {
-  if (
-    isSuper(user) ||
-    (isAdministration(user) &&
-      Administrations[user.administrationId].typeId === 'min')
-  ) {
-    // Utilisateur super ou membre de ministère (admin ou éditeur) : tous les droits
-    return raw('true')
-  } else if (isAdministration(user)) {
-    const administration = Administrations[user.administrationId]
-
-    const administrationIds: AdministrationId[] = []
-
-    if (administration.regionId) {
-      const departementIds = Object.values(Departements)
-        .filter(({ regionId }) => regionId === administration.regionId)
-        .map(({ id }) => id)
-      // On récupère toutes les administrations départementales qui sont de la même région que l’administration régionale de l’utilisateur
-      administrationIds.push(
-        ...sortedAdministrations
-          .filter(({ departementId }) => departementIds.includes(departementId))
-          .map(({ id }) => id)
-      )
-    }
-
-    administrationIds.push(user.administrationId)
-
-    return raw(
-      `${administrationAlias}.id IN (${administrationIds
-        .map(() => '?')
-        .join(',')})`,
-      administrationIds
-    )
-  }
-
-  return raw('false')
-}
 
 const administrationsQueryModify = (
   q: QueryBuilder<
@@ -121,15 +76,6 @@ const administrationsQueryModify = (
       }
     }
   }
-
-  q.select(emailsLectureQuery(user, 'administrations').as('emailsLecture'))
-
-  q.modifyGraph('activitesTypesEmails', a =>
-    administrationsActivitesTypesEmailsQueryModify(
-      a as QueryBuilder<ActivitesTypes, ActivitesTypes | ActivitesTypes[]>,
-      user
-    )
-  )
 
   q.modifyGraph('gestionnaireTitres', a =>
     titresQueryModify(a as QueryBuilder<Titres, Titres | Titres[]>, user)
@@ -332,6 +278,5 @@ export {
   administrationsTitresTypesTitresStatutsModify,
   administrationsTitresTypesEtapesTypesModify,
   administrationsTitresQuery,
-  administrationsActivitesModify,
-  emailsLectureQuery
+  administrationsActivitesModify
 }

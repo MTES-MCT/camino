@@ -60,7 +60,7 @@ describe("état de l'administration consultée", () => {
 
   test("obtient les données d'un administration", async () => {
     const administration = { id: 71, nom: 'toto' }
-    const apiMock = api.administration.mockResolvedValue(administration)
+    const apiMock = api.administration.mockResolvedValue({ administration })
     await store.dispatch('administration/get', 71)
 
     expect(apiMock).toHaveBeenCalledWith({ id: 71 })

@@ -33,6 +33,9 @@ import { administrationFormat } from '../../_format/administrations'
 import { emailCheck } from '../../../tools/email-check'
 import { userGet } from '../../../database/queries/utilisateurs'
 import { isSuper } from 'camino-common/src/roles'
+import { canReadActivitesTypesEmails } from 'camino-common/src/permissions/administrations'
+import administrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails'
+import { isAdministrationId } from 'camino-common/src/administrations'
 
 const administration = async (
   { id }: { id: string },
@@ -50,6 +53,34 @@ const administration = async (
     }
 
     return administrationFormat(administration)
+  } catch (e) {
+    if (debug) {
+      console.error(e)
+    }
+
+    throw e
+  }
+}
+
+export const administrationActivitesTypesEmails = async (
+  { id }: { id: string },
+  context: IToken
+): Promise<IAdministrationActiviteTypeEmail[]> => {
+  try {
+    const user = await userGet(context.user?.id)
+
+    if (isAdministrationId(id)) {
+      const can = canReadActivitesTypesEmails(user, id)
+      if (!can) {
+        throw new Error('droit insuffisant')
+      }
+
+      return administrationsActivitesTypesEmails
+        .query()
+        .where('administrationId', id)
+    } else {
+      throw new Error('l’identifiant est inconnu')
+    }
   } catch (e) {
     if (debug) {
       console.error(e)

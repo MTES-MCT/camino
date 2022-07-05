@@ -220,57 +220,6 @@ describe('administrationsQueryModify', () => {
     }
   )
 
-  test.each`
-    role         | emailsLecture
-    ${'super'}   | ${true}
-    ${'admin'}   | ${true}
-    ${'editeur'} | ${true}
-    ${'defaut'}  | ${false}
-  `(
-    "pour une préfecture, emailsLecture est '$emailsLecture' pour un utilisateur $role et pour tous ses membres",
-    async ({ role, emailsLecture }) => {
-      const mockAdministration = CommonAdministrations['pre-01053-01']
-
-      const email = `${idGenerate()}@bar.com`
-      await AdministrationsActivitesTypesEmails.query().delete()
-      await AdministrationsActivitesTypesEmails.query().insert({
-        administrationId: mockAdministration.id,
-        email,
-        activiteTypeId: 'grx'
-      })
-
-      const mockUser: IUtilisateur = {
-        id: idGenerate(),
-        role,
-        administrationId: mockAdministration.id,
-        email: 'email' + idGenerate(),
-        motDePasse: 'motdepasse',
-        dateCreation: '2022-05-12'
-      }
-
-      await Utilisateurs.query().insertGraph(
-        mockUser,
-        options.utilisateurs.update
-      )
-
-      const q = administrationsQueryModify(
-        Administrations.query().where('id', mockAdministration.id),
-        mockUser
-      )
-      const res = (await q
-        .withGraphFetched({ activitesTypesEmails: {} })
-        .first()) as IAdministration
-      if (emailsLecture) {
-        expect(res.emailsLecture).toBeTruthy()
-        expect(res.activitesTypesEmails?.length).toBeTruthy()
-        expect(res.activitesTypesEmails![0].email).toBe(email)
-      } else {
-        expect(res.emailsLecture).toBeFalsy()
-        expect(res.activitesTypesEmails).toHaveLength(0)
-      }
-    }
-  )
-
   test('vérifie que le bon nombre de couple types activites + email est retourné par une requête', async () => {
     const mockAdministration = CommonAdministrations['pre-01053-01']
 

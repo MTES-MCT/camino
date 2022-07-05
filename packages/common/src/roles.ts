@@ -21,7 +21,7 @@ type UserEditeur = { role: 'editeur'; administrationId: AdministrationId }
 type UserSuper = { role: 'super'; administrationId: undefined }
 type UserDefaut = { role: 'defaut'; administrationId: undefined }
 
-type User =
+export type User =
   | { role: Role; administrationId: undefined | null | AdministrationId }
   | undefined
   | null
