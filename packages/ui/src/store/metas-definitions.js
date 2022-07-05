@@ -72,7 +72,6 @@ import {
   activiteTypeDocumentTypeCreer,
   activiteTypeDocumentTypeSupprimer,
   activitesTypesPays,
-  activiteTypePaysModifier,
   activiteTypePaysCreer,
   activiteTypePaysSupprimer
 } from '../api/metas-activites'
@@ -643,7 +642,6 @@ const metasIndex = {
 
   'activites-types--pays': {
     get: activitesTypesPays,
-    update: activiteTypePaysModifier,
     create: activiteTypePaysCreer,
     delete: activiteTypePaysSupprimer,
     nom: 'Types des activités | Pays',
@@ -657,8 +655,8 @@ const metasIndex = {
       {
         id: 'paysId',
         nom: 'Pays',
-        type: 'elements',
-        entities: Object.keys(PaysList)
+        type: Array,
+        elements: Object.keys(PaysList)
       }
     ],
     ids: ['activiteTypeId', 'paysId']

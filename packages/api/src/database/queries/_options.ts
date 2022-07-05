@@ -6,14 +6,6 @@ const points = {
   graph: `references`
 }
 
-const communes = {
-  graph: `departement.region.pays`
-}
-
-const pays = {
-  graph: `regions.departements.communes`
-}
-
 const titresDemarchesPhases = {
   graph: 'statut'
 }
@@ -123,7 +115,6 @@ const titresEtapes = {
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph},
     administrations.${administrations.graph},
-    communes.${communes.graph},
     forets
   ]`,
 
@@ -185,7 +176,6 @@ const titresDemarches = {
 }
 
 const activitesTypesRelateTrue = [
-  'pays',
   'frequence',
   'titresTypes',
   'administrations',
@@ -201,7 +191,7 @@ const activitesTypesRelateFalse = [
 ]
 
 const activitesTypes = {
-  graph: `[pays, frequence.[mois, trimestres.mois, annees], titresTypes, administrations, documentsTypes]`,
+  graph: `[frequence.[mois, trimestres.mois, annees], titresTypes, administrations, documentsTypes]`,
 
   update: {
     relate: activitesTypesRelateTrue,
@@ -253,13 +243,7 @@ const titresRelateFalse = [
   ...titresTypesRelateFalse.map(k => `domaine.titresTypes.${k}`),
   'points',
   'points.references',
-  'pays',
-  'pays.departement',
-  'pays.departement.region',
   'communes',
-  'communes.departement',
-  'communes.departement.region',
-  'communes.departement.region.pays',
   'forets',
   'substances',
   'substances.legales',
@@ -283,8 +267,6 @@ const titresRelateFalse = [
   'surfaceEtape',
   ...titresActivitesRelateFalse.map(k => `activites.${k}`),
   ...titresDemarchesRelateFalse.map(k => `demarches.${k}`),
-  'titresAdministrations.region',
-  'titresAdministrations.departement',
   'titresAdministrations.type'
 ]
 
@@ -300,7 +282,6 @@ const titres = {
     administrationsGestionnaires.${administrations.graph},
     administrationsLocales.${administrations.graph},
     demarches(orderDesc).${titresDemarches.graph},
-    communes.${communes.graph},
     forets,
     activites(orderDesc).${titresActivites.graph},
     references(orderAsc).type,
@@ -324,14 +305,12 @@ const journaux = {
 export default {
   activitesTypes,
   administrations,
-  communes,
   demarchesTypes,
   domaines,
   documents,
   entreprises,
   entreprisesEtablissements,
   etapesTypes,
-  pays,
   points,
   substances,
   titres,

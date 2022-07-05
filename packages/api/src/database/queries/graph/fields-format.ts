@@ -83,10 +83,8 @@ const fieldsFormat = (fields: IFields, parent: string) => {
     }
   })
 
-  if (fields.pays && (isParentTitre || parent === 'etapes')) {
-    fields.communes = { departement: { region: { pays: { id: {} } } } }
-
-    delete fields.pays
+  if (fields.communes && (isParentTitre || parent === 'etapes')) {
+    fields.communes = { id: {} }
   }
 
   // ajoute `(orderDesc)` à certaine propriétés

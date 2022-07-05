@@ -1,13 +1,10 @@
 import { ICommune, IForet, ISDOMZone } from '../../types'
 
-import options from './_options'
-
 import Communes from '../models/communes'
 import Forets from '../models/forets'
 import SDOMZones from '../models/sdom-zones'
 
-const communesGet = async (): Promise<ICommune[]> =>
-  Communes.query().withGraphFetched(options.communes.graph)
+const communesGet = async (): Promise<ICommune[]> => Communes.query()
 
 const communesUpsert = async (communes: ICommune[]) =>
   Communes.query().upsertGraph(communes, { insertMissing: true })

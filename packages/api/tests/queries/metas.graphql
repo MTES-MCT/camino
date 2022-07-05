@@ -18,7 +18,8 @@ query {
     ...geosysteme
   }
   pays {
-    ...pays
+    id
+    nom
   }
   regions {
     id

@@ -38,7 +38,6 @@ const titresActivitesUpdate = async (titresIds?: string[]) => {
 
   const activitesTypes = await activitesTypesGet({
     fields: {
-      pays: { id: {} },
       frequence: {
         mois: { id: {} },
         trimestres: { mois: { id: {} } },

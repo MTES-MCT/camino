@@ -76,12 +76,7 @@ fragment titre on Titre {
   references {
     ...reference
   }
-  volume
   surface
-  volumeUnite {
-    id
-    nom
-  }
 }
 
 fragment reference on Reference {

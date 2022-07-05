@@ -18,17 +18,10 @@ import {
   TableAutoRow,
   TextColumnData
 } from '@/components/_ui/table-auto.type'
+import { DepartementId, Departements } from 'camino-common/src/departement'
+import { onlyUnique } from 'camino-common/src/typescript-tools'
+import { Regions } from 'camino-common/src/region'
 
-interface Departement {
-  nom: string
-}
-interface Region {
-  nom: string
-  departements: Departement[]
-}
-interface Pays {
-  regions: Region[]
-}
 interface Reference {
   type: { nom: string }
   nom: string
@@ -42,11 +35,11 @@ interface Titulaire {
   id: string
   nom: string
 }
-export interface Entreprise {
+export interface TitreEntreprise {
   id: string
   slug: string
   nom: string
-  pays?: Pays[]
+  communes?: { departementId: DepartementId }[]
   references?: Reference[]
   domaine: { id: DomaineId; nom: string }
   coordonnees?: { x: number; y: number }
@@ -237,26 +230,20 @@ export const activitesCell = (titre: {
   value: (titre?.activitesAbsentes ?? 0) + (titre?.activitesEnConstruction ?? 0)
 })
 const titresLignesBuild = (
-  titres: Entreprise[],
+  titres: TitreEntreprise[],
   activitesCol: boolean,
   ordre = 'asc'
 ): TableAutoRow[] =>
   titres.map(titre => {
-    const regions = titre.pays?.reduce<string[]>(
-      (acc, pay) => acc.concat(pay.regions?.map(({ nom }) => nom)),
-      []
-    )
-    const departements = titre.pays?.reduce<string[]>(
-      (pays, pay) =>
-        pays.concat(
-          pay.regions?.reduce<string[]>(
-            (regions, region) =>
-              regions.concat(region.departements?.map(({ nom }) => nom)),
-            []
-          )
-        ),
-      []
-    )
+    const departements =
+      titre.communes
+        ?.map(({ departementId }) => Departements[departementId])
+        .filter(onlyUnique) ?? []
+    const departementNoms: string[] = departements.map(({ nom }) => nom)
+    const regionNoms: string[] = departements
+      .map(({ regionId }) => Regions[regionId].nom)
+      .filter(onlyUnique)
+
     const columns: { [key in string]: ComponentColumnData | TextColumnData } = {
       nom: nomCell(titre),
       domaine: domaineCell({ domaineId: titre.domaine.id }),
@@ -277,20 +264,20 @@ const titresLignesBuild = (
       regions: {
         component: markRaw(List),
         props: {
-          elements: regions,
+          elements: regionNoms,
           mini: true
         },
         class: 'mb--xs',
-        value: regions
+        value: regionNoms
       },
       departements: {
         component: markRaw(List),
         props: {
-          elements: departements,
+          elements: departementNoms,
           mini: true
         },
         class: 'mb--xs',
-        value: departements
+        value: departementNoms
       },
       references: referencesCell(titre)
     }

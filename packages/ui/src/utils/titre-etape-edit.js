@@ -198,7 +198,7 @@ const etapeEditFormat = etape => {
     etape.justificatifs = []
   }
 
-  delete etape.pays
+  delete etape.communes
   delete etape.modification
   delete etape.points
   delete etape.geojsonPoints
