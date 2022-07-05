@@ -58,6 +58,8 @@ services:
     environment:
       UI_PORT: ${UI_PORT}
       API_URL: ${API_URL}
+      UI_HOST: ${UI_HOST}
+      SENTRY_DSN: ${SENTRY_DSN}
       API_MATOMO_URL: ${API_MATOMO_URL}
       API_MATOMO_ID: ${API_MATOMO_ID}
       ENV: ${ENV}

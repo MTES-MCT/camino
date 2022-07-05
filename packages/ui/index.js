@@ -53,7 +53,8 @@ app.use(
 app.use('/sentryOptions', (req, res) =>
   res.json({
     dsn: process.env.SENTRY_DSN,
-    environment: process.env.ENV
+    environment: process.env.ENV,
+    host: process.env.UI_HOST
   })
 )
 app.use('/matomoOptions', (req, res) =>

@@ -1,8 +1,8 @@
 import './styles/styles.css'
 import { createApp } from 'vue'
 import { sync } from 'vuex-router-sync'
-import * as Sentry from '@sentry/browser'
-import * as SentryIntegrations from '@sentry/integrations'
+import * as Sentry from '@sentry/vue'
+import { BrowserTracing } from '@sentry/tracing'
 
 // le polyfill ResizeObserver est nécessaire pour chart.js sur Firefox 60
 // on devrait pourvoir l'injecter dans vite.config, mais ça ne marche pas…
@@ -26,15 +26,15 @@ Promise.resolve().then(async () => {
       const options = await sentryResponse.json()
       if (!options.dsn) throw new Error('dsn manquant')
       Sentry.init({
+        app,
         dsn: options.dsn,
         environment: options.environment ? options.environment : 'production',
         autoSessionTracking: false,
         integrations: [
-          new SentryIntegrations.Vue({
-            Vue: app,
-            attachProps: true
-          }),
-          new SentryIntegrations.RewriteFrames()
+          new BrowserTracing({
+            routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+            tracingOrigins: ['localhost', options.host, /^\//]
+          })
         ],
         /* global applicationVersion */
         // @ts-ignore
