@@ -83,10 +83,6 @@ const fieldsFormat = (fields: IFields, parent: string) => {
     }
   })
 
-  if (isParentTitre || parent === 'etapes') {
-    fields.communes = { id: {} }
-  }
-
   // ajoute `(orderDesc)` à certaine propriétés
   if (fieldsOrderDesc.includes(parent)) {
     // TODO: est ce qu'on peut faire un typage plus propre ?
