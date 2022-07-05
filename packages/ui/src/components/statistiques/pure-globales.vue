@@ -48,7 +48,7 @@
     </div>
   </div>
   <div id="utilisateurs" class="mb-xxl content">
-    <h2>Les profils des utilisateurs de Camino</h2>
+    <h2>Les différents profils des utilisateurs de Camino</h2>
     <span class="separator" />
     <div class="tablet-float-blobs clearfix">
       <div class="tablet-float-blob-1-3">
@@ -56,7 +56,7 @@
           <p class="h0 text-center">
             {{ numberFormatInternal(totalUtilisateurs) }}
           </p>
-          <p class="bold text-center">utilisateurs enregistrés</p>
+          <p class="bold text-center">utilisateurs sur la plateforme</p>
         </div>
         <div class="mb-xl mt">
           <p class="h0 text-center">
@@ -66,9 +66,7 @@
               )
             }}
           </p>
-          <p class="bold text-center">
-            utilisateurs rattachés à un compte Entreprise
-          </p>
+          <p class="bold text-center">utilisateurs affiliés à une Entreprise</p>
         </div>
 
         <div class="mb-xl mt">
@@ -91,7 +89,7 @@
     </div>
   </div>
   <div id="administrations" class="mb-xxl content">
-    <h2>Les administrations utilisatrices de Camino</h2>
+    <h2>Répartition des différentes administrations sur Camino</h2>
     <span class="separator" />
     <div class="tablet-float-blobs clearfix">
       <div class="tablet-float-blob-1-3">
