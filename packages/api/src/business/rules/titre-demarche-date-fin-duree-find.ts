@@ -40,7 +40,7 @@ const titreDemarcheDateFinAndDureeFind = (
 
       // si
       // - la démarche est un octroi
-      if (['oct', 'vut', 'vct'].includes(titreDemarche.typeId)) {
+      if (['oct', 'vut', 'vct', 'fus'].includes(titreDemarche.typeId)) {
         return titreDemarcheOctroiDateFinAndDureeFind(
           duree,
           titreDemarche.etapes
