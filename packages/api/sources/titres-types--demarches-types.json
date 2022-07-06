@@ -526,6 +526,10 @@
   },
   {
     "titre_type_id": "cxm",
+    "demarche_type_id": "fus"
+  },
+  {
+    "titre_type_id": "cxm",
     "demarche_type_id": "mut",
     "delai_implicite": "15",
     "delai_recours": "2"

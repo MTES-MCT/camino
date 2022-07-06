@@ -10764,6 +10764,18 @@
   },
   {
     "titre_type_id": "cxm",
+    "ordre": 100,
+    "demarche_type_id": "fus",
+    "etape_type_id": "dex"
+  },
+  {
+    "titre_type_id": "cxm",
+    "ordre": 200,
+    "demarche_type_id": "fus",
+    "etape_type_id": "dpu"
+  },
+  {
+    "titre_type_id": "cxm",
     "ordre": 440,
     "demarche_type_id": "mut",
     "etape_type_id": "acg"
