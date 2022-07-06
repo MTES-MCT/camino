@@ -41,6 +41,11 @@
     "gestionnaire": true
   },
   {
+    "administration_id": "dre-nouvelle-aquitaine-01",
+    "titre_type_id": "pxg",
+    "gestionnaire": true
+  },
+  {
     "administration_id": "min-dajb-01",
     "titre_type_id": "apc",
     "associee": true
@@ -815,6 +820,11 @@
   {
     "administration_id": "min-mtes-dgpr-01",
     "titre_type_id": "pxw",
+    "associee": true
+  },
+  {
+    "administration_id": "ope-brgm-01",
+    "titre_type_id": "pcc",
     "associee": true
   },
   {

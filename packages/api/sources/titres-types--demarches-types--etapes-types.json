@@ -6170,7 +6170,22 @@
     "titre_type_id": "axm",
     "ordre": 150,
     "demarche_type_id": "oct",
-    "etape_type_id": "dae"
+    "etape_type_id": "dae",
+    "sections": [
+      {
+        "id": "mea",
+        "nom": "Mission autorité environnementale",
+        "elements": [
+          {
+            "id": "arrete",
+            "nom": "Arrêté préfectoral",
+            "type": "text",
+            "optionnel": true,
+            "description": "Numéro de l'arrêté préfectoral portant décision dans le cadre de l’examen au cas par cas du projet d’autorisation de recherche minière"
+          }
+        ]
+      }
+    ]
   },
   {
     "titre_type_id": "axm",
@@ -13943,7 +13958,29 @@
     "titre_type_id": "cxw",
     "ordre": 260,
     "demarche_type_id": "aom",
-    "etape_type_id": "wao"
+    "etape_type_id": "wao",
+    "sections": [
+      {
+        "id": "cxx",
+        "nom": "Propriétés de l'arrêté d'ouverture de travaux",
+        "elements": [
+          {
+            "id": "volume",
+            "nom": "Volume",
+            "type": "number",
+            "optionnel": true
+          },
+          {
+            "id": "volumeUniteId",
+            "nom": "Unité du volume",
+            "type": "select",
+            "optionnel": true,
+            "description": "",
+            "valeursMetasNom": "unites"
+          }
+        ]
+      }
+    ]
   },
   {
     "titre_type_id": "cxw",
@@ -21650,6 +21687,18 @@
     "etape_type_id": "spp"
   },
   {
+    "titre_type_id": "prg",
+    "ordre": 2,
+    "demarche_type_id": "vut",
+    "etape_type_id": "dex"
+  },
+  {
+    "titre_type_id": "prg",
+    "ordre": 1,
+    "demarche_type_id": "vut",
+    "etape_type_id": "dpu"
+  },
+  {
     "titre_type_id": "prh",
     "ordre": 240,
     "demarche_type_id": "aom",
@@ -25550,6 +25599,12 @@
   },
   {
     "titre_type_id": "prm",
+    "ordre": 306,
+    "demarche_type_id": "pr2",
+    "etape_type_id": "aac"
+  },
+  {
+    "titre_type_id": "prm",
     "ordre": 550,
     "demarche_type_id": "pr2",
     "etape_type_id": "abd"
@@ -25574,6 +25629,18 @@
   },
   {
     "titre_type_id": "prm",
+    "ordre": 305,
+    "demarche_type_id": "pr2",
+    "etape_type_id": "apl"
+  },
+  {
+    "titre_type_id": "prm",
+    "ordre": 307,
+    "demarche_type_id": "pr2",
+    "etape_type_id": "apm"
+  },
+  {
+    "titre_type_id": "prm",
     "ordre": 370,
     "demarche_type_id": "pr2",
     "etape_type_id": "apo"
@@ -25583,6 +25650,12 @@
     "ordre": 380,
     "demarche_type_id": "pr2",
     "etape_type_id": "app"
+  },
+  {
+    "titre_type_id": "prm",
+    "ordre": 308,
+    "demarche_type_id": "pr2",
+    "etape_type_id": "ars"
   },
   {
     "titre_type_id": "prm",
@@ -25763,6 +25836,12 @@
     "ordre": 130,
     "demarche_type_id": "pr2",
     "etape_type_id": "spp"
+  },
+  {
+    "titre_type_id": "prm",
+    "ordre": 300,
+    "demarche_type_id": "pr2",
+    "etape_type_id": "ssr"
   },
   {
     "titre_type_id": "prm",

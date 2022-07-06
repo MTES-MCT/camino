@@ -4,6 +4,10 @@
     "nom": "Avis d'un service de l'administration centrale"
   },
   {
+    "id": "acc",
+    "nom": "Accord du propriétaire du sol ou du gestionnaire"
+  },
+  {
     "id": "acd",
     "nom": "Avis de la commission départementale des mines"
   },
@@ -80,12 +84,16 @@
     "nom": "Avis"
   },
   {
+    "id": "bil",
+    "nom": "3 derniers bilans et comptes de résultats"
+  },
+  {
     "id": "cam",
     "nom": "Contrat d'amodiation"
   },
   {
     "id": "car",
-    "nom": "Carte"
+    "nom": "Documents cartographiques"
   },
   {
     "id": "cco",
@@ -126,6 +134,10 @@
   {
     "id": "dcl",
     "nom": "Déclaration"
+  },
+  {
+    "id": "deb",
+    "nom": "Déclarations bancaires ou cautions appropriées"
   },
   {
     "id": "dec",
@@ -188,6 +200,10 @@
     "nom": "Justificatif des capacités techniques"
   },
   {
+    "id": "jeg",
+    "nom": "Justification d’existence du gisement"
+  },
+  {
     "id": "jid",
     "nom": "Justificatif d'identité"
   },
@@ -224,8 +240,21 @@
     "nom": "Lettre"
   },
   {
+    "id": "lis",
+    "nom": "Liste des travaux antérieurs",
+    "description": "Liste des travaux auxquels le demandeur a participé au cours des 3 dernières années"
+  },
+  {
     "id": "lpf",
     "nom": "Lettre de saisine du préfet"
+  },
+  {
+    "id": "mes",
+    "nom": "Mesures prévues pour réhabiliter le site "
+  },
+  {
+    "id": "met",
+    "nom": "Méthodes pour l'exécution des travaux"
   },
   {
     "id": "mot",
@@ -274,6 +303,10 @@
   {
     "id": "pla",
     "nom": "Plan"
+  },
+  {
+    "id": "plg",
+    "nom": "Planigramme des travaux"
   },
   {
     "id": "prg",
@@ -328,6 +361,11 @@
     "nom": "Rapport environnemental d'exploration"
   },
   {
+    "id": "ref",
+    "nom": "Références professionnelles ",
+    "description": "Références professionnelles du demandeur ou celles des cadres chargés du suivi et de la conduite des travaux"
+  },
+  {
     "id": "rfe",
     "nom": "Rapport financier d'exploration"
   },
@@ -346,6 +384,10 @@
   {
     "id": "rwp",
     "nom": "rapport annuel d'exploitation"
+  },
+  {
+    "id": "sch",
+    "nom": "Schéma de pénétration du massif forestier"
   },
   {
     "id": "sir",

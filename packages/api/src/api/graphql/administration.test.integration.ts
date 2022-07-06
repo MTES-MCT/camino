@@ -2,6 +2,7 @@ import { graphQLCall, queryImport } from '../../../tests/_utils/index'
 
 import { dbManager } from '../../../tests/db-manager'
 import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
+import { Domaines, DOMAINES_IDS } from 'camino-common/src/domaines'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -49,7 +50,18 @@ describe('administrationTitreTypeModifier', () => {
       data: {
         administrationTitreTypeModifier: {
           id: ADMINISTRATION_IDS.BRGM,
-          titresTypes: [{ id: 'arm', gestionnaire: true, associee: false }]
+          titresTypes: [
+            {
+              id: 'arm',
+              gestionnaire: true,
+              associee: false,
+              domaine: {
+                id: Domaines[DOMAINES_IDS.METAUX].id,
+                nom: Domaines[DOMAINES_IDS.METAUX].nom
+              }
+            },
+            { id: 'pcc', gestionnaire: null, associee: true }
+          ]
         }
       }
     })
@@ -93,7 +105,18 @@ describe('administrationTitreTypeModifier', () => {
       data: {
         administrationTitreTypeModifier: {
           id: ADMINISTRATION_IDS.BRGM,
-          titresTypes: [{ id: 'arm', gestionnaire: true, associee: false }]
+          titresTypes: [
+            {
+              id: 'arm',
+              gestionnaire: true,
+              associee: false,
+              domaine: {
+                id: Domaines[DOMAINES_IDS.METAUX].id,
+                nom: Domaines[DOMAINES_IDS.METAUX].nom
+              }
+            },
+            { id: 'pcc', gestionnaire: null, associee: true }
+          ]
         }
       }
     })

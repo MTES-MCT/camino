@@ -1170,7 +1170,7 @@
             "id": "franchissements",
             "nom": "Franchissements de cours d'eau",
             "type": "integer",
-            "optionnel": true,
+            "optionnel": false,
             "description": "Nombre de franchissements de cours d'eau"
           }
         ]
