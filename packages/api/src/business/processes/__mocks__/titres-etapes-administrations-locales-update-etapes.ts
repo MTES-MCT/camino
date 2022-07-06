@@ -1,23 +1,28 @@
-import Administrations from '../../../database/models/administrations'
 import Titres from '../../../database/models/titres'
 import { DEPARTEMENT_IDS } from 'camino-common/src/departement'
+import {
+  IAdministration,
+  IAdministrationTitreType,
+  ICommune,
+  ITitreType
+} from '../../../types'
 
-const administrations = [
-  { id: 'gestionnaire', domaines: [{ id: 'm' }], titresTypes: [] },
-  { id: 'deal-01', departementId: '01', titresTypes: [] },
-  { id: 'deal-02', regionId: '02', titresTypes: [] },
+const administrations: Pick<IAdministration, 'id' | 'titresTypes'>[] = [
+  { id: 'ope-onf-973-01', titresTypes: [] },
+  { id: 'dre-centre-val-de-loire-01', titresTypes: [] },
+  { id: 'dre-bretagne-01', titresTypes: [] },
   {
     id: 'dea-guyane-01',
-    departementId: DEPARTEMENT_IDS.Guyane,
-    titresTypes: [{ id: 'arm', associee: true }]
+    titresTypes: [
+      { id: 'arm', associee: true } as ITitreType & IAdministrationTitreType
+    ]
   },
   {
-    id: 'ope-onf-973-01',
-    departementId: DEPARTEMENT_IDS.Guyane,
+    id: 'ope-brgm-01',
     titresTypes: []
   },
-  { id: 'xxxx', departementId: 'xxxx', titresTypes: [] }
-] as Administrations[]
+  { id: 'ope-cacem-01', titresTypes: [] }
+]
 
 const titresEtapesCommunes = [
   {
@@ -32,23 +37,19 @@ const titresEtapesCommunes = [
             communes: [
               {
                 id: 'paris',
-                departementId: '01',
-                departement: { regionId: '01' }
+                departementId: '973'
               },
               {
                 id: 'issy',
-                departementId: '01',
-                departement: { regionId: '01' }
+                departementId: '973'
               },
               {
                 id: 'ivry',
-                departementId: '02',
-                departement: { regionId: '02' }
+                departementId: '973'
               },
               {
                 id: 'evry',
-                departementId: '02',
-                departement: { regionId: '02' }
+                departementId: '973'
               }
             ]
           },
@@ -96,10 +97,7 @@ const titresEtapesCommunesMemeCommune = [
             statutId: 'acc',
             ordre: 2,
             date: '1988-03-11',
-            communes: [
-              { departementId: '01', departement: { regionId: '01' } },
-              { departementId: '01', departement: { regionId: '01' } }
-            ]
+            communes: [{ departementId: '29' }, { departementId: '29' }]
           }
         ]
       }
@@ -110,21 +108,21 @@ const titresEtapesCommunesMemeCommune = [
 const titresEtapesAdministrationLocalesInexistante = [
   {
     id: 'titre-id',
-    domaineId: 'h',
     demarches: [
       {
         etapes: [
           {
             id: 'h-cx-courdemanges-1988-oct01-dpu01',
+            titreDemarcheId: 'h-cx-courdemanges-1988-oct01',
             typeId: 'dpu',
-            communes: [],
-            administrations: [{ id: 'xxx', associee: null }]
+            communes: [] as ICommune[],
+            administrations: [{ id: 'ope-cacem-01', associee: null }]
           }
         ]
       }
     ]
   }
-] as unknown as Titres[]
+] as Titres[]
 
 const titresEtapesAdministrationLocalesExistante = [
   {
@@ -136,16 +134,14 @@ const titresEtapesAdministrationLocalesExistante = [
           {
             id: 'h-cx-courdemanges-1988-oct01-dpu01',
             typeId: 'dpu',
-            communes: [
-              { departementId: '01', departement: { regionId: '01' } }
-            ],
-            administrations: [{ id: 'deal-01', associee: null }]
+            communes: [{ departementId: '29' }],
+            administrations: [{ id: 'dre-bretagne-01', associee: null }]
           }
         ]
       }
     ]
   }
-] as unknown as Titres[]
+] as Titres[]
 
 const titresArm = [
   {

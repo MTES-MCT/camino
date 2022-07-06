@@ -39,7 +39,9 @@ console.info = jest.fn()
 describe("administrations d'une étape", () => {
   test('ajoute 2 administrations dans une étape', async () => {
     titresGetMock.mockResolvedValue(titresEtapesCommunes)
-    administrationsGetMock.mockResolvedValue(administrations)
+    administrationsGetMock.mockResolvedValue(
+      administrations as Administrations[]
+    )
     const {
       titresEtapesAdministrationsLocalesCreated,
       titresEtapesAdministrationsLocalesDeleted
@@ -51,7 +53,9 @@ describe("administrations d'une étape", () => {
 
   test("n'ajoute pas deux fois une administration en doublon ", async () => {
     titresGetMock.mockResolvedValue(titresEtapesCommunesMemeCommune)
-    administrationsGetMock.mockResolvedValue(administrations)
+    administrationsGetMock.mockResolvedValue(
+      administrations as Administrations[]
+    )
     const {
       titresEtapesAdministrationsLocalesCreated,
       titresEtapesAdministrationsLocalesDeleted
@@ -66,7 +70,9 @@ describe("administrations d'une étape", () => {
 
   test("ne met pas à jour les administrations d'une étape qui n'a pas de commune", async () => {
     titresGetMock.mockResolvedValue(titresEtapesCommunesVides)
-    administrationsGetMock.mockResolvedValue(administrations)
+    administrationsGetMock.mockResolvedValue(
+      administrations as Administrations[]
+    )
     const {
       titresEtapesAdministrationsLocalesCreated,
       titresEtapesAdministrationsLocalesDeleted
@@ -81,7 +87,9 @@ describe("administrations d'une étape", () => {
 
   test("n'ajoute pas d'administration si elle existe déjà dans l'étape", async () => {
     titresGetMock.mockResolvedValue(titresEtapesAdministrationLocalesExistante)
-    administrationsGetMock.mockResolvedValue(administrations)
+    administrationsGetMock.mockResolvedValue(
+      administrations as Administrations[]
+    )
     const {
       titresEtapesAdministrationsLocalesCreated,
       titresEtapesAdministrationsLocalesDeleted
@@ -95,9 +103,9 @@ describe("administrations d'une étape", () => {
     titresGetMock.mockResolvedValue(
       titresEtapesAdministrationLocalesInexistante
     )
-    administrationsGetMock.mockResolvedValue([
-      { id: '0' }
-    ] as unknown as Administrations[])
+    administrationsGetMock.mockResolvedValue(
+      administrations as Administrations[]
+    )
     const {
       titresEtapesAdministrationsLocalesCreated,
       titresEtapesAdministrationsLocalesDeleted
@@ -109,7 +117,9 @@ describe("administrations d'une étape", () => {
 
   test("ajoute l'option 'associee' à la Déal Guyane sur une ARM", async () => {
     titresGetMock.mockResolvedValue(titresArm)
-    administrationsGetMock.mockResolvedValue(administrations)
+    administrationsGetMock.mockResolvedValue(
+      administrations as Administrations[]
+    )
     const {
       titresEtapesAdministrationsLocalesCreated,
       titresEtapesAdministrationsLocalesDeleted
