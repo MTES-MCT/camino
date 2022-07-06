@@ -1,7 +1,6 @@
 import { FileUpload } from 'graphql-upload'
 import {
   AdministrationId,
-  AdministrationType,
   AdministrationTypeId
 } from 'camino-common/src/administrations'
 import { Departement, DepartementId } from 'camino-common/src/departement'
@@ -243,7 +242,6 @@ interface IAdministration {
   id: AdministrationId
   typeId: AdministrationTypeId
   nom: string
-  type?: AdministrationType
   service?: string | null
   url?: string | null
   email?: string | null
