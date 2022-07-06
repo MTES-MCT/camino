@@ -40,15 +40,89 @@
   {
     "titre_type_id": "axm",
     "demarche_type_id": "oct",
+    "etape_type_id": "asl",
+    "document_type_id": "let",
+    "description": "Avis suite à la demande d'accord du propriétaire du sol"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "dae",
+    "document_type_id": "arp"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
     "etape_type_id": "mfr",
-    "document_type_id": "jac",
+    "document_type_id": "car"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "idm",
+    "description": "Liste et valeur du matériel d’extraction et de traitement envisagé"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "jeg",
     "optionnel": true
   },
   {
     "titre_type_id": "axm",
     "demarche_type_id": "oct",
     "etape_type_id": "mfr",
+    "document_type_id": "let",
+    "optionnel": true
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "mes"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "met",
+    "description": "Descriptif des méthodes envisagées pour l’exécution des travaux"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
     "document_type_id": "nir",
+    "optionnel": true,
+    "description": "Obligatoire pour les AEX hors de la zone 2 du SDOM"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "prg",
+    "description": "Phasage et planigramme"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "sch"
+  },
+  {
+    "titre_type_id": "cxm",
+    "demarche_type_id": "ren",
+    "etape_type_id": "dim",
+    "document_type_id": "cou",
+    "optionnel": true
+  },
+  {
+    "titre_type_id": "prg",
+    "demarche_type_id": "vut",
+    "etape_type_id": "dex",
+    "document_type_id": "arr",
     "optionnel": true
   }
 ]

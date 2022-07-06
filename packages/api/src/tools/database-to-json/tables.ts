@@ -31,7 +31,6 @@ const tables = [
   // la table 'caches' n'est pas utile dans les json
   // { name: 'caches',orderBy: ['id'] },
   { name: 'communes', orderBy: ['id'] },
-  { name: 'definitions', orderBy: ['id'] },
   { name: 'demarches_statuts', orderBy: ['id'] },
   { name: 'demarches_types', orderBy: ['id'] },
   { name: 'documents', orderBy: ['id'] },
@@ -58,7 +57,6 @@ const tables = [
   { name: 'frequences', orderBy: ['id'] },
   { name: 'globales', orderBy: ['id'] },
   { name: 'mois', orderBy: ['id'] },
-  { name: 'permissions', orderBy: ['id'] },
   { name: 'phases_statuts', orderBy: ['id'] },
   { name: 'references_types', orderBy: ['id'] },
   { name: 'substances', orderBy: ['id'] },

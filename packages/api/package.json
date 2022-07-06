@@ -12,7 +12,7 @@
     "daily": "node ./dist/src/scripts/daily.js",
     "monthly": "node ./dist/src/scripts/monthly.js",
     "db:dump": "pg_dump --host=localhost --username=postgres --clean --if-exists --format=c --no-owner --no-privileges --dbname=camino --file=./backups/camino.sql",
-    "db:export": "rm -rf sources && node ./dist/src/scripts/database-to-json-export.js",
+    "db:export": "rm -rf sources && ts-node --transpile-only src/scripts/database-to-json-export.ts",
     "db:import": "pg_restore --host=localhost --username=postgres --clean --if-exists --no-owner --no-privileges --dbname=camino ./backups/camino.sql",
     "db:prod-fetch": "scp -P 212 $u@camino.beta.gouv.fr:/srv/backups/camino.sql backups/",
     "db:public-import": "pg_restore --host=localhost --username=postgres --clean --if-exists --no-owner --no-privileges --dbname=camino ./backups/camino-public.sql",

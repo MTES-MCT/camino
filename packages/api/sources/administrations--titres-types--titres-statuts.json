@@ -89,48 +89,6 @@
   },
   {
     "administration_id": "dea-guyane-01",
-    "titre_type_id": "prm",
-    "titre_statut_id": "dmc",
-    "titres_modification_interdit": true,
-    "demarches_modification_interdit": true
-  },
-  {
-    "administration_id": "dea-guyane-01",
-    "titre_type_id": "prm",
-    "titre_statut_id": "dmi",
-    "titres_modification_interdit": true,
-    "demarches_modification_interdit": true
-  },
-  {
-    "administration_id": "dea-guyane-01",
-    "titre_type_id": "prm",
-    "titre_statut_id": "ech",
-    "titres_modification_interdit": true,
-    "demarches_modification_interdit": true
-  },
-  {
-    "administration_id": "dea-guyane-01",
-    "titre_type_id": "prm",
-    "titre_statut_id": "ind",
-    "titres_modification_interdit": true,
-    "demarches_modification_interdit": true
-  },
-  {
-    "administration_id": "dea-guyane-01",
-    "titre_type_id": "prm",
-    "titre_statut_id": "mod",
-    "titres_modification_interdit": true,
-    "demarches_modification_interdit": true
-  },
-  {
-    "administration_id": "dea-guyane-01",
-    "titre_type_id": "prm",
-    "titre_statut_id": "val",
-    "titres_modification_interdit": true,
-    "demarches_modification_interdit": true
-  },
-  {
-    "administration_id": "dea-guyane-01",
     "titre_type_id": "pxm",
     "titre_statut_id": "dmc",
     "titres_modification_interdit": true,
