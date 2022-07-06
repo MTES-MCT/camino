@@ -9,7 +9,9 @@
 type Administration {
   id: ID!
   nom: String
-  type: AdministrationType
+  typeId: String
+  departementId: String
+  regionId: String
   abreviation: String
   service: String
   url: String

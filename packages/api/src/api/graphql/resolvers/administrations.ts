@@ -70,8 +70,7 @@ export const administrationActivitesTypesEmails = async (
     const user = await userGet(context.user?.id)
 
     if (isAdministrationId(id)) {
-      const can = canReadActivitesTypesEmails(user, id)
-      if (!can) {
+      if (!canReadActivitesTypesEmails(user, id)) {
         throw new Error('droit insuffisant')
       }
 
