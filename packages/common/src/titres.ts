@@ -1,5 +1,5 @@
 import { DomaineId } from './domaines'
-import { TitresTypesTypesId } from './titresTypesTypes'
+import { TitreTypeTypeId } from './titresTypesTypes'
 
 export interface CommonTitre {
   id: string
@@ -19,7 +19,7 @@ export interface CommonTitrePTMG extends CommonTitre {
 
 export interface CommonTitreDREAL extends CommonTitre {
   domaineId: DomaineId
-  typeId: TitresTypesTypesId
+  typeId: TitreTypeTypeId
   activitesAbsentes: number
   activitesEnConstruction: number
 }

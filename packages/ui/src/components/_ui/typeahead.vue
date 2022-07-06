@@ -83,7 +83,8 @@ watch(
   () => props.overrideItems,
   newItems => {
     selectedItems.value = [...newItems]
-  }
+  },
+  { deep: true }
 )
 const selectedItems = ref<unknown[]>([...props.overrideItems])
 const input = ref<string>('')

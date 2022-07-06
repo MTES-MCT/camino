@@ -29,7 +29,7 @@ import { Titre } from './pure-quick-access-titres.type'
 import Domaine from '@/components/_common/domaine.vue'
 import {
   TitresTypesTypes,
-  TitresTypesTypesId
+  TitreTypeTypeId
 } from 'camino-common/src/titresTypesTypes'
 import { ref } from 'vue'
 
@@ -54,7 +54,7 @@ const selectItem = (item: Titre) => {
   emit('onSelectedTitre', item)
 }
 
-const titreTypeGetById = (id: TitresTypesTypesId) => TitresTypesTypes[id].nom
+const titreTypeGetById = (id: TitreTypeTypeId) => TitresTypesTypes[id].nom
 
 const debounce = createDebounce()
 

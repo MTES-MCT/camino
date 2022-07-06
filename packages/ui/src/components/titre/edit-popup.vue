@@ -102,6 +102,12 @@
       </button>
     </div>
 
+    <PureTitresLink
+      :titreTypeId="titre.typeId"
+      :selectedTitreId="undefined"
+      :getTitresFromChoices="getTitresFromChoices"
+    />
+
     <template #footer>
       <div v-if="!loading" class="tablet-blobs">
         <div class="tablet-blob-1-3 mb tablet-mb-0">
@@ -132,11 +138,14 @@ import Popup from '../_ui/popup.vue'
 import TitreTypeSelect from '../_common/titre-type-select.vue'
 import { sortedAdministrations } from 'camino-common/src/administrations'
 import Icon from '@/components/_ui/icon.vue'
+import PureTitresLink from '@/components/titre/pure-titres-link.vue'
+import { getTitreFromChoices } from '@/components/titre/pure-titres-link.type'
 
 export default {
   name: 'CaminoDemarcheEditPopup',
 
   components: {
+    PureTitresLink,
     Icon,
     Popup,
     TitreTypeSelect
@@ -153,6 +162,10 @@ export default {
       default: false
     }
   },
+
+  data: () => ({
+    getTitresFromChoices: getTitreFromChoices
+  }),
 
   computed: {
     loading() {

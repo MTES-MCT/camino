@@ -1,5 +1,5 @@
 import { DomaineId } from 'camino-common/src/domaines'
-import { TitresTypesTypesId } from 'camino-common/src/titresTypesTypes'
+import { TitreTypeTypeId } from 'camino-common/src/titresTypesTypes'
 
 export interface Titre {
   id: string
@@ -9,7 +9,7 @@ export interface Titre {
   }
   type: {
     type: {
-      id: TitresTypesTypesId
+      id: TitreTypeTypeId
     }
   }
 }

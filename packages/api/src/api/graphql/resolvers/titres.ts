@@ -21,6 +21,11 @@ import titreUpdateTask from '../../../business/titre-update'
 
 import { titreUpdationValidate } from '../../../business/validations/titre-updation-validate'
 import { domaineGet } from '../../../database/queries/metas'
+import TitresTitres from '../../../database/models/titres--titres'
+import {
+  canLinkTitresFrom,
+  getTitreFromTypeId
+} from 'camino-common/src/permissions/titres'
 
 const titre = async (
   { id }: { id: string },
@@ -191,7 +196,7 @@ const titreCreer = async (
 }
 
 const titreModifier = async (
-  { titre }: { titre: ITitre },
+  { titre }: { titre: ITitre & { titreFromIds?: string[] } },
   context: IToken,
   info: GraphQLResolveInfo
 ) => {
@@ -200,7 +205,7 @@ const titreModifier = async (
 
     const titreOld = await titreGet(
       titre.id,
-      { fields: { titresAdministrations: { id: {} } } },
+      { fields: { titresAdministrations: { id: {} }, demarches: { id: {} } } },
       user
     )
 
@@ -212,6 +217,52 @@ const titreModifier = async (
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
+    }
+
+    if (!titreOld.demarches) {
+      throw new Error('les démarches ne sont pas chargées')
+    }
+
+    if (canLinkTitresFrom(titre.typeId) && titre.titreFromIds === undefined) {
+      throw new Error(
+        'Le champ titreFromIds est obligatoire pour ce type de titre'
+      )
+    }
+
+    if (titre.titreFromIds !== undefined) {
+      const titresFrom = await titresGet(
+        { ids: titre.titreFromIds },
+        { fields: { id: {} } },
+        user
+      )
+
+      if (titresFrom.length !== titre.titreFromIds.length) {
+        throw new Error('droit insuffisant')
+      }
+
+      const titreFromTypeId = getTitreFromTypeId(titre.typeId)
+      if (titreFromTypeId) {
+        if (titresFrom.length > 1) {
+          throw new Error(
+            `une ${titre.typeId} ne peut avoir qu’un seul titre lié`
+          )
+        }
+        if (titresFrom.length && titresFrom[0].typeId !== titreFromTypeId) {
+          throw new Error(
+            `une ${titre.typeId} ne peut-être liée qu’à une ${titreFromTypeId}`
+          )
+        }
+      }
+
+      await TitresTitres.query().where('titreToId', titre.id).delete()
+      if (titre.titreFromIds.length) {
+        await TitresTitres.query().insert(
+          titre.titreFromIds.map(titreFromId => ({
+            titreFromId,
+            titreToId: titre.id
+          }))
+        )
+      }
     }
 
     const fields = fieldsBuild(info)

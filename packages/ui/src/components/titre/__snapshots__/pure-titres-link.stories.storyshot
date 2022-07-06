@@ -1,0 +1,139 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Automated Storybook Snapshots Components/Titre/TitresLink AXM 1`] = `
+<div>
+  <h3
+    class="mb-s"
+  >
+    Titres
+  </h3>
+  <p
+    class="h6 italic"
+  />
+  <hr />
+  <div
+    class="typeahead"
+    id="typeahead_307_wrapper"
+  >
+    <div
+      class="flex typeahead-wrapper p-xs"
+    >
+      
+      
+      <input
+        autocomplete="off"
+        class="typeahead-input"
+        id="typeahead_307"
+        placeholder="Rechercher un titre"
+        type="text"
+      />
+    </div>
+    <!--v-if-->
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/Titre/TitresLink AXM With Already Selected Titre 1`] = `
+<div>
+  <h3
+    class="mb-s"
+  >
+    Titres
+  </h3>
+  <p
+    class="h6 italic"
+  />
+  <hr />
+  <div
+    class="typeahead"
+    id="typeahead_307_wrapper"
+  >
+    <div
+      class="flex typeahead-wrapper p-xs"
+    >
+      
+      <button
+        class="bg-neutral chip pl-m pr-m mr-xs mb-xs mt-xs"
+      >
+        Abttis Coucou 
+        <span>
+          x
+        </span>
+      </button>
+      
+      <!--v-if-->
+    </div>
+    <!--v-if-->
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/Titre/TitresLink Neither AXM Nor PXM 1`] = `<!--v-if-->`;
+
+exports[`Automated Storybook Snapshots Components/Titre/TitresLink PXM 1`] = `
+<div>
+  <h3
+    class="mb-s"
+  >
+    Titres
+  </h3>
+  <p
+    class="h6 italic"
+  />
+  <hr />
+  <div
+    class="typeahead"
+    id="typeahead_307_wrapper"
+  >
+    <div
+      class="flex typeahead-wrapper p-xs"
+    >
+      
+      
+      <input
+        autocomplete="off"
+        class="typeahead-input"
+        id="typeahead_307"
+        placeholder="Rechercher un titre"
+        type="text"
+      />
+    </div>
+    <!--v-if-->
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/Titre/TitresLink PXM With Already Selected Titre 1`] = `
+<div>
+  <h3
+    class="mb-s"
+  >
+    Titres
+  </h3>
+  <p
+    class="h6 italic"
+  />
+  <hr />
+  <div
+    class="typeahead"
+    id="typeahead_307_wrapper"
+  >
+    <div
+      class="flex typeahead-wrapper p-xs"
+    >
+      
+      <button
+        class="bg-neutral chip pl-m pr-m mr-xs mb-xs mt-xs"
+      >
+        Abttis Coucou 
+        <span>
+          x
+        </span>
+      </button>
+      
+      <!--v-if-->
+    </div>
+    <!--v-if-->
+  </div>
+</div>
+`;

@@ -10,7 +10,7 @@ import Statut from '../_common/statut.vue'
 import { DomaineId } from 'camino-common/src/domaines'
 import {
   TitresTypesTypes,
-  TitresTypesTypesId
+  TitreTypeTypeId
 } from 'camino-common/src/titresTypesTypes'
 import {
   Column,
@@ -48,7 +48,7 @@ export interface TitreEntreprise {
     id: string
     typeId: string
     domaineId: DomaineId
-    type: { id: TitresTypesTypesId; nom: string }
+    type: { id: TitreTypeTypeId; nom: string }
   }
   // id devrait être une union, couleur aussi
   statut: { id: string; nom: string; couleur: string }
@@ -213,7 +213,7 @@ export const domaineCell = (titre: { domaineId: DomaineId }) => ({
   value: titre.domaineId
 })
 
-export const typeCell = (titre: { typeId: TitresTypesTypesId }) => ({
+export const typeCell = (titre: { typeId: TitreTypeTypeId }) => ({
   component: markRaw(TitreTypeTypeNom),
   props: { nom: TitresTypesTypes[titre.typeId].nom },
   value: TitresTypesTypes[titre.typeId].nom
