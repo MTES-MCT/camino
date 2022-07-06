@@ -94,16 +94,10 @@ const fieldsFormat = (fields: IFields, parent: string) => {
     fields.$modifier = 'orderAsc' as unknown as IFields
   }
 
-  if (fields.administrations) {
-    if (isParentTitre) {
-      graphTitreAdministrationsFormat(fields, 'Locales')
-      graphTitreAdministrationsFormat(fields, 'Gestionnaires')
-      delete fields.administrations
-    } else {
-      delete fields.administrations.type
-      delete fields.administrations.departement
-      delete fields.administrations.region
-    }
+  if (isParentTitre && fields.administrations) {
+    graphTitreAdministrationsFormat(fields, 'Locales')
+    graphTitreAdministrationsFormat(fields, 'Gestionnaires')
+    delete fields.administrations
   }
 
   // sur les titres
@@ -144,10 +138,6 @@ const fieldsFormat = (fields: IFields, parent: string) => {
 
     if (!fields.type.administrations) {
       fields.type.administrations = { id: {} }
-    } else {
-      delete fields.type.administrations.type
-      delete fields.type.administrations.departement
-      delete fields.type.administrations.region
     }
 
     if (!fields.type.documentsTypes) {
@@ -217,12 +207,6 @@ const fieldsFormat = (fields: IFields, parent: string) => {
     if (!fields.sdomZones) {
       fields.sdomZones = { id: {} }
     }
-  }
-
-  if (['administration', 'administrations'].includes(parent)) {
-    delete fields.type
-    delete fields.departement
-    delete fields.region
   }
 
   return fields

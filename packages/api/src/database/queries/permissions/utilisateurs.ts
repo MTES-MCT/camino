@@ -15,7 +15,7 @@ import {
   isSuper
 } from 'camino-common/src/roles'
 
-const utilisateursQueryModify = (
+export const utilisateursQueryModify = (
   q: QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>,
   user: IUtilisateur | null | undefined
 ) => {
@@ -130,5 +130,3 @@ const utilisateursQueryModify = (
 
   return q
 }
-
-export { utilisateursQueryModify }

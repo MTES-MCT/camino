@@ -1,5 +1,5 @@
 <template>
-  <div v-if="administration.emailsLecture" class="mb-xxl">
+  <div class="mb-xxl">
     <h3>Emails à notifier lors du dépôt d’un type d’activité</h3>
 
     <div class="tablet-blob-3-4">
@@ -56,21 +56,21 @@
             </td>
           </tr>
           <tr
-            v-for="activiteType in administration.activitesTypesEmails"
-            :key="activiteType.id + activiteType.email"
+            v-for="activiteTypeEmail in activitesTypesEmails"
+            :key="activiteTypeEmail.activiteTypeId + activiteTypeEmail.email"
           >
             <td>
               <span class="cap-first">
-                {{ activiteTypeLabelize(activiteType) }}
+                {{ activiteTypeIdLabelize(activiteTypeEmail.activiteTypeId) }}
               </span>
             </td>
             <td>
-              {{ activiteType.email }}
+              {{ activiteTypeEmail.email }}
             </td>
             <td v-if="administration.emailsModification">
               <button
                 class="btn-border py-s px-m my--xs rnd-xs flex-right"
-                @click="activiteTypeEmailDelete(activiteType)"
+                @click="activiteTypeEmailDelete(activiteTypeEmail)"
               >
                 <Icon name="delete" size="M" />
               </button>
@@ -85,7 +85,7 @@
 <script lang="ts">
 import ButtonPlus from '../_ui/button-plus.vue'
 import emailValidator from 'email-validator'
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import Icon from '@/components/_ui/icon.vue'
 
 export default defineComponent({
@@ -96,7 +96,12 @@ export default defineComponent({
 
   props: {
     administration: { type: Object, required: true },
-    activitesTypes: { type: Array, required: true, default: () => [] }
+    activitesTypes: {
+      type: Array as PropType<{ id: string; nom: string }[]>,
+      required: true,
+      default: () => []
+    },
+    activitesTypesEmails: { type: Array, required: true, default: () => [] }
   },
 
   emits: ['emailUpdate', 'emailDelete'],
@@ -137,19 +142,29 @@ export default defineComponent({
       this.activiteTypeNew.email = null
     },
 
-    async activiteTypeEmailDelete(activiteType: {
+    async activiteTypeEmailDelete({
+      activiteTypeId,
+      email
+    }: {
       email: string
       activiteTypeId: string
     }) {
-      const { email, id } = activiteType
       this.$emit('emailDelete', {
         administrationId: this.administration.id,
-        activiteTypeId: id,
+        activiteTypeId,
         email
       })
     },
 
-    activiteTypeLabelize(activiteType) {
+    activiteTypeIdLabelize(activiteTypeId: string) {
+      const activiteType = this.activitesTypes.find(
+        ({ id }) => id === activiteTypeId
+      )
+
+      return activiteType ? this.activiteTypeLabelize(activiteType) : ''
+    },
+
+    activiteTypeLabelize(activiteType: { nom: string; id: string }) {
       return (
         activiteType.nom.charAt(0).toUpperCase() +
         activiteType.nom.slice(1) +

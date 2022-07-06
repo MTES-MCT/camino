@@ -1,11 +1,10 @@
 import { FileUpload } from 'graphql-upload'
 import {
   AdministrationId,
-  AdministrationType,
   AdministrationTypeId
 } from 'camino-common/src/administrations'
 import { Departement, DepartementId } from 'camino-common/src/departement'
-import { Region } from 'camino-common/src/region'
+import { RegionId } from 'camino-common/src/region'
 import { GeoSystemeId } from 'camino-common/src/geoSystemes'
 import { Role } from 'camino-common/src/roles'
 import { DomaineId } from 'camino-common/src/domaines'
@@ -243,7 +242,6 @@ interface IAdministration {
   id: AdministrationId
   typeId: AdministrationTypeId
   nom: string
-  type?: AdministrationType
   service?: string | null
   url?: string | null
   email?: string | null
@@ -254,9 +252,7 @@ interface IAdministration {
   commune?: string | null
   cedex?: string | null
   departementId?: DepartementId | null
-  departement?: Departement
-  regionId?: string | null
-  region?: Region
+  regionId?: RegionId | null
   abreviation?: string | null
   titresTypes?: (ITitreType & IAdministrationTitreType)[] | null
   titresTypesTitresStatuts?: IAdministrationTitreTypeTitreStatut[] | null
@@ -267,7 +263,6 @@ interface IAdministration {
   localeTitres?: ITitre[] | null
   associee?: boolean | null
   emailsModification?: boolean
-  emailsLecture?: boolean
   modification?: boolean | null
   activitesTypesEmails?: (IActiviteType & { email: string })[]
 }

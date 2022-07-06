@@ -12,10 +12,9 @@ import {
 
 const state = {
   element: null,
+  activitesTypesEmails: [],
   metas: {
     domaines: [],
-    regions: [],
-    departements: [],
     titresStatuts: [],
     etapesTypes: [],
     activitesTypes: []
@@ -27,7 +26,7 @@ const actions = {
     try {
       commit('loadingAdd', 'administrationInit', { root: true })
       const data = await administrationMetas()
-      commit('metasSet', data)
+      commit('metasSet', { activitesTypes: data })
     } catch (e) {
       commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
     } finally {
@@ -254,12 +253,14 @@ const mutations = {
     })
   },
 
-  set(state, administration) {
-    state.element = administration
+  set(state, data) {
+    state.element = data.administration
+    state.activitesTypesEmails = data.administrationActivitesTypesEmails
   },
 
   reset(state) {
     state.element = null
+    state.activitesTypesEmails = []
   }
 }
 

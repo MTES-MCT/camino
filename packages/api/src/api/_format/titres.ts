@@ -20,6 +20,7 @@ import { entrepriseFormat } from './entreprises'
 import { titreActiviteFormat } from './titres-activites'
 import { titreDemarcheFormat } from './titres-demarches'
 import { titreFormatFields } from './_fields'
+import { ADMINISTRATION_TYPES } from 'camino-common/src/administrations'
 
 const titreTypeSectionsFormat = (
   contenusTitreEtapesIds: IContenusTitreEtapesIds,
@@ -178,7 +179,9 @@ const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
       t.administrations = administrations.map(administrationFormat)
 
       t.administrations = t.administrations.sort(
-        (a, b) => a.type!.ordre - b.type!.ordre
+        (a, b) =>
+          ADMINISTRATION_TYPES[a.typeId].ordre -
+          ADMINISTRATION_TYPES[b.typeId].ordre
       )
 
       delete t.administrationsGestionnaires

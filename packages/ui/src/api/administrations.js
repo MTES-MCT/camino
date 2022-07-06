@@ -6,16 +6,6 @@ import { fragmentAdministration } from './fragments/administration'
 const administrationMetas = apiGraphQLFetch(
   gql`
     query AdministrationMetas {
-      regions {
-        id
-        nom
-      }
-
-      departements {
-        id
-        nom
-      }
-
       activitesTypes {
         id
         nom
@@ -56,6 +46,11 @@ const administration = apiGraphQLFetch(gql`
   query Administration($id: ID!) {
     administration(id: $id) {
       ...administration
+    }
+
+    administrationActivitesTypesEmails(id: $id) {
+      email
+      activiteTypeId
     }
   }
 
