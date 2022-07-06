@@ -45,7 +45,8 @@ const titresActivitesUpdate = async (titresIds?: string[]) => {
       },
       titresTypes: { id: {} },
       administrations: { id: {} },
-      documentsTypes: { id: {} }
+      documentsTypes: { id: {} },
+      activitesTypesPays: { id: {} }
     }
   })
 

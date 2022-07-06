@@ -1,46 +1,44 @@
-import { IActiviteType, ITitre } from '../../../types'
+import { ActiviteTypeReduced, TitreReduced } from '../titre-activite-type-check'
 
-const activiteTypeMAxmPxmGuyane = {
+const activiteTypeMAxmPxmGuyane: ActiviteTypeReduced = {
   titresTypes: [{ id: 'axm' }, { id: 'pxm' }],
-  pays: [{ id: 'GF' }]
-} as IActiviteType
+  activitesTypesPays: [{ paysId: 'GF' }]
+}
 
-const activiteTypeMPrmMetropole = {
+const activiteTypeMPrmMetropole: ActiviteTypeReduced = {
   titresTypes: [{ id: 'prm' }],
-  pays: [{ id: 'FR' }]
-} as IActiviteType
+  activitesTypesPays: [{ paysId: 'FR' }]
+}
 
-const activiteTypeWPrwSansPays = {
-  titresTypes: [{ id: 'prw' }]
-} as IActiviteType
+const activiteTypeWPrwSansPays: ActiviteTypeReduced = {
+  titresTypes: [{ id: 'prw' }],
+  activitesTypesPays: []
+}
 
-const titreMAxmGuyane = {
-  id: 'm-ax-saint-pierre-2015',
+const titreMAxmGuyane: TitreReduced = {
   typeId: 'axm',
-  pays: [{ id: 'GF' }]
-} as ITitre
+  communes: [{ departementId: '973' }]
+}
 
-const titreMAxmMetropole = {
-  id: 'm-ax-ile-de-france-2015',
+const titreMAxmMetropole: TitreReduced = {
   typeId: 'axm',
-  pays: [{ id: 'FR' }]
-} as ITitre
+  communes: [{ departementId: '72' }]
+}
 
-const titreMPrmMetropole = {
-  id: 'm-pr-saint-jean-2016',
+const titreMPrmMetropole: TitreReduced = {
   typeId: 'prm',
-  pays: [{ id: 'FR' }]
-} as ITitre
+  communes: [{ departementId: '72' }]
+}
 
-const titreSansPays = {
-  id: 'm-ax-saint-jacques-2016',
-  typeId: 'axm'
-} as ITitre
+const titreSansPays: TitreReduced = {
+  typeId: 'axm',
+  communes: []
+}
 
-const titrePrwSansPays = {
-  id: 'w-pr-grande-normandie-2018',
-  typeId: 'prw'
-} as ITitre
+const titrePrwSansPays: TitreReduced = {
+  typeId: 'prw',
+  communes: []
+}
 
 export {
   activiteTypeMAxmPxmGuyane,

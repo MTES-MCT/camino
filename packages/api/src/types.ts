@@ -3,13 +3,13 @@ import {
   AdministrationId,
   AdministrationTypeId
 } from 'camino-common/src/administrations'
-import { Departement, DepartementId } from 'camino-common/src/departement'
+import { DepartementId } from 'camino-common/src/departement'
 import { RegionId } from 'camino-common/src/region'
 import { GeoSystemeId } from 'camino-common/src/geoSystemes'
 import { Role } from 'camino-common/src/roles'
 import { DomaineId } from 'camino-common/src/domaines'
 import { TitresTypesTypesId } from 'camino-common/src/titresTypesTypes'
-import { PaysId, Pays } from 'camino-common/src/pays'
+import { PaysId } from 'camino-common/src/pays'
 
 const DemarchesStatutsTypesIds = {
   Accepte: 'acc',
@@ -232,7 +232,7 @@ interface IActiviteType {
   documentsTypes: IDocumentType[]
   sections: ISection[]
   frequence?: IFrequence | null
-  pays?: Pays[] | null
+  activitesTypesPays?: IActiviteTypePays[] | null
   administrations?: IAdministration[] | null
   email?: string | null
   modification?: boolean | null
@@ -241,7 +241,7 @@ interface IActiviteType {
 interface IAdministration {
   id: AdministrationId
   typeId: AdministrationTypeId
-  nom: string
+  nom?: string
   service?: string | null
   url?: string | null
   email?: string | null
@@ -278,7 +278,6 @@ interface IArea {
 }
 
 interface ICommune extends IArea {
-  departement?: Departement | null
   departementId?: DepartementId | null
 }
 
@@ -653,7 +652,6 @@ interface ITitre {
   sdomZones?: ISDOMZone[] | null
   demarches?: ITitreDemarche[]
   activites?: ITitreActivite[] | null
-  pays?: Pays[] | null
   modification?: boolean | null
   suppression?: boolean | null
   publicLecture?: boolean | null
@@ -812,7 +810,6 @@ interface ITitreEtape {
   forets?: IForet[] | null
   sdomZones?: ISDOMZone[] | null
   incertitudes?: ITitreIncertitudes | null
-  pays?: Pays[] | null
   contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
   heritageProps?: IHeritageProps | null
   heritageContenu?: IHeritageContenu | null

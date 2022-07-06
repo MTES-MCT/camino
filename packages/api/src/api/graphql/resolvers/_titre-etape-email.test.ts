@@ -62,8 +62,7 @@ const etape: ITitreEtape = {
   titulaires: [],
   administrations: [],
   communes: [],
-  forets: [],
-  pays: []
+  forets: []
 }
 const etapeType = {
   id: 'mdp',

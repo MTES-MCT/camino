@@ -4,6 +4,7 @@ import TitresTypes from './titres-types'
 import Frequences from './frequences'
 import Administrations from './administrations'
 import DocumentsTypes from './documents-types'
+import ActivitesTypesPays from './activites-types--pays'
 
 interface ActivitesTypes extends IActiviteType {}
 
@@ -62,7 +63,14 @@ class ActivitesTypes extends Model {
         to: 'administrations.id'
       }
     },
-
+    activitesTypesPays: {
+      relation: Model.HasManyRelation,
+      modelClass: ActivitesTypesPays,
+      join: {
+        from: 'activitesTypes.id',
+        to: 'activitesTypes__pays.activiteTypeId'
+      }
+    },
     administrationsEmails: {
       relation: Model.ManyToManyRelation,
       modelClass: Administrations,

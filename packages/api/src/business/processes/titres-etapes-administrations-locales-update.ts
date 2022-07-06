@@ -13,8 +13,10 @@ import {
   titreEtapeAdministrationDelete
 } from '../../database/queries/titres-etapes'
 import { titresGet } from '../../database/queries/titres'
-import { administrationsGet } from '../../database/queries/administrations'
 import { userSuper } from '../../database/user-super'
+import { Departements } from 'camino-common/src/departement'
+import { administrationsGet } from '../../database/queries/administrations'
+import { administrationFormat } from '../../api/_format/administrations'
 
 const titreEtapeAdministrationsLocalesCreatedBuild = (
   titreEtapeAdministrationsLocalesOld: IAdministration[] | null | undefined,
@@ -123,10 +125,9 @@ const titreEtapeAdministrationsRegionsAndDepartementsBuild = (
         ({ titreDepartementsIds, titreRegionsIds }, commune) => {
           if (commune.departementId) {
             titreDepartementsIds.add(commune.departementId)
-          }
 
-          if (commune.departement && commune.departement.regionId) {
-            titreRegionsIds.add(commune.departement.regionId)
+            const departement = Departements[commune.departementId]
+            titreRegionsIds.add(departement.regionId)
           }
 
           return {
@@ -244,7 +245,10 @@ const titresEtapesAdministrationsLocalesUpdate = async (
   // parcourt les étapes à partir des titres
   // car on a besoin de titre.domaineId
   const titresEtapesAdministrationsLocales =
-    titresEtapesAdministrationsLocalesBuild(titres, administrations)
+    titresEtapesAdministrationsLocalesBuild(
+      titres,
+      administrations.map(administrationFormat)
+    )
 
   const {
     titresEtapesAdministrationsLocalesToCreate,
