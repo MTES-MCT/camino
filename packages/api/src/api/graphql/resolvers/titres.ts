@@ -263,6 +263,7 @@ const titreModifier = async (
           }))
         )
       }
+      delete titre.titreFromIds
     }
 
     const fields = fieldsBuild(info)

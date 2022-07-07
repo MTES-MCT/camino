@@ -1,7 +1,7 @@
 import TitresLink from './pure-titres-link.vue'
 import { Meta, Story } from '@storybook/vue3'
 import { TitreTypeId } from 'camino-common/src/titresTypes'
-import { GetTitreFromChoices } from './pure-titres-link.type'
+import { GetTitreFromChoices, TitresLinkConfig } from './pure-titres-link.type'
 
 const meta: Meta = {
   title: 'Components/Titre/TitresLink',
@@ -11,8 +11,7 @@ const meta: Meta = {
 export default meta
 
 type Props = {
-  titreTypeId: TitreTypeId
-  selectedTitreId: string | null
+  config: TitresLinkConfig
   getTitresFromChoices: GetTitreFromChoices
 }
 
@@ -61,35 +60,41 @@ const Template: Story<Props> = (args: Props) => ({
 
 export const AXM = Template.bind({})
 AXM.args = {
-  titreTypeId: 'axm',
-  selectedTitreId: null,
+  config: { type: 'single', titreTypeId: 'axm', selectedTitreId: null },
   getTitresFromChoices: () => Promise.resolve(titres)
 }
 
 export const AXMWithAlreadySelectedTitre = Template.bind({})
 AXMWithAlreadySelectedTitre.args = {
-  titreTypeId: 'axm',
-  selectedTitreId: 'id1',
+  config: { type: 'single', titreTypeId: 'axm', selectedTitreId: 'id1' },
   getTitresFromChoices: () => Promise.resolve(titres)
 }
 
 export const PXM = Template.bind({})
 PXM.args = {
-  titreTypeId: 'pxm',
-  selectedTitreId: null,
+  config: { type: 'single', titreTypeId: 'pxm', selectedTitreId: null },
   getTitresFromChoices: () => Promise.resolve(titres)
 }
 
 export const PXMWithAlreadySelectedTitre = Template.bind({})
 PXMWithAlreadySelectedTitre.args = {
-  titreTypeId: 'pxm',
-  selectedTitreId: 'id1',
+  config: { type: 'single', titreTypeId: 'pxm', selectedTitreId: 'id1' },
   getTitresFromChoices: () => Promise.resolve(titres)
 }
 
 export const NeitherAXMNorPXM = Template.bind({})
 NeitherAXMNorPXM.args = {
-  titreTypeId: 'arm',
-  selectedTitreId: null,
+  config: { type: 'single', titreTypeId: 'arm', selectedTitreId: 'id1' },
+  getTitresFromChoices: () => Promise.resolve(titres)
+}
+
+export const DemarcheFusion = Template.bind({})
+DemarcheFusion.args = {
+  config: {
+    type: 'multiple',
+    titreTypeId: 'pxm',
+    demarcheTypeId: 'fus',
+    selectedTitreIds: ['id1']
+  },
   getTitresFromChoices: () => Promise.resolve(titres)
 }

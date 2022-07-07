@@ -49,6 +49,12 @@
           class="tablet-blob-2-3 p-s"
         />
       </div>
+
+      <PureTitresLink
+        :config="titreLinkConfig"
+        :getTitresFromChoices="getTitresFromChoices"
+        @onSelectedTitres="onSelectedTitres"
+      />
     </div>
 
     <template #footer>
@@ -77,11 +83,14 @@
 
 <script>
 import Popup from '../_ui/popup.vue'
+import PureTitresLink from './pure-titres-link.vue'
+import { getTitreFromChoices } from './pure-titres-link.type'
 
 export default {
   name: 'CaminoDemarcheEditPopup',
 
   components: {
+    PureTitresLink,
     Popup
   },
 
@@ -92,6 +101,10 @@ export default {
     creation: { type: Boolean, default: false },
     tabId: { type: String, required: true }
   },
+
+  data: () => ({
+    getTitresFromChoices: getTitreFromChoices
+  }),
 
   computed: {
     loading() {
@@ -116,6 +129,17 @@ export default {
 
     complete() {
       return this.demarche.typeId
+    },
+
+    titreLinkConfig() {
+      return {
+        type: 'multiple',
+        // FIXME
+        selectedTitreIds: [],
+        // FIXME
+        titreTypeId: 'cxm',
+        demarcheTypeId: this.demarche.typeId
+      }
     }
   },
 
@@ -149,6 +173,10 @@ export default {
           nom: demarche.id
         })
       }
+    },
+
+    onSelectedTitres(titres) {
+      this.demarche.titreFromIds = titres.map(({ id }) => id)
     },
 
     cancel() {

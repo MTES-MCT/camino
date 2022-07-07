@@ -1,4 +1,4 @@
-import { TitreTypeId } from '../titresTypes'
+import { isTitreType, TitresTypes, TitreTypeId } from '../titresTypes'
 
 export const getTitreFromTypeId = (typeId: TitreTypeId): TitreTypeId | null => {
   switch (typeId) {
@@ -8,10 +8,19 @@ export const getTitreFromTypeId = (typeId: TitreTypeId): TitreTypeId | null => {
       return 'prm'
   }
 
+  const titreType = TitresTypes[typeId]
+  if (titreType.typeId === 'cx') {
+    return typeId
+  }
+
   return null
 }
 
-export const canLinkTitresFrom = (titreTypeId: TitreTypeId): boolean => {
-  return getTitreFromTypeId(titreTypeId) !== null
-  // || titreOld.demarches.some(({ typeId }) => typeId === 'fus')
+// FIXME faire DemarcheTypeId
+export const canLinkTitresFrom = (typeId: TitreTypeId | string): boolean => {
+  if (isTitreType(typeId)) {
+    return getTitreFromTypeId(typeId) !== null
+  } else {
+    return typeId === 'fus'
+  }
 }

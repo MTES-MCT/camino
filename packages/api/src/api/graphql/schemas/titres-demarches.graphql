@@ -73,6 +73,7 @@ input InputDemarcheCreation {
   typeId: ID!
   titreId: ID!
   description: String
+  titreFromIds: [ID]
 }
 
 input InputDemarcheModification {

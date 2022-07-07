@@ -13,7 +13,12 @@ import {
   entreprises
 } from '../api/rest/index'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers'
-import { titresDREAL, titresONF, titresPTMG } from '../api/rest/titres'
+import {
+  getTitresFrom,
+  titresDREAL,
+  titresONF,
+  titresPTMG
+} from '../api/rest/titres'
 import { fiscalite } from '../api/rest/entreprises'
 
 const contentTypes = {
@@ -121,6 +126,7 @@ const restDownload =
     }
   }
 
+rest.get('/titres/:id/titresOrigine', restCatcher(getTitresFrom))
 rest.get('/titres/:id', restDownload(titre))
 rest.get('/titres', restDownload(titres))
 rest.get('/titresONF', restCatcher(titresONF))

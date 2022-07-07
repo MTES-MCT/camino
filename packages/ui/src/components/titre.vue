@@ -11,7 +11,7 @@
 
     <TitreHeader :titre="titre" @titre-event-track="eventTrack" />
 
-    <TitreInfos :titre="titre" class="mb" />
+    <TitreInfos :titre="titre" :titresFrom="titresFrom" class="mb" />
 
     <Perimetre
       v-if="titre.geojsonMultiPolygon && titre.points"
@@ -121,7 +121,8 @@ export default {
   data() {
     return {
       geoTabId: 'carte',
-      show: false
+      show: false,
+      titresFrom: []
     }
   },
 
@@ -187,7 +188,13 @@ export default {
 
   methods: {
     async get() {
-      await this.$store.dispatch('titre/get', this.$route.params.id)
+      const titreId = this.$route.params.id
+      await this.$store.dispatch('titre/get', titreId)
+
+      // FIXME à faire que si on peut avoir des liaisons
+      this.titresFrom = await (
+        await fetch(`/apiUrl/titres/${titreId}/titresOrigine`)
+      ).json()
     },
 
     tabUpdate(tabId) {

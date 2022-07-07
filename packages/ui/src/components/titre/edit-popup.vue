@@ -103,8 +103,7 @@
     </div>
 
     <PureTitresLink
-      :titreTypeId="titre.typeId"
-      :selectedTitreId="undefined"
+      :config="titreLinkConfig"
       :getTitresFromChoices="getTitresFromChoices"
     />
 
@@ -168,6 +167,14 @@ export default {
   }),
 
   computed: {
+    titreLinkConfig() {
+      return {
+        type: 'single',
+        titreTypeId: this.titre.typeId,
+        // FIXME
+        selectedTitreId: null
+      }
+    },
     loading() {
       return this.$store.state.popup.loading
     },

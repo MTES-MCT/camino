@@ -1,4 +1,4 @@
-import { titresGet } from '../../database/queries/titres'
+import { titreGet, titresGet } from '../../database/queries/titres'
 
 import { userGet } from '../../database/queries/utilisateurs'
 
@@ -14,6 +14,7 @@ import { DOMAINES_IDS } from 'camino-common/src/domaines'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/titresTypesTypes'
 import { ITitre, IUser, ITitreReference, ITitreDemarche } from '../../types'
 import {
+  CommonTitre,
   CommonTitreDREAL,
   CommonTitreONF,
   CommonTitrePTMG
@@ -31,6 +32,7 @@ import { userSuper } from '../../database/user-super'
 import Utilisateurs from '../../database/models/utilisateurs'
 import { NotNullableKeys } from 'camino-common/src/typescript-tools'
 import { isAdministration } from 'camino-common/src/roles'
+import TitresTitres from '../../database/models/titres--titres'
 
 type MyTitreRef = { type: NonNullable<ITitreReference['type']> } & Omit<
   ITitreReference,
@@ -336,5 +338,39 @@ export const titresDREAL = async (
       })
 
     res.json(titresFormated)
+  }
+}
+
+export const getTitresFrom = async (
+  req: express.Request<{ id?: string }>,
+  res: CustomResponse<Pick<CommonTitre, 'id' | 'nom'>[]>
+) => {
+  const userId = (req.user as unknown as IUser | undefined)?.id
+
+  const user = await userGet(userId)
+
+  const titreToId: string | undefined = req.params.id
+
+  if (!titreToId) {
+    res.json([])
+  } else {
+    const titre = titreGet(titreToId, { fields: { id: {} } }, user)
+    if (!titre) {
+      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    }
+
+    const titresTitres = await TitresTitres.query().where(
+      'titreToId',
+      titreToId
+    )
+    const titreFromIds = titresTitres.map(({ titreFromId }) => titreFromId)
+
+    const titresFrom = await titresGet(
+      { ids: titreFromIds },
+      { fields: { id: {} } },
+      user
+    )
+
+    res.json(titresFrom.map(({ id, nom }) => ({ id, nom })))
   }
 }

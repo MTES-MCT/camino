@@ -4,6 +4,19 @@ import { apiGraphQLFetch } from '@/api/_client'
 import { TitresTypes, TitreTypeId } from 'camino-common/src/titresTypes'
 import gql from 'graphql-tag'
 
+export type TitresLinkConfig =
+  | {
+      type: 'single'
+      selectedTitreId: string | null
+      titreTypeId: TitreTypeId
+    }
+  | {
+      type: 'multiple'
+      selectedTitreIds: string[]
+      titreTypeId: TitreTypeId
+      demarcheTypeId: string | null
+    }
+
 export type TitreLink = Pick<CommonTitre, 'id' | 'nom'> & {
   demarches: { phase?: { dateDebut: string; dateFin: string } }[]
 }

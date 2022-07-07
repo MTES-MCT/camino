@@ -16,6 +16,8 @@ class TitresTitres extends Model {
       titreToId: { type: 'string' }
     }
   }
+
+  public static idColumn = ['titreFromId', 'titreToId']
 }
 
 export default TitresTitres

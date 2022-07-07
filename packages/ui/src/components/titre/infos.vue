@@ -66,6 +66,17 @@
     </div>
 
     <div class="desktop-blob-1-2 mt">
+      <div v-if="titresFrom && titresFrom.length">
+        <h5>Titres à l’origine de ce titre</h5>
+        <ul>
+          <li v-for="titreFrom of titresFrom" :key="titreFrom.id">
+            <router-link
+              :to="{ name: 'titre', params: { id: titreFrom.id } }"
+              >{{ titreFrom.nom }}</router-link
+            >
+          </li>
+        </ul>
+      </div>
       <div v-if="titre.substances && titre.substances.length > 0" class="mb">
         <h5>Substances</h5>
         <TagList :elements="titre.substances.map(s => s.nom)" />
@@ -152,6 +163,10 @@ export default {
     titre: {
       type: Object,
       default: () => ({})
+    },
+    titresFrom: {
+      type: Array,
+      default: () => []
     }
   },
 

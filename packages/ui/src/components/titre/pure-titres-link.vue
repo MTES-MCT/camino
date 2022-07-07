@@ -1,17 +1,24 @@
 <template>
-  <div v-if="canLinkTitresFrom(titreTypeId)">
+  <div
+    v-if="
+      canLinkTitresFrom(
+        config.type === 'single' ? config.titreTypeId : config.demarcheTypeId
+      )
+    "
+  >
     <h3 class="mb-s">Titres</h3>
     <p class="h6 italic"></p>
     <hr />
     <SimpleTypeahead
-      placeholder="Rechercher un titre"
-      type="single"
+      placeholder="Lier un titre"
+      :type="config.type"
       :items="titresFiltered"
       :itemKey="item => item.id"
       :itemChipLabel="item => item.nom"
       :overrideItems="selectedTitres"
       :minInputLength="1"
-      @selectItem="onSelect"
+      @selectItem="onSelectItem"
+      @selectItems="onSelectItems"
       @onInput="onSearch"
     >
       <template #default="{ item }">
@@ -28,22 +35,25 @@
 </template>
 
 <script lang="ts" setup>
-import { TitreTypeId } from 'camino-common/src/titresTypes'
 import { canLinkTitresFrom } from 'camino-common/src/permissions/titres'
 import SimpleTypeahead from '@/components/_ui/typeahead.vue'
-import { computed, onMounted, ref } from 'vue'
-import { GetTitreFromChoices, TitreLink } from './pure-titres-link.type'
+import { computed, onMounted, ref, watch } from 'vue'
+import {
+  GetTitreFromChoices,
+  TitreLink,
+  TitresLinkConfig
+} from './pure-titres-link.type'
 import Statut from '@/components/_common/statut.vue'
 
 const props = defineProps<{
-  titreTypeId: TitreTypeId
-  selectedTitreId: string | null
+  config: TitresLinkConfig
   // FIXME rename
   getTitresFromChoices: GetTitreFromChoices
 }>()
 
 const emit = defineEmits<{
   (e: 'onSelectedTitre', titre: TitreLink): void
+  (e: 'onSelectedTitres', titres: TitreLink[]): void
 }>()
 
 const titres = ref<TitreLink[]>([])
@@ -51,16 +61,37 @@ const search = ref<string>('')
 const selectedTitres = ref<TitreLink[]>([])
 
 // FIXME: manage loading and errors
-onMounted(async () => {
-  titres.value.push(...(await props.getTitresFromChoices(props.titreTypeId)))
-  if (props.selectedTitreId) {
-    const selectedTitre = titres.value.find(
-      ({ id }) => id === props.selectedTitreId
+const init = async () => {
+  try {
+    titres.value.push(
+      ...(await props.getTitresFromChoices(props.config.titreTypeId))
     )
-    if (selectedTitre) {
-      selectedTitres.value.push(selectedTitre)
+    const titreIds: string[] = []
+    if (
+      props.config.type === 'single' &&
+      props.config.selectedTitreId !== null
+    ) {
+      titreIds.push(props.config.selectedTitreId)
     }
+    if (props.config.type === 'multiple') {
+      titreIds.push(...props.config.selectedTitreIds)
+    }
+
+    if (titreIds.length) {
+      const selectedTitreList = titres.value.filter(({ id }) =>
+        titreIds.includes(id)
+      )
+      if (selectedTitreList) {
+        selectedTitres.value.push(...selectedTitreList)
+      }
+    }
+  } catch (e) {
+    console.log(e)
   }
+}
+
+onMounted(async () => {
+  await init()
 })
 
 const titresFiltered = computed(() => {
@@ -73,8 +104,11 @@ const onSearch = (searchLabel: string) => {
   search.value = searchLabel.toLowerCase()
 }
 
-const onSelect = (titre: TitreLink) => {
+const onSelectItem = (titre: TitreLink) => {
   emit('onSelectedTitre', titre)
+}
+const onSelectItems = (titres: TitreLink[]) => {
+  emit('onSelectedTitres', titres)
 }
 
 const getDateDebutEtDateFin = (titre: TitreLink): string => {
