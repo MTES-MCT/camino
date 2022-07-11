@@ -100,12 +100,12 @@
         <span class="mt-xxs">Ajouter une administration</span>
         <Icon name="plus" size="M" class="flex-right" />
       </button>
+      <PureTitresLink
+        :config="titreLinkConfig"
+        :loadLinkableTitres="loadLinkableTitres"
+        @onSelectedTitre="onSelectedTitre"
+      />
     </div>
-
-    <PureTitresLink
-      :config="titreLinkConfig"
-      :getTitresFromChoices="getTitresFromChoices"
-    />
 
     <template #footer>
       <div v-if="!loading" class="tablet-blobs">
@@ -138,7 +138,7 @@ import TitreTypeSelect from '../_common/titre-type-select.vue'
 import { sortedAdministrations } from 'camino-common/src/administrations'
 import Icon from '@/components/_ui/icon.vue'
 import PureTitresLink from '@/components/titre/pure-titres-link.vue'
-import { getTitreFromChoices } from '@/components/titre/pure-titres-link.type'
+import { loadLinkableTitres } from '@/components/titre/pure-titres-link.type'
 
 export default {
   name: 'CaminoDemarcheEditPopup',
@@ -163,7 +163,7 @@ export default {
   },
 
   data: () => ({
-    getTitresFromChoices: getTitreFromChoices
+    loadLinkableTitres
   }),
 
   computed: {
@@ -218,6 +218,10 @@ export default {
   methods: {
     async get() {
       await this.$store.dispatch('titre/init')
+    },
+
+    onSelectedTitre(titre) {
+      this.titre.titreFromIds = titre.id
     },
 
     async save() {

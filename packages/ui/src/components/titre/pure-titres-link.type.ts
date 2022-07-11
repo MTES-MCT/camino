@@ -17,14 +17,16 @@ export type TitresLinkConfig =
       demarcheTypeId: string | null
     }
 
+type DemarchePhase = { dateDebut: string; dateFin: string }
+export type TitreLinkDemarche = { phase?: DemarchePhase }
 export type TitreLink = Pick<CommonTitre, 'id' | 'nom'> & {
-  demarches: { phase?: { dateDebut: string; dateFin: string } }[]
+  demarches: TitreLinkDemarche[]
 }
-export type GetTitreFromChoices = (
+export type LoadLinkableTitres = (
   titreTypeId: TitreTypeId
 ) => Promise<TitreLink[]>
 
-export const getTitreFromChoices: GetTitreFromChoices = async (
+export const loadLinkableTitres: LoadLinkableTitres = async (
   titreTypeId: TitreTypeId
 ) => {
   const titreTypeFromId = getTitreFromTypeId(titreTypeId)

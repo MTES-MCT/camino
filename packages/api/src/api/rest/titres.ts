@@ -354,23 +354,23 @@ export const getTitresFrom = async (
   if (!titreToId) {
     res.json([])
   } else {
-    const titre = titreGet(titreToId, { fields: { id: {} } }, user)
+    const titre = await titreGet(titreToId, { fields: { id: {} } }, user)
     if (!titre) {
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    } else {
+      const titresTitres = await TitresTitres.query().where(
+        'titreToId',
+        titre.id
+      )
+      const titreFromIds = titresTitres.map(({ titreFromId }) => titreFromId)
+
+      const titresFrom = await titresGet(
+        { ids: titreFromIds },
+        { fields: { id: {} } },
+        user
+      )
+
+      res.json(titresFrom.map(({ id, nom }) => ({ id, nom })))
     }
-
-    const titresTitres = await TitresTitres.query().where(
-      'titreToId',
-      titreToId
-    )
-    const titreFromIds = titresTitres.map(({ titreFromId }) => titreFromId)
-
-    const titresFrom = await titresGet(
-      { ids: titreFromIds },
-      { fields: { id: {} } },
-      user
-    )
-
-    res.json(titresFrom.map(({ id, nom }) => ({ id, nom })))
   }
 }

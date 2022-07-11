@@ -68,12 +68,18 @@
     <div class="desktop-blob-1-2 mt">
       <div v-if="titresFrom && titresFrom.length">
         <h5>Titres à l’origine de ce titre</h5>
-        <ul>
-          <li v-for="titreFrom of titresFrom" :key="titreFrom.id">
+        <ul class="list-inline">
+          <li
+            v-for="titreFrom in titresFrom"
+            :key="titreFrom.id"
+            class="mb-xs mr-xs"
+          >
             <router-link
               :to="{ name: 'titre', params: { id: titreFrom.id } }"
-              >{{ titreFrom.nom }}</router-link
+              class="btn-border small p-s rnd-xs mr-xs"
             >
+              <span class="mr-xs">{{ titreFrom.nom }}</span>
+            </router-link>
           </li>
         </ul>
       </div>

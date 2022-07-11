@@ -103,6 +103,7 @@ import TitreRepertoire from './titre/repertoire.vue'
 import TitreDemarches from './titre/demarches.vue'
 import TitreActivitesList from './activites/list.vue'
 import Journaux from './journaux/journaux.vue'
+import { canLinkTitresFrom } from 'camino-common/src/permissions/titres'
 
 export default {
   components: {
@@ -191,10 +192,11 @@ export default {
       const titreId = this.$route.params.id
       await this.$store.dispatch('titre/get', titreId)
 
-      // FIXME à faire que si on peut avoir des liaisons
-      this.titresFrom = await (
-        await fetch(`/apiUrl/titres/${titreId}/titresOrigine`)
-      ).json()
+      if (canLinkTitresFrom(this.$store.state.titre.element.type.id)) {
+        this.titresFrom = await (
+          await fetch(`/apiUrl/titres/${titreId}/titresOrigine`)
+        ).json()
+      }
     },
 
     tabUpdate(tabId) {

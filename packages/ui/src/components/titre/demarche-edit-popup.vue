@@ -52,7 +52,7 @@
 
       <PureTitresLink
         :config="titreLinkConfig"
-        :getTitresFromChoices="getTitresFromChoices"
+        :loadLinkableTitres="loadLinkableTitres"
         @onSelectedTitres="onSelectedTitres"
       />
     </div>
@@ -84,7 +84,7 @@
 <script>
 import Popup from '../_ui/popup.vue'
 import PureTitresLink from './pure-titres-link.vue'
-import { getTitreFromChoices } from './pure-titres-link.type'
+import { loadLinkableTitres } from './pure-titres-link.type'
 
 export default {
   name: 'CaminoDemarcheEditPopup',
@@ -103,7 +103,7 @@ export default {
   },
 
   data: () => ({
-    getTitresFromChoices: getTitreFromChoices
+    loadLinkableTitres
   }),
 
   computed: {
