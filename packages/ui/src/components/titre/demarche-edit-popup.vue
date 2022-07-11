@@ -132,11 +132,12 @@ export default {
     },
 
     titreLinkConfig() {
+      console.log('this.demarche', this.demarche, this.titreTypeNom)
       return {
         type: 'multiple',
         // FIXME
         selectedTitreIds: [],
-        // FIXME
+        // FIXME -> récupérer à la place du titreTypeNom le titreTypeId et en déduire le reste (faire ça pour la preview des étapes, remove etapes, les démarches
         titreTypeId: 'cxm',
         demarcheTypeId: this.demarche.typeId
       }

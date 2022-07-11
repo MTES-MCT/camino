@@ -69,6 +69,10 @@ export default {
     titre: {
       type: Object,
       default: () => ({})
+    },
+    titresFrom: {
+      type: Array,
+      default: () => []
     }
   },
 
@@ -91,6 +95,7 @@ export default {
         nom: reference.nom
       }))
       titre.titresAdministrations = this.titre.titresAdministrations
+      titre.titreFromIds = this.titresFrom.map(({ id }) => id)
 
       this.$store.commit('popupOpen', {
         component: EditPopup,

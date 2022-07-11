@@ -21,11 +21,11 @@ import titreUpdateTask from '../../../business/titre-update'
 
 import { titreUpdationValidate } from '../../../business/validations/titre-updation-validate'
 import { domaineGet } from '../../../database/queries/metas'
-import TitresTitres from '../../../database/models/titres--titres'
 import {
   canLinkTitresFrom,
   getTitreFromTypeId
 } from 'camino-common/src/permissions/titres'
+import { linkTitres } from '../../../database/queries/titres-titres'
 
 const titre = async (
   { id }: { id: string },
@@ -254,15 +254,7 @@ const titreModifier = async (
         }
       }
 
-      await TitresTitres.query().where('titreToId', titre.id).delete()
-      if (titre.titreFromIds.length) {
-        await TitresTitres.query().insert(
-          titre.titreFromIds.map(titreFromId => ({
-            titreFromId,
-            titreToId: titre.id
-          }))
-        )
-      }
+      await linkTitres({ linkTo: titre.id, linkFrom: titre.titreFromIds })
       delete titre.titreFromIds
     }
 

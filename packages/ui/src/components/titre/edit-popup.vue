@@ -2,9 +2,7 @@
   <Popup :messages="messages">
     <template #header>
       <div>
-        <h2 class="cap-first">
-          {{ creation ? "Ajout d'un" : 'Modification du' }} titre
-        </h2>
+        <h2 class="cap-first">Modification du titre</h2>
       </div>
     </template>
 
@@ -103,7 +101,7 @@
       <PureTitresLink
         :config="titreLinkConfig"
         :loadLinkableTitres="loadLinkableTitres"
-        @onSelectedTitre="onSelectedTitre"
+        @onSelectedTitres="onSelectedTitres"
       />
     </div>
 
@@ -154,11 +152,6 @@ export default {
     titre: {
       type: Object,
       default: () => ({})
-    },
-
-    creation: {
-      type: Boolean,
-      default: false
     }
   },
 
@@ -171,8 +164,10 @@ export default {
       return {
         type: 'single',
         titreTypeId: this.titre.typeId,
-        // FIXME
-        selectedTitreId: null
+        selectedTitreId:
+          this.titre.titreFromIds.length === 1
+            ? this.titre.titreFromIds[0]
+            : null
       }
     },
     loading() {
@@ -220,8 +215,8 @@ export default {
       await this.$store.dispatch('titre/init')
     },
 
-    onSelectedTitre(titre) {
-      this.titre.titreFromIds = titre.id
+    onSelectedTitres(titres) {
+      this.titre.titreFromIds = titres.map(({ id }) => id)
     },
 
     async save() {
@@ -230,12 +225,11 @@ export default {
         titre.references = titre.references.filter(reference => {
           return reference.nom
         })
-
-        if (this.creation) {
-          await this.$store.dispatch('titre/add', titre)
-        } else {
-          await this.$store.dispatch('titre/update', titre)
+        if (!titre.titreFromIds) {
+          titre.titreFromIds = []
         }
+
+        await this.$store.dispatch('titre/update', titre)
 
         this.eventTrack({
           categorie: 'titre-sections',

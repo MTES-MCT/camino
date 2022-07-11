@@ -21,7 +21,7 @@ export const canLinkTitresFrom = (
   typeIdOrDemarcheTypeId: TitreTypeId | DemarcheTypeId
 ): boolean => {
   if (isTitreType(typeIdOrDemarcheTypeId)) {
-    return getTitreFromTypeId(typeIdOrDemarcheTypeId) !== null
+    return ['axm', 'pxm'].includes(typeIdOrDemarcheTypeId)
   } else if (isDemarcheTypeId(typeIdOrDemarcheTypeId)) {
     return typeIdOrDemarcheTypeId === 'fus'
   }

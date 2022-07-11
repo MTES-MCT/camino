@@ -11,6 +11,7 @@ import { DomaineId } from 'camino-common/src/domaines'
 import { TitreTypeTypeId } from 'camino-common/src/titresTypesTypes'
 import { PaysId } from 'camino-common/src/pays'
 import { TitreTypeId } from 'camino-common/src/titresTypes'
+import { DemarcheTypeId } from 'camino-common/src/demarchesTypes'
 
 const DemarchesStatutsTypesIds = {
   Accepte: 'acc',
@@ -739,7 +740,7 @@ interface ITitreDemarche {
   slug?: string
   titreId: string
   titre?: ITitre | null
-  typeId: string
+  typeId: DemarcheTypeId
   statutId?: string | null
   statut?: IDemarcheStatut | null
   type?: IDemarcheType | null

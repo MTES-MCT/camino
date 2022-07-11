@@ -9,7 +9,11 @@
       >.
     </div>
 
-    <TitreHeader :titre="titre" @titre-event-track="eventTrack" />
+    <TitreHeader
+      :titre="titre"
+      :titresFrom="titresFrom"
+      @titre-event-track="eventTrack"
+    />
 
     <TitreInfos :titre="titre" :titresFrom="titresFrom" class="mb" />
 
@@ -164,7 +168,8 @@ export default {
       }
     },
 
-    user: 'get'
+    user: 'get',
+    titre: 'loadTitresOrigine'
   },
 
   async created() {
@@ -191,12 +196,12 @@ export default {
     async get() {
       const titreId = this.$route.params.id
       await this.$store.dispatch('titre/get', titreId)
-
-      if (canLinkTitresFrom(this.$store.state.titre.element.type.id)) {
-        this.titresFrom = await (
-          await fetch(`/apiUrl/titres/${titreId}/titresOrigine`)
-        ).json()
-      }
+    },
+    async loadTitresOrigine() {
+      // TODO 2022-07-11: on ne peut pas vraiment appliquer un 'canLinkTitresFrom' ici, car sinon on masque les titres liés par une démarche de fusion
+      this.titresFrom = await (
+        await fetch(`/apiUrl/titres/${this.titre.id}/titresOrigine`)
+      ).json()
     },
 
     tabUpdate(tabId) {
