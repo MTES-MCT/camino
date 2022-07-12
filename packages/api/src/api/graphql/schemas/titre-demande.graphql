@@ -11,4 +11,5 @@ input InputTitreDemande {
   domaineId: ID!
   typeId: ID!
   references: [InputReference]
+  titreFromIds: [ID]
 }

@@ -27,6 +27,7 @@
       :titreNom="titre.nom"
       :titreId="titre.id"
       :tabId="tabId"
+      :titresFrom="titresFrom"
       @event-track="eventTrack"
     />
   </div>
@@ -45,6 +46,7 @@ export default {
 
   props: {
     demarches: { type: Array, default: () => [] },
+    titresFrom: { type: Array, default: () => [] },
     tabId: { type: String, required: true }
   },
 
@@ -67,7 +69,7 @@ export default {
         component: EditPopup,
         props: {
           demarche,
-          titreTypeNom: this.titre.type.type.nom,
+          titreTypeId: this.titre.type.id,
           titreNom: this.titre.nom,
           creation: true,
           tabId: this.tabId

@@ -46,6 +46,8 @@
 
 <script>
 import Popup from '../_ui/popup.vue'
+import { isTitreType, TitresTypes } from 'camino-common/src/titresTypes'
+import { TitresTypesTypes } from 'camino-common/src/titresTypesTypes'
 
 export default {
   name: 'CaminoDemarcheRemovePopup',
@@ -70,13 +72,15 @@ export default {
       default: ''
     },
 
-    titreTypeNom: {
-      type: String,
-      default: ''
-    }
+    titreTypeId: { type: String, default: '' }
   },
 
   computed: {
+    titreTypeNom() {
+      return isTitreType(this.titreTypeId)
+        ? TitresTypesTypes[TitresTypes[this.titreTypeId].typeId].nom
+        : ''
+    },
     loading() {
       return this.$store.state.popup.loading
     },

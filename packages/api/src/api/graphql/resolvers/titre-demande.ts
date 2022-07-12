@@ -14,7 +14,11 @@ import {
 } from '../../../database/queries/utilisateurs'
 import { titreDemandeEntreprisesGet } from '../../../database/queries/entreprises'
 import { domaineGet, etapeTypeGet } from '../../../database/queries/metas'
-import { titreCreate, titreGet } from '../../../database/queries/titres'
+import {
+  titreCreate,
+  titreGet,
+  titresGet
+} from '../../../database/queries/titres'
 import { titreDemarcheCreate } from '../../../database/queries/titres-demarches'
 import { titreEtapeUpsert } from '../../../database/queries/titres-etapes'
 
@@ -30,9 +34,16 @@ import {
   isEntreprise,
   isSuper
 } from 'camino-common/src/roles'
+import {
+  canLinkTitresFrom,
+  getTitreFromTypeId
+} from 'camino-common/src/permissions/titres'
+import { linkTitres } from '../../../database/queries/titres-titres'
 
-const titreDemandeCreer = async (
-  { titreDemande }: { titreDemande: ITitreDemande },
+export const titreDemandeCreer = async (
+  {
+    titreDemande
+  }: { titreDemande: ITitreDemande & { titreFromIds?: string[] } },
   context: IToken
 ) => {
   try {
@@ -106,6 +117,46 @@ const titreDemandeCreer = async (
     )
 
     const titreId = titre.id
+    if (
+      canLinkTitresFrom(titreDemande.typeId) &&
+      titreDemande.titreFromIds === undefined
+    ) {
+      throw new Error(
+        'Le champ titreFromIds est obligatoire pour ce type de titre'
+      )
+    }
+
+    if (titreDemande.titreFromIds !== undefined) {
+      const titresFrom = await titresGet(
+        { ids: titreDemande.titreFromIds },
+        { fields: { id: {} } },
+        user
+      )
+
+      if (titresFrom.length !== titreDemande.titreFromIds.length) {
+        throw new Error('droit insuffisant')
+      }
+
+      const titreFromTypeId = getTitreFromTypeId(titreDemande.typeId)
+      if (titreFromTypeId) {
+        if (titresFrom.length > 1) {
+          throw new Error(
+            `une ${titreDemande.typeId} ne peut avoir qu’un seul titre lié`
+          )
+        }
+        if (titresFrom.length && titresFrom[0].typeId !== titreFromTypeId) {
+          throw new Error(
+            `une ${titreDemande.typeId} ne peut-être liée qu’à une ${titreFromTypeId}`
+          )
+        }
+      }
+
+      await linkTitres({
+        linkTo: titre.id,
+        linkFrom: titreDemande.titreFromIds
+      })
+      delete titreDemande.titreFromIds
+    }
     await titreUpdateTask(titre.id)
 
     const titreDemarche = await titreDemarcheCreate({
@@ -221,5 +272,3 @@ const titreDemandeCreer = async (
     throw e
   }
 }
-
-export { titreDemandeCreer }

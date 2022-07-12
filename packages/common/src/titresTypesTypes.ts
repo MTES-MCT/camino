@@ -10,11 +10,11 @@ export const TITRES_TYPES_TYPES_IDS = {
   PERMIS_EXCLUSIF_DE_RECHERCHES: 'pr',
   PERMIS_D_EXPLOITATION: 'px'
 } as const
-export type TitresTypesTypesId =
+export type TitreTypeTypeId =
   typeof TITRES_TYPES_TYPES_IDS[keyof typeof TITRES_TYPES_TYPES_IDS]
 
 export const TitresTypesTypes: {
-  [key in TitresTypesTypesId]: Definition<key>
+  [key in TitreTypeTypeId]: Definition<key>
 } = {
   ap: {
     id: 'ap',

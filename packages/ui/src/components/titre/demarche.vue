@@ -94,7 +94,8 @@ export default {
     titreId: { type: String, required: true },
     titreType: { type: Object, required: true },
     domaineId: { type: String, required: true },
-    tabId: { type: String, required: true }
+    tabId: { type: String, required: true },
+    titresFrom: { type: Array, default: () => [] }
   },
 
   emits: ['titre-event-track'],
@@ -129,7 +130,8 @@ export default {
         props: {
           demarche,
           types: this.titreType.demarchesTypes,
-          titreTypeNom: this.titreType.type.nom,
+          titreTypeId: this.titreType.id,
+          titresFrom: this.titresFrom,
           titreNom: this.titreNom,
           tabId: this.tabId
         }
@@ -149,7 +151,7 @@ export default {
           id: this.demarche.id,
           typeNom: this.demarche.type.nom,
           titreNom: this.titreNom,
-          titreTypeNom: this.titreType.type.nom
+          titreTypeId: this.titreType.id
         }
       })
 

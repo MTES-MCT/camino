@@ -21,6 +21,11 @@ import titreUpdateTask from '../../../business/titre-update'
 
 import { titreUpdationValidate } from '../../../business/validations/titre-updation-validate'
 import { domaineGet } from '../../../database/queries/metas'
+import {
+  canLinkTitresFrom,
+  getTitreFromTypeId
+} from 'camino-common/src/permissions/titres'
+import { linkTitres } from '../../../database/queries/titres-titres'
 
 const titre = async (
   { id }: { id: string },
@@ -153,6 +158,10 @@ const titres = async (
   }
 }
 
+/**
+ * TODO 2022-07-12 enlever cette fonction et nettoyer l'ui
+ * @deprecated Not used by frontend, titreDemandeCreer is used instead
+ */
 const titreCreer = async (
   { titre }: { titre: ITitre },
   context: IToken,
@@ -191,7 +200,7 @@ const titreCreer = async (
 }
 
 const titreModifier = async (
-  { titre }: { titre: ITitre },
+  { titre }: { titre: ITitre & { titreFromIds?: string[] } },
   context: IToken,
   info: GraphQLResolveInfo
 ) => {
@@ -200,7 +209,7 @@ const titreModifier = async (
 
     const titreOld = await titreGet(
       titre.id,
-      { fields: { titresAdministrations: { id: {} } } },
+      { fields: { titresAdministrations: { id: {} }, demarches: { id: {} } } },
       user
     )
 
@@ -212,6 +221,45 @@ const titreModifier = async (
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
+    }
+
+    if (!titreOld.demarches) {
+      throw new Error('les démarches ne sont pas chargées')
+    }
+
+    if (canLinkTitresFrom(titre.typeId) && titre.titreFromIds === undefined) {
+      throw new Error(
+        'Le champ titreFromIds est obligatoire pour ce type de titre'
+      )
+    }
+
+    if (titre.titreFromIds !== undefined) {
+      const titresFrom = await titresGet(
+        { ids: titre.titreFromIds },
+        { fields: { id: {} } },
+        user
+      )
+
+      if (titresFrom.length !== titre.titreFromIds.length) {
+        throw new Error('droit insuffisant')
+      }
+
+      const titreFromTypeId = getTitreFromTypeId(titre.typeId)
+      if (titreFromTypeId) {
+        if (titresFrom.length > 1) {
+          throw new Error(
+            `une ${titre.typeId} ne peut avoir qu’un seul titre lié`
+          )
+        }
+        if (titresFrom.length && titresFrom[0].typeId !== titreFromTypeId) {
+          throw new Error(
+            `une ${titre.typeId} ne peut-être liée qu’à une ${titreFromTypeId}`
+          )
+        }
+      }
+
+      await linkTitres({ linkTo: titre.id, linkFrom: titre.titreFromIds })
+      delete titre.titreFromIds
     }
 
     const fields = fieldsBuild(info)

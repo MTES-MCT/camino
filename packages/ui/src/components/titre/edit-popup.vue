@@ -2,9 +2,7 @@
   <Popup :messages="messages">
     <template #header>
       <div>
-        <h2 class="cap-first">
-          {{ creation ? "Ajout d'un" : 'Modification du' }} titre
-        </h2>
+        <h2 class="cap-first">Modification du titre</h2>
       </div>
     </template>
 
@@ -100,6 +98,12 @@
         <span class="mt-xxs">Ajouter une administration</span>
         <Icon name="plus" size="M" class="flex-right" />
       </button>
+      <PureTitresLink
+        class="mb-xxl"
+        :config="titreLinkConfig"
+        :loadLinkableTitres="loadLinkableTitres"
+        @onSelectedTitres="onSelectedTitres"
+      />
     </div>
 
     <template #footer>
@@ -132,11 +136,14 @@ import Popup from '../_ui/popup.vue'
 import TitreTypeSelect from '../_common/titre-type-select.vue'
 import { sortedAdministrations } from 'camino-common/src/administrations'
 import Icon from '@/components/_ui/icon.vue'
+import PureTitresLink from '@/components/titre/pure-titres-link.vue'
+import { loadLinkableTitres } from '@/components/titre/pure-titres-link.type'
 
 export default {
   name: 'CaminoDemarcheEditPopup',
 
   components: {
+    PureTitresLink,
     Icon,
     Popup,
     TitreTypeSelect
@@ -146,15 +153,24 @@ export default {
     titre: {
       type: Object,
       default: () => ({})
-    },
-
-    creation: {
-      type: Boolean,
-      default: false
     }
   },
 
+  data: () => ({
+    loadLinkableTitres
+  }),
+
   computed: {
+    titreLinkConfig() {
+      return {
+        type: 'single',
+        titreTypeId: this.titre.typeId,
+        selectedTitreId:
+          this.titre.titreFromIds.length === 1
+            ? this.titre.titreFromIds[0]
+            : null
+      }
+    },
     loading() {
       return this.$store.state.popup.loading
     },
@@ -200,18 +216,21 @@ export default {
       await this.$store.dispatch('titre/init')
     },
 
+    onSelectedTitres(titres) {
+      this.titre.titreFromIds = titres.map(({ id }) => id)
+    },
+
     async save() {
       if (this.complete) {
         const titre = JSON.parse(JSON.stringify(this.titre))
         titre.references = titre.references.filter(reference => {
           return reference.nom
         })
-
-        if (this.creation) {
-          await this.$store.dispatch('titre/add', titre)
-        } else {
-          await this.$store.dispatch('titre/update', titre)
+        if (!titre.titreFromIds) {
+          titre.titreFromIds = []
         }
+
+        await this.$store.dispatch('titre/update', titre)
 
         this.eventTrack({
           categorie: 'titre-sections',
