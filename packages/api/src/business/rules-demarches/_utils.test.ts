@@ -20,6 +20,7 @@ import {
 } from './definitions'
 import { titreContenuFormat } from '../../database/models/_format/titre-contenu'
 import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find'
+import { TitreTypeId } from 'camino-common/src/titresTypes'
 
 test('teste EtatsValidate', () => {
   const octEtatsValidate = demarcheEtatsValidate('oct', 'axm', '2021-01-01')
@@ -87,7 +88,7 @@ const etapesTypesGet = (demarcheTypeId: string, titreTypeId: string) => {
 
 const demarcheEtatsValidate = (
   demarcheTypeId: string,
-  titreTypeId: string,
+  titreTypeId: TitreTypeId,
   date: string
 ) => {
   const etapesTypes = etapesTypesGet(demarcheTypeId, titreTypeId)

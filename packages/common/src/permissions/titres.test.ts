@@ -22,5 +22,5 @@ test('canLinkTitresFrom', () => {
   }, {})
   expect(titreFromTypeId).toMatchSnapshot()
   expect(canLinkTitresFrom('fus')).toBe(true)
-  expect(null).toBe(false)
+  expect(canLinkTitresFrom(null)).toBe(false)
 })
