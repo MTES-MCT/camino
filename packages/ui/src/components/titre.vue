@@ -75,6 +75,7 @@
       v-if="tabId === 'demarches'"
       :demarches="demarches"
       :tabId="tabId"
+      :titresFrom="titresFrom"
       @event-track="eventTrack"
     />
 

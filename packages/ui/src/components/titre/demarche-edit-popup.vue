@@ -49,12 +49,13 @@
           class="tablet-blob-2-3 p-s"
         />
       </div>
-
-      <PureTitresLink
-        :config="titreLinkConfig"
-        :loadLinkableTitres="loadLinkableTitres"
-        @onSelectedTitres="onSelectedTitres"
-      />
+      <div class="mb-s">
+        <PureTitresLink
+          :config="titreLinkConfig"
+          :loadLinkableTitres="loadLinkableTitres"
+          @onSelectedTitres="onSelectedTitres"
+        />
+      </div>
     </div>
 
     <template #footer>
@@ -85,6 +86,8 @@
 import Popup from '../_ui/popup.vue'
 import PureTitresLink from './pure-titres-link.vue'
 import { loadLinkableTitres } from './pure-titres-link.type'
+import { isTitreType, TitresTypes } from 'camino-common/src/titresTypes'
+import { TitresTypesTypes } from 'camino-common/src/titresTypesTypes'
 
 export default {
   name: 'CaminoDemarcheEditPopup',
@@ -97,7 +100,8 @@ export default {
   props: {
     demarche: { type: Object, default: () => ({}) },
     titreNom: { type: String, default: '' },
-    titreTypeNom: { type: String, default: '' },
+    titreTypeId: { type: String, default: '' },
+    titresFrom: { type: Array, default: () => [] },
     creation: { type: Boolean, default: false },
     tabId: { type: String, required: true }
   },
@@ -107,6 +111,11 @@ export default {
   }),
 
   computed: {
+    titreTypeNom() {
+      return isTitreType(this.titreTypeId)
+        ? TitresTypesTypes[TitresTypes[this.titreTypeId].typeId].nom
+        : ''
+    },
     loading() {
       return this.$store.state.popup.loading
     },
@@ -132,13 +141,16 @@ export default {
     },
 
     titreLinkConfig() {
-      console.log('this.demarche', this.demarche, this.titreTypeNom)
+      console.log(
+        'this.demarche',
+        this.demarche,
+        this.titreTypeNom,
+        this.titresFrom
+      )
       return {
         type: 'multiple',
-        // FIXME
-        selectedTitreIds: [],
-        // FIXME -> récupérer à la place du titreTypeNom le titreTypeId et en déduire le reste (faire ça pour la preview des étapes, remove etapes, les démarches
-        titreTypeId: 'cxm',
+        selectedTitreIds: this.titresFrom.map(({ id }) => id),
+        titreTypeId: this.titreTypeId,
         demarcheTypeId: this.demarche.typeId
       }
     }
