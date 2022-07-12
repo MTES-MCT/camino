@@ -33,6 +33,8 @@ import { demarcheTypeGet } from '../../../database/queries/metas'
 import { canLinkTitresFrom } from 'camino-common/src/permissions/titres'
 import { TitresTypes } from 'camino-common/src/titresTypes'
 import { linkTitres } from '../../../database/queries/titres-titres'
+import Utilisateurs from '../../../database/models/utilisateurs'
+import { DBTitre } from '../../../database/models/titres'
 
 const demarche = async (
   { id }: { id: string },
@@ -209,32 +211,7 @@ const demarcheCreer = async (
       )
     }
 
-    if (demarche.titreFromIds !== undefined) {
-      const titreType = TitresTypes[titre.typeId]
-      const titresFrom = await titresGet(
-        {
-          ids: demarche.titreFromIds,
-          typesIds: [titreType.typeId],
-          domainesIds: [titreType.domaineId]
-        },
-        { fields: { id: {} } },
-        user
-      )
-
-      if (titresFrom.length !== demarche.titreFromIds.length) {
-        throw new Error('droit insuffisant')
-      }
-
-      const titreFromTypeId = titre.typeId
-      if (titreFromTypeId) {
-        if (titresFrom.length < 2) {
-          throw new Error(`une fusion doit avoir au moins 2 titres liés`)
-        }
-      }
-
-      await linkTitres({ linkTo: titre.id, linkFrom: demarche.titreFromIds })
-      delete demarche.titreFromIds
-    }
+    await manageLinkTitres(user, titre, demarche)
 
     const demarcheCreated = await titreDemarcheCreate(demarche)
 
@@ -258,6 +235,38 @@ const demarcheCreer = async (
   }
 }
 
+const manageLinkTitres = async (
+  user: Utilisateurs | null | undefined,
+  titre: DBTitre,
+  demarche: ITitreDemarche & { titreFromIds?: string[] }
+) => {
+  if (demarche.titreFromIds !== undefined) {
+    const titreType = TitresTypes[titre.typeId]
+    const titresFrom = await titresGet(
+      {
+        ids: demarche.titreFromIds,
+        typesIds: [titreType.typeId],
+        domainesIds: [titreType.domaineId]
+      },
+      { fields: { id: {} } },
+      user
+    )
+
+    if (titresFrom.length !== demarche.titreFromIds.length) {
+      throw new Error('droit insuffisant')
+    }
+
+    const titreFromTypeId = titre.typeId
+    if (titreFromTypeId) {
+      if (titresFrom.length < 2) {
+        throw new Error(`une fusion doit avoir au moins 2 titres liés`)
+      }
+    }
+
+    await linkTitres({ linkTo: titre.id, linkFrom: demarche.titreFromIds })
+    delete demarche.titreFromIds
+  }
+}
 const demarcheModifier = async (
   { demarche }: { demarche: ITitreDemarche & { titreFromIds?: string[] } },
   context: IToken,
@@ -277,6 +286,8 @@ const demarcheModifier = async (
     )
 
     if (!demarcheOld) throw new Error('la démarche n’existe pas')
+    const titre = await titreGet(demarcheOld.titreId, { fields: {} }, user)
+    if (!titre) throw new Error("le titre n'existe pas")
 
     if (!demarcheOld.modification) throw new Error('droits insuffisants')
 
@@ -292,35 +303,7 @@ const demarcheModifier = async (
       )
     }
 
-    if (demarche.titreFromIds !== undefined) {
-      const titre = await titreGet(demarche.titreId, { fields: {} }, user)
-      if (!titre) throw new Error("le titre n'existe pas")
-
-      const titreType = TitresTypes[titre.typeId]
-      const titresFrom = await titresGet(
-        {
-          ids: demarche.titreFromIds,
-          typesIds: [titreType.typeId],
-          domainesIds: [titreType.domaineId]
-        },
-        { fields: { id: {} } },
-        user
-      )
-
-      if (titresFrom.length !== demarche.titreFromIds.length) {
-        throw new Error('droit insuffisant')
-      }
-
-      const titreFromTypeId = titre.typeId
-      if (titreFromTypeId) {
-        if (titresFrom.length < 2) {
-          throw new Error(`une fusion doit avoir au moins 2 titres liés`)
-        }
-      }
-
-      await linkTitres({ linkTo: titre.id, linkFrom: demarche.titreFromIds })
-      delete demarche.titreFromIds
-    }
+    await manageLinkTitres(user, titre, demarche)
 
     const rulesErrors = await titreDemarcheUpdationValidate(
       demarche,
