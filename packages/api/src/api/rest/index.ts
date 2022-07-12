@@ -32,6 +32,7 @@ import { entreprisesFormatTable } from './format/entreprises'
 
 import { matomo } from '../../tools/matomo'
 import { isRole } from 'camino-common/src/roles'
+import { stringSplit } from '../../database/queries/_utils'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -99,9 +100,9 @@ interface ITitresQueryInput {
   domainesIds?: string | null
   typesIds?: string | null
   statutsIds?: string | null
-  substances?: string | null
-  noms?: string | null
-  entreprises?: string | null
+  substancesLegalesIds?: string | null
+  titresIds?: string | null
+  entreprisesIds?: string | null
   references?: string | null
   territoires?: string | null
   perimetre?: number[] | null
@@ -116,9 +117,9 @@ const titres = async (
       typesIds,
       domainesIds,
       statutsIds,
-      substances,
-      noms,
-      entreprises,
+      substancesLegalesIds,
+      titresIds,
+      entreprisesIds,
       references,
       territoires,
       perimetre
@@ -137,9 +138,9 @@ const titres = async (
       typesIds: typesIds?.split(','),
       domainesIds: domainesIds?.split(','),
       statutsIds: statutsIds?.split(','),
-      substances,
-      noms,
-      entreprises,
+      ids: stringSplit(titresIds ?? ''),
+      entreprisesIds: stringSplit(entreprisesIds ?? ''),
+      substancesLegalesIds: stringSplit(substancesLegalesIds ?? ''),
       references,
       territoires,
       perimetre
@@ -172,9 +173,9 @@ const titres = async (
       typesIds,
       domainesIds,
       statutsIds,
-      substances,
-      noms,
-      entreprises,
+      substancesLegalesIds,
+      titresIds,
+      entreprisesIds,
       references,
       territoires
     })
