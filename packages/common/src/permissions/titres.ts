@@ -18,7 +18,7 @@ export const getTitreFromTypeId = (typeId: TitreTypeId): TitreTypeId | null => {
 }
 
 export const canLinkTitresFrom = (
-  typeIdOrDemarcheTypeId: TitreTypeId | DemarcheTypeId
+  typeIdOrDemarcheTypeId: TitreTypeId | DemarcheTypeId | null
 ): boolean => {
   if (isTitreType(typeIdOrDemarcheTypeId)) {
     return ['axm', 'pxm'].includes(typeIdOrDemarcheTypeId)

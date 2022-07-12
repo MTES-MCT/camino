@@ -3,6 +3,7 @@ import { getTitreFromTypeId } from 'camino-common/src/permissions/titres'
 import { apiGraphQLFetch } from '@/api/_client'
 import { TitresTypes, TitreTypeId } from 'camino-common/src/titresTypes'
 import gql from 'graphql-tag'
+import { DemarcheTypeId } from 'camino-common/src/demarchesTypes'
 
 export type TitresLinkConfig =
   | {
@@ -14,7 +15,7 @@ export type TitresLinkConfig =
       type: 'multiple'
       selectedTitreIds: string[]
       titreTypeId: TitreTypeId
-      demarcheTypeId: string | null
+      demarcheTypeId: DemarcheTypeId | null
     }
 
 type DemarchePhase = { dateDebut: string; dateFin: string }

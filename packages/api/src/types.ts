@@ -979,7 +979,7 @@ type IFormat = 'xlsx' | 'csv' | 'ods' | 'geojson' | 'json' | 'pdf' | 'zip'
 
 interface ITitreDemande {
   nom: string
-  typeId: string
+  typeId: TitreTypeId
   domaineId: DomaineId
   entrepriseId: string
   references?: ITitreReference[]

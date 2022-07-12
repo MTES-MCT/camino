@@ -158,6 +158,10 @@ const titres = async (
   }
 }
 
+/**
+ * TODO 2022-07-12 enlever cette fonction et nettoyer l'ui
+ * @deprecated Not used by frontend, titreDemandeCreer is used instead
+ */
 const titreCreer = async (
   { titre }: { titre: ITitre },
   context: IToken,

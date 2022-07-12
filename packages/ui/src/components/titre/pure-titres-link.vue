@@ -67,38 +67,55 @@ const selectedTitres = ref<TitreLink[]>([])
 const data = ref<AsyncData<TitreLink[]>>({ status: 'LOADING' })
 
 const init = async () => {
-  try {
-    const titresLinkables = await props.loadLinkableTitres(
-      props.config.titreTypeId
+  data.value = { status: 'LOADING' }
+  if (
+    canLinkTitresFrom(
+      props.config.type === 'single'
+        ? props.config.titreTypeId
+        : props.config.demarcheTypeId
     )
-
-    data.value = { status: 'LOADED', value: titresLinkables }
-    const titreIds: string[] = []
-    if (
-      props.config.type === 'single' &&
-      props.config.selectedTitreId !== null
-    ) {
-      titreIds.push(props.config.selectedTitreId)
-    }
-    if (props.config.type === 'multiple') {
-      titreIds.push(...props.config.selectedTitreIds)
-    }
-
-    if (titreIds.length) {
-      const selectedTitreList = data.value.value.filter(({ id }) =>
-        titreIds.includes(id)
+  ) {
+    try {
+      const titresLinkables = await props.loadLinkableTitres(
+        props.config.titreTypeId
       )
-      if (selectedTitreList) {
-        selectedTitres.value.push(...selectedTitreList)
+
+      data.value = { status: 'LOADED', value: titresLinkables }
+      const titreIds: string[] = []
+      if (
+        props.config.type === 'single' &&
+        props.config.selectedTitreId !== null
+      ) {
+        titreIds.push(props.config.selectedTitreId)
       }
-    }
-  } catch (e: any) {
-    data.value = {
-      status: 'ERROR',
-      message: e.message ?? 'something wrong happened'
+      if (props.config.type === 'multiple') {
+        titreIds.push(...props.config.selectedTitreIds)
+      }
+
+      if (titreIds.length) {
+        const selectedTitreList = data.value.value.filter(({ id }) =>
+          titreIds.includes(id)
+        )
+        if (selectedTitreList) {
+          selectedTitres.value.push(...selectedTitreList)
+        }
+      }
+    } catch (e: any) {
+      data.value = {
+        status: 'ERROR',
+        message: e.message ?? 'something wrong happened'
+      }
     }
   }
 }
+
+watch(
+  () => props.config,
+  async _ => {
+    await init()
+  },
+  { deep: true }
+)
 
 onMounted(async () => {
   await init()
