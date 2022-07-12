@@ -222,8 +222,10 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
     etapesAvant.push(...toMachineEtapes(sortedEtapes.slice(0, index)))
     etapesApres.push(...toMachineEtapes(sortedEtapes.slice(index + 1)))
   } else {
+    // TODO 2022-07-12: Il faudrait mieux gérer les étapes à la même date que l'étape qu'on veut rajouter
+    // elles ne sont ni avant, ni après, mais potentiellement au milieu de toutes ces étapes
     etapesAvant.push(
-      ...toMachineEtapes(sortedEtapes.filter(etape => etape.date < date))
+      ...toMachineEtapes(sortedEtapes.filter(etape => etape.date <= date))
     )
     etapesApres.push(...toMachineEtapes(sortedEtapes.slice(etapesAvant.length)))
   }
