@@ -99,6 +99,7 @@
         <Icon name="plus" size="M" class="flex-right" />
       </button>
       <PureTitresLink
+        class="mb-xxl"
         :config="titreLinkConfig"
         :loadLinkableTitres="loadLinkableTitres"
         @onSelectedTitres="onSelectedTitres"
