@@ -207,7 +207,7 @@ const demarcheCreer = async (
       demarche.titreFromIds === undefined
     ) {
       throw new Error(
-        'Le champ titreFromIds est obligatoire pour ce type de titre'
+        'Le champ titreFromIds est obligatoire pour ce type de démarche'
       )
     }
 
@@ -299,7 +299,7 @@ const demarcheModifier = async (
       demarche.titreFromIds === undefined
     ) {
       throw new Error(
-        'Le champ titreFromIds est obligatoire pour ce type de titre'
+        'Le champ titreFromIds est obligatoire pour ce type de démarche'
       )
     }
 

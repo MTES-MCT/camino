@@ -49,7 +49,7 @@
           class="tablet-blob-2-3 p-s"
         />
       </div>
-      <div class="mb-s">
+      <div class="mb-xxl">
         <PureTitresLink
           :config="titreLinkConfig"
           :loadLinkableTitres="loadLinkableTitres"
@@ -141,12 +141,6 @@ export default {
     },
 
     titreLinkConfig() {
-      console.log(
-        'this.demarche',
-        this.demarche,
-        this.titreTypeNom,
-        this.titresFrom
-      )
       return {
         type: 'multiple',
         selectedTitreIds: this.titresFrom.map(({ id }) => id),
