@@ -16,6 +16,16 @@ const tableConvert = (
 
   const sheet = xlsx.utils.json_to_sheet(elements as Index<any>[])
 
+  if (format === 'xlsx') {
+    const cells = Object.keys(sheet)
+    for (const cell of cells) {
+      if (typeof sheet[cell].v === 'string' && sheet[cell].v.length > 32767) {
+        sheet[cell].v =
+          'la cellule est trop grosse pour le format xlsx, veuillez télécharger le document en ods si vous voulez y accéder'
+      }
+    }
+  }
+
   if (format === 'csv') {
     contenu = xlsx.utils.sheet_to_csv(sheet)
   } else if (format === 'xlsx' || format === 'ods') {

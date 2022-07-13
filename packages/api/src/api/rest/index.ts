@@ -138,9 +138,11 @@ const titres = async (
       typesIds: typesIds?.split(','),
       domainesIds: domainesIds?.split(','),
       statutsIds: statutsIds?.split(','),
-      ids: stringSplit(titresIds ?? ''),
-      entreprisesIds: stringSplit(entreprisesIds ?? ''),
-      substancesLegalesIds: stringSplit(substancesLegalesIds ?? ''),
+      ids: titresIds ? stringSplit(titresIds) : null,
+      entreprisesIds: entreprisesIds ? stringSplit(entreprisesIds) : null,
+      substancesLegalesIds: substancesLegalesIds
+        ? stringSplit(substancesLegalesIds)
+        : null,
       references,
       territoires,
       perimetre
