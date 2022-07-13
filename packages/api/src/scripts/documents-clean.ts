@@ -6,6 +6,6 @@ documentsClean()
     process.exit()
   })
   .catch(e => {
-    console.log(e)
+    console.error(e)
     process.exit(1)
   })

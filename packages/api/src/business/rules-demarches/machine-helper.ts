@@ -98,7 +98,7 @@ export const toMachineEtape = (dbEtape: ITitreEtape): Etape => {
   if (isStatus(dbEtape.statutId)) {
     statutId = dbEtape.statutId
   } else {
-    console.log(
+    console.error(
       `le status ${dbEtape.statutId} est inconnu, ${JSON.stringify(dbEtape)}`
     )
     throw new Error(

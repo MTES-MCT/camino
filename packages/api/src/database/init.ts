@@ -21,9 +21,9 @@ const createAdminUserAtStartup = async () => {
     { fields: { id: {} } },
     userSuper
   )
-  console.log(`${numberOfUsers} utilisateurs en base`)
+  console.info(`${numberOfUsers} utilisateurs en base`)
   if (numberOfUsers === 0) {
-    console.log("creation de l'utilisateur super par défaut")
+    console.warn("creation de l'utilisateur super par défaut")
     await userAdd(knex, {
       id: 'admin',
       email: process.env.ADMIN_EMAIL,

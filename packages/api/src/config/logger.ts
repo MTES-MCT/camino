@@ -1,3 +1,5 @@
+/* eslint no-console: 0 */
+
 const numberToDoubleCharString = (param: number): string =>
   param.toString(10).padStart(2, '0')
 // TODO 2022-07-13: move to common?

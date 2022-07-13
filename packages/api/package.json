@@ -186,6 +186,19 @@
           "selector": "Identifier[name='leftJoinRelation']"
         }
       ],
+      "no-console": [
+        "error",
+        {
+          "allow": [
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "time",
+            "timeEnd"
+          ]
+        }
+      ],
       "@typescript-eslint/explicit-function-return-type": 0,
       "@typescript-eslint/explicit-module-boundary-types": 0,
       "@typescript-eslint/no-empty-interface": 0,

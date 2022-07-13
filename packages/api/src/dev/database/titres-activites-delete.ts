@@ -19,7 +19,7 @@ const main = async () => {
         ))
     ) {
       titresActivitesSupprimeesIds.push(ta.id)
-      console.log('activité supprimée', ta.id)
+      console.info('activité supprimée', ta.id)
       await TitresActivites.query().where('id', ta.id).del()
     } else {
       titresActivitesConserveesIds.push(ta.id)

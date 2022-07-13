@@ -23,7 +23,7 @@ export const userAdd = async (
     await knex('utilisateurs').insert(user)
 
     console.info('Utilisateur créé')
-    console.log(`utilisateur crée avec le mot de passe ${password}`)
+    console.info(`utilisateur crée avec le mot de passe ${password}`)
   } else {
     console.info('Aucun user créé:', errors.join(', '))
   }

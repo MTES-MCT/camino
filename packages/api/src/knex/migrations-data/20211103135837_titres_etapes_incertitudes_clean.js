@@ -30,7 +30,7 @@ exports.up = async knex => {
           .where('id', titreEtape.id)
           .update('incertitudes', titreEtape.incertitudes)
 
-        console.log(`Incertitudes nettoyées ${titreEtape.slug}`)
+        console.info(`Incertitudes nettoyées ${titreEtape.slug}`)
       }
     }
   }
