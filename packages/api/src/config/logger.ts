@@ -27,6 +27,7 @@ const utilFormat = {
   }
 }
 
+// TODO 2022-07-13 : supprime winston et utilise console.log classique (avec des couleurs si on veut être fancy, mais pas besoin de cette dépendance (et encore moins des sous dépendances))
 const consoleOverride = (logger: winston.Logger) => {
   console.info = (...args) => logger.info('', ...args)
   console.warn = (...args) => logger.warn('', ...args)
@@ -42,32 +43,8 @@ const appLogger = createLogger({
   transports: [consoleTransport]
 })
 
-// Si nous sommes en production, alors on met aussi les logs dans un fichier
-if (process.env.NODE_ENV === 'production') {
-  appLogger.add(
-    new transports.File({
-      filename: 'app.log',
-      format: combine(timestampFormat, utilFormat, printFormat)
-    })
-  )
-}
-
-const htmlFormat = printf(({ level, message, timestamp }) => {
-  if (!message || !message.length) {
-    return ''
-  }
-
-  return `<div>${timestamp} [${level}]: ${message}</div>`
-})
-
 const cronLogger = createLogger({
-  transports: [
-    consoleTransport,
-    new transports.File({
-      filename: 'cron.log',
-      format: combine(timestampFormat, utilFormat, htmlFormat)
-    })
-  ]
+  transports: [consoleTransport]
 })
 
 export { consoleOverride, appLogger, cronLogger }

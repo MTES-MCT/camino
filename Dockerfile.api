@@ -20,21 +20,26 @@ RUN npm run build -w packages/api && \
 
 FROM node:17.8-alpine as production-stage
 
-# redirige les logs sur le collecteur de logs docker
-# cf le Dockerfile de nginx
-# https://github.com/nginxinc/docker-nginx/blob/8921999083def7ba43a06fabd5f80e4406651353/mainline/jessie/Dockerfile#L21-L23
-RUN ln -sf /dev/stdout ./app.log
+# TODO 2022-07-13 : on profite que
+# - l'utilisateur a le même id sur toutes les machines
+# - ansible crée les dossiers avec les bons droits
+RUN adduser -u 1002 -D nonroot
 
-COPY --from=build-stage /app/package.json ./
-COPY --from=build-stage /app/packages/api/package.json ./packages/api/
-COPY --from=build-stage /app/packages/common/package.json ./packages/common/
-COPY --from=build-stage /app/packages/api/dist/ ./packages/api/dist/
-COPY --from=build-stage /app/node_modules ./node_modules/
-COPY --from=build-stage /app/packages/api/node_modules ./node_modules/
+USER nonroot
+
+COPY --chown=nonroot:nonroot --from=build-stage /app/package.json ./
+COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/package.json ./packages/api/
+COPY --chown=nonroot:nonroot --from=build-stage /app/packages/common/package.json ./packages/common/
+COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/dist/ ./packages/api/dist/
+COPY --chown=nonroot:nonroot --from=build-stage /app/node_modules ./node_modules/
+COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/node_modules ./node_modules/
 # nous avons besoin des sources pour lancer certains scripts manuellement
-COPY --from=build-stage /app/packages/api/src ./packages/api/src/
-COPY --from=build-stage /app/packages/api/tsconfig.json ./packages/api/
-COPY --from=build-stage /app/packages/common/src ./packages/common/src/
-COPY --from=build-stage /app/packages/common/tsconfig.json ./packages/common/
+COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/src ./packages/api/src/
+COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/tsconfig.json ./packages/api/
+COPY --chown=nonroot:nonroot --from=build-stage /app/packages/common/src ./packages/common/src/
+COPY --chown=nonroot:nonroot --from=build-stage /app/packages/common/tsconfig.json ./packages/common/
+
+# Ce n'est pas nécessaire pour les environnements de prod (le dossier est crée par ansible et monté) mais est plus correct pour pouvoir utiliser l'image sans problème de droit au démarrage
+RUN mkdir -p /packages/api/files
 
 CMD ["npm", "start", "-w", "packages/api"]

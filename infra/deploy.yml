@@ -6,12 +6,8 @@
         name: rsync
         state: present
       become: True
-    - file:
-        path: /srv/www/camino/files
-        group: users
-        mode: u=rwx,g=rwx,o=r
-      become: True
   roles:
+    - role: user
     - role: nginx
     - role: camino
     - role: devAndPreprod
