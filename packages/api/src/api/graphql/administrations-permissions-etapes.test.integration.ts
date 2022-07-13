@@ -6,6 +6,7 @@ import {
 } from '../../../tests/_utils/administrations-permissions'
 import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../../database/models/titres-types--demarches-types-etapes-types-justificatifs-types'
 import TitresTypesDemarchesTypesEtapesTypesDocumentsTypes from '../../database/models/titres-types--demarches-types-etapes-types-documents-types'
+import Utilisateurs from '../../database/models/utilisateurs'
 
 jest.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -22,6 +23,11 @@ jest.mock('../../tools/file-delete', () => ({
 }))
 console.info = jest.fn()
 console.error = jest.fn()
+
+beforeEach(async () => {
+  await Utilisateurs.query().delete()
+})
+
 beforeAll(async () => {
   await dbManager.populateDb()
 

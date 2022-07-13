@@ -1,6 +1,6 @@
 import PQueue from 'p-queue'
 
-import { ITitreEtape, IUtilisateur } from '../../types'
+import { ITitreEtape } from '../../types'
 
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches'
@@ -13,9 +13,10 @@ import {
   titreEtapesSortAscByOrdre,
   titreEtapesSortDescByOrdre
 } from '../utils/titre-etapes-sort'
+import { UserNotNull } from 'camino-common/src/roles'
 
 const titresEtapesHeritageContenuUpdate = async (
-  user: IUtilisateur,
+  user: UserNotNull,
   titresDemarchesIds?: string[]
 ) => {
   console.info()

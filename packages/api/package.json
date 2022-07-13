@@ -34,11 +34,11 @@
     "start": "node ./dist/src/index.js",
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "jest -c jest.config.ts",
-    "test:integration": "JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest -c jest.config.integration.ts --runInBand",
+    "test:integration": "JWT_SECRET=secret-tests jest -c jest.config.integration.ts --runInBand",
     "test:generate-data": "ts-node --transpile-only src/tools/demarches/tests-creation.ts",
     "ci:lint": "prettier --check . && eslint .",
     "ci:test-unit": "jest -c jest.config.ts --ci --collect-coverage",
-    "ci:test-integration": "JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest -c jest.config.integration.ts --runInBand --ci --collect-coverage"
+    "ci:test-integration": "JWT_SECRET=secret-tests jest -c jest.config.integration.ts --runInBand --ci --collect-coverage"
   },
   "@comment dependencies": {
     "modules esm": "crypto-random-string, p-queue, @sindresorhus/slugify, email-regex, decamelize, dateformat, node-fetch à ne pas updater tant que on ne compile pas pour es2020: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c. Pas simple de migrer ts-node.",
@@ -56,7 +56,6 @@
     "@types/basic-auth": "^1.1.3",
     "@types/bcryptjs": "^2.4.2",
     "@types/compression": "1.7.2",
-    "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.12",
     "@types/cron": "^1.7.3",
     "@types/dateformat": "^5.0.0",
@@ -81,7 +80,6 @@
     "cerbere": "^0.2.3",
     "chalk": "^4.1.2",
     "compression": "^1.7.4",
-    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "cron": "^1.8.2",
     "cross-env": "^7.0.3",

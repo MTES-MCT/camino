@@ -1,10 +1,10 @@
-import { ITitre, IUtilisateur } from '../../types'
-import { isSuper } from 'camino-common/src/roles'
+import { ITitre } from '../../types'
+import { isSuper, User } from 'camino-common/src/roles'
 
 const titreUpdationValidate = async (
   titreNew: ITitre,
   titreOld: ITitre,
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   // vérifie
   // - si un titre contient des démarches qui ne sont pas recevables

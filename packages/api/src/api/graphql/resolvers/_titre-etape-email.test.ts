@@ -1,6 +1,7 @@
 import { emailsForAdministrationsGet } from './_titre-etape-email'
-import { ITitreEtape, IUtilisateur } from '../../../types'
+import { ITitreEtape } from '../../../types'
 import { userSuper } from '../../../database/user-super'
+import { UserNotNull } from 'camino-common/src/roles'
 
 test('envoie un email sur une étape non existante', () => {
   const actual = emailsForAdministrationsGet(
@@ -82,13 +83,14 @@ const etapeType = {
   publicLecture: true,
   entreprisesLecture: true
 }
-const user: IUtilisateur = {
+const user: UserNotNull = {
   id: 'super',
   email: 'camino@beta.gouv.fr',
   nom: 'Camino',
+  prenom: '',
   role: 'super',
-  dateCreation: '2022-05-12',
-  administrationId: undefined
+  entreprisesCreation: false,
+  utilisateursCreation: false
 }
 
 test("envoie un email sur un octroi d'AEX", () => {

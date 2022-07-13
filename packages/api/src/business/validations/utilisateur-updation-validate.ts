@@ -3,9 +3,10 @@ import { IUtilisateur } from '../../types'
 import { userGet } from '../../database/queries/utilisateurs'
 
 import {
-  isAdministration,
+  isAdministrationRole,
   isAdministrationAdmin,
-  isSuper
+  isSuper,
+  User
 } from 'camino-common/src/roles'
 
 /**
@@ -18,7 +19,7 @@ import {
  */
 
 const utilisateurUpdationValidate = async (
-  user: IUtilisateur,
+  user: User,
   utilisateur: IUtilisateur
 ) => {
   const utilisateurOld = await userGet(utilisateur.id)
@@ -26,7 +27,10 @@ const utilisateurUpdationValidate = async (
   if (!utilisateurOld) return ["l'utilisateur n'existe pas"]
 
   if (!isSuper(user)) {
-    if (isAdministration(utilisateur) && !utilisateur.administrationId) {
+    if (
+      isAdministrationRole(utilisateur.role) &&
+      !utilisateur.administrationId
+    ) {
       return ["l'utilisateur doit être associé à une administration"]
     }
 

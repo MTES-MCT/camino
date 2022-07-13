@@ -1,22 +1,18 @@
-import { IToken } from '../../../types'
-
 import { debug } from '../../../config/index'
 
 import {
-  userGet,
   utilisateurTitreCreate,
   utilisateurTitreDelete
 } from '../../../database/queries/utilisateurs'
 
 import { titreGet } from '../../../database/queries/titres'
+import { Context } from '../../../types'
 
 const utilisateurTitreAbonner = async (
   { titreId, abonner }: { titreId: string; abonner: boolean },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!user) {
       throw new Error('droits insuffisants')
     }

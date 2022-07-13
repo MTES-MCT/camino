@@ -18,7 +18,7 @@ import * as Sentry from '@sentry/node'
 import { port, url } from './config/index'
 import { rest } from './server/rest'
 import { graphql } from './server/graphql'
-import { authJwt, authJwtError } from './server/auth-jwt'
+import { authJwt } from './server/auth-jwt'
 import { authBasic } from './server/auth-basic'
 import {
   restUpload,
@@ -28,7 +28,6 @@ import {
 import { databaseInit } from './database/init'
 
 import { consoleOverride, appLogger } from './config/logger'
-import cookieParser from 'cookie-parser'
 import { filesInit } from './config/files'
 import { geoSystemesInit } from './config/proj4'
 
@@ -57,9 +56,7 @@ filesInit().then(() => {
       cors({ credentials: true, exposedHeaders: ['Content-disposition'] }),
       compression(),
       limiter,
-      cookieParser(),
       authJwt,
-      authJwtError,
       authBasic
     )
 

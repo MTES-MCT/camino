@@ -1,5 +1,4 @@
-import { isSuper, Role } from './roles'
-import { AdministrationId } from './administrations'
+import { isSuper, User } from './roles'
 
 export interface Fiscalite {
   redevanceCommunale: number
@@ -8,22 +7,5 @@ export interface Fiscalite {
   totalInvestissementsDeduits: number
 }
 
-export const fiscaliteVisible = (
-  user:
-    | {
-        entreprises?: { id: string }[] | null
-        role: Role
-        administrationId: AdministrationId | undefined | null
-      }
-    | undefined
-    | null,
-  _entrepriseId: string
-): boolean => {
-  if (user) {
-    if (isSuper(user)) {
-      return true
-    }
-  }
-
-  return false
-}
+export const fiscaliteVisible = (user: User, _entrepriseId: string): boolean =>
+  isSuper(user)

@@ -37,9 +37,13 @@ describe('demarcheCreer', () => {
       {}
     )
 
-    const res = await graphQLCall(demarcheCreerQuery, {
-      demarche: { titreId: titre.id, typeId: 'dpu' }
-    })
+    const res = await graphQLCall(
+      demarcheCreerQuery,
+      {
+        demarche: { titreId: titre.id, typeId: 'dpu' }
+      },
+      undefined
+    )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
   })
@@ -59,8 +63,10 @@ describe('demarcheCreer', () => {
     const res = await graphQLCall(
       demarcheCreerQuery,
       { demarche: { titreId: titre.id, typeId: 'dpu' } },
-      'editeur',
-      'ope-onf-973-01'
+      {
+        role: 'editeur',
+        administrationId: 'ope-onf-973-01'
+      }
     )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
@@ -70,7 +76,7 @@ describe('demarcheCreer', () => {
     const resTitreCreer = await graphQLCall(
       queryImport('titre-creer'),
       { titre: { nom: 'titre', typeId: 'arm', domaineId: 'm' } },
-      'super'
+      userSuper
     )
 
     const titreId = resTitreCreer.body.data.titreCreer.id
@@ -78,7 +84,7 @@ describe('demarcheCreer', () => {
     const res = await graphQLCall(
       demarcheCreerQuery,
       { demarche: { titreId, typeId: 'oct' } },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -89,8 +95,10 @@ describe('demarcheCreer', () => {
     const res = await graphQLCall(
       demarcheCreerQuery,
       { demarche: { titreId: 'unknown', typeId: 'oct' } },
-      'admin',
-      'ope-onf-973-01'
+      {
+        role: 'admin',
+        administrationId: 'ope-onf-973-01'
+      }
     )
 
     expect(res.body.errors[0].message).toBe("le titre n'existe pas")
@@ -100,7 +108,7 @@ describe('demarcheCreer', () => {
     const resTitreCreer = await graphQLCall(
       queryImport('titre-creer'),
       { titre: { nom: 'titre', typeId: 'arm', domaineId: 'm' } },
-      'super'
+      userSuper
     )
 
     const titreId = resTitreCreer.body.data.titreCreer.id
@@ -108,8 +116,10 @@ describe('demarcheCreer', () => {
     const res = await graphQLCall(
       demarcheCreerQuery,
       { demarche: { titreId, typeId: 'oct' } },
-      'admin',
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      }
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -138,8 +148,10 @@ describe('demarcheCreer', () => {
     const res = await graphQLCall(
       demarcheCreerQuery,
       { demarche: { titreId: titre.id, typeId: 'oct' } },
-      'admin',
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      }
     )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
@@ -150,9 +162,13 @@ describe('demarcheModifier', () => {
   const demarcheModifierQuery = queryImport('titre-demarche-modifier')
 
   test('ne peut pas modifier une démarche (utilisateur anonyme)', async () => {
-    const res = await graphQLCall(demarcheModifierQuery, {
-      demarche: { id: 'toto', titreId: '', typeId: '' }
-    })
+    const res = await graphQLCall(
+      demarcheModifierQuery,
+      {
+        demarche: { id: 'toto', titreId: '', typeId: '' }
+      },
+      undefined
+    )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
   })
@@ -161,8 +177,7 @@ describe('demarcheModifier', () => {
     const res = await graphQLCall(
       demarcheModifierQuery,
       { demarche: { id: 'toto', titreId: '', typeId: '' } },
-      'editeur',
-      'ope-onf-973-01'
+      { role: 'editeur', administrationId: 'ope-onf-973-01' }
     )
 
     expect(res.body.errors[0].message).toBe('la démarche n’existe pas')
@@ -174,7 +189,7 @@ describe('demarcheModifier', () => {
     const res = await graphQLCall(
       demarcheModifierQuery,
       { demarche: { id: demarcheId, titreId, typeId: 'pro' } },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -185,7 +200,7 @@ describe('demarcheModifier', () => {
     const res = await graphQLCall(
       demarcheModifierQuery,
       { demarche: { id: 'toto', titreId: '', typeId: '' } },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors[0].message).toBe('la démarche n’existe pas')
@@ -197,8 +212,10 @@ describe('demarcheModifier', () => {
     const res = await graphQLCall(
       demarcheModifierQuery,
       { demarche: { id: demarcheId, titreId, typeId: 'pro' } },
-      'admin',
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      }
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -211,8 +228,7 @@ describe('demarcheModifier', () => {
     const res = await graphQLCall(
       demarcheModifierQuery,
       { demarche: { id: demarcheId, titreId, typeId: 'pro' } },
-      'admin',
-      ADMINISTRATION_IDS['DGTM - GUYANE']
+      { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }
     )
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
@@ -224,7 +240,7 @@ describe('demarcheModifier', () => {
     const res = await graphQLCall(
       demarcheModifierQuery,
       { demarche: { id: 'wrongId', titreId, typeId: 'pro' } },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors).toHaveLength(1)
@@ -255,7 +271,7 @@ describe('demarcheModifier', () => {
           typeId: 'pro'
         }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors).toHaveLength(1)
@@ -269,10 +285,13 @@ describe('demarcheSupprimer', () => {
   const demarcheSupprimerQuery = queryImport('titre-demarche-supprimer')
 
   test('ne peut pas supprimer une démarche (utilisateur anonyme)', async () => {
-    const res = await graphQLCall(demarcheSupprimerQuery, {
-      id: 'toto'
-    })
-
+    const res = await graphQLCall(
+      demarcheSupprimerQuery,
+      {
+        id: 'toto'
+      },
+      userSuper
+    )
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
   })
 
@@ -280,8 +299,7 @@ describe('demarcheSupprimer', () => {
     const res = await graphQLCall(
       demarcheSupprimerQuery,
       { id: 'toto' },
-      'admin',
-      'ope-onf-973-01'
+      { role: 'admin', administrationId: 'ope-onf-973-01' }
     )
 
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
@@ -291,7 +309,7 @@ describe('demarcheSupprimer', () => {
     const res = await graphQLCall(
       demarcheSupprimerQuery,
       { id: 'toto' },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
@@ -302,7 +320,7 @@ describe('demarcheSupprimer', () => {
     const res = await graphQLCall(
       demarcheSupprimerQuery,
       { id: demarcheId },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -332,7 +350,7 @@ const demarcheCreate = async () => {
   const resDemarchesCreer = await graphQLCall(
     queryImport('titre-demarche-creer'),
     { demarche: { titreId: titre.id, typeId: 'oct' } },
-    'super'
+    userSuper
   )
 
   expect(resDemarchesCreer.body.errors).toBeUndefined()

@@ -5,12 +5,12 @@ import { join } from 'path'
 
 import { debug } from '../config/index'
 import {
+  activites,
+  demarches,
+  entreprises,
   titre,
   titres,
-  demarches,
-  activites,
-  utilisateurs,
-  entreprises
+  utilisateurs
 } from '../api/rest/index'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers'
 import {
@@ -20,6 +20,7 @@ import {
   titresPTMG
 } from '../api/rest/titres'
 import { fiscalite } from '../api/rest/entreprises'
+import { logout, resetPassword } from '../api/rest/keycloak'
 
 const contentTypes = {
   csv: 'text/csv',
@@ -45,7 +46,7 @@ type IRestResolver = (
     params: Index<unknown>
     query: Index<unknown>
   },
-  userId?: string
+  userEmail?: string
 ) => Promise<IRestResolverResult | null>
 
 const rest = express.Router()
@@ -79,9 +80,12 @@ const restDownload =
   ) => {
     try {
       const user = req.user as unknown as IUser | undefined
+      if (!user?.email) {
+        throw new Error('Utilisateur sans email')
+      }
       const result = await resolver(
         { query: req.query, params: req.params },
-        user?.id
+        user.email
       )
 
       if (!result) {
@@ -140,6 +144,8 @@ rest.get('/entreprises', restDownload(entreprises))
 rest.get('/fichiers/:documentId', restDownload(fichier))
 rest.get('/etape/zip/:etapeId', restDownload(etapeTelecharger))
 rest.get('/etape/:etapeId/:fichierNom', restDownload(etapeFichier))
+rest.get('/deconnecter', restCatcher(logout))
+rest.get('/changerMotDePasse', restCatcher(resetPassword))
 
 rest.use(
   (

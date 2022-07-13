@@ -1,5 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 import {
+  Context,
   IDemarcheStatut,
   IDemarcheType,
   IDocumentRepertoire,
@@ -11,8 +12,7 @@ import {
   IPhaseStatut,
   IReferenceType,
   ITitreStatut,
-  ITitreTypeType,
-  IToken
+  ITitreTypeType
 } from '../../../types'
 import { debug } from '../../../config/index'
 
@@ -41,8 +41,6 @@ import {
   titreTypeTypeUpdate
 } from '../../../database/queries/metas'
 
-import { userGet } from '../../../database/queries/utilisateurs'
-
 import { fieldsBuild } from './_fields-build'
 import {
   etapeTypeFormat,
@@ -70,7 +68,8 @@ import {
   isEntreprise,
   isSuper,
   isAdministrationEditeur,
-  isBureauDEtudes
+  isBureauDEtudes,
+  User
 } from 'camino-common/src/roles'
 import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort'
 import TitresDemarches from '../../../database/models/titres-demarches'
@@ -104,8 +103,7 @@ const documentsTypes = async ({
 }
 
 // TODO: 2022-06-15 à supprimer de l’API
-const documentsVisibilites = async (_: never, context: IToken) => {
-  const user = await userGet(context.user?.id)
+const documentsVisibilites = async (_: never, { user }: Context) => {
   if (!user) return []
 
   if (
@@ -133,11 +131,10 @@ const referencesTypes = async () => referencesTypesGet()
 
 const domaines = async (
   _: never,
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
     return await domainesGet(null as never, { fields }, user)
@@ -162,10 +159,8 @@ const types = async () => {
   }
 }
 
-const statuts = async (_: never, context: IToken) => {
+const statuts = async (_: never, { user }: Context) => {
   try {
-    const user = await userGet(context.user?.id)
-
     return await titresStatutsGet(user)
   } catch (e) {
     if (debug) {
@@ -178,11 +173,10 @@ const statuts = async (_: never, context: IToken) => {
 
 const demarchesTypes = async (
   { titreId, travaux }: { titreId?: string; travaux?: boolean },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
     return await demarchesTypesGet({ titreId, travaux }, { fields }, user)
@@ -254,10 +248,8 @@ const demarcheEtapesTypesGet = async (
     date
   }: { titreDemarcheId: string; date: string; titreEtapeId?: string },
   { fields }: { fields: IFields },
-  userId?: string
+  user: User
 ) => {
-  const user = await userGet(userId)
-
   const titreDemarche = await titreDemarcheGet(
     titreDemarcheId,
     {
@@ -351,11 +343,10 @@ const etapesTypes = async (
     date?: string
     travaux?: boolean
   },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
     // si création ou édition d'une étape de démarche
@@ -368,7 +359,7 @@ const etapesTypes = async (
       return demarcheEtapesTypesGet(
         { titreDemarcheId, date, titreEtapeId },
         { fields },
-        context.user?.id
+        user
       )
     }
 
@@ -435,12 +426,10 @@ const phasesStatuts = async () => {
 
 const domaineModifier = async (
   { domaine }: { domaine: IDomaine },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -467,11 +456,9 @@ const domaineModifier = async (
 
 const titreTypeTypeModifier = async (
   { titreType }: { titreType: ITitreTypeType },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -496,11 +483,9 @@ const titreTypeTypeModifier = async (
 
 const titreStatutModifier = async (
   { titreStatut }: { titreStatut: ITitreStatut },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -525,12 +510,10 @@ const titreStatutModifier = async (
 
 const demarcheTypeModifier = async (
   { demarcheType }: { demarcheType: IDemarcheType },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -557,11 +540,9 @@ const demarcheTypeModifier = async (
 
 const demarcheStatutModifier = async (
   { demarcheStatut }: { demarcheStatut: IDemarcheStatut },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -586,11 +567,9 @@ const demarcheStatutModifier = async (
 
 const phaseStatutModifier = async (
   { phaseStatut }: { phaseStatut: IPhaseStatut },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -609,12 +588,10 @@ const phaseStatutModifier = async (
 
 const etapeTypeModifier = async (
   { etapeType }: { etapeType: IEtapeType },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!user || !isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -643,11 +620,9 @@ const etapeTypeModifier = async (
 
 const etapeStatutModifier = async (
   { etapeStatut }: { etapeStatut: IEtapeStatut },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -666,11 +641,9 @@ const etapeStatutModifier = async (
 
 const documentTypeCreer = async (
   { documentType }: { documentType: IDocumentType },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -689,11 +662,9 @@ const documentTypeCreer = async (
 
 const documentTypeModifier = async (
   { documentType }: { documentType: IDocumentType },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -711,11 +682,9 @@ const documentTypeModifier = async (
 }
 const referenceTypeModifier = async (
   { referenceType }: { referenceType: IReferenceType },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }

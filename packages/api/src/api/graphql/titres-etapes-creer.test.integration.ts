@@ -12,7 +12,8 @@ import {
   ADMINISTRATION_IDS,
   Administrations
 } from 'camino-common/src/administrations'
-import { Role } from 'camino-common/src/roles'
+import { isAdministrationRole, Role } from 'camino-common/src/roles'
+import { userSuper } from '../../database/user-super'
 
 jest.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -89,20 +90,20 @@ describe('etapeCreer', () => {
       const res = await graphQLCall(
         etapeCreerQuery,
         { etape: { typeId: '', statutId: '', titreDemarcheId: '', date: '' } },
-        role,
-        'ope-onf-973-01'
+        role && isAdministrationRole(role)
+          ? { role, administrationId: 'ope-onf-973-01' }
+          : undefined
       )
 
       expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
     }
   )
 
-  test('ne peut pas créer une étape sur une démarche inexistante (utilisateur super)', async () => {
+  test('ne peut pas créer une étape sur une démarche inexistante (utilisateur admin)', async () => {
     const res = await graphQLCall(
       etapeCreerQuery,
       { etape: { typeId: '', statutId: '', titreDemarcheId: '', date: '' } },
-      'admin',
-      'ope-onf-973-01'
+      { role: 'admin', administrationId: 'ope-onf-973-01' }
     )
 
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
@@ -188,7 +189,7 @@ describe('etapeCreer', () => {
           ]
         }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -207,8 +208,10 @@ describe('etapeCreer', () => {
           date: '2018-01-01'
         }
       },
-      'admin',
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      }
     )
 
     expect(res.body.errors[0].message).toBe(
@@ -229,7 +232,7 @@ describe('etapeCreer', () => {
           date: '2018-01-01'
         }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -247,8 +250,10 @@ describe('etapeCreer', () => {
           date: '2018-01-01'
         }
       },
-      'admin',
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      }
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -273,8 +278,10 @@ describe('etapeCreer', () => {
           }
         }
       },
-      'admin',
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      }
     )
 
     expect(res.body.errors[0].message).toBe(
@@ -346,7 +353,7 @@ describe('etapeCreer', () => {
           ]
         }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors[0].message).toBe(
@@ -382,7 +389,7 @@ describe('etapeCreer', () => {
           }
         }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors).toBeUndefined()

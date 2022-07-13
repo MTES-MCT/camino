@@ -1,10 +1,10 @@
 import { titresActivitesGet } from './titres-activites'
 import TitresActivites from '../models/titres-activites'
 import { dbManager } from '../../../tests/db-manager'
-import { IUtilisateur } from '../../types'
 import { idGenerate } from '../models/_format/id-create'
 import Titres from '../models/titres'
 import AdministrationsTitresTypes from '../models/administrations-titres-types'
+import { UserNotNull } from 'camino-common/src/roles'
 console.info = jest.fn()
 console.error = jest.fn()
 beforeAll(async () => {
@@ -46,14 +46,15 @@ describe('teste les requêtes sur les activités', () => {
       gestionnaire: true
     })
 
-    const adminDGALN: IUtilisateur = {
+    const adminDGALN: UserNotNull = {
       id: 'utilisateurId',
       role: 'admin',
       nom: 'utilisateurNom',
+      prenom: 'utilisateurPrenom',
       email: 'utilisateurEmail',
-      motDePasse: 'utilisateurMotdepasse',
       administrationId: 'min-mtes-dgaln-01',
-      dateCreation: '2022-05-12'
+      utilisateursCreation: false,
+      entreprisesCreation: false
     }
 
     const actual = await titresActivitesGet(

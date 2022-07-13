@@ -1,28 +1,32 @@
-import { IUtilisateur, IUser } from '../../types'
+import { IUser } from '../../types'
 
 import {
   isAdministration,
   isBureauDEtudes,
   isEntreprise,
-  isSuper
+  isSuper,
+  User
 } from 'camino-common/src/roles'
 
-export const userFormat = (utilisateur: IUtilisateur | null) => {
+export const userFormat = (utilisateur: User) => {
   if (!utilisateur) return null
 
   const user = utilisateur as IUser
 
   user.sections = {
-    travaux: isSuper(user) || isAdministration(user),
-    activites: isSuper(user) || isAdministration(user) || isEntreprise(user),
-    administrations: isSuper(user) || isAdministration(user),
+    travaux: isSuper(utilisateur) || isAdministration(utilisateur),
+    activites:
+      isSuper(utilisateur) ||
+      isAdministration(utilisateur) ||
+      isEntreprise(utilisateur),
+    administrations: isSuper(utilisateur) || isAdministration(utilisateur),
     utilisateurs:
-      isSuper(user) ||
-      isAdministration(user) ||
-      isEntreprise(user) ||
-      isBureauDEtudes(user),
-    metas: isSuper(user),
-    journaux: isSuper(user)
+      isSuper(utilisateur) ||
+      isAdministration(utilisateur) ||
+      isEntreprise(utilisateur) ||
+      isBureauDEtudes(utilisateur),
+    metas: isSuper(utilisateur),
+    journaux: isSuper(utilisateur)
   }
 
   return user

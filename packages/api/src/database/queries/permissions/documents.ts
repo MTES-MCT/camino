@@ -1,7 +1,5 @@
 import { QueryBuilder, raw } from 'objection'
 
-import { IUtilisateur } from '../../../types'
-
 import Documents from '../../models/documents'
 import TitresEtapesJustificatifs from '../../models/titres-etapes-justificatifs'
 import EtapesTypesDocumentsTypes from '../../models/etapes-types--documents-types'
@@ -9,12 +7,13 @@ import ActivitesTypesDocumentsTypes from '../../models/activites-types--document
 import {
   isBureauDEtudes,
   isDefault,
-  isEntreprise
+  isEntreprise,
+  User
 } from 'camino-common/src/roles'
 
 const documentsQueryModify = (
   q: QueryBuilder<Documents, Documents | Documents[]>,
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   q.select('documents.*')
 

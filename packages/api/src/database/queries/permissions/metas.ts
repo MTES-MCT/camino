@@ -1,7 +1,5 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types'
-
 import { knex } from '../../../knex'
 // import fileCreate from '../../../tools/file-create'
 // import { format } from 'sql-formatter'
@@ -27,7 +25,8 @@ import {
   isBureauDEtudes,
   isDefault,
   isEntreprise,
-  isSuper
+  isSuper,
+  User
 } from 'camino-common/src/roles'
 import { AdministrationId } from 'camino-common/src/administrations'
 
@@ -103,7 +102,7 @@ const titresCreationQuery = (administrationId: AdministrationId) =>
 
 const titresTypesQueryModify = (
   q: QueryBuilder<TitresTypes, TitresTypes | TitresTypes[]>,
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   q.select('titresTypes.*')
 
@@ -122,7 +121,7 @@ const titresTypesQueryModify = (
 
 const domainesQueryModify = (
   q: QueryBuilder<Domaines, Domaines | Domaines[] | undefined>,
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   q.select('domaines.*')
 
@@ -136,7 +135,7 @@ const domainesQueryModify = (
 
 const etapesTypesQueryModify = (
   q: QueryBuilder<EtapesTypes, EtapesTypes | EtapesTypes[]>,
-  user: IUtilisateur | null | undefined,
+  user: User,
   {
     titreDemarcheId,
     titreEtapeId,
@@ -242,7 +241,7 @@ const etapesTypesQueryModify = (
 
 export const demarchesCreationQuery = (
   q: QueryBuilder<DemarchesTypes, DemarchesTypes | DemarchesTypes[]>,
-  user: Pick<IUtilisateur, 'role' | 'administrationId'> | null | undefined,
+  user: User,
   { titreId, titreIdAlias }: { titreId?: string; titreIdAlias?: string }
 ) => {
   let demarchesCreation = raw('false')
@@ -271,7 +270,7 @@ export const demarchesCreationQuery = (
 
 const demarchesTypesQueryModify = (
   q: QueryBuilder<DemarchesTypes, DemarchesTypes | DemarchesTypes[]>,
-  user: Pick<IUtilisateur, 'role' | 'administrationId'> | null | undefined,
+  user: User,
   { titreId, titreIdAlias }: { titreId?: string; titreIdAlias?: string } = {}
 ): void => {
   q.select('demarchesTypes.*')

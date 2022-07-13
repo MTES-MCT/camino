@@ -5,6 +5,7 @@ import Utilisateurs from '../../models/utilisateurs'
 import { utilisateursGet } from '../utilisateurs'
 import { Administrations } from 'camino-common/src/administrations'
 import options from '../_options'
+import { testBlankUser, TestUser } from '../../../../tests/_utils'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -30,28 +31,20 @@ const mockUser: IUtilisateur = {
 }
 
 describe('utilisateursQueryModify', () => {
-  test.each`
-    role            | voit
-    ${'super'}      | ${true}
-    ${'admin'}      | ${true}
-    ${'editeur'}    | ${true}
-    ${'lecteur'}    | ${true}
-    ${'entreprise'} | ${true}
-    ${'defaut'}     | ${false}
-  `(
+  test.each<[TestUser, boolean]>([
+    [{ role: 'super' }, true],
+    [{ role: 'admin', administrationId: mockAdministration.id }, true],
+    [{ role: 'editeur', administrationId: mockAdministration.id }, true],
+    [{ role: 'lecteur', administrationId: mockAdministration.id }, true],
+    [{ role: 'entreprise', entreprises: [] }, true],
+    [{ role: 'defaut' }, false]
+  ])(
     "Vérifie l'écriture de la requête sur un utilisateur",
-    async ({ role, voit }) => {
-      const user: IUtilisateur = {
-        id: 'userId',
-        role,
-        administrationId: mockAdministration.id,
-        dateCreation: '2022-05-12'
-      }
-
+    async (user, voit) => {
       const utilisateurs = await utilisateursGet(
         { noms: mockUser.nom },
         {},
-        user
+        { ...user, ...testBlankUser }
       )
       if (voit) {
         expect(utilisateurs).toHaveLength(1)
