@@ -129,8 +129,8 @@
             <div class="tablet-blob-1-4" />
             <div class="tablet-blob-3-4">
               <p class="h6 mb">
-                Un utilisateur d'une <b>administration locale</b> peut créer et
-                modifier le contenu des titres du territoire concerné.
+                Un utilisateur d'une <strong>administration locale</strong> peut
+                créer et modifier le contenu des titres du territoire concerné.
               </p>
             </div>
           </div>
@@ -142,7 +142,7 @@
       <div class="line-neutral width-full mb-xxl" />
       <h2>Utilisateurs</h2>
       <div class="line width-full" />
-      <Table
+      <CaminoTable
         class="width-full-p"
         :columns="utilisateursColonnes"
         :rows="utilisateursLignes"
@@ -174,7 +174,7 @@
 <script>
 import Accordion from './_ui/accordion.vue'
 import Loader from './_ui/loader.vue'
-import Table from './_ui/table.vue'
+import CaminoTable from './_ui/table.vue'
 import AdministrationPermission from './administration/permissions.vue'
 import AdministrationActiviteTypeEmail from './administration/activites-types-emails.vue'
 
@@ -195,7 +195,7 @@ export default {
   components: {
     Accordion,
     Loader,
-    Table,
+    CaminoTable,
     AdministrationPermission,
     AdministrationActiviteTypeEmail
   },

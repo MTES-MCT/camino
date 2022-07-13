@@ -20,14 +20,14 @@ import { emailsSend } from '../../../tools/api-mailjet/emails'
 import { fieldsBuild } from './_fields-build'
 
 import {
-  userGet,
-  utilisateurGet,
-  utilisateursGet,
-  utilisateurCreate,
-  utilisateurUpdate,
-  utilisateurUpsert,
   userByEmailGet,
-  utilisateursCount
+  userGet,
+  utilisateurCreate,
+  utilisateurGet,
+  utilisateursCount,
+  utilisateursGet,
+  utilisateurUpdate,
+  utilisateurUpsert
 } from '../../../database/queries/utilisateurs'
 
 import { globales } from '../../../database/cache/globales'
@@ -43,12 +43,12 @@ import {
 import { userSuper } from '../../../database/user-super'
 import dateFormat from 'dateformat'
 import {
-  isSuper,
-  Role,
-  isEntreprise,
   isAdministration,
   isAdministrationAdmin,
-  isBureauDEtudes
+  isBureauDEtudes,
+  isEntreprise,
+  isSuper,
+  Role
 } from 'camino-common/src/roles'
 
 const TOKEN_TTL = '5m'
@@ -77,9 +77,8 @@ const utilisateur = async (
   try {
     const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
-    const utilisateur = await utilisateurGet(id, { fields }, user)
 
-    return utilisateur
+    return utilisateurGet(id, { fields }, user)
   } catch (e) {
     if (debug) {
       console.error(e)

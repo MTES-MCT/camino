@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Table
+    <CaminoTable
       :column="column"
       :columns="columns"
       :order="order"
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import Table from './table.vue'
+import CaminoTable from './table.vue'
 import Pagination from './pagination.vue'
 import Ranges from './ranges.vue'
 
@@ -39,7 +39,7 @@ export default {
   name: 'CaminoTable',
 
   components: {
-    Table,
+    CaminoTable,
     Pagination,
     Ranges
   },

@@ -1,5 +1,5 @@
 <template>
-  <Table
+  <CaminoTable
     :columns="props.columns"
     :rows="myRows"
     :column="sort.column"
@@ -15,7 +15,7 @@ import {
   TableAutoRow,
   TableSortEvent
 } from './table-auto.type'
-import Table from './table.vue'
+import CaminoTable from './table.vue'
 import { reactive, watch } from 'vue'
 
 const props = defineProps<{

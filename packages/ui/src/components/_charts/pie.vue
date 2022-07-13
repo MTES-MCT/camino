@@ -14,15 +14,15 @@ export default {
 
   data() {
     return {
-      canvas: null
+      canvas: null,
+      chart: null
     }
   },
 
   mounted() {
     this.canvas = this.$refs.canvas
 
-    // eslint-disable-next-line no-new
-    new Chart(this.canvas.getContext('2d'), {
+    this.chart = new Chart(this.canvas.getContext('2d'), {
       type: 'pie',
       data: this.data,
       options: {
@@ -30,6 +30,9 @@ export default {
         aspectRatio: 1.33
       }
     })
+  },
+  unmounted() {
+    this.chart = null
   }
 }
 </script>

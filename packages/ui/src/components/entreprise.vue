@@ -162,7 +162,7 @@
       <div class="line-neutral width-full mb-xxl" />
       <h3>Utilisateurs</h3>
       <div class="line width-full" />
-      <Table
+      <CaminoTable
         class="width-full-p"
         :columns="utilisateursColonnes"
         :rows="utilisateursLignes"
@@ -196,7 +196,7 @@
 <script>
 import Accordion from './_ui/accordion.vue'
 import Loader from './_ui/loader.vue'
-import Table from './_ui/table.vue'
+import CaminoTable from './_ui/table.vue'
 import TitresTable from './titres/table.vue'
 import EntrepriseEditPopup from './entreprise/edit-popup.vue'
 import DocumentAddButton from './document/button-add.vue'
@@ -222,7 +222,7 @@ export default {
     Icon,
     Accordion,
     Loader,
-    Table,
+    CaminoTable,
     TitresTable,
     DocumentAddButton,
     Documents,

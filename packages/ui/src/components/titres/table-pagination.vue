@@ -1,5 +1,5 @@
 <template>
-  <Table
+  <CaminoTable
     :column="preferences.colonne"
     :columns="colonnes"
     :order="preferences.ordre"
@@ -12,14 +12,14 @@
 </template>
 
 <script>
-import Table from '../_ui/table-pagination.vue'
+import CaminoTable from '../_ui/table-pagination.vue'
 
 import { titresColonnes, titresLignesBuild } from './table-utils'
 
 export default {
   name: 'Titres',
 
-  components: { Table },
+  components: { CaminoTable },
 
   props: {
     titres: { type: Array, required: true },
