@@ -1,8 +1,7 @@
 FROM python:3.7
 
 RUN pip install --upgrade pip && \
-    pip install openfisca-france-fiscalite-miniere==3.0.0 && \
-    pip install openfisca-core[web-api]==35.8.3 && \
+    pip install openfisca-france-fiscalite-miniere==3.0.2 && \
     # en attente de https://github.com/openfisca/openfisca-core/pull/1130
     pip install --upgrade flask
 
