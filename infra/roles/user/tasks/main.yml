@@ -1,0 +1,24 @@
+---
+# TODO 2022-07-13: gérer l'accés des développeurs ici (nom, uid et clé publique ssh)
+- name: ajoute le groupe "git"
+  ansible.builtin.group:
+    name: git
+    state: present
+    gid: 1002
+  become: True
+- name: ajoute l'utilisateur 'git'
+  ansible.builtin.user:
+    name: git
+    comment: Git
+    # L'UID doit être le même que dans le Dockerfile.api
+    uid: 1002
+    groups: git, users, docker
+  become: True
+- file:
+    path: /srv/www/camino/files
+    group: users
+    state: directory
+    recurse: True
+    owner: git
+    mode: u=rwx,g=rwx,o=r
+  become: True

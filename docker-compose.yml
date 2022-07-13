@@ -22,7 +22,6 @@ services:
     volumes:
       - ./files:/packages/api/files
       - ./.env:/.env
-      - ./app.log:/app.log
     networks:
       - default
       - nginx-proxy
