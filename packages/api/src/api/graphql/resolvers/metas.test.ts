@@ -1458,7 +1458,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       '2019-12-04',
       etapesTypes
     )
-    expect(etapes.map(({ id }) => id)).toStrictEqual(['mcb', 'mod'])
+    expect(etapes.map(({ id }) => id)).toStrictEqual(['mod'])
   })
 
   test('peut faire une dae, une rde et pfd AVANT la mfr', () => {
@@ -1517,5 +1517,63 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       etapesTypes
     )
     expect(etapes.map(({ id }) => id)).toStrictEqual(['pfd'])
+  })
+  test('peut faire une completude (mcp) le même jour que le dépôt (mdp) de la demande', () => {
+    const demarche = {
+      etapes: [
+        {
+          id: 'id3',
+          titreDemarcheId: '',
+          typeId: 'mfr',
+          statutId: 'fai',
+          date: '2022-06-23',
+          contenu: {
+            arm: {
+              mecanise: true,
+              franchissements: 4
+            }
+          },
+          ordre: 3
+        },
+        {
+          id: 'id1',
+          titreDemarcheId: '',
+          typeId: 'dae',
+          statutId: 'exe',
+          date: '2021-06-22',
+          ordre: 1
+        },
+        {
+          id: 'id4',
+          titreDemarcheId: '',
+          typeId: 'mdp',
+          statutId: 'fai',
+          date: '2022-07-01',
+          ordre: 4
+        },
+        {
+          id: 'id2',
+          titreDemarcheId: '',
+          typeId: 'pfd',
+          statutId: 'fai',
+          date: '2021-07-05',
+          ordre: 2
+        }
+      ]
+    }
+    const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+      demarche,
+      undefined,
+      '2022-07-01',
+      etapesTypes
+    )
+    expect(etapes.map(({ id }) => id)).toStrictEqual([
+      'mcb',
+      'mod',
+      'mcp',
+      'css',
+      'rde',
+      'des'
+    ])
   })
 })
