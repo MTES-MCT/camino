@@ -1,50 +1,27 @@
-/* istanbul ignore file */
-import util from 'util'
-import winston from 'winston'
+const numberToDoubleCharString = (param: number): string =>
+  param.toString(10).padStart(2, '0')
+// TODO 2022-07-13: move to common?
+export const newDateFormated = (date = new Date()): string => {
+  const year = date.getFullYear()
+  const month = numberToDoubleCharString(date.getMonth() + 1)
+  const day = numberToDoubleCharString(date.getDate())
+  const hour = numberToDoubleCharString(date.getUTCHours())
+  const minute = numberToDoubleCharString(date.getMinutes())
+  const seconds = numberToDoubleCharString(date.getSeconds())
 
-const { createLogger, format, transports } = winston
-
-const { combine, timestamp, printf, colorize } = format
-
-const printFormat = printf(({ level, message, timestamp }) => {
-  if (!message || !message.length) {
-    return ''
-  }
-
-  return `${timestamp} [${level}]: ${message}`
-})
-
-const timestampFormat = timestamp({ format: 'YYYY-MM-DD HH:mm:ss' })
-
-const utilFormat = {
-  transform(info: any) {
-    const args = info[Symbol.for('splat')]
-    if (args) {
-      info.message = util.format(info.message, ...args)
-    }
-
-    return info
-  }
+  return (
+    year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + seconds
+  )
 }
 
-// TODO 2022-07-13 : supprime winston et utilise console.log classique (avec des couleurs si on veut être fancy, mais pas besoin de cette dépendance (et encore moins des sous dépendances))
-const consoleOverride = (logger: winston.Logger) => {
-  console.info = (...args) => logger.info('', ...args)
-  console.warn = (...args) => logger.warn('', ...args)
-  console.error = (...args) => logger.error('', ...args)
-  console.debug = (...args) => logger.debug('', ...args)
+export const consoleOverride = () => {
+  console.info = (...args) =>
+    console.log(newDateFormated(), ' [\x1b[32minfo\x1b[0m]', ...args)
+  console.warn = (...args) =>
+    console.log(newDateFormated(), ' [\x1b[33mwarn\x1b[0m]', ...args)
+  console.error = (...args) =>
+    console.log(newDateFormated(), '[\x1b[31merror\x1b[0m]', ...args)
+  // TODO 2022-07-13 Not used in the application...
+  console.debug = (...args) =>
+    console.log(newDateFormated(), '[\x1b[36mdebug\x1b[0m]', ...args)
 }
-
-const consoleTransport = new transports.Console({
-  format: combine(colorize(), timestampFormat, utilFormat, printFormat)
-})
-
-const appLogger = createLogger({
-  transports: [consoleTransport]
-})
-
-const cronLogger = createLogger({
-  transports: [consoleTransport]
-})
-
-export { consoleOverride, appLogger, cronLogger }
