@@ -9,12 +9,10 @@ export type TitresLinkConfig =
   | {
       type: 'single'
       selectedTitreId: string | null
-      titreTypeId: TitreTypeId
     }
   | {
       type: 'multiple'
       selectedTitreIds: string[]
-      titreTypeId: TitreTypeId
       demarcheTypeId: DemarcheTypeId | null
     }
 

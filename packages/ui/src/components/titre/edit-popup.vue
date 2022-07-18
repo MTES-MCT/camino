@@ -99,8 +99,10 @@
         <Icon name="plus" size="M" class="flex-right" />
       </button>
       <PureTitresLink
+        v-if="titre"
         class="mb-xxl"
         :config="titreLinkConfig"
+        :titreTypeId="titre.typeId"
         :loadLinkableTitres="loadLinkableTitres"
         @onSelectedTitres="onSelectedTitres"
       />
@@ -164,7 +166,6 @@ export default {
     titreLinkConfig() {
       return {
         type: 'single',
-        titreTypeId: this.titre.typeId,
         selectedTitreId:
           this.titre.titreFromIds.length === 1
             ? this.titre.titreFromIds[0]

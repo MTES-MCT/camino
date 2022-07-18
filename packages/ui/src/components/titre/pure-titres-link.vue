@@ -2,7 +2,7 @@
   <div
     v-if="
       canLinkTitresFrom(
-        config.type === 'single' ? config.titreTypeId : config.demarcheTypeId
+        config.type === 'single' ? titreTypeId : config.demarcheTypeId
       )
     "
   >
@@ -51,14 +51,16 @@ import {
 import Statut from '@/components/_common/statut.vue'
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '@/components/_ui/loader-element.vue'
+import { TitreTypeId } from 'camino-common/src/titresTypes'
 
 const props = defineProps<{
   config: TitresLinkConfig
+  titreTypeId: TitreTypeId
   loadLinkableTitres: LoadLinkableTitres
 }>()
 
 const emit = defineEmits<{
-  (e: 'onSelectedTitre', titre: TitreLink): void
+  (e: 'onSelectedTitre', titre: TitreLink | null): void
   (e: 'onSelectedTitres', titres: TitreLink[]): void
 }>()
 
@@ -71,14 +73,12 @@ const init = async () => {
   if (
     canLinkTitresFrom(
       props.config.type === 'single'
-        ? props.config.titreTypeId
+        ? props.titreTypeId
         : props.config.demarcheTypeId
     )
   ) {
     try {
-      const titresLinkables = await props.loadLinkableTitres(
-        props.config.titreTypeId
-      )
+      const titresLinkables = await props.loadLinkableTitres(props.titreTypeId)
 
       data.value = { status: 'LOADED', value: titresLinkables }
       const titreIds: string[] = []
@@ -110,11 +110,13 @@ const init = async () => {
 }
 
 watch(
-  () => props.config,
+  () => props.titreTypeId,
   async _ => {
+    selectedTitres.value.splice(0, selectedTitres.value.length)
+    onSelectItem(null)
+    onSelectItems([])
     await init()
-  },
-  { deep: true }
+  }
 )
 
 onMounted(async () => {
@@ -136,7 +138,7 @@ const onSearch = (searchLabel: string) => {
   search.value = searchLabel.toLowerCase()
 }
 
-const onSelectItem = (titre: TitreLink) => {
+const onSelectItem = (titre: TitreLink | null) => {
   emit('onSelectedTitre', titre)
 }
 const onSelectItems = (titres: TitreLink[]) => {
