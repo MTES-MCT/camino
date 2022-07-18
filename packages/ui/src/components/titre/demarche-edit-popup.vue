@@ -52,7 +52,6 @@
       <div class="mb-xxl">
         <PureTitresLink
           :config="titreLinkConfig"
-          :loadLinkableTitres="loadLinkableTitres"
           @onSelectedTitres="onSelectedTitres"
         />
       </div>
@@ -85,7 +84,6 @@
 <script>
 import Popup from '../_ui/popup.vue'
 import PureTitresLink from './pure-titres-link.vue'
-import { loadLinkableTitres } from './pure-titres-link.type'
 import { isTitreType, TitresTypes } from 'camino-common/src/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/titresTypesTypes'
 
@@ -105,10 +103,6 @@ export default {
     creation: { type: Boolean, default: false },
     tabId: { type: String, required: true }
   },
-
-  data: () => ({
-    loadLinkableTitres
-  }),
 
   computed: {
     titreTypeNom() {

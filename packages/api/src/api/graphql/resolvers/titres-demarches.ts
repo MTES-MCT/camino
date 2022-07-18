@@ -30,7 +30,7 @@ import titreDemarcheUpdateTask from '../../../business/titre-demarche-update'
 import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate'
 import { userGet } from '../../../database/queries/utilisateurs'
 import { demarcheTypeGet } from '../../../database/queries/metas'
-import { canLinkTitresFrom } from 'camino-common/src/permissions/titres'
+import { demarcheCanHaveLinks } from 'camino-common/src/permissions/titres'
 import { TitresTypes } from 'camino-common/src/titresTypes'
 import { linkTitres } from '../../../database/queries/titres-titres'
 import Utilisateurs from '../../../database/models/utilisateurs'
@@ -203,7 +203,7 @@ const demarcheCreer = async (
       throw new Error('droits insuffisants')
 
     if (
-      canLinkTitresFrom(demarche.typeId) &&
+      demarcheCanHaveLinks(demarche.typeId) &&
       demarche.titreFromIds === undefined
     ) {
       throw new Error(
@@ -295,7 +295,7 @@ const demarcheModifier = async (
       throw new Error('le titre n’existe pas')
 
     if (
-      canLinkTitresFrom(demarche.typeId) &&
+      demarcheCanHaveLinks(demarche.typeId) &&
       demarche.titreFromIds === undefined
     ) {
       throw new Error(

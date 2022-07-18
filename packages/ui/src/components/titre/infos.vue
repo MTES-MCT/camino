@@ -66,23 +66,16 @@
     </div>
 
     <div class="desktop-blob-1-2 mt">
-      <div v-if="titresFrom && titresFrom.length">
-        <h5>Titres à l’origine de ce titre</h5>
-        <ul class="list-inline">
-          <li
-            v-for="titreFrom in titresFrom"
-            :key="titreFrom.id"
-            class="mb-xs mr-xs"
-          >
-            <router-link
-              :to="{ name: 'titre', params: { id: titreFrom.id } }"
-              class="btn-border small p-s rnd-xs mr-xs"
-            >
-              <span class="mr-xs">{{ titreFrom.nom }}</span>
-            </router-link>
-          </li>
-        </ul>
-      </div>
+      <PureTitresLinkForm
+        :user="user"
+        :titre="{
+          id: titre.id,
+          typeId: titre.type.id,
+          administrations: titre.administrations,
+          demarches: titre.demarches
+        }"
+      />
+
       <div v-if="titre.substances && titre.substances.length > 0" class="mb">
         <h5>Substances</h5>
         <TagList :elements="titre.substances.map(s => s.nom)" />
@@ -161,9 +154,10 @@ import Dot from '../_ui/dot.vue'
 import Section from '../_common/section.vue'
 import Statut from '../_common/statut.vue'
 import { dateFormat } from '@/utils'
+import PureTitresLinkForm from './pure-titres-link-form.vue'
 
 export default {
-  components: { Pill, Dot, TagList, Section, Statut, Tag },
+  components: { Pill, Dot, TagList, Section, Statut, Tag, PureTitresLinkForm },
 
   props: {
     titre: {
@@ -173,6 +167,10 @@ export default {
     titresFrom: {
       type: Array,
       default: () => []
+    },
+    user: {
+      type: Object,
+      required: true
     }
   },
 

@@ -3,7 +3,11 @@ import { GraphQLResolveInfo } from 'graphql'
 import { ITitre, ITitreColonneId, IToken } from '../../../types'
 
 import { debug } from '../../../config/index'
-import { titreFormat, titresFormat } from '../../_format/titres'
+import {
+  titreAdministrationsGet,
+  titreFormat,
+  titresFormat
+} from '../../_format/titres'
 
 import { fieldsBuild } from './_fields-build'
 
@@ -22,7 +26,8 @@ import titreUpdateTask from '../../../business/titre-update'
 import { titreUpdationValidate } from '../../../business/validations/titre-updation-validate'
 import { domaineGet } from '../../../database/queries/metas'
 import {
-  canLinkTitresFrom,
+  titreLinksExpectedGet,
+  canLinkTitres,
   getTitreFromTypeId
 } from 'camino-common/src/permissions/titres'
 import { linkTitres } from '../../../database/queries/titres-titres'
@@ -199,8 +204,95 @@ const titreCreer = async (
   }
 }
 
+// TODO 2022-07-19 à mettre en REST mais il faut documenter les routes
+export const titreLiaisonsModifier = async (
+  { titreId, titreFromIds }: { titreId: string; titreFromIds: string[] },
+  context: IToken
+): Promise<boolean> => {
+  try {
+    const user = await userGet(context.user?.id)
+
+    const titre = await titreGet(
+      titreId,
+      {
+        fields: {
+          administrationsGestionnaires: { id: {} },
+          administrationsLocales: { id: {} },
+          demarches: { id: {} }
+        }
+      },
+      user
+    )
+
+    if (!titre) throw new Error("le titre n'existe pas")
+
+    if (!titre.administrationsGestionnaires || !titre.administrationsLocales) {
+      throw new Error('les administrations ne sont pas chargées')
+    }
+
+    const administrations = titreAdministrationsGet(titre)
+    if (
+      !canLinkTitres(
+        user,
+        administrations.map(({ id }) => id)
+      )
+    )
+      throw new Error('droits insuffisants')
+
+    if (!titre.demarches) {
+      throw new Error('les démarches ne sont pas chargées')
+    }
+
+    const titresFrom = await titresGet(
+      { ids: titreFromIds },
+      { fields: { id: {} } },
+      user
+    )
+
+    checkTitreLinks(titre, titreFromIds, titresFrom)
+
+    await linkTitres({ linkTo: titreId, linkFrom: titreFromIds })
+
+    return true
+  } catch (e) {
+    if (debug) {
+      console.error(e)
+    }
+
+    throw e
+  }
+}
+
+export const checkTitreLinks = (
+  titre: Pick<ITitre, 'typeId'>,
+  titreFromIds: string[],
+  titresFrom: ITitre[]
+) => {
+  const linksCount = titreLinksExpectedGet(titre)
+  if (linksCount === 'none') {
+    throw new Error('ce titre ne peut pas être lié à d’autres titres')
+  }
+
+  if (linksCount === 'one' && titreFromIds.length > 1) {
+    throw new Error('ce titre peut avoir un seul titre lié')
+  }
+
+  if (titresFrom.length !== titreFromIds.length) {
+    throw new Error('droit insuffisant')
+  }
+
+  const titreFromTypeId = getTitreFromTypeId(titre.typeId)
+  if (titreFromTypeId) {
+    if (titresFrom.some(({ typeId }) => typeId !== titreFromTypeId)) {
+      throw new Error(
+        `un titre de type ${titre.typeId} ne peut-être lié qu’à un titre de type ${titreFromTypeId}`
+      )
+    }
+  }
+}
+
 const titreModifier = async (
-  { titre }: { titre: ITitre & { titreFromIds?: string[] } },
+  { titre }: { titre: ITitre },
   context: IToken,
   info: GraphQLResolveInfo
 ) => {
@@ -209,7 +301,7 @@ const titreModifier = async (
 
     const titreOld = await titreGet(
       titre.id,
-      { fields: { titresAdministrations: { id: {} }, demarches: { id: {} } } },
+      { fields: { titresAdministrations: { id: {} } } },
       user
     )
 
@@ -221,45 +313,6 @@ const titreModifier = async (
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
-    }
-
-    if (!titreOld.demarches) {
-      throw new Error('les démarches ne sont pas chargées')
-    }
-
-    if (canLinkTitresFrom(titre.typeId) && titre.titreFromIds === undefined) {
-      throw new Error(
-        'Le champ titreFromIds est obligatoire pour ce type de titre'
-      )
-    }
-
-    if (titre.titreFromIds !== undefined) {
-      const titresFrom = await titresGet(
-        { ids: titre.titreFromIds },
-        { fields: { id: {} } },
-        user
-      )
-
-      if (titresFrom.length !== titre.titreFromIds.length) {
-        throw new Error('droit insuffisant')
-      }
-
-      const titreFromTypeId = getTitreFromTypeId(titre.typeId)
-      if (titreFromTypeId) {
-        if (titresFrom.length > 1) {
-          throw new Error(
-            `une ${titre.typeId} ne peut avoir qu’un seul titre lié`
-          )
-        }
-        if (titresFrom.length && titresFrom[0].typeId !== titreFromTypeId) {
-          throw new Error(
-            `une ${titre.typeId} ne peut-être liée qu’à une ${titreFromTypeId}`
-          )
-        }
-      }
-
-      await linkTitres({ linkTo: titre.id, linkFrom: titre.titreFromIds })
-      delete titre.titreFromIds
     }
 
     const fields = fieldsBuild(info)

@@ -96,12 +96,24 @@
       <hr />
     </div>
 
-    <div class="mb">
-      <PureTitresLink
-        :config="titreLinkConfig"
-        :loadLinkableTitres="loadLinkableTitres"
-        @onSelectedTitres="onSelectedTitres"
-      />
+    <div v-if="titreDemande.typeId && canLinkTitres">
+      <div class="tablet-blobs">
+        <div class="tablet-blob-1-3 tablet-pt-s pb-s">
+          <h5>
+            Titre {{ titreLinksExpected === 'multiple' ? 's' : '' }} à l’origine
+            de cette nouvelle demande
+          </h5>
+        </div>
+        <div class="tablet-blob-2-3">
+          <PureTitresLink
+            v-if="canLinkTitres"
+            :config="titreLinkConfig"
+            :titreTypeId="titreDemande.typeId"
+            @onSelectedTitres="onSelectedTitres"
+          />
+        </div>
+      </div>
+      <hr />
     </div>
 
     <div class="tablet-blobs mb">
@@ -134,21 +146,19 @@ import {
   isSuper
 } from 'camino-common/src/roles'
 import PureTitresLink from '@/components/titre/pure-titres-link.vue'
-import { loadLinkableTitres } from '@/components/titre/pure-titres-link.type'
+import { titreLinksExpectedGet } from 'camino-common/src/permissions/titres'
 
 export default {
   components: { PureTitresLink, Icon, TitreTypeSelect },
 
   data: () => ({
-    loadLinkableTitres,
     titreDemande: {}
   }),
 
   computed: {
     titreLinkConfig() {
       return {
-        type: 'single',
-        titreTypeId: this.titreDemande.typeId,
+        type: this.titreLinksExpected === 'one' ? 'single' : 'multiple',
         selectedTitreId: null
       }
     },
@@ -213,6 +223,14 @@ export default {
 
     loading() {
       return this.$store.state.loading.includes('titreCreationAdd')
+    },
+
+    titreLinksExpected() {
+      return titreLinksExpectedGet(this.titreDemande)
+    },
+
+    canLinkTitres() {
+      return this.titreLinksExpected !== 'none'
     }
   },
 

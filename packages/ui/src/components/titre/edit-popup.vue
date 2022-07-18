@@ -139,7 +139,6 @@ import TitreTypeSelect from '../_common/titre-type-select.vue'
 import { sortedAdministrations } from 'camino-common/src/administrations'
 import Icon from '@/components/_ui/icon.vue'
 import PureTitresLink from '@/components/titre/pure-titres-link.vue'
-import { loadLinkableTitres } from '@/components/titre/pure-titres-link.type'
 
 export default {
   name: 'CaminoDemarcheEditPopup',
@@ -157,10 +156,6 @@ export default {
       default: () => ({})
     }
   },
-
-  data: () => ({
-    loadLinkableTitres
-  }),
 
   computed: {
     titreLinkConfig() {

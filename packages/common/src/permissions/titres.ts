@@ -1,5 +1,12 @@
-import { isTitreType, TitresTypes, TitreTypeId } from '../titresTypes'
-import { DemarcheTypeId, isDemarcheTypeId } from '../demarchesTypes'
+import { TitresTypes, TitreTypeId } from '../titresTypes'
+import { DemarcheTypeId } from '../demarchesTypes'
+import {
+  isAdministrationAdmin,
+  isAdministrationEditeur,
+  isSuper,
+  User
+} from '../roles'
+import { AdministrationId } from '../administrations'
 
 export const getTitreFromTypeId = (typeId: TitreTypeId): TitreTypeId | null => {
   switch (typeId) {
@@ -10,6 +17,7 @@ export const getTitreFromTypeId = (typeId: TitreTypeId): TitreTypeId | null => {
   }
 
   const titreType = TitresTypes[typeId]
+
   if (titreType.typeId === 'cx') {
     return typeId
   }
@@ -17,13 +25,39 @@ export const getTitreFromTypeId = (typeId: TitreTypeId): TitreTypeId | null => {
   return null
 }
 
-export const canLinkTitresFrom = (
-  typeIdOrDemarcheTypeId: TitreTypeId | DemarcheTypeId | null
+export const titreLinksExpectedGet = (titre: {
+  typeId: TitreTypeId
+  demarches?: { typeId: DemarcheTypeId }[]
+}): 'none' | 'one' | 'multiple' => {
+  if (['axm', 'pxm'].includes(titre.typeId)) {
+    return 'one'
+  }
+
+  // FIXME CX
+  // const titreType = TitresTypes[titre.typeId]
+  // if (titreType.typeId === 'cx') {
+  //   return 'multiple'
+  // }
+
+  if (titre.demarches?.some(({ typeId }) => demarcheCanHaveLinks(typeId))) {
+    return 'multiple'
+  }
+
+  return 'none'
+}
+
+export const demarcheCanHaveLinks = (typeId: DemarcheTypeId) => typeId === 'fus'
+
+export const canLinkTitres = (
+  user: User,
+  administrationIds: AdministrationId[]
 ): boolean => {
-  if (isTitreType(typeIdOrDemarcheTypeId)) {
-    return ['axm', 'pxm'].includes(typeIdOrDemarcheTypeId)
-  } else if (isDemarcheTypeId(typeIdOrDemarcheTypeId)) {
-    return typeIdOrDemarcheTypeId === 'fus'
+  if (isSuper(user)) {
+    return true
+  }
+
+  if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
+    return administrationIds.includes(user.administrationId)
   }
 
   return false

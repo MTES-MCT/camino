@@ -1,4 +1,4 @@
-import { canLinkTitresFrom, getTitreFromTypeId } from './titres'
+import { canHaveLinkTitresFrom, getTitreFromTypeId } from './titres'
 import { TitresTypesIds, TitreTypeId } from '../titresTypes'
 
 test('getTitreFromTypeId', () => {
@@ -16,11 +16,11 @@ test('canLinkTitresFrom', () => {
   const titreFromTypeId = TitresTypesIds.reduce<{
     [key in TitreTypeId]?: boolean
   }>((acc, titreTypeId) => {
-    acc[titreTypeId] = canLinkTitresFrom(titreTypeId)
+    acc[titreTypeId] = canHaveLinkTitresFrom(titreTypeId)
 
     return acc
   }, {})
   expect(titreFromTypeId).toMatchSnapshot()
-  expect(canLinkTitresFrom('fus')).toBe(true)
-  expect(canLinkTitresFrom(null)).toBe(false)
+  expect(canHaveLinkTitresFrom('fus')).toBe(true)
+  expect(canHaveLinkTitresFrom(null)).toBe(false)
 })

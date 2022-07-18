@@ -16,10 +16,9 @@ export default meta
 
 type Props = {
   config: TitresLinkConfig
-  loadLinkableTitres: LoadLinkableTitres
   titreTypeId: TitreTypeId
+  loadLinkableTitres: LoadLinkableTitres
 }
-
 const titres = [
   {
     id: 'id1',
@@ -118,7 +117,6 @@ export const DemarcheFusion = Template.bind({})
 DemarcheFusion.args = {
   config: {
     type: 'multiple',
-    demarcheTypeId: 'fus',
     selectedTitreIds: []
   },
   titreTypeId: 'pxm',
@@ -129,7 +127,6 @@ export const DemarcheFusionWithAlreadySelectedTitre = Template.bind({})
 DemarcheFusionWithAlreadySelectedTitre.args = {
   config: {
     type: 'multiple',
-    demarcheTypeId: 'fus',
     selectedTitreIds: ['id1', 'id2']
   },
   titreTypeId: 'pxm',
@@ -141,7 +138,6 @@ Loading.args = {
   loadLinkableTitres: () => new Promise<TitreLink[]>(resolve => {}),
   config: {
     type: 'multiple',
-    demarcheTypeId: 'fus',
     selectedTitreIds: ['id1']
   },
   titreTypeId: 'pxm'
@@ -151,7 +147,6 @@ WithError.args = {
   loadLinkableTitres: () => Promise.reject(new Error('because reasons')),
   config: {
     type: 'multiple',
-    demarcheTypeId: 'fus',
     selectedTitreIds: ['id1']
   },
   titreTypeId: 'pxm'

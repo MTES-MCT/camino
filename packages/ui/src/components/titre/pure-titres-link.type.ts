@@ -13,7 +13,6 @@ export type TitresLinkConfig =
   | {
       type: 'multiple'
       selectedTitreIds: string[]
-      demarcheTypeId: DemarcheTypeId | null
     }
 
 type DemarchePhase = { dateDebut: string; dateFin: string }
@@ -21,6 +20,13 @@ export type TitreLinkDemarche = { phase?: DemarchePhase }
 export type TitreLink = Pick<CommonTitre, 'id' | 'nom'> & {
   demarches: TitreLinkDemarche[]
 }
+
+export type LoadLinkedTitres = (titreId: string) => Promise<TitreLink[]>
+
+export const loadLinkedTitres: LoadLinkedTitres = async (titreId: string) => {
+  return (await fetch(`/apiUrl/titres/${titreId}/titresOrigine`)).json()
+}
+
 export type LoadLinkableTitres = (
   titreTypeId: TitreTypeId
 ) => Promise<TitreLink[]>
@@ -65,4 +71,25 @@ export const loadLinkableTitres: LoadLinkableTitres = async (
   } else {
     return []
   }
+}
+
+export type LinkTitres = (
+  titreId: string,
+  titreFromIds: string[]
+) => Promise<void>
+
+export const linkTitres: LinkTitres = async (
+  titreId: string,
+  titreFromIds: string[]
+) => {
+  await apiGraphQLFetch(
+    gql`
+      mutation TitreLiaisonsModifier($titreId: ID!, $titreFromIds: [ID]!) {
+        titreLiaisonsModifier(titreId: $titreId, titreFromIds: $titreFromIds)
+      }
+    `
+  )({
+    titreId,
+    titreFromIds
+  })
 }
