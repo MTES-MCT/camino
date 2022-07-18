@@ -267,6 +267,7 @@ export default {
       if (file && validity.valid && file.type === 'application/pdf') {
         this.warnings = []
         this.document.fichierNouveau = file
+        this.document.fichier = true
         this.document.fichierTypeId = 'pdf'
       } else {
         this.warnings = [

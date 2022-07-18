@@ -38,8 +38,6 @@ const actions = {
         delete document.id
       }
 
-      document.fichier = true
-
       // Il faut envoyer les données de "document" sans sa propriété "fichierNouveau"
       // pour ne pas téléverser le fichier via GQL. Mais transformer "document" ici altère
       // le rendu de la UI. Elle pointe vers la référence de "document.fichierNouveau"
