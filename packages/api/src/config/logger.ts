@@ -16,14 +16,30 @@ export const newDateFormated = (date = new Date()): string => {
   )
 }
 
-export const consoleOverride = () => {
+export const consoleOverride = (color = true) => {
   console.info = (...args) =>
-    console.log(newDateFormated(), ' [\x1b[32minfo\x1b[0m]', ...args)
+    console.log(
+      newDateFormated(),
+      color ? ' [\x1b[32minfo\x1b[0m]' : ' [info]',
+      ...args
+    )
   console.warn = (...args) =>
-    console.log(newDateFormated(), ' [\x1b[33mwarn\x1b[0m]', ...args)
+    console.log(
+      newDateFormated(),
+      color ? ' [\x1b[33mwarn\x1b[0m]' : ' [warn]',
+      ...args
+    )
   console.error = (...args) =>
-    console.log(newDateFormated(), '[\x1b[31merror\x1b[0m]', ...args)
+    console.log(
+      newDateFormated(),
+      color ? '[\x1b[31merror\x1b[0m]' : '[error]',
+      ...args
+    )
   // TODO 2022-07-13 Not used in the application...
   console.debug = (...args) =>
-    console.log(newDateFormated(), '[\x1b[36mdebug\x1b[0m]', ...args)
+    console.log(
+      newDateFormated(),
+      color ? '[\x1b[36mdebug\x1b[0m]' : '[debug]',
+      ...args
+    )
 }
