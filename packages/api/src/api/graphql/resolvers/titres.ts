@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { ITitre, ITitreColonneId, IToken } from '../../../types'
+import { ITitre, ITitreColonneId, ITitreDemarche, IToken } from '../../../types'
 
 import { debug } from '../../../config/index'
 import {
@@ -26,9 +26,8 @@ import titreUpdateTask from '../../../business/titre-update'
 import { titreUpdationValidate } from '../../../business/validations/titre-updation-validate'
 import { domaineGet } from '../../../database/queries/metas'
 import {
-  titreLinksExpectedGet,
   canLinkTitres,
-  getTitreFromTypeId
+  getLinkConfig
 } from 'camino-common/src/permissions/titres'
 import { linkTitres } from '../../../database/queries/titres-titres'
 
@@ -249,7 +248,7 @@ export const titreLiaisonsModifier = async (
       user
     )
 
-    checkTitreLinks(titre, titreFromIds, titresFrom)
+    checkTitreLinks(titre, titreFromIds, titresFrom, titre.demarches)
 
     await linkTitres({ linkTo: titreId, linkFrom: titreFromIds })
 
@@ -266,14 +265,15 @@ export const titreLiaisonsModifier = async (
 export const checkTitreLinks = (
   titre: Pick<ITitre, 'typeId'>,
   titreFromIds: string[],
-  titresFrom: ITitre[]
+  titresFrom: ITitre[],
+  demarches: ITitreDemarche[]
 ) => {
-  const linksCount = titreLinksExpectedGet(titre)
-  if (linksCount === 'none') {
+  const linkConfig = getLinkConfig(titre.typeId, demarches)
+  if (!linkConfig) {
     throw new Error('ce titre ne peut pas être lié à d’autres titres')
   }
 
-  if (linksCount === 'one' && titreFromIds.length > 1) {
+  if (linkConfig.count === 'single' && titreFromIds.length > 1) {
     throw new Error('ce titre peut avoir un seul titre lié')
   }
 
@@ -281,11 +281,10 @@ export const checkTitreLinks = (
     throw new Error('droit insuffisant')
   }
 
-  const titreFromTypeId = getTitreFromTypeId(titre.typeId)
-  if (titreFromTypeId) {
-    if (titresFrom.some(({ typeId }) => typeId !== titreFromTypeId)) {
+  if (linkConfig) {
+    if (titresFrom.some(({ typeId }) => typeId !== linkConfig.typeId)) {
       throw new Error(
-        `un titre de type ${titre.typeId} ne peut-être lié qu’à un titre de type ${titreFromTypeId}`
+        `un titre de type ${titre.typeId} ne peut-être lié qu’à un titre de type ${linkConfig.typeId}`
       )
     }
   }

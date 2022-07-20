@@ -49,12 +49,6 @@
           class="tablet-blob-2-3 p-s"
         />
       </div>
-      <div class="mb-xxl">
-        <PureTitresLink
-          :config="titreLinkConfig"
-          @onSelectedTitres="onSelectedTitres"
-        />
-      </div>
     </div>
 
     <template #footer>
@@ -83,7 +77,6 @@
 
 <script>
 import Popup from '../_ui/popup.vue'
-import PureTitresLink from './pure-titres-link.vue'
 import { isTitreType, TitresTypes } from 'camino-common/src/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/titresTypesTypes'
 
@@ -91,7 +84,6 @@ export default {
   name: 'CaminoDemarcheEditPopup',
 
   components: {
-    PureTitresLink,
     Popup
   },
 
@@ -99,7 +91,6 @@ export default {
     demarche: { type: Object, default: () => ({}) },
     titreNom: { type: String, default: '' },
     titreTypeId: { type: String, default: '' },
-    titresFrom: { type: Array, default: () => [] },
     creation: { type: Boolean, default: false },
     tabId: { type: String, required: true }
   },
@@ -132,15 +123,6 @@ export default {
 
     complete() {
       return this.demarche.typeId
-    },
-
-    titreLinkConfig() {
-      return {
-        type: 'multiple',
-        selectedTitreIds: this.titresFrom.map(({ id }) => id),
-        titreTypeId: this.titreTypeId,
-        demarcheTypeId: this.demarche.typeId
-      }
     }
   },
 
@@ -174,10 +156,6 @@ export default {
           nom: demarche.id
         })
       }
-    },
-
-    onSelectedTitres(titres) {
-      this.demarche.titreFromIds = titres.map(({ id }) => id)
     },
 
     cancel() {

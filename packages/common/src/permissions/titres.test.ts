@@ -1,26 +1,29 @@
-import { canHaveLinkTitresFrom, getTitreFromTypeId } from './titres'
+import { getLinkConfig } from './titres'
 import { TitresTypesIds, TitreTypeId } from '../titresTypes'
 
-test('getTitreFromTypeId', () => {
+test('getTitreFromTypeId pas de fusions', () => {
   const titreFromTypeId = TitresTypesIds.reduce<{
-    [key in TitreTypeId]?: TitreTypeId | null
+    [key in TitreTypeId]?: {
+      count: 'single' | 'multiple'
+      typeId: TitreTypeId
+    } | null
   }>((acc, titreTypeId) => {
-    acc[titreTypeId] = getTitreFromTypeId(titreTypeId)
+    acc[titreTypeId] = getLinkConfig(titreTypeId, [])
 
     return acc
   }, {})
   expect(titreFromTypeId).toMatchSnapshot()
 })
-
-test('canLinkTitresFrom', () => {
+test('getTitreFromTypeId fusions', () => {
   const titreFromTypeId = TitresTypesIds.reduce<{
-    [key in TitreTypeId]?: boolean
+    [key in TitreTypeId]?: {
+      count: 'single' | 'multiple'
+      typeId: TitreTypeId
+    } | null
   }>((acc, titreTypeId) => {
-    acc[titreTypeId] = canHaveLinkTitresFrom(titreTypeId)
+    acc[titreTypeId] = getLinkConfig(titreTypeId, [{ typeId: 'fus' }])
 
     return acc
   }, {})
   expect(titreFromTypeId).toMatchSnapshot()
-  expect(canHaveLinkTitresFrom('fus')).toBe(true)
-  expect(canHaveLinkTitresFrom(null)).toBe(false)
 })

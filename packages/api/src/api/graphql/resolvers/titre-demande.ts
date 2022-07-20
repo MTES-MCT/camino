@@ -34,9 +34,9 @@ import {
   isEntreprise,
   isSuper
 } from 'camino-common/src/roles'
-import { titreLinksExpectedGet } from 'camino-common/src/permissions/titres'
 import { linkTitres } from '../../../database/queries/titres-titres'
 import { checkTitreLinks } from './titres'
+import { getLinkConfig } from 'camino-common/src/permissions/titres'
 
 export const titreDemandeCreer = async (
   {
@@ -116,8 +116,8 @@ export const titreDemandeCreer = async (
 
     const titreId = titre.id
 
-    const nbLinksExpected = titreLinksExpectedGet(titreDemande)
-    if (nbLinksExpected !== 'none' && titreDemande.titreFromIds === undefined) {
+    const linkConfig = getLinkConfig(titreDemande.typeId, [])
+    if (linkConfig && titreDemande.titreFromIds === undefined) {
       throw new Error(
         'Le champ titreFromIds est obligatoire pour ce type de titre'
       )
@@ -130,7 +130,7 @@ export const titreDemandeCreer = async (
         user
       )
 
-      checkTitreLinks(titreDemande, titreDemande.titreFromIds, titresFrom)
+      checkTitreLinks(titreDemande, titreDemande.titreFromIds, titresFrom, [])
 
       await linkTitres({
         linkTo: titre.id,

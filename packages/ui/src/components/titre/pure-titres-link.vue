@@ -30,26 +30,20 @@
 
 <script lang="ts" setup>
 import SimpleTypeahead from '@/components/_ui/typeahead.vue'
-import { computed, onMounted, ref, watch, withDefaults } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import {
-  loadLinkableTitres,
   LoadLinkableTitres,
   TitreLink,
   TitresLinkConfig
 } from './pure-titres-link.type'
 import Statut from '@/components/_common/statut.vue'
 import { AsyncData } from '@/api/client-rest'
-import LoadingElement from '@/components/_ui/loader-element.vue'
-import { TitreTypeId } from 'camino-common/src/titresTypes'
+import LoadingElement from '@/components/_ui/pure-loader-data.vue'
 
-const props = withDefaults(
-  defineProps<{
-    config: TitresLinkConfig
-    titreTypeId: TitreTypeId
-    loadLinkableTitres?: () => LoadLinkableTitres
-  }>(),
-  { loadLinkableTitres: () => loadLinkableTitres }
-)
+const props = defineProps<{
+  config: TitresLinkConfig
+  loadLinkableTitres: LoadLinkableTitres
+}>()
 
 const emit = defineEmits<{
   (e: 'onSelectedTitre', titre: TitreLink | null): void
@@ -64,7 +58,7 @@ const init = async () => {
   try {
     data.value = { status: 'LOADING' }
 
-    const titresLinkables = await props.loadLinkableTitres(props.titreTypeId)
+    const titresLinkables = await props.loadLinkableTitres()
 
     data.value = { status: 'LOADED', value: titresLinkables }
     const titreIds: string[] = []
@@ -95,7 +89,7 @@ const init = async () => {
 }
 
 watch(
-  () => props.titreTypeId,
+  () => props.loadLinkableTitres,
   async _ => {
     selectedTitres.value.splice(0, selectedTitres.value.length)
     onSelectItem(null)

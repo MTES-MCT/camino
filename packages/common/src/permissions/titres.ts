@@ -8,45 +8,28 @@ import {
 } from '../roles'
 import { AdministrationId } from '../administrations'
 
-export const getTitreFromTypeId = (typeId: TitreTypeId): TitreTypeId | null => {
+export const getLinkConfig = (
+  typeId: TitreTypeId,
+  demarches: { typeId: DemarcheTypeId }[]
+): { count: 'single' | 'multiple'; typeId: TitreTypeId } | null => {
   switch (typeId) {
     case 'axm':
-      return 'arm'
+      return { count: 'single', typeId: 'arm' }
     case 'pxm':
-      return 'prm'
+      return { count: 'single', typeId: 'prm' }
   }
 
   const titreType = TitresTypes[typeId]
 
-  if (titreType.typeId === 'cx') {
-    return typeId
+  if (
+    titreType.typeId === 'cx' &&
+    demarches.some(({ typeId }) => typeId === 'fus')
+  ) {
+    return { count: 'multiple', typeId }
   }
 
   return null
 }
-
-export const titreLinksExpectedGet = (titre: {
-  typeId: TitreTypeId
-  demarches?: { typeId: DemarcheTypeId }[]
-}): 'none' | 'one' | 'multiple' => {
-  if (['axm', 'pxm'].includes(titre.typeId)) {
-    return 'one'
-  }
-
-  // FIXME CX
-  // const titreType = TitresTypes[titre.typeId]
-  // if (titreType.typeId === 'cx') {
-  //   return 'multiple'
-  // }
-
-  if (titre.demarches?.some(({ typeId }) => demarcheCanHaveLinks(typeId))) {
-    return 'multiple'
-  }
-
-  return 'none'
-}
-
-export const demarcheCanHaveLinks = (typeId: DemarcheTypeId) => typeId === 'fus'
 
 export const canLinkTitres = (
   user: User,

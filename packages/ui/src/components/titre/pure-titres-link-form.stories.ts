@@ -6,7 +6,6 @@ import { AdministrationId } from 'camino-common/src/administrations'
 import {
   LinkTitres,
   LoadLinkableTitres,
-  loadLinkedTitres,
   LoadLinkedTitres,
   TitreLink
 } from '@/components/titre/pure-titres-link.type'
@@ -28,7 +27,10 @@ type Props = {
     demarches: { typeId: DemarcheTypeId }[]
   }
   loadLinkedTitres: LoadLinkedTitres
-  loadLinkableTitres: LoadLinkableTitres
+  loadLinkableTitres: (
+    titreTypeId: TitreTypeId,
+    demarches: { typeId: DemarcheTypeId }[]
+  ) => LoadLinkableTitres
   linkTitres: LinkTitres
 }
 const Template: Story<Props> = (args: Props) => ({
@@ -95,16 +97,21 @@ export const AxmWithAlreadySelectedTitre = Template.bind({})
 AxmWithAlreadySelectedTitre.args = {
   user: { role: 'super', administrationId: undefined },
   titre: { typeId: 'axm', administrations: [], id: 'titreId', demarches: [] },
-  loadLinkableTitres: () => Promise.resolve(titres),
+  loadLinkableTitres: () => () => Promise.resolve(titres),
   loadLinkedTitres: () => Promise.resolve([titres[0]]),
   linkTitres
 }
 
-export const CxmWithAlreadySelectedTitre = Template.bind({})
-CxmWithAlreadySelectedTitre.args = {
+export const FusionWithAlreadySelectedTitre = Template.bind({})
+FusionWithAlreadySelectedTitre.args = {
   user: { role: 'super', administrationId: undefined },
-  titre: { typeId: 'cxm', administrations: [], id: 'titreId', demarches: [] },
-  loadLinkableTitres: () => Promise.resolve(titres),
+  titre: {
+    typeId: 'cxm',
+    administrations: [],
+    id: 'titreId',
+    demarches: [{ typeId: 'fus' }]
+  },
+  loadLinkableTitres: () => () => Promise.resolve(titres),
   loadLinkedTitres: () => Promise.resolve(titres),
   linkTitres
 }
@@ -113,7 +120,7 @@ export const TitreWithTitreLinksLoading = Template.bind({})
 TitreWithTitreLinksLoading.args = {
   user: { role: 'super', administrationId: undefined },
   titre: { typeId: 'axm', administrations: [], id: 'titreId', demarches: [] },
-  loadLinkableTitres: () => Promise.resolve(titres),
+  loadLinkableTitres: () => () => Promise.resolve(titres),
   loadLinkedTitres: () => new Promise<TitreLink[]>(() => ({})),
   linkTitres
 }
@@ -122,7 +129,7 @@ export const DefautCantUpdateLinks = Template.bind({})
 DefautCantUpdateLinks.args = {
   user: { role: 'defaut', administrationId: undefined },
   titre: { typeId: 'axm', administrations: [], id: 'titreId', demarches: [] },
-  loadLinkableTitres: () => Promise.resolve(titres),
+  loadLinkableTitres: () => () => Promise.resolve(titres),
   loadLinkedTitres: () => Promise.resolve(titres),
   linkTitres
 }

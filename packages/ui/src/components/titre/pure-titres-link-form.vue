@@ -1,17 +1,19 @@
 <template>
   <div>
-    <LoadingElement v-if="nbLinksExpected !== 'none'" :data="titresFrom">
-      <div v-if="titresFrom.value.length || canLink">
+    <LoadingData v-if="linkConfig" v-slot="{ item }" :data="titresFrom">
+      <div v-if="item.length || canLink">
         <h5>
-          Titre{{ nbLinksExpected === 'multiple' ? 's' : '' }} à l’origine de ce
-          titre
+          Titre{{ linkConfig.count === 'multiple' ? 's' : '' }} à l’origine de
+          ce titre
         </h5>
         <div v-if="mode === 'edit'">
-          <LoadingElement :data="titresLinking">
+          <Loading :data="titresLinking">
             <PureTitresLink
+              v-if="titreLinkConfig"
               :config="titreLinkConfig"
-              :titreTypeId="titre.typeId"
-              :loadLinkableTitres="loadLinkableTitres"
+              :loadLinkableTitres="
+                loadLinkableTitres(titre.typeId, titre.demarches)
+              "
               @onSelectedTitres="onSelectedTitres"
             />
             <div class="flex mt-m" style="flex-direction: row-reverse">
@@ -30,16 +32,12 @@
                 Annuler
               </button>
             </div>
-          </LoadingElement>
+          </Loading>
         </div>
 
         <div v-else class="flex flex-center">
           <ul class="list-inline" style="margin-bottom: 0">
-            <li
-              v-for="titreFrom in titresFrom.value"
-              :key="titreFrom.id"
-              class="mb-xs mr-xs"
-            >
+            <li v-for="titreFrom in item" :key="titreFrom.id" class="mr-xs">
               <router-link
                 :to="{ name: 'titre', params: { id: titreFrom.id } }"
                 class="btn-border small p-s rnd-xs mr-xs"
@@ -59,54 +57,48 @@
           </button>
         </div>
       </div>
-    </LoadingElement>
+    </LoadingData>
   </div>
 </template>
 
 <script lang="ts" setup>
 import {
   canLinkTitres,
-  titreLinksExpectedGet
+  getLinkConfig
 } from 'camino-common/src/permissions/titres'
-import { computed, onMounted, ref, withDefaults } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import {
   TitreLink,
   TitresLinkConfig,
-  loadLinkableTitres,
   LoadLinkableTitres,
-  linkTitres,
   LinkTitres,
-  LoadLinkedTitres,
-  loadLinkedTitres
+  LoadLinkedTitres
 } from './pure-titres-link.type'
 import { TitreTypeId } from 'camino-common/src/titresTypes'
 import { User } from 'camino-common/src/roles'
 import { AdministrationId } from 'camino-common/src/administrations'
 import PureTitresLink from './pure-titres-link.vue'
-import { AsyncData } from '@/api/client-rest'
-import LoadingElement from '@/components/_ui/loader-element.vue'
+import { AsyncData, AsyncProcess } from '@/api/client-rest'
+import LoadingData from '@/components/_ui/pure-loader-data.vue'
+import Loading from '@/components/_ui/pure-loader.vue'
 import Icon from '@/components/_ui/icon.vue'
 import { DemarcheTypeId } from 'camino-common/src/demarchesTypes'
 
-const props = withDefaults(
-  defineProps<{
-    user: User
-    titre: {
-      id: string
-      typeId: TitreTypeId
-      administrations: { id: AdministrationId }[]
-      demarches: { typeId: DemarcheTypeId }[]
-    }
-    loadLinkedTitres?: () => LoadLinkedTitres
-    loadLinkableTitres?: () => LoadLinkableTitres
-    linkTitres?: () => LinkTitres
-  }>(),
-  {
-    loadLinkableTitres: () => loadLinkableTitres,
-    linkTitres: () => linkTitres,
-    loadLinkedTitres: () => loadLinkedTitres
+const props = defineProps<{
+  user: User
+  titre: {
+    id: string
+    typeId: TitreTypeId
+    administrations: { id: AdministrationId }[]
+    demarches: { typeId: DemarcheTypeId }[]
   }
-)
+  loadLinkedTitres: LoadLinkedTitres
+  loadLinkableTitres: (
+    titreTypeId: TitreTypeId,
+    demarches: { typeId: DemarcheTypeId }[]
+  ) => LoadLinkableTitres
+  linkTitres: LinkTitres
+}>()
 
 const emit = defineEmits<{
   (e: 'onSelectedTitre', titre: TitreLink | null): void
@@ -114,16 +106,30 @@ const emit = defineEmits<{
 }>()
 
 const mode = ref<'read' | 'edit'>('read')
-const titresLinking = ref<AsyncData<boolean>>({ status: 'LOADED', value: true })
+const titresLinking = ref<AsyncProcess>({ status: 'LOADED' })
 const selectedTitres = ref<TitreLink[]>([])
 const titresFrom = ref<AsyncData<TitreLink[]>>({ status: 'LOADING' })
 
-const nbLinksExpected = computed(() => titreLinksExpectedGet(props.titre))
+const linkConfig = computed(() =>
+  getLinkConfig(props.titre.typeId, props.titre.demarches)
+)
 
 onMounted(async () => {
-  if (nbLinksExpected.value !== 'none') {
+  await init()
+})
+
+watch(
+  () => props.titre,
+  async _ => {
+    titresFrom.value = { status: 'LOADED', value: [] }
+    await init()
+  }
+)
+
+const init = async () => {
+  if (linkConfig.value) {
     try {
-      const titres = await props.loadLinkedTitres()(props.titre.id)
+      const titres = await props.loadLinkedTitres(props.titre.id)
       titresFrom.value = { status: 'LOADED', value: titres }
     } catch (e: any) {
       titresFrom.value = {
@@ -132,11 +138,11 @@ onMounted(async () => {
       }
     }
   }
-})
+}
 
 const canLink = computed<boolean>(() => {
   // On ne peut pas lier si ce type de titre n’accepte pas de liaison
-  if (nbLinksExpected.value === 'none') {
+  if (!linkConfig.value) {
     return false
   }
 
@@ -152,7 +158,7 @@ const titreLinkConfig = computed<TitresLinkConfig | null>(() => {
   }
 
   const titreFromIds = titresFrom.value.value.map(({ id }) => id)
-  if (nbLinksExpected.value === 'one') {
+  if (linkConfig.value?.count === 'single') {
     return {
       type: 'single',
       selectedTitreId: titreFromIds.length === 1 ? titreFromIds[0] : null
@@ -172,11 +178,11 @@ const onSelectedTitres = (titres: TitreLink[]) => {
 const saveLink = async () => {
   titresLinking.value = { status: 'LOADING' }
   try {
-    await props.linkTitres()(
+    await props.linkTitres(
       props.titre.id,
       selectedTitres.value.map(({ id }) => id)
     )
-    titresLinking.value = { status: 'LOADED', value: true }
+    titresLinking.value = { status: 'LOADED' }
     mode.value = 'read'
     titresFrom.value = { status: 'LOADED', value: selectedTitres.value }
   } catch (e: any) {

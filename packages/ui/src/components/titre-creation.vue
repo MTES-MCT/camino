@@ -96,19 +96,18 @@
       <hr />
     </div>
 
-    <div v-if="titreDemande.typeId && canLinkTitres">
+    <div v-if="titreDemande.typeId && linkConfig">
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
           <h5>
-            Titre {{ titreLinksExpected === 'multiple' ? 's' : '' }} à l’origine
+            Titre {{ linkConfig.count === 'multiple' ? 's' : '' }} à l’origine
             de cette nouvelle demande
           </h5>
         </div>
         <div class="tablet-blob-2-3">
           <PureTitresLink
-            v-if="canLinkTitres"
             :config="titreLinkConfig"
-            :titreTypeId="titreDemande.typeId"
+            :loadLinkableTitres="loadLinkableTitresByTypeId"
             @onSelectedTitres="onSelectedTitres"
           />
         </div>
@@ -146,7 +145,8 @@ import {
   isSuper
 } from 'camino-common/src/roles'
 import PureTitresLink from '@/components/titre/pure-titres-link.vue'
-import { titreLinksExpectedGet } from 'camino-common/src/permissions/titres'
+import { getLinkConfig } from 'camino-common/src/permissions/titres'
+import { loadLinkableTitres } from '@/components/titre/pure-titres-link.type'
 
 export default {
   components: { PureTitresLink, Icon, TitreTypeSelect },
@@ -157,9 +157,16 @@ export default {
 
   computed: {
     titreLinkConfig() {
+      if (this.linkConfig?.count === 'single') {
+        return {
+          type: 'single',
+          selectedTitreId: null
+        }
+      }
+
       return {
-        type: this.titreLinksExpected === 'one' ? 'single' : 'multiple',
-        selectedTitreId: null
+        type: 'multiple',
+        selectedTitreIds: []
       }
     },
     user() {
@@ -225,12 +232,12 @@ export default {
       return this.$store.state.loading.includes('titreCreationAdd')
     },
 
-    titreLinksExpected() {
-      return titreLinksExpectedGet(this.titreDemande)
+    linkConfig() {
+      return getLinkConfig(this.titreDemande, [])
     },
 
-    canLinkTitres() {
-      return this.titreLinksExpected !== 'none'
+    loadLinkableTitresByTypeId() {
+      return loadLinkableTitres(this.titreDemande.typeId, [])
     }
   },
 

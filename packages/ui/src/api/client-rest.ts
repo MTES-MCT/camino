@@ -1,4 +1,6 @@
-export type AsyncData<T> =
-  | { status: 'LOADING' }
-  | { status: 'LOADED'; value: T }
-  | { status: 'ERROR'; message: string }
+type Loading = { status: 'LOADING' }
+type Error = { status: 'ERROR'; message: string }
+
+export type AsyncData<T> = Loading | { status: 'LOADED'; value: T } | Error
+
+export type AsyncProcess = Loading | { status: 'LOADED' } | Error

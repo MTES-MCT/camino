@@ -7,7 +7,7 @@
             {{ titre.domaine.id }}
           </Pill>
           <span class="cap-first">
-            {{ titre.type.type.nom }}
+            {{ TitresTypesTypes[type.typeId].nom }}
           </span>
         </h4>
 
@@ -35,7 +35,7 @@
               </td>
               <td>
                 <span class="cap-first bold h5 mb-0">
-                  {{ demarche.type.nom }}
+                  {{ DemarchesTypes[demarche.type.id].nom }}
                 </span>
               </td>
               <td>
@@ -70,10 +70,13 @@
         :user="user"
         :titre="{
           id: titre.id,
-          typeId: titre.type.id,
+          typeId: type.id,
           administrations: titre.administrations,
-          demarches: titre.demarches
+          demarches: titre.demarches.map(d => ({ typeId: d.type.id }))
         }"
+        :linkTitres="linkTitres"
+        :loadLinkedTitres="loadLinkedTitres"
+        :loadLinkableTitres="loadLinkableTitres"
       />
 
       <div v-if="titre.substances && titre.substances.length > 0" class="mb">
@@ -146,7 +149,7 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import Pill from '../_ui/pill.vue'
 import Tag from '../_ui/tag.vue'
 import TagList from '../_ui/tag-list.vue'
@@ -155,49 +158,65 @@ import Section from '../_common/section.vue'
 import Statut from '../_common/statut.vue'
 import { dateFormat } from '@/utils'
 import PureTitresLinkForm from './pure-titres-link-form.vue'
+import {
+  linkTitres,
+  loadLinkableTitres,
+  loadLinkedTitres
+} from '@/components/titre/pure-titres-link.type'
+import { User } from 'camino-common/src/roles'
+import { computed } from 'vue'
+import { TitresTypes, TitreTypeId } from 'camino-common/src/titresTypes'
+import {
+  DemarchesTypes,
+  DemarcheTypeId
+} from 'camino-common/src/demarchesTypes'
+import { AdministrationId } from 'camino-common/src/administrations'
+import { TitresTypesTypes } from 'camino-common/src/titresTypesTypes'
 
-export default {
-  components: { Pill, Dot, TagList, Section, Statut, Tag, PureTitresLinkForm },
-
-  props: {
-    titre: {
-      type: Object,
-      default: () => ({})
-    },
-    titresFrom: {
-      type: Array,
-      default: () => []
-    },
-    user: {
-      type: Object,
-      required: true
-    }
-  },
-
-  computed: {
-    phases() {
-      return this.titre.demarches.filter(d => d.phase)
-    },
-
-    hasContenu() {
-      return (
-        this.titre.contenu &&
-        this.titre.type.sections &&
-        this.titre.type.sections.some(s =>
-          s.elements.some(
-            e =>
-              this.titre.contenu[s.id] &&
-              this.titre.contenu[s.id][e.id] !== undefined
-          )
-        )
-      )
-    }
-  },
-
-  methods: {
-    dateFormat(date) {
-      return dateFormat(date)
-    }
-  }
+type Entreprise = {
+  id: string
+  nom: string
+  legalSiren?: string
+  operateur: boolean
 }
+
+const props = defineProps<{
+  titre: {
+    id: string
+    domaine: { id: string }
+    statut: { nom: string; couleur: string }
+    demarches: {
+      id: string
+      type: { id: DemarcheTypeId }
+      phase: { dateDebut: string; dateFin: string; statut: { couleur: string } }
+    }[]
+    contenu: { [sectionId: string]: { [elementId: string]: unknown } }
+    administrations: { id: AdministrationId }[]
+    type: {
+      id: TitreTypeId
+      sections: { id: string; elements: { id: string }[] }[]
+    }
+    titulaires: Entreprise[]
+    amodiataires: Entreprise[]
+    substances: { nom: string }[]
+    references: { nom: string; type: { nom: string } }[]
+  }
+  user: User
+}>()
+const phases = computed(() => props.titre.demarches.filter(d => d.phase))
+
+const hasContenu = computed(
+  () =>
+    props.titre.contenu &&
+    props.titre.type.sections &&
+    props.titre.type.sections.some(s =>
+      s.elements.some(
+        e =>
+          props.titre.contenu[s.id] &&
+          props.titre.contenu[s.id][e.id] !== undefined
+      )
+    )
+)
+
+const type = computed(() => TitresTypes[props.titre.type.id])
 </script>

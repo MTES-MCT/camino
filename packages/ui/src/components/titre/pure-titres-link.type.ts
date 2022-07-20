@@ -1,5 +1,5 @@
 import { CommonTitre } from 'camino-common/src/titres'
-import { getTitreFromTypeId } from 'camino-common/src/permissions/titres'
+import { getLinkConfig } from 'camino-common/src/permissions/titres'
 import { apiGraphQLFetch } from '@/api/_client'
 import { TitresTypes, TitreTypeId } from 'camino-common/src/titresTypes'
 import gql from 'graphql-tag'
@@ -27,51 +27,52 @@ export const loadLinkedTitres: LoadLinkedTitres = async (titreId: string) => {
   return (await fetch(`/apiUrl/titres/${titreId}/titresOrigine`)).json()
 }
 
-export type LoadLinkableTitres = (
-  titreTypeId: TitreTypeId
-) => Promise<TitreLink[]>
+export type LoadLinkableTitres = () => Promise<TitreLink[]>
 
-export const loadLinkableTitres: LoadLinkableTitres = async (
-  titreTypeId: TitreTypeId
-) => {
-  const titreTypeFromId = getTitreFromTypeId(titreTypeId)
+export const loadLinkableTitres: (
+  titreTypeId: TitreTypeId,
+  demarches: { typeId: DemarcheTypeId }[]
+) => LoadLinkableTitres =
+  (titreTypeId: TitreTypeId, demarches: { typeId: DemarcheTypeId }[]) =>
+  async () => {
+    const linkConfig = getLinkConfig(titreTypeId, demarches)
 
-  if (titreTypeFromId) {
-    const titreTypeFrom = TitresTypes[titreTypeFromId]
-    const result = await apiGraphQLFetch(
-      gql`
-        query Titres($typesIds: [ID!], $domainesIds: [ID!]) {
-          titres(
-            typesIds: $typesIds
-            domainesIds: $domainesIds
-            statutsIds: ["ech", "mod", "val"]
-          ) {
-            elements {
-              id
-              nom
-              statut {
-                couleur
+    if (linkConfig) {
+      const titreTypeFrom = TitresTypes[linkConfig.typeId]
+      const result = await apiGraphQLFetch(
+        gql`
+          query Titres($typesIds: [ID!], $domainesIds: [ID!]) {
+            titres(
+              typesIds: $typesIds
+              domainesIds: $domainesIds
+              statutsIds: ["ech", "mod", "val"]
+            ) {
+              elements {
+                id
                 nom
-              }
-              demarches {
-                phase {
-                  dateDebut
-                  dateFin
+                statut {
+                  couleur
+                  nom
+                }
+                demarches {
+                  phase {
+                    dateDebut
+                    dateFin
+                  }
                 }
               }
             }
           }
-        }
-      `
-    )({
-      typesIds: [titreTypeFrom.typeId],
-      domainesIds: [titreTypeFrom.domaineId]
-    })
-    return result.elements
-  } else {
-    return []
+        `
+      )({
+        typesIds: [titreTypeFrom.typeId],
+        domainesIds: [titreTypeFrom.domaineId]
+      })
+      return result.elements
+    } else {
+      return []
+    }
   }
-}
 
 export type LinkTitres = (
   titreId: string,
