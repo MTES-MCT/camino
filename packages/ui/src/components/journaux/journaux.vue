@@ -66,7 +66,7 @@ export default defineComponent({
         : []
     },
     lignes() {
-      return this.journaux?.map(journal => {
+      return this.journaux?.map((journal: any) => {
         const date = new Date(Number.parseInt(journal.date))
         const columns = {
           date: {

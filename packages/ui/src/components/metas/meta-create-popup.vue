@@ -79,7 +79,7 @@ export default defineComponent({
 
   data() {
     return {
-      element: {}
+      element: {} as any
     }
   },
 
@@ -95,14 +95,14 @@ export default defineComponent({
     colonnesToEdit() {
       const keys = Object.keys(this.foreignKeys)
 
-      return metasIndex[this.joinTable].colonnes.filter(
-        colonne => !keys.includes(colonne.id)
+      return (metasIndex as any)[this.joinTable].colonnes.filter(
+        (colonne: any) => !keys.includes(colonne.id)
       )
     },
 
     complete() {
-      return metasIndex[this.joinTable].colonnes.every(
-        c => !!this.element[c.id] || c.optional
+      return (metasIndex as any)[this.joinTable].colonnes.every(
+        (c: any) => !!this.element[c.id] || c.optional
       )
     }
   },
@@ -133,12 +133,12 @@ export default defineComponent({
       this.$store.commit('popupClose')
     },
 
-    keyup(e) {
+    keyup(e: any) {
       if ((e.which || e.keyCode) === 27) {
         this.cancel()
       } else if ((e.which || e.keyCode) === 13) {
         if (this.complete) {
-          this.$refs['save-button'].focus()
+          ;(this.$refs['save-button'] as any).focus()
           this.save()
         }
       }

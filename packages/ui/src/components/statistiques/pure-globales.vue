@@ -337,7 +337,7 @@ const titresModifies = computed(() => {
 
 const statistiques = computed(() => props.statistiques)
 
-const statsLineFormatInternal = ({ stats, id, labelX, labelY }) => {
+const statsLineFormatInternal = ({ stats, id, labelX, labelY }: any) => {
   return statsLineFormat({ stats, id, labelX, labelY })
 }
 

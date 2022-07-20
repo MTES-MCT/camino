@@ -1,5 +1,5 @@
 <template>
-  <Loader v-if="!loaded" class="content" />
+  <Loader v-if="!statistiques" class="content" />
   <div v-else class="content">
     <PureGlobales :statistiques="statistiques" />
   </div>
@@ -10,14 +10,13 @@ import Loader from '../_ui/loader.vue'
 import PureGlobales from './pure-globales.vue'
 import { statistiquesGlobales } from '@/api/statistiques'
 import { onMounted, ref } from 'vue'
+import { Statistiques } from 'camino-common/src/statistiques'
 
-const loaded = ref(false)
-const statistiques = ref(null)
+const statistiques = ref<Statistiques | null>(null)
 
 onMounted(async () => {
   try {
     statistiques.value = await statistiquesGlobales()
-    loaded.value = true
   } catch (e) {}
 })
 </script>
