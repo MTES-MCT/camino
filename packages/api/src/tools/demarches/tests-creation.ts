@@ -54,12 +54,12 @@ const writeEtapesForTest = async () => {
           }) ?? []
       try {
         if (!isEtapesOk(etapes)) {
-          console.log(
+          console.warn(
             `https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche "${demarche.typeId}"`
           )
         }
       } catch (e) {
-        console.log(
+        console.error(
           `https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche "${demarche.typeId}"`
         )
       }

@@ -270,7 +270,7 @@ const main = async () => {
           try {
             await fileRename(documentOldFilePath, documentFilePath)
           } catch (e) {
-            console.log(e)
+            console.error(e)
           }
         }
       }

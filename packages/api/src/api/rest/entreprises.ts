@@ -23,9 +23,6 @@ export const bodyBuilder = (
   annee: number,
   entreprise: Pick<IEntreprise, 'categorie' | 'nom'>
 ) => {
-  // console.log('activites', JSON.stringify(activites.map(({titreId, contenu}) => ({titreId, contenu}))))
-  // console.log('titres', JSON.stringify(titres.map(({substances, communes, id}) => ({substances, communes, id}))));
-  // console.log('entreprise', {categorie: entreprise.categorie, nom: entreprise.nom})
   const anneePrecedente = annee - 1
   const body: OpenfiscaRequest = {
     articles: {},
@@ -200,8 +197,8 @@ export const fiscalite = async (
 
       const redevances = responseExtractor(result, annee)
 
-      console.log(JSON.stringify(result))
-      console.log('redevanceCommunaleMinesAurifere', redevances)
+      console.info(JSON.stringify(result))
+      console.info('redevanceCommunaleMinesAurifere', redevances)
       res.json(redevances)
     } else {
       res.json({

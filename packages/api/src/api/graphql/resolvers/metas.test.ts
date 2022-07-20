@@ -1429,7 +1429,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           etapesTypes
         )
       if (etapesTypesPossibles.length === 0) {
-        console.log(
+        console.error(
           `pas d'étapes possibles à l'étape ${JSON.stringify(
             etape
           )}. Devrait contenir AU MOINS la même étape`

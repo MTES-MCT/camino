@@ -9,7 +9,10 @@ const from = {
   name: 'Camino - le cadastre minier'
 }
 
-const mailjetSend = async (emails: string[], options: Record<string, any>) => {
+export const mailjetSend = async (
+  emails: string[],
+  options: Record<string, any>
+) => {
   try {
     if (!Array.isArray(emails)) {
       throw new Error(`un tableau d'emails est attendu ${emails}`)
@@ -54,7 +57,11 @@ const mailjetSend = async (emails: string[], options: Record<string, any>) => {
   }
 }
 
-const emailsSend = async (emails: string[], subject: string, html: string) => {
+export const emailsSend = async (
+  emails: string[],
+  subject: string,
+  html: string
+) => {
   if (process.env.NODE_ENV !== 'production' || process.env.ENV !== 'prod') {
     html = `<p style="color: red">destinataire(s): ${emails.join(
       ', '
@@ -70,7 +77,7 @@ const emailsSend = async (emails: string[], subject: string, html: string) => {
   })
 }
 
-const emailsWithTemplateSend = async (
+export const emailsWithTemplateSend = async (
   emails: string[],
   templateId: EmailTemplateId,
   params: Record<string, string>
@@ -81,5 +88,3 @@ const emailsWithTemplateSend = async (
     Vars: params
   })
 }
-
-export { emailsSend, emailsWithTemplateSend }
