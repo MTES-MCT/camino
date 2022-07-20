@@ -262,9 +262,8 @@ const documentTypeIdsBySdomZonesGet = (
   ) {
     // Pour les demandes d’octroi d’AXM dans la zone 2 du SDOM les documents suivants sont obligatoires:
     // Notice d’impact renforcée
-    // Justificatif d’adhésion à la charte des bonnes pratiques
     // Justification d’existence du gisement
-    documentTypeIds.push(...['jac', 'nir', 'jeg'])
+    documentTypeIds.push(...['nir', 'jeg'])
   }
 
   return documentTypeIds
