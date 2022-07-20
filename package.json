@@ -42,6 +42,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react": "file:stub/types__react",
     "husky": "^7.0.4",
     "lint-staged": "^12.3.6",
     "semantic-release": "^19.0.2"

@@ -101,7 +101,11 @@ export default defineComponent({
       required: true,
       default: () => []
     },
-    activitesTypesEmails: { type: Array, required: true, default: () => [] }
+    activitesTypesEmails: {
+      type: Array as PropType<{ activiteTypeId: string; email: string }[]>,
+      required: true,
+      default: () => []
+    }
   },
 
   emits: ['emailUpdate', 'emailDelete'],

@@ -59,11 +59,11 @@ type Props = {
   id?: string
   placeholder: string
   type: 'single' | 'multiple'
-  items: unknown[]
-  overrideItems?: unknown[]
+  items: any[]
+  overrideItems?: any[]
   minInputLength: number
-  itemChipLabel: (item: unknown) => string
-  itemKey: (item: unknown) => string
+  itemChipLabel: (item: any) => string
+  itemKey: (item: any) => string
 }
 
 const myTypeaheadInput = ref<HTMLInputElement | null>(null)
@@ -75,8 +75,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   (e: 'onInput', searchTerm: string): void
-  (e: 'selectItems', items: unknown[]): void
-  (e: 'selectItem', item: unknown): void
+  (e: 'selectItems', items: any[]): void
+  (e: 'selectItem', item: any): void
 }>()
 
 watch(
@@ -153,7 +153,7 @@ const scrollSelectionIntoView = () => {
     }
   })
 }
-const selectCurrentSelection = (event: InputEvent) => {
+const selectCurrentSelection = (event: KeyboardEvent) => {
   if (currentSelection.value) {
     selectItem(currentSelection.value)
     event.stopPropagation()

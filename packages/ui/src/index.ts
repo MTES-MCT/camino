@@ -70,6 +70,7 @@ Promise.resolve().then(async () => {
     const eventSource = new EventSource('/stream/version')
 
     eventSource.addEventListener('version', event => {
+      // @ts-ignore
       if (event.data !== applicationVersion) {
         eventSource.close()
         window.location.reload()

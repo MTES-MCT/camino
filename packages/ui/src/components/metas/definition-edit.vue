@@ -122,7 +122,7 @@ export default defineComponent({
     title() {
       return (
         this.definition.colonnes.find(
-          colonne => colonne.id === this.definitionsTree.foreignKey
+          (colonne: any) => colonne.id === this.definitionsTree.foreignKey
         )?.nom || this.definition.nom
       )
     },
@@ -132,7 +132,7 @@ export default defineComponent({
       )
     },
     definition() {
-      return metasIndex[
+      return (metasIndex as any)[
         this.definitionsTree.joinTable
           ? this.definitionsTree.joinTable
           : this.definitionsTree.id
@@ -148,24 +148,24 @@ export default defineComponent({
         this.definitionsTree.joinTable
       )
         // on garde les lignes en fonction des éléments déjà sélectionnés
-        .filter(joinRow =>
+        .filter((joinRow: any) =>
           Object.keys(this.foreignKeys).every(
             foreignKey => joinRow[foreignKey] === this.foreignKeys[foreignKey]
           )
         )
-        .map(joinRow => joinRow[this.definitionsTree.foreignKey])
+        .map((joinRow: any) => joinRow[this.definitionsTree.foreignKey])
 
       return (
         this.$store.getters['meta/elements'](this.definitionsTree.id)?.filter(
-          ({ id }) => elementIdsFiltered.includes(id)
+          ({ id }: any) => elementIdsFiltered.includes(id)
         ) || []
       )
     },
 
     colonnesToEdit() {
       return this.definition.colonnes
-        .filter(colonne => colonne.id !== 'id')
-        .filter(colonne => colonne.type !== 'entities')
+        .filter((colonne: any) => colonne.id !== 'id')
+        .filter((colonne: any) => colonne.type !== 'entities')
     },
 
     elementToEdit() {
@@ -175,14 +175,14 @@ export default defineComponent({
 
       return this.$store.getters['meta/elements'](
         this.definitionsTree.joinTable
-      ).find(joinRow =>
+      ).find((joinRow: any) =>
         Object.keys(this.foreignKeysNew).every(
           foreignKey => joinRow[foreignKey] === this.foreignKeysNew[foreignKey]
         )
       )
     },
 
-    foreignKeysNew() {
+    foreignKeysNew(): Record<string, string> {
       return {
         ...this.foreignKeys,
         [this.definitionsTree.foreignKey]: this.elementSelected?.id
@@ -207,9 +207,11 @@ export default defineComponent({
   },
 
   methods: {
-    async selectChange(event) {
+    async selectChange(event: any) {
       const elementId = event.target.value
-      const element = this.elements.find(({ id }) => id === elementId)
+      const element = this.elements.find(
+        ({ id }: { id: string }) => id === elementId
+      )
       await this.elementSelect(element)
     },
     async update(content: string, element: any, colonneId: string) {
@@ -220,15 +222,15 @@ export default defineComponent({
       })
     },
     labelGet(element: any) {
-      return metasIndex[this.definitionsTree.id].labelGet(element)
+      return (metasIndex as any)[this.definitionsTree.id].labelGet(element)
     },
-    async elementSelect(element) {
+    async elementSelect(element: any) {
       await this.$store.dispatch('meta/elementSelect', {
         id: this.definitionsTree.joinTable || this.definitionsTree.id,
         element
       })
     },
-    async elementDelete(element) {
+    async elementDelete(element: any) {
       if (
         !window.confirm(
           'Voulez-vous supprimer cet élément ? Cette action ne peut pas être annulée.'

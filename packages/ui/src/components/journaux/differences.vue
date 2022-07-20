@@ -21,7 +21,7 @@ export default defineComponent({
   computed: {
     differencesHtml() {
       if (this.journal.differences) {
-        let html = formatters.html.format(this.journal.differences)
+        let html = formatters.html.format(this.journal.differences, null)
         html = html.replaceAll('jsondiffpatch-child-node-type-object', '')
         return html
       }

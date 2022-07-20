@@ -20,7 +20,7 @@ import { reactive, watch } from 'vue'
 
 const props = defineProps<{
   rows: TableAutoRow[]
-  columns: Column[]
+  columns: readonly Column[]
   initialSort?: InitialSort
 }>()
 

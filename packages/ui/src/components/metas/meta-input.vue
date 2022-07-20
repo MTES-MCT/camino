@@ -74,27 +74,29 @@ export default defineComponent({
   },
 
   methods: {
-    entitiesGet(colonne) {
+    entitiesGet(colonne: any) {
       const entities = this.entities[colonne.entities]
       if (!this.joinTable) {
         return entities
       }
 
-      const definitions = metasIndex[this.joinTable]
+      const definitions = (metasIndex as any)[this.joinTable]
       const idsUsed = definitions.ids
         ? this.entities[this.joinTable]
-            .filter(e =>
+            .filter((e: any) =>
               definitions.ids.every(
-                id => id === colonne.id || e[id] === this.element[id]
+                (id: string) => id === colonne.id || e[id] === this.element[id]
               )
             )
-            .map(e => e[colonne.id])
+            .map((e: any) => e[colonne.id])
         : []
 
-      return entities.filter(e => !idsUsed.includes(e.id))
+      return entities.filter((e: any) => !idsUsed.includes(e.id))
     },
-    entityLabelGet(colonne, entity) {
-      return entity ? metasIndex[colonne.entities].labelGet(entity) : ''
+    entityLabelGet(colonne: any, entity: any) {
+      return entity
+        ? (metasIndex as any)[colonne.entities].labelGet(entity)
+        : ''
     }
   }
 })

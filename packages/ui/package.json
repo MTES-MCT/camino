@@ -4,7 +4,7 @@
   "description": "Interface web de Camino, le cadastre minier numérique ouvert",
   "private": true,
   "scripts": {
-    "build": "vite build --emptyOutDir",
+    "build": "vue-tsc --noEmit && vite build --emptyOutDir",
     "predev": "find ../common/src -name '*.js*' -delete",
     "dev": "vite",
     "dev:update": "npm-check-updates && npm install && npm audit fix",
@@ -114,6 +114,7 @@
     "vue-loader": "^17.0.0",
     "vue-meta": "^2.4.0",
     "vue-router": "^4.0.14",
+    "vue-tsc": "^0.38.9",
     "vuex": "^4.0.2",
     "vuex-router-sync": "^6.0.0-rc.1"
   },

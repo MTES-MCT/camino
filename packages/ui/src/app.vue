@@ -64,67 +64,37 @@
   </div>
 </template>
 
-<script>
+<script lang="ts" setup>
 import Messages from './components/_ui/messages.vue'
 import PageHeader from './components/page/header.vue'
 import PageFooter from './components/page/footer.vue'
 import Error from './components/error.vue'
+import { computed, inject } from 'vue'
+import { useStore } from 'vuex'
 
-export default {
-  name: 'App',
+const store = useStore()
+const matomo = inject('matomo', null)
 
-  components: {
-    Messages,
-    PageHeader,
-    PageFooter,
-    Error
-  },
+const user = computed(() => store.state.user.element)
 
-  computed: {
-    user() {
-      return this.$store.state.user.element
-    },
+const loaded = computed(() => store.state.user.loaded)
 
-    loaded() {
-      return this.$store.state.user.loaded
-    },
+const error = computed(() => store.state.error)
 
-    error() {
-      return this.$store.state.error
-    },
+const messages = computed(() => store.state.messages)
 
-    messages() {
-      return this.$store.state.messages
-    },
+const popup = computed(() => store.state.popup)
 
-    popup() {
-      return this.$store.state.popup
-    },
+const menu = computed(() => store.state.menu)
 
-    menu() {
-      return this.$store.state.menu
-    },
+const loading = computed(() => store.state.loading.length > 0)
 
-    loading() {
-      return this.$store.state.loading.length > 0
-    },
+const fileLoading = computed(() => store.state.fileLoading)
 
-    fileLoading() {
-      return this.$store.state.fileLoading
-    }
-  },
-
-  async created() {
-    this.viewTrack()
-  },
-
-  methods: {
-    viewTrack() {
-      if (this.$matomo) {
-        this.$matomo.customVariableVisitUser(this.user)
-        this.$matomo.trackPageView()
-      }
-    }
-  }
+if (matomo) {
+  // @ts-ignore
+  matomo.customVariableVisitUser(user)
+  // @ts-ignore
+  matomo.trackPageView()
 }
 </script>
