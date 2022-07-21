@@ -6,8 +6,7 @@ import {
   titres,
   titreCreer,
   titreSupprimer,
-  titreModifier,
-  titreLiaisonsModifier
+  titreModifier
 } from './resolvers/titres'
 
 import {
@@ -259,7 +258,6 @@ export default {
   titreCreer,
   titreModifier,
   titreSupprimer,
-  titreLiaisonsModifier,
   demarcheCreer,
   demarcheModifier,
   demarcheSupprimer,

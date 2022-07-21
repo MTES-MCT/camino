@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { Fiscalite } from 'camino-common/src/fiscalite'
-import LoadingElement from '@/components/_ui/pure-loader-data.vue'
+import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { AsyncData } from '@/api/client-rest'
 
 const props = defineProps<{

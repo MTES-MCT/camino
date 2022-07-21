@@ -95,7 +95,10 @@ const linkableTitres: LinkableTitre[] = [
 const titresTo: TitreLink[] = [{ id: 'id10', nom: 'Titre fils' }]
 const titresFrom: TitreLink[] = [linkableTitres[0]]
 
-const linkTitres = () => new Promise<void>(resolve => setTimeout(resolve, 1000))
+const linkTitres = () =>
+  new Promise<TitreLinks>(resolve =>
+    resolve({ aval: titresTo, amont: titresFrom })
+  )
 
 export const AxmWithAlreadySelectedTitre = Template.bind({})
 AxmWithAlreadySelectedTitre.args = {

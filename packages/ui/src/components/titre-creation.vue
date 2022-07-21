@@ -233,7 +233,7 @@ export default {
     },
 
     linkConfig() {
-      return getLinkConfig(this.titreDemande, [])
+      return getLinkConfig(this.titreDemande.typeId, [])
     },
 
     loadLinkableTitresByTypeId() {

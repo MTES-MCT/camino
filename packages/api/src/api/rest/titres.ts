@@ -40,6 +40,10 @@ import Utilisateurs from '../../database/models/utilisateurs'
 import { NotNullableKeys } from 'camino-common/src/typescript-tools'
 import { isAdministration } from 'camino-common/src/roles'
 import TitresTitres from '../../database/models/titres--titres'
+import { titreAdministrationsGet } from '../_format/titres'
+import { canLinkTitres } from 'camino-common/src/permissions/titres'
+import { linkTitres } from '../../database/queries/titres-titres'
+import { checkTitreLinks } from '../graphql/resolvers/titres'
 
 type MyTitreRef = { type: NonNullable<ITitreReference['type']> } & Omit<
   ITitreReference,
@@ -348,6 +352,67 @@ export const titresDREAL = async (
   }
 }
 
+export const postTitreLiaisons = async (
+  req: express.Request<{ id?: string }, any, string[]>,
+  res: CustomResponse<TitreLinks>
+) => {
+  const userId = (req.user as unknown as IUser | undefined)?.id
+
+  const user = await userGet(userId)
+
+  const titreId: string | undefined = req.params.id
+  const titreFromIds = req.body
+
+  if (!titreId) {
+    throw new Error('le paramètre id est obligatoire')
+  }
+
+  const titre = await titreGet(
+    titreId,
+    {
+      fields: {
+        administrationsGestionnaires: { id: {} },
+        administrationsLocales: { id: {} },
+        demarches: { id: {} }
+      }
+    },
+    user
+  )
+
+  if (!titre) throw new Error("le titre n'existe pas")
+
+  if (!titre.administrationsGestionnaires || !titre.administrationsLocales) {
+    throw new Error('les administrations ne sont pas chargées')
+  }
+
+  const administrations = titreAdministrationsGet(titre)
+  if (
+    !canLinkTitres(
+      user,
+      administrations.map(({ id }) => id)
+    )
+  )
+    throw new Error('droits insuffisants')
+
+  if (!titre.demarches) {
+    throw new Error('les démarches ne sont pas chargées')
+  }
+
+  const titresFrom = await titresGet(
+    { ids: titreFromIds },
+    { fields: { id: {} } },
+    user
+  )
+
+  checkTitreLinks(titre, titreFromIds, titresFrom, titre.demarches)
+
+  await linkTitres({ linkTo: titreId, linkFrom: titreFromIds })
+
+  res.json({
+    amont: await titreLinksGet(titreId, 'titreFromId', user),
+    aval: await titreLinksGet(titreId, 'titreToId', user)
+  })
+}
 export const getTitreLiaisons = async (
   req: express.Request<{ id?: string }>,
   res: CustomResponse<TitreLinks>
@@ -378,8 +443,11 @@ const titreLinksGet = async (
   link: 'titreToId' | 'titreFromId',
   user: IUtilisateur | null | undefined
 ): Promise<TitreLink[]> => {
-  const titresTitres = await TitresTitres.query().where(link, titreId)
-  const titreIds = titresTitres.map(({ titreFromId }) => titreFromId)
+  const titresTitres = await TitresTitres.query().where(
+    link === 'titreToId' ? 'titreFromId' : 'titreToId',
+    titreId
+  )
+  const titreIds = titresTitres.map(r => r[link])
 
   const titres = await titresGet(
     { ids: titreIds },

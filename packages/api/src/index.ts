@@ -63,7 +63,7 @@ filesInit().then(() => {
       authBasic
     )
 
-    app.use(rest)
+    app.use(express.urlencoded({ extended: true }), express.json(), rest)
 
     app.use('/televersement', uploadAllowedMiddleware, restUpload())
 

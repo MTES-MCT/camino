@@ -3,11 +3,7 @@ import { GraphQLResolveInfo } from 'graphql'
 import { ITitre, ITitreColonneId, ITitreDemarche, IToken } from '../../../types'
 
 import { debug } from '../../../config/index'
-import {
-  titreAdministrationsGet,
-  titreFormat,
-  titresFormat
-} from '../../_format/titres'
+import { titreFormat, titresFormat } from '../../_format/titres'
 
 import { fieldsBuild } from './_fields-build'
 
@@ -25,11 +21,7 @@ import titreUpdateTask from '../../../business/titre-update'
 
 import { titreUpdationValidate } from '../../../business/validations/titre-updation-validate'
 import { domaineGet } from '../../../database/queries/metas'
-import {
-  canLinkTitres,
-  getLinkConfig
-} from 'camino-common/src/permissions/titres'
-import { linkTitres } from '../../../database/queries/titres-titres'
+import { getLinkConfig } from 'camino-common/src/permissions/titres'
 
 const titre = async (
   { id }: { id: string },
@@ -194,65 +186,6 @@ const titreCreer = async (
     const titreUpdated = await titreGet(titre.id, { fields }, user)
 
     return titreUpdated && titreFormat(titreUpdated)
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-// TODO 2022-07-19 à mettre en REST mais il faut documenter les routes
-export const titreLiaisonsModifier = async (
-  { titreId, titreFromIds }: { titreId: string; titreFromIds: string[] },
-  context: IToken
-): Promise<boolean> => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    const titre = await titreGet(
-      titreId,
-      {
-        fields: {
-          administrationsGestionnaires: { id: {} },
-          administrationsLocales: { id: {} },
-          demarches: { id: {} }
-        }
-      },
-      user
-    )
-
-    if (!titre) throw new Error("le titre n'existe pas")
-
-    if (!titre.administrationsGestionnaires || !titre.administrationsLocales) {
-      throw new Error('les administrations ne sont pas chargées')
-    }
-
-    const administrations = titreAdministrationsGet(titre)
-    if (
-      !canLinkTitres(
-        user,
-        administrations.map(({ id }) => id)
-      )
-    )
-      throw new Error('droits insuffisants')
-
-    if (!titre.demarches) {
-      throw new Error('les démarches ne sont pas chargées')
-    }
-
-    const titresFrom = await titresGet(
-      { ids: titreFromIds },
-      { fields: { id: {} } },
-      user
-    )
-
-    checkTitreLinks(titre, titreFromIds, titresFrom, titre.demarches)
-
-    await linkTitres({ linkTo: titreId, linkFrom: titreFromIds })
-
-    return true
   } catch (e) {
     if (debug) {
       console.error(e)

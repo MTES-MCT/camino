@@ -15,6 +15,7 @@ import {
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers'
 import {
   getTitreLiaisons,
+  postTitreLiaisons,
   titresDREAL,
   titresONF,
   titresPTMG
@@ -126,6 +127,7 @@ const restDownload =
     }
   }
 
+rest.post('/titres/:id/titreLiaisons', restCatcher(postTitreLiaisons))
 rest.get('/titres/:id/titreLiaisons', restCatcher(getTitreLiaisons))
 rest.get('/titres/:id', restDownload(titre))
 rest.get('/titres', restDownload(titres))

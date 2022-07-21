@@ -327,9 +327,6 @@ type Mutation {
   "Modifie un titre minier"
   titreModifier(titre: InputTitreModification!): Titre
 
-  "Modifie les titres liés à un titre"
-  titreLiaisonsModifier(titreId: ID!, titreFromIds: [ID]!): Boolean
-
   "Supprime un titre minier"
   titreSupprimer(id: ID!): String
 

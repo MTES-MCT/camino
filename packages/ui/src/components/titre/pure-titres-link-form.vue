@@ -1,43 +1,45 @@
 <template>
   <div>
-    <LoadingData v-if="linkConfig" v-slot="{ item }" :data="titresLinks">
-      <div v-if="item.length || canLink">
+    <LoadingData v-slot="{ item }" :data="titresLinks">
+      <div v-if="item.amont.length || canLink">
         <h5>
           Titre{{ linkConfig.count === 'multiple' ? 's' : '' }} à l’origine de
           ce titre
         </h5>
         <div v-if="mode === 'edit'">
-          <Loading :data="titresLinking">
-            <PureTitresLink
-              v-if="titreLinkConfig"
-              :config="titreLinkConfig"
-              :loadLinkableTitres="
-                loadLinkableTitres(titre.typeId, titre.demarches)
-              "
-              @onSelectedTitres="onSelectedTitres"
-            />
-            <div class="flex mt-m" style="flex-direction: row-reverse">
-              <button
-                class="btn-primary ml-s"
-                style="flex: 0 1 min-content"
-                @click="saveLink"
-              >
-                Enregistrer
-              </button>
-              <button
-                class="btn-secondary"
-                style="flex: 0 1 min-content"
-                @click="mode = 'read'"
-              >
-                Annuler
-              </button>
-            </div>
-          </Loading>
+          <PureTitresLink
+            v-if="titreLinkConfig"
+            :config="titreLinkConfig"
+            :loadLinkableTitres="
+              loadLinkableTitres(titre.typeId, titre.demarches)
+            "
+            @onSelectedTitres="onSelectedTitres"
+          />
+          <div class="flex mt-m" style="flex-direction: row-reverse">
+            <button
+              class="btn-primary ml-s"
+              style="flex: 0 1 min-content"
+              @click="saveLink"
+            >
+              Enregistrer
+            </button>
+            <button
+              class="btn-secondary"
+              style="flex: 0 1 min-content"
+              @click="mode = 'read'"
+            >
+              Annuler
+            </button>
+          </div>
         </div>
 
         <div v-else class="flex flex-center">
           <ul class="list-inline" style="margin-bottom: 0">
-            <li v-for="titreFrom in item" :key="titreFrom.id" class="mr-xs">
+            <li
+              v-for="titreFrom in item.amont"
+              :key="titreFrom.id"
+              class="mr-xs"
+            >
               <router-link
                 :to="{ name: 'titre', params: { id: titreFrom.id } }"
                 class="btn-border small p-s rnd-xs mr-xs"
@@ -55,6 +57,22 @@
           >
             <Icon size="M" name="pencil" />
           </button>
+        </div>
+      </div>
+
+      <div v-if="item.aval.length">
+        <h5>Titre{{ item.aval.length > 1 ? 's' : '' }} issu de ce titre</h5>
+        <div class="flex flex-center">
+          <ul class="list-inline" style="margin-bottom: 0">
+            <li v-for="titreTo in item.aval" :key="titreTo.id" class="mr-xs">
+              <router-link
+                :to="{ name: 'titre', params: { id: titreTo.id } }"
+                class="btn-border small p-s rnd-xs mr-xs"
+              >
+                <span class="mr-xs">{{ titreTo.nom }}</span>
+              </router-link>
+            </li>
+          </ul>
         </div>
       </div>
     </LoadingData>
@@ -77,9 +95,8 @@ import { TitreTypeId } from 'camino-common/src/titresTypes'
 import { User } from 'camino-common/src/roles'
 import { AdministrationId } from 'camino-common/src/administrations'
 import PureTitresLink from './pure-titres-link.vue'
-import { AsyncData, AsyncProcess } from '@/api/client-rest'
-import LoadingData from '@/components/_ui/pure-loader-data.vue'
-import Loading from '@/components/_ui/pure-loader.vue'
+import { AsyncData } from '@/api/client-rest'
+import LoadingData from '@/components/_ui/pure-loader.vue'
 import Icon from '@/components/_ui/icon.vue'
 import { DemarcheTypeId } from 'camino-common/src/demarchesTypes'
 import { TitreLink, TitreLinks } from 'camino-common/src/titres'
@@ -106,7 +123,6 @@ const emit = defineEmits<{
 }>()
 
 const mode = ref<'read' | 'edit'>('read')
-const titresLinking = ref<AsyncProcess>({ status: 'LOADED' })
 const selectedTitres = ref<TitreLink[]>([])
 const titresLinks = ref<AsyncData<TitreLinks>>({ status: 'LOADING' })
 
@@ -174,20 +190,19 @@ const onSelectedTitres = (titres: TitreLink[]) => {
 }
 
 const saveLink = async () => {
-  titresLinking.value = { status: 'LOADING' }
+  titresLinks.value = { status: 'LOADING' }
   try {
-    await props.linkTitres(
+    const links = await props.linkTitres(
       props.titre.id,
       selectedTitres.value.map(({ id }) => id)
     )
-    titresLinking.value = { status: 'LOADED' }
     mode.value = 'read'
     titresLinks.value = {
       status: 'LOADED',
-      value: { aval: titresLinks.value.aval, amont: selectedTitres.value }
+      value: links
     }
   } catch (e: any) {
-    titresLinking.value = {
+    titresLinks.value = {
       status: 'ERROR',
       message: e.message ?? 'something wrong happened'
     }

@@ -78,20 +78,17 @@ export const loadLinkableTitres: (
 export type LinkTitres = (
   titreId: string,
   titreFromIds: string[]
-) => Promise<void>
+) => Promise<TitreLinks>
 
 export const linkTitres: LinkTitres = async (
   titreId: string,
   titreFromIds: string[]
 ) => {
-  await apiGraphQLFetch(
-    gql`
-      mutation TitreLiaisonsModifier($titreId: ID!, $titreFromIds: [ID]!) {
-        titreLiaisonsModifier(titreId: $titreId, titreFromIds: $titreFromIds)
-      }
-    `
-  )({
-    titreId,
-    titreFromIds
-  })
+  return (
+    await fetch(`/apiUrl/titres/${titreId}/titreLiaisons`, {
+      method: 'post',
+      body: JSON.stringify(titreFromIds),
+      headers: { 'Content-Type': 'application/json' }
+    })
+  ).json()
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="top-level">
     <template v-if="data.status === 'LOADED'">
-      <slot />
+      <slot :item="data.value" />
     </template>
     <div v-else-if="data.status === 'ERROR'">
       <HelpTooltip icon="error-warning">
@@ -13,10 +13,10 @@
 </template>
 
 <script setup lang="ts">
-import { AsyncData, AsyncProcess } from '@/api/client-rest'
+import { AsyncData } from '@/api/client-rest'
 import HelpTooltip from '@/components/_ui/help-tooltip.vue'
 
-defineProps<{ data: AsyncData<any> | AsyncProcess }>()
+defineProps<{ data: AsyncData<any> }>()
 </script>
 <style scoped>
 .top-level {
