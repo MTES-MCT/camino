@@ -3,8 +3,8 @@
     <LoadingData v-slot="{ item }" :data="titresLinks">
       <div v-if="item.amont.length || canLink">
         <h5>
-          Titre{{ linkConfig.count === 'multiple' ? 's' : '' }} à l’origine de
-          ce titre
+          Titre{{ linkConfig && linkConfig.count === 'multiple' ? 's' : '' }} à
+          l’origine de ce titre
         </h5>
         <div v-if="mode === 'edit'">
           <PureTitresLink

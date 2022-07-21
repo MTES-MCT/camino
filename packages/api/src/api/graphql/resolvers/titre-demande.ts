@@ -35,8 +35,8 @@ import {
   isSuper
 } from 'camino-common/src/roles'
 import { linkTitres } from '../../../database/queries/titres-titres'
-import { checkTitreLinks } from './titres'
 import { getLinkConfig } from 'camino-common/src/permissions/titres'
+import { checkTitreLinks } from '../../../business/validations/titre-links-validate'
 
 export const titreDemandeCreer = async (
   {

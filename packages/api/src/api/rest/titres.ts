@@ -43,7 +43,7 @@ import TitresTitres from '../../database/models/titres--titres'
 import { titreAdministrationsGet } from '../_format/titres'
 import { canLinkTitres } from 'camino-common/src/permissions/titres'
 import { linkTitres } from '../../database/queries/titres-titres'
-import { checkTitreLinks } from '../graphql/resolvers/titres'
+import { checkTitreLinks } from '../../business/validations/titre-links-validate'
 
 type MyTitreRef = { type: NonNullable<ITitreReference['type']> } & Omit<
   ITitreReference,
@@ -351,9 +351,13 @@ export const titresDREAL = async (
     res.json(titresFormated)
   }
 }
-
+const isStringArray = (stuff: any): stuff is string[] => {
+  return (
+    stuff instanceof Array && stuff.every(value => typeof value === 'string')
+  )
+}
 export const postTitreLiaisons = async (
-  req: express.Request<{ id?: string }, any, string[]>,
+  req: express.Request<{ id?: string }>,
   res: CustomResponse<TitreLinks>
 ) => {
   const userId = (req.user as unknown as IUser | undefined)?.id
@@ -362,6 +366,12 @@ export const postTitreLiaisons = async (
 
   const titreId: string | undefined = req.params.id
   const titreFromIds = req.body
+
+  if (!isStringArray(titreFromIds)) {
+    throw new Error(
+      `un tableau est attendu en corps de message : '${titreFromIds}'`
+    )
+  }
 
   if (!titreId) {
     throw new Error('le paramètre id est obligatoire')

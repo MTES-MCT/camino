@@ -3,11 +3,12 @@ import { titreCreate } from '../../database/queries/titres'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes'
 import { userSuper } from '../../database/user-super'
-import { restCall } from '../../../tests/_utils'
+import { restCall, restPostCall } from '../../../tests/_utils'
 import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
 import { ITitreDemarche, ITitreEtape } from '../../types'
 import { entreprisesUpsert } from '../../database/queries/entreprises'
 import { Knex } from 'knex'
+import TitresAdministrationsGestionnaires from '../../database/models/titres-administrations-gestionnaires'
 
 let knex: Knex<any, unknown[]>
 beforeAll(async () => {
@@ -26,6 +27,7 @@ beforeAll(async () => {
     },
     {}
   )
+
   await createTitreWithEtapes(
     'titre1',
     [
@@ -155,6 +157,60 @@ describe('titresPTMG', () => {
       id: expect.any(String),
       slug: expect.any(String),
       references: [{ titreId: expect.any(String) }]
+    })
+  })
+})
+describe('titresLiaisons', () => {
+  test('peut lier deux titres', async () => {
+    const getTitres = await restCall(
+      '/titresONF',
+      'admin',
+      ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+    )
+    const titreId = getTitres.body[0].id
+
+    const axm = await titreCreate(
+      {
+        nom: 'mon axm simple',
+        domaineId: 'm',
+        typeId: 'axm',
+        statutId: 'val',
+        propsTitreEtapesIds: {}
+      },
+      {}
+    )
+
+    await TitresAdministrationsGestionnaires.query().insert({
+      titreId: axm.id,
+      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+    })
+    const tested = await restPostCall(
+      `/titres/${axm.id}/titreLiaisons`,
+      'admin',
+      [titreId],
+      ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+    )
+
+    expect(tested.statusCode).toBe(200)
+    expect(tested.body.amont).toHaveLength(1)
+    expect(tested.body.aval).toHaveLength(0)
+    expect(tested.body.amont[0]).toStrictEqual({
+      id: titreId,
+      nom: getTitres.body[0].nom
+    })
+
+    const avalTested = await restCall(
+      `/titres/${titreId}/titreLiaisons`,
+      'admin',
+      ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+    )
+
+    expect(avalTested.statusCode).toBe(200)
+    expect(avalTested.body.amont).toHaveLength(0)
+    expect(avalTested.body.aval).toHaveLength(1)
+    expect(avalTested.body.aval[0]).toStrictEqual({
+      id: axm.id,
+      nom: axm.nom
     })
   })
 })

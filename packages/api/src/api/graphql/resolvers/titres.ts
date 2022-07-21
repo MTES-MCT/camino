@@ -1,6 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { ITitre, ITitreColonneId, ITitreDemarche, IToken } from '../../../types'
+import { ITitre, ITitreColonneId, IToken } from '../../../types'
 
 import { debug } from '../../../config/index'
 import { titreFormat, titresFormat } from '../../_format/titres'
@@ -8,12 +8,12 @@ import { titreFormat, titresFormat } from '../../_format/titres'
 import { fieldsBuild } from './_fields-build'
 
 import {
+  titreArchive,
   titreCreate,
   titreGet,
   titresCount,
   titresGet,
-  titreUpsert,
-  titreArchive
+  titreUpsert
 } from '../../../database/queries/titres'
 import { userGet } from '../../../database/queries/utilisateurs'
 
@@ -21,7 +21,6 @@ import titreUpdateTask from '../../../business/titre-update'
 
 import { titreUpdationValidate } from '../../../business/validations/titre-updation-validate'
 import { domaineGet } from '../../../database/queries/metas'
-import { getLinkConfig } from 'camino-common/src/permissions/titres'
 
 const titre = async (
   { id }: { id: string },
@@ -192,34 +191,6 @@ const titreCreer = async (
     }
 
     throw e
-  }
-}
-
-export const checkTitreLinks = (
-  titre: Pick<ITitre, 'typeId'>,
-  titreFromIds: string[],
-  titresFrom: ITitre[],
-  demarches: ITitreDemarche[]
-) => {
-  const linkConfig = getLinkConfig(titre.typeId, demarches)
-  if (!linkConfig) {
-    throw new Error('ce titre ne peut pas être lié à d’autres titres')
-  }
-
-  if (linkConfig.count === 'single' && titreFromIds.length > 1) {
-    throw new Error('ce titre peut avoir un seul titre lié')
-  }
-
-  if (titresFrom.length !== titreFromIds.length) {
-    throw new Error('droit insuffisant')
-  }
-
-  if (linkConfig) {
-    if (titresFrom.some(({ typeId }) => typeId !== linkConfig.typeId)) {
-      throw new Error(
-        `un titre de type ${titre.typeId} ne peut-être lié qu’à un titre de type ${linkConfig.typeId}`
-      )
-    }
   }
 }
 

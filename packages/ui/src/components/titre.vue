@@ -9,18 +9,9 @@
       >.
     </div>
 
-    <TitreHeader
-      :titre="titre"
-      :titresFrom="titresFrom"
-      @titre-event-track="eventTrack"
-    />
+    <TitreHeader :titre="titre" @titre-event-track="eventTrack" />
 
-    <TitreInfos
-      :titre="titre"
-      :user="user"
-      :titresFrom="titresFrom"
-      class="mb"
-    />
+    <TitreInfos :titre="titre" :user="user" class="mb" />
 
     <Perimetre
       v-if="titre.geojsonMultiPolygon && titre.points"
@@ -80,7 +71,6 @@
       v-if="tabId === 'demarches'"
       :demarches="demarches"
       :tabId="tabId"
-      :titresFrom="titresFrom"
       @event-track="eventTrack"
     />
 
@@ -131,8 +121,7 @@ export default {
   data() {
     return {
       geoTabId: 'carte',
-      show: false,
-      titresFrom: []
+      show: false
     }
   },
 
