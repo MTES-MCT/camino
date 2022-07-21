@@ -22,20 +22,6 @@ services:
       - ${API_PORT}:${API_PORT}
     volumes:
       - ./.env:/.env
-
-  cron:
-    container_name: camino_api_cron
-    build:
-      context: .
-      dockerfile: Dockerfile.api
-    command: node ./packages/api/dist/src/cron.js
-    depends_on:
-      - db
-    environment:
-      PGHOST: db
-    volumes:
-      - ./.env:/.env
-
   db:
     container_name: camino_api_db
     image: postgis/postgis:12-3.2

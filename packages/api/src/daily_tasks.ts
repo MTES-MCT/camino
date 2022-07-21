@@ -1,5 +1,4 @@
 import './init'
-import { job } from 'cron'
 import daily from './business/daily'
 import documentsCheck from './tools/documents/check'
 import { matomoCacheInit } from './tools/api-matomo'
@@ -21,7 +20,7 @@ console.log = logger.log
 consoleOverride(false)
 
 const tasks = async () => {
-  console.info('Cron quotidien : démarrage')
+  console.info('Tâches quotidiennes : démarrage')
   // Réinitialise les logs qui seront envoyés par email
   writeFileSync(logFile, '')
 
@@ -45,24 +44,13 @@ const tasks = async () => {
     Subject: `[Camino][${process.env.ENV}] Résultats du daily`,
     'Text-part': emailBody
   })
-  console.info('Cron quotidien : terminé')
+  console.info('Tâches quotidiennes : terminé')
 }
 
-job(
-  // cronTime
-  '00 00 04 * * *',
-  // onTick
-  tasks,
-  //  onComplete
-  null,
-  // start
-  true,
-  // timezone
-  'Europe/Paris',
-  // context
-  null,
-  // runOnInit
-  false
-  // utcOffset
-  // unrefTimeout
-)
+tasks()
+  .then(() => {
+    process.exit()
+  })
+  .catch(() => {
+    process.exit(1)
+  })

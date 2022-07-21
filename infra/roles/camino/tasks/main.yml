@@ -22,3 +22,40 @@
     group: users
     backup: True
   become: True
+- name: Daily
+  block:
+    - name: Ajoute le script pour pouvoir lancer le daily
+      ansible.builtin.template:
+        src: daily
+        dest: /srv/scripts/
+        mode: u=rwx,g=rx,o=r
+        owner: git
+        group: users
+      become: True
+    - name: Ajoute le cron de daily
+      ansible.builtin.cron:
+        name: "daily"
+        minute: "0"
+        hour: "4"
+        job: "/srv/scripts/daily"
+        user: git
+      become: True
+- name: Monthly
+  block:
+    - name: Ajoute le script pour pouvoir lancer le monthly
+      ansible.builtin.template:
+        src: monthly
+        dest: /srv/scripts/
+        mode: u=rwx,g=rx,o=r
+        owner: git
+        group: users
+      become: True
+    - name: Ajoute le cron de monthly
+      ansible.builtin.cron:
+        name: "daily"
+        minute: "0"
+        hour: "6"
+        day: "1"
+        job: "/srv/scripts/monthly"
+        user: git
+      become: True
