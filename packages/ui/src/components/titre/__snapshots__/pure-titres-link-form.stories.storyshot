@@ -6,7 +6,6 @@ exports[`Automated Storybook Snapshots Components/Titre/PureTitresLinkForm Axm W
     class="top-level"
   >
     
-    
     <div>
       <h5>
          Titre à l’origine de ce titre 
@@ -396,7 +395,36 @@ exports[`Automated Storybook Snapshots Components/Titre/PureTitresLinkForm Axm W
         </button>
       </div>
     </div>
-    
+    <div>
+      <h5>
+        Titre issu de ce titre
+      </h5>
+      <div
+        class="flex flex-center"
+      >
+        <ul
+          class="list-inline"
+          style="margin-bottom: 0px;"
+        >
+          
+          <li
+            class="mr-xs"
+          >
+            <router-link
+              class="btn-border small p-s rnd-xs mr-xs"
+              to="[object Object]"
+            >
+              <span
+                class="mr-xs"
+              >
+                Titre fils
+              </span>
+            </router-link>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
     
   </div>
 </div>
@@ -407,7 +435,6 @@ exports[`Automated Storybook Snapshots Components/Titre/PureTitresLinkForm Defau
   <div
     class="top-level"
   >
-    
     
     <div>
       <h5>
@@ -435,40 +462,41 @@ exports[`Automated Storybook Snapshots Components/Titre/PureTitresLinkForm Defau
               </span>
             </router-link>
           </li>
-          <li
-            class="mr-xs"
-          >
-            <router-link
-              class="btn-border small p-s rnd-xs mr-xs"
-              to="[object Object]"
-            >
-              <span
-                class="mr-xs"
-              >
-                Affluent Crique Saint Bernard
-              </span>
-            </router-link>
-          </li>
-          <li
-            class="mr-xs"
-          >
-            <router-link
-              class="btn-border small p-s rnd-xs mr-xs"
-              to="[object Object]"
-            >
-              <span
-                class="mr-xs"
-              >
-                Nouveau titre
-              </span>
-            </router-link>
-          </li>
           
         </ul>
         <!--v-if-->
       </div>
     </div>
-    
+    <div>
+      <h5>
+        Titre issu de ce titre
+      </h5>
+      <div
+        class="flex flex-center"
+      >
+        <ul
+          class="list-inline"
+          style="margin-bottom: 0px;"
+        >
+          
+          <li
+            class="mr-xs"
+          >
+            <router-link
+              class="btn-border small p-s rnd-xs mr-xs"
+              to="[object Object]"
+            >
+              <span
+                class="mr-xs"
+              >
+                Titre fils
+              </span>
+            </router-link>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
     
   </div>
 </div>
@@ -479,7 +507,6 @@ exports[`Automated Storybook Snapshots Components/Titre/PureTitresLinkForm Fusio
   <div
     class="top-level"
   >
-    
     
     <div>
       <h5>
@@ -507,34 +534,6 @@ exports[`Automated Storybook Snapshots Components/Titre/PureTitresLinkForm Fusio
               </span>
             </router-link>
           </li>
-          <li
-            class="mr-xs"
-          >
-            <router-link
-              class="btn-border small p-s rnd-xs mr-xs"
-              to="[object Object]"
-            >
-              <span
-                class="mr-xs"
-              >
-                Affluent Crique Saint Bernard
-              </span>
-            </router-link>
-          </li>
-          <li
-            class="mr-xs"
-          >
-            <router-link
-              class="btn-border small p-s rnd-xs mr-xs"
-              to="[object Object]"
-            >
-              <span
-                class="mr-xs"
-              >
-                Nouveau titre
-              </span>
-            </router-link>
-          </li>
           
         </ul>
         <button
@@ -898,7 +897,36 @@ exports[`Automated Storybook Snapshots Components/Titre/PureTitresLinkForm Fusio
         </button>
       </div>
     </div>
-    
+    <div>
+      <h5>
+        Titre issu de ce titre
+      </h5>
+      <div
+        class="flex flex-center"
+      >
+        <ul
+          class="list-inline"
+          style="margin-bottom: 0px;"
+        >
+          
+          <li
+            class="mr-xs"
+          >
+            <router-link
+              class="btn-border small p-s rnd-xs mr-xs"
+              to="[object Object]"
+            >
+              <span
+                class="mr-xs"
+              >
+                Titre fils
+              </span>
+            </router-link>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
     
   </div>
 </div>

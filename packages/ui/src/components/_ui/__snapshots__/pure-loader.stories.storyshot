@@ -13,7 +13,7 @@ exports[`Automated Storybook Snapshots UI/Loader All 1`] = `
     class="top-level"
   >
     
-    Chargé
+    La valeur de l’item est : chargé
     
   </div>
   <div

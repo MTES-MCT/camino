@@ -246,7 +246,6 @@ const demarcheModifier = async (
     if (demarcheOld.titreId !== demarche.titreId)
       throw new Error('le titre n’existe pas')
 
-
     const rulesErrors = await titreDemarcheUpdationValidate(
       demarche,
       demarcheOld
