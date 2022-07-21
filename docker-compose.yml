@@ -26,22 +26,6 @@ services:
       - default
       - nginx-proxy
     restart: unless-stopped
-  cron:
-    container_name: camino_api_cron
-    image: caminofr/camino-api:${CAMINO_TAG}
-    command: ["node", "./packages/api/dist/src/cron.js"]
-    depends_on:
-      - db
-    environment:
-      APPLICATION_VERSION: ${CAMINO_TAG}
-      PGHOST: db
-    volumes:
-      - ./files:/packages/api/files
-      - ./.env:/.env
-    networks:
-      - default
-      - nginx-proxy
-    restart: unless-stopped
   db:
     container_name: camino_api_db
     image: postgis/postgis:12-3.2
