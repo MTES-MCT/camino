@@ -14,7 +14,7 @@ import {
 } from '../api/rest/index'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers'
 import {
-  getTitresFrom,
+  getTitreLiaisons,
   titresDREAL,
   titresONF,
   titresPTMG
@@ -126,8 +126,7 @@ const restDownload =
     }
   }
 
-rest.get('/titres/:id/titresOrigine', restCatcher(getTitresFrom))
-rest.post('/titres/:id/lier', restCatcher(getTitresFrom))
+rest.get('/titres/:id/titreLiaisons', restCatcher(getTitreLiaisons))
 rest.get('/titres/:id', restDownload(titre))
 rest.get('/titres', restDownload(titres))
 rest.get('/titresONF', restCatcher(titresONF))

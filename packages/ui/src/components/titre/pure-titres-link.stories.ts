@@ -1,8 +1,8 @@
 import TitresLink from './pure-titres-link.vue'
 import { Meta, Story } from '@storybook/vue3'
 import {
+  LinkableTitre,
   LoadLinkableTitres,
-  TitreLink,
   TitresLinkConfig
 } from './pure-titres-link.type'
 
@@ -108,7 +108,7 @@ DemarcheFusionWithAlreadySelectedTitre.args = {
 
 export const Loading = Template.bind({})
 Loading.args = {
-  loadLinkableTitres: () => new Promise<TitreLink[]>(resolve => {}),
+  loadLinkableTitres: () => new Promise<LinkableTitre[]>(resolve => {}),
   config: {
     type: 'multiple',
     selectedTitreIds: ['id1']

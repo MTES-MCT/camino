@@ -4,12 +4,13 @@ import { User } from 'camino-common/src/roles'
 import { TitreTypeId } from 'camino-common/src/titresTypes'
 import { AdministrationId } from 'camino-common/src/administrations'
 import {
+  LinkableTitre,
   LinkTitres,
   LoadLinkableTitres,
-  LoadLinkedTitres,
-  TitreLink
+  LoadTitreLinks
 } from '@/components/titre/pure-titres-link.type'
 import { DemarcheTypeId } from 'camino-common/src/demarchesTypes'
+import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 
 const meta: Meta = {
   title: 'Components/Titre/PureTitresLinkForm',
@@ -26,7 +27,7 @@ type Props = {
     administrations: { id: AdministrationId }[]
     demarches: { typeId: DemarcheTypeId }[]
   }
-  loadLinkedTitres: LoadLinkedTitres
+  loadTitreLinks: LoadTitreLinks
   loadLinkableTitres: (
     titreTypeId: TitreTypeId,
     demarches: { typeId: DemarcheTypeId }[]
@@ -40,7 +41,7 @@ const Template: Story<Props> = (args: Props) => ({
   },
   template: '<PureTitresLinkForm v-bind="args" />'
 })
-const titres = [
+const linkableTitres: LinkableTitre[] = [
   {
     id: 'id1',
     nom: 'Abttis Coucou',
@@ -91,14 +92,17 @@ const titres = [
   }
 ]
 
+const titresTo: TitreLink[] = [{ id: 'id10', nom: 'Titre fils' }]
+const titresFrom: TitreLink[] = [linkableTitres[0]]
+
 const linkTitres = () => new Promise<void>(resolve => setTimeout(resolve, 1000))
 
 export const AxmWithAlreadySelectedTitre = Template.bind({})
 AxmWithAlreadySelectedTitre.args = {
   user: { role: 'super', administrationId: undefined },
   titre: { typeId: 'axm', administrations: [], id: 'titreId', demarches: [] },
-  loadLinkableTitres: () => () => Promise.resolve(titres),
-  loadLinkedTitres: () => Promise.resolve([titres[0]]),
+  loadLinkableTitres: () => () => Promise.resolve(linkableTitres),
+  loadTitreLinks: () => Promise.resolve({ aval: titresTo, amont: titresFrom }),
   linkTitres
 }
 
@@ -111,8 +115,8 @@ FusionWithAlreadySelectedTitre.args = {
     id: 'titreId',
     demarches: [{ typeId: 'fus' }]
   },
-  loadLinkableTitres: () => () => Promise.resolve(titres),
-  loadLinkedTitres: () => Promise.resolve(titres),
+  loadLinkableTitres: () => () => Promise.resolve(linkableTitres),
+  loadTitreLinks: () => Promise.resolve({ aval: titresTo, amont: titresFrom }),
   linkTitres
 }
 
@@ -120,8 +124,8 @@ export const TitreWithTitreLinksLoading = Template.bind({})
 TitreWithTitreLinksLoading.args = {
   user: { role: 'super', administrationId: undefined },
   titre: { typeId: 'axm', administrations: [], id: 'titreId', demarches: [] },
-  loadLinkableTitres: () => () => Promise.resolve(titres),
-  loadLinkedTitres: () => new Promise<TitreLink[]>(() => ({})),
+  loadLinkableTitres: () => () => Promise.resolve(linkableTitres),
+  loadTitreLinks: () => new Promise<TitreLinks>(() => ({})),
   linkTitres
 }
 
@@ -129,7 +133,7 @@ export const DefautCantUpdateLinks = Template.bind({})
 DefautCantUpdateLinks.args = {
   user: { role: 'defaut', administrationId: undefined },
   titre: { typeId: 'axm', administrations: [], id: 'titreId', demarches: [] },
-  loadLinkableTitres: () => () => Promise.resolve(titres),
-  loadLinkedTitres: () => Promise.resolve(titres),
+  loadLinkableTitres: () => () => Promise.resolve(linkableTitres),
+  loadTitreLinks: () => Promise.resolve({ aval: titresTo, amont: titresFrom }),
   linkTitres
 }

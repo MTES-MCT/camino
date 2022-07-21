@@ -30,3 +30,6 @@ export interface CommonTitreONF extends CommonTitre {
   dateCARM: string
   enAttenteDeONF: boolean
 }
+
+export type TitreLink = Pick<CommonTitre, 'id' | 'nom'>
+export type TitreLinks = { amont: TitreLink[]; aval: TitreLink[] }

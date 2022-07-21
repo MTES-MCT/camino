@@ -32,13 +32,14 @@
 import SimpleTypeahead from '@/components/_ui/typeahead.vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import {
+  LinkableTitre,
   LoadLinkableTitres,
-  TitreLink,
   TitresLinkConfig
 } from './pure-titres-link.type'
 import Statut from '@/components/_common/statut.vue'
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '@/components/_ui/pure-loader-data.vue'
+import { TitreLink } from 'camino-common/src/titres'
 
 const props = defineProps<{
   config: TitresLinkConfig
@@ -124,7 +125,7 @@ const onSelectItems = (titres: TitreLink[]) => {
   emit('onSelectedTitres', titres)
 }
 
-const getDateDebutEtDateFin = (titre: TitreLink): string => {
+const getDateDebutEtDateFin = (titre: LinkableTitre): string => {
   const titreLinkDemarches = titre.demarches.filter(({ phase }) => phase)
   const dateDebut = titreLinkDemarches
     .map(({ phase }) => phase?.dateDebut)

@@ -12,12 +12,19 @@ import express from 'express'
 import { constants } from 'http2'
 import { DOMAINES_IDS } from 'camino-common/src/domaines'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/titresTypesTypes'
-import { ITitre, IUser, ITitreReference, ITitreDemarche } from '../../types'
 import {
-  CommonTitre,
+  ITitre,
+  IUser,
+  ITitreReference,
+  ITitreDemarche,
+  IUtilisateur
+} from '../../types'
+import {
   CommonTitreDREAL,
   CommonTitreONF,
-  CommonTitrePTMG
+  CommonTitrePTMG,
+  TitreLink,
+  TitreLinks
 } from 'camino-common/src/titres'
 import {
   toMachineEtapes,
@@ -341,36 +348,44 @@ export const titresDREAL = async (
   }
 }
 
-export const getTitresFrom = async (
+export const getTitreLiaisons = async (
   req: express.Request<{ id?: string }>,
-  res: CustomResponse<Pick<CommonTitre, 'id' | 'nom'>[]>
+  res: CustomResponse<TitreLinks>
 ) => {
   const userId = (req.user as unknown as IUser | undefined)?.id
 
   const user = await userGet(userId)
 
-  const titreToId: string | undefined = req.params.id
+  const titreId: string | undefined = req.params.id
 
-  if (!titreToId) {
-    res.json([])
+  if (!titreId) {
+    res.json({ amont: [], aval: [] })
   } else {
-    const titre = await titreGet(titreToId, { fields: { id: {} } }, user)
+    const titre = await titreGet(titreId, { fields: { id: {} } }, user)
     if (!titre) {
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
-      const titresTitres = await TitresTitres.query().where(
-        'titreToId',
-        titre.id
-      )
-      const titreFromIds = titresTitres.map(({ titreFromId }) => titreFromId)
-
-      const titresFrom = await titresGet(
-        { ids: titreFromIds },
-        { fields: { id: {} } },
-        user
-      )
-
-      res.json(titresFrom.map(({ id, nom }) => ({ id, nom })))
+      res.json({
+        amont: await titreLinksGet(titreId, 'titreFromId', user),
+        aval: await titreLinksGet(titreId, 'titreToId', user)
+      })
     }
   }
+}
+
+const titreLinksGet = async (
+  titreId: string,
+  link: 'titreToId' | 'titreFromId',
+  user: IUtilisateur | null | undefined
+): Promise<TitreLink[]> => {
+  const titresTitres = await TitresTitres.query().where(link, titreId)
+  const titreIds = titresTitres.map(({ titreFromId }) => titreFromId)
+
+  const titres = await titresGet(
+    { ids: titreIds },
+    { fields: { id: {} } },
+    user
+  )
+
+  return titres.map(({ id, nom }) => ({ id, nom }))
 }

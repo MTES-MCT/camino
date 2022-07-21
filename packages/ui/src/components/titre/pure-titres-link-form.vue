@@ -1,6 +1,6 @@
 <template>
   <div>
-    <LoadingData v-if="linkConfig" v-slot="{ item }" :data="titresFrom">
+    <LoadingData v-if="linkConfig" v-slot="{ item }" :data="titresLinks">
       <div v-if="item.length || canLink">
         <h5>
           Titre{{ linkConfig.count === 'multiple' ? 's' : '' }} à l’origine de
@@ -68,11 +68,10 @@ import {
 } from 'camino-common/src/permissions/titres'
 import { computed, onMounted, ref, watch } from 'vue'
 import {
-  TitreLink,
   TitresLinkConfig,
   LoadLinkableTitres,
   LinkTitres,
-  LoadLinkedTitres
+  LoadTitreLinks
 } from './pure-titres-link.type'
 import { TitreTypeId } from 'camino-common/src/titresTypes'
 import { User } from 'camino-common/src/roles'
@@ -83,6 +82,7 @@ import LoadingData from '@/components/_ui/pure-loader-data.vue'
 import Loading from '@/components/_ui/pure-loader.vue'
 import Icon from '@/components/_ui/icon.vue'
 import { DemarcheTypeId } from 'camino-common/src/demarchesTypes'
+import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 
 const props = defineProps<{
   user: User
@@ -92,7 +92,7 @@ const props = defineProps<{
     administrations: { id: AdministrationId }[]
     demarches: { typeId: DemarcheTypeId }[]
   }
-  loadLinkedTitres: LoadLinkedTitres
+  loadTitreLinks: LoadTitreLinks
   loadLinkableTitres: (
     titreTypeId: TitreTypeId,
     demarches: { typeId: DemarcheTypeId }[]
@@ -108,7 +108,7 @@ const emit = defineEmits<{
 const mode = ref<'read' | 'edit'>('read')
 const titresLinking = ref<AsyncProcess>({ status: 'LOADED' })
 const selectedTitres = ref<TitreLink[]>([])
-const titresFrom = ref<AsyncData<TitreLink[]>>({ status: 'LOADING' })
+const titresLinks = ref<AsyncData<TitreLinks>>({ status: 'LOADING' })
 
 const linkConfig = computed(() =>
   getLinkConfig(props.titre.typeId, props.titre.demarches)
@@ -121,21 +121,19 @@ onMounted(async () => {
 watch(
   () => props.titre,
   async _ => {
-    titresFrom.value = { status: 'LOADED', value: [] }
     await init()
   }
 )
 
 const init = async () => {
-  if (linkConfig.value) {
-    try {
-      const titres = await props.loadLinkedTitres(props.titre.id)
-      titresFrom.value = { status: 'LOADED', value: titres }
-    } catch (e: any) {
-      titresFrom.value = {
-        status: 'ERROR',
-        message: e.message ?? 'something wrong happened'
-      }
+  titresLinks.value = { status: 'LOADING' }
+  try {
+    const result = await props.loadTitreLinks(props.titre.id)
+    titresLinks.value = { status: 'LOADED', value: result }
+  } catch (e: any) {
+    titresLinks.value = {
+      status: 'ERROR',
+      message: e.message ?? 'something wrong happened'
     }
   }
 }
@@ -153,11 +151,11 @@ const canLink = computed<boolean>(() => {
 })
 
 const titreLinkConfig = computed<TitresLinkConfig | null>(() => {
-  if (titresFrom.value.status !== 'LOADED') {
+  if (titresLinks.value.status !== 'LOADED') {
     return null
   }
 
-  const titreFromIds = titresFrom.value.value.map(({ id }) => id)
+  const titreFromIds = titresLinks.value.value.amont.map(({ id }) => id)
   if (linkConfig.value?.count === 'single') {
     return {
       type: 'single',
@@ -184,7 +182,10 @@ const saveLink = async () => {
     )
     titresLinking.value = { status: 'LOADED' }
     mode.value = 'read'
-    titresFrom.value = { status: 'LOADED', value: selectedTitres.value }
+    titresLinks.value = {
+      status: 'LOADED',
+      value: { aval: titresLinks.value.aval, amont: selectedTitres.value }
+    }
   } catch (e: any) {
     titresLinking.value = {
       status: 'ERROR',

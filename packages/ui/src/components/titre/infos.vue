@@ -75,7 +75,7 @@
           demarches: titre.demarches.map(d => ({ typeId: d.type.id }))
         }"
         :linkTitres="linkTitres"
-        :loadLinkedTitres="loadLinkedTitres"
+        :loadTitreLinks="loadTitreLinks"
         :loadLinkableTitres="loadLinkableTitres"
       />
 
@@ -161,7 +161,7 @@ import PureTitresLinkForm from './pure-titres-link-form.vue'
 import {
   linkTitres,
   loadLinkableTitres,
-  loadLinkedTitres
+  loadTitreLinks
 } from '@/components/titre/pure-titres-link.type'
 import { User } from 'camino-common/src/roles'
 import { computed } from 'vue'

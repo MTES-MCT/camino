@@ -1,4 +1,4 @@
-import { CommonTitre } from 'camino-common/src/titres'
+import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { getLinkConfig } from 'camino-common/src/permissions/titres'
 import { apiGraphQLFetch } from '@/api/_client'
 import { TitresTypes, TitreTypeId } from 'camino-common/src/titresTypes'
@@ -15,19 +15,20 @@ export type TitresLinkConfig =
       selectedTitreIds: string[]
     }
 
+export type LoadTitreLinks = (titreId: string) => Promise<TitreLinks>
+
+export const loadTitreLinks: LoadTitreLinks = async (titreId: string) => {
+  return (await fetch(`/apiUrl/titres/${titreId}/titreLiaisons`)).json()
+}
+
 type DemarchePhase = { dateDebut: string; dateFin: string }
-export type TitreLinkDemarche = { phase?: DemarchePhase }
-export type TitreLink = Pick<CommonTitre, 'id' | 'nom'> & {
+type TitreLinkDemarche = { phase?: DemarchePhase }
+export type LinkableTitre = TitreLink & {
   demarches: TitreLinkDemarche[]
+  statut: { couleur: string; nom: string }
 }
 
-export type LoadLinkedTitres = (titreId: string) => Promise<TitreLink[]>
-
-export const loadLinkedTitres: LoadLinkedTitres = async (titreId: string) => {
-  return (await fetch(`/apiUrl/titres/${titreId}/titresOrigine`)).json()
-}
-
-export type LoadLinkableTitres = () => Promise<TitreLink[]>
+export type LoadLinkableTitres = () => Promise<LinkableTitre[]>
 
 export const loadLinkableTitres: (
   titreTypeId: TitreTypeId,
