@@ -53,6 +53,17 @@ export const restCall = async (
   return cookiesSet(req, role, administrationId)
 }
 
+export const restPostCall = async <T extends string | object | undefined>(
+  path: string,
+  role: Role,
+  body: T,
+  administrationId?: AdministrationId
+): Promise<request.Test> => {
+  const req = request(app).post(path).send(body)
+
+  return cookiesSet(req, role, administrationId)
+}
+
 const cookiesSet = async (
   req: request.Test,
   role?: Role,

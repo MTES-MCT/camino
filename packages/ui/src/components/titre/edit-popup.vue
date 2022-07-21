@@ -99,8 +99,10 @@
         <Icon name="plus" size="M" class="flex-right" />
       </button>
       <PureTitresLink
+        v-if="titre"
         class="mb-xxl"
         :config="titreLinkConfig"
+        :titreTypeId="titre.typeId"
         :loadLinkableTitres="loadLinkableTitres"
         @onSelectedTitres="onSelectedTitres"
       />
@@ -137,7 +139,6 @@ import TitreTypeSelect from '../_common/titre-type-select.vue'
 import { sortedAdministrations } from 'camino-common/src/administrations'
 import Icon from '@/components/_ui/icon.vue'
 import PureTitresLink from '@/components/titre/pure-titres-link.vue'
-import { loadLinkableTitres } from '@/components/titre/pure-titres-link.type'
 
 export default {
   name: 'CaminoDemarcheEditPopup',
@@ -156,15 +157,10 @@ export default {
     }
   },
 
-  data: () => ({
-    loadLinkableTitres
-  }),
-
   computed: {
     titreLinkConfig() {
       return {
         type: 'single',
-        titreTypeId: this.titre.typeId,
         selectedTitreId:
           this.titre.titreFromIds.length === 1
             ? this.titre.titreFromIds[0]

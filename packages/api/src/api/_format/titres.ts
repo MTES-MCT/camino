@@ -166,29 +166,9 @@ const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
   }
 
   if (fields.administrations) {
-    const hasAdministrations =
-      t.administrationsGestionnaires?.length || t.administrationsLocales?.length
-
-    if (hasAdministrations) {
-      // fusionne administrations gestionnaires et locales
-      const administrations = dupRemove('id', [
-        ...(t.administrationsGestionnaires || []),
-        ...(t.administrationsLocales || [])
-      ]) as IAdministration[]
-
-      t.administrations = administrations.map(administrationFormat)
-
-      t.administrations = t.administrations.sort(
-        (a, b) =>
-          ADMINISTRATION_TYPES[a.typeId].ordre -
-          ADMINISTRATION_TYPES[b.typeId].ordre
-      )
-
-      delete t.administrationsGestionnaires
-      delete t.administrationsLocales
-    } else {
-      t.administrations = []
-    }
+    t.administrations = titreAdministrationsGet(t)
+    delete t.administrationsGestionnaires
+    delete t.administrationsLocales
   }
 
   t.titulaires = t.titulaires?.map(entrepriseFormat)
@@ -196,6 +176,30 @@ const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
   t.amodiataires = t.amodiataires?.map(entrepriseFormat)
 
   return t
+}
+
+export const titreAdministrationsGet = (titre: ITitre): IAdministration[] => {
+  let result: IAdministration[] = []
+  const hasAdministrations =
+    titre.administrationsGestionnaires?.length ||
+    titre.administrationsLocales?.length
+  if (hasAdministrations) {
+    // fusionne administrations gestionnaires et locales
+    const administrations = dupRemove('id', [
+      ...(titre.administrationsGestionnaires || []),
+      ...(titre.administrationsLocales || [])
+    ]) as IAdministration[]
+
+    result = administrations.map(administrationFormat)
+
+    result = administrations.sort(
+      (a, b) =>
+        ADMINISTRATION_TYPES[a.typeId].ordre -
+        ADMINISTRATION_TYPES[b.typeId].ordre
+    )
+  }
+
+  return result
 }
 
 const titresFormat = (titres: ITitre[], fields = titreFormatFields) =>

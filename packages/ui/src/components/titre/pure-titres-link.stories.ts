@@ -1,8 +1,8 @@
 import TitresLink from './pure-titres-link.vue'
 import { Meta, Story } from '@storybook/vue3'
 import {
+  LinkableTitre,
   LoadLinkableTitres,
-  TitreLink,
   TitresLinkConfig
 } from './pure-titres-link.type'
 
@@ -17,7 +17,6 @@ type Props = {
   config: TitresLinkConfig
   loadLinkableTitres: LoadLinkableTitres
 }
-
 const titres = [
   {
     id: 'id1',
@@ -79,31 +78,13 @@ const Template: Story<Props> = (args: Props) => ({
 
 export const AXM = Template.bind({})
 AXM.args = {
-  config: { type: 'single', titreTypeId: 'axm', selectedTitreId: null },
+  config: { type: 'single', selectedTitreId: null },
   loadLinkableTitres: () => Promise.resolve(titres)
 }
 
 export const AXMWithAlreadySelectedTitre = Template.bind({})
 AXMWithAlreadySelectedTitre.args = {
-  config: { type: 'single', titreTypeId: 'axm', selectedTitreId: 'id1' },
-  loadLinkableTitres: () => Promise.resolve(titres)
-}
-
-export const PXM = Template.bind({})
-PXM.args = {
-  config: { type: 'single', titreTypeId: 'pxm', selectedTitreId: null },
-  loadLinkableTitres: () => Promise.resolve(titres)
-}
-
-export const PXMWithAlreadySelectedTitre = Template.bind({})
-PXMWithAlreadySelectedTitre.args = {
-  config: { type: 'single', titreTypeId: 'pxm', selectedTitreId: 'id1' },
-  loadLinkableTitres: () => Promise.resolve(titres)
-}
-
-export const NeitherAXMNorPXM = Template.bind({})
-NeitherAXMNorPXM.args = {
-  config: { type: 'single', titreTypeId: 'arm', selectedTitreId: 'id1' },
+  config: { type: 'single', selectedTitreId: 'id1' },
   loadLinkableTitres: () => Promise.resolve(titres)
 }
 
@@ -111,8 +92,6 @@ export const DemarcheFusion = Template.bind({})
 DemarcheFusion.args = {
   config: {
     type: 'multiple',
-    titreTypeId: 'pxm',
-    demarcheTypeId: 'fus',
     selectedTitreIds: []
   },
   loadLinkableTitres: () => Promise.resolve(titres)
@@ -122,8 +101,6 @@ export const DemarcheFusionWithAlreadySelectedTitre = Template.bind({})
 DemarcheFusionWithAlreadySelectedTitre.args = {
   config: {
     type: 'multiple',
-    titreTypeId: 'pxm',
-    demarcheTypeId: 'fus',
     selectedTitreIds: ['id1', 'id2']
   },
   loadLinkableTitres: () => Promise.resolve(titres)
@@ -131,11 +108,9 @@ DemarcheFusionWithAlreadySelectedTitre.args = {
 
 export const Loading = Template.bind({})
 Loading.args = {
-  loadLinkableTitres: () => new Promise<TitreLink[]>(resolve => {}),
+  loadLinkableTitres: () => new Promise<LinkableTitre[]>(resolve => {}),
   config: {
     type: 'multiple',
-    titreTypeId: 'pxm',
-    demarcheTypeId: 'fus',
     selectedTitreIds: ['id1']
   }
 }
@@ -144,8 +119,6 @@ WithError.args = {
   loadLinkableTitres: () => Promise.reject(new Error('because reasons')),
   config: {
     type: 'multiple',
-    titreTypeId: 'pxm',
-    demarcheTypeId: 'fus',
     selectedTitreIds: ['id1']
   }
 }

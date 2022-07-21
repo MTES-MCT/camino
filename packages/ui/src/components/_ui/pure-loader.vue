@@ -1,6 +1,8 @@
 <template>
   <div class="top-level">
-    <slot v-if="data.status === 'LOADED'" :item="data.value" />
+    <template v-if="data.status === 'LOADED'">
+      <slot :item="data.value" />
+    </template>
     <div v-else-if="data.status === 'ERROR'">
       <HelpTooltip icon="error-warning">
         {{ data.message }}

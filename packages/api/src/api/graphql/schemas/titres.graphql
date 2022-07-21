@@ -160,7 +160,11 @@ input InputTitreModification {
   domaineId: ID!
   references: [InputReference]
   titresAdministrations: [InputId]
-  titreFromIds: [ID]
+}
+
+input InputTitreLiaisonsModification {
+  id: ID!
+  titreFromIds: [ID]!
 }
 
 input InputId {

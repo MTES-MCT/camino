@@ -9,13 +9,9 @@
       >.
     </div>
 
-    <TitreHeader
-      :titre="titre"
-      :titresFrom="titresFrom"
-      @titre-event-track="eventTrack"
-    />
+    <TitreHeader :titre="titre" @titre-event-track="eventTrack" />
 
-    <TitreInfos :titre="titre" :titresFrom="titresFrom" class="mb" />
+    <TitreInfos :titre="titre" :user="user" class="mb" />
 
     <Perimetre
       v-if="titre.geojsonMultiPolygon && titre.points"
@@ -75,7 +71,6 @@
       v-if="tabId === 'demarches'"
       :demarches="demarches"
       :tabId="tabId"
-      :titresFrom="titresFrom"
       @event-track="eventTrack"
     />
 
@@ -108,7 +103,6 @@ import TitreRepertoire from './titre/repertoire.vue'
 import TitreDemarches from './titre/demarches.vue'
 import TitreActivitesList from './activites/list.vue'
 import Journaux from './journaux/journaux.vue'
-import { canLinkTitresFrom } from 'camino-common/src/permissions/titres'
 
 export default {
   components: {
@@ -127,8 +121,7 @@ export default {
   data() {
     return {
       geoTabId: 'carte',
-      show: false,
-      titresFrom: []
+      show: false
     }
   },
 
@@ -169,8 +162,7 @@ export default {
       }
     },
 
-    user: 'get',
-    titre: 'loadTitresOrigine'
+    user: 'get'
   },
 
   async created() {
@@ -197,12 +189,6 @@ export default {
     async get() {
       const titreId = this.$route.params.id
       await this.$store.dispatch('titre/get', titreId)
-    },
-    async loadTitresOrigine() {
-      // TODO 2022-07-11: on ne peut pas vraiment appliquer un 'canLinkTitresFrom' ici, car sinon on masque les titres liés par une démarche de fusion
-      this.titresFrom = await (
-        await fetch(`/apiUrl/titres/${this.titre.id}/titresOrigine`)
-      ).json()
     },
 
     tabUpdate(tabId) {

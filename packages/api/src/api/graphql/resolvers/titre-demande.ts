@@ -34,11 +34,9 @@ import {
   isEntreprise,
   isSuper
 } from 'camino-common/src/roles'
-import {
-  canLinkTitresFrom,
-  getTitreFromTypeId
-} from 'camino-common/src/permissions/titres'
 import { linkTitres } from '../../../database/queries/titres-titres'
+import { getLinkConfig } from 'camino-common/src/permissions/titres'
+import { checkTitreLinks } from '../../../business/validations/titre-links-validate'
 
 export const titreDemandeCreer = async (
   {
@@ -117,10 +115,9 @@ export const titreDemandeCreer = async (
     )
 
     const titreId = titre.id
-    if (
-      canLinkTitresFrom(titreDemande.typeId) &&
-      titreDemande.titreFromIds === undefined
-    ) {
+
+    const linkConfig = getLinkConfig(titreDemande.typeId, [])
+    if (linkConfig && titreDemande.titreFromIds === undefined) {
       throw new Error(
         'Le champ titreFromIds est obligatoire pour ce type de titre'
       )
@@ -133,23 +130,7 @@ export const titreDemandeCreer = async (
         user
       )
 
-      if (titresFrom.length !== titreDemande.titreFromIds.length) {
-        throw new Error('droit insuffisant')
-      }
-
-      const titreFromTypeId = getTitreFromTypeId(titreDemande.typeId)
-      if (titreFromTypeId) {
-        if (titresFrom.length > 1) {
-          throw new Error(
-            `une ${titreDemande.typeId} ne peut avoir qu’un seul titre lié`
-          )
-        }
-        if (titresFrom.length && titresFrom[0].typeId !== titreFromTypeId) {
-          throw new Error(
-            `une ${titreDemande.typeId} ne peut-être liée qu’à une ${titreFromTypeId}`
-          )
-        }
-      }
+      checkTitreLinks(titreDemande, titreDemande.titreFromIds, titresFrom, [])
 
       await linkTitres({
         linkTo: titre.id,

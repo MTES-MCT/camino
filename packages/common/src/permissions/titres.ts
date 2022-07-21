@@ -1,29 +1,46 @@
-import { isTitreType, TitresTypes, TitreTypeId } from '../titresTypes'
-import { DemarcheTypeId, isDemarcheTypeId } from '../demarchesTypes'
+import { TitresTypes, TitreTypeId } from '../titresTypes'
+import { DemarcheTypeId } from '../demarchesTypes'
+import {
+  isAdministrationAdmin,
+  isAdministrationEditeur,
+  isSuper,
+  User
+} from '../roles'
+import { AdministrationId } from '../administrations'
 
-export const getTitreFromTypeId = (typeId: TitreTypeId): TitreTypeId | null => {
+export const getLinkConfig = (
+  typeId: TitreTypeId,
+  demarches: { typeId: DemarcheTypeId }[]
+): { count: 'single' | 'multiple'; typeId: TitreTypeId } | null => {
   switch (typeId) {
     case 'axm':
-      return 'arm'
+      return { count: 'single', typeId: 'arm' }
     case 'pxm':
-      return 'prm'
+      return { count: 'single', typeId: 'prm' }
   }
 
   const titreType = TitresTypes[typeId]
-  if (titreType.typeId === 'cx') {
-    return typeId
+
+  if (
+    titreType.typeId === 'cx' &&
+    demarches.some(({ typeId }) => typeId === 'fus')
+  ) {
+    return { count: 'multiple', typeId }
   }
 
   return null
 }
 
-export const canLinkTitresFrom = (
-  typeIdOrDemarcheTypeId: TitreTypeId | DemarcheTypeId | null
+export const canLinkTitres = (
+  user: User,
+  administrationIds: AdministrationId[]
 ): boolean => {
-  if (isTitreType(typeIdOrDemarcheTypeId)) {
-    return ['axm', 'pxm'].includes(typeIdOrDemarcheTypeId)
-  } else if (isDemarcheTypeId(typeIdOrDemarcheTypeId)) {
-    return typeIdOrDemarcheTypeId === 'fus'
+  if (isSuper(user)) {
+    return true
+  }
+
+  if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
+    return administrationIds.includes(user.administrationId)
   }
 
   return false

@@ -5,7 +5,11 @@
         <h5>Domaine</h5>
       </div>
       <div class="mb tablet-blob-2-3">
-        <select v-model="element.domaineId" class="p-s mr">
+        <select
+          v-model="element.domaineId"
+          class="p-s mr"
+          @change="element.typeId = null"
+        >
           <option
             v-for="domaine in domaines"
             :key="domaine.id"

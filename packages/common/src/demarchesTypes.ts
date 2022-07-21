@@ -38,7 +38,7 @@ export const DemarchesTypesIds = [
 
 export type DemarcheTypeId = typeof DemarchesTypesIds[number]
 
-export const TitresTypes: {
+export const DemarchesTypes: {
   [key in DemarcheTypeId]: DemarchesDefinition<key>
 } = {
   amo: {
