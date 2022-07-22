@@ -21,11 +21,14 @@ import TitresActivites from '../../database/models/titres-activites'
 import Titres from '../../database/models/titres'
 import { CustomResponse } from './express-type'
 import { SubstancesFiscales } from 'camino-common/src/substance'
+import { Departements } from 'camino-common/src/departement'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { Regions } from 'camino-common/src/region'
 
 // VisibleForTesting
 export const bodyBuilder = (
   activites: Pick<TitresActivites, 'titreId' | 'contenu'>[],
-  titres: Pick<Titres, 'substances' | 'communes' | 'id' | 'pays'>[],
+  titres: Pick<Titres, 'substances' | 'communes' | 'id'>[],
   annee: number,
   entreprise: Pick<IEntreprise, 'categorie' | 'nom'>
 ) => {
@@ -43,13 +46,18 @@ export const bodyBuilder = (
       throw new Error(`le titre ${activite.titreId} n’est pas chargé`)
     }
 
-    if (!titre.pays?.length) {
+    if (!titre.communes?.length) {
       throw new Error(
-        `les pays du titre ${activite.titreId} ne sont pas chargés`
+        `les communes du titre ${activite.titreId} ne sont pas chargées`
       )
     }
 
-    const titreGuyannais = titre.pays.some(pays => pays.id === 'GF')
+    const titreGuyannais = titre.communes
+      .map(({ departementId }) => departementId)
+      .filter(isNotNullNorUndefined)
+      .some(departementId => {
+        return Regions[Departements[departementId].regionId].paysId === 'GF'
+      })
 
     if (!titre.substances) {
       throw new Error(
@@ -66,6 +74,7 @@ export const bodyBuilder = (
 
       const substanceLegalesWithFiscales = titre.substances
         .flatMap(s => s.legales)
+        .filter(isNotNullNorUndefined)
         .filter(s =>
           SubstancesFiscales.some(
             ({ substanceLegaleId }) => substanceLegaleId === s.id
@@ -242,7 +251,7 @@ export const fiscalite = async (
       {
         fields: {
           substances: { legales: { id: {} } },
-          communes: { departement: { region: { pays: { id: {} } } } }
+          communes: { id: {} }
         }
       },
       user
@@ -262,6 +271,7 @@ export const fiscalite = async (
     )
 
     const body = bodyBuilder(activites, titres, annee, entreprise)
+    console.info(JSON.stringify(body))
 
     if (Object.keys(body.articles).length > 0) {
       const result = await apiOpenfiscaFetch(body)
