@@ -1,12 +1,11 @@
 import fetch from 'node-fetch'
 
-type InputAttribute =
-  | 'quantite_aurifere_kg'
-  | 'surface_communale'
-  | 'surface_totale'
+type InputAttribute = 'quantite_aurifere_kg' | 'surface_communale'
 type OutputAttribute =
   | 'redevance_communale_des_mines_aurifere_kg'
   | 'redevance_departementale_des_mines_aurifere_kg'
+  | 'taxe_guyane_brute'
+  | 'taxe_guyane_deduction'
   | 'taxe_guyane'
 
 type Entries = Partial<
@@ -24,6 +23,9 @@ export interface OpenfiscaRequest {
     [titreId: string]: {
       commune_principale_exploitation?: {
         [annee: string]: string | null
+      }
+      surface_totale?: {
+        [annee: string]: number | null
       }
       operateur?: {
         [annee: string]: string | null
@@ -71,7 +73,9 @@ export const apiOpenfiscaFetch = async (
   const result = (await response.json()) as OpenfiscaResponse
 
   if (!response.ok) {
-    throw new Error(`Le serveur Openfisca a retourné une erreur: ${result}`)
+    throw new Error(
+      `Le serveur Openfisca a retourné une erreur: ${JSON.stringify(result)}`
+    )
   }
 
   return result
