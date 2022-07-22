@@ -117,7 +117,6 @@ export const bodyBuilder = (
 
             body.articles[articleId] = {
               surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
-              surface_totale: { [anneePrecedente]: surfaceTotale },
               // TODO Sandra, substance
               quantite_aurifere_kg: { [anneePrecedente]: production },
               redevance_communale_des_mines_aurifere_kg: {
@@ -139,6 +138,7 @@ export const bodyBuilder = (
                 commune_principale_exploitation: {
                   [anneePrecedente]: commune.id
                 },
+                surface_totale: { [anneePrecedente]: surfaceTotale },
                 operateur: {
                   [anneePrecedente]: entreprise.nom
                 },
