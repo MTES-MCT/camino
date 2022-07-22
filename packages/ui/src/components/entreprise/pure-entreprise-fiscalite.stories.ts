@@ -26,9 +26,20 @@ Ok.args = {
   getFiscaliteEntreprise: () =>
     Promise.resolve({
       redevanceCommunale: 1600.071,
+      redevanceDepartementale: 330.98
+    })
+}
+export const Guyane = Template.bind({})
+Guyane.args = {
+  getFiscaliteEntreprise: () =>
+    Promise.resolve({
+      redevanceCommunale: 1600.071,
       redevanceDepartementale: 330.98,
-      taxeAurifereGuyane: 4100.027,
-      totalInvestissementsDeduits: 0
+      guyane: {
+        taxeAurifereBrute: 4100,
+        totalInvestissementsDeduits: 100,
+        taxeAurifere: 210
+      }
     })
 }
 
