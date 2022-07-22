@@ -73,7 +73,7 @@
         class="flex full-x mb-s"
       >
         <select v-model="administration.id" class="p-s mr-s">
-          <option v-for="a in administrations" :key="a.id" :value="a.id">
+          <option v-for="a in sortedAdministrations" :key="a.id" :value="a.id">
             {{ a.abreviation }}
           </option>
         </select>
@@ -98,14 +98,6 @@
         <span class="mt-xxs">Ajouter une administration</span>
         <Icon name="plus" size="M" class="flex-right" />
       </button>
-      <PureTitresLink
-        v-if="titre"
-        class="mb-xxl"
-        :config="titreLinkConfig"
-        :titreTypeId="titre.typeId"
-        :loadLinkableTitres="loadLinkableTitres"
-        @onSelectedTitres="onSelectedTitres"
-      />
     </div>
 
     <template #footer>
@@ -117,7 +109,7 @@
         </div>
         <div class="tablet-blob-2-3">
           <button
-            ref="save-button"
+            :ref="saveRef"
             class="btn btn-primary"
             :disabled="!complete"
             :class="{ disabled: !complete }"
@@ -132,151 +124,130 @@
   </Popup>
 </template>
 
-<script>
+<script setup lang="ts">
 import Popup from '../_ui/popup.vue'
 
 import TitreTypeSelect from '../_common/titre-type-select.vue'
-import { sortedAdministrations } from 'camino-common/src/administrations'
+import {
+  AdministrationId,
+  sortedAdministrations
+} from 'camino-common/src/administrations'
 import Icon from '@/components/_ui/icon.vue'
-import PureTitresLink from '@/components/titre/pure-titres-link.vue'
+import { TitreTypeId } from 'camino-common/src/titresTypes'
+import { computed, ComputedRef, inject, onMounted, onUnmounted, ref } from 'vue'
+import { useStore } from 'vuex'
+import { DomaineId } from 'camino-common/src/domaines'
+type Titre = {
+  id: string
+  nom: string
+  domaineId: DomaineId
+  typeId: TitreTypeId
+  references: { typeId: string; nom: string }[]
+  titresAdministrations: { id: AdministrationId | '' }[]
+}
+const props = defineProps<{
+  titre: Titre
+}>()
+const store = useStore()
+const matomo = inject('matomo', null)
+const saveRef = ref<any>(null)
+const loading = computed(() => store.state.popup.loading)
 
-export default {
-  name: 'CaminoDemarcheEditPopup',
+const messages = computed(() => {
+  return store.state.popup.messages
+})
 
-  components: {
-    PureTitresLink,
-    Icon,
-    Popup,
-    TitreTypeSelect
-  },
+const domaines = computed(() => {
+  return store.state.user.metas.domaines.filter((d: any) =>
+    d.titresTypes.some((dtt: { titresCreation: any }) => dtt.titresCreation)
+  )
+})
 
-  props: {
-    titre: {
-      type: Object,
-      default: () => ({})
+const referencesTypes = computed(() => {
+  return store.state.titre.metas.referencesTypes
+})
+
+const complete = computed(() => {
+  return !!props.titre.nom && !!props.titre.typeId && !!props.titre.domaineId
+})
+
+const userIsSuper: ComputedRef<boolean> = computed(() => {
+  return store.getters['user/userIsSuper']
+})
+
+const get = async () => {
+  await store.dispatch('titre/init')
+}
+const keyup = (e: KeyboardEvent) => {
+  if ((e.which || e.keyCode) === 27) {
+    cancel()
+  } else if ((e.which || e.keyCode) === 13) {
+    if (complete.value) {
+      saveRef.value?.focus()
+      save()
     }
-  },
+  }
+}
 
-  computed: {
-    titreLinkConfig() {
-      return {
-        type: 'single',
-        selectedTitreId:
-          this.titre.titreFromIds.length === 1
-            ? this.titre.titreFromIds[0]
-            : null
-      }
-    },
-    loading() {
-      return this.$store.state.popup.loading
-    },
+onMounted(async () => {
+  await get()
+  document.addEventListener('keyup', keyup)
+})
 
-    messages() {
-      return this.$store.state.popup.messages
-    },
+onUnmounted(() => {
+  document.removeEventListener('keyup', keyup)
+})
 
-    domaines() {
-      return this.$store.state.user.metas.domaines.filter(d =>
-        d.titresTypes.some(dtt => dtt.titresCreation)
-      )
-    },
+const save = async () => {
+  if (complete.value) {
+    const titre: Titre = JSON.parse(JSON.stringify(props.titre))
+    titre.references = titre.references.filter(reference => {
+      return reference.nom
+    })
 
-    referencesTypes() {
-      return this.$store.state.titre.metas.referencesTypes
-    },
+    await store.dispatch('titre/update', titre)
 
-    administrations() {
-      return sortedAdministrations
-    },
+    eventTrack({
+      categorie: 'titre-sections',
+      action: 'titre-enregistrer',
+      nom: titre.id
+    })
+  }
+}
 
-    complete() {
-      return !!this.titre.nom && !!this.titre.typeId && !!this.titre.domaineId
-    },
+const cancel = () => {
+  errorsRemove()
+  store.commit('popupClose')
+}
 
-    userIsSuper() {
-      return this.$store.getters['user/userIsSuper']
-    }
-  },
+const errorsRemove = () => {
+  // this.$store.commit('utilisateur/loginMessagesRemove')
+}
 
-  created() {
-    this.get()
-    document.addEventListener('keyup', this.keyup)
-  },
+const referenceAdd = () => {
+  props.titre.references.push({ typeId: '', nom: '' })
+}
 
-  beforeUnmount() {
-    document.removeEventListener('keyup', this.keyup)
-  },
+const referenceRemove = (index: number) => {
+  props.titre.references.splice(index, 1)
+}
 
-  methods: {
-    async get() {
-      await this.$store.dispatch('titre/init')
-    },
+const administrationAdd = () => {
+  props.titre.titresAdministrations.push({ id: '' })
+}
 
-    onSelectedTitres(titres) {
-      this.titre.titreFromIds = titres.map(({ id }) => id)
-    },
+const administrationRemove = (index: number) => {
+  props.titre.titresAdministrations.splice(index, 1)
+}
 
-    async save() {
-      if (this.complete) {
-        const titre = JSON.parse(JSON.stringify(this.titre))
-        titre.references = titre.references.filter(reference => {
-          return reference.nom
-        })
-        if (!titre.titreFromIds) {
-          titre.titreFromIds = []
-        }
-
-        await this.$store.dispatch('titre/update', titre)
-
-        this.eventTrack({
-          categorie: 'titre-sections',
-          action: 'titre-enregistrer',
-          nom: titre.id
-        })
-      }
-    },
-
-    cancel() {
-      this.errorsRemove()
-      this.$store.commit('popupClose')
-    },
-
-    keyup(e) {
-      if ((e.which || e.keyCode) === 27) {
-        this.cancel()
-      } else if ((e.which || e.keyCode) === 13) {
-        if (this.complete) {
-          this.$refs['save-button'].focus()
-          this.save()
-        }
-      }
-    },
-
-    errorsRemove() {
-      // this.$store.commit('utilisateur/loginMessagesRemove')
-    },
-
-    referenceAdd() {
-      this.titre.references.push({ typeId: '', nom: '' })
-    },
-
-    referenceRemove(index) {
-      this.titre.references.splice(index, 1)
-    },
-
-    administrationAdd() {
-      this.titre.titresAdministrations.push({ id: '' })
-    },
-
-    administrationRemove(index) {
-      this.titre.titresAdministrations.splice(index, 1)
-    },
-
-    eventTrack(event) {
-      if (this.$matomo) {
-        this.$matomo.trackEvent(event.categorie, event.action, event.nom)
-      }
-    }
+const eventTrack = (event: {
+  categorie: string
+  action: string
+  nom: string
+}) => {
+  if (matomo) {
+    // @ts-ignore
+    matomo?.trackEvent(event.categorie, event.action, event.nom)
   }
 }
 </script>
