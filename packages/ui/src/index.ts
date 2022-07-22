@@ -52,6 +52,7 @@ Promise.resolve().then(async () => {
       const matomo = await VueMatomo({
         host: options.host,
         siteId: options.siteId,
+        environnement: options.environnement,
         router,
         store,
         requireConsent: false,
