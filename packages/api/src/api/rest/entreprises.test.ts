@@ -28,7 +28,7 @@ describe("extrait la réponse venant d'openFisca", () => {
 
 describe('construit le corps de la requête pour openFisca', () => {
   test('sans activités', () => {
-    expect(bodyBuilder([], [], 2022, entreprise)).toEqual({
+    expect(bodyBuilder([], [], [], 2022, entreprise)).toEqual({
       articles: {},
       communes: {},
       titres: {}
@@ -36,12 +36,22 @@ describe('construit le corps de la requête pour openFisca', () => {
   })
 
   test('avec activités', () => {
-    const activites = [
+    const activitesAnnuelles = [
       { titreId: 'titre2', contenu: { substancesFiscales: { auru: 39.715 } } },
       { titreId: 'titre3', contenu: { substancesFiscales: { auru: 0 } } },
       { titreId: 'titre1', contenu: { substancesFiscales: { auru: 0 } } },
       { titreId: 'titre4', contenu: { substancesFiscales: { auru: 0 } } },
       { titreId: 'titre5', contenu: { substancesFiscales: { auru: 8.91 } } }
+    ]
+    const activitesTrimestrielles = [
+      {
+        titreId: 'titre2',
+        contenu: { renseignements: { environnement: 7300 } }
+      },
+      {
+        titreId: 'titre3',
+        contenu: { renseignements: { environnement: 1000 } }
+      }
     ]
     const titres = [
       {
@@ -141,6 +151,14 @@ describe('construit le corps de la requête pour openFisca', () => {
       }
     ]
 
-    expect(bodyBuilder(activites, titres, 2022, entreprise)).toMatchSnapshot()
+    expect(
+      bodyBuilder(
+        activitesAnnuelles,
+        activitesTrimestrielles,
+        titres,
+        2022,
+        entreprise
+      )
+    ).toMatchSnapshot()
   })
 })

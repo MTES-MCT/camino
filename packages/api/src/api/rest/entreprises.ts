@@ -27,7 +27,8 @@ import { Regions } from 'camino-common/src/region'
 
 // VisibleForTesting
 export const bodyBuilder = (
-  activites: Pick<TitresActivites, 'titreId' | 'contenu'>[],
+  activitesAnnuelles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
+  activitesTrimestrielles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
   titres: Pick<Titres, 'substances' | 'communes' | 'id'>[],
   annee: number,
   entreprise: Pick<IEntreprise, 'categorie' | 'nom'>
@@ -39,8 +40,11 @@ export const bodyBuilder = (
     communes: {}
   }
 
-  for (const activite of activites) {
+  for (const activite of activitesAnnuelles) {
     const titre = titres.find(({ id }) => id === activite.titreId)
+    const activiteTrimestresTitre = activitesTrimestrielles.filter(
+      ({ titreId }) => titreId === activite.titreId
+    )
 
     if (!titre) {
       throw new Error(`le titre ${activite.titreId} n’est pas chargé`)
@@ -134,6 +138,21 @@ export const bodyBuilder = (
             }
 
             if (!Object.prototype.hasOwnProperty.call(body.titres, titre.id)) {
+              const investissement = activiteTrimestresTitre.reduce(
+                (investissement, activite) => {
+                  let newInvestissement = 0
+                  if (
+                    typeof activite?.contenu?.renseignements?.environnement ===
+                    'number'
+                  ) {
+                    newInvestissement =
+                      activite?.contenu?.renseignements?.environnement
+                  }
+
+                  return investissement + newInvestissement
+                },
+                0
+              )
               body.titres[titre.id] = {
                 commune_principale_exploitation: {
                   [anneePrecedente]: commune.id
@@ -144,7 +163,7 @@ export const bodyBuilder = (
                 },
                 // TODO C'est dans les rapports trimestriels (GRP)
                 investissement: {
-                  [anneePrecedente]: '10000'
+                  [anneePrecedente]: investissement.toString(10)
                 },
                 categorie: {
                   [anneePrecedente]:
@@ -269,8 +288,26 @@ export const fiscalite = async (
       { fields: { id: {} } },
       user
     )
+    const activitesTrimestrielles = await titresActivitesGet(
+      // TODO Laure, est-ce qu’il faut faire les WRP ?
+      {
+        typesIds: ['grp'],
+        // TODO Laure, que les déposées ? Pas les « en construction » ?
+        statutsIds: ['dep'],
+        annees: [anneePrecedente],
+        titresIds: titres.map(({ id }) => id)
+      },
+      { fields: { id: {} } },
+      user
+    )
 
-    const body = bodyBuilder(activites, titres, annee, entreprise)
+    const body = bodyBuilder(
+      activites,
+      activitesTrimestrielles,
+      titres,
+      annee,
+      entreprise
+    )
     console.info(JSON.stringify(body))
 
     if (Object.keys(body.articles).length > 0) {
