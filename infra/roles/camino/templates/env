@@ -65,8 +65,8 @@ API_INSEE_URL="https://api.insee.fr"
 API_CERBERE="https://authentification.din.developpement-durable.gouv.fr/cas/public/login"
 
 # API Matomo
-API_MATOMO_URL={{ matomo_url }}
-API_MATOMO_ID={{ matomo_id }}
+API_MATOMO_URL=https://stats.data.gouv.fr
+API_MATOMO_ID=70
 API_MATOMO_TOKEN={{ matomo_token }}
 API_MATOMO_MONTHS=24
 

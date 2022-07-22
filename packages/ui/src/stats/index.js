@@ -8,7 +8,8 @@ const defaultOptions = {
   trackerFileName: 'piwik',
   enableHeartBeatTimer: false,
   enableLinkTracking: false,
-  heartBeatTimerInterval: 60
+  heartBeatTimerInterval: 60,
+  environnement: 'dev'
 }
 
 const install = (setupOptions = {}) => {
@@ -21,6 +22,8 @@ const install = (setupOptions = {}) => {
         options.siteId
       )
 
+      // dimension d'environnement : https://stats.data.gouv.fr/index.php?module=CustomDimensions&action=manage&idSite=70&period=day&date=yesterday#?idDimension=1&scope=visit
+      matomo.setCustomDimension(1, options.environnement)
       matomo.customVariableVisitUser = visitUser(matomo)
       matomo.customVariablePageTitre = pageTitre(matomo)
 

@@ -60,7 +60,8 @@ app.use('/sentryOptions', (req, res) =>
 app.use('/matomoOptions', (req, res) =>
   res.json({
     host: apiMatomoUrl,
-    siteId: process.env.API_MATOMO_ID
+    siteId: process.env.API_MATOMO_ID,
+    environment: process.env.ENV
   })
 )
 
