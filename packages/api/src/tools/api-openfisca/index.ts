@@ -73,7 +73,9 @@ export const apiOpenfiscaFetch = async (
   const result = (await response.json()) as OpenfiscaResponse
 
   if (!response.ok) {
-    throw new Error(`Le serveur Openfisca a retourné une erreur: ${result}`)
+    throw new Error(
+      `Le serveur Openfisca a retourné une erreur: ${JSON.stringify(result)}`
+    )
   }
 
   return result
