@@ -52,7 +52,7 @@
       become: True
     - name: Ajoute le cron de monthly
       ansible.builtin.cron:
-        name: "daily"
+        name: "monthly"
         minute: "0"
         hour: "6"
         day: "1"
