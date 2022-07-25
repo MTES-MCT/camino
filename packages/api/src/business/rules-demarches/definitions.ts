@@ -8,18 +8,18 @@ import { AnyStateMachine } from 'xstate'
 import { armOctMachine } from './arm/oct.machine'
 import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot-demande-date-find'
 
-interface IEtapeTypeIdCondition {
+export interface IEtapeTypeIdCondition {
   etapeTypeId?: string
   statutId?: string
   titre?: ITitreCondition
   contextCheck?: (_etapes: ITitreEtape[]) => boolean
 }
 
-interface IDemarcheDefinitionRestrictions {
+export interface IDemarcheDefinitionRestrictions {
   [key: string]: IDemarcheDefinitionRestrictionsProps
 }
 
-interface IDemarcheDefinitionRestrictionsProps {
+export interface IDemarcheDefinitionRestrictionsProps {
   separation?: string[]
   final?: boolean
   avant?: IEtapeTypeIdCondition[][]
@@ -27,11 +27,11 @@ interface IDemarcheDefinitionRestrictionsProps {
   justeApres: IEtapeTypeIdCondition[][]
 }
 
-interface IDemarcheDefinitionRestrictionsElements
+export interface IDemarcheDefinitionRestrictionsElements
   extends IDemarcheDefinitionRestrictionsProps {
   etapeTypeId?: string
 }
-type IDemarcheDefinition =
+export type IDemarcheDefinition =
   | DemarcheDefinitionRestriction
   | DemarcheDefinitionMachine
 
@@ -64,7 +64,7 @@ type IContenuOperation = {
   operation?: 'NOT_EQUAL' | 'EQUAL'
 }
 
-interface IContenuElementCondition {
+export interface IContenuElementCondition {
   [id: string]: IContenuOperation | undefined
 }
 
@@ -72,12 +72,12 @@ interface IContenuCondition {
   [id: string]: IContenuElementCondition
 }
 
-interface ITitreCondition {
+export interface ITitreCondition {
   statutId?: string
   contenu: IContenuCondition
 }
 
-const demarchesDefinitions: IDemarcheDefinition[] = [
+export const demarchesDefinitions: IDemarcheDefinition[] = [
   {
     titreTypeId: 'arm',
     demarcheTypeIds: ['oct'],
@@ -111,12 +111,12 @@ const demarchesDefinitions: IDemarcheDefinition[] = [
   }
 ]
 
-const demarcheDefinitionFind = (
+export const demarcheDefinitionFind = (
   titreTypeId: string,
   demarcheTypeId: string,
-  titreEtapes?: Pick<ITitreEtape, 'date' | 'typeId'>[]
+  titreEtapes: Pick<ITitreEtape, 'date' | 'typeId'>[] | undefined
 ) => {
-  const date = titreDemarcheDepotDemandeDateFind(titreEtapes ?? [])
+  const date = titreDemarcheDepotDemandeDateFind(titreEtapes)
 
   return demarchesDefinitions
     .sort((a, b) => b.dateDebut.localeCompare(a.dateDebut))
@@ -126,16 +126,4 @@ const demarcheDefinitionFind = (
         d.titreTypeId === titreTypeId &&
         d.demarcheTypeIds.includes(demarcheTypeId)
     )
-}
-
-export {
-  demarchesDefinitions,
-  demarcheDefinitionFind,
-  ITitreCondition,
-  IDemarcheDefinitionRestrictions,
-  IDemarcheDefinitionRestrictionsProps,
-  IDemarcheDefinitionRestrictionsElements,
-  IEtapeTypeIdCondition,
-  IDemarcheDefinition,
-  IContenuElementCondition
 }
