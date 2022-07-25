@@ -12,7 +12,10 @@ import { constants } from 'http2'
 import {
   apiOpenfiscaFetch,
   OpenfiscaRequest,
-  OpenfiscaResponse
+  OpenfiscaResponse,
+  redevanceCommunale,
+  redevanceDepartementale,
+  substanceFiscaleToInput
 } from '../../tools/api-openfisca'
 import { titresGet } from '../../database/queries/titres'
 import { titresActivitesGet } from '../../database/queries/titres-activites'
@@ -121,11 +124,15 @@ export const bodyBuilder = (
 
             body.articles[articleId] = {
               surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
-              quantite_aurifere_kg: { [anneePrecedente]: production },
-              redevance_communale_des_mines_aurifere_kg: {
+              [substanceFiscaleToInput(substancesFiscale)]: {
+                [anneePrecedente]:
+                  substancesFiscale?.openFisca?.conversion?.(production) ??
+                  production
+              },
+              [redevanceCommunale(substancesFiscale)]: {
                 [annee]: null
               },
-              redevance_departementale_des_mines_aurifere_kg: {
+              [redevanceDepartementale(substancesFiscale)]: {
                 [annee]: null
               }
             }
@@ -199,11 +206,20 @@ export const responseExtractor = (
 ): Fiscalite => {
   const redevances: Reduced = Object.values(result.articles).reduce<Reduced>(
     (acc, article) => {
+      const communes = Object.keys(article).filter(key =>
+        key.startsWith('redevance_communale')
+      )
+      const departements = Object.keys(article).filter(key =>
+        key.startsWith('redevance_departementale')
+      )
       // TODO 2022_07_25 gérer les substances autre que l'or -> redevance_communale_des_mines_substance_unite
-      acc.fiscalite.redevanceCommunale +=
-        article.redevance_communale_des_mines_aurifere_kg?.[annee] ?? 0
-      acc.fiscalite.redevanceDepartementale +=
-        article.redevance_departementale_des_mines_aurifere_kg?.[annee] ?? 0
+      for (const commune of communes) {
+        acc.fiscalite.redevanceCommunale += article[commune]?.[annee] ?? 0
+      }
+      for (const departement of departements) {
+        acc.fiscalite.redevanceDepartementale +=
+          article[departement]?.[annee] ?? 0
+      }
 
       if (!acc.guyane && 'taxe_guyane_brute' in article) {
         acc = {
@@ -304,8 +320,10 @@ export const fiscalite = async (
       annee,
       entreprise
     )
+    console.info('body', JSON.stringify(body))
     if (Object.keys(body.articles).length > 0) {
       const result = await apiOpenfiscaFetch(body)
+      console.info('result', JSON.stringify(result))
 
       const redevances = responseExtractor(result, annee)
 

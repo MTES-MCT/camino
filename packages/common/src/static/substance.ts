@@ -1,4 +1,4 @@
-import { UniteId } from './unites'
+import { UniteId, Unites } from './unites'
 
 export const SUBSTANCES_FISCALES_IDS = {
   bauxite: 'aloh',
@@ -46,6 +46,11 @@ export interface SubstanceFiscale<T = SubstanceFiscaleId> {
   substanceLegaleId: string
   uniteId: UniteId
   description: string
+  openFisca?: {
+    nom: string
+    unite: string
+    conversion?: (quantite: number) => number
+  }
 }
 
 export const isSubstanceFiscale = (
@@ -89,7 +94,11 @@ export const SubstancesFiscale: {
     substanceLegaleId: 'auru',
     uniteId: 'mgr',
     nom: 'or',
-    description: 'contenu dans les minerais'
+    description: 'contenu dans les minerais',
+    openFisca: {
+      nom: 'aurifere',
+      unite: 'kg'
+    }
   },
   bism: {
     id: 'bism',
@@ -254,7 +263,16 @@ export const SubstancesFiscale: {
     substanceLegaleId: 'nacl',
     uniteId: 'mtk',
     nom: 'sel (chlorure de sodium contenu)',
-    description: 'extrait en dissolution par sondage et livré en dissolution'
+    description: 'extrait en dissolution par sondage et livré en dissolution',
+    openFisca: {
+      nom: 'sel_dissolution',
+      unite: 'kt',
+      // TODO 2022-07-25 : On peut déduire ça tout le temps ? On a l'unité id, et on sait qu'on stocke en base la référenceUniteRatio
+      // FIXME : Le fait d'avoir les quantités par article semble dupliquer la données, peut être qu'on paie trop du coup ?
+      conversion: (quantiteKg: number) =>
+        quantiteKg /
+        (Unites[SubstancesFiscale.nacc.uniteId].referenceUniteRatio ?? 1)
+    }
   },
   plom: {
     id: 'plom',

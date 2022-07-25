@@ -1,12 +1,46 @@
 import fetch from 'node-fetch'
-
-type InputAttribute = 'quantite_aurifere_kg' | 'surface_communale'
+import { SubstanceFiscale } from 'camino-common/src/substance'
+type QuantiteInputAttribute = 'quantite_aurifere_kg'
+type InputAttribute = QuantiteInputAttribute | 'surface_communale' | string
 type OutputAttribute =
-  | 'redevance_communale_des_mines_aurifere_kg'
-  | 'redevance_departementale_des_mines_aurifere_kg'
   | 'taxe_guyane_brute'
   | 'taxe_guyane_deduction'
   | 'taxe_guyane'
+  | string
+
+export const substanceFiscaleToInput = (
+  substanceFiscale: SubstanceFiscale
+): string => {
+  if (substanceFiscale.openFisca) {
+    return `quantite_${substanceFiscale.openFisca.nom}_${substanceFiscale.openFisca.unite}`
+  } else {
+    throw new Error(
+      `la substance fiscale ${substanceFiscale.id} n'est pas gérée par openfisca`
+    )
+  }
+}
+export const redevanceCommunale = (
+  substanceFiscale: SubstanceFiscale
+): string => {
+  if (substanceFiscale.openFisca !== undefined) {
+    return `redevance_communale_des_mines_${substanceFiscale.openFisca?.nom}_${substanceFiscale.openFisca?.unite}`
+  } else {
+    throw new Error(
+      `la substance fiscale ${substanceFiscale.id} n'est pas gérée par openfisca`
+    )
+  }
+}
+export const redevanceDepartementale = (
+  substanceFiscale: SubstanceFiscale
+): string => {
+  if (substanceFiscale.openFisca !== undefined) {
+    return `redevance_departementale_des_mines_${substanceFiscale.openFisca?.nom}_${substanceFiscale.openFisca?.unite}`
+  } else {
+    throw new Error(
+      `la substance fiscale ${substanceFiscale.id} n'est pas gérée par openfisca`
+    )
+  }
+}
 
 type Entries = Partial<
   Record<InputAttribute, { [annee: string]: number | null }>
