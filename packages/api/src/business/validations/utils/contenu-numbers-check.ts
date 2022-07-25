@@ -1,6 +1,9 @@
 import { IContenu, ISection } from '../../../types'
 
-const contenuNumbersCheck = (sections: ISection[], contenu: IContenu) => {
+export const contenuNumbersCheck = (
+  sections: ISection[],
+  contenu: IContenu
+) => {
   const errors = sections.reduce((errors: string[], section) => {
     if (!section.elements) return errors
 
@@ -26,5 +29,3 @@ const contenuNumbersCheck = (sections: ISection[], contenu: IContenu) => {
 
   return null
 }
-
-export { contenuNumbersCheck }

@@ -1,6 +1,6 @@
 import { ISection, IHeritageContenu } from '../../../types'
 
-const heritageContenuValidate = (
+export const heritageContenuValidate = (
   sections?: ISection[] | null,
   heritageContenu?: IHeritageContenu | null
 ) => {
@@ -64,5 +64,3 @@ const heritageContenuValidate = (
 
   return errors
 }
-
-export { heritageContenuValidate }

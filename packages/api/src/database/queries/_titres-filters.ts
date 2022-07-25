@@ -21,7 +21,7 @@ const fieldFormat = (name: string, field: string) =>
 // - 'titres' depuis la table 'titres'
 // - 'titre' depuis la table 'titresDemarches'
 // root: nom de la table de base
-const titresFiltersQueryModify = (
+export const titresFiltersQueryModify = (
   {
     ids,
     perimetre,
@@ -288,5 +288,3 @@ const titresFiltersQueryModify = (
       .groupBy(`${root}.id`)
   }
 }
-
-export { titresFiltersQueryModify }

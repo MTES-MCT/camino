@@ -165,7 +165,7 @@ const relationsSlugsUpdate = async (
   return hasChanged
 }
 
-const titreSlugAndRelationsUpdate = async (
+export const titreSlugAndRelationsUpdate = async (
   titre: ITitre
 ): Promise<{ hasChanged: boolean; slug: string }> => {
   let slug = titreSlugFind(titre)
@@ -205,5 +205,3 @@ const titreSlugAndRelationsUpdate = async (
 
   return { hasChanged, slug }
 }
-
-export { titreSlugAndRelationsUpdate }

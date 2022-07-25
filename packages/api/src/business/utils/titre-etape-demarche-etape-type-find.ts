@@ -1,6 +1,6 @@
 import { IEtapeType } from '../../types'
 
-const titreEtapeDemarcheEtapeTypeFind = (
+export const titreEtapeDemarcheEtapeTypeFind = (
   etapeTypeId: string,
   etapesTypes: IEtapeType[],
   demarcheTypeNom: string
@@ -17,5 +17,3 @@ const titreEtapeDemarcheEtapeTypeFind = (
 
   return titreDemarcheEtapeType
 }
-
-export { titreEtapeDemarcheEtapeTypeFind }

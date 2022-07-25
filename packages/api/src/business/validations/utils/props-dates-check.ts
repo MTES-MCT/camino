@@ -10,7 +10,7 @@ import { ITitreActivite, ITitreEtape } from '../../../types'
  *
  */
 
-const propsDatesCheck = <T extends ITitreActivite | ITitreEtape>(
+export const propsDatesCheck = <T extends ITitreActivite | ITitreEtape>(
   propsNames: [keyof T],
   element: T
 ) => {
@@ -31,5 +31,3 @@ const propsDatesCheck = <T extends ITitreActivite | ITitreEtape>(
 
   return null
 }
-
-export { propsDatesCheck }

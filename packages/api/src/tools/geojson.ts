@@ -8,7 +8,7 @@ import { knex } from '../knex'
 // convertit des points
 // en un geojson de type 'MultiPolygon'
 
-const geojsonFeatureMultiPolygon = (points: ITitrePoint[]) => ({
+export const geojsonFeatureMultiPolygon = (points: ITitrePoint[]) => ({
   type: 'Feature',
   properties: { etapeId: points[0].titreEtapeId },
   coordinates: [],
@@ -24,7 +24,7 @@ const geojsonFeatureMultiPolygon = (points: ITitrePoint[]) => ({
 // convertit des points
 // en un geojson de type 'FeatureCollection' de 'Points'
 
-const geojsonFeatureCollectionPoints = (points: ITitrePoint[]) => ({
+export const geojsonFeatureCollectionPoints = (points: ITitrePoint[]) => ({
   type: 'FeatureCollection',
   properties: { etapeId: points[0].titreEtapeId },
   features: points.map(p => ({
@@ -78,13 +78,13 @@ const multiPolygonContoursClose = (groupes: number[][][][]) =>
     }, [])
   )
 
-const geojsonCenter = (points: ITitrePoint[]) => {
+export const geojsonCenter = (points: ITitrePoint[]) => {
   const geojson = geojsonFeatureMultiPolygon(points)
 
   return center(geojson).geometry.coordinates
 }
 
-const geojsonSurface = async (geojson: Feature<any>) => {
+export const geojsonSurface = async (geojson: Feature<any>) => {
   const result: { rows: { area: number }[] } = await knex.raw(
     `select ST_AREA(
     ST_GeomFromGeoJSON('${JSON.stringify(geojson.geometry)}'), true) as area`
@@ -92,11 +92,4 @@ const geojsonSurface = async (geojson: Feature<any>) => {
   const area = result.rows[0].area
 
   return Number.parseFloat((area / 1000000).toFixed(2))
-}
-
-export {
-  geojsonFeatureMultiPolygon,
-  geojsonFeatureCollectionPoints,
-  geojsonCenter,
-  geojsonSurface
 }

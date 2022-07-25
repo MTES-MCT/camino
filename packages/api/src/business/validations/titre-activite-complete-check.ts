@@ -2,7 +2,7 @@ import { IContenu, IDocument, IDocumentType, ISection } from '../../types'
 
 import { documentsTypesValidate } from './documents-types-validate'
 
-const titreActiviteCompleteCheck = (
+export const titreActiviteCompleteCheck = (
   sections: ISection[],
   contenu?: IContenu | null,
   documents?: IDocument[] | null,
@@ -29,5 +29,3 @@ const titreActiviteCompleteCheck = (
 
   return !documentsErrors.length
 }
-
-export { titreActiviteCompleteCheck }

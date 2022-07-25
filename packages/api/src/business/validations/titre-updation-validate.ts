@@ -1,7 +1,7 @@
 import { ITitre, IUtilisateur } from '../../types'
 import { isSuper } from 'camino-common/src/roles'
 
-const titreUpdationValidate = async (
+export const titreUpdationValidate = async (
   titreNew: ITitre,
   titreOld: ITitre,
   user: IUtilisateur | null | undefined
@@ -53,5 +53,3 @@ const titreUpdationValidate = async (
 
   return errors
 }
-
-export { titreUpdationValidate }

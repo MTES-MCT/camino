@@ -1,7 +1,7 @@
 import proj4 from 'proj4'
 import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
 
-const geoSystemesInit = () => {
+export const geoSystemesInit = () => {
   // initialise les définitions proj4
   // utilisées dans /tools/geo-convert
   proj4.defs(
@@ -11,5 +11,3 @@ const geoSystemesInit = () => {
     ])
   )
 }
-
-export { geoSystemesInit }

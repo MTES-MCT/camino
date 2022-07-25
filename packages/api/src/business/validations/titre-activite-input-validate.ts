@@ -6,7 +6,7 @@ import { contenuDatesCheck } from './utils/contenu-dates-check'
 
 const datePropsNames = ['date'] as [keyof ITitreActivite]
 
-const titreActiviteInputValidate = (
+export const titreActiviteInputValidate = (
   titreActivite: ITitreActivite,
   activiteSections: ISection[]
 ) => {
@@ -41,5 +41,3 @@ const titreActiviteInputValidate = (
 
   return errors
 }
-
-export { titreActiviteInputValidate }

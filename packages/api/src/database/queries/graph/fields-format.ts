@@ -28,7 +28,7 @@ const graphTitreAdministrationsFormat = (fields: IFields, type: string) => {
 }
 
 // ajoute des propriétés requises par /database/queries/_format
-const fieldsFormat = (fields: IFields, parent: string) => {
+export const fieldsFormat = (fields: IFields, parent: string) => {
   const isParentTitre = [
     'titres',
     'titre',
@@ -211,5 +211,3 @@ const fieldsFormat = (fields: IFields, parent: string) => {
 
   return fields
 }
-
-export { fieldsFormat }

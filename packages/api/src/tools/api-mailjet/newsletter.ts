@@ -110,7 +110,7 @@ const contactAdd = async (Email: string) => {
 const recipientFind = (contactId: number, recipients: IRecipient[]) =>
   recipients.find(r => r.ListID === contactListId && r.ContactID === contactId)
 
-const newsletterSubscribersFind = async () => {
+export const newsletterSubscribersFind = async () => {
   try {
     const emails = [] as string[]
 
@@ -131,7 +131,7 @@ const newsletterSubscribersFind = async () => {
   }
 }
 
-const newsletterSubscriberCheck = async (email: string) => {
+export const newsletterSubscriberCheck = async (email: string) => {
   try {
     // est ce que le contact est inscrit à la liste
     return await contactListCheck(email)
@@ -141,7 +141,7 @@ const newsletterSubscriberCheck = async (email: string) => {
   }
 }
 
-const newsletterSubscriberUpdate = async (
+export const newsletterSubscriberUpdate = async (
   email: string,
   subscribed: boolean
 ) => {
@@ -182,10 +182,4 @@ const newsletterSubscriberUpdate = async (
   } catch (e: any) {
     throw new Error(e)
   }
-}
-
-export {
-  newsletterSubscribersFind,
-  newsletterSubscriberUpdate,
-  newsletterSubscriberCheck
 }

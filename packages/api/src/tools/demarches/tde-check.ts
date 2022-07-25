@@ -2,7 +2,7 @@ import { titresTypesDemarchesTypesEtapesTypesGet } from '../../database/queries/
 import { titresDemarchesGet } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 
-const titreTypeDemarcheTypeEtapeTypeCheck = async () => {
+export const titreTypeDemarcheTypeEtapeTypeCheck = async () => {
   console.info()
   console.info('- - -')
   console.info('vérification de TDE avec les démarches en bdd')
@@ -47,5 +47,3 @@ const titreTypeDemarcheTypeEtapeTypeCheck = async () => {
   })
   console.info(`erreurs : ${errorsNb} TDE inconnus`)
 }
-
-export { titreTypeDemarcheTypeEtapeTypeCheck }

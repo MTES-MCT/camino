@@ -110,7 +110,7 @@ const specifiquesAdd = (
  * @params user - utilisateur connecté
  * @returns une requête d'étape(s)
  */
-const titresEtapesQueryModify = (
+export const titresEtapesQueryModify = (
   q: QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]>,
   user: IUtilisateur | null | undefined
 ) => {
@@ -204,5 +204,3 @@ const titresEtapesQueryModify = (
 
   return q
 }
-
-export { titresEtapesQueryModify }

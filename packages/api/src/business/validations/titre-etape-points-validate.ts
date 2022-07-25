@@ -1,6 +1,6 @@
 import { ITitrePoint } from '../../types'
 
-const titreEtapePointsValidate = (titrePoints: ITitrePoint[]) => {
+export const titreEtapePointsValidate = (titrePoints: ITitrePoint[]) => {
   const errors = titrePoints.reduce((errors: string[], point) => {
     if (
       !point.references.every(
@@ -25,5 +25,3 @@ const titreEtapePointsValidate = (titrePoints: ITitrePoint[]) => {
 
   return null
 }
-
-export { titreEtapePointsValidate }

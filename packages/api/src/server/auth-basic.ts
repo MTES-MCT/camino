@@ -27,7 +27,7 @@ const userCredentialsCheck = async (email: string, motDePasse: string) => {
   return valid ? user : null
 }
 
-const authBasic = async (
+export const authBasic = async (
   req: express.Request,
   res: express.Response,
   next: express.NextFunction
@@ -63,5 +63,3 @@ const authBasic = async (
 
   next()
 }
-
-export { authBasic }

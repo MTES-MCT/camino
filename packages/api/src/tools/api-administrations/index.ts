@@ -134,7 +134,7 @@ const organismeDepartementGet = async (
   return organisme ? organismeFormat(organisme, departementId) : null
 }
 
-const organismesDepartementsGet = async (
+export const organismesDepartementsGet = async (
   departementsIdsNoms: { departementId: DepartementId; nom: string }[]
 ): Promise<Administration[]> => {
   const administrationsOrganismesRequests = departementsIdsNoms.map(
@@ -151,5 +151,3 @@ const organismesDepartementsGet = async (
 
   return organismesDepartements.filter((o): o is Administration => !!o)
 }
-
-export { organismesDepartementsGet }

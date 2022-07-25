@@ -1,6 +1,6 @@
 import { ITitrePoint } from '../../../types'
 
-const titrePoints = [
+export const titrePoints = [
   {
     id: 'h-cx-courdemanges-1988-oct01-dpu01-1',
     groupe: 1,
@@ -23,5 +23,3 @@ const titrePoints = [
     coordonnees: { x: 1, y: 1 }
   }
 ] as ITitrePoint[]
-
-export { titrePoints }

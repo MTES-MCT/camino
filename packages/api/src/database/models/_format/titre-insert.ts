@@ -1,6 +1,6 @@
 import { Pojo } from 'objection'
 
-const titreInsertFormat = (json: Pojo) => {
+export const titreInsertFormat = (json: Pojo) => {
   delete json.geojsonMultiPolygon
   delete json.geojsonPoints
   delete json.communes
@@ -21,5 +21,3 @@ const titreInsertFormat = (json: Pojo) => {
 
   return json
 }
-
-export { titreInsertFormat }
