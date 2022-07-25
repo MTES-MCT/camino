@@ -12,7 +12,7 @@ import {
  * @returns l'objet contenu formaté
  */
 
-const titreContenuFormat = (
+export const titreContenuFormat = (
   contenusTitreEtapesIds: IContenusTitreEtapesIds,
   titreDemarches?: ITitreDemarche[] | null
 ) => {
@@ -52,5 +52,3 @@ const titreContenuFormat = (
 
   return contenu
 }
-
-export { titreContenuFormat }

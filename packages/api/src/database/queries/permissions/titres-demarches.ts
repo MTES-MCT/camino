@@ -23,7 +23,7 @@ import {
   isBureauDEtudes
 } from 'camino-common/src/roles'
 
-const titresDemarchesQueryModify = (
+export const titresDemarchesQueryModify = (
   q: QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>,
   user: IUtilisateur | null | undefined
 ) => {
@@ -170,5 +170,3 @@ const titreEtapesCreationQuery = (
     return raw('false')
   }
 }
-
-export { titresDemarchesQueryModify }

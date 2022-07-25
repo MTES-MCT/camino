@@ -17,7 +17,7 @@ import {
  * @returns une liste de messages d'erreur si l'utilisateur n'a pas le droit de faire les modifications
  */
 
-const utilisateurUpdationValidate = async (
+export const utilisateurUpdationValidate = async (
   user: IUtilisateur,
   utilisateur: IUtilisateur
 ) => {
@@ -57,5 +57,3 @@ const utilisateurUpdationValidate = async (
 
   return []
 }
-
-export { utilisateurUpdationValidate }

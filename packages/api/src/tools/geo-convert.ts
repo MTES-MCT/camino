@@ -2,7 +2,7 @@ import proj4 from 'proj4'
 import { ICoordonnees } from '../types'
 import { GEO_SYSTEME_IDS, GeoSystemeId } from 'camino-common/src/geoSystemes'
 
-const geoConvert = (
+export const geoConvert = (
   epsgId: GeoSystemeId,
   coords: ICoordonnees
 ): ICoordonnees => {
@@ -15,5 +15,3 @@ const geoConvert = (
 
   return proj4(fromProjection, toProjection, coords)
 }
-
-export { geoConvert }

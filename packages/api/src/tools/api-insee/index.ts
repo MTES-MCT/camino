@@ -9,7 +9,9 @@ import { IEntreprise, IEntrepriseEtablissement } from '../../types'
 
 // cherche les établissements des entreprises
 // retourne des objets du modèle EntrepriseEtablissements
-const apiInseeEntreprisesEtablissementsGet = async (sirenIds: string[]) => {
+export const apiInseeEntreprisesEtablissementsGet = async (
+  sirenIds: string[]
+) => {
   if (!sirenIds.length) return []
 
   const token = await tokenInitialize()
@@ -35,7 +37,7 @@ const apiInseeEntreprisesEtablissementsGet = async (sirenIds: string[]) => {
 
 // cherche les adresses des entreprises
 // retourne des objets du modèle Entreprise
-const apiInseeEntreprisesGet = async (sirenIds: string[]) => {
+export const apiInseeEntreprisesGet = async (sirenIds: string[]) => {
   const token = await tokenInitialize()
 
   if (!token) {
@@ -59,7 +61,9 @@ const apiInseeEntreprisesGet = async (sirenIds: string[]) => {
   }, [])
 }
 
-const apiInseeEntrepriseAndEtablissementsGet = async (sirenId: string) => {
+export const apiInseeEntrepriseAndEtablissementsGet = async (
+  sirenId: string
+) => {
   const token = await tokenInitialize()
 
   if (!token) {
@@ -79,10 +83,4 @@ const apiInseeEntrepriseAndEtablissementsGet = async (sirenId: string) => {
   ])
 
   return entreprise
-}
-
-export {
-  apiInseeEntrepriseAndEtablissementsGet,
-  apiInseeEntreprisesGet,
-  apiInseeEntreprisesEtablissementsGet
 }

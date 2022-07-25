@@ -2,7 +2,7 @@ import { ISection, IContenu } from '../../../types'
 
 import { dateValidate } from '../../../tools/date'
 
-const contenuDatesCheck = (sections: ISection[], contenu: IContenu) => {
+export const contenuDatesCheck = (sections: ISection[], contenu: IContenu) => {
   const errors = sections.reduce(
     (errors: string[], section) =>
       section.elements && contenu[section.id]
@@ -30,5 +30,3 @@ const contenuDatesCheck = (sections: ISection[], contenu: IContenu) => {
 
   return null
 }
-
-export { contenuDatesCheck }

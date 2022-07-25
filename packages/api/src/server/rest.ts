@@ -49,7 +49,7 @@ type IRestResolver = (
   userId?: string
 ) => Promise<IRestResolverResult | null>
 
-const rest = express.Router()
+export const rest = express.Router()
 
 type ExpressRoute = (
   req: express.Request,
@@ -160,5 +160,3 @@ rest.use(
     next()
   }
 )
-
-export { rest }

@@ -2,7 +2,7 @@ import { titresEtapesGet } from '../../database/queries/titres-etapes'
 import { titresTypesDemarchesTypesEtapesTypesGet } from '../../database/queries/metas'
 import { userSuper } from '../../database/user-super'
 
-const etapeStatutCheck = async () => {
+export const etapeStatutCheck = async () => {
   console.info()
   console.info('- - -')
   console.info('vérification des statuts des étapes en bdd')
@@ -55,5 +55,3 @@ const etapeStatutCheck = async () => {
   })
   console.info(`erreurs : ${errorsNb} statuts inconnus`)
 }
-
-export { etapeStatutCheck }

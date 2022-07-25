@@ -1,5 +1,5 @@
 // Liste des noms des tables à sauvegarder au format json
-const tables = [
+export const tables = [
   { name: 'activites_statuts', orderBy: ['id'] },
   { name: 'activites_types', orderBy: ['id'] },
   {
@@ -135,5 +135,3 @@ const tables = [
     orderBy: ['utilisateur_id', 'entreprise_id']
   }
 ]
-
-export { tables }

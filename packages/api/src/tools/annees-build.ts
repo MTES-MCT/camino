@@ -4,7 +4,7 @@
  * @param dateFin - date de fin au format 'yyy-mm-dd'
  */
 
-const anneesBuild = (dateDebut: string, dateFin: string) => {
+export const anneesBuild = (dateDebut: string, dateFin: string) => {
   const anneeDebut = new Date(dateDebut).getFullYear()
   const anneeFin = new Date(dateFin).getFullYear()
 
@@ -16,5 +16,3 @@ const anneesBuild = (dateDebut: string, dateFin: string) => {
 
   return annees
 }
-
-export { anneesBuild }

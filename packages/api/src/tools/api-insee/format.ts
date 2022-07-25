@@ -109,7 +109,9 @@ const entrepriseEtablissementFormat = (
   return etablissement
 }
 
-const entrepriseEtablissementsFormat = (uniteLegale: IApiSirenUniteLegale) => {
+export const entrepriseEtablissementsFormat = (
+  uniteLegale: IApiSirenUniteLegale
+) => {
   // periodesUniteLegale est un tableau
   // classé par ordre de fin chronologique décroissant
   if (
@@ -127,7 +129,7 @@ const entrepriseEtablissementsFormat = (uniteLegale: IApiSirenUniteLegale) => {
   return entrepriseEtablissements
 }
 
-const entrepriseFormat = ({
+export const entrepriseFormat = ({
   uniteLegale,
   adresseEtablissement: adresse,
   siren
@@ -228,5 +230,3 @@ const entrepriseFormat = ({
 
   return entreprise
 }
-
-export { entrepriseEtablissementsFormat, entrepriseFormat }

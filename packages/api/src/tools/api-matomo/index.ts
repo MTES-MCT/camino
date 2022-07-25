@@ -214,7 +214,7 @@ const titresModifiesCountGet = async (duree: number) => {
   )
 }
 
-const matomoCacheInit = async () => {
+export const matomoCacheInit = async () => {
   console.info()
   console.info('- - -')
   console.info('rafraichissement du cache Matomo…')
@@ -256,7 +256,7 @@ const matomoCacheInit = async () => {
   return matomoCacheValue
 }
 
-const matomoData = async () => {
+export const matomoData = async () => {
   const matomoCache = await cacheGet('matomo')
 
   if (!matomoCache) {
@@ -290,5 +290,3 @@ const getPath = (
 
   return `${process.env.API_MATOMO_URL}/index.php?expanded=1${_params}&filter_limit=-1&format=JSON&idSite=${process.env.API_MATOMO_ID}&method=${method}&module=API&period=${period}&token_auth=${process.env.API_MATOMO_TOKEN}`
 }
-
-export { matomoData, matomoCacheInit }

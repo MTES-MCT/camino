@@ -1,6 +1,6 @@
 import { IDocument, IDocumentType } from '../../types'
 
-const documentsTypesValidate = (
+export const documentsTypesValidate = (
   documents?: IDocument[] | null,
   documentsTypes?: IDocumentType[]
 ) => {
@@ -27,5 +27,3 @@ const documentsTypesValidate = (
 
   return errors
 }
-
-export { documentsTypesValidate }

@@ -59,7 +59,7 @@ const areaFormat = (area: IGeoJsonProperties): IArea => ({
   surface: area.surface as number
 })
 
-const apiGeoGet = async (
+export const apiGeoGet = async (
   geojson: IGeoJson,
   areasTypes: IAreaType[]
 ): Promise<IApiGeoResult | null> => {
@@ -95,5 +95,3 @@ const apiGeoGet = async (
 
   return areas
 }
-
-export { apiGeoGet }

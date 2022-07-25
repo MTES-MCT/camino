@@ -11,7 +11,7 @@ import { titreDemarchesEtapesRebuild } from './titre-demarches-etapes-rebuild'
  * @param titreTypeId - id du type de titre
  * @param hasDemarcheDeposee - si un titre échu avec une démarche déposée doit être pris en compte
  */
-const titreValideCheck = (
+export const titreValideCheck = (
   titreDemarches: ITitreDemarche[],
   dateDebut: string,
   dateFin: string,
@@ -60,5 +60,3 @@ const titreValideCheck = (
 
   return false
 }
-
-export { titreValideCheck }

@@ -2,7 +2,7 @@ import { Index } from '../../types'
 import { IndexFile } from './_types'
 import { matchFuzzy } from './_utils'
 
-const documentsFilesCheck = (
+export const documentsFilesCheck = (
   documentsIndex: IndexFile,
   filesIndex: Index<string>
 ) => {
@@ -35,5 +35,3 @@ const documentsFilesCheck = (
     )
   }
 }
-
-export { documentsFilesCheck }

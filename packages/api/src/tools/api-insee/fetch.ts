@@ -35,7 +35,7 @@ const tokenTest = async () => {
   }
 }
 
-const tokenInitialize = async () => {
+export const tokenInitialize = async () => {
   if (apiToken) return apiToken
 
   try {
@@ -279,7 +279,7 @@ const batchesBuild = (ids: string[]) => {
   )
 }
 
-const entreprisesEtablissementsFetch = async (ids: string[]) => {
+export const entreprisesEtablissementsFetch = async (ids: string[]) => {
   const batches = batchesBuild(ids)
 
   const queryFormat = (idsBatch: string[]) =>
@@ -313,7 +313,7 @@ const entreprisesEtablissementsFetch = async (ids: string[]) => {
   }, [])
 }
 
-const entreprisesFetch = async (ids: string[]) => {
+export const entreprisesFetch = async (ids: string[]) => {
   const batches = batchesBuild(ids)
 
   const queryFormat = (idsBatch: string[]) => {
@@ -348,5 +348,3 @@ const entreprisesFetch = async (ids: string[]) => {
     return r
   }, [])
 }
-
-export { entreprisesFetch, entreprisesEtablissementsFetch, tokenInitialize }

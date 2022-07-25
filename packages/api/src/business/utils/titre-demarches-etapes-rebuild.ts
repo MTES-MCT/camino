@@ -19,7 +19,7 @@ const titreEtapesFilter = (titreEtapes: ITitreEtape[], date: string) =>
  * @returns démarches du titre
  */
 
-const titreDemarchesEtapesRebuild = (
+export const titreDemarchesEtapesRebuild = (
   date: string,
   titreDemarches: ITitreDemarche[],
   titreTypeId: string
@@ -56,5 +56,3 @@ const titreDemarchesEtapesRebuild = (
 
     return acc
   }, [])
-
-export { titreDemarchesEtapesRebuild }

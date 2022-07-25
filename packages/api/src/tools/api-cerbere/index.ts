@@ -44,7 +44,7 @@ const cerbereProfileFormat = (attributes: { [key: string]: string }) =>
     {}
   )
 
-const login = async (ticket: string) => {
+export const login = async (ticket: string) => {
   try {
     const { attributes } = await cerbereClient.validate(ticket)
 
@@ -68,6 +68,5 @@ const login = async (ticket: string) => {
   }
 }
 
-const logout = (returnUrl: string) => cerbereClient.logout(returnUrl, true)
-
-export { login, logout }
+export const logout = (returnUrl: string) =>
+  cerbereClient.logout(returnUrl, true)

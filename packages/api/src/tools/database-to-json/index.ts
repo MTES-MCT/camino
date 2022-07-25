@@ -8,7 +8,7 @@ import { tables } from './tables'
 
 const dir = 'sources'
 
-const databaseToJsonExport = async () => {
+export const databaseToJsonExport = async () => {
   await rm(`./${dir}`, { recursive: true, force: true }, err => {
     if (err) {
       throw err
@@ -64,5 +64,3 @@ const fieldFormat = (field: IFields, key: string) => {
 
   return field[key]
 }
-
-export { databaseToJsonExport }

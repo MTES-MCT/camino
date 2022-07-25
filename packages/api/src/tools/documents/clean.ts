@@ -5,7 +5,7 @@ import { documentSupprimer } from '../../api/graphql/resolvers/documents'
 import { userSuper } from '../../database/user-super'
 import { datesDiffInDays } from 'camino-common/src/date'
 
-const documentsClean = async () => {
+export const documentsClean = async () => {
   console.info()
   console.info('- - -')
   console.info('suppression des documents orphelins')
@@ -31,5 +31,3 @@ const documentsClean = async () => {
     } catch (e) {}
   }
 }
-
-export { documentsClean }

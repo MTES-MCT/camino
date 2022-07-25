@@ -1,5 +1,4 @@
 import emailRegex from 'email-regex'
 
-const emailCheck = (email: string) => emailRegex({ exact: true }).test(email)
-
-export { emailCheck }
+export const emailCheck = (email: string) =>
+  emailRegex({ exact: true }).test(email)

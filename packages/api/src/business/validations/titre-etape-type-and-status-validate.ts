@@ -3,7 +3,7 @@ import { IEtapeType } from '../../types'
 // valide le type et le statut de l'étape en fonction des type d'étapes d'une démarche
 import { titreEtapeDemarcheEtapeTypeFind } from '../utils/titre-etape-demarche-etape-type-find'
 
-const titreEtapeTypeAndStatusValidate = (
+export const titreEtapeTypeAndStatusValidate = (
   etapeTypeId: string,
   etapeStatutId: string | undefined,
   etapesTypes: IEtapeType[],
@@ -35,5 +35,3 @@ const titreEtapeTypeAndStatusValidate = (
     return [e.message]
   }
 }
-
-export { titreEtapeTypeAndStatusValidate }

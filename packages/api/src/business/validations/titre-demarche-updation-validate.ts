@@ -1,6 +1,6 @@
 import { ITitreDemarche } from '../../types'
 
-const titreDemarcheUpdationValidate = async (
+export const titreDemarcheUpdationValidate = async (
   titreDemarcheNew: ITitreDemarche,
   titreDemarcheOld: ITitreDemarche
 ) => {
@@ -17,5 +17,3 @@ const titreDemarcheUpdationValidate = async (
 
   return errors
 }
-
-export { titreDemarcheUpdationValidate }

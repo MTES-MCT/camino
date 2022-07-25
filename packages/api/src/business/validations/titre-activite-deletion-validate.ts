@@ -1,6 +1,8 @@
 import { ITitreActivite } from '../../types'
 
-const titreActiviteDeletionValidate = (titreActivite: ITitreActivite) => {
+export const titreActiviteDeletionValidate = (
+  titreActivite: ITitreActivite
+) => {
   const errors = [] as string[]
 
   if (!titreActivite.suppression) {
@@ -9,5 +11,3 @@ const titreActiviteDeletionValidate = (titreActivite: ITitreActivite) => {
 
   return errors
 }
-
-export { titreActiviteDeletionValidate }

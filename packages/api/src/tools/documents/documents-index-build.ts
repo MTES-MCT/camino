@@ -23,7 +23,7 @@ const documentPathGet = (document: IDocument) => {
   return `${path}/${document.id}.${document.fichierTypeId}`
 }
 
-const documentsIndexBuild = async () => {
+export const documentsIndexBuild = async () => {
   const documents = await documentsGet({}, {}, userSuper)
 
   return documents.reduce((res: IndexFile, document) => {
@@ -34,5 +34,3 @@ const documentsIndexBuild = async () => {
     return res
   }, {})
 }
-
-export { documentsIndexBuild }
