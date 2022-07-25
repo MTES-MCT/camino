@@ -86,7 +86,7 @@ export const bodyBuilder = (
         )
 
       if (substanceLegalesWithFiscales.length > 1) {
-        // TODO on fait quoi ? On calcule quand même ?
+        // TODO 2022-07-25 on fait quoi ? On calcule quand même ?
         console.error(
           'BOOM, titre avec plusieurs substances légales possédant plusieurs substances fiscales ',
           titre.id
@@ -121,7 +121,6 @@ export const bodyBuilder = (
 
             body.articles[articleId] = {
               surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
-              // TODO Sandra, substance
               quantite_aurifere_kg: { [anneePrecedente]: production },
               redevance_communale_des_mines_aurifere_kg: {
                 [annee]: null
@@ -161,7 +160,6 @@ export const bodyBuilder = (
                 operateur: {
                   [anneePrecedente]: entreprise.nom
                 },
-                // TODO C'est dans les rapports trimestriels (GRP)
                 investissement: {
                   [anneePrecedente]: investissement.toString(10)
                 },
@@ -201,7 +199,7 @@ export const responseExtractor = (
 ): Fiscalite => {
   const redevances: Reduced = Object.values(result.articles).reduce<Reduced>(
     (acc, article) => {
-      // TODO Sandra, remplacer redevance_communale_des_mines_aurifere_kg par redevance_communale_des_mines_substance_unite
+      // TODO 2022_07_25 gérer les substances autre que l'or -> redevance_communale_des_mines_substance_unite
       acc.fiscalite.redevanceCommunale +=
         article.redevance_communale_des_mines_aurifere_kg?.[annee] ?? 0
       acc.fiscalite.redevanceDepartementale +=
@@ -261,7 +259,7 @@ export const fiscalite = async (
       throw new Error(`l’entreprise ${entrepriseId} est inconnue`)
     }
 
-    // TODO gérer l’année
+    // TODO 2022-07-25 gérer l’année
     const annee = 2022
     const anneePrecedente = annee - 1
 
@@ -277,10 +275,10 @@ export const fiscalite = async (
     )
 
     const activites = await titresActivitesGet(
-      // TODO Laure, est-ce qu’il faut faire les WRP ?
+      // TODO 2022-07-25 Laure, est-ce qu’il faut faire les WRP ?
       {
         typesIds: ['grx', 'gra', 'wrp'],
-        // TODO Laure, que les déposées ? Pas les « en construction » ?
+        // TODO 2022-07-25 Laure, que les déposées ? Pas les « en construction » ?
         statutsIds: ['dep'],
         annees: [anneePrecedente],
         titresIds: titres.map(({ id }) => id)
@@ -289,10 +287,8 @@ export const fiscalite = async (
       user
     )
     const activitesTrimestrielles = await titresActivitesGet(
-      // TODO Laure, est-ce qu’il faut faire les WRP ?
       {
         typesIds: ['grp'],
-        // TODO Laure, que les déposées ? Pas les « en construction » ?
         statutsIds: ['dep'],
         annees: [anneePrecedente],
         titresIds: titres.map(({ id }) => id)
@@ -308,15 +304,11 @@ export const fiscalite = async (
       annee,
       entreprise
     )
-    console.info(JSON.stringify(body))
-
     if (Object.keys(body.articles).length > 0) {
       const result = await apiOpenfiscaFetch(body)
 
       const redevances = responseExtractor(result, annee)
 
-      console.info(JSON.stringify(result))
-      console.info('redevanceCommunaleMinesAurifere', redevances)
       res.json(redevances)
     } else {
       res.json({
