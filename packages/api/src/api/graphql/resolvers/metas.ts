@@ -67,10 +67,10 @@ import {
 import { UNITES } from 'camino-common/src/unites'
 import {
   isAdministrationAdmin,
-  isEntreprise,
-  isSuper,
   isAdministrationEditeur,
-  isBureauDEtudes
+  isBureauDEtudes,
+  isEntreprise,
+  isSuper
 } from 'camino-common/src/roles'
 import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort'
 import TitresDemarches from '../../../database/models/titres-demarches'
@@ -79,13 +79,13 @@ import { Pays, PaysList } from 'camino-common/src/pays'
 import { Departement, Departements } from 'camino-common/src/departement'
 import { Region, Regions } from 'camino-common/src/region'
 
-const devises = async () => devisesGet()
+export const devises = async () => devisesGet()
 
-const geoSystemes = () => sortedGeoSystemes
+export const geoSystemes = () => sortedGeoSystemes
 
-const unites = () => UNITES
+export const unites = () => UNITES
 
-const documentsTypes = async ({
+export const documentsTypes = async ({
   repertoire,
   typeId
 }: {
@@ -104,7 +104,7 @@ const documentsTypes = async ({
 }
 
 // TODO: 2022-06-15 à supprimer de l’API
-const documentsVisibilites = async (_: never, context: IToken) => {
+export const documentsVisibilites = async (_: never, context: IToken) => {
   const user = await userGet(context.user?.id)
   if (!user) return []
 
@@ -129,9 +129,9 @@ const documentsVisibilites = async (_: never, context: IToken) => {
   return []
 }
 
-const referencesTypes = async () => referencesTypesGet()
+export const referencesTypes = async () => referencesTypesGet()
 
-const domaines = async (
+export const domaines = async (
   _: never,
   context: IToken,
   info: GraphQLResolveInfo
@@ -150,7 +150,7 @@ const domaines = async (
   }
 }
 
-const types = async () => {
+export const types = async () => {
   try {
     return await titresTypesTypesGet()
   } catch (e) {
@@ -162,7 +162,7 @@ const types = async () => {
   }
 }
 
-const statuts = async (_: never, context: IToken) => {
+export const statuts = async (_: never, context: IToken) => {
   try {
     const user = await userGet(context.user?.id)
 
@@ -176,7 +176,7 @@ const statuts = async (_: never, context: IToken) => {
   }
 }
 
-const demarchesTypes = async (
+export const demarchesTypes = async (
   { titreId, travaux }: { titreId?: string; travaux?: boolean },
   context: IToken,
   info: GraphQLResolveInfo
@@ -195,7 +195,7 @@ const demarchesTypes = async (
   }
 }
 
-const demarchesStatuts = async () => {
+export const demarchesStatuts = async () => {
   try {
     return await demarchesStatutsGet()
   } catch (e) {
@@ -304,7 +304,8 @@ const demarcheEtapesTypesGet = async (
   // on laisse l’arbre traiter l’unicité des étapes
   const demarcheDefinition = demarcheDefinitionFind(
     titre.typeId,
-    titreDemarche.typeId
+    titreDemarche.typeId,
+    titreDemarche.etapes
   )
 
   // dans un premier temps on récupère toutes les étapes possibles pour cette démarche
@@ -339,7 +340,7 @@ const demarcheEtapesTypesGet = async (
   )
 }
 
-const etapesTypes = async (
+export const etapesTypes = async (
   {
     titreDemarcheId,
     titreEtapeId,
@@ -384,7 +385,7 @@ const etapesTypes = async (
   }
 }
 
-const etapesStatuts = async () => {
+export const etapesStatuts = async () => {
   try {
     return await etapesStatutsGet()
   } catch (e) {
@@ -396,14 +397,14 @@ const etapesStatuts = async () => {
   }
 }
 
-const version = () => process.env.APPLICATION_VERSION
+export const version = () => process.env.APPLICATION_VERSION
 
 /**
  * Retourne les types d'administrations
  *
  * @returns un tableau de types d'administrations
  */
-const administrationsTypes = () => {
+export const administrationsTypes = () => {
   try {
     return sortedAdministrationTypes
   } catch (e) {
@@ -415,13 +416,13 @@ const administrationsTypes = () => {
   }
 }
 
-const pays = (): Pays[] => Object.values(PaysList)
+export const pays = (): Pays[] => Object.values(PaysList)
 
-const departements = (): Departement[] => Object.values(Departements)
+export const departements = (): Departement[] => Object.values(Departements)
 
-const regions = (): Region[] => Object.values(Regions)
+export const regions = (): Region[] => Object.values(Regions)
 
-const phasesStatuts = async () => {
+export const phasesStatuts = async () => {
   try {
     return await phasesStatutsGet()
   } catch (e) {
@@ -433,7 +434,7 @@ const phasesStatuts = async () => {
   }
 }
 
-const domaineModifier = async (
+export const domaineModifier = async (
   { domaine }: { domaine: IDomaine },
   context: IToken,
   info: GraphQLResolveInfo
@@ -465,7 +466,7 @@ const domaineModifier = async (
   }
 }
 
-const titreTypeTypeModifier = async (
+export const titreTypeTypeModifier = async (
   { titreType }: { titreType: ITitreTypeType },
   context: IToken
 ) => {
@@ -494,7 +495,7 @@ const titreTypeTypeModifier = async (
   }
 }
 
-const titreStatutModifier = async (
+export const titreStatutModifier = async (
   { titreStatut }: { titreStatut: ITitreStatut },
   context: IToken
 ) => {
@@ -523,7 +524,7 @@ const titreStatutModifier = async (
   }
 }
 
-const demarcheTypeModifier = async (
+export const demarcheTypeModifier = async (
   { demarcheType }: { demarcheType: IDemarcheType },
   context: IToken,
   info: GraphQLResolveInfo
@@ -555,7 +556,7 @@ const demarcheTypeModifier = async (
   }
 }
 
-const demarcheStatutModifier = async (
+export const demarcheStatutModifier = async (
   { demarcheStatut }: { demarcheStatut: IDemarcheStatut },
   context: IToken
 ) => {
@@ -584,7 +585,7 @@ const demarcheStatutModifier = async (
   }
 }
 
-const phaseStatutModifier = async (
+export const phaseStatutModifier = async (
   { phaseStatut }: { phaseStatut: IPhaseStatut },
   context: IToken
 ) => {
@@ -607,7 +608,7 @@ const phaseStatutModifier = async (
   }
 }
 
-const etapeTypeModifier = async (
+export const etapeTypeModifier = async (
   { etapeType }: { etapeType: IEtapeType },
   context: IToken,
   info: GraphQLResolveInfo
@@ -641,7 +642,7 @@ const etapeTypeModifier = async (
   }
 }
 
-const etapeStatutModifier = async (
+export const etapeStatutModifier = async (
   { etapeStatut }: { etapeStatut: IEtapeStatut },
   context: IToken
 ) => {
@@ -664,7 +665,7 @@ const etapeStatutModifier = async (
   }
 }
 
-const documentTypeCreer = async (
+export const documentTypeCreer = async (
   { documentType }: { documentType: IDocumentType },
   context: IToken
 ) => {
@@ -687,7 +688,7 @@ const documentTypeCreer = async (
   }
 }
 
-const documentTypeModifier = async (
+export const documentTypeModifier = async (
   { documentType }: { documentType: IDocumentType },
   context: IToken
 ) => {
@@ -709,7 +710,7 @@ const documentTypeModifier = async (
     throw e
   }
 }
-const referenceTypeModifier = async (
+export const referenceTypeModifier = async (
   { referenceType }: { referenceType: IReferenceType },
   context: IToken
 ) => {
@@ -730,37 +731,4 @@ const referenceTypeModifier = async (
 
     throw e
   }
-}
-
-export {
-  devises,
-  demarchesTypes,
-  demarchesStatuts,
-  documentsTypes,
-  documentsVisibilites,
-  domaines,
-  etapesTypes,
-  etapesStatuts,
-  geoSystemes,
-  phasesStatuts,
-  referencesTypes,
-  statuts,
-  titreStatutModifier,
-  types,
-  unites,
-  version,
-  administrationsTypes,
-  regions,
-  departements,
-  domaineModifier,
-  titreTypeTypeModifier,
-  demarcheTypeModifier,
-  demarcheStatutModifier,
-  phaseStatutModifier,
-  etapeTypeModifier,
-  etapeStatutModifier,
-  documentTypeCreer,
-  documentTypeModifier,
-  referenceTypeModifier,
-  pays
 }
