@@ -1,11 +1,24 @@
 import { isSuper, Role } from './roles'
 import { AdministrationId } from './administrations'
 
-export interface Fiscalite {
+export type Fiscalite = FiscaliteGuyane | FiscaliteFrance
+export interface FiscaliteFrance {
   redevanceCommunale: number
   redevanceDepartementale: number
-  taxeAurifereGuyane: number
-  totalInvestissementsDeduits: number
+}
+
+export interface FiscaliteGuyane extends FiscaliteFrance {
+  guyane: {
+    taxeAurifereBrute: number
+    totalInvestissementsDeduits: number
+    taxeAurifere: number
+  }
+}
+
+export const isFiscaliteGuyane = (
+  fiscalite: Fiscalite
+): fiscalite is FiscaliteGuyane => {
+  return 'guyane' in fiscalite
 }
 
 export const fiscaliteVisible = (

@@ -2,7 +2,12 @@ import { userGet } from '../../database/queries/utilisateurs'
 
 import express from 'express'
 import { IEntreprise, IUser } from '../../types'
-import { Fiscalite, fiscaliteVisible } from 'camino-common/src/fiscalite'
+import {
+  Fiscalite,
+  FiscaliteFrance,
+  FiscaliteGuyane,
+  fiscaliteVisible
+} from 'camino-common/src/fiscalite'
 import { constants } from 'http2'
 import {
   apiOpenfiscaFetch,
@@ -15,10 +20,15 @@ import { entrepriseGet } from '../../database/queries/entreprises'
 import TitresActivites from '../../database/models/titres-activites'
 import Titres from '../../database/models/titres'
 import { CustomResponse } from './express-type'
+import { SubstancesFiscales } from 'camino-common/src/substance'
+import { Departements } from 'camino-common/src/departement'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { Regions } from 'camino-common/src/region'
 
 // VisibleForTesting
 export const bodyBuilder = (
-  activites: Pick<TitresActivites, 'titreId' | 'contenu'>[],
+  activitesAnnuelles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
+  activitesTrimestrielles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
   titres: Pick<Titres, 'substances' | 'communes' | 'id'>[],
   annee: number,
   entreprise: Pick<IEntreprise, 'categorie' | 'nom'>
@@ -30,12 +40,28 @@ export const bodyBuilder = (
     communes: {}
   }
 
-  for (const activite of activites) {
+  for (const activite of activitesAnnuelles) {
     const titre = titres.find(({ id }) => id === activite.titreId)
+    const activiteTrimestresTitre = activitesTrimestrielles.filter(
+      ({ titreId }) => titreId === activite.titreId
+    )
 
     if (!titre) {
       throw new Error(`le titre ${activite.titreId} n’est pas chargé`)
     }
+
+    if (!titre.communes?.length) {
+      throw new Error(
+        `les communes du titre ${activite.titreId} ne sont pas chargées`
+      )
+    }
+
+    const titreGuyannais = titre.communes
+      .map(({ departementId }) => departementId)
+      .filter(isNotNullNorUndefined)
+      .some(departementId => {
+        return Regions[Departements[departementId].regionId].paysId === 'GF'
+      })
 
     if (!titre.substances) {
       throw new Error(
@@ -44,74 +70,116 @@ export const bodyBuilder = (
     }
 
     if (titre.substances.length > 0 && activite.contenu) {
-      // TODO Laure, on fait bien les calculs que sur la substance principale ?
-      // Pour le titre m-px-saint-pierre-2013 il n'y a pas d'ordre aux substances, il y'a or et substances connexes
-      // d'après le code, il y'a un tri par ordre alphabétique, pas terrible non ?
-      // plus inquiétant, cette étape à 11 substances non triées : EZtUs2fefrDZUw0wLAUK42p8
+      if (!titre.substances[0].legales) {
+        throw new Error(
+          `les substances légales des substances du titre ${activite.titreId} ne sont pas chargées`
+        )
+      }
 
-      const mainSubstance = titre.substances[0]
-      const production = activite.contenu.substancesFiscales[mainSubstance.id]
-
-      if (typeof production === 'number' && production > 0) {
-        if (!titre.communes) {
-          throw new Error(
-            `les communes du titre ${titre.id} ne sont pas chargées`
+      const substanceLegalesWithFiscales = titre.substances
+        .flatMap(s => s.legales)
+        .filter(isNotNullNorUndefined)
+        .filter(s =>
+          SubstancesFiscales.some(
+            ({ substanceLegaleId }) => substanceLegaleId === s.id
           )
-        }
-
-        const surfaceTotale = titre.communes.reduce(
-          (value, commune) => value + (commune.surface ?? 0),
-          0
         )
 
-        for (const commune of titre.communes) {
-          const articleId = `${titre.id}-${mainSubstance.id}-${commune.id}`
+      if (substanceLegalesWithFiscales.length > 1) {
+        // TODO 2022-07-25 on fait quoi ? On calcule quand même ?
+        console.error(
+          'BOOM, titre avec plusieurs substances légales possédant plusieurs substances fiscales ',
+          titre.id
+        )
+      }
 
-          body.articles[articleId] = {
-            surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
-            surface_totale: { [anneePrecedente]: surfaceTotale },
-            // TODO Sandra, substance
-            quantite_aurifere_kg: { [anneePrecedente]: production },
-            redevance_communale_des_mines_aurifere_kg: {
-              [annee]: null
-            },
-            redevance_departementale_des_mines_aurifere_kg: {
-              [annee]: null
-            }
-            // TODO taxe guyane
-            // TODO Sandra - elle ne fonctionne pas via OPENFISCA
-            // TODO Laure - on calcule cette taxe que pour les titres Guyannais ?
+      const substancesFiscales = substanceLegalesWithFiscales.flatMap(
+        ({ id }) =>
+          SubstancesFiscales.filter(
+            ({ substanceLegaleId }) => substanceLegaleId === id
+          )
+      )
+
+      for (const substancesFiscale of substancesFiscales) {
+        const production =
+          activite.contenu.substancesFiscales[substancesFiscale.id]
+
+        if (typeof production === 'number' && production > 0) {
+          if (!titre.communes) {
+            throw new Error(
+              `les communes du titre ${titre.id} ne sont pas chargées`
+            )
           }
 
-          if (!Object.prototype.hasOwnProperty.call(body.titres, titre.id)) {
-            body.titres[titre.id] = {
-              commune_principale_exploitation: {
-                [anneePrecedente]: commune.id
-              },
-              operateur: {
-                // TODO Sandra : ça sert à quoi ?
-                [anneePrecedente]: entreprise.nom
-              },
-              // TODO Sandra, ça vient d’où ?
-              investissement: {
-                [anneePrecedente]: '1'
-              },
-              categorie: {
-                [anneePrecedente]:
-                  entreprise.categorie === 'PME' ? 'pme' : 'autre'
-              },
-              articles: [articleId]
-            }
-          } else {
-            body.titres[titre.id].articles.push(articleId)
-          }
+          const surfaceTotale = titre.communes.reduce(
+            (value, commune) => value + (commune.surface ?? 0),
+            0
+          )
 
-          if (
-            !Object.prototype.hasOwnProperty.call(body.communes, commune.id)
-          ) {
-            body.communes[commune.id] = { articles: [articleId] }
-          } else {
-            body.communes[commune.id].articles.push(articleId)
+          for (const commune of titre.communes) {
+            const articleId = `${titre.id}-${substancesFiscale.id}-${commune.id}`
+
+            body.articles[articleId] = {
+              surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
+              quantite_aurifere_kg: { [anneePrecedente]: production },
+              redevance_communale_des_mines_aurifere_kg: {
+                [annee]: null
+              },
+              redevance_departementale_des_mines_aurifere_kg: {
+                [annee]: null
+              }
+            }
+
+            if (substancesFiscale.id === 'auru' && titreGuyannais) {
+              body.articles[articleId].taxe_guyane_brute = { [annee]: null }
+              body.articles[articleId].taxe_guyane_deduction = { [annee]: null }
+              body.articles[articleId].taxe_guyane = { [annee]: null }
+            }
+
+            if (!Object.prototype.hasOwnProperty.call(body.titres, titre.id)) {
+              const investissement = activiteTrimestresTitre.reduce(
+                (investissement, activite) => {
+                  let newInvestissement = 0
+                  if (
+                    typeof activite?.contenu?.renseignements?.environnement ===
+                    'number'
+                  ) {
+                    newInvestissement =
+                      activite?.contenu?.renseignements?.environnement
+                  }
+
+                  return investissement + newInvestissement
+                },
+                0
+              )
+              body.titres[titre.id] = {
+                commune_principale_exploitation: {
+                  [anneePrecedente]: commune.id
+                },
+                surface_totale: { [anneePrecedente]: surfaceTotale },
+                operateur: {
+                  [anneePrecedente]: entreprise.nom
+                },
+                investissement: {
+                  [anneePrecedente]: investissement.toString(10)
+                },
+                categorie: {
+                  [anneePrecedente]:
+                    entreprise.categorie === 'PME' ? 'pme' : 'autre'
+                },
+                articles: [articleId]
+              }
+            } else {
+              body.titres[titre.id].articles.push(articleId)
+            }
+
+            if (
+              !Object.prototype.hasOwnProperty.call(body.communes, commune.id)
+            ) {
+              body.communes[commune.id] = { articles: [articleId] }
+            } else {
+              body.communes[commune.id].articles.push(articleId)
+            }
           }
         }
       }
@@ -121,28 +189,52 @@ export const bodyBuilder = (
   return body
 }
 
+type Reduced =
+  | { guyane: true; fiscalite: FiscaliteGuyane }
+  | { guyane: false; fiscalite: FiscaliteFrance }
 // VisibleForTesting
-export const responseExtractor = (result: OpenfiscaResponse, annee: number) => {
-  const redevances: Fiscalite = Object.values(result.articles).reduce(
+export const responseExtractor = (
+  result: OpenfiscaResponse,
+  annee: number
+): Fiscalite => {
+  const redevances: Reduced = Object.values(result.articles).reduce<Reduced>(
     (acc, article) => {
-      // TODO Sandra, remplacer redevance_communale_des_mines_aurifere_kg par redevance_communale_des_mines_substance_unite
-      acc.redevanceCommunale +=
+      // TODO 2022_07_25 gérer les substances autre que l'or -> redevance_communale_des_mines_substance_unite
+      acc.fiscalite.redevanceCommunale +=
         article.redevance_communale_des_mines_aurifere_kg?.[annee] ?? 0
-      acc.redevanceDepartementale +=
+      acc.fiscalite.redevanceDepartementale +=
         article.redevance_departementale_des_mines_aurifere_kg?.[annee] ?? 0
 
-      // TODO Sandra, taxeAurifereGuyane et totalInvestissementsDeduits
+      if (!acc.guyane && 'taxe_guyane_brute' in article) {
+        acc = {
+          guyane: true,
+          fiscalite: {
+            ...acc.fiscalite,
+            guyane: {
+              taxeAurifereBrute: 0,
+              taxeAurifere: 0,
+              totalInvestissementsDeduits: 0
+            }
+          }
+        }
+      }
+      if (acc.guyane) {
+        acc.fiscalite.guyane.taxeAurifereBrute +=
+          article.taxe_guyane_brute?.[annee] ?? 0
+        acc.fiscalite.guyane.totalInvestissementsDeduits +=
+          article.taxe_guyane_deduction?.[annee] ?? 0
+        acc.fiscalite.guyane.taxeAurifere += article.taxe_guyane?.[annee] ?? 0
+      }
+
       return acc
     },
     {
-      redevanceCommunale: 0,
-      redevanceDepartementale: 0,
-      taxeAurifereGuyane: 0,
-      totalInvestissementsDeduits: 0
+      guyane: false,
+      fiscalite: { redevanceCommunale: 0, redevanceDepartementale: 0 }
     }
   )
 
-  return redevances
+  return redevances.fiscalite
 }
 
 export const fiscalite = async (
@@ -167,21 +259,36 @@ export const fiscalite = async (
       throw new Error(`l’entreprise ${entrepriseId} est inconnue`)
     }
 
-    // TODO gérer l’année
+    // TODO 2022-07-25 gérer l’année
     const annee = 2022
     const anneePrecedente = annee - 1
 
     const titres = await titresGet(
       { entreprisesIds: [entrepriseId] },
-      { fields: { substances: { id: {} }, communes: { id: {} } } },
+      {
+        fields: {
+          substances: { legales: { id: {} } },
+          communes: { id: {} }
+        }
+      },
       user
     )
 
     const activites = await titresActivitesGet(
-      // TODO Laure, est-ce qu’il faut faire les WRP ?
+      // TODO 2022-07-25 Laure, est-ce qu’il faut faire les WRP ?
       {
         typesIds: ['grx', 'gra', 'wrp'],
-        // TODO Laure, que les déposées ? Pas les « en construction » ?
+        // TODO 2022-07-25 Laure, que les déposées ? Pas les « en construction » ?
+        statutsIds: ['dep'],
+        annees: [anneePrecedente],
+        titresIds: titres.map(({ id }) => id)
+      },
+      { fields: { id: {} } },
+      user
+    )
+    const activitesTrimestrielles = await titresActivitesGet(
+      {
+        typesIds: ['grp'],
         statutsIds: ['dep'],
         annees: [anneePrecedente],
         titresIds: titres.map(({ id }) => id)
@@ -190,22 +297,23 @@ export const fiscalite = async (
       user
     )
 
-    const body = bodyBuilder(activites, titres, annee, entreprise)
-
+    const body = bodyBuilder(
+      activites,
+      activitesTrimestrielles,
+      titres,
+      annee,
+      entreprise
+    )
     if (Object.keys(body.articles).length > 0) {
       const result = await apiOpenfiscaFetch(body)
 
       const redevances = responseExtractor(result, annee)
 
-      console.info(JSON.stringify(result))
-      console.info('redevanceCommunaleMinesAurifere', redevances)
       res.json(redevances)
     } else {
       res.json({
         redevanceCommunale: 0,
-        redevanceDepartementale: 0,
-        taxeAurifereGuyane: 0,
-        totalInvestissementsDeduits: 0
+        redevanceDepartementale: 0
       })
     }
   }
