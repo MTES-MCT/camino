@@ -46,13 +46,13 @@ Promise.resolve().then(async () => {
     try {
       const response = await fetch('/matomoOptions')
       const options = await response.json()
-      if (!options || !options.host || !options.siteId)
+      if (!options || !options.host || !options.siteId || !options.environment)
         throw new Error('host et/ou siteId manquant(s)')
 
       const matomo = await VueMatomo({
         host: options.host,
         siteId: options.siteId,
-        environnement: options.environnement,
+        environnement: options.environment,
         router,
         store,
         requireConsent: false,
