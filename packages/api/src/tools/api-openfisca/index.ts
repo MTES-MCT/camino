@@ -1,53 +1,61 @@
 import fetch from 'node-fetch'
 import { SubstanceFiscale } from 'camino-common/src/substance'
-type QuantiteInputAttribute = 'quantite_aurifere_kg'
-type InputAttribute = QuantiteInputAttribute | 'surface_communale' | string
-type OutputAttribute =
+import { Unite, Unites } from 'camino-common/src/unites'
+type Attribute =
+  | 'surface_communale'
   | 'taxe_guyane_brute'
   | 'taxe_guyane_deduction'
   | 'taxe_guyane'
   | string
 
+export const substanceFiscaleToPair = (
+  substanceFiscale: SubstanceFiscale
+): { nom: string; unite: Unite } => {
+  const nom = substanceFiscale.openFisca?.nom ?? substanceFiscale.nom
+  const unite = substanceFiscale.openFisca?.unite
+    ? Unites[substanceFiscale.openFisca.unite]
+    : Unites[substanceFiscale.uniteId]
+  if (!unite.openfiscaId) {
+    throw new Error(
+      `l'unité ${unite.id} pour la substance ${substanceFiscale.id} n'est pas connue par openFisca`
+    )
+  }
+
+  return { nom, unite }
+}
+
 export const substanceFiscaleToInput = (
   substanceFiscale: SubstanceFiscale
 ): string => {
-  if (substanceFiscale.openFisca) {
-    return `quantite_${substanceFiscale.openFisca.nom}_${substanceFiscale.openFisca.unite}`
-  } else {
-    throw new Error(
-      `la substance fiscale ${substanceFiscale.id} n'est pas gérée par openfisca`
-    )
-  }
+  const { nom, unite } = substanceFiscaleToPair(substanceFiscale)
+
+  return `quantite_${nom}_${unite.openfiscaId}`
 }
+
 export const redevanceCommunale = (
   substanceFiscale: SubstanceFiscale
 ): string => {
-  if (substanceFiscale.openFisca !== undefined) {
-    return `redevance_communale_des_mines_${substanceFiscale.openFisca?.nom}_${substanceFiscale.openFisca?.unite}`
-  } else {
-    throw new Error(
-      `la substance fiscale ${substanceFiscale.id} n'est pas gérée par openfisca`
-    )
+  const { nom, unite } = substanceFiscaleToPair(substanceFiscale)
+  // FIXME 2022-07-26: en attente de https://github.com/openfisca/openfisca-france-fiscalite-miniere/pull/29
+  if (['auru', 'nacc'].includes(substanceFiscale.id)) {
+    return `redevance_communale_des_mines_${nom}_${unite.openfiscaId}`
   }
+
+  return `redevance_communale_des_mines_${nom}`
 }
 export const redevanceDepartementale = (
   substanceFiscale: SubstanceFiscale
 ): string => {
-  if (substanceFiscale.openFisca !== undefined) {
-    return `redevance_departementale_des_mines_${substanceFiscale.openFisca?.nom}_${substanceFiscale.openFisca?.unite}`
-  } else {
-    throw new Error(
-      `la substance fiscale ${substanceFiscale.id} n'est pas gérée par openfisca`
-    )
+  const { nom, unite } = substanceFiscaleToPair(substanceFiscale)
+  // FIXME 2022-07-26: en attente de https://github.com/openfisca/openfisca-france-fiscalite-miniere/pull/29
+  if (['auru', 'nacc'].includes(substanceFiscale.id)) {
+    return `redevance_departementale_des_mines_${nom}_${unite.openfiscaId}`
   }
+
+  return `redevance_departementale_des_mines_${nom}`
 }
 
-type Entries = Partial<
-  Record<InputAttribute, { [annee: string]: number | null }>
->
-type Request = Partial<Record<OutputAttribute, { [annee: string]: null }>>
-
-type Article = Entries & Request
+type Article = Record<Attribute, { [annee: string]: number | null }>
 
 export interface OpenfiscaRequest {
   articles: {
@@ -83,7 +91,7 @@ export interface OpenfiscaRequest {
 export interface OpenfiscaResponse {
   articles: {
     [titreId_substance_commune: string]: Partial<
-      Record<OutputAttribute, { [annee: string]: number }>
+      Record<Attribute, { [annee: string]: number }>
     >
   }
 }

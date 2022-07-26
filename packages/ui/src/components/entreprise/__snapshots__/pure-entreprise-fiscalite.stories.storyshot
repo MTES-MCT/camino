@@ -2,12 +2,12 @@
 
 exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane 1`] = `
 <div>
-   Cotisations: 
+   Cotisations 
   <div
     class="fiscalite-table"
   >
     <div>
-      a. Redevance communale:
+      a. Redevance communale
     </div>
     <div
       class="top-level fiscalite-value"
@@ -84,12 +84,12 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
 
 exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Loading 1`] = `
 <div>
-   Cotisations: 
+   Cotisations 
   <div
     class="fiscalite-table"
   >
     <div>
-      a. Redevance communale:
+      a. Redevance communale
     </div>
     <div
       class="top-level fiscalite-value"
@@ -110,7 +110,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Loadin
     </div>
     <!--v-if-->
     <div>
-      f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%
+      f. Frais de gestion de fiscalité directe locale (a+b)X 8%
     </div>
     <div
       class="top-level fiscalite-value"
@@ -135,12 +135,12 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Loadin
 
 exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Ok 1`] = `
 <div>
-   Cotisations: 
+   Cotisations 
   <div
     class="fiscalite-table"
   >
     <div>
-      a. Redevance communale:
+      a. Redevance communale
     </div>
     <div
       class="top-level fiscalite-value"
@@ -161,7 +161,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Ok 1`]
     </div>
     <!--v-if-->
     <div>
-      f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%
+      f. Frais de gestion de fiscalité directe locale (a+b)X 8%
     </div>
     <div
       class="top-level fiscalite-value"
@@ -186,12 +186,12 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Ok 1`]
 
 exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite With Error 1`] = `
 <div>
-   Cotisations: 
+   Cotisations 
   <div
     class="fiscalite-table"
   >
     <div>
-      a. Redevance communale:
+      a. Redevance communale
     </div>
     <div
       class="top-level fiscalite-value"
@@ -940,7 +940,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite With E
     </div>
     <!--v-if-->
     <div>
-      f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%
+      f. Frais de gestion de fiscalité directe locale (a+b)X 8%
     </div>
     <div
       class="top-level fiscalite-value"

@@ -1,7 +1,7 @@
 import { userGet } from '../../database/queries/utilisateurs'
 
 import express from 'express'
-import { IEntreprise, IUser } from '../../types'
+import { IContenuValeur, IEntreprise, IUser } from '../../types'
 import {
   Fiscalite,
   FiscaliteFrance,
@@ -15,7 +15,8 @@ import {
   OpenfiscaResponse,
   redevanceCommunale,
   redevanceDepartementale,
-  substanceFiscaleToInput
+  substanceFiscaleToInput,
+  substanceFiscaleToPair
 } from '../../tools/api-openfisca'
 import { titresGet } from '../../database/queries/titres'
 import { titresActivitesGet } from '../../database/queries/titres-activites'
@@ -23,11 +24,25 @@ import { entrepriseGet } from '../../database/queries/entreprises'
 import TitresActivites from '../../database/models/titres-activites'
 import Titres from '../../database/models/titres'
 import { CustomResponse } from './express-type'
-import { SubstancesFiscales } from 'camino-common/src/static/substance'
+import {
+  SubstanceFiscale,
+  SubstancesFiscales
+} from 'camino-common/src/static/substance'
 import { Departements } from 'camino-common/src/static/departement'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'
 
+const conversion = (
+  substanceFiscale: SubstanceFiscale,
+  quantite: IContenuValeur
+): number => {
+  if (typeof quantite !== 'number') {
+    return 0
+  }
+  const { unite } = substanceFiscaleToPair(substanceFiscale)
+
+  return quantite / (unite.referenceUniteRatio ?? 1)
+}
 // VisibleForTesting
 export const bodyBuilder = (
   activitesAnnuelles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
@@ -104,10 +119,12 @@ export const bodyBuilder = (
       )
 
       for (const substancesFiscale of substancesFiscales) {
-        const production =
+        const production = conversion(
+          substancesFiscale,
           activite.contenu.substancesFiscales[substancesFiscale.id]
+        )
 
-        if (typeof production === 'number' && production > 0) {
+        if (production > 0) {
           if (!titre.communes) {
             throw new Error(
               `les communes du titre ${titre.id} ne sont pas chargées`
@@ -125,9 +142,7 @@ export const bodyBuilder = (
             body.articles[articleId] = {
               surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
               [substanceFiscaleToInput(substancesFiscale)]: {
-                [anneePrecedente]:
-                  substancesFiscale?.openFisca?.conversion?.(production) ??
-                  production
+                [anneePrecedente]: production
               },
               [redevanceCommunale(substancesFiscale)]: {
                 [annee]: null

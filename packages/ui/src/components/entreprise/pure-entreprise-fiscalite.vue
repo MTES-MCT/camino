@@ -1,8 +1,8 @@
 <template>
   <div>
-    Cotisations:
+    Cotisations
     <div class="fiscalite-table">
-      <div>a. Redevance communale:</div>
+      <div>a. Redevance communale</div>
       <LoadingElement v-slot="{ item }" :data="data" class="fiscalite-value">{{
         currencyFormat(item.redevanceCommunale)
       }}</LoadingElement>
@@ -40,7 +40,11 @@
           >{{ currencyFormat(montantNetTaxeAurifere(item)) }}</LoadingElement
         >
       </template>
-      <div>f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%</div>
+      <div>
+        f. Frais de gestion de fiscalité directe locale (a+b{{
+          data.status === 'LOADED' && isFiscaliteGuyane(data.value) ? '+e' : ''
+        }})X 8%
+      </div>
       <LoadingElement v-slot="{ item }" :data="data" class="fiscalite-value">{{
         currencyFormat(fraisGestion(item))
       }}</LoadingElement>

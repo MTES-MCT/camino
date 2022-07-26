@@ -82,7 +82,6 @@ export const SubstancesFiscale: {
     nom: 'argent',
     description: 'contenu dans les minerais',
     openFisca: {
-      // FIXME Openfisca c’est 'q' alors qu’il existe déjà 100kg
       nom: 'argentifere'
     }
   },
@@ -273,7 +272,6 @@ export const SubstancesFiscale: {
     nom: 'oxyde de lithium',
     description: 'Li2O contenu dans les minerais de lithium',
     openFisca: {
-      // fixme openfisca, à renommer lithium_li20_t
       nom: 'lithium_li20'
     }
   },
@@ -365,7 +363,6 @@ export const SubstancesFiscale: {
     uniteId: 'mtc',
     nom: 'zinc',
     description: 'contenu dans les minerais'
-    // FIXME Openfisca -> kt déclaré, devrait être 100t
   }
 }
 
