@@ -1,4 +1,4 @@
-import { UniteId, Unites } from './unites'
+import { UniteId } from './unites'
 
 export const SUBSTANCES_FISCALES_IDS = {
   bauxite: 'aloh',
@@ -48,8 +48,8 @@ export interface SubstanceFiscale<T = SubstanceFiscaleId> {
   description: string
   openFisca?: {
     nom: string
-    unite: string
-    conversion?: (quantite: number) => number
+    // TODO 2022-07-26 : sauvegarder l'or en kg et le saisir en gramme dans l’ihm, ce champ pourra être supprimé
+    unite?: UniteId
   }
 }
 
@@ -80,7 +80,11 @@ export const SubstancesFiscale: {
     substanceLegaleId: 'arge',
     uniteId: 'mkc',
     nom: 'argent',
-    description: 'contenu dans les minerais'
+    description: 'contenu dans les minerais',
+    openFisca: {
+      // FIXME Openfisca c’est 'q' alors qu’il existe déjà 100kg
+      nom: 'argentifere'
+    }
   },
   arse: {
     id: 'arse',
@@ -97,7 +101,7 @@ export const SubstancesFiscale: {
     description: 'contenu dans les minerais',
     openFisca: {
       nom: 'aurifere',
-      unite: 'kg'
+      unite: 'mkg'
     }
   },
   bism: {
@@ -120,7 +124,10 @@ export const SubstancesFiscale: {
     uniteId: 'mtk',
     nom: 'lignites',
     description:
-      "net livré pour les lignites d'un pouvoir calorifique égal ou supérieur à 13 MJ/kg"
+      "net livré pour les lignites d'un pouvoir calorifique égal ou supérieur à 13 MJ/kg",
+    openFisca: {
+      nom: 'lignites_ge_13'
+    }
   },
   cfxc: {
     id: 'cfxc',
@@ -128,14 +135,20 @@ export const SubstancesFiscale: {
     uniteId: 'mtk',
     nom: 'lignites',
     description:
-      "net livré pour les lignites d'un pouvoir calorifique inférieur à 13 MJ/kg"
+      "net livré pour les lignites d'un pouvoir calorifique inférieur à 13 MJ/kg",
+    openFisca: {
+      nom: 'lignites_lt_13'
+    }
   },
   coox: {
     id: 'coox',
     substanceLegaleId: 'coox',
     uniteId: 'vmd',
     nom: 'gaz carbonique',
-    description: 'extrait à 1 bar et 15 °C'
+    description: 'extrait à 1 bar et 15 °C',
+    openFisca: {
+      nom: 'gaz_carbonique'
+    }
   },
   cuiv: {
     id: 'cuiv',
@@ -149,21 +162,30 @@ export const SubstancesFiscale: {
     substanceLegaleId: 'etai',
     uniteId: 'mtt',
     nom: 'étain',
-    description: 'contenu dans les minerais'
+    description: 'contenu dans les minerais',
+    openFisca: {
+      nom: 'etain'
+    }
   },
   fera: {
     id: 'fera',
     substanceLegaleId: 'ferx',
-    uniteId: 'mtt',
+    uniteId: 'mtk',
     nom: 'pyrite de fer',
-    description: 'net livré'
+    description: 'net livré',
+    openFisca: {
+      nom: 'fer_pyrite'
+    }
   },
   ferb: {
     id: 'ferb',
     substanceLegaleId: 'ferx',
-    uniteId: 'mtt',
+    uniteId: 'mtk',
     nom: 'minerais de fer',
-    description: 'net livré'
+    description: 'net livré',
+    openFisca: {
+      nom: 'fer'
+    }
   },
   fluo: {
     id: 'fluo',
@@ -178,85 +200,122 @@ export const SubstancesFiscale: {
     uniteId: 'mtk',
     nom: 'calcaires et grès bitumineux ou asphaltiques',
     description:
-      "net livré (non destinés à la distillation pour production d'huiles ou d'essences)"
+      "net livré (non destinés à la distillation pour production d'huiles ou d'essences)",
+    openFisca: {
+      nom: 'bitume_non_distillation'
+    }
   },
   hydb: {
     id: 'hydb',
     substanceLegaleId: 'hydm',
-    uniteId: 'mtt',
+    uniteId: 'mtk',
     nom: 'schistes carbobitumineux et schistes bitumineux',
     description:
-      'net livré (à traiter par distillation pour en extraire des huiles et des essences)'
+      'net livré (à traiter par distillation pour en extraire des huiles et des essences)',
+    openFisca: {
+      nom: 'bitume_distillation'
+    }
   },
   hydc: {
     id: 'hydc',
     substanceLegaleId: 'hydx',
     uniteId: 'mtc',
     nom: 'pétrole brut',
-    description: 'net extrait'
+    description: 'net extrait',
+    openFisca: {
+      nom: 'petrole_brut'
+    }
   },
   hydd: {
     id: 'hydd',
     substanceLegaleId: 'hydx',
     uniteId: 'mtt',
     nom: 'propane et le butane',
-    description: 'net livré'
+    description: 'net livré',
+    openFisca: {
+      nom: 'propane'
+    }
   },
   hyde: {
     id: 'hyde',
     substanceLegaleId: 'hydx',
     uniteId: 'mtt',
     nom: 'essence de dégazolinage',
-    description: 'net livré'
+    description: 'net livré',
+    openFisca: {
+      nom: 'degazolinage'
+    }
   },
   hydf: {
     id: 'hydf',
     substanceLegaleId: 'hydx',
     uniteId: 'vmd',
     nom: 'gaz naturel',
-    description: 'extrait des gisements'
+    description: 'extrait des gisements',
+    openFisca: {
+      nom: 'gaz_naturel'
+    }
   },
   kclx: {
     id: 'kclx',
     substanceLegaleId: 'kclx',
     uniteId: 'mtc',
     nom: 'oxyde de potassium',
-    description: 'K2O contenu dans les sels de potassium'
+    description: 'K2O contenu dans les sels de potassium',
+    openFisca: {
+      nom: 'potassium'
+    }
   },
   lith: {
     id: 'lith',
     substanceLegaleId: 'lith',
     uniteId: 'mtt',
     nom: 'oxyde de lithium',
-    description: 'Li2O contenu dans les minerais de lithium'
+    description: 'Li2O contenu dans les minerais de lithium',
+    openFisca: {
+      // fixme openfisca, à renommer lithium_li20_t
+      nom: 'lithium_li20'
+    }
   },
   mang: {
     id: 'mang',
     substanceLegaleId: 'mang',
     uniteId: 'mtc',
     nom: 'manganèse',
-    description: 'contenu dans les minerais'
+    description: 'contenu dans les minerais',
+    openFisca: {
+      nom: 'manganese'
+    }
   },
   moly: {
     id: 'moly',
     substanceLegaleId: 'moly',
     uniteId: 'mtt',
     nom: 'molybdène',
-    description: 'contenu dans les minerais'
+    description: 'contenu dans les minerais',
+    openFisca: {
+      nom: 'molybdene'
+    }
   },
   naca: {
     id: 'naca',
     substanceLegaleId: 'nacl',
     uniteId: 'mtk',
     nom: 'sel (chlorure de sodium)',
-    description: 'extrait par abattage net livré'
+    description: 'extrait par abattage net livré',
+    openFisca: {
+      nom: 'sel_abattage'
+    }
   },
   nacb: {
     id: 'nacb',
     substanceLegaleId: 'nacl',
     uniteId: 'mtk',
     nom: 'sel (chlorure de sodium)',
-    description: 'extrait en dissolution par sondage et livré raffiné'
+    description: 'extrait en dissolution par sondage et livré raffiné',
+    openFisca: {
+      nom: 'sel_raffine'
+    }
   },
   nacc: {
     id: 'nacc',
@@ -265,13 +324,7 @@ export const SubstancesFiscale: {
     nom: 'sel (chlorure de sodium contenu)',
     description: 'extrait en dissolution par sondage et livré en dissolution',
     openFisca: {
-      nom: 'sel_dissolution',
-      unite: 'kt',
-      // TODO 2022-07-25 : On peut déduire ça tout le temps ? On a l'unité id, et on sait qu'on stocke en base la référenceUniteRatio
-      // FIXME : Le fait d'avoir les quantités par article semble dupliquer la données, peut être qu'on paie trop du coup ?
-      conversion: (quantiteKg: number) =>
-        quantiteKg /
-        (Unites[SubstancesFiscale.nacc.uniteId].referenceUniteRatio ?? 1)
+      nom: 'sel_dissolution'
     }
   },
   plom: {
@@ -301,7 +354,10 @@ export const SubstancesFiscale: {
     substanceLegaleId: 'wolf',
     uniteId: 'mtt',
     nom: 'oxyde de tungstène (WO3)',
-    description: 'contenu dans les minerais'
+    description: 'contenu dans les minerais',
+    openFisca: {
+      nom: 'tungstene'
+    }
   },
   zinc: {
     id: 'zinc',
@@ -309,6 +365,7 @@ export const SubstancesFiscale: {
     uniteId: 'mtc',
     nom: 'zinc',
     description: 'contenu dans les minerais'
+    // FIXME Openfisca -> kt déclaré, devrait être 100t
   }
 }
 
