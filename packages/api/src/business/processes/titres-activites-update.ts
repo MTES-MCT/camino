@@ -13,7 +13,7 @@ import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
 import { activitesUrlGet } from '../utils/urls-get'
 import { EmailTemplateId } from '../../tools/api-mailjet/types'
 
-const titresActivitesUpdate = async (titresIds?: string[]) => {
+export const titresActivitesUpdate = async (titresIds?: string[]) => {
   console.info()
   console.info('activités des titres…')
 
@@ -115,13 +115,11 @@ const titresActivitesUpdate = async (titresIds?: string[]) => {
 
     const log = {
       type: 'titre / activités (création) ->',
-      value: titresActivitesCreated.map(ta => ta.id).join(', ')
+      value: titresActivitesCreated.map(ta => ta.titreId).join(', ')
     }
 
     console.info(log.type, log.value)
   }
 
-  return titresActivitesCreated.map(ta => ta.id)
+  return titresActivitesCreated.map(ta => ta.titreId)
 }
-
-export { titresActivitesUpdate }
