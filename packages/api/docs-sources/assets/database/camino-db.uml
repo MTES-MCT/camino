@@ -236,13 +236,6 @@ entity "**etapes_types__documents_types**" {
   ""description"": //text //
 }
 
-entity "**etapes_types__etapes_statuts**" {
-  + ""etape_type_id"": //character varying(7) [PK][FK]//
-  + ""etape_statut_id"": //character varying(3) [PK]//
-  --
-  ""ordre"": //integer //
-}
-
 entity "**etapes_types__justificatifs_types**" {
   + ""etape_type_id"": //character varying(3) [PK][FK]//
   + ""document_type_id"": //character varying(3) [PK][FK]//
@@ -770,10 +763,6 @@ entity "**utilisateurs__titres**" {
 "**etapes_types__documents_types**"   }--  "**etapes_types**"
 
 "**etapes_types__documents_types**"   }--  "**etapes_types**"
-
-"**etapes_types__etapes_statuts**"   }--  "**etapes_types**"
-
-"**etapes_types__etapes_statuts**"   }--  "**etapes_types**"
 
 "**etapes_types__justificatifs_types**"   }--  "**entreprises__documents_types**"
 

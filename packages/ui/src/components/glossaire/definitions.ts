@@ -35,7 +35,6 @@ export const definitions: Definition[] = [
     id: 'est',
     nom: "Statuts d'étapes",
     slug: 'etapes-statuts',
-    table: 'etapes_statuts',
     ordre: 9
   },
   {

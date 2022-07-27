@@ -62,7 +62,7 @@ describe("valide le type et le statut d'une étape en fonction du type de titre 
         'toto'
       )
     ).toEqual([
-      'statut de l\'étape "ko" invalide pour une type d\'étape xxx pour une démarche de type toto'
+      'statut de l\'étape "rej" invalide pour une type d\'étape mdp pour une démarche de type toto'
     ])
   })
 

@@ -5,7 +5,6 @@ const fieldsOrderAsc = [
   'substances',
   'references',
   'etapesTypes',
-  'etapesStatuts',
   'titresTypes',
   'titresTypesEtapesTypes',
   'titresTypesTitresStatuts'

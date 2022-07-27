@@ -183,7 +183,6 @@ const etapeHeritage = async (
           titre: { id: {} },
           etapes: {
             type: { id: {} },
-            statut: { id: {} },
             titulaires: { id: {} },
             amodiataires: { id: {} },
             substances: { legales: { code: { id: {} } } },
@@ -279,7 +278,7 @@ const etapeCreer = async (
       etape.titreDemarcheId,
       {
         fields: {
-          type: { etapesTypes: { etapesStatuts: { id: {} } } },
+          type: { etapesTypes: { id: {} } },
           titre: {
             type: { demarchesTypes: { id: {} } },
             demarches: { etapes: { id: {} } }
@@ -439,7 +438,7 @@ const etapeModifier = async (
       etape.titreDemarcheId,
       {
         fields: {
-          type: { etapesTypes: { etapesStatuts: { id: {} } } },
+          type: { etapesTypes: { id: {} } },
           titre: {
             type: { demarchesTypes: { id: {} } },
             demarches: { etapes: { id: {} } }
@@ -788,7 +787,7 @@ const etapeSupprimer = async (
       titreEtape.titreDemarcheId,
       {
         fields: {
-          type: { etapesTypes: { etapesStatuts: { id: {} } } },
+          type: { etapesTypes: { id: {} } },
           titre: {
             type: { demarchesTypes: { id: {} } },
             demarches: { etapes: { id: {} } }

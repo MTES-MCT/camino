@@ -1,13 +1,9 @@
 import {
-  domaines,
-  titresTypesTypes,
   titresStatuts,
   demarchesTypes,
   demarchesStatuts,
   etapesTypes,
   phasesStatuts,
-  domaineModifier,
-  titreTypeTypeModifier,
   titreStatutModifier,
   demarcheTypeModifier,
   demarcheStatutModifier,
@@ -74,30 +70,6 @@ import { PaysList } from 'camino-common/src/static/pays'
 const labelGet = entity => (entity ? `${entity.id} - ${entity.nom}` : '')
 
 const metasIndex = {
-  domaines: {
-    get: domaines,
-    update: domaineModifier,
-    labelGet,
-    nom: 'Domaines',
-    colonnes: [
-      { id: 'id', nom: 'Id' },
-      { id: 'nom', nom: 'Nom', type: String },
-      { id: 'description', nom: 'Description', type: String },
-      { id: 'ordre', nom: 'Ordre', type: Number }
-    ]
-  },
-  'titres-types-types': {
-    get: titresTypesTypes,
-    update: titreTypeTypeModifier,
-    labelGet,
-    nom: 'Types des titres',
-    colonnes: [
-      { id: 'id', nom: 'Id' },
-      { id: 'nom', nom: 'Nom', type: String },
-      { id: 'description', nom: 'Description', type: String, optional: true },
-      { id: 'ordre', nom: 'Ordre', type: Number }
-    ]
-  },
   'titres-types': {
     get: titresTypes,
     update: titreTypeModifier,

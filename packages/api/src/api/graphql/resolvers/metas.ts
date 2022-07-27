@@ -4,7 +4,6 @@ import {
   IDemarcheType,
   IDocumentRepertoire,
   IDocumentType,
-  IDomaine,
   IEtapeType,
   IFields,
   IPhaseStatut,
@@ -25,7 +24,6 @@ import {
   documentTypeCreate,
   documentTypeUpdate,
   domainesGet,
-  domaineUpdate,
   etapesTypesGet,
   etapeTypeUpdate,
   phasesStatutsGet,
@@ -260,7 +258,7 @@ const demarcheEtapesTypesGet = async (
     titreDemarcheId,
     {
       fields: {
-        type: { etapesTypes: { etapesStatuts: { id: {} } } },
+        type: { etapesTypes: { id: {} } },
         titre: {
           type: { demarchesTypes: { id: {} } },
           demarches: { etapes: { id: {} } }
@@ -413,38 +411,6 @@ export const regions = (): Region[] => Object.values(Regions)
 export const phasesStatuts = async () => {
   try {
     return await phasesStatutsGet()
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-export const domaineModifier = async (
-  { domaine }: { domaine: IDomaine },
-  context: IToken,
-  info: GraphQLResolveInfo
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const fields = fieldsBuild(info)
-
-    if (domaine.ordre) {
-      const domaines = await domainesGet(null as never, { fields }, user)
-
-      await ordreUpdate(domaine, domaines, domaineUpdate)
-    }
-
-    await domaineUpdate(domaine.id!, domaine)
-
-    return await domainesGet(null as never, { fields }, user)
   } catch (e) {
     if (debug) {
       console.error(e)

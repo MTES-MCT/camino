@@ -3,6 +3,7 @@ import FiltresTitresDomaines from '../_common/filtres/domaines.vue'
 import FiltresTitresStatuts from '../_common/filtres/statuts.vue'
 import FiltresEtapes from './filtres-custom-etapes.vue'
 import { elementsFormat } from '../../utils/index'
+import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 
 const etapesElementsFormat = (id, metas) => metas.etapesTypes
 const etapesLabelFormat = f =>
@@ -24,9 +25,8 @@ const etapesLabelFormat = f =>
             val = element.nom
             order = 1
           } else if (k === 'statutId') {
-            const element = f.elements.find(e => e.id === value.typeId)
             key = 'statut'
-            val = element.etapesStatuts.find(es => es.id === value.statutId).nom
+            val = EtapesStatuts[value.statutId].nom
             order = 2
           } else if (k === 'dateDebut') {
             key = 'après le'

@@ -47,16 +47,6 @@ const fragmentDemarcheStatut = gql`
   }
 `
 
-const fragmentUnite = gql`
-  fragment unite on Unite {
-    id
-    nom
-    symbole
-    referenceUniteId
-    referenceUniteRatio
-  }
-`
-
 const fragmentDemarcheType = gql`
   fragment demarcheType on DemarcheType {
     id
@@ -74,14 +64,7 @@ const fragmentDemarcheType = gql`
     travaux
   }
 `
-const fragmentDomaine = gql`
-  fragment domaine on Domaine {
-    id
-    nom
-    description
-    ordre
-  }
-`
+
 const fragmentPhaseStatut = gql`
   fragment phaseStatut on PhaseStatut {
     id
@@ -116,11 +99,6 @@ const fragmentEtapeType = gql`
     acceptationAuto
     publicLecture
     entreprisesLecture
-    etapesStatuts {
-      id
-      nom
-      couleur
-    }
     etapesCreation
     documentsTypes {
       ...documentType
@@ -194,14 +172,6 @@ const fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType = gql`
   }
 `
 
-const fragmentEtapeTypeEtapeStatut = gql`
-  fragment etapeTypeEtapeStatut on EtapeTypeEtapeStatut {
-    etapeTypeId
-    etapeStatutId
-    ordre
-  }
-`
-
 const fragmentEtapeTypeDocumentType = gql`
   fragment etapeTypeDocumentType on EtapeTypeDocumentType {
     etapeTypeId
@@ -224,12 +194,9 @@ export {
   fragmentTitreTypeType,
   fragmentTitreStatut,
   fragmentEtapeType,
-  fragmentEtapeStatut,
-  fragmentUnite,
   fragmentDemarcheType,
   fragmentDemarcheStatut,
   fragmentTitreType,
-  fragmentDomaine,
   fragmentPhaseStatut,
   fragmentDocumentType,
   fragmentReferenceType,
@@ -237,7 +204,6 @@ export {
   fragmentTitreTypeDemarcheType,
   fragmentTitreTypeDemarcheTypeEtapeType,
   fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType,
-  fragmentEtapeTypeEtapeStatut,
   fragmentEtapeTypeDocumentType,
   fragmentEtapeTypeJustificatifType
 }

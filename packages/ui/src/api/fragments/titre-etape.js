@@ -46,11 +46,7 @@ const fragmentHeritageEtape = gql`
       nom
       sections
     }
-    statut {
-      id
-      nom
-      couleur
-    }
+    statutId
     administrations {
       ...titreAdministrations
     }
@@ -139,11 +135,7 @@ const fragmentTitreEtape = gql`
         ...documentType
       }
     }
-    statut {
-      id
-      nom
-      couleur
-    }
+    statutId
     administrations {
       ...titreAdministrations
     }
@@ -301,11 +293,7 @@ const fragmentEtape = gql`
         ...documentType
       }
     }
-    statut {
-      id
-      nom
-      couleur
-    }
+    statutId
     administrations {
       ...titreAdministrations
     }

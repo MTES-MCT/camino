@@ -322,18 +322,6 @@ type EtapeTypeJustificatifType {
   description: String
 }
 
-input InputDomaine {
-  "Id composée d'une seule lettre"
-  id: ID!
-
-  "Nom du domaine en français"
-  nom: String
-
-  description: String
-
-  ordre: Int
-}
-
 input InputDefinition {
   id: ID!
   nom: String

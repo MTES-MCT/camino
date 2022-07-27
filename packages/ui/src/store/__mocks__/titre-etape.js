@@ -61,7 +61,6 @@ const titreEtapeEdited = {
   geoSystemeOpposableId: null,
   groupes: [],
   incertitudes: {},
-  statutId: '',
   substances: [],
   documents: [],
   justificatifs: []

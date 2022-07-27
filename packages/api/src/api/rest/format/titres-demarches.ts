@@ -32,7 +32,7 @@ const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
     }, {} as Index<string>)
 }
 
-const titresDemarchesFormatTable = (titresDemarches: ITitreDemarche[]) =>
+export const titresDemarchesFormatTable = (titresDemarches: ITitreDemarche[]) =>
   titresDemarches.map(titreDemarche => {
     const titre = titreDemarche.titre!
 
@@ -81,5 +81,3 @@ const titresDemarchesFormatTable = (titresDemarches: ITitreDemarche[]) =>
 
     return titreDemarcheNew
   })
-
-export { titresDemarchesFormatTable }

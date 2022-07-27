@@ -5,7 +5,7 @@ import { titreEtapeGet } from '../../queries/titres-etapes'
 const heritagePropsFormat = async (heritageProps: IHeritageProps) => {
   for (const propId of Object.keys(heritageProps)) {
     if (heritageProps[propId]?.etapeId) {
-      const fields = { type: { id: {} }, statut: { id: {} } } as IFields
+      const fields = { type: { id: {} } } as IFields
       if (propId === 'points') {
         fields.points = { references: { id: {} } }
       } else if (propId === 'substances') {
@@ -28,7 +28,7 @@ const heritagePropsFormat = async (heritageProps: IHeritageProps) => {
 }
 
 const heritageContenuFormat = async (heritageContenu: IHeritageContenu) => {
-  const fields = { type: { id: {} }, statut: { id: {} } } as IFields
+  const fields = { type: { id: {} } } as IFields
   for (const sectionId of Object.keys(heritageContenu)) {
     if (heritageContenu[sectionId]) {
       for (const elementId of Object.keys(heritageContenu[sectionId])) {

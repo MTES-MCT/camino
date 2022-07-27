@@ -30,7 +30,7 @@ type Etape {
   type: EtapeType!
 
   "Statut de l'étape"
-  statut: EtapeStatut!
+  statutId: ID!
 
   "Ordre chronologique de l'étape"
   ordre: Int!

@@ -110,11 +110,7 @@ fragment etape on Etape {
     id
     nom
   }
-  statut {
-    id
-    nom
-    couleur
-  }
+  statutId
   substances {
     ...titreSubstance
   }

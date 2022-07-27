@@ -129,7 +129,7 @@ const demarchesValidate = async () => {
           fields: {
             titre: { id: {}, demarches: { etapes: { id: {} } } },
             etapes: { id: {} },
-            type: { etapesTypes: { etapesStatuts: { id: {} } } }
+            type: { etapesTypes: { id: {} } }
           }
         },
         userSuper

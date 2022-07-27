@@ -1,14 +1,12 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 import {
-  fragmentDomaine,
   fragmentTitreTypeType,
   fragmentTitreStatut,
   fragmentDemarcheType,
   fragmentDemarcheStatut,
   fragmentPhaseStatut,
   fragmentEtapeType,
-  fragmentEtapeStatut,
   fragmentDocumentType,
   fragmentReferenceType,
   fragmentTitreType,
@@ -19,28 +17,6 @@ import {
   fragmentEtapeTypeJustificatifType,
   fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType
 } from './fragments/metas'
-
-const domaines = apiGraphQLFetch(
-  gql`
-    query Domaines {
-      domaines {
-        ...domaine
-      }
-    }
-
-    ${fragmentDomaine}
-  `
-)
-
-const domaineModifier = apiGraphQLFetch(gql`
-  mutation DomaineModifier($element: InputDomaine!) {
-    domaineModifier(domaine: $element) {
-      ...domaine
-    }
-  }
-
-  ${fragmentDomaine}
-`)
 
 const titresTypesTypes = apiGraphQLFetch(
   gql`
@@ -53,16 +29,6 @@ const titresTypesTypes = apiGraphQLFetch(
     ${fragmentTitreTypeType}
   `
 )
-
-const titreTypeTypeModifier = apiGraphQLFetch(gql`
-  mutation TitreTypeTypeModifier($element: InputTitreTypeType!) {
-    titreTypeTypeModifier(titreType: $element) {
-      ...titreTypeType
-    }
-  }
-
-  ${fragmentTitreTypeType}
-`)
 
 const titreStatutModifier = apiGraphQLFetch(gql`
   mutation TitreStatutModifier($element: InputTitreStatut!) {
@@ -151,18 +117,6 @@ const phaseStatutModifier = apiGraphQLFetch(gql`
 
   ${fragmentPhaseStatut}
 `)
-
-const etapesStatuts = apiGraphQLFetch(
-  gql`
-    query EtapesStatuts {
-      etapesStatuts {
-        ...etapeStatut
-      }
-    }
-
-    ${fragmentEtapeStatut}
-  `
-)
 
 const etapesTypes = apiGraphQLFetch(
   gql`
@@ -650,10 +604,7 @@ const etapeTypeJustificatifTypeSupprimer = apiGraphQLFetch(gql`
 `)
 
 export {
-  domaines,
-  domaineModifier,
   titresTypesTypes,
-  titreTypeTypeModifier,
   titresStatuts,
   titreStatutModifier,
   demarchesTypes,
@@ -664,7 +615,6 @@ export {
   phaseStatutModifier,
   etapesTypes,
   etapeTypeModifier,
-  etapesStatuts,
   substancesLegales,
   documentsTypes,
   documentTypeCreer,

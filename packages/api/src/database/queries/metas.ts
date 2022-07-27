@@ -3,7 +3,6 @@ import { raw } from 'objection'
 import {
   IFields,
   IDocumentRepertoire,
-  IDomaine,
   ITitreTypeType,
   ITitreStatut,
   IDemarcheType,
@@ -107,9 +106,6 @@ const domaineGet = async (
 
   return q
 }
-
-const domaineUpdate = async (id: string, props: Partial<IDomaine>) =>
-  Domaines.query().patchAndFetchById(id, props)
 
 const titresTypesGet = async (_: never, { fields }: { fields?: IFields }) => {
   const graph = fields
@@ -457,9 +453,7 @@ const etapesTypesGet = async (
   { fields, uniqueCheck = true }: { fields?: IFields; uniqueCheck?: boolean },
   user: IUtilisateur | null | undefined
 ) => {
-  const graph = fields
-    ? graphBuild(fields, 'etapesTypes', fieldsFormat)
-    : options.etapesTypes.graph
+  const graph = fields ? graphBuild(fields, 'etapesTypes', fieldsFormat) : []
 
   const q = EtapesTypes.query().withGraphFetched(graph)
 
@@ -489,9 +483,7 @@ const etapesTypesGet = async (
 }
 
 const etapeTypeGet = async (id: string, { fields }: { fields?: IFields }) => {
-  const graph = fields
-    ? graphBuild(fields, 'etapesTypes', fieldsFormat)
-    : options.etapesTypes.graph
+  const graph = fields ? graphBuild(fields, 'etapesTypes', fieldsFormat) : []
 
   return EtapesTypes.query().withGraphFetched(graph).findById(id)
 }
@@ -560,7 +552,6 @@ const substancesLegalesCodesGet = async () =>
 export {
   domaineGet,
   domainesGet,
-  domaineUpdate,
   titresTypesTypesGet,
   titreTypeTypeUpdate,
   titresTypesGet,

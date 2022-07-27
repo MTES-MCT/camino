@@ -405,8 +405,6 @@ type Mutation {
     entrepriseTitreType: InputEntrepriseTitreType!
   ): Entreprise
 
-  domaineModifier(domaine: InputDomaine!): [Domaine]
-
   definitionModifier(definition: InputDefinition!): [Definition]
 
   titreTypeTypeModifier(titreType: InputTitreTypeType!): [TitreTypeType]
