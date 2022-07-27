@@ -10,14 +10,12 @@ import {
   IDemarcheStatut,
   IPhaseStatut,
   IEtapeType,
-  IEtapeStatut,
   IDocumentType,
   IReferenceType,
   ITitreType,
   ITitreTypeTitreStatut,
   ITitreTypeDemarcheType,
   ITitreTypeDemarcheTypeEtapeType,
-  IEtapeTypeEtapeStatut,
   IUtilisateur,
   IEtapeTypeDocumentType,
   IEtapeTypeJustificatifType,
@@ -39,7 +37,6 @@ import EtapesTypes from '../models/etapes-types'
 import ReferencesTypes from '../models/references-types'
 import TitresStatuts from '../models/titres-statuts'
 import TitresTypesTypes from '../models/titres-types-types'
-import EtapesStatuts from '../models/etapes-statuts'
 import SubstancesLegalesCodes from '../models/substances-legales-codes'
 
 import {
@@ -53,7 +50,6 @@ import TitresTypes from '../models/titres-types'
 import TitresTypesTitresStatuts from '../models/titres-types--titres-statuts'
 import TitresTypesDemarchesTypesEtapesTypes from '../models/titres-types--demarches-types-etapes-types'
 import TitresTypesDemarchesTypes from '../models/titres-types--demarches-types'
-import EtapesTypesEtapesStatuts from '../models/etapes-types--etapes-statuts'
 import EtapesTypesDocumentsTypes from '../models/etapes-types--documents-types'
 import EtapesTypesJustificatifsTypes from '../models/etapes-types--justificatifs-types'
 import TitresTypesDemarchesTypesEtapesTypesDocumentsTypes from '../models/titres-types--demarches-types-etapes-types-documents-types'
@@ -311,28 +307,6 @@ const titreTypeDemarcheTypeEtapeTypeJustificatifTypeDelete = async (
     documentTypeId
   ])
 
-const etapesTypesEtapesStatutsGet = async () =>
-  EtapesTypesEtapesStatuts.query().orderBy(['etapeTypeId', 'etapeStatutId'])
-
-const etapeTypeEtapeStatutUpdate = async (
-  etapeTypeId: string,
-  etapeStatutId: string,
-  props: Partial<IEtapeTypeEtapeStatut>
-) =>
-  EtapesTypesEtapesStatuts.query().patchAndFetchById(
-    [etapeTypeId, etapeStatutId],
-    props
-  )
-
-const etapeTypeEtapeStatutCreate = async (
-  etapeTypeEtapeStatut: IEtapeTypeEtapeStatut
-) => EtapesTypesEtapesStatuts.query().insert(etapeTypeEtapeStatut)
-
-const etapeTypeEtapeStatutDelete = async (
-  etapeTypeId: string,
-  etapeStatutId: string
-) => EtapesTypesEtapesStatuts.query().deleteById([etapeTypeId, etapeStatutId])
-
 const etapesTypesDocumentsTypesGet = async () =>
   EtapesTypesDocumentsTypes.query().orderBy(['etapeTypeId', 'documentTypeId'])
 
@@ -580,11 +554,6 @@ const documentTypeGet = async (id: string) =>
 
 const referencesTypesGet = async () => ReferencesTypes.query().orderBy('nom')
 
-const etapesStatutsGet = async () => EtapesStatuts.query()
-
-const etapeStatutUpdate = async (id: string, props: Partial<IEtapeStatut>) =>
-  EtapesStatuts.query().patchAndFetchById(id, props)
-
 const substancesLegalesCodesGet = async () =>
   SubstancesLegalesCodes.query().orderBy('ordre')
 
@@ -611,8 +580,6 @@ export {
   referencesTypesGet,
   phasesStatutsGet,
   phaseStatutUpdate,
-  etapesStatutsGet,
-  etapeStatutUpdate,
   substancesLegalesCodesGet,
   documentTypeCreate,
   documentTypeUpdate,
@@ -642,10 +609,6 @@ export {
   titreTypeDemarcheTypeEtapeTypeJustificatifTypeUpdate,
   titreTypeDemarcheTypeEtapeTypeJustificatifTypeCreate,
   titreTypeDemarcheTypeEtapeTypeJustificatifTypeDelete,
-  etapesTypesEtapesStatutsGet,
-  etapeTypeEtapeStatutUpdate,
-  etapeTypeEtapeStatutCreate,
-  etapeTypeEtapeStatutDelete,
   etapesTypesDocumentsTypesGet,
   etapeTypeDocumentTypeUpdate,
   etapeTypeDocumentTypeCreate,

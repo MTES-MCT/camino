@@ -167,8 +167,6 @@ type EtapeType {
   publicLecture: Boolean
   entreprisesLecture: Boolean
 
-  etapesStatuts: [EtapeStatut]
-
   etapesCreation: Boolean
 
   documentsTypes: [DocumentType]
@@ -187,8 +185,6 @@ type EtapeStatut {
   couleur: Couleur!
 
   description: String
-
-  ordre: Int
 }
 
 "Référence métier"
@@ -312,12 +308,6 @@ type TitreTypeDemarcheTypeEtapeTypeDocumentType {
   description: String
 }
 
-type EtapeTypeEtapeStatut {
-  etapeTypeId: ID!
-  etapeStatutId: ID!
-  ordre: Int!
-}
-
 type EtapeTypeDocumentType {
   etapeTypeId: ID!
   documentTypeId: ID!
@@ -413,14 +403,6 @@ input InputEtapeType {
   entreprisesLecture: Boolean
 }
 
-input InputEtapeStatut {
-  id: ID!
-  nom: String
-  couleur: Couleur
-  description: String
-  ordre: Int
-}
-
 input InputDocumentType {
   id: ID!
   nom: String
@@ -484,12 +466,6 @@ input InputTitreTypeDemarcheTypeEtapeTypeDocumentType {
   documentTypeId: ID!
   optionnel: Boolean
   description: String
-}
-
-input InputEtapeTypeEtapeStatut {
-  etapeTypeId: ID!
-  etapeStatutId: ID!
-  ordre: Int
 }
 
 input InputEtapeTypeDocumentType {

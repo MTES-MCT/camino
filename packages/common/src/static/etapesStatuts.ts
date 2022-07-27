@@ -1,4 +1,6 @@
-export const STATUTS = {
+import { Couleur } from './couleurs'
+
+export const ETAPES_STATUTS = {
   ACCEPTE: 'acc',
   DEFAVORABLE_AVEC_RESERVES: 'dre',
   EN_COURS: 'enc',
@@ -18,21 +20,21 @@ export const STATUTS = {
   NON_APPLICABLE: 'nul',
   PROGRAMME: 'pro'
 } as const
-export type StatutId = typeof STATUTS[keyof typeof STATUTS]
+export type EtapeStatutId = typeof ETAPES_STATUTS[keyof typeof ETAPES_STATUTS]
 
-const StatutsIds = Object.values(STATUTS)
+const StatutsIds = Object.values(ETAPES_STATUTS)
 
-export const isStatut = (statut: string): statut is StatutId => {
+export const isStatut = (statut: string): statut is EtapeStatutId => {
   return StatutsIds.includes(statut)
 }
 
-interface EtapeStatutDefinition<T> {
+export interface EtapeStatut<T = EtapeStatutId> {
   id: T
   nom: string
-  couleur: string
+  couleur: Couleur
   description?: string
 }
-export const Statuts: { [key in StatutId]: EtapeStatutDefinition<key> } = {
+export const EtapesStatuts: { [key in EtapeStatutId]: EtapeStatut<key> } = {
   acc: {
     id: 'acc',
     nom: 'accepté',

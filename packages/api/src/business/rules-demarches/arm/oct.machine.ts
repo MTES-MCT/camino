@@ -5,7 +5,10 @@ import {
   IContenu
 } from '../../../types'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
-import { StatutId, STATUTS } from 'camino-common/src/static/etapesStatuts'
+import {
+  EtapeStatutId,
+  ETAPES_STATUTS
+} from 'camino-common/src/static/etapesStatuts'
 
 export const ETATS = {
   Demande: 'mfr',
@@ -63,7 +66,7 @@ export const isEtat = (dbEtat: string): dbEtat is Etat => {
 
 export interface Etape {
   typeId: Etat
-  statutId: StatutId
+  statutId: EtapeStatutId
   date: string
   contenu?: IContenu
 }
@@ -172,18 +175,18 @@ export const toPotentialXStateEvent = (event: Event): XStateEvent[] => {
   }
 }
 
-export type DBEtat = { etat: Etat; statut?: StatutId }
+export type DBEtat = { etat: Etat; statut?: EtapeStatutId }
 const trad: { [_key in Event]: DBEtat } = {
   FAIRE_DEMANDE: { etat: ETATS.Demande },
   DEPOSER_DEMANDE: { etat: ETATS.DepotDeLaDemande },
   PAYER_FRAIS_DE_DOSSIER: { etat: ETATS.PaiementDesFraisDeDossier },
   DEMANDER_MODIFICATION_DE_LA_DEMANDE: {
     etat: ETATS.DecisionAutoriteEnvironnementale,
-    statut: STATUTS.REQUIS
+    statut: ETAPES_STATUTS.REQUIS
   },
   EXEMPTER_DAE: {
     etat: ETATS.DecisionAutoriteEnvironnementale,
-    statut: STATUTS.EXEMPTE
+    statut: ETAPES_STATUTS.EXEMPTE
   },
   DESISTER_PAR_LE_DEMANDEUR: { etat: ETATS.Desistement },
   CLASSER_SANS_SUITE: { etat: ETATS.ClassementSansSuite },
@@ -198,7 +201,7 @@ const trad: { [_key in Event]: DBEtat } = {
   },
   REFUSER_COMPLETUDE: {
     etat: ETATS.CompletudeDeLaDemande,
-    statut: STATUTS.INCOMPLETE
+    statut: ETAPES_STATUTS.INCOMPLETE
   },
   RECEVOIR_COMPLEMENTS_COMPLETUDE: {
     etat: ETATS.ReceptionDeComplementsCompletude
@@ -208,18 +211,18 @@ const trad: { [_key in Event]: DBEtat } = {
   },
   ACCEPTER_COMPLETUDE: {
     etat: ETATS.CompletudeDeLaDemande,
-    statut: STATUTS.COMPLETE
+    statut: ETAPES_STATUTS.COMPLETE
   },
   VALIDER_FRAIS_DE_DOSSIER: {
     etat: ETATS.ValidationDesFraisDossier
   },
   REFUSER_RDE: {
     etat: ETATS.RecepisseDeDeclarationLoiSurLEau,
-    statut: STATUTS.DEFAVORABLE
+    statut: ETAPES_STATUTS.DEFAVORABLE
   },
   ACCEPTER_RDE: {
     etat: ETATS.RecepisseDeDeclarationLoiSurLEau,
-    statut: STATUTS.FAVORABLE
+    statut: ETAPES_STATUTS.FAVORABLE
   },
   DEMANDER_COMPLEMENTS_RDE: {
     etat: ETATS.DemandeDeComplementsRecepisseDeDeclarationLoiSurLEau
@@ -232,11 +235,11 @@ const trad: { [_key in Event]: DBEtat } = {
   },
   DECLARER_DEMANDE_FAVORABLE: {
     etat: ETATS.RecevabiliteDeLaDemande,
-    statut: STATUTS.FAVORABLE
+    statut: ETAPES_STATUTS.FAVORABLE
   },
   DECLARER_DEMANDE_DEFAVORABLE: {
     etat: ETATS.RecevabiliteDeLaDemande,
-    statut: STATUTS.DEFAVORABLE
+    statut: ETAPES_STATUTS.DEFAVORABLE
   },
   FAIRE_EXPERTISE_ONF: {
     etat: ETATS.ExpertiseONF
@@ -255,15 +258,15 @@ const trad: { [_key in Event]: DBEtat } = {
   },
   RENDRE_AVIS_FAVORABLE_CARM: {
     etat: ETATS.AvisCARM,
-    statut: STATUTS.FAVORABLE
+    statut: ETAPES_STATUTS.FAVORABLE
   },
   RENDRE_AVIS_DEFAVORABLE_CARM: {
     etat: ETATS.AvisCARM,
-    statut: STATUTS.DEFAVORABLE
+    statut: ETAPES_STATUTS.DEFAVORABLE
   },
   RENDRE_AVIS_AJOURNE_CARM: {
     etat: ETATS.AvisCARM,
-    statut: STATUTS.AJOURNE
+    statut: ETAPES_STATUTS.AJOURNE
   },
   NOTIFIER_DEMANDEUR_AVIS_AJOURNE_CARM: {
     etat: ETATS.NotificationCARMAjournee

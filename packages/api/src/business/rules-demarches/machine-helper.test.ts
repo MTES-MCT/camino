@@ -92,7 +92,7 @@ describe('toMachineEtape', () => {
     expect(() =>
       toMachineEtape({
         id: 'id',
-        typeId: 'iii',
+        typeId: 'mdp',
         statutId: 'fai',
         date: '2022-01-01',
         titreDemarcheId: 'idDemarche'
@@ -105,12 +105,12 @@ describe('toMachineEtape', () => {
       toMachineEtape({
         id: 'id',
         typeId: 'mfr',
-        statutId: 'ffi',
+        statutId: 'fai',
         date: '2022-01-01',
         titreDemarcheId: 'idDemarche'
       })
     ).toThrowErrorMatchingInlineSnapshot(
-      `"le status ffi est inconnu, {\\"id\\":\\"id\\",\\"typeId\\":\\"mfr\\",\\"statutId\\":\\"ffi\\",\\"date\\":\\"2022-01-01\\",\\"titreDemarcheId\\":\\"idDemarche\\"}"`
+      `"le status ffi est inconnu, {\\"id\\":\\"id\\",\\"typeId\\":\\"mfr\\",\\"statutId\\":\\"fai\\",\\"date\\":\\"2022-01-01\\",\\"titreDemarcheId\\":\\"idDemarche\\"}"`
     )
   })
 })

@@ -1,7 +1,6 @@
 import { Model, Modifiers } from 'objection'
 
 import { IEtapeType } from '../../types'
-import EtapesStatuts from './etapes-statuts'
 import AdministrationsTitresTypesEtapesTypes from './administrations-titres-types-etapes-types'
 import DocumentsTypes from './documents-types'
 
@@ -31,20 +30,6 @@ class EtapesTypes extends Model {
   }
 
   static relationMappings = () => ({
-    etapesStatuts: {
-      relation: Model.ManyToManyRelation,
-      modelClass: EtapesStatuts,
-      join: {
-        from: 'etapesTypes.id',
-        through: {
-          from: 'etapesTypes__etapesStatuts.etapeTypeId',
-          to: 'etapesTypes__etapesStatuts.etapeStatutId',
-          extra: ['ordre']
-        },
-        to: 'etapesStatuts.id'
-      }
-    },
-
     administrations: {
       relation: Model.HasManyRelation,
       modelClass: AdministrationsTitresTypesEtapesTypes,

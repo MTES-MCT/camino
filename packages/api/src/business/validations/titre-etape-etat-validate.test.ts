@@ -37,17 +37,17 @@ describe('teste etapesSuivantesEnAttenteGet', () => {
   })
 
   test('retourne les 2 dernières étapes des chemins parralèles', () => {
-    const etapes = [{ typeId: 'ide1' }, { typeId: 'ide2' }] as ITitreEtape[]
+    const etapes = [{ typeId: 'mfr' }, { typeId: 'mdp' }] as ITitreEtape[]
     const etapesEnAttente = etapesSuivantesEnAttenteGet(etapes, etapes, [], {
       ide1: { justeApres: [] },
       ide2: { justeApres: [] },
       mno: {
-        justeApres: [[{ etapeTypeId: 'ide1' }, { etapeTypeId: 'ide2' }]]
+        justeApres: [[{ etapeTypeId: 'mfr' }, { etapeTypeId: 'mdp' }]]
       }
     })
     expect(etapesEnAttente).toHaveLength(2)
-    expect(etapesEnAttente[0]).toEqual({ typeId: 'ide1' })
-    expect(etapesEnAttente[1]).toEqual({ typeId: 'ide2' })
+    expect(etapesEnAttente[0]).toEqual({ typeId: 'mfr' })
+    expect(etapesEnAttente[1]).toEqual({ typeId: 'mdp' })
   })
 
   test('retourne la dernière étape après la fusion de 2 chemins parralèles', () => {

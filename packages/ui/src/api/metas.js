@@ -15,7 +15,6 @@ import {
   fragmentTitreTypeTitreStatut,
   fragmentTitreTypeDemarcheType,
   fragmentTitreTypeDemarcheTypeEtapeType,
-  fragmentEtapeTypeEtapeStatut,
   fragmentEtapeTypeDocumentType,
   fragmentEtapeTypeJustificatifType,
   fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType
@@ -185,16 +184,6 @@ const etapeTypeModifier = apiGraphQLFetch(gql`
   }
 
   ${fragmentEtapeType}
-`)
-
-const etapeStatutModifier = apiGraphQLFetch(gql`
-  mutation EtapeStatutModifier($element: InputEtapeStatut!) {
-    etapeStatutModifier(etapeStatut: $element) {
-      ...etapeStatut
-    }
-  }
-
-  ${fragmentEtapeStatut}
 `)
 
 const substancesLegales = apiGraphQLFetch(
@@ -566,48 +555,6 @@ const titreTypeDemarcheTypeEtapeTypeJustificatifTypeSupprimer =
     ${fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType}
   `)
 
-const etapesTypesEtapesStatuts = apiGraphQLFetch(
-  gql`
-    query EtapesTypesEtapesStatuts {
-      etapesTypesEtapesStatuts {
-        ...etapeTypeEtapeStatut
-      }
-    }
-
-    ${fragmentEtapeTypeEtapeStatut}
-  `
-)
-
-const etapeTypeEtapeStatutModifier = apiGraphQLFetch(gql`
-  mutation EtapeTypeEtapeStatutModifier($element: InputEtapeTypeEtapeStatut!) {
-    etapeTypeEtapeStatutModifier(etapeTypeEtapeStatut: $element) {
-      ...etapeTypeEtapeStatut
-    }
-  }
-
-  ${fragmentEtapeTypeEtapeStatut}
-`)
-
-const etapeTypeEtapeStatutCreer = apiGraphQLFetch(gql`
-  mutation EtapeTypeEtapeStatutCreer($element: InputEtapeTypeEtapeStatut!) {
-    etapeTypeEtapeStatutCreer(etapeTypeEtapeStatut: $element) {
-      ...etapeTypeEtapeStatut
-    }
-  }
-
-  ${fragmentEtapeTypeEtapeStatut}
-`)
-
-const etapeTypeEtapeStatutSupprimer = apiGraphQLFetch(gql`
-  mutation EtapeTypeEtapeStatutSupprimer($element: InputEtapeTypeEtapeStatut!) {
-    etapeTypeEtapeStatutSupprimer(etapeTypeEtapeStatut: $element) {
-      ...etapeTypeEtapeStatut
-    }
-  }
-
-  ${fragmentEtapeTypeEtapeStatut}
-`)
-
 const etapesTypesDocumentsTypes = apiGraphQLFetch(
   gql`
     query EtapesTypesDocumentsTypes {
@@ -718,7 +665,6 @@ export {
   etapesTypes,
   etapeTypeModifier,
   etapesStatuts,
-  etapeStatutModifier,
   substancesLegales,
   documentsTypes,
   documentTypeCreer,
@@ -749,10 +695,6 @@ export {
   titreTypeDemarcheTypeEtapeTypeJustificatifTypeModifier,
   titreTypeDemarcheTypeEtapeTypeJustificatifTypeCreer,
   titreTypeDemarcheTypeEtapeTypeJustificatifTypeSupprimer,
-  etapesTypesEtapesStatuts,
-  etapeTypeEtapeStatutModifier,
-  etapeTypeEtapeStatutCreer,
-  etapeTypeEtapeStatutSupprimer,
   etapesTypesDocumentsTypes,
   etapeTypeDocumentTypeModifier,
   etapeTypeDocumentTypeCreer,

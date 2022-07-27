@@ -1,6 +1,7 @@
 import { titresEtapesGet } from '../../database/queries/titres-etapes'
 import { titresTypesDemarchesTypesEtapesTypesGet } from '../../database/queries/metas'
 import { userSuper } from '../../database/user-super'
+import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 export const etapeStatutCheck = async () => {
   console.info()
@@ -31,10 +32,11 @@ export const etapeStatutCheck = async () => {
         t.demarcheTypeId === etape.demarche!.typeId &&
         t.etapeTypeId === etape.typeId
     )
+    const etapesStatuts = getEtapesStatuts(etape.typeId)
 
     if (
       tdeExists &&
-      !etape.type!.etapesStatuts!.map(es => es.id).includes(etape.statutId)
+      !etapesStatuts!.map(es => es.id).includes(etape.statutId)
     ) {
       console.info(
         `erreur sur le titre https://camino.beta.gouv.fr/titres/${

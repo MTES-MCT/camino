@@ -1,5 +1,5 @@
 import { emailsForAdministrationsGet } from './_titre-etape-email'
-import { ITitreEtape, IUtilisateur } from '../../../types'
+import { IEtapeType, ITitreEtape, IUtilisateur } from '../../../types'
 import { userSuper } from '../../../database/user-super'
 
 test('envoie un email sur une étape non existante', () => {
@@ -49,12 +49,6 @@ const etape: ITitreEtape = {
     publicLecture: true,
     entreprisesLecture: true
   },
-  statut: {
-    id: 'fai',
-    nom: 'fait',
-    description: undefined,
-    couleur: 'success'
-  },
   justificatifs: [],
   substances: [],
   documents: [],
@@ -64,9 +58,8 @@ const etape: ITitreEtape = {
   communes: [],
   forets: []
 }
-const etapeType = {
+const etapeType: IEtapeType = {
   id: 'mdp',
-  parentId: null,
   nom: 'dépôt de la demande',
   description:
     "Le dépôt de la demande formalise la prise en charge de la demande par l'administration compétente. Cette étape fait l’objet d’un accusé de réception qui informe le demandeur des modalités d’instruction, du délai au-delà duquel une décision implicite d’accord ou de rejet sera formée et des voies de recours.",
@@ -74,8 +67,6 @@ const etapeType = {
   fondamentale: null,
   unique: true,
   acceptationAuto: true,
-  legalRef: null,
-  legalLien: null,
   dateDebut: null,
   dateFin: null,
   sections: null,

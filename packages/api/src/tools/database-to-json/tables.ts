@@ -39,7 +39,6 @@ export const tables = [
   { name: 'entreprises', orderBy: ['id'] },
   { name: 'entreprises__documents_types', orderBy: ['document_type_id'] },
   { name: 'entreprises_etablissements', orderBy: ['id'] },
-  { name: 'etapes_statuts', orderBy: ['id'] },
   { name: 'etapes_types', orderBy: ['id'] },
   {
     name: 'etapes_types__documents_types',
@@ -48,10 +47,6 @@ export const tables = [
   {
     name: 'etapes_types__justificatifs_types',
     orderBy: ['etape_type_id', 'document_type_id']
-  },
-  {
-    name: 'etapes_types__etapes_statuts',
-    orderBy: ['etape_type_id', 'etape_statut_id']
   },
   { name: 'forets', orderBy: ['id'] },
   { name: 'frequences', orderBy: ['id'] },

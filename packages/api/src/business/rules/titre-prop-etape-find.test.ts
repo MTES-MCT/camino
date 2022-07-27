@@ -206,7 +206,7 @@ describe("id de l'étape qui a un contenu", () => {
         {
           id: 'demarche-id',
           statutId: 'acc',
-          etapes: [{ id: 'etape-id', statutId: 'bof' }]
+          etapes: [{ id: 'etape-id', statutId: 'fai' }]
         }
       ] as ITitreDemarche[],
       'val'

@@ -315,7 +315,7 @@ describe("statut d'une démarche", () => {
 
   test('une démarche de retrait sans aucune étape décisive a le statut “indéterminé”', () => {
     expect(
-      titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'xxx' }]), 'pxm')
+      titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'ihi' }]), 'pxm')
     ).toEqual('ind')
   })
 

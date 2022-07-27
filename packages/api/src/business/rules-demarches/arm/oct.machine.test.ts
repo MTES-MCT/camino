@@ -5,7 +5,10 @@ import {
   orderAndInterpretMachine
 } from '../machine-test-helper'
 import { IContenu } from '../../../types'
-import { StatutId, STATUTS } from 'camino-common/src/static/etapesStatuts'
+import {
+  EtapeStatutId,
+  ETAPES_STATUTS
+} from 'camino-common/src/static/etapesStatuts'
 
 const etapesProd = require('./oct.cas.json')
 
@@ -118,12 +121,12 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test.each([
     {
       typeId: ETATS.DemandeDeComplementsDecisionAutoriteEnvironnementale,
-      statutId: STATUTS.FAIT,
+      statutId: ETAPES_STATUTS.FAIT,
       date: '2020-01-01'
     },
     {
       typeId: ETATS.DemandeDeComplementsRecepisseDeDeclarationLoiSurLEau,
-      statutId: STATUTS.FAIT,
+      statutId: ETAPES_STATUTS.FAIT,
       date: '2020-01-01'
     }
   ])(
@@ -173,12 +176,12 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test.each([
     {
       typeId: ETATS.RecepisseDeDeclarationLoiSurLEau,
-      statutId: STATUTS.FAVORABLE,
+      statutId: ETAPES_STATUTS.FAVORABLE,
       contenu: { arm: { franchissements: 1 } }
     },
     {
       typeId: ETATS.DecisionAutoriteEnvironnementale,
-      statutId: STATUTS.EXEMPTE
+      statutId: ETAPES_STATUTS.EXEMPTE
     }
   ])(
     'peut créer une étape "%s" juste après une "mdp" et que le titre est mécanisé avec franchissement d’eau',
@@ -188,7 +191,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       contenu
     }: {
       typeId: Etat
-      statutId: StatutId
+      statutId: EtapeStatutId
       contenu?: IContenu
     }) => {
       orderAndInterpretMachine([

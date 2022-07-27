@@ -183,7 +183,6 @@ type Query {
   titresTypesDemarchesTypesEtapesTypes: [TitreTypeDemarcheTypeEtapeType]
   titresTypesDemarchesTypesEtapesTypesDocumentsTypes: [TitreTypeDemarcheTypeEtapeTypeDocumentType]
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypes: [TitreTypeDemarcheTypeEtapeTypeDocumentType]
-  etapesTypesEtapesStatuts: [EtapeTypeEtapeStatut]
   etapesTypesDocumentsTypes: [EtapeTypeDocumentType]
   etapesTypesJustificatifsTypes: [EtapeTypeJustificatifType]
 
@@ -422,8 +421,6 @@ type Mutation {
 
   etapeTypeModifier(etapeType: InputEtapeType!): [EtapeType]
 
-  etapeStatutModifier(etapeStatut: InputEtapeStatut!): [EtapeStatut]
-
   activiteTypeModifier(activiteType: InputActiviteType!): [ActiviteType]
 
   activiteStatutModifier(activiteStatut: InputActiviteStatut!): [ActiviteStatut]
@@ -499,18 +496,6 @@ type Mutation {
   titreTypeDemarcheTypeEtapeTypeJustificatifTypeSupprimer(
     titreTypeDemarcheTypeEtapeTypeJustificatifType: InputTitreTypeDemarcheTypeEtapeTypeDocumentType!
   ): [TitreTypeDemarcheTypeEtapeTypeDocumentType]
-
-  etapeTypeEtapeStatutModifier(
-    etapeTypeEtapeStatut: InputEtapeTypeEtapeStatut!
-  ): [EtapeTypeEtapeStatut]
-
-  etapeTypeEtapeStatutCreer(
-    etapeTypeEtapeStatut: InputEtapeTypeEtapeStatut!
-  ): [EtapeTypeEtapeStatut]
-
-  etapeTypeEtapeStatutSupprimer(
-    etapeTypeEtapeStatut: InputEtapeTypeEtapeStatut!
-  ): [EtapeTypeEtapeStatut]
 
   etapeTypeDocumentTypeModifier(
     etapeTypeDocumentType: InputEtapeTypeDocumentType!

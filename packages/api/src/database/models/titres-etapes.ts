@@ -8,7 +8,6 @@ import {
 } from './_format/titre-etape-heritage'
 import { idGenerate } from './_format/id-create'
 import EtapesTypes from './etapes-types'
-import EtapesStatuts from './etapes-statuts'
 import TitresDemarches from './titres-demarches'
 import Substances from './substances'
 import TitresPoints from './titres-points'
@@ -62,15 +61,6 @@ class TitresEtapes extends Model {
       join: {
         from: 'titresEtapes.typeId',
         to: 'etapesTypes.id'
-      }
-    },
-
-    statut: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: EtapesStatuts,
-      join: {
-        from: 'titresEtapes.statutId',
-        to: 'etapesStatuts.id'
       }
     },
 

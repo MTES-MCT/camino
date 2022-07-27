@@ -5,7 +5,6 @@ import {
   demarchesTypes,
   demarchesStatuts,
   etapesTypes,
-  etapesStatuts,
   phasesStatuts,
   domaineModifier,
   titreTypeTypeModifier,
@@ -14,7 +13,6 @@ import {
   demarcheStatutModifier,
   phaseStatutModifier,
   etapeTypeModifier,
-  etapeStatutModifier,
   documentsTypes,
   documentTypeModifier,
   referencesTypes,
@@ -35,10 +33,6 @@ import {
   titreTypeDemarcheTypeEtapeTypeModifier,
   titreTypeDemarcheTypeEtapeTypeCreer,
   titreTypeDemarcheTypeEtapeTypeSupprimer,
-  etapesTypesEtapesStatuts,
-  etapeTypeEtapeStatutModifier,
-  etapeTypeEtapeStatutCreer,
-  etapeTypeEtapeStatutSupprimer,
   etapesTypesDocumentsTypes,
   etapeTypeDocumentTypeModifier,
   etapeTypeDocumentTypeCreer,
@@ -435,46 +429,6 @@ const metasIndex = {
       { id: 'description', nom: 'Description', type: String, optional: true }
     ],
     ids: ['titreTypeId', 'demarcheTypeId', 'etapeTypeId', 'documentTypeId']
-  },
-  'etapes-statuts': {
-    get: etapesStatuts,
-    update: etapeStatutModifier,
-    labelGet,
-    nom: 'Statuts des étapes',
-    colonnes: [
-      { id: 'id', nom: 'Id' },
-      { id: 'nom', nom: 'Nom', type: String },
-      { id: 'description', nom: 'Description', type: String, optional: true },
-      {
-        id: 'couleur',
-        nom: 'Couleur',
-        type: Array,
-        elements: ['warning', 'neutral', 'success', 'error']
-      }
-    ]
-  },
-  'etapes-types--etapes-statuts': {
-    get: etapesTypesEtapesStatuts,
-    update: etapeTypeEtapeStatutModifier,
-    create: etapeTypeEtapeStatutCreer,
-    delete: etapeTypeEtapeStatutSupprimer,
-    nom: 'Types des étapes | Statuts des étapes',
-    colonnes: [
-      {
-        id: 'etapeTypeId',
-        nom: "Type d'étape",
-        type: 'entities',
-        entities: 'etapes-types'
-      },
-      {
-        id: 'etapeStatutId',
-        nom: "Statut d'étape",
-        type: 'entities',
-        entities: 'etapes-statuts'
-      },
-      { id: 'ordre', nom: 'Ordre', type: Number }
-    ],
-    ids: ['etapeTypeId', 'etapeStatutId']
   },
   'etapes-types--documents-types': {
     get: etapesTypesDocumentsTypes,

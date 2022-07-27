@@ -37,6 +37,10 @@ import {
 import { linkTitres } from '../../../database/queries/titres-titres'
 import { getLinkConfig } from 'camino-common/src/permissions/titres'
 import { checkTitreLinks } from '../../../business/validations/titre-links-validate'
+import {
+  EtapeTypeId,
+  getEtapesStatuts
+} from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 export const titreDemandeCreer = async (
   {
@@ -170,7 +174,7 @@ export const titreDemandeCreer = async (
       titulaires: [titulaire]
     }
 
-    let decisionsAnnexesEtapeTypeIds: string[] = []
+    let decisionsAnnexesEtapeTypeIds: EtapeTypeId[] = []
     if (titreDemande.typeId === 'axm') {
       // si c’est une AXM, d’après l’arbre d’instructions il y a 2 décisions annexes
       // - la décision du propriétaire du sol (asl)
@@ -183,10 +187,11 @@ export const titreDemandeCreer = async (
       for (const etapeTypeId of decisionsAnnexesEtapeTypeIds) {
         const etapeType = await etapeTypeGet(etapeTypeId, {
           fields: {
-            etapesStatuts: { id: {} },
             documentsTypes: { id: {} }
           }
         })
+
+        const etapesStatuts = getEtapesStatuts(etapeTypeId)
 
         const decisionAnnexeSections: ISection = {
           id: etapeTypeId,
@@ -201,7 +206,7 @@ export const titreDemandeCreer = async (
               id: 'statutId',
               nom: 'Statut',
               type: 'select',
-              valeurs: etapeType!.etapesStatuts!.map(statut => ({
+              valeurs: etapesStatuts.map(statut => ({
                 id: statut.id,
                 nom: statut.nom
               }))

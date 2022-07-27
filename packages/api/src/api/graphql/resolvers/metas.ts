@@ -5,7 +5,6 @@ import {
   IDocumentRepertoire,
   IDocumentType,
   IDomaine,
-  IEtapeStatut,
   IEtapeType,
   IFields,
   IPhaseStatut,
@@ -27,8 +26,6 @@ import {
   documentTypeUpdate,
   domainesGet,
   domaineUpdate,
-  etapesStatutsGet,
-  etapeStatutUpdate,
   etapesTypesGet,
   etapeTypeUpdate,
   phasesStatutsGet,
@@ -78,6 +75,7 @@ import { Etape } from '../../../business/rules-demarches/arm/oct.machine'
 import { Pays, PaysList } from 'camino-common/src/static/pays'
 import { Departement, Departements } from 'camino-common/src/static/departement'
 import { Region, Regions } from 'camino-common/src/static/region'
+import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 
 export const devises = async () => devisesGet()
 
@@ -385,17 +383,7 @@ export const etapesTypes = async (
   }
 }
 
-export const etapesStatuts = async () => {
-  try {
-    return await etapesStatutsGet()
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
+export const etapesStatuts = () => Object.values(EtapesStatuts)
 
 export const version = () => process.env.APPLICATION_VERSION
 
@@ -633,29 +621,6 @@ export const etapeTypeModifier = async (
     await titresEtapesHeritageContenuUpdate(user)
 
     return await etapesTypesGet({}, { fields }, user)
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-export const etapeStatutModifier = async (
-  { etapeStatut }: { etapeStatut: IEtapeStatut },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    await etapeStatutUpdate(etapeStatut.id!, etapeStatut)
-
-    return await etapesStatutsGet()
   } catch (e) {
     if (debug) {
       console.error(e)
