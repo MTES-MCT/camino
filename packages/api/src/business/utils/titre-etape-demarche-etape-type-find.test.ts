@@ -26,6 +26,6 @@ describe("retourne le type d'étape provenant des types d'étapes d'un type de d
         demarcheType.etapesTypes,
         demarcheType.nom
       )
-    ).toThrow(/étape "introuvable" invalide pour une démarche "demarche"/)
+    ).toThrow(/étape "mdp" invalide pour une démarche "demarche"/)
   })
 })

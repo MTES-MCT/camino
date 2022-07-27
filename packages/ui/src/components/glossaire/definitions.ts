@@ -3,7 +3,6 @@ interface Definition {
   nom: string
   slug: string
   ordre: number
-  table?: string
   description?: string
 }
 
@@ -12,7 +11,6 @@ export const definitions: Definition[] = [
     id: 'dom',
     nom: 'Domaines miniers',
     slug: 'domaines',
-    table: 'domaines',
     ordre: 1,
     description:
       "Territoire national et sous juridiction française, sur lequel l’État ou les collectivités territoriales compétentes sont autorisés à mener ou à faire mener pour leur compte, l'inventaire et l'exploitation des ressources en matières premières du sous-sol classées dans la catégorie des substances de mines.\n\nLes substances de mines sont  regroupées   selon leur nature, leurs méthodes d’exploitation et leurs usages : \nminéraux et métaux, \nhydrocarbures liquides ou gazeux, \ncombustibles fossiles,\néléments radioactifs\n\nDes substances de carrières, telle que les granulats marins, présentent des enjeux équivalents à ceux des substances de mines en matière d’accès à la ressource et empruntent des règles de gestion minière adaptées.\n\nL’exploitation de gîtes de géothermie et l’usage de formations géologiques aptes au stockage souterrain de certaines substances, qui présentent des enjeux équivalents à ceux des substances de mines de part leur localisation dans le sous-sol, empruntent également les règles de gestions minières adaptées à leurs spécificités."
@@ -21,14 +19,12 @@ export const definitions: Definition[] = [
     id: 'dst',
     nom: 'Statuts de démarches',
     slug: 'demarches-statuts',
-    table: 'demarches_statuts',
     ordre: 7
   },
   {
     id: 'dty',
     nom: 'Types de démarches',
     slug: 'demarches-types',
-    table: 'demarches_types',
     ordre: 6
   },
   {
@@ -41,7 +37,6 @@ export const definitions: Definition[] = [
     id: 'ety',
     nom: "Types d'étapes",
     slug: 'etapes-types',
-    table: 'etapes_types',
     ordre: 8
   },
   {
@@ -56,7 +51,6 @@ export const definitions: Definition[] = [
     id: 'smi',
     nom: 'Substances et usages du sous-sol',
     slug: 'substances-legales',
-    table: 'substances_legales_codes',
     ordre: 10
   },
   {
@@ -79,7 +73,6 @@ export const definitions: Definition[] = [
     id: 'tst',
     nom: 'Statuts des autorisations et titres miniers',
     slug: 'titres-statuts',
-    table: 'titres_statuts',
     ordre: 5,
     description:
       'Ce statut caractérise l’état d’avancement du projet minier.\r\nIl indique l’état de disponibilité du domaine minier pour les substances ou les usages visés par le titre ou l’autorisation.'
@@ -88,7 +81,6 @@ export const definitions: Definition[] = [
     id: 'tty',
     nom: 'Types de titres',
     slug: 'titres-types',
-    table: 'titres_types_types',
     ordre: 4
   },
   {
