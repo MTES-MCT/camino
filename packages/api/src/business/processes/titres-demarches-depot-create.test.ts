@@ -42,30 +42,4 @@ describe('créer le dépot de la démarche', () => {
       expect(titreEtapeDepotCreateMock).not.toHaveBeenCalled()
     }
   })
-
-  test.each`
-    etapes                                                                                                                                                                      | creation
-    ${[{ date: '2021-01-01', typeId: 'mfr', statutId: 'fai' }, { date: '2021-01-01', typeId: 'asl', statutId: 'fav' }, { date: '2021-01-01', typeId: 'dae', statutId: 'exe' }]} | ${true}
-    ${[{ date: '2021-01-01', typeId: 'mfr', statutId: 'fai' }, { date: '2021-01-01', typeId: 'asl', statutId: 'fre' }, { date: '2021-01-01', typeId: 'dae', statutId: 'exe' }]} | ${true}
-    ${[{ date: '2021-01-01', typeId: 'mfr', statutId: 'aco' }, { date: '2021-01-01', typeId: 'asl', statutId: 'fre' }, { date: '2021-01-01', typeId: 'dae', statutId: 'exe' }]} | ${false}
-    ${[{ date: '2021-01-01', typeId: 'mfr', statutId: 'fai' }, { date: '2021-01-01', typeId: 'asl', statutId: 'def' }, { date: '2021-01-01', typeId: 'dae', statutId: 'exe' }]} | ${false}
-    ${[{ date: '2021-01-01', typeId: 'mfr', statutId: 'fai' }, { date: '2021-01-01', typeId: 'asl', statutId: 'fre' }, { date: '2021-01-01', typeId: 'dae', statutId: 'req' }]} | ${false}
-    ${[{ date: '2018-01-01', typeId: 'mfr', statutId: 'fai' }, { date: '2021-01-01', typeId: 'asl', statutId: 'fav' }, { date: '2021-01-01', typeId: 'dae', statutId: 'exe' }]} | ${false}
-  `('test le dépot automatique d’AXM', async ({ etapes, creation }) => {
-    titreDemarcheGetMock.mockResolvedValue({
-      titre: { typeId: 'axm' } as ITitre,
-      typeId: 'oct',
-      etapes
-    } as TitresDemarches)
-
-    const titresDemarchesDepotCreated = await titresEtapesDepotCreate(
-      'demarcheId'
-    )
-    expect(titresDemarchesDepotCreated).toEqual(creation)
-    if (creation) {
-      expect(titreEtapeDepotCreateMock).toHaveBeenCalled()
-    } else {
-      expect(titreEtapeDepotCreateMock).not.toHaveBeenCalled()
-    }
-  })
 })
