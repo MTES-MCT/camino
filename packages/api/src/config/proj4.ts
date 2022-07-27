@@ -1,5 +1,5 @@
 import proj4 from 'proj4'
-import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
+import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
 
 export const geoSystemesInit = () => {
   // initialise les définitions proj4

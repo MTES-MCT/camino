@@ -1,7 +1,7 @@
 import { IAdministration } from '../../types'
 
 import { titresFormat } from './titres'
-import { Administrations } from 'camino-common/src/administrations'
+import { Administrations } from 'camino-common/src/static/administrations'
 
 /**
  * Formate une administration en fonction du profil de l'utilisateur

@@ -1,6 +1,6 @@
 import { elementsFormat } from '../../utils/index'
 import { ROLES } from 'camino-common/src/roles'
-import { sortedAdministrations } from 'camino-common/src/administrations'
+import { sortedAdministrations } from 'camino-common/src/static/administrations'
 
 const utilisateursFiltres = [
   {

@@ -1,7 +1,7 @@
 import { createStore } from 'vuex'
 import { createApp } from 'vue'
 import * as api from '../api/utilisateurs'
-import { Administrations } from 'camino-common/src/administrations'
+import { Administrations } from 'camino-common/src/static/administrations'
 
 import user from './user'
 import tiles from '../utils/map-tiles'

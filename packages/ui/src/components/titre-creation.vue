@@ -152,9 +152,9 @@ import {
 } from '@/components/titre/pure-titres-link.type'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
-import { TitreTypeId } from 'camino-common/src/titresTypes'
-import { DomaineId } from 'camino-common/src/domaines'
-import { TitreTypeTypeId } from 'camino-common/src/titresTypesTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { DomaineId } from 'camino-common/src/static/domaines'
+import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
 
 type TitreTypeType = { id: TitreTypeTypeId; nom: string }
 type Domaine = {

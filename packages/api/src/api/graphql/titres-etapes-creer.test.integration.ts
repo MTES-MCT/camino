@@ -11,7 +11,7 @@ import { documentCreate } from '../../database/queries/documents'
 import {
   ADMINISTRATION_IDS,
   Administrations
-} from 'camino-common/src/administrations'
+} from 'camino-common/src/static/administrations'
 import { Role } from 'camino-common/src/roles'
 
 jest.mock('../../tools/dir-create', () => ({

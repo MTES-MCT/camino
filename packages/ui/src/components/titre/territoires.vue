@@ -45,9 +45,12 @@
 import numberFormat from '@/utils/number-format'
 import TagList from '../_ui/tag-list.vue'
 import { computed, withDefaults } from 'vue'
-import { DepartementId, Departements } from 'camino-common/src/departement'
-import { PAYS_IDS, PaysId } from 'camino-common/src/pays'
-import { Regions } from 'camino-common/src/region'
+import {
+  DepartementId,
+  Departements
+} from 'camino-common/src/static/departement'
+import { PAYS_IDS, PaysId } from 'camino-common/src/static/pays'
+import { Regions } from 'camino-common/src/static/region'
 
 interface Props {
   surface?: number

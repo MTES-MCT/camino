@@ -10,7 +10,7 @@ import {
 } from './titres-demarches'
 import TitresEtapes from '../../models/titres-etapes'
 import { Role } from 'camino-common/src/roles'
-import { Administrations } from 'camino-common/src/administrations'
+import { Administrations } from 'camino-common/src/static/administrations'
 
 console.info = jest.fn()
 console.error = jest.fn()

@@ -75,7 +75,7 @@ import {
   activiteTypePaysCreer,
   activiteTypePaysSupprimer
 } from '../api/metas-activites'
-import { PaysList } from 'camino-common/src/pays'
+import { PaysList } from 'camino-common/src/static/pays'
 
 const labelGet = entity => (entity ? `${entity.id} - ${entity.nom}` : '')
 

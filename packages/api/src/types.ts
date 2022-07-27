@@ -2,16 +2,16 @@ import { FileUpload } from 'graphql-upload'
 import {
   AdministrationId,
   AdministrationTypeId
-} from 'camino-common/src/administrations'
-import { DepartementId } from 'camino-common/src/departement'
-import { RegionId } from 'camino-common/src/region'
-import { GeoSystemeId } from 'camino-common/src/geoSystemes'
+} from 'camino-common/src/static/administrations'
+import { DepartementId } from 'camino-common/src/static/departement'
+import { RegionId } from 'camino-common/src/static/region'
+import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { Role } from 'camino-common/src/roles'
-import { DomaineId } from 'camino-common/src/domaines'
-import { TitreTypeTypeId } from 'camino-common/src/titresTypesTypes'
-import { PaysId } from 'camino-common/src/pays'
-import { TitreTypeId } from 'camino-common/src/titresTypes'
-import { DemarcheTypeId } from 'camino-common/src/demarchesTypes'
+import { DomaineId } from 'camino-common/src/static/domaines'
+import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
+import { PaysId } from 'camino-common/src/static/pays'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 
 const DemarchesStatutsTypesIds = {
   Accepte: 'acc',

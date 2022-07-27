@@ -7,20 +7,23 @@ import TitreTypeTypeNom from '../_common/titre-type-type-nom.vue'
 import CoordonneesIcone from '../_common/coordonnees-icone.vue'
 import ActivitesPills from '../_common/pills.vue'
 import Statut from '../_common/statut.vue'
-import { DomaineId } from 'camino-common/src/domaines'
+import { DomaineId } from 'camino-common/src/static/domaines'
 import {
   TitresTypesTypes,
   TitreTypeTypeId
-} from 'camino-common/src/titresTypesTypes'
+} from 'camino-common/src/static/titresTypesTypes'
 import {
   Column,
   ComponentColumnData,
   TableAutoRow,
   TextColumnData
 } from '@/components/_ui/table-auto.type'
-import { DepartementId, Departements } from 'camino-common/src/departement'
+import {
+  DepartementId,
+  Departements
+} from 'camino-common/src/static/departement'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
-import { Regions } from 'camino-common/src/region'
+import { Regions } from 'camino-common/src/static/region'
 
 interface Reference {
   type: { nom: string }

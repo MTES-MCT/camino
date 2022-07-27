@@ -14,7 +14,7 @@ import {
 } from '../../database/queries/titres-etapes'
 import { titresGet } from '../../database/queries/titres'
 import { userSuper } from '../../database/user-super'
-import { Departements } from 'camino-common/src/departement'
+import { Departements } from 'camino-common/src/static/departement'
 import { administrationsGet } from '../../database/queries/administrations'
 import { administrationFormat } from '../../api/_format/administrations'
 

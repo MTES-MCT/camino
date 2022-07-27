@@ -1,4 +1,4 @@
-import { DepartementId } from 'camino-common/src/departement'
+import { DepartementId } from 'camino-common/src/static/departement'
 
 export interface TerritoiresProps {
   surface?: number

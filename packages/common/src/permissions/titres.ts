@@ -1,12 +1,12 @@
-import { TitresTypes, TitreTypeId } from '../titresTypes'
-import { DemarcheTypeId } from '../demarchesTypes'
+import { TitresTypes, TitreTypeId } from '../static/titresTypes'
+import { DemarcheTypeId } from '../static/demarchesTypes'
 import {
   isAdministrationAdmin,
   isAdministrationEditeur,
   isSuper,
   User
 } from '../roles'
-import { AdministrationId } from '../administrations'
+import { AdministrationId } from '../static/administrations'
 
 export const getLinkConfig = (
   typeId: TitreTypeId,

@@ -77,8 +77,8 @@
 
 <script>
 import Popup from '../_ui/popup.vue'
-import { isTitreType, TitresTypes } from 'camino-common/src/titresTypes'
-import { TitresTypesTypes } from 'camino-common/src/titresTypesTypes'
+import { isTitreType, TitresTypes } from 'camino-common/src/static/titresTypes'
+import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 
 export default {
   name: 'CaminoDemarcheEditPopup',

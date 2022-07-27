@@ -5,8 +5,11 @@ import { stringSplit } from './_utils'
 import Titres from '../models/titres'
 import TitresDemarches from '../models/titres-demarches'
 import TitresActivites from '../models/titres-activites'
-import { DepartementId, departements } from 'camino-common/src/departement'
-import { regions } from 'camino-common/src/region'
+import {
+  DepartementId,
+  departements
+} from 'camino-common/src/static/departement'
+import { regions } from 'camino-common/src/static/region'
 
 type ITitreTableName = 'titres' | 'titre'
 type ITitreRootName = 'titres' | 'titresDemarches' | 'titresActivites'

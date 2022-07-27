@@ -1,7 +1,7 @@
 import { isNotNullNorUndefined, onlyUnique } from './typescript-tools'
 import { Role } from './roles'
-import { AdministrationId } from './administrations'
-import { Departements } from './departement'
+import { AdministrationId } from './static/administrations'
+import { Departements } from './static/departement'
 
 describe('isNotNullNorUndefined', () => {
   test('null or undefined', () => {

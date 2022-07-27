@@ -1,6 +1,9 @@
 import { IActiviteTypePays, ICommune, ITitreType } from '../../types'
-import { Departements, isDepartementId } from 'camino-common/src/departement'
-import { Regions } from 'camino-common/src/region'
+import {
+  Departements,
+  isDepartementId
+} from 'camino-common/src/static/departement'
+import { Regions } from 'camino-common/src/static/region'
 
 /**
  * Vérifie que le titre peut recevoir un type d'activité

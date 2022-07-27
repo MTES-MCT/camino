@@ -1,5 +1,5 @@
 import { geoConvert } from './geo-convert'
-import { GEO_SYSTEME_IDS } from 'camino-common/src/geoSystemes'
+import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes'
 
 describe('teste la conversion des projections', () => {
   test.each`

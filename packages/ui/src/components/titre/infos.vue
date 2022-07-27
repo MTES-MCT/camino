@@ -165,13 +165,13 @@ import {
 } from '@/components/titre/pure-titres-link.type'
 import { User } from 'camino-common/src/roles'
 import { computed } from 'vue'
-import { TitresTypes, TitreTypeId } from 'camino-common/src/titresTypes'
+import { TitresTypes, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import {
   DemarchesTypes,
   DemarcheTypeId
-} from 'camino-common/src/demarchesTypes'
-import { AdministrationId } from 'camino-common/src/administrations'
-import { TitresTypesTypes } from 'camino-common/src/titresTypesTypes'
+} from 'camino-common/src/static/demarchesTypes'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 
 type Entreprise = {
   id: string

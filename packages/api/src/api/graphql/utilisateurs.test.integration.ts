@@ -8,7 +8,7 @@ import { userAdd } from '../../knex/user-add'
 import request from 'supertest'
 import jwt from 'jsonwebtoken'
 import { dbManager } from '../../../tests/db-manager'
-import { Administrations } from 'camino-common/src/administrations'
+import { Administrations } from 'camino-common/src/static/administrations'
 import { Knex } from 'knex'
 
 console.info = jest.fn()

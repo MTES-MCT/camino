@@ -8,8 +8,8 @@ import {
 import {
   isSubstanceFiscale,
   SubstancesFiscale
-} from 'camino-common/src/substance'
-import { UniteId, Unites } from 'camino-common/src/unites'
+} from 'camino-common/src/static/substance'
+import { UniteId, Unites } from 'camino-common/src/static/unites'
 
 const titreActiviteContenuFormat = (contenu: IContenu, sections: ISection[]) =>
   sections.reduce((resSections: Index<IContenuValeur>, section) => {

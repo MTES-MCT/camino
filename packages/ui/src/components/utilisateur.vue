@@ -191,7 +191,7 @@ import UtilisateurRemovePopup from './utilisateur/remove-popup.vue'
 import UtilisateurPasswordPopup from './utilisateur/password-popup.vue'
 import UtilisateurEmailPopup from './utilisateur/email-popup.vue'
 import { isAdministration, isSuper } from 'camino-common/src/roles'
-import { Administrations } from 'camino-common/src/administrations'
+import { Administrations } from 'camino-common/src/static/administrations'
 import Icon from './_ui/icon.vue'
 
 export default {

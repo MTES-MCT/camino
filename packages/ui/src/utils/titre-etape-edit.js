@@ -1,5 +1,5 @@
 import { cloneAndClean } from './index'
-import { GeoSystemes } from 'camino-common/src/geoSystemes'
+import { GeoSystemes } from 'camino-common/src/static/geoSystemes'
 
 const referencesBuild = references =>
   references.reduce(

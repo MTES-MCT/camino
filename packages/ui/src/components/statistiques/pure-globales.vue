@@ -240,7 +240,7 @@ import {
   ADMINISTRATION_TYPE_IDS_ARRAY,
   AdministrationTypeId,
   sortedAdministrationTypes
-} from 'camino-common/src/administrations'
+} from 'camino-common/src/static/administrations'
 
 const props = defineProps<{ statistiques: Statistiques }>()
 

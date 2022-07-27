@@ -3,7 +3,7 @@ import { IUtilisateur } from '../../../types'
 import { dbManager } from '../../../../tests/db-manager'
 import Utilisateurs from '../../models/utilisateurs'
 import { utilisateursGet } from '../utilisateurs'
-import { Administrations } from 'camino-common/src/administrations'
+import { Administrations } from 'camino-common/src/static/administrations'
 import options from '../_options'
 
 console.info = jest.fn()

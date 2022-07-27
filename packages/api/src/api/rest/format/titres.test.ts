@@ -1,5 +1,5 @@
 import { titreTerritoiresFind } from './titres'
-import { DEPARTEMENT_IDS } from 'camino-common/src/departement'
+import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 
 describe('titreTerritoiresFind', () => {
   test('titreTerritoiresFind', () => {

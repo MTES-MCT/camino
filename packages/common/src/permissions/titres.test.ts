@@ -1,7 +1,7 @@
 import { canLinkTitres, getLinkConfig } from './titres'
-import { TitresTypesIds, TitreTypeId } from '../titresTypes'
+import { TitresTypesIds, TitreTypeId } from '../static/titresTypes'
 import { User } from '../roles'
-import { ADMINISTRATION_IDS, AdministrationId } from '../administrations'
+import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations'
 
 test('getTitreFromTypeId pas de fusions', () => {
   const titreFromTypeId = TitresTypesIds.reduce<{

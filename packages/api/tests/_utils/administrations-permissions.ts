@@ -19,7 +19,7 @@ import {
 import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritage-props-find'
 import { etapeTypeSectionsFormat } from '../../src/api/_format/etapes-types'
 import { Role } from 'camino-common/src/roles'
-import { AdministrationId } from 'camino-common/src/administrations'
+import { AdministrationId } from 'camino-common/src/static/administrations'
 
 const visibleCheck = async (
   administrationId: string,

@@ -4,7 +4,7 @@ import {
   isBureauDEtudes,
   isEntreprise
 } from 'camino-common/src/roles'
-import { Administrations } from 'camino-common/src/administrations'
+import { Administrations } from 'camino-common/src/static/administrations'
 import { Column } from '@/components/_ui/table-auto.type'
 
 export const utilisateursColonnes: Column[] = [

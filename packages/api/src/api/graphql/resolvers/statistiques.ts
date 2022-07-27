@@ -12,7 +12,7 @@ import {
 } from 'camino-common/src/statistiques'
 import Utilisateurs from '../../../database/models/utilisateurs'
 import { isAdministration } from 'camino-common/src/roles'
-import { Administrations } from 'camino-common/src/administrations'
+import { Administrations } from 'camino-common/src/static/administrations'
 
 const ACTIVITE_ANNEE_DEBUT = 2018
 

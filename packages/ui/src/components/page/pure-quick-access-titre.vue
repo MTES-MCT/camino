@@ -30,7 +30,7 @@ import Domaine from '@/components/_common/domaine.vue'
 import {
   TitresTypesTypes,
   TitreTypeTypeId
-} from 'camino-common/src/titresTypesTypes'
+} from 'camino-common/src/static/titresTypesTypes'
 import { ref } from 'vue'
 
 const emit = defineEmits<{

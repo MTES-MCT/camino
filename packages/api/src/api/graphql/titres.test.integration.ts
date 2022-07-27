@@ -4,7 +4,7 @@ import { titreCreate } from '../../database/queries/titres'
 import {
   ADMINISTRATION_IDS,
   Administrations
-} from 'camino-common/src/administrations'
+} from 'camino-common/src/static/administrations'
 import { IAdministration, ITitre } from '../../types'
 
 console.info = jest.fn()

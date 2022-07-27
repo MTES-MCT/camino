@@ -47,7 +47,7 @@
 <script>
 import InputFile from '../_ui/input-file.vue'
 import Popup from '../_ui/popup.vue'
-import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
+import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
 
 export default {
   components: {

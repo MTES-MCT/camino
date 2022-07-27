@@ -1,6 +1,6 @@
 import { Meta } from '@storybook/vue3'
 import Domaine from './domaine.vue'
-import { DOMAINES_IDS } from 'camino-common/src/domaines'
+import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
 
 const meta: Meta = {
   title: 'Common/Domaine',

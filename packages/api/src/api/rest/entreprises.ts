@@ -20,10 +20,10 @@ import { entrepriseGet } from '../../database/queries/entreprises'
 import TitresActivites from '../../database/models/titres-activites'
 import Titres from '../../database/models/titres'
 import { CustomResponse } from './express-type'
-import { SubstancesFiscales } from 'camino-common/src/substance'
-import { Departements } from 'camino-common/src/departement'
+import { SubstancesFiscales } from 'camino-common/src/static/substance'
+import { Departements } from 'camino-common/src/static/departement'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { Regions } from 'camino-common/src/region'
+import { Regions } from 'camino-common/src/static/region'
 
 // VisibleForTesting
 export const bodyBuilder = (

@@ -131,12 +131,12 @@ import TitreTypeSelect from '../_common/titre-type-select.vue'
 import {
   AdministrationId,
   sortedAdministrations
-} from 'camino-common/src/administrations'
+} from 'camino-common/src/static/administrations'
 import Icon from '@/components/_ui/icon.vue'
-import { TitreTypeId } from 'camino-common/src/titresTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { computed, ComputedRef, inject, onMounted, onUnmounted, ref } from 'vue'
 import { useStore } from 'vuex'
-import { DomaineId } from 'camino-common/src/domaines'
+import { DomaineId } from 'camino-common/src/static/domaines'
 type Titre = {
   id: string
   nom: string

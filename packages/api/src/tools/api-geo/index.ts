@@ -10,7 +10,7 @@ import {
 } from '../../types'
 import errorLog from '../error-log'
 import { check } from '@placemarkio/check-geojson'
-import { isDepartementId } from 'camino-common/src/departement'
+import { isDepartementId } from 'camino-common/src/static/departement'
 
 const apiGeoFetch = async (geojson: IGeoJson, areasTypes: IAreaType[]) => {
   try {

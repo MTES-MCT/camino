@@ -35,7 +35,7 @@
 
 <script>
 import InputNumber from '../_ui/input-number.vue'
-import { Unites } from 'camino-common/src/unites'
+import { Unites } from 'camino-common/src/static/unites'
 
 export default {
   components: { InputNumber },

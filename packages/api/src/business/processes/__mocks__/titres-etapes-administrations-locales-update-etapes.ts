@@ -1,5 +1,5 @@
 import Titres from '../../../database/models/titres'
-import { DEPARTEMENT_IDS } from 'camino-common/src/departement'
+import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 import {
   IAdministration,
   IAdministrationTitreType,

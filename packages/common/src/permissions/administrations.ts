@@ -1,10 +1,10 @@
-import { isAdministration, isSuper, User } from 'camino-common/src/roles'
+import { isAdministration, isSuper, User } from '../roles'
 import {
   AdministrationId,
   Administrations,
   sortedAdministrations
-} from 'camino-common/src/administrations'
-import { Departements } from 'camino-common/src/departement'
+} from '../static/administrations'
+import { Departements } from '../static/departement'
 
 export const canReadActivitesTypesEmails = (
   user: User,

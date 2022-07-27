@@ -18,7 +18,7 @@ import { userSuper } from '../../user-super'
 import {
   ADMINISTRATION_IDS,
   AdministrationId
-} from 'camino-common/src/administrations'
+} from 'camino-common/src/static/administrations'
 import { Role } from 'camino-common/src/roles'
 
 console.info = jest.fn()

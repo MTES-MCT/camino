@@ -185,11 +185,11 @@ import {
 import {
   ADMINISTRATION_TYPES,
   Administrations
-} from 'camino-common/src/administrations'
+} from 'camino-common/src/static/administrations'
 import { isSuper } from 'camino-common/src/roles'
 import { canReadActivitesTypesEmails } from 'camino-common/src/permissions/administrations'
-import { Departements } from 'camino-common/src/departement'
-import { Regions } from 'camino-common/src/region'
+import { Departements } from 'camino-common/src/static/departement'
+import { Regions } from 'camino-common/src/static/region'
 
 export default {
   components: {
