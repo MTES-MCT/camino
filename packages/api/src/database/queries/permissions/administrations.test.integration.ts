@@ -6,7 +6,7 @@ import Titres from '../../models/titres'
 import Utilisateurs from '../../models/utilisateurs'
 import AdministrationsActivitesTypesEmails from '../../models/administrations-activites-types-emails'
 import Administrations from '../../models/administrations'
-import { Administrations as CommonAdministrations } from 'camino-common/src/administrations'
+import { Administrations as CommonAdministrations } from 'camino-common/src/static/administrations'
 import {
   administrationsTitresQuery,
   administrationsQueryModify

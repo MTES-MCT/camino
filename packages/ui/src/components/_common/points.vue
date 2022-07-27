@@ -99,7 +99,7 @@
 import { etapeGroupesBuild } from '../../utils/titre-etape-edit'
 import Tag from '../_ui/tag.vue'
 import pointReference from './point-reference.vue'
-import { Unites, UNITE_IDS } from 'camino-common/src/unites'
+import { Unites, UNITE_IDS } from 'camino-common/src/static/unites'
 
 export default {
   components: { Tag, pointReference },

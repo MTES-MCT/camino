@@ -19,7 +19,7 @@ import {
   ADMINISTRATION_IDS,
   ADMINISTRATION_TYPES,
   Administrations
-} from 'camino-common/src/administrations'
+} from 'camino-common/src/static/administrations'
 import {
   isAdministration,
   isAdministrationAdmin,

@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import Pill from '../_ui/pill.vue'
-import { DomaineId, DOMAINES_IDS } from 'camino-common/src/domaines'
+import { DomaineId, DOMAINES_IDS } from 'camino-common/src/static/domaines'
 import { withDefaults } from 'vue'
 
 withDefaults(

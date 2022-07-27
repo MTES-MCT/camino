@@ -35,7 +35,7 @@ import { userGet } from '../../../database/queries/utilisateurs'
 import { isSuper } from 'camino-common/src/roles'
 import { canReadActivitesTypesEmails } from 'camino-common/src/permissions/administrations'
 import administrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails'
-import { isAdministrationId } from 'camino-common/src/administrations'
+import { isAdministrationId } from 'camino-common/src/static/administrations'
 
 const administration = async (
   { id }: { id: string },

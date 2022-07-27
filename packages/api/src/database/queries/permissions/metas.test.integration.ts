@@ -6,7 +6,7 @@ import Titres from '../../models/titres'
 import { IDemarcheType } from '../../../types'
 import AdministrationsTitresTypes from '../../models/administrations-titres-types'
 import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts'
-import { AdministrationId } from 'camino-common/src/administrations'
+import { AdministrationId } from 'camino-common/src/static/administrations'
 
 console.info = jest.fn()
 console.error = jest.fn()

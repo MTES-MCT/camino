@@ -7,8 +7,8 @@ import {
   IContenu,
   ICommune
 } from '../../../types'
-import { Departements } from 'camino-common/src/departement'
-import { Regions } from 'camino-common/src/region'
+import { Departements } from 'camino-common/src/static/departement'
+import { Regions } from 'camino-common/src/static/region'
 
 const titreContenuTableFormat = (contenu?: IContenu | null) =>
   contenu

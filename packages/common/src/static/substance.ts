@@ -294,5 +294,4 @@ export const SubstancesFiscale: {
   }
 }
 
-
 export const SubstancesFiscales = Object.values(SubstancesFiscale)

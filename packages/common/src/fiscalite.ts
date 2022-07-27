@@ -1,5 +1,5 @@
 import { isSuper, Role } from './roles'
-import { AdministrationId } from './administrations'
+import { AdministrationId } from './static/administrations'
 
 export type Fiscalite = FiscaliteGuyane | FiscaliteFrance
 export interface FiscaliteFrance {

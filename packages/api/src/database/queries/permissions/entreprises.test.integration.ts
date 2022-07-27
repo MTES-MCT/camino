@@ -5,7 +5,7 @@ import { dbManager } from '../../../../tests/db-manager'
 import Entreprises from '../../models/entreprises'
 import Utilisateurs from '../../models/utilisateurs'
 import { entreprisesQueryModify } from './entreprises'
-import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 
 console.info = jest.fn()
 console.error = jest.fn()

@@ -1,7 +1,7 @@
 import Communes from '../../../database/models/communes'
 import Forets from '../../../database/models/forets'
 import TitresEtapes from '../../../database/models/titres-etapes'
-import { DEPARTEMENT_IDS } from 'camino-common/src/departement'
+import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 
 const commune1 = {
   id: '1',

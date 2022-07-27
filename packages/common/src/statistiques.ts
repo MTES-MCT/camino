@@ -1,4 +1,4 @@
-import { AdministrationTypeId } from './administrations'
+import { AdministrationTypeId } from './static/administrations'
 
 export interface QuantiteParMois {
   mois: string

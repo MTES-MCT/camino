@@ -1,5 +1,5 @@
 import { IAdministration, ITitre } from '../../../types'
-import { DEPARTEMENT_IDS } from 'camino-common/src/departement'
+import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 
 const administrations = [
   {

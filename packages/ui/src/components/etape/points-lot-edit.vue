@@ -38,8 +38,8 @@
 </template>
 
 <script>
-import { GeoSystemes } from 'camino-common/src/geoSystemes'
-import { Unites } from 'camino-common/src/unites'
+import { GeoSystemes } from 'camino-common/src/static/geoSystemes'
+import { Unites } from 'camino-common/src/static/unites'
 
 export default {
   props: {

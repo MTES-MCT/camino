@@ -3,12 +3,12 @@ import PQueue from 'p-queue'
 import fetch from 'node-fetch'
 
 import errorLog from '../error-log'
-import { DepartementId } from 'camino-common/src/departement'
+import { DepartementId } from 'camino-common/src/static/departement'
 import {
   Administration,
   AdministrationId,
   AdministrationTypeId
-} from 'camino-common/src/administrations'
+} from 'camino-common/src/static/administrations'
 
 const MAX_CALLS_MINUTE = 200
 

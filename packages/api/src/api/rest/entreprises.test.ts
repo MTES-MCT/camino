@@ -1,5 +1,5 @@
 import { bodyBuilder, responseExtractor } from './entreprises'
-import { DEPARTEMENT_IDS } from 'camino-common/src/departement'
+import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 
 const entreprise = { categorie: 'PME', nom: 'ma companie' }
 

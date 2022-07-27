@@ -1,4 +1,4 @@
-import { Definition } from './definition'
+import { Definition } from '../definition'
 
 export const DOMAINES_IDS = {
   METAUX: 'm',

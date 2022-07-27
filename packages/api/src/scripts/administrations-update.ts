@@ -1,8 +1,8 @@
 import '../init'
 
 import { organismesDepartementsGet } from '../tools/api-administrations'
-import { Administrations } from 'camino-common/src/administrations'
-import { DepartementId } from 'camino-common/src/departement'
+import { Administrations } from 'camino-common/src/static/administrations'
+import { DepartementId } from 'camino-common/src/static/departement'
 import { readFileSync, writeFileSync } from 'fs'
 
 const administrationsUpdate = async () => {

@@ -28,7 +28,7 @@ import {
   titreEtapesSortAscByOrdre,
   titreEtapesSortDescByOrdre
 } from '../../../business/utils/titre-etapes-sort'
-import { GeoSystemes } from 'camino-common/src/geoSystemes'
+import { GeoSystemes } from 'camino-common/src/static/geoSystemes'
 
 const titreEtapePointsCalc = <
   T extends {

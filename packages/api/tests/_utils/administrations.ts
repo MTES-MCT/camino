@@ -16,7 +16,7 @@ import { objectClone } from '../../src/tools/index'
 import {
   Administration,
   Administrations
-} from 'camino-common/src/administrations'
+} from 'camino-common/src/static/administrations'
 
 interface ISources {
   titresTypes: {

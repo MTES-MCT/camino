@@ -1,5 +1,5 @@
 import { etapeEditFormat } from './titre-etape-edit'
-import { GEO_SYSTEME_IDS } from 'camino-common/src/geoSystemes'
+import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes'
 
 // dateFormat
 describe('etapeEditFormat', () => {

@@ -1,8 +1,8 @@
 import { graphQLCall, queryImport } from '../../../tests/_utils/index'
 
 import { dbManager } from '../../../tests/db-manager'
-import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
-import { Domaines, DOMAINES_IDS } from 'camino-common/src/domaines'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { Domaines, DOMAINES_IDS } from 'camino-common/src/static/domaines'
 
 console.info = jest.fn()
 console.error = jest.fn()

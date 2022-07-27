@@ -10,7 +10,7 @@ import {
   ROLES,
   isBureauDEtudes
 } from './roles'
-import { ADMINISTRATION_IDS } from './administrations'
+import { ADMINISTRATION_IDS } from './static/administrations'
 const administrationId = ADMINISTRATION_IDS.CACEM
 describe('role', () => {
   test('isSuper', () => {

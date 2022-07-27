@@ -19,8 +19,8 @@ import {
   AdministrationId,
   Administrations,
   sortedAdministrations
-} from 'camino-common/src/administrations'
-import { Departements } from 'camino-common/src/departement'
+} from 'camino-common/src/static/administrations'
+import { Departements } from 'camino-common/src/static/departement'
 
 const administrationsQueryModify = (
   q: QueryBuilder<

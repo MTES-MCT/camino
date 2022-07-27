@@ -1,9 +1,9 @@
 import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { getLinkConfig } from 'camino-common/src/permissions/titres'
 import { apiGraphQLFetch } from '@/api/_client'
-import { TitresTypes, TitreTypeId } from 'camino-common/src/titresTypes'
+import { TitresTypes, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import gql from 'graphql-tag'
-import { DemarcheTypeId } from 'camino-common/src/demarchesTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 
 export type TitresLinkConfig =
   | {

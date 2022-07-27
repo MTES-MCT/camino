@@ -1,4 +1,4 @@
-import { Definition } from './definition'
+import { Definition } from '../definition'
 import { RegionId } from './region'
 import { DepartementId } from './departement'
 

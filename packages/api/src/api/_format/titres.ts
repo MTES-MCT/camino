@@ -20,7 +20,7 @@ import { entrepriseFormat } from './entreprises'
 import { titreActiviteFormat } from './titres-activites'
 import { titreDemarcheFormat } from './titres-demarches'
 import { titreFormatFields } from './_fields'
-import { ADMINISTRATION_TYPES } from 'camino-common/src/administrations'
+import { ADMINISTRATION_TYPES } from 'camino-common/src/static/administrations'
 
 const titreTypeSectionsFormat = (
   contenusTitreEtapesIds: IContenusTitreEtapesIds,

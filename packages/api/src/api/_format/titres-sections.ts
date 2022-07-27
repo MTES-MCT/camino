@@ -1,8 +1,8 @@
 import { ISection, ISectionElement } from '../../types'
 
 import { objectClone } from '../../tools/index'
-import { sortedDevises } from 'camino-common/src/devise'
-import { UNITES } from 'camino-common/src/unites'
+import { sortedDevises } from 'camino-common/src/static/devise'
+import { UNITES } from 'camino-common/src/static/unites'
 import { exhaustiveCheck } from '../../tools/exhaustive-type-check'
 
 const titreSectionElementFormat = (element: ISectionElement) => {

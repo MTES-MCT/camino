@@ -1,5 +1,5 @@
-import { DomaineId } from './domaines'
-import { TitreTypeTypeId } from './titresTypesTypes'
+import { DomaineId } from './static/domaines'
+import { TitreTypeTypeId } from './static/titresTypesTypes'
 
 export interface CommonTitre {
   id: string

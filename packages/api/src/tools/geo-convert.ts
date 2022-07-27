@@ -1,6 +1,9 @@
 import proj4 from 'proj4'
 import { ICoordonnees } from '../types'
-import { GEO_SYSTEME_IDS, GeoSystemeId } from 'camino-common/src/geoSystemes'
+import {
+  GEO_SYSTEME_IDS,
+  GeoSystemeId
+} from 'camino-common/src/static/geoSystemes'
 
 export const geoConvert = (
   epsgId: GeoSystemeId,

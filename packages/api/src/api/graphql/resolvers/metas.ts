@@ -57,14 +57,14 @@ import {
 } from '../../../business/rules-demarches/definitions'
 import { userSuper } from '../../../database/user-super'
 import { titresEtapesHeritageContenuUpdate } from '../../../business/processes/titres-etapes-heritage-contenu-update'
-import { sortedAdministrationTypes } from 'camino-common/src/administrations'
-import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
+import { sortedAdministrationTypes } from 'camino-common/src/static/administrations'
+import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
 import {
   isEtapesOk,
   possibleNextEtapes,
   toMachineEtapes
 } from '../../../business/rules-demarches/machine-helper'
-import { UNITES } from 'camino-common/src/unites'
+import { UNITES } from 'camino-common/src/static/unites'
 import {
   isAdministrationAdmin,
   isAdministrationEditeur,
@@ -75,9 +75,9 @@ import {
 import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort'
 import TitresDemarches from '../../../database/models/titres-demarches'
 import { Etape } from '../../../business/rules-demarches/arm/oct.machine'
-import { Pays, PaysList } from 'camino-common/src/pays'
-import { Departement, Departements } from 'camino-common/src/departement'
-import { Region, Regions } from 'camino-common/src/region'
+import { Pays, PaysList } from 'camino-common/src/static/pays'
+import { Departement, Departements } from 'camino-common/src/static/departement'
+import { Region, Regions } from 'camino-common/src/static/region'
 
 export const devises = async () => devisesGet()
 

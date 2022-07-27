@@ -27,7 +27,10 @@ import { etapeTypeGet } from '../../../database/queries/metas'
 import { titreGet, titresGet } from '../../../database/queries/titres'
 import { userSuper } from '../../../database/user-super'
 import intersect from '@turf/intersect'
-import { assertGeoSystemeId, GeoSystemes } from 'camino-common/src/geoSystemes'
+import {
+  assertGeoSystemeId,
+  GeoSystemes
+} from 'camino-common/src/static/geoSystemes'
 import {
   isSuper,
   isAdministrationAdmin,

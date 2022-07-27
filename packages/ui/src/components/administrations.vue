@@ -21,7 +21,7 @@ import {
   Administrations,
   AdministrationTypeId,
   sortedAdministrationTypes
-} from 'camino-common/src/administrations'
+} from 'camino-common/src/static/administrations'
 import { elementsFormat } from '@/utils'
 import { computed, ref } from 'vue'
 import Tag from '@/components/_ui/tag.vue'

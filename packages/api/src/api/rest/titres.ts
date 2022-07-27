@@ -7,11 +7,11 @@ import {
   ADMINISTRATION_TYPE_IDS,
   AdministrationId,
   Administrations
-} from 'camino-common/src/administrations'
+} from 'camino-common/src/static/administrations'
 import express from 'express'
 import { constants } from 'http2'
-import { DOMAINES_IDS } from 'camino-common/src/domaines'
-import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/titresTypesTypes'
+import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
+import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
 import {
   ITitre,
   IUser,

@@ -1,4 +1,4 @@
-import { AdministrationId } from './administrations'
+import { AdministrationId } from './static/administrations'
 import { isNotNullNorUndefined } from './typescript-tools'
 export const ROLES = [
   'super',

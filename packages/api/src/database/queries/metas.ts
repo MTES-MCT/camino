@@ -59,7 +59,7 @@ import EtapesTypesJustificatifsTypes from '../models/etapes-types--justificatifs
 import TitresTypesDemarchesTypesEtapesTypesDocumentsTypes from '../models/titres-types--demarches-types-etapes-types-documents-types'
 import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../models/titres-types--demarches-types-etapes-types-justificatifs-types'
 import Titres from '../models/titres'
-import { sortedDevises } from 'camino-common/src/devise'
+import { sortedDevises } from 'camino-common/src/static/devise'
 
 const documentTypeCreate = async (documentType: IDocumentType) =>
   DocumentsTypes.query().insertGraphAndFetch(documentType)

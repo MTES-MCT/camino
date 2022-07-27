@@ -1,7 +1,10 @@
 import Territoires from './territoires.vue'
 import { TerritoiresProps } from './territoires.type'
 import { Meta, Story } from '@storybook/vue3'
-import { DEPARTEMENT_IDS, Departements } from 'camino-common/src/departement'
+import {
+  DEPARTEMENT_IDS,
+  Departements
+} from 'camino-common/src/static/departement'
 
 const meta: Meta = {
   title: 'Components/Titre/Territoires',

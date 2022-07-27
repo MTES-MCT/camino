@@ -29,7 +29,7 @@ import {
   isEntreprise,
   isSuper
 } from 'camino-common/src/roles'
-import { AdministrationId } from 'camino-common/src/administrations'
+import { AdministrationId } from 'camino-common/src/static/administrations'
 
 // récupère les types d'étapes qui ont
 // - les autorisations sur le titre

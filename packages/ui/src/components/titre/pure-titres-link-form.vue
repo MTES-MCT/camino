@@ -91,14 +91,14 @@ import {
   LinkTitres,
   LoadTitreLinks
 } from './pure-titres-link.type'
-import { TitreTypeId } from 'camino-common/src/titresTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { User } from 'camino-common/src/roles'
-import { AdministrationId } from 'camino-common/src/administrations'
+import { AdministrationId } from 'camino-common/src/static/administrations'
 import PureTitresLink from './pure-titres-link.vue'
 import { AsyncData } from '@/api/client-rest'
 import LoadingData from '@/components/_ui/pure-loader.vue'
 import Icon from '@/components/_ui/icon.vue'
-import { DemarcheTypeId } from 'camino-common/src/demarchesTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 
 const props = defineProps<{

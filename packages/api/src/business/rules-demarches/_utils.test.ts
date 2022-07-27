@@ -20,7 +20,7 @@ import {
 } from './definitions'
 import { titreContenuFormat } from '../../database/models/_format/titre-contenu'
 import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find'
-import { TitreTypeId } from 'camino-common/src/titresTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 test('teste EtatsValidate', () => {
   const octEtatsValidate = demarcheEtatsValidate('oct', 'axm', '2021-01-01')

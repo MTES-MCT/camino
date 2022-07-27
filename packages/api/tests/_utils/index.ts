@@ -11,7 +11,7 @@ import {
   utilisateurGet
 } from '../../src/database/queries/utilisateurs'
 import { userSuper } from '../../src/database/user-super'
-import { AdministrationId } from 'camino-common/src/administrations'
+import { AdministrationId } from 'camino-common/src/static/administrations'
 import dateFormat from 'dateformat'
 import { Role } from 'camino-common/src/roles'
 

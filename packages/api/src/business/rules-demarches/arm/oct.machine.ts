@@ -4,7 +4,7 @@ import {
   DemarcheStatutId,
   IContenu
 } from '../../../types'
-import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 
 export const ETATS = {
   Demande: 'mfr',

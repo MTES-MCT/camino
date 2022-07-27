@@ -1,15 +1,15 @@
 import PureTitresLinkForm from './pure-titres-link-form.vue'
 import { Meta, Story } from '@storybook/vue3'
 import { User } from 'camino-common/src/roles'
-import { TitreTypeId } from 'camino-common/src/titresTypes'
-import { AdministrationId } from 'camino-common/src/administrations'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { AdministrationId } from 'camino-common/src/static/administrations'
 import {
   LinkableTitre,
   LinkTitres,
   LoadLinkableTitres,
   LoadTitreLinks
 } from '@/components/titre/pure-titres-link.type'
-import { DemarcheTypeId } from 'camino-common/src/demarchesTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 
 const meta: Meta = {

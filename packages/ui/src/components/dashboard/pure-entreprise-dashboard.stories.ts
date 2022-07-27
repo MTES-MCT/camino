@@ -1,7 +1,7 @@
 import PureEntrepriseDashboard from './pure-entreprise-dashboard.vue'
 import { Meta, Story } from '@storybook/vue3'
 import { TitreEntreprise } from '@/components/titres/table-utils'
-import { DEPARTEMENT_IDS } from 'camino-common/src/departement'
+import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 
 const meta: Meta = {
   title: 'Components/PureEntrepriseDashboard',

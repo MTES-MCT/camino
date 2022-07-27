@@ -4,7 +4,7 @@ import {
   toMachineEtape,
   whoIsBlocking
 } from './machine-helper'
-import { ADMINISTRATION_IDS } from 'camino-common/src/administrations'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 
 describe('nextEtapes', () => {
   test('retourne les prochaines étapes possibles', () => {

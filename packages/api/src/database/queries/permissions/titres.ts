@@ -38,7 +38,7 @@ import {
 import {
   AdministrationId,
   Administrations
-} from 'camino-common/src/administrations'
+} from 'camino-common/src/static/administrations'
 
 const titresDemarchesAdministrationsModificationQuery = (
   administrationId: AdministrationId,

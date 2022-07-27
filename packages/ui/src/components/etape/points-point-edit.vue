@@ -32,7 +32,7 @@
 
 <script>
 import PointReferenceEdit from './points-point-reference-edit.vue'
-import { sortedGeoSystemes } from 'camino-common/src/geoSystemes'
+import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
 
 export default {
   components: { PointReferenceEdit },
