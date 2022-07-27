@@ -1,17 +1,11 @@
-import {
-  Etat,
-  Etape,
-  armOctMachine,
-  Status,
-  ETATS,
-  STATUS
-} from './oct.machine'
+import { Etat, Etape, armOctMachine, ETATS } from './oct.machine'
 import { interpret } from 'xstate'
 import {
   interpretMachine,
   orderAndInterpretMachine
 } from '../machine-test-helper'
 import { IContenu } from '../../../types'
+import { StatutId, STATUTS } from 'camino-common/src/static/etapesStatuts'
 
 const etapesProd = require('./oct.cas.json')
 
@@ -124,12 +118,12 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test.each([
     {
       typeId: ETATS.DemandeDeComplementsDecisionAutoriteEnvironnementale,
-      statutId: STATUS.FAIT,
+      statutId: STATUTS.FAIT,
       date: '2020-01-01'
     },
     {
       typeId: ETATS.DemandeDeComplementsRecepisseDeDeclarationLoiSurLEau,
-      statutId: STATUS.FAIT,
+      statutId: STATUTS.FAIT,
       date: '2020-01-01'
     }
   ])(
@@ -179,10 +173,13 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test.each([
     {
       typeId: ETATS.RecepisseDeDeclarationLoiSurLEau,
-      statutId: STATUS.FAVORABLE,
+      statutId: STATUTS.FAVORABLE,
       contenu: { arm: { franchissements: 1 } }
     },
-    { typeId: ETATS.DecisionAutoriteEnvironnementale, statutId: STATUS.EXEMPTE }
+    {
+      typeId: ETATS.DecisionAutoriteEnvironnementale,
+      statutId: STATUTS.EXEMPTE
+    }
   ])(
     'peut créer une étape "%s" juste après une "mdp" et que le titre est mécanisé avec franchissement d’eau',
     ({
@@ -191,7 +188,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       contenu
     }: {
       typeId: Etat
-      statutId: Status
+      statutId: StatutId
       contenu?: IContenu
     }) => {
       orderAndInterpretMachine([

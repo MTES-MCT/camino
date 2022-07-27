@@ -7,7 +7,6 @@ import {
   eventToEtat,
   isEtat,
   isEvent,
-  isStatus,
   OctARMContext,
   tags,
   toPotentialXStateEvent,
@@ -21,6 +20,7 @@ import {
   ITitreEtape
 } from '../../types'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
+import { isStatut } from 'camino-common/src/static/etapesStatuts'
 
 // TODO 2022-05-18: il faudrait que le orderMachine retourne la solution la plus longue possible quand il n'y a pas de solution, pour aider au debug
 // orderMachine devrait retourner un tuple {ok: bool, etapes: Etape[]} pour éviter de faire isEtapesOk(orderMachine( qui ne sert à rien car orderMachine sait si les étapes sont ok
@@ -95,7 +95,7 @@ export const toMachineEtape = (dbEtape: ITitreEtape): Etape => {
     throw new Error(`l'état ${dbEtape.typeId} est inconnu`)
   }
   let statutId
-  if (isStatus(dbEtape.statutId)) {
+  if (isStatut(dbEtape.statutId)) {
     statutId = dbEtape.statutId
   } else {
     console.error(
