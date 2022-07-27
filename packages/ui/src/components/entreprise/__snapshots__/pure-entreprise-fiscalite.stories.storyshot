@@ -59,7 +59,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
     </div>
     
     <div>
-      f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%
+       f. Frais de gestion de fiscalité directe locale (a+b+e)X 8% 
     </div>
     <div
       class="top-level fiscalite-value"
@@ -110,7 +110,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Loadin
     </div>
     <!--v-if-->
     <div>
-      f. Frais de gestion de fiscalité directe locale (a+b)X 8%
+       f. Frais de gestion de fiscalité directe locale (a+b)X 8% 
     </div>
     <div
       class="top-level fiscalite-value"
@@ -161,7 +161,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Ok 1`]
     </div>
     <!--v-if-->
     <div>
-      f. Frais de gestion de fiscalité directe locale (a+b)X 8%
+       f. Frais de gestion de fiscalité directe locale (a+b)X 8% 
     </div>
     <div
       class="top-level fiscalite-value"
@@ -940,7 +940,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite With E
     </div>
     <!--v-if-->
     <div>
-      f. Frais de gestion de fiscalité directe locale (a+b)X 8%
+       f. Frais de gestion de fiscalité directe locale (a+b)X 8% 
     </div>
     <div
       class="top-level fiscalite-value"

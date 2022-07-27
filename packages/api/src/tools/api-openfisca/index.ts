@@ -1,6 +1,6 @@
 import fetch from 'node-fetch'
-import { SubstanceFiscale } from 'camino-common/src/substance'
-import { Unite, Unites } from 'camino-common/src/unites'
+import { SubstanceFiscale } from 'camino-common/src/static/substance'
+import { Unite, Unites } from 'camino-common/src/static/unites'
 type Attribute =
   | 'surface_communale'
   | 'taxe_guyane_brute'
