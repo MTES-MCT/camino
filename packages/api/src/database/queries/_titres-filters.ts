@@ -286,8 +286,8 @@ export const titresFiltersQueryModify = (
           ])
           b.orWhereRaw(`?? = ?`, [fieldFormat(name, 'communes.id'), t])
         })
+        b.orWhereIn(fieldFormat(name, 'communes.departementId'), departementIds)
       })
-      .orWhereIn(fieldFormat(name, 'communes.departementId'), departementIds)
       .groupBy(`${root}.id`)
   }
 }
