@@ -73,38 +73,6 @@ const titreDemarcheDepotCheck = (titreDemarche: ITitreDemarche) => {
 
     // Si on a déjà un dépot de la demande
     return !titreDemarche.etapes?.find(e => e.typeId === 'mdp')
-  } else if (
-    titreDemarche.titre!.typeId === 'axm' &&
-    titreDemarche.typeId === 'oct'
-  ) {
-    // https://cacoo.com/diagrams/Yb0HWsbldfgf7kt1/249D0
-    // Si on a pas de demande faite
-    if (
-      !titreDemarche.etapes?.find(
-        e => e.typeId === 'mfr' && e.statutId === 'fai'
-      )
-    ) {
-      return false
-    }
-    // Si on a pas de décision de la mission d’autorité environnementale exemptée
-    if (
-      !titreDemarche.etapes?.find(
-        e => e.typeId === 'dae' && e.statutId === 'exe'
-      )
-    ) {
-      return false
-    }
-    // Si on a pas de décision du propriétaire du sol favorable avec ou sans réserve
-    if (
-      !titreDemarche.etapes?.find(
-        e => e.typeId === 'asl' && ['fav', 'fre'].includes(e.statutId)
-      )
-    ) {
-      return false
-    }
-
-    // Si on a déjà un dépot de la demande
-    return !titreDemarche.etapes?.find(e => e.typeId === 'mdp')
   }
 
   return false
