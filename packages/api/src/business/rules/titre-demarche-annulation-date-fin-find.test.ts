@@ -1,6 +1,6 @@
 import { ITitreEtape } from '../../types'
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 describe("date de fin d'une démarche d'annulation", () => {
   test.each<EtapeTypeId>(['dex', 'dux', 'dim'])(

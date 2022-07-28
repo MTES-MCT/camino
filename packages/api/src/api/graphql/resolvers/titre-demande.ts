@@ -36,10 +36,8 @@ import {
 import { linkTitres } from '../../../database/queries/titres-titres'
 import { getLinkConfig } from 'camino-common/src/permissions/titres'
 import { checkTitreLinks } from '../../../business/validations/titre-links-validate'
-import {
-  EtapeTypeId,
-  getEtapesStatuts
-} from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 export const titreDemandeCreer = async (
   {

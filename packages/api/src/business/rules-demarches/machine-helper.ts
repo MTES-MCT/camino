@@ -1,11 +1,7 @@
 import {
   armOctMachine,
-  DBEtat,
   Etape,
-  Event,
   eventFrom,
-  eventToEtat,
-  isEtat,
   isEvent,
   OctARMContext,
   tags,
@@ -21,6 +17,7 @@ import {
 } from '../../types'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { isStatut } from 'camino-common/src/static/etapesStatuts'
+import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 // TODO 2022-05-18: il faudrait que le orderMachine retourne la solution la plus longue possible quand il n'y a pas de solution, pour aider au debug
 // orderMachine devrait retourner un tuple {ok: bool, etapes: Etape[]} pour éviter de faire isEtapesOk(orderMachine( qui ne sert à rien car orderMachine sait si les étapes sont ok
@@ -89,7 +86,7 @@ export const toMachineEtapes = (etapes: ITitreEtape[]): Etape[] => {
 
 export const toMachineEtape = (dbEtape: ITitreEtape): Etape => {
   let typeId
-  if (isEtat(dbEtape.typeId)) {
+  if (isEtapeTypeId(dbEtape.typeId)) {
     typeId = dbEtape.typeId
   } else {
     throw new Error(`l'état ${dbEtape.typeId} est inconnu`)
@@ -131,20 +128,6 @@ export const demarcheStatut = (etapes: readonly Etape[]): DemarcheStatutId => {
   } else {
     return value.state.context.demarcheStatut
   }
-}
-
-export const nextEtapes = (etapes: readonly Etape[]): DBEtat[] => {
-  const state = assertGoTo(etapes)
-
-  const possibleEvents: Event[] = state.nextEvents
-    .filter(isEvent)
-    .filter(event => {
-      const events = toPotentialXStateEvent(event)
-
-      return events.some(event => state.can(event))
-    })
-
-  return possibleEvents.map(eventToEtat)
 }
 
 type Intervenant = keyof typeof tags['responsable']
@@ -216,7 +199,9 @@ export const possibleNextEtapes = (
     .flatMap(event => {
       const events = toPotentialXStateEvent(event)
 
-      return events.filter(event => state.can(event)).map(xStateEventToEtape)
+      return events
+        .filter(event => state.can(event))
+        .flatMap(xStateEventToEtape)
     })
     .filter(event => event !== undefined)
 }

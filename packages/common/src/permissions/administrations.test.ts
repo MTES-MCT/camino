@@ -7,25 +7,18 @@ test.each<[User, boolean]>([
   [
     {
       role: 'admin',
-      administrationId:
-        ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON']
+      administrationId: ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON']
     },
     true
   ],
   [
     {
       role: 'editeur',
-      administrationId:
-        ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON']
+      administrationId: ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON']
     },
     true
   ],
   [{ role: 'defaut', administrationId: undefined }, false]
-])(
-  "pour une préfecture, emailsLecture est '$emailsLecture' pour un utilisateur $role et pour tous ses membres",
-  async (user, emailsLecture) => {
-    expect(canReadActivitesTypesEmails(user, 'pre-01053-01')).toBe(
-      emailsLecture
-    )
-  }
-)
+])("pour une préfecture, emailsLecture est '$emailsLecture' pour un utilisateur $role et pour tous ses membres", async (user, emailsLecture) => {
+  expect(canReadActivitesTypesEmails(user, 'pre-01053-01')).toBe(emailsLecture)
+})

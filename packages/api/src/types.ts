@@ -14,7 +14,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { Couleur } from 'camino-common/src/static/couleurs'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 const DemarchesStatutsTypesIds = {
   Accepte: 'acc',

@@ -2,14 +2,7 @@ import { Definition } from '../definition'
 import { RegionId } from './region'
 import { DepartementId } from './departement'
 
-export const ADMINISTRATION_TYPE_IDS_ARRAY = [
-  'aut',
-  'dea',
-  'dre',
-  'min',
-  'ope',
-  'pre'
-] as const
+export const ADMINISTRATION_TYPE_IDS_ARRAY = ['aut', 'dea', 'dre', 'min', 'ope', 'pre'] as const
 
 export type AdministrationTypeId = typeof ADMINISTRATION_TYPE_IDS_ARRAY[number]
 
@@ -22,10 +15,7 @@ export const ADMINISTRATION_TYPE_IDS: Record<string, AdministrationTypeId> = {
   PREFECTURE: 'pre'
 } as const
 
-export type AdministrationType<T = AdministrationTypeId> = Omit<
-  Definition<T>,
-  'description'
->
+export type AdministrationType<T = AdministrationTypeId> = Omit<Definition<T>, 'description'>
 export const ADMINISTRATION_TYPES: {
   [key in AdministrationTypeId]: AdministrationType<key>
 } = {
@@ -61,9 +51,7 @@ export const ADMINISTRATION_TYPES: {
   }
 }
 
-export const sortedAdministrationTypes = Object.values(
-  ADMINISTRATION_TYPES
-).sort((a, b) => a.ordre - b.ordre)
+export const sortedAdministrationTypes = Object.values(ADMINISTRATION_TYPES).sort((a, b) => a.ordre - b.ordre)
 
 export const ADMINISTRATION_IDS = {
   'GENDARMERIE NATIONALE - GUYANE': 'aut-97300-01',
@@ -199,12 +187,9 @@ export const ADMINISTRATION_IDS = {
   'PRÉFECTURE - MAYOTTE': 'pre-97611-01'
 } as const
 
-export type AdministrationId =
-  typeof ADMINISTRATION_IDS[keyof typeof ADMINISTRATION_IDS]
+export type AdministrationId = typeof ADMINISTRATION_IDS[keyof typeof ADMINISTRATION_IDS]
 
-export const isAdministrationId = (
-  id: string | null | undefined
-): id is AdministrationId => Object.values(ADMINISTRATION_IDS).includes(id)
+export const isAdministrationId = (id: string | null | undefined): id is AdministrationId => Object.values(ADMINISTRATION_IDS).includes(id)
 
 export interface Administration<T = AdministrationId> {
   id: T
@@ -474,8 +459,7 @@ export const Administrations: {
       abreviation: 'DREAL - Occitanie - Siège de Toulouse',
       url: 'http://www.occitanie.developpement-durable.gouv.fr',
       telephone: '+33 (0)5 61 58 50 00',
-      adresse1:
-        '1 rue de la Cité-Administrative\nBâtiment G\nCS 80002\n31074 Toulouse',
+      adresse1: '1 rue de la Cité-Administrative\nBâtiment G\nCS 80002\n31074 Toulouse',
       codePostal: '31074',
       commune: 'Toulouse',
       cedex: 'Cedex',
@@ -512,10 +496,8 @@ export const Administrations: {
       id: 'min-dajb-01',
       typeId: 'min',
       nom: "Ministère de l'Economie, des Finances et de la Relance",
-      abreviation:
-        "DAJ - Ministère de l'Economie, des Finances et de la Relance",
-      service:
-        "Bureau 4C. Droit de l'industrie, de l'énergie et des réseaux de communication",
+      abreviation: "DAJ - Ministère de l'Economie, des Finances et de la Relance",
+      service: "Bureau 4C. Droit de l'industrie, de l'énergie et des réseaux de communication",
       url: 'http://www.economie.gouv.fr',
       telephone: '01 44 97 03 32',
       adresse1: '6 rue Louise-Weiss',
@@ -541,8 +523,7 @@ export const Administrations: {
       typeId: 'min',
       nom: "Ministère de l'Economie, des Finances et de la Relance & Ministère de la Transition écologique",
       abreviation: 'DGALN/DEB/EARM2',
-      service:
-        "Bureau de la politique des ressources minérales non énergétiques - Direction générale de l'aménagement, du logement et de la nature (DGALN)",
+      service: "Bureau de la politique des ressources minérales non énergétiques - Direction générale de l'aménagement, du logement et de la nature (DGALN)",
       url: 'http://www.mineralinfo.fr',
       email: 'earm2.deb.dgaln@developpement-durable.gouv.fr',
       telephone: '+33 (0)1 40 81 21 22',
@@ -557,8 +538,7 @@ export const Administrations: {
       typeId: 'min',
       nom: "Ministère de l'Economie, des Finances et de la Relance & Ministère de la Transition écologique",
       abreviation: 'DGEC/DE/SD2/2A',
-      service:
-        "Bureau Ressources énergétiques du sous-sol (2A) - Direction générale de l'énergie et du climat (DGEC)",
+      service: "Bureau Ressources énergétiques du sous-sol (2A) - Direction générale de l'énergie et du climat (DGEC)",
       url: 'http://www.minergies.fr',
       email: '2a.sd2.de.dgec@developpement-durable.gouv.fr',
       telephone: '+33 (0)1 40 81 95 63',
@@ -573,8 +553,7 @@ export const Administrations: {
       typeId: 'min',
       nom: "Ministère de l'Economie, des Finances et de la Relance & Ministère de la Transition écologique",
       abreviation: 'DGPR/SRT/SDRCP/BSSS',
-      service:
-        'Bureau du sol et du sous-sol - Direction générale de la prévention des risques (DGPR)',
+      service: 'Bureau du sol et du sous-sol - Direction générale de la prévention des risques (DGPR)',
       email: 'bsss.sdrcp.srt.dgpr@developpement-durable.gouv.fr',
       telephone: '+33 (0)1 40 81 21 22',
       adresse1: 'Tour Séquoia\n1 place Carpeaux\n92800 Puteaux',
@@ -601,8 +580,7 @@ export const Administrations: {
       typeId: 'ope',
       nom: 'BRGM - Projet Zercoa',
       abreviation: 'BRGM - Projet Zercoa',
-      service:
-        'BRGM - Equipe projet "zones favorables à une exploitation et à un réaménagement coordonné de l\'or alluvionnaire"',
+      service: 'BRGM - Equipe projet "zones favorables à une exploitation et à un réaménagement coordonné de l\'or alluvionnaire"',
       url: 'https://www.brgm.fr//',
       telephone: '02 38 64 34 34',
       adresse1: '3 avenue Claude-Guillemin',
@@ -619,8 +597,7 @@ export const Administrations: {
       service: 'DIRM NAMO/DOSM/CROSS Etel/CACEM',
       url: 'http://extranet.legicem.metier.developpement-durable.gouv.fr',
       email: 'cacem@developpement-durable.gouv.fr',
-      adresse1:
-        'Centre régional opérationnel de surveillance et de sauvetage Atlantique',
+      adresse1: 'Centre régional opérationnel de surveillance et de sauvetage Atlantique',
       adresse2: '40 avenue L. Bougo',
       codePostal: '56410',
       commune: 'Etel'
@@ -646,8 +623,7 @@ export const Administrations: {
       nom: 'Pôle Technique Minier de Guyane',
       abreviation: 'Pôle Technique Minier de Guyane',
       telephone: '+594 (0)5 94 30 06 00',
-      adresse1:
-        'Hôtel de la Collectivité Territoriale de Guyane, Carrefour de Suzini',
+      adresse1: 'Hôtel de la Collectivité Territoriale de Guyane, Carrefour de Suzini',
       adresse2: '4179 route de Montabo',
       codePostal: '97307',
       commune: 'Cayenne'
@@ -726,8 +702,7 @@ export const Administrations: {
       commune: 'Nice',
       telephone: '04 93 72 20 00',
       departementId: '06',
-      adresse2:
-        "Services de l'État dans les Alpes-Maritimes, Préfecture, CADAM, 147, route de Grenoble",
+      adresse2: "Services de l'État dans les Alpes-Maritimes, Préfecture, CADAM, 147, route de Grenoble",
       url: 'http://www.alpes-maritimes.gouv.fr'
     },
     'pre-07186-01': {
@@ -946,8 +921,7 @@ export const Administrations: {
       commune: 'Périgueux',
       telephone: '05 53 02 24 24',
       departementId: '24',
-      adresse2:
-        "Services de l'État - Préfecture de la Dordogne, Cité adminsitrative",
+      adresse2: "Services de l'État - Préfecture de la Dordogne, Cité adminsitrative",
       email: 'prefecture@dordogne.gouv.fr',
       url: 'http://www.dordogne.gouv.fr'
     },
@@ -1946,6 +1920,4 @@ export const Administrations: {
     }
   } // ----- ne pas supprimer cette ligne : fin
 
-export const sortedAdministrations = Object.values(Administrations).sort(
-  (a, b) => a.abreviation.localeCompare(b.abreviation)
-)
+export const sortedAdministrations = Object.values(Administrations).sort((a, b) => a.abreviation.localeCompare(b.abreviation))

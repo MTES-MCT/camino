@@ -1,20 +1,9 @@
 import { isAdministration, isSuper, User } from '../roles'
-import {
-  AdministrationId,
-  Administrations,
-  sortedAdministrations
-} from '../static/administrations'
+import { AdministrationId, Administrations, sortedAdministrations } from '../static/administrations'
 import { Departements } from '../static/departement'
 
-export const canReadActivitesTypesEmails = (
-  user: User,
-  administrationId: AdministrationId
-) => {
-  if (
-    isSuper(user) ||
-    (isAdministration(user) &&
-      Administrations[user.administrationId].typeId === 'min')
-  ) {
+export const canReadActivitesTypesEmails = (user: User, administrationId: AdministrationId) => {
+  if (isSuper(user) || (isAdministration(user) && Administrations[user.administrationId].typeId === 'min')) {
     // Utilisateur super ou membre de ministère (admin ou éditeur) : tous les droits
     return true
   } else if (isAdministration(user)) {
@@ -27,11 +16,7 @@ export const canReadActivitesTypesEmails = (
         .filter(({ regionId }) => regionId === administration.regionId)
         .map(({ id }) => id)
       // On récupère toutes les administrations départementales qui sont de la même région que l’administration régionale de l’utilisateur
-      administrationIds.push(
-        ...sortedAdministrations
-          .filter(({ departementId }) => departementIds.includes(departementId))
-          .map(({ id }) => id)
-      )
+      administrationIds.push(...sortedAdministrations.filter(({ departementId }) => departementIds.includes(departementId)).map(({ id }) => id))
     }
 
     administrationIds.push(user.administrationId)

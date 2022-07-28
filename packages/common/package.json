@@ -22,7 +22,8 @@
     "semi": false,
     "singleQuote": true,
     "trailingComma": "none",
-    "arrowParens": "avoid"
+    "arrowParens": "avoid",
+    "printWidth": 200
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",

@@ -1,48 +1,6 @@
-import {
-  isEtapesOk,
-  nextEtapes,
-  toMachineEtape,
-  whoIsBlocking
-} from './machine-helper'
+import { isEtapesOk, toMachineEtape, whoIsBlocking } from './machine-helper'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { ITitreEtape } from '../../types'
-
-describe('nextEtapes', () => {
-  test('retourne les prochaines étapes possibles', () => {
-    expect(
-      nextEtapes([
-        { typeId: 'mfr', statutId: 'fai', date: '2020-02-02' },
-        { typeId: 'mdp', statutId: 'dep', date: '2020-02-03' }
-      ])
-    ).toStrictEqual([
-      { etat: 'mod' },
-      { etat: 'des' },
-      { etat: 'css' },
-      { etat: 'pfd' }
-    ])
-  })
-
-  test('peut faire une mfr après une dae', () => {
-    expect(
-      nextEtapes([{ typeId: 'dae', statutId: 'exe', date: '2020-02-02' }])
-    ).toStrictEqual([
-      { etat: 'mfr' },
-      { etat: 'pfd' },
-      { etat: 'rde', statut: 'def' },
-      { etat: 'rde', statut: 'fav' }
-    ])
-  })
-  test('retourne les premières étapes possibles', () => {
-    expect(nextEtapes([])).toStrictEqual([
-      { etat: 'rde', statut: 'def' },
-      { etat: 'rde', statut: 'fav' },
-      { etat: 'mfr' },
-      { etat: 'pfd' },
-      { etat: 'dae', statut: 'req' },
-      { etat: 'dae', statut: 'exe' }
-    ])
-  })
-})
 
 describe('isEtapesOk', () => {
   // On n'est pas certain de notre base de données, si ça impacte les perf,
@@ -146,7 +104,7 @@ describe('whoIsBlocking', () => {
         { typeId: 'pfd', statutId: 'fai', date: '2021-02-03' },
         { typeId: 'mcp', statutId: 'com', date: '2021-02-04' },
         { typeId: 'vfd', statutId: 'fai', date: '2021-02-05' },
-        { typeId: 'mcr', statutId: 'fai', date: '2021-02-06' }
+        { typeId: 'mcr', statutId: 'fav', date: '2021-02-06' }
       ])
     ).toStrictEqual([])
   })

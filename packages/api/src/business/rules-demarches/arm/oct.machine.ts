@@ -7,65 +7,17 @@ import {
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import {
   EtapeStatutId,
-  ETAPES_STATUTS
+  EtapeStatutKey
 } from 'camino-common/src/static/etapesStatuts'
-
-export const ETATS = {
-  Demande: 'mfr',
-  DepotDeLaDemande: 'mdp',
-  PaiementDesFraisDeDossier: 'pfd',
-  DecisionAutoriteEnvironnementale: 'dae',
-  CompletudeDeLaDemande: 'mcp',
-  Desistement: 'des',
-  ModificationDeLaDemande: 'mod',
-  ClassementSansSuite: 'css',
-  DemandeDeComplementsDecisionAutoriteEnvironnementale: 'mcd',
-  ReceptionDeComplementsDecisionAutoriteEnvironnementale: 'rcd',
-  ModificationDeLaDemandeApresDecisionAutoriteEnvironnementale: 'mom',
-  DemandeDeComplementsCompletude: 'mcm',
-  ReceptionDeComplementsCompletude: 'rcm',
-  ValidationDesFraisDossier: 'vfd',
-  RecepisseDeDeclarationLoiSurLEau: 'rde',
-  DemandeDeComplementsRecepisseDeDeclarationLoiSurLEau: 'mcb',
-  ReceptionDeComplementsRecepisseDeDeclarationLoiSurLEau: 'rcb',
-  NotificationCss: 'mnc',
-  RecevabiliteDeLaDemande: 'mcr',
-  ExpertiseONF: 'eof',
-  AvisONF: 'aof',
-  DemandeInformationAvisONF: 'mia',
-  ReceptionInformationAvisONF: 'ria',
-  SaisineCARM: 'sca',
-  AvisCARM: 'aca',
-  NotificationCARM: 'mnb',
-  NotificationCARMDefavorable: 'mnd',
-  NotificationCARMAjournee: 'mna',
-  DemandeDeComplementsSaisineCARM: 'mcs',
-  ReceptionComplementsSaisineCARM: 'rcs',
-  PaiementDesFraisDeDossierComplementaires: 'pfc',
-  ValidationDuPaiementDesFraisDeDossierComplementaires: 'vfc',
-  SignatureAutorisationDeRechercheMiniere: 'sco',
-  DemandeInformationRecevabiliteDeLaDemande: 'mim',
-  ReceptionInformationRecevabiliteDeLaDemande: 'rim',
-  DemandeDeComplementsRecevabiliteDeLaDemande: 'mca',
-  ReceptionComplementsRecevabiliteDeLaDemande: 'rca',
-  DemandeInformationExpertiseONF: 'mio',
-  ReceptionInformationExpertiseONF: 'rio',
-  ReceptionExpertiseServiceEau: 'ede',
-  ReceptionExpertiseServiceMines: 'edm',
-  NotificationSignatureARM: 'mns',
-  AvenantARM: 'aco',
-  NotificationAvenantARM: 'mnv'
-} as const
-export type Etat = typeof ETATS[keyof typeof ETATS]
-
-const EtatsTrigrammes = Object.values(ETATS)
-
-export const isEtat = (dbEtat: string): dbEtat is Etat => {
-  return EtatsTrigrammes.includes(dbEtat)
-}
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import {
+  EtapesTypesEtapesStatuts,
+  EtapeTypeEtapeStatut
+} from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 export interface Etape {
-  typeId: Etat
+  // TODO 2022-07-28 : ceci pourrait être réduit en utilisant les états de 'trad'
+  typeId: EtapeTypeId
   statutId: EtapeStatutId
   date: string
   contenu?: IContenu
@@ -175,159 +127,127 @@ export const toPotentialXStateEvent = (event: Event): XStateEvent[] => {
   }
 }
 
-export type DBEtat = { etat: Etat; statut?: EtapeStatutId }
-const trad: { [_key in Event]: DBEtat } = {
-  FAIRE_DEMANDE: { etat: ETATS.Demande },
-  DEPOSER_DEMANDE: { etat: ETATS.DepotDeLaDemande },
-  PAYER_FRAIS_DE_DOSSIER: { etat: ETATS.PaiementDesFraisDeDossier },
+export type DBEtat = { [key in EtapeStatutKey]?: EtapeTypeEtapeStatut }
+const trad: { [key in Event]: DBEtat } = {
+  FAIRE_DEMANDE: EtapesTypesEtapesStatuts.demande,
+  DEPOSER_DEMANDE: EtapesTypesEtapesStatuts.depotDeLaDemande,
+  PAYER_FRAIS_DE_DOSSIER: EtapesTypesEtapesStatuts.paiementDesFraisDeDossier,
   DEMANDER_MODIFICATION_DE_LA_DEMANDE: {
-    etat: ETATS.DecisionAutoriteEnvironnementale,
-    statut: ETAPES_STATUTS.REQUIS
+    REQUIS:
+      EtapesTypesEtapesStatuts
+        .decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_
+        .REQUIS
   },
   EXEMPTER_DAE: {
-    etat: ETATS.DecisionAutoriteEnvironnementale,
-    statut: ETAPES_STATUTS.EXEMPTE
+    EXEMPTE:
+      EtapesTypesEtapesStatuts
+        .decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_
+        .EXEMPTE
   },
-  DESISTER_PAR_LE_DEMANDEUR: { etat: ETATS.Desistement },
-  CLASSER_SANS_SUITE: { etat: ETATS.ClassementSansSuite },
-  DEMANDER_COMPLEMENTS_DAE: {
-    etat: ETATS.DemandeDeComplementsDecisionAutoriteEnvironnementale
-  },
-  RECEVOIR_COMPLEMENTS_DAE: {
-    etat: ETATS.ReceptionDeComplementsDecisionAutoriteEnvironnementale
-  },
-  MODIFIER_DEMANDE_APRES_DAE: {
-    etat: ETATS.ModificationDeLaDemandeApresDecisionAutoriteEnvironnementale
-  },
+  DESISTER_PAR_LE_DEMANDEUR: EtapesTypesEtapesStatuts.desistementDuDemandeur,
+  CLASSER_SANS_SUITE: EtapesTypesEtapesStatuts.classementSansSuite,
+  DEMANDER_COMPLEMENTS_DAE:
+    EtapesTypesEtapesStatuts.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
+  RECEVOIR_COMPLEMENTS_DAE:
+    EtapesTypesEtapesStatuts.receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__,
+  MODIFIER_DEMANDE_APRES_DAE:
+    EtapesTypesEtapesStatuts.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
   REFUSER_COMPLETUDE: {
-    etat: ETATS.CompletudeDeLaDemande,
-    statut: ETAPES_STATUTS.INCOMPLETE
+    INCOMPLETE: EtapesTypesEtapesStatuts.completudeDeLaDemande.INCOMPLETE
   },
-  RECEVOIR_COMPLEMENTS_COMPLETUDE: {
-    etat: ETATS.ReceptionDeComplementsCompletude
-  },
-  DEMANDER_COMPLEMENTS_COMPLETUDE: {
-    etat: ETATS.DemandeDeComplementsCompletude
-  },
+  RECEVOIR_COMPLEMENTS_COMPLETUDE:
+    EtapesTypesEtapesStatuts.receptionDeComplements_CompletudeDeLaDemande_,
+  DEMANDER_COMPLEMENTS_COMPLETUDE:
+    EtapesTypesEtapesStatuts.demandeDeComplements_CompletudeDeLaDemande_,
   ACCEPTER_COMPLETUDE: {
-    etat: ETATS.CompletudeDeLaDemande,
-    statut: ETAPES_STATUTS.COMPLETE
+    COMPLETE: EtapesTypesEtapesStatuts.completudeDeLaDemande.COMPLETE
   },
-  VALIDER_FRAIS_DE_DOSSIER: {
-    etat: ETATS.ValidationDesFraisDossier
-  },
+  VALIDER_FRAIS_DE_DOSSIER:
+    EtapesTypesEtapesStatuts.validationDuPaiementDesFraisDeDossier,
   REFUSER_RDE: {
-    etat: ETATS.RecepisseDeDeclarationLoiSurLEau,
-    statut: ETAPES_STATUTS.DEFAVORABLE
+    DEFAVORABLE:
+      EtapesTypesEtapesStatuts.recepisseDeDeclarationLoiSurLeau.DEFAVORABLE
   },
   ACCEPTER_RDE: {
-    etat: ETATS.RecepisseDeDeclarationLoiSurLEau,
-    statut: ETAPES_STATUTS.FAVORABLE
+    FAVORABLE:
+      EtapesTypesEtapesStatuts.recepisseDeDeclarationLoiSurLeau.FAVORABLE
   },
-  DEMANDER_COMPLEMENTS_RDE: {
-    etat: ETATS.DemandeDeComplementsRecepisseDeDeclarationLoiSurLEau
-  },
-  RECEVOIR_COMPLEMENTS_RDE: {
-    etat: ETATS.ReceptionDeComplementsRecepisseDeDeclarationLoiSurLEau
-  },
-  NOTIFIER_DEMANDEUR_CSS: {
-    etat: ETATS.NotificationCss
-  },
+  DEMANDER_COMPLEMENTS_RDE:
+    EtapesTypesEtapesStatuts.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_,
+  RECEVOIR_COMPLEMENTS_RDE:
+    EtapesTypesEtapesStatuts.receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_,
+  NOTIFIER_DEMANDEUR_CSS:
+    EtapesTypesEtapesStatuts.notificationAuDemandeur_ClassementSansSuite_,
   DECLARER_DEMANDE_FAVORABLE: {
-    etat: ETATS.RecevabiliteDeLaDemande,
-    statut: ETAPES_STATUTS.FAVORABLE
+    FAVORABLE: EtapesTypesEtapesStatuts.recevabiliteDeLaDemande.FAVORABLE
   },
   DECLARER_DEMANDE_DEFAVORABLE: {
-    etat: ETATS.RecevabiliteDeLaDemande,
-    statut: ETAPES_STATUTS.DEFAVORABLE
+    DEFAVORABLE: EtapesTypesEtapesStatuts.recevabiliteDeLaDemande.DEFAVORABLE
   },
-  FAIRE_EXPERTISE_ONF: {
-    etat: ETATS.ExpertiseONF
-  },
-  RENDRE_AVIS_ONF: {
-    etat: ETATS.AvisONF
-  },
-  DEMANDER_INFORMATION_AVIS_ONF: {
-    etat: ETATS.DemandeInformationAvisONF
-  },
-  RECEVOIR_INFORMATION_AVIS_ONF: {
-    etat: ETATS.ReceptionInformationAvisONF
-  },
-  FAIRE_SAISINE_CARM: {
-    etat: ETATS.SaisineCARM
-  },
+  FAIRE_EXPERTISE_ONF:
+    EtapesTypesEtapesStatuts.expertiseDeLOfficeNationalDesForets,
+  RENDRE_AVIS_ONF: EtapesTypesEtapesStatuts.avisDeLOfficeNationalDesForets,
+  DEMANDER_INFORMATION_AVIS_ONF:
+    EtapesTypesEtapesStatuts.demandeDinformations_AvisDeLOfficeNationalDesForets_,
+  RECEVOIR_INFORMATION_AVIS_ONF:
+    EtapesTypesEtapesStatuts.receptionDinformation_AvisDeLOfficeNationalDesForets_,
+  FAIRE_SAISINE_CARM:
+    EtapesTypesEtapesStatuts.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_,
   RENDRE_AVIS_FAVORABLE_CARM: {
-    etat: ETATS.AvisCARM,
-    statut: ETAPES_STATUTS.FAVORABLE
+    FAVORABLE:
+      EtapesTypesEtapesStatuts
+        .avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_.FAVORABLE
   },
   RENDRE_AVIS_DEFAVORABLE_CARM: {
-    etat: ETATS.AvisCARM,
-    statut: ETAPES_STATUTS.DEFAVORABLE
+    DEFAVORABLE:
+      EtapesTypesEtapesStatuts
+        .avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_
+        .DEFAVORABLE
   },
   RENDRE_AVIS_AJOURNE_CARM: {
-    etat: ETATS.AvisCARM,
-    statut: ETAPES_STATUTS.AJOURNE
+    AJOURNE:
+      EtapesTypesEtapesStatuts
+        .avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_.AJOURNE
   },
-  NOTIFIER_DEMANDEUR_AVIS_AJOURNE_CARM: {
-    etat: ETATS.NotificationCARMAjournee
-  },
-  DEMANDER_COMPLEMENT_SAISINE_CARM: {
-    etat: ETATS.DemandeDeComplementsSaisineCARM
-  },
-  RECEVOIR_COMPLEMENT_SAISINE_CARM: {
-    etat: ETATS.ReceptionComplementsSaisineCARM
-  },
-  NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM: {
-    etat: ETATS.NotificationCARM
-  },
-  NOTIFIER_DEMANDEUR_AVIS_DEFAVORABLE_CARM: {
-    etat: ETATS.NotificationCARMDefavorable
-  },
-  MODIFIER_DEMANDE: {
-    etat: ETATS.ModificationDeLaDemande
-  },
-  PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: {
-    etat: ETATS.PaiementDesFraisDeDossierComplementaires
-  },
-  VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: {
-    etat: ETATS.ValidationDuPaiementDesFraisDeDossierComplementaires
-  },
-  SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE: {
-    etat: ETATS.SignatureAutorisationDeRechercheMiniere
-  },
-  DEMANDER_INFORMATION_MCR: {
-    etat: ETATS.DemandeInformationRecevabiliteDeLaDemande
-  },
-  RECEVOIR_INFORMATION_MCR: {
-    etat: ETATS.ReceptionInformationRecevabiliteDeLaDemande
-  },
-  DEMANDER_COMPLEMENTS_MCR: {
-    etat: ETATS.DemandeDeComplementsRecevabiliteDeLaDemande
-  },
-  RECEVOIR_COMPLEMENTS_MCR: {
-    etat: ETATS.ReceptionComplementsRecevabiliteDeLaDemande
-  },
-  DEMANDER_INFORMATION_EXPERTISE_ONF: {
-    etat: ETATS.DemandeInformationExpertiseONF
-  },
-  RECEVOIR_INFORMATION_EXPERTISE_ONF: {
-    etat: ETATS.ReceptionInformationExpertiseONF
-  },
-  RECEVOIR_EXPERTISE_SERVICE_EAU: {
-    etat: ETATS.ReceptionExpertiseServiceEau
-  },
-  RECEVOIR_EXPERTISE_SERVICE_MINES: {
-    etat: ETATS.ReceptionExpertiseServiceMines
-  },
-  NOTIFIER_DEMANDEUR_SIGNATURE_ARM: {
-    etat: ETATS.NotificationSignatureARM
-  },
-  FAIRE_AVENANT_ARM: {
-    etat: ETATS.AvenantARM
-  },
-  NOTIFIER_AVENANT_ARM: {
-    etat: ETATS.NotificationAvenantARM
-  }
+  NOTIFIER_DEMANDEUR_AVIS_AJOURNE_CARM:
+    EtapesTypesEtapesStatuts.notificationAuDemandeur_AjournementDeLaCARM_,
+  DEMANDER_COMPLEMENT_SAISINE_CARM:
+    EtapesTypesEtapesStatuts.demandeDeComplements_SaisineDeLaCARM_,
+  RECEVOIR_COMPLEMENT_SAISINE_CARM:
+    EtapesTypesEtapesStatuts.receptionDeComplements_SaisineDeLaCARM_,
+  NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM:
+    EtapesTypesEtapesStatuts.notificationAuDemandeur_AvisFavorableDeLaCARM_,
+  NOTIFIER_DEMANDEUR_AVIS_DEFAVORABLE_CARM:
+    EtapesTypesEtapesStatuts.notificationAuDemandeur_AvisDefavorable_,
+  MODIFIER_DEMANDE: EtapesTypesEtapesStatuts.modificationDeLaDemande,
+  PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES:
+    EtapesTypesEtapesStatuts.paiementDesFraisDeDossierComplementaires,
+  VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES:
+    EtapesTypesEtapesStatuts.validationDuPaiementDesFraisDeDossierComplementaires,
+  SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE:
+    EtapesTypesEtapesStatuts.signatureDeLautorisationDeRechercheMiniere,
+  DEMANDER_INFORMATION_MCR:
+    EtapesTypesEtapesStatuts.demandeDinformations_RecevabiliteDeLaDemande_,
+  RECEVOIR_INFORMATION_MCR:
+    EtapesTypesEtapesStatuts.receptionDinformation_RecevabiliteDeLaDemande_,
+  DEMANDER_COMPLEMENTS_MCR:
+    EtapesTypesEtapesStatuts.demandeDeComplements_RecevabiliteDeLaDemande_,
+  RECEVOIR_COMPLEMENTS_MCR:
+    EtapesTypesEtapesStatuts.receptionDeComplements_RecevabiliteDeLaDemande_,
+  DEMANDER_INFORMATION_EXPERTISE_ONF:
+    EtapesTypesEtapesStatuts.demandeDinformations_ExpertiseDeLOfficeNationalDesForets_,
+  RECEVOIR_INFORMATION_EXPERTISE_ONF:
+    EtapesTypesEtapesStatuts.receptionDinformation_ExpertiseDeLOfficeNationalDesForets_,
+  RECEVOIR_EXPERTISE_SERVICE_EAU:
+    EtapesTypesEtapesStatuts.expertiseDREALOuDGTMServiceEau,
+  RECEVOIR_EXPERTISE_SERVICE_MINES:
+    EtapesTypesEtapesStatuts.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_,
+  NOTIFIER_DEMANDEUR_SIGNATURE_ARM:
+    EtapesTypesEtapesStatuts.notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_,
+  FAIRE_AVENANT_ARM:
+    EtapesTypesEtapesStatuts.avenantALautorisationDeRechercheMiniere,
+  NOTIFIER_AVENANT_ARM:
+    EtapesTypesEtapesStatuts.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_
 } as const
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
@@ -339,9 +259,11 @@ export const eventToEtat = (event: Event): DBEtat => {
   return trad[event]
 }
 
-export const xStateEventToEtape = (event: XStateEvent): Omit<Etape, 'date'> => {
+export const xStateEventToEtape = (
+  event: XStateEvent
+): Omit<Etape, 'date'>[] => {
   const dbEtat = trad[event.type]
-  let contenu
+  let contenu: IContenu | undefined
   switch (event.type) {
     case 'FAIRE_DEMANDE': {
       contenu = {
@@ -359,7 +281,11 @@ export const xStateEventToEtape = (event: XStateEvent): Omit<Etape, 'date'> => {
     }
   }
 
-  return { typeId: dbEtat.etat, statutId: dbEtat.statut ?? 'fai', contenu }
+  return Object.values(dbEtat).map(({ etapeTypeId, etapeStatutId }) => ({
+    typeId: etapeTypeId,
+    statutId: etapeStatutId,
+    contenu
+  }))
 }
 
 export const eventFrom = (etape: Etape): XStateEvent => {
@@ -367,14 +293,13 @@ export const eventFrom = (etape: Etape): XStateEvent => {
     (entry): entry is [Event, DBEtat] => EVENTS.includes(entry[0])
   )
 
-  let entry = entries.find(
-    ([_key, value]) =>
-      value.etat === etape.typeId && value.statut === etape.statutId
-  )
-
-  if (!entry) {
-    entry = entries.find(([_, value]) => value.etat === etape.typeId)
-  }
+  const entry = entries.find(([_key, dbEtat]) => {
+    return Object.values(dbEtat).some(
+      dbEtatSingle =>
+        dbEtatSingle.etapeTypeId === etape.typeId &&
+        dbEtatSingle.etapeStatutId === etape.statutId
+    )
+  })
 
   if (entry) {
     const eventFromEntry = entry[0]
