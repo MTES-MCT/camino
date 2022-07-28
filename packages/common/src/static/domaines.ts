@@ -25,8 +25,7 @@ export const Domaines: { [key in DomaineId]: Definition<key> } = {
   f: {
     id: 'f',
     nom: 'combustibles fossiles',
-    description:
-      'Domaine minier auquel appartiennent les combustibles fossiles, la tourbe exceptée.',
+    description: 'Domaine minier auquel appartiennent les combustibles fossiles, la tourbe exceptée.',
     ordre: 5
   },
   g: {
@@ -39,8 +38,7 @@ export const Domaines: { [key in DomaineId]: Definition<key> } = {
   h: {
     id: 'h',
     nom: 'hydrocarbures liquides ou gazeux',
-    description:
-      "Domaine minier auquel appartiennent des hydrocarbures qu'ils soient sous forme liquide ou gazeuse.",
+    description: "Domaine minier auquel appartiennent des hydrocarbures qu'ils soient sous forme liquide ou gazeuse.",
     ordre: 4
   },
   i: {
@@ -59,8 +57,7 @@ export const Domaines: { [key in DomaineId]: Definition<key> } = {
   r: {
     id: 'r',
     nom: 'éléments radioactifs',
-    description:
-      'Domaine minier auquel appartiennent les substances minérales radioactives classés dans la catégorie des substances de mines.',
+    description: 'Domaine minier auquel appartiennent les substances minérales radioactives classés dans la catégorie des substances de mines.',
     ordre: 6
   },
   s: {
@@ -73,8 +70,7 @@ export const Domaines: { [key in DomaineId]: Definition<key> } = {
   w: {
     id: 'w',
     nom: 'granulats marins',
-    description:
-      'Domaine auquel appartiennent les substances de carrières situés dans les fonds marins du domaine public.',
+    description: 'Domaine auquel appartiennent les substances de carrières situés dans les fonds marins du domaine public.',
     ordre: 2
   }
 }

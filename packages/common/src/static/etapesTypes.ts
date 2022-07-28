@@ -4,13 +4,11 @@ export const ETAPES_TYPES = {
   abrogationDeLaDecision: 'abd',
   avisDGTMServiceMilieuxNaturelsBiodiversiteSitesEtPaysages_MNBST_: 'abs',
   avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_: 'aca',
-  avisDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst_:
-    'acd',
+  avisDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst_: 'acd',
   avisDuConseilGeneralDeLeconomie_CGE_: 'acg',
   avisDuneCollectiviteLocale: 'acl',
   avenantALautorisationDeRechercheMiniere: 'aco',
-  avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi:
-    'aec',
+  avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi: 'aec',
   avisDunPresidentDEPCI: 'aep',
   avisDeLaDirectionRegionaleDesFinancesPubliques: 'afp',
   avisDeLaGendarmerieNationale: 'agn',
@@ -22,8 +20,7 @@ export const ETAPES_TYPES = {
   avisDeMiseEnConcurrenceAuJORF: 'anf',
   avisDeLOfficeNationalDesForets: 'aof',
   avisDeLInstitutNationalDeLorigineEtDeLaQualite: 'aop',
-  avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement:
-    'apd',
+  avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement: 'apd',
   avisDuConseilDEtat: 'ape',
   avisDeLetatMajorOrpaillageEtPecheIllicite_EMOPI_: 'api',
   avisDunServiceAdministratifLocal: 'apl',
@@ -40,8 +37,7 @@ export const ETAPES_TYPES = {
   avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_: 'auc',
   consultationDesAdministrationsCentrales: 'cac',
   concertationInterministerielle: 'cim',
-  saisineDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst_:
-    'cod',
+  saisineDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst_: 'cod',
   confirmationDeLaccordDuProprietaireDuSol: 'cps',
   classementSansSuite: 'css',
   decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_: 'dae',
@@ -64,8 +60,7 @@ export const ETAPES_TYPES = {
   informationsHistoriquesIncompletes: 'ihi',
   demandeDeComplements_RecevabiliteDeLaDemande_: 'mca',
   demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_: 'mcb',
-  demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_:
-    'mcd',
+  demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_: 'mcd',
   demandeDeComplements_CompletudeDeLaDemande_: 'mcm',
   demandeDeComplements: 'mco',
   completudeDeLaDemande: 'mcp',
@@ -88,11 +83,9 @@ export const ETAPES_TYPES = {
   notificationAuDemandeur_InitiationDeLaDemarcheDeRetrait_: 'mni',
   notificationAuDemandeur: 'mno',
   notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_: 'mns',
-  notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_:
-    'mnv',
+  notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_: 'mnv',
   modificationDeLaDemande: 'mod',
-  modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_:
-    'mom',
+  modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_: 'mom',
   notificationDesCollectivitesLocales: 'ncl',
   noteInterneSignalee: 'nis',
   notificationAuPrefet: 'npp',
@@ -104,8 +97,7 @@ export const ETAPES_TYPES = {
   publicationDansUnJournalLocalOuNational: 'pqr',
   receptionDeComplements_RecevabiliteDeLaDemande_: 'rca',
   receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_: 'rcb',
-  receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__:
-    'rcd',
+  receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__: 'rcd',
   rapportDuConseilGeneralDeLeconomie_CGE_: 'rcg',
   receptionDeComplements_CompletudeDeLaDemande_: 'rcm',
   receptionDeComplements: 'rco',
@@ -141,8 +133,7 @@ export const ETAPES_TYPES = {
   avisDuPrefetMaritime_wap: 'wap',
   avisDeReception: 'war',
   avisDeLagenceRegionaleDeSanteARS: 'was',
-  avisDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst__wat:
-    'wat',
+  avisDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst__wat: 'wat',
   avisDuDemandeurSurLesPrescriptionsProposees: 'wau',
   clotureDeLenquetePublique_wce: 'wce',
   receptionDeComplements_wco: 'wco',
@@ -169,8 +160,7 @@ export const ETAPES_TYPES = {
   receptionDeComplements_wrc: 'wrc',
   rapportDeLaDreal: 'wrd',
   recevabilite: 'wre',
-  avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement_wrl:
-    'wrl',
+  avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement_wrl: 'wrl',
   recolement: 'wrt',
   saisineDeLautoriteEnvironnementale: 'wse',
   saisineDesServicesDeLEtat: 'wss',
@@ -178,11 +168,13 @@ export const ETAPES_TYPES = {
 } as const
 
 export type EtapeTypeId = typeof ETAPES_TYPES[keyof typeof ETAPES_TYPES]
+export type EtapeTypeKey = keyof typeof ETAPES_TYPES
 
-const EtatsTrigrammes = Object.values(ETAPES_TYPES)
+const etapesTypesIds = Object.values(ETAPES_TYPES)
 
-export const isEtapeTypeId = (
-  etapeTypeId: string
-): etapeTypeId is EtapeTypeId => {
-  return EtatsTrigrammes.includes(etapeTypeId)
+export const isEtapeTypeId = (etapeTypeId: string): etapeTypeId is EtapeTypeId => {
+  return etapesTypesIds.includes(etapeTypeId)
+}
+export const isEtapeTypeKey = (etapeTypeKey: string): etapeTypeKey is EtapeTypeKey => {
+  return etapeTypeKey in ETAPES_TYPES
 }

@@ -1,10 +1,7 @@
 import {
   armOctMachine,
-  DBEtat,
   Etape,
-  Event,
   eventFrom,
-  eventToEtat,
   isEvent,
   OctARMContext,
   tags,
@@ -133,20 +130,6 @@ export const demarcheStatut = (etapes: readonly Etape[]): DemarcheStatutId => {
   }
 }
 
-export const nextEtapes = (etapes: readonly Etape[]): DBEtat[] => {
-  const state = assertGoTo(etapes)
-
-  const possibleEvents: Event[] = state.nextEvents
-    .filter(isEvent)
-    .filter(event => {
-      const events = toPotentialXStateEvent(event)
-
-      return events.some(event => state.can(event))
-    })
-
-  return possibleEvents.map(eventToEtat)
-}
-
 type Intervenant = keyof typeof tags['responsable']
 
 const intervenants = Object.keys(tags.responsable) as Array<
@@ -216,7 +199,9 @@ export const possibleNextEtapes = (
     .flatMap(event => {
       const events = toPotentialXStateEvent(event)
 
-      return events.filter(event => state.can(event)).map(xStateEventToEtape)
+      return events
+        .filter(event => state.can(event))
+        .flatMap(xStateEventToEtape)
     })
     .filter(event => event !== undefined)
 }

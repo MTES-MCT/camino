@@ -21,11 +21,16 @@ export const ETAPES_STATUTS = {
   PROGRAMME: 'pro'
 } as const
 export type EtapeStatutId = typeof ETAPES_STATUTS[keyof typeof ETAPES_STATUTS]
+export type EtapeStatutKey = keyof typeof ETAPES_STATUTS
 
-const StatutsIds = Object.values(ETAPES_STATUTS)
+const etapesStatutsIds = Object.values(ETAPES_STATUTS)
 
 export const isStatut = (statut: string): statut is EtapeStatutId => {
-  return StatutsIds.includes(statut)
+  return etapesStatutsIds.includes(statut)
+}
+
+export const isEtapeStatutKey = (etapeStatutKey: string): etapeStatutKey is EtapeStatutKey => {
+  return etapeStatutKey in ETAPES_STATUTS
 }
 
 export interface EtapeStatut<T = EtapeStatutId> {
@@ -38,8 +43,7 @@ export const EtapesStatuts: { [key in EtapeStatutId]: EtapeStatut<key> } = {
   acc: {
     id: 'acc',
     nom: 'accepté',
-    description:
-      "La demande a fait l’objet d’une décision favorable de l'administration.",
+    description: "La demande a fait l’objet d’une décision favorable de l'administration.",
     couleur: 'success'
   },
   aco: {

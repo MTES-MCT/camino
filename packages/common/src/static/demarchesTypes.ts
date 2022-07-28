@@ -107,8 +107,7 @@ export const DemarchesTypes: {
   exp: {
     id: 'exp',
     nom: 'extension de périmètre',
-    description:
-      "Démarche appliquée aux permis exclusifs de recherches, permis d'exploitation de minéraux et métaux et concessions pour étendre leurs périmètres.",
+    description: "Démarche appliquée aux permis exclusifs de recherches, permis d'exploitation de minéraux et métaux et concessions pour étendre leurs périmètres.",
     ordre: 7,
     duree: true,
     points: true,
@@ -149,8 +148,7 @@ export const DemarchesTypes: {
   oct: {
     id: 'oct',
     nom: 'octroi',
-    description:
-      'Démarche à l’initiative d’une personne physique ou morale en vue de l’obtention d’une autorisation ou d’un titre minier pour une première période de validité définie.',
+    description: 'Démarche à l’initiative d’une personne physique ou morale en vue de l’obtention d’une autorisation ou d’un titre minier pour une première période de validité définie.',
     ordre: 1,
     duree: true,
     points: true,
@@ -259,7 +257,4 @@ export const DemarchesTypes: {
   }
 } as const
 
-export const isDemarcheTypeId = (
-  demarcheTypeId: string | undefined | null
-): demarcheTypeId is DemarcheTypeId =>
-  DemarchesTypesIds.includes(demarcheTypeId)
+export const isDemarcheTypeId = (demarcheTypeId: string | undefined | null): demarcheTypeId is DemarcheTypeId => DemarchesTypesIds.includes(demarcheTypeId)

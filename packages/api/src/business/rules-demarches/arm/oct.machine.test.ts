@@ -28,7 +28,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('quelles sont mes prochaines étapes sur un titre mécanisé', () => {
     const service = orderAndInterpretMachine([
       { typeId: 'pfd', statutId: 'fai', date: '2020-02-03' },
-      { typeId: 'mdp', statutId: 'dep', date: '2020-02-02' },
+      { typeId: 'mdp', statutId: 'fai', date: '2020-02-02' },
       {
         typeId: 'mfr',
         statutId: 'fai',
@@ -53,7 +53,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('quelles sont mes prochaines étapes sur un titre mécanisé avec franchissements', () => {
     const service = orderAndInterpretMachine([
       { typeId: 'pfd', statutId: 'fai', date: '2020-02-03' },
-      { typeId: 'mdp', statutId: 'dep', date: '2020-02-02' },
+      { typeId: 'mdp', statutId: 'fai', date: '2020-02-02' },
       {
         typeId: 'mfr',
         statutId: 'fai',
@@ -80,7 +80,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('quelles sont mes prochaines étapes non mécanisé', () => {
     const service = orderAndInterpretMachine([
       { typeId: 'pfd', statutId: 'fai', date: '2020-02-03' },
-      { typeId: 'mdp', statutId: 'dep', date: '2020-02-02' },
+      { typeId: 'mdp', statutId: 'fai', date: '2020-02-02' },
       {
         typeId: 'mfr',
         statutId: 'fai',
@@ -102,7 +102,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     const service = orderAndInterpretMachine([
       { typeId: 'mcp', statutId: 'inc', date: '2020-02-04' },
       { typeId: 'pfd', statutId: 'fai', date: '2020-02-03' },
-      { typeId: 'mdp', statutId: 'dep', date: '2020-02-02' },
+      { typeId: 'mdp', statutId: 'fai', date: '2020-02-02' },
       {
         typeId: 'mfr',
         statutId: 'fai',
@@ -161,7 +161,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     expect(() =>
       orderAndInterpretMachine([
         { typeId: 'mfr', statutId: 'fai', date: '2020-01-01' },
-        { typeId: 'mdp', statutId: 'dep', date: '2020-01-02' },
+        { typeId: 'mdp', statutId: 'fai', date: '2020-01-02' },
         { typeId: 'mfr', statutId: 'fai', date: '2020-01-03' }
       ])
     ).toThrowErrorMatchingSnapshot()
@@ -170,7 +170,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('ne peut pas déplacer une étape "mdp" sans "mfr"', () => {
     expect(() =>
       orderAndInterpretMachine([
-        { typeId: 'mdp', statutId: 'dep', date: '2020-02-02' },
+        { typeId: 'mdp', statutId: 'fai', date: '2020-02-02' },
         { typeId: 'mfr', statutId: 'fai', date: '2020-02-03' }
       ])
     ).toThrowErrorMatchingSnapshot()
@@ -205,7 +205,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
           date: '2020-01-01',
           contenu: { arm: { mecanise: true, franchissements: 1 } }
         },
-        { typeId: 'mdp', statutId: 'dep', date: '2020-01-02' },
+        { typeId: 'mdp', statutId: 'fai', date: '2020-01-02' },
         { typeId, statutId, contenu, date: '2020-01-03' }
       ])
     }
@@ -215,7 +215,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     orderAndInterpretMachine([
       { typeId: 'mcp', statutId: 'com', date: '2020-02-03' },
       { typeId: 'pfd', statutId: 'fai', date: '2020-02-03' },
-      { typeId: 'mdp', statutId: 'dep', date: '2020-02-02' },
+      { typeId: 'mdp', statutId: 'fai', date: '2020-02-02' },
       { typeId: 'mfr', statutId: 'fai', date: '2020-01-01' }
     ])
   })
@@ -223,7 +223,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('peut créer une "des" après "mdp"', () => {
     orderAndInterpretMachine([
       { typeId: 'mfr', statutId: 'fai', date: '2020-01-01' },
-      { typeId: 'mdp', statutId: 'dep', date: '2020-01-02' },
+      { typeId: 'mdp', statutId: 'fai', date: '2020-01-02' },
       { typeId: 'des', statutId: 'fai', date: '2020-01-04' }
     ])
   })
@@ -232,7 +232,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     expect(() =>
       orderAndInterpretMachine([
         { typeId: 'mfr', statutId: 'fai', date: '2020-01-01' },
-        { typeId: 'mdp', statutId: 'dep', date: '2020-01-02' },
+        { typeId: 'mdp', statutId: 'fai', date: '2020-01-02' },
         { typeId: 'des', statutId: 'fai', date: '2020-01-03' },
         { typeId: 'des', statutId: 'fai', date: '2020-01-04' }
       ])
@@ -242,7 +242,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     expect(() =>
       orderAndInterpretMachine([
         { typeId: 'mfr', statutId: 'fai', date: '2020-01-01' },
-        { typeId: 'mdp', statutId: 'dep', date: '2020-01-02' },
+        { typeId: 'mdp', statutId: 'fai', date: '2020-01-02' },
         { typeId: 'des', statutId: 'fai', date: '2020-01-04' },
         { typeId: 'css', statutId: 'fai', date: '2020-01-05' }
       ])
@@ -256,7 +256,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: '2020-01-01',
         contenu: { arm: { mecanise: true } }
       },
-      { typeId: 'mdp', statutId: 'dep', date: '2020-01-02' },
+      { typeId: 'mdp', statutId: 'fai', date: '2020-01-02' },
       { typeId: 'dae', statutId: 'exe', date: '2020-01-03' },
       { typeId: 'pfd', statutId: 'fai', date: '2020-01-04' },
       { typeId: 'mcp', statutId: 'com', date: '2020-01-05' },
@@ -276,7 +276,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     expect(() =>
       orderAndInterpretMachine([
         { typeId: 'mfr', statutId: 'fai', date: '2020-01-01' },
-        { typeId: 'mdp', statutId: 'dep', date: '2020-01-01' },
+        { typeId: 'mdp', statutId: 'fai', date: '2020-01-01' },
         { typeId: 'pfd', statutId: 'fai', date: '2020-01-01' },
         { typeId: 'mcp', statutId: 'com', date: '2020-01-01' },
         { typeId: 'vfd', statutId: 'fai', date: '2020-01-01' },

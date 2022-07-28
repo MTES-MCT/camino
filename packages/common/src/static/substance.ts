@@ -36,8 +36,7 @@ export const SUBSTANCES_FISCALES_IDS = {
   zinc: 'zinc'
 } as const
 
-export type SubstanceFiscaleId =
-  typeof SUBSTANCES_FISCALES_IDS[keyof typeof SUBSTANCES_FISCALES_IDS]
+export type SubstanceFiscaleId = typeof SUBSTANCES_FISCALES_IDS[keyof typeof SUBSTANCES_FISCALES_IDS]
 
 export interface SubstanceFiscale<T = SubstanceFiscaleId> {
   id: T
@@ -53,9 +52,7 @@ export interface SubstanceFiscale<T = SubstanceFiscaleId> {
   }
 }
 
-export const isSubstanceFiscale = (
-  substance: string
-): substance is SubstanceFiscaleId => {
+export const isSubstanceFiscale = (substance: string): substance is SubstanceFiscaleId => {
   return Object.values(SUBSTANCES_FISCALES_IDS).includes(substance)
 }
 export const SubstancesFiscale: {
@@ -122,8 +119,7 @@ export const SubstancesFiscale: {
     substanceLegaleId: 'cfxx',
     uniteId: 'mtk',
     nom: 'lignites',
-    description:
-      "net livré pour les lignites d'un pouvoir calorifique égal ou supérieur à 13 MJ/kg",
+    description: "net livré pour les lignites d'un pouvoir calorifique égal ou supérieur à 13 MJ/kg",
     openFisca: {
       nom: 'lignites_ge_13'
     }
@@ -133,8 +129,7 @@ export const SubstancesFiscale: {
     substanceLegaleId: 'cfxx',
     uniteId: 'mtk',
     nom: 'lignites',
-    description:
-      "net livré pour les lignites d'un pouvoir calorifique inférieur à 13 MJ/kg",
+    description: "net livré pour les lignites d'un pouvoir calorifique inférieur à 13 MJ/kg",
     openFisca: {
       nom: 'lignites_lt_13'
     }
@@ -198,8 +193,7 @@ export const SubstancesFiscale: {
     substanceLegaleId: 'hydm',
     uniteId: 'mtk',
     nom: 'calcaires et grès bitumineux ou asphaltiques',
-    description:
-      "net livré (non destinés à la distillation pour production d'huiles ou d'essences)",
+    description: "net livré (non destinés à la distillation pour production d'huiles ou d'essences)",
     openFisca: {
       nom: 'bitume_non_distillation'
     }
@@ -209,8 +203,7 @@ export const SubstancesFiscale: {
     substanceLegaleId: 'hydm',
     uniteId: 'mtk',
     nom: 'schistes carbobitumineux et schistes bitumineux',
-    description:
-      'net livré (à traiter par distillation pour en extraire des huiles et des essences)',
+    description: 'net livré (à traiter par distillation pour en extraire des huiles et des essences)',
     openFisca: {
       nom: 'bitume_distillation'
     }
@@ -337,8 +330,7 @@ export const SubstancesFiscale: {
     substanceLegaleId: 'souf',
     uniteId: 'mtt',
     nom: 'soufre',
-    description:
-      'contenu dans les minerais de soufre autres que les pyrites de fer'
+    description: 'contenu dans les minerais de soufre autres que les pyrites de fer'
   },
   uran: {
     id: 'uran',

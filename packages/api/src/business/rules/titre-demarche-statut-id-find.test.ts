@@ -196,7 +196,7 @@ describe("statut d'une démarche", () => {
           { typeId: 'mfr', statutId: 'fai' },
           { typeId: 'mdp', statutId: 'fai' },
           { typeId: 'pfd', statutId: 'fai' },
-          { typeId: 'mcp', statutId: 'fai' }
+          { typeId: 'mcp', statutId: 'com' }
         ]),
         'arm'
       )
