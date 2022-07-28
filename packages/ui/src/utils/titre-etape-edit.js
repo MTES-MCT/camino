@@ -143,13 +143,6 @@ const etapePointsFormat = (etape, points) => {
 const etapeEditFormat = etape => {
   etape = cloneAndClean(etape)
 
-  if (etape.statut) {
-    etape.statutId = etape.statut.id
-    delete etape.statut
-  } else {
-    etape.statutId = ''
-  }
-
   delete etape.administrations
 
   const entreprisesPropIds = ['titulaires', 'amodiataires']

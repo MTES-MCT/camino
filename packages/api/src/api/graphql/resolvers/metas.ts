@@ -4,8 +4,6 @@ import {
   IDemarcheType,
   IDocumentRepertoire,
   IDocumentType,
-  IDomaine,
-  IEtapeStatut,
   IEtapeType,
   IFields,
   IPhaseStatut,
@@ -26,9 +24,6 @@ import {
   documentTypeCreate,
   documentTypeUpdate,
   domainesGet,
-  domaineUpdate,
-  etapesStatutsGet,
-  etapeStatutUpdate,
   etapesTypesGet,
   etapeTypeUpdate,
   phasesStatutsGet,
@@ -78,6 +73,7 @@ import { Etape } from '../../../business/rules-demarches/arm/oct.machine'
 import { Pays, PaysList } from 'camino-common/src/static/pays'
 import { Departement, Departements } from 'camino-common/src/static/departement'
 import { Region, Regions } from 'camino-common/src/static/region'
+import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 
 export const devises = async () => devisesGet()
 
@@ -262,7 +258,7 @@ const demarcheEtapesTypesGet = async (
     titreDemarcheId,
     {
       fields: {
-        type: { etapesTypes: { etapesStatuts: { id: {} } } },
+        type: { etapesTypes: { id: {} } },
         titre: {
           type: { demarchesTypes: { id: {} } },
           demarches: { etapes: { id: {} } }
@@ -385,17 +381,7 @@ export const etapesTypes = async (
   }
 }
 
-export const etapesStatuts = async () => {
-  try {
-    return await etapesStatutsGet()
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
+export const etapesStatuts = () => Object.values(EtapesStatuts)
 
 export const version = () => process.env.APPLICATION_VERSION
 
@@ -425,38 +411,6 @@ export const regions = (): Region[] => Object.values(Regions)
 export const phasesStatuts = async () => {
   try {
     return await phasesStatutsGet()
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-export const domaineModifier = async (
-  { domaine }: { domaine: IDomaine },
-  context: IToken,
-  info: GraphQLResolveInfo
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const fields = fieldsBuild(info)
-
-    if (domaine.ordre) {
-      const domaines = await domainesGet(null as never, { fields }, user)
-
-      await ordreUpdate(domaine, domaines, domaineUpdate)
-    }
-
-    await domaineUpdate(domaine.id!, domaine)
-
-    return await domainesGet(null as never, { fields }, user)
   } catch (e) {
     if (debug) {
       console.error(e)
@@ -633,29 +587,6 @@ export const etapeTypeModifier = async (
     await titresEtapesHeritageContenuUpdate(user)
 
     return await etapesTypesGet({}, { fields }, user)
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-export const etapeStatutModifier = async (
-  { etapeStatut }: { etapeStatut: IEtapeStatut },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    await etapeStatutUpdate(etapeStatut.id!, etapeStatut)
-
-    return await etapesStatutsGet()
   } catch (e) {
     if (debug) {
       console.error(e)

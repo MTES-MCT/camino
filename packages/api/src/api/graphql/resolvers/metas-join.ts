@@ -3,7 +3,6 @@ import {
   ITitreTypeTitreStatut,
   ITitreTypeDemarcheType,
   ITitreTypeDemarcheTypeEtapeType,
-  IEtapeTypeEtapeStatut,
   IToken,
   IEtapeTypeDocumentType,
   IEtapeTypeJustificatifType,
@@ -32,10 +31,6 @@ import {
   titreTypeDemarcheTypeEtapeTypeUpdate,
   titreTypeDemarcheTypeEtapeTypeCreate,
   titreTypeDemarcheTypeEtapeTypeDelete,
-  etapesTypesEtapesStatutsGet,
-  etapeTypeEtapeStatutUpdate,
-  etapeTypeEtapeStatutCreate,
-  etapeTypeEtapeStatutDelete,
   titreTypeGet,
   etapesTypesDocumentsTypesGet,
   etapeTypeDocumentTypeUpdate,
@@ -781,112 +776,6 @@ const titreTypeDemarcheTypeEtapeTypeJustificatifTypeSupprimer = async (
   }
 }
 
-//
-
-const etapesTypesEtapesStatuts = async (_: never, context: IToken) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const etapesTypesEtapesStatuts = await etapesTypesEtapesStatutsGet()
-
-    return etapesTypesEtapesStatuts
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-const etapeTypeEtapeStatutModifier = async (
-  { etapeTypeEtapeStatut }: { etapeTypeEtapeStatut: IEtapeTypeEtapeStatut },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    await etapeTypeEtapeStatutUpdate(
-      etapeTypeEtapeStatut.etapeTypeId,
-      etapeTypeEtapeStatut.etapeStatutId,
-      etapeTypeEtapeStatut
-    )
-
-    const etapesTypesEtapesStatuts = await etapesTypesEtapesStatutsGet()
-
-    return etapesTypesEtapesStatuts
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-const etapeTypeEtapeStatutCreer = async (
-  { etapeTypeEtapeStatut }: { etapeTypeEtapeStatut: IEtapeTypeEtapeStatut },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    await etapeTypeEtapeStatutCreate(etapeTypeEtapeStatut)
-
-    const etapesTypesEtapesStatuts = await etapesTypesEtapesStatutsGet()
-
-    return etapesTypesEtapesStatuts
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-const etapeTypeEtapeStatutSupprimer = async (
-  { etapeTypeEtapeStatut }: { etapeTypeEtapeStatut: IEtapeTypeEtapeStatut },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    await etapeTypeEtapeStatutDelete(
-      etapeTypeEtapeStatut.etapeTypeId,
-      etapeTypeEtapeStatut.etapeStatutId
-    )
-
-    const etapesTypesEtapesStatuts = await etapesTypesEtapesStatutsGet()
-
-    return etapesTypesEtapesStatuts
-  } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
-
-    throw e
-  }
-}
-
-//
-
 const etapesTypesDocumentsTypes = async (_: never, context: IToken) => {
   try {
     const user = await userGet(context.user?.id)
@@ -1183,10 +1072,6 @@ export {
   titreTypeDemarcheTypeEtapeTypeJustificatifTypeModifier,
   titreTypeDemarcheTypeEtapeTypeJustificatifTypeCreer,
   titreTypeDemarcheTypeEtapeTypeJustificatifTypeSupprimer,
-  etapesTypesEtapesStatuts,
-  etapeTypeEtapeStatutModifier,
-  etapeTypeEtapeStatutCreer,
-  etapeTypeEtapeStatutSupprimer,
   etapesTypesDocumentsTypes,
   etapeTypeDocumentTypeModifier,
   etapeTypeDocumentTypeCreer,

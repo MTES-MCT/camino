@@ -1,7 +1,8 @@
 import { IEtapeType } from '../../types'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 export const titreEtapeDemarcheEtapeTypeFind = (
-  etapeTypeId: string,
+  etapeTypeId: EtapeTypeId,
   etapesTypes: IEtapeType[],
   demarcheTypeNom: string
 ) => {

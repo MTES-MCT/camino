@@ -2,10 +2,15 @@ import { IEtapeType } from '../../types'
 
 // valide le type et le statut de l'étape en fonction des type d'étapes d'une démarche
 import { titreEtapeDemarcheEtapeTypeFind } from '../utils/titre-etape-demarche-etape-type-find'
+import {
+  EtapeTypeId,
+  getEtapesStatuts
+} from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 
 export const titreEtapeTypeAndStatusValidate = (
-  etapeTypeId: string,
-  etapeStatutId: string | undefined,
+  etapeTypeId: EtapeTypeId,
+  etapeStatutId: EtapeStatutId | undefined,
   etapesTypes: IEtapeType[],
   demarcheTypeNom: string
 ) => {
@@ -20,7 +25,9 @@ export const titreEtapeTypeAndStatusValidate = (
       demarcheTypeNom
     )
 
-    const titreEtapeStatut = etapeType.etapesStatuts!.find(
+    const etapesStatuts = getEtapesStatuts(etapeType.id)
+
+    const titreEtapeStatut = etapesStatuts.find(
       etapeStatut => etapeStatut.id === etapeStatutId
     )
 

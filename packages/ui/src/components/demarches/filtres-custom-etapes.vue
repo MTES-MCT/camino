@@ -78,6 +78,7 @@
 <script>
 import InputDate from '../_ui/input-date.vue'
 import Icon from '@/components/_ui/icon.vue'
+import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 export default {
   components: { Icon, InputDate },
@@ -88,12 +89,7 @@ export default {
 
   methods: {
     statutsFind(n) {
-      const typeId = this.filter.value[n].typeId
-      const type = typeId
-        ? this.filter.elements.find(type => type.id === typeId)
-        : []
-
-      return type.etapesStatuts
+      return getEtapesStatuts(this.filter.value[n].typeId)
     },
 
     valueAdd() {

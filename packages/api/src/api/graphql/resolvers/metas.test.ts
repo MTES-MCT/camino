@@ -180,16 +180,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [
-        {
-          id: 'aco',
-          nom: 'en construction',
-
-          couleur: 'warning'
-        },
-        { id: 'fai', nom: 'fait', couleur: 'success' }
-      ]
+      etapesCreation: true
     },
     {
       id: 'mdp',
@@ -205,8 +196,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'mcd',
@@ -244,8 +234,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'rcd',
@@ -260,8 +249,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'mcb',
@@ -299,8 +287,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'rcb',
@@ -315,8 +302,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'dae',
@@ -346,16 +332,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [
-        {
-          id: 'exe',
-          nom: 'exempté',
-
-          couleur: 'success'
-        },
-        { id: 'req', nom: 'requis', couleur: 'neutral' }
-      ]
+      etapesCreation: true
     },
     {
       id: 'mom',
@@ -370,8 +347,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'men',
@@ -387,8 +363,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'mod',
@@ -404,8 +379,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'pfd',
@@ -441,8 +415,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'vfd',
@@ -472,8 +445,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'mcp',
@@ -489,16 +461,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [
-        {
-          id: 'com',
-          nom: 'complet',
-
-          couleur: 'success'
-        },
-        { id: 'inc', nom: 'incomplet', couleur: 'error' }
-      ]
+      etapesCreation: true
     },
     {
       id: 'mca',
@@ -536,8 +499,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'rca',
@@ -552,8 +514,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'mcm',
@@ -591,8 +552,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'rcm',
@@ -607,8 +567,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'mim',
@@ -623,8 +582,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'rim',
@@ -639,8 +597,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'mcr',
@@ -656,16 +613,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [
-        {
-          id: 'fav',
-          nom: 'favorable',
-
-          couleur: 'success'
-        },
-        { id: 'def', nom: 'défavorable', couleur: 'error' }
-      ]
+      etapesCreation: true
     },
     {
       id: 'meo',
@@ -680,8 +628,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'edm',
@@ -717,16 +664,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: false,
-      etapesCreation: true,
-      etapesStatuts: [
-        {
-          id: 'fav',
-          nom: 'favorable',
-
-          couleur: 'success'
-        },
-        { id: 'def', nom: 'défavorable', couleur: 'error' }
-      ]
+      etapesCreation: true
     },
     {
       id: 'css',
@@ -741,8 +679,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'mnc',
@@ -772,8 +709,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'ede',
@@ -810,16 +746,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: false,
-      etapesCreation: true,
-      etapesStatuts: [
-        {
-          id: 'fav',
-          nom: 'favorable',
-
-          couleur: 'success'
-        },
-        { id: 'def', nom: 'défavorable', couleur: 'error' }
-      ]
+      etapesCreation: true
     },
     {
       id: 'rde',
@@ -869,16 +796,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [
-        {
-          id: 'fav',
-          nom: 'favorable',
-
-          couleur: 'success'
-        },
-        { id: 'def', nom: 'défavorable', couleur: 'error' }
-      ]
+      etapesCreation: true
     },
     {
       id: 'mio',
@@ -893,8 +811,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'rio',
@@ -909,8 +826,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'eof',
@@ -926,8 +842,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: false,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'mcs',
@@ -965,8 +880,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'rcs',
@@ -981,8 +895,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'mia',
@@ -997,8 +910,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'ria',
@@ -1013,8 +925,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'aof',
@@ -1030,28 +941,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: false,
       entreprisesLecture: false,
-      etapesCreation: true,
-      etapesStatuts: [
-        {
-          id: 'fav',
-          nom: 'favorable',
-
-          couleur: 'success'
-        },
-        {
-          id: 'fre',
-          nom: 'favorable avec réserves',
-
-          couleur: 'warning'
-        },
-        { id: 'def', nom: 'défavorable', couleur: 'error' },
-        {
-          id: 'dre',
-          nom: 'défavorable avec réserves',
-
-          couleur: 'warning'
-        }
-      ]
+      etapesCreation: true
     },
     {
       id: 'sca',
@@ -1066,8 +956,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'aca',
@@ -1082,22 +971,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [
-        {
-          id: 'fav',
-          nom: 'favorable',
-
-          couleur: 'success'
-        },
-        { id: 'def', nom: 'défavorable', couleur: 'error' },
-        {
-          id: 'ajo',
-          nom: 'ajourné',
-
-          couleur: 'warning'
-        }
-      ]
+      etapesCreation: true
     },
     {
       id: 'mna',
@@ -1126,8 +1000,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'mnd',
@@ -1157,8 +1030,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'mnb',
@@ -1188,8 +1060,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'pfc',
@@ -1227,8 +1098,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'vfc',
@@ -1258,8 +1128,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'def',
@@ -1275,23 +1144,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [
-        {
-          id: 'acc',
-          nom: 'accepté',
-          description:
-            "La demande a fait l’objet d’une décision favorable de l'administration.",
-          couleur: 'success'
-        },
-        {
-          id: 'rej',
-          nom: 'rejeté',
-          description:
-            "La demande a fait l’objet d’une décision défavorable de l'administration. Les textes d’applications du code minier prévoient que les décisions de rejet ne font pas l’objet d’une publication. En conséquence, les démarches qui passent au statut “rejeté” dans Camino sont dé-publiées et rendues inaccessibles aux tiers.\n",
-          couleur: 'error'
-        }
-      ]
+      etapesCreation: true
     },
     {
       id: 'des',
@@ -1307,8 +1160,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'sco',
@@ -1324,8 +1176,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'mns',
@@ -1355,8 +1206,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'aco',
@@ -1372,8 +1222,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       sections: null,
       publicLecture: true,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     },
     {
       id: 'mnv',
@@ -1403,8 +1252,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ],
       publicLecture: false,
       entreprisesLecture: true,
-      etapesCreation: true,
-      etapesStatuts: [{ id: 'fai', nom: 'fait', couleur: 'success' }]
+      etapesCreation: true
     }
   ]
 
@@ -1462,7 +1310,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   })
 
   test('peut faire une dae, une rde et pfd AVANT la mfr', () => {
-    const demarche = {
+    const demarche: Pick<TitresDemarches, 'etapes'> = {
       etapes: [
         {
           id: 'idMfr',
@@ -1491,7 +1339,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   })
 
   test('peut faire que une pfd AVANT la mfr non mecanisee', () => {
-    const demarche = {
+    const demarche: Pick<TitresDemarches, 'etapes'> = {
       etapes: [
         {
           id: 'idMfr',
@@ -1519,7 +1367,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     expect(etapes.map(({ id }) => id)).toStrictEqual(['pfd'])
   })
   test('peut faire une completude (mcp) le même jour que le dépôt (mdp) de la demande', () => {
-    const demarche = {
+    const demarche: Pick<TitresDemarches, 'etapes'> = {
       etapes: [
         {
           id: 'id3',

@@ -1,4 +1,6 @@
 import { demarcheEtatsValidate } from '../_utils.test'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 describe('vérifie l’arbre d’octroi d’AXM', () => {
   const octEtatsValidate = demarcheEtatsValidate('oct', 'axm', '2020-10-01')
@@ -238,12 +240,12 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
     ).toHaveLength(0)
   })
 
-  test.each([
-    { typeId: 'dex', statutId: 'fav' },
-    { typeId: 'sas', statutId: 'fai' }
+  test.each<[EtapeTypeId, EtapeStatutId]>([
+    ['dex', 'fav'],
+    ['sas', 'fai']
   ])(
     'la %s est possible après une apo favorable avec réserve',
-    ({ typeId, statutId }) => {
+    (typeId, statutId) => {
       expect(
         octEtatsValidate([
           { typeId: 'mfr', date: '2020-01-01' },

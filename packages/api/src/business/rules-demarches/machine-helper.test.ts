@@ -5,6 +5,7 @@ import {
   whoIsBlocking
 } from './machine-helper'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { ITitreEtape } from '../../types'
 
 describe('nextEtapes', () => {
   test('retourne les prochaines étapes possibles', () => {
@@ -96,7 +97,7 @@ describe('toMachineEtape', () => {
         statutId: 'fai',
         date: '2022-01-01',
         titreDemarcheId: 'idDemarche'
-      })
+      } as unknown as ITitreEtape)
     ).toThrowErrorMatchingInlineSnapshot(`"l'état iii est inconnu"`)
   })
 
@@ -108,7 +109,7 @@ describe('toMachineEtape', () => {
         statutId: 'ffi',
         date: '2022-01-01',
         titreDemarcheId: 'idDemarche'
-      })
+      } as unknown as ITitreEtape)
     ).toThrowErrorMatchingInlineSnapshot(
       `"le status ffi est inconnu, {\\"id\\":\\"id\\",\\"typeId\\":\\"mfr\\",\\"statutId\\":\\"ffi\\",\\"date\\":\\"2022-01-01\\",\\"titreDemarcheId\\":\\"idDemarche\\"}"`
     )

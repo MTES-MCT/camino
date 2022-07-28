@@ -10,12 +10,8 @@ const titresDemarchesPhases = {
   graph: 'statut'
 }
 
-const etapesTypes = {
-  graph: `[etapesStatuts]`
-}
-
 const demarchesTypes = {
-  graph: `[etapesTypes.${etapesTypes.graph}]`
+  graph: `[etapesTypes]`
 }
 
 const titresTypes = {
@@ -80,7 +76,6 @@ const administrations = {
 
 const titresEtapesRelateTrue = [
   'type',
-  'statut',
   'titulaires',
   'amodiataires',
   'administrations',
@@ -108,7 +103,6 @@ const titresEtapes = {
   graph: `[
     points(orderAsc).${points.graph},
     type,
-    statut,
     documents.${documents.graph},
     justificatifs.${documents.graph},
     substances(orderAsc).${substances.graph},
@@ -132,8 +126,6 @@ const titresTypesRelateFalse = [
   'type',
   'demarchesTypes',
   'demarchesTypes.etapesTypes',
-  'demarchesTypes.etapesTypes.etapesStatuts',
-  'demarchesTypes.etapesTypes',
   'titresTypesTitresStatuts'
 ]
 
@@ -147,8 +139,6 @@ const titresDemarchesRelateTrue = [
 ]
 
 const titresDemarchesRelateFalse = [
-  'type.etapesTypes',
-  'type.etapesTypes.etapesStatuts',
   'type.etapesTypes',
   'titreType',
   ...titresTypesRelateFalse.map(k => `titreType.${k}`)
@@ -310,7 +300,6 @@ export default {
   documents,
   entreprises,
   entreprisesEtablissements,
-  etapesTypes,
   points,
   substances,
   titres,

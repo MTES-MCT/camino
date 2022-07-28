@@ -1,25 +1,25 @@
 import {
-  domaines,
   demarchesStatuts,
   demarchesTypes,
   etapesTypes,
-  etapesStatuts,
   substancesLegales,
-  titresStatuts,
-  titresTypesTypes
+  titresStatuts
 } from '../api/metas'
+import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
+import { Domaines } from 'camino-common/src/static/domaines'
+import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 
 const definitionsIndex = {
-  domaines,
+  domaines: () => Object.values(Domaines),
   'titre-minier': '',
   'autorisation-miniere': '',
   'demarches-statuts': demarchesStatuts,
   'demarches-types': demarchesTypes,
   'etapes-types': etapesTypes,
-  'etapes-statuts': etapesStatuts,
+  'etapes-statuts': () => Object.values(EtapesStatuts),
   'substances-legales': substancesLegales,
   'titres-statuts': titresStatuts,
-  'titres-types': titresTypesTypes
+  'titres-types': () => Object.values(TitresTypesTypes)
 }
 
 const state = {

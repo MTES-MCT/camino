@@ -21,11 +21,6 @@ const titreEtapeEtapesTypes = apiGraphQLFetch(
         nom
         description
         fondamentale
-        etapesStatuts {
-          id
-          nom
-          couleur
-        }
         etapesCreation
       }
     }

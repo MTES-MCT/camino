@@ -120,11 +120,7 @@ fragment etape on Etape {
     id
     nom
   }
-  statut {
-    id
-    nom
-    couleur
-  }
+  statutId
   administrations {
     ...administration
   }

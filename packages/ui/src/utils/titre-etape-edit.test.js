@@ -11,7 +11,6 @@ describe('etapeEditFormat', () => {
       })
     ).toEqual({
       id: 'etape-id',
-      statutId: '',
       duree: { ans: null, mois: null },
       amodiataires: [],
       titulaires: [],
@@ -49,7 +48,6 @@ describe('etapeEditFormat', () => {
       })
     ).toEqual({
       id: 'etape-id',
-      statutId: '',
       duree: { ans: null, mois: null },
       amodiataires: [],
       titulaires: [],
@@ -83,7 +81,7 @@ describe('etapeEditFormat', () => {
         __typename: 'etape',
         id: 'etape-id',
         type: { id: 'etape-type-id' },
-        statut: { id: 'etape-statut-id' },
+        statutId: 'etape-statut-id',
         duree: 240,
         administrations: ['administration'],
         titulaires: [{ id: 'titulaire-id', prop: 'titulaire-prop' }],

@@ -263,7 +263,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           } as unknown as ITitreType,
           demarches: [{ typeId: 'oct' }]
         } as ITitre,
-        { typeId: 'aaa', date: '2022-01-01' } as ITitreEtape,
+        { typeId: 'aaa', date: '2022-01-01' } as unknown as ITitreEtape,
         [
           { id: '1', typeId: 'mfr', statutId: 'aco', date: '2021-01-01' },
           { id: '2', typeId: 'dae', date: '2021-01-02' }

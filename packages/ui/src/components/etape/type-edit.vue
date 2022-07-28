@@ -70,6 +70,7 @@
 
 <script>
 import InputDate from '../_ui/input-date.vue'
+import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 export default {
   components: { InputDate },
@@ -85,7 +86,7 @@ export default {
 
   computed: {
     etapesStatuts() {
-      return this.etapeType && this.etapeType.etapesStatuts
+      return getEtapesStatuts(this.etapeType?.id)
     },
 
     complete() {

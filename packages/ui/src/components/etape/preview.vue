@@ -24,7 +24,7 @@
       <h3 class="cap-first mb-s">{{ etape.type.nom }}</h3>
 
       <div class="mb-xs flex flex-center">
-        <Statut :color="etape.statut.couleur" :nom="statutNom" />
+        <Statut :color="etapeStatut.couleur" :nom="statutNom" />
 
         <HelpTooltip v-if="demandeHelp" class="ml-m">{{
           demandeHelp
@@ -156,6 +156,7 @@ import RemovePopup from './remove.vue'
 import DeposePopup from './depose-popup.vue'
 import HelpTooltip from '../_ui/help-tooltip.vue'
 import Icon from '@/components/_ui/icon.vue'
+import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 
 export default {
   components: {
@@ -198,7 +199,7 @@ export default {
     },
 
     etapeIsDemandeEnConstruction() {
-      return this.etape.type.id === 'mfr' && this.etape.statut.id === 'aco'
+      return this.etape.type.id === 'mfr' && this.etapeStatut.id === 'aco'
     },
 
     hasFondamentales() {
@@ -228,8 +229,8 @@ export default {
 
     statutNom() {
       return this.etapeIsDemandeEnConstruction && !this.etape.deposable
-        ? `${this.etape.statut.nom} (incomplet)`
-        : this.etape.statut.nom
+        ? `${this.etapeStatut.nom} (incomplet)`
+        : this.etapeStatut.nom
     },
 
     userIsAdmin() {
@@ -242,14 +243,16 @@ export default {
         (this.hasDocuments || this.hasJustificatifs)
       )
     },
-
+    etapeStatut() {
+      return EtapesStatuts[this.etape.statutId]
+    },
     demandeHelp() {
       if (!this.userIsAdmin && this.etape.type.id === 'mfr') {
         if (
           this.domaineId === 'm' &&
           ['ar', 'ax'].includes(this.titreTypeType.id)
         ) {
-          if (this.etape.statut.id === 'aco') {
+          if (this.etapeStatut.id === 'aco') {
             return 'Si vous avez ajouté tous les documents spécifiques à la demande et justificatifs d’entreprise, et que vous considérez que votre demande est complète, vous pouvez la déposer en cliquant sur « Déposer … ». L’ONF et le PTMG seront ainsi notifiés et pourront instruire votre demande.'
           } else {
             return 'Votre demande est bien déposée. L’ONF et le PTMG instruisent votre demande.'

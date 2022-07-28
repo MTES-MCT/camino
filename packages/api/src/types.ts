@@ -12,6 +12,9 @@ import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
 import { PaysId } from 'camino-common/src/static/pays'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
+import { Couleur } from 'camino-common/src/static/couleurs'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 const DemarchesStatutsTypesIds = {
   Accepte: 'acc',
@@ -115,12 +118,11 @@ type ITitreActiviteColonneId = 'titreNom' | 'titulaire' | 'periode' | 'statut'
 
 type IUtilisateursColonneId = 'nom' | 'prenom' | 'email' | 'role'
 type IEntrepriseColonneId = 'nom' | 'siren'
-type ICouleur = 'error' | 'info' | 'neutral' | 'success' | 'warning'
 
 interface IActiviteStatut {
   id: string
   nom: string
-  couleur: ICouleur
+  couleur: Couleur
 }
 
 interface IContenuId {
@@ -143,7 +145,7 @@ interface IContenuElement {
 
 interface IDecisionAnnexeContenuElement extends IContenuElement {
   date: string
-  statutId: string
+  statutId: EtapeStatutId
   [elementId: string]: IContenuValeur
 }
 
@@ -292,7 +294,7 @@ interface IDemarcheStatut {
   id: string
   nom: string
   ordre: number
-  couleur: ICouleur
+  couleur: Couleur
 }
 
 interface IDemarcheType {
@@ -380,13 +382,6 @@ interface IEntrepriseTitreType {
   titresCreation: boolean
 }
 
-interface IEtapeStatut {
-  id: string
-  nom: string
-  description?: string
-  couleur: ICouleur
-}
-
 interface IEtapeTypeDocumentType {
   etapeTypeId: string
   documentTypeId: string
@@ -405,7 +400,7 @@ interface ITitreTypeDemarcheTypeEtapeTypeJustificatifType
   extends ITitreTypeDemarcheTypeEtapeTypeDocumentType {}
 
 interface IEtapeType {
-  id: string
+  id: EtapeTypeId
   nom: string
   ordre: number
   description?: string
@@ -415,7 +410,6 @@ interface IEtapeType {
   dateFin?: string | null
   sections?: ISection[] | null
   sectionsSpecifiques?: ISection[] | null
-  etapesStatuts?: IEtapeStatut[] | null
   titreTypeId?: string | null
   demarcheTypeId?: string | null
   etapesCreation?: boolean | null
@@ -498,7 +492,7 @@ interface IPeriode {
 interface IPhaseStatut {
   id: string
   nom: string
-  couleur: ICouleur
+  couleur: Couleur
 }
 
 interface IReferenceType {
@@ -584,7 +578,7 @@ interface IAdministrationActiviteTypeEmail {
 interface ITitreStatut {
   id: string
   nom: string
-  couleur: ICouleur
+  couleur: Couleur
   ordre: number
 }
 
@@ -785,10 +779,9 @@ interface IDocument {
 interface ITitreEtape {
   id: string
   slug?: string
-  typeId: string
+  typeId: EtapeTypeId
   type?: IEtapeType | null
-  statutId: string
-  statut?: IEtapeStatut | null
+  statutId: EtapeStatutId
   ordre?: number | null
   date: string
   duree?: number | null
@@ -1024,7 +1017,6 @@ export {
   IEntreprise,
   IEntrepriseEtablissement,
   IEntrepriseTitreType,
-  IEtapeStatut,
   IEtapeType,
   IForet,
   ISDOMZone,

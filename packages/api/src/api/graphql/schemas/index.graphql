@@ -183,7 +183,6 @@ type Query {
   titresTypesDemarchesTypesEtapesTypes: [TitreTypeDemarcheTypeEtapeType]
   titresTypesDemarchesTypesEtapesTypesDocumentsTypes: [TitreTypeDemarcheTypeEtapeTypeDocumentType]
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypes: [TitreTypeDemarcheTypeEtapeTypeDocumentType]
-  etapesTypesEtapesStatuts: [EtapeTypeEtapeStatut]
   etapesTypesDocumentsTypes: [EtapeTypeDocumentType]
   etapesTypesJustificatifsTypes: [EtapeTypeJustificatifType]
 
@@ -406,8 +405,6 @@ type Mutation {
     entrepriseTitreType: InputEntrepriseTitreType!
   ): Entreprise
 
-  domaineModifier(domaine: InputDomaine!): [Domaine]
-
   definitionModifier(definition: InputDefinition!): [Definition]
 
   titreTypeTypeModifier(titreType: InputTitreTypeType!): [TitreTypeType]
@@ -421,8 +418,6 @@ type Mutation {
   phaseStatutModifier(phaseStatut: InputPhaseStatut!): [PhaseStatut]
 
   etapeTypeModifier(etapeType: InputEtapeType!): [EtapeType]
-
-  etapeStatutModifier(etapeStatut: InputEtapeStatut!): [EtapeStatut]
 
   activiteTypeModifier(activiteType: InputActiviteType!): [ActiviteType]
 
@@ -499,18 +494,6 @@ type Mutation {
   titreTypeDemarcheTypeEtapeTypeJustificatifTypeSupprimer(
     titreTypeDemarcheTypeEtapeTypeJustificatifType: InputTitreTypeDemarcheTypeEtapeTypeDocumentType!
   ): [TitreTypeDemarcheTypeEtapeTypeDocumentType]
-
-  etapeTypeEtapeStatutModifier(
-    etapeTypeEtapeStatut: InputEtapeTypeEtapeStatut!
-  ): [EtapeTypeEtapeStatut]
-
-  etapeTypeEtapeStatutCreer(
-    etapeTypeEtapeStatut: InputEtapeTypeEtapeStatut!
-  ): [EtapeTypeEtapeStatut]
-
-  etapeTypeEtapeStatutSupprimer(
-    etapeTypeEtapeStatut: InputEtapeTypeEtapeStatut!
-  ): [EtapeTypeEtapeStatut]
 
   etapeTypeDocumentTypeModifier(
     etapeTypeDocumentType: InputEtapeTypeDocumentType!

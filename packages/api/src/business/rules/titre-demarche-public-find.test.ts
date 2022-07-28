@@ -1,6 +1,7 @@
 import { ITitreEtape } from '../../types'
 
 import { titreDemarchePublicFind } from './titre-demarche-public-find'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   etapesProps.map(
@@ -483,7 +484,7 @@ describe("publicité d'une démarche", () => {
     }
   )
 
-  test.each([
+  test.each<EtapeTypeId>([
     'ane',
     'anf',
     'dex',
@@ -496,7 +497,7 @@ describe("publicité d'une démarche", () => {
     'epc'
   ])(
     "une démarche d’un titre non énergétique dont l'étape la plus récente est %s est public",
-    (etapeTypeId: string) => {
+    etapeTypeId => {
       expect(
         titreDemarchePublicFind(
           'oct',

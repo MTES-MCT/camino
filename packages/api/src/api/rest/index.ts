@@ -267,7 +267,7 @@ const demarches = async (
     },
     {
       fields: {
-        type: { etapesTypes: { etapesStatuts: { id: {} } } },
+        type: { etapesTypes: { id: {} } },
         statut: { id: {} },
         titre: {
           id: {},
@@ -280,7 +280,7 @@ const demarches = async (
           communes: { id: {} },
           points: { id: {} },
           type: {
-            etapesStatuts: { id: {} }
+            id: {}
           }
         }
       }

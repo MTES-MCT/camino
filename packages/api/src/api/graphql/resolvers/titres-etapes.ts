@@ -68,12 +68,14 @@ import { idGenerate } from '../../../database/models/_format/id-create'
 import fileRename from '../../../tools/file-rename'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find'
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
+import { isEtapeTypeId } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 const statutIdAndDateGet = (
   etape: ITitreEtape,
   user: IUtilisateur,
   depose = false
-): { date: string; statutId: string } => {
+): { date: string; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
 
   if (depose) {
@@ -181,7 +183,6 @@ const etapeHeritage = async (
           titre: { id: {} },
           etapes: {
             type: { id: {} },
-            statut: { id: {} },
             titulaires: { id: {} },
             amodiataires: { id: {} },
             substances: { legales: { code: { id: {} } } },
@@ -277,7 +278,7 @@ const etapeCreer = async (
       etape.titreDemarcheId,
       {
         fields: {
-          type: { etapesTypes: { etapesStatuts: { id: {} } } },
+          type: { etapesTypes: { id: {} } },
           titre: {
             type: { demarchesTypes: { id: {} } },
             demarches: { etapes: { id: {} } }
@@ -437,7 +438,7 @@ const etapeModifier = async (
       etape.titreDemarcheId,
       {
         fields: {
-          type: { etapesTypes: { etapesStatuts: { id: {} } } },
+          type: { etapesTypes: { id: {} } },
           titre: {
             type: { demarchesTypes: { id: {} } },
             demarches: { etapes: { id: {} } }
@@ -686,6 +687,9 @@ const etapeDeposer = async (
     // Si il y a des décisions annexes, il faut générer une étape par décision
     if (decisionsAnnexesContenu) {
       for (const etapeTypeId of Object.keys(decisionsAnnexesContenu!)) {
+        if (!isEtapeTypeId(etapeTypeId)) {
+          throw new Error(`l'étapeTypeId ${etapeTypeId} n'existe pas`)
+        }
         const decisionContenu = decisionsAnnexesContenu![etapeTypeId]
         let etapeDecisionAnnexe: Partial<ITitreEtape> = {
           typeId: etapeTypeId,
@@ -783,7 +787,7 @@ const etapeSupprimer = async (
       titreEtape.titreDemarcheId,
       {
         fields: {
-          type: { etapesTypes: { etapesStatuts: { id: {} } } },
+          type: { etapesTypes: { id: {} } },
           titre: {
             type: { demarchesTypes: { id: {} } },
             demarches: { etapes: { id: {} } }

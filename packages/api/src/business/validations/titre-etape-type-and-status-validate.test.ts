@@ -16,12 +16,11 @@ describe("valide le type et le statut d'une étape en fonction du type de titre 
   test('le statut est obligatoire', () => {
     expect(
       titreEtapeTypeAndStatusValidate(
-        'xxx',
+        'mdp',
         undefined,
         [
           {
-            id: 'xxx',
-            etapesStatuts: [{ id: 'ok' }]
+            id: 'mdp'
           }
         ] as IEtapeType[],
         ''
@@ -30,18 +29,16 @@ describe("valide le type et le statut d'une étape en fonction du type de titre 
   })
   test("le type et le statut de l'étape correspondent au type de titre et de démarche", () => {
     titreEtapeDemarcheEtapeTypeFindMock.mockReturnValue({
-      id: 'xxx',
-      etapesStatuts: [{ id: 'ok' }]
+      id: 'mdp'
     } as IEtapeType)
 
     expect(
       titreEtapeTypeAndStatusValidate(
-        'xxx',
-        'ok',
+        'mdp',
+        'fai',
         [
           {
-            id: 'xxx',
-            etapesStatuts: [{ id: 'ok' }]
+            id: 'mdp'
           }
         ] as IEtapeType[],
         ''
@@ -51,23 +48,21 @@ describe("valide le type et le statut d'une étape en fonction du type de titre 
 
   test("le statut de l'étape ne correspond pas au type de titre et de démarche", () => {
     titreEtapeDemarcheEtapeTypeFindMock.mockReturnValue({
-      id: 'xxx',
-      etapesStatuts: [{ id: 'ok' }]
+      id: 'mdp'
     } as IEtapeType)
     expect(
       titreEtapeTypeAndStatusValidate(
-        'xxx',
-        'ko',
+        'mdp',
+        'rej',
         [
           {
-            id: 'xxx',
-            etapesStatuts: [{ id: 'ok' }]
+            id: 'mdp'
           }
         ] as IEtapeType[],
         'toto'
       )
     ).toEqual([
-      'statut de l\'étape "ko" invalide pour une type d\'étape xxx pour une démarche de type toto'
+      'statut de l\'étape "rej" invalide pour une type d\'étape mdp pour une démarche de type toto'
     ])
   })
 
@@ -77,12 +72,11 @@ describe("valide le type et le statut d'une étape en fonction du type de titre 
     })
     expect(
       titreEtapeTypeAndStatusValidate(
-        'xxx',
-        'ko',
+        'mdp',
+        'rej',
         [
           {
-            id: 'xxx',
-            etapesStatuts: [{ id: 'ok' }]
+            id: 'mdp'
           }
         ] as IEtapeType[],
         'toto'
