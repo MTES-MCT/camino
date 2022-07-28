@@ -1,4 +1,4 @@
-import { Etat, Etape, armOctMachine, ETATS } from './oct.machine'
+import { Etape, armOctMachine } from './oct.machine'
 import { interpret } from 'xstate'
 import {
   interpretMachine,
@@ -9,6 +9,7 @@ import {
   EtapeStatutId,
   ETAPES_STATUTS
 } from 'camino-common/src/static/etapesStatuts'
+import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 const etapesProd = require('./oct.cas.json')
 
@@ -120,12 +121,14 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test.each([
     {
-      typeId: ETATS.DemandeDeComplementsDecisionAutoriteEnvironnementale,
+      typeId:
+        ETAPES_TYPES.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
       statutId: ETAPES_STATUTS.FAIT,
       date: '2020-01-01'
     },
     {
-      typeId: ETATS.DemandeDeComplementsRecepisseDeDeclarationLoiSurLEau,
+      typeId:
+        ETAPES_TYPES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_,
       statutId: ETAPES_STATUTS.FAIT,
       date: '2020-01-01'
     }
@@ -175,12 +178,13 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test.each([
     {
-      typeId: ETATS.RecepisseDeDeclarationLoiSurLEau,
+      typeId: ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau,
       statutId: ETAPES_STATUTS.FAVORABLE,
       contenu: { arm: { franchissements: 1 } }
     },
     {
-      typeId: ETATS.DecisionAutoriteEnvironnementale,
+      typeId:
+        ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
       statutId: ETAPES_STATUTS.EXEMPTE
     }
   ])(
@@ -190,7 +194,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       statutId,
       contenu
     }: {
-      typeId: Etat
+      typeId: EtapeTypeId
       statutId: EtapeStatutId
       contenu?: IContenu
     }) => {

@@ -67,7 +67,7 @@ import fileRename from '../../../tools/file-rename'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find'
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { isEtapeTypeId } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 const statutIdAndDateGet = (
   etape: ITitreEtape,

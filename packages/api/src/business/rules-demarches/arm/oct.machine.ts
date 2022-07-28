@@ -9,63 +9,11 @@ import {
   EtapeStatutId,
   ETAPES_STATUTS
 } from 'camino-common/src/static/etapesStatuts'
-
-export const ETATS = {
-  Demande: 'mfr',
-  DepotDeLaDemande: 'mdp',
-  PaiementDesFraisDeDossier: 'pfd',
-  DecisionAutoriteEnvironnementale: 'dae',
-  CompletudeDeLaDemande: 'mcp',
-  Desistement: 'des',
-  ModificationDeLaDemande: 'mod',
-  ClassementSansSuite: 'css',
-  DemandeDeComplementsDecisionAutoriteEnvironnementale: 'mcd',
-  ReceptionDeComplementsDecisionAutoriteEnvironnementale: 'rcd',
-  ModificationDeLaDemandeApresDecisionAutoriteEnvironnementale: 'mom',
-  DemandeDeComplementsCompletude: 'mcm',
-  ReceptionDeComplementsCompletude: 'rcm',
-  ValidationDesFraisDossier: 'vfd',
-  RecepisseDeDeclarationLoiSurLEau: 'rde',
-  DemandeDeComplementsRecepisseDeDeclarationLoiSurLEau: 'mcb',
-  ReceptionDeComplementsRecepisseDeDeclarationLoiSurLEau: 'rcb',
-  NotificationCss: 'mnc',
-  RecevabiliteDeLaDemande: 'mcr',
-  ExpertiseONF: 'eof',
-  AvisONF: 'aof',
-  DemandeInformationAvisONF: 'mia',
-  ReceptionInformationAvisONF: 'ria',
-  SaisineCARM: 'sca',
-  AvisCARM: 'aca',
-  NotificationCARM: 'mnb',
-  NotificationCARMDefavorable: 'mnd',
-  NotificationCARMAjournee: 'mna',
-  DemandeDeComplementsSaisineCARM: 'mcs',
-  ReceptionComplementsSaisineCARM: 'rcs',
-  PaiementDesFraisDeDossierComplementaires: 'pfc',
-  ValidationDuPaiementDesFraisDeDossierComplementaires: 'vfc',
-  SignatureAutorisationDeRechercheMiniere: 'sco',
-  DemandeInformationRecevabiliteDeLaDemande: 'mim',
-  ReceptionInformationRecevabiliteDeLaDemande: 'rim',
-  DemandeDeComplementsRecevabiliteDeLaDemande: 'mca',
-  ReceptionComplementsRecevabiliteDeLaDemande: 'rca',
-  DemandeInformationExpertiseONF: 'mio',
-  ReceptionInformationExpertiseONF: 'rio',
-  ReceptionExpertiseServiceEau: 'ede',
-  ReceptionExpertiseServiceMines: 'edm',
-  NotificationSignatureARM: 'mns',
-  AvenantARM: 'aco',
-  NotificationAvenantARM: 'mnv'
-} as const
-export type Etat = typeof ETATS[keyof typeof ETATS]
-
-const EtatsTrigrammes = Object.values(ETATS)
-
-export const isEtat = (dbEtat: string): dbEtat is Etat => {
-  return EtatsTrigrammes.includes(dbEtat)
-}
+import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 export interface Etape {
-  typeId: Etat
+  // TODO 2022-07-28 : ceci pourrait être réduit en utilisant les états de 'trad'
+  typeId: EtapeTypeId
   statutId: EtapeStatutId
   date: string
   contenu?: IContenu
@@ -175,158 +123,158 @@ export const toPotentialXStateEvent = (event: Event): XStateEvent[] => {
   }
 }
 
-export type DBEtat = { etat: Etat; statut?: EtapeStatutId }
+export type DBEtat = { etat: EtapeTypeId; statut?: EtapeStatutId }
 const trad: { [_key in Event]: DBEtat } = {
-  FAIRE_DEMANDE: { etat: ETATS.Demande },
-  DEPOSER_DEMANDE: { etat: ETATS.DepotDeLaDemande },
-  PAYER_FRAIS_DE_DOSSIER: { etat: ETATS.PaiementDesFraisDeDossier },
+  FAIRE_DEMANDE: { etat: ETAPES_TYPES.demande },
+  DEPOSER_DEMANDE: { etat: ETAPES_TYPES.depotDeLaDemande },
+  PAYER_FRAIS_DE_DOSSIER: { etat: ETAPES_TYPES.paiementDesFraisDeDossier },
   DEMANDER_MODIFICATION_DE_LA_DEMANDE: {
-    etat: ETATS.DecisionAutoriteEnvironnementale,
+    etat: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
     statut: ETAPES_STATUTS.REQUIS
   },
   EXEMPTER_DAE: {
-    etat: ETATS.DecisionAutoriteEnvironnementale,
+    etat: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
     statut: ETAPES_STATUTS.EXEMPTE
   },
-  DESISTER_PAR_LE_DEMANDEUR: { etat: ETATS.Desistement },
-  CLASSER_SANS_SUITE: { etat: ETATS.ClassementSansSuite },
+  DESISTER_PAR_LE_DEMANDEUR: { etat: ETAPES_TYPES.desistementDuDemandeur },
+  CLASSER_SANS_SUITE: { etat: ETAPES_TYPES.classementSansSuite },
   DEMANDER_COMPLEMENTS_DAE: {
-    etat: ETATS.DemandeDeComplementsDecisionAutoriteEnvironnementale
+    etat: ETAPES_TYPES.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_
   },
   RECEVOIR_COMPLEMENTS_DAE: {
-    etat: ETATS.ReceptionDeComplementsDecisionAutoriteEnvironnementale
+    etat: ETAPES_TYPES.receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__
   },
   MODIFIER_DEMANDE_APRES_DAE: {
-    etat: ETATS.ModificationDeLaDemandeApresDecisionAutoriteEnvironnementale
+    etat: ETAPES_TYPES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_
   },
   REFUSER_COMPLETUDE: {
-    etat: ETATS.CompletudeDeLaDemande,
+    etat: ETAPES_TYPES.completudeDeLaDemande,
     statut: ETAPES_STATUTS.INCOMPLETE
   },
   RECEVOIR_COMPLEMENTS_COMPLETUDE: {
-    etat: ETATS.ReceptionDeComplementsCompletude
+    etat: ETAPES_TYPES.receptionDeComplements_CompletudeDeLaDemande_
   },
   DEMANDER_COMPLEMENTS_COMPLETUDE: {
-    etat: ETATS.DemandeDeComplementsCompletude
+    etat: ETAPES_TYPES.demandeDeComplements_CompletudeDeLaDemande_
   },
   ACCEPTER_COMPLETUDE: {
-    etat: ETATS.CompletudeDeLaDemande,
+    etat: ETAPES_TYPES.completudeDeLaDemande,
     statut: ETAPES_STATUTS.COMPLETE
   },
   VALIDER_FRAIS_DE_DOSSIER: {
-    etat: ETATS.ValidationDesFraisDossier
+    etat: ETAPES_TYPES.validationDuPaiementDesFraisDeDossier
   },
   REFUSER_RDE: {
-    etat: ETATS.RecepisseDeDeclarationLoiSurLEau,
+    etat: ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau,
     statut: ETAPES_STATUTS.DEFAVORABLE
   },
   ACCEPTER_RDE: {
-    etat: ETATS.RecepisseDeDeclarationLoiSurLEau,
+    etat: ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau,
     statut: ETAPES_STATUTS.FAVORABLE
   },
   DEMANDER_COMPLEMENTS_RDE: {
-    etat: ETATS.DemandeDeComplementsRecepisseDeDeclarationLoiSurLEau
+    etat: ETAPES_TYPES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_
   },
   RECEVOIR_COMPLEMENTS_RDE: {
-    etat: ETATS.ReceptionDeComplementsRecepisseDeDeclarationLoiSurLEau
+    etat: ETAPES_TYPES.receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_
   },
   NOTIFIER_DEMANDEUR_CSS: {
-    etat: ETATS.NotificationCss
+    etat: ETAPES_TYPES.notificationAuDemandeur_ClassementSansSuite_
   },
   DECLARER_DEMANDE_FAVORABLE: {
-    etat: ETATS.RecevabiliteDeLaDemande,
+    etat: ETAPES_TYPES.recevabiliteDeLaDemande,
     statut: ETAPES_STATUTS.FAVORABLE
   },
   DECLARER_DEMANDE_DEFAVORABLE: {
-    etat: ETATS.RecevabiliteDeLaDemande,
+    etat: ETAPES_TYPES.recevabiliteDeLaDemande,
     statut: ETAPES_STATUTS.DEFAVORABLE
   },
   FAIRE_EXPERTISE_ONF: {
-    etat: ETATS.ExpertiseONF
+    etat: ETAPES_TYPES.expertiseDeLOfficeNationalDesForets
   },
   RENDRE_AVIS_ONF: {
-    etat: ETATS.AvisONF
+    etat: ETAPES_TYPES.avisDeLOfficeNationalDesForets
   },
   DEMANDER_INFORMATION_AVIS_ONF: {
-    etat: ETATS.DemandeInformationAvisONF
+    etat: ETAPES_TYPES.demandeDinformations_AvisDeLOfficeNationalDesForets_
   },
   RECEVOIR_INFORMATION_AVIS_ONF: {
-    etat: ETATS.ReceptionInformationAvisONF
+    etat: ETAPES_TYPES.receptionDinformation_AvisDeLOfficeNationalDesForets_
   },
   FAIRE_SAISINE_CARM: {
-    etat: ETATS.SaisineCARM
+    etat: ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_
   },
   RENDRE_AVIS_FAVORABLE_CARM: {
-    etat: ETATS.AvisCARM,
+    etat: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_,
     statut: ETAPES_STATUTS.FAVORABLE
   },
   RENDRE_AVIS_DEFAVORABLE_CARM: {
-    etat: ETATS.AvisCARM,
+    etat: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_,
     statut: ETAPES_STATUTS.DEFAVORABLE
   },
   RENDRE_AVIS_AJOURNE_CARM: {
-    etat: ETATS.AvisCARM,
+    etat: ETAPES_TYPES.avisDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_,
     statut: ETAPES_STATUTS.AJOURNE
   },
   NOTIFIER_DEMANDEUR_AVIS_AJOURNE_CARM: {
-    etat: ETATS.NotificationCARMAjournee
+    etat: ETAPES_TYPES.notificationAuDemandeur_AjournementDeLaCARM_
   },
   DEMANDER_COMPLEMENT_SAISINE_CARM: {
-    etat: ETATS.DemandeDeComplementsSaisineCARM
+    etat: ETAPES_TYPES.demandeDeComplements_SaisineDeLaCARM_
   },
   RECEVOIR_COMPLEMENT_SAISINE_CARM: {
-    etat: ETATS.ReceptionComplementsSaisineCARM
+    etat: ETAPES_TYPES.receptionDeComplements_SaisineDeLaCARM_
   },
   NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM: {
-    etat: ETATS.NotificationCARM
+    etat: ETAPES_TYPES.notificationAuDemandeur_AvisFavorableDeLaCARM_
   },
   NOTIFIER_DEMANDEUR_AVIS_DEFAVORABLE_CARM: {
-    etat: ETATS.NotificationCARMDefavorable
+    etat: ETAPES_TYPES.notificationAuDemandeur_AvisDefavorable_
   },
   MODIFIER_DEMANDE: {
-    etat: ETATS.ModificationDeLaDemande
+    etat: ETAPES_TYPES.modificationDeLaDemande
   },
   PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: {
-    etat: ETATS.PaiementDesFraisDeDossierComplementaires
+    etat: ETAPES_TYPES.paiementDesFraisDeDossierComplementaires
   },
   VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: {
-    etat: ETATS.ValidationDuPaiementDesFraisDeDossierComplementaires
+    etat: ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires
   },
   SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE: {
-    etat: ETATS.SignatureAutorisationDeRechercheMiniere
+    etat: ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere
   },
   DEMANDER_INFORMATION_MCR: {
-    etat: ETATS.DemandeInformationRecevabiliteDeLaDemande
+    etat: ETAPES_TYPES.demandeDinformations_RecevabiliteDeLaDemande_
   },
   RECEVOIR_INFORMATION_MCR: {
-    etat: ETATS.ReceptionInformationRecevabiliteDeLaDemande
+    etat: ETAPES_TYPES.receptionDinformation_RecevabiliteDeLaDemande_
   },
   DEMANDER_COMPLEMENTS_MCR: {
-    etat: ETATS.DemandeDeComplementsRecevabiliteDeLaDemande
+    etat: ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_
   },
   RECEVOIR_COMPLEMENTS_MCR: {
-    etat: ETATS.ReceptionComplementsRecevabiliteDeLaDemande
+    etat: ETAPES_TYPES.receptionDeComplements_RecevabiliteDeLaDemande_
   },
   DEMANDER_INFORMATION_EXPERTISE_ONF: {
-    etat: ETATS.DemandeInformationExpertiseONF
+    etat: ETAPES_TYPES.demandeDinformations_ExpertiseDeLOfficeNationalDesForets_
   },
   RECEVOIR_INFORMATION_EXPERTISE_ONF: {
-    etat: ETATS.ReceptionInformationExpertiseONF
+    etat: ETAPES_TYPES.receptionDinformation_ExpertiseDeLOfficeNationalDesForets_
   },
   RECEVOIR_EXPERTISE_SERVICE_EAU: {
-    etat: ETATS.ReceptionExpertiseServiceEau
+    etat: ETAPES_TYPES.expertiseDREALOuDGTMServiceEau
   },
   RECEVOIR_EXPERTISE_SERVICE_MINES: {
-    etat: ETATS.ReceptionExpertiseServiceMines
+    etat: ETAPES_TYPES.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_
   },
   NOTIFIER_DEMANDEUR_SIGNATURE_ARM: {
-    etat: ETATS.NotificationSignatureARM
+    etat: ETAPES_TYPES.notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_
   },
   FAIRE_AVENANT_ARM: {
-    etat: ETATS.AvenantARM
+    etat: ETAPES_TYPES.avenantALautorisationDeRechercheMiniere
   },
   NOTIFIER_AVENANT_ARM: {
-    etat: ETATS.NotificationAvenantARM
+    etat: ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_
   }
 } as const
 

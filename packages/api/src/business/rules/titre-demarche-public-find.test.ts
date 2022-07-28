@@ -1,7 +1,7 @@
 import { ITitreEtape } from '../../types'
 
 import { titreDemarchePublicFind } from './titre-demarche-public-find'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   etapesProps.map(

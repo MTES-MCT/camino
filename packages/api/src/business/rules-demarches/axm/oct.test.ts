@@ -1,6 +1,6 @@
 import { demarcheEtatsValidate } from '../_utils.test'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 describe('vérifie l’arbre d’octroi d’AXM', () => {
   const octEtatsValidate = demarcheEtatsValidate('oct', 'axm', '2020-10-01')
