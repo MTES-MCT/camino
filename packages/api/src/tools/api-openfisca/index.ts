@@ -1,8 +1,9 @@
-import fetch from 'node-fetch'
+import fetch, { Response } from 'node-fetch'
 import { SubstanceFiscale } from 'camino-common/src/static/substance'
 import { Unite, Unites } from 'camino-common/src/static/unites'
 type Attribute =
   | 'surface_communale'
+  | 'surface_communale_proportionnee'
   | 'taxe_guyane_brute'
   | 'taxe_guyane_deduction'
   | 'taxe_guyane'
@@ -57,10 +58,21 @@ export const redevanceDepartementale = (
 
 type Article = Record<Attribute, { [annee: string]: number | null }>
 
-export interface OpenfiscaRequest {
+export interface OpenfiscaRequest extends OpenfiscaCommon {
   articles: {
     [titreId_substance_commune: string]: Article
   }
+}
+
+export interface OpenfiscaResponse extends OpenfiscaCommon {
+  articles: {
+    [titreId_substance_commune: string]: Partial<
+      Record<Attribute, { [annee: string]: number }>
+    >
+  }
+}
+
+interface OpenfiscaCommon {
   titres: {
     [titreId: string]: {
       commune_principale_exploitation?: {
@@ -88,17 +100,15 @@ export interface OpenfiscaRequest {
   }
 }
 
-export interface OpenfiscaResponse {
-  articles: {
-    [titreId_substance_commune: string]: Partial<
-      Record<Attribute, { [annee: string]: number }>
-    >
-  }
+export interface OpenfiscaConstants {
+  tarifDepartemental: number
+  tarifCommunal: number
+  tarifTaxeMinierePME: number
 }
 
-export const apiOpenfiscaFetch = async (
-  body: OpenfiscaRequest
-): Promise<OpenfiscaResponse> => {
+const apiOpenfiscaFetch = async <T>(
+  call: (apiOpenfiscaUrl: string) => Promise<Response>
+): Promise<T> => {
   const apiOpenfiscaUrl = process.env.API_OPENFISCA_URL
   if (!apiOpenfiscaUrl) {
     throw new Error(
@@ -106,13 +116,9 @@ export const apiOpenfiscaFetch = async (
     )
   }
 
-  const response = await fetch(`${apiOpenfiscaUrl}/calculate`, {
-    method: 'post',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  })
+  const response = await call(apiOpenfiscaUrl)
 
-  const result = (await response.json()) as OpenfiscaResponse
+  const result = (await response.json()) as T
 
   if (!response.ok) {
     throw new Error(
@@ -121,4 +127,53 @@ export const apiOpenfiscaFetch = async (
   }
 
   return result
+}
+
+export const apiOpenfiscaCalculate = async (
+  body: OpenfiscaRequest
+): Promise<OpenfiscaResponse> => {
+  const call = (url: string) =>
+    fetch(`${url}/calculate`, {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    })
+
+  return apiOpenfiscaFetch<OpenfiscaResponse>(call)
+}
+
+export const apiOpenfiscaConstantsFetch = async (
+  annee: number
+): Promise<OpenfiscaConstants> => {
+  const getParameter = async (parameter: string): Promise<number> => {
+    const call = (url: string) =>
+      fetch(`${url}/parameter/${parameter}`, {
+        headers: { 'Content-Type': 'application/json' }
+      })
+
+    const response = await apiOpenfiscaFetch<{
+      values: { [date: string]: number }
+    }>(call)
+
+    if (!Object.keys(response.values).includes(`${annee}-01-01`)) {
+      throw new Error(
+        `le paramètre ${parameter} n’est pas renseigné pour l’année ${annee}`
+      )
+    }
+
+    return response.values[`${annee}-01-01`]
+  }
+
+  const tarifTaxeMinierePME = await getParameter('taxes/guyane/categories/pme')
+  // TODO 2022-08-09 : faire passer la substance en parametre le jour où on fait des matrices autre que Guyane
+  const tarifCommunal = await getParameter('redevances/communales/aurifere')
+  const tarifDepartemental = await getParameter(
+    'redevances/departementales/aurifere'
+  )
+
+  return {
+    tarifCommunal,
+    tarifDepartemental,
+    tarifTaxeMinierePME
+  }
 }

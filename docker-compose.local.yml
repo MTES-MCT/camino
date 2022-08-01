@@ -19,7 +19,7 @@ services:
     environment:
       PGHOST: db
     expose:
-      - ${API_PORT}:${API_PORT}
+      - ${API_PORT}
     volumes:
       - ./.env:/.env
   db:

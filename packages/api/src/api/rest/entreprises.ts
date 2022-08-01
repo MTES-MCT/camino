@@ -1,16 +1,17 @@
 import { userGet } from '../../database/queries/utilisateurs'
 
 import express from 'express'
-import { IContenuValeur, IEntreprise, IUser } from '../../types'
+import { ICommune, IContenuValeur, IEntreprise, IUser } from '../../types'
 import {
   Fiscalite,
   FiscaliteFrance,
   FiscaliteGuyane,
-  fiscaliteVisible
+  fiscaliteVisible,
+  isFiscaliteGuyane
 } from 'camino-common/src/fiscalite'
 import { constants } from 'http2'
 import {
-  apiOpenfiscaFetch,
+  apiOpenfiscaCalculate,
   OpenfiscaRequest,
   OpenfiscaResponse,
   redevanceCommunale,
@@ -47,9 +48,12 @@ const conversion = (
 export const bodyBuilder = (
   activitesAnnuelles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
   activitesTrimestrielles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
-  titres: Pick<Titres, 'substances' | 'communes' | 'id'>[],
+  titres: Pick<
+    Titres,
+    'titulaires' | 'amodiataires' | 'substances' | 'communes' | 'id'
+  >[],
   annee: number,
-  entreprise: Pick<IEntreprise, 'categorie' | 'nom'>
+  entreprises: Pick<IEntreprise, 'id' | 'categorie' | 'nom'>[]
 ) => {
   const anneePrecedente = annee - 1
   const body: OpenfiscaRequest = {
@@ -71,6 +75,33 @@ export const bodyBuilder = (
     if (!titre.communes?.length) {
       throw new Error(
         `les communes du titre ${activite.titreId} ne sont pas chargées`
+      )
+    }
+    if (!titre.titulaires?.length) {
+      throw new Error(
+        `les titulaires du titre ${activite.titreId} ne sont pas chargées`
+      )
+    }
+    if (!titre.amodiataires) {
+      throw new Error(
+        `les amodiataires du titre ${activite.titreId} ne sont pas chargés`
+      )
+    }
+
+    if (titre.titulaires.length + titre.amodiataires.length > 1) {
+      throw new Error(
+        `plusieurs entreprises liées au titre ${activite.titreId}, cas non géré`
+      )
+    }
+
+    const entreprise = entreprises.find(
+      ({ id }) =>
+        titre.amodiataires?.[0]?.id === id || titre.titulaires?.[0]?.id === id
+    )
+
+    if (!entreprise) {
+      throw new Error(
+        `pas d'entreprise trouvée pour le titre ${activite.titreId}`
       )
     }
 
@@ -136,11 +167,27 @@ export const bodyBuilder = (
             0
           )
 
+          let communePrincipale: ICommune | null = null
+          for (const commune of titre.communes) {
+            if (communePrincipale === null) {
+              communePrincipale = commune
+            } else if (
+              (communePrincipale?.surface ?? 0) < (commune?.surface ?? 0)
+            ) {
+              communePrincipale = commune
+            }
+          }
+          if (communePrincipale === null) {
+            throw new Error(
+              `Impossible de trouver une commune principale pour le titre ${titre.id}`
+            )
+          }
           for (const commune of titre.communes) {
             const articleId = `${titre.id}-${substancesFiscale.id}-${commune.id}`
 
             body.articles[articleId] = {
               surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
+              surface_communale_proportionnee: { [anneePrecedente]: null },
               [substanceFiscaleToInput(substancesFiscale)]: {
                 [anneePrecedente]: production
               },
@@ -176,7 +223,7 @@ export const bodyBuilder = (
               )
               body.titres[titre.id] = {
                 commune_principale_exploitation: {
-                  [anneePrecedente]: commune.id
+                  [anneePrecedente]: communePrincipale.id
                 },
                 surface_totale: { [anneePrecedente]: surfaceTotale },
                 operateur: {
@@ -211,59 +258,87 @@ export const bodyBuilder = (
   return body
 }
 
+export const toFiscalite = (
+  result: Pick<OpenfiscaResponse, 'articles'>,
+  articleId: string,
+  annee: number
+): Fiscalite => {
+  const article = result.articles[articleId]
+  const fiscalite: Fiscalite = {
+    redevanceCommunale: 0,
+    redevanceDepartementale: 0
+  }
+  const communes = Object.keys(article).filter(key =>
+    key.startsWith('redevance_communale')
+  )
+  const departements = Object.keys(article).filter(key =>
+    key.startsWith('redevance_departementale')
+  )
+  // TODO 2022_07_25 gérer les substances autre que l'or -> redevance_communale_des_mines_substance_unite
+  for (const commune of communes) {
+    fiscalite.redevanceCommunale += article[commune]?.[annee] ?? 0
+  }
+  for (const departement of departements) {
+    fiscalite.redevanceDepartementale += article[departement]?.[annee] ?? 0
+  }
+
+  if ('taxe_guyane_brute' in article) {
+    return {
+      ...fiscalite,
+      guyane: {
+        taxeAurifereBrute: article.taxe_guyane_brute?.[annee] ?? 0,
+        taxeAurifere: article.taxe_guyane?.[annee] ?? 0,
+        totalInvestissementsDeduits: article.taxe_guyane_deduction?.[annee] ?? 0
+      }
+    }
+  }
+
+  return fiscalite
+}
 type Reduced =
   | { guyane: true; fiscalite: FiscaliteGuyane }
   | { guyane: false; fiscalite: FiscaliteFrance }
 // VisibleForTesting
 export const responseExtractor = (
-  result: OpenfiscaResponse,
+  result: Pick<OpenfiscaResponse, 'articles'>,
   annee: number
 ): Fiscalite => {
-  const redevances: Reduced = Object.values(result.articles).reduce<Reduced>(
-    (acc, article) => {
-      const communes = Object.keys(article).filter(key =>
-        key.startsWith('redevance_communale')
-      )
-      const departements = Object.keys(article).filter(key =>
-        key.startsWith('redevance_departementale')
-      )
-      // TODO 2022_07_25 gérer les substances autre que l'or -> redevance_communale_des_mines_substance_unite
-      for (const commune of communes) {
-        acc.fiscalite.redevanceCommunale += article[commune]?.[annee] ?? 0
-      }
-      for (const departement of departements) {
+  const redevances: Reduced = Object.keys(result.articles)
+    .map(articleId => toFiscalite(result, articleId, annee))
+    .reduce<Reduced>(
+      (acc, fiscalite) => {
+        acc.fiscalite.redevanceCommunale += fiscalite.redevanceCommunale
         acc.fiscalite.redevanceDepartementale +=
-          article[departement]?.[annee] ?? 0
-      }
+          fiscalite.redevanceDepartementale
 
-      if (!acc.guyane && 'taxe_guyane_brute' in article) {
-        acc = {
-          guyane: true,
-          fiscalite: {
-            ...acc.fiscalite,
-            guyane: {
-              taxeAurifereBrute: 0,
-              taxeAurifere: 0,
-              totalInvestissementsDeduits: 0
+        if (!acc.guyane && isFiscaliteGuyane(fiscalite)) {
+          acc = {
+            guyane: true,
+            fiscalite: {
+              ...acc.fiscalite,
+              guyane: {
+                taxeAurifereBrute: 0,
+                taxeAurifere: 0,
+                totalInvestissementsDeduits: 0
+              }
             }
           }
         }
-      }
-      if (acc.guyane) {
-        acc.fiscalite.guyane.taxeAurifereBrute +=
-          article.taxe_guyane_brute?.[annee] ?? 0
-        acc.fiscalite.guyane.totalInvestissementsDeduits +=
-          article.taxe_guyane_deduction?.[annee] ?? 0
-        acc.fiscalite.guyane.taxeAurifere += article.taxe_guyane?.[annee] ?? 0
-      }
+        if (acc.guyane && isFiscaliteGuyane(fiscalite)) {
+          acc.fiscalite.guyane.taxeAurifereBrute +=
+            fiscalite.guyane.taxeAurifereBrute
+          acc.fiscalite.guyane.totalInvestissementsDeduits +=
+            fiscalite.guyane.totalInvestissementsDeduits
+          acc.fiscalite.guyane.taxeAurifere += fiscalite.guyane.taxeAurifere
+        }
 
-      return acc
-    },
-    {
-      guyane: false,
-      fiscalite: { redevanceCommunale: 0, redevanceDepartementale: 0 }
-    }
-  )
+        return acc
+      },
+      {
+        guyane: false,
+        fiscalite: { redevanceCommunale: 0, redevanceDepartementale: 0 }
+      }
+    )
 
   return redevances.fiscalite
 }
@@ -333,11 +408,11 @@ export const fiscalite = async (
       activitesTrimestrielles,
       titres,
       annee,
-      entreprise
+      [entreprise]
     )
     console.info('body', JSON.stringify(body))
     if (Object.keys(body.articles).length > 0) {
-      const result = await apiOpenfiscaFetch(body)
+      const result = await apiOpenfiscaCalculate(body)
       console.info('result', JSON.stringify(result))
 
       const redevances = responseExtractor(result, annee)

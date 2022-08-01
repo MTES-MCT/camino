@@ -16,6 +16,9 @@ Object {
       "surface_communale": Object {
         "2021": 19805494,
       },
+      "surface_communale_proportionnee": Object {
+        "2021": null,
+      },
       "taxe_guyane": Object {
         "2022": null,
       },
@@ -38,6 +41,9 @@ Object {
       },
       "surface_communale": Object {
         "2021": 35604009,
+      },
+      "surface_communale_proportionnee": Object {
+        "2021": null,
       },
       "taxe_guyane": Object {
         "2022": null,
