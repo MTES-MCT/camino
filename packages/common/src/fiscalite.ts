@@ -21,6 +21,15 @@ export const isFiscaliteGuyane = (
   return 'guyane' in fiscalite
 }
 
+export const montantNetTaxeAurifere = (fiscalite: Fiscalite) =>
+  isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.taxeAurifere : 0
+
+export const fraisGestion = (fiscalite: Fiscalite) =>
+  (fiscalite.redevanceDepartementale +
+    fiscalite.redevanceCommunale +
+    montantNetTaxeAurifere(fiscalite)) *
+  0.08
+
 export const fiscaliteVisible = (
   user:
     | {
