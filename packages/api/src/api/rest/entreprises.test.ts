@@ -1,7 +1,12 @@
 import { bodyBuilder, responseExtractor } from './entreprises'
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 
-const entreprise = { categorie: 'PME', nom: 'ma companie' }
+const entreprise = { id: 'entrepriseId', categorie: 'PME', nom: 'ma companie' }
+const entreprise2 = {
+  id: 'entrepriseId2',
+  categorie: 'PME',
+  nom: 'une compagnie non concernée'
+}
 
 describe("extrait la réponse venant d'openFisca", () => {
   test('récupère les bonnes valeurs', () => {
@@ -28,7 +33,7 @@ describe("extrait la réponse venant d'openFisca", () => {
 
 describe('construit le corps de la requête pour openFisca', () => {
   test('sans activités', () => {
-    expect(bodyBuilder([], [], [], 2022, entreprise)).toEqual({
+    expect(bodyBuilder([], [], [], 2022, [entreprise])).toEqual({
       articles: {},
       communes: {},
       titres: {}
@@ -58,6 +63,8 @@ describe('construit le corps de la requête pour openFisca', () => {
         substances: [
           { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] }
         ],
+        titulaires: [entreprise2],
+        amodiataires: [],
         communes: [
           {
             id: '97310',
@@ -66,7 +73,6 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 1006827
           }
         ],
-        pays: [{ id: 'GF', nom: 'unused' }],
         id: 'titreSansActivite'
       },
       {
@@ -82,7 +88,8 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 6036587
           }
         ],
-        pays: [{ id: 'GF', nom: 'unused' }],
+        titulaires: [entreprise2],
+        amodiataires: [],
         id: 'titre1'
       },
       {
@@ -90,6 +97,8 @@ describe('construit le corps de la requête pour openFisca', () => {
           { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] },
           { id: 'suco', nom: 'substances connexes', legales: [] }
         ],
+        titulaires: [entreprise],
+        amodiataires: [],
         communes: [
           {
             id: '97310',
@@ -106,7 +115,8 @@ describe('construit le corps de la requête pour openFisca', () => {
           { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] },
           { id: 'suco', nom: 'substances connexes', legales: [] }
         ],
-        pays: [{ id: 'GF', nom: 'unused' }],
+        titulaires: [entreprise2],
+        amodiataires: [],
         communes: [
           {
             id: '97310',
@@ -122,7 +132,8 @@ describe('construit le corps de la requête pour openFisca', () => {
           { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] },
           { id: 'suco', nom: 'substances connexes', legales: [] }
         ],
-        pays: [{ id: 'GF', nom: 'unused' }],
+        titulaires: [entreprise2],
+        amodiataires: [],
         communes: [
           {
             id: '97310',
@@ -138,7 +149,8 @@ describe('construit le corps de la requête pour openFisca', () => {
           { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] },
           { id: 'suco', nom: 'substances connexes', legales: [] }
         ],
-        pays: [{ id: 'GF', nom: 'unused' }],
+        titulaires: [entreprise],
+        amodiataires: [],
         communes: [
           {
             id: '97311',
@@ -152,13 +164,10 @@ describe('construit le corps de la requête pour openFisca', () => {
     ]
 
     expect(
-      bodyBuilder(
-        activitesAnnuelles,
-        activitesTrimestrielles,
-        titres,
-        2022,
-        entreprise
-      )
+      bodyBuilder(activitesAnnuelles, activitesTrimestrielles, titres, 2022, [
+        entreprise,
+        entreprise2
+      ])
     ).toMatchSnapshot()
   })
 })

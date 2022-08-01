@@ -58,7 +58,12 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { Fiscalite, isFiscaliteGuyane } from 'camino-common/src/fiscalite'
+import {
+  Fiscalite,
+  isFiscaliteGuyane,
+  montantNetTaxeAurifere,
+  fraisGestion
+} from 'camino-common/src/fiscalite'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { AsyncData } from '@/api/client-rest'
 
@@ -80,15 +85,6 @@ onMounted(async () => {
     }
   }
 })
-
-const fraisGestion = (fiscalite: Fiscalite) =>
-  (fiscalite.redevanceDepartementale +
-    fiscalite.redevanceCommunale +
-    montantNetTaxeAurifere(fiscalite)) *
-  0.08
-
-const montantNetTaxeAurifere = (fiscalite: Fiscalite) =>
-  isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.taxeAurifere : 0
 
 const sommeAPayer = (fiscalite: Fiscalite) =>
   fiscalite.redevanceCommunale +

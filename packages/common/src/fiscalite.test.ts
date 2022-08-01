@@ -1,5 +1,22 @@
-import { fiscaliteVisible } from './fiscalite'
+import { fiscaliteVisible, fraisGestion } from './fiscalite'
 import { Role } from './roles'
+
+test('fraisGestion', () => {
+  expect(
+    fraisGestion({ redevanceDepartementale: 50, redevanceCommunale: 50 })
+  ).toBe(8)
+  expect(
+    fraisGestion({
+      redevanceDepartementale: 50,
+      redevanceCommunale: 50,
+      guyane: {
+        taxeAurifere: 100,
+        taxeAurifereBrute: 0,
+        totalInvestissementsDeduits: 0
+      }
+    })
+  ).toBe(16)
+})
 
 // unskip une fois l'accès aux utilisateurs autorisé
 test.skip.each`
