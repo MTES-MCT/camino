@@ -1,7 +1,7 @@
 import { userGet } from '../../database/queries/utilisateurs'
 
 import express from 'express'
-import { IEntreprise, IUser } from '../../types'
+import { IContenuValeur, IEntreprise, IUser } from '../../types'
 import {
   Fiscalite,
   FiscaliteFrance,
@@ -12,7 +12,11 @@ import { constants } from 'http2'
 import {
   apiOpenfiscaFetch,
   OpenfiscaRequest,
-  OpenfiscaResponse
+  OpenfiscaResponse,
+  redevanceCommunale,
+  redevanceDepartementale,
+  substanceFiscaleToInput,
+  substanceFiscaleToPair
 } from '../../tools/api-openfisca'
 import { titresGet } from '../../database/queries/titres'
 import { titresActivitesGet } from '../../database/queries/titres-activites'
@@ -20,11 +24,25 @@ import { entrepriseGet } from '../../database/queries/entreprises'
 import TitresActivites from '../../database/models/titres-activites'
 import Titres from '../../database/models/titres'
 import { CustomResponse } from './express-type'
-import { SubstancesFiscales } from 'camino-common/src/static/substance'
+import {
+  SubstanceFiscale,
+  SubstancesFiscales
+} from 'camino-common/src/static/substance'
 import { Departements } from 'camino-common/src/static/departement'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'
 
+const conversion = (
+  substanceFiscale: SubstanceFiscale,
+  quantite: IContenuValeur
+): number => {
+  if (typeof quantite !== 'number') {
+    return 0
+  }
+  const { unite } = substanceFiscaleToPair(substanceFiscale)
+
+  return quantite / (unite.referenceUniteRatio ?? 1)
+}
 // VisibleForTesting
 export const bodyBuilder = (
   activitesAnnuelles: Pick<TitresActivites, 'titreId' | 'contenu'>[],
@@ -101,10 +119,12 @@ export const bodyBuilder = (
       )
 
       for (const substancesFiscale of substancesFiscales) {
-        const production =
+        const production = conversion(
+          substancesFiscale,
           activite.contenu.substancesFiscales[substancesFiscale.id]
+        )
 
-        if (typeof production === 'number' && production > 0) {
+        if (production > 0) {
           if (!titre.communes) {
             throw new Error(
               `les communes du titre ${titre.id} ne sont pas chargées`
@@ -121,11 +141,13 @@ export const bodyBuilder = (
 
             body.articles[articleId] = {
               surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
-              quantite_aurifere_kg: { [anneePrecedente]: production },
-              redevance_communale_des_mines_aurifere_kg: {
+              [substanceFiscaleToInput(substancesFiscale)]: {
+                [anneePrecedente]: production
+              },
+              [redevanceCommunale(substancesFiscale)]: {
                 [annee]: null
               },
-              redevance_departementale_des_mines_aurifere_kg: {
+              [redevanceDepartementale(substancesFiscale)]: {
                 [annee]: null
               }
             }
@@ -199,11 +221,20 @@ export const responseExtractor = (
 ): Fiscalite => {
   const redevances: Reduced = Object.values(result.articles).reduce<Reduced>(
     (acc, article) => {
+      const communes = Object.keys(article).filter(key =>
+        key.startsWith('redevance_communale')
+      )
+      const departements = Object.keys(article).filter(key =>
+        key.startsWith('redevance_departementale')
+      )
       // TODO 2022_07_25 gérer les substances autre que l'or -> redevance_communale_des_mines_substance_unite
-      acc.fiscalite.redevanceCommunale +=
-        article.redevance_communale_des_mines_aurifere_kg?.[annee] ?? 0
-      acc.fiscalite.redevanceDepartementale +=
-        article.redevance_departementale_des_mines_aurifere_kg?.[annee] ?? 0
+      for (const commune of communes) {
+        acc.fiscalite.redevanceCommunale += article[commune]?.[annee] ?? 0
+      }
+      for (const departement of departements) {
+        acc.fiscalite.redevanceDepartementale +=
+          article[departement]?.[annee] ?? 0
+      }
 
       if (!acc.guyane && 'taxe_guyane_brute' in article) {
         acc = {
@@ -304,8 +335,10 @@ export const fiscalite = async (
       annee,
       entreprise
     )
+    console.info('body', JSON.stringify(body))
     if (Object.keys(body.articles).length > 0) {
       const result = await apiOpenfiscaFetch(body)
+      console.info('result', JSON.stringify(result))
 
       const redevances = responseExtractor(result, annee)
 

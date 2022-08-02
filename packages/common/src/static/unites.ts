@@ -21,7 +21,10 @@ export interface Unite<T = UniteId> {
   symbole: string
   referenceUniteId: null | UniteId
   referenceUniteRatio: null | number
+  openfiscaId?: UniteOpenfiscaId
 }
+
+export type UniteOpenfiscaId = 'kg' | '100kg' | 't' | '100t' | 'kt' | '100km3'
 
 export type UniteId = typeof UNITE_IDS[keyof typeof UNITE_IDS]
 
@@ -80,35 +83,40 @@ export const Unites: { [key in UniteId]: Unite<key> } = {
     nom: 'quintal',
     symbole: 'x 100 kg',
     referenceUniteId: 'mkg',
-    referenceUniteRatio: 100
+    referenceUniteRatio: 100,
+    openfiscaId: '100kg'
   },
   mkg: {
     id: 'mkg',
     nom: 'kilogramme',
     symbole: 'kg',
     referenceUniteId: null,
-    referenceUniteRatio: null
+    referenceUniteRatio: null,
+    openfiscaId: 'kg'
   },
   mtc: {
     id: 'mtc',
     nom: 'centaine de tonnes',
     symbole: 'x 100 t',
     referenceUniteId: 'mkg',
-    referenceUniteRatio: 100000
+    referenceUniteRatio: 100000,
+    openfiscaId: '100t'
   },
   mtk: {
     id: 'mtk',
     nom: 'millier de tonnes',
     symbole: 'x 1000 t',
     referenceUniteId: 'mkg',
-    referenceUniteRatio: 1000000
+    referenceUniteRatio: 1000000,
+    openfiscaId: 'kt'
   },
   mtt: {
     id: 'mtt',
     nom: 'tonne',
     symbole: 't',
     referenceUniteId: 'mkg',
-    referenceUniteRatio: 1000
+    referenceUniteRatio: 1000,
+    openfiscaId: 't'
   },
   txa: {
     id: 'txa',
@@ -122,7 +130,8 @@ export const Unites: { [key in UniteId]: Unite<key> } = {
     nom: '100 000 mètres cubes',
     symbole: 'x 100 000 m³',
     referenceUniteId: 'm3x',
-    referenceUniteRatio: 100000
+    referenceUniteRatio: 100000,
+    openfiscaId: '100km3'
   }
 }
 
