@@ -50,10 +50,10 @@ const titreStatutIdFind = (
     return 'val'
   }
 
-  // si le titre est un PER M ou W
+  // si le titre est un PER M ou W, ou une AXM
   // et qu'une démarche de prolongation est déposée et a été déposée avant l'échéance de l'octroi ou d’une prolongation précédente
   // -> le statut du titre est modification en instance (survie provisoire)
-  if (['prm', 'prw'].includes(titreTypeId)) {
+  if (['prm', 'prw', 'axm'].includes(titreTypeId)) {
     const octroi = titreDemarches.find(d => d.typeId === 'oct')
 
     if (octroi) {
@@ -64,7 +64,7 @@ const titreStatutIdFind = (
       if (
         dateFin &&
         titreDemarches.some(d => {
-          if (!['pr1', 'pr2'].includes(d.typeId)) {
+          if (!['pr1', 'pr2', 'pro'].includes(d.typeId)) {
             return false
           }
 
@@ -77,7 +77,10 @@ const titreStatutIdFind = (
             return false
           }
 
-          const demandeProlongation = d.etapes?.find(e => e.typeId === 'mfr')
+          let demandeProlongation = d.etapes?.find(e => e.typeId === 'mfr')
+          if (!demandeProlongation) {
+            demandeProlongation = d.etapes?.find(e => e.typeId === 'mdp')
+          }
 
           return demandeProlongation && demandeProlongation.date < dateFin
         })
