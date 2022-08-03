@@ -1,4 +1,10 @@
 #!/bin/bash
+set eufo -pipefail
+
+if [ "$(id -u)" != "{{git_user_uid}}" ]; then
+   echo "This script must be run as git" 1>&2
+   exit 1
+fi
 
 echo 'Mise en place des fichiers de prod'
 rsync --delete -r /srv/backups/camino_prod/files/ /srv/www/camino/files

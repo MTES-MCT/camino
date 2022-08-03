@@ -1,6 +1,6 @@
 ---
 - name: Ajoute le script pour pouvoir mettre les données de production sur cet environnement
-  copy:
+  template:
     src: apply-prod
     dest: /srv/scripts/
     mode: u=rwx,g=rx,o=r
