@@ -1,5 +1,7 @@
 ---
 - hosts: servers
+  vars:
+    git_user_uid: 1002
   tasks:
     - name: Install rsync
       ansible.builtin.apt:

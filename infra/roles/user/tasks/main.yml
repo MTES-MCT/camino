@@ -4,14 +4,14 @@
   ansible.builtin.group:
     name: git
     state: present
-    gid: 1002
+    gid: "{{ git_user_uid }}"
   become: True
 - name: ajoute l'utilisateur 'git'
   ansible.builtin.user:
     name: git
     comment: Git
     # L'UID doit être le même que dans le Dockerfile.api
-    uid: 1002
+    uid: "{{ git_user_uid }}"
     groups: git, users, docker
   become: True
 - file:
