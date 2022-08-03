@@ -1,7 +1,7 @@
 import { userGet } from '../../database/queries/utilisateurs'
 
 import express from 'express'
-import { IContenuValeur, IEntreprise, IUser } from '../../types'
+import { ICommune, IContenuValeur, IEntreprise, IUser } from '../../types'
 import {
   Fiscalite,
   FiscaliteFrance,
@@ -167,6 +167,21 @@ export const bodyBuilder = (
             0
           )
 
+          let communePrincipale: ICommune | null = null
+          for (const commune of titre.communes) {
+            if (communePrincipale === null) {
+              communePrincipale = commune
+            } else if (
+              (communePrincipale?.surface ?? 0) < (commune?.surface ?? 0)
+            ) {
+              communePrincipale = commune
+            }
+          }
+          if (communePrincipale === null) {
+            throw new Error(
+              `Impossible de trouver une commune principale pour le titre ${titre.id}`
+            )
+          }
           for (const commune of titre.communes) {
             const articleId = `${titre.id}-${substancesFiscale.id}-${commune.id}`
 
@@ -208,7 +223,7 @@ export const bodyBuilder = (
               )
               body.titres[titre.id] = {
                 commune_principale_exploitation: {
-                  [anneePrecedente]: commune.id
+                  [anneePrecedente]: communePrincipale.id
                 },
                 surface_totale: { [anneePrecedente]: surfaceTotale },
                 operateur: {
