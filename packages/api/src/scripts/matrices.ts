@@ -16,6 +16,10 @@ import { ICommune, ITitre } from '../types'
 import { Departements } from 'camino-common/src/static/departement'
 import fs from 'fs'
 
+// TODO 2022-08-03 : à faire avec Vincent
+// - discuter de l'architecture cible (Beaucoup de trucs qui se ressemblent sans être pareil). Peut être se balader avec 'raw' le plus longtemps possible et traduire au dernier moment
+// - ajouter des tests
+// - Trouver un moyen de comparer les matrices de l'année d'avant de manière exhaustive
 const sips = {
   cayenne: {
     nom: 'SIP de Cayenne',
@@ -77,7 +81,7 @@ type Matrice1404 = {
   departements: string
   communes: string | undefined
   revenusImposableALaTFPB: number
-  tonnagesExtraits: number
+  tonnagesExtraits: string
   redevanceDepartementaleProduitNet: number
   redevanceDepartementaleSommesRevenantsAuxDepartements: number
   redevanceCommunaleProduitNet: number
@@ -127,7 +131,12 @@ type Matrice1121 = {
 type Matrices = {
   '1122': Matrice1122
   '1121': Matrice1121
-  raw: { commune: ICommune; fiscalite: Fiscalite; quantiteOrExtrait: number }
+  raw: {
+    communePrincipale: ICommune
+    commune: ICommune
+    fiscalite: Fiscalite
+    quantiteOrExtrait: number
+  }
 }
 
 const matrice1403Header: Record<keyof Matrice1403, string> = {
@@ -244,6 +253,10 @@ const matrice1122Header: Record<keyof Matrice1122, string> = {
     "Tonnages extraits ou cours de l'année précédente | par département"
 }
 
+const precisionGramme = (x: number): string => {
+  return x.toFixed(3)
+}
+
 // FIXME 2022-08-02 c'est vraiment comme ça qu'on calcule le titulaire ?
 // Ça peut être une bonne approximation pour les matrices 1121,1122,1403,1404 vu qu'il n'y a pas 2 titulaires sur un même titre, ni d'amodiataire
 const titulaireToString = (titreId: string, titres: ITitre[]): string => {
@@ -346,9 +359,29 @@ const matrices = async () => {
       if (!commune) {
         throw new Error(`commune ${communeId} introuvable`)
       }
+
+      if (!commune) {
+        throw new Error(`commune ${communeId} introuvable`)
+      }
+      const communePrincipaleId =
+        body.titres[titreId]?.commune_principale_exploitation?.[anneePrecedente]
+      const communePrincipale = communes.find(
+        ({ id }) => id === communePrincipaleId
+      )
+
+      if (!communePrincipale) {
+        throw new Error(`commune principale ${communeId} introuvable`)
+      }
+
+      const surfaceCommunaleProportionnee =
+        result.articles[articleKey]?.surface_communale_proportionnee?.[
+          anneePrecedente
+        ] ?? 1
       const quantiteOrExtrait =
-        result.articles[articleKey]?.quantite_aurifere_kg?.[anneePrecedente] ??
-        0
+        (result.articles[articleKey]?.quantite_aurifere_kg?.[anneePrecedente] ??
+          0) * surfaceCommunaleProportionnee
+
+      const quantiteOrExtraitFormatted = precisionGramme(quantiteOrExtrait)
 
       // FIXME récupérer depuis les substances ?
       const natureSubstance = 'Minerais aurifères'
@@ -389,16 +422,16 @@ const matrices = async () => {
         : ''
 
       return {
-        raw: { commune, fiscalite, quantiteOrExtrait },
+        raw: { communePrincipale, commune, fiscalite, quantiteOrExtrait },
         1121: {
           numeroOrdreDeLaMatrice: index + 1,
-          communeDuLieuPrincipalDExploitation: commune?.nom,
+          communeDuLieuPrincipalDExploitation: communePrincipale.nom,
           designationEtAdressDesConcessionnaires: titulaire,
           natureDesSubstancesExtraites: natureSubstance,
           redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_baseDesRedevances_nature:
             natureRedevance,
           redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_baseDesRedevances_quantites:
-            quantiteOrExtrait,
+            quantiteOrExtraitFormatted,
           redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_redevanceDepartementale_tarifs:
             tarifDepartemental,
           redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_redevanceDepartementale_montantNet:
@@ -428,12 +461,11 @@ const matrices = async () => {
           designationDesConcessionsPermisOuExplorations: numeroDeLarticleDuRole,
           departementsEtCommunesSurLeTerritoireDesquelsFonctionnentLesExploitations_departements:
             departement,
-          departementsEtCommunesSurLeTerritoireDesquelsFonctionnentLesExploitations_communes:
-            commune?.nom,
+          departementsEtCommunesSurLeTerritoireDesquelsFonctionnentLesExploitations_communes: `${commune?.nom} (${surfaceCommunaleProportionnee})`,
           tonnagesExtraitsAuCoursDeLAnneePrecedente_parDepartement:
-            quantiteOrExtrait,
+            quantiteOrExtraitFormatted,
           tonnagesExtraitsAuCoursDeLAnneePrecedente_parCommune:
-            quantiteOrExtrait,
+            quantiteOrExtraitFormatted,
           observations: "production en kilogramme d'or"
         }
       }
@@ -488,34 +520,26 @@ const matrices = async () => {
               `la commune ${ligne.raw.commune.id} n'appartient à aucun SIP`
             )
           } else {
+            const taxeMiniereSurLOrDeGuyane = isFiscaliteGuyane(
+              ligne.raw.fiscalite
+            )
+              ? ligne.raw.fiscalite.guyane.taxeAurifere
+              : 0
             toAdd.redevanceDepartementale +=
-              ligne[
-                '1121'
-              ].redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_redevanceDepartementale_montantNet
-            toAdd.redevanceCommunale +=
-              ligne[
-                '1121'
-              ].redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_redevanceCommunale_montantNetRedevanceDesMines
-            toAdd.taxeMiniereSurLOrDeGuyane +=
-              ligne[
-                '1121'
-              ].redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_taxeMiniereSurLOrDeGuyane_montantNetDeTaxeMiniereSurLOrDeGuyane
-            toAdd.sommesRevenantALaRegionDeGuyane +=
-              ligne[
-                '1121'
-              ].redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_taxeMiniereSurLOrDeGuyane_montantNetDeTaxeMiniereSurLOrDeGuyane
+              ligne.raw.fiscalite.redevanceDepartementale
+            toAdd.redevanceCommunale += ligne.raw.fiscalite.redevanceCommunale
+            toAdd.taxeMiniereSurLOrDeGuyane += taxeMiniereSurLOrDeGuyane
+            toAdd.sommesRevenantALaRegionDeGuyane += taxeMiniereSurLOrDeGuyane
             toAdd.sommesRevenantAuConservatoireDeBiodiversite += 0
             // FIXME ça vient d'oû ? on part du principe que ce sont les 8% de frais de gestion (ça semble coller)
-            toAdd.fraisDAssietteEtDeRecouvrement +=
-              ligne[
-                '1121'
-              ].redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_fraisDeGestionDeLaFiscaliteDirecteLocale
+            toAdd.fraisDAssietteEtDeRecouvrement += fraisGestion(
+              ligne.raw.fiscalite
+            )
             toAdd.degrevementsEtNonValeurs += 0
             // FIXME ça vient d'oû ? on part du principe que ce sont les 8% de frais de gestion (ça semble coller)
-            toAdd.totalDesSommesRevenantALEtat +=
-              ligne[
-                '1121'
-              ].redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_fraisDeGestionDeLaFiscaliteDirecteLocale
+            toAdd.totalDesSommesRevenantALEtat += fraisGestion(
+              ligne.raw.fiscalite
+            )
             toAdd.totalDesSommes =
               toAdd.redevanceDepartementale +
               toAdd.redevanceCommunale +
@@ -615,11 +639,9 @@ const matrices = async () => {
             departements:
               ligne['1122']
                 .departementsEtCommunesSurLeTerritoireDesquelsFonctionnentLesExploitations_departements,
-            communes:
-              ligne['1122']
-                .departementsEtCommunesSurLeTerritoireDesquelsFonctionnentLesExploitations_communes,
+            communes: ligne.raw.commune.nom,
             revenusImposableALaTFPB: 0,
-            tonnagesExtraits: ligne.raw.quantiteOrExtrait,
+            tonnagesExtraits: precisionGramme(ligne.raw.quantiteOrExtrait),
             redevanceDepartementaleProduitNet:
               ligne.raw.fiscalite.redevanceDepartementale,
             redevanceDepartementaleSommesRevenantsAuxDepartements:
