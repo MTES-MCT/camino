@@ -8,10 +8,64 @@ import { entreprisesGet } from '../database/queries/entreprises'
 import { communesGet } from '../database/queries/territoires'
 import { fraisGestion, isFiscaliteGuyane } from 'camino-common/src/fiscalite'
 import xlsx from 'xlsx'
-import { ITitre } from '../types'
+import { ICommune, ITitre } from '../types'
 import { Departements } from 'camino-common/src/static/departement'
 import fs from 'fs'
 
+const sips = {
+  cayenne: {
+    nom: 'SIP de Cayenne',
+    communes: [
+      '97313', // Montsinery-Tonnegrande
+      '97314', // Ouanary
+      '97356', // Camopi
+      '97302', // Cayenne
+      '97301', // Régina
+      '97309', // Remire-Montjoly
+      '97310', // Roura
+      '97308', // Saint-Georges
+      '97307' // Matoury
+    ]
+  },
+  kourou: {
+    nom: 'SIP de Kourou',
+    communes: [
+      '97304', // Kourou
+      '97305', // Macouria
+      '97303', // Iracoubo
+      '97312', // Sinnamary
+      '97358' // Saint-Élie
+    ]
+  },
+  saintLaurentDuMaroni: {
+    nom: 'SIP de Saint-Laurent du Maroni',
+    communes: [
+      '97362', //  Papaichton
+      '97360', //  Apatou
+      '97361', //  Awala-Yalimapo
+      '97357', //  Grand-Santi
+      '97306', //  Mana
+      '97352', //  Saül
+      '97353', //  Maripasoula
+      '97311' //  Saint-Laurent-du-Maroni
+    ]
+  }
+} as const
+
+type Sips = keyof typeof sips
+type Matrice1403 = {
+  circonscriptionDe: string
+  redevanceDepartementale: number
+  redevanceCommunale: number
+  taxeMiniereSurLOrDeGuyane: number
+  sommesRevenantALaRegionDeGuyane: number
+  sommesRevenantAuConservatoireDeBiodiversite: number
+  fraisDAssietteEtDeRecouvrement: number
+  degrevementsEtNonValeurs: number
+  totalDesSommesRevenantALEtat: number
+  totalDesSommes: number
+  nombreDArticlesDesRoles: number
+}
 type Matrice1122 = {
   departementsEtCommunesSurLeTerritoireDesquelsFonctionnentLesExploitations_departements: string
   tonnagesExtraitsAuCoursDeLAnneePrecedente_parCommune: any
@@ -45,7 +99,31 @@ type Matrice1121 = {
   designationEtAdressDesConcessionnaires: string
 }
 
-type Matrices = { '1122': Matrice1122; '1121': Matrice1121 }
+type Matrices = {
+  '1122': Matrice1122
+  '1121': Matrice1121
+  raw: { commune: ICommune }
+}
+
+const matrice1403Header: Record<keyof Matrice1403, string> = {
+  circonscriptionDe: 'Circonscription de',
+  redevanceDepartementale: 'Redevance départementale',
+  redevanceCommunale: 'Redevance communale',
+  taxeMiniereSurLOrDeGuyane: "Taxe minière sur l'or de Guyane",
+  sommesRevenantALaRegionDeGuyane: 'Sommes revenant à la Région de Guyane',
+  sommesRevenantAuConservatoireDeBiodiversite:
+    'Sommes revenant au Conservatoire de biodiversité',
+  fraisDAssietteEtDeRecouvrement:
+    "Sommes revenant à l'État | Frais d'assiette et de recouvrement",
+  degrevementsEtNonValeurs:
+    "Sommes revenant à l'État | Dégrèvements et non-valeurs",
+  totalDesSommesRevenantALEtat: "Sommes revenant à l'État | Total",
+  totalDesSommes: 'Total des colonnes',
+  nombreDArticlesDesRoles: "Nombre d'articles des rôles"
+}
+const isLigneMatrice1403 = (entry: string): entry is keyof Matrice1403 => {
+  return Object.keys(matrice1403Header).includes(entry)
+}
 const isLigneMatrice1121 = (entry: string): entry is keyof Matrice1121 => {
   return Object.keys(matrice1121Header).includes(entry)
 }
@@ -202,6 +280,9 @@ const matrices = async () => {
       const [titreId, _substance, communeId] = articleKey.split('-')
       const titulaire = titulaireToString(titreId, titres)
       const commune = communes.find(({ id }) => id === communeId)
+      if (!commune) {
+        throw new Error(`commune ${communeId} introuvable`)
+      }
       const quantiteOrExtrait =
         result.articles[articleKey]?.quantite_aurifere_kg?.[anneePrecedente]
 
@@ -239,11 +320,12 @@ const matrices = async () => {
         titres
       )
 
-      const departement = commune?.departementId
-        ? Departements[commune?.departementId].nom
+      const departement = commune.departementId
+        ? Departements[commune.departementId].nom
         : ''
 
       return {
+        raw: { commune },
         1121: {
           numeroOrdreDeLaMatrice: index + 1,
           communeDuLieuPrincipalDExploitation: commune?.nom,
@@ -322,6 +404,120 @@ const matrices = async () => {
     )
     const csv1122 = xlsx.utils.sheet_to_csv(worksheet1122)
     fs.writeFileSync('1122.csv', csv1122)
+
+    const matrice1403 = Object.values(
+      matrices.reduce<Record<Sips, Matrice1403>>(
+        (acc, ligne) => {
+          let toAdd = null
+          if (
+            sips.saintLaurentDuMaroni.communes.includes(ligne.raw.commune.id)
+          ) {
+            toAdd = acc.saintLaurentDuMaroni
+          } else if (sips.cayenne.communes.includes(ligne.raw.commune.id)) {
+            toAdd = acc.cayenne
+          } else if (sips.kourou.communes.includes(ligne.raw.commune.id)) {
+            toAdd = acc.kourou
+          }
+
+          if (toAdd === null) {
+            throw new Error(
+              `la commune ${ligne.raw.commune.id} n'appartient à aucun SIP`
+            )
+          } else {
+            toAdd.redevanceDepartementale +=
+              ligne[
+                '1121'
+              ].redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_redevanceDepartementale_montantNet
+            toAdd.redevanceCommunale +=
+              ligne[
+                '1121'
+              ].redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_redevanceCommunale_montantNetRedevanceDesMines
+            toAdd.taxeMiniereSurLOrDeGuyane +=
+              ligne[
+                '1121'
+              ].redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_taxeMiniereSurLOrDeGuyane_montantNetDeTaxeMiniereSurLOrDeGuyane
+            toAdd.sommesRevenantALaRegionDeGuyane +=
+              ligne[
+                '1121'
+              ].redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_taxeMiniereSurLOrDeGuyane_montantNetDeTaxeMiniereSurLOrDeGuyane
+            toAdd.sommesRevenantAuConservatoireDeBiodiversite += 0
+            // FIXME ça vient d'oû ? on part du principe que ce sont les 8% de frais de gestion (ça semble coller)
+            toAdd.fraisDAssietteEtDeRecouvrement +=
+              ligne[
+                '1121'
+              ].redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_fraisDeGestionDeLaFiscaliteDirecteLocale
+            toAdd.degrevementsEtNonValeurs += 0
+            // FIXME ça vient d'oû ? on part du principe que ce sont les 8% de frais de gestion (ça semble coller)
+            toAdd.totalDesSommesRevenantALEtat +=
+              ligne[
+                '1121'
+              ].redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_fraisDeGestionDeLaFiscaliteDirecteLocale
+            toAdd.totalDesSommes =
+              toAdd.redevanceDepartementale +
+              toAdd.redevanceCommunale +
+              toAdd.taxeMiniereSurLOrDeGuyane +
+              toAdd.totalDesSommesRevenantALEtat
+            toAdd.nombreDArticlesDesRoles++
+          }
+
+          return acc
+        },
+        {
+          cayenne: {
+            circonscriptionDe: sips.cayenne.nom,
+            redevanceDepartementale: 0,
+            redevanceCommunale: 0,
+            taxeMiniereSurLOrDeGuyane: 0,
+            sommesRevenantALaRegionDeGuyane: 0,
+            sommesRevenantAuConservatoireDeBiodiversite: 0,
+            fraisDAssietteEtDeRecouvrement: 0,
+            degrevementsEtNonValeurs: 0,
+            totalDesSommesRevenantALEtat: 0,
+            totalDesSommes: 0,
+            nombreDArticlesDesRoles: 0
+          },
+          kourou: {
+            circonscriptionDe: sips.kourou.nom,
+            redevanceDepartementale: 0,
+            redevanceCommunale: 0,
+            taxeMiniereSurLOrDeGuyane: 0,
+            sommesRevenantALaRegionDeGuyane: 0,
+            sommesRevenantAuConservatoireDeBiodiversite: 0,
+            fraisDAssietteEtDeRecouvrement: 0,
+            degrevementsEtNonValeurs: 0,
+            totalDesSommesRevenantALEtat: 0,
+            totalDesSommes: 0,
+            nombreDArticlesDesRoles: 0
+          },
+          saintLaurentDuMaroni: {
+            circonscriptionDe: sips.saintLaurentDuMaroni.nom,
+            redevanceDepartementale: 0,
+            redevanceCommunale: 0,
+            taxeMiniereSurLOrDeGuyane: 0,
+            sommesRevenantALaRegionDeGuyane: 0,
+            sommesRevenantAuConservatoireDeBiodiversite: 0,
+            fraisDAssietteEtDeRecouvrement: 0,
+            degrevementsEtNonValeurs: 0,
+            totalDesSommesRevenantALEtat: 0,
+            totalDesSommes: 0,
+            nombreDArticlesDesRoles: 0
+          }
+        }
+      )
+    )
+
+    const worksheet1403 = xlsx.utils.json_to_sheet(matrice1403)
+    xlsx.utils.sheet_add_aoa(
+      worksheet1403,
+      [
+        Object.keys(matrice1403[0])
+          .filter(isLigneMatrice1403)
+          .map(ligne => matrice1403Header[ligne])
+      ],
+      { origin: 'A1' }
+    )
+    const csv1403 = xlsx.utils.sheet_to_csv(worksheet1403)
+    fs.writeFileSync('1403.csv', csv1403)
   }
 }
 
