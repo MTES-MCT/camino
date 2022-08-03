@@ -3,6 +3,7 @@ import { SubstanceFiscale } from 'camino-common/src/static/substance'
 import { Unite, Unites } from 'camino-common/src/static/unites'
 type Attribute =
   | 'surface_communale'
+  | 'surface_communale_proportionnee'
   | 'taxe_guyane_brute'
   | 'taxe_guyane_deduction'
   | 'taxe_guyane'

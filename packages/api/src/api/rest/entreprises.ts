@@ -172,6 +172,7 @@ export const bodyBuilder = (
 
             body.articles[articleId] = {
               surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
+              surface_communale_proportionnee: { [anneePrecedente]: null },
               [substanceFiscaleToInput(substancesFiscale)]: {
                 [anneePrecedente]: production
               },
