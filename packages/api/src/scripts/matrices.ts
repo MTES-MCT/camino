@@ -6,7 +6,11 @@ import { bodyBuilder, toFiscalite } from '../api/rest/entreprises'
 import { userSuper } from '../database/user-super'
 import { entreprisesGet } from '../database/queries/entreprises'
 import { communesGet } from '../database/queries/territoires'
-import { fraisGestion, isFiscaliteGuyane } from 'camino-common/src/fiscalite'
+import {
+  Fiscalite,
+  fraisGestion,
+  isFiscaliteGuyane
+} from 'camino-common/src/fiscalite'
 import xlsx from 'xlsx'
 import { ICommune, ITitre } from '../types'
 import { Departements } from 'camino-common/src/static/departement'
@@ -51,7 +55,7 @@ const sips = {
     ]
   }
 } as const
-
+type Sip = typeof sips[keyof typeof sips]
 type Sips = keyof typeof sips
 type Matrice1403 = {
   circonscriptionDe: string
@@ -65,6 +69,27 @@ type Matrice1403 = {
   totalDesSommesRevenantALEtat: number
   totalDesSommes: number
   nombreDArticlesDesRoles: number
+}
+type Matrice1404 = {
+  circonscriptionDe: string
+  articlesDesRoles: number
+  designationDesExploitants: string
+  departements: string
+  communes: string | undefined
+  revenusImposableALaTFPB: number
+  tonnagesExtraits: number
+  redevanceDepartementaleProduitNet: number
+  redevanceDepartementaleSommesRevenantsAuxDepartements: number
+  redevanceCommunaleProduitNet: number
+  redevanceCommunaleRepartition1EreFraction: number
+  redevanceCommunaleRepartition2EmeFraction: number
+  redevanceCommunaleRepartition3EmeFraction: number
+  redevanceCommunaleSommesRevenantAuxCommunes1EreFraction: number
+  redevanceCommunaleSommesRevenantAuxCommunes2EmeFraction: number
+  redevanceCommunaleSommesRevenantAuxCommunesTotal: number
+  taxeMiniereSurLOrDeGuyaneProduitNet: number
+  taxeMiniereSurLOrDeGuyaneRepartitionRegionDeGuyane: number
+  taxeMiniereSurLOrDeGuyaneRepartitionConservatoire: number
 }
 type Matrice1122 = {
   departementsEtCommunesSurLeTerritoireDesquelsFonctionnentLesExploitations_departements: string
@@ -102,7 +127,7 @@ type Matrice1121 = {
 type Matrices = {
   '1122': Matrice1122
   '1121': Matrice1121
-  raw: { commune: ICommune }
+  raw: { commune: ICommune; fiscalite: Fiscalite; quantiteOrExtrait: number }
 }
 
 const matrice1403Header: Record<keyof Matrice1403, string> = {
@@ -123,6 +148,43 @@ const matrice1403Header: Record<keyof Matrice1403, string> = {
 }
 const isLigneMatrice1403 = (entry: string): entry is keyof Matrice1403 => {
   return Object.keys(matrice1403Header).includes(entry)
+}
+const matrice1404Header: Record<keyof Matrice1404, string> = {
+  circonscriptionDe: 'Circonscription de',
+  articlesDesRoles: 'Articles des rôles',
+  designationDesExploitants: 'Désignation des exploitants',
+  departements: 'Départements',
+  communes: 'Communes',
+  revenusImposableALaTFPB: 'Elements de base | Revenus imposables à la TFPB',
+  tonnagesExtraits: 'Elements de base | Tonnages extraits',
+  redevanceDepartementaleProduitNet:
+    'Redevance départementale | Produit net de la redevance',
+  redevanceDepartementaleSommesRevenantsAuxDepartements:
+    'Redevance départementale | Sommes revenant aux départements',
+  redevanceCommunaleProduitNet:
+    'Redevance communale | Produit net de la redevance',
+  redevanceCommunaleRepartition1EreFraction:
+    'Redevance communale | Répartition | 1ère fraction',
+  redevanceCommunaleRepartition2EmeFraction:
+    'Redevance communale | Répartition | 2ème fraction',
+  redevanceCommunaleRepartition3EmeFraction:
+    'Redevance communale | Répartition | 3ème fraction',
+  redevanceCommunaleSommesRevenantAuxCommunes1EreFraction:
+    'Redevance communale | Revenant aux communes | 1ère fraction',
+  redevanceCommunaleSommesRevenantAuxCommunes2EmeFraction:
+    'Redevance communale | Revenant aux communes | 2ème fraction',
+  redevanceCommunaleSommesRevenantAuxCommunesTotal:
+    'Redevance communale | Revenant aux communes | Total',
+  taxeMiniereSurLOrDeGuyaneProduitNet:
+    "Taxe minière sur l'or de Guyane | Produit net",
+  taxeMiniereSurLOrDeGuyaneRepartitionRegionDeGuyane:
+    "Taxe minière sur l'or de Guyane | Répartition | Région de Guyane",
+  taxeMiniereSurLOrDeGuyaneRepartitionConservatoire:
+    "Taxe minière sur l'or de Guyane | Répartition | Conservatoire"
+}
+
+const isLigneMatrice1404 = (entry: string): entry is keyof Matrice1404 => {
+  return Object.keys(matrice1404Header).includes(entry)
 }
 const isLigneMatrice1121 = (entry: string): entry is keyof Matrice1121 => {
   return Object.keys(matrice1121Header).includes(entry)
@@ -275,6 +337,7 @@ const matrices = async () => {
   const communes = await communesGet()
   if (Object.keys(body.articles).length > 0) {
     const result = await apiOpenfiscaFetch(body)
+    console.info(JSON.stringify(result))
     const articlesKeys = Object.keys(result.articles)
     const matrices: Matrices[] = articlesKeys.map((articleKey, index) => {
       const [titreId, _substance, communeId] = articleKey.split('-')
@@ -284,7 +347,8 @@ const matrices = async () => {
         throw new Error(`commune ${communeId} introuvable`)
       }
       const quantiteOrExtrait =
-        result.articles[articleKey]?.quantite_aurifere_kg?.[anneePrecedente]
+        result.articles[articleKey]?.quantite_aurifere_kg?.[anneePrecedente] ??
+        0
 
       // FIXME récupérer depuis les substances ?
       const natureSubstance = 'Minerais aurifères'
@@ -325,7 +389,7 @@ const matrices = async () => {
         : ''
 
       return {
-        raw: { commune },
+        raw: { commune, fiscalite, quantiteOrExtrait },
         1121: {
           numeroOrdreDeLaMatrice: index + 1,
           communeDuLieuPrincipalDExploitation: commune?.nom,
@@ -518,6 +582,98 @@ const matrices = async () => {
     )
     const csv1403 = xlsx.utils.sheet_to_csv(worksheet1403)
     fs.writeFileSync('1403.csv', csv1403)
+
+    const matrice1404 = matrices.reduce<Record<Sips, Matrice1404[]>>(
+      (acc, ligne) => {
+        let toAdd = null
+        let sip: Sip | undefined
+        if (sips.saintLaurentDuMaroni.communes.includes(ligne.raw.commune.id)) {
+          toAdd = acc.saintLaurentDuMaroni
+          sip = sips.saintLaurentDuMaroni
+        } else if (sips.cayenne.communes.includes(ligne.raw.commune.id)) {
+          toAdd = acc.cayenne
+          sip = sips.cayenne
+        } else if (sips.kourou.communes.includes(ligne.raw.commune.id)) {
+          toAdd = acc.kourou
+          sip = sips.kourou
+        }
+
+        if (toAdd === null) {
+          throw new Error(
+            `la commune ${ligne.raw.commune.id} n'appartient à aucun SIP`
+          )
+        } else {
+          const redevanceCommunalePremiereFraction =
+            ligne.raw.fiscalite.redevanceCommunale * 0.35
+          const redevanceCommunaleDeuxiemeFraction =
+            ligne.raw.fiscalite.redevanceCommunale * 0.1
+          toAdd.push({
+            circonscriptionDe: sip?.nom ?? '',
+            articlesDesRoles: ligne['1121'].numeroOrdreDeLaMatrice,
+            designationDesExploitants:
+              ligne['1121'].designationEtAdressDesConcessionnaires,
+            departements:
+              ligne['1122']
+                .departementsEtCommunesSurLeTerritoireDesquelsFonctionnentLesExploitations_departements,
+            communes:
+              ligne['1122']
+                .departementsEtCommunesSurLeTerritoireDesquelsFonctionnentLesExploitations_communes,
+            revenusImposableALaTFPB: 0,
+            tonnagesExtraits: ligne.raw.quantiteOrExtrait,
+            redevanceDepartementaleProduitNet:
+              ligne.raw.fiscalite.redevanceDepartementale,
+            redevanceDepartementaleSommesRevenantsAuxDepartements:
+              ligne.raw.fiscalite.redevanceDepartementale,
+            redevanceCommunaleProduitNet:
+              ligne.raw.fiscalite.redevanceCommunale,
+            redevanceCommunaleRepartition1EreFraction:
+              redevanceCommunalePremiereFraction,
+            redevanceCommunaleRepartition2EmeFraction:
+              redevanceCommunaleDeuxiemeFraction,
+            redevanceCommunaleRepartition3EmeFraction:
+              ligne.raw.fiscalite.redevanceCommunale * 0.55,
+            redevanceCommunaleSommesRevenantAuxCommunes1EreFraction:
+              redevanceCommunalePremiereFraction,
+            redevanceCommunaleSommesRevenantAuxCommunes2EmeFraction:
+              redevanceCommunaleDeuxiemeFraction,
+            redevanceCommunaleSommesRevenantAuxCommunesTotal:
+              redevanceCommunalePremiereFraction +
+              redevanceCommunaleDeuxiemeFraction,
+            taxeMiniereSurLOrDeGuyaneProduitNet: isFiscaliteGuyane(
+              ligne.raw.fiscalite
+            )
+              ? ligne.raw.fiscalite.guyane.taxeAurifere
+              : 0,
+            taxeMiniereSurLOrDeGuyaneRepartitionRegionDeGuyane:
+              isFiscaliteGuyane(ligne.raw.fiscalite)
+                ? ligne.raw.fiscalite.guyane.taxeAurifere
+                : 0,
+            taxeMiniereSurLOrDeGuyaneRepartitionConservatoire: 0
+          })
+        }
+
+        return acc
+      },
+      {
+        cayenne: [],
+        kourou: [],
+        saintLaurentDuMaroni: []
+      }
+    )
+    Object.entries(matrice1404).forEach(([sip, matrice]) => {
+      const worksheet1404 = xlsx.utils.json_to_sheet(matrice)
+      xlsx.utils.sheet_add_aoa(
+        worksheet1404,
+        [
+          Object.keys(matrice[0])
+            .filter(isLigneMatrice1404)
+            .map(ligne => matrice1404Header[ligne])
+        ],
+        { origin: 'A1' }
+      )
+      const csv1404 = xlsx.utils.sheet_to_csv(worksheet1404)
+      fs.writeFileSync(`1404_${sip}.csv`, csv1404)
+    })
   }
 }
 
