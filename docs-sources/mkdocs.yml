@@ -1,0 +1,24 @@
+site_name: Camino
+nav:
+  - 'index.md'
+  - Utilisation:
+      - Introduction: '01-utilisation/01-introduction.md'
+      - 'API GraphQL': '01-utilisation/02-graphql.md'
+      - 'API Rest': '01-utilisation/03-rest.md'
+      - 'Flux GeoJson': '01-utilisation/04-flux.md'
+  - Développement:
+      - Introduction: '02-developpement/01-introduction.md'
+      - 'Base de données': '02-developpement/02-base-de-donnees.md'
+      - Tests: '02-developpement/03-tests.md'
+  - Architecture:
+      - Introduction: '03-architecture/01-introduction.md'
+      - Docker: '03-architecture/02-docker.md'
+      - 'Scripts de sauvegarde et restauration': '03-architecture/03-scripts-sauvegarde-restaurations.md'
+      - 'Scripts de déploiement': '03-architecture/04-scripts-deploiement.md'
+      - Utilisateurs: '03-architecture/05-utilisateurs.md'
+  - Déploiement:
+      - Introduction: '04-deploiement/01-introduction.md'
+      - 'Sauvegarde et restauration': '04-deploiement/02-sauvegarde-restauration.md'
+      - 'Base de données': '04-deploiement/03-base-de-donnees.md'
+      - Fichiers: '04-deploiement/04-fichiers.md'
+      - Scripts: '04-deploiement/05-utils.md'

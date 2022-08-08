@@ -8,7 +8,6 @@
     "email-regex",
     "decamelize",
     "dateformat",
-    "node-fetch",
-    "typedoc"
+    "node-fetch"
   ]
 }

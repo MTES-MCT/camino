@@ -4,3 +4,4 @@ set eufo -pipefail
 planter postgres://postgres:password@localhost/camino?sslmode=disable -o camino-db.uml
 
 cat camino-db.uml | docker run --rm -i agileek/plantuml:1.2022.3 > camino-db.svg
+cp camino-db.svg ../../docs/img

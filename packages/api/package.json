@@ -28,7 +28,6 @@
     "dev:monthly": "ts-node --transpile-only ./src/scripts/monthly.ts",
     "dev:schema": "node src/dev/api/graphql-dsl-to-query-convert.js",
     "dev:update": "npm-check-updates -u && npm install && npm audit fix",
-    "docs": "rm -rf docs && typedoc src --media docs-sources/assets/ --sourcefile-url-prefix \"https://github.com/MTES-MCT/camino/blob/master/\"",
     "documents:check": "node ./dist/src/scripts/documents-check.js",
     "lint": "prettier --write . && eslint --fix .",
     "start": "node ./dist/src/index.js",
@@ -41,8 +40,7 @@
     "ci:test-integration": "JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest -c jest.config.integration.ts --runInBand --ci --collect-coverage"
   },
   "@comment dependencies": {
-    "modules esm": "crypto-random-string, @sindresorhus/slugify, email-regex, decamelize, dateformat, node-fetch à ne pas updater tant que on ne compile pas pour es2020: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c. Pas simple de migrer ts-node.",
-    "typedoc": "bloqué à 0.21.19 https://github.com/mipatterson/typedoc-plugin-pages/issues/64"
+    "modules esm": "crypto-random-string, @sindresorhus/slugify, email-regex, decamelize, dateformat, node-fetch à ne pas updater tant que on ne compile pas pour es2020: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c. Pas simple de migrer ts-node."
   },
   "dependencies": {
     "@graphql-tools/graphql-file-loader": "^7.3.5",
@@ -141,10 +139,7 @@
     "sql-formatter": "^4.0.2",
     "standard-version": "^9.3.2",
     "supertest": "^6.2.2",
-    "ts-jest": "^27.1.4",
-    "typedoc": "^0.21.9",
-    "typedoc-plugin-pages-fork": "^0.0.1",
-    "typedoc-plugin-sourcefile-url": "^1.0.6"
+    "ts-jest": "^27.1.4"
   },
   "prettier": {
     "semi": false,
