@@ -2,8 +2,16 @@ import { ITitreEtape } from '../../types'
 
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
+import { demarchesTypesOctroi } from './common'
 
-const demarchesTypesPhases = ['oct', 'pro', 'pr1', 'pr2', 'pre', 'vut', 'vct']
+const demarchesTypesPhases = [
+  ...demarchesTypesOctroi,
+  'pro',
+  'pr1',
+  'pr2',
+  'pre',
+  'vct'
+]
 
 /**
  * Vérifie si la démarche donne lieu à une phase

@@ -7,6 +7,7 @@ import { ITitreDemarche, ITitreEtape, IPropId, IContenuId } from '../../types'
 import { propValueFind } from '../utils/prop-value-find'
 import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc'
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
+import { demarchesTypesOctroi } from './common'
 
 const etapeAmodiataireFind = (
   titreEtape: ITitreEtape,
@@ -46,7 +47,7 @@ const etapeValideCheck = (
   }
 
   // si la démarche est un octroi, une demande de titre d'exploitation ou une mutation partielle
-  if (['oct', 'vut', 'vct'].includes(titreDemarcheTypeId)) {
+  if ([...demarchesTypesOctroi, 'vct'].includes(titreDemarcheTypeId)) {
     return true
   }
   // si il s'agit d'une étape de décision
@@ -132,7 +133,7 @@ const demarcheEligibleCheck = (
   titreDemarches: ITitreDemarche[]
 ) =>
   ['acc', 'ter'].includes(titreDemarcheStatutId) ||
-  ['oct', 'vut', 'vct'].includes(titreDemarcheTypeId) ||
+  [...demarchesTypesOctroi, 'vct'].includes(titreDemarcheTypeId) ||
   (titreStatutId === 'mod' &&
     ['pro', 'pr1', 'pr2', 'prr', 'vct'].includes(titreDemarcheTypeId) &&
     !titreDemarches.find(td => td.phase && td.phase.statutId === 'val'))
