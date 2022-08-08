@@ -1,6 +1,6 @@
 # Architecture de l'application Camino
 
-![architecture](media://architecture.svg)
+![architecture](../img/architecture.svg)
 
 ## Ansible
 

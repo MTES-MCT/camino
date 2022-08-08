@@ -5,3 +5,5 @@ node_modules
 /.cache
 packages/ui/storybook-static/
 .vault
+/docs
+/*.csv

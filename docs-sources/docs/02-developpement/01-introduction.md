@@ -69,8 +69,6 @@ npm run start -w packages/api
 ```bash
 .
 │
-├── docs-sources         # `source de la documentation générée avec typeDoc`
-│
 └── src                  # `fichiers sources. Transformés avec npm run build.`
     ├── index            # `point d'entrée`
     │
