@@ -2,6 +2,7 @@ import { ITitreDemarche } from '../../types'
 
 import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
+import { demarchesTypesOctroi } from './common'
 
 const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]) => {
   // trouve la démarche génératrice du titre
@@ -10,7 +11,7 @@ const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]) => {
     titreDemarches
   ) as ITitreDemarche[]
   const titreDemarche = titreDemarchesSorted.find(titreDemarche =>
-    ['oct', 'vut'].includes(titreDemarche.typeId)
+    demarchesTypesOctroi.includes(titreDemarche.typeId)
   )
 
   // si

@@ -1,4 +1,5 @@
 import { ITitreDemarche, ITitreTypeTitreStatut } from '../../types'
+import { demarchesTypesOctroi } from './common'
 
 const titrePublicFind = (
   titreStatutId: string,
@@ -17,7 +18,7 @@ const titrePublicFind = (
   // alors le titre est public
   if (titreTypeTitreStatut?.publicLecture) {
     const titreDemarcheOctroi = titreDemarches.find(
-      d => ['oct', 'vut'].includes(d.typeId) && d.publicLecture
+      d => demarchesTypesOctroi.includes(d.typeId) && d.publicLecture
     )
 
     if (titreDemarcheOctroi) {

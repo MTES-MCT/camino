@@ -6,6 +6,7 @@ import {
   titreEtapesSortAscByOrdre
 } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
+import { demarchesTypesOctroi } from './common'
 
 const titreDemarcheDateDebutFind = (
   titreDemarche: ITitreDemarche,
@@ -57,7 +58,7 @@ const titreDateDebutFind = (
   const titreDemarche = titreDemarchesSorted.find(
     titreDemarche =>
       ['acc', 'ter'].includes(titreDemarche.statutId!) &&
-      ['oct', 'vut', 'vct'].includes(titreDemarche.typeId)
+      [...demarchesTypesOctroi, 'vct'].includes(titreDemarche.typeId)
   )
 
   if (!titreDemarche) return null
