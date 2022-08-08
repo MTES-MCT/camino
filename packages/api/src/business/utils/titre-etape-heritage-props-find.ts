@@ -179,9 +179,17 @@ const titreEtapeHeritagePropsFind = (
           newTitreEtape.incertitudes![incertitudePropId] =
             prevTitreEtape.incertitudes[incertitudePropId]
         } else if (newTitreEtape.incertitudes && !prevTitreEtape.incertitudes) {
-          hasChanged = true
           newTitreEtape = objectClone(newTitreEtape)
-          newTitreEtape.incertitudes = null
+          if (
+            newTitreEtape.incertitudes &&
+            newTitreEtape.incertitudes[incertitudePropId]
+          ) {
+            hasChanged = true
+            delete newTitreEtape.incertitudes[incertitudePropId]
+            if (!Object.keys(newTitreEtape.incertitudes).length) {
+              newTitreEtape.incertitudes = null
+            }
+          }
         } else if (
           prevTitreEtape.incertitudes &&
           prevTitreEtape.incertitudes[incertitudePropId] &&
