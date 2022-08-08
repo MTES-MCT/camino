@@ -4,5 +4,5 @@
 
 L'API de Camino propose deux manières d'interagir:
 
-- {@page API GraphQL} (complète)
-- {@page API Rest} (interaction limitée)
+- [complète](02-graphql.md)
+- [interaction limitée](03-rest.md)
