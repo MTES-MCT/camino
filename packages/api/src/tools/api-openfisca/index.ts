@@ -121,6 +121,11 @@ export interface OpenfiscaResponse {
       articles: string[]
     }
   }
+  communes: {
+    [communeId: string]: {
+      articles: string[]
+    }
+  }
 }
 
 const apiOpenfiscaFetch = async <T>(

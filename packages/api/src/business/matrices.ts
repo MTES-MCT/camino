@@ -10,7 +10,6 @@ import {
 import { bodyBuilder, toFiscalite } from '../api/rest/entreprises'
 import { userSuper } from '../database/user-super'
 import { entreprisesGet } from '../database/queries/entreprises'
-import { communesGet } from '../database/queries/territoires'
 import {
   Fiscalite,
   fraisGestion,
@@ -265,139 +264,137 @@ const precisionGramme = (x: number): string => {
 // FIXME 2022-08-02 c'est vraiment comme ça qu'on calcule le titulaire ?
 // Ça peut être une bonne approximation pour les matrices 1121,1122,1403,1404 vu qu'il n'y a pas 2 titulaires sur un même titre, ni d'amodiataire
 const titulaireToString = (
-  titreId: string,
-  titres: Pick<ITitre, 'id' | 'titulaires'>[]
+  titre: Pick<ITitre, 'id' | 'titulaires'>
 ): string => {
-  const titre = titres.find(({ id }) => id === titreId)
+  if (titre.titulaires?.length !== 1) {
+    throw new Error(
+      `Un seul titulaire doit être présent sur le titre ${titre.id}`
+    )
+  }
+
   const titulaireTitre = titre?.titulaires?.[0]
 
   return `${titulaireTitre?.nom} - ${titulaireTitre?.adresse} - ${titulaireTitre?.legalSiren} SIREN`
-}
-const numeroDeLarticleDuRoleString = (
-  titreId: string,
-  titres: Pick<ITitre, 'id' | 'slug'>[]
-): string | undefined => {
-  const titre = titres.find(({ id }) => id === titreId)
-
-  return titre?.slug
 }
 
 // VISIBLE FOR TESTING
 export const buildMatrices = (
   result: OpenfiscaResponse,
-  titres: Pick<ITitre, 'id' | 'slug' | 'titulaires'>[],
-  communes: ICommune[],
+  titres: Pick<ITitre, 'id' | 'slug' | 'titulaires' | 'communes'>[],
   annee: number,
   openfiscaConstants: OpenfiscaConstants
 ) => {
   const anneePrecedente = annee - 1
-  const articlesKeys = Object.keys(result.articles)
-  const matrices: Matrices[] = articlesKeys.map((articleKey, index) => {
-    const [titreId, _substance, communeId] = articleKey.split('-')
-    const titulaire = titulaireToString(titreId, titres)
-    const commune = communes.find(({ id }) => id === communeId)
-    if (!commune) {
-      throw new Error(`commune ${communeId} introuvable`)
-    }
-
-    if (!commune) {
-      throw new Error(`commune ${communeId} introuvable`)
-    }
+  let count = 0
+  const matrices: Matrices[] = titres.flatMap(titre => {
+    const titulaire = titulaireToString(titre)
     const communePrincipaleId =
-      result.titres[titreId]?.commune_principale_exploitation?.[anneePrecedente]
-    const communePrincipale = communes.find(
+      result.titres[titre.id]?.commune_principale_exploitation?.[
+        anneePrecedente
+      ]
+    const communePrincipale = titre.communes?.find(
       ({ id }) => id === communePrincipaleId
     )
 
     if (!communePrincipale) {
-      throw new Error(`commune principale ${communeId} introuvable`)
+      throw new Error(`commune principale ${communePrincipaleId} introuvable`)
     }
 
-    const surfaceCommunaleProportionnee =
-      result.articles[articleKey]?.surface_communale_proportionnee?.[
-        anneePrecedente
-      ] ?? 1
-    const quantiteOrExtrait =
-      (result.articles[articleKey]?.quantite_aurifere_kg?.[anneePrecedente] ??
-        0) * surfaceCommunaleProportionnee
+    return result.titres[titre.id].articles.map(articleKey => {
+      count++
 
-    const quantiteOrExtraitFormatted = precisionGramme(quantiteOrExtrait)
-
-    // FIXME récupérer depuis les substances ?
-    const natureSubstance = 'Minerais aurifères'
-    const natureRedevance = "Kilogramme d'or contenu"
-
-    const fiscalite = toFiscalite(result, articleKey, annee)
-
-    const totalRedevanceDesMines =
-      fiscalite.redevanceCommunale + fiscalite.redevanceDepartementale
-
-    const tarifTaxeMiniereAutres = 0
-
-    const montantInvestissementsDeduits = isFiscaliteGuyane(fiscalite)
-      ? fiscalite.guyane.totalInvestissementsDeduits
-      : 0
-    const montantNet: number = isFiscaliteGuyane(fiscalite)
-      ? fiscalite.guyane.taxeAurifere
-      : 0
-
-    const fraisGestionFiscaliteDirecteLocale = fraisGestion(fiscalite)
-    const serviceDeLaDirectionGeneraleDesFinancesPubliquesEnChargeDuRecouvrement =
-      'Direction régionale des finances publiques (DRFIP) - Guyane'
-    const numeroDeLarticleDuRole = numeroDeLarticleDuRoleString(titreId, titres)
-
-    const departement = commune.departementId
-      ? Departements[commune.departementId].nom
-      : ''
-
-    return {
-      raw: { communePrincipale, commune, fiscalite, quantiteOrExtrait },
-      1121: {
-        numeroOrdreDeLaMatrice: index + 1,
-        communeDuLieuPrincipalDExploitation: communePrincipale.nom,
-        designationEtAdressDesConcessionnaires: titulaire,
-        natureDesSubstancesExtraites: natureSubstance,
-        redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_baseDesRedevances_nature:
-          natureRedevance,
-        redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_baseDesRedevances_quantites:
-          quantiteOrExtraitFormatted,
-        redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_redevanceDepartementale_tarifs:
-          openfiscaConstants.tarifDepartemental,
-        redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_redevanceDepartementale_montantNet:
-          fiscalite.redevanceDepartementale,
-        redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_redevanceCommunale_tarifs:
-          openfiscaConstants.tarifCommunal,
-        redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_redevanceCommunale_montantNetRedevanceDesMines:
-          fiscalite.redevanceCommunale,
-        redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_totalRedevanceDesMines:
-          totalRedevanceDesMines,
-        redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_taxeMiniereSurLOrDeGuyane_tarifsParKgExtraitPourLes_PME:
-          openfiscaConstants.tarifTaxeMinierePME,
-        redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_taxeMiniereSurLOrDeGuyane_tarifsParKgExtraitPourLes_autresEntreprises:
-          tarifTaxeMiniereAutres,
-        redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_taxeMiniereSurLOrDeGuyane_montantDesInvestissementsDeduits:
-          montantInvestissementsDeduits,
-        redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_taxeMiniereSurLOrDeGuyane_montantNetDeTaxeMiniereSurLOrDeGuyane:
-          montantNet,
-        redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_fraisDeGestionDeLaFiscaliteDirecteLocale:
-          fraisGestionFiscaliteDirecteLocale,
-        serviceDeLaDirectionGeneraleDesFinancesPubliquesEnChargeDuRecouvrement,
-        numeroDeLarticleDuRole
-      },
-      1122: {
-        numeroOrdreDeLaMatrice: index + 1,
-        designationEtAdressDesConcessionnaires: titulaire,
-        designationDesConcessionsPermisOuExplorations: numeroDeLarticleDuRole,
-        departementsEtCommunesSurLeTerritoireDesquelsFonctionnentLesExploitations_departements:
-          departement,
-        departementsEtCommunesSurLeTerritoireDesquelsFonctionnentLesExploitations_communes: `${commune?.nom} (${surfaceCommunaleProportionnee})`,
-        tonnagesExtraitsAuCoursDeLAnneePrecedente_parDepartement:
-          quantiteOrExtraitFormatted,
-        tonnagesExtraitsAuCoursDeLAnneePrecedente_parCommune:
-          quantiteOrExtraitFormatted,
-        observations: "production en kilogramme d'or"
+      const commune = titre.communes?.find(commune => {
+        return result.communes[commune.id].articles.includes(articleKey)
+      })
+      if (!commune) {
+        throw new Error(`commune de l’article ${articleKey} introuvable`)
       }
-    }
+
+      const surfaceCommunaleProportionnee =
+        result.articles[articleKey]?.surface_communale_proportionnee?.[
+          anneePrecedente
+        ] ?? 1
+      const quantiteOrExtrait =
+        (result.articles[articleKey]?.quantite_aurifere_kg?.[anneePrecedente] ??
+          0) * surfaceCommunaleProportionnee
+
+      const quantiteOrExtraitFormatted = precisionGramme(quantiteOrExtrait)
+
+      const natureSubstance = 'Minerais aurifères'
+      const natureRedevance = "Kilogramme d'or contenu"
+
+      const fiscalite = toFiscalite(result, articleKey, annee)
+
+      const totalRedevanceDesMines =
+        fiscalite.redevanceCommunale + fiscalite.redevanceDepartementale
+
+      const tarifTaxeMiniereAutres = 0
+
+      const montantInvestissementsDeduits = isFiscaliteGuyane(fiscalite)
+        ? fiscalite.guyane.totalInvestissementsDeduits
+        : 0
+      const montantNet: number = isFiscaliteGuyane(fiscalite)
+        ? fiscalite.guyane.taxeAurifere
+        : 0
+
+      const fraisGestionFiscaliteDirecteLocale = fraisGestion(fiscalite)
+      const serviceDeLaDirectionGeneraleDesFinancesPubliquesEnChargeDuRecouvrement =
+        'Direction régionale des finances publiques (DRFIP) - Guyane'
+      const numeroDeLarticleDuRole = titre.slug
+
+      const departement = commune.departementId
+        ? Departements[commune.departementId].nom
+        : ''
+
+      return {
+        raw: { communePrincipale, commune, fiscalite, quantiteOrExtrait },
+        1121: {
+          numeroOrdreDeLaMatrice: count,
+          communeDuLieuPrincipalDExploitation: communePrincipale.nom,
+          designationEtAdressDesConcessionnaires: titulaire,
+          natureDesSubstancesExtraites: natureSubstance,
+          redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_baseDesRedevances_nature:
+            natureRedevance,
+          redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_baseDesRedevances_quantites:
+            quantiteOrExtraitFormatted,
+          redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_redevanceDepartementale_tarifs:
+            openfiscaConstants.tarifDepartemental,
+          redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_redevanceDepartementale_montantNet:
+            fiscalite.redevanceDepartementale,
+          redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_redevanceCommunale_tarifs:
+            openfiscaConstants.tarifCommunal,
+          redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_redevanceCommunale_montantNetRedevanceDesMines:
+            fiscalite.redevanceCommunale,
+          redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_totalRedevanceDesMines:
+            totalRedevanceDesMines,
+          redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_taxeMiniereSurLOrDeGuyane_tarifsParKgExtraitPourLes_PME:
+            openfiscaConstants.tarifTaxeMinierePME,
+          redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_taxeMiniereSurLOrDeGuyane_tarifsParKgExtraitPourLes_autresEntreprises:
+            tarifTaxeMiniereAutres,
+          redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_taxeMiniereSurLOrDeGuyane_montantDesInvestissementsDeduits:
+            montantInvestissementsDeduits,
+          redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_taxeMiniereSurLOrDeGuyane_montantNetDeTaxeMiniereSurLOrDeGuyane:
+            montantNet,
+          redevancesDepartementaleEtCommunaleDesMinesEtTaxeMiniereSurLOrDeGuyane_fraisDeGestionDeLaFiscaliteDirecteLocale:
+            fraisGestionFiscaliteDirecteLocale,
+          serviceDeLaDirectionGeneraleDesFinancesPubliquesEnChargeDuRecouvrement,
+          numeroDeLarticleDuRole
+        },
+        1122: {
+          numeroOrdreDeLaMatrice: count,
+          designationEtAdressDesConcessionnaires: titulaire,
+          designationDesConcessionsPermisOuExplorations: numeroDeLarticleDuRole,
+          departementsEtCommunesSurLeTerritoireDesquelsFonctionnentLesExploitations_departements:
+            departement,
+          departementsEtCommunesSurLeTerritoireDesquelsFonctionnentLesExploitations_communes: `${commune?.nom} (${surfaceCommunaleProportionnee})`,
+          tonnagesExtraitsAuCoursDeLAnneePrecedente_parDepartement:
+            quantiteOrExtraitFormatted,
+          tonnagesExtraitsAuCoursDeLAnneePrecedente_parCommune:
+            quantiteOrExtraitFormatted,
+          observations: "production en kilogramme d'or"
+        }
+      }
+    })
   })
 
   const matrice1403 = Object.values(
@@ -428,12 +425,10 @@ export const buildMatrices = (
           toAdd.taxeMiniereSurLOrDeGuyane += taxeMiniereSurLOrDeGuyane
           toAdd.sommesRevenantALaRegionDeGuyane += taxeMiniereSurLOrDeGuyane
           toAdd.sommesRevenantAuConservatoireDeBiodiversite += 0
-          // FIXME ça vient d'oû ? on part du principe que ce sont les 8% de frais de gestion (ça semble coller)
           toAdd.fraisDAssietteEtDeRecouvrement += fraisGestion(
             ligne.raw.fiscalite
           )
           toAdd.degrevementsEtNonValeurs += 0
-          // FIXME ça vient d'oû ? on part du principe que ce sont les 8% de frais de gestion (ça semble coller)
           toAdd.totalDesSommesRevenantALEtat += fraisGestion(
             ligne.raw.fiscalite
           )
@@ -646,7 +641,6 @@ export const matrices = async () => {
     annee,
     entreprises
   )
-  const communes = await communesGet()
   if (Object.keys(body.articles).length > 0) {
     const result = await apiOpenfiscaCalculate(body)
 
@@ -655,7 +649,6 @@ export const matrices = async () => {
     const { matrices, matrice1403, matrice1404 } = buildMatrices(
       result,
       titres,
-      communes,
       annee,
       openfiscaConstants
     )
