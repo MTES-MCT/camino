@@ -1,4 +1,5 @@
 import { buildMatrices } from './matrices'
+import { ITitre } from '../types'
 
 describe('matrices', () => {
   test('buildMatrices', () => {
@@ -78,7 +79,7 @@ describe('matrices', () => {
         '97358': { articles: ['titre2-auru-97358'] }
       }
     }
-    const titres = [
+    const titres: Pick<ITitre, 'id' | 'slug' | 'titulaires' | 'communes'>[] = [
       {
         id: 'titre1',
         titulaires: [
@@ -94,7 +95,7 @@ describe('matrices', () => {
           {
             id: '97310',
             nom: 'Roura',
-            departement_id: '973'
+            departementId: '973'
           }
         ]
       },
@@ -113,12 +114,12 @@ describe('matrices', () => {
           {
             id: '97358',
             nom: 'Saint-Élie',
-            departement_id: '973'
+            departementId: '973'
           },
           {
             id: '97312',
             nom: 'Sinnamary',
-            departement_id: '973'
+            departementId: '973'
           }
         ]
       },
@@ -137,7 +138,7 @@ describe('matrices', () => {
           {
             id: '97311',
             nom: 'Saint-Laurent-du-Maroni',
-            departement_id: '973'
+            departementId: '973'
           }
         ]
       }
