@@ -80,16 +80,23 @@ describe('matrices', () => {
     }
     const titres = [
       {
-        id: 'titre3',
+        id: 'titre1',
         titulaires: [
           {
             id: '',
-            nom: 'titulaire3',
-            adresse: 'ladresse3',
-            legalSiren: 'legalSiren3'
+            nom: 'titulaire1',
+            adresse: 'ladresse1',
+            legalSiren: 'legalSiren1'
           }
         ],
-        slug: 'slug-titre-3'
+        slug: 'slug-titre-1',
+        communes: [
+          {
+            id: '97310',
+            nom: 'Roura',
+            departement_id: '973'
+          }
+        ]
       },
       {
         id: 'titre2',
@@ -101,45 +108,43 @@ describe('matrices', () => {
             legalSiren: 'legalSiren2'
           }
         ],
-        slug: 'slug-titre-2'
+        slug: 'slug-titre-2',
+        communes: [
+          {
+            id: '97358',
+            nom: 'Saint-Élie',
+            departement_id: '973'
+          },
+          {
+            id: '97312',
+            nom: 'Sinnamary',
+            departement_id: '973'
+          }
+        ]
       },
       {
-        id: 'titre1',
+        id: 'titre3',
         titulaires: [
           {
             id: '',
-            nom: 'titulaire1',
-            adresse: 'ladresse1',
-            legalSiren: 'legalSiren1'
+            nom: 'titulaire3',
+            adresse: 'ladresse3',
+            legalSiren: 'legalSiren3'
           }
         ],
-        slug: 'slug-titre-1'
+        slug: 'slug-titre-3',
+        communes: [
+          {
+            id: '97311',
+            nom: 'Saint-Laurent-du-Maroni',
+            departement_id: '973'
+          }
+        ]
       }
     ]
-    const communes = [
-      {
-        id: '97310',
-        nom: 'Roura',
-        departement_id: '973'
-      },
-      {
-        id: '97311',
-        nom: 'Saint-Laurent-du-Maroni',
-        departement_id: '973'
-      },
-      {
-        id: '97312',
-        nom: 'Sinnamary',
-        departement_id: '973'
-      },
-      {
-        id: '97358',
-        nom: 'Saint-Élie',
-        departement_id: '973'
-      }
-    ]
+
     expect(
-      buildMatrices(openFiscaResponse, titres, communes, 2021, {
+      buildMatrices(openFiscaResponse, titres, 2021, {
         tarifCommunal: 166.3,
         tarifDepartemental: 33.2,
         tarifTaxeMinierePME: 498.06
