@@ -11,7 +11,7 @@ import {
 } from 'camino-common/src/fiscalite'
 import { constants } from 'http2'
 import {
-  apiOpenfiscaFetch,
+  apiOpenfiscaCalculate,
   OpenfiscaRequest,
   OpenfiscaResponse,
   redevanceCommunale,
@@ -412,7 +412,7 @@ export const fiscalite = async (
     )
     console.info('body', JSON.stringify(body))
     if (Object.keys(body.articles).length > 0) {
-      const result = await apiOpenfiscaFetch(body)
+      const result = await apiOpenfiscaCalculate(body)
       console.info('result', JSON.stringify(result))
 
       const redevances = responseExtractor(result, annee)
