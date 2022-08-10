@@ -259,7 +259,7 @@ export const bodyBuilder = (
 }
 
 export const toFiscalite = (
-  result: OpenfiscaResponse,
+  result: Pick<OpenfiscaResponse, 'articles'>,
   articleId: string,
   annee: number
 ): Fiscalite => {
@@ -300,7 +300,7 @@ type Reduced =
   | { guyane: false; fiscalite: FiscaliteFrance }
 // VisibleForTesting
 export const responseExtractor = (
-  result: OpenfiscaResponse,
+  result: Pick<OpenfiscaResponse, 'articles'>,
   annee: number
 ): Fiscalite => {
   const redevances: Reduced = Object.keys(result.articles)

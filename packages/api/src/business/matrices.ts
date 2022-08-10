@@ -20,10 +20,6 @@ import { ICommune, ITitre } from '../types'
 import { Departements } from 'camino-common/src/static/departement'
 import fs from 'fs'
 
-// TODO 2022-08-03 : à faire avec Vincent
-// - discuter de l'architecture cible (Beaucoup de trucs qui se ressemblent sans être pareil). Peut être se balader avec 'raw' le plus longtemps possible et traduire au dernier moment
-// - ajouter des tests
-// - Trouver un moyen de comparer les matrices de l'année d'avant de manière exhaustive
 const sips = {
   cayenne: {
     nom: 'SIP de Cayenne',
@@ -178,7 +174,7 @@ export const buildMatrices = (
 } => {
   const anneePrecedente = annee - 1
   let count = 0
-  const matrices: Matrices[] = titres
+  const rawLines: Matrices[] = titres
     .filter(titre => !!result.titres[titre.id])
     .flatMap(titre => {
       const titulaireLabel = titulaireToString(titre)
@@ -245,17 +241,17 @@ export const buildMatrices = (
       })
     })
 
-  const matrice1121 = matrices.map(matrice => {
-    const fiscalite = matrice.fiscalite
+  const matrice1121 = rawLines.map(line => {
+    const fiscalite = line.fiscalite
 
     return {
-      "Numéro d'ordre de la matrice": matrice.index,
-      "Commune du lieu principal d'exploitation": matrice.communePrincipale.nom,
+      "Numéro d'ordre de la matrice": line.index,
+      "Commune du lieu principal d'exploitation": line.communePrincipale.nom,
       'Désignation et adresse des concessionnaires, titulaires de permis d’exploitation ou exploitants':
-        matrice.titulaireLabel,
+        line.titulaireLabel,
       'Nature des substances extraites': 'Minerais aurifères',
       'Base des redevances | Nature': "Kilogramme d'or contenu",
-      'Base des redevances | Quantités': matrice.quantiteOrExtrait,
+      'Base des redevances | Quantités': line.quantiteOrExtrait,
       'Redevance départementale | Tarifs':
         openfiscaConstants.tarifDepartemental,
       'Redevance départementale | Montant net':
@@ -278,52 +274,52 @@ export const buildMatrices = (
         fraisGestion(fiscalite),
       'Service de la Direction générale des Finances publiques en charge du recouvrement':
         'Direction régionale des finances publiques (DRFIP) - Guyane',
-      "Numéro de l'article du rôle": matrice.titreLabel
+      "Numéro de l'article du rôle": line.titreLabel
     }
   })
 
-  const matrice1122 = matrices.map(matrice => {
+  const matrice1122 = rawLines.map(line => {
     return {
-      "Numéro d'ordre de la matrice": matrice.index,
-      'Désignation des concessionnaires': matrice.titulaireLabel,
-      'Désignation des concessions': matrice.titreLabel,
+      "Numéro d'ordre de la matrice": line.index,
+      'Désignation des concessionnaires': line.titulaireLabel,
+      'Désignation des concessions': line.titreLabel,
       'Départements sur le territoire desquels fonctionnent les exploitations':
-        matrice.departementLabel,
-      'Communes sur le territoire desquels fonctionnent les exploitations': `${matrice.commune?.nom} (${matrice.surfaceCommunaleProportionnee})`,
+        line.departementLabel,
+      'Communes sur le territoire desquels fonctionnent les exploitations': `${line.commune?.nom} (${line.surfaceCommunaleProportionnee})`,
       "Tonnages extraits ou cours de l'année précédente | par département":
-        matrice.quantiteOrExtrait,
+        line.quantiteOrExtrait,
       "Tonnages extraits ou cours de l'année précédente | par commune":
-        matrice.quantiteOrExtrait,
+        line.quantiteOrExtrait,
       Observations: "production en kilogramme d'or"
     }
   })
 
   const matrice1403 = Object.values(
-    matrices.reduce<Record<Sips, Matrice1403>>(
-      (acc, ligne) => {
-        const toAdd = acc[ligne.sip]
+    rawLines.reduce<Record<Sips, Matrice1403>>(
+      (acc, line) => {
+        const toAdd = acc[line.sip]
 
         if (toAdd === null) {
           throw new Error(
-            `la commune ${ligne.commune.id} n'appartient à aucun SIP`
+            `la commune ${line.commune.id} n'appartient à aucun SIP`
           )
         } else {
-          const taxeMiniereSurLOrDeGuyane = isFiscaliteGuyane(ligne.fiscalite)
-            ? ligne.fiscalite.guyane.taxeAurifere
+          const taxeMiniereSurLOrDeGuyane = isFiscaliteGuyane(line.fiscalite)
+            ? line.fiscalite.guyane.taxeAurifere
             : 0
           toAdd['Redevance départementale'] +=
-            ligne.fiscalite.redevanceDepartementale
-          toAdd['Redevance communale'] += ligne.fiscalite.redevanceCommunale
+            line.fiscalite.redevanceDepartementale
+          toAdd['Redevance communale'] += line.fiscalite.redevanceCommunale
           toAdd["Taxe minière sur l'or de Guyane"] += taxeMiniereSurLOrDeGuyane
           toAdd['Sommes revenant à la Région de Guyane'] +=
             taxeMiniereSurLOrDeGuyane
           toAdd['Sommes revenant au Conservatoire de biodiversité'] += 0
           toAdd[
             "Sommes revenant à l'État | Frais d'assiette et de recouvrement"
-          ] += fraisGestion(ligne.fiscalite)
+          ] += fraisGestion(line.fiscalite)
           toAdd["Sommes revenant à l'État | Dégrèvements et non-valeurs"] += 0
           toAdd["Sommes revenant à l'État | Total"] += fraisGestion(
-            ligne.fiscalite
+            line.fiscalite
           )
           toAdd['Total des colonnes'] =
             toAdd['Redevance départementale'] +
@@ -379,40 +375,40 @@ export const buildMatrices = (
     )
   )
 
-  const matrice1404 = matrices.reduce<Record<Sips, Matrice1404[]>>(
-    (acc, ligne) => {
-      const toAdd = acc[ligne.sip]
-      const sip = sips[ligne.sip]
+  const matrice1404 = rawLines.reduce<Record<Sips, Matrice1404[]>>(
+    (acc, line) => {
+      const toAdd = acc[line.sip]
+      const sip = sips[line.sip]
 
       if (toAdd === null) {
         throw new Error(
-          `la commune ${ligne.commune.id} n'appartient à aucun SIP`
+          `la commune ${line.commune.id} n'appartient à aucun SIP`
         )
       } else {
         const redevanceCommunalePremiereFraction =
-          ligne.fiscalite.redevanceCommunale * 0.35
+          line.fiscalite.redevanceCommunale * 0.35
         const redevanceCommunaleDeuxiemeFraction =
-          ligne.fiscalite.redevanceCommunale * 0.1
+          line.fiscalite.redevanceCommunale * 0.1
         toAdd.push({
           'Circonscription de': sip?.nom ?? '',
-          'Articles des rôles': ligne.index,
-          'Désignation des exploitants': ligne.titulaireLabel,
-          Départements: ligne.departementLabel,
-          Communes: ligne.commune.nom,
+          'Articles des rôles': line.index,
+          'Désignation des exploitants': line.titulaireLabel,
+          Départements: line.departementLabel,
+          Communes: line.commune.nom,
           'Elements de base | Revenus imposables à la TFPB': 0,
-          'Elements de base | Tonnages extraits': ligne.quantiteOrExtrait,
+          'Elements de base | Tonnages extraits': line.quantiteOrExtrait,
           'Redevance départementale | Produit net de la redevance':
-            ligne.fiscalite.redevanceDepartementale,
+            line.fiscalite.redevanceDepartementale,
           'Redevance départementale | Sommes revenant aux départements':
-            ligne.fiscalite.redevanceDepartementale,
+            line.fiscalite.redevanceDepartementale,
           'Redevance communale | Produit net de la redevance':
-            ligne.fiscalite.redevanceCommunale,
+            line.fiscalite.redevanceCommunale,
           'Redevance communale | Répartition | 1ère fraction':
             redevanceCommunalePremiereFraction,
           'Redevance communale | Répartition | 2ème fraction':
             redevanceCommunaleDeuxiemeFraction,
           'Redevance communale | Répartition | 3ème fraction':
-            ligne.fiscalite.redevanceCommunale * 0.55,
+            line.fiscalite.redevanceCommunale * 0.55,
           'Redevance communale | Revenant aux communes | 1ère fraction':
             redevanceCommunalePremiereFraction,
           'Redevance communale | Revenant aux communes | 2ème fraction':
@@ -421,13 +417,13 @@ export const buildMatrices = (
             redevanceCommunalePremiereFraction +
             redevanceCommunaleDeuxiemeFraction,
           "Taxe minière sur l'or de Guyane | Produit net": isFiscaliteGuyane(
-            ligne.fiscalite
+            line.fiscalite
           )
-            ? ligne.fiscalite.guyane.taxeAurifere
+            ? line.fiscalite.guyane.taxeAurifere
             : 0,
           "Taxe minière sur l'or de Guyane | Répartition | Région de Guyane":
-            isFiscaliteGuyane(ligne.fiscalite)
-              ? ligne.fiscalite.guyane.taxeAurifere
+            isFiscaliteGuyane(line.fiscalite)
+              ? line.fiscalite.guyane.taxeAurifere
               : 0,
           "Taxe minière sur l'or de Guyane | Répartition | Conservatoire": 0
         })
@@ -445,9 +441,7 @@ export const buildMatrices = (
   return { matrice1121, matrice1122, matrice1403, matrice1404 }
 }
 
-export const matrices = async () => {
-  // TODO 2022-07-25 gérer l’année
-  const annee = 2021
+export const matrices = async (annee: number) => {
   const anneePrecedente = annee - 1
 
   const titres = await titresGet(
