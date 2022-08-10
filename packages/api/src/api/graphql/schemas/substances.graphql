@@ -24,13 +24,5 @@ type SubstanceLegale {
   nom: String!
   domaine: Domaine
   description: String
-  code: SubstanceLegaleCode!
   ordre: Int
-}
-
-type SubstanceLegaleCode {
-  id: ID!
-  nom: String!
-  description: String
-  lien: String!
 }

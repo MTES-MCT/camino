@@ -21314,6 +21314,12 @@
   },
   {
     "titre_type_id": "prg",
+    "ordre": 600,
+    "demarche_type_id": "pr2",
+    "etape_type_id": "des"
+  },
+  {
+    "titre_type_id": "prg",
     "ordre": 450,
     "demarche_type_id": "pr2",
     "etape_type_id": "dex",
@@ -21373,6 +21379,18 @@
         ]
       }
     ]
+  },
+  {
+    "titre_type_id": "prg",
+    "ordre": 140,
+    "demarche_type_id": "pr2",
+    "etape_type_id": "mcp"
+  },
+  {
+    "titre_type_id": "prg",
+    "ordre": 150,
+    "demarche_type_id": "pr2",
+    "etape_type_id": "mcr"
   },
   {
     "titre_type_id": "prg",

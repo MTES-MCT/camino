@@ -1,5 +1,5 @@
 const substances = {
-  graph: `legales.[code, domaine]`
+  graph: `legales.domaine`
 }
 
 const points = {
@@ -237,7 +237,6 @@ const titresRelateFalse = [
   'forets',
   'substances',
   'substances.legales',
-  'substances.legales.code',
   'substances.legales.domaine',
   'titulaires',
   'titulaires.etablissements',

@@ -60,7 +60,6 @@ export const tables = [
     orderBy: ['substance_id', 'substance_legale_id']
   },
   { name: 'substances_legales', orderBy: ['id'] },
-  { name: 'substances_legales_codes', orderBy: ['id'] },
   { name: 'titres', orderBy: ['id'] },
   { name: 'titres_activites', orderBy: ['id'] },
   {

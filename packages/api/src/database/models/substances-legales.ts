@@ -2,7 +2,6 @@ import { Model } from 'objection'
 
 import { ISubstanceLegale } from '../../types'
 
-import SubstancesLegalesCodes from './substances-legales-codes'
 import Domaines from './domaines'
 
 interface SubstancesLegales extends ISubstanceLegale {}
@@ -24,15 +23,6 @@ class SubstancesLegales extends Model {
   }
 
   static relationMappings = () => ({
-    code: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: SubstancesLegalesCodes,
-      join: {
-        from: 'substancesLegales.substanceLegaleCodeId',
-        to: 'substancesLegalesCodes.id'
-      }
-    },
-
     domaine: {
       relation: Model.BelongsToOneRelation,
       modelClass: Domaines,
