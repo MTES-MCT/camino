@@ -301,11 +301,6 @@ export const eventFrom = (etape: Etape): XStateEvent => {
     )
   })
 
-  // FIXME: vérifier que les tests sont bons
-  // if (!entry) {
-  //   entry = entries.find(([_, value]) => value.etat === etape.typeId)
-  // }
-
   if (entry) {
     const eventFromEntry = entry[0]
     switch (eventFromEntry) {
