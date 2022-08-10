@@ -8,7 +8,6 @@ import {
   IToken
 } from '../../../types'
 
-import { debug } from '../../../config/index'
 import { fieldsBuild } from './_fields-build'
 import { userGet } from '../../../database/queries/utilisateurs'
 import {
@@ -40,9 +39,7 @@ const activitesTypes = async (
 
     return await activitesTypesGet({ fields })
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -54,9 +51,7 @@ const activitesStatuts = async () => {
 
     return activitesStatuts
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -88,9 +83,7 @@ const activiteTypeModifier = async (
 
     return activitesTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -113,9 +106,7 @@ const activiteStatutModifier = async (
 
     return activitesStatuts
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -133,9 +124,7 @@ const activitesTypesTitresTypes = async (_: never, context: IToken) => {
 
     return activitesTypesTitresTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -158,9 +147,7 @@ const activiteTypeTitreTypeCreer = async (
 
     return activitesTypesTitresTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -186,9 +173,7 @@ const activiteTypeTitreTypeSupprimer = async (
 
     return activitesTypesTitresTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -206,9 +191,7 @@ const activitesTypesDocumentsTypes = async (_: never, context: IToken) => {
 
     return activitesTypesDocumentsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -233,9 +216,7 @@ const activiteTypeDocumentTypeCreer = async (
 
     return activitesTypesDocumentsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -264,9 +245,7 @@ const activiteTypeDocumentTypeModifier = async (
 
     return activitesTypesDocumentsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -294,9 +273,7 @@ const activiteTypeDocumentTypeSupprimer = async (
 
     return activitesTypesDocumentsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -314,9 +291,7 @@ const activitesTypesPays = async (_: never, context: IToken) => {
 
     return activitesTypesPays
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -339,9 +314,7 @@ const activiteTypePaysCreer = async (
 
     return activitesTypesDocumentsPays
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -367,9 +340,7 @@ const activiteTypePaysSupprimer = async (
 
     return activitesTypesDocumentsPays
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

@@ -2,7 +2,6 @@ import { ITitre } from '../../../types'
 
 import { titreEtapePropFind } from '../../../business/rules/titre-etape-prop-find'
 import { titreValideCheck } from '../../../business/utils/titre-valide-check'
-import { debug } from '../../../config'
 import { titresActivitesGet } from '../../../database/queries/titres-activites'
 import { userSuper } from '../../../database/user-super'
 import { matomoData } from '../../../tools/api-matomo'
@@ -103,9 +102,7 @@ const statistiquesGlobales = async (): Promise<Statistiques> => {
       reutilisations
     }
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

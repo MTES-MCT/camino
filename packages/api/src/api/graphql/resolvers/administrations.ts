@@ -9,7 +9,6 @@ import {
   IToken
 } from '../../../types'
 
-import { debug } from '../../../config/index'
 import {
   administrationGet,
   administrationsGet,
@@ -54,9 +53,7 @@ const administration = async (
 
     return administrationFormat(administration)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -81,9 +78,7 @@ export const administrationActivitesTypesEmails = async (
       throw new Error('l’identifiant est inconnu')
     }
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -104,9 +99,7 @@ const administrations = async (
 
     return administrations.map(administrationFormat)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -149,9 +142,7 @@ const administrationTitreTypeModifier = async (
       user
     )
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -197,9 +188,7 @@ const administrationTitreTypeTitreStatutModifier = async (
       user
     )
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -245,9 +234,7 @@ const administrationTitreTypeEtapeTypeModifier = async (
       user
     )
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -287,9 +274,7 @@ const administrationActiviteTypeModifier = async (
       user
     )
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -329,9 +314,7 @@ const administrationActiviteTypeEmailCreer = async (
       user
     )
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     // Un doublon d'email + admin ID + type d'activité génère une erreur spécifique.
     if ((e as Error).name === 'UniqueViolationError') {
@@ -376,9 +359,7 @@ const administrationActiviteTypeEmailSupprimer = async (
       user
     )
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

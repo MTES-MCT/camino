@@ -1,6 +1,5 @@
 import { journauxGet } from '../../../database/queries/journaux'
 import { userGet } from '../../../database/queries/utilisateurs'
-import { debug } from '../../../config'
 import { IToken } from '../../../types'
 import { GraphQLResolveInfo } from 'graphql'
 import { fieldsBuild } from './_fields-build'
@@ -36,9 +35,7 @@ export const journaux = async (
       total
     }
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

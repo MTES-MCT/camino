@@ -11,8 +11,6 @@ import {
   IUtilisateur
 } from '../../../types'
 
-import { debug } from '../../../config'
-
 import { titreFormat } from '../../_format/titres'
 
 import {
@@ -149,9 +147,7 @@ const etape = async (
 
     return titreEtapeFormat(titreEtape)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -215,9 +211,7 @@ const etapeHeritage = async (
 
     return titreEtapeFormat(titreEtape)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -401,9 +395,7 @@ const etapeCreer = async (
 
     return titreEtapeFormat(etapeUpdated!)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -612,9 +604,7 @@ const etapeModifier = async (
 
     return titreEtapeFormat(etapeUpdated!)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -756,9 +746,7 @@ const etapeDeposer = async (
 
     return titreFormat(titreUpdated!)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -821,9 +809,7 @@ const etapeSupprimer = async (
 
     return titreFormat(titreUpdated!)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

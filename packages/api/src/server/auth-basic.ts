@@ -2,7 +2,6 @@ import express from 'express'
 import basicAuth from 'basic-auth'
 import bcrypt from 'bcryptjs'
 
-import { debug } from '../config/index'
 import { emailCheck } from '../tools/email-check'
 import { userByEmailGet } from '../database/queries/utilisateurs'
 
@@ -52,9 +51,7 @@ export const authBasic = async (
       }
     }
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     next(e)
 

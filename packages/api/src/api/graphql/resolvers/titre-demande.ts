@@ -7,7 +7,6 @@ import {
   ISection,
   ITitreEntreprise
 } from '../../../types'
-import { debug } from '../../../config/index'
 import {
   userGet,
   utilisateurTitreCreate
@@ -251,9 +250,7 @@ export const titreDemandeCreer = async (
       titreEtapeId
     }
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

@@ -1,7 +1,5 @@
 import { IToken } from '../../../types'
 
-import { debug } from '../../../config/index'
-
 import {
   userGet,
   utilisateurTitreCreate,
@@ -35,9 +33,7 @@ const utilisateurTitreAbonner = async (
 
     return true
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
