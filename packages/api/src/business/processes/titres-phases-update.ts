@@ -1,6 +1,5 @@
 import { ITitrePhase } from '../../types'
 import dateFormat from 'dateformat'
-import PQueue from 'p-queue'
 
 import {
   titrePhasesUpsert,
@@ -87,10 +86,9 @@ const titrePhasesIdDeletedFind = (
     return res
   }, [])
 
-const titresPhasesUpdate = async (titresIds?: string[]) => {
+export const titresPhasesUpdate = async (titresIds?: string[]) => {
   console.info()
   console.info('phases des titres…')
-  const queue = new PQueue({ concurrency: 100 })
 
   const titres = await titresGet(
     { ids: titresIds },
@@ -103,85 +101,63 @@ const titresPhasesUpdate = async (titresIds?: string[]) => {
   )
 
   const aujourdhui = dateFormat(new Date(), 'yyyy-mm-dd')
+  const titresPhasesIdsUpdated = []
+  const titresPhasesIdsDeleted = []
 
-  const { titresPhasesIdsUpdated, titresPhasesIdsDeleted } = titres.reduce(
-    (
-      res: {
-        titresPhasesIdsUpdated: string[]
-        titresPhasesIdsDeleted: string[]
-      },
-      titre
-    ) => {
-      // met les démarches d'un titre dans le sens croissant avec `reverse()` :
-      // les démarches données part `titresGet` sont dans l'ordre décroissant
-      const demarches = titre.demarches!.slice().reverse()
+  for (const titre of titres) {
+    // met les démarches d'un titre dans le sens croissant avec `reverse()` :
+    // les démarches données part `titresGet` sont dans l'ordre décroissant
+    const demarches = titre.demarches!.slice().reverse()
 
-      // retourne les phases enregistrées en base
-      const titrePhasesOld = demarches.reduce((res: ITitrePhase[], td) => {
-        if (td.phase) {
-          res.push(td.phase)
-        }
-
-        return res
-      }, [])
-
-      // retourne un tableau avec les phases
-      // créées à partir des démarches
-      const titrePhases = titrePhasesFind(demarches, aujourdhui, titre.typeId)
-
-      const titrePhasesToUpdate = titrePhasesUpdatedFind(
-        titrePhasesOld,
-        titrePhases
-      )
-
-      if (titrePhasesToUpdate.length) {
-        queue.add(async () => {
-          await titrePhasesUpsert(titrePhasesToUpdate)
-
-          const log = {
-            type: 'titre / démarche / phases (mise à jour) ->',
-            value: JSON.stringify(titrePhasesToUpdate)
-          }
-
-          console.info(log.type, log.value)
-
-          res.titresPhasesIdsUpdated.push(
-            ...titrePhasesToUpdate.map(p => p.titreDemarcheId)
-          )
-        })
-      }
-
-      const titrePhasesToDeleteIds = titrePhasesIdDeletedFind(
-        titrePhasesOld,
-        titrePhases
-      )
-
-      if (titrePhasesToDeleteIds.length) {
-        queue.add(async () => {
-          await titrePhasesDelete(titrePhasesToDeleteIds)
-
-          const log = {
-            type: 'titre / démarche / phases (suppression) ->',
-            value: titrePhasesToDeleteIds.join(', ')
-          }
-
-          console.info(log.type, log.value)
-
-          res.titresPhasesIdsDeleted.push(...titrePhasesToDeleteIds)
-        })
+    // retourne les phases enregistrées en base
+    const titrePhasesOld = demarches.reduce((res: ITitrePhase[], td) => {
+      if (td.phase) {
+        res.push(td.phase)
       }
 
       return res
-    },
-    {
-      titresPhasesIdsUpdated: [] as string[],
-      titresPhasesIdsDeleted: [] as string[]
-    }
-  )
+    }, [])
 
-  await queue.onIdle()
+    // retourne un tableau avec les phases
+    // créées à partir des démarches
+    const titrePhases = titrePhasesFind(demarches, aujourdhui, titre.typeId)
+
+    const titrePhasesToUpdate = titrePhasesUpdatedFind(
+      titrePhasesOld,
+      titrePhases
+    )
+
+    if (titrePhasesToUpdate.length) {
+      await titrePhasesUpsert(titrePhasesToUpdate)
+
+      console.info(
+        'titre / démarche / phases (mise à jour) ->',
+        JSON.stringify(titrePhasesToUpdate)
+      )
+
+      titresPhasesIdsUpdated.push(
+        ...titrePhasesToUpdate.map(p => p.titreDemarcheId)
+      )
+    }
+
+    const titrePhasesToDeleteIds = titrePhasesIdDeletedFind(
+      titrePhasesOld,
+      titrePhases
+    )
+
+    if (titrePhasesToDeleteIds.length) {
+      await titrePhasesDelete(titrePhasesToDeleteIds)
+
+      const log = {
+        type: 'titre / démarche / phases (suppression) ->',
+        value: titrePhasesToDeleteIds.join(', ')
+      }
+
+      console.info(log.type, log.value)
+
+      titresPhasesIdsDeleted.push(...titrePhasesToDeleteIds)
+    }
+  }
 
   return [titresPhasesIdsUpdated, titresPhasesIdsDeleted]
 }
-
-export { titresPhasesUpdate }

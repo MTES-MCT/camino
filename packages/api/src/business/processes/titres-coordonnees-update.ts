@@ -1,13 +1,10 @@
-import PQueue from 'p-queue'
-
 import { titresGet, titreUpdate } from '../../database/queries/titres'
 import { userSuper } from '../../database/user-super'
 import { titreCoordonneesFind } from '../utils/titre-coordonnees-find'
 
-const titresCoordonneesUpdate = async (titresIds?: string[]) => {
+export const titresCoordonneesUpdate = async (titresIds?: string[]) => {
   console.info()
   console.info('coordonnées des titres…')
-  const queue = new PQueue({ concurrency: 100 })
 
   const titres = await titresGet(
     { ids: titresIds },
@@ -17,7 +14,7 @@ const titresCoordonneesUpdate = async (titresIds?: string[]) => {
 
   const titresCoordonneesUpdated = [] as string[]
 
-  titres.forEach(titre => {
+  for (const titre of titres) {
     const coordonnees = titreCoordonneesFind(titre.points)
 
     if (
@@ -27,24 +24,16 @@ const titresCoordonneesUpdate = async (titresIds?: string[]) => {
           coordonnees.y !== titre.coordonnees.y)) ||
       !coordonnees !== !titre.coordonnees
     ) {
-      queue.add(async () => {
-        await titreUpdate(titre.id, { coordonnees })
+      await titreUpdate(titre.id, { coordonnees })
 
-        const log = {
-          type: 'titre : coordonnées (mise à jour) ->',
-          value: `${titre.id} : ${coordonnees?.x}, ${coordonnees?.y}`
-        }
+      console.info(
+        'titre : coordonnées (mise à jour) ->',
+        `${titre.id} : ${coordonnees?.x}, ${coordonnees?.y}`
+      )
 
-        console.info(log.type, log.value)
-
-        titresCoordonneesUpdated.push(titre.id)
-      })
+      titresCoordonneesUpdated.push(titre.id)
     }
-  })
-
-  await queue.onIdle()
+  }
 
   return titresCoordonneesUpdated
 }
-
-export { titresCoordonneesUpdate }

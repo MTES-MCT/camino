@@ -1,5 +1,3 @@
-import PQueue from 'p-queue'
-
 import {
   utilisateursGet,
   utilisateurUpdate
@@ -7,10 +5,11 @@ import {
 import { userSuper } from '../../database/user-super'
 import { newsletterSubscribersFind } from '../../tools/api-mailjet/newsletter'
 
-const utilisateursNewsletterUpdate = async (utilisateursIds?: string[]) => {
+export const utilisateursNewsletterUpdate = async (
+  utilisateursIds?: string[]
+) => {
   console.info()
   console.info('utilisateurs inscrits à la newsletter…')
-  const queue = new PQueue({ concurrency: 100 })
 
   const utilisateurs = await utilisateursGet(
     { ids: utilisateursIds },
@@ -22,31 +21,23 @@ const utilisateursNewsletterUpdate = async (utilisateursIds?: string[]) => {
 
   const utilisateursUpdated = [] as string[]
 
-  utilisateurs.forEach(utilisateur => {
+  for (const utilisateur of utilisateurs) {
     if (
       utilisateur.email &&
       ((emails.includes(utilisateur.email) && !utilisateur.newsletter) ||
         (!emails.includes(utilisateur.email) && utilisateur.newsletter))
     ) {
       const newsletter = !utilisateur.newsletter
-      queue.add(async () => {
-        await utilisateurUpdate(utilisateur.id, { newsletter })
+      await utilisateurUpdate(utilisateur.id, { newsletter })
 
-        const log = {
-          type: 'utilisateur : inscrit à la newsletter (mise à jour) ->',
-          value: `${utilisateur.id} : ${newsletter}`
-        }
+      console.info(
+        'utilisateur : inscrit à la newsletter (mise à jour) ->',
+        `${utilisateur.id} : ${newsletter}`
+      )
 
-        console.info(log.type, log.value)
-
-        utilisateursUpdated.push(utilisateur.id)
-      })
+      utilisateursUpdated.push(utilisateur.id)
     }
-  })
-
-  await queue.onIdle()
+  }
 
   return utilisateursUpdated
 }
-
-export { utilisateursNewsletterUpdate }

@@ -9,7 +9,7 @@ import { EmailTemplateId } from '../../tools/api-mailjet/types'
 
 export const ACTIVITES_DELAI_RELANCE_JOURS = 14
 
-const titresActivitesRelanceSend = async (aujourdhui = new Date()) => {
+export const titresActivitesRelanceSend = async (aujourdhui = new Date()) => {
   console.info()
   console.info('relance des activités des titres…')
 
@@ -75,5 +75,3 @@ const titresActivitesRelanceSend = async (aujourdhui = new Date()) => {
 
   return titresActivitesRelanceToSend.map(ta => ta.id)
 }
-
-export { titresActivitesRelanceSend }

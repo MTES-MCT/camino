@@ -1,5 +1,4 @@
 // https://etablissements-publics.api.gouv.fr
-import PQueue from 'p-queue'
 import fetch from 'node-fetch'
 
 import errorLog from '../error-log'
@@ -137,17 +136,12 @@ const organismeDepartementGet = async (
 export const organismesDepartementsGet = async (
   departementsIdsNoms: { departementId: DepartementId; nom: string }[]
 ): Promise<Administration[]> => {
-  const administrationsOrganismesRequests = departementsIdsNoms.map(
-    ({ departementId, nom }) =>
-      () =>
-        organismeDepartementGet(departementId, nom)
-  )
-
-  const queue = new PQueue({ concurrency: 10 })
-
-  const organismesDepartements = await queue.addAll(
-    administrationsOrganismesRequests
-  )
+  const organismesDepartements = []
+  for (const { departementId, nom } of departementsIdsNoms) {
+    organismesDepartements.push(
+      await organismeDepartementGet(departementId, nom)
+    )
+  }
 
   return organismesDepartements.filter((o): o is Administration => !!o)
 }

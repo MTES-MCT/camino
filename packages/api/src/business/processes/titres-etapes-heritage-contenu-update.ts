@@ -1,5 +1,3 @@
-import PQueue from 'p-queue'
-
 import { ITitreEtape, IUtilisateur } from '../../types'
 
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes'
@@ -14,13 +12,12 @@ import {
   titreEtapesSortDescByOrdre
 } from '../utils/titre-etapes-sort'
 
-const titresEtapesHeritageContenuUpdate = async (
+export const titresEtapesHeritageContenuUpdate = async (
   user: IUtilisateur,
   titresDemarchesIds?: string[]
 ) => {
   console.info()
   console.info('héritage des contenus des étapes…')
-  const queue = new PQueue({ concurrency: 100 })
 
   const titresDemarches = await titresDemarchesGet(
     { titresDemarchesIds },
@@ -38,7 +35,7 @@ const titresEtapesHeritageContenuUpdate = async (
 
   const titresEtapesIdsUpdated = [] as string[]
 
-  titresDemarches.forEach(titreDemarche => {
+  for (const titreDemarche of titresDemarches) {
     if (titreDemarche.etapes?.length) {
       const etapeSectionsDictionary = etapeSectionsDictionaryBuild(
         titreDemarche.etapes
@@ -48,7 +45,8 @@ const titresEtapesHeritageContenuUpdate = async (
       )
 
       if (titreEtapes) {
-        titreEtapes.forEach((titreEtape: ITitreEtape, index: number) => {
+        for (let index = 0; index < titreEtapes.length; index++) {
+          const titreEtape: ITitreEtape = titreEtapes[index]
           const titreEtapesFiltered = titreEtapesSortDescByOrdre(
             titreEtapes.slice(0, index)
           )
@@ -61,38 +59,30 @@ const titresEtapesHeritageContenuUpdate = async (
             )
 
           if (hasChanged) {
-            queue.add(async () => {
-              await titreEtapeUpdate(
-                titreEtape.id,
-                {
-                  contenu,
-                  heritageContenu
-                },
-                user,
-                titreDemarche.titreId
-              )
+            await titreEtapeUpdate(
+              titreEtape.id,
+              {
+                contenu,
+                heritageContenu
+              },
+              user,
+              titreDemarche.titreId
+            )
 
-              const log = {
-                type: 'titre / démarche / étape : héritage du contenu (mise à jour) ->',
-                value: `${titreEtape.id}`
-              }
+            console.info(
+              'titre / démarche / étape : héritage du contenu (mise à jour) ->',
+              titreEtape.id
+            )
 
-              console.info(log.type, log.value)
-
-              titresEtapesIdsUpdated.push(titreEtape.id)
-            })
+            titresEtapesIdsUpdated.push(titreEtape.id)
 
             titreEtape.contenu = contenu
             titreEtape.heritageContenu = heritageContenu
           }
-        })
+        }
       }
     }
-  })
-
-  await queue.onIdle()
+  }
 
   return titresEtapesIdsUpdated
 }
-
-export { titresEtapesHeritageContenuUpdate }

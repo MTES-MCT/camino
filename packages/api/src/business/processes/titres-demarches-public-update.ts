@@ -1,5 +1,3 @@
-import PQueue from 'p-queue'
-
 import { titreDemarcheUpdate } from '../../database/queries/titres-demarches'
 import { titreDemarchePublicFind } from '../rules/titre-demarche-public-find'
 import { titresGet } from '../../database/queries/titres'
@@ -12,11 +10,10 @@ type ITitreDemarchePatch = {
 }
 
 // met à jour la publicité des démarches d'un titre
-const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
+export const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
   console.info()
   console.info('publicité des démarches…')
 
-  const queue = new PQueue({ concurrency: 100 })
   const titres = await titresGet(
     { ids: titresIds },
     {
@@ -35,8 +32,8 @@ const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
 
   const titresDemarchesUpdated = [] as string[]
 
-  titres.forEach(titre => {
-    titre.demarches!.forEach(titreDemarche => {
+  for (const titre of titres) {
+    for (const titreDemarche of titre.demarches!) {
       const titreDemarcheEtapes = titreEtapesSortAscByOrdre(
         titreDemarche.etapes ?? []
       )
@@ -64,25 +61,17 @@ const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
       }
 
       if (Object.keys(patch).length) {
-        queue.add(async () => {
-          await titreDemarcheUpdate(titreDemarche.id, patch)
+        await titreDemarcheUpdate(titreDemarche.id, patch)
 
-          const log = {
-            type: 'titre / démarche : publique (mise à jour) ->',
-            value: `${titreDemarche.id}: ${JSON.stringify(patch)}`
-          }
-
-          console.info(log.type, log.value)
-        })
+        console.info(
+          'titre / démarche : publique (mise à jour) ->',
+          `${titreDemarche.id}: ${JSON.stringify(patch)}`
+        )
 
         titresDemarchesUpdated.push(titreDemarche.id)
       }
-    })
-  })
-
-  await queue.onIdle()
+    }
+  }
 
   return titresDemarchesUpdated
 }
-
-export { titresDemarchesPublicUpdate }

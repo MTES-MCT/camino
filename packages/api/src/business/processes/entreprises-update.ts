@@ -95,7 +95,7 @@ const sirensFind = (entreprisesOld: IEntreprise[]) =>
     }, {})
   )
 
-const entreprisesUpdate = async () => {
+export const entreprisesUpdate = async () => {
   console.info()
   console.info('entreprises (Api Insee)…')
 
@@ -173,5 +173,3 @@ const entreprisesUpdate = async () => {
 
   return { entreprisesUpdated, etablissementsUpdated, etablissementsDeleted }
 }
-
-export { entreprisesUpdate }

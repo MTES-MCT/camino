@@ -1,5 +1,3 @@
-import PQueue from 'p-queue'
-
 import {
   IAdministration,
   ITitre,
@@ -117,7 +115,7 @@ const titresAsGsToCreateAndDeleteBuild = (
     }
   )
 
-const titresAdministrationsGestionnairesUpdate = async (
+export const titresAdministrationsGestionnairesUpdate = async (
   titresIds?: string[]
 ) => {
   console.info()
@@ -151,24 +149,16 @@ const titresAdministrationsGestionnairesUpdate = async (
   }
 
   if (titresAsGsToDelete.length) {
-    const queue = new PQueue({ concurrency: 100 })
+    for (const { titreId, administrationId } of titresAsGsToDelete) {
+      await titreAdministrationGestionnaireDelete(titreId, administrationId)
 
-    titresAsGsToDelete.forEach(({ titreId, administrationId }) => {
-      queue.add(async () => {
-        await titreAdministrationGestionnaireDelete(titreId, administrationId)
+      console.info(
+        'titre : administration gestionnaire (suppression) ->',
+        `${titreId}: ${administrationId}`
+      )
 
-        const log = {
-          type: 'titre : administration gestionnaire (suppression) ->',
-          value: `${titreId}: ${administrationId}`
-        }
-
-        console.info(log.type, log.value)
-
-        titresAsGsDeleted.push(titreId)
-      })
-    })
-
-    await queue.onIdle()
+      titresAsGsDeleted.push(titreId)
+    }
   }
 
   return {
@@ -178,5 +168,3 @@ const titresAdministrationsGestionnairesUpdate = async (
     titresAdministrationsGestionnairesDeleted: titresAsGsDeleted
   }
 }
-
-export { titresAdministrationsGestionnairesUpdate }

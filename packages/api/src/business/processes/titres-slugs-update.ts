@@ -4,7 +4,6 @@ import { titresGet } from '../../database/queries/titres'
 import { userSuper } from '../../database/user-super'
 
 import { titreSlugAndRelationsUpdate } from '../utils/titre-slug-and-relations-update'
-import PQueue from 'p-queue'
 
 // met à jour les slugs de titre
 const titreSlugsUpdate = async (titre: ITitre) => {
@@ -15,11 +14,7 @@ const titreSlugsUpdate = async (titre: ITitre) => {
 
     if (!hasChanged) return null
 
-    const log = {
-      type: 'titre : slug (mise à jour) ->',
-      value: slug
-    }
-    console.info(log.type, log.value)
+    console.info('titre : slug (mise à jour) ->', slug)
 
     return { [slug]: titreOldSlug }
   } catch (e) {
@@ -29,7 +24,7 @@ const titreSlugsUpdate = async (titre: ITitre) => {
   }
 }
 
-const titresSlugsUpdate = async (titresIds?: string[]) => {
+export const titresSlugsUpdate = async (titresIds?: string[]) => {
   console.info()
   console.info('slugs de titres, démarches, étapes et sous-éléments…')
 
@@ -49,22 +44,15 @@ const titresSlugsUpdate = async (titresIds?: string[]) => {
     userSuper
   )
 
-  const queue = new PQueue({ concurrency: 100 })
   const titresUpdatedIndex = {} as Index<string>
 
   for (const titre of titres) {
-    queue.add(async () => {
-      const titreUpdatedIndex = await titreSlugsUpdate(titre)
+    const titreUpdatedIndex = await titreSlugsUpdate(titre)
 
-      if (titreUpdatedIndex) {
-        Object.assign(titresUpdatedIndex, titreUpdatedIndex)
-      }
-    })
+    if (titreUpdatedIndex) {
+      Object.assign(titresUpdatedIndex, titreUpdatedIndex)
+    }
   }
-
-  await queue.onIdle()
 
   return titresUpdatedIndex
 }
-
-export { titresSlugsUpdate }

@@ -1,19 +1,16 @@
-import PQueue from 'p-queue'
-
-import { ITitreEtape, IUtilisateur } from '../../types'
+import { IUtilisateur } from '../../types'
 
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes'
 import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 
-const titresEtapesOrdreUpdate = async (
+export const titresEtapesOrdreUpdate = async (
   user: IUtilisateur,
   titresDemarchesIds?: string[]
 ) => {
   console.info()
   console.info('ordre des étapes…')
-  const queue = new PQueue({ concurrency: 100 })
 
   const titresDemarches = await titresDemarchesGet(
     { titresDemarchesIds },
@@ -29,39 +26,33 @@ const titresEtapesOrdreUpdate = async (
 
   const titresEtapesIdsUpdated = [] as string[]
 
-  titresDemarches.forEach(titreDemarche => {
+  for (const titreDemarche of titresDemarches) {
     if (titreDemarche.etapes) {
-      titreEtapesSortAscByDate(
+      const etapes = titreEtapesSortAscByDate(
         titreDemarche.etapes,
         titreDemarche.type,
         titreDemarche.titre?.typeId
-      ).forEach((titreEtape: ITitreEtape, index: number) => {
+      )
+      for (let index = 0; index < etapes.length; index++) {
+        const titreEtape = etapes[index]
         if (titreEtape.ordre !== index + 1) {
-          queue.add(async () => {
-            await titreEtapeUpdate(
-              titreEtape.id,
-              { ordre: index + 1 },
-              user,
-              titreDemarche.titreId
-            )
+          await titreEtapeUpdate(
+            titreEtape.id,
+            { ordre: index + 1 },
+            user,
+            titreDemarche.titreId
+          )
 
-            const log = {
-              type: 'titre / démarche / étape : ordre (mise à jour) ->',
-              value: `${titreEtape.id} : ${index + 1}`
-            }
+          console.info(
+            'titre / démarche / étape : ordre (mise à jour) ->',
+            `${titreEtape.id} : ${index + 1}`
+          )
 
-            console.info(log.type, log.value)
-
-            titresEtapesIdsUpdated.push(titreEtape.id)
-          })
+          titresEtapesIdsUpdated.push(titreEtape.id)
         }
-      })
+      }
     }
-  })
-
-  await queue.onIdle()
+  }
 
   return titresEtapesIdsUpdated
 }
-
-export { titresEtapesOrdreUpdate }
