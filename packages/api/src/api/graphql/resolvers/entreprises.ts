@@ -6,7 +6,6 @@ import {
 } from '../../../types'
 import { GraphQLResolveInfo } from 'graphql'
 
-import { debug } from '../../../config/index'
 import {
   entrepriseGet,
   entreprisesCount,
@@ -41,9 +40,7 @@ const entreprise = async (
 
     return entrepriseFormat(entreprise)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -63,9 +60,7 @@ const entreprisesTitresCreation = async (
 
     return entreprises.map(entrepriseFormat)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -159,9 +154,7 @@ const entreprises = async (
       total
     }
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -211,9 +204,7 @@ const entrepriseCreer = async (
 
     return entrepriseNew
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -256,9 +247,7 @@ const entrepriseModifier = async (
 
     return entrepriseGet(entrepriseUpserted.id, { fields }, user)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -293,9 +282,7 @@ const entrepriseTitreTypeModifier = async (
       user
     )
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

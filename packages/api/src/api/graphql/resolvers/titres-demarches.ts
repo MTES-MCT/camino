@@ -7,8 +7,6 @@ import {
   ITitreDemarcheColonneId
 } from '../../../types'
 
-import { debug } from '../../../config/index'
-
 import { fieldsBuild } from './_fields-build'
 
 import { titreFormat } from '../../_format/titres'
@@ -48,9 +46,7 @@ const demarche = async (
 
     return titreDemarcheFormat(titreDemarche, fields.elements)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -168,9 +164,7 @@ const demarches = async (
       total
     }
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -211,9 +205,7 @@ const demarcheCreer = async (
 
     return titreUpdated && titreFormat(titreUpdated)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -265,9 +257,7 @@ const demarcheModifier = async (
 
     return titreUpdated && titreFormat(titreUpdated)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -301,9 +291,7 @@ const demarcheSupprimer = async (
 
     return titreUpdated && titreFormat(titreUpdated)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

@@ -2,7 +2,6 @@ import camelcase from 'camelcase'
 
 import { ITitre, ITitreActivite } from '../../../types'
 
-import { debug } from '../../../config/index'
 import { titresGet } from '../../../database/queries/titres'
 import { titresActivitesGet } from '../../../database/queries/titres-activites'
 import { userSuper } from '../../../database/user-super'
@@ -233,9 +232,7 @@ const statistiquesGuyane = async () => {
       ...statistiquesGuyaneInstantBuild(titres)
     }
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

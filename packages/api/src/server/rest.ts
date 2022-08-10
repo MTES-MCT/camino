@@ -3,7 +3,6 @@ import { IFormat, Index, IUser } from '../types'
 import express from 'express'
 import { join } from 'path'
 
-import { debug } from '../config/index'
 import {
   titre,
   titres,
@@ -119,9 +118,7 @@ const restDownload =
         res.send(contenu)
       }
     } catch (e) {
-      if (debug) {
-        console.error(e)
-      }
+      console.error(e)
 
       next(e)
     }

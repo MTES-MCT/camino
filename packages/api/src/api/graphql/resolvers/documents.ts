@@ -5,7 +5,6 @@ import cryptoRandomString from 'crypto-random-string'
 
 import { IDocument, IToken, ITitreEtape, IUtilisateur } from '../../../types'
 
-import { debug } from '../../../config/index'
 import fileDelete from '../../../tools/file-delete'
 import fileStreamCreate from '../../../tools/file-stream-create'
 
@@ -66,9 +65,7 @@ const documents = async (
 
     return documents
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -170,9 +167,7 @@ const documentCreer = async (
 
     return documentUpdated
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -252,9 +247,7 @@ const documentModifier = async (
 
     return await documentGet(documentUpdated.id, { fields }, user)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -312,9 +305,7 @@ const documentSupprimer = async ({ id }: { id: string }, context: IToken) => {
 
     return true
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

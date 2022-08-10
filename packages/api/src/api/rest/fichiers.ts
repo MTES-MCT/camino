@@ -11,7 +11,6 @@ import { userGet } from '../../database/queries/utilisateurs'
 import { titreEtapeGet } from '../../database/queries/titres-etapes'
 import { documentRepertoireFind } from '../../tools/documents/document-repertoire-find'
 import { documentFilePathFind } from '../../tools/documents/document-path-find'
-import { debug } from '../../config/index'
 
 import JSZip from 'jszip'
 import { statSync, readFileSync } from 'fs'
@@ -82,9 +81,7 @@ const etapeTelecharger = async (
       buffer: Buffer.from(base64Data, 'base64')
     }
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

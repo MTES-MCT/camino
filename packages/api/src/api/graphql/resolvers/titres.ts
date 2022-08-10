@@ -2,7 +2,6 @@ import { GraphQLResolveInfo } from 'graphql'
 
 import { ITitre, ITitreColonneId, IToken } from '../../../types'
 
-import { debug } from '../../../config/index'
 import { titreFormat, titresFormat } from '../../_format/titres'
 
 import { fieldsBuild } from './_fields-build'
@@ -37,9 +36,7 @@ const titre = async (
 
     return titreFormat(titre, fields)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -145,9 +142,7 @@ const titres = async (
       total
     }
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -186,9 +181,7 @@ const titreCreer = async (
 
     return titreUpdated && titreFormat(titreUpdated)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -230,9 +223,7 @@ const titreModifier = async (
 
     return titreUpdated && titreFormat(titreUpdated)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

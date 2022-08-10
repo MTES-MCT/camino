@@ -15,7 +15,6 @@ import { login as cerbereLogin } from '../../../tools/api-cerbere/index'
 
 import { cacheInit } from '../../../database/init'
 
-import { debug } from '../../../config/index'
 import { emailsSend } from '../../../tools/api-mailjet/emails'
 import { fieldsBuild } from './_fields-build'
 
@@ -81,9 +80,7 @@ const utilisateur = async (
 
     return utilisateur
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -156,9 +153,7 @@ const utilisateurs = async (
       total
     }
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -183,9 +178,7 @@ const moi = async (_: never, context: IToken, info: GraphQLResolveInfo) => {
 
     return userFormat(utilisateur!)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -233,9 +226,7 @@ const utilisateurConnecter = async (
 
     return userFormat(utilisateur!)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -247,9 +238,7 @@ export const utilisateurDeconnecter = async (_: never, { res }: IToken) => {
 
     return true
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -259,9 +248,7 @@ const utilisateurCerbereUrlObtenir = async ({ url }: { url: string }) => {
   try {
     return `${process.env.API_CERBERE}?service=${url}`
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -304,9 +291,7 @@ const utilisateurCerbereConnecter = async (
 
     return userFormat(utilisateur!)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -396,9 +381,7 @@ const utilisateurCreer = async (
 
     return utilisateurUpdated
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -443,9 +426,7 @@ const utilisateurCreationMessageEnvoyer = async ({
 
     return 'email envoyé'
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -515,9 +496,7 @@ const utilisateurModifier = async (
 
     return utilisateurUpdated
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -551,9 +530,7 @@ const utilisateurSupprimer = async (
 
     return utilisateurUpdated
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -619,9 +596,7 @@ const utilisateurMotDePasseModifier = async (
 
     return utilisateurUpdated
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -657,9 +632,7 @@ const utilisateurMotDePasseMessageEnvoyer = async ({
 
     return 'email envoyé'
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -715,9 +688,7 @@ const utilisateurMotDePasseInitialiser = async ({
 
     return userFormat(utilisateurUpdated)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -766,9 +737,7 @@ const utilisateurEmailMessageEnvoyer = async (
 
     return 'email envoyé'
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -819,9 +788,7 @@ const utilisateurEmailModifier = async (
 
     return userFormat(utilisateurUpdated)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -864,9 +831,7 @@ const newsletterInscrire = async ({ email }: { email: string }) => {
 
     return newsletterSubscriberUpdate(email, true)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

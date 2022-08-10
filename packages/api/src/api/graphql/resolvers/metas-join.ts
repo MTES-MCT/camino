@@ -10,8 +10,6 @@ import {
   ITitreTypeDemarcheTypeEtapeTypeJustificatifType
 } from '../../../types'
 
-import { debug } from '../../../config/index'
-
 import { userGet } from '../../../database/queries/utilisateurs'
 
 import {
@@ -79,9 +77,7 @@ const titresTypes = async (
 
     return titresTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -104,9 +100,7 @@ const titreTypeModifier = async (
 
     return titresTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -129,9 +123,7 @@ const titreTypeCreer = async (
 
     return titresTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -154,9 +146,7 @@ const titreTypeSupprimer = async (
 
     return titresTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -176,9 +166,7 @@ const titresTypesTitresStatuts = async (_: never, context: IToken) => {
 
     return titresTypesTitresStatuts
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -205,9 +193,7 @@ const titreTypeTitreStatutModifier = async (
 
     return titresTypesTitresStatuts
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -230,9 +216,7 @@ const titreTypeTitreStatutCreer = async (
 
     return titresTypesTitresStatuts
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -258,9 +242,7 @@ const titreTypeTitreStatutSupprimer = async (
 
     return titresTypesTitresStatuts
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -278,9 +260,7 @@ const titresTypesDemarchesTypes = async (_: never, context: IToken) => {
 
     return titresTypesDemarchesTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -307,9 +287,7 @@ const titreTypeDemarcheTypeModifier = async (
 
     return titresTypesDemarchesTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -332,9 +310,7 @@ const titreTypeDemarcheTypeCreer = async (
 
     return titresTypesDemarchesTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -360,9 +336,7 @@ const titreTypeDemarcheTypeSupprimer = async (
 
     return titresTypesDemarchesTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -386,9 +360,7 @@ const titresTypesDemarchesTypesEtapesTypes = async (
 
     return titresTypesDemarchesTypesEtapesTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -421,9 +393,7 @@ const titreTypeDemarcheTypeEtapeTypeModifier = async (
 
     return titresTypesDemarchesTypesEtapesTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -451,9 +421,7 @@ const titreTypeDemarcheTypeEtapeTypeCreer = async (
 
     return titresTypesDemarchesTypesEtapesTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -510,9 +478,7 @@ const titreTypeDemarcheTypeEtapeTypeSupprimer = async (
 
     return titresTypesDemarchesTypesEtapesTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -536,9 +502,7 @@ const titresTypesDemarchesTypesEtapesTypesDocumentsTypes = async (
 
     return titresTypesDemarchesTypesEtapesTypesDocumentsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -572,9 +536,7 @@ const titreTypeDemarcheTypeEtapeTypeDocumentTypeModifier = async (
 
     return titresTypesDemarchesTypesEtapesTypesDocumentsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -604,9 +566,7 @@ const titreTypeDemarcheTypeEtapeTypeDocumentTypeCreer = async (
 
     return titresTypesDemarchesTypesEtapesTypesDocumentsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -639,9 +599,7 @@ const titreTypeDemarcheTypeEtapeTypeDocumentTypeSupprimer = async (
 
     return titresTypesDemarchesTypesEtapesTypesDocumentsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -665,9 +623,7 @@ const titresTypesDemarchesTypesEtapesTypesJustificatifsTypes = async (
 
     return titresTypesDemarchesTypesEtapesTypesJustificatifsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -701,9 +657,7 @@ const titreTypeDemarcheTypeEtapeTypeJustificatifTypeModifier = async (
 
     return titresTypesDemarchesTypesEtapesTypesJustificatifsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -733,9 +687,7 @@ const titreTypeDemarcheTypeEtapeTypeJustificatifTypeCreer = async (
 
     return titresTypesDemarchesTypesEtapesTypesJustificatifsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -768,9 +720,7 @@ const titreTypeDemarcheTypeEtapeTypeJustificatifTypeSupprimer = async (
 
     return titresTypesDemarchesTypesEtapesTypesJustificatifsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -788,9 +738,7 @@ const etapesTypesDocumentsTypes = async (_: never, context: IToken) => {
 
     return etapesTypesDocumentsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -817,9 +765,7 @@ const etapeTypeDocumentTypeModifier = async (
 
     return etapesTypesDocumentsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -842,9 +788,7 @@ const etapeTypeDocumentTypeCreer = async (
 
     return etapesTypesDocumentsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -881,9 +825,7 @@ const etapeTypeDocumentTypeSupprimer = async (
 
     return etapesTypesDocumentsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -904,9 +846,7 @@ const etapesTypesJustificatifsTypes = async (_: never, context: IToken) => {
 
     return etapesTypesJustificatifsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -953,9 +893,7 @@ const etapeTypeJustificatifTypeModifier = async (
 
     return etapesTypesJustificatifsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -997,9 +935,7 @@ const etapeTypeJustificatifTypeCreer = async (
 
     return etapesTypesJustificatifsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -1039,9 +975,7 @@ const etapeTypeJustificatifTypeSupprimer = async (
 
     return etapesTypesJustificatifsTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

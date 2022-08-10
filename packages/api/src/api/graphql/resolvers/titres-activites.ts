@@ -9,8 +9,6 @@ import {
   IUtilisateur
 } from '../../../types'
 
-import { debug } from '../../../config/index'
-
 import { titreActiviteEmailsSend } from './_titre-activite'
 import {
   titreActiviteContenuFormat,
@@ -63,9 +61,7 @@ const activite = async (
 
     return titreActivite && titreActiviteFormat(titreActivite, fields)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -198,9 +194,7 @@ const activites = async (
       total
     }
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -293,9 +287,7 @@ const activiteDeposer = async (
 
     return activiteFormated
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -366,9 +358,7 @@ const activiteModifier = async (
 
     return titreActiviteFormat(activiteRes, fields)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -395,9 +385,7 @@ const activiteSupprimer = async ({ id }: { id: string }, context: IToken) => {
 
     return activite
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

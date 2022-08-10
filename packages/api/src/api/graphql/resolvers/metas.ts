@@ -12,7 +12,6 @@ import {
   ITitreTypeType,
   IToken
 } from '../../../types'
-import { debug } from '../../../config/index'
 
 import {
   demarchesStatutsGet,
@@ -91,9 +90,7 @@ export const documentsTypes = async ({
   try {
     return await documentsTypesGet({ repertoire, typeId })
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -138,9 +135,7 @@ export const domaines = async (
 
     return await domainesGet(null as never, { fields }, user)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -150,9 +145,7 @@ export const types = async () => {
   try {
     return await titresTypesTypesGet()
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -164,9 +157,7 @@ export const statuts = async (_: never, context: IToken) => {
 
     return await titresStatutsGet(user)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -183,9 +174,7 @@ export const demarchesTypes = async (
 
     return await demarchesTypesGet({ titreId, travaux }, { fields }, user)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -195,9 +184,7 @@ export const demarchesStatuts = async () => {
   try {
     return await demarchesStatutsGet()
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -373,9 +360,7 @@ export const etapesTypes = async (
     // retourne la liste des types d'étapes
     return etapesTypesGet({ travaux }, { fields }, user)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -394,9 +379,7 @@ export const administrationsTypes = () => {
   try {
     return sortedAdministrationTypes
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -412,9 +395,7 @@ export const phasesStatuts = async () => {
   try {
     return await phasesStatutsGet()
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -441,9 +422,7 @@ export const titreTypeTypeModifier = async (
 
     return await titresTypesTypesGet()
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -470,9 +449,7 @@ export const titreStatutModifier = async (
 
     return await titresStatutsGet(user)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -502,9 +479,7 @@ export const demarcheTypeModifier = async (
 
     return await demarchesTypesGet({}, { fields }, user)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -531,9 +506,7 @@ export const demarcheStatutModifier = async (
 
     return await demarchesStatutsGet()
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -554,9 +527,7 @@ export const phaseStatutModifier = async (
 
     return await phasesStatutsGet()
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -588,9 +559,7 @@ export const etapeTypeModifier = async (
 
     return await etapesTypesGet({}, { fields }, user)
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -611,9 +580,7 @@ export const documentTypeCreer = async (
 
     return await documentsTypesGet({})
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -634,9 +601,7 @@ export const documentTypeModifier = async (
 
     return await documentsTypesGet({})
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -656,9 +621,7 @@ export const referenceTypeModifier = async (
 
     return await referencesTypesGet()
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }

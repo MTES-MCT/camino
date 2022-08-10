@@ -6,7 +6,6 @@ import {
   SDOMZoneId
 } from '../../../types'
 
-import { debug } from '../../../config/index'
 import { FileUpload } from 'graphql-upload'
 import { Stream } from 'stream'
 import shpjs from 'shpjs'
@@ -154,9 +153,7 @@ export const pointsImporter = async (
       context
     )
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -314,9 +311,7 @@ export const perimetreInformations = async (
 
     return { ...informations, sdomZones, points: titreEtapePoints }
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
@@ -368,9 +363,7 @@ export const titreEtapePerimetreInformations = async (
 
     return { sdomZones, ...informations }
   } catch (e) {
-    if (debug) {
-      console.error(e)
-    }
+    console.error(e)
 
     throw e
   }
