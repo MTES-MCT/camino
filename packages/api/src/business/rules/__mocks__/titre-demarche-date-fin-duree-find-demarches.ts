@@ -194,7 +194,7 @@ const titreDemarchesOctNiDpuNiDex = [
       {
         id: 'h-cx-courdemanges-1988-oct01-dpu01',
         titreDemarcheId: 'h-cx-courdemanges-1988-oct01',
-        typeId: 'rpu',
+        typeId: 'mdp',
         statutId: 'acc',
         ordre: 1,
         date: '1988-03-06',
