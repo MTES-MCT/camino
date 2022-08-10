@@ -6,6 +6,7 @@ daily()
   .then(() => {
     process.exit()
   })
-  .catch(() => {
+  .catch(e => {
+    console.error('daily failed', e)
     process.exit(1)
   })

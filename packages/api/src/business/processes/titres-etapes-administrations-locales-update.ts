@@ -1,5 +1,3 @@
-import PQueue from 'p-queue'
-
 import {
   ITitre,
   IAdministration,
@@ -218,7 +216,7 @@ const titresEtapesAdministrationsLocalesBuild = (
     []
   )
 
-const titresEtapesAdministrationsLocalesUpdate = async (
+export const titresEtapesAdministrationsLocalesUpdate = async (
   titresIds?: string[]
 ) => {
   console.info()
@@ -263,29 +261,22 @@ const titresEtapesAdministrationsLocalesUpdate = async (
     [] as ITitreAdministrationLocale[]
 
   if (titresEtapesAdministrationsLocalesToDelete.length) {
-    const queue = new PQueue({ concurrency: 100 })
+    for (const {
+      titreEtapeId,
+      administrationId
+    } of titresEtapesAdministrationsLocalesToDelete) {
+      await titreEtapeAdministrationDelete(titreEtapeId, administrationId)
 
-    titresEtapesAdministrationsLocalesToDelete.forEach(
-      ({ titreEtapeId, administrationId }) => {
-        queue.add(async () => {
-          await titreEtapeAdministrationDelete(titreEtapeId, administrationId)
+      console.info(
+        'titre / démarche / étape : administration locale (suppression) ->',
+        `${titreEtapeId}: ${administrationId}`
+      )
 
-          const log = {
-            type: 'titre / démarche / étape : administration locale (suppression) ->',
-            value: `${titreEtapeId}: ${administrationId}`
-          }
-
-          console.info(log.type, log.value)
-
-          titresEtapesAdministrationsLocalesDeleted.push({
-            titreEtapeId,
-            administrationId
-          })
-        })
-      }
-    )
-
-    await queue.onIdle()
+      titresEtapesAdministrationsLocalesDeleted.push({
+        titreEtapeId,
+        administrationId
+      })
+    }
   }
 
   if (titresEtapesAdministrationsLocalesToCreate.length) {
@@ -294,14 +285,12 @@ const titresEtapesAdministrationsLocalesUpdate = async (
         titresEtapesAdministrationsLocalesToCreate
       )
 
-    const log = {
-      type: 'titres / démarches / étapes : administrations locales (création) ->',
-      value: titresEtapesAdministrationsLocalesCreated
+    console.info(
+      'titres / démarches / étapes : administrations locales (création) ->',
+      titresEtapesAdministrationsLocalesCreated
         .map(tea => JSON.stringify(tea))
         .join(', ')
-    }
-
-    console.info(log.type, log.value)
+    )
   }
 
   return {
@@ -309,5 +298,3 @@ const titresEtapesAdministrationsLocalesUpdate = async (
     titresEtapesAdministrationsLocalesDeleted
   }
 }
-
-export { titresEtapesAdministrationsLocalesUpdate }

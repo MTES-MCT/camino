@@ -41,7 +41,7 @@
     "ci:test-integration": "JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest -c jest.config.integration.ts --runInBand --ci --collect-coverage"
   },
   "@comment dependencies": {
-    "modules esm": "crypto-random-string, p-queue, @sindresorhus/slugify, email-regex, decamelize, dateformat, node-fetch à ne pas updater tant que on ne compile pas pour es2020: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c. Pas simple de migrer ts-node.",
+    "modules esm": "crypto-random-string, @sindresorhus/slugify, email-regex, decamelize, dateformat, node-fetch à ne pas updater tant que on ne compile pas pour es2020: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c. Pas simple de migrer ts-node.",
     "typedoc": "bloqué à 0.21.19 https://github.com/mipatterson/typedoc-plugin-pages/issues/64"
   },
   "dependencies": {
@@ -108,7 +108,6 @@
     "node-fetch": "^2.6.5",
     "node-mailjet": "^3.3.7",
     "objection": "^3.0.1",
-    "p-queue": "^6.6.2",
     "pg": "^8.7.3",
     "proj4": "^2.8.0",
     "shpjs": "^4.0.2",

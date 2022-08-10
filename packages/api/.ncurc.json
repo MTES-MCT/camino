@@ -9,7 +9,6 @@
     "decamelize",
     "dateformat",
     "node-fetch",
-    "p-queue",
     "typedoc"
   ]
 }

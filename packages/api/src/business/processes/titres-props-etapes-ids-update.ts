@@ -1,12 +1,11 @@
 import { IPropId, IPropsTitreEtapesIds } from '../../types'
-import PQueue from 'p-queue'
 
 import { titresGet, titreUpdate } from '../../database/queries/titres'
 import { titrePropTitreEtapeFind } from '../rules/titre-prop-etape-find'
 import { objectsDiffer } from '../../tools/index'
 import { userSuper } from '../../database/user-super'
 
-const titrePropsEtapes = [
+export const titrePropsEtapes = [
   'points',
   'titulaires',
   'amodiataires',
@@ -15,10 +14,9 @@ const titrePropsEtapes = [
   'surface'
 ] as IPropId[]
 
-const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
+export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
   console.info()
   console.info('propriétés des titres (liens vers les étapes)…')
-  const queue = new PQueue({ concurrency: 100 })
 
   const titres = await titresGet(
     { ids: titresIds },
@@ -41,7 +39,7 @@ const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
 
   const titresPropsEtapesIdsUpdated = [] as string[]
 
-  titres.forEach(titre => {
+  for (const titre of titres) {
     const propsTitreEtapesIds = titrePropsEtapes.reduce(
       (propsTitreEtapesIds: IPropsTitreEtapesIds, propId) => {
         const titreEtape = titrePropTitreEtapeFind(
@@ -60,26 +58,18 @@ const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
     )
 
     if (objectsDiffer(propsTitreEtapesIds, titre.propsTitreEtapesIds)) {
-      queue.add(async () => {
-        await titreUpdate(titre.id, { propsTitreEtapesIds })
+      await titreUpdate(titre.id, { propsTitreEtapesIds })
 
-        const log = {
-          type: "titre : ids d'étapes des props (mise à jour) ->",
-          value: `${titre.id} : ${JSON.stringify(
-            propsTitreEtapesIds
-          )} | ${JSON.stringify(titre.propsTitreEtapesIds)}`
-        }
+      console.info(
+        "titre : ids d'étapes des props (mise à jour) ->",
+        `${titre.id} : ${JSON.stringify(
+          propsTitreEtapesIds
+        )} | ${JSON.stringify(titre.propsTitreEtapesIds)}`
+      )
 
-        console.info(log.type, log.value)
-
-        titresPropsEtapesIdsUpdated.push(titre.id)
-      })
+      titresPropsEtapesIdsUpdated.push(titre.id)
     }
-  })
-
-  await queue.onIdle()
+  }
 
   return titresPropsEtapesIdsUpdated
 }
-
-export { titrePropsEtapes, titresPropsEtapesIdsUpdate }

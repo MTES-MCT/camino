@@ -2,7 +2,6 @@
 
 import { join } from 'path'
 import fetch from 'node-fetch'
-import PQueue from 'p-queue'
 import makeDir from 'make-dir'
 
 import {
@@ -285,32 +284,20 @@ export const entreprisesEtablissementsFetch = async (ids: string[]) => {
   const queryFormat = (idsBatch: string[]) =>
     idsBatch.map(batch => `siren:${batch}`).join(' OR ')
 
-  const batchesQueries = batches.reduce(
-    (acc: (() => Promise<IApiSirenUniteLegale[] | null>)[], batch) => {
-      acc.push(
-        () =>
-          typeMultiFetch(
-            'siren',
-            'unitesLegales',
-            batch,
-            queryFormat(batch)
-          ) as Promise<IApiSirenUniteLegale[] | null>
-      )
+  const results = []
+  for (const batch of batches) {
+    const result = (await typeMultiFetch(
+      'siren',
+      'unitesLegales',
+      batch,
+      queryFormat(batch)
+    )) as IApiSirenUniteLegale[]
+    if (result) {
+      results.push(...result)
+    }
+  }
 
-      return acc
-    },
-    []
-  )
-
-  const queue = new PQueue({ concurrency: 1 })
-
-  const batchesResults = await queue.addAll(batchesQueries)
-
-  return batchesResults.reduce((r: IApiSirenUniteLegale[], p) => {
-    if (p) r.push(...p)
-
-    return r
-  }, [])
+  return results
 }
 
 export const entreprisesFetch = async (ids: string[]) => {
@@ -322,29 +309,18 @@ export const entreprisesFetch = async (ids: string[]) => {
     return `(${ids}) AND etablissementSiege:true`
   }
 
-  const batchesQueries = batches.reduce(
-    (acc: (() => Promise<IApiSirenEtablissement[] | null>)[], batch) => {
-      acc.push(
-        () =>
-          typeMultiFetch(
-            'siret',
-            'etablissements',
-            batch,
-            queryFormat(batch)
-          ) as Promise<IApiSirenEtablissement[] | null>
-      )
+  const results = []
+  for (const batch of batches) {
+    const result = (await typeMultiFetch(
+      'siret',
+      'etablissements',
+      batch,
+      queryFormat(batch)
+    )) as IApiSirenEtablissement[]
+    if (result) {
+      results.push(...result)
+    }
+  }
 
-      return acc
-    },
-    []
-  )
-
-  const queue = new PQueue({ concurrency: 1 })
-  const batchesResults = await queue.addAll(batchesQueries)
-
-  return batchesResults.reduce((r: IApiSirenEtablissement[], p) => {
-    if (p) r.push(...p)
-
-    return r
-  }, [])
+  return results
 }

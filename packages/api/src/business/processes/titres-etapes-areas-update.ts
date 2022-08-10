@@ -1,5 +1,3 @@
-import PQueue from 'p-queue'
-
 import {
   ITitreEtape,
   ITitreArea,
@@ -218,39 +216,26 @@ const areasBuild = (
  * @returns un index d’étapes associées à leurs territoires
  */
 const titresEtapesAreasGet = async (titresEtapes: ITitreEtape[]) => {
-  // exécute les requêtes en série
-  // avec PQueue plutôt que Promise.all
-  // pour ne pas surcharger l'API geoareas
-  const queue = new PQueue({
-    concurrency: 10
-    //    interval: 1000,
-    //    intervalCap: 10
-  })
-
   const areasTypes = ['communes', 'forets', 'sdomZones'] as IAreaType[]
   const titresEtapesAreasIndex = {} as Index<ITitreEtapeAreas>
 
-  titresEtapes.forEach((titreEtape: ITitreEtape) => {
-    queue.add(async () => {
-      let apiGeoResult: IApiGeoResult | null
-      if (titreEtape.points?.length) {
-        apiGeoResult = await apiGeoGet(
-          geojsonFeatureMultiPolygon(titreEtape.points),
-          areasTypes
-        )
-      }
+  for (const titreEtape of titresEtapes) {
+    let apiGeoResult: IApiGeoResult | null
+    if (titreEtape.points?.length) {
+      apiGeoResult = await apiGeoGet(
+        geojsonFeatureMultiPolygon(titreEtape.points),
+        areasTypes
+      )
+    }
 
-      const areas = areasTypes.reduce((acc, id) => {
-        acc[id] = apiGeoResult && apiGeoResult[id] ? apiGeoResult[id] : []
+    const areas = areasTypes.reduce((acc, id) => {
+      acc[id] = apiGeoResult && apiGeoResult[id] ? apiGeoResult[id] : []
 
-        return acc
-      }, {} as { [areaType in IAreaType]: IArea[] })
+      return acc
+    }, {} as { [areaType in IAreaType]: IArea[] })
 
-      titresEtapesAreasIndex[titreEtape.id] = { titreEtape, areas }
-    })
-  })
-
-  await queue.onIdle()
+    titresEtapesAreasIndex[titreEtape.id] = { titreEtape, areas }
+  }
 
   return titresEtapesAreasIndex
 }
@@ -260,7 +245,7 @@ const titresEtapesAreasGet = async (titresEtapes: ITitreEtape[]) => {
  * @param titresEtapesIds - liste d’étapes
  * @returns toutes les modifications effectuées
  */
-const titresEtapesAreasUpdate = async (titresEtapesIds?: string[]) => {
+export const titresEtapesAreasUpdate = async (titresEtapesIds?: string[]) => {
   console.info()
   console.info('communes, forêts et zones du SDOM associées aux étapes…')
 
@@ -419,12 +404,10 @@ const titresEtapesAreaUpdate = async (
   if (areasToUpdate.length) {
     areasUpdated = await areasUpsert(areasToUpdate)
 
-    const log = {
-      type: `${areaType} (mise à jour) ->`,
-      value: areasToUpdate.map(area => area.id).join(', ')
-    }
-
-    console.info(log.type, log.value)
+    console.info(
+      `${areaType} (mise à jour) ->`,
+      areasToUpdate.map(area => area.id).join(', ')
+    )
   }
 
   const { titresEtapesAreasToUpdate, titresEtapesAreasToDelete } =
@@ -434,48 +417,30 @@ const titresEtapesAreaUpdate = async (
   const titresEtapesAreasDeleted: string[] = []
 
   if (titresEtapesAreasToUpdate.length) {
-    const queue = new PQueue({ concurrency: 100 })
+    for (const titreEtapeArea of titresEtapesAreasToUpdate) {
+      await titresEtapesAreasUpdateQuery(titreEtapeArea)
 
-    titresEtapesAreasToUpdate.forEach(titreEtapeArea => {
-      queue.add(async () => {
-        await titresEtapesAreasUpdateQuery(titreEtapeArea)
+      console.info(
+        `titre / démarche / étape : ${areaType} (mise à jour) ->`,
+        JSON.stringify(titreEtapeArea)
+      )
 
-        const log = {
-          type: `titre / démarche / étape : ${areaType} (mise à jour) ->`,
-          value: JSON.stringify(titreEtapeArea)
-        }
-
-        console.info(log.type, log.value)
-
-        titresEtapesAreasUpdated.push(titreEtapeArea.titreEtapeId)
-      })
-    })
-
-    await queue.onIdle()
+      titresEtapesAreasUpdated.push(titreEtapeArea.titreEtapeId)
+    }
   }
 
   if (titresEtapesAreasToDelete.length) {
-    const queue = new PQueue({ concurrency: 100 })
+    for (const { titreEtapeId, areaId } of titresEtapesAreasToDelete) {
+      await titreEtapeAreaDeleteQuery(titreEtapeId, areaId!)
 
-    titresEtapesAreasToDelete.forEach(({ titreEtapeId, areaId }) => {
-      queue.add(async () => {
-        await titreEtapeAreaDeleteQuery(titreEtapeId, areaId!)
+      console.info(
+        `titre / démarche / étape : ${areaType} (suppression)`,
+        `${titreEtapeId} : ${areaId}`
+      )
 
-        const log = {
-          type: `titre / démarche / étape : ${areaType} (suppression)`,
-          value: `${titreEtapeId} : ${areaId}`
-        }
-
-        console.info(log.type, log.value)
-
-        titresEtapesAreasDeleted.push(titreEtapeId)
-      })
-    })
-
-    await queue.onIdle()
+      titresEtapesAreasDeleted.push(titreEtapeId)
+    }
   }
 
   return { areasUpdated, titresEtapesAreasUpdated, titresEtapesAreasDeleted }
 }
-
-export { titresEtapesAreasUpdate }

@@ -7,7 +7,7 @@ import { titresGet } from '../../database/queries/titres'
 import { titreValideCheck } from '../utils/titre-valide-check'
 import { userSuper } from '../../database/user-super'
 
-const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
+export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
   console.info()
   console.info('propriétés des activités de titres…')
 
@@ -91,5 +91,3 @@ const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
 
   return titresActivitesUpdated.map(ta => ta.id)
 }
-
-export { titresActivitesPropsUpdate }

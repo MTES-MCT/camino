@@ -1,14 +1,11 @@
-import PQueue from 'p-queue'
-
 import { titresGet, titreUpdate } from '../../database/queries/titres'
 import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find'
 import { objectsDiffer } from '../../tools/index'
 import { userSuper } from '../../database/user-super'
 
-const titresContenusEtapesIdsUpdate = async (titresIds?: string[]) => {
+export const titresContenusEtapesIdsUpdate = async (titresIds?: string[]) => {
   console.info()
   console.info(`contenus des titres (liens vers les contenus d'étapes)…`)
-  const queue = new PQueue({ concurrency: 100 })
 
   const titres = await titresGet(
     { ids: titresIds },
@@ -16,7 +13,9 @@ const titresContenusEtapesIdsUpdate = async (titresIds?: string[]) => {
     userSuper
   )
 
-  const titresUpdated = titres.reduce((titresIdsUpdated: string[], titre) => {
+  const titresUpdated = []
+
+  for (const titre of titres) {
     const contenusTitreEtapesIds = contenusTitreEtapesIdsFind(
       titre.statutId!,
       titre.demarches!,
@@ -32,26 +31,16 @@ const titresContenusEtapesIdsUpdate = async (titresIds?: string[]) => {
         objectsDiffer(titre.contenusTitreEtapesIds, contenusTitreEtapesIds))
 
     if (hasChanged) {
-      queue.add(async () => {
-        await titreUpdate(titre.id, { contenusTitreEtapesIds })
+      await titreUpdate(titre.id, { contenusTitreEtapesIds })
 
-        const log = {
-          type: 'titre : props-contenu-etape (mise à jour) ->',
-          value: `${titre.id} : ${JSON.stringify(contenusTitreEtapesIds)}`
-        }
+      console.info(
+        'titre : props-contenu-etape (mise à jour) ->',
+        `${titre.id} : ${JSON.stringify(contenusTitreEtapesIds)}`
+      )
 
-        console.info(log.type, log.value)
-
-        titresIdsUpdated.push(titre.id)
-      })
+      titresUpdated.push(titre.id)
     }
-
-    return titresIdsUpdated
-  }, [])
-
-  await queue.onIdle()
+  }
 
   return titresUpdated
 }
-
-export { titresContenusEtapesIdsUpdate }

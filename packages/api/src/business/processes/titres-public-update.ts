@@ -1,5 +1,3 @@
-import PQueue from 'p-queue'
-
 import { titresGet, titreUpdate } from '../../database/queries/titres'
 import { userSuper } from '../../database/user-super'
 import titrePublicFind from '../rules/titre-public-find'
@@ -10,10 +8,9 @@ type ITitrePatch = {
 }
 
 // met à jour la publicité d'un titre
-const titresPublicUpdate = async (titresIds?: string[]) => {
+export const titresPublicUpdate = async (titresIds?: string[]) => {
   console.info()
   console.info('publicité des titres…')
-  const queue = new PQueue({ concurrency: 100 })
 
   const titres = await titresGet(
     { ids: titresIds },
@@ -30,7 +27,7 @@ const titresPublicUpdate = async (titresIds?: string[]) => {
   // https://stackoverflow.com/questions/40510611/typescript-interface-require-one-of-two-properties-to-exist/49725198#49725198
   const titresUpdated = [] as string[]
 
-  titres.forEach(titre => {
+  for (const titre of titres) {
     const { publicLecture, entreprisesLecture } = titrePublicFind(
       titre.statutId!,
       titre.type!.titresTypesTitresStatuts!,
@@ -48,24 +45,16 @@ const titresPublicUpdate = async (titresIds?: string[]) => {
     }
 
     if (Object.keys(patch).length) {
-      queue.add(async () => {
-        await titreUpdate(titre.id, patch)
+      await titreUpdate(titre.id, patch)
 
-        const log = {
-          type: 'titre : public (mise à jour) ->',
-          value: `${titre.id} : ${JSON.stringify(patch)}`
-        }
+      console.info(
+        'titre : public (mise à jour) ->',
+        `${titre.id} : ${JSON.stringify(patch)}`
+      )
 
-        console.info(log.type, log.value)
-
-        titresUpdated.push(titre.id)
-      })
+      titresUpdated.push(titre.id)
     }
-  })
-
-  await queue.onIdle()
+  }
 
   return titresUpdated
 }
-
-export { titresPublicUpdate }

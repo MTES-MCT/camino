@@ -14,7 +14,7 @@ import * as Console from 'console'
 const logFile = '/tmp/cron.log'
 
 const output = createWriteStream(logFile)
-const logger = new Console.Console({ stdout: output })
+const logger = new Console.Console({ stdout: output, stderr: output })
 // eslint-disable-next-line no-console
 console.log = logger.log
 consoleOverride(false)
@@ -23,13 +23,16 @@ const tasks = async () => {
   console.info('Tâches quotidiennes : démarrage')
   // Réinitialise les logs qui seront envoyés par email
   writeFileSync(logFile, '')
-
-  await daily()
-  await documentsClean()
-  await documentsCheck()
-  await demarchesDefinitionsCheck()
-  await titreTypeDemarcheTypeEtapeTypeCheck()
-  await etapeStatutCheck()
+  try {
+    await daily()
+    await documentsClean()
+    await documentsCheck()
+    await demarchesDefinitionsCheck()
+    await titreTypeDemarcheTypeEtapeTypeCheck()
+    await etapeStatutCheck()
+  } catch (e) {
+    console.error('Erreur durant le daily', e)
+  }
 
   try {
     await matomoCacheInit()
@@ -49,8 +52,11 @@ const tasks = async () => {
 
 tasks()
   .then(() => {
+    output.end()
     process.exit()
   })
-  .catch(() => {
+  .catch(e => {
+    console.error('Erreur', e)
+    output.end()
     process.exit(1)
   })
