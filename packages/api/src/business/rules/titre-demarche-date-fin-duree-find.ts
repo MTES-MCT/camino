@@ -109,7 +109,7 @@ const titreDemarcheOctroiDateDebutFind = (titreEtapes: ITitreEtape[]) => {
   // en ajoutant la durée cumulée à la date de la première étape de publication
   const titreEtapeDpuFirst = titreEtapesSortAscByOrdre(titreEtapes).find(
     titreEtape =>
-      ['dpu', 'dup', 'def', 'sco', 'aco'].includes(titreEtape.typeId)
+      ['dpu', 'dup', 'def', 'sco', 'aco', 'rpu'].includes(titreEtape.typeId)
   )
 
   if (titreEtapeDpuFirst) {
@@ -140,6 +140,12 @@ const titreDemarcheOctroiDateFinAndDureeFind = (
   const dateDebut = titreDemarcheOctroiDateDebutFind(titreEtapes)
 
   if (!dateDebut) {
+    if (!dateFin) {
+      console.warn(
+        `pas de date de début ni de date de fin pour la démarche ${titreEtapes?.[0].titreDemarcheId}`
+      )
+    }
+
     return { duree: dureeAcc, dateFin }
   }
 
