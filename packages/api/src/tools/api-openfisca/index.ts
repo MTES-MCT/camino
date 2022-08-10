@@ -58,10 +58,21 @@ export const redevanceDepartementale = (
 
 type Article = Record<Attribute, { [annee: string]: number | null }>
 
-export interface OpenfiscaRequest {
+export interface OpenfiscaRequest extends OpenfiscaCommon {
   articles: {
     [titreId_substance_commune: string]: Article
   }
+}
+
+export interface OpenfiscaResponse extends OpenfiscaCommon {
+  articles: {
+    [titreId_substance_commune: string]: Partial<
+      Record<Attribute, { [annee: string]: number }>
+    >
+  }
+}
+
+interface OpenfiscaCommon {
   titres: {
     [titreId: string]: {
       commune_principale_exploitation?: {
@@ -93,39 +104,6 @@ export interface OpenfiscaConstants {
   tarifDepartemental: number
   tarifCommunal: number
   tarifTaxeMinierePME: number
-}
-
-export interface OpenfiscaResponse {
-  articles: {
-    [titreId_substance_commune: string]: Partial<
-      Record<Attribute, { [annee: string]: number }>
-    >
-  }
-  titres: {
-    [titreId: string]: {
-      commune_principale_exploitation?: {
-        [annee: string]: string | null
-      }
-      surface_totale?: {
-        [annee: string]: number | null
-      }
-      operateur?: {
-        [annee: string]: string | null
-      }
-      categorie: {
-        [annee: string]: string | null
-      }
-      investissement?: {
-        [annee: string]: string | null
-      }
-      articles: string[]
-    }
-  }
-  communes: {
-    [communeId: string]: {
-      articles: string[]
-    }
-  }
 }
 
 const apiOpenfiscaFetch = async <T>(
