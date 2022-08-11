@@ -14,7 +14,7 @@ import { titreActiviteValideCheck } from '../utils/titre-activite-valide-check'
 import {
   SubstanceFiscale,
   SubstancesFiscale
-} from 'camino-common/src/static/substance'
+} from 'camino-common/src/static/substancesFiscales'
 import { UNITES, Unites } from 'camino-common/src/static/unites'
 import { sortedDevises } from 'camino-common/src/static/devise'
 import { exhaustiveCheck } from '../../tools/exhaustive-type-check'

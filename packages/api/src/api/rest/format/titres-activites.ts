@@ -8,7 +8,7 @@ import {
 import {
   isSubstanceFiscale,
   SubstancesFiscale
-} from 'camino-common/src/static/substance'
+} from 'camino-common/src/static/substancesFiscales'
 import { UniteId, Unites } from 'camino-common/src/static/unites'
 
 const titreActiviteContenuFormat = (contenu: IContenu, sections: ISection[]) =>

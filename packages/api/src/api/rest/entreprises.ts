@@ -28,7 +28,7 @@ import { CustomResponse } from './express-type'
 import {
   SubstanceFiscale,
   SubstancesFiscales
-} from 'camino-common/src/static/substance'
+} from 'camino-common/src/static/substancesFiscales'
 import { Departements } from 'camino-common/src/static/departement'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'

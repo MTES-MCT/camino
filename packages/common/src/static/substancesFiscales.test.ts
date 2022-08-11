@@ -1,4 +1,4 @@
-import { isSubstanceFiscale } from './substance'
+import { isSubstanceFiscale } from './substancesFiscales'
 
 test('isSubstanceFiscale', () => {
   expect(isSubstanceFiscale('wolf')).toBe(true)
