@@ -9,7 +9,6 @@ import {
 import { idGenerate } from './_format/id-create'
 import EtapesTypes from './etapes-types'
 import TitresDemarches from './titres-demarches'
-import Substances from './substances'
 import TitresPoints from './titres-points'
 import Entreprises from './entreprises'
 import Administrations from './administrations'
@@ -18,6 +17,7 @@ import Communes from './communes'
 import Forets from './forets'
 import SDOMZones from './sdom-zones'
 import Journaux from './journaux'
+import TitresSubstances from './titres-substances'
 
 export interface DBTitresEtapes extends ITitreEtape {
   archive: boolean
@@ -74,16 +74,11 @@ class TitresEtapes extends Model {
     },
 
     substances: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Substances,
+      relation: Model.HasManyRelation,
+      modelClass: TitresSubstances,
       join: {
         from: 'titresEtapes.id',
-        through: {
-          from: 'titresSubstances.titreEtapeId',
-          to: 'titresSubstances.substanceId',
-          extra: ['ordre']
-        },
-        to: 'substances.id'
+        to: 'titresSubstances.titreEtapeId'
       }
     },
 

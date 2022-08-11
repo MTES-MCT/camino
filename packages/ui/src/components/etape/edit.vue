@@ -138,6 +138,7 @@ import SectionsEdit from './sections-edit.vue'
 import DocumentsEdit from '../document/multi-edit.vue'
 import JustificatifsEdit from './justificatifs-edit.vue'
 import DecisionsAnnexesEdit from './decisions-annexes-edit.vue'
+import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
 
 export default {
   components: {
@@ -338,8 +339,8 @@ export default {
     },
 
     substances() {
-      return this.$store.state.titreEtapeEdition.metas.substances.filter(su =>
-        su.legales.find(sl => sl.domaine.id === this.domaineId)
+      return SubstancesLegales.filter(sl =>
+        sl.domaineIds.includes(this.domaineId)
       )
     }
   },

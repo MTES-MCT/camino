@@ -3,7 +3,7 @@ import gql from 'graphql-tag'
 import { fragmentTitreType } from './metas'
 import { fragmentTitreDemarche } from './titre-demarche'
 import { fragmentTitreActivite } from './titre-activite'
-import { fragmentTitreSubstance, fragmentTitresSubstance } from './substance'
+import { fragmentTitreSubstance } from './substance'
 import { fragmentTitreAdministrations } from './administrations'
 import {
   fragmentTitreEntreprises,
@@ -144,7 +144,7 @@ const fragmentTitres = gql`
       couleur
     }
     substances {
-      ...titresSubstance
+      ...titreSubstance
     }
     activitesEnConstruction
     activitesAbsentes
@@ -168,7 +168,7 @@ const fragmentTitres = gql`
 
   ${fragmentTitresEntreprises}
 
-  ${fragmentTitresSubstance}
+  ${fragmentTitreSubstance}
 
   ${fragmentTitreType}
 `

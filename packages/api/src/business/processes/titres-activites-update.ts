@@ -25,7 +25,7 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
           type: { id: {} },
           phase: { id: {} },
           etapes: {
-            substances: { legales: { id: {} } }
+            substances: { id: {} }
           }
         },
         communes: { id: {} },

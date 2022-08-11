@@ -1,9 +1,9 @@
 import {
-  ISubstance,
   ITitreEtape,
   ITitreDemarche,
   ITitrePoint,
-  ITitre
+  ITitre,
+  ITitreSubstance
 } from '../../types'
 
 import {
@@ -13,14 +13,14 @@ import {
 
 describe('valide l’étape avant de l’enregistrer', () => {
   test.each`
-    substances          | etapeType | titreType | error
-    ${[]}               | ${'mfr'}  | ${'arm'}  | ${true}
-    ${[]}               | ${'mfr'}  | ${'axm'}  | ${true}
-    ${[]}               | ${'rde'}  | ${'arm'}  | ${false}
-    ${[]}               | ${'mfr'}  | ${'prm'}  | ${false}
-    ${[{ id: 'auru' }]} | ${'mfr'}  | ${'arm'}  | ${false}
-    ${[{ id: 'auru' }]} | ${'mfr'}  | ${'axm'}  | ${false}
-    ${[{}]}             | ${'mfr'}  | ${'axm'}  | ${true}
+    substances                   | etapeType | titreType | error
+    ${[]}                        | ${'mfr'}  | ${'arm'}  | ${true}
+    ${[]}                        | ${'mfr'}  | ${'axm'}  | ${true}
+    ${[]}                        | ${'rde'}  | ${'arm'}  | ${false}
+    ${[]}                        | ${'mfr'}  | ${'prm'}  | ${false}
+    ${[{ substanceId: 'auru' }]} | ${'mfr'}  | ${'arm'}  | ${false}
+    ${[{ substanceId: 'auru' }]} | ${'mfr'}  | ${'axm'}  | ${false}
+    ${[{}]}                      | ${'mfr'}  | ${'axm'}  | ${true}
   `(
     'teste la complétude des substances',
     ({
@@ -29,7 +29,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       titreType,
       error
     }: {
-      substances: ISubstance[]
+      substances: ITitreSubstance[]
       etapeType: string
       titreType: string
       error: boolean

@@ -1,5 +1,5 @@
 import { UniteId } from './unites'
-import { SubstanceLegaleId } from './substancesLegales'
+import { SubstanceLegaleId, SubstancesLegales } from './substancesLegales'
 
 export const SUBSTANCES_FISCALES_IDS = {
   bauxite: 'aloh',
@@ -359,3 +359,9 @@ export const SubstancesFiscale: {
 }
 
 export const SubstancesFiscales = Object.values(SubstancesFiscale)
+
+export const substancesFiscalesBySubstanceLegale = (substanceLegaleId: SubstanceLegaleId): SubstanceFiscale[] => {
+  const substancesLegalesIds = SubstancesLegales.filter(({ id, substanceParentIds }) => id === substanceLegaleId || substanceParentIds?.includes(substanceLegaleId)).map(({ id }) => id)
+
+  return SubstancesFiscales.filter(({ substanceLegaleId }) => substancesLegalesIds.includes(substanceLegaleId))
+}

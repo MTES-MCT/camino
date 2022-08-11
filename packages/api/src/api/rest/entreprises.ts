@@ -119,18 +119,11 @@ export const bodyBuilder = (
     }
 
     if (titre.substances.length > 0 && activite.contenu) {
-      if (!titre.substances[0].legales) {
-        throw new Error(
-          `les substances légales des substances du titre ${activite.titreId} ne sont pas chargées`
-        )
-      }
-
       const substanceLegalesWithFiscales = titre.substances
-        .flatMap(s => s.legales)
         .filter(isNotNullNorUndefined)
-        .filter(s =>
+        .filter(({ substanceId }) =>
           SubstancesFiscales.some(
-            ({ substanceLegaleId }) => substanceLegaleId === s.id
+            ({ substanceLegaleId }) => substanceLegaleId === substanceId
           )
         )
 
@@ -143,9 +136,9 @@ export const bodyBuilder = (
       }
 
       const substancesFiscales = substanceLegalesWithFiscales.flatMap(
-        ({ id }) =>
+        ({ substanceId }) =>
           SubstancesFiscales.filter(
-            ({ substanceLegaleId }) => substanceLegaleId === id
+            ({ substanceLegaleId }) => substanceLegaleId === substanceId
           )
       )
 
@@ -373,7 +366,7 @@ export const fiscalite = async (
       { entreprisesIds: [entrepriseId] },
       {
         fields: {
-          substances: { legales: { id: {} } },
+          substances: { id: {} },
           communes: { id: {} }
         }
       },

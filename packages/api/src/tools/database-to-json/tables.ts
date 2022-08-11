@@ -54,12 +54,6 @@ export const tables = [
   { name: 'mois', orderBy: ['id'] },
   { name: 'phases_statuts', orderBy: ['id'] },
   { name: 'references_types', orderBy: ['id'] },
-  { name: 'substances', orderBy: ['id'] },
-  {
-    name: 'substances__substances_legales',
-    orderBy: ['substance_id', 'substance_legale_id']
-  },
-  { name: 'substances_legales', orderBy: ['id'] },
   { name: 'titres', orderBy: ['id'] },
   { name: 'titres_activites', orderBy: ['id'] },
   {

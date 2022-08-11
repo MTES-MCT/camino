@@ -101,40 +101,6 @@ const activitesTypesTitresTypes = apiGraphQLFetch(
   `
 )
 
-const activiteTypeTitreTypeModifier = apiGraphQLFetch(gql`
-  mutation ActiviteTypeTitreTypeModifier(
-    $element: InputActiviteTypeTitreType!
-  ) {
-    activiteTypeTitreTypeModifier(activiteTypeTitreType: $element) {
-      ...activiteTypeTitreType
-    }
-  }
-
-  ${fragmentActiviteTypeTitreType}
-`)
-
-const activiteTypeTitreTypeCreer = apiGraphQLFetch(gql`
-  mutation ActiviteTypeTitreTypeCreer($element: InputActiviteTypeTitreType!) {
-    activiteTypeTitreTypeCreer(activiteTypeTitreType: $element) {
-      ...activiteTypeTitreType
-    }
-  }
-
-  ${fragmentActiviteTypeTitreType}
-`)
-
-const activiteTypeTitreTypeSupprimer = apiGraphQLFetch(gql`
-  mutation ActiviteTypeTitreTypeSupprimer(
-    $element: InputActiviteTypeTitreType!
-  ) {
-    activiteTypeTitreTypeSupprimer(activiteTypeTitreType: $element) {
-      ...activiteTypeTitreType
-    }
-  }
-
-  ${fragmentActiviteTypeTitreType}
-`)
-
 const activitesTypesDocumentsTypes = apiGraphQLFetch(
   gql`
     query ActivitesTypesDocumentsTypes {
@@ -222,9 +188,6 @@ export {
   activitesStatuts,
   activiteStatutModifier,
   activitesTypesTitresTypes,
-  activiteTypeTitreTypeCreer,
-  activiteTypeTitreTypeModifier,
-  activiteTypeTitreTypeSupprimer,
   activitesTypesDocumentsTypes,
   activiteTypeDocumentTypeCreer,
   activiteTypeDocumentTypeModifier,

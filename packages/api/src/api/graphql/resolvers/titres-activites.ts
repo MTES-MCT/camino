@@ -35,6 +35,7 @@ import { userSuper } from '../../../database/user-super'
 import { fichiersRepertoireDelete } from './_titre-document'
 import { documentsLier } from './documents'
 import { titreGet } from '../../../database/queries/titres'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 
 /**
  * Retourne une activité
@@ -102,7 +103,7 @@ const activites = async (
     annees,
     titresNoms,
     titresEntreprises,
-    titresSubstances,
+    titresSubstancesIds,
     titresReferences,
     titresTerritoires,
     titresTypesIds,
@@ -118,7 +119,7 @@ const activites = async (
     annees?: number[] | null
     titresNoms?: string | null
     titresEntreprises?: string | null
-    titresSubstances?: string | null
+    titresSubstancesIds?: SubstanceLegaleId[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
     titresTypesIds?: string[] | null
@@ -151,7 +152,7 @@ const activites = async (
           annees,
           titresNoms,
           titresEntreprises,
-          titresSubstances,
+          titresSubstancesIds,
           titresReferences,
           titresTerritoires,
           statutsIds,
@@ -168,7 +169,7 @@ const activites = async (
           annees,
           titresNoms,
           titresEntreprises,
-          titresSubstances,
+          titresSubstancesIds,
           titresReferences,
           titresTerritoires,
           statutsIds,

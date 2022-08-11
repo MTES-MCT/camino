@@ -108,7 +108,7 @@ type Query {
     titresStatutsIds: [ID]
     titresNoms: String
     titresEntreprises: String
-    titresSubstances: String
+    titresSubstancesIds: [String]
     titresReferences: String
     titresTerritoires: String
   ): Activites
@@ -152,14 +152,8 @@ type Query {
     emails: String
   ): Utilisateurs
 
-  "Substance en fonction de son id"
-  substance(id: ID!): Substance
-
   "Liste des substances"
   substances: [Substance]
-
-  "Liste des substances par nom distinct"
-  substancesLegales: [SubstanceLegale]
 
   "Metas"
   devises: [Devise]

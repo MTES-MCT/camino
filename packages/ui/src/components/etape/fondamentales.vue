@@ -134,34 +134,25 @@
         </h5>
       </div>
       <div class="tablet-blob-3-4">
-        <TagList :elements="etape.substances.map(s => s.nom)" />
+        <TagList
+          :elements="
+            etape.substances.map(
+              ({ substanceId }) => SubstancesLegale[substanceId].nom
+            )
+          "
+        />
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { dateFormat } from '@/utils'
 import { etablissementNameFind } from '../../utils/entreprise'
 import TagList from '../_ui/tag-list.vue'
 import Tag from '../_ui/tag.vue'
 import PropDuree from './prop-duree.vue'
+import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 
-export default {
-  components: { TagList, Tag, PropDuree },
-
-  props: {
-    etape: { type: Object, required: true }
-  },
-
-  methods: {
-    etablissementNameFind(etablissements, date) {
-      return etablissementNameFind(etablissements, date)
-    },
-
-    dateFormat(date) {
-      return dateFormat(date)
-    }
-  }
-}
+defineProps<{ etape: any }>()
 </script>

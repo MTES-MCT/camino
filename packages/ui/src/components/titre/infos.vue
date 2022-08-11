@@ -81,7 +81,13 @@
 
       <div v-if="titre.substances && titre.substances.length > 0" class="mb">
         <h5>Substances</h5>
-        <TagList :elements="titre.substances.map(s => s.nom)" />
+        <TagList
+          :elements="
+            titre.substances.map(
+              ({ substanceId }) => SubstancesLegale[substanceId].nom
+            )
+          "
+        />
       </div>
 
       <div v-if="titre.titulaires.length" class="mb">
@@ -172,6 +178,7 @@ import {
 } from 'camino-common/src/static/demarchesTypes'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
+import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 
 type Entreprise = {
   id: string

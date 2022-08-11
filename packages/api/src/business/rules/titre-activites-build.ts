@@ -4,9 +4,9 @@ import {
   ITitreDemarche,
   IActiviteType,
   ITitreActivite,
-  ISubstance,
   ISection,
-  ISectionElement
+  ISectionElement,
+  ITitreSubstance
 } from '../../types'
 
 import { titreEtapePropFind } from './titre-etape-prop-find'
@@ -19,21 +19,14 @@ import { UNITES, Unites } from 'camino-common/src/static/unites'
 import { sortedDevises } from 'camino-common/src/static/devise'
 import { exhaustiveCheck } from '../../tools/exhaustive-type-check'
 
-const onlyUnique = <T>(value: T, index: number, self: T[]): boolean => {
-  return self.indexOf(value) === index
-}
-
-const substancesFiscalesFind = (substances: ISubstance[]): SubstanceFiscale[] =>
-  substances
-    .flatMap(
-      s => s?.legales?.filter(legal => legal !== null).map(({ id }) => id) ?? []
+const substancesFiscalesFind = (
+  substances: ITitreSubstance[]
+): SubstanceFiscale[] =>
+  substances.flatMap(({ substanceId }) =>
+    Object.values(SubstancesFiscale).filter(
+      substance => substance.substanceLegaleId === substanceId
     )
-    .filter(onlyUnique)
-    .flatMap(id =>
-      Object.values(SubstancesFiscale).filter(
-        substance => substance.substanceLegaleId === id
-      )
-    )
+  )
 
 const titreActiviteSectionElementsFormat = (
   elements: ISectionElement[],
@@ -113,7 +106,7 @@ const titreActiviteSectionsBuild = (
         date,
         titreDemarches,
         titreTypeId
-      ) as ISubstance[] | null
+      ) as ITitreSubstance[] | null
 
       if (substances?.length) {
         const substancesFiscales = substancesFiscalesFind(substances)

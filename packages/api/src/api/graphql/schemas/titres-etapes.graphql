@@ -249,7 +249,7 @@ input InputHeritageProp {
 }
 
 input InputSubstances {
-  id: ID!
+  substanceId: ID!
   ordre: Int
 }
 

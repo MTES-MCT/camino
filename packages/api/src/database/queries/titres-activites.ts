@@ -24,6 +24,7 @@ import {
   isAdministrationAdmin,
   isAdministrationEditeur
 } from 'camino-common/src/roles'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 
 /**
  * Modifie la requête en fonction des paramètres de filtre
@@ -48,7 +49,7 @@ const titresActivitesFiltersQueryModify = (
     annees,
     titresNoms,
     titresEntreprises,
-    titresSubstances,
+    titresSubstancesIds,
     titresReferences,
     titresTerritoires,
     titresTypesIds,
@@ -61,7 +62,7 @@ const titresActivitesFiltersQueryModify = (
     annees?: number[] | null
     titresNoms?: string | null
     titresEntreprises?: string | null
-    titresSubstances?: string | null
+    titresSubstancesIds?: SubstanceLegaleId[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
     titresTypesIds?: string[] | null
@@ -94,7 +95,7 @@ const titresActivitesFiltersQueryModify = (
       statutsIds: titresStatutsIds,
       noms: titresNoms,
       entreprises: titresEntreprises,
-      substances: titresSubstances,
+      substancesLegalesIds: titresSubstancesIds,
       references: titresReferences,
       territoires: titresTerritoires
     },
@@ -228,7 +229,7 @@ const titresActivitesGet = async (
     annees,
     titresNoms,
     titresEntreprises,
-    titresSubstances,
+    titresSubstancesIds,
     titresReferences,
     titresTerritoires,
     titresTypesIds,
@@ -245,7 +246,7 @@ const titresActivitesGet = async (
     annees?: number[] | null
     titresNoms?: string | null
     titresEntreprises?: string | null
-    titresSubstances?: string | null
+    titresSubstancesIds?: SubstanceLegaleId[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
     titresTypesIds?: string[] | null
@@ -265,7 +266,7 @@ const titresActivitesGet = async (
       annees,
       titresNoms,
       titresEntreprises,
-      titresSubstances,
+      titresSubstancesIds,
       titresReferences,
       titresTerritoires,
       titresTypesIds,
@@ -330,7 +331,7 @@ const titresActivitesCount = async (
     annees,
     titresNoms,
     titresEntreprises,
-    titresSubstances,
+    titresSubstancesIds,
     titresReferences,
     titresTerritoires,
     titresTypesIds,
@@ -342,7 +343,7 @@ const titresActivitesCount = async (
     annees?: number[] | null
     titresNoms?: string | null
     titresEntreprises?: string | null
-    titresSubstances?: string | null
+    titresSubstancesIds?: SubstanceLegaleId[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
     titresTypesIds?: string[] | null
@@ -361,7 +362,7 @@ const titresActivitesCount = async (
       annees,
       titresNoms,
       titresEntreprises,
-      titresSubstances,
+      titresSubstancesIds,
       titresReferences,
       titresTerritoires,
       titresTypesIds,

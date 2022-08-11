@@ -15,6 +15,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { Couleur } from 'camino-common/src/static/couleurs'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 
 const DemarchesStatutsTypesIds = {
   Accepte: 'acc',
@@ -582,24 +583,9 @@ interface ITitreStatut {
   ordre: number
 }
 
-interface ISubstanceLegale {
-  id: string
-  nom: string
-  domaineId?: string | null
-  description?: string | null
-  domaine?: IDomaine | null
-}
-
-interface ISubstance {
-  id: string
-  nom?: string | null
-  symbole?: string | null
-  gerep?: number | null
-  description?: string | null
-  legales?: ISubstanceLegale[]
-}
-
-interface ITitreSubstance extends ISubstance {
+interface ITitreSubstance {
+  titreEtapeId?: string
+  substanceId: SubstanceLegaleId
   ordre?: number
 }
 
@@ -1033,8 +1019,6 @@ export {
   IAdministrationActiviteType,
   IAdministrationActiviteTypeEmail,
   ITitreStatut,
-  ISubstance,
-  ISubstanceLegale,
   ITitreSubstance,
   ITitre,
   ITitreActivite,

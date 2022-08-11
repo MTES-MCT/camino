@@ -3,26 +3,10 @@
 type Substance {
   id: ID!
   nom: String!
-  symbole: String
-  gerep: Int
   description: String
-  legales: [SubstanceLegale!]
 }
 
 type TitreSubstance {
-  id: ID!
-  nom: String!
-  symbole: String
-  gerep: Int
-  description: String
-  legales: [SubstanceLegale!]
-  ordre: Int
-}
-
-type SubstanceLegale {
-  id: ID!
-  nom: String!
-  domaine: Domaine
-  description: String
+  substanceId: String!
   ordre: Int
 }

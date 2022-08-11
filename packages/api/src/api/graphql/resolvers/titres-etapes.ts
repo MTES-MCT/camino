@@ -181,7 +181,7 @@ const etapeHeritage = async (
             type: { id: {} },
             titulaires: { id: {} },
             amodiataires: { id: {} },
-            substances: { legales: { id: {} } },
+            substances: { id: {} },
             points: { references: { id: {} } }
           }
         }

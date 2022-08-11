@@ -1,7 +1,6 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
-import { fragmentSubstance } from './fragments/substance'
 import { fragmentEtape, fragmentEtapeHeritage } from './fragments/titre-etape'
 import { fragmentEtapeMetasEntreprises } from './fragments/entreprises'
 
@@ -53,18 +52,12 @@ const titreEtapeMetas = apiGraphQLFetch(
         }
       }
 
-      substances {
-        ...substance
-      }
-
       entreprises(archive: false, etapeId: $id) {
         elements {
           ...etapeMetasEntreprises
         }
       }
     }
-
-    ${fragmentSubstance}
 
     ${fragmentEtapeMetasEntreprises}
   `

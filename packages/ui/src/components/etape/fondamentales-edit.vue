@@ -231,8 +231,12 @@
               <option
                 v-for="s in substances"
                 :key="s.id"
-                :value="{ id: s.id }"
-                :disabled="etape.substances.find(({ id }) => id === s.id)"
+                :value="{ substanceId: s.id }"
+                :disabled="
+                  etape.substances.find(
+                    ({ substanceId }) => substanceId === s.id
+                  )
+                "
               >
                 {{ s.nom }}
               </option>
@@ -245,7 +249,9 @@
               <Icon size="M" name="move-down" />
             </button>
             <button
-              v-if="substancesLength && n > 0 && etape.substances[n].id"
+              v-if="
+                substancesLength && n > 0 && etape.substances[n].substanceId
+              "
               :class="{
                 'rnd-l-xs': !(substancesLength && n + 1 < substancesLength)
               }"
@@ -256,7 +262,8 @@
             </button>
             <button
               :class="{
-                'rnd-l-xs': !etape.substances[n].id || substancesLength === 1
+                'rnd-l-xs':
+                  !etape.substances[n].substanceId || substancesLength === 1
               }"
               class="btn py-s px-m rnd-r-xs"
               @click="substanceRemove(n)"
@@ -267,7 +274,7 @@
         </div>
 
         <button
-          v-if="!etape.substances.some(({ id }) => id === '')"
+          v-if="!etape.substances.some(({ substanceId }) => substanceId === '')"
           class="btn small rnd-xs py-s px-m full-x flex mb-s"
           @click="substanceAdd"
         >
@@ -473,7 +480,7 @@ export default {
       )
     },
     substanceAdd() {
-      this.etape.substances.push({ id: '' })
+      this.etape.substances.push({ substanceId: '' })
     },
 
     substanceRemove(index) {

@@ -2,9 +2,7 @@ import { fiscaliteVisible, fraisGestion } from './fiscalite'
 import { Role } from './roles'
 
 test('fraisGestion', () => {
-  expect(
-    fraisGestion({ redevanceDepartementale: 50, redevanceCommunale: 50 })
-  ).toBe(8)
+  expect(fraisGestion({ redevanceDepartementale: 50, redevanceCommunale: 50 })).toBe(8)
   expect(
     fraisGestion({
       redevanceDepartementale: 50,

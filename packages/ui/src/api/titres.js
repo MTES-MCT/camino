@@ -54,11 +54,6 @@ const titresMetas = apiGraphQLFetch(
         couleur
       }
 
-      substancesLegales {
-        id
-        nom
-      }
-
       entreprises {
         elements {
           id

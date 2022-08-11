@@ -54,9 +54,6 @@ import {
   activitesStatuts,
   activiteStatutModifier,
   activitesTypesTitresTypes,
-  activiteTypeTitreTypeModifier,
-  activiteTypeTitreTypeCreer,
-  activiteTypeTitreTypeSupprimer,
   activitesTypesDocumentsTypes,
   activiteTypeDocumentTypeModifier,
   activiteTypeDocumentTypeCreer,
@@ -522,29 +519,6 @@ const metasIndex = {
         elements: ['warning', 'neutral', 'success', 'error']
       }
     ]
-  },
-
-  'activites-types--titres-types': {
-    get: activitesTypesTitresTypes,
-    update: activiteTypeTitreTypeModifier,
-    create: activiteTypeTitreTypeCreer,
-    delete: activiteTypeTitreTypeSupprimer,
-    nom: 'Types des activités | Types des titres',
-    colonnes: [
-      {
-        id: 'activiteTypeId',
-        nom: "Type d'activité",
-        type: 'entities',
-        entities: 'activites-types'
-      },
-      {
-        id: 'titreTypeId',
-        nom: 'Type de titre',
-        type: 'entities',
-        entities: 'titres-types'
-      }
-    ],
-    ids: ['activiteTypeId', 'titreTypeId']
   },
 
   'activites-types--documents-types': {

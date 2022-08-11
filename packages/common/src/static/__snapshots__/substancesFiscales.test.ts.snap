@@ -1,0 +1,90 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`substancesFiscalesBySubstanceLegale 1`] = `
+Array [
+  Object {
+    "description": "contenu dans les minerais",
+    "id": "auru",
+    "nom": "or",
+    "openFisca": Object {
+      "nom": "aurifere",
+      "unite": "mkg",
+    },
+    "substanceLegaleId": "auru",
+    "uniteId": "mgr",
+  },
+]
+`;
+
+exports[`substancesFiscalesBySubstanceLegale 2`] = `
+Array [
+  Object {
+    "description": "bauxite nettes livrées",
+    "id": "aloh",
+    "nom": "bauxite",
+    "substanceLegaleId": "aloh",
+    "uniteId": "mtk",
+  },
+  Object {
+    "description": "contenu dans les minerais",
+    "id": "cuiv",
+    "nom": "cuivre",
+    "substanceLegaleId": "cuiv",
+    "uniteId": "mtt",
+  },
+  Object {
+    "description": "contenu dans les minerais",
+    "id": "etai",
+    "nom": "étain",
+    "openFisca": Object {
+      "nom": "etain",
+    },
+    "substanceLegaleId": "etai",
+    "uniteId": "mtt",
+  },
+  Object {
+    "description": "net livré",
+    "id": "fera",
+    "nom": "pyrite de fer",
+    "openFisca": Object {
+      "nom": "fer_pyrite",
+    },
+    "substanceLegaleId": "ferx",
+    "uniteId": "mtk",
+  },
+  Object {
+    "description": "net livré",
+    "id": "ferb",
+    "nom": "minerais de fer",
+    "openFisca": Object {
+      "nom": "fer",
+    },
+    "substanceLegaleId": "ferx",
+    "uniteId": "mtk",
+  },
+  Object {
+    "description": "contenu dans les minerais",
+    "id": "mang",
+    "nom": "manganèse",
+    "openFisca": Object {
+      "nom": "manganese",
+    },
+    "substanceLegaleId": "mang",
+    "uniteId": "mtc",
+  },
+  Object {
+    "description": "contenu dans les minerais",
+    "id": "plom",
+    "nom": "plomb",
+    "substanceLegaleId": "plom",
+    "uniteId": "mtc",
+  },
+  Object {
+    "description": "contenu dans les minerais",
+    "id": "zinc",
+    "nom": "zinc",
+    "substanceLegaleId": "zinc",
+    "uniteId": "mtc",
+  },
+]
+`;

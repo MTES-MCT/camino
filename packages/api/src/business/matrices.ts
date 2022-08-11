@@ -450,7 +450,7 @@ export const matrices = async (annee: number) => {
     },
     {
       fields: {
-        substances: { legales: { id: {} } },
+        substances: { id: {} },
         communes: { id: {} },
         titulaires: { id: {} },
         amodiataires: { id: {} },

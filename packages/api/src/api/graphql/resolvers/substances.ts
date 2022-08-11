@@ -1,13 +1,3 @@
-import {
-  substanceGet,
-  substancesGet,
-  substancesLegalesGet
-} from '../../../database/queries/substances'
+import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
 
-const substance = async ({ id }: { id: string }) => substanceGet(id)
-
-const substancesLegales = async () => substancesLegalesGet({ distinct: 'nom' })
-
-const substances = async () => substancesGet()
-
-export { substance, substances, substancesLegales }
+export const substances = async () => SubstancesLegales

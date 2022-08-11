@@ -222,19 +222,14 @@ const titreDemarches = [
         statutId: 'fai',
         substances: [
           {
-            id: 'auru',
-            legales: [
-              {
-                id: 'auru',
-                nom: 'Or'
-              },
-              {
-                id: 'nacl',
-                nom: 'Sel'
-              },
-              null
-            ]
-          }
+            substanceId: 'auru',
+            ordre: 1
+          },
+          {
+            substanceId: 'nacl',
+            ordre: 2
+          },
+          null
         ]
       }
     ]

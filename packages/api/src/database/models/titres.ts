@@ -7,7 +7,6 @@ import Communes from './communes'
 import Domaines from './domaines'
 import Entreprises from './entreprises'
 import TitresStatuts from './titres-statuts'
-import Substances from './substances'
 import TitresDemarches from './titres-demarches'
 import TitresEtapes from './titres-etapes'
 import TitresPoints from './titres-points'
@@ -22,6 +21,7 @@ import slugify from '@sindresorhus/slugify'
 import cryptoRandomString from 'crypto-random-string'
 import SDOMZones from './sdom-zones'
 import TitresActivites from './titres-activites'
+import TitresSubstances from './titres-substances'
 
 export interface DBTitre extends ITitre {
   archive: boolean
@@ -91,16 +91,11 @@ class Titres extends Model {
     },
 
     substances: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Substances,
+      relation: Model.HasManyRelation,
+      modelClass: TitresSubstances,
       join: {
         from: ref('titres.propsTitreEtapesIds:substances').castText(),
-        through: {
-          from: 'titresSubstances.titreEtapeId',
-          to: 'titresSubstances.substanceId',
-          extra: ['ordre']
-        },
-        to: 'substances.id'
+        to: 'titresSubstances.titreEtapeId'
       }
     },
 

@@ -57,18 +57,12 @@ const propertyArrayCheck = (
         (prevValue as ITitrePoint[]).map(comparator).sort().toString()
       )
     } else if (propId === 'substances') {
-      const comparator = (propValueArray: { id: string; ordre: number }) =>
-        propValueArray.id + propValueArray.ordre
+      const comparator = (propValueArray: ITitreSubstance) =>
+        propValueArray.substanceId + propValueArray.ordre
 
       return (
-        (newValue as { id: string; ordre: number }[])
-          .map(comparator)
-          .sort()
-          .toString() ===
-        (prevValue as { id: string; ordre: number }[])
-          .map(comparator)
-          .sort()
-          .toString()
+        (newValue as ITitreSubstance[]).map(comparator).sort().toString() ===
+        (prevValue as ITitreSubstance[]).map(comparator).sort().toString()
       )
     } else if (['titulaires', 'amodiataires'].includes(propId)) {
       const comparator = (propValueArray: ITitreEntreprise) =>
