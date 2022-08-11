@@ -36,7 +36,6 @@ import EtapesTypes from '../models/etapes-types'
 import ReferencesTypes from '../models/references-types'
 import TitresStatuts from '../models/titres-statuts'
 import TitresTypesTypes from '../models/titres-types-types'
-import SubstancesLegalesCodes from '../models/substances-legales-codes'
 
 import {
   domainesQueryModify,
@@ -546,9 +545,6 @@ const documentTypeGet = async (id: string) =>
 
 const referencesTypesGet = async () => ReferencesTypes.query().orderBy('nom')
 
-const substancesLegalesCodesGet = async () =>
-  SubstancesLegalesCodes.query().orderBy('ordre')
-
 export {
   domaineGet,
   domainesGet,
@@ -571,7 +567,6 @@ export {
   referencesTypesGet,
   phasesStatutsGet,
   phaseStatutUpdate,
-  substancesLegalesCodesGet,
   documentTypeCreate,
   documentTypeUpdate,
   referenceTypeUpdate,

@@ -260,12 +260,6 @@ fragment titreSubstance on TitreSubstance {
       id
       nom
     }
-    code {
-      id
-      nom
-      description
-      lien
-    }
   }
 }
 

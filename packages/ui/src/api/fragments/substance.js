@@ -15,12 +15,6 @@ const fragmentSubstance = gql`
         id
         nom
       }
-      code {
-        id
-        nom
-        description
-        lien
-      }
     }
   }
 `
@@ -40,12 +34,6 @@ const fragmentTitreSubstance = gql`
       domaine {
         id
         nom
-      }
-      code {
-        id
-        nom
-        description
-        lien
       }
     }
   }

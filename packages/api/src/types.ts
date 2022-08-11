@@ -582,21 +582,12 @@ interface ITitreStatut {
   ordre: number
 }
 
-interface ISubstanceLegaleCode {
-  id: string
-  nom: string
-  description?: string | null
-  lien: string
-}
-
 interface ISubstanceLegale {
   id: string
   nom: string
   domaineId?: string | null
   description?: string | null
-  substanceLegaleCodeId?: string | null
   domaine?: IDomaine | null
-  code?: ISubstanceLegaleCode | null
 }
 
 interface ISubstance {
@@ -1044,7 +1035,6 @@ export {
   ITitreStatut,
   ISubstance,
   ISubstanceLegale,
-  ISubstanceLegaleCode,
   ITitreSubstance,
   ITitre,
   ITitreActivite,
