@@ -218,91 +218,12 @@
       <hr />
     </div>
 
-    <h3 class="mb-s">Substances</h3>
-    <HeritageEdit
-      v-model:prop="etape.heritageProps.substances"
-      propId="substances"
-      :isArray="true"
-    >
-      <template #write>
-        <div v-for="(substance, n) in etape.substances" :key="n">
-          <div class="flex mb-s">
-            <select v-model="etape.substances[n]" class="p-s mr-s">
-              <option
-                v-for="s in substances"
-                :key="s.id"
-                :value="{ substanceId: s.id }"
-                :disabled="
-                  etape.substances.find(
-                    ({ substanceId }) => substanceId === s.id
-                  )
-                "
-              >
-                {{ s.nom }}
-              </option>
-            </select>
-            <button
-              v-if="substancesLength && n + 1 < substancesLength"
-              class="btn-border py-s px-m rnd-l-xs"
-              @click="substanceMoveDown(n)"
-            >
-              <Icon size="M" name="move-down" />
-            </button>
-            <button
-              v-if="
-                substancesLength && n > 0 && etape.substances[n].substanceId
-              "
-              :class="{
-                'rnd-l-xs': !(substancesLength && n + 1 < substancesLength)
-              }"
-              class="btn-border py-s px-m"
-              @click="substanceMoveUp(n)"
-            >
-              <Icon size="M" name="move-up" />
-            </button>
-            <button
-              :class="{
-                'rnd-l-xs':
-                  !etape.substances[n].substanceId || substancesLength === 1
-              }"
-              class="btn py-s px-m rnd-r-xs"
-              @click="substanceRemove(n)"
-            >
-              <Icon name="minus" size="M" />
-            </button>
-          </div>
-        </div>
-
-        <button
-          v-if="!etape.substances.some(({ substanceId }) => substanceId === '')"
-          class="btn small rnd-xs py-s px-m full-x flex mb-s"
-          @click="substanceAdd"
-        >
-          <span class="mt-xxs">Ajouter une substance</span>
-          <Icon name="plus" size="M" class="flex-right" />
-        </button>
-
-        <div v-if="substancesLength" class="h6">
-          <label>
-            <input
-              v-model="etape.incertitudes.substances"
-              type="checkbox"
-              class="mr-xs"
-            />
-            Incertain
-          </label>
-        </div>
-      </template>
-
-      <template #read>
-        <TagList
-          class="mb-s"
-          :elements="
-            etape.heritageProps.substances.etape.substances.map(s => s.nom)
-          "
-        />
-      </template>
-    </HeritageEdit>
+    <SubstancesEdit
+      :substances="etape.substances"
+      :heritageProps="etape.heritageProps"
+      :incertitudes="etape.incertitudes"
+      :domaineId="domaineId"
+    />
 
     <hr />
   </div>
@@ -311,7 +232,6 @@
 <script>
 import { dateFormat } from '../../utils/index'
 import Tag from '../_ui/tag.vue'
-import TagList from '../_ui/tag-list.vue'
 import InputDate from '../_ui/input-date.vue'
 import InputNumber from '../_ui/input-number.vue'
 import HeritageEdit from './heritage-edit.vue'
@@ -319,16 +239,15 @@ import PropDuree from './prop-duree.vue'
 import AutocompleteEntreprise from './autocomplete-entreprise.vue'
 
 import { etablissementNameFind } from '@/utils/entreprise'
-import Icon from '@/components/_ui/icon.vue'
+import SubstancesEdit from '@/components/etape/substances-edit.vue'
 
 export default {
   components: {
-    Icon,
+    SubstancesEdit,
     InputDate,
     InputNumber,
     HeritageEdit,
     Tag,
-    TagList,
     PropDuree,
     AutocompleteEntreprise
   },
@@ -385,10 +304,6 @@ export default {
       return this.etape.amodiataires?.filter(({ id }) => id).length || 0
     },
 
-    substancesLength() {
-      return this.etape.substances.filter(({ id }) => id).length
-    },
-
     dureeOptionalCheck() {
       return (!this.isArm && !this.isAxm) || this.etape.type.id !== 'mfr'
     },
@@ -412,7 +327,8 @@ export default {
     complete() {
       return (
         this.etape.type.id !== 'mfr' ||
-        (this.substancesLength > 0 &&
+        (this.etape.substances.filter(({ substanceId }) => substanceId).length >
+          0 &&
           (this.dureeOptionalCheck ||
             !!this.etape.duree.ans ||
             !!this.etape.duree.mois))
@@ -478,25 +394,6 @@ export default {
         this.etape.amodiataires.length,
         ...newAmodiataires
       )
-    },
-    substanceAdd() {
-      this.etape.substances.push({ substanceId: '' })
-    },
-
-    substanceRemove(index) {
-      this.etape.substances.splice(index, 1)
-    },
-
-    substanceMoveDown(n) {
-      const substance = this.etape.substances[n]
-      this.etape.substances.splice(n, 1)
-      this.etape.substances.splice(n + 1, 0, substance)
-    },
-
-    substanceMoveUp(n) {
-      const substance = this.etape.substances[n]
-      this.etape.substances.splice(n, 1)
-      this.etape.substances.splice(n - 1, 0, substance)
     },
 
     etablissementNameFind() {

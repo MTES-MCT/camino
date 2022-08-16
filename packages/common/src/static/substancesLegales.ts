@@ -2,9 +2,7 @@ import { DomaineId } from './domaines'
 
 // FIXME
 // - corriger les filtres sur les substances (titres, démarches et activités)
-// - corriger l’édition
-// - utiliser partout substancesFiscalesBySubstanceLegale
-// - corriger le glossaire
+// - le storyshot est vide
 
 export const SUBSTANCES_LEGALES_IDS = {
   bauxite: 'aloh',

@@ -17,7 +17,7 @@ const definitionsIndex = {
   'demarches-types': demarchesTypes,
   'etapes-types': etapesTypes,
   'etapes-statuts': () => Object.values(EtapesStatuts),
-  'substances-legales': SubstancesLegales,
+  'substances-legales': () => SubstancesLegales,
   'titres-statuts': titresStatuts,
   'titres-types': () => Object.values(TitresTypesTypes)
 }

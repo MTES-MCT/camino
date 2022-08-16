@@ -27,7 +27,7 @@ import Titres from '../../database/models/titres'
 import { CustomResponse } from './express-type'
 import {
   SubstanceFiscale,
-  SubstancesFiscales
+  substancesFiscalesBySubstanceLegale
 } from 'camino-common/src/static/substancesFiscales'
 import { Departements } from 'camino-common/src/static/departement'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
@@ -121,10 +121,9 @@ export const bodyBuilder = (
     if (titre.substances.length > 0 && activite.contenu) {
       const substanceLegalesWithFiscales = titre.substances
         .filter(isNotNullNorUndefined)
-        .filter(({ substanceId }) =>
-          SubstancesFiscales.some(
-            ({ substanceLegaleId }) => substanceLegaleId === substanceId
-          )
+        .filter(
+          ({ substanceId }) =>
+            substancesFiscalesBySubstanceLegale(substanceId).length
         )
 
       if (substanceLegalesWithFiscales.length > 1) {
@@ -136,10 +135,7 @@ export const bodyBuilder = (
       }
 
       const substancesFiscales = substanceLegalesWithFiscales.flatMap(
-        ({ substanceId }) =>
-          SubstancesFiscales.filter(
-            ({ substanceLegaleId }) => substanceLegaleId === substanceId
-          )
+        ({ substanceId }) => substancesFiscalesBySubstanceLegale(substanceId)
       )
 
       for (const substancesFiscale of substancesFiscales) {

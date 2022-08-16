@@ -158,11 +158,7 @@ const etapeEditFormat = etape => {
     }
   })
 
-  if (etape.substances) {
-    etape.substances = etape.substances.map(({ id }) => ({
-      id
-    }))
-  } else {
+  if (!etape.substances) {
     etape.substances = []
   }
 

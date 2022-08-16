@@ -16,7 +16,6 @@ import { titreFormat } from '../../_format/titres'
 import {
   titreEtapeCreate,
   titreEtapeGet,
-  titreEtapeMaxSubstanceOrdre,
   titreEtapeUpdate,
   titreEtapeUpsert
 } from '../../../database/queries/titres-etapes'
@@ -92,23 +91,6 @@ const statutIdAndDateGet = (
   return result
 }
 
-// il y a un index d’unicité sur la colonne ordre de titres_substances
-// on ne peut pas échanger la position de 2 substances via le upsertGraph de Objection, même avec une transaction
-// https://github.com/Vincit/objection.js/issues/1809)
-// VisibleForTesting
-export const uglySubstanceTrick = (
-  max: number,
-  etape: Pick<ITitreEtape, 'substances'>
-) => {
-  const maxOrdre =
-    etape.substances?.reduce(
-      (maxOrdre, substance) => Math.max(maxOrdre, substance.ordre ?? 0),
-      max
-    ) ?? 0
-  etape.substances?.forEach(substance => {
-    if (substance.ordre) substance.ordre += maxOrdre
-  })
-}
 const etape = async (
   { id }: { id: string },
   context: IToken,
@@ -541,11 +523,6 @@ const etapeModifier = async (
         'demarches',
         etape.id
       )
-    }
-
-    if (etape.substances?.length) {
-      const maxBdd = await titreEtapeMaxSubstanceOrdre(etape.id)
-      uglySubstanceTrick(maxBdd, etape)
     }
 
     let etapeUpdated: ITitreEtape = await titreEtapeUpsert(

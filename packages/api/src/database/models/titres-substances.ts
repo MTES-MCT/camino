@@ -18,6 +18,8 @@ class TitresSubstances extends Model {
     }
   }
 
+  public static idColumn = ['titreEtapeId', 'substanceId']
+
   public static modifiers: Modifiers = {
     orderAsc: builder => {
       builder.orderBy('ordre', 'asc')

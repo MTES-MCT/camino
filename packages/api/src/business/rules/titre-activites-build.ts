@@ -13,7 +13,7 @@ import { titreEtapePropFind } from './titre-etape-prop-find'
 import { titreActiviteValideCheck } from '../utils/titre-activite-valide-check'
 import {
   SubstanceFiscale,
-  SubstancesFiscale
+  substancesFiscalesBySubstanceLegale
 } from 'camino-common/src/static/substancesFiscales'
 import { UNITES, Unites } from 'camino-common/src/static/unites'
 import { sortedDevises } from 'camino-common/src/static/devise'
@@ -23,9 +23,7 @@ const substancesFiscalesFind = (
   substances: ITitreSubstance[]
 ): SubstanceFiscale[] =>
   substances.flatMap(({ substanceId }) =>
-    Object.values(SubstancesFiscale).filter(
-      substance => substance.substanceLegaleId === substanceId
-    )
+    substancesFiscalesBySubstanceLegale(substanceId)
   )
 
 const titreActiviteSectionElementsFormat = (

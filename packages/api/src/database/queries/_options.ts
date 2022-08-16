@@ -75,7 +75,6 @@ const titresEtapesRelateTrue = [
   'titulaires',
   'amodiataires',
   'administrations',
-  'substances',
   'communes',
   'forets',
   'justificatifs'
