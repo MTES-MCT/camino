@@ -5,17 +5,13 @@
         <h5>Date</h5>
       </div>
       <div class="tablet-blob-2-3">
-        <InputDate v-if="modifiable" v-model="document.date" class="mb" />
-        <p v-else-if="document.date" class="pt-xs">
-          {{ document.date }}
-        </p>
-        <p v-else class="color-warning pt-xs">À compléter pour valider</p>
+        <InputDate v-model="document.date" class="mb" />
       </div>
     </div>
 
     <hr />
 
-    <div v-if="documentsVisibilites.length > 1 && modifiable">
+    <div v-if="documentsVisibilites.length > 1">
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3">
           <h5>Visibilité</h5>
@@ -53,7 +49,7 @@
               `${document.id}.${document.fichierTypeId}`
             }}
           </p>
-          <div v-if="modifiable" class="flex-right flex flex-center pl-s">
+          <div class="flex-right flex flex-center pl-s">
             <button
               class="btn-border py-s px-m my--xs rnd-l-xs"
               @click="fileRemove"
@@ -68,14 +64,13 @@
             </button>
           </div>
         </div>
-        <div v-else-if="modifiable">
+        <div v-else>
           <InputFile
             class="btn-border small p-s full-x rnd-xs mb-s"
             @change="fileChange"
           />
           <p class="h5 italic">30 Mo max.</p>
         </div>
-        <p v-else class="color-warning pt-s mb-0">À compléter pour valider</p>
       </div>
     </div>
 
@@ -87,11 +82,7 @@
           <h5>Type de fichier</h5>
         </div>
         <div class="tablet-blob-2-3 mb">
-          <select
-            v-if="modifiable"
-            v-model="document.fichierTypeId"
-            class="p-s"
-          >
+          <select v-model="document.fichierTypeId" class="p-s">
             <option
               v-for="fichierTypeId in fichiersTypesIds"
               :key="fichierTypeId"
@@ -101,20 +92,12 @@
               {{ fichierTypeId }}
             </option>
           </select>
-          <p v-else-if="document.fichierTypeId" class="pt-xs mb-0">
-            {{ document.fichierTypeId }}
-          </p>
-          <p v-else class="color-warning pt-s mb-0">À compléter pour valider</p>
         </div>
       </div>
       <hr />
     </div>
 
-    <div
-      v-if="
-        (document.typeId === 'dec' || document.typeId === 'arr') && modifiable
-      "
-    >
+    <div v-if="document.typeId === 'dec' || document.typeId === 'arr'">
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
           <h5 class="mb-xs">Jorf</h5>
@@ -127,11 +110,7 @@
       <hr />
     </div>
 
-    <div
-      v-if="
-        (document.typeId === 'dec' || document.typeId === 'arr') && modifiable
-      "
-    >
+    <div v-if="document.typeId === 'dec' || document.typeId === 'arr'">
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
           <h5 class="mb-xs">Nor</h5>
@@ -144,7 +123,7 @@
       <hr />
     </div>
 
-    <div v-if="repertoire === 'demarches' && modifiable && userIsAdmin">
+    <div v-if="repertoire === 'demarches' && userIsAdmin">
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
           <h5 class="mb-xs">URI</h5>
@@ -162,7 +141,7 @@
       <hr />
     </div>
 
-    <div v-if="repertoire === 'demarches' && modifiable && userIsAdmin">
+    <div v-if="repertoire === 'demarches' && userIsAdmin">
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
           <h5 class="mb-xs">URL</h5>
@@ -180,22 +159,14 @@
       <hr />
     </div>
 
-    <div v-if="modifiable || document.description">
+    <div v-if="document.description">
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
           <h5 class="mb-xs">Description</h5>
-          <p v-if="modifiable" class="h6 italic mb-0">Optionnel</p>
+          <p class="h6 italic mb-0">Optionnel</p>
         </div>
         <div class="mb tablet-blob-2-3">
-          <input
-            v-if="modifiable"
-            v-model="document.description"
-            type="text"
-            class="p-s"
-          />
-          <p v-else-if="document.description" class="pt-xs mb-0">
-            {{ document.description }}
-          </p>
+          <input v-model="document.description" type="text" class="p-s" />
         </div>
       </div>
       <hr />
@@ -216,7 +187,6 @@ export default {
 
   props: {
     document: { type: Object, required: true },
-    modifiable: { type: Boolean, default: true },
     repertoire: { type: String, required: true },
     userIsAdmin: { type: Boolean, default: false }
   },
