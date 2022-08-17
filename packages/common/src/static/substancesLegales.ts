@@ -1,8 +1,5 @@
 import { DomaineId } from './domaines'
 
-// FIXME
-// - le storyshot est vide
-
 export const SUBSTANCES_LEGALES_IDS = {
   bauxite: 'aloh',
   antimoine: 'anti',

@@ -1,82 +1,84 @@
 <template>
-  <h3 class="mb-s">Substances</h3>
-  <HeritageEdit
-    v-model:prop="heritageProps.substances"
-    propId="substances"
-    :isArray="true"
-  >
-    <template #write>
-      <div
-        v-for="(substance, n) in substances.sort((a, b) => a.ordre - b.ordre)"
-        :key="n"
-      >
-        <div class="flex mb-s">
-          <select v-model="substances[n]" class="p-s mr-s">
-            <option
-              v-for="s in substancesByDomaine"
-              :key="s.id"
-              :value="{ substanceId: s.id, ordre: substance.ordre }"
-              :disabled="
-                substances.some(({ substanceId }) => substanceId === s.id)
-              "
+  <div>
+    <h3 class="mb-s">Substances</h3>
+    <HeritageEdit
+      v-model:prop="heritageProps.substances"
+      propId="substances"
+      :isArray="true"
+    >
+      <template #write>
+        <div
+          v-for="(substance, n) in substances.sort((a, b) => a.ordre - b.ordre)"
+          :key="n"
+        >
+          <div class="flex mb-s">
+            <select v-model="substances[n]" class="p-s mr-s">
+              <option
+                v-for="s in substancesByDomaine"
+                :key="s.id"
+                :value="{ substanceId: s.id, ordre: substance.ordre }"
+                :disabled="
+                  substances.some(({ substanceId }) => substanceId === s.id)
+                "
+              >
+                {{ s.nom }}
+              </option>
+            </select>
+            <button
+              v-if="substancesLength && n + 1 < substancesLength"
+              class="btn-border py-s px-m rnd-l-xs"
+              @click="substanceMoveDown(n)"
             >
-              {{ s.nom }}
-            </option>
-          </select>
-          <button
-            v-if="substancesLength && n + 1 < substancesLength"
-            class="btn-border py-s px-m rnd-l-xs"
-            @click="substanceMoveDown(n)"
-          >
-            <Icon size="M" name="move-down" />
-          </button>
-          <button
-            v-if="substancesLength && n > 0 && substances[n].substanceId"
-            :class="{
-              'rnd-l-xs': !(substancesLength && n + 1 < substancesLength)
-            }"
-            class="btn-border py-s px-m"
-            @click="substanceMoveUp(n)"
-          >
-            <Icon size="M" name="move-up" />
-          </button>
-          <button
-            :class="{
-              'rnd-l-xs': !substances[n].substanceId || substancesLength === 1
-            }"
-            class="btn py-s px-m rnd-r-xs"
-            @click="substanceRemove(n)"
-          >
-            <Icon name="minus" size="M" />
-          </button>
+              <Icon size="M" name="move-down" />
+            </button>
+            <button
+              v-if="substancesLength && n > 0 && substances[n].substanceId"
+              :class="{
+                'rnd-l-xs': !(substancesLength && n + 1 < substancesLength)
+              }"
+              class="btn-border py-s px-m"
+              @click="substanceMoveUp(n)"
+            >
+              <Icon size="M" name="move-up" />
+            </button>
+            <button
+              :class="{
+                'rnd-l-xs': !substances[n].substanceId || substancesLength === 1
+              }"
+              class="btn py-s px-m rnd-r-xs"
+              @click="substanceRemove(n)"
+            >
+              <Icon name="minus" size="M" />
+            </button>
+          </div>
         </div>
-      </div>
 
-      <button
-        v-if="!substances.some(({ substanceId }) => !!substanceId)"
-        class="btn small rnd-xs py-s px-m full-x flex mb-s"
-        @click="substanceAdd"
-      >
-        <span class="mt-xxs">Ajouter une substance</span>
-        <Icon name="plus" size="M" class="flex-right" />
-      </button>
+        <button
+          v-if="substances.every(({ substanceId }) => !!substanceId)"
+          class="btn small rnd-xs py-s px-m full-x flex mb-s"
+          @click="substanceAdd"
+        >
+          <span class="mt-xxs">Ajouter une substance</span>
+          <Icon name="plus" size="M" class="flex-right" />
+        </button>
 
-      <div v-if="substancesLength" class="h6">
-        <label>
-          <input
-            v-model="incertitudes.substances"
-            type="checkbox"
-            class="mr-xs"
-          />
-          Incertain
-        </label>
-      </div>
-    </template>
+        <div v-if="substancesLength" class="h6">
+          <label>
+            <input
+              v-model="incertitudes.substances"
+              type="checkbox"
+              class="mr-xs"
+            />
+            Incertain
+          </label>
+        </div>
+      </template>
 
-    <template #read>
-      <TagList class="mb-s" :elements="substanceNoms" />
-    </template>
-  </HeritageEdit>
+      <template #read>
+        <TagList class="mb-s" :elements="substanceNoms" />
+      </template>
+    </HeritageEdit>
+  </div>
 </template>
 <script setup lang="ts">
 import {
