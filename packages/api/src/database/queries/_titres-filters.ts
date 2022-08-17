@@ -31,7 +31,7 @@ export const titresFiltersQueryModify = (
     domainesIds,
     typesIds,
     statutsIds,
-    substancesLegalesIds,
+    substancesIds,
     entreprisesIds,
     noms,
     entreprises,
@@ -43,11 +43,10 @@ export const titresFiltersQueryModify = (
     domainesIds?: string[] | null
     typesIds?: string[] | null
     statutsIds?: string[] | null
-    substancesLegalesIds?: string[] | null
+    substancesIds?: string[] | null
     entreprisesIds?: string[] | null
     noms?: string | null
     entreprises?: string | null
-    substances?: string | null
     references?: string | null
     territoires?: string | null
   } = {},
@@ -93,14 +92,14 @@ export const titresFiltersQueryModify = (
     q.whereIn(`${name}.statutId`, statutsIds)
   }
 
-  if (substancesLegalesIds?.length) {
+  if (substancesIds?.length) {
     if (name === 'titre') {
       q.leftJoinRelated('titre')
     }
 
     q.leftJoinRelated(jointureFormat(name, 'substances'))
 
-    q.whereIn(fieldFormat(name, 'substances.substanceId'), substancesLegalesIds)
+    q.whereIn(fieldFormat(name, 'substances.substanceId'), substancesIds)
   }
 
   if (entreprisesIds?.length) {

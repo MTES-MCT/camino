@@ -21,11 +21,6 @@ const activitesMetas = apiGraphQLFetch(
         ...activiteStatut
       }
 
-      domaines {
-        id
-        nom
-      }
-
       types {
         ...titreTypeType
       }

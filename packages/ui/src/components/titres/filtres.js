@@ -6,6 +6,8 @@ import FiltresTypes from '../_common/filtres/types.vue'
 
 import { elementsFormat } from '../../utils/index'
 import { titresFiltres, titresRechercherByNom } from '@/api/titres'
+import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
+import { sortedDomaines } from 'camino-common/src/static/domaines'
 
 const filtres = [
   {
@@ -26,11 +28,11 @@ const filtres = [
     elementsFormat
   },
   {
-    id: 'substancesLegalesIds',
+    id: 'substancesIds',
     type: 'autocomplete',
     value: [],
-    name: 'Substances',
-    elementsFormat
+    elements: SubstancesLegales,
+    name: 'Substances'
   },
   {
     id: 'references',
@@ -51,9 +53,8 @@ const filtres = [
     name: 'Domaines',
     type: 'checkboxes',
     value: [],
-    elements: [],
-    component: markRaw(FiltresDomaines),
-    elementsFormat
+    elements: sortedDomaines,
+    component: markRaw(FiltresDomaines)
   },
   {
     id: 'typesIds',

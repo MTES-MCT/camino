@@ -96,6 +96,7 @@ import {
 } from '../_map/leaflet.js'
 import { clustersBuild, layersBuild, zones } from './map.js'
 import Icon from '@/components/_ui/icon.vue'
+import { sortedDomaines } from 'camino-common/src/static/domaines'
 
 export default {
   components: {
@@ -160,7 +161,7 @@ export default {
     },
 
     domaines() {
-      return this.$store.state.titres.metas.domaines
+      return sortedDomaines
     },
 
     domainesIds() {

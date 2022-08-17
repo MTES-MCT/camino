@@ -24,7 +24,6 @@ import {
   isAdministrationAdmin,
   isAdministrationEditeur
 } from 'camino-common/src/roles'
-import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 
 /**
  * Modifie la requête en fonction des paramètres de filtre
@@ -62,7 +61,7 @@ const titresActivitesFiltersQueryModify = (
     annees?: number[] | null
     titresNoms?: string | null
     titresEntreprises?: string | null
-    titresSubstancesIds?: SubstanceLegaleId[] | null
+    titresSubstancesIds?: string[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
     titresTypesIds?: string[] | null
@@ -95,7 +94,7 @@ const titresActivitesFiltersQueryModify = (
       statutsIds: titresStatutsIds,
       noms: titresNoms,
       entreprises: titresEntreprises,
-      substancesLegalesIds: titresSubstancesIds,
+      substancesIds: titresSubstancesIds,
       references: titresReferences,
       territoires: titresTerritoires
     },
@@ -246,7 +245,7 @@ const titresActivitesGet = async (
     annees?: number[] | null
     titresNoms?: string | null
     titresEntreprises?: string | null
-    titresSubstancesIds?: SubstanceLegaleId[] | null
+    titresSubstancesIds?: string[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
     titresTypesIds?: string[] | null
@@ -343,7 +342,7 @@ const titresActivitesCount = async (
     annees?: number[] | null
     titresNoms?: string | null
     titresEntreprises?: string | null
-    titresSubstancesIds?: SubstanceLegaleId[] | null
+    titresSubstancesIds?: string[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
     titresTypesIds?: string[] | null

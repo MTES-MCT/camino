@@ -18,7 +18,6 @@ const state = {
     types: [],
     annees: anneesGet(new Date().getFullYear()),
     statuts: [],
-    titresDomaines: [],
     titresTypes: [],
     titresStatuts: []
   },
@@ -28,7 +27,7 @@ const state = {
     { id: 'annees', type: 'numbers', values: [] },
     { id: 'titresNoms', type: 'string' },
     { id: 'titresEntreprises', type: 'string' },
-    { id: 'titresSubstances', type: 'string' },
+    { id: 'titresSubstancesIds', type: 'strings', values: [] },
     { id: 'titresReferences', type: 'string' },
     { id: 'titresTerritoires', type: 'string' },
     { id: 'titresTypesIds', type: 'strings', values: [] },
@@ -60,7 +59,7 @@ const state = {
       annees: [],
       titresNoms: '',
       titresEntreprises: '',
-      titresSubstances: '',
+      titresSubstancesIds: [],
       titresReferences: '',
       titresTerritoires: '',
       titresTypesIds: [],
@@ -90,9 +89,6 @@ const mutations = Object.assign({}, listeMutations, {
       } else if (id === 'activitesStatuts') {
         metaId = 'statuts'
         paramId = 'statutsIds'
-      } else if (id === 'domaines') {
-        metaId = 'titresDomaines'
-        paramId = 'titresDomainesIds'
       } else if (id === 'types') {
         metaId = 'titresTypes'
         paramId = 'titresTypesIds'

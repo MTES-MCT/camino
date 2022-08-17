@@ -101,7 +101,7 @@ interface ITitresQueryInput {
   domainesIds?: string | null
   typesIds?: string | null
   statutsIds?: string | null
-  substancesLegalesIds?: string | null
+  substancesIds?: string | null
   titresIds?: string | null
   entreprisesIds?: string | null
   references?: string | null
@@ -118,7 +118,7 @@ const titres = async (
       typesIds,
       domainesIds,
       statutsIds,
-      substancesLegalesIds,
+      substancesIds,
       titresIds,
       entreprisesIds,
       references,
@@ -141,9 +141,7 @@ const titres = async (
       statutsIds: statutsIds?.split(','),
       ids: titresIds ? stringSplit(titresIds) : null,
       entreprisesIds: entreprisesIds ? stringSplit(entreprisesIds) : null,
-      substancesLegalesIds: substancesLegalesIds
-        ? stringSplit(substancesLegalesIds)
-        : null,
+      substancesIds: substancesIds ? stringSplit(substancesIds) : null,
       references,
       territoires,
       perimetre
@@ -176,7 +174,7 @@ const titres = async (
       typesIds,
       domainesIds,
       statutsIds,
-      substancesLegalesIds,
+      substancesIds,
       titresIds,
       entreprisesIds,
       references,
@@ -215,7 +213,7 @@ interface ITitresDemarchesQueryInput {
   titresStatutsIds?: string | null
   titresNoms?: string | null
   titresEntreprises?: string | null
-  titresSubstances?: string | null
+  titresSubstancesIds?: string | null
   titresReferences?: string | null
   titresTerritoires?: string | null
   travaux?: string | null
@@ -236,7 +234,7 @@ const demarches = async (
       titresStatutsIds,
       titresNoms,
       titresEntreprises,
-      titresSubstances,
+      titresSubstancesIds,
       titresReferences,
       titresTerritoires,
       travaux
@@ -261,7 +259,7 @@ const demarches = async (
       titresStatutsIds: titresStatutsIds?.split(','),
       titresNoms,
       titresEntreprises,
-      titresSubstances,
+      titresSubstancesIds: titresSubstancesIds?.split(','),
       titresReferences,
       titresTerritoires,
       travaux: travaux ? travaux === 'true' : undefined
