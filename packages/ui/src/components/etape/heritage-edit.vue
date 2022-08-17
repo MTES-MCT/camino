@@ -35,7 +35,7 @@ import { hasValeurCheck } from '@/utils/contenu'
 import Tag from '@/components/_ui/tag.vue'
 import { dateFormat } from '@/utils'
 import { computed, withDefaults } from 'vue'
-import { HeritageProp } from './heritage-edit.types'
+import { HeritageProp } from 'camino-common/src/etape'
 
 const props = withDefaults(
   defineProps<{

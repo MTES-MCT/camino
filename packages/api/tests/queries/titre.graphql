@@ -248,19 +248,8 @@ fragment geojsonPoints on GeojsonPoints {
 }
 
 fragment titreSubstance on TitreSubstance {
-  id
-  nom
-  gerep
-  description
-  legales {
-    id
-    nom
-    description
-    domaine {
-      id
-      nom
-    }
-  }
+  substanceId
+  ordre
 }
 
 fragment document on Document {

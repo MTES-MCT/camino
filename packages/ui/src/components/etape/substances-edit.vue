@@ -14,10 +14,10 @@
           <select v-model="substances[n]" class="p-s mr-s">
             <option
               v-for="s in substancesByDomaine"
-              :key="s.substanceId"
+              :key="s.id"
               :value="{ substanceId: s.id, ordre: substance.ordre }"
               :disabled="
-                substances.find(({ substanceId }) => substanceId === s.id)
+                substances.some(({ substanceId }) => substanceId === s.id)
               "
             >
               {{ s.nom }}
@@ -53,7 +53,7 @@
       </div>
 
       <button
-        v-if="!substances.some(({ substanceId }) => substanceId === '')"
+        v-if="!substances.some(({ substanceId }) => !!substanceId)"
         class="btn small rnd-xs py-s px-m full-x flex mb-s"
         @click="substanceAdd"
       >
@@ -74,28 +74,26 @@
     </template>
 
     <template #read>
-      <TagList
-        class="mb-s"
-        :elements="
-          heritageProps.substances.etape.substances.map(
-            ({ substanceId }) => SubstancesLegale[substanceId].nom
-          )
-        "
-      />
+      <TagList class="mb-s" :elements="substanceNoms" />
     </template>
   </HeritageEdit>
 </template>
 <script setup lang="ts">
 import {
   SubstancesLegales,
-  SubstancesLegale
+  SubstancesLegale,
+  SubstanceLegaleId
 } from 'camino-common/src/static/substancesLegales'
 import { computed } from 'vue'
 import HeritageEdit from '@/components/etape/heritage-edit.vue'
 import TagList from '@/components/_ui/tag-list.vue'
 import Icon from '@/components/_ui/icon.vue'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import { HeritageProp, Substance } from '@/components/etape/heritage-edit.types'
+import { TitreSubstance } from 'camino-common/src/substance'
+import { HeritageProp } from 'camino-common/src/etape'
+import { Optional } from 'camino-common/src/typescript-tools'
+
+type Substance = Optional<TitreSubstance, 'substanceId'>
 
 const props = defineProps<{
   substances: Substance[]
@@ -113,6 +111,13 @@ const substancesByDomaine = computed(() =>
     domaineIds.includes(props.domaineId)
   )
 )
+
+const substanceNoms = computed<string[]>(() => {
+  return props.heritageProps.substances.etape.substances
+    .map(({ substanceId }) => substanceId)
+    .filter((substanceId): substanceId is SubstanceLegaleId => !!substanceId)
+    .map(substanceId => SubstancesLegale[substanceId].nom)
+})
 
 const substanceAdd = () => {
   props.substances.push({

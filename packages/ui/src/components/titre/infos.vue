@@ -179,6 +179,7 @@ import {
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
+import { TitreSubstance } from 'camino-common/src/substance'
 
 type Entreprise = {
   id: string
@@ -205,7 +206,7 @@ const props = defineProps<{
     }
     titulaires: Entreprise[]
     amodiataires: Entreprise[]
-    substances: { nom: string }[]
+    substances: TitreSubstance[]
     references: { nom: string; type: { nom: string } }[]
   }
   user: User

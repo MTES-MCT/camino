@@ -153,6 +153,7 @@ import TagList from '../_ui/tag-list.vue'
 import Tag from '../_ui/tag.vue'
 import PropDuree from './prop-duree.vue'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
+import { Etape } from 'camino-common/src/etape'
 
-defineProps<{ etape: any }>()
+defineProps<{ etape: Etape }>()
 </script>
