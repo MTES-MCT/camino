@@ -22,9 +22,11 @@ import { exhaustiveCheck } from '../../tools/exhaustive-type-check'
 const substancesFiscalesFind = (
   substances: ITitreSubstance[]
 ): SubstanceFiscale[] =>
-  substances.flatMap(({ substanceId }) =>
-    substancesFiscalesBySubstanceLegale(substanceId)
-  )
+  substances
+    .filter(s => !!s)
+    .flatMap(({ substanceId }) =>
+      substancesFiscalesBySubstanceLegale(substanceId)
+    )
 
 const titreActiviteSectionElementsFormat = (
   elements: ISectionElement[],

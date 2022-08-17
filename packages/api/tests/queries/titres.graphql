@@ -2,7 +2,7 @@ query Titres(
   $domainesIds: [ID!]
   $typesIds: [ID!]
   $statutsIds: [ID!]
-  $substances: String
+  $substancesIds: String
   $noms: String
   $entreprises: String
   $references: String
@@ -12,7 +12,7 @@ query Titres(
     domainesIds: $domainesIds
     typesIds: $typesIds
     statutsIds: $statutsIds
-    substances: $substances
+    substancesIds: $substancesIds
     noms: $noms
     entreprises: $entreprises
     references: $references
@@ -237,21 +237,8 @@ fragment geojsonPoints on GeojsonPoints {
 }
 
 fragment titreSubstance on TitreSubstance {
-  id
-  nom
+  substanceId
   ordre
-  symbole
-  gerep
-  description
-  legales {
-    id
-    nom
-    description
-    domaine {
-      id
-      nom
-    }
-  }
 }
 
 fragment document on Document {
