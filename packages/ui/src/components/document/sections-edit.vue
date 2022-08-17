@@ -181,6 +181,13 @@ import InputDate from '../_ui/input-date.vue'
 import InputFile from '../_ui/input-file.vue'
 import Messages from '../_ui/messages.vue'
 import Icon from '@/components/_ui/icon.vue'
+import {
+  isAdministrationAdmin,
+  isAdministrationEditeur,
+  isBureauDEtudes,
+  isEntreprise,
+  isSuper
+} from 'camino-common/src/roles'
 
 export default {
   components: { Icon, Messages, InputFile, InputDate },
@@ -200,7 +207,31 @@ export default {
 
   computed: {
     documentsVisibilites() {
-      return this.$store.state.document.metas.documentsVisibilites
+      const user = this.$store.state.user.element
+      if (!user) return []
+
+      if (
+        isSuper(user) ||
+        isAdministrationAdmin(user) ||
+        isAdministrationEditeur(user)
+      ) {
+        return [
+          { id: 'admin', nom: 'Administrations uniquement' },
+          {
+            id: 'entreprise',
+            nom: 'Administrations et entreprises titulaires'
+          },
+          { id: 'public', nom: 'Public' }
+        ]
+      }
+
+      if (isEntreprise(user) || isBureauDEtudes(user)) {
+        return [
+          { id: 'entreprise', nom: 'Administrations et entreprises titulaires' }
+        ]
+      }
+
+      return []
     },
 
     visibiliteId() {

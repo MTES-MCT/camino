@@ -59,13 +59,7 @@ import {
   toMachineEtapes
 } from '../../../business/rules-demarches/machine-helper'
 import { UNITES } from 'camino-common/src/static/unites'
-import {
-  isAdministrationAdmin,
-  isAdministrationEditeur,
-  isBureauDEtudes,
-  isEntreprise,
-  isSuper
-} from 'camino-common/src/roles'
+import { isSuper } from 'camino-common/src/roles'
 import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort'
 import TitresDemarches from '../../../database/models/titres-demarches'
 import { Etape } from '../../../business/rules-demarches/arm/oct.machine'
@@ -94,32 +88,6 @@ export const documentsTypes = async ({
 
     throw e
   }
-}
-
-// TODO: 2022-06-15 à supprimer de l’API
-export const documentsVisibilites = async (_: never, context: IToken) => {
-  const user = await userGet(context.user?.id)
-  if (!user) return []
-
-  if (
-    isSuper(user) ||
-    isAdministrationAdmin(user) ||
-    isAdministrationEditeur(user)
-  ) {
-    return [
-      { id: 'admin', nom: 'Administrations uniquement' },
-      { id: 'entreprise', nom: 'Administrations et entreprises titulaires' },
-      { id: 'public', nom: 'Public' }
-    ]
-  }
-
-  if (isEntreprise(user) || isBureauDEtudes(user)) {
-    return [
-      { id: 'entreprise', nom: 'Administrations et entreprises titulaires' }
-    ]
-  }
-
-  return []
 }
 
 export const referencesTypes = async () => referencesTypesGet()
