@@ -1,4 +1,4 @@
-import { ITitreEtape } from '../../types'
+import { ITitreDemarche, ITitreEtape } from '../../types'
 
 import { titreDemarchePublicFind } from './titre-demarche-public-find'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
@@ -14,10 +14,12 @@ const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
 
 describe("publicité d'une démarche", () => {
   test("une démarche sans étape n'est pas publique", () => {
-    expect(titreDemarchePublicFind('oct', [], [], 'titreId')).toMatchObject({
-      publicLecture: false,
-      entreprisesLecture: false
-    })
+    expect(titreDemarchePublicFind('oct', [], [], 'titreId', [])).toMatchObject(
+      {
+        publicLecture: false,
+        entreprisesLecture: false
+      }
+    )
   })
 
   test("une démarche d'octroi sans étape décisive n'est pas publique", () => {
@@ -26,7 +28,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'dae' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: false, entreprisesLecture: false })
   })
@@ -37,7 +40,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'spp' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: false, entreprisesLecture: false })
   })
@@ -48,7 +52,8 @@ describe("publicité d'une démarche", () => {
         'ret',
         [],
         etapesBuild([{ typeId: 'spp' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: true, entreprisesLecture: true })
   })
@@ -59,7 +64,8 @@ describe("publicité d'une démarche", () => {
         'dec',
         [],
         etapesBuild([{ typeId: 'spp' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: true, entreprisesLecture: true })
   })
@@ -70,7 +76,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'mfr' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: false, entreprisesLecture: true })
   })
@@ -81,7 +88,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'dex' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: false, entreprisesLecture: true })
   })
@@ -92,7 +100,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'css' }, { typeId: 'mfr' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: false })
   })
@@ -104,6 +113,7 @@ describe("publicité d'une démarche", () => {
         [],
         etapesBuild([{ typeId: 'mcr' }, { typeId: 'css' }]),
         'titreId',
+        [],
         'axm'
       )
     ).toMatchObject({ publicLecture: true })
@@ -116,6 +126,7 @@ describe("publicité d'une démarche", () => {
         [],
         etapesBuild([{ typeId: 'sca' }, { typeId: 'css' }]),
         'titreId',
+        [],
         'arm'
       )
     ).toMatchObject({ publicLecture: true })
@@ -128,6 +139,7 @@ describe("publicité d'une démarche", () => {
         [],
         etapesBuild([{ typeId: 'des' }]),
         'titreId',
+        [],
         'arm'
       )
     ).toMatchObject({ publicLecture: true })
@@ -140,6 +152,7 @@ describe("publicité d'une démarche", () => {
         [],
         etapesBuild([{ typeId: 'des' }]),
         'titreId',
+        [],
         'axm'
       )
     ).toMatchObject({ publicLecture: true })
@@ -151,7 +164,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'mcr' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -163,6 +177,7 @@ describe("publicité d'une démarche", () => {
         [],
         etapesBuild([{ typeId: 'mcr' }]),
         'titreId',
+        [],
         'arm'
       )
     ).toMatchObject({ publicLecture: false })
@@ -174,7 +189,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [{ id: 'anf', nom: 'anf', ordre: 1 }],
         etapesBuild([{ typeId: 'mcr' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: false })
   })
@@ -185,7 +201,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'anf' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -196,7 +213,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'apu' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -207,7 +225,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'ane' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -218,7 +237,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'ppu' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -230,6 +250,7 @@ describe("publicité d'une démarche", () => {
         [],
         etapesBuild([{ typeId: 'def' }]),
         'titreId',
+        [],
         'arm'
       )
     ).toMatchObject({ publicLecture: true })
@@ -242,6 +263,7 @@ describe("publicité d'une démarche", () => {
         [],
         etapesBuild([{ typeId: 'aca' }]),
         'titreId',
+        [],
         'arm'
       )
     ).toMatchObject({ publicLecture: true })
@@ -254,6 +276,7 @@ describe("publicité d'une démarche", () => {
         [],
         etapesBuild([{ typeId: 'sca' }]),
         'titreId',
+        [],
         'arm'
       )
     ).toMatchObject({ publicLecture: true })
@@ -265,7 +288,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'dim', statutId: 'acc' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -279,7 +303,8 @@ describe("publicité d'une démarche", () => {
           { typeId: 'anf', statutId: 'fai' },
           { typeId: 'dim', statutId: 'rej' }
         ]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: false })
   })
@@ -290,7 +315,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'dex', statutId: 'rej' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: false })
   })
@@ -302,6 +328,7 @@ describe("publicité d'une démarche", () => {
         [],
         etapesBuild([{ typeId: 'mcr' }, { typeId: 'dex', statutId: 'rej' }]),
         'titreId',
+        [],
         'axm'
       )
     ).toMatchObject({ publicLecture: true })
@@ -314,6 +341,7 @@ describe("publicité d'une démarche", () => {
         [],
         etapesBuild([{ typeId: 'dex', statutId: 'acc' }]),
         'titreId',
+        [],
         'axm'
       )
     ).toMatchObject({ publicLecture: true })
@@ -325,7 +353,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'dpu', statutId: 'acc' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -336,7 +365,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'dux' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -347,7 +377,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'dup' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -358,7 +389,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'rpu' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -370,6 +402,7 @@ describe("publicité d'une démarche", () => {
         [],
         etapesBuild([{ typeId: 'sco' }]),
         'titreId',
+        [],
         'arm'
       )
     ).toMatchObject({ publicLecture: true })
@@ -382,6 +415,7 @@ describe("publicité d'une démarche", () => {
         [],
         etapesBuild([{ typeId: 'sco' }]),
         'titreId',
+        [],
         'arm'
       )
     ).toMatchObject({ publicLecture: true })
@@ -393,7 +427,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'and', statutId: 'fav' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: true })
   })
@@ -404,7 +439,8 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'and', statutId: 'fai' }]),
-        'titreId'
+        'titreId',
+        []
       )
     ).toMatchObject({ publicLecture: false })
   })
@@ -418,6 +454,7 @@ describe("publicité d'une démarche", () => {
           [],
           etapesBuild([{ typeId: 'mdp', statutId: 'fai' }]),
           'titreId',
+          [],
           'arm'
         )
       ).toMatchObject({ publicLecture: false })
@@ -433,6 +470,7 @@ describe("publicité d'une démarche", () => {
           [],
           etapesBuild([{ typeId: 'mcr' }]),
           'titreId',
+          [],
           'arm'
         )
       ).toMatchObject({ publicLecture: false })
@@ -448,6 +486,7 @@ describe("publicité d'une démarche", () => {
           [],
           etapesBuild([{ typeId: 'eof' }]),
           'titreId',
+          [],
           'arm'
         )
       ).toMatchObject({ publicLecture: true })
@@ -463,6 +502,7 @@ describe("publicité d'une démarche", () => {
           [],
           etapesBuild([{ typeId: 'css' }]),
           'titreId',
+          [],
           'arm'
         )
       ).toMatchObject({ publicLecture: true })
@@ -478,6 +518,7 @@ describe("publicité d'une démarche", () => {
           [],
           etapesBuild([{ typeId: 'des' }]),
           'titreId',
+          [],
           'arm'
         )
       ).toMatchObject({ publicLecture: true })
@@ -504,6 +545,7 @@ describe("publicité d'une démarche", () => {
           [],
           etapesBuild([{ typeId: etapeTypeId }]),
           'titreId',
+          [],
           'arm'
         )
       ).toMatchObject({ publicLecture: true })
@@ -516,7 +558,93 @@ describe("publicité d'une démarche", () => {
         'oct',
         [],
         etapesBuild([{ typeId: 'ane' }]),
-        'WQaZgPfDcQw9tFliMgBIDH3Z'
+        'WQaZgPfDcQw9tFliMgBIDH3Z',
+        []
+      )
+    ).toMatchObject({ publicLecture: false })
+  })
+
+  const demarches: ITitreDemarche[] = [
+    {
+      id: 'm-pr-saint-pierre-2014-pro01',
+      titreId: 'm-pr-saint-pierre-2014',
+      type: { id: 'pr2', nom: 'unused', ordre: 1, etapesTypes: [] },
+      typeId: 'pr2',
+      statutId: 'eco',
+      ordre: 3,
+      etapes: [
+        {
+          date: '2020-06-01',
+          typeId: 'mfr',
+          statutId: 'fai',
+          id: 'id',
+          titreDemarcheId: 'm-pr-saint-pierre-2014-pro02'
+        }
+      ]
+    },
+    {
+      id: 'm-pr-saint-pierre-2014-pro01',
+      titreId: 'm-pr-saint-pierre-2014',
+      type: { id: 'pr1', nom: 'unused', ordre: 1, etapesTypes: [] },
+      typeId: 'pr1',
+      statutId: 'acc',
+      ordre: 2,
+      etapes: [
+        {
+          date: '2020-01-01',
+          typeId: 'dex',
+          statutId: 'acc',
+          id: 'id',
+          titreDemarcheId: 'm-pr-saint-pierre-2014-pro01',
+          ordre: 1,
+          dateDebut: null,
+          dateFin: '2020-10-01'
+        }
+      ]
+    },
+    {
+      id: 'm-pr-saint-pierre-2014-oct01',
+      titreId: 'm-pr-saint-pierre-2014',
+      type: { id: 'oct', nom: 'unused', ordre: 2, etapesTypes: [] },
+      typeId: 'oct',
+      statutId: 'acc',
+      ordre: 1,
+      etapes: [
+        {
+          id: 'm-pr-saint-pierre-2014-oct01-dex01',
+          titreDemarcheId: 'm-pr-saint-pierre-2014-oct01',
+          typeId: 'dex',
+          statutId: 'acc',
+          ordre: 1,
+          date: '1014-04-01',
+          dateDebut: null,
+          dateFin: '2020-04-01'
+        }
+      ]
+    }
+  ]
+  test('la demarche d’une prolongation déposée d’un PRM en survie provisoire est public ', () => {
+    expect(
+      titreDemarchePublicFind(
+        'pr1',
+        [],
+        etapesBuild([{ typeId: 'mfr' }, { typeId: 'mdp' }]),
+        'titreId',
+        demarches,
+        'prm'
+      )
+    ).toMatchObject({ publicLecture: true })
+  })
+
+  test('la demarche d’une prolongation non déposée d’un PRM en survie provisoire n’est pas public ', () => {
+    expect(
+      titreDemarchePublicFind(
+        'pr1',
+        [],
+        etapesBuild([{ typeId: 'mfr' }]),
+        'titreId',
+        demarches,
+        'prm'
       )
     ).toMatchObject({ publicLecture: false })
   })
