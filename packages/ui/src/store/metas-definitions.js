@@ -53,7 +53,6 @@ import {
   activiteTypeModifier,
   activitesStatuts,
   activiteStatutModifier,
-  activitesTypesTitresTypes,
   activitesTypesDocumentsTypes,
   activiteTypeDocumentTypeModifier,
   activiteTypeDocumentTypeCreer,
@@ -63,6 +62,7 @@ import {
   activiteTypePaysSupprimer
 } from '../api/metas-activites'
 import { PaysList } from 'camino-common/src/static/pays'
+import { FREQUENCES_IDS } from 'camino-common/src/static/frequence'
 import { Domaines } from 'camino-common/src/static/domaines'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 
@@ -485,7 +485,7 @@ const metasIndex = {
         id: 'frequenceId',
         nom: 'Id la fréquence',
         type: Array,
-        elements: ['tri', 'ann', 'men']
+        elements: Object.values(FREQUENCES_IDS)
       },
       { id: 'ordre', nom: 'Ordre', type: Number },
       {

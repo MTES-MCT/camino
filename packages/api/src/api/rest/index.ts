@@ -374,13 +374,7 @@ const activites = async (
     },
     {
       fields: {
-        type: {
-          frequence: {
-            annees: { id: {} },
-            trimestres: { id: {} },
-            mois: { id: {} }
-          }
-        },
+        type: { id: {} },
         statut: { id: {} },
         titre: { id: {} }
       }

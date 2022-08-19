@@ -1,7 +1,6 @@
 import { IFields } from '../../types'
 
 const titreActiviteFormatFields = {
-  periode: {},
   sections: {}
 } as IFields
 

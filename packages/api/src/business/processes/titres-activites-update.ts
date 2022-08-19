@@ -36,11 +36,6 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
 
   const activitesTypes = await activitesTypesGet({
     fields: {
-      frequence: {
-        mois: { id: {} },
-        trimestres: { mois: { id: {} } },
-        annees: { id: {} }
-      },
       titresTypes: { id: {} },
       administrations: { id: {} },
       documentsTypes: { id: {} },

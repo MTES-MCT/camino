@@ -1,14 +1,6 @@
 import Titres from '../../../database/models/titres'
 const activiteType = {
-  frequence: {
-    periodesNom: 'trimestres',
-    trimestres: [
-      { id: 1, nom: '1er trimestre', frequenceId: 'tri' },
-      { id: 2, nom: '2e trimestre', frequenceId: 'tri' },
-      { id: 3, nom: '3e trimestre', frequenceId: 'tri' },
-      { id: 4, nom: '4e trimestre', frequenceId: 'tri' }
-    ]
-  }
+  frequenceId: 'tri'
 }
 
 const titresActivitesToUpdate = [

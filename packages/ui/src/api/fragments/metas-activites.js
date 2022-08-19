@@ -9,26 +9,6 @@ const fragmentActiviteType = gql`
     delaiMois
     ordre
     frequenceId
-    frequence {
-      id
-      nom
-      trimestres {
-        id
-        nom
-        mois {
-          id
-          nom
-        }
-      }
-      mois {
-        id
-        nom
-      }
-      annees {
-        id
-        nom
-      }
-    }
     sections
     documentsTypes {
       ...documentType

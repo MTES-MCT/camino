@@ -1,6 +1,7 @@
 import { markRaw } from 'vue'
 import List from '../_ui/list.vue'
 import Statut from '../_common/statut.vue'
+import { getPeriode } from 'camino-common/src/static/frequence'
 
 const activitesColonnes = [
   {
@@ -41,7 +42,9 @@ const activitesLignesBuild = activites =>
         value: activite.titre.titulaires.map(({ nom }) => nom).join(', ')
       },
       annee: { value: activite.annee },
-      periode: { value: activite.periode.nom },
+      periode: {
+        value: getPeriode(activite.type.frequenceId, activite.periodeId)
+      },
       statut: {
         component: markRaw(Statut),
         props: {

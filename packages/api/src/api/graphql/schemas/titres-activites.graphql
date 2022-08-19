@@ -20,7 +20,7 @@ type Activite {
   statut: ActiviteStatut!
   date: String!
   dateSaisie: String
-  periode: Json
+  periodeId: Int
   annee: Int
   sections: Json
   contenu: Json

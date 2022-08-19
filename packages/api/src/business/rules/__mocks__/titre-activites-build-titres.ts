@@ -4,13 +4,13 @@ import { UNITES } from 'camino-common/src/static/unites'
 
 const activiteTypeGra = {
   id: 'gra',
-  frequence: { periodesNom: 'annees', annees: [1] },
+  frequenceId: 'ann',
   sections: [{ id: 'substancesFiscales' }]
-} as unknown as IActiviteType
+} as IActiviteType
 
 const activiteTypeGrp = {
   id: 'grp',
-  frequence: { periodesNom: 'trimestres', trimestres: [...new Array(4)] },
+  frequenceId: 'tri',
   sections: [
     {
       id: 'renseignements',
@@ -43,7 +43,7 @@ const activiteTypeGrp = {
       ]
     }
   ]
-} as unknown as IActiviteType
+} as IActiviteType
 
 const titreActivitesGra = [
   {

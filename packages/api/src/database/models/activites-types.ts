@@ -1,7 +1,6 @@
 import { Model, Modifiers } from 'objection'
 import { IActiviteType } from '../../types'
 import TitresTypes from './titres-types'
-import Frequences from './frequences'
 import Administrations from './administrations'
 import DocumentsTypes from './documents-types'
 import ActivitesTypesPays from './activites-types--pays'
@@ -38,15 +37,6 @@ class ActivitesTypes extends Model {
           to: 'activitesTypes__titresTypes.titreTypeId'
         },
         to: 'titresTypes.id'
-      }
-    },
-
-    frequence: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: Frequences,
-      join: {
-        from: 'activitesTypes.frequenceId',
-        to: 'frequences.id'
       }
     },
 

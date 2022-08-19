@@ -1,12 +1,4 @@
-import {
-  ITitreActivite,
-  ITrimestre,
-  IMois,
-  IAnnee,
-  IFields,
-  ISection,
-  IContenu
-} from '../../types'
+import { ITitreActivite, IFields, ISection, IContenu } from '../../types'
 
 import { titreSectionsFormat } from './titres-sections'
 
@@ -41,7 +33,8 @@ const titreActiviteContenuFormat = (
 
 const titreActiviteFormat = (
   ta: ITitreActivite,
-  fields: IFields = titreActiviteFormatFields
+  // TODO 2022-08-19 : supprimer ce champ ?
+  _fields: IFields = titreActiviteFormatFields
 ) => {
   // si les sections contiennent des élements sur cette activité
   if (ta.sections?.length) {
@@ -52,22 +45,23 @@ const titreActiviteFormat = (
     ta.contenu = titreActiviteContenuFormat(ta.sections, ta.contenu, 'read')
   }
 
-  // si
-  // - le formatage de la période est requis par les fields
-  // - l'activité a une périodicité
-  // - le type d'activité a une fréquence qui contient un tableau de périodes
-  // alors la période de l'activité en cours est définie
-  if (
-    fields.periode &&
-    ta.periodeId &&
-    ta.type?.frequence?.periodesNom &&
-    ta.type.frequence[ta.type.frequence.periodesNom] &&
-    ta.type.frequence[ta.type.frequence.periodesNom]!.length
-  ) {
-    ta.periode = ta.type.frequence[ta.type.frequence.periodesNom]!.find(
-      p => p.id === ta.periodeId
-    ) as IAnnee | ITrimestre | IMois
-  }
+  // FIXME Faire ça en dur ou dans le front ?
+  // // si
+  // // - le formatage de la période est requis par les fields
+  // // - l'activité a une périodicité
+  // // - le type d'activité a une fréquence qui contient un tableau de périodes
+  // // alors la période de l'activité en cours est définie
+  // if (
+  //   fields.periode &&
+  //   ta.periodeId &&
+  //   ta.type?.frequence?.periodesNom &&
+  //   ta.type.frequence[ta.type.frequence.periodesNom] &&
+  //   ta.type.frequence[ta.type.frequence.periodesNom]!.length
+  // ) {
+  //   ta.periode = ta.type.frequence[ta.type.frequence.periodesNom]!.find(
+  //     p => p.id === ta.periodeId
+  //   ) as IAnnee | ITrimestre | IMois
+  // }
 
   if (ta.statutId === 'enc' && ta.modification) {
     ta.deposable = titreActiviteCompleteCheck(

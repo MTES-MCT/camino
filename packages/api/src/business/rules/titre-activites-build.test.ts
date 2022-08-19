@@ -178,9 +178,9 @@ describe("construction des activités d'un titre", () => {
     const titreActivitesD = titreActivitesBuild(
       {
         id: 'gra',
-        frequence: { periodesNom: 'annees', annees: [1] },
+        frequenceId: 'ann',
         sections: [{ id: 'renseignements' }]
-      } as unknown as IActiviteType,
+      } as IActiviteType,
       [2018],
       aujourdhui,
       'titre-id',

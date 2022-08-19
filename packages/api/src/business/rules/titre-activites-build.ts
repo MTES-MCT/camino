@@ -1,11 +1,11 @@
 import dateFormat from 'dateformat'
 
 import {
-  ITitreDemarche,
   IActiviteType,
   ITitreActivite,
   ISection,
-  ISectionElement
+  ISectionElement,
+  ITitreDemarche
 } from '../../types'
 
 import { titreEtapePropFind } from './titre-etape-prop-find'
@@ -17,6 +17,7 @@ import {
 import { UNITES, Unites } from 'camino-common/src/static/unites'
 import { sortedDevises } from 'camino-common/src/static/devise'
 import { exhaustiveCheck } from '../../tools/exhaustive-type-check'
+import { Frequences } from 'camino-common/src/static/frequence'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 
 const substancesFiscalesFind = (
@@ -252,12 +253,12 @@ const titreActivitesBuild = (
   // aucune activité ne peut être créées
   if (!titreDemarches?.some(d => d.phase)) return []
 
-  const periodes =
-    activiteType.frequence![activiteType.frequence!.periodesNom!]!
+  // FIXME: Encore un weasley ?
+  const periodes = Frequences[activiteType.frequenceId].values
   const months = 12 / periodes.length
   const periodesIndexes = [...new Array(periodes.length)]
 
-  const titresActivites = annees.reduce(
+  return annees.reduce(
     (titreActivitesNew: ITitreActivite[], annee) =>
       periodesIndexes.reduce((acc: ITitreActivite[], _, i) => {
         const titreActivite = titreActiviteBuild(
@@ -281,8 +282,6 @@ const titreActivitesBuild = (
       }, titreActivitesNew),
     []
   )
-
-  return titresActivites
 }
 
 export { titreActivitesBuild, titreActiviteSectionsBuild }

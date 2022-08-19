@@ -159,22 +159,17 @@ const titresDemarches = {
 }
 
 const activitesTypesRelateTrue = [
-  'frequence',
   'titresTypes',
   'administrations',
   'documentsTypes'
 ]
 
 const activitesTypesRelateFalse = [
-  'frequence.mois',
-  'frequence.trimestres',
-  'frequence.trimestres.mois',
-  'frequence.annees',
   ...titresTypesRelateFalse.map(k => `type.titresTypes.${k}`)
 ]
 
 const activitesTypes = {
-  graph: `[frequence.[mois, trimestres.mois, annees], titresTypes, administrations, documentsTypes]`,
+  graph: `[titresTypes, administrations, documentsTypes]`,
 
   update: {
     relate: activitesTypesRelateTrue,

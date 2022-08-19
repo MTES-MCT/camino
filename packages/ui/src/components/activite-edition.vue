@@ -14,8 +14,8 @@
       <h5>
         {{ dateFormat(activite.date) }} |
         <span class="cap-first"
-          ><span v-if="activite.periode && activite.periode.nom"
-            >{{ activite.periode.nom }}
+          ><span v-if="activite.periodeId && activite.type.frequenceId"
+            >{{ getPeriodeVue(activite.type.frequenceId, activite.periodeId) }}
           </span>
           {{ activite.annee }}</span
         >
@@ -95,6 +95,7 @@ import SectionsEdit from './_common/sections-edit.vue'
 import DocumentsEdit from './document/multi-edit.vue'
 import DeposePopup from './activite/depose-popup.vue'
 import router from '@/router'
+import { getPeriode } from 'camino-common/src/static/frequence'
 
 export default {
   components: { Loader, SectionsEdit, DocumentsEdit, HelpTooltip },
@@ -156,6 +157,9 @@ export default {
   },
 
   methods: {
+    getPeriodeVue(frequenceId, periodeId) {
+      return getPeriode(frequenceId, periodeId)
+    },
     async activiteDepotPopupOpen() {
       if (this.documentsComplete && this.sectionsComplete) {
         await this.$store.dispatch('titreActiviteEdition/update', this.activite)
