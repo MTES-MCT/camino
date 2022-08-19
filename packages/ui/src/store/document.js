@@ -8,8 +8,7 @@ import { uploadCall } from '../api/_upload'
 
 const state = {
   metas: {
-    documentsTypes: [],
-    documentsVisibilites: []
+    documentsTypes: []
   }
 }
 
@@ -153,9 +152,7 @@ const actions = {
 
 const mutations = {
   metasSet(state, data) {
-    Object.keys(data).forEach(id => {
-      state.metas[id] = data[id]
-    })
+    state.metas.documentsTypes = data
   },
 
   uploadProgress(state, progress) {

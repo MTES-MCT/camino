@@ -9,11 +9,6 @@ const documentMetas = apiGraphQLFetch(
       documentsTypes(repertoire: $repertoire, typeId: $typeId) {
         ...documentType
       }
-
-      documentsVisibilites {
-        id
-        nom
-      }
     }
 
     ${fragmentDocumentType}
