@@ -1,36 +1,38 @@
 <template>
-  <Documents
-    v-if="documents.length"
-    :documents="documents"
-    :boutonModification="true"
-    :boutonSuppression="true"
-    :addAction="addAction"
-    :removeAction="removeAction"
-    :manquantShow="true"
-    :helpShow="true"
-    :repertoire="repertoire"
-    :title="documentPopupTitle"
-  />
+  <div>
+    <Documents
+      v-if="documents.length"
+      :documents="documents"
+      :boutonModification="true"
+      :boutonSuppression="true"
+      :addAction="addAction"
+      :removeAction="removeAction"
+      :manquantShow="true"
+      :helpShow="true"
+      :repertoire="repertoire"
+      :title="documentPopupTitle"
+    />
 
-  <DocumentAddButton
-    v-if="documentsTypes?.length"
-    :document="{
-      date: TODAY,
-      entreprisesLecture: !userIsAdmin,
-      publicLecture: false,
-      fichier: null,
-      fichierNouveau: null,
-      fichierTypeId: null,
-      typeId: ''
-    }"
-    :action="addAction"
-    :title="documentPopupTitle"
-    :repertoire="repertoire"
-    class="btn py-s px-m rnd-xs mt--s mb-s full-x"
-    :parentTypeId="parentTypeId"
-    :large="true"
-    :documentsTypes="documentsTypes"
-  />
+    <DocumentAddButton
+      v-if="documentsTypes?.length"
+      :document="{
+        date: TODAY,
+        entreprisesLecture: !userIsAdmin,
+        publicLecture: false,
+        fichier: null,
+        fichierNouveau: null,
+        fichierTypeId: null,
+        typeId: ''
+      }"
+      :action="addAction"
+      :title="documentPopupTitle"
+      :repertoire="repertoire"
+      class="btn py-s px-m rnd-xs mt--s mb-s full-x"
+      :parentTypeId="parentTypeId"
+      :large="true"
+      :documentsTypes="documentsTypes"
+    />
+  </div>
 </template>
 
 <script>

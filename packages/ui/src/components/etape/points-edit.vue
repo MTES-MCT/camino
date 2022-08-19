@@ -205,54 +205,54 @@
     </HeritageEdit>
 
     <hr />
-  </div>
 
-  <div class="tablet-blobs">
-    <div class="tablet-blob-1-3 tablet-pt-s pb-s flex">
-      <div>
-        <h5 class="mb-0">Surface (Km²)</h5>
-        <p class="h6 italic mb-0">Optionnel</p>
-      </div>
-      <button
-        v-if="!etape.heritageProps.surface.actif"
-        class="flex-right btn-border pill p-s tooltip"
-        @click="surfaceRefresh"
-      >
-        <HelpTooltip icon="refresh"
-          >Recalculer automatiquement la surface à partir du
-          périmètre</HelpTooltip
+    <div class="tablet-blobs">
+      <div class="tablet-blob-1-3 tablet-pt-s pb-s flex">
+        <div>
+          <h5 class="mb-0">Surface (Km²)</h5>
+          <p class="h6 italic mb-0">Optionnel</p>
+        </div>
+        <button
+          v-if="!etape.heritageProps.surface.actif"
+          class="flex-right btn-border pill p-s tooltip"
+          @click="surfaceRefresh"
         >
-      </button>
+          <HelpTooltip icon="refresh"
+            >Recalculer automatiquement la surface à partir du
+            périmètre</HelpTooltip
+          >
+        </button>
+      </div>
+      <HeritageEdit
+        v-model:prop="etape.heritageProps.surface"
+        class="tablet-blob-2-3"
+        propId="surface"
+      >
+        <template #write>
+          <inputNumber
+            v-model="etape.surface"
+            min="0"
+            placeholder="0"
+            class="mb-s"
+          />
+          <div v-if="etape.surface" class="h6">
+            <label>
+              <input
+                v-model="etape.incertitudes.surface"
+                type="checkbox"
+                class="mr-xs"
+              />
+              Incertain
+            </label>
+          </div>
+        </template>
+        <template #read>
+          <div class="border p-s mb-s bold">
+            {{ etape.heritageProps.surface.etape.surface }}
+          </div>
+        </template>
+      </HeritageEdit>
     </div>
-    <HeritageEdit
-      v-model:prop="etape.heritageProps.surface"
-      class="tablet-blob-2-3"
-      propId="surface"
-    >
-      <template #write>
-        <inputNumber
-          v-model="etape.surface"
-          min="0"
-          placeholder="0"
-          class="mb-s"
-        />
-        <div v-if="etape.surface" class="h6">
-          <label>
-            <input
-              v-model="etape.incertitudes.surface"
-              type="checkbox"
-              class="mr-xs"
-            />
-            Incertain
-          </label>
-        </div>
-      </template>
-      <template #read>
-        <div class="border p-s mb-s bold">
-          {{ etape.heritageProps.surface.etape.surface }}
-        </div>
-      </template>
-    </HeritageEdit>
   </div>
 </template>
 

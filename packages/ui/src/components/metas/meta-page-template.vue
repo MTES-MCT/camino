@@ -1,19 +1,21 @@
 <template>
-  <div class="desktop-blobs">
-    <div class="desktop-blob-2-3">
-      <router-link :to="{ name: 'metas' }">
-        <h5>Métas</h5>
-      </router-link>
-      <h1>
-        <span class="cap-first">{{ title }}</span>
-      </h1>
+  <div>
+    <div class="desktop-blobs">
+      <div class="desktop-blob-2-3">
+        <router-link :to="{ name: 'metas' }">
+          <h5>Métas</h5>
+        </router-link>
+        <h1>
+          <span class="cap-first">{{ title }}</span>
+        </h1>
+      </div>
     </div>
-  </div>
 
-  <div class="line-neutral width-full mb-m" />
+    <div class="line-neutral width-full mb-m" />
 
-  <div class="mb-xxl">
-    <DefinitionEdit :definitionsTree="definitionsTree" />
+    <div class="mb-xxl">
+      <DefinitionEdit :definitionsTree="definitionsTree" />
+    </div>
   </div>
 </template>
 
