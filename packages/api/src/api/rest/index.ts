@@ -33,7 +33,6 @@ import { entreprisesFormatTable } from './format/entreprises'
 import { matomo } from '../../tools/matomo'
 import { isRole } from 'camino-common/src/roles'
 import { stringSplit } from '../../database/queries/_utils'
-import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -291,7 +290,7 @@ const demarches = async (
     titreDemarcheFormat(titreDemarche)
   )
 
-  let contenu = ''
+  let contenu
 
   if (['csv', 'xlsx', 'ods'].includes(format)) {
     const elements = titresDemarchesFormatTable(demarchesFormatted)
@@ -324,7 +323,7 @@ interface ITitresActivitesQueryInput {
   annees?: string | null
   titresNoms?: string | null
   titresEntreprises?: string | null
-  titresSubstancesIds?: SubstanceLegaleId[] | null
+  titresSubstancesIds?: string | null
   titresReferences?: string | null
   titresTerritoires?: string | null
   titresTypesIds?: string | null
@@ -366,7 +365,7 @@ const activites = async (
       annees: annees?.split(',').map(a => Number(a)),
       titresNoms,
       titresEntreprises,
-      titresSubstancesIds,
+      titresSubstancesIds: titresSubstancesIds?.split(','),
       titresReferences,
       titresTerritoires,
       titresTypesIds: titresTypesIds?.split(','),
