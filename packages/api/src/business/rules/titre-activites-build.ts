@@ -113,13 +113,13 @@ const titreActiviteSectionsBuild = (
 
         elements = substancesFiscales.map(sf => {
           const unite = Unites[sf.uniteId]
-          const element = {
+          const element: ISectionElement = {
             id: sf.id,
             nom: `${sf.nom}`,
             type: 'number',
             description: `<b>${unite.symbole} (${unite.nom})</b> ${sf.description}`,
             uniteId: sf.uniteId
-          } as ISectionElement
+          }
 
           if (unite.referenceUniteRatio) {
             element.referenceUniteRatio = unite.referenceUniteRatio

@@ -16,6 +16,7 @@ import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { Couleur } from 'camino-common/src/static/couleurs'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
+import { UniteId } from 'camino-common/src/static/unites'
 
 const DemarchesStatutsTypesIds = {
   Accepte: 'acc',
@@ -210,6 +211,7 @@ interface ISectionElement {
   valeurs?: { id: string; nom: string }[] | null
   valeursMetasNom?: IValeurMetasNom
   referenceUniteRatio?: number
+  uniteId?: UniteId
   optionnel?: boolean
   elements?: ISectionElement[]
 }
