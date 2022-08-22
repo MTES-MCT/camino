@@ -74,3 +74,5 @@ export const Domaines: { [key in DomaineId]: Definition<key> } = {
     ordre: 2
   }
 }
+
+export const sortedDomaines = Object.values(Domaines).sort((a, b) => a.ordre - b.ordre)

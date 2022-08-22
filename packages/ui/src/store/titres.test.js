@@ -29,7 +29,6 @@ describe('liste des titres', () => {
       total: 0,
       vueId: 'carte',
       metas: {
-        domaines: [],
         types: [],
         statuts: []
       },
@@ -112,10 +111,6 @@ describe('liste des titres', () => {
 
   test('initialise le composant', async () => {
     const apiMetasMock = api.titresMetas.mockResolvedValue({
-      domaines: [
-        { id: 'w', nom: 'granulats' },
-        { id: 'c', nom: 'carrières' }
-      ],
       types: [
         { id: 'ifr', nom: 'Ifremer' },
         { id: 'dge', nom: 'DGEC' }
@@ -137,10 +132,6 @@ describe('liste des titres', () => {
     expect(apiMetasMock).toHaveBeenCalled()
     expect(apiMock).not.toHaveBeenCalled()
     expect(store.state.titres.metas).toEqual({
-      domaines: [
-        { id: 'w', nom: 'granulats' },
-        { id: 'c', nom: 'carrières' }
-      ],
       types: [
         { id: 'ifr', nom: 'Ifremer' },
         { id: 'dge', nom: 'DGEC' }

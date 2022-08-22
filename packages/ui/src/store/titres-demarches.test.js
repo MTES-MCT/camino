@@ -19,7 +19,6 @@ describe('liste des demarches', () => {
         statuts: [],
         etapesTypes: [],
         titresTypes: [],
-        titresDomaines: [],
         titresStatuts: []
       },
       definitions: [
@@ -49,10 +48,7 @@ describe('liste des demarches', () => {
       { id: 'dep', nom: 'déposé', couleur: 'success' },
       { id: 'fer', nom: 'cloturé', couleur: 'neutral' }
     ]
-    const domaines = [
-      { id: 'm', nom: 'minéraux et métaux' },
-      { id: 'w', nom: 'granulats marins' }
-    ]
+
     const statuts = [
       { id: 'val', nom: 'valide', couleur: 'success' },
       { id: 'ech', nom: 'échu', couleur: 'neutral' }
@@ -66,7 +62,6 @@ describe('liste des demarches', () => {
     store.commit('titresDemarches/metasSet', {
       demarchesTypes,
       demarchesStatuts,
-      domaines,
       statuts,
       types,
       etapesTypes,
@@ -76,7 +71,6 @@ describe('liste des demarches', () => {
     expect(store.state.titresDemarches.metas).toEqual({
       types: demarchesTypes,
       statuts: demarchesStatuts,
-      titresDomaines: domaines,
       titresTypes: types,
       titresStatuts: statuts,
       etapesTypes
@@ -91,7 +85,7 @@ describe('liste des demarches', () => {
       },
       { values: ['dpu'], id: 'etapesInclues', type: 'objects' },
       { values: ['dpu'], id: 'etapesExclues', type: 'objects' },
-      { values: ['m', 'w'], id: 'titresDomainesIds', type: 'strings' },
+      { values: [], id: 'titresDomainesIds', type: 'strings' },
       { values: ['cx', 'pr'], id: 'titresTypesIds', type: 'strings' },
       { values: ['val', 'ech'], id: 'titresStatutsIds', type: 'strings' }
     ])

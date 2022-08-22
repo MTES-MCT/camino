@@ -153,7 +153,7 @@ describe('etapeSaveFormat', () => {
           ],
           [[]]
         ],
-        substances: [{ id: 'substance-id-1' }],
+        substances: ['substance-id-1', undefined],
         contenu: { 'prop-id': 'prop-value' },
         incertitudes: { amodiataires: true },
         documents: [{ id: 'tmp', typeId: 'tmp' }, { id: 'doc-id' }]
@@ -211,7 +211,7 @@ describe('etapeSaveFormat', () => {
         }
       ],
       statutId: 'etape-statut-id',
-      substances: [{ id: 'substance-id-1', ordre: 1 }],
+      substances: ['substance-id-1'],
       titreDemarcheId: 'demarche-id',
       titulaires: [{ id: 'titulaire-id' }],
       typeId: 'etape-type-id',

@@ -140,19 +140,6 @@ const etapeTypeModifier = apiGraphQLFetch(gql`
   ${fragmentEtapeType}
 `)
 
-const substancesLegales = apiGraphQLFetch(
-  gql`
-    query SubstancesLegales {
-      substancesLegales {
-        id
-        nom
-        description
-        ordre
-      }
-    }
-  `
-)
-
 const documentsTypes = apiGraphQLFetch(
   gql`
     query DocumentsTypes {
@@ -615,7 +602,6 @@ export {
   phaseStatutModifier,
   etapesTypes,
   etapeTypeModifier,
-  substancesLegales,
   documentsTypes,
   documentTypeCreer,
   documentTypeModifier,

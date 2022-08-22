@@ -102,7 +102,7 @@ const activites = async (
     annees,
     titresNoms,
     titresEntreprises,
-    titresSubstances,
+    titresSubstancesIds,
     titresReferences,
     titresTerritoires,
     titresTypesIds,
@@ -118,7 +118,7 @@ const activites = async (
     annees?: number[] | null
     titresNoms?: string | null
     titresEntreprises?: string | null
-    titresSubstances?: string | null
+    titresSubstancesIds?: string[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
     titresTypesIds?: string[] | null
@@ -151,7 +151,7 @@ const activites = async (
           annees,
           titresNoms,
           titresEntreprises,
-          titresSubstances,
+          titresSubstancesIds,
           titresReferences,
           titresTerritoires,
           statutsIds,
@@ -168,7 +168,7 @@ const activites = async (
           annees,
           titresNoms,
           titresEntreprises,
-          titresSubstances,
+          titresSubstancesIds,
           titresReferences,
           titresTerritoires,
           statutsIds,

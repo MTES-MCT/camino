@@ -9,7 +9,6 @@ import {
 import { idGenerate } from './_format/id-create'
 import EtapesTypes from './etapes-types'
 import TitresDemarches from './titres-demarches'
-import Substances from './substances'
 import TitresPoints from './titres-points'
 import Entreprises from './entreprises'
 import Administrations from './administrations'
@@ -50,7 +49,8 @@ class TitresEtapes extends Model {
       heritageProps: { type: ['object', 'null'] },
       decisionsAnnexesSections: {},
       decisionsAnnexesContenu: { type: ['object', 'null'] },
-      archive: { type: 'boolean' }
+      archive: { type: 'boolean' },
+      substances: { type: 'array' }
     }
   }
 
@@ -70,20 +70,6 @@ class TitresEtapes extends Model {
       join: {
         from: 'titresEtapes.titreDemarcheId',
         to: 'titresDemarches.id'
-      }
-    },
-
-    substances: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Substances,
-      join: {
-        from: 'titresEtapes.id',
-        through: {
-          from: 'titresSubstances.titreEtapeId',
-          to: 'titresSubstances.substanceId',
-          extra: ['ordre']
-        },
-        to: 'substances.id'
       }
     },
 

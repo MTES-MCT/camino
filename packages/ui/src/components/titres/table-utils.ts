@@ -24,16 +24,16 @@ import {
 } from 'camino-common/src/static/departement'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'
+import {
+  SubstanceLegaleId,
+  SubstancesLegale
+} from 'camino-common/src/static/substancesLegales'
 
 interface Reference {
   type: { nom: string }
   nom: string
 }
-interface Substance {
-  // ceci devrait être une union
-  id: string
-  nom: string
-}
+
 interface Titulaire {
   id: string
   nom: string
@@ -55,7 +55,7 @@ export interface TitreEntreprise {
   }
   // id devrait être une union, couleur aussi
   statut: { id: string; nom: string; couleur: string }
-  substances: Substance[]
+  substances: SubstanceLegaleId[]
   titulaires: Titulaire[]
   activitesAbsentes: number | null
   activitesEnConstruction: number | null
@@ -137,7 +137,7 @@ export const titulairesColumn: Column<'titulaires'> = {
   name: 'Titulaires',
   class: ['min-width-10']
 }
-const titresColonnes: Column[] = [
+export const titresColonnes: Column[] = [
   nomColumn,
   domaineColumn,
   typeColumn,
@@ -146,7 +146,8 @@ const titresColonnes: Column[] = [
   {
     id: 'substances',
     name: 'Substances',
-    class: ['min-width-6']
+    class: ['min-width-6'],
+    noSort: true
   },
   {
     id: 'coordonnees',
@@ -232,7 +233,7 @@ export const activitesCell = (titre: {
   },
   value: (titre?.activitesAbsentes ?? 0) + (titre?.activitesEnConstruction ?? 0)
 })
-const titresLignesBuild = (
+export const titresLignesBuild = (
   titres: TitreEntreprise[],
   activitesCol: boolean,
   ordre = 'asc'
@@ -259,9 +260,15 @@ const titresLignesBuild = (
       statut: statutCell(titre),
       substances: {
         component: markRaw(TagList),
-        props: { elements: titre.substances?.map(s => s.nom) },
+        props: {
+          elements: titre.substances?.map(
+            substanceId => SubstancesLegale[substanceId].nom
+          )
+        },
         class: 'mb--xs',
-        value: titre.substances?.map(s => s.nom).join(', ')
+        value: titre.substances
+          ?.map(substanceId => SubstancesLegale[substanceId].nom)
+          .join(', ')
       },
       titulaires: titulairesCell(titre),
       regions: {
@@ -295,5 +302,3 @@ const titresLignesBuild = (
       columns
     }
   })
-
-export { titresColonnes, titresLignesBuild }

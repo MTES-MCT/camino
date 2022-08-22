@@ -20,7 +20,6 @@ describe("état d'une activité", () => {
       metas: {
         types: [],
         statuts: [],
-        titresDomaines: [],
         titresTypes: [],
         titresStatuts: []
       },
@@ -51,10 +50,7 @@ describe("état d'une activité", () => {
       { id: 'dep', nom: 'déposé', couleur: 'success' },
       { id: 'fer', nom: 'cloturé', couleur: 'neutral' }
     ]
-    const domaines = [
-      { id: 'm', nom: 'minéraux et métaux' },
-      { id: 'w', nom: 'granulats marins' }
-    ]
+
     const statuts = [
       { id: 'val', nom: 'valide', couleur: 'success' },
       { id: 'ech', nom: 'échu', couleur: 'neutral' }
@@ -67,7 +63,6 @@ describe("état d'une activité", () => {
     store.commit('titresActivites/metasSet', {
       activitesTypes,
       activitesStatuts,
-      domaines,
       statuts,
       types,
       truc: {}
@@ -76,7 +71,6 @@ describe("état d'une activité", () => {
     expect(store.state.titresActivites.metas).toEqual({
       types: activitesTypes,
       statuts: activitesStatuts,
-      titresDomaines: domaines,
       titresTypes: types,
       titresStatuts: statuts
     })
@@ -89,7 +83,7 @@ describe("état d'une activité", () => {
         values: ['abs', 'enc', 'dep', 'fer']
       },
       { id: 'titresTypesIds', type: 'strings', values: ['cx', 'pr'] },
-      { id: 'titresDomainesIds', type: 'strings', values: ['m', 'w'] },
+      { id: 'titresDomainesIds', type: 'strings', values: [] },
       { id: 'titresStatutsIds', type: 'strings', values: ['val', 'ech'] }
     ])
   })

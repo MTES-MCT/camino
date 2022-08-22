@@ -1,7 +1,7 @@
 const {
   SUBSTANCES_FISCALES_IDS,
   SubstancesFiscale
-} = require('camino-common/src/static/substance')
+} = require('camino-common/src/static/substancesFiscales')
 const { Unites } = require('camino-common/src/static/unites')
 exports.up = async knex => {
   const activites = await knex('titres_activites')

@@ -108,7 +108,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
     })
   })
 
-  test.each(['titulaires', 'amodiataires', 'substances'])(
+  test.each(['titulaires', 'amodiataires'])(
     'l’étape est modifiée si changement sur les $propId',
     propId => {
       const titreEtapePrecedente = {
@@ -144,6 +144,37 @@ describe('retourne l’étape en fonction de son héritage', () => {
       })
     }
   )
+
+  test('l’étape est modifiée si changement sur les substances', () => {
+    const titreEtapePrecedente = {
+      id: 'titreEtapePrecedenteId',
+      heritageProps: titreEtapePropsIds.reduce((acc, prop) => {
+        acc[prop] = { actif: false, etapeId: null }
+
+        return acc
+      }, {} as IHeritageProps)
+    } as ITitreEtape
+    titreEtapePrecedente.substances = ['auru', 'arge']
+
+    const titreEtape = objectClone(titreEtapePrecedente) as ITitreEtape
+    titreEtape.heritageProps!.substances.actif = true
+    titreEtape.id = 'titreEtapeId'
+    titreEtapePropsIds.forEach(
+      prop =>
+        (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id)
+    )
+    titreEtape.substances = ['nacl', 'arge']
+
+    const titreEtapeNew = objectClone(titreEtape) as ITitreEtape
+    titreEtapeNew.substances = ['auru', 'arge']
+
+    expect(
+      titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)
+    ).toEqual({
+      hasChanged: true,
+      titreEtape: titreEtapeNew
+    })
+  })
 
   test('l’étape est modifiée si il y a un titulaire en moins', () => {
     const titreEtapePrecedente = {

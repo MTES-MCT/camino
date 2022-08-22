@@ -4,7 +4,6 @@ import {
   ITitreDemarche,
   IActiviteType,
   ITitreActivite,
-  ISubstance,
   ISection,
   ISectionElement
 } from '../../types'
@@ -13,27 +12,19 @@ import { titreEtapePropFind } from './titre-etape-prop-find'
 import { titreActiviteValideCheck } from '../utils/titre-activite-valide-check'
 import {
   SubstanceFiscale,
-  SubstancesFiscale
-} from 'camino-common/src/static/substance'
+  substancesFiscalesBySubstanceLegale
+} from 'camino-common/src/static/substancesFiscales'
 import { UNITES, Unites } from 'camino-common/src/static/unites'
 import { sortedDevises } from 'camino-common/src/static/devise'
 import { exhaustiveCheck } from '../../tools/exhaustive-type-check'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 
-const onlyUnique = <T>(value: T, index: number, self: T[]): boolean => {
-  return self.indexOf(value) === index
-}
-
-const substancesFiscalesFind = (substances: ISubstance[]): SubstanceFiscale[] =>
+const substancesFiscalesFind = (
+  substances: SubstanceLegaleId[]
+): SubstanceFiscale[] =>
   substances
-    .flatMap(
-      s => s?.legales?.filter(legal => legal !== null).map(({ id }) => id) ?? []
-    )
-    .filter(onlyUnique)
-    .flatMap(id =>
-      Object.values(SubstancesFiscale).filter(
-        substance => substance.substanceLegaleId === id
-      )
-    )
+    .filter(s => !!s)
+    .flatMap(substanceId => substancesFiscalesBySubstanceLegale(substanceId))
 
 const titreActiviteSectionElementsFormat = (
   elements: ISectionElement[],
@@ -113,20 +104,20 @@ const titreActiviteSectionsBuild = (
         date,
         titreDemarches,
         titreTypeId
-      ) as ISubstance[] | null
+      ) as SubstanceLegaleId[] | null
 
       if (substances?.length) {
         const substancesFiscales = substancesFiscalesFind(substances)
 
         elements = substancesFiscales.map(sf => {
           const unite = Unites[sf.uniteId]
-          const element = {
+          const element: ISectionElement = {
             id: sf.id,
             nom: `${sf.nom}`,
             type: 'number',
             description: `<b>${unite.symbole} (${unite.nom})</b> ${sf.description}`,
             uniteId: sf.uniteId
-          } as ISectionElement
+          }
 
           if (unite.referenceUniteRatio) {
             element.referenceUniteRatio = unite.referenceUniteRatio

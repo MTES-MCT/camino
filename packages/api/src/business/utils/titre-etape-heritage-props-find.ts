@@ -3,11 +3,11 @@ import {
   IEntreprise,
   ITitrePoint,
   ITitreIncertitudes,
-  ITitreSubstance,
   ITitreEntreprise
 } from '../../types'
 import { objectClone } from '../../tools/index'
 import { idGenerate } from '../../database/models/_format/id-create'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 
 const titreEtapePropsIds: (keyof ITitreEtape)[] = [
   'points',
@@ -57,19 +57,7 @@ const propertyArrayCheck = (
         (prevValue as ITitrePoint[]).map(comparator).sort().toString()
       )
     } else if (propId === 'substances') {
-      const comparator = (propValueArray: { id: string; ordre: number }) =>
-        propValueArray.id + propValueArray.ordre
-
-      return (
-        (newValue as { id: string; ordre: number }[])
-          .map(comparator)
-          .sort()
-          .toString() ===
-        (prevValue as { id: string; ordre: number }[])
-          .map(comparator)
-          .sort()
-          .toString()
-      )
+      return newValue.toString() === prevValue.toString()
     } else if (['titulaires', 'amodiataires'].includes(propId)) {
       const comparator = (propValueArray: ITitreEntreprise) =>
         propValueArray.id + propValueArray.operateur
@@ -89,7 +77,7 @@ type IPropValueArray =
   | null
   | IEntreprise[]
   | ITitrePoint[]
-  | ITitreSubstance[]
+  | SubstanceLegaleId[]
 
 type IPropValue = number | string | IPropValueArray
 
@@ -158,7 +146,7 @@ const titreEtapeHeritagePropsFind = (
           } else if (propId === 'amodiataires' || propId === 'titulaires') {
             newTitreEtape[propId] = newValue as IEntreprise[]
           } else if (propId === 'substances') {
-            newTitreEtape[propId] = newValue as ITitreSubstance[]
+            newTitreEtape[propId] = newValue as SubstanceLegaleId[]
           } else if (propId === 'dateDebut' || propId === 'dateFin') {
             newTitreEtape[propId] = newValue as string
           } else if (propId === 'duree' || propId === 'surface') {

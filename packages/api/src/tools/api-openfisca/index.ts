@@ -1,5 +1,5 @@
 import fetch, { Response } from 'node-fetch'
-import { SubstanceFiscale } from 'camino-common/src/static/substance'
+import { SubstanceFiscale } from 'camino-common/src/static/substancesFiscales'
 import { Unite, Unites } from 'camino-common/src/static/unites'
 type Attribute =
   | 'surface_communale'

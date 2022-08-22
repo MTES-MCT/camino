@@ -15,6 +15,8 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { Couleur } from 'camino-common/src/static/couleurs'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
+import { UniteId } from 'camino-common/src/static/unites'
 
 const DemarchesStatutsTypesIds = {
   Accepte: 'acc',
@@ -209,6 +211,7 @@ interface ISectionElement {
   valeurs?: { id: string; nom: string }[] | null
   valeursMetasNom?: IValeurMetasNom
   referenceUniteRatio?: number
+  uniteId?: UniteId
   optionnel?: boolean
   elements?: ISectionElement[]
 }
@@ -582,27 +585,6 @@ interface ITitreStatut {
   ordre: number
 }
 
-interface ISubstanceLegale {
-  id: string
-  nom: string
-  domaineId?: string | null
-  description?: string | null
-  domaine?: IDomaine | null
-}
-
-interface ISubstance {
-  id: string
-  nom?: string | null
-  symbole?: string | null
-  gerep?: number | null
-  description?: string | null
-  legales?: ISubstanceLegale[]
-}
-
-interface ITitreSubstance extends ISubstance {
-  ordre?: number
-}
-
 export interface ITitreTitre {
   titreFromId: string
   titreToId: string
@@ -625,7 +607,8 @@ interface ITitre {
   activitesDeposees?: number | null
   activitesEnConstruction?: number | null
   activitesAbsentes?: number | null
-  substances?: ITitreSubstance[] | null
+  substancesEtape?: ITitreEtape | null
+  substances?: SubstanceLegaleId[] | null
   points?: ITitrePoint[] | null
   coordonnees?: ICoordonnees | null
   geojsonMultiPolygon?: IGeoJson | null
@@ -788,7 +771,7 @@ interface ITitreEtape {
   demarche?: ITitreDemarche
   dateDebut?: string | null
   dateFin?: string | null
-  substances?: ITitreSubstance[] | null
+  substances?: SubstanceLegaleId[] | null
   points?: ITitrePoint[] | null
   geojsonMultiPolygon?: IGeoJson | null
   geojsonPoints?: IGeoJson | null
@@ -1033,9 +1016,6 @@ export {
   IAdministrationActiviteType,
   IAdministrationActiviteTypeEmail,
   ITitreStatut,
-  ISubstance,
-  ISubstanceLegale,
-  ITitreSubstance,
   ITitre,
   ITitreActivite,
   ITitreAdministration,

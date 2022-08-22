@@ -1,7 +1,3 @@
-const substances = {
-  graph: `legales.domaine`
-}
-
 const points = {
   graph: `references`
 }
@@ -79,7 +75,6 @@ const titresEtapesRelateTrue = [
   'titulaires',
   'amodiataires',
   'administrations',
-  'substances',
   'communes',
   'forets',
   'justificatifs'
@@ -94,7 +89,6 @@ const titresEtapesRelateFalse = [
   'amodiataires.utilisateurs',
   'administrations.titresTypes',
   'administrations.utilisateurs',
-  'substances.legales',
   ...documentsRelateFalse.map(k => `documents.${k}`),
   ...documentsRelateFalse.map(k => `justificatifs.${k}`)
 ]
@@ -105,7 +99,6 @@ const titresEtapes = {
     type,
     documents.${documents.graph},
     justificatifs.${documents.graph},
-    substances(orderAsc).${substances.graph},
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph},
     administrations.${administrations.graph},
@@ -235,9 +228,7 @@ const titresRelateFalse = [
   'points.references',
   'communes',
   'forets',
-  'substances',
-  'substances.legales',
-  'substances.legales.domaine',
+  'substancesEtape',
   'titulaires',
   'titulaires.etablissements',
   'titulaires.utilisateurs',
@@ -265,7 +256,6 @@ const titres = {
     domaine.${domaines.graph},
     statut,
     points(orderAsc).${points.graph},
-    substances(orderAsc).${substances.graph},
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph},
     administrationsGestionnaires.${administrations.graph},
@@ -300,7 +290,6 @@ export default {
   entreprises,
   entreprisesEtablissements,
   points,
-  substances,
   titres,
   titresActivites,
   titresDemarches,

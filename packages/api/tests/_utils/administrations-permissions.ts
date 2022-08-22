@@ -230,7 +230,7 @@ const creationCheck = async (
           ),
           heritageContenu,
           contenu,
-          substances: [{ id: 'auru' }],
+          substances: ['auru'],
           points: [
             {
               groupe: 1,

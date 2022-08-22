@@ -54,12 +54,6 @@ export const tables = [
   { name: 'mois', orderBy: ['id'] },
   { name: 'phases_statuts', orderBy: ['id'] },
   { name: 'references_types', orderBy: ['id'] },
-  { name: 'substances', orderBy: ['id'] },
-  {
-    name: 'substances__substances_legales',
-    orderBy: ['substance_id', 'substance_legale_id']
-  },
-  { name: 'substances_legales', orderBy: ['id'] },
   { name: 'titres', orderBy: ['id'] },
   { name: 'titres_activites', orderBy: ['id'] },
   {
@@ -88,7 +82,6 @@ export const tables = [
   { name: 'titres_points_references', orderBy: ['id'] },
   { name: 'titres_references', orderBy: ['titre_id', 'type_id'] },
   { name: 'titres_statuts', orderBy: ['id'] },
-  { name: 'titres_substances', orderBy: ['titre_etape_id', 'substance_id'] },
   { name: 'titres_titulaires', orderBy: ['titre_etape_id', 'entreprise_id'] },
   { name: 'titres_types', orderBy: ['id'] },
   {

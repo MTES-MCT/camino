@@ -7,11 +7,6 @@ import { fragmentDemarches } from './fragments/titres-demarches'
 const demarchesMetas = apiGraphQLFetch(
   gql`
     query MetasDemarches($travaux: Boolean) {
-      domaines {
-        id
-        nom
-      }
-
       types {
         id
         nom
@@ -70,7 +65,7 @@ const demarches = apiGraphQLFetch(
       $titresStatutsIds: [ID!]
       $titresNoms: String
       $titresEntreprises: String
-      $titresSubstances: String
+      $titresSubstancesIds: [ID]
       $titresReferences: String
       $titresTerritoires: String
       $travaux: Boolean
@@ -89,7 +84,7 @@ const demarches = apiGraphQLFetch(
         titresStatutsIds: $titresStatutsIds
         titresNoms: $titresNoms
         titresEntreprises: $titresEntreprises
-        titresSubstances: $titresSubstances
+        titresSubstancesIds: $titresSubstancesIds
         titresReferences: $titresReferences
         titresTerritoires: $titresTerritoires
         travaux: $travaux

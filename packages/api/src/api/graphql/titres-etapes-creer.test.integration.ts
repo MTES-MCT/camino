@@ -149,7 +149,7 @@ describe('etapeCreer', () => {
             }
           },
           contenu: { arm: { mecanise: true, franchissements: 3 } },
-          substances: [{ id: 'auru' }],
+          substances: ['auru'],
           duree: 10,
           documentIds: ['dep', 'doe'],
           points: [
@@ -309,7 +309,7 @@ describe('etapeCreer', () => {
               franchissements: { actif: true }
             }
           },
-          substances: [{ id: 'auru' }],
+          substances: ['auru'],
           points: [
             {
               groupe: 1,

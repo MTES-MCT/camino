@@ -7,16 +7,5 @@ query {
 fragment substance on Substance {
   id
   nom
-  symbole
-  gerep
   description
-  legales {
-    id
-    nom
-    description
-    domaine {
-      id
-      nom
-    }
-  }
 }

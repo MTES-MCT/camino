@@ -230,12 +230,9 @@ const etapeSaveFormat = etape => {
 
   delete etape.demarche
 
-  const propsIds = [
-    'substances',
-    'titulaires',
-    'amodiataires',
-    'administrations'
-  ]
+  etape.substances = etape.substances.filter(substanceId => !!substanceId)
+
+  const propsIds = ['titulaires', 'amodiataires', 'administrations']
 
   // supprime les champs dont les ids sont vides
   propsIds.forEach(propId => {
@@ -243,12 +240,6 @@ const etapeSaveFormat = etape => {
       etape[propId] = etape[propId].filter(({ id }) => id)
     }
   })
-
-  if (etape.substances && etape.substances.length) {
-    etape.substances.forEach((substance, index) => {
-      substance.ordre = index + 1
-    })
-  }
 
   if (
     etape.geoSystemeIds &&

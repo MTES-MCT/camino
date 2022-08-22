@@ -80,11 +80,6 @@ const titresColonnes = {
   type: { id: 'type:type.nom', relation: 'type.type' },
   statut: { id: 'statutId', groupBy: ['titres.statutId'] },
   activites: { id: 'activites', groupBy: [] },
-  substances: {
-    id: raw(`STRING_AGG("substances"."nom", ' ; ')`),
-    relation: 'substances',
-    groupBy: []
-  },
   titulaires: {
     id: raw(`STRING_AGG("titulaires"."nom", ' ; ')`),
     relation: 'titulaires',
@@ -119,9 +114,8 @@ const titresGet = async (
     domainesIds,
     typesIds,
     statutsIds,
-    substancesLegalesIds,
+    substancesIds,
     entreprisesIds,
-    substances,
     noms,
     entreprises,
     references,
@@ -138,9 +132,8 @@ const titresGet = async (
     domainesIds?: string[] | null
     typesIds?: string[] | null
     statutsIds?: string[] | null
-    substancesLegalesIds?: string[] | null
+    substancesIds?: string[] | null
     entreprisesIds?: string[] | null
-    substances?: string | null
     noms?: string | null
     entreprises?: string | null
     references?: string | null
@@ -164,11 +157,10 @@ const titresGet = async (
       domainesIds,
       typesIds,
       statutsIds,
-      substancesLegalesIds,
+      substancesIds,
       entreprisesIds,
       noms,
       entreprises,
-      substances,
       references,
       territoires
     },
@@ -242,8 +234,7 @@ const titresCount = async (
     domainesIds,
     typesIds,
     statutsIds,
-    substances,
-    substancesLegalesIds,
+    substancesIds,
     entreprisesIds,
     noms,
     entreprises,
@@ -255,9 +246,8 @@ const titresCount = async (
     domainesIds?: string[] | null
     typesIds?: string[] | null
     statutsIds?: string[] | null
-    substancesLegalesIds?: string[] | null
+    substancesIds?: string[] | null
     entreprisesIds?: string[] | null
-    substances?: string | null
     noms?: string | null
     entreprises?: string | null
     references?: string | null
@@ -275,11 +265,10 @@ const titresCount = async (
       domainesIds,
       typesIds,
       statutsIds,
-      substancesLegalesIds,
+      substancesIds,
       entreprisesIds,
       noms,
       entreprises,
-      substances,
       references,
       territoires
     },

@@ -1,4 +1,5 @@
 import { UniteId } from './unites'
+import { SubstanceLegaleId, SubstancesLegales } from './substancesLegales'
 
 export const SUBSTANCES_FISCALES_IDS = {
   bauxite: 'aloh',
@@ -41,8 +42,7 @@ export type SubstanceFiscaleId = typeof SUBSTANCES_FISCALES_IDS[keyof typeof SUB
 export interface SubstanceFiscale<T = SubstanceFiscaleId> {
   id: T
   nom: string
-  // TODO 2022-05-31: extract this from DB
-  substanceLegaleId: string
+  substanceLegaleId: SubstanceLegaleId
   uniteId: UniteId
   description: string
   openFisca?: {
@@ -359,3 +359,9 @@ export const SubstancesFiscale: {
 }
 
 export const SubstancesFiscales = Object.values(SubstancesFiscale)
+
+export const substancesFiscalesBySubstanceLegale = (substanceLegaleId: SubstanceLegaleId): SubstanceFiscale[] => {
+  const substancesLegalesIds = SubstancesLegales.filter(({ id, substanceParentIds }) => id === substanceLegaleId || substanceParentIds?.includes(substanceLegaleId)).map(({ id }) => id)
+
+  return SubstancesFiscales.filter(({ substanceLegaleId }) => substancesLegalesIds.includes(substanceLegaleId))
+}

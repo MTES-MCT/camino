@@ -9,7 +9,6 @@ const state = {
     statuts: [],
     etapesTypes: [],
     titresTypes: [],
-    titresDomaines: [],
     titresStatuts: []
   },
   definitions: [
@@ -22,7 +21,7 @@ const state = {
     { id: 'titresStatutsIds', type: 'strings', values: [] },
     { id: 'titresNoms', type: 'string' },
     { id: 'titresEntreprises', type: 'string' },
-    { id: 'titresSubstances', type: 'string' },
+    { id: 'titresSubstancesIds', type: 'strings', values: [] },
     { id: 'titresReferences', type: 'string' },
     { id: 'titresTerritoires', type: 'string' },
     { id: 'page', type: 'number', min: 0 },
@@ -63,7 +62,7 @@ const state = {
       titresStatutsIds: [],
       titresNoms: '',
       titresEntreprises: '',
-      titresSubstances: '',
+      titresSubstancesIds: [],
       titresReferences: '',
       titresTerritoires: ''
     }
@@ -86,7 +85,6 @@ const mutations = Object.assign({}, listeMutations, {
       statuts: [],
       etapesTypes: [],
       titresTypes: [],
-      titresDomaines: [],
       titresStatuts: []
     }
     state.params = {
@@ -106,7 +104,7 @@ const mutations = Object.assign({}, listeMutations, {
         titresStatutsIds: [],
         titresNoms: '',
         titresEntreprises: '',
-        titresSubstances: '',
+        titresSubstancesIds: [],
         titresReferences: '',
         titresTerritoires: ''
       }
@@ -132,9 +130,6 @@ const mutations = Object.assign({}, listeMutations, {
       } else if (id === 'types') {
         metaId = 'titresTypes'
         paramsIds = ['titresTypesIds']
-      } else if (id === 'domaines') {
-        metaId = 'titresDomaines'
-        paramsIds = ['titresDomainesIds']
       }
 
       if (metaId) {

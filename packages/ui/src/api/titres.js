@@ -36,14 +36,6 @@ const titreCreationMetas = apiGraphQLFetch(
 const titresMetas = apiGraphQLFetch(
   gql`
     query TitresMetas {
-      domaines {
-        id
-        nom
-        titresTypes {
-          titresCreation
-        }
-      }
-
       types {
         ...titreTypeType
       }
@@ -52,11 +44,6 @@ const titresMetas = apiGraphQLFetch(
         id
         nom
         couleur
-      }
-
-      substancesLegales {
-        id
-        nom
       }
 
       entreprises {
@@ -90,7 +77,7 @@ const titresGeoPolygon = apiGraphQLFetch(
       $typesIds: [ID!]
       $domainesIds: [ID!]
       $statutsIds: [ID!]
-      $substancesLegalesIds: [ID!]
+      $substancesIds: [ID!]
       $entreprisesIds: [ID!]
       $references: String
       $territoires: String
@@ -101,7 +88,7 @@ const titresGeoPolygon = apiGraphQLFetch(
         typesIds: $typesIds
         domainesIds: $domainesIds
         statutsIds: $statutsIds
-        substancesLegalesIds: $substancesLegalesIds
+        substancesIds: $substancesIds
         entreprisesIds: $entreprisesIds
         references: $references
         territoires: $territoires
@@ -126,7 +113,7 @@ const titresGeo = apiGraphQLFetch(
       $typesIds: [ID!]
       $domainesIds: [ID!]
       $statutsIds: [ID!]
-      $substancesLegalesIds: [ID!]
+      $substancesIds: [ID!]
       $entreprisesIds: [ID!]
       $references: String
       $territoires: String
@@ -137,7 +124,7 @@ const titresGeo = apiGraphQLFetch(
         typesIds: $typesIds
         domainesIds: $domainesIds
         statutsIds: $statutsIds
-        substancesLegalesIds: $substancesLegalesIds
+        substancesIds: $substancesIds
         entreprisesIds: $entreprisesIds
         references: $references
         territoires: $territoires
@@ -166,7 +153,7 @@ const titres = apiGraphQLFetch(
       $typesIds: [ID!]
       $domainesIds: [ID!]
       $statutsIds: [ID!]
-      $substancesLegalesIds: [ID!]
+      $substancesIds: [ID!]
       $noms: String
       $entreprisesIds: [ID!]
       $references: String
@@ -181,7 +168,7 @@ const titres = apiGraphQLFetch(
         typesIds: $typesIds
         domainesIds: $domainesIds
         statutsIds: $statutsIds
-        substancesLegalesIds: $substancesLegalesIds
+        substancesIds: $substancesIds
         noms: $noms
         entreprisesIds: $entreprisesIds
         references: $references

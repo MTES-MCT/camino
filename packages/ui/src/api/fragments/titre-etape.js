@@ -1,7 +1,6 @@
 import gql from 'graphql-tag'
 import { fragmentTitreAdministrations } from './administrations'
 import { fragmentTitreEntreprises } from './entreprises'
-import { fragmentTitreSubstance } from './substance'
 import { fragmentPoint } from './point'
 import { fragmentGeojsonMultiPolygon } from './geojson'
 import {
@@ -59,9 +58,7 @@ const fragmentHeritageEtape = gql`
     points {
       ...point
     }
-    substances {
-      ...titreSubstance
-    }
+    substances
     contenu
   }
 
@@ -72,8 +69,6 @@ const fragmentHeritageEtape = gql`
   ${fragmentTitreEntreprises}
 
   ${fragmentPoint}
-
-  ${fragmentTitreSubstance}
 `
 
 const fragmentHeritageProps = gql`
@@ -151,9 +146,8 @@ const fragmentTitreEtape = gql`
     geojsonMultiPolygon {
       ...geojsonMultiPolygon
     }
-    substances {
-      ...titreSubstance
-    }
+    substances
+
     documents {
       ...document
     }
@@ -185,8 +179,6 @@ const fragmentTitreEtape = gql`
   ${fragmentPoint}
 
   ${fragmentGeojsonMultiPolygon}
-
-  ${fragmentTitreSubstance}
 
   ${fragmentCommune}
 
@@ -229,9 +221,7 @@ const fragmentEtapeHeritage = gql`
       ...point
     }
 
-    substances {
-      ...titreSubstance
-    }
+    substances
 
     contenu
 
@@ -245,8 +235,6 @@ const fragmentEtapeHeritage = gql`
   ${fragmentTitreEntreprises}
 
   ${fragmentPoint}
-
-  ${fragmentTitreSubstance}
 
   ${fragmentHeritageProps}
 
@@ -309,9 +297,7 @@ const fragmentEtape = gql`
     geojsonMultiPolygon {
       ...geojsonMultiPolygon
     }
-    substances {
-      ...titreSubstance
-    }
+    substances
     documents {
       ...document
     }
@@ -346,8 +332,6 @@ const fragmentEtape = gql`
   ${fragmentPoint}
 
   ${fragmentGeojsonMultiPolygon}
-
-  ${fragmentTitreSubstance}
 
   ${fragmentCommune}
 

@@ -21,7 +21,6 @@ export const titresEtapesHeritagePropsUpdate = async (
           type: { id: {} },
           titulaires: { id: {} },
           amodiataires: { id: {} },
-          substances: { id: {} },
           points: { references: { id: {} } }
         }
       }

@@ -135,11 +135,7 @@ import {
   etapeTypeJustificatifTypeSupprimer
 } from './resolvers/metas-join'
 
-import {
-  substance,
-  substances,
-  substancesLegales
-} from './resolvers/substances'
+import { substances } from './resolvers/substances'
 
 import {
   entreprise,
@@ -208,9 +204,7 @@ export default {
   version,
   titre,
   titres,
-  substance,
   substances,
-  substancesLegales,
   moi,
   entreprise,
   entreprises,

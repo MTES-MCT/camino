@@ -26,7 +26,6 @@ const state = {
   metas: {
     demarche: null,
     etapesTypes: [],
-    substances: [],
     entreprises: [],
     documentsTypes: [],
     sdomZonesDocumentTypeIds: [],
@@ -359,7 +358,6 @@ const mutations = {
     state.metas = {
       demarche: null,
       etapesTypes: [],
-      substances: [],
       entreprises: [],
       documentsTypes: [],
       sdomZonesDocumentTypeIds: [],

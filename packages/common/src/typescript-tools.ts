@@ -7,3 +7,5 @@ export const isNotNullNorUndefined = <T>(value: T | null | undefined): value is 
 export const onlyUnique = <T>(value: T, index: number, self: T[]): boolean => {
   return self.indexOf(value) === index
 }
+
+export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>

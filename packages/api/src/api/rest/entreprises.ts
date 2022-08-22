@@ -27,8 +27,8 @@ import Titres from '../../database/models/titres'
 import { CustomResponse } from './express-type'
 import {
   SubstanceFiscale,
-  SubstancesFiscales
-} from 'camino-common/src/static/substance'
+  substancesFiscalesBySubstanceLegale
+} from 'camino-common/src/static/substancesFiscales'
 import { Departements } from 'camino-common/src/static/departement'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'
@@ -119,19 +119,10 @@ export const bodyBuilder = (
     }
 
     if (titre.substances.length > 0 && activite.contenu) {
-      if (!titre.substances[0].legales) {
-        throw new Error(
-          `les substances légales des substances du titre ${activite.titreId} ne sont pas chargées`
-        )
-      }
-
       const substanceLegalesWithFiscales = titre.substances
-        .flatMap(s => s.legales)
         .filter(isNotNullNorUndefined)
-        .filter(s =>
-          SubstancesFiscales.some(
-            ({ substanceLegaleId }) => substanceLegaleId === s.id
-          )
+        .filter(
+          substanceId => substancesFiscalesBySubstanceLegale(substanceId).length
         )
 
       if (substanceLegalesWithFiscales.length > 1) {
@@ -143,10 +134,7 @@ export const bodyBuilder = (
       }
 
       const substancesFiscales = substanceLegalesWithFiscales.flatMap(
-        ({ id }) =>
-          SubstancesFiscales.filter(
-            ({ substanceLegaleId }) => substanceLegaleId === id
-          )
+        substanceId => substancesFiscalesBySubstanceLegale(substanceId)
       )
 
       for (const substancesFiscale of substancesFiscales) {
@@ -373,7 +361,7 @@ export const fiscalite = async (
       { entreprisesIds: [entrepriseId] },
       {
         fields: {
-          substances: { legales: { id: {} } },
+          substancesEtape: { id: {} },
           communes: { id: {} }
         }
       },

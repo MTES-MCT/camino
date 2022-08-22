@@ -53,9 +53,8 @@ const titres = async (
     typesIds,
     domainesIds,
     statutsIds,
-    substancesLegalesIds,
+    substancesIds,
     entreprisesIds,
-    substances,
     noms,
     entreprises,
     references,
@@ -71,7 +70,7 @@ const titres = async (
     typesIds: string[]
     domainesIds: string[]
     statutsIds: string[]
-    substancesLegalesIds: string[]
+    substancesIds: string[]
     entreprisesIds: string[]
     substances: string
     noms: string
@@ -99,9 +98,8 @@ const titres = async (
           typesIds,
           domainesIds,
           statutsIds,
-          substancesLegalesIds,
+          substancesIds,
           entreprisesIds,
-          substances,
           noms,
           entreprises,
           references,
@@ -117,9 +115,8 @@ const titres = async (
           typesIds,
           domainesIds,
           statutsIds,
-          substancesLegalesIds,
+          substancesIds,
           entreprisesIds,
-          substances,
           noms,
           entreprises,
           references,

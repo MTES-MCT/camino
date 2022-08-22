@@ -30,43 +30,39 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { hasValeurCheck } from '@/utils/contenu'
 import Tag from '@/components/_ui/tag.vue'
 import { dateFormat } from '@/utils'
+import { computed, withDefaults } from 'vue'
+import { HeritageProp } from 'camino-common/src/etape'
 
-export default {
-  components: { Tag },
-  props: {
-    prop: { type: Object, required: true },
-    propId: { type: String, required: true },
-    isArray: { type: Boolean, default: false },
-    sectionId: { type: String, default: null }
-  },
-  computed: {
-    buttonText() {
-      return this.prop.actif ? 'Modifier' : `Hériter de l'étape précédente`
-    },
+const props = withDefaults(
+  defineProps<{
+    prop: HeritageProp
+    propId: string
+    isArray?: boolean
+    sectionId?: string
+  }>(),
+  { isArray: false, sectionId: undefined }
+)
 
-    hasHeritage() {
-      let contenu
+const buttonText = computed<string>(() =>
+  props.prop.actif ? 'Modifier' : `Hériter de l'étape précédente`
+)
 
-      if (this.sectionId) {
-        contenu =
-          this.prop.etape &&
-          this.prop.etape.contenu &&
-          this.prop.etape.contenu[this.sectionId]
-      } else {
-        contenu = this.prop.etape
-      }
+const hasHeritage = computed<boolean>(() => {
+  let contenu
 
-      return hasValeurCheck(this.propId, contenu)
-    }
-  },
-  methods: {
-    dateFormat(date) {
-      return dateFormat(date)
-    }
+  if (props.sectionId) {
+    contenu =
+      props.prop.etape &&
+      props.prop.etape.contenu &&
+      props.prop.etape.contenu[props.sectionId]
+  } else {
+    contenu = props.prop.etape
   }
-}
+
+  return hasValeurCheck(props.propId, contenu)
+})
 </script>

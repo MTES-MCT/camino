@@ -7,7 +7,6 @@ import Communes from './communes'
 import Domaines from './domaines'
 import Entreprises from './entreprises'
 import TitresStatuts from './titres-statuts'
-import Substances from './substances'
 import TitresDemarches from './titres-demarches'
 import TitresEtapes from './titres-etapes'
 import TitresPoints from './titres-points'
@@ -90,17 +89,12 @@ class Titres extends Model {
       }
     },
 
-    substances: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Substances,
+    substancesEtape: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: TitresEtapes,
       join: {
         from: ref('titres.propsTitreEtapesIds:substances').castText(),
-        through: {
-          from: 'titresSubstances.titreEtapeId',
-          to: 'titresSubstances.substanceId',
-          extra: ['ordre']
-        },
-        to: 'substances.id'
+        to: 'titresEtapes.id'
       }
     },
 
@@ -269,6 +263,10 @@ class Titres extends Model {
         this.contenusTitreEtapesIds,
         this.demarches
       )
+    }
+
+    if (this.substancesEtape) {
+      this.substances = this.substancesEtape.substances
     }
   }
 

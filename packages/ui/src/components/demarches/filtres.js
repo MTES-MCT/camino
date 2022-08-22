@@ -4,6 +4,8 @@ import FiltresTitresStatuts from '../_common/filtres/statuts.vue'
 import FiltresEtapes from './filtres-custom-etapes.vue'
 import { elementsFormat } from '../../utils/index'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
+import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
+import { sortedDomaines } from 'camino-common/src/static/domaines'
 
 const etapesElementsFormat = (id, metas) => metas.etapesTypes
 const etapesLabelFormat = f =>
@@ -79,9 +81,8 @@ const filtres = [
     name: 'Domaines',
     type: 'checkboxes',
     value: [],
-    elements: [],
-    component: markRaw(FiltresTitresDomaines),
-    elementsFormat
+    elements: sortedDomaines,
+    component: markRaw(FiltresTitresDomaines)
   },
   {
     id: 'titresTypesIds',
@@ -115,11 +116,11 @@ const filtres = [
     placeholder: 'Nom ou siret'
   },
   {
-    id: 'titresSubstances',
-    type: 'input',
-    value: '',
-    name: 'Substances',
-    placeholder: 'Or, Argent, Ag, …'
+    id: 'titresSubstancesIds',
+    type: 'autocomplete',
+    value: [],
+    elements: SubstancesLegales,
+    name: 'Substances'
   },
   {
     id: 'titresReferences',

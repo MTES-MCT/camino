@@ -1,5 +1,5 @@
 import { IActiviteType, ITitreDemarche } from '../../../types'
-import { SubstancesFiscale } from 'camino-common/src/static/substance'
+import { SubstancesFiscale } from 'camino-common/src/static/substancesFiscales'
 import { UNITES } from 'camino-common/src/static/unites'
 
 const activiteTypeGra = {
@@ -220,22 +220,7 @@ const titreDemarches = [
         date: '2018-01-01',
         typeId: 'dpu',
         statutId: 'fai',
-        substances: [
-          {
-            id: 'auru',
-            legales: [
-              {
-                id: 'auru',
-                nom: 'Or'
-              },
-              {
-                id: 'nacl',
-                nom: 'Sel'
-              },
-              null
-            ]
-          }
-        ]
+        substances: ['auru', 'nacl', null]
       }
     ]
   } as ITitreDemarche

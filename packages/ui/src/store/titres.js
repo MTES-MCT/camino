@@ -9,16 +9,14 @@ const getDefaultState = () => {
     total: 0,
     vueId: 'carte',
     metas: {
-      domaines: [],
       types: [],
-      statuts: [],
-      substancesLegales: []
+      statuts: []
     },
     definitions: [
       { id: 'typesIds', type: 'strings', values: [] },
       { id: 'domainesIds', type: 'strings', values: [] },
       { id: 'statutsIds', type: 'strings', values: [] },
-      { id: 'substancesLegalesIds', type: 'strings', values: [] },
+      { id: 'substancesIds', type: 'strings', values: [] },
       { id: 'titresIds', type: 'strings', values: [] },
       { id: 'entreprisesIds', type: 'strings', values: [] },
       { id: 'references', type: 'string' },
@@ -58,7 +56,7 @@ const getDefaultState = () => {
         typesIds: [],
         domainesIds: [],
         statutsIds: [],
-        substancesLegalesIds: [],
+        substancesIds: [],
         titresIds: [],
         entreprisesIds: '',
         references: '',
@@ -272,12 +270,8 @@ const mutations = Object.assign(
         let paramId
         if (id === 'types') {
           paramId = 'typesIds'
-        } else if (id === 'domaines') {
-          paramId = 'domainesIds'
         } else if (id === 'statuts') {
           paramId = 'statutsIds'
-        } else if (id === 'substancesLegales') {
-          paramId = 'substancesLegalesIds'
         } else if (id === 'entreprises') {
           paramId = 'entreprisesIds'
           data[id] = data[id].elements

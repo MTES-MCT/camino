@@ -29,9 +29,7 @@ fragment titre on Titre {
     nom
   }
   surface
-  substances {
-    ...titreSubstance
-  }
+  substances
   administrations {
     ...administration
   }
@@ -139,9 +137,7 @@ fragment etape on Etape {
   geojsonMultiPolygon {
     ...geojsonMultiPolygon
   }
-  substances {
-    ...titreSubstance
-  }
+  substances
   documents {
     ...document
   }
@@ -243,22 +239,6 @@ fragment geojsonPoints on GeojsonPoints {
     geometry {
       type
       coordinates
-    }
-  }
-}
-
-fragment titreSubstance on TitreSubstance {
-  id
-  nom
-  gerep
-  description
-  legales {
-    id
-    nom
-    description
-    domaine {
-      id
-      nom
     }
   }
 }

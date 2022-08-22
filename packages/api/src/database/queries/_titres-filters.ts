@@ -31,11 +31,10 @@ export const titresFiltersQueryModify = (
     domainesIds,
     typesIds,
     statutsIds,
-    substancesLegalesIds,
+    substancesIds,
     entreprisesIds,
     noms,
     entreprises,
-    substances,
     references,
     territoires
   }: {
@@ -44,11 +43,10 @@ export const titresFiltersQueryModify = (
     domainesIds?: string[] | null
     typesIds?: string[] | null
     statutsIds?: string[] | null
-    substancesLegalesIds?: string[] | null
+    substancesIds?: string[] | null
     entreprisesIds?: string[] | null
     noms?: string | null
     entreprises?: string | null
-    substances?: string | null
     references?: string | null
     territoires?: string | null
   } = {},
@@ -94,14 +92,17 @@ export const titresFiltersQueryModify = (
     q.whereIn(`${name}.statutId`, statutsIds)
   }
 
-  if (substancesLegalesIds?.length) {
+  if (substancesIds?.length) {
     if (name === 'titre') {
       q.leftJoinRelated('titre')
     }
 
-    q.leftJoinRelated(jointureFormat(name, 'substances.legales'))
+    q.leftJoinRelated(jointureFormat(name, 'substancesEtape'))
 
-    q.whereIn(fieldFormat(name, 'substances:legales.id'), substancesLegalesIds)
+    q.whereRaw('?? @> ?', [
+      fieldFormat(name, 'substancesEtape.substances'),
+      JSON.stringify(substancesIds)
+    ])
   }
 
   if (entreprisesIds?.length) {
@@ -175,44 +176,6 @@ export const titresFiltersQueryModify = (
           .join(') and (')})`,
         entreprisesArray.flatMap(e =>
           fields.flatMap(f => [f, `%${e.toLowerCase()}%`])
-        )
-      )
-  }
-
-  if (substances) {
-    const substancesArray = stringSplit(substances)
-
-    let fields = [
-      'substances.nom',
-      'substances.id',
-      'substances:legales.nom',
-      'substances:legales.id'
-    ]
-
-    if (name === 'titre') {
-      fields = fields.map(field => fieldFormat(name, field))
-    }
-
-    q.leftJoinRelated(jointureFormat(name, 'substances.legales'))
-      .where(b => {
-        substancesArray.forEach(s => {
-          fields.forEach(f => {
-            b.orWhereRaw(`lower(??) like ?`, [f, `%${s.toLowerCase()}%`])
-          })
-        })
-      })
-      .groupBy(`${root}.id`)
-      .havingRaw(
-        `(${substancesArray
-          .map(
-            () =>
-              'count(*) filter (where ' +
-              fields.map(() => 'lower(??) like ?').join(' or ') +
-              ') > 0'
-          )
-          .join(') and (')})`,
-        substancesArray.flatMap(s =>
-          fields.flatMap(f => [f, `%${s.toLowerCase()}%`])
         )
       )
   }

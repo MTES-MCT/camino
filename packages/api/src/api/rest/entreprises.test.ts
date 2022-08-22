@@ -1,5 +1,6 @@
 import { bodyBuilder, responseExtractor } from './entreprises'
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
+import Titres from '../../database/models/titres'
 
 const entreprise = { id: 'entrepriseId', categorie: 'PME', nom: 'ma companie' }
 const entreprise2 = {
@@ -58,11 +59,12 @@ describe('construit le corps de la requête pour openFisca', () => {
         contenu: { renseignements: { environnement: 1000 } }
       }
     ]
-    const titres = [
+    const titres: Pick<
+      Titres,
+      'titulaires' | 'amodiataires' | 'substances' | 'communes' | 'id'
+    >[] = [
       {
-        substances: [
-          { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] }
-        ],
+        substances: ['auru'],
         titulaires: [entreprise2],
         amodiataires: [],
         communes: [
@@ -76,10 +78,7 @@ describe('construit le corps de la requête pour openFisca', () => {
         id: 'titreSansActivite'
       },
       {
-        substances: [
-          { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] },
-          { id: 'suco', nom: 'substances connexes', legales: [] }
-        ],
+        substances: ['auru', 'scoc'],
         communes: [
           {
             id: '97310',
@@ -93,10 +92,7 @@ describe('construit le corps de la requête pour openFisca', () => {
         id: 'titre1'
       },
       {
-        substances: [
-          { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] },
-          { id: 'suco', nom: 'substances connexes', legales: [] }
-        ],
+        substances: ['auru', 'scoc'],
         titulaires: [entreprise],
         amodiataires: [],
         communes: [
@@ -107,14 +103,10 @@ describe('construit le corps de la requête pour openFisca', () => {
             surface: 19805494
           }
         ],
-        pays: [{ id: 'GF', nom: 'unused' }],
         id: 'titre2'
       },
       {
-        substances: [
-          { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] },
-          { id: 'suco', nom: 'substances connexes', legales: [] }
-        ],
+        substances: ['auru', 'scoc'],
         titulaires: [entreprise2],
         amodiataires: [],
         communes: [
@@ -128,10 +120,7 @@ describe('construit le corps de la requête pour openFisca', () => {
         id: 'titre3'
       },
       {
-        substances: [
-          { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] },
-          { id: 'suco', nom: 'substances connexes', legales: [] }
-        ],
+        substances: ['auru', 'scoc'],
         titulaires: [entreprise2],
         amodiataires: [],
         communes: [
@@ -145,10 +134,7 @@ describe('construit le corps de la requête pour openFisca', () => {
         id: 'titre4'
       },
       {
-        substances: [
-          { id: 'auru', nom: 'or', legales: [{ id: 'auru', nom: 'or' }] },
-          { id: 'suco', nom: 'substances connexes', legales: [] }
-        ],
+        substances: ['auru', 'scoc'],
         titulaires: [entreprise],
         amodiataires: [],
         communes: [

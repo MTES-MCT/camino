@@ -8,8 +8,6 @@ const heritagePropsFormat = async (heritageProps: IHeritageProps) => {
       const fields = { type: { id: {} } } as IFields
       if (propId === 'points') {
         fields.points = { references: { id: {} } }
-      } else if (propId === 'substances') {
-        fields.substances = { legales: { id: {} } }
       } else if (['titulaires', 'amodiataires'].includes(propId)) {
         fields[propId] = { id: {} }
       }

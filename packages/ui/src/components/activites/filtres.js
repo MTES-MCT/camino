@@ -3,6 +3,8 @@ import FiltresDomaines from '../_common/filtres/domaines.vue'
 import FiltresTypes from '../_common/filtres/types.vue'
 import { elementsFormat } from '../../utils/index'
 import { markRaw } from '@vue/reactivity'
+import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
+import { sortedDomaines } from 'camino-common/src/static/domaines'
 
 const filtres = [
   {
@@ -20,11 +22,11 @@ const filtres = [
     placeholder: 'Nom ou siret'
   },
   {
-    id: 'titresSubstances',
-    type: 'input',
-    value: '',
+    id: 'titresSubstancesIds',
+    type: 'autocomplete',
+    value: [],
     name: 'Substances',
-    placeholder: 'Or, Argent, Ag, …'
+    elements: SubstancesLegales
   },
   {
     id: 'titresReferences',
@@ -45,9 +47,8 @@ const filtres = [
     name: 'Domaines',
     type: 'checkboxes',
     value: [],
-    elements: [],
-    component: markRaw(FiltresDomaines),
-    elementsFormat
+    elements: sortedDomaines,
+    component: markRaw(FiltresDomaines)
   },
   {
     id: 'titresTypesIds',
