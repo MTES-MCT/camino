@@ -66,6 +66,8 @@ import {
   activiteTypePaysSupprimer
 } from '../api/metas-activites'
 import { PaysList } from 'camino-common/src/static/pays'
+import { Domaines } from 'camino-common/src/static/domaines'
+import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 
 const labelGet = entity => (entity ? `${entity.id} - ${entity.nom}` : '')
 
@@ -83,14 +85,17 @@ const metasIndex = {
       {
         id: 'domaineId',
         nom: 'Domaine',
-        type: 'entities',
-        entities: 'domaines'
+        type: 'static',
+        elements: Object.values(Domaines),
+        display: domaineId => `${domaineId} - ${Domaines[domaineId].nom}`
       },
       {
         id: 'typeId',
         nom: 'Type',
-        type: 'entities',
-        entities: 'titres-types-types'
+        type: 'static',
+        elements: Object.values(TitresTypesTypes),
+        display: titreTypeTypeId =>
+          `${titreTypeTypeId} - ${TitresTypesTypes[titreTypeTypeId].nom}`
       },
       {
         id: 'contenuIds',

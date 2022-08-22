@@ -46,6 +46,9 @@
                   <div v-if="colonne.type === 'entities'">
                     {{ entityIdLabelGet(colonne, element[colonne.id]) }}
                   </div>
+                  <div v-else-if="colonne.type === 'static'">
+                    {{ colonne.display(element[colonne.id]) }}
+                  </div>
                   <MetaLabelOrInput
                     v-else
                     :colonne="colonne"

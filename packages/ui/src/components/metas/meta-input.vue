@@ -1,6 +1,15 @@
 <template>
   <select
-    v-if="colonne.type === 'entities'"
+    v-if="colonne.type === 'static'"
+    v-model="element[colonne.id]"
+    class="py-xs px-s mb-s"
+  >
+    <option v-for="value in colonne.elements" :key="value.id" :value="value.id">
+      {{ colonne.display(value.id) }}
+    </option>
+  </select>
+  <select
+    v-else-if="colonne.type === 'entities'"
     v-model="element[colonne.id]"
     class="py-xs px-s mb-s"
   >
