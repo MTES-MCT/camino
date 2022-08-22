@@ -1,23 +1,25 @@
 <template>
-  <h2>Activité</h2>
-  <Loader v-if="!loaded" />
-  <div v-else>
-    <h6>
-      <router-link
-        :to="{ name: 'titre', params: { id: activite.titre.slug } }"
-        class="cap-first"
-      >
-        {{ activite.titre.nom }}
-      </router-link>
-    </h6>
+  <div>
+    <h2>Activité</h2>
+    <Loader v-if="!loaded" />
+    <div v-else>
+      <h6>
+        <router-link
+          :to="{ name: 'titre', params: { id: activite.titre.slug } }"
+          class="cap-first"
+        >
+          {{ activite.titre.nom }}
+        </router-link>
+      </h6>
 
-    <Preview
-      :key="activite.id"
-      :activite="activite"
-      :route="route"
-      :initialOpened="true"
-      class="mb"
-    />
+      <Preview
+        :key="activite.id"
+        :activite="activite"
+        :route="route"
+        :initialOpened="true"
+        class="mb"
+      />
+    </div>
   </div>
 </template>
 

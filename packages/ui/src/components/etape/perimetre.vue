@@ -1,42 +1,44 @@
 <template>
-  <div class="tablet-blobs">
-    <div class="tablet-blob-1-4">
-      <h5>
-        Périmètre
-        <Tag v-if="incertitude" :mini="true" color="bg-info" class="ml-xs">
-          Incertain
-        </Tag>
-      </h5>
+  <div>
+    <div class="tablet-blobs">
+      <div class="tablet-blob-1-4">
+        <h5>
+          Périmètre
+          <Tag v-if="incertitude" :mini="true" color="bg-info" class="ml-xs">
+            Incertain
+          </Tag>
+        </h5>
+      </div>
+
+      <div class="tablet-blob-3-4">
+        <Perimetre
+          :domaineId="domaineId"
+          :titreTypeId="titreTypeId"
+          :points="etape.points"
+          :geojsonMultiPolygon="geojsonMultiPolygon"
+          :tabId="tabId"
+          @tab-update="tabUpdate"
+        />
+      </div>
     </div>
 
-    <div class="tablet-blob-3-4">
-      <Perimetre
-        :domaineId="domaineId"
-        :titreTypeId="titreTypeId"
-        :points="etape.points"
-        :geojsonMultiPolygon="geojsonMultiPolygon"
-        :tabId="tabId"
-        @tab-update="tabUpdate"
-      />
-    </div>
-  </div>
-
-  <div v-if="etape.surface" class="tablet-blobs">
-    <div class="tablet-blob-1-4">
-      <h5>
-        Surface
-        <Tag
-          v-if="etape.incertitudes && etape.incertitudes.surface"
-          :mini="true"
-          color="bg-info"
-          class="ml-xs"
-        >
-          Incertain
-        </Tag>
-      </h5>
-    </div>
-    <div class="tablet-blob-3-4">
-      <p>{{ numberFormat(etape.surface) }} km² environ</p>
+    <div v-if="etape.surface" class="tablet-blobs">
+      <div class="tablet-blob-1-4">
+        <h5>
+          Surface
+          <Tag
+            v-if="etape.incertitudes && etape.incertitudes.surface"
+            :mini="true"
+            color="bg-info"
+            class="ml-xs"
+          >
+            Incertain
+          </Tag>
+        </h5>
+      </div>
+      <div class="tablet-blob-3-4">
+        <p>{{ numberFormat(etape.surface) }} km² environ</p>
+      </div>
     </div>
   </div>
 </template>

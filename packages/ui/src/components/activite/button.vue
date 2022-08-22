@@ -1,23 +1,25 @@
 <template>
-  <button
-    class="cmn-activite-btn-remplir btn small flex py-s px-m rnd-0"
-    :class="{ 'btn-primary': activite.statut.id !== 'enc' && buttonText }"
-    @click="activiteEditPopupOpen"
-  >
-    <div v-if="buttonText" class="my-xxs">
-      {{ buttonText }}
-    </div>
-    <Icon v-else size="M" name="pencil" />
-  </button>
-  <button
-    v-if="activite.statut.id === 'enc'"
-    class="cmn-activite-btn-depose btn btn-primary small flex rnd-0"
-    :disabled="!activite.deposable"
-    :class="{ disabled: !activite.deposable }"
-    @click="activiteDepotPopupOpen"
-  >
-    <span class="mt-xxs mb-xxs">Déposer…</span>
-  </button>
+  <div>
+    <button
+      class="cmn-activite-btn-remplir btn small flex py-s px-m rnd-0"
+      :class="{ 'btn-primary': activite.statut.id !== 'enc' && buttonText }"
+      @click="activiteEditPopupOpen"
+    >
+      <div v-if="buttonText" class="my-xxs">
+        {{ buttonText }}
+      </div>
+      <Icon v-else size="M" name="pencil" />
+    </button>
+    <button
+      v-if="activite.statut.id === 'enc'"
+      class="cmn-activite-btn-depose btn btn-primary small flex rnd-0"
+      :disabled="!activite.deposable"
+      :class="{ disabled: !activite.deposable }"
+      @click="activiteDepotPopupOpen"
+    >
+      <span class="mt-xxs mb-xxs">Déposer…</span>
+    </button>
+  </div>
 </template>
 
 <script>

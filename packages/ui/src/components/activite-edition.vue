@@ -1,85 +1,87 @@
 <template>
-  <h2>Activité</h2>
-  <Loader v-if="!loaded" />
-  <div v-else>
-    <h6>
-      <router-link
-        :to="{ name: 'titre', params: { id: activite.titre.slug } }"
-        class="cap-first"
-      >
-        {{ activite.titre.nom }}
-      </router-link>
-    </h6>
-    <h5>
-      {{ dateFormat(activite.date) }} |
-      <span class="cap-first"
-        ><span v-if="activite.periode && activite.periode.nom"
-          >{{ activite.periode.nom }}
-        </span>
-        {{ activite.annee }}</span
-      >
-    </h5>
-
-    <div class="flex">
-      <h3 class="mb-s">
-        <span class="cap-first">{{ activite.type.nom }}</span>
-      </h3>
-
-      <HelpTooltip v-if="shouldDisplayHelp" class="ml-m">
-        Tous les champs doivent être remplis même s’il n’y a pas eu
-        d’extraction. Le cas échéant, indiquer seulement 0, puis enregistrer.
-      </HelpTooltip>
-    </div>
-
-    <!-- eslint-disable vue/no-v-html -->
-    <div
-      v-if="activite.type.description"
-      class="h6"
-      v-html="activite.type.description"
-    />
-
-    <div class="p-s bg-info color-bg mb">
-      Besoin d'aide pour remplir ce rapport ?
-      <router-link
-        to="/contacts"
-        target="_blank"
-        class="p-s bg-info color-bg mb"
-        >Contactez-nous
-      </router-link>
-    </div>
-
-    <SectionsEdit
-      :contenu="activite.contenu"
-      :sections="activite.sections"
-      @contenu-update="activite.contenu = $event"
-      @complete-update="sectionsComplete = $event"
-    />
-
-    <DocumentsEdit
-      v-model:documents="activite.documents"
-      :addAction="{ name: 'titreActiviteEdition/documentAdd' }"
-      :removeAction="{ name: 'titreActiviteEdition/documentRemove' }"
-      repertoire="activites"
-      documentPopupTitle="documentPopupTitle"
-      :parentTypeId="activite.type.id"
-      :documentsTypes="activite.type.documentsTypes"
-      @complete-update="documentsComplete = $event"
-    />
-
-    <div class="tablet-blobs mb">
-      <div class="tablet-blob-1-3" />
-      <div class="tablet-blob-1-3">
-        <button class="btn btn-secondary" @click="save">Enregistrer</button>
-      </div>
-      <div class="tablet-blob-1-3">
-        <button
-          ref="save-button"
-          class="btn btn-primary"
-          :disabled="!sectionsComplete || !documentsComplete"
-          @click="activiteDepotPopupOpen"
+  <div>
+    <h2>Activité</h2>
+    <Loader v-if="!loaded" />
+    <div v-else>
+      <h6>
+        <router-link
+          :to="{ name: 'titre', params: { id: activite.titre.slug } }"
+          class="cap-first"
         >
-          Enregistrer et déposer
-        </button>
+          {{ activite.titre.nom }}
+        </router-link>
+      </h6>
+      <h5>
+        {{ dateFormat(activite.date) }} |
+        <span class="cap-first"
+          ><span v-if="activite.periode && activite.periode.nom"
+            >{{ activite.periode.nom }}
+          </span>
+          {{ activite.annee }}</span
+        >
+      </h5>
+
+      <div class="flex">
+        <h3 class="mb-s">
+          <span class="cap-first">{{ activite.type.nom }}</span>
+        </h3>
+
+        <HelpTooltip v-if="shouldDisplayHelp" class="ml-m">
+          Tous les champs doivent être remplis même s’il n’y a pas eu
+          d’extraction. Le cas échéant, indiquer seulement 0, puis enregistrer.
+        </HelpTooltip>
+      </div>
+
+      <!-- eslint-disable vue/no-v-html -->
+      <div
+        v-if="activite.type.description"
+        class="h6"
+        v-html="activite.type.description"
+      />
+
+      <div class="p-s bg-info color-bg mb">
+        Besoin d'aide pour remplir ce rapport ?
+        <router-link
+          to="/contacts"
+          target="_blank"
+          class="p-s bg-info color-bg mb"
+          >Contactez-nous
+        </router-link>
+      </div>
+
+      <SectionsEdit
+        :contenu="activite.contenu"
+        :sections="activite.sections"
+        @contenu-update="activite.contenu = $event"
+        @complete-update="sectionsComplete = $event"
+      />
+
+      <DocumentsEdit
+        v-model:documents="activite.documents"
+        :addAction="{ name: 'titreActiviteEdition/documentAdd' }"
+        :removeAction="{ name: 'titreActiviteEdition/documentRemove' }"
+        repertoire="activites"
+        documentPopupTitle="documentPopupTitle"
+        :parentTypeId="activite.type.id"
+        :documentsTypes="activite.type.documentsTypes"
+        @complete-update="documentsComplete = $event"
+      />
+
+      <div class="tablet-blobs mb">
+        <div class="tablet-blob-1-3" />
+        <div class="tablet-blob-1-3">
+          <button class="btn btn-secondary" @click="save">Enregistrer</button>
+        </div>
+        <div class="tablet-blob-1-3">
+          <button
+            ref="save-button"
+            class="btn btn-primary"
+            :disabled="!sectionsComplete || !documentsComplete"
+            @click="activiteDepotPopupOpen"
+          >
+            Enregistrer et déposer
+          </button>
+        </div>
       </div>
     </div>
   </div>
