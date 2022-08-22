@@ -1,26 +1,21 @@
-import {
-  ITitreEtape,
-  ITitreDemarche,
-  ITitrePoint,
-  ITitre,
-  ITitreSubstance
-} from '../../types'
+import { ITitreEtape, ITitreDemarche, ITitrePoint, ITitre } from '../../types'
 
 import {
   titreEtapeCompleteValidate,
   titreEtapeUpdationValidate
 } from './titre-etape-updation-validate'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 
 describe('valide l’étape avant de l’enregistrer', () => {
   test.each`
-    substances                   | etapeType | titreType | error
-    ${[]}                        | ${'mfr'}  | ${'arm'}  | ${true}
-    ${[]}                        | ${'mfr'}  | ${'axm'}  | ${true}
-    ${[]}                        | ${'rde'}  | ${'arm'}  | ${false}
-    ${[]}                        | ${'mfr'}  | ${'prm'}  | ${false}
-    ${[{ substanceId: 'auru' }]} | ${'mfr'}  | ${'arm'}  | ${false}
-    ${[{ substanceId: 'auru' }]} | ${'mfr'}  | ${'axm'}  | ${false}
-    ${[{}]}                      | ${'mfr'}  | ${'axm'}  | ${true}
+    substances  | etapeType | titreType | error
+    ${[]}       | ${'mfr'}  | ${'arm'}  | ${true}
+    ${[]}       | ${'mfr'}  | ${'axm'}  | ${true}
+    ${[]}       | ${'rde'}  | ${'arm'}  | ${false}
+    ${[]}       | ${'mfr'}  | ${'prm'}  | ${false}
+    ${['auru']} | ${'mfr'}  | ${'arm'}  | ${false}
+    ${['auru']} | ${'mfr'}  | ${'axm'}  | ${false}
+    ${[]}       | ${'mfr'}  | ${'axm'}  | ${true}
   `(
     'teste la complétude des substances',
     ({
@@ -29,7 +24,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       titreType,
       error
     }: {
-      substances: ITitreSubstance[]
+      substances: SubstanceLegaleId[]
       etapeType: string
       titreType: string
       error: boolean

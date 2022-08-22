@@ -50,7 +50,7 @@ type Titre {
   statut: TitreStatut!
 
   "Substances concernées par le titre dans son dernier état de validité"
-  substances: [TitreSubstance]
+  substances: [String!]
 
   "Coordonnées x,y du titre"
   coordonnees: Coordonnees

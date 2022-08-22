@@ -21,7 +21,6 @@ import slugify from '@sindresorhus/slugify'
 import cryptoRandomString from 'crypto-random-string'
 import SDOMZones from './sdom-zones'
 import TitresActivites from './titres-activites'
-import TitresSubstances from './titres-substances'
 
 export interface DBTitre extends ITitre {
   archive: boolean
@@ -90,12 +89,12 @@ class Titres extends Model {
       }
     },
 
-    substances: {
-      relation: Model.HasManyRelation,
-      modelClass: TitresSubstances,
+    substancesEtape: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: TitresEtapes,
       join: {
         from: ref('titres.propsTitreEtapesIds:substances').castText(),
-        to: 'titresSubstances.titreEtapeId'
+        to: 'titresEtapes.id'
       }
     },
 
@@ -264,6 +263,10 @@ class Titres extends Model {
         this.contenusTitreEtapesIds,
         this.demarches
       )
+    }
+
+    if (this.substancesEtape) {
+      this.substances = this.substancesEtape.substances
     }
   }
 

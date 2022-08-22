@@ -80,11 +80,6 @@ const titresColonnes = {
   type: { id: 'type:type.nom', relation: 'type.type' },
   statut: { id: 'statutId', groupBy: ['titres.statutId'] },
   activites: { id: 'activites', groupBy: [] },
-  substances: {
-    id: raw(`STRING_AGG("substances"."nom", ' ; ')`),
-    relation: 'substances',
-    groupBy: []
-  },
   titulaires: {
     id: raw(`STRING_AGG("titulaires"."nom", ' ; ')`),
     relation: 'titulaires',

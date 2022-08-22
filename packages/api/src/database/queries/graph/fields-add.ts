@@ -86,6 +86,12 @@ const titresFieldsAdd = (fields: IFields) => {
     }
   }
 
+  if (fields.substances) {
+    if (!fields.substancesEtape) {
+      fields.substancesEtape = { id: {} }
+    }
+  }
+
   return fields
 }
 

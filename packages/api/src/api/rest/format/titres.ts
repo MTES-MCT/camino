@@ -56,7 +56,7 @@ export const titresTableFormat = (titres: ITitre[]) =>
       date_demande: titre.dateDemande,
       statut: titre.statut!.nom,
       substances: titre
-        .substances!.map(({ substanceId }) => SubstancesLegale[substanceId].nom)
+        .substances!.map(substanceId => SubstancesLegale[substanceId].nom)
         .join(separator),
       'surface renseignee km2': titre.surface,
       'communes (surface calculee km2)': communes.join(separator),
@@ -112,7 +112,7 @@ const titreGeojsonPropertiesFormat = (titre: ITitre) => {
     statut: titre.statut!.nom,
     substances:
       titre
-        .substances!.map(({ substanceId }) => SubstancesLegale[substanceId].nom)
+        .substances!.map(substanceId => SubstancesLegale[substanceId].nom)
         .join(separator) || null,
     'surface renseignee km2': titre.surface,
     'communes (surface calculee km2)': communes.join(separator),

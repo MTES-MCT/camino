@@ -17,7 +17,6 @@ import Communes from './communes'
 import Forets from './forets'
 import SDOMZones from './sdom-zones'
 import Journaux from './journaux'
-import TitresSubstances from './titres-substances'
 
 export interface DBTitresEtapes extends ITitreEtape {
   archive: boolean
@@ -50,7 +49,8 @@ class TitresEtapes extends Model {
       heritageProps: { type: ['object', 'null'] },
       decisionsAnnexesSections: {},
       decisionsAnnexesContenu: { type: ['object', 'null'] },
-      archive: { type: 'boolean' }
+      archive: { type: 'boolean' },
+      substances: { type: 'array' }
     }
   }
 
@@ -70,15 +70,6 @@ class TitresEtapes extends Model {
       join: {
         from: 'titresEtapes.titreDemarcheId',
         to: 'titresDemarches.id'
-      }
-    },
-
-    substances: {
-      relation: Model.HasManyRelation,
-      modelClass: TitresSubstances,
-      join: {
-        from: 'titresEtapes.id',
-        to: 'titresSubstances.titreEtapeId'
       }
     },
 

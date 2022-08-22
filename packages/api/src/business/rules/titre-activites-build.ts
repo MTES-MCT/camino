@@ -5,8 +5,7 @@ import {
   IActiviteType,
   ITitreActivite,
   ISection,
-  ISectionElement,
-  ITitreSubstance
+  ISectionElement
 } from '../../types'
 
 import { titreEtapePropFind } from './titre-etape-prop-find'
@@ -18,15 +17,14 @@ import {
 import { UNITES, Unites } from 'camino-common/src/static/unites'
 import { sortedDevises } from 'camino-common/src/static/devise'
 import { exhaustiveCheck } from '../../tools/exhaustive-type-check'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 
 const substancesFiscalesFind = (
-  substances: ITitreSubstance[]
+  substances: SubstanceLegaleId[]
 ): SubstanceFiscale[] =>
   substances
     .filter(s => !!s)
-    .flatMap(({ substanceId }) =>
-      substancesFiscalesBySubstanceLegale(substanceId)
-    )
+    .flatMap(substanceId => substancesFiscalesBySubstanceLegale(substanceId))
 
 const titreActiviteSectionElementsFormat = (
   elements: ISectionElement[],
@@ -106,7 +104,7 @@ const titreActiviteSectionsBuild = (
         date,
         titreDemarches,
         titreTypeId
-      ) as ITitreSubstance[] | null
+      ) as SubstanceLegaleId[] | null
 
       if (substances?.length) {
         const substancesFiscales = substancesFiscalesFind(substances)

@@ -97,9 +97,12 @@ export const titresFiltersQueryModify = (
       q.leftJoinRelated('titre')
     }
 
-    q.leftJoinRelated(jointureFormat(name, 'substances'))
+    q.leftJoinRelated(jointureFormat(name, 'substancesEtape'))
 
-    q.whereIn(fieldFormat(name, 'substances.substanceId'), substancesIds)
+    q.whereRaw('?? @> ?', [
+      fieldFormat(name, 'substancesEtape.substances'),
+      JSON.stringify(substancesIds)
+    ])
   }
 
   if (entreprisesIds?.length) {

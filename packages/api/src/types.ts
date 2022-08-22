@@ -585,12 +585,6 @@ interface ITitreStatut {
   ordre: number
 }
 
-interface ITitreSubstance {
-  titreEtapeId?: string
-  substanceId: SubstanceLegaleId
-  ordre?: number
-}
-
 export interface ITitreTitre {
   titreFromId: string
   titreToId: string
@@ -613,7 +607,8 @@ interface ITitre {
   activitesDeposees?: number | null
   activitesEnConstruction?: number | null
   activitesAbsentes?: number | null
-  substances?: ITitreSubstance[] | null
+  substancesEtape?: ITitreEtape | null
+  substances?: SubstanceLegaleId[] | null
   points?: ITitrePoint[] | null
   coordonnees?: ICoordonnees | null
   geojsonMultiPolygon?: IGeoJson | null
@@ -776,7 +771,7 @@ interface ITitreEtape {
   demarche?: ITitreDemarche
   dateDebut?: string | null
   dateFin?: string | null
-  substances?: ITitreSubstance[] | null
+  substances?: SubstanceLegaleId[] | null
   points?: ITitrePoint[] | null
   geojsonMultiPolygon?: IGeoJson | null
   geojsonPoints?: IGeoJson | null
@@ -1021,7 +1016,6 @@ export {
   IAdministrationActiviteType,
   IAdministrationActiviteTypeEmail,
   ITitreStatut,
-  ITitreSubstance,
   ITitre,
   ITitreActivite,
   ITitreAdministration,

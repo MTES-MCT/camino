@@ -122,8 +122,7 @@ export const bodyBuilder = (
       const substanceLegalesWithFiscales = titre.substances
         .filter(isNotNullNorUndefined)
         .filter(
-          ({ substanceId }) =>
-            substancesFiscalesBySubstanceLegale(substanceId).length
+          substanceId => substancesFiscalesBySubstanceLegale(substanceId).length
         )
 
       if (substanceLegalesWithFiscales.length > 1) {
@@ -135,7 +134,7 @@ export const bodyBuilder = (
       }
 
       const substancesFiscales = substanceLegalesWithFiscales.flatMap(
-        ({ substanceId }) => substancesFiscalesBySubstanceLegale(substanceId)
+        substanceId => substancesFiscalesBySubstanceLegale(substanceId)
       )
 
       for (const substancesFiscale of substancesFiscales) {
@@ -362,7 +361,7 @@ export const fiscalite = async (
       { entreprisesIds: [entrepriseId] },
       {
         fields: {
-          substances: { id: {} },
+          substancesEtape: { id: {} },
           communes: { id: {} }
         }
       },

@@ -84,7 +84,7 @@
         <TagList
           :elements="
             titre.substances.map(
-              ({ substanceId }) => SubstancesLegale[substanceId].nom
+              substanceId => SubstancesLegale[substanceId].nom
             )
           "
         />
@@ -178,8 +178,10 @@ import {
 } from 'camino-common/src/static/demarchesTypes'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
-import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
-import { TitreSubstance } from 'camino-common/src/substance'
+import {
+  SubstanceLegaleId,
+  SubstancesLegale
+} from 'camino-common/src/static/substancesLegales'
 
 type Entreprise = {
   id: string
@@ -206,7 +208,7 @@ const props = defineProps<{
     }
     titulaires: Entreprise[]
     amodiataires: Entreprise[]
-    substances: TitreSubstance[]
+    substances: SubstanceLegaleId[]
     references: { nom: string; type: { nom: string } }[]
   }
   user: User

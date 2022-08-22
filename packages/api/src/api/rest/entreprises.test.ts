@@ -64,7 +64,7 @@ describe('construit le corps de la requête pour openFisca', () => {
       'titulaires' | 'amodiataires' | 'substances' | 'communes' | 'id'
     >[] = [
       {
-        substances: [{ substanceId: 'auru' }],
+        substances: ['auru'],
         titulaires: [entreprise2],
         amodiataires: [],
         communes: [
@@ -78,7 +78,7 @@ describe('construit le corps de la requête pour openFisca', () => {
         id: 'titreSansActivite'
       },
       {
-        substances: [{ substanceId: 'auru' }, { substanceId: 'scoc' }],
+        substances: ['auru', 'scoc'],
         communes: [
           {
             id: '97310',
@@ -92,7 +92,7 @@ describe('construit le corps de la requête pour openFisca', () => {
         id: 'titre1'
       },
       {
-        substances: [{ substanceId: 'auru' }, { substanceId: 'scoc' }],
+        substances: ['auru', 'scoc'],
         titulaires: [entreprise],
         amodiataires: [],
         communes: [
@@ -106,7 +106,7 @@ describe('construit le corps de la requête pour openFisca', () => {
         id: 'titre2'
       },
       {
-        substances: [{ substanceId: 'auru' }, { substanceId: 'scoc' }],
+        substances: ['auru', 'scoc'],
         titulaires: [entreprise2],
         amodiataires: [],
         communes: [
@@ -120,7 +120,7 @@ describe('construit le corps de la requête pour openFisca', () => {
         id: 'titre3'
       },
       {
-        substances: [{ substanceId: 'auru' }, { substanceId: 'scoc' }],
+        substances: ['auru', 'scoc'],
         titulaires: [entreprise2],
         amodiataires: [],
         communes: [
@@ -134,7 +134,7 @@ describe('construit le corps de la requête pour openFisca', () => {
         id: 'titre4'
       },
       {
-        substances: [{ substanceId: 'auru' }, { substanceId: 'scoc' }],
+        substances: ['auru', 'scoc'],
         titulaires: [entreprise],
         amodiataires: [],
         communes: [

@@ -2,7 +2,6 @@ const fieldsOrderDesc = ['etablissements', 'demarches', 'activites']
 const fieldsOrderAsc = [
   'domaines',
   'points',
-  'substances',
   'references',
   'etapesTypes',
   'titresTypes',
@@ -197,10 +196,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
 
     if (!fields.points) {
       fields.points = { id: {} }
-    }
-
-    if (!fields.substances) {
-      fields.substances = { id: {} }
     }
 
     if (!fields.sdomZones) {

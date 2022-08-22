@@ -7,19 +7,14 @@
       :isArray="true"
     >
       <template #write>
-        <div
-          v-for="(substance, n) in substances.sort((a, b) => a.ordre - b.ordre)"
-          :key="n"
-        >
+        <div v-for="(_substance, n) in substances" :key="n">
           <div class="flex mb-s">
             <select v-model="substances[n]" class="p-s mr-s">
               <option
                 v-for="s in substancesByDomaine"
                 :key="s.id"
-                :value="{ substanceId: s.id, ordre: substance.ordre }"
-                :disabled="
-                  substances.some(({ substanceId }) => substanceId === s.id)
-                "
+                :value="s.id"
+                :disabled="substances.some(substanceId => substanceId === s.id)"
               >
                 {{ s.nom }}
               </option>
@@ -32,7 +27,7 @@
               <Icon size="M" name="move-down" />
             </button>
             <button
-              v-if="substancesLength && n > 0 && substances[n].substanceId"
+              v-if="substancesLength && n > 0 && substances[n]"
               :class="{
                 'rnd-l-xs': !(substancesLength && n + 1 < substancesLength)
               }"
@@ -43,7 +38,7 @@
             </button>
             <button
               :class="{
-                'rnd-l-xs': !substances[n].substanceId || substancesLength === 1
+                'rnd-l-xs': !substances[n] || substancesLength === 1
               }"
               class="btn py-s px-m rnd-r-xs"
               @click="substanceRemove(n)"
@@ -54,7 +49,7 @@
         </div>
 
         <button
-          v-if="substances.every(({ substanceId }) => !!substanceId)"
+          v-if="substances.every(substanceId => !!substanceId)"
           class="btn small rnd-xs py-s px-m full-x flex mb-s"
           @click="substanceAdd"
         >
@@ -91,21 +86,17 @@ import HeritageEdit from '@/components/etape/heritage-edit.vue'
 import TagList from '@/components/_ui/tag-list.vue'
 import Icon from '@/components/_ui/icon.vue'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import { TitreSubstance } from 'camino-common/src/substance'
 import { HeritageProp } from 'camino-common/src/etape'
-import { Optional } from 'camino-common/src/typescript-tools'
-
-type Substance = Optional<TitreSubstance, 'substanceId'>
 
 const props = defineProps<{
-  substances: Substance[]
+  substances: (SubstanceLegaleId | undefined)[]
   heritageProps: { substances: HeritageProp }
   incertitudes: { substances: boolean }
   domaineId: DomaineId
 }>()
 
 const substancesLength = computed(
-  () => props.substances.filter(({ substanceId }) => substanceId).length
+  () => props.substances.filter(substanceId => substanceId).length
 )
 
 const substancesByDomaine = computed(() =>
@@ -116,32 +107,25 @@ const substancesByDomaine = computed(() =>
 
 const substanceNoms = computed<string[]>(() => {
   return props.heritageProps.substances.etape.substances
-    .map(({ substanceId }) => substanceId)
     .filter((substanceId): substanceId is SubstanceLegaleId => !!substanceId)
     .map(substanceId => SubstancesLegale[substanceId].nom)
 })
 
 const substanceAdd = () => {
-  props.substances.push({
-    substanceId: undefined,
-    ordre: props.substances.length
-  })
+  props.substances.push(undefined)
 }
 
-const substanceRemove = (index: number) => {
-  props.substances.splice(index, 1)
-  props.substances.forEach((s, index) => {
-    s.ordre = index
-  })
+const substanceRemove = (index: number): SubstanceLegaleId | undefined => {
+  return props.substances.splice(index, 1)[0]
 }
 
 const substanceMoveDown = (index: number) => {
-  props.substances[index].ordre = props.substances[index].ordre + 1
-  props.substances[index + 1].ordre = props.substances[index + 1].ordre - 1
+  const substance = substanceRemove(index)
+  props.substances.splice(index + 1, 0, substance)
 }
 
 const substanceMoveUp = (index: number) => {
-  props.substances[index].ordre = props.substances[index].ordre - 1
-  props.substances[index - 1].ordre = props.substances[index - 1].ordre + 1
+  const substance = substanceRemove(index)
+  props.substances.splice(index - 1, 0, substance)
 }
 </script>

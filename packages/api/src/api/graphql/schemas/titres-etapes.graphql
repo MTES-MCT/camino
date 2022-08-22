@@ -51,7 +51,7 @@ type Etape {
   surface: Float
 
   "Substances concernées par le titre"
-  substances: [TitreSubstance]
+  substances: [String!]
 
   "Coordonnées des points du périmètre géographique du titre"
   points: [Point]
@@ -118,7 +118,7 @@ type EtapeHeritage {
   surface: Float
 
   "Substances concernées par le titre"
-  substances: [TitreSubstance]
+  substances: [String!]
 
   "Coordonnées des points du périmètre géographique du titre"
   points: [Point]
@@ -178,7 +178,7 @@ input InputEtapeCreation {
   dateDebut: String
   dateFin: String
   surface: Float
-  substances: [InputSubstances!]
+  substances: [String!]
   points: [InputPoint]
   titulaires: [InputEtapeEntreprise!]
   amodiataires: [InputEtapeEntreprise!]
@@ -201,7 +201,7 @@ input InputEtapeModification {
   dateDebut: String
   dateFin: String
   surface: Float
-  substances: [InputSubstances!]
+  substances: [String!]
   points: [InputPoint]
   titulaires: [InputEtapeEntreprise!]
   amodiataires: [InputEtapeEntreprise!]
@@ -246,11 +246,6 @@ input InputHeritageProps {
 
 input InputHeritageProp {
   actif: Boolean
-}
-
-input InputSubstances {
-  substanceId: ID!
-  ordre: Int
 }
 
 input InputEtapeEntreprise {

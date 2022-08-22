@@ -215,7 +215,7 @@ const titreEtapeCompleteValidate = (
     if (
       !titreEtape.substances ||
       !titreEtape.substances.length ||
-      !titreEtape.substances.some(({ substanceId }) => !!substanceId)
+      !titreEtape.substances.some(substanceId => !!substanceId)
     ) {
       errors.push('au moins une substance doit être renseignée')
     }

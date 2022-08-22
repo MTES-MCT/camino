@@ -1,4 +1,4 @@
-import { TitreSubstance } from './substance'
+import { SubstanceLegaleId } from './static/substancesLegales'
 
 export interface HeritageProp {
   actif: boolean
@@ -10,7 +10,7 @@ export interface Etape {
   date: string
   type: { nom: string }
   incertitudes: { [key: string]: boolean }
-  substances: TitreSubstance[]
+  substances: SubstanceLegaleId[]
   duree: number
   dateDebut: string
   dateFin: string

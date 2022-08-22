@@ -45,7 +45,7 @@ const titreFields = {
   domaine: { id: {} },
   statut: { id: {} },
   references: { type: { id: {} } },
-  substances: { id: {} },
+  substancesEtape: { id: {} },
   titulaires: { id: {} },
   amodiataires: { id: {} },
   surfaceEtape: { id: {} },

@@ -15,7 +15,7 @@ const meta: Meta = {
 export default meta
 
 type Props = {
-  substances: { substanceId: SubstanceLegaleId | undefined; ordre: number }[]
+  substances: (SubstanceLegaleId | undefined)[]
   heritageProps: { substances: HeritageProp }
   incertitudes: { substances: boolean }
   domaineId: DomaineId
@@ -26,7 +26,10 @@ const Template: Story<Props> = (args: Props) => ({
   setup() {
     return { args }
   },
-  template: `<SubstancesEdit  v-bind="args"/>`
+  data: () => ({
+    substances: ['auru']
+  }),
+  template: `<SubstancesEdit  v-bind="args" :substances='substances'/>`
 })
 const etapeHeritage = {
   etape: {
@@ -37,7 +40,7 @@ const etapeHeritage = {
     titulaires: [],
     amodiataires: [],
     type: { nom: 'Demande' },
-    substances: [{ substanceId: SubstancesLegale.auru.id, ordre: 0 }],
+    substances: [SubstancesLegale.auru.id],
     incertitudes: { substances: true },
     contenu: {}
   }
@@ -51,8 +54,7 @@ SansHeritage.args = {
       ...etapeHeritage
     }
   },
-  incertitudes: { substances: true },
-  substances: [{ substanceId: 'auru', ordre: 0 }]
+  incertitudes: { substances: true }
 }
 
 export const AvecHeritage = Template.bind({})
@@ -64,6 +66,5 @@ AvecHeritage.args = {
       ...etapeHeritage
     }
   },
-  incertitudes: { substances: true },
-  substances: [{ substanceId: 'auru', ordre: 0 }]
+  incertitudes: { substances: true }
 }

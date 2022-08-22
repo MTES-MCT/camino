@@ -154,10 +154,7 @@ describe('retourne l’étape en fonction de son héritage', () => {
         return acc
       }, {} as IHeritageProps)
     } as ITitreEtape
-    titreEtapePrecedente.substances = [
-      { substanceId: 'auru' },
-      { substanceId: 'arge' }
-    ]
+    titreEtapePrecedente.substances = ['auru', 'arge']
 
     const titreEtape = objectClone(titreEtapePrecedente) as ITitreEtape
     titreEtape.heritageProps!.substances.actif = true
@@ -166,13 +163,10 @@ describe('retourne l’étape en fonction de son héritage', () => {
       prop =>
         (titreEtape.heritageProps![prop].etapeId = titreEtapePrecedente.id)
     )
-    titreEtape.substances = [{ substanceId: 'nacl' }, { substanceId: 'arge' }]
+    titreEtape.substances = ['nacl', 'arge']
 
     const titreEtapeNew = objectClone(titreEtape) as ITitreEtape
-    titreEtapeNew.substances = [
-      { substanceId: 'auru' },
-      { substanceId: 'arge' }
-    ]
+    titreEtapeNew.substances = ['auru', 'arge']
 
     expect(
       titreEtapeHeritagePropsFind(titreEtape, titreEtapePrecedente)

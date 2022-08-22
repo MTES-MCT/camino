@@ -327,7 +327,7 @@ export default {
     complete() {
       return (
         this.etape.type.id !== 'mfr' ||
-        (this.etape.substances.filter(({ substanceId }) => substanceId).length >
+        (this.etape.substances.filter(substanceId => !!substanceId).length >
           0 &&
           (this.dureeOptionalCheck ||
             !!this.etape.duree.ans ||

@@ -25,6 +25,34 @@ exports.up = async knex => {
   await knex('titres_substances')
     .where('substance_id', 'bitm')
     .update({ substance_id: 'hydm' })
+
+  await knex.schema.alterTable('titres_etapes', function (table) {
+    table.jsonb('substances').index()
+  })
+  const titresSubstances = await knex('titres_substances')
+
+  const substanceIdsByTitre = titresSubstances.reduce((acc, ts) => {
+    if (!acc[ts.titreEtapeId]) {
+      acc[ts.titreEtapeId] = []
+    }
+    acc[ts.titreEtapeId].push(ts)
+
+    return acc
+  }, {})
+
+  for (const titreEtapeId in substanceIdsByTitre) {
+    await knex('titres_etapes')
+      .where('id', titreEtapeId)
+      .update({
+        substances: JSON.stringify(
+          substanceIdsByTitre[titreEtapeId]
+            .sort((a, b) => a.ordre - b.ordre)
+            .map(({ substanceId }) => substanceId)
+        )
+      })
+  }
+
+  await knex.schema.dropTable('titres_substances')
 }
 
 exports.down = () => ({})

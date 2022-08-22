@@ -28,8 +28,7 @@ export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
             points: { id: {} },
             titulaires: { id: {} },
             amodiataires: { id: {} },
-            administrations: { id: {} },
-            substances: { id: {} }
+            administrations: { id: {} }
           }
         }
       }

@@ -220,17 +220,7 @@ const titreDemarches = [
         date: '2018-01-01',
         typeId: 'dpu',
         statutId: 'fai',
-        substances: [
-          {
-            substanceId: 'auru',
-            ordre: 1
-          },
-          {
-            substanceId: 'nacl',
-            ordre: 2
-          },
-          null
-        ]
+        substances: ['auru', 'nacl', null]
       }
     ]
   } as ITitreDemarche

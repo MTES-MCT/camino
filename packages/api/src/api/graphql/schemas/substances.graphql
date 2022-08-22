@@ -5,8 +5,3 @@ type Substance {
   nom: String!
   description: String
 }
-
-type TitreSubstance {
-  substanceId: String!
-  ordre: Int
-}

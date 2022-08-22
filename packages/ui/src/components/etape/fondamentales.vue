@@ -137,7 +137,7 @@
         <TagList
           :elements="
             etape.substances.map(
-              ({ substanceId }) => SubstancesLegale[substanceId].nom
+              substanceId => SubstancesLegale[substanceId].nom
             )
           "
         />
