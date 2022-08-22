@@ -1,7 +1,11 @@
 #!/bin/bash
 
-scp -P 212 /srv/backups/camino.sql prod@preprod.camino.beta.gouv.fr:/srv/backups/camino_prod.sql
+docker exec camino_api_db pg_dump --clean --if-exists --format=c --no-owner --no-privileges --dbname=camino > /srv/backups/camino_for_transfer.sql
+
+chown git:users /srv/backups/camino_for_transfer.sql
+
+scp -P 212 /srv/backups/camino_for_transfer.sql prod@preprod.camino.beta.gouv.fr:/srv/backups/camino_prod.sql
 rsync -avz --delete -e 'ssh -p 212' /srv/www/camino/files prod@preprod.camino.beta.gouv.fr:/srv/backups/camino_prod/
 
-scp -P 212 /srv/backups/camino.sql prod@dev.camino.beta.gouv.fr:/srv/backups/camino_prod.sql
+scp -P 212 /srv/backups/camino_for_transfer.sql prod@dev.camino.beta.gouv.fr:/srv/backups/camino_prod.sql
 rsync -avz --delete -e 'ssh -p 212' /srv/www/camino/files prod@dev.camino.beta.gouv.fr:/srv/backups/camino_prod/
