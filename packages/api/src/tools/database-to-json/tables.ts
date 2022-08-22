@@ -82,7 +82,6 @@ export const tables = [
   { name: 'titres_points_references', orderBy: ['id'] },
   { name: 'titres_references', orderBy: ['titre_id', 'type_id'] },
   { name: 'titres_statuts', orderBy: ['id'] },
-  { name: 'titres_substances', orderBy: ['titre_etape_id', 'substance_id'] },
   { name: 'titres_titulaires', orderBy: ['titre_etape_id', 'entreprise_id'] },
   { name: 'titres_types', orderBy: ['id'] },
   {

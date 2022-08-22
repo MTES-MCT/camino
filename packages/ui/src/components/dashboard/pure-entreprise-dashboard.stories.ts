@@ -45,12 +45,7 @@ const titres: TitreEntreprise[] = [
       nom: 'échu',
       couleur: 'neutral'
     },
-    substances: [
-      {
-        id: 'ferx',
-        nom: 'fer'
-      }
-    ],
+    substances: ['ferx'],
     activitesEnConstruction: null,
     activitesAbsentes: null,
     titulaires: [
@@ -91,12 +86,7 @@ const titres: TitreEntreprise[] = [
       nom: 'valide',
       couleur: 'success'
     },
-    substances: [
-      {
-        id: 'auru',
-        nom: 'or'
-      }
-    ],
+    substances: ['auru'],
     activitesEnConstruction: null,
     activitesAbsentes: null,
     titulaires: [

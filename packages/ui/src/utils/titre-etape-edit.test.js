@@ -131,7 +131,7 @@ describe('etapeEditFormat', () => {
         ],
         contenu: { 'prop-id': 'prop-value' },
         incertitudes: { amodiataires: true },
-        substances: [{ id: 'auru' }],
+        substances: ['auru'],
         documents: [{ type: { id: 'act' } }]
       })
     ).toEqual({
@@ -169,7 +169,7 @@ describe('etapeEditFormat', () => {
           ]
         ]
       ],
-      substances: [{ id: 'auru' }],
+      substances: ['auru'],
       contenu: { 'prop-id': 'prop-value' },
       incertitudes: { amodiataires: true },
       documents: [{ fichierNouveau: null, typeId: 'act', type: { id: 'act' } }],

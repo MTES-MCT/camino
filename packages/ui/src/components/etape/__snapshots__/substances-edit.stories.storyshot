@@ -93,435 +93,440 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
         >
           
           <option
-            value="[object Object]"
+            value="selh"
+          >
+            sources d'eau salée
+          </option>
+          <option
+            value="aloh"
           >
             bauxite
           </option>
           <option
-            value="[object Object]"
+            value="anti"
           >
             antimoine
           </option>
           <option
-            value="[object Object]"
+            value="arge"
           >
             argent
           </option>
           <option
-            value="[object Object]"
+            value="arse"
           >
             arsenic
           </option>
           <option
             disabled=""
-            value="[object Object]"
+            value="auru"
           >
             or
           </option>
           <option
-            value="[object Object]"
+            value="bery"
           >
             béryllium
           </option>
           <option
-            value="[object Object]"
+            value="bism"
           >
             bismuth
           </option>
           <option
-            value="[object Object]"
+            value="cadm"
           >
             cadmium
           </option>
           <option
-            value="[object Object]"
+            value="ceri"
           >
             cérium
           </option>
           <option
-            value="[object Object]"
+            value="cesi"
           >
             césium
           </option>
           <option
-            value="[object Object]"
+            value="chro"
           >
             chrome
           </option>
           <option
-            value="[object Object]"
+            value="coba"
           >
             cobalt
           </option>
           <option
-            value="[object Object]"
+            value="coox"
           >
             gaz carbonique
           </option>
           <option
-            value="[object Object]"
+            value="cuiv"
           >
             cuivre
           </option>
           <option
-            value="[object Object]"
+            value="diam"
           >
             diamant
           </option>
           <option
-            value="[object Object]"
+            value="etai"
           >
             étain
           </option>
           <option
-            value="[object Object]"
+            value="ferx"
           >
             fer
           </option>
           <option
-            value="[object Object]"
+            value="fluo"
           >
             fluorine
           </option>
           <option
-            value="[object Object]"
+            value="gall"
           >
             gallium
           </option>
           <option
-            value="[object Object]"
+            value="germ"
           >
             germanium
           </option>
           <option
-            value="[object Object]"
+            value="grap"
           >
             graphite
           </option>
           <option
-            value="[object Object]"
+            value="hafn"
           >
             hafnium
           </option>
           <option
-            value="[object Object]"
+            value="heli"
           >
             hélium
           </option>
           <option
-            value="[object Object]"
+            value="hydm"
           >
             calcaires bitumineux
           </option>
           <option
-            value="[object Object]"
+            value="indi"
           >
             indium
           </option>
           <option
-            value="[object Object]"
+            value="kals"
           >
             alun
           </option>
           <option
-            value="[object Object]"
+            value="kclx"
           >
             sels de potassium
           </option>
           <option
-            value="[object Object]"
+            value="lith"
           >
             lithium
           </option>
           <option
-            value="[object Object]"
+            value="mang"
           >
             manganèse
           </option>
           <option
-            value="[object Object]"
+            value="merc"
           >
             mercure
           </option>
           <option
-            value="[object Object]"
+            value="moly"
           >
             molybdène
           </option>
           <option
-            value="[object Object]"
+            value="nacl"
           >
             sels de sodium
           </option>
           <option
-            value="[object Object]"
+            value="nick"
           >
             nickel
           </option>
           <option
-            value="[object Object]"
+            value="niob"
           >
             niobium
           </option>
           <option
-            value="[object Object]"
+            value="oooo"
           >
             non précisée(s)
           </option>
           <option
-            value="[object Object]"
+            value="phos"
           >
             phosphates
           </option>
           <option
-            value="[object Object]"
+            value="plat"
           >
             platine
           </option>
           <option
-            value="[object Object]"
+            value="plax"
           >
             métaux de la mine du platine
           </option>
           <option
-            value="[object Object]"
+            value="plom"
           >
             plomb
           </option>
           <option
-            value="[object Object]"
+            value="rhen"
           >
             rhénium
           </option>
           <option
-            value="[object Object]"
+            value="rubi"
           >
             rubidium
           </option>
           <option
-            value="[object Object]"
+            value="scan"
           >
             scandium
           </option>
           <option
-            value="[object Object]"
+            value="scoc"
           >
             substances connexes
           </option>
           <option
-            value="[object Object]"
+            value="sele"
           >
             sélénium
           </option>
           <option
-            value="[object Object]"
+            value="souf"
           >
             soufre
           </option>
           <option
-            value="[object Object]"
+            value="soxx"
           >
             sulfates autres que les sulfates alcalino-terreux
           </option>
           <option
-            value="[object Object]"
+            value="tant"
           >
             tantale
           </option>
           <option
-            value="[object Object]"
+            value="tell"
           >
             tellure
           </option>
           <option
-            value="[object Object]"
+            value="thal"
           >
             thallium
           </option>
           <option
-            value="[object Object]"
+            value="tita"
           >
             titane
           </option>
           <option
-            value="[object Object]"
+            value="trxx"
           >
             autres éléments de terres rares
           </option>
           <option
-            value="[object Object]"
+            value="vana"
           >
             vanadium
           </option>
           <option
-            value="[object Object]"
+            value="wolf"
           >
             tungstène
           </option>
           <option
-            value="[object Object]"
+            value="zinc"
           >
             zinc
           </option>
           <option
-            value="[object Object]"
+            value="zirc"
           >
             zirconium
           </option>
           <option
-            value="[object Object]"
-          >
-            pyrite
-          </option>
-          <option
-            value="[object Object]"
-          >
-            pierres précieuses
-          </option>
-          <option
-            value="[object Object]"
-          >
-            holmium
-          </option>
-          <option
-            value="[object Object]"
-          >
-            minerais
-          </option>
-          <option
-            value="[object Object]"
+            value="dysp"
           >
             dysprosium
           </option>
           <option
-            value="[object Object]"
+            value="erbi"
           >
             erbium
           </option>
           <option
-            value="[object Object]"
+            value="euro"
           >
             europium
           </option>
           <option
-            value="[object Object]"
+            value="gado"
           >
             gadolinium
           </option>
           <option
-            value="[object Object]"
+            value="holm"
+          >
+            holmium
+          </option>
+          <option
+            value="irid"
           >
             iridium
           </option>
           <option
-            value="[object Object]"
+            value="lant"
           >
             lanthane
           </option>
           <option
-            value="[object Object]"
+            value="lute"
           >
             lutécium
           </option>
           <option
-            value="[object Object]"
+            value="mais"
           >
-            néodyme
+            minerais
           </option>
           <option
-            value="[object Object]"
-          >
-            osmium
-          </option>
-          <option
-            value="[object Object]"
-          >
-            palladium
-          </option>
-          <option
-            value="[object Object]"
-          >
-            praséodyme
-          </option>
-          <option
-            value="[object Object]"
-          >
-            prométhium
-          </option>
-          <option
-            value="[object Object]"
-          >
-            rhodium
-          </option>
-          <option
-            value="[object Object]"
-          >
-            ruthénium
-          </option>
-          <option
-            value="[object Object]"
-          >
-            samarium
-          </option>
-          <option
-            value="[object Object]"
-          >
-            sel
-          </option>
-          <option
-            value="[object Object]"
-          >
-            terbium
-          </option>
-          <option
-            value="[object Object]"
-          >
-            thulium
-          </option>
-          <option
-            value="[object Object]"
-          >
-            yttrium
-          </option>
-          <option
-            value="[object Object]"
-          >
-            ytterbium
-          </option>
-          <option
-            value="[object Object]"
-          >
-            tous métaux associés
-          </option>
-          <option
-            value="[object Object]"
-          >
-            puits d'eau salée
-          </option>
-          <option
-            value="[object Object]"
-          >
-            métaux connexes
-          </option>
-          <option
-            value="[object Object]"
+            value="meba"
           >
             métaux de base
           </option>
           <option
-            value="[object Object]"
+            value="meco"
+          >
+            métaux connexes
+          </option>
+          <option
+            value="mepr"
           >
             métaux précieux
           </option>
           <option
-            value="[object Object]"
+            value="neod"
+          >
+            néodyme
+          </option>
+          <option
+            value="osmi"
+          >
+            osmium
+          </option>
+          <option
+            value="pall"
+          >
+            palladium
+          </option>
+          <option
+            value="pipe"
+          >
+            pierres précieuses
+          </option>
+          <option
+            value="pras"
+          >
+            praséodyme
+          </option>
+          <option
+            value="prom"
+          >
+            prométhium
+          </option>
+          <option
+            value="pyri"
+          >
+            pyrite
+          </option>
+          <option
+            value="rhod"
+          >
+            rhodium
+          </option>
+          <option
+            value="ruth"
+          >
+            ruthénium
+          </option>
+          <option
+            value="sama"
+          >
+            samarium
+          </option>
+          <option
+            value="selg"
+          >
+            sel gemme
+          </option>
+          <option
+            value="selp"
+          >
+            puits d'eau salée
+          </option>
+          <option
+            value="sels"
           >
             sels
           </option>
           <option
-            value="[object Object]"
+            value="selx"
           >
-            sel gemme
+            sel
+          </option>
+          <option
+            value="terb"
+          >
+            terbium
+          </option>
+          <option
+            value="thul"
+          >
+            thulium
+          </option>
+          <option
+            value="tmas"
+          >
+            tous métaux associés
+          </option>
+          <option
+            value="ytri"
+          >
+            yttrium
+          </option>
+          <option
+            value="ytte"
+          >
+            ytterbium
           </option>
           
         </select>

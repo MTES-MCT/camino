@@ -49,9 +49,7 @@ fragment titre on Titre {
     couleur
   }
   surface
-  substances {
-    ...substance
-  }
+  substances
   administrations {
     ...administration
   }
@@ -125,9 +123,4 @@ fragment geojsonMultiPolygon on GeojsonMultiPolygon {
     type
     coordinates
   }
-}
-
-fragment substance on TitreSubstance {
-  substanceId
-  ordre
 }
