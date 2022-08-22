@@ -1,10 +1,11 @@
-import { ITitreEtape, IEtapeType } from '../../types'
-
+import { ITitreEtape, IEtapeType, ITitreDemarche } from '../../types'
+import { titreInSurvieProvisoire } from './titre-statut-id-find'
 const titreDemarchePublicLectureFind = (
   publicLecture: boolean,
   demarcheTypeId: string,
   demarcheTypeEtapesTypes: IEtapeType[],
   titreEtape: ITitreEtape,
+  demarches: ITitreDemarche[] | null | undefined,
   titreTypeId?: string
 ) => {
   // si le type de démarche est retrait de la demande ou déchéance
@@ -167,6 +168,16 @@ const titreDemarchePublicLectureFind = (
     return true
   }
 
+  // Pour les PRM d’un titre en survie provisoire, les demandes de prolongations sont public
+  if (
+    titreTypeId === 'prm' &&
+    titreEtape.typeId === 'mdp' &&
+    ['pr1', 'pr2'].includes(demarcheTypeId) &&
+    titreInSurvieProvisoire(demarches, titreTypeId)
+  ) {
+    return true
+  }
+
   return publicLecture
 }
 
@@ -179,11 +190,12 @@ const titreDemarchePublicLectureFind = (
  * @param titreTypeId - id du type de titre
  */
 
-const titreDemarchePublicFind = (
+export const titreDemarchePublicFind = (
   demarcheTypeId: string,
   demarcheTypeEtapesTypes: IEtapeType[],
   titreEtapes: ITitreEtape[],
   titreId: string,
+  titreDemarches: ITitreDemarche[] | null | undefined,
   titreTypeId?: string
 ) => {
   // calcule la visibilité publique ou non de la démarche
@@ -200,6 +212,7 @@ const titreDemarchePublicFind = (
               demarcheTypeId,
               demarcheTypeEtapesTypes,
               titreEtape,
+              titreDemarches,
               titreTypeId
             ),
           false
@@ -214,5 +227,3 @@ const titreDemarchePublicFind = (
 
   return { publicLecture, entreprisesLecture }
 }
-
-export { titreDemarchePublicFind }

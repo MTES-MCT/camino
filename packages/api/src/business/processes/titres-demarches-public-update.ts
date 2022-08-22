@@ -47,6 +47,7 @@ export const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
         demarcheTypeEtapesTypes,
         titreDemarcheEtapes,
         titre.id,
+        titre.demarches,
         titre.typeId
       )
 

@@ -2,7 +2,7 @@ import { DemarchesStatutsTypesIds, ITitreDemarche } from '../../types'
 
 import { titreDateFinFind } from './titre-date-fin-find'
 
-const titreStatutIdFind = (
+export const titreStatutIdFind = (
   aujourdhui: string,
   demarches: ITitreDemarche[] | null | undefined,
   titreTypeId: string
@@ -50,20 +50,32 @@ const titreStatutIdFind = (
     return 'val'
   }
 
-  // si le titre est un PER M ou W, ou une AXM
-  // et qu'une démarche de prolongation est déposée et a été déposée avant l'échéance de l'octroi ou d’une prolongation précédente
-  // -> le statut du titre est modification en instance (survie provisoire)
-  if (['prm', 'prw', 'axm'].includes(titreTypeId)) {
-    const octroi = titreDemarches.find(d => d.typeId === 'oct')
+  if (titreInSurvieProvisoire(titreDemarches, titreTypeId)) {
+    return 'mod'
+  }
+
+  // sinon le statut du titre est échu
+  return 'ech'
+}
+
+// si le titre est un PER M ou W, ou une AXM
+// et qu'une démarche de prolongation est déposée et a été déposée avant l'échéance de l'octroi ou d’une prolongation précédente
+// -> le statut du titre est modification en instance (survie provisoire)
+export const titreInSurvieProvisoire = (
+  demarches: ITitreDemarche[] | null | undefined,
+  titreTypeId: string
+): boolean => {
+  if (demarches?.length && ['prm', 'prw', 'axm'].includes(titreTypeId)) {
+    const octroi = demarches.find(d => d.typeId === 'oct')
 
     if (octroi) {
       const dateFin = titreDateFinFind(
-        titreDemarches.filter(({ typeId }) => ['oct', 'pr1'].includes(typeId))
+        demarches.filter(({ typeId }) => ['oct', 'pr1'].includes(typeId))
       )
 
       if (
         dateFin &&
-        titreDemarches.some(d => {
+        demarches.some(d => {
           if (!['pr1', 'pr2', 'pro'].includes(d.typeId)) {
             return false
           }
@@ -85,13 +97,10 @@ const titreStatutIdFind = (
           return demandeProlongation && demandeProlongation.date < dateFin
         })
       ) {
-        return 'mod'
+        return true
       }
     }
   }
 
-  // sinon le statut du titre est échu
-  return 'ech'
+  return false
 }
-
-export { titreStatutIdFind }
