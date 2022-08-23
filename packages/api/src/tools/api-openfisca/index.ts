@@ -9,10 +9,12 @@ type Attribute =
   | 'taxe_guyane'
   | string
 
-export const substanceFiscaleToPair = (
+export const openfiscaSubstanceFiscaleNom = (
   substanceFiscale: SubstanceFiscale
-): { nom: string; unite: Unite } => {
-  const nom = substanceFiscale.openFisca?.nom ?? substanceFiscale.nom
+): string => substanceFiscale.openFisca?.nom ?? substanceFiscale.nom
+export const openfiscaSubstanceFiscaleUnite = (
+  substanceFiscale: SubstanceFiscale
+): Unite => {
   const unite = substanceFiscale.openFisca?.unite
     ? Unites[substanceFiscale.openFisca.unite]
     : Unites[substanceFiscale.uniteId]
@@ -22,13 +24,14 @@ export const substanceFiscaleToPair = (
     )
   }
 
-  return { nom, unite }
+  return unite
 }
 
 export const substanceFiscaleToInput = (
   substanceFiscale: SubstanceFiscale
 ): string => {
-  const { nom, unite } = substanceFiscaleToPair(substanceFiscale)
+  const nom = openfiscaSubstanceFiscaleNom(substanceFiscale)
+  const unite = openfiscaSubstanceFiscaleUnite(substanceFiscale)
 
   return `quantite_${nom}_${unite.openfiscaId}`
 }
@@ -36,22 +39,14 @@ export const substanceFiscaleToInput = (
 export const redevanceCommunale = (
   substanceFiscale: SubstanceFiscale
 ): string => {
-  const { nom, unite } = substanceFiscaleToPair(substanceFiscale)
-  // FIXME 2022-07-26: en attente de https://github.com/openfisca/openfisca-france-fiscalite-miniere/pull/29
-  if (['auru', 'nacc'].includes(substanceFiscale.id)) {
-    return `redevance_communale_des_mines_${nom}_${unite.openfiscaId}`
-  }
+  const nom = openfiscaSubstanceFiscaleNom(substanceFiscale)
 
   return `redevance_communale_des_mines_${nom}`
 }
 export const redevanceDepartementale = (
   substanceFiscale: SubstanceFiscale
 ): string => {
-  const { nom, unite } = substanceFiscaleToPair(substanceFiscale)
-  // FIXME 2022-07-26: en attente de https://github.com/openfisca/openfisca-france-fiscalite-miniere/pull/29
-  if (['auru', 'nacc'].includes(substanceFiscale.id)) {
-    return `redevance_departementale_des_mines_${nom}_${unite.openfiscaId}`
-  }
+  const nom = openfiscaSubstanceFiscaleNom(substanceFiscale)
 
   return `redevance_departementale_des_mines_${nom}`
 }

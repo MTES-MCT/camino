@@ -7,10 +7,10 @@ Object {
       "quantite_aurifere_kg": Object {
         "2021": 39.715,
       },
-      "redevance_communale_des_mines_aurifere_kg": Object {
+      "redevance_communale_des_mines_aurifere": Object {
         "2022": null,
       },
-      "redevance_departementale_des_mines_aurifere_kg": Object {
+      "redevance_departementale_des_mines_aurifere": Object {
         "2022": null,
       },
       "surface_communale": Object {
@@ -33,10 +33,10 @@ Object {
       "quantite_aurifere_kg": Object {
         "2021": 8.91,
       },
-      "redevance_communale_des_mines_aurifere_kg": Object {
+      "redevance_communale_des_mines_aurifere": Object {
         "2022": null,
       },
-      "redevance_departementale_des_mines_aurifere_kg": Object {
+      "redevance_departementale_des_mines_aurifere": Object {
         "2022": null,
       },
       "surface_communale": Object {

@@ -17,7 +17,7 @@ import {
   redevanceCommunale,
   redevanceDepartementale,
   substanceFiscaleToInput,
-  substanceFiscaleToPair
+  openfiscaSubstanceFiscaleUnite
 } from '../../tools/api-openfisca'
 import { titresGet } from '../../database/queries/titres'
 import { titresActivitesGet } from '../../database/queries/titres-activites'
@@ -40,7 +40,8 @@ const conversion = (
   if (typeof quantite !== 'number') {
     return 0
   }
-  const { unite } = substanceFiscaleToPair(substanceFiscale)
+
+  const unite = openfiscaSubstanceFiscaleUnite(substanceFiscale)
 
   return quantite / (unite.referenceUniteRatio ?? 1)
 }
