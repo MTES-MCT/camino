@@ -125,7 +125,10 @@ module.exports = {
   testEnvironment: 'jsdom',
 
   // Options that will be passed to the testEnvironment
-  // testEnvironmentOptions: {},
+  testEnvironmentOptions: {
+    url: 'http://localhost',
+    customExportConditions: ['node', 'node-addons']
+  },
 
   // Adds a location field to test results
   // testLocationInResults: false,
@@ -151,9 +154,6 @@ module.exports = {
 
   // This option allows use of a custom test runner
   // testRunner: "jasmine2",
-
-  // This option sets the URL for the jsdom environment. It is reflected in properties such as location.href
-  testURL: 'http://localhost/',
 
   // Setting this value to "fake" allows the use of fake timers for functions such as "setTimeout"
   // timers: "real",

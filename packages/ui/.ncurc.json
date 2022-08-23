@@ -2,9 +2,10 @@
   "upgrade": true,
   "reject": [
     "graphql-react",
-    "jest",
-    "jest-util",
-    "babel-jest",
-    "ts-jest"
+    "@uppy/core",
+    "@uppy/tus",
+    "@vitejs/plugin-vue",
+    "vite",
+    "@storybook/builder-vite"
   ]
 }

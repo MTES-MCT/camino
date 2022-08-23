@@ -3,6 +3,9 @@ const { mergeConfig } = require('vite')
 const appConfig = require('../vite.config.js')
 module.exports = {
   async viteFinal(config, { configType }) {
+    //https://github.com/storybookjs/storybook/issues/10887#issuecomment-901109891
+    config.resolve.dedupe = ['@storybook/client-api']
+
     const mergeConfigValue = mergeConfig(appConfig, config)
     // supprime le vue plugin qui vient de vite.config.js
     mergeConfigValue.plugins.shift()
