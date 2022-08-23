@@ -35,12 +35,9 @@ const utilisateursFiltres = [
   },
   {
     id: 'entrepriseIds',
-    name: 'Entreprises',
-    type: 'select',
+    type: 'autocomplete',
     value: [],
-    elements: [],
-    buttonAdd: 'Ajouter une entreprise',
-    elementName: 'nom',
+    name: 'Entreprises',
     elementsFormat
   }
 ]

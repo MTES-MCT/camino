@@ -75,9 +75,9 @@ type Query {
     titresTypesIds: [ID]
     titresDomainesIds: [ID]
     titresStatutsIds: [ID]
-    titresNoms: String
-    titresEntreprises: String
-    titresSubstancesIds: [ID]
+    titresIds: [String]
+    titresEntreprisesIds: [String]
+    titresSubstancesIds: [String]
     titresReferences: String
     titresTerritoires: String
     travaux: Boolean
@@ -106,8 +106,8 @@ type Query {
     titresTypesIds: [ID]
     titresDomainesIds: [ID]
     titresStatutsIds: [ID]
-    titresNoms: String
-    titresEntreprises: String
+    titresIds: [String]
+    titresEntreprisesIds: [String]
     titresSubstancesIds: [String]
     titresReferences: String
     titresTerritoires: String

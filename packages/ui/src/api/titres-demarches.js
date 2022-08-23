@@ -33,6 +33,13 @@ const demarchesMetas = apiGraphQLFetch(
         id
         nom
       }
+
+      entreprises {
+        elements {
+          id
+          nom
+        }
+      }
     }
   `
 )
@@ -63,9 +70,9 @@ const demarches = apiGraphQLFetch(
       $titresDomainesIds: [ID!]
       $titresTypesIds: [ID!]
       $titresStatutsIds: [ID!]
-      $titresNoms: String
-      $titresEntreprises: String
-      $titresSubstancesIds: [ID]
+      $titresIds: [String]
+      $titresEntreprisesIds: [String]
+      $titresSubstancesIds: [String]
       $titresReferences: String
       $titresTerritoires: String
       $travaux: Boolean
@@ -82,8 +89,8 @@ const demarches = apiGraphQLFetch(
         titresDomainesIds: $titresDomainesIds
         titresTypesIds: $titresTypesIds
         titresStatutsIds: $titresStatutsIds
-        titresNoms: $titresNoms
-        titresEntreprises: $titresEntreprises
+        titresIds: $titresIds
+        titresEntreprisesIds: $titresEntreprisesIds
         titresSubstancesIds: $titresSubstancesIds
         titresReferences: $titresReferences
         titresTerritoires: $titresTerritoires

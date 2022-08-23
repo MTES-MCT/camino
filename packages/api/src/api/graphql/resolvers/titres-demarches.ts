@@ -65,8 +65,8 @@ const demarches = async (
     titresTypesIds,
     titresDomainesIds,
     titresStatutsIds,
-    titresNoms,
-    titresEntreprises,
+    titresIds,
+    titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
     titresTerritoires,
@@ -83,8 +83,8 @@ const demarches = async (
     titresTypesIds?: string[] | null
     titresDomainesIds?: string[] | null
     titresStatutsIds?: string[] | null
-    titresNoms?: string | null
-    titresEntreprises?: string | null
+    titresIds?: string[] | null
+    titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
@@ -120,8 +120,8 @@ const demarches = async (
           titresTypesIds,
           titresDomainesIds,
           titresStatutsIds,
-          titresNoms,
-          titresEntreprises,
+          titresIds,
+          titresEntreprisesIds,
           titresSubstancesIds,
           titresReferences,
           titresTerritoires,
@@ -139,8 +139,8 @@ const demarches = async (
           titresTypesIds,
           titresDomainesIds,
           titresStatutsIds,
-          titresNoms,
-          titresEntreprises,
+          titresIds,
+          titresEntreprisesIds,
           titresSubstancesIds,
           titresReferences,
           titresTerritoires,

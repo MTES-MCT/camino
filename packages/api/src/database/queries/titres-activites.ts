@@ -30,8 +30,8 @@ import {
  * @param typesIds - tableau de type(s) d'activité
  * @param statutsIds - tableau de statut(s) d'activité
  * @param annees - année de l'activité
- * @param titresNoms - chaîne de nom(s) de titre
- * @param titresEntreprises - chaîne de nom(s) d'entreprise titulaire ou amodiataire d'un titre
+ * @param titresIds - chaîne de nom(s) de titre
+ * @param titresEntreprisesIds - chaîne de nom(s) d'entreprise titulaire ou amodiataire d'un titre
  * @param titresSubstances - chaîne de substance(s) se rapportant à un titre
  * @param titresReferences - chaîne de référence(s) se rapportant à un titre
  * @param titresTerritoires - chaîne de territoire(s) se rapportant à un titre
@@ -46,28 +46,26 @@ const titresActivitesFiltersQueryModify = (
     typesIds,
     statutsIds,
     annees,
-    titresNoms,
-    titresEntreprises,
+    titresIds,
+    titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
     titresTerritoires,
     titresTypesIds,
     titresDomainesIds,
-    titresStatutsIds,
-    titresIds
+    titresStatutsIds
   }: {
     typesIds?: string[] | null
     statutsIds?: string[] | null
     annees?: number[] | null
-    titresNoms?: string | null
-    titresEntreprises?: string | null
+    titresIds?: string[] | null
+    titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
     titresTypesIds?: string[] | null
     titresDomainesIds?: string[] | null
     titresStatutsIds?: string[] | null
-    titresIds?: string[] | null
   },
   q: QueryBuilder<TitresActivites, TitresActivites[]>
 ) => {
@@ -92,8 +90,8 @@ const titresActivitesFiltersQueryModify = (
       domainesIds: titresDomainesIds,
       typesIds: titresTypesIds,
       statutsIds: titresStatutsIds,
-      noms: titresNoms,
-      entreprises: titresEntreprises,
+      ids: titresIds,
+      entreprisesIds: titresEntreprisesIds,
       substancesIds: titresSubstancesIds,
       references: titresReferences,
       territoires: titresTerritoires
@@ -203,8 +201,8 @@ const titresActivitesColonnes = {
  * @param typesIds - tableau de type(s) d'activité
  * @param statutsIds - tableau de statut(s) d'activité
  * @param annees - année de l'activité
- * @param titresNoms - chaîne de nom(s) de titre
- * @param titresEntreprises - chaîne de nom(s) d'entreprise titulaire ou amodiataire d'un titre
+ * @param titresIds - chaîne de nom(s) de titre
+ * @param titresEntreprisesIds - chaîne de nom(s) d'entreprise titulaire ou amodiataire d'un titre
  * @param titresSubstances - chaîne de substance(s) se rapportant à un titre
  * @param titresReferences - chaîne de référence(s) se rapportant à un titre
  * @param titresTerritoires - chaîne de territoire(s) se rapportant à un titre
@@ -226,8 +224,7 @@ const titresActivitesGet = async (
     typesIds,
     statutsIds,
     annees,
-    titresNoms,
-    titresEntreprises,
+    titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
     titresTerritoires,
@@ -243,8 +240,7 @@ const titresActivitesGet = async (
     typesIds?: string[] | null
     statutsIds?: string[] | null
     annees?: number[] | null
-    titresNoms?: string | null
-    titresEntreprises?: string | null
+    titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
@@ -263,15 +259,14 @@ const titresActivitesGet = async (
       typesIds,
       statutsIds,
       annees,
-      titresNoms,
-      titresEntreprises,
+      titresIds,
+      titresEntreprisesIds,
       titresSubstancesIds,
       titresReferences,
       titresTerritoires,
       titresTypesIds,
       titresDomainesIds,
-      titresStatutsIds,
-      titresIds
+      titresStatutsIds
     },
     q
   )
@@ -309,8 +304,8 @@ const titresActivitesGet = async (
  * @param typesIds - tableau de type(s) d'activité
  * @param statutsIds - tableau de statut(s) d'activité
  * @param annees - année de l'activité
- * @param titresNoms - chaîne de nom(s) de titre
- * @param titresEntreprises - chaîne de nom(s) d'entreprise titulaire ou amodiataire d'un titre
+ * @param titresIds - chaîne de nom(s) de titre
+ * @param titresEntreprisesIds - chaîne de nom(s) d'entreprise titulaire ou amodiataire d'un titre
  * @param titresSubstances - chaîne de substance(s) se rapportant à un titre
  * @param titresReferences - chaîne de référence(s) se rapportant à un titre
  * @param titresTerritoires - chaîne de territoire(s) se rapportant à un titre
@@ -328,8 +323,8 @@ const titresActivitesCount = async (
     typesIds,
     statutsIds,
     annees,
-    titresNoms,
-    titresEntreprises,
+    titresIds,
+    titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
     titresTerritoires,
@@ -340,8 +335,8 @@ const titresActivitesCount = async (
     typesIds?: string[] | null
     statutsIds?: string[] | null
     annees?: number[] | null
-    titresNoms?: string | null
-    titresEntreprises?: string | null
+    titresIds?: string[] | null
+    titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
@@ -359,8 +354,8 @@ const titresActivitesCount = async (
       typesIds,
       statutsIds,
       annees,
-      titresNoms,
-      titresEntreprises,
+      titresIds,
+      titresEntreprisesIds,
       titresSubstancesIds,
       titresReferences,
       titresTerritoires,

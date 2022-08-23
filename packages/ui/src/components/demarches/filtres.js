@@ -6,6 +6,7 @@ import { elementsFormat } from '../../utils/index'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
 import { sortedDomaines } from 'camino-common/src/static/domaines'
+import { titresFiltres, titresRechercherByNom } from '@/api/titres'
 
 const etapesElementsFormat = (id, metas) => metas.etapesTypes
 const etapesLabelFormat = f =>
@@ -77,6 +78,16 @@ const etapesClean = value => {
 
 const filtres = [
   {
+    id: 'titresIds',
+    type: 'autocomplete',
+    value: [],
+    elements: [],
+    name: 'Noms',
+    lazy: true,
+    search: value => titresRechercherByNom({ noms: value, intervalle: 100 }),
+    load: value => titresFiltres({ titresIds: value })
+  },
+  {
     id: 'titresDomainesIds',
     name: 'Domaines',
     type: 'checkboxes',
@@ -102,18 +113,11 @@ const filtres = [
     elementsFormat
   },
   {
-    id: 'titresNoms',
-    type: 'input',
-    value: '',
-    name: 'Noms de titre',
-    placeholder: '…'
-  },
-  {
-    id: 'titresEntreprises',
-    type: 'input',
-    value: '',
+    id: 'titresEntreprisesIds',
+    type: 'autocomplete',
+    value: [],
     name: 'Entreprises',
-    placeholder: 'Nom ou siret'
+    elementsFormat
   },
   {
     id: 'titresSubstancesIds',

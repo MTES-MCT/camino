@@ -58,7 +58,7 @@ export const titresFiltersQueryModify = (
   root: ITitreRootName = 'titres'
 ) => {
   if (ids) {
-    q.whereIn('titres.id', ids)
+    q.whereIn(`${name}.id`, ids)
   }
 
   if (perimetre?.length === 4) {

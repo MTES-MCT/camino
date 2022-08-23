@@ -67,8 +67,8 @@ const titresDemarchesFiltersQueryModify = (
     titresDomainesIds,
     titresTypesIds,
     titresStatutsIds,
-    titresNoms,
-    titresEntreprises,
+    titresIds,
+    titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
     titresTerritoires,
@@ -82,8 +82,8 @@ const titresDemarchesFiltersQueryModify = (
     titresDomainesIds?: string[] | null
     titresTypesIds?: string[] | null
     titresStatutsIds?: string[] | null
-    titresNoms?: string | null
-    titresEntreprises?: string | null
+    titresIds?: string[] | null
+    titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
@@ -129,8 +129,8 @@ const titresDemarchesFiltersQueryModify = (
       domainesIds: titresDomainesIds,
       typesIds: titresTypesIds,
       statutsIds: titresStatutsIds,
-      noms: titresNoms,
-      entreprises: titresEntreprises,
+      ids: titresIds,
+      entreprisesIds: titresEntreprisesIds,
       substancesIds: titresSubstancesIds,
       references: titresReferences,
       territoires: titresTerritoires
@@ -166,8 +166,8 @@ const titresDemarchesCount = async (
     titresDomainesIds,
     titresTypesIds,
     titresStatutsIds,
-    titresNoms,
-    titresEntreprises,
+    titresIds,
+    titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
     titresTerritoires,
@@ -181,8 +181,8 @@ const titresDemarchesCount = async (
     titresDomainesIds?: string[] | null
     titresTypesIds?: string[] | null
     titresStatutsIds?: string[] | null
-    titresNoms?: string | null
-    titresEntreprises?: string | null
+    titresIds?: string[] | null
+    titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
@@ -203,8 +203,8 @@ const titresDemarchesCount = async (
       titresDomainesIds,
       titresTypesIds,
       titresStatutsIds,
-      titresNoms,
-      titresEntreprises,
+      titresIds,
+      titresEntreprisesIds,
       titresSubstancesIds,
       titresReferences,
       titresTerritoires,
@@ -247,8 +247,8 @@ const titresDemarchesGet = async (
     titresDomainesIds,
     titresTypesIds,
     titresStatutsIds,
-    titresNoms,
-    titresEntreprises,
+    titresIds,
+    titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
     titresTerritoires,
@@ -266,8 +266,8 @@ const titresDemarchesGet = async (
     titresDomainesIds?: string[] | null
     titresTypesIds?: string[] | null
     titresStatutsIds?: string[] | null
-    titresNoms?: string | null
-    titresEntreprises?: string | null
+    titresIds?: string[] | null
+    titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
@@ -288,8 +288,8 @@ const titresDemarchesGet = async (
       titresDemarchesIds,
       titresTypesIds,
       titresStatutsIds,
-      titresNoms,
-      titresEntreprises,
+      titresIds,
+      titresEntreprisesIds,
       titresSubstancesIds,
       titresReferences,
       titresTerritoires,

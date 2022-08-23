@@ -210,8 +210,8 @@ interface ITitresDemarchesQueryInput {
   titresTypesIds?: string | null
   titresDomainesIds?: string | null
   titresStatutsIds?: string | null
-  titresNoms?: string | null
-  titresEntreprises?: string | null
+  titresIds?: string | null
+  titresEntreprisesIds?: string | null
   titresSubstancesIds?: string | null
   titresReferences?: string | null
   titresTerritoires?: string | null
@@ -231,8 +231,8 @@ const demarches = async (
       titresTypesIds,
       titresDomainesIds,
       titresStatutsIds,
-      titresNoms,
-      titresEntreprises,
+      titresIds,
+      titresEntreprisesIds,
       titresSubstancesIds,
       titresReferences,
       titresTerritoires,
@@ -256,8 +256,8 @@ const demarches = async (
       titresTypesIds: titresTypesIds?.split(','),
       titresDomainesIds: titresDomainesIds?.split(','),
       titresStatutsIds: titresStatutsIds?.split(','),
-      titresNoms,
-      titresEntreprises,
+      titresIds: titresIds?.split(','),
+      titresEntreprisesIds: titresEntreprisesIds?.split(','),
       titresSubstancesIds: titresSubstancesIds?.split(','),
       titresReferences,
       titresTerritoires,
@@ -321,8 +321,8 @@ interface ITitresActivitesQueryInput {
   typesIds?: string | null
   statutsIds?: string | null
   annees?: string | null
-  titresNoms?: string | null
-  titresEntreprises?: string | null
+  titresIds?: string | null
+  titresEntreprisesIds?: string | null
   titresSubstancesIds?: string | null
   titresReferences?: string | null
   titresTerritoires?: string | null
@@ -340,8 +340,8 @@ const activites = async (
       typesIds,
       statutsIds,
       annees,
-      titresNoms,
-      titresEntreprises,
+      titresIds,
+      titresEntreprisesIds,
       titresSubstancesIds,
       titresReferences,
       titresTerritoires,
@@ -363,8 +363,8 @@ const activites = async (
       typesIds: typesIds?.split(','),
       statutsIds: statutsIds?.split(','),
       annees: annees?.split(',').map(a => Number(a)),
-      titresNoms,
-      titresEntreprises,
+      titresIds: titresIds?.split(','),
+      titresEntreprisesIds: titresEntreprisesIds?.split(','),
       titresSubstancesIds: titresSubstancesIds?.split(','),
       titresReferences,
       titresTerritoires,
