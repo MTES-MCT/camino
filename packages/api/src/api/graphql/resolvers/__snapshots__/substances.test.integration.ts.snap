@@ -993,6 +993,11 @@ Object {
       "id": "ytte",
       "nom": "ytterbium",
     },
+    Object {
+      "description": null,
+      "id": "hydrog",
+      "nom": "hydrogène",
+    },
   ],
 }
 `;
