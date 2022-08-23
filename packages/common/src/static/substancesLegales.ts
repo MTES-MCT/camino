@@ -198,7 +198,8 @@ export const SUBSTANCES_LEGALES_IDS = {
   trachyte: 'trac',
   tuffeau: 'tufo',
   yttrium: 'ytri',
-  ytterbium: 'ytte'
+  ytterbium: 'ytte',
+  hydrogène: 'hydrog'
 } as const
 
 export type SubstanceLegaleId = typeof SUBSTANCES_LEGALES_IDS[keyof typeof SUBSTANCES_LEGALES_IDS]
@@ -1007,7 +1008,8 @@ export const SubstancesLegale: {
     description: 'Roche sédimentaire blanchâtre peu stratifiée à texture crayeuse constituée de calcite, utilisée comme pierre de construction.'
   },
   ytri: { id: 'ytri', nom: 'yttrium', domaineIds: ['m'] },
-  ytte: { id: 'ytte', nom: 'ytterbium', domaineIds: ['m'] }
+  ytte: { id: 'ytte', nom: 'ytterbium', domaineIds: ['m'] },
+  hydrog: { id: 'hydrog', nom: 'hydrogène', domaineIds: ['m'] }
 }
 
 export const SubstancesLegales = Object.values(SubstancesLegale)
