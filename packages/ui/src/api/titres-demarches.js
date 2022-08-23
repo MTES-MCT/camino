@@ -70,7 +70,7 @@ const demarches = apiGraphQLFetch(
       $titresDomainesIds: [ID!]
       $titresTypesIds: [ID!]
       $titresStatutsIds: [ID!]
-      $titresNoms: String
+      $titresIds: [String]
       $titresEntreprisesIds: [String]
       $titresSubstancesIds: [String]
       $titresReferences: String
@@ -89,7 +89,7 @@ const demarches = apiGraphQLFetch(
         titresDomainesIds: $titresDomainesIds
         titresTypesIds: $titresTypesIds
         titresStatutsIds: $titresStatutsIds
-        titresNoms: $titresNoms
+        titresIds: $titresIds
         titresEntreprisesIds: $titresEntreprisesIds
         titresSubstancesIds: $titresSubstancesIds
         titresReferences: $titresReferences

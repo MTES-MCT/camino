@@ -5,14 +5,18 @@ import { elementsFormat } from '../../utils/index'
 import { markRaw } from '@vue/reactivity'
 import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
 import { sortedDomaines } from 'camino-common/src/static/domaines'
+import { titresFiltres, titresRechercherByNom } from '@/api/titres'
 
 const filtres = [
   {
-    id: 'titresNoms',
-    type: 'input',
-    value: '',
-    name: 'Noms de titre',
-    placeholder: '…'
+    id: 'titresIds',
+    type: 'autocomplete',
+    value: [],
+    elements: [],
+    name: 'Noms',
+    lazy: true,
+    search: value => titresRechercherByNom({ noms: value, intervalle: 100 }),
+    load: value => titresFiltres({ titresIds: value })
   },
   {
     id: 'titresEntreprisesIds',

@@ -65,7 +65,7 @@ const demarches = async (
     titresTypesIds,
     titresDomainesIds,
     titresStatutsIds,
-    titresNoms,
+    titresIds,
     titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
@@ -83,7 +83,7 @@ const demarches = async (
     titresTypesIds?: string[] | null
     titresDomainesIds?: string[] | null
     titresStatutsIds?: string[] | null
-    titresNoms?: string | null
+    titresIds?: string[] | null
     titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
@@ -120,7 +120,7 @@ const demarches = async (
           titresTypesIds,
           titresDomainesIds,
           titresStatutsIds,
-          titresNoms,
+          titresIds,
           titresEntreprisesIds,
           titresSubstancesIds,
           titresReferences,
@@ -139,7 +139,7 @@ const demarches = async (
           titresTypesIds,
           titresDomainesIds,
           titresStatutsIds,
-          titresNoms,
+          titresIds,
           titresEntreprisesIds,
           titresSubstancesIds,
           titresReferences,
