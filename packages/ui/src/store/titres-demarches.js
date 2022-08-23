@@ -9,7 +9,8 @@ const state = {
     statuts: [],
     etapesTypes: [],
     titresTypes: [],
-    titresStatuts: []
+    titresStatuts: [],
+    titresEntreprises: []
   },
   definitions: [
     { id: 'typesIds', type: 'strings', values: [] },
@@ -20,7 +21,7 @@ const state = {
     { id: 'titresTypesIds', type: 'strings', values: [] },
     { id: 'titresStatutsIds', type: 'strings', values: [] },
     { id: 'titresNoms', type: 'string' },
-    { id: 'titresEntreprises', type: 'string' },
+    { id: 'titresEntreprisesIds', type: 'strings', values: [] },
     { id: 'titresSubstancesIds', type: 'strings', values: [] },
     { id: 'titresReferences', type: 'string' },
     { id: 'titresTerritoires', type: 'string' },
@@ -61,7 +62,7 @@ const state = {
       titresTypesIds: [],
       titresStatutsIds: [],
       titresNoms: '',
-      titresEntreprises: '',
+      titresEntreprisesIds: [],
       titresSubstancesIds: [],
       titresReferences: '',
       titresTerritoires: ''
@@ -85,7 +86,8 @@ const mutations = Object.assign({}, listeMutations, {
       statuts: [],
       etapesTypes: [],
       titresTypes: [],
-      titresStatuts: []
+      titresStatuts: [],
+      titresEntreprises: []
     }
     state.params = {
       table: {
@@ -103,7 +105,7 @@ const mutations = Object.assign({}, listeMutations, {
         titresTypesIds: [],
         titresStatutsIds: [],
         titresNoms: '',
-        titresEntreprises: '',
+        titresEntreprisesIds: [],
         titresSubstancesIds: [],
         titresReferences: '',
         titresTerritoires: ''
@@ -130,6 +132,10 @@ const mutations = Object.assign({}, listeMutations, {
       } else if (id === 'types') {
         metaId = 'titresTypes'
         paramsIds = ['titresTypesIds']
+      } else if (id === 'entreprises') {
+        metaId = 'titresEntreprises'
+        paramsIds = ['titresEntreprisesIds']
+        data[id] = data[id].elements
       }
 
       if (metaId) {

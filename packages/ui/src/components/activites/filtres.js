@@ -15,11 +15,11 @@ const filtres = [
     placeholder: '…'
   },
   {
-    id: 'titresEntreprises',
-    type: 'input',
-    value: '',
+    id: 'titresEntreprisesIds',
+    type: 'autocomplete',
+    value: [],
     name: 'Entreprises',
-    placeholder: 'Nom ou siret'
+    elementsFormat
   },
   {
     id: 'titresSubstancesIds',

@@ -211,7 +211,7 @@ interface ITitresDemarchesQueryInput {
   titresDomainesIds?: string | null
   titresStatutsIds?: string | null
   titresNoms?: string | null
-  titresEntreprises?: string | null
+  titresEntreprisesIds?: string | null
   titresSubstancesIds?: string | null
   titresReferences?: string | null
   titresTerritoires?: string | null
@@ -232,7 +232,7 @@ const demarches = async (
       titresDomainesIds,
       titresStatutsIds,
       titresNoms,
-      titresEntreprises,
+      titresEntreprisesIds,
       titresSubstancesIds,
       titresReferences,
       titresTerritoires,
@@ -257,7 +257,7 @@ const demarches = async (
       titresDomainesIds: titresDomainesIds?.split(','),
       titresStatutsIds: titresStatutsIds?.split(','),
       titresNoms,
-      titresEntreprises,
+      titresEntreprisesIds: titresEntreprisesIds?.split(','),
       titresSubstancesIds: titresSubstancesIds?.split(','),
       titresReferences,
       titresTerritoires,
@@ -322,7 +322,7 @@ interface ITitresActivitesQueryInput {
   statutsIds?: string | null
   annees?: string | null
   titresNoms?: string | null
-  titresEntreprises?: string | null
+  titresEntreprisesIds?: string | null
   titresSubstancesIds?: string | null
   titresReferences?: string | null
   titresTerritoires?: string | null
@@ -341,7 +341,7 @@ const activites = async (
       statutsIds,
       annees,
       titresNoms,
-      titresEntreprises,
+      titresEntreprisesIds,
       titresSubstancesIds,
       titresReferences,
       titresTerritoires,
@@ -364,7 +364,7 @@ const activites = async (
       statutsIds: statutsIds?.split(','),
       annees: annees?.split(',').map(a => Number(a)),
       titresNoms,
-      titresEntreprises,
+      titresEntreprisesIds: titresEntreprisesIds?.split(','),
       titresSubstancesIds: titresSubstancesIds?.split(','),
       titresReferences,
       titresTerritoires,

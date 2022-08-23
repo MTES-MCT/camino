@@ -30,6 +30,13 @@ const activitesMetas = apiGraphQLFetch(
         nom
         couleur
       }
+
+      entreprises {
+        elements {
+          id
+          nom
+        }
+      }
     }
 
     ${fragmentActiviteType}

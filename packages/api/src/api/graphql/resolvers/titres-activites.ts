@@ -78,7 +78,7 @@ const activite = async (
  * @param statutsIds - tableau de statut(s) d'activité
  * @param annees - année de l'activité
  * @param titresNoms - chaîne de nom(s) de titre
- * @param titresEntreprises - chaîne de nom(s) d'entreprise titulaire ou amodiataire d'un titre
+ * @param titresEntreprisesIds - chaîne de nom(s) d'entreprise titulaire ou amodiataire d'un titre
  * @param titresSubstances - chaîne de substance(s) se rapportant à un titre
  * @param titresReferences - chaîne de référence(s) se rapportant à un titre
  * @param titresTerritoires - chaîne de territoire(s) se rapportant à un titre
@@ -101,7 +101,7 @@ const activites = async (
     statutsIds,
     annees,
     titresNoms,
-    titresEntreprises,
+    titresEntreprisesIds,
     titresSubstancesIds,
     titresReferences,
     titresTerritoires,
@@ -117,7 +117,7 @@ const activites = async (
     statutsIds?: string[] | null
     annees?: number[] | null
     titresNoms?: string | null
-    titresEntreprises?: string | null
+    titresEntreprisesIds?: string[] | null
     titresSubstancesIds?: string[] | null
     titresReferences?: string | null
     titresTerritoires?: string | null
@@ -150,7 +150,7 @@ const activites = async (
           typesIds,
           annees,
           titresNoms,
-          titresEntreprises,
+          titresEntreprisesIds,
           titresSubstancesIds,
           titresReferences,
           titresTerritoires,
@@ -167,7 +167,7 @@ const activites = async (
           typesIds,
           annees,
           titresNoms,
-          titresEntreprises,
+          titresEntreprisesIds,
           titresSubstancesIds,
           titresReferences,
           titresTerritoires,
