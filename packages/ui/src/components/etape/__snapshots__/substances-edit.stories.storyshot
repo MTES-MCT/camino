@@ -93,14 +93,9 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
         >
           
           <option
-            value="selh"
+            value="kals"
           >
-            sources d'eau salée
-          </option>
-          <option
-            value="aloh"
-          >
-            bauxite
+            alun
           </option>
           <option
             value="anti"
@@ -118,10 +113,14 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             arsenic
           </option>
           <option
-            disabled=""
-            value="auru"
+            value="trxx"
           >
-            or
+            autres éléments de terres rares
+          </option>
+          <option
+            value="aloh"
+          >
+            bauxite
           </option>
           <option
             value="bery"
@@ -137,6 +136,11 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             value="cadm"
           >
             cadmium
+          </option>
+          <option
+            value="hydm"
+          >
+            calcaires bitumineux
           </option>
           <option
             value="ceri"
@@ -159,11 +163,6 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             cobalt
           </option>
           <option
-            value="coox"
-          >
-            gaz carbonique
-          </option>
-          <option
             value="cuiv"
           >
             cuivre
@@ -174,9 +173,24 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             diamant
           </option>
           <option
+            value="dysp"
+          >
+            dysprosium
+          </option>
+          <option
+            value="erbi"
+          >
+            erbium
+          </option>
+          <option
             value="etai"
           >
             étain
+          </option>
+          <option
+            value="euro"
+          >
+            europium
           </option>
           <option
             value="ferx"
@@ -189,9 +203,19 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             fluorine
           </option>
           <option
+            value="gado"
+          >
+            gadolinium
+          </option>
+          <option
             value="gall"
           >
             gallium
+          </option>
+          <option
+            value="coox"
+          >
+            gaz carbonique
           </option>
           <option
             value="germ"
@@ -214,9 +238,14 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             hélium
           </option>
           <option
-            value="hydm"
+            value="holm"
           >
-            calcaires bitumineux
+            holmium
+          </option>
+          <option
+            value="hydrog"
+          >
+            hydrogène
           </option>
           <option
             value="indi"
@@ -224,19 +253,24 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             indium
           </option>
           <option
-            value="kals"
+            value="irid"
           >
-            alun
+            iridium
           </option>
           <option
-            value="kclx"
+            value="lant"
           >
-            sels de potassium
+            lanthane
           </option>
           <option
             value="lith"
           >
             lithium
+          </option>
+          <option
+            value="lute"
+          >
+            lutécium
           </option>
           <option
             value="mang"
@@ -249,14 +283,39 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             mercure
           </option>
           <option
+            value="meco"
+          >
+            métaux connexes
+          </option>
+          <option
+            value="meba"
+          >
+            métaux de base
+          </option>
+          <option
+            value="plax"
+          >
+            métaux de la mine du platine
+          </option>
+          <option
+            value="mepr"
+          >
+            métaux précieux
+          </option>
+          <option
+            value="mais"
+          >
+            minerais
+          </option>
+          <option
             value="moly"
           >
             molybdène
           </option>
           <option
-            value="nacl"
+            value="neod"
           >
-            sels de sodium
+            néodyme
           </option>
           <option
             value="nick"
@@ -274,9 +333,30 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             non précisée(s)
           </option>
           <option
+            disabled=""
+            value="auru"
+          >
+            or
+          </option>
+          <option
+            value="osmi"
+          >
+            osmium
+          </option>
+          <option
+            value="pall"
+          >
+            palladium
+          </option>
+          <option
             value="phos"
           >
             phosphates
+          </option>
+          <option
+            value="pipe"
+          >
+            pierres précieuses
           </option>
           <option
             value="plat"
@@ -284,14 +364,29 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             platine
           </option>
           <option
-            value="plax"
-          >
-            métaux de la mine du platine
-          </option>
-          <option
             value="plom"
           >
             plomb
+          </option>
+          <option
+            value="pras"
+          >
+            praséodyme
+          </option>
+          <option
+            value="prom"
+          >
+            prométhium
+          </option>
+          <option
+            value="selp"
+          >
+            puits d'eau salée
+          </option>
+          <option
+            value="pyri"
+          >
+            pyrite
           </option>
           <option
             value="rhen"
@@ -299,9 +394,24 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             rhénium
           </option>
           <option
+            value="rhod"
+          >
+            rhodium
+          </option>
+          <option
             value="rubi"
           >
             rubidium
+          </option>
+          <option
+            value="ruth"
+          >
+            ruthénium
+          </option>
+          <option
+            value="sama"
+          >
+            samarium
           </option>
           <option
             value="scan"
@@ -309,9 +419,14 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             scandium
           </option>
           <option
-            value="scoc"
+            value="selx"
           >
-            substances connexes
+            sel
+          </option>
+          <option
+            value="selg"
+          >
+            sel gemme
           </option>
           <option
             value="sele"
@@ -319,9 +434,34 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             sélénium
           </option>
           <option
+            value="sels"
+          >
+            sels
+          </option>
+          <option
+            value="kclx"
+          >
+            sels de potassium
+          </option>
+          <option
+            value="nacl"
+          >
+            sels de sodium
+          </option>
+          <option
             value="souf"
           >
             soufre
+          </option>
+          <option
+            value="selh"
+          >
+            sources d'eau salée
+          </option>
+          <option
+            value="scoc"
+          >
+            substances connexes
           </option>
           <option
             value="soxx"
@@ -339,9 +479,19 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             tellure
           </option>
           <option
+            value="terb"
+          >
+            terbium
+          </option>
+          <option
             value="thal"
           >
             thallium
+          </option>
+          <option
+            value="thul"
+          >
+            thulium
           </option>
           <option
             value="tita"
@@ -349,9 +499,14 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             titane
           </option>
           <option
-            value="trxx"
+            value="tmas"
           >
-            autres éléments de terres rares
+            tous métaux associés
+          </option>
+          <option
+            value="wolf"
+          >
+            tungstène
           </option>
           <option
             value="vana"
@@ -359,9 +514,14 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             vanadium
           </option>
           <option
-            value="wolf"
+            value="ytte"
           >
-            tungstène
+            ytterbium
+          </option>
+          <option
+            value="ytri"
+          >
+            yttrium
           </option>
           <option
             value="zinc"
@@ -372,161 +532,6 @@ exports[`Automated Storybook Snapshots Components/Etape/SubstancesEdit Sans Heri
             value="zirc"
           >
             zirconium
-          </option>
-          <option
-            value="dysp"
-          >
-            dysprosium
-          </option>
-          <option
-            value="erbi"
-          >
-            erbium
-          </option>
-          <option
-            value="euro"
-          >
-            europium
-          </option>
-          <option
-            value="gado"
-          >
-            gadolinium
-          </option>
-          <option
-            value="holm"
-          >
-            holmium
-          </option>
-          <option
-            value="irid"
-          >
-            iridium
-          </option>
-          <option
-            value="lant"
-          >
-            lanthane
-          </option>
-          <option
-            value="lute"
-          >
-            lutécium
-          </option>
-          <option
-            value="mais"
-          >
-            minerais
-          </option>
-          <option
-            value="meba"
-          >
-            métaux de base
-          </option>
-          <option
-            value="meco"
-          >
-            métaux connexes
-          </option>
-          <option
-            value="mepr"
-          >
-            métaux précieux
-          </option>
-          <option
-            value="neod"
-          >
-            néodyme
-          </option>
-          <option
-            value="osmi"
-          >
-            osmium
-          </option>
-          <option
-            value="pall"
-          >
-            palladium
-          </option>
-          <option
-            value="pipe"
-          >
-            pierres précieuses
-          </option>
-          <option
-            value="pras"
-          >
-            praséodyme
-          </option>
-          <option
-            value="prom"
-          >
-            prométhium
-          </option>
-          <option
-            value="pyri"
-          >
-            pyrite
-          </option>
-          <option
-            value="rhod"
-          >
-            rhodium
-          </option>
-          <option
-            value="ruth"
-          >
-            ruthénium
-          </option>
-          <option
-            value="sama"
-          >
-            samarium
-          </option>
-          <option
-            value="selg"
-          >
-            sel gemme
-          </option>
-          <option
-            value="selp"
-          >
-            puits d'eau salée
-          </option>
-          <option
-            value="sels"
-          >
-            sels
-          </option>
-          <option
-            value="selx"
-          >
-            sel
-          </option>
-          <option
-            value="terb"
-          >
-            terbium
-          </option>
-          <option
-            value="thul"
-          >
-            thulium
-          </option>
-          <option
-            value="tmas"
-          >
-            tous métaux associés
-          </option>
-          <option
-            value="ytri"
-          >
-            yttrium
-          </option>
-          <option
-            value="ytte"
-          >
-            ytterbium
           </option>
           
         </select>

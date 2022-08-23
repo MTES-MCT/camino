@@ -102,7 +102,7 @@ const substancesLength = computed(
 const substancesByDomaine = computed(() =>
   SubstancesLegales.filter(({ domaineIds }) =>
     domaineIds.includes(props.domaineId)
-  )
+  ).sort((a, b) => a.nom.localeCompare(b.nom))
 )
 
 const substanceNoms = computed<string[]>(() => {
