@@ -1,4 +1,4 @@
-FROM node:17.8-alpine as build-stage
+FROM node:18.7-alpine as build-stage
 WORKDIR /app
 
 COPY package*.json /app/
@@ -18,7 +18,7 @@ RUN npm run build -w packages/api && \
     npm set-script prepare "" && \
     npm ci --only=prod
 
-FROM node:17.8-alpine as production-stage
+FROM node:18.7-alpine as production-stage
 
 # TODO 2022-07-13 : on profite que
 # - l'utilisateur a le même id sur toutes les machines
