@@ -1,6 +1,6 @@
 import Table from './table-auto.vue'
 import { Meta, Story } from '@storybook/vue3'
-import { markRaw } from '@vue/reactivity'
+import { markRaw } from 'vue'
 import TitreNom from '../_common/titre-nom.vue'
 import CaminoDomaine from '../_common/domaine.vue'
 import TitreTypeTypeNom from '../_common/titre-type-type-nom.vue'

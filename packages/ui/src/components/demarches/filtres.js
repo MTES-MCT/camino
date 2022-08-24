@@ -1,4 +1,4 @@
-import { markRaw } from '@vue/reactivity'
+import { markRaw } from 'vue'
 import FiltresTitresDomaines from '../_common/filtres/domaines.vue'
 import FiltresTitresStatuts from '../_common/filtres/statuts.vue'
 import FiltresEtapes from './filtres-custom-etapes.vue'

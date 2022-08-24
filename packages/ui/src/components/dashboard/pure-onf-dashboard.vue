@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, markRaw } from 'vue'
 import TableAuto from '../_ui/table-auto.vue'
 import {
   ComponentColumnData,
@@ -58,7 +58,6 @@ import {
   titulairesCell
 } from '@/components/titres/table-utils'
 import { CommonTitreONF } from 'camino-common/src/titres'
-import { markRaw } from '@vue/reactivity'
 import DateComponent from '../_ui/date.vue'
 import { datesDiffInDays } from 'camino-common/src/date'
 

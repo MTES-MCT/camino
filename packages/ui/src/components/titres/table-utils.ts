@@ -1,4 +1,4 @@
-import { markRaw } from '@vue/reactivity'
+import { markRaw } from 'vue'
 import TagList from '../_ui/tag-list.vue'
 import List from '../_ui/list.vue'
 import CaminoDomaine from '../_common/domaine.vue'

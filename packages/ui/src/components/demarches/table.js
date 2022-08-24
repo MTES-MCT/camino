@@ -1,4 +1,4 @@
-import { markRaw } from '@vue/reactivity'
+import { markRaw } from 'vue'
 import Nom from '../_common/nom.vue'
 import Statut from '../_common/statut.vue'
 import CaminoDomaine from '../_common/domaine.vue'

@@ -1,4 +1,4 @@
-import { shallowRef } from '@vue/reactivity'
+import { shallowRef } from 'vue'
 import { createStore } from 'vuex'
 import { saveAs } from 'file-saver'
 
