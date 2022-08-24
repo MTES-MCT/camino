@@ -23,7 +23,7 @@ import {
   sortedAdministrationTypes
 } from 'camino-common/src/static/administrations'
 import { elementsFormat } from '@/utils'
-import { computed, ref , markRaw } from 'vue'
+import { computed, ref, markRaw } from 'vue'
 import Tag from '@/components/_ui/tag.vue'
 
 const colonnes = [

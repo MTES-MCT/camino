@@ -55,9 +55,9 @@
 
     <div class="line-neutral width-full" />
     <template v-if="initialized">
-      <Map v-if="vueId === 'carte'" :titres="titres" />
+      <CaminoMap v-if="vueId === 'carte'" :titres="titres" />
 
-      <Table v-else-if="vueId === 'table'" :titres="titres" :total="total" />
+      <UiTable v-else-if="vueId === 'table'" :titres="titres" :total="total" />
     </template>
     <div v-else class="table-view mb-xxl mt">…</div>
   </div>
@@ -65,15 +65,15 @@
 
 <script>
 import Downloads from './_common/downloads.vue'
-import Table from './titres/table-pagination.vue'
-import Map from './titres/map.vue'
+import UiTable from './titres/table-pagination.vue'
+import CaminoMap from './titres/map.vue'
 import Filtres from './titres/filtres.vue'
 import Icon from '@/components/_ui/icon.vue'
 
 export default {
   name: 'Titres',
 
-  components: { Icon, Filtres, Downloads, Map, Table },
+  components: { Icon, Filtres, Downloads, CaminoMap, UiTable },
 
   data() {
     return {

@@ -55,7 +55,7 @@
         <p>{{ dateFormat(activite.dateSaisie) }}</p>
       </div>
 
-      <Section
+      <UiSection
         v-for="s in activite.sections"
         :key="s.id"
         class="border-b-s px-m pt-m"
@@ -85,7 +85,7 @@
 import ActiviteButton from './button.vue'
 import Accordion from '../_ui/accordion.vue'
 import HelpTooltip from '../_ui/help-tooltip.vue'
-import Section from '../_common/section.vue'
+import UiSection from '../_common/section.vue'
 import Statut from '../_common/statut.vue'
 
 import Documents from '../documents/list.vue'
@@ -98,7 +98,7 @@ export default {
     Icon,
     ActiviteButton,
     Accordion,
-    Section,
+    UiSection,
     Statut,
     Documents,
     HelpTooltip

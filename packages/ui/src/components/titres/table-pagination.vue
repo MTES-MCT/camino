@@ -1,5 +1,5 @@
 <template>
-  <Table
+  <UiTable
     :column="preferences.colonne"
     :columns="colonnes"
     :order="preferences.ordre"
@@ -12,14 +12,14 @@
 </template>
 
 <script>
-import Table from '../_ui/table-pagination.vue'
+import UiTable from '../_ui/table-pagination.vue'
 
 import { titresColonnes, titresLignesBuild } from './table-utils'
 
 export default {
   name: 'Titres',
 
-  components: { Table },
+  components: { UiTable },
 
   props: {
     titres: { type: Array, required: true },

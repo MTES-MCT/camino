@@ -35,7 +35,7 @@
 
     <div class="line-neutral" :class="{ 'width-full': isMain }" />
 
-    <Map
+    <CaminoMap
       v-if="points && geojsonMultiPolygon && tabId === 'carte'"
       :class="{ 'width-full': isMain }"
       :geojson="geojsonMultiPolygon"
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import Map from './map.vue'
+import CaminoMap from './map.vue'
 import Points from './points.vue'
 import Download from './download.vue'
 import Icon from '@/components/_ui/icon.vue'
@@ -68,7 +68,7 @@ import Icon from '@/components/_ui/icon.vue'
 export default {
   components: {
     Icon,
-    Map,
+    CaminoMap,
     Points,
     Download
   },
