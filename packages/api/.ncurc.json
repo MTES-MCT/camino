@@ -8,6 +8,9 @@
     "email-regex",
     "decamelize",
     "dateformat",
-    "node-fetch"
+    "node-fetch",
+    "camelcase",
+    "graphql-upload",
+    "express-jwt"
   ]
 }

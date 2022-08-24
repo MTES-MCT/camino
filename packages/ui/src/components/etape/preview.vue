@@ -68,7 +68,7 @@
       </div>
 
       <div v-if="etape.type.sections?.length">
-        <Section
+        <UiSection
           v-for="s in etape.type.sections"
           :key="s.id"
           :section="s"
@@ -116,7 +116,7 @@
       <div
         v-if="etape.decisionsAnnexesSections && etape.decisionsAnnexesContenu"
       >
-        <Section
+        <UiSection
           v-for="s in etape.decisionsAnnexesSections"
           :key="s.id"
           :section="s"
@@ -147,7 +147,7 @@
 import { dateFormat, cap } from '@/utils'
 import Perimetre from './perimetre.vue'
 import Fondamentales from './fondamentales.vue'
-import Section from '../_common/section.vue'
+import UiSection from '../_common/section.vue'
 import Documents from '../documents/list.vue'
 import Accordion from '../_ui/accordion.vue'
 import Tag from '../_ui/tag.vue'
@@ -167,7 +167,7 @@ export default {
     Statut,
     Perimetre,
     Fondamentales,
-    Section,
+    UiSection,
     Documents
   },
 

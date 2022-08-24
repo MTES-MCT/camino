@@ -13,9 +13,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, markRaw } from 'vue'
 import Liste from '../_common/liste.vue'
-import { markRaw } from '@vue/reactivity'
 import Differences from './differences.vue'
 
 export default defineComponent({

@@ -156,7 +156,8 @@ export const bodyBuilder = (
           )
 
           let communePrincipale: ICommune | null = null
-          for (const commune of titre.communes) {
+          const communes: ICommune[] = titre.communes
+          for (const commune of communes) {
             if (communePrincipale === null) {
               communePrincipale = commune
             } else if (
@@ -170,7 +171,7 @@ export const bodyBuilder = (
               `Impossible de trouver une commune principale pour le titre ${titre.id}`
             )
           }
-          for (const commune of titre.communes) {
+          for (const commune of communes) {
             const articleId = `${titre.id}-${substancesFiscale.id}-${commune.id}`
 
             body.articles[articleId] = {

@@ -51,8 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
-import { withDefaults } from '@vue/runtime-core'
+import { computed, ref, watch, withDefaults } from 'vue'
 import Chip from './chip.vue'
 
 type Props = {

@@ -46,6 +46,8 @@ const recipientsGet = async () => {
     .get('listrecipient', { version: 'v3' })
     .request({ Limit: 1000 })
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   return recipientsResult.body.Data as IRecipient[]
 }
 
@@ -57,6 +59,8 @@ const contactsGet = async () => {
       ContactsList: contactListId
     })
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   return contactsResult.body.Data as IContact[]
 }
 
@@ -66,6 +70,8 @@ const contactGet = async (email: string) => {
     .id(email)
     .request()
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   return contactsResult.body.Data[0] as IContact[]
 }
 
@@ -76,6 +82,8 @@ const contactListCheck = async (email: string) => {
     .action('getcontactslists')
     .request()
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const contactLists = contactResult.body.Data as IContactList[]
 
   if (!contactLists.length) return false
