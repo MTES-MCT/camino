@@ -142,7 +142,7 @@
       <div class="line-neutral width-full mb-xxl" />
       <h2>Utilisateurs</h2>
       <div class="line width-full" />
-      <Table
+      <UiTable
         class="width-full-p"
         :columns="utilisateursColonnes"
         :rows="utilisateursLignes"
@@ -174,7 +174,7 @@
 <script>
 import Accordion from './_ui/accordion.vue'
 import Loader from './_ui/loader.vue'
-import Table from './_ui/table.vue'
+import UiTable from './_ui/table.vue'
 import AdministrationPermission from './administration/permissions.vue'
 import AdministrationActiviteTypeEmail from './administration/activites-types-emails.vue'
 
@@ -195,7 +195,7 @@ export default {
   components: {
     Accordion,
     Loader,
-    Table,
+    UiTable,
     AdministrationPermission,
     AdministrationActiviteTypeEmail
   },
