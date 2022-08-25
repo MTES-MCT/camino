@@ -302,29 +302,6 @@ entity "**spatial_ref_sys**" {
   ""proj4text"": //character varying(2048) //
 }
 
-entity "**substances**" {
-  + ""id"": //character varying(4) [PK]//
-  --
-  *""nom"": //character varying(255) //
-  ""symbole"": //character varying(255) //
-  ""gerep"": //integer //
-  ""description"": //character varying(2048) //
-}
-
-entity "**substances__substances_legales**" {
-  + ""substance_id"": //character varying(255) [PK][FK]//
-  + ""substance_legale_id"": //character varying(255) [PK][FK]//
-  --
-}
-
-entity "**substances_legales**" {
-  + ""id"": //character varying(255) [PK]//
-  --
-  *""nom"": //character varying(255) //
-  *""domaine_id"": //character varying(1) [FK]//
-  ""description"": //text //
-}
-
 entity "**titres**" {
   + ""id"": //character varying(128) [PK]//
   --
@@ -449,6 +426,7 @@ entity "**titres_etapes**" {
   ""decisions_annexes_sections"": //jsonb[] //
   ""decisions_annexes_contenu"": //json //
   *""archive"": //boolean //
+  ""substances"": //jsonb //
 }
 
 entity "**titres_etapes_justificatifs**" {
@@ -511,13 +489,6 @@ entity "**titres_statuts**" {
   *""nom"": //character varying(32) //
   ""description"": //text //
   *""couleur"": //character varying(16) //
-  ""ordre"": //integer //
-}
-
-entity "**titres_substances**" {
-  + ""titre_etape_id"": //character varying(128) [PK][FK]//
-  + ""substance_id"": //character varying(4) [PK][FK]//
-  --
   ""ordre"": //integer //
 }
 
@@ -734,16 +705,6 @@ entity "**utilisateurs__titres**" {
 
 "**journaux**"   }--  "**titres**"
 
-"**substances__substances_legales**"   }--  "**substances**"
-
-"**substances__substances_legales**"   }--  "**substances**"
-
-"**substances__substances_legales**"   }--  "**substances_legales**"
-
-"**substances__substances_legales**"   }--  "**substances_legales**"
-
-"**substances_legales**"   }--  "**domaines**"
-
 "**titres**"   }--  "**domaines**"
 
 "**titres**"   }--  "**titres_statuts**"
@@ -863,18 +824,6 @@ entity "**utilisateurs__titres**" {
 "**titres_references**"   }--  "**references_types**"
 
 "**titres_references**"   }--  "**references_types**"
-
-"**titres_substances**"   }--  "**substances**"
-
-"**titres_substances**"   }--  "**substances**"
-
-"**titres_substances**"   }--  "**titres_etapes**"
-
-"**titres_substances**"   }--  "**titres_etapes**"
-
-"**titres_substances**"   }--  "**titres_etapes**"
-
-"**titres_substances**"   }--  "**titres_etapes**"
 
 "**titres_titulaires**"   }--  "**entreprises**"
 
