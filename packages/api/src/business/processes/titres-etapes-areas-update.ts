@@ -1,16 +1,21 @@
 import {
-  ITitreEtape,
-  ITitreArea,
+  IApiGeoResult,
   IArea,
   IAreaType,
-  Index,
   ICommune,
   IForet,
-  IApiGeoResult,
-  ISDOMZone
+  Index,
+  ISDOMZone,
+  ITitreArea,
+  ITitreEtape
 } from '../../types'
 
-import { geojsonFeatureMultiPolygon } from '../../tools/geojson'
+import {
+  geojsonFeatureMultiPolygon,
+  geojsonIntersectsCommunes,
+  geojsonIntersectsForets,
+  geojsonIntersectsSDOM
+} from '../../tools/geojson'
 import { apiGeoGet } from '../../tools/api-geo/index'
 import {
   communesGet,
@@ -26,13 +31,14 @@ import {
   titreEtapeSdomZoneDelete,
   titresEtapesCommunesUpdate as titresEtapesCommunesUpdateQuery,
   titresEtapesForetsUpdate as titresEtapesForetsUpdateQuery,
-  titresEtapesSDOMZonesUpdate as titresEtapesSDOMZonesUpdateQuery,
-  titresEtapesGet
+  titresEtapesGet,
+  titresEtapesSDOMZonesUpdate as titresEtapesSDOMZonesUpdateQuery
 } from '../../database/queries/titres-etapes'
 import TitresCommunes from '../../database/models/titres-communes'
 import TitresForets from '../../database/models/titres-forets'
 import { userSuper } from '../../database/user-super'
 import TitresSDOMZones from '../../database/models/titres--sdom-zones'
+import { Feature } from '@turf/helpers'
 
 interface ITitreEtapeAreas {
   titreEtape: ITitreEtape
@@ -262,6 +268,18 @@ export const titresEtapesAreasUpdate = async (titresEtapesIds?: string[]) => {
     userSuper
   )
 
+  console.time('coucou forets')
+  await titresEtapesForetsUpdateNew(titresEtapes)
+  console.timeEnd('coucou forets')
+
+  console.time('coucou sdom')
+  await titresEtapesSdomUpdateNew(titresEtapes)
+  console.timeEnd('coucou sdom')
+
+  console.time('coucou communes')
+  await titresEtapesCommunesUpdateNew(titresEtapes)
+  console.timeEnd('coucou communes')
+
   const communes = await communesGet()
   const forets = await foretsGet()
   const sdomZones = await sdomZonesGet()
@@ -291,9 +309,10 @@ export const titresEtapesAreasUpdate = async (titresEtapesIds?: string[]) => {
     }
   }
 
+  console.time('Old call')
   const titresEtapesAreasIndex = await titresEtapesAreasGet(titresEtapes)
 
-  return {
+  const result = {
     titresCommunes: await titresEtapesCommunesUpdate(
       titresEtapesAreasIndex,
       communes
@@ -307,8 +326,11 @@ export const titresEtapesAreasUpdate = async (titresEtapesIds?: string[]) => {
       sdomZones
     )
   }
-}
 
+  console.timeEnd('Old call')
+
+  return result
+}
 /**
  * Met à jour les communes pour chaque étape
  * @param titresEtapesAreasIndex - liste des étapes
@@ -332,6 +354,41 @@ const titresEtapesCommunesUpdate = async (
       }),
     titreEtapeCommuneDelete
   )
+
+/**
+ * Met à jour les forets pour chaque étape
+ * @param titresEtapesAreasIndex - liste des étapes
+ * @returns toutes les modifications effectuées
+ */
+const titresEtapesForetsUpdateNew = async (titresEtapes: ITitreEtape[]) => {
+  for (const titreEtape of titresEtapes) {
+    if (titreEtape.points?.length) {
+      await geojsonIntersectsForets(
+        geojsonFeatureMultiPolygon(titreEtape.points) as Feature
+      )
+    }
+  }
+}
+
+const titresEtapesSdomUpdateNew = async (titresEtapes: ITitreEtape[]) => {
+  for (const titreEtape of titresEtapes) {
+    if (titreEtape.points?.length) {
+      await geojsonIntersectsSDOM(
+        geojsonFeatureMultiPolygon(titreEtape.points) as Feature
+      )
+    }
+  }
+}
+
+const titresEtapesCommunesUpdateNew = async (titresEtapes: ITitreEtape[]) => {
+  for (const titreEtape of titresEtapes) {
+    if (titreEtape.points?.length) {
+      await geojsonIntersectsCommunes(
+        geojsonFeatureMultiPolygon(titreEtape.points) as Feature
+      )
+    }
+  }
+}
 
 /**
  * Met à jour les forets pour chaque étape

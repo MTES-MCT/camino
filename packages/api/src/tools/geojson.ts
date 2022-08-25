@@ -1,7 +1,7 @@
 import rewind from 'geojson-rewind'
 import center from '@turf/center'
 
-import { ITitrePoint, IGeometry } from '../types'
+import { IGeometry, ITitrePoint } from '../types'
 import { Feature } from '@turf/helpers'
 import { knex } from '../knex'
 
@@ -92,4 +92,41 @@ export const geojsonSurface = async (geojson: Feature<any>) => {
   const area = result.rows[0].area
 
   return Number.parseFloat((area / 1000000).toFixed(2))
+}
+
+export const geojsonIntersectsSDOM = async (geojson: Feature<any>) => {
+  const result: { rows: { id: string }[] } = await knex.raw(
+    `select sdom_zones.id from sdom_zones 
+           where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(
+             geojson.geometry
+           )}'), sdom_zones.geometry) is true`
+  )
+
+  return result.rows.map(({ id }) => id)
+}
+
+export const geojsonIntersectsForets = async (geojson: Feature<any>) => {
+  const result: { rows: { id: string }[] } = await knex.raw(
+    `select forets.id from forets 
+           where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(
+             geojson.geometry
+           )}'), forets.geometry) is true`
+  )
+
+  return result.rows.map(({ id }) => id)
+}
+
+export const geojsonIntersectsCommunes = async (
+  geojson: Feature<any>
+): Promise<{ id: string; surface: number }[]> => {
+  const result: { rows: { id: string; surface: number }[] } = await knex.raw(
+    `select communes.id, ST_Area(ST_INTERSECTION(ST_GeomFromGeoJSON('${JSON.stringify(
+      geojson.geometry
+    )}'), communes.geometry), true) as surface from communes
+           where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(
+             geojson.geometry
+           )}'), communes.geometry) is true`
+  )
+
+  return result.rows
 }
