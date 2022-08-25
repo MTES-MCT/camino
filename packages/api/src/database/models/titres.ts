@@ -192,7 +192,9 @@ class Titres extends Model {
           to: 'titresCommunes.communeId',
           extra: ['surface']
         },
-        to: 'communes.id'
+        to: 'communes.id',
+        modify: (query: any) =>
+          query.select('id', 'nom', 'departementId', 'titresCommunes.surface')
       }
     },
 
@@ -204,10 +206,10 @@ class Titres extends Model {
         from: ref('titres.propsTitreEtapesIds:points').castText(),
         through: {
           from: 'titresForets.titreEtapeId',
-          to: 'titresForets.foretId',
-          extra: ['surface']
+          to: 'titresForets.foretId'
         },
-        to: 'forets.id'
+        to: 'forets.id',
+        modify: 'defaultSelects'
       }
     },
     sdomZones: {
@@ -217,10 +219,10 @@ class Titres extends Model {
         from: ref('titres.propsTitreEtapesIds:points').castText(),
         through: {
           from: 'titres__sdomZones.titreEtapeId',
-          to: 'titres__sdomZones.sdomZoneId',
-          extra: ['surface']
+          to: 'titres__sdomZones.sdomZoneId'
         },
-        to: 'sdomZones.id'
+        to: 'sdomZones.id',
+        modify: 'defaultSelects'
       }
     },
 

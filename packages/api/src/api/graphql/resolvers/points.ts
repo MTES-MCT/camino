@@ -274,7 +274,7 @@ export const perimetreInformations = async (
 
       const geojsonFeatures = geojsonFeatureMultiPolygon(
         titreEtapePoints as ITitrePoint[]
-      )
+      ) as Feature
 
       sdomZones = await titreEtapeSdomZonesGet(geojsonFeatures)
     }

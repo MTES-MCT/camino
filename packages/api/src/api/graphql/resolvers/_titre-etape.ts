@@ -2,7 +2,6 @@ import {
   ICoordonnees,
   IDocumentType,
   IEtapeType,
-  IGeoJson,
   IHeritageContenu,
   IHeritageProps,
   ISDOMZone,
@@ -23,12 +22,14 @@ import {
   titreEtapeHeritageContenuFind
 } from '../../../business/utils/titre-etape-heritage-contenu-find'
 import { etapeTypeSectionsFormat } from '../../_format/etapes-types'
-import { apiGeoGet } from '../../../tools/api-geo'
 import {
   titreEtapesSortAscByOrdre,
   titreEtapesSortDescByOrdre
 } from '../../../business/utils/titre-etapes-sort'
 import { GeoSystemes } from 'camino-common/src/static/geoSystemes'
+import { geojsonIntersectsSDOM } from '../../../tools/geojson'
+import { Feature } from '@turf/helpers'
+import SdomZones from '../../../database/models/sdom-zones'
 
 const titreEtapePointsCalc = <
   T extends {
@@ -241,10 +242,12 @@ const titreEtapeHeritageBuild = (
   return titreEtape
 }
 
-const titreEtapeSdomZonesGet = async (geoJson: IGeoJson) => {
-  const apiGeoResult = await apiGeoGet(geoJson, ['sdomZones'])
+const titreEtapeSdomZonesGet = async (
+  geoJson: Feature<any>
+): Promise<ISDOMZone[]> => {
+  const sdomZoneIds = await geojsonIntersectsSDOM(geoJson)
 
-  return apiGeoResult?.sdomZones || []
+  return SdomZones.query().whereIn('id', sdomZoneIds)
 }
 
 const documentTypeIdsBySdomZonesGet = (

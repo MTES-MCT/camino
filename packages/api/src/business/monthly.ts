@@ -13,39 +13,13 @@ const monthly = async () => {
       etablissementsUpdated = [],
       etablissementsDeleted = []
     } = await entreprisesUpdate()
-
     // mise à jour des forêts et des communes
-    const { titresCommunes, titresForets, titresSDOMZones } =
-      await titresEtapesAreasUpdate()
-    const {
-      areasUpdated: communesUpdated = [],
-      titresEtapesAreasUpdated: titresEtapesCommunesUpdated = [],
-      titresEtapesAreasDeleted: titresEtapesCommunesDeleted = []
-    } = titresCommunes
-    const {
-      areasUpdated: foretsUpdated = [],
-      titresEtapesAreasUpdated: titresEtapesForetsUpdated = [],
-      titresEtapesAreasDeleted: titresEtapesForetsDeleted = []
-    } = titresForets
-    const {
-      areasUpdated: sdomZonesUpdated = [],
-      titresEtapesAreasUpdated: titresEtapesSDOMZonesUpdated = [],
-      titresEtapesAreasDeleted: titresEtapesSDOMZonesDeleted = []
-    } = titresSDOMZones
+    await titresEtapesAreasUpdate()
 
     logsUpdate({
       entreprisesUpdated,
       etablissementsUpdated,
-      etablissementsDeleted,
-      communesUpdated,
-      titresEtapesCommunesUpdated,
-      titresEtapesCommunesDeleted,
-      foretsUpdated,
-      titresEtapesForetsUpdated,
-      titresEtapesForetsDeleted,
-      sdomZonesUpdated,
-      titresEtapesSDOMZonesUpdated,
-      titresEtapesSDOMZonesDeleted
+      etablissementsDeleted
     })
   } catch (e) {
     console.info('erreur:', e)

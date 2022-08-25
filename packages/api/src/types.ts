@@ -274,16 +274,15 @@ interface IAdministration {
   activitesTypesEmails?: (IActiviteType & { email: string })[]
 }
 
-type IAreaType = 'communes' | 'forets' | 'sdomZones'
 
 interface IArea {
   id: string
   nom: string
-  surface?: number | null
 }
 
 interface ICommune extends IArea {
   departementId?: DepartementId | null
+  surface?: number | null
 }
 
 interface ICoordonnees {
@@ -447,12 +446,6 @@ interface IGeoJsonCentre {
   properties: { etapeId?: string | null }
 }
 
-interface IApiGeoResult {
-  communes: ICommune[]
-  forets: IForet[]
-  sdomZones: ISDOMZone[]
-}
-
 interface IGeometry {
   type: string
   coordinates: number[] | number[][] | number[][][] | number[][][][]
@@ -512,12 +505,6 @@ interface IActiviteTypeTitreType {
   titreType?: ITitreType | null
   activiteTypeId: string
   activiteType?: IActiviteType | null
-}
-
-interface IEtapeTypeEtapeStatut {
-  etapeTypeId: string
-  etapeStatutId: string
-  ordre: number
 }
 
 interface IAdministrationTitreType {
@@ -655,13 +642,12 @@ interface ITitreAdministrationLocale {
 }
 
 interface ITitreArea {
-  areaId?: string
   titreEtapeId: string
-  surface?: number | null
 }
 
 interface ITitreCommune extends ITitreArea {
   communeId: string
+  surface: number
 }
 
 interface ITitreForet extends ITitreArea {
@@ -947,7 +933,6 @@ export {
   IAdministration,
   ICommune,
   IArea,
-  IAreaType,
   IContenu,
   IContenuElement,
   IContenuValeur,
@@ -966,7 +951,6 @@ export {
   ISDOMZone,
   IGeoJson,
   IGeoJsonProperties,
-  IApiGeoResult,
   IGeometry,
   IGlobale,
   IPhaseStatut,
@@ -974,7 +958,6 @@ export {
   ITitreTypeTitreStatut,
   ITitreTypeDemarcheType,
   IActiviteTypeTitreType,
-  IEtapeTypeEtapeStatut,
   IEtapeTypeDocumentType,
   IEtapeTypeJustificatifType,
   IAdministrationTitreType,

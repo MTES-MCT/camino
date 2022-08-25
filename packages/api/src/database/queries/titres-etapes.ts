@@ -1,29 +1,23 @@
 import {
   ITitreEtape,
-  ITitreCommune,
   ITitreAdministrationLocale,
   IFields,
   IUtilisateur,
-  ITitreEtapeJustificatif,
-  ITitreForet,
-  ITitreSDOMZone
+  ITitreEtapeJustificatif
 } from '../../types'
 import options from './_options'
 import graphBuild from './graph/build'
 import { fieldsFormat } from './graph/fields-format'
 
 import TitresEtapes, { DBTitresEtapes } from '../models/titres-etapes'
-import TitresCommunes from '../models/titres-communes'
 import TitresEtapesJustificatifs from '../models/titres-etapes-justificatifs'
 import TitresAdministrationsLocales from '../models/titres-administrations-locales'
-import TitresForets from '../models/titres-forets'
 import { titresEtapesQueryModify } from './permissions/titres-etapes'
 import {
   createJournalCreate,
   patchJournalCreate,
   upsertJournalCreate
 } from './journaux'
-import TitresSDOMZones from '../models/titres--sdom-zones'
 
 const titresEtapesQueryBuild = (
   { fields }: { fields?: IFields },
@@ -137,70 +131,12 @@ const titreEtapeUpsert = async (
     titreId
   )
 
-const titresEtapesCommunesGet = async () => TitresCommunes.query()
-
-const titresEtapesCommunesUpdate = async (
-  titresEtapesCommunes: ITitreCommune
-) =>
-  TitresCommunes.query().upsertGraph(titresEtapesCommunes, {
-    insertMissing: true
-  })
-
-const titreEtapeCommuneDelete = async (
-  titreEtapeId: string,
-  communeId: string
-) =>
-  TitresCommunes.query()
-    .delete()
-    .where('titreEtapeId', titreEtapeId)
-    .andWhere('communeId', communeId)
-
-const titresEtapesForetsUpdate = async (titresEtapesForets: ITitreForet) =>
-  TitresForets.query().upsertGraph(titresEtapesForets, {
-    insertMissing: true
-  })
-
-const titreEtapeForetDelete = async (titreEtapeId: string, foretId: string) =>
-  TitresForets.query()
-    .delete()
-    .where('titreEtapeId', titreEtapeId)
-    .andWhere('foretId', foretId)
-
-const titresEtapesSDOMZonesUpdate = async (
-  titresEtapesSdomZones: ITitreSDOMZone
-) =>
-  TitresSDOMZones.query().upsertGraph(titresEtapesSdomZones, {
-    insertMissing: true
-  })
-
-const titreEtapeSdomZoneDelete = async (
-  titreEtapeId: string,
-  sdomZoneId: string
-) =>
-  TitresSDOMZones.query()
-    .delete()
-    .where('titreEtapeId', titreEtapeId)
-    .andWhere('sdomZoneId', sdomZoneId)
-
 const titresEtapesJustificatifsUpsert = async (
   titresEtapesJustificatifs: ITitreEtapeJustificatif[]
 ) =>
   TitresEtapesJustificatifs.query().upsertGraph(titresEtapesJustificatifs, {
     insertMissing: true
   })
-
-const titreEtapeJustificatifsDelete = async (
-  titreEtapeId: string,
-  documentId?: string
-) => {
-  const q = TitresEtapesJustificatifs.query().where({ titreEtapeId })
-
-  if (documentId) {
-    q.where({ documentId })
-  }
-
-  return q.delete()
-}
 
 const titresEtapesAdministrationsCreate = async (
   titresEtapesAdministrations: ITitreAdministrationLocale[]
@@ -221,15 +157,7 @@ export {
   titreEtapeCreate,
   titreEtapeUpdate,
   titreEtapeUpsert,
-  titresEtapesCommunesUpdate,
-  titreEtapeCommuneDelete,
-  titresEtapesCommunesGet,
-  titresEtapesForetsUpdate,
-  titreEtapeForetDelete,
-  titresEtapesSDOMZonesUpdate,
-  titreEtapeSdomZoneDelete,
   titresEtapesJustificatifsUpsert,
-  titreEtapeJustificatifsDelete,
   titresEtapesAdministrationsCreate,
   titreEtapeAdministrationDelete
 }

@@ -15,6 +15,12 @@ class Forets extends Model {
       nom: { type: 'string' }
     }
   }
+
+  static modifiers = {
+    defaultSelects(query: any) {
+      query.select('id', 'nom')
+    }
+  }
 }
 
 export default Forets

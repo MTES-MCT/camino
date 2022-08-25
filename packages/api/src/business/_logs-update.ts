@@ -1,6 +1,5 @@
 import {
   Index,
-  IArea,
   ITitreAdministrationLocale,
   IEntrepriseEtablissement,
   IEntreprise
@@ -19,15 +18,6 @@ const logsUpdate = ({
   titresPhasesDeleted,
   titresDatesUpdated,
   pointsReferencesCreated,
-  communesUpdated,
-  titresEtapesCommunesUpdated,
-  titresEtapesCommunesDeleted,
-  foretsUpdated,
-  titresEtapesForetsUpdated,
-  titresEtapesForetsDeleted,
-  sdomZonesUpdated,
-  titresEtapesSDOMZonesUpdated,
-  titresEtapesSDOMZonesDeleted,
   titresAdministrationsGestionnairesCreated,
   titresAdministrationsGestionnairesDeleted,
   titresEtapesAdministrationsLocalesCreated,
@@ -57,15 +47,6 @@ const logsUpdate = ({
   titresPhasesDeleted?: string[]
   titresDatesUpdated?: string[]
   pointsReferencesCreated?: string[]
-  communesUpdated?: IArea[]
-  titresEtapesCommunesUpdated?: string[]
-  titresEtapesCommunesDeleted?: string[]
-  foretsUpdated?: IArea[]
-  titresEtapesForetsUpdated?: string[]
-  titresEtapesForetsDeleted?: string[]
-  sdomZonesUpdated?: IArea[]
-  titresEtapesSDOMZonesUpdated?: string[]
-  titresEtapesSDOMZonesDeleted?: string[]
   titresAdministrationsGestionnairesCreated?: string[]
   titresAdministrationsGestionnairesDeleted?: string[]
   titresEtapesAdministrationsLocalesCreated?: ITitreAdministrationLocale[]
@@ -156,54 +137,6 @@ const logsUpdate = ({
   if (pointsReferencesCreated?.length) {
     console.info(
       `création: ${pointsReferencesCreated.length} référence(s) de points`
-    )
-  }
-
-  if (communesUpdated?.length) {
-    console.info(`mise à jour: ${communesUpdated.length} commune(s)`)
-  }
-
-  if (titresEtapesCommunesUpdated?.length) {
-    console.info(
-      `mise à jour: ${titresEtapesCommunesUpdated.length} commune(s) mise(s) à jour dans des étapes`
-    )
-  }
-
-  if (titresEtapesCommunesDeleted?.length) {
-    console.info(
-      `mise à jour: ${titresEtapesCommunesDeleted.length} commune(s) supprimée(s) dans des étapes`
-    )
-  }
-
-  if (foretsUpdated?.length) {
-    console.info(`mise à jour: ${foretsUpdated.length} foret(s)`)
-  }
-
-  if (titresEtapesForetsUpdated?.length) {
-    console.info(
-      `mise à jour: ${titresEtapesForetsUpdated.length} foret(s) mise(s) à jour dans des étapes`
-    )
-  }
-
-  if (titresEtapesForetsDeleted?.length) {
-    console.info(
-      `mise à jour: ${titresEtapesForetsDeleted.length} foret(s) supprimée(s) dans des étapes`
-    )
-  }
-
-  if (sdomZonesUpdated?.length) {
-    console.info(`mise à jour: ${sdomZonesUpdated.length} zone(s) du SDOM`)
-  }
-
-  if (titresEtapesSDOMZonesUpdated?.length) {
-    console.info(
-      `mise à jour: ${titresEtapesSDOMZonesUpdated.length} zone(s) du SDOM mise(s) à jour dans des étapes`
-    )
-  }
-
-  if (titresEtapesSDOMZonesDeleted?.length) {
-    console.info(
-      `mise à jour: ${titresEtapesSDOMZonesDeleted.length} zone(s) du SDOM supprimée(s) dans des étapes`
     )
   }
 

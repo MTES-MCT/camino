@@ -49,10 +49,6 @@ API_MAILJET_CONTACTS_LIST_ID={{ mailjet_contact_list_id }}
 # UI Sentry
 SENTRY_DSN={{ ui_sentry_dns }}
 
-
-# API Géo
-API_GEO_URL={{ api_geo_url }}
-
 # API Administration
 API_ADMINISTRATION_URL="https://etablissements-publics.api.gouv.fr"
 

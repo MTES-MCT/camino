@@ -17,6 +17,12 @@ class Communes extends Model {
       departementId: { type: 'string' }
     }
   }
+
+  static modifiers = {
+    defaultSelects(query: any) {
+      query.select('id', 'nom', 'departementId')
+    }
+  }
 }
 
 export default Communes

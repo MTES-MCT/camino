@@ -157,7 +157,9 @@ class TitresEtapes extends Model {
           extra: ['surface']
         },
         to: 'communes.id'
-      }
+      },
+      modify: (query: any) =>
+        query.select('id', 'nom', 'departementId', 'titresCommunes.surface')
     },
 
     forets: {
@@ -167,11 +169,11 @@ class TitresEtapes extends Model {
         from: 'titresEtapes.id',
         through: {
           from: 'titresForets.titreEtapeId',
-          to: 'titresForets.foretId',
-          extra: ['surface']
+          to: 'titresForets.foretId'
         },
         to: 'forets.id'
-      }
+      },
+      modify: 'defaultSelects'
     },
     sdomZones: {
       relation: Model.ManyToManyRelation,
@@ -180,11 +182,11 @@ class TitresEtapes extends Model {
         from: 'titresEtapes.id',
         through: {
           from: 'titres__sdomZones.titreEtapeId',
-          to: 'titres__sdomZones.sdomZoneId',
-          extra: ['surface']
+          to: 'titres__sdomZones.sdomZoneId'
         },
         to: 'sdomZones.id'
-      }
+      },
+      modify: 'defaultSelects'
     },
     journaux: {
       relation: Model.HasManyRelation,

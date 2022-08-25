@@ -67,6 +67,7 @@ import { documentFilePathFind } from '../../../tools/documents/document-path-fin
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { Feature } from '@turf/helpers'
 
 const statutIdAndDateGet = (
   etape: ITitreEtape,
@@ -312,7 +313,7 @@ const etapeCreer = async (
       titreEtapePoints = titreEtapePointsCalc(etape.points)
       const geojsonFeatures = geojsonFeatureMultiPolygon(
         titreEtapePoints as ITitrePoint[]
-      )
+      ) as Feature
 
       sdomZones.push(...(await titreEtapeSdomZonesGet(geojsonFeatures)))
     }
@@ -469,7 +470,7 @@ const etapeModifier = async (
       titreEtapePoints = titreEtapePointsCalc(etape.points)
       const geojsonFeatures = geojsonFeatureMultiPolygon(
         titreEtapePoints as ITitrePoint[]
-      )
+      ) as Feature
 
       sdomZones.push(...(await titreEtapeSdomZonesGet(geojsonFeatures)))
     }
