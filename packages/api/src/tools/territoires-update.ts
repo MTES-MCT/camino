@@ -151,7 +151,7 @@ const sdomZonesUpdate = async () => {
   }
 }
 
-async function main() {
+export async function updateTerritoires() {
   try {
     await communesUpdate()
   } catch (e) {
@@ -169,9 +169,3 @@ async function main() {
   }
   process.exit(0)
 }
-
-main().catch(e => {
-  console.error(e)
-
-  process.exit(1)
-})

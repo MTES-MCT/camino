@@ -38,6 +38,7 @@ COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/src ./packages
 COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/tsconfig.json ./packages/api/
 COPY --chown=nonroot:nonroot --from=build-stage /app/packages/common/src ./packages/common/src/
 COPY --chown=nonroot:nonroot --from=build-stage /app/packages/common/tsconfig.json ./packages/common/
+COPY --chown=nonroot:nonroot Makefile .
 
 # Ce n'est pas nécessaire pour les environnements de prod (le dossier est crée par ansible et monté) mais est plus correct pour pouvoir utiliser l'image sans problème de droit au démarrage
 RUN mkdir -p /packages/api/files

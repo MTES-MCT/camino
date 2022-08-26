@@ -95,7 +95,7 @@ const sirensFind = (entreprisesOld: IEntreprise[]) =>
     }, {})
   )
 
-export const entreprisesUpdate = async () => {
+export const entreprisesUpdate = async (): Promise<void> => {
   console.info()
   console.info('entreprises (Api Insee)…')
 
@@ -104,34 +104,27 @@ export const entreprisesUpdate = async () => {
 
   const sirens = sirensFind(entreprisesOld)
 
-  if (!sirens.length) {
-    return {
-      entreprisesUpdated: [],
-      etablissementsUpdated: [],
-      etablissementsDeleted: []
-    }
-  }
+  if (sirens.length) {
+    const entreprisesNew = await apiInseeEntreprisesGet(sirens)
+    const entreprisesEtablissementsNew =
+      await apiInseeEntreprisesEtablissementsGet(sirens)
 
-  const entreprisesNew = await apiInseeEntreprisesGet(sirens)
-  const entreprisesEtablissementsNew =
-    await apiInseeEntreprisesEtablissementsGet(sirens)
+    const entreprisesToUpdate = entreprisesToUpdateBuild(
+      entreprisesOld,
+      entreprisesNew
+    )
 
-  const entreprisesToUpdate = entreprisesToUpdateBuild(
-    entreprisesOld,
-    entreprisesNew
-  )
+    const etablissementsToUpdate = entreprisesEtablissementsToUpdateBuild(
+      entreprisesEtablissementsOld,
+      entreprisesEtablissementsNew
+    )
 
-  const etablissementsToUpdate = entreprisesEtablissementsToUpdateBuild(
-    entreprisesEtablissementsOld,
-    entreprisesEtablissementsNew
-  )
+    const etablissementsToDelete = entreprisesEtablissementsToDeleteBuild(
+      entreprisesEtablissementsOld,
+      entreprisesEtablissementsNew
+    )
 
-  const etablissementsToDelete = entreprisesEtablissementsToDeleteBuild(
-    entreprisesEtablissementsOld,
-    entreprisesEtablissementsNew
-  )
-
-  let etablissementsUpdated = [] as IEntrepriseEtablissement[]
+    let etablissementsUpdated = [] as IEntrepriseEtablissement[]
 
   if (etablissementsToUpdate.length) {
     etablissementsUpdated = await entreprisesEtablissementsUpsert(
@@ -146,8 +139,8 @@ export const entreprisesUpdate = async () => {
 
   const etablissementsDeleted = etablissementsToDelete
 
-  if (etablissementsToDelete.length) {
-    await entreprisesEtablissementsDelete(etablissementsToDelete)
+    if (etablissementsToDelete.length) {
+      await entreprisesEtablissementsDelete(etablissementsToDelete)
 
     console.info(
       'entreprises / établissements (suppression) ->',
@@ -155,16 +148,14 @@ export const entreprisesUpdate = async () => {
     )
   }
 
-  let entreprisesUpdated = [] as IEntreprise[]
+    let entreprisesUpdated = [] as IEntreprise[]
 
-  if (entreprisesToUpdate.length) {
-    entreprisesUpdated = await entreprisesUpsert(entreprisesToUpdate)
+    if (entreprisesToUpdate.length) {
+      entreprisesUpdated = await entreprisesUpsert(entreprisesToUpdate)
 
     console.info(
       'entreprises (mise à jour) ->',
       entreprisesUpdated.map(e => e.id).join(', ')
     )
   }
-
-  return { entreprisesUpdated, etablissementsUpdated, etablissementsDeleted }
 }
