@@ -69,7 +69,7 @@ describe('titresEtapesAreasUpdate', () => {
       typeId: 'arm'
     })
 
-    const titreDemarcheId = idGenerate()
+    const titreDemarcheId = 'titreDemarcheIdUniquePourMiseAJourAreas'
     await TitresDemarches.query().insert([
       {
         id: titreDemarcheId,
