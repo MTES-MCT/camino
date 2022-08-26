@@ -152,6 +152,7 @@ const sdomZonesUpdate = async () => {
 }
 
 export async function updateTerritoires() {
+  console.info('Mise à jour des territoires')
   try {
     await communesUpdate()
   } catch (e) {

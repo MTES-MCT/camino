@@ -33,30 +33,12 @@ class DbManager {
     if (queryResult.rowCount === 0) {
       await globalClient.query(`CREATE DATABASE ${this.dbName}`)
       newDatabase = true
-      //             -- enable raster support (for 3+)
-      //             CREATE EXTENSION postgis_raster;
-      //             -- Enable Topology
-      //             CREATE EXTENSION postgis_topology;
-      //             -- Enable PostGIS Advanced 3D
-      //             -- and other geoprocessing algorithms
-      //             -- sfcgal not available with all distributions
-      //             CREATE EXTENSION postgis_sfcgal;
-      //             -- fuzzy matching needed for Tiger
-      //             CREATE EXTENSION fuzzystrmatch;
-      //             -- rule based standardizer
-      //             CREATE EXTENSION address_standardizer;
-      //             -- example rule data set
-      //             CREATE EXTENSION address_standardizer_data_us;
-      //             -- Enable US Tiger Geocoder
-      //             CREATE EXTENSION postgis_tiger_geocoder;
     }
     await globalClient.end()
 
     this.knexInstance = this.getKnex()
     if (newDatabase) {
       await this.knexInstance.raw('CREATE EXTENSION postgis')
-      // await this.knexInstance.raw('CREATE EXTENSION postgis_raster')
-      // await this.knexInstance.raw('CREATE EXTENSION postgis_topology')
     }
     Model.knex(this.knexInstance)
     knexInstanceSet(this.knexInstance)
