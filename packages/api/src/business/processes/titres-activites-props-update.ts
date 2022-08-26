@@ -6,7 +6,7 @@ import { titresActivitesUpsert } from '../../database/queries/titres-activites'
 import { titresGet } from '../../database/queries/titres'
 import { titreValideCheck } from '../utils/titre-valide-check'
 import { userSuper } from '../../database/user-super'
-import { Frequences } from 'camino-common/src/static/frequence'
+import { getMonth } from 'camino-common/src/static/frequence'
 
 export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
   console.info()
@@ -30,16 +30,10 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
       if (!titre.activites?.length) return acc
 
       return titre.activites.reduce((acc, titreActivite) => {
-        const activiteType = titreActivite.type!
-        const periodes = Frequences[activiteType.frequenceId].values
-
-        // FIXME: C'est quoi cette façon de calculer la période ? On pourrait pas le rendre explicite ?
-        const periodeMonths = 12 / periodes.length
-
         const dateDebut = dateFormat(
           new Date(
             titreActivite.annee,
-            (titreActivite.periodeId - 1) * periodeMonths,
+            getMonth(titreActivite.type?.frequenceId, titreActivite.periodeId),
             1
           ),
           'yyyy-mm-dd'

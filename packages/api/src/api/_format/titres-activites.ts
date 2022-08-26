@@ -1,11 +1,10 @@
-import { ITitreActivite, IFields, ISection, IContenu } from '../../types'
+import { ITitreActivite, ISection, IContenu } from '../../types'
 
 import { titreSectionsFormat } from './titres-sections'
 
-import { titreActiviteFormatFields } from './_fields'
 import { titreActiviteCompleteCheck } from '../../business/validations/titre-activite-complete-check'
 
-const titreActiviteContenuFormat = (
+export const titreActiviteContenuFormat = (
   sections: ISection[],
   contenu: IContenu,
   operation: 'read' | 'write'
@@ -31,11 +30,7 @@ const titreActiviteContenuFormat = (
   return contenu
 }
 
-const titreActiviteFormat = (
-  ta: ITitreActivite,
-  // TODO 2022-08-19 : supprimer ce champ ?
-  _fields: IFields = titreActiviteFormatFields
-) => {
+export const titreActiviteFormat = (ta: ITitreActivite) => {
   // si les sections contiennent des élements sur cette activité
   if (ta.sections?.length) {
     ta.sections = titreSectionsFormat(ta.sections)
@@ -44,24 +39,6 @@ const titreActiviteFormat = (
   if (ta.contenu) {
     ta.contenu = titreActiviteContenuFormat(ta.sections, ta.contenu, 'read')
   }
-
-  // FIXME Faire ça en dur ou dans le front ?
-  // // si
-  // // - le formatage de la période est requis par les fields
-  // // - l'activité a une périodicité
-  // // - le type d'activité a une fréquence qui contient un tableau de périodes
-  // // alors la période de l'activité en cours est définie
-  // if (
-  //   fields.periode &&
-  //   ta.periodeId &&
-  //   ta.type?.frequence?.periodesNom &&
-  //   ta.type.frequence[ta.type.frequence.periodesNom] &&
-  //   ta.type.frequence[ta.type.frequence.periodesNom]!.length
-  // ) {
-  //   ta.periode = ta.type.frequence[ta.type.frequence.periodesNom]!.find(
-  //     p => p.id === ta.periodeId
-  //   ) as IAnnee | ITrimestre | IMois
-  // }
 
   if (ta.statutId === 'enc' && ta.modification) {
     ta.deposable = titreActiviteCompleteCheck(
@@ -73,10 +50,4 @@ const titreActiviteFormat = (
   }
 
   return ta
-}
-
-export {
-  titreActiviteFormatFields,
-  titreActiviteFormat,
-  titreActiviteContenuFormat
 }

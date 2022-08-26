@@ -17,7 +17,11 @@ import {
 import { UNITES, Unites } from 'camino-common/src/static/unites'
 import { sortedDevises } from 'camino-common/src/static/devise'
 import { exhaustiveCheck } from '../../tools/exhaustive-type-check'
-import { Frequences } from 'camino-common/src/static/frequence'
+import {
+  FrequenceId,
+  Frequences,
+  getNumberOfMonths
+} from 'camino-common/src/static/frequence'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 
 const substancesFiscalesFind = (
@@ -81,9 +85,10 @@ const titreActiviteSectionElementsFormat = (
  * @param periodeId - id de la fréquence de la période (ex: 1 pour le premier trimestre)
  * @param date - date de l'activité
  * @param titreDemarches - démarches du titre
+ * @param titreTypeId - le type id du titre
  */
 
-const titreActiviteSectionsBuild = (
+export const titreActiviteSectionsBuild = (
   activiteTypeId: string,
   sections: ISection[],
   periodeId: number,
@@ -166,7 +171,7 @@ const titreActiviteFind = (
  * @param periodeId - id de la période (exemple: 2 pour le 2ème trimestre)
  * @param activiteTypeSections - sections du type d'activité
  * @param annee - année
- * @param months - nombre de mois dans la période (exemple: 3 si la période est le trimestre)
+ * @param frequenceId - fréquence de l'activité
  * @param aujourdhui - date du jour au format yyyy-mm-jj
  * @param titreId - id du titre
  * @param titreDemarches - démarches du titre
@@ -179,7 +184,7 @@ const titreActiviteBuild = (
   periodeId: number,
   activiteTypeSections: ISection[],
   annee: number,
-  months: number,
+  frequenceId: FrequenceId,
   aujourdhui: string,
   titreId: string,
   titreDemarches: ITitreDemarche[],
@@ -192,14 +197,17 @@ const titreActiviteBuild = (
 
   // la date de fin de l'activité est le premier jour du mois
   // du début de la période suivante, en fonction de la fréquence
-  const date = dateFormat(new Date(annee, periodeId * months, 1), 'yyyy-mm-dd')
+  const date = dateFormat(
+    new Date(annee, periodeId * getNumberOfMonths(frequenceId), 1),
+    'yyyy-mm-dd'
+  )
 
   const titreActiviteIsValide = titreActiviteValideCheck(
     date,
     aujourdhui,
     periodeId,
     annee,
-    months,
+    getNumberOfMonths(frequenceId),
     titreDemarches,
     titreTypeId
   )
@@ -240,7 +248,7 @@ const titreActiviteBuild = (
  * @returns une liste d'activités
  */
 
-const titreActivitesBuild = (
+export const titreActivitesBuild = (
   activiteType: IActiviteType,
   annees: number[],
   aujourdhui: string,
@@ -253,20 +261,17 @@ const titreActivitesBuild = (
   // aucune activité ne peut être créées
   if (!titreDemarches?.some(d => d.phase)) return []
 
-  // FIXME: Encore un weasley ?
   const periodes = Frequences[activiteType.frequenceId].values
-  const months = 12 / periodes.length
-  const periodesIndexes = [...new Array(periodes.length)]
 
   return annees.reduce(
     (titreActivitesNew: ITitreActivite[], annee) =>
-      periodesIndexes.reduce((acc: ITitreActivite[], _, i) => {
+      periodes.reduce((acc: ITitreActivite[], _, i) => {
         const titreActivite = titreActiviteBuild(
           activiteType.id,
           i + 1,
           activiteType.sections,
           annee,
-          months,
+          activiteType.frequenceId,
           aujourdhui,
           titreId,
           titreDemarches,
@@ -283,5 +288,3 @@ const titreActivitesBuild = (
     []
   )
 }
-
-export { titreActivitesBuild, titreActiviteSectionsBuild }

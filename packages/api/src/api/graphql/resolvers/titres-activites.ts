@@ -59,7 +59,7 @@ const activite = async (
 
     if (!titreActivite) return null
 
-    return titreActivite && titreActiviteFormat(titreActivite, fields)
+    return titreActivite && titreActiviteFormat(titreActivite)
   } catch (e) {
     console.error(e)
 
@@ -184,9 +184,7 @@ const activites = async (
     if (!titresActivites.length) return { elements: [], total: 0 }
 
     return {
-      elements: titresActivites.map(ta =>
-        titreActiviteFormat(ta, fields.activites)
-      ),
+      elements: titresActivites.map(ta => titreActiviteFormat(ta)),
       page,
       intervalle,
       ordre,
@@ -222,9 +220,8 @@ const activiteDeposer = async (
     )
 
     if (!activite) throw new Error("l'activité n'existe pas")
-    const fields = fieldsBuild(info)
 
-    if (!titreActiviteFormat(activite, fields).deposable)
+    if (!titreActiviteFormat(activite).deposable)
       throw new Error('droits insuffisants')
 
     await titreActiviteUpdateQuery(activite.id, {
@@ -232,10 +229,11 @@ const activiteDeposer = async (
       utilisateurId: user.id,
       dateSaisie: dateFormat(new Date(), 'yyyy-mm-dd')
     })
+    const fields = fieldsBuild(info)
     const activiteRes = await titreActiviteGet(activite.id, { fields }, user)
 
     if (!activiteRes) throw new Error("l'activité n'existe pas")
-    const activiteFormated = titreActiviteFormat(activiteRes, fields)
+    const activiteFormated = titreActiviteFormat(activiteRes)
 
     const titre = (await titreGet(
       activiteRes.titreId,
@@ -356,7 +354,7 @@ const activiteModifier = async (
 
     if (!activiteRes) throw new Error("l'activité n'existe pas")
 
-    return titreActiviteFormat(activiteRes, fields)
+    return titreActiviteFormat(activiteRes)
   } catch (e) {
     console.error(e)
 

@@ -4,7 +4,7 @@ import { titreEtapeFormat } from './titres-etapes'
 import { titreFormat } from './titres'
 import { titreDemarcheFormatFields } from './_fields'
 
-const titreDemarcheFormat = (
+export const titreDemarcheFormat = (
   titreDemarche: ITitreDemarche,
   fields: IFields = titreDemarcheFormatFields
 ) => {
@@ -22,5 +22,3 @@ const titreDemarcheFormat = (
 
   return titreDemarche
 }
-
-export { titreDemarcheFormatFields, titreDemarcheFormat }

@@ -161,7 +161,7 @@ const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
     t.activites = t.activites.map(ta => {
       ta.titre = t
 
-      return titreActiviteFormat(ta, fields.activites)
+      return titreActiviteFormat(ta)
     })
   }
 

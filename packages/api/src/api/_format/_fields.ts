@@ -1,33 +1,24 @@
 import { IFields } from '../../types'
 
-const titreActiviteFormatFields = {
-  sections: {}
-} as IFields
-
-const titreEtapeFormatFields = {
+export const titreEtapeFormatFields = {
   geojsonMultiPolygon: {},
   geojsonPoints: {},
   sections: {}
 } as IFields
 
-const titreDemarcheFormatFields = {
+export const titreDemarcheFormatFields = {
   etapes: titreEtapeFormatFields
 } as IFields
 
-const titreFormatFields = {
+export const titreFormatFields = {
   surface: {},
   geojsonMultiPolygon: {},
   geojsonPoints: {},
   demarches: titreDemarcheFormatFields,
-  activites: titreActiviteFormatFields,
+  activites: {
+    sections: {}
+  },
   administrations: {}
 } as IFields
 
 titreDemarcheFormatFields.titre = titreFormatFields
-
-export {
-  titreEtapeFormatFields,
-  titreDemarcheFormatFields,
-  titreActiviteFormatFields,
-  titreFormatFields
-}
