@@ -97,23 +97,49 @@ export const geojsonSurface = async (geojson: Feature<any>) => {
 export const geojsonIntersectsSDOM = async (
   geojson: Feature<any>
 ): Promise<SDOMZoneId[]> => {
-  const result: { rows: { id: SDOMZoneId }[] } = await knex.raw(
-    `select sdom_zones.id from sdom_zones 
-           where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(
-             geojson.geometry
-           )}'), sdom_zones.geometry) is true`
-  )
+  let result: { rows: { id: SDOMZoneId }[] }
+  try {
+    result = await knex.raw(
+      `select sdom_zones.id from sdom_zones
+         where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(
+           geojson.geometry
+         )}'), sdom_zones.geometry) is true`
+    )
+  } catch (e) {
+    console.warn(
+      "Une erreur est survenue lors du calcul de l'intersection avec des zones du sdom, tentative de correction automatique"
+    )
+    result = await knex.raw(
+      `select sdom_zones.id from sdom_zones
+             where ST_INTERSECTS(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(
+               geojson.geometry
+             )}')), sdom_zones.geometry) is true`
+    )
+  }
 
   return result.rows.map(({ id }) => id)
 }
 
 export const geojsonIntersectsForets = async (geojson: Feature<any>) => {
-  const result: { rows: { id: string }[] } = await knex.raw(
-    `select forets.id from forets 
+  let result: { rows: { id: string }[] }
+  try {
+    result = await knex.raw(
+      `select forets.id from forets 
            where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(
              geojson.geometry
            )}'), forets.geometry) is true`
-  )
+    )
+  } catch (e) {
+    console.warn(
+      "Une erreur est survenue lors du calcul de l'intersection avec des forêts, tentative de correction automatique"
+    )
+    result = await knex.raw(
+      `select forets.id from forets 
+           where ST_INTERSECTS(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(
+             geojson.geometry
+           )}')), forets.geometry) is true`
+    )
+  }
 
   return result.rows.map(({ id }) => id)
 }
@@ -121,14 +147,33 @@ export const geojsonIntersectsForets = async (geojson: Feature<any>) => {
 export const geojsonIntersectsCommunes = async (
   geojson: Feature<any>
 ): Promise<{ id: string; surface: number }[]> => {
-  const result: { rows: { id: string; surface: string }[] } = await knex.raw(
-    `select communes.id, ST_Area(ST_INTERSECTION(ST_GeomFromGeoJSON('${JSON.stringify(
-      geojson.geometry
-    )}'), communes.geometry), true) as surface from communes
-           where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(
-             geojson.geometry
-           )}'), communes.geometry) is true`
-  )
+  let result: { rows: { id: string; surface: string }[] }
+  try {
+    result = await knex.raw(
+      `select communes.id,
+                ST_Area(ST_INTERSECTION(ST_GeomFromGeoJSON('${JSON.stringify(
+                  geojson.geometry
+                )}'), communes.geometry), true) as surface
+         from communes
+         where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(
+           geojson.geometry
+         )}'), communes.geometry) is true`
+    )
+  } catch (e) {
+    console.warn(
+      "Une erreur est survenue lors du calcul de l'intersection avec des communes, tentative de correction automatique"
+    )
+    result = await knex.raw(
+      `select communes.id,
+                ST_Area(ST_INTERSECTION(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(
+                  geojson.geometry
+                )}')), communes.geometry), true) as surface
+         from communes
+         where ST_INTERSECTS(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(
+           geojson.geometry
+         )}')), communes.geometry) is true`
+    )
+  }
 
   return result.rows.map(row => ({
     id: row.id,

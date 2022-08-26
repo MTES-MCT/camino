@@ -168,5 +168,4 @@ export async function updateTerritoires() {
   } catch (e) {
     console.error(`impossible de mettre à jour les zones du SDOM`, e)
   }
-  process.exit(0)
 }

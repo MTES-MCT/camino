@@ -1,7 +1,9 @@
 import { updateTerritoires } from '../tools/territoires-update'
 
-updateTerritoires().catch(e => {
-  console.error(e)
+updateTerritoires()
+  .then(() => process.exit(0))
+  .catch(e => {
+    console.error(e)
 
-  process.exit(1)
-})
+    process.exit(1)
+  })
