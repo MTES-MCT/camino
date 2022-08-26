@@ -148,7 +148,7 @@ export const entreprisesUpdate = async (): Promise<void> => {
     )
   }
 
-    let entreprisesUpdated = [] as IEntreprise[]
+    let entreprisesUpdated: IEntreprise[] = []
 
     if (entreprisesToUpdate.length) {
       entreprisesUpdated = await entreprisesUpsert(entreprisesToUpdate)
