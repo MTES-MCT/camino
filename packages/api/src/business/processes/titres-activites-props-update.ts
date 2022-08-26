@@ -70,12 +70,10 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
   if (titresActivitesUpdated.length) {
     await titresActivitesUpsert(titresActivitesUpdated)
 
-    const log = {
-      type: 'titre / activités / propriétés (mise à jour) ->',
-      value: titresActivitesUpdated.map(ta => ta.id).join(', ')
-    }
-
-    console.info(log.type, log.value)
+    console.info(
+      'titre / activités / propriétés (mise à jour) ->',
+      titresActivitesUpdated.map(ta => ta.id).join(', ')
+    )
   }
 
   return titresActivitesUpdated.map(ta => ta.id)

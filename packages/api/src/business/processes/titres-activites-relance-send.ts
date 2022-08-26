@@ -65,12 +65,10 @@ export const titresActivitesRelanceSend = async (aujourdhui = new Date()) => {
       )
     }
 
-    const log = {
-      type: 'titre / activités (relance) ->',
-      value: titresActivitesRelanceToSend.map(ta => ta.id).join(', ')
-    }
-
-    console.info(log.type, log.value)
+    console.info(
+      'titre / activités (relance) ->',
+      titresActivitesRelanceToSend.map(ta => ta.id).join(', ')
+    )
   }
 
   return titresActivitesRelanceToSend.map(ta => ta.id)
