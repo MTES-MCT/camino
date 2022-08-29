@@ -27,7 +27,6 @@ export const tables = [
     name: 'administrations__titres_types__titres_statuts',
     orderBy: ['administration_id', 'titre_type_id', 'titre_statut_id']
   },
-  { name: 'annees', orderBy: ['id'] },
   // la table 'caches' n'est pas utile dans les json
   // { name: 'caches',orderBy: ['id'] },
   { name: 'communes', orderBy: ['id'] },
@@ -49,9 +48,7 @@ export const tables = [
     orderBy: ['etape_type_id', 'document_type_id']
   },
   { name: 'forets', orderBy: ['id'] },
-  { name: 'frequences', orderBy: ['id'] },
   { name: 'globales', orderBy: ['id'] },
-  { name: 'mois', orderBy: ['id'] },
   { name: 'phases_statuts', orderBy: ['id'] },
   { name: 'references_types', orderBy: ['id'] },
   { name: 'titres', orderBy: ['id'] },
@@ -115,7 +112,6 @@ export const tables = [
     orderBy: ['titre_type_id', 'titre_statut_id']
   },
   { name: 'titres_types_types', orderBy: ['id'] },
-  { name: 'trimestres', orderBy: ['id'] },
   { name: 'utilisateurs', orderBy: ['id'] },
   {
     name: 'utilisateurs__entreprises',
