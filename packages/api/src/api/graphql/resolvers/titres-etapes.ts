@@ -67,6 +67,7 @@ import { documentFilePathFind } from '../../../tools/documents/document-path-fin
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { Feature } from '@turf/helpers'
 
 const statutIdAndDateGet = (
   etape: ITitreEtape,
@@ -312,9 +313,13 @@ const etapeCreer = async (
       titreEtapePoints = titreEtapePointsCalc(etape.points)
       const geojsonFeatures = geojsonFeatureMultiPolygon(
         titreEtapePoints as ITitrePoint[]
-      )
+      ) as Feature
 
-      sdomZones.push(...(await titreEtapeSdomZonesGet(geojsonFeatures)))
+      const geoJsonResult = await titreEtapeSdomZonesGet(geojsonFeatures)
+      if (geoJsonResult.fallback) {
+        console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
+      }
+      sdomZones.push(...geoJsonResult.data)
     }
 
     const rulesErrors = titreEtapeUpdationValidate(
@@ -469,9 +474,14 @@ const etapeModifier = async (
       titreEtapePoints = titreEtapePointsCalc(etape.points)
       const geojsonFeatures = geojsonFeatureMultiPolygon(
         titreEtapePoints as ITitrePoint[]
-      )
+      ) as Feature
 
-      sdomZones.push(...(await titreEtapeSdomZonesGet(geojsonFeatures)))
+      const geoJsonResult = await titreEtapeSdomZonesGet(geojsonFeatures)
+      if (geoJsonResult.fallback) {
+        console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
+      }
+
+      sdomZones.push(...geoJsonResult.data)
     }
 
     const rulesErrors = titreEtapeUpdationValidate(

@@ -11,6 +11,7 @@ services:
       - db
       - openfisca
     environment:
+      CAMINO_STAGE: ${ENV}
       APPLICATION_VERSION: ${CAMINO_TAG}
       VIRTUAL_HOST: ${API_HOST}
       VIRTUAL_PORT: ${API_PORT}

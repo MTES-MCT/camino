@@ -267,16 +267,20 @@ export const perimetreInformations = async (
       throw new Error('droits insuffisants')
     }
 
-    let sdomZones = [] as ISDOMZone[]
+    const sdomZones = [] as ISDOMZone[]
     let titreEtapePoints = [] as ITitrePoint[]
     if (points && points.length > 2) {
       titreEtapePoints = titreEtapePointsCalc(points)
 
       const geojsonFeatures = geojsonFeatureMultiPolygon(
         titreEtapePoints as ITitrePoint[]
-      )
+      ) as Feature
 
-      sdomZones = await titreEtapeSdomZonesGet(geojsonFeatures)
+      const result = await titreEtapeSdomZonesGet(geojsonFeatures)
+      if (result.fallback) {
+        console.warn(`utilisation du fallback pour la démarche ${demarcheId}`)
+      }
+      sdomZones.push(...result.data)
     }
 
     const demarche = await titreDemarcheGet(

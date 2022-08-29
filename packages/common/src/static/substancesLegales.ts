@@ -315,7 +315,7 @@ export const SubstancesLegale: {
     id: 'hydx',
     domaineIds: ['h'],
     nom: 'hydrocarbures liquides ou gazeux',
-    description: "A l'exeption de la tourbe",
+    description: "A l'exception de la tourbe",
     substanceParentIds: ['hyda', 'hydc', 'hydo', 'hydr']
   },
   indi: { id: 'indi', domaineIds: ['m'], nom: 'indium' },

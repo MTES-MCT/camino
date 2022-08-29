@@ -11,3 +11,21 @@ docs/generate-schema:
 	cat docs-sources/assets/database/camino-db.uml | docker run --rm -i agileek/plantuml:1.2022.3 > docs-sources/docs/img/camino-db.svg
 
 	cat docs-sources/assets/architecture.puml | docker run --rm -i agileek/plantuml:1.2022.3 > docs-sources/docs/img/architecture.svg
+
+daily:
+ifdef CAMINO_STAGE
+	@echo 'lancement du daily en mode prod'
+	npm run daily -w packages/api
+else
+	@echo 'lancement du daily en mode dev(local)'
+	npm run dev:daily -w packages/api
+endif
+
+monthly:
+ifdef CAMINO_STAGE
+	@echo 'lancement du monthly en mode prod'
+	npm run monthly -w packages/api
+else
+	@echo 'lancement du monthly en mode dev(local)'
+	npm run dev:monthly -w packages/api
+endif

@@ -29,12 +29,17 @@ class DbManager {
     const queryResult = await globalClient.query(
       `SELECT 1 FROM pg_database WHERE datname='${this.dbName}'`
     )
+    let newDatabase = false
     if (queryResult.rowCount === 0) {
       await globalClient.query(`CREATE DATABASE ${this.dbName}`)
+      newDatabase = true
     }
     await globalClient.end()
 
     this.knexInstance = this.getKnex()
+    if (newDatabase) {
+      await this.knexInstance.raw('CREATE EXTENSION postgis')
+    }
     Model.knex(this.knexInstance)
     knexInstanceSet(this.knexInstance)
     await this.knexInstance.migrate.latest()

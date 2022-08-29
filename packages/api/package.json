@@ -9,8 +9,8 @@
     "build": "npm run build:api && npm run build:common",
     "build:api": "rm -rf dist && tsc && mkdir -p ./dist/src/api/graphql && cp -r ./src/api/graphql/schemas ./dist/src/api/graphql",
     "build:common": "cd ../common/ && tsc",
-    "daily": "node ./dist/src/scripts/daily.js",
-    "monthly": "node ./dist/src/scripts/monthly.js",
+    "daily": "node ./dist/src/daily_tasks.js",
+    "monthly": "node ./dist/src/monthly_tasks.js",
     "db:dump": "pg_dump --host=localhost --username=postgres --clean --if-exists --format=c --no-owner --no-privileges --dbname=camino --file=./backups/camino.sql",
     "db:export": "rm -rf sources && ts-node --transpile-only src/scripts/database-to-json-export.ts",
     "db:import": "pg_restore --host=localhost --username=postgres --clean --if-exists --no-owner --no-privileges --dbname=camino ./backups/camino.sql",
@@ -46,7 +46,6 @@
   "dependencies": {
     "@graphql-tools/graphql-file-loader": "^7.5.2",
     "@graphql-tools/load": "^7.7.4",
-    "@placemarkio/check-geojson": "^0.1.12",
     "@sentry/node": "^7.11.1",
     "@sentry/types": "^7.11.1",
     "@sindresorhus/slugify": "^1.1.2",

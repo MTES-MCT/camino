@@ -12,8 +12,7 @@ class TitresSDOMZones extends Model {
 
     properties: {
       sdomZoneId: { type: 'string', maxLength: 30 },
-      titreEtapeId: { type: 'string', maxLength: 128 },
-      surface: { type: 'number' }
+      titreEtapeId: { type: 'string', maxLength: 128 }
     }
   }
 

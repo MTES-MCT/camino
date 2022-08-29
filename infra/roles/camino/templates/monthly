@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker exec -t camino_api_app node ./packages/api/dist/src/scripts/monthly.js
+docker exec -t -e CAMINO_STAGE=true camino_api_app make monthly

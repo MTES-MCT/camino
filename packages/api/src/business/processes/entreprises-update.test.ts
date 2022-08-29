@@ -4,7 +4,7 @@ import { entreprisesEtablissementsGet } from '../../database/queries/entreprises
 import {
   apiInseeEntreprisesGet,
   apiInseeEntreprisesEtablissementsGet
-} from '../../tools/api-insee/index'
+} from '../../tools/api-insee'
 
 import {
   dbEntreprisesCreees,
@@ -28,17 +28,33 @@ import {
   apiEntreprisesEtablissementsModifiees,
   apiEntreprisesEtablissementsSupprimeees
 } from './__mocks__/entreprises-update'
+import { IEntreprise, IEntrepriseEtablissement } from '../../types'
 
+const entreprisesUpdated: IEntreprise[] = []
 // 'jest.mock()` est hoisté avant l'import, le court-circuitant
 // https://jestjs.io/docs/en/jest-object#jestdomockmodulename-factory-options
 jest.mock('../../database/queries/entreprises', () => ({
-  entreprisesUpsert: jest.fn().mockImplementation(a => a),
+  entreprisesUpsert: jest.fn().mockImplementation(a => {
+    entreprisesUpdated.push(...a)
+
+    return a
+  }),
   entreprisesGet: jest.fn()
 }))
 
+const etablissementsUpdated: IEntrepriseEtablissement[] = []
+const etablissementsDeleted: string[] = []
 jest.mock('../../database/queries/entreprises-etablissements', () => ({
-  entreprisesEtablissementsUpsert: jest.fn().mockImplementation(a => a),
-  entreprisesEtablissementsDelete: jest.fn(),
+  entreprisesEtablissementsUpsert: jest.fn().mockImplementation(a => {
+    etablissementsUpdated.push(...a)
+
+    return a
+  }),
+  entreprisesEtablissementsDelete: jest.fn().mockImplementation(a => {
+    etablissementsDeleted.push(...a)
+
+    return a
+  }),
   entreprisesEtablissementsGet: jest.fn()
 }))
 
@@ -65,6 +81,11 @@ console.info = jest.fn()
 console.info = jest.fn()
 
 describe('entreprises', () => {
+  beforeEach(() => {
+    etablissementsUpdated.splice(0, etablissementsUpdated.length)
+    etablissementsDeleted.splice(0, etablissementsDeleted.length)
+    entreprisesUpdated.splice(0, entreprisesUpdated.length)
+  })
   test("crée les entreprises si elles n'existent pas", async () => {
     entreprisesGetMock.mockResolvedValue(dbEntreprisesCreees)
     entreprisesEtablissementsGetMock.mockResolvedValue(
@@ -75,8 +96,7 @@ describe('entreprises', () => {
       apiEntreprisesEtablissementsCreees
     )
 
-    const { entreprisesUpdated, etablissementsUpdated, etablissementsDeleted } =
-      await entreprisesUpdate()
+    await entreprisesUpdate()
 
     expect(etablissementsUpdated).toEqual([
       { id: 'pipo', nom: 'pipo' },
@@ -96,8 +116,7 @@ describe('entreprises', () => {
       apiEntreprisesEtablissementsModifiees
     )
 
-    const { entreprisesUpdated, etablissementsUpdated, etablissementsDeleted } =
-      await entreprisesUpdate()
+    await entreprisesUpdate()
 
     expect(etablissementsUpdated).toEqual([{ id: 'toto', nom: 'tutu' }])
     expect(etablissementsDeleted.length).toEqual(0)
@@ -115,8 +134,7 @@ describe('entreprises', () => {
       apiEntreprisesEtablissementsSupprimeees
     )
 
-    const { entreprisesUpdated, etablissementsUpdated, etablissementsDeleted } =
-      await entreprisesUpdate()
+    await entreprisesUpdate()
 
     expect(etablissementsUpdated.length).toEqual(0)
     expect(etablissementsDeleted.length).toEqual(1)
@@ -134,8 +152,7 @@ describe('entreprises', () => {
       apiEntreprisesEtablissementsExistantes
     )
 
-    const { entreprisesUpdated, etablissementsUpdated, etablissementsDeleted } =
-      await entreprisesUpdate()
+    await entreprisesUpdate()
 
     expect(entreprisesUpdated).toEqual([])
     expect(etablissementsDeleted.length).toEqual(0)
@@ -152,8 +169,7 @@ describe('entreprises', () => {
       apiEntreprisesEtablissmentsInexistantes
     )
 
-    const { entreprisesUpdated, etablissementsUpdated, etablissementsDeleted } =
-      await entreprisesUpdate()
+    await entreprisesUpdate()
 
     expect(etablissementsUpdated.length).toEqual(0)
     expect(etablissementsDeleted.length).toEqual(0)

@@ -1,4 +1,4 @@
-import { IArea, IUtilisateur } from '../types'
+import { IUtilisateur } from '../types'
 import { titreDemarcheGet } from '../database/queries/titres-demarches'
 
 import { titresActivitesUpdate } from './processes/titres-activites-update'
@@ -69,36 +69,10 @@ const titreEtapeUpdate = async (
     const [titresPhasesUpdated = [], titresPhasesDeleted = []] =
       await titresPhasesUpdate([titreId])
     const titresDatesUpdated = await titresDatesUpdate([titreId])
-    let communesUpdated = [] as IArea[]
-    let titresEtapesCommunesUpdated = [] as string[]
-    let titresEtapesCommunesDeleted = [] as string[]
-    let foretsUpdated = [] as IArea[]
-    let titresEtapesForetsUpdated = [] as string[]
-    let titresEtapesForetsDeleted = [] as string[]
-    let sdomZonesUpdated = [] as IArea[]
-    let titresEtapesSDOMZonesUpdated = [] as string[]
-    let titresEtapesSDOMZonesDeleted = [] as string[]
 
     // si l'étape est supprimée, pas de mise à jour
     if (titreEtapeId) {
-      const { titresCommunes, titresForets, titresSDOMZones } =
-        await titresEtapesAreasUpdate([titreEtapeId])
-
-      ;({
-        areasUpdated: communesUpdated = [],
-        titresEtapesAreasUpdated: titresEtapesCommunesUpdated = [],
-        titresEtapesAreasDeleted: titresEtapesCommunesDeleted = []
-      } = titresCommunes)
-      ;({
-        areasUpdated: foretsUpdated = [],
-        titresEtapesAreasUpdated: titresEtapesForetsUpdated = [],
-        titresEtapesAreasDeleted: titresEtapesForetsDeleted = []
-      } = titresForets)
-      ;({
-        areasUpdated: sdomZonesUpdated = [],
-        titresEtapesAreasUpdated: titresEtapesSDOMZonesUpdated = [],
-        titresEtapesAreasDeleted: titresEtapesSDOMZonesDeleted = []
-      } = titresSDOMZones)
+      await titresEtapesAreasUpdate([titreEtapeId])
     }
 
     const {
@@ -134,15 +108,6 @@ const titreEtapeUpdate = async (
       titresPhasesUpdated,
       titresPhasesDeleted,
       titresDatesUpdated,
-      communesUpdated,
-      titresEtapesCommunesUpdated,
-      titresEtapesCommunesDeleted,
-      foretsUpdated,
-      titresEtapesForetsUpdated,
-      titresEtapesForetsDeleted,
-      sdomZonesUpdated,
-      titresEtapesSDOMZonesUpdated,
-      titresEtapesSDOMZonesDeleted,
       titresEtapesAdministrationsLocalesCreated,
       titresEtapesAdministrationsLocalesDeleted,
       titresPropsEtapesIdsUpdated,
