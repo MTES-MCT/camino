@@ -273,7 +273,11 @@ class Titres extends Model {
       )
     }
 
-    if (this.substancesEtape) {
+    if (this.substancesEtape === null) {
+      this.substances = []
+    } else if (this.substancesEtape === undefined) {
+      this.substances = undefined
+    } else {
       this.substances = this.substancesEtape.substances
     }
   }
