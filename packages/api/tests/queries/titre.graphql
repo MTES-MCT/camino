@@ -75,7 +75,7 @@ fragment activite on Activite {
   }
   modification
   dateSaisie
-  periode
+  periodeId
   annee
   sections
   contenu

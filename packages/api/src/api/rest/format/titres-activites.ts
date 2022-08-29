@@ -10,6 +10,7 @@ import {
   SubstancesFiscale
 } from 'camino-common/src/static/substancesFiscales'
 import { UniteId, Unites } from 'camino-common/src/static/unites'
+import { getPeriode } from 'camino-common/src/static/frequence'
 
 const titreActiviteContenuFormat = (contenu: IContenu, sections: ISection[]) =>
   sections.reduce((resSections: Index<IContenuValeur>, section) => {
@@ -59,7 +60,7 @@ const titresActivitesFormatTable = (activites: ITitreActivite[]) =>
       statut: activite.statut!.nom,
       titulaires: activite.titre?.titulaires?.map(({ nom }) => nom).join(';'),
       annee: activite.annee,
-      periode: activite.periode!.nom,
+      periode: getPeriode(activite.type?.frequenceId, activite.periodeId),
       periode_id: activite.periodeId,
       ...contenu
     }

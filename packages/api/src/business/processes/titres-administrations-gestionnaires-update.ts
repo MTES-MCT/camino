@@ -140,12 +140,10 @@ export const titresAdministrationsGestionnairesUpdate = async (
       titresAsGsToCreate
     )
 
-    const log = {
-      type: 'titre : administrations gestionnaires (création) ->',
-      value: titresAsGsCreated.map(tag => JSON.stringify(tag)).join(', ')
-    }
-
-    console.info(log.type, log.value)
+    console.info(
+      'titre : administrations gestionnaires (création) ->',
+      titresAsGsCreated.map(tag => JSON.stringify(tag)).join(', ')
+    )
   }
 
   if (titresAsGsToDelete.length) {

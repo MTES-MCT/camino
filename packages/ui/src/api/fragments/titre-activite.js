@@ -15,7 +15,7 @@ const fragmentTitreActivite = gql`
     }
     date
     annee
-    periode
+    periodeId
     dateSaisie
     sections
     contenu
@@ -60,7 +60,7 @@ const fragmentActivites = gql`
     }
     date
     annee
-    periode
+    periodeId
     dateSaisie
     sections
     contenu
@@ -100,7 +100,7 @@ const fragmentActivite = gql`
     }
     date
     annee
-    periode
+    periodeId
     dateSaisie
     sections
     contenu

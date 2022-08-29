@@ -98,7 +98,7 @@ describe("construction des activités d'un titre", () => {
           id: 'demarche-id',
           phase: { dateDebut: '2018-01-01', dateFin: '2018-12-31' },
           type: {}
-        } as unknown as ITitreDemarche
+        } as ITitreDemarche
       ]
     )
 
@@ -178,9 +178,9 @@ describe("construction des activités d'un titre", () => {
     const titreActivitesD = titreActivitesBuild(
       {
         id: 'gra',
-        frequence: { periodesNom: 'annees', annees: [1] },
+        frequenceId: 'ann',
         sections: [{ id: 'renseignements' }]
-      } as unknown as IActiviteType,
+      } as IActiviteType,
       [2018],
       aujourdhui,
       'titre-id',

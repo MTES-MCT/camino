@@ -36,11 +36,6 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
 
   const activitesTypes = await activitesTypesGet({
     fields: {
-      frequence: {
-        mois: { id: {} },
-        trimestres: { mois: { id: {} } },
-        annees: { id: {} }
-      },
       titresTypes: { id: {} },
       administrations: { id: {} },
       documentsTypes: { id: {} },
@@ -111,12 +106,10 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
       )
     }
 
-    const log = {
-      type: 'titre / activités (création) ->',
-      value: titresActivitesCreated.map(ta => ta.titreId).join(', ')
-    }
-
-    console.info(log.type, log.value)
+    console.info(
+      'titre / activités (création) ->',
+      titresActivitesCreated.map(ta => ta.titreId).join(', ')
+    )
   }
 
   return titresActivitesCreated.map(ta => ta.titreId)

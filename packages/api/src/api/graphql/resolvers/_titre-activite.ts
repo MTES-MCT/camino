@@ -12,6 +12,7 @@ import {
 
 import { emailsSend } from '../../../tools/api-mailjet/emails'
 import { titreUrlGet } from '../../../business/utils/urls-get'
+import { getPeriode } from 'camino-common/src/static/frequence'
 
 const elementHtmlBuild = (
   sectionId: string,
@@ -114,13 +115,10 @@ const titreActiviteEmailTitleFormat = (
   activite: ITitreActivite,
   titreNom: string
 ) =>
-  `${titreNom} | ${activite.type!.nom}, ${
-    activite.type?.frequence?.periodesNom
-      ? activite.type.frequence[activite.type.frequence.periodesNom]![
-          activite.periodeId - 1
-        ].nom
-      : ''
-  } ${activite.annee}`
+  `${titreNom} | ${activite.type!.nom}, ${getPeriode(
+    activite.type?.frequenceId,
+    activite.periodeId
+  )} ${activite.annee}`
 
 const titreActiviteUtilisateursEmailsGet = (
   utilisateurs: IUtilisateur[] | undefined | null

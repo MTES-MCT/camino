@@ -1,7 +1,6 @@
 # import * from 'scalars.graphql'
 # import * from 'territoires.graphql'
 # import * from 'metas.graphql'
-# import * from 'calendrier.graphql'
 
 type ActiviteStatut {
   id: ID!
@@ -17,7 +16,6 @@ type ActiviteType {
   dateDebut: String!
   delaiMois: Int!
   frequenceId: ID!
-  frequence: Frequence!
   sections: Json!
   documentsTypes: [DocumentType]
   lectureInterdit: Boolean

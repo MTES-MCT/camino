@@ -6,6 +6,7 @@ import { titresActivitesUpsert } from '../../database/queries/titres-activites'
 import { titresGet } from '../../database/queries/titres'
 import { titreValideCheck } from '../utils/titre-valide-check'
 import { userSuper } from '../../database/user-super'
+import { getMonth } from 'camino-common/src/static/frequence'
 
 export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
   console.info()
@@ -17,13 +18,7 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
       fields: {
         demarches: { phase: { id: {} }, etapes: { id: {} }, type: { id: {} } },
         activites: {
-          type: {
-            frequence: {
-              mois: { id: {} },
-              trimestres: { id: {} },
-              annees: { id: {} }
-            }
-          }
+          type: { id: {} }
         }
       }
     },
@@ -35,16 +30,10 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
       if (!titre.activites?.length) return acc
 
       return titre.activites.reduce((acc, titreActivite) => {
-        const activiteType = titreActivite.type!
-        const periodes =
-          activiteType.frequence![activiteType.frequence!.periodesNom!]!
-
-        const periodeMonths = 12 / periodes.length
-
         const dateDebut = dateFormat(
           new Date(
             titreActivite.annee,
-            (titreActivite.periodeId - 1) * periodeMonths,
+            getMonth(titreActivite.type?.frequenceId, titreActivite.periodeId),
             1
           ),
           'yyyy-mm-dd'
@@ -81,12 +70,10 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
   if (titresActivitesUpdated.length) {
     await titresActivitesUpsert(titresActivitesUpdated)
 
-    const log = {
-      type: 'titre / activités / propriétés (mise à jour) ->',
-      value: titresActivitesUpdated.map(ta => ta.id).join(', ')
-    }
-
-    console.info(log.type, log.value)
+    console.info(
+      'titre / activités / propriétés (mise à jour) ->',
+      titresActivitesUpdated.map(ta => ta.id).join(', ')
+    )
   }
 
   return titresActivitesUpdated.map(ta => ta.id)

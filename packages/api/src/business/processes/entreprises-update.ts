@@ -137,12 +137,11 @@ export const entreprisesUpdate = async () => {
     etablissementsUpdated = await entreprisesEtablissementsUpsert(
       etablissementsToUpdate
     )
-    const log = {
-      type: 'entreprises / établissements (mise a jour)',
-      value: etablissementsUpdated.map(e => e.id).join(', ')
-    }
 
-    console.info(log.type, log.value)
+    console.info(
+      'entreprises / établissements (mise a jour)',
+      etablissementsUpdated.map(e => e.id).join(', ')
+    )
   }
 
   const etablissementsDeleted = etablissementsToDelete
@@ -150,12 +149,10 @@ export const entreprisesUpdate = async () => {
   if (etablissementsToDelete.length) {
     await entreprisesEtablissementsDelete(etablissementsToDelete)
 
-    const log = {
-      type: 'entreprises / établissements (suppression) ->',
-      value: etablissementsToDelete.join(', ')
-    }
-
-    console.info(log.type, log.value)
+    console.info(
+      'entreprises / établissements (suppression) ->',
+      etablissementsToDelete.join(', ')
+    )
   }
 
   let entreprisesUpdated = [] as IEntreprise[]
@@ -163,12 +160,10 @@ export const entreprisesUpdate = async () => {
   if (entreprisesToUpdate.length) {
     entreprisesUpdated = await entreprisesUpsert(entreprisesToUpdate)
 
-    const log = {
-      type: 'entreprises (mise à jour) ->',
-      value: entreprisesUpdated.map(e => e.id).join(', ')
-    }
-
-    console.info(log.type, log.value)
+    console.info(
+      'entreprises (mise à jour) ->',
+      entreprisesUpdated.map(e => e.id).join(', ')
+    )
   }
 
   return { entreprisesUpdated, etablissementsUpdated, etablissementsDeleted }

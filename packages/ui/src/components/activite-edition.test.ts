@@ -27,16 +27,15 @@ describe('ActiviteEdition', () => {
               id: 'grp',
               nom: '',
               description: 'desc',
-              documentsTypes: []
+              documentsTypes: [],
+              frequenceId: 'tri'
             },
             documents: [],
             sections: [],
             titre: {
               slug: ''
             },
-            periode: {
-              nom: ''
-            },
+            periodeId: '2',
             annee: ''
           }
         },

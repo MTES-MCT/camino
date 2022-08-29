@@ -14,7 +14,7 @@ entity "**activites_types**" {
   --
   *""nom"": //character varying(255) //
   *""sections"": //jsonb[] //
-  *""frequence_id"": //character varying(3) [FK]//
+  *""frequence_id"": //character varying(3) //
   *""date_debut"": //character varying(255) //
   ""delai_mois"": //integer //
   *""ordre"": //integer //
@@ -86,13 +86,6 @@ entity "**administrations__titres_types__titres_statuts**" {
   ""titres_modification_interdit"": //boolean //
   ""demarches_modification_interdit"": //boolean //
   ""etapes_modification_interdit"": //boolean //
-}
-
-entity "**annees**" {
-  + ""id"": //integer [PK]//
-  --
-  *""nom"": //character varying(255) //
-  ""frequence_id"": //character varying(3) [FK]//
 }
 
 entity "**caches**" {
@@ -250,13 +243,6 @@ entity "**forets**" {
   *""nom"": //character varying(255) //
 }
 
-entity "**frequences**" {
-  + ""id"": //character varying(3) [PK]//
-  --
-  *""nom"": //character varying(255) //
-  ""periodes_nom"": //character varying(255) //
-}
-
 entity "**globales**" {
   + ""id"": //character varying(255) [PK]//
   --
@@ -288,14 +274,6 @@ entity "**knex_migrations_lock**" {
   ""is_locked"": //integer //
 }
 
-entity "**mois**" {
-  + ""id"": //integer [PK]//
-  --
-  *""nom"": //character varying(255) //
-  ""frequence_id"": //character varying(3) [FK]//
-  ""trimestre_id"": //integer [FK]//
-}
-
 entity "**phases_statuts**" {
   + ""id"": //character varying(3) [PK]//
   --
@@ -322,40 +300,6 @@ entity "**spatial_ref_sys**" {
   ""auth_srid"": //integer //
   ""srtext"": //character varying(2048) //
   ""proj4text"": //character varying(2048) //
-}
-
-entity "**substances**" {
-  + ""id"": //character varying(4) [PK]//
-  --
-  *""nom"": //character varying(255) //
-  ""symbole"": //character varying(255) //
-  ""gerep"": //integer //
-  ""description"": //character varying(2048) //
-}
-
-entity "**substances__substances_legales**" {
-  + ""substance_id"": //character varying(255) [PK][FK]//
-  + ""substance_legale_id"": //character varying(255) [PK][FK]//
-  --
-}
-
-entity "**substances_legales**" {
-  + ""id"": //character varying(255) [PK]//
-  --
-  *""nom"": //character varying(255) //
-  *""domaine_id"": //character varying(1) [FK]//
-  ""description"": //text //
-  *""substance_legale_code_id"": //character varying(255) [FK]//
-}
-
-entity "**substances_legales_codes**" {
-  + ""id"": //character varying(255) [PK]//
-  --
-  ""nom"": //character varying(255) //
-  *""code"": //character varying(255) //
-  ""description"": //text //
-  *""lien"": //character varying(255) //
-  *""ordre"": //integer //
 }
 
 entity "**titres**" {
@@ -482,6 +426,7 @@ entity "**titres_etapes**" {
   ""decisions_annexes_sections"": //jsonb[] //
   ""decisions_annexes_contenu"": //json //
   *""archive"": //boolean //
+  ""substances"": //jsonb //
 }
 
 entity "**titres_etapes_justificatifs**" {
@@ -544,13 +489,6 @@ entity "**titres_statuts**" {
   *""nom"": //character varying(32) //
   ""description"": //text //
   *""couleur"": //character varying(16) //
-  ""ordre"": //integer //
-}
-
-entity "**titres_substances**" {
-  + ""titre_etape_id"": //character varying(128) [PK][FK]//
-  + ""substance_id"": //character varying(4) [PK][FK]//
-  --
   ""ordre"": //integer //
 }
 
@@ -628,13 +566,6 @@ entity "**titres_types_types**" {
   *""ordre"": //integer //
 }
 
-entity "**trimestres**" {
-  + ""id"": //integer [PK]//
-  --
-  *""nom"": //character varying(255) //
-  ""frequence_id"": //character varying(3) [FK]//
-}
-
 entity "**utilisateurs**" {
   + ""id"": //character varying(255) [PK]//
   --
@@ -663,8 +594,6 @@ entity "**utilisateurs__titres**" {
   + ""titre_id"": //character varying(255) [PK][FK]//
   --
 }
-
-"**activites_types**"   }--  "**frequences**"
 
 "**activites_types__documents_types**"   }--  "**activites_types**"
 
@@ -730,8 +659,6 @@ entity "**utilisateurs__titres**" {
 
 "**administrations__titres_types__titres_statuts**"   }--  "**titres_types**"
 
-"**annees**"   }--  "**frequences**"
-
 "**documents**"   }--  "**entreprises**"
 
 "**documents**"   }--  "**titres_activites**"
@@ -777,22 +704,6 @@ entity "**utilisateurs__titres**" {
 "**etapes_types__justificatifs_types**"   }--  "**etapes_types**"
 
 "**journaux**"   }--  "**titres**"
-
-"**mois**"   }--  "**frequences**"
-
-"**mois**"   }--  "**trimestres**"
-
-"**substances__substances_legales**"   }--  "**substances**"
-
-"**substances__substances_legales**"   }--  "**substances**"
-
-"**substances__substances_legales**"   }--  "**substances_legales**"
-
-"**substances__substances_legales**"   }--  "**substances_legales**"
-
-"**substances_legales**"   }--  "**domaines**"
-
-"**substances_legales**"   }--  "**substances_legales_codes**"
 
 "**titres**"   }--  "**domaines**"
 
@@ -914,18 +825,6 @@ entity "**utilisateurs__titres**" {
 
 "**titres_references**"   }--  "**references_types**"
 
-"**titres_substances**"   }--  "**substances**"
-
-"**titres_substances**"   }--  "**substances**"
-
-"**titres_substances**"   }--  "**titres_etapes**"
-
-"**titres_substances**"   }--  "**titres_etapes**"
-
-"**titres_substances**"   }--  "**titres_etapes**"
-
-"**titres_substances**"   }--  "**titres_etapes**"
-
 "**titres_titulaires**"   }--  "**entreprises**"
 
 "**titres_titulaires**"   }--  "**entreprises**"
@@ -1025,8 +924,6 @@ entity "**utilisateurs__titres**" {
 "**titres_types__titres_statuts**"   }--  "**titres_types**"
 
 "**titres_types__titres_statuts**"   }--  "**titres_types**"
-
-"**trimestres**"   }--  "**frequences**"
 
 "**utilisateurs**"   }--  "**administrations**"
 

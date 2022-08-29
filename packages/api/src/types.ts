@@ -17,6 +17,7 @@ import { Couleur } from 'camino-common/src/static/couleurs'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { UniteId } from 'camino-common/src/static/unites'
+import { FrequenceId } from 'camino-common/src/static/frequence'
 
 const DemarchesStatutsTypesIds = {
   Accepte: 'acc',
@@ -232,13 +233,12 @@ interface IActiviteType {
   nom: string
   description?: string
   ordre: number
-  frequenceId: string
+  frequenceId: FrequenceId
   dateDebut: string
   delaiMois: number
   titresTypes: ITitreType[]
   documentsTypes: IDocumentType[]
   sections: ISection[]
-  frequence?: IFrequence | null
   activitesTypesPays?: IActiviteTypePays[] | null
   administrations?: IAdministration[] | null
   email?: string | null
@@ -273,8 +273,6 @@ interface IAdministration {
   modification?: boolean | null
   activitesTypesEmails?: (IActiviteType & { email: string })[]
 }
-
-interface IAnnee extends IPeriode {}
 
 type IAreaType = 'communes' | 'forets' | 'sdomZones'
 
@@ -433,17 +431,6 @@ export enum SDOMZoneId {
   Zone2 = '2'
 }
 
-type IPeriodeNom = 'annees' | 'trimestres' | 'mois'
-
-interface IFrequence {
-  id: string
-  nom: string
-  periodesNom: IPeriodeNom
-  annees?: IAnnee[] | null
-  trimestres?: ITrimestre[] | null
-  mois?: IMois[] | null
-}
-
 type IGeoJsonProperties = Index<string | number>
 
 interface IGeoJson {
@@ -476,20 +463,9 @@ interface IGlobale {
   valeur: boolean
 }
 
-interface IMois extends IPeriode {
-  trimestreId?: string | null
-  trimestre?: ITrimestre | null
-}
-
 interface IForet {
   id: string
   nom: string
-}
-
-interface IPeriode {
-  id: number
-  nom: string
-  frequence: IFrequence
 }
 
 interface IPhaseStatut {
@@ -652,7 +628,6 @@ interface ITitreActivite {
   statut?: IActiviteStatut | null
   periodeId: number
   annee: number
-  periode?: IAnnee | ITrimestre | IMois | null
   utilisateurId?: string | null
   utilisateur?: IUtilisateur | null
   dateSaisie?: string
@@ -852,10 +827,6 @@ interface ITitreReference {
   type?: IReferenceType | null
 }
 
-interface ITrimestre extends IPeriode {
-  mois?: IMois[]
-}
-
 type ICacheId = 'matomo'
 
 interface ICache {
@@ -974,7 +945,6 @@ export {
   ISectionElement,
   ISectionElementType,
   IAdministration,
-  IAnnee,
   ICommune,
   IArea,
   IAreaType,
@@ -994,14 +964,11 @@ export {
   IEtapeType,
   IForet,
   ISDOMZone,
-  IFrequence,
   IGeoJson,
   IGeoJsonProperties,
   IApiGeoResult,
   IGeometry,
   IGlobale,
-  IMois,
-  IPeriode,
   IPhaseStatut,
   IReferenceType,
   ITitreTypeTitreStatut,
@@ -1041,7 +1008,6 @@ export {
   ITitreTypeDemarcheTypeEtapeTypeDocumentType,
   ITitreTypeDemarcheTypeEtapeTypeJustificatifType,
   ITitreEntreprise,
-  ITrimestre,
   IUser,
   IUtilisateur,
   IUtilisateurTitre,

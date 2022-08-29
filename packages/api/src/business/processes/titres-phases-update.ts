@@ -148,12 +148,10 @@ export const titresPhasesUpdate = async (titresIds?: string[]) => {
     if (titrePhasesToDeleteIds.length) {
       await titrePhasesDelete(titrePhasesToDeleteIds)
 
-      const log = {
-        type: 'titre / démarche / phases (suppression) ->',
-        value: titrePhasesToDeleteIds.join(', ')
-      }
-
-      console.info(log.type, log.value)
+      console.info(
+        'titre / démarche / phases (suppression) ->',
+        titrePhasesToDeleteIds.join(', ')
+      )
 
       titresPhasesIdsDeleted.push(...titrePhasesToDeleteIds)
     }

@@ -1,6 +1,5 @@
 # import * from 'scalars.graphql'
 # import * from 'administrations.graphql'
-# import * from 'calendrier.graphql'
 # import * from 'documents.graphql'
 # import * from 'entreprises.graphql'
 # import * from 'geojsons.graphql'

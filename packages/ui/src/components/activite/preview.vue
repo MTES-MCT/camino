@@ -10,9 +10,9 @@
     <template #title>
       <h5>
         <span class="cap-first"
-          ><span v-if="activite.periode && activite.periode.nom"
-            >{{ activite.periode.nom }}
-          </span>
+          ><span v-if="activite.periodeId && activite.type.frequenceId">{{
+            getPeriodeVue(activite.type.frequenceId, activite.periodeId)
+          }}</span>
           {{ activite.annee }}</span
         >
       </h5>
@@ -92,6 +92,7 @@ import Documents from '../documents/list.vue'
 import { dateFormat } from '@/utils'
 import RemovePopup from './remove-popup.vue'
 import Icon from '@/components/_ui/icon.vue'
+import { getPeriode } from 'camino-common/src/static/frequence'
 
 export default {
   components: {
@@ -130,7 +131,10 @@ export default {
     },
 
     documentPopupTitle() {
-      return `${this.activite.type.nom} | ${this.activite.periode.nom} ${this.activite.annee}`
+      return `${this.activite.type.nom} | ${getPeriode(
+        this.activite.type.frequenceId,
+        this.activite.periodeId
+      )} ${this.activite.annee}`
     },
 
     statutNom() {
@@ -161,6 +165,9 @@ export default {
   },
 
   methods: {
+    getPeriodeVue(frequenceId, periodeId) {
+      return getPeriode(frequenceId, periodeId)
+    },
     close() {
       this.opened = false
     },
@@ -176,7 +183,10 @@ export default {
           activiteId: this.activite.id,
           typeNom: this.activite.type.nom,
           annee: this.activite.annee,
-          periodeNom: this.activite.periode.nom,
+          periodeNom: getPeriode(
+            this.activite.type.frequenceId,
+            this.activite.periodeId
+          ),
           route: this.route
         }
       })

@@ -15,7 +15,7 @@ import { titreValideCheck } from './titre-valide-check'
  * @param titreTypeId - id du type de titre
  */
 
-const titreActiviteValideCheck = (
+export const titreActiviteValideCheck = (
   date: string,
   aujourdhui: string,
   periodeId: number,
@@ -34,19 +34,7 @@ const titreActiviteValideCheck = (
     'yyyy-mm-dd'
   )
 
-  const titreIsValide = titreValideCheck(
-    titreDemarches,
-    dateDebut,
-    date,
-    titreTypeId,
-    true
-  )
-
   // le titre n'est pas valide pour cette période
   // on ne crée pas l'activité
-  if (!titreIsValide) return false
-
-  return true
+  return titreValideCheck(titreDemarches, dateDebut, date, titreTypeId, true)
 }
-
-export { titreActiviteValideCheck }
