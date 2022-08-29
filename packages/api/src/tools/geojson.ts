@@ -94,10 +94,16 @@ export const geojsonSurface = async (geojson: Feature<any>) => {
   return Number.parseFloat((area / 1000000).toFixed(2))
 }
 
+export interface GeoJsonResult<T> {
+  fallback: boolean
+  data: T
+}
+
 export const geojsonIntersectsSDOM = async (
   geojson: Feature<any>
-): Promise<SDOMZoneId[]> => {
+): Promise<GeoJsonResult<SDOMZoneId[]>> => {
   let result: { rows: { id: SDOMZoneId }[] }
+  let fallback = false
   try {
     result = await knex.raw(
       `select sdom_zones.id from sdom_zones
@@ -106,6 +112,7 @@ export const geojsonIntersectsSDOM = async (
          )}'), sdom_zones.geometry) is true`
     )
   } catch (e) {
+    fallback = true
     console.warn(
       "Une erreur est survenue lors du calcul de l'intersection avec des zones du sdom, tentative de correction automatique"
     )
@@ -117,11 +124,14 @@ export const geojsonIntersectsSDOM = async (
     )
   }
 
-  return result.rows.map(({ id }) => id)
+  return { fallback, data: result.rows.map(({ id }) => id) }
 }
 
-export const geojsonIntersectsForets = async (geojson: Feature<any>) => {
+export const geojsonIntersectsForets = async (
+  geojson: Feature<any>
+): Promise<GeoJsonResult<string[]>> => {
   let result: { rows: { id: string }[] }
+  let fallback = false
   try {
     result = await knex.raw(
       `select forets.id from forets 
@@ -130,6 +140,7 @@ export const geojsonIntersectsForets = async (geojson: Feature<any>) => {
            )}'), forets.geometry) is true`
     )
   } catch (e) {
+    fallback = true
     console.warn(
       "Une erreur est survenue lors du calcul de l'intersection avec des forêts, tentative de correction automatique"
     )
@@ -141,13 +152,14 @@ export const geojsonIntersectsForets = async (geojson: Feature<any>) => {
     )
   }
 
-  return result.rows.map(({ id }) => id)
+  return { fallback, data: result.rows.map(({ id }) => id) }
 }
 
 export const geojsonIntersectsCommunes = async (
   geojson: Feature<any>
-): Promise<{ id: string; surface: number }[]> => {
+): Promise<GeoJsonResult<{ id: string; surface: number }[]>> => {
   let result: { rows: { id: string; surface: string }[] }
+  let fallback = false
   try {
     result = await knex.raw(
       `select communes.id,
@@ -160,6 +172,7 @@ export const geojsonIntersectsCommunes = async (
          )}'), communes.geometry) is true`
     )
   } catch (e) {
+    fallback = true
     console.warn(
       "Une erreur est survenue lors du calcul de l'intersection avec des communes, tentative de correction automatique"
     )
@@ -175,8 +188,11 @@ export const geojsonIntersectsCommunes = async (
     )
   }
 
-  return result.rows.map(row => ({
-    id: row.id,
-    surface: Number.parseInt(row.surface)
-  }))
+  return {
+    fallback,
+    data: result.rows.map(row => ({
+      id: row.id,
+      surface: Number.parseInt(row.surface)
+    }))
+  }
 }

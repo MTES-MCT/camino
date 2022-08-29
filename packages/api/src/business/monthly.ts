@@ -8,11 +8,9 @@ export const monthly = async () => {
     console.info('- - -')
     console.info('mise à jour mensuelle')
 
-    await entreprisesUpdate()
-
     await updateTerritoires()
-    // mise à jour des forêts et des communes
     await titresEtapesAreasUpdate()
+    await entreprisesUpdate()
   } catch (e) {
     console.info('erreur:', e)
 

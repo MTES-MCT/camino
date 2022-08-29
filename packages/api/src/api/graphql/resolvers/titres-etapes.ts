@@ -315,7 +315,11 @@ const etapeCreer = async (
         titreEtapePoints as ITitrePoint[]
       ) as Feature
 
-      sdomZones.push(...(await titreEtapeSdomZonesGet(geojsonFeatures)))
+      const geoJsonResult = await titreEtapeSdomZonesGet(geojsonFeatures)
+      if (geoJsonResult.fallback) {
+        console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
+      }
+      sdomZones.push(...geoJsonResult.data)
     }
 
     const rulesErrors = titreEtapeUpdationValidate(
@@ -472,7 +476,12 @@ const etapeModifier = async (
         titreEtapePoints as ITitrePoint[]
       ) as Feature
 
-      sdomZones.push(...(await titreEtapeSdomZonesGet(geojsonFeatures)))
+      const geoJsonResult = await titreEtapeSdomZonesGet(geojsonFeatures)
+      if (geoJsonResult.fallback) {
+        console.warn(`utilisation du fallback pour l'étape ${etape.id}`)
+      }
+
+      sdomZones.push(...geoJsonResult.data)
     }
 
     const rulesErrors = titreEtapeUpdationValidate(

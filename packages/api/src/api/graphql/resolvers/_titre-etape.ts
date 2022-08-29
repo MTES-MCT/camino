@@ -8,7 +8,8 @@ import {
   ISection,
   ITitreDemarche,
   ITitreEtape,
-  ITitrePointReference
+  ITitrePointReference,
+  SDOMZoneId
 } from '../../../types'
 
 import { geoConvert } from '../../../tools/geo-convert'
@@ -27,7 +28,7 @@ import {
   titreEtapesSortDescByOrdre
 } from '../../../business/utils/titre-etapes-sort'
 import { GeoSystemes } from 'camino-common/src/static/geoSystemes'
-import { geojsonIntersectsSDOM } from '../../../tools/geojson'
+import { geojsonIntersectsSDOM, GeoJsonResult } from '../../../tools/geojson'
 import { Feature } from '@turf/helpers'
 import SdomZones from '../../../database/models/sdom-zones'
 
@@ -242,12 +243,15 @@ const titreEtapeHeritageBuild = (
   return titreEtape
 }
 
-const titreEtapeSdomZonesGet = async (
+export const titreEtapeSdomZonesGet = async (
   geoJson: Feature<any>
-): Promise<ISDOMZone[]> => {
+): Promise<GeoJsonResult<ISDOMZone[]>> => {
   const sdomZoneIds = await geojsonIntersectsSDOM(geoJson)
 
-  return SdomZones.query().whereIn('id', sdomZoneIds)
+  return {
+    fallback: sdomZoneIds.fallback,
+    data: await SdomZones.query().whereIn('id', sdomZoneIds.data)
+  }
 }
 
 const documentTypeIdsBySdomZonesGet = (
@@ -261,7 +265,7 @@ const documentTypeIdsBySdomZonesGet = (
     etapeTypeId === 'mfr' &&
     demarcheTypeId === 'oct' &&
     titreTypeId === 'axm' &&
-    sdomZones?.find(z => z.id === '2')
+    sdomZones?.find(z => z.id === SDOMZoneId.Zone2)
   ) {
     // Pour les demandes d’octroi d’AXM dans la zone 2 du SDOM les documents suivants sont obligatoires:
     // Notice d’impact renforcée
@@ -275,6 +279,5 @@ const documentTypeIdsBySdomZonesGet = (
 export {
   titreEtapeHeritageBuild,
   titreEtapePointsCalc,
-  titreEtapeSdomZonesGet,
   documentTypeIdsBySdomZonesGet
 }

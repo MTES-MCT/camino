@@ -21,9 +21,9 @@ const communesUpdate = async () => {
   for (const commune of communesGeojson.features) {
     try {
       const result = await knex.raw(
-        `select ST_MULTI(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
+        `select ST_MakeValid(ST_MULTI(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
           commune.geometry
-        )}'), 4326)) as result`
+        )}'), 4326))) as result`
       )
 
       if (communesIdsKnown.includes(commune.properties.code)) {
@@ -74,9 +74,9 @@ const foretsUpdate = async () => {
   for (const foret of geojson.features) {
     try {
       const result = await knex.raw(
-        `select ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
+        `select ST_MakeValid(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
           foret.geometry
-        )}'), 4326) as result`
+        )}'), 4326)) as result`
       )
 
       const id = foret.properties.code_for
@@ -136,9 +136,9 @@ const sdomZonesUpdate = async () => {
     try {
       const zoneFeature = geojson.features[0]
       const result = await knex.raw(
-        `select ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
+        `select ST_MakeValid(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
           zoneFeature.geometry
-        )}'), 4326) as result`
+        )}'), 4326)) as result`
       )
 
       await knex('sdom_zones').where('id', zone.id).update({

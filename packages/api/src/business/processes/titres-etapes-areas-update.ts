@@ -58,7 +58,10 @@ export const titresEtapesAreasUpdate = async (
         ) as Feature
         const foretIds = await geojsonIntersectsForets(multipolygonGeojson)
 
-        for (const foretId of foretIds) {
+        if (foretIds.fallback) {
+          console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
+        }
+        for (const foretId of foretIds.data) {
           if (!titreEtape.forets.some(({ id }) => id === foretId)) {
             await TitresForets.query().insert({
               titreEtapeId: titreEtape.id,
@@ -70,7 +73,7 @@ export const titresEtapesAreasUpdate = async (
           }
         }
         for (const foret of titreEtape.forets) {
-          if (!foretIds.some(id => id === foret.id)) {
+          if (!foretIds.data.some(id => id === foret.id)) {
             await TitresForets.query()
               .delete()
               .where('titreEtapeId', titreEtape.id)
@@ -83,7 +86,14 @@ export const titresEtapesAreasUpdate = async (
 
         const sdomZonesIds = await geojsonIntersectsSDOM(multipolygonGeojson)
 
-        for (const sdomZoneId of sdomZonesIds) {
+        if (sdomZonesIds.fallback) {
+          if (sdomZonesIds.fallback) {
+            console.warn(
+              `utilisation du fallback pour l'étape ${titreEtape.id}`
+            )
+          }
+        }
+        for (const sdomZoneId of sdomZonesIds.data) {
           if (!titreEtape.sdomZones.some(({ id }) => id === sdomZoneId)) {
             await TitresSDOMZones.query().insert({
               titreEtapeId: titreEtape.id,
@@ -95,7 +105,7 @@ export const titresEtapesAreasUpdate = async (
           }
         }
         for (const sdomZone of titreEtape.sdomZones) {
-          if (!sdomZonesIds.some(id => id === sdomZone.id)) {
+          if (!sdomZonesIds.data.some(id => id === sdomZone.id)) {
             await TitresSDOMZones.query()
               .delete()
               .where('titreEtapeId', titreEtape.id)
@@ -108,7 +118,10 @@ export const titresEtapesAreasUpdate = async (
 
         const communes = await geojsonIntersectsCommunes(multipolygonGeojson)
 
-        for (const commune of communes) {
+        if (communes.fallback) {
+          console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
+        }
+        for (const commune of communes.data) {
           const oldCommune = titreEtape.communes.find(
             ({ id }) => id === commune.id
           )
@@ -134,7 +147,7 @@ export const titresEtapesAreasUpdate = async (
           }
         }
         for (const commune of titreEtape.communes) {
-          if (!communes.some(({ id }) => id === commune.id)) {
+          if (!communes.data.some(({ id }) => id === commune.id)) {
             await TitresCommunes.query()
               .delete()
               .where('titreEtapeId', titreEtape.id)
