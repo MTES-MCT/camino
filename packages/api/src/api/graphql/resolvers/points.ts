@@ -208,6 +208,7 @@ const sdomZonesInformationsGet = async (
         points as ITitrePoint[]
       )
 
+      // TODO 2022-08-30 utiliser postgis au lieu de turf/intersect
       titres
         ?.filter(t => t.id !== titreId)
         ?.filter(t => t.points && t.points.length > 2)

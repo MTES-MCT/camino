@@ -261,16 +261,22 @@ const documentTypeIdsBySdomZonesGet = (
   etapeTypeId: string
 ) => {
   const documentTypeIds: string[] = []
+
+  // Pour les demandes d’octroi d’AXM
   if (
     etapeTypeId === 'mfr' &&
     demarcheTypeId === 'oct' &&
-    titreTypeId === 'axm' &&
-    sdomZones?.find(z => z.id === SDOMZoneId.Zone2)
+    titreTypeId === 'axm'
   ) {
-    // Pour les demandes d’octroi d’AXM dans la zone 2 du SDOM les documents suivants sont obligatoires:
-    // Notice d’impact renforcée
-    // Justification d’existence du gisement
-    documentTypeIds.push(...['nir', 'jeg'])
+    if (sdomZones?.find(z => z.id === SDOMZoneId.Zone2)) {
+      // dans la zone 2 du SDOM les documents suivants sont obligatoires:
+      // Notice d’impact renforcée
+      // Justification d’existence du gisement
+      documentTypeIds.push(...['nir', 'jeg'])
+    } else {
+      // sinon c’est juste une notice d’impact
+      documentTypeIds.push('nip')
+    }
   }
 
   return documentTypeIds
