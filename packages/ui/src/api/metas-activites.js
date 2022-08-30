@@ -59,16 +59,6 @@ const activitesTypes = apiGraphQLFetch(
   `
 )
 
-const activiteTypeModifier = apiGraphQLFetch(gql`
-  mutation ActiviteTypeModifier($element: InputActiviteType!) {
-    activiteTypeModifier(activiteType: $element) {
-      ...activiteType
-    }
-  }
-
-  ${fragmentActiviteType}
-`)
-
 const activitesStatuts = apiGraphQLFetch(
   gql`
     query ActivitesStatuts {
@@ -78,28 +68,6 @@ const activitesStatuts = apiGraphQLFetch(
     }
 
     ${fragmentActiviteStatut}
-  `
-)
-
-const activiteStatutModifier = apiGraphQLFetch(gql`
-  mutation ActiviteStatutModifier($element: InputActiviteStatut!) {
-    activiteStatutModifier(activiteStatut: $element) {
-      ...activiteStatut
-    }
-  }
-
-  ${fragmentActiviteStatut}
-`)
-
-const activitesTypesTitresTypes = apiGraphQLFetch(
-  gql`
-    query ActivitesTypesTitresTypes {
-      activitesTypesTitresTypes {
-        ...activiteTypeTitreType
-      }
-    }
-
-    ${fragmentActiviteTypeTitreType}
   `
 )
 
@@ -115,42 +83,6 @@ const activitesTypesDocumentsTypes = apiGraphQLFetch(
   `
 )
 
-const activiteTypeDocumentTypeModifier = apiGraphQLFetch(gql`
-  mutation ActiviteTypeDocumentTypeModifier(
-    $element: InputActiviteTypeDocumentType!
-  ) {
-    activiteTypeDocumentTypeModifier(activiteTypeDocumentType: $element) {
-      ...activiteTypeDocumentType
-    }
-  }
-
-  ${fragmentActiviteTypeDocumentType}
-`)
-
-const activiteTypeDocumentTypeCreer = apiGraphQLFetch(gql`
-  mutation ActiviteTypeDocumentTypeCreer(
-    $element: InputActiviteTypeDocumentType!
-  ) {
-    activiteTypeDocumentTypeCreer(activiteTypeDocumentType: $element) {
-      ...activiteTypeDocumentType
-    }
-  }
-
-  ${fragmentActiviteTypeDocumentType}
-`)
-
-const activiteTypeDocumentTypeSupprimer = apiGraphQLFetch(gql`
-  mutation ActiviteTypeDocumentTypeSupprimer(
-    $element: InputActiviteTypeDocumentType!
-  ) {
-    activiteTypeDocumentTypeSupprimer(activiteTypeDocumentType: $element) {
-      ...activiteTypeDocumentType
-    }
-  }
-
-  ${fragmentActiviteTypeDocumentType}
-`)
-
 const activitesTypesPays = apiGraphQLFetch(
   gql`
     query ActivitesTypesPays {
@@ -163,38 +95,10 @@ const activitesTypesPays = apiGraphQLFetch(
   `
 )
 
-const activiteTypePaysCreer = apiGraphQLFetch(gql`
-  mutation ActiviteTypePaysCreer($element: InputActiviteTypePays!) {
-    activiteTypePaysCreer(activiteTypePays: $element) {
-      ...activiteTypePays
-    }
-  }
-
-  ${fragmentActiviteTypePays}
-`)
-
-const activiteTypePaysSupprimer = apiGraphQLFetch(gql`
-  mutation ActiviteTypePaysSupprimer($element: InputActiviteTypePays!) {
-    activiteTypePaysSupprimer(activiteTypePays: $element) {
-      ...activiteTypePays
-    }
-  }
-
-  ${fragmentActiviteTypePays}
-`)
-
 export {
   activitesMetas,
   activitesTypes,
-  activiteTypeModifier,
   activitesStatuts,
-  activiteStatutModifier,
-  activitesTypesTitresTypes,
   activitesTypesDocumentsTypes,
-  activiteTypeDocumentTypeCreer,
-  activiteTypeDocumentTypeModifier,
-  activiteTypeDocumentTypeSupprimer,
-  activitesTypesPays,
-  activiteTypePaysCreer,
-  activiteTypePaysSupprimer
+  activitesTypesPays
 }
