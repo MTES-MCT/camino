@@ -579,7 +579,6 @@ entity "**utilisateurs**" {
   ""refresh_token"": //character varying(255) //
   *""role"": //character varying(255) //
   ""preferences"": //json //
-  ""newsletter"": //boolean //
   *""date_creation"": //character varying(255) //
   ""administration_id"": //character varying(255) [FK]//
 }
