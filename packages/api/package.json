@@ -23,7 +23,7 @@
     "predev": "find ../common/src -name '*.js*' -delete",
     "dev": "nodemon",
     "dev:daily": "ts-node --transpile-only ./src/scripts/daily.ts",
-    "dev:daily-debug": "node -r ts-node/register --inspect-brk=3000 ./src/scripts/daily.ts",
+    "dev:daily-debug": "node -r ts-node/register/transpile-only --inspect-brk=3000 ./src/scripts/daily.ts",
     "dev:backups-archive": "tar -zcvf backups/`date +%Y%m%d_%H%M%S`-camino.tar.gz backups/files/* backups/camino.sql",
     "dev:monthly": "ts-node --transpile-only ./src/scripts/monthly.ts",
     "dev:schema": "node src/dev/api/graphql-dsl-to-query-convert.js",

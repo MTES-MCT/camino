@@ -19,7 +19,6 @@ import { titresEtapesHeritageContenuUpdate } from './processes/titres-etapes-her
 import { titresActivitesPropsUpdate } from './processes/titres-activites-props-update'
 import { titresSlugsUpdate } from './processes/titres-slugs-update'
 import { logsUpdate } from './_logs-update'
-import { utilisateursNewsletterUpdate } from './processes/utilisateurs-newsletter-update'
 import { userSuper } from '../database/user-super'
 import { titresActivitesRelanceSend } from './processes/titres-activites-relance-send'
 
@@ -61,7 +60,6 @@ const daily = async () => {
       await titresActivitesStatutIdsUpdate()
     const titresActivitesPropsUpdated = await titresActivitesPropsUpdate()
     const titresUpdatedIndex = await titresSlugsUpdate()
-    const utilisateursUpdated = await utilisateursNewsletterUpdate()
 
     logsUpdate({
       titresEtapesOrdreUpdated,
@@ -87,8 +85,7 @@ const daily = async () => {
       titresActivitesRelanceSent,
       titresActivitesStatutIdsUpdated,
       titresActivitesPropsUpdated,
-      titresUpdatedIndex,
-      utilisateursUpdated
+      titresUpdatedIndex
     })
   } catch (e) {
     console.info('erreur:', e)

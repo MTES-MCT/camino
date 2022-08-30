@@ -875,7 +875,6 @@ interface IUtilisateur {
   permissionModification?: boolean | null
   entreprisesCreation?: boolean | null
   utilisateursCreation?: boolean | null
-  newsletter?: boolean | null
   refreshToken?: string | null
 }
 
@@ -885,7 +884,9 @@ interface IUtilisateurTitre {
   utilisateur?: IUtilisateur | null
 }
 
-type IUtilisateurCreation = Omit<IUtilisateur, 'id'>
+type IUtilisateurCreation = Omit<IUtilisateur, 'id'> & {
+  newsletter: boolean | null | undefined
+}
 
 interface IToken {
   user?: ITokenUser

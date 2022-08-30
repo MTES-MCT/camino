@@ -35,10 +35,7 @@ import { utilisateurUpdationValidate } from '../../../business/validations/utili
 import { emailCheck } from '../../../tools/email-check'
 import { utilisateurEditionCheck } from '../../_permissions/utilisateur'
 import { userFormat } from '../../_format/users'
-import {
-  newsletterSubscriberCheck,
-  newsletterSubscriberUpdate
-} from '../../../tools/api-mailjet/newsletter'
+import { newsletterSubscriberUpdate } from '../../../tools/api-mailjet/newsletter'
 import { userSuper } from '../../../database/user-super'
 import dateFormat from 'dateformat'
 import {
@@ -358,11 +355,10 @@ const utilisateurCreer = async (
 
     utilisateur.motDePasse = bcrypt.hashSync(utilisateur.motDePasse!, 10)
 
-    if (!utilisateur.newsletter) {
-      utilisateur.newsletter = await newsletterSubscriberCheck(
-        utilisateur.email
-      )
-    }
+    await newsletterSubscriberUpdate(
+      utilisateur.email,
+      !!utilisateur.newsletter
+    )
 
     const utilisateurUpdated = await utilisateurCreate(
       {
@@ -433,7 +429,9 @@ const utilisateurCreationMessageEnvoyer = async ({
 }
 
 const utilisateurModifier = async (
-  { utilisateur }: { utilisateur: IUtilisateur },
+  {
+    utilisateur
+  }: { utilisateur: IUtilisateur & { newsletter: boolean | null | undefined } },
   context: IToken,
   info: GraphQLResolveInfo
 ) => {
@@ -491,7 +489,7 @@ const utilisateurModifier = async (
 
     newsletterSubscriberUpdate(
       utilisateurUpdated.email!,
-      !!utilisateurUpdated.newsletter
+      !!utilisateur.newsletter
     )
 
     return utilisateurUpdated
