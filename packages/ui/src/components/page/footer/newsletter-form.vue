@@ -20,17 +20,32 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      email: ''
-    }
-  },
+<script setup lang="ts">
+import { ref } from 'vue'
+import { newsletterInscrire } from '@/api/utilisateurs'
+import { useStore } from 'vuex'
+const store = useStore()
 
-  methods: {
-    async subscribe() {
-      await this.$store.dispatch('user/newsletterSubscribe', this.email)
+const email = ref<string>('')
+
+const subscribe = async () => {
+  if (email.value) {
+    try {
+      const message = await newsletterInscrire({
+        email: email.value
+      })
+
+      await store.dispatch(
+        'messageAdd',
+        { value: message, type: 'info' },
+        { root: true }
+      )
+    } catch (e) {
+      await store.dispatch(
+        'messageAdd',
+        { value: e, type: 'error' },
+        { root: true }
+      )
     }
   }
 }

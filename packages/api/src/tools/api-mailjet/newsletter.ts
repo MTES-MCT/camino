@@ -7,13 +7,27 @@ interface IContactListAdd {
 
 const contactListId = Number(process.env.API_MAILJET_CONTACTS_LIST_ID!)
 
-const isSubscribed = async (email: string): Promise<boolean> => {
-  const recipientsResult = await mailjet
-    .get('listrecipient', { version: 'v3' })
-    .request({}, { ContactEmail: email, ContactsList: contactListId })
+export const isSubscribed = async (
+  email: string | null | undefined
+): Promise<boolean> => {
+  if (email) {
+    const recipientsResult = await mailjet
+      .get('listrecipient', { version: 'v3' })
+      .request(
+        {},
+        {
+          ContactEmail: email,
+          ContactsList: contactListId,
+          Unsub: false,
+          countOnly: true
+        }
+      )
 
-  // TODO 2022-08-30 en attente d'un meilleur typage https://github.com/mailjet/mailjet-apiv3-nodejs/issues/217
-  return (recipientsResult.body as { Count: number }).Count > 0
+    // TODO 2022-08-30 en attente d'un meilleur typage https://github.com/mailjet/mailjet-apiv3-nodejs/issues/217
+    return (recipientsResult.body as { Count: number }).Count > 0
+  }
+
+  return false
 }
 
 const contactListSubscribe = async (
@@ -46,9 +60,12 @@ const contactAdd = async (email: string): Promise<void> => {
 }
 
 export const newsletterSubscriberUpdate = async (
-  email: string,
+  email: string | undefined | null,
   subscribed: boolean
-) => {
+): Promise<string> => {
+  if (!email) {
+    return ''
+  }
   await isSubscribed(email)
   try {
     if (subscribed) {

@@ -884,9 +884,7 @@ interface IUtilisateurTitre {
   utilisateur?: IUtilisateur | null
 }
 
-type IUtilisateurCreation = Omit<IUtilisateur, 'id'> & {
-  newsletter: boolean | null | undefined
-}
+type IUtilisateurCreation = Omit<IUtilisateur, 'id'>
 
 interface IToken {
   user?: ITokenUser

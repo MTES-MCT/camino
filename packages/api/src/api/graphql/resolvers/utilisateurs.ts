@@ -355,11 +355,6 @@ const utilisateurCreer = async (
 
     utilisateur.motDePasse = bcrypt.hashSync(utilisateur.motDePasse!, 10)
 
-    await newsletterSubscriberUpdate(
-      utilisateur.email,
-      !!utilisateur.newsletter
-    )
-
     const utilisateurUpdated = await utilisateurCreate(
       {
         id: await userIdGenerate(),
@@ -429,9 +424,7 @@ const utilisateurCreationMessageEnvoyer = async ({
 }
 
 const utilisateurModifier = async (
-  {
-    utilisateur
-  }: { utilisateur: IUtilisateur & { newsletter: boolean | null | undefined } },
+  { utilisateur }: { utilisateur: IUtilisateur },
   context: IToken,
   info: GraphQLResolveInfo
 ) => {
@@ -486,11 +479,6 @@ const utilisateurModifier = async (
     const fields = fieldsBuild(info)
 
     const utilisateurUpdated = await utilisateurUpsert(utilisateur, { fields })
-
-    newsletterSubscriberUpdate(
-      utilisateurUpdated.email!,
-      !!utilisateur.newsletter
-    )
 
     return utilisateurUpdated
   } catch (e) {
@@ -817,17 +805,7 @@ export const userTokensDelete = (res: any) => {
 
 const newsletterInscrire = async ({ email }: { email: string }) => {
   try {
-    const utilisateur = await userByEmailGet(email, { fields: {} })
-
-    if (utilisateur?.newsletter) {
-      return 'email inscrit à la newsletter'
-    }
-
-    if (utilisateur) {
-      await utilisateurUpdate(utilisateur.id, { newsletter: true })
-    }
-
-    return newsletterSubscriberUpdate(email, true)
+    return await newsletterSubscriberUpdate(email, true)
   } catch (e) {
     console.error(e)
 

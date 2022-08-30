@@ -1,5 +1,5 @@
 import Cerbere from 'cerbere'
-import { IUtilisateur } from '../../types'
+import { IUtilisateurCreation } from '../../types'
 
 const config = {
   cerbereUrl:
@@ -50,7 +50,7 @@ export const login = async (ticket: string) => {
 
     const cerbereProfile = cerbereProfileFormat(attributes)
 
-    const cerbereUtilisateur: Omit<IUtilisateur, 'id'> = {
+    const cerbereUtilisateur: IUtilisateurCreation = {
       email: cerbereProfile.email,
       prenom: cerbereProfile.prenom,
       nom: cerbereProfile.nom,

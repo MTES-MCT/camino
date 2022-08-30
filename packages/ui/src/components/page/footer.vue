@@ -138,7 +138,7 @@ export default {
     },
 
     newsletterForm() {
-      return !this.$store.state.user.element?.newsletter
+      return !this.$store.state.user.element
     }
   }
 }

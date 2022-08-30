@@ -132,7 +132,7 @@
               <h5>Newsletter</h5>
             </div>
             <div class="tablet-blob-3-4">
-              <p v-if="utilisateur.newsletter">Inscrit</p>
+              <p v-if="subscription.newsletter">Inscrit</p>
               <p v-else>–</p>
             </div>
           </div>
@@ -202,7 +202,8 @@ export default {
     Loader
   },
   data: () => ({
-    userUnwatch: null
+    userUnwatch: null,
+    subscription: { newsletter: false }
   }),
   computed: {
     utilisateur() {
@@ -251,7 +252,14 @@ export default {
     },
 
     async get() {
-      await this.$store.dispatch('utilisateur/get', this.$route.params.id)
+      const utilisateurId = this.$route.params.id
+      await this.$store.dispatch('utilisateur/get', utilisateurId)
+
+      this.subscription.newsletter = await (
+        await fetch(`/apiUrl/utilisateurs/${utilisateurId}/newsletter`, {
+          headers: { 'Content-Type': 'application/json' }
+        })
+      ).json()
     },
 
     editPopupOpen() {
@@ -269,7 +277,8 @@ export default {
         component: UtilisateurEditPopup,
         props: {
           utilisateur,
-          action: 'edit'
+          action: 'edit',
+          subscription: this.subscription
         }
       })
     },

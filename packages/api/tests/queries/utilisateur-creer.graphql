@@ -17,5 +17,4 @@ fragment utilisateur on Utilisateur {
     nom
   }
   role
-  newsletter
 }

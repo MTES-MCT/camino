@@ -2,15 +2,14 @@ import {
   IFormat,
   ITitreColonneId,
   ITitreDemarcheColonneId,
-  ITitreActiviteColonneId,
-  IUtilisateursColonneId
+  ITitreActiviteColonneId
 } from '../../types'
 
 import { titreGet, titresGet } from '../../database/queries/titres'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches'
 import { titresActivitesGet } from '../../database/queries/titres-activites'
 import { entreprisesGet } from '../../database/queries/entreprises'
-import { userGet, utilisateursGet } from '../../database/queries/utilisateurs'
+import { userGet } from '../../database/queries/utilisateurs'
 
 import { titreFormat, titresFormat } from '../_format/titres'
 import { titreDemarcheFormat } from '../_format/titres-demarches'
@@ -27,11 +26,9 @@ import {
 } from './format/titres'
 import { titresDemarchesFormatTable } from './format/titres-demarches'
 import { titresActivitesFormatTable } from './format/titres-activites'
-import { utilisateursFormatTable } from './format/utilisateurs'
 import { entreprisesFormatTable } from './format/entreprises'
 
 import { matomo } from '../../tools/matomo'
-import { isRole } from 'camino-common/src/roles'
 import { stringSplit } from '../../database/queries/_utils'
 
 const formatCheck = (formats: string[], format: string) => {
@@ -61,7 +58,7 @@ interface ITitreInput {
   params: { id?: string | null }
 }
 
-const titre = async (
+export const titre = async (
   { query: { format = 'json' }, params: { id } }: ITitreInput,
   userId?: string
 ) => {
@@ -108,7 +105,7 @@ interface ITitresQueryInput {
   perimetre?: number[] | null
 }
 
-const titres = async (
+export const titres = async (
   {
     query: {
       format = 'json',
@@ -218,7 +215,7 @@ interface ITitresDemarchesQueryInput {
   travaux?: string | null
 }
 
-const demarches = async (
+export const demarches = async (
   {
     query: {
       format = 'json',
@@ -331,7 +328,7 @@ interface ITitresActivitesQueryInput {
   titresStatutsIds?: string | null
 }
 
-const activites = async (
+export const activites = async (
   {
     query: {
       format = 'json',
@@ -405,76 +402,12 @@ const activites = async (
     : null
 }
 
-interface IUtilisateursQueryInput {
-  format?: IFormat
-  colonne?: IUtilisateursColonneId | null
-  ordre?: 'asc' | 'desc' | null
-  entrepriseIds?: string
-  administrationIds?: string
-  //  TODO 2022-06-14: utiliser un tableau de string plutôt qu'une chaine séparée par des ','
-  roles?: string
-  noms?: string | null
-  emails?: string | null
-}
-
-const utilisateurs = async (
-  {
-    query: {
-      format = 'json',
-      colonne,
-      ordre,
-      entrepriseIds,
-      administrationIds,
-      roles,
-      noms,
-      emails
-    }
-  }: { query: IUtilisateursQueryInput },
-  userId?: string
-) => {
-  const user = await userGet(userId)
-
-  formatCheck(['json', 'csv', 'ods', 'xlsx'], format)
-
-  const utilisateurs = await utilisateursGet(
-    {
-      colonne,
-      ordre,
-      entrepriseIds: entrepriseIds?.split(','),
-      administrationIds: administrationIds?.split(','),
-      roles: roles?.split(',').filter(isRole) ?? [],
-      noms,
-      emails
-    },
-    {},
-    user
-  )
-
-  let contenu
-
-  if (['csv', 'xlsx', 'ods'].includes(format)) {
-    const elements = utilisateursFormatTable(utilisateurs)
-
-    contenu = tableConvert('utilisateurs', elements, format)
-  } else {
-    contenu = JSON.stringify(utilisateurs, null, 2)
-  }
-
-  return contenu
-    ? {
-        nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, format),
-        format,
-        contenu
-      }
-    : null
-}
-
 interface IEntreprisesQueryInput {
   format?: IFormat
   noms?: string | null
 }
 
-const entreprises = async (
+export const entreprises = async (
   { query: { format = 'json', noms } }: { query: IEntreprisesQueryInput },
   userId?: string
 ) => {
@@ -504,5 +437,3 @@ const entreprises = async (
       }
     : null
 }
-
-export { titre, titres, demarches, activites, utilisateurs, entreprises }
