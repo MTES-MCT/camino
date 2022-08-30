@@ -99,6 +99,7 @@ entity "**communes**" {
   --
   *""nom"": //character varying(255) //
   *""departement_id"": //character varying(3) //
+  ""geometry"": //geometry(MultiPolygon,4326) //
 }
 
 entity "**demarches_statuts**" {
@@ -241,6 +242,7 @@ entity "**forets**" {
   + ""id"": //character varying(30) [PK]//
   --
   *""nom"": //character varying(255) //
+  ""geometry"": //geometry(MultiPolygon,4326) //
 }
 
 entity "**globales**" {
@@ -291,6 +293,7 @@ entity "**sdom_zones**" {
   + ""id"": //character varying(30) [PK]//
   --
   *""nom"": //character varying(255) //
+  ""geometry"": //geometry(MultiPolygon,4326) //
 }
 
 entity "**spatial_ref_sys**" {
@@ -326,7 +329,6 @@ entity "**titres__sdom_zones**" {
   + ""titre_etape_id"": //character varying(128) [PK][FK]//
   + ""sdom_zone_id"": //character varying(30) [PK][FK]//
   --
-  ""surface"": //integer //
 }
 
 entity "**titres__titres**" {
@@ -439,7 +441,6 @@ entity "**titres_forets**" {
   + ""titre_etape_id"": //character varying(128) [PK][FK]//
   + ""foret_id"": //character varying(8) [PK][FK]//
   --
-  ""surface"": //integer //
 }
 
 entity "**titres_phases**" {

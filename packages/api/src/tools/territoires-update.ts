@@ -5,45 +5,66 @@ import Communes from '../database/models/communes'
 import JSZip from 'jszip'
 import Forets from '../database/models/forets'
 import { SDOMZoneId } from '../types'
-
+import { streamArray } from 'stream-json/streamers/StreamArray'
+import Pick from 'stream-json/filters/Pick'
+import { chain } from 'stream-chain'
+import { Readable } from 'stream'
 const communesUpdate = async () => {
+  const communesIdsKnown = (await Communes.query()).map(({ id }) => id)
   console.info('Téléchargement du fichier des communes')
 
   const communesFetch = await fetch(
     'http://etalab-datasets.geo.data.gouv.fr/contours-administratifs/latest/geojson/communes-5m.geojson'
   )
-  const communesGeojson = await communesFetch.json()
-
-  const communesIdsKnown = (await Communes.query()).map(({ id }) => id)
 
   console.info('Traitement du fichier des communes')
-
-  for (const commune of communesGeojson.features) {
-    try {
-      const result = await knex.raw(
-        `select ST_MakeValid(ST_MULTI(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
-          commune.geometry
-        )}'), 4326))) as result`
-      )
-
-      if (communesIdsKnown.includes(commune.properties.code)) {
-        await knex('communes').where('id', commune.properties.code).update({
-          nom: commune.properties.nom,
-          departementId: commune.properties.departement,
-          geometry: result.rows[0].result
-        })
-      } else {
-        await knex('communes').insert({
-          id: commune.properties.code,
-          nom: commune.properties.nom,
-          departementId: commune.properties.departement,
-          geometry: result.rows[0].result
-        })
+  const pipeline = chain([
+    new Readable().wrap(communesFetch.body),
+    Pick.withParser({ filter: 'features' }),
+    streamArray(),
+    async ({ key, value }) => {
+      if (key % 1000 === 0) {
+        console.info(`${key} communes gérées`)
       }
-    } catch (e) {
-      console.error(commune.properties.nom, e)
+      const commune = value
+      try {
+        const result = await knex.raw(
+          `select ST_MakeValid(ST_MULTI(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
+            commune.geometry
+          )}'), 4326))) as result`
+        )
+
+        if (communesIdsKnown.includes(commune.properties.code)) {
+          await knex('communes').where('id', commune.properties.code).update({
+            nom: commune.properties.nom,
+            departementId: commune.properties.departement,
+            geometry: result.rows[0].result
+          })
+        } else {
+          await knex('communes').insert({
+            id: commune.properties.code,
+            nom: commune.properties.nom,
+            departementId: commune.properties.departement,
+            geometry: result.rows[0].result
+          })
+        }
+      } catch (e) {
+        console.error(commune.properties.nom, e)
+      }
     }
-  }
+  ])
+  const promise = new Promise<void>((resolve, reject) => {
+    pipeline.on('error', error => {
+      console.error('Erreur lors de la gestion des communes', error)
+      reject(error)
+    })
+    pipeline.on('finish', () => {
+      console.info('Fin de gestion des communes')
+      resolve()
+    })
+  })
+
+  await promise
 }
 
 const geoguyaneFileGet = async (path: string) => {
