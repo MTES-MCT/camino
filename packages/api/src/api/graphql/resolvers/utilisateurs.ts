@@ -35,10 +35,7 @@ import { utilisateurUpdationValidate } from '../../../business/validations/utili
 import { emailCheck } from '../../../tools/email-check'
 import { utilisateurEditionCheck } from '../../_permissions/utilisateur'
 import { userFormat } from '../../_format/users'
-import {
-  newsletterSubscriberCheck,
-  newsletterSubscriberUpdate
-} from '../../../tools/api-mailjet/newsletter'
+import { newsletterSubscriberUpdate } from '../../../tools/api-mailjet/newsletter'
 import { userSuper } from '../../../database/user-super'
 import dateFormat from 'dateformat'
 import {
@@ -358,12 +355,6 @@ const utilisateurCreer = async (
 
     utilisateur.motDePasse = bcrypt.hashSync(utilisateur.motDePasse!, 10)
 
-    if (!utilisateur.newsletter) {
-      utilisateur.newsletter = await newsletterSubscriberCheck(
-        utilisateur.email
-      )
-    }
-
     const utilisateurUpdated = await utilisateurCreate(
       {
         id: await userIdGenerate(),
@@ -488,11 +479,6 @@ const utilisateurModifier = async (
     const fields = fieldsBuild(info)
 
     const utilisateurUpdated = await utilisateurUpsert(utilisateur, { fields })
-
-    newsletterSubscriberUpdate(
-      utilisateurUpdated.email!,
-      !!utilisateurUpdated.newsletter
-    )
 
     return utilisateurUpdated
   } catch (e) {
@@ -819,17 +805,7 @@ export const userTokensDelete = (res: any) => {
 
 const newsletterInscrire = async ({ email }: { email: string }) => {
   try {
-    const utilisateur = await userByEmailGet(email, { fields: {} })
-
-    if (utilisateur?.newsletter) {
-      return 'email inscrit à la newsletter'
-    }
-
-    if (utilisateur) {
-      await utilisateurUpdate(utilisateur.id, { newsletter: true })
-    }
-
-    return newsletterSubscriberUpdate(email, true)
+    return await newsletterSubscriberUpdate(email, true)
   } catch (e) {
     console.error(e)
 

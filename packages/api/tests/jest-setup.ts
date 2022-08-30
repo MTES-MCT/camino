@@ -10,9 +10,7 @@ jest.mock('../src/tools/api-mailjet/emails', () => ({
 
 jest.mock('../src/tools/api-mailjet/newsletter', () => ({
   __esModule: true,
-  newsletterSubscribersFind: jest.fn().mockImplementation(() => []),
-  newsletterSubscriberUpdate: jest.fn().mockImplementation(() => 'succès'),
-  newsletterSubscriberCheck: jest.fn().mockImplementation(() => false)
+  newsletterSubscriberUpdate: jest.fn().mockImplementation(() => 'succès')
 }))
 
 jest.mock('tus-node-server')

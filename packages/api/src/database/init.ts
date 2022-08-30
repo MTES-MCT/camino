@@ -26,7 +26,7 @@ const createAdminUserAtStartup = async () => {
     console.warn("creation de l'utilisateur super par défaut")
     await userAdd(knex, {
       id: 'admin',
-      email: process.env.ADMIN_EMAIL,
+      email: process.env.ADMIN_EMAIL!,
       role: 'super',
       dateCreation: dateFormat(new Date(), 'yyyy-mm-dd')
     })

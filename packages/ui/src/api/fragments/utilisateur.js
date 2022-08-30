@@ -14,8 +14,6 @@ export const fragmentUtilisateur = gql`
     }
     administrationId
     role
-    newsletter
-
     modification
     suppression
     permissionModification

@@ -61,7 +61,6 @@ const actions = {
 
       commit('popupClose', null, { root: true })
 
-      router.push({ name: 'utilisateur', params: { id: data.id } })
       dispatch(
         'messageAdd',
         {
@@ -70,6 +69,8 @@ const actions = {
         },
         { root: true }
       )
+
+      return data
     } catch (e) {
       commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
     } finally {

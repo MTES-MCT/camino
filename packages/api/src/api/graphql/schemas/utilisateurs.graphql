@@ -14,7 +14,6 @@ type Utilisateur {
   entreprises: [Entreprise]
   role: ID
   preferences: Json
-  newsletter: Boolean
 
   modification: Boolean
   suppression: Boolean
@@ -54,7 +53,6 @@ input InputUtilisateurModification {
   role: ID
   entreprises: [InputId]
   administrationId: ID
-  newsletter: Boolean
   preferences: Json
 }
 
@@ -68,6 +66,5 @@ input InputUtilisateurCreation {
   role: ID
   entreprises: [InputId]
   administrationId: ID
-  newsletter: Boolean
   preferences: Json
 }

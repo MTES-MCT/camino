@@ -28,7 +28,6 @@ class Utilisateurs extends Model {
       role: { type: 'string' },
       preferences: { type: ['object', 'null'] },
       refreshToken: { type: ['string', 'null'] },
-      newsletter: { type: ['boolean', 'null'] },
       administrationId: { type: ['string', 'null'] }
     }
   }

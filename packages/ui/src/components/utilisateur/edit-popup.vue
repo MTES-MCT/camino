@@ -204,11 +204,11 @@
         <div class="mb tablet-blob-2-3">
           <label class="tablet-pt-s">
             <input
-              v-model="utilisateur.newsletter"
+              v-model="subscription.newsletter"
               type="checkbox"
               class="p-s mt-s mb-s mr-xs"
             />
-            <span v-if="utilisateur.newsletter">Inscrit</span>
+            <span v-if="subscription.newsletter">Inscrit</span>
           </label>
         </div>
       </div>
@@ -252,6 +252,7 @@ import {
   isSuper,
   ROLES
 } from 'camino-common/src/roles'
+import router from '@/router'
 
 export default {
   name: 'CaminoUtilisateurEditPopup',
@@ -263,6 +264,8 @@ export default {
       type: Object,
       default: () => ({})
     },
+
+    subscription: { type: Object, required: true },
 
     action: {
       type: String,
@@ -390,15 +393,33 @@ export default {
           utilisateur.entreprises = []
         }
 
+        let utilisateurId = utilisateur.id
         if (this.action === 'create') {
           if (!utilisateur.role) {
             utilisateur.role = 'defaut'
           }
 
-          await this.$store.dispatch('utilisateur/add', utilisateur)
+          const utilisateurSaved = await this.$store.dispatch(
+            'utilisateur/add',
+            utilisateur
+          )
+          utilisateurId = utilisateurSaved.id
         } else {
           await this.$store.dispatch('utilisateur/update', utilisateur)
         }
+
+        await (
+          await fetch(`/apiUrl/utilisateurs/${utilisateurId}/newsletter`, {
+            headers: { 'Content-Type': 'application/json' },
+            method: 'POST',
+            body: JSON.stringify(this.subscription)
+          })
+        ).json()
+
+        await router.push({
+          name: 'utilisateur',
+          params: { id: utilisateurId }
+        })
       }
     },
 

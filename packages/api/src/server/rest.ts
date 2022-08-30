@@ -3,14 +3,7 @@ import { IFormat, Index, IUser } from '../types'
 import express from 'express'
 import { join } from 'path'
 
-import {
-  titre,
-  titres,
-  demarches,
-  activites,
-  utilisateurs,
-  entreprises
-} from '../api/rest/index'
+import { titre, titres, demarches, activites, entreprises } from '../api/rest'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers'
 import {
   getTitreLiaisons,
@@ -20,6 +13,11 @@ import {
   titresPTMG
 } from '../api/rest/titres'
 import { fiscalite } from '../api/rest/entreprises'
+import {
+  isSubscribedToNewsletter,
+  manageNewsletterSubscription,
+  utilisateurs
+} from '../api/rest/utilisateurs'
 
 const contentTypes = {
   csv: 'text/csv',
@@ -134,6 +132,11 @@ rest.get('/titresPTMG', restCatcher(titresPTMG))
 rest.get('/titresDREAL', restCatcher(titresDREAL))
 rest.get('/demarches', restDownload(demarches))
 rest.get('/activites', restDownload(activites))
+rest.post(
+  '/utilisateurs/:id/newsletter',
+  restCatcher(manageNewsletterSubscription)
+)
+rest.get('/utilisateurs/:id/newsletter', restCatcher(isSubscribedToNewsletter))
 rest.get('/utilisateurs', restDownload(utilisateurs))
 rest.get('/entreprises/:entrepriseId/fiscalite', restCatcher(fiscalite))
 rest.get('/entreprises', restDownload(entreprises))

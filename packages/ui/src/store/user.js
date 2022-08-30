@@ -8,7 +8,6 @@ import {
   utilisateurMotDePasseMessageEnvoyer,
   utilisateurMotDePasseInitialiser,
   userMetas,
-  newsletterInscrire,
   utilisateurDeconnecter
 } from '../api/utilisateurs'
 
@@ -285,22 +284,6 @@ const actions = {
       localStorage.setItem('conditions', params.value)
     } else {
       commit('preferencesSet', { section, params })
-    }
-  },
-
-  async newsletterSubscribe({ commit, dispatch }, email) {
-    try {
-      commit('loadingAdd', 'newsletterSubscribe', { root: true })
-
-      const message = await newsletterInscrire({
-        email
-      })
-
-      dispatch('messageAdd', { value: message, type: 'info' }, { root: true })
-    } catch (e) {
-      dispatch('messageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'newsletterSubscribe', { root: true })
     }
   }
 }

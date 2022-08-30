@@ -32,8 +32,7 @@ const logsUpdate = ({
   titresUpdatedIndex,
   entreprisesUpdated,
   etablissementsUpdated,
-  etablissementsDeleted,
-  utilisateursUpdated
+  etablissementsDeleted
 }: {
   titresEtapesOrdreUpdated?: string[]
   titresEtapesHeritagePropsUpdated?: string[]
@@ -62,7 +61,6 @@ const logsUpdate = ({
   entreprisesUpdated?: IEntreprise[]
   etablissementsUpdated?: IEntrepriseEtablissement[]
   etablissementsDeleted?: string[]
-  utilisateursUpdated?: string[]
 }) => {
   console.info()
   console.info('-')
@@ -227,12 +225,6 @@ const logsUpdate = ({
   if (etablissementsDeleted?.length) {
     console.info(
       `suppression: ${etablissementsDeleted.length} établissement(s) d'entreprise(s)`
-    )
-  }
-
-  if (utilisateursUpdated?.length) {
-    console.info(
-      `mise à jour: ${utilisateursUpdated.length} utilisateurs(s) inscrits à la newsletter`
     )
   }
 }
