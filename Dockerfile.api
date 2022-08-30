@@ -23,7 +23,7 @@ FROM node:18.7-alpine as production-stage
 # TODO 2022-07-13 : on profite que
 # - l'utilisateur a le même id sur toutes les machines
 # - ansible crée les dossiers avec les bons droits
-RUN adduser -u 1002 -D nonroot
+RUN apk add make && adduser -u 1002 -D nonroot
 
 USER nonroot
 
