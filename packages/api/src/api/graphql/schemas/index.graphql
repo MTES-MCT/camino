@@ -369,12 +369,32 @@ type Mutation {
   "Modifie une entreprise"
   entrepriseModifier(entreprise: InputEntrepriseModification!): Entreprise
 
+  entrepriseTitreTypeModifier(
+    entrepriseTitreType: InputEntrepriseTitreType!
+  ): Entreprise
+
   administrationActiviteTypeEmailCreer(
     administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!
   ): Administration
 
   administrationActiviteTypeEmailSupprimer(
     administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!
+  ): Administration
+
+  administrationTitreTypeModifier(
+    administrationTitreType: InputAdministrationTitreType!
+  ): Administration
+
+  administrationTitreTypeTitreStatutModifier(
+    administrationTitreTypeTitreStatut: InputAdministrationTitreTypeTitreStatut!
+  ): Administration
+
+  administrationTitreTypeEtapeTypeModifier(
+    administrationTitreTypeEtapeType: InputAdministrationTitreTypeEtapeType!
+  ): Administration
+
+  administrationActiviteTypeModifier(
+    administrationActiviteType: InputAdministrationActiviteType!
   ): Administration
 
   titreDemandeCreer(titreDemande: InputTitreDemande): TitreDemandeIds
