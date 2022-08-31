@@ -17,11 +17,7 @@ import { titreContenuFormat } from '../../database/models/_format/titre-contenu'
 import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort'
 import { titreEtapeEtatValidate } from './titre-etape-etat-validate'
 import { objectClone } from '../../tools/index'
-import {
-  isEtapesOk,
-  orderMachine,
-  toMachineEtapes
-} from '../rules-demarches/machine-helper'
+import { toMachineEtapes } from '../rules-demarches/machine-common'
 
 const titreDemarcheEtapesBuild = (
   titreEtape: ITitreEtape,
@@ -172,20 +168,11 @@ const titreDemarcheUpdatedEtatValidate = (
 
   // vérifie que toutes les étapes existent dans l’arbre
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {
-    // TODO 2022-04-22
-    // - [x] utiliser la machine pour calculer le statut de la démarche (lancer le daily après pour vérifier les modifications en prod)
-    //   - [x] Prise en compte des statuts d'étapes pour le calcul des étapes possibles
-    //   - [x] Changer la machine à état pour classer sans suite dès le classement sans suite, et pas après la notification du demandeur
-    //   - [x] Prendre en compte la VFC lors de desistement et CSS
-    // - [x] vérifier le calcul de l’ordre des étapes déjà existant
-    // - [x] renommer les trucs dans oct.machine.ts (uniformisation...)
-    //
-    // PR mergeable ici ^
-    // - ajouter les « responsables » sur les étapes (ex: onf, ptmg)
-    // - gérer les notifications via les responsables ?
-    // - récupérer les titres où la personne connectée est en « attente »
-
-    const ok = isEtapesOk(orderMachine(toMachineEtapes(titreDemarcheEtapesNew)))
+    const ok = demarcheDefinition.machine.isEtapesOk(
+      demarcheDefinition.machine.orderMachine(
+        toMachineEtapes(titreDemarcheEtapesNew)
+      )
+    )
     if (!ok) {
       titreDemarchesErrors.push('la démarche n’est pas valide')
     }

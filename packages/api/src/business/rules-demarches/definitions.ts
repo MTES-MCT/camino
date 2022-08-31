@@ -2,11 +2,11 @@ import { DemarcheId, IContenuValeur, ITitreEtape } from '../../types'
 
 import { restrictionsArmRet } from './arm/ret'
 import { restrictionsArmRenPro } from './arm/ren-pro'
-import { restrictionsAxmOct } from './axm/oct'
 import { etatsDefinitionPrmOct } from './prm/oct'
-import { AnyStateMachine } from 'xstate'
-import { armOctMachine } from './arm/oct.machine'
 import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot-demande-date-find'
+import { CaminoMachines } from './machines'
+import { ArmOctMachine } from './arm/oct.machine'
+import { AxmOctMachine } from './axm/oct.machine'
 
 export interface IEtapeTypeIdCondition {
   etapeTypeId?: string
@@ -57,7 +57,7 @@ export interface DemarcheDefinitionRestriction
   restrictions: IDemarcheDefinitionRestrictions
 }
 export interface DemarcheDefinitionMachine extends DemarcheDefinitionCommon {
-  machine: AnyStateMachine
+  machine: CaminoMachines
 }
 
 type IContenuOperation = {
@@ -82,7 +82,7 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
   {
     titreTypeId: 'arm',
     demarcheTypeIds: ['oct'],
-    machine: armOctMachine,
+    machine: new ArmOctMachine(),
     dateDebut: '2019-10-31'
   },
   {
@@ -106,7 +106,7 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
   {
     titreTypeId: 'axm',
     demarcheTypeIds: ['oct'],
-    restrictions: restrictionsAxmOct,
+    machine: new AxmOctMachine(),
     // https://camino.beta.gouv.fr/titres/m-ax-crique-tumuc-humac-2020
     dateDebut: '2020-09-30'
   }

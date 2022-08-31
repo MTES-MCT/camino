@@ -10,10 +10,7 @@ import {
   demarcheDefinitionFind,
   isDemarcheDefinitionMachine
 } from '../rules-demarches/definitions'
-import {
-  demarcheStatut,
-  toMachineEtapes
-} from '../rules-demarches/machine-helper'
+import { toMachineEtapes } from '../rules-demarches/machine-common'
 import {
   DemarcheStatutId,
   DemarchesStatutsIds
@@ -396,7 +393,9 @@ export const titreDemarcheStatutIdFind = (
   )
 
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {
-    return demarcheStatut(toMachineEtapes(titreDemarcheEtapes))
+    return demarcheDefinition.machine.demarcheStatut(
+      toMachineEtapes(titreDemarcheEtapes)
+    ).demarcheStatut
   }
 
   //  si la démarche fait l’objet d’une demande

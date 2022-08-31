@@ -1,27 +1,9 @@
 import { assign, createMachine } from 'xstate'
 import { IContenu } from '../../../types'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
-import {
-  EtapeStatutId,
-  EtapeStatutKey
-} from 'camino-common/src/static/etapesStatuts'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import {
-  EtapesTypesEtapesStatuts,
-  EtapeTypeEtapeStatut
-} from 'camino-common/src/static/etapesTypesEtapesStatuts'
-import {
-  DemarchesStatutsIds,
-  DemarcheStatutId
-} from 'camino-common/src/static/demarchesStatuts'
-
-export interface Etape {
-  // TODO 2022-07-28 : ceci pourrait être réduit en utilisant les états de 'trad'
-  typeId: EtapeTypeId
-  statutId: EtapeStatutId
-  date: string
-  contenu?: IContenu
-}
+import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { CaminoMachine } from '../machine-helper'
+import { CaminoCommonContext, DBEtat, Etape, tags } from '../machine-common'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 
 type FaireDemandeEvent = {
   mecanise: boolean
@@ -97,37 +79,6 @@ export type XStateEvent =
 
 export type Event = XStateEvent['type']
 
-export const isEvent = (event: string): event is Event => {
-  return EVENTS.includes(event)
-}
-
-export const toPotentialXStateEvent = (event: Event): XStateEvent[] => {
-  switch (event) {
-    case 'FAIRE_DEMANDE': {
-      return [
-        { type: event, mecanise: false, franchissements: null },
-        { type: event, mecanise: true, franchissements: null },
-        { type: event, mecanise: true, franchissements: 0 },
-        { type: event, mecanise: true, franchissements: 2 }
-      ]
-    }
-    case 'ACCEPTER_RDE':
-    case 'REFUSER_RDE':
-    case 'RECEVOIR_COMPLEMENTS_RDE': {
-      return [
-        { type: event, franchissements: 0 },
-        { type: event, franchissements: 3 }
-      ]
-    }
-    default:
-      // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      return [{ type: event }]
-  }
-}
-
-export type DBEtat = { [key in EtapeStatutKey]?: EtapeTypeEtapeStatut }
 const trad: { [key in Event]: DBEtat } = {
   FAIRE_DEMANDE: EtapesTypesEtapesStatuts.demande,
   DEPOSER_DEMANDE: EtapesTypesEtapesStatuts.depotDeLaDemande,
@@ -255,85 +206,119 @@ export const EVENTS = Object.keys(trad) as Array<
   Extract<keyof typeof trad, string>
 >
 
-export const eventToEtat = (event: Event): DBEtat => {
-  return trad[event]
-}
-
-export const xStateEventToEtape = (
-  event: XStateEvent
-): Omit<Etape, 'date'>[] => {
-  const dbEtat = trad[event.type]
-  let contenu: IContenu | undefined
-  switch (event.type) {
-    case 'FAIRE_DEMANDE': {
-      contenu = {
-        arm: {
-          mecanise: event.mecanise,
-          franchissements: event.franchissements
-        }
-      }
-      break
-    }
-    case 'ACCEPTER_RDE':
-    case 'REFUSER_RDE':
-    case 'RECEVOIR_COMPLEMENTS_RDE': {
-      contenu = { arm: { franchissements: event.franchissements } }
-    }
+export class ArmOctMachine extends CaminoMachine<
+  OctARMContext,
+  any,
+  XStateEvent
+> {
+  constructor() {
+    super(armOctMachine)
   }
 
-  return Object.values(dbEtat).map(({ etapeTypeId, etapeStatutId }) => ({
-    typeId: etapeTypeId,
-    statutId: etapeStatutId,
-    contenu
-  }))
-}
-
-export const eventFrom = (etape: Etape): XStateEvent => {
-  const entries = Object.entries(trad).filter(
-    (entry): entry is [Event, DBEtat] => EVENTS.includes(entry[0])
-  )
-
-  const entry = entries.find(([_key, dbEtat]) => {
-    return Object.values(dbEtat).some(
-      dbEtatSingle =>
-        dbEtatSingle.etapeTypeId === etape.typeId &&
-        dbEtatSingle.etapeStatutId === etape.statutId
-    )
-  })
-
-  if (entry) {
-    const eventFromEntry = entry[0]
-    switch (eventFromEntry) {
+  caminoXStateEventToEtapes(event: XStateEvent): Omit<Etape, 'date'>[] {
+    const dbEtat = trad[event.type]
+    let contenu: IContenu | undefined
+    switch (event.type) {
       case 'FAIRE_DEMANDE': {
-        let mecanise = false
-        let franchissements = null
-        if (typeof etape.contenu?.arm?.mecanise === 'boolean') {
-          mecanise = etape.contenu?.arm.mecanise
+        contenu = {
+          arm: {
+            mecanise: event.mecanise,
+            franchissements: event.franchissements
+          }
         }
-        if (typeof etape.contenu?.arm?.franchissements === 'number') {
-          franchissements = etape.contenu?.arm?.franchissements
-        }
-
-        return { type: eventFromEntry, mecanise, franchissements }
+        break
       }
       case 'ACCEPTER_RDE':
       case 'REFUSER_RDE':
       case 'RECEVOIR_COMPLEMENTS_RDE': {
-        let franchissements = null
-        if (typeof etape.contenu?.arm?.franchissements === 'number') {
-          franchissements = etape.contenu?.arm?.franchissements
-        }
+        contenu = { arm: { franchissements: event.franchissements } }
+      }
+    }
 
-        return { type: eventFromEntry, franchissements }
+    return Object.values(dbEtat).map(({ etapeTypeId, etapeStatutId }) => ({
+      etapeTypeId,
+      etapeStatutId,
+      contenu
+    }))
+  }
+
+  eventFrom(etape: Etape): XStateEvent {
+    const entries = Object.entries(trad).filter(
+      (entry): entry is [Event, DBEtat] => EVENTS.includes(entry[0])
+    )
+
+    const entry = entries.find(([_key, dbEtat]) => {
+      return Object.values(dbEtat).some(
+        dbEtatSingle =>
+          dbEtatSingle.etapeTypeId === etape.etapeTypeId &&
+          dbEtatSingle.etapeStatutId === etape.etapeStatutId
+      )
+    })
+
+    if (entry) {
+      const eventFromEntry = entry[0]
+      switch (eventFromEntry) {
+        case 'FAIRE_DEMANDE': {
+          let mecanise = false
+          let franchissements = null
+          if (typeof etape.contenu?.arm?.mecanise === 'boolean') {
+            mecanise = etape.contenu?.arm.mecanise
+          }
+          if (typeof etape.contenu?.arm?.franchissements === 'number') {
+            franchissements = etape.contenu?.arm?.franchissements
+          }
+
+          return { type: eventFromEntry, mecanise, franchissements }
+        }
+        case 'ACCEPTER_RDE':
+        case 'REFUSER_RDE':
+        case 'RECEVOIR_COMPLEMENTS_RDE': {
+          let franchissements = null
+          if (typeof etape.contenu?.arm?.franchissements === 'number') {
+            franchissements = etape.contenu?.arm?.franchissements
+          }
+
+          return { type: eventFromEntry, franchissements }
+        }
+        default:
+          // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          return { type: eventFromEntry }
+      }
+    }
+    throw new Error(`no event from ${JSON.stringify(etape)}`)
+  }
+
+  isEvent(event: string): event is XStateEvent['type'] {
+    return EVENTS.includes(event)
+  }
+
+  toPotentialCaminoXStateEvent(event: XStateEvent['type']): XStateEvent[] {
+    switch (event) {
+      case 'FAIRE_DEMANDE': {
+        return [
+          { type: event, mecanise: false, franchissements: null },
+          { type: event, mecanise: true, franchissements: null },
+          { type: event, mecanise: true, franchissements: 0 },
+          { type: event, mecanise: true, franchissements: 2 }
+        ]
+      }
+      case 'ACCEPTER_RDE':
+      case 'REFUSER_RDE':
+      case 'RECEVOIR_COMPLEMENTS_RDE': {
+        return [
+          { type: event, franchissements: 0 },
+          { type: event, franchissements: 3 }
+        ]
       }
       default:
         // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        return { type: eventFromEntry }
+        return [{ type: event }]
     }
   }
-  throw new Error(`no event from ${JSON.stringify(etape)}`)
 }
 
 type MecanisationConnuMecanise = {
@@ -349,11 +334,9 @@ type MecanisationConnu =
 
 type MecanisationInconnu = MecanisationConnu | 'inconnu'
 
-export interface OctARMContext {
+export interface OctARMContext extends CaminoCommonContext {
   mecanisation: MecanisationInconnu
-  visibilite: 'confidentielle' | 'publique'
   expertiseONFFaite: boolean
-  demarcheStatut: DemarcheStatutId
   paiementFraisDossierValide: boolean
 }
 
@@ -439,13 +422,6 @@ const actionMecanisation = assign<OctARMContext>({
   }
 })
 
-export const tags = {
-  responsable: {
-    [ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']]: 'responsablePTMG',
-    [ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]: 'responsableONF'
-  }
-} as const
-
 const actionAccepterOuRefuserRDE = assign<
   OctARMContext,
   AccepterRDE | RefuserRDE
@@ -492,7 +468,8 @@ const actionRecevoirComplementsRde = assign<
   }
 })
 
-export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
+const armOctMachine = createMachine<OctARMContext, XStateEvent>({
+  predictableActionArguments: true,
   id: 'oct',
   initial: 'demandeEnConstructionOuDeposeeOuEnInstruction',
   context: {
@@ -514,7 +491,8 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
       cond: context =>
         context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
       actions: assign<OctARMContext, { type: 'DESISTER_PAR_LE_DEMANDEUR' }>({
-        demarcheStatut: DemarchesStatutsIds.Desiste
+        demarcheStatut: DemarchesStatutsIds.Desiste,
+        visibilite: 'publique'
       })
     },
     CLASSER_SANS_SUITE: {
@@ -522,7 +500,8 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
       cond: context =>
         context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
       actions: assign<OctARMContext, { type: 'CLASSER_SANS_SUITE' }>({
-        demarcheStatut: DemarchesStatutsIds.ClasseSansSuite
+        demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
+        visibilite: 'publique'
       })
     }
   },

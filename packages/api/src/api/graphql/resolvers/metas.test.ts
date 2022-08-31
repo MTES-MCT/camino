@@ -2,6 +2,7 @@ import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape } from './metas'
 import TitresDemarches from '../../../database/models/titres-demarches'
 import { IEtapeType } from '../../../types'
 import { newDemarcheId } from '../../../database/models/_format/id-create'
+import { ArmOctMachine } from '../../../business/rules-demarches/arm/oct.machine'
 
 describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   const demarche: Pick<TitresDemarches, 'etapes'> = {
@@ -1256,9 +1257,10 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       etapesCreation: true
     }
   ]
-
+  const machine = new ArmOctMachine()
   test('modifie une étape existante', () => {
     const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+      machine,
       demarche,
       'etapeId3',
       '2019-10-11',
@@ -1272,6 +1274,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
     for (const etape of demarche?.etapes ?? []) {
       const etapesTypesPossibles =
         etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+          machine,
           demarche,
           etape.id,
           etape.date,
@@ -1291,6 +1294,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
 
   test('ajoute une nouvelle étape à la fin', () => {
     const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+      machine,
       demarche,
       undefined,
       '2022-05-06',
@@ -1302,6 +1306,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
 
   test('ajoute une nouvelle étape en plein milieu', () => {
     const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+      machine,
       demarche,
       undefined,
       '2019-12-04',
@@ -1331,6 +1336,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ]
     }
     const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+      machine,
       demarche,
       undefined,
       '2019-12-04',
@@ -1360,6 +1366,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ]
     }
     const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+      machine,
       demarche,
       undefined,
       '2019-12-04',
@@ -1411,6 +1418,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       ]
     }
     const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+      machine,
       demarche,
       undefined,
       '2022-07-01',

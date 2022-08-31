@@ -27,10 +27,6 @@ import {
   TitreLinks
 } from 'camino-common/src/titres'
 import {
-  toMachineEtapes,
-  whoIsBlocking
-} from '../../business/rules-demarches/machine-helper'
-import {
   demarcheDefinitionFind,
   isDemarcheDefinitionMachine
 } from '../../business/rules-demarches/definitions'
@@ -44,6 +40,7 @@ import { titreAdministrationsGet } from '../_format/titres'
 import { canLinkTitres } from 'camino-common/src/permissions/titres'
 import { linkTitres } from '../../database/queries/titres-titres'
 import { checkTitreLinks } from '../../business/validations/titre-links-validate'
+import { toMachineEtapes } from '../../business/rules-demarches/machine-common'
 
 type MyTitreRef = { type: NonNullable<ITitreReference['type']> } & Omit<
   ITitreReference,
@@ -171,17 +168,18 @@ async function titresArmAvecOctroi(
         throw new Error('les étapes ne sont pas chargées')
       }
 
-      const hasMachine = isDemarcheDefinitionMachine(
-        demarcheDefinitionFind(
-          titre.typeId,
-          octARM.typeId,
-          octARM.etapes,
-          octARM.id
-        )
+      const dd = demarcheDefinitionFind(
+        titre.typeId,
+        octARM.typeId,
+        octARM.etapes,
+          octARM.id,
       )
+      const hasMachine = isDemarcheDefinitionMachine(dd)
       const blockedByMe: boolean =
         hasMachine &&
-        whoIsBlocking(toMachineEtapes(octARM.etapes)).includes(administrationId)
+        dd.machine
+          .whoIsBlocking(toMachineEtapes(octARM.etapes))
+          .includes(administrationId)
 
       // TODO 2022-06-08 wait for typescript to get better at type interpolation
       return {
