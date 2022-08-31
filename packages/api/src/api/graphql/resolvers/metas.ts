@@ -1,38 +1,22 @@
 import { GraphQLResolveInfo } from 'graphql'
 import {
-  IDemarcheStatut,
-  IDemarcheType,
   IDocumentRepertoire,
-  IDocumentType,
   IEtapeType,
   IFields,
-  IPhaseStatut,
-  IReferenceType,
-  ITitreStatut,
-  ITitreTypeType,
   IToken
 } from '../../../types'
 
 import {
   demarchesStatutsGet,
-  demarcheStatutUpdate,
   demarchesTypesGet,
-  demarcheTypeUpdate,
   devisesGet,
   documentsTypesGet,
-  documentTypeCreate,
-  documentTypeUpdate,
   domainesGet,
   etapesTypesGet,
-  etapeTypeUpdate,
   phasesStatutsGet,
-  phaseStatutUpdate,
   referencesTypesGet,
-  referenceTypeUpdate,
   titresStatutsGet,
-  titreStatutUpdate,
-  titresTypesTypesGet,
-  titreTypeTypeUpdate
+  titresTypesTypesGet
 } from '../../../database/queries/metas'
 
 import { userGet } from '../../../database/queries/utilisateurs'
@@ -44,13 +28,11 @@ import {
 } from '../../_format/etapes-types'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes'
-import { ordreUpdate } from './_ordre-update'
 import {
   demarcheDefinitionFind,
   isDemarcheDefinitionMachine
 } from '../../../business/rules-demarches/definitions'
 import { userSuper } from '../../../database/user-super'
-import { titresEtapesHeritageContenuUpdate } from '../../../business/processes/titres-etapes-heritage-contenu-update'
 import { sortedAdministrationTypes } from 'camino-common/src/static/administrations'
 import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
 import {
@@ -59,7 +41,6 @@ import {
   toMachineEtapes
 } from '../../../business/rules-demarches/machine-helper'
 import { UNITES } from 'camino-common/src/static/unites'
-import { isSuper } from 'camino-common/src/roles'
 import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort'
 import TitresDemarches from '../../../database/models/titres-demarches'
 import { Etape } from '../../../business/rules-demarches/arm/oct.machine'
@@ -362,232 +343,6 @@ export const regions = (): Region[] => Object.values(Regions)
 export const phasesStatuts = async () => {
   try {
     return await phasesStatutsGet()
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export const titreTypeTypeModifier = async (
-  { titreType }: { titreType: ITitreTypeType },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    if (titreType.ordre) {
-      const titresTypesTypes = await titresTypesTypesGet()
-
-      await ordreUpdate(titreType, titresTypesTypes, titreTypeTypeUpdate)
-    }
-
-    await titreTypeTypeUpdate(titreType.id!, titreType)
-
-    return await titresTypesTypesGet()
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export const titreStatutModifier = async (
-  { titreStatut }: { titreStatut: ITitreStatut },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    if (titreStatut.ordre) {
-      const titresStatuts = await titresStatutsGet(user)
-
-      await ordreUpdate(titreStatut, titresStatuts, titreStatutUpdate)
-    }
-
-    await titreStatutUpdate(titreStatut.id!, titreStatut)
-
-    return await titresStatutsGet(user)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export const demarcheTypeModifier = async (
-  { demarcheType }: { demarcheType: IDemarcheType },
-  context: IToken,
-  info: GraphQLResolveInfo
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const fields = fieldsBuild(info)
-
-    if (demarcheType.ordre) {
-      const demarchesTypes = await demarchesTypesGet({}, { fields }, user)
-
-      await ordreUpdate(demarcheType, demarchesTypes, demarcheTypeUpdate)
-    }
-
-    await demarcheTypeUpdate(demarcheType.id!, demarcheType)
-
-    return await demarchesTypesGet({}, { fields }, user)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export const demarcheStatutModifier = async (
-  { demarcheStatut }: { demarcheStatut: IDemarcheStatut },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    if (demarcheStatut.ordre) {
-      const demarchesStatuts = await demarchesStatutsGet()
-
-      await ordreUpdate(demarcheStatut, demarchesStatuts, demarcheStatutUpdate)
-    }
-
-    await demarcheStatutUpdate(demarcheStatut.id!, demarcheStatut)
-
-    return await demarchesStatutsGet()
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export const phaseStatutModifier = async (
-  { phaseStatut }: { phaseStatut: IPhaseStatut },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    await phaseStatutUpdate(phaseStatut.id!, phaseStatut)
-
-    return await phasesStatutsGet()
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export const etapeTypeModifier = async (
-  { etapeType }: { etapeType: IEtapeType },
-  context: IToken,
-  info: GraphQLResolveInfo
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!user || !isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const fields = fieldsBuild(info)
-
-    if (etapeType.ordre) {
-      const etapesTypes = await etapesTypesGet({}, { fields }, user)
-
-      await ordreUpdate(etapeType, etapesTypes, etapeTypeUpdate)
-    }
-
-    await etapeTypeUpdate(etapeType.id!, etapeType)
-
-    await titresEtapesHeritageContenuUpdate(user)
-
-    return await etapesTypesGet({}, { fields }, user)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export const documentTypeCreer = async (
-  { documentType }: { documentType: IDocumentType },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    await documentTypeCreate(documentType)
-
-    return await documentsTypesGet({})
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export const documentTypeModifier = async (
-  { documentType }: { documentType: IDocumentType },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    await documentTypeUpdate(documentType.id!, documentType)
-
-    return await documentsTypesGet({})
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-export const referenceTypeModifier = async (
-  { referenceType }: { referenceType: IReferenceType },
-  context: IToken
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    await referenceTypeUpdate(referenceType.id!, referenceType)
-
-    return await referencesTypesGet()
   } catch (e) {
     console.error(e)
 

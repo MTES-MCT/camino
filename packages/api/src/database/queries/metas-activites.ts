@@ -1,11 +1,4 @@
-import {
-  IActiviteStatut,
-  IActiviteType,
-  IActiviteTypeDocumentType,
-  IActiviteTypePays,
-  IActiviteTypeTitreType,
-  IFields
-} from '../../types'
+import { IFields } from '../../types'
 
 import options from './_options'
 import graphBuild from './graph/build'
@@ -17,7 +10,7 @@ import ActivitesStatuts from '../models/activites-statuts'
 import ActivitesTypesDocumentsTypes from '../models/activites-types--documents-types'
 import ActivitesTypesPays from '../models/activites-types--pays'
 
-const activitesTypesGet = async ({ fields }: { fields?: IFields }) => {
+export const activitesTypesGet = async ({ fields }: { fields?: IFields }) => {
   const graph = fields
     ? graphBuild(fields, 'activitesTypes', fieldsFormat)
     : options.activitesTypes.graph
@@ -25,98 +18,12 @@ const activitesTypesGet = async ({ fields }: { fields?: IFields }) => {
   return ActivitesTypes.query().withGraphFetched(graph).modify('orderAsc')
 }
 
-const activitesStatutsGet = async () => ActivitesStatuts.query()
+export const activitesStatutsGet = async () => ActivitesStatuts.query()
 
-const activiteStatutUpdate = async (
-  id: string,
-  props: Partial<IActiviteStatut>
-) => ActivitesStatuts.query().patchAndFetchById(id, props)
-
-const activiteTypeUpdate = async (id: string, props: Partial<IActiviteType>) =>
-  ActivitesTypes.query().patchAndFetchById(id, props)
-
-const activiteTypeCreate = async (activiteType: IActiviteType) =>
-  ActivitesTypes.query().insertGraphAndFetch(
-    activiteType,
-    options.activitesTypes.update
-  )
-
-const activiteTypeDelete = async (activiteTypeId: string) =>
-  ActivitesTypes.query().deleteById(activiteTypeId)
-
-const activitesTypesTitresTypesGet = async () =>
+export const activitesTypesTitresTypesGet = async () =>
   ActivitesTypesTitresTypes.query()
 
-const activiteTypeTitreTypeCreate = async (
-  activiteTypeTitreType: IActiviteTypeTitreType
-) => ActivitesTypesTitresTypes.query().insertAndFetch(activiteTypeTitreType)
-
-const activiteTypeTitreTypeDelete = async ({
-  activiteTypeId,
-  titreTypeId
-}: {
-  activiteTypeId: string
-  titreTypeId: string
-}) =>
-  ActivitesTypesTitresTypes.query().deleteById([activiteTypeId, titreTypeId])
-
-const activitesTypesDocumentsTypesGet = async () =>
+export const activitesTypesDocumentsTypesGet = async () =>
   ActivitesTypesDocumentsTypes.query()
 
-const activiteTypeDocumentTypeCreate = async (
-  activiteTypeDocumentType: IActiviteTypeDocumentType
-) =>
-  ActivitesTypesDocumentsTypes.query().insertAndFetch(activiteTypeDocumentType)
-
-const activiteTypeDocumentTypeUpdate = async (
-  activiteTypeId: string,
-  documentTypeId: string,
-  activiteTypeDocumentType: Partial<IActiviteTypeDocumentType>
-) =>
-  ActivitesTypesDocumentsTypes.query()
-    .patch(activiteTypeDocumentType)
-    .findById([activiteTypeId, documentTypeId])
-
-const activiteTypeDocumentTypeDelete = async ({
-  activiteTypeId,
-  documentTypeId
-}: {
-  activiteTypeId: string
-  documentTypeId: string
-}) =>
-  ActivitesTypesDocumentsTypes.query().deleteById([
-    activiteTypeId,
-    documentTypeId
-  ])
-
-const activitesTypesPaysGet = async () => ActivitesTypesPays.query()
-
-const activiteTypePaysCreate = async (activiteTypePays: IActiviteTypePays) =>
-  ActivitesTypesPays.query().insertAndFetch(activiteTypePays)
-
-const activiteTypePaysDelete = async ({
-  activiteTypeId,
-  paysId
-}: {
-  activiteTypeId: string
-  paysId: string
-}) => ActivitesTypesPays.query().deleteById([activiteTypeId, paysId])
-
-export {
-  activitesTypesGet,
-  activiteTypeUpdate,
-  activiteTypeCreate,
-  activiteTypeDelete,
-  activitesStatutsGet,
-  activiteStatutUpdate,
-  activitesTypesTitresTypesGet,
-  activiteTypeTitreTypeCreate,
-  activiteTypeTitreTypeDelete,
-  activitesTypesDocumentsTypesGet,
-  activiteTypeDocumentTypeCreate,
-  activiteTypeDocumentTypeUpdate,
-  activiteTypeDocumentTypeDelete,
-  activitesTypesPaysGet,
-  activiteTypePaysCreate,
-  activiteTypePaysDelete
-}
+export const activitesTypesPaysGet = async () => ActivitesTypesPays.query()
