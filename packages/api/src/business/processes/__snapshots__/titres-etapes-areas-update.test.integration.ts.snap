@@ -84,3 +84,54 @@ Array [
   },
 ]
 `;
+
+exports[`titresEtapesAreasUpdate met à jour les communes, forêts et zone du SDOM sur une étape 5`] = `
+Array [
+  Object {
+    "archive": false,
+    "communes": Array [
+      Object {
+        "departementId": "973",
+        "id": "97312",
+        "nom": "Sinnamary",
+        "surface": 716357,
+      },
+      Object {
+        "departementId": "973",
+        "id": "97358",
+        "nom": "Saint-Élie",
+        "surface": 292012,
+      },
+    ],
+    "contenusTitreEtapesIds": null,
+    "coordonnees": null,
+    "dateDebut": null,
+    "dateDemande": null,
+    "dateFin": null,
+    "domaineId": "m",
+    "doublonTitreId": null,
+    "entreprisesLecture": false,
+    "forets": Array [
+      Object {
+        "id": "DBR",
+        "nom": "Deux Branches",
+      },
+    ],
+    "id": "titreIdUniquePourMiseAJourAreas",
+    "nom": "nom-titreIdUniquePourMiseAJourAreas",
+    "propsTitreEtapesIds": Object {
+      "points": "titreEtapeIdUniquePourMiseAJourAreas",
+    },
+    "publicLecture": false,
+    "sdomZones": Array [
+      Object {
+        "id": "1",
+        "nom": "Zone 1",
+      },
+    ],
+    "slug": "slug-titreIdUniquePourMiseAJourAreas",
+    "statutId": "val",
+    "typeId": "arm",
+  },
+]
+`;

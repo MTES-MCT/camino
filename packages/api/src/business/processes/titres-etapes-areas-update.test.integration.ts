@@ -1,7 +1,6 @@
 import { dbManager } from '../../../tests/db-manager'
 import { Knex } from 'knex'
 import Titres from '../../database/models/titres'
-import { idGenerate } from '../../database/models/_format/id-create'
 import TitresDemarches from '../../database/models/titres-demarches'
 import TitresEtapes from '../../database/models/titres-etapes'
 import TitresPoints from '../../database/models/titres-points'
@@ -60,9 +59,10 @@ describe('titresEtapesAreasUpdate', () => {
       `insert into sdom_zones (nom, id, geometry) values ('Zone 2', '${SDOMZoneId.Zone2}','${foretReginaPerimetre}')`
     )
 
-    const titreId = idGenerate()
+    const titreId = 'titreIdUniquePourMiseAJourAreas'
     await Titres.query().insert({
       id: titreId,
+      slug: `slug-${titreId}`,
       nom: `nom-${titreId}`,
       statutId: 'val',
       domaineId: 'm',
@@ -158,6 +158,15 @@ describe('titresEtapesAreasUpdate', () => {
     expect(
       await TitresEtapes.query()
         .where('id', titreEtapeId)
+        .withGraphFetched('[sdomZones, forets, communes]')
+    ).toMatchSnapshot()
+
+    await Titres.query()
+      .patch({ propsTitreEtapesIds: { points: titreEtapeId } })
+      .where({ id: titreId })
+    expect(
+      await Titres.query()
+        .where('id', titreId)
         .withGraphFetched('[sdomZones, forets, communes]')
     ).toMatchSnapshot()
   })
