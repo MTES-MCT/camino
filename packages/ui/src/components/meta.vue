@@ -23,50 +23,11 @@
               >
                 {{ colonne.nom }}
               </th>
-              <th v-if="definition.delete || definition.create" />
-            </tr>
-
-            <tr v-if="definition.create">
-              <td
-                v-for="colonne in definition.colonnes"
-                :key="colonne.id"
-                :class="colonne.class"
-              >
-                <MetaInput v-model:element="elementNew" :colonne="colonne">
-                </MetaInput>
-              </td>
-              <td>
-                <ButtonPlus :disabled="!elementNewComplete" @click="create" />
-              </td>
             </tr>
 
             <tr v-for="element in elements" :key="elementKeyFind(element)">
               <td v-for="colonne in definition.colonnes" :key="colonne.id">
-                <template v-if="definition.update">
-                  <div v-if="colonne.type === 'entities'">
-                    {{ entityIdLabelGet(colonne, element[colonne.id]) }}
-                  </div>
-                  <div v-else-if="colonne.type === 'static'">
-                    {{ colonne.display(element[colonne.id]) }}
-                  </div>
-                  <MetaLabelOrInput
-                    v-else
-                    :colonne="colonne"
-                    :element="element"
-                    @update="update"
-                  >
-                  </MetaLabelOrInput>
-                </template>
-                <div v-else>{{ element[colonne.id] }}</div>
-              </td>
-              <td v-if="definition.delete || definition.create">
-                <button
-                  v-if="definition.delete"
-                  class="btn p-xs rnd-xs"
-                  @click="remove(element)"
-                >
-                  <Icon name="minus" size="M" />
-                </button>
+                <div>{{ element[colonne.id] }}</div>
               </td>
             </tr>
           </table>
@@ -79,18 +40,10 @@
 <script>
 import Loader from './_ui/loader.vue'
 import metasIndex from '../store/metas-definitions'
-import MetaLabelOrInput from './metas/meta-label-or-input.vue'
-import MetaInput from './metas/meta-input.vue'
-import ButtonPlus from './_ui/button-plus.vue'
-import Icon from './_ui/icon.vue'
 
 export default {
   components: {
-    Icon,
-    Loader,
-    MetaLabelOrInput,
-    MetaInput,
-    ButtonPlus
+    Loader
   },
 
   data() {
@@ -158,45 +111,10 @@ export default {
       }
     },
 
-    async update(content, element, colonneId) {
-      await this.$store.dispatch('meta/update', {
-        id: this.id,
-        partialElement: { [colonneId]: content },
-        element
-      })
-    },
-
-    async create() {
-      await this.$store
-        .dispatch('meta/create', {
-          id: this.id,
-          element: this.elementNew,
-          joinTable: this.id,
-          foreignKey: 'id'
-        })
-        .then(_ => {
-          this.elementNew = {}
-        })
-    },
-
-    async remove(element) {
-      await this.$store.dispatch('meta/delete', {
-        id: this.id,
-        element
-      })
-    },
-
     elementKeyFind(element) {
       if (!this.definition.ids) return element.id
 
       return this.definition.ids.map(id => element[id]).join('-')
-    },
-
-    entityIdLabelGet(colonne, entityId) {
-      const entity = this.entities[colonne.entities]?.find(
-        ({ id }) => entityId === id
-      )
-      return entity ? metasIndex[colonne.entities].labelGet(entity) : ''
     }
   }
 }

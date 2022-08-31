@@ -4,62 +4,23 @@ import {
   demarchesStatuts,
   etapesTypes,
   phasesStatuts,
-  titreStatutModifier,
-  demarcheTypeModifier,
-  demarcheStatutModifier,
-  phaseStatutModifier,
-  etapeTypeModifier,
   documentsTypes,
-  documentTypeModifier,
   referencesTypes,
-  referenceTypeModifier,
   titresTypes,
-  titreTypeModifier,
-  titreTypeCreer,
-  titreTypeSupprimer,
   titresTypesTitresStatuts,
-  titreTypeTitreStatutCreer,
-  titreTypeTitreStatutSupprimer,
-  titreTypeTitreStatutModifier,
   titresTypesDemarchesTypes,
-  titreTypeDemarcheTypeModifier,
-  titreTypeDemarcheTypeCreer,
-  titreTypeDemarcheTypeSupprimer,
   titresTypesDemarchesTypesEtapesTypes,
-  titreTypeDemarcheTypeEtapeTypeModifier,
-  titreTypeDemarcheTypeEtapeTypeCreer,
-  titreTypeDemarcheTypeEtapeTypeSupprimer,
   etapesTypesDocumentsTypes,
-  etapeTypeDocumentTypeModifier,
-  etapeTypeDocumentTypeCreer,
-  etapeTypeDocumentTypeSupprimer,
   etapesTypesJustificatifsTypes,
-  etapeTypeJustificatifTypeModifier,
-  etapeTypeJustificatifTypeCreer,
-  etapeTypeJustificatifTypeSupprimer,
   titresTypesDemarchesTypesEtapesTypesDocumentsTypes,
-  titreTypeDemarcheTypeEtapeTypeDocumentTypeCreer,
-  titreTypeDemarcheTypeEtapeTypeDocumentTypeModifier,
-  titreTypeDemarcheTypeEtapeTypeDocumentTypeSupprimer,
-  titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
-  titreTypeDemarcheTypeEtapeTypeJustificatifTypeCreer,
-  titreTypeDemarcheTypeEtapeTypeJustificatifTypeModifier,
-  titreTypeDemarcheTypeEtapeTypeJustificatifTypeSupprimer,
-  documentTypeCreer
+  titresTypesDemarchesTypesEtapesTypesJustificatifsTypes
 } from '../api/metas'
 
 import {
   activitesTypes,
-  activiteTypeModifier,
   activitesStatuts,
-  activiteStatutModifier,
   activitesTypesDocumentsTypes,
-  activiteTypeDocumentTypeModifier,
-  activiteTypeDocumentTypeCreer,
-  activiteTypeDocumentTypeSupprimer,
-  activitesTypesPays,
-  activiteTypePaysCreer,
-  activiteTypePaysSupprimer
+  activitesTypesPays
 } from '../api/metas-activites'
 import { PaysList } from 'camino-common/src/static/pays'
 import { FREQUENCES_IDS } from 'camino-common/src/static/frequence'
@@ -71,9 +32,6 @@ const labelGet = entity => (entity ? `${entity.id} - ${entity.nom}` : '')
 const metasIndex = {
   'titres-types': {
     get: titresTypes,
-    update: titreTypeModifier,
-    create: titreTypeCreer,
-    delete: titreTypeSupprimer,
     labelGet: titreType =>
       `${titreType.id} - ${titreType.type.nom}- ${titreType.domaine.nom} `,
     nom: 'Domaines | Types des titres',
@@ -104,7 +62,6 @@ const metasIndex = {
   },
   'titres-statuts': {
     get: titresStatuts,
-    update: titreStatutModifier,
     labelGet,
     nom: 'Statuts des titres',
     colonnes: [
@@ -122,9 +79,6 @@ const metasIndex = {
   },
   'titre-types--titres-statuts': {
     get: titresTypesTitresStatuts,
-    update: titreTypeTitreStatutModifier,
-    create: titreTypeTitreStatutCreer,
-    delete: titreTypeTitreStatutSupprimer,
     nom: 'Types des titres | Statuts des titres',
     colonnes: [
       {
@@ -145,7 +99,6 @@ const metasIndex = {
   },
   'demarches-types': {
     get: demarchesTypes,
-    update: demarcheTypeModifier,
     labelGet,
     nom: 'Types des démarches',
     colonnes: [
@@ -169,9 +122,6 @@ const metasIndex = {
   },
   'titres-types--demarches-types': {
     get: titresTypesDemarchesTypes,
-    update: titreTypeDemarcheTypeModifier,
-    create: titreTypeDemarcheTypeCreer,
-    delete: titreTypeDemarcheTypeSupprimer,
     nom: 'Types des titres | Types des démarches',
     colonnes: [
       {
@@ -213,7 +163,6 @@ const metasIndex = {
   },
   'demarches-statuts': {
     get: demarchesStatuts,
-    update: demarcheStatutModifier,
     nom: 'Statuts des démarches',
     colonnes: [
       { id: 'id', nom: 'Id' },
@@ -230,7 +179,6 @@ const metasIndex = {
   },
   'phases-statuts': {
     get: phasesStatuts,
-    update: phaseStatutModifier,
     nom: 'Statuts des phases',
     colonnes: [
       { id: 'id', nom: 'Id' },
@@ -245,7 +193,6 @@ const metasIndex = {
   },
   'etapes-types': {
     get: etapesTypes,
-    update: etapeTypeModifier,
     labelGet,
     nom: 'Types des étapes',
     colonnes: [
@@ -304,9 +251,6 @@ const metasIndex = {
   },
   'titres-types--demarches-types--etapes-types': {
     get: titresTypesDemarchesTypesEtapesTypes,
-    update: titreTypeDemarcheTypeEtapeTypeModifier,
-    create: titreTypeDemarcheTypeEtapeTypeCreer,
-    delete: titreTypeDemarcheTypeEtapeTypeSupprimer,
     nom: 'Types des titres | Types des démarches | types des étapes',
     colonnes: [
       {
@@ -334,9 +278,6 @@ const metasIndex = {
   },
   'titres-types--demarches-types--etapes-types--documents-types': {
     get: titresTypesDemarchesTypesEtapesTypesDocumentsTypes,
-    create: titreTypeDemarcheTypeEtapeTypeDocumentTypeCreer,
-    update: titreTypeDemarcheTypeEtapeTypeDocumentTypeModifier,
-    delete: titreTypeDemarcheTypeEtapeTypeDocumentTypeSupprimer,
     nom: 'Types des titres | Types des démarches | Types des étapes | Types des documents',
     colonnes: [
       {
@@ -370,9 +311,6 @@ const metasIndex = {
   },
   'titres-types--demarches-types--etapes-types--justificatifs-types': {
     get: titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
-    create: titreTypeDemarcheTypeEtapeTypeJustificatifTypeCreer,
-    update: titreTypeDemarcheTypeEtapeTypeJustificatifTypeModifier,
-    delete: titreTypeDemarcheTypeEtapeTypeJustificatifTypeSupprimer,
     nom: 'Types des titres | Types des démarches | Types des étapes | Types des justificatifs',
     colonnes: [
       {
@@ -406,9 +344,6 @@ const metasIndex = {
   },
   'etapes-types--documents-types': {
     get: etapesTypesDocumentsTypes,
-    update: etapeTypeDocumentTypeModifier,
-    create: etapeTypeDocumentTypeCreer,
-    delete: etapeTypeDocumentTypeSupprimer,
     nom: 'Types des étapes | Types des documents',
     colonnes: [
       {
@@ -430,9 +365,6 @@ const metasIndex = {
   },
   'etapes-types--justificatifs-types': {
     get: etapesTypesJustificatifsTypes,
-    update: etapeTypeJustificatifTypeModifier,
-    create: etapeTypeJustificatifTypeCreer,
-    delete: etapeTypeJustificatifTypeSupprimer,
     nom: 'Types des étapes | Types des justificatifs',
     colonnes: [
       {
@@ -454,8 +386,6 @@ const metasIndex = {
   },
   'documents-types': {
     get: documentsTypes,
-    create: documentTypeCreer,
-    update: documentTypeModifier,
     labelGet,
     nom: 'Types des documents',
     colonnes: [
@@ -466,7 +396,6 @@ const metasIndex = {
   },
   'references-types': {
     get: referencesTypes,
-    update: referenceTypeModifier,
     nom: 'Types des références',
     colonnes: [
       { id: 'id', nom: 'Id' },
@@ -475,7 +404,6 @@ const metasIndex = {
   },
   'activites-types': {
     get: activitesTypes,
-    update: activiteTypeModifier,
     labelGet,
     nom: 'Types des activités',
     colonnes: [
@@ -507,7 +435,6 @@ const metasIndex = {
   },
   'activites-statuts': {
     get: activitesStatuts,
-    update: activiteStatutModifier,
     nom: 'Statuts des activités',
     colonnes: [
       { id: 'id', nom: 'Id' },
@@ -523,9 +450,6 @@ const metasIndex = {
 
   'activites-types--documents-types': {
     get: activitesTypesDocumentsTypes,
-    update: activiteTypeDocumentTypeModifier,
-    create: activiteTypeDocumentTypeCreer,
-    delete: activiteTypeDocumentTypeSupprimer,
     nom: 'Types des activités | Types des documents',
     colonnes: [
       {
@@ -547,8 +471,6 @@ const metasIndex = {
 
   'activites-types--pays': {
     get: activitesTypesPays,
-    create: activiteTypePaysCreer,
-    delete: activiteTypePaysSupprimer,
     nom: 'Types des activités | Pays',
     colonnes: [
       {

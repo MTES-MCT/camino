@@ -7,7 +7,7 @@
           <h4>{{ title }}</h4>
         </div>
 
-        <div class="mb tablet-blob-2-3" :class="{ flex: hasButtonPlus }">
+        <div class="mb tablet-blob-2-3">
           <select
             :value="elementSelected?.id"
             class="p-s"
@@ -21,10 +21,6 @@
               {{ labelGet(element) }}
             </option>
           </select>
-
-          <span class="ml-m">
-            <ButtonPlus v-if="hasButtonPlus" @click="elementCreate" />
-          </span>
         </div>
       </div>
 
@@ -46,25 +42,10 @@
                   </h5>
                 </div>
                 <div class="tablet-blob-2-3">
-                  <MetaLabelOrInput
-                    :colonne="colonne"
-                    :element="elementToEdit"
-                    @update="update"
-                  >
-                  </MetaLabelOrInput>
+                  {{ elementToEdit[colonne.id] || '' }}
                 </div>
               </div>
             </div>
-          </div>
-          <div class="flex blobs pr-m">
-            <button
-              v-if="definition.delete"
-              class="btn py-s px-m btn rnd-xs p-s flex-right"
-              title="supprimer"
-              @click="elementDelete(elementToEdit)"
-            >
-              <Icon size="M" name="delete" />
-            </button>
           </div>
         </div>
         <div
@@ -87,18 +68,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import metasIndex from '@/store/metas-definitions'
-import MetaCreatePopup from './meta-create-popup.vue'
-import MetaLabelOrInput from '@/components/metas/meta-label-or-input.vue'
-import ButtonPlus from '@/components/_ui/button-plus.vue'
 import Loader from '@/components/_ui/loader.vue'
-import Icon from '@/components/_ui/icon.vue'
 
 export default defineComponent({
   name: 'DefinitionEdit',
   components: {
-    Icon,
-    MetaLabelOrInput,
-    ButtonPlus,
     Loader
   },
   props: {
@@ -112,13 +86,6 @@ export default defineComponent({
     }
   },
   computed: {
-    hasButtonPlus() {
-      return (
-        this.definition.create &&
-        !this.rootComponent &&
-        this.definitionsTree.joinTable
-      )
-    },
     title() {
       return (
         this.definition.colonnes.find(
@@ -214,13 +181,6 @@ export default defineComponent({
       )
       await this.elementSelect(element)
     },
-    async update(content: string, element: any, colonneId: string) {
-      await this.$store.dispatch('meta/update', {
-        id: this.definitionsTree.joinTable || this.definitionsTree.id,
-        partialElement: { [colonneId]: content },
-        element
-      })
-    },
     labelGet(element: any) {
       return (metasIndex as any)[this.definitionsTree.id].labelGet(element)
     },
@@ -228,29 +188,6 @@ export default defineComponent({
       await this.$store.dispatch('meta/elementSelect', {
         id: this.definitionsTree.joinTable || this.definitionsTree.id,
         element
-      })
-    },
-    async elementDelete(element: any) {
-      if (
-        !window.confirm(
-          'Voulez-vous supprimer cet élément ? Cette action ne peut pas être annulée.'
-        )
-      )
-        return
-      await this.$store.dispatch('meta/delete', {
-        id: this.definitionsTree.joinTable || this.definitionsTree.id,
-        element
-      })
-    },
-    async elementCreate() {
-      this.$store.commit('popupOpen', {
-        component: MetaCreatePopup,
-        props: {
-          id: this.definitionsTree.id,
-          joinTable: this.definitionsTree.joinTable || this.definitionsTree.id,
-          foreignKeys: this.foreignKeys,
-          foreignKey: this.definitionsTree.foreignKey
-        }
       })
     }
   }

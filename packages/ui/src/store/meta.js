@@ -49,110 +49,12 @@ const actions = {
     }
   },
 
-  async update({ dispatch, commit }, { id, element, partialElement }) {
-    try {
-      commit('loadingAdd', 'metaUpdate', { root: true })
-
-      if (metasIndex[id]) {
-        const definition = metasIndex[id]
-        const elements = await definition.update({
-          element: {
-            ...partialElement,
-            ...idsFind(element, definition)
-          }
-        })
-
-        commit('set', { id, elements })
-        dispatch(
-          'messageAdd',
-          {
-            value: "l'élément a été mis à jour",
-            type: 'success'
-          },
-          { root: true }
-        )
-      }
-    } catch (e) {
-      dispatch('apiError', e, { root: true })
-    } finally {
-      commit('loadingRemove', 'metaUpdate', { root: true })
-    }
-  },
-
-  async create(
-    { dispatch, commit, state },
-    { id, element, joinTable, foreignKey }
-  ) {
-    try {
-      commit('loadingAdd', 'metaCreate', { root: true })
-
-      if (metasIndex[joinTable]) {
-        const definition = metasIndex[joinTable]
-        const elements = await definition.create({ element })
-
-        commit('set', { id: joinTable, elements })
-
-        const elementSelected = state.elementsIndex[id].find(
-          e => e.id === element[foreignKey]
-        )
-
-        dispatch('elementSelect', {
-          id: joinTable,
-          element: elementSelected
-        })
-
-        dispatch(
-          'messageAdd',
-          {
-            value: "l'élément a été créée",
-            type: 'success'
-          },
-          { root: true }
-        )
-      }
-    } catch (e) {
-      dispatch('apiError', e, { root: true })
-    } finally {
-      commit('loadingRemove', 'metaCreate', { root: true })
-    }
-  },
-
   elementSelect({ commit }, { id, element }) {
     commit('elementSelectedSet', { id, element: null })
     if (element) {
       nextTick(() => {
         commit('elementSelectedSet', { id, element })
       })
-    }
-  },
-
-  async delete({ dispatch, commit }, { id, element }) {
-    commit('loadingAdd', 'metaDelete', { root: true })
-
-    try {
-      if (metasIndex[id]) {
-        const definition = metasIndex[id]
-        const elements = await definition.delete({
-          element: {
-            ...idsFind(element, definition)
-          }
-        })
-
-        commit('set', { id, elements })
-        commit('elementSelectedSet', { id, element: null })
-        dispatch(
-          'messageAdd',
-          {
-            value: "l'élément a été effacé",
-            type: 'success'
-          },
-          { root: true }
-        )
-      }
-    } catch (e) {
-      dispatch('apiError', e, { root: true })
-    } finally {
-      commit('loadingRemove', 'metaDelete', { root: true })
     }
   }
 }

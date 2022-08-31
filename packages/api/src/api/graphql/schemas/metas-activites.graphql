@@ -37,36 +37,3 @@ type ActiviteTypePays {
   activiteTypeId: ID!
   paysId: ID!
 }
-
-input InputActiviteStatut {
-  id: ID!
-  nom: String
-  couleur: Couleur
-}
-
-input InputActiviteType {
-  id: ID!
-  nom: String
-  description: String
-  ordre: Int
-  dateDebut: String
-  delaiMois: Int
-  frequenceId: ID
-  sections: Json
-}
-
-input InputActiviteTypeTitreType {
-  activiteTypeId: ID!
-  titreTypeId: ID!
-}
-
-input InputActiviteTypeDocumentType {
-  activiteTypeId: ID!
-  documentTypeId: ID!
-  optionnel: Boolean
-}
-
-input InputActiviteTypePays {
-  activiteTypeId: ID!
-  paysId: ID!
-}
