@@ -2,6 +2,7 @@ import { ITitreDemarche, Index } from '../../../types'
 
 import { titreEtapesSortDescByOrdre } from '../../../business/utils/titre-etapes-sort'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 
 const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
   if (!titreDemarche.etapes?.length) return null
@@ -51,7 +52,7 @@ export const titresDemarchesFormatTable = (titresDemarches: ITitreDemarche[]) =>
       titre_type: titre.type!.type.nom,
       titre_statut: titre.statut!.nom,
       type: titreDemarche.type!.nom,
-      statut: titreDemarche.statut!.nom,
+      statut: DemarchesStatuts[titreDemarche.statutId!].nom,
       description: titreDemarche.description,
       titre_references: titre.references
         ?.map(r => `${r.type?.nom} : ${r.nom}`)

@@ -123,7 +123,6 @@ const titresTypesRelateFalse = [
 ]
 
 const titresDemarchesRelateTrue = [
-  'statut',
   'type',
   'enfants',
   'parents',
@@ -140,7 +139,6 @@ const titresDemarchesRelateFalse = [
 const titresDemarches = {
   graph: `[
      type.${demarchesTypes.graph},
-     statut,
      phase.${titresDemarchesPhases.graph},
      titreType,
      etapes.${titresEtapes.graph},

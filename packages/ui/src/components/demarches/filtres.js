@@ -7,6 +7,7 @@ import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
 import { sortedDomaines } from 'camino-common/src/static/domaines'
 import { titresFiltres, titresRechercherByNom } from '@/api/titres'
+import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 
 const etapesElementsFormat = (id, metas) => metas.etapesTypes
 const etapesLabelFormat = f =>
@@ -152,9 +153,8 @@ const filtres = [
     name: 'Statuts',
     type: 'checkboxes',
     value: [],
-    elements: [],
-    component: markRaw(FiltresTitresStatuts),
-    elementsFormat
+    elements: sortedDemarchesStatuts,
+    component: markRaw(FiltresTitresStatuts)
   },
   {
     id: 'etapesInclues',

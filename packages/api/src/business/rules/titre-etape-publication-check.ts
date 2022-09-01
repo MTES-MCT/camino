@@ -13,10 +13,11 @@ const demarcheEtapesTypesPublication = {
  * @param etapeTypeId - id du type d'étape
  * @param titreTypeId - id du type de titre
  */
-const titreEtapePublicationCheck = (etapeTypeId: string, titreTypeId: string) =>
+export const titreEtapePublicationCheck = (
+  etapeTypeId: string,
+  titreTypeId: string
+) =>
   !!(
     ['dpu', 'dup', 'ihi'].includes(etapeTypeId) ||
     demarcheEtapesTypesPublication[titreTypeId]?.includes(etapeTypeId)
   )
-
-export { titreEtapePublicationCheck }

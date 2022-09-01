@@ -23,12 +23,6 @@ const demarchesMetas = apiGraphQLFetch(
         nom
       }
 
-      demarchesStatuts {
-        id
-        nom
-        couleur
-      }
-
       etapesTypes(travaux: $travaux) {
         id
         nom

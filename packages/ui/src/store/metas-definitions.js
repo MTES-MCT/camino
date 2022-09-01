@@ -1,7 +1,6 @@
 import {
   titresStatuts,
   demarchesTypes,
-  demarchesStatuts,
   etapesTypes,
   phasesStatuts,
   documentsTypes,
@@ -160,22 +159,6 @@ const metasIndex = {
       { id: 'dateFin', nom: 'Date de fin', type: String, optional: true }
     ],
     ids: ['titreTypeId', 'demarcheTypeId']
-  },
-  'demarches-statuts': {
-    get: demarchesStatuts,
-    nom: 'Statuts des démarches',
-    colonnes: [
-      { id: 'id', nom: 'Id' },
-      { id: 'nom', nom: 'Nom', type: String },
-      { id: 'description', nom: 'Description', type: String, optional: true },
-      {
-        id: 'couleur',
-        nom: 'Couleur',
-        type: Array,
-        elements: ['warning', 'neutral', 'success', 'error']
-      },
-      { id: 'ordre', nom: 'Ordre', type: Number }
-    ]
   },
   'phases-statuts': {
     get: phasesStatuts,

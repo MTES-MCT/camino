@@ -1,6 +1,7 @@
-import { DemarchesStatutsTypesIds, ITitreDemarche } from '../../types'
+import { ITitreDemarche } from '../../types'
 
 import { titreDateFinFind } from './titre-date-fin-find'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 
 export const titreStatutIdFind = (
   aujourdhui: string,
@@ -82,8 +83,8 @@ export const titreInSurvieProvisoire = (
 
           if (
             ![
-              DemarchesStatutsTypesIds.EnConstruction,
-              DemarchesStatutsTypesIds.Depose
+              DemarchesStatutsIds.EnConstruction,
+              DemarchesStatutsIds.Depose
             ].includes(d.statutId)
           ) {
             return false

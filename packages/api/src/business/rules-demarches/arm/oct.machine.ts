@@ -1,9 +1,5 @@
 import { assign, createMachine } from 'xstate'
-import {
-  DemarchesStatutsTypesIds,
-  DemarcheStatutId,
-  IContenu
-} from '../../../types'
+import { IContenu } from '../../../types'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import {
   EtapeStatutId,
@@ -14,6 +10,10 @@ import {
   EtapesTypesEtapesStatuts,
   EtapeTypeEtapeStatut
 } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import {
+  DemarchesStatutsIds,
+  DemarcheStatutId
+} from 'camino-common/src/static/demarchesStatuts'
 
 export interface Etape {
   // TODO 2022-07-28 : ceci pourrait être réduit en utilisant les états de 'trad'
@@ -499,30 +499,30 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
     mecanisation: 'inconnu',
     expertiseONFFaite: false,
     visibilite: 'confidentielle',
-    demarcheStatut: DemarchesStatutsTypesIds.EnConstruction,
+    demarcheStatut: DemarchesStatutsIds.EnConstruction,
     paiementFraisDossierValide: false
   },
   on: {
     MODIFIER_DEMANDE: {
       actions: () => ({}),
       cond: context =>
-        context.demarcheStatut === DemarchesStatutsTypesIds.EnInstruction &&
+        context.demarcheStatut === DemarchesStatutsIds.EnInstruction &&
         context.visibilite === 'confidentielle'
     },
     DESISTER_PAR_LE_DEMANDEUR: {
       target: 'desistementDuDemandeur',
       cond: context =>
-        context.demarcheStatut === DemarchesStatutsTypesIds.EnInstruction,
+        context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
       actions: assign<OctARMContext, { type: 'DESISTER_PAR_LE_DEMANDEUR' }>({
-        demarcheStatut: DemarchesStatutsTypesIds.Desiste
+        demarcheStatut: DemarchesStatutsIds.Desiste
       })
     },
     CLASSER_SANS_SUITE: {
       target: 'decisionDeClassementSansSuite',
       cond: context =>
-        context.demarcheStatut === DemarchesStatutsTypesIds.EnInstruction,
+        context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
       actions: assign<OctARMContext, { type: 'CLASSER_SANS_SUITE' }>({
-        demarcheStatut: DemarchesStatutsTypesIds.ClasseSansSuite
+        demarcheStatut: DemarchesStatutsIds.ClasseSansSuite
       })
     }
   },
@@ -605,8 +605,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                             OctARMContext,
                             { type: 'DEPOSER_DEMANDE' }
                           >({
-                            demarcheStatut:
-                              DemarchesStatutsTypesIds.EnInstruction
+                            demarcheStatut: DemarchesStatutsIds.EnInstruction
                           })
                         }
                       }
@@ -650,7 +649,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                           target: 'demandeDeComplements',
                           cond: context =>
                             context.demarcheStatut !==
-                            DemarchesStatutsTypesIds.EnConstruction
+                            DemarchesStatutsIds.EnConstruction
                         }
                       }
                     },
@@ -710,28 +709,25 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                       paiementFraisDossierValide: true
                     }),
                     cond: context =>
+                      context.demarcheStatut !== DemarchesStatutsIds.Desiste &&
                       context.demarcheStatut !==
-                        DemarchesStatutsTypesIds.Desiste &&
-                      context.demarcheStatut !==
-                        DemarchesStatutsTypesIds.ClasseSansSuite
+                        DemarchesStatutsIds.ClasseSansSuite
                   },
                   {
                     target: '#fini',
                     cond: context =>
-                      (context.demarcheStatut ===
-                        DemarchesStatutsTypesIds.Desiste ||
+                      (context.demarcheStatut === DemarchesStatutsIds.Desiste ||
                         context.demarcheStatut ===
-                          DemarchesStatutsTypesIds.ClasseSansSuite) &&
+                          DemarchesStatutsIds.ClasseSansSuite) &&
                       isNonMecanise(context.mecanisation)
                   },
                   {
                     target:
                       '#validationDuPaiementDesFraisDeDossierComplementaires',
                     cond: context =>
-                      (context.demarcheStatut ===
-                        DemarchesStatutsTypesIds.Desiste ||
+                      (context.demarcheStatut === DemarchesStatutsIds.Desiste ||
                         context.demarcheStatut ===
-                          DemarchesStatutsTypesIds.ClasseSansSuite) &&
+                          DemarchesStatutsIds.ClasseSansSuite) &&
                       mustPayerFraisDossierComplementaire(context.mecanisation)
                   }
                 ]
@@ -895,10 +891,9 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                 DEMANDER_COMPLEMENTS_RDE: {
                   target: 'demandeDeComplements',
                   cond: context =>
-                    (context.demarcheStatut ===
-                      DemarchesStatutsTypesIds.Depose ||
+                    (context.demarcheStatut === DemarchesStatutsIds.Depose ||
                       context.demarcheStatut ===
-                        DemarchesStatutsTypesIds.EnInstruction) &&
+                        DemarchesStatutsIds.EnInstruction) &&
                     isMecanise(context.mecanisation)
                 },
                 REFUSER_RDE: {
@@ -978,7 +973,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
             OctARMContext,
             { type: 'RENDRE_AVIS_DEFAVORABLE_CARM' }
           >({
-            demarcheStatut: DemarchesStatutsTypesIds.Rejete
+            demarcheStatut: DemarchesStatutsIds.Rejete
           })
         },
         RENDRE_AVIS_AJOURNE_CARM: 'notificationDuDemandeurAvisAjourneCARM'
@@ -1041,9 +1036,8 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
               }
             }),
             cond: context =>
-              context.demarcheStatut !== DemarchesStatutsTypesIds.Desiste &&
-              context.demarcheStatut !==
-                DemarchesStatutsTypesIds.ClasseSansSuite
+              context.demarcheStatut !== DemarchesStatutsIds.Desiste &&
+              context.demarcheStatut !== DemarchesStatutsIds.ClasseSansSuite
           },
           {
             target: '#fini',
@@ -1063,9 +1057,8 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
               }
             }),
             cond: context =>
-              context.demarcheStatut === DemarchesStatutsTypesIds.Desiste ||
-              context.demarcheStatut ===
-                DemarchesStatutsTypesIds.ClasseSansSuite
+              context.demarcheStatut === DemarchesStatutsIds.Desiste ||
+              context.demarcheStatut === DemarchesStatutsIds.ClasseSansSuite
           }
         ]
       }
@@ -1079,7 +1072,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
               OctARMContext,
               { type: 'SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE' }
             >({
-              demarcheStatut: DemarchesStatutsTypesIds.Accepte
+              demarcheStatut: DemarchesStatutsIds.Accepte
             }),
             cond: context => isMecanise(context.mecanisation)
           },
@@ -1089,7 +1082,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
               OctARMContext,
               { type: 'SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE' }
             >({
-              demarcheStatut: DemarchesStatutsTypesIds.Accepte
+              demarcheStatut: DemarchesStatutsIds.Accepte
             }),
             cond: context => isNonMecanise(context.mecanisation)
           }

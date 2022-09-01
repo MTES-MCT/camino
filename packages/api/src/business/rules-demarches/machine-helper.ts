@@ -10,14 +10,14 @@ import {
   xStateEventToEtape
 } from './arm/oct.machine'
 import { interpret, State, StateFrom } from 'xstate'
-import {
-  DemarchesStatutsTypesIds,
-  DemarcheStatutId,
-  ITitreEtape
-} from '../../types'
+import { ITitreEtape } from '../../types'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { isStatut } from 'camino-common/src/static/etapesStatuts'
 import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import {
+  DemarchesStatutsIds,
+  DemarcheStatutId
+} from 'camino-common/src/static/demarchesStatuts'
 
 // TODO 2022-05-18: il faudrait que le orderMachine retourne la solution la plus longue possible quand il n'y a pas de solution, pour aider au debug
 // orderMachine devrait retourner un tuple {ok: bool, etapes: Etape[]} pour éviter de faire isEtapesOk(orderMachine( qui ne sert à rien car orderMachine sait si les étapes sont ok
@@ -124,7 +124,7 @@ export const demarcheStatut = (etapes: readonly Etape[]): DemarcheStatutId => {
       )}' est incohérente à l'étape ${value.etapeIndex + 1}`
     )
 
-    return DemarchesStatutsTypesIds.Indetermine
+    return DemarchesStatutsIds.Indetermine
   } else {
     return value.state.context.demarcheStatut
   }
