@@ -69,6 +69,7 @@ describe('liste des demarches', () => {
 
     expect(store.state.titresDemarches.definitions).toEqual([
       { values: ['oct'], id: 'typesIds', type: 'strings' },
+      { values: [], id: 'statutsIds', type: 'strings' },
       { values: ['dpu'], id: 'etapesInclues', type: 'objects' },
       { values: ['dpu'], id: 'etapesExclues', type: 'objects' },
       { values: [], id: 'titresDomainesIds', type: 'strings' },

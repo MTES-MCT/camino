@@ -1,10 +1,7 @@
-import {
-  ITitreEtape,
-  TitreEtapesTravauxTypes as Travaux,
-  DemarchesStatutsTypesIds as Demarches
-} from '../../types'
+import { ITitreEtape, TitreEtapesTravauxTypes as Travaux } from '../../types'
 
 import { titreDemarcheStatutIdFind } from './titre-demarche-statut-id-find'
+import { DemarchesStatutsIds as Demarches } from 'camino-common/src/static/demarchesStatuts'
 
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   etapesProps.map(

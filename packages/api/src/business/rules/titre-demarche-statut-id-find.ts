@@ -75,7 +75,7 @@ const titreDemarchesUnilateralesTypes = ['ret', 'prr', 'dec']
 
 const titresDemarcheCommunesStatutIdFind = (
   titreEtapeRecent: ITitreEtape
-): DemarcheStatutId => {
+): DemarcheStatutId | null => {
   //  - le type de l’étape est classement sans suite (css)
   //  - le titre est une ARM
   //    - et le type de l’étape est avis de la commission ARM (aca)
@@ -98,9 +98,14 @@ const titresDemarcheCommunesStatutIdFind = (
     //  - si le statut est fait
     //  - alors, le statut de la démarche repasse en “instruction”
     //  - sinon, le statut de la démarche a celui l'étape (accepté ou rejeté)
-    return titreEtapeRecent.statutId === 'fai'
-      ? DemarchesStatutsIds.EnInstruction
-      : titreEtapeRecent.statutId
+    switch (titreEtapeRecent.statutId) {
+      case 'fai':
+        return DemarchesStatutsIds.EnInstruction
+      case 'acc':
+        return DemarchesStatutsIds.Accepte
+      case 'rej':
+        return DemarchesStatutsIds.Rejete
+    }
   }
 
   return null
@@ -172,7 +177,7 @@ const titreDemarcheUnilateralStatutIdFind = (
 const titreDemarcheDemandeStatutIdFind = (
   titreDemarcheEtapes: ITitreEtape[],
   titreTypeId: string
-) => {
+): DemarcheStatutId => {
   // filtre les types d'étapes qui ont un impact
   // sur le statut de la démarche de demande
   const titreEtapesDecisivesDemande = titreDemarcheEtapes.filter(titreEtape =>
@@ -212,9 +217,15 @@ const titreDemarcheDemandeStatutIdFind = (
     // si l'étape de publication est de type unilatérale
     // alors la démarche a le statut accepté
     // sinon la démarche a le statut de l'étape (accepté ou rejeté)
-    return titreEtapePublicationRecent.statutId === 'fai'
-      ? DemarchesStatutsIds.Accepte
-      : titreEtapePublicationRecent.statutId
+    switch (titreEtapePublicationRecent.statutId) {
+      case 'fai':
+      case 'acc':
+        return DemarchesStatutsIds.Accepte
+      case 'rej':
+        return DemarchesStatutsIds.Rejete
+      default:
+        return DemarchesStatutsIds.Indetermine
+    }
   }
 
   //  - le type de l’étape est décision expresse (dex)
@@ -362,7 +373,7 @@ export const titreDemarcheStatutIdFind = (
   demarcheTypeId: string,
   titreDemarcheEtapes: ITitreEtape[],
   titreTypeId: string
-) => {
+): DemarcheStatutId => {
   // si la démarche ne contient pas d'étapes
   // -> le statut est indétrminé
   if (!titreDemarcheEtapes.length) return DemarchesStatutsIds.Indetermine
