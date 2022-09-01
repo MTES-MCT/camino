@@ -1,9 +1,9 @@
 import gql from 'graphql-tag'
 
 import { fragmentDemarchesTitre } from './titre'
-import { fragmentDemarcheType, fragmentDemarcheStatut } from './metas'
+import { fragmentDemarcheType } from './metas'
 
-const fragmentDemarches = gql`
+export const fragmentDemarches = gql`
   fragment demarches on Demarche {
     id
     slug
@@ -14,9 +14,7 @@ const fragmentDemarches = gql`
     type {
       ...demarcheType
     }
-    statut {
-      ...demarcheStatut
-    }
+    statutId
     phase {
       dateDebut
       dateFin
@@ -32,8 +30,5 @@ const fragmentDemarches = gql`
   }
 
   ${fragmentDemarcheType}
-  ${fragmentDemarcheStatut}
   ${fragmentDemarchesTitre}
 `
-
-export { fragmentDemarches }

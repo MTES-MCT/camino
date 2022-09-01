@@ -263,7 +263,6 @@ export const demarches = async (
     {
       fields: {
         type: { etapesTypes: { id: {} } },
-        statut: { id: {} },
         titre: {
           id: {},
           titulaires: { id: {} },

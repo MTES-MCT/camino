@@ -36,7 +36,7 @@ type Demarche {
   ordre: Int!
 
   "Statut de la démarche"
-  statut: DemarcheStatut!
+  statutId: String!
 
   "Phase, si la démarche donne lieu à une phase"
   phase: Phase

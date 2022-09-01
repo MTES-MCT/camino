@@ -3,7 +3,6 @@ import { Model, Modifiers, Pojo, QueryContext } from 'objection'
 import { ITitreDemarche } from '../../types'
 import { idGenerate } from './_format/id-create'
 import DemarchesTypes from './demarches-types'
-import DemarchesStatuts from './demarches-statuts'
 import TitresTypes from './titres-types'
 import Titres from './titres'
 import TitresEtapes from './titres-etapes'
@@ -42,15 +41,6 @@ class TitresDemarches extends Model {
         from: 'titresDemarches.typeId',
         to: 'demarchesTypes.id',
         extra: { titreId: 'titresDemarches.titreId' }
-      }
-    },
-
-    statut: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: DemarchesStatuts,
-      join: {
-        from: 'titresDemarches.statutId',
-        to: 'demarchesStatuts.id'
       }
     },
 

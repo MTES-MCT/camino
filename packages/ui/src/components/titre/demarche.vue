@@ -11,7 +11,7 @@
           </h3>
         </div>
         <div class="mb-s">
-          <Statut :color="demarche.statut.couleur" :nom="demarche.statut.nom" />
+          <Statut :color="statut.couleur" :nom="statut.nom" />
         </div>
       </div>
       <div class="tablet-blob-1-2 flex">
@@ -80,6 +80,7 @@ import TitreEtape from '../etape/preview.vue'
 import EditPopup from './demarche-edit-popup.vue'
 import RemovePopup from './demarche-remove-popup.vue'
 import Icon from '@/components/_ui/icon.vue'
+import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 
 export default {
   components: {
@@ -112,6 +113,10 @@ export default {
 
     etapes() {
       return this.demarche.etapes.slice().sort((a, b) => b.ordre - a.ordre)
+    },
+
+    statut() {
+      return DemarchesStatuts[this.demarche.statutId]
     }
   },
 

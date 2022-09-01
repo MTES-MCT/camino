@@ -35,11 +35,7 @@ fragment demarche on Demarche {
     id
     nom
   }
-  statut {
-    id
-    nom
-    couleur
-  }
+  statutId
   phase {
     dateDebut
     dateFin

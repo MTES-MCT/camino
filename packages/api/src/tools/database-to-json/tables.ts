@@ -30,7 +30,6 @@ export const tables = [
   // la table 'caches' n'est pas utile dans les json
   // { name: 'caches',orderBy: ['id'] },
   { name: 'communes', orderBy: ['id'] },
-  { name: 'demarches_statuts', orderBy: ['id'] },
   { name: 'demarches_types', orderBy: ['id'] },
   { name: 'documents', orderBy: ['id'] },
   { name: 'documents_types', orderBy: ['id'] },

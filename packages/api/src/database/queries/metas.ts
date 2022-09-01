@@ -10,7 +10,6 @@ import { fieldsFormat } from './graph/fields-format'
 
 import DemarchesTypes from '../models/demarches-types'
 import DocumentsTypes from '../models/documents-types'
-import DemarchesStatuts from '../models/demarches-statuts'
 import Domaines from '../models/domaines'
 import EtapesTypes from '../models/etapes-types'
 import ReferencesTypes from '../models/references-types'
@@ -34,6 +33,7 @@ import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../models/ti
 import Titres from '../models/titres'
 import { sortedDevises } from 'camino-common/src/static/devise'
 import TitresStatuts from '../models/titres-statuts'
+import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 
 const titresTypesTypesGet = async () =>
   TitresTypesTypes.query().orderBy('ordre')
@@ -206,8 +206,7 @@ const demarcheTypeGet = async (
   return q.findById(id)
 }
 
-const demarchesStatutsGet = async () =>
-  DemarchesStatuts.query().orderBy('ordre')
+const demarchesStatutsGet = () => sortedDemarchesStatuts
 
 const phasesStatutsGet = async () => PhasesStatuts.query().orderBy('id')
 

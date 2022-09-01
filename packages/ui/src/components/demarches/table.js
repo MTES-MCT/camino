@@ -3,6 +3,7 @@ import Nom from '../_common/nom.vue'
 import Statut from '../_common/statut.vue'
 import CaminoDomaine from '../_common/domaine.vue'
 import List from '../_ui/list.vue'
+import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 
 const demarchesColonnes = [
   { id: 'titreNom', name: 'Titre' },
@@ -48,10 +49,10 @@ const demarchesLignesBuild = demarches =>
       statut: {
         component: markRaw(Statut),
         props: {
-          color: demarche.statut.couleur,
-          nom: demarche.statut.nom
+          color: DemarchesStatuts[demarche.statutId].couleur,
+          nom: DemarchesStatuts[demarche.statutId].nom
         },
-        value: demarche.statut.nom
+        value: DemarchesStatuts[demarche.statutId].nom
       },
       references: {
         component: markRaw(List),

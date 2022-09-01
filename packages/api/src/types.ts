@@ -18,23 +18,7 @@ import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { UniteId } from 'camino-common/src/static/unites'
 import { FrequenceId } from 'camino-common/src/static/frequence'
-
-const DemarchesStatutsTypesIds = {
-  Accepte: 'acc',
-  ClasseSansSuite: 'cls',
-  Depose: 'dep',
-  Desiste: 'des',
-  EnConstruction: 'eco',
-  Indetermine: 'ind',
-  Initie: 'ini',
-  EnInstruction: 'ins',
-  Rejete: 'rej',
-  Termine: 'ter',
-  FinPoliceMines: 'fpm'
-} as const
-
-export type DemarcheStatutId =
-  typeof DemarchesStatutsTypesIds[keyof typeof DemarchesStatutsTypesIds]
+import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -669,8 +653,7 @@ interface ITitreDemarche {
   titreId: string
   titre?: ITitre | null
   typeId: DemarcheTypeId
-  statutId?: string | null
-  statut?: IDemarcheStatut | null
+  statutId?: DemarcheStatutId | null
   type?: IDemarcheType | null
   ordre?: number | null
   titreType?: ITitreType | null
@@ -918,7 +901,6 @@ interface IJournaux {
 
 export {
   TitreEtapesTravauxTypes,
-  DemarchesStatutsTypesIds,
   Index,
   IFields,
   IFormat,
