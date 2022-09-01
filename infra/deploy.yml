@@ -2,13 +2,8 @@
 - hosts: servers
   vars:
     git_user_uid: 1002
-  tasks:
-    - name: Install rsync
-      ansible.builtin.apt:
-        name: rsync
-        state: present
-      become: True
   roles:
+    - role: init
     - role: user
     - role: nginx
     - role: camino

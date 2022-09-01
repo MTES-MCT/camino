@@ -1,0 +1,19 @@
+---
+- name: Upgrade machine
+  ansible.builtin.apt:
+    upgrade: safe
+    update_cache: yes
+  become: True
+- name: Install rsync
+  ansible.builtin.apt:
+    name: rsync
+    state: present
+  become: True
+- name: Install docker
+  ansible.builtin.apt:
+    name: docker-ce=5:20.10.17~3-0~debian-buster
+  become: True
+- name: Install docker client
+  ansible.builtin.apt:
+    name: docker-ce-cli=5:20.10.17~3-0~debian-buster
+  become: True
