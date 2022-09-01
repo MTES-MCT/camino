@@ -1,8 +1,6 @@
 // https://api.insee.fr/catalogue/site/themes/wso2/subthemes/insee/pages/item-info.jag?name=Sirene&version=V3&provider=insee
 
-import { join } from 'path'
 import fetch from 'node-fetch'
-import makeDir from 'make-dir'
 
 import {
   IApiSirenQueryTypes,
@@ -12,9 +10,7 @@ import {
 } from './types'
 
 import errorLog from '../error-log'
-import fileCreate from '../file-create'
 
-const CACHE_DIR = 'api-cache/insee/'
 const MAX_CALLS_MINUTE = 30
 const MAX_RESULTS = 20
 
@@ -24,32 +20,17 @@ let apiToken = ''
 
 const { API_INSEE_URL, API_INSEE_KEY, API_INSEE_SECRET } = process.env
 
-const TEST_SIREN_ID = '805296415'
-
-const tokenTest = async () => {
-  console.info('API Insee: requête de test du token sur /siren')
-  const res = await typeFetch('siren', `siren:${TEST_SIREN_ID}`)
-  if (!res) {
-    throw new Error('pas de résultat pour la requête de test')
-  }
-}
-
 export const tokenInitialize = async () => {
   if (apiToken) return apiToken
 
   try {
-    const result =
-      process.env.NODE_ENV === 'development'
-        ? await tokenFetchDev()
-        : await tokenFetch()
+    const result = await tokenFetch()
 
-    apiToken = result && result.access_token
+    apiToken = result ? result.access_token : ''
 
     if (!apiToken) {
       throw new Error('pas de token après requête')
     }
-
-    await tokenTest()
 
     return apiToken
   } catch (e: any) {
@@ -117,41 +98,6 @@ const tokenFetch = async () => {
   }
 }
 
-const tokenFetchDev = async () => {
-  await makeDir(CACHE_DIR)
-
-  const cacheFilePath = join(CACHE_DIR, `insee-tokenon`)
-
-  try {
-    const result = require(`../../../${cacheFilePath}`)
-
-    console.info('API Insee: lecture du token depuis le cache', cacheFilePath)
-
-    if (!result) {
-      throw new Error('API Insee: pas de token dans le cache')
-    }
-
-    apiToken = result && result.access_token
-
-    console.info('API Insee: requête de test pour le token du cache')
-
-    return result
-  } catch (e: any) {
-    errorLog(`API Insee: tokenFetchDev `, e.message)
-
-    console.info(`API Insee: création du token`)
-
-    const result = await tokenFetch()
-    if (!result) {
-      throw new Error('API Insee: pas de token retourné')
-    }
-
-    await fileCreate(cacheFilePath, JSON.stringify(result, null, 2))
-
-    return result
-  }
-}
-
 const typeFetch = async (type: 'siren' | 'siret', q: string) => {
   try {
     if (!API_INSEE_URL) {
@@ -207,38 +153,6 @@ const typeFetch = async (type: 'siren' | 'siret', q: string) => {
   }
 }
 
-const typeFetchDev = async (
-  type: 'siren' | 'siret',
-  q: string,
-  field: 'etablissements' | 'unitesLegales',
-  ids: string[]
-) => {
-  await makeDir(CACHE_DIR)
-
-  const cacheFilePath = join(
-    CACHE_DIR,
-    `insee-${field}-${ids.map(id => id.slice(-1)[0]).join('-')}on`
-  )
-
-  try {
-    const result = require(`../../../${cacheFilePath}`) as IApiSirenQueryTypes
-
-    console.info(`API Insee: lecture de ${type} depuis le cache, ids: ${ids}`)
-
-    return result
-  } catch (e: any) {
-    errorLog(`API Insee: typeFetchDev `, e.message)
-
-    console.info(`API Insee: requête de ${type}`)
-
-    const result = await typeFetch(type, q)
-
-    await fileCreate(cacheFilePath, JSON.stringify(result, null, 2))
-
-    return result
-  }
-}
-
 const typeMultiFetch = async (
   type: 'siren' | 'siret',
   field: 'etablissements' | 'unitesLegales',
@@ -246,10 +160,7 @@ const typeMultiFetch = async (
   q: string
 ) => {
   try {
-    const result =
-      process.env.NODE_ENV === 'development'
-        ? await typeFetchDev(type, q, field, ids)
-        : await typeFetch(type, q)
+    const result = await typeFetch(type, q)
 
     return (result && result[field]) || []
   } catch (e: any) {

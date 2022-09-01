@@ -74,8 +74,6 @@ export interface IApiSirenQueryTypes extends IApiSirenQuery {
 }
 
 export interface IApiSirenQueryToken extends IApiSirenQuery {
-  result?: {
-    // eslint-disable-next-line camelcase
-    access_token: string
-  }
+  // eslint-disable-next-line camelcase
+  access_token: string
 }
