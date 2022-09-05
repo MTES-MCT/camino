@@ -106,10 +106,10 @@ export const geojsonIntersectsSDOM = async (
   let fallback = false
   try {
     result = await knex.raw(
-      `select sdom_zones.id from sdom_zones
+      `select sdom_zones_postgis.id from sdom_zones_postgis
          where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(
            geojson.geometry
-         )}'), sdom_zones.geometry) is true`
+         )}'), sdom_zones_postgis.geometry) is true`
     )
   } catch (e) {
     fallback = true
@@ -117,10 +117,10 @@ export const geojsonIntersectsSDOM = async (
       "Une erreur est survenue lors du calcul de l'intersection avec des zones du sdom, tentative de correction automatique"
     )
     result = await knex.raw(
-      `select sdom_zones.id from sdom_zones
+      `select sdom_zones_postgis.id from sdom_zones_postgis
              where ST_INTERSECTS(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(
                geojson.geometry
-             )}')), sdom_zones.geometry) is true`
+             )}')), sdom_zones_postgis.geometry) is true`
     )
   }
 
@@ -134,10 +134,10 @@ export const geojsonIntersectsForets = async (
   let fallback = false
   try {
     result = await knex.raw(
-      `select forets.id from forets 
+      `select forets_postgis.id from forets_postgis 
            where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(
              geojson.geometry
-           )}'), forets.geometry) is true`
+           )}'), forets_postgis.geometry) is true`
     )
   } catch (e) {
     fallback = true
@@ -145,10 +145,10 @@ export const geojsonIntersectsForets = async (
       "Une erreur est survenue lors du calcul de l'intersection avec des forêts, tentative de correction automatique"
     )
     result = await knex.raw(
-      `select forets.id from forets 
+      `select forets_postgis.id from forets_postgis 
            where ST_INTERSECTS(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(
              geojson.geometry
-           )}')), forets.geometry) is true`
+           )}')), forets_postgis.geometry) is true`
     )
   }
 
@@ -162,14 +162,14 @@ export const geojsonIntersectsCommunes = async (
   let fallback = false
   try {
     result = await knex.raw(
-      `select communes.id,
+      `select communes_postgis.id,
                 ST_Area(ST_INTERSECTION(ST_GeomFromGeoJSON('${JSON.stringify(
                   geojson.geometry
-                )}'), communes.geometry), true) as surface
-         from communes
+                )}'), communes_postgis.geometry), true) as surface
+         from communes_postgis
          where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(
            geojson.geometry
-         )}'), communes.geometry) is true`
+         )}'), communes_postgis.geometry) is true`
     )
   } catch (e) {
     fallback = true
@@ -177,14 +177,14 @@ export const geojsonIntersectsCommunes = async (
       "Une erreur est survenue lors du calcul de l'intersection avec des communes, tentative de correction automatique"
     )
     result = await knex.raw(
-      `select communes.id,
+      `select communes_postgis.id,
                 ST_Area(ST_INTERSECTION(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(
                   geojson.geometry
-                )}')), communes.geometry), true) as surface
-         from communes
+                )}')), communes_postgis.geometry), true) as surface
+         from communes_postgis
          where ST_INTERSECTS(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(
            geojson.geometry
-         )}')), communes.geometry) is true`
+         )}')), communes_postgis.geometry) is true`
     )
   }
 

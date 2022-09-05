@@ -9,8 +9,12 @@ import { streamArray } from 'stream-json/streamers/StreamArray'
 import Pick from 'stream-json/filters/Pick'
 import { chain } from 'stream-chain'
 import { Readable } from 'stream'
+import SDOMZones from '../database/models/sdom-zones'
 const communesUpdate = async () => {
   const communesIdsKnown = (await Communes.query()).map(({ id }) => id)
+  const communesPostgisIdsKnown: string[] = (
+    await knex.select('id').from('communes_postgis')
+  ).map(({ id }) => id)
   console.info('Téléchargement du fichier des communes')
 
   const communesFetch = await fetch(
@@ -34,18 +38,28 @@ const communesUpdate = async () => {
           )}'), 4326))) as result`
         )
 
+        if (communesPostgisIdsKnown.includes(commune.properties.code)) {
+          await knex('communes_postgis')
+            .where('id', commune.properties.code)
+            .update({
+              geometry: result.rows[0].result
+            })
+        } else {
+          await knex('communes_postgis').insert({
+            id: commune.properties.code,
+            geometry: result.rows[0].result
+          })
+        }
         if (communesIdsKnown.includes(commune.properties.code)) {
           await knex('communes').where('id', commune.properties.code).update({
             nom: commune.properties.nom,
-            departementId: commune.properties.departement,
-            geometry: result.rows[0].result
+            departementId: commune.properties.departement
           })
         } else {
           await knex('communes').insert({
             id: commune.properties.code,
             nom: commune.properties.nom,
-            departementId: commune.properties.departement,
-            geometry: result.rows[0].result
+            departementId: commune.properties.departement
           })
         }
       } catch (e) {
@@ -89,6 +103,9 @@ const foretsUpdate = async () => {
   const geojson = await geoguyaneFileGet(foretsUrlGenerator)
 
   const foretsIdsKnown = (await Forets.query()).map(({ id }) => id)
+  const foretsPostgisIdsKnown: string[] = (
+    await knex.select('id').from('forets_postgis')
+  ).map(({ id }) => id)
 
   console.info('Traitement du fichier des forets')
 
@@ -101,16 +118,24 @@ const foretsUpdate = async () => {
       )
 
       const id = foret.properties.code_for
+      if (foretsPostgisIdsKnown.includes(id)) {
+        await knex('forets_postgis').where('id', id).update({
+          geometry: result.rows[0].result
+        })
+      } else {
+        await knex('forets_postgis').insert({
+          id,
+          geometry: result.rows[0].result
+        })
+      }
       if (foretsIdsKnown.includes(id)) {
         await knex('forets').where('id', id).update({
-          nom: foret.properties.foret,
-          geometry: result.rows[0].result
+          nom: foret.properties.foret
         })
       } else {
         await knex('forets').insert({
           id,
-          nom: foret.properties.foret,
-          geometry: result.rows[0].result
+          nom: foret.properties.foret
         })
       }
     } catch (e) {
@@ -154,6 +179,11 @@ const sdomZonesUpdate = async () => {
 
     console.info('Traitement du fichier de la ' + zone.nom)
 
+    const sdomZonesIdsKnown = (await SDOMZones.query()).map(({ id }) => id)
+    const sdomZonesPostgisIdsKnown: string[] = (
+      await knex.select('id').from('sdom_zones_postgis')
+    ).map(({ id }) => id)
+
     try {
       const zoneFeature = geojson.features[0]
       const result = await knex.raw(
@@ -162,10 +192,26 @@ const sdomZonesUpdate = async () => {
         )}'), 4326)) as result`
       )
 
-      await knex('sdom_zones').where('id', zone.id).update({
-        nom: zone.nom,
-        geometry: result.rows[0].result
-      })
+      if (sdomZonesPostgisIdsKnown.includes(zone.id)) {
+        await knex('sdom_zones_postgis').where('id', zone.id).update({
+          geometry: result.rows[0].result
+        })
+      } else {
+        await knex('sdom_zones_postgis').insert({
+          id: zone.id,
+          geometry: result.rows[0].result
+        })
+      }
+      if (sdomZonesIdsKnown.includes(zone.id)) {
+        await knex('sdom_zones').where('id', zone.id).update({
+          nom: zone.nom
+        })
+      } else {
+        await knex('sdom_zones').insert({
+          id: zone.id,
+          nom: zone.nom
+        })
+      }
     } catch (e) {
       console.error(zone.nom, e)
     }
