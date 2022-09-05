@@ -26,6 +26,10 @@ exports.up = async knex => {
     .where('substance_id', 'bitm')
     .update({ substance_id: 'hydm' })
 
+  await knex('titres_substances')
+    .where('substance_id', 'hydl')
+    .update({ substance_id: 'hydo' })
+
   await knex.schema.alterTable('titres_etapes', function (table) {
     table.jsonb('substances').index()
   })
