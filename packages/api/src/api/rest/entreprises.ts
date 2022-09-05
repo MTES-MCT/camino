@@ -363,6 +363,8 @@ export const fiscalite = async (
       { entreprisesIds: [entrepriseId] },
       {
         fields: {
+          titulaires: { id: {} },
+          amodiataires: { id: {} },
           substancesEtape: { id: {} },
           communes: { id: {} }
         }
