@@ -33,30 +33,51 @@ describe('titresEtapesAreasUpdate', () => {
     const baisieuxId = '59044'
     const saintElieId = '97358'
     await knex!.raw(
-      `insert into communes (nom, id, departement_id, geometry) values ('Saint-Élie', '${saintElieId}', '973','${SaintEliePerimetre}')`
+      `insert into communes (nom, id, departement_id) values ('Saint-Élie', '${saintElieId}', '973')`
     )
     await knex!.raw(
-      `insert into communes (nom, id, departement_id, geometry) values ('Baisieux', '${baisieuxId}', '59', '${BaisieuxPerimetre}')`
+      `insert into communes (nom, id, departement_id) values ('Baisieux', '${baisieuxId}', '59')`
     )
     await knex!.raw(
-      `insert into communes (nom, id, departement_id, geometry) values ('Sinnamary', '97312', '973', '${SinnamaryPerimetre}')`
+      `insert into communes (nom, id, departement_id) values ('Sinnamary', '97312', '973')`
+    )
+    await knex!.raw(
+      `insert into communes_postgis (id, geometry) values ('${saintElieId}','${SaintEliePerimetre}')`
+    )
+    await knex!.raw(
+      `insert into communes_postgis (id, geometry) values ('${baisieuxId}', '${BaisieuxPerimetre}')`
+    )
+    await knex!.raw(
+      `insert into communes_postgis (id, geometry) values ('97312', '${SinnamaryPerimetre}')`
     )
 
     const reginaId = 'FRG'
     const deuxBranchesId = 'DBR'
     await knex!.raw(
-      `insert into forets (nom, id, geometry) values ('Deux Branches', '${deuxBranchesId}','${foret2BranchesPerimetre}')`
+      `insert into forets (nom, id) values ('Deux Branches', '${deuxBranchesId}')`
     )
     await knex!.raw(
-      `insert into forets (nom, id, geometry) values ('Regina', '${reginaId}','${foretReginaPerimetre}')`
+      `insert into forets (nom, id) values ('Regina', '${reginaId}')`
+    )
+    await knex!.raw(
+      `insert into forets_postgis (id, geometry) values ('${deuxBranchesId}','${foret2BranchesPerimetre}')`
+    )
+    await knex!.raw(
+      `insert into forets_postgis (id, geometry) values ('${reginaId}','${foretReginaPerimetre}')`
     )
 
     // Pour simplifier le test, on utilise des forêts en tant que zone de sdom
     await knex!.raw(
-      `insert into sdom_zones (nom, id, geometry) values ('Zone 1', '${SDOMZoneId.Zone1}','${foret2BranchesPerimetre}')`
+      `insert into sdom_zones (nom, id) values ('Zone 1', '${SDOMZoneId.Zone1}')`
     )
     await knex!.raw(
-      `insert into sdom_zones (nom, id, geometry) values ('Zone 2', '${SDOMZoneId.Zone2}','${foretReginaPerimetre}')`
+      `insert into sdom_zones (nom, id) values ('Zone 2', '${SDOMZoneId.Zone2}')`
+    )
+    await knex!.raw(
+      `insert into sdom_zones_postgis (id, geometry) values ('${SDOMZoneId.Zone1}','${foret2BranchesPerimetre}')`
+    )
+    await knex!.raw(
+      `insert into sdom_zones_postgis (id, geometry) values ('${SDOMZoneId.Zone2}','${foretReginaPerimetre}')`
     )
 
     const titreId = 'titreIdUniquePourMiseAJourAreas'

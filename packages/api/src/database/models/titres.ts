@@ -193,11 +193,7 @@ class Titres extends Model {
           extra: ['surface']
         },
         to: 'communes.id'
-      },
-      // Attention, ici, c'est un ugly hack pour ne pas retourner le champ geometry, qui est énorme et fait des oom...
-      // Ça veut dire que si vous ajouter un champ à cette table, il faut le rajouter en dessous, sinon il n'apparaitra pas
-      modify: (query: any) =>
-        query.select('id', 'nom', 'departementId', 'titresCommunes.surface')
+      }
     },
 
     forets: {
@@ -211,10 +207,7 @@ class Titres extends Model {
           to: 'titresForets.foretId'
         },
         to: 'forets.id'
-      },
-      // Attention, ici, c'est un ugly hack pour ne pas retourner le champ geometry, qui est énorme et fait des oom...
-      // Ça veut dire que si vous ajouter un champ à cette table, il faut le rajouter en dessous, sinon il n'apparaitra pas
-      modify: 'defaultSelects'
+      }
     },
     sdomZones: {
       relation: Model.ManyToManyRelation,
@@ -226,10 +219,7 @@ class Titres extends Model {
           to: 'titres__sdomZones.sdomZoneId'
         },
         to: 'sdomZones.id'
-      },
-      // Attention, ici, c'est un ugly hack pour ne pas retourner le champ geometry, qui est énorme et fait des oom...
-      // Ça veut dire que si vous ajouter un champ à cette table, il faut le rajouter en dessous, sinon il n'apparaitra pas
-      modify: 'defaultSelects'
+      }
     },
 
     activites: {
