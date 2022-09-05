@@ -50,7 +50,7 @@ class TitresEtapes extends Model {
       decisionsAnnexesSections: {},
       decisionsAnnexesContenu: { type: ['object', 'null'] },
       archive: { type: 'boolean' },
-      substances: { type: 'array' }
+      substances: { type: ['array', 'null'] }
     }
   }
 
