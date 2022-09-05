@@ -363,11 +363,13 @@
   },
   {
     "titre_type_id": "cxs",
-    "titre_statut_id": "dmi"
+    "titre_statut_id": "dmi",
+    "public_lecture": true
   },
   {
     "titre_type_id": "cxs",
-    "titre_statut_id": "ech"
+    "titre_statut_id": "ech",
+    "public_lecture": true
   },
   {
     "titre_type_id": "cxs",
@@ -375,11 +377,13 @@
   },
   {
     "titre_type_id": "cxs",
-    "titre_statut_id": "mod"
+    "titre_statut_id": "mod",
+    "public_lecture": true
   },
   {
     "titre_type_id": "cxs",
-    "titre_statut_id": "val"
+    "titre_statut_id": "val",
+    "public_lecture": true
   },
   {
     "titre_type_id": "cxw",
@@ -579,11 +583,13 @@
   },
   {
     "titre_type_id": "prs",
-    "titre_statut_id": "dmi"
+    "titre_statut_id": "dmi",
+    "public_lecture": true
   },
   {
     "titre_type_id": "prs",
-    "titre_statut_id": "ech"
+    "titre_statut_id": "ech",
+    "public_lecture": true
   },
   {
     "titre_type_id": "prs",
@@ -591,11 +597,13 @@
   },
   {
     "titre_type_id": "prs",
-    "titre_statut_id": "mod"
+    "titre_statut_id": "mod",
+    "public_lecture": true
   },
   {
     "titre_type_id": "prs",
-    "titre_statut_id": "val"
+    "titre_statut_id": "val",
+    "public_lecture": true
   },
   {
     "titre_type_id": "prw",
