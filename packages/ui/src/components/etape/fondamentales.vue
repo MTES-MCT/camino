@@ -117,12 +117,12 @@
     </div>
 
     <div
-      v-if="etape.substances && etape.substances.length"
+      v-if="etape.substances && etape.substances?.length"
       class="tablet-blobs"
     >
       <div class="tablet-blob-1-4">
         <h5>
-          Substance{{ etape.substances.length > 1 ? 's' : '' }}
+          Substance{{ etape.substances?.length > 1 ? 's' : '' }}
           <Tag
             v-if="etape.incertitudes && etape.incertitudes.substances"
             :mini="true"
@@ -136,7 +136,7 @@
       <div class="tablet-blob-3-4">
         <TagList
           :elements="
-            etape.substances.map(
+            etape.substances?.map(
               substanceId => SubstancesLegale[substanceId].nom
             )
           "

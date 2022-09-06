@@ -83,7 +83,7 @@
         <h5>Substances</h5>
         <TagList
           :elements="
-            titre.substances.map(
+            titre.substances?.map(
               substanceId => SubstancesLegale[substanceId].nom
             )
           "
