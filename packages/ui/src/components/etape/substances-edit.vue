@@ -49,7 +49,7 @@
         </div>
 
         <button
-          v-if="substances.every(substanceId => !!substanceId)"
+          v-if="substances?.every(substanceId => !!substanceId)"
           class="btn small rnd-xs py-s px-m full-x flex mb-s"
           @click="substanceAdd"
         >
@@ -96,7 +96,7 @@ const props = defineProps<{
 }>()
 
 const substancesLength = computed(
-  () => props.substances.filter(substanceId => substanceId).length
+  () => props.substances?.filter(substanceId => substanceId).length
 )
 
 const substancesByDomaine = computed(() =>

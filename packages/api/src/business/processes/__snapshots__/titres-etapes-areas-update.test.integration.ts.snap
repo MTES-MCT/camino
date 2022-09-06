@@ -77,7 +77,7 @@ Array [
     ],
     "slug": "titreDemarcheIdUniquePourMiseAJourAreas-mfr99",
     "statutId": "aco",
-    "substances": null,
+    "substances": Array [],
     "surface": null,
     "titreDemarcheId": "titreDemarcheIdUniquePourMiseAJourAreas",
     "typeId": "mfr",

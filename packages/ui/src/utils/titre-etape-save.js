@@ -230,7 +230,7 @@ const etapeSaveFormat = etape => {
 
   delete etape.demarche
 
-  etape.substances = etape.substances.filter(substanceId => !!substanceId)
+  etape.substances = etape.substances?.filter(substanceId => !!substanceId)
 
   const propsIds = ['titulaires', 'amodiataires', 'administrations']
 
