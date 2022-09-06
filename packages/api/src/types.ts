@@ -199,6 +199,7 @@ interface ISectionElement {
   uniteId?: UniteId
   optionnel?: boolean
   elements?: ISectionElement[]
+  sectionId?: string
 }
 
 interface IActiviteTypeDocumentType {
