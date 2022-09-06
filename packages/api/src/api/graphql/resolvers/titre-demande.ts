@@ -5,7 +5,8 @@ import {
   ITitreDemande,
   ITitreEtape,
   ISection,
-  ITitreEntreprise
+  ITitreEntreprise,
+  ISectionElement
 } from '../../../types'
 import {
   userGet,
@@ -190,6 +191,15 @@ export const titreDemandeCreer = async (
 
         const etapesStatuts = getEtapesStatuts(etapeTypeId)
 
+        const elements: ISectionElement[] = []
+        if (etapeType?.sections?.length) {
+          etapeType.sections.forEach(section => {
+            section.elements?.forEach(element => {
+              elements.push({ ...element, sectionId: section.id })
+            })
+          })
+        }
+
         const decisionAnnexeSections: ISection = {
           id: etapeTypeId,
           nom: etapeType!.nom,
@@ -207,7 +217,8 @@ export const titreDemandeCreer = async (
                 id: statut.id,
                 nom: statut.nom
               }))
-            }
+            },
+            ...elements
           ]
         }
 

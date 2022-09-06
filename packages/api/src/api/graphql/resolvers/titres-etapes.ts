@@ -1,10 +1,12 @@
 import { GraphQLResolveInfo } from 'graphql'
 
 import {
+  IContenu,
   IDecisionAnnexeContenu,
   IDocument,
   IEtapeType,
   ISDOMZone,
+  ISectionElement,
   ITitreEtape,
   ITitrePoint,
   IToken,
@@ -68,6 +70,7 @@ import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { Feature } from '@turf/helpers'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 const statutIdAndDateGet = (
   etape: ITitreEtape,
@@ -666,6 +669,12 @@ const etapeDeposer = async (
         if (!isEtapeTypeId(etapeTypeId)) {
           throw new Error(`l'étapeTypeId ${etapeTypeId} n'existe pas`)
         }
+        const decisionAnnexesElements =
+          titreEtape.decisionsAnnexesSections
+            ?.filter(({ id }) => id === etapeTypeId)
+            .flatMap(({ elements }) => elements)
+            ?.filter(isNotNullNorUndefined) ?? []
+
         const decisionContenu = decisionsAnnexesContenu![etapeTypeId]
         let etapeDecisionAnnexe: Partial<ITitreEtape> = {
           typeId: etapeTypeId,
@@ -674,15 +683,33 @@ const etapeDeposer = async (
           statutId: decisionContenu.statutId
         }
 
+        const contenu =
+          decisionAnnexesElements.filter(
+            (element): element is Required<ISectionElement> =>
+              element.type !== 'file' && !!element.sectionId
+          ) ?? []
+
+        if (contenu) {
+          etapeDecisionAnnexe.contenu = contenu.reduce<IContenu>((acc, e) => {
+            if (!acc[e.sectionId]) {
+              acc[e.sectionId] = {}
+            }
+            acc[e.sectionId][e.id] = decisionContenu[e.id]
+
+            return acc
+          }, {})
+        }
+
         etapeDecisionAnnexe = await titreEtapeCreate(
           etapeDecisionAnnexe as ITitreEtape,
           userSuper,
           titreDemarche.titreId
         )
 
-        const documentTypeIds = Object.keys(decisionContenu).filter(
-          key => !['date', 'statutId'].includes(key)
-        )
+        const documentTypeIds =
+          decisionAnnexesElements
+            .filter(({ type }) => type === 'file')
+            .map(({ id }) => id) ?? []
         for (const documentTypeId of documentTypeIds) {
           const fileName = decisionContenu[documentTypeId]
 
