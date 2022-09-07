@@ -220,7 +220,7 @@ const titresDemarchesColonnes = {
   titreNom: { id: 'titre.nom', relation: 'titre' },
   titreDomaine: { id: 'titre.domaineId', relation: 'titre' },
   titreType: { id: 'titre:type:type.nom', relation: 'titre.type.type' },
-  titreStatut: { id: 'titre.TitreStatutId', relation: 'titre' },
+  titreStatut: { id: 'titre.titreStatutId', relation: 'titre' },
   type: { id: 'titresDemarches.typeId' },
   statut: { id: 'titresDemarches.statutId' },
   references: {

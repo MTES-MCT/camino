@@ -1,19 +1,23 @@
 import { Couleur } from './couleurs'
+import { Definition } from '../definition'
 
-interface Definition<T> {
-  id: T
-  nom: string
-  description: string
+interface TitreStatutDefinition<T> extends Definition<T> {
   couleur: Couleur
-  ordre: number
 }
 
-export const TitresStatutIds = ['dmc', 'dmi', 'ech', 'ind', 'mod', 'val'] as const
+export const TitresStatutIds = {
+  DemandeClassee: 'dmc',
+  DemandeInitiale: 'dmi',
+  Echu: 'ech',
+  Indetermine: 'ind',
+  ModificationEnInstance: 'mod',
+  Valide: 'val'
+} as const
 
-export type TitreStatutId = typeof TitresStatutIds[number]
+export type TitreStatutId = typeof TitresStatutIds[keyof typeof TitresStatutIds]
 
 export const TitresStatuts: {
-  [key in TitreStatutId]: Definition<key>
+  [key in TitreStatutId]: TitreStatutDefinition<key>
 } = {
   dmc: {
     id: 'dmc',

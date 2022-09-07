@@ -58,7 +58,7 @@ export const titresTableFormat = (titres: ITitre[]) =>
       date_demande: titre.dateDemande,
       statut: isNotNullNorUndefined(titre.titreStatutId)
         ? TitresStatuts[titre.titreStatutId].nom
-        : titre.titreStatutId,
+        : '',
       substances: titre.substances
         ?.map(substanceId => SubstancesLegale[substanceId].nom)
         ?.join(separator),
@@ -115,7 +115,7 @@ const titreGeojsonPropertiesFormat = (titre: ITitre) => {
     date_demande: titre.dateDemande,
     statut: isNotNullNorUndefined(titre.titreStatutId)
       ? TitresStatuts[titre.titreStatutId].nom
-      : titre.titreStatutId,
+      : '',
     substances:
       titre.substances
         ?.map(substanceId => SubstancesLegale[substanceId].nom)

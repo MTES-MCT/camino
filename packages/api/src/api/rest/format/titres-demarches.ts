@@ -54,7 +54,7 @@ export const titresDemarchesFormatTable = (titresDemarches: ITitreDemarche[]) =>
       titre_type: titre.type!.type.nom,
       titre_statut: isNotNullNorUndefined(titre.titreStatutId)
         ? TitresStatuts[titre.titreStatutId].nom
-        : titre.titreStatutId,
+        : '',
       type: titreDemarche.type!.nom,
       statut: DemarchesStatuts[titreDemarche.statutId!].nom,
       description: titreDemarche.description,

@@ -106,6 +106,7 @@ const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
   if (t.confidentiel) {
     // Si le titre est confidentiel, on a le droit de voir que son périmètre sur la carte
     t = {
+      titreStatutId: t.titreStatutId,
       type: t.type,
       domaine: t.domaine,
       points: t.points
