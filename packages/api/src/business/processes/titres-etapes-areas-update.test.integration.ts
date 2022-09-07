@@ -85,7 +85,7 @@ describe('titresEtapesAreasUpdate', () => {
       id: titreId,
       slug: `slug-${titreId}`,
       nom: `nom-${titreId}`,
-      statutId: 'val',
+      titreStatutId: 'val',
       domaineId: 'm',
       typeId: 'arm'
     })

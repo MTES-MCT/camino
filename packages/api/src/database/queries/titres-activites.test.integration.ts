@@ -23,7 +23,7 @@ describe('teste les requêtes sur les activités', () => {
     await Titres.query().insert({
       id: titreId,
       nom: idGenerate(),
-      statutId: 'val',
+      titreStatutId: 'val',
       domaineId: 'm',
       typeId: 'arm'
     })

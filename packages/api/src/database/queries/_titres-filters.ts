@@ -89,7 +89,7 @@ export const titresFiltersQueryModify = (
       q.leftJoinRelated('titre')
     }
 
-    q.whereIn(`${name}.statutId`, statutsIds)
+    q.whereIn(`${name}.titreStatutId`, statutsIds)
   }
 
   if (substancesIds?.length) {

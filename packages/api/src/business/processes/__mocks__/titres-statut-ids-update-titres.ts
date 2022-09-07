@@ -3,7 +3,7 @@ import Titres from '../../../database/models/titres'
 const titresValideStatutIdAJour = [
   {
     id: 'm-pr-saint-pierre-2014',
-    statutId: 'val',
+    titreStatutId: 'val',
     demarches: [
       {
         id: 'm-pr-saint-pierre-2014-oct01',
@@ -32,7 +32,7 @@ const titresValideStatutIdAJour = [
 const titresEchuStatutIdObselete = [
   {
     id: 'm-pr-saint-pierre-1914',
-    statutId: 'val',
+    titreStatutId: 'val',
     demarches: [
       {
         id: 'm-pr-saint-pierre-1914-oct01',

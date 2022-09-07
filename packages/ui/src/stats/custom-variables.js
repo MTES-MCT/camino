@@ -27,7 +27,7 @@ const pageTitre = matomo => titre => {
   if (titre) {
     matomo.setCustomVariable(1, 'domaineId', titre.domaine.id, 'page')
     matomo.setCustomVariable(2, 'typeId', titre.type.typeId, 'page')
-    matomo.setCustomVariable(3, 'statutId', titre.statutId, 'page')
+    matomo.setCustomVariable(3, 'statutId', titre.titreStatutId, 'page')
   }
 }
 

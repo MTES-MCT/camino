@@ -19,6 +19,7 @@ exports.up = async knex => {
   )
   await knex.schema.alterTable('titres', function (table) {
     table.dropForeign('statut_id', 'titres_statutid_foreign')
+    table.renameColumn('statut_id', 'titre_statut_id')
   })
 
   await knex.schema.dropTable('titres_statuts')

@@ -76,26 +76,26 @@ const statistiquesGranulatsMarinsInstantBuild = (titres: ITitre[]) => {
   const statsInstant = titres.reduce(
     (acc, titre) => {
       if (
-        titre.statutId &&
-        ['val', 'mod', 'dmi'].includes(titre.statutId) &&
+        titre.titreStatutId &&
+        ['val', 'mod', 'dmi'].includes(titre.titreStatutId) &&
         titre.surfaceEtape &&
         titre.surfaceEtape.surface
       ) {
         if (['arw', 'apw', 'prw'].includes(titre.typeId!)) {
           acc.surfaceExploration += titre.surfaceEtape.surface
-          if (['mod', 'dmi'].includes(titre.statutId!)) {
+          if (['mod', 'dmi'].includes(titre.titreStatutId!)) {
             acc.titresInstructionExploration++
           }
         } else {
-          if (['val', 'mod'].includes(titre.statutId)) {
+          if (['val', 'mod'].includes(titre.titreStatutId)) {
             acc.surfaceExploitation += titre.surfaceEtape.surface
           }
-          if (['mod', 'dmi'].includes(titre.statutId!)) {
+          if (['mod', 'dmi'].includes(titre.titreStatutId!)) {
             acc.titresInstructionExploitation++
           }
         }
         const id = camelcase(
-          `titres-${titre.statutId!}-${titre.typeId!}`
+          `titres-${titre.titreStatutId!}-${titre.typeId!}`
         ) as IStatsGranulatsMarinsTitresTypesInstant
 
         acc[id]++

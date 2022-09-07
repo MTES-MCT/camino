@@ -39,7 +39,7 @@ class Titres extends Model {
       nom: { type: 'string' },
       domaineId: { type: 'string', maxLength: 1 },
       typeId: { type: 'string', maxLength: 3 },
-      statutId: { type: 'string', maxLength: 3 },
+      titreStatutId: { type: 'string', maxLength: 3 },
       dateDebut: { type: ['string', 'null'] },
       dateFin: { type: ['string', 'null'] },
       dateDemande: { type: ['string', 'null'] },

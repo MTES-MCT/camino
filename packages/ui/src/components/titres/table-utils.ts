@@ -58,7 +58,7 @@ export interface TitreEntreprise {
     domaineId: DomaineId
     type: { id: TitreTypeTypeId; nom: string }
   }
-  statutId: TitreStatutId
+  titreStatutId: TitreStatutId
   substances: SubstanceLegaleId[]
   titulaires: Titulaire[]
   activitesAbsentes: number | null
@@ -178,9 +178,9 @@ export const nomCell = (titre: { nom: string }): ComponentColumnData => ({
   value: titre.nom
 })
 export const statutCell = (titre: {
-  statutId: TitreStatutId
+  titreStatutId: TitreStatutId
 }): ComponentColumnData => {
-  const statut = TitresStatuts[titre.statutId]
+  const statut = TitresStatuts[titre.titreStatutId]
   return {
     component: markRaw(Statut),
     props: {

@@ -23,7 +23,7 @@ const titres: CommonTitreDREAL[] = [
     nom: 'first-name',
     domaineId: 'm',
     typeId: 'pr',
-    statutId: 'dmi',
+    titreStatutId: 'dmi',
     references: [],
     titulaires: [
       {
@@ -39,7 +39,7 @@ const titres: CommonTitreDREAL[] = [
     nom: 'Second Nom de titre',
     domaineId: 'm',
     typeId: 'pr',
-    statutId: 'dmi',
+    titreStatutId: 'dmi',
     references: [
       {
         nom: '2010-001',
@@ -61,7 +61,7 @@ const titres: CommonTitreDREAL[] = [
     nom: 'third-name',
     domaineId: 'm',
     typeId: 'pr',
-    statutId: 'dmi',
+    titreStatutId: 'dmi',
     references: [],
     titulaires: [
       {
@@ -77,7 +77,7 @@ const titres: CommonTitreDREAL[] = [
     nom: 'Quatrième Nom de titre',
     domaineId: 'c',
     typeId: 'ar',
-    statutId: 'dmi',
+    titreStatutId: 'dmi',
     references: [
       {
         nom: '2010-001',

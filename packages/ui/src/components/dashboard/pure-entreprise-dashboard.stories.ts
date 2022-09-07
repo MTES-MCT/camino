@@ -40,7 +40,7 @@ const titres: TitreEntreprise[] = [
       x: 6.049336777414595,
       y: 49.45057350532248
     },
-    statutId: 'ech',
+    titreStatutId: 'ech',
     substances: ['ferx'],
     activitesEnConstruction: null,
     activitesAbsentes: null,
@@ -77,7 +77,7 @@ const titres: TitreEntreprise[] = [
       id: 'm',
       nom: 'minéraux et métaux'
     },
-    statutId: 'val',
+    titreStatutId: 'val',
     substances: ['auru'],
     activitesEnConstruction: null,
     activitesAbsentes: null,

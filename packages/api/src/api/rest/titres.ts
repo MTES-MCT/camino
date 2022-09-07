@@ -79,7 +79,7 @@ export const titresONF = async (
           id: titre.id,
           slug: titre.slug,
           nom: titre.nom,
-          statutId: titre.statutId,
+          titreStatutId: titre.titreStatutId,
           references,
           titulaires: titre.titulaires,
           dateCompletudePTMG,
@@ -93,7 +93,7 @@ export const titresONF = async (
 }
 
 type TitreSanitize = NotNullableKeys<
-  Required<Pick<ITitre, 'slug' | 'titulaires' | 'statutId'>>
+  Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId'>>
 > &
   Pick<ITitre, 'typeId' | 'id' | 'nom'>
 type TitreDemarcheSanitize = NotNullableKeys<
@@ -214,7 +214,7 @@ export const titresPTMG = async (
         id: titre.id,
         slug: titre.slug,
         nom: titre.nom,
-        statutId: titre.statutId,
+        titreStatutId: titre.titreStatutId,
         references,
         titulaires: titre.titulaires,
         enAttenteDePTMG: blockedByMe
@@ -226,7 +226,7 @@ export const titresPTMG = async (
 }
 
 type DrealTitreSanitize = NotNullableKeys<
-  Required<Pick<ITitre, 'slug' | 'titulaires' | 'statutId' | 'type'>>
+  Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId' | 'type'>>
 > &
   Pick<
     ITitre,
@@ -323,7 +323,7 @@ export const titresDREAL = async (
           id: titre.id,
           slug: titre.slug,
           nom: titre.nom,
-          statutId: titre.statutId,
+          titreStatutId: titre.titreStatutId,
           typeId: titre.type.typeId,
           references,
           domaineId: titre.domaineId,

@@ -106,8 +106,8 @@ const layersBuild = (titres, router) =>
           ? titre.titulaires.map(tt => `<li>${tt.nom}</li>`).join('')
           : ''
 
-      const statut = titre.statutId
-        ? TitresStatuts[titre.statutId]
+      const statut = titre.titreStatutId
+        ? TitresStatuts[titre.titreStatutId]
         : { couleur: 'error', nom: 'Inconnu' }
       const popupHtml = `<h4 class="mb-s">${
         titre.nom ? titre.nom : ''

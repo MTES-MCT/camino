@@ -6,7 +6,7 @@ export interface CommonTitre {
   id: string
   slug: string
   nom: string
-  statutId: TitreStatutId
+  titreStatutId: TitreStatutId
   references: { nom: string; type: { nom: string } }[]
   titulaires: { nom: string }[]
 }

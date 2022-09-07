@@ -45,7 +45,7 @@ const linkableTitres: LinkableTitre[] = [
   {
     id: 'id1',
     nom: 'Abttis Coucou',
-    statutId: 'ech',
+    titreStatutId: 'ech',
     demarches: [
       {
         phase: {
@@ -58,7 +58,7 @@ const linkableTitres: LinkableTitre[] = [
   {
     id: 'id2',
     nom: 'Affluent Crique Saint Bernard',
-    statutId: 'ech',
+    titreStatutId: 'ech',
     demarches: [
       {
         phase: {
@@ -71,7 +71,7 @@ const linkableTitres: LinkableTitre[] = [
   {
     id: 'id3',
     nom: 'Nouveau titre',
-    statutId: 'ech',
+    titreStatutId: 'ech',
     demarches: [
       {
         phase: {

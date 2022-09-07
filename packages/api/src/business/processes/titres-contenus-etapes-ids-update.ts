@@ -17,7 +17,7 @@ export const titresContenusEtapesIdsUpdate = async (titresIds?: string[]) => {
 
   for (const titre of titres) {
     const contenusTitreEtapesIds = contenusTitreEtapesIdsFind(
-      titre.statutId!,
+      titre.titreStatutId!,
       titre.demarches!,
       titre.type!.contenuIds
     )

@@ -26,7 +26,7 @@ describe('titresEtapesQueryModify', () => {
         {
           id: titreId,
           nom: titreId,
-          statutId: 'val',
+          titreStatutId: 'val',
           domaineId: 'm',
           typeId: 'arm',
           archive: false

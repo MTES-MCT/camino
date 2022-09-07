@@ -20,7 +20,7 @@ describe('teste les requêtes sur les démarches', () => {
     test('vérifie que la démarche et ses étapes s’archivent correctement', async () => {
       const titre = await Titres.query().insert({
         nom: idGenerate(),
-        statutId: 'val',
+        titreStatutId: 'val',
         domaineId: 'm',
         typeId: 'arm'
       })

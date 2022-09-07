@@ -18,8 +18,8 @@
       <template #default="{ item }">
         <div class="flex flex-center">
           <Statut
-            :color="titreStatut(item.statutId).couleur"
-            :nom="titreStatut(item.statutId).nom"
+            :color="titreStatut(item.titreStatutId).couleur"
+            :nom="titreStatut(item.titreStatutId).nom"
           />
           <span class="cap-first bold ml-m">{{ item.nom }}</span>
           <span class="ml-m" style="margin-left: auto">{{

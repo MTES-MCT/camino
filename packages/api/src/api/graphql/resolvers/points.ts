@@ -226,9 +226,9 @@ const sdomZonesInformationsGet = async (
         .forEach(t =>
           alertes.push({
             message: `Le titre ${t.nom} au statut « ${
-              isNotNullNorUndefined(t.statutId)
-                ? TitresStatuts[t.statutId].nom
-                : t.statutId
+              isNotNullNorUndefined(t.titreStatutId)
+                ? TitresStatuts[t.titreStatutId].nom
+                : t.titreStatutId
             } » est superposé à ce titre`,
             url: `/titres/${t.slug}`
           })

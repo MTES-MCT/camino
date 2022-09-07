@@ -22,7 +22,7 @@ beforeAll(async () => {
       nom: 'mon titre simple',
       domaineId: 'm',
       typeId: 'arm',
-      statutId: 'val',
+      titreStatutId: 'val',
       propsTitreEtapesIds: {}
     },
     {}
@@ -84,7 +84,7 @@ async function createTitreWithEtapes(
       nom: nomTitre,
       domaineId: 'm',
       typeId: 'arm',
-      statutId: 'val',
+      titreStatutId: 'val',
       propsTitreEtapesIds: {},
       administrationsGestionnaires: [],
       references: [
@@ -174,7 +174,7 @@ describe('titresLiaisons', () => {
         nom: 'mon axm simple',
         domaineId: 'm',
         typeId: 'axm',
-        statutId: 'val',
+        titreStatutId: 'val',
         propsTitreEtapesIds: {}
       },
       {}

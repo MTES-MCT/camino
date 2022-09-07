@@ -106,7 +106,7 @@ export const titresArmEnDemandeQuery = (
 ) => {
   // Le titre doit être une ARM en demande initiale avec une « Recevabilité de la demande » favorable
   q.where('titres.typeId', 'arm')
-  q.where('titres.statutId', 'dmi')
+  q.where('titres.titreStatutId', 'dmi')
   q.whereExists(
     TitresEtapes.query()
       .alias('teRCP')

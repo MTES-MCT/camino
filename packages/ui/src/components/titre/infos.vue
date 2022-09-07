@@ -198,7 +198,7 @@ const props = defineProps<{
   titre: {
     id: string
     domaine: { id: string }
-    statutId: TitreStatutId
+    titreStatutId: TitreStatutId
     demarches: {
       id: string
       type: { id: DemarcheTypeId }
@@ -233,5 +233,5 @@ const hasContenu = computed(
 )
 
 const type = computed(() => TitresTypes[props.titre.type.id])
-const titreStatut = computed(() => TitresStatuts[props.titre.statutId])
+const titreStatut = computed(() => TitresStatuts[props.titre.titreStatutId])
 </script>

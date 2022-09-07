@@ -538,8 +538,7 @@ interface ITitre {
   domaine?: IDomaine | null
   typeId: TitreTypeId
   type?: ITitreType | null
-  // FIXME: renommer en titreStatutId
-  statutId?: TitreStatutId | null
+  titreStatutId?: TitreStatutId | null
   references?: ITitreReference[] | null
   dateDebut?: string | null
   dateFin?: string | null

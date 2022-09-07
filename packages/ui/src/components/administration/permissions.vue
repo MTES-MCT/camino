@@ -907,8 +907,8 @@ export default {
       await this.$store.dispatch('administration/permissionsInit')
     },
 
-    getTitreStatut(statutId) {
-      return TitresStatuts[statutId]
+    getTitreStatut(titreStatutId) {
+      return TitresStatuts[titreStatutId]
     },
 
     async titreTypeUpdate(titreTypeId, gestionnaire, associee, type) {

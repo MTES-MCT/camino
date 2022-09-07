@@ -238,7 +238,10 @@ const administrationsTitresTypesTitresStatutsModify = (
       knex.raw('?? = ??', ['a_tt_ts.titreTypeId', `${titreAlias}.typeId`])
     )
     b.andOn(
-      knex.raw('?? = ??', ['a_tt_ts.titreStatutId', `${titreAlias}.statutId`])
+      knex.raw('?? = ??', [
+        'a_tt_ts.titreStatutId',
+        `${titreAlias}.titreStatutId`
+      ])
     )
     b.andOn(knex.raw('?? is true', [`a_tt_ts.${type}ModificationInterdit`]))
   })

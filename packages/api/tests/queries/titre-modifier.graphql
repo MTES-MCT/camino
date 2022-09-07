@@ -18,5 +18,5 @@ fragment titre on Titre {
     id
     nom
   }
-  statutId
+  titreStatutId
 }

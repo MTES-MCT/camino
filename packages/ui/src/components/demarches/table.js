@@ -22,7 +22,7 @@ const demarchesColonnes = [
 
 const demarchesLignesBuild = demarches =>
   demarches.map(demarche => {
-    const statut = TitresStatuts[demarche.titre.statutId]
+    const titreStatut = TitresStatuts[demarche.titre.titreStatutId]
     const columns = {
       titreNom: { value: demarche.titre.nom },
       titreDomaine: {
@@ -38,10 +38,10 @@ const demarchesLignesBuild = demarches =>
       titreStatut: {
         component: markRaw(Statut),
         props: {
-          color: statut.couleur,
-          nom: statut.nom
+          color: titreStatut.couleur,
+          nom: titreStatut.nom
         },
-        value: statut.nom
+        value: titreStatut.nom
       },
       type: {
         component: markRaw(Nom),

@@ -606,7 +606,7 @@ describe('titreModifier', () => {
         nom: 'mon titre échu',
         domaineId: 'm',
         typeId: 'arm',
-        statutId: 'ech',
+        titreStatutId: 'ech',
         propsTitreEtapesIds: {},
         administrationsGestionnaires: [
           {

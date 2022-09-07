@@ -26,7 +26,7 @@ type DemarchePhase = { dateDebut: string; dateFin: string }
 type TitreLinkDemarche = { phase?: DemarchePhase }
 export type LinkableTitre = TitreLink & {
   demarches: TitreLinkDemarche[]
-  statutId: TitreStatutId
+  titreStatutId: TitreStatutId
 }
 
 export type LoadLinkableTitres = () => Promise<LinkableTitre[]>
@@ -52,7 +52,7 @@ export const loadLinkableTitres: (
               elements {
                 id
                 nom
-                statutId
+                titreStatutId
                 demarches {
                   phase {
                     dateDebut

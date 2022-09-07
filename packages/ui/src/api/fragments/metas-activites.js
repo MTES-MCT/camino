@@ -27,13 +27,6 @@ const fragmentActiviteStatut = gql`
   }
 `
 
-const fragmentActiviteTypeTitreType = gql`
-  fragment activiteTypeTitreType on ActiviteTypeTitreType {
-    activiteTypeId
-    titreTypeId
-  }
-`
-
 const fragmentActiviteTypeDocumentType = gql`
   fragment activiteTypeDocumentType on ActiviteTypeDocumentType {
     activiteTypeId
@@ -52,7 +45,6 @@ const fragmentActiviteTypePays = gql`
 export {
   fragmentActiviteType,
   fragmentActiviteStatut,
-  fragmentActiviteTypeTitreType,
   fragmentActiviteTypeDocumentType,
   fragmentActiviteTypePays
 }
