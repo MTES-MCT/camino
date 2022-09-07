@@ -11,7 +11,7 @@ import {
   ITitreType
 } from '../../src/types'
 
-import { objectClone } from '../../src/tools/index'
+import { objectClone } from '../../src/tools'
 import {
   Administration,
   Administrations
@@ -133,8 +133,8 @@ const administrationsWithRelations = Object.values(
         attts.titreType = sources.titresTypes.data.find(
           tt => tt.id === attts.titreTypeId
         )
-        
-return attts
+
+        return attts
       })
 
   dbadmin.titresTypesEtapesTypes =

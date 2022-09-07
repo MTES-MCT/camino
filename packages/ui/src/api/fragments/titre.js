@@ -27,11 +27,7 @@ const fragmentTitre = gql`
       id
       nom
     }
-    statut {
-      id
-      nom
-      couleur
-    }
+    statutId
     references {
       type {
         id
@@ -133,11 +129,7 @@ const fragmentTitres = gql`
       x
       y
     }
-    statut {
-      id
-      nom
-      couleur
-    }
+    statutId
     substances
     activitesEnConstruction
     activitesAbsentes
@@ -176,11 +168,7 @@ const fragmentTitreGeo = gql`
       id
       nom
     }
-    statut {
-      id
-      nom
-      couleur
-    }
+    statutId
     titulaires {
       ...titresEntreprises
     }
@@ -230,11 +218,7 @@ const fragmentDemarchesTitre = gql`
       id
       nom
     }
-    statut {
-      id
-      nom
-      couleur
-    }
+    statutId
     references {
       type {
         nom

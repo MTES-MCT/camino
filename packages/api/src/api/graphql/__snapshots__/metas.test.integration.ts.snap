@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`statuts peut voir tous les statuts (utilisateur super) 1`] = `
+exports[`statuts peut voir tous les statuts 1`] = `
 Object {
   "departements": Array [
     Object {

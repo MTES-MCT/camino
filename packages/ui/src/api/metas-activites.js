@@ -4,7 +4,6 @@ import { apiGraphQLFetch } from './_client'
 import {
   fragmentActiviteType,
   fragmentActiviteStatut,
-  fragmentActiviteTypeTitreType,
   fragmentActiviteTypeDocumentType,
   fragmentActiviteTypePays
 } from './fragments/metas-activites'

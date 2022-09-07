@@ -256,7 +256,6 @@ type TitreTypeTitreStatut {
   titreTypeId: ID!
   titreStatutId: ID!
   titreType: TitreType
-  titreStatut: TitreStatut
   titresModificationInterdit: Boolean
   demarchesModificationInterdit: Boolean
   etapesModificationInterdit: Boolean

@@ -296,7 +296,7 @@
 
             <tr
               v-for="ttts in administration.titresTypesTitresStatuts"
-              :key="`${ttts.titreType.id}-${ttts.titreStatut.id}`"
+              :key="`${ttts.titreType.id}-${ttts.titreStatutId}`"
             >
               <td>
                 <CaminoDomaine
@@ -311,8 +311,8 @@
               </td>
               <td>
                 <Statut
-                  :color="ttts.titreStatut.couleur"
-                  :nom="ttts.titreStatut.nom"
+                  :color="getTitreStatut(ttts.titreStatutId).couleur"
+                  :nom="getTitreStatut(ttts.titreStatutId).nom"
                   class="mt-s"
                 />
               </td>
@@ -753,7 +753,7 @@ import CaminoDomaine from '../_common/domaine.vue'
 import Statut from '../_common/statut.vue'
 import ButtonPlus from '../_ui/button-plus.vue'
 import Icon from '../_ui/icon.vue'
-
+import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 export default {
   components: {
     Icon,
@@ -808,7 +808,7 @@ export default {
     },
 
     titresStatuts() {
-      return this.$store.state.administration.metas.titresStatuts
+      return TitresStatuts
     },
 
     etapesTypes() {
@@ -905,6 +905,10 @@ export default {
   methods: {
     async get() {
       await this.$store.dispatch('administration/permissionsInit')
+    },
+
+    getTitreStatut(statutId) {
+      return TitresStatuts[statutId]
     },
 
     async titreTypeUpdate(titreTypeId, gestionnaire, associee, type) {

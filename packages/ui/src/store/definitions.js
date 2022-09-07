@@ -1,9 +1,10 @@
-import { demarchesTypes, etapesTypes, titresStatuts } from '../api/metas'
+import { demarchesTypes, etapesTypes } from '../api/metas'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { Domaines } from 'camino-common/src/static/domaines'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
 import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
+import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 
 const definitionsIndex = {
   domaines: () => Object.values(Domaines),
@@ -14,7 +15,7 @@ const definitionsIndex = {
   'etapes-types': etapesTypes,
   'etapes-statuts': () => Object.values(EtapesStatuts),
   'substances-legales': () => SubstancesLegales,
-  'titres-statuts': titresStatuts,
+  'titres-statuts': () => Object.values(TitresStatuts),
   'titres-types': () => Object.values(TitresTypesTypes)
 }
 

@@ -20,13 +20,7 @@ Object {
     },
   ],
   "slug": Any<String>,
-  "statut": Object {
-    "couleur": "success",
-    "description": "Titres et autorisations sur lesquels peuvent être mis en oeuvre un projet minier, à compter de la date d'octroi et jusqu’à l’échéance fixée. Le domaine minier est fermé pour les substances et usages visés.",
-    "id": "val",
-    "nom": "valide",
-    "ordre": 3,
-  },
+  "statutId": "val",
   "titulaires": Array [
     Object {
       "adresse": null,
@@ -72,13 +66,7 @@ Object {
     },
   ],
   "slug": Any<String>,
-  "statut": Object {
-    "couleur": "success",
-    "description": "Titres et autorisations sur lesquels peuvent être mis en oeuvre un projet minier, à compter de la date d'octroi et jusqu’à l’échéance fixée. Le domaine minier est fermé pour les substances et usages visés.",
-    "id": "val",
-    "nom": "valide",
-    "ordre": 3,
-  },
+  "statutId": "val",
   "titulaires": Array [
     Object {
       "adresse": null,
@@ -121,13 +109,7 @@ Object {
     },
   ],
   "slug": Any<String>,
-  "statut": Object {
-    "couleur": "success",
-    "description": "Titres et autorisations sur lesquels peuvent être mis en oeuvre un projet minier, à compter de la date d'octroi et jusqu’à l’échéance fixée. Le domaine minier est fermé pour les substances et usages visés.",
-    "id": "val",
-    "nom": "valide",
-    "ordre": 3,
-  },
+  "statutId": "val",
   "titulaires": Array [
     Object {
       "adresse": null,
@@ -170,13 +152,7 @@ Object {
     },
   ],
   "slug": Any<String>,
-  "statut": Object {
-    "couleur": "success",
-    "description": "Titres et autorisations sur lesquels peuvent être mis en oeuvre un projet minier, à compter de la date d'octroi et jusqu’à l’échéance fixée. Le domaine minier est fermé pour les substances et usages visés.",
-    "id": "val",
-    "nom": "valide",
-    "ordre": 3,
-  },
+  "statutId": "val",
   "titulaires": Array [
     Object {
       "adresse": null,

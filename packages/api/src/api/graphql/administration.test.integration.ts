@@ -170,7 +170,7 @@ describe('administrationTitreTypeTitreStatutModifier', () => {
           titresTypesTitresStatuts: [
             {
               titreType: { id: 'arm' },
-              titreStatut: { id: 'val' },
+              titreStatutId: 'val',
               titresModificationInterdit: true,
               demarchesModificationInterdit: true,
               etapesModificationInterdit: true

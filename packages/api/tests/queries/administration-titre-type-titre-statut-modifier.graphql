@@ -23,11 +23,7 @@ fragment administration on Administration {
         nom
       }
     }
-    titreStatut {
-      id
-      nom
-      couleur
-    }
+    titreStatutId
     titresModificationInterdit
     demarchesModificationInterdit
     etapesModificationInterdit

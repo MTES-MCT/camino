@@ -14,7 +14,7 @@ afterAll(async () => {
 describe('statuts', () => {
   const metasQuery = queryImport('metas')
 
-  test('peut voir tous les statuts (utilisateur super)', async () => {
+  test('peut voir tous les statuts', async () => {
     const res = await graphQLCall(metasQuery, {}, 'super')
 
     expect(res.body.data.statuts).toEqual([
@@ -24,20 +24,6 @@ describe('statuts', () => {
       { id: 'mod', nom: 'modification en instance', couleur: 'warning' },
       { id: 'ech', nom: 'échu', couleur: 'neutral' },
       { id: 'ind', nom: 'indéterminé', couleur: 'warning' }
-    ])
-
-    expect(res.body.data).toMatchSnapshot()
-  })
-
-  test('ne peut pas voir tous les statuts (utilisateur anonyme)', async () => {
-    const res = await graphQLCall(metasQuery, {})
-
-    expect(res.body.data.statuts).toEqual([
-      { id: 'dmi', nom: 'demande initiale', couleur: 'warning' },
-      { id: 'dmc', nom: 'demande classée', couleur: 'neutral' },
-      { id: 'val', nom: 'valide', couleur: 'success' },
-      { id: 'mod', nom: 'modification en instance', couleur: 'warning' },
-      { id: 'ech', nom: 'échu', couleur: 'neutral' }
     ])
 
     expect(res.body.data.domaines).toEqual([
@@ -51,5 +37,7 @@ describe('statuts', () => {
       { id: 's', nom: 'stockages souterrains' },
       { id: 'i', nom: 'indéterminé' }
     ])
+
+    expect(res.body.data).toMatchSnapshot()
   })
 })

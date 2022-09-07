@@ -128,7 +128,6 @@ async function titresArmAvecOctroi(
     { ...filters, ids: titresAutorisesIds, colonne: 'nom' },
     {
       fields: {
-        statut: { id: {} },
         references: { type: { id: {} } },
         titulaires: { id: {} },
         demarches: { etapes: { id: {} } }
@@ -267,7 +266,6 @@ export const titresDREAL = async (
       { ...filters, colonne: 'nom' },
       {
         fields: {
-          statut: { id: {} },
           type: { id: {} },
           references: { type: { id: {} } },
           titulaires: { id: {} },
