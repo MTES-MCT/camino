@@ -36,6 +36,8 @@ import {
   isAdministrationEditeur
 } from 'camino-common/src/roles'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches'
+import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 const stream2buffer = async (stream: Stream): Promise<Buffer> => {
   return new Promise<Buffer>((resolve, reject) => {
@@ -224,7 +226,9 @@ const sdomZonesInformationsGet = async (
         .forEach(t =>
           alertes.push({
             message: `Le titre ${t.nom} au statut « ${
-              t.statut!.nom
+              isNotNullNorUndefined(t.statutId)
+                ? TitresStatuts[t.statutId].nom
+                : t.statutId
             } » est superposé à ce titre`,
             url: `/titres/${t.slug}`
           })

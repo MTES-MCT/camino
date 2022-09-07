@@ -1,14 +1,12 @@
 import { DomaineId } from './static/domaines'
 import { TitreTypeTypeId } from './static/titresTypesTypes'
+import { TitreStatutId } from './static/titresStatuts'
 
 export interface CommonTitre {
   id: string
   slug: string
   nom: string
-  statut: {
-    nom: string
-    couleur: string
-  }
+  statutId: TitreStatutId
   references: { nom: string; type: { nom: string } }[]
   titulaires: { nom: string }[]
 }

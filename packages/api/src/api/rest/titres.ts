@@ -79,7 +79,7 @@ export const titresONF = async (
           id: titre.id,
           slug: titre.slug,
           nom: titre.nom,
-          statut: titre.statut,
+          statutId: titre.statutId,
           references,
           titulaires: titre.titulaires,
           dateCompletudePTMG,
@@ -93,7 +93,7 @@ export const titresONF = async (
 }
 
 type TitreSanitize = NotNullableKeys<
-  Required<Pick<ITitre, 'slug' | 'titulaires' | 'statut'>>
+  Required<Pick<ITitre, 'slug' | 'titulaires' | 'statutId'>>
 > &
   Pick<ITitre, 'typeId' | 'id' | 'nom'>
 type TitreDemarcheSanitize = NotNullableKeys<
@@ -140,9 +140,6 @@ async function titresArmAvecOctroi(
     .map<TitreArmAvecOctroi | null>((titre: ITitre) => {
       if (titre.slug === undefined) {
         return null
-      }
-      if (!titre.statut) {
-        throw new Error('le statut du titre n’est pas chargé')
       }
 
       if (!titre.references) {
@@ -218,7 +215,7 @@ export const titresPTMG = async (
         id: titre.id,
         slug: titre.slug,
         nom: titre.nom,
-        statut: titre.statut,
+        statutId: titre.statutId,
         references,
         titulaires: titre.titulaires,
         enAttenteDePTMG: blockedByMe
@@ -230,7 +227,7 @@ export const titresPTMG = async (
 }
 
 type DrealTitreSanitize = NotNullableKeys<
-  Required<Pick<ITitre, 'slug' | 'titulaires' | 'statut' | 'type'>>
+  Required<Pick<ITitre, 'slug' | 'titulaires' | 'statutId' | 'type'>>
 > &
   Pick<
     ITitre,
@@ -291,9 +288,6 @@ export const titresDREAL = async (
         if (titre.slug === undefined) {
           return null
         }
-        if (!titre.statut) {
-          throw new Error('le statut du titre n’est pas chargé')
-        }
 
         if (!titre.type) {
           throw new Error('les types de titres ne sont pas chargées')
@@ -331,7 +325,7 @@ export const titresDREAL = async (
           id: titre.id,
           slug: titre.slug,
           nom: titre.nom,
-          statut: titre.statut,
+          statutId: titre.statutId,
           typeId: titre.type.typeId,
           references,
           domaineId: titre.domaineId,

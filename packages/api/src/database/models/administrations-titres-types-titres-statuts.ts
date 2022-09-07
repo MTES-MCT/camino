@@ -1,7 +1,6 @@
 import { Model, Modifiers } from 'objection'
 import { IAdministrationTitreTypeTitreStatut } from '../../types'
 import TitresTypes from './titres-types'
-import TitresStatuts from './titres-statuts'
 
 interface AdministrationsTitresTypesTitresStatuts
   extends IAdministrationTitreTypeTitreStatut {}
@@ -40,27 +39,16 @@ class AdministrationsTitresTypesTitresStatuts extends Model {
         from: 'administrations__titresTypes__titresStatuts.titreTypeId',
         to: 'titresTypes.id'
       }
-    },
-
-    titreStatut: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: TitresStatuts,
-      join: {
-        from: 'administrations__titresTypes__titresStatuts.titreStatutId',
-        to: 'titresStatuts.id'
-      }
     }
   })
 
   public static modifiers: Modifiers = {
     orderAsc: builder => {
-      builder
+      return builder
         .joinRelated('titreType.domaine')
         .orderBy('titreType:domaine.id')
         .joinRelated('titreType.type')
         .orderBy('titreType:type.nom')
-        .joinRelated('titreStatut')
-        .orderBy('titreStatut.nom')
     }
   }
 }

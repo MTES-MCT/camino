@@ -10,6 +10,8 @@ import {
 import { Departements } from 'camino-common/src/static/departement'
 import { Regions } from 'camino-common/src/static/region'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 
 const titreContenuTableFormat = (contenu?: IContenu | null) =>
   contenu
@@ -54,7 +56,9 @@ export const titresTableFormat = (titres: ITitre[]) =>
       date_debut: titre.dateDebut,
       date_fin: titre.dateFin,
       date_demande: titre.dateDemande,
-      statut: titre.statut!.nom,
+      statut: isNotNullNorUndefined(titre.statutId)
+        ? TitresStatuts[titre.statutId].nom
+        : titre.statutId,
       substances: titre.substances
         ?.map(substanceId => SubstancesLegale[substanceId].nom)
         ?.join(separator),
@@ -109,7 +113,9 @@ const titreGeojsonPropertiesFormat = (titre: ITitre) => {
     date_debut: titre.dateDebut,
     date_fin: titre.dateFin,
     date_demande: titre.dateDemande,
-    statut: titre.statut!.nom,
+    statut: isNotNullNorUndefined(titre.statutId)
+      ? TitresStatuts[titre.statutId].nom
+      : titre.statutId,
     substances:
       titre.substances
         ?.map(substanceId => SubstancesLegale[substanceId].nom)
