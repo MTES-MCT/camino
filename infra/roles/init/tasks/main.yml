@@ -11,9 +11,11 @@
   become: True
 - name: Install docker
   ansible.builtin.apt:
-    name: docker-ce=5:20.10.17~3-0~debian-buster
+    name: docker-ce
+    state: latest
   become: True
 - name: Install docker client
   ansible.builtin.apt:
-    name: docker-ce-cli=5:20.10.17~3-0~debian-buster
+    name: docker-ce-cli
+    state: latest
   become: True
