@@ -32,7 +32,7 @@ export const authBasic = async (
   next: express.NextFunction
 ) => {
   try {
-    if (req.url.includes('titres_mathilde') && !req.headers.authorization) {
+    if (req.url.includes('titres_qgis') && !req.headers.authorization) {
       res.setHeader('WWW-Authenticate', 'Basic realm="Authentication Required"')
       res.status(401)
       res.send('Authentication Required')
