@@ -1,6 +1,7 @@
 import { IDemarcheType, ITitre, ITitreEtape, ITitreType } from '../../types'
 
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate'
+import { newDemarcheId } from '../../database/models/_format/id-create'
 
 describe('teste titreDemarcheUpdatedEtatValidate', () => {
   test('ajoute une étape à une démarche vide', () => {
@@ -15,6 +16,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         demarches: [{ typeId: 'oct' }]
       } as ITitre,
       { typeId: 'mfr', date: '2030-01-01' } as ITitreEtape,
+      newDemarcheId(),
       null
     )
 
@@ -33,6 +35,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         demarches: [{ typeId: 'pro' }, { typeId: 'oct' }]
       } as ITitre,
       { typeId: 'mdp', statutId: 'fai', date: '2022-05-04' } as ITitreEtape,
+      newDemarcheId(),
+
       [
         { id: '1', typeId: 'mfr', statutId: 'fai', date: '2022-05-03' }
       ] as ITitreEtape[]
@@ -58,6 +62,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         statutId: 'fai',
         date: '2022-05-04'
       } as ITitreEtape,
+      newDemarcheId(),
+
       [
         { id: '1', typeId: 'mfr', date: '2022-05-03', statutId: 'fai' },
         { id: '2', typeId: 'mdp', date: '2022-05-04', statutId: 'fai' }
@@ -79,6 +85,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         demarches: [{ typeId: 'oct' }]
       } as ITitre,
       { id: '1', typeId: 'mfr' } as ITitreEtape,
+      newDemarcheId(),
+
       [{ id: '1', typeId: 'mfr', date: '2000-01-01' }] as ITitreEtape[],
       false
     )
@@ -98,6 +106,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         demarches: [{ typeId: 'oct' }]
       } as ITitre,
       { id: '1', typeId: 'mfr' } as ITitreEtape,
+      newDemarcheId(),
+
       [] as ITitreEtape[]
     )
 
@@ -117,6 +127,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           demarches: [{ typeId: 'pro' }]
         } as ITitre,
         { id: '1', typeId: 'mfr' } as ITitreEtape,
+        newDemarcheId(),
+
         [] as ITitreEtape[]
       )
     ).toThrow()
@@ -132,6 +144,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           } as unknown as ITitreType
         } as ITitre,
         { id: '1', typeId: 'mfr' } as ITitreEtape,
+        newDemarcheId(),
+
         [] as ITitreEtape[]
       )
     ).toThrow()
@@ -149,6 +163,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         demarches: [{ typeId: 'oct' }]
       } as ITitre,
       { id: '1', typeId: 'mfr' } as ITitreEtape,
+      newDemarcheId(),
+
       [{ id: '1', typeId: 'mfr' }] as ITitreEtape[],
       true
     )
@@ -167,7 +183,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         } as unknown as ITitreType,
         demarches: [{ typeId: 'oct' }]
       } as ITitre,
-      { typeId: 'mfr', date: '1030-01-01' } as ITitreEtape
+      { typeId: 'mfr', date: '1030-01-01' } as ITitreEtape,
+      newDemarcheId()
     )
 
     expect(valid).toHaveLength(0)
@@ -185,7 +202,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         demarches: [{ typeId: 'oct' }]
       } as ITitre,
       { typeId: 'mfr', statutId: 'aco', date: '2030-01-01' } as ITitreEtape,
-      null
+      newDemarcheId()
     )
 
     expect(valid).toHaveLength(0)
@@ -203,6 +220,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         demarches: [{ typeId: 'oct' }]
       } as ITitre,
       { typeId: 'mfr', statutId: 'aco' } as ITitreEtape,
+      newDemarcheId(),
+
       [{ id: '1', typeId: 'dae', statutId: 'exe' }] as ITitreEtape[]
     )
 
@@ -221,6 +240,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         demarches: [{ typeId: 'oct' }]
       } as ITitre,
       { id: '1', typeId: 'mfr', statutId: 'aco' } as ITitreEtape,
+      newDemarcheId(),
+
       [
         { id: '1', typeId: 'mfr', statutId: 'aco' },
         { id: '2', typeId: 'dae' }
@@ -243,6 +264,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           demarches: [{ typeId: 'oct' }]
         } as ITitre,
         { id: '3', typeId: 'mfr', statutId: 'aco' } as ITitreEtape,
+        newDemarcheId(),
+
         [
           { id: '1', typeId: 'mfr', statutId: 'aco' },
           { id: '2', typeId: 'dae' }
@@ -264,6 +287,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           demarches: [{ typeId: 'oct' }]
         } as ITitre,
         { typeId: 'aaa', date: '2022-01-01' } as unknown as ITitreEtape,
+        newDemarcheId(),
+
         [
           { id: '1', typeId: 'mfr', statutId: 'aco', date: '2021-01-01' },
           { id: '2', typeId: 'dae', date: '2021-01-02' }

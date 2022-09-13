@@ -1,4 +1,5 @@
 import {
+  DemarcheId,
   IDemarcheType,
   IDocumentType,
   IEtapeType,
@@ -117,6 +118,7 @@ const etapeTypeIsValidCheck = (
   date: string,
   titre: ITitre,
   demarcheType: IDemarcheType,
+  demarcheId: DemarcheId,
   titreDemarcheEtapes?: ITitreEtape[] | null,
   titreEtape?: ITitreEtape
 ) => {
@@ -135,6 +137,7 @@ const etapeTypeIsValidCheck = (
     demarcheType,
     titre,
     titreEtape,
+    demarcheId,
     titreDemarcheEtapes
   ).length
 }

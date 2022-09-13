@@ -10,6 +10,7 @@ import {
   orderMachine,
   toMachineEtapes
 } from '../rules-demarches/machine-helper'
+import { newDemarcheId } from '../../database/models/_format/id-create'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
 export const titreEtapesSortDescByOrdre = (titreEtapes: ITitreEtape[]) =>
@@ -35,7 +36,8 @@ export const titreEtapesSortAscByDate = (
     demarcheDefinition = demarcheDefinitionFind(
       titreTypeId,
       demarcheType.id,
-      titreEtapes
+      titreEtapes,
+      newDemarcheId()
     )
   }
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {

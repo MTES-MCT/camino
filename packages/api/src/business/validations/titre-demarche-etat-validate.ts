@@ -1,5 +1,11 @@
 // valide la date et la position de l'étape en fonction des autres étapes
-import { ITitre, ITitreEtape, IDemarcheType, ITitreDemarche } from '../../types'
+import {
+  ITitre,
+  ITitreEtape,
+  IDemarcheType,
+  ITitreDemarche,
+  DemarcheId
+} from '../../types'
 
 import {
   demarcheDefinitionFind,
@@ -108,6 +114,7 @@ const titreDemarcheUpdatedEtatValidate = (
   demarcheType: IDemarcheType,
   titre: ITitre,
   titreEtape: ITitreEtape,
+  demarcheId: DemarcheId,
   titreDemarcheEtapes?: ITitreEtape[] | null,
   suppression = false
 ) => {
@@ -119,7 +126,8 @@ const titreDemarcheUpdatedEtatValidate = (
   const demarcheDefinition = demarcheDefinitionFind(
     titre.typeId,
     demarcheType.id,
-    titreDemarcheEtapesNew
+    titreDemarcheEtapesNew,
+    demarcheId
   )
 
   // pas de validation pour les démarches qui n'ont pas d'arbre d’instructions

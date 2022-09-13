@@ -252,6 +252,7 @@ const titreEtapeUpdationBusinessValidate = (
     titreDemarche.type!,
     titre,
     titreEtape,
+    titreDemarche.id,
     titreDemarche.etapes!
   )
   if (demarcheUpdatedErrors.length) {

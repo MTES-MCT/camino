@@ -1,4 +1,8 @@
-import { ITitreEtape, TitreEtapesTravauxTypes as Travaux } from '../../types'
+import {
+  DemarcheId,
+  ITitreEtape,
+  TitreEtapesTravauxTypes as Travaux
+} from '../../types'
 
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
@@ -372,7 +376,8 @@ const titreDemarcheTravauxStatutIdFind = (
 export const titreDemarcheStatutIdFind = (
   demarcheTypeId: string,
   titreDemarcheEtapes: ITitreEtape[],
-  titreTypeId: string
+  titreTypeId: string,
+  demarcheId: DemarcheId
 ): DemarcheStatutId => {
   // si la démarche ne contient pas d'étapes
   // -> le statut est indétrminé
@@ -386,7 +391,8 @@ export const titreDemarcheStatutIdFind = (
   const demarcheDefinition = demarcheDefinitionFind(
     titreTypeId,
     demarcheTypeId,
-    titreDemarcheEtapes
+    titreDemarcheEtapes,
+    demarcheId
   )
 
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {

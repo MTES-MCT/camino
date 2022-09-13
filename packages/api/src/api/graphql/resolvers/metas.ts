@@ -227,7 +227,8 @@ const demarcheEtapesTypesGet = async (
   const demarcheDefinition = demarcheDefinitionFind(
     titre.typeId,
     titreDemarche.typeId,
-    titreDemarche.etapes
+    titreDemarche.etapes,
+    titreDemarche.id
   )
 
   // dans un premier temps on récupère toutes les étapes possibles pour cette démarche
@@ -251,6 +252,7 @@ const demarcheEtapesTypesGet = async (
         date,
         titre,
         titreDemarche.type!,
+        titreDemarche.id,
         titreDemarche.etapes,
         titreEtape
       )
