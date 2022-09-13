@@ -159,7 +159,7 @@
       <hr />
     </div>
 
-    <div v-if="document.description">
+    <div>
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
           <h5 class="mb-xs">Description</h5>
