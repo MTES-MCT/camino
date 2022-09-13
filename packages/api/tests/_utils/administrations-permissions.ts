@@ -20,6 +20,7 @@ import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritag
 import { etapeTypeSectionsFormat } from '../../src/api/_format/etapes-types'
 import { Role } from 'camino-common/src/roles'
 import { AdministrationId } from 'camino-common/src/static/administrations'
+import { newDemarcheId } from '../../src/database/models/_format/id-create'
 
 const visibleCheck = async (
   administrationId: string,
@@ -399,7 +400,7 @@ const titreBuild = (
     propsTitreEtapesIds: { administrations: `${titreId}-demarche-id-etape-id` },
     demarches: [
       {
-        id: `${titreId}-demarche-id`,
+        id: newDemarcheId(`${titreId}-demarche-id`),
         titreId,
         typeId: 'oct',
         etapes: [
@@ -407,7 +408,7 @@ const titreBuild = (
             id: `${titreId}-demarche-id-etape-id`,
             typeId: etapeTypeId || 'mcr',
             ordre: 0,
-            titreDemarcheId: `${titreId}-demarche-id`,
+            titreDemarcheId: newDemarcheId(`${titreId}-demarche-id`),
             statutId: 'enc',
             date: '2020-01-01',
             administrations: administrationIdLocale

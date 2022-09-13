@@ -1,7 +1,7 @@
 import { dbManager } from '../../../../tests/db-manager'
 
 import Titres from '../../models/titres'
-import { idGenerate } from '../../models/_format/id-create'
+import { idGenerate, newDemarcheId } from '../../models/_format/id-create'
 import { userSuper } from '../../user-super'
 import TitresDemarches from '../../models/titres-demarches'
 import {
@@ -55,7 +55,7 @@ describe('titresDemarchesQueryModify', () => {
           }
         ])
 
-        const titreDemarcheId = idGenerate()
+        const titreDemarcheId = newDemarcheId()
         await TitresDemarches.query().insert([
           {
             id: titreDemarcheId,
@@ -116,7 +116,7 @@ describe('titresDemarchesQueryModify', () => {
           }
         ])
 
-        const titreDemarcheId = idGenerate()
+        const titreDemarcheId = newDemarcheId()
         await TitresDemarches.query().insert([
           {
             id: titreDemarcheId,
@@ -165,8 +165,8 @@ describe('titresDemarchesQueryModify', () => {
         }
       ])
 
-      const titreDemarcheId = idGenerate()
-      const archivedTitreDemarcheId = idGenerate()
+      const titreDemarcheId = newDemarcheId()
+      const archivedTitreDemarcheId = newDemarcheId()
       await TitresDemarches.query().insert([
         {
           id: titreDemarcheId,

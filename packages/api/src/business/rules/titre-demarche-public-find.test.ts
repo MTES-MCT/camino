@@ -2,6 +2,7 @@ import { ITitreDemarche, ITitreEtape } from '../../types'
 
 import { titreDemarchePublicFind } from './titre-demarche-public-find'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { newDemarcheId } from '../../database/models/_format/id-create'
 
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   etapesProps.map(
@@ -566,7 +567,7 @@ describe("publicité d'une démarche", () => {
 
   const demarches: ITitreDemarche[] = [
     {
-      id: 'm-pr-saint-pierre-2014-pro01',
+      id: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
       titreId: 'm-pr-saint-pierre-2014',
       type: { id: 'pr2', nom: 'unused', ordre: 1, etapesTypes: [] },
       typeId: 'pr2',
@@ -578,12 +579,12 @@ describe("publicité d'une démarche", () => {
           typeId: 'mfr',
           statutId: 'fai',
           id: 'id',
-          titreDemarcheId: 'm-pr-saint-pierre-2014-pro02'
+          titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro02')
         }
       ]
     },
     {
-      id: 'm-pr-saint-pierre-2014-pro01',
+      id: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
       titreId: 'm-pr-saint-pierre-2014',
       type: { id: 'pr1', nom: 'unused', ordre: 1, etapesTypes: [] },
       typeId: 'pr1',
@@ -595,7 +596,7 @@ describe("publicité d'une démarche", () => {
           typeId: 'dex',
           statutId: 'acc',
           id: 'id',
-          titreDemarcheId: 'm-pr-saint-pierre-2014-pro01',
+          titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
           ordre: 1,
           dateDebut: null,
           dateFin: '2020-10-01'
@@ -603,7 +604,7 @@ describe("publicité d'une démarche", () => {
       ]
     },
     {
-      id: 'm-pr-saint-pierre-2014-oct01',
+      id: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
       titreId: 'm-pr-saint-pierre-2014',
       type: { id: 'oct', nom: 'unused', ordre: 2, etapesTypes: [] },
       typeId: 'oct',
@@ -612,7 +613,7 @@ describe("publicité d'une démarche", () => {
       etapes: [
         {
           id: 'm-pr-saint-pierre-2014-oct01-dex01',
-          titreDemarcheId: 'm-pr-saint-pierre-2014-oct01',
+          titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
           typeId: 'dex',
           statutId: 'acc',
           ordre: 1,

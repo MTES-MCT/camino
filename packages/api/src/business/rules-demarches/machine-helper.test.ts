@@ -1,6 +1,7 @@
 import { isEtapesOk, toMachineEtape, whoIsBlocking } from './machine-helper'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { ITitreEtape } from '../../types'
+import { newDemarcheId } from '../../database/models/_format/id-create'
 
 describe('isEtapesOk', () => {
   // On n'est pas certain de notre base de données, si ça impacte les perf,
@@ -22,7 +23,7 @@ describe('toMachineEtape', () => {
         typeId: 'mfr',
         statutId: 'fai',
         date: '2022-01-01',
-        titreDemarcheId: 'idDemarche'
+        titreDemarcheId: newDemarcheId('idDemarche')
       })
     ).toEqual({
       typeId: 'mfr',
@@ -36,7 +37,7 @@ describe('toMachineEtape', () => {
         typeId: 'mfr',
         statutId: 'fai',
         date: '2022-01-01',
-        titreDemarcheId: 'idDemarche',
+        titreDemarcheId: newDemarcheId('idDemarche'),
         contenu: { arm: { mecanise: true } }
       })
     ).toEqual({

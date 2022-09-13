@@ -639,8 +639,9 @@ interface ITitreEtapeJustificatif {
   titreEtapeId: string
 }
 
+export type DemarcheId = string & { __camino: 'demarcheId' }
 interface ITitreDemarche {
-  id: string
+  id: DemarcheId
   description?: string
   slug?: string
   titreId: string
@@ -703,7 +704,7 @@ interface ITitreEtape {
   documentsTypesSpecifiques?: IDocumentType[] | null
   justificatifsTypesSpecifiques?: IDocumentType[] | null
   sectionsSpecifiques?: ISection[] | null
-  titreDemarcheId: string
+  titreDemarcheId: DemarcheId
   demarche?: ITitreDemarche
   dateDebut?: string | null
   dateFin?: string | null

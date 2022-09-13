@@ -12,6 +12,7 @@ import {
   titreDemarchesInstruction,
   titrePERDemarchesProlongation
 } from './__mocks__/titre-statut-id-find-titres'
+import { newDemarcheId } from '../../database/models/_format/id-create'
 
 describe("statut d'un titre", () => {
   const aujourdhui = '2020-12-01'
@@ -84,7 +85,7 @@ describe("statut d'un titre", () => {
         aujourdhui,
         [
           {
-            id: 'm-pr-saint-pierre-2014-pro01',
+            id: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
             titreId: 'm-pr-saint-pierre-2014',
             type: { id: 'pr2', nom: 'unused', ordre: 1, etapesTypes: [] },
             typeId: 'pr2',
@@ -96,12 +97,12 @@ describe("statut d'un titre", () => {
                 typeId: 'mfr',
                 statutId: 'fai',
                 id: 'id',
-                titreDemarcheId: 'm-pr-saint-pierre-2014-pro02'
+                titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro02')
               }
             ]
           },
           {
-            id: 'm-pr-saint-pierre-2014-pro01',
+            id: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
             titreId: 'm-pr-saint-pierre-2014',
             type: { id: 'pr1', nom: 'unused', ordre: 1, etapesTypes: [] },
             typeId: 'pr1',
@@ -113,7 +114,7 @@ describe("statut d'un titre", () => {
                 typeId: 'dex',
                 statutId: 'acc',
                 id: 'id',
-                titreDemarcheId: 'm-pr-saint-pierre-2014-pro01',
+                titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
                 ordre: 1,
                 dateDebut: null,
                 dateFin: '2020-10-01'
@@ -121,7 +122,7 @@ describe("statut d'un titre", () => {
             ]
           },
           {
-            id: 'm-pr-saint-pierre-2014-oct01',
+            id: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
             titreId: 'm-pr-saint-pierre-2014',
             type: { id: 'oct', nom: 'unused', ordre: 2, etapesTypes: [] },
             typeId: 'oct',
@@ -130,7 +131,7 @@ describe("statut d'un titre", () => {
             etapes: [
               {
                 id: 'm-pr-saint-pierre-2014-oct01-dex01',
-                titreDemarcheId: 'm-pr-saint-pierre-2014-oct01',
+                titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
                 typeId: 'dex',
                 statutId: 'acc',
                 ordre: 1,

@@ -6,6 +6,7 @@ import {
   Administrations
 } from 'camino-common/src/static/administrations'
 import { IAdministration, ITitre } from '../../types'
+import { newDemarcheId } from '../../database/models/_format/id-create'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -39,13 +40,13 @@ const titreDemarchesPubliques: ITitre = {
   propsTitreEtapesIds: {},
   demarches: [
     {
-      id: 'titre-id-demarche-oct',
+      id: newDemarcheId('titre-id-demarche-oct'),
       titreId: 'titre-id',
       typeId: 'oct',
       publicLecture: true
     },
     {
-      id: 'titre-id-demarche-pro',
+      id: newDemarcheId('titre-id-demarche-pro'),
       titreId: 'titre-id',
       typeId: 'pro',
       publicLecture: false
@@ -64,7 +65,7 @@ const titreEtapesPubliques: ITitre = {
   propsTitreEtapesIds: { administrations: 'titre-id-demarche-id-dpu' },
   demarches: [
     {
-      id: 'titre-id-demarche-id',
+      id: newDemarcheId('titre-id-demarche-id'),
       titreId: 'titre-id',
       typeId: 'oct',
       statutId: 'acc',
@@ -74,7 +75,7 @@ const titreEtapesPubliques: ITitre = {
           id: 'titre-id-demarche-id-aof',
           typeId: 'aof',
           ordre: 8,
-          titreDemarcheId: 'titre-id-demarche-id',
+          titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: '2020-02-02'
         },
@@ -82,7 +83,7 @@ const titreEtapesPubliques: ITitre = {
           id: 'titre-id-demarche-id-eof',
           typeId: 'eof',
           ordre: 7,
-          titreDemarcheId: 'titre-id-demarche-id',
+          titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: '2020-02-02'
         },
@@ -90,7 +91,7 @@ const titreEtapesPubliques: ITitre = {
           id: 'titre-id-demarche-id-edm',
           typeId: 'edm',
           ordre: 6,
-          titreDemarcheId: 'titre-id-demarche-id',
+          titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: '2020-02-02'
         },
@@ -98,7 +99,7 @@ const titreEtapesPubliques: ITitre = {
           id: 'titre-id-demarche-id-ede',
           typeId: 'ede',
           ordre: 5,
-          titreDemarcheId: 'titre-id-demarche-id',
+          titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: '2020-02-02'
         },
@@ -106,7 +107,7 @@ const titreEtapesPubliques: ITitre = {
           id: 'titre-id-demarche-id-pfd',
           typeId: 'pfd',
           ordre: 4,
-          titreDemarcheId: 'titre-id-demarche-id',
+          titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: '2020-02-02'
         },
@@ -114,7 +115,7 @@ const titreEtapesPubliques: ITitre = {
           id: 'titre-id-demarche-id-pfc',
           typeId: 'pfc',
           ordre: 3,
-          titreDemarcheId: 'titre-id-demarche-id',
+          titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: '2020-02-02'
         },
@@ -122,7 +123,7 @@ const titreEtapesPubliques: ITitre = {
           id: 'titre-id-demarche-id-vfd',
           typeId: 'vfd',
           ordre: 2,
-          titreDemarcheId: 'titre-id-demarche-id',
+          titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: '2020-02-02'
         },
@@ -130,7 +131,7 @@ const titreEtapesPubliques: ITitre = {
           id: 'titre-id-demarche-id-vfc',
           typeId: 'vfc',
           ordre: 1,
-          titreDemarcheId: 'titre-id-demarche-id',
+          titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: '2020-02-02'
         },
@@ -138,7 +139,7 @@ const titreEtapesPubliques: ITitre = {
           id: 'titre-id-demarche-id-dpu',
           typeId: 'dpu',
           ordre: 0,
-          titreDemarcheId: 'titre-id-demarche-id',
+          titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: '2020-02-02',
           administrations: [{ id: 'dea-guyane-01' }] as IAdministration[]
@@ -191,7 +192,7 @@ const titreWithActiviteGrp = {
   ],
   demarches: [
     {
-      id: 'titre-id-demarche-id',
+      id: newDemarcheId('titre-id-demarche-id'),
       titreId: 'titre-id',
       typeId: 'oct',
       publicLecture: true,
@@ -200,7 +201,7 @@ const titreWithActiviteGrp = {
           id: 'titre-id-demarche-id-dpu',
           typeId: 'dpu',
           ordre: 0,
-          titreDemarcheId: 'titre-id-demarche-id',
+          titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: '2020-02-02',
           administrations: [{ id: 'dea-guyane-01' }] as IAdministration[]

@@ -1,4 +1,4 @@
-import { IContenuValeur, ITitreEtape } from '../../types'
+import { DemarcheId, IContenuValeur, ITitreEtape } from '../../types'
 
 import { restrictionsArmRet } from './arm/ret'
 import { restrictionsArmRenPro } from './arm/ren-pro'
@@ -50,6 +50,7 @@ interface DemarcheDefinitionCommon {
   titreTypeId: string
   demarcheTypeIds: string[]
   dateDebut: string
+  demarcheIdExceptions?: DemarcheId[]
 }
 export interface DemarcheDefinitionRestriction
   extends DemarcheDefinitionCommon {
@@ -114,11 +115,12 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
 export const demarcheDefinitionFind = (
   titreTypeId: string,
   demarcheTypeId: string,
-  titreEtapes: Pick<ITitreEtape, 'date' | 'typeId'>[] | undefined
-) => {
+  titreEtapes: Pick<ITitreEtape, 'date' | 'typeId'>[] | undefined,
+  demarcheId: DemarcheId
+): IDemarcheDefinition | undefined => {
   const date = titreDemarcheDepotDemandeDateFind(titreEtapes)
 
-  return demarchesDefinitions
+  const definition = demarchesDefinitions
     .sort((a, b) => b.dateDebut.localeCompare(a.dateDebut))
     .find(
       d =>
@@ -126,4 +128,10 @@ export const demarcheDefinitionFind = (
         d.titreTypeId === titreTypeId &&
         d.demarcheTypeIds.includes(demarcheTypeId)
     )
+
+  if (definition?.demarcheIdExceptions?.includes(demarcheId)) {
+    return undefined
+  }
+
+  return definition
 }

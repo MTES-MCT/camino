@@ -28,7 +28,8 @@ export const titresDemarchesStatutIdUpdate = async (titresIds?: string[]) => {
       const statutId = titreDemarcheStatutIdFind(
         titreDemarche.typeId,
         titreDemarcheEtapes,
-        titre.typeId
+        titre.typeId,
+        titreDemarche.id
       )
 
       if (titreDemarche.statutId !== statutId) {

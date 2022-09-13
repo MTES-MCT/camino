@@ -21,6 +21,7 @@ import {
   titreDemarchesProModPhaseEch,
   titreDemarchesOctTitulairesACO
 } from './__mocks__/titre-prop-etape-find-demarches'
+import { newDemarcheId } from '../../database/models/_format/id-create'
 
 describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
   test("trouve l'id de la dernière étape acceptée de la démarche d'octroi acceptée ayant la propriété 'points'", () => {
@@ -196,7 +197,9 @@ describe("id de l'étape qui a un contenu", () => {
   test("retourne null si aucune étape n'est trouvé", () => {
     const etape1 = titreContenuTitreEtapeFind(
       { sectionId: 'arm', elementId: 'mecanisee' },
-      [{ id: 'demarche-id', etapes: [{ id: 'etape-id' }] }] as ITitreDemarche[],
+      [
+        { id: newDemarcheId('demarche-id'), etapes: [{ id: 'etape-id' }] }
+      ] as ITitreDemarche[],
       'val'
     )
 
@@ -204,7 +207,7 @@ describe("id de l'étape qui a un contenu", () => {
       { sectionId: 'arm', elementId: 'mecanisee' },
       [
         {
-          id: 'demarche-id',
+          id: newDemarcheId('demarche-id'),
           statutId: 'acc',
           etapes: [{ id: 'etape-id', statutId: 'fai' }]
         }
@@ -216,19 +219,19 @@ describe("id de l'étape qui a un contenu", () => {
       { sectionId: 'arm', elementId: 'mecanisee' },
       [
         {
-          id: 'demarche-id',
+          id: newDemarcheId('demarche-id'),
           titreId: 'titre-id',
           typeId: 'pro',
           phase: {
             dateDebut: '2020-01-01',
             dateFin: '2020-01-02',
             statutId: 'val',
-            titreDemarcheId: 'demarche-id'
+            titreDemarcheId: newDemarcheId('demarche-id')
           },
           etapes: [
             {
               id: 'etape-id',
-              titreDemarcheId: 'demarche-id',
+              titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'dpu',
               date: '2020-01-01',
               statutId: 'acc',
@@ -250,13 +253,13 @@ describe("id de l'étape qui a un contenu", () => {
       { sectionId: 'arm', elementId: 'mecanisee' },
       [
         {
-          id: 'demarche-id',
+          id: newDemarcheId('demarche-id'),
           titreId: 'titre-id',
           typeId: 'oct',
           etapes: [
             {
               id: 'etape-id',
-              titreDemarcheId: 'demarche-id',
+              titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'dpu',
               date: '2020-01-03',
               statutId: 'acc',
@@ -271,7 +274,7 @@ describe("id de l'étape qui a un contenu", () => {
           etapes: [
             {
               id: 'etape-id-2',
-              titreDemarcheId: 'demarche-id',
+              titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'dex',
               date: '2020-01-01',
               statutId: 'dex'
@@ -286,13 +289,13 @@ describe("id de l'étape qui a un contenu", () => {
       { sectionId: 'arm', elementId: 'mecanisee' },
       [
         {
-          id: 'demarche-id',
+          id: newDemarcheId('demarche-id'),
           titreId: 'titre-id',
           typeId: 'pro',
           etapes: [
             {
               id: 'etape-id',
-              titreDemarcheId: 'demarche-id',
+              titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'dpu',
               date: '2020-01-01',
               statutId: 'acc',
@@ -313,13 +316,13 @@ describe("id de l'étape qui a un contenu", () => {
       { sectionId: 'arm', elementId: 'mecanisee' },
       [
         {
-          id: 'demarche-id',
+          id: newDemarcheId('demarche-id'),
           titreId: 'titre-id',
           typeId: 'oct',
           etapes: [
             {
               id: 'etape-id',
-              titreDemarcheId: 'demarche-id',
+              titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'mfr',
               date: '2020-01-03',
               statutId: 'aco',
@@ -338,13 +341,13 @@ describe("id de l'étape qui a un contenu", () => {
       { sectionId: 'arm', elementId: 'mecanisee' },
       [
         {
-          id: 'demarche-id',
+          id: newDemarcheId('demarche-id'),
           titreId: 'titre-id',
           typeId: 'oct',
           etapes: [
             {
               id: 'etape-id',
-              titreDemarcheId: 'demarche-id',
+              titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'mfr',
               date: '2020-01-03',
               statutId: 'aco',

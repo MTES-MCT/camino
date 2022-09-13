@@ -7,7 +7,8 @@ import {
   IColonne,
   IFields,
   Index,
-  IUtilisateur
+  IUtilisateur,
+  DemarcheId
 } from '../../types'
 
 import options from './_options'
@@ -365,9 +366,11 @@ const titreDemarcheDelete = async (id: string, trx?: Transaction) =>
     .returning('*')
 
 const titreDemarcheUpdate = async (
-  id: string,
+  id: DemarcheId,
   titreDemarche: Partial<DBTitresDemarches>
-) => TitresDemarches.query().patchAndFetchById(id, { ...titreDemarche, id })
+): Promise<TitresDemarches> => {
+  return TitresDemarches.query().patchAndFetchById(id, { ...titreDemarche, id })
+}
 
 const titreDemarcheUpsert = async (
   titreDemarche: ITitreDemarche,

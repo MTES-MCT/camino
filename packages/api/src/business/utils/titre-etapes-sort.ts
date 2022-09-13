@@ -1,4 +1,4 @@
-import { IDemarcheType, ITitreEtape } from '../../types'
+import { DemarcheId, IDemarcheType, ITitreEtape } from '../../types'
 import {
   demarcheDefinitionFind,
   IDemarcheDefinition,
@@ -22,6 +22,7 @@ export const titreEtapesSortAscByOrdre = (titreEtapes: ITitreEtape[]) =>
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
 export const titreEtapesSortAscByDate = (
   titreEtapes: ITitreEtape[],
+  demarcheId: DemarcheId,
   demarcheType?: IDemarcheType | null,
   titreTypeId?: string
 ): ITitreEtape[] => {
@@ -35,7 +36,8 @@ export const titreEtapesSortAscByDate = (
     demarcheDefinition = demarcheDefinitionFind(
       titreTypeId,
       demarcheType.id,
-      titreEtapes
+      titreEtapes,
+      demarcheId
     )
   }
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {

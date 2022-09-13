@@ -2,6 +2,7 @@ import { ITitreEtape, TitreEtapesTravauxTypes as Travaux } from '../../types'
 
 import { titreDemarcheStatutIdFind } from './titre-demarche-statut-id-find'
 import { DemarchesStatutsIds as Demarches } from 'camino-common/src/static/demarchesStatuts'
+import { newDemarcheId } from '../../database/models/_format/id-create'
 
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   etapesProps.map(
@@ -14,12 +15,19 @@ const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
 
 describe("statut d'une démarche", () => {
   test('une démarche sans étape a le statut “indéfini”', () => {
-    expect(titreDemarcheStatutIdFind('oct', [], 'pxm')).toEqual('ind')
+    expect(
+      titreDemarcheStatutIdFind('oct', [], 'pxm', newDemarcheId())
+    ).toEqual('ind')
   })
 
   test("une démarche d'octroi sans étape décisive a le statut “indéfini”", () => {
     expect(
-      titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'anf' }]), 'pxm')
+      titreDemarcheStatutIdFind(
+        'oct',
+        etapesBuild([{ typeId: 'anf' }]),
+        'pxm',
+        newDemarcheId()
+      )
     ).toEqual('ind')
   })
 
@@ -31,7 +39,8 @@ describe("statut d'une démarche", () => {
           { typeId: 'dex', statutId: 'acc' },
           { typeId: 'dpu', statutId: 'acc' }
         ]),
-        'pxm'
+        'pxm',
+        newDemarcheId()
       )
     ).toEqual('acc')
   })
@@ -41,7 +50,8 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([{ typeId: 'dex', statutId: 'acc' }]),
-        'axm'
+        'axm',
+        newDemarcheId()
       )
     ).toEqual('acc')
   })
@@ -50,8 +60,15 @@ describe("statut d'une démarche", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([{ typeId: 'def', statutId: 'acc', date: '2010-01-01' }]),
-        'arm'
+        etapesBuild([
+          {
+            typeId: 'def',
+            statutId: 'acc',
+            date: '2010-01-01'
+          }
+        ]),
+        'arm',
+        newDemarcheId()
       )
     ).toEqual('acc')
   })
@@ -61,7 +78,8 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([{ typeId: 'rpu', statutId: 'acc' }]),
-        'prm'
+        'prm',
+        newDemarcheId()
       )
     ).toEqual('acc')
   })
@@ -74,7 +92,8 @@ describe("statut d'une démarche", () => {
           { typeId: 'dex', statutId: 'acc' },
           { typeId: 'dpu', statutId: 'acc' }
         ]),
-        'pxm'
+        'pxm',
+        newDemarcheId()
       )
     ).toEqual('acc')
   })
@@ -111,14 +130,22 @@ describe("statut d'une démarche", () => {
           { typeId: 'vfc', statutId: 'fai', date: '2020-07-17' },
           { typeId: 'sco', statutId: 'fai', date: '2020-09-28' }
         ]),
-        'arm'
+        'arm',
+        newDemarcheId()
       )
     ).toEqual('acc')
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([{ typeId: 'sco', statutId: 'fai', date: '2010-09-28' }]),
-        'arm'
+        etapesBuild([
+          {
+            typeId: 'sco',
+            statutId: 'fai',
+            date: '2010-09-28'
+          }
+        ]),
+        'arm',
+        newDemarcheId()
       )
     ).toEqual('acc')
   })
@@ -128,7 +155,8 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([{ typeId: 'sco', statutId: 'fai' }]),
-        'pxm'
+        'pxm',
+        newDemarcheId()
       )
     ).toEqual('ind')
   })
@@ -138,7 +166,8 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([{ typeId: 'dex', statutId: 'acc' }]),
-        'pxm'
+        'pxm',
+        newDemarcheId()
       )
     ).toEqual('ins')
   })
@@ -151,7 +180,8 @@ describe("statut d'une démarche", () => {
           { typeId: 'dex', statutId: 'acc' },
           { typeId: 'dpu', statutId: 'acc' }
         ]),
-        'pxm'
+        'pxm',
+        newDemarcheId()
       )
     ).toEqual('acc')
   })
@@ -161,14 +191,20 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([{ typeId: 'dex', statutId: 'rej' }]),
-        'pxm'
+        'pxm',
+        newDemarcheId()
       )
     ).toEqual('rej')
   })
 
   test("une démarche d'octroi dont l'étape est men a le statut “en instruction”", () => {
     expect(
-      titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'men' }]), 'pxm')
+      titreDemarcheStatutIdFind(
+        'oct',
+        etapesBuild([{ typeId: 'men' }]),
+        'pxm',
+        newDemarcheId()
+      )
     ).toEqual('ind')
   })
 
@@ -180,7 +216,8 @@ describe("statut d'une démarche", () => {
           { typeId: 'mfr', statutId: 'fai' },
           { typeId: 'mdp', statutId: 'fai' }
         ]),
-        'arm'
+        'arm',
+        newDemarcheId()
       )
     ).toEqual('ins')
   })
@@ -195,7 +232,8 @@ describe("statut d'une démarche", () => {
           { typeId: 'pfd', statutId: 'fai' },
           { typeId: 'mcp', statutId: 'com' }
         ]),
-        'arm'
+        'arm',
+        newDemarcheId()
       )
     ).toEqual('ins')
   })
@@ -204,8 +242,15 @@ describe("statut d'une démarche", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([{ typeId: 'def', statutId: 'acc', date: '2010-01-01' }]),
-        'arm'
+        etapesBuild([
+          {
+            typeId: 'def',
+            statutId: 'acc',
+            date: '2010-01-01'
+          }
+        ]),
+        'arm',
+        newDemarcheId()
       )
     ).toEqual('acc')
   })
@@ -214,8 +259,15 @@ describe("statut d'une démarche", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([{ typeId: 'def', statutId: 'rej', date: '2010-01-12' }]),
-        'arm'
+        etapesBuild([
+          {
+            typeId: 'def',
+            statutId: 'rej',
+            date: '2010-01-12'
+          }
+        ]),
+        'arm',
+        newDemarcheId()
       )
     ).toEqual('rej')
   })
@@ -225,14 +277,20 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([{ typeId: 'def', statutId: 'rej' }]),
-        'prh'
+        'prh',
+        newDemarcheId()
       )
     ).toEqual('ind')
   })
 
   test("une démarche d'octroi dont l'étape la plus récente est des a le statut “désisté”", () => {
     expect(
-      titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'des' }]), 'pxm')
+      titreDemarcheStatutIdFind(
+        'oct',
+        etapesBuild([{ typeId: 'des' }]),
+        'pxm',
+        newDemarcheId()
+      )
     ).toEqual('des')
   })
 
@@ -241,7 +299,8 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([{ typeId: 'mdp', statutId: 'fai' }]),
-        'pxm'
+        'pxm',
+        newDemarcheId()
       )
     ).toEqual('dep')
   })
@@ -251,20 +310,31 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([{ typeId: 'mfr', statutId: 'aco' }]),
-        'pxm'
+        'pxm',
+        newDemarcheId()
       )
     ).toEqual('eco')
   })
 
   test("une démarche d'octroi dont l'étape la plus récente est mcr a le statut “en instruction”", () => {
     expect(
-      titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'mcr' }]), 'pxm')
+      titreDemarcheStatutIdFind(
+        'oct',
+        etapesBuild([{ typeId: 'mcr' }]),
+        'pxm',
+        newDemarcheId()
+      )
     ).toEqual('ins')
   })
 
   test("une démarche d'octroi dont l'étape la plus récente est css a le statut “classé sans suite”", () => {
     expect(
-      titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'css' }]), 'pxm')
+      titreDemarcheStatutIdFind(
+        'oct',
+        etapesBuild([{ typeId: 'css' }]),
+        'pxm',
+        newDemarcheId()
+      )
     ).toEqual('cls')
   })
 
@@ -284,7 +354,8 @@ describe("statut d'une démarche", () => {
           { typeId: 'sca', statutId: 'fai', date: '2021-09-24' },
           { typeId: 'aca', statutId: 'def', date: '2021-09-25' }
         ]),
-        'arm'
+        'arm',
+        newDemarcheId()
       )
     ).toEqual('rej')
   })
@@ -305,14 +376,20 @@ describe("statut d'une démarche", () => {
           { typeId: 'sca', statutId: 'fai', date: '2021-09-24' },
           { typeId: 'aca', statutId: 'fav', date: '2021-09-25' }
         ]),
-        'arm'
+        'arm',
+        newDemarcheId()
       )
     ).toEqual('ins')
   })
 
   test('une démarche de retrait sans aucune étape décisive a le statut “indéterminé”', () => {
     expect(
-      titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'ihi' }]), 'pxm')
+      titreDemarcheStatutIdFind(
+        'ret',
+        etapesBuild([{ typeId: 'ihi' }]),
+        'pxm',
+        newDemarcheId()
+      )
     ).toEqual('ind')
   })
 
@@ -321,20 +398,31 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'ret',
         etapesBuild([{ typeId: 'dup', statutId: 'fai' }]),
-        'pxm'
+        'pxm',
+        newDemarcheId()
       )
     ).toEqual('ter')
   })
 
   test("une démarche de retrait dont l'étape la plus récente est ide faite a le statut “initié”", () => {
     expect(
-      titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'ide' }]), 'pxm')
+      titreDemarcheStatutIdFind(
+        'ret',
+        etapesBuild([{ typeId: 'ide' }]),
+        'pxm',
+        newDemarcheId()
+      )
     ).toEqual('ini')
   })
 
   test("une démarche de retrait dont l'étape la plus récente est spp a le statut “en instruction”", () => {
     expect(
-      titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'spp' }]), 'pxm')
+      titreDemarcheStatutIdFind(
+        'ret',
+        etapesBuild([{ typeId: 'spp' }]),
+        'pxm',
+        newDemarcheId()
+      )
     ).toEqual('ins')
   })
 
@@ -343,14 +431,20 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'ret',
         etapesBuild([{ typeId: 'ide' }, { typeId: 'eof' }]),
-        'pxm'
+        'pxm',
+        newDemarcheId()
       )
     ).toEqual('ins')
   })
 
   test("une démarche de retrait dont l'étape la plus récente est aco a le statut “terminé”", () => {
     expect(
-      titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'aco' }]), 'pxm')
+      titreDemarcheStatutIdFind(
+        'ret',
+        etapesBuild([{ typeId: 'aco' }]),
+        'pxm',
+        newDemarcheId()
+      )
     ).toEqual('ter')
   })
 
@@ -359,32 +453,53 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'ret',
         etapesBuild([{ typeId: 'aof', statutId: 'def' }]),
-        'pxm'
+        'pxm',
+        newDemarcheId()
       )
     ).toEqual('cls')
   })
 
   test("une démarche de retrait dont l'étape la plus récente de css a été faite a le statut “classé sans suite”", () => {
     expect(
-      titreDemarcheStatutIdFind('ret', etapesBuild([{ typeId: 'css' }]), 'pxm')
+      titreDemarcheStatutIdFind(
+        'ret',
+        etapesBuild([{ typeId: 'css' }]),
+        'pxm',
+        newDemarcheId()
+      )
     ).toEqual('cls')
   })
 
   test("une démarche de demande dont l'étape la plus récente est spp ne change pas de statut", () => {
     expect(
-      titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'spp' }]), 'pxm')
+      titreDemarcheStatutIdFind(
+        'oct',
+        etapesBuild([{ typeId: 'spp' }]),
+        'pxm',
+        newDemarcheId()
+      )
     ).toEqual('ind')
   })
 
   test("une démarche dont l'étape la plus récente est de type “retrait de la décision” a le statut “en instruction”", () => {
     expect(
-      titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'rtd' }]), 'pxm')
+      titreDemarcheStatutIdFind(
+        'oct',
+        etapesBuild([{ typeId: 'rtd' }]),
+        'pxm',
+        newDemarcheId()
+      )
     ).toEqual('ins')
   })
 
   test("une démarche dont l'étape la plus récente est de type “abrogation de la décision” a le statut “en instruction”", () => {
     expect(
-      titreDemarcheStatutIdFind('oct', etapesBuild([{ typeId: 'abd' }]), 'pxm')
+      titreDemarcheStatutIdFind(
+        'oct',
+        etapesBuild([{ typeId: 'abd' }]),
+        'pxm',
+        newDemarcheId()
+      )
     ).toEqual('ins')
   })
 
@@ -393,7 +508,8 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([{ typeId: 'and', statutId: 'fai' }]),
-        'pxm'
+        'pxm',
+        newDemarcheId()
       )
     ).toEqual('ins')
   })
@@ -403,7 +519,8 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([{ typeId: 'and', statutId: 'acc' }]),
-        'pxm'
+        'pxm',
+        newDemarcheId()
       )
     ).toEqual('acc')
   })
@@ -413,14 +530,20 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([{ typeId: 'and', statutId: 'rej' }]),
-        'pxm'
+        'pxm',
+        newDemarcheId()
       )
     ).toEqual('rej')
   })
 
   test('une démarche inexistante a le statut “indéfini”', () => {
     expect(
-      titreDemarcheStatutIdFind('xxx', etapesBuild([{ typeId: 'mfr' }]), 'pxm')
+      titreDemarcheStatutIdFind(
+        'xxx',
+        etapesBuild([{ typeId: 'mfr' }]),
+        'pxm',
+        newDemarcheId()
+      )
     ).toEqual('ind')
   })
 
@@ -452,7 +575,8 @@ describe("statut d'une démarche", () => {
         titreDemarcheStatutIdFind(
           'aom',
           etapesBuild([{ typeId: etapeTypeId, statutId }]),
-          'pxm'
+          'pxm',
+          newDemarcheId()
         )
       ).toEqual(resultId)
     }
@@ -486,7 +610,8 @@ describe("statut d'une démarche", () => {
         titreDemarcheStatutIdFind(
           'dot',
           etapesBuild([{ typeId: etapeTypeId, statutId }]),
-          'pxm'
+          'pxm',
+          newDemarcheId()
         )
       ).toEqual(resultId)
     }
@@ -525,7 +650,8 @@ describe("statut d'une démarche", () => {
         titreDemarcheStatutIdFind(
           'dam',
           etapesBuild([{ typeId: etapeTypeId, statutId }]),
-          'pxm'
+          'pxm',
+          newDemarcheId()
         )
       ).toEqual(resultId)
     }

@@ -21,6 +21,7 @@ import {
 import { titreContenuFormat } from '../../database/models/_format/titre-contenu'
 import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { newDemarcheId } from '../../database/models/_format/id-create'
 
 test('teste EtatsValidate', () => {
   const octEtatsValidate = demarcheEtatsValidate('oct', 'axm', '2021-01-01')
@@ -103,7 +104,8 @@ const demarcheEtatsValidate = (
     const demarcheDefinitions = demarcheDefinitionFind(
       titreTypeId,
       demarcheTypeId,
-      [{ typeId: 'mfr', date }]
+      [{ typeId: 'mfr', date }],
+      newDemarcheId()
     )
     if (!isDemarcheDefinitionRestriction(demarcheDefinitions)) {
       throw new Error('cette démarche n’a pas de restrictions')

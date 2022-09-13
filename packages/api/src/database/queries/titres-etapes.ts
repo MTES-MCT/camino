@@ -106,7 +106,7 @@ const titreEtapeUpdate = async (
   titreEtape: Partial<DBTitresEtapes>,
   user: IUtilisateur,
   titreId: string
-) => {
+): Promise<TitresEtapes> => {
   return patchJournalCreate<TitresEtapes>(
     id,
     titreEtape,

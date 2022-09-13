@@ -11,6 +11,7 @@ import Document from '../../models/documents'
 import { documentCreate, documentGet } from '../documents'
 import { etapeTypeDocumentTypeUsedCheck } from './documents'
 import { Knex } from 'knex'
+import { newDemarcheId } from '../../models/_format/id-create'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -50,7 +51,7 @@ describe('documentSupprimer', () => {
       await TitresEtapes.query().insertGraph({
         id: 'titreEtapeId',
         typeId: 'dpu',
-        titreDemarcheId: 'titreDemarcheId',
+        titreDemarcheId: newDemarcheId('titreDemarcheId'),
         date: '',
         statutId
       })
@@ -145,7 +146,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
     await TitresEtapes.query().insertGraph({
       id: 'titreEtapeId',
       typeId: 'dpu',
-      titreDemarcheId: 'titreDemarcheId',
+      titreDemarcheId: newDemarcheId('titreDemarcheId'),
       date: '',
       statutId: 'aco'
     })
@@ -178,7 +179,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
     await TitresEtapes.query().insertGraph({
       id: 'titreEtapeId',
       typeId: 'dpu',
-      titreDemarcheId: 'titreDemarcheId',
+      titreDemarcheId: newDemarcheId('titreDemarcheId'),
       date: '',
       statutId: 'aco'
     })

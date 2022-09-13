@@ -30,6 +30,7 @@ export const titresEtapesOrdreUpdate = async (
     if (titreDemarche.etapes) {
       const etapes = titreEtapesSortAscByDate(
         titreDemarche.etapes,
+        titreDemarche.id,
         titreDemarche.type,
         titreDemarche.titre?.typeId
       )

@@ -172,7 +172,12 @@ async function titresArmAvecOctroi(
       }
 
       const hasMachine = isDemarcheDefinitionMachine(
-        demarcheDefinitionFind(titre.typeId, octARM.typeId, octARM.etapes)
+        demarcheDefinitionFind(
+          titre.typeId,
+          octARM.typeId,
+          octARM.etapes,
+          octARM.id
+        )
       )
       const blockedByMe: boolean =
         hasMachine &&

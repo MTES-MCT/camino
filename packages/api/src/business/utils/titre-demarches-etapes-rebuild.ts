@@ -37,7 +37,8 @@ export const titreDemarchesEtapesRebuild = (
       titreDemarche.statutId = titreDemarcheStatutIdFind(
         titreDemarche.typeId,
         titreDemarche.etapes,
-        titreTypeId
+        titreTypeId,
+        titreDemarche.id
       )
 
       if (

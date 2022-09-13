@@ -803,10 +803,11 @@ const etapeSupprimer = async (
 
     if (!titreDemarche.titre) throw new Error("le titre n'existe pas")
 
-    const rulesErrors = await titreDemarcheUpdatedEtatValidate(
+    const rulesErrors = titreDemarcheUpdatedEtatValidate(
       titreDemarche.type!,
       titreDemarche.titre,
       titreEtape,
+      titreDemarche.id,
       titreDemarche.etapes!,
       true
     )
