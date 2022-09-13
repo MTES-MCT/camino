@@ -254,6 +254,7 @@ export default {
     async get() {
       const utilisateurId = this.$route.params.id
       await this.$store.dispatch('utilisateur/get', utilisateurId)
+      await new Promise(resolve => setTimeout(resolve, 2000))
 
       this.subscription.newsletter = await (
         await fetch(`/apiUrl/utilisateurs/${utilisateurId}/newsletter`, {
