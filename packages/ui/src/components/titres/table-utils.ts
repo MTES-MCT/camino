@@ -28,6 +28,11 @@ import {
   SubstanceLegaleId,
   SubstancesLegale
 } from 'camino-common/src/static/substancesLegales'
+import {
+  sortedTitresStatuts,
+  TitresStatuts,
+  TitreStatutId
+} from 'camino-common/src/static/titresStatuts'
 
 interface Reference {
   type: { nom: string }
@@ -53,36 +58,34 @@ export interface TitreEntreprise {
     domaineId: DomaineId
     type: { id: TitreTypeTypeId; nom: string }
   }
-  // id devrait être une union, couleur aussi
-  statut: { id: string; nom: string; couleur: string }
+  titreStatutId: TitreStatutId
   substances: SubstanceLegaleId[]
   titulaires: Titulaire[]
   activitesAbsentes: number | null
   activitesEnConstruction: number | null
 }
 
-const STATUTS = [
-  'demande initiale',
-  'modification en instance',
-  'valide',
-  'demande classée',
-  'échu'
-] as const
-
-type DemandeStatut = typeof STATUTS[number]
-
-export const ordreStatut: { [key in DemandeStatut]: number } = {
-  'demande initiale': 0,
-  'modification en instance': 1,
-  valide: 2,
-  'demande classée': 3,
-  échu: 4
+const ordreStatut: { [key in TitreStatutId]: number } = {
+  dmi: 0,
+  mod: 1,
+  val: 2,
+  dmc: 3,
+  ech: 4,
+  ind: 5
 }
 
-export const isDemandeStatut = (
+const ordreFromStatut = (entry: string) => {
+  const titreStatut = sortedTitresStatuts.find(({ nom }) => nom === entry)
+  if (titreStatut) {
+    return ordreStatut[titreStatut.id]
+  }
+  return -1
+}
+
+const isTitreStatut = (
   entry: string | number | string[] | undefined
-): entry is DemandeStatut => {
-  return STATUTS.includes(entry)
+): entry is string => {
+  return sortedTitresStatuts.some(({ nom }) => nom === entry)
 }
 
 export const nomColumn: Column<'nom'> = {
@@ -121,8 +124,8 @@ export const statutColumn: Column<'statut'> = {
   sort: (statut1: TableAutoRow, statut2: TableAutoRow) => {
     const row1Statut = statut1.columns.statut.value
     const row2Statut = statut2.columns.statut.value
-    if (isDemandeStatut(row1Statut) && isDemandeStatut(row2Statut)) {
-      return ordreStatut[row1Statut] - ordreStatut[row2Statut]
+    if (isTitreStatut(row1Statut) && isTitreStatut(row2Statut)) {
+      return ordreFromStatut(row1Statut) - ordreFromStatut(row2Statut)
     }
     return 0
   }
@@ -175,15 +178,18 @@ export const nomCell = (titre: { nom: string }): ComponentColumnData => ({
   value: titre.nom
 })
 export const statutCell = (titre: {
-  statut: { nom: string; couleur: string }
-}): ComponentColumnData => ({
-  component: markRaw(Statut),
-  props: {
-    color: titre.statut.couleur,
-    nom: titre.statut.nom
-  },
-  value: titre.statut.nom
-})
+  titreStatutId: TitreStatutId
+}): ComponentColumnData => {
+  const statut = TitresStatuts[titre.titreStatutId]
+  return {
+    component: markRaw(Statut),
+    props: {
+      color: statut.couleur,
+      nom: statut.nom
+    },
+    value: statut.nom
+  }
+}
 
 export const referencesCell = (titre: {
   references?: { nom: string; type: { nom: string } }[]

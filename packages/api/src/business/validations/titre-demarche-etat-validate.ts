@@ -77,7 +77,7 @@ const titreDemarcheEtatValidate = (
     demarche.etapes = etapes
 
     const contenusTitreEtapesIds = contenusTitreEtapesIdsFind(
-      titre.statutId!,
+      titre.titreStatutId!,
       [demarche],
       titre.type!.contenuIds
     )

@@ -8,11 +8,10 @@ import {
   IAdministrationTitreTypeEtapeType,
   IAdministrationTitreTypeTitreStatut,
   IEtapeType,
-  ITitreStatut,
   ITitreType
 } from '../../src/types'
 
-import { objectClone } from '../../src/tools/index'
+import { objectClone } from '../../src/tools'
 import {
   Administration,
   Administrations
@@ -23,7 +22,6 @@ interface ISources {
     path: string
     data: ITitreType[]
   }
-  titresStatuts: { path: string; data: ITitreStatut[] }
   administrations__titresTypes: {
     path: string
     data: IAdministrationTitreType[]
@@ -41,7 +39,6 @@ interface ISources {
 
 const sources = {
   titresTypes: { path: '../../sources/titres-types.json', data: [] },
-  titresStatuts: { path: '../../sources/titres-statuts.json', data: [] },
   administrations__titresTypes: {
     path: '../../sources/administrations--titres-types.json',
     data: []
@@ -135,9 +132,6 @@ const administrationsWithRelations = Object.values(
       .map(attts => {
         attts.titreType = sources.titresTypes.data.find(
           tt => tt.id === attts.titreTypeId
-        )
-        attts.titreStatut = sources.titresStatuts.data.find(
-          ts => ts.id === attts.titreStatutId
         )
 
         return attts

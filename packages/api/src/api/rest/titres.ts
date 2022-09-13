@@ -79,7 +79,7 @@ export const titresONF = async (
           id: titre.id,
           slug: titre.slug,
           nom: titre.nom,
-          statut: titre.statut,
+          titreStatutId: titre.titreStatutId,
           references,
           titulaires: titre.titulaires,
           dateCompletudePTMG,
@@ -93,7 +93,7 @@ export const titresONF = async (
 }
 
 type TitreSanitize = NotNullableKeys<
-  Required<Pick<ITitre, 'slug' | 'titulaires' | 'statut'>>
+  Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId'>>
 > &
   Pick<ITitre, 'typeId' | 'id' | 'nom'>
 type TitreDemarcheSanitize = NotNullableKeys<
@@ -128,7 +128,6 @@ async function titresArmAvecOctroi(
     { ...filters, ids: titresAutorisesIds, colonne: 'nom' },
     {
       fields: {
-        statut: { id: {} },
         references: { type: { id: {} } },
         titulaires: { id: {} },
         demarches: { etapes: { id: {} } }
@@ -140,9 +139,6 @@ async function titresArmAvecOctroi(
     .map<TitreArmAvecOctroi | null>((titre: ITitre) => {
       if (titre.slug === undefined) {
         return null
-      }
-      if (!titre.statut) {
-        throw new Error('le statut du titre n’est pas chargé')
       }
 
       if (!titre.references) {
@@ -218,7 +214,7 @@ export const titresPTMG = async (
         id: titre.id,
         slug: titre.slug,
         nom: titre.nom,
-        statut: titre.statut,
+        titreStatutId: titre.titreStatutId,
         references,
         titulaires: titre.titulaires,
         enAttenteDePTMG: blockedByMe
@@ -230,7 +226,7 @@ export const titresPTMG = async (
 }
 
 type DrealTitreSanitize = NotNullableKeys<
-  Required<Pick<ITitre, 'slug' | 'titulaires' | 'statut' | 'type'>>
+  Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId' | 'type'>>
 > &
   Pick<
     ITitre,
@@ -270,7 +266,6 @@ export const titresDREAL = async (
       { ...filters, colonne: 'nom' },
       {
         fields: {
-          statut: { id: {} },
           type: { id: {} },
           references: { type: { id: {} } },
           titulaires: { id: {} },
@@ -290,9 +285,6 @@ export const titresDREAL = async (
       .map((titre: ITitre): TitreDrealAvecReferences | null => {
         if (titre.slug === undefined) {
           return null
-        }
-        if (!titre.statut) {
-          throw new Error('le statut du titre n’est pas chargé')
         }
 
         if (!titre.type) {
@@ -331,7 +323,7 @@ export const titresDREAL = async (
           id: titre.id,
           slug: titre.slug,
           nom: titre.nom,
-          statut: titre.statut,
+          titreStatutId: titre.titreStatutId,
           typeId: titre.type.typeId,
           references,
           domaineId: titre.domaineId,

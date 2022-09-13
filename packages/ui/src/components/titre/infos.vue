@@ -12,7 +12,7 @@
         </h4>
 
         <div class="mb">
-          <Statut :color="titre.statut.couleur" :nom="titre.statut.nom" />
+          <Statut :color="titreStatut.couleur" :nom="titreStatut.nom" />
         </div>
 
         <div
@@ -182,6 +182,10 @@ import {
   SubstanceLegaleId,
   SubstancesLegale
 } from 'camino-common/src/static/substancesLegales'
+import {
+  TitresStatuts,
+  TitreStatutId
+} from 'camino-common/src/static/titresStatuts'
 
 type Entreprise = {
   id: string
@@ -194,7 +198,7 @@ const props = defineProps<{
   titre: {
     id: string
     domaine: { id: string }
-    statut: { nom: string; couleur: string }
+    titreStatutId: TitreStatutId
     demarches: {
       id: string
       type: { id: DemarcheTypeId }
@@ -229,4 +233,5 @@ const hasContenu = computed(
 )
 
 const type = computed(() => TitresTypes[props.titre.type.id])
+const titreStatut = computed(() => TitresStatuts[props.titre.titreStatutId])
 </script>

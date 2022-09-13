@@ -43,11 +43,7 @@ fragment titre on Titre {
     id
     nom
   }
-  statut {
-    id
-    nom
-    couleur
-  }
+  titreStatutId
   surface
   substances
   administrations {

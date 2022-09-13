@@ -4,6 +4,7 @@ import { apiGraphQLFetch } from '@/api/_client'
 import { TitresTypes, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import gql from 'graphql-tag'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 
 export type TitresLinkConfig =
   | {
@@ -25,7 +26,7 @@ type DemarchePhase = { dateDebut: string; dateFin: string }
 type TitreLinkDemarche = { phase?: DemarchePhase }
 export type LinkableTitre = TitreLink & {
   demarches: TitreLinkDemarche[]
-  statut: { couleur: string; nom: string }
+  titreStatutId: TitreStatutId
 }
 
 export type LoadLinkableTitres = () => Promise<LinkableTitre[]>
@@ -51,10 +52,7 @@ export const loadLinkableTitres: (
               elements {
                 id
                 nom
-                statut {
-                  couleur
-                  nom
-                }
+                titreStatutId
                 demarches {
                   phase {
                     dateDebut

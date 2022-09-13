@@ -42,7 +42,7 @@ describe('administrationsTitresQuery', () => {
         id: 'monTitreId',
         nom: 'monTitreNom',
         domaineId: 'm',
-        statutId: 'ech',
+        titreStatutId: 'ech',
         typeId: 'arm'
       } as ITitre
 

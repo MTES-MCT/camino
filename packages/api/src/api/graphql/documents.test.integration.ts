@@ -1,4 +1,4 @@
-import { graphQLCall, queryImport } from '../../../tests/_utils/index'
+import { graphQLCall, queryImport } from '../../../tests/_utils'
 import { ITitreEtapeJustificatif } from '../../types'
 import { documentCreate, documentGet } from '../../database/queries/documents'
 import { entrepriseUpsert } from '../../database/queries/entreprises'

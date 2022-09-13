@@ -6,7 +6,6 @@ import Administrations from './administrations'
 import Communes from './communes'
 import Domaines from './domaines'
 import Entreprises from './entreprises'
-import TitresStatuts from './titres-statuts'
 import TitresDemarches from './titres-demarches'
 import TitresEtapes from './titres-etapes'
 import TitresPoints from './titres-points'
@@ -40,7 +39,7 @@ class Titres extends Model {
       nom: { type: 'string' },
       domaineId: { type: 'string', maxLength: 1 },
       typeId: { type: 'string', maxLength: 3 },
-      statutId: { type: 'string', maxLength: 3 },
+      titreStatutId: { type: 'string', maxLength: 3 },
       dateDebut: { type: ['string', 'null'] },
       dateFin: { type: ['string', 'null'] },
       dateDemande: { type: ['string', 'null'] },
@@ -66,12 +65,6 @@ class Titres extends Model {
       relation: Model.BelongsToOneRelation,
       modelClass: Types,
       join: { from: 'titres.typeId', to: 'titresTypes.id' }
-    },
-
-    statut: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: TitresStatuts,
-      join: { from: 'titres.statutId', to: 'titresStatuts.id' }
     },
 
     demarches: {

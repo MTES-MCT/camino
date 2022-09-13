@@ -105,7 +105,7 @@ describe('titresQueryModify', () => {
         nom: 'titre1',
         domaineId: 'm',
         typeId: titreTypeId,
-        statutId: titreStatutId,
+        titreStatutId,
         demarches: [
           {
             typeId: demarcheTypeId,
@@ -218,7 +218,7 @@ describe('titresQueryModify', () => {
           nom: 'titre1',
           domaineId: 'm',
           typeId,
-          statutId,
+          titreStatutId: statutId,
           publicLecture,
           entreprisesLecture,
           propsTitreEtapesIds: { titulaires: etapeId },
@@ -286,7 +286,7 @@ describe('titresQueryModify', () => {
         await Titres.query().insert({
           id: titreId,
           nom: idGenerate(),
-          statutId: 'val',
+          titreStatutId: 'val',
           domaineId: 'm',
           typeId: 'arm'
         })
@@ -326,7 +326,7 @@ describe('titresQueryModify', () => {
         await Titres.query().insert({
           id: titreId,
           nom: idGenerate(),
-          statutId: 'val',
+          titreStatutId: 'val',
           domaineId: 'm',
           typeId: 'arm'
         })
@@ -355,7 +355,7 @@ describe('titresQueryModify', () => {
       async ({ role, modification }: { role: Role; modification: boolean }) => {
         await Titres.query().insert({
           nom: idGenerate(),
-          statutId: 'val',
+          titreStatutId: 'val',
           domaineId: 'm',
           typeId: 'arm'
         })
@@ -387,7 +387,7 @@ describe('titresQueryModify', () => {
     test('une administration non gestionnaire ne peut pas modifier un titre', async () => {
       await Titres.query().insert({
         nom: idGenerate(),
-        statutId: 'val',
+        titreStatutId: 'val',
         domaineId: 'm',
         typeId: 'arm'
       })
@@ -421,7 +421,7 @@ describe('titresQueryModify', () => {
       async ({ role, modification }: { role: Role; modification: boolean }) => {
         await Titres.query().insert({
           nom: idGenerate(),
-          statutId: 'val',
+          titreStatutId: 'val',
           domaineId: 'm',
           typeId: 'arm'
         })
@@ -448,7 +448,7 @@ describe('titresQueryModify', () => {
         {
           id: archivedTitreId,
           nom: archivedTitreId,
-          statutId: 'val',
+          titreStatutId: 'val',
           domaineId: 'm',
           typeId: 'arm',
           archive: true
@@ -456,7 +456,7 @@ describe('titresQueryModify', () => {
         {
           id: titreId,
           nom: titreId,
-          statutId: 'val',
+          titreStatutId: 'val',
           domaineId: 'm',
           typeId: 'arm',
           archive: false

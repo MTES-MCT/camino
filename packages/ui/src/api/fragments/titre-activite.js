@@ -121,22 +121,4 @@ const fragmentActivite = gql`
   ${fragmentDocument}
 `
 
-const fragmentTitresActivite = gql`
-  fragment titresActivite on Activite {
-    id
-    slug
-    date
-    statut {
-      id
-      couleur
-    }
-    deposable
-  }
-`
-
-export {
-  fragmentActivites,
-  fragmentActivite,
-  fragmentTitreActivite,
-  fragmentTitresActivite
-}
+export { fragmentActivites, fragmentActivite, fragmentTitreActivite }

@@ -33,11 +33,7 @@ const fragmentAdministration = gql`
           nom
         }
       }
-      titreStatut {
-        id
-        nom
-        couleur
-      }
+      titreStatutId
       titresModificationInterdit
       demarchesModificationInterdit
       etapesModificationInterdit

@@ -47,7 +47,7 @@ type Titre {
   references: [Reference]
 
   "Statut du titre"
-  statut: TitreStatut!
+  titreStatutId: String!
 
   "Substances concernées par le titre dans son dernier état de validité"
   substances: [String!]

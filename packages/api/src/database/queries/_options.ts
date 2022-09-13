@@ -204,7 +204,6 @@ const domaines = {
 
 const titresRelateTrue = [
   'type',
-  'statut',
   'domaine',
   'administrationsGestionnaires',
   'references.type',
@@ -247,7 +246,6 @@ const titres = {
   graph: `[
     type.${titresTypes.graph},
     domaine.${domaines.graph},
-    statut,
     points(orderAsc).${points.graph},
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph},

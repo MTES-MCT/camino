@@ -41,7 +41,7 @@ describe('metas permissions queries', () => {
         await Titres.query().insert({
           id: titreId,
           nom: idGenerate(),
-          statutId: 'val',
+          titreStatutId: 'val',
           domaineId: 'm',
           typeId: 'arm'
         })

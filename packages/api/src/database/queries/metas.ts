@@ -32,7 +32,6 @@ import TitresTypesDemarchesTypesEtapesTypesDocumentsTypes from '../models/titres
 import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../models/titres-types--demarches-types-etapes-types-justificatifs-types'
 import Titres from '../models/titres'
 import { sortedDevises } from 'camino-common/src/static/devise'
-import TitresStatuts from '../models/titres-statuts'
 import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 
 const titresTypesTypesGet = async () =>
@@ -136,29 +135,6 @@ const etapesTypesJustificatifsTypesGet = async () =>
     'etapeTypeId',
     'documentTypeId'
   ])
-
-/**
- * retourne les statuts de titre visible par l’utilisateur
- * @param user - utilisateur
- * @returns liste de statuts
- */
-export const titresStatutsGet = async (
-  user: IUtilisateur | null | undefined
-) => {
-  let query = TitresStatuts.query().orderBy('ordre')
-
-  // si l’utilisateur n’est pas connecté on filtre les statuts non visibles pour le public
-  if (!user) {
-    query = query.whereIn(
-      'id',
-      TitresTypesTitresStatuts.query()
-        .distinct('titreStatutId')
-        .where('publicLecture', true)
-    )
-  }
-
-  return query
-}
 
 const demarchesTypesGet = async (
   { titreId, travaux }: { titreId?: string; travaux?: boolean },

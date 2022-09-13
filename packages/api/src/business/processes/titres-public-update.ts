@@ -29,7 +29,7 @@ export const titresPublicUpdate = async (titresIds?: string[]) => {
 
   for (const titre of titres) {
     const { publicLecture, entreprisesLecture } = titrePublicFind(
-      titre.statutId!,
+      titre.titreStatutId!,
       titre.type!.titresTypesTitresStatuts!,
       titre.demarches || []
     )

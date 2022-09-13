@@ -17,7 +17,10 @@
     >
       <template #default="{ item }">
         <div class="flex flex-center">
-          <Statut :color="item.statut.couleur" :nom="item.statut.nom" />
+          <Statut
+            :color="titreStatut(item.titreStatutId).couleur"
+            :nom="titreStatut(item.titreStatutId).nom"
+          />
           <span class="cap-first bold ml-m">{{ item.nom }}</span>
           <span class="ml-m" style="margin-left: auto">{{
             getDateDebutEtDateFin(item)
@@ -40,6 +43,10 @@ import Statut from '@/components/_common/statut.vue'
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { TitreLink } from 'camino-common/src/titres'
+import {
+  TitresStatuts,
+  TitreStatutId
+} from 'camino-common/src/static/titresStatuts'
 
 const props = defineProps<{
   config: TitresLinkConfig
@@ -137,4 +144,6 @@ const getDateDebutEtDateFin = (titre: LinkableTitre): string => {
 
   return `${dateDebut} - ${dateFin}`
 }
+const titreStatut = (titreStatutId: TitreStatutId) =>
+  TitresStatuts[titreStatutId]
 </script>

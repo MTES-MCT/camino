@@ -70,8 +70,8 @@ const statistiquesGuyaneInstantBuild = (titres: ITitre[]) => {
   const statsInstant = titres.reduce(
     (acc, titre) => {
       if (
-        titre.statutId &&
-        ['val', 'mod'].includes(titre.statutId) &&
+        titre.titreStatutId &&
+        ['val', 'mod'].includes(titre.titreStatutId) &&
         titre.surfaceEtape &&
         titre.surfaceEtape.surface
       ) {

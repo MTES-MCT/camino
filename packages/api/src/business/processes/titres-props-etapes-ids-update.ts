@@ -44,7 +44,7 @@ export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
         const titreEtape = titrePropTitreEtapeFind(
           propId,
           titre.demarches!,
-          titre.statutId!
+          titre.titreStatutId!
         )
 
         if (titreEtape) {

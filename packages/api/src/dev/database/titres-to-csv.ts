@@ -7,7 +7,7 @@ import { Index } from '../../types.js'
 async function main() {
   const titres = await knex('titres')
     .where('dateFin', '>', '1990-01-01')
-    .where('statutId', 'ech')
+    .where('titreStatutId', 'ech')
 
   const sheet = xlsx.utils.json_to_sheet(titres as Index<any>[])
 

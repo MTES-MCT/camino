@@ -15,7 +15,6 @@ import {
   etapesTypesGet,
   phasesStatutsGet,
   referencesTypesGet,
-  titresStatutsGet,
   titresTypesTypesGet
 } from '../../../database/queries/metas'
 
@@ -48,6 +47,7 @@ import { Pays, PaysList } from 'camino-common/src/static/pays'
 import { Departement, Departements } from 'camino-common/src/static/departement'
 import { Region, Regions } from 'camino-common/src/static/region'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
+import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
 
 export const devises = async () => devisesGet()
 
@@ -100,17 +100,7 @@ export const types = async () => {
   }
 }
 
-export const statuts = async (_: never, context: IToken) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    return await titresStatutsGet(user)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
+export const statuts = () => sortedTitresStatuts
 
 export const demarchesTypes = async (
   { titreId, travaux }: { titreId?: string; travaux?: boolean },

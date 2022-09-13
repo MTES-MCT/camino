@@ -19,6 +19,7 @@ import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { UniteId } from 'camino-common/src/static/unites'
 import { FrequenceId } from 'camino-common/src/static/frequence'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
+import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -466,8 +467,7 @@ interface ITitreTypeEtapeType {
 interface ITitreTypeTitreStatut {
   titreTypeId: string
   titreType?: ITitreType | null
-  titreStatutId: string
-  titreStatut?: ITitreStatut | null
+  titreStatutId: TitreStatutId
   publicLecture: boolean
 }
 
@@ -525,13 +525,6 @@ interface IAdministrationActiviteTypeEmail {
   email: string
 }
 
-interface ITitreStatut {
-  id: string
-  nom: string
-  couleur: Couleur
-  ordre: number
-}
-
 export interface ITitreTitre {
   titreFromId: string
   titreToId: string
@@ -545,8 +538,7 @@ interface ITitre {
   domaine?: IDomaine | null
   typeId: TitreTypeId
   type?: ITitreType | null
-  statutId?: string | null
-  statut?: ITitreStatut | null
+  titreStatutId?: TitreStatutId | null
   references?: ITitreReference[] | null
   dateDebut?: string | null
   dateFin?: string | null
@@ -946,7 +938,6 @@ export {
   IAdministrationTitreTypeEtapeType,
   IAdministrationActiviteType,
   IAdministrationActiviteTypeEmail,
-  ITitreStatut,
   ITitre,
   ITitreActivite,
   ITitreAdministration,

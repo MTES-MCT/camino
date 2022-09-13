@@ -26,18 +26,18 @@ export const titresStatutIdsUpdate = async (titresIds?: string[]) => {
   const aujourdhui = dateFormat(new Date(), 'yyyy-mm-dd')
 
   for (const titre of titres) {
-    const statutId = titreStatutIdFind(
+    const titreStatutId = titreStatutIdFind(
       aujourdhui,
       titre.demarches,
       titre.typeId
     )
 
-    if (statutId !== titre.statutId) {
-      await titreUpdate(titre.id, { statutId })
+    if (titreStatutId !== titre.titreStatutId) {
+      await titreUpdate(titre.id, { titreStatutId })
 
       console.info(
         'titre : statut (mise à jour) ->',
-        `${titre.id} : ${statutId}`
+        `${titre.id} : ${titreStatutId}`
       )
 
       titresUpdated.push(titre.id)

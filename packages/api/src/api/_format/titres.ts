@@ -13,7 +13,7 @@ import {
   geojsonFeatureCollectionPoints
 } from '../../tools/geojson'
 
-import { dupRemove } from '../../tools/index'
+import { dupRemove } from '../../tools'
 
 import { administrationFormat } from './administrations'
 import { entrepriseFormat } from './entreprises'
@@ -106,7 +106,7 @@ const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
   if (t.confidentiel) {
     // Si le titre est confidentiel, on a le droit de voir que son périmètre sur la carte
     t = {
-      statut: t.statut,
+      titreStatutId: t.titreStatutId,
       type: t.type,
       domaine: t.domaine,
       points: t.points

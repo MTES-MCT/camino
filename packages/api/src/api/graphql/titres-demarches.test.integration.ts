@@ -122,7 +122,7 @@ describe('demarcheCreer', () => {
         nom: 'mon titre échu',
         domaineId: 'm',
         typeId: 'arm',
-        statutId: 'ech',
+        titreStatutId: 'ech',
         administrationsGestionnaires: [
           {
             ...Administrations[

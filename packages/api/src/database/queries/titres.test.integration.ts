@@ -19,7 +19,7 @@ describe('teste les requêtes sur les titres', () => {
     test('vérifie que le titre, ses démarches et ses étapes s’archivent correctement', async () => {
       const titre = await Titres.query().insert({
         nom: idGenerate(),
-        statutId: 'val',
+        titreStatutId: 'val',
         domaineId: 'm',
         typeId: 'arm'
       })

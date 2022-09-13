@@ -22,10 +22,7 @@ const titres: CommonTitrePTMG[] = [
     id: 'firstId',
     slug: 'first-id-slug',
     nom: 'first-name',
-    statut: {
-      nom: 'demande initiale',
-      couleur: 'warning'
-    },
+    titreStatutId: 'dmi',
     references: [],
     titulaires: [
       {
@@ -38,10 +35,7 @@ const titres: CommonTitrePTMG[] = [
     id: 'secondId',
     slug: 'second-slug',
     nom: 'Second Nom de titre',
-    statut: {
-      nom: 'demande initiale',
-      couleur: 'warning'
-    },
+    titreStatutId: 'dmi',
     references: [
       {
         nom: '2010-001',
@@ -60,10 +54,7 @@ const titres: CommonTitrePTMG[] = [
     id: 'thirdId',
     slug: 'third-id-slug',
     nom: 'third-name',
-    statut: {
-      nom: 'demande initiale',
-      couleur: 'warning'
-    },
+    titreStatutId: 'dmi',
     references: [],
     titulaires: [
       {
@@ -76,10 +67,7 @@ const titres: CommonTitrePTMG[] = [
     id: 'fourthId',
     slug: 'fourth-slug',
     nom: 'Quatrième Nom de titre',
-    statut: {
-      nom: 'demande initiale',
-      couleur: 'warning'
-    },
+    titreStatutId: 'dmi',
     references: [
       {
         nom: '2010-001',
