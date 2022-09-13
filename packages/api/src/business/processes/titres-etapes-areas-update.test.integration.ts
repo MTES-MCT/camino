@@ -16,6 +16,7 @@ import {
 import TitresForets from '../../database/models/titres-forets'
 import { SDOMZoneId } from '../../types'
 import TitresSDOMZones from '../../database/models/titres--sdom-zones'
+import { newDemarcheId } from '../../database/models/_format/id-create'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -90,7 +91,9 @@ describe('titresEtapesAreasUpdate', () => {
       typeId: 'arm'
     })
 
-    const titreDemarcheId = 'titreDemarcheIdUniquePourMiseAJourAreas'
+    const titreDemarcheId = newDemarcheId(
+      'titreDemarcheIdUniquePourMiseAJourAreas'
+    )
     await TitresDemarches.query().insert([
       {
         id: titreDemarcheId,

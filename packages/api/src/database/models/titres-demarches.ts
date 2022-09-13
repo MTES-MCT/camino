@@ -1,7 +1,7 @@
 import { Model, Modifiers, Pojo, QueryContext } from 'objection'
 
 import { ITitreDemarche } from '../../types'
-import { idGenerate } from './_format/id-create'
+import { newDemarcheId } from './_format/id-create'
 import DemarchesTypes from './demarches-types'
 import TitresTypes from './titres-types'
 import Titres from './titres'
@@ -120,7 +120,7 @@ class TitresDemarches extends Model {
 
   async $beforeInsert(context: QueryContext) {
     if (!this.id) {
-      this.id = idGenerate()
+      this.id = newDemarcheId()
     }
 
     if (!this.slug && this.titreId && this.typeId) {

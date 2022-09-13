@@ -1,6 +1,7 @@
 import { emailsForAdministrationsGet } from './_titre-etape-email'
 import { IEtapeType, ITitreEtape, IUtilisateur } from '../../../types'
 import { userSuper } from '../../../database/user-super'
+import { newDemarcheId } from '../../../database/models/_format/id-create'
 
 test('envoie un email sur une étape non existante', () => {
   const actual = emailsForAdministrationsGet(
@@ -17,7 +18,7 @@ test('envoie un email sur une étape non existante', () => {
 })
 const etape: ITitreEtape = {
   id: 'bCbIOAqNyVH0vl1Jn1AG8Bt1',
-  titreDemarcheId: '6zaBy4eRzTHVFFLhHCB433x2',
+  titreDemarcheId: newDemarcheId('6zaBy4eRzTHVFFLhHCB433x2'),
   typeId: 'mdp',
   statutId: 'fai',
   ordre: null,

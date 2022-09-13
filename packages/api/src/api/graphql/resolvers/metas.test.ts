@@ -1,13 +1,14 @@
 import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape } from './metas'
 import TitresDemarches from '../../../database/models/titres-demarches'
 import { IEtapeType } from '../../../types'
+import { newDemarcheId } from '../../../database/models/_format/id-create'
 
 describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   const demarche: Pick<TitresDemarches, 'etapes'> = {
     etapes: [
       {
         id: 'etapeId16',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'sco',
         statutId: 'fai',
         ordre: 16,
@@ -17,7 +18,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId1',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'mfr',
         statutId: 'fai',
         ordre: 1,
@@ -27,7 +28,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId5',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'mcp',
         statutId: 'com',
         ordre: 5,
@@ -36,7 +37,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId10',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'aof',
         statutId: 'fav',
         ordre: 10,
@@ -45,7 +46,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId9',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'eof',
         statutId: 'fai',
         ordre: 9,
@@ -54,7 +55,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId14',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'pfc',
         statutId: 'fai',
         ordre: 14,
@@ -63,7 +64,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId8',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'mcr',
         statutId: 'fav',
         ordre: 8,
@@ -72,7 +73,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId4',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'pfd',
         statutId: 'fai',
         ordre: 4,
@@ -81,7 +82,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId15',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'vfc',
         statutId: 'fai',
         ordre: 15,
@@ -90,7 +91,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId13',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'mnb',
         statutId: 'fai',
         ordre: 13,
@@ -99,7 +100,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId12',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'aca',
         statutId: 'fav',
         ordre: 12,
@@ -108,7 +109,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId6',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'rde',
         statutId: 'fav',
         ordre: 6,
@@ -118,7 +119,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId2',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'mdp',
         statutId: 'fai',
         ordre: 2,
@@ -127,7 +128,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId7',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'vfd',
         statutId: 'fai',
         ordre: 7,
@@ -136,7 +137,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId11',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'sca',
         statutId: 'fai',
         ordre: 11,
@@ -145,7 +146,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId3',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'dae',
         statutId: 'exe',
         ordre: 3,
@@ -154,7 +155,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       },
       {
         id: 'etapeId17',
-        titreDemarcheId: 'demarcheId',
+        titreDemarcheId: newDemarcheId('demarcheId'),
         typeId: 'aco',
         statutId: 'fai',
         ordre: 17,
@@ -1314,7 +1315,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       etapes: [
         {
           id: 'idMfr',
-          titreDemarcheId: '',
+          titreDemarcheId: newDemarcheId(''),
           typeId: 'mfr',
           statutId: 'fai',
           date: '2022-05-16',
@@ -1322,7 +1323,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         },
         {
           id: 'idMdp',
-          titreDemarcheId: '',
+          titreDemarcheId: newDemarcheId(''),
           typeId: 'mdp',
           statutId: 'fai',
           date: '2022-05-17'
@@ -1343,7 +1344,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       etapes: [
         {
           id: 'idMfr',
-          titreDemarcheId: '',
+          titreDemarcheId: newDemarcheId(''),
           typeId: 'mfr',
           statutId: 'fai',
           date: '2022-05-16',
@@ -1351,7 +1352,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         },
         {
           id: 'idMdp',
-          titreDemarcheId: '',
+          titreDemarcheId: newDemarcheId(''),
           typeId: 'mdp',
           statutId: 'fai',
           date: '2022-05-17'
@@ -1371,7 +1372,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       etapes: [
         {
           id: 'id3',
-          titreDemarcheId: '',
+          titreDemarcheId: newDemarcheId(''),
           typeId: 'mfr',
           statutId: 'fai',
           date: '2022-06-23',
@@ -1385,7 +1386,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         },
         {
           id: 'id1',
-          titreDemarcheId: '',
+          titreDemarcheId: newDemarcheId(''),
           typeId: 'dae',
           statutId: 'exe',
           date: '2021-06-22',
@@ -1393,7 +1394,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         },
         {
           id: 'id4',
-          titreDemarcheId: '',
+          titreDemarcheId: newDemarcheId(''),
           typeId: 'mdp',
           statutId: 'fai',
           date: '2022-07-01',
@@ -1401,7 +1402,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         },
         {
           id: 'id2',
-          titreDemarcheId: '',
+          titreDemarcheId: newDemarcheId(''),
           typeId: 'pfd',
           statutId: 'fai',
           date: '2021-07-05',

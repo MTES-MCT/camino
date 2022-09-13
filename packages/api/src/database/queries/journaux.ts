@@ -86,7 +86,7 @@ export const patchJournalCreate = async <T extends Model>(
   model: typeof Model,
   userId: string,
   titreId: string
-) => {
+): Promise<T> => {
   const oldValue = await model.query().findById(id)
 
   const oldPartialValue = (
@@ -114,7 +114,7 @@ export const patchJournalCreate = async <T extends Model>(
     })
   }
 
-  return result
+  return result as T
 }
 
 export const upsertJournalCreate = async <T extends Model>(

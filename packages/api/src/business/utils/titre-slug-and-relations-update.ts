@@ -1,6 +1,7 @@
 import slugify from '@sindresorhus/slugify'
 
 import {
+  DemarcheId,
   ITitre,
   ITitreActivite,
   ITitreDemarche,
@@ -86,25 +87,25 @@ const titreActiviteSlugFind = (titreActivite: ITitreActivite, titre: ITitre) =>
     titreActivite.annee
   }-${titreActivite.periodeId.toString().padStart(2, '0')}`
 
-interface ITitreRelation {
+interface ITitreRelation<T extends string | DemarcheId = string> {
   name: string
   slugFind: (...args: any[]) => string
   update:
     | ((
-        id: string,
+        id: T,
         element: { slug: string },
         user: IUtilisateur
-      ) => Promise<any>)
+      ) => Promise<{ id: T }>)
     | ((
-        id: string,
+        id: T,
         element: { slug: string },
         user: IUtilisateur,
         titreId: string
-      ) => Promise<any>)
+      ) => Promise<{ id: T }>)
   relations?: ITitreRelation[]
 }
 
-const titreRelations: ITitreRelation[] = [
+const titreRelations: (ITitreRelation<DemarcheId> | ITitreRelation)[] = [
   {
     name: 'demarches',
     slugFind: titreDemarcheSlugFind,
@@ -140,7 +141,7 @@ const titreRelations: ITitreRelation[] = [
 
 const relationsSlugsUpdate = async (
   parent: any,
-  relations: ITitreRelation[],
+  relations: (ITitreRelation<DemarcheId> | ITitreRelation)[],
   titreId: string
 ): Promise<boolean> => {
   let hasChanged = false

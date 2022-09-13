@@ -10,6 +10,7 @@ import {
   titreDemarchesOctAnnulation,
   titreDemarchesOctAnnulationSansPoints
 } from './__mocks__/titre-phases-find-demarches'
+import { newDemarcheId } from '../../database/models/_format/id-create'
 
 describe("phases d'une démarche", () => {
   const aujourdhui = '2020-12-01'
@@ -21,7 +22,7 @@ describe("phases d'une démarche", () => {
         dateDebut: '2200-01-01',
         dateFin: '2202-01-01',
         statutId: 'val',
-        titreDemarcheId: 'h-cx-courdemanges-1988-oct01'
+        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01')
       }
     ])
   })
@@ -40,7 +41,7 @@ describe("phases d'une démarche", () => {
         dateDebut: '2200-01-01',
         dateFin: '2202-01-01',
         statutId: 'val',
-        titreDemarcheId: 'h-ax-courdemanges-1988-oct01'
+        titreDemarcheId: newDemarcheId('h-ax-courdemanges-1988-oct01')
       }
     ])
   })
@@ -53,7 +54,7 @@ describe("phases d'une démarche", () => {
         dateDebut: '2200-01-01',
         dateFin: '2200-01-02',
         statutId: 'val',
-        titreDemarcheId: 'm-pr-courdemanges-1988-oct01'
+        titreDemarcheId: newDemarcheId('m-pr-courdemanges-1988-oct01')
       }
     ])
   })
@@ -66,7 +67,7 @@ describe("phases d'une démarche", () => {
         dateDebut: '2200-01-02',
         dateFin: '2202-01-02',
         statutId: 'val',
-        titreDemarcheId: 'h-cx-courdemanges-1988-oct01'
+        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01')
       }
     ])
   })
@@ -79,13 +80,13 @@ describe("phases d'une démarche", () => {
         dateDebut: '2200-01-01',
         dateFin: '2500-01-01',
         statutId: 'val',
-        titreDemarcheId: 'h-cx-courdemanges-1988-oct01'
+        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01')
       },
       {
         dateDebut: '2500-01-01',
         dateFin: '3000-01-01',
         statutId: 'val',
-        titreDemarcheId: 'h-cx-courdemanges-1988-pro01'
+        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-pro01')
       }
     ])
   })
@@ -98,7 +99,7 @@ describe("phases d'une démarche", () => {
         dateDebut: '2000-01-02',
         dateFin: '2019-01-02',
         statutId: 'ech',
-        titreDemarcheId: 'h-cx-courdemanges-1988-oct01'
+        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01')
       }
     ])
   })
@@ -111,7 +112,7 @@ describe("phases d'une démarche", () => {
         dateDebut: '2000-01-02',
         dateFin: '2020-01-02',
         statutId: 'ech',
-        titreDemarcheId: 'h-cx-courdemanges-1988-oct01'
+        titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01')
       }
     ])
   })
@@ -119,7 +120,7 @@ describe("phases d'une démarche", () => {
   test("modification d'une mutation suite à renonciation totale en décision implicite", () => {
     const demarches: ITitreDemarche[] = [
       {
-        id: 'demarcheId1',
+        id: newDemarcheId('demarcheId1'),
         titreId: 'titreId',
         typeId: 'oct',
         statutId: 'acc',
@@ -127,7 +128,7 @@ describe("phases d'une démarche", () => {
         etapes: [
           {
             id: 'demarcheId1etapeId2',
-            titreDemarcheId: 'demarcheId1',
+            titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 2,
@@ -135,7 +136,7 @@ describe("phases d'une démarche", () => {
           },
           {
             id: 'demarcheId1etapeId1',
-            titreDemarcheId: 'demarcheId1',
+            titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
@@ -144,7 +145,7 @@ describe("phases d'une démarche", () => {
         ]
       },
       {
-        id: 'demarcheId2',
+        id: newDemarcheId('demarcheId2'),
         titreId: 'titreId',
         typeId: 'mut',
         statutId: 'acc',
@@ -153,7 +154,7 @@ describe("phases d'une démarche", () => {
         etapes: [
           {
             id: 'demarcheId2EtapeId2',
-            titreDemarcheId: 'demarcheId2',
+            titreDemarcheId: newDemarcheId('demarcheId2'),
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 2,
@@ -163,7 +164,7 @@ describe("phases d'une démarche", () => {
           },
           {
             id: 'demarcheId2EtapeId1',
-            titreDemarcheId: 'demarcheId2',
+            titreDemarcheId: newDemarcheId('demarcheId2'),
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
@@ -173,7 +174,7 @@ describe("phases d'une démarche", () => {
         ]
       },
       {
-        id: 'demarcheId3',
+        id: newDemarcheId('demarcheId3'),
         titreId: 'titreId',
         typeId: 'ren',
         statutId: 'acc',
@@ -181,7 +182,7 @@ describe("phases d'une démarche", () => {
         etapes: [
           {
             id: 'demarcheId3etapeId1',
-            titreDemarcheId: 'demarcheId3',
+            titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'mfr',
             statutId: 'fai',
             ordre: 1,
@@ -189,7 +190,7 @@ describe("phases d'une démarche", () => {
           },
           {
             id: 'demarcheId3etapeId2',
-            titreDemarcheId: 'demarcheId3',
+            titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'mdp',
             statutId: 'fai',
             ordre: 2,
@@ -197,7 +198,7 @@ describe("phases d'une démarche", () => {
           },
           {
             id: 'demarcheId3etapeId5',
-            titreDemarcheId: 'demarcheId3',
+            titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'dex',
             statutId: 'acc',
             ordre: 5,
@@ -205,7 +206,7 @@ describe("phases d'une démarche", () => {
           },
           {
             id: 'demarcheId3etapeId6',
-            titreDemarcheId: 'demarcheId3',
+            titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 6,
@@ -213,7 +214,7 @@ describe("phases d'une démarche", () => {
           },
           {
             id: 'demarcheId3etapeId3',
-            titreDemarcheId: 'demarcheId3',
+            titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'apd',
             statutId: 'fav',
             ordre: 3,
@@ -221,7 +222,7 @@ describe("phases d'une démarche", () => {
           },
           {
             id: 'demarcheId3etapeId4',
-            titreDemarcheId: 'demarcheId3',
+            titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'app',
             statutId: 'fav',
             ordre: 4,
@@ -240,13 +241,13 @@ describe("phases d'une démarche", () => {
         dateDebut: '1970-09-17',
         dateFin: '2018-12-31',
         statutId: 'ech',
-        titreDemarcheId: 'demarcheId1'
+        titreDemarcheId: newDemarcheId('demarcheId1')
       },
       {
         dateDebut: '2018-12-31',
         dateFin: '2022-05-09',
         statutId: 'val',
-        titreDemarcheId: 'demarcheId2'
+        titreDemarcheId: newDemarcheId('demarcheId2')
       }
     ])
   })
@@ -254,7 +255,7 @@ describe("phases d'une démarche", () => {
   test("modification d'une mutation suite à renonciation totale", () => {
     const demarches: ITitreDemarche[] = [
       {
-        id: 'demarcheId1',
+        id: newDemarcheId('demarcheId1'),
         titreId: 'titreId',
         typeId: 'oct',
         statutId: 'acc',
@@ -262,7 +263,7 @@ describe("phases d'une démarche", () => {
         etapes: [
           {
             id: 'demarcheId1etapeId2',
-            titreDemarcheId: 'demarcheId1',
+            titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 2,
@@ -270,7 +271,7 @@ describe("phases d'une démarche", () => {
           },
           {
             id: 'demarcheId1etapeId1',
-            titreDemarcheId: 'demarcheId1',
+            titreDemarcheId: newDemarcheId('demarcheId1'),
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
@@ -279,7 +280,7 @@ describe("phases d'une démarche", () => {
         ]
       },
       {
-        id: 'demarcheId2',
+        id: newDemarcheId('demarcheId2'),
         titreId: 'titreId',
         typeId: 'mut',
         statutId: 'acc',
@@ -287,7 +288,7 @@ describe("phases d'une démarche", () => {
         etapes: [
           {
             id: 'demarcheId2EtapeId2',
-            titreDemarcheId: 'demarcheId2',
+            titreDemarcheId: newDemarcheId('demarcheId2'),
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 2,
@@ -297,7 +298,7 @@ describe("phases d'une démarche", () => {
           },
           {
             id: 'demarcheId2EtapeId1',
-            titreDemarcheId: 'demarcheId2',
+            titreDemarcheId: newDemarcheId('demarcheId2'),
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
@@ -307,7 +308,7 @@ describe("phases d'une démarche", () => {
         ]
       },
       {
-        id: 'demarcheId3',
+        id: newDemarcheId('demarcheId3'),
         titreId: 'titreId',
         typeId: 'ren',
         statutId: 'acc',
@@ -315,7 +316,7 @@ describe("phases d'une démarche", () => {
         etapes: [
           {
             id: 'demarcheId3etapeId1',
-            titreDemarcheId: 'demarcheId3',
+            titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'mfr',
             statutId: 'fai',
             ordre: 1,
@@ -323,7 +324,7 @@ describe("phases d'une démarche", () => {
           },
           {
             id: 'demarcheId3etapeId2',
-            titreDemarcheId: 'demarcheId3',
+            titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'mdp',
             statutId: 'fai',
             ordre: 2,
@@ -331,7 +332,7 @@ describe("phases d'une démarche", () => {
           },
           {
             id: 'demarcheId3etapeId3',
-            titreDemarcheId: 'demarcheId3',
+            titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'apd',
             statutId: 'fav',
             ordre: 3,
@@ -339,7 +340,7 @@ describe("phases d'une démarche", () => {
           },
           {
             id: 'demarcheId3etapeId5',
-            titreDemarcheId: 'demarcheId3',
+            titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'dim',
             statutId: 'acc',
             ordre: 5,
@@ -347,7 +348,7 @@ describe("phases d'une démarche", () => {
           },
           {
             id: 'demarcheId3etapeId4',
-            titreDemarcheId: 'demarcheId3',
+            titreDemarcheId: newDemarcheId('demarcheId3'),
             typeId: 'app',
             statutId: 'fav',
             ordre: 4,
@@ -366,13 +367,13 @@ describe("phases d'une démarche", () => {
         dateDebut: '1970-09-17',
         dateFin: '2018-12-31',
         statutId: 'ech',
-        titreDemarcheId: 'demarcheId1'
+        titreDemarcheId: newDemarcheId('demarcheId1')
       },
       {
         dateDebut: '2018-12-31',
         dateFin: '2022-05-09',
         statutId: 'val',
-        titreDemarcheId: 'demarcheId2'
+        titreDemarcheId: newDemarcheId('demarcheId2')
       }
     ])
   })
