@@ -1,4 +1,4 @@
-import { IDemarcheType, ITitreEtape } from '../../types'
+import { DemarcheId, IDemarcheType, ITitreEtape } from '../../types'
 import {
   demarcheDefinitionFind,
   IDemarcheDefinition,
@@ -10,7 +10,6 @@ import {
   orderMachine,
   toMachineEtapes
 } from '../rules-demarches/machine-helper'
-import { newDemarcheId } from '../../database/models/_format/id-create'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
 export const titreEtapesSortDescByOrdre = (titreEtapes: ITitreEtape[]) =>
@@ -23,6 +22,7 @@ export const titreEtapesSortAscByOrdre = (titreEtapes: ITitreEtape[]) =>
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
 export const titreEtapesSortAscByDate = (
   titreEtapes: ITitreEtape[],
+  demarcheId: DemarcheId,
   demarcheType?: IDemarcheType | null,
   titreTypeId?: string
 ): ITitreEtape[] => {
@@ -37,7 +37,7 @@ export const titreEtapesSortAscByDate = (
       titreTypeId,
       demarcheType.id,
       titreEtapes,
-      newDemarcheId()
+      demarcheId
     )
   }
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {

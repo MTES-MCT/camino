@@ -5,6 +5,7 @@ import {
   titreEtapesSortAscByOrdre,
   titreEtapesSortDescByOrdre
 } from './titre-etapes-sort'
+import { newDemarcheId } from '../../database/models/_format/id-create'
 
 const titreEtapesSortedDescResult = [
   { typeId: 'dpu', ordre: 2, date: '1988-03-11' },
@@ -50,15 +51,15 @@ describe('trie les étapes', () => {
   })
 
   test('des étapes organisées par date décroissante sont triées par date croissante', () => {
-    expect(titreEtapesSortAscByDate(titreEtapesSortedDesc)).toMatchObject(
-      titreEtapesSortedAsc
-    )
+    expect(
+      titreEtapesSortAscByDate(titreEtapesSortedDesc, newDemarcheId())
+    ).toMatchObject(titreEtapesSortedAsc)
   })
 
   test('des étapes organisées par date croissante restent triées par date croissante', () => {
-    expect(titreEtapesSortAscByDate(titreEtapesSortedAsc)).toMatchObject(
-      titreEtapesSortedAsc
-    )
+    expect(
+      titreEtapesSortAscByDate(titreEtapesSortedAsc, newDemarcheId())
+    ).toMatchObject(titreEtapesSortedAsc)
   })
 
   test('des étapes avec les mêmes dates organisées par ordre décroissant sont triées par ordre croissant', () => {
@@ -74,6 +75,7 @@ describe('trie les étapes', () => {
     expect(
       titreEtapesSortAscByDate(
         titreEtapesMemesDatesOrdreDesc,
+        newDemarcheId(),
         null,
         'titre-type-id'
       )
@@ -89,6 +91,7 @@ describe('trie les étapes', () => {
     expect(
       titreEtapesSortAscByDate(
         titreEtapesMemesDatesOrdreEtapesTypesDesc,
+        newDemarcheId(),
         {
           id: 'demarche-type-id',
           etapesTypes
@@ -117,7 +120,7 @@ describe('trie les étapes', () => {
     ] as ITitreEtape[]
 
     expect(
-      titreEtapesSortAscByDate(etapes, {
+      titreEtapesSortAscByDate(etapes, newDemarcheId(), {
         id: 'demarche-type-id',
         etapesTypes: [
           { id: 'dex', nom: 'dex', ordre: 100 },
@@ -134,9 +137,13 @@ describe('trie les étapes', () => {
     ] as ITitreEtape[]
 
     expect(
-      titreEtapesSortAscByDate(titreEtapesMemesDatesMemeOrdreDesc, {
-        etapesTypes
-      } as IDemarcheType)
+      titreEtapesSortAscByDate(
+        titreEtapesMemesDatesMemeOrdreDesc,
+        newDemarcheId(),
+        {
+          etapesTypes
+        } as IDemarcheType
+      )
     ).toMatchObject(titreEtapesMemesDatesMemeOrdreDesc.slice().reverse())
   })
 
@@ -149,6 +156,7 @@ describe('trie les étapes', () => {
 
     const result = titreEtapesSortAscByDate(
       etapes,
+      newDemarcheId(),
       { id: 'oct' } as IDemarcheType,
       'arm'
     )
@@ -165,7 +173,12 @@ describe('trie les étapes', () => {
     ] as ITitreEtape[]
 
     expect(() =>
-      titreEtapesSortAscByDate(etapes, { id: 'oct' } as IDemarcheType, 'arm')
+      titreEtapesSortAscByDate(
+        etapes,
+        newDemarcheId(),
+        { id: 'oct' } as IDemarcheType,
+        'arm'
+      )
     ).toThrowErrorMatchingInlineSnapshot(`"l'état bof est inconnu"`)
   })
 
@@ -177,6 +190,7 @@ describe('trie les étapes', () => {
 
     const result = titreEtapesSortAscByDate(
       etapes,
+      newDemarcheId(),
       {
         id: 'oct',
         etapesTypes: [

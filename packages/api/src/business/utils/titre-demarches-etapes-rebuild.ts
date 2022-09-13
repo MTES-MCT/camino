@@ -1,7 +1,6 @@
 import { ITitreDemarche, ITitreEtape } from '../../types'
 import { titreDemarchePhaseCheck } from '../rules/titre-demarche-phase-check'
 import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find'
-import { newDemarcheId } from '../../database/models/_format/id-create'
 
 /**
  * Filtre les étapes antérieures à une date
@@ -39,7 +38,7 @@ export const titreDemarchesEtapesRebuild = (
         titreDemarche.typeId,
         titreDemarche.etapes,
         titreTypeId,
-        newDemarcheId()
+        titreDemarche.id
       )
 
       if (

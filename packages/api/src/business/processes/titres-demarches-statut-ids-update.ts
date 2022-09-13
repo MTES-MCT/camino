@@ -3,7 +3,6 @@ import { titreDemarcheUpdate } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
-import { newDemarcheId } from '../../database/models/_format/id-create'
 
 // met à jour le statut des démarches d'un titre
 export const titresDemarchesStatutIdUpdate = async (titresIds?: string[]) => {
@@ -30,7 +29,7 @@ export const titresDemarchesStatutIdUpdate = async (titresIds?: string[]) => {
         titreDemarche.typeId,
         titreDemarcheEtapes,
         titre.typeId,
-        newDemarcheId()
+        titreDemarche.id
       )
 
       if (titreDemarche.statutId !== statutId) {

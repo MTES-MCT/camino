@@ -69,6 +69,7 @@ const titreDemarcheEtatValidate = (
 
   titreEtapes = titreEtapesSortAscByDate(
     titreEtapes,
+    titreDemarche.id,
     demarcheType,
     titre.typeId
   )
