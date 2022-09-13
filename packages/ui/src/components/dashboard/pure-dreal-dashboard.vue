@@ -9,6 +9,16 @@
       <div class="loader" />
     </div>
     <div v-if="status === 'LOADED'">
+      <template v-if="drealTitresBloques.length">
+        <div class="line-neutral width-full mb-l"></div>
+        <h3>Titres en attente de la DREAL</h3>
+        <TableAuto
+          class="mb-xxl"
+          :columns="columns.slice(0, 4)"
+          :rows="drealTitresBloques"
+          :initialSort="{ column: initialColumnId, order: 'asc' }"
+        />
+      </template>
       <div class="line-neutral width-full mb-l"></div>
       <h3>Titres en cours d’instruction</h3>
       <TableAuto
@@ -57,6 +67,7 @@ import { CommonTitreDREAL } from 'camino-common/src/titres'
 
 const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
 const drealTitres = ref<TableAutoRow[]>([])
+const drealTitresBloques = ref<TableAutoRow[]>([])
 const props = defineProps<{
   getDrealTitres: () => Promise<CommonTitreDREAL[]>
 }>()
@@ -100,7 +111,12 @@ const titresLignesBuild = (
 onMounted(async () => {
   try {
     const titres = await props.getDrealTitres()
-    drealTitres.value.push(...titresLignesBuild(titres))
+    drealTitres.value.push(
+      ...titresLignesBuild(titres.filter(titre => !titre.enAttenteDeDREAL))
+    )
+    drealTitresBloques.value.push(
+      ...titresLignesBuild(titres.filter(titre => titre.enAttenteDeDREAL))
+    )
     status.value = 'LOADED'
   } catch (e) {
     console.log('error', e)

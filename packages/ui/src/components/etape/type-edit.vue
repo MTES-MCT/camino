@@ -103,9 +103,9 @@ export default {
   watch: {
     etapesStatuts: function () {
       if (this.etapesStatuts?.length === 1) {
-        this.etape.etapeStatutId = this.etapesStatuts[0].id
+        this.etape.statutId = this.etapesStatuts[0].id
       } else {
-        this.etape.etapeStatutId = null
+        this.etape.statutId = null
       }
     },
 

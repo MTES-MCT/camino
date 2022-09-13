@@ -7,7 +7,7 @@ import {
   StateMachine,
   TypegenDisabled
 } from 'xstate'
-import { EventObject, StateSchema } from 'xstate/lib/types'
+import { EventObject } from 'xstate/lib/types'
 import {
   CaminoCommonContext,
   Etape,
@@ -20,15 +20,13 @@ import {
   DemarcheStatutId
 } from 'camino-common/src/static/demarchesStatuts'
 
-// FIXME CaminoState always any?
 export abstract class CaminoMachine<
   CaminoContext extends CaminoCommonContext,
-  CaminoState extends StateSchema,
   CaminoEvent extends EventObject
 > {
   public readonly machine: StateMachine<
     CaminoContext,
-    CaminoState,
+    any,
     CaminoEvent,
     { value: any; context: CaminoContext },
     BaseActionObject,
@@ -44,7 +42,7 @@ export abstract class CaminoMachine<
   protected constructor(
     machine: StateMachine<
       CaminoContext,
-      CaminoState,
+      any,
       CaminoEvent,
       { value: any; context: CaminoContext },
       BaseActionObject,

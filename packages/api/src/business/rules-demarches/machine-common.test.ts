@@ -1,3 +1,4 @@
+import { newDemarcheId } from '../../database/models/_format/id-create'
 import { ITitreEtape } from '../../types'
 import { toMachineEtapes } from './machine-common'
 
@@ -10,7 +11,7 @@ describe('toMachineEtapes', () => {
           typeId: 'mfr',
           statutId: 'fai',
           date: '2022-01-01',
-          titreDemarcheId: 'idDemarche'
+          titreDemarcheId: newDemarcheId('idDemarche')
         }
       ])
     ).toEqual([
@@ -28,7 +29,7 @@ describe('toMachineEtapes', () => {
           typeId: 'mfr',
           statutId: 'fai',
           date: '2022-01-01',
-          titreDemarcheId: 'idDemarche',
+          titreDemarcheId: newDemarcheId('idDemarche'),
           contenu: { arm: { mecanise: true } }
         }
       ])

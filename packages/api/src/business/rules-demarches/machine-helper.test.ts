@@ -1,6 +1,5 @@
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { ArmOctMachine } from './arm/oct.machine'
-import { newDemarcheId } from '../../database/models/_format/id-create'
 
 const machine = new ArmOctMachine()
 describe('isEtapesOk', () => {

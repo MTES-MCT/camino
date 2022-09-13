@@ -52,7 +52,7 @@ const titreDemarcheEtapesBuild = (
 }
 
 // vérifie que  la démarche est valide par rapport aux définitions des types d'étape
-const titreDemarcheEtatValidate = (
+export const titreDemarcheEtatValidate = (
   demarcheDefinitionRestrictions: IDemarcheDefinitionRestrictions,
   demarcheType: IDemarcheType,
   titreDemarche: ITitreDemarche,
@@ -107,7 +107,7 @@ const titreDemarcheEtatValidate = (
 
 // vérifie que la modification de la démarche
 // est valide par rapport aux définitions des types d'étape
-const titreDemarcheUpdatedEtatValidate = (
+export const titreDemarcheUpdatedEtatValidate = (
   demarcheType: IDemarcheType,
   titre: ITitre,
   titreEtape: ITitreEtape,
@@ -168,12 +168,17 @@ const titreDemarcheUpdatedEtatValidate = (
 
   // vérifie que toutes les étapes existent dans l’arbre
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {
-    const ok = demarcheDefinition.machine.isEtapesOk(
-      demarcheDefinition.machine.orderMachine(
-        toMachineEtapes(titreDemarcheEtapesNew)
+    try {
+      const ok = demarcheDefinition.machine.isEtapesOk(
+        demarcheDefinition.machine.orderMachine(
+          toMachineEtapes(titreDemarcheEtapesNew)
+        )
       )
-    )
-    if (!ok) {
+      if (!ok) {
+        titreDemarchesErrors.push('la démarche n’est pas valide')
+      }
+    } catch (e) {
+      console.warn('une erreur est survenue', e)
       titreDemarchesErrors.push('la démarche n’est pas valide')
     }
   } else {
@@ -200,5 +205,3 @@ const titreDemarcheUpdatedEtatValidate = (
 
   return titreDemarchesErrors
 }
-
-export { titreDemarcheUpdatedEtatValidate, titreDemarcheEtatValidate }

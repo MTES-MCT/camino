@@ -20,6 +20,7 @@ export interface CommonTitreDREAL extends CommonTitre {
   typeId: TitreTypeTypeId
   activitesAbsentes: number
   activitesEnConstruction: number
+  enAttenteDeDREAL: boolean
 }
 
 export interface CommonTitreONF extends CommonTitre {

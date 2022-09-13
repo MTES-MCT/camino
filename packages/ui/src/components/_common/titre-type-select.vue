@@ -80,7 +80,7 @@ export default {
 
     titresTypesUpdate() {
       if (this.titresTypes?.length === 1) {
-        this.element.etapeTypeId = this.titresTypes[0].id
+        this.element.typeId = this.titresTypes[0].id
       }
     }
   }

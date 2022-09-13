@@ -2,6 +2,7 @@ import { IDemarcheType, ITitre, ITitreEtape, ITitreType } from '../../types'
 
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate'
 import { newDemarcheId } from '../../database/models/_format/id-create'
+import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 describe('teste titreDemarcheUpdatedEtatValidate', () => {
   test('ajoute une étape à une démarche vide', () => {
@@ -274,7 +275,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
     ).toContain('il y a déjà une demande en construction')
   })
 
-  test('ne peut pas ajouter étape de type inconnu', () => {
+  test('ne peut pas ajouter étape de type inconnu sur une machine', () => {
     expect(
       titreDemarcheUpdatedEtatValidate(
         { id: 'oct' } as IDemarcheType,
@@ -286,14 +287,36 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           } as unknown as ITitreType,
           demarches: [{ typeId: 'oct' }]
         } as ITitre,
-        { typeId: 'aaa', date: '2022-01-01' } as unknown as ITitreEtape,
+        {
+          typeId: 'aaa',
+          date: '2022-01-01',
+          statutId: 'fai'
+        } as unknown as ITitreEtape,
         newDemarcheId(),
 
         [
-          { id: '1', typeId: 'mfr', statutId: 'aco', date: '2021-01-01' },
-          { id: '2', typeId: 'dae', date: '2021-01-02' }
+          {
+            id: '1',
+            typeId:
+              EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
+            statutId:
+              EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
+            date: '2021-01-01'
+          },
+          {
+            id: '2',
+            typeId:
+              EtapesTypesEtapesStatuts
+                .decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_
+                .REQUIS.etapeTypeId,
+            statutId:
+              EtapesTypesEtapesStatuts
+                .decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_
+                .REQUIS.etapeStatutId,
+            date: '2021-01-02'
+          }
         ] as ITitreEtape[]
       )
-    ).toContain('l’étape aaa n’existe pas dans l’arbre')
+    ).toContain('la démarche n’est pas valide')
   })
 })

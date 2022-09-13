@@ -7,6 +7,7 @@ import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot
 import { CaminoMachines } from './machines'
 import { ArmOctMachine } from './arm/oct.machine'
 import { AxmOctMachine } from './axm/oct.machine'
+import { newDemarcheId } from '../../database/models/_format/id-create'
 
 export interface IEtapeTypeIdCondition {
   etapeTypeId?: string
@@ -108,7 +109,11 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
     demarcheTypeIds: ['oct'],
     machine: new AxmOctMachine(),
     // https://camino.beta.gouv.fr/titres/m-ax-crique-tumuc-humac-2020
-    dateDebut: '2020-09-30'
+    dateDebut: '2020-09-30',
+    demarcheIdExceptions: [
+      newDemarcheId('C3rs92l1eci3mLvsAGkv7gVV'),
+      newDemarcheId('YEWeODXiFb7xKJB2OQlTyc14')
+    ]
   }
 ]
 

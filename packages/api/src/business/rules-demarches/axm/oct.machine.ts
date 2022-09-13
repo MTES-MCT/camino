@@ -6,9 +6,7 @@ import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 
 // FIXME
-// - gérer le titre problématique (@laure @dgtm)
 // ? revoir la 1ère machine
-// ? faire le tableau de bord
 // ? refacto de la machine
 // ? vérifier la visibilité classement sans suite (@laure)
 // ? brancher le calcul de la visibilité
@@ -173,7 +171,6 @@ const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
 // basé sur https://cacoo.com/diagrams/iUPEVBYNBjsiirfE/249D0
 export class AxmOctMachine extends CaminoMachine<
   AxmContext,
-  any,
   AXMOctXStateEvent
 > {
   constructor() {
@@ -253,10 +250,6 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
       cond: context => context.demandeFaite
     },
     FAIRE_DESISTEMENT_DEMANDEUR: {
-      actions: assign<AxmContext, { type: 'FAIRE_DESISTEMENT_DEMANDEUR' }>({
-        demarcheStatut: DemarchesStatutsIds.Desiste,
-        visibilite: 'publique'
-      }),
       cond: context =>
         context.demandeFaite &&
         [
@@ -274,15 +267,6 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
           DemarchesStatutsIds.Depose,
           DemarchesStatutsIds.EnInstruction
         ].includes(context.demarcheStatut),
-      actions: assign<
-        AxmContext,
-        {
-          type: 'FAIRE_CLASSEMENT_SANS_SUITE'
-        }
-      >({
-        demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
-        visibilite: 'publique'
-      }),
       target: 'classementSansSuiteRendu'
     }
   },
@@ -295,16 +279,12 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
           states: {
             demandeAFaire: {
               on: {
-                FAIRE_DEMANDE: {
-                  target: 'demandeFaite',
-                  actions: assign<AxmContext, { type: 'FAIRE_DEMANDE' }>({
-                    demandeFaite: true
-                  })
-                }
+                FAIRE_DEMANDE: 'demandeFaite'
               }
             },
             demandeFaite: {
-              type: 'final'
+              type: 'final',
+              entry: assign<AxmContext>({ demandeFaite: true })
             }
           }
         },
@@ -509,19 +489,16 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
                   states: {
                     confirmationAccordProprietaireDuSolAFaire: {
                       on: {
-                        FAIRE_CONFIRMATION_PROPRIETAIRE_DU_SOL: {
-                          target: 'confirmationAccordProprietaireDuSolFait',
-                          actions: assign<
-                            AxmContext,
-                            { type: 'FAIRE_CONFIRMATION_PROPRIETAIRE_DU_SOL' }
-                          >({
-                            decisionDuProprietaireDuSolFavorableSansReserve:
-                              true
-                          })
-                        }
+                        FAIRE_CONFIRMATION_PROPRIETAIRE_DU_SOL:
+                          'confirmationAccordProprietaireDuSolFait'
                       }
                     },
-                    confirmationAccordProprietaireDuSolFait: { type: 'final' }
+                    confirmationAccordProprietaireDuSolFait: {
+                      type: 'final',
+                      entry: assign<AxmContext>({
+                        decisionDuProprietaireDuSolFavorableSansReserve: true
+                      })
+                    }
                   }
                 },
                 avisDgtmMNBSTMachine: {
@@ -746,15 +723,7 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
         RENDRE_DECISION_ABROGATION: 'decisionAbrogationFaite',
         RENDRE_DECISION_RETRAIT: 'decisionRetraitFaite',
         RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF: {
-          target: 'decisionAnnulationParJugeAdministratifRendu',
-          actions: assign<
-            AxmContext,
-            {
-              type: 'RENDRE_DECISION_ANNULATION_PAR_JUGE_ADMINISTRATIF'
-            }
-          >({
-            demarcheStatut: DemarchesStatutsIds.Rejete
-          })
+          target: 'decisionAnnulationParJugeAdministratifRendu'
         },
         NOTIFIER_DEMANDEUR: { target: 'publicationsEtNotificationsMachine' },
         PUBLIER_DECISIONS_RECUEIL_ACTES_ADMINISTRATIFS:
@@ -859,24 +828,28 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
       id: 'classementSansSuiteAFaire',
       tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
       on: {
-        FAIRE_CLASSEMENT_SANS_SUITE: {
-          target: 'classementSansSuiteRendu',
-          actions: assign<
-            AxmContext,
-            {
-              type: 'FAIRE_CLASSEMENT_SANS_SUITE'
-            }
-          >({
-            demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
-            visibilite: 'publique'
-          })
-        }
+        FAIRE_CLASSEMENT_SANS_SUITE: 'classementSansSuiteRendu'
       }
     },
     decisionAbrogationFaite: { type: 'final' },
     decisionRetraitFaite: { type: 'final' },
-    decisionAnnulationParJugeAdministratifRendu: { type: 'final' },
-    desistementDuDemandeurRendu: { type: 'final' },
-    classementSansSuiteRendu: { type: 'final' }
+    decisionAnnulationParJugeAdministratifRendu: {
+      type: 'final',
+      entry: assign<AxmContext>({ demarcheStatut: DemarchesStatutsIds.Rejete })
+    },
+    desistementDuDemandeurRendu: {
+      type: 'final',
+      entry: assign<AxmContext>({
+        demarcheStatut: DemarchesStatutsIds.Desiste,
+        visibilite: 'publique'
+      })
+    },
+    classementSansSuiteRendu: {
+      type: 'final',
+      entry: assign<AxmContext>({
+        demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
+        visibilite: 'publique'
+      })
+    }
   }
 })

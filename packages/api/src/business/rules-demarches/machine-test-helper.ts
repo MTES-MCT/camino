@@ -5,7 +5,7 @@ import { CaminoMachine } from './machine-helper'
 
 interface CustomMatchers<R = unknown> {
   canOnlyTransitionTo<T extends EventObject>(
-    machine: CaminoMachine<any, any, T>,
+    machine: CaminoMachine<any, T>,
     _events: EventObject['type'][]
   ): R
 }
@@ -23,7 +23,7 @@ declare global {
 expect.extend({
   canOnlyTransitionTo<T extends EventObject>(
     service: any,
-    machine: CaminoMachine<any, any, T>,
+    machine: CaminoMachine<any, T>,
     events: T['type'][]
   ) {
     events.sort()
@@ -57,7 +57,7 @@ expect.extend({
 })
 
 export const interpretMachine = <T extends EventObject>(
-  machine: CaminoMachine<any, any, T>,
+  machine: CaminoMachine<any, T>,
   etapes: readonly Etape[]
 ) => {
   const service = interpret(machine.machine)
@@ -94,7 +94,7 @@ export const interpretMachine = <T extends EventObject>(
 }
 
 export const orderAndInterpretMachine = <T extends EventObject>(
-  machine: CaminoMachine<any, any, T>,
+  machine: CaminoMachine<any, T>,
   etapes: readonly Etape[]
 ) => {
   return interpretMachine(machine, machine.orderMachine(etapes))

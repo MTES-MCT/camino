@@ -46,6 +46,7 @@ const writeEtapesForTest = async () => {
         if (
           // décision du propriétaire du sol avant le dépôt de la demande
           [
+            'EI4lAxLbhdFOoHb6LWL0y9pO',
             'e8ZYqaA9HB3bXuOeRlXz5g76',
             // visibilité publique
             'z0DZo6TKEvP28D6oQyAuTvwA',

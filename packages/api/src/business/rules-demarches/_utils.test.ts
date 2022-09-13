@@ -24,7 +24,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 
 test('teste EtatsValidate', () => {
-  const octEtatsValidate = demarcheEtatsValidate('oct', 'axm', '2021-01-01')
+  const octEtatsValidate = demarcheEtatsValidate('ren', 'arm', '2021-01-01')
 
   expect(octEtatsValidate).toBeTruthy()
   expect(octEtatsValidate([], {})).toHaveLength(0)
@@ -60,7 +60,7 @@ const elementsGet = <T>(fileName: string): T[] => {
   )
 }
 
-const etapesTypesGet = (demarcheTypeId: string, titreTypeId: string) => {
+export const etapesTypesGet = (demarcheTypeId: string, titreTypeId: string) => {
   const titresTypesDemarchesTypesEtapesTypes =
     elementsGet<ITitreTypeDemarcheTypeEtapeType>(
       'titres-types--demarches-types--etapes-types.json'
@@ -87,7 +87,7 @@ const etapesTypesGet = (demarcheTypeId: string, titreTypeId: string) => {
   )
 }
 
-const demarcheEtatsValidate = (
+export const demarcheEtatsValidate = (
   demarcheTypeId: string,
   titreTypeId: TitreTypeId,
   date: string
@@ -135,5 +135,3 @@ const demarcheEtatsValidate = (
     )
   }
 }
-
-export { demarcheEtatsValidate, etapesTypesGet }
