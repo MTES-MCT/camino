@@ -408,13 +408,11 @@ export default {
           await this.$store.dispatch('utilisateur/update', utilisateur)
         }
 
-        await (
-          await fetch(`/apiUrl/utilisateurs/${utilisateurId}/newsletter`, {
-            headers: { 'Content-Type': 'application/json' },
-            method: 'POST',
-            body: JSON.stringify(this.subscription)
-          })
-        ).json()
+        await fetch(`/apiUrl/utilisateurs/${utilisateurId}/newsletter`, {
+          headers: { 'Content-Type': 'application/json' },
+          method: 'POST',
+          body: JSON.stringify(this.subscription)
+        })
 
         await router.push({
           name: 'utilisateur',
