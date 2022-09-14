@@ -10,6 +10,7 @@ import {
 import { EventObject } from 'xstate/lib/types'
 import {
   CaminoCommonContext,
+  DBEtat,
   Etape,
   Intervenant,
   intervenants,
@@ -39,6 +40,9 @@ export abstract class CaminoMachine<
     >
   >
 
+  private readonly trad: { [key in CaminoEvent['type']]: DBEtat }
+  private readonly events: Array<CaminoEvent['type']>
+
   protected constructor(
     machine: StateMachine<
       CaminoContext,
@@ -53,18 +57,65 @@ export abstract class CaminoMachine<
         BaseActionObject,
         ServiceMap
       >
-    >
+    >,
+    trad: { [key in CaminoEvent['type']]: DBEtat }
   ) {
     this.machine = machine
+    this.trad = trad
+    this.events = Object.keys(trad) as Array<CaminoEvent['type']>
   }
 
-  abstract eventFrom(etape: Etape): CaminoEvent
-  abstract isEvent(event: string): event is CaminoEvent['type']
-  abstract toPotentialCaminoXStateEvent(
-    event: CaminoEvent['type']
-  ): CaminoEvent[]
+  protected caminoXStateEventToEtapes(
+    event: CaminoEvent
+  ): Omit<Etape, 'date'>[] {
+    const dbEtat: DBEtat = this.trad[event.type as CaminoEvent['type']]
 
-  abstract caminoXStateEventToEtapes(event: CaminoEvent): Omit<Etape, 'date'>[]
+    return Object.values(dbEtat).map(({ etapeTypeId, etapeStatutId }) => ({
+      etapeTypeId,
+      etapeStatutId
+    }))
+  }
+
+  // visibleForTesting
+  public eventFrom(etape: Etape): CaminoEvent {
+    const entries = Object.entries(this.trad).filter(
+      (entry): entry is [CaminoEvent['type'], DBEtat] =>
+        this.events.includes(entry[0])
+    )
+
+    const entry = entries.find(([_key, dbEtat]) => {
+      return Object.values(dbEtat).some(
+        dbEtatSingle =>
+          dbEtatSingle.etapeTypeId === etape.etapeTypeId &&
+          dbEtatSingle.etapeStatutId === etape.etapeStatutId
+      )
+    })
+
+    if (entry) {
+      const eventFromEntry = entry[0]
+
+      // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      return { type: eventFromEntry }
+    }
+    throw new Error(`no event from ${JSON.stringify(etape)}`)
+  }
+
+  // visibleForTesting
+  public toPotentialCaminoXStateEvent(
+    event: CaminoEvent['type']
+  ): CaminoEvent[] {
+    // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return [{ type: event }]
+  }
+
+  // visibleForTesting
+  public isEvent(event: string): event is CaminoEvent['type'] {
+    return this.events.includes(event)
+  }
 
   public orderMachine(etapes: readonly Etape[]): readonly Etape[] {
     const sortedEtapes = etapes
@@ -241,7 +292,7 @@ export abstract class CaminoMachine<
     const state = this.assertGoTo(etapes)
 
     return state.nextEvents
-      .filter(this.isEvent)
+      .filter((event: string) => this.isEvent(event))
       .flatMap(event => {
         const events = this.toPotentialCaminoXStateEvent(event)
 

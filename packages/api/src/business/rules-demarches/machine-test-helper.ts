@@ -28,7 +28,7 @@ expect.extend({
   ) {
     events.sort()
     const passEvents: EventObject['type'][] = service.state.nextEvents
-      .filter(machine.isEvent)
+      .filter((event: string) => machine.isEvent(event))
       .filter((event: EventObject['type']) => {
         const events = machine.toPotentialCaminoXStateEvent(event)
 
@@ -79,7 +79,7 @@ export const interpretMachine = <T extends EventObject>(
         )}'. The event ${JSON.stringify(
           event
         )} should be one of '${service.state.nextEvents
-          .filter(machine.isEvent)
+          .filter(event => machine.isEvent(event))
           .filter((event: EventObject['type']) => {
             const events = machine.toPotentialCaminoXStateEvent(event)
 

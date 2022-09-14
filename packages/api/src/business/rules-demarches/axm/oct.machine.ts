@@ -1,13 +1,11 @@
 import { assign, createMachine } from 'xstate'
 import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat, Etape, tags } from '../machine-common'
+import { CaminoCommonContext, DBEtat, tags } from '../machine-common'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 
 // FIXME
-// ? revoir la 1ère machine
-// ? refacto de la machine
 // ? vérifier la visibilité classement sans suite (@laure)
 // ? brancher le calcul de la visibilité
 export type AXMOctXStateEvent =
@@ -166,7 +164,6 @@ const trad: { [key in AXMOctXStateEvent['type']]: DBEtat } = {
   FAIRE_DESISTEMENT_DEMANDEUR: ETES.desistementDuDemandeur,
   FAIRE_CLASSEMENT_SANS_SUITE: ETES.classementSansSuite
 }
-const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
 
 // basé sur https://cacoo.com/diagrams/iUPEVBYNBjsiirfE/249D0
 export class AxmOctMachine extends CaminoMachine<
@@ -174,54 +171,7 @@ export class AxmOctMachine extends CaminoMachine<
   AXMOctXStateEvent
 > {
   constructor() {
-    super(axmOctMachine)
-  }
-
-  caminoXStateEventToEtapes(event: AXMOctXStateEvent): Omit<Etape, 'date'>[] {
-    const dbEtat = trad[event.type]
-
-    return Object.values(dbEtat).map(({ etapeTypeId, etapeStatutId }) => ({
-      etapeTypeId,
-      etapeStatutId
-    }))
-  }
-
-  eventFrom(etape: Etape): AXMOctXStateEvent {
-    const entries = Object.entries(trad).filter(
-      (entry): entry is [AXMOctXStateEvent['type'], DBEtat] =>
-        EVENTS.includes(entry[0])
-    )
-
-    const entry = entries.find(([_key, dbEtat]) => {
-      return Object.values(dbEtat).some(
-        dbEtatSingle =>
-          dbEtatSingle.etapeTypeId === etape.etapeTypeId &&
-          dbEtatSingle.etapeStatutId === etape.etapeStatutId
-      )
-    })
-
-    if (entry) {
-      const eventFromEntry = entry[0]
-
-      // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      return { type: eventFromEntry }
-    }
-    throw new Error(`no event from ${JSON.stringify(etape)}`)
-  }
-
-  isEvent(event: string): event is AXMOctXStateEvent['type'] {
-    return EVENTS.includes(event)
-  }
-
-  toPotentialCaminoXStateEvent(
-    event: AXMOctXStateEvent['type']
-  ): AXMOctXStateEvent[] {
-    // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return [{ type: event }]
+    super(axmOctMachine, trad)
   }
 }
 interface AxmContext extends CaminoCommonContext {

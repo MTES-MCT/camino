@@ -208,7 +208,7 @@ export const EVENTS = Object.keys(trad) as Array<
 
 export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
   constructor() {
-    super(armOctMachine)
+    super(armOctMachine, trad)
   }
 
   caminoXStateEventToEtapes(event: XStateEvent): Omit<Etape, 'date'>[] {
@@ -284,10 +284,6 @@ export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
       }
     }
     throw new Error(`no event from ${JSON.stringify(etape)}`)
-  }
-
-  isEvent(event: string): event is XStateEvent['type'] {
-    return EVENTS.includes(event)
   }
 
   toPotentialCaminoXStateEvent(event: XStateEvent['type']): XStateEvent[] {
