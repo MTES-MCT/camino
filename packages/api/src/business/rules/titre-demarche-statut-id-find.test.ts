@@ -49,7 +49,7 @@ describe("statut d'une démarche", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([{ typeId: 'dex', statutId: 'acc' }]),
+        etapesBuild([{ typeId: 'dex', date: '2010-01-01', statutId: 'acc' }]),
         'axm',
         newDemarcheId()
       )

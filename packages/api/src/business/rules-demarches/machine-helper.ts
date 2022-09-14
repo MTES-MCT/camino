@@ -1,227 +1,254 @@
 import {
-  armOctMachine,
+  BaseActionObject,
+  interpret,
+  ResolveTypegenMeta,
+  ServiceMap,
+  State,
+  StateMachine,
+  TypegenDisabled
+} from 'xstate'
+import { EventObject } from 'xstate/lib/types'
+import {
+  CaminoCommonContext,
   Etape,
-  eventFrom,
-  isEvent,
-  OctARMContext,
-  tags,
-  toPotentialXStateEvent,
-  XStateEvent,
-  xStateEventToEtape
-} from './arm/oct.machine'
-import { interpret, State, StateFrom } from 'xstate'
-import { ITitreEtape } from '../../types'
-import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
-import { isStatut } from 'camino-common/src/static/etapesStatuts'
-import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
+  Intervenant,
+  intervenants,
+  tags
+} from './machine-common'
 import {
   DemarchesStatutsIds,
   DemarcheStatutId
 } from 'camino-common/src/static/demarchesStatuts'
 
-// TODO 2022-05-18: il faudrait que le orderMachine retourne la solution la plus longue possible quand il n'y a pas de solution, pour aider au debug
-// orderMachine devrait retourner un tuple {ok: bool, etapes: Etape[]} pour éviter de faire isEtapesOk(orderMachine( qui ne sert à rien car orderMachine sait si les étapes sont ok
-export const orderMachine = (etapes: readonly Etape[]): readonly Etape[] => {
-  const sortedEtapes = etapes
-    .slice()
-    .sort((a, b) => a.date.localeCompare(b.date))
+export abstract class CaminoMachine<
+  CaminoContext extends CaminoCommonContext,
+  CaminoEvent extends EventObject
+> {
+  public readonly machine: StateMachine<
+    CaminoContext,
+    any,
+    CaminoEvent,
+    { value: any; context: CaminoContext },
+    BaseActionObject,
+    ServiceMap,
+    ResolveTypegenMeta<
+      TypegenDisabled,
+      CaminoEvent,
+      BaseActionObject,
+      ServiceMap
+    >
+  >
 
-  const solution = findSolution(sortedEtapes)
-
-  if (solution === undefined) {
-    return sortedEtapes
+  protected constructor(
+    machine: StateMachine<
+      CaminoContext,
+      any,
+      CaminoEvent,
+      { value: any; context: CaminoContext },
+      BaseActionObject,
+      ServiceMap,
+      ResolveTypegenMeta<
+        TypegenDisabled,
+        CaminoEvent,
+        BaseActionObject,
+        ServiceMap
+      >
+    >
+  ) {
+    this.machine = machine
   }
 
-  return solution
-}
+  abstract eventFrom(etape: Etape): CaminoEvent
+  abstract isEvent(event: string): event is CaminoEvent['type']
+  abstract toPotentialCaminoXStateEvent(
+    event: CaminoEvent['type']
+  ): CaminoEvent[]
 
-const findSolution = (
-  etapes: readonly Etape[],
-  temp: Etape[] = []
-): readonly Etape[] | undefined => {
-  if (!etapes.length) {
-    return isEtapesOk(temp) ? temp : undefined
+  abstract caminoXStateEventToEtapes(event: CaminoEvent): Omit<Etape, 'date'>[]
+
+  public orderMachine(etapes: readonly Etape[]): readonly Etape[] {
+    const sortedEtapes = etapes
+      .slice()
+      .sort((a, b) => a.date.localeCompare(b.date))
+
+    const solution = this.findSolution(sortedEtapes)
+
+    if (solution === undefined) {
+      return sortedEtapes
+    }
+
+    return solution
   }
 
-  const etape = etapes[0]
-  // Une étape en conflit avec une autre peut être:
-  // - une étape à la même date
-  const etapesAvecConflitPotentiel = etapes.filter(
-    ({ date }) => date === etape.date
-  )
+  private findSolution(
+    etapes: readonly Etape[],
+    temp: Etape[] = []
+  ): readonly Etape[] | undefined {
+    if (!etapes.length) {
+      return this.isEtapesOk(temp) ? temp : undefined
+    }
 
-  if (etapesAvecConflitPotentiel.length) {
-    for (let i = 0; i < etapesAvecConflitPotentiel.length; i++) {
-      const e = etapesAvecConflitPotentiel[i]
-      const tmp = [...temp]
-      tmp.push(e)
-      const nextEtapes = etapes.filter(
-        ({ date, typeId, statutId }) =>
-          date !== e.date || typeId !== e.typeId || statutId !== e.statutId
-      )
-      if (isEtapesOk(tmp)) {
-        const solution = findSolution(nextEtapes, tmp)
-        if (solution) {
-          return solution
+    const etape = etapes[0]
+    // Une étape en conflit avec une autre peut être:
+    // - une étape à la même date
+    const etapesAvecConflitPotentiel = etapes.filter(
+      ({ date }) => date === etape.date
+    )
+
+    if (etapesAvecConflitPotentiel.length) {
+      for (let i = 0; i < etapesAvecConflitPotentiel.length; i++) {
+        const e = etapesAvecConflitPotentiel[i]
+        const tmp = [...temp]
+        tmp.push(e)
+        const nextEtapes = etapes.filter(
+          ({ date, etapeTypeId, etapeStatutId }) =>
+            date !== e.date ||
+            etapeTypeId !== e.etapeTypeId ||
+            etapeStatutId !== e.etapeStatutId
+        )
+        if (this.isEtapesOk(tmp)) {
+          const solution = this.findSolution(nextEtapes, tmp)
+          if (solution) {
+            return solution
+          }
+        }
+      }
+    } else {
+      temp.push(etape)
+      const nextEtapes = etapes.slice(1)
+      const solution = this.findSolution(nextEtapes, temp)
+      if (solution) {
+        return solution
+      }
+    }
+
+    return undefined
+  }
+
+  /**
+   * Cette function ne doit JAMAIS appeler orderMachine, car c'est orderMachine qui se sert de cette fonction.
+   * Cette function ne fait que vérifier si les étapes qu'on lui donne sont valides dans l'ordre
+   */
+  public isEtapesOk(
+    sortedEtapes: readonly Etape[],
+    initialState: State<CaminoContext, CaminoEvent> | null = null
+  ): boolean {
+    if (sortedEtapes.length) {
+      for (let i = 1; i < sortedEtapes.length; i++) {
+        if (sortedEtapes[i - 1].date > sortedEtapes[i].date) {
+          return false
         }
       }
     }
-  } else {
-    temp.push(etape)
-    const nextEtapes = etapes.slice(1)
-    const solution = findSolution(nextEtapes, temp)
-    if (solution) {
-      return solution
+    const result = this.goTo(sortedEtapes, initialState)
+
+    return result.valid
+  }
+
+  private goTo(
+    etapes: readonly Etape[],
+    initialState: State<CaminoContext, CaminoEvent> | null = null
+  ):
+    | { valid: false; etapeIndex: number }
+    | {
+        valid: true
+        state: State<
+          CaminoContext,
+          CaminoEvent,
+          any,
+          { value: any; context: CaminoContext },
+          ResolveTypegenMeta<
+            TypegenDisabled,
+            CaminoEvent,
+            BaseActionObject,
+            ServiceMap
+          >
+        >
+      } {
+    const service = interpret(this.machine)
+
+    if (initialState === null) {
+      service.start()
+    } else {
+      service.start(initialState)
     }
-  }
+    for (let i = 0; i < etapes.length; i++) {
+      const etapeAFaire = etapes[i]
+      const event = this.eventFrom(etapeAFaire)
+      if (!service.state.can(event)) {
+        service.stop()
 
-  return undefined
-}
-
-export const toMachineEtapes = (etapes: ITitreEtape[]): Etape[] => {
-  return titreEtapesSortAscByOrdre(etapes).map(dbEtape =>
-    toMachineEtape(dbEtape)
-  )
-}
-
-export const toMachineEtape = (dbEtape: ITitreEtape): Etape => {
-  let typeId
-  if (isEtapeTypeId(dbEtape.typeId)) {
-    typeId = dbEtape.typeId
-  } else {
-    throw new Error(`l'état ${dbEtape.typeId} est inconnu`)
-  }
-  let statutId
-  if (isStatut(dbEtape.statutId)) {
-    statutId = dbEtape.statutId
-  } else {
-    console.error(
-      `le status ${dbEtape.statutId} est inconnu, ${JSON.stringify(dbEtape)}`
-    )
-    throw new Error(
-      `le status ${dbEtape.statutId} est inconnu, ${JSON.stringify(dbEtape)}`
-    )
-  }
-
-  const machineEtape: Etape = {
-    date: dbEtape.date,
-    typeId,
-    statutId
-  }
-  if (dbEtape.contenu) {
-    machineEtape.contenu = dbEtape.contenu
-  }
-
-  return machineEtape
-}
-
-export const demarcheStatut = (etapes: readonly Etape[]): DemarcheStatutId => {
-  const value = goTo(etapes)
-  if (!value.valid) {
-    console.error(
-      `impossible de trouver le demarcheStatus, cette liste d'étapes '${JSON.stringify(
-        etapes
-      )}' est incohérente à l'étape ${value.etapeIndex + 1}`
-    )
-
-    return DemarchesStatutsIds.Indetermine
-  } else {
-    return value.state.context.demarcheStatut
-  }
-}
-
-type Intervenant = keyof typeof tags['responsable']
-
-const intervenants = Object.keys(tags.responsable) as Array<
-  keyof typeof tags.responsable
->
-
-const goTo = (
-  etapes: readonly Etape[],
-  initialState: State<OctARMContext, XStateEvent> | null = null
-):
-  | { valid: false; etapeIndex: number }
-  | { valid: true; state: StateFrom<typeof armOctMachine> } => {
-  const service = interpret(armOctMachine)
-
-  if (initialState === null) {
-    service.start()
-  } else {
-    service.start(initialState)
-  }
-  for (let i = 0; i < etapes.length; i++) {
-    const etapeAFaire = etapes[i]
-    const event = eventFrom(etapeAFaire)
-    if (!service.state.can(event)) {
-      service.stop()
-
-      return { valid: false, etapeIndex: i }
+        return { valid: false, etapeIndex: i }
+      }
+      service.send(event)
     }
-    service.send(event)
+
+    const state = service.state
+    service.stop()
+
+    return { valid: true, state }
   }
 
-  service.stop()
+  public demarcheStatut(etapes: readonly Etape[]): {
+    demarcheStatut: DemarcheStatutId
+    publique: boolean
+  } {
+    const value = this.goTo(etapes)
+    if (!value.valid) {
+      console.error(
+        `impossible de trouver le demarcheStatus, cette liste d'étapes '${JSON.stringify(
+          etapes
+        )}' est incohérente à l'étape ${value.etapeIndex + 1}`
+      )
 
-  return { valid: true, state: service.state }
-}
-
-const assertGoTo = (
-  etapes: readonly Etape[],
-  initialState: State<OctARMContext, XStateEvent> | null = null
-) => {
-  const value = goTo(etapes, initialState)
-  if (!value.valid) {
-    throw new Error(
-      `Les étapes '${JSON.stringify(
-        etapes
-      )}' sont invalides à partir de l’étape ${value.etapeIndex}`
-    )
-  } else {
-    return value.state
-  }
-}
-
-export const whoIsBlocking = (etapes: readonly Etape[]): Intervenant[] => {
-  const state = assertGoTo(etapes)
-
-  const responsables: string[] = [...state.tags]
-
-  return intervenants.filter(r => responsables.includes(tags.responsable[r]))
-}
-
-export const possibleNextEtapes = (
-  etapes: readonly Etape[]
-): Omit<Etape, 'date'>[] => {
-  const state = assertGoTo(etapes)
-
-  return state.nextEvents
-    .filter(isEvent)
-    .flatMap(event => {
-      const events = toPotentialXStateEvent(event)
-
-      return events
-        .filter(event => state.can(event))
-        .flatMap(xStateEventToEtape)
-    })
-    .filter(event => event !== undefined)
-}
-
-/**
- * Cette function ne doit JAMAIS appeler orderMachine, car c'est orderMachine qui se sert de cette fonction.
- * Cette function ne fait que vérifier si les étapes qu'on lui donne sont valides dans l'ordre
- */
-export const isEtapesOk = (
-  sortedEtapes: readonly Etape[],
-  initialState: State<OctARMContext, XStateEvent> | null = null
-): boolean => {
-  if (sortedEtapes.length) {
-    for (let i = 1; i < sortedEtapes.length; i++) {
-      if (sortedEtapes[i - 1].date > sortedEtapes[i].date) {
-        return false
+      return {
+        demarcheStatut: DemarchesStatutsIds.Indetermine,
+        publique: false
+      }
+    } else {
+      return {
+        demarcheStatut: value.state.context.demarcheStatut,
+        publique: value.state.context.visibilite === 'publique'
       }
     }
   }
-  const result = goTo(sortedEtapes, initialState)
 
-  return result.valid
+  private assertGoTo(
+    etapes: readonly Etape[],
+    initialState: State<CaminoContext, CaminoEvent> | null = null
+  ) {
+    const value = this.goTo(etapes, initialState)
+    if (!value.valid) {
+      throw new Error(
+        `Les étapes '${JSON.stringify(
+          etapes
+        )}' sont invalides à partir de l’étape ${value.etapeIndex}`
+      )
+    } else {
+      return value.state
+    }
+  }
+
+  public whoIsBlocking(etapes: readonly Etape[]): Intervenant[] {
+    const state = this.assertGoTo(etapes)
+
+    const responsables: string[] = [...state.tags]
+
+    return intervenants.filter(r => responsables.includes(tags.responsable[r]))
+  }
+
+  public possibleNextEtapes(etapes: readonly Etape[]): Omit<Etape, 'date'>[] {
+    const state = this.assertGoTo(etapes)
+
+    return state.nextEvents
+      .filter(this.isEvent)
+      .flatMap(event => {
+        const events = this.toPotentialCaminoXStateEvent(event)
+
+        return events
+          .filter(event => state.can(event))
+          .flatMap(this.caminoXStateEventToEtapes)
+      })
+      .filter(event => event !== undefined)
+  }
 }

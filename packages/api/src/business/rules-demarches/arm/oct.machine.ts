@@ -1,27 +1,9 @@
 import { assign, createMachine } from 'xstate'
 import { IContenu } from '../../../types'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
-import {
-  EtapeStatutId,
-  EtapeStatutKey
-} from 'camino-common/src/static/etapesStatuts'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import {
-  EtapesTypesEtapesStatuts,
-  EtapeTypeEtapeStatut
-} from 'camino-common/src/static/etapesTypesEtapesStatuts'
-import {
-  DemarchesStatutsIds,
-  DemarcheStatutId
-} from 'camino-common/src/static/demarchesStatuts'
-
-export interface Etape {
-  // TODO 2022-07-28 : ceci pourrait être réduit en utilisant les états de 'trad'
-  typeId: EtapeTypeId
-  statutId: EtapeStatutId
-  date: string
-  contenu?: IContenu
-}
+import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { CaminoMachine } from '../machine-helper'
+import { CaminoCommonContext, DBEtat, Etape, tags } from '../machine-common'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
 
 type FaireDemandeEvent = {
   mecanise: boolean
@@ -97,37 +79,6 @@ export type XStateEvent =
 
 export type Event = XStateEvent['type']
 
-export const isEvent = (event: string): event is Event => {
-  return EVENTS.includes(event)
-}
-
-export const toPotentialXStateEvent = (event: Event): XStateEvent[] => {
-  switch (event) {
-    case 'FAIRE_DEMANDE': {
-      return [
-        { type: event, mecanise: false, franchissements: null },
-        { type: event, mecanise: true, franchissements: null },
-        { type: event, mecanise: true, franchissements: 0 },
-        { type: event, mecanise: true, franchissements: 2 }
-      ]
-    }
-    case 'ACCEPTER_RDE':
-    case 'REFUSER_RDE':
-    case 'RECEVOIR_COMPLEMENTS_RDE': {
-      return [
-        { type: event, franchissements: 0 },
-        { type: event, franchissements: 3 }
-      ]
-    }
-    default:
-      // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      return [{ type: event }]
-  }
-}
-
-export type DBEtat = { [key in EtapeStatutKey]?: EtapeTypeEtapeStatut }
 const trad: { [key in Event]: DBEtat } = {
   FAIRE_DEMANDE: EtapesTypesEtapesStatuts.demande,
   DEPOSER_DEMANDE: EtapesTypesEtapesStatuts.depotDeLaDemande,
@@ -255,85 +206,115 @@ export const EVENTS = Object.keys(trad) as Array<
   Extract<keyof typeof trad, string>
 >
 
-export const eventToEtat = (event: Event): DBEtat => {
-  return trad[event]
-}
-
-export const xStateEventToEtape = (
-  event: XStateEvent
-): Omit<Etape, 'date'>[] => {
-  const dbEtat = trad[event.type]
-  let contenu: IContenu | undefined
-  switch (event.type) {
-    case 'FAIRE_DEMANDE': {
-      contenu = {
-        arm: {
-          mecanise: event.mecanise,
-          franchissements: event.franchissements
-        }
-      }
-      break
-    }
-    case 'ACCEPTER_RDE':
-    case 'REFUSER_RDE':
-    case 'RECEVOIR_COMPLEMENTS_RDE': {
-      contenu = { arm: { franchissements: event.franchissements } }
-    }
+export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
+  constructor() {
+    super(armOctMachine)
   }
 
-  return Object.values(dbEtat).map(({ etapeTypeId, etapeStatutId }) => ({
-    typeId: etapeTypeId,
-    statutId: etapeStatutId,
-    contenu
-  }))
-}
-
-export const eventFrom = (etape: Etape): XStateEvent => {
-  const entries = Object.entries(trad).filter(
-    (entry): entry is [Event, DBEtat] => EVENTS.includes(entry[0])
-  )
-
-  const entry = entries.find(([_key, dbEtat]) => {
-    return Object.values(dbEtat).some(
-      dbEtatSingle =>
-        dbEtatSingle.etapeTypeId === etape.typeId &&
-        dbEtatSingle.etapeStatutId === etape.statutId
-    )
-  })
-
-  if (entry) {
-    const eventFromEntry = entry[0]
-    switch (eventFromEntry) {
+  caminoXStateEventToEtapes(event: XStateEvent): Omit<Etape, 'date'>[] {
+    const dbEtat = trad[event.type]
+    let contenu: IContenu | undefined
+    switch (event.type) {
       case 'FAIRE_DEMANDE': {
-        let mecanise = false
-        let franchissements = null
-        if (typeof etape.contenu?.arm?.mecanise === 'boolean') {
-          mecanise = etape.contenu?.arm.mecanise
+        contenu = {
+          arm: {
+            mecanise: event.mecanise,
+            franchissements: event.franchissements
+          }
         }
-        if (typeof etape.contenu?.arm?.franchissements === 'number') {
-          franchissements = etape.contenu?.arm?.franchissements
-        }
-
-        return { type: eventFromEntry, mecanise, franchissements }
+        break
       }
       case 'ACCEPTER_RDE':
       case 'REFUSER_RDE':
       case 'RECEVOIR_COMPLEMENTS_RDE': {
-        let franchissements = null
-        if (typeof etape.contenu?.arm?.franchissements === 'number') {
-          franchissements = etape.contenu?.arm?.franchissements
-        }
+        contenu = { arm: { franchissements: event.franchissements } }
+      }
+    }
 
-        return { type: eventFromEntry, franchissements }
+    return Object.values(dbEtat).map(({ etapeTypeId, etapeStatutId }) => ({
+      etapeTypeId,
+      etapeStatutId,
+      contenu
+    }))
+  }
+
+  eventFrom(etape: Etape): XStateEvent {
+    const entries = Object.entries(trad).filter(
+      (entry): entry is [Event, DBEtat] => EVENTS.includes(entry[0])
+    )
+
+    const entry = entries.find(([_key, dbEtat]) => {
+      return Object.values(dbEtat).some(
+        dbEtatSingle =>
+          dbEtatSingle.etapeTypeId === etape.etapeTypeId &&
+          dbEtatSingle.etapeStatutId === etape.etapeStatutId
+      )
+    })
+
+    if (entry) {
+      const eventFromEntry = entry[0]
+      switch (eventFromEntry) {
+        case 'FAIRE_DEMANDE': {
+          let mecanise = false
+          let franchissements = null
+          if (typeof etape.contenu?.arm?.mecanise === 'boolean') {
+            mecanise = etape.contenu?.arm.mecanise
+          }
+          if (typeof etape.contenu?.arm?.franchissements === 'number') {
+            franchissements = etape.contenu?.arm?.franchissements
+          }
+
+          return { type: eventFromEntry, mecanise, franchissements }
+        }
+        case 'ACCEPTER_RDE':
+        case 'REFUSER_RDE':
+        case 'RECEVOIR_COMPLEMENTS_RDE': {
+          let franchissements = null
+          if (typeof etape.contenu?.arm?.franchissements === 'number') {
+            franchissements = etape.contenu?.arm?.franchissements
+          }
+
+          return { type: eventFromEntry, franchissements }
+        }
+        default:
+          // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          return { type: eventFromEntry }
+      }
+    }
+    throw new Error(`no event from ${JSON.stringify(etape)}`)
+  }
+
+  isEvent(event: string): event is XStateEvent['type'] {
+    return EVENTS.includes(event)
+  }
+
+  toPotentialCaminoXStateEvent(event: XStateEvent['type']): XStateEvent[] {
+    switch (event) {
+      case 'FAIRE_DEMANDE': {
+        return [
+          { type: event, mecanise: false, franchissements: null },
+          { type: event, mecanise: true, franchissements: null },
+          { type: event, mecanise: true, franchissements: 0 },
+          { type: event, mecanise: true, franchissements: 2 }
+        ]
+      }
+      case 'ACCEPTER_RDE':
+      case 'REFUSER_RDE':
+      case 'RECEVOIR_COMPLEMENTS_RDE': {
+        return [
+          { type: event, franchissements: 0 },
+          { type: event, franchissements: 3 }
+        ]
       }
       default:
         // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        return { type: eventFromEntry }
+        return [{ type: event }]
     }
   }
-  throw new Error(`no event from ${JSON.stringify(etape)}`)
 }
 
 type MecanisationConnuMecanise = {
@@ -349,11 +330,9 @@ type MecanisationConnu =
 
 type MecanisationInconnu = MecanisationConnu | 'inconnu'
 
-export interface OctARMContext {
+export interface OctARMContext extends CaminoCommonContext {
   mecanisation: MecanisationInconnu
-  visibilite: 'confidentielle' | 'publique'
   expertiseONFFaite: boolean
-  demarcheStatut: DemarcheStatutId
   paiementFraisDossierValide: boolean
 }
 
@@ -400,13 +379,13 @@ const fraisDeDossierComplementairesPayeOuExempte = (
 const validationFraisApresDesistementOuClassementSansSuite = [
   {
     target:
-      'demandeEnConstructionOuDeposeeOuEnInstruction.pasRde.validationDesFraisDossier',
+      'demandeEnConstructionOuDeposeeOuEnInstructionMachine.pasRdeMachine.validationDesFraisDossierAFaire',
     cond: (context: OctARMContext) => {
       return !context.paiementFraisDossierValide
     }
   },
   {
-    target: 'validationDuPaiementDesFraisDeDossierComplementaires',
+    target: 'validationDuPaiementDesFraisDeDossierComplementairesAFaire',
     cond: (context: OctARMContext) => {
       return (
         context.paiementFraisDossierValide &&
@@ -438,13 +417,6 @@ const actionMecanisation = assign<OctARMContext>({
     }
   }
 })
-
-export const tags = {
-  responsable: {
-    [ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']]: 'responsablePTMG',
-    [ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]: 'responsableONF'
-  }
-} as const
 
 const actionAccepterOuRefuserRDE = assign<
   OctARMContext,
@@ -492,9 +464,10 @@ const actionRecevoirComplementsRde = assign<
   }
 })
 
-export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
+const armOctMachine = createMachine<OctARMContext, XStateEvent>({
+  predictableActionArguments: true,
   id: 'oct',
-  initial: 'demandeEnConstructionOuDeposeeOuEnInstruction',
+  initial: 'demandeEnConstructionOuDeposeeOuEnInstructionMachine',
   context: {
     mecanisation: 'inconnu',
     expertiseONFFaite: false,
@@ -510,42 +483,44 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
         context.visibilite === 'confidentielle'
     },
     DESISTER_PAR_LE_DEMANDEUR: {
-      target: 'desistementDuDemandeur',
+      target: 'desistementDuDemandeurFait',
       cond: context =>
         context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
       actions: assign<OctARMContext, { type: 'DESISTER_PAR_LE_DEMANDEUR' }>({
-        demarcheStatut: DemarchesStatutsIds.Desiste
+        demarcheStatut: DemarchesStatutsIds.Desiste,
+        visibilite: 'publique'
       })
     },
     CLASSER_SANS_SUITE: {
-      target: 'decisionDeClassementSansSuite',
+      target: 'decisionDeClassementSansSuiteFait',
       cond: context =>
         context.demarcheStatut === DemarchesStatutsIds.EnInstruction,
       actions: assign<OctARMContext, { type: 'CLASSER_SANS_SUITE' }>({
-        demarcheStatut: DemarchesStatutsIds.ClasseSansSuite
+        demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
+        visibilite: 'publique'
       })
     }
   },
   states: {
-    demandeEnConstructionOuDeposeeOuEnInstruction: {
+    demandeEnConstructionOuDeposeeOuEnInstructionMachine: {
       type: 'parallel',
       onDone: {
-        target: 'saisineCommissionAutorisationsDeRecherchesMinieres'
+        target: 'saisineCommissionAutorisationsDeRecherchesMinieresAFaire'
       },
       states: {
-        pasRde: {
-          initial: 'demandeEnConstructionOuDeposee',
+        pasRdeMachine: {
+          initial: 'demandeEnConstructionOuDeposeeMachine',
           states: {
-            demandeEnConstructionOuDeposee: {
+            demandeEnConstructionOuDeposeeMachine: {
               type: 'parallel',
               states: {
-                demande: {
-                  initial: 'demandeEnConstruction',
+                demandeMachine: {
+                  initial: 'demandeAFaire',
                   states: {
-                    demandeEnConstruction: {
+                    demandeAFaire: {
                       on: {
                         FAIRE_DEMANDE: {
-                          target: 'demandeFaite',
+                          target: 'demandeADeposer',
                           actions: assign<OctARMContext, FaireDemandeEvent>({
                             mecanisation: (context, event) => {
                               if (
@@ -597,7 +572,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                         }
                       }
                     },
-                    demandeFaite: {
+                    demandeADeposer: {
                       on: {
                         DEPOSER_DEMANDE: {
                           target: 'demandeDeposee',
@@ -615,93 +590,98 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                     }
                   }
                 },
-                paiementDesFraisDeDossier: {
-                  initial: 'nonPaye',
+                paiementDesFraisDeDossierMachine: {
+                  initial: 'paiementDesFraisDeDossierAFaire',
                   states: {
-                    nonPaye: {
+                    paiementDesFraisDeDossierAFaire: {
                       on: {
-                        PAYER_FRAIS_DE_DOSSIER: 'paye'
+                        PAYER_FRAIS_DE_DOSSIER: 'paiementDesFraisDeDossierFait'
                       }
                     },
-                    paye: {
+                    paiementDesFraisDeDossierFait: {
                       type: 'final'
                     }
                   }
                 },
-                decisionAutoriteEnvironnementale: {
-                  initial: 'enCours',
+                decisionAutoriteEnvironnementaleMachine: {
+                  initial: 'decisionAutoriteEnvironnementaleAFaire',
                   states: {
-                    enCours: {
+                    decisionAutoriteEnvironnementaleAFaire: {
                       always: {
-                        target: 'exemptee',
+                        target: 'decisionAutoriteEnvironnementaleExemptee',
                         cond: context => isNonMecanise(context.mecanisation)
                       },
                       on: {
                         DEMANDER_MODIFICATION_DE_LA_DEMANDE: {
-                          target: 'modificationDeLaDemande',
+                          target: 'modificationDeLaDemandeAFaire',
                           actions: actionMecanisation
                         },
                         EXEMPTER_DAE: {
-                          target: 'exemptee',
+                          target: 'decisionAutoriteEnvironnementaleExemptee',
                           actions: actionMecanisation
                         },
                         DEMANDER_COMPLEMENTS_DAE: {
-                          target: 'demandeDeComplements',
+                          target: 'recevoirComplementDAEAFaire',
                           cond: context =>
                             context.demarcheStatut !==
                             DemarchesStatutsIds.EnConstruction
                         }
                       }
                     },
-                    demandeDeComplements: {
+                    recevoirComplementDAEAFaire: {
                       on: {
-                        RECEVOIR_COMPLEMENTS_DAE: 'enCours',
+                        RECEVOIR_COMPLEMENTS_DAE:
+                          'decisionAutoriteEnvironnementaleAFaire',
                         EXEMPTER_DAE: {
-                          target: 'exemptee',
+                          target: 'decisionAutoriteEnvironnementaleExemptee',
                           actions: actionMecanisation
                         },
                         DEMANDER_MODIFICATION_DE_LA_DEMANDE: {
-                          target: 'modificationDeLaDemande',
+                          target: 'modificationDeLaDemandeAFaire',
                           actions: actionMecanisation
                         }
                       }
                     },
-                    modificationDeLaDemande: {
-                      on: { MODIFIER_DEMANDE_APRES_DAE: 'demandeModifiee' }
+                    modificationDeLaDemandeAFaire: {
+                      on: {
+                        MODIFIER_DEMANDE_APRES_DAE:
+                          'modificationDeLaDemandeFaite'
+                      }
                     },
-                    exemptee: { type: 'final' },
-                    demandeModifiee: { type: 'final' }
+                    decisionAutoriteEnvironnementaleExemptee: { type: 'final' },
+                    modificationDeLaDemandeFaite: { type: 'final' }
                   }
                 }
               },
 
               onDone: {
-                target: 'completudeDeLaDemande'
+                target: 'completudeDeLaDemandeAFaire'
               }
             },
-            completudeDeLaDemande: {
+            completudeDeLaDemandeAFaire: {
               on: {
-                REFUSER_COMPLETUDE: 'refusTemporaireCompletude',
-                ACCEPTER_COMPLETUDE: 'validationDesFraisDossier'
+                REFUSER_COMPLETUDE: 'demandeDeComplementsPourCompletudeAFaire',
+                ACCEPTER_COMPLETUDE: 'validationDesFraisDossierAFaire'
               },
               tags: [tags.responsable['ope-ptmg-973-01']]
             },
-            refusTemporaireCompletude: {
+            demandeDeComplementsPourCompletudeAFaire: {
               on: {
-                DEMANDER_COMPLEMENTS_COMPLETUDE: 'demandeDeComplements'
+                DEMANDER_COMPLEMENTS_COMPLETUDE:
+                  'receptionDeComplementsPourCompletudeAFaire'
               }
             },
-            demandeDeComplements: {
+            receptionDeComplementsPourCompletudeAFaire: {
               on: {
-                RECEVOIR_COMPLEMENTS_COMPLETUDE: 'completudeDeLaDemande'
+                RECEVOIR_COMPLEMENTS_COMPLETUDE: 'completudeDeLaDemandeAFaire'
               }
             },
-            validationDesFraisDossier: {
+            validationDesFraisDossierAFaire: {
               tags: [tags.responsable['ope-onf-973-01']],
               on: {
                 VALIDER_FRAIS_DE_DOSSIER: [
                   {
-                    target: 'recevabiliteDeLaDemande',
+                    target: 'recevabiliteDeLaDemandeAFaire',
                     actions: assign<
                       OctARMContext,
                       { type: 'VALIDER_FRAIS_DE_DOSSIER' }
@@ -723,7 +703,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                   },
                   {
                     target:
-                      '#validationDuPaiementDesFraisDeDossierComplementaires',
+                      '#validationDuPaiementDesFraisDeDossierComplementairesAFaire',
                     cond: context =>
                       (context.demarcheStatut === DemarchesStatutsIds.Desiste ||
                         context.demarcheStatut ===
@@ -733,86 +713,88 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                 ]
               }
             },
-            recevabiliteDeLaDemande: {
+            recevabiliteDeLaDemandeAFaire: {
               tags: [tags.responsable['ope-onf-973-01']],
               on: {
                 DEMANDER_INFORMATION_MCR:
-                  'demandeInformationPourLaRecevabilite',
+                  'receptionInformationPourLaRecevabiliteAFaire',
                 DEMANDER_COMPLEMENTS_MCR:
-                  'demandeComplementsPourLaRecevabilite',
-                DECLARER_DEMANDE_FAVORABLE: 'expertises',
-                DECLARER_DEMANDE_DEFAVORABLE: 'recevabiliteDefavorable'
+                  'receptionComplementsPourLaRecevabiliteAFaire',
+                DECLARER_DEMANDE_FAVORABLE: 'expertisesMachine',
+                DECLARER_DEMANDE_DEFAVORABLE: 'avisONFARendre'
               }
             },
-            demandeInformationPourLaRecevabilite: {
+            receptionInformationPourLaRecevabiliteAFaire: {
               on: {
-                RECEVOIR_INFORMATION_MCR: 'recevabiliteDeLaDemande',
-                DECLARER_DEMANDE_FAVORABLE: 'expertises',
-                DECLARER_DEMANDE_DEFAVORABLE: 'recevabiliteDefavorable'
+                RECEVOIR_INFORMATION_MCR: 'recevabiliteDeLaDemandeAFaire',
+                DECLARER_DEMANDE_FAVORABLE: 'expertisesMachine',
+                DECLARER_DEMANDE_DEFAVORABLE: 'avisONFARendre'
               }
             },
-            demandeComplementsPourLaRecevabilite: {
+            receptionComplementsPourLaRecevabiliteAFaire: {
               on: {
-                RECEVOIR_COMPLEMENTS_MCR: 'recevabiliteDeLaDemande',
-                DECLARER_DEMANDE_FAVORABLE: 'expertises',
-                DECLARER_DEMANDE_DEFAVORABLE: 'recevabiliteDefavorable'
+                RECEVOIR_COMPLEMENTS_MCR: 'recevabiliteDeLaDemandeAFaire',
+                DECLARER_DEMANDE_FAVORABLE: 'expertisesMachine',
+                DECLARER_DEMANDE_DEFAVORABLE: 'avisONFARendre'
               }
             },
-            expertises: {
+            expertisesMachine: {
               type: 'parallel',
               states: {
-                expertiseONF: {
-                  initial: 'enCours',
+                expertiseONFMachine: {
+                  initial: 'expertiseONFAFaire',
                   states: {
-                    enCours: {
+                    expertiseONFAFaire: {
                       on: {
                         DEMANDER_INFORMATION_EXPERTISE_ONF:
-                          'demandeInformationONF',
-                        FAIRE_EXPERTISE_ONF: 'expertiseONFFaite'
+                          'expertiseOuReceptionInformationONFAFaire',
+                        FAIRE_EXPERTISE_ONF: 'demandeAvisONFAFaire'
                       }
                     },
-                    demandeInformationONF: {
+                    expertiseOuReceptionInformationONFAFaire: {
                       on: {
-                        FAIRE_EXPERTISE_ONF: 'expertiseONFFaite',
-                        RECEVOIR_INFORMATION_EXPERTISE_ONF: 'enCours'
+                        FAIRE_EXPERTISE_ONF: 'demandeAvisONFAFaire',
+                        RECEVOIR_INFORMATION_EXPERTISE_ONF: 'expertiseONFAFaire'
                       }
                     },
-                    expertiseONFFaite: {
+                    demandeAvisONFAFaire: {
                       on: {
                         DEMANDER_INFORMATION_AVIS_ONF:
-                          'demandeInformationAvisONF'
+                          'receptionInformationAvisONFAFaire'
                       },
                       entry: assign<OctARMContext>({ expertiseONFFaite: true })
                     },
-                    demandeInformationAvisONF: {
+                    receptionInformationAvisONFAFaire: {
                       on: {
-                        RECEVOIR_INFORMATION_AVIS_ONF: 'expertiseONFFaite'
+                        RECEVOIR_INFORMATION_AVIS_ONF: 'demandeAvisONFAFaire'
                       }
                     }
                   }
                 },
-                expertiseServiceEau: {
-                  initial: 'enCours',
+                expertiseServiceEauMachine: {
+                  initial: 'expertiseServiceEauAfaire',
                   states: {
-                    enCours: {
+                    expertiseServiceEauAfaire: {
                       on: {
-                        RECEVOIR_EXPERTISE_SERVICE_EAU: 'edeFait'
+                        RECEVOIR_EXPERTISE_SERVICE_EAU:
+                          'expertiseServiceEauFait'
                       }
                     },
-                    edeFait: {
+                    expertiseServiceEauFait: {
                       type: 'final'
                     }
                   }
                 },
-                expertiseServiceMines: {
-                  initial: 'enCours',
+                expertiseServiceMinesMachine: {
+                  initial: 'expertiseServiceMinesAFaire',
                   states: {
-                    enCours: {
+                    expertiseServiceMinesAFaire: {
                       on: {
-                        RECEVOIR_EXPERTISE_SERVICE_MINES: 'edmFait'
+                        RECEVOIR_EXPERTISE_SERVICE_MINES:
+                          'expertiseServiceMinesFait'
                       }
                     },
-                    edmFait: { type: 'final' }
+                    expertiseServiceMinesFait: { type: 'final' }
                   }
                 }
               },
@@ -823,7 +805,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                 }
               }
             },
-            recevabiliteDefavorable: {
+            avisONFARendre: {
               on: {
                 RENDRE_AVIS_ONF: 'avisONFRendu'
               }
@@ -831,12 +813,12 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
             avisONFRendu: { type: 'final' }
           }
         },
-        declarationLoiSurLEau: {
-          initial: 'enCours',
+        declarationLoiSurLEauMachine: {
+          initial: 'declarationLoiSurLEauAFaire',
           states: {
-            enCours: {
+            declarationLoiSurLEauAFaire: {
               always: {
-                target: 'exemptee',
+                target: 'declarationLoiSurLEauExemptee',
                 cond: context =>
                   isNonMecanise(context.mecanisation) ||
                   (isMecanise(context.mecanisation) &&
@@ -845,51 +827,51 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
               },
               on: {
                 REFUSER_RDE: {
-                  target: 'faite',
-                  cond: (context, event) => (event.franchissements ?? 0) > 0,
+                  target: 'declarationLoiSurLEauFaite',
+                  cond: (_context, event) => (event.franchissements ?? 0) > 0,
                   actions: actionAccepterOuRefuserRDE
                 },
                 ACCEPTER_RDE: {
-                  target: 'faite',
-                  cond: (context, event) => (event.franchissements ?? 0) > 0,
+                  target: 'declarationLoiSurLEauFaite',
+                  cond: (_context, event) => (event.franchissements ?? 0) > 0,
                   actions: actionAccepterOuRefuserRDE
                 },
-                DEMANDER_COMPLEMENTS_RDE: 'demandeDeComplements'
+                DEMANDER_COMPLEMENTS_RDE: 'receptionDeComplementsAFaire'
               }
             },
-            demandeDeComplements: {
+            receptionDeComplementsAFaire: {
               on: {
                 RECEVOIR_COMPLEMENTS_RDE: {
-                  target: 'enCours',
+                  target: 'declarationLoiSurLEauAFaire',
                   actions: actionRecevoirComplementsRde
                 },
                 REFUSER_RDE: {
-                  target: 'faite',
+                  target: 'declarationLoiSurLEauFaite',
                   cond: context =>
                     isMecanise(context.mecanisation) &&
                     context.mecanisation.franchissementCoursEau > 0,
                   actions: actionAccepterOuRefuserRDE
                 },
                 ACCEPTER_RDE: {
-                  target: 'faite',
+                  target: 'declarationLoiSurLEauFaite',
                   cond: context =>
                     isMecanise(context.mecanisation) &&
                     context.mecanisation.franchissementCoursEau > 0,
                   actions: actionAccepterOuRefuserRDE
                 },
-                DEMANDER_COMPLEMENTS_RDE: 'demandeDeComplements'
+                DEMANDER_COMPLEMENTS_RDE: 'receptionDeComplementsAFaire'
               }
             },
-            exemptee: {
+            declarationLoiSurLEauExemptee: {
               always: {
-                target: 'enCours',
+                target: 'declarationLoiSurLEauAFaire',
                 cond: context =>
                   isMecanise(context.mecanisation) &&
                   context.mecanisation.franchissementCoursEau > 0
               },
               on: {
                 DEMANDER_COMPLEMENTS_RDE: {
-                  target: 'demandeDeComplements',
+                  target: 'receptionDeComplementsAFaire',
                   cond: context =>
                     (context.demarcheStatut === DemarchesStatutsIds.Depose ||
                       context.demarcheStatut ===
@@ -897,7 +879,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                     isMecanise(context.mecanisation)
                 },
                 REFUSER_RDE: {
-                  target: 'faite',
+                  target: 'declarationLoiSurLEauFaite',
                   cond: (context, event) =>
                     (isInconnu(context.mecanisation) ||
                       isMecanise(context.mecanisation)) &&
@@ -905,7 +887,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                   actions: actionAccepterOuRefuserRDE
                 },
                 ACCEPTER_RDE: {
-                  target: 'faite',
+                  target: 'declarationLoiSurLEauFaite',
                   cond: (context, event) =>
                     (isInconnu(context.mecanisation) ||
                       isMecanise(context.mecanisation)) &&
@@ -915,30 +897,30 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
               },
               type: 'final'
             },
-            faite: { type: 'final' }
+            declarationLoiSurLEauFaite: { type: 'final' }
           }
         }
       }
     },
-    saisineCommissionAutorisationsDeRecherchesMinieres: {
+    saisineCommissionAutorisationsDeRecherchesMinieresAFaire: {
       on: {
         FAIRE_SAISINE_CARM: {
-          target: 'avisCommissionAutorisationDeRecherchesMinieres',
+          target: 'avisCommissionAutorisationDeRecherchesMinieresAFaire',
           actions: assign<OctARMContext, { type: 'FAIRE_SAISINE_CARM' }>({
             visibilite: 'publique'
           })
         },
         DEMANDER_COMPLEMENTS_RDE: {
           target: [
-            'demandeEnConstructionOuDeposeeOuEnInstruction.declarationLoiSurLEau.demandeDeComplements',
-            'demandeEnConstructionOuDeposeeOuEnInstruction.pasRde.avisONFRendu'
+            'demandeEnConstructionOuDeposeeOuEnInstructionMachine.declarationLoiSurLEauMachine.receptionDeComplementsAFaire',
+            'demandeEnConstructionOuDeposeeOuEnInstructionMachine.pasRdeMachine.avisONFRendu'
           ],
           cond: context =>
             isMecanise(context.mecanisation) &&
             !context.mecanisation.franchissementCoursEau
         },
         REFUSER_RDE: {
-          target: 'saisineCommissionAutorisationsDeRecherchesMinieres',
+          target: 'saisineCommissionAutorisationsDeRecherchesMinieresAFaire',
           cond: (context, event) =>
             isMecanise(context.mecanisation) &&
             !context.mecanisation.franchissementCoursEau &&
@@ -946,7 +928,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
           actions: actionAccepterOuRefuserRDE
         },
         ACCEPTER_RDE: {
-          target: 'saisineCommissionAutorisationsDeRecherchesMinieres',
+          target: 'saisineCommissionAutorisationsDeRecherchesMinieresAFaire',
           cond: (context, event) =>
             isMecanise(context.mecanisation) &&
             !context.mecanisation.franchissementCoursEau &&
@@ -955,20 +937,21 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
         }
       }
     },
-    avisCommissionAutorisationDeRecherchesMinieres: {
+    avisCommissionAutorisationDeRecherchesMinieresAFaire: {
       on: {
         RENDRE_AVIS_FAVORABLE_CARM: [
           {
-            target: 'signatureAutorisationDeRechercheMiniere',
+            target: 'signatureAutorisationDeRechercheMiniereAFaire',
             cond: context => isNonMecanise(context.mecanisation)
           },
           {
-            target: 'notificationDuDemandeurFraisDeDossierComplementaires',
+            target:
+              'notificationDuDemandeurFraisDeDossierComplementairesAFaire',
             cond: context => isMecanise(context.mecanisation)
           }
         ],
         RENDRE_AVIS_DEFAVORABLE_CARM: {
-          target: 'notificationDuDemandeurAvisDefavorableCARM',
+          target: 'notificationDuDemandeurAvisDefavorableCARMAFaire',
           actions: assign<
             OctARMContext,
             { type: 'RENDRE_AVIS_DEFAVORABLE_CARM' }
@@ -976,50 +959,53 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
             demarcheStatut: DemarchesStatutsIds.Rejete
           })
         },
-        RENDRE_AVIS_AJOURNE_CARM: 'notificationDuDemandeurAvisAjourneCARM'
+        RENDRE_AVIS_AJOURNE_CARM: 'notificationDuDemandeurAvisAjourneCARMAFaire'
       }
     },
-    notificationDuDemandeurAvisAjourneCARM: {
-      on: { NOTIFIER_DEMANDEUR_AVIS_AJOURNE_CARM: 'saisineCARMEnAttente' }
+    notificationDuDemandeurAvisAjourneCARMAFaire: {
+      on: { NOTIFIER_DEMANDEUR_AVIS_AJOURNE_CARM: 'saisineCARMAFaire' }
     },
-    saisineCARMEnAttente: {
+    saisineCARMAFaire: {
       on: {
-        DEMANDER_COMPLEMENT_SAISINE_CARM: 'demandeComplementSaisineCARM',
-        FAIRE_SAISINE_CARM: 'avisCommissionAutorisationDeRecherchesMinieres'
+        DEMANDER_COMPLEMENT_SAISINE_CARM:
+          'receptionComplementSaisineCARMAFaire',
+        FAIRE_SAISINE_CARM:
+          'avisCommissionAutorisationDeRecherchesMinieresAFaire'
       }
     },
-    demandeComplementSaisineCARM: {
+    receptionComplementSaisineCARMAFaire: {
       on: {
-        RECEVOIR_COMPLEMENT_SAISINE_CARM: 'saisineCARMEnAttente',
-        FAIRE_SAISINE_CARM: 'avisCommissionAutorisationDeRecherchesMinieres'
+        RECEVOIR_COMPLEMENT_SAISINE_CARM: 'saisineCARMAFaire',
+        FAIRE_SAISINE_CARM:
+          'avisCommissionAutorisationDeRecherchesMinieresAFaire'
       }
     },
-    notificationDuDemandeurAvisDefavorableCARM: {
+    notificationDuDemandeurAvisDefavorableCARMAFaire: {
       on: {
         NOTIFIER_DEMANDEUR_AVIS_DEFAVORABLE_CARM: {
           target: 'fini'
         }
       }
     },
-    notificationDuDemandeurFraisDeDossierComplementaires: {
+    notificationDuDemandeurFraisDeDossierComplementairesAFaire: {
       on: {
         NOTIFIER_DEMANDEUR_AVIS_FAVORABLE_CARM:
-          'paiementDesFraisDeDossierComplementaires'
+          'paiementDesFraisDeDossierComplementairesAFaire'
       }
     },
-    paiementDesFraisDeDossierComplementaires: {
+    paiementDesFraisDeDossierComplementairesAFaire: {
       on: {
         PAYER_FRAIS_DE_DOSSIER_COMPLEMENTAIRES:
-          'validationDuPaiementDesFraisDeDossierComplementaires'
+          'validationDuPaiementDesFraisDeDossierComplementairesAFaire'
       }
     },
-    validationDuPaiementDesFraisDeDossierComplementaires: {
+    validationDuPaiementDesFraisDeDossierComplementairesAFaire: {
       tags: [tags.responsable['ope-onf-973-01']],
-      id: 'validationDuPaiementDesFraisDeDossierComplementaires',
+      id: 'validationDuPaiementDesFraisDeDossierComplementairesAFaire',
       on: {
         VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES: [
           {
-            target: 'signatureAutorisationDeRechercheMiniere',
+            target: 'signatureAutorisationDeRechercheMiniereAFaire',
             actions: assign<
               OctARMContext,
               { type: 'VALIDER_PAIEMENT_FRAIS_DE_DOSSIER_COMPLEMENTAIRES' }
@@ -1063,11 +1049,11 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
         ]
       }
     },
-    signatureAutorisationDeRechercheMiniere: {
+    signatureAutorisationDeRechercheMiniereAFaire: {
       on: {
         SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE: [
           {
-            target: 'avenantARM',
+            target: 'avenantARMAFaire',
             actions: assign<
               OctARMContext,
               { type: 'SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE' }
@@ -1077,7 +1063,7 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
             cond: context => isMecanise(context.mecanisation)
           },
           {
-            target: 'notificationSignatureARM',
+            target: 'notificationSignatureARMAFaire',
             actions: assign<
               OctARMContext,
               { type: 'SIGNER_AUTORISATION_DE_RECHERCHE_MINIERE' }
@@ -1089,26 +1075,26 @@ export const armOctMachine = createMachine<OctARMContext, XStateEvent>({
         ]
       }
     },
-    notificationSignatureARM: {
-      on: { NOTIFIER_DEMANDEUR_SIGNATURE_ARM: 'avenantARM' }
+    notificationSignatureARMAFaire: {
+      on: { NOTIFIER_DEMANDEUR_SIGNATURE_ARM: 'avenantARMAFaire' }
     },
-    avenantARM: {
-      on: { FAIRE_AVENANT_ARM: 'notificationAvenantARM' }
+    avenantARMAFaire: {
+      on: { FAIRE_AVENANT_ARM: 'notificationAvenantARMAFaire' }
     },
-    notificationAvenantARM: {
-      on: { NOTIFIER_AVENANT_ARM: 'avenantARM' }
+    notificationAvenantARMAFaire: {
+      on: { NOTIFIER_AVENANT_ARM: 'avenantARMAFaire' }
     },
-    desistementDuDemandeur: {
+    desistementDuDemandeurFait: {
       always: validationFraisApresDesistementOuClassementSansSuite
     },
-    decisionDeClassementSansSuite: {
+    decisionDeClassementSansSuiteFait: {
       on: {
         NOTIFIER_DEMANDEUR_CSS: {
-          target: 'notificationDuDemandeurApresClassementSansSuite'
+          target: 'notificationDuDemandeurApresClassementSansSuiteFait'
         }
       }
     },
-    notificationDuDemandeurApresClassementSansSuite: {
+    notificationDuDemandeurApresClassementSansSuiteFait: {
       always: validationFraisApresDesistementOuClassementSansSuite
     },
 

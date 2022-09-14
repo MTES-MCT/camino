@@ -1,8 +1,8 @@
-import { Etape, armOctMachine } from './oct.machine'
+import { ArmOctMachine } from './oct.machine'
 import { interpret } from 'xstate'
 import {
   interpretMachine,
-  orderAndInterpretMachine
+  orderAndInterpretMachine as commonOrderAndInterpretMachine
 } from '../machine-test-helper'
 import { IContenu } from '../../../types'
 import {
@@ -10,12 +10,17 @@ import {
   ETAPES_STATUTS
 } from 'camino-common/src/static/etapesStatuts'
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { Etape } from '../machine-common'
 
 const etapesProd = require('./oct.cas.json')
+const orderAndInterpretMachine = (etapes: readonly Etape[]) => {
+  return commonOrderAndInterpretMachine(new ArmOctMachine(), etapes)
+}
 
 describe('vérifie l’arbre d’octroi d’ARM', () => {
+  const armOctMachine = new ArmOctMachine()
   test('ne peut pas désister', () => {
-    const service = interpret(armOctMachine)
+    const service = interpret(armOctMachine.machine)
     const interpreter = service.start()
 
     const state = interpreter.state
@@ -27,17 +32,17 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('quelles sont mes prochaines étapes sur un titre mécanisé', () => {
     const service = orderAndInterpretMachine([
-      { typeId: 'pfd', statutId: 'fai', date: '2020-02-03' },
-      { typeId: 'mdp', statutId: 'fai', date: '2020-02-02' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2020-02-03' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2020-02-02' },
       {
-        typeId: 'mfr',
-        statutId: 'fai',
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
         date: '2020-01-01',
         contenu: { arm: { mecanise: true } }
       }
     ])
 
-    expect(service).canOnlyTransitionTo([
+    expect(service).canOnlyTransitionTo(armOctMachine, [
       'ACCEPTER_RDE',
       'CLASSER_SANS_SUITE',
       'DESISTER_PAR_LE_DEMANDEUR',
@@ -52,17 +57,17 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('quelles sont mes prochaines étapes sur un titre mécanisé avec franchissements', () => {
     const service = orderAndInterpretMachine([
-      { typeId: 'pfd', statutId: 'fai', date: '2020-02-03' },
-      { typeId: 'mdp', statutId: 'fai', date: '2020-02-02' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2020-02-03' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2020-02-02' },
       {
-        typeId: 'mfr',
-        statutId: 'fai',
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
         date: '2020-01-01',
         contenu: { arm: { mecanise: true, franchissements: 1 } }
       }
     ])
 
-    expect(service).canOnlyTransitionTo([
+    expect(service).canOnlyTransitionTo(armOctMachine, [
       'ACCEPTER_RDE',
       'CLASSER_SANS_SUITE',
       'DEMANDER_COMPLEMENTS_DAE',
@@ -79,17 +84,17 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   // notamment car il permet de trouver tous les chemins possibles vers les états finaux
   test('quelles sont mes prochaines étapes non mécanisé', () => {
     const service = orderAndInterpretMachine([
-      { typeId: 'pfd', statutId: 'fai', date: '2020-02-03' },
-      { typeId: 'mdp', statutId: 'fai', date: '2020-02-02' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2020-02-03' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2020-02-02' },
       {
-        typeId: 'mfr',
-        statutId: 'fai',
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
         date: '2020-01-01',
         contenu: { arm: { mecanise: false } }
       }
     ])
 
-    expect(service).canOnlyTransitionTo([
+    expect(service).canOnlyTransitionTo(armOctMachine, [
       'ACCEPTER_COMPLETUDE',
       'CLASSER_SANS_SUITE',
       'DESISTER_PAR_LE_DEMANDEUR',
@@ -100,18 +105,18 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('on peut faire une demande de compléments après une complétude incomplète', () => {
     const service = orderAndInterpretMachine([
-      { typeId: 'mcp', statutId: 'inc', date: '2020-02-04' },
-      { typeId: 'pfd', statutId: 'fai', date: '2020-02-03' },
-      { typeId: 'mdp', statutId: 'fai', date: '2020-02-02' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'inc', date: '2020-02-04' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2020-02-03' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2020-02-02' },
       {
-        typeId: 'mfr',
-        statutId: 'fai',
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
         date: '2020-01-01',
         contenu: { arm: { mecanise: false } }
       }
     ])
 
-    expect(service).canOnlyTransitionTo([
+    expect(service).canOnlyTransitionTo(armOctMachine, [
       'CLASSER_SANS_SUITE',
       'DEMANDER_COMPLEMENTS_COMPLETUDE',
       'DESISTER_PAR_LE_DEMANDEUR',
@@ -121,15 +126,15 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test.each([
     {
-      typeId:
+      etapeTypeId:
         ETAPES_TYPES.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
-      statutId: ETAPES_STATUTS.FAIT,
+      etapeStatutId: ETAPES_STATUTS.FAIT,
       date: '2020-01-01'
     },
     {
-      typeId:
+      etapeTypeId:
         ETAPES_TYPES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_,
-      statutId: ETAPES_STATUTS.FAIT,
+      etapeStatutId: ETAPES_STATUTS.FAIT,
       date: '2020-01-01'
     }
   ])(
@@ -143,16 +148,16 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('peut créer une étape "mdp" juste après une "mfr"', () => {
     orderAndInterpretMachine([
-      { typeId: 'mfr', statutId: 'fai', date: '2022-04-14' },
-      { typeId: 'mdp', statutId: 'fai', date: '2022-04-15' }
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: '2022-04-14' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2022-04-15' }
     ])
   })
 
   test('ne peut pas créer une étape "mcp" sans "mdp"', () => {
     expect(() =>
       orderAndInterpretMachine([
-        { typeId: 'mfr', statutId: 'fai', date: '2022-04-14' },
-        { typeId: 'mcp', statutId: 'com', date: '2022-04-16' }
+        { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: '2022-04-14' },
+        { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2022-04-16' }
       ])
     ).toThrowErrorMatchingSnapshot()
   })
@@ -160,9 +165,9 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('ne peut pas créer 2 "mfr"', () => {
     expect(() =>
       orderAndInterpretMachine([
-        { typeId: 'mfr', statutId: 'fai', date: '2020-01-01' },
-        { typeId: 'mdp', statutId: 'fai', date: '2020-01-02' },
-        { typeId: 'mfr', statutId: 'fai', date: '2020-01-03' }
+        { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: '2020-01-01' },
+        { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2020-01-02' },
+        { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: '2020-01-03' }
       ])
     ).toThrowErrorMatchingSnapshot()
   })
@@ -170,8 +175,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('ne peut pas déplacer une étape "mdp" sans "mfr"', () => {
     expect(() =>
       orderAndInterpretMachine([
-        { typeId: 'mdp', statutId: 'fai', date: '2020-02-02' },
-        { typeId: 'mfr', statutId: 'fai', date: '2020-02-03' }
+        { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2020-02-02' },
+        { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: '2020-02-03' }
       ])
     ).toThrowErrorMatchingSnapshot()
   })
@@ -200,186 +205,191 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     }) => {
       orderAndInterpretMachine([
         {
-          typeId: 'mfr',
-          statutId: 'fai',
+          etapeTypeId: 'mfr',
+          etapeStatutId: 'fai',
           date: '2020-01-01',
           contenu: { arm: { mecanise: true, franchissements: 1 } }
         },
-        { typeId: 'mdp', statutId: 'fai', date: '2020-01-02' },
-        { typeId, statutId, contenu, date: '2020-01-03' }
+        { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2020-01-02' },
+        {
+          etapeTypeId: typeId,
+          etapeStatutId: statutId,
+          contenu,
+          date: '2020-01-03'
+        }
       ])
     }
   )
 
   test('peut créer une étape "mcp" après une "mdp"', () => {
     orderAndInterpretMachine([
-      { typeId: 'mcp', statutId: 'com', date: '2020-02-03' },
-      { typeId: 'pfd', statutId: 'fai', date: '2020-02-03' },
-      { typeId: 'mdp', statutId: 'fai', date: '2020-02-02' },
-      { typeId: 'mfr', statutId: 'fai', date: '2020-01-01' }
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2020-02-03' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2020-02-03' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2020-02-02' },
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: '2020-01-01' }
     ])
   })
 
   test('peut créer une "des" après "mdp"', () => {
     orderAndInterpretMachine([
-      { typeId: 'mfr', statutId: 'fai', date: '2020-01-01' },
-      { typeId: 'mdp', statutId: 'fai', date: '2020-01-02' },
-      { typeId: 'des', statutId: 'fai', date: '2020-01-04' }
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: '2020-01-01' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2020-01-02' },
+      { etapeTypeId: 'des', etapeStatutId: 'fai', date: '2020-01-04' }
     ])
   })
 
   test('ne peut pas créer deux "des"', () => {
     expect(() =>
       orderAndInterpretMachine([
-        { typeId: 'mfr', statutId: 'fai', date: '2020-01-01' },
-        { typeId: 'mdp', statutId: 'fai', date: '2020-01-02' },
-        { typeId: 'des', statutId: 'fai', date: '2020-01-03' },
-        { typeId: 'des', statutId: 'fai', date: '2020-01-04' }
+        { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: '2020-01-01' },
+        { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2020-01-02' },
+        { etapeTypeId: 'des', etapeStatutId: 'fai', date: '2020-01-03' },
+        { etapeTypeId: 'des', etapeStatutId: 'fai', date: '2020-01-04' }
       ])
     ).toThrowErrorMatchingSnapshot()
   })
   test('ne peut pas créer une "css" après une "des"', () => {
     expect(() =>
       orderAndInterpretMachine([
-        { typeId: 'mfr', statutId: 'fai', date: '2020-01-01' },
-        { typeId: 'mdp', statutId: 'fai', date: '2020-01-02' },
-        { typeId: 'des', statutId: 'fai', date: '2020-01-04' },
-        { typeId: 'css', statutId: 'fai', date: '2020-01-05' }
+        { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: '2020-01-01' },
+        { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2020-01-02' },
+        { etapeTypeId: 'des', etapeStatutId: 'fai', date: '2020-01-04' },
+        { etapeTypeId: 'css', etapeStatutId: 'fai', date: '2020-01-05' }
       ])
     ).toThrowErrorMatchingSnapshot()
   })
   test('peut créer une "des" si le titre est en attente de "pfc"', () => {
     orderAndInterpretMachine([
       {
-        typeId: 'mfr',
-        statutId: 'fai',
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
         date: '2020-01-01',
         contenu: { arm: { mecanise: true } }
       },
-      { typeId: 'mdp', statutId: 'fai', date: '2020-01-02' },
-      { typeId: 'dae', statutId: 'exe', date: '2020-01-03' },
-      { typeId: 'pfd', statutId: 'fai', date: '2020-01-04' },
-      { typeId: 'mcp', statutId: 'com', date: '2020-01-05' },
-      { typeId: 'mod', statutId: 'fai', date: '2020-01-06' },
-      { typeId: 'vfd', statutId: 'fai', date: '2020-01-06' },
-      { typeId: 'mcr', statutId: 'fav', date: '2020-01-07' },
-      { typeId: 'eof', statutId: 'fai', date: '2020-01-08' },
-      { typeId: 'aof', statutId: 'fav', date: '2020-01-09' },
-      { typeId: 'sca', statutId: 'fai', date: '2020-01-10' },
-      { typeId: 'aca', statutId: 'fav', date: '2020-01-11' },
-      { typeId: 'mnb', statutId: 'fai', date: '2020-01-12' },
-      { typeId: 'des', statutId: 'fai', date: '2020-01-13' }
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2020-01-02' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe', date: '2020-01-03' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2020-01-04' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2020-01-05' },
+      { etapeTypeId: 'mod', etapeStatutId: 'fai', date: '2020-01-06' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: '2020-01-06' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav', date: '2020-01-07' },
+      { etapeTypeId: 'eof', etapeStatutId: 'fai', date: '2020-01-08' },
+      { etapeTypeId: 'aof', etapeStatutId: 'fav', date: '2020-01-09' },
+      { etapeTypeId: 'sca', etapeStatutId: 'fai', date: '2020-01-10' },
+      { etapeTypeId: 'aca', etapeStatutId: 'fav', date: '2020-01-11' },
+      { etapeTypeId: 'mnb', etapeStatutId: 'fai', date: '2020-01-12' },
+      { etapeTypeId: 'des', etapeStatutId: 'fai', date: '2020-01-13' }
     ])
   })
 
   test('ne peut pas créer une "mno" après la "aca" si le titre n’est pas mécanisé', () => {
     expect(() =>
       orderAndInterpretMachine([
-        { typeId: 'mfr', statutId: 'fai', date: '2020-01-01' },
-        { typeId: 'mdp', statutId: 'fai', date: '2020-01-01' },
-        { typeId: 'pfd', statutId: 'fai', date: '2020-01-01' },
-        { typeId: 'mcp', statutId: 'com', date: '2020-01-01' },
-        { typeId: 'vfd', statutId: 'fai', date: '2020-01-01' },
-        { typeId: 'mcr', statutId: 'fav', date: '2020-01-01' },
-        { typeId: 'eof', statutId: 'fai', date: '2020-01-01' },
-        { typeId: 'aof', statutId: 'fav', date: '2020-01-01' },
-        { typeId: 'sca', statutId: 'fai', date: '2020-01-02' },
-        { typeId: 'aca', statutId: 'fav', date: '2020-01-03' },
-        { typeId: 'mnb', statutId: 'fai', date: '2020-01-04' }
+        { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: '2020-01-01' },
+        { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2020-01-01' },
+        { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2020-01-01' },
+        { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2020-01-01' },
+        { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: '2020-01-01' },
+        { etapeTypeId: 'mcr', etapeStatutId: 'fav', date: '2020-01-01' },
+        { etapeTypeId: 'eof', etapeStatutId: 'fai', date: '2020-01-01' },
+        { etapeTypeId: 'aof', etapeStatutId: 'fav', date: '2020-01-01' },
+        { etapeTypeId: 'sca', etapeStatutId: 'fai', date: '2020-01-02' },
+        { etapeTypeId: 'aca', etapeStatutId: 'fav', date: '2020-01-03' },
+        { etapeTypeId: 'mnb', etapeStatutId: 'fai', date: '2020-01-04' }
       ])
     ).toThrowErrorMatchingSnapshot()
   })
 
   test('peut créer une "mnd" apres une "aca" défavorable', () => {
     orderAndInterpretMachine([
-      { typeId: 'mnd', date: '2020-08-18', statutId: 'fai' },
-      { typeId: 'aca', date: '2020-08-18', statutId: 'def' },
-      { typeId: 'sca', date: '2020-08-07', statutId: 'fai' },
-      { typeId: 'aof', date: '2020-06-19', statutId: 'def' },
-      { typeId: 'eof', date: '2020-06-19', statutId: 'fai' },
-      { typeId: 'mcr', date: '2020-06-15', statutId: 'fav' },
-      { typeId: 'vfd', date: '2020-06-15', statutId: 'fai' },
-      { typeId: 'mcp', date: '2020-05-29', statutId: 'com' },
-      { typeId: 'mdp', date: '2020-05-04', statutId: 'fai' },
-      { typeId: 'pfd', date: '2020-05-01', statutId: 'fai' },
-      { typeId: 'mfr', date: '2020-04-29', statutId: 'fai' }
+      { etapeTypeId: 'mnd', date: '2020-08-18', etapeStatutId: 'fai' },
+      { etapeTypeId: 'aca', date: '2020-08-18', etapeStatutId: 'def' },
+      { etapeTypeId: 'sca', date: '2020-08-07', etapeStatutId: 'fai' },
+      { etapeTypeId: 'aof', date: '2020-06-19', etapeStatutId: 'def' },
+      { etapeTypeId: 'eof', date: '2020-06-19', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcr', date: '2020-06-15', etapeStatutId: 'fav' },
+      { etapeTypeId: 'vfd', date: '2020-06-15', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', date: '2020-05-29', etapeStatutId: 'com' },
+      { etapeTypeId: 'mdp', date: '2020-05-04', etapeStatutId: 'fai' },
+      { etapeTypeId: 'pfd', date: '2020-05-01', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mfr', date: '2020-04-29', etapeStatutId: 'fai' }
     ])
   })
 
   test('peut créer une "mod" si il n’y a pas de sca', () => {
     orderAndInterpretMachine([
-      { typeId: 'mfr', date: '2019-12-12', statutId: 'fai' },
-      { typeId: 'mdp', date: '2019-12-12', statutId: 'fai' },
-      { typeId: 'pfd', date: '2019-12-12', statutId: 'fai' },
-      { typeId: 'mcp', date: '2020-01-21', statutId: 'com' },
-      { typeId: 'vfd', date: '2020-02-05', statutId: 'fai' },
-      { typeId: 'mcr', date: '2020-02-05', statutId: 'fav' },
-      { typeId: 'eof', date: '2020-02-05', statutId: 'fai' },
-      { typeId: 'aof', date: '2020-02-05', statutId: 'fav' },
-      { typeId: 'mod', date: '2020-06-17', statutId: 'fai' }
+      { etapeTypeId: 'mfr', date: '2019-12-12', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mdp', date: '2019-12-12', etapeStatutId: 'fai' },
+      { etapeTypeId: 'pfd', date: '2019-12-12', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', date: '2020-01-21', etapeStatutId: 'com' },
+      { etapeTypeId: 'vfd', date: '2020-02-05', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcr', date: '2020-02-05', etapeStatutId: 'fav' },
+      { etapeTypeId: 'eof', date: '2020-02-05', etapeStatutId: 'fai' },
+      { etapeTypeId: 'aof', date: '2020-02-05', etapeStatutId: 'fav' },
+      { etapeTypeId: 'mod', date: '2020-06-17', etapeStatutId: 'fai' }
     ])
   })
 
   test('peut créer une "mcp" après une "pfd" et "mdp"', () => {
     orderAndInterpretMachine([
-      { typeId: 'mfr', date: '2020-01-30', statutId: 'fai' },
-      { typeId: 'mdp', date: '2020-02-23', statutId: 'fai' },
-      { typeId: 'pfd', date: '2020-02-23', statutId: 'fai' },
-      { typeId: 'mcp', date: '2020-02-28', statutId: 'com' }
+      { etapeTypeId: 'mfr', date: '2020-01-30', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mdp', date: '2020-02-23', etapeStatutId: 'fai' },
+      { etapeTypeId: 'pfd', date: '2020-02-23', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', date: '2020-02-28', etapeStatutId: 'com' }
     ])
   })
 
   test('peut créer une "sca" après une "aof" et "rde"', () => {
     orderAndInterpretMachine([
-      { typeId: 'dae', date: '2020-06-22', statutId: 'exe' },
+      { etapeTypeId: 'dae', date: '2020-06-22', etapeStatutId: 'exe' },
       {
-        typeId: 'mfr',
+        etapeTypeId: 'mfr',
         date: '2020-07-09',
-        statutId: 'fai',
+        etapeStatutId: 'fai',
         contenu: { arm: { mecanise: true, franchissements: 3 } }
       },
-      { typeId: 'pfd', date: '2020-07-10', statutId: 'fai' },
-      { typeId: 'mdp', date: '2020-07-17', statutId: 'fai' },
-      { typeId: 'mcp', date: '2020-07-17', statutId: 'com' },
+      { etapeTypeId: 'pfd', date: '2020-07-10', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mdp', date: '2020-07-17', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcp', date: '2020-07-17', etapeStatutId: 'com' },
       {
-        typeId: 'rde',
+        etapeTypeId: 'rde',
         date: '2020-07-30',
-        statutId: 'fav',
+        etapeStatutId: 'fav',
         contenu: { arm: { franchissements: 3 } }
       },
-      { typeId: 'vfd', date: '2020-07-31', statutId: 'fai' },
-      { typeId: 'mcr', date: '2020-07-31', statutId: 'fav' },
-      { typeId: 'eof', date: '2020-08-10', statutId: 'fai' },
-      { typeId: 'aof', date: '2020-08-10', statutId: 'fav' },
-      { typeId: 'sca', date: '2020-09-04', statutId: 'fai' }
+      { etapeTypeId: 'vfd', date: '2020-07-31', etapeStatutId: 'fai' },
+      { etapeTypeId: 'mcr', date: '2020-07-31', etapeStatutId: 'fav' },
+      { etapeTypeId: 'eof', date: '2020-08-10', etapeStatutId: 'fai' },
+      { etapeTypeId: 'aof', date: '2020-08-10', etapeStatutId: 'fav' },
+      { etapeTypeId: 'sca', date: '2020-09-04', etapeStatutId: 'fai' }
     ])
   })
 
   test('peut faire une "sco" après une "aca" favorable en mécanisé', () => {
     orderAndInterpretMachine([
-      { typeId: 'sco', statutId: 'fai', date: '2020-09-28' },
-      { typeId: 'vfc', statutId: 'fai', date: '2020-07-17' },
-      { typeId: 'pfc', statutId: 'fai', date: '2020-07-16' },
-      { typeId: 'mnb', statutId: 'fai', date: '2020-07-09' },
-      { typeId: 'aca', statutId: 'fav', date: '2020-06-17' },
-      { typeId: 'sca', statutId: 'fai', date: '2020-06-15' },
+      { etapeTypeId: 'sco', etapeStatutId: 'fai', date: '2020-09-28' },
+      { etapeTypeId: 'vfc', etapeStatutId: 'fai', date: '2020-07-17' },
+      { etapeTypeId: 'pfc', etapeStatutId: 'fai', date: '2020-07-16' },
+      { etapeTypeId: 'mnb', etapeStatutId: 'fai', date: '2020-07-09' },
+      { etapeTypeId: 'aca', etapeStatutId: 'fav', date: '2020-06-17' },
+      { etapeTypeId: 'sca', etapeStatutId: 'fai', date: '2020-06-15' },
       {
-        typeId: 'rde',
-        statutId: 'fav',
+        etapeTypeId: 'rde',
+        etapeStatutId: 'fav',
         date: '2020-02-11',
         contenu: { arm: { franchissements: 3 } }
       },
-      { typeId: 'aof', statutId: 'fav', date: '2020-02-08' },
-      { typeId: 'eof', statutId: 'fai', date: '2020-02-07' },
-      { typeId: 'mcr', statutId: 'fav', date: '2020-02-06' },
-      { typeId: 'vfd', statutId: 'fai', date: '2020-02-05' },
-      { typeId: 'mcp', statutId: 'com', date: '2020-01-23' },
-      { typeId: 'dae', statutId: 'exe', date: '2020-01-14' },
-      { typeId: 'pfd', statutId: 'fai', date: '2019-12-13' },
-      { typeId: 'mdp', statutId: 'fai', date: '2019-12-11' },
+      { etapeTypeId: 'aof', etapeStatutId: 'fav', date: '2020-02-08' },
+      { etapeTypeId: 'eof', etapeStatutId: 'fai', date: '2020-02-07' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav', date: '2020-02-06' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: '2020-02-05' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2020-01-23' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe', date: '2020-01-14' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2019-12-13' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2019-12-11' },
       {
-        typeId: 'mfr',
-        statutId: 'fai',
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
         date: '2019-12-10',
         contenu: { arm: { mecanise: true, franchissements: 3 } }
       }
@@ -388,23 +398,23 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('les étapes sont vérifiées dans le bon ordre', () => {
     orderAndInterpretMachine([
-      { typeId: 'aof', statutId: 'fav', date: '2021-06-08' },
-      { typeId: 'eof', statutId: 'fai', date: '2021-06-02' },
-      { typeId: 'mcp', statutId: 'com', date: '2021-05-20' },
-      { typeId: 'mcr', statutId: 'fav', date: '2021-05-20' },
-      { typeId: 'vfd', statutId: 'fai', date: '2021-05-20' },
-      { typeId: 'pfd', statutId: 'fai', date: '2021-05-20' },
-      { typeId: 'dae', statutId: 'exe', date: '2021-05-20' },
-      { typeId: 'mdp', statutId: 'fai', date: '2021-05-20' },
+      { etapeTypeId: 'aof', etapeStatutId: 'fav', date: '2021-06-08' },
+      { etapeTypeId: 'eof', etapeStatutId: 'fai', date: '2021-06-02' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2021-05-20' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav', date: '2021-05-20' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: '2021-05-20' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2021-05-20' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe', date: '2021-05-20' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2021-05-20' },
       {
-        typeId: 'mfr',
-        statutId: 'fai',
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
         date: '2021-05-20',
         contenu: { arm: { mecanise: true, franchissements: 3 } }
       },
       {
-        typeId: 'rde',
-        statutId: 'fav',
+        etapeTypeId: 'rde',
+        etapeStatutId: 'fav',
         date: '2021-04-09',
         contenu: { arm: { franchissements: 3 } }
       }
@@ -413,115 +423,115 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('des étapes qui se font la même journée', () => {
     orderAndInterpretMachine([
-      { typeId: 'mcp', statutId: 'com', date: '2021-02-26' },
-      { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
-      { typeId: 'mfr', statutId: 'fai', date: '2021-02-26' },
-      { typeId: 'pfd', statutId: 'fai', date: '2020-09-03' }
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2021-02-26' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2021-02-26' },
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: '2021-02-26' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2020-09-03' }
     ])
   })
 
   test('peut réaliser une saisine de la CARM après un récépissé de la déclaration sur l’eau défavorable', () => {
     orderAndInterpretMachine([
-      { typeId: 'sca', statutId: 'fai', date: '2021-09-24' },
-      { typeId: 'aof', statutId: 'def', date: '2021-09-23' },
+      { etapeTypeId: 'sca', etapeStatutId: 'fai', date: '2021-09-24' },
+      { etapeTypeId: 'aof', etapeStatutId: 'def', date: '2021-09-23' },
       {
-        typeId: 'rde',
-        statutId: 'def',
+        etapeTypeId: 'rde',
+        etapeStatutId: 'def',
         date: '2021-09-22',
         contenu: { arm: { franchissements: 3 } }
       },
-      { typeId: 'edm', statutId: 'fav', date: '2021-04-30' },
-      { typeId: 'eof', statutId: 'fai', date: '2021-03-17' },
-      { typeId: 'mcb', statutId: 'fai', date: '2021-03-16' },
-      { typeId: 'mcr', statutId: 'fav', date: '2021-03-11' },
-      { typeId: 'vfd', statutId: 'fai', date: '2021-03-10' },
-      { typeId: 'mcp', statutId: 'com', date: '2021-02-26' },
-      { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
+      { etapeTypeId: 'edm', etapeStatutId: 'fav', date: '2021-04-30' },
+      { etapeTypeId: 'eof', etapeStatutId: 'fai', date: '2021-03-17' },
+      { etapeTypeId: 'mcb', etapeStatutId: 'fai', date: '2021-03-16' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav', date: '2021-03-11' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: '2021-03-10' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2021-02-26' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2021-02-26' },
       {
-        typeId: 'mfr',
-        statutId: 'fai',
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
         date: '2021-02-26',
         contenu: { arm: { mecanise: true, franchissements: 3 } }
       },
-      { typeId: 'pfd', statutId: 'fai', date: '2020-09-03' },
-      { typeId: 'dae', statutId: 'exe', date: '2020-07-28' }
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2020-09-03' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe', date: '2020-07-28' }
     ])
   })
 
   test('peut réaliser une demande d’informations sur l’avis de l’ONF', () => {
     orderAndInterpretMachine([
-      { typeId: 'aof', statutId: 'def', date: '2021-09-23' },
-      { typeId: 'ria', statutId: 'fai', date: '2021-09-21' },
-      { typeId: 'mia', statutId: 'fai', date: '2021-09-20' },
-      { typeId: 'eof', statutId: 'fai', date: '2021-03-17' },
-      { typeId: 'mcr', statutId: 'fav', date: '2021-03-10' },
-      { typeId: 'vfd', statutId: 'fai', date: '2021-03-10' },
-      { typeId: 'mcp', statutId: 'com', date: '2021-02-26' },
-      { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
-      { typeId: 'mfr', statutId: 'fai', date: '2021-02-26' },
-      { typeId: 'pfd', statutId: 'fai', date: '2020-09-03' }
+      { etapeTypeId: 'aof', etapeStatutId: 'def', date: '2021-09-23' },
+      { etapeTypeId: 'ria', etapeStatutId: 'fai', date: '2021-09-21' },
+      { etapeTypeId: 'mia', etapeStatutId: 'fai', date: '2021-09-20' },
+      { etapeTypeId: 'eof', etapeStatutId: 'fai', date: '2021-03-17' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav', date: '2021-03-10' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: '2021-03-10' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2021-02-26' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2021-02-26' },
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: '2021-02-26' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2020-09-03' }
     ])
   })
 
   test('peut réaliser une demande de compléments après un avis de la CARM ajourné', () => {
     orderAndInterpretMachine([
-      { typeId: 'sca', statutId: 'fai', date: '2021-09-30' },
-      { typeId: 'rcs', statutId: 'fai', date: '2021-09-28' },
-      { typeId: 'mcs', statutId: 'fai', date: '2021-09-27' },
-      { typeId: 'mna', statutId: 'fai', date: '2021-09-26' },
-      { typeId: 'aca', statutId: 'ajo', date: '2021-09-25' },
-      { typeId: 'sca', statutId: 'fai', date: '2021-09-24' },
-      { typeId: 'aof', statutId: 'fav', date: '2021-09-23' },
-      { typeId: 'eof', statutId: 'fai', date: '2021-03-17' },
-      { typeId: 'mcr', statutId: 'fav', date: '2021-03-10' },
-      { typeId: 'vfd', statutId: 'fai', date: '2021-03-10' },
-      { typeId: 'mcp', statutId: 'com', date: '2021-02-26' },
-      { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
-      { typeId: 'mfr', statutId: 'fai', date: '2021-02-26' },
-      { typeId: 'pfd', statutId: 'fai', date: '2020-09-03' }
+      { etapeTypeId: 'sca', etapeStatutId: 'fai', date: '2021-09-30' },
+      { etapeTypeId: 'rcs', etapeStatutId: 'fai', date: '2021-09-28' },
+      { etapeTypeId: 'mcs', etapeStatutId: 'fai', date: '2021-09-27' },
+      { etapeTypeId: 'mna', etapeStatutId: 'fai', date: '2021-09-26' },
+      { etapeTypeId: 'aca', etapeStatutId: 'ajo', date: '2021-09-25' },
+      { etapeTypeId: 'sca', etapeStatutId: 'fai', date: '2021-09-24' },
+      { etapeTypeId: 'aof', etapeStatutId: 'fav', date: '2021-09-23' },
+      { etapeTypeId: 'eof', etapeStatutId: 'fai', date: '2021-03-17' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav', date: '2021-03-10' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: '2021-03-10' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2021-02-26' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2021-02-26' },
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: '2021-02-26' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2020-09-03' }
     ])
   })
 
   test('peut réaliser une demande d’ARM non mécanisée et un avenant', () => {
     orderAndInterpretMachine([
-      { typeId: 'mnv', statutId: 'fai', date: '2021-09-29' },
-      { typeId: 'aco', statutId: 'fai', date: '2021-09-28' },
-      { typeId: 'mns', statutId: 'fai', date: '2021-09-27' },
-      { typeId: 'sco', statutId: 'fai', date: '2021-09-26' },
-      { typeId: 'aca', statutId: 'fav', date: '2021-09-25' },
-      { typeId: 'sca', statutId: 'fai', date: '2021-09-24' },
-      { typeId: 'aof', statutId: 'fav', date: '2021-09-23' },
-      { typeId: 'eof', statutId: 'fai', date: '2021-03-17' },
-      { typeId: 'mcr', statutId: 'fav', date: '2021-03-10' },
-      { typeId: 'vfd', statutId: 'fai', date: '2021-03-10' },
-      { typeId: 'mcp', statutId: 'com', date: '2021-02-26' },
-      { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
-      { typeId: 'mfr', statutId: 'fai', date: '2021-02-26' },
-      { typeId: 'pfd', statutId: 'fai', date: '2020-09-03' }
+      { etapeTypeId: 'mnv', etapeStatutId: 'fai', date: '2021-09-29' },
+      { etapeTypeId: 'aco', etapeStatutId: 'fai', date: '2021-09-28' },
+      { etapeTypeId: 'mns', etapeStatutId: 'fai', date: '2021-09-27' },
+      { etapeTypeId: 'sco', etapeStatutId: 'fai', date: '2021-09-26' },
+      { etapeTypeId: 'aca', etapeStatutId: 'fav', date: '2021-09-25' },
+      { etapeTypeId: 'sca', etapeStatutId: 'fai', date: '2021-09-24' },
+      { etapeTypeId: 'aof', etapeStatutId: 'fav', date: '2021-09-23' },
+      { etapeTypeId: 'eof', etapeStatutId: 'fai', date: '2021-03-17' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav', date: '2021-03-10' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: '2021-03-10' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2021-02-26' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2021-02-26' },
+      { etapeTypeId: 'mfr', etapeStatutId: 'fai', date: '2021-02-26' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2020-09-03' }
     ])
   })
 
   test('peut réaliser une demande d’ARM mécanisée et un avenant', () => {
     orderAndInterpretMachine([
-      { typeId: 'mnv', statutId: 'fai', date: '2021-10-02' },
-      { typeId: 'aco', statutId: 'fai', date: '2021-10-01' },
-      { typeId: 'sco', statutId: 'fai', date: '2021-09-29' },
-      { typeId: 'vfc', statutId: 'fai', date: '2021-09-28' },
-      { typeId: 'pfc', statutId: 'fai', date: '2021-09-27' },
-      { typeId: 'mnb', statutId: 'fai', date: '2021-09-26' },
-      { typeId: 'aca', statutId: 'fav', date: '2021-09-25' },
-      { typeId: 'sca', statutId: 'fai', date: '2021-09-24' },
-      { typeId: 'aof', statutId: 'fav', date: '2021-09-23' },
-      { typeId: 'eof', statutId: 'fai', date: '2021-03-17' },
-      { typeId: 'mcr', statutId: 'fav', date: '2021-03-11' },
-      { typeId: 'vfd', statutId: 'fai', date: '2021-03-10' },
-      { typeId: 'mcp', statutId: 'com', date: '2021-02-29' },
-      { typeId: 'pfd', statutId: 'fai', date: '2021-02-28' },
-      { typeId: 'dae', statutId: 'exe', date: '2021-02-27' },
-      { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
+      { etapeTypeId: 'mnv', etapeStatutId: 'fai', date: '2021-10-02' },
+      { etapeTypeId: 'aco', etapeStatutId: 'fai', date: '2021-10-01' },
+      { etapeTypeId: 'sco', etapeStatutId: 'fai', date: '2021-09-29' },
+      { etapeTypeId: 'vfc', etapeStatutId: 'fai', date: '2021-09-28' },
+      { etapeTypeId: 'pfc', etapeStatutId: 'fai', date: '2021-09-27' },
+      { etapeTypeId: 'mnb', etapeStatutId: 'fai', date: '2021-09-26' },
+      { etapeTypeId: 'aca', etapeStatutId: 'fav', date: '2021-09-25' },
+      { etapeTypeId: 'sca', etapeStatutId: 'fai', date: '2021-09-24' },
+      { etapeTypeId: 'aof', etapeStatutId: 'fav', date: '2021-09-23' },
+      { etapeTypeId: 'eof', etapeStatutId: 'fai', date: '2021-03-17' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav', date: '2021-03-11' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: '2021-03-10' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2021-02-29' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2021-02-28' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe', date: '2021-02-27' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2021-02-26' },
       {
-        typeId: 'mfr',
-        statutId: 'fai',
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
         date: '2021-02-25',
         contenu: { arm: { mecanise: true } }
       }
@@ -531,8 +541,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test("peut faire une demande de compléments pour la RDE si les franchissements d'eau ne sont pas spécifiés sur une ARM mécanisée", () => {
     orderAndInterpretMachine([
       {
-        typeId: 'rcb',
-        statutId: 'fai',
+        etapeTypeId: 'rcb',
+        etapeStatutId: 'fai',
         date: '2020-10-08',
         contenu: {
           arm: {
@@ -540,14 +550,14 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
           }
         }
       },
-      { typeId: 'mcb', statutId: 'fai', date: '2020-10-05' },
-      { typeId: 'mcp', statutId: 'com', date: '2020-08-25' },
-      { typeId: 'mdp', statutId: 'fai', date: '2020-08-25' },
-      { typeId: 'pfd', statutId: 'fai', date: '2020-08-20' },
-      { typeId: 'dae', statutId: 'exe', date: '2020-07-30' },
+      { etapeTypeId: 'mcb', etapeStatutId: 'fai', date: '2020-10-05' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2020-08-25' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2020-08-25' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2020-08-20' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe', date: '2020-07-30' },
       {
-        typeId: 'mfr',
-        statutId: 'fai',
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
         date: '2020-07-14',
         contenu: {
           arm: {
@@ -561,10 +571,10 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   test('ne peut pas faire de mfr non mécanisée après une dae', () => {
     expect(() =>
       orderAndInterpretMachine([
-        { typeId: 'dae', statutId: 'exe', date: '2021-02-23' },
+        { etapeTypeId: 'dae', etapeStatutId: 'exe', date: '2021-02-23' },
         {
-          typeId: 'mfr',
-          statutId: 'fai',
+          etapeTypeId: 'mfr',
+          etapeStatutId: 'fai',
           date: '2021-02-25',
           contenu: { arm: { mecanise: false } }
         }
@@ -576,14 +586,14 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     expect(() =>
       orderAndInterpretMachine([
         {
-          typeId: 'rde',
-          statutId: 'fav',
+          etapeTypeId: 'rde',
+          etapeStatutId: 'fav',
           date: '2021-02-23',
           contenu: { arm: { franchissements: 1 } }
         },
         {
-          typeId: 'mfr',
-          statutId: 'fai',
+          etapeTypeId: 'mfr',
+          etapeStatutId: 'fai',
           date: '2021-02-25',
           contenu: { arm: { mecanise: false } }
         }
@@ -593,71 +603,71 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
 
   test('peut réaliser une validation des frais de dossier complémentaire après un désistement', () => {
     orderAndInterpretMachine([
-      { typeId: 'vfc', statutId: 'fai', date: '2021-10-04' },
-      { typeId: 'mnc', statutId: 'fai', date: '2021-10-02' },
-      { typeId: 'css', statutId: 'fai', date: '2021-10-01' },
-      { typeId: 'aof', statutId: 'fav', date: '2021-09-23' },
-      { typeId: 'eof', statutId: 'fai', date: '2021-03-17' },
-      { typeId: 'mcr', statutId: 'fav', date: '2021-03-11' },
-      { typeId: 'vfd', statutId: 'fai', date: '2021-03-10' },
-      { typeId: 'mcp', statutId: 'com', date: '2021-02-29' },
-      { typeId: 'pfd', statutId: 'fai', date: '2021-02-28' },
-      { typeId: 'dae', statutId: 'exe', date: '2021-02-27' },
-      { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
+      { etapeTypeId: 'vfc', etapeStatutId: 'fai', date: '2021-10-04' },
+      { etapeTypeId: 'mnc', etapeStatutId: 'fai', date: '2021-10-02' },
+      { etapeTypeId: 'css', etapeStatutId: 'fai', date: '2021-10-01' },
+      { etapeTypeId: 'aof', etapeStatutId: 'fav', date: '2021-09-23' },
+      { etapeTypeId: 'eof', etapeStatutId: 'fai', date: '2021-03-17' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav', date: '2021-03-11' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: '2021-03-10' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2021-02-29' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2021-02-28' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe', date: '2021-02-27' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2021-02-26' },
       {
-        typeId: 'mfr',
-        statutId: 'fai',
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
         date: '2021-02-25',
         contenu: { arm: { mecanise: true } }
       }
     ])
 
     orderAndInterpretMachine([
-      { typeId: 'vfc', statutId: 'fai', date: '2021-10-05' },
-      { typeId: 'vfd', statutId: 'fai', date: '2021-10-04' },
-      { typeId: 'mnc', statutId: 'fai', date: '2021-10-02' },
-      { typeId: 'css', statutId: 'fai', date: '2021-10-01' },
-      { typeId: 'mcp', statutId: 'com', date: '2021-02-29' },
-      { typeId: 'pfd', statutId: 'fai', date: '2021-02-28' },
-      { typeId: 'dae', statutId: 'exe', date: '2021-02-27' },
-      { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
+      { etapeTypeId: 'vfc', etapeStatutId: 'fai', date: '2021-10-05' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: '2021-10-04' },
+      { etapeTypeId: 'mnc', etapeStatutId: 'fai', date: '2021-10-02' },
+      { etapeTypeId: 'css', etapeStatutId: 'fai', date: '2021-10-01' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2021-02-29' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2021-02-28' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe', date: '2021-02-27' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2021-02-26' },
       {
-        typeId: 'mfr',
-        statutId: 'fai',
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
         date: '2021-02-25',
         contenu: { arm: { mecanise: true } }
       }
     ])
     orderAndInterpretMachine([
-      { typeId: 'vfc', statutId: 'fai', date: '2021-10-04' },
-      { typeId: 'des', statutId: 'fai', date: '2021-10-01' },
-      { typeId: 'aof', statutId: 'fav', date: '2021-09-23' },
-      { typeId: 'eof', statutId: 'fai', date: '2021-03-17' },
-      { typeId: 'mcr', statutId: 'fav', date: '2021-03-11' },
-      { typeId: 'vfd', statutId: 'fai', date: '2021-03-10' },
-      { typeId: 'mcp', statutId: 'com', date: '2021-02-29' },
-      { typeId: 'pfd', statutId: 'fai', date: '2021-02-28' },
-      { typeId: 'dae', statutId: 'exe', date: '2021-02-27' },
-      { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
+      { etapeTypeId: 'vfc', etapeStatutId: 'fai', date: '2021-10-04' },
+      { etapeTypeId: 'des', etapeStatutId: 'fai', date: '2021-10-01' },
+      { etapeTypeId: 'aof', etapeStatutId: 'fav', date: '2021-09-23' },
+      { etapeTypeId: 'eof', etapeStatutId: 'fai', date: '2021-03-17' },
+      { etapeTypeId: 'mcr', etapeStatutId: 'fav', date: '2021-03-11' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: '2021-03-10' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2021-02-29' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2021-02-28' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe', date: '2021-02-27' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2021-02-26' },
       {
-        typeId: 'mfr',
-        statutId: 'fai',
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
         date: '2021-02-25',
         contenu: { arm: { mecanise: true } }
       }
     ])
 
     orderAndInterpretMachine([
-      { typeId: 'vfc', statutId: 'fai', date: '2021-10-05' },
-      { typeId: 'vfd', statutId: 'fai', date: '2021-10-04' },
-      { typeId: 'des', statutId: 'fai', date: '2021-10-01' },
-      { typeId: 'mcp', statutId: 'com', date: '2021-02-29' },
-      { typeId: 'pfd', statutId: 'fai', date: '2021-02-28' },
-      { typeId: 'dae', statutId: 'exe', date: '2021-02-27' },
-      { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
+      { etapeTypeId: 'vfc', etapeStatutId: 'fai', date: '2021-10-05' },
+      { etapeTypeId: 'vfd', etapeStatutId: 'fai', date: '2021-10-04' },
+      { etapeTypeId: 'des', etapeStatutId: 'fai', date: '2021-10-01' },
+      { etapeTypeId: 'mcp', etapeStatutId: 'com', date: '2021-02-29' },
+      { etapeTypeId: 'pfd', etapeStatutId: 'fai', date: '2021-02-28' },
+      { etapeTypeId: 'dae', etapeStatutId: 'exe', date: '2021-02-27' },
+      { etapeTypeId: 'mdp', etapeStatutId: 'fai', date: '2021-02-26' },
       {
-        typeId: 'mfr',
-        statutId: 'fai',
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
         date: '2021-02-25',
         contenu: { arm: { mecanise: true } }
       }
@@ -668,8 +678,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     expect(() =>
       orderAndInterpretMachine([
         {
-          typeId: 'mfr',
-          statutId: 'fai',
+          etapeTypeId: 'mfr',
+          etapeStatutId: 'fai',
           date: '2019-12-10',
           contenu: { arm: { mecanise: false, franchissements: 3 } }
         }
@@ -680,6 +690,10 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
   test.each(etapesProd as any[])('cas réel N°$id', demarche => {
     // ici les étapes sont déjà ordonnées
-    interpretMachine(demarche.etapes as Etape[])
+    interpretMachine(armOctMachine, demarche.etapes)
+    expect(armOctMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
+      demarcheStatut: demarche.demarcheStatutId,
+      publique: demarche.demarchePublique
+    })
   })
 })

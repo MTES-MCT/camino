@@ -2,8 +2,8 @@ import {
   isDemarcheDefinitionMachine,
   isDemarcheDefinitionRestriction
 } from './definitions'
-import { armOctMachine } from './arm/oct.machine'
 import { restrictionsArmRet } from './arm/ret'
+import { ArmOctMachine } from './arm/oct.machine'
 
 test('isDemarcheDefinitionMachine', () => {
   expect(
@@ -11,7 +11,7 @@ test('isDemarcheDefinitionMachine', () => {
       titreTypeId: '',
       demarcheTypeIds: [],
       dateDebut: '',
-      machine: armOctMachine
+      machine: new ArmOctMachine()
     })
   ).toBe(true)
   expect(
@@ -30,7 +30,7 @@ test('isDemarcheDefinitionRestriction', () => {
       titreTypeId: '',
       demarcheTypeIds: [],
       dateDebut: '',
-      machine: armOctMachine
+      machine: new ArmOctMachine()
     })
   ).toBe(false)
   expect(

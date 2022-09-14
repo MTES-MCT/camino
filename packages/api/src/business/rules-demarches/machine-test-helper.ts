@@ -1,16 +1,13 @@
-import {
-  Etape,
-  Event,
-  eventFrom,
-  armOctMachine,
-  isEvent,
-  toPotentialXStateEvent
-} from './arm/oct.machine'
+import { Etape } from './machine-common'
+import { EventObject } from 'xstate/lib/types'
 import { interpret } from 'xstate'
-import { orderMachine } from './machine-helper'
+import { CaminoMachine } from './machine-helper'
 
 interface CustomMatchers<R = unknown> {
-  canOnlyTransitionTo(_events: Event[]): R
+  canOnlyTransitionTo<T extends EventObject>(
+    machine: CaminoMachine<any, T>,
+    _events: EventObject['type'][]
+  ): R
 }
 
 declare global {
@@ -24,12 +21,16 @@ declare global {
   }
 }
 expect.extend({
-  canOnlyTransitionTo(service, events: Event[]) {
+  canOnlyTransitionTo<T extends EventObject>(
+    service: any,
+    machine: CaminoMachine<any, T>,
+    events: T['type'][]
+  ) {
     events.sort()
-    const passEvents: Event[] = service.state.nextEvents
-      .filter(isEvent)
-      .filter((event: Event) => {
-        const events = toPotentialXStateEvent(event)
+    const passEvents: EventObject['type'][] = service.state.nextEvents
+      .filter(machine.isEvent)
+      .filter((event: EventObject['type']) => {
+        const events = machine.toPotentialCaminoXStateEvent(event)
 
         return events.some(event => service.state.can(event))
       })
@@ -55,27 +56,32 @@ expect.extend({
   }
 })
 
-export const interpretMachine = (etapes: readonly Etape[]) => {
-  const service = interpret(armOctMachine)
+export const interpretMachine = <T extends EventObject>(
+  machine: CaminoMachine<any, T>,
+  etapes: readonly Etape[]
+) => {
+  const service = interpret(machine.machine)
 
   service.start()
 
   for (let i = 0; i < etapes.length; i++) {
     const etapeAFaire = etapes[i]
-    const event = eventFrom(etapeAFaire)
+    const event = machine.eventFrom(etapeAFaire)
 
     if (!service.state.can(event)) {
       throw new Error(
         `Error: cannot execute step: '${JSON.stringify(
           etapeAFaire
         )}' after '${JSON.stringify(
-          etapes.slice(0, i).map(etape => etape.typeId + '_' + etape.statutId)
+          etapes
+            .slice(0, i)
+            .map(etape => etape.etapeTypeId + '_' + etape.etapeStatutId)
         )}'. The event ${JSON.stringify(
           event
         )} should be one of '${service.state.nextEvents
-          .filter(isEvent)
-          .filter((event: Event) => {
-            const events = toPotentialXStateEvent(event)
+          .filter(machine.isEvent)
+          .filter((event: EventObject['type']) => {
+            const events = machine.toPotentialCaminoXStateEvent(event)
 
             return events.some(event => service.state.can(event))
           })}'`
@@ -84,15 +90,12 @@ export const interpretMachine = (etapes: readonly Etape[]) => {
     service.send(event)
   }
 
-  service.stop()
-
   return service
 }
 
-export const orderAndInterpretMachine = (etapes: readonly Etape[]) => {
-  const sortedEtapes = etapes
-    .slice()
-    .sort((a, b) => a.date.localeCompare(b.date))
-
-  return interpretMachine(orderMachine(sortedEtapes))
+export const orderAndInterpretMachine = <T extends EventObject>(
+  machine: CaminoMachine<any, T>,
+  etapes: readonly Etape[]
+) => {
+  return interpretMachine(machine, machine.orderMachine(etapes))
 }

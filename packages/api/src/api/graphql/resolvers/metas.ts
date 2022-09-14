@@ -34,20 +34,20 @@ import {
 import { userSuper } from '../../../database/user-super'
 import { sortedAdministrationTypes } from 'camino-common/src/static/administrations'
 import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
-import {
-  isEtapesOk,
-  possibleNextEtapes,
-  toMachineEtapes
-} from '../../../business/rules-demarches/machine-helper'
+
 import { UNITES } from 'camino-common/src/static/unites'
 import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort'
 import TitresDemarches from '../../../database/models/titres-demarches'
-import { Etape } from '../../../business/rules-demarches/arm/oct.machine'
 import { Pays, PaysList } from 'camino-common/src/static/pays'
 import { Departement, Departements } from 'camino-common/src/static/departement'
 import { Region, Regions } from 'camino-common/src/static/region'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
+import {
+  Etape,
+  toMachineEtapes
+} from '../../../business/rules-demarches/machine-common'
+import { CaminoMachines } from '../../../business/rules-demarches/machines'
 
 export const devises = async () => devisesGet()
 
@@ -130,6 +130,7 @@ export const demarchesStatuts = async () => {
 }
 // VISIBLE_FOR_TESTING
 export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
+  machine: CaminoMachines,
   titreDemarche: Pick<TitresDemarches, 'etapes'>,
   titreEtapeId: string | undefined,
   date: string,
@@ -152,18 +153,18 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
     etapesApres.push(...toMachineEtapes(sortedEtapes.slice(etapesAvant.length)))
   }
 
-  const etapesPossibles = possibleNextEtapes(etapesAvant).filter(et => {
+  const etapesPossibles = machine.possibleNextEtapes(etapesAvant).filter(et => {
     const newEtapes = [...etapesAvant]
 
     const items = { ...et, date }
     newEtapes.push(items)
     newEtapes.push(...etapesApres)
 
-    return isEtapesOk(newEtapes)
+    return machine.isEtapesOk(newEtapes)
   })
 
   etapesTypes = etapesTypes.filter(et =>
-    etapesPossibles.map(({ typeId }) => typeId).includes(et.id)
+    etapesPossibles.map(({ etapeTypeId }) => etapeTypeId).includes(et.id)
   )
 
   return etapesTypes
@@ -240,6 +241,7 @@ const demarcheEtapesTypesGet = async (
 
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {
     etapesTypes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+      demarcheDefinition.machine,
       titreDemarche,
       titreEtapeId,
       date,

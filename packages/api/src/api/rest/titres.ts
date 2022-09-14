@@ -27,10 +27,6 @@ import {
   TitreLinks
 } from 'camino-common/src/titres'
 import {
-  toMachineEtapes,
-  whoIsBlocking
-} from '../../business/rules-demarches/machine-helper'
-import {
   demarcheDefinitionFind,
   isDemarcheDefinitionMachine
 } from '../../business/rules-demarches/definitions'
@@ -44,6 +40,7 @@ import { titreAdministrationsGet } from '../_format/titres'
 import { canLinkTitres } from 'camino-common/src/permissions/titres'
 import { linkTitres } from '../../database/queries/titres-titres'
 import { checkTitreLinks } from '../../business/validations/titre-links-validate'
+import { toMachineEtapes } from '../../business/rules-demarches/machine-common'
 
 type MyTitreRef = { type: NonNullable<ITitreReference['type']> } & Omit<
   ITitreReference,
@@ -170,18 +167,22 @@ async function titresArmAvecOctroi(
       if (!octARM.etapes) {
         throw new Error('les étapes ne sont pas chargées')
       }
+      if (octARM.statutId === 'eco') {
+        return null
+      }
 
-      const hasMachine = isDemarcheDefinitionMachine(
-        demarcheDefinitionFind(
-          titre.typeId,
-          octARM.typeId,
-          octARM.etapes,
-          octARM.id
-        )
+      const dd = demarcheDefinitionFind(
+        titre.typeId,
+        octARM.typeId,
+        octARM.etapes,
+        octARM.id
       )
+      const hasMachine = isDemarcheDefinitionMachine(dd)
       const blockedByMe: boolean =
         hasMachine &&
-        whoIsBlocking(toMachineEtapes(octARM.etapes)).includes(administrationId)
+        dd.machine
+          .whoIsBlocking(toMachineEtapes(octARM.etapes))
+          .includes(administrationId)
 
       // TODO 2022-06-08 wait for typescript to get better at type interpolation
       return {
@@ -246,6 +247,7 @@ type DrealTitreSanitize = NotNullableKeys<
 interface TitreDrealAvecReferences {
   titre: DrealTitreSanitize
   references: MyTitreRef[]
+  blockedByMe: boolean
 }
 export const titresDREAL = async (
   req: express.Request,
@@ -267,26 +269,36 @@ export const titresDREAL = async (
       statutsIds: ['dmi', 'mod', 'val']
     }
 
-    const titres = await titresGet(
-      { ...filters, colonne: 'nom' },
+    const titresAutorises = await titresGet(
+      filters,
       {
-        fields: {
-          type: { id: {} },
-          references: { type: { id: {} } },
-          titulaires: { id: {} },
-          activites: { id: {} }
-        }
+        fields: { id: {} }
       },
       user
     )
-
-    const titresFormated: CommonTitreDREAL[] = titres
+    const titresAutorisesIds = titresAutorises
       .filter(
         ({ modification, demarchesCreation, travauxCreation }) =>
           (modification ?? false) ||
           (demarchesCreation ?? false) ||
           (travauxCreation ?? false)
       )
+      .map(({ id }) => id)
+    const titres = await titresGet(
+      { ...filters, ids: titresAutorisesIds, colonne: 'nom' },
+      {
+        fields: {
+          type: { id: {} },
+          references: { type: { id: {} } },
+          titulaires: { id: {} },
+          activites: { id: {} },
+          demarches: { etapes: { id: {} } }
+        }
+      },
+      userSuper
+    )
+
+    const titresFormated: CommonTitreDREAL[] = titres
       .map((titre: ITitre): TitreDrealAvecReferences | null => {
         if (titre.slug === undefined) {
           return null
@@ -316,14 +328,51 @@ export const titresDREAL = async (
           throw new Error('le type de référence n’est pas chargé')
         }
 
-        return { titre: titre as DrealTitreSanitize, references }
+        if (!titre.demarches) {
+          throw new Error('les démarches ne sont pas chargées')
+        }
+
+        const octroi = titre.demarches.find(
+          demarche => demarche.typeId === 'oct'
+        )
+        let blockedByMe = false
+        if (octroi) {
+          if (!octroi.etapes) {
+            throw new Error('les étapes ne sont pas chargées')
+          }
+          if (octroi.statutId === 'eco') {
+            return null
+          } else {
+            const dd = demarcheDefinitionFind(
+              titre.typeId,
+              octroi.typeId,
+              octroi.etapes,
+              octroi.id
+            )
+            const hasMachine = isDemarcheDefinitionMachine(dd)
+            try {
+              blockedByMe =
+                hasMachine &&
+                dd.machine
+                  .whoIsBlocking(toMachineEtapes(octroi.etapes))
+                  .includes(user.administrationId)
+            } catch (e) {
+              console.error(
+                `Impossible de traiter le titre ${titre.id} car la démarche d'octroi n'est pas valide`,
+                e
+              )
+            }
+          }
+        }
+
+        return { titre: titre as DrealTitreSanitize, references, blockedByMe }
       })
       .filter(
         (
           titre: TitreDrealAvecReferences | null
         ): titre is TitreDrealAvecReferences => titre !== null
       )
-      .map(({ titre, references }) => {
+      .map(({ titre, references, blockedByMe }) => {
         return {
           id: titre.id,
           slug: titre.slug,
@@ -341,7 +390,8 @@ export const titresDREAL = async (
           activitesAbsentes:
             typeof titre.activitesAbsentes === 'string'
               ? parseInt(titre.activitesAbsentes, 10)
-              : titre.activitesAbsentes ?? 0
+              : titre.activitesAbsentes ?? 0,
+          enAttenteDeDREAL: blockedByMe
         }
       })
 

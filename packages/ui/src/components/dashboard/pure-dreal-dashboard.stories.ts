@@ -31,7 +31,8 @@ const titres: CommonTitreDREAL[] = [
       }
     ],
     activitesAbsentes: 0,
-    activitesEnConstruction: 0
+    activitesEnConstruction: 0,
+    enAttenteDeDREAL: false
   },
   {
     id: 'secondId',
@@ -53,7 +54,8 @@ const titres: CommonTitreDREAL[] = [
       }
     ],
     activitesEnConstruction: 2,
-    activitesAbsentes: 0
+    activitesAbsentes: 0,
+    enAttenteDeDREAL: true
   },
   {
     id: 'thirdId',
@@ -69,7 +71,8 @@ const titres: CommonTitreDREAL[] = [
       }
     ],
     activitesAbsentes: 0,
-    activitesEnConstruction: 3
+    activitesEnConstruction: 3,
+    enAttenteDeDREAL: false
   },
   {
     id: 'fourthId',
@@ -91,7 +94,8 @@ const titres: CommonTitreDREAL[] = [
       }
     ],
     activitesEnConstruction: 8,
-    activitesAbsentes: 2
+    activitesAbsentes: 2,
+    enAttenteDeDREAL: false
   }
 ]
 

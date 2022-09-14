@@ -5,11 +5,7 @@ import {
   IDemarcheDefinitionRestrictions,
   isDemarcheDefinitionMachine
 } from '../rules-demarches/definitions'
-import {
-  isEtapesOk,
-  orderMachine,
-  toMachineEtapes
-} from '../rules-demarches/machine-helper'
+import { toMachineEtapes } from '../rules-demarches/machine-common'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
 export const titreEtapesSortDescByOrdre = (titreEtapes: ITitreEtape[]) =>
@@ -41,8 +37,10 @@ export const titreEtapesSortAscByDate = (
     )
   }
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {
-    const etapes = orderMachine(toMachineEtapes(titreEtapes))
-    if (!isEtapesOk(etapes)) {
+    const etapes = demarcheDefinition.machine.orderMachine(
+      toMachineEtapes(titreEtapes)
+    )
+    if (!demarcheDefinition.machine.isEtapesOk(etapes)) {
       console.error(
         `impossible de trouver un ordre pour la démarche '${
           titreEtapes[0]?.titreDemarcheId
@@ -55,8 +53,8 @@ export const titreEtapesSortAscByDate = (
         titreEtapes.find(
           te =>
             te.date === etape.date &&
-            te.typeId === etape.typeId &&
-            te.statutId === etape.statutId
+            te.typeId === etape.etapeTypeId &&
+            te.statutId === etape.etapeStatutId
         )
       )
       .filter(
