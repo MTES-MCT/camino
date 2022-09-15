@@ -23,6 +23,7 @@
     "@mdx-js/preact": "dépendance transitive à @storybook/builder-vite -> https://github.com/storybookjs/builder-vite/issues/406"
   },
   "dependencies": {
+    "canvas": "^2.10.1",
     "compression": "^1.7.4",
     "connect-history-api-fallback": "^2.0.0",
     "dotenv": "^16.0.1",

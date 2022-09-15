@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Automated Storybook Snapshots Components/PureDGTMStats Loading 1`] = `
+<div>
+  <div
+    class="loaders fixed p"
+  >
+    <div
+      class="loader"
+    />
+  </div>
+  <!--v-if-->
+  <!--v-if-->
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/PureDGTMStats Ok 1`] = `
+<div>
+  <!--v-if-->
+  <div>
+    <div
+      style="display: grid; grid-template-columns: 1fr 1fr 1fr;"
+    >
+      <div>
+        <!-- placeholders for other stats -->
+      </div>
+      <div>
+        <canvas
+          height="0"
+          style="display: block; box-sizing: border-box; height: 0px; width: 0px;"
+          width="0"
+        />
+      </div>
+      <div>
+        <!-- placeholders for other stats -->
+      </div>
+    </div>
+  </div>
+  <!--v-if-->
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/PureDGTMStats With Error 1`] = `
+<div>
+  <!--v-if-->
+  <!--v-if-->
+  <div
+    class="mb p-s color-bg bg-error"
+  >
+    because reasons
+  </div>
+</div>
+`;

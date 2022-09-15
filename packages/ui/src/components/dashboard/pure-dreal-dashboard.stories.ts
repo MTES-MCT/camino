@@ -1,7 +1,8 @@
 import PureDrealDashboard from './pure-dreal-dashboard.vue'
 import { Meta, Story } from '@storybook/vue3'
 import { CommonTitreDREAL } from 'camino-common/src/titres'
-
+import { StatistiquesDGTM } from 'camino-common/src/statistiques'
+import { statistiquesDGTMFake } from './testData'
 const meta: Meta = {
   title: 'Components/PureDrealDashboard',
   component: PureDrealDashboard,
@@ -14,6 +15,8 @@ export default meta
 
 type Props = {
   getDrealTitres: () => Promise<CommonTitreDREAL[]>
+  isDGTM: boolean
+  getDgtmStats: () => Promise<StatistiquesDGTM>
 }
 
 const titres: CommonTitreDREAL[] = [
@@ -109,14 +112,27 @@ const Template: Story<Props> = (args: Props) => ({
 
 export const Ok = Template.bind({})
 Ok.args = {
-  getDrealTitres: () => Promise.resolve(titres)
+  getDrealTitres: () => Promise.resolve(titres),
+  isDGTM: false,
+  getDgtmStats: () => Promise.resolve({ depotEtInstructions: {} })
+}
+
+export const OkDGTM = Template.bind({})
+OkDGTM.args = {
+  getDrealTitres: () => Promise.resolve(titres),
+  isDGTM: true,
+  getDgtmStats: () => Promise.resolve(statistiquesDGTMFake)
 }
 
 export const Loading = Template.bind({})
 Loading.args = {
-  getDrealTitres: () => new Promise<CommonTitreDREAL[]>(resolve => {})
+  getDrealTitres: () => new Promise<CommonTitreDREAL[]>(resolve => {}),
+  isDGTM: false,
+  getDgtmStats: () => Promise.resolve({ depotEtInstructions: {} })
 }
 export const WithError = Template.bind({})
 WithError.args = {
-  getDrealTitres: () => Promise.reject(new Error('because reasons'))
+  getDrealTitres: () => Promise.reject(new Error('because reasons')),
+  isDGTM: false,
+  getDgtmStats: () => Promise.resolve({ depotEtInstructions: {} })
 }

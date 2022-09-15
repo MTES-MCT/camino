@@ -6,7 +6,12 @@
   />
   <PureONFDashboard v-else-if="isONF" :getOnfTitres="getOnfTitres" />
   <PurePTMGDashboard v-else-if="isPTMG" :getPtmgTitres="getPtmgTitres" />
-  <PureDREALDashboard v-else-if="isDREAL" :getDrealTitres="getDrealTitres" />
+  <PureDREALDashboard
+    v-else-if="isDREAL || isDGTM"
+    :getDrealTitres="getDrealTitres"
+    :isDGTM="isDGTM"
+    :getDgtmStats="getDgtmStats"
+  />
   <div v-else>Loading</div>
 </template>
 
@@ -32,13 +37,14 @@ const hasEntreprises: boolean = store.getters['user/hasEntreprises']
 const isONF: boolean = store.getters['user/isONF']
 const isPTMG: boolean = store.getters['user/isPTMG']
 const isDREAL: boolean = store.getters['user/isDREAL']
+const isDGTM: boolean = store.getters['user/isDGTM']
 if (hasEntreprises) {
   // TODO 2022-03-17: type the store
   const entreprises = store.getters['user/user']?.entreprises ?? []
   entreprisesIds.push(
     ...entreprises.map((entreprise: { id: string }) => entreprise.id)
   )
-} else if (!isONF && !isPTMG && !isDREAL) {
+} else if (!isONF && !isPTMG && !isDREAL && !isDGTM) {
   store.commit('titres/reset')
   store.dispatch('titres/init')
   router.replace({ name: 'titres' })
@@ -51,4 +57,5 @@ const getEntreprisesTitres = async () => {
 const getOnfTitres = async () => (await fetch('/apiUrl/titresONF')).json()
 const getPtmgTitres = async () => (await fetch('/apiUrl/titresPTMG')).json()
 const getDrealTitres = async () => (await fetch('/apiUrl/titresDREAL')).json()
+const getDgtmStats = async () => (await fetch('/apiUrl/statistiques')).json()
 </script>

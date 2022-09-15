@@ -18,6 +18,7 @@ import {
   manageNewsletterSubscription,
   utilisateurs
 } from '../api/rest/utilisateurs'
+import { getDGTMStats } from '../api/rest/statistiques'
 
 const contentTypes = {
   csv: 'text/csv',
@@ -130,6 +131,7 @@ rest.get('/titres_qgis', restDownload(titres))
 rest.get('/titresONF', restCatcher(titresONF))
 rest.get('/titresPTMG', restCatcher(titresPTMG))
 rest.get('/titresDREAL', restCatcher(titresDREAL))
+rest.get('/statistiques', restCatcher(getDGTMStats))
 rest.get('/demarches', restDownload(demarches))
 rest.get('/activites', restDownload(activites))
 rest.post(

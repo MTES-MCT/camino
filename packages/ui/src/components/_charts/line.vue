@@ -46,7 +46,12 @@ export default {
       data: this.data,
       options: {
         locale: 'fr-FR',
-        aspectRatio: 1.33
+        responsive: true,
+        aspectRatio: 1.33,
+        interaction: {
+          mode: 'index',
+          intersect: false
+        }
       }
     })
   }
