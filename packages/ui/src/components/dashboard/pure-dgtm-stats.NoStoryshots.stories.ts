@@ -4,7 +4,7 @@ import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import { statistiquesDGTMFake } from './testData'
 
 const meta: Meta = {
-  title: 'Components/PureDGTMStats',
+  title: 'Components/NoStoryshots/PureDGTMStats',
   component: PureDGTMStats,
   argTypes: {
     getEntreprisesTitres: { name: 'function', required: true },

@@ -1,5 +1,89 @@
 import { valideAnnee } from 'camino-common/src/date'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
+import { CommonTitreDREAL } from 'camino-common/src/titres'
+
+export const titresDreal: CommonTitreDREAL[] = [
+  {
+    id: 'firstId',
+    slug: 'first-id-slug',
+    nom: 'first-name',
+    domaineId: 'm',
+    typeId: 'pr',
+    titreStatutId: 'dmi',
+    references: [],
+    titulaires: [
+      {
+        nom: 'Titulaire1'
+      }
+    ],
+    activitesAbsentes: 0,
+    activitesEnConstruction: 0,
+    enAttenteDeDREAL: false
+  },
+  {
+    id: 'secondId',
+    slug: 'second-slug',
+    nom: 'Second Nom de titre',
+    domaineId: 'm',
+    typeId: 'pr',
+    titreStatutId: 'dmi',
+    references: [
+      {
+        nom: '2010-001',
+        type: { nom: 'PTMG' }
+      },
+      { nom: '2010-000', type: { nom: 'PTMG' } }
+    ],
+    titulaires: [
+      {
+        nom: 'Titulaire3'
+      }
+    ],
+    activitesEnConstruction: 2,
+    activitesAbsentes: 0,
+    enAttenteDeDREAL: true
+  },
+  {
+    id: 'thirdId',
+    slug: 'third-id-slug',
+    nom: 'third-name',
+    domaineId: 'm',
+    typeId: 'pr',
+    titreStatutId: 'dmi',
+    references: [],
+    titulaires: [
+      {
+        nom: 'Titulaire1'
+      }
+    ],
+    activitesAbsentes: 0,
+    activitesEnConstruction: 3,
+    enAttenteDeDREAL: false
+  },
+  {
+    id: 'fourthId',
+    slug: 'fourth-slug',
+    nom: 'Quatrième Nom de titre',
+    domaineId: 'c',
+    typeId: 'ar',
+    titreStatutId: 'dmi',
+    references: [
+      {
+        nom: '2010-001',
+        type: { nom: 'PTMG' }
+      },
+      { nom: '2010-000', type: { nom: 'PTMG' } }
+    ],
+    titulaires: [
+      {
+        nom: 'Titulaire 8'
+      }
+    ],
+    activitesEnConstruction: 8,
+    activitesAbsentes: 2,
+    enAttenteDeDREAL: false
+  }
+]
 
 export const statistiquesDGTMFake: StatistiquesDGTM = {
   depotEtInstructions: {

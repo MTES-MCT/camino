@@ -35,6 +35,14 @@ const props = defineProps<{
   getDgtmStats: () => Promise<StatistiquesDGTM>
 }>()
 
+const datasetParams = (index: number) => {
+  return {
+    fill: false,
+    tension: 0.5,
+    backgroundColor: nextColor(index),
+    borderColor: nextColor(index)
+  }
+}
 const graphData = () => {
   const dataNoRef = data.value
   if (dataNoRef.status === 'LOADED') {
@@ -47,40 +55,28 @@ const graphData = () => {
       data: annees.map(
         annee => dataNoRef.value.depotEtInstructions[annee].totalTitresDeposes
       ),
-      fill: false,
-      tension: 0.5,
-      backgroundColor: nextColor(0),
-      borderColor: nextColor(0)
+      ...datasetParams(0)
     })
     datasets.push({
       label: 'Titres octroyés',
       data: annees.map(
         annee => dataNoRef.value.depotEtInstructions[annee].totalTitresOctroyes
       ),
-      fill: false,
-      tension: 0.5,
-      backgroundColor: nextColor(1),
-      borderColor: nextColor(1)
+      ...datasetParams(1)
     })
     datasets.push({
       label: 'AEX octroyés',
       data: annees.map(
         annee => dataNoRef.value.depotEtInstructions[annee].totalAXMOctroyees
       ),
-      fill: false,
-      tension: 0.5,
-      backgroundColor: nextColor(2),
-      borderColor: nextColor(2)
+      ...datasetParams(2)
     })
     datasets.push({
       label: 'AEX déposés',
       data: annees.map(
         annee => dataNoRef.value.depotEtInstructions[annee].totalAXMDeposees
       ),
-      fill: false,
-      tension: 0.5,
-      backgroundColor: nextColor(3),
-      borderColor: nextColor(3)
+      ...datasetParams(3)
     })
 
     return {
