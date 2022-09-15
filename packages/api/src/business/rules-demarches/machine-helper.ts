@@ -298,7 +298,7 @@ export abstract class CaminoMachine<
 
         return events
           .filter(event => state.can(event))
-          .flatMap(this.caminoXStateEventToEtapes)
+          .flatMap(event => this.caminoXStateEventToEtapes(event))
       })
       .filter(event => event !== undefined)
   }
