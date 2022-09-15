@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/vue3'
 import { Statistiques } from 'camino-common/src/statistiques'
 
 const meta: Meta = {
-  title: 'NoStoryshots/Components/Statistiques/Globales',
+  title: 'Components/NoStoryshots/Statistiques/Globales',
   component: PureGlobales,
   argTypes: {}
 }

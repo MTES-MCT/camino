@@ -355,6 +355,13 @@ const getters = {
       )
     )
   },
+  isDGTM(state) {
+    return (
+      (isAdministrationAdmin(state.element) ||
+        isAdministrationEditeur(state.element)) &&
+      state.element.administrationId === ADMINISTRATION_IDS['DGTM - GUYANE']
+    )
+  },
 
   userIsSuper(state) {
     return isSuper(state.element)

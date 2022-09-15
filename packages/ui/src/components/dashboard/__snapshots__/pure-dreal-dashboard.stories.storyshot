@@ -11,10 +11,11 @@ exports[`Automated Storybook Snapshots Components/PureDrealDashboard Loading 1`]
       <h1
         class="mt-xs mb-xxl"
       >
-        Tableau de bord
+        Tableau de bord 
       </h1>
     </div>
   </div>
+  <!--v-if-->
   <div
     class="loaders fixed p"
   >
@@ -38,10 +39,11 @@ exports[`Automated Storybook Snapshots Components/PureDrealDashboard Ok 1`] = `
       <h1
         class="mt-xs mb-xxl"
       >
-        Tableau de bord
+        Tableau de bord 
       </h1>
     </div>
   </div>
+  <!--v-if-->
   <!--v-if-->
   <div>
     
@@ -1309,10 +1311,11 @@ exports[`Automated Storybook Snapshots Components/PureDrealDashboard With Error 
       <h1
         class="mt-xs mb-xxl"
       >
-        Tableau de bord
+        Tableau de bord 
       </h1>
     </div>
   </div>
+  <!--v-if-->
   <!--v-if-->
   <!--v-if-->
   <div

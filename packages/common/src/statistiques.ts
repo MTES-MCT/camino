@@ -1,3 +1,4 @@
+import { CaminoAnnee } from './date'
 import { AdministrationTypeId } from './static/administrations'
 
 export interface QuantiteParMois {
@@ -25,4 +26,15 @@ export interface Statistiques {
   signalements: number
   reutilisations: number
   utilisateurs: StatistiquesUtilisateurs
+}
+
+export interface DepotEtInstructionStat {
+  totalAXMDeposees: number
+  totalAXMOctroyees: number
+  totalTitresDeposes: number
+  totalTitresOctroyes: number
+}
+
+export interface StatistiquesDGTM {
+  depotEtInstructions: Record<CaminoAnnee, DepotEtInstructionStat>
 }

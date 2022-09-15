@@ -2,8 +2,11 @@
   <div>
     <div class="desktop-blobs">
       <div class="desktop-blob-2-3">
-        <h1 class="mt-xs mb-xxl">Tableau de bord</h1>
+        <h1 class="mt-xs mb-xxl">Tableau de bord {{ isDGTM ? 'DGTM' : '' }}</h1>
       </div>
+    </div>
+    <div v-if="isDGTM" class="mb-l">
+      <PureDGTMStats :getDgtmStats="getDgtmStats" />
     </div>
     <div v-if="status === 'LOADING'" class="loaders fixed p">
       <div class="loader" />
@@ -46,6 +49,7 @@ import {
   TableAutoRow,
   TextColumnData
 } from '../_ui/table-auto.type'
+import PureDGTMStats from './pure-dgtm-stats.vue'
 import Error from '@/components/error.vue'
 import {
   nomColumn,
@@ -64,12 +68,15 @@ import {
   activitesCell
 } from '@/components/titres/table-utils'
 import { CommonTitreDREAL } from 'camino-common/src/titres'
+import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 
 const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
 const drealTitres = ref<TableAutoRow[]>([])
 const drealTitresBloques = ref<TableAutoRow[]>([])
 const props = defineProps<{
   getDrealTitres: () => Promise<CommonTitreDREAL[]>
+  isDGTM: boolean
+  getDgtmStats: () => Promise<StatistiquesDGTM>
 }>()
 
 const columns = [
