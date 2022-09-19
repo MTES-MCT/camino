@@ -140,7 +140,7 @@ rest.post(
 )
 rest.get('/utilisateurs/:id/newsletter', restCatcher(isSubscribedToNewsletter))
 rest.get('/utilisateurs', restDownload(utilisateurs))
-rest.get('/entreprises/:entrepriseId/fiscalite', restCatcher(fiscalite))
+rest.get('/entreprises/:entrepriseId/fiscalite/:annee', restCatcher(fiscalite))
 rest.get('/entreprises', restDownload(entreprises))
 rest.get('/fichiers/:documentId', restDownload(fichier))
 rest.get('/etape/zip/:etapeId', restDownload(etapeTelecharger))

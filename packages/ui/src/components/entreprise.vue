@@ -156,7 +156,11 @@
     <div v-if="fiscaliteVisible" class="mb-xxl">
       <div class="line-neutral width-full mb-xxl" />
       <h3>Fiscalité</h3>
-      <EntrepriseFiscalite :getFiscaliteEntreprise="getFiscaliteEntreprise" />
+      <EntrepriseFiscalite
+        :getFiscaliteEntreprise="getFiscaliteEntreprise"
+        :anneeCourante="annees[annees.length - 1]"
+        :annees="annees"
+      />
     </div>
     <div v-if="utilisateurs && utilisateurs.length" class="mb-xxl">
       <div class="line-neutral width-full mb-xxl" />
@@ -216,6 +220,7 @@ import {
   isSuper
 } from 'camino-common/src/roles'
 import Icon from './_ui/icon.vue'
+import { valideAnnee } from 'camino-common/src/date'
 
 export default {
   components: {
@@ -233,9 +238,9 @@ export default {
   data() {
     return {
       utilisateursColonnes,
-      getFiscaliteEntreprise: async () => {
+      getFiscaliteEntreprise: async annee => {
         const res = await fetch(
-          `/apiUrl/entreprises/${this.entreprise.id}/fiscalite`
+          `/apiUrl/entreprises/${this.entreprise.id}/fiscalite/${annee}`
         )
 
         if (!res.ok) {
@@ -249,6 +254,18 @@ export default {
   },
 
   computed: {
+    annees: () => {
+      const anneeDepart = 2021
+      const anneeCourante = new Date().getFullYear()
+      const caminoAnneeCourante = valideAnnee(anneeCourante.toString())
+      let anneeAAjouter = anneeDepart
+      const annees = [valideAnnee(anneeAAjouter.toString())]
+      while (annees[annees.length - 1] !== caminoAnneeCourante) {
+        anneeAAjouter++
+        annees.push(valideAnnee(anneeAAjouter.toString()))
+      }
+      return annees
+    },
     entreprise() {
       return this.$store.state.entreprise.element
     },

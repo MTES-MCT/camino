@@ -2,7 +2,43 @@
 
 exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane 1`] = `
 <div>
-   Cotisations 
+   Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère) 
+  <div
+    class="flex"
+  >
+    
+    <div
+      class="mr-xs"
+    >
+      <button
+        class="p-m btn-tab rnd-t-s"
+        id="cmn-titre-tab-2021"
+      >
+        2021
+      </button>
+    </div>
+    <div
+      class="mr-xs active"
+    >
+      <button
+        class="p-m btn-tab rnd-t-s"
+        id="cmn-titre-tab-2022"
+      >
+        2022
+      </button>
+    </div>
+    
+  </div>
+  <div
+    class="line-neutral mb"
+  />
+  
+  Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2021 
+  <br />
+  
+  <strong>
+    Cotisations
+  </strong>
   <div
     class="fiscalite-table"
   >
@@ -13,7 +49,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
       class="top-level fiscalite-value"
     >
       
-      1 600,07 €
+      3 235 343,56 €
       
     </div>
     <div>
@@ -23,7 +59,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
       class="top-level fiscalite-value"
     >
       
-      330,98 €
+      669 241,56 €
       
     </div>
     
@@ -34,7 +70,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
       class="top-level fiscalite-value"
     >
       
-      4 100,00 €
+      8 290 200,00 €
       
     </div>
     <div>
@@ -44,7 +80,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
       class="top-level fiscalite-value"
     >
       
-      100,00 €
+      202 200,00 €
       
     </div>
     <div>
@@ -54,7 +90,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
       class="top-level fiscalite-value"
     >
       
-      210,00 €
+      424 620,00 €
       
     </div>
     
@@ -65,7 +101,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
       class="top-level fiscalite-value"
     >
       
-      171,28 €
+      346 336,41 €
       
     </div>
     <div>
@@ -75,7 +111,122 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
       class="top-level fiscalite-value"
     >
       
-      2 312,34 €
+      4 675 541,53 €
+      
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane Annee Precedente 1`] = `
+<div>
+   Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère) 
+  <div
+    class="flex"
+  >
+    
+    <div
+      class="mr-xs active"
+    >
+      <button
+        class="p-m btn-tab rnd-t-s"
+        id="cmn-titre-tab-2021"
+      >
+        2021
+      </button>
+    </div>
+    <div
+      class="mr-xs"
+    >
+      <button
+        class="p-m btn-tab rnd-t-s"
+        id="cmn-titre-tab-2022"
+      >
+        2022
+      </button>
+    </div>
+    
+  </div>
+  <div
+    class="line-neutral mb"
+  />
+  <!--v-if-->
+  <strong>
+    Cotisations
+  </strong>
+  <div
+    class="fiscalite-table"
+  >
+    <div>
+      a. Redevance communale
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      
+      3 233 743,49 €
+      
+    </div>
+    <div>
+      b. Redevance départementale
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      
+      668 910,58 €
+      
+    </div>
+    
+    <div>
+      c. Taxe minière sur l’or de Guyane
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      
+      8 286 100,00 €
+      
+    </div>
+    <div>
+       d. Investissements déductibles de la taxe perçue pour la région de Guyane 
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      
+      202 100,00 €
+      
+    </div>
+    <div>
+      e. Montant net de taxe minière sur l’or de Guyane (c-d)
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      
+      424 410,00 €
+      
+    </div>
+    
+    <div>
+       f. Frais de gestion de fiscalité directe locale (a+b+e)X 8% 
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      
+      346 165,13 €
+      
+    </div>
+    <div>
+      Somme à payer auprès du comptable (2)
+    </div>
+    <div
+      class="top-level fiscalite-value"
+    >
+      
+      4 673 229,20 €
       
     </div>
   </div>
@@ -84,7 +235,43 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
 
 exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Loading 1`] = `
 <div>
-   Cotisations 
+   Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère) 
+  <div
+    class="flex"
+  >
+    
+    <div
+      class="mr-xs"
+    >
+      <button
+        class="p-m btn-tab rnd-t-s"
+        id="cmn-titre-tab-2021"
+      >
+        2021
+      </button>
+    </div>
+    <div
+      class="mr-xs active"
+    >
+      <button
+        class="p-m btn-tab rnd-t-s"
+        id="cmn-titre-tab-2022"
+      >
+        2022
+      </button>
+    </div>
+    
+  </div>
+  <div
+    class="line-neutral mb"
+  />
+  
+  Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2021 
+  <br />
+  
+  <strong>
+    Cotisations
+  </strong>
   <div
     class="fiscalite-table"
   >
@@ -135,7 +322,43 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Loadin
 
 exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Ok 1`] = `
 <div>
-   Cotisations 
+   Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère) 
+  <div
+    class="flex"
+  >
+    
+    <div
+      class="mr-xs"
+    >
+      <button
+        class="p-m btn-tab rnd-t-s"
+        id="cmn-titre-tab-2021"
+      >
+        2021
+      </button>
+    </div>
+    <div
+      class="mr-xs active"
+    >
+      <button
+        class="p-m btn-tab rnd-t-s"
+        id="cmn-titre-tab-2022"
+      >
+        2022
+      </button>
+    </div>
+    
+  </div>
+  <div
+    class="line-neutral mb"
+  />
+  
+  Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2021 
+  <br />
+  
+  <strong>
+    Cotisations
+  </strong>
   <div
     class="fiscalite-table"
   >
@@ -186,7 +409,43 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Ok 1`]
 
 exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite With Error 1`] = `
 <div>
-   Cotisations 
+   Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère) 
+  <div
+    class="flex"
+  >
+    
+    <div
+      class="mr-xs"
+    >
+      <button
+        class="p-m btn-tab rnd-t-s"
+        id="cmn-titre-tab-2021"
+      >
+        2021
+      </button>
+    </div>
+    <div
+      class="mr-xs active"
+    >
+      <button
+        class="p-m btn-tab rnd-t-s"
+        id="cmn-titre-tab-2022"
+      >
+        2022
+      </button>
+    </div>
+    
+  </div>
+  <div
+    class="line-neutral mb"
+  />
+  
+  Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2021 
+  <br />
+  
+  <strong>
+    Cotisations
+  </strong>
   <div
     class="fiscalite-table"
   >

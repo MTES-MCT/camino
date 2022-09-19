@@ -32,6 +32,7 @@ import {
 import { Departements } from 'camino-common/src/static/departement'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'
+import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
 
 const conversion = (
   substanceFiscale: SubstanceFiscale,
@@ -334,7 +335,7 @@ export const responseExtractor = (
 }
 
 export const fiscalite = async (
-  req: express.Request<{ entrepriseId?: string }>,
+  req: express.Request<{ entrepriseId?: string; annee?: CaminoAnnee }>,
   res: CustomResponse<Fiscalite>
 ) => {
   const userId = (req.user as unknown as IUser | undefined)?.id
@@ -342,9 +343,16 @@ export const fiscalite = async (
   const user = await userGet(userId)
 
   const entrepriseId = req.params.entrepriseId
+  const caminoAnnee = req.params.annee
 
   if (!entrepriseId || !fiscaliteVisible(user, entrepriseId)) {
+    console.warn(
+      `l'utilisateur ${userId} n'a pas le droit de voir la fiscalité de l'entreprise ${entrepriseId}`
+    )
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else if (!caminoAnnee || !isAnnee(caminoAnnee)) {
+    console.warn(`l'année ${caminoAnnee} n'est pas correcte`)
+    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
   } else {
     const entreprise = await entrepriseGet(
       entrepriseId,
@@ -355,8 +363,7 @@ export const fiscalite = async (
       throw new Error(`l’entreprise ${entrepriseId} est inconnue`)
     }
 
-    // TODO 2022-07-25 gérer l’année
-    const annee = 2022
+    const annee = Number.parseInt(caminoAnnee, 10)
     const anneePrecedente = annee - 1
 
     const titres = await titresGet(
