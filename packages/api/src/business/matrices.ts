@@ -127,6 +127,7 @@ type Matrices = {
   departementLabel: string
   titreLabel: string
   surfaceCommunaleProportionnee: number
+  surfaceCommunale: number
 }
 
 type Matrice1122 = {
@@ -204,6 +205,8 @@ export const buildMatrices = (
           result.articles[articleKey]?.surface_communale_proportionnee?.[
             anneePrecedente
           ] ?? 1
+        const surfaceCommunale =
+          result.articles[articleKey]?.surface_communale?.[anneePrecedente] ?? 0
         const quantiteOrExtrait =
           (result.articles[articleKey]?.quantite_aurifere_kg?.[
             anneePrecedente
@@ -236,7 +239,8 @@ export const buildMatrices = (
           titulaireLabel,
           titreLabel,
           departementLabel: departement,
-          surfaceCommunaleProportionnee
+          surfaceCommunaleProportionnee,
+          surfaceCommunale
         }
       })
     })
@@ -285,7 +289,9 @@ export const buildMatrices = (
       'Désignation des concessions': line.titreLabel,
       'Départements sur le territoire desquels fonctionnent les exploitations':
         line.departementLabel,
-      'Communes sur le territoire desquels fonctionnent les exploitations': `${line.commune?.nom} (${line.surfaceCommunaleProportionnee})`,
+      'Communes sur le territoire desquels fonctionnent les exploitations': `${
+        line.commune?.nom
+      } (${line.surfaceCommunale / 1_000_000} km²)`,
       "Tonnages extraits ou cours de l'année précédente | par département":
         line.quantiteOrExtrait,
       "Tonnages extraits ou cours de l'année précédente | par commune":
@@ -394,7 +400,9 @@ export const buildMatrices = (
           'Articles des rôles': line.index,
           'Désignation des exploitants': line.titulaireLabel,
           Départements: line.departementLabel,
-          Communes: line.commune.nom,
+          // TODO 2022-09-19 on est dans une impasse, impossible de répartir correctement la redevance entre la commune principale et les autres.
+          // pour le moment, on fait comme les années précédences, en attendant une correction
+          Communes: line.communePrincipale.nom,
           'Elements de base | Revenus imposables à la TFPB': 0,
           'Elements de base | Tonnages extraits': line.quantiteOrExtrait,
           'Redevance départementale | Produit net de la redevance':
