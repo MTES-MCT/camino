@@ -26,14 +26,43 @@ export const getDGTMStats = async (
   } else {
     const result: StatistiquesDGTM = { depotEtInstructions: {} }
 
-    const phaseOctrois: { dateDebut: string; typeId: TitreTypeId }[] =
-      await knex
-        .select('titresPhases.dateDebut', 'titres.typeId')
-        .from('titresPhases')
-        .leftJoin('titresDemarches', 'titreDemarcheId', 'titresDemarches.id')
-        .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
-        .where('titresDemarches.typeId', 'oct')
-        .andWhere('titresPhases.dateDebut', '>=', `${anneeDepartStats}-01-01`)
+    const phaseOctrois: {
+      id: string
+      dateDebut: string
+      typeId: TitreTypeId
+    }[] = await knex
+      .select('titresPhases.dateDebut', 'titres.typeId')
+      .distinct('titres.id')
+      .from('titresPhases')
+      .leftJoin('titresDemarches', 'titreDemarcheId', 'titresDemarches.id')
+      .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
+      .leftJoin(
+        'titresAdministrationsGestionnaires',
+        'titres.id',
+        'titresAdministrationsGestionnaires.titreId'
+      )
+      .leftJoin(
+        'titresAdministrations',
+        'titres.id',
+        'titresAdministrations.titreId'
+      )
+      .joinRaw(
+        "left join titres_administrations_locales on titres_administrations_locales.titre_etape_id = titres.props_titre_etapes_ids ->> 'administrations'"
+      )
+      .where('titresDemarches.typeId', 'oct')
+      .andWhere('titresPhases.dateDebut', '>=', `${anneeDepartStats}-01-01`)
+      .andWhere(builder =>
+        builder
+          .where(
+            'titresAdministrationsGestionnaires.administrationId',
+            administrationId
+          )
+          .orWhere(
+            'titresAdministrationsLocales.administrationId',
+            administrationId
+          )
+          .orWhere('titresAdministrations.administrationId', administrationId)
+      )
 
     phaseOctrois?.forEach(phase => {
       const annee = phase.dateDebut.substring(0, 4)
@@ -57,12 +86,38 @@ export const getDGTMStats = async (
 
     const etapeDeposees: { date: string; typeId: TitreTypeId }[] = await knex
       .select('titresEtapes.date', 'titres.typeId')
+      .distinct('titres.id')
       .from('titresEtapes')
       .leftJoin('titresDemarches', 'titreDemarcheId', 'titresDemarches.id')
       .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
+      .leftJoin(
+        'titresAdministrationsGestionnaires',
+        'titres.id',
+        'titresAdministrationsGestionnaires.titreId'
+      )
+      .leftJoin(
+        'titresAdministrations',
+        'titres.id',
+        'titresAdministrations.titreId'
+      )
+      .joinRaw(
+        "left join titres_administrations_locales on titres_administrations_locales.titre_etape_id = titres.props_titre_etapes_ids ->> 'administrations'"
+      )
       .where('titresEtapes.typeId', 'mdp')
       .andWhere('titresDemarches.typeId', 'oct')
       .andWhere('titresEtapes.date', '>=', `${anneeDepartStats}-01-01`)
+      .andWhere(builder =>
+        builder
+          .where(
+            'titresAdministrationsGestionnaires.administrationId',
+            administrationId
+          )
+          .orWhere(
+            'titresAdministrationsLocales.administrationId',
+            administrationId
+          )
+          .orWhere('titresAdministrations.administrationId', administrationId)
+      )
 
     etapeDeposees?.forEach(etape => {
       const annee = etape.date.substring(0, 4)
