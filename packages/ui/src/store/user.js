@@ -193,7 +193,8 @@ const actions = {
   async add({ commit, dispatch }, { utilisateur, token }) {
     try {
       commit('loadingAdd', 'userAdd', { root: true })
-
+      const newsletter = utilisateur.newsletter ?? false
+      delete utilisateur.newsletter
       const data = await utilisateurCreer({ utilisateur, token })
 
       if (data) {
@@ -210,6 +211,14 @@ const actions = {
           email: data.email,
           motDePasse: utilisateur.motDePasse
         })
+
+        if (newsletter) {
+          await fetch(`/apiUrl/utilisateurs/${data.id}/newsletter`, {
+            headers: { 'Content-Type': 'application/json' },
+            method: 'POST',
+            body: JSON.stringify({ newsletter: true })
+          })
+        }
 
         router.push({ name: 'titres' })
       }

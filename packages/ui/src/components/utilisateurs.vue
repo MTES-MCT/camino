@@ -133,6 +133,7 @@ export default {
             role: 'defaut',
             entreprises: []
           },
+          subscription: { newsletter: false },
           action: 'create'
         }
       })
