@@ -1,5 +1,4 @@
-import { fiscaliteVisible, fraisGestion } from './fiscalite'
-import { Role } from './roles'
+import { fiscaliteVisible, fraisGestion, UserFiscalite } from './fiscalite'
 
 test('fraisGestion', () => {
   expect(fraisGestion({ redevanceDepartementale: 50, redevanceCommunale: 50 })).toBe(8)
@@ -16,37 +15,19 @@ test('fraisGestion', () => {
   ).toBe(16)
 })
 
-// unskip une fois l'accès aux utilisateurs autorisé
-test.skip.each`
-  user                                                                  | visible
-  ${null}                                                               | ${false}
-  ${undefined}                                                          | ${false}
-  ${{ role: 'defaut' }}                                                 | ${false}
-  ${{ role: 'bureau d’études' }}                                        | ${false}
-  ${{ role: 'entreprise' }}                                             | ${false}
-  ${{ role: 'entreprise', entreprises: [] }}                            | ${false}
-  ${{ role: 'entreprise', entreprises: [{ id: '1' }] }}                 | ${false}
-  ${{ role: 'entreprise', entreprises: [{ id: '1234' }] }}              | ${true}
-  ${{ role: 'entreprise', entreprises: [{ id: '1' }, { id: '1234' }] }} | ${true}
-  ${{ role: 'admin' }}                                                  | ${true}
-  ${{ role: 'editeur' }}                                                | ${true}
-  ${{ role: 'lecteur' }}                                                | ${true}
-  ${{ role: 'super' }}                                                  | ${true}
-`(
-  'fiscaliteVisible',
-  ({
-    user,
-    visible
-  }: {
-    user:
-      | {
-          entreprises?: { id: string }[] | null
-          role: Role
-        }
-      | undefined
-      | null
-    visible: boolean
-  }) => {
-    expect(fiscaliteVisible(user ? { ...user, administrationId: undefined } : user, '1234')).toEqual(visible)
-  }
-)
+test.each<{ user: UserFiscalite; visible: boolean }>([
+  { user: null, visible: false },
+  { user: undefined, visible: false },
+  { user: { role: 'defaut', administrationId: undefined }, visible: false },
+  { user: { role: 'bureau d’études', administrationId: undefined }, visible: false },
+  { user: { role: 'entreprise', administrationId: undefined, entreprises: [] }, visible: false },
+  { user: { role: 'entreprise', administrationId: undefined, entreprises: [{ id: '1' }] }, visible: false },
+  { user: { role: 'entreprise', administrationId: undefined, entreprises: [{ id: '1234' }] }, visible: true },
+  { user: { role: 'entreprise', administrationId: undefined, entreprises: [{ id: '1' }, { id: '1234' }] }, visible: true },
+  { user: { role: 'admin', administrationId: 'aut-97300-01' }, visible: true },
+  { user: { role: 'editeur', administrationId: 'aut-97300-01' }, visible: true },
+  { user: { role: 'lecteur', administrationId: 'aut-97300-01' }, visible: true },
+  { user: { role: 'super', administrationId: undefined }, visible: true }
+])('fiscaliteVisible $user | $visible', toTest => {
+  expect(fiscaliteVisible(toTest.user ? { ...toTest.user } : toTest.user, '1234')).toEqual(toTest.visible)
+})
