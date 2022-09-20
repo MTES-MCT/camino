@@ -86,7 +86,7 @@ Object {
   ],
   "matrice1122": Array [
     Object {
-      "Communes sur le territoire desquels fonctionnent les exploitations": "Roura (1)",
+      "Communes sur le territoire desquels fonctionnent les exploitations": "Roura (19.805494 km²)",
       "Départements sur le territoire desquels fonctionnent les exploitations": "Guyane",
       "Désignation des concessionnaires": "titulaire1 - ladresse1 - legalSiren1 SIREN",
       "Désignation des concessions": "slug-titre-1",
@@ -96,7 +96,7 @@ Object {
       "Tonnages extraits ou cours de l'année précédente | par département": "12.243",
     },
     Object {
-      "Communes sur le territoire desquels fonctionnent les exploitations": "Saint-Élie (0.3191007)",
+      "Communes sur le territoire desquels fonctionnent les exploitations": "Saint-Élie (0.323907 km²)",
       "Départements sur le territoire desquels fonctionnent les exploitations": "Guyane",
       "Désignation des concessionnaires": "titulaire2 - ladresse2 - legalSiren2 SIREN",
       "Désignation des concessions": "slug-titre-2",
@@ -106,7 +106,7 @@ Object {
       "Tonnages extraits ou cours de l'année précédente | par département": "1.008",
     },
     Object {
-      "Communes sur le territoire desquels fonctionnent les exploitations": "Sinnamary (0.6808993)",
+      "Communes sur le territoire desquels fonctionnent les exploitations": "Sinnamary (0.691155 km²)",
       "Départements sur le territoire desquels fonctionnent les exploitations": "Guyane",
       "Désignation des concessionnaires": "titulaire2 - ladresse2 - legalSiren2 SIREN",
       "Désignation des concessions": "slug-titre-2",
@@ -116,7 +116,7 @@ Object {
       "Tonnages extraits ou cours de l'année précédente | par département": "2.151",
     },
     Object {
-      "Communes sur le territoire desquels fonctionnent les exploitations": "Saint-Laurent-du-Maroni (1)",
+      "Communes sur le territoire desquels fonctionnent les exploitations": "Saint-Laurent-du-Maroni (1.005053 km²)",
       "Départements sur le territoire desquels fonctionnent les exploitations": "Guyane",
       "Désignation des concessionnaires": "titulaire3 - ladresse3 - legalSiren3 SIREN",
       "Désignation des concessions": "slug-titre-3",
@@ -195,7 +195,7 @@ Object {
       Object {
         "Articles des rôles": 2,
         "Circonscription de": "SIP de Kourou",
-        "Communes": "Saint-Élie",
+        "Communes": "Sinnamary",
         "Départements": "Guyane",
         "Désignation des exploitants": "titulaire2 - ladresse2 - legalSiren2 SIREN",
         "Elements de base | Revenus imposables à la TFPB": 0,
