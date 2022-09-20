@@ -5,7 +5,8 @@ export const CHART_COLORS = {
   green: 'rgb(75, 192, 192)',
   blue: 'rgb(54, 162, 235)',
   purple: 'rgb(153, 102, 255)',
-  grey: 'rgb(201, 203, 207)'
+  grey: 'rgb(201, 203, 207)',
+  black: 'rgb(0, 0, 0)'
 } as const
 
 type ChartColor = typeof CHART_COLORS[keyof typeof CHART_COLORS]

@@ -1,5 +1,6 @@
 import { CaminoAnnee } from './date'
 import { AdministrationTypeId } from './static/administrations'
+import { SDOMZoneIds } from './static/sdom'
 
 export interface QuantiteParMois {
   mois: string
@@ -37,4 +38,13 @@ export interface DepotEtInstructionStat {
 
 export interface StatistiquesDGTM {
   depotEtInstructions: Record<CaminoAnnee, DepotEtInstructionStat>
+  sdom: Record<
+    CaminoAnnee,
+    {
+      [SDOMZoneIds.Zone0]: { depose: number; octroye: number }
+      [SDOMZoneIds.Zone0Potentielle]: { depose: number; octroye: number }
+      [SDOMZoneIds.Zone1]: { depose: number; octroye: number }
+      [SDOMZoneIds.Zone2]: { depose: number; octroye: number }
+    }
+  >
 }

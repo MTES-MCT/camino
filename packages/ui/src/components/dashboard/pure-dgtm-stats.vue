@@ -5,8 +5,8 @@
     </div>
     <div v-if="data.status === 'LOADED'">
       <div style="display: grid; grid-template-columns: 1fr 1fr 1fr">
-        <div><!-- placeholders for other stats --></div>
-        <div><LineChart :data="graphData()" /></div>
+        <div><LineChart :data="graphSdomData()" /></div>
+        <div><LineChart :data="graphDepoData()" /></div>
         <div><!-- placeholders for other stats --></div>
       </div>
     </div>
@@ -29,6 +29,7 @@ import { AsyncData } from '@/api/client-rest'
 import LineChart from '../_charts/line.vue'
 import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
 import { nextColor } from '../_charts/utils'
+import { SDOMZoneIds } from 'camino-common/src/static/sdom'
 
 const data = ref<AsyncData<StatistiquesDGTM>>({ status: 'LOADING' })
 const props = defineProps<{
@@ -43,7 +44,7 @@ const datasetParams = (index: number) => {
     borderColor: nextColor(index)
   }
 }
-const graphData = () => {
+const graphDepoData = () => {
   const dataNoRef = data.value
   if (dataNoRef.status === 'LOADED') {
     const annees: CaminoAnnee[] = Object.keys(
@@ -77,6 +78,81 @@ const graphData = () => {
         annee => dataNoRef.value.depotEtInstructions[annee].totalAXMDeposees
       ),
       ...datasetParams(3)
+    })
+
+    return {
+      labels: annees,
+      datasets
+    }
+  }
+  return {}
+}
+const graphSdomData = () => {
+  const dataNoRef = data.value
+  if (dataNoRef.status === 'LOADED') {
+    const annees: CaminoAnnee[] = Object.keys(dataNoRef.value.sdom).filter(
+      isAnnee
+    )
+    const datasets = []
+    datasets.push({
+      label: 'Déposés en zone 0',
+      data: annees.map(
+        annee => dataNoRef.value.sdom[annee][SDOMZoneIds.Zone0].depose
+      ),
+      ...datasetParams(0)
+    })
+    datasets.push({
+      label: 'Octroyés en zone 0',
+      data: annees.map(
+        annee => dataNoRef.value.sdom[annee][SDOMZoneIds.Zone0].octroye
+      ),
+      ...datasetParams(1)
+    })
+    datasets.push({
+      label: 'Déposés en zone 0 potentielle',
+      data: annees.map(
+        annee =>
+          dataNoRef.value.sdom[annee][SDOMZoneIds.Zone0Potentielle].depose
+      ),
+      ...datasetParams(2)
+    })
+    datasets.push({
+      label: 'Octroyés en zone 0 potentielle',
+      data: annees.map(
+        annee =>
+          dataNoRef.value.sdom[annee][SDOMZoneIds.Zone0Potentielle].octroye
+      ),
+      ...datasetParams(3)
+    })
+    datasets.push({
+      label: 'Déposés en zone 1',
+      data: annees.map(
+        annee => dataNoRef.value.sdom[annee][SDOMZoneIds.Zone1].depose
+      ),
+      ...datasetParams(4)
+    })
+    datasets.push({
+      label: 'Octroyés en zone 1',
+      data: annees.map(
+        annee => dataNoRef.value.sdom[annee][SDOMZoneIds.Zone1].octroye
+      ),
+      ...datasetParams(5)
+    })
+
+    datasets.push({
+      label: 'Déposés en zone 2',
+      data: annees.map(
+        annee => dataNoRef.value.sdom[annee][SDOMZoneIds.Zone2].depose
+      ),
+      ...datasetParams(6)
+    })
+
+    datasets.push({
+      label: 'Octroyés en zone 2',
+      data: annees.map(
+        annee => dataNoRef.value.sdom[annee][SDOMZoneIds.Zone2].octroye
+      ),
+      ...datasetParams(7)
     })
 
     return {

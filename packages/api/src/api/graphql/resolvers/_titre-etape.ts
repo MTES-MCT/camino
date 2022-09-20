@@ -8,8 +8,7 @@ import {
   ISection,
   ITitreDemarche,
   ITitreEtape,
-  ITitrePointReference,
-  SDOMZoneId
+  ITitrePointReference
 } from '../../../types'
 
 import { geoConvert } from '../../../tools/geo-convert'
@@ -31,6 +30,7 @@ import { GeoSystemes } from 'camino-common/src/static/geoSystemes'
 import { geojsonIntersectsSDOM, GeoJsonResult } from '../../../tools/geojson'
 import { Feature } from '@turf/helpers'
 import SdomZones from '../../../database/models/sdom-zones'
+import { SDOMZoneIds } from 'camino-common/src/static/sdom'
 
 const titreEtapePointsCalc = <
   T extends {
@@ -268,7 +268,7 @@ const documentTypeIdsBySdomZonesGet = (
     demarcheTypeId === 'oct' &&
     titreTypeId === 'axm'
   ) {
-    if (sdomZones?.find(z => z.id === SDOMZoneId.Zone2)) {
+    if (sdomZones?.find(z => z.id === SDOMZoneIds.Zone2)) {
       // dans la zone 2 du SDOM les documents suivants sont obligatoires:
       // Notice d’impact renforcée
       // Justification d’existence du gisement
