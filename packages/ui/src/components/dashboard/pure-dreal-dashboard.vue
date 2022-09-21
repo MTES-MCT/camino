@@ -6,38 +6,38 @@
       </div>
     </div>
     <div v-if="isDGTM" class="mb-l">
+      <h3>Statistiques</h3>
       <PureDGTMStats :getDgtmStats="getDgtmStats" />
     </div>
-    <div v-if="status === 'LOADING'" class="loaders fixed p">
-      <div class="loader" />
-    </div>
-    <div v-if="status === 'LOADED'">
-      <template v-if="drealTitresBloques.length">
-        <div class="line-neutral width-full mb-l"></div>
-        <h3>Titres en attente de la DREAL</h3>
+    <div class="line-neutral width-full mb-l"></div>
+    <h3>Titres</h3>
+    <LoadingElement
+      v-slot="{ item }"
+      :data="data"
+      :style="
+        data.status !== 'LOADED'
+          ? { display: 'flex', ['justify-content']: 'center' }
+          : ''
+      "
+    >
+      <template v-if="item.drealTitresBloques.length">
+        <h4>Titres en attente de la DREAL</h4>
+
         <TableAuto
           class="mb-xxl"
           :columns="columns.slice(0, 4)"
-          :rows="drealTitresBloques"
+          :rows="item.drealTitresBloques"
           :initialSort="{ column: initialColumnId, order: 'asc' }"
         />
       </template>
-      <div class="line-neutral width-full mb-l"></div>
-      <h3>Titres en cours d’instruction</h3>
+      <h4>Titres en cours d’instruction</h4>
       <TableAuto
         :columns="columns"
-        :rows="drealTitres"
+        :rows="item.drealTitres"
         :initialSort="{ column: initialColumnId, order: 'asc' }"
         class="width-full-p"
       />
-    </div>
-    <Error
-      v-if="status === 'ERROR'"
-      :message="{
-        type: 'error',
-        value: 'Le serveur est inaccessible, veuillez réessayer plus tard'
-      }"
-    />
+    </LoadingElement>
   </div>
 </template>
 
@@ -50,7 +50,6 @@ import {
   TextColumnData
 } from '../_ui/table-auto.type'
 import PureDGTMStats from './pure-dgtm-stats.vue'
-import Error from '@/components/error.vue'
 import {
   nomColumn,
   domaineColumn,
@@ -69,10 +68,12 @@ import {
 } from '@/components/titres/table-utils'
 import { CommonTitreDREAL } from 'camino-common/src/titres'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
+import LoadingElement from '@/components/_ui/pure-loader.vue'
+import { AsyncData } from '@/api/client-rest'
 
-const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
-const drealTitres = ref<TableAutoRow[]>([])
-const drealTitresBloques = ref<TableAutoRow[]>([])
+const data = ref<
+  AsyncData<{ drealTitres: TableAutoRow[]; drealTitresBloques: TableAutoRow[] }>
+>({ status: 'LOADING' })
 const props = defineProps<{
   getDrealTitres: () => Promise<CommonTitreDREAL[]>
   isDGTM: boolean
@@ -118,16 +119,23 @@ const titresLignesBuild = (
 onMounted(async () => {
   try {
     const titres = await props.getDrealTitres()
-    drealTitres.value.push(
-      ...titresLignesBuild(titres.filter(titre => !titre.enAttenteDeDREAL))
-    )
-    drealTitresBloques.value.push(
-      ...titresLignesBuild(titres.filter(titre => titre.enAttenteDeDREAL))
-    )
-    status.value = 'LOADED'
-  } catch (e) {
+    data.value = {
+      status: 'LOADED',
+      value: {
+        drealTitres: titresLignesBuild(
+          titres.filter(titre => !titre.enAttenteDeDREAL)
+        ),
+        drealTitresBloques: titresLignesBuild(
+          titres.filter(titre => titre.enAttenteDeDREAL)
+        )
+      }
+    }
+  } catch (e: any) {
     console.log('error', e)
-    status.value = 'ERROR'
+    data.value = {
+      status: 'ERROR',
+      message: e.message ?? "Une erreur s'est produite"
+    }
   }
 })
 </script>

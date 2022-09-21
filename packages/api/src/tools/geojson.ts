@@ -1,9 +1,10 @@
 import rewind from 'geojson-rewind'
 import center from '@turf/center'
 
-import { IGeometry, ITitrePoint, SDOMZoneId } from '../types'
+import { IGeometry, ITitrePoint } from '../types'
 import { Feature } from '@turf/helpers'
 import { knex } from '../knex'
+import { SDOMZoneId } from 'camino-common/src/static/sdom'
 
 // convertit des points
 // en un geojson de type 'MultiPolygon'

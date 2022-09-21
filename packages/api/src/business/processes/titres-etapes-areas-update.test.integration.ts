@@ -14,9 +14,9 @@ import {
   SinnamaryPerimetre
 } from './__mocks__/titres-etapes-areas-update'
 import TitresForets from '../../database/models/titres-forets'
-import { SDOMZoneId } from '../../types'
 import TitresSDOMZones from '../../database/models/titres--sdom-zones'
 import { newDemarcheId } from '../../database/models/_format/id-create'
+import { SDOMZoneIds } from 'camino-common/src/static/sdom'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -69,16 +69,16 @@ describe('titresEtapesAreasUpdate', () => {
 
     // Pour simplifier le test, on utilise des forêts en tant que zone de sdom
     await knex!.raw(
-      `insert into sdom_zones (nom, id) values ('Zone 1', '${SDOMZoneId.Zone1}')`
+      `insert into sdom_zones (nom, id) values ('Zone 1', '${SDOMZoneIds.Zone1}')`
     )
     await knex!.raw(
-      `insert into sdom_zones (nom, id) values ('Zone 2', '${SDOMZoneId.Zone2}')`
+      `insert into sdom_zones (nom, id) values ('Zone 2', '${SDOMZoneIds.Zone2}')`
     )
     await knex!.raw(
-      `insert into sdom_zones_postgis (id, geometry) values ('${SDOMZoneId.Zone1}','${foret2BranchesPerimetre}')`
+      `insert into sdom_zones_postgis (id, geometry) values ('${SDOMZoneIds.Zone1}','${foret2BranchesPerimetre}')`
     )
     await knex!.raw(
-      `insert into sdom_zones_postgis (id, geometry) values ('${SDOMZoneId.Zone2}','${foretReginaPerimetre}')`
+      `insert into sdom_zones_postgis (id, geometry) values ('${SDOMZoneIds.Zone2}','${foretReginaPerimetre}')`
     )
 
     const titreId = 'titreIdUniquePourMiseAJourAreas'
@@ -165,7 +165,7 @@ describe('titresEtapesAreasUpdate', () => {
     // ajoute la zone 2
     await TitresSDOMZones.query().insert({
       titreEtapeId,
-      sdomZoneId: SDOMZoneId.Zone2
+      sdomZoneId: SDOMZoneIds.Zone2
     })
 
     await titresEtapesAreasUpdate([titreEtapeId])

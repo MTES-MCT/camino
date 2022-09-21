@@ -4,12 +4,13 @@ import fetch from 'node-fetch'
 import Communes from '../database/models/communes'
 import JSZip from 'jszip'
 import Forets from '../database/models/forets'
-import { SDOMZoneId } from '../types'
 import { streamArray } from 'stream-json/streamers/StreamArray'
 import Pick from 'stream-json/filters/Pick'
 import { chain } from 'stream-chain'
 import { Readable } from 'stream'
 import SDOMZones from '../database/models/sdom-zones'
+import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
+
 const communesUpdate = async () => {
   const communesIdsKnown = (await Communes.query()).map(({ id }) => id)
   const communesPostgisIdsKnown: string[] = (
@@ -151,22 +152,22 @@ const sdomZonesUpdate = async () => {
   // https://catalogue.geoguyane.fr/geosource/panierDownloadFrontalParametrage/125ffae0-53a5-431e-9568-5213b6643608
   const zones: { id: SDOMZoneId; nom: string; url: string }[] = [
     {
-      id: SDOMZoneId.Zone0Potentielle,
+      id: SDOMZoneIds.Zone0Potentielle,
       nom: 'ZONE 0, potentielle',
       url: 'https://telecarto.geoguyane.fr/?email=&direct=MQ%3D%3D&mode=prodige&data_type=vector&service_idx=1&format=anNvbg%3D%3D&projection=NDMyNg%3D%3D&data=UE9TVEdJU19EQVRBJTNBem9uZV8wX3BvdGVudGllbGxlX3NfOTcz&metadata_id=NjYwMzYwMjE%3D&bTerritoire=0&territoire_type=&territoire_data=&territoire_area=%25&extractionattributaire_couche=&restricted_area_field=%25&restricted_area_buffer=%25'
     },
     {
-      id: SDOMZoneId.Zone0,
+      id: SDOMZoneIds.Zone0,
       nom: 'ZONE 0, activité minière interdite',
       url: 'https://telecarto.geoguyane.fr/?email=&direct=MQ%3D%3D&mode=prodige&data_type=vector&service_idx=1&format=anNvbg%3D%3D&projection=NDMyNg%3D%3D&data=UE9TVEdJU19EQVRBJTNBem9uZV8wX3NfOTcz&metadata_id=NjYwMzU4ODE%3D&bTerritoire=0&territoire_type=&territoire_data=&territoire_area=%25&extractionattributaire_couche=&restricted_area_field=%25&restricted_area_buffer=%25'
     },
     {
-      id: SDOMZoneId.Zone1,
+      id: SDOMZoneIds.Zone1,
       nom: 'ZONE 1, activité minière interdite sauf exploitation souterraine et recherches aériennes',
       url: 'https://telecarto.geoguyane.fr/?email=&direct=MQ%3D%3D&mode=prodige&data_type=vector&service_idx=1&format=anNvbg%3D%3D&projection=NDMyNg%3D%3D&data=UE9TVEdJU19EQVRBJTNBem9uZV8xX3NfOTcz&metadata_id=NjYwMzU4ODI%3D&bTerritoire=0&territoire_type=&territoire_data=&territoire_area=%25&extractionattributaire_couche=&restricted_area_field=%25&restricted_area_buffer=%25'
     },
     {
-      id: SDOMZoneId.Zone2,
+      id: SDOMZoneIds.Zone2,
       nom: 'ZONE 2, activité minière autorisée sous contrainte',
       url: 'https://telecarto.geoguyane.fr/?email=&direct=MQ%3D%3D&mode=prodige&data_type=vector&service_idx=1&format=anNvbg%3D%3D&projection=NDMyNg%3D%3D&data=UE9TVEdJU19EQVRBJTNBem9uZV8yX3NfOTcz&metadata_id=NjYwMzU4ODM%3D&bTerritoire=0&territoire_type=&territoire_data=&territoire_area=%25&extractionattributaire_couche=&restricted_area_field=%25&restricted_area_buffer=%25'
     }

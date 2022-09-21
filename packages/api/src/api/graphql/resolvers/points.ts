@@ -1,10 +1,4 @@
-import {
-  ISDOMZone,
-  ITitrePoint,
-  IToken,
-  IUtilisateur,
-  SDOMZoneId
-} from '../../../types'
+import { ISDOMZone, ITitrePoint, IToken, IUtilisateur } from '../../../types'
 
 import { FileUpload } from 'graphql-upload'
 import { Stream } from 'stream'
@@ -38,6 +32,7 @@ import {
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
 
 const stream2buffer = async (stream: Stream): Promise<Buffer> => {
   return new Promise<Buffer>((resolve, reject) => {
@@ -183,9 +178,9 @@ const sdomZonesInformationsGet = async (
   if (titreTypeId === 'axm' && ['mfr', 'mcr'].includes(etapeTypeId)) {
     const zone = zones.find(s =>
       [
-        SDOMZoneId.Zone0,
-        SDOMZoneId.Zone0Potentielle,
-        SDOMZoneId.Zone1
+        SDOMZoneIds.Zone0,
+        SDOMZoneIds.Zone0Potentielle,
+        SDOMZoneIds.Zone1
       ].includes(s.id as SDOMZoneId)
     )
     if (zone) {
