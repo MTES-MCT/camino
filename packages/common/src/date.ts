@@ -6,14 +6,31 @@ export const datesDiffInDays = (a: Date, b: Date) => {
 }
 
 export const daysBetween = (a: CaminoDate, b: CaminoDate) => {
-  const utc1 = new Date(a).getTime()
-  const utc2 = new Date(b).getTime()
-
-  return Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24))
+  return datesDiffInDays(new Date(a), new Date(b))
 }
 
 export type CaminoDate = string & { __camino: 'Date' }
 
+const checkValidCaminoDate = (str: string): str is CaminoDate => {
+  return str.match(/^\d{4}-\d{2}-\d{2}$/) !== null
+}
+
+export const toCaminoDate = (date: Date | string): CaminoDate => {
+  if (typeof date === 'string') {
+    if (checkValidCaminoDate(date)) {
+      return date
+    } else {
+      throw new Error(`Invalid date string: ${date}`)
+    }
+  } else {
+    // Use the Sweden locale because it uses the ISO format
+    const dateString = date.toLocaleDateString('sv')
+    if (checkValidCaminoDate(dateString)) {
+      return dateString
+    }
+  }
+  throw new Error(`Shouldn't get here (invalid toDateStr provided): ${date}`)
+}
 export type CaminoAnnee = string & { __camino: 'Annee' }
 
 export const getAnnee = (date: CaminoDate): CaminoAnnee => {
@@ -21,7 +38,7 @@ export const getAnnee = (date: CaminoDate): CaminoAnnee => {
 }
 
 export const isAnnee = (annee: string): annee is CaminoAnnee => {
-  return !!annee.match(/^[0-9]{4}$/)
+  return annee.match(/^\d{4}$/) !== null
 }
 
 export function checkValideAnnee(annee: string): asserts annee is CaminoAnnee {
@@ -31,9 +48,7 @@ export function checkValideAnnee(annee: string): asserts annee is CaminoAnnee {
 }
 
 export function valideAnnee(annee: string): CaminoAnnee {
-  if (!isAnnee(annee)) {
-    throw new Error(`l'année ${annee} n'est pas une année valide`)
-  }
+  checkValideAnnee(annee)
 
   return annee
 }
