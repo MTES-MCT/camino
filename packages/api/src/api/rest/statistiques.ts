@@ -188,21 +188,51 @@ export const getDGTMStats = async (
       mcrdate: CaminoDate
       dexdate: CaminoDate
     }[] = await knex
-      .select('titresDemarches.id', {
+      .select({
         mcrdate: 'MCR.date',
         dexdate: 'DEX.date'
       })
+      .distinct('titresDemarches.id')
       .from({
-        titresDemarches: 'titresDemarches',
         MCR: 'titresEtapes',
-        DEX: 'titresEtapes'
+        DEX: 'titresEtapes',
+        titresDemarches: 'titresDemarches'
       })
+      .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
+      .leftJoin(
+        'titresAdministrationsGestionnaires',
+        'titres.id',
+        'titresAdministrationsGestionnaires.titreId'
+      )
+      .leftJoin(
+        'titresAdministrations',
+        'titres.id',
+        'titresAdministrations.titreId'
+      )
+      .joinRaw(
+        "left join titres_administrations_locales on titres_administrations_locales.titre_etape_id = titres.props_titre_etapes_ids ->> 'administrations'"
+      )
+      .joinRaw(
+        "left join titres__sdom_zones on titres__sdom_zones.titre_etape_id = titres.props_titre_etapes_ids ->> 'points'"
+      )
       .where('titresDemarches.typeId', 'oct')
       .andWhereRaw('MCR.titre_demarche_id = "titres_demarches"."id"')
       .andWhere('MCR.typeId', 'mcr')
       .andWhere('MCR.date', '>=', `${anneeDepartStats}-01-01`)
       .andWhereRaw('DEX.titre_demarche_id = "titres_demarches"."id"')
       .andWhere('DEX.typeId', 'dex')
+      .andWhere(builder =>
+        builder
+          .where(
+            'titresAdministrationsGestionnaires.administrationId',
+            administrationId
+          )
+          .orWhere(
+            'titresAdministrationsLocales.administrationId',
+            administrationId
+          )
+          .orWhere('titresAdministrations.administrationId', administrationId)
+      )
 
     dateInstruction.forEach(instruction => {
       const annee = getAnnee(instruction.mcrdate)
@@ -225,18 +255,48 @@ export const getDGTMStats = async (
       mcrdate: CaminoDate
       apo: CaminoDate
     }[] = await knex
-      .select('titresDemarches.id', { mcrdate: 'MCR.date', apo: 'APO.date' })
+      .select({ mcrdate: 'MCR.date', apo: 'APO.date' })
+      .distinct('titresDemarches.id')
       .from({
-        titresDemarches: 'titresDemarches',
         MCR: 'titresEtapes',
-        APO: 'titresEtapes'
+        APO: 'titresEtapes',
+        titresDemarches: 'titresDemarches'
       })
+      .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
+      .leftJoin(
+        'titresAdministrationsGestionnaires',
+        'titres.id',
+        'titresAdministrationsGestionnaires.titreId'
+      )
+      .leftJoin(
+        'titresAdministrations',
+        'titres.id',
+        'titresAdministrations.titreId'
+      )
+      .joinRaw(
+        "left join titres_administrations_locales on titres_administrations_locales.titre_etape_id = titres.props_titre_etapes_ids ->> 'administrations'"
+      )
+      .joinRaw(
+        "left join titres__sdom_zones on titres__sdom_zones.titre_etape_id = titres.props_titre_etapes_ids ->> 'points'"
+      )
       .where('titresDemarches.typeId', 'oct')
       .andWhereRaw('MCR.titre_demarche_id = "titres_demarches"."id"')
       .andWhere('MCR.typeId', 'mcr')
       .andWhere('MCR.date', '>=', `${anneeDepartStats}-01-01`)
       .andWhereRaw('APO.titre_demarche_id = "titres_demarches"."id"')
       .andWhere('APO.typeId', 'apo')
+      .andWhere(builder =>
+        builder
+          .where(
+            'titresAdministrationsGestionnaires.administrationId',
+            administrationId
+          )
+          .orWhere(
+            'titresAdministrationsLocales.administrationId',
+            administrationId
+          )
+          .orWhere('titresAdministrations.administrationId', administrationId)
+      )
 
     dateCDM.forEach(instruction => {
       const annee = getAnnee(instruction.mcrdate)

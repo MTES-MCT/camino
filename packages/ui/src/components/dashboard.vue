@@ -20,10 +20,17 @@ import PureEntrepriseDashboard from '@/components/dashboard/pure-entreprise-dash
 import PureONFDashboard from '@/components/dashboard/pure-onf-dashboard.vue'
 import PurePTMGDashboard from '@/components/dashboard/pure-ptmg-dashboard.vue'
 import PureDREALDashboard from '@/components/dashboard/pure-dreal-dashboard.vue'
+import { fetchWithJson } from '@/api/client-rest'
+import {
+  CommonTitreDREAL,
+  CommonTitreONF,
+  CommonTitrePTMG
+} from 'camino-common/src/titres'
 
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { titres } from '@/api/titres'
+import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 
 const store = useStore()
 const router = useRouter()
@@ -54,8 +61,12 @@ const getEntreprisesTitres = async () => {
   return (await titres({ entreprisesIds })).elements
 }
 
-const getOnfTitres = async () => (await fetch('/apiUrl/titresONF')).json()
-const getPtmgTitres = async () => (await fetch('/apiUrl/titresPTMG')).json()
-const getDrealTitres = async () => (await fetch('/apiUrl/titresDREAL')).json()
-const getDgtmStats = async () => (await fetch('/apiUrl/statistiques')).json()
+const getOnfTitres = async () =>
+  fetchWithJson<CommonTitreONF[]>('/apiUrl/titresONF')
+const getPtmgTitres = async () =>
+  fetchWithJson<CommonTitrePTMG[]>('/apiUrl/titresPTMG')
+const getDrealTitres = async () =>
+  fetchWithJson<CommonTitreDREAL[]>('/apiUrl/titresDREAL')
+const getDgtmStats = async () =>
+  fetchWithJson<StatistiquesDGTM>('/apiUrl/statistiques')
 </script>
