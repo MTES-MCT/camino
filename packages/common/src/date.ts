@@ -5,7 +5,20 @@ export const datesDiffInDays = (a: Date, b: Date) => {
   return Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24))
 }
 
+export const daysBetween = (a: CaminoDate, b: CaminoDate) => {
+  const utc1 = new Date(a).getTime()
+  const utc2 = new Date(b).getTime()
+
+  return Math.floor((utc2 - utc1) / (1000 * 60 * 60 * 24))
+}
+
+export type CaminoDate = string & { __camino: 'Date' }
+
 export type CaminoAnnee = string & { __camino: 'Annee' }
+
+export const getAnnee = (date: CaminoDate): CaminoAnnee => {
+  return valideAnnee(date.substring(0, 4))
+}
 
 export const isAnnee = (annee: string): annee is CaminoAnnee => {
   return !!annee.match(/^[0-9]{4}$/)

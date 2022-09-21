@@ -47,4 +47,5 @@ export interface StatistiquesDGTM {
       [SDOMZoneIds.Zone2]: { depose: number; octroye: number }
     }
   >
+  delais: Record<CaminoAnnee, { delaiInstructionEnJours: number[]; delaiCommissionDepartementaleEnJours: number[] }>
 }

@@ -31,18 +31,21 @@ export const Ok = Template.bind({})
 Ok.args = {
   getDrealTitres: () => Promise.resolve(titresDreal),
   isDGTM: false,
-  getDgtmStats: () => Promise.resolve({ depotEtInstructions: {}, sdom: {} })
+  getDgtmStats: () =>
+    Promise.resolve({ depotEtInstructions: {}, sdom: {}, delais: {} })
 }
 
 export const Loading = Template.bind({})
 Loading.args = {
   getDrealTitres: () => new Promise<CommonTitreDREAL[]>(resolve => {}),
   isDGTM: false,
-  getDgtmStats: () => Promise.resolve({ depotEtInstructions: {}, sdom: {} })
+  getDgtmStats: () =>
+    Promise.resolve({ depotEtInstructions: {}, sdom: {}, delais: {} })
 }
 export const WithError = Template.bind({})
 WithError.args = {
   getDrealTitres: () => Promise.reject(new Error('because reasons')),
   isDGTM: false,
-  getDgtmStats: () => Promise.resolve({ depotEtInstructions: {}, sdom: {} })
+  getDgtmStats: () =>
+    Promise.resolve({ depotEtInstructions: {}, sdom: {}, delais: {} })
 }

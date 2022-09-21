@@ -6,7 +6,7 @@ import { IUser } from '../../types'
 import { constants } from 'http2'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
-import { checkValideAnnee } from 'camino-common/src/date'
+import { CaminoDate, getAnnee, daysBetween } from 'camino-common/src/date'
 import { knex } from '../../knex'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
 
@@ -25,11 +25,15 @@ export const getDGTMStats = async (
   if (user?.administrationId !== administrationId) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
-    const result: StatistiquesDGTM = { depotEtInstructions: {}, sdom: {} }
+    const result: StatistiquesDGTM = {
+      depotEtInstructions: {},
+      sdom: {},
+      delais: {}
+    }
 
     const phaseOctrois: {
       id: string
-      dateDebut: string
+      dateDebut: CaminoDate
       typeId: TitreTypeId
       sdomZoneId: SDOMZoneId | null
     }[] = await knex
@@ -74,8 +78,7 @@ export const getDGTMStats = async (
       )
 
     phaseOctrois?.forEach(phase => {
-      const annee = phase.dateDebut.substring(0, 4)
-      checkValideAnnee(annee)
+      const annee = getAnnee(phase.dateDebut)
 
       if (!result.depotEtInstructions[annee]) {
         result.depotEtInstructions[annee] = {
@@ -104,7 +107,7 @@ export const getDGTMStats = async (
     })
 
     const etapeDeposees: {
-      date: string
+      date: CaminoDate
       typeId: TitreTypeId
       sdomZoneId: SDOMZoneId | null
     }[] = await knex
@@ -150,8 +153,7 @@ export const getDGTMStats = async (
       )
 
     etapeDeposees?.forEach(etape => {
-      const annee = etape.date.substring(0, 4)
-      checkValideAnnee(annee)
+      const annee = getAnnee(etape.date)
 
       if (!result.depotEtInstructions[annee]) {
         result.depotEtInstructions[annee] = {
@@ -179,6 +181,77 @@ export const getDGTMStats = async (
       if (etape.typeId === 'axm') {
         result.depotEtInstructions[annee].totalAXMDeposees++
       }
+    })
+
+    const dateInstruction: {
+      id: string
+      mcrdate: CaminoDate
+      dexdate: CaminoDate
+    }[] = await knex
+      .select('titresDemarches.id', {
+        mcrdate: 'MCR.date',
+        dexdate: 'DEX.date'
+      })
+      .from({
+        titresDemarches: 'titresDemarches',
+        MCR: 'titresEtapes',
+        DEX: 'titresEtapes'
+      })
+      .where('titresDemarches.typeId', 'oct')
+      .andWhereRaw('MCR.titre_demarche_id = "titres_demarches"."id"')
+      .andWhere('MCR.typeId', 'mcr')
+      .andWhere('MCR.date', '>=', `${anneeDepartStats}-01-01`)
+      .andWhereRaw('DEX.titre_demarche_id = "titres_demarches"."id"')
+      .andWhere('DEX.typeId', 'dex')
+
+    dateInstruction.forEach(instruction => {
+      const annee = getAnnee(instruction.mcrdate)
+      if (!result.delais[annee]) {
+        result.delais[annee] = {
+          delaiInstructionEnJours: [],
+          delaiCommissionDepartementaleEnJours: []
+        }
+      }
+      let days = daysBetween(instruction.mcrdate, instruction.dexdate)
+      if (days < 0) {
+        console.warn('cette demarche a une dex AVANT la mcr', instruction.id)
+        days = Math.abs(days)
+      }
+      result.delais[annee].delaiInstructionEnJours.push(days)
+    })
+
+    const dateCDM: {
+      id: string
+      mcrdate: CaminoDate
+      apo: CaminoDate
+    }[] = await knex
+      .select('titresDemarches.id', { mcrdate: 'MCR.date', apo: 'APO.date' })
+      .from({
+        titresDemarches: 'titresDemarches',
+        MCR: 'titresEtapes',
+        APO: 'titresEtapes'
+      })
+      .where('titresDemarches.typeId', 'oct')
+      .andWhereRaw('MCR.titre_demarche_id = "titres_demarches"."id"')
+      .andWhere('MCR.typeId', 'mcr')
+      .andWhere('MCR.date', '>=', `${anneeDepartStats}-01-01`)
+      .andWhereRaw('APO.titre_demarche_id = "titres_demarches"."id"')
+      .andWhere('APO.typeId', 'apo')
+
+    dateCDM.forEach(instruction => {
+      const annee = getAnnee(instruction.mcrdate)
+      if (!result.delais[annee]) {
+        result.delais[annee] = {
+          delaiInstructionEnJours: [],
+          delaiCommissionDepartementaleEnJours: []
+        }
+      }
+      let days = daysBetween(instruction.mcrdate, instruction.apo)
+      if (days < 0) {
+        console.warn('cette demarche a une apo AVANT la mcr', instruction.id)
+        days = Math.abs(days)
+      }
+      result.delais[annee].delaiCommissionDepartementaleEnJours.push(days)
     })
 
     res.json(result)
