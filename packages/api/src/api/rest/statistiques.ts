@@ -2,13 +2,18 @@ import { CustomResponse } from './express-type'
 import express from 'express'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { userGet } from '../../database/queries/utilisateurs'
-import { IUser } from '../../types'
+import { ITitre, IUser } from '../../types'
 import { constants } from 'http2'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { StatistiquesDGTM } from 'camino-common/src/statistiques'
+import {
+  StatistiquesDGTM,
+  StatistiquesMetauxMinerauxMetropole
+} from 'camino-common/src/statistiques'
 import { CaminoDate, getAnnee, daysBetween } from 'camino-common/src/date'
 import { knex } from '../../knex'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
+import { userSuper } from '../../database/user-super'
+import { titresGet } from '../../database/queries/titres'
 
 const anneeDepartStats = 2015
 
@@ -315,5 +320,98 @@ export const getDGTMStats = async (
     })
 
     res.json(result)
+  }
+}
+
+// TODO 2022-09-23 better type
+const isTitreGoodType = (
+  typeId: TitreTypeId
+): typeId is 'axm' | 'prm' | 'axm' | 'pxm' | 'cxm' => {
+  return ['axm', 'prm', 'axm', 'pxm', 'cxm'].includes(typeId)
+}
+
+const statistiquesMetauxMinerauxMetropoleInstantBuild = (
+  titres: ITitre[]
+): StatistiquesMetauxMinerauxMetropole => {
+  const statsInstant = titres.reduce(
+    (acc, titre) => {
+      if (
+        titre.titreStatutId &&
+        ['val', 'mod'].includes(titre.titreStatutId) &&
+        titre.surfaceEtape &&
+        titre.surfaceEtape.surface
+      ) {
+        if (['arm', 'prm'].includes(titre.typeId)) {
+          acc.surfaceExploration += titre.surfaceEtape.surface
+        } else {
+          acc.surfaceExploitation += titre.surfaceEtape.surface
+        }
+
+        if (isTitreGoodType(titre.typeId)) {
+          acc.titres[titre.typeId]++
+        }
+      }
+
+      return acc
+    },
+    {
+      surfaceExploration: 0,
+      surfaceExploitation: 0,
+      titres: {
+        arm: 0,
+        prm: 0,
+        axm: 0,
+        pxm: 0,
+        cxm: 0
+      }
+    }
+  )
+
+  statsInstant.surfaceExploration = Math.floor(
+    statsInstant.surfaceExploration * 100
+  ) // conversion 1 km² = 100 ha
+  statsInstant.surfaceExploitation = Math.floor(
+    statsInstant.surfaceExploitation * 100
+  ) // conversion 1 km² = 100 ha
+
+  return statsInstant
+}
+export const getMetauxMinerauxMetropolesStats = async (
+  _req: express.Request,
+  res: CustomResponse<StatistiquesMetauxMinerauxMetropole>
+) => {
+  try {
+    // const anneeCurrent = new Date().getFullYear()
+    // // un tableau avec les 5 dernières années
+    // const annees = Array.from(Array(6).keys())
+    //   .map(e => anneeCurrent - e)
+    //   .reverse()
+
+    const titres = await titresGet(
+      {
+        domainesIds: ['m'],
+        typesIds: ['ar', 'pr', 'ax', 'px', 'cx']
+        // FIXME PAS LA GUYANE territoires: 'france'
+      },
+      {
+        fields: {
+          surfaceEtape: { id: {} },
+          demarches: { phase: { id: {} }, etapes: { id: {} }, type: { id: {} } }
+        }
+      },
+      userSuper
+    )
+
+    // const titresActivites = await titresActivitesGet(
+    // { titresTerritoires: 'guyane', annees, typesIds: ['grp', 'gra', 'grx'] },
+    // { fields: { titre: { id: {} } } },
+    // userSuper
+    // )
+
+    res.json(statistiquesMetauxMinerauxMetropoleInstantBuild(titres))
+  } catch (e) {
+    console.error(e)
+
+    res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
   }
 }
