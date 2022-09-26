@@ -23,6 +23,8 @@ defineProps<{ data: AsyncData<any> }>()
   position: relative;
   min-width: var(--unit);
   min-height: var(--unit);
+  display: flex;
+  justify-content: center;
 }
 @keyframes spinner {
   to {

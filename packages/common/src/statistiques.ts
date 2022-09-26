@@ -50,14 +50,13 @@ export interface StatistiquesDGTM {
   delais: Record<CaminoAnnee, { delaiInstructionEnJours: number[]; delaiCommissionDepartementaleEnJours: number[] }>
 }
 
-export interface StatistiquesMetauxMinerauxMetropole {
+export interface StatistiquesMinerauxMetauxMetropole {
   surfaceExploration: number
   surfaceExploitation: number
   titres: {
-    arm: number
-    prm: number
-    axm: number
-    pxm: number
-    cxm: number
+    instructionExploration: number
+    valPrm: number
+    instructionExploitation: number
+    valCxm: number
   }
 }

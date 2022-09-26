@@ -10,6 +10,7 @@ import {
   departements
 } from 'camino-common/src/static/departement'
 import { regions } from 'camino-common/src/static/region'
+import { isPaysId } from 'camino-common/src/static/pays'
 
 type ITitreTableName = 'titres' | 'titre'
 type ITitreRootName = 'titres' | 'titresDemarches' | 'titresActivites'
@@ -218,25 +219,41 @@ export const titresFiltersQueryModify = (
 
     const departementIds: DepartementId[] = territoiresArray.flatMap(
       territoire => {
-        const resultRegion = regions
-          .filter(({ nom }) =>
-            nom.toLowerCase().includes(territoire.toLowerCase())
+        const result: DepartementId[] = []
+        if (isPaysId(territoire)) {
+          result.push(
+            ...regions
+              .filter(({ paysId }) => paysId === territoire)
+              .flatMap(({ id }) =>
+                departements
+                  .filter(({ regionId }) => id === regionId)
+                  .map(({ id }) => id)
+              )
           )
-          .flatMap(({ id }) =>
-            departements
-              .filter(({ regionId }) => id === regionId)
-              .map(({ id }) => id)
-          )
+        }
+        result.push(
+          ...regions
+            .filter(({ nom }) =>
+              nom.toLowerCase().includes(territoire.toLowerCase())
+            )
+            .flatMap(({ id }) =>
+              departements
+                .filter(({ regionId }) => id === regionId)
+                .map(({ id }) => id)
+            )
+        )
 
-        const resultDepartement = departements
-          .filter(
-            ({ nom, id }) =>
-              nom.toLowerCase().includes(territoire.toLowerCase()) ||
-              id === territoire
-          )
-          .map(({ id }) => id)
+        result.push(
+          ...departements
+            .filter(
+              ({ nom, id }) =>
+                nom.toLowerCase().includes(territoire.toLowerCase()) ||
+                id === territoire
+            )
+            .map(({ id }) => id)
+        )
 
-        return resultRegion.concat(resultDepartement)
+        return result
       }
     )
 

@@ -41,8 +41,8 @@ const Statistiques = () => import('../components/statistiques.vue')
 const StatistiquesGuyane = () => import('../components/statistiques/guyane.vue')
 const StatistiquesGranulatsMarins = () =>
   import('../components/statistiques/granulats-marins.vue')
-const StatistiquesMetrauxMinerauxMetropole = () =>
-  import('../components/statistiques/metaux-mineraux-metropole.vue')
+const StatistiquesMinerauxMetauxMetropole = () =>
+  import('../components/statistiques/mineraux-metaux-metropole.vue')
 const Journaux = () => import('../components/journaux.vue')
 
 const routes: RouteRecordRaw[] = [
@@ -247,9 +247,9 @@ const routes: RouteRecordRaw[] = [
         component: StatistiquesGranulatsMarins
       },
       {
-        path: 'metaux-mineraux-metropole',
-        name: 'statistiques-metaux-mineraux-metropole',
-        component: StatistiquesMetrauxMinerauxMetropole
+        path: 'mineraux-metaux-metropole',
+        name: 'statistiques-mineraux-metaux-metropole',
+        component: StatistiquesMinerauxMetauxMetropole
       }
     ]
   },

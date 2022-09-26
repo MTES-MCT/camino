@@ -20,7 +20,7 @@ import {
 } from '../api/rest/utilisateurs'
 import {
   getDGTMStats,
-  getMetauxMinerauxMetropolesStats
+  getMinerauxMetauxMetropolesStats
 } from '../api/rest/statistiques'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
 const contentTypes = {
@@ -135,8 +135,8 @@ rest.get(CaminoRestRoutes.titresONF, restCatcher(titresONF))
 rest.get(CaminoRestRoutes.titresPTMG, restCatcher(titresPTMG))
 rest.get(CaminoRestRoutes.titresDREAL, restCatcher(titresDREAL))
 rest.get(
-  CaminoRestRoutes.statistiquesMetauxMinerauxMetropole,
-  restCatcher(getMetauxMinerauxMetropolesStats)
+  CaminoRestRoutes.statistiquesMinerauxMetauxMetropole,
+  restCatcher(getMinerauxMetauxMetropolesStats)
 )
 rest.get(CaminoRestRoutes.statistiquesDGTM, restCatcher(getDGTMStats))
 rest.get('/demarches', restDownload(demarches))

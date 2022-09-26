@@ -34,9 +34,9 @@ export default {
           name: 'statistiques-granulats-marins'
         },
         {
-          id: 'metaux-mineraux-metropole',
-          nom: 'Métaux & minéraux métropole',
-          name: 'statistiques-metaux-mineraux-metropole'
+          id: 'mineraux-metaux-metropole',
+          nom: 'Mineraux & métaux métropole',
+          name: 'statistiques-mineraux-metaux-metropole'
         }
       ]
     }

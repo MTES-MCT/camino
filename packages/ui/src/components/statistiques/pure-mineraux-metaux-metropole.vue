@@ -25,17 +25,18 @@
           <div class="tablet-blob-1-3">
             <p class="h0 text-center">
               <LoadingElement v-slot="{ item }" :data="data">
-                {{ item.titresInstructionExploration }}
+                {{ item.titres.instructionExploration }}
               </LoadingElement>
             </p>
             <div>
               <p class="bold text-center">
-                <LoadingElement v-slot="{ item }" :data="data">
-                  Demande{{
-                    item.titresInstructionExploration > 1 ? 's' : ''
-                  }}
-                  en cours d'instruction (initiale et modification en instance)
-                </LoadingElement>
+                Demande{{
+                  data.status === 'LOADED' &&
+                  data.value.titres.instructionExploration > 1
+                    ? 's'
+                    : ''
+                }}
+                en cours d'instruction (initiale et modification en instance)
               </p>
             </div>
             <p class="h6 text-center">
@@ -43,9 +44,10 @@
                 :to="{
                   name: 'titres',
                   query: {
-                    domainesIds: 'w',
+                    domainesIds: 'm',
                     typesIds: 'ar,ap,pr',
                     statutsIds: 'dmi,mod',
+                    territoires: 'FR',
                     vueId: 'table'
                   }
                 }"
@@ -57,7 +59,7 @@
           <div class="tablet-blob-1-3">
             <p class="h0 text-center">
               <LoadingElement v-slot="{ item }" :data="data">
-                {{ item.titres.prm }}
+                {{ item.titres.valPrm }}
               </LoadingElement>
             </p>
             <p class="bold text-center">Permis exclusifs de recherches</p>
@@ -69,6 +71,7 @@
                     domainesIds: 'm',
                     typesIds: 'pr',
                     statutsIds: 'val',
+                    territoires: 'FR',
                     vueId: 'table'
                   }
                 }"
@@ -78,7 +81,7 @@
             </p>
           </div>
           <div class="tablet-blob-1-3">
-            <p class="h0 text-center flex flex-center">
+            <p class="h0 text-center">
               <LoadingElement v-slot="{ item }" :data="data">
                 {{ numberFormat(item.surfaceExploration) }} ha
               </LoadingElement>
@@ -97,17 +100,18 @@
           <div class="tablet-blob-1-3">
             <p class="h0 text-center">
               <LoadingElement v-slot="{ item }" :data="data">
-                {{ item.titresInstructionExploitation }}
+                {{ item.titres.instructionExploitation }}
               </LoadingElement>
             </p>
             <div>
               <p class="bold text-center">
-                <LoadingElement v-slot="{ item }" :data="data">
-                  Demande{{
-                    item.titresInstructionExploitation > 1 ? 's' : ''
-                  }}
-                  en cours d'instruction (initiale et modification en instance)
-                </LoadingElement>
+                Demande{{
+                  data.status === 'LOADED' &&
+                  data.value.titres.instructionExploitation > 1
+                    ? 's'
+                    : ''
+                }}
+                en cours d'instruction (initiale et modification en instance)
               </p>
             </div>
             <p class="h6 text-center">
@@ -115,9 +119,10 @@
                 :to="{
                   name: 'titres',
                   query: {
-                    domainesIds: 'w',
+                    domainesIds: 'm',
                     typesIds: 'ax,cx,px',
                     statutsIds: 'dmi,mod',
+                    territoires: 'FR',
                     vueId: 'table'
                   }
                 }"
@@ -129,24 +134,27 @@
           <div class="tablet-blob-1-3">
             <p class="h0 text-center">
               <LoadingElement v-slot="{ item }" :data="data">
-                {{ item.titresValCxw }}
+                {{ item.titres.valCxm }}
               </LoadingElement>
             </p>
             <div>
-              <LoadingElement v-slot="{ item }" :data="data">
-                <p class="bold text-center">
-                  Concession{{ item.titresValCxw > 1 ? 's' : '' }}
-                </p>
-              </LoadingElement>
+              <p class="bold text-center">
+                Concession{{
+                  data.status === 'LOADED' && data.value.titres.valCxm > 1
+                    ? 's'
+                    : ''
+                }}
+              </p>
             </div>
             <p class="h6 text-center">
               <router-link
                 :to="{
                   name: 'titres',
                   query: {
-                    domainesIds: 'w',
+                    domainesIds: 'm',
                     typesIds: 'cx',
                     statutsIds: 'val',
+                    territoires: 'FR',
                     vueId: 'table'
                   }
                 }"
@@ -178,13 +186,13 @@
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { numberFormat } from '@/utils/number-format'
-import { StatistiquesMetauxMinerauxMetropole } from 'camino-common/src/statistiques'
+import { StatistiquesMinerauxMetauxMetropole } from 'camino-common/src/statistiques'
 import { ref, onMounted } from 'vue'
-const data = ref<AsyncData<StatistiquesMetauxMinerauxMetropole>>({
+const data = ref<AsyncData<StatistiquesMinerauxMetauxMetropole>>({
   status: 'LOADING'
 })
 const props = defineProps<{
-  getStats: () => Promise<StatistiquesMetauxMinerauxMetropole>
+  getStats: () => Promise<StatistiquesMinerauxMetauxMetropole>
 }>()
 
 onMounted(async () => {

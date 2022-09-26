@@ -7,13 +7,17 @@ import { constants } from 'http2'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import {
   StatistiquesDGTM,
-  StatistiquesMetauxMinerauxMetropole
+  StatistiquesMinerauxMetauxMetropole
 } from 'camino-common/src/statistiques'
 import { CaminoDate, getAnnee, daysBetween } from 'camino-common/src/date'
 import { knex } from '../../knex'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
 import { userSuper } from '../../database/user-super'
 import { titresGet } from '../../database/queries/titres'
+import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { Regions } from 'camino-common/src/static/region'
+import { Departements } from 'camino-common/src/static/departement'
 
 const anneeDepartStats = 2015
 
@@ -323,32 +327,38 @@ export const getDGTMStats = async (
   }
 }
 
-// TODO 2022-09-23 better type
-const isTitreGoodType = (
-  typeId: TitreTypeId
-): typeId is 'axm' | 'prm' | 'axm' | 'pxm' | 'cxm' => {
-  return ['axm', 'prm', 'axm', 'pxm', 'cxm'].includes(typeId)
-}
-
-const statistiquesMetauxMinerauxMetropoleInstantBuild = (
+const statistiquesMinerauxMetauxMetropoleInstantBuild = (
   titres: ITitre[]
-): StatistiquesMetauxMinerauxMetropole => {
-  const statsInstant = titres.reduce(
+): StatistiquesMinerauxMetauxMetropole => {
+  const statsInstant: StatistiquesMinerauxMetauxMetropole = titres.reduce(
     (acc, titre) => {
       if (
         titre.titreStatutId &&
-        ['val', 'mod'].includes(titre.titreStatutId) &&
-        titre.surfaceEtape &&
-        titre.surfaceEtape.surface
+        ['val', 'mod', 'dmi'].includes(titre.titreStatutId)
       ) {
-        if (['arm', 'prm'].includes(titre.typeId)) {
-          acc.surfaceExploration += titre.surfaceEtape.surface
-        } else {
-          acc.surfaceExploitation += titre.surfaceEtape.surface
+        if (!titre.surfaceEtape) {
+          console.warn(`ce titre ${titre.slug} n'a pas de surface`)
         }
-
-        if (isTitreGoodType(titre.typeId)) {
-          acc.titres[titre.typeId]++
+        if (['arm', 'apm', 'prm'].includes(titre.typeId!)) {
+          acc.surfaceExploration += titre.surfaceEtape?.surface ?? 0
+          if (['mod', 'dmi'].includes(titre.titreStatutId!)) {
+            acc.titres.instructionExploration++
+          }
+        } else {
+          if (['val', 'mod'].includes(titre.titreStatutId)) {
+            acc.surfaceExploitation += titre.surfaceEtape?.surface ?? 0
+          }
+          if (['mod', 'dmi'].includes(titre.titreStatutId!)) {
+            acc.titres.instructionExploitation++
+          }
+        }
+        if (TitresStatutIds.Valide === titre.titreStatutId) {
+          if (titre.typeId === 'prm') {
+            acc.titres.valPrm++
+          }
+          if (titre.typeId === 'cxm') {
+            acc.titres.valCxm++
+          }
         }
       }
 
@@ -358,11 +368,10 @@ const statistiquesMetauxMinerauxMetropoleInstantBuild = (
       surfaceExploration: 0,
       surfaceExploitation: 0,
       titres: {
-        arm: 0,
-        prm: 0,
-        axm: 0,
-        pxm: 0,
-        cxm: 0
+        instructionExploration: 0,
+        valPrm: 0,
+        instructionExploitation: 0,
+        valCxm: 0
       }
     }
   )
@@ -376,42 +385,58 @@ const statistiquesMetauxMinerauxMetropoleInstantBuild = (
 
   return statsInstant
 }
-export const getMetauxMinerauxMetropolesStats = async (
-  _req: express.Request,
-  res: CustomResponse<StatistiquesMetauxMinerauxMetropole>
-) => {
-  try {
-    // const anneeCurrent = new Date().getFullYear()
-    // // un tableau avec les 5 dernières années
-    // const annees = Array.from(Array(6).keys())
-    //   .map(e => anneeCurrent - e)
-    //   .reverse()
 
+export const getMinerauxMetauxMetropolesStats = async (
+  _req: express.Request,
+  res: CustomResponse<StatistiquesMinerauxMetauxMetropole>
+): Promise<void> => {
+  try {
     const titres = await titresGet(
       {
         domainesIds: ['m'],
-        typesIds: ['ar', 'pr', 'ax', 'px', 'cx']
-        // FIXME PAS LA GUYANE territoires: 'france'
+        typesIds: ['ar', 'ap', 'pr', 'ax', 'px', 'cx']
       },
       {
         fields: {
           surfaceEtape: { id: {} },
-          demarches: { phase: { id: {} }, etapes: { id: {} }, type: { id: {} } }
+          demarches: {
+            phase: { id: {} },
+            etapes: { id: {} },
+            type: { id: {} }
+          },
+          communes: { id: {} }
         }
       },
       userSuper
     )
+    const titresMetropole = titres.filter(titre => {
+      if (!titre.communes) {
+        throw new Error('les communes ne sont pas chargées')
+      }
+
+      return titre.communes
+        .map(({ departementId }) => departementId)
+        .filter(isNotNullNorUndefined)
+        .some(
+          departementId =>
+            Regions[Departements[departementId].regionId].paysId === 'FR'
+        )
+    })
 
     // const titresActivites = await titresActivitesGet(
-    // { titresTerritoires: 'guyane', annees, typesIds: ['grp', 'gra', 'grx'] },
-    // { fields: { titre: { id: {} } } },
-    // userSuper
+    //   { annees, typesIds: ['wrp'] },
+    //   {
+    //     fields: {
+    //       titre: { id: {} }
+    //     }
+    //   },
+    //   userSuper
     // )
 
-    res.json(statistiquesMetauxMinerauxMetropoleInstantBuild(titres))
+    res.json(statistiquesMinerauxMetauxMetropoleInstantBuild(titresMetropole))
   } catch (e) {
     console.error(e)
 
-    res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+    throw e
   }
 }
