@@ -4,6 +4,7 @@ import express from 'express'
 import { ICommune, IContenuValeur, IEntreprise, IUser } from '../../types'
 import {
   Fiscalite,
+  FiscaliteData,
   FiscaliteFrance,
   FiscaliteGuyane,
   fiscaliteVisible,
@@ -33,6 +34,7 @@ import { Departements } from 'camino-common/src/static/departement'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'
 import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
+import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
 
 const conversion = (
   substanceFiscale: SubstanceFiscale,
@@ -253,9 +255,9 @@ export const toFiscalite = (
   result: Pick<OpenfiscaResponse, 'articles'>,
   articleId: string,
   annee: number
-): Fiscalite => {
+): FiscaliteData => {
   const article = result.articles[articleId]
-  const fiscalite: Fiscalite = {
+  const fiscalite: FiscaliteData = {
     redevanceCommunale: 0,
     redevanceDepartementale: 0
   }
@@ -379,49 +381,54 @@ export const fiscalite = async (
       user
     )
 
-    const activites = await titresActivitesGet(
-      // TODO 2022-07-25 Laure, est-ce qu’il faut faire les WRP ?
-      {
-        typesIds: ['grx', 'gra', 'wrp'],
-        // TODO 2022-07-25 Laure, que les déposées ? Pas les « en construction » ?
-        statutsIds: ['dep'],
-        annees: [anneePrecedente],
-        titresIds: titres.map(({ id }) => id)
-      },
-      { fields: { id: {} } },
-      user
-    )
-    const activitesTrimestrielles = await titresActivitesGet(
-      {
-        typesIds: ['grp'],
-        statutsIds: ['dep'],
-        annees: [anneePrecedente],
-        titresIds: titres.map(({ id }) => id)
-      },
-      { fields: { id: {} } },
-      user
-    )
-
-    const body = bodyBuilder(
-      activites,
-      activitesTrimestrielles,
-      titres,
-      annee,
-      [entreprise]
-    )
-    console.info('body', JSON.stringify(body))
-    if (Object.keys(body.articles).length > 0) {
-      const result = await apiOpenfiscaCalculate(body)
-      console.info('result', JSON.stringify(result))
-
-      const redevances = responseExtractor(result, annee)
-
-      res.json(redevances)
+    // TODO 2022-09-26 feature https://trello.com/c/VnlFB6Z1/294-featfiscalit%C3%A9-masquer-la-section-fiscalit%C3%A9-de-la-fiche-entreprise-pour-les-autres-domaines-que-m
+    if (titres.some(({ domaineId }) => domaineId !== DOMAINES_IDS.METAUX)) {
+      res.json(false)
     } else {
-      res.json({
-        redevanceCommunale: 0,
-        redevanceDepartementale: 0
-      })
+      const activites = await titresActivitesGet(
+        // TODO 2022-07-25 Laure, est-ce qu’il faut faire les WRP ?
+        {
+          typesIds: ['grx', 'gra', 'wrp'],
+          // TODO 2022-07-25 Laure, que les déposées ? Pas les « en construction » ?
+          statutsIds: ['dep'],
+          annees: [anneePrecedente],
+          titresIds: titres.map(({ id }) => id)
+        },
+        { fields: { id: {} } },
+        user
+      )
+      const activitesTrimestrielles = await titresActivitesGet(
+        {
+          typesIds: ['grp'],
+          statutsIds: ['dep'],
+          annees: [anneePrecedente],
+          titresIds: titres.map(({ id }) => id)
+        },
+        { fields: { id: {} } },
+        user
+      )
+
+      const body = bodyBuilder(
+        activites,
+        activitesTrimestrielles,
+        titres,
+        annee,
+        [entreprise]
+      )
+      console.info('body', JSON.stringify(body))
+      if (Object.keys(body.articles).length > 0) {
+        const result = await apiOpenfiscaCalculate(body)
+        console.info('result', JSON.stringify(result))
+
+        const redevances = responseExtractor(result, annee)
+
+        res.json(redevances)
+      } else {
+        res.json({
+          redevanceCommunale: 0,
+          redevanceDepartementale: 0
+        })
+      }
     }
   }
 }

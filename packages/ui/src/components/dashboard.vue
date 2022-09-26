@@ -62,12 +62,12 @@ const getEntreprisesTitres = async () => {
   return (await titres({ entreprisesIds })).elements
 }
 
-const getOnfTitres = async () =>
-  fetchWithJson<CommonTitreONF[]>(CaminoRestRoutes.titresONF)
-const getPtmgTitres = async () =>
-  fetchWithJson<CommonTitrePTMG[]>(CaminoRestRoutes.titresPTMG)
-const getDrealTitres = async () =>
-  fetchWithJson<CommonTitreDREAL[]>(CaminoRestRoutes.titresDREAL)
-const getDgtmStats = async () =>
-  fetchWithJson<StatistiquesDGTM>(CaminoRestRoutes.statistiquesDGTM)
+const getOnfTitres = async (): Promise<CommonTitreONF[]> =>
+  fetchWithJson(CaminoRestRoutes.titresONF, {})
+const getPtmgTitres = async (): Promise<CommonTitrePTMG[]> =>
+  fetchWithJson(CaminoRestRoutes.titresPTMG, {})
+const getDrealTitres = async (): Promise<CommonTitreDREAL[]> =>
+  fetchWithJson(CaminoRestRoutes.titresDREAL, {})
+const getDgtmStats = async (): Promise<StatistiquesDGTM> =>
+  fetchWithJson(CaminoRestRoutes.statistiquesDGTM, {})
 </script>

@@ -197,7 +197,7 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import Accordion from './_ui/accordion.vue'
 import Loader from './_ui/loader.vue'
 import UiTable from './_ui/table.vue'
@@ -213,171 +213,120 @@ import {
   utilisateursColonnes,
   utilisateursLignesBuild
 } from './utilisateurs/table'
-import { fiscaliteVisible } from 'camino-common/src/fiscalite'
+import {
+  Fiscalite,
+  fiscaliteVisible as fiscaliteVisibleFunc
+} from 'camino-common/src/fiscalite'
 import {
   isAdministrationAdmin,
   isAdministrationEditeur,
-  isSuper
+  isSuper,
+  User
 } from 'camino-common/src/roles'
 import Icon from './_ui/icon.vue'
-import { valideAnnee } from 'camino-common/src/date'
+import { CaminoAnnee, valideAnnee } from 'camino-common/src/date'
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
+import { fetchWithJson } from '@/api/client-rest'
+import { CaminoRestRoutes } from 'camino-common/src/rest'
 
-export default {
-  components: {
-    Icon,
-    Accordion,
-    Loader,
-    UiTable,
-    TitresTable,
-    DocumentAddButton,
-    Documents,
-    EntreprisePermission,
-    EntrepriseFiscalite
-  },
+const store = useStore()
+const vueRoute = useRoute()
 
-  data() {
-    return {
-      utilisateursColonnes,
-      getFiscaliteEntreprise: async annee => {
-        const res = await fetch(
-          `/apiUrl/entreprises/${this.entreprise.id}/fiscalite/${annee}`
-        )
+const getFiscaliteEntreprise = async (annee: CaminoAnnee): Promise<Fiscalite> =>
+  fetchWithJson(CaminoRestRoutes.fiscaliteEntreprise, {
+    annee,
+    entrepriseId: entreprise.value.id
+  })
 
-        if (!res.ok) {
-          const response = await res.json()
-          throw new Error(response?.error ?? response)
-        }
+const annees = computed(() => {
+  const anneeDepart = 2021
+  const anneeCourante = new Date().getFullYear()
+  const caminoAnneeCourante = valideAnnee(anneeCourante.toString())
+  let anneeAAjouter = anneeDepart
+  const annees = [valideAnnee(anneeAAjouter.toString())]
+  while (annees[annees.length - 1] !== caminoAnneeCourante) {
+    anneeAAjouter++
+    annees.push(valideAnnee(anneeAAjouter.toString()))
+  }
+  return annees
+})
+const entreprise = computed(() => store.state.entreprise.element)
+const nom = computed(() => (entreprise.value && entreprise.value.nom) ?? '-')
+const utilisateurs = computed(() => entreprise.value.utilisateurs)
+const utilisateursLignes = computed(() =>
+  utilisateursLignesBuild(utilisateurs.value)
+)
+const titulaireTitres = computed(() => entreprise.value.titulaireTitres)
+const amodiataireTitres = computed(() => entreprise.value.amodiataireTitres)
+const user = computed(() => store.state.user.element)
+const loaded = computed(() => !!entreprise.value)
+const documentNew = computed(() => ({
+  entrepriseId: entreprise.value.id,
+  entreprisesLecture: false,
+  publicLecture: false,
+  fichier: null,
+  fichierNouveau: null,
+  fichierTypeId: null,
+  typeId: ''
+}))
 
-        return res.json()
-      }
-    }
-  },
+const route = computed(() => ({ id: entreprise.value.id, name: 'entreprise' }))
+const fiscaliteVisible = computed(() =>
+  fiscaliteVisibleFunc(user.value, entreprise.value.id)
+)
+const get = async () => {
+  await store.dispatch('entreprise/get', vueRoute.params.id)
+}
 
-  computed: {
-    annees: () => {
-      const anneeDepart = 2021
-      const anneeCourante = new Date().getFullYear()
-      const caminoAnneeCourante = valideAnnee(anneeCourante.toString())
-      let anneeAAjouter = anneeDepart
-      const annees = [valideAnnee(anneeAAjouter.toString())]
-      while (annees[annees.length - 1] !== caminoAnneeCourante) {
-        anneeAAjouter++
-        annees.push(valideAnnee(anneeAAjouter.toString()))
-      }
-      return annees
-    },
-    entreprise() {
-      return this.$store.state.entreprise.element
-    },
-
-    nom() {
-      return this.entreprise && this.entreprise.nom ? this.entreprise.nom : '–'
-    },
-
-    utilisateurs() {
-      return this.entreprise.utilisateurs
-    },
-
-    utilisateursLignes() {
-      return utilisateursLignesBuild(this.utilisateurs)
-    },
-
-    titulaireTitres() {
-      return this.entreprise.titulaireTitres
-    },
-
-    amodiataireTitres() {
-      return this.entreprise.amodiataireTitres
-    },
-
-    user() {
-      return this.$store.state.user.element
-    },
-
-    loaded() {
-      return !!this.entreprise
-    },
-
-    documentNew() {
-      return {
-        entrepriseId: this.entreprise.id,
-        entreprisesLecture: false,
-        publicLecture: false,
-        fichier: null,
-        fichierNouveau: null,
-        fichierTypeId: null,
-        typeId: ''
-      }
-    },
-
-    route() {
-      return {
-        id: this.entreprise.id,
-        name: 'entreprise'
-      }
-    },
-
-    fiscaliteVisible() {
-      return fiscaliteVisible(this.user, this.entreprise.id)
-    }
-  },
-
-  watch: {
-    '$route.params.id': function (id) {
-      if (this.$route.name === 'entreprise' && id) {
-        this.get()
-      }
-    },
-
-    user: 'get'
-  },
-
-  async created() {
-    await this.get()
-  },
-
-  beforeUnmount() {
-    this.$store.commit('entreprise/reset')
-  },
-
-  methods: {
-    async get() {
-      await this.$store.dispatch('entreprise/get', this.$route.params.id)
-    },
-
-    editPopupOpen() {
-      const entreprise = {
-        id: this.entreprise.id,
-        telephone: this.entreprise.telephone,
-        url: this.entreprise.url,
-        email: this.entreprise.email,
-        archive: this.entreprise.archive
-      }
-
-      this.$store.commit('popupOpen', {
-        component: EntrepriseEditPopup,
-        props: {
-          entreprise
-        }
-      })
-    },
-
-    dateFormat(date) {
-      return dateFormat(date)
-    },
-
-    isSuper(user) {
-      return isSuper(user)
-    },
-
-    canDeleteDocument(entreprise, user) {
-      return (
-        entreprise.modification &&
-        (isSuper(user) ||
-          isAdministrationAdmin(user) ||
-          isAdministrationEditeur(user))
-      )
+watch(
+  () => vueRoute.params.id,
+  newRoute => {
+    if (vueRoute.name === 'entreprise' && newRoute) {
+      get()
     }
   }
+)
+watch(
+  () => user,
+  _newUser => get()
+)
+
+onMounted(async () => {
+  await get()
+})
+
+onBeforeUnmount(() => {
+  store.commit('entreprise/reset')
+})
+
+const editPopupOpen = () => {
+  const entrepriseEdit = {
+    id: entreprise.value.id,
+    telephone: entreprise.value.telephone,
+    url: entreprise.value.url,
+    email: entreprise.value.email,
+    archive: entreprise.value.archive
+  }
+
+  store.commit('popupOpen', {
+    component: EntrepriseEditPopup,
+    props: {
+      entreprise: entrepriseEdit
+    }
+  })
+}
+
+const canDeleteDocument = (
+  entreprise: { modification?: boolean },
+  user: User
+): boolean => {
+  return (
+    (entreprise.modification ?? false) &&
+    (isSuper(user) ||
+      isAdministrationAdmin(user) ||
+      isAdministrationEditeur(user))
+  )
 }
 </script>

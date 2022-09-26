@@ -1,5 +1,12 @@
 <template>
-  <div>
+  <div v-if="data.status === 'LOADED' && data.value === false">
+    Il n'est pas encore possible de calculer la fiscalité pour votre
+    entreprise.<br />
+    Pour le moment, seules les entreprises dont tous les titres sont du domaine
+    "Mineraux et métaux" sont éligibles.<br />
+    Si vous pensez qu'il s'agit d'un bug, contactez-nous.
+  </div>
+  <div v-else>
     Calcul, à titre indicatif, du montant de l'imposition minière de votre
     entreprise (redevance départementale et communale des mines pour les
     substances non énergétiques et taxe aurifère)
@@ -87,7 +94,8 @@ import {
   Fiscalite,
   isFiscaliteGuyane,
   montantNetTaxeAurifere,
-  fraisGestion
+  fraisGestion,
+  isFiscaliteData
 } from 'camino-common/src/fiscalite'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { AsyncData } from '@/api/client-rest'
@@ -128,10 +136,12 @@ const reloadData = async (annee: CaminoAnnee) => {
 }
 
 const sommeAPayer = (fiscalite: Fiscalite) =>
-  fiscalite.redevanceCommunale +
-  fiscalite.redevanceDepartementale +
-  montantNetTaxeAurifere(fiscalite) +
-  fraisGestion(fiscalite)
+  isFiscaliteData(fiscalite)
+    ? fiscalite.redevanceCommunale +
+      fiscalite.redevanceDepartementale +
+      montantNetTaxeAurifere(fiscalite) +
+      fraisGestion(fiscalite)
+    : 0
 
 const currencyFormat = (number: number) =>
   Intl.NumberFormat('FR-fr', {
