@@ -2,13 +2,22 @@ import { CustomResponse } from './express-type'
 import express from 'express'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { userGet } from '../../database/queries/utilisateurs'
-import { IUser } from '../../types'
+import { ITitre, IUser } from '../../types'
 import { constants } from 'http2'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { StatistiquesDGTM } from 'camino-common/src/statistiques'
+import {
+  StatistiquesDGTM,
+  StatistiquesMinerauxMetauxMetropole
+} from 'camino-common/src/statistiques'
 import { CaminoDate, getAnnee, daysBetween } from 'camino-common/src/date'
 import { knex } from '../../knex'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
+import { userSuper } from '../../database/user-super'
+import { titresGet } from '../../database/queries/titres'
+import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { Regions } from 'camino-common/src/static/region'
+import { Departements } from 'camino-common/src/static/departement'
 
 const anneeDepartStats = 2015
 
@@ -315,5 +324,119 @@ export const getDGTMStats = async (
     })
 
     res.json(result)
+  }
+}
+
+const statistiquesMinerauxMetauxMetropoleInstantBuild = (
+  titres: ITitre[]
+): StatistiquesMinerauxMetauxMetropole => {
+  const statsInstant: StatistiquesMinerauxMetauxMetropole = titres.reduce(
+    (acc, titre) => {
+      if (
+        titre.titreStatutId &&
+        ['val', 'mod', 'dmi'].includes(titre.titreStatutId)
+      ) {
+        if (!titre.surfaceEtape) {
+          console.warn(`ce titre ${titre.slug} n'a pas de surface`)
+        }
+        if (['arm', 'apm', 'prm'].includes(titre.typeId!)) {
+          acc.surfaceExploration += titre.surfaceEtape?.surface ?? 0
+          if (['mod', 'dmi'].includes(titre.titreStatutId!)) {
+            acc.titres.instructionExploration++
+          }
+        } else {
+          if (['val', 'mod'].includes(titre.titreStatutId)) {
+            acc.surfaceExploitation += titre.surfaceEtape?.surface ?? 0
+          }
+          if (['mod', 'dmi'].includes(titre.titreStatutId!)) {
+            acc.titres.instructionExploitation++
+          }
+        }
+        if (TitresStatutIds.Valide === titre.titreStatutId) {
+          if (titre.typeId === 'prm') {
+            acc.titres.valPrm++
+          }
+          if (titre.typeId === 'cxm') {
+            acc.titres.valCxm++
+          }
+        }
+      }
+
+      return acc
+    },
+    {
+      surfaceExploration: 0,
+      surfaceExploitation: 0,
+      titres: {
+        instructionExploration: 0,
+        valPrm: 0,
+        instructionExploitation: 0,
+        valCxm: 0
+      }
+    }
+  )
+
+  statsInstant.surfaceExploration = Math.floor(
+    statsInstant.surfaceExploration * 100
+  ) // conversion 1 km² = 100 ha
+  statsInstant.surfaceExploitation = Math.floor(
+    statsInstant.surfaceExploitation * 100
+  ) // conversion 1 km² = 100 ha
+
+  return statsInstant
+}
+
+export const getMinerauxMetauxMetropolesStats = async (
+  _req: express.Request,
+  res: CustomResponse<StatistiquesMinerauxMetauxMetropole>
+): Promise<void> => {
+  try {
+    const titres = await titresGet(
+      {
+        domainesIds: ['m'],
+        typesIds: ['ar', 'ap', 'pr', 'ax', 'px', 'cx']
+      },
+      {
+        fields: {
+          surfaceEtape: { id: {} },
+          demarches: {
+            phase: { id: {} },
+            etapes: { id: {} },
+            type: { id: {} }
+          },
+          communes: { id: {} }
+        }
+      },
+      userSuper
+    )
+    const titresMetropole = titres.filter(titre => {
+      if (!titre.communes) {
+        throw new Error('les communes ne sont pas chargées')
+      }
+
+      return titre.communes
+        .map(({ departementId }) => departementId)
+        .filter(isNotNullNorUndefined)
+        .some(
+          departementId =>
+            Regions[Departements[departementId].regionId].paysId === 'FR'
+        )
+    })
+
+    // const titresActivites = await titresActivitesGet(
+    //   { annees, typesIds: ['wrp'] },
+    //   {
+    //     fields: {
+    //       titre: { id: {} }
+    //     }
+    //   },
+    //   userSuper
+    // )
+
+    res.json(statistiquesMinerauxMetauxMetropoleInstantBuild(titresMetropole))
+  } catch (e) {
+    console.error(e)
+
+    throw e
   }
 }

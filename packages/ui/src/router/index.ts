@@ -41,6 +41,8 @@ const Statistiques = () => import('../components/statistiques.vue')
 const StatistiquesGuyane = () => import('../components/statistiques/guyane.vue')
 const StatistiquesGranulatsMarins = () =>
   import('../components/statistiques/granulats-marins.vue')
+const StatistiquesMinerauxMetauxMetropole = () =>
+  import('../components/statistiques/mineraux-metaux-metropole.vue')
 const Journaux = () => import('../components/journaux.vue')
 
 const routes: RouteRecordRaw[] = [
@@ -243,6 +245,11 @@ const routes: RouteRecordRaw[] = [
         path: 'granulats-marins',
         name: 'statistiques-granulats-marins',
         component: StatistiquesGranulatsMarins
+      },
+      {
+        path: 'mineraux-metaux-metropole',
+        name: 'statistiques-mineraux-metaux-metropole',
+        component: StatistiquesMinerauxMetauxMetropole
       }
     ]
   },

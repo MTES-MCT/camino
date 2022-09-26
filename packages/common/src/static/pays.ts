@@ -38,3 +38,7 @@ export const PaysList: { [key in PaysId]: Pays<key> } = {
   XX: { id: 'XX', nom: 'Clipperton (Île)' },
   YT: { id: 'YT', nom: 'Département de Mayotte' }
 }
+
+const PAYS_IDS_LIST = Object.values(PAYS_IDS)
+
+export const isPaysId = (value: string): value is PaysId => PAYS_IDS_LIST.includes(value)

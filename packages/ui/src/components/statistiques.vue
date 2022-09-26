@@ -32,6 +32,11 @@ export default {
           id: 'granulats-marins',
           nom: 'Granulats marins',
           name: 'statistiques-granulats-marins'
+        },
+        {
+          id: 'mineraux-metaux-metropole',
+          nom: 'Mineraux & métaux métropole',
+          name: 'statistiques-mineraux-metaux-metropole'
         }
       ]
     }

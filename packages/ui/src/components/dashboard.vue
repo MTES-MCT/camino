@@ -31,6 +31,7 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { titres } from '@/api/titres'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
+import { CaminoRestRoutes } from 'camino-common/src/rest'
 
 const store = useStore()
 const router = useRouter()
@@ -62,11 +63,11 @@ const getEntreprisesTitres = async () => {
 }
 
 const getOnfTitres = async () =>
-  fetchWithJson<CommonTitreONF[]>('/apiUrl/titresONF')
+  fetchWithJson<CommonTitreONF[]>(CaminoRestRoutes.titresONF)
 const getPtmgTitres = async () =>
-  fetchWithJson<CommonTitrePTMG[]>('/apiUrl/titresPTMG')
+  fetchWithJson<CommonTitrePTMG[]>(CaminoRestRoutes.titresPTMG)
 const getDrealTitres = async () =>
-  fetchWithJson<CommonTitreDREAL[]>('/apiUrl/titresDREAL')
+  fetchWithJson<CommonTitreDREAL[]>(CaminoRestRoutes.titresDREAL)
 const getDgtmStats = async () =>
-  fetchWithJson<StatistiquesDGTM>('/apiUrl/statistiques')
+  fetchWithJson<StatistiquesDGTM>(CaminoRestRoutes.statistiquesDGTM)
 </script>

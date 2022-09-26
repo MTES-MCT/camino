@@ -18,8 +18,11 @@ import {
   manageNewsletterSubscription,
   utilisateurs
 } from '../api/rest/utilisateurs'
-import { getDGTMStats } from '../api/rest/statistiques'
-
+import {
+  getDGTMStats,
+  getMinerauxMetauxMetropolesStats
+} from '../api/rest/statistiques'
+import { CaminoRestRoutes } from 'camino-common/src/rest'
 const contentTypes = {
   csv: 'text/csv',
   geojson: 'application/geojson',
@@ -128,10 +131,14 @@ rest.get('/titres/:id/titreLiaisons', restCatcher(getTitreLiaisons))
 rest.get('/titres/:id', restDownload(titre))
 rest.get('/titres', restDownload(titres))
 rest.get('/titres_qgis', restDownload(titres))
-rest.get('/titresONF', restCatcher(titresONF))
-rest.get('/titresPTMG', restCatcher(titresPTMG))
-rest.get('/titresDREAL', restCatcher(titresDREAL))
-rest.get('/statistiques', restCatcher(getDGTMStats))
+rest.get(CaminoRestRoutes.titresONF, restCatcher(titresONF))
+rest.get(CaminoRestRoutes.titresPTMG, restCatcher(titresPTMG))
+rest.get(CaminoRestRoutes.titresDREAL, restCatcher(titresDREAL))
+rest.get(
+  CaminoRestRoutes.statistiquesMinerauxMetauxMetropole,
+  restCatcher(getMinerauxMetauxMetropolesStats)
+)
+rest.get(CaminoRestRoutes.statistiquesDGTM, restCatcher(getDGTMStats))
 rest.get('/demarches', restDownload(demarches))
 rest.get('/activites', restDownload(activites))
 rest.post(
