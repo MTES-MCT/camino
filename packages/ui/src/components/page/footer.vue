@@ -4,7 +4,8 @@
       <ul class="list-sans text-decoration-none li-sep mb-0">
         <li>
           <a href="https://economie.gouv.fr/"
-            >Ministère de l'Économie, des Finances et de la Relance</a
+            >Ministère de l'Économie, des Finances et de la Souveraineté
+            industrielle et numérique</a
           >
         </li>
         <li>
