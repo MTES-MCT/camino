@@ -1,5 +1,9 @@
 ---
-# TODO 2022-07-13: gérer l'accés des développeurs ici (nom, uid et clé publique ssh)
+- name: Ajout utilisateurs
+  include_tasks: "devs.yml"
+  loop: "{{ users }}"
+  loop_control:
+    loop_var: camino_dev
 - name: ajoute le groupe "git"
   ansible.builtin.group:
     name: git
