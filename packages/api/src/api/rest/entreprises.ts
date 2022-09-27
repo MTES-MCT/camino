@@ -92,155 +92,170 @@ export const bodyBuilder = (
       )
     }
 
-    if (titre.titulaires.length + titre.amodiataires.length > 1) {
+    // si N titulaires et UN amodiataire le titre appartient fiscalement à l'amodiataire
+    // https://trello.com/c/2WJcnFRw/321-featfiscalit%C3%A9-les-titres-avec-un-seul-titulaire-et-un-seul-amodiataire-sont-g%C3%A9r%C3%A9s
+    let entrepriseId: null | string = null
+    let amodiataire = false
+    if (titre.amodiataires.length === 1) {
+      entrepriseId = titre.amodiataires[0].id
+      amodiataire = true
+    } else if (titre.titulaires.length === 1) {
+      entrepriseId = titre.titulaires[0].id
+    } else {
       throw new Error(
         `plusieurs entreprises liées au titre ${activite.titreId}, cas non géré`
       )
     }
 
-    const entreprise = entreprises.find(
-      ({ id }) =>
-        titre.amodiataires?.[0]?.id === id || titre.titulaires?.[0]?.id === id
-    )
+    const entreprise = entreprises.find(({ id }) => id === entrepriseId)
 
-    if (!entreprise) {
+    if (!entreprise && !amodiataire) {
       throw new Error(
         `pas d'entreprise trouvée pour le titre ${activite.titreId}`
       )
-    }
-
-    const titreGuyannais = titre.communes
-      .map(({ departementId }) => departementId)
-      .filter(isNotNullNorUndefined)
-      .some(departementId => {
-        return Regions[Departements[departementId].regionId].paysId === 'GF'
-      })
-
-    if (!titre.substances) {
-      throw new Error(
-        `les substances du titre ${activite.titreId} ne sont pas chargées`
+    } else if (!entreprise && amodiataire) {
+      console.warn(
+        `le titre ${activite.titreId} appartient à l'entreprise amodiataire et n'est pas dans la liste des entreprises à analyser`
       )
-    }
-
-    if (titre.substances.length > 0 && activite.contenu) {
-      const substanceLegalesWithFiscales = titre.substances
+    } else if (entreprise) {
+      const titreGuyannais = titre.communes
+        .map(({ departementId }) => departementId)
         .filter(isNotNullNorUndefined)
-        .filter(
-          substanceId => substancesFiscalesBySubstanceLegale(substanceId).length
-        )
+        .some(departementId => {
+          return Regions[Departements[departementId].regionId].paysId === 'GF'
+        })
 
-      if (substanceLegalesWithFiscales.length > 1) {
-        // TODO 2022-07-25 on fait quoi ? On calcule quand même ?
-        console.error(
-          'BOOM, titre avec plusieurs substances légales possédant plusieurs substances fiscales ',
-          titre.id
+      if (!titre.substances) {
+        throw new Error(
+          `les substances du titre ${activite.titreId} ne sont pas chargées`
         )
       }
 
-      const substancesFiscales = substanceLegalesWithFiscales.flatMap(
-        substanceId => substancesFiscalesBySubstanceLegale(substanceId)
-      )
-
-      for (const substancesFiscale of substancesFiscales) {
-        const production = conversion(
-          substancesFiscale,
-          activite.contenu.substancesFiscales[substancesFiscale.id]
-        )
-
-        if (production > 0) {
-          if (!titre.communes) {
-            throw new Error(
-              `les communes du titre ${titre.id} ne sont pas chargées`
-            )
-          }
-
-          const surfaceTotale = titre.communes.reduce(
-            (value, commune) => value + (commune.surface ?? 0),
-            0
+      if (titre.substances.length > 0 && activite.contenu) {
+        const substanceLegalesWithFiscales = titre.substances
+          .filter(isNotNullNorUndefined)
+          .filter(
+            substanceId =>
+              substancesFiscalesBySubstanceLegale(substanceId).length
           )
 
-          let communePrincipale: ICommune | null = null
-          const communes: ICommune[] = titre.communes
-          for (const commune of communes) {
-            if (communePrincipale === null) {
-              communePrincipale = commune
-            } else if (
-              (communePrincipale?.surface ?? 0) < (commune?.surface ?? 0)
-            ) {
-              communePrincipale = commune
-            }
-          }
-          if (communePrincipale === null) {
-            throw new Error(
-              `Impossible de trouver une commune principale pour le titre ${titre.id}`
-            )
-          }
-          for (const commune of communes) {
-            const articleId = `${titre.id}-${substancesFiscale.id}-${commune.id}`
+        if (substanceLegalesWithFiscales.length > 1) {
+          // TODO 2022-07-25 on fait quoi ? On calcule quand même ?
+          console.error(
+            'BOOM, titre avec plusieurs substances légales possédant plusieurs substances fiscales ',
+            titre.id
+          )
+        }
 
-            body.articles[articleId] = {
-              surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
-              surface_communale_proportionnee: { [anneePrecedente]: null },
-              [substanceFiscaleToInput(substancesFiscale)]: {
-                [anneePrecedente]: production
-              },
-              [redevanceCommunale(substancesFiscale)]: {
-                [annee]: null
-              },
-              [redevanceDepartementale(substancesFiscale)]: {
-                [annee]: null
-              }
-            }
+        const substancesFiscales = substanceLegalesWithFiscales.flatMap(
+          substanceId => substancesFiscalesBySubstanceLegale(substanceId)
+        )
 
-            if (substancesFiscale.id === 'auru' && titreGuyannais) {
-              body.articles[articleId].taxe_guyane_brute = { [annee]: null }
-              body.articles[articleId].taxe_guyane_deduction = { [annee]: null }
-              body.articles[articleId].taxe_guyane = { [annee]: null }
-            }
+        for (const substancesFiscale of substancesFiscales) {
+          const production = conversion(
+            substancesFiscale,
+            activite.contenu.substancesFiscales[substancesFiscale.id]
+          )
 
-            if (!Object.prototype.hasOwnProperty.call(body.titres, titre.id)) {
-              const investissement = activiteTrimestresTitre.reduce(
-                (investissement, activite) => {
-                  let newInvestissement = 0
-                  if (
-                    typeof activite?.contenu?.renseignements?.environnement ===
-                    'number'
-                  ) {
-                    newInvestissement =
-                      activite?.contenu?.renseignements?.environnement
-                  }
-
-                  return investissement + newInvestissement
-                },
-                0
+          if (production > 0) {
+            if (!titre.communes) {
+              throw new Error(
+                `les communes du titre ${titre.id} ne sont pas chargées`
               )
-              body.titres[titre.id] = {
-                commune_principale_exploitation: {
-                  [anneePrecedente]: communePrincipale.id
-                },
-                surface_totale: { [anneePrecedente]: surfaceTotale },
-                operateur: {
-                  [anneePrecedente]: entreprise.nom
-                },
-                investissement: {
-                  [anneePrecedente]: investissement.toString(10)
-                },
-                categorie: {
-                  [anneePrecedente]:
-                    entreprise.categorie === 'PME' ? 'pme' : 'autre'
-                },
-                articles: [articleId]
-              }
-            } else {
-              body.titres[titre.id].articles.push(articleId)
             }
 
-            if (
-              !Object.prototype.hasOwnProperty.call(body.communes, commune.id)
-            ) {
-              body.communes[commune.id] = { articles: [articleId] }
-            } else {
-              body.communes[commune.id].articles.push(articleId)
+            const surfaceTotale = titre.communes.reduce(
+              (value, commune) => value + (commune.surface ?? 0),
+              0
+            )
+
+            let communePrincipale: ICommune | null = null
+            const communes: ICommune[] = titre.communes
+            for (const commune of communes) {
+              if (communePrincipale === null) {
+                communePrincipale = commune
+              } else if (
+                (communePrincipale?.surface ?? 0) < (commune?.surface ?? 0)
+              ) {
+                communePrincipale = commune
+              }
+            }
+            if (communePrincipale === null) {
+              throw new Error(
+                `Impossible de trouver une commune principale pour le titre ${titre.id}`
+              )
+            }
+            for (const commune of communes) {
+              const articleId = `${titre.id}-${substancesFiscale.id}-${commune.id}`
+
+              body.articles[articleId] = {
+                surface_communale: { [anneePrecedente]: commune.surface ?? 0 },
+                surface_communale_proportionnee: { [anneePrecedente]: null },
+                [substanceFiscaleToInput(substancesFiscale)]: {
+                  [anneePrecedente]: production
+                },
+                [redevanceCommunale(substancesFiscale)]: {
+                  [annee]: null
+                },
+                [redevanceDepartementale(substancesFiscale)]: {
+                  [annee]: null
+                }
+              }
+
+              if (substancesFiscale.id === 'auru' && titreGuyannais) {
+                body.articles[articleId].taxe_guyane_brute = { [annee]: null }
+                body.articles[articleId].taxe_guyane_deduction = {
+                  [annee]: null
+                }
+                body.articles[articleId].taxe_guyane = { [annee]: null }
+              }
+
+              if (
+                !Object.prototype.hasOwnProperty.call(body.titres, titre.id)
+              ) {
+                const investissement = activiteTrimestresTitre.reduce(
+                  (investissement, activite) => {
+                    let newInvestissement = 0
+                    if (
+                      typeof activite?.contenu?.renseignements
+                        ?.environnement === 'number'
+                    ) {
+                      newInvestissement =
+                        activite?.contenu?.renseignements?.environnement
+                    }
+
+                    return investissement + newInvestissement
+                  },
+                  0
+                )
+                body.titres[titre.id] = {
+                  commune_principale_exploitation: {
+                    [anneePrecedente]: communePrincipale.id
+                  },
+                  surface_totale: { [anneePrecedente]: surfaceTotale },
+                  operateur: {
+                    [anneePrecedente]: entreprise.nom
+                  },
+                  investissement: {
+                    [anneePrecedente]: investissement.toString(10)
+                  },
+                  categorie: {
+                    [anneePrecedente]:
+                      entreprise.categorie === 'PME' ? 'pme' : 'autre'
+                  },
+                  articles: [articleId]
+                }
+              } else {
+                body.titres[titre.id].articles.push(articleId)
+              }
+
+              if (
+                !Object.prototype.hasOwnProperty.call(body.communes, commune.id)
+              ) {
+                body.communes[commune.id] = { articles: [articleId] }
+              } else {
+                body.communes[commune.id].articles.push(articleId)
+              }
             }
           }
         }
