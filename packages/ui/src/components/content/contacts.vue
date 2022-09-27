@@ -24,8 +24,8 @@
         </li>
         <li>
           <strong>Lundi</strong>, <strong>mardi</strong> et
-          <strong>mercredi</strong>, de 9h à 18h : Félix au
-          <a href="tel:+33763429218">07.63.42.92.18</a>
+          <strong>mercredi</strong>, de 9h à 18h : Équipe Camino au
+          <a href="tel:+330140817366">01.40.81.73.66</a>
         </li>
       </ul>
     </div>
