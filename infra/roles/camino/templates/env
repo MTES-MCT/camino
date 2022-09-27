@@ -45,6 +45,7 @@ API_MAILJET_KEY={{ mailjet_key }}
 API_MAILJET_SECRET={{ mailjet_secret }}
 API_MAILJET_SERVER=in-v3.mailjet.com
 API_MAILJET_CONTACTS_LIST_ID={{ mailjet_contact_list_id }}
+API_MAILJET_EXPLOITANTS_GUYANE_LIST_ID={{ mailjet_exploitants_guyane_list_id }}
 
 # UI Sentry
 SENTRY_DSN={{ ui_sentry_dns }}
