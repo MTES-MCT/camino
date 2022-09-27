@@ -16,6 +16,7 @@ const isUiRestRoute = (route: string): route is UiRestRoute => {
   return false
 }
 
+// VisibleForTesting
 export const getUiRestRoute = (route: CaminoRestRoute): UiRestRoute => {
   const uiRoute = `${baseRoute}${route}`
   if (!isUiRestRoute(uiRoute)) {
@@ -25,12 +26,25 @@ export const getUiRestRoute = (route: CaminoRestRoute): UiRestRoute => {
   }
 }
 
-export const fetchWithJson = async <T>(
-  url: UiRestRoute | CaminoRestRoute
-): Promise<T> => {
-  if (!isUiRestRoute(url)) {
-    url = getUiRestRoute(url)
-  }
+type ParseUrlParams<url> = url extends `${infer path}(${infer optionalPath})`
+  ? ParseUrlParams<path> & Partial<ParseUrlParams<optionalPath>>
+  : url extends `${infer start}/${infer rest}`
+  ? ParseUrlParams<start> & ParseUrlParams<rest>
+  : url extends `:${infer param}`
+  ? { [k in param]: string }
+  : {}
+
+export const fetchWithJson = async <U, T extends CaminoRestRoute>(
+  path: T,
+  params: ParseUrlParams<T>
+): Promise<any> => {
+  const uiPath = getUiRestRoute(path)
+  let url = Object.entries<string>(params).reduce<string>(
+    (uiPath, [key, value]) => uiPath.replace(`:${key}`, value),
+    uiPath
+  )
+  // clean url
+  url = url.replace(/(\(|\)|\/?:[^/]+)/g, '')
   const fetched = await fetch(url)
   const body = await fetched.json()
   if (fetched.ok) {

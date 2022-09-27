@@ -8,8 +8,6 @@ import { StatistiquesMinerauxMetauxMetropole } from 'camino-common/src/statistiq
 import { CaminoRestRoutes } from 'camino-common/src/rest'
 import PureMinerauxMetauxMetropole from './pure-mineraux-metaux-metropole.vue'
 
-const getStats = async () =>
-  fetchWithJson<StatistiquesMinerauxMetauxMetropole>(
-    CaminoRestRoutes.statistiquesMinerauxMetauxMetropole
-  )
+const getStats = async (): Promise<StatistiquesMinerauxMetauxMetropole> =>
+  fetchWithJson(CaminoRestRoutes.statistiquesMinerauxMetauxMetropole, {})
 </script>

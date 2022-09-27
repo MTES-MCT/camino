@@ -6,7 +6,8 @@ export const CaminoRestRoutes = {
   titresONF: '/titresONF',
   titresPTMG: '/titresPTMG',
   titresDREAL: '/titresDREAL',
-  statistiquesDGTM: '/statistiques/dgtm'
+  statistiquesDGTM: '/statistiques/dgtm',
+  fiscaliteEntreprise: '/entreprises/:entrepriseId/fiscalite/:annee'
 } as const
 
 export type CaminoRestRoute = typeof CaminoRestRoutes[keyof typeof CaminoRestRoutes]

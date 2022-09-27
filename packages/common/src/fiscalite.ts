@@ -1,7 +1,8 @@
 import { isAdministration, isEntreprise, isSuper, Role } from './roles'
 import { AdministrationId } from './static/administrations'
 
-export type Fiscalite = FiscaliteGuyane | FiscaliteFrance
+export type Fiscalite = FiscaliteData | false
+export type FiscaliteData = FiscaliteGuyane | FiscaliteFrance
 export interface FiscaliteFrance {
   redevanceCommunale: number
   redevanceDepartementale: number
@@ -15,13 +16,16 @@ export interface FiscaliteGuyane extends FiscaliteFrance {
   }
 }
 
+export const isFiscaliteData = (fiscalite: Fiscalite): fiscalite is FiscaliteData => {
+  return typeof fiscalite !== 'boolean'
+}
 export const isFiscaliteGuyane = (fiscalite: Fiscalite): fiscalite is FiscaliteGuyane => {
-  return 'guyane' in fiscalite
+  return isFiscaliteData(fiscalite) && 'guyane' in fiscalite
 }
 
 export const montantNetTaxeAurifere = (fiscalite: Fiscalite) => (isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.taxeAurifere : 0)
 
-export const fraisGestion = (fiscalite: Fiscalite) => (fiscalite.redevanceDepartementale + fiscalite.redevanceCommunale + montantNetTaxeAurifere(fiscalite)) * 0.08
+export const fraisGestion = (fiscalite: FiscaliteData) => (fiscalite.redevanceDepartementale + fiscalite.redevanceCommunale + montantNetTaxeAurifere(fiscalite)) * 0.08
 export type UserFiscalite =
   | {
       entreprises?: { id: string }[] | null
