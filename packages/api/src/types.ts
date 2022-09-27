@@ -3,7 +3,7 @@ import {
   AdministrationId,
   AdministrationTypeId
 } from 'camino-common/src/static/administrations'
-import { DepartementId } from 'camino-common/src/static/departement'
+import { CodePostal, DepartementId } from 'camino-common/src/static/departement'
 import { RegionId } from 'camino-common/src/static/region'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
 import { Role } from 'camino-common/src/roles'
@@ -342,7 +342,7 @@ interface IEntreprise {
   categorie?: string | null
   dateCreation?: string | null
   adresse?: string | null
-  codePostal?: string | null
+  codePostal?: CodePostal | null
   commune?: string | null
   cedex?: string | null
   email?: string | null

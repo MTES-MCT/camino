@@ -8,7 +8,7 @@ import { CustomResponse } from './express-type'
 import { IFormat, IUser, IUtilisateursColonneId } from '../../types'
 import { constants } from 'http2'
 import {
-  isSubscribed,
+  isSubscribedToNewsLetter,
   newsletterSubscriberUpdate
 } from '../../tools/api-mailjet/newsletter'
 import { isRole } from 'camino-common/src/roles'
@@ -35,7 +35,7 @@ export const isSubscribedToNewsletter = async (
     if (!user || !utilisateur) {
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
-      const subscribed = await isSubscribed(utilisateur.email)
+      const subscribed = await isSubscribedToNewsLetter(utilisateur.email)
       res.json(subscribed)
     }
   }

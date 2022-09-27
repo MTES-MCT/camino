@@ -13,6 +13,8 @@ import inseePays from './definitions/pays'
 import inseeCategoriesJuridiques from './definitions/categories-juridiques'
 import inseeTypesVoies from './definitions/voies'
 
+import { checkCodePostal } from 'camino-common/src/static/departement'
+
 interface IApiSirenNomFormat
   extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite,
     IApiSirenUnionUniteLegaleEtablissmentUnite {}
@@ -182,7 +184,13 @@ export const entrepriseFormat = ({
   entreprise.adresse = entreprise.adresse ? entreprise.adresse.trim() : null
 
   if (adresse.codePostalEtablissement) {
-    entreprise.codePostal = adresse.codePostalEtablissement
+    try {
+      entreprise.codePostal = checkCodePostal(adresse.codePostalEtablissement)
+    } catch (e) {
+      console.warn(
+        `erreur lors du formatage de l'entreprise '${entreprise.id}', ${e}`
+      )
+    }
   }
 
   const commune =

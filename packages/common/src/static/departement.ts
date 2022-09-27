@@ -110,6 +110,27 @@ export interface Departement<T = DepartementId> {
   regionId: RegionId
 }
 
+const isCodePostal = (codePostal: string): codePostal is CodePostal => codePostal.match(/^\d{5}$/) !== null
+
+export const checkCodePostal = (codePostal: string): CodePostal => {
+  if (isCodePostal(codePostal)) {
+    return codePostal
+  }
+  throw new Error(`la valeur '${codePostal}' n'est pas un code postal`)
+}
+export type CodePostal = string & { __camino: 'codePostal' }
+export const toDepartementId = (codePostal: CodePostal): DepartementId => {
+  let departementId = codePostal.substring(0, 2)
+  if (isDepartementId(departementId)) {
+    return departementId
+  }
+  departementId = codePostal.substring(0, 3)
+  if (isDepartementId(departementId)) {
+    return departementId
+  }
+  throw new Error(`impossible de trouver l'id de département dans le code postal ${codePostal}`)
+}
+
 export type DepartementId = typeof DEPARTEMENT_IDS[keyof typeof DEPARTEMENT_IDS]
 
 export const Departements: { [key in DepartementId]: Departement<key> } = {

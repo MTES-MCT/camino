@@ -5,9 +5,21 @@ interface IContactListAdd {
   Action: string
 }
 
-const contactListId = Number(process.env.API_MAILJET_CONTACTS_LIST_ID!)
+const newsLetterContactListId = Number(
+  process.env.API_MAILJET_CONTACTS_LIST_ID!
+)
+const exploitantsGuyaneContactListId = Number(
+  process.env.API_MAILJET_EXPLOITANTS_GUYANE_LIST_ID!
+)
 
-export const isSubscribed = async (
+export const isSubscribedToNewsLetter = async (
+  email: string | null | undefined
+): Promise<boolean> => {
+  return isSubscribed(newsLetterContactListId, email)
+}
+
+const isSubscribed = async (
+  contactListId: number,
   email: string | null | undefined
 ): Promise<boolean> => {
   if (email) {
@@ -32,6 +44,7 @@ export const isSubscribed = async (
 
 const contactListSubscribe = async (
   email: string,
+  contactListId: number,
   Action: 'addforce' | 'unsub'
 ) => {
   const contactResult = (await mailjet
@@ -59,6 +72,30 @@ const contactAdd = async (email: string): Promise<void> => {
   }
 }
 
+// TODO 2022-09-27 nettoyer la liste des mails déjà sur la liste mailjet.
+export const exploitantsGuyaneSubscriberUpdate = async (
+  users: { email: string; nom: string }[]
+): Promise<void> => {
+  console.info(
+    `ajout de ${users.length} utilisateurs à la liste ${exploitantsGuyaneContactListId}`
+  )
+  const contacts = users.map(user => ({
+    Email: user.email,
+    Name: user.nom,
+    IsExcludedFromCampaigns: false,
+    Properties: 'object'
+  }))
+  await mailjet
+    .post('contact', { version: 'v3' })
+    .action('managemanycontacts')
+    .request({
+      Contacts: contacts,
+      ContactsLists: [
+        { Action: 'addforce', ListID: exploitantsGuyaneContactListId }
+      ]
+    })
+}
+
 export const newsletterSubscriberUpdate = async (
   email: string | undefined | null,
   subscribed: boolean
@@ -66,15 +103,15 @@ export const newsletterSubscriberUpdate = async (
   if (!email) {
     return ''
   }
-  await isSubscribed(email)
+  await isSubscribed(newsLetterContactListId, email)
   try {
     if (subscribed) {
       await contactAdd(email)
-      await contactListSubscribe(email, 'addforce')
+      await contactListSubscribe(email, newsLetterContactListId, 'addforce')
 
       return 'email inscrit à la newsletter'
     } else {
-      await contactListSubscribe(email, 'unsub')
+      await contactListSubscribe(email, newsLetterContactListId, 'unsub')
 
       return 'email désinscrit à la newsletter'
     }
