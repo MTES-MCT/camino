@@ -1,0 +1,26 @@
+---
+- name: "{{ camino_dev.nom }}: ajoute le groupe"
+  ansible.builtin.group:
+    name: "{{ camino_dev.nom }}"
+    state: present
+  become: True
+- name: "{{ camino_dev.nom }}: ajoute l'utilisateur"
+  ansible.builtin.user:
+    name: "{{ camino_dev.nom }}"
+    shell: "/bin/bash"
+    update_password: "on_create"
+    # 'caminimino' -> seul l'utilisateur avec la bonne clef ssh peut se connecter + force le changement de mot de passe au login donc on peut laisser ce mot de passe publique
+    password: "$6$MYtufjmobe/GD$fKrKSXr0R6Zm4ATQqAFJXsXRSOLcOVnkdwfNiDw3nnsBWdojA4BW4TTeVmQP48j6bRck./BnQ4/fRlqtvqavP1"
+    groups: "{{ camino_dev.nom }}, git, users, docker, sudo"
+  become: True
+  register: create_user
+- name: "{{ camino_dev.nom }}: force le changement du mot de passe"
+  shell: "chage -d 0 {{ camino_dev.nom }}"
+  when: create_user.changed
+  become: True
+- name: "{{ camino_dev.nom }}: ajoute la clef ssh"
+  ansible.posix.authorized_key:
+    user: "{{ camino_dev.nom }}"
+    state: present
+    key: "{{ camino_dev.ssh }}"
+  become: True
