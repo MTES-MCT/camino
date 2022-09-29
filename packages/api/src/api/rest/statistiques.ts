@@ -7,9 +7,18 @@ import { constants } from 'http2'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import {
   StatistiquesDGTM,
-  StatistiquesMinerauxMetauxMetropole
+  StatistiquesMinerauxMetauxMetropole,
+  StatistiquesMinerauxMetauxMetropoleSubstances
 } from 'camino-common/src/statistiques'
-import { CaminoDate, getAnnee, daysBetween } from 'camino-common/src/date'
+import {
+  CaminoDate,
+  getAnnee,
+  daysBetween,
+  getCurrentAnnee,
+  CaminoAnnee,
+  valideAnnee
+} from 'camino-common/src/date'
+import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites'
 import { knex } from '../../knex'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
 import { userSuper } from '../../database/user-super'
@@ -18,6 +27,7 @@ import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'
 import { Departements } from 'camino-common/src/static/departement'
+import { SubstancesFiscale } from 'camino-common/src/static/substancesFiscales'
 
 const anneeDepartStats = 2015
 
@@ -372,7 +382,8 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild = (
         valPrm: 0,
         instructionExploitation: 0,
         valCxm: 0
-      }
+      },
+      substances: { aloh: {} }
     }
   )
 
@@ -390,6 +401,13 @@ export const getMinerauxMetauxMetropolesStats = async (
   _req: express.Request,
   res: CustomResponse<StatistiquesMinerauxMetauxMetropole>
 ): Promise<void> => {
+  const anneeDebut = 2010
+  const currentYear = getCurrentAnnee()
+  const annees: CaminoAnnee[] = []
+  for (let year = anneeDebut; year <= parseInt(currentYear); year++) {
+    annees.push(valideAnnee(year))
+  }
+
   try {
     const titres = await titresGet(
       {
@@ -422,18 +440,46 @@ export const getMinerauxMetauxMetropolesStats = async (
             Regions[Departements[departementId].regionId].paysId === 'FR'
         )
     })
+    const result =
+      statistiquesMinerauxMetauxMetropoleInstantBuild(titresMetropole)
 
-    // const titresActivites = await titresActivitesGet(
-    //   { annees, typesIds: ['wrp'] },
-    //   {
-    //     fields: {
-    //       titre: { id: {} }
-    //     }
-    //   },
-    //   userSuper
-    // )
+    for (const substance of Object.keys(
+      result.substances
+    ) as StatistiquesMinerauxMetauxMetropoleSubstances[]) {
+      const resultSubstances: { date: CaminoDate; substance: number }[] =
+        await knex
+          .select(
+            'date',
+            knex.raw(
+              "titres_activites.contenu->'substancesFiscales'-> ? as substance",
+              substance
+            )
+          )
+          .from('titres_activites')
+          .whereRaw(
+            "titres_activites.contenu -> 'substancesFiscales' \\? ?",
+            substance
+          )
 
-    res.json(statistiquesMinerauxMetauxMetropoleInstantBuild(titresMetropole))
+      const substanceResult = resultSubstances.reduce<
+        Record<CaminoAnnee, number>
+      >((acc, dateSubstance) => {
+        const annee = getAnnee(dateSubstance.date)
+        if (!acc[annee]) {
+          acc[annee] = 0
+        }
+        acc[annee] += fromUniteFiscaleToUnite(
+          SubstancesFiscale[substance].uniteId,
+          dateSubstance.substance
+        )
+
+        return acc
+      }, {})
+
+      result.substances[substance] = substanceResult
+    }
+
+    res.json(result)
   } catch (e) {
     console.error(e)
 

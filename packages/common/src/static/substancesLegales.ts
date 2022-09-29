@@ -1013,3 +1013,9 @@ export const SubstancesLegale: {
 }
 
 export const SubstancesLegales = Object.values(SubstancesLegale)
+
+const SUBSTANCES_LEGALES_IDS_ARRAY = Object.values(SUBSTANCES_LEGALES_IDS)
+
+export const isSubstanceLegale = (substance: string): substance is SubstanceLegaleId => {
+  return SUBSTANCES_LEGALES_IDS_ARRAY.includes(substance)
+}

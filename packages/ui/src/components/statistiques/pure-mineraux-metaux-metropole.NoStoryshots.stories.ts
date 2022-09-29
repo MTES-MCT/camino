@@ -31,7 +31,8 @@ Default.args = {
         instructionExploration: 11,
         valCxm: 20,
         valPrm: 3
-      }
+      },
+      substances: { aloh: { 2021: 123496000, 2022: 142764000 } }
     })
 }
 

@@ -29,6 +29,8 @@ test('isAnnee', () => {
 test('valideAnnee', () => {
   expect(valideAnnee('2022')).toBe('2022')
   expect(valideAnnee('1812')).toBe('1812')
+  expect(valideAnnee(2022)).toBe('2022')
+  expect(valideAnnee(1812)).toBe('1812')
   expect(() => valideAnnee('toto')).toThrowErrorMatchingInlineSnapshot(`"l'année toto n'est pas une année valide"`)
   expect(() => valideAnnee('12')).toThrowErrorMatchingInlineSnapshot(`"l'année 12 n'est pas une année valide"`)
   expect(() => valideAnnee('20220')).toThrowErrorMatchingInlineSnapshot(`"l'année 20220 n'est pas une année valide"`)

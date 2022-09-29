@@ -1,6 +1,7 @@
 import { CaminoAnnee } from './date'
 import { AdministrationTypeId } from './static/administrations'
 import { SDOMZoneIds } from './static/sdom'
+import { SubstanceFiscaleId } from './static/substancesFiscales'
 
 export interface QuantiteParMois {
   mois: string
@@ -50,6 +51,7 @@ export interface StatistiquesDGTM {
   delais: Record<CaminoAnnee, { delaiInstructionEnJours: number[]; delaiCommissionDepartementaleEnJours: number[] }>
 }
 
+export type StatistiquesMinerauxMetauxMetropoleSubstances = Extract<SubstanceFiscaleId, 'aloh'>
 export interface StatistiquesMinerauxMetauxMetropole {
   surfaceExploration: number
   surfaceExploitation: number
@@ -58,5 +60,8 @@ export interface StatistiquesMinerauxMetauxMetropole {
     valPrm: number
     instructionExploitation: number
     valCxm: number
+  }
+  substances: {
+    [key in StatistiquesMinerauxMetauxMetropoleSubstances]: Record<CaminoAnnee, number>
   }
 }

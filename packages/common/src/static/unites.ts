@@ -45,4 +45,13 @@ export const Unites: { [key in UniteId]: Unite<key> } = {
   vmd: { id: 'vmd', nom: '100 000 mètres cubes', symbole: 'x 100 000 m³', referenceUniteId: 'm3x', referenceUniteRatio: 100000, openfiscaId: '100km3' }
 }
 
+export const fromUniteFiscaleToUnite = (unite: UniteId, value: number): number => {
+  const uniteRef = Unites[unite]
+  if (uniteRef.referenceUniteRatio !== null) {
+    return value / uniteRef.referenceUniteRatio
+  }
+
+  return value
+}
+
 export const UNITES = Object.values(Unites)
