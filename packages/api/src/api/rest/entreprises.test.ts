@@ -107,8 +107,8 @@ describe('construit le corps de la requête pour openFisca', () => {
       },
       {
         substances: ['auru', 'scoc'],
-        titulaires: [entreprise2],
-        amodiataires: [],
+        titulaires: [entreprise],
+        amodiataires: [entreprise2],
         communes: [
           {
             id: '97310',
