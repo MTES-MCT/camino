@@ -198,7 +198,7 @@ const sdomZonesInformationsGet = async (
       // vérifie qu’il n’existe pas de demandes de titres en cours sur ce périmètre
       const titres = await titresGet(
         { statutsIds: ['val', 'mod', 'dmi'], domainesIds: ['m'] },
-        { fields: { statut: { id: {} }, points: { id: {} } } },
+        { fields: { points: { id: {} } } },
         userSuper
       )
       const geojsonFeatures = geojsonFeatureMultiPolygon(
