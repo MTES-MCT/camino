@@ -179,21 +179,74 @@
     </div>
 
     <div class="line-neutral width-full mb" />
+
+    <h2>Production annuelle</h2>
+    <span class="separator" />
+    <p class="mb-xl">
+      Données contenues dans la base de données Camino, stabilisées pour l’année
+      n-1.
+    </p>
+
+    <LoadingElement v-slot="{ item }" :data="data">
+      <BarChart :chartConfiguration="bauxiteChartConfiguration(item)" />
+    </LoadingElement>
   </div>
 </template>
 
 <script setup lang="ts">
+import BarChart from '../_charts/configurableBar.vue'
+
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { numberFormat } from '@/utils/number-format'
+import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
 import { StatistiquesMinerauxMetauxMetropole } from 'camino-common/src/statistiques'
 import { ref, onMounted } from 'vue'
+import { ChartConfiguration, ChartData } from 'chart.js'
+import { SubstancesFiscale } from 'camino-common/src/static/substancesFiscales'
+import { Unites } from 'camino-common/src/static/unites'
 const data = ref<AsyncData<StatistiquesMinerauxMetauxMetropole>>({
   status: 'LOADING'
 })
+
 const props = defineProps<{
   getStats: () => Promise<StatistiquesMinerauxMetauxMetropole>
 }>()
+
+const bauxiteChartConfiguration = (
+  data: StatistiquesMinerauxMetauxMetropole
+): ChartConfiguration => {
+  const annees: CaminoAnnee[] = Object.keys(data.substances.aloh).filter(
+    isAnnee
+  )
+  const label = Unites[SubstancesFiscale.aloh.uniteId].nom
+  const chartData: ChartData = {
+    labels: annees,
+    datasets: [
+      {
+        type: 'bar',
+        label: label[0].toUpperCase() + label.substring(1),
+        yAxisID: 'bar',
+        data: annees.map(annee => data.substances.aloh[annee] ?? 0),
+        backgroundColor: 'rgb(118, 182, 189)'
+      }
+    ]
+  }
+  return {
+    type: 'bar',
+    data: chartData,
+    options: {
+      locale: 'fr-FR',
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Production Bauxite'
+        }
+      }
+    }
+  }
+}
 
 onMounted(async () => {
   try {
