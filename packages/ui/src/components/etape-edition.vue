@@ -16,11 +16,12 @@
     <h1>Étape</h1>
 
     <div v-if="helpVisible" class="p-s bg-info color-bg mb">
-      Besoin d'aide pour déposer votre demande ? Contactez-nous au
-      <a class="color-bg" href="tel:+33763429218">07.63.42.92.18</a>, ou par
-      mail :
-      <a class="color-bg" href="mailto:camino@beta.gouv.fr"
-        >camino@beta.gouv.fr</a
+      Besoin d'aide pour déposer votre demande ?
+      <router-link
+        to="/contacts"
+        target="_blank"
+        class="p-s bg-info color-bg mb"
+        >Contactez-nous</router-link
       >
     </div>
 
