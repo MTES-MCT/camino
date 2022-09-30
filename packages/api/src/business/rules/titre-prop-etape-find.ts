@@ -2,6 +2,19 @@
 // de la dernière démarche acceptée
 // pour laquelle la propriété existe
 
+import {
+  DemarchesStatutsIds,
+  DemarcheStatutId
+} from 'camino-common/src/static/demarchesStatuts'
+import {
+  DEMARCHES_TYPES_IDS,
+  DemarcheTypeId
+} from 'camino-common/src/static/demarchesTypes'
+import { PHASES_STATUTS_IDS } from 'camino-common/src/static/phasesStatuts'
+import {
+  TitresStatutIds,
+  TitreStatutId
+} from 'camino-common/src/static/titresStatuts'
 import { ITitreDemarche, ITitreEtape, IPropId, IContenuId } from '../../types'
 
 import { propValueFind } from '../utils/prop-value-find'
@@ -17,13 +30,13 @@ const etapeAmodiataireFind = (
     td => td.id === titreEtape.titreDemarcheId
   )
 
-  if (titreDemarche!.phase?.statutId === 'val') {
+  if (titreDemarche!.phase?.phaseStatutId === 'val') {
     return true
   }
 
   const titreDemarchePrevious = titreDemarches.find(td => !!td.phase)
 
-  if (titreDemarchePrevious?.phase?.statutId === 'val') {
+  if (titreDemarchePrevious?.phase?.phaseStatutId === 'val') {
     return true
   }
 
@@ -127,16 +140,29 @@ const titreDemarcheContenuTitreEtapeFind = (
 //   - et la démarche est une prolongation ou une demande de titre
 //   - et la démarche n'a aucune phase valide
 const demarcheEligibleCheck = (
-  titreDemarcheStatutId: string,
-  titreDemarcheTypeId: string,
-  titreStatutId: string,
+  titreDemarcheStatutId: DemarcheStatutId,
+  titreDemarcheTypeId: DemarcheTypeId,
+  titreStatutId: TitreStatutId,
   titreDemarches: ITitreDemarche[]
 ) =>
-  ['acc', 'ter'].includes(titreDemarcheStatutId) ||
-  [...demarchesTypesOctroi, 'vct'].includes(titreDemarcheTypeId) ||
-  (titreStatutId === 'mod' &&
-    ['pro', 'pr1', 'pr2', 'prr', 'vct'].includes(titreDemarcheTypeId) &&
-    !titreDemarches.find(td => td.phase && td.phase.statutId === 'val'))
+  [DemarchesStatutsIds.Accepte, DemarchesStatutsIds.Termine].includes(
+    titreDemarcheStatutId
+  ) ||
+  [
+    ...demarchesTypesOctroi,
+    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation
+  ].includes(titreDemarcheTypeId) ||
+  (titreStatutId === TitresStatutIds.ModificationEnInstance &&
+    [
+      DEMARCHES_TYPES_IDS.Prolongation,
+      DEMARCHES_TYPES_IDS.Prolongation1,
+      DEMARCHES_TYPES_IDS.Prolongation2,
+      DEMARCHES_TYPES_IDS.Prorogation,
+      DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation
+    ].includes(titreDemarcheTypeId) &&
+    !titreDemarches.find(
+      td => td.phase && td.phase.phaseStatutId === PHASES_STATUTS_IDS.Valide
+    ))
 
 /**
  * Trouve l'id de l'étape de référence pour une propriété
@@ -149,8 +175,8 @@ const demarcheEligibleCheck = (
 const titrePropTitreEtapeFind = (
   propId: IPropId,
   titreDemarches: ITitreDemarche[],
-  titreStatutId: string
-) => {
+  titreStatutId: TitreStatutId
+): ITitreEtape | null => {
   const titreDemarchesSorted = titreDemarchesSortAsc(titreDemarches).reverse()
 
   const titreEtape = titreDemarchesSorted.reduce(
@@ -195,7 +221,7 @@ const titrePropTitreEtapeFind = (
 const titreContenuTitreEtapeFind = (
   { sectionId, elementId }: IContenuId,
   titreDemarches: ITitreDemarche[],
-  titreStatutId: string
+  titreStatutId: TitreStatutId
 ) => {
   const titreDemarchesSorted = titreDemarchesSortAsc(titreDemarches).reverse()
 

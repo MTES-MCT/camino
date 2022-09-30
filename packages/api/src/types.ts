@@ -20,6 +20,7 @@ import { UniteId } from 'camino-common/src/static/unites'
 import { FrequenceId } from 'camino-common/src/static/frequence'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
+import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -439,12 +440,6 @@ interface IForet {
   nom: string
 }
 
-interface IPhaseStatut {
-  id: string
-  nom: string
-  couleur: Couleur
-}
-
 interface IReferenceType {
   id: string
   nom: string
@@ -744,10 +739,9 @@ interface ITitreIncertitudes {
 
 interface ITitrePhase {
   titreDemarcheId: string
-  statutId: string
+  phaseStatutId: PhaseStatutId
   dateDebut: string
   dateFin: string
-  statut?: IPhaseStatut
 }
 
 interface ITitrePoint {
@@ -920,7 +914,6 @@ export {
   IGeoJsonProperties,
   IGeometry,
   IGlobale,
-  IPhaseStatut,
   IReferenceType,
   ITitreTypeTitreStatut,
   ITitreTypeDemarcheType,

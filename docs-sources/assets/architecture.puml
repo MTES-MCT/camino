@@ -9,47 +9,43 @@
 
 OFF_DEVICE_LAPTOP(Utilisateurs, Utilisateurs)
 
-package Externes {
-  OFF_3RD_PARTY_MAIL_SERVER(Mailjet, Mailjet)
-'  Sentry -[hidden]d-> Mailjet
-}
+
 package Gouvernement {
-  OFF_APPLICATION_SERVER(Sentry, Sentry)
-  OFF_APPLICATION_SERVER(Matomo, Matomo)
+  together {
+    OFF_APPLICATION_SERVER(Sentry, Sentry)
+    OFF_APPLICATION_SERVER(Matomo, Matomo)
+  }
   OFF_APPLICATION_SERVER(Cerbere, Cerbere)
   OFF_APPLICATION_SERVER(Insee, Insee)
   OFF_APPLICATION_SERVER(Administrations, Administrations)
 
-  Sentry -[hidden]d-> Matomo
-  Matomo -[hidden]d->Cerbere
-  Cerbere -[hidden]d->Insee
+  Matomo -[hidden]->Cerbere
+  Cerbere -[hidden]>Insee
   Insee -[hidden]d->Administrations
- 
 }
 
 package Camino {
   OFF_APPLICATION_WEB(UI, Interface)
   OFF_APPLICATION_SERVER(API,Serveur)
-  OFF_DATABASE(Postgres,Postgres)
-
+  OFF_DATABASE(Postgres,Postgres/PostGIS)
   OFF_APPLICATION_SERVER(CRON,Cron)
-  OFF_APPLICATION_SERVER(GeoApi,GeoApi)
-  UI --> API
+
+  UI <--> API
+  API --> Postgres
+  CRON --> Postgres
   Postgres -[hidden]d-> CRON
 }
-
-
+package Externes {
+  OFF_3RD_PARTY_MAIL_SERVER(Mailjet, Mailjet)
+}
 Utilisateurs --> UI
-
-API --> Postgres
-API --> GeoApi
 API -> Cerbere
 API -> Insee
 API -> Matomo: statistiques
 UI -> Sentry: erreurs
 CRON -> Administrations
 CRON -> Insee
-API -> Sentry: erreurs
+API -r-> Sentry: erreurs
 API -> Mailjet: envoie mail
 Matomo <- UI: statistiques
 @enduml

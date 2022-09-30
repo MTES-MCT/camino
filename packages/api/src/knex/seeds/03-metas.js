@@ -6,7 +6,6 @@ const domaines = require('../../../sources/domaines.json')
 const titresTypesTypes = require('../../../sources/titres-types-types.json')
 const titresTypes = require('../../../sources/titres-types.json')
 const titresTypes_titresStatuts = require('../../../sources/titres-types--titres-statuts.json')
-const phasesStatuts = require('../../../sources/phases-statuts.json')
 const demarchesTypes = require('../../../sources/demarches-types.json')
 const titresTypes__demarchesTypes = require('../../../sources/titres-types--demarches-types.json')
 const etapesTypes = require('../../../sources/etapes-types.json')
@@ -22,7 +21,6 @@ const seed = (module.exports = seeding(async ({ insert }) => {
   await Promise.all([
     insert('domaines', domaines),
     insert('titresTypesTypes', titresTypesTypes),
-    insert('phasesStatuts', phasesStatuts),
     insert('demarchesTypes', demarchesTypes),
     insert('etapesTypes', etapesTypes),
     insert('documentsTypes', documentsTypes),

@@ -75,7 +75,7 @@ const titrePhasesFind = (
         titrePhases,
         index,
         titreTypeId
-      ) as string
+      )
 
       // dateFin et dateDebut ne seront jamais `null`
       // car les démarches sont pré-filtrées
@@ -85,7 +85,7 @@ const titrePhasesFind = (
       // le statut est valide
       // sinon,
       // - le statut est échu
-      const statutId = dateFin < aujourdhui ? 'ech' : 'val'
+      const phaseStatutId = dateFin < aujourdhui ? 'ech' : 'val'
 
       // TODO:
       // est ce qu'on doit vérifier si une date de début
@@ -95,7 +95,7 @@ const titrePhasesFind = (
         titreDemarcheId: titreDemarche.id,
         dateFin,
         dateDebut,
-        statutId
+        phaseStatutId
       })
 
       return titrePhases

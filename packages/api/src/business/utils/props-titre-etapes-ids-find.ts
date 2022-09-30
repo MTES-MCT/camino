@@ -1,3 +1,4 @@
+import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import {
   ITitreDemarche,
   IContenusTitreEtapesIds,
@@ -6,8 +7,8 @@ import {
 
 import { titreContenuTitreEtapeFind } from '../rules/titre-prop-etape-find'
 
-const contenusTitreEtapesIdsFind = (
-  titreStatutId: string,
+export const contenusTitreEtapesIdsFind = (
+  titreStatutId: TitreStatutId,
   titreDemarches: ITitreDemarche[],
   contenuIds?: IContenuId[] | null
 ) => {
@@ -45,5 +46,3 @@ const contenusTitreEtapesIdsFind = (
 
   return titrePropsEtapesIds
 }
-
-export { contenusTitreEtapesIdsFind }

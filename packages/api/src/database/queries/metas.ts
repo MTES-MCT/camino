@@ -21,7 +21,6 @@ import {
   etapesTypesQueryModify
 } from './permissions/metas'
 
-import PhasesStatuts from '../models/phases-statuts'
 import TitresTypes from '../models/titres-types'
 import TitresTypesTitresStatuts from '../models/titres-types--titres-statuts'
 import TitresTypesDemarchesTypesEtapesTypes from '../models/titres-types--demarches-types-etapes-types'
@@ -184,8 +183,6 @@ const demarcheTypeGet = async (
 
 const demarchesStatutsGet = () => sortedDemarchesStatuts
 
-const phasesStatutsGet = async () => PhasesStatuts.query().orderBy('id')
-
 const etapesTypesGet = async (
   {
     titreDemarcheId,
@@ -303,7 +300,6 @@ export {
   documentsTypesGet,
   documentTypeGet,
   referencesTypesGet,
-  phasesStatutsGet,
   titresTypesTitresStatutsGet,
   titresTypesDemarchesTypesGet,
   titresTypesDemarchesTypesEtapesTypesGet,

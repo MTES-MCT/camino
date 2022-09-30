@@ -1,6 +1,8 @@
 name: openfisca
 on:
   push:
+    branches-ignore:
+      - release-candidate
 concurrency:
   group: openfisca-${{ github.ref }}
   cancel-in-progress: true

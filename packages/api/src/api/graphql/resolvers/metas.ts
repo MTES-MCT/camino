@@ -13,7 +13,6 @@ import {
   documentsTypesGet,
   domainesGet,
   etapesTypesGet,
-  phasesStatutsGet,
   referencesTypesGet,
   titresTypesTypesGet
 } from '../../../database/queries/metas'
@@ -48,6 +47,7 @@ import {
   toMachineEtapes
 } from '../../../business/rules-demarches/machine-common'
 import { CaminoMachines } from '../../../business/rules-demarches/machines'
+import { phasesStatuts as staticPhasesStatuts } from 'camino-common/src/static/phasesStatuts'
 
 export const devises = async () => devisesGet()
 
@@ -334,12 +334,4 @@ export const departements = (): Departement[] => Object.values(Departements)
 
 export const regions = (): Region[] => Object.values(Regions)
 
-export const phasesStatuts = async () => {
-  try {
-    return await phasesStatutsGet()
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
+export const phasesStatuts = () => staticPhasesStatuts

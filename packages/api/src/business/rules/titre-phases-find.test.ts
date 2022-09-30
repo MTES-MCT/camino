@@ -21,7 +21,7 @@ describe("phases d'une démarche", () => {
       {
         dateDebut: '2200-01-01',
         dateFin: '2202-01-01',
-        statutId: 'val',
+        phaseStatutId: 'val',
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01')
       }
     ])
@@ -40,7 +40,7 @@ describe("phases d'une démarche", () => {
       {
         dateDebut: '2200-01-01',
         dateFin: '2202-01-01',
-        statutId: 'val',
+        phaseStatutId: 'val',
         titreDemarcheId: newDemarcheId('h-ax-courdemanges-1988-oct01')
       }
     ])
@@ -53,7 +53,7 @@ describe("phases d'une démarche", () => {
       {
         dateDebut: '2200-01-01',
         dateFin: '2200-01-02',
-        statutId: 'val',
+        phaseStatutId: 'val',
         titreDemarcheId: newDemarcheId('m-pr-courdemanges-1988-oct01')
       }
     ])
@@ -66,7 +66,7 @@ describe("phases d'une démarche", () => {
       {
         dateDebut: '2200-01-02',
         dateFin: '2202-01-02',
-        statutId: 'val',
+        phaseStatutId: 'val',
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01')
       }
     ])
@@ -79,13 +79,13 @@ describe("phases d'une démarche", () => {
       {
         dateDebut: '2200-01-01',
         dateFin: '2500-01-01',
-        statutId: 'val',
+        phaseStatutId: 'val',
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01')
       },
       {
         dateDebut: '2500-01-01',
         dateFin: '3000-01-01',
-        statutId: 'val',
+        phaseStatutId: 'val',
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-pro01')
       }
     ])
@@ -98,7 +98,7 @@ describe("phases d'une démarche", () => {
       {
         dateDebut: '2000-01-02',
         dateFin: '2019-01-02',
-        statutId: 'ech',
+        phaseStatutId: 'ech',
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01')
       }
     ])
@@ -111,7 +111,7 @@ describe("phases d'une démarche", () => {
       {
         dateDebut: '2000-01-02',
         dateFin: '2020-01-02',
-        statutId: 'ech',
+        phaseStatutId: 'ech',
         titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01')
       }
     ])
@@ -240,13 +240,13 @@ describe("phases d'une démarche", () => {
       {
         dateDebut: '1970-09-17',
         dateFin: '2018-12-31',
-        statutId: 'ech',
+        phaseStatutId: 'ech',
         titreDemarcheId: newDemarcheId('demarcheId1')
       },
       {
         dateDebut: '2018-12-31',
         dateFin: '2022-05-09',
-        statutId: 'val',
+        phaseStatutId: 'val',
         titreDemarcheId: newDemarcheId('demarcheId2')
       }
     ])
@@ -366,13 +366,13 @@ describe("phases d'une démarche", () => {
       {
         dateDebut: '1970-09-17',
         dateFin: '2018-12-31',
-        statutId: 'ech',
+        phaseStatutId: 'ech',
         titreDemarcheId: newDemarcheId('demarcheId1')
       },
       {
         dateDebut: '2018-12-31',
         dateFin: '2022-05-09',
-        statutId: 'val',
+        phaseStatutId: 'val',
         titreDemarcheId: newDemarcheId('demarcheId2')
       }
     ])

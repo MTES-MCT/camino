@@ -54,14 +54,15 @@
     "titre_type_id": "axm",
     "demarche_type_id": "oct",
     "etape_type_id": "mfr",
-    "document_type_id": "car"
+    "document_type_id": "car",
+    "description": "Plan à l’échelle 1/50 000ème ou 1/100 000ème"
   },
   {
     "titre_type_id": "axm",
     "demarche_type_id": "oct",
     "etape_type_id": "mfr",
     "document_type_id": "idm",
-    "description": "Liste et valeur du matériel d’extraction et de traitement envisagé"
+    "description": "la liste et la valeur du matériel d’extraction et de\n traitement que le demandeur détient ou qu’il \nenvisage d’acquérir ainsi que, dans ce dernier\n cas, le financement correspondant. Ces pièces \nsont demandées au titre de la justification des \ncapacités financières du\ndemandeur \n(décret 2001-204, art. 7)"
   },
   {
     "titre_type_id": "axm",
@@ -81,14 +82,22 @@
     "titre_type_id": "axm",
     "demarche_type_id": "oct",
     "etape_type_id": "mfr",
-    "document_type_id": "mes"
+    "document_type_id": "mes",
+    "description": "la définition des mesures prévues par le pétitionnaire pour réhabiliter le site après exploitation, notamment la nature et les modalités de revégétalisation envisagée. (décret 2001-204, art. 5 bis)"
   },
   {
     "titre_type_id": "axm",
     "demarche_type_id": "oct",
     "etape_type_id": "mfr",
     "document_type_id": "met",
-    "description": "Descriptif des méthodes envisagées pour l’exécution des travaux"
+    "description": "descriptif des méthodes envisagées pour l’exécution des travaux ((décret 2001-204, art. 6)"
+  },
+  {
+    "titre_type_id": "axm",
+    "demarche_type_id": "oct",
+    "etape_type_id": "mfr",
+    "document_type_id": "nip",
+    "optionnel": true
   },
   {
     "titre_type_id": "axm",
@@ -103,13 +112,14 @@
     "demarche_type_id": "oct",
     "etape_type_id": "mfr",
     "document_type_id": "prg",
-    "description": "Phasage et planigramme"
+    "description": "Description du phasage et planigramme des travaux. (décret 2001-204, art. 5)"
   },
   {
     "titre_type_id": "axm",
     "demarche_type_id": "oct",
     "etape_type_id": "mfr",
-    "document_type_id": "sch"
+    "document_type_id": "sch",
+    "description": "le schéma de pénétration du massif forestier proposé par le pétitionnaire pour l'acheminement du matériel lourd et la desserte du chantier (décret 2001-204, art. 5 bis)"
   },
   {
     "titre_type_id": "cxm",

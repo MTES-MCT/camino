@@ -16,11 +16,7 @@ export const fragmentTitreDemarche = gql`
     phase {
       dateDebut
       dateFin
-      statut {
-        id
-        nom
-        couleur
-      }
+      phaseStatutId
     }
     etapes {
       ...titreEtape

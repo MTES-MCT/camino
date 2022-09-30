@@ -126,7 +126,7 @@ const titresDemarchesRelateTrue = [
   'type',
   'enfants',
   'parents',
-  'phase.statut',
+  'phase',
   ...titresEtapesRelateTrue.map(k => `etapes.${k}`)
 ]
 
@@ -139,7 +139,7 @@ const titresDemarchesRelateFalse = [
 const titresDemarches = {
   graph: `[
      type.${demarchesTypes.graph},
-     phase.${titresDemarchesPhases.graph},
+     phase,
      titreType,
      etapes.${titresEtapes.graph},
      parents.^1,
