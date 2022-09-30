@@ -10,33 +10,35 @@ interface DemarchesDefinition<T> extends Definition<T> {
   exception?: boolean
   auto?: boolean
 }
-export const DemarchesTypesIds = [
-  'amo',
-  'aom',
-  'ces',
-  'con',
-  'dam',
-  'dec',
-  'dep',
-  'dot',
-  'exp',
-  'exs',
-  'fus',
-  'mut',
-  'oct',
-  'pr1',
-  'pr2',
-  'pre',
-  'pro',
-  'prr',
-  'ren',
-  'res',
-  'ret',
-  'vct',
-  'vut'
-] as const
+export const DEMARCHES_TYPES_IDS = {
+  Amodiation: 'amo',
+  AutorisationDOuvertureDeTravaux: 'aom',
+  Cession: 'ces',
+  Conversion: 'con',
+  DeclarationDArretDefinitifDesTravaux: 'dam',
+  Decheance: 'dec',
+  DeplacementDePerimetre: 'dep',
+  DeclarationDOuvertureDeTravaux: 'dot',
+  ExtensionDePerimetre: 'exp',
+  ExtensionDeSubstance: 'exs',
+  Fusion: 'fus',
+  Mutation: 'mut',
+  Octroi: 'oct',
+  Prolongation1: 'pr1',
+  Prolongation2: 'pr2',
+  ProlongationExceptionnelle: 'pre',
+  Prolongation: 'pro',
+  Prorogation: 'prr',
+  Renonciation: 'ren',
+  ResiliationAnticipeeDAmodiation: 'res',
+  Retrait: 'ret',
+  DemandeDeTitreDExploitation: 'vct',
+  MutationPartielle: 'vut'
+} as const
 
-export type DemarcheTypeId = typeof DemarchesTypesIds[number]
+export const DemarchesTypesIds = Object.values(DEMARCHES_TYPES_IDS)
+
+export type DemarcheTypeId = typeof DEMARCHES_TYPES_IDS[keyof typeof DEMARCHES_TYPES_IDS]
 
 export const DemarchesTypes: {
   [key in DemarcheTypeId]: DemarchesDefinition<key>

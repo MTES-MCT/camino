@@ -1,7 +1,6 @@
 import {
   demarchesTypes,
   etapesTypes,
-  phasesStatuts,
   documentsTypes,
   referencesTypes,
   titresTypes,
@@ -25,6 +24,7 @@ import { FREQUENCES_IDS } from 'camino-common/src/static/frequence'
 import { Domaines } from 'camino-common/src/static/domaines'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { phasesStatuts } from 'camino-common/src/static/phasesStatuts'
 
 const labelGet = entity => (entity ? `${entity.id} - ${entity.nom}` : '')
 
@@ -161,7 +161,7 @@ const metasIndex = {
     ids: ['titreTypeId', 'demarcheTypeId']
   },
   'phases-statuts': {
-    get: phasesStatuts,
+    get: () => phasesStatuts,
     nom: 'Statuts des phases',
     colonnes: [
       { id: 'id', nom: 'Id' },

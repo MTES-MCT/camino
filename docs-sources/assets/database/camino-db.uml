@@ -277,13 +277,6 @@ entity "**knex_migrations_lock**" {
   ""is_locked"": //integer //
 }
 
-entity "**phases_statuts**" {
-  + ""id"": //character varying(3) [PK]//
-  --
-  *""nom"": //character varying(32) //
-  *""couleur"": //character varying(16) //
-}
-
 entity "**references_types**" {
   + ""id"": //character varying(3) [PK]//
   --
@@ -452,7 +445,7 @@ entity "**titres_forets**" {
 entity "**titres_phases**" {
   + ""titre_demarche_id"": //character varying(128) [PK][FK]//
   --
-  *""statut_id"": //character varying(3) [FK]//
+  *""phase_statut_id"": //character varying(3) //
   ""date_debut"": //character varying(10) //
   ""date_fin"": //character varying(10) //
 }
@@ -797,8 +790,6 @@ entity "**utilisateurs__titres**" {
 "**titres_forets**"   }--  "**titres_etapes**"
 
 "**titres_forets**"   }--  "**titres_etapes**"
-
-"**titres_phases**"   }--  "**phases_statuts**"
 
 "**titres_phases**"  ||-||  "**titres_demarches**"
 

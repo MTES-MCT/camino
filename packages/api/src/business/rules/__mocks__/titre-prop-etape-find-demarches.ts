@@ -1,7 +1,11 @@
-import { ITitreDemarche, ITitrePhase } from '../../../types'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
+import { newDemarcheId } from '../../../database/models/_format/id-create'
+import { ITitreDemarche, ITitreEtape, ITitrePhase } from '../../../types'
 
 const titreDemarchesOctPointsMut = {
-  statutId: 'val',
+  statutId: TitresStatutIds.Valide,
   demarches: [
     {
       id: 'h-cx-courdemanges-1989-oct01',
@@ -53,7 +57,7 @@ const titreDemarchesOctPointsMut = {
 }
 
 const titreDemarchesOctPointsVides = {
-  statutId: 'val',
+  statutId: TitresStatutIds.Valide,
   demarches: [
     {
       id: 'h-cx-courdemanges-1988-oct01',
@@ -82,7 +86,7 @@ const titreDemarchesOctPointsVides = {
 }
 
 const titreDemarchesOctMutPoints = {
-  statutId: 'val',
+  statutId: TitresStatutIds.Valide,
   demarches: [
     {
       id: 'h-cx-courdemanges-1986-oct01',
@@ -134,7 +138,7 @@ const titreDemarchesOctMutPoints = {
 }
 
 const titreDemarchesOctPointsMutInstruction = {
-  statutId: 'val',
+  statutId: TitresStatutIds.Valide,
   demarches: [
     {
       id: 'h-cx-courdemanges-1985-mut01',
@@ -183,11 +187,11 @@ const titreDemarchesOctPointsMutInstruction = {
         }
       ]
     }
-  ] as unknown as ITitreDemarche[]
+  ] as ITitreDemarche[]
 }
 
 const titreDemarchesOctAccDpuRej = {
-  statutId: 'val',
+  statutId: TitresStatutIds.Valide,
   demarches: [
     {
       id: 'h-cx-courdemanges-1984-oct01',
@@ -212,33 +216,44 @@ const titreDemarchesOctAccDpuRej = {
         }
       ]
     }
-  ] as unknown as ITitreDemarche[]
+  ] as ITitreDemarche[]
 }
 
 const titreDemarchesOctMfrPoints = {
-  statutId: 'val',
+  statutId: TitresStatutIds.Valide,
   demarches: [
     {
-      id: 'h-cx-courdemanges-1983-oct01',
+      id: newDemarcheId('h-cx-courdemanges-1983-oct01'),
       titreId: 'h-cx-courdemanges-1983',
       typeId: 'oct',
       statutId: 'acc',
       etapes: [
         {
           id: 'h-cx-courdemanges-1983-oct01-mfr01',
-          titreDemarcheId: 'h-cx-courdemanges-1983-oct01',
+          date: '1983-01-01',
+          titreDemarcheId: newDemarcheId('h-cx-courdemanges-1983-oct01'),
           typeId: 'mfr',
           statutId: 'acc',
           ordre: 1,
-          points: [1, 2, 3]
-        }
+          points: [
+            {
+              id: 'id',
+              titreEtapeId: 'h-cx-courdemanges-1983-oct01-mfr01',
+              groupe: 1,
+              contour: 1,
+              point: 1,
+              references: [],
+              coordonnees: { x: 0, y: 0 }
+            }
+          ]
+        } as ITitreEtape
       ]
     }
-  ] as unknown as ITitreDemarche[]
+  ] as ITitreDemarche[]
 }
 
 const titreDemarchesOctTitulairesACO = {
-  statutId: 'dmi',
+  statutId: TitresStatutIds.DemandeInitiale,
   demarches: [
     {
       id: 'h-cx-courdemanges-1982-oct01',
@@ -261,7 +276,7 @@ const titreDemarchesOctTitulairesACO = {
 }
 
 const titreDemarchesOctAmodiatairesPassee = {
-  statutId: 'val',
+  statutId: TitresStatutIds.Valide,
   demarches: [
     {
       id: 'h-cx-courdemanges-1982-oct01',
@@ -279,13 +294,13 @@ const titreDemarchesOctAmodiatairesPassee = {
           amodiataires: [{ id: 'fr-123456789' }]
         }
       ],
-      phase: { statutId: 'val' }
+      phase: { phaseStatutId: 'val' }
     }
   ] as ITitreDemarche[]
 }
 
 const titreDemarchesOctAmodiatairesValide = {
-  statutId: 'mod',
+  statutId: TitresStatutIds.ModificationEnInstance,
   demarches: [
     {
       id: 'h-cx-courdemanges-1982-amo01',
@@ -309,14 +324,14 @@ const titreDemarchesOctAmodiatairesValide = {
       titreId: 'h-cx-courdemanges-1982',
       typeId: 'oct',
       statutId: 'acc',
-      phase: { statutId: 'val' } as ITitrePhase,
+      phase: { phaseStatutId: 'val' } as ITitrePhase,
       etapes: []
     }
   ] as ITitreDemarche[]
 }
 
 const titreDemarchesOctAmodiatairesMod = {
-  statutId: 'mod',
+  statutId: TitresStatutIds.ModificationEnInstance,
   demarches: [
     {
       id: 'h-cx-courdemanges-1981-amo01',
@@ -364,11 +379,11 @@ const titreDemarchesOctAmodiatairesMod = {
         }
       ]
     }
-  ] as unknown as ITitreDemarche[]
+  ] as ITitreDemarche[]
 }
 
 const titreDemarchesProPointsModPhaseEch = {
-  statutId: 'mod',
+  statutId: TitresStatutIds.ModificationEnInstance,
   demarches: [
     {
       id: 'h-cx-courdemanges-1981-pro01',
@@ -404,11 +419,11 @@ const titreDemarchesProPointsModPhaseEch = {
         }
       ]
     }
-  ] as unknown as ITitreDemarche[]
+  ] as ITitreDemarche[]
 }
 
 const titreDemarchesProPointsModPhaseVal = {
-  statutId: 'mod',
+  statutId: TitresStatutIds.ModificationEnInstance,
   demarches: [
     {
       id: 'h-cx-courdemanges-1981-pro01',
@@ -418,15 +433,15 @@ const titreDemarchesProPointsModPhaseVal = {
       etapes: [
         {
           id: 'h-cx-courdemanges-1981-pro01-dpu01',
-          titreDemarcheId: 'h-cx-courdemanges-1981-pro01',
-          typeId: 'dpu',
-          statutId: 'acc',
-          ordre: 1,
-          points: [1, 2, 3]
+          titreDemarcheId: newDemarcheId('h-cx-courdemanges-1981-pro01'),
+          date: '1981-01-01',
+          typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
+          statutId: ETAPES_STATUTS.ACCEPTE,
+          ordre: 1
         }
-      ],
+      ] as ITitreEtape[],
       phase: {
-        statutId: 'val'
+        phaseStatutId: 'val'
       }
     },
     {
@@ -444,11 +459,11 @@ const titreDemarchesProPointsModPhaseVal = {
         }
       ]
     }
-  ] as unknown as ITitreDemarche[]
+  ] as ITitreDemarche[]
 }
 
 const titreDemarchesMutPointsMod = {
-  statutId: 'mod',
+  statutId: TitresStatutIds.ModificationEnInstance,
   demarches: [
     {
       id: 'h-cx-courdemanges-1981-mut01',
@@ -484,14 +499,14 @@ const titreDemarchesMutPointsMod = {
         }
       ]
     }
-  ] as unknown as ITitreDemarche[]
+  ] as ITitreDemarche[]
 }
 
 const titreDemarchesProModPhaseEch = {
-  statutId: 'mod',
+  statutId: TitresStatutIds.ModificationEnInstance,
   demarches: [
     {
-      id: 'h-cx-courdemanges-1981-pro01',
+      id: newDemarcheId('h-cx-courdemanges-1981-pro01'),
       titreId: 'h-cx-courdemanges-1981',
       typeId: 'pro',
       statutId: 'ins',
@@ -499,7 +514,8 @@ const titreDemarchesProModPhaseEch = {
       etapes: [
         {
           id: 'h-cx-courdemanges-1981-pro01-dpu01',
-          titreDemarcheId: 'h-cx-courdemanges-1981-pro01',
+          date: '1981-01-01',
+          titreDemarcheId: newDemarcheId('h-cx-courdemanges-1981-pro01'),
           typeId: 'eee',
           statutId: 'acc',
           ordre: 1,
@@ -510,14 +526,14 @@ const titreDemarchesProModPhaseEch = {
           titulaires: ['titulaire2'],
           amodiataires: ['amodiataire2'],
           administrations: ['administration2']
-        }
+        } as unknown as ITitreEtape
       ],
       phase: {
-        statutId: 'ech'
+        phaseStatutId: 'ech'
       }
     },
     {
-      id: 'h-cx-courdemanges-1981-oct01',
+      id: newDemarcheId('h-cx-courdemanges-1981-oct01'),
       titreId: 'h-cx-courdemanges-1981',
       typeId: 'oct',
       statutId: 'acc',
@@ -525,7 +541,7 @@ const titreDemarchesProModPhaseEch = {
       etapes: [
         {
           id: 'h-cx-courdemanges-1981-oct01-dpu01',
-          titreDemarcheId: 'h-cx-courdemanges-1981-oct01',
+          titreDemarcheId: newDemarcheId('h-cx-courdemanges-1981-oct01'),
           typeId: 'dpu',
           statutId: 'acc',
           ordre: 1,
@@ -539,7 +555,7 @@ const titreDemarchesProModPhaseEch = {
         }
       ]
     }
-  ] as unknown as ITitreDemarche[]
+  ] as ITitreDemarche[]
 }
 
 export {

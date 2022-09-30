@@ -18,11 +18,7 @@ export const fragmentDemarches = gql`
     phase {
       dateDebut
       dateFin
-      statut {
-        id
-        nom
-        couleur
-      }
+      phaseStatutId
     }
 
     modification

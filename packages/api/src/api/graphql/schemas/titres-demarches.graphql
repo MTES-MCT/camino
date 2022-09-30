@@ -60,7 +60,7 @@ type Demarche {
 "Phase d'un titre minier"
 type Phase {
   "Statut d'une phase"
-  statut: PhaseStatut!
+  phaseStatutId: String
 
   "Date de début d'une phase"
   dateDebut: String

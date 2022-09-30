@@ -225,7 +225,7 @@ describe("id de l'étape qui a un contenu", () => {
           phase: {
             dateDebut: '2020-01-01',
             dateFin: '2020-01-02',
-            statutId: 'val',
+            phaseStatutId: 'val',
             titreDemarcheId: newDemarcheId('demarche-id')
           },
           etapes: [

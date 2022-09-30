@@ -48,7 +48,6 @@ export const tables = [
   },
   { name: 'forets', orderBy: ['id'] },
   { name: 'globales', orderBy: ['id'] },
-  { name: 'phases_statuts', orderBy: ['id'] },
   { name: 'references_types', orderBy: ['id'] },
   { name: 'titres', orderBy: ['id'] },
   { name: 'titres_activites', orderBy: ['id'] },
@@ -73,7 +72,7 @@ export const tables = [
     orderBy: ['titre_etape_id', 'document_id']
   },
   { name: 'titres_forets', orderBy: ['titre_etape_id', 'foret_id'] },
-  { name: 'titres_phases', orderBy: ['titre_demarche_id', 'statut_id'] },
+  { name: 'titres_phases', orderBy: ['titre_demarche_id', 'phase_statut_id'] },
   { name: 'titres_points', orderBy: ['id'] },
   { name: 'titres_points_references', orderBy: ['id'] },
   { name: 'titres_references', orderBy: ['titre_id', 'type_id'] },

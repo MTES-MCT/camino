@@ -30,7 +30,9 @@
               <td class="max-width-1">
                 <Dot
                   class="mt-xs"
-                  :color="`bg-${demarche.phase.statut.couleur}`"
+                  :color="`bg-${
+                    phaseStatuts[demarche.phase.phaseStatutId].couleur
+                  }`"
                 />
               </td>
               <td>
@@ -186,6 +188,10 @@ import {
   TitresStatuts,
   TitreStatutId
 } from 'camino-common/src/static/titresStatuts'
+import {
+  PhaseStatutId,
+  phaseStatuts
+} from 'camino-common/src/static/phasesStatuts'
 
 type Entreprise = {
   id: string
@@ -202,7 +208,11 @@ const props = defineProps<{
     demarches: {
       id: string
       type: { id: DemarcheTypeId }
-      phase: { dateDebut: string; dateFin: string; statut: { couleur: string } }
+      phase: {
+        dateDebut: string
+        dateFin: string
+        phaseStatutId: PhaseStatutId
+      }
     }[]
     contenu: { [sectionId: string]: { [elementId: string]: unknown } }
     administrations: { id: AdministrationId }[]
