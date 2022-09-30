@@ -1,6 +1,9 @@
 name: GitGuardian scan
 
-on: push
+on:
+  push:
+    branches-ignore:
+      - release-candidate
 
 jobs:
   scanning:
