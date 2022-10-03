@@ -47,6 +47,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
     </div>
     <div
       class="top-level fiscalite-value"
+      style=""
     >
       
       3 235 343,56 €
@@ -57,6 +58,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
     </div>
     <div
       class="top-level fiscalite-value"
+      style=""
     >
       
       669 241,56 €
@@ -99,6 +101,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
     </div>
     <div
       class="top-level fiscalite-value"
+      style=""
     >
       
       346 336,41 €
@@ -109,6 +112,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
     </div>
     <div
       class="top-level fiscalite-value"
+      style=""
     >
       
       4 675 541,53 €
@@ -162,6 +166,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
     </div>
     <div
       class="top-level fiscalite-value"
+      style=""
     >
       
       3 233 743,49 €
@@ -172,6 +177,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
     </div>
     <div
       class="top-level fiscalite-value"
+      style=""
     >
       
       668 910,58 €
@@ -214,6 +220,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
     </div>
     <div
       class="top-level fiscalite-value"
+      style=""
     >
       
       346 165,13 €
@@ -224,6 +231,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Guyane
     </div>
     <div
       class="top-level fiscalite-value"
+      style=""
     >
       
       4 673 229,20 €
@@ -280,6 +288,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Loadin
     </div>
     <div
       class="top-level fiscalite-value"
+      style="display: flex; justify-content: center;"
     >
       <div
         class="spinner"
@@ -290,6 +299,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Loadin
     </div>
     <div
       class="top-level fiscalite-value"
+      style="display: flex; justify-content: center;"
     >
       <div
         class="spinner"
@@ -301,6 +311,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Loadin
     </div>
     <div
       class="top-level fiscalite-value"
+      style="display: flex; justify-content: center;"
     >
       <div
         class="spinner"
@@ -311,6 +322,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Loadin
     </div>
     <div
       class="top-level fiscalite-value"
+      style="display: flex; justify-content: center;"
     >
       <div
         class="spinner"
@@ -377,6 +389,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Ok 1`]
     </div>
     <div
       class="top-level fiscalite-value"
+      style=""
     >
       
       1 600,07 €
@@ -387,6 +400,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Ok 1`]
     </div>
     <div
       class="top-level fiscalite-value"
+      style=""
     >
       
       330,98 €
@@ -398,6 +412,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Ok 1`]
     </div>
     <div
       class="top-level fiscalite-value"
+      style=""
     >
       
       154,48 €
@@ -408,6 +423,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Ok 1`]
     </div>
     <div
       class="top-level fiscalite-value"
+      style=""
     >
       
       2 085,54 €
@@ -464,6 +480,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite With E
     </div>
     <div
       class="top-level fiscalite-value"
+      style="display: flex; justify-content: center;"
     >
       <div>
         <div
@@ -838,6 +855,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite With E
     </div>
     <div
       class="top-level fiscalite-value"
+      style="display: flex; justify-content: center;"
     >
       <div>
         <div
@@ -1213,6 +1231,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite With E
     </div>
     <div
       class="top-level fiscalite-value"
+      style="display: flex; justify-content: center;"
     >
       <div>
         <div
@@ -1587,6 +1606,7 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite With E
     </div>
     <div
       class="top-level fiscalite-value"
+      style="display: flex; justify-content: center;"
     >
       <div>
         <div

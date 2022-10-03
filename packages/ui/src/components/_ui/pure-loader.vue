@@ -1,5 +1,12 @@
 <template>
-  <div class="top-level">
+  <div
+    class="top-level"
+    :style="
+      data.status !== 'LOADED'
+        ? { display: 'flex', ['justify-content']: 'center' }
+        : ''
+    "
+  >
     <template v-if="data.status === 'LOADED'">
       <slot :item="data.value" />
     </template>
@@ -23,8 +30,6 @@ defineProps<{ data: AsyncData<any> }>()
   position: relative;
   min-width: var(--unit);
   min-height: var(--unit);
-  display: flex;
-  justify-content: center;
 }
 @keyframes spinner {
   to {

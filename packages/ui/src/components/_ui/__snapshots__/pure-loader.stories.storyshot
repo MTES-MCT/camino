@@ -4,6 +4,7 @@ exports[`Automated Storybook Snapshots UI/Loader All 1`] = `
 <div>
   <div
     class="top-level"
+    style="display: flex; justify-content: center;"
   >
     <div
       class="spinner"
@@ -11,6 +12,7 @@ exports[`Automated Storybook Snapshots UI/Loader All 1`] = `
   </div>
   <div
     class="top-level"
+    style=""
   >
     
     La valeur de l’item est : chargé
@@ -18,6 +20,7 @@ exports[`Automated Storybook Snapshots UI/Loader All 1`] = `
   </div>
   <div
     class="top-level"
+    style="display: flex; justify-content: center;"
   >
     <div>
       <div

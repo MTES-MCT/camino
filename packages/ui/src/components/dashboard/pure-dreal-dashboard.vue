@@ -11,18 +11,9 @@
     </div>
     <div class="line-neutral width-full mb-l"></div>
     <h3>Titres</h3>
-    <LoadingElement
-      v-slot="{ item }"
-      :data="data"
-      :style="
-        data.status !== 'LOADED'
-          ? { display: 'flex', ['justify-content']: 'center' }
-          : ''
-      "
-    >
+    <LoadingElement v-slot="{ item }" :data="data">
       <template v-if="item.drealTitresBloques.length">
         <h4>Titres en attente de la DREAL</h4>
-
         <TableAuto
           class="mb-xxl"
           :columns="columns.slice(0, 4)"
@@ -30,7 +21,9 @@
           :initialSort="{ column: initialColumnId, order: 'asc' }"
         />
       </template>
-      <h4>Titres en cours d’instruction</h4>
+    </LoadingElement>
+    <h4>Titres en cours d’instruction</h4>
+    <LoadingElement v-slot="{ item }" :data="data">
       <TableAuto
         :columns="columns"
         :rows="item.drealTitres"

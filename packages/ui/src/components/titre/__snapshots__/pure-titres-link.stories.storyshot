@@ -3,6 +3,7 @@
 exports[`Automated Storybook Snapshots Components/Titre/TitresLink AXM 1`] = `
 <div
   class="top-level"
+  style=""
 >
   
   <div
@@ -31,6 +32,7 @@ exports[`Automated Storybook Snapshots Components/Titre/TitresLink AXM 1`] = `
 exports[`Automated Storybook Snapshots Components/Titre/TitresLink AXM With Already Selected Titre 1`] = `
 <div
   class="top-level"
+  style=""
 >
   
   <div
@@ -61,6 +63,7 @@ exports[`Automated Storybook Snapshots Components/Titre/TitresLink AXM With Alre
 exports[`Automated Storybook Snapshots Components/Titre/TitresLink Demarche Fusion 1`] = `
 <div
   class="top-level"
+  style=""
 >
   
   <div
@@ -89,6 +92,7 @@ exports[`Automated Storybook Snapshots Components/Titre/TitresLink Demarche Fusi
 exports[`Automated Storybook Snapshots Components/Titre/TitresLink Demarche Fusion With Already Selected Titre 1`] = `
 <div
   class="top-level"
+  style=""
 >
   
   <div
@@ -133,6 +137,7 @@ exports[`Automated Storybook Snapshots Components/Titre/TitresLink Demarche Fusi
 exports[`Automated Storybook Snapshots Components/Titre/TitresLink Loading 1`] = `
 <div
   class="top-level"
+  style="display: flex; justify-content: center;"
 >
   <div
     class="spinner"
@@ -143,6 +148,7 @@ exports[`Automated Storybook Snapshots Components/Titre/TitresLink Loading 1`] =
 exports[`Automated Storybook Snapshots Components/Titre/TitresLink With Error 1`] = `
 <div
   class="top-level"
+  style="display: flex; justify-content: center;"
 >
   <div>
     <div

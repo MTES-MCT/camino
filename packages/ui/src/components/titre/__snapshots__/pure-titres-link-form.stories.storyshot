@@ -4,6 +4,7 @@ exports[`Automated Storybook Snapshots Components/Titre/PureTitresLinkForm Axm W
 <div>
   <div
     class="top-level"
+    style=""
   >
     
     <div>
@@ -434,6 +435,7 @@ exports[`Automated Storybook Snapshots Components/Titre/PureTitresLinkForm Defau
 <div>
   <div
     class="top-level"
+    style=""
   >
     
     <div>
@@ -506,6 +508,7 @@ exports[`Automated Storybook Snapshots Components/Titre/PureTitresLinkForm Fusio
 <div>
   <div
     class="top-level"
+    style=""
   >
     
     <div>
@@ -936,6 +939,7 @@ exports[`Automated Storybook Snapshots Components/Titre/PureTitresLinkForm Titre
 <div>
   <div
     class="top-level"
+    style="display: flex; justify-content: center;"
   >
     <div
       class="spinner"
