@@ -8,6 +8,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import {
   StatistiquesDGTM,
   StatistiquesMinerauxMetauxMetropole,
+  StatistiquesMinerauxMetauxMetropoleSels
 } from 'camino-common/src/statistiques'
 import {
   CaminoDate,
@@ -15,7 +16,7 @@ import {
   daysBetween,
   getCurrentAnnee,
   CaminoAnnee,
-  valideAnnee,
+  valideAnnee
 } from 'camino-common/src/date'
 import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites'
 import { knex } from '../../knex'
@@ -23,9 +24,16 @@ import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
 import { userSuper } from '../../database/user-super'
 import { titresGet } from '../../database/queries/titres'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
-import { SubstancesFiscale, SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales'
-import { CodePostal, Departements, toDepartementId } from 'camino-common/src/static/departement'
-import { RegionId } from 'camino-common/src/static/region'
+import {
+  SubstancesFiscale,
+  SUBSTANCES_FISCALES_IDS
+} from 'camino-common/src/static/substancesFiscales'
+import {
+  CodePostal,
+  Departements,
+  toDepartementId
+} from 'camino-common/src/static/departement'
+import { REGION_IDS } from 'camino-common/src/static/region'
 
 const anneeDepartStats = 2015
 
@@ -395,6 +403,12 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild = (
   return statsInstant
 }
 
+const sels = [
+  SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_,
+  SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage,
+  SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage
+] as const
+type Sels = typeof sels[number]
 export const getMinerauxMetauxMetropolesStats = async (
   _req: express.Request,
   res: CustomResponse<StatistiquesMinerauxMetauxMetropole>
@@ -442,8 +456,7 @@ export const getMinerauxMetauxMetropolesStats = async (
         )
         .from('titres_activites')
         .whereRaw(
-          "titres_activites.contenu -> 'substancesFiscales' \\? ?",
-          bauxite
+          `titres_activites.contenu -> 'substancesFiscales' \\? '${bauxite}'`
         )
 
     const substanceResult = resultSubstances.reduce<
@@ -461,81 +474,180 @@ export const getMinerauxMetauxMetropolesStats = async (
       return acc
     }, {})
     // 2022-09-30 Valeurs fournies par Laure dans mattermost : https://mattermost.incubateur.net/camino/pl/3n4y958n6idwbrr4me5rkma1oy
-    substanceResult[valideAnnee('2009')] = 178.700
+    substanceResult[valideAnnee('2009')] = 178.7
     substanceResult[valideAnnee('2010')] = 132.302
-    substanceResult[valideAnnee('2011')] = 117.700
+    substanceResult[valideAnnee('2011')] = 117.7
     substanceResult[valideAnnee('2012')] = 65.336
     substanceResult[valideAnnee('2013')] = 109.602
-    substanceResult[valideAnnee('2014')] = 71.070
+    substanceResult[valideAnnee('2014')] = 71.07
     substanceResult[valideAnnee('2015')] = 80.578
     substanceResult[valideAnnee('2016')] = 112.445
     substanceResult[valideAnnee('2017')] = 131.012
-    substanceResult[valideAnnee('2018')] = 138.800
-    substanceResult[valideAnnee('2019')] = 120.760
+    substanceResult[valideAnnee('2018')] = 138.8
+    substanceResult[valideAnnee('2019')] = 120.76
 
     result.substances[bauxite] = substanceResult
 
+    // TODO 2022-10-03 Problème de type postgres (jsonb ou numeric trop gros?), même avec du cast, on obtient des string
+    const resultSel: {
+      annee: CaminoAnnee
+      communeId: CodePostal
+      nacc: string
+      naca: string
+      nacb: string
+    }[] = await knex
+      .select(
+        'titres_activites.annee',
+        'tc.commune_id',
+        knex.raw(
+          "titres_activites.contenu->'substancesFiscales'->'nacc' as nacc"
+        ),
+        knex.raw(
+          "titres_activites.contenu->'substancesFiscales'->'naca' as naca"
+        ),
+        knex.raw(
+          "titres_activites.contenu->'substancesFiscales'->'nacb' as nacb"
+        )
+      )
+      .distinctOn('titres.slug', 'titres_activites.annee')
+      .from('titres_activites')
+      .leftJoin('titres', 'titres.id', 'titres_activites.titre_id')
+      .joinRaw(
+        "left join titres_communes tc on tc.titre_etape_id  = titres.props_titre_etapes_ids ->> 'points'"
+      )
+      .whereRaw("titres_activites.contenu -> 'substancesFiscales' \\? 'nacc'")
+      .orWhereRaw("titres_activites.contenu -> 'substancesFiscales' \\? 'nacb'")
+      .orWhereRaw("titres_activites.contenu -> 'substancesFiscales' \\? 'naca'")
+      .orderBy('titres.slug')
 
-    const nacc = SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_
+    const selsStats = resultSel.reduce<{
+      [key in Sels]: StatistiquesMinerauxMetauxMetropoleSels
+    }>(
+      (acc, stat) => {
+        const annee = stat.annee
 
-//     select distinct on (t.slug, ta.annee) t.slug, tc.commune_id,  ta.annee, ta.contenu, (ta.contenu->'substancesFiscales'->'nacc')::numeric as nacc, (ta.contenu->'substancesFiscales'->'nacb')::numeric as nacb, (ta.contenu->'substancesFiscales'->'naca')::numeric as naca from titres_activites ta 
-// left join titres t on t.id = ta.titre_id 
-// left join titres_communes tc on tc.titre_etape_id  = t.props_titre_etapes_ids ->> 'points'
-// where ta.contenu -> 'substancesFiscales' ? 'nacc'
-// or ta.contenu -> 'substancesFiscales' ? 'naca'
-// or ta.contenu -> 'substancesFiscales' ? 'nacb'
-// order by t.slug ;
-    const resultSel: { annee: CaminoAnnee; communeId: CodePostal; nacc: number; naca: number;nacb: number }[] =
-      await knex
-        .select(
-          'titres_activites.annee',
-          'tc.commune_id',
-          knex.raw( "(titres_activites.contenu->'substancesFiscales'->'nacc')::numeric as nacc"),
-          knex.raw( "(titres_activites.contenu->'substancesFiscales'->'naca')::numeric as naca"),
-          knex.raw( "(titres_activites.contenu->'substancesFiscales'->'nacb')::numeric as nacb"),
-        ).distinctOn('titres.slug', 'titres_activites.annee')
-        .from('titres_activites')
-        .leftJoin('titres', 'titres.id', 'titres_activites.titre_id')
-        .joinRaw("left join titres_communes tc on tc.titre_etape_id  = titres.props_titre_etapes_ids ->> 'points'")
-        .whereRaw("titres_activites.contenu -> 'substancesFiscales' \\? 'nacc'" )
-        .orWhereRaw("titres_activites.contenu -> 'substancesFiscales' \\? 'nacb'" )
-        .orWhereRaw("titres_activites.contenu -> 'substancesFiscales' \\? 'naca'" )
-        .orderBy('titres.slug')
+        const regionId = Departements[toDepartementId(stat.communeId)].regionId
 
-        console.log(resultSel)
-        console.log(resultSel.length)
-    const selsStats = resultSel.reduce<Record<CaminoAnnee, { [key in RegionId]?: number}>>((acc, stat) => {
-      const annee = stat.annee
+        for (const substance of sels) {
+          if (typeof stat[substance] !== 'number') {
+            console.warn(`WTF ${typeof stat[substance]} ${stat[substance]}`)
+          }
+          if (!acc[substance][annee]) {
+            acc[substance][annee] = {}
+          }
+          let statSel = acc[substance][annee][regionId]
+          const valeur = fromUniteFiscaleToUnite(
+            SubstancesFiscale[substance].uniteId,
+            parseInt(stat[substance], 10)
+          )
+          if (statSel === undefined) {
+            acc[substance][annee][regionId] = valeur
+          } else {
+            statSel += valeur
+          }
+        }
 
-      const regionId = Departements[toDepartementId(stat.communeId)].regionId
-
-      if (!acc[annee]) {
-        acc[annee] = {}
+        return acc
+      },
+      {
+        [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_]: {},
+        [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]:
+          {},
+        [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]: {}
       }
-      if (!acc[annee][regionId]) {
-        acc[annee][regionId] = 0
-      }
-      acc[annee][regionId] += stat.naca
-      return acc
-    }, {})
+    )
 
-    // const naccResult = resultNacc.reduce<
-    //   Record<CaminoAnnee, number>
-    // >((acc, dateSubstance) => {
-    //   const annee = getAnnee(dateSubstance.date)
-    //   if (!acc[annee]) {
-    //     acc[annee] = 0
-    //   }
-    //   acc[annee] += fromUniteFiscaleToUnite(
-    //     SubstancesFiscale[bauxite].uniteId,
-    //     dateSubstance.substance
-    //   )
+    // Valeurs fournies par Laure : https://trello.com/c/d6YDa4Ao/341-cas-france-relance-dashboard-grand-public-compl%C3%A8te-les-statistiques-v3-sel
+    selsStats.naca[valideAnnee(2009)] = {
+      [REGION_IDS['Auvergne-Rhône-Alpes']]: 635.592,
+      [REGION_IDS['Bourgogne-Franche-Comté']]: 7.684,
+      [REGION_IDS['Grand Est']]: 2692.7,
+      [REGION_IDS['Nouvelle-Aquitaine']]: 48.724,
+      [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 274.732,
+      [REGION_IDS.Occitanie]: 867.001
+    }
+    selsStats.naca[valideAnnee(2010)] = {
+      [REGION_IDS['Auvergne-Rhône-Alpes']]: 579.385,
+      [REGION_IDS['Bourgogne-Franche-Comté']]: 11.645,
+      [REGION_IDS['Grand Est']]: 2995.599,
+      [REGION_IDS['Nouvelle-Aquitaine']]: 37.23,
+      [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 500.564,
+      [REGION_IDS.Occitanie]: 990.091
+    }
+    selsStats.naca[valideAnnee(2011)] = {
+      [REGION_IDS['Auvergne-Rhône-Alpes']]: 959.442,
+      [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
+      [REGION_IDS['Grand Est']]: 2959.7,
+      [REGION_IDS['Nouvelle-Aquitaine']]: 32.425,
+      [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 421.48,
+      [REGION_IDS.Occitanie]: 958.849
+    }
+    selsStats.naca[valideAnnee(2012)] = {
+      [REGION_IDS['Auvergne-Rhône-Alpes']]: 936.78,
+      [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
+      [REGION_IDS['Grand Est']]: 2426.62,
+      [REGION_IDS['Nouvelle-Aquitaine']]: 35.97,
+      [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 1042.67,
+      [REGION_IDS.Occitanie]: 797.099
+    }
+    selsStats.naca[valideAnnee(2013)] = {
+      [REGION_IDS['Auvergne-Rhône-Alpes']]: 907.994,
+      [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
+      [REGION_IDS['Grand Est']]: 2703.049,
+      [REGION_IDS['Nouvelle-Aquitaine']]: 37.79,
+      [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 1300.854,
+      [REGION_IDS.Occitanie]: 1010.892
+    }
+    selsStats.naca[valideAnnee(2014)] = {
+      [REGION_IDS['Auvergne-Rhône-Alpes']]: 763.55,
+      [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
+      [REGION_IDS['Grand Est']]: 1552.197,
+      [REGION_IDS['Nouvelle-Aquitaine']]: 34.285,
+      [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 843.83,
+      [REGION_IDS.Occitanie]: 1062.216
+    }
+    selsStats.naca[valideAnnee(2015)] = {
+      [REGION_IDS['Auvergne-Rhône-Alpes']]: 799.949,
+      [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
+      [REGION_IDS['Grand Est']]: 2444.74,
+      [REGION_IDS['Nouvelle-Aquitaine']]: 37.303,
+      [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 135.02,
+      [REGION_IDS.Occitanie]: 1007.542
+    }
+    selsStats.naca[valideAnnee(2016)] = {
+      [REGION_IDS['Auvergne-Rhône-Alpes']]: 830.577,
+      [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
+      [REGION_IDS['Grand Est']]: 2377.175,
+      [REGION_IDS['Nouvelle-Aquitaine']]: 35.841,
+      [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 95.859,
+      [REGION_IDS.Occitanie]: 926.388
+    }
+    selsStats.naca[valideAnnee(2017)] = {
+      [REGION_IDS['Auvergne-Rhône-Alpes']]: 869.676,
+      [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
+      [REGION_IDS['Grand Est']]: 2585.934,
+      [REGION_IDS['Nouvelle-Aquitaine']]: 34.219,
+      [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 91.718,
+      [REGION_IDS.Occitanie]: 1082.021
+    }
+    selsStats.naca[valideAnnee(2018)] = {
+      [REGION_IDS['Auvergne-Rhône-Alpes']]: 870.718,
+      [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
+      [REGION_IDS['Grand Est']]: 2481.271,
+      [REGION_IDS['Nouvelle-Aquitaine']]: 31.71,
+      [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 150.524,
+      [REGION_IDS.Occitanie]: 997.862
+    }
+    selsStats.naca[valideAnnee(2019)] = {
+      [REGION_IDS['Auvergne-Rhône-Alpes']]: 792.394,
+      [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
+      [REGION_IDS['Grand Est']]: 2537.412,
+      [REGION_IDS['Nouvelle-Aquitaine']]: 36.357,
+      [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 196.828,
+      [REGION_IDS.Occitanie]: 997.862
+    }
 
-    //   return acc
-    // }, {})
-
-    // result.substances[nacc] = substanceResult
-    result.substances = {...result.substances, ...selsStats}
+    result.substances = { ...result.substances, ...selsStats }
 
     res.json(result)
   } catch (e) {
