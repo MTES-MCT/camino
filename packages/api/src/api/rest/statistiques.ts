@@ -8,7 +8,6 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import {
   StatistiquesDGTM,
   StatistiquesMinerauxMetauxMetropole,
-  StatistiquesMinerauxMetauxMetropoleSubstances
 } from 'camino-common/src/statistiques'
 import {
   CaminoDate,
@@ -16,7 +15,7 @@ import {
   daysBetween,
   getCurrentAnnee,
   CaminoAnnee,
-  valideAnnee
+  valideAnnee,
 } from 'camino-common/src/date'
 import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites'
 import { knex } from '../../knex'
@@ -24,10 +23,9 @@ import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
 import { userSuper } from '../../database/user-super'
 import { titresGet } from '../../database/queries/titres'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { Regions } from 'camino-common/src/static/region'
-import { Departements } from 'camino-common/src/static/departement'
-import { SubstancesFiscale } from 'camino-common/src/static/substancesFiscales'
+import { SubstancesFiscale, SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales'
+import { CodePostal, Departements, toDepartementId } from 'camino-common/src/static/departement'
+import { RegionId } from 'camino-common/src/static/region'
 
 const anneeDepartStats = 2015
 
@@ -383,7 +381,7 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild = (
         instructionExploitation: 0,
         valCxm: 0
       },
-      substances: { aloh: {} }
+      substances: { aloh: {}, nacc: {}, naca: {}, nacb: {} }
     }
   )
 
@@ -409,10 +407,11 @@ export const getMinerauxMetauxMetropolesStats = async (
   }
 
   try {
-    const titres = await titresGet(
+    const titresMetropole = await titresGet(
       {
         domainesIds: ['m'],
-        typesIds: ['ar', 'ap', 'pr', 'ax', 'px', 'cx']
+        typesIds: ['ar', 'ap', 'pr', 'ax', 'px', 'cx'],
+        territoires: 'FR'
       },
       {
         fields: {
@@ -427,57 +426,116 @@ export const getMinerauxMetauxMetropolesStats = async (
       },
       userSuper
     )
-    const titresMetropole = titres.filter(titre => {
-      if (!titre.communes) {
-        throw new Error('les communes ne sont pas chargées')
-      }
 
-      return titre.communes
-        .map(({ departementId }) => departementId)
-        .filter(isNotNullNorUndefined)
-        .some(
-          departementId =>
-            Regions[Departements[departementId].regionId].paysId === 'FR'
-        )
-    })
     const result =
       statistiquesMinerauxMetauxMetropoleInstantBuild(titresMetropole)
 
-    for (const substance of Object.keys(
-      result.substances
-    ) as StatistiquesMinerauxMetauxMetropoleSubstances[]) {
-      const resultSubstances: { date: CaminoDate; substance: number }[] =
-        await knex
-          .select(
-            'date',
-            knex.raw(
-              "titres_activites.contenu->'substancesFiscales'-> ? as substance",
-              substance
-            )
+    const bauxite = SUBSTANCES_FISCALES_IDS.bauxite
+    const resultSubstances: { annee: CaminoAnnee; substance: number }[] =
+      await knex
+        .select(
+          'annee',
+          knex.raw(
+            "titres_activites.contenu->'substancesFiscales'-> ?  as substance",
+            bauxite
           )
-          .from('titres_activites')
-          .whereRaw(
-            "titres_activites.contenu -> 'substancesFiscales' \\? ?",
-            substance
-          )
-
-      const substanceResult = resultSubstances.reduce<
-        Record<CaminoAnnee, number>
-      >((acc, dateSubstance) => {
-        const annee = getAnnee(dateSubstance.date)
-        if (!acc[annee]) {
-          acc[annee] = 0
-        }
-        acc[annee] += fromUniteFiscaleToUnite(
-          SubstancesFiscale[substance].uniteId,
-          dateSubstance.substance
+        )
+        .from('titres_activites')
+        .whereRaw(
+          "titres_activites.contenu -> 'substancesFiscales' \\? ?",
+          bauxite
         )
 
-        return acc
-      }, {})
+    const substanceResult = resultSubstances.reduce<
+      Record<CaminoAnnee, number>
+    >((acc, dateSubstance) => {
+      const annee = dateSubstance.annee
+      if (!acc[annee]) {
+        acc[annee] = 0
+      }
+      acc[annee] += fromUniteFiscaleToUnite(
+        SubstancesFiscale[bauxite].uniteId,
+        dateSubstance.substance
+      )
 
-      result.substances[substance] = substanceResult
-    }
+      return acc
+    }, {})
+    // 2022-09-30 Valeurs fournies par Laure dans mattermost : https://mattermost.incubateur.net/camino/pl/3n4y958n6idwbrr4me5rkma1oy
+    substanceResult[valideAnnee('2009')] = 178.700
+    substanceResult[valideAnnee('2010')] = 132.302
+    substanceResult[valideAnnee('2011')] = 117.700
+    substanceResult[valideAnnee('2012')] = 65.336
+    substanceResult[valideAnnee('2013')] = 109.602
+    substanceResult[valideAnnee('2014')] = 71.070
+    substanceResult[valideAnnee('2015')] = 80.578
+    substanceResult[valideAnnee('2016')] = 112.445
+    substanceResult[valideAnnee('2017')] = 131.012
+    substanceResult[valideAnnee('2018')] = 138.800
+    substanceResult[valideAnnee('2019')] = 120.760
+
+    result.substances[bauxite] = substanceResult
+
+
+    const nacc = SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_
+
+//     select distinct on (t.slug, ta.annee) t.slug, tc.commune_id,  ta.annee, ta.contenu, (ta.contenu->'substancesFiscales'->'nacc')::numeric as nacc, (ta.contenu->'substancesFiscales'->'nacb')::numeric as nacb, (ta.contenu->'substancesFiscales'->'naca')::numeric as naca from titres_activites ta 
+// left join titres t on t.id = ta.titre_id 
+// left join titres_communes tc on tc.titre_etape_id  = t.props_titre_etapes_ids ->> 'points'
+// where ta.contenu -> 'substancesFiscales' ? 'nacc'
+// or ta.contenu -> 'substancesFiscales' ? 'naca'
+// or ta.contenu -> 'substancesFiscales' ? 'nacb'
+// order by t.slug ;
+    const resultSel: { annee: CaminoAnnee; communeId: CodePostal; nacc: number; naca: number;nacb: number }[] =
+      await knex
+        .select(
+          'titres_activites.annee',
+          'tc.commune_id',
+          knex.raw( "(titres_activites.contenu->'substancesFiscales'->'nacc')::numeric as nacc"),
+          knex.raw( "(titres_activites.contenu->'substancesFiscales'->'naca')::numeric as naca"),
+          knex.raw( "(titres_activites.contenu->'substancesFiscales'->'nacb')::numeric as nacb"),
+        ).distinctOn('titres.slug', 'titres_activites.annee')
+        .from('titres_activites')
+        .leftJoin('titres', 'titres.id', 'titres_activites.titre_id')
+        .joinRaw("left join titres_communes tc on tc.titre_etape_id  = titres.props_titre_etapes_ids ->> 'points'")
+        .whereRaw("titres_activites.contenu -> 'substancesFiscales' \\? 'nacc'" )
+        .orWhereRaw("titres_activites.contenu -> 'substancesFiscales' \\? 'nacb'" )
+        .orWhereRaw("titres_activites.contenu -> 'substancesFiscales' \\? 'naca'" )
+        .orderBy('titres.slug')
+
+        console.log(resultSel)
+        console.log(resultSel.length)
+    const selsStats = resultSel.reduce<Record<CaminoAnnee, { [key in RegionId]?: number}>>((acc, stat) => {
+      const annee = stat.annee
+
+      const regionId = Departements[toDepartementId(stat.communeId)].regionId
+
+      if (!acc[annee]) {
+        acc[annee] = {}
+      }
+      if (!acc[annee][regionId]) {
+        acc[annee][regionId] = 0
+      }
+      acc[annee][regionId] += stat.naca
+      return acc
+    }, {})
+
+    // const naccResult = resultNacc.reduce<
+    //   Record<CaminoAnnee, number>
+    // >((acc, dateSubstance) => {
+    //   const annee = getAnnee(dateSubstance.date)
+    //   if (!acc[annee]) {
+    //     acc[annee] = 0
+    //   }
+    //   acc[annee] += fromUniteFiscaleToUnite(
+    //     SubstancesFiscale[bauxite].uniteId,
+    //     dateSubstance.substance
+    //   )
+
+    //   return acc
+    // }, {})
+
+    // result.substances[nacc] = substanceResult
+    result.substances = {...result.substances, ...selsStats}
 
     res.json(result)
   } catch (e) {
