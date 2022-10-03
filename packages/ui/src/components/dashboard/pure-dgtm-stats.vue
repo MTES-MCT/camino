@@ -1,20 +1,22 @@
 <template>
   <div>
-    <LoadingElement
-      v-slot="{ item }"
-      :data="data"
-      :style="
-        data.status !== 'LOADED'
-          ? { display: 'flex', ['justify-content']: 'center' }
-          : ''
-      "
-    >
-      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr">
-        <div><LineChart :data="graphSdomData(item)" /></div>
-        <div><LineChart :data="graphDepoData(item)" /></div>
-        <div><LineChart :data="graphDelaiData(item)" /></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr">
+      <div>
+        <LoadingElement v-slot="{ item }" :data="data"
+          ><LineChart :data="graphSdomData(item)"
+        /></LoadingElement>
       </div>
-    </LoadingElement>
+      <div>
+        <LoadingElement v-slot="{ item }" :data="data"
+          ><LineChart :data="graphDepoData(item)"
+        /></LoadingElement>
+      </div>
+      <div>
+        <LoadingElement v-slot="{ item }" :data="data"
+          ><LineChart :data="graphDelaiData(item)"
+        /></LoadingElement>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -209,7 +211,6 @@ const graphDelaiData = (item: StatistiquesDGTM) => {
 onMounted(async () => {
   try {
     const stats = await props.getDgtmStats()
-    console.info('plop', stats)
     data.value = { status: 'LOADED', value: stats }
   } catch (e: any) {
     console.log('error', e)
