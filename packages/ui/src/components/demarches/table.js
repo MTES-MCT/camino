@@ -5,6 +5,7 @@ import CaminoDomaine from '../_common/domaine.vue'
 import List from '../_ui/list.vue'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
 
 const demarchesColonnes = [
   { id: 'titreNom', name: 'Titre' },
@@ -17,7 +18,7 @@ const demarchesColonnes = [
   },
   { id: 'type', name: 'Type' },
   { id: 'statut', name: 'Statut', class: ['nowrap'] },
-  { id: 'references', name: 'Références', class: ['nowrap'] }
+  { id: 'references', name: 'Références', class: ['nowrap'], noSort: true }
 ]
 
 const demarchesLignesBuild = demarches =>
@@ -60,7 +61,7 @@ const demarchesLignesBuild = demarches =>
         component: markRaw(List),
         props: {
           elements: demarche.titre.references.map(
-            ref => `${ref.type.nom} : ${ref.nom}`
+            ref => `${ReferencesTypes[ref.referenceTypeId].nom} : ${ref.nom}`
           ),
           mini: true
         },

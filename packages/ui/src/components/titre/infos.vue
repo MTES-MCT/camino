@@ -57,8 +57,11 @@
         <div v-if="titre.references && titre.references.length" class="mb">
           <ul class="list-prefix h6">
             <li v-for="reference in titre.references" :key="reference.nom">
-              <span v-if="reference.type" class="word-break fixed-width bold">
-                {{ reference.type.nom }}
+              <span
+                v-if="reference.referenceTypeId"
+                class="word-break fixed-width bold"
+              >
+                {{ ReferencesTypes[reference.referenceTypeId].nom }}
               </span>
               {{ reference.nom }}
             </li>
@@ -158,6 +161,10 @@
 </template>
 
 <script setup lang="ts">
+import {
+  ReferencesTypes,
+  ReferenceTypeId
+} from 'camino-common/src/static/referencesTypes'
 import Pill from '../_ui/pill.vue'
 import Tag from '../_ui/tag.vue'
 import TagList from '../_ui/tag-list.vue'
@@ -192,6 +199,7 @@ import {
   PhaseStatutId,
   phaseStatuts
 } from 'camino-common/src/static/phasesStatuts'
+import { TitreReference } from 'camino-common/src/titres-references'
 
 type Entreprise = {
   id: string
@@ -223,7 +231,7 @@ const props = defineProps<{
     titulaires: Entreprise[]
     amodiataires: Entreprise[]
     substances: SubstanceLegaleId[]
-    references: { nom: string; type: { nom: string } }[]
+    references: TitreReference[]
   }
   user: User
 }>()

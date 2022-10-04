@@ -9,7 +9,6 @@ import Entreprises from './entreprises'
 import TitresDemarches from './titres-demarches'
 import TitresEtapes from './titres-etapes'
 import TitresPoints from './titres-points'
-import TitresReferences from './titres-references'
 import Types from './titres-types'
 import Forets from './forets'
 
@@ -50,7 +49,8 @@ class Titres extends Model {
         properties: { x: { type: 'number' }, y: { type: 'number' } }
       },
       doublonTitreId: { type: ['string', 'null'] },
-      archive: { type: 'boolean' }
+      archive: { type: 'boolean' },
+      references: { type: ['array', 'null'] }
     }
   }
 
@@ -219,12 +219,6 @@ class Titres extends Model {
       relation: Model.HasManyRelation,
       modelClass: TitresActivites,
       join: { from: 'titres.id', to: 'titresActivites.titreId' }
-    },
-
-    references: {
-      relation: Model.HasManyRelation,
-      modelClass: TitresReferences,
-      join: { from: 'titres.id', to: 'titresReferences.titreId' }
     },
 
     doublonTitre: {

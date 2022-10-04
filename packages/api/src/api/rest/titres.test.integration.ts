@@ -89,10 +89,8 @@ async function createTitreWithEtapes(
       administrationsGestionnaires: [],
       references: [
         {
-          titreId: 'onfTitreId',
-          typeId: 'onf',
-          nom: 'ONF',
-          type: { nom: 'onf', id: 'onf' }
+          referenceTypeId: 'onf',
+          nom: 'ONF'
         }
       ]
     },

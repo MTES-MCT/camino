@@ -6,7 +6,6 @@ import {
   fragmentDemarcheType,
   fragmentEtapeType,
   fragmentDocumentType,
-  fragmentReferenceType,
   fragmentTitreType,
   fragmentTitreTypeTitreStatut,
   fragmentTitreTypeDemarcheType,
@@ -73,18 +72,6 @@ const documentsTypes = apiGraphQLFetch(
     }
 
     ${fragmentDocumentType}
-  `
-)
-
-const referencesTypes = apiGraphQLFetch(
-  gql`
-    query ReferencesTypes {
-      referencesTypes {
-        ...referenceType
-      }
-    }
-
-    ${fragmentReferenceType}
   `
 )
 
@@ -192,7 +179,6 @@ export {
   demarchesTypes,
   etapesTypes,
   documentsTypes,
-  referencesTypes,
   titresTypes,
   titresTypesTitresStatuts,
   titresTypesDemarchesTypes,

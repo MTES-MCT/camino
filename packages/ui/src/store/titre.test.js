@@ -63,34 +63,6 @@ describe('état du titre sélectionné', () => {
     app.use(store)
   })
 
-  test('récupère les métas pour éditer un titre', async () => {
-    const apiMock = api.titreMetas.mockResolvedValueOnce([
-      { id: 'ifr', nom: 'Ifremer' },
-      { id: 'dge', nom: 'DGEC' }
-    ])
-
-    await store.dispatch('titre/init')
-
-    expect(apiMock).toHaveBeenCalled()
-    expect(store.state.titre.metas.referencesTypes).toEqual([
-      { id: 'ifr', nom: 'Ifremer' },
-      { id: 'dge', nom: 'DGEC' }
-    ])
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-  })
-
-  test("retourne une erreur si l'api ne répond pas", async () => {
-    const apiMock = api.titreMetas.mockRejectedValue(
-      new Error("erreur de l'api")
-    )
-
-    await store.dispatch('titre/init')
-
-    expect(apiMock).toHaveBeenCalled()
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-    expect(mutations.popupMessageAdd).toHaveBeenCalled()
-  })
-
   test('retourne un titre', async () => {
     const apiMock = api.titre.mockResolvedValue({ id: 83, nom: 'marne' })
     await store.dispatch('titre/get', 83)

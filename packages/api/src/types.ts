@@ -21,6 +21,7 @@ import { FrequenceId } from 'camino-common/src/static/frequence'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts'
+import { TitreReference } from 'camino-common/src/titres-references'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -435,11 +436,6 @@ interface IForet {
   nom: string
 }
 
-interface IReferenceType {
-  id: string
-  nom: string
-}
-
 interface ITitreTypeEtapeType {
   titreTypeId: string
   titreType?: ITitreType | null
@@ -522,7 +518,7 @@ interface ITitre {
   typeId: TitreTypeId
   type?: ITitreType | null
   titreStatutId?: TitreStatutId | null
-  references?: ITitreReference[] | null
+  references?: TitreReference[] | null
   dateDebut?: string | null
   dateFin?: string | null
   dateDemande?: string | null
@@ -764,13 +760,6 @@ interface ITitrePointReference {
   opposable?: boolean | null
 }
 
-interface ITitreReference {
-  titreId: string
-  typeId: string
-  nom: string
-  type?: IReferenceType | null
-}
-
 type ICacheId = 'matomo'
 
 interface ICache {
@@ -863,7 +852,7 @@ interface ITitreDemande {
   typeId: TitreTypeId
   domaineId: DomaineId
   entrepriseId: string
-  references?: ITitreReference[]
+  references?: TitreReference[]
 }
 interface IJournaux {
   id: string
@@ -908,7 +897,6 @@ export {
   IGeoJson,
   IGeoJsonProperties,
   IGeometry,
-  IReferenceType,
   ITitreTypeTitreStatut,
   ITitreTypeDemarcheType,
   IActiviteTypeTitreType,
@@ -937,7 +925,6 @@ export {
   ITitrePhase,
   ITitrePoint,
   ITitrePointReference,
-  ITitreReference,
   ITitreType,
   ITitreTypeType,
   ITitreTypeDemarcheTypeEtapeType,

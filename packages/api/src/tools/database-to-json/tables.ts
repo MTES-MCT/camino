@@ -47,7 +47,6 @@ export const tables = [
     orderBy: ['etape_type_id', 'document_type_id']
   },
   { name: 'forets', orderBy: ['id'] },
-  { name: 'references_types', orderBy: ['id'] },
   { name: 'titres', orderBy: ['id'] },
   { name: 'titres_activites', orderBy: ['id'] },
   {

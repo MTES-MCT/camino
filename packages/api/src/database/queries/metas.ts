@@ -12,7 +12,6 @@ import DemarchesTypes from '../models/demarches-types'
 import DocumentsTypes from '../models/documents-types'
 import Domaines from '../models/domaines'
 import EtapesTypes from '../models/etapes-types'
-import ReferencesTypes from '../models/references-types'
 import TitresTypesTypes from '../models/titres-types-types'
 
 import {
@@ -284,8 +283,6 @@ const documentsTypesGet = async ({
 const documentTypeGet = async (id: string) =>
   DocumentsTypes.query().findById(id)
 
-const referencesTypesGet = async () => ReferencesTypes.query().orderBy('nom')
-
 export {
   domaineGet,
   domainesGet,
@@ -299,7 +296,6 @@ export {
   devisesGet,
   documentsTypesGet,
   documentTypeGet,
-  referencesTypesGet,
   titresTypesTitresStatutsGet,
   titresTypesDemarchesTypesGet,
   titresTypesDemarchesTypesEtapesTypesGet,

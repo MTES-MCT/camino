@@ -5,6 +5,7 @@ import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStat
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
 
 const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
   if (!titreDemarche.etapes?.length) return null
@@ -59,7 +60,7 @@ export const titresDemarchesFormatTable = (titresDemarches: ITitreDemarche[]) =>
       statut: DemarchesStatuts[titreDemarche.statutId!].nom,
       description: titreDemarche.description,
       titre_references: titre.references
-        ?.map(r => `${r.type?.nom} : ${r.nom}`)
+        ?.map(r => `${ReferencesTypes[r.referenceTypeId].nom} : ${r.nom}`)
         .join(';'),
       titulaires_noms: titre.titulaires!.map(e => e.nom).join(';'),
       titulaires_adresses: titre

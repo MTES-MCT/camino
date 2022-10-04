@@ -1,37 +1,13 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
-import { fragmentReferenceType, fragmentTitreTypeType } from './fragments/metas'
+import { fragmentTitreTypeType } from './fragments/metas'
 import {
   fragmentTitre,
   fragmentTitres,
   fragmentTitresGeo,
   fragmentTitresGeoPolygon
 } from './fragments/titre'
-
-const titreMetas = apiGraphQLFetch(
-  gql`
-    query MetasTitre {
-      referencesTypes {
-        ...referenceType
-      }
-    }
-
-    ${fragmentReferenceType}
-  `
-)
-
-const titreCreationMetas = apiGraphQLFetch(
-  gql`
-    query MetasTitre {
-      referencesTypes {
-        ...referenceType
-      }
-    }
-
-    ${fragmentReferenceType}
-  `
-)
 
 const titresMetas = apiGraphQLFetch(
   gql`
@@ -266,8 +242,6 @@ const titreSupprimer = apiGraphQLFetch(gql`
 `)
 
 export {
-  titreMetas,
-  titreCreationMetas,
   titresMetas,
   titre,
   titres,

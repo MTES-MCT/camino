@@ -33,11 +33,11 @@ import {
   TitresStatuts,
   TitreStatutId
 } from 'camino-common/src/static/titresStatuts'
-
-interface Reference {
-  type: { nom: string }
-  nom: string
-}
+import {
+  ReferencesTypes,
+  ReferenceTypeId
+} from 'camino-common/src/static/referencesTypes'
+import { TitreReference } from 'camino-common/src/titres-references'
 
 interface Titulaire {
   id: string
@@ -48,7 +48,7 @@ export interface TitreEntreprise {
   slug: string
   nom: string
   communes?: { departementId: DepartementId }[]
-  references?: Reference[]
+  references?: TitreReference[]
   domaine: { id: DomaineId; nom: string }
   coordonnees?: { x: number; y: number }
   // id devrait être une union
@@ -133,7 +133,8 @@ export const statutColumn: Column<'statut'> = {
 export const referencesColumn: Column<'references'> = {
   id: 'references',
   name: 'Références',
-  class: ['min-width-8']
+  class: ['min-width-8'],
+  noSort: true
 }
 export const titulairesColumn: Column<'titulaires'> = {
   id: 'titulaires',
@@ -192,10 +193,10 @@ export const statutCell = (titre: {
 }
 
 export const referencesCell = (titre: {
-  references?: { nom: string; type: { nom: string } }[]
+  references?: { nom: string; referenceTypeId: ReferenceTypeId }[]
 }) => {
   const references = titre.references?.map(
-    ref => `${ref.type.nom} : ${ref.nom}`
+    ref => `${ReferencesTypes[ref.referenceTypeId].nom} : ${ref.nom}`
   )
 
   return {

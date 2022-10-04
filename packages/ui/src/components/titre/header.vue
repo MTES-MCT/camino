@@ -86,10 +86,7 @@ export default {
       titre.nom = this.titre.nom
       titre.domaineId = this.titre.domaine.id
       titre.typeId = this.titre.type.id
-      titre.references = this.titre.references.map(reference => ({
-        typeId: reference.type.id,
-        nom: reference.nom
-      }))
+      titre.references = this.titre.references
       titre.titresAdministrations = this.titre.titresAdministrations
 
       this.$store.commit('popupOpen', {

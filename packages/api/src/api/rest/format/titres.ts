@@ -12,6 +12,7 @@ import { Regions } from 'camino-common/src/static/region'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
 
 const titreContenuTableFormat = (contenu?: IContenu | null) =>
   contenu
@@ -40,7 +41,9 @@ export const titresTableFormat = (titres: ITitre[]) =>
 
     const titreReferences = titre.references
       ? titre.references.reduce((titreReferences: Index<string>, reference) => {
-          titreReferences[`reference_${reference.type!.nom}`] = reference.nom
+          titreReferences[
+            `reference_${ReferencesTypes[reference.referenceTypeId].nom}`
+          ] = reference.nom
 
           return titreReferences
         }, {})
@@ -140,7 +143,12 @@ const titreGeojsonPropertiesFormat = (titre: ITitre) => {
     references:
       titre.references &&
       titre.references
-        .map(reference => `${reference.type!.nom}: ${reference.nom}`)
+        .map(
+          reference =>
+            `${ReferencesTypes[reference.referenceTypeId].nom}: ${
+              reference.nom
+            }`
+        )
         .join(separator),
     ...titreContenuTableFormat(titre.contenu)
   }

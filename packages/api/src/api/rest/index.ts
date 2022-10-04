@@ -40,7 +40,6 @@ const formatCheck = (formats: string[], format: string) => {
 const titreFields = {
   type: { type: { id: {} } },
   domaine: { id: {} },
-  references: { type: { id: {} } },
   substancesEtape: { id: {} },
   titulaires: { id: {} },
   amodiataires: { id: {} },
@@ -265,8 +264,7 @@ export const demarches = async (
         titre: {
           id: {},
           titulaires: { id: {} },
-          amodiataires: { id: {} },
-          references: { id: {} }
+          amodiataires: { id: {} }
         },
         etapes: {
           forets: { id: {} },

@@ -132,7 +132,7 @@ type Titre {
 "Références métier d'un titre minier"
 type Reference {
   "Type de références"
-  type: ReferenceType
+  referenceTypeId: String!
 
   "Nom de la référence"
   nom: String!
@@ -172,6 +172,6 @@ input InputId {
 }
 
 input InputReference {
-  typeId: ID!
+  referenceTypeId: String!
   nom: String!
 }
