@@ -359,11 +359,15 @@ const etapeCreer = async (
 
     await documentsLier(context, documentIds, etapeUpdated.id, 'titreEtapeId')
 
-    await titreEtapeUpdateTask(
-      etapeUpdated.id,
-      etapeUpdated.titreDemarcheId,
-      user
-    )
+    try {
+      await titreEtapeUpdateTask(
+        etapeUpdated.id,
+        etapeUpdated.titreDemarcheId,
+        user
+      )
+    } catch (e) {
+      console.error('une erreur est survenue lors des tâches annexes', e)
+    }
 
     await titreEtapeAdministrationsEmailsSend(
       etapeUpdated,
