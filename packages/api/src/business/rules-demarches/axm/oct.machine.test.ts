@@ -290,6 +290,69 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
     ])
   })
 
+  test('ne peut pas faire deux demandes à la même date', () => {
+    const etapes = [
+      { ...ETES.demande.FAIT, date: '2022-04-01' },
+      {
+        ...ETES
+          .decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_
+          .EXEMPTE,
+        date: '2020-01-01'
+      },
+      { ...ETES.decisionDuProprietaireDuSol.FAVORABLE, date: '2020-01-02' },
+      { ...ETES.noteInterneSignalee.FAIT, date: '2022-04-08' },
+      { ...ETES.depotDeLaDemande.FAIT, date: '2022-04-09' },
+      {
+        ...ETES.demandeDeComplements_RecevabiliteDeLaDemande_.FAIT,
+        date: '2022-04-10'
+      },
+      {
+        ...ETES.receptionDeComplements_RecevabiliteDeLaDemande_.FAIT,
+        date: '2022-04-11'
+      },
+      { ...ETES.recevabiliteDeLaDemande.DEFAVORABLE, date: '2022-04-12' },
+      { ...ETES.modificationDeLaDemande.FAIT, date: '2022-04-13' },
+      { ...ETES.recevabiliteDeLaDemande.FAVORABLE, date: '2022-04-15' },
+      { ...ETES.saisineDesCollectivitesLocales.FAIT, date: '2022-04-16' },
+      { ...ETES.avisDunMaire.FAVORABLE, date: '2022-04-17' },
+      { ...ETES.saisineDesServices.FAIT, date: '2022-04-18' },
+      {
+        ...ETES.avisDGTMServiceMilieuxNaturelsBiodiversiteSitesEtPaysages_MNBST_
+          .FAVORABLE,
+        date: '2022-04-19'
+      },
+      {
+        ...ETES
+          .avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement
+          .FAVORABLE,
+        date: '2022-04-20'
+      },
+      {
+        ...ETES.saisineDeLaCommissionDepartementaleDesMines_CDM_.FAIT,
+        date: '2022-04-21'
+      },
+      {
+        ...ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE,
+        date: '2022-04-22'
+      },
+      {
+        ...ETES.saisineDeLautoriteSignataire.FAIT,
+        date: '2022-04-23'
+      },
+      {
+        ...ETES.decisionDeLadministration.ACCEPTE,
+        date: '2022-04-24'
+      },
+      {
+        ...ETES.decisionDeLadministration.ACCEPTE,
+        date: '2022-04-24'
+      }
+    ]
+    expect(() =>
+      orderAndInterpretMachine(axmOctMachine, etapes)
+    ).toThrowErrorMatchingSnapshot()
+  })
+
   test('peut faire un octroi complet', () => {
     const etapes = [
       { ...ETES.demande.FAIT, date: '2022-04-01' },
