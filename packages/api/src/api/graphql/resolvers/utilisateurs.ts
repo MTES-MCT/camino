@@ -13,8 +13,6 @@ import {
 
 import { login as cerbereLogin } from '../../../tools/api-cerbere/index'
 
-import { cacheInit } from '../../../database/init'
-
 import { emailsSend } from '../../../tools/api-mailjet/emails'
 import { fieldsBuild } from './_fields-build'
 
@@ -28,8 +26,6 @@ import {
   userByEmailGet,
   utilisateursCount
 } from '../../../database/queries/utilisateurs'
-
-import { globales } from '../../../database/cache/globales'
 
 import { utilisateurUpdationValidate } from '../../../business/validations/utilisateur-updation-validate'
 import { emailCheck } from '../../../tools/email-check'
@@ -158,13 +154,6 @@ const utilisateurs = async (
 
 const moi = async (_: never, context: IToken, info: GraphQLResolveInfo) => {
   try {
-    // vérifie que la base de données est remplie au démarrage du serveur
-    // TODO:
-    // mettre ça dans un middleware à la racine de l'app express
-    if (!globales.chargement) {
-      await cacheInit()
-    }
-
     const user = await userGet(context.user?.id)
 
     if (!user) return null

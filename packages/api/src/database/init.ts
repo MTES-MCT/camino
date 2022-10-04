@@ -1,18 +1,12 @@
-import { globalesInit } from './cache/globales'
 import { knex } from '../knex'
 import { utilisateursCount } from './queries/utilisateurs'
 import { userSuper } from './user-super'
 import { userAdd } from '../knex/user-add'
 import dateFormat from 'dateformat'
 
-const databaseInit = async () => {
+export const databaseInit = async () => {
   await knex.migrate.latest()
   await createAdminUserAtStartup()
-  await cacheInit()
-}
-
-const cacheInit = async () => {
-  await globalesInit()
 }
 
 const createAdminUserAtStartup = async () => {
@@ -32,5 +26,3 @@ const createAdminUserAtStartup = async () => {
     })
   }
 }
-
-export { databaseInit, cacheInit }
