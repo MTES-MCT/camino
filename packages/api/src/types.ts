@@ -430,11 +430,6 @@ interface IGeometry {
   coordinates: number[] | number[][] | number[][][] | number[][][][]
 }
 
-interface IGlobale {
-  id: string
-  valeur: boolean
-}
-
 interface IForet {
   id: string
   nom: string
@@ -913,7 +908,6 @@ export {
   IGeoJson,
   IGeoJsonProperties,
   IGeometry,
-  IGlobale,
   IReferenceType,
   ITitreTypeTitreStatut,
   ITitreTypeDemarcheType,
