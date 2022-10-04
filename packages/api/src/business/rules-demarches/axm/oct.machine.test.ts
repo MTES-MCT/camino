@@ -290,6 +290,16 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
     ])
   })
 
+  test('ne peut pas faire deux fois la même étape à la même date', () => {
+    const etapes = [
+      { ...ETES.demande.FAIT, date: '2022-04-01' },
+      { ...ETES.demande.FAIT, date: '2022-04-01' }
+    ]
+    expect(() =>
+      orderAndInterpretMachine(axmOctMachine, etapes)
+    ).toThrowErrorMatchingSnapshot()
+  })
+
   test('peut faire un octroi complet', () => {
     const etapes = [
       { ...ETES.demande.FAIT, date: '2022-04-01' },

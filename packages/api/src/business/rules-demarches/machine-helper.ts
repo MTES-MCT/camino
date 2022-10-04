@@ -151,12 +151,21 @@ export abstract class CaminoMachine<
         const e = etapesAvecConflitPotentiel[i]
         const tmp = [...temp]
         tmp.push(e)
-        const nextEtapes = etapes.filter(
+        const index = etapes.findIndex(
           ({ date, etapeTypeId, etapeStatutId }) =>
-            date !== e.date ||
-            etapeTypeId !== e.etapeTypeId ||
-            etapeStatutId !== e.etapeStatutId
+            date === e.date &&
+            etapeTypeId === e.etapeTypeId &&
+            etapeStatutId === e.etapeStatutId
         )
+        if (index < 0) {
+          throw new Error(
+            `On n'arrive pas à trouver l'étape ${e} qu'on avait juste avant ${etapes}, cas impossible ?`
+          )
+        }
+        const nextEtapes = etapes.filter(
+          (_element, elementIndex) => index !== elementIndex
+        )
+
         if (this.isEtapesOk(tmp)) {
           const solution = this.findSolution(nextEtapes, tmp)
           if (solution) {
