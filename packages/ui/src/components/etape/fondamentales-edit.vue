@@ -240,6 +240,7 @@ import AutocompleteEntreprise from './autocomplete-entreprise.vue'
 
 import { etablissementNameFind } from '@/utils/entreprise'
 import SubstancesEdit from '@/components/etape/substances-edit.vue'
+import { dureeOptionalCheck } from 'camino-common/src/permissions/titres-etapes'
 
 export default {
   components: {
@@ -305,7 +306,11 @@ export default {
     },
 
     dureeOptionalCheck() {
-      return (!this.isArm && !this.isAxm) || this.etape.type.id !== 'mfr'
+      return dureeOptionalCheck(
+        this.etape.type.id,
+        this.etape.demarche.type.id,
+        this.titreTypeId + this.domaineId
+      )
     },
 
     canSeeAllDates() {

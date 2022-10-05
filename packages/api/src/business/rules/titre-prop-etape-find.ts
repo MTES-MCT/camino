@@ -20,7 +20,7 @@ import { ITitreDemarche, ITitreEtape, IPropId, IContenuId } from '../../types'
 import { propValueFind } from '../utils/prop-value-find'
 import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc'
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
-import { demarchesTypesOctroi } from './common'
+import { demarchesTypesOctroi } from 'camino-common/src/permissions/titres-etapes'
 
 const etapeAmodiataireFind = (
   titreEtape: ITitreEtape,

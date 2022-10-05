@@ -2,16 +2,7 @@ import { ITitreEtape } from '../../types'
 
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
-import { demarchesTypesOctroi } from './common'
-
-const demarchesTypesPhases = [
-  ...demarchesTypesOctroi,
-  'pro',
-  'pr1',
-  'pr2',
-  'pre',
-  'vct'
-]
+import { demarchesTypesWithPhases } from 'camino-common/src/permissions/titres-etapes'
 
 /**
  * Vérifie si la démarche donne lieu à une phase
@@ -34,7 +25,7 @@ const titreDemarchePhaseCheck = (
   if (
     !titreEtapes?.length ||
     titreDemarcheStatutId !== 'acc' ||
-    (!demarchesTypesPhases.includes(titreDemarcheTypeId) &&
+    (!demarchesTypesWithPhases.includes(titreDemarcheTypeId) &&
       !titreEtapes.find(e => e.dateFin || e.duree))
   ) {
     return false

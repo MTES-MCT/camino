@@ -1,5 +1,5 @@
 import { ITitreDemarche, ITitreTypeTitreStatut } from '../../types'
-import { demarchesTypesOctroi } from './common'
+import { demarchesTypesOctroi } from 'camino-common/src/permissions/titres-etapes'
 
 const titrePublicFind = (
   titreStatutId: string,

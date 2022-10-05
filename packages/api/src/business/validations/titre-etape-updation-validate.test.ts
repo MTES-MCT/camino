@@ -5,6 +5,8 @@ import {
   titreEtapeUpdationValidate
 } from './titre-etape-updation-validate'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 describe('valide l’étape avant de l’enregistrer', () => {
   test.each`
@@ -25,8 +27,8 @@ describe('valide l’étape avant de l’enregistrer', () => {
       error
     }: {
       substances: SubstanceLegaleId[]
-      etapeType: string
-      titreType: string
+      etapeType: EtapeTypeId
+      titreType: TitreTypeId
       error: boolean
     }) => {
       const titreEtape = {
@@ -74,8 +76,8 @@ describe('valide l’étape avant de l’enregistrer', () => {
       error
     }: {
       points: ITitrePoint[]
-      etapeType: string
-      titreType: string
+      etapeType: EtapeTypeId
+      titreType: TitreTypeId
       error: boolean
     }) => {
       const titreEtape = {
@@ -149,8 +151,8 @@ describe('valide l’étape avant de l’enregistrer', () => {
       error
     }: {
       duree: number
-      etapeType: string
-      titreType: string
+      etapeType: EtapeTypeId
+      titreType: TitreTypeId
       error: boolean
     }) => {
       const titreEtape = {

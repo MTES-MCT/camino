@@ -6,7 +6,7 @@ import {
   titreEtapesSortAscByOrdre
 } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
-import { demarchesTypesOctroi } from './common'
+import { demarchesTypesOctroi } from 'camino-common/src/permissions/titres-etapes'
 
 const titreDemarcheDateDebutFind = (
   titreDemarche: ITitreDemarche,

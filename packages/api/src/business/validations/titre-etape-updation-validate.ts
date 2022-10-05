@@ -20,6 +20,9 @@ import { contenuDatesCheck } from './utils/contenu-dates-check'
 import { documentsTypesValidate } from './documents-types-validate'
 import { documentTypeIdsBySdomZonesGet } from '../../api/graphql/resolvers/_titre-etape'
 import { objectClone } from '../../tools'
+import { dureeOptionalCheck } from 'camino-common/src/permissions/titres-etapes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 const numberProps = ['duree', 'surface'] as unknown as [keyof ITitreEtape]
 
@@ -128,8 +131,8 @@ const titreEtapeUpdationValidate = (
 
 const titreEtapeCompleteValidate = (
   titreEtape: ITitreEtape,
-  titreTypeId: string,
-  demarcheTypeId: string,
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
   sections: ISection[],
   documentsTypes: IDocumentType[],
   documents: IDocument[] | null | undefined,
@@ -219,10 +222,13 @@ const titreEtapeCompleteValidate = (
     ) {
       errors.push('au moins une substance doit être renseignée')
     }
+  }
 
-    if (!titreEtape.duree) {
-      errors.push('la durée doit être renseignée')
-    }
+  if (
+    !titreEtape.duree &&
+    !dureeOptionalCheck(titreEtape.typeId, demarcheTypeId, titreTypeId)
+  ) {
+    errors.push('la durée doit être renseignée')
   }
 
   return errors

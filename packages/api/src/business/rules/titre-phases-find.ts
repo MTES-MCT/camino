@@ -8,7 +8,7 @@ import {
 } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find'
-import { demarchesTypesOctroi } from './common'
+import { demarchesTypesOctroi } from 'camino-common/src/permissions/titres-etapes'
 
 /**
  * trouve une démarche acceptée ou terminée qui est
