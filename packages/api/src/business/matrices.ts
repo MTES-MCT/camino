@@ -11,7 +11,7 @@ import { bodyBuilder, toFiscalite } from '../api/rest/entreprises'
 import { userSuper } from '../database/user-super'
 import { entreprisesGet } from '../database/queries/entreprises'
 import {
-  FiscaliteData,
+  Fiscalite,
   fraisGestion,
   isFiscaliteGuyane
 } from 'camino-common/src/fiscalite'
@@ -119,7 +119,7 @@ type Matrice1121 = {
 type Matrices = {
   communePrincipale: ICommune
   commune: ICommune
-  fiscalite: FiscaliteData
+  fiscalite: Fiscalite
   quantiteOrExtrait: string
   sip: Sips
   index: number

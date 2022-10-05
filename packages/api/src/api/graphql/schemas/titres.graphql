@@ -43,6 +43,9 @@ type Titre {
   "Domaine minier auquel se rattache le titre"
   domaine: Domaine!
 
+  "DomaineId minier auquel se rattache le titre"
+  domaineId: String
+
   "Références métier du titre"
   references: [Reference]
 

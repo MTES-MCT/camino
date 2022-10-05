@@ -4,7 +4,6 @@ import express from 'express'
 import { ICommune, IContenuValeur, IEntreprise, IUser } from '../../types'
 import {
   Fiscalite,
-  FiscaliteData,
   FiscaliteFrance,
   FiscaliteGuyane,
   fiscaliteVisible,
@@ -34,7 +33,6 @@ import { Departements } from 'camino-common/src/static/departement'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'
 import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
-import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
 
 const conversion = (
   substanceFiscale: SubstanceFiscale,
@@ -270,9 +268,9 @@ export const toFiscalite = (
   result: Pick<OpenfiscaResponse, 'articles'>,
   articleId: string,
   annee: number
-): FiscaliteData => {
+): Fiscalite => {
   const article = result.articles[articleId]
-  const fiscalite: FiscaliteData = {
+  const fiscalite: Fiscalite = {
     redevanceCommunale: 0,
     redevanceDepartementale: 0
   }
@@ -362,10 +360,8 @@ export const fiscalite = async (
   const entrepriseId = req.params.entrepriseId
   const caminoAnnee = req.params.annee
 
-  if (!entrepriseId || !fiscaliteVisible(user, entrepriseId)) {
-    console.warn(
-      `l'utilisateur ${userId} n'a pas le droit de voir la fiscalité de l'entreprise ${entrepriseId}`
-    )
+  if (!entrepriseId) {
+    console.warn(`l'entrepriseId est obligatoire`)
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else if (!caminoAnnee || !isAnnee(caminoAnnee)) {
     console.warn(`l'année ${caminoAnnee} n'est pas correcte`)
@@ -397,8 +393,11 @@ export const fiscalite = async (
     )
 
     // TODO 2022-09-26 feature https://trello.com/c/VnlFB6Z1/294-featfiscalit%C3%A9-masquer-la-section-fiscalit%C3%A9-de-la-fiche-entreprise-pour-les-autres-domaines-que-m
-    if (titres.some(({ domaineId }) => domaineId !== DOMAINES_IDS.METAUX)) {
-      res.json(false)
+    if (!fiscaliteVisible(user, entrepriseId, titres)) {
+      console.warn(
+        `la fiscalité n'est pas visible pour l'utilisateur ${user} et l'entreprise ${entrepriseId}`
+      )
+      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
       const activites = await titresActivitesGet(
         // TODO 2022-07-25 Laure, est-ce qu’il faut faire les WRP ?

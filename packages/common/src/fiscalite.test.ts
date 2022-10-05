@@ -29,5 +29,14 @@ test.each<{ user: UserFiscalite; visible: boolean }>([
   { user: { role: 'lecteur', administrationId: 'aut-97300-01' }, visible: true },
   { user: { role: 'super', administrationId: undefined }, visible: true }
 ])('fiscaliteVisible $user | $visible', toTest => {
-  expect(fiscaliteVisible(toTest.user ? { ...toTest.user } : toTest.user, '1234')).toEqual(toTest.visible)
+  expect(fiscaliteVisible(toTest.user ? { ...toTest.user } : toTest.user, '1234', [{ domaineId: 'm' }])).toEqual(toTest.visible)
+})
+
+test('fiscaliteVisible avec les titres', () => {
+  expect(fiscaliteVisible({ role: 'super', administrationId: undefined }, '1234', [{ domaineId: 'm' }, { domaineId: 'w' }])).toEqual(true)
+  expect(
+    fiscaliteVisible({ role: 'entreprise', administrationId: undefined, entreprises: [{ id: '1234' }] }, '1234', [{ domaineId: 'g' }, { domaineId: 'r' }, { domaineId: 's' }, { domaineId: 'w' }])
+  ).toEqual(false)
+  expect(fiscaliteVisible({ role: 'entreprise', administrationId: undefined, entreprises: [{ id: '1234' }] }, '1234', [])).toEqual(false)
+  expect(() => fiscaliteVisible({ role: 'super', administrationId: undefined }, '1234', [{}])).toThrowErrorMatchingInlineSnapshot(`"le domaineId d'un titre est obligatoire"`)
 })

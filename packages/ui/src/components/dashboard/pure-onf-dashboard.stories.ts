@@ -23,6 +23,7 @@ const onfs: CommonTitreONF[] = [
     slug: 'first-id-slug',
     nom: 'first-name',
     titreStatutId: 'dmi',
+    domaineId: 'm',
     references: [],
     titulaires: [
       {
@@ -39,6 +40,7 @@ const onfs: CommonTitreONF[] = [
     slug: 'second-slug',
     nom: 'Second Nom de titre',
     titreStatutId: 'dmi',
+    domaineId: 'm',
     references: [
       {
         nom: '2010-001',
@@ -61,6 +63,7 @@ const onfs: CommonTitreONF[] = [
     slug: 'third-id-slug',
     nom: 'third-name',
     titreStatutId: 'dmi',
+    domaineId: 'm',
     references: [],
     titulaires: [
       {
@@ -77,6 +80,7 @@ const onfs: CommonTitreONF[] = [
     slug: 'fourth-slug',
     nom: 'Quatrième Nom de titre',
     titreStatutId: 'dmi',
+    domaineId: 'm',
     references: [
       {
         nom: '2010-001',

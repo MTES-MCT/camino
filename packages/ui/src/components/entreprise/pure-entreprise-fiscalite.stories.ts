@@ -35,12 +35,6 @@ Ok.args = {
   annees: [valideAnnee('2021'), valideAnnee('2022')]
 }
 
-export const NoData = Template.bind({})
-NoData.args = {
-  getFiscaliteEntreprise: () => Promise.resolve(false),
-  anneeCourante: valideAnnee('2022'),
-  annees: [valideAnnee('2021'), valideAnnee('2022')]
-}
 export const Guyane = Template.bind({})
 Guyane.args = {
   getFiscaliteEntreprise: (annee: CaminoAnnee) =>

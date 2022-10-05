@@ -24,6 +24,7 @@ const titres: CommonTitrePTMG[] = [
     nom: 'first-name',
     titreStatutId: 'dmi',
     references: [],
+    domaineId: 'm',
     titulaires: [
       {
         nom: 'Titulaire1'
@@ -36,6 +37,7 @@ const titres: CommonTitrePTMG[] = [
     slug: 'second-slug',
     nom: 'Second Nom de titre',
     titreStatutId: 'dmi',
+    domaineId: 'm',
     references: [
       {
         nom: '2010-001',
@@ -55,6 +57,7 @@ const titres: CommonTitrePTMG[] = [
     slug: 'third-id-slug',
     nom: 'third-name',
     titreStatutId: 'dmi',
+    domaineId: 'm',
     references: [],
     titulaires: [
       {
@@ -68,6 +71,7 @@ const titres: CommonTitrePTMG[] = [
     slug: 'fourth-slug',
     nom: 'Quatrième Nom de titre',
     titreStatutId: 'dmi',
+    domaineId: 'm',
     references: [
       {
         nom: '2010-001',

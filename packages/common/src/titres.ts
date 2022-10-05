@@ -6,6 +6,7 @@ export interface CommonTitre {
   id: string
   slug: string
   nom: string
+  domaineId: DomaineId
   titreStatutId: TitreStatutId
   references: { nom: string; type: { nom: string } }[]
   titulaires: { nom: string }[]
@@ -16,7 +17,6 @@ export interface CommonTitrePTMG extends CommonTitre {
 }
 
 export interface CommonTitreDREAL extends CommonTitre {
-  domaineId: DomaineId
   typeId: TitreTypeTypeId
   activitesAbsentes: number
   activitesEnConstruction: number

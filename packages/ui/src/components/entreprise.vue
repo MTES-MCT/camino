@@ -152,7 +152,6 @@
         </div>
       </template>
     </Accordion>
-
     <div v-if="fiscaliteVisible" class="mb-xxl">
       <div class="line-neutral width-full mb-xxl" />
       <h3>Fiscalité</h3>
@@ -274,7 +273,10 @@ const documentNew = computed(() => ({
 
 const route = computed(() => ({ id: entreprise.value.id, name: 'entreprise' }))
 const fiscaliteVisible = computed(() =>
-  fiscaliteVisibleFunc(user.value, entreprise.value.id)
+  fiscaliteVisibleFunc(user.value, entreprise.value.id, [
+    ...titulaireTitres.value,
+    ...amodiataireTitres.value
+  ])
 )
 const get = async () => {
   await store.dispatch('entreprise/get', vueRoute.params.id)
