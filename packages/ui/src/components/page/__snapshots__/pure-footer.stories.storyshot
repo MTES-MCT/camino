@@ -46,7 +46,7 @@ exports[`Automated Storybook Snapshots Pages/PureFooter With Newsletter 1`] = `
               >
                 <img
                   class="sponsor"
-                  src="/img/logo-fabriquenumerique.svg"
+                  src="undefined"
                 />
               </div>
               <div
@@ -213,7 +213,6 @@ exports[`Automated Storybook Snapshots Pages/PureFooter With Newsletter 1`] = `
         >
           <img
             alt="Je donne mon avis"
-            src="/img/je-donne-mon-avis.svg"
             style="max-width: 120px;"
           />
         </a>
@@ -269,7 +268,7 @@ exports[`Automated Storybook Snapshots Pages/PureFooter Without Newsletter 1`] =
               >
                 <img
                   class="sponsor"
-                  src="/img/logo-fabriquenumerique.svg"
+                  src="undefined"
                 />
               </div>
               <div
@@ -408,7 +407,6 @@ exports[`Automated Storybook Snapshots Pages/PureFooter Without Newsletter 1`] =
         >
           <img
             alt="Je donne mon avis"
-            src="/img/je-donne-mon-avis.svg"
             style="max-width: 120px;"
           />
         </a>
