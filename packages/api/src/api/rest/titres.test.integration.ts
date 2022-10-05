@@ -125,13 +125,11 @@ describe('titresONF', () => {
     expect(tested.body).toHaveLength(2)
     expect(tested.body[0]).toMatchSnapshot({
       id: expect.any(String),
-      slug: expect.any(String),
-      references: [{ titreId: expect.any(String) }]
+      slug: expect.any(String)
     })
     expect(tested.body[1]).toMatchSnapshot({
       id: expect.any(String),
-      slug: expect.any(String),
-      references: [{ titreId: expect.any(String) }]
+      slug: expect.any(String)
     })
   })
 })
@@ -148,13 +146,11 @@ describe('titresPTMG', () => {
     expect(tested.body).toHaveLength(2)
     expect(tested.body[0]).toMatchSnapshot({
       id: expect.any(String),
-      slug: expect.any(String),
-      references: [{ titreId: expect.any(String) }]
+      slug: expect.any(String)
     })
     expect(tested.body[1]).toMatchSnapshot({
       id: expect.any(String),
-      slug: expect.any(String),
-      references: [{ titreId: expect.any(String) }]
+      slug: expect.any(String)
     })
   })
 })

@@ -11,12 +11,7 @@ Object {
   "references": Array [
     Object {
       "nom": "ONF",
-      "titreId": Any<String>,
-      "type": Object {
-        "id": "onf",
-        "nom": "ONF",
-      },
-      "typeId": "onf",
+      "referenceTypeId": "onf",
     },
   ],
   "slug": Any<String>,
@@ -57,12 +52,7 @@ Object {
   "references": Array [
     Object {
       "nom": "ONF",
-      "titreId": Any<String>,
-      "type": Object {
-        "id": "onf",
-        "nom": "ONF",
-      },
-      "typeId": "onf",
+      "referenceTypeId": "onf",
     },
   ],
   "slug": Any<String>,
@@ -100,12 +90,7 @@ Object {
   "references": Array [
     Object {
       "nom": "ONF",
-      "titreId": Any<String>,
-      "type": Object {
-        "id": "onf",
-        "nom": "ONF",
-      },
-      "typeId": "onf",
+      "referenceTypeId": "onf",
     },
   ],
   "slug": Any<String>,
@@ -143,12 +128,7 @@ Object {
   "references": Array [
     Object {
       "nom": "ONF",
-      "titreId": Any<String>,
-      "type": Object {
-        "id": "onf",
-        "nom": "ONF",
-      },
-      "typeId": "onf",
+      "referenceTypeId": "onf",
     },
   ],
   "slug": Any<String>,

@@ -53,9 +53,7 @@ const titres: TitreEntreprise[] = [
     communes: [{ departementId: DEPARTEMENT_IDS.Moselle }],
     references: [
       {
-        type: {
-          nom: 'RNTM'
-        },
+        referenceTypeId: 'rnt',
         nom: '57TM0014'
       }
     ]
@@ -90,15 +88,11 @@ const titres: TitreEntreprise[] = [
     communes: [{ departementId: DEPARTEMENT_IDS.Guyane }],
     references: [
       {
-        type: {
-          nom: 'DEAL'
-        },
+        referenceTypeId: 'dea',
         nom: '01/2022'
       },
       {
-        type: {
-          nom: 'DEAL'
-        },
+        referenceTypeId: 'dea',
         nom: 'X21-09'
       }
     ]
