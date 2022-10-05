@@ -71,7 +71,7 @@ export const documentsTypes = async ({
   }
 }
 
-export const referencesTypes = async () => sortedReferencesTypes
+export const referencesTypes = () => sortedReferencesTypes
 
 export const domaines = async (
   _: never,

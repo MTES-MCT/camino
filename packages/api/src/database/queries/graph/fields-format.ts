@@ -9,7 +9,7 @@ const fieldsOrderAsc = [
   'titresTypesTitresStatuts'
 ]
 const fieldsToRemove = ['coordonnees', 'incertitudes', 'heritageProps']
-const titreFieldsToRemove = ['geojsonCentre', 'references'] as string[]
+const titreFieldsToRemove: string[] = ['geojsonCentre', 'references']
 const geoFieldsToReplace = ['geojsonPoints', 'geojsonMultiPolygon']
 const titrePropsEtapesFields = ['surface']
 

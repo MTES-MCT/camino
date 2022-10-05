@@ -5,7 +5,7 @@ export const REFERENCES_TYPES_IDS = {
   DGEC: 'dge',
   Ifremer: 'ifr',
   IRSN: 'irs',
-  "Nom d'usage": 'nus',
+  NomDUsage: 'nus',
   ONF: 'onf',
   PTMG: 'ptm',
   RNTM: 'rnt'
