@@ -13,6 +13,7 @@ module.exports = {
   },
   core: { builder: '@storybook/builder-vite' },
   stories: ['../src/**/*.stories.@(js|jsx|ts|tsx)'],
+  staticDirs: ['../src/public'],
   addons: [
     '@storybook/addon-actions',
     '@storybook/addon-controls',
