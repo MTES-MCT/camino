@@ -42,7 +42,7 @@ const onfs: CommonTitreONF[] = [
     references: [
       {
         nom: '2010-001',
-        referenceTypeId: 'ptm'
+        referenceTypeId: 'onf'
       },
       { nom: '2010-000', referenceTypeId: 'ptm' }
     ],

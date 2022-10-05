@@ -449,7 +449,7 @@ exports[`Automated Storybook Snapshots Components/PureONFDashboard Ok 1`] = `
                 class="th nowrap min-width-8"
               >
                 <button
-                  class="btn-menu full-x p-0"
+                  class="btn-menu full-x p-0 disabled"
                 >
                   Références 
                   <!--v-if-->
@@ -1093,7 +1093,7 @@ exports[`Automated Storybook Snapshots Components/PureONFDashboard Ok 1`] = `
                 class="th nowrap min-width-8"
               >
                 <button
-                  class="btn-menu full-x p-0"
+                  class="btn-menu full-x p-0 disabled"
                 >
                   Références 
                   <!--v-if-->
