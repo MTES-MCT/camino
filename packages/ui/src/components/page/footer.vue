@@ -36,39 +36,24 @@
     <div class="tablet-blob-1-2 desktop-blob-1-3">
       <ul class="list-prefix text-decoration-none li-mb-s mb-0">
         <li>
-          <router-link to="/contacts"> Contact </router-link>
+          <router-link to="/contacts">Contact</router-link>
         </li>
         <li>
-          <router-link to="/a-propos"> À propos </router-link>
+          <router-link to="/a-propos">À propos</router-link>
         </li>
         <li>
-          <router-link to="/mentions-legales-cgu">
-            Mentions légales et CGU
-          </router-link>
+          <router-link to="/mentions-legales">Mentions légales</router-link>
         </li>
         <li>
-          <router-link to="/accessibilite"> Accessibilité </router-link>
+          <router-link to="/cgu">CGU</router-link>
         </li>
         <li>
-          <router-link to="/contribution"> Contribution </router-link>
-        </li>
-        <li>
-          <a
-            href="https://www.dailymotion.com/camino-le-cadastre-minier"
-            target="_blank"
-            rel="noopener noreferrer"
+          <router-link to="/accessibilite"
+            >Accessibilité : non conforme</router-link
           >
-            Tutoriels
-          </a>
         </li>
         <li>
-          <a
-            href="https://docs.camino.beta.gouv.fr/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Open data et documentation
-          </a>
+          <router-link to="/contribution">Contribution</router-link>
         </li>
       </ul>
     </div>
@@ -78,11 +63,26 @@
       <ul class="list-prefix text-decoration-none li-mb-s">
         <li>
           <a
+            href="https://www.dailymotion.com/camino-le-cadastre-minier"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Tutoriels</a
+          >
+        </li>
+        <li>
+          <a
+            href="https://docs.camino.beta.gouv.fr/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Open data et documentation</a
+          >
+        </li>
+        <li>
+          <a
             href="http://www.mineralinfo.fr/"
             target="_blank"
             rel="noopener noreferrer"
-          >
-            MineralInfo
+            >MineralInfo
           </a>
         </li>
         <li>
@@ -90,8 +90,7 @@
             href="http://www.minergies.fr/"
             target="_blank"
             rel="noopener noreferrer"
-          >
-            Minergies
+            >Minergies
           </a>
         </li>
       </ul>
@@ -102,8 +101,7 @@
           target="_blank"
           rel="noopener noreferrer"
           class="text-decoration-none"
-        >
-          Version {{ version }}
+          >Version {{ version }}
         </a>
       </p>
     </div>
