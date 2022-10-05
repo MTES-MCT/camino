@@ -43,9 +43,3 @@ body {
     color: var(--color-bg);
   }
 }
-
-@media (--viewport-desktop) {
-  .footer {
-    height: var(--footer-height);
-  }
-}
