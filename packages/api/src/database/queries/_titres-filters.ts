@@ -197,6 +197,7 @@ export const titresFiltersQueryModify = (
         b.orWhereRaw("lower(titreRefs->>'nom') like ?", [`%${s}%`])
       })
     })
+    q.groupBy(`${root}.id`)
   }
 
   if (territoires) {
