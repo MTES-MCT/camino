@@ -230,28 +230,29 @@ export const titresFiltersQueryModify = (
                   .map(({ id }) => id)
               )
           )
-        }
-        result.push(
-          ...regions
-            .filter(({ nom }) =>
-              nom.toLowerCase().includes(territoire.toLowerCase())
-            )
-            .flatMap(({ id }) =>
-              departements
-                .filter(({ regionId }) => id === regionId)
-                .map(({ id }) => id)
-            )
-        )
+        } else {
+          result.push(
+            ...regions
+              .filter(({ nom }) =>
+                nom.toLowerCase().includes(territoire.toLowerCase())
+              )
+              .flatMap(({ id }) =>
+                departements
+                  .filter(({ regionId }) => id === regionId)
+                  .map(({ id }) => id)
+              )
+          )
 
-        result.push(
-          ...departements
-            .filter(
-              ({ nom, id }) =>
-                nom.toLowerCase().includes(territoire.toLowerCase()) ||
-                id === territoire
-            )
-            .map(({ id }) => id)
-        )
+          result.push(
+            ...departements
+              .filter(
+                ({ nom, id }) =>
+                  nom.toLowerCase().includes(territoire.toLowerCase()) ||
+                  id === territoire
+              )
+              .map(({ id }) => id)
+          )
+        }
 
         return result
       }

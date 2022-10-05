@@ -29,6 +29,12 @@ export interface Region<T = RegionId> {
 
 export type RegionId = typeof REGION_IDS[keyof typeof REGION_IDS]
 
+export const regionsIds = Object.values(REGION_IDS)
+
+export const isRegionId = (regionId: string): regionId is RegionId => {
+  return regionsIds.includes(regionId)
+}
+
 export const Regions: { [key in RegionId]: Region<key> } = {
   '01': { id: '01', nom: 'Guadeloupe', paysId: 'GP' },
   '02': { id: '02', nom: 'Martinique', paysId: 'MQ' },

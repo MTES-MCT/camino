@@ -190,6 +190,9 @@
     <LoadingElement v-slot="{ item }" :data="data">
       <BarChart :chartConfiguration="bauxiteChartConfiguration(item)" />
     </LoadingElement>
+    <LoadingElement v-slot="{ item }" :data="data">
+      <BarChart :chartConfiguration="selsChartConfiguration(item)" />
+    </LoadingElement>
   </div>
 </template>
 
@@ -202,9 +205,12 @@ import { numberFormat } from '@/utils/number-format'
 import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
 import { StatistiquesMinerauxMetauxMetropole } from 'camino-common/src/statistiques'
 import { ref, onMounted } from 'vue'
-import { ChartConfiguration, ChartData } from 'chart.js'
+import { ChartConfiguration, ChartData, ChartDataset } from 'chart.js'
 import { SubstancesFiscale } from 'camino-common/src/static/substancesFiscales'
 import { Unites } from 'camino-common/src/static/unites'
+import { onlyUnique } from 'camino-common/src/typescript-tools'
+import { RegionId, isRegionId, Regions } from 'camino-common/src/static/region'
+import { nextColor } from '../_charts/utils'
 const data = ref<AsyncData<StatistiquesMinerauxMetauxMetropole>>({
   status: 'LOADING'
 })
@@ -243,6 +249,69 @@ const bauxiteChartConfiguration = (
           display: true,
           text: 'Production Bauxite'
         }
+      }
+    }
+  }
+}
+
+const selsChartConfiguration = (
+  data: StatistiquesMinerauxMetauxMetropole
+): ChartConfiguration => {
+  const annees: CaminoAnnee[] = [
+    ...Object.keys(data.substances.naca),
+    ...Object.keys(data.substances.nacb),
+    ...Object.keys(data.substances.nacc)
+  ]
+    .filter(isAnnee)
+    .filter(onlyUnique)
+
+  const regionsIds: RegionId[] = annees
+    .flatMap(annee => [
+      ...Object.keys(data.substances?.naca[annee] ?? {}),
+      ...Object.keys(data.substances?.nacb[annee] ?? {}),
+      ...Object.keys(data.substances?.nacc[annee] ?? {})
+    ])
+    .filter(isRegionId)
+    .filter(onlyUnique)
+
+  const datasetByRegion: ChartDataset[] = regionsIds.map((regionId, index) => {
+    const label = Regions[regionId].nom
+    const sum = (annee: CaminoAnnee) =>
+      (data.substances.naca[annee]?.[regionId] ?? 0) +
+      (data.substances.nacb[annee]?.[regionId] ?? 0) +
+      (data.substances.nacc[annee]?.[regionId] ?? 0)
+    return {
+      type: 'bar',
+      label: label[0].toUpperCase() + label.substring(1),
+      data: annees.map(sum),
+      backgroundColor: nextColor(index)
+    }
+  })
+  const chartData: ChartData = {
+    labels: annees,
+    datasets: datasetByRegion
+  }
+  return {
+    type: 'bar',
+    data: chartData,
+    options: {
+      locale: 'fr-FR',
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Production Sels'
+        }
+      },
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      scales: {
+        x: {
+          stacked: true
+        },
+        y: { stacked: true }
       }
     }
   }

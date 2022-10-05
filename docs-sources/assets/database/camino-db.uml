@@ -246,12 +246,6 @@ entity "**forets_postgis**" {
   ""geometry"": //geometry(MultiPolygon,4326) //
 }
 
-entity "**globales**" {
-  + ""id"": //character varying(255) [PK]//
-  --
-  *""valeur"": //boolean //
-}
-
 entity "**journaux**" {
   + ""id"": //character varying(255) [PK]//
   --

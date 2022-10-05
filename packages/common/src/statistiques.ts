@@ -1,7 +1,8 @@
 import { CaminoAnnee } from './date'
 import { AdministrationTypeId } from './static/administrations'
+import { RegionId } from './static/region'
 import { SDOMZoneIds } from './static/sdom'
-import { SubstanceFiscaleId } from './static/substancesFiscales'
+import { SUBSTANCES_FISCALES_IDS } from './static/substancesFiscales'
 
 export interface QuantiteParMois {
   mois: string
@@ -51,7 +52,8 @@ export interface StatistiquesDGTM {
   delais: Record<CaminoAnnee, { delaiInstructionEnJours: number[]; delaiCommissionDepartementaleEnJours: number[] }>
 }
 
-export type StatistiquesMinerauxMetauxMetropoleSubstances = Extract<SubstanceFiscaleId, 'aloh'>
+export type StatistiquesMinerauxMetauxMetropoleSels = { [key in CaminoAnnee]: { [key in RegionId]?: number } }
+
 export interface StatistiquesMinerauxMetauxMetropole {
   surfaceExploration: number
   surfaceExploitation: number
@@ -62,6 +64,9 @@ export interface StatistiquesMinerauxMetauxMetropole {
     valCxm: number
   }
   substances: {
-    [key in StatistiquesMinerauxMetauxMetropoleSubstances]: Record<CaminoAnnee, number>
+    [SUBSTANCES_FISCALES_IDS.bauxite]: Record<CaminoAnnee, number>
+    [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_]: StatistiquesMinerauxMetauxMetropoleSels
+    [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]: StatistiquesMinerauxMetauxMetropoleSels
+    [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]: StatistiquesMinerauxMetauxMetropoleSels
   }
 }
