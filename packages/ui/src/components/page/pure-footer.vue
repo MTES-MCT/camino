@@ -19,7 +19,10 @@
         <li>
           <div class="blobs">
             <div class="blob-1-3">
-              <img class="sponsor" src="/img/logo-fabriquenumerique.svg" />
+              <img
+                class="sponsor"
+                src="@/public/img/logo-fabriquenumerique.svg"
+              />
             </div>
             <div class="blob-2-3">
               <p class="h6 mb-0">
@@ -113,7 +116,7 @@
       >
         <img
           style="max-width: 120px; width: calc(var(--unit) * 5)"
-          src="/img/je-donne-mon-avis.svg"
+          src="@/public/img/je-donne-mon-avis.svg"
           alt="Je donne mon avis"
         />
       </a>
