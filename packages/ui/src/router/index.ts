@@ -32,8 +32,9 @@ const Contacts = () => import('../components/content/contacts.vue')
 const About = () => import('../components/content/about.vue')
 const Accessibilite = () => import('../components/content/accessibilite.vue')
 const Contribution = () => import('../components/content/contribution.vue')
-const MentionsLegalesCGU = () =>
-  import('../components/content/mentions-legales-cgu.vue')
+const MentionsLegales = () =>
+  import('../components/content/mentions-legales.vue')
+const Cgu = () => import('../components/content/cgu.vue')
 const Cgu1 = () => import('../components/content/cgu-1-0-0.vue')
 const StatistiquesGlobales = () =>
   import('../components/statistiques/globales.vue')
@@ -199,8 +200,12 @@ const routes: RouteRecordRaw[] = [
     component: Contribution
   },
   {
-    path: '/mentions-legales-cgu',
-    component: MentionsLegalesCGU
+    path: '/mentions-legales',
+    component: MentionsLegales
+  },
+  {
+    path: '/cgu',
+    component: Cgu
   },
   {
     path: '/cgu/1-0-0',
