@@ -59,9 +59,9 @@
         :key="index"
         class="flex full-x mb-s"
       >
-        <select v-model="reference.typeId" class="p-s mr-s">
+        <select v-model="reference.referenceTypeId" class="p-s mr-s">
           <option
-            v-for="referenceType in referencesTypes"
+            v-for="referenceType in sortedReferencesTypes"
             :key="referenceType.id"
             :value="referenceType.id"
           >
@@ -84,7 +84,7 @@
       <button
         v-if="
           titreDemande.references &&
-          !titreDemande.references.find(r => !r.typeId || !r.nom)
+          !titreDemande.references.find(r => !r.referenceTypeId || !r.nom)
         "
         class="btn small rnd-xs py-s px-m full-x mb flex"
         @click="referenceAdd"
@@ -135,6 +135,10 @@
 </template>
 
 <script setup lang="ts">
+import {
+  ReferenceTypeId,
+  sortedReferencesTypes
+} from 'camino-common/src/static/referencesTypes'
 import TitreTypeSelect from './_common/titre-type-select.vue'
 import Icon from '@/components/_ui/icon.vue'
 import {
@@ -184,7 +188,7 @@ const titreDemande = ref<{
   typeId?: TitreTypeId
   nom?: string
   titreFromIds?: string[]
-  references: { typeId: string; nom: string }[]
+  references: { referenceTypeId: ReferenceTypeId | ''; nom: string }[]
 }>({ references: [] })
 const saveRef = ref<any>(null)
 const store = useStore()
@@ -253,10 +257,6 @@ const domaines = computed<Domaine[]>(() => {
   return []
 })
 
-const referencesTypes = computed(() => {
-  return store.state.titreCreation.metas.referencesTypes
-})
-
 const complete = computed(() => {
   return (
     titreDemande.value.entrepriseId &&
@@ -316,8 +316,6 @@ const init = async () => {
     await store.dispatch('pageError')
   }
 
-  await store.dispatch('titreCreation/init')
-
   if (entreprises.value?.length === 1) {
     titreDemande.value.entrepriseId = entreprises.value[0].id
   }
@@ -339,7 +337,7 @@ const save = () => {
 }
 
 const referenceAdd = () => {
-  titreDemande.value.references.push({ typeId: '', nom: '' })
+  titreDemande.value.references.push({ referenceTypeId: '', nom: '' })
 }
 
 const referenceRemove = (index: number) => {

@@ -84,13 +84,6 @@ const titresColonnes = {
     id: raw(`STRING_AGG("titulaires"."nom", ' ; ')`),
     relation: 'titulaires',
     groupBy: []
-  },
-  references: {
-    id: raw(
-      `STRING_AGG(concat("references"."type_id", "references"."nom"), ' ; ')`
-    ),
-    relation: 'references',
-    groupBy: []
   }
 } as Index<IColonne<string | RawBuilder>>
 

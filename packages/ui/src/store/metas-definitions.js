@@ -2,7 +2,6 @@ import {
   demarchesTypes,
   etapesTypes,
   documentsTypes,
-  referencesTypes,
   titresTypes,
   titresTypesTitresStatuts,
   titresTypesDemarchesTypes,
@@ -375,14 +374,6 @@ const metasIndex = {
       { id: 'id', nom: 'Id' },
       { id: 'nom', nom: 'Nom', type: String },
       { id: 'description', nom: 'Description', type: String, optional: true }
-    ]
-  },
-  'references-types': {
-    get: referencesTypes,
-    nom: 'Types des références',
-    colonnes: [
-      { id: 'id', nom: 'Id' },
-      { id: 'nom', nom: 'Nom', type: String }
     ]
   },
   'activites-types': {

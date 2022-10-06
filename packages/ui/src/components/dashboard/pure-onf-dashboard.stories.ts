@@ -44,9 +44,9 @@ const onfs: CommonTitreONF[] = [
     references: [
       {
         nom: '2010-001',
-        type: { nom: 'ONF' }
+        referenceTypeId: 'onf'
       },
-      { nom: '2010-000', type: { nom: 'PTMG' } }
+      { nom: '2010-000', referenceTypeId: 'ptm' }
     ],
     titulaires: [
       {
@@ -84,9 +84,9 @@ const onfs: CommonTitreONF[] = [
     references: [
       {
         nom: '2010-001',
-        type: { nom: 'ONF' }
+        referenceTypeId: 'onf'
       },
-      { nom: '2010-000', type: { nom: 'PTMG' } }
+      { nom: '2010-000', referenceTypeId: 'ptm' }
     ],
     titulaires: [
       {

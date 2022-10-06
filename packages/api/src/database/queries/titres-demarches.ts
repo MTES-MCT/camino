@@ -1,4 +1,4 @@
-import { Transaction, QueryBuilder, raw, RawBuilder } from 'objection'
+import { Transaction, QueryBuilder, RawBuilder } from 'objection'
 
 import {
   ITitreDemarche,
@@ -223,15 +223,7 @@ const titresDemarchesColonnes = {
   titreType: { id: 'titre:type:type.nom', relation: 'titre.type.type' },
   titreStatut: { id: 'titre.titreStatutId', relation: 'titre' },
   type: { id: 'titresDemarches.typeId' },
-  statut: { id: 'titresDemarches.statutId' },
-  references: {
-    id: raw(`STRING_AGG(concat("titre:references"."type_id",
-        "titre:references"."nom"),
-        ' ; '
-      )`),
-    relation: 'titre.references',
-    groupBy: []
-  }
+  statut: { id: 'titresDemarches.statutId' }
 } as Index<IColonne<string | RawBuilder>>
 
 const titresDemarchesGet = async (

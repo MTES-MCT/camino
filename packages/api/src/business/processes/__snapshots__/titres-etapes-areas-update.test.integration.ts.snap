@@ -123,6 +123,7 @@ Array [
       "points": "titreEtapeIdUniquePourMiseAJourAreas",
     },
     "publicLecture": false,
+    "references": Array [],
     "sdomZones": Array [
       Object {
         "id": "1",

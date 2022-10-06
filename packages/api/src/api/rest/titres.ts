@@ -12,13 +12,7 @@ import express from 'express'
 import { constants } from 'http2'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
-import {
-  ITitre,
-  IUser,
-  ITitreReference,
-  ITitreDemarche,
-  IUtilisateur
-} from '../../types'
+import { ITitre, IUser, ITitreDemarche, IUtilisateur } from '../../types'
 import {
   CommonTitreDREAL,
   CommonTitreONF,
@@ -41,11 +35,7 @@ import { canLinkTitres } from 'camino-common/src/permissions/titres'
 import { linkTitres } from '../../database/queries/titres-titres'
 import { checkTitreLinks } from '../../business/validations/titre-links-validate'
 import { toMachineEtapes } from '../../business/rules-demarches/machine-common'
-
-type MyTitreRef = { type: NonNullable<ITitreReference['type']> } & Omit<
-  ITitreReference,
-  'type'
->
+import { TitreReference } from 'camino-common/src/titres-references'
 
 export const titresONF = async (
   req: express.Request,
@@ -100,7 +90,7 @@ type TitreDemarcheSanitize = NotNullableKeys<
 
 type TitreArmAvecOctroi = {
   titre: TitreSanitize
-  references: MyTitreRef[]
+  references: TitreReference[]
   octARM: TitreDemarcheSanitize
   blockedByMe: boolean
 }
@@ -126,7 +116,6 @@ async function titresArmAvecOctroi(
     { ...filters, ids: titresAutorisesIds, colonne: 'nom' },
     {
       fields: {
-        references: { type: { id: {} } },
         titulaires: { id: {} },
         demarches: { etapes: { id: {} } }
       }
@@ -143,13 +132,7 @@ async function titresArmAvecOctroi(
         throw new Error('les références ne sont pas chargées')
       }
 
-      const references = titre.references.filter(
-        (reference: ITitreReference): reference is MyTitreRef =>
-          !!reference.type && !!reference.type.nom && !!reference.nom
-      )
-      if (titre.references.length !== references.length) {
-        throw new Error('le type de référence n’est pas chargé')
-      }
+      const references = titre.references
 
       if (!titre.titulaires) {
         throw new Error('les titulaires ne sont pas chargés')
@@ -248,7 +231,7 @@ type DrealTitreSanitize = NotNullableKeys<
 
 interface TitreDrealAvecReferences {
   titre: DrealTitreSanitize
-  references: MyTitreRef[]
+  references: TitreReference[]
   blockedByMe: boolean
 }
 export const titresDREAL = async (
@@ -291,7 +274,6 @@ export const titresDREAL = async (
       {
         fields: {
           type: { id: {} },
-          references: { type: { id: {} } },
           titulaires: { id: {} },
           activites: { id: {} },
           demarches: { etapes: { id: {} } }
@@ -322,13 +304,7 @@ export const titresDREAL = async (
           throw new Error('les activités ne sont pas chargées')
         }
 
-        const references = titre.references.filter(
-          (reference: ITitreReference): reference is MyTitreRef =>
-            !!reference.type && !!reference.type.nom && !!reference.nom
-        )
-        if (titre.references.length !== references.length) {
-          throw new Error('le type de référence n’est pas chargé')
-        }
+        const references = titre.references
 
         if (!titre.demarches) {
           throw new Error('les démarches ne sont pas chargées')

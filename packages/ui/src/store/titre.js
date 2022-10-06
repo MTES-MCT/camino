@@ -1,20 +1,10 @@
-import {
-  titreMetas,
-  titre,
-  titreCreer,
-  titreModifier,
-  titreSupprimer
-} from '../api/titres'
+import { titre, titreCreer, titreModifier, titreSupprimer } from '../api/titres'
 
 import router from '../router'
 import { utilisateurTitreAbonner } from '../api/utilisateurs-titres'
 
 const state = {
   element: null,
-  metas: {
-    referencesTypes: [],
-    domaines: []
-  },
   opened: {
     etapes: {},
     activites: {},
@@ -62,19 +52,6 @@ const getters = {
 }
 
 const actions = {
-  async init({ commit }) {
-    try {
-      commit('loadingAdd', 'titreInit', { root: true })
-
-      const data = await titreMetas()
-      commit('metasSet', { referencesTypes: data })
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'titreInit', { root: true })
-    }
-  },
-
   async get({ commit, dispatch }, id) {
     try {
       commit('loadingAdd', 'titre', { root: true })
@@ -199,12 +176,6 @@ const mutations = {
 
   reset(state) {
     state.element = null
-  },
-
-  metasSet(state, data) {
-    Object.keys(data).forEach(id => {
-      state.metas[id] = data[id]
-    })
   },
 
   open(state, { section, id }) {

@@ -29,9 +29,9 @@
         :key="index"
         class="flex full-x mb-s"
       >
-        <select v-model="reference.typeId" class="p-s mr-s">
+        <select v-model="reference.referenceTypeId" class="p-s mr-s">
           <option
-            v-for="referenceType in referencesTypes"
+            v-for="referenceType in sortedReferencesTypes"
             :key="referenceType.id"
             :value="referenceType.id"
           >
@@ -53,7 +53,8 @@
 
       <button
         v-if="
-          titre.references && !titre.references.find(r => !r.typeId || !r.nom)
+          titre.references &&
+          !titre.references.find(r => !r.referenceTypeId || !r.nom)
         "
         class="btn rnd-xs py-s px-m full-x mb flex h6"
         @click="referenceAdd"
@@ -137,12 +138,16 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { computed, ComputedRef, inject, onMounted, onUnmounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { DomaineId } from 'camino-common/src/static/domaines'
+import {
+  ReferenceTypeId,
+  sortedReferencesTypes
+} from 'camino-common/src/static/referencesTypes'
 type Titre = {
   id: string
   nom: string
   domaineId: DomaineId
   typeId: TitreTypeId
-  references: { typeId: string; nom: string }[]
+  references: { referenceTypeId: ReferenceTypeId | ''; nom: string }[]
   titresAdministrations: { id: AdministrationId | '' }[]
 }
 const props = defineProps<{
@@ -163,10 +168,6 @@ const domaines = computed(() => {
   )
 })
 
-const referencesTypes = computed(() => {
-  return store.state.titre.metas.referencesTypes
-})
-
 const complete = computed(() => {
   return !!props.titre.nom && !!props.titre.typeId && !!props.titre.domaineId
 })
@@ -175,9 +176,6 @@ const userIsSuper: ComputedRef<boolean> = computed(() => {
   return store.getters['user/userIsSuper']
 })
 
-const get = async () => {
-  await store.dispatch('titre/init')
-}
 const keyup = (e: KeyboardEvent) => {
   if ((e.which || e.keyCode) === 27) {
     cancel()
@@ -190,7 +188,6 @@ const keyup = (e: KeyboardEvent) => {
 }
 
 onMounted(async () => {
-  await get()
   document.addEventListener('keyup', keyup)
 })
 
@@ -225,7 +222,7 @@ const errorsRemove = () => {
 }
 
 const referenceAdd = () => {
-  props.titre.references.push({ typeId: '', nom: '' })
+  props.titre.references.push({ referenceTypeId: '', nom: '' })
 }
 
 const referenceRemove = (index: number) => {

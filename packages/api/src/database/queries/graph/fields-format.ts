@@ -9,7 +9,7 @@ const fieldsOrderAsc = [
   'titresTypesTitresStatuts'
 ]
 const fieldsToRemove = ['coordonnees', 'incertitudes', 'heritageProps']
-const titreFieldsToRemove = ['geojsonCentre'] as string[]
+const titreFieldsToRemove: string[] = ['geojsonCentre', 'references']
 const geoFieldsToReplace = ['geojsonPoints', 'geojsonMultiPolygon']
 const titrePropsEtapesFields = ['surface']
 
@@ -100,10 +100,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
 
   // sur les titres
   if (isParentTitre) {
-    if (fields.references && !fields.references.type) {
-      fields.references.type = { id: {} }
-    }
-
     // si la propriété `surface` est présente
     // - la remplace par `surfaceEtape`
     titrePropsEtapesFields.forEach(key => {

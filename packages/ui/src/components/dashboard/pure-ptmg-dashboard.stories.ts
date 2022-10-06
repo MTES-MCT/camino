@@ -41,9 +41,9 @@ const titres: CommonTitrePTMG[] = [
     references: [
       {
         nom: '2010-001',
-        type: { nom: 'PTMG' }
+        referenceTypeId: 'ptm'
       },
-      { nom: '2010-000', type: { nom: 'PTMG' } }
+      { nom: '2010-000', referenceTypeId: 'ptm' }
     ],
     titulaires: [
       {
@@ -75,9 +75,9 @@ const titres: CommonTitrePTMG[] = [
     references: [
       {
         nom: '2010-001',
-        type: { nom: 'PTMG' }
+        referenceTypeId: 'ptm'
       },
-      { nom: '2010-000', type: { nom: 'PTMG' } }
+      { nom: '2010-000', referenceTypeId: 'ptm' }
     ],
     titulaires: [
       {

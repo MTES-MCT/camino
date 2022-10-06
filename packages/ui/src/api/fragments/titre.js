@@ -29,10 +29,7 @@ const fragmentTitre = gql`
     }
     titreStatutId
     references {
-      type {
-        id
-        nom
-      }
+      referenceTypeId
       nom
     }
     substances
@@ -145,9 +142,7 @@ const fragmentTitres = gql`
       departementId
     }
     references {
-      type {
-        nom
-      }
+      referenceTypeId
       nom
     }
   }
@@ -221,9 +216,7 @@ const fragmentDemarchesTitre = gql`
     }
     titreStatutId
     references {
-      type {
-        nom
-      }
+      referenceTypeId
       nom
     }
   }

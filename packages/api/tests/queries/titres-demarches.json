@@ -1,9 +1,0 @@
-{
-  "intervalle": 100,
-  "page": 1,
-  "colonne": "titreStatut",
-  "ordre": "desc",
-  "titresTypesIds": ["ap", "ar", "ax", "cx", "pc", "pr", "px"],
-  "titresDomainesIds": ["c", "f", "g", "h", "m", "r", "s", "w"],
-  "titresStatutsIds": ["dmc", "dmi", "ech", "ind", "mod", "val"]
-}

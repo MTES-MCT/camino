@@ -13,7 +13,6 @@ import {
   documentsTypesGet,
   domainesGet,
   etapesTypesGet,
-  referencesTypesGet,
   titresTypesTypesGet
 } from '../../../database/queries/metas'
 
@@ -48,6 +47,7 @@ import {
 } from '../../../business/rules-demarches/machine-common'
 import { CaminoMachines } from '../../../business/rules-demarches/machines'
 import { phasesStatuts as staticPhasesStatuts } from 'camino-common/src/static/phasesStatuts'
+import { sortedReferencesTypes } from 'camino-common/src/static/referencesTypes'
 
 export const devises = async () => devisesGet()
 
@@ -71,7 +71,7 @@ export const documentsTypes = async ({
   }
 }
 
-export const referencesTypes = async () => referencesTypesGet()
+export const referencesTypes = () => sortedReferencesTypes
 
 export const domaines = async (
   _: never,

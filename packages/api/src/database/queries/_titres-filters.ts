@@ -1,4 +1,4 @@
-import { QueryBuilder } from 'objection'
+import { QueryBuilder, raw } from 'objection'
 
 import { stringSplit } from './_utils'
 
@@ -182,36 +182,22 @@ export const titresFiltersQueryModify = (
   }
 
   if (references) {
-    const referencesArray = stringSplit(references)
+    const referencesArray = stringSplit(references).map(s => s.toLowerCase())
 
-    let fields = ['references.nom', 'references:type.nom']
-
-    if (name === 'titre') {
-      fields = fields.map(field => fieldFormat(name, field))
+    let field: string
+    if (root === 'titres') {
+      field = 'titres.references'
+    } else {
+      field = 'titre.references'
     }
 
-    q.leftJoinRelated(jointureFormat(name, 'references.type'))
-      .where(b => {
-        referencesArray.forEach(s => {
-          fields.forEach(f => {
-            b.orWhereRaw(`lower(??) like ?`, [f, `%${s.toLowerCase()}%`])
-          })
-        })
+    q.crossJoin(raw(`jsonb_array_elements(${field}) as titreRefs`))
+    q.where(b => {
+      referencesArray.forEach(s => {
+        b.orWhereRaw("lower(titreRefs->>'nom') like ?", [`%${s}%`])
       })
-      .groupBy(`${root}.id`)
-      .havingRaw(
-        `(${referencesArray
-          .map(
-            () =>
-              'count(*) filter (where ' +
-              fields.map(() => 'lower(??) like ?').join(' or ') +
-              ') > 0'
-          )
-          .join(') and (')})`,
-        referencesArray.flatMap(r =>
-          fields.flatMap(f => [f, `%${r.toLowerCase()}%`])
-        )
-      )
+    })
+    q.groupBy(`${root}.id`)
   }
 
   if (territoires) {
