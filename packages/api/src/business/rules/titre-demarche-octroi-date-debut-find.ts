@@ -2,7 +2,7 @@ import { ITitreDemarche } from '../../types'
 
 import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc'
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
-import { demarchesTypesOctroi } from 'camino-common/src/permissions/titres-etapes'
+import { isDemarcheTypeOctroi } from 'camino-common/src/permissions/titres-etapes'
 
 const titreDemarcheOctroiDateDebutFind = (
   titreDemarches?: ITitreDemarche[] | null
@@ -11,7 +11,7 @@ const titreDemarcheOctroiDateDebutFind = (
 
   // récupère la démarche d'octroi (naturelle ou virtuelle)
   const demarcheOctroi = titreDemarchesSortAsc(titreDemarches).find(
-    ({ typeId }) => demarchesTypesOctroi.includes(typeId)
+    ({ typeId }) => isDemarcheTypeOctroi(typeId)
   )
 
   if (

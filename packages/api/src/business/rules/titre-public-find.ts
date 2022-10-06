@@ -1,5 +1,5 @@
 import { ITitreDemarche, ITitreTypeTitreStatut } from '../../types'
-import { demarchesTypesOctroi } from 'camino-common/src/permissions/titres-etapes'
+import { isDemarcheTypeOctroi } from 'camino-common/src/permissions/titres-etapes'
 
 const titrePublicFind = (
   titreStatutId: string,
@@ -18,7 +18,7 @@ const titrePublicFind = (
   // alors le titre est public
   if (titreTypeTitreStatut?.publicLecture) {
     const titreDemarcheOctroi = titreDemarches.find(
-      d => demarchesTypesOctroi.includes(d.typeId) && d.publicLecture
+      d => isDemarcheTypeOctroi(d.typeId) && d.publicLecture
     )
 
     if (titreDemarcheOctroi) {

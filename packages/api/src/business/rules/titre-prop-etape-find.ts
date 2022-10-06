@@ -20,7 +20,7 @@ import { ITitreDemarche, ITitreEtape, IPropId, IContenuId } from '../../types'
 import { propValueFind } from '../utils/prop-value-find'
 import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc'
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
-import { demarchesTypesOctroi } from 'camino-common/src/permissions/titres-etapes'
+import { isDemarcheTypeOctroi } from 'camino-common/src/permissions/titres-etapes'
 
 const etapeAmodiataireFind = (
   titreEtape: ITitreEtape,
@@ -45,7 +45,7 @@ const etapeAmodiataireFind = (
 
 const etapeValideCheck = (
   titreEtape: ITitreEtape,
-  titreDemarcheTypeId: string,
+  titreDemarcheTypeId: DemarcheTypeId,
   titreStatutId: string,
   propId?: IPropId
 ) => {
@@ -60,7 +60,7 @@ const etapeValideCheck = (
   }
 
   // si la démarche est un octroi, une demande de titre d'exploitation ou une mutation partielle
-  if ([...demarchesTypesOctroi, 'vct'].includes(titreDemarcheTypeId)) {
+  if (isDemarcheTypeOctroi(titreDemarcheTypeId)) {
     return true
   }
   // si il s'agit d'une étape de décision
@@ -90,7 +90,7 @@ const etapeValideCheck = (
 const titreDemarchePropTitreEtapeFind = (
   propId: IPropId,
   titreDemarcheEtapes: ITitreEtape[],
-  titreDemarcheTypeId: string,
+  titreDemarcheTypeId: DemarcheTypeId,
   titreStatutId: string,
   titreDemarches: ITitreDemarche[]
 ) =>
@@ -121,7 +121,7 @@ const titreDemarchePropTitreEtapeFind = (
 const titreDemarcheContenuTitreEtapeFind = (
   { sectionId, elementId }: IContenuId,
   titreDemarcheEtapes: ITitreEtape[],
-  titreDemarcheTypeId: string,
+  titreDemarcheTypeId: DemarcheTypeId,
   titreStatutId: string
 ) =>
   titreEtapesSortDescByOrdre(titreDemarcheEtapes).find(
@@ -148,10 +148,7 @@ const demarcheEligibleCheck = (
   [DemarchesStatutsIds.Accepte, DemarchesStatutsIds.Termine].includes(
     titreDemarcheStatutId
   ) ||
-  [
-    ...demarchesTypesOctroi,
-    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation
-  ].includes(titreDemarcheTypeId) ||
+  isDemarcheTypeOctroi(titreDemarcheTypeId) ||
   (titreStatutId === TitresStatutIds.ModificationEnInstance &&
     [
       DEMARCHES_TYPES_IDS.Prolongation,

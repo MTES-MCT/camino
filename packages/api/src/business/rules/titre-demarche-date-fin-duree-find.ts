@@ -7,7 +7,7 @@ import {
 
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find'
 import { dateAddMonths, datesSubtract } from '../../tools/date'
-import { demarchesTypesOctroi } from 'camino-common/src/permissions/titres-etapes'
+import { isDemarcheTypeOctroi } from 'camino-common/src/permissions/titres-etapes'
 
 // entrée
 // - les démarches d'un titre
@@ -41,7 +41,7 @@ const titreDemarcheDateFinAndDureeFind = (
 
       // si
       // - la démarche est un octroi
-      if ([...demarchesTypesOctroi, 'vct'].includes(titreDemarche.typeId)) {
+      if (isDemarcheTypeOctroi(titreDemarche.typeId)) {
         return titreDemarcheOctroiDateFinAndDureeFind(
           duree,
           titreDemarche.etapes
