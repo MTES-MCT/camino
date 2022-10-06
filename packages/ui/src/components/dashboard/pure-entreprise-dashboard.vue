@@ -12,23 +12,26 @@
         </button>
       </div>
     </div>
-    <div v-if="status === 'LOADING'" class="loaders fixed p">
-      <div class="loader" />
-    </div>
-    <TableAuto
-      v-if="status === 'LOADED'"
-      :columns="columns"
-      :rows="entrepriseTitres"
-      :initialSort="{ column: 'statut', order: 'asc' }"
-      class="width-full-p"
-    />
-    <Error
-      v-if="status === 'ERROR'"
-      :message="{
-        type: 'error',
-        value: 'Le serveur est inaccessible, veuillez réessayer plus tard'
-      }"
-    />
+
+    <LoadingElement v-slot="{ item }" :data="data">
+      <div
+        v-if="fiscaliteVisible(user, entrepriseId, item)"
+        class="p-s bg-info color-bg mb"
+      >
+        Découvrez l'estimation de votre<router-link
+          :to="entrepriseUrl"
+          target="_blank"
+          class="p-s bg-info color-bg mb"
+          >fiscalité minière</router-link
+        >
+      </div>
+      <TableAuto
+        :columns="columns"
+        :rows="entrepriseTitres(item)"
+        :initialSort="{ column: 'statut', order: 'asc' }"
+        class="width-full-p"
+      />
+    </LoadingElement>
   </div>
 </template>
 
@@ -36,7 +39,6 @@
 import { onMounted, ref } from 'vue'
 import TableAuto from '../_ui/table-auto.vue'
 import { TableAutoRow } from '../_ui/table-auto.type'
-import Error from '@/components/error.vue'
 import {
   TitreEntreprise,
   titresColonnes,
@@ -44,14 +46,23 @@ import {
 } from '@/components/titres/table-utils'
 import { useRouter } from 'vue-router'
 import Icon from '@/components/_ui/icon.vue'
+import { AsyncData } from '@/api/client-rest'
+import LoadingElement from '@/components/_ui/pure-loader.vue'
+import { fiscaliteVisible } from 'camino-common/src/fiscalite'
+import { User } from 'camino-common/src/roles'
 
-const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
-const entrepriseTitres = ref<TableAutoRow[]>([])
+const data = ref<AsyncData<TitreEntreprise[]>>({ status: 'LOADING' })
+
+const entrepriseTitres = (entreprises: TitreEntreprise[]): TableAutoRow[] =>
+  titresLignesBuild(entreprises, props.displayActivites)
 const props = defineProps<{
+  user: User
+  entrepriseId: string
   // TODO 2022-03-22: type the graphql
   getEntreprisesTitres: () => Promise<TitreEntreprise[]>
   displayActivites: boolean
 }>()
+const entrepriseUrl = `/entreprises/${props.entrepriseId}`
 
 const columns = titresColonnes.filter(({ id }) =>
   props.displayActivites ? true : id !== 'activites'
@@ -66,12 +77,12 @@ const titreDemandeOpen = () => {
 onMounted(async () => {
   try {
     const entreprises = await props.getEntreprisesTitres()
-    entrepriseTitres.value.push(
-      ...titresLignesBuild(entreprises, props.displayActivites)
-    )
-    status.value = 'LOADED'
-  } catch (e) {
-    status.value = 'ERROR'
+    data.value = { status: 'LOADED', value: entreprises }
+  } catch (e: any) {
+    data.value = {
+      status: 'ERROR',
+      message: e.message ?? 'something wrong happened'
+    }
   }
 })
 </script>

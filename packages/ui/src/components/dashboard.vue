@@ -2,6 +2,8 @@
   <PureEntrepriseDashboard
     v-if="hasEntreprises"
     :getEntreprisesTitres="getEntreprisesTitres"
+    :user="user"
+    :entrepriseId="entreprisesIds[0]"
     :displayActivites="activites"
   />
   <PureONFDashboard v-else-if="isONF" :getOnfTitres="getOnfTitres" />

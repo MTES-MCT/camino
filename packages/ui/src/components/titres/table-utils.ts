@@ -49,6 +49,7 @@ export interface TitreEntreprise {
   nom: string
   communes?: { departementId: DepartementId }[]
   references?: TitreReference[]
+  domaineId: DomaineId
   domaine: { id: DomaineId; nom: string }
   coordonnees?: { x: number; y: number }
   // id devrait être une union
