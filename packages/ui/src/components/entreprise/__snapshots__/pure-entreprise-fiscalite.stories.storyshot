@@ -332,16 +332,6 @@ exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Loadin
 </div>
 `;
 
-exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite No Data 1`] = `
-<div>
-   Il n'est pas encore possible de calculer la fiscalité pour votre entreprise.
-  <br />
-   Pour le moment, seules les entreprises dont tous les titres sont du domaine "Mineraux et métaux" sont éligibles.
-  <br />
-   Si vous pensez qu'il s'agit d'un bug, contactez-nous. 
-</div>
-`;
-
 exports[`Automated Storybook Snapshots Components/PureEntrepriseFiscalite Ok 1`] = `
 <div>
    Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère) 

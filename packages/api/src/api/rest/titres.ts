@@ -78,6 +78,7 @@ export const titresONF = async (
           nom: titre.nom,
           titreStatutId: titre.titreStatutId,
           references,
+          domaineId: titre.domaineId,
           titulaires: titre.titulaires,
           dateCompletudePTMG,
           dateReceptionONF,
@@ -90,7 +91,7 @@ export const titresONF = async (
 }
 
 type TitreSanitize = NotNullableKeys<
-  Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId'>>
+  Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId' | 'domaineId'>>
 > &
   Pick<ITitre, 'typeId' | 'id' | 'nom'>
 type TitreDemarcheSanitize = NotNullableKeys<
@@ -220,6 +221,7 @@ export const titresPTMG = async (
         id: titre.id,
         slug: titre.slug,
         nom: titre.nom,
+        domaineId: titre.domaineId,
         titreStatutId: titre.titreStatutId,
         references,
         titulaires: titre.titulaires,

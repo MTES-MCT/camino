@@ -5,6 +5,7 @@ Object {
   "dateCARM": "",
   "dateCompletudePTMG": "2022-03-10",
   "dateReceptionONF": "",
+  "domaineId": "m",
   "enAttenteDeONF": true,
   "id": Any<String>,
   "nom": "titre1",
@@ -51,6 +52,7 @@ Object {
   "dateCARM": "",
   "dateCompletudePTMG": "",
   "dateReceptionONF": "",
+  "domaineId": "m",
   "enAttenteDeONF": false,
   "id": Any<String>,
   "nom": "titre2",
@@ -94,6 +96,7 @@ Object {
 
 exports[`titresPTMG teste la récupération des données pour le PTMG 1`] = `
 Object {
+  "domaineId": "m",
   "enAttenteDePTMG": false,
   "id": Any<String>,
   "nom": "titre1",
@@ -137,6 +140,7 @@ Object {
 
 exports[`titresPTMG teste la récupération des données pour le PTMG 2`] = `
 Object {
+  "domaineId": "m",
   "enAttenteDePTMG": true,
   "id": Any<String>,
   "nom": "titre2",

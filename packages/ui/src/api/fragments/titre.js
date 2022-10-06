@@ -121,6 +121,7 @@ const fragmentTitres = gql`
     type {
       ...titreType
     }
+    domaineId
     domaine {
       id
       nom
