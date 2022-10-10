@@ -300,7 +300,9 @@ const selsChartConfiguration = (
       plugins: {
         title: {
           display: true,
-          text: 'Production Sels'
+          text: `Production Sels (${
+            Unites[SubstancesFiscale.naca.uniteId].nom
+          })`
         }
       },
       interaction: {
