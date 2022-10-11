@@ -59,3 +59,32 @@
         job: "/srv/scripts/monthly"
         user: git
       become: True
+- name: Continuous deployment
+  block:
+    - name: Ajoute le service de continuous deployment
+      ansible.builtin.template:
+        src: cd.service
+        dest: /etc/systemd/system
+      become: True
+    - name: Dossier cible du CD
+      ansible.builtin.file:
+        path: /srv/www/cd
+        state: directory
+        owner: git
+        group: users
+        mode: u=rwx,g=rwx,o=r
+      become: True
+    - name: Ajoute le binaire
+      ansible.builtin.copy:
+        src: ../../cd/target/x86_64-unknown-linux-gnu/release/cd
+        dest: /srv/www/cd/cd
+        owner: git
+        group: users
+        mode: u=rwx,g=rwx,o=rx
+      become: True
+    - name: Lance le service
+      ansible.builtin.systemd:
+        state: started
+        enabled: yes
+        name: cd
+      become: True

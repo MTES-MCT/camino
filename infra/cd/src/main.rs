@@ -3,13 +3,16 @@ use std::env;
 use std::process::Command;
 use warp::http::StatusCode;
 use warp::{Filter};
+use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 
-//FIXME docker run -ti -w /workspace -v $PWD:/workspace rust:1-buster cargo build --release
 #[tokio::main]
 async fn main() {
-    let token = env::var("CD_TOKEN").expect("$CD_TOKEN not set!");
+    let token = env::var("CD_TOKEN").expect("CD_TOKEN not set!");
+    let port: u16 = env::var("CD_PORT").map_or_else(|_| 3030,|port| port.parse::<u16>().expect("CD_PORT should be a string"));
 
-    warp::serve(update(token)).run(([127, 0, 0, 1], 3030)).await;
+    let socket = SocketAddr::new(IpAddr::V4(Ipv4Addr::new(0, 0, 0, 0)), port);
+
+    warp::serve(update(token)).run(socket).await;
 }
 
 fn string_to_str(s: String) -> &'static str {
