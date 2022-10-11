@@ -1,0 +1,29 @@
+name: CD
+on:
+  workflow_dispatch:
+    inputs:
+      DEPLOY_ENVIRONMENT:
+        description: 'Environnement de déploiement'     
+        required: true
+        default: 'dev'
+      GIT_SHA:
+        description: 'Sha git à déployer'     
+        required: true
+  workflow_run:
+    workflows: ["CI", "Release"]
+    branches: [master, release-candidate, ci-cd]
+    types: [completed]
+concurrency:
+  group: cd-${{ github.ref }}
+  cancel-in-progress: true
+env:
+  CD_TOKEN_DEV: ${{ secrets.CD_TOKEN_DEV }}
+  CD_TOKEN_PREPROD: ${{ secrets.CD_TOKEN_PREPROD }}
+  CD_TOKEN_PROD: ${{ secrets.CD_TOKEN_PROD }}
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "${{github.event}}"
+          echo "plop"
