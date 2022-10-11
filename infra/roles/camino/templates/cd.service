@@ -1,0 +1,13 @@
+[Unit]
+Description=Continuous deployment server
+After=network.target
+
+[Service]
+ExecStart=/srv/www/cd/cd
+Type=simple
+Restart=always
+Environment="CD_TOKEN={{ cd_token }}"
+
+
+[Install]
+WantedBy=default.target
