@@ -100,10 +100,13 @@ export const titresFiltersQueryModify = (
 
     q.leftJoinRelated(jointureFormat(name, 'substancesEtape'))
 
-    q.whereRaw('?? @> ?', [
-      fieldFormat(name, 'substancesEtape.substances'),
-      JSON.stringify(substancesIds)
-    ])
+    q.where(b => {
+      substancesIds.forEach(s => {
+        b.orWhereRaw(`?? @> '["${s}"]'::jsonb`, [
+          fieldFormat(name, 'substancesEtape.substances')
+        ])
+      })
+    })
   }
 
   if (entreprisesIds?.length) {
