@@ -535,16 +535,12 @@ export const getMinerauxMetauxMetropolesStats = async (
           if (!acc[substance][annee]) {
             acc[substance][annee] = {}
           }
-          let statSel = acc[substance][annee][regionId]
           const valeur = fromUniteFiscaleToUnite(
             SubstancesFiscale[substance].uniteId,
             parseInt(stat[substance], 10)
           )
-          if (statSel === undefined) {
-            acc[substance][annee][regionId] = valeur
-          } else {
-            statSel += valeur
-          }
+          acc[substance][annee][regionId] =
+            valeur + (acc[substance][annee][regionId] ?? 0)
         }
 
         return acc
