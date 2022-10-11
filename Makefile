@@ -48,7 +48,7 @@ ifeq ($(GITHUB_REF), refs/heads/master)
 endif
 ifeq ($(GITHUB_REF), refs/heads/release-candidate)
 	@echo "Déploiement automatique en prod"
-	@echo GIT_SHA=${GITHUB_SHA} CD_TOKEN=${CD_TOKEN_PROD} $(MAKE) deploy/dev
+	@echo GIT_SHA=${GITHUB_SHA} CD_TOKEN=${CD_TOKEN_PROD} $(MAKE) deploy/prod
 endif
 else
 ifeq ($(GITHUB_EVENT_NAME),workflow_dispatch)
