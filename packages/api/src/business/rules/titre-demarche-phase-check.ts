@@ -2,16 +2,10 @@ import { ITitreEtape } from '../../types'
 
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
-import { demarchesTypesOctroi } from './common'
-
-const demarchesTypesPhases = [
-  ...demarchesTypesOctroi,
-  'pro',
-  'pr1',
-  'pr2',
-  'pre',
-  'vct'
-]
+import {
+  DemarcheTypeId,
+  isDemarcheTypeWithPhase
+} from 'camino-common/src/static/demarchesTypes'
 
 /**
  * Vérifie si la démarche donne lieu à une phase
@@ -20,8 +14,8 @@ const demarchesTypesPhases = [
  * @param titreTypeId - id du type de titre
  * @param titreEtapes - étapes de la démarche
  */
-const titreDemarchePhaseCheck = (
-  titreDemarcheTypeId: string,
+export const titreDemarchePhaseCheck = (
+  titreDemarcheTypeId: DemarcheTypeId,
   titreDemarcheStatutId: string,
   titreTypeId: string,
   titreEtapes?: ITitreEtape[] | null
@@ -34,7 +28,7 @@ const titreDemarchePhaseCheck = (
   if (
     !titreEtapes?.length ||
     titreDemarcheStatutId !== 'acc' ||
-    (!demarchesTypesPhases.includes(titreDemarcheTypeId) &&
+    (!isDemarcheTypeWithPhase(titreDemarcheTypeId) &&
       !titreEtapes.find(e => e.dateFin || e.duree))
   ) {
     return false
@@ -51,5 +45,3 @@ const titreDemarchePhaseCheck = (
     ? ['acc', 'fai'].includes(etapePublicationFirst.statutId)
     : false
 }
-
-export { titreDemarchePhaseCheck }

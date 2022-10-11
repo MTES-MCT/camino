@@ -8,7 +8,7 @@ import {
 } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find'
-import { demarchesTypesOctroi } from './common'
+import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes'
 
 /**
  * trouve une démarche acceptée ou terminée qui est
@@ -112,7 +112,7 @@ const titrePhaseDateDebutFind = (
 ) => {
   // si
   // - la démarche est un octroi
-  if ([...demarchesTypesOctroi, 'vct'].includes(titreDemarche.typeId)) {
+  if (isDemarcheTypeOctroi(titreDemarche.typeId)) {
     // retourne une étape de publication si celle-ci possède une date de début
     const etapePublicationHasDateDebut = titreEtapesSortDescByOrdre(
       titreDemarche.etapes!

@@ -20,6 +20,11 @@ describe('FondamentalesEdit', () => {
     type: {
       id: 'mfr'
     },
+    demarche: {
+      type: {
+        id: 'oct'
+      }
+    },
     duree: {
       ans: 0,
       mois: 4

@@ -6,7 +6,7 @@ import {
   titreEtapesSortAscByOrdre
 } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
-import { demarchesTypesOctroi } from './common'
+import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes'
 
 const titreDemarcheDateDebutFind = (
   titreDemarche: ITitreDemarche,
@@ -47,7 +47,7 @@ const titreDemarcheDateDebutFind = (
  * @param titreTypeId - id du type du titre
  */
 
-const titreDateDebutFind = (
+export const titreDateDebutFind = (
   titreDemarches: ITitreDemarche[],
   titreTypeId: string
 ) => {
@@ -58,12 +58,10 @@ const titreDateDebutFind = (
   const titreDemarche = titreDemarchesSorted.find(
     titreDemarche =>
       ['acc', 'ter'].includes(titreDemarche.statutId!) &&
-      [...demarchesTypesOctroi, 'vct'].includes(titreDemarche.typeId)
+      isDemarcheTypeOctroi(titreDemarche.typeId)
   )
 
   if (!titreDemarche) return null
 
   return titreDemarcheDateDebutFind(titreDemarche, titreTypeId)
 }
-
-export { titreDateDebutFind }
