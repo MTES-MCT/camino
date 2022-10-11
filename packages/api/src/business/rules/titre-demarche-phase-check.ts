@@ -2,8 +2,10 @@ import { ITitreEtape } from '../../types'
 
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
-import { isDemarcheTypeWithPhase } from 'camino-common/src/permissions/titres-etapes'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import {
+  DemarcheTypeId,
+  isDemarcheTypeWithPhase
+} from 'camino-common/src/static/demarchesTypes'
 
 /**
  * Vérifie si la démarche donne lieu à une phase

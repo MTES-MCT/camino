@@ -8,7 +8,8 @@ import {
 } from 'camino-common/src/static/demarchesStatuts'
 import {
   DEMARCHES_TYPES_IDS,
-  DemarcheTypeId
+  DemarcheTypeId,
+  isDemarcheTypeOctroi
 } from 'camino-common/src/static/demarchesTypes'
 import { PHASES_STATUTS_IDS } from 'camino-common/src/static/phasesStatuts'
 import {
@@ -20,7 +21,6 @@ import { ITitreDemarche, ITitreEtape, IPropId, IContenuId } from '../../types'
 import { propValueFind } from '../utils/prop-value-find'
 import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc'
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
-import { isDemarcheTypeOctroi } from 'camino-common/src/permissions/titres-etapes'
 
 const etapeAmodiataireFind = (
   titreEtape: ITitreEtape,

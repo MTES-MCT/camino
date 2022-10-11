@@ -7,7 +7,7 @@ import {
 
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find'
 import { dateAddMonths, datesSubtract } from '../../tools/date'
-import { isDemarcheTypeOctroi } from 'camino-common/src/permissions/titres-etapes'
+import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes'
 
 // entrée
 // - les démarches d'un titre

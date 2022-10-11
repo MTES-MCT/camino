@@ -2,7 +2,7 @@ import { ITitreDemarche } from '../../types'
 
 import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc'
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
-import { isDemarcheTypeOctroi } from 'camino-common/src/permissions/titres-etapes'
+import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes'
 
 const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]) => {
   // trouve la démarche génératrice du titre
