@@ -29,3 +29,55 @@ else
 	@echo 'lancement du monthly en mode dev(local)'
 	npm run dev:monthly -w packages/api
 endif
+
+ifeq (${INPUT_ENV}, dev)
+CD_TOKEN:=${CD_TOKEN_DEV}
+endif
+ifeq (${INPUT_ENV}, preprod)
+CD_TOKEN:=${CD_TOKEN_PREPROD}
+endif
+ifeq (${INPUT_ENV}, prod)
+CD_TOKEN:=${CD_TOKEN_PROD}
+endif
+
+deploy/ci:
+ifeq ($(GITHUB_EVENT_NAME),workflow_run)
+ifeq ($(GITHUB_REF), refs/heads/master)
+	@echo "Déploiement automatique en dev"
+	@GIT_SHA=${GITHUB_SHA} CD_TOKEN=${CD_TOKEN_DEV} $(MAKE) deploy/dev
+endif
+ifeq ($(GITHUB_REF), refs/heads/release-candidate)
+	@echo "Déploiement automatique en prod"
+	@GIT_SHA=${GITHUB_SHA} CD_TOKEN=${CD_TOKEN_PROD} $(MAKE) deploy/prod
+endif
+else
+ifeq ($(GITHUB_EVENT_NAME),workflow_dispatch)
+	@echo "Déploiement manuel en ${INPUT_ENV}"
+	@GIT_SHA=${INPUT_SHA} CD_TOKEN=${CD_TOKEN} $(MAKE) deploy/${INPUT_ENV}
+endif
+endif
+
+_deploy:
+ifndef DEPLOY_URL
+	@echo 'DEPLOY_URL est obligatoire'
+	@exit 1
+endif
+ifndef CD_TOKEN
+	@echo 'CD_TOKEN est obligatoire'
+	@exit 1
+endif
+ifndef GIT_SHA
+	@echo 'GIT_SHA est obligatoire'
+	@exit 1
+endif
+	@echo 'on déploie sur ${DEPLOY_URL} la version ${GIT_SHA}'
+	@curl http://${DEPLOY_URL}:3030/update/${GIT_SHA} -H 'authorization: ${CD_TOKEN}'
+
+deploy/dev:
+	$(MAKE) DEPLOY_URL=dev.camino.beta.gouv.fr _deploy
+
+deploy/preprod:
+	$(MAKE) DEPLOY_URL=preprod.camino.beta.gouv.fr _deploy
+
+deploy/prod:
+	$(MAKE) DEPLOY_URL=camino.beta.gouv.fr _deploy
