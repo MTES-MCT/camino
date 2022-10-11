@@ -1,0 +1,223 @@
+name: CI
+on:
+  push:
+    branches-ignore:
+      - release-candidate
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  api_unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.7'
+          cache: 'npm'
+      - name: Npm install
+        run: |
+          npm set-script prepare ""
+          npm ci
+        env:
+          CI: true
+      - name: Lint
+        run: npm run ci:lint --workspace=packages/api
+      - name: Unit tests
+        run: npm run ci:test-unit --workspace=packages/api
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: api-unit, api
+  api_integration-test:
+      runs-on: ubuntu-latest
+      services:
+        postgres:
+          image: postgis/postgis:12-3.2
+          env:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: password
+            POSTGRES_DB: camino_tests
+            PGUSER: postgres
+            PGPASSWORD: password
+          options: >-
+            --health-cmd pg_isready
+            --health-interval 10s
+            --health-timeout 5s
+            --health-retries 5
+          ports:
+            # Maps tcp port 5432 on service container to the host
+            - 5432:5432
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+        - name: Use Node.js
+          uses: actions/setup-node@v3
+          with:
+            node-version: '18.7'
+            cache: 'npm'
+        - name: Npm install
+          run: |
+            npm set-script prepare ""
+            npm ci
+          env:
+            CI: true
+        - name: Integration tests
+          run: npm run ci:test-integration --workspace=packages/api
+          env:
+            PGHOST: localhost
+            PGPORT: 5432
+            PGUSER: postgres
+            PGPASSWORD: password
+        - uses: codecov/codecov-action@v2
+          with:
+            token: ${{ secrets.CODECOV_TOKEN }}
+            flags: api-integration, api
+  api_build:
+    needs: [api_unit-test, api_integration-test]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build Docker image
+        run: docker build -t caminofr/camino-api:${GITHUB_SHA} -f Dockerfile.api .
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Push Docker image to the Docker Hub
+        if: github.ref == 'refs/heads/master'
+        run: docker push caminofr/camino-api:${GITHUB_SHA}
+  common_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.7'
+          cache: 'npm'
+      - name: Npm install
+        run: |
+          npm set-script prepare ""
+          npm ci
+          npm run lint --workspace=packages/common
+        env:
+          CI: true
+      - name: Unit tests
+        run: npm run ci:test --workspace=packages/common
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: common
+
+  ui_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.7'
+          cache: 'npm'
+      - name: Test units
+        run: |
+          npm set-script prepare ""
+          npm ci
+          npm run lint:check --workspace=packages/ui
+          npm test --workspace=packages/ui
+        env:
+          CI: true
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ui
+
+  ui_build:
+    needs: ui_test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build Docker image
+        run: docker build . --build-arg GIT_SHA=${GITHUB_SHA} -f Dockerfile.ui -t caminofr/camino-ui:${GITHUB_SHA}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Push Docker image to the Docker Hub
+        if: github.ref == 'refs/heads/master'
+        run: docker push caminofr/camino-ui:${GITHUB_SHA}
+  ui_storybook:
+    needs: ui_test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.7'
+          cache: 'npm'
+      - name: Generate storybook
+        run: |
+          npm ci
+          npm run storybook:build -w packages/ui
+        env:
+          CI: true
+          # https://stackoverflow.com/questions/69394632/webpack-build-failing-with-err-ossl-evp-unsupported
+          NODE_OPTIONS: --openssl-legacy-provider
+      - name: Build Docker image
+        run: docker build -f Dockerfile.ui.storybook -t caminofr/camino-ui-storybook:${GITHUB_SHA} .
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Push Docker image to the Docker Hub
+        if: github.ref == 'refs/heads/master'
+        run: docker push caminofr/camino-ui-storybook:${GITHUB_SHA}
+  doc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+      - name: Generate docs
+        run: make docs/build
+      - name: Build Docker image
+        run: docker build -f Dockerfile.api.docs -t caminofr/camino-api-docs:${GITHUB_SHA} .
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Push Docker image to the Docker Hub
+        if: github.ref == 'refs/heads/master'
+        run: docker push caminofr/camino-api-docs:${GITHUB_SHA}
+  openfisca_build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build Docker image
+        run: docker build . --build-arg GIT_SHA=${GITHUB_SHA} -f Dockerfile.openfisca -t caminofr/camino-openfisca:${GITHUB_SHA}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Push Docker image to the Docker Hub
+        if: github.ref == 'refs/heads/master'
+        run: docker push caminofr/camino-openfisca:${GITHUB_SHA}
