@@ -1,0 +1,12 @@
+name: trilili
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  deploy_manual:
+    runs-on: self-hosted
+    steps:
+      - run: |
+          echo "plop $(env)"
