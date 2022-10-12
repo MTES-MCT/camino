@@ -13,10 +13,6 @@
   </TransitionGroup>
 </template>
 
-<script>
-export default {
-  props: {
-    messages: { type: Array, default: () => [] }
-  }
-}
+<script setup lang="ts">
+defineProps<{ messages: { type: 'error' | 'success'; value: string }[] }>()
 </script>

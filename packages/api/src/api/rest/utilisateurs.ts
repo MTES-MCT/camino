@@ -1,4 +1,5 @@
 import {
+  userByEmailGet,
   userGet,
   utilisateurGet,
   utilisateursGet
@@ -15,6 +16,10 @@ import { isRole } from 'camino-common/src/roles'
 import { utilisateursFormatTable } from './format/utilisateurs'
 import { tableConvert } from './_convert'
 import { fileNameCreate } from '../../tools/file-name-create'
+import { QGISToken } from 'camino-common/src/utilisateur'
+import { knex } from '../../knex'
+import { idGenerate } from '../../database/models/_format/id-create'
+import bcrypt from 'bcryptjs'
 
 export const isSubscribedToNewsletter = async (
   req: express.Request<{ id?: string }>,
@@ -76,6 +81,29 @@ export const manageNewsletterSubscription = async (
         res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
       }
     }
+  }
+}
+
+export const generateQgisToken = async (
+  req: express.Request,
+  res: CustomResponse<QGISToken>
+) => {
+  const userEmail = (req.user as unknown as IUser | undefined)?.email
+  if (!userEmail) {
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+
+    return
+  }
+  const user = await userByEmailGet(userEmail)
+
+  if (!user) {
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else {
+    const token = idGenerate()
+    await knex('utilisateurs')
+      .update({ qgis_token: bcrypt.hashSync(token, 10) })
+      .where('email', userEmail)
+    res.send({ token })
   }
 }
 

@@ -175,6 +175,8 @@
               }}
             </div>
           </div>
+
+          <QgisToken :generateTokenCall="generateToken" />
         </div>
       </template>
     </Accordion>
@@ -193,17 +195,23 @@ import UtilisateurEmailPopup from './utilisateur/email-popup.vue'
 import { isAdministration, isSuper } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
 import Icon from './_ui/icon.vue'
+import QgisToken from './utilisateur/pure-qgis-token.vue'
+import { CaminoRestRoutes } from 'camino-common/src/rest'
+import { fetchWithJson } from '@/api/client-rest'
 
 export default {
   components: {
     Icon,
     Accordion,
     Pill,
-    Loader
+    Loader,
+    QgisToken
   },
   data: () => ({
     userUnwatch: null,
-    subscription: { newsletter: false }
+    subscription: { newsletter: false },
+    generateToken: async () =>
+      fetchWithJson(CaminoRestRoutes.generateQgisToken, {}, 'post')
   }),
   computed: {
     utilisateur() {
