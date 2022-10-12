@@ -23,6 +23,7 @@ describe('ActiviteEdition', () => {
         },
         titreActiviteEdition: {
           element: {
+            id: 'activite Id',
             type: {
               id: 'grp',
               nom: '',
@@ -33,7 +34,9 @@ describe('ActiviteEdition', () => {
             documents: [],
             sections: [],
             titre: {
-              slug: ''
+              slug: 'tireSlug',
+              titulaires: [],
+              amodiataires: []
             },
             periodeId: '2',
             annee: ''
