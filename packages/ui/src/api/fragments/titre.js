@@ -78,6 +78,11 @@ const fragmentTitre = gql`
       nom
     }
 
+    secteursMaritime {
+      nom
+      facade
+    }
+
     contenu
 
     modification

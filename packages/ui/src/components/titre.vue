@@ -30,6 +30,7 @@
       :forets="titre.forets"
       :sdomZones="titre.sdomZones"
       :surface="titre.surface"
+      :secteursMaritimes="titre.secteursMaritime"
     />
 
     <div class="line width-full mb-xl" />

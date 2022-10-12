@@ -121,6 +121,9 @@ type Titre {
   "Zones du SDOM de Guyane"
   sdomZones: [SDOMZone]
 
+  "Secteurs Maritime"
+  secteursMaritime: [SecteurMaritime]
+
   modification: Boolean
   suppression: Boolean
   demarchesCreation: Boolean

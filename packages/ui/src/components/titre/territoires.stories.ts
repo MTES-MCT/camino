@@ -35,6 +35,15 @@ export const OnlySdomZones = Template.bind({})
 OnlySdomZones.args = {
   sdomZones: [{ nom: 'Zone 1' }, { nom: 'Zone 3' }]
 }
+export const OnlySecteursMaritimes = Template.bind({})
+OnlySecteursMaritimes.args = {
+  secteursMaritimes: [
+    { facade: 'facade 1', nom: 'nom1' },
+    { facade: 'facade 1', nom: 'nom1' },
+    { facade: 'facade 2', nom: 'nom2' },
+    { facade: 'facade 1', nom: 'nom3' }
+  ]
+}
 
 export const All = Template.bind({})
 All.args = {
@@ -46,6 +55,11 @@ All.args = {
     { nom: 'Montval-sur-loir', departementId: DEPARTEMENT_IDS.Sarthe },
     { nom: 'Tours', departementId: DEPARTEMENT_IDS['Indre-et-Loire'] },
     { nom: 'Ville de Guyane', departementId: DEPARTEMENT_IDS.Guyane }
+  ],
+  secteursMaritimes: [
+    { facade: 'facade 1', nom: 'nom1' },
+    { facade: 'facade 2', nom: 'nom2' },
+    { facade: 'facade 1', nom: 'nom3' }
   ]
 }
 
