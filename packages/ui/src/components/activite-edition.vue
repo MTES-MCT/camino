@@ -48,6 +48,16 @@
           >Contactez-nous
         </router-link>
       </div>
+      <div v-if="shouldDisplayFiscaliteHelp" class="p-s bg-info color-bg mb">
+        Les données déclarées sur Camino/Activités permettent de calculer une
+        estimation de votre fiscalité minière, consultable sur
+        <router-link
+          :to="entrepriseUrl"
+          target="_blank"
+          class="bg-info color-bg mb"
+          >votre page entreprise
+        </router-link>
+      </div>
 
       <SectionsEdit
         :contenu="activite.contenu"
@@ -135,6 +145,26 @@ export default {
 
     isPopupOpen() {
       return !!this.$store.state.popup.component
+    },
+    shouldDisplayFiscaliteHelp() {
+      return (
+        ['grp', 'gra', 'grx'].includes(this.activite.type.id) &&
+        this.entrepriseUrl !== null
+      )
+    },
+    entrepriseUrl() {
+      let entreprise = null
+      if (this.activite.titre.amodiataires.length === 1) {
+        entreprise = this.activite.titre.amodiataires[0]
+      } else if (this.activite.titre.titulaires.length === 1) {
+        entreprise = this.activite.titre.titulaires[0]
+      } else {
+        console.warn(
+          `l'activité ${this.activite.id} du titre ${this.activite.titre.slug} possède plusieurs titulaires`
+        )
+      }
+
+      return entreprise !== null ? `/entreprises/${entreprise.id}` : null
     }
   },
 
