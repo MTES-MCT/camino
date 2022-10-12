@@ -14,6 +14,7 @@ import {
 } from '../api/rest/titres'
 import { fiscalite } from '../api/rest/entreprises'
 import {
+  generateQgisToken,
   isSubscribedToNewsletter,
   manageNewsletterSubscription,
   utilisateurs
@@ -141,6 +142,7 @@ rest.get(
 rest.get(CaminoRestRoutes.statistiquesDGTM, restCatcher(getDGTMStats))
 rest.get('/demarches', restDownload(demarches))
 rest.get('/activites', restDownload(activites))
+rest.post(CaminoRestRoutes.generateQgisToken, restCatcher(generateQgisToken))
 rest.post(
   '/utilisateurs/:id/newsletter',
   restCatcher(manageNewsletterSubscription)

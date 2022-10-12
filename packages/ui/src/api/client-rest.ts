@@ -36,7 +36,8 @@ type ParseUrlParams<url> = url extends `${infer path}(${infer optionalPath})`
 
 export const fetchWithJson = async <U, T extends CaminoRestRoute>(
   path: T,
-  params: ParseUrlParams<T>
+  params: ParseUrlParams<T>,
+  method: 'post' | 'get' | 'put' | 'delete' = 'get'
 ): Promise<any> => {
   const uiPath = getUiRestRoute(path)
   let url = Object.entries<string>(params).reduce<string>(
@@ -45,7 +46,10 @@ export const fetchWithJson = async <U, T extends CaminoRestRoute>(
   )
   // clean url
   url = url.replace(/(\(|\)|\/?:[^/]+)/g, '')
-  const fetched = await fetch(url)
+  const fetched = await fetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' }
+  })
   const body = await fetched.json()
   if (fetched.ok) {
     return body

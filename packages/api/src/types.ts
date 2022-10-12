@@ -824,6 +824,7 @@ interface IUtilisateur {
   entreprisesCreation?: boolean | null
   utilisateursCreation?: boolean | null
   refreshToken?: string | null
+  qgisToken?: string | null
 }
 
 interface IUtilisateurTitre {
