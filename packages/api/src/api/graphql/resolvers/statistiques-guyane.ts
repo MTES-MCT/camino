@@ -69,16 +69,11 @@ const statistiquesGuyaneTitresBuild = (
 const statistiquesGuyaneInstantBuild = (titres: ITitre[]) => {
   const statsInstant = titres.reduce(
     (acc, titre) => {
-      if (
-        titre.titreStatutId &&
-        ['val', 'mod'].includes(titre.titreStatutId) &&
-        titre.surfaceEtape &&
-        titre.surfaceEtape.surface
-      ) {
+      if (titre.titreStatutId && ['val', 'mod'].includes(titre.titreStatutId)) {
         if (['arm', 'prm'].includes(titre.typeId)) {
-          acc.surfaceExploration += titre.surfaceEtape.surface
+          acc.surfaceExploration += titre.surfaceEtape?.surface ?? 0
         } else {
-          acc.surfaceExploitation += titre.surfaceEtape.surface
+          acc.surfaceExploitation += titre.surfaceEtape?.surface ?? 0
         }
         const id = camelcase(
           `titres-${titre.typeId}`
