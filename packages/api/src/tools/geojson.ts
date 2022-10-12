@@ -156,6 +156,34 @@ export const geojsonIntersectsForets = async (
   return { fallback, data: result.rows.map(({ id }) => id) }
 }
 
+export const geojsonIntersectsSecteursMaritime = async (
+  geojson: Feature<any>
+): Promise<GeoJsonResult<string[]>> => {
+  let result: { rows: { id: string }[] }
+  let fallback = false
+  try {
+    result = await knex.raw(
+      `select secteurs_maritime_postgis.id from secteurs_maritime_postgis 
+           where ST_INTERSECTS(ST_GeomFromGeoJSON('${JSON.stringify(
+             geojson.geometry
+           )}'), secteurs_maritime_postgis.geometry) is true`
+    )
+  } catch (e) {
+    fallback = true
+    console.warn(
+      "Une erreur est survenue lors du calcul de l'intersection avec des secteurs maritimes, tentative de correction automatique"
+    )
+    result = await knex.raw(
+      `select secteurs_maritime_postgis.id from secteurs_maritime_postgis 
+           where ST_INTERSECTS(ST_MAKEVALID(ST_GeomFromGeoJSON('${JSON.stringify(
+             geojson.geometry
+           )}')), secteurs_maritime_postgis.geometry) is true`
+    )
+  }
+
+  return { fallback, data: result.rows.map(({ id }) => id) }
+}
+
 export const geojsonIntersectsCommunes = async (
   geojson: Feature<any>
 ): Promise<GeoJsonResult<{ id: string; surface: number }[]>> => {

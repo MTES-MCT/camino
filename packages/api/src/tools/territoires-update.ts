@@ -145,6 +145,53 @@ const foretsUpdate = async () => {
   }
 }
 
+const secteursMaritimeUpdates = async () => {
+  console.info('Téléchargement du fichier des secteurs maritimes')
+
+  // Cette URl a été obtenue depuis https://gisdata.cerema.fr/arcgis/rest/services/Carte_vocation_dsf_2020/MapServer/0/query avec where 1=1 et outfields 'secteur,facade,OBJECTID'
+  const secteursUrl =
+    'https://gisdata.cerema.fr/arcgis/rest/services/Carte_vocation_dsf_2020/MapServer/0/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=secteur%2Cfacade%2COBJECTID&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&having=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&historicMoment=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentOnly=false&datumTransformation=&parameterValues=&rangeValues=&quantizationParameters=&f=geojson'
+
+  const secteurs = await (await fetch(secteursUrl)).json()
+
+  const secteurIdsKnown: number[] = (
+    await knex.select('id').from('secteurs_maritime')
+  ).map(({ id }) => id)
+  for (const secteur of secteurs.features) {
+    try {
+      const id: number = secteur.id
+
+      const result = await knex.raw(
+        `select ST_MakeValid(ST_Multi(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
+          secteur.geometry
+        )}'), 4326))) as result`
+      )
+
+      if (secteurIdsKnown.includes(id)) {
+        await knex('secteurs_maritime').where('id', id).update({
+          nom: secteur.properties.secteur,
+          facade: secteur.properties.facade
+        })
+        await knex('secteurs_maritime_postgis').where('id', id).update({
+          geometry: result.rows[0].result
+        })
+      } else {
+        await knex('secteurs_maritime').insert({
+          id,
+          nom: secteur.properties.secteur,
+          facade: secteur.properties.facade
+        })
+        await knex('secteurs_maritime_postgis').insert({
+          id,
+          geometry: result.rows[0].result
+        })
+      }
+    } catch (e) {
+      console.error(secteur.properties.secteur, e)
+    }
+  }
+}
+
 const sdomZonesUpdate = async () => {
   // https://catalogue.geoguyane.fr/geosource/panierDownloadFrontalParametrage/b6bc9b5d-fe7f-4fde-9d75-f512e5a33374
   // https://catalogue.geoguyane.fr/geosource/panierDownloadFrontalParametrage/cacbd740-dbb1-421e-af2d-96c9f0bd9a6d
@@ -235,5 +282,10 @@ export async function updateTerritoires() {
     await sdomZonesUpdate()
   } catch (e) {
     console.error(`impossible de mettre à jour les zones du SDOM`, e)
+  }
+  try {
+    await secteursMaritimeUpdates()
+  } catch (e) {
+    console.error(`impossible de mettre à jour les secteurs maritimes`, e)
   }
 }
