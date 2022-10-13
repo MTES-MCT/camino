@@ -54,5 +54,14 @@ export default [
       'ZONE2activiteminiereautoriseesouscontrainte,ZONE1activiteminiereinterditesaufexploitationsouterraineetrecherchesaeriennes,ZONE0activiteminiereinterdite,Zone0potentielle',
     attribution: 'GéoGuyane',
     version: '1.3.0'
+  },
+  {
+    id: 'facades',
+    name: 'Façades maritimes',
+    type: 'wms',
+    url: 'https://gisdata.cerema.fr/arcgis/services/Carte_vocation_dsf_2020/MapServer/WMSServer',
+    layers: '0',
+    attribution: 'cerema',
+    version: '1.3.0'
   }
 ]

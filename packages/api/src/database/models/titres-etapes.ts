@@ -17,6 +17,7 @@ import Communes from './communes'
 import Forets from './forets'
 import SDOMZones from './sdom-zones'
 import Journaux from './journaux'
+import SecteursMaritime from './secteurs_maritime'
 
 export interface DBTitresEtapes extends ITitreEtape {
   archive: boolean
@@ -182,6 +183,18 @@ class TitresEtapes extends Model {
           to: 'titres__sdomZones.sdomZoneId'
         },
         to: 'sdomZones.id'
+      }
+    },
+    secteursMaritime: {
+      relation: Model.ManyToManyRelation,
+      modelClass: SecteursMaritime,
+      join: {
+        from: 'titresEtapes.id',
+        through: {
+          from: 'titres__secteurs_maritime.titre_etape_id',
+          to: 'titres__secteurs_maritime.secteur_maritime_id'
+        },
+        to: 'secteurs_maritime.id'
       }
     },
     journaux: {

@@ -409,6 +409,9 @@ interface IEtapeType {
 
 interface IForet extends IArea {}
 interface ISDOMZone extends IArea {}
+export interface ISecteurMaritime extends IArea {
+  facade: string
+}
 
 type IGeoJsonProperties = Index<string | number>
 
@@ -612,6 +615,9 @@ interface ITitreForet extends ITitreArea {
 interface ITitreSDOMZone extends ITitreArea {
   sdomZoneId: string
 }
+export interface ITitreSecteurMaritime extends ITitreArea {
+  secteurMaritimeId: string
+}
 
 interface ITitreEtapeJustificatif {
   documentId: string
@@ -699,6 +705,7 @@ interface ITitreEtape {
   communes?: ICommune[] | null
   forets?: IForet[] | null
   sdomZones?: ISDOMZone[] | null
+  secteursMaritime?: ISecteurMaritime[] | null
   incertitudes?: ITitreIncertitudes | null
   contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
   heritageProps?: IHeritageProps | null

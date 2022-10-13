@@ -7,7 +7,12 @@
       </div>
     </div>
     <div
-      v-if="communes.length || forets.length || sdomZones.length"
+      v-if="
+        communes.length ||
+        forets.length ||
+        sdomZones.length ||
+        secteursMaritimes.length
+      "
       class="tablet-blob-3-4"
     >
       <h5>Territoires</h5>
@@ -37,6 +42,14 @@
           <TagList :elements="sdomZones.map(f => f.nom)" />
         </div>
       </div>
+      <template v-if="secteursMaritimes.length">
+        <div v-for="facade in facadesMaritime" :key="facade.facade">
+          <h6 class="mb-s">
+            {{ facade.facade }}
+          </h6>
+          <TagList :elements="facade.secteurs" />
+        </div>
+      </template>
     </div>
   </div>
 </template>
@@ -51,18 +64,21 @@ import {
 } from 'camino-common/src/static/departement'
 import { PAYS_IDS, PaysId } from 'camino-common/src/static/pays'
 import { Regions } from 'camino-common/src/static/region'
+import { onlyUnique } from 'camino-common/src/typescript-tools'
 
 interface Props {
   surface?: number
   forets?: { nom: string }[]
   sdomZones?: { nom: string }[]
   communes?: { nom: string; departementId: DepartementId }[]
+  secteursMaritimes?: { nom: string; facade: string }[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
   communes: () => [],
   forets: () => [],
   sdomZones: () => [],
+  secteursMaritimes: () => [],
   surface: 0
 })
 
@@ -72,6 +88,27 @@ type RegionsComputed = {
   paysId: PaysId
   departements: { id: string; nom: string; communes: string[] }[]
 }[]
+
+type FacadeComputed = {
+  facade: string
+  secteurs: string[]
+}
+const facadesMaritime = computed<FacadeComputed[]>(() => {
+  const facades = props.secteursMaritimes
+    .map(secteur => secteur.facade)
+    .filter(onlyUnique)
+
+  return facades.reduce<FacadeComputed[]>((acc, facade) => {
+    acc.push({
+      facade,
+      secteurs: props.secteursMaritimes
+        .filter(secteur => facade === secteur.facade)
+        .map(({ nom }) => nom)
+        .filter(onlyUnique)
+    })
+    return acc
+  }, [])
+})
 
 const regions = computed<RegionsComputed>(() => {
   return props.communes.reduce((acc, commune) => {

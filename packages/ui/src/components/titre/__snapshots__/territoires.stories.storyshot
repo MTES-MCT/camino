@@ -225,6 +225,79 @@ exports[`Automated Storybook Snapshots Components/Titre/Territoires All 1`] = `
         </ul>
       </div>
     </div>
+    
+    <div>
+      <h6
+        class="mb-s"
+      >
+        facade 1
+      </h6>
+      <ul
+        class="list-inline"
+      >
+        
+        <li
+          class="mr-xs mb-xs"
+        >
+          <span
+            class="bold cap-first small lh-2"
+          >
+            <span
+              class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
+            >
+              
+              nom1
+              
+            </span>
+          </span>
+        </li>
+        <li
+          class="mr-xs mb-xs"
+        >
+          <span
+            class="bold cap-first small lh-2"
+          >
+            <span
+              class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
+            >
+              
+              nom3
+              
+            </span>
+          </span>
+        </li>
+        
+      </ul>
+    </div>
+    <div>
+      <h6
+        class="mb-s"
+      >
+        facade 2
+      </h6>
+      <ul
+        class="list-inline"
+      >
+        
+        <li
+          class="mr-xs mb-xs"
+        >
+          <span
+            class="bold cap-first small lh-2"
+          >
+            <span
+              class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
+            >
+              
+              nom2
+              
+            </span>
+          </span>
+        </li>
+        
+      </ul>
+    </div>
+    
   </div>
 </div>
 `;
@@ -304,6 +377,7 @@ exports[`Automated Storybook Snapshots Components/Titre/Territoires Only Forets 
       </div>
     </div>
     <!--v-if-->
+    <!--v-if-->
   </div>
 </div>
 `;
@@ -370,6 +444,102 @@ exports[`Automated Storybook Snapshots Components/Titre/Territoires Only Sdom Zo
         </ul>
       </div>
     </div>
+    <!--v-if-->
+  </div>
+</div>
+`;
+
+exports[`Automated Storybook Snapshots Components/Titre/Territoires Only Secteurs Maritimes 1`] = `
+<div
+  class="tablet-blobs mb-xl"
+>
+  <div
+    class="tablet-blob-1-4"
+  >
+    <!--v-if-->
+  </div>
+  <div
+    class="tablet-blob-3-4"
+  >
+    <h5>
+      Territoires
+    </h5>
+    <!--v-if-->
+    <!--v-if-->
+    <!--v-if-->
+    
+    <div>
+      <h6
+        class="mb-s"
+      >
+        facade 1
+      </h6>
+      <ul
+        class="list-inline"
+      >
+        
+        <li
+          class="mr-xs mb-xs"
+        >
+          <span
+            class="bold cap-first small lh-2"
+          >
+            <span
+              class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
+            >
+              
+              nom1
+              
+            </span>
+          </span>
+        </li>
+        <li
+          class="mr-xs mb-xs"
+        >
+          <span
+            class="bold cap-first small lh-2"
+          >
+            <span
+              class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
+            >
+              
+              nom3
+              
+            </span>
+          </span>
+        </li>
+        
+      </ul>
+    </div>
+    <div>
+      <h6
+        class="mb-s"
+      >
+        facade 2
+      </h6>
+      <ul
+        class="list-inline"
+      >
+        
+        <li
+          class="mr-xs mb-xs"
+        >
+          <span
+            class="bold cap-first small lh-2"
+          >
+            <span
+              class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
+            >
+              
+              nom2
+              
+            </span>
+          </span>
+        </li>
+        
+      </ul>
+    </div>
+    
   </div>
 </div>
 `;
