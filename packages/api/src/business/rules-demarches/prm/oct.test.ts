@@ -29,9 +29,11 @@ describe('vérifie l’arbre d’octroi d’une PRM', () => {
         { typeId: 'mno', date: '2020-01-18' },
         { typeId: 'rpu', date: '2020-01-19' }
       ])
-    ).toContain(
-      'l’étape "rpu" n’est pas possible après "ssr", "scl", "spo", "npp", "mno"'
-    )
+    ).toMatchInlineSnapshot(`
+      Array [
+        "l’étape \\"rpu\\" n’est pas possible après \\"ssr\\", \\"scl\\", \\"spo\\", \\"apo\\", \\"npp\\", \\"mno\\"",
+      ]
+    `)
   })
 
   test('peut créer une "rpu" après une "dex" acceptée', () => {
@@ -89,7 +91,7 @@ describe('vérifie l’arbre d’octroi d’une PRM', () => {
         { typeId: 'ppc', date: '2020-01-08' },
         { typeId: 'scl', date: '2020-01-07' },
         { typeId: 'ssr', date: '2020-01-07' },
-        { typeId: 'apo', date: '2020-01-09' }
+        { typeId: 'apd', date: '2020-01-09' }
       ])
     ).toHaveLength(0)
   })
