@@ -4,7 +4,6 @@ import { dbManager } from '../../../tests/db-manager'
 import { IUtilisateur } from '../../types'
 import { idGenerate } from '../models/_format/id-create'
 import Titres from '../models/titres'
-import AdministrationsTitresTypes from '../models/administrations-titres-types'
 console.info = jest.fn()
 console.error = jest.fn()
 beforeAll(async () => {
@@ -37,13 +36,6 @@ describe('teste les requêtes sur les activités', () => {
       statutId: 'dep',
       periodeId: 1,
       annee: 2000
-    })
-
-    await AdministrationsTitresTypes.query().delete()
-    await AdministrationsTitresTypes.query().insert({
-      administrationId: 'min-mtes-dgaln-01',
-      titreTypeId: 'arm',
-      gestionnaire: true
     })
 
     const adminDGALN: IUtilisateur = {

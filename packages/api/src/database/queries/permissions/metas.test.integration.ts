@@ -4,9 +4,10 @@ import { demarchesTypesQueryModify } from './metas'
 import { idGenerate } from '../../models/_format/id-create'
 import Titres from '../../models/titres'
 import { IDemarcheType } from '../../../types'
-import AdministrationsTitresTypes from '../../models/administrations-titres-types'
 import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts'
 import { AdministrationId } from 'camino-common/src/static/administrations'
+import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes'
+import { getKeys } from 'camino-common/src/typescript-tools'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -23,9 +24,8 @@ describe('metas permissions queries', () => {
     test.each`
       administrationId          | travauxCreation
       ${'dre-ile-de-france-01'} | ${true}
-      ${'dea-guadeloupe-01'}    | ${true}
+      ${'dea-guyane-01'}        | ${true}
       ${'min-mtes-dgec-01'}     | ${false}
-      ${'pre-42218-01'}         | ${false}
       ${'ope-ptmg-973-01'}      | ${false}
     `(
       'l’administration $administrationId peut créer des travaux',
@@ -38,27 +38,33 @@ describe('metas permissions queries', () => {
       }) => {
         const titreId = idGenerate()
 
+        // On cherche un type de titre où l’administration est gestionnaire
+        const titreTypeIds = getTitreTypeIdsByAdministration(administrationId)
+        const titreTypeId = titreTypeIds
+          ? getKeys(titreTypeIds).find(
+              typeId => titreTypeIds[typeId]?.gestionnaire
+            )
+          : undefined
+
+        if (!titreTypeId) {
+          throw new Error(
+            'test impossible car cette administration n’est pas gestionnaire'
+          )
+        }
+
         await Titres.query().insert({
           id: titreId,
           nom: idGenerate(),
           titreStatutId: 'val',
           domaineId: 'm',
-          typeId: 'arm'
-        })
-
-        await AdministrationsTitresTypes.query().delete()
-        // On donne le droit gestionnaire à la DREAL
-        await AdministrationsTitresTypes.query().insert({
-          administrationId,
-          titreTypeId: 'arm',
-          gestionnaire: true
+          typeId: titreTypeId
         })
 
         // On met une restriction sur les démarches du code minier sur ce type de titre
         await AdministrationsTitresTypesTitresStatuts.query().delete()
         await AdministrationsTitresTypesTitresStatuts.query().insert({
           administrationId,
-          titreTypeId: 'arm',
+          titreTypeId,
           titreStatutId: 'val',
           titresModificationInterdit: false,
           demarchesModificationInterdit: true,

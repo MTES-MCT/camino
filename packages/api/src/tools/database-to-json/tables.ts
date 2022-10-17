@@ -16,10 +16,6 @@ export const tables = [
     orderBy: ['activite_type_id', 'administration_id']
   },
   {
-    name: 'administrations__titres_types',
-    orderBy: ['administration_id', 'titre_type_id']
-  },
-  {
     name: 'administrations__titres_types__etapes_types',
     orderBy: ['administration_id', 'titre_type_id', 'etape_type_id']
   },

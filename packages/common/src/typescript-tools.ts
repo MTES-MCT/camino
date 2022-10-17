@@ -9,3 +9,9 @@ export const onlyUnique = <T>(value: T, index: number, self: T[]): boolean => {
 }
 
 export type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>
+
+export type PartialRecord<K extends keyof any, T> = {
+  [P in K]?: T
+}
+
+export const getKeys = Object.keys as <T extends object>(obj: T) => Array<keyof T>
