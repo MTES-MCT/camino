@@ -1,7 +1,6 @@
 import {
   DemarcheId,
   IDemarcheType,
-  IDocumentType,
   IEtapeType,
   ISection,
   ITitre,
@@ -13,6 +12,14 @@ import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-de
 
 import { dupRemove } from '../../tools/index'
 import { titreSectionsFormat } from './titres-sections'
+
+import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
+import { DocumentType } from 'camino-common/src/static/documentsTypes'
+import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
+import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
+import { DomaineId } from 'camino-common/src/static/domaines'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 
 const etapeTypeSectionsFormat = (
   sections: ISection[] | undefined | null,
@@ -37,17 +44,13 @@ const etapeTypeSectionsFormat = (
 }
 
 const documentsTypesFormat = (
-  documentsTypes: IDocumentType[] | undefined | null,
-  documentsTypesSpecifiques: IDocumentType[] | undefined | null
-): IDocumentType[] => {
-  let result: IDocumentType[] = []
+  documentsTypes: DocumentType[] | undefined | null,
+  documentsTypesSpecifiques: DocumentType[] | undefined | null
+): DocumentType[] => {
+  let result: DocumentType[] = []
 
   if (documentsTypes?.length) {
-    result = documentsTypes.map(dt => {
-      dt.description = dt.descriptionSpecifique || dt.description
-
-      return dt
-    })
+    result = [...documentsTypes]
   }
 
   if (documentsTypesSpecifiques?.length) {
@@ -69,29 +72,58 @@ const documentsTypesFormat = (
 
   return result
 }
+export interface DocumentTypeData {
+  domaineId: DomaineId
+  titreTypeTypeId: TitreTypeTypeId
+  demarcheTypeId: DemarcheTypeId
+  etapeTypeId: EtapeTypeId
+}
 
 const etapeTypeFormat = (
-  etapeType: IEtapeType,
+  etape: ITitreEtape,
   sectionsSpecifiques: ISection[] | null | undefined,
-  documentsTypesSpecifiques: IDocumentType[] | null | undefined,
-  justificatifsTypesSpecifiques: IDocumentType[] | null | undefined
+  justificatifsTypesSpecifiques: DocumentType[] | null | undefined,
+  documentTypeData: DocumentTypeData | null = null
 ) => {
-  etapeType.sections = etapeTypeSectionsFormat(
-    etapeType.sections,
-    sectionsSpecifiques
-  )
+  const etapeType = etape.type
+  if (etapeType) {
+    etapeType.sections = etapeTypeSectionsFormat(
+      etapeType.sections,
+      sectionsSpecifiques
+    )
 
-  // on ajoute les documents spécifiques
-  etapeType.documentsTypes = documentsTypesFormat(
-    etapeType.documentsTypes,
-    documentsTypesSpecifiques
-  )
+    if (documentTypeData === null) {
+      const domaineId = etape?.demarche?.titre?.domaineId
+      const typeId = etape?.demarche?.titre?.typeId
+      if (!typeId) {
+        throw new Error(
+          `le type du titre de l'étape ${etape.id} n'est pas chargé`
+        )
+      }
+      const titreTypeTypeId = getTitreTypeType(typeId)
+      const demarcheTypeId = etape?.demarche?.typeId
+      const etapeTypeId = etape?.typeId
 
-  // on ajoute les justificatifs spécifiques
-  etapeType.justificatifsTypes = documentsTypesFormat(
-    etapeType.justificatifsTypes,
-    justificatifsTypesSpecifiques
-  )
+      etapeType.documentsTypes = getDocuments(
+        titreTypeTypeId,
+        domaineId,
+        demarcheTypeId,
+        etapeTypeId
+      )
+    } else {
+      etapeType.documentsTypes = getDocuments(
+        documentTypeData.titreTypeTypeId,
+        documentTypeData.domaineId,
+        documentTypeData.demarcheTypeId,
+        documentTypeData.etapeTypeId
+      )
+    }
+    // on ajoute les justificatifs spécifiques
+    etapeType.justificatifsTypes = documentsTypesFormat(
+      etapeType.justificatifsTypes,
+      justificatifsTypesSpecifiques
+    )
+  }
 
   return etapeType
 }

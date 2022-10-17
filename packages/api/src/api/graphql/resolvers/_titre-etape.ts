@@ -1,6 +1,5 @@
 import {
   ICoordonnees,
-  IDocumentType,
   IEtapeType,
   IHeritageContenu,
   IHeritageProps,
@@ -31,6 +30,11 @@ import { geojsonIntersectsSDOM, GeoJsonResult } from '../../../tools/geojson'
 import { Feature } from '@turf/helpers'
 import SdomZones from '../../../database/models/sdom-zones'
 import { SDOMZoneIds } from 'camino-common/src/static/sdom'
+import {
+  DocumentTypeId,
+  DocumentType,
+  DOCUMENTS_TYPES_IDS
+} from 'camino-common/src/static/documentsTypes'
 
 const titreEtapePointsCalc = <
   T extends {
@@ -207,8 +211,7 @@ const titreEtapeHeritageBuild = (
   etapeType: IEtapeType,
   titreDemarche: ITitreDemarche,
   sectionsSpecifiques: ISection[],
-  documentsTypesSpecifiques: IDocumentType[],
-  justificatifsTypesSpecifiques: IDocumentType[]
+  justificatifsTypesSpecifiques: DocumentType[]
 ) => {
   let titreEtape = {} as ITitreEtape
 
@@ -237,7 +240,6 @@ const titreEtapeHeritageBuild = (
   titreEtape.type = etapeType
   titreEtape.titreDemarcheId = titreDemarche.id
   titreEtape.sectionsSpecifiques = sectionsSpecifiques
-  titreEtape.documentsTypesSpecifiques = documentsTypesSpecifiques
   titreEtape.justificatifsTypesSpecifiques = justificatifsTypesSpecifiques
 
   return titreEtape
@@ -260,7 +262,7 @@ const documentTypeIdsBySdomZonesGet = (
   demarcheTypeId: string,
   etapeTypeId: string
 ) => {
-  const documentTypeIds: string[] = []
+  const documentTypeIds: DocumentTypeId[] = []
 
   // Pour les demandes d’octroi d’AXM
   if (
@@ -270,12 +272,12 @@ const documentTypeIdsBySdomZonesGet = (
   ) {
     if (sdomZones?.find(z => z.id === SDOMZoneIds.Zone2)) {
       // dans la zone 2 du SDOM les documents suivants sont obligatoires:
-      // Notice d’impact renforcée
-      // Justification d’existence du gisement
-      documentTypeIds.push(...['nir', 'jeg'])
+      documentTypeIds.push(DOCUMENTS_TYPES_IDS.noticeDImpactRenforcee)
+      documentTypeIds.push(
+        DOCUMENTS_TYPES_IDS.justificationDExistenceDuGisement
+      )
     } else {
-      // sinon c’est juste une notice d’impact
-      documentTypeIds.push('nip')
+      documentTypeIds.push(DOCUMENTS_TYPES_IDS.noticeDImpact)
     }
   }
 

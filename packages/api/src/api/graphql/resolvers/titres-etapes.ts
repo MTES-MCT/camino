@@ -34,7 +34,10 @@ import { titreEtapeUpdationValidate } from '../../../business/validations/titre-
 
 import { fieldsBuild } from './_fields-build'
 import { titreDemarcheUpdatedEtatValidate } from '../../../business/validations/titre-demarche-etat-validate'
-import { titreEtapeFormat } from '../../_format/titres-etapes'
+import {
+  titreEtapeFormat,
+  titreEtapeFormatFields
+} from '../../_format/titres-etapes'
 import {
   etapeTypeGet,
   titreTypeDemarcheTypeEtapeTypeGet
@@ -71,6 +74,8 @@ import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { Feature } from '@turf/helpers'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
+import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
 
 const statutIdAndDateGet = (
   etape: ITitreEtape,
@@ -175,26 +180,36 @@ const etapeHeritage = async (
     )
 
     const etapeType = await etapeTypeGet(typeId, {
-      fields: { documentsTypes: { id: {} }, justificatifsTypes: { id: {} } }
+      fields: { justificatifsTypes: { id: {} } }
     })
 
-    const { sections, documentsTypes, justificatifsTypes } =
-      await specifiquesGet(
-        titreDemarche!.titre!.typeId,
-        titreDemarche!.typeId,
-        etapeType!
-      )
+    const { sections, justificatifsTypes } = await specifiquesGet(
+      titreDemarche!.titre!.typeId,
+      titreDemarche!.typeId,
+      etapeType!
+    )
 
     const titreEtape = titreEtapeHeritageBuild(
       date,
       etapeType!,
       titreDemarche!,
       sections,
-      documentsTypes,
       justificatifsTypes
     )
+    const titreTypeId = titreDemarche?.titre?.typeId
+    if (!titreTypeId) {
+      throw new Error(
+        `le type du titre de l'étape ${titreEtape.id} n'est pas chargé`
+      )
+    }
+    const titreTypeTypeId = getTitreTypeType(titreTypeId)
 
-    return titreEtapeFormat(titreEtape)
+    return titreEtapeFormat(titreEtape, titreEtapeFormatFields, {
+      domaineId: titreDemarche!.titre!.domaineId,
+      titreTypeTypeId,
+      demarcheTypeId: titreDemarche!.typeId,
+      etapeTypeId: etapeType!.id
+    })
   } catch (e) {
     console.error(e)
 
@@ -213,22 +228,17 @@ const specifiquesGet = async (
       demarcheTypeId: titreDemarcheTypeId,
       etapeTypeId: etapeType.id
     },
-    { fields: { documentsTypes: { id: {} }, justificatifsTypes: { id: {} } } }
+    { fields: { justificatifsTypes: { id: {} } } }
   )
 
   const sections = etapeTypeSectionsFormat(etapeType.sections, tde?.sections)
-
-  const documentsTypes = documentsTypesFormat(
-    etapeType.documentsTypes,
-    tde?.documentsTypes
-  )
 
   const justificatifsTypes = documentsTypesFormat(
     etapeType.justificatifsTypes,
     tde?.justificatifsTypes
   )
 
-  return { sections, documentsTypes, justificatifsTypes }
+  return { sections, justificatifsTypes }
 }
 
 const etapeCreer = async (
@@ -272,7 +282,7 @@ const etapeCreer = async (
       throw new Error("le titre n'existe pas")
 
     const etapeType = await etapeTypeGet(etape.typeId, {
-      fields: { documentsTypes: { id: {} }, justificatifsTypes: { id: {} } }
+      fields: { justificatifsTypes: { id: {} } }
     })
 
     if (!etapeType) {
@@ -283,12 +293,11 @@ const etapeCreer = async (
     etape.statutId = statutId
     etape.date = date
 
-    const { sections, documentsTypes, justificatifsTypes } =
-      await specifiquesGet(
-        titreDemarche.titre!.typeId,
-        titreDemarche.typeId,
-        etapeType
-      )
+    const { sections, justificatifsTypes } = await specifiquesGet(
+      titreDemarche.titre!.typeId,
+      titreDemarche.typeId,
+      etapeType
+    )
 
     const justificatifs = etape.justificatifIds?.length
       ? await documentsGet(
@@ -325,12 +334,24 @@ const etapeCreer = async (
       sdomZones.push(...geoJsonResult.data)
     }
 
+    const typeId = titreDemarche?.titre?.typeId
+    if (!typeId) {
+      throw new Error(
+        `le type du titre de la ${titreDemarche.id} n'est pas chargé`
+      )
+    }
+    const titreTypeTypeId = getTitreTypeType(typeId)
     const rulesErrors = titreEtapeUpdationValidate(
       etape,
       titreDemarche,
       titreDemarche.titre,
       sections,
-      documentsTypes,
+      getDocuments(
+        titreTypeTypeId,
+        titreDemarche.titre?.domaineId,
+        titreDemarche.typeId,
+        etape.typeId
+      ),
       documents,
       justificatifsTypes,
       justificatifs,
@@ -438,7 +459,7 @@ const etapeModifier = async (
       throw new Error("le titre n'existe pas")
 
     const etapeType = await etapeTypeGet(etape.typeId, {
-      fields: { documentsTypes: { id: {} }, justificatifsTypes: { id: {} } }
+      fields: { justificatifsTypes: { id: {} } }
     })
     if (!etapeType) {
       throw new Error(`le type d'étape "${etape.typeId}" n'existe pas`)
@@ -448,12 +469,11 @@ const etapeModifier = async (
     etape.statutId = statutId
     etape.date = date
 
-    const { sections, documentsTypes, justificatifsTypes } =
-      await specifiquesGet(
-        titreDemarche.titre!.typeId,
-        titreDemarche.typeId,
-        etapeType
-      )
+    const { sections, justificatifsTypes } = await specifiquesGet(
+      titreDemarche.titre!.typeId,
+      titreDemarche.typeId,
+      etapeType
+    )
 
     const justificatifs = etape.justificatifIds?.length
       ? await documentsGet(
@@ -491,12 +511,24 @@ const etapeModifier = async (
       sdomZones.push(...geoJsonResult.data)
     }
 
+    const typeId = titreDemarche?.titre?.typeId
+    if (!typeId) {
+      throw new Error(
+        `le type du titre de la ${titreDemarche.id} n'est pas chargé`
+      )
+    }
+    const titreTypeTypeId = getTitreTypeType(typeId)
     const rulesErrors = titreEtapeUpdationValidate(
       etape,
       titreDemarche,
       titreDemarche.titre,
       sections,
-      documentsTypes,
+      getDocuments(
+        titreTypeTypeId,
+        titreDemarche.titre.domaineId,
+        titreDemarche.typeId,
+        etape.typeId
+      ),
       documents,
       justificatifsTypes,
       justificatifs,

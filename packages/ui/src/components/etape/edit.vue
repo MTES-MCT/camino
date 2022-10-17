@@ -31,6 +31,7 @@
     >
       <FondamentalesEdit
         v-model:etape="etape"
+        :demarcheTypeId="demarcheTypeId"
         :domaineId="domaineId"
         :titreTypeId="titreTypeId"
         :userIsAdmin="userIsAdmin"
@@ -154,6 +155,7 @@ export default {
 
   props: {
     etape: { type: Object, required: true },
+    demarcheTypeId: { type: String, required: true },
     etapeType: { type: Object, default: null },
     domaineId: { type: String, required: true },
     titreTypeId: { type: String, required: true },

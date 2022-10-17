@@ -39,10 +39,6 @@ export const tables = [
   { name: 'entreprises_etablissements', orderBy: ['id'] },
   { name: 'etapes_types', orderBy: ['id'] },
   {
-    name: 'etapes_types__documents_types',
-    orderBy: ['etape_type_id', 'document_type_id']
-  },
-  {
     name: 'etapes_types__justificatifs_types',
     orderBy: ['etape_type_id', 'document_type_id']
   },
@@ -83,15 +79,6 @@ export const tables = [
   {
     name: 'titres_types__demarches_types__etapes_types',
     orderBy: ['titre_type_id', 'demarche_type_id', 'etape_type_id']
-  },
-  {
-    name: 'titres_types__demarches_types__etapes_types__documents_types',
-    orderBy: [
-      'titre_type_id',
-      'demarche_type_id',
-      'etape_type_id',
-      'document_type_id'
-    ]
   },
   {
     name: 'titres_types__demarches_types__etapes_types__justificatifs_t',

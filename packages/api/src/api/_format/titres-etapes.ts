@@ -4,7 +4,7 @@ import {
   geojsonFeatureMultiPolygon,
   geojsonFeatureCollectionPoints
 } from '../../tools/geojson'
-import { etapeTypeFormat } from './etapes-types'
+import { DocumentTypeData, etapeTypeFormat } from './etapes-types'
 import { administrationFormat } from './administrations'
 import { entrepriseFormat } from './entreprises'
 import { titreEtapeFormatFields } from './_fields'
@@ -13,7 +13,8 @@ import { titreEtapeCompleteValidate } from '../../business/validations/titre-eta
 
 const titreEtapeFormat = (
   titreEtape: ITitreEtape,
-  fields = titreEtapeFormatFields
+  fields = titreEtapeFormatFields,
+  documentTypeData: DocumentTypeData | null = null
 ) => {
   if (titreEtape.demarche) {
     titreEtape.demarche = titreDemarcheFormat(
@@ -24,10 +25,10 @@ const titreEtapeFormat = (
 
   if (titreEtape.type) {
     titreEtape.type = etapeTypeFormat(
-      titreEtape.type,
+      titreEtape,
       titreEtape.sectionsSpecifiques,
-      titreEtape.documentsTypesSpecifiques,
-      titreEtape.justificatifsTypesSpecifiques
+      titreEtape.justificatifsTypesSpecifiques,
+      documentTypeData
     )
   }
 
@@ -69,7 +70,7 @@ const titreEtapeFormat = (
       titreEtape.demarche!.titre!.typeId,
       titreEtape.demarche!.typeId,
       titreEtape.type!.sections!,
-      titreEtape.type!.documentsTypes!,
+      titreEtape?.type?.documentsTypes ?? [],
       titreEtape.documents,
       titreEtape.type!.justificatifsTypes!,
       titreEtape.justificatifs,

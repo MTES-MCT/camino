@@ -168,7 +168,7 @@ const creationCheck = async (
         demarcheTypeId: demarcheType.id,
         etapeTypeId: etapeType.id
       },
-      { fields: { documentsTypes: { id: {} } } }
+      { fields: { id: {} } }
     )) as ITitreTypeDemarcheTypeEtapeType
 
     const sections = etapeTypeSectionsFormat(etapeType.sections, tde.sections)

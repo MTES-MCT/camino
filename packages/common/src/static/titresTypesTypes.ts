@@ -71,3 +71,7 @@ export const TitresTypesTypes: {
     ordre: 6
   }
 }
+
+const titreTypesTypeIds = Object.values(TITRES_TYPES_TYPES_IDS)
+
+export const isTitreTypeType = (titreTypeType: string | undefined | null): titreTypeType is TitreTypeTypeId => titreTypesTypeIds.includes(titreTypeType)

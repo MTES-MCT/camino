@@ -6,7 +6,6 @@ import { titreEtapePropsIds } from '../../business/utils/titre-etape-heritage-pr
 import Titres from '../../database/models/titres'
 import TitresTypesDemarchesTypesEtapesTypes from '../../database/models/titres-types--demarches-types-etapes-types'
 import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../../database/models/titres-types--demarches-types-etapes-types-justificatifs-types'
-import TitresTypesDemarchesTypesEtapesTypesDocumentsTypes from '../../database/models/titres-types--demarches-types-etapes-types-documents-types'
 import { documentCreate } from '../../database/queries/documents'
 import {
   ADMINISTRATION_IDS,
@@ -32,7 +31,6 @@ beforeAll(async () => {
   await dbManager.populateDb()
 
   await TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes.query().delete()
-  await TitresTypesDemarchesTypesEtapesTypesDocumentsTypes.query().delete()
 
   const mfrTDE = (await TitresTypesDemarchesTypesEtapesTypes.query()
     .where('titreTypeId', 'arm')

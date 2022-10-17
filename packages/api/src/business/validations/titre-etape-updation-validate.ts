@@ -2,7 +2,6 @@ import {
   ITitreEtape,
   ITitreDemarche,
   ITitre,
-  IDocumentType,
   ISection,
   IDocument,
   ISDOMZone,
@@ -23,6 +22,10 @@ import { objectClone } from '../../tools'
 import { dureeOptionalCheck } from 'camino-common/src/permissions/titres-etapes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import {
+  DocumentType,
+  DocumentsTypes
+} from 'camino-common/src/static/documentsTypes'
 
 const numberProps = ['duree', 'surface'] as unknown as [keyof ITitreEtape]
 
@@ -35,9 +38,9 @@ const titreEtapeUpdationValidate = (
   titreDemarche: ITitreDemarche,
   titre: ITitre,
   sections: ISection[],
-  documentsTypes: IDocumentType[],
+  documentsTypes: DocumentType[],
   documents: IDocument[] | null | undefined,
-  justificatifsTypes: IDocumentType[],
+  justificatifsTypes: DocumentType[],
   justificatifs: IDocument[] | null | undefined,
   sdomZones: ISDOMZone[] | null | undefined
 ) => {
@@ -134,9 +137,9 @@ const titreEtapeCompleteValidate = (
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
   sections: ISection[],
-  documentsTypes: IDocumentType[],
+  documentsTypes: DocumentType[],
   documents: IDocument[] | null | undefined,
-  justificatifsTypes: IDocumentType[],
+  justificatifsTypes: DocumentType[],
   justificatifs: IDocument[] | null | undefined,
   sdomZones: ISDOMZone[] | null | undefined
 ) => {
@@ -156,7 +159,7 @@ const titreEtapeCompleteValidate = (
     )
   }
 
-  const dts = (objectClone(documentsTypes) || []) as IDocumentType[]
+  const dts = (objectClone(documentsTypes) || []) as DocumentType[]
   if (sdomZones?.length) {
     // Ajoute les documents obligatoires en fonction des zones du SDOM
     const documentTypeIds = documentTypeIdsBySdomZonesGet(
@@ -166,7 +169,9 @@ const titreEtapeCompleteValidate = (
       titreEtape.typeId
     )
 
-    documentTypeIds?.forEach(dtId => dts.push({ id: dtId, optionnel: false }))
+    documentTypeIds?.forEach(dtId =>
+      dts.push({ id: dtId, nom: DocumentsTypes[dtId].nom, optionnel: false })
+    )
   }
 
   // les fichiers obligatoires sont tous renseignés et complets

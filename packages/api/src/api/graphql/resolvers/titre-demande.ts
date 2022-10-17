@@ -26,7 +26,6 @@ import titreUpdateTask from '../../../business/titre-update'
 import titreDemarcheUpdateTask from '../../../business/titre-demarche-update'
 import titreEtapeUpdateTask from '../../../business/titre-etape-update'
 import { userSuper } from '../../../database/user-super'
-import { specifiquesGet } from './titres-etapes'
 import {
   isAdministrationAdmin,
   isAdministrationEditeur,
@@ -39,6 +38,8 @@ import { getLinkConfig } from 'camino-common/src/permissions/titres'
 import { checkTitreLinks } from '../../../business/validations/titre-links-validate'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
+import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
 
 export const titreDemandeCreer = async (
   {
@@ -184,9 +185,7 @@ export const titreDemandeCreer = async (
 
       for (const etapeTypeId of decisionsAnnexesEtapeTypeIds) {
         const etapeType = await etapeTypeGet(etapeTypeId, {
-          fields: {
-            documentsTypes: { id: {} }
-          }
+          fields: { id: {} }
         })
 
         const etapesStatuts = getEtapesStatuts(etapeTypeId)
@@ -222,13 +221,15 @@ export const titreDemandeCreer = async (
           ]
         }
 
-        const { documentsTypes } = await specifiquesGet(
-          titreDemande.typeId,
+        const titreTypeType = getTitreTypeType(titreDemande.typeId)
+        const documents = getDocuments(
+          titreTypeType,
+          titreDemande.domaineId,
           titreDemarche.typeId,
-          etapeType!
+          etapeTypeId
         )
 
-        documentsTypes
+        documents
           ?.filter(dt => !dt.optionnel)
           .forEach(dt => {
             decisionAnnexeSections.elements!.push({

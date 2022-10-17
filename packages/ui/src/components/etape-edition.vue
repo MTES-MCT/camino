@@ -37,6 +37,7 @@
     <Edit
       v-else
       :etape="editedEtape"
+      :demarcheTypeId="demarcheType.id"
       :user="user"
       :events="events"
       :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction"
