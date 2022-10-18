@@ -48,7 +48,7 @@ const visibleCheck = async (
     a => a.id === administrationId
   )!
 
-  const gestionnaire = isGestionnaire(administration.id, titreTypeId)
+  const gestionnaire = isGestionnaire(administration.id)
 
   const titre = titreBuild(
     {
@@ -327,7 +327,7 @@ const modificationCheck = async (
     a => a.id === administrationId
   )!
 
-  const gestionnaire = isGestionnaire(administrationId, titreTypeId)
+  const gestionnaire = isGestionnaire(administrationId)
 
   const titre = titreBuild(
     {
