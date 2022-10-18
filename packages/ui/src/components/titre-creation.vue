@@ -31,7 +31,6 @@
       v-if="titreDemande.entrepriseId"
       v-model:element="titreDemande"
       :domaines="domaines"
-      :user="user"
     />
 
     <div v-if="titreDemande.typeId">
@@ -150,7 +149,10 @@ import {
   isSuper
 } from 'camino-common/src/roles'
 import PureTitresLink from '@/components/titre/pure-titres-link.vue'
-import { getLinkConfig } from 'camino-common/src/permissions/titres'
+import {
+  canCreateTitre,
+  getLinkConfig
+} from 'camino-common/src/permissions/titres'
 import {
   loadLinkableTitres,
   TitresLinkConfig
@@ -168,12 +170,14 @@ type Domaine = {
   titresTypes: {
     id: TitreTypeId
     type: TitreTypeType
+    titresCreation: boolean
   }[]
 }
 type TitreType = {
   id: TitreTypeId
   domaine: Domaine
   type: TitreTypeType
+  titresCreation: boolean
 }
 type Entreprise = {
   id: string
@@ -228,7 +232,13 @@ const domaines = computed<Domaine[]>(() => {
     isAdministrationAdmin(user.value) ||
     isAdministrationEditeur(user.value)
   ) {
-    return store.state.user.metas.domaines
+    return store.state.user.metas.domaines.map(d => ({
+      ...d,
+      titresTypes: d.titresTypes.map(tt => ({
+        ...tt,
+        titresCreation: canCreateTitre(store.state.user.element, tt.id)
+      }))
+    }))
   }
 
   if (isEntreprise(user.value) || isBureauDEtudes(user.value)) {
@@ -243,7 +253,8 @@ const domaines = computed<Domaine[]>(() => {
 
         domaine?.titresTypes?.push({
           id: tt.id,
-          type: tt.type
+          type: tt.type,
+          titresCreation: tt.titresCreation
         })
 
         return domaines

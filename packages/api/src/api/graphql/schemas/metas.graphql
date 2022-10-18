@@ -30,6 +30,7 @@ type TitreType {
   demarchesTypes: [DemarcheType]
   sections: Json
   archive: Boolean
+  titresCreation: Boolean
   contenuIds: Json
 }
 

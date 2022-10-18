@@ -4,6 +4,7 @@
       <div class="tablet-blob-1-3 tablet-pt-s pb-s">
         <h5>Domaine</h5>
       </div>
+
       <div class="mb tablet-blob-2-3">
         <select
           v-model="element.domaineId"
@@ -46,12 +47,10 @@
 </template>
 
 <script>
-import { canCreateTitre } from 'camino-common/src/permissions/titres'
 export default {
   props: {
     element: { type: Object, required: true },
-    domaines: { type: Array, required: true },
-    user: { type: Object, required: true }
+    domaines: { type: Array, required: true }
   },
 
   computed: {
@@ -60,10 +59,7 @@ export default {
         ({ id }) => id === this.element.domaineId
       )
 
-      return (
-        domaine &&
-        domaine.titresTypes.filter(tt => canCreateTitre(this.user, tt.id))
-      )
+      return domaine && domaine.titresTypes.filter(tt => tt.titresCreation)
     }
   },
 

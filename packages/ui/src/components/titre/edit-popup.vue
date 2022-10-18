@@ -17,12 +17,7 @@
       </div>
       <hr />
     </div>
-
-    <TitreTypeSelect
-      v-model:element="titre"
-      :domaines="domaines"
-      :user="user"
-    />
+    <TitreTypeSelect v-model:element="titre" :domaines="domaines" />
 
     <div>
       <h3 class="mb-s">Références</h3>
@@ -167,12 +162,17 @@ const messages = computed(() => {
   return store.state.popup.messages
 })
 
-const domaines = computed(() => {
-  return store.state.user.metas.domaines.filter((d: any) =>
-    d.titresTypes.some((dtt: { id: TitreTypeId }) =>
-      canCreateTitre(store.state.user.element, dtt.id)
+const domaines = computed<
+  { titresTypes: { titresCreation: boolean; id: TitreTypeId }[] }[]
+>(() => {
+  return store.state.user.metas.domaines
+    .filter((d: { titresTypes: { id: TitreTypeId }[] }) =>
+      d.titresTypes.some(dtt => canCreateTitre(user.value, dtt.id))
     )
-  )
+    .map((d: { titresTypes: { id: TitreTypeId }[] }) => ({
+      ...d,
+      titresTypes: d.titresTypes.map(tt => ({ ...tt, titresCreation: true }))
+    }))
 })
 
 const user = computed(() => {
