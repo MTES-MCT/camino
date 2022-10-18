@@ -232,7 +232,7 @@ const domaines = computed<Domaine[]>(() => {
     isAdministrationAdmin(user.value) ||
     isAdministrationEditeur(user.value)
   ) {
-    return store.state.user.metas.domaines.map(d => ({
+    return store.state.user.metas.domaines.map((d: Domaine) => ({
       ...d,
       titresTypes: d.titresTypes.map(tt => ({
         ...tt,
