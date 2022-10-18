@@ -52,7 +52,7 @@ const etatsDefinitionPrmOct: IDemarcheDefinitionRestrictions = {
     justeApres: [[{ etapeTypeId: 'anf' }]]
   },
   scl: {
-    separation: ['apo', 'spo'],
+    separation: ['apo', 'spo', 'apd'],
     avant: [[{ etapeTypeId: 'scl' }]],
     justeApres: [
       [{ etapeTypeId: 'mcr', statutId: 'fav' }],
@@ -62,18 +62,30 @@ const etatsDefinitionPrmOct: IDemarcheDefinitionRestrictions = {
   },
   ama: {
     justeApres: [[{ etapeTypeId: 'scl' }]],
-    avant: [[{ etapeTypeId: 'apo' }], [{ etapeTypeId: 'spo' }]]
+    avant: [
+      [{ etapeTypeId: 'apo' }],
+      [{ etapeTypeId: 'spo' }],
+      [{ etapeTypeId: 'apd' }]
+    ]
   },
   aep: {
     justeApres: [[{ etapeTypeId: 'scl' }]],
-    avant: [[{ etapeTypeId: 'apo' }], [{ etapeTypeId: 'spo' }]]
+    avant: [
+      [{ etapeTypeId: 'apo' }],
+      [{ etapeTypeId: 'spo' }],
+      [{ etapeTypeId: 'apd' }]
+    ]
   },
   acl: {
     justeApres: [[{ etapeTypeId: 'scl' }]],
-    avant: [[{ etapeTypeId: 'apo' }], [{ etapeTypeId: 'spo' }]]
+    avant: [
+      [{ etapeTypeId: 'apo' }],
+      [{ etapeTypeId: 'spo' }],
+      [{ etapeTypeId: 'apd' }]
+    ]
   },
   ssr: {
-    separation: ['apo', 'spo'],
+    separation: ['apo', 'spo', 'apd'],
     avant: [[{ etapeTypeId: 'ssr' }]],
     justeApres: [
       [{ etapeTypeId: 'mcr', statutId: 'fav' }],
@@ -83,31 +95,59 @@ const etatsDefinitionPrmOct: IDemarcheDefinitionRestrictions = {
   },
   apl: {
     justeApres: [[{ etapeTypeId: 'ssr' }]],
-    avant: [[{ etapeTypeId: 'apo' }], [{ etapeTypeId: 'spo' }]]
+    avant: [
+      [{ etapeTypeId: 'apo' }],
+      [{ etapeTypeId: 'spo' }],
+      [{ etapeTypeId: 'apd' }]
+    ]
   },
   apm: {
     justeApres: [[{ etapeTypeId: 'ssr' }]],
-    avant: [[{ etapeTypeId: 'apo' }], [{ etapeTypeId: 'spo' }]]
+    avant: [
+      [{ etapeTypeId: 'apo' }],
+      [{ etapeTypeId: 'spo' }],
+      [{ etapeTypeId: 'apd' }]
+    ]
   },
   pnr: {
     justeApres: [[{ etapeTypeId: 'ssr' }]],
-    avant: [[{ etapeTypeId: 'apo' }], [{ etapeTypeId: 'spo' }]]
+    avant: [
+      [{ etapeTypeId: 'apo' }],
+      [{ etapeTypeId: 'spo' }],
+      [{ etapeTypeId: 'apd' }]
+    ]
   },
   apn: {
     justeApres: [[{ etapeTypeId: 'ssr' }]],
-    avant: [[{ etapeTypeId: 'apo' }], [{ etapeTypeId: 'spo' }]]
+    avant: [
+      [{ etapeTypeId: 'apo' }],
+      [{ etapeTypeId: 'spo' }],
+      [{ etapeTypeId: 'apd' }]
+    ]
   },
   aof: {
     justeApres: [[{ etapeTypeId: 'ssr' }]],
-    avant: [[{ etapeTypeId: 'apo' }], [{ etapeTypeId: 'spo' }]]
+    avant: [
+      [{ etapeTypeId: 'apo' }],
+      [{ etapeTypeId: 'spo' }],
+      [{ etapeTypeId: 'apd' }]
+    ]
   },
   aop: {
     justeApres: [[{ etapeTypeId: 'ssr' }]],
-    avant: [[{ etapeTypeId: 'apo' }], [{ etapeTypeId: 'spo' }]]
+    avant: [
+      [{ etapeTypeId: 'apo' }],
+      [{ etapeTypeId: 'spo' }],
+      [{ etapeTypeId: 'apd' }]
+    ]
   },
   spo: {
     justeApres: [],
-    avant: [[{ etapeTypeId: 'spo' }], [{ etapeTypeId: 'apo' }]],
+    avant: [
+      [{ etapeTypeId: 'apo' }],
+      [{ etapeTypeId: 'spo' }],
+      [{ etapeTypeId: 'apd' }]
+    ],
     apres: [[{ etapeTypeId: 'scl' }, { etapeTypeId: 'ssr' }]]
   },
   apo: {
@@ -115,7 +155,11 @@ const etatsDefinitionPrmOct: IDemarcheDefinitionRestrictions = {
     avant: [[{ etapeTypeId: 'apo' }]],
     apres: [[{ etapeTypeId: 'scl' }, { etapeTypeId: 'ssr' }]]
   },
-  apd: { justeApres: [[{ etapeTypeId: 'apo' }]] },
+  apd: {
+    justeApres: [],
+    avant: [[{ etapeTypeId: 'apd' }]],
+    apres: [[{ etapeTypeId: 'scl' }, { etapeTypeId: 'ssr' }]]
+  },
   app: { justeApres: [[{ etapeTypeId: 'apd' }]] },
   ppu: {
     justeApres: [
