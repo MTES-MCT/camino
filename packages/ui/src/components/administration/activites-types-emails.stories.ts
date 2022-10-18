@@ -2,7 +2,7 @@ import ActivitesTypesEmails from './activites-types-emails.vue'
 import { Meta, Story } from '@storybook/vue3'
 
 const meta: Meta = {
-  title: 'Components/ActivitesTypesEmails',
+  title: 'Components/Administration/ActivitesTypesEmails',
   component: ActivitesTypesEmails
 }
 export default meta

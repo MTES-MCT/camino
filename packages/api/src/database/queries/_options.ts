@@ -51,7 +51,7 @@ const utilisateursRelateFalse = [
 ]
 
 const utilisateurs = {
-  graph: `[administration.[titresTypes, activitesTypes], entreprises.etablissements]`,
+  graph: `[administration.activitesTypes, entreprises.etablissements]`,
   update: {
     relate: utilisateursRelateTrue,
     unrelate: utilisateursRelateTrue,
@@ -64,7 +64,7 @@ const utilisateursTitres = {
 }
 
 const administrations = {
-  graph: `[utilisateurs, titresTypes.${titresTypes.graph}, titresTypesTitresStatuts, titresTypesEtapesTypes]`,
+  graph: `[utilisateurs, titresTypesTitresStatuts, titresTypesEtapesTypes]`,
   update: {
     insertMissing: true
   }
@@ -87,7 +87,6 @@ const titresEtapesRelateFalse = [
   'titulaires.documents.type',
   'amodiataires.etablissements',
   'amodiataires.utilisateurs',
-  'administrations.titresTypes',
   'administrations.utilisateurs',
   ...documentsRelateFalse.map(k => `documents.${k}`),
   ...documentsRelateFalse.map(k => `justificatifs.${k}`)
@@ -228,11 +227,9 @@ const titresRelateFalse = [
   'amodiataires',
   'amodiataires.etablissements',
   'amodiataires.utilisateurs',
-  'administrationsGestionnaires.titresTypes',
   'administrationsGestionnaires.type',
   'administrationsGestionnaires.utilisateurs',
   'administrationsLocales',
-  'administrationsLocales.titresTypes',
   'administrationsLocales.type',
   'administrationsLocales.utilisateurs',
   'surfaceEtape',

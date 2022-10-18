@@ -34,7 +34,10 @@ import {
   isSuper
 } from 'camino-common/src/roles'
 import { linkTitres } from '../../../database/queries/titres-titres'
-import { getLinkConfig } from 'camino-common/src/permissions/titres'
+import {
+  getLinkConfig,
+  canCreateTitre
+} from 'camino-common/src/permissions/titres'
 import { checkTitreLinks } from '../../../business/validations/titre-links-validate'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
@@ -102,7 +105,7 @@ export const titreDemandeCreer = async (
         tt => tt.id === titreDemande.typeId
       )
 
-      if (!user || !titreType || !titreType.titresCreation)
+      if (!user || !titreType || !canCreateTitre(user, titreType.id))
         throw new Error('droits insuffisants')
     }
     // insert le titre dans la base

@@ -4,7 +4,6 @@ import { IAdministration } from '../../types'
 
 import AdministrationsTitresTypesEtapesTypes from './administrations-titres-types-etapes-types'
 import AdministrationsTitresTypesTitresStatuts from './administrations-titres-types-titres-statuts'
-import TitresTypes from './titres-types'
 import Utilisateurs from './utilisateurs'
 import Titres from './titres'
 import ActivitesTypes from './activites-types'
@@ -24,20 +23,6 @@ class Administrations extends Model {
   }
 
   static relationMappings = () => ({
-    titresTypes: {
-      relation: Model.ManyToManyRelation,
-      modelClass: TitresTypes,
-      join: {
-        from: 'administrations.id',
-        through: {
-          from: 'administrations__titresTypes.administrationId',
-          to: 'administrations__titresTypes.titreTypeId',
-          extra: ['gestionnaire', 'associee']
-        },
-        to: 'titresTypes.id'
-      }
-    },
-
     titresTypesTitresStatuts: {
       relation: Model.HasManyRelation,
       modelClass: AdministrationsTitresTypesTitresStatuts,

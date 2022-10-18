@@ -46,10 +46,12 @@
 </template>
 
 <script>
+import { canCreateTitre } from 'camino-common/src/permissions/titres'
 export default {
   props: {
     element: { type: Object, required: true },
-    domaines: { type: Array, required: true }
+    domaines: { type: Array, required: true },
+    user: { type: Object, required: true }
   },
 
   computed: {
@@ -58,7 +60,10 @@ export default {
         ({ id }) => id === this.element.domaineId
       )
 
-      return domaine && domaine.titresTypes.filter(tt => tt.titresCreation)
+      return (
+        domaine &&
+        domaine.titresTypes.filter(tt => canCreateTitre(this.user, tt.id))
+      )
     }
   },
 

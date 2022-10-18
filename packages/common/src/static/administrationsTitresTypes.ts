@@ -1,4 +1,4 @@
-import { PartialRecord } from '../typescript-tools'
+import { getKeys, PartialRecord } from '../typescript-tools'
 import { AdministrationId } from './administrations'
 import { TitreTypeId } from './titresTypes'
 
@@ -731,4 +731,44 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTi
   }
 }
 
-export const getTitreTypeIdsByAdministration = (administrationId: AdministrationId): undefined | AdministrationTitreType => AdministrationsTitresTypes[administrationId]
+export const getTitreTypeIdsByAdministration = (administrationId: AdministrationId): { titreTypeId: TitreTypeId; gestionnaire: boolean; associee: boolean }[] => {
+  const administrationTitresTypes = AdministrationsTitresTypes[administrationId]
+
+  if (!administrationTitresTypes) {
+    return []
+  }
+
+  return getKeys(administrationTitresTypes).reduce<{ titreTypeId: TitreTypeId; gestionnaire: boolean; associee: boolean }[]>((acc, titreTypeId) => {
+    acc.push({ titreTypeId, gestionnaire: administrationTitresTypes[titreTypeId]?.gestionnaire ?? false, associee: administrationTitresTypes[titreTypeId]?.associee ?? false })
+
+    return acc
+  }, [])
+}
+
+export const isGestionnaire = (administrationId: AdministrationId, titreTypeId?: TitreTypeId): boolean => isGestionnaireOrAssociee(administrationId, 'gestionnaire', titreTypeId)
+export const isAssociee = (administrationId: AdministrationId, titreTypeId?: TitreTypeId): boolean => isGestionnaireOrAssociee(administrationId, 'associee', titreTypeId)
+
+const isGestionnaireOrAssociee = (administrationId: AdministrationId, props: 'gestionnaire' | 'associee', titreTypeId?: TitreTypeId): boolean => {
+  const administrationTitresTypes = getTitreTypeIdsByAdministration(administrationId)
+
+  if (!administrationTitresTypes.length) {
+    return false
+  }
+
+  if (!titreTypeId) {
+    return administrationTitresTypes.some(att => att[props])
+  }
+
+  return administrationTitresTypes.some(att => att.titreTypeId === titreTypeId && att[props])
+}
+
+export const getGestionnairesByTitreTypeId = (titreTypeId: TitreTypeId): { administrationId: AdministrationId; associee: boolean }[] => {
+  return getKeys(AdministrationsTitresTypes).reduce<{ administrationId: AdministrationId; associee: boolean }[]>((acc, administrationId) => {
+    const titreType = getTitreTypeIdsByAdministration(administrationId).find(titreType => titreType.titreTypeId === titreTypeId && titreType.gestionnaire)
+    if (titreType) {
+      acc.push({ associee: titreType.associee, administrationId })
+    }
+
+    return acc
+  }, [])
+}

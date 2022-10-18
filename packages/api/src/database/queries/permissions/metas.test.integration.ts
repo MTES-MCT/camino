@@ -7,7 +7,7 @@ import { IDemarcheType } from '../../../types'
 import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes'
-import { getKeys } from 'camino-common/src/typescript-tools'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -39,12 +39,10 @@ describe('metas permissions queries', () => {
         const titreId = idGenerate()
 
         // On cherche un type de titre où l’administration est gestionnaire
-        const titreTypeIds = getTitreTypeIdsByAdministration(administrationId)
-        const titreTypeId = titreTypeIds
-          ? getKeys(titreTypeIds).find(
-              typeId => titreTypeIds[typeId]?.gestionnaire
-            )
-          : undefined
+        const titreTypeId: TitreTypeId | undefined =
+          getTitreTypeIdsByAdministration(administrationId).find(
+            att => att.gestionnaire
+          )?.titreTypeId
 
         if (!titreTypeId) {
           throw new Error(

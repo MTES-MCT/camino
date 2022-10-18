@@ -1,32 +1,29 @@
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import Titres from '../../../database/models/titres'
-import Administrations from '../../../database/models/administrations'
-
-const administrations = [
-  { id: 'dgec' },
-  { id: 'dgaln' },
-  { id: 'ptmg' }
-] as unknown as Administrations[]
 
 const titresAdministrationGestionnaireVide = [
-  { id: 'titre-id', domaineId: 'm' }
+  { id: 'titre-id', typeId: 'arm', domaineId: 'm' }
 ] as Titres[]
 
 const titresAdministrationGestionnaireInexistante = [
   {
     id: 'titre-id',
-    administrationsGestionnaires: [{ id: 'inexistante' }]
+    typeId: 'aph',
+    administrationsGestionnaires: [
+      { id: ADMINISTRATION_IDS['PRÉFECTURE - ALLIER'] }
+    ]
   }
 ] as unknown as Titres[]
 
 const titresAdministrationGestionnaireExistante = [
   {
     id: 'titre-id',
-    administrationsGestionnaires: [{ id: 'dgec' }]
+    typeId: 'aph',
+    administrationsGestionnaires: [{ id: ADMINISTRATION_IDS['DGEC/DE/SD2/2A'] }]
   }
 ] as unknown as Titres[]
 
 export {
-  administrations,
   titresAdministrationGestionnaireVide,
   titresAdministrationGestionnaireInexistante,
   titresAdministrationGestionnaireExistante

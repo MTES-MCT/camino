@@ -57,20 +57,6 @@ const administration = apiGraphQLFetch(gql`
   ${fragmentAdministration}
 `)
 
-const administrationTitreTypeUpdate = apiGraphQLFetch(gql`
-  mutation AdministrationTitreTypeModifier(
-    $administrationTitreType: InputAdministrationTitreType!
-  ) {
-    administrationTitreTypeModifier(
-      administrationTitreType: $administrationTitreType
-    ) {
-      ...administration
-    }
-  }
-
-  ${fragmentAdministration}
-`)
-
 const administrationActiviteTypeUpdate = apiGraphQLFetch(gql`
   mutation AdministrationActiviteTypeModifier(
     $administrationActiviteType: InputAdministrationActiviteType!
@@ -140,7 +126,6 @@ const administrationTitreTypeEtapeTypeUpdate = apiGraphQLFetch(gql`
 export {
   administrationMetas,
   administration,
-  administrationTitreTypeUpdate,
   administrationTitreTypeTitreStatutUpdate,
   administrationTitreTypeEtapeTypeUpdate,
   administrationActiviteTypeUpdate,

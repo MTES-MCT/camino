@@ -8,7 +8,6 @@ jest.mock('../api/administrations', () => ({
   administrationMetas: jest.fn(),
   administrationModifier: jest.fn(),
   administrationPermissionsMetas: jest.fn(),
-  administrationTitreTypeUpdate: jest.fn(),
   administrationTitreTypeTitreStatutUpdate: jest.fn(),
   administrationTitreTypeEtapeTypeUpdate: jest.fn(),
   administrationActiviteTypeUpdate: jest.fn()
@@ -127,57 +126,6 @@ describe("état de l'administration consultée", () => {
 
     expect(apiMock).toHaveBeenCalled()
 
-    expect(mutations.messageAdd).toHaveBeenCalled()
-  })
-
-  test('modifie les permissions (type de titres)', async () => {
-    const apiMock = api.administrationTitreTypeUpdate.mockResolvedValue({
-      id: 71,
-      nom: 'nom admin'
-    })
-
-    await store.dispatch('administration/titreTypeUpdate', {
-      administrationId: 'dea-guyane',
-      titreTypeId: 'aex',
-      gestionnaire: true,
-      associee: true
-    })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      administrationTitreType: {
-        administrationId: 'dea-guyane',
-        titreTypeId: 'aex',
-        gestionnaire: true,
-        associee: true
-      }
-    })
-
-    expect(actions.reload).toHaveBeenCalled()
-    expect(actions.messageAdd).toHaveBeenCalled()
-  })
-
-  test("retourne une erreur si l'API retourne une erreur lors de la modification des permissions (type de titre)", async () => {
-    const apiMock = api.administrationTitreTypeUpdate.mockRejectedValue(
-      new Error('erreur api')
-    )
-
-    await store.dispatch('administration/titreTypeUpdate', {
-      administrationId: 'dea-guyane',
-      titreTypeId: 'aex',
-      gestionnaire: true,
-      associee: true
-    })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      administrationTitreType: {
-        administrationId: 'dea-guyane',
-        titreTypeId: 'aex',
-        gestionnaire: true,
-        associee: true
-      }
-    })
-
-    expect(actions.reload).not.toHaveBeenCalled()
     expect(mutations.messageAdd).toHaveBeenCalled()
   })
 

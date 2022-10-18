@@ -26,7 +26,6 @@ type Administration {
   emailsModification: Boolean
   gestionnaireTitres: [Titre]
   localeTitres: [Titre]
-  titresTypes: [TitreType]
   titresTypesTitresStatuts: [TitreTypeTitreStatut]
   titresTypesEtapesTypes: [TitreTypeEtapeType]
   activitesTypes: [ActiviteType]
@@ -36,13 +35,6 @@ type Administration {
 type ActiviteTypeEmail {
   activiteTypeId: String
   email: String
-}
-
-input InputAdministrationTitreType {
-  administrationId: ID!
-  titreTypeId: ID!
-  gestionnaire: Boolean
-  associee: Boolean
 }
 
 input InputAdministrationTitreTypeTitreStatut {

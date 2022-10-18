@@ -381,10 +381,6 @@ type Mutation {
     administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!
   ): Administration
 
-  administrationTitreTypeModifier(
-    administrationTitreType: InputAdministrationTitreType!
-  ): Administration
-
   administrationTitreTypeTitreStatutModifier(
     administrationTitreTypeTitreStatut: InputAdministrationTitreTypeTitreStatut!
   ): Administration

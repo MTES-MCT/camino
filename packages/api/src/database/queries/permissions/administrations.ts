@@ -22,7 +22,7 @@ import {
 } from 'camino-common/src/static/administrations'
 import { Departements } from 'camino-common/src/static/departement'
 import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes'
-import { getKeys } from 'camino-common/src/typescript-tools'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 const administrationsQueryModify = (
   q: QueryBuilder<
@@ -171,35 +171,25 @@ const administrationsTitresQuery = (
 
   q.where(c => {
     if (isGestionnaire || isAssociee) {
-      const titresTypesByAdministration =
-        getTitreTypeIdsByAdministration(administrationId)
-      if (titresTypesByAdministration) {
-        const titreTypeIds = getKeys(titresTypesByAdministration).filter(
-          titreTypeId => {
-            if (
-              isGestionnaire &&
-              titresTypesByAdministration[titreTypeId]?.gestionnaire
-            ) {
-              return true
-            }
-            if (
-              isAssociee &&
-              titresTypesByAdministration[titreTypeId]?.associee
-            ) {
-              return true
-            }
-
-            return false
+      const titreTypeIds: TitreTypeId[] = getTitreTypeIdsByAdministration(
+        administrationId
+      )
+        .filter(att => {
+          if (isGestionnaire && att.gestionnaire) {
+            return true
           }
-        )
+          if (isAssociee && att.associee) {
+            return true
+          }
 
-        if (titreTypeIds.length) {
-          c.orWhereRaw(`?? in (${titreTypeIds.map(t => `'${t}'`).join(',')})`, [
-            `${titreAlias}.typeId`
-          ])
-        } else {
-          c.orWhereRaw('false')
-        }
+          return false
+        })
+        .map(({ titreTypeId }) => titreTypeId)
+
+      if (titreTypeIds.length) {
+        c.orWhereRaw(`?? in (${titreTypeIds.map(t => `'${t}'`).join(',')})`, [
+          `${titreAlias}.typeId`
+        ])
       } else {
         c.orWhereRaw('false')
       }

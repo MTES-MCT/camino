@@ -26,12 +26,11 @@ afterAll(async () => {
 
 describe('administrationsTitresQuery', () => {
   test.each`
-    administrationId | visible
-    "ope-brgm-01" |
-    ${false}
-    ${true}
-    ${true}
-    ${true}
+    administrationId     | visible
+    ${'ope-brgm-01'}     | ${false}
+    ${'ope-onf-973-01'}  | ${true}
+    ${'pre-97302-01'}    | ${true}
+    ${'ope-ptmg-973-01'} | ${true}
   `(
     "Vérifie l'écriture de la requête sur les titres dont une administration a des droits sur le type",
     async ({ administrationId, visible }) => {

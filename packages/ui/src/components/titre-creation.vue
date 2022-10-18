@@ -31,6 +31,7 @@
       v-if="titreDemande.entrepriseId"
       v-model:element="titreDemande"
       :domaines="domaines"
+      :user="user"
     />
 
     <div v-if="titreDemande.typeId">
@@ -167,14 +168,12 @@ type Domaine = {
   titresTypes: {
     id: TitreTypeId
     type: TitreTypeType
-    titresCreation: boolean
   }[]
 }
 type TitreType = {
   id: TitreTypeId
   domaine: Domaine
   type: TitreTypeType
-  titresCreation: boolean
 }
 type Entreprise = {
   id: string
@@ -244,8 +243,7 @@ const domaines = computed<Domaine[]>(() => {
 
         domaine?.titresTypes?.push({
           id: tt.id,
-          type: tt.type,
-          titresCreation: tt.titresCreation
+          type: tt.type
         })
 
         return domaines

@@ -18,7 +18,11 @@
       <hr />
     </div>
 
-    <TitreTypeSelect v-model:element="titre" :domaines="domaines" />
+    <TitreTypeSelect
+      v-model:element="titre"
+      :domaines="domaines"
+      :user="user"
+    />
 
     <div>
       <h3 class="mb-s">Références</h3>
@@ -142,6 +146,7 @@ import {
   ReferenceTypeId,
   sortedReferencesTypes
 } from 'camino-common/src/static/referencesTypes'
+import { canCreateTitre } from 'camino-common/src/permissions/titres'
 type Titre = {
   id: string
   nom: string
@@ -164,8 +169,14 @@ const messages = computed(() => {
 
 const domaines = computed(() => {
   return store.state.user.metas.domaines.filter((d: any) =>
-    d.titresTypes.some((dtt: { titresCreation: any }) => dtt.titresCreation)
+    d.titresTypes.some((dtt: { id: TitreTypeId }) =>
+      canCreateTitre(store.state.user.element, dtt.id)
+    )
   )
+})
+
+const user = computed(() => {
+  return store.state.user.element
 })
 
 const complete = computed(() => {

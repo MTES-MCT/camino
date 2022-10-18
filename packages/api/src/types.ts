@@ -250,7 +250,6 @@ interface IAdministration {
   departementId?: DepartementId | null
   regionId?: RegionId | null
   abreviation?: string | null
-  titresTypes?: (ITitreType & IAdministrationTitreType)[] | null
   titresTypesTitresStatuts?: IAdministrationTitreTypeTitreStatut[] | null
   titresTypesEtapesTypes?: IAdministrationTitreTypeEtapeType[] | null
   activitesTypes?: IActiviteType[] | null
@@ -346,7 +345,7 @@ interface IEntreprise {
   etablissements?: IEntrepriseEtablissement[] | null
   utilisateurs?: IUtilisateur[] | null
   titulaireTitres?: ITitre[] | null
-  titresTypes?: ITitreType[]
+  titresTypes?: (ITitreType & { titresCreation: boolean })[]
   amodiataireTitres?: ITitre[] | null
   modification?: boolean | null
   archive?: boolean | null
@@ -437,7 +436,7 @@ interface ITitreTypeEtapeType {
 }
 
 interface ITitreTypeTitreStatut {
-  titreTypeId: string
+  titreTypeId: TitreTypeId
   titreType?: ITitreType | null
   titreStatutId: TitreStatutId
   publicLecture: boolean
@@ -461,13 +460,6 @@ interface IActiviteTypeTitreType {
   titreType?: ITitreType | null
   activiteTypeId: string
   activiteType?: IActiviteType | null
-}
-
-interface IAdministrationTitreType {
-  administrationId: string
-  titreTypeId: string
-  gestionnaire: boolean
-  associee: boolean
 }
 
 interface IAdministrationTitreTypeTitreStatut extends ITitreTypeTitreStatut {
@@ -764,7 +756,7 @@ interface ICache {
 }
 
 interface ITitreType {
-  id: string
+  id: TitreTypeId
   domaineId: DomaineId
   typeId: TitreTypeTypeId
   archive?: boolean | null
@@ -773,9 +765,6 @@ interface ITitreType {
   titresTypesTitresStatuts?: ITitreTypeTitreStatut[] | null
   contenuIds?: IContenuId[] | null
   sections?: ISection[] | null
-  gestionnaire?: boolean | null
-  associee?: boolean | null
-  titresCreation?: boolean | null
 }
 
 interface ITitreTypeType {
@@ -897,7 +886,6 @@ export {
   ITitreTypeDemarcheType,
   IActiviteTypeTitreType,
   IEtapeTypeJustificatifType,
-  IAdministrationTitreType,
   IAdministrationTitreTypeTitreStatut,
   IAdministrationTitreTypeEtapeType,
   IAdministrationActiviteType,

@@ -1,30 +1,21 @@
 import Titres from '../../../database/models/titres'
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
+import { ICommune } from '../../../types'
 import {
-  IAdministration,
-  IAdministrationTitreType,
-  ICommune,
-  ITitreType
-} from '../../../types'
+  Administrations,
+  Administration
+} from 'camino-common/src/static/administrations'
 
-const administrations: Pick<IAdministration, 'id' | 'titresTypes'>[] = [
-  { id: 'ope-onf-973-01', titresTypes: [] },
-  { id: 'dre-centre-val-de-loire-01', titresTypes: [] },
-  { id: 'dre-bretagne-01', titresTypes: [] },
-  {
-    id: 'dea-guyane-01',
-    titresTypes: [
-      { id: 'arm', associee: true } as ITitreType & IAdministrationTitreType
-    ]
-  },
-  {
-    id: 'ope-brgm-01',
-    titresTypes: []
-  },
-  { id: 'ope-cacem-01', titresTypes: [] }
+export const administrations: Administration[] = [
+  Administrations['ope-onf-973-01'],
+  Administrations['dre-centre-val-de-loire-01'],
+  Administrations['dre-bretagne-01'],
+  Administrations['dea-guyane-01'],
+  Administrations['ope-brgm-01'],
+  Administrations['ope-cacem-01']
 ]
 
-const titresEtapesCommunes = [
+export const titresEtapesCommunes = [
   {
     id: 'titre-id',
     domaineId: 'h',
@@ -63,7 +54,7 @@ const titresEtapesCommunes = [
   }
 ] as Titres[]
 
-const titresEtapesCommunesVides = [
+export const titresEtapesCommunesVides = [
   {
     id: 'titre-id',
     demarches: [
@@ -84,7 +75,7 @@ const titresEtapesCommunesVides = [
   }
 ] as unknown as Titres[]
 
-const titresEtapesCommunesMemeCommune = [
+export const titresEtapesCommunesMemeCommune = [
   {
     id: 'titre-id',
     demarches: [
@@ -105,7 +96,7 @@ const titresEtapesCommunesMemeCommune = [
   }
 ] as Titres[]
 
-const titresEtapesAdministrationLocalesInexistante = [
+export const titresEtapesAdministrationLocalesInexistante = [
   {
     id: 'titre-id',
     demarches: [
@@ -124,7 +115,7 @@ const titresEtapesAdministrationLocalesInexistante = [
   }
 ] as Titres[]
 
-const titresEtapesAdministrationLocalesExistante = [
+export const titresEtapesAdministrationLocalesExistante = [
   {
     id: 'titre-id',
     domaineId: 'h',
@@ -143,7 +134,7 @@ const titresEtapesAdministrationLocalesExistante = [
   }
 ] as Titres[]
 
-const titresArm = [
+export const titresArm = [
   {
     id: 'titre-id',
     typeId: 'arm',
@@ -166,7 +157,7 @@ const titresArm = [
   }
 ] as Titres[]
 
-const titresAxm = [
+export const titresAxm = [
   {
     id: 'titre-id',
     typeId: 'axm',
@@ -188,14 +179,3 @@ const titresAxm = [
     ]
   }
 ] as Titres[]
-
-export {
-  administrations,
-  titresEtapesCommunes,
-  titresEtapesCommunesVides,
-  titresEtapesCommunesMemeCommune,
-  titresEtapesAdministrationLocalesInexistante,
-  titresEtapesAdministrationLocalesExistante,
-  titresArm,
-  titresAxm
-}

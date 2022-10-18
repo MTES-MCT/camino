@@ -18,7 +18,6 @@ import { entreprisesQueryModify } from './permissions/entreprises'
 import EntreprisesTitresTypes from '../models/entreprises-titres-types'
 import { fieldsEntreprisesTitresCreationAdd } from './graph/fields-add'
 import { utilisateurGet } from './utilisateurs'
-import { titresCreationQuery } from './permissions/metas'
 import {
   isSuper,
   isEntreprise,
@@ -26,6 +25,7 @@ import {
   isAdministrationEditeur,
   isBureauDEtudes
 } from 'camino-common/src/roles'
+import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes'
 
 const entreprisesFiltersQueryModify = (
   {
@@ -196,9 +196,7 @@ const titreDemandeEntreprisesGet = async (
   }
 
   if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    const titresCreation = await titresCreationQuery(
-      user.administrationId
-    ).first()
+    const titresCreation = isGestionnaire(user.administrationId)
 
     if (!titresCreation) return []
 

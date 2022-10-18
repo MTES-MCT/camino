@@ -2,7 +2,6 @@ import { GraphQLResolveInfo } from 'graphql'
 
 import {
   IAdministrationActiviteType,
-  IAdministrationTitreType,
   IAdministrationTitreTypeEtapeType,
   IAdministrationTitreTypeTitreStatut,
   IAdministrationActiviteTypeEmail,
@@ -12,8 +11,6 @@ import {
 import {
   administrationGet,
   administrationsGet,
-  administrationTitreTypeDelete,
-  administrationTitreTypeUpsert,
   administrationTitreTypeTitreStatutUpsert,
   administrationTitreTypeTitreStatutDelete,
   administrationTitreTypeEtapeTypeDelete,
@@ -23,8 +20,6 @@ import {
   administrationActiviteTypeEmailCreate,
   administrationActiviteTypeEmailDelete
 } from '../../../database/queries/administrations'
-
-import administrationUpdateTask from '../../../business/administration-update'
 
 import { fieldsBuild } from './_fields-build'
 
@@ -98,49 +93,6 @@ const administrations = async (
     if (!administrations.length) return []
 
     return administrations.map(administrationFormat)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-const administrationTitreTypeModifier = async (
-  {
-    administrationTitreType
-  }: { administrationTitreType: IAdministrationTitreType },
-  context: IToken,
-  info: GraphQLResolveInfo
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const fields = fieldsBuild(info)
-
-    if (
-      !administrationTitreType.gestionnaire &&
-      !administrationTitreType.associee
-    ) {
-      await administrationTitreTypeDelete(
-        administrationTitreType.administrationId,
-        administrationTitreType.titreTypeId
-      )
-    } else {
-      await administrationTitreTypeUpsert(administrationTitreType)
-    }
-
-    // met à jour les administrations gestionnaires et associées
-    await administrationUpdateTask(administrationTitreType.administrationId)
-
-    return await administrationGet(
-      administrationTitreType.administrationId,
-      { fields },
-      user
-    )
   } catch (e) {
     console.error(e)
 
@@ -368,7 +320,6 @@ const administrationActiviteTypeEmailSupprimer = async (
 export {
   administration,
   administrations,
-  administrationTitreTypeModifier,
   administrationTitreTypeTitreStatutModifier,
   administrationTitreTypeEtapeTypeModifier,
   administrationActiviteTypeModifier,
