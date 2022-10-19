@@ -27,7 +27,7 @@ jobs:
         run: npm run ci:lint --workspace=packages/api
       - name: Unit tests
         run: npm run ci:test-unit --workspace=packages/api
-      - uses: codecov/codecov-action@v2
+      - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api-unit, api
@@ -71,7 +71,7 @@ jobs:
             PGPORT: 5432
             PGUSER: postgres
             PGPASSWORD: password
-        - uses: codecov/codecov-action@v2
+        - uses: codecov/codecov-action@v3
           with:
             token: ${{ secrets.CODECOV_TOKEN }}
             flags: api-integration, api
@@ -85,7 +85,7 @@ jobs:
       - name: Build Docker image
         run: docker build -t caminofr/camino-api:${GITHUB_SHA} -f Dockerfile.api .
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
@@ -111,7 +111,7 @@ jobs:
           CI: true
       - name: Unit tests
         run: npm run ci:test --workspace=packages/common
-      - uses: codecov/codecov-action@v2
+      - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: common
@@ -134,7 +134,7 @@ jobs:
           npm test --workspace=packages/ui
         env:
           CI: true
-      - uses: codecov/codecov-action@v2
+      - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: ui
@@ -149,7 +149,7 @@ jobs:
       - name: Build Docker image
         run: docker build . --build-arg GIT_SHA=${GITHUB_SHA} -f Dockerfile.ui -t caminofr/camino-ui:${GITHUB_SHA}
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
@@ -178,7 +178,7 @@ jobs:
       - name: Build Docker image
         run: docker build -f Dockerfile.ui.storybook -t caminofr/camino-ui-storybook:${GITHUB_SHA} .
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
@@ -199,7 +199,7 @@ jobs:
       - name: Build Docker image
         run: docker build -f Dockerfile.api.docs -t caminofr/camino-api-docs:${GITHUB_SHA} .
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
@@ -214,7 +214,7 @@ jobs:
       - name: Build Docker image
         run: docker build . --build-arg GIT_SHA=${GITHUB_SHA} -f Dockerfile.openfisca -t caminofr/camino-openfisca:${GITHUB_SHA}
       - name: Login to Docker Hub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
