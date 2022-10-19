@@ -97,6 +97,7 @@ describe('FondamentalesEdit', () => {
         },
         props: {
           etape,
+          demarcheTypeId: 'oct',
           titreTypeId,
           domaineId,
           userIsAdmin: true,
@@ -120,6 +121,7 @@ describe('FondamentalesEdit', () => {
       },
       props: {
         etape,
+        demarcheTypeId: 'oct',
         titreTypeId: 'ar',
         domaineId: 'm',
         userIsAdmin: true,
@@ -142,6 +144,7 @@ describe('FondamentalesEdit', () => {
       },
       props: {
         etape,
+        demarcheTypeId: 'oct',
         titreTypeId: 'ar',
         domaineId: 'm',
         userIsAdmin: true,
@@ -164,6 +167,7 @@ describe('FondamentalesEdit', () => {
       },
       props: {
         etape,
+        demarcheTypeId: 'oct',
         titreTypeId: 'ax',
         domaineId: 'm',
         userIsAdmin: true,
@@ -186,6 +190,7 @@ describe('FondamentalesEdit', () => {
       },
       props: {
         etape,
+        demarcheTypeId: 'oct',
         titreTypeId: 'ax',
         domaineId: 'm',
         userIsAdmin: true,
@@ -208,6 +213,7 @@ describe('FondamentalesEdit', () => {
       },
       props: {
         etape,
+        demarcheTypeId: 'oct',
         titreTypeId: 'ni axm',
         domaineId: 'ni arm',
         userIsAdmin: true,
@@ -230,6 +236,7 @@ describe('FondamentalesEdit', () => {
       },
       props: {
         etape,
+        demarcheTypeId: 'oct',
         titreTypeId: 'ni axm',
         domaineId: 'ni arm',
         userIsAdmin: true,
@@ -254,6 +261,7 @@ describe('FondamentalesEdit', () => {
       },
       props: {
         etape,
+        demarcheTypeId: 'oct',
         titreTypeId: 'ar',
         domaineId: 'm',
         userIsAdmin: true,
@@ -274,6 +282,7 @@ describe('FondamentalesEdit', () => {
       },
       props: {
         etape,
+        demarcheTypeId: 'oct',
         titreTypeId: 'ax',
         domaineId: 'm',
         userIsAdmin: true,
@@ -294,6 +303,7 @@ describe('FondamentalesEdit', () => {
       },
       props: {
         etape,
+        demarcheTypeId: 'oct',
         titreTypeId: 'ni arm',
         domaineId: 'ni axm',
         userIsAdmin: true,
