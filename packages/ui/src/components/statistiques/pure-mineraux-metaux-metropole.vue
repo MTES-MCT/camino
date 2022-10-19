@@ -180,19 +180,120 @@
 
     <div class="line-neutral width-full mb" />
 
-    <h2>Production annuelle</h2>
+    <h2>
+      Production annuelle et fiscalité minière des ressources minérales non
+      énergétiques, par famille de substances
+    </h2>
     <span class="separator" />
     <p class="mb-xl">
       Données contenues dans la base de données Camino, stabilisées pour l’année
       n-1.
     </p>
 
-    <LoadingElement v-slot="{ item }" :data="data">
-      <BarChart :chartConfiguration="bauxiteChartConfiguration(item)" />
-    </LoadingElement>
-    <LoadingElement v-slot="{ item }" :data="data">
-      <BarChart :chartConfiguration="selsChartConfiguration(item)" />
-    </LoadingElement>
+    <div class="grid-container">
+      <div style="grid-column-end: span 2">
+        <h3>Bauxite</h3>
+        <hr />
+      </div>
+      <div>
+        <LoadingElement v-slot="{ item }" :data="data">
+          <BarChart :chartConfiguration="bauxiteChartConfiguration(item)" />
+        </LoadingElement>
+      </div>
+      <div>
+        <h4>Fiscalité minière</h4>
+        <p>
+          Les données sont calculées à partir des données de production. Il
+          s'agit des sommes dûes et non des recettes effectivement perçues par
+          les finances publiques.
+        </p>
+        <div class="flex">
+          <div
+            v-for="tab in anneesBauxite"
+            :key="tab"
+            class="mr-xs"
+            :class="{ active: bauxiteTabId === tab }"
+          >
+            <button
+              :id="`cmn-titre-tab-${tab}`"
+              class="p-m btn-tab rnd-t-s"
+              @click="bauxiteTabUpdate(tab)"
+            >
+              {{ tab }}
+            </button>
+          </div>
+        </div>
+        <div class="line-neutral mb" />
+        <p>
+          Sommes dûes par les opérateurs miniers exploitant de la bauxite au
+          titre des redevances départementale et communale des mines, hors frais
+          de gestion
+        </p>
+        <p class="h1 text-center color-info bold">
+          <LoadingElement :data="data">
+            {{ numberFormat(bauxiteFiscalite) }} €
+          </LoadingElement>
+        </p>
+      </div>
+      <div style="grid-column-end: span 2">
+        <h3>Sels (sel de sodium, sel de potassium, sel gemme…)</h3>
+        <hr />
+      </div>
+      <div>
+        <LoadingElement v-slot="{ item }" :data="data">
+          <BarChart :chartConfiguration="selsChartConfiguration(item)" />
+        </LoadingElement>
+      </div>
+      <div>
+        <h4>Fiscalité minière</h4>
+        <p>
+          Les données sont calculées à partir des données de production. Il
+          s'agit des sommes dûes et non des recettes effectivement perçues par
+          les finances publiques.
+        </p>
+        <div class="flex">
+          <div
+            v-for="tab in anneesSels"
+            :key="tab"
+            class="mr-xs"
+            :class="{ active: selsTabId === tab }"
+          >
+            <button
+              :id="`cmn-titre-tab-${tab}`"
+              class="p-m btn-tab rnd-t-s"
+              @click="selsTabUpdate(tab)"
+            >
+              {{ tab }}
+            </button>
+          </div>
+        </div>
+        <div class="line-neutral mb" />
+        <p>
+          Sommes dûes par les opérateurs miniers exploitant des sels au titre
+          des redevances départementale et communale des mines, hors frais de
+          gestion
+        </p>
+        <p class="h1 text-center color-info bold">
+          <LoadingElement :data="data">
+            {{ numberFormat(selsFiscalite) }} €
+          </LoadingElement>
+        </p>
+      </div>
+      <div style="grid-column-end: span 2">
+        <h3>Autres substances</h3>
+        <hr />
+      </div>
+      <div style="grid-column-end: span 2">
+        Pour les autres substances de mines exploitées en métropole,
+        l'agrégation des données n'est pas possible en raison du nombre limité
+        d'exploitant par type de substance.
+        <br />
+        <br />
+        Au titre du secret des informations économiques et financières, les
+        volumes d'exploitation ne sont pas communicables.
+      </div>
+    </div>
+    <div class="line-neutral width-full mb mt" />
   </div>
 </template>
 
@@ -202,11 +303,14 @@ import BarChart from '../_charts/configurableBar.vue'
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { numberFormat } from '@/utils/number-format'
-import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
+import { CaminoAnnee, isAnnee, valideAnnee } from 'camino-common/src/date'
 import { StatistiquesMinerauxMetauxMetropole } from 'camino-common/src/statistiques'
 import { ref, onMounted } from 'vue'
 import { ChartConfiguration, ChartData, ChartDataset } from 'chart.js'
-import { SubstancesFiscale } from 'camino-common/src/static/substancesFiscales'
+import {
+  SubstancesFiscale,
+  SUBSTANCES_FISCALES_IDS
+} from 'camino-common/src/static/substancesFiscales'
 import { Unites } from 'camino-common/src/static/unites'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { RegionId, isRegionId, Regions } from 'camino-common/src/static/region'
@@ -215,6 +319,51 @@ const data = ref<AsyncData<StatistiquesMinerauxMetauxMetropole>>({
   status: 'LOADING'
 })
 
+const anneesBauxite = ref<CaminoAnnee[]>([])
+
+const bauxiteTabId = ref<CaminoAnnee>(
+  anneesBauxite.value[anneesBauxite.value.length - 1]
+)
+
+const bauxiteFiscalite = ref<number>(0)
+
+const bauxiteTabUpdate = async (annee: CaminoAnnee): Promise<void> => {
+  if (annee !== bauxiteTabId.value) {
+    bauxiteTabId.value = annee
+    if (data.value.status === 'LOADED') {
+      bauxiteFiscalite.value =
+        data.value.value.fiscaliteParSubstanceParAnnee[
+          SUBSTANCES_FISCALES_IDS.bauxite
+        ]?.[annee] ?? 0
+    }
+  }
+}
+const anneesSels = ref<CaminoAnnee[]>([])
+
+const selsTabId = ref<CaminoAnnee>(
+  anneesSels.value[anneesSels.value.length - 1]
+)
+
+const selsFiscalite = ref<number>(0)
+
+const selsTabUpdate = async (annee: CaminoAnnee): Promise<void> => {
+  if (annee !== selsTabId.value) {
+    selsTabId.value = annee
+    if (data.value.status === 'LOADED') {
+      selsFiscalite.value =
+        data.value.value.fiscaliteParSubstanceParAnnee[
+          SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_
+        ]?.[annee] +
+          data.value.value.fiscaliteParSubstanceParAnnee[
+            SUBSTANCES_FISCALES_IDS
+              .sel_ChlorureDeSodium_extraitEnDissolutionParSondage
+          ]?.[annee] +
+          data.value.value.fiscaliteParSubstanceParAnnee[
+            SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage
+          ]?.[annee] ?? 0
+    }
+  }
+}
 const props = defineProps<{
   getStats: () => Promise<StatistiquesMinerauxMetauxMetropole>
 }>()
@@ -231,7 +380,6 @@ const bauxiteChartConfiguration = (
     datasets: [
       {
         type: 'bar',
-        label: label[0].toUpperCase() + label.substring(1),
         yAxisID: 'bar',
         data: annees.map(annee => data.substances.aloh[annee] ?? 0),
         backgroundColor: 'rgb(118, 182, 189)'
@@ -245,9 +393,17 @@ const bauxiteChartConfiguration = (
       locale: 'fr-FR',
       responsive: true,
       plugins: {
+        legend: {
+          display: false
+        },
         title: {
           display: true,
-          text: 'Production Bauxite'
+          text: `Production Bauxite (${
+            Unites[SubstancesFiscale.naca.uniteId].nom
+          })`,
+          font: {
+            size: 16
+          }
         }
       }
     }
@@ -302,7 +458,10 @@ const selsChartConfiguration = (
           display: true,
           text: `Production Sels (${
             Unites[SubstancesFiscale.naca.uniteId].nom
-          })`
+          })`,
+          font: {
+            size: 16
+          }
         }
       },
       interaction: {
@@ -326,6 +485,34 @@ onMounted(async () => {
       status: 'LOADED',
       value: stats
     }
+    anneesBauxite.value = Object.keys(
+      stats.fiscaliteParSubstanceParAnnee[SUBSTANCES_FISCALES_IDS.bauxite]
+    )
+      .filter(isAnnee)
+      .sort()
+    anneesSels.value = [
+      ...Object.keys(
+        stats.fiscaliteParSubstanceParAnnee[
+          SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_
+        ]
+      ),
+      ...Object.keys(
+        stats.fiscaliteParSubstanceParAnnee[
+          SUBSTANCES_FISCALES_IDS
+            .sel_ChlorureDeSodium_extraitEnDissolutionParSondage
+        ]
+      ),
+      ...Object.keys(
+        stats.fiscaliteParSubstanceParAnnee[
+          SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage
+        ]
+      )
+    ]
+      .filter(isAnnee)
+      .filter(onlyUnique)
+      .sort()
+    bauxiteTabUpdate(anneesBauxite.value[anneesBauxite.value.length - 1])
+    selsTabUpdate(anneesSels.value[anneesSels.value.length - 1])
   } catch (e: any) {
     console.log('error', e)
     data.value = {
@@ -335,3 +522,12 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+.grid-container {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: repeat(4, auto);
+  gap: 3rem;
+}
+</style>

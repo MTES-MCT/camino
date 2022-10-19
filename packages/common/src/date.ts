@@ -43,6 +43,8 @@ export const isAnnee = (annee: string): annee is CaminoAnnee => {
   return annee.match(/^\d{4}$/) !== null
 }
 
+export const anneeSuivante = (annee: CaminoAnnee): CaminoAnnee => valideAnnee(Number(annee) + 1)
+
 export function checkValideAnnee(annee: string): asserts annee is CaminoAnnee {
   if (!isAnnee(annee)) {
     throw new Error(`l'année ${annee} n'est pas une année valide`)

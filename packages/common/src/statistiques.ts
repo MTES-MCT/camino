@@ -38,6 +38,15 @@ export interface DepotEtInstructionStat {
   totalTitresOctroyes: number
 }
 
+export const substancesFiscalesStats = [
+  SUBSTANCES_FISCALES_IDS.bauxite,
+  SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_,
+  SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage,
+  SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage
+] as const
+
+export type SubstancesFiscalesStats = typeof substancesFiscalesStats[number]
+
 export interface StatistiquesDGTM {
   depotEtInstructions: Record<CaminoAnnee, DepotEtInstructionStat>
   sdom: Record<
@@ -54,6 +63,8 @@ export interface StatistiquesDGTM {
 
 export type StatistiquesMinerauxMetauxMetropoleSels = { [key in CaminoAnnee]: { [key in RegionId]?: number } }
 
+export type FiscaliteParSubstanceParAnnee = Record<SubstancesFiscalesStats, Record<CaminoAnnee, number>>
+
 export interface StatistiquesMinerauxMetauxMetropole {
   surfaceExploration: number
   surfaceExploitation: number
@@ -69,4 +80,5 @@ export interface StatistiquesMinerauxMetauxMetropole {
     [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage]: StatistiquesMinerauxMetauxMetropoleSels
     [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]: StatistiquesMinerauxMetauxMetropoleSels
   }
+  fiscaliteParSubstanceParAnnee: FiscaliteParSubstanceParAnnee
 }

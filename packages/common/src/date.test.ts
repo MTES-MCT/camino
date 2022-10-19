@@ -1,4 +1,4 @@
-import { datesDiffInDays, daysBetween, getAnnee, isAnnee, toCaminoDate, valideAnnee } from './date'
+import { anneeSuivante, datesDiffInDays, daysBetween, getAnnee, isAnnee, toCaminoDate, valideAnnee } from './date'
 
 test.each`
   date1                         | date2                         | days
@@ -43,4 +43,7 @@ test('daysBetween', () => {
   expect(daysBetween(toCaminoDate('2020-01-02'), toCaminoDate('2021-01-02'))).toBe(366)
   expect(daysBetween(toCaminoDate('2021-01-02'), toCaminoDate('2022-01-02'))).toBe(365)
   expect(daysBetween(toCaminoDate('2021-01-02'), toCaminoDate('2021-01-01'))).toBe(-1)
+})
+test('anneeSuivante', () => {
+  expect(anneeSuivante(valideAnnee('2022'))).toBe(valideAnnee('2023'))
 })
