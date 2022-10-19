@@ -93,7 +93,7 @@ describe('trie les étapes', () => {
         titreEtapesMemesDatesOrdreEtapesTypesDesc,
         newDemarcheId(),
         {
-          id: 'demarche-type-id',
+          id: 'amo',
           etapesTypes
         } as IDemarcheType,
         'titre-type-id'
@@ -121,7 +121,7 @@ describe('trie les étapes', () => {
 
     expect(
       titreEtapesSortAscByDate(etapes, newDemarcheId(), {
-        id: 'demarche-type-id',
+        id: 'amo',
         etapesTypes: [
           { id: 'dex', nom: 'dex', ordre: 100 },
           { id: 'dpu', nom: 'dpu', ordre: 100 }

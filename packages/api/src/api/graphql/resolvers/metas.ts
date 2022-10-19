@@ -258,7 +258,6 @@ const demarcheEtapesTypesGet = async (
     )
   }
 
-  // FIXME Vérifier que ça fonctionne toujours
   return etapesTypes
 }
 

@@ -31,7 +31,7 @@ const titresEtapesQueryBuild = (
 
   titresEtapesQueryModify(q, user)
 
-  console.info(q.toKnexQuery().toString())
+  // console.info(q.toKnexQuery().toString())
 
   return q
 }

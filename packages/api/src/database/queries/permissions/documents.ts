@@ -10,6 +10,7 @@ import {
   isDefault,
   isEntreprise
 } from 'camino-common/src/roles'
+import TitresEtapes from '../../models/titres-etapes'
 
 const documentsQueryModify = (
   q: QueryBuilder<Documents, Documents | Documents[]>,
@@ -72,15 +73,20 @@ const documentsQueryModify = (
     raw('(not exists(?))', [titreEtapeJustificatifsQuery]).as('modification')
   )
   q.select(
-    raw('(not exists(?) and not exists(?))', [
+    raw('(not exists(?) and not exists(?) and not exists(?))', [
       titreEtapeJustificatifsQuery,
       documentTypeActiviteTypeQuery(
         'documents.typeId',
         'documents.titreActiviteId'
-      )
+      ),
+      etapeStatutNotAco()
     ]).as('suppression')
   )
 }
+const etapeStatutNotAco = () =>
+  TitresEtapes.query()
+    .whereRaw('?? = ??', ['id', 'documents.titreEtapeId'])
+    .andWhereRaw('?? != ?', ['titresEtapes.statutId', 'aco'])
 
 const titreEtapeJustificatifsQuery = TitresEtapesJustificatifs.query()
   .alias('documentsModification')

@@ -3,7 +3,6 @@ import { dbManager } from '../../../../tests/db-manager'
 import { userSuper } from '../../user-super'
 
 import TitresEtapes from '../../models/titres-etapes'
-import EtapesTypesDocumentsTypes from '../../models/etapes-types--documents-types'
 import ActivitesTypesDocumentsTypes from '../../models/activites-types--documents-types'
 import TitresActivites from '../../models/titres-activites'
 import Document from '../../models/documents'
@@ -26,20 +25,15 @@ afterAll(async () => {
 
 describe('documentSupprimer', () => {
   test.each`
-    optionnel    | statutId | suppression
-    ${true}      | ${'aco'} | ${true}
-    ${false}     | ${'aco'} | ${true}
-    ${undefined} | ${'aco'} | ${true}
-    ${true}      | ${'fai'} | ${true}
-    ${false}     | ${'fai'} | ${false}
-    ${undefined} | ${'fai'} | ${false}
+    statutId | suppression
+    ${'aco'} | ${true}
+    ${'fai'} | ${false}
   `(
     'vérifie la possibilité de supprimer un document optionnel ou non d’une étape (utilisateur super)',
-    async ({ optionnel, statutId, suppression }) => {
+    async ({ statutId, suppression }) => {
       // suppression de la clé étrangère sur la démarche pour ne pas avoir à tout créer
       await TitresEtapes.query().delete()
       await Document.query().delete()
-      await EtapesTypesDocumentsTypes.query().delete()
       await knex.schema.alterTable(TitresEtapes.tableName, table => {
         table.dropColumns('titreDemarcheId')
       })
@@ -62,12 +56,6 @@ describe('documentSupprimer', () => {
         typeId: 'dec',
         date: '',
         titreEtapeId: 'titreEtapeId'
-      })
-
-      await EtapesTypesDocumentsTypes.query().insertGraph({
-        etapeTypeId: 'dpu',
-        documentTypeId: 'dec',
-        optionnel
       })
 
       const documentRes = await documentGet(documentId, {}, userSuper)
