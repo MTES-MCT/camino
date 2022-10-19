@@ -22,6 +22,7 @@ import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
 import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
 import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts'
 import { TitreReference } from 'camino-common/src/titres-references'
+import { DocumentType } from 'camino-common/src/static/documentsTypes'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -225,7 +226,7 @@ interface IActiviteType {
   dateDebut: string
   delaiMois: number
   titresTypes: ITitreType[]
-  documentsTypes: IDocumentType[]
+  documentsTypes: DocumentType[]
   sections: ISection[]
   activitesTypesPays?: IActiviteTypePays[] | null
   administrations?: IAdministration[] | null
@@ -285,7 +286,7 @@ interface IDemarcheStatut {
 }
 
 interface IDemarcheType {
-  id: string
+  id: DemarcheTypeId
   nom: string
   ordre: number
   duree?: boolean | null
@@ -307,14 +308,6 @@ export const DOCUMENTS_REPERTOIRES = [
   'tmp'
 ] as const
 type IDocumentRepertoire = typeof DOCUMENTS_REPERTOIRES[number]
-
-interface IDocumentType {
-  id: string
-  nom?: string
-  optionnel: boolean
-  description?: string | null
-  descriptionSpecifique?: string | null
-}
 
 interface IDomaine {
   id: string
@@ -377,14 +370,11 @@ interface IEtapeTypeDocumentType {
 
 interface IEtapeTypeJustificatifType extends IEtapeTypeDocumentType {}
 
-interface ITitreTypeDemarcheTypeEtapeTypeDocumentType
+interface ITitreTypeDemarcheTypeEtapeTypeJustificatifType
   extends IEtapeTypeDocumentType {
   titreTypeId: string
   demarcheTypeId: string
 }
-
-interface ITitreTypeDemarcheTypeEtapeTypeJustificatifType
-  extends ITitreTypeDemarcheTypeEtapeTypeDocumentType {}
 
 interface IEtapeType {
   id: EtapeTypeId
@@ -401,8 +391,8 @@ interface IEtapeType {
   demarcheTypeId?: string | null
   etapesCreation?: boolean | null
   unique?: boolean | null
-  documentsTypes?: IDocumentType[]
-  justificatifsTypes?: IDocumentType[]
+  documentsTypes?: DocumentType[]
+  justificatifsTypes?: DocumentType[]
   publicLecture?: boolean | null
   entreprisesLecture?: boolean | null
 }
@@ -652,7 +642,7 @@ interface IDocument {
   typeId: string
   date: string
   description?: string | null
-  type?: IDocumentType | null
+  type?: DocumentType | null
   fichier?: boolean | null
   fichierTypeId?: string | null
   fichierNouveau?: { file: FileUpload } | null
@@ -686,8 +676,7 @@ interface ITitreEtape {
   documents?: IDocument[] | null
   modification?: boolean | null
   documentIds?: string[] | null
-  documentsTypesSpecifiques?: IDocumentType[] | null
-  justificatifsTypesSpecifiques?: IDocumentType[] | null
+  justificatifsTypesSpecifiques?: DocumentType[] | null
   sectionsSpecifiques?: ISection[] | null
   titreDemarcheId: DemarcheId
   demarche?: ITitreDemarche
@@ -776,7 +765,7 @@ interface ICache {
 
 interface ITitreType {
   id: string
-  domaineId: string
+  domaineId: DomaineId
   typeId: TitreTypeTypeId
   archive?: boolean | null
   type: ITitreTypeType
@@ -803,8 +792,8 @@ interface ITitreTypeDemarcheTypeEtapeType {
   sections?: ISection[] | null
   ordre: number
   etapeType?: IEtapeType
-  documentsTypes?: IDocumentType[] | null
-  justificatifsTypes?: IDocumentType[] | null
+  documentsTypes?: DocumentType[] | null
+  justificatifsTypes?: DocumentType[] | null
 }
 
 interface IUser extends IUtilisateur {
@@ -893,7 +882,6 @@ export {
   ICoordonnees,
   IDemarcheStatut,
   IDemarcheType,
-  IDocumentType,
   IDocumentRepertoire,
   IDomaine,
   IEntreprise,
@@ -908,7 +896,6 @@ export {
   ITitreTypeTitreStatut,
   ITitreTypeDemarcheType,
   IActiviteTypeTitreType,
-  IEtapeTypeDocumentType,
   IEtapeTypeJustificatifType,
   IAdministrationTitreType,
   IAdministrationTitreTypeTitreStatut,
@@ -936,7 +923,6 @@ export {
   ITitreType,
   ITitreTypeType,
   ITitreTypeDemarcheTypeEtapeType,
-  ITitreTypeDemarcheTypeEtapeTypeDocumentType,
   ITitreTypeDemarcheTypeEtapeTypeJustificatifType,
   ITitreEntreprise,
   IUser,

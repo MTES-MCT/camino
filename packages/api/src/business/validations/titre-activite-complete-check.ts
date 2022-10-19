@@ -1,12 +1,13 @@
-import { IContenu, IDocument, IDocumentType, ISection } from '../../types'
+import { IContenu, IDocument, ISection } from '../../types'
 
 import { documentsTypesValidate } from './documents-types-validate'
+import { DocumentType } from 'camino-common/src/static/documentsTypes'
 
 export const titreActiviteCompleteCheck = (
   sections: ISection[],
   contenu?: IContenu | null,
   documents?: IDocument[] | null,
-  documentsTypes?: IDocumentType[]
+  documentsTypes?: DocumentType[]
 ) => {
   const activiteComplete = sections.every(s =>
     s.elements?.every(

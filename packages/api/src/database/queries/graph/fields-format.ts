@@ -160,6 +160,9 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
     }
   }
 
+  if (['etapesTypes'].includes(parent)) {
+    delete fields.documentsTypes
+  }
   // pour calculer la propriété « déposable » sur les étapes
   if (['etapes', 'etape'].includes(parent)) {
     if (!fields.documents) {
@@ -174,9 +177,7 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
       fields.type = { id: {} }
     }
 
-    if (!fields.type.documentsTypes) {
-      fields.type.documentsTypes = { id: {} }
-    }
+    delete fields.type.documentsTypes
 
     if (!fields.type.justificatifsTypes) {
       fields.type.justificatifsTypes = { id: {} }

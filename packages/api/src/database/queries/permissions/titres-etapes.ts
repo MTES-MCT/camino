@@ -68,21 +68,6 @@ const specifiquesAdd = (
   q.select(raw('tde.sections').as('sectionsSpecifiques'))
   q.groupBy('tde.sections')
 
-  // documents spécifiques
-  q.leftJoin(
-    'titresTypes__demarchesTypes__etapesTypes__documentsTypes as tded',
-    b => {
-      b.andOn('tded.titreTypeId', 'demarche:titre.typeId')
-      b.andOn('tded.demarcheTypeId', 'demarche.typeId')
-      b.andOn('tded.etapeTypeId', 'type.id')
-    }
-  )
-  q.leftJoin('documentsTypes as dt1', 'dt1.id', 'tded.documentTypeId')
-  q.select(
-    raw(
-      "COALESCE(json_agg(json_build_object('id', dt1.id,'nom', dt1.nom, 'optionnel', tded.optionnel, 'description', tded.description)) FILTER (WHERE dt1.id IS NOT NULL), '[]')"
-    ).as('documentsTypesSpecifiques')
-  )
   // justificatifs spécifiques
   q.leftJoin(
     'titresTypes__demarchesTypes__etapesTypes__justificatifsT as tdef',

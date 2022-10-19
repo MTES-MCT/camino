@@ -4,13 +4,13 @@ import { IUtilisateur } from '../../../types'
 
 import Documents from '../../models/documents'
 import TitresEtapesJustificatifs from '../../models/titres-etapes-justificatifs'
-import EtapesTypesDocumentsTypes from '../../models/etapes-types--documents-types'
 import ActivitesTypesDocumentsTypes from '../../models/activites-types--documents-types'
 import {
   isBureauDEtudes,
   isDefault,
   isEntreprise
 } from 'camino-common/src/roles'
+import TitresEtapes from '../../models/titres-etapes'
 
 const documentsQueryModify = (
   q: QueryBuilder<Documents, Documents | Documents[]>,
@@ -79,10 +79,14 @@ const documentsQueryModify = (
         'documents.typeId',
         'documents.titreActiviteId'
       ),
-      documentTypeEtapeTypeQuery('documents.typeId', 'documents.titreEtapeId')
+      etapeStatutNotAco()
     ]).as('suppression')
   )
 }
+const etapeStatutNotAco = () =>
+  TitresEtapes.query()
+    .whereRaw('?? = ??', ['id', 'documents.titreEtapeId'])
+    .andWhereRaw('?? != ?', ['titresEtapes.statutId', 'aco'])
 
 const titreEtapeJustificatifsQuery = TitresEtapesJustificatifs.query()
   .alias('documentsModification')
@@ -98,17 +102,6 @@ const documentTypeActiviteTypeQuery = (
     .andWhereRaw('?? = ??', ['documentTypeId', typeIdAlias])
     .andWhereRaw('?? is not true', ['optionnel'])
     .andWhereRaw('?? not in (?, ?)', ['titresActivites.statutId', 'abs', 'enc'])
-
-const documentTypeEtapeTypeQuery = (
-  typeIdAlias: string,
-  etapeIdAlias: string
-) =>
-  EtapesTypesDocumentsTypes.query()
-    .leftJoin('titresEtapes', 'titresEtapes.id', etapeIdAlias)
-    .whereRaw('?? = ??', ['etapeTypeId', 'titresEtapes.typeId'])
-    .andWhereRaw('?? = ??', ['documentTypeId', typeIdAlias])
-    .andWhereRaw('?? is not true', ['optionnel'])
-    .andWhereRaw('?? != ?', ['titresEtapes.statutId', 'aco'])
 
 const etapeTypeDocumentTypeUsedCheck = async (
   etapeTypeId: string,

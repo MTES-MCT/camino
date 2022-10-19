@@ -125,6 +125,18 @@ const etatsDefinitionPrmOct: IDemarcheDefinitionRestrictions = {
       [{ etapeTypeId: 'apd' }]
     ]
   },
+  ars: {
+    justeApres: [[{ etapeTypeId: 'ssr' }]],
+    avant: [[{ etapeTypeId: 'apo' }], [{ etapeTypeId: 'spo' }]]
+  },
+  afp: {
+    justeApres: [[{ etapeTypeId: 'ssr' }]],
+    avant: [[{ etapeTypeId: 'apo' }], [{ etapeTypeId: 'spo' }]]
+  },
+  aac: {
+    justeApres: [[{ etapeTypeId: 'ssr' }]],
+    avant: [[{ etapeTypeId: 'apo' }], [{ etapeTypeId: 'spo' }]]
+  },
   aof: {
     justeApres: [[{ etapeTypeId: 'ssr' }]],
     avant: [

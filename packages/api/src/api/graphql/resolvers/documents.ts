@@ -264,8 +264,7 @@ const documentSupprimer = async ({ id }: { id: string }, context: IToken) => {
       {
         fields: {
           type: {
-            activitesTypes: { id: {} },
-            etapesTypes: { id: {} }
+            activitesTypes: { id: {} }
           },
           etapesAssociees: { id: {} }
         }

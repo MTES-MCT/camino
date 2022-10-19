@@ -24,13 +24,12 @@ import TitresTypes from '../models/titres-types'
 import TitresTypesTitresStatuts from '../models/titres-types--titres-statuts'
 import TitresTypesDemarchesTypesEtapesTypes from '../models/titres-types--demarches-types-etapes-types'
 import TitresTypesDemarchesTypes from '../models/titres-types--demarches-types'
-import EtapesTypesDocumentsTypes from '../models/etapes-types--documents-types'
 import EtapesTypesJustificatifsTypes from '../models/etapes-types--justificatifs-types'
-import TitresTypesDemarchesTypesEtapesTypesDocumentsTypes from '../models/titres-types--demarches-types-etapes-types-documents-types'
 import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../models/titres-types--demarches-types-etapes-types-justificatifs-types'
 import Titres from '../models/titres'
 import { sortedDevises } from 'camino-common/src/static/devise'
 import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
+import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
 
 const titresTypesTypesGet = async () =>
   TitresTypesTypes.query().orderBy('ordre')
@@ -109,14 +108,6 @@ const titreTypeDemarcheTypeEtapeTypeGet = async (
     .withGraphFetched(graph)
 }
 
-const titresTypesDemarchesTypesEtapesTypesDocumentsTypesGet = async () =>
-  TitresTypesDemarchesTypesEtapesTypesDocumentsTypes.query().orderBy([
-    'titreTypeId',
-    'demarcheTypeId',
-    'etapeTypeId',
-    'documentTypeId'
-  ])
-
 const titresTypesDemarchesTypesEtapesTypesJustificatifsTypesGet = async () =>
   TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes.query().orderBy([
     'titreTypeId',
@@ -125,8 +116,7 @@ const titresTypesDemarchesTypesEtapesTypesJustificatifsTypesGet = async () =>
     'documentTypeId'
   ])
 
-const etapesTypesDocumentsTypesGet = async () =>
-  EtapesTypesDocumentsTypes.query().orderBy(['etapeTypeId', 'documentTypeId'])
+const etapesTypesDocumentsTypesGet = () => toDocuments()
 
 const etapesTypesJustificatifsTypesGet = async () =>
   EtapesTypesJustificatifsTypes.query().orderBy([
@@ -300,7 +290,6 @@ export {
   titresTypesDemarchesTypesGet,
   titresTypesDemarchesTypesEtapesTypesGet,
   titreTypeDemarcheTypeEtapeTypeGet,
-  titresTypesDemarchesTypesEtapesTypesDocumentsTypesGet,
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypesGet,
   etapesTypesDocumentsTypesGet,
   etapesTypesJustificatifsTypesGet

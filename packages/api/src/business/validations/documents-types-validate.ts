@@ -1,8 +1,9 @@
-import { IDocument, IDocumentType } from '../../types'
+import { IDocument } from '../../types'
+import { DocumentType } from 'camino-common/src/static/documentsTypes'
 
 export const documentsTypesValidate = (
   documents?: IDocument[] | null,
-  documentsTypes?: IDocumentType[]
+  documentsTypes?: DocumentType[]
 ) => {
   const errors = [] as string[]
 

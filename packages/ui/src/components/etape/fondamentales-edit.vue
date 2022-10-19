@@ -256,6 +256,7 @@ export default {
   props: {
     etape: { type: Object, default: () => ({}) },
     domaineId: { type: String, default: '' },
+    demarcheTypeId: { type: String, required: true },
     titreTypeId: { type: String, required: true },
     userIsAdmin: { type: Boolean, required: true },
     userIsSuper: { type: Boolean, required: true },
@@ -308,7 +309,7 @@ export default {
     dureeOptionalCheck() {
       return dureeOptionalCheck(
         this.etape.type.id,
-        this.etape.demarche.type.id,
+        this.demarcheTypeId,
         this.titreTypeId + this.domaineId
       )
     },

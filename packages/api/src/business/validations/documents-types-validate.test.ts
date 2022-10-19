@@ -1,4 +1,5 @@
-import { IDocument, IDocumentType } from '../../types'
+import { IDocument } from '../../types'
+import { DocumentType } from 'camino-common/src/static/documentsTypes'
 
 import { documentsTypesValidate } from './documents-types-validate'
 
@@ -16,14 +17,14 @@ describe('teste documentsTypesValidate', () => {
   test('tous les documents sont optionnels', () => {
     const errors = documentsTypesValidate([], [
       { id: 'arr', optionnel: true }
-    ] as IDocumentType[])
+    ] as DocumentType[])
     expect(errors).toHaveLength(0)
   })
 
   test('il manque un document obligatoire', () => {
     const errors = documentsTypesValidate(null, [
       { id: 'arr', optionnel: false }
-    ] as IDocumentType[])
+    ] as DocumentType[])
     expect(errors).toHaveLength(1)
   })
 
@@ -36,7 +37,7 @@ describe('teste documentsTypesValidate', () => {
           fichierTypeId: 'pdf'
         }
       ] as IDocument[],
-      [{ id: 'arr', optionnel: false }] as IDocumentType[]
+      [{ id: 'arr', optionnel: false }] as DocumentType[]
     )
     expect(errors).toHaveLength(1)
   })
@@ -50,7 +51,7 @@ describe('teste documentsTypesValidate', () => {
           date: '2002-10-10'
         }
       ] as IDocument[],
-      [{ id: 'arr', optionnel: false }] as IDocumentType[]
+      [{ id: 'arr', optionnel: false }] as DocumentType[]
     )
     expect(errors).toHaveLength(1)
   })
@@ -65,7 +66,7 @@ describe('teste documentsTypesValidate', () => {
           date: '2002-10-10'
         }
       ] as IDocument[],
-      [{ id: 'arr', optionnel: false }] as IDocumentType[]
+      [{ id: 'arr', optionnel: false }] as DocumentType[]
     )
     expect(errors).toHaveLength(0)
   })

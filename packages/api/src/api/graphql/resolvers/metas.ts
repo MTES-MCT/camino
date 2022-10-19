@@ -19,10 +19,7 @@ import {
 import { userGet } from '../../../database/queries/utilisateurs'
 
 import { fieldsBuild } from './_fields-build'
-import {
-  etapeTypeFormat,
-  etapeTypeIsValidCheck
-} from '../../_format/etapes-types'
+import { etapeTypeIsValidCheck } from '../../_format/etapes-types'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes'
 import {
@@ -261,9 +258,7 @@ const demarcheEtapesTypesGet = async (
     )
   }
 
-  return etapesTypes.map(et =>
-    etapeTypeFormat(et, undefined, undefined, undefined)
-  )
+  return etapesTypes
 }
 
 export const etapesTypes = async (

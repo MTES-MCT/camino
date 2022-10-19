@@ -1,10 +1,9 @@
 import { Model } from 'objection'
 
-import { IDocumentType } from '../../types'
-import EtapesTypes from './etapes-types'
+import { DocumentType } from 'camino-common/src/static/documentsTypes'
 import ActivitesTypes from './activites-types'
 
-interface DocumentsTypes extends IDocumentType {}
+interface DocumentsTypes extends DocumentType {}
 
 class DocumentsTypes extends Model {
   public static tableName = 'documentsTypes'
@@ -32,20 +31,6 @@ class DocumentsTypes extends Model {
           extra: ['optionnel']
         },
         to: 'activitesTypes.id'
-      }
-    },
-
-    etapesTypes: {
-      relation: Model.ManyToManyRelation,
-      modelClass: EtapesTypes,
-      join: {
-        from: 'documentsTypes.id',
-        through: {
-          from: 'etapesTypes__documentsTypes.documentTypeId',
-          to: 'etapesTypes__documentsTypes.etapeTypeId',
-          extra: ['optionnel']
-        },
-        to: 'etapesTypes.id'
       }
     }
   })

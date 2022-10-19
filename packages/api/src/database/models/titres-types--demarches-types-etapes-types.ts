@@ -44,28 +44,6 @@ class TitresTypesDemarchesTypesEtapesTypes extends Model {
       }
     },
 
-    documentsTypes: {
-      relation: Model.ManyToManyRelation,
-      modelClass: DocumentsTypes,
-      join: {
-        from: [
-          'titresTypes__demarchesTypes__etapesTypes.titreTypeId',
-          'titresTypes__demarchesTypes__etapesTypes.demarcheTypeId',
-          'titresTypes__demarchesTypes__etapesTypes.etapeTypeId'
-        ],
-        through: {
-          from: [
-            'titresTypes__demarchesTypes__etapesTypes__documentsTypes.titreTypeId',
-            'titresTypes__demarchesTypes__etapesTypes__documentsTypes.demarcheTypeId',
-            'titresTypes__demarchesTypes__etapesTypes__documentsTypes.etapeTypeId'
-          ],
-          to: 'titresTypes__demarchesTypes__etapesTypes__documentsTypes.documentTypeId',
-          extra: ['optionnel']
-        },
-        to: 'documentsTypes.id'
-      }
-    },
-
     justificatifsTypes: {
       relation: Model.ManyToManyRelation,
       modelClass: DocumentsTypes,

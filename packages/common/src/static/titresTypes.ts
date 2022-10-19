@@ -1,5 +1,5 @@
-import { DomaineId } from './domaines'
-import { TitreTypeTypeId } from './titresTypesTypes'
+import { DomaineId, isDomaineId } from './domaines'
+import { isTitreTypeType, TitreTypeTypeId } from './titresTypesTypes'
 
 interface Definition<T> {
   id: T
@@ -54,3 +54,30 @@ export const TitresTypes: {
 } as const
 
 export const isTitreType = (titreType: string | undefined | null): titreType is TitreTypeId => TitresTypesIds.includes(titreType)
+
+export const toTitreTypeId = (titreTypeType: TitreTypeTypeId, domaineId: DomaineId): TitreTypeId => {
+  const titreTypeId = `${titreTypeType}${domaineId}`
+  if (!isTitreType(titreTypeId)) {
+    throw new Error(`le titre type ${titreTypeId} n'est pas reconnu par Camino`)
+  }
+
+  return titreTypeId
+}
+
+export const getTitreTypeType = (titreType: TitreTypeId): TitreTypeTypeId => {
+  const titreTypeType = titreType.substring(0, 2)
+  if (isTitreTypeType(titreTypeType)) {
+    return titreTypeType
+  } else {
+    throw new Error(`le titreType ${titreType} n'a pas de titreTypeType connu, cas impossible`)
+  }
+}
+
+export const getDomaineId = (titreType: TitreTypeId): DomaineId => {
+  const domaineId = titreType.substring(2, 3)
+  if (isDomaineId(domaineId)) {
+    return domaineId
+  } else {
+    throw new Error(`le titreType ${titreType} n'a pas de domaineId connu, cas impossible`)
+  }
+}
