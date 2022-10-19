@@ -121,6 +121,30 @@ describe('etapeCreer', () => {
       date: '2020-01-01',
       uri: 'https://camino.beta.gouv.fr'
     })
+    await documentCreate({
+      id: 'dom',
+      typeId: 'dom',
+      date: '2020-01-01',
+      uri: 'https://camino.beta.gouv.fr'
+    })
+    await documentCreate({
+      id: 'for',
+      typeId: 'for',
+      date: '2020-01-01',
+      uri: 'https://camino.beta.gouv.fr'
+    })
+    await documentCreate({
+      id: 'jpa',
+      typeId: 'jpa',
+      date: '2020-01-01',
+      uri: 'https://camino.beta.gouv.fr'
+    })
+    await documentCreate({
+      id: 'pla',
+      typeId: 'pla',
+      date: '2020-01-01',
+      uri: 'https://camino.beta.gouv.fr'
+    })
 
     const res = await graphQLCall(
       etapeCreerQuery,
@@ -149,7 +173,7 @@ describe('etapeCreer', () => {
           contenu: { arm: { mecanise: true, franchissements: 3 } },
           substances: ['auru'],
           duree: 10,
-          documentIds: ['dep', 'doe'],
+          documentIds: ['dep', 'doe', 'dom', 'for', 'jpa', 'pla'],
           points: [
             {
               groupe: 1,
@@ -282,6 +306,30 @@ describe('etapeCreer', () => {
 
   test('ne peut pas créer une étape mfr avec un statut fai avec un champ obligatoire manquant (utilisateur super)', async () => {
     const titreDemarcheId = await demarcheCreate()
+    await documentCreate({
+      id: 'dom',
+      typeId: 'dom',
+      date: '2020-01-01',
+      uri: 'https://camino.beta.gouv.fr'
+    })
+    await documentCreate({
+      id: 'for',
+      typeId: 'for',
+      date: '2020-01-01',
+      uri: 'https://camino.beta.gouv.fr'
+    })
+    await documentCreate({
+      id: 'jpa',
+      typeId: 'jpa',
+      date: '2020-01-01',
+      uri: 'https://camino.beta.gouv.fr'
+    })
+    await documentCreate({
+      id: 'pla',
+      typeId: 'pla',
+      date: '2020-01-01',
+      uri: 'https://camino.beta.gouv.fr'
+    })
     const res = await graphQLCall(
       etapeCreerQuery,
       {
@@ -308,6 +356,7 @@ describe('etapeCreer', () => {
             }
           },
           substances: ['auru'],
+          documentIds: ['dom', 'for', 'jpa', 'pla'],
           points: [
             {
               groupe: 1,

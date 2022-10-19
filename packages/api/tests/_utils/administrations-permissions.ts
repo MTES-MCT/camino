@@ -20,7 +20,17 @@ import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritag
 import { etapeTypeSectionsFormat } from '../../src/api/_format/etapes-types'
 import { Role } from 'camino-common/src/roles'
 import { AdministrationId } from 'camino-common/src/static/administrations'
-import { newDemarcheId } from '../../src/database/models/_format/id-create'
+import {
+  idGenerate,
+  newDemarcheId
+} from '../../src/database/models/_format/id-create'
+import {
+  getDomaineId,
+  getTitreTypeType,
+  TitreTypeId
+} from 'camino-common/src/static/titresTypes'
+import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
+import { documentCreate } from '../../src/database/queries/documents'
 
 const visibleCheck = async (
   administrationId: string,
@@ -97,17 +107,18 @@ const creationCheck = async (
   administrationId: string,
   creer: boolean,
   cible: string,
-  titreTypeId: string
+  titreTypeId: TitreTypeId
 ) => {
   const administration = administrationsWithRelations.find(
     a => a.id === administrationId
   )!
 
+  const domaineId = getDomaineId(titreTypeId)
   if (cible === 'titres') {
     const titre = {
       nom: `${titreTypeId}-${cible}-admin-${administrationId}`,
       typeId: titreTypeId,
-      domaineId: titreTypeId.slice(-1)
+      domaineId
     }
 
     const titreCreerQuery = queryImport('titre-creer')
@@ -210,6 +221,27 @@ const creationCheck = async (
     const titreDemarcheId =
       demarcheCreated.body.data.demarcheCreer.demarches[0].id
 
+    const titreTypeType = getTitreTypeType(titreTypeId)
+    const documentTypesIds = getDocuments(
+      titreTypeType,
+      domaineId,
+      demarcheType.id,
+      etapeTypeId
+    )
+      .filter(({ optionnel }) => !optionnel)
+      .map(({ id }) => id)
+    const documentIds = []
+
+    for (const documentTypeId of documentTypesIds) {
+      const id = idGenerate()
+      documentIds.push(id)
+      await documentCreate({
+        id,
+        typeId: documentTypeId,
+        date: '2020-01-01',
+        uri: 'https://camino.beta.gouv.fr'
+      })
+    }
     const res = await graphQLCall(
       queryImport('titre-etape-creer'),
       {
@@ -232,6 +264,7 @@ const creationCheck = async (
           heritageContenu,
           contenu,
           substances: ['auru'],
+          documentIds,
           points: [
             {
               groupe: 1,

@@ -286,7 +286,7 @@ interface IDemarcheStatut {
 }
 
 interface IDemarcheType {
-  id: string
+  id: DemarcheTypeId
   nom: string
   ordre: number
   duree?: boolean | null

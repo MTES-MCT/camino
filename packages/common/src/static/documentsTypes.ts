@@ -1,4 +1,5 @@
 export interface DocumentType {
+  // TODO 2022-10-19 ceci devrait être du type DocumentTypeId
   id: string
   nom: string
   optionnel: boolean
