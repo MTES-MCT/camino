@@ -19,9 +19,7 @@ import {
 import { userGet } from '../../../database/queries/utilisateurs'
 
 import { fieldsBuild } from './_fields-build'
-import {
-  etapeTypeIsValidCheck
-} from '../../_format/etapes-types'
+import { etapeTypeIsValidCheck } from '../../_format/etapes-types'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes'
 import {
