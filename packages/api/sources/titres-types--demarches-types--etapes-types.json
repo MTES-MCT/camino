@@ -25029,6 +25029,12 @@
   },
   {
     "titre_type_id": "prm",
+    "ordre": 1210,
+    "demarche_type_id": "oct",
+    "etape_type_id": "aac"
+  },
+  {
+    "titre_type_id": "prm",
     "ordre": 520,
     "demarche_type_id": "oct",
     "etape_type_id": "abd"
@@ -25050,6 +25056,12 @@
     "ordre": 310,
     "demarche_type_id": "oct",
     "etape_type_id": "aep"
+  },
+  {
+    "titre_type_id": "prm",
+    "ordre": 1208,
+    "demarche_type_id": "oct",
+    "etape_type_id": "afp"
   },
   {
     "titre_type_id": "prm",
@@ -25116,6 +25128,12 @@
     "ordre": 380,
     "demarche_type_id": "oct",
     "etape_type_id": "app"
+  },
+  {
+    "titre_type_id": "prm",
+    "ordre": 1209,
+    "demarche_type_id": "oct",
+    "etape_type_id": "ars"
   },
   {
     "titre_type_id": "prm",
@@ -25581,6 +25599,18 @@
   },
   {
     "titre_type_id": "prm",
+    "ordre": 1203,
+    "demarche_type_id": "pr1",
+    "etape_type_id": "ppc"
+  },
+  {
+    "titre_type_id": "prm",
+    "ordre": 1202,
+    "demarche_type_id": "pr1",
+    "etape_type_id": "ppu"
+  },
+  {
+    "titre_type_id": "prm",
     "ordre": 351,
     "demarche_type_id": "pr1",
     "etape_type_id": "rcg"
@@ -25818,6 +25848,18 @@
     "ordre": 200,
     "demarche_type_id": "pr2",
     "etape_type_id": "mod"
+  },
+  {
+    "titre_type_id": "prm",
+    "ordre": 1201,
+    "demarche_type_id": "pr2",
+    "etape_type_id": "ppc"
+  },
+  {
+    "titre_type_id": "prm",
+    "ordre": 1200,
+    "demarche_type_id": "pr2",
+    "etape_type_id": "ppu"
   },
   {
     "titre_type_id": "prm",
@@ -31452,6 +31494,18 @@
   },
   {
     "titre_type_id": "prw",
+    "ordre": 1205,
+    "demarche_type_id": "pr1",
+    "etape_type_id": "ppc"
+  },
+  {
+    "titre_type_id": "prw",
+    "ordre": 1204,
+    "demarche_type_id": "pr1",
+    "etape_type_id": "ppu"
+  },
+  {
+    "titre_type_id": "prw",
     "ordre": 460,
     "demarche_type_id": "pr1",
     "etape_type_id": "rpu"
@@ -31593,6 +31647,18 @@
     "ordre": 200,
     "demarche_type_id": "pr2",
     "etape_type_id": "mod"
+  },
+  {
+    "titre_type_id": "prw",
+    "ordre": 1207,
+    "demarche_type_id": "pr2",
+    "etape_type_id": "ppc"
+  },
+  {
+    "titre_type_id": "prw",
+    "ordre": 1206,
+    "demarche_type_id": "pr2",
+    "etape_type_id": "ppu"
   },
   {
     "titre_type_id": "prw",

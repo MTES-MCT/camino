@@ -25,7 +25,7 @@ const EtapesTypesDocumentsTypes: { [key in EtapeTypeId]?: DocumentTypeId[] } = {
     DOCUMENTS_TYPES_IDS.decision,
     DOCUMENTS_TYPES_IDS.notificationDeDecision
   ],
-  [ETAPES_TYPES.avisDeLaDirectionRegionaleDesFinancesPubliques]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires],
+  [ETAPES_TYPES.avisDeLaDirectionRegionaleDesFinancesPubliques]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires, DOCUMENTS_TYPES_IDS.avis],
   [ETAPES_TYPES.avisDeLaGendarmerieNationale]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires],
   [ETAPES_TYPES.avisDeLIfremer]: [DOCUMENTS_TYPES_IDS.avis],
   [ETAPES_TYPES.avisDunMaire]: [DOCUMENTS_TYPES_IDS.avis],
@@ -172,7 +172,14 @@ const EtapesTypesDocumentsTypes: { [key in EtapeTypeId]?: DocumentTypeId[] } = {
   [ETAPES_TYPES.paiementDesFraisDeDossier]: [DOCUMENTS_TYPES_IDS.facture, DOCUMENTS_TYPES_IDS.justificatifDePaiement, DOCUMENTS_TYPES_IDS.notes],
   [ETAPES_TYPES.avisDuParcNaturelRegional]: [DOCUMENTS_TYPES_IDS.avis],
   [ETAPES_TYPES.clotureDeLaParticipationDuPublic]: [DOCUMENTS_TYPES_IDS.notes, DOCUMENTS_TYPES_IDS.rapportDuCommissaireEnqueteur],
-  [ETAPES_TYPES.ouvertureDeLaParticipationDuPublic]: [DOCUMENTS_TYPES_IDS.documentsCartographiques, DOCUMENTS_TYPES_IDS.dossier, DOCUMENTS_TYPES_IDS.notes],
+  [ETAPES_TYPES.ouvertureDeLaParticipationDuPublic]: [
+    DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande,
+    DOCUMENTS_TYPES_IDS.documentsCartographiques,
+    DOCUMENTS_TYPES_IDS.dossierDeDemande,
+    DOCUMENTS_TYPES_IDS.dossier,
+    DOCUMENTS_TYPES_IDS.lettreDeDemande,
+    DOCUMENTS_TYPES_IDS.notes
+  ],
   [ETAPES_TYPES.receptionDeComplements_RecevabiliteDeLaDemande_]: [DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande],
   [ETAPES_TYPES.receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_]: [DOCUMENTS_TYPES_IDS.documentsCartographiques, DOCUMENTS_TYPES_IDS.dossierLoiSurLEau],
   [ETAPES_TYPES.rapportDuConseilGeneralDeLeconomie_CGE_]: [
