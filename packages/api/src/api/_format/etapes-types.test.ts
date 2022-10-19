@@ -23,12 +23,8 @@ describe('teste etapes types format', () => {
     description  | dtSpecifiqueDescription | result
     ${undefined} | ${undefined}            | ${undefined}
     ${'des'}     | ${undefined}            | ${'des'}
-    ${'des'}     | ${undefined}            | ${'des1'}
     ${'des'}     | ${'des2'}               | ${'des2'}
     ${undefined} | ${'des2'}               | ${'des2'}
-    ${'des'}     | ${'des2'}               | ${'des2'}
-    ${undefined} | ${'des2'}               | ${'des2'}
-    ${undefined} | ${undefined}            | ${'des1'}
   `(
     'test la déclaration de la description',
     ({ description, dtSpecifiqueDescription, result }) => {
