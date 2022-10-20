@@ -1,7 +1,6 @@
 import { dbManager } from '../../../../tests/db-manager'
 import { IUtilisateur, IAdministration, ITitre } from '../../../types'
 
-import AdministrationsTitresTypes from '../../models/administrations-titres-types'
 import Titres from '../../models/titres'
 import Utilisateurs from '../../models/utilisateurs'
 import AdministrationsActivitesTypesEmails from '../../models/administrations-activites-types-emails'
@@ -27,16 +26,15 @@ afterAll(async () => {
 
 describe('administrationsTitresQuery', () => {
   test.each`
-    gestionnaire | associee | visible
-    ${false}     | ${false} | ${false}
-    ${true}      | ${false} | ${true}
-    ${false}     | ${true}  | ${true}
-    ${true}      | ${true}  | ${true}
+    administrationId     | visible
+    ${'ope-brgm-01'}     | ${false}
+    ${'ope-onf-973-01'}  | ${true}
+    ${'pre-97302-01'}    | ${true}
+    ${'ope-ptmg-973-01'} | ${true}
   `(
     "Vérifie l'écriture de la requête sur les titres dont une administration a des droits sur le type",
-    async ({ gestionnaire, associee, visible }) => {
+    async ({ administrationId, visible }) => {
       await Titres.query().delete()
-      await AdministrationsTitresTypes.query().delete()
 
       const mockTitre = {
         id: 'monTitreId',
@@ -48,21 +46,14 @@ describe('administrationsTitresQuery', () => {
 
       await Titres.query().insertGraph(mockTitre)
 
-      await AdministrationsTitresTypes.query().insertGraph({
-        administrationId: 'ope-brgm-01',
-        titreTypeId: mockTitre.typeId,
-        gestionnaire,
-        associee
-      })
-
       const administrationQuery = administrationsTitresQuery(
-        'ope-brgm-01',
+        administrationId,
         'titres',
         {
           isGestionnaire: true,
           isAssociee: true
         }
-      ).whereNotNull('a_tt.administrationId')
+      )
 
       const q = Titres.query()
         .where('id', 'monTitreId')

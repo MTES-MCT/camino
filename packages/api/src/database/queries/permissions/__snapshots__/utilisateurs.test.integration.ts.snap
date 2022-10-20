@@ -5,26 +5,6 @@ Object {
   "administration": Object {
     "activitesTypes": Array [],
     "id": "aut-97300-01",
-    "titresTypes": Array [
-      Object {
-        "archive": null,
-        "associee": true,
-        "contenuIds": Array [
-          Object {
-            "elementId": "mecanise",
-            "sectionId": "arm",
-          },
-          Object {
-            "elementId": "franchissements",
-            "sectionId": "arm",
-          },
-        ],
-        "domaineId": "m",
-        "gestionnaire": null,
-        "id": "arm",
-        "typeId": "ar",
-      },
-    ],
   },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
@@ -53,26 +33,6 @@ Object {
   "administration": Object {
     "activitesTypes": Array [],
     "id": "aut-97300-01",
-    "titresTypes": Array [
-      Object {
-        "archive": null,
-        "associee": true,
-        "contenuIds": Array [
-          Object {
-            "elementId": "mecanise",
-            "sectionId": "arm",
-          },
-          Object {
-            "elementId": "franchissements",
-            "sectionId": "arm",
-          },
-        ],
-        "domaineId": "m",
-        "gestionnaire": null,
-        "id": "arm",
-        "typeId": "ar",
-      },
-    ],
   },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
@@ -101,26 +61,6 @@ Object {
   "administration": Object {
     "activitesTypes": Array [],
     "id": "aut-97300-01",
-    "titresTypes": Array [
-      Object {
-        "archive": null,
-        "associee": true,
-        "contenuIds": Array [
-          Object {
-            "elementId": "mecanise",
-            "sectionId": "arm",
-          },
-          Object {
-            "elementId": "franchissements",
-            "sectionId": "arm",
-          },
-        ],
-        "domaineId": "m",
-        "gestionnaire": null,
-        "id": "arm",
-        "typeId": "ar",
-      },
-    ],
   },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
@@ -149,26 +89,6 @@ Object {
   "administration": Object {
     "activitesTypes": Array [],
     "id": "aut-97300-01",
-    "titresTypes": Array [
-      Object {
-        "archive": null,
-        "associee": true,
-        "contenuIds": Array [
-          Object {
-            "elementId": "mecanise",
-            "sectionId": "arm",
-          },
-          Object {
-            "elementId": "franchissements",
-            "sectionId": "arm",
-          },
-        ],
-        "domaineId": "m",
-        "gestionnaire": null,
-        "id": "arm",
-        "typeId": "ar",
-      },
-    ],
   },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
@@ -197,26 +117,6 @@ Object {
   "administration": Object {
     "activitesTypes": Array [],
     "id": "aut-97300-01",
-    "titresTypes": Array [
-      Object {
-        "archive": null,
-        "associee": true,
-        "contenuIds": Array [
-          Object {
-            "elementId": "mecanise",
-            "sectionId": "arm",
-          },
-          Object {
-            "elementId": "franchissements",
-            "sectionId": "arm",
-          },
-        ],
-        "domaineId": "m",
-        "gestionnaire": null,
-        "id": "arm",
-        "typeId": "ar",
-      },
-    ],
   },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",

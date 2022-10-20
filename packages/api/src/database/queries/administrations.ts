@@ -1,7 +1,6 @@
 import {
   IAdministrationActiviteType,
   IAdministrationActiviteTypeEmail,
-  IAdministrationTitreType,
   IAdministrationTitreTypeEtapeType,
   IAdministrationTitreTypeTitreStatut,
   IFields,
@@ -13,7 +12,6 @@ import { fieldsFormat } from './graph/fields-format'
 import options from './_options'
 
 import Administrations from '../models/administrations'
-import AdministrationsTitresTypes from '../models/administrations-titres-types'
 import { administrationsQueryModify } from './permissions/administrations'
 import AdministrationsTitresTypesTitresStatuts from '../models/administrations-titres-types-titres-statuts'
 import AdministrationsTitresTypesEtapesTypes from '../models/administrations-titres-types-etapes-types'
@@ -51,19 +49,6 @@ const administrationsGet = async (
 ) => {
   return administrationsQueryBuild({ fields }, user)
 }
-
-const administrationTitreTypeUpsert = async (
-  administrationTitreType: IAdministrationTitreType
-) =>
-  AdministrationsTitresTypes.query().upsertGraph(administrationTitreType, {
-    insertMissing: true
-  })
-
-const administrationTitreTypeDelete = async (
-  administrationId: string,
-  titreTypeId: string
-) =>
-  AdministrationsTitresTypes.query().deleteById([administrationId, titreTypeId])
 
 const administrationTitreTypeTitreStatutUpsert = async (
   administrationTitreTypeTitreStatut: IAdministrationTitreTypeTitreStatut
@@ -145,8 +130,6 @@ const administrationActiviteTypeEmailDelete = async (
 export {
   administrationGet,
   administrationsGet,
-  administrationTitreTypeUpsert,
-  administrationTitreTypeDelete,
   administrationTitreTypeTitreStatutUpsert,
   administrationTitreTypeTitreStatutDelete,
   administrationTitreTypeEtapeTypeUpsert,

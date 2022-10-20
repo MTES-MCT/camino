@@ -60,14 +60,6 @@ entity "**administrations__activites_types__emails**" {
   --
 }
 
-entity "**administrations__titres_types**" {
-  + ""administration_id"": //character varying(255) [PK][FK]//
-  + ""titre_type_id"": //character varying(255) [PK][FK]//
-  --
-  ""gestionnaire"": //boolean //
-  ""associee"": //boolean //
-}
-
 entity "**administrations__titres_types__etapes_types**" {
   + ""administration_id"": //character varying(255) [PK][FK]//
   + ""titre_type_id"": //character varying(255) [PK][FK]//
@@ -218,14 +210,6 @@ entity "**etapes_types**" {
   ""entreprises_lecture"": //boolean //
 }
 
-entity "**etapes_types__documents_types**" {
-  + ""etape_type_id"": //character varying(3) [PK][FK]//
-  + ""document_type_id"": //character varying(3) [PK][FK]//
-  --
-  ""optionnel"": //boolean //
-  ""description"": //text //
-}
-
 entity "**etapes_types__justificatifs_types**" {
   + ""etape_type_id"": //character varying(3) [PK][FK]//
   + ""document_type_id"": //character varying(3) [PK][FK]//
@@ -271,12 +255,6 @@ entity "**knex_migrations_lock**" {
   ""is_locked"": //integer //
 }
 
-entity "**references_types**" {
-  + ""id"": //character varying(3) [PK]//
-  --
-  *""nom"": //character varying(255) //
-}
-
 entity "**sdom_zones**" {
   + ""id"": //character varying(30) [PK]//
   --
@@ -285,6 +263,19 @@ entity "**sdom_zones**" {
 
 entity "**sdom_zones_postgis**" {
   + ""id"": //character varying(30) [PK]//
+  --
+  ""geometry"": //geometry(MultiPolygon,4326) //
+}
+
+entity "**secteurs_maritime**" {
+  + ""id"": //integer [PK]//
+  --
+  ""nom"": //character varying(255) //
+  ""facade"": //character varying(255) //
+}
+
+entity "**secteurs_maritime_postgis**" {
+  + ""id"": //integer [PK][FK]//
   --
   ""geometry"": //geometry(MultiPolygon,4326) //
 }
@@ -316,11 +307,18 @@ entity "**titres**" {
   ""props_titre_etapes_ids"": //jsonb //
   ""slug"": //character varying(255) //
   *""archive"": //boolean //
+  *""references"": //jsonb //
 }
 
 entity "**titres__sdom_zones**" {
   + ""titre_etape_id"": //character varying(128) [PK][FK]//
   + ""sdom_zone_id"": //character varying(30) [PK][FK]//
+  --
+}
+
+entity "**titres__secteurs_maritime**" {
+  + ""titre_etape_id"": //character varying(128) [PK][FK]//
+  + ""secteur_maritime_id"": //integer [PK][FK]//
   --
 }
 
@@ -470,13 +468,6 @@ entity "**titres_points_references**" {
   ""slug"": //character varying(255) //
 }
 
-entity "**titres_references**" {
-  + ""titre_id"": //character varying(128) [PK][FK]//
-  + ""type_id"": //character varying(3) [PK][FK]//
-  + ""nom"": //character varying(255) [PK]//
-  --
-}
-
 entity "**titres_titulaires**" {
   + ""titre_etape_id"": //character varying(128) [PK][FK]//
   + ""entreprise_id"": //character varying(64) [PK][FK]//
@@ -514,16 +505,6 @@ entity "**titres_types__demarches_types__etapes_types**" {
   --
   ""ordre"": //integer //
   ""sections"": //jsonb[] //
-}
-
-entity "**titres_types__demarches_types__etapes_types__documents_types**" {
-  + ""titre_type_id"": //character varying(3) [PK][FK]//
-  + ""demarche_type_id"": //character varying(7) [PK][FK]//
-  + ""etape_type_id"": //character varying(3) [PK][FK]//
-  + ""document_type_id"": //character varying(3) [PK][FK]//
-  --
-  ""optionnel"": //boolean //
-  ""description"": //text //
 }
 
 entity "**titres_types__demarches_types__etapes_types__justificatifs_t**" {
@@ -565,6 +546,7 @@ entity "**utilisateurs**" {
   ""preferences"": //json //
   *""date_creation"": //character varying(255) //
   ""administration_id"": //character varying(255) [FK]//
+  ""qgis_token"": //character varying(255) //
 }
 
 entity "**utilisateurs__entreprises**" {
@@ -611,14 +593,6 @@ entity "**utilisateurs__titres**" {
 
 "**administrations__activites_types__emails**"   }--  "**administrations**"
 
-"**administrations__titres_types**"   }--  "**administrations**"
-
-"**administrations__titres_types**"   }--  "**administrations**"
-
-"**administrations__titres_types**"   }--  "**titres_types**"
-
-"**administrations__titres_types**"   }--  "**titres_types**"
-
 "**administrations__titres_types__etapes_types**"   }--  "**administrations**"
 
 "**administrations__titres_types__etapes_types**"   }--  "**administrations**"
@@ -663,14 +637,6 @@ entity "**utilisateurs__titres**" {
 
 "**etapes_types**"   }--  "**etapes_types**"
 
-"**etapes_types__documents_types**"   }--  "**documents_types**"
-
-"**etapes_types__documents_types**"   }--  "**documents_types**"
-
-"**etapes_types__documents_types**"   }--  "**etapes_types**"
-
-"**etapes_types__documents_types**"   }--  "**etapes_types**"
-
 "**etapes_types__justificatifs_types**"   }--  "**entreprises__documents_types**"
 
 "**etapes_types__justificatifs_types**"   }--  "**entreprises__documents_types**"
@@ -685,6 +651,8 @@ entity "**utilisateurs__titres**" {
 
 "**journaux**"   }--  "**titres**"
 
+"**secteurs_maritime_postgis**"  ||-||  "**secteurs_maritime**"
+
 "**titres**"   }--  "**domaines**"
 
 "**titres**"   }--  "**titres_types**"
@@ -696,6 +664,14 @@ entity "**utilisateurs__titres**" {
 "**titres__sdom_zones**"   }--  "**titres_etapes**"
 
 "**titres__sdom_zones**"   }--  "**titres_etapes**"
+
+"**titres__secteurs_maritime**"   }--  "**secteurs_maritime**"
+
+"**titres__secteurs_maritime**"   }--  "**secteurs_maritime**"
+
+"**titres__secteurs_maritime**"   }--  "**titres_etapes**"
+
+"**titres__secteurs_maritime**"   }--  "**titres_etapes**"
 
 "**titres__titres**"   }--  "**titres**"
 
@@ -791,14 +767,6 @@ entity "**utilisateurs__titres**" {
 
 "**titres_points_references**"   }--  "**titres_points**"
 
-"**titres_references**"   }--  "**titres**"
-
-"**titres_references**"   }--  "**titres**"
-
-"**titres_references**"   }--  "**references_types**"
-
-"**titres_references**"   }--  "**references_types**"
-
 "**titres_titulaires**"   }--  "**entreprises**"
 
 "**titres_titulaires**"   }--  "**entreprises**"
@@ -834,34 +802,6 @@ entity "**utilisateurs__titres**" {
 "**titres_types__demarches_types__etapes_types**"   }--  "**titres_types**"
 
 "**titres_types__demarches_types__etapes_types**"   }--  "**titres_types**"
-
-"**titres_types__demarches_types__etapes_types__documents_types**"   }--  "**documents_types**"
-
-"**titres_types__demarches_types__etapes_types__documents_types**"   }--  "**documents_types**"
-
-"**titres_types__demarches_types__etapes_types__documents_types**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__documents_types**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__documents_types**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__documents_types**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__documents_types**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__documents_types**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__documents_types**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__documents_types**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__documents_types**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__documents_types**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__documents_types**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__demarches_types__etapes_types__documents_types**"   }--  "**titres_types__demarches_types__etapes_types**"
 
 "**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**documents_types**"
 

@@ -21,6 +21,8 @@ import {
   sortedAdministrations
 } from 'camino-common/src/static/administrations'
 import { Departements } from 'camino-common/src/static/departement'
+import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 const administrationsQueryModify = (
   q: QueryBuilder<
@@ -104,35 +106,6 @@ const administrationsQueryModify = (
   return q
 }
 
-const administrationsTitresTypesModify = (
-  q: QueryBuilder<
-    AdministrationsModel,
-    AdministrationsModel | AdministrationsModel[]
-  >,
-  administrationId: AdministrationId,
-  titreAlias: string,
-  {
-    isGestionnaire,
-    isAssociee
-  }: { isGestionnaire?: boolean; isAssociee?: boolean } = {}
-) => {
-  q.leftJoin('administrations__titresTypes as a_tt', b => {
-    b.on(knex.raw('?? = ??', ['a_tt.administrationId', 'administrations.id']))
-    b.andOn(knex.raw('?? = ??', ['a_tt.titreTypeId', `${titreAlias}.typeId`]))
-    b.andOn(knex.raw('?? = ?', ['administrations.id', administrationId]))
-    if (isGestionnaire || isAssociee) {
-      b.andOn(c => {
-        if (isGestionnaire) {
-          c.orOn(knex.raw('?? is true', ['a_tt.gestionnaire']))
-        }
-        if (isAssociee) {
-          c.orOn(knex.raw('?? is true', ['a_tt.associee']))
-        }
-      })
-    }
-  })
-}
-
 const administrationsLocalesModify = (
   q: QueryBuilder<
     AdministrationsModel,
@@ -192,20 +165,34 @@ const administrationsTitresQuery = (
     administrationId
   )
 
-  if (isGestionnaire || isAssociee) {
-    q.modify(administrationsTitresTypesModify, administrationId, titreAlias, {
-      isGestionnaire,
-      isAssociee
-    })
-  }
-
   if (isLocale) {
     q.modify(administrationsLocalesModify, administrationId, titreAlias)
   }
 
   q.where(c => {
     if (isGestionnaire || isAssociee) {
-      c.orWhereNotNull('a_tt.administrationId')
+      const titreTypeIds: TitreTypeId[] = getTitreTypeIdsByAdministration(
+        administrationId
+      )
+        .filter(att => {
+          if (isGestionnaire && att.gestionnaire) {
+            return true
+          }
+          if (isAssociee && att.associee) {
+            return true
+          }
+
+          return false
+        })
+        .map(({ titreTypeId }) => titreTypeId)
+
+      if (titreTypeIds.length) {
+        c.orWhereRaw(`?? in (${titreTypeIds.map(t => `'${t}'`).join(',')})`, [
+          `${titreAlias}.typeId`
+        ])
+      } else {
+        c.orWhereRaw('false')
+      }
     }
 
     if (isLocale) {

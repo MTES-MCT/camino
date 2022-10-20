@@ -8,19 +8,6 @@ const fragmentAdministration = gql`
     utilisateurs {
       ...utilisateur
     }
-    titresTypes {
-      id
-      domaine {
-        id
-        nom
-      }
-      type {
-        id
-        nom
-      }
-      gestionnaire
-      associee
-    }
     titresTypesTitresStatuts {
       titreType {
         id

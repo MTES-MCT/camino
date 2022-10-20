@@ -31,12 +31,13 @@ import {
 } from 'camino-common/src/static/titresTypes'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
 import { documentCreate } from '../../src/database/queries/documents'
+import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes'
 
 const visibleCheck = async (
   administrationId: string,
   visible: boolean,
   cible: 'titres' | 'demarches' | 'etapes',
-  titreTypeId: string,
+  titreTypeId: TitreTypeId,
   locale: boolean,
   etapeTypeId?: string
 ) => {
@@ -46,9 +47,7 @@ const visibleCheck = async (
     a => a.id === administrationId
   )!
 
-  const gestionnaire = administration.titresTypes?.some(
-    tt => tt.id === titreTypeId && tt.gestionnaire
-  )
+  const gestionnaire = isGestionnaire(administration.id)
 
   const titre = titreBuild(
     {
@@ -316,10 +315,10 @@ const creationCheck = async (
 }
 
 const modificationCheck = async (
-  administrationId: string,
+  administrationId: AdministrationId,
   modifier: boolean,
   cible: string,
-  titreTypeId: string,
+  titreTypeId: TitreTypeId,
   locale?: boolean,
   etapeTypeId?: string
 ) => {
@@ -327,9 +326,8 @@ const modificationCheck = async (
     a => a.id === administrationId
   )!
 
-  const gestionnaire = administration.titresTypes?.some(
-    tt => tt.id === titreTypeId && tt.gestionnaire
-  )
+  const gestionnaire = isGestionnaire(administrationId)
+
   const titre = titreBuild(
     {
       titreId: `${titreTypeId}${

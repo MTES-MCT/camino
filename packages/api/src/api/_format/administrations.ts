@@ -11,7 +11,7 @@ import { Administrations } from 'camino-common/src/static/administrations'
  *
  */
 
-const administrationFormat = (administration: IAdministration) => {
+export const administrationFormat = (administration: IAdministration) => {
   administration.gestionnaireTitres =
     administration.gestionnaireTitres &&
     titresFormat(administration.gestionnaireTitres)
@@ -29,5 +29,3 @@ const administrationFormat = (administration: IAdministration) => {
 
   return administration
 }
-
-export { administrationFormat }

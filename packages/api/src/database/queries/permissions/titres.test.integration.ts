@@ -12,13 +12,9 @@ import {
   titresTravauxCreationQuery,
   titresVisibleByEntrepriseQuery
 } from './titres'
-import AdministrationsTitresTypes from '../../models/administrations-titres-types'
 import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts'
 import { userSuper } from '../../user-super'
-import {
-  ADMINISTRATION_IDS,
-  AdministrationId
-} from 'camino-common/src/static/administrations'
+import { AdministrationId } from 'camino-common/src/static/administrations'
 import { Role } from 'camino-common/src/roles'
 
 console.info = jest.fn()
@@ -259,26 +255,19 @@ describe('titresQueryModify', () => {
 
   describe('titresTravauxCreationQuery', () => {
     test.each`
-      administrationId                           | gestionnaire | travauxCreation
-      ${'dre-ile-de-france-01'}                  | ${false}     | ${false}
-      ${'dea-guadeloupe-01'}                     | ${false}     | ${false}
-      ${'min-mtes-dgec-01'}                      | ${false}     | ${false}
-      ${'pre-42218-01'}                          | ${false}     | ${false}
-      ${'ope-ptmg-973-01'}                       | ${false}     | ${false}
-      ${'dre-ile-de-france-01'}                  | ${true}      | ${true}
-      ${ADMINISTRATION_IDS['DEAL - GUADELOUPE']} | ${true}      | ${true}
-      ${'min-mtes-dgec-01'}                      | ${true}      | ${false}
-      ${'pre-42218-01'}                          | ${true}      | ${false}
-      ${'ope-ptmg-973-01'}                       | ${true}      | ${false}
+      administrationId          | travauxCreation
+      ${'dre-ile-de-france-01'} | ${false}
+      ${'dea-guadeloupe-01'}    | ${false}
+      ${'min-mtes-dgec-01'}     | ${false}
+      ${'pre-42218-01'}         | ${false}
+      ${'ope-ptmg-973-01'}      | ${false}
     `(
-      'Vérifie si le $administrationId, gestionnaire $gestionnaire peut créer des travaux ($travauxCreation)',
+      'Vérifie si le $administrationId, peut créer des travaux ($travauxCreation)',
       async ({
         administrationId,
-        gestionnaire,
         travauxCreation
       }: {
         administrationId: AdministrationId
-        gestionnaire: boolean
         travauxCreation: boolean
       }) => {
         const titreId = idGenerate()
@@ -290,17 +279,6 @@ describe('titresQueryModify', () => {
           domaineId: 'm',
           typeId: 'arm'
         })
-
-        await AdministrationsTitresTypes.query().delete()
-        if (gestionnaire) {
-          await AdministrationsTitresTypes.query().insert({
-            administrationId,
-            titreTypeId: 'arm',
-            gestionnaire: true
-          })
-        }
-
-        await AdministrationsTitresTypesTitresStatuts.query().delete()
 
         const q = Titres.query()
         titresTravauxCreationQuery(q, {
@@ -360,13 +338,7 @@ describe('titresQueryModify', () => {
           typeId: 'arm'
         })
 
-        await AdministrationsTitresTypes.query().delete()
         const administrationId = 'ope-ptmg-973-01'
-        await AdministrationsTitresTypes.query().insert({
-          administrationId,
-          titreTypeId: 'arm',
-          gestionnaire: true
-        })
 
         await AdministrationsTitresTypesTitresStatuts.query().delete()
 
@@ -392,10 +364,7 @@ describe('titresQueryModify', () => {
         typeId: 'arm'
       })
 
-      await AdministrationsTitresTypes.query().delete()
-      const administrationId = 'ope-ptmg-973-01'
-
-      await AdministrationsTitresTypesTitresStatuts.query().delete()
+      const administrationId = 'pre-97302-01'
 
       const q = Titres.query()
       q.select(

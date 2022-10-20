@@ -1,8 +1,4 @@
-import {
-  IAdministration,
-  ITitre,
-  ITitreAdministrationGestionnaire
-} from '../../types'
+import { ITitre, ITitreAdministrationGestionnaire } from '../../types'
 
 import {
   titreAdministrationGestionnaireDelete,
@@ -10,9 +6,8 @@ import {
   titresGet
 } from '../../database/queries/titres'
 
-import titreAdministrationsGestionnairesBuild from '../rules/titre-administrations-gestionnaires-build'
-import { administrationsGet } from '../../database/queries/administrations'
 import { userSuper } from '../../database/user-super'
+import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes'
 
 const titreAsGsToCreatedFind = (
   titreAsGsOldIds: string[],
@@ -61,15 +56,13 @@ interface ITitresAsGsToUpdate {
   titreId: string
 }
 
-const titresAsGsToUpdateBuild = (
-  titres: ITitre[],
-  administrations: IAdministration[]
-) =>
+const titresAsGsToUpdateBuild = (titres: ITitre[]) =>
   titres.reduce((titresAsGsToUpdate: ITitresAsGsToUpdate[], titre) => {
-    const titreAsGs = titreAdministrationsGestionnairesBuild(
-      titre,
-      administrations
-    )
+    const titreAsGs: ITitreAdministrationGestionnaire[] =
+      getGestionnairesByTitreTypeId(titre.typeId).map(a => ({
+        ...a,
+        titreId: titre.id
+      }))
 
     const titreAsGsToUpdate = {
       titreAsGsOldIds: titre.administrationsGestionnaires
@@ -84,11 +77,8 @@ const titresAsGsToUpdateBuild = (
     return titresAsGsToUpdate
   }, [])
 
-const titresAsGsToCreateAndDeleteBuild = (
-  titres: ITitre[],
-  administrations: IAdministration[]
-) =>
-  titresAsGsToUpdateBuild(titres, administrations).reduce(
+const titresAsGsToCreateAndDeleteBuild = (titres: ITitre[]) =>
+  titresAsGsToUpdateBuild(titres).reduce(
     (
       {
         titresAsGsToCreate,
@@ -127,10 +117,8 @@ export const titresAdministrationsGestionnairesUpdate = async (
     userSuper
   )
 
-  const administrations = await administrationsGet({}, userSuper)
-
   const { titresAsGsToCreate, titresAsGsToDelete } =
-    titresAsGsToCreateAndDeleteBuild(titres, administrations)
+    titresAsGsToCreateAndDeleteBuild(titres)
 
   let titresAsGsCreated = [] as ITitreAdministrationGestionnaire[]
   const titresAsGsDeleted = [] as string[]

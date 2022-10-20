@@ -20,6 +20,7 @@ import titreUpdateTask from '../../../business/titre-update'
 
 import { titreUpdationValidate } from '../../../business/validations/titre-updation-validate'
 import { domaineGet } from '../../../database/queries/metas'
+import { canCreateTitre } from 'camino-common/src/permissions/titres'
 
 const titre = async (
   { id }: { id: string },
@@ -164,7 +165,7 @@ const titreCreer = async (
     )
     const titreType = domaine?.titresTypes.find(tt => tt.id === titre.typeId)
 
-    if (!user || !titreType || !titreType.titresCreation)
+    if (!user || !titreType || !canCreateTitre(user, titreType.id))
       throw new Error('droits insuffisants')
 
     // insert le titre dans la base

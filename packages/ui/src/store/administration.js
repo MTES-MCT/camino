@@ -1,7 +1,6 @@
 import {
   administration,
   administrationMetas,
-  administrationTitreTypeUpdate,
   administrationTitreTypeTitreStatutUpdate,
   administrationTitreTypeEtapeTypeUpdate,
   administrationActiviteTypeUpdate,
@@ -62,35 +61,6 @@ const actions = {
       dispatch('apiError', e, { root: true })
     } finally {
       commit('loadingRemove', 'administration', { root: true })
-    }
-  },
-
-  async titreTypeUpdate({ commit, dispatch }, administrationTitreType) {
-    try {
-      commit('loadingAdd', 'administrationTitreTypeUpdate', {
-        root: true
-      })
-
-      const data = await administrationTitreTypeUpdate({
-        administrationTitreType
-      })
-
-      await dispatch(
-        'reload',
-        { name: 'administration', id: data.id },
-        { root: true }
-      )
-      dispatch(
-        'messageAdd',
-        { value: `l'administration a été mise à jour`, type: 'success' },
-        { root: true }
-      )
-    } catch (e) {
-      commit('messageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'administrationTitreTypeUpdate', {
-        root: true
-      })
     }
   },
 

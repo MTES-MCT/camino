@@ -69,6 +69,7 @@ import UiTable from './titres/table-pagination.vue'
 import CaminoMap from './titres/map.vue'
 import Filtres from './titres/filtres.vue'
 import Icon from '@/components/_ui/icon.vue'
+import { canCreateTitre } from 'camino-common/src/permissions/titres'
 
 export default {
   name: 'Titres',
@@ -115,7 +116,7 @@ export default {
 
     titresCreation() {
       return this.$store.state.user.metas.domaines.some(d =>
-        d.titresTypes.some(dtt => dtt.titresCreation)
+        d.titresTypes.some(dtt => canCreateTitre(this.user, dtt.id))
       )
     },
 

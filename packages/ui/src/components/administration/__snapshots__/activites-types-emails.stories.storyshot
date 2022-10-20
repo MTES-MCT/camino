@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Automated Storybook Snapshots Components/ActivitesTypesEmails Email Lecture And Modification Sur Administration Visible 1`] = `
+exports[`Automated Storybook Snapshots Components/Administration/ActivitesTypesEmails Email Lecture And Modification Sur Administration Visible 1`] = `
 <div
   class="mb-xxl"
 >
@@ -1183,7 +1183,7 @@ exports[`Automated Storybook Snapshots Components/ActivitesTypesEmails Email Lec
 </div>
 `;
 
-exports[`Automated Storybook Snapshots Components/ActivitesTypesEmails Email Lecture And Modification Visible 1`] = `
+exports[`Automated Storybook Snapshots Components/Administration/ActivitesTypesEmails Email Lecture And Modification Visible 1`] = `
 <div
   class="mb-xxl"
 >
@@ -2370,7 +2370,7 @@ exports[`Automated Storybook Snapshots Components/ActivitesTypesEmails Email Lec
 </div>
 `;
 
-exports[`Automated Storybook Snapshots Components/ActivitesTypesEmails Email Lecture Visible 1`] = `
+exports[`Automated Storybook Snapshots Components/Administration/ActivitesTypesEmails Email Lecture Visible 1`] = `
 <div
   class="mb-xxl"
 >

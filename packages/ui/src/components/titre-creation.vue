@@ -149,7 +149,10 @@ import {
   isSuper
 } from 'camino-common/src/roles'
 import PureTitresLink from '@/components/titre/pure-titres-link.vue'
-import { getLinkConfig } from 'camino-common/src/permissions/titres'
+import {
+  canCreateTitre,
+  getLinkConfig
+} from 'camino-common/src/permissions/titres'
 import {
   loadLinkableTitres,
   TitresLinkConfig
@@ -229,7 +232,13 @@ const domaines = computed<Domaine[]>(() => {
     isAdministrationAdmin(user.value) ||
     isAdministrationEditeur(user.value)
   ) {
-    return store.state.user.metas.domaines
+    return store.state.user.metas.domaines.map((d: Domaine) => ({
+      ...d,
+      titresTypes: d.titresTypes.map(tt => ({
+        ...tt,
+        titresCreation: canCreateTitre(store.state.user.element, tt.id)
+      }))
+    }))
   }
 
   if (isEntreprise(user.value) || isBureauDEtudes(user.value)) {

@@ -1,152 +1,6 @@
 <template>
   <div>
-    <div class="mb-xxl">
-      <h3>Administration gestionnaire ou associée</h3>
-
-      <div class="h6">
-        <ul class="list-prefix">
-          <li>
-            Un utilisateur d'une <b>administration gestionnaire</b> peut créer
-            et modifier les titres et leur contenu.
-          </li>
-          <li>
-            Un utilisateur d'une <b>administration associée</b> peut voir les
-            titres non-publics. Cette administration n'apparaît pas sur les
-            pages des titres.
-          </li>
-        </ul>
-
-        <p>Accorde ces droits par domaine / type de titre.</p>
-      </div>
-
-      <div class="line width-full" />
-      <div class="width-full-p">
-        <div class="overflow-scroll-x mb">
-          <table>
-            <tr>
-              <th>Domaine</th>
-              <th>Type de titre</th>
-              <th>Gestionnaire</th>
-              <th>Associée</th>
-              <th />
-            </tr>
-            <tr>
-              <td>
-                <select
-                  v-model="titreTypeNew.domaineId"
-                  class="py-xs px-s mr-s"
-                >
-                  <option
-                    v-for="domaine in domaines"
-                    :key="domaine.id"
-                    :value="domaine.id"
-                  >
-                    {{ domaine.id.toUpperCase() }} {{ domaine.nom }}
-                  </option>
-                </select>
-              </td>
-              <td>
-                <select
-                  v-model="titreTypeNew.titreTypeTypeId"
-                  class="py-xs px-s mr-s"
-                  :disabled="!titreTypeNew.domaineId"
-                >
-                  <option
-                    v-for="titreType in titreTypeNewTypes"
-                    :key="titreType.id"
-                    :value="titreType.type.id"
-                  >
-                    {{ titreType.type.nom }}
-                  </option>
-                </select>
-              </td>
-              <td>
-                <button
-                  class="btn p-xs rnd-xs"
-                  :disabled="!titreTypeNew.titreTypeTypeId"
-                  @click="
-                    titreTypeNew.gestionnaire = !titreTypeNew.gestionnaire
-                  "
-                >
-                  <Icon
-                    v-if="titreTypeNew.gestionnaire"
-                    name="checkbox"
-                    size="M"
-                  />
-                  <Icon v-else name="checkbox-blank" size="M" />
-                </button>
-              </td>
-              <td>
-                <button
-                  class="btn p-xs rnd-xs"
-                  :disabled="!titreTypeNew.titreTypeTypeId"
-                  @click="titreTypeNew.associee = !titreTypeNew.associee"
-                >
-                  <Icon v-if="titreTypeNew.associee" name="checkbox" size="M" />
-                  <Icon v-else name="checkbox-blank" size="M" />
-                </button>
-              </td>
-              <td>
-                <ButtonPlus
-                  :disabled="!titreTypeNewActive"
-                  @click="titreTypeNewUpdate"
-                />
-              </td>
-            </tr>
-            <tr
-              v-for="titreType in administration.titresTypes"
-              :key="titreType.id"
-            >
-              <td>
-                <CaminoDomaine :domaineId="titreType.domaine.id" class="mt-s" />
-              </td>
-              <td>
-                <span class="small bold cap-first mt-s">{{
-                  titreType.type.nom
-                }}</span>
-              </td>
-              <td>
-                <button
-                  class="btn p-xs rnd-xs"
-                  @click="
-                    titreTypeUpdate(
-                      titreType.id,
-                      titreType.gestionnaire,
-                      titreType.associee,
-                      'gestionnaire'
-                    )
-                  "
-                >
-                  <Icon
-                    v-if="titreType.gestionnaire"
-                    name="checkbox"
-                    size="M"
-                  />
-                  <Icon v-else name="checkbox-blank" size="M" />
-                </button>
-              </td>
-              <td>
-                <button
-                  class="btn p-xs rnd-xs"
-                  @click="
-                    titreTypeUpdate(
-                      titreType.id,
-                      titreType.gestionnaire,
-                      titreType.associee,
-                      'associee'
-                    )
-                  "
-                >
-                  <Icon v-if="titreType.associee" name="checkbox" size="M" />
-                  <Icon v-else name="checkbox-blank" size="M" />
-                </button>
-              </td>
-              <td />
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
+    <PureTitresTypes :administrationId="administration.id" />
 
     <div v-if="administration.typeId" class="mb-xxl">
       <h3>Restrictions de l'édition des titres, démarches et étapes</h3>
@@ -754,12 +608,14 @@ import Statut from '../_common/statut.vue'
 import ButtonPlus from '../_ui/button-plus.vue'
 import Icon from '../_ui/icon.vue'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
+import PureTitresTypes from './pure-titres-types.vue'
 export default {
   components: {
     Icon,
     CaminoDomaine,
     Statut,
-    ButtonPlus
+    ButtonPlus,
+    PureTitresTypes
   },
 
   props: {
@@ -768,12 +624,6 @@ export default {
 
   data() {
     return {
-      titreTypeNew: {
-        domaineId: null,
-        titreTypeTypeId: null,
-        gestionnaire: false,
-        associee: false
-      },
       titreTypeTitreStatutNew: {
         domaineId: null,
         titreTypeTypeId: null,
@@ -823,18 +673,6 @@ export default {
       return !!this.administration
     },
 
-    titreTypeNewTypes() {
-      if (!this.titreTypeNew.domaineId) {
-        return []
-      }
-
-      const domaine = this.domaines.find(
-        d => d.id === this.titreTypeNew.domaineId
-      )
-
-      return domaine.titresTypes
-    },
-
     titreTypeTitreStatutNewTypes() {
       if (!this.titreTypeTitreStatutNew.domaineId) {
         return []
@@ -857,14 +695,6 @@ export default {
       )
 
       return domaine.titresTypes
-    },
-
-    titreTypeNewActive() {
-      return (
-        this.titreTypeNew.titreTypeTypeId &&
-        this.titreTypeNew.domaineId &&
-        (this.titreTypeNew.gestionnaire || this.titreTypeNew.associee)
-      )
     },
 
     titreTypeTitreStatutNewActive() {
@@ -909,21 +739,6 @@ export default {
 
     getTitreStatut(titreStatutId) {
       return TitresStatuts[titreStatutId]
-    },
-
-    async titreTypeUpdate(titreTypeId, gestionnaire, associee, type) {
-      if (type === 'gestionnaire') {
-        gestionnaire = !gestionnaire
-      } else if (type === 'associee') {
-        associee = !associee
-      }
-
-      await this.$store.dispatch('administration/titreTypeUpdate', {
-        administrationId: this.administration.id,
-        titreTypeId,
-        gestionnaire,
-        associee
-      })
     },
 
     async titreTypeTitreStatutUpdate(
@@ -996,23 +811,6 @@ export default {
         lectureInterdit,
         modificationInterdit
       })
-    },
-
-    titreTypeNewUpdate() {
-      if (this.titreTypeNewActive) {
-        this.titreTypeUpdate(
-          `${this.titreTypeNew.titreTypeTypeId}${this.titreTypeNew.domaineId}`,
-          this.titreTypeNew.gestionnaire,
-          this.titreTypeNew.associee
-        )
-
-        this.titreTypeNew = {
-          domaineId: null,
-          titreTypeTypeId: null,
-          gestionnaire: false,
-          associee: false
-        }
-      }
     },
 
     titreTypeTitreStatutNewUpdate() {

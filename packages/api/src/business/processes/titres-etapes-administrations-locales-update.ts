@@ -15,6 +15,8 @@ import { userSuper } from '../../database/user-super'
 import { Departements } from 'camino-common/src/static/departement'
 import { administrationsGet } from '../../database/queries/administrations'
 import { administrationFormat } from '../../api/_format/administrations'
+import { isAssociee } from 'camino-common/src/static/administrationsTitresTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 const titreEtapeAdministrationsLocalesCreatedBuild = (
   titreEtapeAdministrationsLocalesOld: IAdministration[] | null | undefined,
@@ -138,7 +140,7 @@ const titreEtapeAdministrationsRegionsAndDepartementsBuild = (
     : { titreRegionsIds: new Set(), titreDepartementsIds: new Set() }
 
 const titreEtapeAdministrationsLocalesBuild = (
-  titreTypeId: string,
+  titreTypeId: TitreTypeId,
   titreAdministrationIds: string[] | null | undefined,
   titreEtape: ITitreEtape,
   administrations: IAdministration[]
@@ -168,9 +170,8 @@ const titreEtapeAdministrationsLocalesBuild = (
         administrationId: administration.id
       } as ITitreAdministrationLocale
 
-      const associee = administration.titresTypes!.find(
-        t => t.id === titreTypeId && t.associee
-      )
+      const associee = isAssociee(administration.id, titreTypeId)
+
       titreEtapeAdministration.associee = associee ? true : null
       titreEtapeAdministrations.push(titreEtapeAdministration)
 
@@ -229,7 +230,7 @@ export const titresEtapesAdministrationsLocalesUpdate = async (
         titresAdministrations: { id: {} },
         demarches: {
           etapes: {
-            administrations: { titresTypes: { id: {} } },
+            administrations: { id: {} },
             communes: { id: {} }
           }
         }

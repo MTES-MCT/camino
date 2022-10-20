@@ -2,6 +2,7 @@ import { TitresTypes, TitreTypeId } from '../static/titresTypes'
 import { DemarcheTypeId } from '../static/demarchesTypes'
 import { isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from '../roles'
 import { AdministrationId } from '../static/administrations'
+import { isGestionnaire } from '../static/administrationsTitresTypes'
 
 export const getLinkConfig = (typeId: TitreTypeId, demarches: { typeId: DemarcheTypeId }[]): { count: 'single' | 'multiple'; typeId: TitreTypeId } | null => {
   switch (typeId) {
@@ -27,6 +28,16 @@ export const canLinkTitres = (user: User, administrationIds: AdministrationId[])
 
   if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     return administrationIds.includes(user.administrationId)
+  }
+
+  return false
+}
+
+export const canCreateTitre = (user: User, titreTypeId: TitreTypeId | undefined): boolean => {
+  if (isSuper(user)) {
+    return true
+  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
+    return isGestionnaire(user.administrationId, titreTypeId)
   }
 
   return false

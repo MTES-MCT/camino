@@ -6,9 +6,7 @@ import { knex } from '../../../knex'
 // import fileCreate from '../../../tools/file-create'
 // import { format } from 'sql-formatter'
 
-import AdministrationsTitresTypes from '../../models/administrations-titres-types'
 import Domaines from '../../models/domaines'
-import TitresTypes from '../../models/titres-types'
 import DemarchesTypes from '../../models/demarches-types'
 import EtapesTypes from '../../models/etapes-types'
 import TitresEtapes from '../../models/titres-etapes'
@@ -22,8 +20,6 @@ import {
 } from './administrations'
 import {
   isAdministration,
-  isAdministrationAdmin,
-  isAdministrationEditeur,
   isBureauDEtudes,
   isDefault,
   isEntreprise,
@@ -94,44 +90,11 @@ const entreprisesEtapesTypesPropsQuery = (entreprisesIds: string[]) =>
     .whereRaw('?? is true', ['titulaires:titresTypesJoin.titresCreation'])
     .first()
 
-const titresCreationQuery = (administrationId: AdministrationId) =>
-  AdministrationsTitresTypes.query()
-    .alias('a_tt')
-    .select(raw('true'))
-    .where('a_tt.administrationId', administrationId)
-    .where('a_tt.gestionnaire', true)
-
-const titresTypesQueryModify = (
-  q: QueryBuilder<TitresTypes, TitresTypes | TitresTypes[]>,
-  user: IUtilisateur | null | undefined
-) => {
-  q.select('titresTypes.*')
-
-  if (isSuper(user)) {
-    q.select(raw('true').as('titresCreation'))
-  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    q.select(
-      titresCreationQuery(user.administrationId)
-        .as('titresCreation')
-        .whereRaw('?? = ??', ['a_tt.titreTypeId', `titresTypes.id`])
-    )
-  } else {
-    q.select(raw('false').as('titresCreation'))
-  }
-}
-
 const domainesQueryModify = (
   q: QueryBuilder<Domaines, Domaines | Domaines[] | undefined>,
-  user: IUtilisateur | null | undefined
+  _user: IUtilisateur | null | undefined
 ) => {
   q.select('domaines.*')
-
-  q.modifyGraph('titresTypes', b => {
-    titresTypesQueryModify(
-      b as QueryBuilder<TitresTypes, TitresTypes | TitresTypes[]>,
-      user
-    )
-  })
 }
 
 const etapesTypesQueryModify = (
@@ -285,6 +248,5 @@ export {
   domainesQueryModify,
   administrationsEtapesTypesPropsQuery,
   entreprisesEtapesTypesPropsQuery,
-  etapesTypesQueryModify,
-  titresCreationQuery
+  etapesTypesQueryModify
 }

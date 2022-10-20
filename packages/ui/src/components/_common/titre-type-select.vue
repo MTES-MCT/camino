@@ -4,6 +4,7 @@
       <div class="tablet-blob-1-3 tablet-pt-s pb-s">
         <h5>Domaine</h5>
       </div>
+
       <div class="mb tablet-blob-2-3">
         <select
           v-model="element.domaineId"

@@ -4,14 +4,12 @@ import { join } from 'path'
 
 import {
   IAdministration,
-  IAdministrationTitreType,
   IAdministrationTitreTypeEtapeType,
   IAdministrationTitreTypeTitreStatut,
   IEtapeType,
   ITitreType
 } from '../../src/types'
 
-import { objectClone } from '../../src/tools'
 import {
   Administration,
   Administrations
@@ -21,10 +19,6 @@ interface ISources {
   titresTypes: {
     path: string
     data: ITitreType[]
-  }
-  administrations__titresTypes: {
-    path: string
-    data: IAdministrationTitreType[]
   }
   administrations__titresTypes__titresStatuts: {
     path: string
@@ -39,10 +33,6 @@ interface ISources {
 
 const sources = {
   titresTypes: { path: '../../sources/titres-types.json', data: [] },
-  administrations__titresTypes: {
-    path: '../../sources/administrations--titres-types.json',
-    data: []
-  },
   administrations__titresTypes__titresStatuts: {
     path: '../../sources/administrations--titres-types--titres-statuts.json',
     data: []
@@ -105,26 +95,6 @@ const administrationsWithRelations = Object.values(
   Administrations
 ).map<IAdministration>((a: Administration) => {
   const dbadmin: IAdministration = { ...a }
-  dbadmin.titresTypes = sources.administrations__titresTypes.data
-    .filter(att => att.administrationId === a.id)
-    .map(att => {
-      const titreType = objectClone(
-        sources.titresTypes.data.find(tt => att.titreTypeId === tt.id)!
-      ) as ITitreType & IAdministrationTitreType
-
-      titreType.administrationId = att.administrationId
-      titreType.titreTypeId = att.titreTypeId
-
-      if (att.associee) {
-        titreType.associee = true
-      }
-
-      if (att.gestionnaire) {
-        titreType.gestionnaire = true
-      }
-
-      return titreType
-    })
 
   dbadmin.titresTypesTitresStatuts =
     sources.administrations__titresTypes__titresStatuts.data
