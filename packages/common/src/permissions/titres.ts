@@ -33,7 +33,7 @@ export const canLinkTitres = (user: User, administrationIds: AdministrationId[])
   return false
 }
 
-export const canCreateTitre = (user: User, titreTypeId: TitreTypeId): boolean => {
+export const canCreateTitre = (user: User, titreTypeId: TitreTypeId | undefined): boolean => {
   if (isSuper(user)) {
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {

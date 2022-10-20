@@ -25,7 +25,7 @@ import {
   isAdministrationEditeur,
   isBureauDEtudes
 } from 'camino-common/src/roles'
-import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes'
+import { canCreateTitre } from 'camino-common/src/permissions/titres'
 
 const entreprisesFiltersQueryModify = (
   {
@@ -196,9 +196,7 @@ const titreDemandeEntreprisesGet = async (
   }
 
   if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    const titresCreation = isGestionnaire(user.administrationId)
-
-    if (!titresCreation) return []
+    if (!canCreateTitre(user, undefined)) return []
 
     return entreprisesGet({ archive: false }, { fields }, user)
   }

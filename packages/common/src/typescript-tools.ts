@@ -14,4 +14,4 @@ export type PartialRecord<K extends keyof any, T> = {
   [P in K]?: T
 }
 
-export const getKeys = Object.keys as <T extends object>(obj: T) => Array<keyof T>
+export const getKeys = <T extends object>(object: T, filter: (key: string) => key is Extract<keyof T, string>): Array<Extract<keyof T, string>> => Object.keys(object).filter(filter)
