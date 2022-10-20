@@ -12,7 +12,8 @@ import { userSuper } from '../../database/user-super'
 import TitresSDOMZones from '../../database/models/titres--sdom-zones'
 import { Feature } from '@turf/helpers'
 import TitresEtapes from '../../database/models/titres-etapes'
-import TitresSecteursMaritime from '../../database/models/titres-secteurs-maritime'
+import { getSecteurMaritime } from 'camino-common/src/static/facades'
+import { knex } from '../../knex'
 
 /**
  * Met à jour tous les territoires d’une liste d’étapes
@@ -200,28 +201,16 @@ async function intersectSecteursMaritime(
   if (secteurMaritimeIds.fallback) {
     console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
   }
-  for (const secteurMaritimeId of secteurMaritimeIds.data) {
-    if (
-      !titreEtape.secteursMaritime.some(({ id }) => id === secteurMaritimeId)
-    ) {
-      await TitresSecteursMaritime.query().insert({
-        titreEtapeId: titreEtape.id,
-        secteurMaritimeId
-      })
-      console.info(
-        `Ajout du secteur maritime ${secteurMaritimeId} sur l'étape ${titreEtape.id}`
-      )
-    }
-  }
-  for (const secteurMaritime of titreEtape.secteursMaritime) {
-    if (!secteurMaritimeIds.data.some(id => id === secteurMaritime.id)) {
-      await TitresSecteursMaritime.query()
-        .delete()
-        .where('titre_etape_id', titreEtape.id)
-        .andWhere('secteur_maritime_id', secteurMaritime.id)
-      console.info(
-        `Suppression du secteur maritime ${secteurMaritime.id} sur l'étape ${titreEtape.id}`
-      )
-    }
+
+  const secteurMaritimeNew = secteurMaritimeIds.data.map(getSecteurMaritime)
+  if (
+    titreEtape.secteursMaritime?.some(
+      (value, index) => value !== secteurMaritimeNew[index]
+    ) ||
+    titreEtape.secteursMaritime.length !== secteurMaritimeNew.length
+  ) {
+    await knex('titres_etapes')
+      .update({ secteurMaritimes: secteurMaritimeNew })
+      .where('id', titreEtape.id)
   }
 }

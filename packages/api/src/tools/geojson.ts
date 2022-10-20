@@ -5,6 +5,7 @@ import { IGeometry, ITitrePoint } from '../types'
 import { Feature } from '@turf/helpers'
 import { knex } from '../knex'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
+import { SecteursMaritimesIds } from 'camino-common/src/static/facades'
 
 // convertit des points
 // en un geojson de type 'MultiPolygon'
@@ -158,8 +159,8 @@ export const geojsonIntersectsForets = async (
 
 export const geojsonIntersectsSecteursMaritime = async (
   geojson: Feature<any>
-): Promise<GeoJsonResult<string[]>> => {
-  let result: { rows: { id: string }[] }
+): Promise<GeoJsonResult<SecteursMaritimesIds[]>> => {
+  let result: { rows: { id: SecteursMaritimesIds }[] }
   let fallback = false
   try {
     result = await knex.raw(
