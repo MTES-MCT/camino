@@ -32,7 +32,6 @@ import {
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
 import { documentCreate } from '../../src/database/queries/documents'
 import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 const visibleCheck = async (
   administrationId: string,
