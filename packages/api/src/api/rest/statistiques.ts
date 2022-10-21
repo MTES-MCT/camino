@@ -76,11 +76,6 @@ export const getDGTMStats = async (
         'titres.id',
         'titresAdministrationsGestionnaires.titreId'
       )
-      .leftJoin(
-        'titresAdministrations',
-        'titres.id',
-        'titresAdministrations.titreId'
-      )
       .joinRaw(
         "left join titres_administrations_locales on titres_administrations_locales.titre_etape_id = titres.props_titre_etapes_ids ->> 'administrations'"
       )
@@ -95,6 +90,7 @@ export const getDGTMStats = async (
             'titresAdministrationsGestionnaires.administrationId',
             administrationId
           )
+          // FIXME cette table n’existe plus, utilisée plusieurs fois dans ce fichier
           .orWhere(
             'titresAdministrationsLocales.administrationId',
             administrationId

@@ -40,7 +40,6 @@ const facades = {
     'Talus du Golfe de Gascogne': { ids: [26], secteurId: '6', departementIds: [] },
     'Plaine abyssale du Golfe de Gascogne': { ids: [27], secteurId: '7', departementIds: [] }
   },
-  // FIXME: il manque les départements de la Méditeranée
   Méditerranée: {
     'Périmètre du Parc naturel marin du Golfe du Lion': { ids: [44], secteurId: '1', departementIds: [] },
     'Port-la-Nouvelle': { ids: [35], secteurId: '2', departementIds: [] },
@@ -89,6 +88,16 @@ export const getDepartementsByIds = (ids: SecteursMaritimesIds[]): DepartementId
       Object.values(f)
         .filter(s => s.ids.some((id: SecteursMaritimesIds) => ids.includes(id)))
         .flatMap(s => s.departementIds ?? [])
+    )
+    .filter(onlyUnique)
+}
+
+export const getDepartementsBySecteurs = (ids: SecteursMaritimes[]): DepartementId[] => {
+  return Object.values(facades)
+    .flatMap(f =>
+      Object.entries(f)
+        .filter(([key, _value]) => ids.includes(key))
+        .flatMap(([_key, value]) => value.departementIds ?? [])
     )
     .filter(onlyUnique)
 }

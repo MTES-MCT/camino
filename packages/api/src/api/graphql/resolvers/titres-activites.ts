@@ -35,6 +35,8 @@ import { userSuper } from '../../../database/user-super'
 import { fichiersRepertoireDelete } from './_titre-document'
 import { documentsLier } from './documents'
 import { titreGet } from '../../../database/queries/titres'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { onlyUnique } from 'camino-common/src/typescript-tools'
 
 /**
  * Retourne une activité
@@ -267,9 +269,11 @@ const activiteDeposer = async (
       )
     }
 
-    const administrations = []
+    const administrations: AdministrationId[] = []
     if (titre.administrationsGestionnaires?.length) {
-      administrations.push(...titre.administrationsGestionnaires)
+      administrations.push(
+        ...titre.administrationsGestionnaires.map(({ id }) => id)
+      )
     }
     if (titre.administrationsLocales?.length) {
       administrations.push(...titre.administrationsLocales)
@@ -280,7 +284,7 @@ const activiteDeposer = async (
       activiteFormated.titre!.nom,
       user,
       utilisateurs,
-      administrations
+      administrations.filter(onlyUnique)
     )
 
     return activiteFormated

@@ -223,7 +223,7 @@ const props = defineProps<{
       }
     }[]
     contenu: { [sectionId: string]: { [elementId: string]: unknown } }
-    administrations: { id: AdministrationId }[]
+    administrations: AdministrationId[]
     type: {
       id: TitreTypeId
       sections: { id: string; elements: { id: string }[] }[]

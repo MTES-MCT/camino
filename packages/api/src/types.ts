@@ -84,7 +84,7 @@ type IPropId =
   | 'points'
   | 'titulaires'
   | 'amodiataires'
-  | 'administrations'
+  | 'administrationsLocales'
   | 'substances'
   | 'communes'
   | 'forets'
@@ -482,7 +482,7 @@ interface IAdministrationActiviteType {
 }
 
 interface IAdministrationActiviteTypeEmail {
-  administrationId: string
+  administrationId: AdministrationId
   activiteTypeId: string
   email: string
 }
@@ -517,15 +517,15 @@ interface ITitre {
   geojsonCentre?: IGeoJsonCentre | null
   titulaires?: ITitreEntreprise[] | null
   amodiataires?: ITitreEntreprise[] | null
-  administrationsLocales?: IAdministration[] | null
+  administrationsLocales?: AdministrationId[] | null
   administrationsGestionnaires?: IAdministration[] | null
-  administrations?: IAdministration[] | null
+  administrations?: AdministrationId[] | null
   surfaceEtape?: ITitreEtape | null
   surface?: number | null
   communes?: ICommune[] | null
   forets?: IForet[] | null
   sdomZones?: ISDOMZone[] | null
-  secteursMaritimeEtape?: ITitreEtape | null
+  pointsEtape?: ITitreEtape | null
   secteursMaritime?: SecteursMaritimes[] | null
   demarches?: ITitreDemarche[]
   activites?: ITitreActivite[] | null
@@ -568,12 +568,6 @@ interface ITitreActivite {
 interface ITitreAdministrationGestionnaire {
   administrationId: string
   titreId: string
-  associee?: boolean | null
-}
-
-interface ITitreAdministrationLocale {
-  administrationId: string
-  titreEtapeId: string
   associee?: boolean | null
 }
 
@@ -673,7 +667,7 @@ interface ITitreEtape {
   geojsonPoints?: IGeoJson | null
   titulaires?: ITitreEntreprise[] | null
   amodiataires?: ITitreEntreprise[] | null
-  administrations?: IAdministration[] | null
+  administrationsLocales?: AdministrationId[] | null
   justificatifs?: IDocument[] | null
   justificatifIds?: string[] | null
   communes?: ICommune[] | null
@@ -886,7 +880,6 @@ export {
   ITitre,
   ITitreActivite,
   ITitreAdministrationGestionnaire,
-  ITitreAdministrationLocale,
   ITitreCommune,
   ITitreForet,
   ITitreSDOMZone,

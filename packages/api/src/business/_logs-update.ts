@@ -1,9 +1,4 @@
-import {
-  Index,
-  ITitreAdministrationLocale,
-  IEntrepriseEtablissement,
-  IEntreprise
-} from '../types'
+import { Index, IEntrepriseEtablissement, IEntreprise } from '../types'
 
 const logsUpdate = ({
   titresEtapesOrdreUpdated,
@@ -20,8 +15,7 @@ const logsUpdate = ({
   pointsReferencesCreated,
   titresAdministrationsGestionnairesCreated,
   titresAdministrationsGestionnairesDeleted,
-  titresEtapesAdministrationsLocalesCreated,
-  titresEtapesAdministrationsLocalesDeleted,
+  titresEtapesAdministrationsLocalesUpdated,
   titresPropsEtapesIdsUpdated,
   titresContenusEtapesIdsUpdated,
   titresCoordonneesUpdated,
@@ -48,8 +42,7 @@ const logsUpdate = ({
   pointsReferencesCreated?: string[]
   titresAdministrationsGestionnairesCreated?: string[]
   titresAdministrationsGestionnairesDeleted?: string[]
-  titresEtapesAdministrationsLocalesCreated?: ITitreAdministrationLocale[]
-  titresEtapesAdministrationsLocalesDeleted?: ITitreAdministrationLocale[]
+  titresEtapesAdministrationsLocalesUpdated?: string[]
   titresPropsEtapesIdsUpdated?: string[]
   titresContenusEtapesIdsUpdated?: string[]
   titresCoordonneesUpdated?: string[]
@@ -150,15 +143,9 @@ const logsUpdate = ({
     )
   }
 
-  if (titresEtapesAdministrationsLocalesCreated?.length) {
+  if (titresEtapesAdministrationsLocalesUpdated?.length) {
     console.info(
-      `mise à jour: ${titresEtapesAdministrationsLocalesCreated.length} administration(s) locale(s) ajoutée(s) dans des étapes`
-    )
-  }
-
-  if (titresEtapesAdministrationsLocalesDeleted?.length) {
-    console.info(
-      `mise à jour: ${titresEtapesAdministrationsLocalesDeleted.length} administration(s) locale(s) supprimée(s) dans des étapes`
+      `mise à jour: ${titresEtapesAdministrationsLocalesUpdated.length} administration(s) locale(s) modifiée(s) dans des étapes`
     )
   }
 

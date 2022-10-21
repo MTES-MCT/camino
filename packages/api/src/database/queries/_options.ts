@@ -218,7 +218,7 @@ const titresRelateFalse = [
   'communes',
   'forets',
   'substancesEtape',
-  'secteursMaritimeEtape',
+  'pointsEtape',
   'titulaires',
   'titulaires.etablissements',
   'titulaires.utilisateurs',
@@ -234,8 +234,7 @@ const titresRelateFalse = [
   'administrationsLocales.utilisateurs',
   'surfaceEtape',
   ...titresActivitesRelateFalse.map(k => `activites.${k}`),
-  ...titresDemarchesRelateFalse.map(k => `demarches.${k}`),
-  'titresAdministrations.type'
+  ...titresDemarchesRelateFalse.map(k => `demarches.${k}`)
 ]
 
 const titres = {

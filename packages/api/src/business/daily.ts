@@ -46,10 +46,8 @@ const daily = async () => {
       titresAdministrationsGestionnairesCreated = [],
       titresAdministrationsGestionnairesDeleted = []
     } = await titresAdministrationsGestionnairesUpdate()
-    const {
-      titresEtapesAdministrationsLocalesCreated,
-      titresEtapesAdministrationsLocalesDeleted
-    } = await titresEtapesAdministrationsLocalesUpdate()
+    const { titresEtapesAdministrationsLocalesUpdated } =
+      await titresEtapesAdministrationsLocalesUpdate()
     const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate()
     const titresContenusEtapesIdsUpdated = await titresContenusEtapesIdsUpdate()
 
@@ -76,8 +74,7 @@ const daily = async () => {
       pointsReferencesCreated,
       titresAdministrationsGestionnairesCreated,
       titresAdministrationsGestionnairesDeleted,
-      titresEtapesAdministrationsLocalesCreated,
-      titresEtapesAdministrationsLocalesDeleted,
+      titresEtapesAdministrationsLocalesUpdated,
       titresPropsEtapesIdsUpdated,
       titresContenusEtapesIdsUpdated,
       titresCoordonneesUpdated,

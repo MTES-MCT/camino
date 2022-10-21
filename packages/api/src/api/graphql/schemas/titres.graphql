@@ -77,7 +77,7 @@ type Titre {
   amodiataires: [Entreprise]
 
   "Administrations en charge du titre dans son dernier état de validité"
-  administrations: [Administration]
+  administrations: [String]
 
   "Territoires du titre dans son dernier état de validité"
   communes: [Commune]
@@ -162,7 +162,6 @@ input InputTitreModification {
   typeId: ID!
   domaineId: ID!
   references: [InputReference]
-  titresAdministrations: [InputId]
 }
 
 input InputTitreLiaisonsModification {

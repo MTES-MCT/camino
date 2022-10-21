@@ -2,45 +2,52 @@ import {
   productionCheck,
   titreActiviteAdministrationsEmailsGet
 } from './_titre-activite'
-import { IAdministration } from '../../../types'
+import { IAdministrationActiviteTypeEmail } from '../../../types'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 
 describe('teste la construction des emails lors du dépôt d’une activité', () => {
   describe('teste le calcul des emails des administrations', () => {
-    test.each`
-      administrations
-      ${null}
-      ${undefined}
-      ${[]}
-      ${[{ activitesTypesEmails: null }]}
-      ${[{ activitesTypesEmails: undefined }]}
-      ${[{ activitesTypesEmails: [] }]}
-      ${[{ activitesTypesEmails: [{ id: 'grx', email: '' }] }]}
-      ${[{ activitesTypesEmails: [{ id: 'gra', email: 'toto@foo.bar' }] }]}
-      ${[{ typeId: 'aut', activitesTypesEmails: [{ id: 'grx', email: 'toto@foo.bar' }] }]}
-    `('qu’on envoie pas d’emails', ({ administrations }) => {
+    test.each<
+      | null
+      | undefined
+      | Pick<IAdministrationActiviteTypeEmail, 'activiteTypeId' | 'email'>[]
+    >([
+      null,
+      undefined,
+      [],
+      [{ activiteTypeId: 'grx', email: '' }],
+      [{ activiteTypeId: 'gra', email: 'toto@foo.bar' }],
+      [{ activiteTypeId: 'grx', email: 'toto@foo.bar' }]
+    ])('qu’on envoie pas d’emails', administrationActiviteTypeEmail => {
       expect(
-        titreActiviteAdministrationsEmailsGet(administrations, 'grx', undefined)
+        titreActiviteAdministrationsEmailsGet(
+          ['ope-onf-973-01'],
+          administrationActiviteTypeEmail?.map(a => ({
+            ...a,
+            administrationId: 'ope-onf-973-01'
+          })),
+          'grx',
+          undefined
+        )
       ).toHaveLength(0)
     })
 
     test.each`
-      typeId   | envoie
-      ${'min'} | ${true}
-      ${'dre'} | ${true}
-      ${'dea'} | ${true}
-      ${'pre'} | ${false}
-      ${'ope'} | ${false}
-      ${'aut'} | ${false}
+      administrationId                                                                      | envoie
+      ${ADMINISTRATION_IDS["DAJ - MINISTÈRE DE L'ECONOMIE, DES FINANCES ET DE LA RELANCE"]} | ${true}
+      ${ADMINISTRATION_IDS['DREAL - BRETAGNE']}                                             | ${true}
+      ${ADMINISTRATION_IDS['DEAL - LA RÉUNION']}                                            | ${true}
+      ${ADMINISTRATION_IDS['PRÉFECTURE - ALLIER']}                                          | ${false}
+      ${ADMINISTRATION_IDS['BRGM - PROJET ZERCOA']}                                         | ${false}
+      ${ADMINISTRATION_IDS['GENDARMERIE NATIONALE - GUYANE']}                               | ${false}
     `(
       'si la production est nulle on envoie des emails que aux ministères et au DREAL',
-      ({ typeId, envoie }) => {
+      ({ administrationId, envoie }) => {
         expect(
           titreActiviteAdministrationsEmailsGet(
+            [administrationId],
             [
-              {
-                typeId,
-                activitesTypesEmails: [{ id: 'grx', email: 'toto@foo.bar' }]
-              } as IAdministration
+              { activiteTypeId: 'grx', email: 'toto@foo.bar', administrationId }
             ],
             'grx',
             undefined

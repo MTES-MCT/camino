@@ -75,10 +75,10 @@ const titreEtapeUpdate = async (
       await titresEtapesAreasUpdate([titreEtapeId])
     }
 
-    const {
-      titresEtapesAdministrationsLocalesCreated = [],
-      titresEtapesAdministrationsLocalesDeleted = []
-    } = await titresEtapesAdministrationsLocalesUpdate([titreId])
+    const { titresEtapesAdministrationsLocalesUpdated = [] } =
+      await titresEtapesAdministrationsLocalesUpdate(
+        titreEtapeId ? [titreEtapeId] : undefined
+      )
 
     const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate([
       titreId
@@ -108,8 +108,7 @@ const titreEtapeUpdate = async (
       titresPhasesUpdated,
       titresPhasesDeleted,
       titresDatesUpdated,
-      titresEtapesAdministrationsLocalesCreated,
-      titresEtapesAdministrationsLocalesDeleted,
+      titresEtapesAdministrationsLocalesUpdated,
       titresPropsEtapesIdsUpdated,
       titresContenusEtapesIdsUpdated,
       titresCoordonneesUpdated,

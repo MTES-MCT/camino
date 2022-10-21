@@ -1,7 +1,7 @@
 import dateFormat from 'dateformat'
 
 import {
-  IAdministration,
+  IAdministrationActiviteTypeEmail,
   IContenu,
   IContenuValeur,
   ISection,
@@ -13,6 +13,11 @@ import {
 import { emailsSend } from '../../../tools/api-mailjet/emails'
 import { titreUrlGet } from '../../../business/utils/urls-get'
 import { getPeriode } from 'camino-common/src/static/frequence'
+import {
+  AdministrationId,
+  Administrations
+} from 'camino-common/src/static/administrations'
+import AdministrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails'
 
 const elementHtmlBuild = (
   sectionId: string,
@@ -150,29 +155,54 @@ export const productionCheck = (
 }
 
 export const titreActiviteAdministrationsEmailsGet = (
-  administrations: IAdministration[] | null | undefined,
+  administrationIds: AdministrationId[],
+  administrationsActivitesTypesEmails:
+    | IAdministrationActiviteTypeEmail[]
+    | null
+    | undefined,
   activiteTypeId: string,
   contenu: IContenu | null | undefined
 ): string[] => {
-  if (!administrations || !administrations.length) {
+  if (!administrationIds || !administrationIds.length) {
     return []
   }
+
+  const activitesTypesEmailsByAdministrationId = (
+    administrationsActivitesTypesEmails ?? []
+  ).reduce<Record<AdministrationId, IAdministrationActiviteTypeEmail[]>>(
+    (acc, a) => {
+      if (!acc[a.administrationId]) {
+        acc[a.administrationId] = []
+      }
+
+      acc[a.administrationId].push(a)
+
+      return acc
+    },
+    {} as Record<AdministrationId, IAdministrationActiviteTypeEmail[]>
+  )
 
   // Si production > 0, envoyer à toutes les administrations liées au titre
   // sinon envoyer seulement aux minitères et aux DREAL
   const production = productionCheck(activiteTypeId, contenu)
 
   return (
-    administrations
+    administrationIds
+      .map(id => Administrations[id])
       .filter(
         administration =>
           production || ['min', 'dre', 'dea'].includes(administration.typeId)
       )
-      .flatMap(administration => administration.activitesTypesEmails)
+      .flatMap(
+        administration =>
+          activitesTypesEmailsByAdministrationId[administration.id]
+      )
       .filter(activiteTypeEmail => !!activiteTypeEmail)
-      .filter(activiteTypeEmail => activiteTypeEmail!.id === activiteTypeId)
-      .filter(activiteTypeEmail => activiteTypeEmail!.email)
-      .map(activiteTypeEmail => activiteTypeEmail!.email) || []
+      .filter(
+        activiteTypeEmail => activiteTypeEmail.activiteTypeId === activiteTypeId
+      )
+      .filter(activiteTypeEmail => activiteTypeEmail.email)
+      .map(activiteTypeEmail => activiteTypeEmail.email) || []
   )
 }
 
@@ -181,12 +211,19 @@ const titreActiviteEmailsSend = async (
   titreNom: string,
   user: IUtilisateur,
   utilisateurs: IUtilisateur[] | undefined | null,
-  administrations: IAdministration[] | null | undefined
+  administrationIds: AdministrationId[]
 ) => {
   const emails = titreActiviteUtilisateursEmailsGet(utilisateurs)
+
+  const administrationsActivitesTypesEmails =
+    await AdministrationsActivitesTypesEmails.query().whereIn(
+      'administrationId',
+      administrationIds
+    )
   emails.push(
     ...titreActiviteAdministrationsEmailsGet(
-      administrations,
+      administrationIds,
+      administrationsActivitesTypesEmails,
       activite.typeId,
       activite.contenu
     )

@@ -442,9 +442,9 @@ const titreBuild = (
             titreDemarcheId: newDemarcheId(`${titreId}-demarche-id`),
             statutId: 'enc',
             date: '2020-01-01',
-            administrations: administrationIdLocale
-              ? [{ id: administrationIdLocale }]
-              : ([] as IAdministration[])
+            administrationsLocales: administrationIdLocale
+              ? [administrationIdLocale]
+              : []
           }
         ]
       }

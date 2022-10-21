@@ -11,7 +11,6 @@ import EtapesTypes from './etapes-types'
 import TitresDemarches from './titres-demarches'
 import TitresPoints from './titres-points'
 import Entreprises from './entreprises'
-import Administrations from './administrations'
 import Document from './documents'
 import Communes from './communes'
 import Forets from './forets'
@@ -51,7 +50,8 @@ class TitresEtapes extends Model {
       decisionsAnnexesContenu: { type: ['object', 'null'] },
       archive: { type: 'boolean' },
       substances: { type: ['array', 'null'] },
-      secteursMaritime: { type: ['array', 'null'] }
+      secteursMaritime: { type: ['array', 'null'] },
+      administrationsLocale: { type: ['array', 'null'] }
     }
   }
 
@@ -108,20 +108,6 @@ class TitresEtapes extends Model {
           extra: ['operateur']
         },
         to: 'entreprises.id'
-      }
-    },
-
-    administrations: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Administrations,
-      join: {
-        from: 'titresEtapes.id',
-        through: {
-          from: 'titresAdministrationsLocales.titreEtapeId',
-          to: 'titresAdministrationsLocales.administrationId',
-          extra: ['associee']
-        },
-        to: 'administrations.id'
       }
     },
 
@@ -235,13 +221,6 @@ class TitresEtapes extends Model {
       json.points.forEach((point: ITitrePoint) => {
         point.titreEtapeId = json.id
       })
-    }
-
-    if (json.administrationsIds) {
-      json.administrations = json.administrationsIds.map((id: string) => ({
-        id
-      }))
-      delete json.administrationsIds
     }
 
     if (json.amodiatairesIds) {

@@ -63,6 +63,7 @@ class Administrations extends Model {
       }
     },
 
+    // FIXME à supprimer ou à modifier pour aller chercher la colonne dans l’étape (pas certain que ça soit possible)
     localeTitres: {
       relation: Model.ManyToManyRelation,
       modelClass: Titres,

@@ -106,7 +106,7 @@ const props = defineProps<{
   titre: {
     id: string
     typeId: TitreTypeId
-    administrations: { id: AdministrationId }[]
+    administrations: AdministrationId[]
     demarches: { typeId: DemarcheTypeId }[]
   }
   loadTitreLinks: LoadTitreLinks
@@ -160,10 +160,7 @@ const canLink = computed<boolean>(() => {
     return false
   }
 
-  // On peut lier que si on a les droits
-  const administrationIds =
-    props.titre.administrations?.map(({ id }) => id) ?? []
-  return canLinkTitres(props.user, administrationIds)
+  return canLinkTitres(props.user, props.titre.administrations ?? [])
 })
 
 const titreLinkConfig = computed<TitresLinkConfig | null>(() => {

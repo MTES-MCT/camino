@@ -27,9 +27,9 @@
       <div v-if="administrations.length" class="mb">
         <h5>Administrations</h5>
         <Administration
-          v-for="administration in administrations"
-          :key="administration.id"
-          :administration="administration"
+          v-for="administrationId in administrations"
+          :key="administrationId"
+          :administrationId="administrationId"
           class="mb-s"
           @titre-event-track="eventTrack"
         />

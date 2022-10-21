@@ -5,7 +5,7 @@ import {
   ADMINISTRATION_IDS,
   Administrations
 } from 'camino-common/src/static/administrations'
-import { IAdministration, ITitre } from '../../types'
+import { ITitre } from '../../types'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 
 console.info = jest.fn()
@@ -142,7 +142,7 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: '2020-02-02',
-          administrations: [{ id: 'dea-guyane-01' }] as IAdministration[]
+          administrationsLocales: ['dea-guyane-01']
         }
       ]
     }
@@ -204,7 +204,7 @@ const titreWithActiviteGrp = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: '2020-02-02',
-          administrations: [{ id: 'dea-guyane-01' }] as IAdministration[]
+          administrationsLocales: ['dea-guyane-01']
         }
       ]
     }

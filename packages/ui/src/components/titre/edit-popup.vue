@@ -63,43 +63,6 @@
       </button>
     </div>
 
-    <div v-if="userIsSuper">
-      <h3 class="mb-s">Administrations</h3>
-      <p class="h6 italic">Administrations ajoutées manuellement au titre</p>
-      <hr />
-      <div
-        v-for="(administration, index) in titre.titresAdministrations"
-        :key="index"
-        class="flex full-x mb-s"
-      >
-        <select v-model="administration.id" class="p-s mr-s">
-          <option v-for="a in sortedAdministrations" :key="a.id" :value="a.id">
-            {{ a.abreviation }}
-          </option>
-        </select>
-        <div class="flex-right">
-          <button
-            class="btn py-s px-m rnd-xs"
-            @click="administrationRemove(index)"
-          >
-            <Icon name="minus" size="M" />
-          </button>
-        </div>
-      </div>
-
-      <button
-        v-if="
-          titre.titresAdministrations &&
-          !titre.titresAdministrations.find(r => !r.id)
-        "
-        class="btn rnd-xs py-s px-m full-x mb flex h6"
-        @click="administrationAdd"
-      >
-        <span class="mt-xxs">Ajouter une administration</span>
-        <Icon name="plus" size="M" class="flex-right" />
-      </button>
-    </div>
-
     <template #footer>
       <div v-if="!loading" class="tablet-blobs">
         <div class="tablet-blob-1-3 mb tablet-mb-0">
@@ -128,10 +91,6 @@
 import Popup from '../_ui/popup.vue'
 
 import TitreTypeSelect from '../_common/titre-type-select.vue'
-import {
-  AdministrationId,
-  sortedAdministrations
-} from 'camino-common/src/static/administrations'
 import Icon from '@/components/_ui/icon.vue'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { computed, ComputedRef, inject, onMounted, onUnmounted, ref } from 'vue'
@@ -148,7 +107,6 @@ type Titre = {
   domaineId: DomaineId
   typeId: TitreTypeId
   references: { referenceTypeId: ReferenceTypeId | ''; nom: string }[]
-  titresAdministrations: { id: AdministrationId | '' }[]
 }
 const props = defineProps<{
   titre: Titre
@@ -238,14 +196,6 @@ const referenceAdd = () => {
 
 const referenceRemove = (index: number) => {
   props.titre.references.splice(index, 1)
-}
-
-const administrationAdd = () => {
-  props.titre.titresAdministrations.push({ id: '' })
-}
-
-const administrationRemove = (index: number) => {
-  props.titre.titresAdministrations.splice(index, 1)
 }
 
 const eventTrack = (event: {

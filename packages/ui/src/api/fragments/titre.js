@@ -3,7 +3,6 @@ import gql from 'graphql-tag'
 import { fragmentTitreType } from './metas'
 import { fragmentTitreDemarche } from './titre-demarche'
 import { fragmentTitreActivite } from './titre-activite'
-import { fragmentTitreAdministrations } from './administrations'
 import {
   fragmentTitreEntreprises,
   fragmentTitresEntreprises
@@ -39,12 +38,7 @@ const fragmentTitre = gql`
     activitesAbsentes
     activitesDeposees
     surface
-    administrations {
-      ...titreAdministrations
-    }
-    titresAdministrations {
-      id
-    }
+    administrations
     titulaires {
       ...titreEntreprises
     }
@@ -92,8 +86,6 @@ const fragmentTitre = gql`
     }
     abonnement
   }
-
-  ${fragmentTitreAdministrations}
 
   ${fragmentTitreEntreprises}
 

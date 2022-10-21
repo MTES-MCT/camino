@@ -9,7 +9,6 @@ export const titrePropsEtapes = [
   'points',
   'titulaires',
   'amodiataires',
-  'administrations',
   'substances',
   'surface'
 ] as IPropId[]
@@ -27,8 +26,7 @@ export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
           etapes: {
             points: { id: {} },
             titulaires: { id: {} },
-            amodiataires: { id: {} },
-            administrations: { id: {} }
+            amodiataires: { id: {} }
           }
         }
       }

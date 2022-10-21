@@ -100,6 +100,15 @@ class Titres extends Model {
       }
     },
 
+    pointsEtape: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: TitresEtapes,
+      join: {
+        from: ref('titres.propsTitreEtapesIds:points').castText(),
+        to: 'titresEtapes.id'
+      }
+    },
+
     titulaires: {
       relation: Model.ManyToManyRelation,
       modelClass: Entreprises,
@@ -139,20 +148,6 @@ class Titres extends Model {
         through: {
           from: ref('titresAdministrationsGestionnaires.titreId').castText(),
           to: 'titresAdministrationsGestionnaires.administrationId',
-          extra: ['associee']
-        },
-        to: 'administrations.id'
-      }
-    },
-
-    administrationsLocales: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Administrations,
-      join: {
-        from: ref('titres.propsTitreEtapesIds:administrations').castText(),
-        through: {
-          from: 'titresAdministrationsLocales.titreEtapeId',
-          to: 'titresAdministrationsLocales.administrationId',
           extra: ['associee']
         },
         to: 'administrations.id'
@@ -200,14 +195,6 @@ class Titres extends Model {
       }
     },
 
-    secteursMaritimeEtape: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: TitresEtapes,
-      join: {
-        from: ref('titres.propsTitreEtapesIds:points').castText(),
-        to: 'titresEtapes.id'
-      }
-    },
     activites: {
       relation: Model.HasManyRelation,
       modelClass: TitresActivites,
@@ -251,12 +238,16 @@ class Titres extends Model {
       this.substances = this.substancesEtape.substances
     }
 
-    if (this.secteursMaritimeEtape === null) {
+    // Les secteurs et les administrations locales dépendent du périmètre du titre
+    if (this.pointsEtape === null) {
       this.secteursMaritime = []
-    } else if (this.secteursMaritimeEtape === undefined) {
+      this.administrationsLocales = []
+    } else if (this.pointsEtape === undefined) {
       this.secteursMaritime = undefined
+      this.administrationsLocales = undefined
     } else {
-      this.secteursMaritime = this.secteursMaritimeEtape.secteursMaritime
+      this.secteursMaritime = this.pointsEtape.secteursMaritime
+      this.administrationsLocales = this.pointsEtape.administrationsLocales
     }
   }
 

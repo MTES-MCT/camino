@@ -87,7 +87,6 @@ export default {
       titre.domaineId = this.titre.domaine.id
       titre.typeId = this.titre.type.id
       titre.references = this.titre.references
-      titre.titresAdministrations = this.titre.titresAdministrations
 
       this.$store.commit('popupOpen', {
         component: EditPopup,
