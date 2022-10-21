@@ -526,6 +526,8 @@ interface ITitre {
   communes?: ICommune[] | null
   forets?: IForet[] | null
   sdomZones?: ISDOMZone[] | null
+  secteursMaritimeEtape?: ITitreEtape | null
+  secteursMaritime?: SecteursMaritimes[] | null
   demarches?: ITitreDemarche[]
   activites?: ITitreActivite[] | null
   modification?: boolean | null

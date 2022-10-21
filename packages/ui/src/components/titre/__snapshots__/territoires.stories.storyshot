@@ -230,7 +230,7 @@ exports[`Automated Storybook Snapshots Components/Titre/Territoires All 1`] = `
       <h6
         class="mb-s"
       >
-        facade 1
+        Méditerranée
       </h6>
       <ul
         class="list-inline"
@@ -246,22 +246,7 @@ exports[`Automated Storybook Snapshots Components/Titre/Territoires All 1`] = `
               class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
             >
               
-              nom1
-              
-            </span>
-          </span>
-        </li>
-        <li
-          class="mr-xs mb-xs"
-        >
-          <span
-            class="bold cap-first small lh-2"
-          >
-            <span
-              class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
-            >
-              
-              nom3
+              Balagne
               
             </span>
           </span>
@@ -273,7 +258,7 @@ exports[`Automated Storybook Snapshots Components/Titre/Territoires All 1`] = `
       <h6
         class="mb-s"
       >
-        facade 2
+        Nord Atlantique - Manche Ouest
       </h6>
       <ul
         class="list-inline"
@@ -289,7 +274,22 @@ exports[`Automated Storybook Snapshots Components/Titre/Territoires All 1`] = `
               class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
             >
               
-              nom2
+              Bretagne nord
+              
+            </span>
+          </span>
+        </li>
+        <li
+          class="mr-xs mb-xs"
+        >
+          <span
+            class="bold cap-first small lh-2"
+          >
+            <span
+              class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
+            >
+              
+              Bretagne sud
               
             </span>
           </span>
@@ -472,7 +472,7 @@ exports[`Automated Storybook Snapshots Components/Titre/Territoires Only Secteur
       <h6
         class="mb-s"
       >
-        facade 1
+        Méditerranée
       </h6>
       <ul
         class="list-inline"
@@ -488,22 +488,7 @@ exports[`Automated Storybook Snapshots Components/Titre/Territoires Only Secteur
               class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
             >
               
-              nom1
-              
-            </span>
-          </span>
-        </li>
-        <li
-          class="mr-xs mb-xs"
-        >
-          <span
-            class="bold cap-first small lh-2"
-          >
-            <span
-              class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
-            >
-              
-              nom3
+              Balagne
               
             </span>
           </span>
@@ -515,7 +500,7 @@ exports[`Automated Storybook Snapshots Components/Titre/Territoires Only Secteur
       <h6
         class="mb-s"
       >
-        facade 2
+        Nord Atlantique - Manche Ouest
       </h6>
       <ul
         class="list-inline"
@@ -531,7 +516,22 @@ exports[`Automated Storybook Snapshots Components/Titre/Territoires Only Secteur
               class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
             >
               
-              nom2
+              Bretagne nord
+              
+            </span>
+          </span>
+        </li>
+        <li
+          class="mr-xs mb-xs"
+        >
+          <span
+            class="bold cap-first small lh-2"
+          >
+            <span
+              class="bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box"
+            >
+              
+              Bretagne sud
               
             </span>
           </span>

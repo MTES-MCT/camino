@@ -84,6 +84,12 @@ const titresFieldsAdd = (fields: IFields) => {
     }
   }
 
+  if (fields.secteursMaritime) {
+    if (!fields.secteursMaritimeEtape) {
+      fields.secteursMaritimeEtape = { id: {} }
+    }
+  }
+
   return fields
 }
 

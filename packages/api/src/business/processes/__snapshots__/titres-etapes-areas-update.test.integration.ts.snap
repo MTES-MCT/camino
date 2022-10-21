@@ -75,6 +75,7 @@ Array [
         "nom": "Zone 1",
       },
     ],
+    "secteursMaritime": Array [],
     "slug": "titreDemarcheIdUniquePourMiseAJourAreas-mfr99",
     "statutId": "aco",
     "substances": Array [],

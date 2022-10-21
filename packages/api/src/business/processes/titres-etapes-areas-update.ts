@@ -12,7 +12,10 @@ import { userSuper } from '../../database/user-super'
 import TitresSDOMZones from '../../database/models/titres--sdom-zones'
 import { Feature } from '@turf/helpers'
 import TitresEtapes from '../../database/models/titres-etapes'
-import { getSecteurMaritime } from 'camino-common/src/static/facades'
+import {
+  getSecteurMaritime,
+  SecteursMaritimes
+} from 'camino-common/src/static/facades'
 import { knex } from '../../knex'
 
 /**
@@ -33,8 +36,7 @@ export const titresEtapesAreasUpdate = async (
         points: { id: {} },
         communes: { id: {} },
         forets: { id: {} },
-        sdomZones: { id: {} },
-        secteursMaritime: { id: {} }
+        sdomZones: { id: {} }
       }
     },
     userSuper
@@ -191,9 +193,6 @@ async function intersectSecteursMaritime(
   multipolygonGeojson: Feature,
   titreEtape: Pick<TitresEtapes, 'secteursMaritime' | 'id'>
 ) {
-  if (!titreEtape.secteursMaritime) {
-    throw new Error('les secteurs maritime de l’étape ne sont pas chargées')
-  }
   const secteurMaritimeIds = await geojsonIntersectsSecteursMaritime(
     multipolygonGeojson
   )
@@ -202,15 +201,16 @@ async function intersectSecteursMaritime(
     console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
   }
 
-  const secteurMaritimeNew = secteurMaritimeIds.data.map(getSecteurMaritime)
+  const secteurMaritimeNew: SecteursMaritimes[] =
+    secteurMaritimeIds.data.map(getSecteurMaritime)
   if (
-    titreEtape.secteursMaritime?.some(
+    titreEtape.secteursMaritime?.length !== secteurMaritimeNew.length ||
+    titreEtape.secteursMaritime.some(
       (value, index) => value !== secteurMaritimeNew[index]
-    ) ||
-    titreEtape.secteursMaritime.length !== secteurMaritimeNew.length
+    )
   ) {
     await knex('titres_etapes')
-      .update({ secteurMaritimes: secteurMaritimeNew })
+      .update({ secteursMaritime: JSON.stringify(secteurMaritimeNew) })
       .where('id', titreEtape.id)
   }
 }

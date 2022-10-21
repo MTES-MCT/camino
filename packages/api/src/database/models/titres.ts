@@ -214,6 +214,15 @@ class Titres extends Model {
         to: 'sdomZones.id'
       }
     },
+
+    secteursMaritimeEtape: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: TitresEtapes,
+      join: {
+        from: ref('titres.propsTitreEtapesIds:points').castText(),
+        to: 'titresEtapes.id'
+      }
+    },
     activites: {
       relation: Model.HasManyRelation,
       modelClass: TitresActivites,
@@ -255,6 +264,14 @@ class Titres extends Model {
       this.substances = undefined
     } else {
       this.substances = this.substancesEtape.substances
+    }
+
+    if (this.secteursMaritimeEtape === null) {
+      this.secteursMaritime = []
+    } else if (this.secteursMaritimeEtape === undefined) {
+      this.secteursMaritime = undefined
+    } else {
+      this.secteursMaritime = this.secteursMaritimeEtape.secteursMaritime
     }
   }
 

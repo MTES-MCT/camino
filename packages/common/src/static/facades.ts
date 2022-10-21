@@ -1,5 +1,5 @@
 import { DepartementId, DEPARTEMENT_IDS } from './departement'
-import { getEntries, onlyUnique } from '../typescript-tools'
+import { getEntries, getKeys, onlyUnique } from '../typescript-tools'
 
 const facades = {
   'Manche Est - Mer du Nord': {
@@ -102,9 +102,36 @@ export const getSecteurMaritime = (id: SecteursMaritimesIds): SecteursMaritimes 
   return result[0]
 }
 
-export function isSecteurMaritime(secteurMaritime: unknown): secteurMaritime is SecteursMaritimes {
-  return SECTEURS.includes(secteurMaritime)
+export type FacadeComputed = {
+  facade: FacadesMaritimes
+  secteurs: SecteursMaritimes[]
 }
+
+export const getFacadesComputed = (secteursMaritime: SecteursMaritimes[]): FacadeComputed[] => {
+  return secteursMaritime.reduce<FacadeComputed[]>((acc, secteur) => {
+    const facade = getFacade(secteur)
+    let computedFacade = acc.find(a => a.facade === facade)
+    if (!computedFacade) {
+      computedFacade = { facade, secteurs: [] }
+      acc.push(computedFacade)
+    }
+
+    computedFacade.secteurs.push(secteur)
+
+    return acc
+  }, [])
+}
+
+const getFacade = (secteurMaritime: SecteursMaritimes): FacadesMaritimes => {
+  const facade = getKeys(facades, isFacade).find(facade => Object.keys(facades[facade]).includes(secteurMaritime))
+  assertsFacade(facade)
+
+  return facade
+}
+
+export const isFacade = (facade: unknown): facade is FacadesMaritimes => FACADES.includes(facade)
+export const isSecteurMaritime = (secteurMaritime: unknown): secteurMaritime is SecteursMaritimes => SECTEURS.includes(secteurMaritime)
+
 export function assertsFacade(facade: unknown): asserts facade is FacadesMaritimes {
   if (!FACADES.includes(facade)) {
     throw new Error(`La façade ${facade} n'existe pas`)
