@@ -28,10 +28,10 @@ const emailForAdministrationContentFormat = (
 }
 
 const etapeStatusUpdated = (
-  etape: ITitreEtape,
+  etape: Pick<ITitreEtape, 'typeId' | 'statutId'>,
   typeId: string,
   statusId: string,
-  oldEtape?: ITitreEtape
+  oldEtape?: Pick<ITitreEtape, 'statutId'>
 ) =>
   etape.typeId === typeId &&
   (!oldEtape || oldEtape.statutId !== statusId) &&
@@ -39,13 +39,13 @@ const etapeStatusUpdated = (
 
 // VisibleForTesting
 export const emailsForAdministrationsGet = (
-  etape: ITitreEtape | undefined,
-  etapeType: IEtapeType | undefined,
+  etape: Pick<ITitreEtape, 'typeId' | 'statutId'> | undefined,
+  etapeType: Pick<IEtapeType, 'nom'> | undefined,
   demarcheTypeId: string,
   titreId: string,
   titreTypeId: string,
   user: IUtilisateur,
-  oldEtape?: ITitreEtape
+  oldEtape?: Pick<ITitreEtape, 'statutId'>
 ): { subject: string; content: string; emails: string[] } | null => {
   if (!etape) {
     return null
@@ -74,7 +74,7 @@ export const emailsForAdministrationsGet = (
       title = 'Nouvelle demande complète'
     }
   } else if (demarcheTypeId === 'oct' && titreTypeId === 'axm') {
-    if (etapeStatusUpdated(etape, 'mdp', 'fai', oldEtape)) {
+    if (etapeStatusUpdated(etape, 'mfr', 'fai', oldEtape)) {
       emails.push(EmailAdministration.DGTM)
 
       title = 'Nouvelle demande déposée'
