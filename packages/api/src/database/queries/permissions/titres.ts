@@ -18,8 +18,7 @@ import {
 import { titresDemarchesQueryModify } from './titres-demarches'
 import {
   administrationsTitresTypesTitresStatutsModify,
-  administrationsTitresQuery,
-  administrationsQueryModify
+  administrationsTitresQuery
 } from './administrations'
 import { entreprisesQueryModify, entreprisesTitresQuery } from './entreprises'
 import TitresEtapes from '../../models/titres-etapes'
@@ -309,16 +308,6 @@ const titresQueryModify = (
   // visibilité du doublonTitre
   q.modifyGraph('doublonTitre', b => {
     titresQueryModify(b as QueryBuilder<Titres, Titres | Titres[]>, user)
-  })
-
-  q.modifyGraph('titresAdministrations', b => {
-    administrationsQueryModify(
-      b as QueryBuilder<
-        AdministrationsModel,
-        AdministrationsModel | AdministrationsModel[]
-      >,
-      user
-    )
   })
 
   return q

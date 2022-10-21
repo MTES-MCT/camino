@@ -193,17 +193,13 @@ const titreModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    const titreOld = await titreGet(
-      titre.id,
-      { fields: { titresAdministrations: { id: {} } } },
-      user
-    )
+    const titreOld = await titreGet(titre.id, { fields: {} }, user)
 
     if (!titreOld) throw new Error("le titre n'existe pas")
 
     if (!titreOld.modification) throw new Error('droits insuffisants')
 
-    const rulesErrors = await titreUpdationValidate(titre, titreOld, user)
+    const rulesErrors = await titreUpdationValidate(titre, titreOld)
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))

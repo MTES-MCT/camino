@@ -128,20 +128,6 @@ class Titres extends Model {
       }
     },
 
-    // administrations directement ajoutées sur le titre
-    titresAdministrations: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Administrations,
-      join: {
-        from: 'titres.id',
-        through: {
-          from: 'titresAdministrations.titreId',
-          to: 'titresAdministrations.administrationId'
-        },
-        to: 'administrations.id'
-      }
-    },
-
     administrationsGestionnaires: {
       relation: Model.ManyToManyRelation,
       modelClass: Administrations,
@@ -159,7 +145,6 @@ class Titres extends Model {
       }
     },
 
-    // adminitrations calculées via leur région et département
     administrationsLocales: {
       relation: Model.ManyToManyRelation,
       modelClass: Administrations,

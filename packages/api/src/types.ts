@@ -520,7 +520,6 @@ interface ITitre {
   administrationsLocales?: IAdministration[] | null
   administrationsGestionnaires?: IAdministration[] | null
   administrations?: IAdministration[] | null
-  titresAdministrations?: IAdministration[] | null
   surfaceEtape?: ITitreEtape | null
   surface?: number | null
   communes?: ICommune[] | null
@@ -566,12 +565,9 @@ interface ITitreActivite {
   deposable?: boolean | null
 }
 
-interface ITitreAdministration {
+interface ITitreAdministrationGestionnaire {
   administrationId: string
   titreId: string
-}
-
-interface ITitreAdministrationGestionnaire extends ITitreAdministration {
   associee?: boolean | null
 }
 
@@ -889,7 +885,6 @@ export {
   IAdministrationActiviteTypeEmail,
   ITitre,
   ITitreActivite,
-  ITitreAdministration,
   ITitreAdministrationGestionnaire,
   ITitreAdministrationLocale,
   ITitreCommune,

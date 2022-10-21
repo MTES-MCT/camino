@@ -76,9 +76,6 @@ type Titre {
   "Amodiataires du titre dans son dernier état de validité"
   amodiataires: [Entreprise]
 
-  "Administrations ajoutées manuellement sur le titre par l’administrateur"
-  titresAdministrations: [Administration]
-
   "Administrations en charge du titre dans son dernier état de validité"
   administrations: [Administration]
 

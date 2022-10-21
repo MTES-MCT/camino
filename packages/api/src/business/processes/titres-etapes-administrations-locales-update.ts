@@ -141,7 +141,6 @@ const titreEtapeAdministrationsRegionsAndDepartementsBuild = (
 
 const titreEtapeAdministrationsLocalesBuild = (
   titreTypeId: TitreTypeId,
-  titreAdministrationIds: string[] | null | undefined,
   titreEtape: ITitreEtape,
   administrations: IAdministration[]
 ) => {
@@ -154,14 +153,12 @@ const titreEtapeAdministrationsLocalesBuild = (
       titreEtapeAdministrations: ITitreAdministrationLocale[],
       administration: IAdministration
     ) => {
-      // c’est une administration locale si le département ou la région de l'administration sont ceux de l’étape
-      // ou si c’est une administration rattachée directement sur le titre
+      // si le département ou la région de l'administration ne fait pas partie de ceux de l'étape
       const isAdministrationLocale =
         (administration.departementId &&
           titreDepartementsIds.has(administration.departementId)) ||
         (administration.regionId &&
-          titreRegionsIds.has(administration.regionId)) ||
-        titreAdministrationIds?.includes(administration.id)
+          titreRegionsIds.has(administration.regionId))
       // alors l'administration n'est pas rattachée à l'étape
       if (!isAdministrationLocale) return titreEtapeAdministrations
 
@@ -197,7 +194,6 @@ const titresEtapesAdministrationsLocalesBuild = (
               const titreEtapeAdministrationsLocales =
                 titreEtapeAdministrationsLocalesBuild(
                   titre.typeId,
-                  titre.titresAdministrations?.map(({ id }) => id),
                   titreEtape,
                   administrations
                 ) as ITitreAdministrationLocale[]
@@ -227,7 +223,6 @@ export const titresEtapesAdministrationsLocalesUpdate = async (
     { ids: titresIds },
     {
       fields: {
-        titresAdministrations: { id: {} },
         demarches: {
           etapes: {
             administrations: { id: {} },
