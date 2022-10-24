@@ -219,6 +219,7 @@ const titresRelateFalse = [
   'communes',
   'forets',
   'substancesEtape',
+  'secteursMaritimeEtape',
   'titulaires',
   'titulaires.etablissements',
   'titulaires.utilisateurs',

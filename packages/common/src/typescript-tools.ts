@@ -15,3 +15,5 @@ export type PartialRecord<K extends keyof any, T> = {
 }
 
 export const getKeys = <T extends object>(object: T, filter: (key: string) => key is Extract<keyof T, string>): Array<Extract<keyof T, string>> => Object.keys(object).filter(filter)
+export const getEntries = <T extends string, U>(object: Record<T, U>, filter: (key: string) => key is T): [T, U][] =>
+  Object.entries<U>(object).filter((key: [string, U]): key is [T, U] => filter(key[0]))

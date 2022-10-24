@@ -63,12 +63,3 @@ type SDOMZone {
   "Nom de la zone"
   nom: String!
 }
-
-"Secteur Maritime"
-type SecteurMaritime {
-  "Nom du secteur"
-  nom: String!
-
-  "Façade"
-  facade: String!
-}

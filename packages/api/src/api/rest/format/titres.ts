@@ -13,6 +13,18 @@ import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
+import {
+  getFacadesComputed,
+  SecteursMaritimes
+} from 'camino-common/src/static/facades'
+
+const getFacadesMaritimeCell = (
+  secteursMaritime: SecteursMaritimes[],
+  separator: string
+): string =>
+  getFacadesComputed(secteursMaritime)
+    .map(({ facade, secteurs }) => `${facade} (${secteurs.join(', ')})`)
+    .join(separator)
 
 const titreContenuTableFormat = (contenu?: IContenu | null) =>
   contenu
@@ -49,6 +61,10 @@ export const titresTableFormat = (titres: ITitre[]) =>
         }, {})
       : {}
 
+    if (!titre.secteursMaritime) {
+      throw new Error('les secteurs maritimes ne sont pas chargés')
+    }
+
     const separator = ';'
 
     const titreNew = {
@@ -68,6 +84,10 @@ export const titresTableFormat = (titres: ITitre[]) =>
       'surface renseignee km2': titre.surface,
       'communes (surface calculee km2)': communes.join(separator),
       forets: titre.forets?.map(f => f.nom).join(separator),
+      facades_maritimes: getFacadesMaritimeCell(
+        titre.secteursMaritime,
+        separator
+      ),
       departements: departements.join(separator),
       regions: regions.join(separator),
       administrations_noms: titre
@@ -108,6 +128,10 @@ const titreGeojsonPropertiesFormat = (titre: ITitre) => {
 
   const separator = ', '
 
+  if (!titre.secteursMaritime) {
+    throw new Error('les secteurs maritimes ne sont pas chargés')
+  }
+
   return {
     id: titre.slug,
     nom: titre.nom,
@@ -126,6 +150,10 @@ const titreGeojsonPropertiesFormat = (titre: ITitre) => {
     'surface renseignee km2': titre.surface,
     'communes (surface calculee km2)': communes.join(separator),
     forets: titre.forets?.map(f => f.nom).join(separator),
+    facades_maritimes: getFacadesMaritimeCell(
+      titre.secteursMaritime,
+      separator
+    ),
     departements: departements.join(separator),
     regions: regions.join(separator),
     administrations_noms: titre.administrations!.map(a => a.nom),

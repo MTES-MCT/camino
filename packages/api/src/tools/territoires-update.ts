@@ -10,6 +10,11 @@ import { chain } from 'stream-chain'
 import { Readable } from 'stream'
 import SDOMZones from '../database/models/sdom-zones'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
+import {
+  assertsFacade,
+  assertsSecteur,
+  secteurAJour
+} from 'camino-common/src/static/facades'
 
 const communesUpdate = async () => {
   const communesIdsKnown = (await Communes.query()).map(({ id }) => id)
@@ -148,18 +153,30 @@ const foretsUpdate = async () => {
 const secteursMaritimeUpdates = async () => {
   console.info('Téléchargement du fichier des secteurs maritimes')
 
-  // Cette URl a été obtenue depuis https://gisdata.cerema.fr/arcgis/rest/services/Carte_vocation_dsf_2020/MapServer/0/query avec where 1=1 et outfields 'secteur,facade,OBJECTID'
+  // Cette URl a été obtenue depuis https://gisdata.cerema.fr/arcgis/rest/services/Carte_vocation_dsf_2020/MapServer/0/query avec where 1=1 et outfields 'secteur,facade,OBJECTID,id'
   const secteursUrl =
-    'https://gisdata.cerema.fr/arcgis/rest/services/Carte_vocation_dsf_2020/MapServer/0/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=secteur%2Cfacade%2COBJECTID&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&having=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&historicMoment=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentOnly=false&datumTransformation=&parameterValues=&rangeValues=&quantizationParameters=&f=geojson'
+    'https://gisdata.cerema.fr/arcgis/rest/services/Carte_vocation_dsf_2020/MapServer/0/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=secteur%2Cfacade%2COBJECTID%2Cid&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&having=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&historicMoment=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentOnly=false&datumTransformation=&parameterValues=&rangeValues=&quantizationParameters=&f=geojson'
 
   const secteurs = await (await fetch(secteursUrl)).json()
 
   const secteurIdsKnown: number[] = (
-    await knex.select('id').from('secteurs_maritime')
+    await knex.select('id').from('secteurs_maritime_postgis')
   ).map(({ id }) => id)
   for (const secteur of secteurs.features) {
     try {
       const id: number = secteur.id
+      const nomFacade: string = secteur.properties.facade
+      const nomSecteur: string = secteur.properties.secteur
+      const secteurId = secteur.properties.id
+
+      assertsFacade(nomFacade)
+      assertsSecteur(nomFacade, nomSecteur)
+
+      if (!secteurAJour(nomFacade, nomSecteur, id, secteurId)) {
+        throw new Error(
+          `L'id ou le secteur id a changé '${nomFacade}', '${nomSecteur}', '${secteurId}', '${id}'`
+        )
+      }
 
       const result = await knex.raw(
         `select ST_MakeValid(ST_Multi(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
@@ -168,19 +185,10 @@ const secteursMaritimeUpdates = async () => {
       )
 
       if (secteurIdsKnown.includes(id)) {
-        await knex('secteurs_maritime').where('id', id).update({
-          nom: secteur.properties.secteur,
-          facade: secteur.properties.facade
-        })
         await knex('secteurs_maritime_postgis').where('id', id).update({
           geometry: result.rows[0].result
         })
       } else {
-        await knex('secteurs_maritime').insert({
-          id,
-          nom: secteur.properties.secteur,
-          facade: secteur.properties.facade
-        })
         await knex('secteurs_maritime_postgis').insert({
           id,
           geometry: result.rows[0].result

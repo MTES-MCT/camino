@@ -5,6 +5,7 @@ import {
   DEPARTEMENT_IDS,
   Departements
 } from 'camino-common/src/static/departement'
+import { SecteursMaritimes } from 'camino-common/src/static/facades'
 
 const meta: Meta = {
   title: 'Components/Titre/Territoires',
@@ -37,12 +38,7 @@ OnlySdomZones.args = {
 }
 export const OnlySecteursMaritimes = Template.bind({})
 OnlySecteursMaritimes.args = {
-  secteursMaritimes: [
-    { facade: 'facade 1', nom: 'nom1' },
-    { facade: 'facade 1', nom: 'nom1' },
-    { facade: 'facade 2', nom: 'nom2' },
-    { facade: 'facade 1', nom: 'nom3' }
-  ]
+  secteursMaritimes: ['Balagne', 'Bretagne nord', 'Bretagne sud']
 }
 
 export const All = Template.bind({})
@@ -56,11 +52,7 @@ All.args = {
     { nom: 'Tours', departementId: DEPARTEMENT_IDS['Indre-et-Loire'] },
     { nom: 'Ville de Guyane', departementId: DEPARTEMENT_IDS.Guyane }
   ],
-  secteursMaritimes: [
-    { facade: 'facade 1', nom: 'nom1' },
-    { facade: 'facade 2', nom: 'nom2' },
-    { facade: 'facade 1', nom: 'nom3' }
-  ]
+  secteursMaritimes: ['Balagne', 'Bretagne nord', 'Bretagne sud']
 }
 
 export const Empty = Template.bind({})

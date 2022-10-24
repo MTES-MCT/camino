@@ -65,13 +65,18 @@ import {
 import { PAYS_IDS, PaysId } from 'camino-common/src/static/pays'
 import { Regions } from 'camino-common/src/static/region'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
+import {
+  FacadeComputed,
+  getFacadesComputed,
+  SecteursMaritimes
+} from 'camino-common/src/static/facades'
 
 interface Props {
   surface?: number
   forets?: { nom: string }[]
   sdomZones?: { nom: string }[]
   communes?: { nom: string; departementId: DepartementId }[]
-  secteursMaritimes?: { nom: string; facade: string }[]
+  secteursMaritimes?: SecteursMaritimes[]
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -89,26 +94,9 @@ type RegionsComputed = {
   departements: { id: string; nom: string; communes: string[] }[]
 }[]
 
-type FacadeComputed = {
-  facade: string
-  secteurs: string[]
-}
-const facadesMaritime = computed<FacadeComputed[]>(() => {
-  const facades = props.secteursMaritimes
-    .map(secteur => secteur.facade)
-    .filter(onlyUnique)
-
-  return facades.reduce<FacadeComputed[]>((acc, facade) => {
-    acc.push({
-      facade,
-      secteurs: props.secteursMaritimes
-        .filter(secteur => facade === secteur.facade)
-        .map(({ nom }) => nom)
-        .filter(onlyUnique)
-    })
-    return acc
-  }, [])
-})
+const facadesMaritime = computed<FacadeComputed[]>(() =>
+  getFacadesComputed(props.secteursMaritimes)
+)
 
 const regions = computed<RegionsComputed>(() => {
   return props.communes.reduce((acc, commune) => {

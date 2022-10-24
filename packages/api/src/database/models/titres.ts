@@ -19,7 +19,6 @@ import slugify from '@sindresorhus/slugify'
 import cryptoRandomString from 'crypto-random-string'
 import SDOMZones from './sdom-zones'
 import TitresActivites from './titres-activites'
-import SecteursMaritime from './secteurs_maritime'
 
 export interface DBTitre extends ITitre {
   archive: boolean
@@ -215,19 +214,15 @@ class Titres extends Model {
         to: 'sdomZones.id'
       }
     },
-    secteursMaritime: {
-      relation: Model.ManyToManyRelation,
-      modelClass: SecteursMaritime,
+
+    secteursMaritimeEtape: {
+      relation: Model.BelongsToOneRelation,
+      modelClass: TitresEtapes,
       join: {
         from: ref('titres.propsTitreEtapesIds:points').castText(),
-        through: {
-          from: 'titres__secteurs_maritime.titreEtapeId',
-          to: 'titres__secteurs_maritime.secteurMaritimeId'
-        },
-        to: 'secteurs_maritime.id'
+        to: 'titresEtapes.id'
       }
     },
-
     activites: {
       relation: Model.HasManyRelation,
       modelClass: TitresActivites,
@@ -269,6 +264,14 @@ class Titres extends Model {
       this.substances = undefined
     } else {
       this.substances = this.substancesEtape.substances
+    }
+
+    if (this.secteursMaritimeEtape === null) {
+      this.secteursMaritime = []
+    } else if (this.secteursMaritimeEtape === undefined) {
+      this.secteursMaritime = undefined
+    } else {
+      this.secteursMaritime = this.secteursMaritimeEtape.secteursMaritime
     }
   }
 
