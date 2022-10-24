@@ -209,6 +209,9 @@ async function intersectSecteursMaritime(
       (value, index) => value !== secteurMaritimeNew[index]
     )
   ) {
+    console.info(
+      `Mise à jour des secteurs maritimes sur l'étape ${titreEtape.id}, ancien: '${titreEtape.secteursMaritime}', nouveaux: '${secteurMaritimeNew}'`
+    )
     await knex('titres_etapes')
       .update({ secteursMaritime: JSON.stringify(secteurMaritimeNew) })
       .where('id', titreEtape.id)
