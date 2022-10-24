@@ -107,17 +107,9 @@ const administrationsLocalesModify = (
   administrationId: AdministrationId,
   titreAlias: string
 ) => {
-  // FIXME la table titresAdministrationsLocales n’existe plus, maintenant c’est dans une colonne JSONB directement dans l’étape, à réécrire.
-  q.leftJoin('titresAdministrationsLocales as t_al', b => {
-    b.on(
-      knex.raw('?? ->> ? = ??', [
-        `${titreAlias}.propsTitreEtapesIds`,
-        'administrations',
-        't_al.titreEtapeId'
-      ])
-    )
-    b.on(knex.raw('?? = ?', ['t_al.administrationId', administrationId]))
-  })
+  q.joinRaw(
+    `left join titres_etapes on titres_etapes.id = "${titreAlias}"."props_titre_etapes_ids" ->> 'points'`
+  ).whereRaw(`administrations_locales @> '"${administrationId}"'::jsonb`)
 }
 
 const administrationsActivitesModify = (
@@ -190,7 +182,7 @@ const administrationsTitresQuery = (
     }
 
     if (isLocale) {
-      c.orWhereNotNull('t_al.administrationId')
+      c.orWhereNotNull('titres_etapes.administrations_locales')
     }
   })
 

@@ -74,7 +74,6 @@ const titresEtapesRelateTrue = [
   'type',
   'titulaires',
   'amodiataires',
-  'administrations',
   'communes',
   'forets',
   'justificatifs'
@@ -87,7 +86,6 @@ const titresEtapesRelateFalse = [
   'titulaires.documents.type',
   'amodiataires.etablissements',
   'amodiataires.utilisateurs',
-  'administrations.utilisateurs',
   ...documentsRelateFalse.map(k => `documents.${k}`),
   ...documentsRelateFalse.map(k => `justificatifs.${k}`)
 ]
@@ -100,7 +98,6 @@ const titresEtapes = {
     justificatifs.${documents.graph},
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph},
-    administrations.${administrations.graph},
     forets
   ]`,
 

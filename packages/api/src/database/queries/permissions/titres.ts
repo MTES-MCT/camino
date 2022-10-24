@@ -45,7 +45,7 @@ const titresDemarchesAdministrationsModificationQuery = (
 ) => {
   const administrationQuery = administrationsTitresQuery(
     administrationId,
-    'titresModification',
+    'titres_modification',
     {
       isGestionnaire: true,
       isLocale: true

@@ -1,4 +1,4 @@
-import { Model, ref } from 'objection'
+import { Model } from 'objection'
 
 import { IAdministration } from '../../types'
 
@@ -60,20 +60,6 @@ class Administrations extends Model {
           to: 'titresAdministrationsGestionnaires.titreId'
         },
         to: 'titres.id'
-      }
-    },
-
-    // FIXME à supprimer ou à modifier pour aller chercher la colonne dans l’étape (pas certain que ça soit possible)
-    localeTitres: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Titres,
-      join: {
-        from: 'administrations.id',
-        through: {
-          from: 'titresAdministrationsLocales.administrationId',
-          to: 'titresAdministrationsLocales.titreEtapeId'
-        },
-        to: ref('titres.propsTitreEtapesIds:administrations').castText()
       }
     },
 

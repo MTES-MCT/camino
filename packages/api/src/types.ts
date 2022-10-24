@@ -256,7 +256,6 @@ interface IAdministration {
   activitesTypes?: IActiviteType[] | null
   utilisateurs?: IUtilisateur[] | null
   gestionnaireTitres?: ITitre[] | null
-  localeTitres?: ITitre[] | null
   associee?: boolean | null
   emailsModification?: boolean
   modification?: boolean | null

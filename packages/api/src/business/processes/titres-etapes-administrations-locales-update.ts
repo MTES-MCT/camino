@@ -87,8 +87,9 @@ const titresEtapesAdministrationsLocalesBuild = (
 
       titresEtapesAdministrationsLocales.push({
         titreEtapeAdministrationsLocalesOld:
-          titreEtape.administrationsLocales ?? [],
-        titreEtapeAdministrationsLocales,
+          titreEtape.administrationsLocales?.sort() ?? [],
+        titreEtapeAdministrationsLocales:
+          titreEtapeAdministrationsLocales.sort(),
         titreEtapeId: titreEtape.id
       })
 
@@ -134,7 +135,7 @@ export const titresEtapesAdministrationsLocalesUpdate = async (
           })
           .where('id', titreEtapeId)
         console.info(
-          `titres / démarches / étapes : administrations locales (modification) -> ${titreEtapeAdministrationsLocalesOld.join(
+          `titres / démarches / étapes ${titreEtapeId} : administrations locales (modification) -> ${titreEtapeAdministrationsLocalesOld.join(
             ', '
           )} | ${titreEtapeAdministrationsLocales.join(', ')}`
         )
