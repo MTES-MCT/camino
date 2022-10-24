@@ -32,7 +32,7 @@ Le résultat de la requête peut être filtré en ajoutant des paramètres à l�
 
 1. Effectuer une recherche filtrée sur le site [Camino](https://camino.beta.gouv.fr). Par exemple, pour n'afficher que les titres de type _concessions_ du domaine _hydrocarbures_ avec un statut _valide_ l'url est : `https://camino.beta.gouv.fr/titres?domainesIds=h&statutsIds=val&typesIds=cx`.
 
-2. Modifier cette url en ajoutant `api.` après `https://`, et `&format=geojson` en fin de chaîne. L'url modifiée est : `https://api.camino.beta.gouv.fr/titres?domainesIds=h&statutsIds=val&typesIds=cx&format=geosjson`.
+2. Modifier cette url en ajoutant `api.` après `https://`, et `&format=geojson` en fin de chaîne. L'url modifiée est : `https://api.camino.beta.gouv.fr/titres?domainesIds=h&statutsIds=val&typesIds=cx&format=geojson`.
 
 3. Le résultat s'affiche au format GeoJSON.
 
@@ -44,7 +44,7 @@ Certains titres miniers et autorisations nécessitent d'être identifiés pour �
 
 Ajouter les identifiants Camino dans l'url. L'identifiant à Camino est un email, pour l'utiliser dans l'url, il faut remplacer le caratère `@` par `%40`. Le caractère `@` est ajouté après le mot de passe.
 
-Exemple: `https://mon-email%40mon-domaine.tld:mon-mot-de-passe@api.camino.beta.gouv.fr/titres?format=geosjson`.
+Exemple: `https://mon-email%40mon-domaine.tld:mon-mot-de-passe@api.camino.beta.gouv.fr/titres?format=geojson`.
 
 ### Proxy du **RIE** (Réseau Interministériel de l'État)
 
