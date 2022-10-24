@@ -3,7 +3,7 @@
 exports[`envoie un email sur un octroi d'AEX 1`] = `
 Object {
   "content": "
-  <h3>L’étape « dépôt de la demande » d’une demande d’AEX vient d’être réalisée.</h3>
+  <h3>L’étape « demande » d’une demande d’AEX vient d’être réalisée.</h3>
   
   <hr>
   
@@ -14,7 +14,7 @@ Object {
   "emails": Array [
     "mc.remd.deal-guyane@developpement-durable.gouv.fr",
   ],
-  "subject": "dépôt de la demande | Nouvelle demande déposée",
+  "subject": "demande | Nouvelle demande déposée",
 }
 `;
 
