@@ -2,32 +2,64 @@ import { titresEtapesAdministrationsLocalesUpdate } from './titres-etapes-admini
 import { titresEtapesGet } from '../../database/queries/titres-etapes'
 
 import {
-  titresEtapesCommunes,
   titresEtapesCommunesVides,
-  titresEtapesCommunesMemeCommune,
-  titresEtapesAdministrationLocalesInexistante,
-  titresEtapesAdministrationLocalesExistante
+  titresEtapesCommunesMemeCommune
 } from './__mocks__/titres-etapes-administrations-locales-update-etapes'
+import { ICommune, ITitreEtape } from '../../types'
+import { newDemarcheId } from '../../database/models/_format/id-create'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 
 jest.mock('../../database/queries/titres-etapes', () => ({
-  titresEtapesAdministrationsCreate: jest.fn().mockImplementation(a => a),
-  titreEtapeAdministrationDelete: jest.fn().mockImplementation(a => a)
+  titresEtapesGet: jest.fn()
 }))
 
-jest.mock('../../database/queries/titres', () => ({
-  titresGet: jest.fn()
-}))
+jest.mock('../../knex', () => {
+  const mockJest = {
+    update: jest.fn().mockReturnThis(),
+    where: jest.fn().mockReturnThis()
+  }
 
-jest.mock('../../database/queries/administrations', () => ({
-  administrationsGet: jest.fn()
-}))
+  return {
+    knex: jest.fn().mockReturnValue(mockJest)
+  }
+})
 
 const titresEtapesGetMock = jest.mocked(titresEtapesGet, true)
 
 console.info = jest.fn()
 
 describe("administrations d'une étape", () => {
-  test('ajoute 2 administrations dans une étape', async () => {
+  test('ajoute des administrations dans deux étapes', async () => {
+    const titresEtapesCommunes: ITitreEtape[] = [
+      {
+        id: 'h-cx-courdemanges-1988-oct01-dpu01',
+        titreDemarcheId: newDemarcheId(),
+        statutId: 'fai',
+        date: '2022-01-01',
+        typeId: 'dpu',
+        communes: [
+          {
+            id: 'paris',
+            nom: 'paris',
+            departementId: '973'
+          }
+        ]
+      },
+      {
+        id: 'h-cx-courdemanges-1988-oct01-dpu01',
+        titreDemarcheId: newDemarcheId(),
+        statutId: 'fai',
+        date: '2022-01-01',
+        typeId: 'aac',
+        communes: [
+          {
+            id: 'issy',
+            nom: 'issy',
+            departementId: '87'
+          }
+        ]
+      }
+    ]
     titresEtapesGetMock.mockResolvedValue(titresEtapesCommunes)
 
     const { titresEtapesAdministrationsLocalesUpdated } =
@@ -55,20 +87,38 @@ describe("administrations d'une étape", () => {
   })
 
   test("n'ajoute pas d'administration si elle existe déjà dans l'étape", async () => {
-    titresEtapesGetMock.mockResolvedValue(
-      titresEtapesAdministrationLocalesExistante
-    )
+    const titreEtape: ITitreEtape = {
+      id: 'h-cx-courdemanges-1988-oct01-dpu01',
+      titreDemarcheId: newDemarcheId(),
+      statutId: 'fai',
+      date: '2022-01-01',
+      typeId: 'dpu',
+      communes: [],
+      administrationsLocales: [ADMINISTRATION_IDS['DREAL - BRETAGNE']]
+    }
+    titresEtapesGetMock.mockResolvedValue([titreEtape])
 
     const { titresEtapesAdministrationsLocalesUpdated } =
       await titresEtapesAdministrationsLocalesUpdate()
 
-    expect(titresEtapesAdministrationsLocalesUpdated.length).toEqual(0)
+    expect(titresEtapesAdministrationsLocalesUpdated.length).toEqual(1)
+    expect(
+      titresEtapesAdministrationsLocalesUpdated[0].administrations
+    ).toHaveLength(0)
   })
 
   test("supprime une administration si l'étape ne la contient plus dans ses communes", async () => {
-    titresEtapesGetMock.mockResolvedValue(
-      titresEtapesAdministrationLocalesInexistante
-    )
+    const titreEtape: ITitreEtape = {
+      statutId: 'fai',
+      date: '2022-01-01',
+      id: 'h-cx-courdemanges-1988-oct01-dpu01',
+      titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+      typeId: 'dpu',
+      communes: [] as ICommune[],
+      administrationsLocales: ['ope-cacem-01']
+    }
+
+    titresEtapesGetMock.mockResolvedValue([titreEtape])
 
     const { titresEtapesAdministrationsLocalesUpdated } =
       await titresEtapesAdministrationsLocalesUpdate()

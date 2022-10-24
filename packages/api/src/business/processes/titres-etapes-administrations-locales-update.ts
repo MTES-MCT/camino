@@ -109,7 +109,10 @@ export const titresEtapesAdministrationsLocalesUpdate = async (
     { fields: { communes: { id: {} } } },
     userSuper
   )
-  const titresEtapesAdministrationsLocalesUpdated: string[] = []
+  const titresEtapesAdministrationsLocalesUpdated: {
+    titreEtapeId: string
+    administrations: AdministrationId[]
+  }[] = []
 
   if (etapes) {
     const titresEtapesAdministrationsLocales =
@@ -139,7 +142,10 @@ export const titresEtapesAdministrationsLocalesUpdate = async (
             ', '
           )} | ${titreEtapeAdministrationsLocales.join(', ')}`
         )
-        titresEtapesAdministrationsLocalesUpdated.push(titreEtapeId)
+        titresEtapesAdministrationsLocalesUpdated.push({
+          titreEtapeId,
+          administrations: titreEtapeAdministrationsLocales
+        })
       }
     }
   }

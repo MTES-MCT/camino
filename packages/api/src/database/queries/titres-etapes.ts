@@ -65,7 +65,7 @@ const titresEtapesGet = async (
   } = {},
   { fields }: { fields?: IFields },
   user: IUtilisateur | null | undefined
-) => {
+): Promise<ITitreEtape[]> => {
   const q = titresEtapesQueryBuild({ fields }, user)
 
   if (titresEtapesIds) {
