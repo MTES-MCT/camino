@@ -32,14 +32,15 @@ import {
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
 import { documentCreate } from '../../src/database/queries/documents'
 import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
 const visibleCheck = async (
-  administrationId: string,
+  administrationId: AdministrationId,
   visible: boolean,
   cible: 'titres' | 'demarches' | 'etapes',
   titreTypeId: TitreTypeId,
   locale: boolean,
-  etapeTypeId?: string
+  etapeTypeId?: EtapeTypeId
 ) => {
   const titreQuery = queryImport('titre')
 
@@ -320,7 +321,7 @@ const modificationCheck = async (
   cible: string,
   titreTypeId: TitreTypeId,
   locale?: boolean,
-  etapeTypeId?: string
+  etapeTypeId?: EtapeTypeId
 ) => {
   const administration = administrationsWithRelations.find(
     a => a.id === administrationId
@@ -416,19 +417,19 @@ const titreBuild = (
     titreTypeId
   }: {
     titreId: string
-    titreTypeId: string
+    titreTypeId: TitreTypeId
   },
-  administrationIdGestionnaire?: string,
-  administrationIdLocale?: string,
-  etapeTypeId?: string
+  administrationIdGestionnaire?: AdministrationId,
+  administrationIdLocale?: AdministrationId,
+  etapeTypeId?: EtapeTypeId
 ) => {
-  const titre = {
+  const titre: ITitre = {
     id: titreId,
     nom: 'nom titre',
     typeId: titreTypeId,
     titreStatutId: 'val',
-    domaineId: titreTypeId.slice(-1),
-    propsTitreEtapesIds: { administrations: `${titreId}-demarche-id-etape-id` },
+    domaineId: getDomaineId(titreTypeId),
+    propsTitreEtapesIds: { points: `${titreId}-demarche-id-etape-id` },
     demarches: [
       {
         id: newDemarcheId(`${titreId}-demarche-id`),
@@ -450,7 +451,7 @@ const titreBuild = (
       }
     ],
     publicLecture: false
-  } as ITitre
+  }
 
   if (administrationIdGestionnaire) {
     titre.administrationsGestionnaires = [

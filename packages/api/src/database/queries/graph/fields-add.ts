@@ -84,7 +84,11 @@ const titresFieldsAdd = (fields: IFields) => {
     }
   }
 
-  if (fields.secteursMaritime || fields.administrationsLocale) {
+  if (
+    fields.secteursMaritime ||
+    fields.administrationsLocale ||
+    fields.administrations
+  ) {
     if (!fields.pointsEtape) {
       fields.pointsEtape = { id: {} }
     }

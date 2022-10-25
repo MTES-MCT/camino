@@ -226,9 +226,6 @@ const titresRelateFalse = [
   'amodiataires.utilisateurs',
   'administrationsGestionnaires.type',
   'administrationsGestionnaires.utilisateurs',
-  'administrationsLocales',
-  'administrationsLocales.type',
-  'administrationsLocales.utilisateurs',
   'surfaceEtape',
   ...titresActivitesRelateFalse.map(k => `activites.${k}`),
   ...titresDemarchesRelateFalse.map(k => `demarches.${k}`)
@@ -242,11 +239,9 @@ const titres = {
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph},
     administrationsGestionnaires.${administrations.graph},
-    administrationsLocales.${administrations.graph},
     demarches(orderDesc).${titresDemarches.graph},
     forets,
     activites(orderDesc).${titresActivites.graph},
-    references(orderAsc).type
    ]`,
 
   update: {

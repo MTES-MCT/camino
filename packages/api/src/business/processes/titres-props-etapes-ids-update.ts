@@ -1,17 +1,9 @@
-import { IPropId, IPropsTitreEtapesIds } from '../../types'
+import { IPropsTitreEtapesIds, propsTitreEtapeIdKeys } from '../../types'
 
 import { titresGet, titreUpdate } from '../../database/queries/titres'
 import { titrePropTitreEtapeFind } from '../rules/titre-prop-etape-find'
 import { objectsDiffer } from '../../tools/index'
 import { userSuper } from '../../database/user-super'
-
-export const titrePropsEtapes = [
-  'points',
-  'titulaires',
-  'amodiataires',
-  'substances',
-  'surface'
-] as IPropId[]
 
 export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
   console.info()
@@ -37,7 +29,7 @@ export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
   const titresPropsEtapesIdsUpdated = [] as string[]
 
   for (const titre of titres) {
-    const propsTitreEtapesIds = titrePropsEtapes.reduce(
+    const propsTitreEtapesIds = propsTitreEtapeIdKeys.reduce(
       (propsTitreEtapesIds: IPropsTitreEtapesIds, propId) => {
         const titreEtape = titrePropTitreEtapeFind(
           propId,

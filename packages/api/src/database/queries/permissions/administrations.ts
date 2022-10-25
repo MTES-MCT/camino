@@ -107,9 +107,19 @@ const administrationsLocalesModify = (
   administrationId: AdministrationId,
   titreAlias: string
 ) => {
+  // q.leftJoin('titres_etapes as t_e', b => {
+  //   b.on(
+  //     knex.raw('?? ->> ? = ??', [
+  //       `${titreAlias}.propsTitreEtapesIds`,
+  //       'points',
+  //       "t_e.id",
+  //     ])
+  //   )
+  //   b.on(knex.raw(`t_e.administrations_locales @> '"${administrationId}"'::jsonb`))
+  // })
   q.joinRaw(
-    `left join titres_etapes on titres_etapes.id = "${titreAlias}"."props_titre_etapes_ids" ->> 'points'`
-  ).whereRaw(`administrations_locales @> '"${administrationId}"'::jsonb`)
+    `left join titres_etapes as t_e on t_e.id = "${titreAlias}"."props_titre_etapes_ids" ->> 'points' and t_e.administrations_locales @> '"${administrationId}"'::jsonb`
+  )
 }
 
 const administrationsActivitesModify = (
@@ -182,7 +192,7 @@ const administrationsTitresQuery = (
     }
 
     if (isLocale) {
-      c.orWhereNotNull('titres_etapes.administrations_locales')
+      c.orWhereNotNull('t_e.administrations_locales')
     }
   })
 

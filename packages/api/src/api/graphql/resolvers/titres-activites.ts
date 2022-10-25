@@ -244,7 +244,7 @@ const activiteDeposer = async (
           titulaires: { id: {} },
           amodiataires: { id: {} },
           administrationsGestionnaires: { activitesTypesEmails: { id: {} } },
-          administrationsLocales: { activitesTypesEmails: { id: {} } }
+          pointsEtape: { id: {} }
         }
       },
       userSuper

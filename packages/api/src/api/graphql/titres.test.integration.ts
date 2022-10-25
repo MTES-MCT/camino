@@ -62,7 +62,7 @@ const titreEtapesPubliques: ITitre = {
   administrationsGestionnaires: [
     Administrations[ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]
   ],
-  propsTitreEtapesIds: { administrations: 'titre-id-demarche-id-dpu' },
+  propsTitreEtapesIds: { points: 'titre-id-demarche-id-dpu' },
   demarches: [
     {
       id: newDemarcheId('titre-id-demarche-id'),
@@ -149,13 +149,13 @@ const titreEtapesPubliques: ITitre = {
   ]
 }
 
-const titreWithActiviteGrp = {
+const titreWithActiviteGrp: ITitre = {
   id: 'titre-id',
   nom: 'mon titre',
   domaineId: 'm',
   typeId: 'axm',
   publicLecture: true,
-  propsTitreEtapesIds: { administrations: 'titre-id-demarche-id-dpu' },
+  propsTitreEtapesIds: { points: 'titre-id-demarche-id-dpu' },
   administrationsGestionnaires: [
     Administrations[ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']]
   ],
@@ -209,14 +209,15 @@ const titreWithActiviteGrp = {
       ]
     }
   ]
-} as ITitre
+}
 
-const titreActivites = {
+const titreActivites: ITitre = {
   id: 'titre-id',
   nom: 'mon titre',
   domaineId: 'm',
   typeId: 'arm',
   publicLecture: true,
+  propsTitreEtapesIds: {},
   activites: [
     {
       id: 'titre-id-activites-oct',
@@ -276,7 +277,7 @@ const titreActivites = {
       ]
     }
   ]
-} as ITitre
+}
 describe('titre', () => {
   const titreQuery = queryImport('titre')
 
@@ -306,7 +307,7 @@ describe('titre', () => {
     expect(res.body.data).toMatchObject({ titre: null })
   })
 
-  test('ne peut pas voir que les démarches qui sont en "lecture publique" (utilisateur anonyme)', async () => {
+  test('ne peut voir que les démarches qui sont en "lecture publique" (utilisateur anonyme)', async () => {
     await titreCreate(titreDemarchesPubliques, {})
     const res = await graphQLCall(titreQuery, { id: 'titre-id' })
 

@@ -51,7 +51,7 @@ class TitresEtapes extends Model {
       archive: { type: 'boolean' },
       substances: { type: ['array', 'null'] },
       secteursMaritime: { type: ['array', 'null'] },
-      administrationsLocale: { type: ['array', 'null'] }
+      administrationsLocales: { type: ['array', 'null'] }
     }
   }
 

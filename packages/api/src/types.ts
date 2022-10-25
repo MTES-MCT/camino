@@ -80,15 +80,20 @@ interface IColonne<T> {
   groupBy?: boolean | string[]
 }
 
+export const propsTitreEtapeIdKeys = [
+  'points',
+  'titulaires',
+  'amodiataires',
+  'substances',
+  'surface'
+] as const
+export type PropsTitreEtapeIdKeys = typeof propsTitreEtapeIdKeys[number]
+
 type IPropId =
-  | 'points'
-  | 'titulaires'
-  | 'amodiataires'
+  | PropsTitreEtapeIdKeys
   | 'administrationsLocales'
-  | 'substances'
   | 'communes'
   | 'forets'
-  | 'surface'
 
 type ITitreColonneId =
   | 'nom'
@@ -149,12 +154,12 @@ interface IContenu {
   [sectionId: string]: IContenuElement
 }
 
-interface IPropsTitreEtapesIds {
-  [elementId: string]: string
+type IPropsTitreEtapesIds = {
+  [key in PropsTitreEtapeIdKeys]?: string
 }
 
 interface IContenusTitreEtapesIds {
-  [sectionId: string]: IPropsTitreEtapesIds
+  [sectionId: string]: { [key: string]: string }
 }
 
 interface IHeritageProps {

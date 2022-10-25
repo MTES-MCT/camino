@@ -407,7 +407,7 @@ export const postTitreLiaisons = async (
     {
       fields: {
         administrationsGestionnaires: { id: {} },
-        administrationsLocales: { id: {} },
+        pointsEtape: { id: {} },
         demarches: { id: {} }
       }
     },
@@ -421,12 +421,7 @@ export const postTitreLiaisons = async (
   }
 
   const administrations = titreAdministrationsGet(titre)
-  if (
-    !canLinkTitres(
-      user,
-      administrations.map(({ id }) => id)
-    )
-  )
+  if (!canLinkTitres(user, administrations))
     throw new Error('droits insuffisants')
 
   if (!titre.demarches) {
