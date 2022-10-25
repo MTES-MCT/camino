@@ -17,6 +17,7 @@ import {
   getFacadesComputed,
   SecteursMaritimes
 } from 'camino-common/src/static/facades'
+import { Administrations } from 'camino-common/src/static/administrations'
 
 const getFacadesMaritimeCell = (
   secteursMaritime: SecteursMaritimes[],
@@ -91,7 +92,7 @@ export const titresTableFormat = (titres: ITitre[]) =>
       departements: departements.join(separator),
       regions: regions.join(separator),
       administrations_noms: titre
-        .administrations!.map(a => a.nom)
+        .administrations!.map(id => Administrations[id].nom)
         .join(separator),
       titulaires_noms: titre.titulaires!.map(e => e.nom).join(separator),
       titulaires_adresses: titre
@@ -156,7 +157,9 @@ const titreGeojsonPropertiesFormat = (titre: ITitre) => {
     ),
     departements: departements.join(separator),
     regions: regions.join(separator),
-    administrations_noms: titre.administrations!.map(a => a.nom),
+    administrations_noms: titre.administrations!.map(
+      id => Administrations[id].nom
+    ),
     titulaires_noms: titre.titulaires!.map(e => e.nom).join(separator) || null,
     titulaires_legal:
       titre

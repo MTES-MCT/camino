@@ -74,7 +74,10 @@ const daily = async () => {
       pointsReferencesCreated,
       titresAdministrationsGestionnairesCreated,
       titresAdministrationsGestionnairesDeleted,
-      titresEtapesAdministrationsLocalesUpdated,
+      titresEtapesAdministrationsLocalesUpdated:
+        titresEtapesAdministrationsLocalesUpdated.map(
+          ({ titreEtapeId }) => titreEtapeId
+        ),
       titresPropsEtapesIdsUpdated,
       titresContenusEtapesIdsUpdated,
       titresCoordonneesUpdated,

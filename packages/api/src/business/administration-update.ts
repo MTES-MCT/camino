@@ -19,7 +19,10 @@ const administrationUpdate = async (administrationId: string) => {
     logsUpdate({
       titresAdministrationsGestionnairesCreated,
       titresAdministrationsGestionnairesDeleted,
-      titresEtapesAdministrationsLocalesUpdated
+      titresEtapesAdministrationsLocalesUpdated:
+        titresEtapesAdministrationsLocalesUpdated.map(
+          ({ titreEtapeId }) => titreEtapeId
+        )
     })
 
     return administrationId

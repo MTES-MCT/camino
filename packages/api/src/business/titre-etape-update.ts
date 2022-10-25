@@ -108,7 +108,10 @@ const titreEtapeUpdate = async (
       titresPhasesUpdated,
       titresPhasesDeleted,
       titresDatesUpdated,
-      titresEtapesAdministrationsLocalesUpdated,
+      titresEtapesAdministrationsLocalesUpdated:
+        titresEtapesAdministrationsLocalesUpdated.map(
+          ({ titreEtapeId }) => titreEtapeId
+        ),
       titresPropsEtapesIdsUpdated,
       titresContenusEtapesIdsUpdated,
       titresCoordonneesUpdated,
