@@ -93,8 +93,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
   }
 
   if (isParentTitre && fields.administrations) {
-    // FIXME fetch pointsEtape ?
-    // graphTitreAdministrationsFormat(fields, 'Locales')
     graphTitreAdministrationsFormat(fields, 'Gestionnaires')
     delete fields.administrations
   }

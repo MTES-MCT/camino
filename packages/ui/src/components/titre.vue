@@ -36,6 +36,7 @@
     <div class="line width-full mb-xl" />
 
     <TitreRepertoire
+      :titreTypeId="titre.type.id"
       :titulaires="titre.titulaires"
       :amodiataires="titre.amodiataires"
       :administrations="titre.administrations"

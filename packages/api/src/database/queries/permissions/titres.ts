@@ -258,18 +258,6 @@ const titresQueryModify = (
     }
   }
 
-  // FIXME C'EST QUOI ÇA ?
-  // masque les administrations associées
-  if (!(isSuper(user) || isAdministration(user))) {
-    q.modifyGraph('administrationsGestionnaires', b => {
-      b.whereRaw('?? is not true', ['associee'])
-    })
-
-    q.modifyGraph('administrationsLocales', b => {
-      b.whereRaw('?? is not true', ['associee'])
-    })
-  }
-
   // visibilité des étapes
   q.modifyGraph('demarches', b => {
     titresDemarchesQueryModify(
