@@ -280,7 +280,6 @@ export const toFiscalite = (
   const departements = Object.keys(article).filter(key =>
     key.startsWith('redevance_departementale')
   )
-  // TODO 2022_07_25 gérer les substances autre que l'or -> redevance_communale_des_mines_substance_unite
   for (const commune of communes) {
     fiscalite.redevanceCommunale += article[commune]?.[annee] ?? 0
   }
@@ -301,6 +300,7 @@ export const toFiscalite = (
 
   return fiscalite
 }
+
 type Reduced =
   | { guyane: true; fiscalite: FiscaliteGuyane }
   | { guyane: false; fiscalite: FiscaliteFrance }
