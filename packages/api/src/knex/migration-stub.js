@@ -1,6 +1,7 @@
-exports.up = knex =>
-  knex.schema.createTable('matable', table => {
-    table.string('id').primary()
-  })
+exports.up = async knex => {
+  await knex.schema.dropTable('nexistepasEtVaFairePlanterLaMigration')
 
-exports.down = knex => knex.schema.dropTable('maTable')
+  return knex.schema.dropTable('nexistepasEtVaFairePlanterLaMigration')
+}
+
+exports.down = () => ({})
