@@ -74,7 +74,6 @@ const titresEtapesRelateTrue = [
   'type',
   'titulaires',
   'amodiataires',
-  'administrations',
   'communes',
   'forets',
   'justificatifs'
@@ -87,7 +86,6 @@ const titresEtapesRelateFalse = [
   'titulaires.documents.type',
   'amodiataires.etablissements',
   'amodiataires.utilisateurs',
-  'administrations.utilisateurs',
   ...documentsRelateFalse.map(k => `documents.${k}`),
   ...documentsRelateFalse.map(k => `justificatifs.${k}`)
 ]
@@ -100,7 +98,6 @@ const titresEtapes = {
     justificatifs.${documents.graph},
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph},
-    administrations.${administrations.graph},
     forets
   ]`,
 
@@ -206,8 +203,7 @@ const titresRelateTrue = [
   'domaine',
   'administrationsGestionnaires',
   ...titresActivitesRelateTrue.map(k => `activites.${k}`),
-  ...titresDemarchesRelateTrue.map(k => `demarches.${k}`),
-  'titresAdministrations'
+  ...titresDemarchesRelateTrue.map(k => `demarches.${k}`)
 ]
 
 const titresRelateFalse = [
@@ -219,7 +215,7 @@ const titresRelateFalse = [
   'communes',
   'forets',
   'substancesEtape',
-  'secteursMaritimeEtape',
+  'pointsEtape',
   'titulaires',
   'titulaires.etablissements',
   'titulaires.utilisateurs',
@@ -230,13 +226,9 @@ const titresRelateFalse = [
   'amodiataires.utilisateurs',
   'administrationsGestionnaires.type',
   'administrationsGestionnaires.utilisateurs',
-  'administrationsLocales',
-  'administrationsLocales.type',
-  'administrationsLocales.utilisateurs',
   'surfaceEtape',
   ...titresActivitesRelateFalse.map(k => `activites.${k}`),
-  ...titresDemarchesRelateFalse.map(k => `demarches.${k}`),
-  'titresAdministrations.type'
+  ...titresDemarchesRelateFalse.map(k => `demarches.${k}`)
 ]
 
 const titres = {
@@ -247,11 +239,9 @@ const titres = {
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph},
     administrationsGestionnaires.${administrations.graph},
-    administrationsLocales.${administrations.graph},
     demarches(orderDesc).${titresDemarches.graph},
     forets,
     activites(orderDesc).${titresActivites.graph},
-    titresAdministrations.${administrations.graph}
    ]`,
 
   update: {

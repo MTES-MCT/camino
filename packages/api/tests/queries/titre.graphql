@@ -24,9 +24,7 @@ fragment titre on Titre {
   }
   surface
   substances
-  administrations {
-    ...administration
-  }
+  administrations
   titulaires {
     ...entreprise
   }
@@ -105,9 +103,7 @@ fragment etape on Etape {
     nom
   }
   statutId
-  administrations {
-    ...administration
-  }
+  administrations
   titulaires {
     ...entreprise
   }
@@ -128,23 +124,6 @@ fragment etape on Etape {
     ...document
   }
   modification
-}
-
-fragment administration on Administration {
-  id
-  nom
-  service
-  adresse1
-  adresse2
-  codePostal
-  commune
-  cedex
-  url
-  telephone
-  email
-  utilisateurs {
-    ...utilisateur
-  }
 }
 
 fragment entreprise on Entreprise {

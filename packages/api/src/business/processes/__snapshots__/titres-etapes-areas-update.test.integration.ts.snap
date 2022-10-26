@@ -36,6 +36,7 @@ Array [
 exports[`titresEtapesAreasUpdate met à jour les communes, forêts et zone du SDOM sur une étape 4`] = `
 Array [
   Object {
+    "administrationsLocales": null,
     "archive": false,
     "communes": Array [
       Object {

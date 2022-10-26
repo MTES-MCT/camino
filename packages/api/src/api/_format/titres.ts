@@ -1,6 +1,5 @@
 import {
   ITitre,
-  IAdministration,
   IGeoJson,
   IFields,
   ISection,
@@ -13,14 +12,16 @@ import {
   geojsonFeatureCollectionPoints
 } from '../../tools/geojson'
 
-import { dupRemove } from '../../tools'
-
-import { administrationFormat } from './administrations'
 import { entrepriseFormat } from './entreprises'
 import { titreActiviteFormat } from './titres-activites'
 import { titreDemarcheFormat } from './titres-demarches'
 import { titreFormatFields } from './_fields'
-import { ADMINISTRATION_TYPES } from 'camino-common/src/static/administrations'
+import {
+  AdministrationId,
+  Administrations,
+  ADMINISTRATION_TYPES
+} from 'camino-common/src/static/administrations'
+import { onlyUnique } from 'camino-common/src/typescript-tools'
 
 const titreTypeSectionsFormat = (
   contenusTitreEtapesIds: IContenusTitreEtapesIds,
@@ -167,8 +168,6 @@ const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
 
   if (fields.administrations) {
     t.administrations = titreAdministrationsGet(t)
-    delete t.administrationsGestionnaires
-    delete t.administrationsLocales
   }
 
   t.titulaires = t.titulaires?.map(entrepriseFormat)
@@ -178,28 +177,25 @@ const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
   return t
 }
 
-export const titreAdministrationsGet = (titre: ITitre): IAdministration[] => {
-  let result: IAdministration[] = []
-  const hasAdministrations =
-    titre.administrationsGestionnaires?.length ||
-    titre.administrationsLocales?.length
-  if (hasAdministrations) {
-    // fusionne administrations gestionnaires et locales
-    const administrations = dupRemove('id', [
-      ...(titre.administrationsGestionnaires || []),
-      ...(titre.administrationsLocales || [])
-    ]) as IAdministration[]
+export const titreAdministrationsGet = (titre: ITitre): AdministrationId[] => {
+  const ids: AdministrationId[] = []
 
-    result = administrations.map(administrationFormat)
+  if (titre.administrationsGestionnaires) {
+    ids.push(...titre.administrationsGestionnaires.map(({ id }) => id))
+  }
+  if (titre.administrationsLocales) {
+    ids.push(...titre.administrationsLocales)
+  }
 
-    result = administrations.sort(
+  return ids
+    .filter(onlyUnique)
+    .map(id => Administrations[id])
+    .sort(
       (a, b) =>
         ADMINISTRATION_TYPES[a.typeId].ordre -
         ADMINISTRATION_TYPES[b.typeId].ordre
     )
-  }
-
-  return result
+    .map(({ id }) => id)
 }
 
 const titresFormat = (titres: ITitre[], fields = titreFormatFields) =>

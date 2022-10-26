@@ -93,7 +93,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
   }
 
   if (isParentTitre && fields.administrations) {
-    graphTitreAdministrationsFormat(fields, 'Locales')
     graphTitreAdministrationsFormat(fields, 'Gestionnaires')
     delete fields.administrations
   }

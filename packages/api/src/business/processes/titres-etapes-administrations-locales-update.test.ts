@@ -1,136 +1,128 @@
 import { titresEtapesAdministrationsLocalesUpdate } from './titres-etapes-administrations-locales-update'
-import {
-  titresEtapesAdministrationsCreate,
-  titreEtapeAdministrationDelete
-} from '../../database/queries/titres-etapes'
-import { titresGet } from '../../database/queries/titres'
-import { administrationsGet } from '../../database/queries/administrations'
-import Administrations from '../../database/models/administrations'
+import { titresEtapesGet } from '../../database/queries/titres-etapes'
 
 import {
-  administrations,
-  titresEtapesCommunes,
   titresEtapesCommunesVides,
-  titresEtapesCommunesMemeCommune,
-  titresEtapesAdministrationLocalesInexistante,
-  titresEtapesAdministrationLocalesExistante,
-  titresArm
+  titresEtapesCommunesMemeCommune
 } from './__mocks__/titres-etapes-administrations-locales-update-etapes'
+import { ICommune, ITitreEtape } from '../../types'
+import { newDemarcheId } from '../../database/models/_format/id-create'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 
 jest.mock('../../database/queries/titres-etapes', () => ({
-  titresEtapesAdministrationsCreate: jest.fn().mockImplementation(a => a),
-  titreEtapeAdministrationDelete: jest.fn().mockImplementation(a => a)
+  titresEtapesGet: jest.fn()
 }))
 
-jest.mock('../../database/queries/titres', () => ({
-  titresGet: jest.fn()
-}))
+jest.mock('../../knex', () => {
+  const mockJest = {
+    update: jest.fn().mockReturnThis(),
+    where: jest.fn().mockReturnThis()
+  }
 
-jest.mock('../../database/queries/administrations', () => ({
-  administrationsGet: jest.fn()
-}))
+  return {
+    knex: jest.fn().mockReturnValue(mockJest)
+  }
+})
 
-const titresGetMock = jest.mocked(titresGet, true)
-
-const administrationsGetMock = jest.mocked(administrationsGet, true)
+const titresEtapesGetMock = jest.mocked(titresEtapesGet, true)
 
 console.info = jest.fn()
 
 describe("administrations d'une étape", () => {
-  test('ajoute 2 administrations dans une étape', async () => {
-    titresGetMock.mockResolvedValue(titresEtapesCommunes)
-    administrationsGetMock.mockResolvedValue(
-      administrations as Administrations[]
-    )
-    const {
-      titresEtapesAdministrationsLocalesCreated,
-      titresEtapesAdministrationsLocalesDeleted
-    } = await titresEtapesAdministrationsLocalesUpdate()
+  test('ajoute des administrations dans deux étapes', async () => {
+    const titresEtapesCommunes: ITitreEtape[] = [
+      {
+        id: 'h-cx-courdemanges-1988-oct01-dpu01',
+        titreDemarcheId: newDemarcheId(),
+        statutId: 'fai',
+        date: '2022-01-01',
+        typeId: 'dpu',
+        communes: [
+          {
+            id: 'paris',
+            nom: 'paris',
+            departementId: '973'
+          }
+        ]
+      },
+      {
+        id: 'h-cx-courdemanges-1988-oct01-dpu01',
+        titreDemarcheId: newDemarcheId(),
+        statutId: 'fai',
+        date: '2022-01-01',
+        typeId: 'aac',
+        communes: [
+          {
+            id: 'issy',
+            nom: 'issy',
+            departementId: '87'
+          }
+        ]
+      }
+    ]
+    titresEtapesGetMock.mockResolvedValue(titresEtapesCommunes)
 
-    expect(titresEtapesAdministrationsLocalesCreated.length).toEqual(2)
-    expect(titresEtapesAdministrationsLocalesDeleted.length).toEqual(0)
+    const { titresEtapesAdministrationsLocalesUpdated } =
+      await titresEtapesAdministrationsLocalesUpdate()
+
+    expect(titresEtapesAdministrationsLocalesUpdated.length).toEqual(2)
   })
 
   test("n'ajoute pas deux fois une administration en doublon ", async () => {
-    titresGetMock.mockResolvedValue(titresEtapesCommunesMemeCommune)
-    administrationsGetMock.mockResolvedValue(
-      administrations as Administrations[]
-    )
-    const {
-      titresEtapesAdministrationsLocalesCreated,
-      titresEtapesAdministrationsLocalesDeleted
-    } = await titresEtapesAdministrationsLocalesUpdate()
+    titresEtapesGetMock.mockResolvedValue(titresEtapesCommunesMemeCommune)
 
-    expect(titresEtapesAdministrationsLocalesCreated.length).toEqual(1)
-    expect(titresEtapesAdministrationsLocalesDeleted.length).toEqual(0)
+    const { titresEtapesAdministrationsLocalesUpdated } =
+      await titresEtapesAdministrationsLocalesUpdate()
 
-    expect(titresEtapesAdministrationsCreate).toHaveBeenCalled()
-    expect(titreEtapeAdministrationDelete).not.toHaveBeenCalled()
+    expect(titresEtapesAdministrationsLocalesUpdated.length).toEqual(1)
   })
 
   test("ne met pas à jour les administrations d'une étape qui n'a pas de commune", async () => {
-    titresGetMock.mockResolvedValue(titresEtapesCommunesVides)
-    administrationsGetMock.mockResolvedValue(
-      administrations as Administrations[]
-    )
-    const {
-      titresEtapesAdministrationsLocalesCreated,
-      titresEtapesAdministrationsLocalesDeleted
-    } = await titresEtapesAdministrationsLocalesUpdate()
+    titresEtapesGetMock.mockResolvedValue(titresEtapesCommunesVides)
 
-    expect(titresEtapesAdministrationsLocalesCreated.length).toEqual(0)
-    expect(titresEtapesAdministrationsLocalesDeleted.length).toEqual(0)
+    const { titresEtapesAdministrationsLocalesUpdated } =
+      await titresEtapesAdministrationsLocalesUpdate()
 
-    expect(titresEtapesAdministrationsCreate).not.toHaveBeenCalled()
-    expect(titreEtapeAdministrationDelete).not.toHaveBeenCalled()
+    expect(titresEtapesAdministrationsLocalesUpdated.length).toEqual(0)
   })
 
   test("n'ajoute pas d'administration si elle existe déjà dans l'étape", async () => {
-    titresGetMock.mockResolvedValue(titresEtapesAdministrationLocalesExistante)
-    administrationsGetMock.mockResolvedValue(
-      administrations as Administrations[]
-    )
-    const {
-      titresEtapesAdministrationsLocalesCreated,
-      titresEtapesAdministrationsLocalesDeleted
-    } = await titresEtapesAdministrationsLocalesUpdate()
+    const titreEtape: ITitreEtape = {
+      id: 'h-cx-courdemanges-1988-oct01-dpu01',
+      titreDemarcheId: newDemarcheId(),
+      statutId: 'fai',
+      date: '2022-01-01',
+      typeId: 'dpu',
+      communes: [],
+      administrationsLocales: [ADMINISTRATION_IDS['DREAL - BRETAGNE']]
+    }
+    titresEtapesGetMock.mockResolvedValue([titreEtape])
 
-    expect(titresEtapesAdministrationsLocalesCreated.length).toEqual(0)
-    expect(titresEtapesAdministrationsLocalesDeleted.length).toEqual(0)
+    const { titresEtapesAdministrationsLocalesUpdated } =
+      await titresEtapesAdministrationsLocalesUpdate()
+
+    expect(titresEtapesAdministrationsLocalesUpdated.length).toEqual(1)
+    expect(
+      titresEtapesAdministrationsLocalesUpdated[0].administrations
+    ).toHaveLength(0)
   })
 
   test("supprime une administration si l'étape ne la contient plus dans ses communes", async () => {
-    titresGetMock.mockResolvedValue(
-      titresEtapesAdministrationLocalesInexistante
-    )
-    administrationsGetMock.mockResolvedValue(
-      administrations as Administrations[]
-    )
-    const {
-      titresEtapesAdministrationsLocalesCreated,
-      titresEtapesAdministrationsLocalesDeleted
-    } = await titresEtapesAdministrationsLocalesUpdate()
+    const titreEtape: ITitreEtape = {
+      statutId: 'fai',
+      date: '2022-01-01',
+      id: 'h-cx-courdemanges-1988-oct01-dpu01',
+      titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+      typeId: 'dpu',
+      communes: [] as ICommune[],
+      administrationsLocales: ['ope-cacem-01']
+    }
 
-    expect(titresEtapesAdministrationsLocalesCreated.length).toEqual(0)
-    expect(titresEtapesAdministrationsLocalesDeleted.length).toEqual(1)
-  })
+    titresEtapesGetMock.mockResolvedValue([titreEtape])
 
-  test("ajoute l'option 'associee' à la Déal Guyane sur une ARM", async () => {
-    titresGetMock.mockResolvedValue(titresArm)
-    administrationsGetMock.mockResolvedValue(
-      administrations as Administrations[]
-    )
-    const {
-      titresEtapesAdministrationsLocalesCreated,
-      titresEtapesAdministrationsLocalesDeleted
-    } = await titresEtapesAdministrationsLocalesUpdate()
+    const { titresEtapesAdministrationsLocalesUpdated } =
+      await titresEtapesAdministrationsLocalesUpdate()
 
-    expect(titresEtapesAdministrationsLocalesCreated.length).toEqual(2)
-    expect(titresEtapesAdministrationsLocalesDeleted.length).toEqual(0)
-    expect(
-      titresEtapesAdministrationsLocalesCreated.find(
-        ({ administrationId }) => administrationId === 'dea-guyane-01'
-      )!.associee
-    ).toBeTruthy()
+    expect(titresEtapesAdministrationsLocalesUpdated.length).toEqual(1)
   })
 })

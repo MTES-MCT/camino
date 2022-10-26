@@ -89,13 +89,6 @@ const administrationsQueryModify = (
       )
   )
 
-  q.modifyGraph('localeTitres', a =>
-    titresQueryModify(a as QueryBuilder<Titres, Titres | Titres[]>, user)
-      // on group by administrationId au cas où il y a une aggrégation
-      // dans la requête de titre (ex : calc activités)
-      .groupBy('titres.id', 'titresAdministrationsLocales.administrationId')
-  )
-
   q.modifyGraph('utilisateurs', b => {
     utilisateursQueryModify(
       b as QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>,
@@ -114,16 +107,9 @@ const administrationsLocalesModify = (
   administrationId: AdministrationId,
   titreAlias: string
 ) => {
-  q.leftJoin('titresAdministrationsLocales as t_al', b => {
-    b.on(
-      knex.raw('?? ->> ? = ??', [
-        `${titreAlias}.propsTitreEtapesIds`,
-        'administrations',
-        't_al.titreEtapeId'
-      ])
-    )
-    b.on(knex.raw('?? = ?', ['t_al.administrationId', administrationId]))
-  })
+  q.joinRaw(
+    `left join titres_etapes as t_e on t_e.id = "${titreAlias}"."props_titre_etapes_ids" ->> 'points' and t_e.administrations_locales @> '"${administrationId}"'::jsonb`
+  )
 }
 
 const administrationsActivitesModify = (
@@ -196,7 +182,7 @@ const administrationsTitresQuery = (
     }
 
     if (isLocale) {
-      c.orWhereNotNull('t_al.administrationId')
+      c.orWhereNotNull('t_e.administrations_locales')
     }
   })
 

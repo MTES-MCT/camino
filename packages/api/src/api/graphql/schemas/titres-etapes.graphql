@@ -71,7 +71,7 @@ type Etape {
   amodiataires: [Entreprise]
 
   "Administrations en charge du titre"
-  administrations: [Administration]
+  administrations: [String]
 
   "Territoires du titre"
   communes: [Commune]

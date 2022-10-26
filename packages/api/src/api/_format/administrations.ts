@@ -16,9 +16,6 @@ export const administrationFormat = (administration: IAdministration) => {
     administration.gestionnaireTitres &&
     titresFormat(administration.gestionnaireTitres)
 
-  administration.localeTitres =
-    administration.localeTitres && titresFormat(administration.localeTitres)
-
   const adminis = Administrations[administration.id]
 
   for (const key of Object.keys(adminis)) {

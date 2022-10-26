@@ -47,8 +47,7 @@ const titreFields = {
   points: { id: {} },
   communes: { id: {} },
   forets: { id: {} },
-  secteursMaritimeEtape: { id: {} },
-  administrationsLocales: { id: {} },
+  pointsEtape: { id: {} },
   administrationsGestionnaires: { id: {} }
 }
 

@@ -13,16 +13,16 @@ const administrationUpdate = async (administrationId: string) => {
       titresAdministrationsGestionnairesDeleted = []
     } = await titresAdministrationsGestionnairesUpdate()
 
-    const {
-      titresEtapesAdministrationsLocalesCreated,
-      titresEtapesAdministrationsLocalesDeleted
-    } = await titresEtapesAdministrationsLocalesUpdate()
+    const { titresEtapesAdministrationsLocalesUpdated } =
+      await titresEtapesAdministrationsLocalesUpdate()
 
     logsUpdate({
       titresAdministrationsGestionnairesCreated,
       titresAdministrationsGestionnairesDeleted,
-      titresEtapesAdministrationsLocalesCreated,
-      titresEtapesAdministrationsLocalesDeleted
+      titresEtapesAdministrationsLocalesUpdated:
+        titresEtapesAdministrationsLocalesUpdated.map(
+          ({ titreEtapeId }) => titreEtapeId
+        )
     })
 
     return administrationId

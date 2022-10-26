@@ -25,7 +25,6 @@ type Administration {
   utilisateurs: [Utilisateur]
   emailsModification: Boolean
   gestionnaireTitres: [Titre]
-  localeTitres: [Titre]
   titresTypesTitresStatuts: [TitreTypeTitreStatut]
   titresTypesEtapesTypes: [TitreTypeEtapeType]
   activitesTypes: [ActiviteType]

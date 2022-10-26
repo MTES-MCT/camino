@@ -10,7 +10,7 @@
       <span>{{ administration.nom }}</span>
     </template>
 
-    <div v-if="content" class="px-m pt-m">
+    <div class="px-m pt-m">
       <div v-if="administration.service" class="large-blobs">
         <div class="large-blob-1-6">
           <h5>Service</h5>
@@ -86,6 +86,7 @@
 </template>
 
 <script>
+import { Administrations } from 'camino-common/src/static/administrations'
 import Accordion from '../_ui/accordion.vue'
 
 export default {
@@ -94,9 +95,9 @@ export default {
   },
 
   props: {
-    administration: {
-      type: Object,
-      default: () => {}
+    administrationId: {
+      type: String,
+      required: true
     }
   },
 
@@ -109,17 +110,8 @@ export default {
   },
 
   computed: {
-    content() {
-      return (
-        this.administration.legalForme ||
-        this.administration.adresse1 ||
-        this.administration.adresse2 ||
-        this.administration.codePostal ||
-        this.administration.commune ||
-        this.administration.telephone ||
-        this.administration.email ||
-        this.administration.url
-      )
+    administration() {
+      return Administrations[this.administrationId]
     }
   },
 

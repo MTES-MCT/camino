@@ -1,179 +1,75 @@
-import {
-  ITitre,
-  IAdministration,
-  ITitreAdministrationLocale,
-  ITitreEtape,
-  ICommune
-} from '../../types'
+import { IAdministration, ITitreEtape, ICommune } from '../../types'
 
-import {
-  titresEtapesAdministrationsCreate,
-  titreEtapeAdministrationDelete
-} from '../../database/queries/titres-etapes'
-import { titresGet } from '../../database/queries/titres'
+import { titresEtapesGet } from '../../database/queries/titres-etapes'
 import { userSuper } from '../../database/user-super'
-import { Departements } from 'camino-common/src/static/departement'
-import { administrationsGet } from '../../database/queries/administrations'
-import { administrationFormat } from '../../api/_format/administrations'
-import { isAssociee } from 'camino-common/src/static/administrationsTitresTypes'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-
-const titreEtapeAdministrationsLocalesCreatedBuild = (
-  titreEtapeAdministrationsLocalesOld: IAdministration[] | null | undefined,
-  titreEtapeAdministrationsLocales: ITitreAdministrationLocale[]
-) =>
-  titreEtapeAdministrationsLocales.reduce(
-    (queries: ITitreAdministrationLocale[], titreEtapeAdministrationLocale) => {
-      if (
-        !titreEtapeAdministrationsLocalesOld ||
-        !titreEtapeAdministrationsLocalesOld.find(
-          ({ id: idOld, associee }) =>
-            idOld === titreEtapeAdministrationLocale.administrationId &&
-            associee === titreEtapeAdministrationLocale.associee
-        )
-      ) {
-        queries.push(titreEtapeAdministrationLocale)
-      }
-
-      return queries
-    },
-    []
-  )
-
-const titreEtapeAdministrationsLocalesToDeleteBuild = (
-  titreEtapeAdministrationsLocalesOld: IAdministration[],
-  titreEtapeAdministrationsLocales: ITitreAdministrationLocale[],
-  titreEtapeId: string
-) =>
-  titreEtapeAdministrationsLocalesOld.reduce(
-    (
-      queries: ITitreAdministrationLocale[],
-      { id: idOld, associee: associeeOld }
-    ) => {
-      if (
-        !titreEtapeAdministrationsLocales.find(
-          ({ administrationId: idNew, associee: associeeNew }) =>
-            idNew === idOld && associeeOld === associeeNew
-        )
-      ) {
-        queries.push({ titreEtapeId, administrationId: idOld })
-      }
-
-      return queries
-    },
-    []
-  )
+import {
+  DepartementId,
+  Departements
+} from 'camino-common/src/static/departement'
+import {
+  getDepartementsBySecteurs,
+  SecteursMaritimes
+} from 'camino-common/src/static/facades'
+import { onlyUnique } from 'camino-common/src/typescript-tools'
+import {
+  AdministrationId,
+  sortedAdministrations
+} from 'camino-common/src/static/administrations'
+import { knex } from '../../knex'
 
 interface ITitreEtapeAdministrationLocale {
-  titreEtapeAdministrationsLocalesOld: IAdministration[] | null | undefined
-  titreEtapeAdministrationsLocales: ITitreAdministrationLocale[]
+  titreEtapeAdministrationsLocalesOld: AdministrationId[]
+  titreEtapeAdministrationsLocales: AdministrationId[]
   titreEtapeId: string
 }
 
-const titresEtapesAdministrationsLocalesToCreateAndDeleteBuild = (
-  titresEtapesAdministrationsLocales: ITitreEtapeAdministrationLocale[]
-) =>
-  Object.values(titresEtapesAdministrationsLocales).reduce(
-    (
-      {
-        titresEtapesAdministrationsLocalesToCreate,
-        titresEtapesAdministrationsLocalesToDelete
-      }: {
-        titresEtapesAdministrationsLocalesToCreate: ITitreAdministrationLocale[]
-        titresEtapesAdministrationsLocalesToDelete: ITitreAdministrationLocale[]
-      },
-      {
-        titreEtapeAdministrationsLocalesOld,
-        titreEtapeAdministrationsLocales,
-        titreEtapeId
-      }
-    ) => {
-      titresEtapesAdministrationsLocalesToCreate.push(
-        ...titreEtapeAdministrationsLocalesCreatedBuild(
-          titreEtapeAdministrationsLocalesOld,
-          titreEtapeAdministrationsLocales
-        )
-      )
+// calcule tous les départements d'une étape
+const titreEtapeAdministrationsDepartementsBuild = (
+  communes: ICommune[] | undefined | null,
+  secteursMaritimes: SecteursMaritimes[] | undefined | null
+): DepartementId[] => {
+  if (!communes) {
+    throw new Error('les communes ne sont pas chargées')
+  }
 
-      if (titreEtapeAdministrationsLocalesOld) {
-        titresEtapesAdministrationsLocalesToDelete.push(
-          ...titreEtapeAdministrationsLocalesToDeleteBuild(
-            titreEtapeAdministrationsLocalesOld,
-            titreEtapeAdministrationsLocales,
-            titreEtapeId
-          )
-        )
-      }
+  const departements = communes
+    .map(({ departementId }) => departementId)
+    .filter((departementId): departementId is DepartementId => !!departementId)
 
-      return {
-        titresEtapesAdministrationsLocalesToCreate,
-        titresEtapesAdministrationsLocalesToDelete
-      }
-    },
-    {
-      titresEtapesAdministrationsLocalesToCreate: [],
-      titresEtapesAdministrationsLocalesToDelete: []
-    }
-  )
+  if (secteursMaritimes) {
+    departements.push(...getDepartementsBySecteurs(secteursMaritimes))
+  }
 
-// calcule tous les départements et les régions d'une étape
-const titreEtapeAdministrationsRegionsAndDepartementsBuild = (
-  communes: ICommune[] | undefined | null
-) =>
-  communes
-    ? communes.reduce(
-        ({ titreDepartementsIds, titreRegionsIds }, commune) => {
-          if (commune.departementId) {
-            titreDepartementsIds.add(commune.departementId)
-
-            const departement = Departements[commune.departementId]
-            titreRegionsIds.add(departement.regionId)
-          }
-
-          return {
-            titreDepartementsIds,
-            titreRegionsIds
-          }
-        },
-        { titreRegionsIds: new Set(), titreDepartementsIds: new Set() }
-      )
-    : { titreRegionsIds: new Set(), titreDepartementsIds: new Set() }
+  return departements.filter(onlyUnique)
+}
 
 const titreEtapeAdministrationsLocalesBuild = (
-  titreTypeId: TitreTypeId,
-  titreAdministrationIds: string[] | null | undefined,
-  titreEtape: ITitreEtape,
-  administrations: IAdministration[]
-) => {
-  const { titreDepartementsIds, titreRegionsIds } =
-    titreEtapeAdministrationsRegionsAndDepartementsBuild(titreEtape.communes)
+  titreEtape: ITitreEtape
+): AdministrationId[] => {
+  const titreDepartementsIds = titreEtapeAdministrationsDepartementsBuild(
+    titreEtape.communes,
+    titreEtape.secteursMaritime
+  )
+  const titreRegionsIds = titreDepartementsIds
+    .map(departementId => Departements[departementId].regionId)
+    .filter(onlyUnique)
 
   // calcule toutes les administrations qui couvrent ces départements et régions
-  return administrations.reduce(
+  return sortedAdministrations.reduce(
     (
-      titreEtapeAdministrations: ITitreAdministrationLocale[],
+      titreEtapeAdministrations: AdministrationId[],
       administration: IAdministration
     ) => {
-      // c’est une administration locale si le département ou la région de l'administration sont ceux de l’étape
-      // ou si c’est une administration rattachée directement sur le titre
+      // si le département ou la région de l'administration ne fait pas partie de ceux de l'étape
       const isAdministrationLocale =
         (administration.departementId &&
-          titreDepartementsIds.has(administration.departementId)) ||
+          titreDepartementsIds.includes(administration.departementId)) ||
         (administration.regionId &&
-          titreRegionsIds.has(administration.regionId)) ||
-        titreAdministrationIds?.includes(administration.id)
+          titreRegionsIds.includes(administration.regionId))
       // alors l'administration n'est pas rattachée à l'étape
       if (!isAdministrationLocale) return titreEtapeAdministrations
 
-      const titreEtapeAdministration = {
-        titreEtapeId: titreEtape.id,
-        administrationId: administration.id
-      } as ITitreAdministrationLocale
-
-      const associee = isAssociee(administration.id, titreTypeId)
-
-      titreEtapeAdministration.associee = associee ? true : null
-      titreEtapeAdministrations.push(titreEtapeAdministration)
+      titreEtapeAdministrations.push(administration.id)
 
       return titreEtapeAdministrations
     },
@@ -182,120 +78,77 @@ const titreEtapeAdministrationsLocalesBuild = (
 }
 
 const titresEtapesAdministrationsLocalesBuild = (
-  titres: ITitre[],
-  administrations: IAdministration[]
-) =>
-  titres.reduce(
-    (
-      titresEtapesAdministrationsLocales: ITitreEtapeAdministrationLocale[],
-      titre
-    ) =>
-      titre.demarches!.reduce(
-        (titresEtapesAdministrationsLocales, titreDemarche) =>
-          titreDemarche.etapes!.reduce(
-            (titresEtapesAdministrationsLocales, titreEtape) => {
-              const titreEtapeAdministrationsLocales =
-                titreEtapeAdministrationsLocalesBuild(
-                  titre.typeId,
-                  titre.titresAdministrations?.map(({ id }) => id),
-                  titreEtape,
-                  administrations
-                ) as ITitreAdministrationLocale[]
+  etapes: ITitreEtape[]
+): ITitreEtapeAdministrationLocale[] =>
+  etapes.reduce<ITitreEtapeAdministrationLocale[]>(
+    (titresEtapesAdministrationsLocales, titreEtape) => {
+      const titreEtapeAdministrationsLocales =
+        titreEtapeAdministrationsLocalesBuild(titreEtape)
 
-              titresEtapesAdministrationsLocales.push({
-                titreEtapeAdministrationsLocalesOld: titreEtape.administrations,
-                titreEtapeAdministrationsLocales,
-                titreEtapeId: titreEtape.id
-              })
+      titresEtapesAdministrationsLocales.push({
+        titreEtapeAdministrationsLocalesOld:
+          titreEtape.administrationsLocales?.sort() ?? [],
+        titreEtapeAdministrationsLocales:
+          titreEtapeAdministrationsLocales.sort(),
+        titreEtapeId: titreEtape.id
+      })
 
-              return titresEtapesAdministrationsLocales
-            },
-            titresEtapesAdministrationsLocales
-          ),
-        titresEtapesAdministrationsLocales
-      ),
+      return titresEtapesAdministrationsLocales
+    },
     []
   )
 
 export const titresEtapesAdministrationsLocalesUpdate = async (
-  titresIds?: string[]
+  titresEtapesIds?: string[]
 ) => {
   console.info()
   console.info('administrations locales associées aux étapes…')
 
-  const titres = await titresGet(
-    { ids: titresIds },
-    {
-      fields: {
-        titresAdministrations: { id: {} },
-        demarches: {
-          etapes: {
-            administrations: { id: {} },
-            communes: { id: {} }
-          }
-        }
-      }
-    },
+  const etapes = await titresEtapesGet(
+    { titresEtapesIds },
+    { fields: { communes: { id: {} } } },
     userSuper
   )
+  const titresEtapesAdministrationsLocalesUpdated: {
+    titreEtapeId: string
+    administrations: AdministrationId[]
+  }[] = []
 
-  const administrations = await administrationsGet({}, userSuper)
+  if (etapes) {
+    const titresEtapesAdministrationsLocales =
+      titresEtapesAdministrationsLocalesBuild(etapes)
 
-  // parcourt les étapes à partir des titres
-  // car on a besoin de titre.domaineId
-  const titresEtapesAdministrationsLocales =
-    titresEtapesAdministrationsLocalesBuild(
-      titres,
-      administrations.map(administrationFormat)
-    )
-
-  const {
-    titresEtapesAdministrationsLocalesToCreate,
-    titresEtapesAdministrationsLocalesToDelete
-  } = titresEtapesAdministrationsLocalesToCreateAndDeleteBuild(
-    titresEtapesAdministrationsLocales
-  )
-
-  let titresEtapesAdministrationsLocalesCreated =
-    [] as ITitreAdministrationLocale[]
-  const titresEtapesAdministrationsLocalesDeleted =
-    [] as ITitreAdministrationLocale[]
-
-  if (titresEtapesAdministrationsLocalesToDelete.length) {
     for (const {
       titreEtapeId,
-      administrationId
-    } of titresEtapesAdministrationsLocalesToDelete) {
-      await titreEtapeAdministrationDelete(titreEtapeId, administrationId)
-
-      console.info(
-        'titre / démarche / étape : administration locale (suppression) ->',
-        `${titreEtapeId}: ${administrationId}`
-      )
-
-      titresEtapesAdministrationsLocalesDeleted.push({
-        titreEtapeId,
-        administrationId
-      })
+      titreEtapeAdministrationsLocales,
+      titreEtapeAdministrationsLocalesOld
+    } of titresEtapesAdministrationsLocales) {
+      if (
+        titreEtapeAdministrationsLocales.length !==
+          titreEtapeAdministrationsLocalesOld.length ||
+        titreEtapeAdministrationsLocales.some(
+          (a, index) => a !== titreEtapeAdministrationsLocalesOld[index]
+        )
+      ) {
+        await knex('titres_etapes')
+          .update({
+            administrationsLocales: JSON.stringify(
+              titreEtapeAdministrationsLocales
+            )
+          })
+          .where('id', titreEtapeId)
+        console.info(
+          `titres / démarches / étapes ${titreEtapeId} : administrations locales (modification) -> ${titreEtapeAdministrationsLocalesOld.join(
+            ', '
+          )} | ${titreEtapeAdministrationsLocales.join(', ')}`
+        )
+        titresEtapesAdministrationsLocalesUpdated.push({
+          titreEtapeId,
+          administrations: titreEtapeAdministrationsLocales
+        })
+      }
     }
   }
 
-  if (titresEtapesAdministrationsLocalesToCreate.length) {
-    titresEtapesAdministrationsLocalesCreated =
-      await titresEtapesAdministrationsCreate(
-        titresEtapesAdministrationsLocalesToCreate
-      )
-
-    console.info(
-      'titres / démarches / étapes : administrations locales (création) ->',
-      titresEtapesAdministrationsLocalesCreated
-        .map(tea => JSON.stringify(tea))
-        .join(', ')
-    )
-  }
-
-  return {
-    titresEtapesAdministrationsLocalesCreated,
-    titresEtapesAdministrationsLocalesDeleted
-  }
+  return { titresEtapesAdministrationsLocalesUpdated }
 }

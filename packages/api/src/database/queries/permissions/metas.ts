@@ -59,7 +59,7 @@ const administrationsEtapesTypesPropsQuery = (
       )
     })
     .whereExists(
-      administrationsTitresQuery(administrationId, 'titresModification', {
+      administrationsTitresQuery(administrationId, 'titres_modification', {
         isGestionnaire: true,
         isLocale: true
       })

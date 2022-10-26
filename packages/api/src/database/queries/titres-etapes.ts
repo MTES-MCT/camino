@@ -1,6 +1,5 @@
 import {
   ITitreEtape,
-  ITitreAdministrationLocale,
   IFields,
   IUtilisateur,
   ITitreEtapeJustificatif
@@ -11,7 +10,6 @@ import { fieldsFormat } from './graph/fields-format'
 
 import TitresEtapes, { DBTitresEtapes } from '../models/titres-etapes'
 import TitresEtapesJustificatifs from '../models/titres-etapes-justificatifs'
-import TitresAdministrationsLocales from '../models/titres-administrations-locales'
 import { titresEtapesQueryModify } from './permissions/titres-etapes'
 import {
   createJournalCreate,
@@ -67,7 +65,7 @@ const titresEtapesGet = async (
   } = {},
   { fields }: { fields?: IFields },
   user: IUtilisateur | null | undefined
-) => {
+): Promise<ITitreEtape[]> => {
   const q = titresEtapesQueryBuild({ fields }, user)
 
   if (titresEtapesIds) {
@@ -138,26 +136,11 @@ const titresEtapesJustificatifsUpsert = async (
     insertMissing: true
   })
 
-const titresEtapesAdministrationsCreate = async (
-  titresEtapesAdministrations: ITitreAdministrationLocale[]
-) => TitresAdministrationsLocales.query().insert(titresEtapesAdministrations)
-
-const titreEtapeAdministrationDelete = async (
-  titreEtapeId: string,
-  administrationId: string
-) =>
-  TitresAdministrationsLocales.query()
-    .delete()
-    .where('titreEtapeId', titreEtapeId)
-    .andWhere('administrationId', administrationId)
-
 export {
   titresEtapesGet,
   titreEtapeGet,
   titreEtapeCreate,
   titreEtapeUpdate,
   titreEtapeUpsert,
-  titresEtapesJustificatifsUpsert,
-  titresEtapesAdministrationsCreate,
-  titreEtapeAdministrationDelete
+  titresEtapesJustificatifsUpsert
 }

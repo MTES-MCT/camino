@@ -201,8 +201,9 @@ async function intersectSecteursMaritime(
     console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
   }
 
-  const secteurMaritimeNew: SecteursMaritimes[] =
-    secteurMaritimeIds.data.map(getSecteurMaritime)
+  const secteurMaritimeNew: SecteursMaritimes[] = secteurMaritimeIds.data
+    .map(getSecteurMaritime)
+    .sort()
   if (
     titreEtape.secteursMaritime?.length !== secteurMaritimeNew.length ||
     titreEtape.secteursMaritime.some(

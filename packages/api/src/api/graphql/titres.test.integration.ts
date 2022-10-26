@@ -5,7 +5,7 @@ import {
   ADMINISTRATION_IDS,
   Administrations
 } from 'camino-common/src/static/administrations'
-import { IAdministration, ITitre } from '../../types'
+import { ITitre } from '../../types'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 
 console.info = jest.fn()
@@ -62,7 +62,7 @@ const titreEtapesPubliques: ITitre = {
   administrationsGestionnaires: [
     Administrations[ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]
   ],
-  propsTitreEtapesIds: { administrations: 'titre-id-demarche-id-dpu' },
+  propsTitreEtapesIds: { points: 'titre-id-demarche-id-dpu' },
   demarches: [
     {
       id: newDemarcheId('titre-id-demarche-id'),
@@ -142,20 +142,20 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: '2020-02-02',
-          administrations: [{ id: 'dea-guyane-01' }] as IAdministration[]
+          administrationsLocales: ['dea-guyane-01']
         }
       ]
     }
   ]
 }
 
-const titreWithActiviteGrp = {
+const titreWithActiviteGrp: ITitre = {
   id: 'titre-id',
   nom: 'mon titre',
   domaineId: 'm',
   typeId: 'axm',
   publicLecture: true,
-  propsTitreEtapesIds: { administrations: 'titre-id-demarche-id-dpu' },
+  propsTitreEtapesIds: { points: 'titre-id-demarche-id-dpu' },
   administrationsGestionnaires: [
     Administrations[ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']]
   ],
@@ -204,19 +204,20 @@ const titreWithActiviteGrp = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: '2020-02-02',
-          administrations: [{ id: 'dea-guyane-01' }] as IAdministration[]
+          administrationsLocales: ['dea-guyane-01']
         }
       ]
     }
   ]
-} as ITitre
+}
 
-const titreActivites = {
+const titreActivites: ITitre = {
   id: 'titre-id',
   nom: 'mon titre',
   domaineId: 'm',
   typeId: 'arm',
   publicLecture: true,
+  propsTitreEtapesIds: {},
   activites: [
     {
       id: 'titre-id-activites-oct',
@@ -276,7 +277,7 @@ const titreActivites = {
       ]
     }
   ]
-} as ITitre
+}
 describe('titre', () => {
   const titreQuery = queryImport('titre')
 
@@ -306,7 +307,7 @@ describe('titre', () => {
     expect(res.body.data).toMatchObject({ titre: null })
   })
 
-  test('ne peut pas voir que les démarches qui sont en "lecture publique" (utilisateur anonyme)', async () => {
+  test('ne peut voir que les démarches qui sont en "lecture publique" (utilisateur anonyme)', async () => {
     await titreCreate(titreDemarchesPubliques, {})
     const res = await graphQLCall(titreQuery, { id: 'titre-id' })
 

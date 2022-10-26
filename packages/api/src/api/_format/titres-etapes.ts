@@ -5,7 +5,6 @@ import {
   geojsonFeatureCollectionPoints
 } from '../../tools/geojson'
 import { DocumentTypeData, etapeTypeFormat } from './etapes-types'
-import { administrationFormat } from './administrations'
 import { entrepriseFormat } from './entreprises'
 import { titreEtapeFormatFields } from './_fields'
 import { titreDemarcheFormat } from './titres-demarches'
@@ -52,9 +51,6 @@ const titreEtapeFormat = (
     delete titreEtape.heritageProps
     delete titreEtape.heritageContenu
   }
-
-  titreEtape.administrations =
-    titreEtape.administrations?.map(administrationFormat)
 
   titreEtape.titulaires = titreEtape.titulaires?.map(entrepriseFormat)
 

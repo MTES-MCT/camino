@@ -80,15 +80,20 @@ interface IColonne<T> {
   groupBy?: boolean | string[]
 }
 
+export const propsTitreEtapeIdKeys = [
+  'points',
+  'titulaires',
+  'amodiataires',
+  'substances',
+  'surface'
+] as const
+export type PropsTitreEtapeIdKeys = typeof propsTitreEtapeIdKeys[number]
+
 type IPropId =
-  | 'points'
-  | 'titulaires'
-  | 'amodiataires'
-  | 'administrations'
-  | 'substances'
+  | PropsTitreEtapeIdKeys
+  | 'administrationsLocales'
   | 'communes'
   | 'forets'
-  | 'surface'
 
 type ITitreColonneId =
   | 'nom'
@@ -149,12 +154,12 @@ interface IContenu {
   [sectionId: string]: IContenuElement
 }
 
-interface IPropsTitreEtapesIds {
-  [elementId: string]: string
+type IPropsTitreEtapesIds = {
+  [key in PropsTitreEtapeIdKeys]?: string
 }
 
 interface IContenusTitreEtapesIds {
-  [sectionId: string]: IPropsTitreEtapesIds
+  [sectionId: string]: { [key: string]: string }
 }
 
 interface IHeritageProps {
@@ -256,7 +261,6 @@ interface IAdministration {
   activitesTypes?: IActiviteType[] | null
   utilisateurs?: IUtilisateur[] | null
   gestionnaireTitres?: ITitre[] | null
-  localeTitres?: ITitre[] | null
   associee?: boolean | null
   emailsModification?: boolean
   modification?: boolean | null
@@ -482,7 +486,7 @@ interface IAdministrationActiviteType {
 }
 
 interface IAdministrationActiviteTypeEmail {
-  administrationId: string
+  administrationId: AdministrationId
   activiteTypeId: string
   email: string
 }
@@ -517,16 +521,15 @@ interface ITitre {
   geojsonCentre?: IGeoJsonCentre | null
   titulaires?: ITitreEntreprise[] | null
   amodiataires?: ITitreEntreprise[] | null
-  administrationsLocales?: IAdministration[] | null
+  administrationsLocales?: AdministrationId[] | null
   administrationsGestionnaires?: IAdministration[] | null
-  administrations?: IAdministration[] | null
-  titresAdministrations?: IAdministration[] | null
+  administrations?: AdministrationId[] | null
   surfaceEtape?: ITitreEtape | null
   surface?: number | null
   communes?: ICommune[] | null
   forets?: IForet[] | null
   sdomZones?: ISDOMZone[] | null
-  secteursMaritimeEtape?: ITitreEtape | null
+  pointsEtape?: ITitreEtape | null
   secteursMaritime?: SecteursMaritimes[] | null
   demarches?: ITitreDemarche[]
   activites?: ITitreActivite[] | null
@@ -566,18 +569,9 @@ interface ITitreActivite {
   deposable?: boolean | null
 }
 
-interface ITitreAdministration {
+interface ITitreAdministrationGestionnaire {
   administrationId: string
   titreId: string
-}
-
-interface ITitreAdministrationGestionnaire extends ITitreAdministration {
-  associee?: boolean | null
-}
-
-interface ITitreAdministrationLocale {
-  administrationId: string
-  titreEtapeId: string
   associee?: boolean | null
 }
 
@@ -677,7 +671,7 @@ interface ITitreEtape {
   geojsonPoints?: IGeoJson | null
   titulaires?: ITitreEntreprise[] | null
   amodiataires?: ITitreEntreprise[] | null
-  administrations?: IAdministration[] | null
+  administrationsLocales?: AdministrationId[] | null
   justificatifs?: IDocument[] | null
   justificatifIds?: string[] | null
   communes?: ICommune[] | null
@@ -889,9 +883,7 @@ export {
   IAdministrationActiviteTypeEmail,
   ITitre,
   ITitreActivite,
-  ITitreAdministration,
   ITitreAdministrationGestionnaire,
-  ITitreAdministrationLocale,
   ITitreCommune,
   ITitreForet,
   ITitreSDOMZone,

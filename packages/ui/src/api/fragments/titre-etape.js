@@ -1,5 +1,4 @@
 import gql from 'graphql-tag'
-import { fragmentTitreAdministrations } from './administrations'
 import { fragmentTitreEntreprises } from './entreprises'
 import { fragmentPoint } from './point'
 import { fragmentGeojsonMultiPolygon } from './geojson'
@@ -46,9 +45,6 @@ const fragmentHeritageEtape = gql`
       sections
     }
     statutId
-    administrations {
-      ...titreAdministrations
-    }
     titulaires {
       ...titreEntreprises
     }
@@ -63,8 +59,6 @@ const fragmentHeritageEtape = gql`
   }
 
   ${fragmentIncertitudes}
-
-  ${fragmentTitreAdministrations}
 
   ${fragmentTitreEntreprises}
 
@@ -131,9 +125,6 @@ const fragmentTitreEtape = gql`
       }
     }
     statutId
-    administrations {
-      ...titreAdministrations
-    }
     titulaires {
       ...titreEntreprises
     }
@@ -171,8 +162,6 @@ const fragmentTitreEtape = gql`
     modification
     deposable
   }
-
-  ${fragmentTitreAdministrations}
 
   ${fragmentTitreEntreprises}
 
@@ -282,9 +271,6 @@ const fragmentEtape = gql`
       }
     }
     statutId
-    administrations {
-      ...titreAdministrations
-    }
     titulaires {
       ...titreEntreprises
     }
@@ -324,8 +310,6 @@ const fragmentEtape = gql`
   ${fragmentDemarcheType}
 
   ${fragmentTitreType}
-
-  ${fragmentTitreAdministrations}
 
   ${fragmentTitreEntreprises}
 

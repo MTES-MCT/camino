@@ -1,6 +1,6 @@
 import { ITitreEtape, IPropId } from '../../types'
 
-const propValueFind = (titreEtape: ITitreEtape, propId: IPropId) => {
+export const propValueFind = (titreEtape: ITitreEtape, propId: IPropId) => {
   const value = titreEtape[propId]
   if (
     (Array.isArray(value) && value.length) ||
@@ -11,5 +11,3 @@ const propValueFind = (titreEtape: ITitreEtape, propId: IPropId) => {
 
   return null
 }
-
-export { propValueFind }

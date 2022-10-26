@@ -27,9 +27,9 @@
       <div v-if="administrations.length" class="mb">
         <h5>Administrations</h5>
         <Administration
-          v-for="administration in administrations"
-          :key="administration.id"
-          :administration="administration"
+          v-for="administrationId in admins"
+          :key="administrationId"
+          :administrationId="administrationId"
           class="mb-s"
           @titre-event-track="eventTrack"
         />
@@ -38,27 +38,44 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import Entreprise from '../titre/entreprise.vue'
 import Administration from '../titre/administration.vue'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { isAssociee } from 'camino-common/src/static/administrationsTitresTypes'
+import { useStore } from 'vuex'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { computed } from 'vue'
 
-export default {
-  components: { Entreprise, Administration },
+const store = useStore()
+const props = defineProps<{
+  titreTypeId: TitreTypeId
+  titulaires: Record<string, any>[]
+  amodiataires: Record<string, any>[]
+  administrations: AdministrationId[]
+}>()
 
-  props: {
-    titulaires: { type: Array, default: () => [] },
+const emits = defineEmits<{
+  (e: 'titre-event-track', event: unknown): void
+}>()
 
-    amodiataires: { type: Array, default: () => [] },
-
-    administrations: { type: Array, default: () => [] }
-  },
-
-  emits: ['titre-event-track'],
-
-  methods: {
-    eventTrack(event) {
-      this.$emit('titre-event-track', event)
-    }
-  }
+const eventTrack = (event: unknown) => {
+  emits('titre-event-track', event)
 }
+
+const mustFilterOutAssociee = () => {
+  return !(
+    store.getters['user/userIsAdmin'] || store.getters['user/userIsSuper']
+  )
+}
+
+const admins = computed(() => {
+  if (mustFilterOutAssociee()) {
+    return props.administrations.filter(
+      id => !isAssociee(id, props.titreTypeId)
+    )
+  } else {
+    return props.administrations
+  }
+})
 </script>
