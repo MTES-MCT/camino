@@ -64,7 +64,6 @@ import {
 } from 'camino-common/src/static/departement'
 import { PAYS_IDS, PaysId } from 'camino-common/src/static/pays'
 import { Regions } from 'camino-common/src/static/region'
-import { onlyUnique } from 'camino-common/src/typescript-tools'
 import {
   FacadeComputed,
   getFacadesComputed,
@@ -72,20 +71,14 @@ import {
 } from 'camino-common/src/static/facades'
 
 interface Props {
-  surface?: number
-  forets?: { nom: string }[]
-  sdomZones?: { nom: string }[]
-  communes?: { nom: string; departementId: DepartementId }[]
-  secteursMaritimes?: SecteursMaritimes[]
+  surface: number
+  forets: { nom: string }[]
+  sdomZones: { nom: string }[]
+  communes: { nom: string; departementId: DepartementId }[]
+  secteursMaritimes: SecteursMaritimes[]
 }
 
-const props = withDefaults(defineProps<Props>(), {
-  communes: () => [],
-  forets: () => [],
-  sdomZones: () => [],
-  secteursMaritimes: () => [],
-  surface: 0
-})
+const props = defineProps<Props>()
 
 type RegionsComputed = {
   id: string

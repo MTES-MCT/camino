@@ -1,11 +1,7 @@
 import Territoires from './territoires.vue'
 import { TerritoiresProps } from './territoires.type'
 import { Meta, Story } from '@storybook/vue3'
-import {
-  DEPARTEMENT_IDS,
-  Departements
-} from 'camino-common/src/static/departement'
-import { SecteursMaritimes } from 'camino-common/src/static/facades'
+import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 
 const meta: Meta = {
   title: 'Components/Titre/Territoires',
@@ -24,20 +20,36 @@ const Template: Story<TerritoiresProps> = (args: TerritoiresProps) => ({
 
 export const OnlySurface = Template.bind({})
 OnlySurface.args = {
-  surface: 4
+  surface: 4,
+  forets: [],
+  sdomZones: [],
+  communes: [],
+  secteursMaritimes: []
 }
 
 export const OnlyForets = Template.bind({})
 OnlyForets.args = {
+  surface: 0,
+  sdomZones: [],
+  communes: [],
+  secteursMaritimes: [],
   forets: [{ nom: 'Forêt 1' }, { nom: 'Forêt 2' }]
 }
 
 export const OnlySdomZones = Template.bind({})
 OnlySdomZones.args = {
+  surface: 0,
+  forets: [],
+  communes: [],
+  secteursMaritimes: [],
   sdomZones: [{ nom: 'Zone 1' }, { nom: 'Zone 3' }]
 }
 export const OnlySecteursMaritimes = Template.bind({})
 OnlySecteursMaritimes.args = {
+  surface: 0,
+  forets: [],
+  sdomZones: [],
+  communes: [],
   secteursMaritimes: ['Balagne', 'Bretagne nord', 'Bretagne sud']
 }
 
@@ -56,4 +68,10 @@ All.args = {
 }
 
 export const Empty = Template.bind({})
-Empty.args = {}
+Empty.args = {
+  surface: 0,
+  forets: [],
+  sdomZones: [],
+  communes: [],
+  secteursMaritimes: []
+}
