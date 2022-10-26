@@ -38,7 +38,7 @@ Le résultat de la requête peut être filtré en ajoutant des paramètres à l�
 
 ### Authentification
 
-Certains titres miniers et autorisations nécessitent d'être identifiés pour être consultés. Un compte sur Camino est requis pour effectuer cette requête. Un jeton QGIS doit être généré à l'aide du bouton `Générer un jeton QGIS` présent sur votre page profil. Attention, ce jeton ne sera visible qu'à ce moment, veillez à bien le sauvegarder pour l'utiliser lors de vos appels. Il est bien sûr possible d'en générer un nouveau pour le remplacer si il a été perdu.
+Certains titres miniers et autorisations nécessitent d'être identifiés pour être consultés. Ils sont uniquement accessibles via la route `https://api.camino.beta.gouv.fr/titres_qgis`. Un compte sur Camino est requis pour effectuer cette requête. Un jeton QGIS doit être généré à l'aide du bouton `Générer un jeton QGIS` présent sur votre page profil. Attention, ce jeton ne sera visible qu'à ce moment, veillez à bien le sauvegarder pour l'utiliser lors de vos appels. Il est bien sûr possible d'en générer un nouveau pour le remplacer si il a été perdu.
 
 ![Screenshot de la page profil avec le bouton pour générer un jeton QGIS](../img/camino_qgis_token_button.png)
 
@@ -46,7 +46,7 @@ Certains titres miniers et autorisations nécessitent d'être identifiés pour �
 
 Ajouter les identifiants Camino dans l'url. L'identifiant à Camino est un email, pour l'utiliser dans l'url, il faut remplacer le caratère `@` par `%40`. Le caractère `@` est ajouté après le jeton qgis.
 
-Exemple: `https://mon-email%40mon-domaine.tld:jeton-qgis@api.camino.beta.gouv.fr/titres?format=geojson`.
+Exemple: `https://mon-email%40mon-domaine.tld:jeton-qgis@api.camino.beta.gouv.fr/titres_qgis?format=geojson`.
 
 ### Proxy du **RIE** (Réseau Interministériel de l'État)
 
