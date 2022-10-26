@@ -294,6 +294,30 @@
       </div>
     </div>
     <div class="line-neutral width-full mb mt" />
+    <h2>Evolution du nombre de titre et de leur surface</h2>
+    <span class="separator" />
+    <p class="mb-xl">
+      Les données affichées ici sont celles contenues dans la base de donnée
+      Camino. Ces données concernent exclusivement le territoire métropolitain.
+    </p>
+    <div>
+      <h3>Permis Exclusif de Recherche (PER)</h3>
+      <hr />
+      <div>
+        <LoadingElement v-slot="{ item }" :data="data">
+          <BarChart :chartConfiguration="perChartConfiguration(item)" />
+        </LoadingElement>
+      </div>
+    </div>
+    <div>
+      <h3>Concession</h3>
+      <hr />
+      <div>
+        <LoadingElement v-slot="{ item }" :data="data">
+          <BarChart :chartConfiguration="concessionChartConfiguration(item)" />
+        </LoadingElement>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -314,7 +338,7 @@ import {
 import { Unites } from 'camino-common/src/static/unites'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { RegionId, isRegionId, Regions } from 'camino-common/src/static/region'
-import { nextColor } from '../_charts/utils'
+import { CHART_COLORS, nextColor } from '../_charts/utils'
 const data = ref<AsyncData<StatistiquesMinerauxMetauxMetropole>>({
   status: 'LOADING'
 })
@@ -464,6 +488,106 @@ const selsChartConfiguration = (
           }
         }
       },
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      scales: {
+        x: {
+          stacked: true
+        },
+        y: { stacked: true }
+      }
+    }
+  }
+}
+
+const perChartConfiguration = (
+  data: StatistiquesMinerauxMetauxMetropole
+): ChartConfiguration => {
+  // FIXME ajouter les vrais datas
+  const chartData: ChartData = {
+    labels: [2017, 2018, 2019, 2020, 2021, 2022],
+    datasets: [
+      {
+        type: 'bar',
+        label: 'Demandes de PER déposées (octroi et prolongation)',
+        yAxisID: 'demandes',
+        data: [0, 0, 1, 0, 2, 0],
+        backgroundColor: CHART_COLORS.green
+      },
+      {
+        type: 'bar',
+        label: 'Demandes de PER octroyées et prolongées',
+        yAxisID: 'demandes',
+        data: [0, 0, 0, 0, 1, 0],
+        backgroundColor: CHART_COLORS.blue
+      },
+      {
+        type: 'bar',
+        label: 'Demandes de PER refusées (octroi et prolongation)',
+        yAxisID: 'demandes',
+        data: [0, 0, 0, 0, 0, 0],
+        backgroundColor: CHART_COLORS.purple
+      },
+      {
+        type: 'line',
+        label: 'Surface cumulée des permis de recherche (ha) accordés',
+        yAxisID: 'surface',
+        data: [0, 0, 0, 0, 600, 0],
+        backgroundColor: CHART_COLORS.blue
+      }
+    ]
+  }
+
+  return {
+    type: 'bar',
+    data: chartData,
+    options: {
+      plugins: {
+        legend: {
+          // FIXME trouver un moyen de prendre plus de place
+          display: true,
+          position: 'left',
+          fullSize: true
+        }
+      },
+      locale: 'fr-FR',
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      scales: {
+        demandes: {
+          type: 'linear',
+          position: 'left',
+          ticks: { stepSize: 1 }
+        },
+        surface: {
+          type: 'linear',
+          position: 'right'
+        }
+      }
+    }
+  }
+}
+
+const concessionChartConfiguration = (
+  data: StatistiquesMinerauxMetauxMetropole
+): ChartConfiguration => {
+  // FIXME add real datas
+  const chartData: ChartData = {
+    labels: [2017, 2018],
+    datasets: []
+  }
+
+  return {
+    type: 'bar',
+    data: chartData,
+    options: {
+      locale: 'fr-FR',
+      responsive: true,
       interaction: {
         mode: 'index',
         intersect: false
