@@ -41,21 +41,8 @@ CD_TOKEN:=${CD_TOKEN_PROD}
 endif
 
 deploy/ci:
-ifeq ($(GITHUB_EVENT_NAME),workflow_run)
-ifeq ($(GITHUB_REF), refs/heads/master)
-	@echo "Déploiement automatique en dev"
-	@GIT_SHA=${GITHUB_SHA} CD_TOKEN=${CD_TOKEN_DEV} $(MAKE) deploy/dev
-endif
-ifeq ($(GITHUB_REF), refs/heads/release-candidate)
-	@echo "Déploiement automatique en prod"
-	@GIT_SHA=${GITHUB_SHA} CD_TOKEN=${CD_TOKEN_PROD} $(MAKE) deploy/prod
-endif
-else
-ifeq ($(GITHUB_EVENT_NAME),workflow_dispatch)
-	@echo "Déploiement manuel en ${INPUT_ENV}"
+	@echo "Déploiement de la version ${INPUT_SHA} en ${INPUT_ENV}"
 	@GIT_SHA=${INPUT_SHA} CD_TOKEN=${CD_TOKEN} $(MAKE) deploy/${INPUT_ENV}
-endif
-endif
 
 _deploy:
 ifndef DEPLOY_URL

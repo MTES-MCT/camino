@@ -1,0 +1,48 @@
+name: API
+on:
+  workflow_call:
+    secrets:
+      CODECOV_TOKEN:
+        description: 'le token pour pouvoir pousser la couverture de code'
+        required: true
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.7'
+          cache: 'npm'
+      - name: Npm install
+        run: |
+          npm set-script prepare ""
+          npm ci
+        env:
+          CI: true
+      - name: Lint
+        run: npm run lint --workspace=packages/common
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.7'
+          cache: 'npm'
+      - name: Npm install
+        run: |
+          npm set-script prepare ""
+          npm ci
+        env:
+          CI: true
+      - name: Unit tests
+        run: npm run ci:test --workspace=packages/common
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: common
