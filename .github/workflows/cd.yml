@@ -1,5 +1,24 @@
 name: CD
 on:
+  workflow_call:
+    inputs:
+      # Ne peut être que dev, preprod ou prod
+      deploy_environment:
+        required: true
+        type: string
+      git_sha:
+        required: true
+        type: string
+    secrets:
+      CD_TOKEN_DEV:
+        description: 'le token pour déployer en dev'
+        required: true
+      CD_TOKEN_PREPROD:
+        description: 'le token pour déployer en preprod'
+        required: true
+      CD_TOKEN_PROD:
+        description: 'le token pour déployer en prod'
+        required: true
   workflow_dispatch:
     inputs:
       deploy_environment:
@@ -15,10 +34,6 @@ on:
         description: 'Sha git à déployer'  
         type: string   
         required: true
-  workflow_run:
-    workflows: ["CI", "Release"]
-    branches: [master, release-candidate]
-    types: [completed]
 env:
   CD_TOKEN_DEV: ${{ secrets.CD_TOKEN_DEV }}
   CD_TOKEN_PREPROD: ${{ secrets.CD_TOKEN_PREPROD }}

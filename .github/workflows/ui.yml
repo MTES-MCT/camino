@@ -1,0 +1,98 @@
+name: UI
+on:
+  workflow_call:
+    secrets:
+      CODECOV_TOKEN:
+        description: 'le token pour pouvoir pousser la couverture de code'
+        required: true
+      DOCKER_USERNAME:
+        description: 'le user docker'
+        required: true
+      DOCKER_TOKEN:
+        description: 'le token docker'
+        required: true
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.7'
+          cache: 'npm'
+      - name: Test units
+        run: |
+          npm set-script prepare ""
+          npm ci
+          npm run lint:check --workspace=packages/ui
+        env:
+          CI: true
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.7'
+          cache: 'npm'
+      - name: Test units
+        run: |
+          npm set-script prepare ""
+          npm ci
+          npm test --workspace=packages/ui
+        env:
+          CI: true
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: ui
+  build:
+    needs: [test, lint]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build Docker image
+        run: docker build . --build-arg GIT_SHA=${GITHUB_SHA} -f Dockerfile.ui -t caminofr/camino-ui:${GITHUB_SHA}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Push Docker image to the Docker Hub
+        if: github.ref == 'refs/heads/master'
+        run: docker push caminofr/camino-ui:${GITHUB_SHA}
+  storybook:
+    needs: [test, lint]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.7'
+          cache: 'npm'
+      - name: Generate storybook
+        run: |
+          npm ci
+          npm run storybook:build -w packages/ui
+        env:
+          CI: true
+          # https://stackoverflow.com/questions/69394632/webpack-build-failing-with-err-ossl-evp-unsupported
+          NODE_OPTIONS: --openssl-legacy-provider
+      - name: Build Docker image
+        run: docker build -f Dockerfile.ui.storybook -t caminofr/camino-ui-storybook:${GITHUB_SHA} .
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Push Docker image to the Docker Hub
+        if: github.ref == 'refs/heads/master'
+        run: docker push caminofr/camino-ui-storybook:${GITHUB_SHA}

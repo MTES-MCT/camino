@@ -20,3 +20,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
+  deploy:
+    needs: release-github
+    uses: ./.github/workflows/cd.yml
+    secrets:
+      CD_TOKEN_DEV: ${{ secrets.CD_TOKEN_DEV }}
+      CD_TOKEN_PREPROD: ${{ secrets.CD_TOKEN_PREPROD }}
+      CD_TOKEN_PROD: ${{ secrets.CD_TOKEN_PROD }}
+    with:
+      deploy_environment: prod
+      git_sha: ${{ github.sha }}
