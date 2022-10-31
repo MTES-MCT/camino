@@ -19,6 +19,7 @@ import {
   TextColumnData
 } from '@/components/_ui/table-auto.type'
 import {
+  Departement,
   DepartementId,
   Departements
 } from 'camino-common/src/static/departement'
@@ -38,6 +39,10 @@ import {
   ReferenceTypeId
 } from 'camino-common/src/static/referencesTypes'
 import { TitreReference } from 'camino-common/src/titres-references'
+import {
+  getDepartementsBySecteurs,
+  SecteursMaritimes
+} from 'camino-common/src/static/facades'
 
 interface Titulaire {
   id: string
@@ -48,6 +53,7 @@ export interface TitreEntreprise {
   slug: string
   nom: string
   communes?: { departementId: DepartementId }[]
+  secteursMaritime?: [SecteursMaritimes]
   references?: TitreReference[]
   domaineId: DomaineId
   domaine: { id: DomaineId; nom: string }
@@ -247,10 +253,13 @@ export const titresLignesBuild = (
   ordre = 'asc'
 ): TableAutoRow[] =>
   titres.map(titre => {
-    const departements =
-      titre.communes
-        ?.map(({ departementId }) => Departements[departementId])
-        .filter(onlyUnique) ?? []
+    const departements: Departement[] = [
+      ...(titre.communes?.map(({ departementId }) => departementId) ?? []),
+      ...getDepartementsBySecteurs(titre.secteursMaritime ?? [])
+    ]
+      .filter(onlyUnique)
+      .map(departementId => Departements[departementId])
+
     const departementNoms: string[] = departements.map(({ nom }) => nom)
     const regionNoms: string[] = departements
       .map(({ regionId }) => Regions[regionId].nom)

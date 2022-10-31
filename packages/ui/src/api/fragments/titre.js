@@ -135,6 +135,7 @@ const fragmentTitres = gql`
     communes {
       departementId
     }
+    secteursMaritime
     references {
       referenceTypeId
       nom

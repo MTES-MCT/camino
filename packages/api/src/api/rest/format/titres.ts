@@ -10,10 +10,14 @@ import {
 import { Departements } from 'camino-common/src/static/departement'
 import { Regions } from 'camino-common/src/static/region'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
+import {
+  isNotNullNorUndefined,
+  onlyUnique
+} from 'camino-common/src/typescript-tools'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
 import {
+  getDepartementsBySecteurs,
   getFacadesComputed,
   SecteursMaritimes
 } from 'camino-common/src/static/facades'
@@ -48,8 +52,12 @@ const titreContenuTableFormat = (contenu?: IContenu | null) =>
 
 export const titresTableFormat = (titres: ITitre[]) =>
   titres.map(titre => {
+    if (!titre.secteursMaritime) {
+      throw new Error('les secteurs maritimes ne sont pas chargés')
+    }
     const { communes, departements, regions } = titreTerritoiresFind(
-      titre.communes!
+      titre.communes,
+      titre.secteursMaritime
     )
 
     const titreReferences = titre.references
@@ -61,10 +69,6 @@ export const titresTableFormat = (titres: ITitre[]) =>
           return titreReferences
         }, {})
       : {}
-
-    if (!titre.secteursMaritime) {
-      throw new Error('les secteurs maritimes ne sont pas chargés')
-    }
 
     const separator = ';'
 
@@ -123,15 +127,16 @@ export const titresTableFormat = (titres: ITitre[]) =>
   })
 
 const titreGeojsonPropertiesFormat = (titre: ITitre) => {
-  const { communes, departements, regions } = titreTerritoiresFind(
-    titre.communes!
-  )
-
-  const separator = ', '
-
   if (!titre.secteursMaritime) {
     throw new Error('les secteurs maritimes ne sont pas chargés')
   }
+
+  const { communes, departements, regions } = titreTerritoiresFind(
+    titre.communes,
+    titre.secteursMaritime
+  )
+
+  const separator = ', '
 
   return {
     id: titre.slug,
@@ -204,30 +209,51 @@ export const titresGeojsonFormat = (titres: ITitre[]) => ({
 
 // FOR TESTING
 export const titreTerritoiresFind = (
-  communes: Pick<ICommune, 'nom' | 'departementId' | 'surface'>[]
-): { communes: string[]; departements: string[]; regions: string[] } =>
-  communes.reduce(
-    ({ communes, departements, regions }, commune) => {
-      communes.push(
-        `${commune.nom} (${Math.round(commune.surface! / 100) / 10000})`
-      )
+  communes?:
+    | Pick<ICommune, 'nom' | 'departementId' | 'surface'>[]
+    | null
+    | undefined,
+  secteursMaritime?: SecteursMaritimes[] | null | undefined
+): { communes: string[]; departements: string[]; regions: string[] } => {
+  const result: {
+    communes: string[]
+    departements: string[]
+    regions: string[]
+  } = { communes: [], departements: [], regions: [] }
 
-      const departement = Departements[commune.departementId!]
-
-      if (!departements.includes(departement.nom)) {
-        departements.push(departement.nom)
+  getDepartementsBySecteurs(secteursMaritime ?? [])
+    .filter(onlyUnique)
+    .forEach(departementId => {
+      const departement = Departements[departementId]
+      if (!result.departements.includes(departement.nom)) {
+        result.departements.push(departement.nom)
 
         const region = Regions[departement.regionId]
-        if (!regions.includes(region.nom)) {
-          regions.push(region.nom)
+        if (!result.regions.includes(region.nom)) {
+          result.regions.push(region.nom)
         }
       }
+    })
+  ;(communes ?? []).forEach(commune => {
+    result.communes.push(
+      `${commune.nom} (${Math.round(commune.surface! / 100) / 10000})`
+    )
 
-      return { communes, departements, regions }
-    },
-    { communes: [], departements: [], regions: [] } as {
-      communes: string[]
-      departements: string[]
-      regions: string[]
+    const departement = Departements[commune.departementId!]
+
+    if (!result.departements.includes(departement.nom)) {
+      result.departements.push(departement.nom)
+
+      const region = Regions[departement.regionId]
+      if (!result.regions.includes(region.nom)) {
+        result.regions.push(region.nom)
+      }
     }
-  )
+  })
+
+  result.regions.sort()
+  result.communes.sort()
+  result.departements.sort()
+
+  return result
+}
