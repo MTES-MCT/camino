@@ -103,7 +103,7 @@ const titreTypeSectionsFormat = (
 // remplacer le contenu de ce fichier
 // par des requêtes SQL (dans /database/queries/titres)
 // qui retournent les données directement formatées
-const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
+export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
   if (t.confidentiel) {
     // Si le titre est confidentiel, on a le droit de voir que son périmètre sur la carte
     t = {
@@ -198,7 +198,7 @@ export const titreAdministrationsGet = (titre: ITitre): AdministrationId[] => {
     .map(({ id }) => id)
 }
 
-const titresFormat = (titres: ITitre[], fields = titreFormatFields) =>
+export const titresFormat = (titres: ITitre[], fields = titreFormatFields) =>
   titres &&
   titres.reduce((acc: ITitre[], titre) => {
     const titreFormated = titreFormat(titre, fields)
@@ -209,5 +209,3 @@ const titresFormat = (titres: ITitre[], fields = titreFormatFields) =>
 
     return acc
   }, [])
-
-export { titreFormatFields, titreFormat, titresFormat }
