@@ -4,7 +4,6 @@ import { userGet } from '../../../database/queries/utilisateurs'
 
 import {
   titresTypesGet,
-  titresTypesTitresStatutsGet,
   titresTypesDemarchesTypesGet,
   titresTypesDemarchesTypesEtapesTypesGet,
   etapesTypesDocumentsTypesGet,
@@ -15,6 +14,7 @@ import { GraphQLResolveInfo } from 'graphql'
 import { fieldsBuild } from './_fields-build'
 import { isSuper } from 'camino-common/src/roles'
 import { toSpecificDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
+import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypesTypes_domaine_titresStatuts'
 
 const titresTypes = async (
   _: never,
@@ -42,22 +42,8 @@ const titresTypes = async (
 
 //
 
-const titresTypesTitresStatuts = async (_: never, context: IToken) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const titresTypesTitresStatuts = await titresTypesTitresStatutsGet()
-
-    return titresTypesTitresStatuts
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
+const titresTypesTitresStatuts = (_: never) => {
+  return titreTypesStatutsTitresPublicLecture
 }
 
 const titresTypesDemarchesTypes = async (_: never, context: IToken) => {

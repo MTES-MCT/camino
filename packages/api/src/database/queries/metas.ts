@@ -21,7 +21,6 @@ import {
 } from './permissions/metas'
 
 import TitresTypes from '../models/titres-types'
-import TitresTypesTitresStatuts from '../models/titres-types--titres-statuts'
 import TitresTypesDemarchesTypesEtapesTypes from '../models/titres-types--demarches-types-etapes-types'
 import TitresTypesDemarchesTypes from '../models/titres-types--demarches-types'
 import EtapesTypesJustificatifsTypes from '../models/etapes-types--justificatifs-types'
@@ -73,9 +72,6 @@ const titresTypesGet = async (_: never, { fields }: { fields?: IFields }) => {
 
   return TitresTypes.query().withGraphFetched(graph).orderBy('id')
 }
-
-const titresTypesTitresStatutsGet = async () =>
-  TitresTypesTitresStatuts.query().orderBy(['titreTypeId', 'titreStatutId'])
 
 const titresTypesDemarchesTypesGet = async () =>
   TitresTypesDemarchesTypes.query().orderBy(['titreTypeId', 'demarcheTypeId'])
@@ -286,7 +282,6 @@ export {
   devisesGet,
   documentsTypesGet,
   documentTypeGet,
-  titresTypesTitresStatutsGet,
   titresTypesDemarchesTypesGet,
   titresTypesDemarchesTypesEtapesTypesGet,
   titreTypeDemarcheTypeEtapeTypeGet,

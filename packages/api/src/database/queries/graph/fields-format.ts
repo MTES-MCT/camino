@@ -5,8 +5,7 @@ const fieldsOrderAsc = [
   'references',
   'etapesTypes',
   'titresTypes',
-  'titresTypesEtapesTypes',
-  'titresTypesTitresStatuts'
+  'titresTypesEtapesTypes'
 ]
 const fieldsToRemove = ['coordonnees', 'incertitudes', 'heritageProps']
 const titreFieldsToRemove: string[] = ['geojsonCentre', 'references']

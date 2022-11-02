@@ -1,10 +1,11 @@
 import Titres from '../../../database/models/titres'
 
-const titresPublicModifie = [
+export const titresPublicModifie = [
   {
     typeId: 'cxh',
     type: {
-      titresTypesTitresStatuts: []
+      domaineId: 'h',
+      typeId: 'cx'
     },
     demarches: [],
     publicLecture: true,
@@ -12,16 +13,15 @@ const titresPublicModifie = [
   } as unknown as Titres
 ]
 
-const titresPublicIdentique = [
+export const titresPublicIdentique = [
   {
     typeId: 'cxh',
     type: {
-      titresTypesTitresStatuts: []
+      domaineId: 'h',
+      typeId: 'cx'
     },
     demarches: null,
     publicLecture: false,
     entreprisesLecture: true
   } as unknown as Titres
 ]
-
-export { titresPublicModifie, titresPublicIdentique }

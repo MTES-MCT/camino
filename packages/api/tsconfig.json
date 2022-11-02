@@ -30,5 +30,5 @@
     }
   },
   "exclude": ["node_modules", "**/__mocks__/*"],
-  "include": ["src/**/*", "sources/**/*"]
+  "include": ["src/**/*", "sources/**/*", "../common/src/**/*"]
 }

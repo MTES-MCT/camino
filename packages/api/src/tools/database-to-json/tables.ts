@@ -84,10 +84,6 @@ export const tables = [
       'document_type_id'
     ]
   },
-  {
-    name: 'titres_types__titres_statuts',
-    orderBy: ['titre_type_id', 'titre_statut_id']
-  },
   { name: 'titres_types_types', orderBy: ['id'] },
   { name: 'utilisateurs', orderBy: ['id'] },
   {

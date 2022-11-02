@@ -437,13 +437,6 @@ interface ITitreTypeEtapeType {
   etapeType?: IEtapeType | null
 }
 
-interface ITitreTypeTitreStatut {
-  titreTypeId: TitreTypeId
-  titreType?: ITitreType | null
-  titreStatutId: TitreStatutId
-  publicLecture: boolean
-}
-
 interface ITitreTypeDemarcheType {
   titreTypeId: string
   demarcheTypeId: string
@@ -464,8 +457,11 @@ interface IActiviteTypeTitreType {
   activiteType?: IActiviteType | null
 }
 
-interface IAdministrationTitreTypeTitreStatut extends ITitreTypeTitreStatut {
-  administrationId: string
+interface IAdministrationTitreTypeTitreStatut {
+  titreTypeId: TitreTypeId
+  titreType?: ITitreType | null
+  titreStatutId: TitreStatutId
+  administrationId: AdministrationId
   titresModificationInterdit: boolean
   demarchesModificationInterdit: boolean
   etapesModificationInterdit: boolean
@@ -753,7 +749,6 @@ interface ITitreType {
   archive?: boolean | null
   type: ITitreTypeType
   demarchesTypes?: IDemarcheType[] | null
-  titresTypesTitresStatuts?: ITitreTypeTitreStatut[] | null
   contenuIds?: IContenuId[] | null
   sections?: ISection[] | null
 }
@@ -873,7 +868,6 @@ export {
   IGeoJson,
   IGeoJsonProperties,
   IGeometry,
-  ITitreTypeTitreStatut,
   ITitreTypeDemarcheType,
   IActiviteTypeTitreType,
   IEtapeTypeJustificatifType,
