@@ -65,6 +65,12 @@ export type StatistiquesMinerauxMetauxMetropoleSels = { [key in CaminoAnnee]: { 
 
 export type FiscaliteParSubstanceParAnnee = Record<SubstancesFiscalesStats, Record<CaminoAnnee, number>>
 
+export type EvolutionTitres = {
+  depot: Record<CaminoAnnee, number>
+  octroiEtProlongation: Record<CaminoAnnee, number>
+  refusees: Record<CaminoAnnee, number>
+  surface: Record<CaminoAnnee, number>
+}
 export interface StatistiquesMinerauxMetauxMetropole {
   surfaceExploration: number
   surfaceExploitation: number
@@ -81,4 +87,6 @@ export interface StatistiquesMinerauxMetauxMetropole {
     [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]: StatistiquesMinerauxMetauxMetropoleSels
   }
   fiscaliteParSubstanceParAnnee: FiscaliteParSubstanceParAnnee
+  prm: EvolutionTitres
+  cxm: EvolutionTitres
 }

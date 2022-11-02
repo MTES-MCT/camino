@@ -1,4 +1,5 @@
-import { RegionId } from './region'
+import { PAYS_IDS } from './pays'
+import { RegionId, Regions } from './region'
 
 export const DEPARTEMENT_IDS = {
   Ain: '01',
@@ -241,3 +242,4 @@ const departementIds = Object.values(DEPARTEMENT_IDS)
 export const isDepartementId = (departementId: string | null | undefined): departementId is DepartementId => departementIds.includes(departementId)
 
 export const departements = Object.values(Departements)
+export const departementsMetropole: DepartementId[] = departements.filter(dep => Regions[dep.regionId].paysId === PAYS_IDS['République Française']).map(({ id }) => id)

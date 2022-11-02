@@ -294,6 +294,30 @@
       </div>
     </div>
     <div class="line-neutral width-full mb mt" />
+    <h2>Evolution du nombre de titre et de leur surface</h2>
+    <span class="separator" />
+    <p class="mb-xl">
+      Les données affichées ici sont celles contenues dans la base de donnée
+      Camino. Ces données concernent exclusivement le territoire métropolitain.
+    </p>
+    <div class="mb-xl">
+      <h3>Permis Exclusif de Recherche (PER)</h3>
+      <hr />
+      <div>
+        <LoadingElement v-slot="{ item }" :data="data">
+          <BarChart :chartConfiguration="perChartConfiguration(item)" />
+        </LoadingElement>
+      </div>
+    </div>
+    <div class="mb-xl">
+      <h3>Concession</h3>
+      <hr />
+      <div>
+        <LoadingElement v-slot="{ item }" :data="data">
+          <BarChart :chartConfiguration="concessionChartConfiguration(item)" />
+        </LoadingElement>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -314,7 +338,7 @@ import {
 import { Unites } from 'camino-common/src/static/unites'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { RegionId, isRegionId, Regions } from 'camino-common/src/static/region'
-import { nextColor } from '../_charts/utils'
+import { CHART_COLORS, nextColor } from '../_charts/utils'
 const data = ref<AsyncData<StatistiquesMinerauxMetauxMetropole>>({
   status: 'LOADING'
 })
@@ -473,6 +497,148 @@ const selsChartConfiguration = (
           stacked: true
         },
         y: { stacked: true }
+      }
+    }
+  }
+}
+
+const perChartConfiguration = (
+  data: StatistiquesMinerauxMetauxMetropole
+): ChartConfiguration => {
+  const annees: CaminoAnnee[] = [...Object.keys(data.prm.depot)].filter(isAnnee)
+  const chartData: ChartData = {
+    labels: annees,
+    datasets: [
+      {
+        type: 'bar',
+        label: 'Demandes de PER déposées (octroi et prolongation)',
+        yAxisID: 'demandes',
+        data: annees.map(annee => data.prm.depot[annee]),
+        backgroundColor: CHART_COLORS.green
+      },
+      {
+        type: 'bar',
+        label: 'Demandes de PER octroyées et prolongées',
+        yAxisID: 'demandes',
+        data: annees.map(annee => data.prm.octroiEtProlongation[annee]),
+        backgroundColor: CHART_COLORS.blue
+      },
+      {
+        type: 'bar',
+        label: 'Demandes de PER refusées (octroi et prolongation)',
+        yAxisID: 'demandes',
+        data: annees.map(annee => data.prm.refusees[annee]),
+        backgroundColor: CHART_COLORS.purple
+      },
+      {
+        type: 'line',
+        label: 'Surface cumulée des permis de recherche (ha) accordés',
+        yAxisID: 'surface',
+        data: annees.map(annee => data.prm.surface[annee]),
+        backgroundColor: CHART_COLORS.blue
+      }
+    ]
+  }
+
+  return {
+    type: 'bar',
+    data: chartData,
+    options: {
+      plugins: {
+        legend: {
+          // TODO 2022-11-02 trouver un moyen de prendre plus de place
+          display: true,
+          position: 'top',
+          fullSize: true
+        }
+      },
+      locale: 'fr-FR',
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      scales: {
+        demandes: {
+          type: 'linear',
+          position: 'left',
+          ticks: { stepSize: 1 }
+        },
+        surface: {
+          type: 'linear',
+          position: 'right'
+        }
+      }
+    }
+  }
+}
+
+const concessionChartConfiguration = (
+  data: StatistiquesMinerauxMetauxMetropole
+): ChartConfiguration => {
+  const annees: CaminoAnnee[] = [...Object.keys(data.cxm.depot)].filter(isAnnee)
+  const chartData: ChartData = {
+    labels: annees,
+    datasets: [
+      {
+        type: 'bar',
+        label: 'Demandes de concessions déposées (octroi et prolongation)',
+        yAxisID: 'demandes',
+        data: annees.map(annee => data.cxm.depot[annee]),
+        backgroundColor: CHART_COLORS.green
+      },
+      {
+        type: 'bar',
+        label: 'Demandes de concessions octroyées et prolongées',
+        yAxisID: 'demandes',
+        data: annees.map(annee => data.cxm.octroiEtProlongation[annee]),
+        backgroundColor: CHART_COLORS.blue
+      },
+      {
+        type: 'bar',
+        label: 'Demandes de concessions refusées (octroi et prolongation)',
+        yAxisID: 'demandes',
+        data: annees.map(annee => data.cxm.refusees[annee]),
+        backgroundColor: CHART_COLORS.purple
+      },
+      {
+        type: 'line',
+        label: 'Surface cumulée des concessions (ha) accordées',
+        yAxisID: 'surface',
+        data: annees.map(annee => data.cxm.surface[annee]),
+        backgroundColor: CHART_COLORS.blue
+      }
+    ]
+  }
+
+  return {
+    type: 'bar',
+    data: chartData,
+    options: {
+      plugins: {
+        legend: {
+          // TODO 2022-11-02 trouver un moyen de prendre plus de place
+          display: true,
+          position: 'top',
+          fullSize: true
+        }
+      },
+      locale: 'fr-FR',
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      scales: {
+        demandes: {
+          type: 'linear',
+          position: 'left',
+          ticks: { stepSize: 1 }
+        },
+        surface: {
+          type: 'linear',
+          position: 'right'
+        }
       }
     }
   }

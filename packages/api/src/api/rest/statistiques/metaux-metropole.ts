@@ -1,30 +1,15 @@
-import { CustomResponse } from './express-type'
-import express from 'express'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
-import { userGet } from '../../database/queries/utilisateurs'
-import { IUser } from '../../types'
-import { constants } from 'http2'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import {
+  EvolutionTitres,
   FiscaliteParSubstanceParAnnee,
-  StatistiquesDGTM,
   StatistiquesMinerauxMetauxMetropole,
   StatistiquesMinerauxMetauxMetropoleSels,
   substancesFiscalesStats
 } from 'camino-common/src/statistiques'
-import {
-  CaminoDate,
-  getAnnee,
-  daysBetween,
-  CaminoAnnee,
-  valideAnnee,
-  anneeSuivante
-} from 'camino-common/src/date'
+import { CaminoAnnee, valideAnnee, anneeSuivante } from 'camino-common/src/date'
 import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites'
-import { knex } from '../../knex'
-import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
-import { userSuper } from '../../database/user-super'
-import { titresGet } from '../../database/queries/titres'
+import { knex } from '../../../knex'
+import { userSuper } from '../../../database/user-super'
+import { titresGet } from '../../../database/queries/titres'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
 import {
   SubstanceFiscaleId,
@@ -34,6 +19,7 @@ import {
 import {
   CodePostal,
   Departements,
+  departementsMetropole,
   toDepartementId
 } from 'camino-common/src/static/departement'
 import { REGION_IDS } from 'camino-common/src/static/region'
@@ -43,292 +29,48 @@ import {
   redevanceCommunale,
   redevanceDepartementale,
   substanceFiscaleToInput
-} from '../../tools/api-openfisca'
+} from '../../../tools/api-openfisca'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
+import {
+  TITRES_TYPES_TYPES_IDS,
+  TitreTypeTypeId
+} from 'camino-common/src/static/titresTypesTypes'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
+import { toTitreTypeId } from 'camino-common/src/static/titresTypes'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 
-const anneeDepartStats = 2015
+export const getMinerauxMetauxMetropolesStatsInside =
+  async (): Promise<StatistiquesMinerauxMetauxMetropole> => {
+    const result = await statistiquesMinerauxMetauxMetropoleInstantBuild()
+    const substances = await buildSubstances()
+    const fiscaliteParSubstanceParAnnee = await fiscaliteDetail()
+    const prmData = await evolutionTitres(
+      TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES
+    )
+    const cxmData = await evolutionTitres(TITRES_TYPES_TYPES_IDS.CONCESSION)
 
-export const getDGTMStats = async (
-  req: express.Request,
-  res: CustomResponse<StatistiquesDGTM>
-) => {
-  const userId = (req.user as unknown as IUser | undefined)?.id
-
-  const user = await userGet(userId)
-
-  const administrationId = ADMINISTRATION_IDS['DGTM - GUYANE']
-
-  if (user?.administrationId !== administrationId) {
-    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
-  } else {
-    const result: StatistiquesDGTM = {
-      depotEtInstructions: {},
-      sdom: {},
-      delais: {}
+    return {
+      ...result,
+      ...substances,
+      fiscaliteParSubstanceParAnnee,
+      prm: prmData,
+      cxm: cxmData
     }
-
-    const phaseOctrois: {
-      id: string
-      dateDebut: CaminoDate
-      typeId: TitreTypeId
-      sdomZoneId: SDOMZoneId | null
-    }[] = await knex
-      .select(
-        'titresPhases.dateDebut',
-        'titres.typeId',
-        'titres__sdom_zones.sdom_zone_id'
-      )
-      .distinct('titres.id')
-      .from('titresPhases')
-      .leftJoin('titresDemarches', 'titreDemarcheId', 'titresDemarches.id')
-      .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
-      .leftJoin(
-        'titresAdministrationsGestionnaires',
-        'titres.id',
-        'titresAdministrationsGestionnaires.titreId'
-      )
-      .joinRaw(
-        "left join titres_etapes on titres_etapes.id = titres.props_titre_etapes_ids ->> 'points'"
-      )
-      .joinRaw(
-        "left join titres__sdom_zones on titres__sdom_zones.titre_etape_id = titres.props_titre_etapes_ids ->> 'points'"
-      )
-      .where('titresDemarches.typeId', 'oct')
-      .andWhere('titresPhases.dateDebut', '>=', `${anneeDepartStats}-01-01`)
-      .andWhere(builder =>
-        builder
-          .where(
-            'titresAdministrationsGestionnaires.administrationId',
-            administrationId
-          )
-          .orWhereRaw(
-            `titres_etapes.administrations_locales @> '"${administrationId}"'::jsonb`
-          )
-      )
-
-    phaseOctrois?.forEach(phase => {
-      const annee = getAnnee(phase.dateDebut)
-
-      if (!result.depotEtInstructions[annee]) {
-        result.depotEtInstructions[annee] = {
-          totalAXMDeposees: 0,
-          totalAXMOctroyees: 0,
-          totalTitresDeposes: 0,
-          totalTitresOctroyes: 0
-        }
-      }
-      if (!result.sdom[annee]) {
-        result.sdom[annee] = {
-          [SDOMZoneIds.Zone0]: { depose: 0, octroye: 0 },
-          [SDOMZoneIds.Zone0Potentielle]: { depose: 0, octroye: 0 },
-          [SDOMZoneIds.Zone1]: { depose: 0, octroye: 0 },
-          [SDOMZoneIds.Zone2]: { depose: 0, octroye: 0 }
-        }
-      }
-
-      result.depotEtInstructions[annee].totalTitresOctroyes++
-      if (phase.sdomZoneId !== null) {
-        result.sdom[annee][phase.sdomZoneId].octroye++
-      }
-      if (phase.typeId === 'axm') {
-        result.depotEtInstructions[annee].totalAXMOctroyees++
-      }
-    })
-
-    const etapeDeposees: {
-      date: CaminoDate
-      typeId: TitreTypeId
-      sdomZoneId: SDOMZoneId | null
-    }[] = await knex
-      .select(
-        'titresEtapes.date',
-        'titres.typeId',
-        'titres__sdom_zones.sdom_zone_id'
-      )
-      .distinct('titres.id')
-      .from('titresEtapes')
-      .leftJoin('titresDemarches', 'titreDemarcheId', 'titresDemarches.id')
-      .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
-      .leftJoin(
-        'titresAdministrationsGestionnaires',
-        'titres.id',
-        'titresAdministrationsGestionnaires.titreId'
-      )
-      .joinRaw(
-        "left join titres_etapes titre_etape_point on titre_etape_point.id = titres.props_titre_etapes_ids ->> 'points'"
-      )
-      .joinRaw(
-        "left join titres__sdom_zones on titres__sdom_zones.titre_etape_id = titres.props_titre_etapes_ids ->> 'points'"
-      )
-      .where('titresEtapes.typeId', 'mdp')
-      .andWhere('titresDemarches.typeId', 'oct')
-      .andWhere('titresEtapes.date', '>=', `${anneeDepartStats}-01-01`)
-      .andWhere(builder =>
-        builder
-          .where(
-            'titresAdministrationsGestionnaires.administrationId',
-            administrationId
-          )
-          .orWhereRaw(
-            `titre_etape_point.administrations_locales @> '"${administrationId}"'::jsonb`
-          )
-      )
-
-    etapeDeposees?.forEach(etape => {
-      const annee = getAnnee(etape.date)
-
-      if (!result.depotEtInstructions[annee]) {
-        result.depotEtInstructions[annee] = {
-          totalAXMDeposees: 0,
-          totalAXMOctroyees: 0,
-          totalTitresDeposes: 0,
-          totalTitresOctroyes: 0
-        }
-      }
-
-      if (!result.sdom[annee]) {
-        result.sdom[annee] = {
-          [SDOMZoneIds.Zone0]: { depose: 0, octroye: 0 },
-          [SDOMZoneIds.Zone0Potentielle]: { depose: 0, octroye: 0 },
-          [SDOMZoneIds.Zone1]: { depose: 0, octroye: 0 },
-          [SDOMZoneIds.Zone2]: { depose: 0, octroye: 0 }
-        }
-      }
-
-      result.depotEtInstructions[annee].totalTitresDeposes++
-      if (etape.sdomZoneId !== null) {
-        result.sdom[annee][etape.sdomZoneId].depose++
-      }
-
-      if (etape.typeId === 'axm') {
-        result.depotEtInstructions[annee].totalAXMDeposees++
-      }
-    })
-
-    const dateInstruction: {
-      id: string
-      mcrdate: CaminoDate
-      dexdate: CaminoDate
-    }[] = await knex
-      .select({
-        mcrdate: 'MCR.date',
-        dexdate: 'DEX.date'
-      })
-      .distinct('titresDemarches.id')
-      .from({
-        MCR: 'titresEtapes',
-        DEX: 'titresEtapes',
-        titresDemarches: 'titresDemarches'
-      })
-      .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
-      .leftJoin(
-        'titresAdministrationsGestionnaires',
-        'titres.id',
-        'titresAdministrationsGestionnaires.titreId'
-      )
-      .joinRaw(
-        "left join titres_etapes on titres_etapes.id = titres.props_titre_etapes_ids ->> 'points'"
-      )
-      .joinRaw(
-        "left join titres__sdom_zones on titres__sdom_zones.titre_etape_id = titres.props_titre_etapes_ids ->> 'points'"
-      )
-      .where('titresDemarches.typeId', 'oct')
-      .andWhereRaw('MCR.titre_demarche_id = "titres_demarches"."id"')
-      .andWhere('MCR.typeId', 'mcr')
-      .andWhere('MCR.date', '>=', `${anneeDepartStats}-01-01`)
-      .andWhereRaw('DEX.titre_demarche_id = "titres_demarches"."id"')
-      .andWhere('DEX.typeId', 'dex')
-      .andWhere(builder =>
-        builder
-          .where(
-            'titresAdministrationsGestionnaires.administrationId',
-            administrationId
-          )
-          .orWhereRaw(
-            `titres_etapes.administrations_locales @> '"${administrationId}"'::jsonb`
-          )
-      )
-
-    dateInstruction.forEach(instruction => {
-      const annee = getAnnee(instruction.mcrdate)
-      if (!result.delais[annee]) {
-        result.delais[annee] = {
-          delaiInstructionEnJours: [],
-          delaiCommissionDepartementaleEnJours: []
-        }
-      }
-      let days = daysBetween(instruction.mcrdate, instruction.dexdate)
-      if (days < 0) {
-        console.warn('cette demarche a une dex AVANT la mcr', instruction.id)
-        days = Math.abs(days)
-      }
-      result.delais[annee].delaiInstructionEnJours.push(days)
-    })
-
-    const dateCDM: {
-      id: string
-      mcrdate: CaminoDate
-      apo: CaminoDate
-    }[] = await knex
-      .select({ mcrdate: 'MCR.date', apo: 'APO.date' })
-      .distinct('titresDemarches.id')
-      .from({
-        MCR: 'titresEtapes',
-        APO: 'titresEtapes',
-        titresDemarches: 'titresDemarches'
-      })
-      .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
-      .leftJoin(
-        'titresAdministrationsGestionnaires',
-        'titres.id',
-        'titresAdministrationsGestionnaires.titreId'
-      )
-      .joinRaw(
-        "left join titres_etapes on titres_etapes.id = titres.props_titre_etapes_ids ->> 'points'"
-      )
-      .joinRaw(
-        "left join titres__sdom_zones on titres__sdom_zones.titre_etape_id = titres.props_titre_etapes_ids ->> 'points'"
-      )
-      .where('titresDemarches.typeId', 'oct')
-      .andWhereRaw('MCR.titre_demarche_id = "titres_demarches"."id"')
-      .andWhere('MCR.typeId', 'mcr')
-      .andWhere('MCR.date', '>=', `${anneeDepartStats}-01-01`)
-      .andWhereRaw('APO.titre_demarche_id = "titres_demarches"."id"')
-      .andWhere('APO.typeId', 'apo')
-      .andWhere(builder =>
-        builder
-          .where(
-            'titresAdministrationsGestionnaires.administrationId',
-            administrationId
-          )
-          .orWhereRaw(
-            `titres_etapes.administrations_locales @> '"${administrationId}"'::jsonb`
-          )
-      )
-
-    dateCDM.forEach(instruction => {
-      const annee = getAnnee(instruction.mcrdate)
-      if (!result.delais[annee]) {
-        result.delais[annee] = {
-          delaiInstructionEnJours: [],
-          delaiCommissionDepartementaleEnJours: []
-        }
-      }
-      let days = daysBetween(instruction.mcrdate, instruction.apo)
-      if (days < 0) {
-        console.warn('cette demarche a une apo AVANT la mcr', instruction.id)
-        days = Math.abs(days)
-      }
-      result.delais[annee].delaiCommissionDepartementaleEnJours.push(days)
-    })
-
-    res.json(result)
   }
-}
 
-type StatistiquesMinerauxMetauxMetropoleInstantBuild = Omit<
+const sels = [
+  SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_,
+  SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage,
+  SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage
+] as const
+type Sels = typeof sels[number]
+
+type StatistiquesMinerauxMetauxMetropoleInstantBuild = Pick<
   StatistiquesMinerauxMetauxMetropole,
-  'substances' | 'fiscaliteParSubstanceParAnnee'
+  'surfaceExploration' | 'surfaceExploitation' | 'titres'
 >
 const statistiquesMinerauxMetauxMetropoleInstantBuild =
   async (): Promise<StatistiquesMinerauxMetauxMetropoleInstantBuild> => {
@@ -407,30 +149,6 @@ const statistiquesMinerauxMetauxMetropoleInstantBuild =
 
     return statsInstant
   }
-
-const sels = [
-  SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_,
-  SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage,
-  SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage
-] as const
-type Sels = typeof sels[number]
-export const getMinerauxMetauxMetropolesStats = async (
-  _req: express.Request,
-  res: CustomResponse<StatistiquesMinerauxMetauxMetropole>
-): Promise<void> => {
-  try {
-    const result = await statistiquesMinerauxMetauxMetropoleInstantBuild()
-    const substances = await buildSubstances()
-    const fiscaliteParSubstanceParAnnee = await fiscaliteDetail()
-
-    res.json({ ...result, ...substances, fiscaliteParSubstanceParAnnee })
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
 const buildSubstances = async (): Promise<
   Pick<StatistiquesMinerauxMetauxMetropole, 'substances'>
 > => {
@@ -680,14 +398,14 @@ const fiscaliteDetail = async (): Promise<FiscaliteParSubstanceParAnnee> => {
       annee: CaminoAnnee
     } & Record<SubstanceFiscaleId, number>)[]
   } = await knex.raw(`
-    select case when e_t.categorie = 'PME' then 'pme' else 'autre' end as categorie, ta.annee, ${sumSubstances}
-    from titres_activites ta  
-    join titres t on t.id = ta.titre_id 
-    left join titres_titulaires tt on t.props_titre_etapes_ids ->> 'titulaires' = tt.titre_etape_id
-    left join entreprises e_t on e_t.id  = tt.entreprise_id
-    where ${whereSubstances}
-    group by case when e_t.categorie = 'PME' then 'pme' else 'autre' end, ta.annee
-    `)
+  select case when e_t.categorie = 'PME' then 'pme' else 'autre' end as categorie, ta.annee, ${sumSubstances}
+  from titres_activites ta  
+  join titres t on t.id = ta.titre_id 
+  left join titres_titulaires tt on t.props_titre_etapes_ids ->> 'titulaires' = tt.titre_etape_id
+  left join entreprises e_t on e_t.id  = tt.entreprise_id
+  where ${whereSubstances}
+  group by case when e_t.categorie = 'PME' then 'pme' else 'autre' end, ta.annee
+  `)
   const annees: CaminoAnnee[] = []
 
   result.rows.forEach(row => {
@@ -763,4 +481,122 @@ const fiscaliteDetail = async (): Promise<FiscaliteParSubstanceParAnnee> => {
   })
 
   return substances
+}
+
+const evolutionTitres = async (
+  titreTypeTypeId: TitreTypeTypeId
+): Promise<EvolutionTitres> => {
+  const anneeDepart = 2017
+  let currentYear = new Date().getFullYear()
+  const annee: Record<CaminoAnnee, number> = {}
+  while (currentYear >= anneeDepart) {
+    annee[valideAnnee(currentYear)] = 0
+    currentYear--
+  }
+  const demarcheOctroiTypeIds = [
+    DEMARCHES_TYPES_IDS.Octroi,
+    DEMARCHES_TYPES_IDS.Prolongation,
+    DEMARCHES_TYPES_IDS.Prolongation1,
+    DEMARCHES_TYPES_IDS.Prolongation2
+  ]
+  const titreTypeId = toTitreTypeId(titreTypeTypeId, DOMAINES_IDS.METAUX)
+  const depot: {
+    rows: { annee: CaminoAnnee; count: string }[]
+  } = await knex.raw(`
+        select substring(et."date", 0, 5) as annee, count(t.*) from titres_etapes et 
+        join titres_demarches td on td.id  = et.titre_demarche_id 
+        join titres t on t.id = td.titre_id 
+        where et.type_id = '${ETAPES_TYPES.depotDeLaDemande}' 
+        and td.type_id in (${toJoinSQL(demarcheOctroiTypeIds)})
+        and t.type_id = '${titreTypeId}'
+        and substring(et."date", 0, 5)::int >= ${anneeDepart}
+        and exists (select * from titres_communes tc where tc.titre_etape_id = t.props_titre_etapes_ids ->> 'points' and substring(tc.commune_id::text, 0, 3) in (${toJoinSQL(
+          departementsMetropole
+        )}))
+        group by substring(et."date", 0, 5)
+        `)
+
+  const octroi: {
+    rows: { annee: CaminoAnnee; count: string }[]
+  } = await knex.raw(`
+        select substring(tp."date_debut", 0, 5) as annee, count(t.*) from titres_phases tp
+        join titres_demarches td on td.id  = tp.titre_demarche_id  
+		    join titres t on t.id = td.titre_id 
+        where td.type_id in (${toJoinSQL(demarcheOctroiTypeIds)})
+        and t.type_id = '${titreTypeId}'
+        and substring(tp."date_debut", 0, 5)::int >= ${anneeDepart} 
+        and exists (select * from titres_communes tc where tc.titre_etape_id = t.props_titre_etapes_ids ->> 'points' and substring(tc.commune_id::text, 0, 3) in (${toJoinSQL(
+          departementsMetropole
+        )}))
+        group by substring(tp."date_debut", 0, 5)
+      `)
+
+  const etapesTypesDecisionRefus = [
+    ETAPES_TYPES.decisionImplicite,
+    ETAPES_TYPES.decisionDeLadministration,
+    ETAPES_TYPES.decisionDuJugeAdministratif
+  ]
+  const refus: {
+    rows: { annee: CaminoAnnee; count: string }[]
+  } = await knex.raw(`
+         select substring(et."date", 0, 5) as annee, count(distinct t.id) from titres_etapes et 
+         join titres_demarches td on td.id  = et.titre_demarche_id 
+         join titres t on t.id = td.titre_id 
+         where 
+         ((et.type_id in (${toJoinSQL(
+           etapesTypesDecisionRefus
+         )}) and et.statut_id = '${ETAPES_STATUTS.REJETE}') or (et.type_id = '${
+    ETAPES_TYPES.classementSansSuite
+  }' and et.statut_id = '${ETAPES_STATUTS.FAIT}'))
+         and td.type_id in (${toJoinSQL(demarcheOctroiTypeIds)})
+         and t.type_id = '${titreTypeId}'
+         and td.statut_id in (${toJoinSQL([
+           DemarchesStatutsIds.Rejete,
+           DemarchesStatutsIds.ClasseSansSuite
+         ])})
+         and substring(et."date", 0, 5)::int >= ${anneeDepart}
+         and exists (select * from titres_communes tc where tc.titre_etape_id = t.props_titre_etapes_ids ->> 'points' and substring(tc.commune_id::text, 0, 3) in (${toJoinSQL(
+           departementsMetropole
+         )}))
+         group by substring(et."date", 0, 5)
+`)
+
+  // conversion 1 km² = 100 ha
+  const surface: {
+    rows: { annee: CaminoAnnee; count: string }[]
+  } = await knex.raw(`
+    select substring(et."date", 0, 5) as annee, sum(t_surface.surface * 100) as count from titres_etapes et 
+    join titres_demarches td on td.id  = et.titre_demarche_id 
+    join titres t on t.id = td.titre_id 
+    join titres_etapes t_surface on t_surface.id =  t.props_titre_etapes_ids ->> 'surface'
+    where et.type_id = '${ETAPES_TYPES.depotDeLaDemande}' 
+    and td.type_id in (${toJoinSQL(demarcheOctroiTypeIds)})
+    and t.type_id = '${titreTypeId}'
+    and substring(et."date", 0, 5)::int >= ${anneeDepart}
+    and exists (select * from titres_communes tc where tc.titre_etape_id = t.props_titre_etapes_ids ->> 'points' and substring(tc.commune_id::text, 0, 3) in (${toJoinSQL(
+      departementsMetropole
+    )}))
+    group by substring(et."date", 0, 5)
+    `)
+
+  return {
+    depot: { ...annee, ...toRecord(depot.rows) },
+    octroiEtProlongation: { ...annee, ...toRecord(octroi.rows) },
+    refusees: { ...annee, ...toRecord(refus.rows) },
+    surface: { ...annee, ...toRecord(surface.rows) }
+  }
+}
+
+const toJoinSQL = (values: any[]): string => {
+  return values.map(v => `'${v}'`).join(',')
+}
+
+const toRecord = (
+  values: { annee: CaminoAnnee; count: string }[]
+): Record<CaminoAnnee, number> => {
+  return values.reduce<Record<CaminoAnnee, number>>((acc, { annee, count }) => {
+    acc[annee] = Number(count)
+
+    return acc
+  }, {})
 }

@@ -1,4 +1,4 @@
-import { checkCodePostal, isDepartementId, toDepartementId } from './departement'
+import { checkCodePostal, isDepartementId, toDepartementId, departementsMetropole } from './departement'
 
 test('isDepartementId', () => {
   expect(isDepartementId(null)).toBe(false)
@@ -10,4 +10,8 @@ test('toDepartementId', () => {
   expect(toDepartementId(checkCodePostal('97311'))).toBe('973')
   expect(toDepartementId(checkCodePostal('71056'))).toBe('71')
   expect(toDepartementId(checkCodePostal('06093'))).toBe('06')
+})
+
+test('departementsMetropole', () => {
+  expect(departementsMetropole).not.toContain(['971', '972', '973', '974', '976'])
 })
