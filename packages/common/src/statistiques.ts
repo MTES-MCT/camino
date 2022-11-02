@@ -81,4 +81,10 @@ export interface StatistiquesMinerauxMetauxMetropole {
     [SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage]: StatistiquesMinerauxMetauxMetropoleSels
   }
   fiscaliteParSubstanceParAnnee: FiscaliteParSubstanceParAnnee
+  prm: {
+    depot: Record<CaminoAnnee, number>
+    octroiEtProlongation: Record<CaminoAnnee, number>
+    refusees: Record<CaminoAnnee, number>
+    surface: Record<CaminoAnnee, number>
+  }
 }

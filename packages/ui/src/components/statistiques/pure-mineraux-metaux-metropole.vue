@@ -505,36 +505,36 @@ const selsChartConfiguration = (
 const perChartConfiguration = (
   data: StatistiquesMinerauxMetauxMetropole
 ): ChartConfiguration => {
-  // FIXME ajouter les vrais datas
+  const annees: CaminoAnnee[] = [...Object.keys(data.prm.depot)].filter(isAnnee)
   const chartData: ChartData = {
-    labels: [2017, 2018, 2019, 2020, 2021, 2022],
+    labels: annees,
     datasets: [
       {
         type: 'bar',
         label: 'Demandes de PER déposées (octroi et prolongation)',
         yAxisID: 'demandes',
-        data: [0, 0, 1, 0, 2, 0],
+        data: annees.map(annee => data.prm.depot[annee]),
         backgroundColor: CHART_COLORS.green
       },
       {
         type: 'bar',
         label: 'Demandes de PER octroyées et prolongées',
         yAxisID: 'demandes',
-        data: [0, 0, 0, 0, 1, 0],
+        data: annees.map(annee => data.prm.octroiEtProlongation[annee]),
         backgroundColor: CHART_COLORS.blue
       },
       {
         type: 'bar',
         label: 'Demandes de PER refusées (octroi et prolongation)',
         yAxisID: 'demandes',
-        data: [0, 0, 0, 0, 0, 0],
+        data: annees.map(annee => data.prm.refusees[annee]),
         backgroundColor: CHART_COLORS.purple
       },
       {
         type: 'line',
         label: 'Surface cumulée des permis de recherche (ha) accordés',
         yAxisID: 'surface',
-        data: [0, 0, 0, 0, 600, 0],
+        data: annees.map(annee => data.prm.surface[annee]),
         backgroundColor: CHART_COLORS.blue
       }
     ]
@@ -548,7 +548,7 @@ const perChartConfiguration = (
         legend: {
           // FIXME trouver un moyen de prendre plus de place
           display: true,
-          position: 'left',
+          position: 'top',
           fullSize: true
         }
       },
