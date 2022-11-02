@@ -300,7 +300,7 @@
       Les données affichées ici sont celles contenues dans la base de donnée
       Camino. Ces données concernent exclusivement le territoire métropolitain.
     </p>
-    <div>
+    <div class="mb-xl">
       <h3>Permis Exclusif de Recherche (PER)</h3>
       <hr />
       <div>
@@ -309,7 +309,7 @@
         </LoadingElement>
       </div>
     </div>
-    <div>
+    <div class="mb-xl">
       <h3>Concession</h3>
       <hr />
       <div>
@@ -546,7 +546,7 @@ const perChartConfiguration = (
     options: {
       plugins: {
         legend: {
-          // FIXME trouver un moyen de prendre plus de place
+          // TODO 2022-11-02 trouver un moyen de prendre plus de place
           display: true,
           position: 'top',
           fullSize: true
@@ -576,16 +576,53 @@ const perChartConfiguration = (
 const concessionChartConfiguration = (
   data: StatistiquesMinerauxMetauxMetropole
 ): ChartConfiguration => {
-  // FIXME add real datas
+  const annees: CaminoAnnee[] = [...Object.keys(data.cxm.depot)].filter(isAnnee)
   const chartData: ChartData = {
-    labels: [2017, 2018],
-    datasets: []
+    labels: annees,
+    datasets: [
+      {
+        type: 'bar',
+        label: 'Demandes de concessions déposées (octroi et prolongation)',
+        yAxisID: 'demandes',
+        data: annees.map(annee => data.cxm.depot[annee]),
+        backgroundColor: CHART_COLORS.green
+      },
+      {
+        type: 'bar',
+        label: 'Demandes de concessions octroyées et prolongées',
+        yAxisID: 'demandes',
+        data: annees.map(annee => data.cxm.octroiEtProlongation[annee]),
+        backgroundColor: CHART_COLORS.blue
+      },
+      {
+        type: 'bar',
+        label: 'Demandes de concessions refusées (octroi et prolongation)',
+        yAxisID: 'demandes',
+        data: annees.map(annee => data.cxm.refusees[annee]),
+        backgroundColor: CHART_COLORS.purple
+      },
+      {
+        type: 'line',
+        label: 'Surface cumulée des concessions (ha) accordées',
+        yAxisID: 'surface',
+        data: annees.map(annee => data.cxm.surface[annee]),
+        backgroundColor: CHART_COLORS.blue
+      }
+    ]
   }
 
   return {
     type: 'bar',
     data: chartData,
     options: {
+      plugins: {
+        legend: {
+          // TODO 2022-11-02 trouver un moyen de prendre plus de place
+          display: true,
+          position: 'top',
+          fullSize: true
+        }
+      },
       locale: 'fr-FR',
       responsive: true,
       interaction: {
@@ -593,10 +630,15 @@ const concessionChartConfiguration = (
         intersect: false
       },
       scales: {
-        x: {
-          stacked: true
+        demandes: {
+          type: 'linear',
+          position: 'left',
+          ticks: { stepSize: 1 }
         },
-        y: { stacked: true }
+        surface: {
+          type: 'linear',
+          position: 'right'
+        }
       }
     }
   }

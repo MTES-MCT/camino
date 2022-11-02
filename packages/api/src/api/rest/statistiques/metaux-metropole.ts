@@ -1,4 +1,5 @@
 import {
+  EvolutionTitres,
   FiscaliteParSubstanceParAnnee,
   StatistiquesMinerauxMetauxMetropole,
   StatistiquesMinerauxMetauxMetropoleSels,
@@ -31,7 +32,10 @@ import {
 } from '../../../tools/api-openfisca'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
-import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
+import {
+  TITRES_TYPES_TYPES_IDS,
+  TitreTypeTypeId
+} from 'camino-common/src/static/titresTypesTypes'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
 import { toTitreTypeId } from 'camino-common/src/static/titresTypes'
@@ -43,13 +47,17 @@ export const getMinerauxMetauxMetropolesStatsInside =
     const result = await statistiquesMinerauxMetauxMetropoleInstantBuild()
     const substances = await buildSubstances()
     const fiscaliteParSubstanceParAnnee = await fiscaliteDetail()
-    const prmData = await prm()
+    const prmData = await evolutionTitres(
+      TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES
+    )
+    const cxmData = await evolutionTitres(TITRES_TYPES_TYPES_IDS.CONCESSION)
 
     return {
       ...result,
       ...substances,
       fiscaliteParSubstanceParAnnee,
-      ...prmData
+      prm: prmData,
+      cxm: cxmData
     }
   }
 
@@ -475,9 +483,9 @@ const fiscaliteDetail = async (): Promise<FiscaliteParSubstanceParAnnee> => {
   return substances
 }
 
-const prm = async (): Promise<
-  Pick<StatistiquesMinerauxMetauxMetropole, 'prm'>
-> => {
+const evolutionTitres = async (
+  titreTypeTypeId: TitreTypeTypeId
+): Promise<EvolutionTitres> => {
   const anneeDepart = 2017
   let currentYear = new Date().getFullYear()
   const annee: Record<CaminoAnnee, number> = {}
@@ -487,13 +495,11 @@ const prm = async (): Promise<
   }
   const demarcheOctroiTypeIds = [
     DEMARCHES_TYPES_IDS.Octroi,
+    DEMARCHES_TYPES_IDS.Prolongation,
     DEMARCHES_TYPES_IDS.Prolongation1,
     DEMARCHES_TYPES_IDS.Prolongation2
   ]
-  const titreTypeId = toTitreTypeId(
-    TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES,
-    DOMAINES_IDS.METAUX
-  )
+  const titreTypeId = toTitreTypeId(titreTypeTypeId, DOMAINES_IDS.METAUX)
   const depot: {
     rows: { annee: CaminoAnnee; count: string }[]
   } = await knex.raw(`
@@ -574,12 +580,10 @@ const prm = async (): Promise<
     `)
 
   return {
-    prm: {
-      depot: { ...annee, ...toRecord(depot.rows) },
-      octroiEtProlongation: { ...annee, ...toRecord(octroi.rows) },
-      refusees: { ...annee, ...toRecord(refus.rows) },
-      surface: { ...annee, ...toRecord(surface.rows) }
-    }
+    depot: { ...annee, ...toRecord(depot.rows) },
+    octroiEtProlongation: { ...annee, ...toRecord(octroi.rows) },
+    refusees: { ...annee, ...toRecord(refus.rows) },
+    surface: { ...annee, ...toRecord(surface.rows) }
   }
 }
 
