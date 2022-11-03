@@ -26,5 +26,5 @@
     "allowJs": true
   },
   "exclude": ["node_modules", "**/node_modules/*", "dist"],
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*", "../common/src/**/*"]
 }

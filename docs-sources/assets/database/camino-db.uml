@@ -267,15 +267,8 @@ entity "**sdom_zones_postgis**" {
   ""geometry"": //geometry(MultiPolygon,4326) //
 }
 
-entity "**secteurs_maritime**" {
-  + ""id"": //integer [PK]//
-  --
-  ""nom"": //character varying(255) //
-  ""facade"": //character varying(255) //
-}
-
 entity "**secteurs_maritime_postgis**" {
-  + ""id"": //integer [PK][FK]//
+  + ""id"": //integer [PK]//
   --
   ""geometry"": //geometry(MultiPolygon,4326) //
 }
@@ -316,12 +309,6 @@ entity "**titres__sdom_zones**" {
   --
 }
 
-entity "**titres__secteurs_maritime**" {
-  + ""titre_etape_id"": //character varying(128) [PK][FK]//
-  + ""secteur_maritime_id"": //integer [PK][FK]//
-  --
-}
-
 entity "**titres__titres**" {
   + ""titre_from_id"": //character varying(255) [PK][FK]//
   + ""titre_to_id"": //character varying(255) [PK][FK]//
@@ -345,21 +332,8 @@ entity "**titres_activites**" {
   ""slug"": //character varying(255) //
 }
 
-entity "**titres_administrations**" {
-  + ""titre_id"": //character varying(128) [PK][FK]//
-  + ""administration_id"": //character varying(128) [PK][FK]//
-  --
-}
-
 entity "**titres_administrations_gestionnaires**" {
   + ""titre_id"": //character varying(128) [PK][FK]//
-  + ""administration_id"": //character varying(64) [PK][FK]//
-  --
-  ""associee"": //boolean //
-}
-
-entity "**titres_administrations_locales**" {
-  + ""titre_etape_id"": //character varying(128) [PK][FK]//
   + ""administration_id"": //character varying(64) [PK][FK]//
   --
   ""associee"": //boolean //
@@ -420,6 +394,8 @@ entity "**titres_etapes**" {
   ""decisions_annexes_contenu"": //json //
   *""archive"": //boolean //
   *""substances"": //jsonb //
+  ""secteurs_maritime"": //jsonb //
+  ""administrations_locales"": //jsonb //
 }
 
 entity "**titres_etapes_justificatifs**" {
@@ -515,13 +491,6 @@ entity "**titres_types__demarches_types__etapes_types__justificatifs_t**" {
   --
   ""optionnel"": //boolean //
   ""description"": //text //
-}
-
-entity "**titres_types__titres_statuts**" {
-  + ""titre_type_id"": //character varying(255) [PK][FK]//
-  + ""titre_statut_id"": //character varying(255) [PK]//
-  --
-  ""public_lecture"": //boolean //
 }
 
 entity "**titres_types_types**" {
@@ -651,8 +620,6 @@ entity "**utilisateurs__titres**" {
 
 "**journaux**"   }--  "**titres**"
 
-"**secteurs_maritime_postgis**"  ||-||  "**secteurs_maritime**"
-
 "**titres**"   }--  "**domaines**"
 
 "**titres**"   }--  "**titres_types**"
@@ -664,14 +631,6 @@ entity "**utilisateurs__titres**" {
 "**titres__sdom_zones**"   }--  "**titres_etapes**"
 
 "**titres__sdom_zones**"   }--  "**titres_etapes**"
-
-"**titres__secteurs_maritime**"   }--  "**secteurs_maritime**"
-
-"**titres__secteurs_maritime**"   }--  "**secteurs_maritime**"
-
-"**titres__secteurs_maritime**"   }--  "**titres_etapes**"
-
-"**titres__secteurs_maritime**"   }--  "**titres_etapes**"
 
 "**titres__titres**"   }--  "**titres**"
 
@@ -689,14 +648,6 @@ entity "**utilisateurs__titres**" {
 
 "**titres_activites**"   }--  "**utilisateurs**"
 
-"**titres_administrations**"   }--  "**administrations**"
-
-"**titres_administrations**"   }--  "**administrations**"
-
-"**titres_administrations**"   }--  "**titres**"
-
-"**titres_administrations**"   }--  "**titres**"
-
 "**titres_administrations_gestionnaires**"   }--  "**administrations**"
 
 "**titres_administrations_gestionnaires**"   }--  "**administrations**"
@@ -704,14 +655,6 @@ entity "**utilisateurs__titres**" {
 "**titres_administrations_gestionnaires**"   }--  "**titres**"
 
 "**titres_administrations_gestionnaires**"   }--  "**titres**"
-
-"**titres_administrations_locales**"   }--  "**administrations**"
-
-"**titres_administrations_locales**"   }--  "**administrations**"
-
-"**titres_administrations_locales**"   }--  "**titres_etapes**"
-
-"**titres_administrations_locales**"   }--  "**titres_etapes**"
 
 "**titres_amodiataires**"   }--  "**entreprises**"
 
@@ -830,10 +773,6 @@ entity "**utilisateurs__titres**" {
 "**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**titres_types__demarches_types__etapes_types**"
 
 "**titres_types__demarches_types__etapes_types__justificatifs_t**"   }--  "**titres_types__demarches_types__etapes_types**"
-
-"**titres_types__titres_statuts**"   }--  "**titres_types**"
-
-"**titres_types__titres_statuts**"   }--  "**titres_types**"
 
 "**utilisateurs**"   }--  "**administrations**"
 

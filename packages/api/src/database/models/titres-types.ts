@@ -2,7 +2,6 @@ import { Model, Modifiers } from 'objection'
 
 import { ITitreType } from '../../types'
 
-import TitresTypesTitresStatuts from './titres-types--titres-statuts'
 import Domaines from './domaines'
 import DemarchesTypes from './demarches-types'
 import TitresTypesTypes from './titres-types-types'
@@ -64,15 +63,6 @@ class TitresTypes extends Model {
           ]
         },
         to: 'demarchesTypes.id'
-      }
-    },
-
-    titresTypesTitresStatuts: {
-      relation: Model.HasManyRelation,
-      modelClass: TitresTypesTitresStatuts,
-      join: {
-        from: 'titresTypes.id',
-        to: 'titresTypes__titresStatuts.titreTypeId'
       }
     }
   })

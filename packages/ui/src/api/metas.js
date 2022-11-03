@@ -88,19 +88,6 @@ const titresTypes = apiGraphQLFetch(
 )
 
 // tables de jointure
-
-const titresTypesTitresStatuts = apiGraphQLFetch(
-  gql`
-    query TitresTypesTitresStatuts {
-      titresTypesTitresStatuts {
-        ...titreTypeTitreStatut
-      }
-    }
-
-    ${fragmentTitreTypeTitreStatut}
-  `
-)
-
 const titresTypesDemarchesTypes = apiGraphQLFetch(
   gql`
     query TitresTypesDemarchesTypes {
@@ -180,7 +167,6 @@ export {
   etapesTypes,
   documentsTypes,
   titresTypes,
-  titresTypesTitresStatuts,
   titresTypesDemarchesTypes,
   titresTypesDemarchesTypesEtapesTypes,
   titresTypesDemarchesTypesEtapesTypesDocumentsTypes,

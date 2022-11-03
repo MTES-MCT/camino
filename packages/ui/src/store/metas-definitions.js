@@ -3,7 +3,6 @@ import {
   etapesTypes,
   documentsTypes,
   titresTypes,
-  titresTypesTitresStatuts,
   titresTypesDemarchesTypes,
   titresTypesDemarchesTypesEtapesTypes,
   etapesTypesDocumentsTypes,
@@ -24,6 +23,7 @@ import { Domaines } from 'camino-common/src/static/domaines'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { phasesStatuts } from 'camino-common/src/static/phasesStatuts'
+import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypesTypes_domaine_titresStatuts'
 
 const labelGet = entity => (entity ? `${entity.id} - ${entity.nom}` : '')
 
@@ -76,7 +76,7 @@ const metasIndex = {
     ]
   },
   'titre-types--titres-statuts': {
-    get: titresTypesTitresStatuts,
+    get: () => titreTypesStatutsTitresPublicLecture,
     nom: 'Types des titres | Statuts des titres',
     colonnes: [
       {
