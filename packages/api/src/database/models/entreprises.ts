@@ -5,7 +5,6 @@ import EntreprisesEtablissements from './entreprises-etablissements'
 import Utilisateurs from './utilisateurs'
 import Titres from './titres'
 import Document from './documents'
-import TitresTypes from './titres-types'
 
 interface Entreprises extends IEntreprise {}
 
@@ -91,20 +90,6 @@ class Entreprises extends Model {
       join: {
         from: 'entreprises.id',
         to: 'documents.entrepriseId'
-      }
-    },
-
-    titresTypes: {
-      relation: Model.ManyToManyRelation,
-      modelClass: TitresTypes,
-      join: {
-        from: 'entreprises.id',
-        through: {
-          from: 'entreprises__titresTypes.entrepriseId',
-          to: 'entreprises__titresTypes.titreTypeId',
-          extra: ['titresCreation']
-        },
-        to: 'titresTypes.id'
       }
     }
   })

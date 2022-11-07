@@ -40,18 +40,6 @@ const fragmentEntreprise = gql`
     documents {
       ...document
     }
-    titresTypes {
-      id
-      domaine {
-        id
-        nom
-      }
-      type {
-        id
-        nom
-      }
-      titresCreation
-    }
 
     modification
   }

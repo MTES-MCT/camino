@@ -319,7 +319,6 @@ interface IDomaine {
   description?: string
   ordre: number
   titresTypes: ITitreType[]
-  titresCreation: boolean
 }
 
 interface IEntrepriseEtablissement {
@@ -350,7 +349,6 @@ interface IEntreprise {
   etablissements?: IEntrepriseEtablissement[] | null
   utilisateurs?: IUtilisateur[] | null
   titulaireTitres?: ITitre[] | null
-  titresTypes?: (ITitreType & { titresCreation: boolean })[]
   amodiataireTitres?: ITitre[] | null
   modification?: boolean | null
   archive?: boolean | null
@@ -358,12 +356,6 @@ interface IEntreprise {
 
 interface ITitreEntreprise extends IEntreprise {
   operateur?: boolean
-}
-
-interface IEntrepriseTitreType {
-  entrepriseId: string
-  titreTypeId: string
-  titresCreation: boolean
 }
 
 interface IEtapeTypeDocumentType {
@@ -861,7 +853,6 @@ export {
   IDomaine,
   IEntreprise,
   IEntrepriseEtablissement,
-  IEntrepriseTitreType,
   IEtapeType,
   IForet,
   ISDOMZone,

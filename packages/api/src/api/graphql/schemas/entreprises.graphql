@@ -87,9 +87,3 @@ input InputEntrepriseModification {
   email: String
   archive: Boolean
 }
-
-input InputEntrepriseTitreType {
-  entrepriseId: ID!
-  titreTypeId: ID!
-  titresCreation: Boolean
-}

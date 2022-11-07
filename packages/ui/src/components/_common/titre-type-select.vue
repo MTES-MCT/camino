@@ -9,10 +9,10 @@
         <select
           v-model="element.domaineId"
           class="p-s mr"
-          @change="element.typeId = null"
+          @change="domaineUpdate()"
         >
           <option
-            v-for="domaine in domaines"
+            v-for="domaine in domainesFiltered"
             :key="domaine.id"
             :value="domaine.id"
           >
@@ -22,7 +22,7 @@
       </div>
     </div>
     <hr />
-    <div class="tablet-blobs">
+    <div v-if="element.domaineId" class="tablet-blobs">
       <div class="tablet-blob-1-3 tablet-pt-s pb-s">
         <h5>Type</h5>
       </div>
@@ -30,14 +30,14 @@
         <select
           v-model="element.typeId"
           class="p-s mr"
-          :disabled="!titresTypes"
+          :disabled="!titresTypeTypes"
         >
           <option
-            v-for="titreType in titresTypes"
-            :key="titreType.id"
-            :value="titreType.id"
+            v-for="titreTypeType in titresTypeTypes"
+            :key="titreTypeType.id"
+            :value="toTitreTypeId(titreTypeType.id, element.domaineId)"
           >
-            {{ titreType.type.nom }}
+            {{ titreTypeType.nom }}
           </option>
         </select>
       </div>
@@ -46,44 +46,72 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    element: { type: Object, required: true },
-    domaines: { type: Array, required: true }
-  },
+<script setup lang="ts">
+import { canCreateTitre } from 'camino-common/src/permissions/titres'
+import { User } from 'camino-common/src/roles'
+import { DomaineId, sortedDomaines } from 'camino-common/src/static/domaines'
+import {
+  getTitreTypeTypeByDomaineId,
+  TitreTypeId,
+  toTitreTypeId
+} from 'camino-common/src/static/titresTypes'
+import {
+  TitresTypesTypes,
+  TitreTypeType
+} from 'camino-common/src/static/titresTypesTypes'
+import { computed, onMounted } from 'vue'
 
-  computed: {
-    titresTypes() {
-      const domaine = this.domaines.find(
-        ({ id }) => id === this.element.domaineId
-      )
+type Domaine = {
+  id: DomaineId
+  nom: string
+}
 
-      return domaine && domaine.titresTypes.filter(tt => tt.titresCreation)
-    }
-  },
+const props = defineProps<{
+  element: {
+    domaineId: DomaineId | undefined
+    typeId: TitreTypeId | undefined | null
+  }
+  user: User
+}>()
 
-  watch: {
-    domaines: 'domainesUpdate',
-    titresTypes: 'titresTypesUpdate'
-  },
+const domainesFiltered = computed<Domaine[]>(() =>
+  sortedDomaines.filter(d =>
+    getTitreTypeTypeByDomaineId(d.id).some(titreTypeTypeId =>
+      canCreateTitre(props.user, toTitreTypeId(titreTypeTypeId, d.id))
+    )
+  )
+)
 
-  created() {
-    this.domainesUpdate()
-  },
+const titresTypeTypes = computed<undefined | TitreTypeType[]>(() =>
+  props.element.domaineId
+    ? getTitreTypeTypeByDomaineId(props.element.domaineId)
+        .filter(titreTypeTypeId =>
+          canCreateTitre(
+            props.user,
+            toTitreTypeId(titreTypeTypeId, props.element.domaineId)
+          )
+        )
+        .map(titreTypeTypeId => TitresTypesTypes[titreTypeTypeId])
+    : undefined
+)
 
-  methods: {
-    domainesUpdate() {
-      if (this.domaines?.length === 1) {
-        this.element.domaineId = this.domaines[0].id
-      }
-    },
-
-    titresTypesUpdate() {
-      if (this.titresTypes?.length === 1) {
-        this.element.typeId = this.titresTypes[0].id
-      }
-    }
+const domaineUpdate = () => {
+  // Si on a que 1 choix, on le sélectionne directement
+  if (props.element.domaineId && titresTypeTypes.value?.length === 1) {
+    props.element.typeId = toTitreTypeId(
+      titresTypeTypes.value[0].id,
+      props.element.domaineId
+    )
+  } else {
+    props.element.typeId = null
   }
 }
+
+onMounted(() => {
+  // Si l’utilisateur peut sélectionner que 1 domaine, on le sélectionne
+  if (domainesFiltered.value.length === 1) {
+    props.element.domaineId = domainesFiltered.value[0].id
+  }
+  domaineUpdate()
+})
 </script>

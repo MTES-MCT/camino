@@ -87,7 +87,6 @@ const entreprisesEtapesTypesPropsQuery = (entreprisesIds: string[]) =>
     .andWhere('e_te.statutId', 'aco')
     .whereIn('titulaires.id', entreprisesIds)
     .whereRaw('?? = ??', ['demarche:titre.typeId', 'titulaires:titresTypes.id'])
-    .whereRaw('?? is true', ['titulaires:titresTypesJoin.titresCreation'])
     .first()
 
 const domainesQueryModify = (

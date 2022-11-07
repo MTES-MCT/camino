@@ -11,9 +11,7 @@ jest.mock('../router', () => ({
 jest.mock('../api/entreprises', () => ({
   entreprise: jest.fn(),
   entrepriseCreer: jest.fn(),
-  entrepriseModifier: jest.fn(),
-  entreprisePermissionsMetas: jest.fn(),
-  entrepriseTitreTypeUpdate: jest.fn()
+  entrepriseModifier: jest.fn()
 }))
 
 console.info = jest.fn()
@@ -167,79 +165,5 @@ describe("état de l'entreprise sélectionnée", () => {
     })
 
     expect(mutations.popupMessageAdd).toHaveBeenCalled()
-  })
-
-  test('récupère les métas pour éditer les permissions', async () => {
-    const apiMock = api.entreprisePermissionsMetas.mockResolvedValue([
-      { id: 'm', nom: 'minéraux et métaux' }
-    ])
-
-    await store.dispatch('entreprise/permissionsInit')
-
-    expect(apiMock).toHaveBeenCalled()
-    expect(store.state.entreprise.metas).toEqual({
-      domaines: [{ id: 'm', nom: 'minéraux et métaux' }]
-    })
-
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-  })
-
-  test("retourne une erreur si l'API retourne une erreur lors de la récupération des métas", async () => {
-    const apiMock = api.entreprisePermissionsMetas.mockRejectedValue(
-      new Error('erreur api')
-    )
-
-    await store.dispatch('entreprise/permissionsInit')
-
-    expect(apiMock).toHaveBeenCalled()
-
-    expect(mutations.messageAdd).toHaveBeenCalled()
-  })
-
-  test('modifie les permissions (type de titres)', async () => {
-    const apiMock = api.entrepriseTitreTypeUpdate.mockResolvedValue({
-      id: 71,
-      nom: 'nom admin'
-    })
-
-    await store.dispatch('entreprise/titreTypeUpdate', {
-      entrepriseId: 'entreprise-id',
-      titreTypeId: 'aex',
-      titresCreation: true
-    })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      entrepriseTitreType: {
-        entrepriseId: 'entreprise-id',
-        titreTypeId: 'aex',
-        titresCreation: true
-      }
-    })
-
-    expect(actions.reload).toHaveBeenCalled()
-    expect(actions.messageAdd).toHaveBeenCalled()
-  })
-
-  test("retourne une erreur si l'API retourne une erreur lors de la modification des permissions (type de titre)", async () => {
-    const apiMock = api.entrepriseTitreTypeUpdate.mockRejectedValue(
-      new Error('erreur api')
-    )
-
-    await store.dispatch('entreprise/titreTypeUpdate', {
-      entrepriseId: 'entreprise-id',
-      titreTypeId: 'aex',
-      titresCreation: true
-    })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      entrepriseTitreType: {
-        entrepriseId: 'entreprise-id',
-        titreTypeId: 'aex',
-        titresCreation: true
-      }
-    })
-
-    expect(actions.reload).not.toHaveBeenCalled()
-    expect(mutations.messageAdd).toHaveBeenCalled()
   })
 })

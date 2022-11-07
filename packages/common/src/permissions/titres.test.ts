@@ -1,4 +1,4 @@
-import { canLinkTitres, getLinkConfig } from './titres'
+import { canCreateTitre, canLinkTitres, getLinkConfig } from './titres'
 import { TitresTypesIds, TitreTypeId } from '../static/titresTypes'
 import { User } from '../roles'
 import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations'
@@ -51,4 +51,8 @@ test.each<[User, AdministrationId[], boolean]>([
   [{ role: 'defaut', administrationId: undefined }, [ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON']], false]
 ])('un utilisateur $user peut modifier les liaisons d’un titre: $can ', (user, administrationIds, can) => {
   expect(canLinkTitres(user, administrationIds)).toBe(can)
+})
+
+test.each<TitreTypeId>(TitresTypesIds)('vérifie si une entreprise peut créer un titre de type %p', titreTypeId => {
+  expect(canCreateTitre({ role: 'entreprise', administrationId: null }, titreTypeId)).toMatchSnapshot()
 })

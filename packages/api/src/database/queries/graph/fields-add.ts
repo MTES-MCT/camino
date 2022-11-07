@@ -1,13 +1,5 @@
 import { IFields } from '../../../types'
 
-const fieldsEntreprisesTitresCreationAdd = (fields: IFields = {}) => {
-  if (!fields.titresTypes) {
-    fields.titresTypes = { id: {} }
-  }
-
-  return fields
-}
-
 // ajoute les champs nécessaire pour obtenir le sous-objet titre
 // pour vérifier si l'utilisateur a les droits sur les titres
 const fieldsTitreAdd = (fields: IFields) => {
@@ -93,4 +85,4 @@ const titresFieldsAdd = (fields: IFields) => {
   return fields
 }
 
-export { fieldsTitreAdd, titresFieldsAdd, fieldsEntreprisesTitresCreationAdd }
+export { fieldsTitreAdd, titresFieldsAdd }

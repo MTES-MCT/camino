@@ -100,7 +100,6 @@ import {
   entreprises,
   entrepriseCreer,
   entrepriseModifier,
-  entrepriseTitreTypeModifier,
   entreprisesTitresCreation
 } from './resolvers/entreprises'
 import {
@@ -230,7 +229,6 @@ export default {
   newsletterInscrire,
   entrepriseCreer,
   entrepriseModifier,
-  entrepriseTitreTypeModifier,
   entreprisesTitresCreation,
   administrationTitreTypeTitreStatutModifier,
   administrationTitreTypeEtapeTypeModifier,

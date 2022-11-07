@@ -1,6 +1,6 @@
 import { TitresTypes, TitreTypeId } from '../static/titresTypes'
 import { DemarcheTypeId } from '../static/demarchesTypes'
-import { isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from '../roles'
+import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from '../roles'
 import { AdministrationId } from '../static/administrations'
 import { isGestionnaire } from '../static/administrationsTitresTypes'
 
@@ -38,6 +38,8 @@ export const canCreateTitre = (user: User, titreTypeId: TitreTypeId | undefined)
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     return isGestionnaire(user.administrationId, titreTypeId)
+  } else if (isEntreprise(user) || isBureauDEtudes(user)) {
+    return ['axm', 'arm'].includes(titreTypeId)
   }
 
   return false

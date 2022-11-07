@@ -30,7 +30,7 @@
     <TitreTypeSelect
       v-if="titreDemande.entrepriseId"
       v-model:element="titreDemande"
-      :domaines="domaines"
+      :user="user"
     />
 
     <div v-if="titreDemande.typeId">
@@ -161,38 +161,20 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useStore } from 'vuex'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
 
-type TitreTypeType = { id: TitreTypeTypeId; nom: string }
-type Domaine = {
-  id: DomaineId
-  nom: string
-  titresTypes: {
-    id: TitreTypeId
-    type: TitreTypeType
-    titresCreation: boolean
-  }[]
-}
-type TitreType = {
-  id: TitreTypeId
-  domaine: Domaine
-  type: TitreTypeType
-  titresCreation: boolean
-}
 type Entreprise = {
   id: string
   nom: string
-  type: TitreTypeType
-  titresTypes: TitreType[]
 }
 
 const titreDemande = ref<{
   entrepriseId?: string
-  typeId?: TitreTypeId
+  domaineId: DomaineId | undefined
+  typeId: TitreTypeId | undefined | null
   nom?: string
   titreFromIds?: string[]
   references: { referenceTypeId: ReferenceTypeId | ''; nom: string }[]
-}>({ references: [] })
+}>({ references: [], domaineId: undefined, typeId: undefined })
 const saveRef = ref<any>(null)
 const store = useStore()
 
@@ -224,46 +206,6 @@ const entreprise = computed<Entreprise | undefined>(() => {
 
 const entrepriseOuBureauDEtudeCheck = computed<boolean>(() => {
   return isEntreprise(user.value) || isBureauDEtudes(user.value)
-})
-
-const domaines = computed<Domaine[]>(() => {
-  if (
-    isSuper(user.value) ||
-    isAdministrationAdmin(user.value) ||
-    isAdministrationEditeur(user.value)
-  ) {
-    return store.state.user.metas.domaines.map((d: Domaine) => ({
-      ...d,
-      titresTypes: d.titresTypes.map(tt => ({
-        ...tt,
-        titresCreation: canCreateTitre(store.state.user.element, tt.id)
-      }))
-    }))
-  }
-
-  if (isEntreprise(user.value) || isBureauDEtudes(user.value)) {
-    return entreprise.value?.titresTypes?.reduce(
-      (domaines: Domaine[], tt: TitreType) => {
-        if (!domaines.find(({ id }) => tt.domaine.id === id)) {
-          tt.domaine.titresTypes = []
-          domaines.push(tt.domaine)
-        }
-
-        const domaine = domaines.find(({ id }) => tt.domaine.id === id)
-
-        domaine?.titresTypes?.push({
-          id: tt.id,
-          type: tt.type,
-          titresCreation: tt.titresCreation
-        })
-
-        return domaines
-      },
-      []
-    )
-  }
-
-  return []
 })
 
 const complete = computed(() => {
@@ -333,7 +275,9 @@ const init = async () => {
 const entrepriseUpdate = (event: Event) => {
   titreDemande.value = {
     entrepriseId: (event.target as HTMLSelectElement)?.value,
-    references: []
+    references: [],
+    domaineId: undefined,
+    typeId: undefined
   }
 }
 
