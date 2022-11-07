@@ -32,7 +32,7 @@ COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/package.json .
 COPY --chown=nonroot:nonroot --from=build-stage /app/packages/common/package.json ./packages/common/
 COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/dist/ ./packages/api/dist/
 COPY --chown=nonroot:nonroot --from=build-stage /app/node_modules ./node_modules/
-COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/node_modules ./node_modules/
+COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/node_modules /packages/api/node_modules/
 # nous avons besoin des sources pour lancer certains scripts manuellement
 COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/src ./packages/api/src/
 COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/tsconfig.json ./packages/api/

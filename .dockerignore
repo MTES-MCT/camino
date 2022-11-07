@@ -5,3 +5,4 @@ dist
 Dockerfile*
 .env
 docker-compose*
+infra/cd/.cargo_docker
