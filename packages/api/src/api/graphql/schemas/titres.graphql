@@ -159,8 +159,6 @@ input InputTitreModification {
   """
   id: ID!
   nom: String!
-  typeId: ID!
-  domaineId: ID!
   references: [InputReference]
 }
 
