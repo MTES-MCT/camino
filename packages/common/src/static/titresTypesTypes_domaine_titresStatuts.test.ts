@@ -54,4 +54,10 @@ describe("publicité d'un titre", () => {
       titrePublicFind(TitresStatutIds.DemandeInitiale, TITRES_TYPES_TYPES_IDS.CONCESSION, DOMAINES_IDS.METAUX, [{ typeId: DEMARCHES_TYPES_IDS.MutationPartielle, publicLecture: true }])
     ).toMatchObject({ publicLecture: true })
   })
+
+  test("les permis exclusifs de carrières du domaine carrière avec une démarche d'octroi publique est publique", () => {
+    expect(
+      titrePublicFind(TitresStatutIds.Echu, TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_CARRIERES, DOMAINES_IDS.CARRIERES, [{ typeId: DEMARCHES_TYPES_IDS.Octroi, publicLecture: true }])
+    ).toMatchObject({ publicLecture: true })
+  })
 })

@@ -60,7 +60,7 @@ const titresPublicLecture: { [key in TitreTypeTypeId]?: { [key in DomaineId]?: T
     [DOMAINES_IDS.GRANULATS_MARINS]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide]
   },
   [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_CARRIERES]: {
-    [DOMAINES_IDS.CARRIERES]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide]
+    [DOMAINES_IDS.CARRIERES]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide]
   },
   [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES]: {
     [DOMAINES_IDS.FOSSILES]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
