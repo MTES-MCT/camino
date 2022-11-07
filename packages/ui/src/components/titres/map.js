@@ -1,13 +1,20 @@
 import {
   leafletMarkerClusterGroupBuild,
-  leafletCoordinatesFind,
   leafletGeojsonCenterFind,
   leafletGeojsonBuild,
   leafletMarkerBuild,
   leafletIconBuild
-} from '../_map/leaflet.js'
+} from '../_map/leaflet'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 
+const leafletCoordinatesFind = geojson => {
+  const coordinates = geojson.geometry.coordinates
+
+  return {
+    lng: coordinates[0],
+    lat: coordinates[1]
+  }
+}
 const zones = [
   {
     id: 'fr',

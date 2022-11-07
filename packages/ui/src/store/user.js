@@ -11,8 +11,6 @@ import {
   utilisateurDeconnecter
 } from '../api/utilisateurs'
 
-import tiles from '../utils/map-tiles'
-
 import router from '../router'
 import {
   ADMINISTRATION_IDS,
@@ -28,11 +26,10 @@ import {
 const state = {
   element: null,
   metas: {
-    tiles,
     entreprisesTitresCreation: []
   },
   preferences: {
-    carte: { tilesId: 'osm-fr', markerLayersId: 'clusters' }
+    carte: { markerLayersId: 'clusters' }
   },
   loaded: false
 }
@@ -304,11 +301,6 @@ const getters = {
   },
   isLoaded(state) {
     return state.loaded
-  },
-  tilesActive(state) {
-    return state.metas.tiles.find(
-      ({ id }) => id === state.preferences.carte.tilesId
-    )
   },
 
   preferencesConditions(state) {
