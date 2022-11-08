@@ -82,18 +82,18 @@ const domainesFiltered = computed<Domaine[]>(() =>
   )
 )
 
-const titresTypeTypes = computed<undefined | TitreTypeType[]>(() =>
-  props.element.domaineId
-    ? getTitreTypeTypeByDomaineId(props.element.domaineId)
-        .filter(titreTypeTypeId =>
-          canCreateTitre(
-            props.user,
-            toTitreTypeId(titreTypeTypeId, props.element.domaineId)
-          )
-        )
-        .map(titreTypeTypeId => TitresTypesTypes[titreTypeTypeId])
-    : undefined
-)
+const titresTypeTypes = computed<undefined | TitreTypeType[]>(() => {
+  if (props.element.domaineId) {
+    const domaineId: DomaineId = props.element.domaineId
+    return getTitreTypeTypeByDomaineId(domaineId)
+      .filter(titreTypeTypeId =>
+        canCreateTitre(props.user, toTitreTypeId(titreTypeTypeId, domaineId))
+      )
+      .map(titreTypeTypeId => TitresTypesTypes[titreTypeTypeId])
+  }
+
+  return undefined
+})
 
 const domaineUpdate = () => {
   // Si on a que 1 choix, on le sélectionne directement
