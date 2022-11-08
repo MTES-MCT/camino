@@ -1,16 +1,8 @@
 import { IFields } from '../../../types'
 
-const fieldsEntreprisesTitresCreationAdd = (fields: IFields = {}) => {
-  if (!fields.titresTypes) {
-    fields.titresTypes = { id: {} }
-  }
-
-  return fields
-}
-
 // ajoute les champs nécessaire pour obtenir le sous-objet titre
 // pour vérifier si l'utilisateur a les droits sur les titres
-const fieldsTitreAdd = (fields: IFields) => {
+export const fieldsTitreAdd = (fields: IFields) => {
   if (!fields.titre) {
     fields.titre = {
       id: {}
@@ -38,7 +30,7 @@ const fieldsTitreAdd = (fields: IFields) => {
 
 // ajoute les démarches et les étapes sur une requête de titre
 // pour calculer ses sections en fonction des sections des étapes
-const titresFieldsAdd = (fields: IFields) => {
+export const titresFieldsAdd = (fields: IFields) => {
   if (fields.type?.sections || fields.contenu) {
     if (!fields.demarches) {
       fields.demarches = { id: {} }
@@ -92,5 +84,3 @@ const titresFieldsAdd = (fields: IFields) => {
 
   return fields
 }
-
-export { fieldsTitreAdd, titresFieldsAdd, fieldsEntreprisesTitresCreationAdd }

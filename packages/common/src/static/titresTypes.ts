@@ -81,3 +81,8 @@ export const getDomaineId = (titreType: TitreTypeId): DomaineId => {
     throw new Error(`le titreType ${titreType} n'a pas de domaineId connu, cas impossible`)
   }
 }
+
+export const getTitreTypeTypeByDomaineId = (domaineId: DomaineId): TitreTypeTypeId[] =>
+  Object.values(TitresTypes)
+    .filter(v => v.domaineId === domaineId)
+    .map(({ typeId }) => typeId)

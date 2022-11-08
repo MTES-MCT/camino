@@ -369,10 +369,6 @@ type Mutation {
   "Modifie une entreprise"
   entrepriseModifier(entreprise: InputEntrepriseModification!): Entreprise
 
-  entrepriseTitreTypeModifier(
-    entrepriseTitreType: InputEntrepriseTitreType!
-  ): Entreprise
-
   administrationActiviteTypeEmailCreer(
     administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!
   ): Administration

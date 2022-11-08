@@ -12,8 +12,7 @@ import {
   userGet,
   utilisateurTitreCreate
 } from '../../../database/queries/utilisateurs'
-import { titreDemandeEntreprisesGet } from '../../../database/queries/entreprises'
-import { domaineGet, etapeTypeGet } from '../../../database/queries/metas'
+import { etapeTypeGet } from '../../../database/queries/metas'
 import {
   titreCreate,
   titreGet,
@@ -26,17 +25,11 @@ import titreUpdateTask from '../../../business/titre-update'
 import titreDemarcheUpdateTask from '../../../business/titre-demarche-update'
 import titreEtapeUpdateTask from '../../../business/titre-etape-update'
 import { userSuper } from '../../../database/user-super'
-import {
-  isAdministrationAdmin,
-  isAdministrationEditeur,
-  isBureauDEtudes,
-  isEntreprise,
-  isSuper
-} from 'camino-common/src/roles'
+import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { linkTitres } from '../../../database/queries/titres-titres'
 import {
   getLinkConfig,
-  canCreateTitre
+  assertsCanCreateTitre
 } from 'camino-common/src/permissions/titres'
 import { checkTitreLinks } from '../../../business/validations/titre-links-validate'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
@@ -53,61 +46,14 @@ export const titreDemandeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (
-      !user ||
-      (!isSuper(user) &&
-        !isAdministrationAdmin(user) &&
-        !isAdministrationEditeur(user) &&
-        !isEntreprise(user) &&
-        !isBureauDEtudes(user))
-    ) {
-      throw new Error('permissions insuffisantes')
-    }
+    assertsCanCreateTitre(user, titreDemande.typeId)
 
     if (isEntreprise(user) || isBureauDEtudes(user)) {
       if (titreDemande.references?.length) {
         throw new Error('permissions insuffisantes')
       }
-
-      const entreprises = await titreDemandeEntreprisesGet(
-        { fields: { id: {} } },
-        user
-      )
-
-      const entreprise = entreprises.find(
-        e => e.id === titreDemande.entrepriseId
-      )
-
-      if (!entreprise) {
-        throw new Error('permissions insuffisantes')
-      }
-
-      const titreType = entreprise.titresTypes!.find(
-        tt => tt.id === titreDemande.typeId
-      )
-
-      if (!titreType) {
-        throw new Error('permissions insuffisantes')
-      }
     }
 
-    if (
-      isSuper(user) ||
-      isAdministrationAdmin(user) ||
-      isAdministrationEditeur(user)
-    ) {
-      const domaine = await domaineGet(
-        titreDemande.domaineId,
-        { fields: { titresTypes: { id: {} } } },
-        user
-      )
-      const titreType = domaine?.titresTypes.find(
-        tt => tt.id === titreDemande.typeId
-      )
-
-      if (!user || !titreType || !canCreateTitre(user, titreType.id))
-        throw new Error('droits insuffisants')
-    }
     // insert le titre dans la base
     const titre = await titreCreate(
       {

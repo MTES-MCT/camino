@@ -36,7 +36,7 @@ const entreprisesRelateFalse = [
 ]
 
 const entreprises = {
-  graph: `[utilisateurs, etablissements(orderDesc), documents.${documents.graph}, titresTypes.${titresTypes.graph}]`,
+  graph: `[utilisateurs, etablissements(orderDesc), documents.${documents.graph}]`,
   update: {
     insertMissing: true,
     relate: entreprisesRelateTrue,

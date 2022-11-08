@@ -4,8 +4,7 @@ import {
   IEntreprise,
   IFields,
   IUtilisateur,
-  IEntrepriseColonneId,
-  IEntrepriseTitreType
+  IEntrepriseColonneId
 } from '../../types'
 
 import options from './_options'
@@ -15,8 +14,6 @@ import { stringSplit } from './_utils'
 
 import Entreprises from '../models/entreprises'
 import { entreprisesQueryModify } from './permissions/entreprises'
-import EntreprisesTitresTypes from '../models/entreprises-titres-types'
-import { fieldsEntreprisesTitresCreationAdd } from './graph/fields-add'
 import { utilisateurGet } from './utilisateurs'
 import {
   isSuper,
@@ -173,18 +170,6 @@ const entrepriseUpsert = async (entreprise: IEntreprise) =>
 const entrepriseDelete = async (id: string) =>
   Entreprises.query().deleteById(id).first().returning('*')
 
-const entrepriseTitreTypeUpsert = async (
-  entrepriseTitreType: IEntrepriseTitreType
-) =>
-  EntreprisesTitresTypes.query().upsertGraph(entrepriseTitreType, {
-    insertMissing: true
-  })
-
-const entrepriseTitreTypeDelete = async (
-  entrepriseId: string,
-  titreTypeId: string
-) => EntreprisesTitresTypes.query().deleteById([entrepriseId, titreTypeId])
-
 const titreDemandeEntreprisesGet = async (
   { fields }: { fields?: IFields },
   user: IUtilisateur | null | undefined
@@ -204,15 +189,13 @@ const titreDemandeEntreprisesGet = async (
   if (isEntreprise(user) || isBureauDEtudes(user)) {
     const utilisateur = await utilisateurGet(
       user.id,
-      { fields: { entreprises: fieldsEntreprisesTitresCreationAdd(fields) } },
+      { fields: { entreprises: fields ?? { id: {} } } },
       user
     )
 
     if (!utilisateur || !utilisateur.entreprises) return []
 
-    return utilisateur.entreprises.filter(e =>
-      e.titresTypes!.some(tt => tt.titresCreation)
-    )
+    return utilisateur.entreprises
   }
 
   return []
@@ -225,7 +208,5 @@ export {
   entreprisesUpsert,
   entrepriseUpsert,
   entrepriseDelete,
-  entrepriseTitreTypeUpsert,
-  entrepriseTitreTypeDelete,
   titreDemandeEntreprisesGet
 }

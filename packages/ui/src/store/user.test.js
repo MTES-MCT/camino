@@ -50,9 +50,6 @@ describe("état de l'utilisateur connecté", () => {
     user.state = {
       element: null,
       metas: {
-        domaines: [],
-        version: null,
-        versionUi: null,
         tiles
       },
       preferences: {
@@ -88,18 +85,14 @@ describe("état de l'utilisateur connecté", () => {
   })
 
   test("initialise les métas de l'utilisateur connecté", async () => {
-    const apiMock = api.userMetas.mockResolvedValue({
-      version: '1.1.1'
-    })
+    const apiMock = api.userMetas.mockResolvedValue([])
 
     await store.dispatch('user/init')
 
     expect(apiMock).toHaveBeenCalled()
     expect(store.state.user.metas).toEqual({
-      domaines: [],
-      version: '1.1.1',
-      versionUi: null,
-      tiles
+      tiles,
+      entreprisesTitresCreation: []
     })
     expect(mutations.loadingRemove).toHaveBeenCalled()
   })
@@ -114,7 +107,6 @@ describe("état de l'utilisateur connecté", () => {
     expect(apiMock).toHaveBeenCalled()
     expect(mutations.loadingRemove).toHaveBeenCalled()
     expect(actions.apiError).toHaveBeenCalled()
-    expect(store.state.user.metas.version).toBeNull()
   })
 
   test("identifie l'utilisateur si un token valide est présent", async () => {

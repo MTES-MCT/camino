@@ -136,7 +136,7 @@ const creationCheck = async (
         titreCreer: { nom: titre.nom }
       })
     } else {
-      expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
+      expect(res.body.errors[0].message).toBe('permissions insuffisantes')
     }
   } else if (cible === 'demarches') {
     const titreCreated = await titreCreerSuper(administrationId, titreTypeId)

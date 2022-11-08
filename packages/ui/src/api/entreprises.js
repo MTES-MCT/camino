@@ -4,24 +4,6 @@ import { apiGraphQLFetch } from './_client'
 import { fragmentEntreprises } from './fragments/entreprises'
 import { fragmentEntreprise } from './fragments/entreprise'
 
-const entreprisePermissionsMetas = apiGraphQLFetch(
-  gql`
-    query EntreprisePermissionsMetas {
-      domaines {
-        id
-        nom
-        titresTypes {
-          id
-          type {
-            id
-            nom
-          }
-        }
-      }
-    }
-  `
-)
-
 const entreprise = apiGraphQLFetch(
   gql`
     query Entreprise($id: ID!) {
@@ -81,23 +63,4 @@ const entrepriseModifier = apiGraphQLFetch(gql`
   ${fragmentEntreprise}
 `)
 
-const entrepriseTitreTypeUpdate = apiGraphQLFetch(gql`
-  mutation EntrepriseTitreTypeModifier(
-    $entrepriseTitreType: InputEntrepriseTitreType!
-  ) {
-    entrepriseTitreTypeModifier(entrepriseTitreType: $entrepriseTitreType) {
-      ...entreprise
-    }
-  }
-
-  ${fragmentEntreprise}
-`)
-
-export {
-  entreprise,
-  entreprises,
-  entrepriseCreer,
-  entrepriseModifier,
-  entrepriseTitreTypeUpdate,
-  entreprisePermissionsMetas
-}
+export { entreprise, entreprises, entrepriseCreer, entrepriseModifier }

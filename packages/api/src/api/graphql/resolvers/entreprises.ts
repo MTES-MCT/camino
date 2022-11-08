@@ -1,17 +1,10 @@
-import {
-  IEntreprise,
-  IEntrepriseColonneId,
-  IEntrepriseTitreType,
-  IToken
-} from '../../../types'
+import { IEntreprise, IEntrepriseColonneId, IToken } from '../../../types'
 import { GraphQLResolveInfo } from 'graphql'
 
 import {
   entrepriseGet,
   entreprisesCount,
   entreprisesGet,
-  entrepriseTitreTypeDelete,
-  entrepriseTitreTypeUpsert,
   entrepriseUpsert,
   titreDemandeEntreprisesGet
 } from '../../../database/queries/entreprises'
@@ -23,7 +16,6 @@ import { entrepriseFormat } from '../../_format/entreprises'
 import { emailCheck } from '../../../tools/email-check'
 import { apiInseeEntrepriseAndEtablissementsGet } from '../../../tools/api-insee/index'
 import { userGet } from '../../../database/queries/utilisateurs'
-import { isSuper } from 'camino-common/src/roles'
 
 const entreprise = async (
   { id }: { id: string },
@@ -85,7 +77,6 @@ const entreprises = async (
     noms?: string | null
     archive?: boolean | null
     etapeUniquement?: boolean | null
-    titresCreation?: boolean | null
   },
   context: IToken,
   info: GraphQLResolveInfo
@@ -253,46 +244,10 @@ const entrepriseModifier = async (
   }
 }
 
-const entrepriseTitreTypeModifier = async (
-  { entrepriseTitreType }: { entrepriseTitreType: IEntrepriseTitreType },
-  context: IToken,
-  info: GraphQLResolveInfo
-) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const fields = fieldsBuild(info)
-
-    if (!entrepriseTitreType.titresCreation) {
-      await entrepriseTitreTypeDelete(
-        entrepriseTitreType.entrepriseId,
-        entrepriseTitreType.titreTypeId
-      )
-    } else {
-      await entrepriseTitreTypeUpsert(entrepriseTitreType)
-    }
-
-    return await entrepriseGet(
-      entrepriseTitreType.entrepriseId,
-      { fields },
-      user
-    )
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
 export {
   entreprise,
   entreprises,
   entrepriseCreer,
   entrepriseModifier,
-  entrepriseTitreTypeModifier,
   entreprisesTitresCreation
 }

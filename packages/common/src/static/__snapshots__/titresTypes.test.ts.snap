@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getTitreTypeTypeByDomaineId "c" 1`] = `
+Array [
+  "ap",
+  "ar",
+  "pc",
+]
+`;
+
+exports[`getTitreTypeTypeByDomaineId "f" 1`] = `
+Array [
+  "cx",
+  "pr",
+  "px",
+]
+`;
+
+exports[`getTitreTypeTypeByDomaineId "g" 1`] = `
+Array [
+  "ar",
+  "cx",
+  "pr",
+  "px",
+]
+`;
+
+exports[`getTitreTypeTypeByDomaineId "h" 1`] = `
+Array [
+  "ap",
+  "cx",
+  "in",
+  "pr",
+  "px",
+]
+`;
+
+exports[`getTitreTypeTypeByDomaineId "i" 1`] = `
+Array [
+  "cx",
+  "in",
+  "pr",
+  "px",
+]
+`;
+
+exports[`getTitreTypeTypeByDomaineId "m" 1`] = `
+Array [
+  "ap",
+  "ar",
+  "ax",
+  "cx",
+  "in",
+  "pr",
+  "px",
+]
+`;
+
+exports[`getTitreTypeTypeByDomaineId "r" 1`] = `
+Array [
+  "cx",
+  "in",
+  "pr",
+  "px",
+]
+`;
+
+exports[`getTitreTypeTypeByDomaineId "s" 1`] = `
+Array [
+  "cx",
+  "pr",
+]
+`;
+
+exports[`getTitreTypeTypeByDomaineId "w" 1`] = `
+Array [
+  "ap",
+  "cx",
+  "pr",
+  "px",
+]
+`;

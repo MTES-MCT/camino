@@ -2,26 +2,15 @@ import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
 import { fragmentUtilisateur } from './fragments/utilisateur'
-import { fragmentTitreType } from './fragments/metas'
 import { fragmentEntreprises } from './fragments/entreprises'
 
 const userMetas = apiGraphQLFetch(
   gql`
     query MetasUser {
-      domaines {
-        id
-        nom
-        titresTypes {
-          ...titreType
-        }
-      }
-
       entreprisesTitresCreation {
         ...entreprises
       }
     }
-
-    ${fragmentTitreType}
 
     ${fragmentEntreprises}
   `
