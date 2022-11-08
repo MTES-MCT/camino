@@ -138,7 +138,8 @@ export const titres = async (
       substancesIds: substancesIds ? stringSplit(substancesIds) : null,
       references,
       territoires,
-      perimetre
+      perimetre,
+      demandeEnCours: true
     },
     { fields: titreFields },
     user
