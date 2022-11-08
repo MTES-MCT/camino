@@ -7,3 +7,4 @@ packages/ui/storybook-static/
 .vault
 /docs
 /*.csv
+.vscode

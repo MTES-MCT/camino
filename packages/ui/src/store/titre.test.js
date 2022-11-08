@@ -27,8 +27,7 @@ describe('état du titre sélectionné', () => {
     titre.state = {
       element: null,
       metas: {
-        referencesTypes: [],
-        domaines: []
+        referencesTypes: []
       },
       opened: {
         etapes: {},

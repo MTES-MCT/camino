@@ -17,8 +17,6 @@ import {
 import { userGet } from '../../../database/queries/utilisateurs'
 
 import titreUpdateTask from '../../../business/titre-update'
-
-import { titreUpdationValidate } from '../../../business/validations/titre-updation-validate'
 import { domaineGet } from '../../../database/queries/metas'
 import { canCreateTitre } from 'camino-common/src/permissions/titres'
 
@@ -198,12 +196,6 @@ const titreModifier = async (
     if (!titreOld) throw new Error("le titre n'existe pas")
 
     if (!titreOld.modification) throw new Error('droits insuffisants')
-
-    const rulesErrors = await titreUpdationValidate(titre, titreOld)
-
-    if (rulesErrors.length) {
-      throw new Error(rulesErrors.join(', '))
-    }
 
     const fields = fieldsBuild(info)
 

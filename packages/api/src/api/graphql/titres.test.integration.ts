@@ -544,7 +544,7 @@ describe('titreModifier', () => {
 
   test('ne peut pas modifier un titre (utilisateur anonyme)', async () => {
     const res = await graphQLCall(titreModifierQuery, {
-      titre: { id, nom: 'mon titre modifié', typeId: 'arm', domaineId: 'm' }
+      titre: { id, nom: 'mon titre modifié' }
     })
 
     expect(res.body.errors[0].message).toMatch(/le titre n'existe pas/)
@@ -554,7 +554,7 @@ describe('titreModifier', () => {
     const res = await graphQLCall(
       titreModifierQuery,
       {
-        titre: { id, nom: 'mon titre modifié', typeId: 'arm', domaineId: 'm' }
+        titre: { id, nom: 'mon titre modifié' }
       },
       'entreprise'
     )
@@ -566,7 +566,7 @@ describe('titreModifier', () => {
     const res = await graphQLCall(
       titreModifierQuery,
       {
-        titre: { id, nom: 'mon titre modifié', typeId: 'arm', domaineId: 'm' }
+        titre: { id, nom: 'mon titre modifié' }
       },
       'super'
     )
@@ -585,7 +585,7 @@ describe('titreModifier', () => {
     const res = await graphQLCall(
       titreModifierQuery,
       {
-        titre: { id, nom: 'mon titre modifié', typeId: 'arm', domaineId: 'm' }
+        titre: { id, nom: 'mon titre modifié' }
       },
       'admin',
       ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
@@ -627,9 +627,7 @@ describe('titreModifier', () => {
       {
         titre: {
           id: titre.id,
-          nom: 'mon titre échu modifié',
-          typeId: 'arm',
-          domaineId: 'm'
+          nom: 'mon titre échu modifié'
         }
       },
       'admin',
@@ -643,7 +641,7 @@ describe('titreModifier', () => {
     const res = await graphQLCall(
       titreModifierQuery,
       {
-        titre: { id, nom: 'mon titre modifié', typeId: 'arm', domaineId: 'm' }
+        titre: { id, nom: 'mon titre modifié' }
       },
       'admin',
       ADMINISTRATION_IDS['DGTM - GUYANE']

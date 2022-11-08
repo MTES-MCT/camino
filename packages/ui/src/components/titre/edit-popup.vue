@@ -17,7 +17,6 @@
       </div>
       <hr />
     </div>
-    <TitreTypeSelect v-model:element="titre" :domaines="domaines" />
 
     <div>
       <h3 class="mb-s">Références</h3>
@@ -90,22 +89,16 @@
 <script setup lang="ts">
 import Popup from '../_ui/popup.vue'
 
-import TitreTypeSelect from '../_common/titre-type-select.vue'
 import Icon from '@/components/_ui/icon.vue'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { computed, ComputedRef, inject, onMounted, onUnmounted, ref } from 'vue'
 import { useStore } from 'vuex'
-import { DomaineId } from 'camino-common/src/static/domaines'
 import {
   ReferenceTypeId,
   sortedReferencesTypes
 } from 'camino-common/src/static/referencesTypes'
-import { canCreateTitre } from 'camino-common/src/permissions/titres'
 type Titre = {
   id: string
   nom: string
-  domaineId: DomaineId
-  typeId: TitreTypeId
   references: { referenceTypeId: ReferenceTypeId | ''; nom: string }[]
 }
 const props = defineProps<{
@@ -120,25 +113,12 @@ const messages = computed(() => {
   return store.state.popup.messages
 })
 
-const domaines = computed<
-  { titresTypes: { titresCreation: boolean; id: TitreTypeId }[] }[]
->(() => {
-  return store.state.user.metas.domaines
-    .filter((d: { titresTypes: { id: TitreTypeId }[] }) =>
-      d.titresTypes.some(dtt => canCreateTitre(user.value, dtt.id))
-    )
-    .map((d: { titresTypes: { id: TitreTypeId }[] }) => ({
-      ...d,
-      titresTypes: d.titresTypes.map(tt => ({ ...tt, titresCreation: true }))
-    }))
-})
-
 const user = computed(() => {
   return store.state.user.element
 })
 
 const complete = computed(() => {
-  return !!props.titre.nom && !!props.titre.typeId && !!props.titre.domaineId
+  return !!props.titre.nom
 })
 
 const userIsSuper: ComputedRef<boolean> = computed(() => {
@@ -182,12 +162,7 @@ const save = async () => {
 }
 
 const cancel = () => {
-  errorsRemove()
   store.commit('popupClose')
-}
-
-const errorsRemove = () => {
-  // this.$store.commit('utilisateur/loginMessagesRemove')
 }
 
 const referenceAdd = () => {

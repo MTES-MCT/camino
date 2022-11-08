@@ -84,8 +84,6 @@ export default {
       const titre = {}
       titre.id = this.titre.id
       titre.nom = this.titre.nom
-      titre.domaineId = this.titre.domaine.id
-      titre.typeId = this.titre.type.id
       titre.references = this.titre.references
 
       this.$store.commit('popupOpen', {
