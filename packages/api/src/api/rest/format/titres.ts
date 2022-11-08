@@ -165,16 +165,16 @@ const titreGeojsonPropertiesFormat = (titre: ITitre) => {
     administrations_noms: titre.administrations!.map(
       id => Administrations[id].nom
     ),
-    titulaires_noms: titre.titulaires!.map(e => e.nom).join(separator) || null,
+    titulaires_noms: titre.titulaires?.map(e => e.nom).join(separator) || null,
     titulaires_legal:
-      titre
-        .titulaires!.map(e => e.legalEtranger || e.legalSiren)
+      titre.titulaires
+        ?.map(e => e.legalEtranger || e.legalSiren)
         .join(separator) || null,
     amodiataires_noms:
-      titre.amodiataires!.map(e => e.nom).join(separator) || null,
+      titre.amodiataires?.map(e => e.nom).join(separator) || null,
     amodiataires_legal:
-      titre
-        .amodiataires!.map(e => e.legalEtranger || e.legalSiren)
+      titre.amodiataires
+        ?.map(e => e.legalEtranger || e.legalSiren)
         .join(separator) || null,
     references:
       titre.references &&
