@@ -117,3 +117,75 @@ Object {
   "pxw": null,
 }
 `;
+
+exports[`vérifie si une entreprise peut créer un titre de type "apc" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "aph" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "apm" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "apw" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "arc" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "arg" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "arm" 1`] = `true`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "axm" 1`] = `true`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "cxf" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "cxg" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "cxh" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "cxi" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "cxm" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "cxr" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "cxs" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "cxw" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "inh" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "ini" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "inm" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "inr" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "pcc" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "prf" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "prg" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "prh" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "pri" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "prm" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "prr" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "prs" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "prw" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "pxf" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "pxg" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "pxh" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "pxi" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "pxm" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "pxr" 1`] = `false`;
+
+exports[`vérifie si une entreprise peut créer un titre de type "pxw" 1`] = `false`;
