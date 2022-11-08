@@ -20,7 +20,6 @@ import {
   Administrations
 } from 'camino-common/src/static/administrations'
 import {
-  isAdministration,
   isAdministrationAdmin,
   isAdministrationEditeur,
   isSuper
@@ -29,7 +28,6 @@ import {
 const state = {
   element: null,
   metas: {
-    domaines: [],
     tiles,
     entreprisesTitresCreation: []
   },
@@ -44,7 +42,7 @@ const actions = {
     try {
       commit('loadingAdd', 'userInit', { root: true })
 
-      const data = await userMetas({ titresCreation: true })
+      const data = await userMetas()
 
       commit('metasSet', data)
     } catch (e) {
@@ -395,13 +393,10 @@ const mutations = {
   reset(state) {
     state.element = null
     state.metas.entreprisesTitresCreation = []
-    state.metas.domaines = []
   },
 
   metasSet(state, data) {
-    Object.keys(data).forEach(id => {
-      state.metas[id] = data[id]
-    })
+    state.metas.entreprisesTitresCreation = data
   }
 }
 

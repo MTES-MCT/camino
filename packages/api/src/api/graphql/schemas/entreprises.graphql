@@ -34,8 +34,6 @@ type Entreprise {
   amodiataireTitres: [Titre]
   documents: [Document]
 
-  titresTypes: [TitreType]
-
   archive: Boolean
   operateur: Boolean
 

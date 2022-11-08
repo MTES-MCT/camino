@@ -33,13 +33,15 @@ export const canLinkTitres = (user: User, administrationIds: AdministrationId[])
   return false
 }
 
+export const TITRES_TYPES_IDS_DEMAT = ['arm', 'axm']
+
 export const canCreateTitre = (user: User, titreTypeId: TitreTypeId | undefined): boolean => {
   if (isSuper(user)) {
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     return isGestionnaire(user.administrationId, titreTypeId)
   } else if (isEntreprise(user) || isBureauDEtudes(user)) {
-    return ['axm', 'arm'].includes(titreTypeId)
+    return TITRES_TYPES_IDS_DEMAT.includes(titreTypeId)
   }
 
   return false

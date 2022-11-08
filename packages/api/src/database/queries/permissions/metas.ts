@@ -26,6 +26,7 @@ import {
   isSuper
 } from 'camino-common/src/roles'
 import { AdministrationId } from 'camino-common/src/static/administrations'
+import { TITRES_TYPES_IDS_DEMAT } from 'camino-common/src/permissions/titres'
 
 // récupère les types d'étapes qui ont
 // - les autorisations sur le titre
@@ -80,13 +81,13 @@ const entreprisesEtapesTypesPropsQuery = (entreprisesIds: string[]) =>
   TitresEtapes.query()
     .alias('e_te')
     .select(raw('true'))
-    .leftJoinRelated('titulaires.titresTypes')
+    .leftJoinRelated('titulaires')
     .leftJoinRelated('demarche.titre')
     .andWhere('demarche.typeId', 'oct')
     .andWhere('e_te.typeId', 'mfr')
     .andWhere('e_te.statutId', 'aco')
+    .whereIn('demarche:titre.typeId', TITRES_TYPES_IDS_DEMAT)
     .whereIn('titulaires.id', entreprisesIds)
-    .whereRaw('?? = ??', ['demarche:titre.typeId', 'titulaires:titresTypes.id'])
     .first()
 
 const domainesQueryModify = (
