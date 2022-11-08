@@ -453,7 +453,7 @@ describe('titreCreer', () => {
       titre: { nom: 'titre', typeId: 'arm', domaineId: 'm' }
     })
 
-    expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
+    expect(res.body.errors[0].message).toBe('permissions insuffisantes')
   })
 
   test("ne peut pas créer un titre prm (un utilisateur 'entreprise')", async () => {
@@ -463,7 +463,7 @@ describe('titreCreer', () => {
       'entreprise'
     )
 
-    expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
+    expect(res.body.errors[0].message).toBe('permissions insuffisantes')
   })
 
   test("crée un titre (un utilisateur 'super')", async () => {
@@ -487,7 +487,7 @@ describe('titreCreer', () => {
       ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
 
-    expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
+    expect(res.body.errors[0].message).toBe('permissions insuffisantes')
   })
 
   test("ne peut pas créer un titre ARM (un utilisateur 'admin' Déal Guyane)", async () => {
@@ -498,7 +498,7 @@ describe('titreCreer', () => {
       ADMINISTRATION_IDS['DGTM - GUYANE']
     )
 
-    expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
+    expect(res.body.errors[0].message).toBe('permissions insuffisantes')
   })
 
   test("crée un titre ARM (un utilisateur 'admin' PTMG)", async () => {
