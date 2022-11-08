@@ -77,6 +77,6 @@ export const Domaines: { [key in DomaineId]: Definition<key> } = {
 
 export const sortedDomaines = Object.values(Domaines).sort((a, b) => a.ordre - b.ordre)
 
-const domainesIds = Object.values(DOMAINES_IDS)
+export const domainesIds = Object.values(DOMAINES_IDS)
 
 export const isDomaineId = (domaineId: string | null | undefined): domaineId is DomaineId => domainesIds.includes(domaineId)

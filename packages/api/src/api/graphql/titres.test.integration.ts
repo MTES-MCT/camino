@@ -456,7 +456,7 @@ describe('titreCreer', () => {
     expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
   })
 
-  test.only("ne peut pas créer un titre prm (un utilisateur 'entreprise')", async () => {
+  test("ne peut pas créer un titre prm (un utilisateur 'entreprise')", async () => {
     const res = await graphQLCall(
       titreCreerQuery,
       { titre: { nom: 'titre', typeId: 'prm', domaineId: 'm' } },

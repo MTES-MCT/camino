@@ -1,4 +1,5 @@
-import { TitresTypesIds, isTitreType, toTitreTypeId, getTitreTypeType, getDomaineId } from './titresTypes'
+import { DomaineId, domainesIds } from './domaines'
+import { TitresTypesIds, isTitreType, toTitreTypeId, getTitreTypeType, getDomaineId, getTitreTypeTypeByDomaineId } from './titresTypes'
 
 test('isTitreType', () => {
   expect(isTitreType(null)).toBe(false)
@@ -19,4 +20,8 @@ test('getTitreTypeType', () => {
 
 test('getDomaineId', () => {
   expect(getDomaineId('apm')).toBe('m')
+})
+
+test.each<DomaineId>(domainesIds)('getTitreTypeTypeByDomaineId %p', domaineId => {
+  expect(getTitreTypeTypeByDomaineId(domaineId)).toMatchSnapshot()
 })

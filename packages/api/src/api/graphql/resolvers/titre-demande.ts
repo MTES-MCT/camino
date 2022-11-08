@@ -29,16 +29,13 @@ import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { linkTitres } from '../../../database/queries/titres-titres'
 import {
   getLinkConfig,
-  canCreateTitre
+  assertsCanCreateTitre
 } from 'camino-common/src/permissions/titres'
 import { checkTitreLinks } from '../../../business/validations/titre-links-validate'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
-import {
-  getTitreTypeType,
-  isTitreType
-} from 'camino-common/src/static/titresTypes'
+import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
 
 export const titreDemandeCreer = async (
   {
@@ -49,13 +46,7 @@ export const titreDemandeCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (
-      !user ||
-      !isTitreType(titreDemande.typeId) ||
-      !canCreateTitre(user, titreDemande.typeId)
-    ) {
-      throw new Error('permissions insuffisantes')
-    }
+    assertsCanCreateTitre(user, titreDemande.typeId)
 
     if (isEntreprise(user) || isBureauDEtudes(user)) {
       if (titreDemande.references?.length) {

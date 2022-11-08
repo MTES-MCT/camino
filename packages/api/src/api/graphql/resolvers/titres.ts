@@ -17,8 +17,7 @@ import {
 import { userGet } from '../../../database/queries/utilisateurs'
 
 import titreUpdateTask from '../../../business/titre-update'
-import { canCreateTitre } from 'camino-common/src/permissions/titres'
-import { isTitreType } from 'camino-common/src/static/titresTypes'
+import { assertsCanCreateTitre } from 'camino-common/src/permissions/titres'
 
 const titre = async (
   { id }: { id: string },
@@ -156,12 +155,7 @@ const titreCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (
-      !user ||
-      !isTitreType(titre.typeId) ||
-      !canCreateTitre(user, titre.typeId)
-    )
-      throw new Error('droits insuffisants')
+    assertsCanCreateTitre(user, titre.typeId)
 
     // insert le titre dans la base
     titre = await titreCreate(titre, { fields: {} })

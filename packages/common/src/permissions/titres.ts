@@ -1,4 +1,4 @@
-import { TitresTypes, TitreTypeId } from '../static/titresTypes'
+import { isTitreType, TitresTypes, TitreTypeId } from '../static/titresTypes'
 import { DemarcheTypeId } from '../static/demarchesTypes'
 import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from '../roles'
 import { AdministrationId } from '../static/administrations'
@@ -34,6 +34,14 @@ export const canLinkTitres = (user: User, administrationIds: AdministrationId[])
 }
 
 export const TITRES_TYPES_IDS_DEMAT = ['arm', 'axm']
+
+export const assertsCanCreateTitre = (user: User, titreTypeId: TitreTypeId | undefined): boolean => {
+  if (!isTitreType(titreTypeId) || !canCreateTitre(user, titreTypeId)) {
+    throw new Error('permissions insuffisantes')
+  }
+
+  return true
+}
 
 export const canCreateTitre = (user: User, titreTypeId: TitreTypeId | undefined): boolean => {
   if (isSuper(user)) {
