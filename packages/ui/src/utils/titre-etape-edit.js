@@ -162,11 +162,6 @@ const etapeEditFormat = etape => {
     etape.substances = []
   }
 
-  etape.duree = {
-    ans: etape.duree ? Math.floor(etape.duree / 12) : null,
-    mois: etape.duree ? Math.floor(etape.duree % 12) : null
-  }
-
   etape = etapePointsFormat(etape, etape.points)
 
   if (!etape.incertitudes) {

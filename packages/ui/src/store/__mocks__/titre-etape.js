@@ -53,7 +53,6 @@ const titreEtapeEdited = {
   id: 'etape-id',
   titreDemarcheId: 'demarche-id',
   date: '2020-01-01',
-  duree: { ans: null, mois: null },
   amodiataires: [],
   titulaires: [],
   contenu: {},
@@ -96,10 +95,7 @@ const titreEtapeHeritage1 = {
   },
   dateDebut: undefined,
   dateFin: undefined,
-  duree: {
-    ans: null,
-    mois: null
-  },
+  duree: undefined,
   surface: undefined,
   amodiataires: [],
   titulaires: [],
@@ -148,10 +144,7 @@ const titreEtapeHeritage2 = {
   amodiataires: [],
   date: '2020-01-01',
   documents: [],
-  duree: {
-    ans: null,
-    mois: null
-  },
+  duree: undefined,
   geoSystemeIds: [],
   geoSystemeOpposableId: null,
   groupes: [],
