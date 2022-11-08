@@ -1,3 +1,4 @@
+import { EtapeTypeId } from './static/etapesTypes'
 import { SubstanceLegaleId } from './static/substancesLegales'
 
 export interface HeritageProp {
@@ -8,19 +9,27 @@ export interface HeritageProp {
 export interface Etape {
   contenu: { [key: string]: unknown }
   date: string
-  type: { nom: string }
-  incertitudes: { [key: string]: boolean }
+  type: { id: EtapeTypeId; nom: string }
+  incertitudes: { [key in keyof Omit<Etape, 'incertitudes' | 'type' | 'heritageProps' | 'contenu'>]: boolean }
   substances: SubstanceLegaleId[]
   duree: number
   dateDebut: string
   dateFin: string
-  titulaires: Entreprise[]
-  amodiataires: Entreprise[]
+  titulaires: EtapeEntreprise[]
+  amodiataires: EtapeEntreprise[]
+  heritageProps: {
+    substances: HeritageProp
+    duree: HeritageProp
+    dateDebut: HeritageProp
+    dateFin: HeritageProp
+    titulaires: HeritageProp
+    amodiataires: HeritageProp
+  }
 }
 
-interface Entreprise {
+export interface EtapeEntreprise {
   id: string
   nom: string
-  etablissements: []
+  etablissements: unknown[]
   operateur: boolean
 }

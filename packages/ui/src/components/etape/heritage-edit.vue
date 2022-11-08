@@ -35,12 +35,12 @@ import { hasValeurCheck } from '@/utils/contenu'
 import Tag from '@/components/_ui/tag.vue'
 import { dateFormat } from '@/utils'
 import { computed, withDefaults } from 'vue'
-import { HeritageProp } from 'camino-common/src/etape'
+import { Etape, HeritageProp } from 'camino-common/src/etape'
 
 const props = withDefaults(
   defineProps<{
     prop: HeritageProp
-    propId: string
+    propId: keyof Etape['incertitudes']
     isArray?: boolean
     sectionId?: string
   }>(),

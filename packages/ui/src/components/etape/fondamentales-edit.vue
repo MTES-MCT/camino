@@ -126,7 +126,7 @@
         <template #write>
           <AutocompleteEntreprise
             :allEntities="entreprises"
-            :selectedEntities="entreprisesTitulaires"
+            :selectedEntities="etape.titulaires"
             :nonSelectableEntities="entreprisesDisabled"
             placeholder="Sélectionner un titulaire"
             @onEntreprisesUpdate="titulairesUpdate"
@@ -176,7 +176,7 @@
           <template #write>
             <AutocompleteEntreprise
               :allEntities="entreprises"
-              :selectedEntities="entreprisesAmodiataires"
+              :selectedEntities="etape.amodiataires"
               :nonSelectableEntities="entreprisesDisabled"
               placeholder="Sélectionner un amodiataire"
               @onEntreprisesUpdate="amodiatairesUpdate"
@@ -229,7 +229,7 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import { dateFormat } from '../../utils/index'
 import Tag from '../_ui/tag.vue'
 import InputDate from '../_ui/input-date.vue'
@@ -240,179 +240,176 @@ import AutocompleteEntreprise from './autocomplete-entreprise.vue'
 
 import { etablissementNameFind } from '@/utils/entreprise'
 import SubstancesEdit from '@/components/etape/substances-edit.vue'
-import { dureeOptionalCheck } from 'camino-common/src/permissions/titres-etapes'
+import { dureeOptionalCheck as titreEtapesDureeOptionalCheck } from 'camino-common/src/permissions/titres-etapes'
 
-export default {
-  components: {
-    SubstancesEdit,
-    InputDate,
-    InputNumber,
-    HeritageEdit,
-    Tag,
-    PropDuree,
-    AutocompleteEntreprise
-  },
+import { EtapeEntreprise, Etape } from 'camino-common/src/etape'
+import { DomaineId, DOMAINES_IDS } from 'camino-common/src/static/domaines'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { toTitreTypeId } from 'camino-common/src/static/titresTypes'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
+import {
+  TITRES_TYPES_TYPES_IDS,
+  TitreTypeTypeId
+} from 'camino-common/src/static/titresTypesTypes'
+import { etape } from '@/api/titres-etapes'
+import { useStore } from 'vuex'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { watch, computed } from 'vue'
+import { AutoCompleteEntreprise } from './autocomplete-entreprise.type'
 
-  props: {
-    etape: { type: Object, default: () => ({}) },
-    domaineId: { type: String, default: '' },
-    demarcheTypeId: { type: String, required: true },
-    titreTypeId: { type: String, required: true },
-    userIsAdmin: { type: Boolean, required: true },
-    userIsSuper: { type: Boolean, required: true },
-    substances: { type: Array, required: true }
-  },
-  emits: ['complete-update'],
+const store = useStore()
 
-  computed: {
-    entreprisesDisabled() {
-      return this.entreprises.filter(entr => {
-        return (
-          this.etape.amodiataires.find(a => a.id === entr.id) ||
-          this.etape.titulaires.find(t => t.id === entr.id)
-        )
-      })
-    },
-    entreprisesTitulaires() {
-      return this.etape.titulaires.map(titulaire => ({
-        ...this.entreprises.find(({ id }) => id === titulaire.id),
-        operateur: titulaire.operateur ?? false
-      }))
-    },
-    entreprisesAmodiataires() {
-      return this.etape.amodiataires.map(amodiataire => ({
-        ...this.entreprises.find(({ id }) => id === amodiataire.id),
-        operateur: amodiataire.operateur ?? false
-      }))
-    },
+const props = defineProps<{
+  etape: Etape
+  domaineId: DomaineId
+  demarcheTypeId: DemarcheTypeId
+  titreTypeId: TitreTypeTypeId
+  userIsAdmin: boolean
+  userIsSuper: boolean
+  substances: SubstanceLegaleId[]
+}>()
 
-    isArm() {
-      return this.domaineId === 'm' && this.titreTypeId === 'ar'
-    },
+const emits = defineEmits<{
+  (e: 'complete-update', complete: boolean): void
+}>()
 
-    isAxm() {
-      return this.domaineId === 'm' && this.titreTypeId === 'ax'
-    },
+const entreprisesDisabled = computed<EtapeEntreprise[]>(() => {
+  return entreprises.value.filter(entr => {
+    return (
+      props.etape.amodiataires.find(a => a.id === entr.id) ||
+      props.etape.titulaires.find(t => t.id === entr.id)
+    )
+  })
+})
 
-    entreprises() {
-      return this.$store.state.titreEtapeEdition.metas.entreprises
-    },
+const isArm = computed<boolean>(() => {
+  return (
+    props.domaineId === DOMAINES_IDS.METAUX &&
+    props.titreTypeId === TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE
+  )
+})
 
-    titulairesLength() {
-      return this.etape.titulaires.filter(({ id }) => id).length
-    },
+const isAxm = computed<boolean>(() => {
+  return (
+    props.domaineId === DOMAINES_IDS.METAUX &&
+    props.titreTypeId === TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION
+  )
+})
 
-    amodiatairesLength() {
-      return this.etape.amodiataires?.filter(({ id }) => id).length || 0
-    },
+const entreprises = computed<AutoCompleteEntreprise[]>(() => {
+  return store.state.titreEtapeEdition.metas.entreprises
+})
 
-    dureeOptionalCheck() {
-      return dureeOptionalCheck(
-        this.etape.type.id,
-        this.demarcheTypeId,
-        this.titreTypeId + this.domaineId
-      )
-    },
+const titulairesLength = computed<number>(() => {
+  return props.etape.titulaires.filter(({ id }) => id).length
+})
 
-    canSeeAllDates() {
-      if (this.userIsSuper) {
-        return true
-      }
+const amodiatairesLength = computed<number>(() => {
+  return props.etape.amodiataires?.filter(({ id }) => id).length || 0
+})
 
-      if (this.etape.type?.id === 'mfr' && (this.isArm || this.isAxm)) {
-        return false
-      }
+const dureeOptionalCheck = computed<boolean>(() => {
+  return titreEtapesDureeOptionalCheck(
+    props.etape.type.id,
+    props.demarcheTypeId,
+    toTitreTypeId(props.titreTypeId, props.domaineId)
+  )
+})
 
-      return true
-    },
-
-    canAddAmodiataires() {
-      return !this.isArm && !this.isAxm
-    },
-
-    complete() {
-      return (
-        this.etape.type.id !== 'mfr' ||
-        (this.etape.substances?.filter(substanceId => !!substanceId)?.length >
-          0 &&
-          (this.dureeOptionalCheck ||
-            !!this.etape.duree.ans ||
-            !!this.etape.duree.mois))
-      )
-    }
-  },
-
-  watch: {
-    complete: 'completeUpdate',
-    etape: {
-      handler: function (etape) {
-        if (!etape.duree) {
-          etape.incertitudes.duree = false
-        }
-
-        if (!etape.dateDebut) {
-          etape.incertitudes.dateDebut = false
-        }
-
-        if (!etape.dateFin) {
-          etape.incertitudes.dateFin = false
-        }
-
-        if (!etape.titulaires.length) {
-          etape.incertitudes.titulaires = false
-        }
-
-        if (!etape.amodiataires?.length) {
-          etape.incertitudes.amodiataires = false
-        }
-
-        if (!etape.substances?.length) {
-          etape.incertitudes.substances = false
-        }
-      },
-      deep: true
-    }
-  },
-
-  created() {
-    this.completeUpdate()
-  },
-
-  methods: {
-    titulairesUpdate(titulaires) {
-      const newTitulaires = titulaires.map(titulaire => ({
-        id: titulaire.id,
-        operateur: titulaire.operateur
-      }))
-      this.etape.titulaires.splice(
-        0,
-        this.etape.titulaires.length,
-        ...newTitulaires
-      )
-    },
-    amodiatairesUpdate(amodiataires) {
-      const newAmodiataires = amodiataires.map(amodiataire => ({
-        id: amodiataire.id,
-        operateur: amodiataire.operateur
-      }))
-      this.etape.amodiataires.splice(
-        0,
-        this.etape.amodiataires.length,
-        ...newAmodiataires
-      )
-    },
-
-    etablissementNameFind() {
-      return etablissementNameFind()
-    },
-
-    dateFormat(date) {
-      return dateFormat(date)
-    },
-
-    completeUpdate() {
-      this.$emit('complete-update', this.complete)
-    }
+const canSeeAllDates = computed<boolean>(() => {
+  if (props.userIsSuper) {
+    return true
   }
+
+  if (props.etape.type?.id === 'mfr' && (isArm.value || isAxm.value)) {
+    return false
+  }
+
+  return true
+})
+
+const canAddAmodiataires = computed<boolean>(() => {
+  return !isArm.value && !isAxm.value
+})
+
+const complete = computed<boolean>(() => {
+  return (
+    props.etape.type.id !== ETAPES_TYPES.demande ||
+    (props.etape.substances?.filter(substanceId => !!substanceId)?.length > 0 &&
+      (dureeOptionalCheck.value ||
+        !!props.etape.duree.ans ||
+        !!props.etape.duree.mois))
+  )
+})
+
+watch(
+  () => complete,
+  () => completeUpdate()
+)
+
+watch(
+  () => props.etape,
+  etape => {
+    if (!etape.duree) {
+      etape.incertitudes.duree = false
+    }
+
+    if (!etape.dateDebut) {
+      etape.incertitudes.dateDebut = false
+    }
+
+    if (!etape.dateFin) {
+      etape.incertitudes.dateFin = false
+    }
+
+    if (!etape.titulaires.length) {
+      etape.incertitudes.titulaires = false
+    }
+
+    if (!etape.amodiataires?.length) {
+      etape.incertitudes.amodiataires = false
+    }
+
+    if (!etape.substances?.length) {
+      etape.incertitudes.substances = false
+    }
+  },
+  { deep: true }
+)
+
+const titulairesUpdate = (titulaires: AutoCompleteEntreprise[]) => {
+  const newTitulaires = titulaires.map(titulaire => ({
+    id: titulaire.id,
+    operateur: titulaire.operateur,
+    // FIXME 2022-11-08 utiliser un autre type
+    nom: '',
+    etablissements: []
+  }))
+  props.etape.titulaires.splice(
+    0,
+    props.etape.titulaires.length,
+    ...newTitulaires
+  )
 }
+
+const amodiatairesUpdate = (amodiataires: AutoCompleteEntreprise[]) => {
+  const newAmodiataires = amodiataires.map(amodiataire => ({
+    id: amodiataire.id,
+    operateur: amodiataire.operateur,
+    // FIXME 2022-11-08 utiliser un autre type
+    nom: '',
+    etablissements: []
+  }))
+  props.etape.amodiataires.splice(
+    0,
+    props.etape.amodiataires.length,
+    ...newAmodiataires
+  )
+}
+
+const completeUpdate = () => {
+  emits('complete-update', complete.value)
+}
+
+completeUpdate()
 </script>
