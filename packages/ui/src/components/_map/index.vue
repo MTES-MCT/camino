@@ -1,206 +1,314 @@
 <template>
-  <div ref="map">
-    <div class="absolute p-s map-loader">
-      <div class="small">Zoom: {{ zoom }}</div>
-
-      <div v-if="legends?.length" class="mt-xs">
-        <div
-          v-for="(legend, index) in legends"
-          :key="legend.label"
-          class="flex flex-center"
-          :class="{ 'mb-xs': index !== legends.length - 1 }"
-        >
-          <i class="icon-map-legend" :class="legend.icon" />
-          : {{ legend.label }}
-        </div>
-      </div>
-    </div>
-  </div>
+  <div ref="map"></div>
 </template>
 
-<script>
-import { markRaw } from 'vue'
+<script setup lang="ts">
+import L, {
+  LatLngBoundsExpression,
+  LatLngExpression,
+  Map,
+  Layer,
+  LayersControlEvent,
+  LeafletEvent
+} from 'leaflet'
+import { ref, onMounted, markRaw, watch } from 'vue'
 
-import {
-  leafletMap,
-  leafletTileLayerDefault,
-  leafletScaleBuild,
-  leafletFeatureGroupGet,
-  leafletCanvasLayerBuild
-} from './leaflet.js'
+const map = ref<HTMLDivElement | null>(null)
+const leafletComponent = ref<Map | null>(null)
+const updateBboxOnly = ref<boolean>(false)
+const updateCenterAndZoomOnly = ref<boolean>(false)
+const zoom = ref<number>(8)
 
-export default {
-  props: {
-    geojsonLayers: { type: Array, default: () => [] },
-    markerLayers: { type: Array, default: () => [] },
-    tilesLayer: { type: Object, default: () => leafletTileLayerDefault },
-    canvasMarkers: { type: Array, default: () => [] },
-    legends: { type: Array, default: () => [] }
+const props = defineProps<{ geojsonLayers: Layer[]; markerLayers: Layer[] }>()
+const sdomOverlayName = 'SDOM (schéma départemental d’orientation minière)'
+const brgmBaseLayerName = 'BRGM / Cartes géologiques 1/50 000'
+
+const geojsonLayer = L.layerGroup([])
+const markerLayer = L.layerGroup([])
+
+watch(
+  () => props.geojsonLayers,
+  (layers: Layer[]) => {
+    geojsonLayer.clearLayers()
+    layers.forEach(l => l.addTo(geojsonLayer))
   },
-
-  emits: ['map-update'],
-
-  data() {
-    return {
-      map: null,
-      zoom: 0,
-      updateBboxOnly: false,
-      updateCenterAndZoomOnly: false,
-      layers: {
-        tiles: {},
-        geojsons: [],
-        markers: [],
-        canvas: null
-      }
-    }
+  { immediate: true }
+)
+watch(
+  () => props.markerLayers,
+  (layers: Layer[]) => {
+    markerLayer.clearLayers()
+    layers.forEach(l => l.addTo(markerLayer))
   },
+  { immediate: true }
+)
 
-  watch: {
-    tilesLayer: 'tilesUpdate',
-    geojsonLayers: 'geojsonsUpdate',
-    markerLayers: 'markersUpdate',
-    canvasMarkers: 'canvasMarkersUpdate'
-  },
+const emits = defineEmits<{
+  (
+    e: 'map-update',
+    payload: { center?: number[]; zoom?: number; bbox?: number[] }
+  ): void
+}>()
 
-  mounted() {
-    this.init()
-    this.scaleAdd()
-    this.tilesAdd()
-    this.markersAdd()
-    this.geojsonsAdd()
-    this.layersCanvasAdd()
-  },
+const boundsGet = () => {
+  if (leafletComponent.value !== null) {
+    const bounds = leafletComponent.value.getBounds()
 
-  methods: {
-    init() {
-      this.map = markRaw(leafletMap(this.$refs.map))
-
-      this.map.on('moveend', () => {
-        if (this.updateBboxOnly) {
-          this.updateBboxOnly = false
-          const bbox = this.boundsGet()
-
-          this.$emit('map-update', { bbox })
-        } else {
-          const center = [this.map.getCenter().lat, this.map.getCenter().lng]
-          const zoom = this.map.getZoom()
-          this.zoom = zoom
-
-          if (this.updateCenterAndZoomOnly) {
-            this.updateCenterAndZoomOnly = false
-            this.$emit('map-update', { center, zoom })
-          } else {
-            const bbox = this.boundsGet()
-
-            this.$emit('map-update', { center, zoom, bbox })
-          }
-        }
-      })
-
-      this.map.on('fullscreenchange', () => {
-        if (this.map.isFullscreen()) {
-          this.map.gestureHandling.disable()
-        } else {
-          this.map.gestureHandling.enable()
-        }
-      })
-
-      this.zoom = this.map.getZoom()
-    },
-
-    boundsFit(bounds) {
-      this.map.fitBounds(bounds)
-    },
-
-    allFit() {
-      const featureGroup = leafletFeatureGroupGet(this.layers.markers)
-      this.updateCenterAndZoomOnly = true
-      this.boundsFit(featureGroup.getBounds())
-    },
-
-    positionSet({ zoom, center }) {
-      this.updateBboxOnly = true
-      this.map.setView(center, zoom)
-      this.zoom = zoom
-    },
-
-    boundsGet() {
-      const bounds = this.map.getBounds()
-
-      return [
-        bounds._southWest.lng,
-        bounds._southWest.lat,
-        bounds._northEast.lng,
-        bounds._northEast.lat
-      ]
-    },
-
-    scaleAdd() {
-      const scale = leafletScaleBuild()
-      scale.addTo(this.map)
-    },
-
-    tilesUpdate() {
-      this.layers.tiles.removeFrom(this.map)
-      this.tilesAdd()
-    },
-
-    tilesAdd() {
-      this.layers.tiles = this.tilesLayer
-      this.layers.tiles.addTo(this.map)
-    },
-
-    geojsonsAdd() {
-      this.geojsonLayers.forEach(l => {
-        this.layers.geojsons.push(l)
-        l.addTo(this.map)
-      })
-    },
-
-    geojsonsUpdate() {
-      this.layers.geojsons.forEach(l => l.remove())
-
-      this.geojsonsAdd()
-    },
-
-    markersAdd() {
-      this.markerLayers.forEach(marker => {
-        this.layers.markers.push(marker)
-        this.map.addLayer(marker)
-      })
-    },
-
-    hasLayer(layer) {
-      return this.map.hasLayer(layer)
-    },
-
-    markersUpdate() {
-      this.layers.markers.forEach(marker => {
-        this.map.removeLayer(marker)
-      })
-
-      this.markersAdd()
-    },
-
-    canvasMarkersUpdate() {
-      const markers = []
-      this.canvasMarkers.forEach((marker, i) => {
-        markers.push(marker)
-      })
-      this.layers.canvas.clear()
-      this.layers.canvas.addMarkers(markers)
-      if (!markers.length) {
-        this.layers.canvas._canvas.classList.add('hide')
-      } else {
-        this.layers.canvas._canvas.classList.remove('hide')
-      }
-    },
-
-    layersCanvasAdd() {
-      this.map.createPane('canvas')
-      this.layers.canvas = leafletCanvasLayerBuild({ pane: 'canvas' })
-      this.layers.canvas.addTo(this.map)
-    }
+    return [
+      bounds.getSouthWest().lng,
+      bounds.getSouthWest().lat,
+      bounds.getNorthEast().lng,
+      bounds.getNorthEast().lat
+    ]
   }
+  return []
 }
+
+function boundsFit(bounds: LatLngBoundsExpression) {
+  leafletComponent.value?.fitBounds(bounds)
+}
+
+const positionSet = (position: { zoom: number; center: LatLngExpression }) => {
+  updateBboxOnly.value = true
+
+  zoom.value = position.zoom
+  leafletComponent.value?.setView(position.center, position.zoom)
+}
+
+const allFit = () => {
+  const featureGroup = new L.FeatureGroup(markerLayer.getLayers())
+  updateCenterAndZoomOnly.value = true
+  boundsFit(featureGroup.getBounds())
+}
+defineExpose({ boundsFit, positionSet, allFit })
+
+const sdomLegends = [
+  { icon: 'icon-map-legend-sdom-zone-0', label: 'Zone 0' },
+  {
+    icon: 'icon-map-legend-sdom-zone-0-potentielle',
+    label: 'Zone 0 potentielle'
+  },
+  { icon: 'icon-map-legend-sdom-zone-1', label: 'Zone 1' },
+  { icon: 'icon-map-legend-sdom-zone-2', label: 'Zone 2' }
+]
+
+onMounted(() => {
+  const L = window.L
+
+  const osm = L.tileLayer(
+    'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
+    {
+      maxZoom: 19,
+      attribution:
+        '&copy; Openstreetmap France | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }
+  )
+  const hot = L.tileLayer(
+    'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+    {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/">Humanitarian OpenStreetMap Team</a>'
+    }
+  )
+  const geoIGN = L.tileLayer(
+    'https://wxs.ign.fr/essentiels/geoportail/wmts?layer=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}',
+    {
+      maxZoom: 19,
+      attribution: 'IGN-F/Geoportail'
+    }
+  )
+  const geoAer = L.tileLayer(
+    'https://wxs.ign.fr/essentiels/geoportail/wmts?&REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/jpeg&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',
+    {
+      maxZoom: 19,
+      attribution: 'IGN-F/Geoportail'
+    }
+  )
+  const geoCadastre = L.tileLayer(
+    'https://wxs.ign.fr/essentiels/geoportail/wmts?&REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/jpeg&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',
+    {
+      maxZoom: 19,
+      attribution: 'IGN-F/Geoportail'
+    }
+  )
+
+  const BRGMGeo = L.tileLayer.wms('https://geoservices.brgm.fr/geologie', {
+    layers: 'SCAN_H_GEOL50',
+    format: 'image/png',
+    attribution: 'BRGM',
+    version: '1.3.0'
+  })
+
+  const baseMaps = {
+    'OSM / fr': osm,
+    'OSM / hot': hot,
+    'Géoportail / Plan IGN': geoIGN,
+    'Géoportail / Photographies aériennes': geoAer,
+    'Géoportail / Parcelles cadastrales': geoCadastre,
+    [brgmBaseLayerName]: BRGMGeo
+  }
+
+  const SDOM = L.tileLayer.wms(
+    'https://datacarto.geoguyane.fr/wms/SDOM_GUYANE',
+    {
+      layers:
+        'ZONE2activiteminiereautoriseesouscontrainte,ZONE1activiteminiereinterditesaufexploitationsouterraineetrecherchesaeriennes,ZONE0activiteminiereinterdite,Zone0potentielle',
+      format: 'image/png',
+      attribution: 'GéoGuyane'
+    }
+  )
+
+  const Facades = L.tileLayer.wms(
+    'https://gisdata.cerema.fr/arcgis/services/Carte_vocation_dsf_2020/MapServer/WMSServer',
+    {
+      layers: '0',
+      format: 'image/png',
+      transparent: true,
+      attribution: 'cerema'
+    }
+  )
+  const overlayMaps = {
+    [sdomOverlayName]: SDOM,
+    'Façades maritimes': Facades,
+    Contours: geojsonLayer,
+    Points: markerLayer
+  }
+  if (map.value !== null) {
+    const leafletComponentOnMounted = markRaw(
+      L.map(map.value, {
+        zoomControl: true,
+        zoomAnimation: false,
+        doubleClickZoom: false,
+        minZoom: 1,
+        // @ts-ignore
+        gestureHandling: true,
+        fullscreenControl: {
+          pseudoFullscreen: true
+        },
+        layers: [osm, geojsonLayer, markerLayer]
+      })
+    )
+    leafletComponent.value = leafletComponentOnMounted
+
+    L.control.layers(baseMaps, overlayMaps).addTo(leafletComponentOnMounted)
+
+    leafletComponentOnMounted.on('moveend', () => {
+      if (updateBboxOnly.value) {
+        updateBboxOnly.value = false
+        const bbox = boundsGet()
+
+        emits('map-update', { bbox })
+      } else {
+        const center = [
+          leafletComponentOnMounted.getCenter().lat,
+          leafletComponentOnMounted.getCenter().lng
+        ]
+        const leafletZoom = leafletComponentOnMounted.getZoom()
+        zoom.value = leafletZoom
+
+        if (updateCenterAndZoomOnly.value) {
+          updateCenterAndZoomOnly.value = false
+          emits('map-update', { center, zoom: zoom.value })
+        } else {
+          const bbox = boundsGet()
+
+          emits('map-update', { center, zoom: zoom.value, bbox })
+        }
+      }
+    })
+
+    // TODO 2022-11-07 add gesture handling typing
+    leafletComponentOnMounted.on('fullscreenchange', () => {
+      // @ts-ignore
+      if (leafletComponentOnMounted.isFullscreen()) {
+        // @ts-ignore
+        leafletComponentOnMounted.gestureHandling.disable()
+      } else {
+        // @ts-ignore
+        leafletComponentOnMounted.gestureHandling.enable()
+      }
+    })
+
+    zoom.value = leafletComponentOnMounted.getZoom()
+
+    L.control.scale({ imperial: false }).addTo(leafletComponentOnMounted)
+    const ZoomViewer = L.Control.extend({
+      onAdd() {
+        const gauge = L.DomUtil.create('div')
+        gauge.style.width = '70px'
+        gauge.style.background = 'rgba(255,255,255,0.5)'
+        gauge.style.textAlign = 'left'
+        leafletComponentOnMounted.on(
+          'zoomstart zoom zoomend zoomlevelschange load viewreset',
+          () => {
+            gauge.innerHTML = `Zoom: ${zoom.value}`
+          }
+        )
+        return gauge
+      }
+    })
+
+    new ZoomViewer().addTo(leafletComponentOnMounted)
+    const SdomLegend = L.Control.extend({
+      onAdd() {
+        const legend = L.DomUtil.create('div')
+        legend.style.background = 'rgba(255,255,255,0.7)'
+        legend.className = 'mt-xs'
+
+        sdomLegends.forEach(sdom => {
+          const ligne = L.DomUtil.create('div')
+          const icone = L.DomUtil.create('i')
+          ligne.className = 'flex flex-center mb-xs'
+          icone.className = `icon-map-legend ${sdom.icon}`
+          ligne.appendChild(icone)
+          ligne.append(`: ${sdom.label}`)
+          legend.appendChild(ligne)
+        })
+        leafletComponentOnMounted.on('overlayadd overlayremove', layer => {
+          if (isLayersControlEvent(layer)) {
+            if (layer.type === 'overlayadd' && layer.name === sdomOverlayName) {
+              legend.style.display = 'block'
+            }
+            if (
+              layer.type === 'overlayremove' &&
+              layer.name === sdomOverlayName
+            ) {
+              legend.style.display = 'none'
+            }
+          }
+        })
+        legend.style.display = 'none'
+        return legend
+      }
+    })
+    new SdomLegend({ position: 'topright' }).addTo(leafletComponentOnMounted)
+
+    const BRGMLegend = L.Control.extend({
+      onAdd() {
+        const legend = L.DomUtil.create('div')
+        legend.className = 'bg-warning px py-s color-bg mb-s h6 bold'
+        legend.innerHTML =
+          'Fond de carte visible <br /> aux niveaux de zoom 12 à 16 en métropole'
+        leafletComponentOnMounted.on('baselayerchange', layer => {
+          if (isLayersControlEvent(layer)) {
+            if (layer.name === brgmBaseLayerName) {
+              legend.style.display = 'block'
+            } else {
+              legend.style.display = 'none'
+            }
+          }
+        })
+        legend.style.display = 'none'
+        return legend
+      }
+    })
+    new BRGMLegend({ position: 'topright' }).addTo(leafletComponentOnMounted)
+  } else {
+    console.error('Cas impossible ?')
+  }
+})
+const isLayersControlEvent = (
+  layer: LeafletEvent
+): layer is LayersControlEvent => 'type' in layer && 'name' in layer
 </script>

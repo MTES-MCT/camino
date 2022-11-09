@@ -4,7 +4,6 @@ import * as api from '../api/utilisateurs'
 import { Administrations } from 'camino-common/src/static/administrations'
 
 import user from './user'
-import tiles from '../utils/map-tiles'
 
 jest.mock('../api/utilisateurs', () => ({
   utilisateurConnecter: jest.fn(),
@@ -49,11 +48,9 @@ describe("état de l'utilisateur connecté", () => {
 
     user.state = {
       element: null,
-      metas: {
-        tiles
-      },
+      metas: {},
       preferences: {
-        carte: { tilesId: 'osm-fr' }
+        carte: {}
       }
     }
 
@@ -72,7 +69,7 @@ describe("état de l'utilisateur connecté", () => {
       menuClose: jest.fn()
     }
 
-    map = { state: { tiles: [{ id: 'osm-fr' }, { id: 'geoportail' }] } }
+    map = { state: {} }
 
     store = createStore({
       modules: { user, map },
@@ -90,10 +87,7 @@ describe("état de l'utilisateur connecté", () => {
     await store.dispatch('user/init')
 
     expect(apiMock).toHaveBeenCalled()
-    expect(store.state.user.metas).toEqual({
-      tiles,
-      entreprisesTitresCreation: []
-    })
+    expect(store.state.user.metas).toEqual({ entreprisesTitresCreation: [] })
     expect(mutations.loadingRemove).toHaveBeenCalled()
   })
 
@@ -366,21 +360,10 @@ describe("état de l'utilisateur connecté", () => {
 
   test('initialise les preferences de filtre', async () => {
     const section = 'carte'
-    const params = { tilesId: 'ign' }
+    const params = { zoom: 2 }
     await store.dispatch('user/preferencesSet', { section, params })
 
-    expect(store.state.user.preferences.carte.tilesId).toEqual('ign')
-  })
-
-  test('retourne le fond de carte actif', () => {
-    expect(store.getters['user/tilesActive']).toEqual({
-      id: 'osm-fr',
-      name: 'OSM / fr',
-      type: 'tiles',
-      url: 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
-      attribution:
-        '&copy; Openstreetmap France | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    })
+    expect(store.state.user.preferences.carte.zoom).toEqual(2)
   })
 
   test("retourne true si l'utilisateur est connecté", () => {

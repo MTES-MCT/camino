@@ -2,18 +2,13 @@
   <div class="width-full bg-alt">
     <Mapo
       ref="map"
-      :tilesLayer="tilesLayer"
       :geojsonLayers="geojsonLayers"
       :markerLayers="markerLayers"
-      :canvasMarkers="canvasMarkers"
-      :legends="legends"
       class="map map-view mb-s"
       @map-update="titresPreferencesUpdate"
     />
 
     <MapPattern :domainesIds="domainesIds" :typesIds="typesIds" />
-
-    <MapWarningBrgm :zoom="preferences.zoom" :tilesId="tilesId" />
 
     <div class="container overflow-auto">
       <div class="desktop-blobs">
@@ -70,13 +65,6 @@
               </button>
             </div>
           </div>
-
-          <MapTilesSelector
-            :tiles="tiles"
-            :tilesId="tilesId"
-            class="flex-grow mb-s"
-            @params-update="userPreferencesUpdate"
-          />
         </div>
       </div>
     </div>
@@ -86,14 +74,8 @@
 <script>
 import { nextTick } from 'vue'
 import Mapo from '../_map/index.vue'
-import MapTilesSelector from '../_map/tiles-selector.vue'
-import MapWarningBrgm from '../_map/warning-brgm.vue'
 import MapPattern from '../_map/pattern.vue'
-import {
-  leafletGeojsonBoundsGet,
-  leafletTilesBuild,
-  leafletTilesLegendGet
-} from '../_map/leaflet.js'
+import { leafletGeojsonBoundsGet } from '../_map/leaflet'
 import { clustersBuild, layersBuild, zones } from './map.js'
 import Icon from '@/components/_ui/icon.vue'
 import { sortedDomaines } from 'camino-common/src/static/domaines'
@@ -101,9 +83,7 @@ import { sortedDomaines } from 'camino-common/src/static/domaines'
 export default {
   components: {
     Icon,
-    MapWarningBrgm,
     Mapo,
-    MapTilesSelector,
     MapPattern
   },
 
@@ -123,15 +103,6 @@ export default {
   },
 
   computed: {
-    tilesActive() {
-      return this.$store.getters['user/tilesActive']
-    },
-    tilesLayer() {
-      return leafletTilesBuild(this.tilesActive)
-    },
-    legends() {
-      return leafletTilesLegendGet(this.tilesActive)
-    },
     markerLayersId() {
       return this.$store.state.user.preferences.carte.markerLayersId
     },
@@ -139,13 +110,7 @@ export default {
     markerLayers() {
       if (this.markerLayersId === 'clusters') {
         return this.clusters
-      }
-
-      return []
-    },
-
-    canvasMarkers() {
-      if (this.markerLayersId === 'markers') {
+      } else if (this.markerLayersId === 'markers') {
         return this.markers
       }
 
@@ -170,14 +135,6 @@ export default {
 
     typesIds() {
       return this.$store.state.titres.metas.types.map(({ id }) => id)
-    },
-
-    tiles() {
-      return this.$store.state.user.metas.tiles
-    },
-
-    tilesId() {
-      return this.$store.state.user.preferences.carte.tilesId
     },
 
     preferences() {
@@ -297,10 +254,7 @@ export default {
       nextTick(() => {
         this.geojsonLayers = []
         this.markers.forEach(marker => {
-          if (
-            this.markerLayersId !== 'clusters' ||
-            (this.$refs.map && this.$refs.map.hasLayer(marker))
-          ) {
+          if (this.markerLayersId !== 'clusters' || this.$refs.map) {
             this.geojsonLayers.push(this.geojsons[marker.id])
           }
         })

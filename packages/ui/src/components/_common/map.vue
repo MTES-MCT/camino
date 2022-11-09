@@ -4,15 +4,11 @@
 
     <Mapo
       ref="map"
-      :tilesLayer="tilesLayer"
       :geojsonLayers="geojsonLayers"
       :markerLayers="markerLayers"
       :bounds="bounds"
-      :legends="legends"
       class="map map-detail mb-s"
     />
-
-    <MapWarningBrgm :zoom="zoom" :tilesId="tilesId" />
 
     <div :class="{ container: isMain }">
       <div class="tablet-blobs">
@@ -43,14 +39,6 @@
               <Icon size="M" name="pattern" />
             </button>
           </div>
-
-          <MapTilesSelector
-            v-if="isMain"
-            :tiles="tiles"
-            :tilesId="tilesId"
-            class="flex-grow mb-s"
-            @params-update="preferencesUpdate"
-          />
         </div>
       </div>
     </div>
@@ -59,21 +47,17 @@
 
 <script>
 import Mapo from '../_map/index.vue'
-import MapTilesSelector from '../_map/tiles-selector.vue'
-import MapWarningBrgm from '../_map/warning-brgm.vue'
 import MapPattern from '../_map/pattern.vue'
 
 import {
-  leafletTilesBuild,
   leafletMarkerBuild,
   leafletGeojsonBuild,
-  leafletDivIconBuild,
-  leafletTilesLegendGet
-} from '../_map/leaflet.js'
+  leafletDivIconBuild
+} from '../_map/leaflet.ts'
 import Icon from '@/components/_ui/icon.vue'
 
 export default {
-  components: { Icon, MapPattern, MapWarningBrgm, Mapo, MapTilesSelector },
+  components: { Icon, MapPattern, Mapo },
 
   props: {
     geojson: { type: Object, required: true },
@@ -97,18 +81,6 @@ export default {
   computed: {
     bounds() {
       return this.geojsonLayers[0] ? this.geojsonLayers[0].getBounds() : [0, 0]
-    },
-
-    tilesActive() {
-      return this.$store.getters['user/tilesActive']
-    },
-
-    tilesLayer() {
-      return leafletTilesBuild(this.tilesActive)
-    },
-
-    legends() {
-      return leafletTilesLegendGet(this.tilesActive)
     },
 
     geojsonLayers() {
@@ -149,14 +121,6 @@ export default {
       }
 
       return []
-    },
-
-    tiles() {
-      return this.$store.state.user.metas.tiles
-    },
-
-    tilesId() {
-      return this.$store.state.user.preferences.carte.tilesId
     }
   },
 
