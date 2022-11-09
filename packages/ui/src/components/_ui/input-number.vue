@@ -4,44 +4,52 @@
     type="text"
     pattern="([0-9]{1,3}[\s]?)*([.,][0-9]*)?"
     class="p-s text-right"
-    @blur="textToNumberFormat($event.target)"
+    @blur="textToNumberFormatFunc($event)"
   />
 </template>
 
-<script>
+<script setup lang="ts">
 import { textNumberFormat, textToNumberFormat } from '../../utils'
-import numberFormat from '../../utils/number-format'
+import { numberFormat } from '../../utils/number-format'
+import { computed } from 'vue'
 
-export default {
-  props: {
-    modelValue: { type: Number, default: undefined },
-    negative: { type: Boolean, default: false },
-    integer: { type: Boolean, default: false }
-  },
+const props = withDefaults(
+  defineProps<{
+    modelValue?: number | undefined
+    negative?: boolean
+    integer?: boolean
+  }>(),
+  {
+    integer: false,
+    negative: false,
+    modelValue: undefined
+  }
+)
 
-  emits: ['update:modelValue'],
+const emits = defineEmits<{
+  (e: 'update:modelValue', number: number | null): void
+}>()
 
-  computed: {
-    valueFormatted() {
-      if (!this.modelValue) return this.modelValue
+const valueFormatted = computed<string>(() => {
+  if (!props.modelValue) return ''
 
-      if (this.integer) return numberFormat(Math.floor(this.modelValue))
+  if (props.integer) return numberFormat(Math.floor(props.modelValue))
 
-      return numberFormat(this.modelValue)
-    }
-  },
+  return numberFormat(props.modelValue)
+})
 
-  methods: {
-    textToNumberFormat(target) {
-      target.value = textNumberFormat(target.value, {
-        negative: this.negative,
-        integer: this.integer
-      })
+const textToNumberFormatFunc = (
+  event: FocusEvent & { target: HTMLInputElement }
+) => {
+  if (event.target !== null) {
+    event.target.value = textNumberFormat(event.target.value, {
+      negative: props.negative,
+      integer: props.integer
+    })
 
-      const number = textToNumberFormat(target.value)
+    const number = textToNumberFormat(event.target.value)
 
-      this.$emit('update:modelValue', number)
-    }
+    emits('update:modelValue', number)
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!isArm || userIsAdmin" class="tablet-blobs">
+    <div v-if="!isArm" class="tablet-blobs">
       <div class="tablet-blob-1-3 tablet-pt-s pb-s">
         <h5 class="mb-0">Durée (années / mois)</h5>
         <p v-if="dureeOptionalCheck" class="h6 italic mb-0">Optionnel</p>
@@ -14,23 +14,25 @@
         <template #write>
           <div class="blobs-mini">
             <div class="blob-mini-1-2">
-              <inputNumber
-                v-model="etape.duree.ans"
+              <InputNumber
+                v-model="ans"
                 :integer="true"
                 placeholder="années"
                 class="py-s mb-s"
+                @blur="updateDuree"
               />
             </div>
             <div class="blob-mini-1-2">
-              <inputNumber
-                v-model="etape.duree.mois"
+              <InputNumber
+                v-model="mois"
                 :integer="true"
                 placeholder="mois"
                 class="p-s"
+                @blur="updateDuree"
               />
             </div>
           </div>
-          <div v-if="etape.duree.ans || etape.duree.mois" class="h6">
+          <div v-if="ans || mois" class="h6">
             <label>
               <input
                 v-model="etape.incertitudes.duree"
@@ -41,9 +43,9 @@
             </label>
           </div>
         </template>
-        <template #read>
+        <template #read="{ heritagePropEtape }">
           <div class="border p-s mb-s bold">
-            <PropDuree :duree="etape.heritageProps.duree.etape.duree" />
+            <PropDuree :duree="heritagePropEtape.duree" />
           </div>
         </template>
       </HeritageEdit>
@@ -51,8 +53,8 @@
       <hr />
     </div>
 
-    <div v-if="(!isArm && !isAxm) || userIsAdmin">
-      <div v-if="canSeeAllDates" class="tablet-blobs">
+    <template v-if="canEditDateDebut">
+      <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
           <h5 class="mb-0">Date de début</h5>
           <p class="h6 italic mb-0">Optionnel</p>
@@ -75,15 +77,19 @@
               </label>
             </div>
           </template>
-          <template #read>
+          <template #read="{ heritagePropEtape }">
             <div class="border p-s mb-s bold">
-              {{ dateFormat(etape.heritageProps.dateDebut.etape.dateDebut) }}
+              {{ dateFormat(heritagePropEtape.dateDebut) }}
             </div>
           </template>
         </HeritageEdit>
       </div>
 
-      <div v-if="canSeeAllDates" class="tablet-blobs">
+      <hr />
+    </template>
+
+    <template v-if="canEditDateDebut">
+      <div class="tablet-blobs">
         <hr />
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
           <h5 class="mb-0">Date d'échéance</h5>
@@ -107,15 +113,18 @@
               </label>
             </div>
           </template>
-          <template #read>
+          <template #read="{ heritagePropEtape }">
             <div class="border p-s mb-s bold">
-              {{ dateFormat(etape.heritageProps.dateFin.etape.dateFin) }}
+              {{ dateFormat(heritagePropEtape.dateFin) }}
             </div>
           </template>
         </HeritageEdit>
       </div>
       <hr />
+    </template>
 
+    <!-- FIXME -->
+    <template v-if="(!isArm && !isAxm) || userIsAdmin">
       <h3 class="mb-s">Titulaires</h3>
       <p class="h6 italic">Optionnel</p>
       <HeritageEdit
@@ -142,13 +151,60 @@
             </label>
           </div>
         </template>
-        <template #read>
+        <template #read="{ heritagePropEtape }">
           <ul class="list-prefix">
-            <li
-              v-for="t in etape.heritageProps.titulaires.etape.titulaires"
-              :key="t.id"
-            >
-              {{ etablissementNameFind(t.etablissements, etape.date) || t.nom }}
+            <li v-for="t in heritagePropEtape.titulaires" :key="t.id">
+              {{ getEntrepriseNom(t) }}
+              <Tag
+                v-if="t.operateur"
+                :mini="true"
+                color="bg-info"
+                class="ml-xs"
+              >
+                Opérateur
+              </Tag>
+            </li>
+          </ul>
+        </template>
+      </HeritageEdit>
+      <hr />
+    </template>
+
+    <!-- FIXME -->
+    <template v-if="(canAddAmodiataires && !isArm && !isAxm) || userIsAdmin">
+      <hr />
+
+      <h3 class="mb-s">Amodiataires</h3>
+      <p class="h6 italic">Optionnel</p>
+
+      <HeritageEdit
+        v-model:prop="etape.heritageProps.amodiataires"
+        propId="amodiataires"
+        :isArray="true"
+      >
+        <template #write>
+          <AutocompleteEntreprise
+            :allEntities="entreprises"
+            :selectedEntities="etape.amodiataires"
+            :nonSelectableEntities="entreprisesDisabled"
+            placeholder="Sélectionner un amodiataire"
+            @onEntreprisesUpdate="amodiatairesUpdate"
+          />
+          <div class="h6 mt-s">
+            <label v-if="amodiatairesLength">
+              <input
+                v-model="etape.incertitudes.amodiataires"
+                type="checkbox"
+                class="mr-xs"
+              />
+              Incertain
+            </label>
+          </div>
+        </template>
+        <template #read="{ heritagePropEtape }">
+          <ul class="list-prefix">
+            <li v-for="t in heritagePropEtape.amodiataires" :key="t.id">
+              {{ getEntrepriseNom(t) }}
               <Tag
                 v-if="t.operateur"
                 :mini="true"
@@ -162,61 +218,8 @@
         </template>
       </HeritageEdit>
 
-      <template v-if="canAddAmodiataires">
-        <hr />
-
-        <h3 class="mb-s">Amodiataires</h3>
-        <p class="h6 italic">Optionnel</p>
-
-        <HeritageEdit
-          v-model:prop="etape.heritageProps.amodiataires"
-          propId="amodiataires"
-          :isArray="true"
-        >
-          <template #write>
-            <AutocompleteEntreprise
-              :allEntities="entreprises"
-              :selectedEntities="etape.amodiataires"
-              :nonSelectableEntities="entreprisesDisabled"
-              placeholder="Sélectionner un amodiataire"
-              @onEntreprisesUpdate="amodiatairesUpdate"
-            />
-            <div class="h6 mt-s">
-              <label v-if="amodiatairesLength">
-                <input
-                  v-model="etape.incertitudes.amodiataires"
-                  type="checkbox"
-                  class="mr-xs"
-                />
-                Incertain
-              </label>
-            </div>
-          </template>
-          <template #read>
-            <ul class="list-prefix">
-              <li
-                v-for="t in etape.heritageProps.amodiataires.etape.amodiataires"
-                :key="t.id"
-              >
-                {{
-                  etablissementNameFind(t.etablissements, etape.date) || t.nom
-                }}
-                <Tag
-                  v-if="t.operateur"
-                  :mini="true"
-                  color="bg-info"
-                  class="ml-xs"
-                >
-                  Opérateur
-                </Tag>
-              </li>
-            </ul>
-          </template>
-        </HeritageEdit>
-      </template>
-
       <hr />
-    </div>
+    </template>
 
     <SubstancesEdit
       :substances="etape.substances"
@@ -242,45 +245,42 @@ import { etablissementNameFind } from '@/utils/entreprise'
 import SubstancesEdit from '@/components/etape/substances-edit.vue'
 import { dureeOptionalCheck as titreEtapesDureeOptionalCheck } from 'camino-common/src/permissions/titres-etapes'
 
-import { EtapeEntreprise, Etape } from 'camino-common/src/etape'
+import { EtapeEntreprise, EtapeFondamentale } from 'camino-common/src/etape'
 import { DomaineId, DOMAINES_IDS } from 'camino-common/src/static/domaines'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { toTitreTypeId } from 'camino-common/src/static/titresTypes'
-import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import {
   TITRES_TYPES_TYPES_IDS,
   TitreTypeTypeId
 } from 'camino-common/src/static/titresTypesTypes'
-import { etape } from '@/api/titres-etapes'
-import { useStore } from 'vuex'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
-import { watch, computed } from 'vue'
-import { AutoCompleteEntreprise } from './autocomplete-entreprise.type'
-
-const store = useStore()
+import { watch, computed, ref } from 'vue'
+import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
+import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles'
 
 const props = defineProps<{
-  etape: Etape
+  etape: EtapeFondamentale
   domaineId: DomaineId
   demarcheTypeId: DemarcheTypeId
   titreTypeId: TitreTypeTypeId
-  userIsAdmin: boolean
-  userIsSuper: boolean
-  substances: SubstanceLegaleId[]
+  user: User
+  entreprises: Entreprise[]
 }>()
 
 const emits = defineEmits<{
   (e: 'complete-update', complete: boolean): void
 }>()
 
-const entreprisesDisabled = computed<EtapeEntreprise[]>(() => {
-  return entreprises.value.filter(entr => {
-    return (
-      props.etape.amodiataires.find(a => a.id === entr.id) ||
-      props.etape.titulaires.find(t => t.id === entr.id)
-    )
-  })
-})
+const ans = ref<number>(
+  props.etape.duree ? Math.floor(props.etape.duree / 12) : 0
+)
+const mois = ref<number>(
+  props.etape.duree ? Math.floor(props.etape.duree % 12) : 0
+)
+
+const entreprisesDisabled = computed<EntrepriseId[]>(() =>
+  [...props.etape.amodiataires, ...props.etape.titulaires].map(({ id }) => id)
+)
 
 const isArm = computed<boolean>(() => {
   return (
@@ -294,10 +294,6 @@ const isAxm = computed<boolean>(() => {
     props.domaineId === DOMAINES_IDS.METAUX &&
     props.titreTypeId === TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION
   )
-})
-
-const entreprises = computed<AutoCompleteEntreprise[]>(() => {
-  return store.state.titreEtapeEdition.metas.entreprises
 })
 
 const titulairesLength = computed<number>(() => {
@@ -316,12 +312,29 @@ const dureeOptionalCheck = computed<boolean>(() => {
   )
 })
 
-const canSeeAllDates = computed<boolean>(() => {
-  if (props.userIsSuper) {
+const canEditDateDebut = computed<boolean>(() => {
+  if (!isArm.value && !isAxm.value) {
     return true
   }
 
-  if (props.etape.type?.id === 'mfr' && (isArm.value || isAxm.value)) {
+  // ne peut pas modifier les dates sur une demande d’ARM ou d’AXM car c'est camino qui fait foi
+  if (props.etape.type?.id === ETAPES_TYPES.demande) {
+    return false
+  }
+
+  if (isEntreprise(props.user) || isBureauDEtudes(props.user)) {
+    return false
+  }
+
+  return true
+})
+
+const canSeeAllDates = computed<boolean>(() => {
+  // ne peut pas modifier les dates sur une demande d’ARM ou d’AXM car c'est camino qui fait foi
+  if (
+    props.etape.type?.id === ETAPES_TYPES.demande &&
+    (isArm.value || isAxm.value)
+  ) {
     return false
   }
 
@@ -336,9 +349,7 @@ const complete = computed<boolean>(() => {
   return (
     props.etape.type.id !== ETAPES_TYPES.demande ||
     (props.etape.substances?.filter(substanceId => !!substanceId)?.length > 0 &&
-      (dureeOptionalCheck.value ||
-        !!props.etape.duree.ans ||
-        !!props.etape.duree.mois))
+      (dureeOptionalCheck.value || !!ans.value || !!mois.value))
   )
 })
 
@@ -377,13 +388,10 @@ watch(
   { deep: true }
 )
 
-const titulairesUpdate = (titulaires: AutoCompleteEntreprise[]) => {
+const titulairesUpdate = (titulaires: EtapeEntreprise[]) => {
   const newTitulaires = titulaires.map(titulaire => ({
     id: titulaire.id,
-    operateur: titulaire.operateur,
-    // FIXME 2022-11-08 utiliser un autre type
-    nom: '',
-    etablissements: []
+    operateur: titulaire.operateur
   }))
   props.etape.titulaires.splice(
     0,
@@ -392,19 +400,35 @@ const titulairesUpdate = (titulaires: AutoCompleteEntreprise[]) => {
   )
 }
 
-const amodiatairesUpdate = (amodiataires: AutoCompleteEntreprise[]) => {
+const amodiatairesUpdate = (amodiataires: EtapeEntreprise[]) => {
   const newAmodiataires = amodiataires.map(amodiataire => ({
     id: amodiataire.id,
-    operateur: amodiataire.operateur,
-    // FIXME 2022-11-08 utiliser un autre type
-    nom: '',
-    etablissements: []
+    operateur: amodiataire.operateur
   }))
   props.etape.amodiataires.splice(
     0,
     props.etape.amodiataires.length,
     ...newAmodiataires
   )
+}
+
+const getEntrepriseNom = (etapeEntreprise: EtapeEntreprise): string => {
+  const entreprise = props.entreprises.find(
+    ({ id }) => id === etapeEntreprise.id
+  )
+
+  if (!entreprise) {
+    return ''
+  }
+
+  return (
+    etablissementNameFind(entreprise.etablissements, props.etape.date) ||
+    entreprise.nom
+  )
+}
+
+const updateDuree = (): void => {
+  props.etape.duree = mois.value + ans.value * 12
 }
 
 const completeUpdate = () => {

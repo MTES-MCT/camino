@@ -320,7 +320,9 @@ const getters = {
 
     return false
   },
-
+  /*
+  / @deprecated
+  */
   userIsAdmin(state) {
     return (
       isSuper(state.element) ||

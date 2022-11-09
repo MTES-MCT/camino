@@ -2,7 +2,7 @@
   <div class="mb-s">
     <slot v-if="!prop.actif" name="write" />
     <div v-else>
-      <slot v-if="hasHeritage" name="read" />
+      <slot v-if="hasHeritage" name="read" :heritagePropEtape="prop.etape" />
       <div v-else class="border p-s mb-s">Non renseigné</div>
       <div class="mb-s">
         <Tag

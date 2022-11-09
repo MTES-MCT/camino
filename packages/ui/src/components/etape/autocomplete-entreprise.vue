@@ -3,7 +3,7 @@
     <div v-for="entity in mySelectedEntities || []" :key="entity.id">
       <div class="flex mb-s flex-center">
         <div class="h4" style="flex: 0 1 15em">
-          {{ entity.nom }}
+          {{ getEntrepriseNom(entity) }}
         </div>
 
         <label style="flex: auto; user-select: none">
@@ -44,14 +44,15 @@
 <script setup lang="ts">
 import Typeahead from '@/components/_ui/typeahead.vue'
 import { computed, ref, watch, withDefaults } from 'vue'
-import { AutoCompleteEntreprise } from '@/components/etape/autocomplete-entreprise.type'
 import Icon from '@/components/_ui/icon.vue'
+import { EtapeEntreprise } from 'camino-common/src/etape'
+import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
 
 const props = withDefaults(
   defineProps<{
-    nonSelectableEntities?: AutoCompleteEntreprise[]
-    selectedEntities?: AutoCompleteEntreprise[]
-    allEntities: AutoCompleteEntreprise[]
+    nonSelectableEntities?: EntrepriseId[]
+    selectedEntities?: EtapeEntreprise[]
+    allEntities: Entreprise[]
     placeholder: string
   }>(),
   {
@@ -61,12 +62,12 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: 'onEntreprisesUpdate', entreprises: AutoCompleteEntreprise[]): void
+  (e: 'onEntreprisesUpdate', entreprises: EtapeEntreprise[]): void
 }>()
 
-const overrideItems = ref<AutoCompleteEntreprise[]>([])
+const overrideItems = ref<EtapeEntreprise[]>([])
 
-const mySelectedEntities = ref<AutoCompleteEntreprise[]>([])
+const mySelectedEntities = ref<EtapeEntreprise[]>([])
 const inputValue = ref<string>('')
 
 watch(
@@ -79,12 +80,7 @@ watch(
 
 const selectableEntities = computed(() =>
   props.allEntities
-    .filter(
-      entity =>
-        !props.nonSelectableEntities.some(
-          nonSelectableEntity => nonSelectableEntity.id === entity.id
-        )
-    )
+    .filter(entity => !props.nonSelectableEntities.some(id => id === entity.id))
     .filter(
       entity =>
         !mySelectedEntities.value.some(
@@ -96,7 +92,7 @@ const selectableEntities = computed(() =>
     )
 )
 
-const addEntity = (entity: AutoCompleteEntreprise | undefined) => {
+const addEntity = (entity: EtapeEntreprise | undefined) => {
   if (entity) {
     mySelectedEntities.value.push(entity)
     overrideItems.value = []
@@ -105,15 +101,18 @@ const addEntity = (entity: AutoCompleteEntreprise | undefined) => {
   }
 }
 
-const removeEntity = (entity: AutoCompleteEntreprise) => {
+const removeEntity = (entity: EtapeEntreprise) => {
   mySelectedEntities.value = mySelectedEntities.value.filter(
     e => e.id !== entity.id
   )
   emit('onEntreprisesUpdate', mySelectedEntities.value)
 }
 
-const toggleOperator = (entity: AutoCompleteEntreprise) => {
+const toggleOperator = (entity: EtapeEntreprise) => {
   entity.operateur = !entity.operateur
   emit('onEntreprisesUpdate', mySelectedEntities.value)
 }
+
+const getEntrepriseNom = (entity: EtapeEntreprise) =>
+  props.allEntities.find(({ id }) => id === entity.id)?.nom ?? ''
 </script>

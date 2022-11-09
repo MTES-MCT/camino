@@ -1,7 +1,12 @@
 import AutoCompleteEntrepriseComponent from './autocomplete-entreprise.vue'
 import { Meta, Story } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
-import { AutoCompleteEntreprise } from './autocomplete-entreprise.type'
+import { EtapeEntreprise } from 'camino-common/src/etape'
+import {
+  EntrepriseId,
+  Entreprise,
+  newEntrepriseId
+} from 'camino-common/src/entreprise'
 
 const meta: Meta = {
   title: 'Components/Etape/AutoCompleteEntreprise',
@@ -11,9 +16,9 @@ const meta: Meta = {
 export default meta
 
 type Props = {
-  nonSelectableEntities: AutoCompleteEntreprise[]
-  selectedEntities: AutoCompleteEntreprise[]
-  allEntities: AutoCompleteEntreprise[]
+  nonSelectableEntities?: EntrepriseId[]
+  selectedEntities?: EtapeEntreprise[]
+  allEntities: Entreprise[]
   placeholder: string
 }
 const Template: Story<Props> = (args: Props) => ({
@@ -31,23 +36,28 @@ const Template: Story<Props> = (args: Props) => ({
 export const Default = Template.bind({})
 Default.args = {
   placeholder: 'placeholder',
-  allEntities: [{ id: 'optionId1', nom: 'optionNom1', operateur: false }]
+  allEntities: [
+    { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }
+  ]
 }
 export const WithEntitiesAlreadyPresent = Template.bind({})
 WithEntitiesAlreadyPresent.args = {
   placeholder: 'placeholder',
   selectedEntities: [
-    { id: 'optionId10', nom: 'optionNom10', operateur: false },
-    { id: 'optionId2', nom: 'optionNom2', operateur: true }
+    { id: newEntrepriseId('optionId10'), operateur: false },
+    { id: newEntrepriseId('optionId2'), operateur: true }
   ],
   allEntities: [
-    { id: 'optionId1', nom: 'optionNom1', operateur: false },
-    { id: 'optionId2', nom: 'optionNom2', operateur: false },
-    { id: 'optionId3', nom: 'optionNom3', operateur: false },
-    { id: 'optionId4', nom: 'optionNom4', operateur: false },
-    { id: 'optionId5', nom: 'optionNom5', operateur: false }
+    { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] },
+    { id: newEntrepriseId('optionId2'), nom: 'optionNom2', etablissements: [] },
+    { id: newEntrepriseId('optionId3'), nom: 'optionNom3', etablissements: [] },
+    { id: newEntrepriseId('optionId4'), nom: 'optionNom4', etablissements: [] },
+    { id: newEntrepriseId('optionId5'), nom: 'optionNom5', etablissements: [] },
+    {
+      id: newEntrepriseId('optionId10'),
+      nom: 'optionNom10',
+      etablissements: []
+    }
   ],
-  nonSelectableEntities: [
-    { id: 'optionId1', nom: 'optionNom1', operateur: false }
-  ]
+  nonSelectableEntities: [newEntrepriseId('optionId1')]
 }
