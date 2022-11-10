@@ -64,13 +64,15 @@ export const titreEtapeUpdationValidate = (
   errors.push(...errorsHeritageContenu)
 
   if (
-    !canEditDuree(titre.typeId) &&
+    !canEditDuree(titre.typeId, titreDemarche.typeId) &&
     (titreEtape.duree ?? 0) !== (titreEtapeOld?.duree ?? 0)
   ) {
     errors.push('impossible d’éditer la durée')
   }
 
-  if (!canEditDates(titre.typeId, titreEtape.typeId, user)) {
+  if (
+    !canEditDates(titre.typeId, titreDemarche.typeId, titreEtape.typeId, user)
+  ) {
     if ((titreEtape.dateDebut ?? '') !== (titreEtapeOld?.dateDebut ?? '')) {
       errors.push('impossible d’éditer la date de début')
     }

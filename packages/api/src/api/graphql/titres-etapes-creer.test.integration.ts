@@ -106,116 +106,6 @@ describe('etapeCreer', () => {
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
   })
 
-  test('peut créer une étape mfr avec un statut fai (utilisateur super)', async () => {
-    const titreDemarcheId = await demarcheCreate()
-
-    await documentCreate({
-      id: 'dep',
-      typeId: 'dep',
-      date: '2020-01-01',
-      uri: 'https://camino.beta.gouv.fr'
-    })
-    await documentCreate({
-      id: 'doe',
-      typeId: 'doe',
-      date: '2020-01-01',
-      uri: 'https://camino.beta.gouv.fr'
-    })
-    await documentCreate({
-      id: 'dom',
-      typeId: 'dom',
-      date: '2020-01-01',
-      uri: 'https://camino.beta.gouv.fr'
-    })
-    await documentCreate({
-      id: 'for',
-      typeId: 'for',
-      date: '2020-01-01',
-      uri: 'https://camino.beta.gouv.fr'
-    })
-    await documentCreate({
-      id: 'jpa',
-      typeId: 'jpa',
-      date: '2020-01-01',
-      uri: 'https://camino.beta.gouv.fr'
-    })
-    await documentCreate({
-      id: 'pla',
-      typeId: 'pla',
-      date: '2020-01-01',
-      uri: 'https://camino.beta.gouv.fr'
-    })
-
-    const res = await graphQLCall(
-      etapeCreerQuery,
-      {
-        etape: {
-          typeId: 'mfr',
-          statutId: 'fai',
-          titreDemarcheId,
-          date: '2018-01-01',
-          heritageProps: titreEtapePropsIds.reduce(
-            (acc, prop) => {
-              acc[prop] = { actif: false }
-
-              return acc
-            },
-            {} as {
-              [key: string]: { actif: boolean }
-            }
-          ),
-          heritageContenu: {
-            arm: {
-              mecanise: { actif: true },
-              franchissements: { actif: true }
-            }
-          },
-          contenu: { arm: { mecanise: true, franchissements: 3 } },
-          substances: ['auru'],
-          duree: 10,
-          documentIds: ['dep', 'doe', 'dom', 'for', 'jpa', 'pla'],
-          points: [
-            {
-              groupe: 1,
-              contour: 1,
-              point: 1,
-              references: [
-                { geoSystemeId: '4326', coordonnees: { x: 1, y: 2 } }
-              ]
-            },
-            {
-              groupe: 1,
-              contour: 1,
-              point: 2,
-              references: [
-                { geoSystemeId: '4326', coordonnees: { x: 2, y: 2 } }
-              ]
-            },
-            {
-              groupe: 1,
-              contour: 1,
-              point: 3,
-              references: [
-                { geoSystemeId: '4326', coordonnees: { x: 2, y: 1 } }
-              ]
-            },
-            {
-              groupe: 1,
-              contour: 1,
-              point: 4,
-              references: [
-                { geoSystemeId: '4326', coordonnees: { x: 1, y: 1 } }
-              ]
-            }
-          ]
-        }
-      },
-      'super'
-    )
-
-    expect(res.body.errors).toBeUndefined()
-  })
-
   test('ne peut pas créer une étape mia avec un statut fav (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
 
@@ -396,8 +286,8 @@ describe('etapeCreer', () => {
       'super'
     )
 
-    expect(res.body.errors[0].message).toBe(
-      'l’élément "Franchissements de cours d\'eau" de la section "Caractéristiques ARM" est obligatoire'
+    expect(res.body.errors[0].message).toMatchInlineSnapshot(
+      `"impossible d’éditer la durée, l’élément \\"Franchissements de cours d'eau\\" de la section \\"Caractéristiques ARM\\" est obligatoire"`
     )
   })
 

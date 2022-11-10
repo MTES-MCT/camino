@@ -1,4 +1,4 @@
-import { TitresTypesIds, TitreTypeId } from '../static/titresTypes'
+import { TitreTypeId } from '../static/titresTypes'
 import { EtapeTypeId } from '../static/etapesTypes'
 import { DemarcheTypeId } from '../static/demarchesTypes'
 import { canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck } from './titres-etapes'
@@ -15,17 +15,22 @@ test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeI
   expect(dureeOptionalCheck(etapeTypeId, demarcheTypeId, titreTypeId)).toEqual(optional)
 })
 
-test.each<TitreTypeId>(TitresTypesIds)('canEditDuree %p', titreTypeId => expect(canEditDuree(titreTypeId)).toMatchSnapshot())
+test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; canEdit: boolean }>([
+  { titreTypeId: 'arm', demarcheTypeId: 'dep', canEdit: false },
+  { titreTypeId: 'arm', demarcheTypeId: 'dec', canEdit: false },
+  { titreTypeId: 'axm', demarcheTypeId: 'dec', canEdit: true }
+])('canEditDuree $titreTypeId | $demarcheTypeId | $canEdit', ({ titreTypeId, demarcheTypeId, canEdit }) => expect(canEditDuree(titreTypeId, demarcheTypeId)).toEqual(canEdit))
 
-test.each<{ titreTypeId: TitreTypeId; etapeTypeId: EtapeTypeId; user: User; canEdit: boolean }>([
-  { titreTypeId: 'arm', etapeTypeId: 'mfr', user: { role: 'super', administrationId: undefined }, canEdit: false },
-  { titreTypeId: 'arm', etapeTypeId: 'dpu', user: { role: 'super', administrationId: undefined }, canEdit: true },
-  { titreTypeId: 'axm', etapeTypeId: 'mfr', user: { role: 'super', administrationId: undefined }, canEdit: false },
-  { titreTypeId: 'prm', etapeTypeId: 'mfr', user: { role: 'super', administrationId: undefined }, canEdit: true },
-  { titreTypeId: 'prm', etapeTypeId: 'mfr', user: { role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
-  { titreTypeId: 'prm', etapeTypeId: 'mfr', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true }
-])('canEditDate $titreTypeId | $etapeTypeId | $user | $canEdit', ({ titreTypeId, etapeTypeId, user, canEdit }) => {
-  expect(canEditDates(titreTypeId, etapeTypeId, user)).toEqual(canEdit)
+test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; etapeTypeId: EtapeTypeId; user: User; canEdit: boolean }>([
+  { titreTypeId: 'arm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'super', administrationId: undefined }, canEdit: false },
+  { titreTypeId: 'arm', etapeTypeId: 'dpu', demarcheTypeId: 'dec', user: { role: 'super', administrationId: undefined }, canEdit: true },
+  { titreTypeId: 'axm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'super', administrationId: undefined }, canEdit: false },
+  { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'super', administrationId: undefined }, canEdit: true },
+  { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
+  { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
+  { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dep', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: false }
+])('canEditDate $titreTypeId | $demarcheTypeId | $etapeTypeId | $user | $canEdit', ({ titreTypeId, demarcheTypeId, etapeTypeId, user, canEdit }) => {
+  expect(canEditDates(titreTypeId, demarcheTypeId, etapeTypeId, user)).toEqual(canEdit)
 })
 
 test.each<{ titreTypeId: TitreTypeId; user: User; canEdit: boolean }>([

@@ -119,27 +119,6 @@ describe('Visibilité des étapes', () => {
 describe('Création des étapes', () => {
   test.each`
     administrationId
-    ${'ope-onf-973-01'}
-    ${'min-mtes-dgaln-01'}
-  `(
-    'un utilisateur admin de l’administration $administrationId peut créer une étape mfr sur un titre ARM',
-    async ({ administrationId }) =>
-      creationCheck(administrationId, true, 'etapes', 'arm')
-  )
-
-  test.each`
-    administrationId
-    ${'ope-onf-973-01'}
-    ${'dea-guyane-01'}
-    ${'min-mtes-dgaln-01'}
-  `(
-    'un utilisateur admin de l’administration $administrationId peut créer une étape mfr sur un titre AXM',
-    async ({ administrationId }) =>
-      creationCheck(administrationId, true, 'etapes', 'axm')
-  )
-
-  test.each`
-    administrationId
     ${'min-mtes-dgaln-01'}
   `(
     'un utilisateur admin de l’administration $administrationId peut créer une étape $etapeTypeId sur un titre CXM',

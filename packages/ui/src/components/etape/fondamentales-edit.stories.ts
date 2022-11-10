@@ -19,7 +19,7 @@ type Props = {
   etape: EtapeFondamentale
   domaineId: DomaineId
   demarcheTypeId: DemarcheTypeId
-  titreTypeId: TitreTypeTypeId
+  titreTypeTypeId: TitreTypeTypeId
   user: User
   entreprises: Entreprise[]
 }
@@ -98,7 +98,7 @@ ArmDemandeONF.args = {
   etape,
   domaineId: 'm',
   demarcheTypeId: 'oct',
-  titreTypeId: 'ar',
+  titreTypeTypeId: 'ar',
   user: { role: 'admin', administrationId: 'ope-onf-973-01' },
   entreprises: [
     { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }
@@ -111,7 +111,7 @@ ArmDemandeOperateur.args = {
   etape,
   domaineId: 'm',
   demarcheTypeId: 'oct',
-  titreTypeId: 'ar',
+  titreTypeTypeId: 'ar',
   user: { role: 'entreprise', administrationId: undefined },
   entreprises: [
     { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }
@@ -124,7 +124,7 @@ ArmJorfONF.args = {
   etape: { ...etape, type: { id: 'dpu', nom: 'Jorf' } },
   domaineId: 'm',
   demarcheTypeId: 'oct',
-  titreTypeId: 'ar',
+  titreTypeTypeId: 'ar',
   user: { role: 'admin', administrationId: 'ope-onf-973-01' },
   entreprises: [
     { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }
@@ -137,7 +137,7 @@ AxmDemandeONF.args = {
   etape,
   domaineId: 'm',
   demarcheTypeId: 'oct',
-  titreTypeId: 'ax',
+  titreTypeTypeId: 'ax',
   user: { role: 'admin', administrationId: 'ope-onf-973-01' },
   entreprises: [
     { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }
@@ -150,7 +150,7 @@ PrmDemandeONF.args = {
   etape,
   domaineId: 'm',
   demarcheTypeId: 'oct',
-  titreTypeId: 'pr',
+  titreTypeTypeId: 'pr',
   user: { role: 'admin', administrationId: 'ope-onf-973-01' },
   entreprises: [
     { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }

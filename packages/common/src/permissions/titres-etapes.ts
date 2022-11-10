@@ -1,6 +1,6 @@
 import { ETAPES_TYPES, EtapeTypeId } from '../static/etapesTypes'
 import { TitreTypeId } from '../static/titresTypes'
-import { DemarcheTypeId, isDemarcheTypeWithPhase } from '../static/demarchesTypes'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeWithPhase } from '../static/demarchesTypes'
 import { isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from '../roles'
 
 export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
@@ -25,7 +25,12 @@ export const canEditAmodiataires = (titreTypeId: TitreTypeId, user: User): boole
   return isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
 }
 
-export const canEditDates = (titreTypeId: TitreTypeId, etapeTypeId: EtapeTypeId, user: User): boolean => {
+export const canEditDates = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId, user: User): boolean => {
+  // ne peut pas ajouter de dates à la démarche déplacement de périmètre
+  if (demarcheTypeId === DEMARCHES_TYPES_IDS.DeplacementDePerimetre) {
+    return false
+  }
+
   // peut éditer la date sur les titres autre que ARM et AXM
   if (titreTypeId !== 'arm' && titreTypeId !== 'axm') {
     return true
@@ -50,7 +55,12 @@ export const canEditTitulaires = (titreTypeId: TitreTypeId, user: User): boolean
   return isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
 }
 
-export const canEditDuree = (titreTypeId: TitreTypeId): boolean => {
+export const canEditDuree = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId): boolean => {
+  // ne peut pas ajouter de durée à la démarche déplacement de périmètre
+  if (demarcheTypeId === DEMARCHES_TYPES_IDS.DeplacementDePerimetre) {
+    return false
+  }
+
   // la durée pour les ARM est fixée à 4 mois par l’API
   return titreTypeId !== 'arm'
 }

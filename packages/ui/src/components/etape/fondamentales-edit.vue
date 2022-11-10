@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="canEditDuree(titreTypeId)" class="tablet-blobs">
+    <div v-if="canEditDuree(titreTypeId, demarcheTypeId)" class="tablet-blobs">
       <div class="tablet-blob-1-3 tablet-pt-s pb-s">
         <h5 class="mb-0">Durée (années / mois)</h5>
         <p v-if="dureeOptionalCheck" class="h6 italic mb-0">Optionnel</p>
@@ -53,7 +53,9 @@
       <hr />
     </div>
 
-    <template v-if="canEditDates(titreTypeId, etape.type.id, user)">
+    <template
+      v-if="canEditDates(titreTypeId, demarcheTypeId, etape.type.id, user)"
+    >
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
           <h5 class="mb-0">Date de début</h5>
@@ -88,7 +90,9 @@
       <hr />
     </template>
 
-    <template v-if="canEditDates(titreTypeId, etape.type.id, user)">
+    <template
+      v-if="canEditDates(titreTypeId, demarcheTypeId, etape.type.id, user)"
+    >
       <div class="tablet-blobs">
         <hr />
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
