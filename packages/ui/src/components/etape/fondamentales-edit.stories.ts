@@ -156,3 +156,16 @@ PrmDemandeONF.args = {
     { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }
   ]
 }
+
+export const PrmDeplacementDePerimetreONF = Template.bind({})
+
+PrmDeplacementDePerimetreONF.args = {
+  etape,
+  domaineId: 'm',
+  demarcheTypeId: 'dep',
+  titreTypeTypeId: 'pr',
+  user: { role: 'admin', administrationId: 'ope-onf-973-01' },
+  entreprises: [
+    { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }
+  ]
+}
