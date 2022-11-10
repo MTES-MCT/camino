@@ -33,8 +33,9 @@
         v-model:etape="etape"
         :demarcheTypeId="demarcheTypeId"
         :domaineId="domaineId"
-        :titreTypeId="titreTypeId"
+        :titreTypeTypeId="titreTypeId"
         :user="user"
+        :entreprises="entreprises"
         @complete-update="fondamentalesCompleteUpdate"
       />
     </Accordion>

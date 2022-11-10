@@ -25,6 +25,7 @@ import { TitreReference } from 'camino-common/src/titres-references'
 import { DocumentType } from 'camino-common/src/static/documentsTypes'
 import { SecteursMaritimes } from 'camino-common/src/static/facades'
 import { CaminoDate } from 'camino-common/src/date'
+import { EntrepriseId } from 'camino-common/src/entreprise'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -332,7 +333,7 @@ interface IEntrepriseEtablissement {
 }
 
 interface IEntreprise {
-  id: string
+  id: EntrepriseId
   nom: string
   paysId?: string | null
   legalSiren?: string | null

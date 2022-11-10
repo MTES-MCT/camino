@@ -355,7 +355,8 @@ const etapeCreer = async (
       documents,
       justificatifsTypes,
       justificatifs,
-      sdomZones
+      sdomZones,
+      user
     )
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
@@ -429,7 +430,13 @@ const etapeModifier = async (
 
     const titreEtapeOld = await titreEtapeGet(
       etape.id,
-      { fields: { documents: { id: {} } } },
+      {
+        fields: {
+          documents: { id: {} },
+          titulaires: { id: {} },
+          amodiataires: { id: {} }
+        }
+      },
       user
     )
 
@@ -532,7 +539,9 @@ const etapeModifier = async (
       documents,
       justificatifsTypes,
       justificatifs,
-      sdomZones
+      sdomZones,
+      user,
+      titreEtapeOld
     )
 
     if (rulesErrors.length) {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!isArm" class="tablet-blobs">
+    <div v-if="canEditDuree(titreTypeId)" class="tablet-blobs">
       <div class="tablet-blob-1-3 tablet-pt-s pb-s">
         <h5 class="mb-0">Durée (années / mois)</h5>
         <p v-if="dureeOptionalCheck" class="h6 italic mb-0">Optionnel</p>
@@ -53,7 +53,7 @@
       <hr />
     </div>
 
-    <template v-if="canEditDateDebut">
+    <template v-if="canEditDates(titreTypeId, etape.type.id, user)">
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
           <h5 class="mb-0">Date de début</h5>
@@ -88,7 +88,7 @@
       <hr />
     </template>
 
-    <template v-if="canEditDateDebut">
+    <template v-if="canEditDates(titreTypeId, etape.type.id, user)">
       <div class="tablet-blobs">
         <hr />
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
@@ -123,8 +123,7 @@
       <hr />
     </template>
 
-    <!-- FIXME -->
-    <template v-if="(!isArm && !isAxm) || userIsAdmin">
+    <template v-if="canEditTitulaires(titreTypeId, user)">
       <h3 class="mb-s">Titulaires</h3>
       <p class="h6 italic">Optionnel</p>
       <HeritageEdit
@@ -170,8 +169,7 @@
       <hr />
     </template>
 
-    <!-- FIXME -->
-    <template v-if="(canAddAmodiataires && !isArm && !isAxm) || userIsAdmin">
+    <template v-if="canEditAmodiataires(titreTypeId, user)">
       <hr />
 
       <h3 class="mb-s">Amodiataires</h3>
@@ -243,26 +241,32 @@ import AutocompleteEntreprise from './autocomplete-entreprise.vue'
 
 import { etablissementNameFind } from '@/utils/entreprise'
 import SubstancesEdit from '@/components/etape/substances-edit.vue'
-import { dureeOptionalCheck as titreEtapesDureeOptionalCheck } from 'camino-common/src/permissions/titres-etapes'
+import {
+  dureeOptionalCheck as titreEtapesDureeOptionalCheck,
+  canEditAmodiataires,
+  canEditTitulaires,
+  canEditDuree,
+  canEditDates
+} from 'camino-common/src/permissions/titres-etapes'
 
 import { EtapeEntreprise, EtapeFondamentale } from 'camino-common/src/etape'
-import { DomaineId, DOMAINES_IDS } from 'camino-common/src/static/domaines'
+import { DomaineId } from 'camino-common/src/static/domaines'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { toTitreTypeId } from 'camino-common/src/static/titresTypes'
 import {
-  TITRES_TYPES_TYPES_IDS,
-  TitreTypeTypeId
-} from 'camino-common/src/static/titresTypesTypes'
+  TitreTypeId,
+  toTitreTypeId
+} from 'camino-common/src/static/titresTypes'
+import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { watch, computed, ref } from 'vue'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
-import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles'
+import { User } from 'camino-common/src/roles'
 
 const props = defineProps<{
   etape: EtapeFondamentale
   domaineId: DomaineId
   demarcheTypeId: DemarcheTypeId
-  titreTypeId: TitreTypeTypeId
+  titreTypeTypeId: TitreTypeTypeId
   user: User
   entreprises: Entreprise[]
 }>()
@@ -282,19 +286,9 @@ const entreprisesDisabled = computed<EntrepriseId[]>(() =>
   [...props.etape.amodiataires, ...props.etape.titulaires].map(({ id }) => id)
 )
 
-const isArm = computed<boolean>(() => {
-  return (
-    props.domaineId === DOMAINES_IDS.METAUX &&
-    props.titreTypeId === TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE
-  )
-})
-
-const isAxm = computed<boolean>(() => {
-  return (
-    props.domaineId === DOMAINES_IDS.METAUX &&
-    props.titreTypeId === TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION
-  )
-})
+const titreTypeId = computed<TitreTypeId>(() =>
+  toTitreTypeId(props.titreTypeTypeId, props.domaineId)
+)
 
 const titulairesLength = computed<number>(() => {
   return props.etape.titulaires.filter(({ id }) => id).length
@@ -308,41 +302,8 @@ const dureeOptionalCheck = computed<boolean>(() => {
   return titreEtapesDureeOptionalCheck(
     props.etape.type.id,
     props.demarcheTypeId,
-    toTitreTypeId(props.titreTypeId, props.domaineId)
+    toTitreTypeId(props.titreTypeTypeId, props.domaineId)
   )
-})
-
-const canEditDateDebut = computed<boolean>(() => {
-  if (!isArm.value && !isAxm.value) {
-    return true
-  }
-
-  // ne peut pas modifier les dates sur une demande d’ARM ou d’AXM car c'est camino qui fait foi
-  if (props.etape.type?.id === ETAPES_TYPES.demande) {
-    return false
-  }
-
-  if (isEntreprise(props.user) || isBureauDEtudes(props.user)) {
-    return false
-  }
-
-  return true
-})
-
-const canSeeAllDates = computed<boolean>(() => {
-  // ne peut pas modifier les dates sur une demande d’ARM ou d’AXM car c'est camino qui fait foi
-  if (
-    props.etape.type?.id === ETAPES_TYPES.demande &&
-    (isArm.value || isAxm.value)
-  ) {
-    return false
-  }
-
-  return true
-})
-
-const canAddAmodiataires = computed<boolean>(() => {
-  return !isArm.value && !isAxm.value
 })
 
 const complete = computed<boolean>(() => {

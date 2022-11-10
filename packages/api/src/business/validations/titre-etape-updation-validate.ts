@@ -5,7 +5,8 @@ import {
   ISection,
   IDocument,
   ISDOMZone,
-  IContenu
+  IContenu,
+  ITitreEntreprise
 } from '../../types'
 
 import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate'
@@ -19,21 +20,27 @@ import { contenuDatesCheck } from './utils/contenu-dates-check'
 import { documentsTypesValidate } from './documents-types-validate'
 import { documentTypeIdsBySdomZonesGet } from '../../api/graphql/resolvers/_titre-etape'
 import { objectClone } from '../../tools'
-import { dureeOptionalCheck } from 'camino-common/src/permissions/titres-etapes'
+import {
+  canEditAmodiataires,
+  canEditDates,
+  canEditDuree,
+  canEditTitulaires,
+  dureeOptionalCheck
+} from 'camino-common/src/permissions/titres-etapes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import {
   DocumentType,
   DocumentsTypes
 } from 'camino-common/src/static/documentsTypes'
-
+import { User } from 'camino-common/src/roles'
 const numberProps = ['duree', 'surface'] as unknown as [keyof ITitreEtape]
 
 const dateProps = ['date', 'dateDebut', 'dateFin'] as unknown as [
   keyof ITitreEtape
 ]
 
-const titreEtapeUpdationValidate = (
+export const titreEtapeUpdationValidate = (
   titreEtape: ITitreEtape,
   titreDemarche: ITitreDemarche,
   titre: ITitre,
@@ -42,7 +49,9 @@ const titreEtapeUpdationValidate = (
   documents: IDocument[] | null | undefined,
   justificatifsTypes: DocumentType[],
   justificatifs: IDocument[] | null | undefined,
-  sdomZones: ISDOMZone[] | null | undefined
+  sdomZones: ISDOMZone[] | null | undefined,
+  user: User,
+  titreEtapeOld?: ITitreEtape
 ) => {
   const errors = []
 
@@ -54,10 +63,43 @@ const titreEtapeUpdationValidate = (
 
   errors.push(...errorsHeritageContenu)
 
-  // Pas d'amodiataires pour les titres 'arm' ou 'axm'
   if (
-    ['arm', 'axm'].includes(titre.typeId) &&
-    titreEtape.amodiataires?.length
+    !canEditDuree(titre.typeId) &&
+    (titreEtape.duree ?? 0) !== (titreEtapeOld?.duree ?? 0)
+  ) {
+    errors.push('impossible d’éditer la durée')
+  }
+
+  if (!canEditDates(titre.typeId, titreEtape.typeId, user)) {
+    if ((titreEtape.dateDebut ?? '') !== (titreEtapeOld?.dateDebut ?? '')) {
+      errors.push('impossible d’éditer la date de début')
+    }
+    if ((titreEtape.dateFin ?? '') !== (titreEtapeOld?.dateFin ?? '')) {
+      errors.push('impossible d’éditer la date d’échéance')
+    }
+  }
+
+  if (titreEtapeOld && !titreEtapeOld.titulaires) {
+    throw new Error('les titulaires ne sont pas chargés')
+  }
+  if (
+    !canEditTitulaires(titre.typeId, user) &&
+    entreprisesHaveChanged(titreEtape.titulaires, titreEtapeOld?.titulaires)
+  ) {
+    errors.push(
+      `une autorisation ${
+        titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"
+      } ne peut pas inclure de titulaires`
+    )
+  }
+
+  if (titreEtapeOld && !titreEtapeOld.amodiataires) {
+    throw new Error('les amodiataires ne sont pas chargés')
+  }
+
+  if (
+    !canEditAmodiataires(titre.typeId, user) &&
+    entreprisesHaveChanged(titreEtape.amodiataires, titreEtapeOld?.amodiataires)
   ) {
     errors.push(
       `une autorisation ${
@@ -132,7 +174,7 @@ const titreEtapeUpdationValidate = (
   return titreEtapeUpdationBusinessValidate(titreEtape, titreDemarche, titre)
 }
 
-const titreEtapeCompleteValidate = (
+export const titreEtapeCompleteValidate = (
   titreEtape: ITitreEtape,
   titreTypeId: TitreTypeId,
   demarcheTypeId: DemarcheTypeId,
@@ -330,4 +372,24 @@ const contenuCompleteValidate = (
   return errors
 }
 
-export { titreEtapeUpdationValidate, titreEtapeCompleteValidate }
+const entreprisesHaveChanged = (
+  newValue: ITitreEntreprise[] | undefined | null,
+  oldValue: ITitreEntreprise[] | undefined | null
+): boolean => {
+  if (!newValue && !oldValue) {
+    return false
+  }
+
+  if ((newValue?.length ?? 0) !== (oldValue?.length ?? 0)) {
+    return true
+  }
+
+  if (!newValue || newValue.length === 0) {
+    return false
+  }
+
+  return newValue.some(
+    (v, i) =>
+      oldValue?.[i].id !== v.id || oldValue?.[i].operateur !== v.operateur
+  )
+}
