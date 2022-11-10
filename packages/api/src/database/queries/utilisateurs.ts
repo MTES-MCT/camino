@@ -101,11 +101,10 @@ const utilisateursFiltersQueryModify = (
   }
 
   if (emails) {
-    const emailsArray = stringSplit(emails)
     q.where(b => {
-      b.whereRaw(`?? ~* ?`, [
+      b.whereRaw(`LOWER(??) LIKE LOWER(?)`, [
         'utilisateurs.email',
-        emailsArray.map(n => `(?=.*?(${n}))`).join('')
+        `%${emails}%`
       ])
     })
   }

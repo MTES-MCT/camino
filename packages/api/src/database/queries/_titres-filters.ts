@@ -126,16 +126,11 @@ export const titresFiltersQueryModify = (
       q.leftJoinRelated('titre')
     }
 
-    const nomsArray = stringSplit(noms)
-
     q.where(b => {
-      b.whereRaw(`?? ~* ?`, [
+      b.whereRaw(`LOWER(??) LIKE LOWER(?)`, [
         `${name}.nom`,
-        nomsArray.map(n => `(?=.*?(${n}))`).join('')
-      ]).orWhereRaw(`?? ~* ?`, [
-        `${name}.slug`,
-        nomsArray.map(n => `(?=.*?(${n}))`).join('')
-      ])
+        `%${noms}%`
+      ]).orWhereRaw(`LOWER(??) LIKE LOWER(?)`, [`${name}.slug`, `%${noms}%`])
     })
   }
 
