@@ -251,7 +251,7 @@ export const titresDREAL = async (
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
     const filters = {
-      statutsIds: ['dmi', 'mod', 'val']
+      statutsIds: ['dmi', 'mod']
     }
 
     const titresAutorises = await titresGet(
