@@ -177,7 +177,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: true,
       acceptationAuto: true,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -193,7 +192,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: true,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -208,7 +206,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -246,7 +243,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -261,7 +257,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -299,7 +294,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -314,7 +308,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -344,7 +337,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -360,7 +352,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: true,
-      dateDebut: null,
       dateFin: '2018-01-01',
       sections: null,
       publicLecture: true,
@@ -376,7 +367,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -391,7 +381,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -428,7 +417,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -458,7 +446,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -473,7 +460,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -511,7 +497,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -526,7 +511,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -564,7 +548,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -579,7 +562,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -594,7 +576,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -610,7 +591,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -625,7 +605,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: '2020-01-01',
       sections: null,
       publicLecture: false,
@@ -640,7 +619,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -676,7 +654,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -691,7 +668,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -722,7 +698,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -759,7 +734,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -808,7 +782,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -823,7 +796,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -839,7 +812,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -854,7 +827,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -892,7 +865,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -907,7 +880,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -922,7 +895,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -938,7 +911,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -953,7 +926,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -968,7 +941,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -983,7 +956,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -1012,7 +985,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -1042,7 +1015,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -1073,7 +1046,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -1111,7 +1084,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -1141,7 +1114,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: '2018-10-22',
       sections: null,
       publicLecture: true,
@@ -1157,7 +1130,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -1173,7 +1146,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -1188,7 +1161,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -1219,7 +1192,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -1234,7 +1207,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {

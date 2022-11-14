@@ -379,7 +379,6 @@ interface IEtapeType {
   description?: string
   acceptationAuto?: boolean | null
   fondamentale?: boolean | null
-  dateDebut?: string | null
   dateFin?: string | null
   sections?: ISection[] | null
   sectionsSpecifiques?: ISection[] | null
