@@ -34,7 +34,7 @@ import {
 import { ref } from 'vue'
 
 const emit = defineEmits<{
-  (e: 'onSelectedTitre', titre: Titre): void
+  (e: 'onSelectedTitre', titre: Titre | undefined): void
   (e: 'onSearch', searchTerm: string): void
 }>()
 
@@ -49,7 +49,7 @@ const createDebounce = () => {
 }
 
 const overrideItems = ref<Titre[]>([])
-const selectItem = (item: Titre) => {
+const selectItem = (item: Titre | undefined) => {
   overrideItems.value = []
   emit('onSelectedTitre', item)
 }

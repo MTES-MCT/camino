@@ -18,11 +18,14 @@
   </div>
 </template>
 
+<script lang="ts">
+type Element = { id: string; nom: string }
+</script>
+
 <script setup lang="ts">
 import Typeahead from '@/components/_ui/typeahead.vue'
 import { onMounted, ref, watch } from 'vue'
 
-type Element = { id: string; nom: string }
 const props = defineProps<{
   filter: {
     id: string

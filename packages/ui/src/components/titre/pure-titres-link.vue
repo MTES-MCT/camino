@@ -54,13 +54,13 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: 'onSelectedTitre', titre: TitreLink | null): void
+  (e: 'onSelectedTitre', titre: TitreLink | undefined): void
   (e: 'onSelectedTitres', titres: TitreLink[]): void
 }>()
 
 const search = ref<string>('')
 const selectedTitres = ref<TitreLink[]>([])
-const data = ref<AsyncData<TitreLink[]>>({ status: 'LOADING' })
+const data = ref<AsyncData<LinkableTitre[]>>({ status: 'LOADING' })
 
 const init = async () => {
   try {
@@ -100,7 +100,7 @@ watch(
   () => props.loadLinkableTitres,
   async _ => {
     selectedTitres.value.splice(0, selectedTitres.value.length)
-    onSelectItem(null)
+    onSelectItem(undefined)
     onSelectItems([])
     await init()
   }
@@ -125,7 +125,7 @@ const onSearch = (searchLabel: string) => {
   search.value = searchLabel.toLowerCase()
 }
 
-const onSelectItem = (titre: TitreLink | null) => {
+const onSelectItem = (titre: TitreLink | undefined) => {
   emit('onSelectedTitre', titre)
 }
 const onSelectItems = (titres: TitreLink[]) => {

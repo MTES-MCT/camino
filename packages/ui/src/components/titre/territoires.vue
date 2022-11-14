@@ -70,15 +70,14 @@ import {
   SecteursMaritimes
 } from 'camino-common/src/static/facades'
 
-interface Props {
+
+const props = defineProps<{
   surface: number
   forets: { nom: string }[]
   sdomZones: { nom: string }[]
   communes: { nom: string; departementId: DepartementId }[]
   secteursMaritimes: SecteursMaritimes[]
-}
-
-const props = defineProps<Props>()
+}>()
 
 type RegionsComputed = {
   id: string

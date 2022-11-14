@@ -50,45 +50,49 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { computed, ref, watch, withDefaults } from 'vue'
+
+<script setup lang="ts" generic="K, T extends K">
+import { computed, Ref, ref, watch, withDefaults } from 'vue'
 import Chip from './chip.vue'
 
-type Props = {
-  id?: string
-  placeholder: string
-  type: 'single' | 'multiple'
-  items: any[]
-  overrideItems?: any[]
-  minInputLength: number
-  itemChipLabel: (item: any) => string
-  itemKey: (item: any) => string
-}
+export type Props<K, T extends K> = {
+    id?: string
+    placeholder: string
+    type: 'single' | 'multiple'
+    items: T[]
+    overrideItems?: K[]
+    minInputLength: number
+    itemChipLabel: (key:K) => string
+    itemKey: (key:K) => string
+  }
+
+const getItems = (items: K[]):  T[] => items.map(o => props.items.find((i) => props.itemKey(i) === props.itemKey(o))).filter((o): o is T => !!o)
 
 const myTypeaheadInput = ref<HTMLInputElement | null>(null)
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<Props<K,T>>(), {
   overrideItems: () => [],
   id: `typeahead_${(Math.random() * 1000).toFixed()}`
 })
 
 const emit = defineEmits<{
   (e: 'onInput', searchTerm: string): void
-  (e: 'selectItems', items: any[]): void
-  (e: 'selectItem', item: any): void
+  (e: 'selectItems', items: T[]): void
+  (e: 'selectItem', item: T | undefined): void
 }>()
 
 watch(
   () => props.overrideItems,
   newItems => {
-    selectedItems.value = [...newItems]
+    selectedItems.value = getItems(newItems)
   },
   { deep: true }
 )
-const selectedItems = ref<unknown[]>([...props.overrideItems])
+const selectedItems = ref<T[]>(getItems(props.overrideItems)) as Ref<T[]>
 const input = ref<string>('')
 const isInputFocused = ref<boolean>(false)
 const currentSelectionIndex = ref<number>(0)
+
 
 const onInput = () => {
   if (
@@ -168,7 +172,7 @@ const deleteLastSelected = () => {
   }
 }
 
-const selectItem = (item: unknown) => {
+const selectItem = (item: T) => {
   input.value = ''
   currentSelectionIndex.value = 0
   document.getElementById(props.id)?.blur()
@@ -183,7 +187,7 @@ const selectItem = (item: unknown) => {
   emit('selectItems', selectedItems.value)
 }
 
-const unselectItem = (item: unknown) => {
+const unselectItem = (item: T) => {
   const itemKey = props.itemKey(item)
   selectedItems.value = selectedItems.value.filter(
     i => props.itemKey(i) !== itemKey
