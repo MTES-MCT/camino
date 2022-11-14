@@ -370,7 +370,7 @@ export const activites = async (
       fields: {
         type: { id: {} },
         statut: { id: {} },
-        titre: { id: {} }
+        titre: { communes: { id: {} } }
       }
     },
     user
