@@ -193,9 +193,10 @@ const titresGet = async (
     }
   } else {
     if (noms?.length) {
-      q.orderByRaw('case when titres.nom ~* ? then 0 else 1 end, titres.nom', [
-        `^${noms}`
-      ])
+      q.orderByRaw(
+        'case when LOWER(titres.nom) LIKE LOWER(?) then 0 else 1 end, titres.nom',
+        [`${noms}%`]
+      )
     } else {
       q.orderBy('titres.nom')
     }
