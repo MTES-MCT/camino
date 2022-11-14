@@ -24,6 +24,7 @@ import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts'
 import { TitreReference } from 'camino-common/src/titres-references'
 import { DocumentType } from 'camino-common/src/static/documentsTypes'
 import { SecteursMaritimes } from 'camino-common/src/static/facades'
+import { CaminoDate } from 'camino-common/src/date'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -639,7 +640,7 @@ interface ITitreEtape {
   type?: IEtapeType | null
   statutId: EtapeStatutId
   ordre?: number | null
-  date: string
+  date: CaminoDate
   duree?: number | null
   surface?: number | null
   contenu?: IContenu | null
