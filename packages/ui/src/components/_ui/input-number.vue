@@ -38,10 +38,8 @@ const valueFormatted = computed<string>(() => {
   return numberFormat(props.modelValue)
 })
 
-const textToNumberFormatFunc = (
-  event: FocusEvent & { target: HTMLInputElement }
-) => {
-  if (event.target !== null) {
+const textToNumberFormatFunc = (event: FocusEvent) => {
+  if (isEventWithTarget(event) && event.target !== null) {
     event.target.value = textNumberFormat(event.target.value, {
       negative: props.negative,
       integer: props.integer
@@ -52,4 +50,8 @@ const textToNumberFormatFunc = (
     emits('update:modelValue', number)
   }
 }
+
+const isEventWithTarget = (
+  event: any
+): event is FocusEvent & { target: HTMLInputElement } => event.target
 </script>

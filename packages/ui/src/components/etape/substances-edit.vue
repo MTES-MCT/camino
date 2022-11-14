@@ -1,11 +1,7 @@
 <template>
   <div>
     <h3 class="mb-s">Substances</h3>
-    <HeritageEdit
-      v-model:prop="heritageProps.substances"
-      propId="substances"
-      :isArray="true"
-    >
+    <HeritageEdit v-model:prop="heritageProps.substances" propId="substances">
       <template #write>
         <div v-for="(_substance, n) in substances" :key="n">
           <div class="flex mb-s">
@@ -86,11 +82,11 @@ import HeritageEdit from '@/components/etape/heritage-edit.vue'
 import TagList from '@/components/_ui/tag-list.vue'
 import Icon from '@/components/_ui/icon.vue'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import { HeritageProp } from 'camino-common/src/etape'
+import { HeritageProp, Etape } from 'camino-common/src/etape'
 
 const props = defineProps<{
   substances: (SubstanceLegaleId | undefined)[]
-  heritageProps: { substances: HeritageProp }
+  heritageProps: { substances: HeritageProp<Etape> }
   incertitudes: { substances: boolean }
   domaineId: DomaineId
 }>()
