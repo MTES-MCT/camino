@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="width-full-p">
     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr">
       <div>
         <LoadingElement v-slot="{ item }" :data="data"
@@ -29,6 +29,7 @@ import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { AsyncData } from '@/api/client-rest'
 import LineChart from '../_charts/line.vue'
 import ConfigurableLineChart from '../_charts/configurableLine.vue'
+
 import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
 import { datasetParams, sdomChartConfiguration } from './dgtm-stats'
 

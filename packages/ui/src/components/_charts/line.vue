@@ -1,8 +1,8 @@
 <template>
-  <canvas ref="canvas" />
+  <canvas ref="myCanvas" />
 </template>
 
-<script>
+<script setup lang="ts">
 import {
   Chart,
   LinearScale,
@@ -14,6 +14,7 @@ import {
   Legend,
   Tooltip
 } from 'chart.js'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 Chart.register(
   LinearScale,
@@ -26,24 +27,22 @@ Chart.register(
   Tooltip
 )
 
-export default {
-  props: {
-    data: { type: Object, required: true }
-  },
+const props = defineProps<{
+  // TODO 2022-09-29: Type this, this should be generic
+  data: any
+}>()
 
-  data() {
-    return {
-      canvas: null
-    }
-  },
+let chart: Chart | null = null
+const myCanvas = ref<HTMLCanvasElement | null>(null)
 
-  mounted() {
-    this.canvas = this.$refs.canvas
-
-    // eslint-disable-next-line no-new
-    new Chart(this.canvas.getContext('2d'), {
+onMounted(() => {
+  const context = myCanvas.value?.getContext('2d')
+  if (!context) {
+    console.error('le canvas ne devrait pas être null')
+  } else {
+    chart = new Chart(context, {
       type: 'line',
-      data: this.data,
+      data: props.data,
       options: {
         locale: 'fr-FR',
         responsive: true,
@@ -55,5 +54,12 @@ export default {
       }
     })
   }
-}
+})
+
+onUnmounted(() => {
+  if (chart !== null) {
+    chart.destroy()
+    chart = null
+  }
+})
 </script>
