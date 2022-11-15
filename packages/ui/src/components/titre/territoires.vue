@@ -70,7 +70,6 @@ import {
   SecteursMaritimes
 } from 'camino-common/src/static/facades'
 
-
 const props = defineProps<{
   surface: number
   forets: { nom: string }[]

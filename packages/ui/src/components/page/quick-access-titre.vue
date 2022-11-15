@@ -38,7 +38,7 @@ const search = async (searchTerm: string): Promise<void> => {
 }
 
 const onSelectedTitre = (titre: Titre | undefined) => {
-  if( titre ){
+  if (titre) {
     if (matomo) {
       // @ts-ignore
       matomo.trackEvent('navigation', 'navigation-rapide', titre.id)

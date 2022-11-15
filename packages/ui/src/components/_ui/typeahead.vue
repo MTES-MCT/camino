@@ -50,27 +50,29 @@
   </div>
 </template>
 
-
 <script setup lang="ts" generic="K, T extends K">
 import { computed, Ref, ref, watch, withDefaults } from 'vue'
 import Chip from './chip.vue'
 
 export type Props<K, T extends K> = {
-    id?: string
-    placeholder: string
-    type: 'single' | 'multiple'
-    items: T[]
-    overrideItems?: K[]
-    minInputLength: number
-    itemChipLabel: (key:K) => string
-    itemKey: (key:K) => string
-  }
+  id?: string
+  placeholder: string
+  type: 'single' | 'multiple'
+  items: T[]
+  overrideItems?: K[]
+  minInputLength: number
+  itemChipLabel: (key: K) => string
+  itemKey: (key: K) => string
+}
 
-const getItems = (items: K[]):  T[] => items.map(o => props.items.find((i) => props.itemKey(i) === props.itemKey(o))).filter((o): o is T => !!o)
+const getItems = (items: K[]): T[] =>
+  items
+    .map(o => props.items.find(i => props.itemKey(i) === props.itemKey(o)))
+    .filter((o): o is T => !!o)
 
 const myTypeaheadInput = ref<HTMLInputElement | null>(null)
 
-const props = withDefaults(defineProps<Props<K,T>>(), {
+const props = withDefaults(defineProps<Props<K, T>>(), {
   overrideItems: () => [],
   id: `typeahead_${(Math.random() * 1000).toFixed()}`
 })
@@ -92,7 +94,6 @@ const selectedItems = ref<T[]>(getItems(props.overrideItems)) as Ref<T[]>
 const input = ref<string>('')
 const isInputFocused = ref<boolean>(false)
 const currentSelectionIndex = ref<number>(0)
-
 
 const onInput = () => {
   if (
