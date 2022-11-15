@@ -35,18 +35,14 @@
 <script
   setup
   lang="ts"
-  generic="P extends string | number | symbol, T extends {
-    type: { nom: string }
-    date: CaminoDate,
-    incertitudes: Record<P, boolean>
-  } & Record<P, unknown>"
+  generic="P extends keyof Omit<Etape, 'incertitudes' | 'type' | 'heritageProps' | 'contenu' | 'date'>, T extends EtapeHeritage<P>"
 >
 import { hasValeurCheck } from '@/utils/contenu'
 import Tag from '@/components/_ui/tag.vue'
 import { dateFormat } from '@/utils'
 import { computed } from 'vue'
-import { HeritageProp } from 'camino-common/src/etape'
-import { CaminoDate } from 'camino-common/src/date'
+import { Etape, HeritageProp } from 'camino-common/src/etape'
+import { EtapeHeritage } from './heritage-edit.types'
 
 const props = defineProps<{
   prop: HeritageProp<T>
