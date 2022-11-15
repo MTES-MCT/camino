@@ -96,7 +96,7 @@ const selectableEntities = computed(() =>
     )
 )
 
-const addEntity = (entity: AutoCompleteEntreprise) => {
+const addEntity = (entity: AutoCompleteEntreprise | undefined) => {
   if (entity) {
     mySelectedEntities.value.push(entity)
     overrideItems.value = []

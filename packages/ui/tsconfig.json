@@ -26,5 +26,9 @@
     "allowJs": true
   },
   "exclude": ["node_modules", "**/node_modules/*", "dist"],
-  "include": ["./src/**/*", "../common/src/**/*"]
+  "include": ["./src/**/*", "../common/src/**/*"],
+  "vueCompilerOptions": {
+    "jsxTemplates": true,
+    "experimentalRfc436": true
+  }
 }

@@ -91,12 +91,13 @@ import Popup from '../_ui/popup.vue'
 
 import Icon from '@/components/_ui/icon.vue'
 import { computed, ComputedRef, inject, onMounted, onUnmounted, ref } from 'vue'
-import { useStore } from 'vuex'
 import {
   ReferenceTypeId,
   sortedReferencesTypes
 } from 'camino-common/src/static/referencesTypes'
-type Titre = {
+import { useStore } from 'vuex'
+
+export type Titre = {
   id: string
   nom: string
   references: { referenceTypeId: ReferenceTypeId | ''; nom: string }[]

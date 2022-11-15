@@ -124,7 +124,9 @@
     },
     "globals": {
       "defineProps": "readonly",
-      "defineEmits": "readonly"
+      "defineEmits": "readonly",
+      "T": "readonly",
+      "K": "readonly"
     },
     "extends": [
       "plugin:vue/vue3-recommended",

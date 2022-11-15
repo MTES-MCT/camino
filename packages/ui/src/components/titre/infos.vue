@@ -201,7 +201,7 @@ import {
 } from 'camino-common/src/static/phasesStatuts'
 import { TitreReference } from 'camino-common/src/titres-references'
 
-type Entreprise = {
+export interface Entreprise {
   id: string
   nom: string
   legalSiren?: string

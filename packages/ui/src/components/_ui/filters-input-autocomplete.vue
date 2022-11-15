@@ -21,8 +21,8 @@
 <script setup lang="ts">
 import Typeahead from '@/components/_ui/typeahead.vue'
 import { onMounted, ref, watch } from 'vue'
+export type Element = { id: string; nom: string }
 
-type Element = { id: string; nom: string }
 const props = defineProps<{
   filter: {
     id: string

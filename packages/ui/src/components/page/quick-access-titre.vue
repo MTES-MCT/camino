@@ -37,12 +37,14 @@ const search = async (searchTerm: string): Promise<void> => {
   titres.value.splice(0, titres.value.length, ...searchTitres.elements)
 }
 
-const onSelectedTitre = (titre: Titre) => {
-  if (matomo) {
-    // @ts-ignore
-    matomo.trackEvent('navigation', 'navigation-rapide', titre.id)
+const onSelectedTitre = (titre: Titre | undefined) => {
+  if (titre) {
+    if (matomo) {
+      // @ts-ignore
+      matomo.trackEvent('navigation', 'navigation-rapide', titre.id)
+    }
+    router.push({ name: 'titre', params: { id: titre.id } })
   }
-  router.push({ name: 'titre', params: { id: titre.id } })
 }
 </script>
 

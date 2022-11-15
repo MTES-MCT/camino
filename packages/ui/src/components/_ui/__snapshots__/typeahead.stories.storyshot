@@ -44,14 +44,6 @@ exports[`Automated Storybook Snapshots UI/Typeahead Multiple With Initial Items 
     <button
       class="bg-neutral chip pl-m pr-m mr-xs mb-xs mt-xs"
     >
-      Not In items 
-      <span>
-        x
-      </span>
-    </button>
-    <button
-      class="bg-neutral chip pl-m pr-m mr-xs mb-xs mt-xs"
-    >
       titreItem2 
       <span>
         x
