@@ -54,7 +54,7 @@
 
     <div class="px pt-m">
       <div v-if="hasFondamentales">
-        <Fondamentales :etape="etape" />
+        <Fondamentales :etape="etape" :entreprises="entreprises" />
 
         <Perimetre
           v-if="etape.points && etape.points.length"

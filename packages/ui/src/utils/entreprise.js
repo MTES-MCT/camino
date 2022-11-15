@@ -1,4 +1,4 @@
-const etablissementNameFind = (etablissements, date) => {
+export const etablissementNameFind = (etablissements, date) => {
   if (!etablissements || !etablissements.length) {
     return null
   }
@@ -10,5 +10,3 @@ const etablissementNameFind = (etablissements, date) => {
 
   return etablissement && etablissement.nom
 }
-
-export { etablissementNameFind }

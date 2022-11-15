@@ -64,7 +64,8 @@ const etape: EtapeFondamentale = {
           id: 'mfr',
           nom: 'étape précédente'
         },
-        substances: ['arge']
+        substances: ['arge'],
+        incertitudes: { substances: true }
       }
     },
     titulaires: {

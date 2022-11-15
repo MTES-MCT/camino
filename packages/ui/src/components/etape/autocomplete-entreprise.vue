@@ -65,7 +65,7 @@ const emit = defineEmits<{
   (e: 'onEntreprisesUpdate', entreprises: EtapeEntreprise[]): void
 }>()
 
-const overrideItems = ref<EtapeEntreprise[]>([])
+const overrideItems = ref<{ id: EntrepriseId }[]>([])
 
 const mySelectedEntities = ref<EtapeEntreprise[]>([])
 const inputValue = ref<string>('')
@@ -92,9 +92,9 @@ const selectableEntities = computed(() =>
     )
 )
 
-const addEntity = (entity: EtapeEntreprise | undefined) => {
+const addEntity = (entity: Entreprise | undefined) => {
   if (entity) {
-    mySelectedEntities.value.push(entity)
+    mySelectedEntities.value.push({ id: entity.id, operateur: false })
     overrideItems.value = []
 
     emit('onEntreprisesUpdate', mySelectedEntities.value)

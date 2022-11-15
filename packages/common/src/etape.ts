@@ -27,9 +27,9 @@ type EtapeBase = {
   dateDebut: CaminoDate
 } & ({ duree: number; dateFin: CaminoDate | undefined } | { duree: number | undefined; dateFin: CaminoDate })
 
-type EtapeWithIncertitudesAndHeritage<T extends Pick<EtapeBase, 'type' | 'date'>> = T & {
+export type EtapeWithIncertitudesAndHeritage<T extends Pick<EtapeBase, 'type' | 'date'>> = T & {
   incertitudes: { [key in keyof Omit<T, 'incertitudes' | 'type' | 'heritageProps' | 'contenu'>]: boolean }
-  heritageProps: { [key in keyof Omit<T, 'incertitudes' | 'type' | 'heritageProps' | 'contenu' | 'date'>]: HeritageProp<Pick<T, 'type' | 'date' | key> & { incertitudes: Record<key, boolean> }> }
+  heritageProps: { [key in keyof Omit<T, 'incertitudes' | 'type' | 'heritageProps' | 'contenu' | 'date'>]: HeritageProp<Pick<T, 'type' | 'date' | key> & { incertitudes: { [k in key]: boolean } }> }
 }
 
 export type Etape = EtapeWithIncertitudesAndHeritage<EtapeBase>

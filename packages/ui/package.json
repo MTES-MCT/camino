@@ -126,7 +126,8 @@
       "defineProps": "readonly",
       "defineEmits": "readonly",
       "T": "readonly",
-      "K": "readonly"
+      "K": "readonly",
+      "P": "readonly"
     },
     "extends": [
       "plugin:vue/vue3-recommended",

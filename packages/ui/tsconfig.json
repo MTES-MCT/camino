@@ -9,6 +9,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "jsx": "preserve",
+    "noErrorTruncation": true,
     "lib": [
       "esnext",
       "dom"

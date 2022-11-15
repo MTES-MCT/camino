@@ -1,11 +1,6 @@
-import SubstancesEdit from './substances-edit.vue'
+import SubstancesEdit, { Props } from './substances-edit.vue'
 import { Meta, Story } from '@storybook/vue3'
-import {
-  SubstanceLegaleId,
-  SubstancesLegale
-} from 'camino-common/src/static/substancesLegales'
-import { DomaineId } from 'camino-common/src/static/domaines'
-import { HeritageProp } from 'camino-common/src/etape'
+import { toCaminoDate } from 'camino-common/src/date'
 
 const meta: Meta = {
   title: 'Components/Etape/SubstancesEdit',
@@ -13,13 +8,6 @@ const meta: Meta = {
   argTypes: {}
 }
 export default meta
-
-type Props = {
-  substances: (SubstanceLegaleId | undefined)[]
-  heritageProps: { substances: HeritageProp }
-  incertitudes: { substances: boolean }
-  domaineId: DomaineId
-}
 
 const Template: Story<Props> = (args: Props) => ({
   components: { SubstancesEdit },
@@ -31,40 +19,25 @@ const Template: Story<Props> = (args: Props) => ({
   }),
   template: `<SubstancesEdit  v-bind="args" :substances='substances'/>`
 })
-const etapeHeritage = {
+const heritageProps: Props['heritageProps']['substances'] = {
+  actif: true,
   etape: {
-    duree: 4,
-    dateFin: '2020-01-01',
-    dateDebut: '2020-01-01',
-    date: '2020-01-01',
-    titulaires: [],
-    amodiataires: [],
-    type: { nom: 'Demande' },
-    substances: [SubstancesLegale.auru.id],
     incertitudes: { substances: true },
-    contenu: {}
+    substances: [],
+    date: toCaminoDate('2022-02-02'),
+    type: { nom: 'bite', id: 'aac' }
   }
 }
 export const SansHeritage = Template.bind({})
 SansHeritage.args = {
   domaineId: 'm',
-  heritageProps: {
-    substances: {
-      actif: false,
-      ...etapeHeritage
-    }
-  },
+  heritageProps: { substances: { ...heritageProps, actif: false } },
   incertitudes: { substances: true }
 }
 
 export const AvecHeritage = Template.bind({})
 AvecHeritage.args = {
   domaineId: 'm',
-  heritageProps: {
-    substances: {
-      actif: true,
-      ...etapeHeritage
-    }
-  },
+  heritageProps: { substances: heritageProps },
   incertitudes: { substances: true }
 }
