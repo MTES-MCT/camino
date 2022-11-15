@@ -126,7 +126,6 @@
       "defineProps": "readonly",
       "defineEmits": "readonly",
       "T": "readonly",
-      "L": "readonly",
       "K": "readonly"
     },
     "extends": [
