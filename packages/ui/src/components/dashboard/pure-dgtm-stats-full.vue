@@ -48,7 +48,7 @@ const graphDelaiData = (item: StatistiquesDGTM) => {
   const annees: CaminoAnnee[] = Object.keys(item.delais).filter(isAnnee)
   const datasets = []
   datasets.push({
-    label: "Délai minimun d'instruction",
+    label: "Délai minimum d'instruction",
     data: annees.map(annee =>
       Math.round(Math.min(...item.delais[annee].delaiInstructionEnJours) / 30)
     ),
@@ -76,7 +76,7 @@ const graphDelaiData = (item: StatistiquesDGTM) => {
     ...datasetParams(2)
   })
   datasets.push({
-    label: 'Délai minimun de CDM',
+    label: 'Délai minimum de CDM',
     data: annees.map(annee =>
       Math.round(
         Math.min(...item.delais[annee].delaiCommissionDepartementaleEnJours) /

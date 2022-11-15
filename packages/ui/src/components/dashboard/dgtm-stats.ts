@@ -30,7 +30,6 @@ export const depotChartConfiguration = (
               let sumOctroi = 0
 
               tooltipItems.forEach(function (tooltipItem) {
-                console.log(tooltipItem)
                 if (tooltipItem.dataset.stack === 'octroi') {
                   sumOctroi += tooltipItem.parsed.y
                 }
