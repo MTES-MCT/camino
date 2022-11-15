@@ -1,3 +1,4 @@
+import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { dbManager } from '../../../tests/db-manager'
 import { restCall } from '../../../tests/_utils'
 import { entrepriseUpsert } from '../../database/queries/entreprises'
@@ -13,7 +14,7 @@ afterAll(async () => {
 describe('fiscalite', () => {
   test('un utilisateur defaut n’a pas les droits', async () => {
     const entreprise = await entrepriseUpsert({
-      id: 'plop',
+      id: newEntrepriseId('plop'),
       nom: 'Mon Entreprise'
     })
     const tested = await restCall(

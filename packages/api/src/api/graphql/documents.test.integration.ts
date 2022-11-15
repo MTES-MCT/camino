@@ -11,6 +11,7 @@ import { userSuper } from '../../database/user-super'
 import { dbManager } from '../../../tests/db-manager'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
 import { toCaminoDate } from 'camino-common/src/date'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -51,7 +52,7 @@ describe('documentSupprimer', () => {
   })
 
   test('peut supprimer un document d’entreprise (utilisateur super)', async () => {
-    const entrepriseId = 'entreprise-id'
+    const entrepriseId = newEntrepriseId('entreprise-id')
     await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
 
     const documentId = 'document-id'
@@ -74,7 +75,7 @@ describe('documentSupprimer', () => {
   })
 
   test('ne peut pas supprimer un document d’entreprise lié à une étape (utilisateur super)', async () => {
-    const entrepriseId = 'entreprise-id'
+    const entrepriseId = newEntrepriseId('entreprise-id')
     await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
 
     const titre = await titreCreate(
@@ -129,7 +130,7 @@ describe('documentSupprimer', () => {
   })
 
   test('peut supprimer un document d’étape (utilisateur super)', async () => {
-    const entrepriseId = 'entreprise-id'
+    const entrepriseId = newEntrepriseId('entreprise-id')
     await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
 
     const titre = await titreCreate(

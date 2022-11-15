@@ -1,5 +1,6 @@
 import { buildMatrices } from './matrices'
 import { ITitre } from '../types'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
 
 describe('matrices', () => {
   test('buildMatrices', () => {
@@ -84,7 +85,7 @@ describe('matrices', () => {
         id: 'titre1',
         titulaires: [
           {
-            id: '',
+            id: newEntrepriseId(''),
             nom: 'titulaire1',
             adresse: 'ladresse1',
             legalSiren: 'legalSiren1'
@@ -103,7 +104,7 @@ describe('matrices', () => {
         id: 'titre2',
         titulaires: [
           {
-            id: '',
+            id: newEntrepriseId(''),
             nom: 'titulaire2',
             adresse: 'ladresse2',
             legalSiren: 'legalSiren2'
@@ -127,7 +128,7 @@ describe('matrices', () => {
         id: 'titre3',
         titulaires: [
           {
-            id: '',
+            id: newEntrepriseId(''),
             nom: 'titulaire3',
             adresse: 'ladresse3',
             legalSiren: 'legalSiren3'

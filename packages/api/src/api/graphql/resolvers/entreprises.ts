@@ -16,6 +16,7 @@ import { entrepriseFormat } from '../../_format/entreprises'
 import { emailCheck } from '../../../tools/email-check'
 import { apiInseeEntrepriseAndEtablissementsGet } from '../../../tools/api-insee/index'
 import { userGet } from '../../../database/queries/utilisateurs'
+import { EntrepriseId } from 'camino-common/src/entreprise'
 
 const entreprise = async (
   { id }: { id: string },
@@ -205,7 +206,12 @@ const entrepriseModifier = async (
   {
     entreprise
   }: {
-    entreprise: { id: string; url?: string; telephone?: string; email?: string }
+    entreprise: {
+      id: EntrepriseId
+      url?: string
+      telephone?: string
+      email?: string
+    }
   },
   context: IToken,
   info: GraphQLResolveInfo
