@@ -1,5 +1,3 @@
-import dateFormat from 'dateformat'
-
 import {
   IToken,
   ITitreDemande,
@@ -36,6 +34,7 @@ import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStat
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
 import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
+import { toCaminoDate } from 'camino-common/src/date'
 
 export const titreDemandeCreer = async (
   {
@@ -109,7 +108,7 @@ export const titreDemandeCreer = async (
       throw new Error('recupération du titre nouvellement créé impossible')
     }
 
-    const date = dateFormat(new Date(), 'yyyy-mm-dd')
+    const date = toCaminoDate(new Date())
     const titreDemarcheId = updatedTitre.demarches![0].id
 
     const titulaire = { id: titreDemande.entrepriseId } as ITitreEntreprise

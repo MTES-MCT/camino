@@ -11,6 +11,7 @@ import {
   titreDemarchesOctAnnulationSansPoints
 } from './__mocks__/titre-phases-find-demarches'
 import { newDemarcheId } from '../../database/models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 
 describe("phases d'une démarche", () => {
   const aujourdhui = '2020-12-01'
@@ -132,7 +133,7 @@ describe("phases d'une démarche", () => {
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 2,
-            date: '1970-09-17'
+            date: toCaminoDate('1970-09-17')
           },
           {
             id: 'demarcheId1etapeId1',
@@ -140,7 +141,7 @@ describe("phases d'une démarche", () => {
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
-            date: '1970-09-09'
+            date: toCaminoDate('1970-09-09')
           }
         ]
       },
@@ -158,7 +159,7 @@ describe("phases d'une démarche", () => {
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 2,
-            date: '1994-10-18',
+            date: toCaminoDate('1994-10-18'),
             dateFin: '2044-10-18',
             duree: 600
           },
@@ -168,7 +169,7 @@ describe("phases d'une démarche", () => {
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
-            date: '1994-10-13',
+            date: toCaminoDate('1994-10-13'),
             duree: 600
           }
         ]
@@ -186,7 +187,7 @@ describe("phases d'une démarche", () => {
             typeId: 'mfr',
             statutId: 'fai',
             ordre: 1,
-            date: '2019-10-22'
+            date: toCaminoDate('2019-10-22')
           },
           {
             id: 'demarcheId3etapeId2',
@@ -194,7 +195,7 @@ describe("phases d'une démarche", () => {
             typeId: 'mdp',
             statutId: 'fai',
             ordre: 2,
-            date: '2019-11-20'
+            date: toCaminoDate('2019-11-20')
           },
           {
             id: 'demarcheId3etapeId5',
@@ -202,7 +203,7 @@ describe("phases d'une démarche", () => {
             typeId: 'dex',
             statutId: 'acc',
             ordre: 5,
-            date: '2022-05-09'
+            date: toCaminoDate('2022-05-09')
           },
           {
             id: 'demarcheId3etapeId6',
@@ -210,7 +211,7 @@ describe("phases d'une démarche", () => {
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 6,
-            date: '2022-05-09'
+            date: toCaminoDate('2022-05-09')
           },
           {
             id: 'demarcheId3etapeId3',
@@ -218,7 +219,7 @@ describe("phases d'une démarche", () => {
             typeId: 'apd',
             statutId: 'fav',
             ordre: 3,
-            date: '2020-05-11'
+            date: toCaminoDate('2020-05-11')
           },
           {
             id: 'demarcheId3etapeId4',
@@ -226,7 +227,7 @@ describe("phases d'une démarche", () => {
             typeId: 'app',
             statutId: 'fav',
             ordre: 4,
-            date: '2020-06-30',
+            date: toCaminoDate('2020-06-30'),
             slug: 'm-cx-pontaubert-1970-ren01-app01'
           }
         ]
@@ -267,7 +268,7 @@ describe("phases d'une démarche", () => {
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 2,
-            date: '1970-09-17'
+            date: toCaminoDate('1970-09-17')
           },
           {
             id: 'demarcheId1etapeId1',
@@ -275,7 +276,7 @@ describe("phases d'une démarche", () => {
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
-            date: '1970-09-09'
+            date: toCaminoDate('1970-09-09')
           }
         ]
       },
@@ -292,7 +293,7 @@ describe("phases d'une démarche", () => {
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 2,
-            date: '1994-10-18',
+            date: toCaminoDate('1994-10-18'),
             dateFin: '2044-10-18',
             duree: 600
           },
@@ -302,7 +303,7 @@ describe("phases d'une démarche", () => {
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
-            date: '1994-10-13',
+            date: toCaminoDate('1994-10-13'),
             duree: 600
           }
         ]
@@ -320,7 +321,7 @@ describe("phases d'une démarche", () => {
             typeId: 'mfr',
             statutId: 'fai',
             ordre: 1,
-            date: '2019-10-22'
+            date: toCaminoDate('2019-10-22')
           },
           {
             id: 'demarcheId3etapeId2',
@@ -328,7 +329,7 @@ describe("phases d'une démarche", () => {
             typeId: 'mdp',
             statutId: 'fai',
             ordre: 2,
-            date: '2019-11-20'
+            date: toCaminoDate('2019-11-20')
           },
           {
             id: 'demarcheId3etapeId3',
@@ -336,7 +337,7 @@ describe("phases d'une démarche", () => {
             typeId: 'apd',
             statutId: 'fav',
             ordre: 3,
-            date: '2020-05-11'
+            date: toCaminoDate('2020-05-11')
           },
           {
             id: 'demarcheId3etapeId5',
@@ -344,7 +345,7 @@ describe("phases d'une démarche", () => {
             typeId: 'dim',
             statutId: 'acc',
             ordre: 5,
-            date: '2022-05-09'
+            date: toCaminoDate('2022-05-09')
           },
           {
             id: 'demarcheId3etapeId4',
@@ -352,7 +353,7 @@ describe("phases d'une démarche", () => {
             typeId: 'app',
             statutId: 'fav',
             ordre: 4,
-            date: '2020-06-30'
+            date: toCaminoDate('2020-06-30')
           }
         ]
       }

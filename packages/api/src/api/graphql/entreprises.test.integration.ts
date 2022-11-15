@@ -19,6 +19,7 @@ import {
 } from '../../database/queries/titres-etapes'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
+import { toCaminoDate } from 'camino-common/src/date'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -256,7 +257,7 @@ describe('entreprise', () => {
         typeId: 'mfr',
         statutId: 'fai',
         titreDemarcheId: titreDemarche.id,
-        date: ''
+        date: toCaminoDate('2022-01-01')
       },
       userSuper,
       titre.id

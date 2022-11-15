@@ -2,6 +2,8 @@ import { DomaineId } from './static/domaines'
 import { TitreTypeTypeId } from './static/titresTypesTypes'
 import { TitreStatutId } from './static/titresStatuts'
 import { TitreReference } from './titres-references'
+import { EtapeTypeId } from './static/etapesTypes'
+import { CaminoDate } from './date'
 
 export interface CommonTitre {
   id: string
@@ -21,7 +23,9 @@ export interface CommonTitreDREAL extends CommonTitre {
   typeId: TitreTypeTypeId
   activitesAbsentes: number
   activitesEnConstruction: number
+  derniereEtape: { etapeTypeId: EtapeTypeId; date: CaminoDate } | null
   enAttenteDeDREAL: boolean
+  prochainesEtapes: EtapeTypeId[]
 }
 
 export interface CommonTitreONF extends CommonTitre {

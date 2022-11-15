@@ -55,7 +55,6 @@ import {
   contenuFilesPathGet,
   sectionsContenuAndFilesGet
 } from '../../../business/utils/contenu-element-file-process'
-import dateFormat from 'dateformat'
 import {
   documentCreate,
   documentsGet
@@ -76,12 +75,13 @@ import { Feature } from '@turf/helpers'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
 import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
+import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 
 const statutIdAndDateGet = (
   etape: ITitreEtape,
   user: IUtilisateur,
   depose = false
-): { date: string; statutId: EtapeStatutId } => {
+): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
 
   if (depose) {
@@ -91,7 +91,7 @@ const statutIdAndDateGet = (
 
     result.statutId = 'fai'
     if (isEntreprise(user) || isBureauDEtudes(user)) {
-      result.date = dateFormat(new Date(), 'yyyy-mm-dd')
+      result.date = toCaminoDate(new Date())
     }
   } else if (etape.typeId === 'mfr' && !etape.statutId) {
     result.statutId = 'aco'
@@ -715,7 +715,7 @@ const etapeDeposer = async (
         let etapeDecisionAnnexe: Partial<ITitreEtape> = {
           typeId: etapeTypeId,
           titreDemarcheId: titreDemarche.id,
-          date: decisionContenu.date,
+          date: toCaminoDate(decisionContenu.date),
           statutId: decisionContenu.statutId
         }
 

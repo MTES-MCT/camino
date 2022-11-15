@@ -1,5 +1,6 @@
 import { ITitreDemarche } from '../../../types'
 import { newDemarcheId } from '../../../database/models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 
 const titreDemarchesIndefini: ITitreDemarche[] = [
   { statutId: 'ind', type: { id: 'oct' } }
@@ -20,7 +21,7 @@ const titreDemarchesValide: ITitreDemarche[] = [
         typeId: 'dex',
         statutId: 'acc',
         ordre: 1,
-        date: '2014-04-01',
+        date: toCaminoDate('2014-04-01'),
         dateDebut: null,
         dateFin: '3014-04-01'
       }
@@ -43,7 +44,7 @@ const titreDemarchesEchu: ITitreDemarche[] = [
         typeId: 'dex',
         statutId: 'acc',
         ordre: 1,
-        date: '1014-04-01',
+        date: toCaminoDate('1014-04-01'),
         dateDebut: null,
         dateFin: '2014-04-01'
       }
@@ -135,7 +136,7 @@ const titrePERDemarchesProlongation: ITitreDemarche[] = [
     ordre: 1,
     etapes: [
       {
-        date: '2020-01-01',
+        date: toCaminoDate('2020-01-01'),
         typeId: 'mfr',
         statutId: 'fai',
         id: 'id',
@@ -157,7 +158,7 @@ const titrePERDemarchesProlongation: ITitreDemarche[] = [
         typeId: 'dex',
         statutId: 'acc',
         ordre: 1,
-        date: '1014-04-01',
+        date: toCaminoDate('1014-04-01'),
         dateDebut: null,
         dateFin: '2020-04-01'
       }

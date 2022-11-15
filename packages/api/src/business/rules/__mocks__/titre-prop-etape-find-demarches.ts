@@ -1,3 +1,4 @@
+import { toCaminoDate } from 'camino-common/src/date'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
@@ -230,7 +231,7 @@ const titreDemarchesOctMfrPoints = {
       etapes: [
         {
           id: 'h-cx-courdemanges-1983-oct01-mfr01',
-          date: '1983-01-01',
+          date: toCaminoDate('1983-01-01'),
           titreDemarcheId: newDemarcheId('h-cx-courdemanges-1983-oct01'),
           typeId: 'mfr',
           statutId: 'acc',

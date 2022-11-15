@@ -27,7 +27,7 @@ import {
 import { CustomResponse } from './express-type'
 import { userSuper } from '../../database/user-super'
 import Utilisateurs from '../../database/models/utilisateurs'
-import { NotNullableKeys } from 'camino-common/src/typescript-tools'
+import { NotNullableKeys, onlyUnique } from 'camino-common/src/typescript-tools'
 import { isAdministration } from 'camino-common/src/roles'
 import TitresTitres from '../../database/models/titres--titres'
 import { titreAdministrationsGet } from '../_format/titres'
@@ -36,6 +36,9 @@ import { linkTitres } from '../../database/queries/titres-titres'
 import { checkTitreLinks } from '../../business/validations/titre-links-validate'
 import { toMachineEtapes } from '../../business/rules-demarches/machine-common'
 import { TitreReference } from 'camino-common/src/titres-references'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { CaminoDate } from 'camino-common/src/date'
 
 export const titresONF = async (
   req: express.Request,
@@ -229,11 +232,13 @@ type DrealTitreSanitize = NotNullableKeys<
     | 'activitesAbsentes'
   >
 
-interface TitreDrealAvecReferences {
+type TitreDrealAvecReferences = {
   titre: DrealTitreSanitize
   references: TitreReference[]
-  blockedByMe: boolean
-}
+} & Pick<
+  CommonTitreDREAL,
+  'prochainesEtapes' | 'derniereEtape' | 'enAttenteDeDREAL'
+>
 export const titresDREAL = async (
   req: express.Request,
   res: CustomResponse<CommonTitreDREAL[]>
@@ -251,7 +256,7 @@ export const titresDREAL = async (
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
     const filters = {
-      statutsIds: ['dmi', 'mod', 'val']
+      statutsIds: ['dmi', 'mod']
     }
 
     const titresAutorises = await titresGet(
@@ -313,12 +318,17 @@ export const titresDREAL = async (
         const octroi = titre.demarches.find(
           demarche => demarche.typeId === 'oct'
         )
-        let blockedByMe = false
+        let enAttenteDeDREAL = false
+        const prochainesEtapes: EtapeTypeId[] = []
+        let derniereEtape: {
+          etapeTypeId: EtapeTypeId
+          date: CaminoDate
+        } | null = null
         if (octroi) {
           if (!octroi.etapes) {
             throw new Error('les étapes ne sont pas chargées')
           }
-          if (octroi.statutId === 'eco') {
+          if (octroi.statutId === DemarchesStatutsIds.EnConstruction) {
             return null
           } else {
             const dd = demarcheDefinitionFind(
@@ -327,51 +337,74 @@ export const titresDREAL = async (
               octroi.etapes,
               octroi.id
             )
-            const hasMachine = isDemarcheDefinitionMachine(dd)
-            try {
-              blockedByMe =
-                hasMachine &&
-                dd.machine
-                  .whoIsBlocking(toMachineEtapes(octroi.etapes))
+            if (isDemarcheDefinitionMachine(dd)) {
+              try {
+                const etapes = toMachineEtapes(octroi.etapes)
+                enAttenteDeDREAL = dd.machine
+                  .whoIsBlocking(etapes)
                   .includes(user.administrationId)
-            } catch (e) {
-              console.error(
-                `Impossible de traiter le titre ${titre.id} car la démarche d'octroi n'est pas valide`,
-                e
-              )
+                derniereEtape = etapes[etapes.length - 1]
+                const nextEtapes = dd.machine.possibleNextEtapes(etapes)
+                prochainesEtapes.push(
+                  ...nextEtapes
+                    .map(etape => etape.etapeTypeId)
+                    .filter(onlyUnique)
+                )
+              } catch (e) {
+                console.error(
+                  `Impossible de traiter le titre ${titre.id} car la démarche d'octroi n'est pas valide`,
+                  e
+                )
+              }
             }
           }
         }
 
-        return { titre: titre as DrealTitreSanitize, references, blockedByMe }
+        return {
+          titre: titre as DrealTitreSanitize,
+          references,
+          enAttenteDeDREAL,
+          derniereEtape,
+          prochainesEtapes
+        }
       })
       .filter(
         (
           titre: TitreDrealAvecReferences | null
         ): titre is TitreDrealAvecReferences => titre !== null
       )
-      .map(({ titre, references, blockedByMe }) => {
-        return {
-          id: titre.id,
-          slug: titre.slug,
-          nom: titre.nom,
-          titreStatutId: titre.titreStatutId,
-          typeId: titre.type.typeId,
+      .map(
+        ({
+          titre,
           references,
-          domaineId: titre.domaineId,
-          titulaires: titre.titulaires,
-          // pour une raison inconnue les chiffres sortent parfois en tant que string...., par exemple pour les titres
-          activitesEnConstruction:
-            typeof titre.activitesEnConstruction === 'string'
-              ? parseInt(titre.activitesEnConstruction, 10)
-              : titre.activitesEnConstruction ?? 0,
-          activitesAbsentes:
-            typeof titre.activitesAbsentes === 'string'
-              ? parseInt(titre.activitesAbsentes, 10)
-              : titre.activitesAbsentes ?? 0,
-          enAttenteDeDREAL: blockedByMe
+          enAttenteDeDREAL,
+          derniereEtape,
+          prochainesEtapes
+        }) => {
+          return {
+            id: titre.id,
+            slug: titre.slug,
+            nom: titre.nom,
+            titreStatutId: titre.titreStatutId,
+            typeId: titre.type.typeId,
+            references,
+            domaineId: titre.domaineId,
+            titulaires: titre.titulaires,
+            // pour une raison inconnue les chiffres sortent parfois en tant que string...., par exemple pour les titres
+            activitesEnConstruction:
+              typeof titre.activitesEnConstruction === 'string'
+                ? parseInt(titre.activitesEnConstruction, 10)
+                : titre.activitesEnConstruction ?? 0,
+            activitesAbsentes:
+              typeof titre.activitesAbsentes === 'string'
+                ? parseInt(titre.activitesAbsentes, 10)
+                : titre.activitesAbsentes ?? 0,
+            enAttenteDeDREAL,
+            derniereEtape,
+            prochainesEtapes
+          }
         }
-      })
+      )
 
     res.json(titresFormated)
   }

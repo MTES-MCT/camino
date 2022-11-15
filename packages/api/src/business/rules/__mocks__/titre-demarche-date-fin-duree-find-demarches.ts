@@ -1,5 +1,6 @@
 import { ITitreDemarche } from '../../../types'
 import { newDemarcheId } from '../../../database/models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 
 const titreDemarchesOctDateFin = [
   {
@@ -112,7 +113,7 @@ const titreDemarchesOctDureeZero = [
         typeId: 'dex',
         statutId: 'acc',
         ordre: 1,
-        date: '1988-03-06',
+        date: toCaminoDate('1988-03-06'),
         duree: 0,
         points: []
       }
@@ -134,7 +135,7 @@ const titreDemarchesOctIhiDureeZero = [
         typeId: 'ihi',
         statutId: 'acc',
         ordre: 1,
-        date: '1988-03-06',
+        date: toCaminoDate('1988-03-06'),
         duree: 0,
         points: []
       }
@@ -576,7 +577,7 @@ const titreDemarchesRenPointsVideNiDpuNiDex = [
         typeId: 'mfr',
         statutId: 'acc',
         ordre: 1,
-        date: '1988-06-06',
+        date: toCaminoDate('1988-06-06'),
         points: []
       }
     ]

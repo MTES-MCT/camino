@@ -3,6 +3,7 @@ import { ITitreEtape, TitreEtapesTravauxTypes as Travaux } from '../../types'
 import { titreDemarcheStatutIdFind } from './titre-demarche-statut-id-find'
 import { DemarchesStatutsIds as Demarches } from 'camino-common/src/static/demarchesStatuts'
 import { newDemarcheId } from '../../database/models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   etapesProps.map(
@@ -49,7 +50,9 @@ describe("statut d'une démarche", () => {
     expect(
       titreDemarcheStatutIdFind(
         'oct',
-        etapesBuild([{ typeId: 'dex', date: '2010-01-01', statutId: 'acc' }]),
+        etapesBuild([
+          { typeId: 'dex', date: toCaminoDate('2010-01-01'), statutId: 'acc' }
+        ]),
         'axm',
         newDemarcheId()
       )
@@ -64,7 +67,7 @@ describe("statut d'une démarche", () => {
           {
             typeId: 'def',
             statutId: 'acc',
-            date: '2010-01-01'
+            date: toCaminoDate('2010-01-01')
           }
         ]),
         'arm',
@@ -106,29 +109,29 @@ describe("statut d'une démarche", () => {
           {
             typeId: 'mfr',
             statutId: 'fai',
-            date: '2019-12-10',
+            date: toCaminoDate('2019-12-10'),
             contenu: { arm: { mecanise: true, franchissements: 3 } }
           },
-          { typeId: 'mdp', statutId: 'fai', date: '2019-12-11' },
-          { typeId: 'pfd', statutId: 'fai', date: '2019-12-13' },
-          { typeId: 'dae', statutId: 'exe', date: '2020-01-14' },
-          { typeId: 'mcp', statutId: 'com', date: '2020-01-23' },
-          { typeId: 'vfd', statutId: 'fai', date: '2020-02-05' },
-          { typeId: 'mcr', statutId: 'fav', date: '2020-02-06' },
-          { typeId: 'eof', statutId: 'fai', date: '2020-02-07' },
-          { typeId: 'aof', statutId: 'fav', date: '2020-02-08' },
+          { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2019-12-11') },
+          { typeId: 'pfd', statutId: 'fai', date: toCaminoDate('2019-12-13') },
+          { typeId: 'dae', statutId: 'exe', date: toCaminoDate('2020-01-14') },
+          { typeId: 'mcp', statutId: 'com', date: toCaminoDate('2020-01-23') },
+          { typeId: 'vfd', statutId: 'fai', date: toCaminoDate('2020-02-05') },
+          { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-02-06') },
+          { typeId: 'eof', statutId: 'fai', date: toCaminoDate('2020-02-07') },
+          { typeId: 'aof', statutId: 'fav', date: toCaminoDate('2020-02-08') },
           {
             typeId: 'rde',
             statutId: 'fav',
-            date: '2020-02-11',
+            date: toCaminoDate('2020-02-11'),
             contenu: { arm: { franchissements: 3 } }
           },
-          { typeId: 'sca', statutId: 'fai', date: '2020-06-15' },
-          { typeId: 'aca', statutId: 'fav', date: '2020-06-17' },
-          { typeId: 'mnb', statutId: 'fai', date: '2020-07-09' },
-          { typeId: 'pfc', statutId: 'fai', date: '2020-07-16' },
-          { typeId: 'vfc', statutId: 'fai', date: '2020-07-17' },
-          { typeId: 'sco', statutId: 'fai', date: '2020-09-28' }
+          { typeId: 'sca', statutId: 'fai', date: toCaminoDate('2020-06-15') },
+          { typeId: 'aca', statutId: 'fav', date: toCaminoDate('2020-06-17') },
+          { typeId: 'mnb', statutId: 'fai', date: toCaminoDate('2020-07-09') },
+          { typeId: 'pfc', statutId: 'fai', date: toCaminoDate('2020-07-16') },
+          { typeId: 'vfc', statutId: 'fai', date: toCaminoDate('2020-07-17') },
+          { typeId: 'sco', statutId: 'fai', date: toCaminoDate('2020-09-28') }
         ]),
         'arm',
         newDemarcheId()
@@ -141,7 +144,7 @@ describe("statut d'une démarche", () => {
           {
             typeId: 'sco',
             statutId: 'fai',
-            date: '2010-09-28'
+            date: toCaminoDate('2010-09-28')
           }
         ]),
         'arm',
@@ -246,7 +249,7 @@ describe("statut d'une démarche", () => {
           {
             typeId: 'def',
             statutId: 'acc',
-            date: '2010-01-01'
+            date: toCaminoDate('2010-01-01')
           }
         ]),
         'arm',
@@ -263,7 +266,7 @@ describe("statut d'une démarche", () => {
           {
             typeId: 'def',
             statutId: 'rej',
-            date: '2010-01-12'
+            date: toCaminoDate('2010-01-12')
           }
         ]),
         'arm',
@@ -343,16 +346,16 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([
-          { typeId: 'mfr', statutId: 'fai', date: '2021-02-25' },
-          { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
-          { typeId: 'pfd', statutId: 'fai', date: '2020-09-03' },
-          { typeId: 'mcp', statutId: 'com', date: '2021-02-27' },
-          { typeId: 'vfd', statutId: 'fai', date: '2021-03-10' },
-          { typeId: 'mcr', statutId: 'fav', date: '2021-03-11' },
-          { typeId: 'eof', statutId: 'fai', date: '2021-03-17' },
-          { typeId: 'aof', statutId: 'fav', date: '2021-09-23' },
-          { typeId: 'sca', statutId: 'fai', date: '2021-09-24' },
-          { typeId: 'aca', statutId: 'def', date: '2021-09-25' }
+          { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2021-02-25') },
+          { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2021-02-26') },
+          { typeId: 'pfd', statutId: 'fai', date: toCaminoDate('2020-09-03') },
+          { typeId: 'mcp', statutId: 'com', date: toCaminoDate('2021-02-27') },
+          { typeId: 'vfd', statutId: 'fai', date: toCaminoDate('2021-03-10') },
+          { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2021-03-11') },
+          { typeId: 'eof', statutId: 'fai', date: toCaminoDate('2021-03-17') },
+          { typeId: 'aof', statutId: 'fav', date: toCaminoDate('2021-09-23') },
+          { typeId: 'sca', statutId: 'fai', date: toCaminoDate('2021-09-24') },
+          { typeId: 'aca', statutId: 'def', date: toCaminoDate('2021-09-25') }
         ]),
         'arm',
         newDemarcheId()
@@ -365,16 +368,16 @@ describe("statut d'une démarche", () => {
       titreDemarcheStatutIdFind(
         'oct',
         etapesBuild([
-          { typeId: 'mfr', statutId: 'fai', date: '2021-02-25' },
-          { typeId: 'mdp', statutId: 'fai', date: '2021-02-26' },
-          { typeId: 'pfd', statutId: 'fai', date: '2020-09-03' },
-          { typeId: 'mcp', statutId: 'com', date: '2021-02-27' },
-          { typeId: 'vfd', statutId: 'fai', date: '2021-03-10' },
-          { typeId: 'mcr', statutId: 'fav', date: '2021-03-11' },
-          { typeId: 'eof', statutId: 'fai', date: '2021-03-17' },
-          { typeId: 'aof', statutId: 'fav', date: '2021-09-23' },
-          { typeId: 'sca', statutId: 'fai', date: '2021-09-24' },
-          { typeId: 'aca', statutId: 'fav', date: '2021-09-25' }
+          { typeId: 'mfr', statutId: 'fai', date: toCaminoDate('2021-02-25') },
+          { typeId: 'mdp', statutId: 'fai', date: toCaminoDate('2021-02-26') },
+          { typeId: 'pfd', statutId: 'fai', date: toCaminoDate('2020-09-03') },
+          { typeId: 'mcp', statutId: 'com', date: toCaminoDate('2021-02-27') },
+          { typeId: 'vfd', statutId: 'fai', date: toCaminoDate('2021-03-10') },
+          { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2021-03-11') },
+          { typeId: 'eof', statutId: 'fai', date: toCaminoDate('2021-03-17') },
+          { typeId: 'aof', statutId: 'fav', date: toCaminoDate('2021-09-23') },
+          { typeId: 'sca', statutId: 'fai', date: toCaminoDate('2021-09-24') },
+          { typeId: 'aca', statutId: 'fav', date: toCaminoDate('2021-09-25') }
         ]),
         'arm',
         newDemarcheId()

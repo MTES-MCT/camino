@@ -4,6 +4,7 @@ import Titres from '../models/titres'
 import TitresDemarches from '../models/titres-demarches'
 import TitresEtapes from '../models/titres-etapes'
 import { titreDemarcheArchive } from './titres-demarches'
+import { toCaminoDate } from 'camino-common/src/date'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -37,7 +38,7 @@ describe('teste les requêtes sur les démarches', () => {
           titreDemarcheId: demarche.id,
           typeId: 'mfr',
           statutId: 'aco',
-          date: '2020-02-02'
+          date: toCaminoDate('2020-02-02')
         })
         expect(etape.archive).toBeFalsy()
       }

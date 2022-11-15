@@ -3,6 +3,7 @@ import TitresDemarches from '../../../database/models/titres-demarches'
 import { IEtapeType } from '../../../types'
 import { newDemarcheId } from '../../../database/models/_format/id-create'
 import { ArmOctMachine } from '../../../business/rules-demarches/arm/oct.machine'
+import { toCaminoDate } from 'camino-common/src/date'
 
 describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   const demarche: Pick<TitresDemarches, 'etapes'> = {
@@ -13,7 +14,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'sco',
         statutId: 'fai',
         ordre: 16,
-        date: '2020-08-17',
+        date: toCaminoDate('2020-08-17'),
         contenu: { arm: { mecanise: true } },
         slug: 'demarcheSlug-sco01'
       },
@@ -23,7 +24,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mfr',
         statutId: 'fai',
         ordre: 1,
-        date: '2019-09-19',
+        date: toCaminoDate('2019-09-19'),
         slug: 'demarcheSlug-mfr01',
         contenu: { arm: { mecanise: true, franchissements: 19 } }
       },
@@ -33,7 +34,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mcp',
         statutId: 'com',
         ordre: 5,
-        date: '2019-11-27',
+        date: toCaminoDate('2019-11-27'),
         slug: 'demarcheSlug-mcp01'
       },
       {
@@ -42,7 +43,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'aof',
         statutId: 'fav',
         ordre: 10,
-        date: '2019-12-04',
+        date: toCaminoDate('2019-12-04'),
         slug: 'demarcheSlug-aof01'
       },
       {
@@ -51,7 +52,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'eof',
         statutId: 'fai',
         ordre: 9,
-        date: '2019-12-04',
+        date: toCaminoDate('2019-12-04'),
         slug: 'demarcheSlug-eof01'
       },
       {
@@ -60,7 +61,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'pfc',
         statutId: 'fai',
         ordre: 14,
-        date: '2020-05-22',
+        date: toCaminoDate('2020-05-22'),
         slug: 'demarcheSlug-pfc01'
       },
       {
@@ -69,7 +70,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mcr',
         statutId: 'fav',
         ordre: 8,
-        date: '2019-12-04',
+        date: toCaminoDate('2019-12-04'),
         slug: 'demarcheSlug-mcr01'
       },
       {
@@ -78,7 +79,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'pfd',
         statutId: 'fai',
         ordre: 4,
-        date: '2019-11-20',
+        date: toCaminoDate('2019-11-20'),
         slug: 'demarcheSlug-pfd01'
       },
       {
@@ -87,7 +88,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'vfc',
         statutId: 'fai',
         ordre: 15,
-        date: '2020-05-22',
+        date: toCaminoDate('2020-05-22'),
         slug: 'demarcheSlug-vfc01'
       },
       {
@@ -96,7 +97,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mnb',
         statutId: 'fai',
         ordre: 13,
-        date: '2020-05-18',
+        date: toCaminoDate('2020-05-18'),
         slug: 'demarcheSlug-mnb01'
       },
       {
@@ -105,7 +106,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'aca',
         statutId: 'fav',
         ordre: 12,
-        date: '2020-05-13',
+        date: toCaminoDate('2020-05-13'),
         slug: 'demarcheSlug-aca01'
       },
       {
@@ -114,7 +115,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'rde',
         statutId: 'fav',
         ordre: 6,
-        date: '2019-12-04',
+        date: toCaminoDate('2019-12-04'),
         slug: 'demarcheSlug-rde01',
         contenu: { arm: { franchissements: 19 } }
       },
@@ -124,7 +125,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'mdp',
         statutId: 'fai',
         ordre: 2,
-        date: '2019-09-20',
+        date: toCaminoDate('2019-09-20'),
         slug: 'demarcheSlug-mdp01'
       },
       {
@@ -133,7 +134,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'vfd',
         statutId: 'fai',
         ordre: 7,
-        date: '2019-12-04',
+        date: toCaminoDate('2019-12-04'),
         slug: 'demarcheSlug-vfd01'
       },
       {
@@ -142,7 +143,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'sca',
         statutId: 'fai',
         ordre: 11,
-        date: '2020-05-04',
+        date: toCaminoDate('2020-05-04'),
         slug: 'demarcheSlug-sca01'
       },
       {
@@ -151,7 +152,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'dae',
         statutId: 'exe',
         ordre: 3,
-        date: '2019-10-11',
+        date: toCaminoDate('2019-10-11'),
         slug: 'demarcheSlug-dae01'
       },
       {
@@ -160,7 +161,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         typeId: 'aco',
         statutId: 'fai',
         ordre: 17,
-        date: '2022-05-05',
+        date: toCaminoDate('2022-05-05'),
         slug: 'demarcheSlug-aco01'
       }
     ]
@@ -177,7 +178,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: true,
       acceptationAuto: true,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -193,7 +193,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: true,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -208,7 +207,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -246,7 +244,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -261,7 +258,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -299,7 +295,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -314,7 +309,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -344,7 +338,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -360,7 +353,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: true,
-      dateDebut: null,
       dateFin: '2018-01-01',
       sections: null,
       publicLecture: true,
@@ -376,7 +368,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -391,7 +382,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -428,7 +418,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -458,7 +447,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -473,7 +461,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -511,7 +498,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -526,7 +512,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -564,7 +549,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -579,7 +563,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -594,7 +577,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -610,7 +592,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -625,7 +606,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: '2020-01-01',
       sections: null,
       publicLecture: false,
@@ -640,7 +620,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -676,7 +655,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -691,7 +669,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -722,7 +699,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -759,7 +735,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: [
         {
@@ -808,7 +783,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -823,7 +797,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -839,7 +813,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -854,7 +828,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -892,7 +866,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -907,7 +881,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -922,7 +896,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -938,7 +912,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: false,
@@ -953,7 +927,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -968,7 +942,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -983,7 +957,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -1012,7 +986,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -1042,7 +1016,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -1073,7 +1047,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -1111,7 +1085,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -1141,7 +1115,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: '2018-10-22',
       sections: null,
       publicLecture: true,
@@ -1157,7 +1131,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -1173,7 +1147,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: true,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -1188,7 +1162,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -1219,7 +1193,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: true,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: null,
       publicLecture: true,
@@ -1234,7 +1208,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       fondamentale: null,
       unique: null,
       acceptationAuto: null,
-      dateDebut: null,
+
       dateFin: null,
       sections: [
         {
@@ -1263,7 +1237,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       machine,
       demarche,
       'etapeId3',
-      '2019-10-11',
+      toCaminoDate('2019-10-11'),
       etapesTypes
     )
     expect(etapes).toHaveLength(1)
@@ -1297,7 +1271,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       machine,
       demarche,
       undefined,
-      '2022-05-06',
+      toCaminoDate('2022-05-06'),
       etapesTypes
     )
     expect(etapes).toHaveLength(1)
@@ -1309,7 +1283,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       machine,
       demarche,
       undefined,
-      '2019-12-04',
+      toCaminoDate('2019-12-04'),
       etapesTypes
     )
     expect(etapes.map(({ id }) => id)).toStrictEqual(['mod'])
@@ -1323,7 +1297,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           titreDemarcheId: newDemarcheId(''),
           typeId: 'mfr',
           statutId: 'fai',
-          date: '2022-05-16',
+          date: toCaminoDate('2022-05-16'),
           contenu: { arm: { mecanise: true, franchissements: 2 } }
         },
         {
@@ -1331,7 +1305,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           titreDemarcheId: newDemarcheId(''),
           typeId: 'mdp',
           statutId: 'fai',
-          date: '2022-05-17'
+          date: toCaminoDate('2022-05-17')
         }
       ]
     }
@@ -1339,7 +1313,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       machine,
       demarche,
       undefined,
-      '2019-12-04',
+      toCaminoDate('2019-12-04'),
       etapesTypes
     )
     expect(etapes.map(({ id }) => id)).toStrictEqual(['dae', 'pfd', 'rde'])
@@ -1353,7 +1327,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           titreDemarcheId: newDemarcheId(''),
           typeId: 'mfr',
           statutId: 'fai',
-          date: '2022-05-16',
+          date: toCaminoDate('2022-05-16'),
           contenu: { arm: { mecanise: false } }
         },
         {
@@ -1361,7 +1335,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           titreDemarcheId: newDemarcheId(''),
           typeId: 'mdp',
           statutId: 'fai',
-          date: '2022-05-17'
+          date: toCaminoDate('2022-05-17')
         }
       ]
     }
@@ -1369,7 +1343,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       machine,
       demarche,
       undefined,
-      '2019-12-04',
+      toCaminoDate('2019-12-04'),
       etapesTypes
     )
     expect(etapes.map(({ id }) => id)).toStrictEqual(['pfd'])
@@ -1382,7 +1356,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           titreDemarcheId: newDemarcheId(''),
           typeId: 'mfr',
           statutId: 'fai',
-          date: '2022-06-23',
+          date: toCaminoDate('2022-06-23'),
           contenu: {
             arm: {
               mecanise: true,
@@ -1396,7 +1370,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           titreDemarcheId: newDemarcheId(''),
           typeId: 'dae',
           statutId: 'exe',
-          date: '2021-06-22',
+          date: toCaminoDate('2021-06-22'),
           ordre: 1
         },
         {
@@ -1404,7 +1378,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           titreDemarcheId: newDemarcheId(''),
           typeId: 'mdp',
           statutId: 'fai',
-          date: '2022-07-01',
+          date: toCaminoDate('2022-07-01'),
           ordre: 4
         },
         {
@@ -1412,7 +1386,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
           titreDemarcheId: newDemarcheId(''),
           typeId: 'pfd',
           statutId: 'fai',
-          date: '2021-07-05',
+          date: toCaminoDate('2021-07-05'),
           ordre: 2
         }
       ]
@@ -1421,7 +1395,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       machine,
       demarche,
       undefined,
-      '2022-07-01',
+      toCaminoDate('2022-07-01'),
       etapesTypes
     )
     expect(etapes.map(({ id }) => id)).toStrictEqual([

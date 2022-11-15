@@ -22,6 +22,7 @@ import {
   titreDemarchesOctTitulairesACO
 } from './__mocks__/titre-prop-etape-find-demarches'
 import { newDemarcheId } from '../../database/models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 
 describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
   test("trouve l'id de la dernière étape acceptée de la démarche d'octroi acceptée ayant la propriété 'points'", () => {
@@ -233,7 +234,7 @@ describe("id de l'étape qui a un contenu", () => {
               id: 'etape-id',
               titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'dpu',
-              date: '2020-01-01',
+              date: toCaminoDate('2020-01-01'),
               statutId: 'acc',
               contenu: { arm: { mecanisee: true } }
             }
@@ -261,7 +262,7 @@ describe("id de l'étape qui a un contenu", () => {
               id: 'etape-id',
               titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'dpu',
-              date: '2020-01-03',
+              date: toCaminoDate('2020-01-03'),
               statutId: 'acc',
               contenu: { arm: { mecanisee: true } }
             }
@@ -297,7 +298,7 @@ describe("id de l'étape qui a un contenu", () => {
               id: 'etape-id',
               titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'dpu',
-              date: '2020-01-01',
+              date: toCaminoDate('2020-01-01'),
               statutId: 'acc',
               contenu: { arm: { mecanisee: true } }
             }
@@ -324,7 +325,7 @@ describe("id de l'étape qui a un contenu", () => {
               id: 'etape-id',
               titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'mfr',
-              date: '2020-01-03',
+              date: toCaminoDate('2020-01-03'),
               statutId: 'aco',
               contenu: { arm: { mecanisee: true } }
             }
@@ -349,7 +350,7 @@ describe("id de l'étape qui a un contenu", () => {
               id: 'etape-id',
               titreDemarcheId: newDemarcheId('demarche-id'),
               typeId: 'mfr',
-              date: '2020-01-03',
+              date: toCaminoDate('2020-01-03'),
               statutId: 'aco',
               contenu: { arm: { mecanisee: true } }
             }

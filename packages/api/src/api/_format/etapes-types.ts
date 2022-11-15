@@ -20,6 +20,7 @@ import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { CaminoDate } from 'camino-common/src/date'
 
 const etapeTypeSectionsFormat = (
   sections: ISection[] | undefined | null,
@@ -147,7 +148,7 @@ const etapeTypeDateFinCheck = (
 
 const etapeTypeIsValidCheck = (
   etapeType: IEtapeType,
-  date: string,
+  date: CaminoDate,
   titre: ITitre,
   demarcheType: IDemarcheType,
   demarcheId: DemarcheId,

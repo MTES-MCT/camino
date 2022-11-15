@@ -479,7 +479,6 @@
   },
   {
     "id": "mca",
-    "parent_id": "mco",
     "nom": "demande de compléments (recevabilité de la demande)",
     "description": "après une mcr",
     "ordre": 20,
@@ -509,7 +508,6 @@
   },
   {
     "id": "mcb",
-    "parent_id": "mco",
     "nom": "demande de compléments (récépissé de déclaration loi sur l'eau)",
     "description": "après une rde",
     "ordre": 19,
@@ -539,7 +537,6 @@
   },
   {
     "id": "mcd",
-    "parent_id": "mco",
     "nom": "demande de compléments (décision de la mission autorité environnementale (examen au cas par cas du projet)",
     "description": "après une dae",
     "ordre": 18,
@@ -569,7 +566,6 @@
   },
   {
     "id": "mcm",
-    "parent_id": "mco",
     "nom": "demande de compléments (complétude de la demande)",
     "description": "après une mcp",
     "ordre": 17,
@@ -643,7 +639,6 @@
   },
   {
     "id": "mcs",
-    "parent_id": "mco",
     "nom": "demande de compléments (saisine de la CARM)",
     "description": "après une sca",
     "ordre": 21,
@@ -721,7 +716,6 @@
   },
   {
     "id": "mia",
-    "parent_id": "mif",
     "nom": "demande d'informations (avis de l'Office national des forêts)",
     "description": "après une aof",
     "ordre": 33,
@@ -729,7 +723,6 @@
   },
   {
     "id": "mie",
-    "parent_id": "mif",
     "nom": "demande d'informations (avis du DREAL, DEAL ou DGTM)",
     "description": "après une adp",
     "ordre": 32,
@@ -744,7 +737,6 @@
   },
   {
     "id": "mim",
-    "parent_id": "mif",
     "nom": "demande d'informations (recevabilité de la demande)",
     "description": "après une mcr",
     "ordre": 29,
@@ -752,7 +744,6 @@
   },
   {
     "id": "mio",
-    "parent_id": "mif",
     "nom": "demande d'informations (expertise de l'Office national des forêts)",
     "description": "après une eof",
     "ordre": 30,
@@ -760,7 +751,6 @@
   },
   {
     "id": "mna",
-    "parent_id": "mno",
     "nom": "notification au demandeur (ajournement de la CARM)",
     "description": "après une aca ajournée",
     "ordre": 114,
@@ -783,7 +773,6 @@
   },
   {
     "id": "mnb",
-    "parent_id": "mno",
     "nom": "notification au demandeur (avis favorable de la CARM)",
     "description": "après une aca favorable",
     "ordre": 115,
@@ -806,7 +795,6 @@
   },
   {
     "id": "mnc",
-    "parent_id": "mno",
     "nom": "notification au demandeur (classement sans suite)",
     "description": "après une css",
     "ordre": 116,
@@ -829,7 +817,6 @@
   },
   {
     "id": "mnd",
-    "parent_id": "mno",
     "nom": "notification au demandeur (avis défavorable)",
     "description": "après une aca défavorable",
     "ordre": 117,
@@ -852,7 +839,6 @@
   },
   {
     "id": "mni",
-    "parent_id": "mno",
     "nom": "notification au demandeur (initiation de la démarche de retrait)",
     "description": "après une ide",
     "ordre": 120,
@@ -897,7 +883,6 @@
   },
   {
     "id": "mns",
-    "parent_id": "mno",
     "nom": "notification au demandeur (signature de l’autorisation de recherche minière)",
     "description": "après une sco",
     "ordre": 118,
@@ -920,7 +905,6 @@
   },
   {
     "id": "mnv",
-    "parent_id": "mno",
     "nom": "notification au demandeur (signature de l'avenant à l’autorisation de recherche minière)",
     "description": "après une aco",
     "ordre": 119,
@@ -952,7 +936,6 @@
   },
   {
     "id": "mom",
-    "parent_id": "mod",
     "nom": "modification de la demande (décision de la mission autorité environnementale (examen au cas par cas du projet)",
     "description": "après une dae",
     "ordre": 15,
@@ -1100,7 +1083,6 @@
   },
   {
     "id": "rca",
-    "parent_id": "rco",
     "nom": "réception de compléments (recevabilité de la demande)",
     "description": "après une mcr",
     "ordre": 26,
@@ -1109,7 +1091,6 @@
   },
   {
     "id": "rcb",
-    "parent_id": "rco",
     "nom": "réception de compléments (récépissé de déclaration loi sur l'eau)",
     "description": "après une rde",
     "ordre": 25,
@@ -1118,7 +1099,6 @@
   },
   {
     "id": "rcd",
-    "parent_id": "rco",
     "nom": "réception de compléments (décision de la mission autorité environnementale (examen au cas par cas du projet))",
     "description": "après une dae",
     "ordre": 24,
@@ -1132,7 +1112,6 @@
   },
   {
     "id": "rcm",
-    "parent_id": "rco",
     "nom": "réception de compléments (complétude de la demande)",
     "description": "après une mcp",
     "ordre": 23,
@@ -1149,7 +1128,6 @@
   },
   {
     "id": "rcs",
-    "parent_id": "rco",
     "nom": "réception de compléments (saisine de la CARM)",
     "description": "après une sca",
     "ordre": 27,
@@ -1201,7 +1179,6 @@
   },
   {
     "id": "ria",
-    "parent_id": "rif",
     "nom": "réception d'information (avis de l'Office national des forêts)",
     "description": "après une aof",
     "ordre": 39,
@@ -1210,7 +1187,6 @@
   },
   {
     "id": "rie",
-    "parent_id": "rif",
     "nom": "réception d'information (avis du DREAL, DEAL ou DGTM)",
     "description": "après une adp",
     "ordre": 38,
@@ -1227,7 +1203,6 @@
   },
   {
     "id": "rim",
-    "parent_id": "rif",
     "nom": "réception d'information (recevabilité de la demande)",
     "description": "après une mcr",
     "ordre": 35,
@@ -1236,7 +1211,6 @@
   },
   {
     "id": "rio",
-    "parent_id": "rif",
     "nom": "réception d'information (expertise de l'Office national des forêts)",
     "description": "après une eof",
     "ordre": 36,

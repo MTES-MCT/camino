@@ -11,12 +11,13 @@ import {
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { EtapeTypeEtapeStatut } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
+import { CaminoDate } from 'camino-common/src/date'
 
 export interface Etape {
   // TODO 2022-07-28 : ceci pourrait être réduit en utilisant les états de 'trad'
   etapeTypeId: EtapeTypeId
   etapeStatutId: EtapeStatutId
-  date: string
+  date: CaminoDate
   contenu?: IContenu
 }
 

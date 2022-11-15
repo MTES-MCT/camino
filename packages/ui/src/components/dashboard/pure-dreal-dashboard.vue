@@ -16,7 +16,7 @@
         <h4>Titres en attente de la DREAL</h4>
         <TableAuto
           class="mb-xxl"
-          :columns="columns.slice(0, 4)"
+          :columns="columnsEnAttente"
           :rows="item.drealTitresBloques"
           :initialSort="{ column: initialColumnId, order: 'asc' }"
         />
@@ -35,9 +35,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { markRaw, onMounted, ref } from 'vue'
 import TableAuto from '../_ui/table-auto.vue'
+import List from '../_ui/list.vue'
 import {
+  Column,
   ComponentColumnData,
   TableAutoRow,
   TextColumnData
@@ -45,7 +47,6 @@ import {
 import PureDGTMStats from './pure-dgtm-stats.vue'
 import {
   nomColumn,
-  domaineColumn,
   nomCell,
   referencesColumn,
   statutColumn,
@@ -54,7 +55,6 @@ import {
   referencesCell,
   titulairesCell,
   typeColumn,
-  domaineCell,
   typeCell,
   activiteColumn,
   activitesCell
@@ -63,6 +63,7 @@ import { CommonTitreDREAL } from 'camino-common/src/titres'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { AsyncData } from '@/api/client-rest'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 
 const data = ref<
   AsyncData<{ drealTitres: TableAutoRow[]; drealTitresBloques: TableAutoRow[] }>
@@ -73,20 +74,51 @@ const props = defineProps<{
   getDgtmStats: () => Promise<StatistiquesDGTM>
 }>()
 
+const derniereEtapeColumn: Column<'derniereEtape'> = {
+  id: 'derniereEtape',
+  name: 'Dernière étape',
+  class: ['min-width-8']
+}
+
+const prochainesEtapesColumn: Column<'prochainesEtapes'> = {
+  id: 'prochainesEtapes',
+  name: 'Prochaines étapes',
+  class: ['min-width-8']
+}
 const columns = [
   nomColumn,
-  domaineColumn,
   typeColumn,
   statutColumn,
   activiteColumn,
   referencesColumn,
-  titulairesColumn
+  titulairesColumn,
+  derniereEtapeColumn
+] as const
+
+const columnsEnAttente = [
+  nomColumn,
+  typeColumn,
+  statutColumn,
+  titulairesColumn,
+  derniereEtapeColumn,
+  prochainesEtapesColumn
 ] as const
 
 const initialColumnId = columns[3].id
 
-type Columns = typeof columns[number]['id']
+type Columns =
+  | typeof columns[number]['id']
+  | typeof columnsEnAttente[number]['id']
 
+const prochainesEtapesCell = (titre: CommonTitreDREAL) => ({
+  component: markRaw(List),
+  props: {
+    elements: titre.prochainesEtapes?.map(id => EtapesTypes[id].nom),
+    mini: true
+  },
+  class: 'mb--xs',
+  value: titre.prochainesEtapes?.map(id => EtapesTypes[id].nom).join(', ')
+})
 const titresLignesBuild = (
   titres: CommonTitreDREAL[]
 ): TableAutoRow<Columns>[] => {
@@ -94,12 +126,19 @@ const titresLignesBuild = (
     const columns: { [key in Columns]: ComponentColumnData | TextColumnData } =
       {
         nom: nomCell(titre),
-        domaine: domaineCell(titre),
         type: typeCell(titre),
         statut: statutCell(titre),
         activites: activitesCell(titre),
         references: referencesCell(titre),
-        titulaires: titulairesCell(titre)
+        titulaires: titulairesCell(titre),
+        derniereEtape: {
+          value: titre.derniereEtape
+            ? `${EtapesTypes[titre.derniereEtape.etapeTypeId].nom} (${
+                titre.derniereEtape.date
+              })`
+            : ''
+        },
+        prochainesEtapes: prochainesEtapesCell(titre)
       }
     return {
       id: titre.id,

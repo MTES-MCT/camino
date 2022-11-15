@@ -179,24 +179,10 @@ const metasIndex = {
     nom: 'Types des étapes',
     colonnes: [
       { id: 'id', nom: 'Id' },
-      {
-        id: 'parentId',
-        nom: 'Id du type de l’étape parent',
-        type: String,
-        optional: true
-      },
       { id: 'nom', nom: 'Nom', type: String },
       { id: 'description', nom: 'Description', type: String, optional: true },
       { id: 'ordre', nom: 'Ordre', type: Number },
       { id: 'sections', nom: 'Sections', type: 'json', optional: true },
-      { id: 'legalLien', nom: 'Lien légal', type: String, optional: true },
-      {
-        id: 'dateDebut',
-        nom: 'Date de début',
-        type: Date,
-        class: ['min-width-12'],
-        optional: true
-      },
       {
         id: 'dateFin',
         nom: 'Date de fin',

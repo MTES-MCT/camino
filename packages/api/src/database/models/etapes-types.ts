@@ -19,7 +19,6 @@ class EtapesTypes extends Model {
       description: { type: ['string', 'null'] },
       acceptationAuto: { type: ['boolean', 'null'] },
       fondamentale: { type: ['boolean', 'null'] },
-      dateDebut: { type: ['string', 'null'] },
       dateFin: { type: ['string', 'null'] },
       sections: {},
       unique: { type: ['boolean', 'null'] },
