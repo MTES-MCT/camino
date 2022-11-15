@@ -9,7 +9,8 @@
       </div>
       <div>
         <LoadingElement v-slot="{ item }" :data="data"
-          ><LineChart :data="graphDepoData(item)"
+          ><ConfigurableBarChart
+            :chartConfiguration="depotChartConfiguration(item)"
         /></LoadingElement>
       </div>
       <div>
@@ -29,52 +30,19 @@ import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { AsyncData } from '@/api/client-rest'
 import LineChart from '../_charts/line.vue'
 import ConfigurableLineChart from '../_charts/configurableLine.vue'
+import ConfigurableBarChart from '../_charts/configurableBar.vue'
 
 import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
-import { datasetParams, sdomChartConfiguration } from './dgtm-stats'
+import {
+  datasetParams,
+  sdomChartConfiguration,
+  depotChartConfiguration
+} from './dgtm-stats'
 
 const data = ref<AsyncData<StatistiquesDGTM>>({ status: 'LOADING' })
 const props = defineProps<{
   getDgtmStats: () => Promise<StatistiquesDGTM>
 }>()
-
-const graphDepoData = (item: StatistiquesDGTM) => {
-  const annees: CaminoAnnee[] = Object.keys(item.depotEtInstructions).filter(
-    isAnnee
-  )
-  const datasets = []
-  datasets.push({
-    label: 'Titres déposés',
-    data: annees.map(
-      annee => item.depotEtInstructions[annee].totalTitresDeposes
-    ),
-    ...datasetParams(0)
-  })
-  datasets.push({
-    label: 'Titres octroyés',
-    data: annees.map(
-      annee => item.depotEtInstructions[annee].totalTitresOctroyes
-    ),
-    ...datasetParams(1)
-  })
-  datasets.push({
-    label: 'AEX octroyés',
-    data: annees.map(
-      annee => item.depotEtInstructions[annee].totalAXMOctroyees
-    ),
-    ...datasetParams(2)
-  })
-  datasets.push({
-    label: 'AEX déposés',
-    data: annees.map(annee => item.depotEtInstructions[annee].totalAXMDeposees),
-    ...datasetParams(3)
-  })
-
-  return {
-    labels: annees,
-    datasets
-  }
-}
 
 const graphDelaiData = (item: StatistiquesDGTM) => {
   const annees: CaminoAnnee[] = Object.keys(item.delais).filter(isAnnee)
