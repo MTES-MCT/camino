@@ -17,6 +17,7 @@ import TitresForets from '../../database/models/titres-forets'
 import TitresSDOMZones from '../../database/models/titres--sdom-zones'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { SDOMZoneIds } from 'camino-common/src/static/sdom'
+import { toCaminoDate } from 'camino-common/src/date'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -108,7 +109,7 @@ describe('titresEtapesAreasUpdate', () => {
     await TitresEtapes.query().insert([
       {
         id: titreEtapeId,
-        date: '2022-03-09',
+        date: toCaminoDate('2022-03-09'),
         typeId: 'mfr',
         statutId: 'aco',
         titreDemarcheId,

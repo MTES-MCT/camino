@@ -7,6 +7,7 @@ import {
   ADMINISTRATION_IDS,
   Administrations
 } from 'camino-common/src/static/administrations'
+import { toCaminoDate } from 'camino-common/src/date'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -240,7 +241,7 @@ describe('demarcheModifier', () => {
         typeId: 'mno',
         titreDemarcheId: demarcheId,
         statutId: 'acc',
-        date: '2020-01-01'
+        date: toCaminoDate('2020-01-01')
       },
       userSuper,
       titreId

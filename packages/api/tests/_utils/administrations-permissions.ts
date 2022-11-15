@@ -33,6 +33,7 @@ import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesType
 import { documentCreate } from '../../src/database/queries/documents'
 import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { toCaminoDate } from 'camino-common/src/date'
 
 const visibleCheck = async (
   administrationId: AdministrationId,
@@ -442,7 +443,7 @@ const titreBuild = (
             ordre: 0,
             titreDemarcheId: newDemarcheId(`${titreId}-demarche-id`),
             statutId: 'enc',
-            date: '2020-01-01',
+            date: toCaminoDate('2020-01-01'),
             administrationsLocales: administrationIdLocale
               ? [administrationIdLocale]
               : []

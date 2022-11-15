@@ -2,6 +2,7 @@ import { ITitreEtape } from '../../types'
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { newDemarcheId } from '../../database/models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 
 describe("date de fin d'une démarche d'annulation", () => {
   test.each<EtapeTypeId>(['dex', 'dux', 'dim'])(
@@ -14,7 +15,7 @@ describe("date de fin d'une démarche d'annulation", () => {
           typeId,
           statutId: 'acc',
           ordre: 1,
-          date: '2013-05-21'
+          date: toCaminoDate('2013-05-21')
         }
       ]
       expect(
@@ -33,7 +34,7 @@ describe("date de fin d'une démarche d'annulation", () => {
           typeId,
           statutId: 'acc',
           ordre: 1,
-          date: '2013-05-21',
+          date: toCaminoDate('2013-05-21'),
           dateFin: '2013-05-25'
         }
       ]
@@ -70,7 +71,7 @@ describe("date de fin d'une démarche d'annulation", () => {
         typeId: 'aco',
         statutId: 'fai',
         ordre: 1,
-        date: '2013-05-21',
+        date: toCaminoDate('2013-05-21'),
         dateFin: '2013-05-25'
       }
     ]

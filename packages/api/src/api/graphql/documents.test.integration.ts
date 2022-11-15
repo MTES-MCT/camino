@@ -10,6 +10,7 @@ import {
 import { userSuper } from '../../database/user-super'
 import { dbManager } from '../../../tests/db-manager'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
+import { toCaminoDate } from 'camino-common/src/date'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -95,7 +96,7 @@ describe('documentSupprimer', () => {
         typeId: 'mfr',
         statutId: 'fai',
         titreDemarcheId: titreDemarche.id,
-        date: ''
+        date: toCaminoDate('2022-01-01')
       },
       userSuper,
       titre.id
@@ -151,7 +152,7 @@ describe('documentSupprimer', () => {
         typeId: 'mfr',
         statutId: 'aco',
         titreDemarcheId: titreDemarche.id,
-        date: ''
+        date: toCaminoDate('2021-01-01')
       },
       userSuper,
       titre.id

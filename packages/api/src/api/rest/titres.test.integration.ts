@@ -9,6 +9,7 @@ import { ITitreDemarche, ITitreEtape } from '../../types'
 import { entreprisesUpsert } from '../../database/queries/entreprises'
 import { Knex } from 'knex'
 import TitresAdministrationsGestionnaires from '../../database/models/titres-administrations-gestionnaires'
+import { toCaminoDate } from 'camino-common/src/date'
 
 let knex: Knex<any, unknown[]>
 beforeAll(async () => {
@@ -31,19 +32,54 @@ beforeAll(async () => {
   await createTitreWithEtapes(
     'titre1',
     [
-      { typeId: 'mfr', statutId: 'fai', date: '2022-01-01', ordre: 0 },
-      { typeId: 'mdp', statutId: 'fai', date: '2022-02-01', ordre: 1 },
-      { typeId: 'pfd', statutId: 'fai', date: '2022-02-10', ordre: 2 },
-      { typeId: 'mcp', statutId: 'com', date: '2022-03-10', ordre: 3 }
+      {
+        typeId: 'mfr',
+        statutId: 'fai',
+        date: toCaminoDate('2022-01-01'),
+        ordre: 0
+      },
+      {
+        typeId: 'mdp',
+        statutId: 'fai',
+        date: toCaminoDate('2022-02-01'),
+        ordre: 1
+      },
+      {
+        typeId: 'pfd',
+        statutId: 'fai',
+        date: toCaminoDate('2022-02-10'),
+        ordre: 2
+      },
+      {
+        typeId: 'mcp',
+        statutId: 'com',
+        date: toCaminoDate('2022-03-10'),
+        ordre: 3
+      }
     ],
     entreprises
   )
   await createTitreWithEtapes(
     'titre2',
     [
-      { typeId: 'mfr', statutId: 'fai', date: '2022-01-01', ordre: 0 },
-      { typeId: 'mdp', statutId: 'fai', date: '2022-02-01', ordre: 1 },
-      { typeId: 'pfd', statutId: 'fai', date: '2022-02-10', ordre: 2 }
+      {
+        typeId: 'mfr',
+        statutId: 'fai',
+        date: toCaminoDate('2022-01-01'),
+        ordre: 0
+      },
+      {
+        typeId: 'mdp',
+        statutId: 'fai',
+        date: toCaminoDate('2022-02-01'),
+        ordre: 1
+      },
+      {
+        typeId: 'pfd',
+        statutId: 'fai',
+        date: toCaminoDate('2022-02-10'),
+        ordre: 2
+      }
     ],
     entreprises
   )

@@ -22,6 +22,7 @@ import { titreContenuFormat } from '../../database/models/_format/titre-contenu'
 import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { newDemarcheId } from '../../database/models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 
 test('teste EtatsValidate', () => {
   const octEtatsValidate = demarcheEtatsValidate('ren', 'arm', '2021-01-01')
@@ -104,7 +105,7 @@ export const demarcheEtatsValidate = (
     const demarcheDefinitions = demarcheDefinitionFind(
       titreTypeId,
       demarcheTypeId,
-      [{ typeId: 'mfr', date }],
+      [{ typeId: 'mfr', date: toCaminoDate(date) }],
       newDemarcheId()
     )
     if (!isDemarcheDefinitionRestriction(demarcheDefinitions)) {

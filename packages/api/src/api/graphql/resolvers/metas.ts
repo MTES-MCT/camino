@@ -45,6 +45,7 @@ import {
 import { CaminoMachines } from '../../../business/rules-demarches/machines'
 import { phasesStatuts as staticPhasesStatuts } from 'camino-common/src/static/phasesStatuts'
 import { sortedReferencesTypes } from 'camino-common/src/static/referencesTypes'
+import { CaminoDate } from 'camino-common/src/date'
 
 export const devises = async () => devisesGet()
 
@@ -130,7 +131,7 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
   machine: CaminoMachines,
   titreDemarche: Pick<TitresDemarches, 'etapes'>,
   titreEtapeId: string | undefined,
-  date: string,
+  date: CaminoDate,
   etapesTypes: IEtapeType[]
 ): IEtapeType[] => {
   if (!titreDemarche.etapes) throw new Error('les étapes ne sont pas chargées')
@@ -172,7 +173,7 @@ const demarcheEtapesTypesGet = async (
     titreDemarcheId,
     titreEtapeId,
     date
-  }: { titreDemarcheId: string; date: string; titreEtapeId?: string },
+  }: { titreDemarcheId: string; date: CaminoDate; titreEtapeId?: string },
   { fields }: { fields: IFields },
   userId?: string
 ) => {
@@ -270,7 +271,7 @@ export const etapesTypes = async (
   }: {
     titreDemarcheId?: string
     titreEtapeId?: string
-    date?: string
+    date?: CaminoDate
     travaux?: boolean
   },
   context: IToken,

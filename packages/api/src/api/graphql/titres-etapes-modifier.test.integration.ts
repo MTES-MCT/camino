@@ -11,6 +11,7 @@ import {
   Administrations
 } from 'camino-common/src/static/administrations'
 import { Role } from 'camino-common/src/roles'
+import { toCaminoDate } from 'camino-common/src/date'
 
 jest.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -69,7 +70,7 @@ async function etapeCreate() {
       typeId: 'mfr',
       statutId: 'fai',
       titreDemarcheId: titreDemarche.id,
-      date: '2018-01-01'
+      date: toCaminoDate('2018-01-01')
     },
     userSuper,
     titre.id

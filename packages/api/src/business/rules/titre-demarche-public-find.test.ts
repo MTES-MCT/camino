@@ -3,6 +3,7 @@ import { ITitreDemarche, ITitreEtape } from '../../types'
 import { titreDemarchePublicFind } from './titre-demarche-public-find'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { newDemarcheId } from '../../database/models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   etapesProps.map(
@@ -575,7 +576,7 @@ describe("publicité d'une démarche", () => {
       ordre: 3,
       etapes: [
         {
-          date: '2020-06-01',
+          date: toCaminoDate('2020-06-01'),
           typeId: 'mfr',
           statutId: 'fai',
           id: 'id',
@@ -592,7 +593,7 @@ describe("publicité d'une démarche", () => {
       ordre: 2,
       etapes: [
         {
-          date: '2020-01-01',
+          date: toCaminoDate('2020-01-01'),
           typeId: 'dex',
           statutId: 'acc',
           id: 'id',
@@ -617,7 +618,7 @@ describe("publicité d'une démarche", () => {
           typeId: 'dex',
           statutId: 'acc',
           ordre: 1,
-          date: '1014-04-01',
+          date: toCaminoDate('1014-04-01'),
           dateDebut: null,
           dateFin: '2020-04-01'
         }

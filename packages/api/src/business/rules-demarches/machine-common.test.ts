@@ -1,3 +1,4 @@
+import { toCaminoDate } from 'camino-common/src/date'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { ITitreEtape } from '../../types'
 import { toMachineEtapes } from './machine-common'
@@ -10,7 +11,7 @@ describe('toMachineEtapes', () => {
           id: 'id',
           typeId: 'mfr',
           statutId: 'fai',
-          date: '2022-01-01',
+          date: toCaminoDate('2022-01-01'),
           titreDemarcheId: newDemarcheId('idDemarche')
         }
       ])
@@ -28,7 +29,7 @@ describe('toMachineEtapes', () => {
           id: 'id',
           typeId: 'mfr',
           statutId: 'fai',
-          date: '2022-01-01',
+          date: toCaminoDate('2022-01-01'),
           titreDemarcheId: newDemarcheId('idDemarche'),
           contenu: { arm: { mecanise: true } }
         }

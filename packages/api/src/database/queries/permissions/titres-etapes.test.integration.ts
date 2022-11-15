@@ -6,6 +6,7 @@ import { userSuper } from '../../user-super'
 import TitresEtapes from '../../models/titres-etapes'
 import { titresEtapesQueryModify } from './titres-etapes'
 import TitresDemarches from '../../models/titres-demarches'
+import { toCaminoDate } from 'camino-common/src/date'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -46,7 +47,7 @@ describe('titresEtapesQueryModify', () => {
       await TitresEtapes.query().insert([
         {
           id: titreEtapeId,
-          date: '2022-03-09',
+          date: toCaminoDate('2022-03-09'),
           typeId: 'mfr',
           statutId: 'aco',
           titreDemarcheId,
@@ -54,7 +55,7 @@ describe('titresEtapesQueryModify', () => {
         },
         {
           id: archivedTitreEtapeId,
-          date: '2022-03-09',
+          date: toCaminoDate('2022-03-09'),
           typeId: 'mfr',
           statutId: 'aco',
           titreDemarcheId,

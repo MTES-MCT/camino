@@ -11,6 +11,7 @@ import {
 import TitresEtapes from '../../models/titres-etapes'
 import { Role } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
+import { toCaminoDate } from 'camino-common/src/date'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -129,7 +130,7 @@ describe('titresDemarchesQueryModify', () => {
 
         await TitresEtapes.query().insert({
           titreDemarcheId,
-          date: '2020-12-23',
+          date: toCaminoDate('2020-12-23'),
           typeId: 'mfr',
           statutId: 'fai'
         })

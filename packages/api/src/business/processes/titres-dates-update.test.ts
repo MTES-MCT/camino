@@ -4,6 +4,7 @@ import { titreDateDebutFind } from '../rules/titre-date-debut-find'
 import { titreDateDemandeFind } from '../rules/titre-date-demande-find'
 import { titresGet } from '../../database/queries/titres'
 import Titres from '../../database/models/titres'
+import { toCaminoDate } from 'camino-common/src/date'
 
 jest.mock('../../database/queries/titres', () => ({
   titreUpdate: jest.fn().mockResolvedValue(true),
@@ -34,7 +35,7 @@ describe("dates d'un titre", () => {
     titresGetMock.mockResolvedValue([{ id: 'titre-id' }] as Titres[])
     titreDateFinFindMock.mockReturnValue('2019-01-01')
     titreDateDebutFindMock.mockReturnValue('2018-01-01')
-    titreDateDemandeFindMock.mockReturnValue('2017-01-01')
+    titreDateDemandeFindMock.mockReturnValue(toCaminoDate('2017-01-01'))
 
     const titresDatesUpdated = await titresDatesUpdate()
 

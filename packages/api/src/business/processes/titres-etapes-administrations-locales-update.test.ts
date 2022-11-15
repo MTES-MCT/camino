@@ -8,6 +8,7 @@ import {
 import { ICommune, ITitreEtape } from '../../types'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { toCaminoDate } from 'camino-common/src/date'
 
 jest.mock('../../database/queries/titres-etapes', () => ({
   titresEtapesGet: jest.fn()
@@ -35,7 +36,7 @@ describe("administrations d'une étape", () => {
         id: 'h-cx-courdemanges-1988-oct01-dpu01',
         titreDemarcheId: newDemarcheId(),
         statutId: 'fai',
-        date: '2022-01-01',
+        date: toCaminoDate('2022-01-01'),
         typeId: 'dpu',
         communes: [
           {
@@ -49,7 +50,7 @@ describe("administrations d'une étape", () => {
         id: 'h-cx-courdemanges-1988-oct01-dpu01',
         titreDemarcheId: newDemarcheId(),
         statutId: 'fai',
-        date: '2022-01-01',
+        date: toCaminoDate('2022-01-01'),
         typeId: 'aac',
         communes: [
           {
@@ -91,7 +92,7 @@ describe("administrations d'une étape", () => {
       id: 'h-cx-courdemanges-1988-oct01-dpu01',
       titreDemarcheId: newDemarcheId(),
       statutId: 'fai',
-      date: '2022-01-01',
+      date: toCaminoDate('2022-01-01'),
       typeId: 'dpu',
       communes: [],
       administrationsLocales: [ADMINISTRATION_IDS['DREAL - BRETAGNE']]
@@ -110,7 +111,7 @@ describe("administrations d'une étape", () => {
   test("supprime une administration si l'étape ne la contient plus dans ses communes", async () => {
     const titreEtape: ITitreEtape = {
       statutId: 'fai',
-      date: '2022-01-01',
+      date: toCaminoDate('2022-01-01'),
       id: 'h-cx-courdemanges-1988-oct01-dpu01',
       titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
       typeId: 'dpu',

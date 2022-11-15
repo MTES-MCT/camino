@@ -11,6 +11,7 @@ import { documentCreate, documentGet } from '../documents'
 import { etapeTypeDocumentTypeUsedCheck } from './documents'
 import { Knex } from 'knex'
 import { newDemarcheId } from '../../models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -46,7 +47,7 @@ describe('documentSupprimer', () => {
         id: 'titreEtapeId',
         typeId: 'dpu',
         titreDemarcheId: newDemarcheId('titreDemarcheId'),
-        date: '',
+        date: toCaminoDate('2022-01-01'),
         statutId
       })
 
@@ -135,7 +136,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
       id: 'titreEtapeId',
       typeId: 'dpu',
       titreDemarcheId: newDemarcheId('titreDemarcheId'),
-      date: '',
+      date: toCaminoDate('2022-01-01'),
       statutId: 'aco'
     })
 
@@ -168,7 +169,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
       id: 'titreEtapeId',
       typeId: 'dpu',
       titreDemarcheId: newDemarcheId('titreDemarcheId'),
-      date: '',
+      date: toCaminoDate('2022-01-01'),
       statutId: 'aco'
     })
 

@@ -7,6 +7,7 @@ import {
 } from 'camino-common/src/static/administrations'
 import { ITitre } from '../../types'
 import { newDemarcheId } from '../../database/models/_format/id-create'
+import { toCaminoDate } from 'camino-common/src/date'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -77,7 +78,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 8,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: '2020-02-02'
+          date: toCaminoDate('2020-02-02')
         },
         {
           id: 'titre-id-demarche-id-eof',
@@ -85,7 +86,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 7,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: '2020-02-02'
+          date: toCaminoDate('2020-02-02')
         },
         {
           id: 'titre-id-demarche-id-edm',
@@ -93,7 +94,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 6,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: '2020-02-02'
+          date: toCaminoDate('2020-02-02')
         },
         {
           id: 'titre-id-demarche-id-ede',
@@ -101,7 +102,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 5,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: '2020-02-02'
+          date: toCaminoDate('2020-02-02')
         },
         {
           id: 'titre-id-demarche-id-pfd',
@@ -109,7 +110,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 4,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: '2020-02-02'
+          date: toCaminoDate('2020-02-02')
         },
         {
           id: 'titre-id-demarche-id-pfc',
@@ -117,7 +118,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 3,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: '2020-02-02'
+          date: toCaminoDate('2020-02-02')
         },
         {
           id: 'titre-id-demarche-id-vfd',
@@ -125,7 +126,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 2,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: '2020-02-02'
+          date: toCaminoDate('2020-02-02')
         },
         {
           id: 'titre-id-demarche-id-vfc',
@@ -133,7 +134,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 1,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: '2020-02-02'
+          date: toCaminoDate('2020-02-02')
         },
         {
           id: 'titre-id-demarche-id-dpu',
@@ -141,7 +142,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 0,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: '2020-02-02',
+          date: toCaminoDate('2020-02-02'),
           administrationsLocales: ['dea-guyane-01']
         }
       ]
@@ -163,7 +164,7 @@ const titreWithActiviteGrp: ITitre = {
     {
       titreId: 'titre-id',
       id: 'titre-id-grp-2020-03',
-      date: '2020-10-01',
+      date: toCaminoDate('2020-10-01'),
       typeId: 'grp',
       statutId: 'abs',
       periodeId: 3,
@@ -203,7 +204,7 @@ const titreWithActiviteGrp: ITitre = {
           ordre: 0,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: '2020-02-02',
+          date: toCaminoDate('2020-02-02'),
           administrationsLocales: ['dea-guyane-01']
         }
       ]
@@ -223,7 +224,7 @@ const titreActivites: ITitre = {
       id: 'titre-id-activites-oct',
       titreId: 'titre-id',
       typeId: 'grp',
-      date: '2020-01-01',
+      date: toCaminoDate('2020-01-01'),
       statutId: 'dep',
       periodeId: 1,
       annee: 2020,
@@ -252,7 +253,7 @@ const titreActivites: ITitre = {
       id: 'titre-id-activites-pro',
       titreId: 'titre-id',
       typeId: 'gra',
-      date: '2020-01-01',
+      date: toCaminoDate('2020-01-01'),
       statutId: 'dep',
       periodeId: 1,
       annee: 2020,
