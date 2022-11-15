@@ -6,10 +6,8 @@
 import {
   Chart,
   LinearScale,
-  BarController,
-  CategoryScale,
-  BarElement,
   LineController,
+  CategoryScale,
   PointElement,
   LineElement,
   Filler,
@@ -17,20 +15,18 @@ import {
   Tooltip,
   Title
 } from 'chart.js'
-import { ref, onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 Chart.register(
   LinearScale,
-  BarController,
-  CategoryScale,
-  BarElement,
   LineController,
+  CategoryScale,
   PointElement,
   LineElement,
   Filler,
   Legend,
-  Tooltip,
-  Title
+  Title,
+  Tooltip
 )
 
 const props = defineProps<{
@@ -38,8 +34,9 @@ const props = defineProps<{
   chartConfiguration: any
 }>()
 
-const myCanvas = ref<HTMLCanvasElement | null>(null)
 let chart: Chart | null = null
+const myCanvas = ref<HTMLCanvasElement | null>(null)
+
 onMounted(() => {
   const context = myCanvas.value?.getContext('2d')
   if (!context) {

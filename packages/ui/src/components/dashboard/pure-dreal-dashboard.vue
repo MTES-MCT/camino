@@ -6,7 +6,10 @@
       </div>
     </div>
     <div v-if="isDGTM" class="mb-l">
-      <h3>Statistiques</h3>
+      <h3>
+        Statistiques
+        <router-link :to="{ name: 'Stats DGTM' }"> Voir plus </router-link>
+      </h3>
       <PureDGTMStats :getDgtmStats="getDgtmStats" />
     </div>
     <div class="line-neutral width-full mb-l"></div>
