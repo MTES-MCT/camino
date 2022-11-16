@@ -33,10 +33,9 @@
         v-model:etape="etape"
         :demarcheTypeId="demarcheTypeId"
         :domaineId="domaineId"
-        :titreTypeId="titreTypeId"
-        :userIsAdmin="userIsAdmin"
-        :userIsSuper="userIsSuper"
-        :substances="substances"
+        :titreTypeTypeId="titreTypeId"
+        :user="user"
+        :entreprises="entreprises"
         @complete-update="fondamentalesCompleteUpdate"
       />
     </Accordion>
@@ -108,7 +107,7 @@
       <JustificatifsEdit
         v-model:justificatifs="etape.justificatifs"
         :justificatifsTypes="etape.type.justificatifsTypes"
-        :entreprises="entreprises"
+        :entreprises="titulairesAndAmodiataires"
         @complete-update="justificatifsCompleteUpdate"
       />
     </Accordion>
@@ -139,7 +138,6 @@ import SectionsEdit from './sections-edit.vue'
 import DocumentsEdit from '../document/multi-edit.vue'
 import JustificatifsEdit from './justificatifs-edit.vue'
 import DecisionsAnnexesEdit from './decisions-annexes-edit.vue'
-import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
 
 export default {
   components: {
@@ -202,10 +200,14 @@ export default {
     },
 
     entreprises() {
+      return this.$store.state.titreEtapeEdition.metas.entreprises
+    },
+
+    titulairesAndAmodiataires() {
       const titulaireIds = this.etape.titulaires.map(({ id }) => id)
       const amodiatairesIds = this.etape.amodiataires.map(({ id }) => id)
 
-      return this.$store.state.titreEtapeEdition.metas.entreprises.filter(
+      return this.entreprises.filter(
         ({ id }) => titulaireIds.includes(id) || amodiatairesIds.includes(id)
       )
     },
@@ -338,12 +340,6 @@ export default {
 
     userIsSuper() {
       return this.$store.getters['user/userIsSuper']
-    },
-
-    substances() {
-      return SubstancesLegales.filter(sl =>
-        sl.domaineIds.includes(this.domaineId)
-      )
     }
   },
 

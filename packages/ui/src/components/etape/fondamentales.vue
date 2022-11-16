@@ -153,7 +153,13 @@ import TagList from '../_ui/tag-list.vue'
 import Tag from '../_ui/tag.vue'
 import PropDuree from './prop-duree.vue'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
-import { Etape } from 'camino-common/src/etape'
+import { EtapeEntreprise, EtapeFondamentale } from 'camino-common/src/etape'
+import { Entreprise } from 'camino-common/src/entreprise'
 
-defineProps<{ etape: Etape }>()
+defineProps<{
+  etape: Omit<EtapeFondamentale, 'titulaires' | 'amodiataires'> & {
+    titulaires: (Entreprise & EtapeEntreprise)[]
+    amodiataires: (Entreprise & EtapeEntreprise)[]
+  }
+}>()
 </script>

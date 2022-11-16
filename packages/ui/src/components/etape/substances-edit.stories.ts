@@ -1,11 +1,24 @@
 import SubstancesEdit from './substances-edit.vue'
 import { Meta, Story } from '@storybook/vue3'
+import { toCaminoDate } from 'camino-common/src/date'
+import {
+  EtapeWithIncertitudesAndHeritage,
+  EtapeFondamentale
+} from 'camino-common/src/etape'
+import { DomaineId } from 'camino-common/src/static/domaines'
 import {
   SubstanceLegaleId,
   SubstancesLegale
 } from 'camino-common/src/static/substancesLegales'
-import { DomaineId } from 'camino-common/src/static/domaines'
-import { HeritageProp } from 'camino-common/src/etape'
+
+type Props = {
+  substances: (SubstanceLegaleId | undefined)[]
+  heritageProps: EtapeWithIncertitudesAndHeritage<
+    Pick<EtapeFondamentale, 'substances' | 'type' | 'date'>
+  >['heritageProps']
+  incertitudes: { substances: boolean }
+  domaineId: DomaineId
+}
 
 const meta: Meta = {
   title: 'Components/Etape/SubstancesEdit',
@@ -13,13 +26,6 @@ const meta: Meta = {
   argTypes: {}
 }
 export default meta
-
-type Props = {
-  substances: (SubstanceLegaleId | undefined)[]
-  heritageProps: { substances: HeritageProp }
-  incertitudes: { substances: boolean }
-  domaineId: DomaineId
-}
 
 const Template: Story<Props> = (args: Props) => ({
   components: { SubstancesEdit },
@@ -31,40 +37,25 @@ const Template: Story<Props> = (args: Props) => ({
   }),
   template: `<SubstancesEdit  v-bind="args" :substances='substances'/>`
 })
-const etapeHeritage = {
+const heritageProps: Props['heritageProps']['substances'] = {
+  actif: true,
   etape: {
-    duree: 4,
-    dateFin: '2020-01-01',
-    dateDebut: '2020-01-01',
-    date: '2020-01-01',
-    titulaires: [],
-    amodiataires: [],
-    type: { nom: 'Demande' },
-    substances: [SubstancesLegale.auru.id],
     incertitudes: { substances: true },
-    contenu: {}
+    substances: [SubstancesLegale.auru.id],
+    date: toCaminoDate('2020-01-01'),
+    type: { nom: 'Demande', id: 'aac' }
   }
 }
 export const SansHeritage = Template.bind({})
 SansHeritage.args = {
   domaineId: 'm',
-  heritageProps: {
-    substances: {
-      actif: false,
-      ...etapeHeritage
-    }
-  },
-  incertitudes: { substances: true }
+  heritageProps: { substances: { ...heritageProps, actif: false } },
+  incertitudes: { substances: false }
 }
 
 export const AvecHeritage = Template.bind({})
 AvecHeritage.args = {
   domaineId: 'm',
-  heritageProps: {
-    substances: {
-      actif: true,
-      ...etapeHeritage
-    }
-  },
+  heritageProps: { substances: { ...heritageProps } },
   incertitudes: { substances: true }
 }

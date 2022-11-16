@@ -179,8 +179,6 @@ const pointsBuild = (groupes, geoSystemeIds, geoSystemeOpposableId) => {
   return points
 }
 
-const dureeBuild = (ans, mois) => (ans ? ans * 12 : 0) + (mois || 0)
-
 const etapeSaveFormat = etape => {
   const decisionsAnnexesContenu = etape.decisionsAnnexesContenu
   etape = JSON.parse(JSON.stringify(etape))
@@ -211,12 +209,6 @@ const etapeSaveFormat = etape => {
   }
 
   delete etape.decisionsAnnexesSections
-
-  if (etape.duree && (etape.duree.ans || etape.duree.mois)) {
-    etape.duree = dureeBuild(etape.duree.ans, etape.duree.mois)
-  } else {
-    etape.duree = null
-  }
 
   const props = ['date', 'dateDebut', 'dateFin', 'surface', 'duree']
 
@@ -281,4 +273,4 @@ const etapeSaveFormat = etape => {
   return etape
 }
 
-export { etapeSaveFormat, pointsBuild, dureeBuild }
+export { etapeSaveFormat, pointsBuild }

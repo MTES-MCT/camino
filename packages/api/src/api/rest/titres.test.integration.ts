@@ -10,13 +10,14 @@ import { entreprisesUpsert } from '../../database/queries/entreprises'
 import { Knex } from 'knex'
 import TitresAdministrationsGestionnaires from '../../database/models/titres-administrations-gestionnaires'
 import { toCaminoDate } from 'camino-common/src/date'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
 
 let knex: Knex<any, unknown[]>
 beforeAll(async () => {
   knex = await dbManager.populateDb()
 
   const entreprises = await entreprisesUpsert([
-    { id: 'plop', nom: 'Mon Entreprise' }
+    { id: newEntrepriseId('plop'), nom: 'Mon Entreprise' }
   ])
   await titreCreate(
     {

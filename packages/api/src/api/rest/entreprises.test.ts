@@ -1,10 +1,15 @@
 import { bodyBuilder, responseExtractor } from './entreprises'
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 import Titres from '../../database/models/titres'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
 
-const entreprise = { id: 'entrepriseId', categorie: 'PME', nom: 'ma companie' }
+const entreprise = {
+  id: newEntrepriseId('entrepriseId'),
+  categorie: 'PME',
+  nom: 'ma companie'
+}
 const entreprise2 = {
-  id: 'entrepriseId2',
+  id: newEntrepriseId('entrepriseId2'),
   categorie: 'PME',
   nom: 'une compagnie non concernée'
 }

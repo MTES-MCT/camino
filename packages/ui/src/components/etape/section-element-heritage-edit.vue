@@ -4,16 +4,6 @@
     <div v-else>
       <slot v-if="hasHeritage" name="read" :heritagePropEtape="prop.etape" />
       <div v-else class="border p-s mb-s">Non renseigné</div>
-      <div class="mb-s">
-        <Tag
-          v-if="
-            prop.etape.incertitudes && prop.etape.incertitudes[props.propId]
-          "
-          :mini="true"
-          color="bg-info"
-          >Incertain
-        </Tag>
-      </div>
       <p class="h6 italic mb-s">
         Hérité de :
         <span class="cap-first">{{ prop.etape.type.nom }}</span> ({{
@@ -32,22 +22,17 @@
   </div>
 </template>
 
-<script
-  setup
-  lang="ts"
-  generic="P extends EtapeHeritageProps, T extends EtapeHeritage"
->
-// TODO 2022-11-16 normalement T devrait étendre EtapeHeritage<P>, mais il y a un bug avec vite qui empêche de lancer l'appli en mode dev
+<script setup lang="ts">
 import { hasValeurCheck } from '@/utils/contenu'
-import Tag from '@/components/_ui/tag.vue'
 import { dateFormat } from '@/utils'
 import { computed } from 'vue'
-import { HeritageProp } from 'camino-common/src/etape'
-import { EtapeHeritageProps, EtapeHeritage } from './heritage-edit.types'
+import { Etape, HeritageProp } from 'camino-common/src/etape'
 
+// TODO 2022-11-14 surement à merger avec heritage-edit.vue
 const props = defineProps<{
-  prop: HeritageProp<T>
-  propId: P
+  prop: HeritageProp<Etape>
+  propId: string
+  sectionId: string
 }>()
 
 const buttonText = computed<string>(() =>
@@ -55,6 +40,11 @@ const buttonText = computed<string>(() =>
 )
 
 const hasHeritage = computed<boolean>(() => {
-  return hasValeurCheck(props.propId, props.prop.etape)
+  const contenu =
+    props.prop.etape &&
+    props.prop.etape.contenu &&
+    props.prop.etape.contenu[props.sectionId]
+
+  return hasValeurCheck(props.propId, contenu)
 })
 </script>

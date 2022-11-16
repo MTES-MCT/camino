@@ -1,11 +1,7 @@
 <template>
   <div>
     <h3 class="mb-s">Substances</h3>
-    <HeritageEdit
-      v-model:prop="heritageProps.substances"
-      propId="substances"
-      :isArray="true"
-    >
+    <HeritageEdit v-model:prop="heritageProps.substances" propId="substances">
       <template #write>
         <div v-for="(_substance, n) in substances" :key="n">
           <div class="flex mb-s">
@@ -86,14 +82,20 @@ import HeritageEdit from '@/components/etape/heritage-edit.vue'
 import TagList from '@/components/_ui/tag-list.vue'
 import Icon from '@/components/_ui/icon.vue'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import { HeritageProp } from 'camino-common/src/etape'
+import {
+  EtapeFondamentale,
+  EtapeWithIncertitudesAndHeritage
+} from 'camino-common/src/etape'
 
-const props = defineProps<{
+export type Props = {
   substances: (SubstanceLegaleId | undefined)[]
-  heritageProps: { substances: HeritageProp }
+  heritageProps: EtapeWithIncertitudesAndHeritage<
+    Pick<EtapeFondamentale, 'substances' | 'type' | 'date'>
+  >['heritageProps']
   incertitudes: { substances: boolean }
   domaineId: DomaineId
-}>()
+}
+const props = defineProps<Props>()
 
 const substancesLength = computed(
   () => props.substances?.filter(substanceId => substanceId).length
@@ -106,9 +108,11 @@ const substancesByDomaine = computed(() =>
 )
 
 const substanceNoms = computed<string[]>(() => {
-  return props.heritageProps.substances.etape.substances
-    .filter((substanceId): substanceId is SubstanceLegaleId => !!substanceId)
-    .map(substanceId => SubstancesLegale[substanceId].nom)
+  return (
+    props.heritageProps.substances.etape?.substances
+      .filter((substanceId): substanceId is SubstanceLegaleId => !!substanceId)
+      .map(substanceId => SubstancesLegale[substanceId].nom) || []
+  )
 })
 
 const substanceAdd = () => {

@@ -11,7 +11,6 @@ describe('etapeEditFormat', () => {
       })
     ).toEqual({
       id: 'etape-id',
-      duree: { ans: null, mois: null },
       amodiataires: [],
       titulaires: [],
       geoSystemeIds: [],
@@ -48,7 +47,6 @@ describe('etapeEditFormat', () => {
       })
     ).toEqual({
       id: 'etape-id',
-      duree: { ans: null, mois: null },
       amodiataires: [],
       titulaires: [],
       geoSystemeIds: [GEO_SYSTEME_IDS.WGS84],
@@ -138,7 +136,7 @@ describe('etapeEditFormat', () => {
       id: 'etape-id',
       type: { id: 'etape-type-id' },
       statutId: 'etape-statut-id',
-      duree: { ans: 20, mois: 0 },
+      duree: 240,
       amodiataires: [],
       titulaires: [{ id: 'titulaire-id', operateur: undefined }],
       geoSystemeIds: [GEO_SYSTEME_IDS.WGS84],

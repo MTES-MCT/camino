@@ -61,7 +61,7 @@ export type Props<K, T extends K> = {
   items: T[]
   overrideItems?: K[]
   minInputLength: number
-  itemChipLabel: (key: K) => string
+  itemChipLabel: (key: T) => string
   itemKey: (key: K) => string
 }
 

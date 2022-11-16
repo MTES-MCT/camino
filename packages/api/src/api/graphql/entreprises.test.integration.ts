@@ -20,6 +20,7 @@ import {
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { toCaminoDate } from 'camino-common/src/date'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
 
 console.info = jest.fn()
 console.error = jest.fn()
@@ -235,7 +236,7 @@ describe('entreprise', () => {
   const entrepriseQuery = queryImport('entreprise')
 
   test('un document d’entreprise lié à une étape est non supprimable et non modifiable (super)', async () => {
-    const entrepriseId = 'entreprise-id'
+    const entrepriseId = newEntrepriseId('entreprise-id')
     await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
 
     const titre = await titreCreate(
@@ -287,7 +288,7 @@ describe('entreprise', () => {
   })
 
   test('un document d’entreprise lié à aucune étape est supprimable et modifiable (super)', async () => {
-    const entrepriseId = 'entreprise-id'
+    const entrepriseId = newEntrepriseId('entreprise-id')
     await entrepriseUpsert({ id: entrepriseId, nom: entrepriseId })
 
     const documentId = 'document-id'
@@ -317,7 +318,7 @@ describe('entreprises', () => {
     const entrepriseId = 'entreprise-id'
     for (let i = 0; i < 10; i++) {
       await entrepriseUpsert({
-        id: `${entrepriseId}-${i}`,
+        id: newEntrepriseId(`${entrepriseId}-${i}`),
         nom: `${entrepriseId}-${i}`,
         archive: i > 3
       })
