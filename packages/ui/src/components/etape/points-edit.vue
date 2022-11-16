@@ -16,7 +16,10 @@
           <Icon name="plus" size="M" class="flex-right" />
         </button>
 
-        <GeoSystemeEdit v-model:etape="etape" />
+        <GeoSystemeEdit
+          :etape="etape"
+          @update:etape="newValue => $emit('update:etape', newValue)"
+        />
 
         <div v-if="etape.geoSystemeIds.length" class="mb-s">
           <hr />
@@ -284,7 +287,7 @@ export default {
     events: { type: Object, default: () => ({ saveKeyUp: true }) },
     showTitle: { type: Boolean, default: true }
   },
-  emits: ['complete-update'],
+  emits: ['complete-update', 'update:etape'],
 
   computed: {
     pointsTotal() {

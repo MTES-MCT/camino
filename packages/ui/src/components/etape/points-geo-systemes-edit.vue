@@ -63,7 +63,7 @@ export default {
   props: {
     etape: { type: Object, default: () => ({}) }
   },
-
+  emits: ['update:etape'],
   computed: {
     geoSystemes() {
       return sortedGeoSystemes

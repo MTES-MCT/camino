@@ -46,6 +46,8 @@ export default {
     pointReferences: { type: Object, required: true }
   },
 
+  emits: ['update:pointReferences'],
+
   computed: {
     pointReference() {
       return this.pointReferences[this.geoSysteme.id]

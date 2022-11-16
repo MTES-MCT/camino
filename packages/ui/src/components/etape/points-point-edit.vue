@@ -43,6 +43,8 @@ export default {
     geoSystemeOpposableId: { type: String, required: true }
   },
 
+  emits: ['update:point'],
+
   computed: {
     geoSystemes() {
       return sortedGeoSystemes.filter(({ id }) =>

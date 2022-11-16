@@ -276,7 +276,8 @@ const props = defineProps<{
 }>()
 
 const emits = defineEmits<{
-  (e: 'complete-update', complete: boolean): void
+  (e: 'complete-update', complete: boolean): void,
+  (e: 'update:etape', etape: EtapeFondamentale): void,
 }>()
 
 const ans = ref<number>(
@@ -346,8 +347,14 @@ watch(
       etape.incertitudes.amodiataires = false
     }
 
-    if (!etape.substances?.length) {
-      etape.incertitudes.substances = false
+        if (!etape.substances?.length) {
+          etape.incertitudes.substances = false
+        }
+
+
+        this.$emit('update:etape', this.etape)
+      },
+      deep: true
     }
   },
   { deep: true }

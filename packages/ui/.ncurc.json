@@ -3,9 +3,6 @@
   "reject": [
     "graphql-react",
     "@uppy/core",
-    "@uppy/tus",
-    "@vitejs/plugin-vue",
-    "vite",
-    "@storybook/builder-vite"
+    "@uppy/tus"
   ]
 }

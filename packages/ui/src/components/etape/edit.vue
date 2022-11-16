@@ -10,11 +10,12 @@
       @toggle="toggle('type')"
     >
       <TypeEdit
-        v-model:etape="etape"
+        :etape="etape"
         :userIsAdmin="userIsAdmin"
         :etapesTypes="etapesTypes"
         :etapeType="etapeType"
         :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction"
+        @update:etape="newValue => $emit('update:etape', newValue)"
         @type-update="typeUpdate"
         @complete-update="typeCompleteUpdate"
       />
@@ -30,12 +31,13 @@
       @toggle="toggle('fondamentales')"
     >
       <FondamentalesEdit
-        v-model:etape="etape"
+        :etape="etape"
         :demarcheTypeId="demarcheTypeId"
         :domaineId="domaineId"
         :titreTypeTypeId="titreTypeId"
         :user="user"
         :entreprises="entreprises"
+        @update:etape="newValue => $emit('update:etape', newValue)"
         @complete-update="fondamentalesCompleteUpdate"
       />
     </Accordion>
@@ -50,9 +52,11 @@
       @toggle="toggle('points')"
     >
       <PointsEdit
-        v-model:etape="etape"
-        v-model:events="events"
+        :etape="etape"
+        :events="events"
         :showTitle="false"
+        @update:etape="newValue => $emit('update:etape', newValue)"
+        @update:events="newValue => $emit('update:events', newValue)"
         @complete-update="perimetreCompleteUpdate"
       />
     </Accordion>
@@ -67,8 +71,9 @@
       @toggle="toggle('sections')"
     >
       <SectionsEdit
-        v-model:etape="etape"
+        :etape="etape"
         :sections="etape.type.sections"
+        @update:etape="newValue => $emit('update:etape', newValue)"
         @complete-update="sectionsCompleteUpdate"
         @sections-update="sectionsUpdate"
       />
@@ -163,7 +168,7 @@ export default {
     documentPopupTitle: { type: String, required: true }
   },
 
-  emits: ['complete-update', 'type-complete-update', 'change'],
+  emits: ['complete-update', 'type-complete-update', 'change', 'update:etape'],
 
   data() {
     return {

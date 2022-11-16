@@ -106,8 +106,9 @@
 
     <div v-else-if="element.type === 'file'">
       <SectionElementFileEdit
-        v-model:contenu="contenu"
+        :contenu="contenu"
         :elementId="element.id"
+        @update:contenu="newValue => emits('update:contenu', newValue)"
       />
     </div>
   </div>
@@ -133,6 +134,8 @@ export default {
     element: { type: Object, required: true }
   },
 
+  emits: ['update:contenu'],
+
   computed: {
     valeurs() {
       return this.element.valeurs
@@ -154,6 +157,7 @@ export default {
         this.contenu[this.element.id] = []
       }
     }
+    this.$emit('update:contenu', this.contenu)
   }
 }
 </script>
