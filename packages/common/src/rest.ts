@@ -3,6 +3,7 @@
 // type the Return types of these routes
 export const CaminoRestRoutes = {
   statistiquesMinerauxMetauxMetropole: '/statistiques/minerauxMetauxMetropole',
+  statistiquesGuyane: '/statistiques/guyane',
   titresONF: '/titresONF',
   titresPTMG: '/titresPTMG',
   titresDREAL: '/titresDREAL',

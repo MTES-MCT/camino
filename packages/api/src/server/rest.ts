@@ -21,6 +21,7 @@ import {
 } from '../api/rest/utilisateurs'
 import {
   getDGTMStats,
+  getGuyaneStats,
   getMinerauxMetauxMetropolesStats
 } from '../api/rest/statistiques'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
@@ -138,6 +139,10 @@ rest.get(CaminoRestRoutes.titresDREAL, restCatcher(titresDREAL))
 rest.get(
   CaminoRestRoutes.statistiquesMinerauxMetauxMetropole,
   restCatcher(getMinerauxMetauxMetropolesStats)
+)
+rest.get(
+  CaminoRestRoutes.statistiquesGuyane,
+  restCatcher(getGuyaneStats)
 )
 rest.get(CaminoRestRoutes.statistiquesDGTM, restCatcher(getDGTMStats))
 rest.get('/demarches', restDownload(demarches))

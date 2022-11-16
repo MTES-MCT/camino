@@ -49,19 +49,27 @@ export const statistiquesGuyane = apiGraphQLFetch(gql`
       annees {
         annee
         titresArm {
-          quantite
+          demande
+          octroi
+          refus
           surface
         }
         titresPrm {
-          quantite
+          demande
+          octroi
+          refus
           surface
         }
         titresAxm {
-          quantite
+          demande
+          octroi
+          refus
           surface
         }
         titresCxm {
-          quantite
+          demande
+          octroi
+          refus
           surface
         }
         orNet

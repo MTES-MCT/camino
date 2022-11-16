@@ -6,6 +6,7 @@ import { titresGet } from '../../../database/queries/titres'
 import { titresActivitesGet } from '../../../database/queries/titres-activites'
 import { userSuper } from '../../../database/user-super'
 import { titresSurfaceIndexBuild } from './statistiques'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 const statistiquesGuyaneActivitesBuild = (
   sectionId: string,
@@ -45,22 +46,24 @@ type IStatsGuyaneTitresTypes =
   | 'titresCxm'
 
 const statistiquesGuyaneTitresBuild = (
-  titres: { id: string; typeId: string; surface: number }[]
-) =>
+  titres: { id: string; typeId: TitreTypeId; surface: number }[]
+): Record<string, {demande: number, octroi: number, refus: number, surface: number}> =>
   titres.reduce(
     (acc, titre) => {
       const id = camelcase(`titres-${titre.typeId}`) as IStatsGuyaneTitresTypes
 
-      acc[id].quantite++
+      acc[id].demande++
+      acc[id].octroi++
+      acc[id].refus++
       acc[id].surface += titre.surface
 
       return acc
     },
     {
-      titresArm: { quantite: 0, surface: 0 },
-      titresPrm: { quantite: 0, surface: 0 },
-      titresAxm: { quantite: 0, surface: 0 },
-      titresCxm: { quantite: 0, surface: 0 }
+      titresArm: { demande: 0, octroi: 0, refus: 0, surface: 0 },
+      titresPrm: { demande: 0, octroi: 0, refus: 0, surface: 0 },
+      titresAxm: { demande: 0, octroi: 0, refus: 0, surface: 0 },
+      titresCxm: { demande: 0, octroi: 0, refus: 0, surface: 0 }
     }
   )
 

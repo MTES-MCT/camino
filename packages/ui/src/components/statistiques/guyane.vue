@@ -204,12 +204,15 @@
           </div>
         </div>
       </div>
-      <h3>Autorisations de recherche</h3>
+      <LoadingElement v-slot="{ item }" :data="data">
+          {{ item }}
+      </LoadingElement>
+      <!-- <h3>Autorisations de recherche</h3>
       <hr />
       <div class="tablet-float-blobs clearfix">
         <div class="tablet-float-blob-1-3 mb-xl mt">
           <p class="h0 text-center">
-            {{ statistiques[anneeCurrent - 1].titresArm.quantite }}
+            {{ statistiques[anneeCurrent - 1].titresArm.octroi }}
           </p>
           <p>Autorisations de recherches octroyées l’an dernier</p>
         </div>
@@ -219,7 +222,7 @@
               statsBarFormat({
                 annees: statistiquesGuyane.annees,
                 id: 'titresArm',
-                bar: 'quantite',
+                bar: 'octroi',
                 line: 'surface',
                 labelX: 'annee',
                 labelBar: 'Autorisations de recherche',
@@ -235,7 +238,7 @@
       <div class="tablet-float-blobs clearfix">
         <div class="tablet-float-blob-1-3 mb-xl mt">
           <p class="h0 text-center">
-            {{ statistiques[anneeCurrent - 1].titresPrm.quantite }}
+            {{ statistiques[anneeCurrent - 1].titresPrm.octroi }}
           </p>
           <p>Permis exclusifs de recherches octroyés l’an dernier</p>
         </div>
@@ -245,7 +248,7 @@
               statsBarFormat({
                 annees: statistiquesGuyane.annees,
                 id: 'titresPrm',
-                bar: 'quantite',
+                bar: 'octroi',
                 line: 'surface',
                 labelX: 'annee',
                 labelBar: 'Permis de recherches',
@@ -261,7 +264,7 @@
       <div class="tablet-float-blobs clearfix">
         <div class="tablet-float-blob-1-3 mb-xl mt">
           <p class="h0 text-center">
-            {{ statistiques[anneeCurrent - 1].titresAxm.quantite }}
+            {{ statistiques[anneeCurrent - 1].titresAxm.octroi }}
           </p>
           <p>Autorisations d’exploitation octroyées l’an dernier</p>
         </div>
@@ -271,7 +274,7 @@
               statsBarFormat({
                 annees: statistiquesGuyane.annees,
                 id: 'titresAxm',
-                bar: 'quantite',
+                bar: 'octroi',
                 line: 'surface',
                 labelX: 'annee',
                 labelBar: 'Autorisations d\'exploitation',
@@ -287,7 +290,7 @@
       <div class="tablet-float-blobs clearfix">
         <div class="tablet-float-blob-1-3 mb-xl mt">
           <p class="h0 text-center">
-            {{ statistiques[anneeCurrent - 1].titresCxm.quantite }}
+            {{ statistiques[anneeCurrent - 1].titresCxm.octroi }}
           </p>
           <p>concessions octroyées l’an dernier</p>
         </div>
@@ -297,7 +300,7 @@
               statsBarFormat({
                 annees: statistiquesGuyane.annees,
                 id: 'titresCxm',
-                bar: 'quantite',
+                bar: 'octroi',
                 line: 'surface',
                 labelX: 'annee',
                 labelBar: 'Concessions',
@@ -307,23 +310,28 @@
             :suggestedMax="suggestedMaxTitres"
           />
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 
+
 <script>
+// FIXME 2022-11-16 migrate to script setup
+import { fetchWithJson } from '@/api/client-rest'
+import { CaminoRestRoutes } from 'camino-common/src/rest'
 import Loader from '../_ui/loader.vue'
 import GuyaneActivite from './guyane-activite.vue'
 import BarChart from '../_charts/bar.vue'
 import LineChart from '../_charts/line.vue'
+import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { suggestedMaxCalc, statsBarFormat, statsLineFormat } from './_utils'
 import numberFormat from '@/utils/number-format'
 
 export default {
   name: 'TableauBordGuyane',
 
-  components: { Loader, GuyaneActivite, LineChart, BarChart },
+  components: { Loader, GuyaneActivite, LineChart, BarChart, LoadingElement },
 
   data() {
     return {
@@ -333,6 +341,10 @@ export default {
   },
 
   computed: {
+    data() {
+      return fetchWithJson(CaminoRestRoutes.statistiquesGuyane, {})
+    },
+
     statistiquesGuyane() {
       return this.$store.state.statistiques.guyane
     },

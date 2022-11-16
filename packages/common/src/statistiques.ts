@@ -108,3 +108,10 @@ export interface StatistiquesMinerauxMetauxMetropole {
   prm: EvolutionTitres
   cxm: EvolutionTitres
 }
+
+export interface StatistiquesGuyane {
+  arm: EvolutionTitres
+  prm: EvolutionTitres
+  axm: EvolutionTitres
+  cxm: EvolutionTitres
+}

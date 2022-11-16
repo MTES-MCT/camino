@@ -63,7 +63,9 @@ type StatistiquesGuyaneAnnee {
 }
 
 type StatistiqueAnneeTitre {
-  quantite: Int
+  demande: Int
+  octroi: Int
+  refus: Int
   surface: Float
 }
 
