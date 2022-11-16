@@ -28,7 +28,7 @@ import { dateFormat } from '@/utils'
 import { computed } from 'vue'
 import { Etape, HeritageProp } from 'camino-common/src/etape'
 
-// TODO 2022-11-14 surement à merger avec heritage-edit.vue lorsqu’on pourra utiliser les generics sur les props
+// TODO 2022-11-14 surement à merger avec heritage-edit.vue
 const props = defineProps<{
   prop: HeritageProp<Etape>
   propId: string
