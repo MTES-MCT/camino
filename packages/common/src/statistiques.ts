@@ -109,9 +109,36 @@ export interface StatistiquesMinerauxMetauxMetropole {
   cxm: EvolutionTitres
 }
 
-export interface StatistiquesGuyane {
+export interface StatistiquesGuyaneRest {
   arm: EvolutionTitres
   prm: EvolutionTitres
   axm: EvolutionTitres
   cxm: EvolutionTitres
+}
+
+// TODO 2022-11-28 tout bouger dans l'appel rest
+export type StatistiquesGuyaneGraphQL = {
+  annee: CaminoAnnee
+  orNet: number
+  carburantConventionnel: number
+  carburantDetaxe: number
+  mercure: number
+  environnementCout: number
+  effectifs: number
+  activitesDeposesQuantite: number
+  activitesDeposesRatio: number
+}
+
+export type StatistiquesGuyane = {
+  rest: StatistiquesGuyaneRest
+  graphql: {
+    titresArm: number
+    titresPrm: number
+    surfaceExploitation: number
+    surfaceExploration: number
+    titresAxm: number
+    titresCxm: number
+    annees: StatistiquesGuyaneGraphQL[]
+  }
+  statistiques: Record<CaminoAnnee, StatistiquesGuyaneGraphQL>
 }

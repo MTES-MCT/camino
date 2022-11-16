@@ -3,7 +3,7 @@ import express from 'express'
 import {
   StatistiquesMinerauxMetauxMetropole,
   StatistiquesDGTM,
-  StatistiquesGuyane
+  StatistiquesGuyaneRest
 } from 'camino-common/src/statistiques'
 import { getMinerauxMetauxMetropolesStatsInside } from './metaux-metropole'
 
@@ -48,7 +48,7 @@ export const getMinerauxMetauxMetropolesStats = async (
 
 export const getGuyaneStats = async (
   _req: express.Request,
-  res: CustomResponse<StatistiquesGuyane>
+  res: CustomResponse<StatistiquesGuyaneRest>
 ): Promise<void> => {
   try {
     res.json(await getGuyaneStatsInside())

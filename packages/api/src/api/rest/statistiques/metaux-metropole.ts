@@ -30,9 +30,7 @@ import {
   substanceFiscaleToInput
 } from '../../../tools/api-openfisca'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
-import {
-  TITRES_TYPES_TYPES_IDS,
-} from 'camino-common/src/static/titresTypesTypes'
+import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
 import { evolutionTitres } from './evolution-titres'
 
 export const getMinerauxMetauxMetropolesStatsInside =
@@ -44,7 +42,10 @@ export const getMinerauxMetauxMetropolesStatsInside =
       TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES,
       departementsMetropole
     )
-    const cxmData = await evolutionTitres(TITRES_TYPES_TYPES_IDS.CONCESSION, departementsMetropole)
+    const cxmData = await evolutionTitres(
+      TITRES_TYPES_TYPES_IDS.CONCESSION,
+      departementsMetropole
+    )
 
     return {
       ...result,
@@ -476,5 +477,3 @@ const fiscaliteDetail = async (): Promise<FiscaliteParSubstanceParAnnee> => {
 
   return substances
 }
-
-

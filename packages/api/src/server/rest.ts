@@ -140,10 +140,7 @@ rest.get(
   CaminoRestRoutes.statistiquesMinerauxMetauxMetropole,
   restCatcher(getMinerauxMetauxMetropolesStats)
 )
-rest.get(
-  CaminoRestRoutes.statistiquesGuyane,
-  restCatcher(getGuyaneStats)
-)
+rest.get(CaminoRestRoutes.statistiquesGuyane, restCatcher(getGuyaneStats))
 rest.get(CaminoRestRoutes.statistiquesDGTM, restCatcher(getDGTMStats))
 rest.get('/demarches', restDownload(demarches))
 rest.get('/activites', restDownload(activites))

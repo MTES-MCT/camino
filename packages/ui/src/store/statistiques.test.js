@@ -5,7 +5,6 @@ import { createStore } from 'vuex'
 import { vi, describe, expect, beforeEach, test } from 'vitest'
 
 vi.mock('../api/statistiques', () => ({
-  statistiquesGuyane: vi.fn(),
   statistiquesGranulatsMarins: vi.fn()
 }))
 
@@ -15,14 +14,9 @@ describe('page de statistiques', () => {
   let actions
   let mutations
   let store
-  let statistiquesGuyane
   let statistiquesGranulatsMarins
 
   beforeEach(() => {
-    statistiquesGuyane = {
-      exemple: 'truc'
-    }
-
     statistiquesGranulatsMarins = {
       annees: [
         {
@@ -39,7 +33,6 @@ describe('page de statistiques', () => {
     }
 
     statistiques.state = {
-      guyane: {},
       granulatsMarins: {}
     }
 
@@ -58,18 +51,6 @@ describe('page de statistiques', () => {
 
     const app = createApp({})
     app.use(store)
-  })
-
-  test('récupère les statistiques de guyane', async () => {
-    const apiMock = api.statistiquesGuyane.mockResolvedValue(statistiquesGuyane)
-    await store.dispatch('statistiques/get', 'guyane')
-
-    expect(mutations.loadingAdd).toHaveBeenCalled()
-    expect(apiMock).toHaveBeenCalled()
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-    expect(store.state.statistiques.guyane).toEqual(statistiquesGuyane)
-
-    await store.dispatch('statistiques/get', 'pour avoir 100% de coverage')
   })
 
   test('récupère les statistiques sur les granulats marins', async () => {

@@ -1,10 +1,6 @@
-import {
-  statistiquesGuyane,
-  statistiquesGranulatsMarins
-} from '../api/statistiques'
+import { statistiquesGranulatsMarins } from '../api/statistiques'
 
 const state = {
-  guyane: {},
   granulatsMarins: {}
 }
 
@@ -14,9 +10,7 @@ const actions = {
       commit('loadingAdd', 'statistiquesGet', { root: true })
 
       let data
-      if (section === 'guyane') {
-        data = await statistiquesGuyane()
-      } else if (section === 'granulatsMarins') {
+      if (section === 'granulatsMarins') {
         data = await statistiquesGranulatsMarins()
       }
 
