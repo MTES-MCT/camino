@@ -1,5 +1,6 @@
 import { documentsRequiredAdd } from './documents'
 import { TODAY } from './index'
+import { describe, expect, test } from 'vitest'
 
 describe('documents', () => {
   test('retourne un tableau vide si il n’y a aucun doc à ajouter', () => {

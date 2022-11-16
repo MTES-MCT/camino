@@ -2,6 +2,7 @@ import titreEtapeEdition from './titre-etape-edition'
 import * as api from '../api/titres-etapes'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
 import {
   titreEtapeMetas,
@@ -15,17 +16,17 @@ import {
   titreEtapeEtapesTypes
 } from './__mocks__/titre-etape'
 
-jest.mock('../api/titres-etapes', () => ({
-  etape: jest.fn(),
-  etapeHeritage: jest.fn(),
-  titreEtapeMetas: jest.fn(),
-  titreEtapeEtapesTypes: jest.fn(),
-  etapeCreer: jest.fn(),
-  etapeModifier: jest.fn(),
-  etapeSupprimer: jest.fn()
+vi.mock('../api/titres-etapes', () => ({
+  etape: vi.fn(),
+  etapeHeritage: vi.fn(),
+  titreEtapeMetas: vi.fn(),
+  titreEtapeEtapesTypes: vi.fn(),
+  etapeCreer: vi.fn(),
+  etapeModifier: vi.fn(),
+  etapeSupprimer: vi.fn()
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe('étapes', () => {
   let store
@@ -46,21 +47,21 @@ describe('étapes', () => {
     }
 
     actions = {
-      pageError: jest.fn(),
-      apiError: jest.fn(),
-      reload: jest.fn(),
-      messageAdd: jest.fn(),
-      dateUpdate: jest.fn()
+      pageError: vi.fn(),
+      apiError: vi.fn(),
+      reload: vi.fn(),
+      messageAdd: vi.fn(),
+      dateUpdate: vi.fn()
     }
 
     mutations = {
-      loadingAdd: jest.fn(),
-      loadingRemove: jest.fn(),
-      apiError: jest.fn(),
-      popupLoad: jest.fn(),
-      popupMessagesRemove: jest.fn(),
-      popupClose: jest.fn(),
-      popupMessageAdd: jest.fn()
+      loadingAdd: vi.fn(),
+      loadingRemove: vi.fn(),
+      apiError: vi.fn(),
+      popupLoad: vi.fn(),
+      popupMessagesRemove: vi.fn(),
+      popupClose: vi.fn(),
+      popupMessageAdd: vi.fn()
     }
 
     store = createStore({
@@ -68,7 +69,7 @@ describe('étapes', () => {
       mutations,
       modules: {
         titreEtapeEdition,
-        titre: { namespaced: true, mutations: { open: jest.fn() } }
+        titre: { namespaced: true, mutations: { open: vi.fn() } }
       }
     })
 

@@ -1,11 +1,12 @@
 import { listeActionsBuild, listeMutations } from './_liste-build.js'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-console.info = jest.fn()
+console.info = vi.fn()
 
-const listeElementsGet = jest.fn()
-const listeMetasGet = jest.fn()
+const listeElementsGet = vi.fn()
+const listeMetasGet = vi.fn()
 
 describe('listes', () => {
   let store
@@ -31,6 +32,7 @@ describe('listes', () => {
   })
 
   beforeEach(() => {
+    vi.restoreAllMocks()
     liste.state = {
       elements: null,
       metas: {
@@ -55,14 +57,14 @@ describe('listes', () => {
     }
 
     mutations = {
-      loadingAdd: jest.fn(),
-      loadingRemove: jest.fn()
+      loadingAdd: vi.fn(),
+      loadingRemove: vi.fn()
     }
 
     actions = {
-      apiError: jest.fn(),
-      messageAdd: jest.fn(),
-      urlQueryUpdate: jest.fn()
+      apiError: vi.fn(),
+      messageAdd: vi.fn(),
+      urlQueryUpdate: vi.fn()
     }
 
     route = {
@@ -209,6 +211,7 @@ describe('listes sans metas', () => {
   liste.mutations = Object.assign({}, listeMutations)
 
   beforeEach(() => {
+    vi.restoreAllMocks()
     liste.state = {
       element: null,
       definitions: [
@@ -227,14 +230,14 @@ describe('listes sans metas', () => {
     }
 
     mutations = {
-      loadingAdd: jest.fn(),
-      loadingRemove: jest.fn()
+      loadingAdd: vi.fn(),
+      loadingRemove: vi.fn()
     }
 
     actions = {
-      apiError: jest.fn(),
-      messageAdd: jest.fn(),
-      urlQueryUpdate: jest.fn()
+      apiError: vi.fn(),
+      messageAdd: vi.fn(),
+      urlQueryUpdate: vi.fn()
     }
 
     route = {

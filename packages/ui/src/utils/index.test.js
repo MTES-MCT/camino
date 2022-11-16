@@ -6,6 +6,7 @@ import {
   elementsFormat,
   paramsBuild
 } from './index'
+import { describe, expect, test } from 'vitest'
 
 // dateFormat
 describe('dateFormat', () => {

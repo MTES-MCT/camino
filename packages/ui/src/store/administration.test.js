@@ -2,18 +2,19 @@ import administration from './administration'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
 import * as api from '../api/administrations'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('../api/administrations', () => ({
-  administration: jest.fn(),
-  administrationMetas: jest.fn(),
-  administrationModifier: jest.fn(),
-  administrationPermissionsMetas: jest.fn(),
-  administrationTitreTypeTitreStatutUpdate: jest.fn(),
-  administrationTitreTypeEtapeTypeUpdate: jest.fn(),
-  administrationActiviteTypeUpdate: jest.fn()
+vi.mock('../api/administrations', () => ({
+  administration: vi.fn(),
+  administrationMetas: vi.fn(),
+  administrationModifier: vi.fn(),
+  administrationPermissionsMetas: vi.fn(),
+  administrationTitreTypeTitreStatutUpdate: vi.fn(),
+  administrationTitreTypeEtapeTypeUpdate: vi.fn(),
+  administrationActiviteTypeUpdate: vi.fn()
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe("état de l'administration consultée", () => {
   let store
@@ -33,19 +34,19 @@ describe("état de l'administration consultée", () => {
       }
     }
     mutations = {
-      loadingAdd: jest.fn(),
-      loadingRemove: jest.fn(),
-      popupLoad: jest.fn(),
-      popupMessagesRemove: jest.fn(),
-      popupClose: jest.fn(),
-      popupMessageAdd: jest.fn(),
-      messageAdd: jest.fn()
+      loadingAdd: vi.fn(),
+      loadingRemove: vi.fn(),
+      popupLoad: vi.fn(),
+      popupMessagesRemove: vi.fn(),
+      popupClose: vi.fn(),
+      popupMessageAdd: vi.fn(),
+      messageAdd: vi.fn()
     }
     actions = {
-      pageError: jest.fn(),
-      apiError: jest.fn(),
-      reload: jest.fn(),
-      messageAdd: jest.fn()
+      pageError: vi.fn(),
+      apiError: vi.fn(),
+      reload: vi.fn(),
+      messageAdd: vi.fn()
     }
     store = createStore({
       modules: { administration },

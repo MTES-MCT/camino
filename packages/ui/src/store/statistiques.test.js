@@ -2,13 +2,14 @@ import statistiques from './statistiques'
 import * as api from '../api/statistiques'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('../api/statistiques', () => ({
-  statistiquesGuyane: jest.fn(),
-  statistiquesGranulatsMarins: jest.fn()
+vi.mock('../api/statistiques', () => ({
+  statistiquesGuyane: vi.fn(),
+  statistiquesGranulatsMarins: vi.fn()
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe('page de statistiques', () => {
   let actions
@@ -43,11 +44,11 @@ describe('page de statistiques', () => {
     }
 
     mutations = {
-      loadingAdd: jest.fn(),
-      loadingRemove: jest.fn()
+      loadingAdd: vi.fn(),
+      loadingRemove: vi.fn()
     }
     actions = {
-      apiError: jest.fn()
+      apiError: vi.fn()
     }
     store = createStore({
       modules: { statistiques },

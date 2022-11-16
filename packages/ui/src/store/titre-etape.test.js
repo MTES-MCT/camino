@@ -2,14 +2,15 @@ import titreEtape from './titre-etape'
 import * as api from '../api/titres-etapes'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('../api/titres-etapes', () => ({
-  etape: jest.fn(),
-  etapeDeposer: jest.fn(),
-  etapeSupprimer: jest.fn()
+vi.mock('../api/titres-etapes', () => ({
+  etape: vi.fn(),
+  etapeDeposer: vi.fn(),
+  etapeSupprimer: vi.fn()
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe('étapes', () => {
   let store
@@ -22,21 +23,21 @@ describe('étapes', () => {
     }
 
     actions = {
-      pageError: jest.fn(),
-      apiError: jest.fn(),
-      reload: jest.fn(),
-      messageAdd: jest.fn()
+      pageError: vi.fn(),
+      apiError: vi.fn(),
+      reload: vi.fn(),
+      messageAdd: vi.fn()
     }
 
     mutations = {
-      loadingAdd: jest.fn(),
-      loadingRemove: jest.fn(),
-      apiError: jest.fn(),
-      popupLoad: jest.fn(),
-      fileLoad: jest.fn(),
-      popupMessagesRemove: jest.fn(),
-      popupClose: jest.fn(),
-      popupMessageAdd: jest.fn()
+      loadingAdd: vi.fn(),
+      loadingRemove: vi.fn(),
+      apiError: vi.fn(),
+      popupLoad: vi.fn(),
+      fileLoad: vi.fn(),
+      popupMessagesRemove: vi.fn(),
+      popupClose: vi.fn(),
+      popupMessageAdd: vi.fn()
     }
 
     store = createStore({
@@ -44,7 +45,7 @@ describe('étapes', () => {
       mutations,
       modules: {
         titreEtape,
-        titre: { namespaced: true, mutations: { open: jest.fn() } }
+        titre: { namespaced: true, mutations: { open: vi.fn() } }
       }
     })
 

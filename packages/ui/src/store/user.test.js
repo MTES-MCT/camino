@@ -2,25 +2,25 @@ import { createStore } from 'vuex'
 import { createApp } from 'vue'
 import * as api from '../api/utilisateurs'
 import { Administrations } from 'camino-common/src/static/administrations'
-
+import { vi, beforeEach, test, describe, expect } from 'vitest'
 import user from './user'
 
-jest.mock('../api/utilisateurs', () => ({
-  utilisateurConnecter: jest.fn(),
-  utilisateurDeconnecter: jest.fn(),
-  utilisateurCerbereUrlObtenir: jest.fn(),
-  utilisateurCerbereTokenCreer: jest.fn(),
-  moi: jest.fn(),
-  utilisateurMotDePasseInitialiser: jest.fn(),
-  utilisateurMotDePasseMessageEnvoyer: jest.fn(),
-  utilisateurCreationMessageEnvoyer: jest.fn(),
-  utilisateurCreer: jest.fn(),
-  userMetas: jest.fn()
+vi.mock('../api/utilisateurs', () => ({
+  utilisateurConnecter: vi.fn(),
+  utilisateurDeconnecter: vi.fn(),
+  utilisateurCerbereUrlObtenir: vi.fn(),
+  utilisateurCerbereTokenCreer: vi.fn(),
+  moi: vi.fn(),
+  utilisateurMotDePasseInitialiser: vi.fn(),
+  utilisateurMotDePasseMessageEnvoyer: vi.fn(),
+  utilisateurCreationMessageEnvoyer: vi.fn(),
+  utilisateurCreer: vi.fn(),
+  userMetas: vi.fn()
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
-jest.mock('../router', () => [])
+vi.mock('../router', () => [])
 
 describe("état de l'utilisateur connecté", () => {
   let store
@@ -55,18 +55,18 @@ describe("état de l'utilisateur connecté", () => {
     }
 
     actions = {
-      messageAdd: jest.fn(),
-      errorRemove: jest.fn(),
-      apiError: jest.fn()
+      messageAdd: vi.fn(),
+      errorRemove: vi.fn(),
+      apiError: vi.fn()
     }
 
     mutations = {
-      popupMessagesRemove: jest.fn(),
-      loadingAdd: jest.fn(),
-      popupClose: jest.fn(),
-      popupMessageAdd: jest.fn(),
-      loadingRemove: jest.fn(),
-      menuClose: jest.fn()
+      popupMessagesRemove: vi.fn(),
+      loadingAdd: vi.fn(),
+      popupClose: vi.fn(),
+      popupMessageAdd: vi.fn(),
+      loadingRemove: vi.fn(),
+      menuClose: vi.fn()
     }
 
     map = { state: {} }
@@ -249,7 +249,7 @@ describe("état de l'utilisateur connecté", () => {
   })
 
   test('ajoute un utilisateur', async () => {
-    const loginMock = jest.fn()
+    const loginMock = vi.fn()
     user.actions.login = loginMock
     store = createStore({ modules: { user, map }, actions, mutations })
     const apiMock = api.utilisateurCreer.mockResolvedValue(userInfo)
@@ -275,7 +275,7 @@ describe("état de l'utilisateur connecté", () => {
   })
 
   test("retourne une erreur api lors de l'ajout d'un utilisateur", async () => {
-    const loginMock = jest.fn()
+    const loginMock = vi.fn()
     user.actions.login = loginMock
     store = createStore({ modules: { user, map }, actions, mutations })
     const apiMock = api.utilisateurCreer.mockRejectedValue(
@@ -331,7 +331,7 @@ describe("état de l'utilisateur connecté", () => {
   test("retourne une erreur api dans la création du mot de passe de l'utilisateur", async () => {
     const motDePasse1 = 'mignon'
     const motDePasse2 = 'mignon'
-    const loginMock = jest.fn()
+    const loginMock = vi.fn()
     user.actions.login = loginMock
     store = createStore({ modules: { user, map }, actions, mutations })
     const apiMock = api.utilisateurMotDePasseInitialiser.mockRejectedValue(
@@ -400,16 +400,15 @@ describe("état de l'utilisateur connecté", () => {
     expect(store.state.user.element.entreprise).toBeUndefined()
   })
 
-  test.each`
-    role            | isAdmin  | administrationId
-    ${'super'}      | ${true}  | ${undefined}
-    ${'admin'}      | ${true}  | ${Administrations['dea-guadeloupe-01'].id}
-    ${'editeur'}    | ${true}  | ${Administrations['dea-guadeloupe-01'].id}
-    ${'entreprise'} | ${false} | ${undefined}
-    ${undefined}    | ${false} | ${undefined}
-  `(
+  test.each([
+    ['super', true, undefined],
+    ['admin', true, Administrations['dea-guadeloupe-01'].id],
+    ['editeur', true, Administrations['dea-guadeloupe-01'].id],
+    ['entreprise', false, undefined],
+    [undefined, false, undefined]
+  ])(
     'ajoute un utilisateur au store avec le role $role et vérifie si il est admin $isAdmin',
-    ({ role, isAdmin, administrationId }) => {
+    (role, isAdmin, administrationId) => {
       store.commit('user/set', {
         id: 66,
         prenom: 'rene',

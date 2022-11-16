@@ -2,15 +2,16 @@ import titres from './titres'
 import * as api from '../api/titres'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('../api/titres', () => ({
-  titres: jest.fn(),
-  titresGeo: jest.fn(),
-  titresGeoPolygon: jest.fn(),
-  titresMetas: jest.fn()
+vi.mock('../api/titres', () => ({
+  titres: vi.fn(),
+  titresGeo: vi.fn(),
+  titresGeoPolygon: vi.fn(),
+  titresMetas: vi.fn()
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe('liste des titres', () => {
   let actions
@@ -21,6 +22,7 @@ describe('liste des titres', () => {
   let route
 
   beforeEach(() => {
+    vi.restoreAllMocks()
     titresCarte = ['pointe-a-pitre', 'marseille-sud', 'matignon', 'crique']
     titresListe = ['pointe-a-pitre', 'marseille-sud', 'matignon']
 
@@ -82,14 +84,14 @@ describe('liste des titres', () => {
     }
 
     mutations = {
-      loadingAdd: jest.fn(),
-      loadingRemove: jest.fn()
+      loadingAdd: vi.fn(),
+      loadingRemove: vi.fn()
     }
 
     actions = {
-      apiError: jest.fn(),
-      messageAdd: jest.fn(),
-      urlQueryUpdate: jest.fn()
+      apiError: vi.fn(),
+      messageAdd: vi.fn(),
+      urlQueryUpdate: vi.fn()
     }
 
     route = {

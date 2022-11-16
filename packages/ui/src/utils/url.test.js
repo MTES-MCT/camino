@@ -1,4 +1,5 @@
 import { urlQueryParamsGet } from './url.js'
+import { describe, expect, test } from 'vitest'
 
 describe('urlQueryParamsGet', () => {
   test('récupère les paramètres de requête qui ont changé', () => {

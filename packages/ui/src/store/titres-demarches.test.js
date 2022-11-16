@@ -1,13 +1,14 @@
 import titresDemarches from './titres-demarches'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('../api/titres-demarches', () => ({
-  demarchesMetas: jest.fn(),
-  demarches: jest.fn()
+vi.mock('../api/titres-demarches', () => ({
+  demarchesMetas: vi.fn(),
+  demarches: vi.fn()
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe('liste des demarches', () => {
   let store

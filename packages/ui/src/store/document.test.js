@@ -3,19 +3,20 @@ import * as api from '../api/documents'
 import * as upload from '../api/_upload'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('../api/documents', () => ({
-  documentMetas: jest.fn(),
-  documentCreer: jest.fn(),
-  documentModifier: jest.fn(),
-  documentSupprimer: jest.fn()
+vi.mock('../api/documents', () => ({
+  documentMetas: vi.fn(),
+  documentCreer: vi.fn(),
+  documentModifier: vi.fn(),
+  documentSupprimer: vi.fn()
 }))
 
-jest.mock('../api/_upload', () => ({
-  uploadCall: jest.fn()
+vi.mock('../api/_upload', () => ({
+  uploadCall: vi.fn()
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe('documents', () => {
   let store
@@ -23,7 +24,7 @@ describe('documents', () => {
   let mutations
 
   beforeEach(() => {
-    jest.resetAllMocks()
+    vi.resetAllMocks()
 
     document.state = {
       metas: { documentsTypes: [] },
@@ -31,22 +32,22 @@ describe('documents', () => {
     }
 
     actions = {
-      pageError: jest.fn(),
-      apiError: jest.fn(),
-      reload: jest.fn(),
-      messageAdd: jest.fn(),
-      test: jest.fn()
+      pageError: vi.fn(),
+      apiError: vi.fn(),
+      reload: vi.fn(),
+      messageAdd: vi.fn(),
+      test: vi.fn()
     }
 
     mutations = {
-      loadingAdd: jest.fn(),
-      loadingRemove: jest.fn(),
-      apiError: jest.fn(),
-      popupLoad: jest.fn(),
-      popupMessagesRemove: jest.fn(),
-      popupClose: jest.fn(),
-      popupMessageAdd: jest.fn(),
-      fileLoad: jest.fn()
+      loadingAdd: vi.fn(),
+      loadingRemove: vi.fn(),
+      apiError: vi.fn(),
+      popupLoad: vi.fn(),
+      popupMessagesRemove: vi.fn(),
+      popupClose: vi.fn(),
+      popupMessageAdd: vi.fn(),
+      fileLoad: vi.fn()
     }
 
     store = createStore({
@@ -56,7 +57,7 @@ describe('documents', () => {
         document,
         titre: {
           namespaced: true,
-          mutations: { open: jest.fn() }
+          mutations: { open: vi.fn() }
         }
       }
     })
@@ -113,7 +114,7 @@ describe('documents', () => {
     delete sentDocument.fichierNouveau
     expect(apiMock).toHaveBeenCalledWith({ document: sentDocument })
 
-    jest.resetAllMocks()
+    vi.resetAllMocks()
 
     await store.dispatch('document/upsert', {
       document,
@@ -122,7 +123,7 @@ describe('documents', () => {
     expect(upload.uploadCall).toHaveBeenCalled()
     expect(apiMock).toHaveBeenCalledWith({ document: sentDocument })
 
-    jest.resetAllMocks()
+    vi.resetAllMocks()
 
     document = {
       nom: 'champs',
@@ -172,7 +173,7 @@ describe('documents', () => {
     delete sentDocument.typeId
     expect(apiMock).toHaveBeenCalledWith({ document: sentDocument })
 
-    jest.resetAllMocks()
+    vi.resetAllMocks()
 
     await store.dispatch('document/upsert', {
       document,
@@ -181,7 +182,7 @@ describe('documents', () => {
     expect(upload.uploadCall).toHaveBeenCalled()
     expect(apiMock).toHaveBeenCalledWith({ document: sentDocument })
 
-    jest.resetAllMocks()
+    vi.resetAllMocks()
 
     document = {
       nom: 'champs',

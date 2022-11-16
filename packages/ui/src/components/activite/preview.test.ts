@@ -1,5 +1,6 @@
 import { mount } from '@vue/test-utils'
 import Preview from './preview.vue'
+import { describe, expect, test } from 'vitest'
 
 describe('Activite > Preview', () => {
   const activite = {

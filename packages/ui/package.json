@@ -9,8 +9,7 @@
     "dev": "vite",
     "dev:update": "npm-check-updates && npm install && npm audit fix",
     "start": "node ./index.js",
-    "test": "cross-env NODE_ENV=test && jest --verbose",
-    "test:watch": "cross-env NODE_ENV=test jest --watch --verbose",
+    "test": "vitest --environment jsdom --root src/",
     "lint": "prettier --write src && eslint --fix --ext .js,.ts,.vue src",
     "lint:check": "prettier --check src && eslint src",
     "storybook": "start-storybook -p 6006",
@@ -18,8 +17,7 @@
     "generate-icon-types": "ts-node --transpile-only scripts/generateIconTypes.ts"
   },
   "@comment dependencies": {
-    "@uppy/core": "et @uppy/tus en v3 sont en ESM",
-    "@mdx-js/preact": "dépendance transitive à @storybook/builder-vite -> https://github.com/storybookjs/builder-vite/issues/406"
+    "@uppy/core": "et @uppy/tus en v3 sont en ESM"
   },
   "dependencies": {
     "compression": "^1.7.4",
@@ -39,10 +37,10 @@
     "@storybook/addon-actions": "^6.5.13",
     "@storybook/addon-controls": "^6.5.13",
     "@storybook/addon-postcss": "^2.0.0",
-    "@storybook/addon-storyshots": "^6.5.13",
     "@storybook/builder-vite": "^0.2.5",
+    "@storybook/testing-vue3": "^0.0.2",
     "@storybook/vue3": "^6.5.13",
-    "@types/jest": "^28.1.7",
+    "@testing-library/vue": "^6.6.1",
     "@types/leaflet": "^1.7.11",
     "@types/leaflet.markercluster": "^1.5.1",
     "@types/webpack-env": "^1.18.0",
@@ -50,12 +48,11 @@
     "@uppy/core": "^2.1.10",
     "@uppy/tus": "^2.2.2",
     "@vitejs/plugin-vue": "^3.2.0",
+    "@vitejs/plugin-vue-jsx": "^2.1.1",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/eslint-config-standard": "^8.0.1",
     "@vue/test-utils": "^2.0.2",
-    "@vue/vue3-jest": "28.1.0",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^28.1.3",
     "babel-loader": "^8.2.5",
     "babel-plugin-graphql-tag": "^3.3.0",
     "babel-preset-vite": "^1.0.4",
@@ -63,7 +60,6 @@
     "chart.js": "^3.9.1",
     "commitizen": "^4.2.5",
     "core-js": "^3.24.1",
-    "cross-env": "^7.0.3",
     "cross-fetch": "^3.1.5",
     "cz-conventional-changelog": "^3.3.0",
     "email-validator": "^2.0.4",
@@ -71,7 +67,6 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^26.8.7",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-vue": "^9.4.0",
@@ -80,12 +75,6 @@
     "graphql-react": "^15.0.0",
     "graphql-tag": "^2.12.6",
     "html-webpack-plugin": "^5.5.0",
-    "jest": "^28.1.3",
-    "jest-environment-jsdom": "^28.1.3",
-    "jest-fetch-mock": "^3.0.3",
-    "jest-serializer-vue": "^2.0.2",
-    "jest-transform-stub": "^2.0.0",
-    "jest-util": "^28.1.3",
     "json2csv": "^5.0.7",
     "jsondiffpatch": "^0.4.1",
     "leaflet": "1.8.0",
@@ -104,9 +93,10 @@
     "rollup-plugin-visualizer": "^5.8.0",
     "snarkdown": "^2.0.0",
     "standard-version": "^9.5.0",
-    "ts-jest": "^28.0.8",
     "typescript": "^4.8.4",
     "vite": "^3.2.4",
+    "vitest": "^0.25.2",
+    "vitest-fetch-mock": "^0.2.1",
     "vue": "^3.2.45",
     "vue-loader": "^17.0.1",
     "vue-meta": "^2.4.0",
@@ -118,8 +108,7 @@
   "eslintConfig": {
     "root": true,
     "env": {
-      "node": true,
-      "jest/globals": true
+      "node": true
     },
     "globals": {
       "defineProps": "readonly",
@@ -149,10 +138,7 @@
     },
     "parserOptions": {
       "parser": "@typescript-eslint/parser"
-    },
-    "plugins": [
-      "jest"
-    ]
+    }
   },
   "prettier": {
     "semi": false,

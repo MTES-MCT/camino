@@ -216,7 +216,6 @@ const actions = {
         },
         { root: true }
       )
-
       router.push({ name: 'utilisateurs' })
     } catch (e) {
       commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
