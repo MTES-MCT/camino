@@ -6,9 +6,6 @@ import { knex } from '../../../knex'
 
 import AdministrationsModel from '../../models/administrations'
 import Utilisateurs from '../../models/utilisateurs'
-import Titres from '../../models/titres'
-
-import { titresQueryModify } from './titres'
 import { utilisateursQueryModify } from './utilisateurs'
 import {
   isAdministrationAdmin,
@@ -78,16 +75,6 @@ const administrationsQueryModify = (
       }
     }
   }
-
-  q.modifyGraph('gestionnaireTitres', a =>
-    titresQueryModify(a as QueryBuilder<Titres, Titres | Titres[]>, user)
-      // on group by administrationId au cas où il y a une aggrégation
-      // dans la requête de titre (ex : calc activités)
-      .groupBy(
-        'titres.id',
-        'titresAdministrationsGestionnaires.administrationId'
-      )
-  )
 
   q.modifyGraph('utilisateurs', b => {
     utilisateursQueryModify(

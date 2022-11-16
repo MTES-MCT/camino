@@ -1,8 +1,6 @@
 import { Model, Pojo, QueryContext, ref } from 'objection'
 
 import { ITitre } from '../../types'
-
-import Administrations from './administrations'
 import Communes from './communes'
 import Domaines from './domaines'
 import Entreprises from './entreprises'
@@ -134,23 +132,6 @@ class Titres extends Model {
           extra: ['operateur']
         },
         to: 'entreprises.id'
-      }
-    },
-
-    administrationsGestionnaires: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Administrations,
-      // On ne peut pas utiliser directement administrations__titresTypes car on ne peut pas sélectionner les lignes où le booléen
-      // gestionnaire est à vrai
-      // https://github.com/Vincit/objection/issues/1356
-      join: {
-        from: 'titres.id',
-        through: {
-          from: ref('titresAdministrationsGestionnaires.titreId').castText(),
-          to: 'titresAdministrationsGestionnaires.administrationId',
-          extra: ['associee']
-        },
-        to: 'administrations.id'
       }
     },
 

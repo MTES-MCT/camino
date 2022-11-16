@@ -5,7 +5,6 @@ import { IAdministration } from '../../types'
 import AdministrationsTitresTypesEtapesTypes from './administrations-titres-types-etapes-types'
 import AdministrationsTitresTypesTitresStatuts from './administrations-titres-types-titres-statuts'
 import Utilisateurs from './utilisateurs'
-import Titres from './titres'
 import ActivitesTypes from './activites-types'
 
 interface Administrations extends IAdministration {}
@@ -47,19 +46,6 @@ class Administrations extends Model {
       join: {
         from: 'administrations.id',
         to: 'utilisateurs.administrationId'
-      }
-    },
-
-    gestionnaireTitres: {
-      relation: Model.ManyToManyRelation,
-      modelClass: Titres,
-      join: {
-        from: 'administrations.id',
-        through: {
-          from: 'titresAdministrationsGestionnaires.administrationId',
-          to: 'titresAdministrationsGestionnaires.titreId'
-        },
-        to: 'titres.id'
       }
     },
 

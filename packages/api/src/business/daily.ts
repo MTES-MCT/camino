@@ -1,6 +1,5 @@
 import { titresActivitesStatutIdsUpdate } from './processes/titres-activites-statut-ids-update'
 import { titresActivitesUpdate } from './processes/titres-activites-update'
-import { titresAdministrationsGestionnairesUpdate } from './processes/titres-administrations-gestionnaires-update'
 import { titresDatesUpdate } from './processes/titres-dates-update'
 import { titresDemarchesOrdreUpdate } from './processes/titres-demarches-ordre-update'
 import { titresDemarchesPublicUpdate } from './processes/titres-demarches-public-update'
@@ -42,10 +41,6 @@ const daily = async () => {
       await titresPhasesUpdate()
     const titresDatesUpdated = await titresDatesUpdate()
     const pointsReferencesCreated = await titresPointsReferencesCreate()
-    const {
-      titresAdministrationsGestionnairesCreated = [],
-      titresAdministrationsGestionnairesDeleted = []
-    } = await titresAdministrationsGestionnairesUpdate()
     const { titresEtapesAdministrationsLocalesUpdated } =
       await titresEtapesAdministrationsLocalesUpdate()
     const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate()
@@ -72,8 +67,6 @@ const daily = async () => {
       titresPhasesDeleted,
       titresDatesUpdated,
       pointsReferencesCreated,
-      titresAdministrationsGestionnairesCreated,
-      titresAdministrationsGestionnairesDeleted,
       titresEtapesAdministrationsLocalesUpdated:
         titresEtapesAdministrationsLocalesUpdated.map(
           ({ titreEtapeId }) => titreEtapeId

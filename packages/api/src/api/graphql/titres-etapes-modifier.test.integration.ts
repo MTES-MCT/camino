@@ -6,10 +6,7 @@ import { titreEtapeCreate } from '../../database/queries/titres-etapes'
 import { titreEtapePropsIds } from '../../business/utils/titre-etape-heritage-props-find'
 import Titres from '../../database/models/titres'
 import { userSuper } from '../../database/user-super'
-import {
-  ADMINISTRATION_IDS,
-  Administrations
-} from 'camino-common/src/static/administrations'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { Role } from 'camino-common/src/roles'
 import { toCaminoDate } from 'camino-common/src/date'
 
@@ -48,15 +45,7 @@ async function etapeCreate() {
       nom: 'mon titre',
       domaineId: 'm',
       typeId: 'arm',
-      propsTitreEtapesIds: {},
-      administrationsGestionnaires: [
-        {
-          ...Administrations[
-            ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
-          ]
-        },
-        { ...Administrations[ADMINISTRATION_IDS['DGTM - GUYANE']] }
-      ]
+      propsTitreEtapesIds: {}
     },
     {}
   )

@@ -41,14 +41,6 @@ export const tables = [
   { name: 'forets', orderBy: ['id'] },
   { name: 'titres', orderBy: ['id'] },
   { name: 'titres_activites', orderBy: ['id'] },
-  {
-    name: 'titres_administrations_gestionnaires',
-    orderBy: ['titre_id', 'administration_id']
-  },
-  {
-    name: 'titres_administrations_locales',
-    orderBy: ['titre_etape_id', 'administration_id']
-  },
   { name: 'titres_amodiataires', orderBy: ['titre_etape_id', 'entreprise_id'] },
   { name: 'titres_communes', orderBy: ['titre_etape_id', 'commune_id'] },
   { name: 'titres_demarches', orderBy: ['id'] },
