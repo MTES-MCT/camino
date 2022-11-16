@@ -42,7 +42,6 @@ type IStatsGuyaneTitresTypes =
   | 'titresArm'
   | 'titresPrm'
   | 'titresAxm'
-  | 'titresPxm'
   | 'titresCxm'
 
 const statistiquesGuyaneTitresBuild = (
@@ -61,7 +60,6 @@ const statistiquesGuyaneTitresBuild = (
       titresArm: { quantite: 0, surface: 0 },
       titresPrm: { quantite: 0, surface: 0 },
       titresAxm: { quantite: 0, surface: 0 },
-      titresPxm: { quantite: 0, surface: 0 },
       titresCxm: { quantite: 0, surface: 0 }
     }
   )
@@ -90,7 +88,6 @@ const statistiquesGuyaneInstantBuild = (titres: ITitre[]) => {
       titresArm: 0,
       titresPrm: 0,
       titresAxm: 0,
-      titresPxm: 0,
       titresCxm: 0
     }
   )
@@ -112,7 +109,7 @@ const statistiquesGuyaneAnneeBuild = (
 ) => {
   const titresFiltered = titresSurfaceIndexBuild(titres, annee)
 
-  const { titresArm, titresPrm, titresAxm, titresPxm, titresCxm } =
+  const { titresArm, titresPrm, titresAxm, titresCxm } =
     statistiquesGuyaneTitresBuild(titresFiltered)
 
   // les activités de type grp de l'année
@@ -172,7 +169,6 @@ const statistiquesGuyaneAnneeBuild = (
     titresArm,
     titresPrm,
     titresAxm,
-    titresPxm,
     titresCxm,
     orNet: Math.floor(statistiquesActivitesGra.auru),
     carburantConventionnel: Math.floor(

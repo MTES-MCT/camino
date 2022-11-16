@@ -105,28 +105,6 @@
           </div>
           <div class="tablet-blob-1-4">
             <p class="h0 text-center">
-              {{ statistiquesGuyane.titresPxm }}
-            </p>
-            <p class="bold text-center">Permis d'exploitation</p>
-            <p class="h6 text-center">
-              <router-link
-                :to="{
-                  name: 'titres',
-                  query: {
-                    domainesIds: 'm',
-                    typesIds: 'px',
-                    statutsIds: 'val,mod',
-                    territoires: 'guyane',
-                    vueId: 'table'
-                  }
-                }"
-              >
-                Voir les titres
-              </router-link>
-            </p>
-          </div>
-          <div class="tablet-blob-1-4">
-            <p class="h0 text-center">
               {{ statistiquesGuyane.titresCxm }}
             </p>
             <p class="bold text-center">Concessions</p>
@@ -226,7 +204,7 @@
           </div>
         </div>
       </div>
-      <h3>Autorisations de recherche octroyées</h3>
+      <h3>Autorisations de recherche</h3>
       <hr />
       <div class="tablet-float-blobs clearfix">
         <div class="tablet-float-blob-1-3 mb-xl mt">
@@ -252,7 +230,7 @@
           />
         </div>
       </div>
-      <h3>Permis de recherches octroyés</h3>
+      <h3>Permis de recherches</h3>
       <hr />
       <div class="tablet-float-blobs clearfix">
         <div class="tablet-float-blob-1-3 mb-xl mt">
@@ -278,7 +256,7 @@
           />
         </div>
       </div>
-      <h3>Autorisations d'exploitation octroyées</h3>
+      <h3>Autorisations d'exploitation</h3>
       <hr />
       <div class="tablet-float-blobs clearfix">
         <div class="tablet-float-blob-1-3 mb-xl mt">
@@ -304,33 +282,7 @@
           />
         </div>
       </div>
-      <h3>Permis d'exploitation octroyés</h3>
-      <hr />
-      <div class="tablet-float-blobs clearfix">
-        <div class="tablet-float-blob-1-3 mb-xl mt">
-          <p class="h0 text-center">
-            {{ statistiques[anneeCurrent - 1].titresPxm.quantite }}
-          </p>
-          <p>Permis d’exploitation octroyés l’an dernier</p>
-        </div>
-        <div class="tablet-float-blob-2-3 relative mb-xl">
-          <BarChart
-            :data="
-              statsBarFormat({
-                annees: statistiquesGuyane.annees,
-                id: 'titresPxm',
-                bar: 'quantite',
-                line: 'surface',
-                labelX: 'annee',
-                labelBar: 'Permis d\'exploitation',
-                labelLine: 'Surface des permis d\'exploitation (ha)'
-              })
-            "
-            :suggestedMax="suggestedMaxTitres"
-          />
-        </div>
-      </div>
-      <h3>Concessions octroyées</h3>
+      <h3>Concessions</h3>
       <hr />
       <div class="tablet-float-blobs clearfix">
         <div class="tablet-float-blob-1-3 mb-xl mt">
@@ -413,8 +365,7 @@ export default {
         },
         {
           id: this.anneeCurrent - 1,
-          nom: (this.anneeCurrent - 1).toString(),
-          enConstruction: true
+          nom: (this.anneeCurrent - 1).toString()
         },
         {
           id: this.anneeCurrent,
@@ -429,7 +380,6 @@ export default {
         'titresArm',
         'titresPrm',
         'titresAxm',
-        'titresPxm',
         'titresCxm'
       ])
     }

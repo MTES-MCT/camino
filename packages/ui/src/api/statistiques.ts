@@ -45,7 +45,6 @@ export const statistiquesGuyane = apiGraphQLFetch(gql`
       titresArm
       titresPrm
       titresAxm
-      titresPxm
       titresCxm
       annees {
         annee
@@ -58,10 +57,6 @@ export const statistiquesGuyane = apiGraphQLFetch(gql`
           surface
         }
         titresAxm {
-          quantite
-          surface
-        }
-        titresPxm {
           quantite
           surface
         }
