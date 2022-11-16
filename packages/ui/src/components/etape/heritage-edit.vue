@@ -35,14 +35,15 @@
 <script
   setup
   lang="ts"
-  generic="P extends keyof Omit<Etape, 'incertitudes' | 'type' | 'heritageProps' | 'contenu' | 'date'>, T extends EtapeHeritage<P>"
+  generic="P extends EtapeHeritageProps, T extends EtapeHeritage"
 >
+// TODO 2022-11-16 normalement T devrait étendre EtapeHeritage<P>, mais il y a un bug avec vite qui empêche de lancer l'appli en mode dev
 import { hasValeurCheck } from '@/utils/contenu'
 import Tag from '@/components/_ui/tag.vue'
 import { dateFormat } from '@/utils'
 import { computed } from 'vue'
-import { Etape, HeritageProp } from 'camino-common/src/etape'
-import { EtapeHeritage } from './heritage-edit.types'
+import { HeritageProp } from 'camino-common/src/etape'
+import { EtapeHeritageProps, EtapeHeritage } from './heritage-edit.types'
 
 const props = defineProps<{
   prop: HeritageProp<T>
