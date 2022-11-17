@@ -1,4 +1,5 @@
 import { Domaines, DOMAINES_IDS, isDomaineId } from './domaines'
+import { test, expect } from 'vitest'
 
 test('domaine', () => {
   expect(Domaines.c).toBe(Domaines[DOMAINES_IDS.CARRIERES])

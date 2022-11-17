@@ -1,8 +1,8 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
 exports[`getPeriode 1`] = `
-Array [
-  Array [
+[
+  [
     "",
     "année",
     "",
@@ -17,7 +17,7 @@ Array [
     "",
     "",
   ],
-  Array [
+  [
     "",
     "janvier",
     "février",
@@ -32,7 +32,7 @@ Array [
     "novembre",
     "décembre",
   ],
-  Array [
+  [
     "",
     "1er trimestre",
     "2e trimestre",

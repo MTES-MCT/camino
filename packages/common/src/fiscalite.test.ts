@@ -1,4 +1,5 @@
 import { fiscaliteVisible, fraisGestion, UserFiscalite } from './fiscalite'
+import { test, expect } from 'vitest'
 
 test('fraisGestion', () => {
   expect(fraisGestion({ redevanceDepartementale: 50, redevanceCommunale: 50 })).toBe(8)

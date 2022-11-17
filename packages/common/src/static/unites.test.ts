@@ -1,4 +1,5 @@
 import { fromUniteFiscaleToUnite } from './unites'
+import { test, expect } from 'vitest'
 
 test('fromUniteFiscaleToUnite', () => {
   expect(fromUniteFiscaleToUnite('mtk', 142_764_000)).toBe(142.764)

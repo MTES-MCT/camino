@@ -1,100 +1,100 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
 exports[`getDocuments surcharge 2`] = `
-Array [
-  Object {
+[
+  {
     "id": "cam",
     "nom": "Contrat d'amodiation",
     "optionnel": true,
   },
-  Object {
+  {
     "description": "Plan à l’échelle 1/50 000ème ou 1/100 000ème",
     "id": "car",
     "nom": "Documents cartographiques",
     "optionnel": false,
   },
-  Object {
+  {
     "id": "cnt",
     "nom": "Contrat",
     "optionnel": true,
   },
-  Object {
+  {
     "id": "cod",
     "nom": "Compléments au dossier de demande",
     "optionnel": true,
   },
-  Object {
+  {
     "id": "dep",
     "nom": "Décision cas par cas",
     "optionnel": true,
   },
-  Object {
+  {
     "id": "doe",
     "nom": "Dossier \\"Loi sur l'eau\\"",
     "optionnel": true,
   },
-  Object {
+  {
     "id": "dom",
     "nom": "Dossier de demande",
     "optionnel": true,
   },
-  Object {
+  {
     "id": "dos",
     "nom": "Dossier",
     "optionnel": true,
   },
-  Object {
+  {
     "id": "fac",
     "nom": "Facture",
     "optionnel": true,
   },
-  Object {
+  {
     "id": "fic",
     "nom": "Fiche de complétude",
     "optionnel": true,
   },
-  Object {
+  {
     "id": "fip",
     "nom": "Fiche de présentation",
     "optionnel": true,
   },
-  Object {
+  {
     "id": "for",
     "nom": "Formulaire de demande",
     "optionnel": true,
   },
-  Object {
+  {
     "id": "jpa",
     "nom": "Justificatif de paiement",
     "optionnel": true,
   },
-  Object {
+  {
     "id": "lem",
     "nom": "Lettre de demande",
     "optionnel": true,
   },
-  Object {
+  {
     "description": undefined,
     "id": "let",
     "nom": "Lettre",
     "optionnel": true,
   },
-  Object {
+  {
     "id": "noi",
     "nom": "Notice d'incidence",
     "optionnel": true,
   },
-  Object {
+  {
     "id": "pla",
     "nom": "Plan",
     "optionnel": true,
   },
-  Object {
+  {
     "id": "rec",
     "nom": "Récépissé \\"Loi sur l'eau\\"",
     "optionnel": true,
   },
-  Object {
+  {
     "description": "la liste et la valeur du matériel d’extraction et de
  traitement que le demandeur détient ou qu’il 
 envisage d’acquérir ainsi que, dans ce dernier
@@ -107,43 +107,43 @@ demandeur
     "nom": "Identification de matériel",
     "optionnel": false,
   },
-  Object {
+  {
     "description": undefined,
     "id": "jeg",
     "nom": "Justification d’existence du gisement",
     "optionnel": true,
   },
-  Object {
+  {
     "description": "la définition des mesures prévues par le pétitionnaire pour réhabiliter le site après exploitation, notamment la nature et les modalités de revégétalisation envisagée. (décret 2001-204, art. 5 bis)",
     "id": "mes",
     "nom": "Mesures prévues pour réhabiliter le site ",
     "optionnel": false,
   },
-  Object {
+  {
     "description": "descriptif des méthodes envisagées pour l’exécution des travaux ((décret 2001-204, art. 6)",
     "id": "met",
     "nom": "Méthodes pour l'exécution des travaux",
     "optionnel": false,
   },
-  Object {
+  {
     "description": undefined,
     "id": "nip",
     "nom": "Notice d’impact",
     "optionnel": true,
   },
-  Object {
+  {
     "description": "Obligatoire pour les AEX hors de la zone 2 du SDOM",
     "id": "nir",
     "nom": "Notice d’impact renforcée",
     "optionnel": true,
   },
-  Object {
+  {
     "description": "Description du phasage et planigramme des travaux. (décret 2001-204, art. 5)",
     "id": "prg",
     "nom": "Programme des travaux ",
     "optionnel": false,
   },
-  Object {
+  {
     "description": "le schéma de pénétration du massif forestier proposé par le pétitionnaire pour l'acheminement du matériel lourd et la desserte du chantier (décret 2001-204, art. 5 bis)",
     "id": "sch",
     "nom": "Schéma de pénétration du massif forestier",

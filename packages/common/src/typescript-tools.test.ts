@@ -2,6 +2,7 @@ import { isNotNullNorUndefined, onlyUnique } from './typescript-tools'
 import { Role } from './roles'
 import { AdministrationId } from './static/administrations'
 import { Departements } from './static/departement'
+import { test, expect, describe } from 'vitest'
 
 describe('isNotNullNorUndefined', () => {
   test('null or undefined', () => {

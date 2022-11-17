@@ -1,23 +1,23 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`getTitreTypeTypeByDomaineId "c" 1`] = `
-Array [
+exports[`getTitreTypeTypeByDomaineId %p c 1`] = `
+[
   "ap",
   "ar",
   "pc",
 ]
 `;
 
-exports[`getTitreTypeTypeByDomaineId "f" 1`] = `
-Array [
+exports[`getTitreTypeTypeByDomaineId %p f 1`] = `
+[
   "cx",
   "pr",
   "px",
 ]
 `;
 
-exports[`getTitreTypeTypeByDomaineId "g" 1`] = `
-Array [
+exports[`getTitreTypeTypeByDomaineId %p g 1`] = `
+[
   "ar",
   "cx",
   "pr",
@@ -25,8 +25,8 @@ Array [
 ]
 `;
 
-exports[`getTitreTypeTypeByDomaineId "h" 1`] = `
-Array [
+exports[`getTitreTypeTypeByDomaineId %p h 1`] = `
+[
   "ap",
   "cx",
   "in",
@@ -35,8 +35,8 @@ Array [
 ]
 `;
 
-exports[`getTitreTypeTypeByDomaineId "i" 1`] = `
-Array [
+exports[`getTitreTypeTypeByDomaineId %p i 1`] = `
+[
   "cx",
   "in",
   "pr",
@@ -44,8 +44,8 @@ Array [
 ]
 `;
 
-exports[`getTitreTypeTypeByDomaineId "m" 1`] = `
-Array [
+exports[`getTitreTypeTypeByDomaineId %p m 1`] = `
+[
   "ap",
   "ar",
   "ax",
@@ -56,8 +56,8 @@ Array [
 ]
 `;
 
-exports[`getTitreTypeTypeByDomaineId "r" 1`] = `
-Array [
+exports[`getTitreTypeTypeByDomaineId %p r 1`] = `
+[
   "cx",
   "in",
   "pr",
@@ -65,15 +65,15 @@ Array [
 ]
 `;
 
-exports[`getTitreTypeTypeByDomaineId "s" 1`] = `
-Array [
+exports[`getTitreTypeTypeByDomaineId %p s 1`] = `
+[
   "cx",
   "pr",
 ]
 `;
 
-exports[`getTitreTypeTypeByDomaineId "w" 1`] = `
-Array [
+exports[`getTitreTypeTypeByDomaineId %p w 1`] = `
+[
   "ap",
   "cx",
   "pr",
