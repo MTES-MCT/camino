@@ -4,20 +4,20 @@ import TitresActivites from '../../database/models/titres-activites'
 import { titresActivitesRelanceSend } from './titres-activites-relance-send'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
 import { EmailTemplateId } from '../../tools/api-mailjet/types'
-
-jest.mock('../../database/queries/titres-activites', () => ({
-  titresActivitesGet: jest.fn()
+import { vi, describe, expect, test } from 'vitest'
+vi.mock('../../database/queries/titres-activites', () => ({
+  titresActivitesGet: vi.fn()
 }))
 
-jest.mock('../../tools/api-mailjet/emails', () => ({
+vi.mock('../../tools/api-mailjet/emails', () => ({
   __esModule: true,
-  emailsWithTemplateSend: jest.fn().mockImplementation(a => a)
+  emailsWithTemplateSend: vi.fn().mockImplementation(a => a)
 }))
 
-const titresActivitesGetMock = jest.mocked(titresActivitesGet, true)
-const emailsWithTemplateSendMock = jest.mocked(emailsWithTemplateSend, true)
+const titresActivitesGetMock = vi.mocked(titresActivitesGet, true)
+const emailsWithTemplateSendMock = vi.mocked(emailsWithTemplateSend, true)
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe('relance les opérateurs des activités qui vont se fermer automatiquement', () => {
   test('envoie un email aux opérateurs', async () => {

@@ -2,20 +2,20 @@ import { titreCoordonneesFind } from '../utils/titre-coordonnees-find'
 import { titresGet } from '../../database/queries/titres'
 import Titres from '../../database/models/titres'
 import { titresCoordonneesUpdate } from './titres-coordonnees-update'
-
-jest.mock('../../database/queries/titres', () => ({
-  titreUpdate: jest.fn().mockResolvedValue(true),
-  titresGet: jest.fn()
+import { vi, describe, expect, test } from 'vitest'
+vi.mock('../../database/queries/titres', () => ({
+  titreUpdate: vi.fn().mockResolvedValue(true),
+  titresGet: vi.fn()
 }))
 
-jest.mock('../utils/titre-coordonnees-find', () => ({
-  titreCoordonneesFind: jest.fn()
+vi.mock('../utils/titre-coordonnees-find', () => ({
+  titreCoordonneesFind: vi.fn()
 }))
 
-const titresGetMock = jest.mocked(titresGet, true)
-const titreCoordonneesFindMock = jest.mocked(titreCoordonneesFind, true)
+const titresGetMock = vi.mocked(titresGet, true)
+const titreCoordonneesFindMock = vi.mocked(titreCoordonneesFind, true)
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe('coordoonnées des titres', () => {
   test.each([{ x: 1, y: 1 }, { x: 1 }, { y: 1 }, undefined])(

@@ -21,20 +21,29 @@ import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
 import { userSuper } from '../../database/user-super'
 import { toCaminoDate } from 'camino-common/src/date'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
+import {
+  beforeAll,
+  beforeEach,
+  afterEach,
+  afterAll,
+  test,
+  expect,
+  describe,
+  vi
+} from 'vitest'
+console.info = vi.fn()
+console.error = vi.fn()
 
-console.info = jest.fn()
-console.error = jest.fn()
-
-jest.mock('../../tools/api-insee/fetch', () => ({
+vi.mock('../../tools/api-insee/fetch', () => ({
   __esModule: true,
-  tokenInitialize: jest.fn(),
-  entreprisesFetch: jest.fn(),
-  entreprisesEtablissementsFetch: jest.fn()
+  tokenInitialize: vi.fn(),
+  entreprisesFetch: vi.fn(),
+  entreprisesEtablissementsFetch: vi.fn()
 }))
 
-const tokenInitializeMock = jest.mocked(tokenInitialize, true)
-const entrepriseFetchMock = jest.mocked(entreprisesFetch, true)
-const entreprisesEtablissementsFetchMock = jest.mocked(
+const tokenInitializeMock = vi.mocked(tokenInitialize, true)
+const entrepriseFetchMock = vi.mocked(entreprisesFetch, true)
+const entreprisesEtablissementsFetchMock = vi.mocked(
   entreprisesEtablissementsFetch,
   true
 )

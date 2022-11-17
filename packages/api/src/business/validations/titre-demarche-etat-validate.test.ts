@@ -3,7 +3,7 @@ import { IDemarcheType, ITitre, ITitreEtape, ITitreType } from '../../types'
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
-
+import { describe, test, expect } from 'vitest'
 describe('teste titreDemarcheUpdatedEtatValidate', () => {
   test('ajoute une étape à une démarche vide', () => {
     const valid = titreDemarcheUpdatedEtatValidate(

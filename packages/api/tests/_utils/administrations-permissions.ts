@@ -33,7 +33,7 @@ import { documentCreate } from '../../src/database/queries/documents'
 import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { toCaminoDate } from 'camino-common/src/date'
-
+import { expect } from 'vitest'
 export const visibleCheck = async (
   administrationId: AdministrationId,
   visible: boolean,

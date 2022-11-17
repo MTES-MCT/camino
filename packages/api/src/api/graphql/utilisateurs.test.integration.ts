@@ -10,9 +10,18 @@ import jwt from 'jsonwebtoken'
 import { dbManager } from '../../../tests/db-manager'
 import { Administrations } from 'camino-common/src/static/administrations'
 import { Knex } from 'knex'
+import {
+  expect,
+  test,
+  describe,
+  afterAll,
+  afterEach,
+  beforeAll,
+  vi
+} from 'vitest'
 
-console.info = jest.fn()
-console.error = jest.fn()
+console.info = vi.fn()
+console.error = vi.fn()
 let knex: Knex<any, unknown[]>
 beforeAll(async () => {
   knex = await dbManager.populateDb()

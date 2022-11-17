@@ -14,6 +14,7 @@ import {
 } from './__mocks__/titre-statut-id-find-titres'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { toCaminoDate } from 'camino-common/src/date'
+import { describe, expect, test } from 'vitest'
 
 describe("statut d'un titre", () => {
   const aujourdhui = '2020-12-01'

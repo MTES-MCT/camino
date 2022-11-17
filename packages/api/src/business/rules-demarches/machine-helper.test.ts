@@ -1,7 +1,7 @@
 import { toCaminoDate } from 'camino-common/src/date'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { ArmOctMachine } from './arm/oct.machine'
-
+import { describe, expect, test } from 'vitest'
 const machine = new ArmOctMachine()
 describe('isEtapesOk', () => {
   // On n'est pas certain de notre base de données, si ça impacte les perf,

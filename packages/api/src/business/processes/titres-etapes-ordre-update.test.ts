@@ -8,19 +8,21 @@ import {
 } from './__mocks__/titres-etapes-ordre-update-demarches'
 import TitresDemarches from '../../database/models/titres-demarches'
 import { userSuper } from '../../database/user-super'
-
-jest.mock('../../database/queries/titres-etapes', () => ({
-  titreEtapeUpdate: jest.fn().mockResolvedValue(true)
+import { vi, afterEach, describe, expect, test } from 'vitest'
+vi.mock('../../database/queries/titres-etapes', () => ({
+  titreEtapeUpdate: vi.fn().mockResolvedValue(true)
 }))
 
-jest.mock('../../database/queries/titres-demarches', () => ({
-  titresDemarchesGet: jest.fn()
+vi.mock('../../database/queries/titres-demarches', () => ({
+  titresDemarchesGet: vi.fn()
 }))
 
-const titresDemarchesGetMock = jest.mocked(titresDemarchesGet, true)
+const titresDemarchesGetMock = vi.mocked(titresDemarchesGet, true)
 
-console.info = jest.fn()
-
+console.info = vi.fn()
+afterEach(() => {
+  vi.resetAllMocks()
+})
 describe('ordre des étapes', () => {
   test("met à jour l'ordre de deux étapes", async () => {
     titresDemarchesGetMock.mockResolvedValue(titresDemarchesEtapes)

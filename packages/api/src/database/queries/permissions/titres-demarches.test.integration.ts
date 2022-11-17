@@ -12,9 +12,10 @@ import TitresEtapes from '../../models/titres-etapes'
 import { Role } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
 import { toCaminoDate } from 'camino-common/src/date'
+import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 
-console.info = jest.fn()
-console.error = jest.fn()
+console.info = vi.fn()
+console.error = vi.fn()
 
 beforeAll(async () => {
   await dbManager.populateDb()
@@ -26,24 +27,17 @@ afterAll(async () => {
 
 describe('titresDemarchesQueryModify', () => {
   describe('titreDemarcheSuppressionSelectQuery', () => {
-    test.each`
-      role            | suppression
-      ${'super'}      | ${true}
-      ${'admin'}      | ${true}
-      ${'editeur'}    | ${true}
-      ${'lecteur'}    | ${false}
-      ${'entreprise'} | ${false}
-      ${'default'}    | ${false}
-      ${undefined}    | ${false}
-    `(
+    test.each<[Role | undefined, boolean]>([
+      ['super', true],
+      ['admin', true],
+      ['editeur', true],
+      ['lecteur', false],
+      ['entreprise', false],
+      ['defaut', false],
+      [undefined, false]
+    ])(
       'un utilisateur $user peut supprimer $suppression une démarche qui n’a pas d’étape',
-      async ({
-        role,
-        suppression
-      }: {
-        role: Role | undefined
-        suppression: boolean
-      }) => {
+      async (role, suppression) => {
         const titreId = idGenerate()
         await Titres.query().insert([
           {
@@ -87,24 +81,17 @@ describe('titresDemarchesQueryModify', () => {
       }
     )
 
-    test.each`
-      role            | suppression
-      ${'super'}      | ${true}
-      ${'admin'}      | ${false}
-      ${'editeur'}    | ${false}
-      ${'lecteur'}    | ${false}
-      ${'entreprise'} | ${false}
-      ${'default'}    | ${false}
-      ${undefined}    | ${false}
-    `(
+    test.each<[Role | undefined, boolean]>([
+      ['super', true],
+      ['admin', false],
+      ['editeur', false],
+      ['lecteur', false],
+      ['entreprise', false],
+      ['defaut', false],
+      [undefined, false]
+    ])(
       'un utilisateur $role peut supprimer une démarche qui a au moins une étape',
-      async ({
-        role,
-        suppression
-      }: {
-        role: Role | undefined
-        suppression: boolean
-      }) => {
+      async (role, suppression) => {
         const titreId = idGenerate()
         await Titres.query().insert([
           {

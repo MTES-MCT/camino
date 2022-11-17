@@ -4,7 +4,7 @@ import {
   titreEtapePointsValides,
   titreEtapePointsReferenceManquante
 } from './__mocks__/titre-etape-points-validate'
-
+import { describe, test, expect } from 'vitest'
 describe("vérifie la validité des coordonnées des points d'une étape", () => {
   test('les points ont des coordonnées de référence', () => {
     expect(titreEtapePointsValidate(titreEtapePointsValides)).toEqual(null)

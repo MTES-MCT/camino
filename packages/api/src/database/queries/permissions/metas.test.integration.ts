@@ -8,9 +8,10 @@ import AdministrationsTitresTypesTitresStatuts from '../../models/administration
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 
-console.info = jest.fn()
-console.error = jest.fn()
+console.info = vi.fn()
+console.error = vi.fn()
 beforeAll(async () => {
   await dbManager.populateDb()
 })
@@ -21,21 +22,14 @@ afterAll(async () => {
 
 describe('metas permissions queries', () => {
   describe('demarchesTypesQueryModify', () => {
-    test.each`
-      administrationId          | travauxCreation
-      ${'dre-ile-de-france-01'} | ${true}
-      ${'dea-guyane-01'}        | ${true}
-      ${'min-mtes-dgec-01'}     | ${false}
-      ${'ope-ptmg-973-01'}      | ${false}
-    `(
+    test.each<[AdministrationId, boolean]>([
+      ['dre-ile-de-france-01', true],
+      ['dea-guyane-01', true],
+      ['min-mtes-dgec-01', false],
+      ['ope-ptmg-973-01', false]
+    ])(
       'l’administration $administrationId peut créer des travaux',
-      async ({
-        administrationId,
-        travauxCreation
-      }: {
-        administrationId: AdministrationId
-        travauxCreation: boolean
-      }) => {
+      async (administrationId, travauxCreation) => {
         const titreId = idGenerate()
 
         // On cherche un type de titre où l’administration est gestionnaire

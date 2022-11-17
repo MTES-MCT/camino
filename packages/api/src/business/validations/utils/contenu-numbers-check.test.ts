@@ -5,6 +5,7 @@ import {
   sections,
   sectionsSansElement
 } from '../__mocks__/contenu-numbers-check-contenus'
+import { describe, test, expect } from 'vitest'
 
 describe('vérifie la validité du contenu de type nombre', () => {
   test("la sections n'a pas d'éléments", () => {

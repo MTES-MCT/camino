@@ -1,8 +1,8 @@
 import { ITitreDemarche } from '../../types'
 
 import { titreEtapePropFind } from './titre-etape-prop-find'
-
-console.error = jest.fn()
+import { vi, describe, expect, test } from 'vitest'
+console.error = vi.fn()
 
 describe("valeur d'une propriété pour une étape", () => {
   const date = '2020-12-01'

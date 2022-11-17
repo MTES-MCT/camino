@@ -13,20 +13,23 @@ import {
   titresUnePhaseMiseAJour,
   titrePhase
 } from './__mocks__/titres-phases-update-titres'
-
-jest.mock('../../database/queries/titres-phases', () => ({
-  titrePhasesUpsert: jest.fn().mockResolvedValue(true),
-  titrePhasesDelete: jest.fn().mockResolvedValue(true)
+import { vi, afterEach, describe, expect, test } from 'vitest'
+vi.mock('../../database/queries/titres-phases', () => ({
+  titrePhasesUpsert: vi.fn().mockResolvedValue(true),
+  titrePhasesDelete: vi.fn().mockResolvedValue(true)
 }))
 
-jest.mock('../../database/queries/titres', () => ({
-  titresGet: jest.fn()
+vi.mock('../../database/queries/titres', () => ({
+  titresGet: vi.fn()
 }))
 
-const titresGetMock = jest.mocked(titresGet, true)
+const titresGetMock = vi.mocked(titresGet, true)
 
-console.info = jest.fn()
+console.info = vi.fn()
 
+afterEach(() => {
+  vi.resetAllMocks()
+})
 describe("phases d'un titre", () => {
   test('met à jour un titre dont une phase est créée', async () => {
     titresGetMock.mockResolvedValue(titresUnePhase)

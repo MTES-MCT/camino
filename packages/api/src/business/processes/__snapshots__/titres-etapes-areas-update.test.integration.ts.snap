@@ -1,4 +1,143 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
+
+exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 1`] = `
+[
+  {
+    "communeId": "97358",
+    "surface": 292012,
+    "titreEtapeId": "titreEtapeIdUniquePourMiseAJourAreas",
+  },
+  {
+    "communeId": "97312",
+    "surface": 716357,
+    "titreEtapeId": "titreEtapeIdUniquePourMiseAJourAreas",
+  },
+]
+`;
+
+exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 2`] = `
+[
+  {
+    "foretId": "DBR",
+    "titreEtapeId": "titreEtapeIdUniquePourMiseAJourAreas",
+  },
+]
+`;
+
+exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 3`] = `
+[
+  {
+    "sdomZoneId": "1",
+    "titreEtapeId": "titreEtapeIdUniquePourMiseAJourAreas",
+  },
+]
+`;
+
+exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 4`] = `
+[
+  {
+    "administrationsLocales": null,
+    "archive": false,
+    "communes": [
+      {
+        "departementId": "973",
+        "id": "97312",
+        "nom": "Sinnamary",
+        "surface": 716357,
+      },
+      {
+        "departementId": "973",
+        "id": "97358",
+        "nom": "Saint-Élie",
+        "surface": 292012,
+      },
+    ],
+    "contenu": null,
+    "date": "2022-03-09",
+    "dateDebut": null,
+    "dateFin": null,
+    "decisionsAnnexesContenu": null,
+    "decisionsAnnexesSections": null,
+    "duree": null,
+    "forets": [
+      {
+        "id": "DBR",
+        "nom": "Deux Branches",
+      },
+    ],
+    "heritageContenu": null,
+    "heritageProps": null,
+    "id": "titreEtapeIdUniquePourMiseAJourAreas",
+    "incertitudes": null,
+    "ordre": null,
+    "sdomZones": [
+      {
+        "id": "1",
+        "nom": "Zone 1",
+      },
+    ],
+    "secteursMaritime": [],
+    "slug": "titreDemarcheIdUniquePourMiseAJourAreas-mfr99",
+    "statutId": "aco",
+    "substances": [],
+    "surface": null,
+    "titreDemarcheId": "titreDemarcheIdUniquePourMiseAJourAreas",
+    "typeId": "mfr",
+  },
+]
+`;
+
+exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 5`] = `
+[
+  {
+    "archive": false,
+    "communes": [
+      {
+        "departementId": "973",
+        "id": "97312",
+        "nom": "Sinnamary",
+        "surface": 716357,
+      },
+      {
+        "departementId": "973",
+        "id": "97358",
+        "nom": "Saint-Élie",
+        "surface": 292012,
+      },
+    ],
+    "contenusTitreEtapesIds": null,
+    "coordonnees": null,
+    "dateDebut": null,
+    "dateDemande": null,
+    "dateFin": null,
+    "domaineId": "m",
+    "doublonTitreId": null,
+    "entreprisesLecture": false,
+    "forets": [
+      {
+        "id": "DBR",
+        "nom": "Deux Branches",
+      },
+    ],
+    "id": "titreIdUniquePourMiseAJourAreas",
+    "nom": "nom-titreIdUniquePourMiseAJourAreas",
+    "propsTitreEtapesIds": {
+      "points": "titreEtapeIdUniquePourMiseAJourAreas",
+    },
+    "publicLecture": false,
+    "references": [],
+    "sdomZones": [
+      {
+        "id": "1",
+        "nom": "Zone 1",
+      },
+    ],
+    "slug": "slug-titreIdUniquePourMiseAJourAreas",
+    "titreStatutId": "val",
+    "typeId": "arm",
+  },
+]
+`;
 
 exports[`titresEtapesAreasUpdate met à jour les communes, forêts et zone du SDOM sur une étape 1`] = `
 Array [

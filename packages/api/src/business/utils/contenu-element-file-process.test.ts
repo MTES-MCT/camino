@@ -1,5 +1,6 @@
 import { FileUpload } from 'graphql-upload'
 import { ReadStream } from 'fs'
+import { afterEach, vi, describe, test, expect } from 'vitest'
 
 import { IContenu, IContenuElement, ISection, ITitreEtape } from '../../types'
 
@@ -14,25 +15,29 @@ import dirCreate from '../../tools/dir-create'
 import fileStreamCreate from '../../tools/file-stream-create'
 import fileDelete from '../../tools/file-delete'
 
-jest.mock('../../tools/dir-create', () => ({
+vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
-  default: jest.fn()
+  default: vi.fn()
 }))
-const dirCreateMock = jest.mocked(dirCreate, true)
+const dirCreateMock = vi.mocked(dirCreate, true)
 
-jest.mock('../../tools/file-stream-create', () => ({
+vi.mock('../../tools/file-stream-create', () => ({
   __esModule: true,
-  default: jest.fn()
+  default: vi.fn()
 }))
-const fileStreamCreateMock = jest.mocked(fileStreamCreate, true)
+const fileStreamCreateMock = vi.mocked(fileStreamCreate, true)
 
-jest.mock('../../tools/file-delete', () => ({
+vi.mock('../../tools/file-delete', () => ({
   __esModule: true,
-  default: jest.fn()
+  default: vi.fn()
 }))
-const fileDeleteMock = jest.mocked(fileDelete, true)
+const fileDeleteMock = vi.mocked(fileDelete, true)
 
-jest.mock('crypto-random-string', () => () => 'prefix')
+vi.mock('crypto-random-string', () => ({ default: () => 'prefix' }))
+
+afterEach(() => {
+  vi.resetAllMocks()
+})
 
 describe('sectionsContenuAndFilesGet', () => {
   test('si pas de contenu alors pas de contenu ni de fichier', () => {

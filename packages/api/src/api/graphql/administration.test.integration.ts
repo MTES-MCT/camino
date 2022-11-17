@@ -2,9 +2,10 @@ import { graphQLCall, queryImport } from '../../../tests/_utils/index'
 
 import { dbManager } from '../../../tests/db-manager'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { beforeAll, afterAll, test, expect, describe, vi } from 'vitest'
 
-console.info = jest.fn()
-console.error = jest.fn()
+console.info = vi.fn()
+console.error = vi.fn()
 beforeAll(async () => {
   await dbManager.populateDb()
 })

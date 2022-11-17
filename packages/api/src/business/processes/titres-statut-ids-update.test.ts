@@ -5,16 +5,16 @@ import {
   titresValideStatutIdAJour,
   titresEchuStatutIdObselete
 } from './__mocks__/titres-statut-ids-update-titres'
-
-jest.mock('../../database/queries/titres', () => ({
+import { vi, describe, expect, test } from 'vitest'
+vi.mock('../../database/queries/titres', () => ({
   __esModule: true,
-  titreUpdate: jest.fn().mockResolvedValue(true),
-  titresGet: jest.fn()
+  titreUpdate: vi.fn().mockResolvedValue(true),
+  titresGet: vi.fn()
 }))
 
-const titresGetMock = jest.mocked(titresGet, true)
+const titresGetMock = vi.mocked(titresGet, true)
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe("statut d'un titre", () => {
   test('met à jour un titre si son statut est obsolète', async () => {

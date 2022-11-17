@@ -25,7 +25,6 @@ const uploadAllowedMiddleware = async (
 const restUpload = () => {
   const tmp = '/files/tmp'
   const server = new Server()
-
   // nous passons à travers un proxy
   const relativeLocation = true
   server.datastore = new FileStore({ path: tmp, relativeLocation })

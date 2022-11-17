@@ -4,11 +4,13 @@ import { titreActiviteValideCheck } from './titre-activite-valide-check'
 
 import { titreValideCheck } from './titre-valide-check'
 
-jest.mock('./titre-valide-check', () => ({
-  titreValideCheck: jest.fn()
+import { vi, describe, test, expect } from 'vitest'
+
+vi.mock('./titre-valide-check', () => ({
+  titreValideCheck: vi.fn()
 }))
 
-const titreValideCheckMock = jest.mocked(titreValideCheck, true)
+const titreValideCheckMock = vi.mocked(titreValideCheck, true)
 
 describe('validité des activités', () => {
   test("retourne faux si la date de l'activité est après aujourd'hui", () => {

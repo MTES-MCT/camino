@@ -1,4 +1,5 @@
 import { timeFormat } from './index'
+import { describe, expect, test } from 'vitest'
 
 describe('timeFormat', () => {
   test('conversion', () => {

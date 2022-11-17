@@ -11,6 +11,7 @@ import {
 } from './titre-etape-heritage-props-find'
 
 import { objectClone } from '../../tools/index'
+import { describe, test, expect } from 'vitest'
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
@@ -30,23 +31,14 @@ describe('retourne l’étape en fonction de son héritage', () => {
     })
   })
 
-  test.each`
-    propId         | heritageValeur  | etapeValeur
-    ${'surface'}   | ${3}            | ${2}
-    ${'duree'}     | ${10}           | ${20}
-    ${'dateDebut'} | ${'2020-01-01'} | ${'2023-01-01'}
-    ${'dateFin'}   | ${'2021-01-01'} | ${'2021-03-01'}
-  `(
+  test.each<[keyof ITitreEtape, any, any]>([
+    ['surface', 3, 2],
+    ['duree', 10, 20],
+    ['dateDebut', '2020-01-01', '2023-01-01'],
+    ['dateFin', '2021-01-01', '2021-03-01']
+  ])(
     'l’étape est modifiée si elle a une étape précédente et qu’elle au moins un héritage non renseigné',
-    ({
-      propId,
-      heritageValeur,
-      etapeValeur
-    }: {
-      propId: keyof ITitreEtape
-      heritageValeur: any
-      etapeValeur: any
-    }) => {
+    (propId, heritageValeur, etapeValeur) => {
       const titreEtapePrecedente = {
         id: 'titreEtapePrecedenteId',
         heritageProps: titreEtapePropsIds.reduce((acc, prop) => {

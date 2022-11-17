@@ -1,6 +1,6 @@
 import { toCaminoDate } from 'camino-common/src/date'
 import { demarcheEtatsValidate } from '../_utils.test'
-
+import { describe, expect, test } from 'vitest'
 describe('vérifie l’arbre d’octroi d’une PRM', () => {
   const octEtatsValidate = demarcheEtatsValidate('oct', 'prm', '2020-01-01')
 
@@ -31,7 +31,7 @@ describe('vérifie l’arbre d’octroi d’une PRM', () => {
         { typeId: 'rpu', date: toCaminoDate('2020-01-19') }
       ])
     ).toMatchInlineSnapshot(`
-      Array [
+      [
         "l’étape \\"rpu\\" n’est pas possible après \\"ssr\\", \\"scl\\", \\"spo\\", \\"apo\\", \\"npp\\", \\"mno\\"",
       ]
     `)

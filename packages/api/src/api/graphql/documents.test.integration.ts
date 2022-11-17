@@ -13,8 +13,18 @@ import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
 import { toCaminoDate } from 'camino-common/src/date'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 
-console.info = jest.fn()
-console.error = jest.fn()
+import {
+  afterAll,
+  afterEach,
+  beforeAll,
+  describe,
+  test,
+  expect,
+  vi
+} from 'vitest'
+
+console.info = vi.fn()
+console.error = vi.fn()
 
 beforeAll(async () => {
   await dbManager.populateDb()

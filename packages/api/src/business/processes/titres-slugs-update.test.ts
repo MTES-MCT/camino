@@ -3,27 +3,27 @@ import { titresSlugsUpdate } from './titres-slugs-update'
 
 import { titreSlugAndRelationsUpdate } from '../utils/titre-slug-and-relations-update'
 import { titresGet } from '../../database/queries/titres'
-
-jest.mock('../utils/titre-slug-and-relations-update', () => ({
+import { vi, describe, expect, test } from 'vitest'
+vi.mock('../utils/titre-slug-and-relations-update', () => ({
   __esModule: true,
-  titreSlugAndRelationsUpdate: jest.fn()
+  titreSlugAndRelationsUpdate: vi.fn()
 }))
 
-jest.mock('../../database/queries/titres', () => ({
+vi.mock('../../database/queries/titres', () => ({
   __esModule: true,
-  titreIdUpdate: jest.fn().mockResolvedValue(true),
-  titreGet: jest.fn().mockResolvedValue(true),
-  titresGet: jest.fn().mockResolvedValue(true)
+  titreIdUpdate: vi.fn().mockResolvedValue(true),
+  titreGet: vi.fn().mockResolvedValue(true),
+  titresGet: vi.fn().mockResolvedValue(true)
 }))
 
-const titresGetMock = jest.mocked(titresGet, true)
-const titreSlugAndRelationsUpdateMock = jest.mocked(
+const titresGetMock = vi.mocked(titresGet, true)
+const titreSlugAndRelationsUpdateMock = vi.mocked(
   titreSlugAndRelationsUpdate,
   true
 )
 
-console.info = jest.fn()
-console.error = jest.fn()
+console.info = vi.fn()
+console.error = vi.fn()
 
 const titre = { slug: 'slug-old' } as Titres
 

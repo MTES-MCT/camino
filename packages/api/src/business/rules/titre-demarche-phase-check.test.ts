@@ -1,6 +1,6 @@
 import { ITitreEtape } from '../../types'
 import { titreDemarchePhaseCheck } from './titre-demarche-phase-check'
-
+import { describe, expect, test } from 'vitest'
 describe('retourne si la démarche donne lieu à une étape ou non', () => {
   test('une démarche sans étape ne donne pas lieu à une phase', () => {
     expect(titreDemarchePhaseCheck('mut', 'acc', 'cxh', null)).toBeFalsy()

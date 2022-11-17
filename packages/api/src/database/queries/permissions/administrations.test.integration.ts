@@ -5,16 +5,20 @@ import Titres from '../../models/titres'
 import Utilisateurs from '../../models/utilisateurs'
 import AdministrationsActivitesTypesEmails from '../../models/administrations-activites-types-emails'
 import Administrations from '../../models/administrations'
-import { Administrations as CommonAdministrations } from 'camino-common/src/static/administrations'
+import {
+  AdministrationId,
+  Administrations as CommonAdministrations
+} from 'camino-common/src/static/administrations'
 import {
   administrationsTitresQuery,
   administrationsQueryModify
 } from './administrations'
 import { idGenerate } from '../../models/_format/id-create'
 import options from '../_options'
-
-console.info = jest.fn()
-console.error = jest.fn()
+import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
+import { Role } from 'camino-common/src/roles'
+console.info = vi.fn()
+console.error = vi.fn()
 
 beforeAll(async () => {
   await dbManager.populateDb()
@@ -25,15 +29,14 @@ afterAll(async () => {
 })
 
 describe('administrationsTitresQuery', () => {
-  test.each`
-    administrationId     | visible
-    ${'ope-brgm-01'}     | ${false}
-    ${'ope-onf-973-01'}  | ${true}
-    ${'pre-97302-01'}    | ${true}
-    ${'ope-ptmg-973-01'} | ${true}
-  `(
+  test.each<[AdministrationId, boolean]>([
+    ['ope-brgm-01', false],
+    ['ope-onf-973-01', true],
+    ['pre-97302-01', true],
+    ['ope-ptmg-973-01', true]
+  ])(
     "Vérifie l'écriture de la requête sur les titres dont une administration a des droits sur le type",
-    async ({ administrationId, visible }) => {
+    async (administrationId, visible) => {
       await Titres.query().delete()
 
       const mockTitre = {
@@ -70,15 +73,14 @@ describe('administrationsTitresQuery', () => {
 })
 
 describe('administrationsQueryModify', () => {
-  test.each`
-    role         | emailsModification
-    ${'super'}   | ${true}
-    ${'admin'}   | ${false}
-    ${'editeur'} | ${false}
-    ${'lecteur'} | ${false}
-  `(
+  test.each<[Role, boolean]>([
+    ['super', true],
+    ['admin', false],
+    ['editeur', false],
+    ['lecteur', false]
+  ])(
     "pour une préfecture, emailsModification est 'true' pour un utilisateur super, 'false' pour tous ses membres",
-    async ({ role, emailsModification }) => {
+    async (role, emailsModification) => {
       const mockAdministration = CommonAdministrations['pre-01053-01']
 
       const mockUser: IUtilisateur = {
@@ -108,16 +110,15 @@ describe('administrationsQueryModify', () => {
     }
   )
 
-  test.each`
-    role         | emailsModification
-    ${'super'}   | ${true}
-    ${'admin'}   | ${true}
-    ${'editeur'} | ${true}
-    ${'lecteur'} | ${false}
-    ${'defaut'}  | ${false}
-  `(
+  test.each<[Role, boolean]>([
+    ['super', true],
+    ['admin', true],
+    ['editeur', true],
+    ['lecteur', false],
+    ['defaut', false]
+  ])(
     "pour une DREAL/DEAL, emailsModification est 'true' pour ses membres admins et éditeurs, pour les utilisateurs supers, 'false' pour ses autres membres",
-    async ({ role, emailsModification }) => {
+    async (role, emailsModification) => {
       const mockDreal = CommonAdministrations['dre-ile-de-france-01']
 
       const mockUser: IUtilisateur = {
@@ -173,15 +174,14 @@ describe('administrationsQueryModify', () => {
     expect(res?.emailsModification).toBe(false)
   })
 
-  test.each`
-    role         | emailsModification
-    ${'admin'}   | ${true}
-    ${'editeur'} | ${true}
-    ${'lecteur'} | ${false}
-    ${'defaut'}  | ${false}
-  `(
+  test.each<[Role, boolean]>([
+    ['admin', true],
+    ['editeur', true],
+    ['lecteur', false],
+    ['defaut', false]
+  ])(
     "pour un membre $role de ministère, emailsModification est '$emailsModification'",
-    async ({ role, emailsModification }) => {
+    async (role, emailsModification) => {
       const mockMin = CommonAdministrations['min-dajb-01']
 
       const mockUser: IUtilisateur = {

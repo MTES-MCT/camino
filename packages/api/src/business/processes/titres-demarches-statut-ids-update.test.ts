@@ -6,19 +6,19 @@ import {
   titresDemarchesStatutIdentique,
   titresDemarchesSansEtape
 } from './__mocks__/titres-demarches-statut-ids-update-demarches'
-
-jest.mock('../../database/queries/titres-demarches', () => ({
-  titreDemarcheUpdate: jest.fn().mockResolvedValue(true)
+import { vi, describe, expect, test } from 'vitest'
+vi.mock('../../database/queries/titres-demarches', () => ({
+  titreDemarcheUpdate: vi.fn().mockResolvedValue(true)
 }))
 
-jest.mock('../../database/queries/titres', () => ({
+vi.mock('../../database/queries/titres', () => ({
   __esModule: true,
-  titresGet: jest.fn()
+  titresGet: vi.fn()
 }))
 
-const titresGetMock = jest.mocked(titresGet, true)
+const titresGetMock = vi.mocked(titresGet, true)
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe("statut des démarches d'un titre", () => {
   test("met à jour le statut d'une démarche", async () => {

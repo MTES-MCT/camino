@@ -1,10 +1,10 @@
 import { mkdirSync, readFileSync, rmdirSync } from 'fs'
-
+import { vi, beforeEach, afterEach, describe, expect, test } from 'vitest'
 import fileRename from './file-rename'
 import fileCreate from './file-create'
 
-console.error = jest.fn()
-console.info = jest.fn()
+console.error = vi.fn()
+console.info = vi.fn()
 
 const workingDir = 'testFileRenameTmp'
 const pathGet = (path: string) => `${workingDir}/${path}`

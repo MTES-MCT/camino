@@ -29,56 +29,57 @@ import {
   apiEntreprisesEtablissementsSupprimeees
 } from './__mocks__/entreprises-update'
 import { IEntreprise, IEntrepriseEtablissement } from '../../types'
+import { vi, beforeEach, describe, expect, test } from 'vitest'
 
 const entreprisesUpdated: IEntreprise[] = []
-// 'jest.mock()` est hoisté avant l'import, le court-circuitant
-// https://jestjs.io/docs/en/jest-object#jestdomockmodulename-factory-options
-jest.mock('../../database/queries/entreprises', () => ({
-  entreprisesUpsert: jest.fn().mockImplementation(a => {
+// 'vi.mock()` est hoisté avant l'import, le court-circuitant
+// https://vijs.io/docs/en/vi-object#vidomockmodulename-factory-options
+vi.mock('../../database/queries/entreprises', () => ({
+  entreprisesUpsert: vi.fn().mockImplementation(a => {
     entreprisesUpdated.push(...a)
 
     return a
   }),
-  entreprisesGet: jest.fn()
+  entreprisesGet: vi.fn()
 }))
 
 const etablissementsUpdated: IEntrepriseEtablissement[] = []
 const etablissementsDeleted: string[] = []
-jest.mock('../../database/queries/entreprises-etablissements', () => ({
-  entreprisesEtablissementsUpsert: jest.fn().mockImplementation(a => {
+vi.mock('../../database/queries/entreprises-etablissements', () => ({
+  entreprisesEtablissementsUpsert: vi.fn().mockImplementation(a => {
     etablissementsUpdated.push(...a)
 
     return a
   }),
-  entreprisesEtablissementsDelete: jest.fn().mockImplementation(a => {
+  entreprisesEtablissementsDelete: vi.fn().mockImplementation(a => {
     etablissementsDeleted.push(...a)
 
     return a
   }),
-  entreprisesEtablissementsGet: jest.fn()
+  entreprisesEtablissementsGet: vi.fn()
 }))
 
-// 'jest.mock()' est hoisté avant l'import, le court-circuitant
-// https://jestjs.io/docs/en/jest-object#jestdomockmodulename-factory-options
-jest.mock('../../tools/api-insee/index', () => ({
+// 'vi.mock()' est hoisté avant l'import, le court-circuitant
+// https://vijs.io/docs/en/vi-object#vidomockmodulename-factory-options
+vi.mock('../../tools/api-insee/index', () => ({
   __esModule: true,
-  apiInseeEntreprisesGet: jest.fn(),
-  apiInseeEntreprisesEtablissementsGet: jest.fn()
+  apiInseeEntreprisesGet: vi.fn(),
+  apiInseeEntreprisesEtablissementsGet: vi.fn()
 }))
 
-const entreprisesGetMock = jest.mocked(entreprisesGet, true)
-const entreprisesEtablissementsGetMock = jest.mocked(
+const entreprisesGetMock = vi.mocked(entreprisesGet, true)
+const entreprisesEtablissementsGetMock = vi.mocked(
   entreprisesEtablissementsGet,
   true
 )
-const apiInseeEntreprisesGetMock = jest.mocked(apiInseeEntreprisesGet, true)
-const apiInseeEntreprisesEtablissementsGetMock = jest.mocked(
+const apiInseeEntreprisesGetMock = vi.mocked(apiInseeEntreprisesGet, true)
+const apiInseeEntreprisesEtablissementsGetMock = vi.mocked(
   apiInseeEntreprisesEtablissementsGet,
   true
 )
 
-console.info = jest.fn()
-console.info = jest.fn()
+console.info = vi.fn()
+console.info = vi.fn()
 
 describe('entreprises', () => {
   beforeEach(() => {

@@ -5,30 +5,30 @@ import { titreDateDemandeFind } from '../rules/titre-date-demande-find'
 import { titresGet } from '../../database/queries/titres'
 import Titres from '../../database/models/titres'
 import { toCaminoDate } from 'camino-common/src/date'
-
-jest.mock('../../database/queries/titres', () => ({
-  titreUpdate: jest.fn().mockResolvedValue(true),
-  titresGet: jest.fn()
+import { vi, describe, expect, test } from 'vitest'
+vi.mock('../../database/queries/titres', () => ({
+  titreUpdate: vi.fn().mockResolvedValue(true),
+  titresGet: vi.fn()
 }))
 
-jest.mock('../rules/titre-date-fin-find', () => ({
-  titreDateFinFind: jest.fn()
+vi.mock('../rules/titre-date-fin-find', () => ({
+  titreDateFinFind: vi.fn()
 }))
 
-jest.mock('../rules/titre-date-debut-find', () => ({
-  titreDateDebutFind: jest.fn()
+vi.mock('../rules/titre-date-debut-find', () => ({
+  titreDateDebutFind: vi.fn()
 }))
 
-jest.mock('../rules/titre-date-demande-find', () => ({
-  titreDateDemandeFind: jest.fn()
+vi.mock('../rules/titre-date-demande-find', () => ({
+  titreDateDemandeFind: vi.fn()
 }))
 
-const titresGetMock = jest.mocked(titresGet, true)
-const titreDateFinFindMock = jest.mocked(titreDateFinFind, true)
-const titreDateDebutFindMock = jest.mocked(titreDateDebutFind, true)
-const titreDateDemandeFindMock = jest.mocked(titreDateDemandeFind, true)
+const titresGetMock = vi.mocked(titresGet, true)
+const titreDateFinFindMock = vi.mocked(titreDateFinFind, true)
+const titreDateDebutFindMock = vi.mocked(titreDateDebutFind, true)
+const titreDateDemandeFindMock = vi.mocked(titreDateDemandeFind, true)
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe("dates d'un titre", () => {
   test("met à jour les dates d'un titre", async () => {

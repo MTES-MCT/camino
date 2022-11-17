@@ -1,5 +1,6 @@
 import { filesPathCheck } from './files-path-check'
 import { IndexFile } from './_types'
+import { expect, test } from 'vitest'
 
 test('filesPathCheck', () => {
   const fileIndex = {

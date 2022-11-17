@@ -1,5 +1,5 @@
 import { objectsDiffer, dupRemove, dupFind, objectClone } from './index'
-
+import { describe, expect, test } from 'vitest'
 describe('comparaison entre des objets', () => {
   test('retourne false si les objets sont identiques (dates)', () => {
     const res = objectsDiffer({ date: '1910-01-01' }, { date: '1910-01-01' })

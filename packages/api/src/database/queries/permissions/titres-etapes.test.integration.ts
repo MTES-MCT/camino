@@ -7,9 +7,9 @@ import TitresEtapes from '../../models/titres-etapes'
 import { titresEtapesQueryModify } from './titres-etapes'
 import TitresDemarches from '../../models/titres-demarches'
 import { toCaminoDate } from 'camino-common/src/date'
-
-console.info = jest.fn()
-console.error = jest.fn()
+import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
+console.info = vi.fn()
+console.error = vi.fn()
 
 beforeAll(async () => {
   await dbManager.populateDb()

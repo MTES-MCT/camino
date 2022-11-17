@@ -1,6 +1,6 @@
 import { ITitreDemarche } from '../../../types'
 import { titreContenuFormat } from './titre-contenu'
-
+import { describe, test, expect } from 'vitest'
 describe('formatage du contenu', () => {
   test("formate le contenu d'un titre", () => {
     expect(

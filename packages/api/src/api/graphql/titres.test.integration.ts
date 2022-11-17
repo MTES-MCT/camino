@@ -5,9 +5,19 @@ import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { ITitre } from '../../types'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { toCaminoDate } from 'camino-common/src/date'
+import {
+  vi,
+  afterEach,
+  beforeEach,
+  afterAll,
+  beforeAll,
+  describe,
+  test,
+  expect
+} from 'vitest'
 
-console.info = jest.fn()
-console.error = jest.fn()
+console.info = vi.fn()
+console.error = vi.fn()
 beforeAll(async () => {
   await dbManager.populateDb()
 })

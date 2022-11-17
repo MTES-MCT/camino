@@ -23,6 +23,7 @@ import {
 } from './__mocks__/titre-prop-etape-find-demarches'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { toCaminoDate } from 'camino-common/src/date'
+import { describe, expect, test } from 'vitest'
 
 describe("id de l'étape d'une propriété valide (dé-normalise)", () => {
   test("trouve l'id de la dernière étape acceptée de la démarche d'octroi acceptée ayant la propriété 'points'", () => {

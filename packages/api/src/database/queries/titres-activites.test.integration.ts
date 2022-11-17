@@ -4,8 +4,9 @@ import { dbManager } from '../../../tests/db-manager'
 import { IUtilisateur } from '../../types'
 import { idGenerate } from '../models/_format/id-create'
 import Titres from '../models/titres'
-console.info = jest.fn()
-console.error = jest.fn()
+import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
+console.info = vi.fn()
+console.error = vi.fn()
 beforeAll(async () => {
   await dbManager.populateDb()
 })

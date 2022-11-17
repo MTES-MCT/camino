@@ -5,22 +5,24 @@ import {
   visibleCheck
 } from '../../../tests/_utils/administrations-permissions'
 import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../../database/models/titres-types--demarches-types-etapes-types-justificatifs-types'
-
-jest.mock('../../tools/dir-create', () => ({
+import { afterAll, beforeAll, describe, test, vi } from 'vitest'
+import { AdministrationId } from 'camino-common/src/static/administrations'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
-  default: jest.fn()
+  default: vi.fn()
 }))
 
-jest.mock('../../tools/file-stream-create', () => ({
+vi.mock('../../tools/file-stream-create', () => ({
   __esModule: true,
-  default: jest.fn()
+  default: vi.fn()
 }))
-jest.mock('../../tools/file-delete', () => ({
+vi.mock('../../tools/file-delete', () => ({
   __esModule: true,
-  default: jest.fn()
+  default: vi.fn()
 }))
-console.info = jest.fn()
-console.error = jest.fn()
+console.info = vi.fn()
+console.error = vi.fn()
 beforeAll(async () => {
   await dbManager.populateDb()
 
@@ -32,13 +34,12 @@ afterAll(async () => {
 })
 
 describe('Visibilité des étapes', () => {
-  test.each`
-    administrationId       | visible | etapeTypeId
-    ${'ope-onf-973-01'}    | ${true} | ${'mcr'}
-    ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
-  `(
+  test.each<[AdministrationId, boolean, EtapeTypeId]>([
+    ['ope-onf-973-01', true, 'mcr'],
+    ['min-mtes-dgaln-01', true, 'mcr']
+  ])(
     "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre ARM : $visible",
-    async ({ administrationId, visible, etapeTypeId }) =>
+    async (administrationId, visible, etapeTypeId) =>
       visibleCheck(
         administrationId,
         visible,
@@ -49,14 +50,13 @@ describe('Visibilité des étapes', () => {
       )
   )
 
-  test.each`
-    administrationId       | visible | etapeTypeId
-    ${'ope-onf-973-01'}    | ${true} | ${'mcr'}
-    ${'dea-guyane-01'}     | ${true} | ${'mcr'}
-    ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
-  `(
+  test.each<[AdministrationId, boolean, EtapeTypeId]>([
+    ['ope-onf-973-01', true, 'mcr'],
+    ['dea-guyane-01', true, 'mcr'],
+    ['min-mtes-dgaln-01', true, 'mcr']
+  ])(
     "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre AXM : $visible",
-    async ({ administrationId, visible, etapeTypeId }) =>
+    async (administrationId, visible, etapeTypeId) =>
       visibleCheck(
         administrationId,
         visible,
@@ -67,12 +67,11 @@ describe('Visibilité des étapes', () => {
       )
   )
 
-  test.each`
-    administrationId       | visible | etapeTypeId
-    ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
-  `(
+  test.each<[AdministrationId, boolean, EtapeTypeId]>([
+    ['min-mtes-dgaln-01', true, 'mcr']
+  ])(
     "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre CXM : $visible",
-    async ({ administrationId, visible, etapeTypeId }) =>
+    async (administrationId, visible, etapeTypeId) =>
       visibleCheck(
         administrationId,
         visible,
@@ -83,12 +82,11 @@ describe('Visibilité des étapes', () => {
       )
   )
 
-  test.each`
-    administrationId       | visible | etapeTypeId
-    ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
-  `(
+  test.each<[AdministrationId, boolean, EtapeTypeId]>([
+    ['min-mtes-dgaln-01', true, 'mcr']
+  ])(
     "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre PRM : $visible",
-    async ({ administrationId, visible, etapeTypeId }) =>
+    async (administrationId, visible, etapeTypeId) =>
       visibleCheck(
         administrationId,
         visible,
@@ -99,12 +97,11 @@ describe('Visibilité des étapes', () => {
       )
   )
 
-  test.each`
-    administrationId       | visible | etapeTypeId
-    ${'min-mtes-dgaln-01'} | ${true} | ${'mcr'}
-  `(
+  test.each<[AdministrationId, boolean, EtapeTypeId]>([
+    ['min-mtes-dgaln-01', true, 'mcr']
+  ])(
     "un utilisateur admin de l’administration $administrationId peut voir l'étape $etapeTypeId d'un titre PXM : $visible",
-    async ({ administrationId, visible, etapeTypeId }) =>
+    async (administrationId, visible, etapeTypeId) =>
       visibleCheck(
         administrationId,
         visible,
@@ -117,42 +114,33 @@ describe('Visibilité des étapes', () => {
 })
 
 describe('Création des étapes', () => {
-  test.each`
-    administrationId
-    ${'min-mtes-dgaln-01'}
-  `(
+
+  test.each<[AdministrationId]>([['min-mtes-dgaln-01']])(
     'un utilisateur admin de l’administration $administrationId peut créer une étape $etapeTypeId sur un titre CXM',
-    async ({ administrationId }) =>
+    async administrationId =>
       creationCheck(administrationId, true, 'etapes', 'cxm')
   )
 
-  test.each`
-    administrationId
-    ${'min-mtes-dgaln-01'}
-  `(
+  test.each<[AdministrationId]>([['min-mtes-dgaln-01']])(
     'un utilisateur admin de l’administration $administrationId peut créer une étape mfr sur un titre PRM',
-    async ({ administrationId }) =>
+    async administrationId =>
       creationCheck(administrationId, true, 'etapes', 'prm')
   )
 
-  test.each`
-    administrationId
-    ${'min-mtes-dgaln-01'}
-  `(
+  test.each<[AdministrationId]>([['min-mtes-dgaln-01']])(
     'un utilisateur admin de l’administration $administrationId peut créer une étape mfr sur un titre PXM',
-    async ({ administrationId }) =>
+    async administrationId =>
       creationCheck(administrationId, true, 'etapes', 'pxm')
   )
 })
 
 describe('Modification des étapes', () => {
-  test.each`
-    administrationId       | modifier | etapeTypeId
-    ${'ope-onf-973-01'}    | ${true}  | ${'mcr'}
-    ${'min-mtes-dgaln-01'} | ${true}  | ${'mcr'}
-  `(
+  test.each<[AdministrationId, boolean, EtapeTypeId]>([
+    ['ope-onf-973-01', true, 'mcr'],
+    ['min-mtes-dgaln-01', true, 'mcr']
+  ])(
     'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre ARM : $modifier',
-    async ({ administrationId, modifier, etapeTypeId }) =>
+    async (administrationId, modifier, etapeTypeId) =>
       modificationCheck(
         administrationId,
         modifier,
@@ -163,14 +151,13 @@ describe('Modification des étapes', () => {
       )
   )
 
-  test.each`
-    administrationId       | modifier | etapeTypeId
-    ${'ope-onf-973-01'}    | ${false} | ${'mcr'}
-    ${'dea-guyane-01'}     | ${true}  | ${'mcr'}
-    ${'min-mtes-dgaln-01'} | ${true}  | ${'mcr'}
-  `(
+  test.each<[AdministrationId, boolean, EtapeTypeId]>([
+    ['ope-onf-973-01', false, 'mcr'],
+    ['dea-guyane-01', true, 'mcr'],
+    ['min-mtes-dgaln-01', true, 'mcr']
+  ])(
     'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre AXM : $modifier',
-    async ({ administrationId, modifier, etapeTypeId }) =>
+    async (administrationId, modifier, etapeTypeId) =>
       modificationCheck(
         administrationId,
         modifier,
@@ -181,12 +168,11 @@ describe('Modification des étapes', () => {
       )
   )
 
-  test.each`
-    administrationId       | modifier | etapeTypeId
-    ${'min-mtes-dgaln-01'} | ${true}  | ${'mcr'}
-  `(
+  test.each<[AdministrationId, boolean, EtapeTypeId]>([
+    ['min-mtes-dgaln-01', true, 'mcr']
+  ])(
     'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre CXM : $modifier',
-    async ({ administrationId, modifier, etapeTypeId }) =>
+    async (administrationId, modifier, etapeTypeId) =>
       modificationCheck(
         administrationId,
         modifier,
@@ -197,12 +183,11 @@ describe('Modification des étapes', () => {
       )
   )
 
-  test.each`
-    administrationId       | modifier | etapeTypeId
-    ${'min-mtes-dgaln-01'} | ${true}  | ${'mcr'}
-  `(
+  test.each<[AdministrationId, boolean, EtapeTypeId]>([
+    ['min-mtes-dgaln-01', true, 'mcr']
+  ])(
     'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre PRM : $modifier',
-    async ({ administrationId, modifier, etapeTypeId }) =>
+    async (administrationId, modifier, etapeTypeId) =>
       modificationCheck(
         administrationId,
         modifier,
@@ -213,12 +198,11 @@ describe('Modification des étapes', () => {
       )
   )
 
-  test.each`
-    administrationId       | modifier | etapeTypeId
-    ${'min-mtes-dgaln-01'} | ${true}  | ${'mcr'}
-  `(
+  test.each<[AdministrationId, boolean, EtapeTypeId]>([
+    ['min-mtes-dgaln-01', true, 'mcr']
+  ])(
     'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre PXM : $modifier',
-    async ({ administrationId, modifier, etapeTypeId }) =>
+    async (administrationId, modifier, etapeTypeId) =>
       modificationCheck(
         administrationId,
         modifier,

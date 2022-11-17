@@ -8,30 +8,19 @@ import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { userSuper } from '../../database/user-super'
-
+import { describe, test, expect } from 'vitest'
 describe('valide l’étape avant de l’enregistrer', () => {
-  test.each`
-    substances  | etapeType | titreType | error
-    ${[]}       | ${'mfr'}  | ${'arm'}  | ${true}
-    ${[]}       | ${'mfr'}  | ${'axm'}  | ${true}
-    ${[]}       | ${'rde'}  | ${'arm'}  | ${false}
-    ${[]}       | ${'mfr'}  | ${'prm'}  | ${false}
-    ${['auru']} | ${'mfr'}  | ${'arm'}  | ${false}
-    ${['auru']} | ${'mfr'}  | ${'axm'}  | ${false}
-    ${[]}       | ${'mfr'}  | ${'axm'}  | ${true}
-  `(
+  test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, boolean]>([
+    [[], 'mfr', 'arm', true],
+    [[], 'mfr', 'axm', true],
+    [[], 'rde', 'arm', false],
+    [[], 'mfr', 'prm', false],
+    [['auru'], 'mfr', 'arm', false],
+    [['auru'], 'mfr', 'axm', false],
+    [[], 'mfr', 'axm', true]
+  ])(
     'teste la complétude des substances',
-    ({
-      substances,
-      etapeType,
-      titreType,
-      error
-    }: {
-      substances: SubstanceLegaleId[]
-      etapeType: EtapeTypeId
-      titreType: TitreTypeId
-      error: boolean
-    }) => {
+    (substances, etapeType, titreType, error) => {
       const titreEtape = {
         substances,
         typeId: etapeType
@@ -59,28 +48,17 @@ describe('valide l’étape avant de l’enregistrer', () => {
     }
   )
 
-  test.each`
-    points              | etapeType | titreType | error
-    ${[]}               | ${'mfr'}  | ${'arm'}  | ${true}
-    ${[]}               | ${'mfr'}  | ${'axm'}  | ${true}
-    ${[]}               | ${'rde'}  | ${'arm'}  | ${false}
-    ${[]}               | ${'mfr'}  | ${'prm'}  | ${false}
-    ${[{}, {}, {}, {}]} | ${'mfr'}  | ${'arm'}  | ${false}
-    ${[{}, {}, {}, {}]} | ${'mfr'}  | ${'axm'}  | ${false}
-    ${[{}, {}, {}]}     | ${'mfr'}  | ${'axm'}  | ${true}
-  `(
+  test.each<[ITitrePoint[], EtapeTypeId, TitreTypeId, boolean]>([
+    [[], 'mfr', 'arm', true],
+    [[], 'mfr', 'axm', true],
+    [[], 'rde', 'arm', false],
+    [[], 'mfr', 'prm', false],
+    [[{}, {}, {}, {}] as ITitrePoint[], 'mfr', 'arm', false],
+    [[{}, {}, {}, {}] as ITitrePoint[], 'mfr', 'axm', false],
+    [[{}, {}, {}] as ITitrePoint[], 'mfr', 'axm', true]
+  ])(
     'teste la complétude du périmètre',
-    ({
-      points,
-      etapeType,
-      titreType,
-      error
-    }: {
-      points: ITitrePoint[]
-      etapeType: EtapeTypeId
-      titreType: TitreTypeId
-      error: boolean
-    }) => {
+    (points, etapeType, titreType, error) => {
       const titreEtape = {
         points,
         typeId: etapeType
@@ -133,29 +111,18 @@ describe('valide l’étape avant de l’enregistrer', () => {
     expect(errors).not.toContain('le document "tot" est obligatoire')
   })
 
-  test.each`
-    duree        | etapeType | titreType | error
-    ${undefined} | ${'mfr'}  | ${'arm'}  | ${true}
-    ${null}      | ${'mfr'}  | ${'axm'}  | ${true}
-    ${0}         | ${'mfr'}  | ${'axm'}  | ${true}
-    ${0}         | ${'mfr'}  | ${'arm'}  | ${true}
-    ${0}         | ${'mfr'}  | ${'prm'}  | ${false}
-    ${0}         | ${'rde'}  | ${'arm'}  | ${false}
-    ${3}         | ${'mfr'}  | ${'arm'}  | ${false}
-    ${3}         | ${'mfr'}  | ${'axm'}  | ${false}
-  `(
+  test.each<[number | undefined | null, EtapeTypeId, TitreTypeId, boolean]>([
+    [undefined, 'mfr', 'arm', true],
+    [null, 'mfr', 'axm', true],
+    [0, 'mfr', 'axm', true],
+    [0, 'mfr', 'arm', true],
+    [0, 'mfr', 'prm', false],
+    [0, 'rde', 'arm', false],
+    [3, 'mfr', 'arm', false],
+    [3, 'mfr', 'axm', false]
+  ])(
     'teste la complétude de la durée',
-    ({
-      duree,
-      etapeType,
-      titreType,
-      error
-    }: {
-      duree: number
-      etapeType: EtapeTypeId
-      titreType: TitreTypeId
-      error: boolean
-    }) => {
+    (duree, etapeType, titreType, error) => {
       const titreEtape = {
         duree,
         typeId: etapeType

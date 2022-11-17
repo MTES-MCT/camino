@@ -16,9 +16,16 @@ import AdministrationsTitresTypesTitresStatuts from '../../models/administration
 import { userSuper } from '../../user-super'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { Role } from 'camino-common/src/roles'
+import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 
-console.info = jest.fn()
-console.error = jest.fn()
+console.info = vi.fn()
+console.error = vi.fn()
 beforeAll(async () => {
   await dbManager.populateDb()
 })
@@ -29,15 +36,14 @@ afterAll(async () => {
 
 describe('titresQueryModify', () => {
   describe('titresVisibleByEntrepriseQuery', () => {
-    test.each`
-      entreprisesLecture | withTitulaire | visible
-      ${false}           | ${false}      | ${false}
-      ${false}           | ${true}       | ${false}
-      ${true}            | ${false}      | ${false}
-      ${true}            | ${true}       | ${true}
-    `(
+    test.each([
+      [false, false, false],
+      [false, true, false],
+      [true, false, false],
+      [true, true, true]
+    ])(
       'Vérifie la visibilité d’un titre par une entreprise',
-      async ({ entreprisesLecture, withTitulaire, visible }) => {
+      async (entreprisesLecture, withTitulaire, visible) => {
         const mockEntreprise1 = {
           id: idGenerate(),
           nom: 'monEntrepriseNom'
@@ -126,15 +132,14 @@ describe('titresQueryModify', () => {
       expect(res).toHaveLength(visible ? 1 : 0)
     }
 
-    test.each`
-      titreTypeId | titreStatutId | visible
-      ${'axm'}    | ${'val'}      | ${false}
-      ${'axm'}    | ${'dmi'}      | ${false}
-      ${'arm'}    | ${'val'}      | ${false}
-      ${'arm'}    | ${'dmi'}      | ${true}
-    `(
+    test.each<[TitreTypeId, TitreStatutId, boolean]>([
+      ['axm', 'val', false],
+      ['axm', 'dmi', false],
+      ['arm', 'val', false],
+      ['arm', 'dmi', true]
+    ])(
       'Vérifie si le titre est une ARM en cours de demande',
-      async ({ titreTypeId, titreStatutId, visible }) => {
+      async (titreTypeId, titreStatutId, visible) => {
         await titresArmEnDemandeQueryTest({
           visible,
           titreTypeId,
@@ -143,15 +148,14 @@ describe('titresQueryModify', () => {
       }
     )
 
-    test.each`
-      demarcheTypeId | demarcheStatutId | visible
-      ${'pro'}       | ${'dep'}         | ${false}
-      ${'pro'}       | ${'ins'}         | ${false}
-      ${'oct'}       | ${'dep'}         | ${false}
-      ${'oct'}       | ${'ins'}         | ${true}
-    `(
+    test.each<[DemarcheTypeId, DemarcheStatutId, boolean]>([
+      ['pro', 'dep', false],
+      ['pro', 'ins', false],
+      ['oct', 'dep', false],
+      ['oct', 'ins', true]
+    ])(
       'Vérifie si la démarche est un octroi en cours d’instruction',
-      async ({ demarcheTypeId, demarcheStatutId, visible }) => {
+      async (demarcheTypeId, demarcheStatutId, visible) => {
         await titresArmEnDemandeQueryTest({
           visible,
           demarcheTypeId,
@@ -160,15 +164,14 @@ describe('titresQueryModify', () => {
       }
     )
 
-    test.each`
-      etapeTypeId | etapeStatutId | visible
-      ${'mdp'}    | ${'fai'}      | ${false}
-      ${'mdp'}    | ${'fav'}      | ${false}
-      ${'mcr'}    | ${'fai'}      | ${false}
-      ${'mcr'}    | ${'fav'}      | ${true}
-    `(
+    test.each<[EtapeTypeId, EtapeStatutId, boolean]>([
+      ['mdp', 'fai', false],
+      ['mdp', 'fav', false],
+      ['mcr', 'fai', false],
+      ['mcr', 'fav', true]
+    ])(
       'Vérifie si il y a une « Recevabilité de la demande » favorable',
-      async ({ etapeTypeId, etapeStatutId, visible }) => {
+      async (etapeTypeId, etapeStatutId, visible) => {
         await titresArmEnDemandeQueryTest({
           visible,
           etapeTypeId,
@@ -179,27 +182,35 @@ describe('titresQueryModify', () => {
   })
 
   describe('titresConfidentielQuery', () => {
-    test.each`
-      publicLecture | entreprisesLecture | withTitulaire | typeId   | statutId | confidentiel
-      ${false}      | ${false}           | ${false}      | ${'arm'} | ${'dmi'} | ${true}
-      ${false}      | ${false}           | ${true}       | ${'arm'} | ${'dmi'} | ${true}
-      ${undefined}  | ${true}            | ${false}      | ${'arm'} | ${'dmi'} | ${true}
-      ${false}      | ${true}            | ${true}       | ${'arm'} | ${'dmi'} | ${false}
-      ${false}      | ${false}           | ${false}      | ${'axm'} | ${'dmi'} | ${false}
-      ${false}      | ${false}           | ${false}      | ${'arm'} | ${'val'} | ${false}
-      ${true}       | ${false}           | ${false}      | ${'arm'} | ${'dmi'} | ${false}
-      ${true}       | ${false}           | ${true}       | ${'arm'} | ${'dmi'} | ${false}
-      ${true}       | ${true}            | ${false}      | ${'arm'} | ${'dmi'} | ${false}
-    `(
+    test.each<
+      [
+        boolean | undefined,
+        boolean,
+        boolean,
+        TitreTypeId,
+        TitreStatutId,
+        boolean
+      ]
+    >([
+      [false, false, false, 'arm', 'dmi', true],
+      [false, false, true, 'arm', 'dmi', true],
+      [undefined, true, false, 'arm', 'dmi', true],
+      [false, true, true, 'arm', 'dmi', false],
+      [false, false, false, 'axm', 'dmi', false],
+      [false, false, false, 'arm', 'val', false],
+      [true, false, false, 'arm', 'dmi', false],
+      [true, false, true, 'arm', 'dmi', false],
+      [true, true, false, 'arm', 'dmi', false]
+    ])(
       'Vérifie si le titre est confidentiel',
-      async ({
+      async (
         publicLecture,
         entreprisesLecture,
         withTitulaire,
         typeId,
         statutId,
         confidentiel
-      }) => {
+      ) => {
         const mockEntreprise1 = {
           id: idGenerate(),
           nom: 'monEntrepriseNom'
@@ -254,22 +265,15 @@ describe('titresQueryModify', () => {
   })
 
   describe('titresTravauxCreationQuery', () => {
-    test.each`
-      administrationId          | travauxCreation
-      ${'dre-ile-de-france-01'} | ${false}
-      ${'dea-guadeloupe-01'}    | ${false}
-      ${'min-mtes-dgec-01'}     | ${false}
-      ${'pre-42218-01'}         | ${false}
-      ${'ope-ptmg-973-01'}      | ${false}
-    `(
+    test.each<[AdministrationId, boolean]>([
+      ['dre-ile-de-france-01', false],
+      ['dea-guadeloupe-01', false],
+      ['min-mtes-dgec-01', false],
+      ['pre-42218-01', false],
+      ['ope-ptmg-973-01', false]
+    ])(
       'Vérifie si le $administrationId, peut créer des travaux ($travauxCreation)',
-      async ({
-        administrationId,
-        travauxCreation
-      }: {
-        administrationId: AdministrationId
-        travauxCreation: boolean
-      }) => {
+      async (administrationId, travauxCreation) => {
         const titreId = idGenerate()
 
         await Titres.query().insert({
@@ -291,14 +295,13 @@ describe('titresQueryModify', () => {
         expect(titre.travauxCreation ?? false).toEqual(travauxCreation)
       }
     )
-    test.each`
-      role            | travauxCreation
-      ${'super'}      | ${true}
-      ${'entreprise'} | ${false}
-      ${'default'}    | ${false}
-    `(
+    test.each<[Role, boolean]>([
+      ['super', true],
+      ['entreprise', false],
+      ['defaut', false]
+    ])(
       'Vérifie si un profil $role peut créer des travaux',
-      async ({ role, travauxCreation }) => {
+      async (role, travauxCreation) => {
         const titreId = idGenerate()
 
         await Titres.query().insert({
@@ -323,14 +326,13 @@ describe('titresQueryModify', () => {
   })
 
   describe('titresModificationSelectQuery', () => {
-    test.each`
-      role         | modification
-      ${'admin'}   | ${true}
-      ${'editeur'} | ${true}
-      ${'lecteur'} | ${false}
-    `(
+    test.each<[Role, boolean]>([
+      ['admin', true],
+      ['editeur', true],
+      ['lecteur', false]
+    ])(
       'un utilisateur $role d’une administration gestionnaire peut modifier un titre',
-      async ({ role, modification }: { role: Role; modification: boolean }) => {
+      async (role, modification) => {
         await Titres.query().insert({
           nom: idGenerate(),
           titreStatutId: 'val',
@@ -379,15 +381,14 @@ describe('titresQueryModify', () => {
       expect(titre?.modification).toBeFalsy()
     })
 
-    test.each`
-      role            | modification
-      ${'super'}      | ${true}
-      ${'lecteur'}    | ${false}
-      ${'entreprise'} | ${false}
-      ${'default'}    | ${false}
-    `(
+    test.each<[Role, boolean]>([
+      ['super', true],
+      ['lecteur', false],
+      ['entreprise', false],
+      ['defaut', false]
+    ])(
       'Vérifie si un profil $role peut modifier un titre',
-      async ({ role, modification }: { role: Role; modification: boolean }) => {
+      async (role, modification) => {
         await Titres.query().insert({
           nom: idGenerate(),
           titreStatutId: 'val',

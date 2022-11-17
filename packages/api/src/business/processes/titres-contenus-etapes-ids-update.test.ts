@@ -4,23 +4,23 @@ import { titresContenusEtapesIdsUpdate } from './titres-contenus-etapes-ids-upda
 import { titreContenuTitreEtapeFind } from '../rules/titre-prop-etape-find'
 import { titresGet } from '../../database/queries/titres'
 import Titres from '../../database/models/titres'
-
-jest.mock('../../database/queries/titres', () => ({
-  titreUpdate: jest.fn().mockResolvedValue(true),
-  titresGet: jest.fn()
+import { vi, describe, expect, test } from 'vitest'
+vi.mock('../../database/queries/titres', () => ({
+  titreUpdate: vi.fn().mockResolvedValue(true),
+  titresGet: vi.fn()
 }))
 
-jest.mock('../rules/titre-prop-etape-find', () => ({
-  titreContenuTitreEtapeFind: jest.fn()
+vi.mock('../rules/titre-prop-etape-find', () => ({
+  titreContenuTitreEtapeFind: vi.fn()
 }))
 
-const titresGetMock = jest.mocked(titresGet, true)
-const titreContenuTitreEtapeFindMock = jest.mocked(
+const titresGetMock = vi.mocked(titresGet, true)
+const titreContenuTitreEtapeFindMock = vi.mocked(
   titreContenuTitreEtapeFind,
   true
 )
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe("propriétés (contenu) d'un titre", () => {
   test('ajoute 2 nouvelles propriétés dans les props du titre', async () => {

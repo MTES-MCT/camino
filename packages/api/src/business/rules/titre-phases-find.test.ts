@@ -12,6 +12,7 @@ import {
 } from './__mocks__/titre-phases-find-demarches'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { toCaminoDate } from 'camino-common/src/date'
+import { describe, expect, test } from 'vitest'
 
 describe("phases d'une démarche", () => {
   const aujourdhui = '2020-12-01'

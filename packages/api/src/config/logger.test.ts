@@ -1,5 +1,5 @@
 import { newDateFormated } from './logger'
-
+import { test, expect } from 'vitest'
 test('newDateFormated', () => {
   expect(
     newDateFormated(new Date('2020-06-02T13:35:11.366Z'))

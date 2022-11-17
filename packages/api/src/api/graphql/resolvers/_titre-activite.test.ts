@@ -2,8 +2,12 @@ import {
   productionCheck,
   titreActiviteAdministrationsEmailsGet
 } from './_titre-activite'
-import { IAdministrationActiviteTypeEmail } from '../../../types'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { IAdministrationActiviteTypeEmail, IContenu } from '../../../types'
+import {
+  AdministrationId,
+  ADMINISTRATION_IDS
+} from 'camino-common/src/static/administrations'
+import { describe, expect, test } from 'vitest'
 
 describe('teste la construction des emails lors du dépôt d’une activité', () => {
   describe('teste le calcul des emails des administrations', () => {
@@ -32,17 +36,21 @@ describe('teste la construction des emails lors du dépôt d’une activité', (
       ).toHaveLength(0)
     })
 
-    test.each`
-      administrationId                                                                      | envoie
-      ${ADMINISTRATION_IDS["DAJ - MINISTÈRE DE L'ECONOMIE, DES FINANCES ET DE LA RELANCE"]} | ${true}
-      ${ADMINISTRATION_IDS['DREAL - BRETAGNE']}                                             | ${true}
-      ${ADMINISTRATION_IDS['DEAL - LA RÉUNION']}                                            | ${true}
-      ${ADMINISTRATION_IDS['PRÉFECTURE - ALLIER']}                                          | ${false}
-      ${ADMINISTRATION_IDS['BRGM - PROJET ZERCOA']}                                         | ${false}
-      ${ADMINISTRATION_IDS['GENDARMERIE NATIONALE - GUYANE']}                               | ${false}
-    `(
+    test.each<[AdministrationId, boolean]>([
+      [
+        ADMINISTRATION_IDS[
+          "DAJ - MINISTÈRE DE L'ECONOMIE, DES FINANCES ET DE LA RELANCE"
+        ],
+        true
+      ],
+      [ADMINISTRATION_IDS['DREAL - BRETAGNE'], true],
+      [ADMINISTRATION_IDS['DEAL - LA RÉUNION'], true],
+      [ADMINISTRATION_IDS['PRÉFECTURE - ALLIER'], false],
+      [ADMINISTRATION_IDS['BRGM - PROJET ZERCOA'], false],
+      [ADMINISTRATION_IDS['GENDARMERIE NATIONALE - GUYANE'], false]
+    ])(
       'si la production est nulle on envoie des emails que aux ministères et au DREAL',
-      ({ administrationId, envoie }) => {
+      (administrationId, envoie) => {
         expect(
           titreActiviteAdministrationsEmailsGet(
             [administrationId],
@@ -58,60 +66,53 @@ describe('teste la construction des emails lors du dépôt d’une activité', (
   })
 
   describe('teste le calcul de la production', () => {
-    test.each`
-      typeId   | positive
-      ${'pma'} | ${true}
-      ${'pmd'} | ${true}
-      ${'pmb'} | ${true}
-      ${'pmc'} | ${true}
-      ${'grx'} | ${false}
-      ${'wrp'} | ${false}
-      ${'grp'} | ${false}
-      ${'gra'} | ${false}
-    `(
+    test.each<[string, boolean]>([
+      ['pma', true],
+      ['pmd', true],
+      ['pmb', true],
+      ['pmc', true],
+      ['grx', false],
+      ['wrp', false],
+      ['grp', false],
+      ['gra', false]
+    ])(
       'la production est positive sur les type d’activités sans exploitation',
-      ({ typeId, positive }) => {
+      (typeId, positive) => {
         expect(productionCheck(typeId, undefined)).toEqual(!!positive)
       }
     )
 
-    test.each`
-      contenu                                          | positive
-      ${undefined}                                     | ${false}
-      ${{}}                                            | ${false}
-      ${{ substancesFiscales: undefined }}             | ${false}
-      ${{ substancesFiscales: {} }}                    | ${false}
-      ${{ substancesFiscales: { auru: 0 } }}           | ${false}
-      ${{ substancesFiscales: { auru: 10 } }}          | ${true}
-      ${{ substancesFiscales: { iiii: 0, auru: 10 } }} | ${true}
-    `('teste la production des GRX et GRA', ({ contenu, positive }) => {
+    test.each<[IContenu | undefined, boolean]>([
+      [undefined, false],
+      [{}, false],
+      [{ substancesFiscales: {} }, false],
+      [{ substancesFiscales: { auru: 0 } }, false],
+      [{ substancesFiscales: { auru: 10 } }, true],
+      [{ substancesFiscales: { iiii: 0, auru: 10 } }, true]
+    ])('teste la production des GRX et GRA', (contenu, positive) => {
       ;['grx', 'gra'].forEach(typeId =>
         expect(productionCheck(typeId, contenu)).toEqual(!!positive)
       )
     })
 
-    test.each`
-      contenu                                         | positive
-      ${undefined}                                    | ${false}
-      ${{}}                                           | ${false}
-      ${{ renseignements: undefined }}                | ${false}
-      ${{ renseignements: {} }}                       | ${false}
-      ${{ renseignements: { orExtrait: undefined } }} | ${false}
-      ${{ renseignements: { orExtrait: 0 } }}         | ${false}
-      ${{ renseignements: { orExtrait: 232 } }}       | ${true}
-    `('teste la production des GRP', ({ contenu, positive }) => {
+    test.each<[IContenu | undefined, boolean]>([
+      [undefined, false],
+      [{}, false],
+      [{ renseignements: {} }, false],
+      [{ renseignements: { orExtrait: null } }, false],
+      [{ renseignements: { orExtrait: 0 } }, false],
+      [{ renseignements: { orExtrait: 232 } }, true]
+    ])('teste la production des GRP', (contenu, positive) => {
       expect(productionCheck('grp', contenu)).toEqual(!!positive)
     })
 
-    test.each`
-      contenu                                                          | positive
-      ${undefined}                                                     | ${false}
-      ${{}}                                                            | ${false}
-      ${{ renseignementsProduction: undefined }}                       | ${false}
-      ${{ renseignementsProduction: {} }}                              | ${false}
-      ${{ renseignementsProduction: { volumeGranulatsExtrait: 0 } }}   | ${false}
-      ${{ renseignementsProduction: { volumeGranulatsExtrait: 232 } }} | ${true}
-    `('teste la production des WRP', ({ contenu, positive }) => {
+    test.each<[IContenu | undefined, boolean]>([
+      [undefined, false],
+      [{}, false],
+      [{ renseignementsProduction: {} }, false],
+      [{ renseignementsProduction: { volumeGranulatsExtrait: 0 } }, false],
+      [{ renseignementsProduction: { volumeGranulatsExtrait: 232 } }, true]
+    ])('teste la production des WRP', (contenu, positive) => {
       expect(productionCheck('wrp', contenu)).toEqual(!!positive)
     })
   })

@@ -2,12 +2,13 @@ import { titreCoordonneesFind } from './titre-coordonnees-find'
 import { geojsonCenter } from '../../tools/geojson'
 
 import { titrePoints } from './__mocks__/titre-coordonnees-find'
+import { vi, describe, test, expect } from 'vitest'
 
-jest.mock('../../tools/geojson', () => ({
-  geojsonCenter: jest.fn()
+vi.mock('../../tools/geojson', () => ({
+  geojsonCenter: vi.fn()
 }))
 
-const geojsonCenterMock = jest.mocked(geojsonCenter, true)
+const geojsonCenterMock = vi.mocked(geojsonCenter, true)
 
 describe("coordonnées d'un titre", () => {
   test("retourne les coordonnées d'un titre", () => {

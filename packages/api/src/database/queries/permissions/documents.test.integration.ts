@@ -12,9 +12,11 @@ import { etapeTypeDocumentTypeUsedCheck } from './documents'
 import { Knex } from 'knex'
 import { newDemarcheId } from '../../models/_format/id-create'
 import { toCaminoDate } from 'camino-common/src/date'
+import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 
-console.info = jest.fn()
-console.error = jest.fn()
+console.info = vi.fn()
+console.error = vi.fn()
 let knex: Knex<any, unknown[]>
 beforeAll(async () => {
   knex = await dbManager.populateDb()
@@ -25,13 +27,12 @@ afterAll(async () => {
 })
 
 describe('documentSupprimer', () => {
-  test.each`
-    statutId | suppression
-    ${'aco'} | ${true}
-    ${'fai'} | ${false}
-  `(
+  test.each<[EtapeStatutId, boolean]>([
+    ['aco', true],
+    ['fai', false]
+  ])(
     'vérifie la possibilité de supprimer un document optionnel ou non d’une étape (utilisateur super)',
-    async ({ statutId, suppression }) => {
+    async (statutId, suppression) => {
       // suppression de la clé étrangère sur la démarche pour ne pas avoir à tout créer
       await TitresEtapes.query().delete()
       await Document.query().delete()
@@ -65,17 +66,16 @@ describe('documentSupprimer', () => {
     }
   )
 
-  test.each`
-    optionnel    | statutId | suppression
-    ${true}      | ${'enc'} | ${true}
-    ${false}     | ${'enc'} | ${true}
-    ${undefined} | ${'enc'} | ${true}
-    ${true}      | ${'dep'} | ${true}
-    ${false}     | ${'dep'} | ${false}
-    ${undefined} | ${'dep'} | ${false}
-  `(
+  test.each<[boolean | undefined, string, boolean]>([
+    [true, 'enc', true],
+    [false, 'enc', true],
+    [undefined, 'enc', true],
+    [true, 'dep', true],
+    [false, 'dep', false],
+    [undefined, 'dep', false]
+  ])(
     'vérifie la possibilité de supprimer un document optionnel ou non d’une activité (utilisateur super)',
-    async ({ optionnel, suppression, statutId }) => {
+    async (optionnel, statutId, suppression) => {
       // suppression de la clé étrangère sur le titre pour ne pas avoir à tout créer
       await TitresActivites.query().delete()
       await Document.query().delete()

@@ -17,7 +17,7 @@ import {
   titreDemarchesRenPointsVideNiDpuNiDex,
   titreDemarchesOctIhiDureeZero
 } from './__mocks__/titre-demarche-date-fin-duree-find-demarches'
-
+import { describe, expect, test } from 'vitest'
 describe("retourne la date de fin et la durée d'une démarche", () => {
   test("la date de fin d'une démarche d'octroi est celle de la dernière étape dont la date de fin est renseignée", () => {
     expect(

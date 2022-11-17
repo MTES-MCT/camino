@@ -9,25 +9,25 @@ import { ICommune, ITitreEtape } from '../../types'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { toCaminoDate } from 'camino-common/src/date'
-
-jest.mock('../../database/queries/titres-etapes', () => ({
-  titresEtapesGet: jest.fn()
+import { vi, describe, expect, test } from 'vitest'
+vi.mock('../../database/queries/titres-etapes', () => ({
+  titresEtapesGet: vi.fn()
 }))
 
-jest.mock('../../knex', () => {
-  const mockJest = {
-    update: jest.fn().mockReturnThis(),
-    where: jest.fn().mockReturnThis()
+vi.mock('../../knex', () => {
+  const mockvi = {
+    update: vi.fn().mockReturnThis(),
+    where: vi.fn().mockReturnThis()
   }
 
   return {
-    knex: jest.fn().mockReturnValue(mockJest)
+    knex: vi.fn().mockReturnValue(mockvi)
   }
 })
 
-const titresEtapesGetMock = jest.mocked(titresEtapesGet, true)
+const titresEtapesGetMock = vi.mocked(titresEtapesGet, true)
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe("administrations d'une étape", () => {
   test('ajoute des administrations dans deux étapes', async () => {

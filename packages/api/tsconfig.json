@@ -17,7 +17,7 @@
     "strictNullChecks": true,
     "sourceMap": true,
     "target": "ES2020",
-    "types": ["node", "jest"],
+    "types": ["node"],
     "resolveJsonModule": true,
     "paths": {
       "geojson-rewind": ["./src/@types/geojson-rewind"],

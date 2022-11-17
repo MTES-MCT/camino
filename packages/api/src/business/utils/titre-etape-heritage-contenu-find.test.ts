@@ -15,9 +15,10 @@ import {
   heritageContenuFind,
   titreEtapeHeritageContenuFind
 } from './titre-etape-heritage-contenu-find'
+import { vi, describe, test, expect } from 'vitest'
 
-jest.mock('../../api/_format/etapes-types', () => ({
-  etapeTypeSectionsFormat: jest.fn()
+vi.mock('../../api/_format/etapes-types', () => ({
+  etapeTypeSectionsFormat: vi.fn()
 }))
 
 describe('retourne le contenu spécifique d’un élément d’une section en fonction de son héritage', () => {
@@ -346,7 +347,7 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
 })
 
 describe('construit le dictionnaire les sections', () => {
-  const etapeTypeSectionsFormatMock = jest.mocked(etapeTypeSectionsFormat, true)
+  const etapeTypeSectionsFormatMock = vi.mocked(etapeTypeSectionsFormat, true)
 
   test('retourne un dictionnaire vide', () => {
     const dictionary = etapeSectionsDictionaryBuild([])

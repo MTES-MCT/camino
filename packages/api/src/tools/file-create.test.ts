@@ -1,8 +1,9 @@
 import fileCreate from './file-create'
 import { mkdirSync, readFileSync, rmdirSync } from 'fs'
+import { vi, beforeEach, afterEach, describe, expect, test } from 'vitest'
 
-console.error = jest.fn()
-console.info = jest.fn()
+console.error = vi.fn()
+console.info = vi.fn()
 
 const workingDir = 'testFileCreateTmp'
 const pathGet = (path: string) => `${workingDir}/${path}`

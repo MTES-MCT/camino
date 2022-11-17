@@ -18,9 +18,9 @@ import TitresSDOMZones from '../../database/models/titres--sdom-zones'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { SDOMZoneIds } from 'camino-common/src/static/sdom'
 import { toCaminoDate } from 'camino-common/src/date'
-
-console.info = jest.fn()
-console.error = jest.fn()
+import { vi, beforeAll, afterAll, describe, test, expect } from 'vitest'
+console.info = vi.fn()
+console.error = vi.fn()
 let knex: Knex | undefined
 beforeAll(async () => {
   knex = await dbManager.populateDb()

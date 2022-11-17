@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
 exports[`envoie un email sur un octroi d'AEX 1`] = `
-Object {
+{
   "content": "
   <h3>L’étape « demande » d’une demande d’AEX vient d’être réalisée.</h3>
   
@@ -11,7 +11,7 @@ Object {
   <b>Effectué par</b> : undefined Camino (camino@beta.gouv.fr)<br>
   
   ",
-  "emails": Array [
+  "emails": [
     "mc.remd.deal-guyane@developpement-durable.gouv.fr",
   ],
   "subject": "demande | Nouvelle demande déposée",
@@ -19,7 +19,7 @@ Object {
 `;
 
 exports[`envoie un email sur un octroi d'ARM 1`] = `
-Object {
+{
   "content": "
   <h3>L’étape « dépôt de la demande » d’une demande d’ARM vient d’être réalisée.</h3>
   
@@ -29,7 +29,7 @@ Object {
   <b>Effectué par</b> : undefined Camino (camino@beta.gouv.fr)<br>
   
   ",
-  "emails": Array [
+  "emails": [
     "ptmg@ctguyane.fr",
     "pole.minier@onf.fr",
   ],

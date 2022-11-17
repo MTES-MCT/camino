@@ -23,7 +23,7 @@ import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { toCaminoDate } from 'camino-common/src/date'
-
+import { vi, expect, test } from 'vitest'
 test('teste EtatsValidate', () => {
   const octEtatsValidate = demarcheEtatsValidate('ren', 'arm', '2021-01-01')
 
@@ -31,18 +31,18 @@ test('teste EtatsValidate', () => {
   expect(octEtatsValidate([], {})).toHaveLength(0)
 })
 
-jest.mock('../../database/models/_format/titre-contenu', () => ({
+vi.mock('../../database/models/_format/titre-contenu', () => ({
   __esModule: true,
-  titreContenuFormat: jest.fn()
+  titreContenuFormat: vi.fn()
 }))
 
-jest.mock('../utils/props-titre-etapes-ids-find', () => ({
+vi.mock('../utils/props-titre-etapes-ids-find', () => ({
   __esModule: true,
-  contenusTitreEtapesIdsFind: jest.fn()
+  contenusTitreEtapesIdsFind: vi.fn()
 }))
 
-const titreContenuFormatMock = jest.mocked(titreContenuFormat, true)
-const contenusTitreEtapesIdsFindMock = jest.mocked(
+const titreContenuFormatMock = vi.mocked(titreContenuFormat, true)
+const contenusTitreEtapesIdsFindMock = vi.mocked(
   contenusTitreEtapesIdsFind,
   true
 )
