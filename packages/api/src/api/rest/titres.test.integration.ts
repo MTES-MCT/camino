@@ -8,7 +8,6 @@ import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { ITitreDemarche, ITitreEtape } from '../../types'
 import { entreprisesUpsert } from '../../database/queries/entreprises'
 import { Knex } from 'knex'
-import TitresAdministrationsGestionnaires from '../../database/models/titres-administrations-gestionnaires'
 import { toCaminoDate } from 'camino-common/src/date'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 
@@ -123,7 +122,6 @@ async function createTitreWithEtapes(
       typeId: 'arm',
       titreStatutId: 'val',
       propsTitreEtapesIds: {},
-      administrationsGestionnaires: [],
       references: [
         {
           referenceTypeId: 'onf',
@@ -211,10 +209,6 @@ describe('titresLiaisons', () => {
       {}
     )
 
-    await TitresAdministrationsGestionnaires.query().insert({
-      titreId: axm.id,
-      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
-    })
     const tested = await restPostCall(
       `/titres/${axm.id}/titreLiaisons`,
       'admin',

@@ -7,10 +7,7 @@ import Titres from '../../database/models/titres'
 import TitresTypesDemarchesTypesEtapesTypes from '../../database/models/titres-types--demarches-types-etapes-types'
 import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../../database/models/titres-types--demarches-types-etapes-types-justificatifs-types'
 import { documentCreate } from '../../database/queries/documents'
-import {
-  ADMINISTRATION_IDS,
-  Administrations
-} from 'camino-common/src/static/administrations'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { Role } from 'camino-common/src/roles'
 
 jest.mock('../../tools/dir-create', () => ({
@@ -57,15 +54,7 @@ const demarcheCreate = async () => {
       nom: 'mon titre',
       domaineId: 'm',
       typeId: 'arm',
-      propsTitreEtapesIds: {},
-      administrationsGestionnaires: [
-        {
-          ...Administrations[
-            ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
-          ]
-        },
-        { ...Administrations[ADMINISTRATION_IDS['DGTM - GUYANE']] }
-      ]
+      propsTitreEtapesIds: {}
     },
     {}
   )

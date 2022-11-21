@@ -200,7 +200,6 @@ const domaines = {
 const titresRelateTrue = [
   'type',
   'domaine',
-  'administrationsGestionnaires',
   ...titresActivitesRelateTrue.map(k => `activites.${k}`),
   ...titresDemarchesRelateTrue.map(k => `demarches.${k}`)
 ]
@@ -223,8 +222,6 @@ const titresRelateFalse = [
   'amodiataires',
   'amodiataires.etablissements',
   'amodiataires.utilisateurs',
-  'administrationsGestionnaires.type',
-  'administrationsGestionnaires.utilisateurs',
   'surfaceEtape',
   ...titresActivitesRelateFalse.map(k => `activites.${k}`),
   ...titresDemarchesRelateFalse.map(k => `demarches.${k}`)
@@ -237,7 +234,6 @@ const titres = {
     points(orderAsc).${points.graph},
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph},
-    administrationsGestionnaires.${administrations.graph},
     demarches(orderDesc).${titresDemarches.graph},
     forets,
     activites(orderDesc).${titresActivites.graph},

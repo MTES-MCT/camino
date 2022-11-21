@@ -47,8 +47,7 @@ const titreFields = {
   points: { id: {} },
   communes: { id: {} },
   forets: { id: {} },
-  pointsEtape: { id: {} },
-  administrationsGestionnaires: { id: {} }
+  pointsEtape: { id: {} }
 }
 
 interface ITitreInput {

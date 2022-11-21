@@ -262,7 +262,6 @@ interface IAdministration {
   titresTypesEtapesTypes?: IAdministrationTitreTypeEtapeType[] | null
   activitesTypes?: IActiviteType[] | null
   utilisateurs?: IUtilisateur[] | null
-  gestionnaireTitres?: ITitre[] | null
   associee?: boolean | null
   emailsModification?: boolean
   modification?: boolean | null
@@ -511,7 +510,6 @@ interface ITitre {
   titulaires?: ITitreEntreprise[] | null
   amodiataires?: ITitreEntreprise[] | null
   administrationsLocales?: AdministrationId[] | null
-  administrationsGestionnaires?: IAdministration[] | null
   administrations?: AdministrationId[] | null
   surfaceEtape?: ITitreEtape | null
   surface?: number | null
@@ -556,12 +554,6 @@ interface ITitreActivite {
   modification?: boolean | null
   suppression?: boolean | null
   deposable?: boolean | null
-}
-
-interface ITitreAdministrationGestionnaire {
-  administrationId: string
-  titreId: string
-  associee?: boolean | null
 }
 
 interface ITitreArea {
@@ -869,7 +861,6 @@ export {
   IAdministrationActiviteTypeEmail,
   ITitre,
   ITitreActivite,
-  ITitreAdministrationGestionnaire,
   ITitreCommune,
   ITitreForet,
   ITitreSDOMZone,

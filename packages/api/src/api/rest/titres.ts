@@ -439,7 +439,6 @@ export const postTitreLiaisons = async (
     titreId,
     {
       fields: {
-        administrationsGestionnaires: { id: {} },
         pointsEtape: { id: {} },
         demarches: { id: {} }
       }
@@ -448,10 +447,6 @@ export const postTitreLiaisons = async (
   )
 
   if (!titre) throw new Error("le titre n'existe pas")
-
-  if (!titre.administrationsGestionnaires || !titre.administrationsLocales) {
-    throw new Error('les administrations ne sont pas chargées')
-  }
 
   const administrations = titreAdministrationsGet(titre)
   if (!canLinkTitres(user, administrations))

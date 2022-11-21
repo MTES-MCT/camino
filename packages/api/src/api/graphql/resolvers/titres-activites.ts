@@ -37,6 +37,7 @@ import { documentsLier } from './documents'
 import { titreGet } from '../../../database/queries/titres'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
+import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes'
 
 /**
  * Retourne une activité
@@ -243,7 +244,6 @@ const activiteDeposer = async (
         fields: {
           titulaires: { id: {} },
           amodiataires: { id: {} },
-          administrationsGestionnaires: { activitesTypesEmails: { id: {} } },
           pointsEtape: { id: {} }
         }
       },
@@ -269,12 +269,10 @@ const activiteDeposer = async (
       )
     }
 
-    const administrations: AdministrationId[] = []
-    if (titre.administrationsGestionnaires?.length) {
-      administrations.push(
-        ...titre.administrationsGestionnaires.map(({ id }) => id)
-      )
-    }
+    const administrations: AdministrationId[] = getGestionnairesByTitreTypeId(
+      titre.typeId
+    ).map(({ administrationId }) => administrationId)
+
     if (titre.administrationsLocales?.length) {
       administrations.push(...titre.administrationsLocales)
     }

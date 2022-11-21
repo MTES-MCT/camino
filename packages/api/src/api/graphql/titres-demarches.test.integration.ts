@@ -3,10 +3,7 @@ import { graphQLCall, queryImport } from '../../../tests/_utils/index'
 import { titreCreate } from '../../database/queries/titres'
 import { titreEtapeUpsert } from '../../database/queries/titres-etapes'
 import { userSuper } from '../../database/user-super'
-import {
-  ADMINISTRATION_IDS,
-  Administrations
-} from 'camino-common/src/static/administrations'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { toCaminoDate } from 'camino-common/src/date'
 
 console.info = jest.fn()
@@ -124,13 +121,6 @@ describe('demarcheCreer', () => {
         domaineId: 'm',
         typeId: 'arm',
         titreStatutId: 'ech',
-        administrationsGestionnaires: [
-          {
-            ...Administrations[
-              ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
-            ]
-          }
-        ],
         propsTitreEtapesIds: {}
       },
       {}
@@ -317,14 +307,6 @@ const demarcheCreate = async () => {
       nom: 'mon titre',
       domaineId: 'm',
       typeId: 'arm',
-      administrationsGestionnaires: [
-        {
-          ...Administrations[
-            ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
-          ]
-        },
-        { ...Administrations[ADMINISTRATION_IDS['DGTM - GUYANE']] }
-      ],
       propsTitreEtapesIds: {}
     },
     {}

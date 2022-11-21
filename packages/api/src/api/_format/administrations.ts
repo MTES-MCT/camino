@@ -1,6 +1,4 @@
 import { IAdministration } from '../../types'
-
-import { titresFormat } from './titres'
 import { Administrations } from 'camino-common/src/static/administrations'
 
 /**
@@ -12,10 +10,6 @@ import { Administrations } from 'camino-common/src/static/administrations'
  */
 
 export const administrationFormat = (administration: IAdministration) => {
-  administration.gestionnaireTitres =
-    administration.gestionnaireTitres &&
-    titresFormat(administration.gestionnaireTitres)
-
   const adminis = Administrations[administration.id]
 
   for (const key of Object.keys(adminis)) {

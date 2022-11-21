@@ -22,6 +22,7 @@ import {
   ADMINISTRATION_TYPES
 } from 'camino-common/src/static/administrations'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
+import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes'
 
 const titreTypeSectionsFormat = (
   contenusTitreEtapesIds: IContenusTitreEtapesIds,
@@ -181,11 +182,10 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
 }
 
 export const titreAdministrationsGet = (titre: ITitre): AdministrationId[] => {
-  const ids: AdministrationId[] = []
+  const ids: AdministrationId[] = getGestionnairesByTitreTypeId(titre.typeId)
+    .filter(({ associee }) => !associee)
+    .map(({ administrationId }) => administrationId)
 
-  if (titre.administrationsGestionnaires) {
-    ids.push(...titre.administrationsGestionnaires.map(({ id }) => id))
-  }
   if (titre.administrationsLocales) {
     ids.push(...titre.administrationsLocales)
   }

@@ -1,5 +1,4 @@
 import {
-  IAdministration,
   IDemarcheType,
   IEtapeType,
   ITitre,
@@ -35,7 +34,7 @@ import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTy
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { toCaminoDate } from 'camino-common/src/date'
 
-const visibleCheck = async (
+export const visibleCheck = async (
   administrationId: AdministrationId,
   visible: boolean,
   cible: 'titres' | 'demarches' | 'etapes',
@@ -104,7 +103,7 @@ const visibleCheck = async (
   }
 }
 
-const creationCheck = async (
+export const creationCheck = async (
   administrationId: string,
   creer: boolean,
   cible: string,
@@ -316,7 +315,7 @@ const creationCheck = async (
   }
 }
 
-const modificationCheck = async (
+export const modificationCheck = async (
   administrationId: AdministrationId,
   modifier: boolean,
   cible: string,
@@ -454,13 +453,5 @@ const titreBuild = (
     publicLecture: false
   }
 
-  if (administrationIdGestionnaire) {
-    titre.administrationsGestionnaires = [
-      { id: administrationIdGestionnaire }
-    ] as IAdministration[]
-  }
-
   return titre
 }
-
-export { visibleCheck, creationCheck, modificationCheck }

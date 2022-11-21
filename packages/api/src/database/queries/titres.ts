@@ -5,7 +5,6 @@ import {
   IFields,
   Index,
   ITitre,
-  ITitreAdministrationGestionnaire,
   ITitreColonneId,
   IUtilisateur
 } from '../../types'
@@ -16,7 +15,6 @@ import { fieldsFormat } from './graph/fields-format'
 import { titresFieldsAdd } from './graph/fields-add'
 
 import Titres, { DBTitre } from '../models/titres'
-import TitresAdministrationsGestionnaires from '../models/titres-administrations-gestionnaires'
 import { titresQueryModify } from './permissions/titres'
 import { titresFiltersQueryModify } from './_titres-filters'
 import TitresDemarches from '../models/titres-demarches'
@@ -136,7 +134,7 @@ const titresGet = async (
   } = {},
   { fields }: { fields?: IFields },
   user: IUtilisateur | null | undefined
-) => {
+): Promise<ITitre[]> => {
   const q = titresQueryBuild({ fields }, user, demandeEnCours)
 
   if (slugs) {
@@ -327,29 +325,11 @@ const titreUpsert = async (
   return q.upsertGraph(titre, options.titres.update)
 }
 
-const titresAdministrationsGestionnairesCreate = async (
-  titresAdministrationsGestionnaires: ITitreAdministrationGestionnaire[]
-) =>
-  TitresAdministrationsGestionnaires.query().insert(
-    titresAdministrationsGestionnaires
-  )
-
-const titreAdministrationGestionnaireDelete = async (
-  titreId: string,
-  administrationId: string
-) =>
-  TitresAdministrationsGestionnaires.query()
-    .delete()
-    .where('titreId', titreId)
-    .andWhere('administrationId', administrationId)
-
 export {
   titreGet,
   titresGet,
   titresCount,
   titreUpdate,
   titreCreate,
-  titresAdministrationsGestionnairesCreate,
-  titreAdministrationGestionnaireDelete,
   titreUpsert
 }

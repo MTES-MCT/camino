@@ -1,10 +1,7 @@
 import { dbManager } from '../../../tests/db-manager'
 import { graphQLCall, queryImport } from '../../../tests/_utils/index'
 import { titreCreate } from '../../database/queries/titres'
-import {
-  ADMINISTRATION_IDS,
-  Administrations
-} from 'camino-common/src/static/administrations'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { ITitre } from '../../types'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { toCaminoDate } from 'camino-common/src/date'
@@ -60,9 +57,6 @@ const titreEtapesPubliques: ITitre = {
   domaineId: 'm',
   typeId: 'arm',
   publicLecture: true,
-  administrationsGestionnaires: [
-    Administrations[ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]
-  ],
   propsTitreEtapesIds: { points: 'titre-id-demarche-id-dpu' },
   demarches: [
     {
@@ -157,9 +151,6 @@ const titreWithActiviteGrp: ITitre = {
   typeId: 'axm',
   publicLecture: true,
   propsTitreEtapesIds: { points: 'titre-id-demarche-id-dpu' },
-  administrationsGestionnaires: [
-    Administrations[ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']]
-  ],
   activites: [
     {
       titreId: 'titre-id',
@@ -528,15 +519,7 @@ describe('titreModifier', () => {
         nom: 'mon titre',
         domaineId: 'm',
         typeId: 'arm',
-        propsTitreEtapesIds: {},
-        administrationsGestionnaires: [
-          {
-            ...Administrations[
-              ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
-            ]
-          },
-          { ...Administrations[ADMINISTRATION_IDS['DGTM - GUYANE']] }
-        ]
+        propsTitreEtapesIds: {}
       },
       {}
     )
@@ -610,15 +593,7 @@ describe('titreModifier', () => {
         domaineId: 'm',
         typeId: 'arm',
         titreStatutId: 'ech',
-        propsTitreEtapesIds: {},
-        administrationsGestionnaires: [
-          {
-            ...Administrations[
-              ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
-            ]
-          },
-          { ...Administrations[ADMINISTRATION_IDS['DGTM - GUYANE']] }
-        ]
+        propsTitreEtapesIds: {}
       },
       {}
     )

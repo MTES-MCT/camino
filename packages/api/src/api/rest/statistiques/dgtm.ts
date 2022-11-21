@@ -1,5 +1,6 @@
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import { CaminoDate, getAnnee, daysBetween } from 'camino-common/src/date'
 import { knex } from '../../../knex'
@@ -16,6 +17,11 @@ export const getDGTMStatsInside = async (
     delais: {}
   }
 
+  const gestionnaireTitreTypeIds: TitreTypeId[] =
+    getTitreTypeIdsByAdministration(administrationId)
+      .filter(({ gestionnaire }) => gestionnaire)
+      .map(({ titreTypeId }) => titreTypeId)
+
   const phaseOctrois: {
     id: string
     dateDebut: CaminoDate
@@ -31,11 +37,6 @@ export const getDGTMStatsInside = async (
     .from('titresPhases')
     .leftJoin('titresDemarches', 'titreDemarcheId', 'titresDemarches.id')
     .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
-    .leftJoin(
-      'titresAdministrationsGestionnaires',
-      'titres.id',
-      'titresAdministrationsGestionnaires.titreId'
-    )
     .joinRaw(
       "left join titres_etapes on titres_etapes.id = titres.props_titre_etapes_ids ->> 'points'"
     )
@@ -44,16 +45,17 @@ export const getDGTMStatsInside = async (
     )
     .where('titresDemarches.typeId', 'oct')
     .andWhere('titresPhases.dateDebut', '>=', `${anneeDepartStats}-01-01`)
-    .andWhere(builder =>
-      builder
-        .where(
-          'titresAdministrationsGestionnaires.administrationId',
-          administrationId
+    .andWhere(builder => {
+      builder.whereRaw(
+        `titres_etapes.administrations_locales @> '"${administrationId}"'::jsonb`
+      )
+      if (gestionnaireTitreTypeIds.length) {
+        builder.orWhereRaw(
+          `?? in (${gestionnaireTitreTypeIds.map(t => `'${t}'`).join(',')})`,
+          [`titres.typeId`]
         )
-        .orWhereRaw(
-          `titres_etapes.administrations_locales @> '"${administrationId}"'::jsonb`
-        )
-    )
+      }
+    })
 
   phaseOctrois?.forEach(phase => {
     const annee = getAnnee(phase.dateDebut)
@@ -98,11 +100,6 @@ export const getDGTMStatsInside = async (
     .from('titresEtapes')
     .leftJoin('titresDemarches', 'titreDemarcheId', 'titresDemarches.id')
     .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
-    .leftJoin(
-      'titresAdministrationsGestionnaires',
-      'titres.id',
-      'titresAdministrationsGestionnaires.titreId'
-    )
     .joinRaw(
       "left join titres_etapes titre_etape_point on titre_etape_point.id = titres.props_titre_etapes_ids ->> 'points'"
     )
@@ -112,16 +109,17 @@ export const getDGTMStatsInside = async (
     .where('titresEtapes.typeId', 'mdp')
     .andWhere('titresDemarches.typeId', 'oct')
     .andWhere('titresEtapes.date', '>=', `${anneeDepartStats}-01-01`)
-    .andWhere(builder =>
-      builder
-        .where(
-          'titresAdministrationsGestionnaires.administrationId',
-          administrationId
+    .andWhere(builder => {
+      builder.whereRaw(
+        `titres_etapes.administrations_locales @> '"${administrationId}"'::jsonb`
+      )
+      if (gestionnaireTitreTypeIds.length) {
+        builder.orWhereRaw(
+          `?? in (${gestionnaireTitreTypeIds.map(t => `'${t}'`).join(',')})`,
+          [`titres.typeId`]
         )
-        .orWhereRaw(
-          `titre_etape_point.administrations_locales @> '"${administrationId}"'::jsonb`
-        )
-    )
+      }
+    })
 
   etapeDeposees?.forEach(etape => {
     const annee = getAnnee(etape.date)
@@ -170,11 +168,6 @@ export const getDGTMStatsInside = async (
       titresDemarches: 'titresDemarches'
     })
     .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
-    .leftJoin(
-      'titresAdministrationsGestionnaires',
-      'titres.id',
-      'titresAdministrationsGestionnaires.titreId'
-    )
     .joinRaw(
       "left join titres_etapes on titres_etapes.id = titres.props_titre_etapes_ids ->> 'points'"
     )
@@ -187,16 +180,17 @@ export const getDGTMStatsInside = async (
     .andWhere('MCR.date', '>=', `${anneeDepartStats}-01-01`)
     .andWhereRaw('DEX.titre_demarche_id = "titres_demarches"."id"')
     .andWhere('DEX.typeId', 'dex')
-    .andWhere(builder =>
-      builder
-        .where(
-          'titresAdministrationsGestionnaires.administrationId',
-          administrationId
+    .andWhere(builder => {
+      builder.whereRaw(
+        `titres_etapes.administrations_locales @> '"${administrationId}"'::jsonb`
+      )
+      if (gestionnaireTitreTypeIds.length) {
+        builder.orWhereRaw(
+          `?? in (${gestionnaireTitreTypeIds.map(t => `'${t}'`).join(',')})`,
+          [`titres.typeId`]
         )
-        .orWhereRaw(
-          `titres_etapes.administrations_locales @> '"${administrationId}"'::jsonb`
-        )
-    )
+      }
+    })
 
   dateInstruction.forEach(instruction => {
     const annee = getAnnee(instruction.mcrdate)
@@ -227,11 +221,6 @@ export const getDGTMStatsInside = async (
       titresDemarches: 'titresDemarches'
     })
     .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
-    .leftJoin(
-      'titresAdministrationsGestionnaires',
-      'titres.id',
-      'titresAdministrationsGestionnaires.titreId'
-    )
     .joinRaw(
       "left join titres_etapes on titres_etapes.id = titres.props_titre_etapes_ids ->> 'points'"
     )
@@ -244,16 +233,17 @@ export const getDGTMStatsInside = async (
     .andWhere('MCR.date', '>=', `${anneeDepartStats}-01-01`)
     .andWhereRaw('APO.titre_demarche_id = "titres_demarches"."id"')
     .andWhere('APO.typeId', 'apo')
-    .andWhere(builder =>
-      builder
-        .where(
-          'titresAdministrationsGestionnaires.administrationId',
-          administrationId
+    .andWhere(builder => {
+      builder.whereRaw(
+        `titres_etapes.administrations_locales @> '"${administrationId}"'::jsonb`
+      )
+      if (gestionnaireTitreTypeIds.length) {
+        builder.orWhereRaw(
+          `?? in (${gestionnaireTitreTypeIds.map(t => `'${t}'`).join(',')})`,
+          [`titres.typeId`]
         )
-        .orWhereRaw(
-          `titres_etapes.administrations_locales @> '"${administrationId}"'::jsonb`
-        )
-    )
+      }
+    })
 
   dateCDM.forEach(instruction => {
     const annee = getAnnee(instruction.mcrdate)
