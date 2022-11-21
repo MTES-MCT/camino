@@ -4,6 +4,7 @@ export default defineConfig({
   test: {
     include: ['**/*.test.integration.ts'],
     threads: false,
-    setupFiles: '../tests/vitestSetup.ts'
+    setupFiles: '../tests/vitestSetup.ts',
+    testTimeout: 10000
   }
 })
