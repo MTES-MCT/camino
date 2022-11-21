@@ -32,7 +32,7 @@
     "lint": "prettier --write . && eslint --fix .",
     "start": "node ./dist/api/src/index.js",
     "test": "npm run test:unit && npm run test:integration",
-    "test:unit": "vitest --environment node --root src/",
+    "test:unit": "vitest --environment node --root src/ --config ../vitest.unit.config.ts",
     "test:integration": "JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret vitest --environment node --root src/ --config ../vitest.integration.config.ts",
     "test:generate-data": "ts-node --transpile-only src/tools/demarches/tests-creation.ts",
     "ci:lint": "prettier --check . && eslint ."
