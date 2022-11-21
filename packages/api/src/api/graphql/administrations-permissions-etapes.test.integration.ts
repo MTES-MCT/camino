@@ -114,7 +114,6 @@ describe('Visibilité des étapes', () => {
 })
 
 describe('Création des étapes', () => {
-
   test.each<[AdministrationId]>([['min-mtes-dgaln-01']])(
     'un utilisateur admin de l’administration $administrationId peut créer une étape $etapeTypeId sur un titre CXM',
     async administrationId =>

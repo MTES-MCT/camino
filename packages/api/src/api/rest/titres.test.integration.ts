@@ -9,7 +9,8 @@ import { ITitreDemarche, ITitreEtape } from '../../types'
 import { entreprisesUpsert } from '../../database/queries/entreprises'
 import { Knex } from 'knex'
 import { toCaminoDate } from 'camino-common/src/date'
-import { afterAll, beforeAll, describe, test, expect } from 'vitest'import { newEntrepriseId } from 'camino-common/src/entreprise'
+import { afterAll, beforeAll, describe, test, expect } from 'vitest'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
 
 let knex: Knex<any, unknown[]>
 beforeAll(async () => {
