@@ -4,6 +4,7 @@ import { DemarcheTypeId } from '../static/demarchesTypes'
 import { canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck } from './titres-etapes'
 import { User } from '../roles'
 import { ADMINISTRATION_IDS } from '../static/administrations'
+import { test, expect } from 'vitest'
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'arm', optional: false },

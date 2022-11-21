@@ -12,7 +12,7 @@ import {
 import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { Etape } from '../machine-common'
 import { toCaminoDate } from 'camino-common/src/date'
-
+import { describe, expect, test } from 'vitest'
 const etapesProd = require('./oct.cas.json')
 const orderAndInterpretMachine = (etapes: readonly Etape[]) => {
   return commonOrderAndInterpretMachine(new ArmOctMachine(), etapes)

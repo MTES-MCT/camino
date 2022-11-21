@@ -1,4 +1,5 @@
 import { isPaysId, PAYS_IDS } from './pays'
+import { test, expect } from 'vitest'
 
 test('isPaysId', () => {
   expect(isPaysId('FR')).toBe(true)

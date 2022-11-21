@@ -5,18 +5,18 @@ import {
   titresDemarchesPublicModifie,
   titresDemarchesPublicIdentique
 } from './__mocks__/titres-demarches-public-update-demarches'
-
-jest.mock('../../database/queries/titres', () => ({
-  titresGet: jest.fn()
+import { vi, describe, expect, test } from 'vitest'
+vi.mock('../../database/queries/titres', () => ({
+  titresGet: vi.fn()
 }))
 
-jest.mock('../../database/queries/titres-demarches', () => ({
-  titreDemarcheUpdate: jest.fn().mockResolvedValue(true)
+vi.mock('../../database/queries/titres-demarches', () => ({
+  titreDemarcheUpdate: vi.fn().mockResolvedValue(true)
 }))
 
-const titresGetMock = jest.mocked(titresGet, true)
+const titresGetMock = vi.mocked(titresGet, true)
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe("public des démarches d'un titre", () => {
   test("met à jour la publicité d'une démarche", async () => {

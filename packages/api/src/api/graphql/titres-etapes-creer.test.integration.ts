@@ -10,20 +10,30 @@ import { documentCreate } from '../../database/queries/documents'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { Role } from 'camino-common/src/roles'
 
-jest.mock('../../tools/dir-create', () => ({
+import {
+  afterAll,
+  beforeEach,
+  beforeAll,
+  describe,
+  test,
+  expect,
+  vi
+} from 'vitest'
+
+vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
-  default: jest.fn()
+  default: vi.fn()
 }))
-jest.mock('../../tools/file-stream-create', () => ({
+vi.mock('../../tools/file-stream-create', () => ({
   __esModule: true,
-  default: jest.fn()
+  default: vi.fn()
 }))
-jest.mock('../../tools/file-delete', () => ({
+vi.mock('../../tools/file-delete', () => ({
   __esModule: true,
-  default: jest.fn()
+  default: vi.fn()
 }))
-console.info = jest.fn()
-console.error = jest.fn()
+console.info = vi.fn()
+console.error = vi.fn()
 beforeAll(async () => {
   await dbManager.populateDb()
 

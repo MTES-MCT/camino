@@ -21,9 +21,10 @@
       >
         <template #write>
           <SectionElementEdit
-            v-model:contenu="contenu"
+            :contenu="contenu"
             class="mb-s"
             :element="element"
+            @update:contenu="newValue => $emit('update:contenu', newValue)"
           />
         </template>
         <template #read>
@@ -65,6 +66,7 @@ export default {
     heritage: { type: Object, required: true },
     sectionId: { type: String, required: true }
   },
+  emits: ['update:contenu'],
 
   computed: {
     hasValeur() {

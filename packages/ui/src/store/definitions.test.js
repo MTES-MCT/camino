@@ -1,19 +1,20 @@
 import definitions from './definitions'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('../api/metas', () => ({
-  definitions: jest.fn(),
-  domaines: jest.fn(),
-  demarchesStatuts: jest.fn(),
-  demarchesTypes: jest.fn(),
-  etapesTypes: jest.fn(),
-  substancesLegales: jest.fn(),
-  titresStatuts: jest.fn(),
-  titresTypesTypes: jest.fn()
+vi.mock('../api/metas', () => ({
+  definitions: vi.fn(),
+  domaines: vi.fn(),
+  demarchesStatuts: vi.fn(),
+  demarchesTypes: vi.fn(),
+  etapesTypes: vi.fn(),
+  substancesLegales: vi.fn(),
+  titresStatuts: vi.fn(),
+  titresTypesTypes: vi.fn()
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe('définitions du glossaire', () => {
   let store
@@ -27,16 +28,16 @@ describe('définitions du glossaire', () => {
     }
 
     actions = {
-      pageError: jest.fn(),
-      apiError: jest.fn(),
-      messageAdd: jest.fn()
+      pageError: vi.fn(),
+      apiError: vi.fn(),
+      messageAdd: vi.fn()
     }
     mutations = {
-      loadingAdd: jest.fn(),
-      loadingRemove: jest.fn(),
-      popupMessagesRemove: jest.fn(),
-      popupMessageAdd: jest.fn(),
-      popupClose: jest.fn()
+      loadingAdd: vi.fn(),
+      loadingRemove: vi.fn(),
+      popupMessagesRemove: vi.fn(),
+      popupMessageAdd: vi.fn(),
+      popupClose: vi.fn()
     }
 
     store = createStore({

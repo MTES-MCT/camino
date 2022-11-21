@@ -18,9 +18,10 @@
         }"
       >
         <SectionElementEdit
-          v-model:contenu="contenu"
+          :contenu="contenu"
           class="mb-s"
           :element="element"
+          @update:contenu="newValue => $emit('update:contenu', newValue)"
         />
 
         <!-- eslint-disable vue/no-v-html -->
@@ -52,6 +53,7 @@ export default {
     contenu: { type: Object, required: true },
     element: { type: Object, required: true }
   },
+  emits: ['update:contenu'],
 
   computed: {
     hasValeur() {

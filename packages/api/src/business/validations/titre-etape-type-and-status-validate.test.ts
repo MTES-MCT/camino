@@ -2,12 +2,12 @@ import { IEtapeType } from '../../types'
 
 import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate'
 import { titreEtapeDemarcheEtapeTypeFind } from '../utils/titre-etape-demarche-etape-type-find'
-
-jest.mock('../utils/titre-etape-demarche-etape-type-find', () => ({
-  titreEtapeDemarcheEtapeTypeFind: jest.fn()
+import { vi, describe, test, expect } from 'vitest'
+vi.mock('../utils/titre-etape-demarche-etape-type-find', () => ({
+  titreEtapeDemarcheEtapeTypeFind: vi.fn()
 }))
 
-const titreEtapeDemarcheEtapeTypeFindMock = jest.mocked(
+const titreEtapeDemarcheEtapeTypeFindMock = vi.mocked(
   titreEtapeDemarcheEtapeTypeFind,
   true
 )

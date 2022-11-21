@@ -1,4 +1,5 @@
 import { isSubstanceFiscale, substancesFiscalesBySubstanceLegale } from './substancesFiscales'
+import { test, expect } from 'vitest'
 
 test('isSubstanceFiscale', () => {
   expect(isSubstanceFiscale('wolf')).toBe(true)

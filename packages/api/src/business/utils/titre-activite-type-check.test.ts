@@ -10,6 +10,7 @@ import {
   titreMPrmMetropole,
   titrePrwSansPays
 } from './__mocks__/titre-activite-type-check'
+import { describe, test, expect } from 'vitest'
 
 describe("vérifie si un titre a des activités d'un certain type", () => {
   test("ne retourne aucun type d'activité relié à un pays sur un titre sans pays", () => {

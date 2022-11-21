@@ -4,16 +4,19 @@ import {
   titrePointReferenceCreate
 } from '../../database/queries/titres-points'
 import TitresPoints from '../../database/models/titres-points'
-
-jest.mock('../../database/queries/titres-points', () => ({
-  titrePointReferenceCreate: jest.fn().mockResolvedValue(true),
-  titresPointsGet: jest.fn()
+import { vi, afterEach, describe, expect, test } from 'vitest'
+vi.mock('../../database/queries/titres-points', () => ({
+  titrePointReferenceCreate: vi.fn().mockResolvedValue(true),
+  titresPointsGet: vi.fn()
 }))
 
-const titresPointsGetMock = jest.mocked(titresPointsGet, true)
+const titresPointsGetMock = vi.mocked(titresPointsGet, true)
 
-console.info = jest.fn()
+console.info = vi.fn()
 
+afterEach(() => {
+  vi.resetAllMocks()
+})
 describe("références des points d'un titre", () => {
   test('crée une référence sur un point si elle est absente', async () => {
     titresPointsGetMock.mockResolvedValue([

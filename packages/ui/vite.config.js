@@ -19,7 +19,9 @@ module.exports = defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   },
-
+  test: {
+    setupFiles: ['./__mocks__/setupVitest.js']
+  },
   // suite à l’ajout de la lib jsondiffpatch, il faut injecter process
   // => https://github.com/avkonst/hookstate/issues/118
   define: {
@@ -39,6 +41,7 @@ module.exports = defineConfig({
     }
   },
   server: {
+    port: 3000,
     proxy: {
       '/apiUrl': {
         target: process.env.API_URL,

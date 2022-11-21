@@ -32,12 +32,10 @@
     "lint": "prettier --write . && eslint --fix .",
     "start": "node ./dist/api/src/index.js",
     "test": "npm run test:unit && npm run test:integration",
-    "test:unit": "jest -c jest.config.ts",
-    "test:integration": "JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest -c jest.config.integration.ts --runInBand",
+    "test:unit": "vitest --environment node --root src/ --config ../vitest.unit.config.ts",
+    "test:integration": "JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret vitest --environment node --root src/ --config ../vitest.integration.config.ts",
     "test:generate-data": "ts-node --transpile-only src/tools/demarches/tests-creation.ts",
-    "ci:lint": "prettier --check . && eslint .",
-    "ci:test-unit": "jest -c jest.config.ts --ci --collect-coverage",
-    "ci:test-integration": "JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret jest -c jest.config.integration.ts --runInBand --ci --collect-coverage"
+    "ci:lint": "prettier --check . && eslint ."
   },
   "@comment dependencies": {
     "modules esm": "crypto-random-string, @sindresorhus/slugify, email-regex, decamelize, dateformat, node-fetch à ne pas updater tant que on ne compile pas pour es2020: https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c. Pas simple de migrer ts-node.",
@@ -63,7 +61,6 @@
     "@types/geojson": "^7946.0.10",
     "@types/graphql-type-json": "^0.3.2",
     "@types/graphql-upload": "^8.0.11",
-    "@types/jest": "^28.1.7",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/node": "^18.7.12",
     "@types/node-fetch": "^2.5.12",
@@ -79,7 +76,6 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "cross-env": "^7.0.3",
     "crypto-random-string": "^3.3.1",
     "dateformat": "^4.5.1",
     "decamelize": "^5.0.0",
@@ -99,40 +95,38 @@
     "jsondiffpatch": "^0.4.1",
     "jsonwebtoken": "^8.5.1",
     "jszip": "^3.10.1",
-    "knex": "2.2.0",
+    "knex": "^2.3.0",
     "make-dir": "^3.1.0",
     "matomo-tracker": "^2.2.4",
     "node-fetch": "^2.6.5",
     "node-mailjet": "^5.1.1",
-    "objection": "^3.0.1",
+    "objection": "github:Vincit/objection.js#dbb20aebaac2059149ec18386283b3cce4a3d7f0",
     "pg": "^8.8.0",
     "proj4": "^2.8.0",
     "shpjs": "^4.0.4",
     "stream-json": "^1.7.4",
     "ts-node": "^10.9.1",
     "tus-node-server": "^0.7.1",
-    "typescript": "^4.7.4",
+    "typescript": "^4.8.4",
     "xlsx": "^0.18.5",
-    "xstate": "^4.33.4"
+    "xstate": "^4.34.0"
   },
   "devDependencies": {
-    "@jest/types": "^28.1.3",
     "@types/stream-json": "^1.7.2",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.34.0",
     "@typescript-eslint/parser": "^5.34.0",
+    "@vitest/coverage-c8": "^0.25.2",
     "commitizen": "^4.2.5",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^26.8.7",
     "eslint-plugin-n": "^15.2.5",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-tsdoc": "^0.2.16",
-    "jest": "^28.1.3",
     "nodemon": "^2.0.19",
     "npm-check-updates": "^16.0.5",
     "pg-escape": "^0.2.0",
@@ -140,7 +134,8 @@
     "sql-formatter": "^9.2.0",
     "standard-version": "^9.5.0",
     "supertest": "^6.2.4",
-    "ts-jest": "^28.0.8"
+    "vite": "^3.2.4",
+    "vitest": "^0.25.2"
   },
   "prettier": {
     "semi": false,
@@ -158,11 +153,9 @@
       "prettier"
     ],
     "env": {
-      "node": true,
-      "jest/globals": true
+      "node": true
     },
     "plugins": [
-      "jest",
       "@typescript-eslint"
     ],
     "rules": {

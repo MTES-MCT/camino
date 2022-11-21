@@ -1,4 +1,5 @@
 import { ADMINISTRATION_IDS, isAdministrationId, sortedAdministrationTypes } from './administrations'
+import { test, expect } from 'vitest'
 
 test('sortedAdministrationTypes', () => {
   expect(sortedAdministrationTypes).toMatchSnapshot()

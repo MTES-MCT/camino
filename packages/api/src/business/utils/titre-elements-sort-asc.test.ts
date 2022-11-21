@@ -10,6 +10,7 @@ import {
   titreDemarchesSortedDescEqual,
   titreDemarchesSortedDescEqualResult
 } from './__mocks__/titre-demarches-asc-sort-demarches'
+import { describe, test, expect } from 'vitest'
 
 describe('trie les démarches', () => {
   test('des démarches sans étapes organisées par ordre décroissant sont triées par ordre croissant', () => {

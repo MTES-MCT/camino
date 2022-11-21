@@ -2,19 +2,20 @@ import { createApp } from 'vue'
 import { createStore } from 'vuex'
 import * as api from '../api/entreprises'
 import entreprise from './entreprise'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('../router', () => ({
+vi.mock('../router', () => ({
   push: () => {},
   replace: () => {}
 }))
 
-jest.mock('../api/entreprises', () => ({
-  entreprise: jest.fn(),
-  entrepriseCreer: jest.fn(),
-  entrepriseModifier: jest.fn()
+vi.mock('../api/entreprises', () => ({
+  entreprise: vi.fn(),
+  entrepriseCreer: vi.fn(),
+  entrepriseModifier: vi.fn()
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe("état de l'entreprise sélectionnée", () => {
   let store
@@ -29,20 +30,20 @@ describe("état de l'entreprise sélectionnée", () => {
       }
     }
     actions = {
-      pageError: jest.fn(),
-      apiError: jest.fn(),
-      reload: jest.fn(),
-      messageAdd: jest.fn()
+      pageError: vi.fn(),
+      apiError: vi.fn(),
+      reload: vi.fn(),
+      messageAdd: vi.fn()
     }
 
     mutations = {
-      loadingAdd: jest.fn(),
-      loadingRemove: jest.fn(),
-      popupLoad: jest.fn(),
-      popupMessagesRemove: jest.fn(),
-      popupClose: jest.fn(),
-      popupMessageAdd: jest.fn(),
-      messageAdd: jest.fn()
+      loadingAdd: vi.fn(),
+      loadingRemove: vi.fn(),
+      popupLoad: vi.fn(),
+      popupMessagesRemove: vi.fn(),
+      popupClose: vi.fn(),
+      popupMessageAdd: vi.fn(),
+      messageAdd: vi.fn()
     }
 
     store = createStore({

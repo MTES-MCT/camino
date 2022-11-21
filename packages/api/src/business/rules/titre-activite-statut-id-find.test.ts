@@ -1,5 +1,5 @@
 import { titreActiviteStatutIdFind } from './titre-activite-statut-id-find'
-
+import { describe, expect, test } from 'vitest'
 import {
   titreActiviteFermee,
   titreActiviteDeposee,

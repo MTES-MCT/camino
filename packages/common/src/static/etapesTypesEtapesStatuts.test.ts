@@ -1,6 +1,7 @@
 import { EtapesStatuts, EtapeStatutKey, ETAPES_STATUTS, isEtapeStatutKey } from './etapesStatuts'
 import { ETAPES_TYPES } from './etapesTypes'
 import { EtapesTypesEtapesStatuts, EtapeTypeEtapeStatut, getEtapesStatuts } from './etapesTypesEtapesStatuts'
+import { test, expect } from 'vitest'
 
 test('getEtapesStatuts', () => {
   expect(getEtapesStatuts(ETAPES_TYPES.abandonDeLaDemande)).toStrictEqual([EtapesStatuts.fai])

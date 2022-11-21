@@ -2,6 +2,7 @@ import { newEntrepriseId } from 'camino-common/src/entreprise'
 import { dbManager } from '../../../tests/db-manager'
 import { restCall } from '../../../tests/_utils'
 import { entrepriseUpsert } from '../../database/queries/entreprises'
+import { afterAll, beforeAll, describe, test, expect } from 'vitest'
 
 beforeAll(async () => {
   await dbManager.populateDb()

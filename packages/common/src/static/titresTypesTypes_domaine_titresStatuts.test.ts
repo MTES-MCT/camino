@@ -3,6 +3,7 @@ import { DOMAINES_IDS } from './domaines'
 import { TitresStatutIds } from './titresStatuts'
 import { TITRES_TYPES_TYPES_IDS } from './titresTypesTypes'
 import { titrePublicFind } from './titresTypesTypes_domaine_titresStatuts'
+import { test, expect, describe } from 'vitest'
 
 describe("publicité d'un titre", () => {
   test('un titre est toujours visible par son demandeur ou titulaire', () => {

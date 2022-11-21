@@ -2,7 +2,7 @@ import { IDocument } from '../../types'
 import { DocumentType } from 'camino-common/src/static/documentsTypes'
 
 import { documentsTypesValidate } from './documents-types-validate'
-
+import { describe, test, expect } from 'vitest'
 describe('teste documentsTypesValidate', () => {
   test('aucun document type n’est possible', () => {
     const errors = documentsTypesValidate(null)

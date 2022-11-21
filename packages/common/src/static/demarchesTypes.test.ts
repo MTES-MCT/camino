@@ -1,4 +1,5 @@
 import { DemarchesTypesIds, DEMARCHES_TYPES_IDS, isDemarcheTypeId, isDemarcheTypeOctroi, isDemarcheTypeWithPhase } from './demarchesTypes'
+import { test, expect } from 'vitest'
 
 test('isDemarcheTypeId', () => {
   expect(isDemarcheTypeId(null)).toBe(false)

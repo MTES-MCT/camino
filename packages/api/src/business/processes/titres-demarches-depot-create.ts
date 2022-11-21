@@ -1,4 +1,4 @@
-import { ITitreDemarche, ITitreEntreprise, ITitreEtape } from '../../types'
+import type { ITitreDemarche, ITitreEntreprise, ITitreEtape } from '../../types'
 
 import { titreEtapeUpsert } from '../../database/queries/titres-etapes'
 import { titreDemarcheGet } from '../../database/queries/titres-demarches'
@@ -60,7 +60,18 @@ const titreEtapeDepotConfirmationEmailsSend = async (
   }
 }
 
-const titreDemarcheDepotCheck = (titreDemarche: ITitreDemarche) => {
+// visibleForTesting
+export const titreDemarcheDepotCheck = (
+  titreDemarche: ITitreDemarche
+): boolean => {
+  const demarcheDefinition = demarcheDefinitionFind(
+    titreDemarche.titre!.typeId,
+    titreDemarche.typeId,
+    titreDemarche.etapes,
+    titreDemarche.id
+  )
+  // On peut déposer automatiquement seulement les démarches qui possèdent un arbre d’instructions
+  if (!demarcheDefinition) return false
   if (titreDemarche.titre!.typeId === 'arm' && titreDemarche.typeId === 'oct') {
     // Si on a pas de demande faite
     if (
@@ -136,15 +147,6 @@ export const titresEtapesDepotCreate = async (demarcheId: string) => {
   if (!titreDemarche) {
     return false
   }
-
-  const demarcheDefinition = demarcheDefinitionFind(
-    titreDemarche.titre!.typeId,
-    titreDemarche.typeId,
-    titreDemarche.etapes,
-    titreDemarche.id
-  )
-  // On peut déposer automatiquement seulement les démarches qui possèdent un arbre d’instructions
-  if (!demarcheDefinition) return false
 
   const depotCheck = titreDemarcheDepotCheck(titreDemarche)
   if (depotCheck) {

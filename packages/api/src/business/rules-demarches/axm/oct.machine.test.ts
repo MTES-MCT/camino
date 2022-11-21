@@ -6,6 +6,7 @@ import { AxmOctMachine } from './oct.machine'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { toCaminoDate } from 'camino-common/src/date'
+import { describe, expect, test } from 'vitest'
 const etapesProd = require('./oct.cas.json')
 
 describe('vérifie l’arbre d’octroi d’AXM', () => {

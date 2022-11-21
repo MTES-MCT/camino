@@ -5,20 +5,21 @@ import { titreStatutIdFind } from '../rules/titre-statut-id-find'
 import { titreDemarchesEtapesRebuild } from './titre-demarches-etapes-rebuild'
 
 import { titreDemarches } from './__mocks__/titre-valide-check-demarches'
+import { vi, describe, test, expect } from 'vitest'
 
-jest.mock('../rules/titre-statut-id-find', () => ({
+vi.mock('../rules/titre-statut-id-find', () => ({
   __esModule: true,
-  titreStatutIdFind: jest.fn()
+  titreStatutIdFind: vi.fn()
 }))
 
-jest.mock('./titre-demarches-etapes-rebuild', () => ({
+vi.mock('./titre-demarches-etapes-rebuild', () => ({
   __esModule: true,
-  titreDemarchesEtapesRebuild: jest.fn()
+  titreDemarchesEtapesRebuild: vi.fn()
 }))
 
-const titreStatutIdFindMock = jest.mocked(titreStatutIdFind, true)
+const titreStatutIdFindMock = vi.mocked(titreStatutIdFind, true)
 
-const titreDemarchesEtapesRebuildMock = jest.mocked(
+const titreDemarchesEtapesRebuildMock = vi.mocked(
   titreDemarchesEtapesRebuild,
   true
 )

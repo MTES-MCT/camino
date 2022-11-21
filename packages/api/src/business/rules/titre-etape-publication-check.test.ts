@@ -1,5 +1,5 @@
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
-
+import { describe, expect, test } from 'vitest'
 describe("étape de publication d'une étape", () => {
   test('une étape de dpu est une étape de publication', () => {
     expect(titreEtapePublicationCheck('dpu', 'pxm')).toEqual(true)

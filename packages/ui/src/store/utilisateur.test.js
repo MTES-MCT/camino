@@ -4,23 +4,24 @@ import * as router from '../router'
 import * as api from '../api/utilisateurs'
 
 import utilisateur from './utilisateur'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('../api/utilisateurs', () => ({
-  utilisateurMetas: jest.fn(),
-  utilisateur: jest.fn(),
-  utilisateurCreer: jest.fn(),
-  utilisateurModifier: jest.fn(),
-  utilisateurSupprimer: jest.fn(),
-  utilisateurMotDePasseModifier: jest.fn(),
-  utilisateurEmailMessageEnvoyer: jest.fn(),
-  utilisateurEmailModifier: jest.fn()
+vi.mock('../api/utilisateurs', () => ({
+  utilisateurMetas: vi.fn(),
+  utilisateur: vi.fn(),
+  utilisateurCreer: vi.fn(),
+  utilisateurModifier: vi.fn(),
+  utilisateurSupprimer: vi.fn(),
+  utilisateurMotDePasseModifier: vi.fn(),
+  utilisateurEmailMessageEnvoyer: vi.fn(),
+  utilisateurEmailModifier: vi.fn()
 }))
 
-jest.mock('../router', () => ({
-  push: jest.fn()
+vi.mock('../router', () => ({
+  default: { push: vi.fn() }
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe("état de l'utilisateur consulté", () => {
   let store
@@ -42,27 +43,27 @@ describe("état de l'utilisateur consulté", () => {
         element: {}
       },
       actions: {
-        logout: jest.fn()
+        logout: vi.fn()
       },
       mutations: {
-        set: jest.fn()
+        set: vi.fn()
       }
     }
 
     mutations = {
-      loadingAdd: jest.fn(),
-      loadingRemove: jest.fn(),
-      popupMessageAdd: jest.fn(),
-      popupClose: jest.fn(),
-      popupMessagesRemove: jest.fn(),
-      popupLoad: jest.fn()
+      loadingAdd: vi.fn(),
+      loadingRemove: vi.fn(),
+      popupMessageAdd: vi.fn(),
+      popupClose: vi.fn(),
+      popupMessagesRemove: vi.fn(),
+      popupLoad: vi.fn()
     }
 
     actions = {
-      pageError: jest.fn(),
-      apiError: jest.fn(),
-      reload: jest.fn(),
-      messageAdd: jest.fn()
+      pageError: vi.fn(),
+      apiError: vi.fn(),
+      reload: vi.fn(),
+      messageAdd: vi.fn()
     }
 
     store = createStore({
@@ -260,7 +261,7 @@ describe("état de l'utilisateur consulté", () => {
     expect(apiMock).toHaveBeenCalledWith({ id: 46 })
     expect(user.actions.logout).not.toHaveBeenCalled()
     expect(actions.messageAdd).toHaveBeenCalled()
-    expect(router.push).toHaveBeenCalled()
+    expect(router.default.push).toHaveBeenCalled()
   })
 
   test('supprime un utilisateur et le déconnecte', async () => {

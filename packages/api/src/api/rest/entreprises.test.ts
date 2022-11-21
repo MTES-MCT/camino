@@ -1,6 +1,7 @@
 import { bodyBuilder, responseExtractor } from './entreprises'
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 import Titres from '../../database/models/titres'
+import { describe, expect, test } from 'vitest'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
 
 const entreprise = {

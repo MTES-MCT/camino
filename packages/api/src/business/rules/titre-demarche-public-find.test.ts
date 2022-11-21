@@ -4,7 +4,7 @@ import { titreDemarchePublicFind } from './titre-demarche-public-find'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { toCaminoDate } from 'camino-common/src/date'
-
+import { describe, expect, test } from 'vitest'
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   etapesProps.map(
     (etapeProps, i) =>

@@ -1,4 +1,5 @@
 import { getDocuments } from './titresTypes_demarchesTypes_etapesTypes'
+import { test, expect } from 'vitest'
 
 test('getDocuments erreurs', () => {
   expect(() => getDocuments()).toThrowErrorMatchingInlineSnapshot(
@@ -7,13 +8,13 @@ test('getDocuments erreurs', () => {
 })
 
 test('getDocuments pas de surcharge mais pas de documents', () => {
-  expect(getDocuments('ap', 'm', 'amo', 'abs')).toMatchInlineSnapshot(`Array []`)
+  expect(getDocuments('ap', 'm', 'amo', 'abs')).toMatchInlineSnapshot('[]')
 })
 
 test('getDocuments pas de surcharge', () => {
   expect(getDocuments('ap', 'm', 'amo', 'wfo')).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "id": "dcl",
         "nom": "Déclaration",
         "optionnel": true,
@@ -24,29 +25,29 @@ test('getDocuments pas de surcharge', () => {
 
 test('getDocuments surcharge', () => {
   expect(getDocuments('ax', 'm', 'oct', 'dae')).toMatchInlineSnapshot(`
-    Array [
-      Object {
+    [
+      {
         "description": undefined,
         "id": "arp",
         "nom": "Arrêté préfectoral",
         "optionnel": false,
       },
-      Object {
+      {
         "id": "arr",
         "nom": "Arrêté",
         "optionnel": true,
       },
-      Object {
+      {
         "id": "dep",
         "nom": "Décision cas par cas",
         "optionnel": true,
       },
-      Object {
+      {
         "id": "let",
         "nom": "Lettre",
         "optionnel": true,
       },
-      Object {
+      {
         "id": "ndd",
         "nom": "Notification de décision",
         "optionnel": true,

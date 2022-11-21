@@ -1,7 +1,7 @@
 import { buildMatrices } from './matrices'
 import { ITitre } from '../types'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
-
+import { describe, expect, test } from 'vitest'
 describe('matrices', () => {
   test('buildMatrices', () => {
     const openFiscaResponse = {

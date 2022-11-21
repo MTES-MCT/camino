@@ -1,7 +1,7 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`titresONF teste la récupération des données pour l'ONF 1`] = `
-Object {
+exports[`titresONF > teste la récupération des données pour l'ONF 1`] = `
+{
   "dateCARM": "",
   "dateCompletudePTMG": "2022-03-10",
   "dateReceptionONF": "",
@@ -9,16 +9,16 @@ Object {
   "enAttenteDeONF": true,
   "id": Any<String>,
   "nom": "titre1",
-  "references": Array [
-    Object {
+  "references": [
+    {
       "nom": "ONF",
       "referenceTypeId": "onf",
     },
   ],
   "slug": Any<String>,
   "titreStatutId": "val",
-  "titulaires": Array [
-    Object {
+  "titulaires": [
+    {
       "adresse": null,
       "archive": false,
       "categorie": null,
@@ -42,8 +42,8 @@ Object {
 }
 `;
 
-exports[`titresONF teste la récupération des données pour l'ONF 2`] = `
-Object {
+exports[`titresONF > teste la récupération des données pour l'ONF 2`] = `
+{
   "dateCARM": "",
   "dateCompletudePTMG": "",
   "dateReceptionONF": "",
@@ -51,16 +51,16 @@ Object {
   "enAttenteDeONF": false,
   "id": Any<String>,
   "nom": "titre2",
-  "references": Array [
-    Object {
+  "references": [
+    {
       "nom": "ONF",
       "referenceTypeId": "onf",
     },
   ],
   "slug": Any<String>,
   "titreStatutId": "val",
-  "titulaires": Array [
-    Object {
+  "titulaires": [
+    {
       "adresse": null,
       "archive": false,
       "categorie": null,
@@ -84,22 +84,22 @@ Object {
 }
 `;
 
-exports[`titresPTMG teste la récupération des données pour le PTMG 1`] = `
-Object {
+exports[`titresPTMG > teste la récupération des données pour le PTMG 1`] = `
+{
   "domaineId": "m",
   "enAttenteDePTMG": false,
   "id": Any<String>,
   "nom": "titre1",
-  "references": Array [
-    Object {
+  "references": [
+    {
       "nom": "ONF",
       "referenceTypeId": "onf",
     },
   ],
   "slug": Any<String>,
   "titreStatutId": "val",
-  "titulaires": Array [
-    Object {
+  "titulaires": [
+    {
       "adresse": null,
       "archive": false,
       "categorie": null,
@@ -123,22 +123,22 @@ Object {
 }
 `;
 
-exports[`titresPTMG teste la récupération des données pour le PTMG 2`] = `
-Object {
+exports[`titresPTMG > teste la récupération des données pour le PTMG 2`] = `
+{
   "domaineId": "m",
   "enAttenteDePTMG": true,
   "id": Any<String>,
   "nom": "titre2",
-  "references": Array [
-    Object {
+  "references": [
+    {
       "nom": "ONF",
       "referenceTypeId": "onf",
     },
   ],
   "slug": Any<String>,
   "titreStatutId": "val",
-  "titulaires": Array [
-    Object {
+  "titulaires": [
+    {
       "adresse": null,
       "archive": false,
       "categorie": null,

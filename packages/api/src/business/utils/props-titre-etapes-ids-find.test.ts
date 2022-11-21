@@ -1,5 +1,6 @@
 import { contenusTitreEtapesIdsFind } from './props-titre-etapes-ids-find'
 import { newDemarcheId } from '../../database/models/_format/id-create'
+import { describe, test, expect } from 'vitest'
 
 describe("liste des propriétés et les étapes qui en sont à l'origine", () => {
   test('trouve la liste des propriétés', () => {

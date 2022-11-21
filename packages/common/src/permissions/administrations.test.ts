@@ -1,6 +1,7 @@
 import { canReadActivitesTypesEmails } from './administrations'
 import { User } from '../roles'
 import { ADMINISTRATION_IDS } from '../static/administrations'
+import { test, expect } from 'vitest'
 
 test.each<[User, boolean]>([
   [{ role: 'super', administrationId: undefined }, true],

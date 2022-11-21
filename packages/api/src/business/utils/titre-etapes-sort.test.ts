@@ -6,6 +6,7 @@ import {
   titreEtapesSortDescByOrdre
 } from './titre-etapes-sort'
 import { newDemarcheId } from '../../database/models/_format/id-create'
+import { vi, describe, test, expect } from 'vitest'
 
 const titreEtapesSortedDescResult = [
   { typeId: 'dpu', ordre: 2, date: '1988-03-11' },
@@ -24,7 +25,7 @@ const etapesTypes = [
   { id: 'dpu', nom: 'dpu', ordre: 200, titreTypeId: 'titre-type-id' }
 ] as IEtapeType[]
 
-console.error = jest.fn()
+console.error = vi.fn()
 describe('trie les étapes', () => {
   test('des étapes organisées par ordre décroissant sont triées par ordre croissant', () => {
     expect(titreEtapesSortAscByOrdre(titreEtapesSortedDesc)).toMatchObject(

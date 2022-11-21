@@ -18,51 +18,54 @@ import {
   emailsWithTemplateSend
 } from '../../tools/api-mailjet/emails'
 import { EmailTemplateId } from '../../tools/api-mailjet/types'
+import { vi, afterEach, describe, expect, test } from 'vitest'
 
-jest.mock('../../database/queries/titres', () => ({
-  titresGet: jest.fn()
+vi.mock('../../database/queries/titres', () => ({
+  titresGet: vi.fn()
 }))
 
-jest.mock('../../database/queries/metas-activites', () => ({
-  activitesTypesGet: jest.fn()
+vi.mock('../../database/queries/metas-activites', () => ({
+  activitesTypesGet: vi.fn()
 }))
 
-jest.mock('../utils/titre-activite-type-check', () => ({
+vi.mock('../utils/titre-activite-type-check', () => ({
   __esModule: true,
-  titreActiviteTypeCheck: jest.fn()
+  titreActiviteTypeCheck: vi.fn()
 }))
 
-jest.mock('../../tools/annees-build', () => ({
+vi.mock('../../tools/annees-build', () => ({
   __esModule: true,
-  anneesBuild: jest.fn()
+  anneesBuild: vi.fn()
 }))
 
-jest.mock('../../database/queries/titres-activites', () => ({
+vi.mock('../../database/queries/titres-activites', () => ({
   __esModule: true,
-  titresActivitesUpsert: jest.fn().mockResolvedValue(true)
+  titresActivitesUpsert: vi.fn().mockResolvedValue(true)
 }))
 
-jest.mock('../rules/titre-activites-build', () => ({
+vi.mock('../rules/titre-activites-build', () => ({
   __esModule: true,
-  titreActivitesBuild: jest.fn().mockResolvedValue(true)
+  titreActivitesBuild: vi.fn().mockResolvedValue(true)
 }))
 
-jest.mock('../../tools/api-mailjet/emails', () => ({
+vi.mock('../../tools/api-mailjet/emails', () => ({
   __esModule: true,
-  emailsSend: jest.fn().mockImplementation(a => a),
-  emailsWithTemplateSend: jest.fn().mockImplementation(a => a)
+  emailsSend: vi.fn().mockImplementation(a => a),
+  emailsWithTemplateSend: vi.fn().mockImplementation(a => a)
 }))
 
-const titresGetMock = jest.mocked(titresGet, true)
-const activitesTypesGetMock = jest.mocked(activitesTypesGet, true)
-const titreActiviteTypeCheckMock = jest.mocked(titreActiviteTypeCheck, true)
-const anneesBuildMock = jest.mocked(anneesBuild, true)
-const titreActivitesBuildMock = jest.mocked(titreActivitesBuild, true)
-const emailsSendMock = jest.mocked(emailsSend, true)
-const emailsWithTemplateSendMock = jest.mocked(emailsWithTemplateSend, true)
+const titresGetMock = vi.mocked(titresGet, true)
+const activitesTypesGetMock = vi.mocked(activitesTypesGet, true)
+const titreActiviteTypeCheckMock = vi.mocked(titreActiviteTypeCheck, true)
+const anneesBuildMock = vi.mocked(anneesBuild, true)
+const titreActivitesBuildMock = vi.mocked(titreActivitesBuild, true)
+const emailsSendMock = vi.mocked(emailsSend, true)
+const emailsWithTemplateSendMock = vi.mocked(emailsWithTemplateSend, true)
 
-console.info = jest.fn()
-
+console.info = vi.fn()
+afterEach(() => {
+  vi.resetAllMocks()
+})
 describe("activités d'un titre", () => {
   test('met à jour un titre sans activité', async () => {
     titresGetMock.mockResolvedValue(titresSansActivite)

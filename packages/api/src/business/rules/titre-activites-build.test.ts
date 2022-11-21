@@ -9,7 +9,7 @@ import {
   activiteTypeGrp,
   titreDemarches
 } from './__mocks__/titre-activites-build-titres'
-
+import { describe, expect, test } from 'vitest'
 describe("construction des activités d'un titre", () => {
   const aujourdhui = '2021-01-01'
 

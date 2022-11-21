@@ -1,6 +1,6 @@
 import { titreTerritoiresFind } from './titres'
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
-
+import { describe, expect, test } from 'vitest'
 describe('titreTerritoiresFind', () => {
   test('titreTerritoiresFind uniquement des communes', () => {
     expect(
@@ -19,17 +19,17 @@ describe('titreTerritoiresFind', () => {
         }
       ])
     ).toMatchInlineSnapshot(`
-      Object {
-        "communes": Array [
+      {
+        "communes": [
           "Flée (0.1)",
           "Montval-sur-loir (0.105)",
           "Tours (0.1)",
         ],
-        "departements": Array [
+        "departements": [
           "Indre-et-Loire",
           "Sarthe",
         ],
-        "regions": Array [
+        "regions": [
           "Centre-Val de Loire",
           "Pays de la Loire",
         ],
@@ -39,18 +39,18 @@ describe('titreTerritoiresFind', () => {
   test('titreTerritoiresFind uniquement des secteurs maritimes', () => {
     expect(titreTerritoiresFind(null, ['Baie de Seine']))
       .toMatchInlineSnapshot(`
-      Object {
-        "communes": Array [],
-        "departements": Array [
-          "Calvados",
-          "Manche",
-          "Seine-Maritime",
-        ],
-        "regions": Array [
-          "Normandie",
-        ],
-      }
-    `)
+        {
+          "communes": [],
+          "departements": [
+            "Calvados",
+            "Manche",
+            "Seine-Maritime",
+          ],
+          "regions": [
+            "Normandie",
+          ],
+        }
+      `)
   })
   test('titreTerritoiresFind uniquement', () => {
     expect(
@@ -66,17 +66,17 @@ describe('titreTerritoiresFind', () => {
         ['Baie de Seine']
       )
     ).toMatchInlineSnapshot(`
-      Object {
-        "communes": Array [
+      {
+        "communes": [
           "Tours (0.1)",
         ],
-        "departements": Array [
+        "departements": [
           "Calvados",
           "Indre-et-Loire",
           "Manche",
           "Seine-Maritime",
         ],
-        "regions": Array [
+        "regions": [
           "Centre-Val de Loire",
           "Normandie",
         ],

@@ -8,3 +8,4 @@ packages/ui/storybook-static/
 /docs
 /*.csv
 .vscode
+**/coverage

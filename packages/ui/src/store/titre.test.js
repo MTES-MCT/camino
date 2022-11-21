@@ -2,21 +2,22 @@ import titre from './titre'
 import * as api from '../api/titres'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('../router', () => ({
+vi.mock('../router', () => ({
   push: () => {}
 }))
 
-jest.mock('../api/titres', () => ({
-  titreMetas: jest.fn(),
-  titre: jest.fn(),
-  titreCreer: jest.fn(),
-  titreModifier: jest.fn(),
-  titreSupprimer: jest.fn(),
-  utilisateurTitreAbonner: jest.fn()
+vi.mock('../api/titres', () => ({
+  titreMetas: vi.fn(),
+  titre: vi.fn(),
+  titreCreer: vi.fn(),
+  titreModifier: vi.fn(),
+  titreSupprimer: vi.fn(),
+  utilisateurTitreAbonner: vi.fn()
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe('état du titre sélectionné', () => {
   let store
@@ -37,19 +38,19 @@ describe('état du titre sélectionné', () => {
     }
 
     actions = {
-      pageError: jest.fn(),
-      apiError: jest.fn(),
-      reload: jest.fn(),
-      messageAdd: jest.fn()
+      pageError: vi.fn(),
+      apiError: vi.fn(),
+      reload: vi.fn(),
+      messageAdd: vi.fn()
     }
 
     mutations = {
-      loadingAdd: jest.fn(),
-      loadingRemove: jest.fn(),
-      popupLoad: jest.fn(),
-      popupMessagesRemove: jest.fn(),
-      popupClose: jest.fn(),
-      popupMessageAdd: jest.fn()
+      loadingAdd: vi.fn(),
+      loadingRemove: vi.fn(),
+      popupLoad: vi.fn(),
+      popupMessagesRemove: vi.fn(),
+      popupClose: vi.fn(),
+      popupMessageAdd: vi.fn()
     }
 
     store = createStore({

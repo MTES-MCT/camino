@@ -5,15 +5,15 @@ import {
   titresActivitesDelaiDepasse,
   titresActivitesDelaiNonDepasse
 } from './__mocks__/titres-activites-statut-ids-update-activites'
-
-jest.mock('../../database/queries/titres-activites', () => ({
-  titreActiviteUpdate: jest.fn().mockResolvedValue(true),
-  titresActivitesGet: jest.fn()
+import { vi, describe, expect, test } from 'vitest'
+vi.mock('../../database/queries/titres-activites', () => ({
+  titreActiviteUpdate: vi.fn().mockResolvedValue(true),
+  titresActivitesGet: vi.fn()
 }))
 
-const titresActivitesGetMock = jest.mocked(titresActivitesGet, true)
+const titresActivitesGetMock = vi.mocked(titresActivitesGet, true)
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe("statut des activités d'un titre", () => {
   test("met à jour le statut d'une activité", async () => {

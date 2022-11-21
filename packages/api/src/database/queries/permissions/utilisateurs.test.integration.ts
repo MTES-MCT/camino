@@ -5,9 +5,10 @@ import Utilisateurs from '../../models/utilisateurs'
 import { utilisateursGet } from '../utilisateurs'
 import { Administrations } from 'camino-common/src/static/administrations'
 import options from '../_options'
-
-console.info = jest.fn()
-console.error = jest.fn()
+import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
+import { Role } from 'camino-common/src/roles'
+console.info = vi.fn()
+console.error = vi.fn()
 beforeAll(async () => {
   await dbManager.populateDb()
   await Utilisateurs.query().insertGraph(mockUser, options.utilisateurs.update)
@@ -30,17 +31,16 @@ const mockUser: IUtilisateur = {
 }
 
 describe('utilisateursQueryModify', () => {
-  test.each`
-    role            | voit
-    ${'super'}      | ${true}
-    ${'admin'}      | ${true}
-    ${'editeur'}    | ${true}
-    ${'lecteur'}    | ${true}
-    ${'entreprise'} | ${true}
-    ${'defaut'}     | ${false}
-  `(
+  test.each<[Role, boolean]>([
+    ['super', true],
+    ['admin', true],
+    ['editeur', true],
+    ['lecteur', true],
+    ['entreprise', true],
+    ['defaut', false]
+  ])(
     "Vérifie l'écriture de la requête sur un utilisateur",
-    async ({ role, voit }) => {
+    async (role, voit) => {
       const user: IUtilisateur = {
         id: 'userId',
         role,

@@ -1,4 +1,5 @@
 import { filesIndexBuild } from './files-index-build'
+import { expect, test } from 'vitest'
 
 test('filesIndexBuild', () => {
   const dir = process.cwd()

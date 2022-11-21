@@ -5,16 +5,16 @@ import {
   titresPublicModifie,
   titresPublicIdentique
 } from './__mocks__/titres-public-update-titres'
-
-jest.mock('../../database/queries/titres', () => ({
+import { vi, describe, expect, test } from 'vitest'
+vi.mock('../../database/queries/titres', () => ({
   __esModule: true,
-  titreUpdate: jest.fn().mockResolvedValue(true),
-  titresGet: jest.fn()
+  titreUpdate: vi.fn().mockResolvedValue(true),
+  titresGet: vi.fn()
 }))
 
-const titresGetMock = jest.mocked(titresGet, true)
+const titresGetMock = vi.mocked(titresGet, true)
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe("public des titres d'un titre", () => {
   test("met à jour la publicité d'un titre", async () => {

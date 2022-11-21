@@ -1,8 +1,9 @@
 import gql from 'graphql-tag'
 
 import { apiGraphQLFetch } from './_client.js'
+import { vi, describe, expect, beforeEach, afterEach, test } from 'vitest'
 
-jest.mock('./fragments/utilisateur', () => ({
+vi.mock('./fragments/utilisateur', () => ({
   fragmentUtilisateur: gql`
     fragment utilisateur on Utilisateur {
       id
@@ -11,15 +12,15 @@ jest.mock('./fragments/utilisateur', () => ({
   `
 }))
 
-console.info = jest.fn()
-console.error = jest.fn()
+console.info = vi.fn()
+console.error = vi.fn()
 
 describe('api client', () => {
   const { location } = window
 
   beforeEach(() => {
     delete window.location
-    window.location = { reload: jest.fn() }
+    window.location = { reload: vi.fn() }
     process.env.NODE_ENV = 'production'
   })
 

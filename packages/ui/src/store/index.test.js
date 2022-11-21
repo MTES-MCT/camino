@@ -3,41 +3,45 @@ import { createApp } from 'vue'
 import { createStore } from 'vuex'
 import * as fileSaver from 'file-saver'
 import * as router from '../router'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('file-saver', () => ({ saveAs: jest.fn() }))
-jest.mock('./titre', () => ({ titre: jest.fn() }))
-jest.mock('./titres', () => ({ titres: jest.fn() }))
-jest.mock('./titre-demarche', () => ({ titreDemarche: jest.fn() }))
-jest.mock('./titre-creation', () => ({ titreCreation: jest.fn() }))
-jest.mock('./titre-etape', () => ({ titreEtape: jest.fn() }))
-jest.mock('./titre-etape-edition', () => ({ titreEtape: jest.fn() }))
-jest.mock('./document', () => ({ document: jest.fn() }))
-jest.mock('./titres-demarches', () => ({ titresDemarches: jest.fn() }))
-jest.mock('./utilisateur', () => ({ utilisateur: jest.fn() }))
-jest.mock('./utilisateurs', () => ({ utilisateurs: jest.fn() }))
-jest.mock('./entreprises', () => ({ entreprises: jest.fn() }))
-jest.mock('./entreprise', () => ({ entreprise: jest.fn() }))
-jest.mock('./administration', () => ({ administration: jest.fn() }))
-jest.mock('./user', () => ({ user: jest.fn() }))
-jest.mock('./titre-activite', () => ({ titreActivite: jest.fn() }))
-jest.mock('./titre-activite-edition', () => ({
-  titreActiviteEdition: jest.fn()
+vi.mock('file-saver', () => ({ saveAs: vi.fn() }))
+vi.mock('./titre', () => ({ default: { titre: vi.fn() } }))
+vi.mock('./titres', () => ({ default: { titres: vi.fn() } }))
+vi.mock('./titre-demarche', () => ({ default: { titreDemarche: vi.fn() } }))
+vi.mock('./titre-creation', () => ({ default: { titreCreation: vi.fn() } }))
+vi.mock('./titre-etape', () => ({ default: { titreEtape: vi.fn() } }))
+vi.mock('./titre-etape-edition', () => ({ default: { titreEtape: vi.fn() } }))
+vi.mock('./document', () => ({ default: { document: vi.fn() } }))
+vi.mock('./titres-demarches', () => ({ default: { titresDemarches: vi.fn() } }))
+vi.mock('./utilisateur', () => ({ default: { utilisateur: vi.fn() } }))
+vi.mock('./utilisateurs', () => ({ default: { utilisateurs: vi.fn() } }))
+vi.mock('./entreprises', () => ({ default: { entreprises: vi.fn() } }))
+vi.mock('./entreprise', () => ({ default: { entreprise: vi.fn() } }))
+vi.mock('./administration', () => ({ default: { administration: vi.fn() } }))
+vi.mock('./user', () => ({ default: { user: vi.fn() } }))
+vi.mock('./titre-activite', () => ({ default: { titreActivite: vi.fn() } }))
+vi.mock('./titre-activite-edition', () => ({
+  default: {
+    titreActiviteEdition: vi.fn()
+  }
 }))
-jest.mock('./titres-activites', () => ({ titresActivites: jest.fn() }))
-jest.mock('./statistiques', () => ({ statistiques: jest.fn() }))
-jest.mock('./definitions', () => ({ definitions: jest.fn() }))
-jest.mock('./metas', () => ({ metas: jest.fn() }))
-jest.mock('./meta', () => ({ meta: jest.fn() }))
-jest.mock('./journaux', () => ({ journaux: jest.fn() }))
+vi.mock('./titres-activites', () => ({ default: { titresActivites: vi.fn() } }))
+vi.mock('./statistiques', () => ({ default: { statistiques: vi.fn() } }))
+vi.mock('./definitions', () => ({ default: { definitions: vi.fn() } }))
+vi.mock('./metas', () => ({ default: { metas: vi.fn() } }))
+vi.mock('./meta', () => ({ default: { meta: vi.fn() } }))
+vi.mock('./journaux', () => ({ default: { journaux: vi.fn() } }))
 
-jest.mock('../router', () => ({
-  replace: jest.fn(),
-  push: jest.fn()
+vi.mock('../router', () => ({
+  default: {
+    replace: vi.fn(),
+    push: vi.fn()
+  }
 }))
 
-console.info = jest.fn()
-console.error = jest.fn()
-jest.useFakeTimers()
+console.info = vi.fn()
+console.error = vi.fn()
 
 describe("état général de l'application", () => {
   let state
@@ -45,12 +49,13 @@ describe("état général de l'application", () => {
   let modules
 
   beforeEach(() => {
+    vi.resetAllMocks()
     modules = {
       titre: {
         namespaced: true,
         state: { element: null },
         actions: {
-          get: jest.fn()
+          get: vi.fn()
         }
       },
       route: {
@@ -148,7 +153,7 @@ describe("état général de l'application", () => {
   })
 
   test("retourne une erreur de l'api", async () => {
-    Date.now = jest.fn(() => 1487076708000)
+    Date.now = vi.fn(() => 1487076708000)
     await store.dispatch('apiError', 'message')
 
     expect(state.messages).toEqual([
@@ -217,15 +222,14 @@ describe("état général de l'application", () => {
   test("charge la nouvelle page si l'id du titre a changé", async () => {
     store.state.route.params = { id: 'id-test' }
     await store.dispatch('reload', { name: 'titre', id: 'titre-id-new' })
-
-    expect(router.replace).toHaveBeenCalled()
+    expect(router.default.replace).toHaveBeenCalled()
   })
 
   test("ne recharge pas la page si l'id n'a pas changé", async () => {
     store.state.route.params = { id: 'id-test' }
     await store.dispatch('reload', { name: 'titre', id: 'id-test' })
 
-    expect(router.replace).not.toHaveBeenCalled()
+    expect(router.default.replace).not.toHaveBeenCalled()
     expect(modules.titre.actions.get).toHaveBeenCalled()
   })
 
@@ -233,7 +237,7 @@ describe("état général de l'application", () => {
     store.state.titre.element = { id: 'id-test', nom: 'marne' }
     await store.dispatch('reload', { name: 'titres' })
 
-    expect(router.push).toHaveBeenCalled()
+    expect(router.default.push).toHaveBeenCalled()
   })
 
   test("met à jour les paramètres d'url", async () => {
@@ -242,15 +246,15 @@ describe("état général de l'application", () => {
       definitions: [{ id: 'typesIds', type: 'strings', elements: [] }]
     })
 
-    expect(router.push).not.toHaveBeenCalled()
-    expect(router.replace).not.toHaveBeenCalled()
+    expect(router.default.push).not.toHaveBeenCalled()
+    expect(router.default.replace).not.toHaveBeenCalled()
 
     await store.dispatch('urlQueryUpdate', {
       params: { typesIds: ['pr', 'ar'] },
       definitions: [{ id: 'typesIds', type: 'strings', elements: [] }]
     })
 
-    expect(router.replace).toHaveBeenCalledWith({
+    expect(router.default.replace).toHaveBeenCalledWith({
       query: { typesIds: 'pr,ar' }
     })
 
@@ -261,7 +265,7 @@ describe("état général de l'application", () => {
       definitions: [{ id: 'typesIds', type: 'strings', elements: [] }]
     })
 
-    expect(router.push).toHaveBeenCalledWith({
+    expect(router.default.push).toHaveBeenCalledWith({
       query: { typesIds: 'cx' }
     })
   })
@@ -285,7 +289,9 @@ describe("état général de l'application", () => {
   })
 
   test('supprime un message', async () => {
-    const messageRemoveMock = jest.fn()
+    vi.useFakeTimers()
+    vi.setSystemTime('2022-01-01')
+    const messageRemoveMock = vi.fn()
     mutations.messageRemove = messageRemoveMock
     store = createStore({ actions, state, mutations })
     const message = { id: 14, message: 'message important' }
@@ -294,14 +300,14 @@ describe("état général de l'application", () => {
     const res = state.messages.pop()
     expect(res.message).toEqual('message important')
     expect(res.id).toBeLessThanOrEqual(Date.now())
-    jest.advanceTimersByTime(4500)
+    vi.advanceTimersByTime(4500)
     // expect(setTimeout).toHaveBeenCalled()
     // expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 4500)
     expect(messageRemoveMock).toHaveBeenCalled()
   })
 
   test('télécharge un document du serveur', async () => {
-    const messageAddMock = jest.fn()
+    const messageAddMock = vi.fn()
     actions.messageAdd = messageAddMock
     store = createStore({ state, actions, mutations })
 
@@ -313,7 +319,7 @@ describe("état général de l'application", () => {
   })
 
   test('télécharge un nouveau document depuis le navigateur', async () => {
-    const messageAddMock = jest.fn()
+    const messageAddMock = vi.fn()
     actions.messageAdd = messageAddMock
     store = createStore({ state, actions, mutations })
 
@@ -327,7 +333,7 @@ describe("état général de l'application", () => {
   })
 
   test('télécharge du contenu', async () => {
-    const messageAddMock = jest.fn()
+    const messageAddMock = vi.fn()
     actions.messageAdd = messageAddMock
     store = createStore({ state, actions, mutations })
 

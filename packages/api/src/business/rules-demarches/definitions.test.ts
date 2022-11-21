@@ -4,6 +4,7 @@ import {
 } from './definitions'
 import { restrictionsArmRet } from './arm/ret'
 import { ArmOctMachine } from './arm/oct.machine'
+import { expect, test } from 'vitest'
 
 test('isDemarcheDefinitionMachine', () => {
   expect(

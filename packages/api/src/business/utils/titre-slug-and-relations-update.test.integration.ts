@@ -5,6 +5,7 @@ import { dbManager } from '../../../tests/db-manager'
 import { ITitre } from '../../types'
 import Titres from '../../database/models/titres'
 import { objectClone } from '../../tools'
+import { expect, test, describe, afterAll, beforeAll } from 'vitest'
 beforeAll(async () => {
   await dbManager.populateDb()
 })

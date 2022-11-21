@@ -1,111 +1,111 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`construit le corps de la requête pour openFisca avec activités 1`] = `
-Object {
-  "articles": Object {
-    "titre2-auru-97310": Object {
-      "quantite_aurifere_kg": Object {
+exports[`construit le corps de la requête pour openFisca > avec activités 1`] = `
+{
+  "articles": {
+    "titre2-auru-97310": {
+      "quantite_aurifere_kg": {
         "2021": 39.715,
       },
-      "redevance_communale_des_mines_aurifere": Object {
+      "redevance_communale_des_mines_aurifere": {
         "2022": null,
       },
-      "redevance_departementale_des_mines_aurifere": Object {
+      "redevance_departementale_des_mines_aurifere": {
         "2022": null,
       },
-      "surface_communale": Object {
+      "surface_communale": {
         "2021": 19805494,
       },
-      "surface_communale_proportionnee": Object {
+      "surface_communale_proportionnee": {
         "2021": null,
       },
-      "taxe_guyane": Object {
+      "taxe_guyane": {
         "2022": null,
       },
-      "taxe_guyane_brute": Object {
+      "taxe_guyane_brute": {
         "2022": null,
       },
-      "taxe_guyane_deduction": Object {
+      "taxe_guyane_deduction": {
         "2022": null,
       },
     },
-    "titre5-auru-97311": Object {
-      "quantite_aurifere_kg": Object {
+    "titre5-auru-97311": {
+      "quantite_aurifere_kg": {
         "2021": 8.91,
       },
-      "redevance_communale_des_mines_aurifere": Object {
+      "redevance_communale_des_mines_aurifere": {
         "2022": null,
       },
-      "redevance_departementale_des_mines_aurifere": Object {
+      "redevance_departementale_des_mines_aurifere": {
         "2022": null,
       },
-      "surface_communale": Object {
+      "surface_communale": {
         "2021": 35604009,
       },
-      "surface_communale_proportionnee": Object {
+      "surface_communale_proportionnee": {
         "2021": null,
       },
-      "taxe_guyane": Object {
+      "taxe_guyane": {
         "2022": null,
       },
-      "taxe_guyane_brute": Object {
+      "taxe_guyane_brute": {
         "2022": null,
       },
-      "taxe_guyane_deduction": Object {
+      "taxe_guyane_deduction": {
         "2022": null,
       },
     },
   },
-  "communes": Object {
-    "97310": Object {
-      "articles": Array [
+  "communes": {
+    "97310": {
+      "articles": [
         "titre2-auru-97310",
       ],
     },
-    "97311": Object {
-      "articles": Array [
+    "97311": {
+      "articles": [
         "titre5-auru-97311",
       ],
     },
   },
-  "titres": Object {
-    "titre2": Object {
-      "articles": Array [
+  "titres": {
+    "titre2": {
+      "articles": [
         "titre2-auru-97310",
       ],
-      "categorie": Object {
+      "categorie": {
         "2021": "pme",
       },
-      "commune_principale_exploitation": Object {
+      "commune_principale_exploitation": {
         "2021": "97310",
       },
-      "investissement": Object {
+      "investissement": {
         "2021": "7300",
       },
-      "operateur": Object {
+      "operateur": {
         "2021": "ma companie",
       },
-      "surface_totale": Object {
+      "surface_totale": {
         "2021": 19805494,
       },
     },
-    "titre5": Object {
-      "articles": Array [
+    "titre5": {
+      "articles": [
         "titre5-auru-97311",
       ],
-      "categorie": Object {
+      "categorie": {
         "2021": "pme",
       },
-      "commune_principale_exploitation": Object {
+      "commune_principale_exploitation": {
         "2021": "97311",
       },
-      "investissement": Object {
+      "investissement": {
         "2021": "0",
       },
-      "operateur": Object {
+      "operateur": {
         "2021": "ma companie",
       },
-      "surface_totale": Object {
+      "surface_totale": {
         "2021": 35604009,
       },
     },

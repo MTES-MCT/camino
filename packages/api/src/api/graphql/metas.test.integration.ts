@@ -1,8 +1,10 @@
 import { dbManager } from '../../../tests/db-manager'
 import { graphQLCall, queryImport } from '../../../tests/_utils/index'
 
-console.info = jest.fn()
-console.error = jest.fn()
+import { afterAll, beforeAll, describe, test, expect, vi } from 'vitest'
+
+console.info = vi.fn()
+console.error = vi.fn()
 beforeAll(async () => {
   await dbManager.populateDb()
 })

@@ -1,9 +1,9 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`matrices buildMatrices 1`] = `
-Object {
-  "matrice1121": Array [
-    Object {
+exports[`matrices > buildMatrices 1`] = `
+{
+  "matrice1121": [
+    {
       "Base des redevances | Nature": "Kilogramme d'or contenu",
       "Base des redevances | Quantités": "12.243",
       "Commune du lieu principal d'exploitation": "Roura",
@@ -23,7 +23,7 @@ Object {
       "Taxe minière sur l'or de Guyane | Tarifs par kg extrait pour les autres entreprises": 0,
       "Total redevance des mines": 340.97999999999996,
     },
-    Object {
+    {
       "Base des redevances | Nature": "Kilogramme d'or contenu",
       "Base des redevances | Quantités": "1.008",
       "Commune du lieu principal d'exploitation": "Sinnamary",
@@ -43,7 +43,7 @@ Object {
       "Taxe minière sur l'or de Guyane | Tarifs par kg extrait pour les autres entreprises": 0,
       "Total redevance des mines": 201.10999999999999,
     },
-    Object {
+    {
       "Base des redevances | Nature": "Kilogramme d'or contenu",
       "Base des redevances | Quantités": "2.151",
       "Commune du lieu principal d'exploitation": "Sinnamary",
@@ -63,7 +63,7 @@ Object {
       "Taxe minière sur l'or de Guyane | Tarifs par kg extrait pour les autres entreprises": 0,
       "Total redevance des mines": 429.13,
     },
-    Object {
+    {
       "Base des redevances | Nature": "Kilogramme d'or contenu",
       "Base des redevances | Quantités": "6.118",
       "Commune du lieu principal d'exploitation": "Saint-Laurent-du-Maroni",
@@ -84,8 +84,8 @@ Object {
       "Total redevance des mines": 1119.6,
     },
   ],
-  "matrice1122": Array [
-    Object {
+  "matrice1122": [
+    {
       "Communes sur le territoire desquels fonctionnent les exploitations": "Roura (19.805494 km²)",
       "Départements sur le territoire desquels fonctionnent les exploitations": "Guyane",
       "Désignation des concessionnaires": "titulaire1 - ladresse1 - legalSiren1 SIREN",
@@ -95,7 +95,7 @@ Object {
       "Tonnages extraits ou cours de l'année précédente | par commune": "12.243",
       "Tonnages extraits ou cours de l'année précédente | par département": "12.243",
     },
-    Object {
+    {
       "Communes sur le territoire desquels fonctionnent les exploitations": "Saint-Élie (0.323907 km²)",
       "Départements sur le territoire desquels fonctionnent les exploitations": "Guyane",
       "Désignation des concessionnaires": "titulaire2 - ladresse2 - legalSiren2 SIREN",
@@ -105,7 +105,7 @@ Object {
       "Tonnages extraits ou cours de l'année précédente | par commune": "1.008",
       "Tonnages extraits ou cours de l'année précédente | par département": "1.008",
     },
-    Object {
+    {
       "Communes sur le territoire desquels fonctionnent les exploitations": "Sinnamary (0.691155 km²)",
       "Départements sur le territoire desquels fonctionnent les exploitations": "Guyane",
       "Désignation des concessionnaires": "titulaire2 - ladresse2 - legalSiren2 SIREN",
@@ -115,7 +115,7 @@ Object {
       "Tonnages extraits ou cours de l'année précédente | par commune": "2.151",
       "Tonnages extraits ou cours de l'année précédente | par département": "2.151",
     },
-    Object {
+    {
       "Communes sur le territoire desquels fonctionnent les exploitations": "Saint-Laurent-du-Maroni (1.005053 km²)",
       "Départements sur le territoire desquels fonctionnent les exploitations": "Guyane",
       "Désignation des concessionnaires": "titulaire3 - ladresse3 - legalSiren3 SIREN",
@@ -126,8 +126,8 @@ Object {
       "Tonnages extraits ou cours de l'année précédente | par département": "6.118",
     },
   ],
-  "matrice1403": Array [
-    Object {
+  "matrice1403": [
+    {
       "Circonscription de": "SIP de Cayenne",
       "Nombre d'articles des rôles": 1,
       "Redevance communale": 284.71,
@@ -140,7 +140,7 @@ Object {
       "Taxe minière sur l'or de Guyane": 652.29,
       "Total des colonnes": 1072.7316,
     },
-    Object {
+    {
       "Circonscription de": "SIP de Kourou",
       "Nombre d'articles des rôles": 2,
       "Redevance communale": 525.36,
@@ -153,7 +153,7 @@ Object {
       "Taxe minière sur l'or de Guyane": 1573.4199999999998,
       "Total des colonnes": 2379.9528,
     },
-    Object {
+    {
       "Circonscription de": "SIP de Saint-Laurent du Maroni",
       "Nombre d'articles des rôles": 1,
       "Redevance communale": 933.47,
@@ -167,9 +167,9 @@ Object {
       "Total des colonnes": 15195.4596,
     },
   ],
-  "matrice1404": Object {
-    "cayenne": Array [
-      Object {
+  "matrice1404": {
+    "cayenne": [
+      {
         "Articles des rôles": 1,
         "Circonscription de": "SIP de Cayenne",
         "Communes": "Roura",
@@ -191,8 +191,8 @@ Object {
         "Taxe minière sur l'or de Guyane | Répartition | Région de Guyane": 652.29,
       },
     ],
-    "kourou": Array [
-      Object {
+    "kourou": [
+      {
         "Articles des rôles": 2,
         "Circonscription de": "SIP de Kourou",
         "Communes": "Sinnamary",
@@ -213,7 +213,7 @@ Object {
         "Taxe minière sur l'or de Guyane | Répartition | Conservatoire": 0,
         "Taxe minière sur l'or de Guyane | Répartition | Région de Guyane": 502.08,
       },
-      Object {
+      {
         "Articles des rôles": 3,
         "Circonscription de": "SIP de Kourou",
         "Communes": "Sinnamary",
@@ -235,8 +235,8 @@ Object {
         "Taxe minière sur l'or de Guyane | Répartition | Région de Guyane": 1071.34,
       },
     ],
-    "saintLaurentDuMaroni": Array [
-      Object {
+    "saintLaurentDuMaroni": [
+      {
         "Articles des rôles": 4,
         "Circonscription de": "SIP de Saint-Laurent du Maroni",
         "Communes": "Saint-Laurent-du-Maroni",

@@ -2,13 +2,14 @@ import titreActivite from './titre-activite'
 import * as api from '../api/titres-activites'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('../api/titres-activites', () => ({
-  activiteSupprimer: jest.fn(),
-  activiteDeposer: jest.fn(),
-  activite: jest.fn()
+vi.mock('../api/titres-activites', () => ({
+  activiteSupprimer: vi.fn(),
+  activiteDeposer: vi.fn(),
+  activite: vi.fn()
 }))
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe("état d'une activité", () => {
   let store
@@ -19,19 +20,19 @@ describe("état d'une activité", () => {
     titreActivite.state = { element: null }
 
     actions = {
-      reload: jest.fn(),
-      messageAdd: jest.fn(),
-      pageError: jest.fn(),
-      apiError: jest.fn()
+      reload: vi.fn(),
+      messageAdd: vi.fn(),
+      pageError: vi.fn(),
+      apiError: vi.fn()
     }
 
     mutations = {
-      popupMessagesRemove: jest.fn(),
-      loadingAdd: jest.fn(),
-      loadingRemove: jest.fn(),
-      popupClose: jest.fn(),
-      popupMessageAdd: jest.fn(),
-      popupLoad: jest.fn()
+      popupMessagesRemove: vi.fn(),
+      loadingAdd: vi.fn(),
+      loadingRemove: vi.fn(),
+      popupClose: vi.fn(),
+      popupMessageAdd: vi.fn(),
+      popupLoad: vi.fn()
     }
 
     store = createStore({
@@ -40,7 +41,7 @@ describe("état d'une activité", () => {
         titre: {
           namespaced: true,
           state: { element: { id: 5 } },
-          mutations: { open: jest.fn() }
+          mutations: { open: vi.fn() }
         }
       },
       mutations,

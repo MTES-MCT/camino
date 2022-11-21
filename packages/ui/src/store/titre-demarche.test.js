@@ -2,15 +2,16 @@ import titreDemarche from './titre-demarche'
 import * as api from '../api/titres-demarches'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('../api/titres-demarches', () => ({
-  demarcheMetas: jest.fn(),
-  demarcheCreer: jest.fn(),
-  demarcheModifier: jest.fn(),
-  demarcheSupprimer: jest.fn()
+vi.mock('../api/titres-demarches', () => ({
+  demarcheMetas: vi.fn(),
+  demarcheCreer: vi.fn(),
+  demarcheModifier: vi.fn(),
+  demarcheSupprimer: vi.fn()
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe('démarche', () => {
   let store
@@ -25,20 +26,20 @@ describe('démarche', () => {
     }
 
     actions = {
-      pageError: jest.fn(),
-      apiError: jest.fn(),
-      reload: jest.fn(),
-      messageAdd: jest.fn()
+      pageError: vi.fn(),
+      apiError: vi.fn(),
+      reload: vi.fn(),
+      messageAdd: vi.fn()
     }
 
     mutations = {
-      loadingAdd: jest.fn(),
-      loadingRemove: jest.fn(),
-      apiError: jest.fn(),
-      popupLoad: jest.fn(),
-      popupMessagesRemove: jest.fn(),
-      popupClose: jest.fn(),
-      popupMessageAdd: jest.fn()
+      loadingAdd: vi.fn(),
+      loadingRemove: vi.fn(),
+      apiError: vi.fn(),
+      popupLoad: vi.fn(),
+      popupMessagesRemove: vi.fn(),
+      popupClose: vi.fn(),
+      popupMessageAdd: vi.fn()
     }
 
     store = createStore({ actions, mutations, modules: { titreDemarche } })

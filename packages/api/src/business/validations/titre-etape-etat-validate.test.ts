@@ -6,7 +6,7 @@ import {
 } from './titre-etape-etat-validate'
 import { restrictionsArmRet } from '../rules-demarches/arm/ret'
 import { etatInformationsGet } from '../rules-demarches/etat-cycles'
-
+import { describe, test, expect } from 'vitest'
 describe('teste etapesSuivantesEnAttenteGet', () => {
   test('retourne la seule étape déjà effectuée', () => {
     const etapes = [{ typeId: 'ide' }] as ITitreEtape[]

@@ -82,7 +82,7 @@ export default {
     etapeIsDemandeEnConstruction: { type: Boolean, default: false }
   },
 
-  emits: ['type-update', 'complete-update'],
+  emits: ['type-update', 'complete-update', 'update:etape'],
 
   computed: {
     etapesStatuts() {
@@ -107,6 +107,7 @@ export default {
       } else {
         this.etape.statutId = null
       }
+      this.$emit('update:etape', this.etape)
     },
 
     complete: 'completeUpdate'

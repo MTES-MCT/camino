@@ -1,15 +1,15 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 1`] = `
-Object {
-  "administration": Object {
-    "activitesTypes": Array [],
+exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 1`] = `
+{
+  "administration": {
+    "activitesTypes": [],
     "id": "aut-97300-01",
   },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",
-  "entreprises": Array [],
+  "entreprises": [],
   "entreprisesCreation": true,
   "id": "utilisateurId",
   "modification": true,
@@ -28,16 +28,16 @@ Object {
 }
 `;
 
-exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 2`] = `
-Object {
-  "administration": Object {
-    "activitesTypes": Array [],
+exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 2`] = `
+{
+  "administration": {
+    "activitesTypes": [],
     "id": "aut-97300-01",
   },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",
-  "entreprises": Array [],
+  "entreprises": [],
   "entreprisesCreation": true,
   "id": "utilisateurId",
   "modification": true,
@@ -56,16 +56,16 @@ Object {
 }
 `;
 
-exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 3`] = `
-Object {
-  "administration": Object {
-    "activitesTypes": Array [],
+exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 3`] = `
+{
+  "administration": {
+    "activitesTypes": [],
     "id": "aut-97300-01",
   },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",
-  "entreprises": Array [],
+  "entreprises": [],
   "entreprisesCreation": true,
   "id": "utilisateurId",
   "modification": false,
@@ -84,16 +84,16 @@ Object {
 }
 `;
 
-exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 4`] = `
-Object {
-  "administration": Object {
-    "activitesTypes": Array [],
+exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 4`] = `
+{
+  "administration": {
+    "activitesTypes": [],
     "id": "aut-97300-01",
   },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",
-  "entreprises": Array [],
+  "entreprises": [],
   "entreprisesCreation": false,
   "id": "utilisateurId",
   "modification": false,
@@ -112,16 +112,16 @@ Object {
 }
 `;
 
-exports[`utilisateursQueryModify Vérifie l'écriture de la requête sur un utilisateur 5`] = `
-Object {
-  "administration": Object {
-    "activitesTypes": Array [],
+exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 5`] = `
+{
+  "administration": {
+    "activitesTypes": [],
     "id": "aut-97300-01",
   },
   "administrationId": "aut-97300-01",
   "dateCreation": "2022-05-12",
   "email": "utilisateurEmail",
-  "entreprises": Array [],
+  "entreprises": [],
   "entreprisesCreation": false,
   "id": "utilisateurId",
   "modification": false,

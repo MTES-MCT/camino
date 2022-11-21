@@ -1,16 +1,17 @@
 import titresActivites, { anneesGet } from './titres-activites'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('../api/titres-activites', () => ({
-  activites: jest.fn()
+vi.mock('../api/titres-activites', () => ({
+  activites: vi.fn()
 }))
 
-jest.mock('../api/metas-activites', () => ({
-  activitesMetas: jest.fn()
+vi.mock('../api/metas-activites', () => ({
+  activitesMetas: vi.fn()
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe("état d'une activité", () => {
   let store

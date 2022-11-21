@@ -1,10 +1,14 @@
 import { ITitreEtape, TitreEtapesTravauxTypes as Travaux } from '../../types'
 
 import { titreDemarcheStatutIdFind } from './titre-demarche-statut-id-find'
-import { DemarchesStatutsIds as Demarches } from 'camino-common/src/static/demarchesStatuts'
+import {
+  DemarchesStatutsIds as Demarches,
+  DemarcheStatutId
+} from 'camino-common/src/static/demarchesStatuts'
 import { newDemarcheId } from '../../database/models/_format/id-create'
 import { toCaminoDate } from 'camino-common/src/date'
-
+import { describe, expect, test } from 'vitest'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   etapesProps.map(
     (etapeProps, i) =>
@@ -550,30 +554,29 @@ describe("statut d'une démarche", () => {
     ).toEqual('ind')
   })
 
-  test.each`
-    etapeTypeId                               | statutId | resultId
-    ${Travaux.DemandeAutorisationOuverture}   | ${'fai'} | ${Demarches.Depose}
-    ${Travaux.DepotDemande}                   | ${'fai'} | ${Demarches.Depose}
-    ${Travaux.Recevabilite}                   | ${'def'} | ${Demarches.EnInstruction}
-    ${Travaux.Recevabilite}                   | ${'fav'} | ${Demarches.EnInstruction}
-    ${Travaux.DemandeComplements}             | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.ReceptionComplements}           | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.SaisineAutoriteEnvironmentale}  | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.MemoireReponseExploitant}       | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisReception}                  | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.SaisineServiceEtat}             | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisAutoriteEnvironmentale}     | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.MemoireReponseExploitant}       | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisRapportDirecteurREAL}       | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.TransPrescriptionsDemandeur}    | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisCODERST}                    | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisPrescriptionsDemandeur}     | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.ArreteOuvertureTravauxMiniers}  | ${'fai'} | ${Demarches.Accepte}
-    ${Travaux.PubliDecisionRecueilActesAdmin} | ${'fai'} | ${Demarches.Accepte}
-    ${Travaux.Abandon}                        | ${'fai'} | ${Demarches.Desiste}
-  `(
+  test.each<[Travaux, EtapeStatutId, DemarcheStatutId]>([
+    [Travaux.DemandeAutorisationOuverture, 'fai', Demarches.Depose],
+    [Travaux.DepotDemande, 'fai', Demarches.Depose],
+    [Travaux.Recevabilite, 'def', Demarches.EnInstruction],
+    [Travaux.Recevabilite, 'fav', Demarches.EnInstruction],
+    [Travaux.DemandeComplements, 'fai', Demarches.EnInstruction],
+    [Travaux.ReceptionComplements, 'fai', Demarches.EnInstruction],
+    [Travaux.SaisineAutoriteEnvironmentale, 'fai', Demarches.EnInstruction],
+    [Travaux.MemoireReponseExploitant, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisReception, 'fai', Demarches.EnInstruction],
+    [Travaux.SaisineServiceEtat, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisAutoriteEnvironmentale, 'fai', Demarches.EnInstruction],
+    [Travaux.MemoireReponseExploitant, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisRapportDirecteurREAL, 'fai', Demarches.EnInstruction],
+    [Travaux.TransPrescriptionsDemandeur, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisCODERST, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisPrescriptionsDemandeur, 'fai', Demarches.EnInstruction],
+    [Travaux.ArreteOuvertureTravauxMiniers, 'fai', Demarches.Accepte],
+    [Travaux.PubliDecisionRecueilActesAdmin, 'fai', Demarches.Accepte],
+    [Travaux.Abandon, 'fai', Demarches.Desiste]
+  ])(
     "pour une démarche de travaux de type 'aom' sur un titre, dont la dernière étape est '$etapeTypeId' au statut $statutId, le résultat est $resultId",
-    ({ etapeTypeId, statutId, resultId }) => {
+    (etapeTypeId, statutId, resultId) => {
       expect(
         titreDemarcheStatutIdFind(
           'aom',
@@ -585,30 +588,29 @@ describe("statut d'une démarche", () => {
     }
   )
 
-  test.each`
-    etapeTypeId                            | statutId | resultId
-    ${Travaux.DeclarationOuverture}        | ${'fai'} | ${Demarches.Depose}
-    ${Travaux.DepotDemande}                | ${'fai'} | ${Demarches.Depose}
-    ${Travaux.Recevabilite}                | ${'def'} | ${Demarches.EnInstruction}
-    ${Travaux.Recevabilite}                | ${'fav'} | ${Demarches.EnInstruction}
-    ${Travaux.DemandeComplements}          | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.ReceptionComplements}        | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.SaisineServiceEtat}          | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisServiceAdminLocal}       | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisDDTM}                    | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisAutoriteMilitaire}       | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisARS}                     | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisDRAC}                    | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisPrefetMaritime}          | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisAutresInstances}         | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.RapportDREAL}                | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.TransPrescriptionsDemandeur} | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisPrescriptionsDemandeur}  | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.DonneActeDeclaration}        | ${'fai'} | ${Demarches.Accepte}
-    ${Travaux.Abandon}                     | ${'fai'} | ${Demarches.Desiste}
-  `(
+  test.each<[Travaux, EtapeStatutId, DemarcheStatutId]>([
+    [Travaux.DeclarationOuverture, 'fai', Demarches.Depose],
+    [Travaux.DepotDemande, 'fai', Demarches.Depose],
+    [Travaux.Recevabilite, 'def', Demarches.EnInstruction],
+    [Travaux.Recevabilite, 'fav', Demarches.EnInstruction],
+    [Travaux.DemandeComplements, 'fai', Demarches.EnInstruction],
+    [Travaux.ReceptionComplements, 'fai', Demarches.EnInstruction],
+    [Travaux.SaisineServiceEtat, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisServiceAdminLocal, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisDDTM, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisAutoriteMilitaire, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisARS, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisDRAC, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisPrefetMaritime, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisAutresInstances, 'fai', Demarches.EnInstruction],
+    [Travaux.RapportDREAL, 'fai', Demarches.EnInstruction],
+    [Travaux.TransPrescriptionsDemandeur, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisPrescriptionsDemandeur, 'fai', Demarches.EnInstruction],
+    [Travaux.DonneActeDeclaration, 'fai', Demarches.Accepte],
+    [Travaux.Abandon, 'fai', Demarches.Desiste]
+  ])(
     "pour une démarche de travaux de type 'dot' sur un titre, dont la dernière étape est '$etapeTypeId' au statut $statutId, le résultat est $resultId",
-    ({ etapeTypeId, statutId, resultId }) => {
+    (etapeTypeId, statutId, resultId) => {
       expect(
         titreDemarcheStatutIdFind(
           'dot',
@@ -620,35 +622,34 @@ describe("statut d'une démarche", () => {
     }
   )
 
-  test.each`
-    etapeTypeId                                 | statutId | resultId
-    ${Travaux.DeclarationArret}                 | ${'fai'} | ${Demarches.Depose}
-    ${Travaux.DepotDemande}                     | ${'fai'} | ${Demarches.Depose}
-    ${Travaux.Recevabilite}                     | ${'def'} | ${Demarches.EnInstruction}
-    ${Travaux.Recevabilite}                     | ${'fav'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisReception}                    | ${'fav'} | ${Demarches.EnInstruction}
-    ${Travaux.SaisineServiceEtat}               | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.ArretePrefectoralSursis}          | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisServiceAdminLocal}            | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisDDTM}                         | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisAutoriteMilitaire}            | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisARS}                          | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisDRAC}                         | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisPrefetMaritime}               | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisAutresInstances}              | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.AvisPrescriptionsDemandeur}       | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.RapportDREAL}                     | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.ArretePrefectDonneActe1}          | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.ArretePrescriptionComplementaire} | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.MemoireFinTravaux}                | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.Recolement}                       | ${'fai'} | ${Demarches.EnInstruction}
-    ${Travaux.ArretePrefectDonneActe2}          | ${'acc'} | ${Demarches.FinPoliceMines}
-    ${Travaux.PubliDecisionRecueilActesAdmin}   | ${'fai'} | ${Demarches.FinPoliceMines}
-    ${Travaux.PorterAConnaissance}              | ${'fai'} | ${Demarches.FinPoliceMines}
-    ${Travaux.Abandon}                          | ${'fai'} | ${Demarches.Desiste}
-  `(
+  test.each<[Travaux, EtapeStatutId, DemarcheStatutId]>([
+    [Travaux.DeclarationArret, 'fai', Demarches.Depose],
+    [Travaux.DepotDemande, 'fai', Demarches.Depose],
+    [Travaux.Recevabilite, 'def', Demarches.EnInstruction],
+    [Travaux.Recevabilite, 'fav', Demarches.EnInstruction],
+    [Travaux.AvisReception, 'fav', Demarches.EnInstruction],
+    [Travaux.SaisineServiceEtat, 'fai', Demarches.EnInstruction],
+    [Travaux.ArretePrefectoralSursis, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisServiceAdminLocal, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisDDTM, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisAutoriteMilitaire, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisARS, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisDRAC, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisPrefetMaritime, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisAutresInstances, 'fai', Demarches.EnInstruction],
+    [Travaux.AvisPrescriptionsDemandeur, 'fai', Demarches.EnInstruction],
+    [Travaux.RapportDREAL, 'fai', Demarches.EnInstruction],
+    [Travaux.ArretePrefectDonneActe1, 'fai', Demarches.EnInstruction],
+    [Travaux.ArretePrescriptionComplementaire, 'fai', Demarches.EnInstruction],
+    [Travaux.MemoireFinTravaux, 'fai', Demarches.EnInstruction],
+    [Travaux.Recolement, 'fai', Demarches.EnInstruction],
+    [Travaux.ArretePrefectDonneActe2, 'acc', Demarches.FinPoliceMines],
+    [Travaux.PubliDecisionRecueilActesAdmin, 'fai', Demarches.FinPoliceMines],
+    [Travaux.PorterAConnaissance, 'fai', Demarches.FinPoliceMines],
+    [Travaux.Abandon, 'fai', Demarches.Desiste]
+  ])(
     "pour une démarche de travaux de type 'dam' sur un titre, dont la dernière étape est '$etapeTypeId' au statut $statutId, le résultat est $resultId",
-    ({ etapeTypeId, statutId, resultId }) => {
+    (etapeTypeId, statutId, resultId) => {
       expect(
         titreDemarcheStatutIdFind(
           'dam',

@@ -1,4 +1,5 @@
 import { isTitreTypeType } from './titresTypesTypes'
+import { test, expect } from 'vitest'
 
 test('isTitreTypeType', () => {
   expect(isTitreTypeType('px')).toBe(true)

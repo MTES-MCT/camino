@@ -18,7 +18,7 @@
     "strictNullChecks": true,
     "sourceMap": true,
     "target": "ES2020",
-    "types": ["node", "jest"],
+    "types": ["node"],
     "resolveJsonModule": true
   },
   "exclude": ["node_modules"],

@@ -2,7 +2,7 @@ import { Etape } from './machine-common'
 import { EventObject } from 'xstate/lib/types'
 import { interpret } from 'xstate'
 import { CaminoMachine } from './machine-helper'
-
+import { expect } from 'vitest'
 interface CustomMatchers<R = unknown> {
   canOnlyTransitionTo<T extends EventObject>(
     machine: CaminoMachine<any, T>,

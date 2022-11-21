@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import { ISectionElement } from '../../../types'
+import { describe, test, expect } from 'vitest'
 
 import { heritageContenuValidate } from './heritage-contenu-validate'
 

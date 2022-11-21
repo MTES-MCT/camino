@@ -1,4 +1,5 @@
 import { checkCodePostal, isDepartementId, toDepartementId, departementsMetropole } from './departement'
+import { test, expect } from 'vitest'
 
 test('isDepartementId', () => {
   expect(isDepartementId(null)).toBe(false)

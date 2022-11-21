@@ -43,7 +43,7 @@ jobs:
         run: |
           npm set-script prepare ""
           npm ci
-          npm test --workspace=packages/ui
+          make test/ui
         env:
           CI: true
       - uses: codecov/codecov-action@v3

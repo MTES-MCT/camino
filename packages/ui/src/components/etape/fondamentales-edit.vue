@@ -277,6 +277,7 @@ const props = defineProps<{
 
 const emits = defineEmits<{
   (e: 'complete-update', complete: boolean): void
+  (e: 'update:etape', etape: EtapeFondamentale): void
 }>()
 
 const ans = ref<number>(
@@ -323,7 +324,7 @@ watch(
   () => completeUpdate()
 )
 
-watch(
+watch<EtapeFondamentale>(
   () => props.etape,
   etape => {
     if (!etape.duree) {
@@ -349,6 +350,8 @@ watch(
     if (!etape.substances?.length) {
       etape.incertitudes.substances = false
     }
+
+    emits('update:etape', etape)
   },
   { deep: true }
 )

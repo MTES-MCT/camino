@@ -1,5 +1,6 @@
 import { titreEtapeDemarcheEtapeTypeFind } from './titre-etape-demarche-etape-type-find'
 import { IDemarcheType } from '../../types'
+import { describe, test, expect } from 'vitest'
 
 const demarcheType = {
   etapesTypes: [{ id: 'mfr' }],

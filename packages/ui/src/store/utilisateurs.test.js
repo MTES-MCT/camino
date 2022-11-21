@@ -1,13 +1,14 @@
 import utilisateurs from './utilisateurs'
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
+import { vi, describe, expect, beforeEach, test } from 'vitest'
 
-jest.mock('../api/utilisateurs', () => ({
-  utilisateurs: jest.fn(),
-  utilisateurMetas: jest.fn()
+vi.mock('../api/utilisateurs', () => ({
+  utilisateurs: vi.fn(),
+  utilisateurMetas: vi.fn()
 }))
 
-console.info = jest.fn()
+console.info = vi.fn()
 
 describe('liste des utilisateurs', () => {
   let store
@@ -30,7 +31,7 @@ describe('liste des utilisateurs', () => {
         titre: {
           namespaced: true,
           actions: {
-            openTab: jest.fn()
+            openTab: vi.fn()
           }
         }
       }

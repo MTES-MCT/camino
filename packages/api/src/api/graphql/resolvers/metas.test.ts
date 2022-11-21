@@ -4,6 +4,7 @@ import { IEtapeType } from '../../../types'
 import { newDemarcheId } from '../../../database/models/_format/id-create'
 import { ArmOctMachine } from '../../../business/rules-demarches/arm/oct.machine'
 import { toCaminoDate } from 'camino-common/src/date'
+import { describe, expect, test } from 'vitest'
 
 describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   const demarche: Pick<TitresDemarches, 'etapes'> = {

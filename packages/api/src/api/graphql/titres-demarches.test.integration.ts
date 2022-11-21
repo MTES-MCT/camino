@@ -6,8 +6,18 @@ import { userSuper } from '../../database/user-super'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
 import { toCaminoDate } from 'camino-common/src/date'
 
-console.info = jest.fn()
-console.error = jest.fn()
+import {
+  afterAll,
+  beforeAll,
+  afterEach,
+  describe,
+  test,
+  expect,
+  vi
+} from 'vitest'
+
+console.info = vi.fn()
+console.error = vi.fn()
 beforeAll(async () => {
   await dbManager.populateDb()
 })

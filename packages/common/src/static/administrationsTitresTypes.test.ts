@@ -1,6 +1,7 @@
 import { AdministrationId, ADMINISTRATION_IDS } from './administrations'
 import { isAssociee, isGestionnaire, getTitreTypeIdsByAdministration } from './administrationsTitresTypes'
 import { TitresTypesIds, TitreTypeId } from './titresTypes'
+import { test, expect } from 'vitest'
 
 interface AdministrationsWithTitreTypeId {
   administrationId: AdministrationId

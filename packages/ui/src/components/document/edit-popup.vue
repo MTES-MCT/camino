@@ -37,9 +37,10 @@
     <hr />
 
     <SectionsEdit
-      v-model:document="document"
+      :document="document"
       :repertoire="repertoire"
       :userIsAdmin="userIsAdmin"
+      @update:document="newValue => emits('update:document', newValue)"
     />
 
     <template #footer>
@@ -92,6 +93,8 @@ export default {
     parentTypeId: { type: String, default: '' },
     documentsTypes: { type: Array, default: null }
   },
+
+  emits: ['update:document'],
 
   computed: {
     loading() {
