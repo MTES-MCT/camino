@@ -30,6 +30,9 @@ else
 	npm run dev:monthly -w packages/api
 endif
 
+
+#test: test/ui test/api test/common
+#test/api: test-unit/api test-integration/api
 test/ui:
 ifndef CI
 	npm run test -w packages/ui

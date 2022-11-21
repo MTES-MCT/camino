@@ -24,8 +24,8 @@ vi.mock('../src/server/upload', async () => {
   const origUpload = await vi.importActual('../src/server/upload')
 
   assertObject(origUpload)
-  
-return {
+
+  return {
     __esModule: true,
     ...origUpload,
     restUpload: vi.fn().mockImplementation(() => {
