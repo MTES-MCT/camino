@@ -47,7 +47,7 @@ jobs:
         env:
           CI: true
       - name: Unit tests
-        run: npm run test:unit --workspace=packages/api
+        run: make test/api-unit
       - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -86,7 +86,7 @@ jobs:
           env:
             CI: true
         - name: Integration tests
-          run: npm run test:integration --workspace=packages/api
+          run: make test/api-integration
           env:
             PGHOST: localhost
             PGPORT: 5432
