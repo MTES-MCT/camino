@@ -42,7 +42,6 @@ type StatistiquesGuyane {
   titresArm: Int
   titresPrm: Int
   titresAxm: Int
-  titresPxm: Int
   titresCxm: Int
   annees: [StatistiquesGuyaneAnnee]
 }
@@ -52,7 +51,6 @@ type StatistiquesGuyaneAnnee {
   titresArm: StatistiqueAnneeTitre
   titresPrm: StatistiqueAnneeTitre
   titresAxm: StatistiqueAnneeTitre
-  titresPxm: StatistiqueAnneeTitre
   titresCxm: StatistiqueAnneeTitre
   orNet: Int
   carburantConventionnel: Int
