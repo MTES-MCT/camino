@@ -150,49 +150,57 @@ export const statistiquesDGTMFake: StatistiquesDGTM = {
       '0': { depose: 0, octroye: 4 },
       '0_potentielle': { depose: 0, octroye: 1 },
       '1': { depose: 0, octroye: 0 },
-      '2': { depose: 0, octroye: 26 }
+      '2': { depose: 0, octroye: 26 },
+      '3': { depose: 0, octroye: 26 }
     },
     [valideAnnee('2016')]: {
       '0': { depose: 0, octroye: 4 },
       '0_potentielle': { depose: 0, octroye: 4 },
       '1': { depose: 0, octroye: 0 },
-      '2': { depose: 0, octroye: 43 }
+      '2': { depose: 0, octroye: 43 },
+      '3': { depose: 0, octroye: 26 }
     },
     [valideAnnee('2017')]: {
       '0': { depose: 0, octroye: 2 },
       '0_potentielle': { depose: 0, octroye: 2 },
       '1': { depose: 0, octroye: 0 },
-      '2': { depose: 0, octroye: 14 }
+      '2': { depose: 0, octroye: 14 },
+      '3': { depose: 0, octroye: 26 }
     },
     [valideAnnee('2018')]: {
       '0': { depose: 0, octroye: 1 },
       '0_potentielle': { depose: 0, octroye: 1 },
       '1': { depose: 0, octroye: 0 },
-      '2': { depose: 0, octroye: 30 }
+      '2': { depose: 0, octroye: 30 },
+      '3': { depose: 0, octroye: 26 }
     },
     [valideAnnee('2019')]: {
       '0': { depose: 0, octroye: 0 },
       '0_potentielle': { depose: 0, octroye: 1 },
       '1': { depose: 0, octroye: 0 },
-      '2': { depose: 0, octroye: 19 }
+      '2': { depose: 0, octroye: 19 },
+      '3': { depose: 0, octroye: 26 }
     },
     [valideAnnee('2020')]: {
       '0': { depose: 0, octroye: 0 },
       '0_potentielle': { depose: 0, octroye: 0 },
       '1': { depose: 0, octroye: 0 },
-      '2': { depose: 0, octroye: 11 }
+      '2': { depose: 0, octroye: 11 },
+      '3': { depose: 0, octroye: 26 }
     },
     [valideAnnee('2021')]: {
       '0': { depose: 0, octroye: 0 },
       '0_potentielle': { depose: 0, octroye: 0 },
       '1': { depose: 0, octroye: 0 },
-      '2': { depose: 0, octroye: 19 }
+      '2': { depose: 0, octroye: 19 },
+      '3': { depose: 0, octroye: 26 }
     },
     [valideAnnee('2022')]: {
       '0': { depose: 0, octroye: 0 },
       '0_potentielle': { depose: 0, octroye: 0 },
       '1': { depose: 0, octroye: 0 },
-      '2': { depose: 0, octroye: 9 }
+      '2': { depose: 0, octroye: 9 },
+      '3': { depose: 0, octroye: 26 }
     }
   },
   delais: {

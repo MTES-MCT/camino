@@ -77,45 +77,53 @@ export const sdomChartConfiguration = (
 }
 const graphSdomData = (item: StatistiquesDGTM): ChartData => {
   const annees: CaminoAnnee[] = Object.keys(item.sdom).filter(isAnnee)
-  const datasets = []
-  datasets.push({
-    label: 'Déposés ou octroyés en zone 0',
-    data: annees.map(
-      annee =>
-        item.sdom[annee][SDOMZoneIds.Zone0].depose +
-        item.sdom[annee][SDOMZoneIds.Zone0].octroye
-    ),
-    ...datasetParams(0)
-  })
-  datasets.push({
-    label: 'Déposés ou octroyés en zone 0 potentielle',
-    data: annees.map(
-      annee =>
-        item.sdom[annee][SDOMZoneIds.Zone0Potentielle].depose +
-        item.sdom[annee][SDOMZoneIds.Zone0Potentielle].octroye
-    ),
-    ...datasetParams(1)
-  })
+  const datasets = [
+    {
+      label: 'Déposés ou octroyés en zone 0',
+      data: annees.map(
+        annee =>
+          item.sdom[annee][SDOMZoneIds.Zone0].depose +
+          item.sdom[annee][SDOMZoneIds.Zone0].octroye
+      ),
+      ...datasetParams(0)
+    },
+    {
+      label: 'Déposés ou octroyés en zone 0 potentielle',
+      data: annees.map(
+        annee =>
+          item.sdom[annee][SDOMZoneIds.Zone0Potentielle].depose +
+          item.sdom[annee][SDOMZoneIds.Zone0Potentielle].octroye
+      ),
+      ...datasetParams(1)
+    },
 
-  datasets.push({
-    label: 'Déposés ou octroyés en zone 1',
-    data: annees.map(
-      annee =>
-        item.sdom[annee][SDOMZoneIds.Zone1].depose +
-        item.sdom[annee][SDOMZoneIds.Zone1].octroye
-    ),
-    ...datasetParams(2)
-  })
+    {
+      label: 'Déposés ou octroyés en zone 1',
+      data: annees.map(
+        annee =>
+          item.sdom[annee][SDOMZoneIds.Zone1].depose +
+          item.sdom[annee][SDOMZoneIds.Zone1].octroye
+      ),
+      ...datasetParams(2)
+    },
 
-  datasets.push({
-    label: 'Déposés ou octroyés en zone 2',
-    data: annees.map(
-      annee =>
-        item.sdom[annee][SDOMZoneIds.Zone2].depose +
-        item.sdom[annee][SDOMZoneIds.Zone2].octroye
-    ),
-    ...datasetParams(3)
-  })
+    {
+      label: 'Déposés ou octroyés en zone 2',
+      data: annees.map(
+        annee =>
+          item.sdom[annee][SDOMZoneIds.Zone2].depose +
+          item.sdom[annee][SDOMZoneIds.Zone2].octroye
+      ),
+      ...datasetParams(3)
+    },
+    {
+      label: 'Déposés ou octroyés en zone 3',
+      data: annees.map(
+        annee => item.sdom[annee][3].depose + item.sdom[annee][3].octroye
+      ),
+      ...datasetParams(4)
+    }
+  ]
 
   return {
     labels: annees,

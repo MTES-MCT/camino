@@ -19,7 +19,7 @@ export const getDGTMStatsInside = async (
 
   const gestionnaireTitreTypeIds: TitreTypeId[] =
     getTitreTypeIdsByAdministration(administrationId)
-      .filter(({ gestionnaire }) => gestionnaire)
+      .filter(({ gestionnaire, associee }) => gestionnaire || associee)
       .map(({ titreTypeId }) => titreTypeId)
 
   const phaseOctrois: {
@@ -73,12 +73,15 @@ export const getDGTMStatsInside = async (
         [SDOMZoneIds.Zone0]: { depose: 0, octroye: 0 },
         [SDOMZoneIds.Zone0Potentielle]: { depose: 0, octroye: 0 },
         [SDOMZoneIds.Zone1]: { depose: 0, octroye: 0 },
-        [SDOMZoneIds.Zone2]: { depose: 0, octroye: 0 }
+        [SDOMZoneIds.Zone2]: { depose: 0, octroye: 0 },
+        3: { depose: 0, octroye: 0 }
       }
     }
 
     result.depotEtInstructions[annee].totalTitresOctroyes++
-    if (phase.sdomZoneId !== null) {
+    if (phase.sdomZoneId === null) {
+      result.sdom[annee]['3'].octroye++
+    } else {
       result.sdom[annee][phase.sdomZoneId].octroye++
     }
     if (phase.typeId === 'axm') {
@@ -138,12 +141,15 @@ export const getDGTMStatsInside = async (
         [SDOMZoneIds.Zone0]: { depose: 0, octroye: 0 },
         [SDOMZoneIds.Zone0Potentielle]: { depose: 0, octroye: 0 },
         [SDOMZoneIds.Zone1]: { depose: 0, octroye: 0 },
-        [SDOMZoneIds.Zone2]: { depose: 0, octroye: 0 }
+        [SDOMZoneIds.Zone2]: { depose: 0, octroye: 0 },
+        3: { depose: 0, octroye: 0 }
       }
     }
 
     result.depotEtInstructions[annee].totalTitresDeposes++
-    if (etape.sdomZoneId !== null) {
+    if (etape.sdomZoneId === null) {
+      result.sdom[annee][3].depose++
+    } else {
       result.sdom[annee][etape.sdomZoneId].depose++
     }
 
