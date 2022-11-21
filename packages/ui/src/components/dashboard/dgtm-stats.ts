@@ -4,12 +4,116 @@ import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import { ChartConfiguration, ChartData } from 'chart.js'
 import { nextColor } from '../_charts/utils'
 
-export const datasetParams = (index: number) => {
+const datasetParams = (index: number) => {
   return {
     fill: false,
     tension: 0.5,
     backgroundColor: nextColor(index),
     borderColor: nextColor(index)
+  }
+}
+
+export const delaiChartConfiguration = (
+  data: StatistiquesDGTM
+): ChartConfiguration => {
+  const chartData: ChartData = graphDelaiData(data)
+
+  return {
+    type: 'line',
+    data: chartData,
+    options: {
+      plugins: {
+        title: { display: true, text: "Délais d'instruction" }
+      },
+      locale: 'fr-FR',
+      aspectRatio: 1.33,
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      scales: {
+        y: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Mois'
+          }
+        }
+      }
+    }
+  }
+}
+
+const graphDelaiData = (item: StatistiquesDGTM) => {
+  const annees: CaminoAnnee[] = Object.keys(item.delais).filter(isAnnee)
+  const datasets = []
+  datasets.push({
+    label: "Délai minimum d'instruction",
+    data: annees.map(annee =>
+      Math.round(Math.min(...item.delais[annee].delaiInstructionEnJours) / 30)
+    ),
+    ...datasetParams(0)
+  })
+  datasets.push({
+    label: "Délai moyen d'instruction",
+    data: annees.map(annee =>
+      Math.round(
+        item.delais[annee].delaiInstructionEnJours.reduce(
+          (acc, current) => acc + current,
+          0
+        ) /
+          item.delais[annee].delaiInstructionEnJours.length /
+          30
+      )
+    ),
+    ...datasetParams(1)
+  })
+  datasets.push({
+    label: "Délai maximum d'instruction",
+    data: annees.map(annee =>
+      Math.round(Math.max(...item.delais[annee].delaiInstructionEnJours) / 30)
+    ),
+    ...datasetParams(2)
+  })
+  datasets.push({
+    label: 'Délai minimum de CDM',
+    data: annees.map(annee =>
+      Math.round(
+        Math.min(...item.delais[annee].delaiCommissionDepartementaleEnJours) /
+          30
+      )
+    ),
+    ...datasetParams(3)
+  })
+  datasets.push({
+    label: 'Délai moyen de CDM',
+    data: annees.map(annee =>
+      Math.round(
+        item.delais[annee].delaiCommissionDepartementaleEnJours.reduce(
+          (acc, current) => acc + current,
+          0
+        ) /
+          item.delais[annee].delaiCommissionDepartementaleEnJours.length /
+          30
+      )
+    ),
+    ...datasetParams(4)
+  })
+  datasets.push({
+    label: 'Délai maximum de CDM',
+    data: annees.map(annee =>
+      Math.round(
+        Math.max(...item.delais[annee].delaiCommissionDepartementaleEnJours) /
+          30
+      )
+    ),
+    ...datasetParams(5)
+  })
+
+  return {
+    labels: annees,
+    datasets
   }
 }
 

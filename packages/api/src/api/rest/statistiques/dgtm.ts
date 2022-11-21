@@ -5,6 +5,7 @@ import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import { CaminoDate, getAnnee, daysBetween } from 'camino-common/src/date'
 import { knex } from '../../../knex'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 
 const anneeDepartStats = 2015
 
@@ -160,16 +161,16 @@ export const getDGTMStatsInside = async (
 
   const dateInstruction: {
     id: string
-    mcrdate: CaminoDate
+    depotdelademandedate: CaminoDate
     dexdate: CaminoDate
   }[] = await knex
     .select({
-      mcrdate: 'MCR.date',
+      depotdelademandedate: 'depot_de_la_demande.date',
       dexdate: 'DEX.date'
     })
     .distinct('titresDemarches.id')
     .from({
-      MCR: 'titresEtapes',
+      depot_de_la_demande: 'titresEtapes',
       DEX: 'titresEtapes',
       titresDemarches: 'titresDemarches'
     })
@@ -181,11 +182,13 @@ export const getDGTMStatsInside = async (
       "left join titres__sdom_zones on titres__sdom_zones.titre_etape_id = titres.props_titre_etapes_ids ->> 'points'"
     )
     .where('titresDemarches.typeId', 'oct')
-    .andWhereRaw('MCR.titre_demarche_id = "titres_demarches"."id"')
-    .andWhere('MCR.typeId', 'mcr')
-    .andWhere('MCR.date', '>=', `${anneeDepartStats}-01-01`)
+    .andWhereRaw(
+      'depot_de_la_demande.titre_demarche_id = "titres_demarches"."id"'
+    )
+    .andWhere('depot_de_la_demande.typeId', ETAPES_TYPES.depotDeLaDemande)
+    .andWhere('depot_de_la_demande.date', '>=', `${anneeDepartStats}-01-01`)
     .andWhereRaw('DEX.titre_demarche_id = "titres_demarches"."id"')
-    .andWhere('DEX.typeId', 'dex')
+    .andWhere('DEX.typeId', ETAPES_TYPES.decisionDeLadministration)
     .andWhere(builder => {
       builder.whereRaw(
         `titres_etapes.administrations_locales @> '"${administrationId}"'::jsonb`
@@ -199,16 +202,19 @@ export const getDGTMStatsInside = async (
     })
 
   dateInstruction.forEach(instruction => {
-    const annee = getAnnee(instruction.mcrdate)
+    const annee = getAnnee(instruction.depotdelademandedate)
     if (!result.delais[annee]) {
       result.delais[annee] = {
         delaiInstructionEnJours: [],
         delaiCommissionDepartementaleEnJours: []
       }
     }
-    let days = daysBetween(instruction.mcrdate, instruction.dexdate)
+    let days = daysBetween(
+      instruction.depotdelademandedate,
+      instruction.dexdate
+    )
     if (days < 0) {
-      console.warn('cette demarche a une dex AVANT la mcr', instruction.id)
+      console.warn('cette demarche a une dex AVANT le depot', instruction.id)
       days = Math.abs(days)
     }
     result.delais[annee].delaiInstructionEnJours.push(days)
@@ -216,13 +222,16 @@ export const getDGTMStatsInside = async (
 
   const dateCDM: {
     id: string
-    mcrdate: CaminoDate
+    depotdelademandedate: CaminoDate
     apo: CaminoDate
   }[] = await knex
-    .select({ mcrdate: 'MCR.date', apo: 'APO.date' })
+    .select({
+      depotdelademandedate: 'depot_de_la_demande.date',
+      apo: 'APO.date'
+    })
     .distinct('titresDemarches.id')
     .from({
-      MCR: 'titresEtapes',
+      depot_de_la_demande: 'titresEtapes',
       APO: 'titresEtapes',
       titresDemarches: 'titresDemarches'
     })
@@ -234,11 +243,16 @@ export const getDGTMStatsInside = async (
       "left join titres__sdom_zones on titres__sdom_zones.titre_etape_id = titres.props_titre_etapes_ids ->> 'points'"
     )
     .where('titresDemarches.typeId', 'oct')
-    .andWhereRaw('MCR.titre_demarche_id = "titres_demarches"."id"')
-    .andWhere('MCR.typeId', 'mcr')
-    .andWhere('MCR.date', '>=', `${anneeDepartStats}-01-01`)
+    .andWhereRaw(
+      'depot_de_la_demande.titre_demarche_id = "titres_demarches"."id"'
+    )
+    .andWhere('depot_de_la_demande.typeId', ETAPES_TYPES.depotDeLaDemande)
+    .andWhere('depot_de_la_demande.date', '>=', `${anneeDepartStats}-01-01`)
     .andWhereRaw('APO.titre_demarche_id = "titres_demarches"."id"')
-    .andWhere('APO.typeId', 'apo')
+    .andWhere(
+      'APO.typeId',
+      ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_
+    )
     .andWhere(builder => {
       builder.whereRaw(
         `titres_etapes.administrations_locales @> '"${administrationId}"'::jsonb`
@@ -252,16 +266,16 @@ export const getDGTMStatsInside = async (
     })
 
   dateCDM.forEach(instruction => {
-    const annee = getAnnee(instruction.mcrdate)
+    const annee = getAnnee(instruction.depotdelademandedate)
     if (!result.delais[annee]) {
       result.delais[annee] = {
         delaiInstructionEnJours: [],
         delaiCommissionDepartementaleEnJours: []
       }
     }
-    let days = daysBetween(instruction.mcrdate, instruction.apo)
+    let days = daysBetween(instruction.depotdelademandedate, instruction.apo)
     if (days < 0) {
-      console.warn('cette demarche a une apo AVANT la mcr', instruction.id)
+      console.warn('cette demarche a une apo AVANT le depot', instruction.id)
       days = Math.abs(days)
     }
     result.delais[annee].delaiCommissionDepartementaleEnJours.push(days)
