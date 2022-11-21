@@ -37,8 +37,16 @@ import { checkTitreLinks } from '../../business/validations/titre-links-validate
 import { toMachineEtapes } from '../../business/rules-demarches/machine-common'
 import { TitreReference } from 'camino-common/src/titres-references'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { CaminoDate } from 'camino-common/src/date'
+
+const etapesAMasquer = [
+  ETAPES_TYPES.classementSansSuite,
+  ETAPES_TYPES.desistementDuDemandeur,
+  ETAPES_TYPES.noteInterneSignalee,
+  ETAPES_TYPES.decisionImplicite,
+  ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_
+]
 
 export const titresONF = async (
   req: express.Request,
@@ -315,44 +323,54 @@ export const titresDREAL = async (
           throw new Error('les démarches ne sont pas chargées')
         }
 
-        const octroi = titre.demarches.find(
-          demarche => demarche.typeId === 'oct'
-        )
+        const demarcheLaPlusRecente = titre.demarches.sort(
+          ({ ordre: ordreA }, { ordre: ordreB }) =>
+            (ordreA ?? 0) - (ordreB ?? 0)
+        )[titre.demarches?.length - 1]
         let enAttenteDeDREAL = false
         const prochainesEtapes: EtapeTypeId[] = []
         let derniereEtape: {
           etapeTypeId: EtapeTypeId
           date: CaminoDate
         } | null = null
-        if (octroi) {
-          if (!octroi.etapes) {
+        if (demarcheLaPlusRecente) {
+          if (!demarcheLaPlusRecente.etapes) {
             throw new Error('les étapes ne sont pas chargées')
           }
-          if (octroi.statutId === DemarchesStatutsIds.EnConstruction) {
+          if (
+            demarcheLaPlusRecente.statutId ===
+            DemarchesStatutsIds.EnConstruction
+          ) {
             return null
           } else {
+            const etapesDerniereDemarche = toMachineEtapes(
+              demarcheLaPlusRecente.etapes
+            )
+            derniereEtape =
+              etapesDerniereDemarche[etapesDerniereDemarche.length - 1]
             const dd = demarcheDefinitionFind(
               titre.typeId,
-              octroi.typeId,
-              octroi.etapes,
-              octroi.id
+              demarcheLaPlusRecente.typeId,
+              demarcheLaPlusRecente.etapes,
+              demarcheLaPlusRecente.id
             )
             if (isDemarcheDefinitionMachine(dd)) {
               try {
-                const etapes = toMachineEtapes(octroi.etapes)
                 enAttenteDeDREAL = dd.machine
-                  .whoIsBlocking(etapes)
+                  .whoIsBlocking(etapesDerniereDemarche)
                   .includes(user.administrationId)
-                derniereEtape = etapes[etapes.length - 1]
-                const nextEtapes = dd.machine.possibleNextEtapes(etapes)
+                const nextEtapes = dd.machine.possibleNextEtapes(
+                  etapesDerniereDemarche
+                )
                 prochainesEtapes.push(
                   ...nextEtapes
                     .map(etape => etape.etapeTypeId)
                     .filter(onlyUnique)
+                    .filter(etape => !etapesAMasquer.includes(etape))
                 )
               } catch (e) {
                 console.error(
-                  `Impossible de traiter le titre ${titre.id} car la démarche d'octroi n'est pas valide`,
+                  `Impossible de traiter le titre ${titre.id} car la démarche ${demarcheLaPlusRecente.typeId} n'est pas valide`,
                   e
                 )
               }
