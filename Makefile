@@ -30,6 +30,13 @@ else
 	npm run dev:monthly -w packages/api
 endif
 
+test/ui:
+ifndef CI
+	npm run test -w packages/ui
+else
+	npm run test -w packages/ui -- --coverage
+endif
+
 ifeq (${INPUT_ENV}, dev)
 CD_TOKEN:=${CD_TOKEN_DEV}
 endif
