@@ -13,10 +13,17 @@ vi.mock('../src/tools/api-mailjet/newsletter', () => ({
   newsletterSubscriberUpdate: vi.fn().mockImplementation(() => 'succès')
 }))
 
+function assertObject(stuff: unknown): asserts stuff is object {
+  if (typeof stuff !== 'object') {
+    throw new Error(`${stuff} n'est pas un objet`)
+  }
+}
 vi.resetAllMocks()
 vi.mock('tus-node-server')
 vi.mock('../src/server/upload', async () => {
   const origUpload = await vi.importActual('../src/server/upload')
+
+  assertObject(origUpload)
   
 return {
     __esModule: true,
