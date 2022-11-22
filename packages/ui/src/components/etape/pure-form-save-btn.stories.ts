@@ -10,7 +10,7 @@ const meta: Meta = {
 export default meta
 
 type Props = {
-  alertes: { message: string; url: string }[]
+  alertes?: { message: string; url: string }[]
   canSave: boolean
   canDepose: boolean
   showDepose: boolean

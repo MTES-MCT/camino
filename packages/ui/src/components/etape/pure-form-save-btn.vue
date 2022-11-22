@@ -42,7 +42,7 @@
 import Icon from '@/components/_ui/icon.vue'
 
 defineProps<{
-  alertes: { message: string; url: string }[]
+  alertes?: { message: string; url: string }[]
   canSave: boolean
   canDepose: boolean
   showDepose: boolean

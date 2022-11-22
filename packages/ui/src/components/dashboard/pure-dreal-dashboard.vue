@@ -166,7 +166,7 @@ onMounted(async () => {
       }
     }
   } catch (e: any) {
-    console.log('error', e)
+    console.error('error', e)
     data.value = {
       status: 'ERROR',
       message: e.message ?? "Une erreur s'est produite"

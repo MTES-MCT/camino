@@ -159,7 +159,7 @@ onMounted(async () => {
     )
     status.value = 'LOADED'
   } catch (e) {
-    console.log('error', e)
+    console.error('error', e)
     status.value = 'ERROR'
   }
 })
