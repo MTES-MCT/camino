@@ -1,13 +1,24 @@
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import type { Meta, StoryFn } from '@storybook/vue3'
 import { render } from '@testing-library/vue'
 import { composeStories } from '@storybook/testing-vue3'
 import type { ContextedStory } from '@storybook/testing-vue3/dist/types'
+import { h } from 'vue'
 
 type StoryFile = {
   default: Meta
   [name: string]: StoryFn | Meta
 }
+console.error = vi.fn()
+
+vi.mock('vue-router', () => ({
+  useRoute: vi.fn(),
+  useRouter: vi.fn(() => ({
+    push: () => {}
+  }))
+}))
+
+vi.mock('vuex', () => ({ useStore: vi.fn() }))
 
 describe('Storybook Smoke Test', async () => {
   const modules = await Promise.all(
@@ -25,7 +36,11 @@ describe('Storybook Smoke Test', async () => {
           ([name, story]) => ({ name, story })
         )
       )('$name', ({ story }) => {
-      const mounted = render(story())
+      const mounted = render(story(), {
+        global: {
+          components: { 'router-link': h('a', { type: 'primary' }) }
+        }
+      })
       expect(mounted.html()).toMatchSnapshot()
     })
   })
