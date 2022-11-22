@@ -3,6 +3,7 @@ import { AdministrationTypeId } from './static/administrations'
 import { RegionId } from './static/region'
 import { SDOMZoneIds } from './static/sdom'
 import { SUBSTANCES_FISCALES_IDS } from './static/substancesFiscales'
+import { TitresTypes } from './static/titresTypes'
 
 export interface QuantiteParMois {
   mois: string
@@ -46,6 +47,8 @@ export const substancesFiscalesStats = [
 ] as const
 
 export type SubstancesFiscalesStats = typeof substancesFiscalesStats[number]
+export const titreTypeIdDelais = [TitresTypes.axm.id, TitresTypes.prm.id, TitresTypes.cxm.id] as const
+export type TitreTypeIdDelai = typeof titreTypeIdDelais[number]
 
 export interface StatistiquesDGTM {
   depotEtInstructions: Record<CaminoAnnee, DepotEtInstructionStat>
@@ -59,7 +62,17 @@ export interface StatistiquesDGTM {
       3: { depose: number; octroye: number }
     }
   >
-  delais: Record<CaminoAnnee, { delaiInstructionEnJours: number[]; delaiCommissionDepartementaleEnJours: number[]; delaiDecisionPrefetEnJours: number[] }>
+  delais: Record<
+    CaminoAnnee,
+    Record<
+      TitreTypeIdDelai,
+      {
+        delaiInstructionEnJours: number[]
+        delaiCommissionDepartementaleEnJours: number[]
+        delaiDecisionPrefetEnJours: number[]
+      }
+    >
+  >
 }
 
 export type StatistiquesMinerauxMetauxMetropoleSels = { [key in CaminoAnnee]: { [key in RegionId]?: number } }

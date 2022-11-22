@@ -19,6 +19,12 @@
             :chartConfiguration="delaiChartConfiguration(item)"
         /></LoadingElement>
       </div>
+      <div>
+        <LoadingElement v-slot="{ item }" :data="data"
+          ><ConfigurableLineChart
+            :chartConfiguration="delaiPerConcessionChartConfiguration(item)"
+        /></LoadingElement>
+      </div>
     </div>
   </div>
 </template>
@@ -35,7 +41,8 @@ import ConfigurableBarChart from '../_charts/configurableBar.vue'
 import {
   sdomChartConfiguration,
   depotChartConfiguration,
-  delaiChartConfiguration
+  delaiChartConfiguration,
+  delaiPerConcessionChartConfiguration
 } from './dgtm-stats'
 
 const data = ref<AsyncData<StatistiquesDGTM>>({ status: 'LOADING' })

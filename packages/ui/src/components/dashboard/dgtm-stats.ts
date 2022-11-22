@@ -9,7 +9,81 @@ const datasetParams = (index: number) => {
     fill: false,
     tension: 0.5,
     backgroundColor: nextColor(index),
-    borderColor: nextColor(index)
+    borderColor: nextColor(index),
+    spanGaps: true
+  }
+}
+
+export const delaiPerConcessionChartConfiguration = (
+  data: StatistiquesDGTM
+): ChartConfiguration => {
+  const annees: CaminoAnnee[] = Object.keys(data.delais).filter(isAnnee)
+
+  const datasets = [
+    {
+      label: 'PER',
+      data: annees.map(annee =>
+        Math.round(
+          data.delais[annee].prm.delaiInstructionEnJours.reduce(
+            (acc, current) => acc + current,
+            0
+          ) /
+            data.delais[annee].prm.delaiInstructionEnJours.length /
+            30
+        )
+      ),
+      ...datasetParams(0)
+    },
+    {
+      label: 'Concession',
+      data: annees.map(annee =>
+        Math.round(
+          data.delais[annee].cxm.delaiInstructionEnJours.reduce(
+            (acc, current) => acc + current,
+            0
+          ) /
+            data.delais[annee].cxm.delaiInstructionEnJours.length /
+            30
+        )
+      ),
+      ...datasetParams(1)
+    }
+  ]
+
+  console.log(datasets)
+  const chartData: ChartData = { labels: annees, datasets }
+  return {
+    type: 'line',
+    data: chartData,
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: "Délais moyens d'instruction des PER et concessions"
+        },
+        legend: {
+          labels: {
+            boxHeight: 0
+          }
+        }
+      },
+      locale: 'fr-FR',
+      aspectRatio: 1.33,
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      scales: {
+        y: {
+          display: true,
+          title: {
+            display: true,
+            text: 'Mois'
+          }
+        }
+      }
+    }
   }
 }
 
@@ -25,7 +99,7 @@ export const delaiChartConfiguration = (
       plugins: {
         title: {
           display: true,
-          text: "Délais d'instruction, de CDM et de décision du préfet"
+          text: "Délais d'instruction, de CDM et de décision du préfet pour les AEX"
         },
         legend: {
           labels: {
@@ -59,7 +133,9 @@ const graphDelaiData = (item: StatistiquesDGTM) => {
     {
       label: 'instruction min',
       data: annees.map(annee =>
-        Math.round(Math.min(...item.delais[annee].delaiInstructionEnJours) / 30)
+        Math.round(
+          Math.min(...item.delais[annee].axm.delaiInstructionEnJours) / 30
+        )
       ),
       hidden: true,
       ...datasetParams(0)
@@ -68,11 +144,11 @@ const graphDelaiData = (item: StatistiquesDGTM) => {
       label: 'instruction',
       data: annees.map(annee =>
         Math.round(
-          item.delais[annee].delaiInstructionEnJours.reduce(
+          item.delais[annee].axm.delaiInstructionEnJours.reduce(
             (acc, current) => acc + current,
             0
           ) /
-            item.delais[annee].delaiInstructionEnJours.length /
+            item.delais[annee].axm.delaiInstructionEnJours.length /
             30
         )
       ),
@@ -81,7 +157,9 @@ const graphDelaiData = (item: StatistiquesDGTM) => {
     {
       label: 'instruction max',
       data: annees.map(annee =>
-        Math.round(Math.max(...item.delais[annee].delaiInstructionEnJours) / 30)
+        Math.round(
+          Math.max(...item.delais[annee].axm.delaiInstructionEnJours) / 30
+        )
       ),
       hidden: true,
       ...datasetParams(2)
@@ -90,8 +168,9 @@ const graphDelaiData = (item: StatistiquesDGTM) => {
       label: 'CDM min',
       data: annees.map(annee =>
         Math.round(
-          Math.min(...item.delais[annee].delaiCommissionDepartementaleEnJours) /
-            30
+          Math.min(
+            ...item.delais[annee].axm.delaiCommissionDepartementaleEnJours
+          ) / 30
         )
       ),
       hidden: true,
@@ -101,11 +180,11 @@ const graphDelaiData = (item: StatistiquesDGTM) => {
       label: 'CDM',
       data: annees.map(annee =>
         Math.round(
-          item.delais[annee].delaiCommissionDepartementaleEnJours.reduce(
+          item.delais[annee].axm.delaiCommissionDepartementaleEnJours.reduce(
             (acc, current) => acc + current,
             0
           ) /
-            item.delais[annee].delaiCommissionDepartementaleEnJours.length /
+            item.delais[annee].axm.delaiCommissionDepartementaleEnJours.length /
             30
         )
       ),
@@ -115,8 +194,9 @@ const graphDelaiData = (item: StatistiquesDGTM) => {
       label: 'CDM max',
       data: annees.map(annee =>
         Math.round(
-          Math.max(...item.delais[annee].delaiCommissionDepartementaleEnJours) /
-            30
+          Math.max(
+            ...item.delais[annee].axm.delaiCommissionDepartementaleEnJours
+          ) / 30
         )
       ),
       hidden: true,
@@ -126,11 +206,11 @@ const graphDelaiData = (item: StatistiquesDGTM) => {
       label: 'décision du préfet',
       data: annees.map(annee =>
         Math.round(
-          item.delais[annee].delaiDecisionPrefetEnJours.reduce(
+          item.delais[annee].axm.delaiDecisionPrefetEnJours.reduce(
             (acc, current) => acc + current,
             0
           ) /
-            item.delais[annee].delaiDecisionPrefetEnJours.length /
+            item.delais[annee].axm.delaiDecisionPrefetEnJours.length /
             30
         )
       ),
