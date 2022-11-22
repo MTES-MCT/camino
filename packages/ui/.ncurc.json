@@ -1,8 +1,4 @@
 {
   "upgrade": true,
-  "reject": [
-    "graphql-react",
-    "@uppy/core",
-    "@uppy/tus"
-  ]
+  "reject": []
 }
