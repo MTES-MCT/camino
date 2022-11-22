@@ -1,9 +1,9 @@
 import { print } from 'graphql/language/printer'
-import fetchOptionsGraphQL from 'graphql-react/public/fetchOptionsGraphQL.js'
-import fetchGraphQL from 'graphql-react/public/fetchGraphQL.js'
-import Cache from 'graphql-react/public/Cache.js'
-import Loading from 'graphql-react/public/Loading.js'
-import LoadingCacheValue from 'graphql-react/public/LoadingCacheValue.js'
+import fetchOptionsGraphQL from 'graphql-react/fetchOptionsGraphQL.mjs'
+import fetchGraphQL from 'graphql-react/fetchGraphQL.mjs'
+import Cache from 'graphql-react/Cache.mjs'
+import Loading from 'graphql-react/Loading.mjs'
+import LoadingCacheValue from 'graphql-react/LoadingCacheValue.mjs'
 
 const apiUrl = '/apiUrl'
 const cache = new Cache()
