@@ -1,7 +1,7 @@
 import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
 import { SDOMZoneIds } from 'camino-common/src/static/sdom'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
-import { ChartConfiguration, ChartData } from 'chart.js'
+import { ChartConfiguration, ChartData, ChartDataset } from 'chart.js'
 import { nextColor } from '../_charts/utils'
 
 const datasetParams = (index: number) => {
@@ -23,7 +23,12 @@ export const delaiChartConfiguration = (
     data: chartData,
     options: {
       plugins: {
-        title: { display: true, text: "Délais d'instruction" }
+        title: { display: true, text: "Délais d'instruction" },
+        legend: {
+          labels: {
+            boxHeight: 0
+          }
+        }
       },
       locale: 'fr-FR',
       aspectRatio: 1.33,
@@ -167,7 +172,15 @@ export const sdomChartConfiguration = (
     data: chartData,
     options: {
       plugins: {
-        title: { display: true, text: 'Titres en zones du SDOM' }
+        title: {
+          display: true,
+          text: 'Titres déposés ou octroyés en zones du SDOM'
+        },
+        legend: {
+          labels: {
+            boxHeight: 0
+          }
+        }
       },
       locale: 'fr-FR',
       aspectRatio: 1.33,
@@ -183,49 +196,65 @@ const graphSdomData = (item: StatistiquesDGTM): ChartData => {
   const annees: CaminoAnnee[] = Object.keys(item.sdom).filter(isAnnee)
   const datasets = [
     {
-      label: 'Déposés ou octroyés en zone 0',
+      label: 'Zone 0',
       data: annees.map(
         annee =>
           item.sdom[annee][SDOMZoneIds.Zone0].depose +
           item.sdom[annee][SDOMZoneIds.Zone0].octroye
       ),
-      ...datasetParams(0)
+      fill: false,
+      tension: 0.5,
+      backgroundColor: '#0000ff',
+      borderColor: '#0000ff'
     },
     {
-      label: 'Déposés ou octroyés en zone 0 potentielle',
+      label: 'Zone 0 potentielle',
       data: annees.map(
         annee =>
           item.sdom[annee][SDOMZoneIds.Zone0Potentielle].depose +
           item.sdom[annee][SDOMZoneIds.Zone0Potentielle].octroye
       ),
-      ...datasetParams(1)
+      fill: false,
+      tension: 0.5,
+      backgroundColor: '#ffffff',
+      borderDash: [1, 5],
+      borderColor: '#0000ff'
     },
 
     {
-      label: 'Déposés ou octroyés en zone 1',
+      label: 'Zone 1',
       data: annees.map(
         annee =>
           item.sdom[annee][SDOMZoneIds.Zone1].depose +
           item.sdom[annee][SDOMZoneIds.Zone1].octroye
       ),
-      ...datasetParams(2)
+      fill: false,
+      tension: 0.5,
+      backgroundColor: '#00ff7f',
+      borderColor: '#00ff7f'
     },
 
     {
-      label: 'Déposés ou octroyés en zone 2',
+      label: 'Zone 2',
       data: annees.map(
         annee =>
           item.sdom[annee][SDOMZoneIds.Zone2].depose +
           item.sdom[annee][SDOMZoneIds.Zone2].octroye
       ),
-      ...datasetParams(3)
+      fill: false,
+      tension: 0.5,
+      backgroundColor: '#ffaa00',
+      borderColor: '#ffaa00'
     },
     {
-      label: 'Déposés ou octroyés en zone 3',
+      label: 'Zone 3',
       data: annees.map(
         annee => item.sdom[annee][3].depose + item.sdom[annee][3].octroye
       ),
-      ...datasetParams(4)
+      fill: false,
+      tension: 0.5,
+      backgroundColor: '#E0E0DD',
+      borderColor: '#E0E0DD'
     }
   ]
 

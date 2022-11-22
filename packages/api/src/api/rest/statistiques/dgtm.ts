@@ -115,7 +115,7 @@ export const getDGTMStatsInside = async (
     .andWhere('titresEtapes.date', '>=', `${anneeDepartStats}-01-01`)
     .andWhere(builder => {
       builder.whereRaw(
-        `titres_etapes.administrations_locales @> '"${administrationId}"'::jsonb`
+        `titre_etape_point.administrations_locales @> '"${administrationId}"'::jsonb`
       )
       if (gestionnaireTitreTypeIds.length) {
         builder.orWhereRaw(
