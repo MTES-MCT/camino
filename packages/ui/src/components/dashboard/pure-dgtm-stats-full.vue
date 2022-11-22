@@ -15,7 +15,14 @@
       </div>
       <div>
         <LoadingElement v-slot="{ item }" :data="data"
-          ><LineChart :data="graphDelaiData(item)"
+          ><ConfigurableLineChart
+            :chartConfiguration="delaiChartConfiguration(item)"
+        /></LoadingElement>
+      </div>
+      <div>
+        <LoadingElement v-slot="{ item }" :data="data"
+          ><ConfigurableLineChart
+            :chartConfiguration="delaiPerConcessionChartConfiguration(item)"
         /></LoadingElement>
       </div>
     </div>
@@ -28,93 +35,20 @@ import { onMounted, ref } from 'vue'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { AsyncData } from '@/api/client-rest'
-import LineChart from '../_charts/line.vue'
 import ConfigurableLineChart from '../_charts/configurableLine.vue'
 import ConfigurableBarChart from '../_charts/configurableBar.vue'
 
-import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
 import {
-  datasetParams,
   sdomChartConfiguration,
-  depotChartConfiguration
+  depotChartConfiguration,
+  delaiChartConfiguration,
+  delaiPerConcessionChartConfiguration
 } from './dgtm-stats'
 
 const data = ref<AsyncData<StatistiquesDGTM>>({ status: 'LOADING' })
 const props = defineProps<{
   getDgtmStats: () => Promise<StatistiquesDGTM>
 }>()
-
-const graphDelaiData = (item: StatistiquesDGTM) => {
-  const annees: CaminoAnnee[] = Object.keys(item.delais).filter(isAnnee)
-  const datasets = []
-  datasets.push({
-    label: "Délai minimum d'instruction",
-    data: annees.map(annee =>
-      Math.round(Math.min(...item.delais[annee].delaiInstructionEnJours) / 30)
-    ),
-    ...datasetParams(0)
-  })
-  datasets.push({
-    label: "Délai moyen d'instruction",
-    data: annees.map(annee =>
-      Math.round(
-        item.delais[annee].delaiInstructionEnJours.reduce(
-          (acc, current) => acc + current,
-          0
-        ) /
-          item.delais[annee].delaiInstructionEnJours.length /
-          30
-      )
-    ),
-    ...datasetParams(1)
-  })
-  datasets.push({
-    label: "Délai maximum d'instruction",
-    data: annees.map(annee =>
-      Math.round(Math.max(...item.delais[annee].delaiInstructionEnJours) / 30)
-    ),
-    ...datasetParams(2)
-  })
-  datasets.push({
-    label: 'Délai minimum de CDM',
-    data: annees.map(annee =>
-      Math.round(
-        Math.min(...item.delais[annee].delaiCommissionDepartementaleEnJours) /
-          30
-      )
-    ),
-    ...datasetParams(3)
-  })
-  datasets.push({
-    label: 'Délai moyen de CDM',
-    data: annees.map(annee =>
-      Math.round(
-        item.delais[annee].delaiCommissionDepartementaleEnJours.reduce(
-          (acc, current) => acc + current,
-          0
-        ) /
-          item.delais[annee].delaiCommissionDepartementaleEnJours.length /
-          30
-      )
-    ),
-    ...datasetParams(4)
-  })
-  datasets.push({
-    label: 'Délai maximum de CDM',
-    data: annees.map(annee =>
-      Math.round(
-        Math.max(...item.delais[annee].delaiCommissionDepartementaleEnJours) /
-          30
-      )
-    ),
-    ...datasetParams(5)
-  })
-
-  return {
-    labels: annees,
-    datasets
-  }
-}
 
 onMounted(async () => {
   try {
