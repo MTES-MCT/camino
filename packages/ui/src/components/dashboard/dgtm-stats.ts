@@ -23,7 +23,10 @@ export const delaiChartConfiguration = (
     data: chartData,
     options: {
       plugins: {
-        title: { display: true, text: "Délais d'instruction" },
+        title: {
+          display: true,
+          text: "Délais d'instruction, de CDM et de décision du préfet"
+        },
         legend: {
           labels: {
             boxHeight: 0
@@ -52,69 +55,88 @@ export const delaiChartConfiguration = (
 
 const graphDelaiData = (item: StatistiquesDGTM) => {
   const annees: CaminoAnnee[] = Object.keys(item.delais).filter(isAnnee)
-  const datasets = []
-  datasets.push({
-    label: "Délai minimum d'instruction",
-    data: annees.map(annee =>
-      Math.round(Math.min(...item.delais[annee].delaiInstructionEnJours) / 30)
-    ),
-    ...datasetParams(0)
-  })
-  datasets.push({
-    label: "Délai moyen d'instruction",
-    data: annees.map(annee =>
-      Math.round(
-        item.delais[annee].delaiInstructionEnJours.reduce(
-          (acc, current) => acc + current,
-          0
-        ) /
-          item.delais[annee].delaiInstructionEnJours.length /
-          30
-      )
-    ),
-    ...datasetParams(1)
-  })
-  datasets.push({
-    label: "Délai maximum d'instruction",
-    data: annees.map(annee =>
-      Math.round(Math.max(...item.delais[annee].delaiInstructionEnJours) / 30)
-    ),
-    ...datasetParams(2)
-  })
-  datasets.push({
-    label: 'Délai minimum de CDM',
-    data: annees.map(annee =>
-      Math.round(
-        Math.min(...item.delais[annee].delaiCommissionDepartementaleEnJours) /
-          30
-      )
-    ),
-    ...datasetParams(3)
-  })
-  datasets.push({
-    label: 'Délai moyen de CDM',
-    data: annees.map(annee =>
-      Math.round(
-        item.delais[annee].delaiCommissionDepartementaleEnJours.reduce(
-          (acc, current) => acc + current,
-          0
-        ) /
-          item.delais[annee].delaiCommissionDepartementaleEnJours.length /
-          30
-      )
-    ),
-    ...datasetParams(4)
-  })
-  datasets.push({
-    label: 'Délai maximum de CDM',
-    data: annees.map(annee =>
-      Math.round(
-        Math.max(...item.delais[annee].delaiCommissionDepartementaleEnJours) /
-          30
-      )
-    ),
-    ...datasetParams(5)
-  })
+  const datasets = [
+    {
+      label: 'instruction min',
+      data: annees.map(annee =>
+        Math.round(Math.min(...item.delais[annee].delaiInstructionEnJours) / 30)
+      ),
+      hidden: true,
+      ...datasetParams(0)
+    },
+    {
+      label: 'instruction',
+      data: annees.map(annee =>
+        Math.round(
+          item.delais[annee].delaiInstructionEnJours.reduce(
+            (acc, current) => acc + current,
+            0
+          ) /
+            item.delais[annee].delaiInstructionEnJours.length /
+            30
+        )
+      ),
+      ...datasetParams(1)
+    },
+    {
+      label: 'instruction max',
+      data: annees.map(annee =>
+        Math.round(Math.max(...item.delais[annee].delaiInstructionEnJours) / 30)
+      ),
+      hidden: true,
+      ...datasetParams(2)
+    },
+    {
+      label: 'CDM min',
+      data: annees.map(annee =>
+        Math.round(
+          Math.min(...item.delais[annee].delaiCommissionDepartementaleEnJours) /
+            30
+        )
+      ),
+      hidden: true,
+      ...datasetParams(3)
+    },
+    {
+      label: 'CDM',
+      data: annees.map(annee =>
+        Math.round(
+          item.delais[annee].delaiCommissionDepartementaleEnJours.reduce(
+            (acc, current) => acc + current,
+            0
+          ) /
+            item.delais[annee].delaiCommissionDepartementaleEnJours.length /
+            30
+        )
+      ),
+      ...datasetParams(4)
+    },
+    {
+      label: 'CDM max',
+      data: annees.map(annee =>
+        Math.round(
+          Math.max(...item.delais[annee].delaiCommissionDepartementaleEnJours) /
+            30
+        )
+      ),
+      hidden: true,
+      ...datasetParams(5)
+    },
+    {
+      label: 'décision du préfet',
+      data: annees.map(annee =>
+        Math.round(
+          item.delais[annee].delaiDecisionPrefetEnJours.reduce(
+            (acc, current) => acc + current,
+            0
+          ) /
+            item.delais[annee].delaiDecisionPrefetEnJours.length /
+            30
+        )
+      ),
+      ...datasetParams(6)
+    }
+  ]
 
   return {
     labels: annees,

@@ -206,19 +206,23 @@ export const statistiquesDGTMFake: StatistiquesDGTM = {
   delais: {
     [valideAnnee('2015')]: {
       delaiCommissionDepartementaleEnJours: [591],
-      delaiInstructionEnJours: [1341, 496, 1327, 633, 607, 1044]
+      delaiInstructionEnJours: [1341, 496, 1327, 633, 607, 1044],
+      delaiDecisionPrefetEnJours: [127]
     },
     [valideAnnee('2017')]: {
       delaiCommissionDepartementaleEnJours: [401, 568, 758, 167],
-      delaiInstructionEnJours: [698, 821, 1449, 1823]
+      delaiInstructionEnJours: [698, 821, 1449, 1823],
+      delaiDecisionPrefetEnJours: [12]
     },
     [valideAnnee('2018')]: {
       delaiCommissionDepartementaleEnJours: [387, 273, 100],
-      delaiInstructionEnJours: [618]
+      delaiInstructionEnJours: [618],
+      delaiDecisionPrefetEnJours: [523]
     },
     [valideAnnee('2019')]: {
       delaiCommissionDepartementaleEnJours: [223, 125, 281],
-      delaiInstructionEnJours: [276, 970, 303]
+      delaiInstructionEnJours: [276, 970, 303],
+      delaiDecisionPrefetEnJours: [123]
     },
     [valideAnnee('2020')]: {
       delaiCommissionDepartementaleEnJours: [
@@ -227,7 +231,8 @@ export const statistiquesDGTMFake: StatistiquesDGTM = {
       delaiInstructionEnJours: [
         571, 108, 97, 97, 61, 61, 74, 91, 95, 68, 366, 364, 101, 189, 115, 83,
         84, 230, 117
-      ]
+      ],
+      delaiDecisionPrefetEnJours: [87]
     },
     [valideAnnee('2021')]: {
       delaiCommissionDepartementaleEnJours: [
@@ -237,13 +242,15 @@ export const statistiquesDGTMFake: StatistiquesDGTM = {
       delaiInstructionEnJours: [
         87, 117, 166, 166, 90, 90, 87, 83, 83, 113, 160, 160, 110, 160, 166,
         153, 186, 133, 133, 214, 171, 157, 198, 197, 77
-      ]
+      ],
+      delaiDecisionPrefetEnJours: [1]
     },
     [valideAnnee('2022')]: {
       delaiCommissionDepartementaleEnJours: [
         64, 64, 58, 53, 52, 52, 114, 99, 61
       ],
-      delaiInstructionEnJours: [78, 70, 73, 66, 66, 128, 111, 73]
+      delaiInstructionEnJours: [78, 70, 73, 66, 66, 128, 111, 73],
+      delaiDecisionPrefetEnJours: [8]
     }
   }
 }

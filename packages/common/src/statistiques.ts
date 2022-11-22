@@ -59,7 +59,7 @@ export interface StatistiquesDGTM {
       3: { depose: number; octroye: number }
     }
   >
-  delais: Record<CaminoAnnee, { delaiInstructionEnJours: number[]; delaiCommissionDepartementaleEnJours: number[] }>
+  delais: Record<CaminoAnnee, { delaiInstructionEnJours: number[]; delaiCommissionDepartementaleEnJours: number[]; delaiDecisionPrefetEnJours: number[] }>
 }
 
 export type StatistiquesMinerauxMetauxMetropoleSels = { [key in CaminoAnnee]: { [key in RegionId]?: number } }
