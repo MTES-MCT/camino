@@ -1,7 +1,7 @@
 import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
 import { SDOMZoneIds } from 'camino-common/src/static/sdom'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
-import { ChartConfiguration, ChartData, ChartDataset } from 'chart.js'
+import { ChartConfiguration, ChartData } from 'chart.js'
 import { nextColor } from '../_charts/utils'
 
 const datasetParams = (index: number) => {
@@ -11,6 +11,123 @@ const datasetParams = (index: number) => {
     backgroundColor: nextColor(index),
     borderColor: nextColor(index),
     spanGaps: true
+  }
+}
+
+export const avisAXMChartConfiguration = (
+  data: StatistiquesDGTM
+): ChartConfiguration => {
+  const annees: CaminoAnnee[] = Object.keys(data.avisAXM).filter(isAnnee)
+
+  const datasets = [
+    {
+      label: 'DREAL Favorable',
+      data: annees.map(
+        annee =>
+          (data.avisAXM[annee]?.apd?.fav ?? 0) +
+          (data.avisAXM[annee]?.apd?.fre ?? 0)
+      ),
+      backgroundColor: '#6ECCAF',
+      borderColor: '#6ECCAF',
+      stack: 'DREAL'
+    },
+    {
+      label: 'DREAL Défavorable',
+      data: annees.map(
+        annee =>
+          (data.avisAXM[annee]?.apd?.def ?? 0) +
+          (data.avisAXM[annee]?.apd?.dre ?? 0)
+      ),
+      backgroundColor: '#E14D2A',
+      borderColor: '#E14D2A',
+      stack: 'DREAL'
+    },
+
+    {
+      label: 'CDM Favorable',
+      data: annees.map(
+        annee =>
+          (data.avisAXM[annee]?.apo?.fav ?? 0) +
+          (data.avisAXM[annee]?.apo?.fre ?? 0)
+      ),
+      backgroundColor: '#ADE792',
+      borderColor: '#ADE792',
+      stack: 'CDM'
+    },
+    {
+      label: 'CDM Défavorable',
+      data: annees.map(
+        annee =>
+          (data.avisAXM[annee]?.apo?.def ?? 0) +
+          (data.avisAXM[annee]?.apo?.dre ?? 0)
+      ),
+      backgroundColor: '#FD841F',
+      borderColor: '#FD841F',
+      stack: 'CDM'
+    }
+  ]
+
+  const chartData: ChartData = { labels: annees, datasets }
+  return {
+    type: 'bar',
+    data: chartData,
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: 'Avis AEX'
+        }
+      },
+      locale: 'fr-FR',
+      aspectRatio: 1.33,
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      scales: { x: { stacked: true }, y: { stacked: true } }
+    }
+  }
+}
+
+export const producteursOrChartConfiguration = (
+  data: StatistiquesDGTM
+): ChartConfiguration => {
+  const annees: CaminoAnnee[] = Object.keys(data.producteursOr).filter(isAnnee)
+
+  const datasets = [
+    {
+      label: 'Producteurs',
+      data: annees.map(annee => data.producteursOr[annee]),
+      ...datasetParams(0)
+    }
+  ]
+
+  const chartData: ChartData = { labels: annees, datasets }
+  return {
+    type: 'line',
+    data: chartData,
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: "Nombre d'entreprises produisant de l'or"
+        },
+        legend: {
+          labels: {
+            boxHeight: 0
+          }
+        }
+      },
+      scales: { y: { min: 0 } },
+      locale: 'fr-FR',
+      aspectRatio: 1.33,
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      }
+    }
   }
 }
 
@@ -50,7 +167,6 @@ export const delaiPerConcessionChartConfiguration = (
     }
   ]
 
-  console.log(datasets)
   const chartData: ChartData = { labels: annees, datasets }
   return {
     type: 'line',
@@ -67,6 +183,7 @@ export const delaiPerConcessionChartConfiguration = (
           }
         }
       },
+
       locale: 'fr-FR',
       aspectRatio: 1.33,
       responsive: true,
@@ -77,6 +194,7 @@ export const delaiPerConcessionChartConfiguration = (
       scales: {
         y: {
           display: true,
+          min: 0,
           title: {
             display: true,
             text: 'Mois'

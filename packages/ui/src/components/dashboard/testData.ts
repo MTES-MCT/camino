@@ -95,6 +95,30 @@ export const titresDreal: CommonTitreDREAL[] = [
 ]
 
 export const statistiquesDGTMFake: StatistiquesDGTM = {
+  avisAXM: {
+    [valideAnnee('2017')]: {
+      apd: { ajo: 1, def: 2, dre: 2, fav: 2, fre: 9 },
+      apo: { ajo: 1, def: 2, dre: 2, fav: 2, fre: 9 }
+    },
+    [valideAnnee('2018')]: {
+      apd: { ajo: 1, def: 2, dre: 2, fav: 2, fre: 9 },
+      apo: { ajo: 1, def: 2, dre: 2, fav: 2, fre: 9 }
+    },
+    [valideAnnee('2019')]: {
+      apd: { ajo: 1, def: 2, dre: 2, fav: 2, fre: 9 },
+      apo: { ajo: 1, def: 2, dre: 2, fav: 2, fre: 9 }
+    },
+    [valideAnnee('2020')]: {
+      apd: { ajo: 1, def: 2, dre: 2, fav: 2, fre: 9 },
+      apo: { ajo: 1, def: 2, dre: 2, fav: 2, fre: 9 }
+    }
+  },
+  producteursOr: {
+    [valideAnnee('2017')]: 12,
+    [valideAnnee('2018')]: 13,
+    [valideAnnee('2019')]: 13,
+    [valideAnnee('2020')]: 15
+  },
   depotEtInstructions: {
     [valideAnnee('2015')]: {
       totalAXMDeposees: 11,

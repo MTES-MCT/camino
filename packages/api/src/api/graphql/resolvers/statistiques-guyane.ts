@@ -187,7 +187,7 @@ const statistiquesGuyaneAnneeBuild = (
   }
 }
 
-const statistiquesGuyane = async () => {
+export const statistiquesGuyane = async () => {
   try {
     const anneeCurrent = new Date().getFullYear()
     // un tableau avec les 5 dernières années
@@ -228,5 +228,3 @@ const statistiquesGuyane = async () => {
     throw e
   }
 }
-
-export { statistiquesGuyane }

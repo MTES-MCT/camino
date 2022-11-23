@@ -73,6 +73,10 @@ export interface StatistiquesDGTM {
       }
     >
   >
+  producteursOr: Record<CaminoAnnee, number>
+  avisAXM: {
+    [key in CaminoAnnee]?: { apd: { fav: number; def: number; dre: number; fre: number; ajo: number }; apo: { fav: number; def: number; dre: number; fre: number; ajo: number } }
+  }
 }
 
 export type StatistiquesMinerauxMetauxMetropoleSels = { [key in CaminoAnnee]: { [key in RegionId]?: number } }

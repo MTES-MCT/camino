@@ -25,6 +25,18 @@
             :chartConfiguration="delaiPerConcessionChartConfiguration(item)"
         /></LoadingElement>
       </div>
+      <div>
+        <LoadingElement v-slot="{ item }" :data="data"
+          ><ConfigurableLineChart
+            :chartConfiguration="producteursOrChartConfiguration(item)"
+        /></LoadingElement>
+      </div>
+      <div>
+        <LoadingElement v-slot="{ item }" :data="data"
+          ><ConfigurableLineChart
+            :chartConfiguration="avisAXMChartConfiguration(item)"
+        /></LoadingElement>
+      </div>
     </div>
   </div>
 </template>
@@ -42,7 +54,9 @@ import {
   sdomChartConfiguration,
   depotChartConfiguration,
   delaiChartConfiguration,
-  delaiPerConcessionChartConfiguration
+  delaiPerConcessionChartConfiguration,
+  producteursOrChartConfiguration,
+  avisAXMChartConfiguration
 } from './dgtm-stats'
 
 const data = ref<AsyncData<StatistiquesDGTM>>({ status: 'LOADING' })

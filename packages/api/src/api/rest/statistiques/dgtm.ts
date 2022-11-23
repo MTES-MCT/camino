@@ -6,10 +6,17 @@ import {
   TitreTypeIdDelai,
   titreTypeIdDelais
 } from 'camino-common/src/statistiques'
-import { CaminoDate, getAnnee, daysBetween } from 'camino-common/src/date'
+import {
+  CaminoAnnee,
+  CaminoDate,
+  getAnnee,
+  daysBetween
+} from 'camino-common/src/date'
 import { knex } from '../../../knex'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
-import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
 
 const anneeDepartStats = 2015
 
@@ -19,7 +26,9 @@ export const getDGTMStatsInside = async (
   const result: StatistiquesDGTM = {
     depotEtInstructions: {},
     sdom: {},
-    delais: {}
+    delais: {},
+    producteursOr: {},
+    avisAXM: {}
   }
 
   const gestionnaireTitreTypeIds: TitreTypeId[] =
@@ -114,6 +123,7 @@ export const getDGTMStatsInside = async (
     .joinRaw(
       "left join titres__sdom_zones on titres__sdom_zones.titre_etape_id = titres.props_titre_etapes_ids ->> 'points'"
     )
+    .where('titresEtapes.archive', false)
     .where('titresEtapes.typeId', 'mdp')
     .andWhere('titresDemarches.typeId', 'oct')
     .andWhere('titresEtapes.date', '>=', `${anneeDepartStats}-01-01`)
@@ -272,6 +282,57 @@ export const getDGTMStatsInside = async (
       }
     }
   })
+
+  // On peut récupérer le nombre de producteurs d’or que à partir de l’année 2018. L’année à laquelle nous avons commencé à récolter les productions dans Camino
+  const producteursOr: { rows: { annee: CaminoAnnee; count: string }[] } =
+    await knex.raw(`select distinct ta.annee, count ( distinct tt.entreprise_id)
+  from titres_activites ta
+      left join titres t on ta.titre_id = t.id
+      left join titres_titulaires tt  on tt.titre_etape_id = t.props_titre_etapes_ids->>'titulaires'
+  where ta.type_id in ('gra', 'grx') and (ta.contenu -> 'substancesFiscales' -> '${SUBSTANCES_FISCALES_IDS.or}')::int > 0
+  and ta.annee > 2017
+  group by ta.annee;`)
+
+  if (producteursOr && producteursOr.rows?.length) {
+    result.producteursOr = producteursOr.rows.reduce<
+      Record<CaminoAnnee, number>
+    >((acc, r) => {
+      acc[r.annee] = parseInt(r.count, 10)
+
+      return acc
+    }, {})
+  }
+
+  const avisAXM: {
+    rows: {
+      annee: CaminoAnnee
+      type_id: Extract<EtapeTypeId, 'apd' | 'apo'>
+      statut_id: Extract<EtapeStatutId, 'dre' | 'fav' | 'fre' | 'def' | 'ajo'>
+      count: string
+    }[]
+  } = await knex.raw(`select substring(te.date, 0, 5) as annee, te.type_id, te.statut_id, count(*)
+  from titres_etapes te
+  left join titres_demarches td on te.titre_demarche_id = td.id
+  left join titres t on td.titre_id = t.id
+  left join titres_etapes te_admin on t.props_titre_etapes_ids->>'points' = te_admin.id
+  where te.type_id in ('${ETAPES_TYPES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement}', '${ETAPES_TYPES.avisDeLaCommissionDepartementaleDesMines_CDM_}')
+  and te_admin.administrations_locales @> '"${administrationId}"'::jsonb
+  and te.date >= '${anneeDepartStats}-01-01'
+  group by (substring(te.date, 0, 5), te.type_id, te.statut_id)`)
+
+  if (avisAXM?.rows?.length) {
+    result.avisAXM = avisAXM.rows.reduce<StatistiquesDGTM['avisAXM']>(
+      (acc, r) => {
+        ;(acc[r.annee] ??= {
+          apd: { fav: 0, def: 0, dre: 0, fre: 0, ajo: 0 },
+          apo: { fav: 0, def: 0, dre: 0, fre: 0, ajo: 0 }
+        })[r.type_id][r.statut_id] = parseInt(r.count)
+
+        return acc
+      },
+      {}
+    )
+  }
 
   return result
 }
