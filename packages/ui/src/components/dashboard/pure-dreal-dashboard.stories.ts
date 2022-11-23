@@ -27,25 +27,49 @@ const Template: Story<Props> = (args: Props) => ({
   template: '<PureDrealDashboard v-bind="args" />'
 })
 
-export const Ok = Template.bind({})
-Ok.args = {
-  getDrealTitres: () => Promise.resolve(titresDreal),
-  isDGTM: false,
-  getDgtmStats: () =>
-    Promise.resolve({ depotEtInstructions: {}, sdom: {}, delais: {} })
-}
+export const Ok = Template.bind(
+  {},
+  {
+    getDrealTitres: () => Promise.resolve(titresDreal),
+    isDGTM: false,
+    getDgtmStats: () =>
+      Promise.resolve({
+        depotEtInstructions: {},
+        sdom: {},
+        delais: {},
+        avisAXM: {},
+        producteursOr: {}
+      })
+  }
+)
 
-export const Loading = Template.bind({})
-Loading.args = {
-  getDrealTitres: () => new Promise<CommonTitreDREAL[]>(resolve => {}),
-  isDGTM: false,
-  getDgtmStats: () =>
-    Promise.resolve({ depotEtInstructions: {}, sdom: {}, delais: {} })
-}
-export const WithError = Template.bind({})
-WithError.args = {
-  getDrealTitres: () => Promise.reject(new Error('because reasons')),
-  isDGTM: false,
-  getDgtmStats: () =>
-    Promise.resolve({ depotEtInstructions: {}, sdom: {}, delais: {} })
-}
+export const Loading = Template.bind(
+  {},
+  {
+    getDrealTitres: () => new Promise<CommonTitreDREAL[]>(_resolve => {}),
+    isDGTM: false,
+    getDgtmStats: () =>
+      Promise.resolve({
+        depotEtInstructions: {},
+        sdom: {},
+        delais: {},
+        avisAXM: {},
+        producteursOr: {}
+      })
+  }
+)
+export const WithError = Template.bind(
+  {},
+  {
+    getDrealTitres: () => Promise.reject(new Error('because reasons')),
+    isDGTM: false,
+    getDgtmStats: () =>
+      Promise.resolve({
+        depotEtInstructions: {},
+        sdom: {},
+        delais: {},
+        avisAXM: {},
+        producteursOr: {}
+      })
+  }
+)

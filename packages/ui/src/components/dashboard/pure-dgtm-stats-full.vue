@@ -31,6 +31,12 @@
             :chartConfiguration="producteursOrChartConfiguration(item)"
         /></LoadingElement>
       </div>
+      <div>
+        <LoadingElement v-slot="{ item }" :data="data"
+          ><ConfigurableLineChart
+            :chartConfiguration="avisAXMChartConfiguration(item)"
+        /></LoadingElement>
+      </div>
     </div>
   </div>
 </template>
@@ -49,7 +55,8 @@ import {
   depotChartConfiguration,
   delaiChartConfiguration,
   delaiPerConcessionChartConfiguration,
-  producteursOrChartConfiguration
+  producteursOrChartConfiguration,
+  avisAXMChartConfiguration
 } from './dgtm-stats'
 
 const data = ref<AsyncData<StatistiquesDGTM>>({ status: 'LOADING' })

@@ -14,6 +14,82 @@ const datasetParams = (index: number) => {
   }
 }
 
+export const avisAXMChartConfiguration = (
+  data: StatistiquesDGTM
+): ChartConfiguration => {
+  const annees: CaminoAnnee[] = Object.keys(data.avisAXM).filter(isAnnee)
+
+  const datasets = [
+    {
+      label: 'DREAL Favorable',
+      data: annees.map(
+        annee =>
+          (data.avisAXM[annee]?.apd?.fav ?? 0) +
+          (data.avisAXM[annee]?.apd?.fre ?? 0)
+      ),
+      backgroundColor: '#6ECCAF',
+      borderColor: '#6ECCAF',
+      stack: 'DREAL'
+    },
+    {
+      label: 'DREAL Défavorable',
+      data: annees.map(
+        annee =>
+          (data.avisAXM[annee]?.apd?.def ?? 0) +
+          (data.avisAXM[annee]?.apd?.dre ?? 0)
+      ),
+      backgroundColor: '#E14D2A',
+      borderColor: '#E14D2A',
+      stack: 'DREAL'
+    },
+
+    {
+      label: 'CDM Favorable',
+      data: annees.map(
+        annee =>
+          (data.avisAXM[annee]?.apo?.fav ?? 0) +
+          (data.avisAXM[annee]?.apo?.fre ?? 0)
+      ),
+      backgroundColor: '#ADE792',
+      borderColor: '#ADE792',
+      stack: 'CDM'
+    },
+    {
+      label: 'CDM Défavorable',
+      data: annees.map(
+        annee =>
+          (data.avisAXM[annee]?.apo?.def ?? 0) +
+          (data.avisAXM[annee]?.apo?.dre ?? 0)
+      ),
+      backgroundColor: '#FD841F',
+      borderColor: '#FD841F',
+      stack: 'CDM'
+    }
+  ]
+
+  const chartData: ChartData = { labels: annees, datasets }
+  return {
+    type: 'bar',
+    data: chartData,
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: 'Avis AEX'
+        }
+      },
+      locale: 'fr-FR',
+      aspectRatio: 1.33,
+      responsive: true,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      scales: { x: { stacked: true }, y: { stacked: true } }
+    }
+  }
+}
+
 export const producteursOrChartConfiguration = (
   data: StatistiquesDGTM
 ): ChartConfiguration => {
