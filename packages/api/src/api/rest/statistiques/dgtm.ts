@@ -6,10 +6,16 @@ import {
   TitreTypeIdDelai,
   titreTypeIdDelais
 } from 'camino-common/src/statistiques'
-import { CaminoDate, getAnnee, daysBetween } from 'camino-common/src/date'
+import {
+  CaminoAnnee,
+  CaminoDate,
+  getAnnee,
+  daysBetween
+} from 'camino-common/src/date'
 import { knex } from '../../../knex'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
+import { SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales'
 
 const anneeDepartStats = 2015
 
@@ -19,7 +25,8 @@ export const getDGTMStatsInside = async (
   const result: StatistiquesDGTM = {
     depotEtInstructions: {},
     sdom: {},
-    delais: {}
+    delais: {},
+    producteursOr: {}
   }
 
   const gestionnaireTitreTypeIds: TitreTypeId[] =
@@ -272,6 +279,26 @@ export const getDGTMStatsInside = async (
       }
     }
   })
+
+  // On peut récupérer le nombre de producteurs d’or que à partir de l’année 2018. L’année à laquelle nous avons commencé à récolter les productions dans Camino
+  const producteursOr: { rows: { annee: CaminoAnnee; count: string }[] } =
+    await knex.raw(`select distinct ta.annee, count ( distinct tt.entreprise_id)
+  from titres_activites ta
+      left join titres t on ta.titre_id = t.id
+      left join titres_titulaires tt  on tt.titre_etape_id = t.props_titre_etapes_ids->>'titulaires'
+  where ta.type_id in ('gra', 'grx') and (ta.contenu -> 'substancesFiscales' -> '${SUBSTANCES_FISCALES_IDS.or}')::int > 0
+  and ta.annee > 2017
+  group by ta.annee;`)
+
+  if (producteursOr && producteursOr.rows?.length) {
+    result.producteursOr = producteursOr.rows.reduce<
+      Record<CaminoAnnee, number>
+    >((acc, r) => {
+      acc[r.annee] = parseInt(r.count, 10)
+
+      return acc
+    }, {})
+  }
 
   return result
 }

@@ -73,6 +73,7 @@ export interface StatistiquesDGTM {
       }
     >
   >
+  producteursOr: Record<CaminoAnnee, number>
 }
 
 export type StatistiquesMinerauxMetauxMetropoleSels = { [key in CaminoAnnee]: { [key in RegionId]?: number } }

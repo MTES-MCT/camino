@@ -95,6 +95,12 @@ export const titresDreal: CommonTitreDREAL[] = [
 ]
 
 export const statistiquesDGTMFake: StatistiquesDGTM = {
+  producteursOr: {
+    [valideAnnee('2017')]: 12,
+    [valideAnnee('2018')]: 13,
+    [valideAnnee('2019')]: 13,
+    [valideAnnee('2020')]: 15
+  },
   depotEtInstructions: {
     [valideAnnee('2015')]: {
       totalAXMDeposees: 11,
