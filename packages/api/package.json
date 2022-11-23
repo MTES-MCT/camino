@@ -116,8 +116,6 @@
     "@typescript-eslint/eslint-plugin": "^5.34.0",
     "@typescript-eslint/parser": "^5.34.0",
     "@vitest/coverage-c8": "^0.25.2",
-    "commitizen": "^4.2.5",
-    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-standard": "^17.0.0",
@@ -127,11 +125,9 @@
     "eslint-plugin-standard": "^5.0.0",
     "eslint-plugin-tsdoc": "^0.2.16",
     "nodemon": "^2.0.19",
-    "npm-check-updates": "^16.0.5",
     "pg-escape": "^0.2.0",
     "prettier-eslint": "^15.0.1",
     "sql-formatter": "^9.2.0",
-    "standard-version": "^9.5.0",
     "supertest": "^6.2.4",
     "vite": "^3.2.4",
     "vitest": "^0.25.2"
@@ -197,11 +193,6 @@
           "varsIgnorePattern": "^_"
         }
       ]
-    }
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
     }
   }
 }
