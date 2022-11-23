@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="flex">
     <button
-      class="cmn-activite-btn-remplir btn small flex py-s px-m rnd-0"
+      class="cmn-activite-btn-remplir btn small flex py-s px-m rnd-0 mr-px"
       :class="{ 'btn-primary': activite.statut.id !== 'enc' && buttonText }"
       @click="activiteEditPopupOpen"
     >
@@ -29,8 +29,7 @@ import Icon from '@/components/_ui/icon.vue'
 export default {
   components: { Icon },
   props: {
-    activite: { type: Object, default: () => ({}) },
-    route: { type: Object, required: true }
+    activite: { type: Object, default: () => ({}) }
   },
 
   computed: {

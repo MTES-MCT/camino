@@ -26,7 +26,7 @@ export const TitresTypesTypes: {
     id: 'ar',
     nom: 'autorisation de recherches',
     description:
-      "Cette autorisation minière donne un droit de prospection destiné à caractériser un gisement pressenti. Ensuite le titulaire pourra éventuellement faire valoir son droit d’inventeur. Il s’agit généralement de périmètres n'excédant pas quelques kilomètres carrés. Elle se décline pour :\r\n- la géothermie , la durée n'excédant pas trois ans ;\r\n- dans les zones spéciales de carrières pour une durée de trois ans renouvelable sans limite pour la même durée.\r\n- pour les minéraux et métaux, en Guyane, afin d’effectuer des travaux de recherches avec l’accord du propriétaire du sol. Cette autorisation porte exclusivement sur le domaine privé forestier de l’Etat. Elle est accordée par l’Office National des Forêts, mandataire de l’Etat, sous la conduite du préfet.",
+      "Cette autorisation minière donne un droit de prospection destiné à caractériser un gisement pressenti. Ensuite le titulaire pourra éventuellement faire valoir son droit d’inventeur. Il s’agit généralement de périmètres n'excédant pas quelques kilomètres carrés. Elle se décline pour :<br />- la géothermie , la durée n'excédant pas trois ans ;<br />- dans les zones spéciales de carrières pour une durée de trois ans renouvelable sans limite pour la même durée.<br />- pour les minéraux et métaux, en Guyane, afin d’effectuer des travaux de recherches avec l’accord du propriétaire du sol. Cette autorisation porte exclusivement sur le domaine privé forestier de l’Etat. Elle est accordée par l’Office National des Forêts, mandataire de l’Etat, sous la conduite du préfet.",
     ordre: 2
   },
   ax: {

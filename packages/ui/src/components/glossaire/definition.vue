@@ -7,7 +7,7 @@
     />
     <h2>{{ definition.nom }}</h2>
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <p v-if="definition.description" v-html="descriptionHtml" />
+    <p v-if="definition.description" v-html="definition.description" />
     <div v-if="entrees && entrees.length">
       <DefinitionEntree
         v-for="entree in entrees"
@@ -20,7 +20,6 @@
 </template>
 
 <script>
-import snarkdown from 'snarkdown'
 import DefinitionEntree from './definition-entree.vue'
 import MapPattern from '../_map/pattern.vue'
 
@@ -38,10 +37,6 @@ export default {
   computed: {
     entrees() {
       return this.$store.state.definitions.entrees
-    },
-
-    descriptionHtml() {
-      return snarkdown(this.definition.description)
     }
   },
 

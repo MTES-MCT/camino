@@ -4,18 +4,11 @@ import { sync } from 'vuex-router-sync'
 import * as Sentry from '@sentry/vue'
 import { BrowserTracing } from '@sentry/tracing'
 
-// le polyfill ResizeObserver est nécessaire pour chart.js sur Firefox 60
-// on devrait pourvoir l'injecter dans vite.config, mais ça ne marche pas…
-// plugins.legacy({additionalLegacyPolyfills: ['@juggle/resize-observer']})
-import { ResizeObserver as resizeObserverPolyfill } from '@juggle/resize-observer'
-
 import VueMatomo from './stats'
 import App from './app.vue'
 
 import router from './router'
 import store from './store'
-
-window.ResizeObserver = window.ResizeObserver || resizeObserverPolyfill
 
 Promise.resolve().then(async () => {
   const app = createApp(App)

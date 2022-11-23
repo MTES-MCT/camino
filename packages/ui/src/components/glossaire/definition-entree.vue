@@ -26,12 +26,11 @@
       </h3>
     </div>
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <div v-if="entree.description" class="mb-l" v-html="descriptionHtml" />
+    <div v-if="entree.description" class="mb-l" v-html="entree.description" />
   </div>
 </template>
 
 <script>
-import snarkdown from 'snarkdown'
 import Pill from '../_ui/pill.vue'
 import Statut from '../_common/statut.vue'
 
@@ -48,10 +47,6 @@ export default {
   computed: {
     elements() {
       return this.entree.elements
-    },
-
-    descriptionHtml() {
-      return snarkdown(this.entree.description)
     }
   }
 }

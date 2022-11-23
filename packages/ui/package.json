@@ -26,7 +26,6 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.9",
     "@babel/preset-env": "^7.18.10",
-    "@juggle/resize-observer": "^3.4.0",
     "@rollup/plugin-inject": "^4.0.4",
     "@sentry/tracing": "^7.11.1",
     "@sentry/vue": "^7.11.1",
@@ -48,17 +47,14 @@
     "@vitest/coverage-c8": "^0.25.2",
     "@vue/eslint-config-prettier": "^7.0.0",
     "@vue/eslint-config-standard": "^8.0.1",
-    "@vue/test-utils": "^2.0.2",
     "babel-core": "^7.0.0-bridge.0",
     "babel-loader": "^8.2.5",
     "babel-plugin-graphql-tag": "^3.3.0",
     "babel-preset-vite": "^1.0.4",
     "chalk": "^5.0.1",
     "chart.js": "^3.9.1",
-    "commitizen": "^4.2.5",
     "core-js": "^3.24.1",
     "cross-fetch": "^3.1.5",
-    "cz-conventional-changelog": "^3.3.0",
     "email-validator": "^2.0.4",
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
@@ -78,7 +74,6 @@
     "leaflet-fullscreen": "^1.0.2",
     "leaflet-gesture-handling": "^1.2.2",
     "leaflet.markercluster": "^1.5.3",
-    "npm-check-updates": "^16.0.5",
     "postcss": "^8.4.16",
     "postcss-calc": "^8.2.4",
     "postcss-import": "14.1.0",
@@ -86,10 +81,7 @@
     "postcss-normalize": "^10.0.1",
     "postcss-preset-env": "^7.8.0",
     "prettier": "^2.7.1",
-    "rbush": "^3.0.1",
     "rollup-plugin-visualizer": "^5.8.0",
-    "snarkdown": "^2.0.0",
-    "standard-version": "^9.5.0",
     "typescript": "^4.8.4",
     "vite": "^3.2.4",
     "vitest": "^0.25.2",
@@ -158,10 +150,5 @@
   },
   "browserslist": [
     "supports es6-module"
-  ],
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  }
+  ]
 }

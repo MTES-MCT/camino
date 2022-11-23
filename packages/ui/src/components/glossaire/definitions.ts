@@ -13,7 +13,7 @@ export const definitions: Definition[] = [
     slug: 'domaines',
     ordre: 1,
     description:
-      "Territoire national et sous juridiction française, sur lequel l’État ou les collectivités territoriales compétentes sont autorisés à mener ou à faire mener pour leur compte, l'inventaire et l'exploitation des ressources en matières premières du sous-sol classées dans la catégorie des substances de mines.\n\nLes substances de mines sont  regroupées   selon leur nature, leurs méthodes d’exploitation et leurs usages : \nminéraux et métaux, \nhydrocarbures liquides ou gazeux, \ncombustibles fossiles,\néléments radioactifs\n\nDes substances de carrières, telle que les granulats marins, présentent des enjeux équivalents à ceux des substances de mines en matière d’accès à la ressource et empruntent des règles de gestion minière adaptées.\n\nL’exploitation de gîtes de géothermie et l’usage de formations géologiques aptes au stockage souterrain de certaines substances, qui présentent des enjeux équivalents à ceux des substances de mines de part leur localisation dans le sous-sol, empruntent également les règles de gestions minières adaptées à leurs spécificités."
+      "Territoire national et sous juridiction française, sur lequel l’État ou les collectivités territoriales compétentes sont autorisés à mener ou à faire mener pour leur compte, l'inventaire et l'exploitation des ressources en matières premières du sous-sol classées dans la catégorie des substances de mines.<br />Les substances de mines sont  regroupées   selon leur nature, leurs méthodes d’exploitation et leurs usages : minéraux et métaux, hydrocarbures liquides ou gazeux, combustibles fossiles,éléments radioactifs<br />Des substances de carrières, telle que les granulats marins, présentent des enjeux équivalents à ceux des substances de mines en matière d’accès à la ressource et empruntent des règles de gestion minière adaptées.<br />L’exploitation de gîtes de géothermie et l’usage de formations géologiques aptes au stockage souterrain de certaines substances, qui présentent des enjeux équivalents à ceux des substances de mines de part leur localisation dans le sous-sol, empruntent également les règles de gestions minières adaptées à leurs spécificités."
   },
   {
     id: 'dst',
@@ -45,7 +45,7 @@ export const definitions: Definition[] = [
     slug: 'sdom',
     ordre: 11,
     description:
-      'Il est spécifique à la Guyane et a pour vocation de définir les conditions générales applicables à la recherche minière, ainsi que les modalités de l’implantation et de l’exploitation des sites miniers. Il définit un zonage (3 zones : zone 0, 1 et 2) des secteurs ouverts et interdits à l’activité minière et fixe au besoin des contraintes particulières sur certaines zones. \n</br>\n</br>\nTrois zones sont définies : \n</br>\n<ul>\n<li>Zone 0 : activité interdite</li>\n<li>Zone 1 : activité interdite sauf exploitation souterraine et recherches aériennes</li>\n<li>Zone 2 : activité autorisée sous contrainte</li>\n</ul>\nCe zonage traduit la compatibilité des différents espaces du territoire de la Guyane avec les activités minières, en prenant en compte la nécessité de protéger les milieux naturels sensibles, les paysages, les sites et les populations et de gérer de manière équilibrée l’espace et les ressources naturelles. Il tient compte de l’intérêt économique de la Guyane et de la valorisation durable de ses ressources minières. Au sein des secteurs qu’il identifie comme compatibles avec une activité d’exploitation, il fixe les contraintes environnementales et les objectifs à atteindre en matière de remise en état des sites miniers.\n</br>\n</br>\n<a href="http://www.guyane.developpement-durable.gouv.fr/schema-departemental-d-orientation-miniere-a1535.html" target="blank"><b>Arrêté préfectoral du SDOM</b>\n</br>\n</br>\n<a href="https://carto.geoguyane.fr/1/sdom.map" target="blank"><b>Carte du SDOM</b>\n'
+      'Il est spécifique à la Guyane et a pour vocation de définir les conditions générales applicables à la recherche minière, ainsi que les modalités de l’implantation et de l’exploitation des sites miniers. Il définit un zonage (3 zones : zone 0, 1 et 2) des secteurs ouverts et interdits à l’activité minière et fixe au besoin des contraintes particulières sur certaines zones. <br /><br />Trois zones sont définies : <br /><ul><li>Zone 0 : activité interdite</li><li>Zone 1 : activité interdite sauf exploitation souterraine et recherches aériennes</li><li>Zone 2 : activité autorisée sous contrainte</li></ul>Ce zonage traduit la compatibilité des différents espaces du territoire de la Guyane avec les activités minières, en prenant en compte la nécessité de protéger les milieux naturels sensibles, les paysages, les sites et les populations et de gérer de manière équilibrée l’espace et les ressources naturelles. Il tient compte de l’intérêt économique de la Guyane et de la valorisation durable de ses ressources minières. Au sein des secteurs qu’il identifie comme compatibles avec une activité d’exploitation, il fixe les contraintes environnementales et les objectifs à atteindre en matière de remise en état des sites miniers.<br /><br /><a href="http://www.guyane.developpement-durable.gouv.fr/schema-departemental-d-orientation-miniere-a1535.html" target="blank"><b>Arrêté préfectoral du SDOM</b><br /><br /><a href="https://carto.geoguyane.fr/1/sdom.map" target="blank"><b>Carte du SDOM</b>'
   },
   {
     id: 'smi',
@@ -67,7 +67,7 @@ export const definitions: Definition[] = [
     slug: 'titre-minier',
     ordre: 2,
     description:
-      'Acte administratif individuel qui octroie des droits miniers exclusifs, pour des substances de mines ou des usages du sous-sol, pour une durée et dans un périmètre fixés. L’autorité décisionnaire est le ministre chargée des mines. Le titre n’inclut pas d’autorisation de travaux miniers.\n\nVous pouvez vous abonner au titre minier pour recevoir des notifications par email à chaque fois qu’une nouvelle étape est ajoutée.'
+      'Acte administratif individuel qui octroie des droits miniers exclusifs, pour des substances de mines ou des usages du sous-sol, pour une durée et dans un périmètre fixés. L’autorité décisionnaire est le ministre chargée des mines. Le titre n’inclut pas d’autorisation de travaux miniers.<br />Vous pouvez vous abonner au titre minier pour recevoir des notifications par email à chaque fois qu’une nouvelle étape est ajoutée.'
   },
   {
     id: 'tst',
@@ -75,7 +75,7 @@ export const definitions: Definition[] = [
     slug: 'titres-statuts',
     ordre: 5,
     description:
-      'Ce statut caractérise l’état d’avancement du projet minier.\r\nIl indique l’état de disponibilité du domaine minier pour les substances ou les usages visés par le titre ou l’autorisation.'
+      'Ce statut caractérise l’état d’avancement du projet minier.<br />Il indique l’état de disponibilité du domaine minier pour les substances ou les usages visés par le titre ou l’autorisation.'
   },
   {
     id: 'tty',

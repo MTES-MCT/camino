@@ -1,5 +1,4 @@
-import { rm, writeFileSync } from 'fs'
-import makeDir from 'make-dir'
+import { rmSync, writeFileSync, mkdirSync } from 'fs'
 import decamelize from 'decamelize'
 
 import { ICoordonnees } from '../../types'
@@ -9,12 +8,8 @@ import { tables } from './tables'
 const dir = 'sources'
 
 export const databaseToJsonExport = async () => {
-  await rm(`./${dir}`, { recursive: true, force: true }, err => {
-    if (err) {
-      throw err
-    }
-    makeDir(`./${dir}`)
-  })
+  rmSync(`./${dir}`, { recursive: true, force: true })
+  mkdirSync(`./${dir}`, { recursive: true })
 
   for (const table of tables) {
     try {
