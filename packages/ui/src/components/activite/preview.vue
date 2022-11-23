@@ -11,7 +11,7 @@
       <h5>
         <span class="cap-first"
           ><span v-if="activite.periodeId && activite.type.frequenceId">{{
-            getPeriodeVue(activite.type.frequenceId, activite.periodeId)
+            getPeriode(activite.type.frequenceId, activite.periodeId)
           }}</span>
           {{ activite.annee }}</span
         >
@@ -36,11 +36,7 @@
       >
         <Icon size="M" name="delete" />
       </button>
-      <ActiviteButton
-        v-if="activite.modification"
-        :activite="activite"
-        :route="route"
-      />
+      <ActiviteButton v-if="activite.modification" :activite="activite" />
     </template>
 
     <div>
@@ -81,7 +77,7 @@
   </Accordion>
 </template>
 
-<script>
+<script setup lang="ts">
 import ActiviteButton from './button.vue'
 import Accordion from '../_ui/accordion.vue'
 import HelpTooltip from '../_ui/help-tooltip.vue'
@@ -93,108 +89,68 @@ import { dateFormat } from '@/utils'
 import RemovePopup from './remove-popup.vue'
 import Icon from '@/components/_ui/icon.vue'
 import { getPeriode } from 'camino-common/src/static/frequence'
+import { withDefaults, ref, computed } from 'vue'
+import { useStore } from 'vuex'
+import { Activite } from './preview.types'
 
-export default {
-  components: {
-    Icon,
-    ActiviteButton,
-    Accordion,
-    UiSection,
-    Statut,
-    Documents,
-    HelpTooltip
-  },
+const props = withDefaults(
+  defineProps<{ activite: Activite; route: unknown; initialOpened: boolean }>(),
+  { initialOpened: false }
+)
 
-  props: {
-    activite: { type: Object, required: true },
-    route: { type: Object, required: true },
-    initialOpened: { type: Boolean, default: false }
-  },
+const store = useStore()
+const opened = ref<boolean>(props.initialOpened)
 
-  emits: ['popup'],
+const documentPopupTitle = computed<string>(() => {
+  return `${props.activite.type.nom} | ${getPeriode(
+    props.activite.type.frequenceId,
+    props.activite.periodeId
+  )} ${props.activite.annee}`
+})
 
-  data: () => ({
-    opened: false
-  }),
+const isEnConstruction = computed<boolean>(() => {
+  return props.activite.statut.id === 'enc'
+})
 
-  computed: {
-    documentNew() {
-      return {
-        titreActiviteId: this.activite.id,
-        entreprisesLecture: false,
-        publicLecture: false,
-        fichier: null,
-        fichierNouveau: null,
-        fichierTypeId: null,
-        typeId: ''
-      }
-    },
+const isActiviteDeposable = computed<boolean>(() => {
+  return props.activite.deposable === true
+})
 
-    documentPopupTitle() {
-      return `${this.activite.type.nom} | ${getPeriode(
-        this.activite.type.frequenceId,
-        this.activite.periodeId
-      )} ${this.activite.annee}`
-    },
+const statutNom = computed<string>(() => {
+  return isEnConstruction.value && !isActiviteDeposable.value
+    ? `${props.activite.statut.nom} (incomplet)`
+    : props.activite.statut.nom
+})
 
-    statutNom() {
-      return this.isEnConstruction && !this.isActiviteDeposable
-        ? `${this.activite.statut.nom} (incomplet)`
-        : this.activite.statut.nom
-    },
+const shouldDisplayHelp = computed<boolean>(() => {
+  return (
+    isEnConstruction.value &&
+    isActiviteDeposable.value &&
+    ['grp', 'gra'].includes(props.activite.type.id)
+  )
+})
 
-    isEnConstruction() {
-      return this.activite.statut.id === 'enc'
-    },
+const close = () => {
+  opened.value = false
+}
 
-    isActiviteDeposable() {
-      return this.activite.deposable === true
-    },
+const toggle = () => {
+  opened.value = !opened.value
+}
 
-    shouldDisplayHelp() {
-      return (
-        this.isEnConstruction &&
-        this.isActiviteDeposable &&
-        ['grp', 'gra'].includes(this.activite.type.id)
-      )
+const activiteRemovePopupOpen = () => {
+  store.commit('popupOpen', {
+    component: RemovePopup,
+    props: {
+      activiteId: props.activite.id,
+      typeNom: props.activite.type.nom,
+      annee: props.activite.annee,
+      periodeNom: getPeriode(
+        props.activite.type.frequenceId,
+        props.activite.periodeId
+      ),
+      route: props.route
     }
-  },
-
-  created() {
-    this.opened = this.initialOpened
-  },
-
-  methods: {
-    getPeriodeVue(frequenceId, periodeId) {
-      return getPeriode(frequenceId, periodeId)
-    },
-    close() {
-      this.opened = false
-    },
-
-    toggle() {
-      this.opened = !this.opened
-    },
-
-    activiteRemovePopupOpen() {
-      this.$store.commit('popupOpen', {
-        component: RemovePopup,
-        props: {
-          activiteId: this.activite.id,
-          typeNom: this.activite.type.nom,
-          annee: this.activite.annee,
-          periodeNom: getPeriode(
-            this.activite.type.frequenceId,
-            this.activite.periodeId
-          ),
-          route: this.route
-        }
-      })
-    },
-
-    dateFormat(date) {
-      return dateFormat(date)
-    }
-  }
+  })
 }
 </script>
