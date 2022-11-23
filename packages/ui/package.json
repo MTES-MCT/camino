@@ -38,7 +38,6 @@
     "@testing-library/vue": "^6.6.1",
     "@types/leaflet": "^1.7.11",
     "@types/leaflet.markercluster": "^1.5.1",
-    "@types/webpack-env": "^1.18.0",
     "@typescript-eslint/parser": "^5.34.0",
     "@uppy/core": "^3.0.4",
     "@uppy/tus": "^3.0.5",
@@ -51,10 +50,8 @@
     "babel-loader": "^8.2.5",
     "babel-plugin-graphql-tag": "^3.3.0",
     "babel-preset-vite": "^1.0.4",
-    "chalk": "^5.0.1",
     "chart.js": "^3.9.1",
     "core-js": "^3.24.1",
-    "cross-fetch": "^3.1.5",
     "email-validator": "^2.0.4",
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
@@ -67,8 +64,6 @@
     "graphql": "^16.6.0",
     "graphql-react": "^20.0.0",
     "graphql-tag": "^2.12.6",
-    "html-webpack-plugin": "^5.5.0",
-    "json2csv": "^5.0.7",
     "jsondiffpatch": "^0.4.1",
     "leaflet": "1.8.0",
     "leaflet-fullscreen": "^1.0.2",
@@ -76,9 +71,6 @@
     "leaflet.markercluster": "^1.5.3",
     "postcss": "^8.4.16",
     "postcss-calc": "^8.2.4",
-    "postcss-import": "14.1.0",
-    "postcss-loader": "^7.0.1",
-    "postcss-normalize": "^10.0.1",
     "postcss-preset-env": "^7.8.0",
     "prettier": "^2.7.1",
     "rollup-plugin-visualizer": "^5.8.0",
@@ -139,8 +131,6 @@
   },
   "postcss": {
     "plugins": {
-      "postcss-import": {},
-      "postcss-normalize": {},
       "postcss-custom-media": {},
       "postcss-preset-env": {
         "stage": 0
