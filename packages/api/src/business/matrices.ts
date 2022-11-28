@@ -64,6 +64,7 @@ const sips = {
   }
 } as const
 type Sips = keyof typeof sips
+const isSip = (value: string): value is Sips => Object.keys(sips).includes(value)
 type Matrice1403 = {
   circonscriptionDe: string
   redevanceDepartementale: number
@@ -414,44 +415,44 @@ export const buildMatrices = (
         const redevanceCommunaleDeuxiemeFraction =
           line.fiscalite.redevanceCommunale * 0.1
         toAdd.push({
-          'Circonscription de': sip?.nom ?? '',
-          'Articles des rôles': line.index,
-          'Désignation des exploitants': line.titulaireLabel,
-          Départements: line.departementLabel,
+          circonscriptionDe: sip?.nom ?? '',
+          articlesDeRoles: line.index,
+          designationDesExploitants: line.titulaireLabel,
+          departements: line.departementLabel,
           // TODO 2022-09-19 on est dans une impasse, impossible de répartir correctement la redevance entre la commune principale et les autres.
           // pour le moment, on fait comme les années précédences, en attendant une correction
-          Communes: line.communePrincipale.nom,
-          'Elements de base | Revenus imposables à la TFPB': 0,
-          'Elements de base | Tonnages extraits': line.quantiteOrExtrait,
-          'Redevance départementale | Produit net de la redevance':
+          communes: line.communePrincipale.nom,
+          elementsDeBase_revenusImposablesALaTFPB: 0,
+          elementsDeBase_tonnagesExtraits: line.quantiteOrExtrait,
+          redevanceDepartementale_produitNetDeLaRedevance:
             line.fiscalite.redevanceDepartementale,
-          'Redevance départementale | Sommes revenant aux départements':
+          redevanceDepartementale_sommesRevenantAuxDepartements:
             line.fiscalite.redevanceDepartementale,
-          'Redevance communale | Produit net de la redevance':
+          redevanceCommunale_produitNetDeLaRedevance:
             line.fiscalite.redevanceCommunale,
-          'Redevance communale | Répartition | 1ère fraction':
+          redevanceCommunale_repartition_1ereFraction:
             redevanceCommunalePremiereFraction,
-          'Redevance communale | Répartition | 2ème fraction':
+            redevanceCommunale_repartition_2emeFraction:
             redevanceCommunaleDeuxiemeFraction,
-          'Redevance communale | Répartition | 3ème fraction':
+            redevanceCommunale_repartition_3emeFraction:
             line.fiscalite.redevanceCommunale * 0.55,
-          'Redevance communale | Revenant aux communes | 1ère fraction':
+          redevanceCommunale_revenantAuxCommunes_1ereFraction:
             redevanceCommunalePremiereFraction,
-          'Redevance communale | Revenant aux communes | 2ème fraction':
+            redevanceCommunale_revenantAuxCommunes_2emeFraction:
             redevanceCommunaleDeuxiemeFraction,
-          'Redevance communale | Revenant aux communes | Total':
+            redevanceCommunale_revenantAuxCommunes_total:
             redevanceCommunalePremiereFraction +
             redevanceCommunaleDeuxiemeFraction,
-          "Taxe minière sur l'or de Guyane | Produit net": isFiscaliteGuyane(
+          taxeMiniereSurLOrDeGuyane_produitNet: isFiscaliteGuyane(
             line.fiscalite
           )
             ? line.fiscalite.guyane.taxeAurifere
             : 0,
-          "Taxe minière sur l'or de Guyane | Répartition | Région de Guyane":
+          taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane:
             isFiscaliteGuyane(line.fiscalite)
               ? line.fiscalite.guyane.taxeAurifere
               : 0,
-          "Taxe minière sur l'or de Guyane | Répartition | Conservatoire": 0
+          taxeMiniereSurLOrDeGuyane_repartition_conservatoire: 0
         })
       }
 
@@ -625,10 +626,47 @@ export const matrices = async (annee: number) => {
       )
     })
 
-    Object.entries(matrice1404).forEach(([sip, matrice]) => {
-      const worksheet1404 = xlsx.utils.json_to_sheet(matrice)
-      const csv1404 = xlsx.utils.sheet_to_csv(worksheet1404)
-      fs.writeFileSync(`1404_${sip}.csv`, csv1404)
+
+    console.log(matrice1404)
+    const total1404 = Object.keys(matrice1404).filter(isSip).reduce((acc, sip)  => {
+      
+      acc[sip] = matrice1404[sip].reduce((accLine, line) => {
+        accLine.elementsDeBase_tonnagesExtraits = pleaseRound(
+          accLine.elementsDeBase_tonnagesExtraits + Number.parseFloat(line.elementsDeBase_tonnagesExtraits)
+        )
+        return accLine
+      }, {
+        kourou: {
+          elementsDeBase_tonnagesExtraits: 0,
+        }
+      })
+      
+      return acc
+    },
+    {
+      kourou: {
+        elementsDeBase_tonnagesExtraits: 0,
+      },
+    }
+        
+    )
+    await new Promise<void>(resolve => {
+      carbone.render(
+        'packages/api/src/business/resources/matrice_1404-SD_2022.ods',
+        {
+          'kourou': matrice1404.kourou,
+          total: total1404,
+          annee
+        },
+        function (err, result) {
+          if (err) {
+            return console.error(err)
+          }
+          fs.writeFileSync(`1404_${annee}.ods`, result)
+          resolve()
+        }
+      )
     })
+
   }
 }
