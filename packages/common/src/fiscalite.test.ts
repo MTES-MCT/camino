@@ -14,6 +14,8 @@ test('fraisGestion', () => {
       }
     })
   ).toBe(16)
+
+  expect(fraisGestion({ redevanceDepartementale: 12.5, redevanceCommunale: 13.2 })).toBe(2.06)
 })
 
 test.each<{ user: UserFiscalite; visible: boolean }>([

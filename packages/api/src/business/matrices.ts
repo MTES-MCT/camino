@@ -19,6 +19,10 @@ import xlsx from 'xlsx'
 import { ICommune, ITitre } from '../types'
 import { Departements } from 'camino-common/src/static/departement'
 import fs from 'fs'
+import carbone from 'carbone'
+
+const pleaseRound = (value: number): number =>
+  Number.parseFloat(value.toFixed(2))
 
 const sips = {
   cayenne: {
@@ -61,18 +65,19 @@ const sips = {
 } as const
 type Sips = keyof typeof sips
 type Matrice1403 = {
-  'Circonscription de': string
-  'Redevance départementale': number
-  'Redevance communale': number
-  "Taxe minière sur l'or de Guyane": number
-  'Sommes revenant à la Région de Guyane': number
-  'Sommes revenant au Conservatoire de biodiversité': number
-  "Sommes revenant à l'État | Frais d'assiette et de recouvrement": number
-  "Sommes revenant à l'État | Dégrèvements et non-valeurs": number
-  "Sommes revenant à l'État | Total": number
-  'Total des colonnes': number
-  "Nombre d'articles des rôles": number
+  circonscriptionDe: string
+  redevanceDepartementale: number
+  redevanceCommunale: number
+  taxeMiniereSurLOrDeGuyane: number
+  sommesRevenantALaRegionDeGuyane: number
+  sommesRevenantAuConservatoireDeBioDiversite: number
+  sommesRevenantALEtatFraisAssietteEtRecouvrement: number
+  sommesRevenantALEtatDegrevementsEtNonValeurs: number
+  sommesRevenantALEtatTotal: number
+  totalColonnes: number
+  nombreDArticlesDesRoles: number
 }
+
 type Matrice1404 = {
   'Circonscription de': string
   'Articles des rôles': number
@@ -313,69 +318,82 @@ export const buildMatrices = (
           const taxeMiniereSurLOrDeGuyane = isFiscaliteGuyane(line.fiscalite)
             ? line.fiscalite.guyane.taxeAurifere
             : 0
-          toAdd['Redevance départementale'] +=
-            line.fiscalite.redevanceDepartementale
-          toAdd['Redevance communale'] += line.fiscalite.redevanceCommunale
-          toAdd["Taxe minière sur l'or de Guyane"] += taxeMiniereSurLOrDeGuyane
-          toAdd['Sommes revenant à la Région de Guyane'] +=
-            taxeMiniereSurLOrDeGuyane
-          toAdd['Sommes revenant au Conservatoire de biodiversité'] += 0
-          toAdd[
-            "Sommes revenant à l'État | Frais d'assiette et de recouvrement"
-          ] += fraisGestion(line.fiscalite)
-          toAdd["Sommes revenant à l'État | Dégrèvements et non-valeurs"] += 0
-          toAdd["Sommes revenant à l'État | Total"] += fraisGestion(
-            line.fiscalite
+          toAdd.redevanceDepartementale = pleaseRound(
+            line.fiscalite.redevanceDepartementale +
+              toAdd.redevanceDepartementale
           )
-          toAdd['Total des colonnes'] =
-            toAdd['Redevance départementale'] +
-            toAdd['Redevance communale'] +
-            toAdd["Taxe minière sur l'or de Guyane"] +
-            toAdd["Sommes revenant à l'État | Total"]
-          toAdd["Nombre d'articles des rôles"]++
+          toAdd.redevanceCommunale = pleaseRound(
+            line.fiscalite.redevanceCommunale + toAdd.redevanceCommunale
+          )
+          toAdd.taxeMiniereSurLOrDeGuyane = pleaseRound(
+            taxeMiniereSurLOrDeGuyane + toAdd.taxeMiniereSurLOrDeGuyane
+          )
+          toAdd.sommesRevenantALaRegionDeGuyane = pleaseRound(
+            taxeMiniereSurLOrDeGuyane + toAdd.sommesRevenantALaRegionDeGuyane
+          )
+          toAdd.sommesRevenantAuConservatoireDeBioDiversite = pleaseRound(
+            0 + toAdd.sommesRevenantAuConservatoireDeBioDiversite
+          )
+          toAdd.sommesRevenantALEtatFraisAssietteEtRecouvrement = pleaseRound(
+            fraisGestion(line.fiscalite) +
+              toAdd.sommesRevenantALEtatFraisAssietteEtRecouvrement
+          )
+          toAdd.sommesRevenantALEtatDegrevementsEtNonValeurs = pleaseRound(
+            0 + toAdd.sommesRevenantALEtatDegrevementsEtNonValeurs
+          )
+          toAdd.sommesRevenantALEtatTotal = pleaseRound(
+            fraisGestion(line.fiscalite) + toAdd.sommesRevenantALEtatTotal
+          )
+          toAdd.totalColonnes = pleaseRound(
+            toAdd.redevanceDepartementale +
+              toAdd.redevanceCommunale +
+              toAdd.taxeMiniereSurLOrDeGuyane +
+              toAdd.sommesRevenantALEtatTotal
+          )
+          toAdd.nombreDArticlesDesRoles++
         }
 
         return acc
       },
       {
         cayenne: {
-          'Circonscription de': sips.cayenne.nom,
-          'Redevance départementale': 0,
-          'Redevance communale': 0,
-          "Taxe minière sur l'or de Guyane": 0,
-          'Sommes revenant à la Région de Guyane': 0,
-          'Sommes revenant au Conservatoire de biodiversité': 0,
-          "Sommes revenant à l'État | Frais d'assiette et de recouvrement": 0,
-          "Sommes revenant à l'État | Dégrèvements et non-valeurs": 0,
-          "Sommes revenant à l'État | Total": 0,
-          'Total des colonnes': 0,
-          "Nombre d'articles des rôles": 0
+          circonscriptionDe: sips.cayenne.nom,
+          redevanceDepartementale: 0,
+          redevanceCommunale: 0,
+          taxeMiniereSurLOrDeGuyane: 0,
+          sommesRevenantALaRegionDeGuyane: 0,
+          sommesRevenantAuConservatoireDeBioDiversite: 0,
+          sommesRevenantALEtatFraisAssietteEtRecouvrement: 0,
+          sommesRevenantALEtatDegrevementsEtNonValeurs: 0,
+          sommesRevenantALEtatTotal: 0,
+          totalColonnes: 0,
+          nombreDArticlesDesRoles: 0
         },
         kourou: {
-          'Circonscription de': sips.kourou.nom,
-          'Redevance départementale': 0,
-          'Redevance communale': 0,
-          "Taxe minière sur l'or de Guyane": 0,
-          'Sommes revenant à la Région de Guyane': 0,
-          'Sommes revenant au Conservatoire de biodiversité': 0,
-          "Sommes revenant à l'État | Frais d'assiette et de recouvrement": 0,
-          "Sommes revenant à l'État | Dégrèvements et non-valeurs": 0,
-          "Sommes revenant à l'État | Total": 0,
-          'Total des colonnes': 0,
-          "Nombre d'articles des rôles": 0
+          circonscriptionDe: sips.kourou.nom,
+          redevanceDepartementale: 0,
+          redevanceCommunale: 0,
+          taxeMiniereSurLOrDeGuyane: 0,
+          sommesRevenantALaRegionDeGuyane: 0,
+          sommesRevenantAuConservatoireDeBioDiversite: 0,
+          sommesRevenantALEtatFraisAssietteEtRecouvrement: 0,
+          sommesRevenantALEtatDegrevementsEtNonValeurs: 0,
+          sommesRevenantALEtatTotal: 0,
+          totalColonnes: 0,
+          nombreDArticlesDesRoles: 0
         },
         saintLaurentDuMaroni: {
-          'Circonscription de': sips.saintLaurentDuMaroni.nom,
-          'Redevance départementale': 0,
-          'Redevance communale': 0,
-          "Taxe minière sur l'or de Guyane": 0,
-          'Sommes revenant à la Région de Guyane': 0,
-          'Sommes revenant au Conservatoire de biodiversité': 0,
-          "Sommes revenant à l'État | Frais d'assiette et de recouvrement": 0,
-          "Sommes revenant à l'État | Dégrèvements et non-valeurs": 0,
-          "Sommes revenant à l'État | Total": 0,
-          'Total des colonnes': 0,
-          "Nombre d'articles des rôles": 0
+          circonscriptionDe: sips.saintLaurentDuMaroni.nom,
+          redevanceDepartementale: 0,
+          redevanceCommunale: 0,
+          taxeMiniereSurLOrDeGuyane: 0,
+          sommesRevenantALaRegionDeGuyane: 0,
+          sommesRevenantAuConservatoireDeBioDiversite: 0,
+          sommesRevenantALEtatFraisAssietteEtRecouvrement: 0,
+          sommesRevenantALEtatDegrevementsEtNonValeurs: 0,
+          sommesRevenantALEtatTotal: 0,
+          totalColonnes: 0,
+          nombreDArticlesDesRoles: 0
         }
       }
     )
@@ -539,9 +557,73 @@ export const matrices = async (annee: number) => {
     const csv1122 = xlsx.utils.sheet_to_csv(worksheet1122)
     fs.writeFileSync('1122.csv', csv1122)
 
-    const worksheet1403 = xlsx.utils.json_to_sheet(matrice1403)
-    const csv1403 = xlsx.utils.sheet_to_csv(worksheet1403)
-    fs.writeFileSync('1403.csv', csv1403)
+    const total = matrice1403.reduce(
+      (acc, cur) => {
+        acc.redevanceDepartementale = pleaseRound(
+          acc.redevanceDepartementale + cur.redevanceDepartementale
+        )
+        acc.redevanceCommunale = pleaseRound(
+          acc.redevanceCommunale + cur.redevanceCommunale
+        )
+        acc.taxeMiniereSurLOrDeGuyane = pleaseRound(
+          acc.taxeMiniereSurLOrDeGuyane + cur.taxeMiniereSurLOrDeGuyane
+        )
+        acc.sommesRevenantALaRegionDeGuyane = pleaseRound(
+          acc.sommesRevenantALaRegionDeGuyane +
+            cur.sommesRevenantALaRegionDeGuyane
+        )
+        acc.sommesRevenantAuConservatoireDeBioDiversite = pleaseRound(
+          acc.sommesRevenantAuConservatoireDeBioDiversite +
+            cur.sommesRevenantAuConservatoireDeBioDiversite
+        )
+        acc.sommesRevenantALEtatFraisAssietteEtRecouvrement = pleaseRound(
+          acc.sommesRevenantALEtatFraisAssietteEtRecouvrement +
+            cur.sommesRevenantALEtatFraisAssietteEtRecouvrement
+        )
+        acc.sommesRevenantALEtatDegrevementsEtNonValeurs = pleaseRound(
+          acc.sommesRevenantALEtatDegrevementsEtNonValeurs +
+            cur.sommesRevenantALEtatDegrevementsEtNonValeurs
+        )
+        acc.sommesRevenantALEtatTotal = pleaseRound(
+          acc.sommesRevenantALEtatTotal + cur.sommesRevenantALEtatTotal
+        )
+        acc.totalColonnes = pleaseRound(acc.totalColonnes + cur.totalColonnes)
+        acc.nombreDArticlesDesRoles = pleaseRound(
+          acc.nombreDArticlesDesRoles + cur.nombreDArticlesDesRoles
+        )
+
+        return acc
+      },
+      {
+        redevanceDepartementale: 0,
+        redevanceCommunale: 0,
+        taxeMiniereSurLOrDeGuyane: 0,
+        sommesRevenantALaRegionDeGuyane: 0,
+        sommesRevenantAuConservatoireDeBioDiversite: 0,
+        sommesRevenantALEtatFraisAssietteEtRecouvrement: 0,
+        sommesRevenantALEtatDegrevementsEtNonValeurs: 0,
+        sommesRevenantALEtatTotal: 0,
+        totalColonnes: 0,
+        nombreDArticlesDesRoles: 0
+      }
+    )
+    await new Promise<void>(resolve => {
+      carbone.render(
+        'packages/api/src/business/resources/matrice_1403-SD_2022.ods',
+        {
+          '1403': matrice1403,
+          total,
+          annee
+        },
+        function (err, result) {
+          if (err) {
+            return console.error(err)
+          }
+          fs.writeFileSync(`1403_${annee}.ods`, result)
+          resolve()
+        }
+      )
+    })
 
     Object.entries(matrice1404).forEach(([sip, matrice]) => {
       const worksheet1404 = xlsx.utils.json_to_sheet(matrice)
