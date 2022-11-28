@@ -176,7 +176,7 @@
     <LoadingElement v-slot="{ item }" :data="data">
       <GuyaneActivite
         :statistiqueGuyane="item.statistiques[tabActive]"
-        :enConstruction="tabs.find(t => t.id === tabActive)?.enConstruction"
+        :enConstruction="enConstruction(tabActive)"
         class="mb-xxl"
       />
     </LoadingElement>
@@ -239,7 +239,6 @@ import {
 import { CHART_COLORS } from '../_charts/utils'
 import { ChartConfiguration, ChartData } from 'chart.js'
 import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
-
 const data = ref<AsyncData<StatistiquesGuyane>>({
   status: 'LOADING'
 })
@@ -271,13 +270,26 @@ const tabs = computed(() => [
   },
   {
     id: anneeCurrent.value,
-    nom: anneeCurrent.value.toString(),
-    enConstruction: true
+    nom: anneeCurrent.value.toString()
   }
 ])
 
 const tabToggle = (tabId: number) => {
   tabActive.value = tabId
+}
+
+const enConstruction = (annee: number): boolean => {
+  // À partir du 01/09 de chaque année cacher le bandeau sur l’année d’avant.
+  // Le 1er septembre 2023 on enlève le bandeau sur l’année 2022
+  const anneePrecedente = new Date().getFullYear() - 1
+  if (annee < anneePrecedente) {
+    return false
+  }
+  const limit = Date.UTC(new Date().getFullYear(), 8, 1)
+  if (new Date().getTime() >= limit && annee === anneePrecedente) {
+    return false
+  }
+  return true
 }
 
 tabToggle(anneeCurrent.value - 2)
