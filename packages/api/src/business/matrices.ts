@@ -179,6 +179,7 @@ export const buildMatrices = (
   matrice1122: Matrice1122[]
   matrice1403: Matrice1403[]
   matrice1404: Record<Sips, Matrice1404[]>
+  rawLines: Matrices[]
 } => {
   const anneePrecedente = annee - 1
   let count = 0
@@ -470,7 +471,7 @@ export const buildMatrices = (
     }
   )
 
-  return { matrice1121, matrice1122, matrice1403, matrice1404 }
+  return { matrice1121, matrice1122, matrice1403, matrice1404, rawLines }
 }
 
 export const matrices = async (annee: number) => {
@@ -552,7 +553,7 @@ export const matrices = async (annee: number) => {
 
     const openfiscaConstants = await apiOpenfiscaConstantsFetch(annee)
 
-    const { matrice1121, matrice1122, matrice1403, matrice1404 } =
+    const { matrice1121, matrice1122, matrice1403, matrice1404, rawLines } =
       buildMatrices(result, titres, annee, openfiscaConstants)
 
     const worksheet1121 = xlsx.utils.json_to_sheet(matrice1121)
@@ -741,5 +742,57 @@ export const matrices = async (annee: number) => {
         }
       )
     })
+
+    for (const matriceLine of rawLines) {
+      const fiscaliteLine = matriceLine.fiscalite
+
+      if (!isFiscaliteGuyane(fiscaliteLine)) {
+        console.error("cette ligne n'est pas de guyane", matriceLine)
+      } else {
+        await new Promise<void>(resolve => {
+          carbone.render(
+            'packages/api/src/business/resources/matrice_1402-SD_2022.ods',
+            {
+              departement: matriceLine.departementLabel,
+              commune: matriceLine.commune.nom,
+              article: matriceLine.index,
+              role: matriceLine.titreLabel,
+              entreprise: matriceLine.titulaireLabel,
+              quantite: matriceLine.quantiteOrExtrait,
+              tarifCommunal: openfiscaConstants.tarifCommunal,
+              tarifDepartemental: openfiscaConstants.tarifDepartemental,
+              taxePME: openfiscaConstants.tarifTaxeMinierePME,
+              taxeAutre: openfiscaConstants.tarifTaxeMiniereAutre,
+              redevanceCommunale: matriceLine.fiscalite.redevanceCommunale,
+              redevanceDepartementale:
+                matriceLine.fiscalite.redevanceDepartementale,
+              taxeMiniereOr: fiscaliteLine.guyane.taxeAurifereBrute,
+              montantInvestissements:
+                fiscaliteLine.guyane.totalInvestissementsDeduits,
+              montantNetTaxeMiniereOr: fiscaliteLine.guyane.taxeAurifere,
+              fraisGestion: fraisGestion(fiscaliteLine),
+              total: pleaseRound(
+                matriceLine.fiscalite.redevanceCommunale +
+                  matriceLine.fiscalite.redevanceDepartementale +
+                  fiscaliteLine.guyane.taxeAurifere +
+                  fraisGestion(fiscaliteLine)
+              ),
+              annee
+            },
+            function (err, result) {
+              if (err) {
+                return console.error(err)
+              }
+              fs.writeFileSync(
+                `1402_${annee}_${matriceLine.index}_${matriceLine.titreLabel}.ods`,
+                result
+              )
+              resolve()
+            }
+          )
+        })
+      }
+    }
+    console.info('fini', new Date())
   }
 }
