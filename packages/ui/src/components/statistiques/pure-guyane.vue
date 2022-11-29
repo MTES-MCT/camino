@@ -226,7 +226,7 @@
 <script setup lang="ts">
 import { AsyncData } from '@/api/client-rest'
 import GuyaneActivite from './guyane-activite.vue'
-import BarChart from '../_charts/configurableBar.vue'
+import BarChart from '../_charts/configurable-chart.vue'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import numberFormat from '@/utils/number-format'
 

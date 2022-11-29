@@ -1,36 +1,25 @@
 <template>
-  <div>
-    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr">
-      <div>
-        <LoadingElement v-slot="{ item }" :data="data"
-          ><ConfigurableLineChart
-            :chartConfiguration="sdomChartConfiguration(item)"
-        /></LoadingElement>
-      </div>
-      <div>
-        <LoadingElement v-slot="{ item }" :data="data"
-          ><ConfigurableBarChart
-            :chartConfiguration="depotChartConfiguration(item)"
-        /></LoadingElement>
-      </div>
-      <div>
-        <LoadingElement v-slot="{ item }" :data="data"
-          ><ConfigurableLineChart
-            :chartConfiguration="delaiChartConfiguration(item)"
-        /></LoadingElement>
-      </div>
-    </div>
+  <div style="display: grid; grid-template-columns: 1fr 1fr 1fr">
+    <ChartWithExport
+      :data="data"
+      :getConfiguration="data => sdomChartConfiguration(data)"
+    />
+    <ChartWithExport
+      :data="data"
+      :getConfiguration="data => depotChartConfiguration(data)"
+    />
+    <ChartWithExport
+      :data="data"
+      :getConfiguration="data => delaiChartConfiguration(data)"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
-import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { AsyncData } from '@/api/client-rest'
-import ConfigurableLineChart from '../_charts/configurableLine.vue'
-import ConfigurableBarChart from '../_charts/configurableBar.vue'
+import ChartWithExport from '@/components/_charts/chart-with-export.vue'
 
 import {
   sdomChartConfiguration,

@@ -1,42 +1,30 @@
 <template>
   <div class="width-full-p">
     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr">
-      <div>
-        <LoadingElement v-slot="{ item }" :data="data"
-          ><ConfigurableLineChart
-            :chartConfiguration="sdomChartConfiguration(item)"
-        /></LoadingElement>
-      </div>
-      <div>
-        <LoadingElement v-slot="{ item }" :data="data"
-          ><ConfigurableBarChart
-            :chartConfiguration="depotChartConfiguration(item)"
-        /></LoadingElement>
-      </div>
-      <div>
-        <LoadingElement v-slot="{ item }" :data="data"
-          ><ConfigurableLineChart
-            :chartConfiguration="delaiChartConfiguration(item)"
-        /></LoadingElement>
-      </div>
-      <div>
-        <LoadingElement v-slot="{ item }" :data="data"
-          ><ConfigurableLineChart
-            :chartConfiguration="delaiPerConcessionChartConfiguration(item)"
-        /></LoadingElement>
-      </div>
-      <div>
-        <LoadingElement v-slot="{ item }" :data="data"
-          ><ConfigurableLineChart
-            :chartConfiguration="producteursOrChartConfiguration(item)"
-        /></LoadingElement>
-      </div>
-      <div>
-        <LoadingElement v-slot="{ item }" :data="data"
-          ><ConfigurableLineChart
-            :chartConfiguration="avisAXMChartConfiguration(item)"
-        /></LoadingElement>
-      </div>
+      <ChartWithExport
+        :data="data"
+        :getConfiguration="data => sdomChartConfiguration(data)"
+      />
+      <ChartWithExport
+        :data="data"
+        :getConfiguration="data => depotChartConfiguration(data)"
+      />
+      <ChartWithExport
+        :data="data"
+        :getConfiguration="data => delaiChartConfiguration(data)"
+      />
+      <ChartWithExport
+        :data="data"
+        :getConfiguration="data => delaiPerConcessionChartConfiguration(data)"
+      />
+      <ChartWithExport
+        :data="data"
+        :getConfiguration="data => producteursOrChartConfiguration(data)"
+      />
+      <ChartWithExport
+        :data="data"
+        :getConfiguration="data => avisAXMChartConfiguration(data)"
+      />
     </div>
   </div>
 </template>
@@ -45,10 +33,8 @@
 import { onMounted, ref } from 'vue'
 
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
-import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { AsyncData } from '@/api/client-rest'
-import ConfigurableLineChart from '../_charts/configurableLine.vue'
-import ConfigurableBarChart from '../_charts/configurableBar.vue'
+import ChartWithExport from '@/components/_charts/chart-with-export.vue'
 
 import {
   sdomChartConfiguration,
