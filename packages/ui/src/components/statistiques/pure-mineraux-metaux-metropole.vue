@@ -196,9 +196,10 @@
         <hr />
       </div>
       <div>
-        <LoadingElement v-slot="{ item }" :data="data">
-          <BarChart :chartConfiguration="bauxiteChartConfiguration(item)" />
-        </LoadingElement>
+        <ChartWithExport
+          :data="data"
+          :getConfiguration="item => bauxiteChartConfiguration(item)"
+        />
       </div>
       <div>
         <h4>Fiscalité minière</h4>
@@ -239,11 +240,10 @@
         <h3>Sels (sel de sodium, sel de potassium, sel gemme…)</h3>
         <hr />
       </div>
-      <div>
-        <LoadingElement v-slot="{ item }" :data="data">
-          <BarChart :chartConfiguration="selsChartConfiguration(item)" />
-        </LoadingElement>
-      </div>
+      <ChartWithExport
+        :data="data"
+        :getConfiguration="item => selsChartConfiguration(item)"
+      />
       <div>
         <h4>Fiscalité minière</h4>
         <p>
@@ -303,26 +303,24 @@
     <div class="mb-xl">
       <h3>Permis Exclusif de Recherche (PER)</h3>
       <hr />
-      <div>
-        <LoadingElement v-slot="{ item }" :data="data">
-          <BarChart :chartConfiguration="perChartConfiguration(item)" />
-        </LoadingElement>
-      </div>
+      <ChartWithExport
+        :data="data"
+        :getConfiguration="item => perChartConfiguration(item)"
+      />
     </div>
     <div class="mb-xl">
       <h3>Concession</h3>
       <hr />
-      <div>
-        <LoadingElement v-slot="{ item }" :data="data">
-          <BarChart :chartConfiguration="concessionChartConfiguration(item)" />
-        </LoadingElement>
-      </div>
+      <ChartWithExport
+        :data="data"
+        :getConfiguration="item => concessionChartConfiguration(item)"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import BarChart from '../_charts/configurableBar.vue'
+import ChartWithExport from '../_charts/chart-with-export.vue'
 
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '@/components/_ui/pure-loader.vue'

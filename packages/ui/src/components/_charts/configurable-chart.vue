@@ -15,7 +15,8 @@ import {
   Filler,
   Legend,
   Tooltip,
-  Title
+  Title,
+  ChartConfiguration
 } from 'chart.js'
 import { ref, onMounted, onUnmounted } from 'vue'
 
@@ -34,8 +35,7 @@ Chart.register(
 )
 
 const props = defineProps<{
-  // TODO 2022-09-29: Type this, this should be generic
-  chartConfiguration: any
+  chartConfiguration: ChartConfiguration
 }>()
 
 const myCanvas = ref<HTMLCanvasElement | null>(null)
