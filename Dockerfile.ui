@@ -9,12 +9,11 @@ WORKDIR /app
 COPY package*.json /app/
 COPY packages/common/package.json /app/packages/common/package.json
 COPY packages/ui/package.json /app/packages/ui/package.json
-# On désactive husky
-RUN npm set-script prepare ""
-RUN npm ci
+COPY Makefile /Makefile
+RUN CI=true make install
 
 COPY ./ /app/
-RUN npm run build -w packages/ui
+RUN make build/ui
 
 FROM node:18.7-alpine as production-stage
 

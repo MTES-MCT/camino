@@ -23,11 +23,7 @@ jobs:
           node-version: '18.7'
           cache: 'npm'
       - name: Npm install
-        run: |
-          npm set-script prepare ""
-          npm ci
-        env:
-          CI: true
+        run: make install
       - name: Lint
         run: npm run ci:lint --workspace=packages/api
   unit-test:
@@ -41,11 +37,7 @@ jobs:
           node-version: '18.7'
           cache: 'npm'
       - name: Npm install
-        run: |
-          npm set-script prepare ""
-          npm ci
-        env:
-          CI: true
+        run: make install
       - name: Unit tests
         run: make test/api-unit
       - uses: codecov/codecov-action@v3
@@ -80,11 +72,7 @@ jobs:
             node-version: '18.7'
             cache: 'npm'
         - name: Npm install
-          run: |
-            npm set-script prepare ""
-            npm ci
-          env:
-            CI: true
+          run: make install
         - name: Integration tests
           run: make test/api-integration
           env:

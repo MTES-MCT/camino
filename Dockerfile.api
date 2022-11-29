@@ -4,10 +4,9 @@ WORKDIR /app
 COPY package*.json /app/
 COPY packages/common/package.json /app/packages/common/package.json
 COPY packages/api/package.json /app/packages/api/package.json
+COPY Makefile /Makefile
 
-# On désactive husky
-RUN npm set-script prepare "" && \
-    npm ci
+RUN CI=true make install
 
 COPY ./ /app/
 RUN npm run build -w packages/api && \

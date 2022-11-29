@@ -61,6 +61,23 @@ else
 	npm run test:integration -w packages/api -- --coverage
 endif
 
+install:
+ifdef CI
+	npm set-script prepare ""
+endif
+	npm ci
+
+
+build: build/common build/api build/ui
+
+build/common:
+	npm run build -w packages/common
+build/ui:
+	npm run build -w packages/ui
+
+build/api:
+	npm run build -w packages/api
+
 ifeq (${INPUT_ENV}, dev)
 CD_TOKEN:=${CD_TOKEN_DEV}
 endif

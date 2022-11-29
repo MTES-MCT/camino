@@ -24,11 +24,8 @@ jobs:
           cache: 'npm'
       - name: Test units
         run: |
-          npm set-script prepare ""
-          npm ci
+          make install
           npm run lint:check --workspace=packages/ui
-        env:
-          CI: true
   test:
     runs-on: ubuntu-latest
     steps:
@@ -41,11 +38,8 @@ jobs:
           cache: 'npm'
       - name: Test units
         run: |
-          npm set-script prepare ""
-          npm ci
+          make install
           make test/ui
-        env:
-          CI: true
       - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -80,10 +74,9 @@ jobs:
           cache: 'npm'
       - name: Generate storybook
         run: |
-          npm ci
+          make install
           npm run storybook:build -w packages/ui
         env:
-          CI: true
           # https://stackoverflow.com/questions/69394632/webpack-build-failing-with-err-ossl-evp-unsupported
           NODE_OPTIONS: --openssl-legacy-provider
       - name: Build Docker image
