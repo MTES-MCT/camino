@@ -558,11 +558,11 @@ export const matrices = async (annee: number) => {
 
     const worksheet1121 = xlsx.utils.json_to_sheet(matrice1121)
     const csv1121 = xlsx.utils.sheet_to_csv(worksheet1121)
-    fs.writeFileSync('1121.csv', csv1121)
+    fs.writeFileSync(`1121_${annee}.csv`, csv1121)
 
     const worksheet1122 = xlsx.utils.json_to_sheet(matrice1122)
     const csv1122 = xlsx.utils.sheet_to_csv(worksheet1122)
-    fs.writeFileSync('1122.csv', csv1122)
+    fs.writeFileSync(`1122_${annee}.csv`, csv1122)
 
     const total = matrice1403.reduce(
       (acc, cur) => {
@@ -743,40 +743,69 @@ export const matrices = async (annee: number) => {
       )
     })
 
+    const matrice1401: Record<
+      Sips,
+      {
+        article: number
+        entreprise: string
+        quantite: string
+        tarifCommunal: number
+        tarifDepartemental: number
+        taxePME: number
+        taxeAutre: number
+        redevanceCommunale: number
+        redevanceDepartementale: number
+        taxeMiniereOr: number
+        montantInvestissements: number
+        montantNetTaxeMiniereOr: number
+        totalCotisations: number
+        fraisGestion: number
+        total: number
+      }[]
+    > = { kourou: [], saintLaurentDuMaroni: [], cayenne: [] }
     for (const matriceLine of rawLines) {
       const fiscaliteLine = matriceLine.fiscalite
 
       if (!isFiscaliteGuyane(fiscaliteLine)) {
         console.error("cette ligne n'est pas de guyane", matriceLine)
       } else {
+        const matrice = {
+          article: matriceLine.index,
+          entreprise: matriceLine.titulaireLabel,
+          quantite: matriceLine.quantiteOrExtrait,
+          tarifCommunal: openfiscaConstants.tarifCommunal,
+          tarifDepartemental: openfiscaConstants.tarifDepartemental,
+          taxePME: openfiscaConstants.tarifTaxeMinierePME,
+          taxeAutre: openfiscaConstants.tarifTaxeMiniereAutre,
+          redevanceCommunale: matriceLine.fiscalite.redevanceCommunale,
+          redevanceDepartementale:
+            matriceLine.fiscalite.redevanceDepartementale,
+          taxeMiniereOr: fiscaliteLine.guyane.taxeAurifereBrute,
+          montantInvestissements:
+            fiscaliteLine.guyane.totalInvestissementsDeduits,
+          montantNetTaxeMiniereOr: fiscaliteLine.guyane.taxeAurifere,
+          totalCotisations: pleaseRound(
+            matriceLine.fiscalite.redevanceCommunale +
+              matriceLine.fiscalite.redevanceDepartementale +
+              fiscaliteLine.guyane.taxeAurifere
+          ),
+          fraisGestion: fraisGestion(fiscaliteLine),
+          total: pleaseRound(
+            matriceLine.fiscalite.redevanceCommunale +
+              matriceLine.fiscalite.redevanceDepartementale +
+              fiscaliteLine.guyane.taxeAurifere +
+              fraisGestion(fiscaliteLine)
+          )
+        }
+        matrice1401[matriceLine.sip].push(matrice)
         await new Promise<void>(resolve => {
           carbone.render(
             'packages/api/src/business/resources/matrice_1402-SD_2022.ods',
             {
+              ...matrice,
               departement: matriceLine.departementLabel,
               commune: matriceLine.commune.nom,
-              article: matriceLine.index,
               role: matriceLine.titreLabel,
-              entreprise: matriceLine.titulaireLabel,
-              quantite: matriceLine.quantiteOrExtrait,
-              tarifCommunal: openfiscaConstants.tarifCommunal,
-              tarifDepartemental: openfiscaConstants.tarifDepartemental,
-              taxePME: openfiscaConstants.tarifTaxeMinierePME,
-              taxeAutre: openfiscaConstants.tarifTaxeMiniereAutre,
-              redevanceCommunale: matriceLine.fiscalite.redevanceCommunale,
-              redevanceDepartementale:
-                matriceLine.fiscalite.redevanceDepartementale,
-              taxeMiniereOr: fiscaliteLine.guyane.taxeAurifereBrute,
-              montantInvestissements:
-                fiscaliteLine.guyane.totalInvestissementsDeduits,
-              montantNetTaxeMiniereOr: fiscaliteLine.guyane.taxeAurifere,
-              fraisGestion: fraisGestion(fiscaliteLine),
-              total: pleaseRound(
-                matriceLine.fiscalite.redevanceCommunale +
-                  matriceLine.fiscalite.redevanceDepartementale +
-                  fiscaliteLine.guyane.taxeAurifere +
-                  fraisGestion(fiscaliteLine)
-              ),
               annee
             },
             function (err, result) {
@@ -791,6 +820,63 @@ export const matrices = async (annee: number) => {
             }
           )
         })
+      }
+    }
+
+    for (const sip of Object.keys(sips)) {
+      if (isSip(sip)) {
+        await new Promise<void>(resolve => {
+          const montantTotalSommeALEtat = pleaseRound(
+            matrice1401[sip].reduce((acc, cur) => acc + cur.fraisGestion, 0)
+          )
+          const fraisAssietteEtRecouvrement = pleaseRound(
+            (montantTotalSommeALEtat * 4.4) / 8
+          )
+          carbone.render(
+            'packages/api/src/business/resources/matrice_1401-SD_2022.ods',
+            {
+              valeurs: matrice1401[sip],
+              nombreArticles: matrice1401[sip].length,
+              total: pleaseRound(
+                matrice1401[sip].reduce((acc, cur) => acc + cur.total, 0)
+              ),
+              montantTotalSommeALEtat,
+              fraisAssietteEtRecouvrement,
+              fraisDegrevement: pleaseRound(
+                montantTotalSommeALEtat - fraisAssietteEtRecouvrement
+              ),
+              redevanceDepartementale: pleaseRound(
+                matrice1401[sip].reduce(
+                  (acc, cur) => acc + cur.redevanceDepartementale,
+                  0
+                )
+              ),
+              redevanceCommunale: pleaseRound(
+                matrice1401[sip].reduce(
+                  (acc, cur) => acc + cur.redevanceCommunale,
+                  0
+                )
+              ),
+              montantNetTaxeMiniereOr: pleaseRound(
+                matrice1401[sip].reduce(
+                  (acc, cur) => acc + cur.montantNetTaxeMiniereOr,
+                  0
+                )
+              ),
+              annee,
+              anneePrecedente
+            },
+            function (err, result) {
+              if (err) {
+                return console.error(err)
+              }
+              fs.writeFileSync(`1401_${sip}_${annee}.ods`, result)
+              resolve()
+            }
+          )
+        })
+      } else {
+        console.error(`${sip} n'est pas un SIP valide`)
       }
     }
     console.info('fini', new Date())
