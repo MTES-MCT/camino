@@ -6,6 +6,7 @@ import { titresGet } from '../../../database/queries/titres'
 import { titresActivitesGet } from '../../../database/queries/titres-activites'
 import { userSuper } from '../../../database/user-super'
 import { titresSurfaceIndexBuild } from './statistiques'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 const statistiquesGuyaneActivitesBuild = (
   sectionId: string,
@@ -45,8 +46,8 @@ type IStatsGuyaneTitresTypes =
   | 'titresCxm'
 
 const statistiquesGuyaneTitresBuild = (
-  titres: { id: string; typeId: string; surface: number }[]
-) =>
+  titres: { id: string; typeId: TitreTypeId; surface: number }[]
+): Record<string, { quantite: number; surface: number }> =>
   titres.reduce(
     (acc, titre) => {
       const id = camelcase(`titres-${titre.typeId}`) as IStatsGuyaneTitresTypes

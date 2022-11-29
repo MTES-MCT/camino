@@ -2,7 +2,8 @@ import { CustomResponse } from '../express-type'
 import express from 'express'
 import {
   StatistiquesMinerauxMetauxMetropole,
-  StatistiquesDGTM
+  StatistiquesDGTM,
+  StatistiquesGuyaneRest
 } from 'camino-common/src/statistiques'
 import { getMinerauxMetauxMetropolesStatsInside } from './metaux-metropole'
 
@@ -11,6 +12,7 @@ import { userGet } from '../../../database/queries/utilisateurs'
 import { IUser } from '../../../types'
 import { constants } from 'http2'
 import { getDGTMStatsInside } from './dgtm'
+import { getGuyaneStatsInside } from './guyane'
 
 export const getDGTMStats = async (
   req: express.Request,
@@ -37,6 +39,19 @@ export const getMinerauxMetauxMetropolesStats = async (
 ): Promise<void> => {
   try {
     res.json(await getMinerauxMetauxMetropolesStatsInside())
+  } catch (e) {
+    console.error(e)
+
+    throw e
+  }
+}
+
+export const getGuyaneStats = async (
+  _req: express.Request,
+  res: CustomResponse<StatistiquesGuyaneRest>
+): Promise<void> => {
+  try {
+    res.json(await getGuyaneStatsInside())
   } catch (e) {
     console.error(e)
 

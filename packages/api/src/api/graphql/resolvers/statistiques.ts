@@ -12,6 +12,8 @@ import {
 import Utilisateurs from '../../../database/models/utilisateurs'
 import { isAdministration } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 
 const ACTIVITE_ANNEE_DEBUT = 2018
 
@@ -119,7 +121,7 @@ const titresSurfaceIndexBuild = (titres: ITitre[], annee: number) =>
     (
       acc: {
         id: string
-        typeId: string
+        typeId: TitreTypeId
         surface: number
       }[],
       titre
@@ -127,7 +129,7 @@ const titresSurfaceIndexBuild = (titres: ITitre[], annee: number) =>
       // titres dont le dernier octroi valide avec une phase valide débute cette année
       const titreDemarcheOctroiValide = titre.demarches?.find(
         demarche =>
-          demarche.typeId === 'oct' &&
+          demarche.typeId === DEMARCHES_TYPES_IDS.Octroi &&
           demarche.phase &&
           demarche.phase.dateDebut &&
           demarche.phase.dateDebut.substr(0, 4) === annee.toString()
