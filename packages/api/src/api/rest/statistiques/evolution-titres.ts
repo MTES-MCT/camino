@@ -35,6 +35,7 @@ export const evolutionTitres = async (
           join titres_demarches td on td.id  = et.titre_demarche_id 
           join titres t on t.id = td.titre_id 
           where et.type_id = '${ETAPES_TYPES.depotDeLaDemande}' 
+          and et.archive is false
           and td.type_id in (${toJoinSQL(demarcheOctroiTypeIds)})
           and t.type_id = '${titreTypeId}'
           and substring(et."date", 0, 5)::int >= ${anneeDepart}
@@ -78,6 +79,7 @@ export const evolutionTitres = async (
   }') or (et.type_id = '${
     ETAPES_TYPES.classementSansSuite
   }' and et.statut_id = '${ETAPES_STATUTS.FAIT}'))
+           and et.archive is false
            and td.type_id in (${toJoinSQL(demarcheOctroiTypeIds)})
            and t.type_id = '${titreTypeId}'
            and td.statut_id in (${toJoinSQL([
@@ -100,6 +102,7 @@ export const evolutionTitres = async (
       join titres t on t.id = td.titre_id 
       join titres_etapes t_surface on t_surface.id =  t.props_titre_etapes_ids ->> 'surface'
       where et.type_id = '${ETAPES_TYPES.depotDeLaDemande}' 
+      and et.archive is false
       and td.type_id in (${toJoinSQL(demarcheOctroiTypeIds)})
       and t.type_id = '${titreTypeId}'
       and substring(et."date", 0, 5)::int >= ${anneeDepart}
