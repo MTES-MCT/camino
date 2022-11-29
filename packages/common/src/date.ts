@@ -37,8 +37,8 @@ export const getAnnee = (date: CaminoDate): CaminoAnnee => {
   return valideAnnee(date.substring(0, 4))
 }
 
-export const getCurrentAnnee = () => getAnnee(toCaminoDate(new Date()))
 export const getCurrent = () => toCaminoDate(new Date())
+export const getCurrentAnnee = () => getAnnee(getCurrent())
 
 export const isAnnee = (annee: string): annee is CaminoAnnee => {
   return annee.match(/^\d{4}$/) !== null
