@@ -64,7 +64,8 @@ const sips = {
   }
 } as const
 type Sips = keyof typeof sips
-const isSip = (value: string): value is Sips => Object.keys(sips).includes(value)
+const isSip = (value: string): value is Sips =>
+  Object.keys(sips).includes(value)
 type Matrice1403 = {
   circonscriptionDe: string
   redevanceDepartementale: number
@@ -80,25 +81,25 @@ type Matrice1403 = {
 }
 
 type Matrice1404 = {
-  'Circonscription de': string
-  'Articles des rôles': number
-  'Désignation des exploitants': string
-  Départements: string
-  Communes: string | undefined
-  'Elements de base | Revenus imposables à la TFPB': number
-  'Elements de base | Tonnages extraits': string
-  'Redevance départementale | Produit net de la redevance': number
-  'Redevance départementale | Sommes revenant aux départements': number
-  'Redevance communale | Produit net de la redevance': number
-  'Redevance communale | Répartition | 1ère fraction': number
-  'Redevance communale | Répartition | 2ème fraction': number
-  'Redevance communale | Répartition | 3ème fraction': number
-  'Redevance communale | Revenant aux communes | 1ère fraction': number
-  'Redevance communale | Revenant aux communes | 2ème fraction': number
-  'Redevance communale | Revenant aux communes | Total': number
-  "Taxe minière sur l'or de Guyane | Produit net": number
-  "Taxe minière sur l'or de Guyane | Répartition | Région de Guyane": number
-  "Taxe minière sur l'or de Guyane | Répartition | Conservatoire": number
+  circonscriptionDe: string
+  articlesDeRoles: number
+  designationDesExploitants: string
+  departements: string
+  communes: string
+  elementsDeBase_revenusImposablesALaTFPB: number
+  elementsDeBase_tonnagesExtraits: string
+  redevanceDepartementale_produitNetDeLaRedevance: number
+  redevanceDepartementale_sommesRevenantAuxDepartements: number
+  redevanceCommunale_produitNetDeLaRedevance: number
+  redevanceCommunale_repartition_1ereFraction: number
+  redevanceCommunale_repartition_2emeFraction: number
+  redevanceCommunale_repartition_3emeFraction: number
+  redevanceCommunale_revenantAuxCommunes_1ereFraction: number
+  redevanceCommunale_revenantAuxCommunes_2emeFraction: number
+  redevanceCommunale_revenantAuxCommunes_total: number
+  taxeMiniereSurLOrDeGuyane_produitNet: number
+  taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane: number
+  taxeMiniereSurLOrDeGuyane_repartition_conservatoire: number
 }
 
 type Matrice1121 = {
@@ -410,10 +411,12 @@ export const buildMatrices = (
           `la commune ${line.commune.id} n'appartient à aucun SIP`
         )
       } else {
-        const redevanceCommunalePremiereFraction =
+        const redevanceCommunalePremiereFraction = pleaseRound(
           line.fiscalite.redevanceCommunale * 0.35
-        const redevanceCommunaleDeuxiemeFraction =
+        )
+        const redevanceCommunaleDeuxiemeFraction = pleaseRound(
           line.fiscalite.redevanceCommunale * 0.1
+        )
         toAdd.push({
           circonscriptionDe: sip?.nom ?? '',
           articlesDeRoles: line.index,
@@ -432,17 +435,19 @@ export const buildMatrices = (
             line.fiscalite.redevanceCommunale,
           redevanceCommunale_repartition_1ereFraction:
             redevanceCommunalePremiereFraction,
-            redevanceCommunale_repartition_2emeFraction:
+          redevanceCommunale_repartition_2emeFraction:
             redevanceCommunaleDeuxiemeFraction,
-            redevanceCommunale_repartition_3emeFraction:
-            line.fiscalite.redevanceCommunale * 0.55,
+          redevanceCommunale_repartition_3emeFraction: pleaseRound(
+            line.fiscalite.redevanceCommunale * 0.55
+          ),
           redevanceCommunale_revenantAuxCommunes_1ereFraction:
             redevanceCommunalePremiereFraction,
-            redevanceCommunale_revenantAuxCommunes_2emeFraction:
+          redevanceCommunale_revenantAuxCommunes_2emeFraction:
             redevanceCommunaleDeuxiemeFraction,
-            redevanceCommunale_revenantAuxCommunes_total:
+          redevanceCommunale_revenantAuxCommunes_total: pleaseRound(
             redevanceCommunalePremiereFraction +
-            redevanceCommunaleDeuxiemeFraction,
+              redevanceCommunaleDeuxiemeFraction
+          ),
           taxeMiniereSurLOrDeGuyane_produitNet: isFiscaliteGuyane(
             line.fiscalite
           )
@@ -626,35 +631,104 @@ export const matrices = async (annee: number) => {
       )
     })
 
+    const total1404 = Object.keys(matrice1404)
+      .filter(isSip)
+      .reduce(
+        (acc, sip) => {
+          acc[sip] = matrice1404[sip].reduce(
+            (accLine, line) => {
+              accLine.elementsDeBase_tonnagesExtraits = pleaseRound(
+                accLine.elementsDeBase_tonnagesExtraits +
+                  Number.parseFloat(line.elementsDeBase_tonnagesExtraits)
+              )
+              accLine.redevanceDepartementale_produitNetDeLaRedevance =
+                pleaseRound(
+                  accLine.redevanceDepartementale_produitNetDeLaRedevance +
+                    line.redevanceDepartementale_produitNetDeLaRedevance
+                )
+              accLine.redevanceDepartementale_sommesRevenantAuxDepartements =
+                pleaseRound(
+                  accLine.redevanceDepartementale_sommesRevenantAuxDepartements +
+                    line.redevanceDepartementale_sommesRevenantAuxDepartements
+                )
+              accLine.redevanceCommunale_produitNetDeLaRedevance = pleaseRound(
+                accLine.redevanceCommunale_produitNetDeLaRedevance +
+                  line.redevanceCommunale_produitNetDeLaRedevance
+              )
+              accLine.redevanceCommunale_repartition_1ereFraction = pleaseRound(
+                accLine.redevanceCommunale_repartition_1ereFraction +
+                  line.redevanceCommunale_repartition_1ereFraction
+              )
+              accLine.redevanceCommunale_repartition_2emeFraction = pleaseRound(
+                accLine.redevanceCommunale_repartition_2emeFraction +
+                  line.redevanceCommunale_repartition_2emeFraction
+              )
+              accLine.redevanceCommunale_repartition_3emeFraction = pleaseRound(
+                accLine.redevanceCommunale_repartition_3emeFraction +
+                  line.redevanceCommunale_repartition_3emeFraction
+              )
+              accLine.redevanceCommunale_revenantAuxCommunes_1ereFraction =
+                pleaseRound(
+                  accLine.redevanceCommunale_revenantAuxCommunes_1ereFraction +
+                    line.redevanceCommunale_revenantAuxCommunes_1ereFraction
+                )
+              accLine.redevanceCommunale_revenantAuxCommunes_2emeFraction =
+                pleaseRound(
+                  accLine.redevanceCommunale_revenantAuxCommunes_2emeFraction +
+                    line.redevanceCommunale_revenantAuxCommunes_2emeFraction
+                )
+              accLine.redevanceCommunale_revenantAuxCommunes_total =
+                pleaseRound(
+                  accLine.redevanceCommunale_revenantAuxCommunes_total +
+                    line.redevanceCommunale_revenantAuxCommunes_total
+                )
+              accLine.taxeMiniereSurLOrDeGuyane_produitNet = pleaseRound(
+                accLine.taxeMiniereSurLOrDeGuyane_produitNet +
+                  line.taxeMiniereSurLOrDeGuyane_produitNet
+              )
+              accLine.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane =
+                pleaseRound(
+                  accLine.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane +
+                    line.taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane
+                )
+              accLine.taxeMiniereSurLOrDeGuyane_repartition_conservatoire =
+                pleaseRound(
+                  accLine.taxeMiniereSurLOrDeGuyane_repartition_conservatoire +
+                    line.taxeMiniereSurLOrDeGuyane_repartition_conservatoire
+                )
 
-    console.log(matrice1404)
-    const total1404 = Object.keys(matrice1404).filter(isSip).reduce((acc, sip)  => {
-      
-      acc[sip] = matrice1404[sip].reduce((accLine, line) => {
-        accLine.elementsDeBase_tonnagesExtraits = pleaseRound(
-          accLine.elementsDeBase_tonnagesExtraits + Number.parseFloat(line.elementsDeBase_tonnagesExtraits)
-        )
-        return accLine
-      }, {
-        kourou: {
-          elementsDeBase_tonnagesExtraits: 0,
+              return accLine
+            },
+            {
+              elementsDeBase_tonnagesExtraits: 0,
+              redevanceDepartementale_produitNetDeLaRedevance: 0,
+              redevanceDepartementale_sommesRevenantAuxDepartements: 0,
+              redevanceCommunale_produitNetDeLaRedevance: 0,
+              redevanceCommunale_repartition_1ereFraction: 0,
+              redevanceCommunale_repartition_2emeFraction: 0,
+              redevanceCommunale_repartition_3emeFraction: 0,
+              redevanceCommunale_revenantAuxCommunes_1ereFraction: 0,
+              redevanceCommunale_revenantAuxCommunes_2emeFraction: 0,
+              redevanceCommunale_revenantAuxCommunes_total: 0,
+              taxeMiniereSurLOrDeGuyane_produitNet: 0,
+              taxeMiniereSurLOrDeGuyane_repartition_regionDeGuyane: 0,
+              taxeMiniereSurLOrDeGuyane_repartition_conservatoire: 0
+            }
+          )
+
+          return acc
+        },
+        {
+          kourou: {},
+          cayenne: {},
+          saintLaurentDuMaroni: {}
         }
-      })
-      
-      return acc
-    },
-    {
-      kourou: {
-        elementsDeBase_tonnagesExtraits: 0,
-      },
-    }
-        
-    )
+      )
     await new Promise<void>(resolve => {
       carbone.render(
         'packages/api/src/business/resources/matrice_1404-SD_2022.ods',
         {
-          'kourou': matrice1404.kourou,
+          ...matrice1404,
           total: total1404,
           annee
         },
@@ -667,6 +741,5 @@ export const matrices = async (annee: number) => {
         }
       )
     })
-
   }
 }
