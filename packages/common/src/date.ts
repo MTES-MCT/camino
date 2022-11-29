@@ -37,13 +37,15 @@ export const getAnnee = (date: CaminoDate): CaminoAnnee => {
   return valideAnnee(date.substring(0, 4))
 }
 
-export const getCurrentAnnee = () => getAnnee(toCaminoDate(new Date()))
+export const getCurrent = () => toCaminoDate(new Date())
+export const getCurrentAnnee = () => getAnnee(getCurrent())
 
 export const isAnnee = (annee: string): annee is CaminoAnnee => {
   return annee.match(/^\d{4}$/) !== null
 }
 
 export const anneeSuivante = (annee: CaminoAnnee): CaminoAnnee => valideAnnee(Number(annee) + 1)
+export const anneePrecedente = (annee: CaminoAnnee): CaminoAnnee => valideAnnee(Number(annee) - 1)
 
 export function checkValideAnnee(annee: string): asserts annee is CaminoAnnee {
   if (!isAnnee(annee)) {

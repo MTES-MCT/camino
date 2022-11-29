@@ -162,12 +162,12 @@
     <div class="flex">
       <div
         v-for="tab in tabs"
-        :key="tab.id"
+        :key="tab"
         class="mr-xs"
-        :class="{ active: tabActive === tab.id }"
+        :class="{ active: tabActive === tab }"
       >
-        <div class="p-m btn-tab rnd-t-s" @click="tabToggle(tab.id)">
-          {{ tab.nom }}
+        <div class="p-m btn-tab rnd-t-s" @click="tabToggle(tab)">
+          {{ tab }}
         </div>
       </div>
     </div>
@@ -176,7 +176,7 @@
     <LoadingElement v-slot="{ item }" :data="data">
       <GuyaneActivite
         :statistiqueGuyane="item.statistiques[tabActive]"
-        :enConstruction="tabs.find(t => t.id === tabActive)?.enConstruction"
+        :enConstruction="enConstruction(tabActive)"
         class="mb-xxl"
       />
     </LoadingElement>
@@ -230,7 +230,7 @@ import BarChart from '../_charts/configurable-chart.vue'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import numberFormat from '@/utils/number-format'
 
-import { Ref, ref, computed, onMounted } from 'vue'
+import { Ref, ref, computed, onMounted, withDefaults } from 'vue'
 
 import {
   StatistiquesGuyane,
@@ -238,49 +238,52 @@ import {
 } from 'camino-common/src/statistiques'
 import { CHART_COLORS } from '../_charts/utils'
 import { ChartConfiguration, ChartData } from 'chart.js'
-import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
-
+import {
+  anneePrecedente,
+  anneeSuivante,
+  CaminoAnnee,
+  CaminoDate,
+  getAnnee,
+  getCurrent,
+  isAnnee,
+  toCaminoDate
+} from 'camino-common/src/date'
 const data = ref<AsyncData<StatistiquesGuyane>>({
   status: 'LOADING'
 })
 
-const tabActive: Ref<number> = ref(0)
+const props = withDefaults(
+  defineProps<{
+    getStats: () => Promise<StatistiquesGuyane>
+    currentDate?: CaminoDate
+  }>(),
+  { currentDate: getCurrent() }
+)
 
-const props = defineProps<{
-  getStats: () => Promise<StatistiquesGuyane>
-}>()
+const tabs = computed<Array<CaminoAnnee>>(() => {
+  let annee = getAnnee(props.currentDate)
+  return [0, 1, 2, 3, 4]
+    .map(_id => {
+      const monAnnee = annee
+      annee = anneePrecedente(annee)
+      return monAnnee
+    })
+    .reverse()
+})
 
-const anneeCurrent = computed(() => new Date().getFullYear())
-
-const tabs = computed(() => [
-  {
-    id: anneeCurrent.value - 4,
-    nom: (anneeCurrent.value - 4).toString()
-  },
-  {
-    id: anneeCurrent.value - 3,
-    nom: (anneeCurrent.value - 3).toString()
-  },
-  {
-    id: anneeCurrent.value - 2,
-    nom: (anneeCurrent.value - 2).toString()
-  },
-  {
-    id: anneeCurrent.value - 1,
-    nom: (anneeCurrent.value - 1).toString()
-  },
-  {
-    id: anneeCurrent.value,
-    nom: anneeCurrent.value.toString(),
-    enConstruction: true
-  }
-])
-
-const tabToggle = (tabId: number) => {
+const tabToggle = (tabId: CaminoAnnee) => {
   tabActive.value = tabId
 }
 
-tabToggle(anneeCurrent.value - 2)
+const enConstruction = (annee: CaminoAnnee): boolean => {
+  // À partir du 01/09 de chaque année cacher le bandeau sur l’année d’avant.
+  // Le 1er septembre 2023 on enlève le bandeau sur l’année 2022
+  return props.currentDate < toCaminoDate(`${anneeSuivante(annee)}-09-01`)
+}
+const tabActive: Ref<CaminoAnnee> = ref(
+  tabs.value.findLast(annee => !enConstruction(annee)) ??
+    getAnnee(props.currentDate)
+)
 
 onMounted(async () => {
   try {

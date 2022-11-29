@@ -1,4 +1,4 @@
-import { anneeSuivante, datesDiffInDays, daysBetween, getAnnee, isAnnee, toCaminoDate, valideAnnee } from './date'
+import { anneePrecedente, anneeSuivante, datesDiffInDays, daysBetween, getAnnee, isAnnee, toCaminoDate, valideAnnee } from './date'
 import { test, expect } from 'vitest'
 test.each([
   ['2020-06-02T13:35:11.366Z', '2021-06-03T13:35:11.366Z', 366],
@@ -45,4 +45,7 @@ test('daysBetween', () => {
 })
 test('anneeSuivante', () => {
   expect(anneeSuivante(valideAnnee('2022'))).toBe(valideAnnee('2023'))
+})
+test('anneePrecedente', () => {
+  expect(anneePrecedente(valideAnnee('2022'))).toBe(valideAnnee('2021'))
 })
