@@ -15,8 +15,7 @@ RUN npm run build -w packages/api && \
     rm -rf /app/packages/api/node_modules/ && \
     rm -rf /app/packages/ui/node_modules/ && \
     rm -rf /app/packages/common/node_modules/ && \
-    npm set-script prepare "" && \
-    npm ci --only=prod
+    CI=true make install/prod
 
 FROM node:18.7-alpine as production-stage
 

@@ -19,7 +19,9 @@ FROM node:18.7-alpine as production-stage
 
 COPY --from=build-stage /app/package*.json ./
 COPY --from=build-stage /app/packages/ui/package.json ./packages/ui/package.json
-RUN npm set-script prepare "" && npm ci --only=prod
+# Doit être supprimer quand on enlève l'express serveur frontal qui sert à rien
+COPY Makefile /app/Makefile
+RUN apk add make && cd /app && CI=true make install/prod
 COPY --from=build-stage /app/packages/ui/dist ./packages/ui/dist
 COPY --from=build-stage /app/packages/ui/index.js ./packages/ui/index.js
 

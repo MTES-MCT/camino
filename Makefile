@@ -68,6 +68,13 @@ endif
 	npm ci
 
 
+install/prod:
+ifdef CI
+	npm set-script prepare ""
+endif
+	npm ci --only=prod
+
+
 build: build/common build/api build/ui
 
 build/common:
