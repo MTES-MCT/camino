@@ -34,7 +34,7 @@ describe("dates d'un titre", () => {
   test("met à jour les dates d'un titre", async () => {
     titresGetMock.mockResolvedValue([{ id: 'titre-id' }] as Titres[])
     titreDateFinFindMock.mockReturnValue('2019-01-01')
-    titreDateDebutFindMock.mockReturnValue('2018-01-01')
+    titreDateDebutFindMock.mockReturnValue(toCaminoDate('2018-01-01'))
     titreDateDemandeFindMock.mockReturnValue(toCaminoDate('2017-01-01'))
 
     const titresDatesUpdated = await titresDatesUpdate()

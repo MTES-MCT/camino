@@ -16,7 +16,7 @@ import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes'
 // - la date de fin de la démarche
 // - la durée cumulée depuis la date de fin précédemment enregistré dans la bdd
 const titreDemarcheDateFinAndDureeFind = (
-  titreDemarches: ITitreDemarche[],
+  titreDemarches: TitreDemarchePhaseFind[],
   ordre: number
 ) =>
   titreDemarches.reduce(
@@ -80,7 +80,9 @@ const titreDemarcheDateFinAndDureeFind = (
     { duree: 0, dateFin: null }
   )
 
-const titreDemarcheOctroiDateDebutFind = (titreEtapes: ITitreEtape[]) => {
+const titreDemarcheOctroiDateDebutFind = (
+  titreEtapes: TitreEtapePhaseFind[]
+) => {
   const titreEtapesSorted =
     titreEtapes && titreEtapesSortDescByOrdre(titreEtapes)
 
@@ -125,10 +127,27 @@ const titreDemarcheOctroiDateDebutFind = (titreEtapes: ITitreEtape[]) => {
   return titreEtapeDexFirst ? titreEtapeDexFirst.date : null
 }
 
+export type TitreEtapePhaseFind = Pick<
+  ITitreEtape,
+  | 'titreDemarcheId'
+  | 'ordre'
+  | 'typeId'
+  | 'dateFin'
+  | 'duree'
+  | 'dateDebut'
+  | 'date'
+  | 'statutId'
+  | 'points'
+>
+export type TitreDemarchePhaseFind = Pick<
+  ITitreDemarche,
+  'statutId' | 'ordre' | 'typeId' | 'id'
+> & { etapes?: TitreEtapePhaseFind[] }
+
 // trouve la date de fin et la durée d'une démarche d'octroi
 const titreDemarcheOctroiDateFinAndDureeFind = (
   dureeAcc: number,
-  titreEtapes: ITitreEtape[]
+  titreEtapes: TitreEtapePhaseFind[]
 ) => {
   // retourne la durée cumulée et la date de fin
   // de la démarche d'octroi
@@ -189,7 +208,7 @@ const titreDemarcheOctroiDateFinAndDureeFind = (
 // - duree: la durée cumulée
 const titreDemarcheNormaleDateFinAndDureeFind = (
   dureeAcc: number,
-  titreEtapes: ITitreEtape[]
+  titreEtapes: TitreEtapePhaseFind[]
 ) => {
   // la dernière étape
   // - dont le type est décision express (dex)

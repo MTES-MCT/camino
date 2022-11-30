@@ -23,7 +23,7 @@ const titreDemarchesValide: ITitreDemarche[] = [
         ordre: 1,
         date: toCaminoDate('2014-04-01'),
         dateDebut: null,
-        dateFin: '3014-04-01'
+        dateFin: toCaminoDate('3014-04-01')
       }
     ]
   }
@@ -46,7 +46,7 @@ const titreDemarchesEchu: ITitreDemarche[] = [
         ordre: 1,
         date: toCaminoDate('1014-04-01'),
         dateDebut: null,
-        dateFin: '2014-04-01'
+        dateFin: toCaminoDate('2014-04-01')
       }
     ]
   }
@@ -160,7 +160,7 @@ const titrePERDemarchesProlongation: ITitreDemarche[] = [
         ordre: 1,
         date: toCaminoDate('1014-04-01'),
         dateDebut: null,
-        dateFin: '2020-04-01'
+        dateFin: toCaminoDate('2020-04-01')
       }
     ]
   }

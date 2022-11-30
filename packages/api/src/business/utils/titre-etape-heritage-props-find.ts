@@ -8,6 +8,7 @@ import {
 import { objectClone } from '../../tools/index'
 import { idGenerate } from '../../database/models/_format/id-create'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
+import { CaminoDate } from 'camino-common/src/date'
 
 const titreEtapePropsIds: (keyof ITitreEtape)[] = [
   'points',
@@ -148,7 +149,7 @@ const titreEtapeHeritagePropsFind = (
           } else if (propId === 'substances') {
             newTitreEtape[propId] = newValue as SubstanceLegaleId[]
           } else if (propId === 'dateDebut' || propId === 'dateFin') {
-            newTitreEtape[propId] = newValue as string
+            newTitreEtape[propId] = newValue as CaminoDate
           } else if (propId === 'duree' || propId === 'surface') {
             newTitreEtape[propId] = newValue as number
           }

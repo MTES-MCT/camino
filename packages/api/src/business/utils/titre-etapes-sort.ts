@@ -8,12 +8,16 @@ import {
 import { toMachineEtapes } from '../rules-demarches/machine-common'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
-export const titreEtapesSortDescByOrdre = (titreEtapes: ITitreEtape[]) =>
-  titreEtapes.slice().sort((a, b) => b.ordre! - a.ordre!)
+export const titreEtapesSortDescByOrdre = <
+  T extends Pick<ITitreEtape, 'ordre'>
+>(
+  titreEtapes: T[]
+): T[] => titreEtapes.slice().sort((a, b) => b.ordre! - a.ordre!)
 
 // classe les étapes selon leur ordre: 1, 2, 3, …
-export const titreEtapesSortAscByOrdre = (titreEtapes: ITitreEtape[]) =>
-  titreEtapes.slice().sort((a, b) => a.ordre! - b.ordre!)
+export const titreEtapesSortAscByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(
+  titreEtapes: T[]
+): T[] => titreEtapes.slice().sort((a, b) => a.ordre! - b.ordre!)
 
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
 export const titreEtapesSortAscByDate = (

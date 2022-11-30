@@ -161,7 +161,7 @@ describe("phases d'une démarche", () => {
             statutId: 'acc',
             ordre: 2,
             date: toCaminoDate('1994-10-18'),
-            dateFin: '2044-10-18',
+            dateFin: toCaminoDate('2044-10-18'),
             duree: 600
           },
           {
@@ -295,7 +295,7 @@ describe("phases d'une démarche", () => {
             statutId: 'acc',
             ordre: 2,
             date: toCaminoDate('1994-10-18'),
-            dateFin: '2044-10-18',
+            dateFin: toCaminoDate('2044-10-18'),
             duree: 600
           },
           {

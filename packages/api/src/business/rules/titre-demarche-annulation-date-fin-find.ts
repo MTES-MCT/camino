@@ -1,9 +1,10 @@
-import { ITitreEtape } from '../../types'
+import { CaminoDate } from 'camino-common/src/date'
 
 import {
   titreEtapesSortAscByOrdre,
   titreEtapesSortDescByOrdre
 } from '../utils/titre-etapes-sort'
+import { TitreEtapePhaseFind } from './titre-demarche-date-fin-duree-find'
 
 /**
  * Retourne la date de fin d'une démarche d'annulation
@@ -11,10 +12,11 @@ import {
  * @param titreEtapes - les étapes de la démarche d'annulation
  * @returns la date de fin si elle existe
  */
-
-const titreDemarcheAnnulationDateFinFind = (titreEtapes: ITitreEtape[]) => {
+export const titreDemarcheAnnulationDateFinFind = (
+  titreEtapes: TitreEtapePhaseFind[]
+): CaminoDate | null | undefined => {
   // si l’étape valide l’annulation
-  const etapeAnnulationValideCheck = (te: ITitreEtape) =>
+  const etapeAnnulationValideCheck = (te: TitreEtapePhaseFind) =>
     // si on a une décision expresse (dex) ou unilatérale (dux) ou implicite (dim)
     ['dex', 'dux', 'dim'].includes(te.typeId) ||
     // si l’ARM a une signature de l’avenant à l’autorisation de recherche minière fait
@@ -39,5 +41,3 @@ const titreDemarcheAnnulationDateFinFind = (titreEtapes: ITitreEtape[]) => {
   // la date de fin est la date de l'étape
   return etapeAnnulation?.date ? etapeAnnulation.date : null
 }
-
-export { titreDemarcheAnnulationDateFinFind }
