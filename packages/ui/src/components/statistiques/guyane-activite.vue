@@ -92,20 +92,12 @@
   </div>
 </template>
 
-<script>
+<script setup lang="ts">
 import numberFormat from '@/utils/number-format'
-export default {
-  name: 'IndicateursActiviteGuyane',
+import { StatistiquesGuyaneGraphQL } from 'camino-common/src/statistiques'
 
-  props: {
-    statistiqueGuyane: { type: Object, required: true },
-    enConstruction: { type: Boolean, default: false }
-  },
-
-  methods: {
-    numberFormat(number) {
-      return numberFormat(number)
-    }
-  }
-}
+defineProps<{
+  statistiqueGuyane: StatistiquesGuyaneGraphQL
+  enConstruction: boolean
+}>()
 </script>
