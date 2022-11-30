@@ -582,10 +582,10 @@ interface ITitreIncertitudes {
 }
 
 interface ITitrePhase {
-  titreDemarcheId: string
+  titreDemarcheId: DemarcheId
   phaseStatutId: PhaseStatutId
-  dateDebut: string
-  dateFin: string
+  dateDebut: CaminoDate
+  dateFin: CaminoDate
 }
 
 interface ITitrePoint {

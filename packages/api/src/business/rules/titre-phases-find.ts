@@ -7,6 +7,7 @@ import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find.js'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { CaminoDate } from 'camino-common/src/date'
 
 /**
  * trouve une démarche acceptée ou terminée qui est
@@ -27,7 +28,7 @@ const titreDemarcheAnnulationFind = (titreDemarches: TitreDemarchePhaseFind[]) =
  * @param aujourdhui - date du jour
  * @param titreTypeId - id du type de titre
  */
-export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujourdhui: string, titreTypeId: TitreTypeId) => {
+export const titrePhasesFind = (titreDemarches: TitreDemarchePhaseFind[], aujourdhui: CaminoDate, titreTypeId: TitreTypeId): ITitrePhase[] => {
   // filtre les démarches qui donnent lieu à des phases
   const titreDemarchesFiltered = titreDemarches.filter(titreDemarche => titreDemarchePhaseCheck(titreDemarche.typeId, titreDemarche.statutId!, titreTypeId, titreDemarche.etapes))
 

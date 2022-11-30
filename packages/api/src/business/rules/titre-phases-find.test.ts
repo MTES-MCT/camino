@@ -1,4 +1,4 @@
-import { ITitreDemarche } from '../../types.js'
+import { ITitreDemarche, ITitrePhase } from '../../types.js'
 import { titrePhasesFind } from './titre-phases-find.js'
 import {
   titreDemarcheOctDpuAcc,
@@ -11,13 +11,23 @@ import {
   titreDemarchesOctAnnulationSansPoints,
 } from './__mocks__/titre-phases-find-demarches.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { TitreDemarchePhaseFind } from './titre-demarche-date-fin-duree-find'
+import titresProd from './titre-phases-find.cas.json'
+
+export type TitrePhasesTest = [
+  TitreTypeId,
+  TitreDemarchePhaseFind[],
+  ITitrePhase[],
+  CaminoDate
+]
 
 describe("phases d'une démarche", () => {
-  const aujourdhui = '2020-12-01'
+  const aujourdhui = toCaminoDate('2020-12-01')
   test("un titre qui a une démarche d'octroi avec une dpu a une phase", () => {
     expect(titrePhasesFind([titreDemarcheOctDpuAcc], aujourdhui, 'cxh')).toEqual([
       {
@@ -220,7 +230,7 @@ describe("phases d'une démarche", () => {
         ],
       },
     ]
-    const aujourdhui = '2022-05-09'
+    const aujourdhui = toCaminoDate('2022-05-09')
     const titreTypeId = 'cxm'
 
     const tested = titrePhasesFind(demarches, aujourdhui, titreTypeId)
@@ -345,7 +355,7 @@ describe("phases d'une démarche", () => {
         ],
       },
     ]
-    const aujourdhui = '2022-05-09'
+    const aujourdhui = toCaminoDate('2022-05-09')
     const titreTypeId = 'cxm'
 
     //  d'un côté on a une dim, de l'autre on a une dex suivie d'une dpu
@@ -407,7 +417,7 @@ describe("phases d'une démarche", () => {
             statutId: 'acc',
             ordre: 2,
             date: toCaminoDate('1981-09-13'),
-            dateFin: '2031-09-13'
+            dateFin: toCaminoDate('2031-09-13')
           },
           {
             id: 'demarcheId2EtapeId1',
@@ -420,7 +430,7 @@ describe("phases d'une démarche", () => {
         ]
       }
     ]
-    const aujourdhui = '2022-05-09'
+    const aujourdhui = toCaminoDate('2022-05-09')
     const titreTypeId = 'cxm'
 
     const tested = titrePhasesFind(demarches, aujourdhui, titreTypeId)
@@ -487,7 +497,7 @@ describe("phases d'une démarche", () => {
         ]
       }
     ]
-    const aujourdhui = '2022-11-29'
+    const aujourdhui = toCaminoDate('2022-11-29')
     const titreTypeId = 'prw'
 
     const tested = titrePhasesFind(demarches, aujourdhui, titreTypeId)
@@ -506,4 +516,12 @@ describe("phases d'une démarche", () => {
       }
     ])
   })
+  test.each<TitrePhasesTest>(titresProd)(
+    'cas réel N°$id',
+    (titreTypeId, demarches, phases, date) => {
+      expect(titrePhasesFind(demarches, date, titreTypeId)).toStrictEqual(
+        phases
+      )
+    }
+  )
 })
