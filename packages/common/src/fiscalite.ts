@@ -23,7 +23,9 @@ export const isFiscaliteGuyane = (fiscalite: Fiscalite): fiscalite is FiscaliteG
 
 export const montantNetTaxeAurifere = (fiscalite: Fiscalite) => (isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.taxeAurifere : 0)
 
-export const fraisGestion = (fiscalite: Fiscalite) => (fiscalite.redevanceDepartementale + fiscalite.redevanceCommunale + montantNetTaxeAurifere(fiscalite)) * 0.08
+export const fraisGestion = (fiscalite: Fiscalite): number => {
+  return Number.parseFloat(((fiscalite.redevanceDepartementale + fiscalite.redevanceCommunale + montantNetTaxeAurifere(fiscalite)) * 0.08).toFixed(2))
+}
 export type UserFiscalite =
   | {
       entreprises?: { id: string }[] | null

@@ -149,7 +149,8 @@ describe('matrices', () => {
       buildMatrices(openFiscaResponse, titres, 2021, {
         tarifCommunal: 166.3,
         tarifDepartemental: 33.2,
-        tarifTaxeMinierePME: 498.06
+        tarifTaxeMinierePME: 498.06,
+        tarifTaxeMiniereAutre: 123.97
       })
     ).toMatchSnapshot()
   })

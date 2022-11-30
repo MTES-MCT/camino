@@ -99,6 +99,7 @@ export interface OpenfiscaConstants {
   tarifDepartemental: number
   tarifCommunal: number
   tarifTaxeMinierePME: number
+  tarifTaxeMiniereAutre: number
 }
 
 const apiOpenfiscaFetch = async <T>(
@@ -160,6 +161,10 @@ export const apiOpenfiscaConstantsFetch = async (
   }
 
   const tarifTaxeMinierePME = await getParameter('taxes/guyane/categories/pme')
+  const tarifTaxeMiniereAutre = await getParameter(
+    'taxes/guyane/categories/autre'
+  )
+
   // TODO 2022-08-09 : faire passer la substance en parametre le jour où on fait des matrices autre que Guyane
   const tarifCommunal = await getParameter('redevances/communales/aurifere')
   const tarifDepartemental = await getParameter(
@@ -169,6 +174,7 @@ export const apiOpenfiscaConstantsFetch = async (
   return {
     tarifCommunal,
     tarifDepartemental,
-    tarifTaxeMinierePME
+    tarifTaxeMinierePME,
+    tarifTaxeMiniereAutre
   }
 }
