@@ -600,7 +600,7 @@ describe("publicité d'une démarche", () => {
           titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
           ordre: 1,
           dateDebut: null,
-          dateFin: '2020-10-01'
+          dateFin: toCaminoDate('2020-10-01')
         }
       ]
     },
@@ -620,7 +620,7 @@ describe("publicité d'une démarche", () => {
           ordre: 1,
           date: toCaminoDate('1014-04-01'),
           dateDebut: null,
-          dateFin: '2020-04-01'
+          dateFin: toCaminoDate('2020-04-01')
         }
       ]
     }

@@ -644,8 +644,8 @@ interface ITitreEtape {
   sectionsSpecifiques?: ISection[] | null
   titreDemarcheId: DemarcheId
   demarche?: ITitreDemarche
-  dateDebut?: string | null
-  dateFin?: string | null
+  dateDebut?: CaminoDate | null
+  dateFin?: CaminoDate | null
   substances?: SubstanceLegaleId[] | null
   points?: ITitrePoint[] | null
   geojsonMultiPolygon?: IGeoJson | null

@@ -1,11 +1,10 @@
-import { ITitreEtape } from '../../types'
-
 import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check'
 import {
   DemarcheTypeId,
   isDemarcheTypeWithPhase
 } from 'camino-common/src/static/demarchesTypes'
+import { TitreEtapePhaseFind } from './titre-demarche-date-fin-duree-find'
 
 /**
  * Vérifie si la démarche donne lieu à une phase
@@ -18,7 +17,7 @@ export const titreDemarchePhaseCheck = (
   titreDemarcheTypeId: DemarcheTypeId,
   titreDemarcheStatutId: string,
   titreTypeId: string,
-  titreEtapes?: ITitreEtape[] | null
+  titreEtapes?: TitreEtapePhaseFind[] | null
 ) => {
   // si
   // - la démarche n'a pas d'étapes

@@ -35,7 +35,7 @@ describe("date de fin d'une démarche d'annulation", () => {
           statutId: 'acc',
           ordre: 1,
           date: toCaminoDate('2013-05-21'),
-          dateFin: '2013-05-25'
+          dateFin: toCaminoDate('2013-05-25')
         }
       ]
       expect(
@@ -72,7 +72,7 @@ describe("date de fin d'une démarche d'annulation", () => {
         statutId: 'fai',
         ordre: 1,
         date: toCaminoDate('2013-05-21'),
-        dateFin: '2013-05-25'
+        dateFin: toCaminoDate('2013-05-25')
       }
     ]
     expect(

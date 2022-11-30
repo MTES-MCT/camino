@@ -1,6 +1,8 @@
-import { ITitreDemarche, ITitrePhase } from '../../types'
+import { ITitrePhase } from '../../types'
 
-import titreDemarcheDateFinAndDureeFind from './titre-demarche-date-fin-duree-find'
+import titreDemarcheDateFinAndDureeFind, {
+  TitreDemarchePhaseFind
+} from './titre-demarche-date-fin-duree-find'
 import { titreDemarchePhaseCheck } from './titre-demarche-phase-check'
 import {
   titreEtapesSortAscByOrdre,
@@ -18,7 +20,9 @@ import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes'
  *   (= ne contient pas d'étape avec des infos géo (points)
  * @param titreDemarches - liste d’étapes
  */
-const titreDemarcheAnnulationFind = (titreDemarches: ITitreDemarche[]) =>
+const titreDemarcheAnnulationFind = (
+  titreDemarches: TitreDemarchePhaseFind[]
+) =>
   titreDemarches.find(
     titreDemarche =>
       ['acc', 'ter'].includes(titreDemarche.statutId!) &&
@@ -33,8 +37,8 @@ const titreDemarcheAnnulationFind = (titreDemarches: ITitreDemarche[]) =>
  * @param aujourdhui - date du jour
  * @param titreTypeId - id du type de titre
  */
-const titrePhasesFind = (
-  titreDemarches: ITitreDemarche[],
+export const titrePhasesFind = (
+  titreDemarches: TitreDemarchePhaseFind[],
   aujourdhui: string,
   titreTypeId: string
 ) => {
@@ -105,7 +109,7 @@ const titrePhasesFind = (
 }
 
 const titrePhaseDateDebutFind = (
-  titreDemarche: ITitreDemarche,
+  titreDemarche: TitreDemarchePhaseFind,
   titrePhases: ITitrePhase[],
   index: number,
   titreTypeId: string
@@ -155,13 +159,11 @@ const titrePhaseDateDebutFind = (
 // - titreDemarche: la démarche dont on cherche la date de fin
 
 const titrePhaseDateFinFind = (
-  titreDemarchesFiltered: ITitreDemarche[],
-  titreDemarche: ITitreDemarche
+  titreDemarchesFiltered: TitreDemarchePhaseFind[],
+  titreDemarche: TitreDemarchePhaseFind
 ) =>
   // sinon, calcule la date de fin en fonction des démarches
   titreDemarcheDateFinAndDureeFind(
     titreDemarchesFiltered.slice().reverse(),
     titreDemarche.ordre!
   ).dateFin
-
-export { titrePhasesFind }
