@@ -1,4 +1,4 @@
-FROM node:18.7-alpine as build-stage
+FROM node:19.1-alpine as build-stage
 WORKDIR /app
 
 RUN apk add make
@@ -17,7 +17,7 @@ RUN npm run build -w packages/api && \
     rm -rf /app/packages/common/node_modules/ && \
     CI=true make install/prod
 
-FROM node:18.7-alpine as production-stage
+FROM node:19.1-alpine as production-stage
 
 # TODO 2022-07-13 : on profite que
 # - l'utilisateur a le même id sur toutes les machines
