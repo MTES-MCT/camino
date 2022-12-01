@@ -1,6 +1,6 @@
-import { ITitrePoint } from '../../types'
+import { ITitrePoint } from '../../types.js'
 
-import { geojsonCenter } from '../../tools/geojson'
+import { geojsonCenter } from '../../tools/geojson.js'
 
 export const titreCoordonneesFind = (titrePoints?: ITitrePoint[] | null) => {
   if (!titrePoints?.length) return null

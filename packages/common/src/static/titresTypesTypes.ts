@@ -1,4 +1,4 @@
-import { Definition } from '../definition'
+import { Definition } from '../definition.js'
 
 export const TITRES_TYPES_TYPES_IDS = {
   AUTORISATION_DE_PROSPECTION: 'ap',

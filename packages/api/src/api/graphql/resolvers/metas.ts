@@ -4,7 +4,7 @@ import {
   IEtapeType,
   IFields,
   IToken
-} from '../../../types'
+} from '../../../types.js'
 
 import {
   demarchesStatutsGet,
@@ -14,38 +14,41 @@ import {
   domainesGet,
   etapesTypesGet,
   titresTypesTypesGet
-} from '../../../database/queries/metas'
+} from '../../../database/queries/metas.js'
 
-import { userGet } from '../../../database/queries/utilisateurs'
+import { userGet } from '../../../database/queries/utilisateurs.js'
 
-import { fieldsBuild } from './_fields-build'
-import { etapeTypeIsValidCheck } from '../../_format/etapes-types'
-import { titreDemarcheGet } from '../../../database/queries/titres-demarches'
-import { titreEtapeGet } from '../../../database/queries/titres-etapes'
+import { fieldsBuild } from './_fields-build.js'
+import { etapeTypeIsValidCheck } from '../../_format/etapes-types.js'
+import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
+import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
 import {
   demarcheDefinitionFind,
   isDemarcheDefinitionMachine
-} from '../../../business/rules-demarches/definitions'
-import { userSuper } from '../../../database/user-super'
-import { sortedAdministrationTypes } from 'camino-common/src/static/administrations'
-import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
+} from '../../../business/rules-demarches/definitions.js'
+import { userSuper } from '../../../database/user-super.js'
+import { sortedAdministrationTypes } from 'camino-common/src/static/administrations.js'
+import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 
-import { UNITES } from 'camino-common/src/static/unites'
-import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort'
-import TitresDemarches from '../../../database/models/titres-demarches'
-import { Pays, PaysList } from 'camino-common/src/static/pays'
-import { Departement, Departements } from 'camino-common/src/static/departement'
-import { Region, Regions } from 'camino-common/src/static/region'
-import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
-import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { UNITES } from 'camino-common/src/static/unites.js'
+import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort.js'
+import TitresDemarches from '../../../database/models/titres-demarches.js'
+import { Pays, PaysList } from 'camino-common/src/static/pays.js'
+import {
+  Departement,
+  Departements
+} from 'camino-common/src/static/departement.js'
+import { Region, Regions } from 'camino-common/src/static/region.js'
+import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts.js'
+import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import {
   Etape,
   toMachineEtapes
-} from '../../../business/rules-demarches/machine-common'
-import { CaminoMachines } from '../../../business/rules-demarches/machines'
-import { phasesStatuts as staticPhasesStatuts } from 'camino-common/src/static/phasesStatuts'
-import { sortedReferencesTypes } from 'camino-common/src/static/referencesTypes'
-import { CaminoDate } from 'camino-common/src/date'
+} from '../../../business/rules-demarches/machine-common.js'
+import { CaminoMachines } from '../../../business/rules-demarches/machines.js'
+import { phasesStatuts as staticPhasesStatuts } from 'camino-common/src/static/phasesStatuts.js'
+import { sortedReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
+import { CaminoDate } from 'camino-common/src/date.js'
 
 export const devises = async () => devisesGet()
 

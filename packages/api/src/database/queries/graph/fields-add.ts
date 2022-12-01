@@ -1,4 +1,4 @@
-import { IFields } from '../../../types'
+import { IFields } from '../../../types.js'
 
 // ajoute les champs nécessaire pour obtenir le sous-objet titre
 // pour vérifier si l'utilisateur a les droits sur les titres

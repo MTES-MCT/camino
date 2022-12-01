@@ -1,7 +1,7 @@
 import { Model } from 'objection'
-import { ITitreEtapeJustificatif } from '../../types'
-import TitresEtapes from './titres-etapes'
-import Document from './documents'
+import { ITitreEtapeJustificatif } from '../../types.js'
+import TitresEtapes from './titres-etapes.js'
+import Document from './documents.js'
 
 interface TitresEtapesJustificatifs extends ITitreEtapeJustificatif {}
 

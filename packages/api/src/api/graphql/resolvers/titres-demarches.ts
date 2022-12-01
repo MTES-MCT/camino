@@ -5,13 +5,13 @@ import {
   ITitreDemarche,
   ITitreEtapeFiltre,
   ITitreDemarcheColonneId
-} from '../../../types'
+} from '../../../types.js'
 
-import { fieldsBuild } from './_fields-build'
+import { fieldsBuild } from './_fields-build.js'
 
-import { titreFormat } from '../../_format/titres'
+import { titreFormat } from '../../_format/titres.js'
 
-import { titreDemarcheFormat } from '../../_format/titres-demarches'
+import { titreDemarcheFormat } from '../../_format/titres-demarches.js'
 
 import {
   titreDemarcheGet,
@@ -20,14 +20,14 @@ import {
   titreDemarcheCreate,
   titreDemarcheUpdate,
   titreDemarcheArchive
-} from '../../../database/queries/titres-demarches'
+} from '../../../database/queries/titres-demarches.js'
 
-import { titreGet } from '../../../database/queries/titres'
+import { titreGet } from '../../../database/queries/titres.js'
 
-import titreDemarcheUpdateTask from '../../../business/titre-demarche-update'
-import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate'
-import { userGet } from '../../../database/queries/utilisateurs'
-import { demarcheTypeGet } from '../../../database/queries/metas'
+import titreDemarcheUpdateTask from '../../../business/titre-demarche-update.js'
+import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate.js'
+import { userGet } from '../../../database/queries/utilisateurs.js'
+import { demarcheTypeGet } from '../../../database/queries/metas.js'
 
 const demarche = async (
   { id }: { id: string },

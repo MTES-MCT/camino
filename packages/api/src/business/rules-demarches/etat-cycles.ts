@@ -1,4 +1,4 @@
-import { IDemarcheDefinitionRestrictionsElements } from './definitions'
+import { IDemarcheDefinitionRestrictionsElements } from './definitions.js'
 
 const etatCycleGet = (
   etapeTypeIdDefinition: IDemarcheDefinitionRestrictionsElements,

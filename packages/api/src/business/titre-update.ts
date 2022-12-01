@@ -1,7 +1,7 @@
-import { titresActivitesUpdate } from './processes/titres-activites-update'
-import { titresPublicUpdate } from './processes/titres-public-update'
-import { titresSlugsUpdate } from './processes/titres-slugs-update'
-import { logsUpdate } from './_logs-update'
+import { titresActivitesUpdate } from './processes/titres-activites-update.js'
+import { titresPublicUpdate } from './processes/titres-public-update.js'
+import { titresSlugsUpdate } from './processes/titres-slugs-update.js'
+import { logsUpdate } from './_logs-update.js'
 
 const titreUpdate = async (titreId: string) => {
   try {

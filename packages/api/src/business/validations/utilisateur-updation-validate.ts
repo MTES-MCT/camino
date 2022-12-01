@@ -1,12 +1,12 @@
-import { IUtilisateur } from '../../types'
+import { IUtilisateur } from '../../types.js'
 
-import { userGet } from '../../database/queries/utilisateurs'
+import { userGet } from '../../database/queries/utilisateurs.js'
 
 import {
   isAdministration,
   isAdministrationAdmin,
   isSuper
-} from 'camino-common/src/roles'
+} from 'camino-common/src/roles.js'
 
 /**
  * Valide la mise à jour d'un utilisateur

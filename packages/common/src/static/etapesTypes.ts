@@ -1,4 +1,4 @@
-import { Definition } from '../definition'
+import { Definition } from '../definition.js'
 
 export const ETAPES_TYPES = {
   avisDeDirectionRegionaleDesAffairesCulturelles: 'aac',

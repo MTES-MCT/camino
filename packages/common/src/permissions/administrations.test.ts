@@ -1,6 +1,6 @@
-import { canReadActivitesTypesEmails } from './administrations'
-import { User } from '../roles'
-import { ADMINISTRATION_IDS } from '../static/administrations'
+import { canReadActivitesTypesEmails } from './administrations.js'
+import { User } from '../roles.js'
+import { ADMINISTRATION_IDS } from '../static/administrations.js'
 import { test, expect } from 'vitest'
 
 test.each<[User, boolean]>([

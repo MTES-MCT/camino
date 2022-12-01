@@ -1,12 +1,12 @@
 import express from 'express'
 import expressJwt from 'express-jwt'
 import jwt from 'jsonwebtoken'
-import { userByRefreshTokenGet } from '../database/queries/utilisateurs'
+import { userByRefreshTokenGet } from '../database/queries/utilisateurs.js'
 import {
   accessTokenGet,
   cookieSet,
   userTokensDelete
-} from '../api/graphql/resolvers/utilisateurs'
+} from '../api/graphql/resolvers/utilisateurs.js'
 
 const authJwt = expressJwt({
   credentialsRequired: false,

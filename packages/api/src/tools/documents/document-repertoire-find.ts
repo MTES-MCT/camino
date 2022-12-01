@@ -1,4 +1,4 @@
-import { IDocument, IDocumentRepertoire } from '../../types'
+import { IDocument, IDocumentRepertoire } from '../../types.js'
 
 export const documentRepertoireFind = (
   document: IDocument

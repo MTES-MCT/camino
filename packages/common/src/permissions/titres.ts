@@ -1,8 +1,8 @@
-import { isTitreType, TitresTypes, TitreTypeId } from '../static/titresTypes'
-import { DemarcheTypeId } from '../static/demarchesTypes'
-import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, Role, User } from '../roles'
-import { AdministrationId } from '../static/administrations'
-import { isGestionnaire } from '../static/administrationsTitresTypes'
+import { isTitreType, TitresTypes, TitreTypeId } from '../static/titresTypes.js'
+import { DemarcheTypeId } from '../static/demarchesTypes.js'
+import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, Role, User } from '../roles.js'
+import { AdministrationId } from '../static/administrations.js'
+import { isGestionnaire } from '../static/administrationsTitresTypes.js'
 
 export const getLinkConfig = (typeId: TitreTypeId, demarches: { typeId: DemarcheTypeId }[]): { count: 'single' | 'multiple'; typeId: TitreTypeId } | null => {
   switch (typeId) {

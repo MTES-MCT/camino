@@ -1,8 +1,8 @@
-import { ITitrePhase } from '../../types'
+import { ITitrePhase } from '../../types.js'
 
-import options from './_options'
+import options from './_options.js'
 
-import TitresPhases from '../models/titres-phases'
+import TitresPhases from '../models/titres-phases.js'
 
 const titresPhasesGet = async () =>
   TitresPhases.query().withGraphFetched(options.titresDemarchesPhases.graph)

@@ -1,7 +1,7 @@
-import { isAdministration, isEntreprise, isSuper, Role } from './roles'
-import { AdministrationId } from './static/administrations'
-import { DOMAINES_IDS } from './static/domaines'
-import { CommonTitre } from './titres'
+import { isAdministration, isEntreprise, isSuper, Role } from './roles.js'
+import { AdministrationId } from './static/administrations.js'
+import { DOMAINES_IDS } from './static/domaines.js'
+import { CommonTitre } from './titres.js'
 
 export type Fiscalite = FiscaliteGuyane | FiscaliteFrance
 export interface FiscaliteFrance {

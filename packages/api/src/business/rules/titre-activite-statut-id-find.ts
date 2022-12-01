@@ -1,5 +1,5 @@
-import { ITitreActivite } from '../../types'
-import { dateAddMonths } from '../../tools/date'
+import { ITitreActivite } from '../../types.js'
+import { dateAddMonths } from '../../tools/date.js'
 
 /**
  * Trouve le statut d'une activité

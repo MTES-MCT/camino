@@ -1,14 +1,14 @@
-import { userGet } from '../../database/queries/utilisateurs'
+import { userGet } from '../../database/queries/utilisateurs.js'
 
 import express from 'express'
-import { ICommune, IContenuValeur, IEntreprise, IUser } from '../../types'
+import { ICommune, IContenuValeur, IEntreprise, IUser } from '../../types.js'
 import {
   Fiscalite,
   FiscaliteFrance,
   FiscaliteGuyane,
   fiscaliteVisible,
   isFiscaliteGuyane
-} from 'camino-common/src/fiscalite'
+} from 'camino-common/src/fiscalite.js'
 import { constants } from 'http2'
 import {
   apiOpenfiscaCalculate,
@@ -18,21 +18,21 @@ import {
   redevanceDepartementale,
   substanceFiscaleToInput,
   openfiscaSubstanceFiscaleUnite
-} from '../../tools/api-openfisca'
-import { titresGet } from '../../database/queries/titres'
-import { titresActivitesGet } from '../../database/queries/titres-activites'
-import { entrepriseGet } from '../../database/queries/entreprises'
-import TitresActivites from '../../database/models/titres-activites'
-import Titres from '../../database/models/titres'
-import { CustomResponse } from './express-type'
+} from '../../tools/api-openfisca/index.js'
+import { titresGet } from '../../database/queries/titres.js'
+import { titresActivitesGet } from '../../database/queries/titres-activites.js'
+import { entrepriseGet } from '../../database/queries/entreprises.js'
+import TitresActivites from '../../database/models/titres-activites.js'
+import Titres from '../../database/models/titres.js'
+import { CustomResponse } from './express-type.js'
 import {
   SubstanceFiscale,
   substancesFiscalesBySubstanceLegale
-} from 'camino-common/src/static/substancesFiscales'
-import { Departements } from 'camino-common/src/static/departement'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { Regions } from 'camino-common/src/static/region'
-import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
+} from 'camino-common/src/static/substancesFiscales.js'
+import { Departements } from 'camino-common/src/static/departement.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { Regions } from 'camino-common/src/static/region.js'
+import { CaminoAnnee, isAnnee } from 'camino-common/src/date.js'
 
 const conversion = (
   substanceFiscale: SubstanceFiscale,

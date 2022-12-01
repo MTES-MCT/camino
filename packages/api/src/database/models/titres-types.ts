@@ -1,10 +1,10 @@
 import { Model, Modifiers } from 'objection'
 
-import { ITitreType } from '../../types'
+import { ITitreType } from '../../types.js'
 
-import Domaines from './domaines'
-import DemarchesTypes from './demarches-types'
-import TitresTypesTypes from './titres-types-types'
+import Domaines from './domaines.js'
+import DemarchesTypes from './demarches-types.js'
+import TitresTypesTypes from './titres-types-types.js'
 
 interface TitresTypes extends ITitreType {}
 

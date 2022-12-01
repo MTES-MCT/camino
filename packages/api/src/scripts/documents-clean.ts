@@ -1,5 +1,5 @@
 import '../init'
-import { documentsClean } from '../tools/documents/clean'
+import { documentsClean } from '../tools/documents/clean.js'
 
 documentsClean()
   .then(() => {

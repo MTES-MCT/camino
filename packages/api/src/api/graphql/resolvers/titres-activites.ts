@@ -1,4 +1,3 @@
-import dateFormat from 'dateformat'
 import { GraphQLResolveInfo } from 'graphql'
 
 import {
@@ -7,15 +6,15 @@ import {
   ITitreActiviteColonneId,
   IToken,
   IUtilisateur
-} from '../../../types'
+} from '../../../types.js'
 
-import { titreActiviteEmailsSend } from './_titre-activite'
+import { titreActiviteEmailsSend } from './_titre-activite.js'
 import {
   titreActiviteContenuFormat,
   titreActiviteFormat
-} from '../../_format/titres-activites'
+} from '../../_format/titres-activites.js'
 
-import { fieldsBuild } from './_fields-build'
+import { fieldsBuild } from './_fields-build.js'
 
 import {
   titreActiviteDelete,
@@ -23,21 +22,21 @@ import {
   titreActiviteUpdate as titreActiviteUpdateQuery,
   titresActivitesCount,
   titresActivitesGet
-} from '../../../database/queries/titres-activites'
+} from '../../../database/queries/titres-activites.js'
 import {
   userGet,
   utilisateursGet
-} from '../../../database/queries/utilisateurs'
+} from '../../../database/queries/utilisateurs.js'
 
-import { titreActiviteInputValidate } from '../../../business/validations/titre-activite-input-validate'
-import { titreActiviteDeletionValidate } from '../../../business/validations/titre-activite-deletion-validate'
-import { userSuper } from '../../../database/user-super'
-import { fichiersRepertoireDelete } from './_titre-document'
-import { documentsLier } from './documents'
-import { titreGet } from '../../../database/queries/titres'
-import { AdministrationId } from 'camino-common/src/static/administrations'
-import { onlyUnique } from 'camino-common/src/typescript-tools'
-import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes'
+import { titreActiviteInputValidate } from '../../../business/validations/titre-activite-input-validate.js'
+import { titreActiviteDeletionValidate } from '../../../business/validations/titre-activite-deletion-validate.js'
+import { userSuper } from '../../../database/user-super.js'
+import { fichiersRepertoireDelete } from './_titre-document.js'
+import { documentsLier } from './documents.js'
+import { titreGet } from '../../../database/queries/titres.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
 
 /**
  * Retourne une activité
@@ -230,7 +229,7 @@ const activiteDeposer = async (
     await titreActiviteUpdateQuery(activite.id, {
       statutId: 'dep',
       utilisateurId: user.id,
-      dateSaisie: dateFormat(new Date(), 'yyyy-mm-dd')
+      dateSaisie: getCurrent()
     })
     const fields = fieldsBuild(info)
     const activiteRes = await titreActiviteGet(activite.id, { fields }, user)
@@ -328,7 +327,7 @@ const activiteModifier = async (
     }
 
     activite.utilisateurId = user.id
-    activite.dateSaisie = dateFormat(new Date(), 'yyyy-mm-dd')
+    activite.dateSaisie = getCurrent()
     activite.statutId = 'enc'
 
     if (activite.contenu) {
@@ -397,4 +396,10 @@ export {
   activiteModifier,
   activiteSupprimer,
   activiteDeposer
+}
+
+function getCurrent():
+  | import('camino-common/src/date.js').CaminoDate
+  | undefined {
+  throw new Error('Function not implemented.')
 }

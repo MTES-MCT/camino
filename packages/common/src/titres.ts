@@ -1,9 +1,9 @@
-import { DomaineId } from './static/domaines'
-import { TitreTypeTypeId } from './static/titresTypesTypes'
-import { TitreStatutId } from './static/titresStatuts'
-import { TitreReference } from './titres-references'
-import { EtapeTypeId } from './static/etapesTypes'
-import { CaminoDate } from './date'
+import { DomaineId } from './static/domaines.js'
+import { TitreTypeTypeId } from './static/titresTypesTypes.js'
+import { TitreStatutId } from './static/titresStatuts.js'
+import { TitreReference } from './titres-references.js'
+import { EtapeTypeId } from './static/etapesTypes.js'
+import { CaminoDate } from './date.js'
 
 export interface CommonTitre {
   id: string

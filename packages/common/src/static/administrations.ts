@@ -1,6 +1,6 @@
-import { Definition } from '../definition'
-import { RegionId } from './region'
-import { DepartementId } from './departement'
+import { Definition } from '../definition.js'
+import { RegionId } from './region.js'
+import { DepartementId } from './departement.js'
 
 export const ADMINISTRATION_TYPE_IDS_ARRAY = ['aut', 'dea', 'dre', 'min', 'ope', 'pre'] as const
 

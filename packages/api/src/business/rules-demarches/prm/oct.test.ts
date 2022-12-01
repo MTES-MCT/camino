@@ -1,5 +1,5 @@
-import { toCaminoDate } from 'camino-common/src/date'
-import { demarcheEtatsValidate } from '../_utils.test'
+import { toCaminoDate } from 'camino-common/src/date.js'
+import { demarcheEtatsValidate } from '../_utils.test.js'
 import { describe, expect, test } from 'vitest'
 describe('vérifie l’arbre d’octroi d’une PRM', () => {
   const octEtatsValidate = demarcheEtatsValidate('oct', 'prm', '2020-01-01')

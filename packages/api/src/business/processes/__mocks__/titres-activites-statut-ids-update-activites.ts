@@ -1,4 +1,4 @@
-import TitresActivites from '../../../database/models/titres-activites'
+import TitresActivites from '../../../database/models/titres-activites.js'
 
 const titresActivitesDelaiDepasse = [
   {

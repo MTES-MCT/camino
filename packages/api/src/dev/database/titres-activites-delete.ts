@@ -1,5 +1,5 @@
 import '../../init'
-import TitresActivites from '../../database/models/titres-activites'
+import TitresActivites from '../../database/models/titres-activites.js'
 
 const main = async () => {
   const titresActivites = await TitresActivites.query().where(

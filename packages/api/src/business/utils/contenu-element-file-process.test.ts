@@ -2,18 +2,23 @@ import { FileUpload } from 'graphql-upload'
 import { ReadStream } from 'fs'
 import { afterEach, vi, describe, test, expect } from 'vitest'
 
-import { IContenu, IContenuElement, ISection, ITitreEtape } from '../../types'
+import {
+  IContenu,
+  IContenuElement,
+  ISection,
+  ITitreEtape
+} from '../../types.js'
 
 import {
   contenuElementFilesCreate,
   contenuElementFilesDelete,
   sectionsContenuAndFilesGet
-} from './contenu-element-file-process'
+} from './contenu-element-file-process.js'
 
-import { objectClone } from '../../tools/index'
-import dirCreate from '../../tools/dir-create'
-import fileStreamCreate from '../../tools/file-stream-create'
-import fileDelete from '../../tools/file-delete'
+import { objectClone } from '../../tools/index.js'
+import dirCreate from '../../tools/dir-create.js'
+import fileStreamCreate from '../../tools/file-stream-create.js'
+import fileDelete from '../../tools/file-delete.js'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,

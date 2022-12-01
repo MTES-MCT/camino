@@ -1,17 +1,20 @@
-import { graphQLCall, queryImport } from '../../../tests/_utils'
-import { ITitreEtapeJustificatif } from '../../types'
-import { documentCreate, documentGet } from '../../database/queries/documents'
-import { entrepriseUpsert } from '../../database/queries/entreprises'
-import { titreCreate } from '../../database/queries/titres'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
+import { ITitreEtapeJustificatif } from '../../types.js'
+import {
+  documentCreate,
+  documentGet
+} from '../../database/queries/documents.js'
+import { entrepriseUpsert } from '../../database/queries/entreprises.js'
+import { titreCreate } from '../../database/queries/titres.js'
 import {
   titreEtapeCreate,
   titresEtapesJustificatifsUpsert
-} from '../../database/queries/titres-etapes'
-import { userSuper } from '../../database/user-super'
-import { dbManager } from '../../../tests/db-manager'
-import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
-import { toCaminoDate } from 'camino-common/src/date'
-import { newEntrepriseId } from 'camino-common/src/entreprise'
+} from '../../database/queries/titres-etapes.js'
+import { userSuper } from '../../database/user-super.js'
+import { dbManager } from '../../../tests/db-manager.js'
+import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
+import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 
 import {
   afterAll,

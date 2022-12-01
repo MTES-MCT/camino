@@ -1,8 +1,8 @@
 import { Model } from 'objection'
-import { ITitreTypeDemarcheTypeEtapeType } from '../../types'
-import EtapesTypes from './etapes-types'
-import DocumentsTypes from './documents-types'
-import DemarchesTypes from './demarches-types'
+import { ITitreTypeDemarcheTypeEtapeType } from '../../types.js'
+import EtapesTypes from './etapes-types.js'
+import DocumentsTypes from './documents-types.js'
+import DemarchesTypes from './demarches-types.js'
 
 interface TitresTypesDemarchesTypesEtapesTypes
   extends ITitreTypeDemarcheTypeEtapeType {}

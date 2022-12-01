@@ -1,10 +1,10 @@
-import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
-import { titreEtapePublicationCheck } from './titre-etape-publication-check'
+import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
+import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
 import {
   DemarcheTypeId,
   isDemarcheTypeWithPhase
-} from 'camino-common/src/static/demarchesTypes'
-import { TitreEtapePhaseFind } from './titre-demarche-date-fin-duree-find'
+} from 'camino-common/src/static/demarchesTypes.js'
+import { TitreEtapePhaseFind } from './titre-demarche-date-fin-duree-find.js'
 
 /**
  * Vérifie si la démarche donne lieu à une phase

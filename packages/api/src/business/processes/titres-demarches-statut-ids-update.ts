@@ -1,8 +1,8 @@
-import { titresGet } from '../../database/queries/titres'
-import { titreDemarcheUpdate } from '../../database/queries/titres-demarches'
-import { userSuper } from '../../database/user-super'
-import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find'
-import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
+import { titresGet } from '../../database/queries/titres.js'
+import { titreDemarcheUpdate } from '../../database/queries/titres-demarches.js'
+import { userSuper } from '../../database/user-super.js'
+import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find.js'
+import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
 
 // met à jour le statut des démarches d'un titre
 export const titresDemarchesStatutIdUpdate = async (titresIds?: string[]) => {

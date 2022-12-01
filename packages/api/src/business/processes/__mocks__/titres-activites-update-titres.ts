@@ -1,5 +1,5 @@
-import ActivitesTypes from '../../../database/models/activites-types'
-import Titres from '../../../database/models/titres'
+import ActivitesTypes from '../../../database/models/activites-types.js'
+import Titres from '../../../database/models/titres.js'
 
 const titresSansActivite = [
   {

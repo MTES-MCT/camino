@@ -1,6 +1,6 @@
-import { titresGet, titreUpdate } from '../../database/queries/titres'
-import { userSuper } from '../../database/user-super'
-import { titreCoordonneesFind } from '../utils/titre-coordonnees-find'
+import { titresGet, titreUpdate } from '../../database/queries/titres.js'
+import { userSuper } from '../../database/user-super.js'
+import { titreCoordonneesFind } from '../utils/titre-coordonnees-find.js'
 
 export const titresCoordonneesUpdate = async (titresIds?: string[]) => {
   console.info()

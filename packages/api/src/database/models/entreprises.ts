@@ -1,10 +1,10 @@
 import { Model, Pojo, ref } from 'objection'
 
-import { IEntreprise } from '../../types'
-import EntreprisesEtablissements from './entreprises-etablissements'
-import Utilisateurs from './utilisateurs'
-import Titres from './titres'
-import Document from './documents'
+import { IEntreprise } from '../../types.js'
+import EntreprisesEtablissements from './entreprises-etablissements.js'
+import Utilisateurs from './utilisateurs.js'
+import Titres from './titres.js'
+import Document from './documents.js'
 
 interface Entreprises extends IEntreprise {}
 

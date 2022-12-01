@@ -1,4 +1,4 @@
-import { titreDateDebutFind } from './titre-date-debut-find'
+import { titreDateDebutFind } from './titre-date-debut-find.js'
 
 import {
   titreDemarchesDpu,
@@ -9,7 +9,7 @@ import {
   titreDemarchesSansOctroi,
   titreDemarchesSansDateDebut,
   titreDemarchesDateUndefined
-} from './__mocks__/titre-date-debut-find-demarches'
+} from './__mocks__/titre-date-debut-find-demarches.js'
 import { describe, expect, test } from 'vitest'
 describe("date de début d'une démarche", () => {
   test("retourne la date de la première étape d'octroi d'une dpu dont le statut est acceptée", () => {

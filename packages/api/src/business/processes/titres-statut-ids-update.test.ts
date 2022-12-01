@@ -1,10 +1,10 @@
-import { titresStatutIdsUpdate } from './titres-statut-ids-update'
-import { titresGet } from '../../database/queries/titres'
+import { titresStatutIdsUpdate } from './titres-statut-ids-update.js'
+import { titresGet } from '../../database/queries/titres.js'
 
 import {
   titresValideStatutIdAJour,
   titresEchuStatutIdObselete
-} from './__mocks__/titres-statut-ids-update-titres'
+} from './__mocks__/titres-statut-ids-update-titres.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres', () => ({
   __esModule: true,

@@ -1,7 +1,7 @@
-import { CaminoDate } from './date'
-import { EntrepriseId } from './entreprise'
-import { EtapeTypeId } from './static/etapesTypes'
-import { SubstanceLegaleId } from './static/substancesLegales'
+import { CaminoDate } from './date.js'
+import { EntrepriseId } from './entreprise.js'
+import { EtapeTypeId } from './static/etapesTypes.js'
+import { SubstanceLegaleId } from './static/substancesLegales.js'
 
 export type HeritageProp<T> =
   | {

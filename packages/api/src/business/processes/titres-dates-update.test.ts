@@ -1,10 +1,10 @@
-import { titresDatesUpdate } from './titres-dates-update'
-import { titreDateFinFind } from '../rules/titre-date-fin-find'
-import { titreDateDebutFind } from '../rules/titre-date-debut-find'
-import { titreDateDemandeFind } from '../rules/titre-date-demande-find'
-import { titresGet } from '../../database/queries/titres'
-import Titres from '../../database/models/titres'
-import { toCaminoDate } from 'camino-common/src/date'
+import { titresDatesUpdate } from './titres-dates-update.js'
+import { titreDateFinFind } from '../rules/titre-date-fin-find.js'
+import { titreDateDebutFind } from '../rules/titre-date-debut-find.js'
+import { titreDateDemandeFind } from '../rules/titre-date-demande-find.js'
+import { titresGet } from '../../database/queries/titres.js'
+import Titres from '../../database/models/titres.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres', () => ({
   titreUpdate: vi.fn().mockResolvedValue(true),

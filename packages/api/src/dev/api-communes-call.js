@@ -1,6 +1,6 @@
 import 'dotenvp/config'
 
-import { apiGeoGet } from '../tools/api-geo'
+import { apiGeoGet } from '../tools/api-geo.js'
 
 const geojson = {
   type: 'Feature',

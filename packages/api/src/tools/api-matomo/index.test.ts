@@ -1,4 +1,4 @@
-import { timeFormat } from './index'
+import { timeFormat } from './index.js'
 import { describe, expect, test } from 'vitest'
 
 describe('timeFormat', () => {

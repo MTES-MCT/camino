@@ -1,6 +1,6 @@
-import { Index } from '../../types'
-import { IndexFile } from './_types'
-import { matchFuzzy } from './_utils'
+import { Index } from '../../types.js'
+import { IndexFile } from './_types.js'
+import { matchFuzzy } from './_utils.js'
 
 export const documentsFilesCheck = (
   documentsIndex: IndexFile,

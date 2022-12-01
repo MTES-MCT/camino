@@ -1,7 +1,7 @@
-import { ITitreDemarche } from '../../types'
+import { ITitreDemarche } from '../../types.js'
 
-import { titreDateFinFind } from './titre-date-fin-find'
-import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
+import { titreDateFinFind } from './titre-date-fin-find.js'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 
 export const titreStatutIdFind = (
   aujourdhui: string,

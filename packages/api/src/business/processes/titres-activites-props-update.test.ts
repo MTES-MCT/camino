@@ -1,12 +1,12 @@
-import { titresActivitesPropsUpdate } from './titres-activites-props-update'
-import { titresActivitesUpsert } from '../../database/queries/titres-activites'
-import { titresGet } from '../../database/queries/titres'
-import { titreValideCheck } from '../utils/titre-valide-check'
+import { titresActivitesPropsUpdate } from './titres-activites-props-update.js'
+import { titresActivitesUpsert } from '../../database/queries/titres-activites.js'
+import { titresGet } from '../../database/queries/titres.js'
+import { titreValideCheck } from '../utils/titre-valide-check.js'
 import { vi, describe, expect, test, afterEach } from 'vitest'
 import {
   titresActivitesToUpdate,
   titresActivitesNotToUpdate
-} from './__mocks__/titre-activite-props-update'
+} from './__mocks__/titre-activite-props-update.js'
 
 vi.mock('../../database/queries/titres-activites', () => ({
   titresActivitesUpsert: vi.fn()

@@ -1,26 +1,26 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types'
+import { IUtilisateur } from '../../../types.js'
 
-import { knex } from '../../../knex'
+import { knex } from '../../../knex.js'
 
-import Titres from '../../models/titres'
-import Documents from '../../models/documents'
-import TitresActivites from '../../models/titres-activites'
+import Titres from '../../models/titres.js'
+import Documents from '../../models/documents.js'
+import TitresActivites from '../../models/titres-activites.js'
 
-import { documentsQueryModify } from './documents'
+import { documentsQueryModify } from './documents.js'
 import {
   administrationsTitresQuery,
   administrationsActivitesModify
-} from './administrations'
-import { entreprisesTitresQuery } from './entreprises'
+} from './administrations.js'
+import { entreprisesTitresQuery } from './entreprises.js'
 import {
   isAdministration,
   isAdministrationAdmin,
   isAdministrationEditeur,
   isEntreprise,
   isSuper
-} from 'camino-common/src/roles'
+} from 'camino-common/src/roles.js'
 
 const activiteStatuts = [
   {

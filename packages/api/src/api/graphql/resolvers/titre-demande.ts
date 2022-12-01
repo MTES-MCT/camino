@@ -5,36 +5,36 @@ import {
   ISection,
   ITitreEntreprise,
   ISectionElement
-} from '../../../types'
+} from '../../../types.js'
 import {
   userGet,
   utilisateurTitreCreate
-} from '../../../database/queries/utilisateurs'
-import { etapeTypeGet } from '../../../database/queries/metas'
+} from '../../../database/queries/utilisateurs.js'
+import { etapeTypeGet } from '../../../database/queries/metas.js'
 import {
   titreCreate,
   titreGet,
   titresGet
-} from '../../../database/queries/titres'
-import { titreDemarcheCreate } from '../../../database/queries/titres-demarches'
-import { titreEtapeUpsert } from '../../../database/queries/titres-etapes'
+} from '../../../database/queries/titres.js'
+import { titreDemarcheCreate } from '../../../database/queries/titres-demarches.js'
+import { titreEtapeUpsert } from '../../../database/queries/titres-etapes.js'
 
-import titreUpdateTask from '../../../business/titre-update'
-import titreDemarcheUpdateTask from '../../../business/titre-demarche-update'
-import titreEtapeUpdateTask from '../../../business/titre-etape-update'
-import { userSuper } from '../../../database/user-super'
-import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
-import { linkTitres } from '../../../database/queries/titres-titres'
+import titreUpdateTask from '../../../business/titre-update.js'
+import titreDemarcheUpdateTask from '../../../business/titre-demarche-update.js'
+import titreEtapeUpdateTask from '../../../business/titre-etape-update.js'
+import { userSuper } from '../../../database/user-super.js'
+import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
+import { linkTitres } from '../../../database/queries/titres-titres.js'
 import {
   getLinkConfig,
   assertsCanCreateTitre
-} from 'camino-common/src/permissions/titres'
-import { checkTitreLinks } from '../../../business/validations/titre-links-validate'
-import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
-import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
-import { toCaminoDate } from 'camino-common/src/date'
+} from 'camino-common/src/permissions/titres.js'
+import { checkTitreLinks } from '../../../business/validations/titre-links-validate.js'
+import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes.js'
+import { getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 
 export const titreDemandeCreer = async (
   {

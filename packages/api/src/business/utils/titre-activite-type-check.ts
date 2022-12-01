@@ -1,9 +1,9 @@
-import { IActiviteTypePays, ICommune, ITitreType } from '../../types'
+import { IActiviteTypePays, ICommune, ITitreType } from '../../types.js'
 import {
   Departements,
   isDepartementId
-} from 'camino-common/src/static/departement'
-import { Regions } from 'camino-common/src/static/region'
+} from 'camino-common/src/static/departement.js'
+import { Regions } from 'camino-common/src/static/region.js'
 
 /**
  * Vérifie que le titre peut recevoir un type d'activité

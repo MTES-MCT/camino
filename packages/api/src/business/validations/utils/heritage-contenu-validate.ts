@@ -1,4 +1,4 @@
-import { ISection, IHeritageContenu } from '../../../types'
+import { ISection, IHeritageContenu } from '../../../types.js'
 
 export const heritageContenuValidate = (
   sections?: ISection[] | null,

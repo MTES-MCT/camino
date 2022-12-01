@@ -1,7 +1,7 @@
-import { canCreateTitre, canLinkTitres, getLinkConfig } from './titres'
-import { TitresTypesIds, TitreTypeId } from '../static/titresTypes'
-import { User } from '../roles'
-import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations'
+import { canCreateTitre, canLinkTitres, getLinkConfig } from './titres.js'
+import { TitresTypesIds, TitreTypeId } from '../static/titresTypes.js'
+import { User } from '../roles.js'
+import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations.js'
 import { test, expect } from 'vitest'
 
 test('getTitreFromTypeId pas de fusions', () => {

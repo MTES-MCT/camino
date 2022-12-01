@@ -1,7 +1,7 @@
-import { titresGet, titreUpdate } from '../../database/queries/titres'
-import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find'
-import { objectsDiffer } from '../../tools/index'
-import { userSuper } from '../../database/user-super'
+import { titresGet, titreUpdate } from '../../database/queries/titres.js'
+import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find.js'
+import { objectsDiffer } from '../../tools/index.js'
+import { userSuper } from '../../database/user-super.js'
 
 export const titresContenusEtapesIdsUpdate = async (titresIds?: string[]) => {
   console.info()

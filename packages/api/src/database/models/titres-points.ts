@@ -1,8 +1,8 @@
 import { Model, Modifiers, Pojo, QueryContext } from 'objection'
 
-import { ITitrePoint, ITitrePointReference } from '../../types'
-import { idGenerate } from './_format/id-create'
-import TitresPointsReferences from './titres-points-references'
+import { ITitrePoint, ITitrePointReference } from '../../types.js'
+import { idGenerate } from './_format/id-create.js'
+import TitresPointsReferences from './titres-points-references.js'
 
 interface TitresPoints extends ITitrePoint {}
 

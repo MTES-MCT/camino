@@ -1,9 +1,9 @@
 import { assign, createMachine } from 'xstate'
-import { CaminoMachine } from '../machine-helper'
-import { CaminoCommonContext, DBEtat, tags } from '../machine-common'
-import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts'
-import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { CaminoMachine } from '../machine-helper.js'
+import { CaminoCommonContext, DBEtat, tags } from '../machine-common.js'
+import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 
 // FIXME
 // ? vérifier la visibilité classement sans suite (@laure)

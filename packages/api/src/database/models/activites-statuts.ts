@@ -1,5 +1,5 @@
 import { Model } from 'objection'
-import { IActiviteStatut } from '../../types'
+import { IActiviteStatut } from '../../types.js'
 
 interface ActivitesStatuts extends IActiviteStatut {}
 

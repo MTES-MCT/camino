@@ -1,5 +1,5 @@
-import { dateValidate } from '../../../tools/date'
-import { ITitreActivite, ITitreEtape } from '../../../types'
+import { dateValidate } from '../../../tools/date.js'
+import { ITitreActivite, ITitreEtape } from '../../../types.js'
 
 /**
  * Vérifie que les champs `date` d'une étape ou activité sont valides

@@ -1,5 +1,5 @@
-import type { ITitre, ITitreEtape, ITitreDemarche } from '../../types'
-import { titreDemarcheDepotCheck } from './titres-demarches-depot-create'
+import type { ITitre, ITitreEtape, ITitreDemarche } from '../../types.js'
+import { titreDemarcheDepotCheck } from './titres-demarches-depot-create.js'
 
 import { describe, expect, test } from 'vitest'
 

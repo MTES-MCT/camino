@@ -1,9 +1,9 @@
-import { ITitreEtape } from '../../types'
+import { ITitreEtape } from '../../types.js'
 
-import { titresPropsEtapesIdsUpdate } from './titres-props-etapes-ids-update'
-import { titrePropTitreEtapeFind } from '../rules/titre-prop-etape-find'
-import { titresGet } from '../../database/queries/titres'
-import Titres from '../../database/models/titres'
+import { titresPropsEtapesIdsUpdate } from './titres-props-etapes-ids-update.js'
+import { titrePropTitreEtapeFind } from '../rules/titre-prop-etape-find.js'
+import { titresGet } from '../../database/queries/titres.js'
+import Titres from '../../database/models/titres.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres', () => ({
   titreUpdate: vi.fn().mockResolvedValue(true),

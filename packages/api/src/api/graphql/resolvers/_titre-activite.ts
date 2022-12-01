@@ -1,5 +1,3 @@
-import dateFormat from 'dateformat'
-
 import {
   IAdministrationActiviteTypeEmail,
   IContenu,
@@ -8,16 +6,17 @@ import {
   ISectionElement,
   ITitreActivite,
   IUtilisateur
-} from '../../../types'
+} from '../../../types.js'
 
-import { emailsSend } from '../../../tools/api-mailjet/emails'
-import { titreUrlGet } from '../../../business/utils/urls-get'
-import { getPeriode } from 'camino-common/src/static/frequence'
+import { emailsSend } from '../../../tools/api-mailjet/emails.js'
+import { titreUrlGet } from '../../../business/utils/urls-get.js'
+import { getPeriode } from 'camino-common/src/static/frequence.js'
 import {
   AdministrationId,
   Administrations
-} from 'camino-common/src/static/administrations'
-import AdministrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails'
+} from 'camino-common/src/static/administrations.js'
+import { dateFormat } from 'camino-common/src/date.js'
+import AdministrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails.js'
 
 const elementHtmlBuild = (
   sectionId: string,
@@ -93,7 +92,7 @@ const titreActiviteEmailFormat = (
 
 <b>Lien</b> : ${titreUrl} <br>
 <b>Rempli par</b> : ${user.prenom} ${user.nom} (${user.email}) <br>
-<b>Date de dépôt</b> : ${dateFormat(dateSaisie, 'dd-mm-yyyy')} <br>
+<b>Date de dépôt</b> : ${dateSaisie ? dateFormat(dateSaisie) : ''} <br>
 
 <hr>
 `

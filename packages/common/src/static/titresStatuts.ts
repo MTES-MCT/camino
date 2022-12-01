@@ -1,5 +1,5 @@
-import { Couleur } from './couleurs'
-import { Definition } from '../definition'
+import { Couleur } from './couleurs.js'
+import { Definition } from '../definition.js'
 
 interface TitreStatutDefinition<T> extends Definition<T> {
   couleur: Couleur

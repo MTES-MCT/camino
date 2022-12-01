@@ -1,5 +1,5 @@
 import { Model } from 'objection'
-import { ISDOMZone } from '../../types'
+import { ISDOMZone } from '../../types.js'
 
 interface SDOMZones extends ISDOMZone {}
 

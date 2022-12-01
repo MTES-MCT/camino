@@ -1,4 +1,4 @@
-import { IUtilisateur } from '../types'
+import { IUtilisateur } from '../types.js'
 
 export const userSuper: IUtilisateur = {
   id: 'super',

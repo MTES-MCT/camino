@@ -1,11 +1,11 @@
-import { dbManager } from '../../../tests/db-manager'
+import { dbManager } from '../../../tests/db-manager.js'
 import {
   visibleCheck,
   creationCheck,
   modificationCheck
-} from '../../../tests/_utils/administrations-permissions'
+} from '../../../tests/_utils/administrations-permissions.js'
 import { beforeAll, afterAll, test, describe, vi } from 'vitest'
-import { AdministrationId } from 'camino-common/src/static/administrations'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
 
 console.info = vi.fn()
 console.error = vi.fn()

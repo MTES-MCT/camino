@@ -8,12 +8,12 @@ import {
   IAdministrationTitreTypeTitreStatut,
   IEtapeType,
   ITitreType
-} from '../../src/types'
+} from '../../src/types.js'
 
 import {
   Administration,
   Administrations
-} from 'camino-common/src/static/administrations'
+} from 'camino-common/src/static/administrations.js'
 
 interface ISources {
   titresTypes: {

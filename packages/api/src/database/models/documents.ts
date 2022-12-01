@@ -1,10 +1,10 @@
 import { Model, Pojo } from 'objection'
 
-import { IDocument } from '../../types'
-import DocumentsTypes from './documents-types'
-import TitresEtapes from './titres-etapes'
-import TitresActivites from './titres-activites'
-import Entreprises from './entreprises'
+import { IDocument } from '../../types.js'
+import DocumentsTypes from './documents-types.js'
+import TitresEtapes from './titres-etapes.js'
+import TitresActivites from './titres-activites.js'
+import Entreprises from './entreprises.js'
 
 interface Document extends IDocument {}
 class Document extends Model {

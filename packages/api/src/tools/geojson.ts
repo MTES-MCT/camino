@@ -1,11 +1,11 @@
 import rewind from 'geojson-rewind'
 import center from '@turf/center'
 
-import { IGeometry, ITitrePoint } from '../types'
-import { Feature } from '@turf/helpers'
-import { knex } from '../knex'
-import { SDOMZoneId } from 'camino-common/src/static/sdom'
-import { SecteursMaritimesIds } from 'camino-common/src/static/facades'
+import { IGeometry, ITitrePoint } from '../types.js'
+import { knex } from '../knex.js'
+import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
+import { SecteursMaritimesIds } from 'camino-common/src/static/facades.js'
+import { Feature } from 'geojson'
 
 // convertit des points
 // en un geojson de type 'MultiPolygon'

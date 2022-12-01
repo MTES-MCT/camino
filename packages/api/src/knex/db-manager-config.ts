@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import { connection, knexConfig } from './config'
+import { connection, knexConfig } from './config.js'
 
 export const dbManagerConfig = {
   knex: knexConfig,

@@ -1,5 +1,5 @@
-import { graphQLCall } from '../../../../tests/_utils'
-import { dbManager } from '../../../../tests/db-manager'
+import { graphQLCall } from '../../../../tests/_utils/index.js'
+import { dbManager } from '../../../../tests/db-manager.js'
 import { expect, test, describe, afterAll, beforeAll } from 'vitest'
 beforeAll(async () => {
   await dbManager.populateDb()

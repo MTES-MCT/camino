@@ -1,11 +1,11 @@
-import { contenuDatesCheck } from './contenu-dates-check'
+import { contenuDatesCheck } from './contenu-dates-check.js'
 import { describe, test, expect } from 'vitest'
 import {
   sections,
   sectionsSansElement,
   contenuDatesValides,
   contenuDatesInvalides
-} from '../__mocks__/contenu-dates-check-contenus'
+} from '../__mocks__/contenu-dates-check-contenus.js'
 
 describe("vérifie la validité des propriétés dont le type est date d'une étape", () => {
   test("la sections n'a pas d'éléments", () => {

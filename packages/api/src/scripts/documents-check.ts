@@ -1,5 +1,5 @@
 import '../init'
-import documentsCheck from '../tools/documents/check'
+import documentsCheck from '../tools/documents/check.js'
 
 documentsCheck()
   .then(() => {

@@ -1,6 +1,6 @@
-import { isAdministration, isSuper, User } from '../roles'
-import { AdministrationId, Administrations, sortedAdministrations } from '../static/administrations'
-import { Departements } from '../static/departement'
+import { isAdministration, isSuper, User } from '../roles.js'
+import { AdministrationId, Administrations, sortedAdministrations } from '../static/administrations.js'
+import { Departements } from '../static/departement.js'
 
 export const canReadActivitesTypesEmails = (user: User, administrationId: AdministrationId) => {
   if (isSuper(user) || (isAdministration(user) && Administrations[user.administrationId].typeId === 'min')) {

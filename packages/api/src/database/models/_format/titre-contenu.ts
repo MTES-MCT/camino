@@ -3,7 +3,7 @@ import {
   ITitreDemarche,
   ITitreEtape,
   IContenusTitreEtapesIds
-} from '../../../types'
+} from '../../../types.js'
 
 /**
  * Formate le contenu du titre d'après les contenus d'étape

@@ -1,6 +1,7 @@
 import Mailjet from 'node-mailjet'
 
-export const mailjet = new Mailjet({
+// eslint-disable-next-line new-cap
+export const mailjet = new Mailjet.default({
   apiKey: process.env.API_MAILJET_KEY || 'fakeKey',
   apiSecret: process.env.API_MAILJET_SECRET || 'fakeSecret'
 })

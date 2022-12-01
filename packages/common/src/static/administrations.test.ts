@@ -1,4 +1,4 @@
-import { ADMINISTRATION_IDS, isAdministrationId, sortedAdministrationTypes } from './administrations'
+import { ADMINISTRATION_IDS, isAdministrationId, sortedAdministrationTypes } from './administrations.js'
 import { test, expect } from 'vitest'
 
 test('sortedAdministrationTypes', () => {

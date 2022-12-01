@@ -1,8 +1,7 @@
-import dateFormat from 'dateformat'
+import { toCaminoDate } from 'camino-common/src/date.js'
+import { ITitreDemarche } from '../../types.js'
 
-import { ITitreDemarche } from '../../types'
-
-import { titreValideCheck } from './titre-valide-check'
+import { titreValideCheck } from './titre-valide-check.js'
 
 /**
  * Vérifie si une activité doit exister
@@ -29,10 +28,7 @@ export const titreActiviteValideCheck = (
   if (date > aujourdhui) return false
 
   // si le titre est valide pendant la durée de l'activité
-  const dateDebut = dateFormat(
-    new Date(annee, (periodeId - 1) * months, 1),
-    'yyyy-mm-dd'
-  )
+  const dateDebut = toCaminoDate(new Date(annee, (periodeId - 1) * months, 1))
 
   // le titre n'est pas valide pour cette période
   // on ne crée pas l'activité

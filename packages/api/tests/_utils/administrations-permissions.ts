@@ -3,36 +3,36 @@ import {
   IEtapeType,
   ITitre,
   ITitreTypeDemarcheTypeEtapeType
-} from '../../src/types'
+} from '../../src/types.js'
 
-import { graphQLCall, queryImport } from './index'
-import { administrationsWithRelations } from './administrations'
+import { graphQLCall, queryImport } from './index.js'
+import { administrationsWithRelations } from './administrations.js'
 
-import Titres from '../../src/database/models/titres'
-import DemarchesTypes from '../../src/database/models/demarches-types'
-import options from '../../src/database/queries/_options'
+import Titres from '../../src/database/models/titres.js'
+import DemarchesTypes from '../../src/database/models/demarches-types.js'
+import options from '../../src/database/queries/_options.js'
 import {
   etapeTypeGet,
   titreTypeDemarcheTypeEtapeTypeGet
-} from '../../src/database/queries/metas'
-import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritage-props-find'
-import { etapeTypeSectionsFormat } from '../../src/api/_format/etapes-types'
-import { Role } from 'camino-common/src/roles'
-import { AdministrationId } from 'camino-common/src/static/administrations'
+} from '../../src/database/queries/metas.js'
+import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritage-props-find.js'
+import { etapeTypeSectionsFormat } from '../../src/api/_format/etapes-types.js'
+import { Role } from 'camino-common/src/roles.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import {
   idGenerate,
   newDemarcheId
-} from '../../src/database/models/_format/id-create'
+} from '../../src/database/models/_format/id-create.js'
 import {
   getDomaineId,
   getTitreTypeType,
   TitreTypeId
-} from 'camino-common/src/static/titresTypes'
-import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
-import { documentCreate } from '../../src/database/queries/documents'
-import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { toCaminoDate } from 'camino-common/src/date'
+} from 'camino-common/src/static/titresTypes.js'
+import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes.js'
+import { documentCreate } from '../../src/database/queries/documents.js'
+import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 import { expect } from 'vitest'
 export const visibleCheck = async (
   administrationId: AdministrationId,

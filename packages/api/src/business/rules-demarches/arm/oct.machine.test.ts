@@ -1,17 +1,20 @@
-import { ArmOctMachine } from './oct.machine'
+import { ArmOctMachine } from './oct.machine.js'
 import { interpret } from 'xstate'
 import {
   interpretMachine,
   orderAndInterpretMachine as commonOrderAndInterpretMachine
-} from '../machine-test-helper'
-import { IContenu } from '../../../types'
+} from '../machine-test-helper.js'
+import { IContenu } from '../../../types.js'
 import {
   EtapeStatutId,
   ETAPES_STATUTS
-} from 'camino-common/src/static/etapesStatuts'
-import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { Etape } from '../machine-common'
-import { toCaminoDate } from 'camino-common/src/date'
+} from 'camino-common/src/static/etapesStatuts.js'
+import {
+  ETAPES_TYPES,
+  EtapeTypeId
+} from 'camino-common/src/static/etapesTypes.js'
+import { Etape } from '../machine-common.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 const etapesProd = require('./oct.cas.json')
 const orderAndInterpretMachine = (etapes: readonly Etape[]) => {

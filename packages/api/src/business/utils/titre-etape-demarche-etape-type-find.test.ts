@@ -1,5 +1,5 @@
-import { titreEtapeDemarcheEtapeTypeFind } from './titre-etape-demarche-etape-type-find'
-import { IDemarcheType } from '../../types'
+import { titreEtapeDemarcheEtapeTypeFind } from './titre-etape-demarche-etape-type-find.js'
+import { IDemarcheType } from '../../types.js'
 import { describe, test, expect } from 'vitest'
 
 const demarcheType = {

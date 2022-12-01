@@ -1,11 +1,10 @@
-import dateFormat from 'dateformat'
-
 import {
   titreActiviteUpdate,
   titresActivitesGet
-} from '../../database/queries/titres-activites'
-import { titreActiviteStatutIdFind } from '../rules/titre-activite-statut-id-find'
-import { userSuper } from '../../database/user-super'
+} from '../../database/queries/titres-activites.js'
+import { titreActiviteStatutIdFind } from '../rules/titre-activite-statut-id-find.js'
+import { userSuper } from '../../database/user-super.js'
+import { getCurrent } from 'camino-common/src/date.js'
 
 // met à jour le statut des activités d'un titre
 export const titresActivitesStatutIdsUpdate = async () => {
@@ -14,7 +13,7 @@ export const titresActivitesStatutIdsUpdate = async () => {
 
   const titresActivites = await titresActivitesGet({}, {}, userSuper)
 
-  const aujourdhui = dateFormat(new Date(), 'yyyy-mm-dd')
+  const aujourdhui = getCurrent()
 
   const titresActivitesUpdated = [] as string[]
   for (const titreActivite of titresActivites) {

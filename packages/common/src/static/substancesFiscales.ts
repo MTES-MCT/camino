@@ -1,5 +1,5 @@
-import { UniteId } from './unites'
-import { SubstanceLegaleId, SubstancesLegales } from './substancesLegales'
+import { UniteId } from './unites.js'
+import { SubstanceLegaleId, SubstancesLegales } from './substancesLegales.js'
 
 export const SUBSTANCES_FISCALES_IDS = {
   bauxite: 'aloh',

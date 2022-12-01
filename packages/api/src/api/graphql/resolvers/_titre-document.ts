@@ -1,8 +1,8 @@
 import { join } from 'path'
 
-import { IDocumentRepertoire } from '../../../types'
+import { IDocumentRepertoire } from '../../../types.js'
 
-import { dirDelete } from '../../../tools/dir-delete'
+import { dirDelete } from '../../../tools/dir-delete.js'
 
 const fichiersRepertoireDelete = async (
   id: string,

@@ -1,7 +1,7 @@
 import '../../init'
-import fileCreate from '../tools/file-create'
+import fileCreate from '../tools/file-create.js'
 
-import { inseeSirenGet, inseeSiretGet } from '../tools/api-insee'
+import { inseeSirenGet, inseeSiretGet } from '../tools/api-insee.js'
 
 const siret1 = '57219916400045'
 const siret2 = '48486050700017'

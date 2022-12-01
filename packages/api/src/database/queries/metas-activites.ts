@@ -1,14 +1,14 @@
-import { IFields } from '../../types'
+import { IFields } from '../../types.js'
 
-import options from './_options'
-import graphBuild from './graph/build'
-import { fieldsFormat } from './graph/fields-format'
+import options from './_options.js'
+import graphBuild from './graph/build.js'
+import { fieldsFormat } from './graph/fields-format.js'
 
-import ActivitesTypes from '../models/activites-types'
-import ActivitesTypesTitresTypes from '../models/activites-types--titres-types'
-import ActivitesStatuts from '../models/activites-statuts'
-import ActivitesTypesDocumentsTypes from '../models/activites-types--documents-types'
-import ActivitesTypesPays from '../models/activites-types--pays'
+import ActivitesTypes from '../models/activites-types.js'
+import ActivitesTypesTitresTypes from '../models/activites-types--titres-types.js'
+import ActivitesStatuts from '../models/activites-statuts.js'
+import ActivitesTypesDocumentsTypes from '../models/activites-types--documents-types.js'
+import ActivitesTypesPays from '../models/activites-types--pays.js'
 
 export const activitesTypesGet = async ({ fields }: { fields?: IFields }) => {
   const graph = fields

@@ -4,13 +4,13 @@ import {
   Index,
   ISection,
   ITitreActivite
-} from '../../../types'
+} from '../../../types.js'
 import {
   isSubstanceFiscale,
   SubstancesFiscale
-} from 'camino-common/src/static/substancesFiscales'
-import { UniteId, Unites } from 'camino-common/src/static/unites'
-import { getPeriode } from 'camino-common/src/static/frequence'
+} from 'camino-common/src/static/substancesFiscales.js'
+import { UniteId, Unites } from 'camino-common/src/static/unites.js'
+import { getPeriode } from 'camino-common/src/static/frequence.js'
 
 const titreActiviteContenuFormat = (contenu: IContenu, sections: ISection[]) =>
   sections.reduce((resSections: Index<IContenuValeur>, section) => {

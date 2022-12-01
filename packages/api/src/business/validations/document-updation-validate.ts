@@ -1,6 +1,6 @@
-import { IDocument } from '../../types'
+import { IDocument } from '../../types.js'
 
-import { dateValidate } from '../../tools/date'
+import { dateValidate } from '../../tools/date.js'
 
 export const documentUpdationValidate = async (document: IDocument) => {
   const errors = [] as string[]

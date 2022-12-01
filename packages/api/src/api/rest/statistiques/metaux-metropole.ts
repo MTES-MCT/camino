@@ -3,35 +3,39 @@ import {
   StatistiquesMinerauxMetauxMetropole,
   StatistiquesMinerauxMetauxMetropoleSels,
   substancesFiscalesStats
-} from 'camino-common/src/statistiques'
-import { CaminoAnnee, valideAnnee, anneeSuivante } from 'camino-common/src/date'
-import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites'
-import { knex } from '../../../knex'
-import { userSuper } from '../../../database/user-super'
-import { titresGet } from '../../../database/queries/titres'
-import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
+} from 'camino-common/src/statistiques.js'
+import {
+  CaminoAnnee,
+  valideAnnee,
+  anneeSuivante
+} from 'camino-common/src/date.js'
+import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites.js'
+import { knex } from '../../../knex.js'
+import { userSuper } from '../../../database/user-super.js'
+import { titresGet } from '../../../database/queries/titres.js'
+import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import {
   SubstanceFiscaleId,
   SubstancesFiscale,
   SUBSTANCES_FISCALES_IDS
-} from 'camino-common/src/static/substancesFiscales'
+} from 'camino-common/src/static/substancesFiscales.js'
 import {
   CodePostal,
   Departements,
   departementsMetropole,
   toDepartementId
-} from 'camino-common/src/static/departement'
-import { REGION_IDS } from 'camino-common/src/static/region'
+} from 'camino-common/src/static/departement.js'
+import { REGION_IDS } from 'camino-common/src/static/region.js'
 import {
   apiOpenfiscaCalculate,
   OpenfiscaRequest,
   redevanceCommunale,
   redevanceDepartementale,
   substanceFiscaleToInput
-} from '../../../tools/api-openfisca'
-import { onlyUnique } from 'camino-common/src/typescript-tools'
-import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
-import { evolutionTitres } from './evolution-titres'
+} from '../../../tools/api-openfisca/index.js'
+import { onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
+import { evolutionTitres } from './evolution-titres.js'
 
 export const getMinerauxMetauxMetropolesStatsInside =
   async (): Promise<StatistiquesMinerauxMetauxMetropole> => {

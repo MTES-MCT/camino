@@ -1,16 +1,16 @@
-import { IEntreprise, IUtilisateur } from '../../../types'
+import { IEntreprise, IUtilisateur } from '../../../types.js'
 
-import { dbManager } from '../../../../tests/db-manager'
+import { dbManager } from '../../../../tests/db-manager.js'
 
-import Entreprises from '../../models/entreprises'
-import Utilisateurs from '../../models/utilisateurs'
-import { entreprisesQueryModify } from './entreprises'
+import Entreprises from '../../models/entreprises.js'
+import Utilisateurs from '../../models/utilisateurs.js'
+import { entreprisesQueryModify } from './entreprises.js'
 import {
   AdministrationId,
   ADMINISTRATION_IDS
-} from 'camino-common/src/static/administrations'
+} from 'camino-common/src/static/administrations.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
-import { Role } from 'camino-common/src/roles'
+import { Role } from 'camino-common/src/roles.js'
 
 console.info = vi.fn()
 console.error = vi.fn()

@@ -1,19 +1,18 @@
-import dateFormat from 'dateformat'
-
 import {
   IApiSirenEtablissement,
   IApiSirenUniteLegalePeriode,
   IApiSirenUnionUniteLegalePeriodeEtablissmentUnite,
   IApiSirenUnionUniteLegaleEtablissmentUnite,
   IApiSirenUniteLegale
-} from './types'
-import { IEntrepriseEtablissement, IEntreprise } from '../../types'
+} from './types.js'
+import { IEntrepriseEtablissement, IEntreprise } from '../../types.js'
 
-import inseePays from './definitions/pays'
-import inseeCategoriesJuridiques from './definitions/categories-juridiques'
-import inseeTypesVoies from './definitions/voies'
+import inseePays from './definitions/pays.js'
+import inseeCategoriesJuridiques from './definitions/categories-juridiques.js'
+import inseeTypesVoies from './definitions/voies.js'
 
-import { checkCodePostal } from 'camino-common/src/static/departement'
+import { checkCodePostal } from 'camino-common/src/static/departement.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 
 interface IApiSirenNomFormat
   extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite,
@@ -92,7 +91,7 @@ const entrepriseEtablissementFormat = (
 ) => {
   const entrepriseId = `fr-${uniteLegale.siren}`
   const nic = uniteLegalePeriode.nicSiegeUniteLegale || 'xxxxx'
-  const dateDebut = dateFormat(uniteLegalePeriode.dateDebut, 'yyyy-mm-dd')
+  const dateDebut = toCaminoDate(uniteLegalePeriode.dateDebut)
 
   const nom = nomFormat(Object.assign({}, uniteLegale, uniteLegalePeriode))
   const legalSiret = `${uniteLegale.siren}${nic}`
@@ -105,7 +104,7 @@ const entrepriseEtablissementFormat = (
   } as IEntrepriseEtablissement
 
   if (uniteLegalePeriode.dateFin) {
-    etablissement.dateFin = dateFormat(uniteLegalePeriode.dateFin, 'yyyy-mm-dd')
+    etablissement.dateFin = toCaminoDate(uniteLegalePeriode.dateFin)
   }
 
   return etablissement
@@ -230,10 +229,7 @@ export const entrepriseFormat = ({
   }
 
   if (uniteLegale.dateCreationUniteLegale) {
-    entreprise.dateCreation = dateFormat(
-      uniteLegale.dateCreationUniteLegale,
-      'yyyy-mm-dd'
-    )
+    entreprise.dateCreation = toCaminoDate(uniteLegale.dateCreationUniteLegale)
   }
 
   return entreprise

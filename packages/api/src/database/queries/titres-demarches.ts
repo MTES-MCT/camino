@@ -9,17 +9,19 @@ import {
   Index,
   IUtilisateur,
   DemarcheId
-} from '../../types'
+} from '../../types.js'
 
-import options from './_options'
-import { fieldsFormat } from './graph/fields-format'
-import graphBuild from './graph/build'
-import { fieldsTitreAdd } from './graph/fields-add'
+import options from './_options.js'
+import { fieldsFormat } from './graph/fields-format.js'
+import graphBuild from './graph/build.js'
+import { fieldsTitreAdd } from './graph/fields-add.js'
 
-import TitresDemarches, { DBTitresDemarches } from '../models/titres-demarches'
-import { titresDemarchesQueryModify } from './permissions/titres-demarches'
-import { titresFiltersQueryModify } from './_titres-filters'
-import TitresEtapes from '../models/titres-etapes'
+import TitresDemarches, {
+  DBTitresDemarches
+} from '../models/titres-demarches.js'
+import { titresDemarchesQueryModify } from './permissions/titres-demarches.js'
+import { titresFiltersQueryModify } from './_titres-filters.js'
+import TitresEtapes from '../models/titres-etapes.js'
 
 const etapesIncluesExcluesBuild = (
   q: QueryBuilder<TitresDemarches, TitresDemarches[]>,

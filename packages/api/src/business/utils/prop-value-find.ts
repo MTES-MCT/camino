@@ -1,4 +1,4 @@
-import { ITitreEtape, IPropId } from '../../types'
+import { ITitreEtape, IPropId } from '../../types.js'
 
 export const propValueFind = (titreEtape: ITitreEtape, propId: IPropId) => {
   const value = titreEtape[propId]

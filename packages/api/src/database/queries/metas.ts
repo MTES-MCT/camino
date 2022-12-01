@@ -1,34 +1,34 @@
 import { raw } from 'objection'
 
-import { IDocumentRepertoire, IFields, IUtilisateur } from '../../types'
+import { IDocumentRepertoire, IFields, IUtilisateur } from '../../types.js'
 
-import { knex } from '../../knex'
+import { knex } from '../../knex.js'
 
-import options from './_options'
-import graphBuild from './graph/build'
-import { fieldsFormat } from './graph/fields-format'
+import options from './_options.js'
+import graphBuild from './graph/build.js'
+import { fieldsFormat } from './graph/fields-format.js'
 
-import DemarchesTypes from '../models/demarches-types'
-import DocumentsTypes from '../models/documents-types'
-import Domaines from '../models/domaines'
-import EtapesTypes from '../models/etapes-types'
-import TitresTypesTypes from '../models/titres-types-types'
+import DemarchesTypes from '../models/demarches-types.js'
+import DocumentsTypes from '../models/documents-types.js'
+import Domaines from '../models/domaines.js'
+import EtapesTypes from '../models/etapes-types.js'
+import TitresTypesTypes from '../models/titres-types-types.js'
 
 import {
   demarchesTypesQueryModify,
   domainesQueryModify,
   etapesTypesQueryModify
-} from './permissions/metas'
+} from './permissions/metas.js'
 
-import TitresTypes from '../models/titres-types'
-import TitresTypesDemarchesTypesEtapesTypes from '../models/titres-types--demarches-types-etapes-types'
-import TitresTypesDemarchesTypes from '../models/titres-types--demarches-types'
-import EtapesTypesJustificatifsTypes from '../models/etapes-types--justificatifs-types'
-import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../models/titres-types--demarches-types-etapes-types-justificatifs-types'
-import Titres from '../models/titres'
-import { sortedDevises } from 'camino-common/src/static/devise'
-import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
-import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
+import TitresTypes from '../models/titres-types.js'
+import TitresTypesDemarchesTypesEtapesTypes from '../models/titres-types--demarches-types-etapes-types.js'
+import TitresTypesDemarchesTypes from '../models/titres-types--demarches-types.js'
+import EtapesTypesJustificatifsTypes from '../models/etapes-types--justificatifs-types.js'
+import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../models/titres-types--demarches-types-etapes-types-justificatifs-types.js'
+import Titres from '../models/titres.js'
+import { sortedDevises } from 'camino-common/src/static/devise.js'
+import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
+import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes.js'
 
 const titresTypesTypesGet = async () =>
   TitresTypesTypes.query().orderBy('ordre')

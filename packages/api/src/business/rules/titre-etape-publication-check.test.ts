@@ -1,4 +1,4 @@
-import { titreEtapePublicationCheck } from './titre-etape-publication-check'
+import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
 import { describe, expect, test } from 'vitest'
 describe("étape de publication d'une étape", () => {
   test('une étape de dpu est une étape de publication', () => {

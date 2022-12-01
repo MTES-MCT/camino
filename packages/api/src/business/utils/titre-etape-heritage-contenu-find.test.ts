@@ -5,16 +5,16 @@ import {
   Index,
   ISection,
   ITitreEtape
-} from '../../types'
+} from '../../types.js'
 
-import { objectClone } from '../../tools/index'
+import { objectClone } from '../../tools/index.js'
 
-import { etapeTypeSectionsFormat } from '../../api/_format/etapes-types'
+import { etapeTypeSectionsFormat } from '../../api/_format/etapes-types.js'
 import {
   etapeSectionsDictionaryBuild,
   heritageContenuFind,
   titreEtapeHeritageContenuFind
-} from './titre-etape-heritage-contenu-find'
+} from './titre-etape-heritage-contenu-find.js'
 import { vi, describe, test, expect } from 'vitest'
 
 vi.mock('../../api/_format/etapes-types', () => ({

@@ -1,14 +1,14 @@
-import { app } from '../../../tests/app'
+import { app } from '../../../tests/app.js'
 import {
   graphQLCall,
   queryImport,
   tokenCreate
-} from '../../../tests/_utils/index'
-import { userAdd } from '../../knex/user-add'
+} from '../../../tests/_utils/index.js'
+import { userAdd } from '../../knex/user-add.js'
 import request from 'supertest'
 import jwt from 'jsonwebtoken'
-import { dbManager } from '../../../tests/db-manager'
-import { Administrations } from 'camino-common/src/static/administrations'
+import { dbManager } from '../../../tests/db-manager.js'
+import { Administrations } from 'camino-common/src/static/administrations.js'
 import { Knex } from 'knex'
 import {
   expect,

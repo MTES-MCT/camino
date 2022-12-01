@@ -1,23 +1,23 @@
-import { ITitreActivite } from '../../types'
+import { ITitreActivite } from '../../types.js'
 
-import { titresActivitesUpdate } from './titres-activites-update'
-import { titreActiviteTypeCheck } from '../utils/titre-activite-type-check'
-import { anneesBuild } from '../../tools/annees-build'
-import { titresActivitesUpsert } from '../../database/queries/titres-activites'
-import { titresGet } from '../../database/queries/titres'
-import { activitesTypesGet } from '../../database/queries/metas-activites'
-import { titreActivitesBuild } from '../rules/titre-activites-build'
+import { titresActivitesUpdate } from './titres-activites-update.js'
+import { titreActiviteTypeCheck } from '../utils/titre-activite-type-check.js'
+import { anneesBuild } from '../../tools/annees-build.js'
+import { titresActivitesUpsert } from '../../database/queries/titres-activites.js'
+import { titresGet } from '../../database/queries/titres.js'
+import { activitesTypesGet } from '../../database/queries/metas-activites.js'
+import { titreActivitesBuild } from '../rules/titre-activites-build.js'
 
 import {
   titresToutesActivites,
   titreActivitesTypes,
   titresSansActivite
-} from './__mocks__/titres-activites-update-titres'
+} from './__mocks__/titres-activites-update-titres.js'
 import {
   emailsSend,
   emailsWithTemplateSend
-} from '../../tools/api-mailjet/emails'
-import { EmailTemplateId } from '../../tools/api-mailjet/types'
+} from '../../tools/api-mailjet/emails.js'
+import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
 import { vi, afterEach, describe, expect, test } from 'vitest'
 
 vi.mock('../../database/queries/titres', () => ({

@@ -1,10 +1,10 @@
-import { titreSlugAndRelationsUpdate } from './titre-slug-and-relations-update'
-import { titreCreate, titreGet } from '../../database/queries/titres'
-import { userSuper } from '../../database/user-super'
-import { dbManager } from '../../../tests/db-manager'
-import { ITitre } from '../../types'
-import Titres from '../../database/models/titres'
-import { objectClone } from '../../tools'
+import { titreSlugAndRelationsUpdate } from './titre-slug-and-relations-update.js'
+import { titreCreate, titreGet } from '../../database/queries/titres.js'
+import { userSuper } from '../../database/user-super.js'
+import { dbManager } from '../../../tests/db-manager.js'
+import { ITitre } from '../../types.js'
+import Titres from '../../database/models/titres.js'
+import { objectClone } from '../../tools/index.js'
 import { expect, test, describe, afterAll, beforeAll } from 'vitest'
 beforeAll(async () => {
   await dbManager.populateDb()

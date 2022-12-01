@@ -1,5 +1,5 @@
-import { isEntreprise, isSuper, isAdministration, isAdministrationEditeur, isAdministrationAdmin, isAdministrationLecteur, isDefault, isRole, ROLES, isBureauDEtudes } from './roles'
-import { ADMINISTRATION_IDS } from './static/administrations'
+import { isEntreprise, isSuper, isAdministration, isAdministrationEditeur, isAdministrationAdmin, isAdministrationLecteur, isDefault, isRole, ROLES, isBureauDEtudes } from './roles.js'
+import { ADMINISTRATION_IDS } from './static/administrations.js'
 import { test, expect, describe } from 'vitest'
 const administrationId = ADMINISTRATION_IDS.CACEM
 describe('role', () => {

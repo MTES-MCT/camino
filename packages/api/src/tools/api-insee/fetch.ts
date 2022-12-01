@@ -7,9 +7,9 @@ import {
   IApiSirenQueryToken,
   IApiSirenEtablissement,
   IApiSirenUniteLegale
-} from './types'
+} from './types.js'
 
-import errorLog from '../error-log'
+import errorLog from '../error-log.js'
 
 const MAX_CALLS_MINUTE = 30
 const MAX_RESULTS = 20

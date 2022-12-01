@@ -1,7 +1,7 @@
-import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
-import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
-import { StatistiquesGuyaneRest } from 'camino-common/src/statistiques'
-import { evolutionTitres } from './evolution-titres'
+import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement.js'
+import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
+import { StatistiquesGuyaneRest } from 'camino-common/src/statistiques.js'
+import { evolutionTitres } from './evolution-titres.js'
 
 export const getGuyaneStatsInside =
   async (): Promise<StatistiquesGuyaneRest> => {

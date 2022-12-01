@@ -1,13 +1,13 @@
-import { ITitrePhase } from '../../types'
-import dateFormat from 'dateformat'
+import { ITitrePhase } from '../../types.js'
 
 import {
   titrePhasesUpsert,
   titrePhasesDelete
-} from '../../database/queries/titres-phases'
-import { titrePhasesFind } from '../rules/titre-phases-find'
-import { titresGet } from '../../database/queries/titres'
-import { userSuper } from '../../database/user-super'
+} from '../../database/queries/titres-phases.js'
+import { titrePhasesFind } from '../rules/titre-phases-find.js'
+import { titresGet } from '../../database/queries/titres.js'
+import { userSuper } from '../../database/user-super.js'
+import { getCurrent } from 'camino-common/src/date.js'
 
 // retourne une phase parmi les titrePhases en fonction de son id
 const titrePhaseEqualFind = (
@@ -100,7 +100,7 @@ export const titresPhasesUpdate = async (titresIds?: string[]) => {
     userSuper
   )
 
-  const aujourdhui = dateFormat(new Date(), 'yyyy-mm-dd')
+  const aujourdhui = getCurrent()
   const titresPhasesIdsUpdated = []
   const titresPhasesIdsDeleted = []
 

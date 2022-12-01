@@ -1,10 +1,10 @@
-import { IEtapeType, ITitreEtape, IUtilisateur } from '../../../types'
+import { IEtapeType, ITitreEtape, IUtilisateur } from '../../../types.js'
 
-import { emailsSend } from '../../../tools/api-mailjet/emails'
-import { titreEtapeGet } from '../../../database/queries/titres-etapes'
-import { utilisateursTitresGet } from '../../../database/queries/utilisateurs'
-import { titreUrlGet } from '../../../business/utils/urls-get'
-import { EmailAdministration } from '../../../tools/api-mailjet/types'
+import { emailsSend } from '../../../tools/api-mailjet/emails.js'
+import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
+import { utilisateursTitresGet } from '../../../database/queries/utilisateurs.js'
+import { titreUrlGet } from '../../../business/utils/urls-get.js'
+import { EmailAdministration } from '../../../tools/api-mailjet/types.js'
 
 const emailForAdministrationContentFormat = (
   titreTypeId: string,

@@ -4,9 +4,9 @@ import {
   ISection,
   ISectionElementType,
   ITitreEtape
-} from '../../types'
+} from '../../types.js'
 
-import { etapeTypeSectionsFormat } from '../../api/_format/etapes-types'
+import { etapeTypeSectionsFormat } from '../../api/_format/etapes-types.js'
 
 const heritageContenuFind = (
   sectionId: string,

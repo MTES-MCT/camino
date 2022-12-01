@@ -1,7 +1,7 @@
-import { entreprisesUpdate } from './processes/entreprises-update'
-import { titresEtapesAreasUpdate } from './processes/titres-etapes-areas-update'
-import { updateTerritoires } from '../tools/territoires-update'
-import { subscribeUsersToGuyaneExploitants } from './entreprises-guyane'
+import { entreprisesUpdate } from './processes/entreprises-update.js'
+import { titresEtapesAreasUpdate } from './processes/titres-etapes-areas-update.js'
+import { updateTerritoires } from '../tools/territoires-update.js'
+import { subscribeUsersToGuyaneExploitants } from './entreprises-guyane.js'
 
 export const monthly = async () => {
   try {

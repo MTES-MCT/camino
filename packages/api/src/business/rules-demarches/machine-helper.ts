@@ -7,7 +7,7 @@ import {
   StateMachine,
   TypegenDisabled
 } from 'xstate'
-import { EventObject } from 'xstate/lib/types'
+import { EventObject } from 'xstate/lib/types.js'
 import {
   CaminoCommonContext,
   DBEtat,
@@ -15,11 +15,11 @@ import {
   Intervenant,
   intervenants,
   tags
-} from './machine-common'
+} from './machine-common.js'
 import {
   DemarchesStatutsIds,
   DemarcheStatutId
-} from 'camino-common/src/static/demarchesStatuts'
+} from 'camino-common/src/static/demarchesStatuts.js'
 
 export abstract class CaminoMachine<
   CaminoContext extends CaminoCommonContext,

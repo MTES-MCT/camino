@@ -1,9 +1,9 @@
 import './init'
-import { consoleOverride } from './config/logger'
-import { mailjetSend } from './tools/api-mailjet/emails'
+import { consoleOverride } from './config/logger.js'
+import { mailjetSend } from './tools/api-mailjet/emails.js'
 import { readFileSync, writeFileSync, createWriteStream } from 'fs'
 import * as Console from 'console'
-import { monthly } from './business/monthly'
+import { monthly } from './business/monthly.js'
 
 const logFile = '/tmp/monthly.log'
 

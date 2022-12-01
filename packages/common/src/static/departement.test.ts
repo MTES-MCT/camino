@@ -1,4 +1,4 @@
-import { checkCodePostal, isDepartementId, toDepartementId, departementsMetropole } from './departement'
+import { checkCodePostal, isDepartementId, toDepartementId, departementsMetropole } from './departement.js'
 import { test, expect } from 'vitest'
 
 test('isDepartementId', () => {

@@ -1,4 +1,4 @@
-import { ITitreDemarche } from '../../../types'
+import { ITitreDemarche } from '../../../types.js'
 
 const titreDemarchesNoEtapesSortedAsc = [
   {

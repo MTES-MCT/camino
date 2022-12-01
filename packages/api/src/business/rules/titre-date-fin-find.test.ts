@@ -1,11 +1,11 @@
-import { titreDateFinFind } from './titre-date-fin-find'
+import { titreDateFinFind } from './titre-date-fin-find.js'
 
 import {
   titreDemarchesProAccOctAcc,
   titreDemarchesProTerOctAcc,
   titreDemarchesProRejOctAcc,
   titreDemarchesProRejOctRej
-} from './__mocks__/titre-date-fin-find-demarches'
+} from './__mocks__/titre-date-fin-find-demarches.js'
 import { describe, expect, test } from 'vitest'
 describe("cherche la date de fin d'une démarche", () => {
   test("la date de fin de validité d'un titre est celle de la dernière démarche dont le statut est acceptée", () => {

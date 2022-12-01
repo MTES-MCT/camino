@@ -11,18 +11,18 @@ import {
   ITitreType,
   IContenu,
   ITitreTypeDemarcheTypeEtapeType
-} from '../../types'
+} from '../../types.js'
 
-import { titreDemarcheEtatValidate } from '../validations/titre-demarche-etat-validate'
+import { titreDemarcheEtatValidate } from '../validations/titre-demarche-etat-validate.js'
 import {
   demarcheDefinitionFind,
   isDemarcheDefinitionRestriction
-} from './definitions'
-import { titreContenuFormat } from '../../database/models/_format/titre-contenu'
-import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { newDemarcheId } from '../../database/models/_format/id-create'
-import { toCaminoDate } from 'camino-common/src/date'
+} from './definitions.js'
+import { titreContenuFormat } from '../../database/models/_format/titre-contenu.js'
+import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 import { vi, expect, test } from 'vitest'
 test('teste EtatsValidate', () => {
   const octEtatsValidate = demarcheEtatsValidate('ren', 'arm', '2021-01-01')

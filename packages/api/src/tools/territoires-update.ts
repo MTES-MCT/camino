@@ -1,20 +1,20 @@
 import '../init'
-import { knex } from '../knex'
+import { knex } from '../knex.js'
 import fetch from 'node-fetch'
-import Communes from '../database/models/communes'
+import Communes from '../database/models/communes.js'
 import JSZip from 'jszip'
-import Forets from '../database/models/forets'
+import Forets from '../database/models/forets.js'
 import { streamArray } from 'stream-json/streamers/StreamArray'
 import Pick from 'stream-json/filters/Pick'
 import { chain } from 'stream-chain'
 import { Readable } from 'stream'
-import SDOMZones from '../database/models/sdom-zones'
-import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
+import SDOMZones from '../database/models/sdom-zones.js'
+import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import {
   assertsFacade,
   assertsSecteur,
   secteurAJour
-} from 'camino-common/src/static/facades'
+} from 'camino-common/src/static/facades.js'
 
 const communesUpdate = async () => {
   const communesIdsKnown = (await Communes.query()).map(({ id }) => id)

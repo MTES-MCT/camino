@@ -1,5 +1,5 @@
-import { geoConvert } from './geo-convert'
-import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes'
+import { geoConvert } from './geo-convert.js'
+import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes.js'
 import { describe, expect, test } from 'vitest'
 
 describe('teste la conversion des projections', () => {

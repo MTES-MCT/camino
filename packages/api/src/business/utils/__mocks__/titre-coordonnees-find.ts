@@ -1,4 +1,4 @@
-import { ITitrePoint } from '../../../types'
+import { ITitrePoint } from '../../../types.js'
 
 export const titrePoints = [
   {

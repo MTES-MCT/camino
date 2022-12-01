@@ -1,7 +1,7 @@
-import { ETAPES_TYPES, EtapeTypeId } from '../static/etapesTypes'
-import { TitreTypeId } from '../static/titresTypes'
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeWithPhase } from '../static/demarchesTypes'
-import { isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from '../roles'
+import { ETAPES_TYPES, EtapeTypeId } from '../static/etapesTypes.js'
+import { TitreTypeId } from '../static/titresTypes.js'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeWithPhase } from '../static/demarchesTypes.js'
+import { isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from '../roles.js'
 
 export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {

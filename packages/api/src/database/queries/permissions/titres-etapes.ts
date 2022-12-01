@@ -1,25 +1,28 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types'
+import { IUtilisateur } from '../../../types.js'
 
-import Documents from '../../models/documents'
-import TitresEtapes from '../../models/titres-etapes'
-import Entreprises from '../../models/entreprises'
+import Documents from '../../models/documents.js'
+import TitresEtapes from '../../models/titres-etapes.js'
+import Entreprises from '../../models/entreprises.js'
 
-import { documentsQueryModify } from './documents'
+import { documentsQueryModify } from './documents.js'
 import {
   administrationsEtapesTypesPropsQuery,
   entreprisesEtapesTypesPropsQuery
-} from './metas'
+} from './metas.js'
 import {
   administrationsTitresTypesEtapesTypesModify,
   administrationsTitresQuery
-} from './administrations'
-import { entreprisesQueryModify, entreprisesTitresQuery } from './entreprises'
-import { titresDemarchesQueryModify } from './titres-demarches'
-import TitresDemarches from '../../models/titres-demarches'
-import Journaux from '../../models/journaux'
-import { journauxQueryModify } from './journaux'
+} from './administrations.js'
+import {
+  entreprisesQueryModify,
+  entreprisesTitresQuery
+} from './entreprises.js'
+import { titresDemarchesQueryModify } from './titres-demarches.js'
+import TitresDemarches from '../../models/titres-demarches.js'
+import Journaux from '../../models/journaux.js'
+import { journauxQueryModify } from './journaux.js'
 import {
   isAdministration,
   isAdministrationAdmin,
@@ -27,7 +30,7 @@ import {
   isBureauDEtudes,
   isEntreprise,
   isSuper
-} from 'camino-common/src/roles'
+} from 'camino-common/src/roles.js'
 
 const titreEtapeModificationQueryBuild = (
   user: IUtilisateur | null | undefined

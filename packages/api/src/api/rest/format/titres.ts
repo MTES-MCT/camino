@@ -6,22 +6,22 @@ import {
   IContenuValeur,
   IContenu,
   ICommune
-} from '../../../types'
-import { Departements } from 'camino-common/src/static/departement'
-import { Regions } from 'camino-common/src/static/region'
-import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
+} from '../../../types.js'
+import { Departements } from 'camino-common/src/static/departement.js'
+import { Regions } from 'camino-common/src/static/region.js'
+import { SubstancesLegale } from 'camino-common/src/static/substancesLegales.js'
 import {
   isNotNullNorUndefined,
   onlyUnique
-} from 'camino-common/src/typescript-tools'
-import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
-import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
+} from 'camino-common/src/typescript-tools.js'
+import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
+import { ReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
 import {
   getDepartementsBySecteurs,
   getFacadesComputed,
   SecteursMaritimes
-} from 'camino-common/src/static/facades'
-import { Administrations } from 'camino-common/src/static/administrations'
+} from 'camino-common/src/static/facades.js'
+import { Administrations } from 'camino-common/src/static/administrations.js'
 
 const getFacadesMaritimeCell = (
   secteursMaritime: SecteursMaritimes[],

@@ -1,6 +1,6 @@
-import { dbManager } from '../../../tests/db-manager'
-import { graphQLCall, queryImport } from '../../../tests/_utils/index'
-import Utilisateurs from '../../database/models/utilisateurs'
+import { dbManager } from '../../../tests/db-manager.js'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
+import Utilisateurs from '../../database/models/utilisateurs.js'
 
 import { afterAll, beforeAll, describe, test, expect, vi } from 'vitest'
 

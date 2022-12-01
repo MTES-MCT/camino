@@ -1,5 +1,5 @@
-import { toCaminoDate } from 'camino-common/src/date'
-import { demarcheEtatsValidate } from '../_utils.test'
+import { toCaminoDate } from 'camino-common/src/date.js'
+import { demarcheEtatsValidate } from '../_utils.test.js'
 import { describe, expect, test } from 'vitest'
 describe('vérifie l’arbre de retrait d’ARM', () => {
   const retEtatsValidate = demarcheEtatsValidate('ret', 'arm', '2020-01-01')

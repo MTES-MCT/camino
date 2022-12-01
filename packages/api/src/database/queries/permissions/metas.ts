@@ -1,32 +1,32 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types'
+import { IUtilisateur } from '../../../types.js'
 
-import { knex } from '../../../knex'
+import { knex } from '../../../knex.js'
 // import fileCreate from '../../../tools/file-create'
 // import { format } from 'sql-formatter'
 
-import Domaines from '../../models/domaines'
-import DemarchesTypes from '../../models/demarches-types'
-import EtapesTypes from '../../models/etapes-types'
-import TitresEtapes from '../../models/titres-etapes'
-import TitresTypesDemarchesTypesEtapesTypes from '../../models/titres-types--demarches-types-etapes-types'
+import Domaines from '../../models/domaines.js'
+import DemarchesTypes from '../../models/demarches-types.js'
+import EtapesTypes from '../../models/etapes-types.js'
+import TitresEtapes from '../../models/titres-etapes.js'
+import TitresTypesDemarchesTypesEtapesTypes from '../../models/titres-types--demarches-types-etapes-types.js'
 
-import { titresDemarchesAdministrationsModificationQuery } from './titres'
+import { titresDemarchesAdministrationsModificationQuery } from './titres.js'
 import {
   administrationsTitresTypesTitresStatutsModify,
   administrationsTitresTypesEtapesTypesModify,
   administrationsTitresQuery
-} from './administrations'
+} from './administrations.js'
 import {
   isAdministration,
   isBureauDEtudes,
   isDefault,
   isEntreprise,
   isSuper
-} from 'camino-common/src/roles'
-import { AdministrationId } from 'camino-common/src/static/administrations'
-import { TITRES_TYPES_IDS_DEMAT } from 'camino-common/src/permissions/titres'
+} from 'camino-common/src/roles.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { TITRES_TYPES_IDS_DEMAT } from 'camino-common/src/permissions/titres.js'
 
 // récupère les types d'étapes qui ont
 // - les autorisations sur le titre

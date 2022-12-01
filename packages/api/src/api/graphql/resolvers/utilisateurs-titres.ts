@@ -1,12 +1,12 @@
-import { IToken } from '../../../types'
+import { IToken } from '../../../types.js'
 
 import {
   userGet,
   utilisateurTitreCreate,
   utilisateurTitreDelete
-} from '../../../database/queries/utilisateurs'
+} from '../../../database/queries/utilisateurs.js'
 
-import { titreGet } from '../../../database/queries/titres'
+import { titreGet } from '../../../database/queries/titres.js'
 
 const utilisateurTitreAbonner = async (
   { titreId, abonner }: { titreId: string; abonner: boolean },

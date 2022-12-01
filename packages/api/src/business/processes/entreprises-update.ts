@@ -1,20 +1,20 @@
-import { IEntrepriseEtablissement, IEntreprise } from '../../types'
+import { IEntrepriseEtablissement, IEntreprise } from '../../types.js'
 
-import { objectsDiffer } from '../../tools/index'
+import { objectsDiffer } from '../../tools/index.js'
 import {
   entreprisesUpsert,
   entreprisesGet
-} from '../../database/queries/entreprises'
+} from '../../database/queries/entreprises.js'
 import {
   entreprisesEtablissementsUpsert,
   entreprisesEtablissementsDelete,
   entreprisesEtablissementsGet
-} from '../../database/queries/entreprises-etablissements'
+} from '../../database/queries/entreprises-etablissements.js'
 import {
   apiInseeEntreprisesEtablissementsGet,
   apiInseeEntreprisesGet
-} from '../../tools/api-insee'
-import { userSuper } from '../../database/user-super'
+} from '../../tools/api-insee/index.js'
+import { userSuper } from '../../database/user-super.js'
 
 const entreprisesEtablissementsToUpdateBuild = (
   entreprisesEtablissementsOld: IEntrepriseEtablissement[],

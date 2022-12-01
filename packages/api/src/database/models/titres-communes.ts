@@ -1,5 +1,5 @@
 import { Model } from 'objection'
-import { ITitreCommune } from '../../types'
+import { ITitreCommune } from '../../types.js'
 
 interface TitresCommunes extends ITitreCommune {}
 

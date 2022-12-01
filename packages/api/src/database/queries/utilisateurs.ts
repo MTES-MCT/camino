@@ -6,17 +6,17 @@ import {
   IUtilisateursColonneId,
   IColonne,
   IUtilisateurTitre
-} from '../../types'
+} from '../../types.js'
 
-import options from './_options'
-import graphBuild from './graph/build'
-import { fieldsFormat } from './graph/fields-format'
-import { stringSplit } from './_utils'
+import options from './_options.js'
+import graphBuild from './graph/build.js'
+import { fieldsFormat } from './graph/fields-format.js'
+import { stringSplit } from './_utils.js'
 
-import Utilisateurs from '../models/utilisateurs'
-import { utilisateursQueryModify } from './permissions/utilisateurs'
-import UtilisateursTitres from '../models/utilisateurs--titres'
-import { Role } from 'camino-common/src/roles'
+import Utilisateurs from '../models/utilisateurs.js'
+import { utilisateursQueryModify } from './permissions/utilisateurs.js'
+import UtilisateursTitres from '../models/utilisateurs--titres.js'
+import { Role } from 'camino-common/src/roles.js'
 
 const userGet = async (userId?: string) => {
   if (!userId) return null

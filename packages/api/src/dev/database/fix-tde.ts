@@ -1,8 +1,8 @@
 import '../../init'
 
-import { titresDemarchesGet } from '../../database/queries/titres-demarches'
-import TitresEtapes from '../../database/models/titres-etapes'
-import { userSuper } from '../../database/user-super'
+import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
+import TitresEtapes from '../../database/models/titres-etapes.js'
+import { userSuper } from '../../database/user-super.js'
 
 async function main() {
   let demarches = await titresDemarchesGet(

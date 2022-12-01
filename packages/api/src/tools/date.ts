@@ -1,4 +1,4 @@
-import dateFormat from 'dateformat'
+import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 
 export const dateValidate = (str: string | undefined | null) => {
   if (!str) return 'Date manquante'
@@ -13,17 +13,17 @@ export const dateValidate = (str: string | undefined | null) => {
 }
 
 // ajoute une durée en jours à une string au format YYYY-MM-DD
-export const dateAddDays = (date: string, days: number) => {
+export const dateAddDays = (date: CaminoDate, days: number): CaminoDate => {
   const [y, m, d] = date.split('-')
 
-  return dateFormat(new Date(+y, +m - 1, +d + days), 'yyyy-mm-dd')
+  return toCaminoDate(new Date(+y, +m - 1, +d + days))
 }
 
 // ajoute une durée en mois à une string au format YYYY-MM-DD
-export const dateAddMonths = (date: string, months: number) => {
+export const dateAddMonths = (date: CaminoDate, months: number): CaminoDate => {
   const [y, m, d] = date.split('-')
 
-  return dateFormat(new Date(+y, +m - 1 + months, +d), 'yyyy-mm-dd')
+  return toCaminoDate(new Date(+y, +m - 1 + months, +d))
 }
 
 // calcul le nombre de mois entre 2 dates

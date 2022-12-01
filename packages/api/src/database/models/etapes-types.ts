@@ -1,8 +1,8 @@
 import { Model, Modifiers } from 'objection'
 
-import { IEtapeType } from '../../types'
-import AdministrationsTitresTypesEtapesTypes from './administrations-titres-types-etapes-types'
-import DocumentsTypes from './documents-types'
+import { IEtapeType } from '../../types.js'
+import AdministrationsTitresTypesEtapesTypes from './administrations-titres-types-etapes-types.js'
+import DocumentsTypes from './documents-types.js'
 
 interface EtapesTypes extends IEtapeType {}
 

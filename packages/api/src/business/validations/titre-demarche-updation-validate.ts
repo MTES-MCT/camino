@@ -1,4 +1,4 @@
-import { ITitreDemarche } from '../../types'
+import { ITitreDemarche } from '../../types.js'
 
 export const titreDemarcheUpdationValidate = async (
   titreDemarcheNew: ITitreDemarche,

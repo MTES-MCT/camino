@@ -1,9 +1,9 @@
-import { IEntreprise, ITitre, ITitreDemarche } from '../../../types'
+import { IEntreprise, ITitre, ITitreDemarche } from '../../../types.js'
 
-import { dbManager } from '../../../../tests/db-manager'
+import { dbManager } from '../../../../tests/db-manager.js'
 
-import Titres from '../../models/titres'
-import { idGenerate } from '../../models/_format/id-create'
+import Titres from '../../models/titres.js'
+import { idGenerate } from '../../models/_format/id-create.js'
 import {
   titresArmEnDemandeQuery,
   titresConfidentielSelect,
@@ -11,18 +11,18 @@ import {
   titresQueryModify,
   titresTravauxCreationQuery,
   titresVisibleByEntrepriseQuery
-} from './titres'
-import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts'
-import { userSuper } from '../../user-super'
-import { AdministrationId } from 'camino-common/src/static/administrations'
-import { Role } from 'camino-common/src/roles'
+} from './titres.js'
+import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts.js'
+import { userSuper } from '../../user-super.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { Role } from 'camino-common/src/roles.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 
 console.info = vi.fn()
 console.error = vi.fn()

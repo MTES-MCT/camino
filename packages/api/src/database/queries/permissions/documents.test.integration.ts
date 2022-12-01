@@ -1,19 +1,19 @@
-import { dbManager } from '../../../../tests/db-manager'
+import { dbManager } from '../../../../tests/db-manager.js'
 
-import { userSuper } from '../../user-super'
+import { userSuper } from '../../user-super.js'
 
-import TitresEtapes from '../../models/titres-etapes'
-import ActivitesTypesDocumentsTypes from '../../models/activites-types--documents-types'
-import TitresActivites from '../../models/titres-activites'
-import Document from '../../models/documents'
+import TitresEtapes from '../../models/titres-etapes.js'
+import ActivitesTypesDocumentsTypes from '../../models/activites-types--documents-types.js'
+import TitresActivites from '../../models/titres-activites.js'
+import Document from '../../models/documents.js'
 
-import { documentCreate, documentGet } from '../documents'
-import { etapeTypeDocumentTypeUsedCheck } from './documents'
+import { documentCreate, documentGet } from '../documents.js'
+import { etapeTypeDocumentTypeUsedCheck } from './documents.js'
 import { Knex } from 'knex'
-import { newDemarcheId } from '../../models/_format/id-create'
-import { toCaminoDate } from 'camino-common/src/date'
+import { newDemarcheId } from '../../models/_format/id-create.js'
+import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -92,7 +92,7 @@ describe('documentSupprimer', () => {
         id: 'titreActiviteId',
         typeId: 'grx',
         titreId: '',
-        date: '',
+        date: getCurrent(),
         statutId,
         periodeId: 1,
         annee: 2000

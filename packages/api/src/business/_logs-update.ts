@@ -1,4 +1,4 @@
-import { Index, IEntrepriseEtablissement, IEntreprise } from '../types'
+import { Index, IEntrepriseEtablissement, IEntreprise } from '../types.js'
 
 export const logsUpdate = ({
   titresEtapesOrdreUpdated,

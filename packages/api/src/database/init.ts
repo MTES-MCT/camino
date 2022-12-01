@@ -1,8 +1,8 @@
-import { knex } from '../knex'
-import { utilisateursCount } from './queries/utilisateurs'
-import { userSuper } from './user-super'
-import { userAdd } from '../knex/user-add'
-import dateFormat from 'dateformat'
+import { knex } from '../knex.js'
+import { utilisateursCount } from './queries/utilisateurs.js'
+import { userSuper } from './user-super.js'
+import { userAdd } from '../knex/user-add.js'
+import { getCurrent } from 'camino-common/src/date.js'
 
 export const databaseInit = async () => {
   await knex.migrate.latest()
@@ -22,7 +22,7 @@ const createAdminUserAtStartup = async () => {
       id: 'admin',
       email: process.env.ADMIN_EMAIL!,
       role: 'super',
-      dateCreation: dateFormat(new Date(), 'yyyy-mm-dd')
+      dateCreation: getCurrent()
     })
   }
 }

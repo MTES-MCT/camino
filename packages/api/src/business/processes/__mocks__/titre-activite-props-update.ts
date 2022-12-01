@@ -1,4 +1,4 @@
-import Titres from '../../../database/models/titres'
+import Titres from '../../../database/models/titres.js'
 const activiteType = {
   frequenceId: 'tri'
 }

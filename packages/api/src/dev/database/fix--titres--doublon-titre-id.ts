@@ -1,5 +1,5 @@
 import '../../init'
-import Titres from '../../database/models/titres'
+import Titres from '../../database/models/titres.js'
 
 const main = async () => {
   const titres = await Titres.query().whereNotNull('doublonTitreId')

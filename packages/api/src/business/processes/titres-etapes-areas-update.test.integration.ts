@@ -1,23 +1,23 @@
-import { dbManager } from '../../../tests/db-manager'
+import { dbManager } from '../../../tests/db-manager.js'
 import { Knex } from 'knex'
-import Titres from '../../database/models/titres'
-import TitresDemarches from '../../database/models/titres-demarches'
-import TitresEtapes from '../../database/models/titres-etapes'
-import TitresPoints from '../../database/models/titres-points'
-import { titresEtapesAreasUpdate } from './titres-etapes-areas-update'
-import TitresCommunes from '../../database/models/titres-communes'
+import Titres from '../../database/models/titres.js'
+import TitresDemarches from '../../database/models/titres-demarches.js'
+import TitresEtapes from '../../database/models/titres-etapes.js'
+import TitresPoints from '../../database/models/titres-points.js'
+import { titresEtapesAreasUpdate } from './titres-etapes-areas-update.js'
+import TitresCommunes from '../../database/models/titres-communes.js'
 import {
   BaisieuxPerimetre,
   foret2BranchesPerimetre,
   foretReginaPerimetre,
   SaintEliePerimetre,
   SinnamaryPerimetre
-} from './__mocks__/titres-etapes-areas-update'
-import TitresForets from '../../database/models/titres-forets'
-import TitresSDOMZones from '../../database/models/titres--sdom-zones'
-import { newDemarcheId } from '../../database/models/_format/id-create'
-import { SDOMZoneIds } from 'camino-common/src/static/sdom'
-import { toCaminoDate } from 'camino-common/src/date'
+} from './__mocks__/titres-etapes-areas-update.js'
+import TitresForets from '../../database/models/titres-forets.js'
+import TitresSDOMZones from '../../database/models/titres--sdom-zones.js'
+import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { SDOMZoneIds } from 'camino-common/src/static/sdom.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 import { vi, beforeAll, afterAll, describe, test, expect } from 'vitest'
 console.info = vi.fn()
 console.error = vi.fn()

@@ -1,11 +1,11 @@
-import { IDemarcheType, IEtapeType, ITitreEtape } from '../../types'
+import { IDemarcheType, IEtapeType, ITitreEtape } from '../../types.js'
 
 import {
   titreEtapesSortAscByDate,
   titreEtapesSortAscByOrdre,
   titreEtapesSortDescByOrdre
-} from './titre-etapes-sort'
-import { newDemarcheId } from '../../database/models/_format/id-create'
+} from './titre-etapes-sort.js'
+import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { vi, describe, test, expect } from 'vitest'
 
 const titreEtapesSortedDescResult = [

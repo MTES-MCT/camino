@@ -1,13 +1,14 @@
-import { ITitreDemarche, ITitreEtape } from '../../types'
+import { ITitreDemarche, ITitreEtape } from '../../types.js'
 
 import {
   titreEtapesSortAscByOrdre,
   titreEtapesSortDescByOrdre
-} from '../utils/titre-etapes-sort'
+} from '../utils/titre-etapes-sort.js'
 
-import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find'
-import { dateAddMonths, datesSubtract } from '../../tools/date'
-import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes'
+import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find.js'
+import { dateAddMonths, datesSubtract } from '../../tools/date.js'
+import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 
 // entrée
 // - les démarches d'un titre
@@ -183,7 +184,7 @@ const titreDemarcheOctroiDateFinAndDureeFind = (
     // la date de fin par défaut est fixée au 31 décembre 2018,
     // selon l'article L144-4 du code minier :
     // https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000023501962&idArticle=LEGIARTI000023504741
-    dateFin = '2018-12-31'
+    dateFin = toCaminoDate('2018-12-31')
     // on calcule la durée que sépare la date de début et la date de fin
     duree = datesSubtract(dateDebut, dateFin!)
     // on met à jour la date de fin avec la durée accumulée

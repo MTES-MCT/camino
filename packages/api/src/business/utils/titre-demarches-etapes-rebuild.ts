@@ -1,6 +1,6 @@
-import { ITitreDemarche, ITitreEtape } from '../../types'
-import { titreDemarchePhaseCheck } from '../rules/titre-demarche-phase-check'
-import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find'
+import { ITitreDemarche, ITitreEtape } from '../../types.js'
+import { titreDemarchePhaseCheck } from '../rules/titre-demarche-phase-check.js'
+import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find.js'
 
 /**
  * Filtre les étapes antérieures à une date

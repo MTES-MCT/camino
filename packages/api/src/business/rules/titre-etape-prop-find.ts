@@ -1,10 +1,10 @@
-import { ITitreDemarche, IPropId } from '../../types'
+import { ITitreDemarche, IPropId } from '../../types.js'
 
-import { propValueFind } from '../utils/prop-value-find'
-import { titreDemarchesEtapesRebuild } from '../utils/titre-demarches-etapes-rebuild'
+import { propValueFind } from '../utils/prop-value-find.js'
+import { titreDemarchesEtapesRebuild } from '../utils/titre-demarches-etapes-rebuild.js'
 
-import { titrePropTitreEtapeFind } from './titre-prop-etape-find'
-import { titreStatutIdFind } from './titre-statut-id-find'
+import { titrePropTitreEtapeFind } from './titre-prop-etape-find.js'
+import { titreStatutIdFind } from './titre-statut-id-find.js'
 
 /**
  * Trouve la propriété d'un titre à une date donnée

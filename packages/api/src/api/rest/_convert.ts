@@ -1,6 +1,6 @@
 import xlsx from 'xlsx'
 
-import { IFormat, Index } from '../../types'
+import { IFormat, Index } from '../../types.js'
 
 const tableConvert = (
   section:

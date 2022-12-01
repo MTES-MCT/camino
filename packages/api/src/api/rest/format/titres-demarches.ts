@@ -1,11 +1,11 @@
-import { ITitreDemarche, Index } from '../../../types'
+import { ITitreDemarche, Index } from '../../../types.js'
 
-import { titreEtapesSortDescByOrdre } from '../../../business/utils/titre-etapes-sort'
-import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
-import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
-import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
+import { titreEtapesSortDescByOrdre } from '../../../business/utils/titre-etapes-sort.js'
+import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
+import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
+import { ReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
 
 const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
   if (!titreDemarche.etapes?.length) return null

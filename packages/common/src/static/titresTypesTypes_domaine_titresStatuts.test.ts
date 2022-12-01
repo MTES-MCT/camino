@@ -1,8 +1,8 @@
-import { DEMARCHES_TYPES_IDS } from './demarchesTypes'
-import { DOMAINES_IDS } from './domaines'
-import { TitresStatutIds } from './titresStatuts'
-import { TITRES_TYPES_TYPES_IDS } from './titresTypesTypes'
-import { titrePublicFind } from './titresTypesTypes_domaine_titresStatuts'
+import { DEMARCHES_TYPES_IDS } from './demarchesTypes.js'
+import { DOMAINES_IDS } from './domaines.js'
+import { TitresStatutIds } from './titresStatuts.js'
+import { TITRES_TYPES_TYPES_IDS } from './titresTypesTypes.js'
+import { titrePublicFind } from './titresTypesTypes_domaine_titresStatuts.js'
 import { test, expect, describe } from 'vitest'
 
 describe("publicité d'un titre", () => {

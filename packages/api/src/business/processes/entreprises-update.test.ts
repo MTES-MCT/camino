@@ -1,10 +1,10 @@
-import { entreprisesUpdate } from './entreprises-update'
-import { entreprisesGet } from '../../database/queries/entreprises'
-import { entreprisesEtablissementsGet } from '../../database/queries/entreprises-etablissements'
+import { entreprisesUpdate } from './entreprises-update.js'
+import { entreprisesGet } from '../../database/queries/entreprises.js'
+import { entreprisesEtablissementsGet } from '../../database/queries/entreprises-etablissements.js'
 import {
   apiInseeEntreprisesGet,
   apiInseeEntreprisesEtablissementsGet
-} from '../../tools/api-insee'
+} from '../../tools/api-insee/index.js'
 
 import {
   dbEntreprisesCreees,
@@ -27,8 +27,8 @@ import {
   apiEntreprisesEtablissementsCreees,
   apiEntreprisesEtablissementsModifiees,
   apiEntreprisesEtablissementsSupprimeees
-} from './__mocks__/entreprises-update'
-import { IEntreprise, IEntrepriseEtablissement } from '../../types'
+} from './__mocks__/entreprises-update.js'
+import { IEntreprise, IEntrepriseEtablissement } from '../../types.js'
 import { vi, beforeEach, describe, expect, test } from 'vitest'
 
 const entreprisesUpdated: IEntreprise[] = []

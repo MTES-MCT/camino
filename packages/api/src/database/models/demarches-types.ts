@@ -1,7 +1,7 @@
 import { Model, Modifiers } from 'objection'
 
-import { IDemarcheType } from '../../types'
-import EtapesTypes from './etapes-types'
+import { IDemarcheType } from '../../types.js'
+import EtapesTypes from './etapes-types.js'
 
 interface DemarchesTypes extends IDemarcheType {}
 

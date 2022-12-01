@@ -3,14 +3,14 @@ import {
   IHeritageProps,
   ITitreEtape,
   ITitrePoint
-} from '../../types'
+} from '../../types.js'
 
 import {
   titreEtapeHeritagePropsFind,
   titreEtapePropsIds
-} from './titre-etape-heritage-props-find'
+} from './titre-etape-heritage-props-find.js'
 
-import { objectClone } from '../../tools/index'
+import { objectClone } from '../../tools/index.js'
 import { describe, test, expect } from 'vitest'
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */

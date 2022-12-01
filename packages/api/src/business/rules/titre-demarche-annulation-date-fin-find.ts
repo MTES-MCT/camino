@@ -1,10 +1,10 @@
-import { CaminoDate } from 'camino-common/src/date'
+import { CaminoDate } from 'camino-common/src/date.js'
 
 import {
   titreEtapesSortAscByOrdre,
   titreEtapesSortDescByOrdre
-} from '../utils/titre-etapes-sort'
-import { TitreEtapePhaseFind } from './titre-demarche-date-fin-duree-find'
+} from '../utils/titre-etapes-sort.js'
+import { TitreEtapePhaseFind } from './titre-demarche-date-fin-duree-find.js'
 
 /**
  * Retourne la date de fin d'une démarche d'annulation

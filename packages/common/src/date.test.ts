@@ -1,4 +1,4 @@
-import { anneePrecedente, anneeSuivante, datesDiffInDays, daysBetween, getAnnee, isAnnee, toCaminoDate, valideAnnee } from './date'
+import { anneePrecedente, anneeSuivante, datesDiffInDays, daysBetween, getAnnee, isAnnee, toCaminoDate, valideAnnee } from './date.js'
 import { test, expect } from 'vitest'
 test.each([
   ['2020-06-02T13:35:11.366Z', '2021-06-03T13:35:11.366Z', 366],

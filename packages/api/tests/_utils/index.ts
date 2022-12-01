@@ -3,17 +3,17 @@ import path from 'path'
 import jwt from 'jsonwebtoken'
 import request from 'supertest'
 
-import { Index, IUtilisateur } from '../../src/types'
+import { Index, IUtilisateur } from '../../src/types.js'
 
-import { app } from '../app'
+import { app } from '../app.js'
 import {
   utilisateurCreate,
   utilisateurGet
-} from '../../src/database/queries/utilisateurs'
-import { userSuper } from '../../src/database/user-super'
-import { AdministrationId } from 'camino-common/src/static/administrations'
-import dateFormat from 'dateformat'
-import { Role } from 'camino-common/src/roles'
+} from '../../src/database/queries/utilisateurs.js'
+import { userSuper } from '../../src/database/user-super.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { Role } from 'camino-common/src/roles.js'
+import { getCurrent } from 'camino-common/src/date.js'
 
 const queryImport = (nom: string) =>
   fs
@@ -105,7 +105,7 @@ const userTokenGenerate = async (
         nom: `nom-${role}`,
         email: `${id}@camino.local`,
         motDePasse: 'mot-de-passe',
-        dateCreation: dateFormat(new Date(), 'yyyy-mm-dd'),
+        dateCreation: getCurrent(),
         role,
         administrationId
       },

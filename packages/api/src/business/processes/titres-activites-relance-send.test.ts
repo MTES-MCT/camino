@@ -1,9 +1,9 @@
-import { titresActivitesGet } from '../../database/queries/titres-activites'
+import { titresActivitesGet } from '../../database/queries/titres-activites.js'
 
-import TitresActivites from '../../database/models/titres-activites'
-import { titresActivitesRelanceSend } from './titres-activites-relance-send'
-import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
-import { EmailTemplateId } from '../../tools/api-mailjet/types'
+import TitresActivites from '../../database/models/titres-activites.js'
+import { titresActivitesRelanceSend } from './titres-activites-relance-send.js'
+import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
+import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres-activites', () => ({
   titresActivitesGet: vi.fn()

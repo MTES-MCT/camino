@@ -1,6 +1,6 @@
 import fetch, { Response } from 'node-fetch'
-import { SubstanceFiscale } from 'camino-common/src/static/substancesFiscales'
-import { Unite, Unites } from 'camino-common/src/static/unites'
+import { SubstanceFiscale } from 'camino-common/src/static/substancesFiscales.js'
+import { Unite, Unites } from 'camino-common/src/static/unites.js'
 type Attribute =
   | 'surface_communale'
   | 'surface_communale_proportionnee'

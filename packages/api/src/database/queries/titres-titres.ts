@@ -1,4 +1,4 @@
-import TitresTitres from '../models/titres--titres'
+import TitresTitres from '../models/titres--titres.js'
 
 interface LinkTitre {
   linkTo: string

@@ -1,7 +1,7 @@
 import { rename } from 'fs'
 import { join, basename } from 'path'
 
-import errorLog from './error-log'
+import errorLog from './error-log.js'
 
 const fileRename = async (oldFileName: string, newFileName: string) =>
   new Promise((resolve, reject) => {

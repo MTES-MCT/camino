@@ -1,7 +1,7 @@
-import { Etape } from './machine-common'
-import { EventObject } from 'xstate/lib/types'
+import { Etape } from './machine-common.js'
+import { EventObject } from 'xstate/lib/types.js'
 import { interpret } from 'xstate'
-import { CaminoMachine } from './machine-helper'
+import { CaminoMachine } from './machine-helper.js'
 import { expect } from 'vitest'
 interface CustomMatchers<R = unknown> {
   canOnlyTransitionTo<T extends EventObject>(

@@ -1,7 +1,7 @@
-import { titreCoordonneesFind } from './titre-coordonnees-find'
-import { geojsonCenter } from '../../tools/geojson'
+import { titreCoordonneesFind } from './titre-coordonnees-find.js'
+import { geojsonCenter } from '../../tools/geojson.js'
 
-import { titrePoints } from './__mocks__/titre-coordonnees-find'
+import { titrePoints } from './__mocks__/titre-coordonnees-find.js'
 import { vi, describe, test, expect } from 'vitest'
 
 vi.mock('../../tools/geojson', () => ({

@@ -1,6 +1,6 @@
 import 'dotenv/config'
 
-import { mailjet } from '../src/tools/api-mailjet'
+import { mailjet } from '../src/tools/api-mailjet/index.js'
 
 export default async () => {
   // https://github.com/mailjet/mailjet-apiv3-nodejs#disable-api-call

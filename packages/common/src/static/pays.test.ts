@@ -1,4 +1,4 @@
-import { isPaysId, PAYS_IDS } from './pays'
+import { isPaysId, PAYS_IDS } from './pays.js'
 import { test, expect } from 'vitest'
 
 test('isPaysId', () => {

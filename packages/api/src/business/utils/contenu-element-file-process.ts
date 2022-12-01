@@ -10,11 +10,11 @@ import {
   ISection,
   ISectionElement,
   ITitreEtape
-} from '../../types'
+} from '../../types.js'
 
-import dirCreate from '../../tools/dir-create'
-import fileStreamCreate from '../../tools/file-stream-create'
-import fileDelete from '../../tools/file-delete'
+import dirCreate from '../../tools/dir-create.js'
+import fileStreamCreate from '../../tools/file-stream-create.js'
+import fileDelete from '../../tools/file-delete.js'
 
 const sectionElementContenuAndFilesGet = (
   contenuValeur: IContenuValeur,

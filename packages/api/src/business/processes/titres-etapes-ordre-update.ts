@@ -1,9 +1,9 @@
-import { IUtilisateur } from '../../types'
+import { IUtilisateur } from '../../types.js'
 
-import { titreEtapeUpdate } from '../../database/queries/titres-etapes'
-import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort'
-import { titresDemarchesGet } from '../../database/queries/titres-demarches'
-import { userSuper } from '../../database/user-super'
+import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
+import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort.js'
+import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
+import { userSuper } from '../../database/user-super.js'
 
 export const titresEtapesOrdreUpdate = async (
   user: IUtilisateur,

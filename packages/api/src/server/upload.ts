@@ -1,8 +1,8 @@
 import express from 'express'
 import { Server, FileStore } from 'tus-node-server'
 import { graphqlUploadExpress } from 'graphql-upload'
-import { userGet } from '../database/queries/utilisateurs'
-import { isDefault } from 'camino-common/src/roles'
+import { userGet } from '../database/queries/utilisateurs.js'
+import { isDefault } from 'camino-common/src/roles.js'
 
 // Téléversement REST
 const uploadAllowedMiddleware = async (

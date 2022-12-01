@@ -2,19 +2,19 @@ import {
   DemarcheId,
   ITitreEtape,
   TitreEtapesTravauxTypes as Travaux
-} from '../../types'
+} from '../../types.js'
 
-import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
-import { titreEtapePublicationCheck } from './titre-etape-publication-check'
+import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
+import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
 import {
   demarcheDefinitionFind,
   isDemarcheDefinitionMachine
-} from '../rules-demarches/definitions'
-import { toMachineEtapes } from '../rules-demarches/machine-common'
+} from '../rules-demarches/definitions.js'
+import { toMachineEtapes } from '../rules-demarches/machine-common.js'
 import {
   DemarcheStatutId,
   DemarchesStatutsIds
-} from 'camino-common/src/static/demarchesStatuts'
+} from 'camino-common/src/static/demarchesStatuts.js'
 
 const titreEtapesDecisivesCommunesTypes = ['css', 'rtd', 'abd', 'and']
 

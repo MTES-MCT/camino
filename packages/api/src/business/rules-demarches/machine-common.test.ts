@@ -1,7 +1,7 @@
-import { toCaminoDate } from 'camino-common/src/date'
-import { newDemarcheId } from '../../database/models/_format/id-create'
-import { ITitreEtape } from '../../types'
-import { toMachineEtapes } from './machine-common'
+import { toCaminoDate } from 'camino-common/src/date.js'
+import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { ITitreEtape } from '../../types.js'
+import { toMachineEtapes } from './machine-common.js'
 import { describe, expect, test } from 'vitest'
 describe('toMachineEtapes', () => {
   test('transforme une étape de la bdd en étape de machine', () => {

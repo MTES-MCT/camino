@@ -7,33 +7,33 @@ import {
   ISDOMZone,
   IContenu,
   ITitreEntreprise
-} from '../../types'
+} from '../../types.js'
 
-import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate'
-import { titreEtapePointsValidate } from './titre-etape-points-validate'
-import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate'
-import { heritageContenuValidate } from './utils/heritage-contenu-validate'
-import { propsNumbersCheck } from './utils/props-numbers-check'
-import { contenuNumbersCheck } from './utils/contenu-numbers-check'
-import { propsDatesCheck } from './utils/props-dates-check'
-import { contenuDatesCheck } from './utils/contenu-dates-check'
-import { documentsTypesValidate } from './documents-types-validate'
-import { documentTypeIdsBySdomZonesGet } from '../../api/graphql/resolvers/_titre-etape'
-import { objectClone } from '../../tools'
+import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
+import { titreEtapePointsValidate } from './titre-etape-points-validate.js'
+import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'
+import { heritageContenuValidate } from './utils/heritage-contenu-validate.js'
+import { propsNumbersCheck } from './utils/props-numbers-check.js'
+import { contenuNumbersCheck } from './utils/contenu-numbers-check.js'
+import { propsDatesCheck } from './utils/props-dates-check.js'
+import { contenuDatesCheck } from './utils/contenu-dates-check.js'
+import { documentsTypesValidate } from './documents-types-validate.js'
+import { documentTypeIdsBySdomZonesGet } from '../../api/graphql/resolvers/_titre-etape.js'
+import { objectClone } from '../../tools/index.js'
 import {
   canEditAmodiataires,
   canEditDates,
   canEditDuree,
   canEditTitulaires,
   dureeOptionalCheck
-} from 'camino-common/src/permissions/titres-etapes'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+} from 'camino-common/src/permissions/titres-etapes.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import {
   DocumentType,
   DocumentsTypes
-} from 'camino-common/src/static/documentsTypes'
-import { User } from 'camino-common/src/roles'
+} from 'camino-common/src/static/documentsTypes.js'
+import { User } from 'camino-common/src/roles.js'
 const numberProps = ['duree', 'surface'] as unknown as [keyof ITitreEtape]
 
 const dateProps = ['date', 'dateDebut', 'dateFin'] as unknown as [

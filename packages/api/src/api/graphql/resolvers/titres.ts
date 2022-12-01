@@ -1,10 +1,10 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import { ITitre, ITitreColonneId, IToken } from '../../../types'
+import { ITitre, ITitreColonneId, IToken } from '../../../types.js'
 
-import { titreFormat, titresFormat } from '../../_format/titres'
+import { titreFormat, titresFormat } from '../../_format/titres.js'
 
-import { fieldsBuild } from './_fields-build'
+import { fieldsBuild } from './_fields-build.js'
 
 import {
   titreArchive,
@@ -13,11 +13,11 @@ import {
   titresCount,
   titresGet,
   titreUpsert
-} from '../../../database/queries/titres'
-import { userGet } from '../../../database/queries/utilisateurs'
+} from '../../../database/queries/titres.js'
+import { userGet } from '../../../database/queries/utilisateurs.js'
 
-import titreUpdateTask from '../../../business/titre-update'
-import { assertsCanCreateTitre } from 'camino-common/src/permissions/titres'
+import titreUpdateTask from '../../../business/titre-update.js'
+import { assertsCanCreateTitre } from 'camino-common/src/permissions/titres.js'
 
 const titre = async (
   { id }: { id: string },

@@ -1,7 +1,7 @@
 import '../../init'
 
-import EtapesTypes from '../../database/models/etapes-types'
-import TitresTypesDemarchesTypesEtapesTypes from '../../database/models/titres-types--demarches-types-etapes-types'
+import EtapesTypes from '../../database/models/etapes-types.js'
+import TitresTypesDemarchesTypesEtapesTypes from '../../database/models/titres-types--demarches-types-etapes-types.js'
 
 async function main() {
   const etapeTypes = await EtapesTypes.query()

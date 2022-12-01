@@ -1,22 +1,25 @@
-import { AdministrationId } from 'camino-common/src/static/administrations'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes.js'
 import {
   StatistiquesDGTM,
   TitreTypeIdDelai,
   titreTypeIdDelais
-} from 'camino-common/src/statistiques'
+} from 'camino-common/src/statistiques.js'
 import {
   CaminoAnnee,
   CaminoDate,
   getAnnee,
   daysBetween
-} from 'camino-common/src/date'
-import { knex } from '../../../knex'
-import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
-import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
+} from 'camino-common/src/date.js'
+import { knex } from '../../../knex.js'
+import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
+import {
+  ETAPES_TYPES,
+  EtapeTypeId
+} from 'camino-common/src/static/etapesTypes.js'
+import { SUBSTANCES_FISCALES_IDS } from 'camino-common/src/static/substancesFiscales.js'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
 
 const anneeDepartStats = 2015
 

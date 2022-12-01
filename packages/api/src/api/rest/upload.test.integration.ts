@@ -1,8 +1,8 @@
-import { dbManager } from '../../../tests/db-manager'
+import { dbManager } from '../../../tests/db-manager.js'
 import { vi, afterAll, beforeAll, describe, test, expect } from 'vitest'
-import { Role } from 'camino-common/src/roles'
-import { uploadAllowedMiddleware } from '../../server/upload'
-import { utilisateurCreate } from '../../database/queries/utilisateurs'
+import { Role } from 'camino-common/src/roles.js'
+import { uploadAllowedMiddleware } from '../../server/upload.js'
+import { utilisateurCreate } from '../../database/queries/utilisateurs.js'
 import { Request, Response } from 'express'
 
 console.info = vi.fn()

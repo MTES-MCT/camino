@@ -1,4 +1,4 @@
-import { ITitreActivite } from '../../types'
+import { ITitreActivite } from '../../types.js'
 
 export const titreActiviteDeletionValidate = (
   titreActivite: ITitreActivite

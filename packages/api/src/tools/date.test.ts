@@ -1,5 +1,11 @@
-import { dateAddDays, dateAddMonths, datesSubtract, dateValidate } from './date'
+import {
+  dateAddDays,
+  dateAddMonths,
+  datesSubtract,
+  dateValidate
+} from './date.js'
 import { describe, expect, test } from 'vitest'
+import { toCaminoDate } from 'camino-common/src/date.js'
 
 describe('test les utilitaires de date', () => {
   test("retourne une erreur si aucune date n'est fournie", () => {
@@ -26,7 +32,7 @@ describe('test les utilitaires de date', () => {
     ['2020-01-01', 31, '2020-02-01'],
     ['2020-12-31', 1, '2021-01-01']
   ])('ajoute des jours à une date', (date, days, result) => {
-    expect(dateAddDays(date, days)).toBe(result)
+    expect(dateAddDays(toCaminoDate(date), days)).toBe(result)
   })
 
   test.each([
@@ -37,13 +43,15 @@ describe('test les utilitaires de date', () => {
     ['2020-01-31', 3, '2020-05-01'],
     ['2020-12-01', 3, '2021-03-01']
   ])('ajoute $months mois à la date $date', (date, months, result) => {
-    expect(dateAddMonths(date, months)).toBe(result)
+    expect(dateAddMonths(toCaminoDate(date), months)).toBe(result)
   })
 
   test("la méthode dateAddMonths n'est pas idempotente", () => {
     const date = '2022-05-30'
 
-    expect(dateAddMonths(dateAddMonths(date, -3), 3)).toBe('2022-06-02')
+    expect(dateAddMonths(dateAddMonths(toCaminoDate(date), -3), 3)).toBe(
+      '2022-06-02'
+    )
   })
 
   test.each([

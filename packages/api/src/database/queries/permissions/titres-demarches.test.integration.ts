@@ -1,17 +1,17 @@
-import { dbManager } from '../../../../tests/db-manager'
+import { dbManager } from '../../../../tests/db-manager.js'
 
-import Titres from '../../models/titres'
-import { idGenerate, newDemarcheId } from '../../models/_format/id-create'
-import { userSuper } from '../../user-super'
-import TitresDemarches from '../../models/titres-demarches'
+import Titres from '../../models/titres.js'
+import { idGenerate, newDemarcheId } from '../../models/_format/id-create.js'
+import { userSuper } from '../../user-super.js'
+import TitresDemarches from '../../models/titres-demarches.js'
 import {
   titreDemarcheSuppressionSelectQuery,
   titresDemarchesQueryModify
-} from './titres-demarches'
-import TitresEtapes from '../../models/titres-etapes'
-import { Role } from 'camino-common/src/roles'
-import { Administrations } from 'camino-common/src/static/administrations'
-import { toCaminoDate } from 'camino-common/src/date'
+} from './titres-demarches.js'
+import TitresEtapes from '../../models/titres-etapes.js'
+import { Role } from 'camino-common/src/roles.js'
+import { Administrations } from 'camino-common/src/static/administrations.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 
 console.info = vi.fn()

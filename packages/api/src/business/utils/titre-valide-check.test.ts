@@ -1,10 +1,10 @@
-import { ITitreDemarche } from '../../types'
+import { ITitreDemarche } from '../../types.js'
 
-import { titreValideCheck } from './titre-valide-check'
-import { titreStatutIdFind } from '../rules/titre-statut-id-find'
-import { titreDemarchesEtapesRebuild } from './titre-demarches-etapes-rebuild'
+import { titreValideCheck } from './titre-valide-check.js'
+import { titreStatutIdFind } from '../rules/titre-statut-id-find.js'
+import { titreDemarchesEtapesRebuild } from './titre-demarches-etapes-rebuild.js'
 
-import { titreDemarches } from './__mocks__/titre-valide-check-demarches'
+import { titreDemarches } from './__mocks__/titre-valide-check-demarches.js'
 import { vi, describe, test, expect } from 'vitest'
 
 vi.mock('../rules/titre-statut-id-find', () => ({

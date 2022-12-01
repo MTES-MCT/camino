@@ -1,4 +1,4 @@
-import { fromUniteFiscaleToUnite } from './unites'
+import { fromUniteFiscaleToUnite } from './unites.js'
 import { test, expect } from 'vitest'
 
 test('fromUniteFiscaleToUnite', () => {

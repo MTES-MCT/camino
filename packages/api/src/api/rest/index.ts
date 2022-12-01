@@ -3,33 +3,33 @@ import {
   ITitreColonneId,
   ITitreDemarcheColonneId,
   ITitreActiviteColonneId
-} from '../../types'
+} from '../../types.js'
 
-import { titreGet, titresGet } from '../../database/queries/titres'
-import { titresDemarchesGet } from '../../database/queries/titres-demarches'
-import { titresActivitesGet } from '../../database/queries/titres-activites'
-import { entreprisesGet } from '../../database/queries/entreprises'
-import { userGet } from '../../database/queries/utilisateurs'
+import { titreGet, titresGet } from '../../database/queries/titres.js'
+import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
+import { titresActivitesGet } from '../../database/queries/titres-activites.js'
+import { entreprisesGet } from '../../database/queries/entreprises.js'
+import { userGet } from '../../database/queries/utilisateurs.js'
 
-import { titreFormat, titresFormat } from '../_format/titres'
-import { titreDemarcheFormat } from '../_format/titres-demarches'
-import { titreActiviteFormat } from '../_format/titres-activites'
-import { entrepriseFormat } from '../_format/entreprises'
+import { titreFormat, titresFormat } from '../_format/titres.js'
+import { titreDemarcheFormat } from '../_format/titres-demarches.js'
+import { titreActiviteFormat } from '../_format/titres-activites.js'
+import { entrepriseFormat } from '../_format/entreprises.js'
 
-import { tableConvert } from './_convert'
-import { fileNameCreate } from '../../tools/file-name-create'
+import { tableConvert } from './_convert.js'
+import { fileNameCreate } from '../../tools/file-name-create.js'
 
 import {
   titresGeojsonFormat,
   titreGeojsonFormat,
   titresTableFormat
-} from './format/titres'
-import { titresDemarchesFormatTable } from './format/titres-demarches'
-import { titresActivitesFormatTable } from './format/titres-activites'
-import { entreprisesFormatTable } from './format/entreprises'
+} from './format/titres.js'
+import { titresDemarchesFormatTable } from './format/titres-demarches.js'
+import { titresActivitesFormatTable } from './format/titres-activites.js'
+import { entreprisesFormatTable } from './format/entreprises.js'
 
-import { matomo } from '../../tools/matomo'
-import { stringSplit } from '../../database/queries/_utils'
+import { matomo } from '../../tools/matomo.js'
+import { stringSplit } from '../../database/queries/_utils.js'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {

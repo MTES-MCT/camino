@@ -1,4 +1,4 @@
-import Journaux from '../models/journaux'
+import Journaux from '../models/journaux.js'
 import { create } from 'jsondiffpatch'
 import {
   Model,
@@ -7,12 +7,12 @@ import {
   Transaction,
   UpsertGraphOptions
 } from 'objection'
-import { journauxQueryModify } from './permissions/journaux'
-import { IFields, IUtilisateur } from '../../types'
-import graphBuild from './graph/build'
-import { fieldsFormat } from './graph/fields-format'
-import options from './_options'
-import { IJournauxQueryParams } from '../../api/graphql/resolvers/journaux'
+import { journauxQueryModify } from './permissions/journaux.js'
+import { IFields, IUtilisateur } from '../../types.js'
+import graphBuild from './graph/build.js'
+import { fieldsFormat } from './graph/fields-format.js'
+import options from './_options.js'
+import { IJournauxQueryParams } from '../../api/graphql/resolvers/journaux.js'
 
 const diffPatcher = create({
   // on filtre certaines proprietés qu’on ne souhaite pas voir apparaitre dans les journaux

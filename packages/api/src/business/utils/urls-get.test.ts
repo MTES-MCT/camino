@@ -1,4 +1,4 @@
-import { activitesUrlGet } from './urls-get'
+import { activitesUrlGet } from './urls-get.js'
 import { describe, test, expect } from 'vitest'
 
 describe('activitesUrlGet', () => {

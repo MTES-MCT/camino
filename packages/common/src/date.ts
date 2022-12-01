@@ -10,6 +10,7 @@ export const daysBetween = (a: CaminoDate, b: CaminoDate) => {
 }
 
 export type CaminoDate = string & { __camino: 'Date' }
+export type CaminoDateFormated = string & { __camino: 'DateFormated' }
 
 const checkValidCaminoDate = (str: string): str is CaminoDate => {
   return str.match(/^\d{4}-\d{2}-\d{2}$/) !== null
@@ -35,6 +36,10 @@ export type CaminoAnnee = string & { __camino: 'Annee' }
 
 export const getAnnee = (date: CaminoDate): CaminoAnnee => {
   return valideAnnee(date.substring(0, 4))
+}
+
+export const dateFormat = (date: CaminoDate): CaminoDateFormated => {
+  return `${date.substring(8)}—${date.substring(5, 7)}-${date.substring(0, 4)}` as CaminoDateFormated
 }
 
 export const getCurrent = () => toCaminoDate(new Date())

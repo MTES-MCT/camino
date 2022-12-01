@@ -1,10 +1,10 @@
-import { contenuNumbersCheck } from './contenu-numbers-check'
+import { contenuNumbersCheck } from './contenu-numbers-check.js'
 import {
   contenuNumber,
   contenuNumberNeg,
   sections,
   sectionsSansElement
-} from '../__mocks__/contenu-numbers-check-contenus'
+} from '../__mocks__/contenu-numbers-check-contenus.js'
 import { describe, test, expect } from 'vitest'
 
 describe('vérifie la validité du contenu de type nombre', () => {

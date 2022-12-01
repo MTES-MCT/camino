@@ -1,4 +1,4 @@
-import { newDateFormated } from './logger'
+import { newDateFormated } from './logger.js'
 import { test, expect } from 'vitest'
 test('newDateFormated', () => {
   expect(

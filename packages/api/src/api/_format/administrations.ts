@@ -1,5 +1,5 @@
-import { IAdministration } from '../../types'
-import { Administrations } from 'camino-common/src/static/administrations'
+import { IAdministration } from '../../types.js'
+import { Administrations } from 'camino-common/src/static/administrations.js'
 
 /**
  * Formate une administration en fonction du profil de l'utilisateur

@@ -1,11 +1,11 @@
-import { titresDemarchesStatutIdUpdate } from './titres-demarches-statut-ids-update'
-import { titresGet } from '../../database/queries/titres'
+import { titresDemarchesStatutIdUpdate } from './titres-demarches-statut-ids-update.js'
+import { titresGet } from '../../database/queries/titres.js'
 
 import {
   titresDemarchesStatutModifie,
   titresDemarchesStatutIdentique,
   titresDemarchesSansEtape
-} from './__mocks__/titres-demarches-statut-ids-update-demarches'
+} from './__mocks__/titres-demarches-statut-ids-update-demarches.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres-demarches', () => ({
   titreDemarcheUpdate: vi.fn().mockResolvedValue(true)

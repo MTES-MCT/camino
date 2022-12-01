@@ -4,11 +4,11 @@ import {
   ITitrePoint,
   ITitreIncertitudes,
   ITitreEntreprise
-} from '../../types'
-import { objectClone } from '../../tools/index'
-import { idGenerate } from '../../database/models/_format/id-create'
-import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
-import { CaminoDate } from 'camino-common/src/date'
+} from '../../types.js'
+import { objectClone } from '../../tools/index.js'
+import { idGenerate } from '../../database/models/_format/id-create.js'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
+import { CaminoDate } from 'camino-common/src/date.js'
 
 const titreEtapePropsIds: (keyof ITitreEtape)[] = [
   'points',

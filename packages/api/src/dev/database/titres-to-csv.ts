@@ -1,6 +1,6 @@
 import '../../init'
-import { knex } from '../../knex'
-import fileCreate from '../../tools/file-create'
+import { knex } from '../../knex.js'
+import fileCreate from '../../tools/file-create.js'
 import xlsx from 'xlsx'
 import { Index } from '../../types.js'
 

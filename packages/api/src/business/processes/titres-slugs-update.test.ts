@@ -1,8 +1,8 @@
-import Titres from '../../database/models/titres'
-import { titresSlugsUpdate } from './titres-slugs-update'
+import Titres from '../../database/models/titres.js'
+import { titresSlugsUpdate } from './titres-slugs-update.js'
 
-import { titreSlugAndRelationsUpdate } from '../utils/titre-slug-and-relations-update'
-import { titresGet } from '../../database/queries/titres'
+import { titreSlugAndRelationsUpdate } from '../utils/titre-slug-and-relations-update.js'
+import { titresGet } from '../../database/queries/titres.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../utils/titre-slug-and-relations-update', () => ({
   __esModule: true,

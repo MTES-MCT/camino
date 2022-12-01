@@ -1,8 +1,8 @@
 import { graphqlHTTP } from 'express-graphql'
 import http from 'http'
 
-import rootValue from '../api/graphql/resolvers'
-import schema from '../api/graphql/schemas'
+import rootValue from '../api/graphql/resolvers.js'
+import schema from '../api/graphql/schemas.js'
 
 interface IAuthRequestHttp extends http.IncomingMessage {
   user?: {

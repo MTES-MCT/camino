@@ -1,5 +1,5 @@
 import { Model } from 'objection'
-import { ITitrePhase } from '../../types'
+import { ITitrePhase } from '../../types.js'
 
 interface TitresPhases extends ITitrePhase {}
 

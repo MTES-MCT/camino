@@ -1,44 +1,50 @@
-import { titreGet, titresGet } from '../../database/queries/titres'
+import { titreGet, titresGet } from '../../database/queries/titres.js'
 
-import { userGet } from '../../database/queries/utilisateurs'
+import { userGet } from '../../database/queries/utilisateurs.js'
 
 import {
   ADMINISTRATION_IDS,
   ADMINISTRATION_TYPE_IDS,
   AdministrationId,
   Administrations
-} from 'camino-common/src/static/administrations'
+} from 'camino-common/src/static/administrations.js'
 import express from 'express'
 import { constants } from 'http2'
-import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
-import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
-import { ITitre, IUser, ITitreDemarche, IUtilisateur } from '../../types'
+import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
+import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
+import { ITitre, IUser, ITitreDemarche, IUtilisateur } from '../../types.js'
 import {
   CommonTitreDREAL,
   CommonTitreONF,
   CommonTitrePTMG,
   TitreLink,
   TitreLinks
-} from 'camino-common/src/titres'
+} from 'camino-common/src/titres.js'
 import {
   demarcheDefinitionFind,
   isDemarcheDefinitionMachine
-} from '../../business/rules-demarches/definitions'
-import { CustomResponse } from './express-type'
-import { userSuper } from '../../database/user-super'
-import Utilisateurs from '../../database/models/utilisateurs'
-import { NotNullableKeys, onlyUnique } from 'camino-common/src/typescript-tools'
-import { isAdministration } from 'camino-common/src/roles'
-import TitresTitres from '../../database/models/titres--titres'
-import { titreAdministrationsGet } from '../_format/titres'
-import { canLinkTitres } from 'camino-common/src/permissions/titres'
-import { linkTitres } from '../../database/queries/titres-titres'
-import { checkTitreLinks } from '../../business/validations/titre-links-validate'
-import { toMachineEtapes } from '../../business/rules-demarches/machine-common'
-import { TitreReference } from 'camino-common/src/titres-references'
-import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts'
-import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { CaminoDate } from 'camino-common/src/date'
+} from '../../business/rules-demarches/definitions.js'
+import { CustomResponse } from './express-type.js'
+import { userSuper } from '../../database/user-super.js'
+import Utilisateurs from '../../database/models/utilisateurs.js'
+import {
+  NotNullableKeys,
+  onlyUnique
+} from 'camino-common/src/typescript-tools.js'
+import { isAdministration } from 'camino-common/src/roles.js'
+import TitresTitres from '../../database/models/titres--titres.js'
+import { titreAdministrationsGet } from '../_format/titres.js'
+import { canLinkTitres } from 'camino-common/src/permissions/titres.js'
+import { linkTitres } from '../../database/queries/titres-titres.js'
+import { checkTitreLinks } from '../../business/validations/titre-links-validate.js'
+import { toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
+import { TitreReference } from 'camino-common/src/titres-references.js'
+import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
+import {
+  ETAPES_TYPES,
+  EtapeTypeId
+} from 'camino-common/src/static/etapesTypes.js'
+import { CaminoDate } from 'camino-common/src/date.js'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,

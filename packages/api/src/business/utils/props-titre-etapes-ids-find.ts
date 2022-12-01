@@ -1,11 +1,11 @@
-import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
+import { TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
 import {
   ITitreDemarche,
   IContenusTitreEtapesIds,
   IContenuId
-} from '../../types'
+} from '../../types.js'
 
-import { titreContenuTitreEtapeFind } from '../rules/titre-prop-etape-find'
+import { titreContenuTitreEtapeFind } from '../rules/titre-prop-etape-find.js'
 
 export const contenusTitreEtapesIdsFind = (
   titreStatutId: TitreStatutId,

@@ -1,9 +1,9 @@
-import { IDocument } from '../../types'
-import { IndexFile } from './_types'
+import { IDocument } from '../../types.js'
+import { IndexFile } from './_types.js'
 
-import { documentsGet } from '../../database/queries/documents'
-import { userSuper } from '../../database/user-super'
-import { documentRepertoireFind } from './document-repertoire-find'
+import { documentsGet } from '../../database/queries/documents.js'
+import { userSuper } from '../../database/user-super.js'
+import { documentRepertoireFind } from './document-repertoire-find.js'
 
 const documentPathGet = (document: IDocument) => {
   let path = documentRepertoireFind(document)

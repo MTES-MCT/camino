@@ -1,6 +1,6 @@
-import { titrePublicFind } from 'camino-common/src/static/titresTypesTypes_domaine_titresStatuts'
-import { titresGet, titreUpdate } from '../../database/queries/titres'
-import { userSuper } from '../../database/user-super'
+import { titrePublicFind } from 'camino-common/src/static/titresTypesTypes_domaine_titresStatuts.js'
+import { titresGet, titreUpdate } from '../../database/queries/titres.js'
+import { userSuper } from '../../database/user-super.js'
 
 type ITitrePatch = {
   publicLecture: boolean

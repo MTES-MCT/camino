@@ -1,7 +1,7 @@
 import { Model } from 'objection'
 
-import { DocumentType } from 'camino-common/src/static/documentsTypes'
-import ActivitesTypes from './activites-types'
+import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
+import ActivitesTypes from './activites-types.js'
 
 interface DocumentsTypes extends DocumentType {}
 

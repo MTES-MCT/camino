@@ -1,4 +1,4 @@
-import { ITitreEtape, ISection } from '../../../types'
+import { ITitreEtape, ISection } from '../../../types.js'
 
 const titreEtapesSections = [
   {

@@ -1,38 +1,43 @@
-import { ISDOMZone, ITitrePoint, IToken, IUtilisateur } from '../../../types'
+import { ISDOMZone, ITitrePoint, IToken, IUtilisateur } from '../../../types.js'
 
 import { FileUpload } from 'graphql-upload'
 import { Stream } from 'stream'
 import shpjs from 'shpjs'
-import { FeatureCollection, MultiPolygon, Polygon, Position } from 'geojson'
+import {
+  FeatureCollection,
+  MultiPolygon,
+  Polygon,
+  Position,
+  Feature
+} from 'geojson'
 import {
   documentTypeIdsBySdomZonesGet,
   titreEtapePointsCalc,
   titreEtapeSdomZonesGet
-} from './_titre-etape'
+} from './_titre-etape.js'
 import {
   geojsonFeatureMultiPolygon,
   geojsonSurface
-} from '../../../tools/geojson'
-import { Feature } from '@turf/helpers'
-import { titreEtapeGet } from '../../../database/queries/titres-etapes'
-import { userGet } from '../../../database/queries/utilisateurs'
-import { etapeTypeGet } from '../../../database/queries/metas'
-import { titreGet, titresGet } from '../../../database/queries/titres'
-import { userSuper } from '../../../database/user-super'
+} from '../../../tools/geojson.js'
+import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
+import { userGet } from '../../../database/queries/utilisateurs.js'
+import { etapeTypeGet } from '../../../database/queries/metas.js'
+import { titreGet, titresGet } from '../../../database/queries/titres.js'
+import { userSuper } from '../../../database/user-super.js'
 import intersect from '@turf/intersect'
 import {
   assertGeoSystemeId,
   GeoSystemes
-} from 'camino-common/src/static/geoSystemes'
+} from 'camino-common/src/static/geoSystemes.js'
 import {
   isSuper,
   isAdministrationAdmin,
   isAdministrationEditeur
-} from 'camino-common/src/roles'
-import { titreDemarcheGet } from '../../../database/queries/titres-demarches'
-import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom'
+} from 'camino-common/src/roles.js'
+import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
+import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 
 const stream2buffer = async (stream: Stream): Promise<Buffer> => {
   return new Promise<Buffer>((resolve, reject) => {

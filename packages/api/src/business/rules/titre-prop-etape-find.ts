@@ -5,22 +5,27 @@
 import {
   DemarchesStatutsIds,
   DemarcheStatutId
-} from 'camino-common/src/static/demarchesStatuts'
+} from 'camino-common/src/static/demarchesStatuts.js'
 import {
   DEMARCHES_TYPES_IDS,
   DemarcheTypeId,
   isDemarcheTypeOctroi
-} from 'camino-common/src/static/demarchesTypes'
-import { PHASES_STATUTS_IDS } from 'camino-common/src/static/phasesStatuts'
+} from 'camino-common/src/static/demarchesTypes.js'
+import { PHASES_STATUTS_IDS } from 'camino-common/src/static/phasesStatuts.js'
 import {
   TitresStatutIds,
   TitreStatutId
-} from 'camino-common/src/static/titresStatuts'
-import { ITitreDemarche, ITitreEtape, IPropId, IContenuId } from '../../types'
+} from 'camino-common/src/static/titresStatuts.js'
+import {
+  ITitreDemarche,
+  ITitreEtape,
+  IPropId,
+  IContenuId
+} from '../../types.js'
 
-import { propValueFind } from '../utils/prop-value-find'
-import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc'
-import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort'
+import { propValueFind } from '../utils/prop-value-find.js'
+import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc.js'
+import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 
 const etapeAmodiataireFind = (
   titreEtape: ITitreEtape,

@@ -1,6 +1,6 @@
-import { titresTypesDemarchesTypesEtapesTypesGet } from '../../database/queries/metas'
-import { titresDemarchesGet } from '../../database/queries/titres-demarches'
-import { userSuper } from '../../database/user-super'
+import { titresTypesDemarchesTypesEtapesTypesGet } from '../../database/queries/metas.js'
+import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
+import { userSuper } from '../../database/user-super.js'
 
 export const titreTypeDemarcheTypeEtapeTypeCheck = async () => {
   console.info()

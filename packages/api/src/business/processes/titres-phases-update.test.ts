@@ -1,9 +1,9 @@
-import { titresPhasesUpdate } from './titres-phases-update'
+import { titresPhasesUpdate } from './titres-phases-update.js'
 import {
   titrePhasesUpsert,
   titrePhasesDelete
-} from '../../database/queries/titres-phases'
-import { titresGet } from '../../database/queries/titres'
+} from '../../database/queries/titres-phases.js'
+import { titresGet } from '../../database/queries/titres.js'
 
 import {
   titresSansPhase,
@@ -12,7 +12,7 @@ import {
   titresUnePhaseSansChangement,
   titresUnePhaseMiseAJour,
   titrePhase
-} from './__mocks__/titres-phases-update-titres'
+} from './__mocks__/titres-phases-update-titres.js'
 import { vi, afterEach, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres-phases', () => ({
   titrePhasesUpsert: vi.fn().mockResolvedValue(true),

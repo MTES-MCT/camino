@@ -1,11 +1,11 @@
 import { Model } from 'objection'
 
-import { IAdministration } from '../../types'
+import { IAdministration } from '../../types.js'
 
-import AdministrationsTitresTypesEtapesTypes from './administrations-titres-types-etapes-types'
-import AdministrationsTitresTypesTitresStatuts from './administrations-titres-types-titres-statuts'
-import Utilisateurs from './utilisateurs'
-import ActivitesTypes from './activites-types'
+import AdministrationsTitresTypesEtapesTypes from './administrations-titres-types-etapes-types.js'
+import AdministrationsTitresTypesTitresStatuts from './administrations-titres-types-titres-statuts.js'
+import Utilisateurs from './utilisateurs.js'
+import ActivitesTypes from './activites-types.js'
 
 interface Administrations extends IAdministration {}
 

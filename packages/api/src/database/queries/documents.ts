@@ -1,13 +1,13 @@
 import { transaction, Transaction } from 'objection'
 
-import { IDocument, IFields, IUtilisateur } from '../../types'
+import { IDocument, IFields, IUtilisateur } from '../../types.js'
 
-import options from './_options'
-import graphBuild from './graph/build'
-import { fieldsFormat } from './graph/fields-format'
+import options from './_options.js'
+import graphBuild from './graph/build.js'
+import { fieldsFormat } from './graph/fields-format.js'
 
-import Document from '../models/documents'
-import { documentsQueryModify } from './permissions/documents'
+import Document from '../models/documents.js'
+import { documentsQueryModify } from './permissions/documents.js'
 
 const documentGet = async (
   documentId: string,

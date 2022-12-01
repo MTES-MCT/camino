@@ -1,7 +1,7 @@
 import { Model, Modifiers } from 'objection'
 
-import { ITitreTypeType } from '../../types'
-import TitresTypes from './titres-types'
+import { ITitreTypeType } from '../../types.js'
+import TitresTypes from './titres-types.js'
 
 interface TitresTypesTypes extends ITitreTypeType {}
 

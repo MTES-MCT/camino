@@ -7,7 +7,7 @@ import {
   titreCreer,
   titreSupprimer,
   titreModifier
-} from './resolvers/titres'
+} from './resolvers/titres.js'
 
 import {
   etape,
@@ -16,14 +16,14 @@ import {
   etapeModifier,
   etapeSupprimer,
   etapeDeposer
-} from './resolvers/titres-etapes'
+} from './resolvers/titres-etapes.js'
 
 import {
   documents,
   documentCreer,
   documentModifier,
   documentSupprimer
-} from './resolvers/documents'
+} from './resolvers/documents.js'
 
 import {
   demarche,
@@ -31,7 +31,7 @@ import {
   demarcheCreer,
   demarcheModifier,
   demarcheSupprimer
-} from './resolvers/titres-demarches'
+} from './resolvers/titres-demarches.js'
 
 import {
   utilisateur,
@@ -51,7 +51,7 @@ import {
   utilisateurEmailMessageEnvoyer,
   utilisateurEmailModifier,
   newsletterInscrire
-} from './resolvers/utilisateurs'
+} from './resolvers/utilisateurs.js'
 
 import {
   devises,
@@ -72,7 +72,7 @@ import {
   regions,
   departements,
   pays
-} from './resolvers/metas'
+} from './resolvers/metas.js'
 
 import {
   activitesTypes,
@@ -80,7 +80,7 @@ import {
   activitesTypesTitresTypes,
   activitesTypesDocumentsTypes,
   activitesTypesPays
-} from './resolvers/metas-activites'
+} from './resolvers/metas-activites.js'
 
 import {
   titresTypes,
@@ -91,9 +91,9 @@ import {
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
   etapesTypesDocumentsTypes,
   etapesTypesJustificatifsTypes
-} from './resolvers/metas-join'
+} from './resolvers/metas-join.js'
 
-import { substances } from './resolvers/substances'
+import { substances } from './resolvers/substances.js'
 
 import {
   entreprise,
@@ -101,7 +101,7 @@ import {
   entrepriseCreer,
   entrepriseModifier,
   entreprisesTitresCreation
-} from './resolvers/entreprises'
+} from './resolvers/entreprises.js'
 import {
   administration,
   administrations,
@@ -111,26 +111,26 @@ import {
   administrationActiviteTypeEmailCreer,
   administrationActiviteTypeEmailSupprimer,
   administrationActivitesTypesEmails
-} from './resolvers/administrations'
+} from './resolvers/administrations.js'
 import {
   activite,
   activites,
   activiteModifier,
   activiteSupprimer,
   activiteDeposer
-} from './resolvers/titres-activites'
-import { statistiquesGlobales } from './resolvers/statistiques'
-import { statistiquesGuyane } from './resolvers/statistiques-guyane'
-import { statistiquesGranulatsMarins } from './resolvers/statistiques-granulats-marins'
+} from './resolvers/titres-activites.js'
+import { statistiquesGlobales } from './resolvers/statistiques.js'
+import { statistiquesGuyane } from './resolvers/statistiques-guyane.js'
+import { statistiquesGranulatsMarins } from './resolvers/statistiques-granulats-marins.js'
 
-import { titreDemandeCreer } from './resolvers/titre-demande'
+import { titreDemandeCreer } from './resolvers/titre-demande.js'
 import {
   pointsImporter,
   perimetreInformations,
   titreEtapePerimetreInformations
-} from './resolvers/points'
-import { journaux } from './resolvers/journaux'
-import { utilisateurTitreAbonner } from './resolvers/utilisateurs-titres'
+} from './resolvers/points.js'
+import { journaux } from './resolvers/journaux.js'
+import { utilisateurTitreAbonner } from './resolvers/utilisateurs-titres.js'
 
 export default {
   //  types

@@ -1,6 +1,6 @@
-import { EtapesStatuts, EtapeStatutKey, ETAPES_STATUTS, isEtapeStatutKey } from './etapesStatuts'
-import { ETAPES_TYPES } from './etapesTypes'
-import { EtapesTypesEtapesStatuts, EtapeTypeEtapeStatut, getEtapesStatuts } from './etapesTypesEtapesStatuts'
+import { EtapesStatuts, EtapeStatutKey, ETAPES_STATUTS, isEtapeStatutKey } from './etapesStatuts.js'
+import { ETAPES_TYPES } from './etapesTypes.js'
+import { EtapesTypesEtapesStatuts, EtapeTypeEtapeStatut, getEtapesStatuts } from './etapesTypesEtapesStatuts.js'
 import { test, expect } from 'vitest'
 
 test('getEtapesStatuts', () => {

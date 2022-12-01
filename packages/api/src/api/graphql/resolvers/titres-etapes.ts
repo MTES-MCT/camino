@@ -11,71 +11,71 @@ import {
   ITitrePoint,
   IToken,
   IUtilisateur
-} from '../../../types'
+} from '../../../types.js'
 
-import { titreFormat } from '../../_format/titres'
+import { titreFormat } from '../../_format/titres.js'
 
 import {
   titreEtapeCreate,
   titreEtapeGet,
   titreEtapeUpdate,
   titreEtapeUpsert
-} from '../../../database/queries/titres-etapes'
-import { titreDemarcheGet } from '../../../database/queries/titres-demarches'
-import { titreGet } from '../../../database/queries/titres'
+} from '../../../database/queries/titres-etapes.js'
+import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
+import { titreGet } from '../../../database/queries/titres.js'
 
-import titreEtapeUpdateTask from '../../../business/titre-etape-update'
+import titreEtapeUpdateTask from '../../../business/titre-etape-update.js'
 import {
   titreEtapeHeritageBuild,
   titreEtapePointsCalc,
   titreEtapeSdomZonesGet
-} from './_titre-etape'
-import { titreEtapeUpdationValidate } from '../../../business/validations/titre-etape-updation-validate'
+} from './_titre-etape.js'
+import { titreEtapeUpdationValidate } from '../../../business/validations/titre-etape-updation-validate.js'
 
-import { fieldsBuild } from './_fields-build'
-import { titreDemarcheUpdatedEtatValidate } from '../../../business/validations/titre-demarche-etat-validate'
+import { fieldsBuild } from './_fields-build.js'
+import { titreDemarcheUpdatedEtatValidate } from '../../../business/validations/titre-demarche-etat-validate.js'
 import {
   titreEtapeFormat,
   titreEtapeFormatFields
-} from '../../_format/titres-etapes'
+} from '../../_format/titres-etapes.js'
 import {
   etapeTypeGet,
   titreTypeDemarcheTypeEtapeTypeGet
-} from '../../../database/queries/metas'
-import { userSuper } from '../../../database/user-super'
-import { userGet } from '../../../database/queries/utilisateurs'
-import { documentsLier } from './documents'
+} from '../../../database/queries/metas.js'
+import { userSuper } from '../../../database/user-super.js'
+import { userGet } from '../../../database/queries/utilisateurs.js'
+import { documentsLier } from './documents.js'
 import {
   documentsTypesFormat,
   etapeTypeSectionsFormat
-} from '../../_format/etapes-types'
+} from '../../_format/etapes-types.js'
 import {
   contenuElementFilesCreate,
   contenuElementFilesDelete,
   contenuFilesPathGet,
   sectionsContenuAndFilesGet
-} from '../../../business/utils/contenu-element-file-process'
+} from '../../../business/utils/contenu-element-file-process.js'
 import {
   documentCreate,
   documentsGet
-} from '../../../database/queries/documents'
+} from '../../../database/queries/documents.js'
 import {
   titreEtapeAdministrationsEmailsSend,
   titreEtapeUtilisateursEmailsSend
-} from './_titre-etape-email'
-import { objectClone } from '../../../tools'
-import { geojsonFeatureMultiPolygon } from '../../../tools/geojson'
-import { idGenerate } from '../../../database/models/_format/id-create'
-import fileRename from '../../../tools/file-rename'
-import { documentFilePathFind } from '../../../tools/documents/document-path-find'
-import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { Feature } from '@turf/helpers'
-import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
-import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
-import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
-import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
+} from './_titre-etape-email.js'
+import { objectClone } from '../../../tools/index.js'
+import { geojsonFeatureMultiPolygon } from '../../../tools/geojson.js'
+import { idGenerate } from '../../../database/models/_format/id-create.js'
+import fileRename from '../../../tools/file-rename.js'
+import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
+import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
+import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { Feature } from 'geojson'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
+import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes.js'
+import { getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
+import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 
 const statutIdAndDateGet = (
   etape: ITitreEtape,

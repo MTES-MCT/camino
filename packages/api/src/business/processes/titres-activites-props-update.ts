@@ -1,12 +1,11 @@
-import dateFormat from 'dateformat'
+import type { ITitreActivite } from '../../types.js'
 
-import { ITitreActivite } from '../../types'
-
-import { titresActivitesUpsert } from '../../database/queries/titres-activites'
-import { titresGet } from '../../database/queries/titres'
-import { titreValideCheck } from '../utils/titre-valide-check'
-import { userSuper } from '../../database/user-super'
-import { getMonth } from 'camino-common/src/static/frequence'
+import { titresActivitesUpsert } from '../../database/queries/titres-activites.js'
+import { titresGet } from '../../database/queries/titres.js'
+import { titreValideCheck } from '../utils/titre-valide-check.js'
+import { userSuper } from '../../database/user-super.js'
+import { getMonth } from 'camino-common/src/static/frequence.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 
 export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
   console.info()
@@ -30,13 +29,12 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
       if (!titre.activites?.length) return acc
 
       return titre.activites.reduce((acc, titreActivite) => {
-        const dateDebut = dateFormat(
+        const dateDebut = toCaminoDate(
           new Date(
             titreActivite.annee,
             getMonth(titreActivite.type?.frequenceId, titreActivite.periodeId),
             1
-          ),
-          'yyyy-mm-dd'
+          )
         )
 
         const titreIsValide =

@@ -1,8 +1,8 @@
-import { filesDocumentCheck } from './files-document-check'
-import { documentsIndexBuild } from './documents-index-build'
-import { filesIndexBuild } from './files-index-build'
-import { documentsFilesCheck } from './documents-files-check'
-import { filesPathCheck } from './files-path-check'
+import { filesDocumentCheck } from './files-document-check.js'
+import { documentsIndexBuild } from './documents-index-build.js'
+import { filesIndexBuild } from './files-index-build.js'
+import { documentsFilesCheck } from './documents-files-check.js'
+import { filesPathCheck } from './files-path-check.js'
 
 const documentsCheck = async () => {
   console.info()
