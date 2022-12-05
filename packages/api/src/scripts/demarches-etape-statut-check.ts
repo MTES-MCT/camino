@@ -1,4 +1,4 @@
-import '../init'
+import '../init.js'
 import { etapeStatutCheck } from '../tools/demarches/etape-statut-check.js'
 
 etapeStatutCheck()

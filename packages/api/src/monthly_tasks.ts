@@ -1,4 +1,4 @@
-import './init'
+import './init.js'
 import { consoleOverride } from './config/logger.js'
 import { mailjetSend } from './tools/api-mailjet/emails.js'
 import { readFileSync, writeFileSync, createWriteStream } from 'fs'

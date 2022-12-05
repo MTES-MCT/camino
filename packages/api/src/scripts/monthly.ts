@@ -1,4 +1,4 @@
-import '../init'
+import '../init.js'
 import { monthly } from '../business/monthly.js'
 
 monthly()

@@ -1,4 +1,4 @@
-import './init'
+import './init.js'
 import daily from './business/daily.js'
 import documentsCheck from './tools/documents/check.js'
 import { matomoCacheInit } from './tools/api-matomo/index.js'

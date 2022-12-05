@@ -1,4 +1,4 @@
-import '../init'
+import '../init.js'
 
 import { organismesDepartementsGet } from '../tools/api-administrations/index.js'
 import { Administrations } from 'camino-common/src/static/administrations.js'

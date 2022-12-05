@@ -1,4 +1,4 @@
-import '../init'
+import '../init.js'
 import { titreTypeDemarcheTypeEtapeTypeCheck } from '../tools/demarches/tde-check.js'
 
 titreTypeDemarcheTypeEtapeTypeCheck()

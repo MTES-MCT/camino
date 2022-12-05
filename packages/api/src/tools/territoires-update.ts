@@ -1,12 +1,9 @@
-import '../init'
+import '../init.js'
 import { knex } from '../knex.js'
 import fetch from 'node-fetch'
 import Communes from '../database/models/communes.js'
 import JSZip from 'jszip'
 import Forets from '../database/models/forets.js'
-import { streamArray } from 'stream-json/streamers/StreamArray'
-import Pick from 'stream-json/filters/Pick'
-import { chain } from 'stream-chain'
 import { Readable } from 'stream'
 import SDOMZones from '../database/models/sdom-zones.js'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
@@ -15,6 +12,11 @@ import {
   assertsSecteur,
   secteurAJour
 } from 'camino-common/src/static/facades.js'
+import { createRequire } from 'node:module'
+const require = createRequire(import.meta.url)
+const { streamArray } = require('stream-json/streamers/StreamArray')
+const { withParser } = require('stream-json/filters/Pick')
+const { chain } = require('stream-chain')
 
 const communesUpdate = async () => {
   const communesIdsKnown = (await Communes.query()).map(({ id }) => id)
@@ -33,7 +35,7 @@ const communesUpdate = async () => {
   }
   const pipeline = chain([
     new Readable().wrap(communesFetch.body),
-    Pick.withParser({ filter: 'features' }),
+    withParser({ filter: 'features' }),
     streamArray(),
     async ({ key, value }) => {
       if (key % 1000 === 0) {
