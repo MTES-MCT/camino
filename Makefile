@@ -74,6 +74,26 @@ build/ui:
 build/api:
 	npm run build -w packages/api
 
+start/api:
+ifdef CAMINO_STAGE
+	@echo 'lancement du backend en mode prod'
+	npm start -w packages/api
+else
+	@echo 'lancement du backend en mode dev(local)'
+	npm run dev -w packages/api
+endif
+	
+
+start/ui:
+ifdef CAMINO_STAGE
+	@echo 'lancement du frontend en mode prod'
+	npm start -w packages/ui
+else
+	@echo 'lancement du frontend en mode dev(local)'
+	npm run dev -w packages/ui
+endif
+	
+
 ifeq (${INPUT_ENV}, dev)
 CD_TOKEN:=${CD_TOKEN_DEV}
 endif

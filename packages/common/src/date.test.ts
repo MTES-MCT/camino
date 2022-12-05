@@ -25,7 +25,7 @@ test('isAnnee', () => {
   expect(isAnnee('20220')).toBe(false)
 })
 
-test('valideAnnee', () => {
+test('toCaminoAnnee', () => {
   expect(toCaminoAnnee('2022')).toBe('2022')
   expect(toCaminoAnnee('1812')).toBe('1812')
   expect(toCaminoAnnee(2022)).toBe('2022')

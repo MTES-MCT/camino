@@ -1,5 +1,5 @@
 import { Meta, Story } from '@storybook/vue3'
-import { valideAnnee } from 'camino-common/src/date'
+import { toCaminoAnnee } from 'camino-common/src/date'
 import { StatistiquesGuyaneRest } from 'camino-common/src/statistiques'
 import PureGuyane from './pure-guyane.vue'
 
@@ -30,90 +30,90 @@ const data = Promise.resolve({
   rest: {
     arm: {
       depot: {
-        [valideAnnee('2017')]: 10,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 10,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       },
       octroiEtProlongation: {
-        [valideAnnee('2017')]: 20,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 20,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       },
       refusees: {
-        [valideAnnee('2017')]: 15,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 15,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       },
       surface: {
-        [valideAnnee('2017')]: 500,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 500,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       }
     },
     axm: {
       depot: {
-        [valideAnnee('2017')]: 1,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 1,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       },
       octroiEtProlongation: {
-        [valideAnnee('2017')]: 1,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 1,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       },
       refusees: {
-        [valideAnnee('2017')]: 1,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 1,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       },
       surface: {
-        [valideAnnee('2017')]: 1,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 1,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       }
     },
     prm: {
       depot: {
-        [valideAnnee('2017')]: 1,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 1,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       },
       octroiEtProlongation: {
-        [valideAnnee('2017')]: 1,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 1,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       },
       refusees: {
-        [valideAnnee('2017')]: 1,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 1,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       },
       surface: {
-        [valideAnnee('2017')]: 1,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 1,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       }
     },
     cxm: {
       depot: {
-        [valideAnnee('2017')]: 1,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 1,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       },
       octroiEtProlongation: {
-        [valideAnnee('2017')]: 1,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 1,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       },
       refusees: {
-        [valideAnnee('2017')]: 1,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 1,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       },
       surface: {
-        [valideAnnee('2017')]: 1,
-        [valideAnnee('2018')]: 2,
-        [valideAnnee('2019')]: 3
+        [toCaminoAnnee('2017')]: 1,
+        [toCaminoAnnee('2018')]: 2,
+        [toCaminoAnnee('2019')]: 3
       }
     }
   },

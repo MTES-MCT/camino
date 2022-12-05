@@ -215,7 +215,7 @@ import {
   User
 } from 'camino-common/src/roles'
 import Icon from './_ui/icon.vue'
-import { CaminoAnnee, valideAnnee } from 'camino-common/src/date'
+import { CaminoAnnee, toCaminoAnnee } from 'camino-common/src/date'
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
@@ -234,12 +234,12 @@ const getFiscaliteEntreprise = async (annee: CaminoAnnee): Promise<Fiscalite> =>
 const annees = computed(() => {
   const anneeDepart = 2021
   const anneeCourante = new Date().getFullYear()
-  const caminoAnneeCourante = valideAnnee(anneeCourante.toString())
+  const caminoAnneeCourante = toCaminoAnnee(anneeCourante.toString())
   let anneeAAjouter = anneeDepart
-  const annees = [valideAnnee(anneeAAjouter.toString())]
+  const annees = [toCaminoAnnee(anneeAAjouter.toString())]
   while (annees[annees.length - 1] !== caminoAnneeCourante) {
     anneeAAjouter++
-    annees.push(valideAnnee(anneeAAjouter.toString()))
+    annees.push(toCaminoAnnee(anneeAAjouter.toString()))
   }
   return annees
 })
