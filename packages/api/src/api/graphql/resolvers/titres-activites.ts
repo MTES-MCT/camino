@@ -37,6 +37,7 @@ import { titreGet } from '../../../database/queries/titres.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
+import { getCurrent } from 'camino-common/src/date.js'
 
 /**
  * Retourne une activité
@@ -396,10 +397,4 @@ export {
   activiteModifier,
   activiteSupprimer,
   activiteDeposer
-}
-
-function getCurrent():
-  | import('camino-common/src/date.js').CaminoDate
-  | undefined {
-  throw new Error('Function not implemented.')
 }
