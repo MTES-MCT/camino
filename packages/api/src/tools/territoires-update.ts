@@ -19,10 +19,12 @@ const { withParser } = require('stream-json/filters/Pick')
 const { chain } = require('stream-chain')
 
 const communesUpdate = async () => {
-  const communesIdsKnown = (await Communes.query()).map(({ id }) => id)
+  const communesIdsKnown: string[] = (await Communes.query()).map(
+    ({ id }) => id
+  )
   const communesPostgisIdsKnown: string[] = (
     await knex.select('id').from('communes_postgis')
-  ).map(({ id }) => id)
+  ).map(({ id }: { id: string }) => id)
   console.info('Téléchargement du fichier des communes')
 
   const communesFetch = await fetch(
@@ -37,7 +39,7 @@ const communesUpdate = async () => {
     new Readable().wrap(communesFetch.body),
     withParser({ filter: 'features' }),
     streamArray(),
-    async ({ key, value }) => {
+    async ({ key, value }: { key: number; value: any }) => {
       if (key % 1000 === 0) {
         console.info(`${key} communes gérées`)
       }
@@ -79,7 +81,7 @@ const communesUpdate = async () => {
     }
   ])
   const promise = new Promise<void>((resolve, reject) => {
-    pipeline.on('error', error => {
+    pipeline.on('error', (error: any) => {
       console.error('Erreur lors de la gestion des communes', error)
       reject(error)
     })
@@ -96,7 +98,7 @@ const geoguyaneFileGet = async (path: string) => {
   const dataUrlFetch = await fetch(path)
   const dataUrlJson = await dataUrlFetch
     .json()
-    .then(value => value as { data: any })
+    .then((value: any) => value as { data: any })
 
   console.info('Téléchargement des données', dataUrlJson.data)
   const foretsZip = await fetch(dataUrlJson.data)
@@ -118,7 +120,7 @@ const foretsUpdate = async () => {
   const foretsIdsKnown = (await Forets.query()).map(({ id }) => id)
   const foretsPostgisIdsKnown: string[] = (
     await knex.select('id').from('forets_postgis')
-  ).map(({ id }) => id)
+  ).map(({ id }: { id: string }) => id)
 
   console.info('Traitement du fichier des forets')
 
@@ -166,11 +168,11 @@ const secteursMaritimeUpdates = async () => {
 
   const secteurs = await (await fetch(secteursUrl))
     .json()
-    .then(value => value as { features: any[] })
+    .then((value: any) => value as { features: any[] })
 
   const secteurIdsKnown: number[] = (
     await knex.select('id').from('secteurs_maritime_postgis')
-  ).map(({ id }) => id)
+  ).map(({ id }: any) => id)
   for (const secteur of secteurs.features) {
     try {
       const id: number = secteur.id
@@ -247,7 +249,7 @@ const sdomZonesUpdate = async () => {
     const sdomZonesIdsKnown = (await SDOMZones.query()).map(({ id }) => id)
     const sdomZonesPostgisIdsKnown: string[] = (
       await knex.select('id').from('sdom_zones_postgis')
-    ).map(({ id }) => id)
+    ).map(({ id }: { id: string }) => id)
 
     try {
       const zoneFeature = geojson.features[0]
