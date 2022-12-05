@@ -30,6 +30,8 @@ const restUpload = () => {
   server.datastore = new FileStore({ path: tmp, relativeLocation })
 
   const uploadServer = express()
+  uploadServer.disable('x-powered-by')
+
   uploadServer.all('*', server.handle.bind(server))
 
   return uploadServer

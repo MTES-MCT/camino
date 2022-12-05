@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser'
 import { rest } from '../src/server/rest'
 
 const app = express()
-
+app.disable('x-powered-by')
 app.use(cookieParser())
 app.use(authJwt)
 app.use(express.urlencoded({ extended: true }), express.json(), rest)

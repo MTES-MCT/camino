@@ -16,6 +16,7 @@ const compression = require('compression')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
 const app = express()
+app.disable('x-powered-by')
 const port = process.env.UI_PORT
 const apiUrl = process.env.API_URL
 const apiMatomoUrl = process.env.API_MATOMO_URL

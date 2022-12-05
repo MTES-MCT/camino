@@ -37,6 +37,7 @@ geoSystemesInit()
 filesInit().then(() => {
   databaseInit().then(() => {
     const app = express()
+    app.disable('x-powered-by')
 
     if (process.env.API_SENTRY_URL) {
       Sentry.init({
