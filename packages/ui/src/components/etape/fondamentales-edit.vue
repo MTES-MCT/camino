@@ -319,11 +319,15 @@ const complete = computed<boolean>(() => {
   )
 })
 
-watch(
-  () => complete,
-  () => completeUpdate()
-)
+const completeUpdate = () => {
+  emits('complete-update', complete.value)
+}
 
+watch(
+  () => complete.value,
+  () => completeUpdate(),
+  { immediate: true }
+)
 watch<EtapeFondamentale>(
   () => props.etape,
   etape => {
@@ -398,10 +402,4 @@ const getEntrepriseNom = (etapeEntreprise: EtapeEntreprise): string => {
 const updateDuree = (): void => {
   props.etape.duree = mois.value + ans.value * 12
 }
-
-const completeUpdate = () => {
-  emits('complete-update', complete.value)
-}
-
-completeUpdate()
 </script>

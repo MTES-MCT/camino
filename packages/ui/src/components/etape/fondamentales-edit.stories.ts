@@ -93,80 +93,110 @@ const Template: Story<Props> = (args: Props) => ({
   template: '<FondatementalesEditComponent v-bind="args" :etape="etapeData"/>'
 })
 
-export const ArmDemandeONF = Template.bind({})
+export const ArmDemandeONF = Template.bind(
+  {},
+  {
+    etape,
+    domaineId: 'm',
+    demarcheTypeId: 'oct',
+    titreTypeTypeId: 'ar',
+    user: { role: 'admin', administrationId: 'ope-onf-973-01' },
+    entreprises: [
+      {
+        id: newEntrepriseId('optionId1'),
+        nom: 'optionNom1',
+        etablissements: []
+      }
+    ]
+  }
+)
 
-ArmDemandeONF.args = {
-  etape,
-  domaineId: 'm',
-  demarcheTypeId: 'oct',
-  titreTypeTypeId: 'ar',
-  user: { role: 'admin', administrationId: 'ope-onf-973-01' },
-  entreprises: [
-    { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }
-  ]
-}
+export const ArmDemandeOperateur = Template.bind(
+  {},
+  {
+    etape,
+    domaineId: 'm',
+    demarcheTypeId: 'oct',
+    titreTypeTypeId: 'ar',
+    user: { role: 'entreprise', administrationId: undefined },
+    entreprises: [
+      {
+        id: newEntrepriseId('optionId1'),
+        nom: 'optionNom1',
+        etablissements: []
+      }
+    ]
+  }
+)
 
-export const ArmDemandeOperateur = Template.bind({})
+export const ArmJorfONF = Template.bind(
+  {},
+  {
+    etape: { ...etape, type: { id: 'dpu', nom: 'Jorf' } },
+    domaineId: 'm',
+    demarcheTypeId: 'oct',
+    titreTypeTypeId: 'ar',
+    user: { role: 'admin', administrationId: 'ope-onf-973-01' },
+    entreprises: [
+      {
+        id: newEntrepriseId('optionId1'),
+        nom: 'optionNom1',
+        etablissements: []
+      }
+    ]
+  }
+)
 
-ArmDemandeOperateur.args = {
-  etape,
-  domaineId: 'm',
-  demarcheTypeId: 'oct',
-  titreTypeTypeId: 'ar',
-  user: { role: 'entreprise', administrationId: undefined },
-  entreprises: [
-    { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }
-  ]
-}
+export const AxmDemandeONF = Template.bind(
+  {},
+  {
+    etape,
+    domaineId: 'm',
+    demarcheTypeId: 'oct',
+    titreTypeTypeId: 'ax',
+    user: { role: 'admin', administrationId: 'ope-onf-973-01' },
+    entreprises: [
+      {
+        id: newEntrepriseId('optionId1'),
+        nom: 'optionNom1',
+        etablissements: []
+      }
+    ]
+  }
+)
 
-export const ArmJorfONF = Template.bind({})
+export const PrmDemandeONF = Template.bind(
+  {},
+  {
+    etape,
+    domaineId: 'm',
+    demarcheTypeId: 'oct',
+    titreTypeTypeId: 'pr',
+    user: { role: 'admin', administrationId: 'ope-onf-973-01' },
+    entreprises: [
+      {
+        id: newEntrepriseId('optionId1'),
+        nom: 'optionNom1',
+        etablissements: []
+      }
+    ]
+  }
+)
 
-ArmJorfONF.args = {
-  etape: { ...etape, type: { id: 'dpu', nom: 'Jorf' } },
-  domaineId: 'm',
-  demarcheTypeId: 'oct',
-  titreTypeTypeId: 'ar',
-  user: { role: 'admin', administrationId: 'ope-onf-973-01' },
-  entreprises: [
-    { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }
-  ]
-}
-
-export const AxmDemandeONF = Template.bind({})
-
-AxmDemandeONF.args = {
-  etape,
-  domaineId: 'm',
-  demarcheTypeId: 'oct',
-  titreTypeTypeId: 'ax',
-  user: { role: 'admin', administrationId: 'ope-onf-973-01' },
-  entreprises: [
-    { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }
-  ]
-}
-
-export const PrmDemandeONF = Template.bind({})
-
-PrmDemandeONF.args = {
-  etape,
-  domaineId: 'm',
-  demarcheTypeId: 'oct',
-  titreTypeTypeId: 'pr',
-  user: { role: 'admin', administrationId: 'ope-onf-973-01' },
-  entreprises: [
-    { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }
-  ]
-}
-
-export const PrmDeplacementDePerimetreONF = Template.bind({})
-
-PrmDeplacementDePerimetreONF.args = {
-  etape,
-  domaineId: 'm',
-  demarcheTypeId: 'dep',
-  titreTypeTypeId: 'pr',
-  user: { role: 'admin', administrationId: 'ope-onf-973-01' },
-  entreprises: [
-    { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }
-  ]
-}
+export const PrmDeplacementDePerimetreONF = Template.bind(
+  {},
+  {
+    etape,
+    domaineId: 'm',
+    demarcheTypeId: 'dep',
+    titreTypeTypeId: 'pr',
+    user: { role: 'admin', administrationId: 'ope-onf-973-01' },
+    entreprises: [
+      {
+        id: newEntrepriseId('optionId1'),
+        nom: 'optionNom1',
+        etablissements: []
+      }
+    ]
+  }
+)

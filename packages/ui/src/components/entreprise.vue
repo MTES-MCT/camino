@@ -283,7 +283,7 @@ watch(
   }
 )
 watch(
-  () => user,
+  () => user.value,
   _newUser => get()
 )
 
