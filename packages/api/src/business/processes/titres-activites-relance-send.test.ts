@@ -5,6 +5,7 @@ import { titresActivitesRelanceSend } from './titres-activites-relance-send.js'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
 import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
 import { vi, describe, expect, test } from 'vitest'
+import { toCaminoDate } from 'camino-common/src/date.js'
 vi.mock('../../database/queries/titres-activites', () => ({
   titresActivitesGet: vi.fn()
 }))
@@ -37,7 +38,7 @@ describe('relance les opérateurs des activités qui vont se fermer automatiquem
       }
     ] as TitresActivites[])
     const titresActivites = await titresActivitesRelanceSend(
-      new Date('2022-03-18')
+      toCaminoDate('2022-03-18')
     )
 
     expect(emailsWithTemplateSendMock).toBeCalledWith(

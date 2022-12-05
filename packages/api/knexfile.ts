@@ -1,3 +1,3 @@
-import { knexConfig } from './src/knex/config'
+import { knexConfig } from './src/knex/config.js'
 
-module.exports = knexConfig
+export default knexConfig

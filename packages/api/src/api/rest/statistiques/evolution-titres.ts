@@ -1,4 +1,4 @@
-import { CaminoAnnee, valideAnnee } from 'camino-common/src/date.js'
+import { CaminoAnnee, toCaminoAnnee } from 'camino-common/src/date.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
@@ -18,7 +18,7 @@ export const evolutionTitres = async (
   let currentYear = new Date().getFullYear()
   const annee: Record<CaminoAnnee, number> = {}
   while (currentYear >= anneeDepart) {
-    annee[valideAnnee(currentYear)] = 0
+    annee[toCaminoAnnee(currentYear)] = 0
     currentYear--
   }
   const demarcheOctroiTypeIds = [

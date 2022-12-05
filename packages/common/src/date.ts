@@ -35,7 +35,7 @@ export const toCaminoDate = (date: Date | string): CaminoDate => {
 export type CaminoAnnee = string & { __camino: 'Annee' }
 
 export const getAnnee = (date: CaminoDate): CaminoAnnee => {
-  return valideAnnee(date.substring(0, 4))
+  return toCaminoAnnee(date.substring(0, 4))
 }
 
 export const dateFormat = (date: CaminoDate): CaminoDateFormated => {
@@ -49,8 +49,8 @@ export const isAnnee = (annee: string): annee is CaminoAnnee => {
   return annee.match(/^\d{4}$/) !== null
 }
 
-export const anneeSuivante = (annee: CaminoAnnee): CaminoAnnee => valideAnnee(Number(annee) + 1)
-export const anneePrecedente = (annee: CaminoAnnee): CaminoAnnee => valideAnnee(Number(annee) - 1)
+export const anneeSuivante = (annee: CaminoAnnee): CaminoAnnee => toCaminoAnnee(Number(annee) + 1)
+export const anneePrecedente = (annee: CaminoAnnee): CaminoAnnee => toCaminoAnnee(Number(annee) - 1)
 
 export function checkValideAnnee(annee: string): asserts annee is CaminoAnnee {
   if (!isAnnee(annee)) {
@@ -58,9 +58,9 @@ export function checkValideAnnee(annee: string): asserts annee is CaminoAnnee {
   }
 }
 
-export function valideAnnee(annee: string | number): CaminoAnnee {
+export function toCaminoAnnee(annee: string | number): CaminoAnnee {
   if (typeof annee === 'number') {
-    return valideAnnee(annee.toString(10))
+    return toCaminoAnnee(annee.toString(10))
   }
   checkValideAnnee(annee)
 

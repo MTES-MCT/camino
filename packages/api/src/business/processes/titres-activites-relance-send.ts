@@ -4,11 +4,15 @@ import { dateAddDays, dateAddMonths } from '../../tools/date.js'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
 import { activitesUrlGet } from '../utils/urls-get.js'
 import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
-import { getCurrent } from 'camino-common/src/date.js'
+import {
+  anneePrecedente,
+  getAnnee,
+  getCurrent
+} from 'camino-common/src/date.js'
 
 export const ACTIVITES_DELAI_RELANCE_JOURS = 14
 
-export const titresActivitesRelanceSend = async (aujourdhui = new Date()) => {
+export const titresActivitesRelanceSend = async (aujourdhui = getCurrent()) => {
   console.info()
   console.info('relance des activités des titres…')
 
@@ -25,12 +29,11 @@ export const titresActivitesRelanceSend = async (aujourdhui = new Date()) => {
     userSuper
   )
 
-  const dateDelai = dateAddDays(getCurrent(), ACTIVITES_DELAI_RELANCE_JOURS)
+  const dateDelai = dateAddDays(aujourdhui, ACTIVITES_DELAI_RELANCE_JOURS)
 
   const titresActivitesRelanceToSend = activites.filter(
     ({ date }) => dateDelai === dateAddMonths(date, 3)
   )
-
   if (titresActivitesRelanceToSend.length) {
     // envoi d’email aux opérateurs pour les relancer ACTIVITES_DELAI_RELANCE_JOURS jours avant la fermeture automatique de l’activité
     const emails = new Set<string>()
@@ -44,7 +47,6 @@ export const titresActivitesRelanceSend = async (aujourdhui = new Date()) => {
         })
       )
     }
-
     if (emails.size) {
       await emailsWithTemplateSend(
         [...emails],
@@ -53,7 +55,7 @@ export const titresActivitesRelanceSend = async (aujourdhui = new Date()) => {
           activitesUrl: activitesUrlGet({
             typesIds,
             statutsIds,
-            annees: [aujourdhui.getFullYear() - 1]
+            annees: [anneePrecedente(getAnnee(aujourdhui))]
           })
         }
       )
