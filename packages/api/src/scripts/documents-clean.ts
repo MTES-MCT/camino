@@ -1,4 +1,4 @@
-import '../init'
+import '../init.js'
 import { documentsClean } from '../tools/documents/clean.js'
 
 documentsClean()

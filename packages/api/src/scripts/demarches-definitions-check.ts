@@ -1,4 +1,4 @@
-import '../init'
+import '../init.js'
 import demarchesDefinitionsCheck from '../tools/demarches/definitions-check.js'
 
 demarchesDefinitionsCheck()

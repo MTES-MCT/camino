@@ -1,4 +1,4 @@
-import '../../init'
+import '../../init.js'
 
 import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'

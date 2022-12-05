@@ -1,5 +1,5 @@
 import { getCurrent } from 'camino-common/src/date.js'
-import '../init'
+import '../init.js'
 import { knex } from '../knex.js'
 import { userAdd } from './user-add.js'
 

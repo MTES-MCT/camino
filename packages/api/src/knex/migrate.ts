@@ -1,4 +1,4 @@
-import '../init'
+import '../init.js'
 import { knex } from '../knex.js'
 import chalk from 'chalk'
 

@@ -1,4 +1,4 @@
-import '../init'
+import '../init.js'
 import documentsCheck from '../tools/documents/check.js'
 
 documentsCheck()

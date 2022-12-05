@@ -1,4 +1,4 @@
-import '../init'
+import '../init.js'
 
 import daily from '../business/daily.js'
 
