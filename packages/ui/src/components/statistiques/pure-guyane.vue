@@ -234,7 +234,7 @@ import { Ref, ref, computed, onMounted, withDefaults } from 'vue'
 
 import {
   StatistiquesGuyane,
-  StatistiquesGuyaneRest
+  StatistiquesGuyaneData
 } from 'camino-common/src/statistiques'
 import { CHART_COLORS } from '../_charts/utils'
 import { ChartConfiguration, ChartData } from 'chart.js'
@@ -335,7 +335,7 @@ const defaultConfiguration = (data: ChartData): ChartConfiguration => ({
 
 const armChartConfiguration = (
   // eslint-disable-next-line no-undef
-  data: StatistiquesGuyaneRest
+  data: StatistiquesGuyaneData
 ): ChartConfiguration => {
   const annees: CaminoAnnee[] = [...Object.keys(data.arm.depot)].filter(isAnnee)
   const chartData: ChartData = {
@@ -376,7 +376,7 @@ const armChartConfiguration = (
 }
 
 const prmChartConfiguration = (
-  data: StatistiquesGuyaneRest
+  data: StatistiquesGuyaneData
 ): ChartConfiguration => {
   const annees: CaminoAnnee[] = [...Object.keys(data.prm.depot)].filter(isAnnee)
   const chartData: ChartData = {
@@ -417,7 +417,7 @@ const prmChartConfiguration = (
 }
 
 const axmChartConfiguration = (
-  data: StatistiquesGuyaneRest
+  data: StatistiquesGuyaneData
 ): ChartConfiguration => {
   const annees: CaminoAnnee[] = [...Object.keys(data.axm.depot)].filter(isAnnee)
   const chartData: ChartData = {
@@ -457,7 +457,7 @@ const axmChartConfiguration = (
 }
 
 const cxmChartConfiguration = (
-  data: StatistiquesGuyaneRest
+  data: StatistiquesGuyaneData
 ): ChartConfiguration => {
   const annees: CaminoAnnee[] = [...Object.keys(data.cxm.depot)].filter(isAnnee)
   const chartData: ChartData = {

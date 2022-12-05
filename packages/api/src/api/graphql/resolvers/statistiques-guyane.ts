@@ -7,7 +7,12 @@ import { titresActivitesGet } from '../../../database/queries/titres-activites.j
 import { userSuper } from '../../../database/user-super.js'
 import { titresSurfaceIndexBuild } from './statistiques.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { anneePrecedente, CaminoAnnee, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date.js'
+import {
+  anneePrecedente,
+  CaminoAnnee,
+  getCurrentAnnee,
+  toCaminoAnnee
+} from 'camino-common/src/date.js'
 
 const statistiquesGuyaneActivitesBuild = (
   sectionId: string,

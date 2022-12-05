@@ -9,12 +9,12 @@ import { CaminoRestRoutes } from 'camino-common/src/rest'
 import {
   StatistiquesGuyane,
   StatistiquesGuyaneActivite,
-  StatistiquesGuyaneRest
+  StatistiquesGuyaneData
 } from 'camino-common/src/statistiques'
 import PureGuyane from './pure-guyane.vue'
 
 const getStats = async (): Promise<StatistiquesGuyane> => {
-  const data: StatistiquesGuyaneRest = await fetchWithJson(
+  const data: StatistiquesGuyaneData = await fetchWithJson(
     CaminoRestRoutes.statistiquesGuyane,
     {}
   )
