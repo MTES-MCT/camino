@@ -5,24 +5,24 @@ import {
   IFields,
   IUtilisateur,
   IEntrepriseColonneId
-} from '../../types'
+} from '../../types.js'
 
-import options from './_options'
-import graphBuild from './graph/build'
-import { fieldsFormat } from './graph/fields-format'
-import { stringSplit } from './_utils'
+import options from './_options.js'
+import graphBuild from './graph/build.js'
+import { fieldsFormat } from './graph/fields-format.js'
+import { stringSplit } from './_utils.js'
 
-import Entreprises from '../models/entreprises'
-import { entreprisesQueryModify } from './permissions/entreprises'
-import { utilisateurGet } from './utilisateurs'
+import Entreprises from '../models/entreprises.js'
+import { entreprisesQueryModify } from './permissions/entreprises.js'
+import { utilisateurGet } from './utilisateurs.js'
 import {
   isSuper,
   isEntreprise,
   isAdministrationAdmin,
   isAdministrationEditeur,
   isBureauDEtudes
-} from 'camino-common/src/roles'
-import { canCreateTitre } from 'camino-common/src/permissions/titres'
+} from 'camino-common/src/roles.js'
+import { canCreateTitre } from 'camino-common/src/permissions/titres.js'
 
 const entreprisesFiltersQueryModify = (
   {

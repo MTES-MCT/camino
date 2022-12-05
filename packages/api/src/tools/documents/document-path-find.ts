@@ -1,6 +1,6 @@
-import { IDocument } from '../../types'
-import { documentRepertoireFind } from './document-repertoire-find'
-import dirCreate from '../dir-create'
+import { IDocument } from '../../types.js'
+import { documentRepertoireFind } from './document-repertoire-find.js'
+import dirCreate from '../dir-create.js'
 
 export const documentFilePathFind = async (
   document: IDocument,

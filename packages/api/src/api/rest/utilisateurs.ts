@@ -3,22 +3,22 @@ import {
   userGet,
   utilisateurGet,
   utilisateursGet
-} from '../../database/queries/utilisateurs'
+} from '../../database/queries/utilisateurs.js'
 import express from 'express'
-import { CustomResponse } from './express-type'
-import { IFormat, IUser, IUtilisateursColonneId } from '../../types'
+import { CustomResponse } from './express-type.js'
+import { IFormat, IUser, IUtilisateursColonneId } from '../../types.js'
 import { constants } from 'http2'
 import {
   isSubscribedToNewsLetter,
   newsletterSubscriberUpdate
-} from '../../tools/api-mailjet/newsletter'
-import { isRole } from 'camino-common/src/roles'
-import { utilisateursFormatTable } from './format/utilisateurs'
-import { tableConvert } from './_convert'
-import { fileNameCreate } from '../../tools/file-name-create'
-import { QGISToken } from 'camino-common/src/utilisateur'
-import { knex } from '../../knex'
-import { idGenerate } from '../../database/models/_format/id-create'
+} from '../../tools/api-mailjet/newsletter.js'
+import { isRole } from 'camino-common/src/roles.js'
+import { utilisateursFormatTable } from './format/utilisateurs.js'
+import { tableConvert } from './_convert.js'
+import { fileNameCreate } from '../../tools/file-name-create.js'
+import { QGISToken } from 'camino-common/src/utilisateur.js'
+import { knex } from '../../knex.js'
+import { idGenerate } from '../../database/models/_format/id-create.js'
 import bcrypt from 'bcryptjs'
 
 export const isSubscribedToNewsletter = async (

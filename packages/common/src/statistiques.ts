@@ -1,9 +1,9 @@
-import { CaminoAnnee } from './date'
-import { AdministrationTypeId } from './static/administrations'
-import { RegionId } from './static/region'
-import { SDOMZoneIds } from './static/sdom'
-import { SUBSTANCES_FISCALES_IDS } from './static/substancesFiscales'
-import { TitresTypes } from './static/titresTypes'
+import { CaminoAnnee } from './date.js'
+import { AdministrationTypeId } from './static/administrations.js'
+import { RegionId } from './static/region.js'
+import { SDOMZoneIds } from './static/sdom.js'
+import { SUBSTANCES_FISCALES_IDS } from './static/substancesFiscales.js'
+import { TitresTypes } from './static/titresTypes.js'
 
 export interface QuantiteParMois {
   mois: string

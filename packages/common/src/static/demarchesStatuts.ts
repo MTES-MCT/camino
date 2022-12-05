@@ -1,5 +1,5 @@
-import { Definition } from '../definition'
-import { Couleur } from './couleurs'
+import { Definition } from '../definition.js'
+import { Couleur } from './couleurs.js'
 
 export const DemarchesStatutsIds = {
   Accepte: 'acc',

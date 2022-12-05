@@ -1,5 +1,5 @@
-import { ITitre, ITitreDemarche } from '../../types'
-import { getLinkConfig } from 'camino-common/src/permissions/titres'
+import { ITitre, ITitreDemarche } from '../../types.js'
+import { getLinkConfig } from 'camino-common/src/permissions/titres.js'
 
 export const checkTitreLinks = (
   titre: Pick<ITitre, 'typeId'>,

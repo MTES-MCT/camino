@@ -1,4 +1,4 @@
-import { isSubstanceFiscale, substancesFiscalesBySubstanceLegale } from './substancesFiscales'
+import { isSubstanceFiscale, substancesFiscalesBySubstanceLegale } from './substancesFiscales.js'
 import { test, expect } from 'vitest'
 
 test('isSubstanceFiscale', () => {

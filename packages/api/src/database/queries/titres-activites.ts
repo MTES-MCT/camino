@@ -7,23 +7,23 @@ import {
   ITitreActiviteColonneId,
   Index,
   IColonne
-} from '../../types'
+} from '../../types.js'
 
-import options from './_options'
-import { fieldsFormat } from './graph/fields-format'
-import { fieldsTitreAdd } from './graph/fields-add'
-import graphBuild from './graph/build'
+import options from './_options.js'
+import { fieldsFormat } from './graph/fields-format.js'
+import { fieldsTitreAdd } from './graph/fields-add.js'
+import graphBuild from './graph/build.js'
 
-import { titresFiltersQueryModify } from './_titres-filters'
-import TitresActivites from '../models/titres-activites'
+import { titresFiltersQueryModify } from './_titres-filters.js'
+import TitresActivites from '../models/titres-activites.js'
 import {
   titresActivitesQueryModify,
   titresActivitesPropsQueryModify
-} from './permissions/titres-activites'
+} from './permissions/titres-activites.js'
 import {
   isAdministrationAdmin,
   isAdministrationEditeur
-} from 'camino-common/src/roles'
+} from 'camino-common/src/roles.js'
 
 /**
  * Modifie la requête en fonction des paramètres de filtre

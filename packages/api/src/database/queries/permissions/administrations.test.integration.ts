@@ -1,22 +1,22 @@
-import { dbManager } from '../../../../tests/db-manager'
-import { IUtilisateur, IAdministration, ITitre } from '../../../types'
+import { dbManager } from '../../../../tests/db-manager.js'
+import { IUtilisateur, IAdministration, ITitre } from '../../../types.js'
 
-import Titres from '../../models/titres'
-import Utilisateurs from '../../models/utilisateurs'
-import AdministrationsActivitesTypesEmails from '../../models/administrations-activites-types-emails'
-import Administrations from '../../models/administrations'
+import Titres from '../../models/titres.js'
+import Utilisateurs from '../../models/utilisateurs.js'
+import AdministrationsActivitesTypesEmails from '../../models/administrations-activites-types-emails.js'
+import Administrations from '../../models/administrations.js'
 import {
   AdministrationId,
   Administrations as CommonAdministrations
-} from 'camino-common/src/static/administrations'
+} from 'camino-common/src/static/administrations.js'
 import {
   administrationsTitresQuery,
   administrationsQueryModify
-} from './administrations'
-import { idGenerate } from '../../models/_format/id-create'
-import options from '../_options'
+} from './administrations.js'
+import { idGenerate } from '../../models/_format/id-create.js'
+import options from '../_options.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
-import { Role } from 'camino-common/src/roles'
+import { Role } from 'camino-common/src/roles.js'
 console.info = vi.fn()
 console.error = vi.fn()
 

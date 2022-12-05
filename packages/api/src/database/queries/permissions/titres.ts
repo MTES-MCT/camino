@@ -1,31 +1,34 @@
 import { QueryBuilder, raw, RawBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types'
+import { IUtilisateur } from '../../../types.js'
 
 // import sqlFormatter from 'sql-formatter'
 // import fileCreate from '../../../tools/file-create'
 
-import Titres from '../../models/titres'
-import TitresDemarches from '../../models/titres-demarches'
-import TitresActivites from '../../models/titres-activites'
-import Entreprises from '../../models/entreprises'
+import Titres from '../../models/titres.js'
+import TitresDemarches from '../../models/titres-demarches.js'
+import TitresActivites from '../../models/titres-activites.js'
+import Entreprises from '../../models/entreprises.js'
 
 import {
   titresActivitesQueryModify,
   titresActivitesPropsQueryModify,
   titreActivitesCount
-} from './titres-activites'
-import { titresDemarchesQueryModify } from './titres-demarches'
+} from './titres-activites.js'
+import { titresDemarchesQueryModify } from './titres-demarches.js'
 import {
   administrationsTitresTypesTitresStatutsModify,
   administrationsTitresQuery
-} from './administrations'
-import { entreprisesQueryModify, entreprisesTitresQuery } from './entreprises'
-import TitresEtapes from '../../models/titres-etapes'
-import AdministrationsModel from '../../models/administrations'
-import UtilisateursTitres from '../../models/utilisateurs--titres'
-import DemarchesTypes from '../../models/demarches-types'
-import { demarchesCreationQuery } from './metas'
+} from './administrations.js'
+import {
+  entreprisesQueryModify,
+  entreprisesTitresQuery
+} from './entreprises.js'
+import TitresEtapes from '../../models/titres-etapes.js'
+import AdministrationsModel from '../../models/administrations.js'
+import UtilisateursTitres from '../../models/utilisateurs--titres.js'
+import DemarchesTypes from '../../models/demarches-types.js'
+import { demarchesCreationQuery } from './metas.js'
 import {
   isAdministration,
   isAdministrationAdmin,
@@ -33,11 +36,11 @@ import {
   isBureauDEtudes,
   isEntreprise,
   isSuper
-} from 'camino-common/src/roles'
+} from 'camino-common/src/roles.js'
 import {
   AdministrationId,
   Administrations
-} from 'camino-common/src/static/administrations'
+} from 'camino-common/src/static/administrations.js'
 
 const titresDemarchesAdministrationsModificationQuery = (
   administrationId: AdministrationId,

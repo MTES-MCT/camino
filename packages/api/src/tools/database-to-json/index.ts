@@ -1,9 +1,9 @@
 import { rmSync, writeFileSync, mkdirSync } from 'fs'
 import decamelize from 'decamelize'
 
-import { ICoordonnees } from '../../types'
-import { knex } from '../../knex'
-import { tables } from './tables'
+import { ICoordonnees } from '../../types.js'
+import { knex } from '../../knex.js'
+import { tables } from './tables.js'
 
 const dir = 'sources'
 

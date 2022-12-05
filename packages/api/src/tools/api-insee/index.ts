@@ -1,11 +1,11 @@
-import errorLog from '../error-log'
-import { entrepriseEtablissementsFormat, entrepriseFormat } from './format'
+import errorLog from '../error-log.js'
+import { entrepriseEtablissementsFormat, entrepriseFormat } from './format.js'
 import {
   entreprisesFetch,
   entreprisesEtablissementsFetch,
   tokenInitialize
-} from './fetch'
-import { IEntreprise, IEntrepriseEtablissement } from '../../types'
+} from './fetch.js'
+import { IEntreprise, IEntrepriseEtablissement } from '../../types.js'
 
 // cherche les établissements des entreprises
 // retourne des objets du modèle EntrepriseEtablissements

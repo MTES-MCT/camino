@@ -1,8 +1,8 @@
-import { ITitreDemarche } from '../../types'
+import { ITitreDemarche } from '../../types.js'
 
-import { titreActiviteValideCheck } from './titre-activite-valide-check'
+import { titreActiviteValideCheck } from './titre-activite-valide-check.js'
 
-import { titreValideCheck } from './titre-valide-check'
+import { titreValideCheck } from './titre-valide-check.js'
 
 import { vi, describe, test, expect } from 'vitest'
 

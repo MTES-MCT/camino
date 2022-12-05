@@ -1,10 +1,10 @@
-import { dbManager } from '../../../tests/db-manager'
-import { graphQLCall, queryImport } from '../../../tests/_utils/index'
-import { titreCreate } from '../../database/queries/titres'
-import { titreEtapeUpsert } from '../../database/queries/titres-etapes'
-import { userSuper } from '../../database/user-super'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
-import { toCaminoDate } from 'camino-common/src/date'
+import { dbManager } from '../../../tests/db-manager.js'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
+import { titreCreate } from '../../database/queries/titres.js'
+import { titreEtapeUpsert } from '../../database/queries/titres-etapes.js'
+import { userSuper } from '../../database/user-super.js'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 
 import {
   afterAll,

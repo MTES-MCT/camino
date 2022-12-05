@@ -9,21 +9,21 @@ import {
   ITitrePoint,
   ITitrePointReference,
   IUtilisateur
-} from '../../types'
+} from '../../types.js'
 
-import titreDemarcheSortAsc from './titre-elements-sort-asc'
-import { titreEtapesSortAscByOrdre } from './titre-etapes-sort'
-import titreDemarcheOctroiDateDebutFind from '../rules/titre-demarche-octroi-date-debut-find'
-import { titresGet, titreUpdate } from '../../database/queries/titres'
-import { userSuper } from '../../database/user-super'
+import titreDemarcheSortAsc from './titre-elements-sort-asc.js'
+import { titreEtapesSortAscByOrdre } from './titre-etapes-sort.js'
+import titreDemarcheOctroiDateDebutFind from '../rules/titre-demarche-octroi-date-debut-find.js'
+import { titresGet, titreUpdate } from '../../database/queries/titres.js'
+import { userSuper } from '../../database/user-super.js'
 import cryptoRandomString from 'crypto-random-string'
-import { titreDemarcheUpdate } from '../../database/queries/titres-demarches'
-import { titreEtapeUpdate } from '../../database/queries/titres-etapes'
+import { titreDemarcheUpdate } from '../../database/queries/titres-demarches.js'
+import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import {
   titrePointReferenceUpdate,
   titrePointUpdate
-} from '../../database/queries/titres-points'
-import { titreActiviteUpdate } from '../../database/queries/titres-activites'
+} from '../../database/queries/titres-points.js'
+import { titreActiviteUpdate } from '../../database/queries/titres-activites.js'
 
 const titreSlugFind = (titre: ITitre) => {
   const { domaineId, type, nom } = titre

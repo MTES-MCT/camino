@@ -1,7 +1,7 @@
+import { getCurrent } from 'camino-common/src/date.js'
 import '../init'
-import { knex } from '../knex'
-import { userAdd } from './user-add'
-import dateFormat from 'dateformat'
+import { knex } from '../knex.js'
+import { userAdd } from './user-add.js'
 
 const run = async () => {
   try {
@@ -9,7 +9,7 @@ const run = async () => {
       id: 'admin',
       email: process.env.ADMIN_EMAIL,
       role: 'super',
-      dateCreation: dateFormat(new Date(), 'yyyy-mm-dd')
+      dateCreation: getCurrent()
     })
   } catch (e) {
     console.error(e)

@@ -1,9 +1,9 @@
 import {
   isDemarcheDefinitionMachine,
   isDemarcheDefinitionRestriction
-} from './definitions'
-import { restrictionsArmRet } from './arm/ret'
-import { ArmOctMachine } from './arm/oct.machine'
+} from './definitions.js'
+import { restrictionsArmRet } from './arm/ret.js'
+import { ArmOctMachine } from './arm/oct.machine.js'
 import { expect, test } from 'vitest'
 
 test('isDemarcheDefinitionMachine', () => {

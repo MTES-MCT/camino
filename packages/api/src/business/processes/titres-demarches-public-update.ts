@@ -1,8 +1,8 @@
-import { titreDemarcheUpdate } from '../../database/queries/titres-demarches'
-import { titreDemarchePublicFind } from '../rules/titre-demarche-public-find'
-import { titresGet } from '../../database/queries/titres'
-import { userSuper } from '../../database/user-super'
-import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort'
+import { titreDemarcheUpdate } from '../../database/queries/titres-demarches.js'
+import { titreDemarchePublicFind } from '../rules/titre-demarche-public-find.js'
+import { titresGet } from '../../database/queries/titres.js'
+import { userSuper } from '../../database/user-super.js'
+import { titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
 
 type ITitreDemarchePatch = {
   publicLecture: boolean

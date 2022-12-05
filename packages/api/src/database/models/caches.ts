@@ -1,6 +1,6 @@
 import { Model } from 'objection'
 
-import { ICache } from '../../types'
+import { ICache } from '../../types.js'
 
 interface Caches extends ICache {}
 

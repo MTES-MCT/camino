@@ -1,14 +1,14 @@
-import { ITitreEtape, IGeoJson } from '../../types'
+import { ITitreEtape, IGeoJson } from '../../types.js'
 
 import {
   geojsonFeatureMultiPolygon,
   geojsonFeatureCollectionPoints
-} from '../../tools/geojson'
-import { DocumentTypeData, etapeTypeFormat } from './etapes-types'
-import { entrepriseFormat } from './entreprises'
-import { titreEtapeFormatFields } from './_fields'
-import { titreDemarcheFormat } from './titres-demarches'
-import { titreEtapeCompleteValidate } from '../../business/validations/titre-etape-updation-validate'
+} from '../../tools/geojson.js'
+import { DocumentTypeData, etapeTypeFormat } from './etapes-types.js'
+import { entrepriseFormat } from './entreprises.js'
+import { titreEtapeFormatFields } from './_fields.js'
+import { titreDemarcheFormat } from './titres-demarches.js'
+import { titreEtapeCompleteValidate } from '../../business/validations/titre-etape-updation-validate.js'
 
 const titreEtapeFormat = (
   titreEtape: ITitreEtape,

@@ -1,4 +1,4 @@
-import { titreActiviteTypeCheck } from './titre-activite-type-check'
+import { titreActiviteTypeCheck } from './titre-activite-type-check.js'
 
 import {
   activiteTypeMAxmPxmGuyane,
@@ -9,7 +9,7 @@ import {
   titreMAxmMetropole,
   titreMPrmMetropole,
   titrePrwSansPays
-} from './__mocks__/titre-activite-type-check'
+} from './__mocks__/titre-activite-type-check.js'
 import { describe, test, expect } from 'vitest'
 
 describe("vérifie si un titre a des activités d'un certain type", () => {

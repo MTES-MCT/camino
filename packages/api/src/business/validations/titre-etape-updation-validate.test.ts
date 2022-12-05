@@ -1,13 +1,18 @@
-import { ITitreEtape, ITitreDemarche, ITitrePoint, ITitre } from '../../types'
+import {
+  ITitreEtape,
+  ITitreDemarche,
+  ITitrePoint,
+  ITitre
+} from '../../types.js'
 
 import {
   titreEtapeCompleteValidate,
   titreEtapeUpdationValidate
-} from './titre-etape-updation-validate'
-import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { userSuper } from '../../database/user-super'
+} from './titre-etape-updation-validate.js'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { userSuper } from '../../database/user-super.js'
 import { describe, test, expect } from 'vitest'
 describe('valide l’étape avant de l’enregistrer', () => {
   test.each<[SubstanceLegaleId[], EtapeTypeId, TitreTypeId, boolean]>([

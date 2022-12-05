@@ -1,5 +1,5 @@
 import '../init'
-import { knex } from '../knex'
+import { knex } from '../knex.js'
 import chalk from 'chalk'
 
 const run = async () => {

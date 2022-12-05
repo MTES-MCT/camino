@@ -1,6 +1,6 @@
 import { rm } from 'fs'
 
-import errorLog from './error-log'
+import errorLog from './error-log.js'
 
 export const dirDelete = async (name: string) =>
   new Promise((resolve, reject) => {

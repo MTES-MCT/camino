@@ -1,6 +1,6 @@
 // https://cacoo.com/diagrams/mdAnl7m9V2ViBlxA/C4063
 
-import { IDemarcheDefinitionRestrictions } from '../definitions'
+import { IDemarcheDefinitionRestrictions } from '../definitions.js'
 
 const etatsDefinitionPrmOct: IDemarcheDefinitionRestrictions = {
   mfr: {

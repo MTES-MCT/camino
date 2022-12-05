@@ -6,7 +6,7 @@ import {
   IAdministrationTitreTypeTitreStatut,
   IAdministrationActiviteTypeEmail,
   IToken
-} from '../../../types'
+} from '../../../types.js'
 
 import {
   administrationGet,
@@ -19,17 +19,17 @@ import {
   administrationActiviteTypeUpsert,
   administrationActiviteTypeEmailCreate,
   administrationActiviteTypeEmailDelete
-} from '../../../database/queries/administrations'
+} from '../../../database/queries/administrations.js'
 
-import { fieldsBuild } from './_fields-build'
+import { fieldsBuild } from './_fields-build.js'
 
-import { administrationFormat } from '../../_format/administrations'
-import { emailCheck } from '../../../tools/email-check'
-import { userGet } from '../../../database/queries/utilisateurs'
-import { isSuper } from 'camino-common/src/roles'
-import { canReadActivitesTypesEmails } from 'camino-common/src/permissions/administrations'
-import administrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails'
-import { isAdministrationId } from 'camino-common/src/static/administrations'
+import { administrationFormat } from '../../_format/administrations.js'
+import { emailCheck } from '../../../tools/email-check.js'
+import { userGet } from '../../../database/queries/utilisateurs.js'
+import { isSuper } from 'camino-common/src/roles.js'
+import { canReadActivitesTypesEmails } from 'camino-common/src/permissions/administrations.js'
+import administrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails.js'
+import { isAdministrationId } from 'camino-common/src/static/administrations.js'
 
 const administration = async (
   { id }: { id: string },

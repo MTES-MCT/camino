@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 
-import { cacheGet, cacheUpsert } from '../../database/queries/caches'
-import { Statistiques } from 'camino-common/src/statistiques'
+import { cacheGet, cacheUpsert } from '../../database/queries/caches.js'
+import { Statistiques } from 'camino-common/src/statistiques.js'
 
 interface IMatomoSectionData {
   label: string

@@ -1,8 +1,8 @@
-import { journauxGet } from '../../../database/queries/journaux'
-import { userGet } from '../../../database/queries/utilisateurs'
-import { IToken } from '../../../types'
+import { journauxGet } from '../../../database/queries/journaux.js'
+import { userGet } from '../../../database/queries/utilisateurs.js'
+import { IToken } from '../../../types.js'
 import { GraphQLResolveInfo } from 'graphql'
-import { fieldsBuild } from './_fields-build'
+import { fieldsBuild } from './_fields-build.js'
 
 export interface IJournauxQueryParams {
   page: number

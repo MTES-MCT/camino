@@ -1,7 +1,7 @@
-import { titreCoordonneesFind } from '../utils/titre-coordonnees-find'
-import { titresGet } from '../../database/queries/titres'
-import Titres from '../../database/models/titres'
-import { titresCoordonneesUpdate } from './titres-coordonnees-update'
+import { titreCoordonneesFind } from '../utils/titre-coordonnees-find.js'
+import { titresGet } from '../../database/queries/titres.js'
+import Titres from '../../database/models/titres.js'
+import { titresCoordonneesUpdate } from './titres-coordonnees-update.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres', () => ({
   titreUpdate: vi.fn().mockResolvedValue(true),

@@ -1,19 +1,19 @@
-import { ITitre } from '../../../types'
+import { ITitre } from '../../../types.js'
 
-import { titreEtapePropFind } from '../../../business/rules/titre-etape-prop-find'
-import { titreValideCheck } from '../../../business/utils/titre-valide-check'
-import { titresActivitesGet } from '../../../database/queries/titres-activites'
-import { userSuper } from '../../../database/user-super'
-import { matomoData } from '../../../tools/api-matomo'
+import { titreEtapePropFind } from '../../../business/rules/titre-etape-prop-find.js'
+import { titreValideCheck } from '../../../business/utils/titre-valide-check.js'
+import { titresActivitesGet } from '../../../database/queries/titres-activites.js'
+import { userSuper } from '../../../database/user-super.js'
+import { matomoData } from '../../../tools/api-matomo/index.js'
 import {
   Statistiques,
   StatistiquesUtilisateurs
-} from 'camino-common/src/statistiques'
-import Utilisateurs from '../../../database/models/utilisateurs'
-import { isAdministration } from 'camino-common/src/roles'
-import { Administrations } from 'camino-common/src/static/administrations'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes'
+} from 'camino-common/src/statistiques.js'
+import Utilisateurs from '../../../database/models/utilisateurs.js'
+import { isAdministration } from 'camino-common/src/roles.js'
+import { Administrations } from 'camino-common/src/static/administrations.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
 
 const ACTIVITE_ANNEE_DEBUT = 2018
 

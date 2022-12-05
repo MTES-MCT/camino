@@ -1,4 +1,4 @@
-import fileCreate from './file-create'
+import fileCreate from './file-create.js'
 import { mkdirSync, readFileSync, rmdirSync } from 'fs'
 import { vi, beforeEach, afterEach, describe, expect, test } from 'vitest'
 

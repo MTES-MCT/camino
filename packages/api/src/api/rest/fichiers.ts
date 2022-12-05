@@ -4,13 +4,13 @@ import {
   IDocument,
   IDocumentRepertoire,
   IFormat
-} from '../../types'
+} from '../../types.js'
 
-import { documentGet } from '../../database/queries/documents'
-import { userGet } from '../../database/queries/utilisateurs'
-import { titreEtapeGet } from '../../database/queries/titres-etapes'
-import { documentRepertoireFind } from '../../tools/documents/document-repertoire-find'
-import { documentFilePathFind } from '../../tools/documents/document-path-find'
+import { documentGet } from '../../database/queries/documents.js'
+import { userGet } from '../../database/queries/utilisateurs.js'
+import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
+import { documentRepertoireFind } from '../../tools/documents/document-repertoire-find.js'
+import { documentFilePathFind } from '../../tools/documents/document-path-find.js'
 
 import JSZip from 'jszip'
 import { statSync, readFileSync } from 'fs'

@@ -1,10 +1,11 @@
-import { titresActivitesGet } from './titres-activites'
-import TitresActivites from '../models/titres-activites'
-import { dbManager } from '../../../tests/db-manager'
-import { IUtilisateur } from '../../types'
-import { idGenerate } from '../models/_format/id-create'
-import Titres from '../models/titres'
+import { titresActivitesGet } from './titres-activites.js'
+import TitresActivites from '../models/titres-activites.js'
+import { dbManager } from '../../../tests/db-manager.js'
+import { IUtilisateur } from '../../types.js'
+import { idGenerate } from '../models/_format/id-create.js'
+import Titres from '../models/titres.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
+import { getCurrent } from 'camino-common/src/date.js'
 console.info = vi.fn()
 console.error = vi.fn()
 beforeAll(async () => {
@@ -33,7 +34,7 @@ describe('teste les requêtes sur les activités', () => {
       id: titreActiviteId,
       typeId: 'grx',
       titreId,
-      date: '',
+      date: getCurrent(),
       statutId: 'dep',
       periodeId: 1,
       annee: 2000

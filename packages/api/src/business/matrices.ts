@@ -1,23 +1,23 @@
 import '../init'
-import { titresGet } from '../database/queries/titres'
-import { titresActivitesGet } from '../database/queries/titres-activites'
+import { titresGet } from '../database/queries/titres.js'
+import { titresActivitesGet } from '../database/queries/titres-activites.js'
 import {
   apiOpenfiscaCalculate,
   apiOpenfiscaConstantsFetch,
   OpenfiscaConstants,
   OpenfiscaResponse
-} from '../tools/api-openfisca'
-import { bodyBuilder, toFiscalite } from '../api/rest/entreprises'
-import { userSuper } from '../database/user-super'
-import { entreprisesGet } from '../database/queries/entreprises'
+} from '../tools/api-openfisca/index.js'
+import { bodyBuilder, toFiscalite } from '../api/rest/entreprises.js'
+import { userSuper } from '../database/user-super.js'
+import { entreprisesGet } from '../database/queries/entreprises.js'
 import {
   Fiscalite,
   fraisGestion,
   isFiscaliteGuyane
-} from 'camino-common/src/fiscalite'
+} from 'camino-common/src/fiscalite.js'
 import xlsx from 'xlsx'
-import { ICommune, ITitre } from '../types'
-import { Departements } from 'camino-common/src/static/departement'
+import { ICommune, ITitre } from '../types.js'
+import { Departements } from 'camino-common/src/static/departement.js'
 import fs from 'fs'
 import carbone from 'carbone'
 

@@ -1,5 +1,5 @@
-import { DomaineId, domainesIds } from './domaines'
-import { TitresTypesIds, isTitreType, toTitreTypeId, getTitreTypeType, getDomaineId, getTitreTypeTypeByDomaineId } from './titresTypes'
+import { DomaineId, domainesIds } from './domaines.js'
+import { TitresTypesIds, isTitreType, toTitreTypeId, getTitreTypeType, getDomaineId, getTitreTypeTypeByDomaineId } from './titresTypes.js'
 import { test, expect } from 'vitest'
 
 test('isTitreType', () => {

@@ -1,5 +1,5 @@
-import { IDemarcheDefinitionRestrictions } from '../definitions'
-import { etatComplementsGet, etatInformationsGet } from '../etat-cycles'
+import { IDemarcheDefinitionRestrictions } from '../definitions.js'
+import { etatComplementsGet, etatInformationsGet } from '../etat-cycles.js'
 
 // https://cacoo.com/diagrams/nStw2pYe0PKBs1lp/B1B05
 const restrictionsArmRenPro: IDemarcheDefinitionRestrictions = {

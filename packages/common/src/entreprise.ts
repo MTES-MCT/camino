@@ -1,4 +1,4 @@
-import { CaminoDate } from './date'
+import { CaminoDate } from './date.js'
 
 export type EntrepriseId = string & { __camino: 'entrepriseId' }
 

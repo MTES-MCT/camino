@@ -1,6 +1,6 @@
 import { Model } from 'objection'
 
-import { IActiviteTypePays } from '../../types'
+import { IActiviteTypePays } from '../../types.js'
 
 interface ActivitesTypesPays extends IActiviteTypePays {}
 

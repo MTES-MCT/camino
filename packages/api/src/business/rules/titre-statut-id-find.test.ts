@@ -1,4 +1,4 @@
-import { titreStatutIdFind } from './titre-statut-id-find'
+import { titreStatutIdFind } from './titre-statut-id-find.js'
 
 import {
   titreDemarchesIndefini,
@@ -11,9 +11,9 @@ import {
   titreDemarchesOctroiRetire,
   titreDemarchesInstruction,
   titrePERDemarchesProlongation
-} from './__mocks__/titre-statut-id-find-titres'
-import { newDemarcheId } from '../../database/models/_format/id-create'
-import { toCaminoDate } from 'camino-common/src/date'
+} from './__mocks__/titre-statut-id-find-titres.js'
+import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 
 describe("statut d'un titre", () => {

@@ -1,5 +1,5 @@
-import { ITitreDemarche } from '../../types'
-import { titrePhasesFind } from './titre-phases-find'
+import { ITitreDemarche } from '../../types.js'
+import { titrePhasesFind } from './titre-phases-find.js'
 import {
   titreDemarcheOctDpuAcc,
   titreDemarcheOctDpuInexistante,
@@ -9,9 +9,9 @@ import {
   titreDemarchesOctProlongation,
   titreDemarchesOctAnnulation,
   titreDemarchesOctAnnulationSansPoints
-} from './__mocks__/titre-phases-find-demarches'
-import { newDemarcheId } from '../../database/models/_format/id-create'
-import { toCaminoDate } from 'camino-common/src/date'
+} from './__mocks__/titre-phases-find-demarches.js'
+import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 
 describe("phases d'une démarche", () => {

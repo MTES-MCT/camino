@@ -1,4 +1,4 @@
-import { Index } from '../../types'
+import { Index } from '../../types.js'
 
 const hashGet = (str: string) => str.split('-').pop()
 

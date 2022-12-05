@@ -2,8 +2,8 @@ import express from 'express'
 import basicAuth from 'basic-auth'
 import bcrypt from 'bcryptjs'
 
-import { emailCheck } from '../tools/email-check'
-import { userByEmailGet } from '../database/queries/utilisateurs'
+import { emailCheck } from '../tools/email-check.js'
+import { userByEmailGet } from '../database/queries/utilisateurs.js'
 
 const userCredentialsCheck = async (email: string, motDePasse: string) => {
   email = email.toLowerCase()

@@ -1,6 +1,6 @@
-import { getKeys, PartialRecord } from '../typescript-tools'
-import { AdministrationId, isAdministrationId } from './administrations'
-import { isTitreType, TitreTypeId } from './titresTypes'
+import { getKeys, PartialRecord } from '../typescript-tools.js'
+import { AdministrationId, isAdministrationId } from './administrations.js'
+import { isTitreType, TitreTypeId } from './titresTypes.js'
 
 type AdministrationTitreType = PartialRecord<
   TitreTypeId,

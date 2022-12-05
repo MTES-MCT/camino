@@ -1,6 +1,6 @@
 import { Model } from 'objection'
 
-import { IAdministrationActiviteType } from '../../types'
+import { IAdministrationActiviteType } from '../../types.js'
 
 interface AdministrationsActivitesTypes extends IAdministrationActiviteType {}
 

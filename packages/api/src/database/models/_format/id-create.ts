@@ -1,5 +1,5 @@
 import cryptoRandomString from 'crypto-random-string'
-import { DemarcheId } from '../../../types'
+import { DemarcheId } from '../../../types.js'
 
 export const idGenerate = <T extends string = string>(): T =>
   cryptoRandomString({ length: 24, type: 'alphanumeric' }) as T

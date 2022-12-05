@@ -1,6 +1,6 @@
 import { Model } from 'objection'
 
-import { IAdministrationActiviteTypeEmail } from '../../types'
+import { IAdministrationActiviteTypeEmail } from '../../types.js'
 
 interface AdministrationsActivitesTypesEmails
   extends IAdministrationActiviteTypeEmail {}

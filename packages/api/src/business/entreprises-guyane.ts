@@ -2,11 +2,11 @@ import {
   toDepartementId,
   Departements,
   CodePostal
-} from 'camino-common/src/static/departement'
-import { PAYS_IDS } from 'camino-common/src/static/pays'
-import { Regions } from 'camino-common/src/static/region'
-import { knex } from '../knex'
-import { exploitantsGuyaneSubscriberUpdate } from '../tools/api-mailjet/newsletter'
+} from 'camino-common/src/static/departement.js'
+import { PAYS_IDS } from 'camino-common/src/static/pays.js'
+import { Regions } from 'camino-common/src/static/region.js'
+import { knex } from '../knex.js'
+import { exploitantsGuyaneSubscriberUpdate } from '../tools/api-mailjet/newsletter.js'
 
 interface Result {
   id: string

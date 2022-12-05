@@ -5,19 +5,19 @@ import {
   IDemarcheType,
   ITitreDemarche,
   DemarcheId
-} from '../../types'
+} from '../../types.js'
 
 import {
   demarcheDefinitionFind,
   IDemarcheDefinitionRestrictions,
   isDemarcheDefinitionMachine
-} from '../rules-demarches/definitions'
-import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find'
-import { titreContenuFormat } from '../../database/models/_format/titre-contenu'
-import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort'
-import { titreEtapeEtatValidate } from './titre-etape-etat-validate'
-import { objectClone } from '../../tools/index'
-import { toMachineEtapes } from '../rules-demarches/machine-common'
+} from '../rules-demarches/definitions.js'
+import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find.js'
+import { titreContenuFormat } from '../../database/models/_format/titre-contenu.js'
+import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort.js'
+import { titreEtapeEtatValidate } from './titre-etape-etat-validate.js'
+import { objectClone } from '../../tools/index.js'
+import { toMachineEtapes } from '../rules-demarches/machine-common.js'
 
 const titreDemarcheEtapesBuild = (
   titreEtape: ITitreEtape,

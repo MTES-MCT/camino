@@ -1,8 +1,8 @@
-import { ITitreActivite, ISection, IContenu } from '../../types'
+import { ITitreActivite, ISection, IContenu } from '../../types.js'
 
-import { titreSectionsFormat } from './titres-sections'
+import { titreSectionsFormat } from './titres-sections.js'
 
-import { titreActiviteCompleteCheck } from '../../business/validations/titre-activite-complete-check'
+import { titreActiviteCompleteCheck } from '../../business/validations/titre-activite-complete-check.js'
 
 export const titreActiviteContenuFormat = (
   sections: ISection[],

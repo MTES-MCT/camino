@@ -1,11 +1,11 @@
-import { IUtilisateur, IUser } from '../../types'
+import { IUtilisateur, IUser } from '../../types.js'
 
 import {
   isAdministration,
   isBureauDEtudes,
   isEntreprise,
   isSuper
-} from 'camino-common/src/roles'
+} from 'camino-common/src/roles.js'
 
 export const userFormat = (utilisateur: IUtilisateur | null) => {
   if (!utilisateur) return null

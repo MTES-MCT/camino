@@ -1,10 +1,10 @@
-import { IUtilisateur, IUtilisateurCreation } from '../../types'
-import { emailCheck } from '../../tools/email-check'
+import { IUtilisateur, IUtilisateurCreation } from '../../types.js'
+import { emailCheck } from '../../tools/email-check.js'
 import {
   isAdministration,
   isBureauDEtudes,
   isEntreprise
-} from 'camino-common/src/roles'
+} from 'camino-common/src/roles.js'
 
 const utilisateurEditionCheck = (
   utilisateur: IUtilisateur | IUtilisateurCreation

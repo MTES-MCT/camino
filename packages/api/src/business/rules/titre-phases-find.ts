@@ -1,16 +1,16 @@
-import { ITitrePhase } from '../../types'
+import { ITitrePhase } from '../../types.js'
 
 import titreDemarcheDateFinAndDureeFind, {
   TitreDemarchePhaseFind
-} from './titre-demarche-date-fin-duree-find'
-import { titreDemarchePhaseCheck } from './titre-demarche-phase-check'
+} from './titre-demarche-date-fin-duree-find.js'
+import { titreDemarchePhaseCheck } from './titre-demarche-phase-check.js'
 import {
   titreEtapesSortAscByOrdre,
   titreEtapesSortDescByOrdre
-} from '../utils/titre-etapes-sort'
-import { titreEtapePublicationCheck } from './titre-etape-publication-check'
-import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find'
-import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes'
+} from '../utils/titre-etapes-sort.js'
+import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
+import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find.js'
+import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
 
 /**
  * trouve une démarche acceptée ou terminée qui est

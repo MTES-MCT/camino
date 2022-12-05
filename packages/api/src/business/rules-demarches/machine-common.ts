@@ -1,17 +1,17 @@
-import { IContenu, ITitreEtape } from '../../types'
+import { IContenu, ITitreEtape } from '../../types.js'
 import {
   EtapeStatutId,
   EtapeStatutKey,
   isStatut
-} from 'camino-common/src/static/etapesStatuts'
+} from 'camino-common/src/static/etapesStatuts.js'
 import {
   EtapeTypeId,
   isEtapeTypeId
-} from 'camino-common/src/static/etapesTypes'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
-import { EtapeTypeEtapeStatut } from 'camino-common/src/static/etapesTypesEtapesStatuts'
-import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
-import { CaminoDate } from 'camino-common/src/date'
+} from 'camino-common/src/static/etapesTypes.js'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
+import { EtapeTypeEtapeStatut } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
+import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
+import { CaminoDate } from 'camino-common/src/date.js'
 
 export interface Etape {
   // TODO 2022-07-28 : ceci pourrait être réduit en utilisant les états de 'trad'

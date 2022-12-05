@@ -1,6 +1,6 @@
-import { ITitreDemarche } from '../../types'
+import { ITitreDemarche } from '../../types.js'
 
-import { titreEtapePropFind } from './titre-etape-prop-find'
+import { titreEtapePropFind } from './titre-etape-prop-find.js'
 import { vi, describe, expect, test } from 'vitest'
 console.error = vi.fn()
 

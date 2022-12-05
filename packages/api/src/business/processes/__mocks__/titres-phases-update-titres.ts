@@ -1,5 +1,5 @@
-import Titres from '../../../database/models/titres'
-import { ITitrePhase } from '../../../types'
+import Titres from '../../../database/models/titres.js'
+import { ITitrePhase } from '../../../types.js'
 
 const titresSansPhase = [
   {

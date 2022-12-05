@@ -1,18 +1,22 @@
-import type { ITitreDemarche, ITitreEntreprise, ITitreEtape } from '../../types'
+import type {
+  ITitreDemarche,
+  ITitreEntreprise,
+  ITitreEtape
+} from '../../types.js'
 
-import { titreEtapeUpsert } from '../../database/queries/titres-etapes'
-import { titreDemarcheGet } from '../../database/queries/titres-demarches'
-import { userSuper } from '../../database/user-super'
-import dateFormat from 'dateformat'
-import titreEtapeUpdateTask from '../titre-etape-update'
-import { titreEtapeAdministrationsEmailsSend } from '../../api/graphql/resolvers/_titre-etape-email'
-import { demarcheDefinitionFind } from '../rules-demarches/definitions'
-import { titreUrlGet } from '../utils/urls-get'
-import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
+import { titreEtapeUpsert } from '../../database/queries/titres-etapes.js'
+import { titreDemarcheGet } from '../../database/queries/titres-demarches.js'
+import { userSuper } from '../../database/user-super.js'
+import titreEtapeUpdateTask from '../titre-etape-update.js'
+import { titreEtapeAdministrationsEmailsSend } from '../../api/graphql/resolvers/_titre-etape-email.js'
+import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
+import { titreUrlGet } from '../utils/urls-get.js'
+import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
 import {
   EmailTemplateId,
   EmailAdministration
-} from '../../tools/api-mailjet/types'
+} from '../../tools/api-mailjet/types.js'
+import { getCurrent } from 'camino-common/src/date.js'
 
 const emailConfirmationDepotSend = async (
   emails: string[],
@@ -94,7 +98,7 @@ export const titreEtapeDepotCreate = async (titreDemarche: ITitreDemarche) => {
     titreDemarcheId: titreDemarche.id,
     typeId: 'mdp',
     statutId: 'fai',
-    date: dateFormat(new Date(), 'yyyy-mm-dd')
+    date: getCurrent()
   } as ITitreEtape
 
   titreEtapeDepot = await titreEtapeUpsert(

@@ -1,6 +1,6 @@
 import { Model } from 'objection'
-import { IUtilisateurTitre } from '../../types'
-import Utilisateurs from './utilisateurs'
+import { IUtilisateurTitre } from '../../types.js'
+import Utilisateurs from './utilisateurs.js'
 
 interface UtilisateursTitres extends IUtilisateurTitre {}
 

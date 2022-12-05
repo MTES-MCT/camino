@@ -1,4 +1,7 @@
-import { ActiviteTypeReduced, TitreReduced } from '../titre-activite-type-check'
+import {
+  ActiviteTypeReduced,
+  TitreReduced
+} from '../titre-activite-type-check.js'
 
 const activiteTypeMAxmPxmGuyane: ActiviteTypeReduced = {
   titresTypes: [{ id: 'axm' }, { id: 'pxm' }],

@@ -1,6 +1,6 @@
-import { buildMatrices } from './matrices'
-import { ITitre } from '../types'
-import { newEntrepriseId } from 'camino-common/src/entreprise'
+import { buildMatrices } from './matrices.js'
+import { ITitre } from '../types.js'
+import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { describe, expect, test } from 'vitest'
 describe('matrices', () => {
   test('buildMatrices', () => {

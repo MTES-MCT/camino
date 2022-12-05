@@ -3,10 +3,10 @@ import { FileUpload } from 'graphql-upload'
 import { join } from 'path'
 import cryptoRandomString from 'crypto-random-string'
 
-import { IDocument, IToken, ITitreEtape, IUtilisateur } from '../../../types'
+import { IDocument, IToken, ITitreEtape, IUtilisateur } from '../../../types.js'
 
-import fileDelete from '../../../tools/file-delete'
-import fileStreamCreate from '../../../tools/file-stream-create'
+import fileDelete from '../../../tools/file-delete.js'
+import fileStreamCreate from '../../../tools/file-stream-create.js'
 
 import {
   documentsGet,
@@ -14,22 +14,22 @@ import {
   documentCreate,
   documentUpdate,
   documentDelete
-} from '../../../database/queries/documents'
+} from '../../../database/queries/documents.js'
 
-import { documentTypeGet } from '../../../database/queries/metas'
+import { documentTypeGet } from '../../../database/queries/metas.js'
 
-import { fieldsBuild } from './_fields-build'
-import fileRename from '../../../tools/file-rename'
-import { titreEtapeGet } from '../../../database/queries/titres-etapes'
-import { titreActiviteGet } from '../../../database/queries/titres-activites'
+import { fieldsBuild } from './_fields-build.js'
+import fileRename from '../../../tools/file-rename.js'
+import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
+import { titreActiviteGet } from '../../../database/queries/titres-activites.js'
 
-import { documentInputValidate } from '../../../business/validations/document-input-validate'
-import { documentUpdationValidate } from '../../../business/validations/document-updation-validate'
-import { entrepriseGet } from '../../../database/queries/entreprises'
-import { userGet } from '../../../database/queries/utilisateurs'
-import { userSuper } from '../../../database/user-super'
-import { documentFilePathFind } from '../../../tools/documents/document-path-find'
-import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
+import { documentInputValidate } from '../../../business/validations/document-input-validate.js'
+import { documentUpdationValidate } from '../../../business/validations/document-updation-validate.js'
+import { entrepriseGet } from '../../../database/queries/entreprises.js'
+import { userGet } from '../../../database/queries/utilisateurs.js'
+import { userSuper } from '../../../database/user-super.js'
+import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
+import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
 
 const errorEtapesAssocieesUpdate = (
   etapesAssociees: ITitreEtape[],

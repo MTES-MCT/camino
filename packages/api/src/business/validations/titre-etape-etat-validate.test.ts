@@ -1,11 +1,11 @@
-import { ITitreEtape } from '../../types'
+import { ITitreEtape } from '../../types.js'
 
 import {
   etapesSuivantesEnAttenteGet,
   titreEtapeTypeIdRestrictionsFind
-} from './titre-etape-etat-validate'
-import { restrictionsArmRet } from '../rules-demarches/arm/ret'
-import { etatInformationsGet } from '../rules-demarches/etat-cycles'
+} from './titre-etape-etat-validate.js'
+import { restrictionsArmRet } from '../rules-demarches/arm/ret.js'
+import { etatInformationsGet } from '../rules-demarches/etat-cycles.js'
 import { describe, test, expect } from 'vitest'
 describe('teste etapesSuivantesEnAttenteGet', () => {
   test('retourne la seule étape déjà effectuée', () => {

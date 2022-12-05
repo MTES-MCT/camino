@@ -1,5 +1,5 @@
-import { DepartementId, DEPARTEMENT_IDS } from './departement'
-import { getEntries, getKeys, onlyUnique } from '../typescript-tools'
+import { DepartementId, DEPARTEMENT_IDS } from './departement.js'
+import { getEntries, getKeys, onlyUnique } from '../typescript-tools.js'
 
 const facades = {
   'Manche Est - Mer du Nord': {

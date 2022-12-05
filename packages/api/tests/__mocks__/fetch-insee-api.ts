@@ -1,7 +1,7 @@
 import {
   IApiSirenEtablissement,
   IApiSirenUniteLegale
-} from '../../src/tools/api-insee/types'
+} from '../../src/tools/api-insee/types.js'
 
 const entreprise = {
   siren: '729800706',

@@ -1,4 +1,4 @@
-import { IEntreprise, IEntrepriseColonneId, IToken } from '../../../types'
+import { IEntreprise, IEntrepriseColonneId, IToken } from '../../../types.js'
 import { GraphQLResolveInfo } from 'graphql'
 
 import {
@@ -7,16 +7,16 @@ import {
   entreprisesGet,
   entrepriseUpsert,
   titreDemandeEntreprisesGet
-} from '../../../database/queries/entreprises'
-import { titreEtapeGet } from '../../../database/queries/titres-etapes'
+} from '../../../database/queries/entreprises.js'
+import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
 
-import { fieldsBuild } from './_fields-build'
+import { fieldsBuild } from './_fields-build.js'
 
-import { entrepriseFormat } from '../../_format/entreprises'
-import { emailCheck } from '../../../tools/email-check'
-import { apiInseeEntrepriseAndEtablissementsGet } from '../../../tools/api-insee/index'
-import { userGet } from '../../../database/queries/utilisateurs'
-import { EntrepriseId } from 'camino-common/src/entreprise'
+import { entrepriseFormat } from '../../_format/entreprises.js'
+import { emailCheck } from '../../../tools/email-check.js'
+import { apiInseeEntrepriseAndEtablissementsGet } from '../../../tools/api-insee/index.js'
+import { userGet } from '../../../database/queries/utilisateurs.js'
+import { EntrepriseId } from 'camino-common/src/entreprise.js'
 
 const entreprise = async (
   { id }: { id: string },

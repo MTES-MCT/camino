@@ -1,10 +1,10 @@
-import { Index } from '../../types'
-import { IndexFile } from './_types'
-import { matchFuzzy } from './_utils'
-import { titreEtapeGet } from '../../database/queries/titres-etapes'
-import { userSuper } from '../../database/user-super'
-import { contenuFilesGet } from '../../business/utils/contenu-element-file-process'
-import { etapeTypeSectionsFormat } from '../../api/_format/etapes-types'
+import { Index } from '../../types.js'
+import { IndexFile } from './_types.js'
+import { matchFuzzy } from './_utils.js'
+import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
+import { userSuper } from '../../database/user-super.js'
+import { contenuFilesGet } from '../../business/utils/contenu-element-file-process.js'
+import { etapeTypeSectionsFormat } from '../../api/_format/etapes-types.js'
 
 const etapeGet = (str: string) => str.split('-').slice(0, -1).join('-')
 

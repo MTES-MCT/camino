@@ -1,8 +1,8 @@
 import { Knex } from 'knex'
 import emailRegex from 'email-regex'
 import bcrypt from 'bcryptjs'
-import { IUtilisateur } from '../types'
-import { idGenerate } from '../database/models/_format/id-create'
+import { IUtilisateur } from '../types.js'
+import { idGenerate } from '../database/models/_format/id-create.js'
 
 export const userAdd = async (
   knex: Knex,

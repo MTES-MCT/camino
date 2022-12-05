@@ -1,4 +1,4 @@
-import { DomaineId } from './domaines'
+import { DomaineId } from './domaines.js'
 
 export const SUBSTANCES_LEGALES_IDS = {
   'combustibles fossiles': 'cfxx',

@@ -1,4 +1,4 @@
-import { IContenu, ISection } from '../../../types'
+import { IContenu, ISection } from '../../../types.js'
 
 const sections = [
   {

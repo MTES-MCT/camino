@@ -1,30 +1,40 @@
-import { IFormat, Index, IUser } from '../types'
+import { IFormat, Index, IUser } from '../types.js'
 
 import express from 'express'
 import { join } from 'path'
 
-import { titre, titres, demarches, activites, entreprises } from '../api/rest'
-import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers'
+import {
+  titre,
+  titres,
+  demarches,
+  activites,
+  entreprises
+} from '../api/rest/index.js'
+import {
+  etapeFichier,
+  etapeTelecharger,
+  fichier
+} from '../api/rest/fichiers.js'
 import {
   getTitreLiaisons,
   postTitreLiaisons,
   titresDREAL,
   titresONF,
   titresPTMG
-} from '../api/rest/titres'
-import { fiscalite } from '../api/rest/entreprises'
+} from '../api/rest/titres.js'
+import { fiscalite } from '../api/rest/entreprises.js'
 import {
   generateQgisToken,
   isSubscribedToNewsletter,
   manageNewsletterSubscription,
   utilisateurs
-} from '../api/rest/utilisateurs'
+} from '../api/rest/utilisateurs.js'
 import {
   getDGTMStats,
   getGuyaneStats,
   getMinerauxMetauxMetropolesStats
-} from '../api/rest/statistiques'
-import { CaminoRestRoutes } from 'camino-common/src/rest'
+} from '../api/rest/statistiques/index.js'
+import { CaminoRestRoutes } from 'camino-common/src/rest.js'
 const contentTypes = {
   csv: 'text/csv',
   geojson: 'application/geojson',

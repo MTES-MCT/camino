@@ -1,4 +1,4 @@
-import { updateTerritoires } from '../tools/territoires-update'
+import { updateTerritoires } from '../tools/territoires-update.js'
 
 updateTerritoires()
   .then(() => process.exit(0))

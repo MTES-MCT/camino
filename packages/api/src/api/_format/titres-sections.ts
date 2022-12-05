@@ -1,9 +1,9 @@
-import { ISection, ISectionElement } from '../../types'
+import { ISection, ISectionElement } from '../../types.js'
 
-import { objectClone } from '../../tools/index'
-import { sortedDevises } from 'camino-common/src/static/devise'
-import { UNITES } from 'camino-common/src/static/unites'
-import { exhaustiveCheck } from '../../tools/exhaustive-type-check'
+import { objectClone } from '../../tools/index.js'
+import { sortedDevises } from 'camino-common/src/static/devise.js'
+import { UNITES } from 'camino-common/src/static/unites.js'
+import { exhaustiveCheck } from '../../tools/exhaustive-type-check.js'
 
 const titreSectionElementFormat = (element: ISectionElement) => {
   if (element.valeursMetasNom) {

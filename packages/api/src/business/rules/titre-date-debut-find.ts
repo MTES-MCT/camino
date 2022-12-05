@@ -1,12 +1,12 @@
-import { ITitreDemarche } from '../../types'
+import { ITitreDemarche } from '../../types.js'
 
-import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc'
+import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc.js'
 import {
   titreEtapesSortDescByOrdre,
   titreEtapesSortAscByOrdre
-} from '../utils/titre-etapes-sort'
-import { titreEtapePublicationCheck } from './titre-etape-publication-check'
-import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes'
+} from '../utils/titre-etapes-sort.js'
+import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
+import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
 
 const titreDemarcheDateDebutFind = (
   titreDemarche: ITitreDemarche,

@@ -1,9 +1,9 @@
 import { Model } from 'objection'
 
-import { IJournaux } from '../../types'
-import { idGenerate } from './_format/id-create'
-import Utilisateurs from './utilisateurs'
-import Titres from './titres'
+import { IJournaux } from '../../types.js'
+import { idGenerate } from './_format/id-create.js'
+import Utilisateurs from './utilisateurs.js'
+import Titres from './titres.js'
 
 interface Journaux extends IJournaux {}
 

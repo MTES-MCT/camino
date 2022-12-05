@@ -1,4 +1,4 @@
-import { fiscaliteVisible, fraisGestion, UserFiscalite } from './fiscalite'
+import { fiscaliteVisible, fraisGestion, UserFiscalite } from './fiscalite.js'
 import { test, expect } from 'vitest'
 
 test('fraisGestion', () => {

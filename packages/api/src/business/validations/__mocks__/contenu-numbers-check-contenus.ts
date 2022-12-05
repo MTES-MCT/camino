@@ -1,4 +1,4 @@
-import { ISection } from '../../../types'
+import { ISection } from '../../../types.js'
 
 const sections = [
   { id: 'section', elements: [{ id: 'number', type: 'number' }] }

@@ -1,7 +1,7 @@
-import { IDocument } from '../../types'
-import { DocumentType } from 'camino-common/src/static/documentsTypes'
+import { IDocument } from '../../types.js'
+import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 
-import { documentsTypesValidate } from './documents-types-validate'
+import { documentsTypesValidate } from './documents-types-validate.js'
 import { describe, test, expect } from 'vitest'
 describe('teste documentsTypesValidate', () => {
   test('aucun document type n’est possible', () => {

@@ -1,7 +1,7 @@
-import { titresEtapesGet } from '../../database/queries/titres-etapes'
-import { titresTypesDemarchesTypesEtapesTypesGet } from '../../database/queries/metas'
-import { userSuper } from '../../database/user-super'
-import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
+import { titresTypesDemarchesTypesEtapesTypesGet } from '../../database/queries/metas.js'
+import { userSuper } from '../../database/user-super.js'
+import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 
 export const etapeStatutCheck = async () => {
   console.info()

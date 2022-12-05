@@ -1,12 +1,12 @@
 import { Model, Modifiers, Pojo, QueryContext } from 'objection'
 
-import { ITitreDemarche } from '../../types'
-import { newDemarcheId } from './_format/id-create'
-import DemarchesTypes from './demarches-types'
-import TitresTypes from './titres-types'
-import Titres from './titres'
-import TitresEtapes from './titres-etapes'
-import TitresPhases from './titres-phases'
+import { ITitreDemarche } from '../../types.js'
+import { newDemarcheId } from './_format/id-create.js'
+import DemarchesTypes from './demarches-types.js'
+import TitresTypes from './titres-types.js'
+import Titres from './titres.js'
+import TitresEtapes from './titres-etapes.js'
+import TitresPhases from './titres-phases.js'
 
 export interface DBTitresDemarches extends ITitreDemarche {
   archive: boolean

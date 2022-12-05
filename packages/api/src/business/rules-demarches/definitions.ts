@@ -1,13 +1,13 @@
-import { DemarcheId, IContenuValeur, ITitreEtape } from '../../types'
+import { DemarcheId, IContenuValeur, ITitreEtape } from '../../types.js'
 
-import { restrictionsArmRet } from './arm/ret'
-import { restrictionsArmRenPro } from './arm/ren-pro'
-import { etatsDefinitionPrmOct } from './prm/oct'
-import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot-demande-date-find'
-import { CaminoMachines } from './machines'
-import { ArmOctMachine } from './arm/oct.machine'
-import { AxmOctMachine } from './axm/oct.machine'
-import { newDemarcheId } from '../../database/models/_format/id-create'
+import { restrictionsArmRet } from './arm/ret.js'
+import { restrictionsArmRenPro } from './arm/ren-pro.js'
+import { etatsDefinitionPrmOct } from './prm/oct.js'
+import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot-demande-date-find.js'
+import { CaminoMachines } from './machines.js'
+import { ArmOctMachine } from './arm/oct.machine.js'
+import { AxmOctMachine } from './axm/oct.machine.js'
+import { newDemarcheId } from '../../database/models/_format/id-create.js'
 
 export interface IEtapeTypeIdCondition {
   etapeTypeId?: string

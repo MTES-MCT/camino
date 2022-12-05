@@ -7,18 +7,18 @@ import {
   ITitre,
   ITitreColonneId,
   IUtilisateur
-} from '../../types'
+} from '../../types.js'
 
-import options from './_options'
-import graphBuild from './graph/build'
-import { fieldsFormat } from './graph/fields-format'
-import { titresFieldsAdd } from './graph/fields-add'
+import options from './_options.js'
+import graphBuild from './graph/build.js'
+import { fieldsFormat } from './graph/fields-format.js'
+import { titresFieldsAdd } from './graph/fields-add.js'
 
-import Titres, { DBTitre } from '../models/titres'
-import { titresQueryModify } from './permissions/titres'
-import { titresFiltersQueryModify } from './_titres-filters'
-import TitresDemarches from '../models/titres-demarches'
-import TitresEtapes from '../models/titres-etapes'
+import Titres, { DBTitre } from '../models/titres.js'
+import { titresQueryModify } from './permissions/titres.js'
+import { titresFiltersQueryModify } from './_titres-filters.js'
+import TitresDemarches from '../models/titres-demarches.js'
+import TitresEtapes from '../models/titres-etapes.js'
 
 /**
  * Construit la requête pour récupérer certains champs de titres filtrés

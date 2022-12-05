@@ -1,8 +1,7 @@
-import dateFormat from 'dateformat'
-
-import { titresGet, titreUpdate } from '../../database/queries/titres'
-import { titreStatutIdFind } from '../rules/titre-statut-id-find'
-import { userSuper } from '../../database/user-super'
+import { titresGet, titreUpdate } from '../../database/queries/titres.js'
+import { titreStatutIdFind } from '../rules/titre-statut-id-find.js'
+import { userSuper } from '../../database/user-super.js'
+import { getCurrent } from 'camino-common/src/date.js'
 
 export const titresStatutIdsUpdate = async (titresIds?: string[]) => {
   console.info()
@@ -23,7 +22,7 @@ export const titresStatutIdsUpdate = async (titresIds?: string[]) => {
   )
 
   const titresUpdated = [] as string[]
-  const aujourdhui = dateFormat(new Date(), 'yyyy-mm-dd')
+  const aujourdhui = getCurrent()
 
   for (const titre of titres) {
     const titreStatutId = titreStatutIdFind(

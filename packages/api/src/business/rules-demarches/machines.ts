@@ -1,4 +1,4 @@
-import { ArmOctMachine } from './arm/oct.machine'
-import { AxmOctMachine } from './axm/oct.machine'
+import { ArmOctMachine } from './arm/oct.machine.js'
+import { AxmOctMachine } from './axm/oct.machine.js'
 
 export type CaminoMachines = ArmOctMachine | AxmOctMachine

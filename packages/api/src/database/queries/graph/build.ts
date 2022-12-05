@@ -1,6 +1,6 @@
-import { IFields } from '../../../types'
+import { IFields } from '../../../types.js'
 
-import { objectClone } from '../../../tools/index'
+import { objectClone } from '../../../tools/index.js'
 
 interface IFieldsFormat {
   (fields: IFields, parent: string): IFields

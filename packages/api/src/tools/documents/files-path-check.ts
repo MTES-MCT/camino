@@ -1,5 +1,5 @@
-import { Index } from '../../types'
-import { IndexFile } from './_types'
+import { Index } from '../../types.js'
+import { IndexFile } from './_types.js'
 
 export const filesPathCheck = (
   documentsIndex: IndexFile,

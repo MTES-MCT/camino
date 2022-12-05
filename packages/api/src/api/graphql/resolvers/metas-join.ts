@@ -1,6 +1,6 @@
-import { IToken } from '../../../types'
+import { IToken } from '../../../types.js'
 
-import { userGet } from '../../../database/queries/utilisateurs'
+import { userGet } from '../../../database/queries/utilisateurs.js'
 
 import {
   titresTypesGet,
@@ -9,12 +9,12 @@ import {
   etapesTypesDocumentsTypesGet,
   etapesTypesJustificatifsTypesGet,
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypesGet
-} from '../../../database/queries/metas'
+} from '../../../database/queries/metas.js'
 import { GraphQLResolveInfo } from 'graphql'
-import { fieldsBuild } from './_fields-build'
-import { isSuper } from 'camino-common/src/roles'
-import { toSpecificDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes'
-import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypesTypes_domaine_titresStatuts'
+import { fieldsBuild } from './_fields-build.js'
+import { isSuper } from 'camino-common/src/roles.js'
+import { toSpecificDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes.js'
+import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypesTypes_domaine_titresStatuts.js'
 
 const titresTypes = async (
   _: never,

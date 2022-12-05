@@ -1,5 +1,5 @@
 import '../init'
-import demarchesDefinitionsCheck from '../tools/demarches/definitions-check'
+import demarchesDefinitionsCheck from '../tools/demarches/definitions-check.js'
 
 demarchesDefinitionsCheck()
   .then(() => {

@@ -1,6 +1,6 @@
 import { Model, Modifiers } from 'objection'
-import { IAdministrationTitreTypeTitreStatut } from '../../types'
-import TitresTypes from './titres-types'
+import { IAdministrationTitreTypeTitreStatut } from '../../types.js'
+import TitresTypes from './titres-types.js'
 
 interface AdministrationsTitresTypesTitresStatuts
   extends IAdministrationTitreTypeTitreStatut {}

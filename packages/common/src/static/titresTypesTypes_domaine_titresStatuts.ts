@@ -1,9 +1,9 @@
-import { isNotNullNorUndefined } from '../typescript-tools'
-import { DemarcheTypeId, isDemarcheTypeOctroi } from './demarchesTypes'
-import { DomaineId, DOMAINES_IDS, isDomaineId } from './domaines'
-import { TitresStatutIds, TitreStatutId } from './titresStatuts'
-import { TitreTypeId, toTitreTypeId } from './titresTypes'
-import { TITRES_TYPES_TYPES_IDS, TitreTypeTypeId, isTitreTypeType } from './titresTypesTypes'
+import { isNotNullNorUndefined } from '../typescript-tools.js'
+import { DemarcheTypeId, isDemarcheTypeOctroi } from './demarchesTypes.js'
+import { DomaineId, DOMAINES_IDS, isDomaineId } from './domaines.js'
+import { TitresStatutIds, TitreStatutId } from './titresStatuts.js'
+import { TitreTypeId, toTitreTypeId } from './titresTypes.js'
+import { TITRES_TYPES_TYPES_IDS, TitreTypeTypeId, isTitreTypeType } from './titresTypesTypes.js'
 
 export const titrePublicFind = (
   titreStatutId: TitreStatutId | null | undefined,

@@ -1,7 +1,7 @@
 import { join } from 'path'
 
-import { idGenerate } from '../src/database/models/_format/id-create'
-import { knexInstanceSet } from '../src/knex'
+import { idGenerate } from '../src/database/models/_format/id-create.js'
+import { knexInstanceSet } from '../src/knex.js'
 import knex, { Knex } from 'knex'
 import { Client } from 'pg'
 import { knexSnakeCaseMappers, Model } from 'objection'
@@ -38,11 +38,11 @@ class DbManager {
 
     this.knexInstance = this.getKnex()
     if (newDatabase) {
-      await this.knexInstance.raw('CREATE EXTENSION postgis')
+      await this.knexInstance!.raw('CREATE EXTENSION postgis')
     }
-    Model.knex(this.knexInstance)
-    knexInstanceSet(this.knexInstance)
-    await this.knexInstance.migrate.latest()
+    Model.knex(this.knexInstance!)
+    knexInstanceSet(this.knexInstance!)
+    await this.knexInstance!.migrate.latest()
   }
 
   private getKnex() {
@@ -56,7 +56,9 @@ class DbManager {
         password: DbManager.getPgPassword()
       },
       migrations: {
-        directory: [join(__dirname, '../src/knex/migrations-schema')]
+        directory: [join(__dirname, '../src/knex/migrations-schema')],
+        loadExtensions: ['.ts'],
+        extension: 'ts'
       },
       seeds: {
         directory: join(__dirname, '../src/knex/seeds')

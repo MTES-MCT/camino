@@ -1,4 +1,4 @@
-import titreDemarchesSortAsc from './titre-elements-sort-asc'
+import titreDemarchesSortAsc from './titre-elements-sort-asc.js'
 import {
   titreDemarchesNoEtapesSortedAsc,
   titreDemarchesNoEtapesSortedDesc,
@@ -9,7 +9,7 @@ import {
   titreDemarchesSortedAscResult,
   titreDemarchesSortedDescEqual,
   titreDemarchesSortedDescEqualResult
-} from './__mocks__/titre-demarches-asc-sort-demarches'
+} from './__mocks__/titre-demarches-asc-sort-demarches.js'
 import { describe, test, expect } from 'vitest'
 
 describe('trie les démarches', () => {

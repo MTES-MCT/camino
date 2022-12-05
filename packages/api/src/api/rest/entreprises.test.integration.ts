@@ -1,7 +1,7 @@
-import { newEntrepriseId } from 'camino-common/src/entreprise'
-import { dbManager } from '../../../tests/db-manager'
-import { restCall } from '../../../tests/_utils'
-import { entrepriseUpsert } from '../../database/queries/entreprises'
+import { newEntrepriseId } from 'camino-common/src/entreprise.js'
+import { dbManager } from '../../../tests/db-manager.js'
+import { restCall } from '../../../tests/_utils/index.js'
+import { entrepriseUpsert } from '../../database/queries/entreprises.js'
 import { afterAll, beforeAll, describe, test, expect } from 'vitest'
 
 beforeAll(async () => {

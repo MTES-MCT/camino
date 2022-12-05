@@ -1,5 +1,5 @@
 import Cerbere from 'cerbere'
-import { IUtilisateurCreation } from '../../types'
+import { IUtilisateurCreation } from '../../types.js'
 
 const config = {
   cerbereUrl:

@@ -1,6 +1,6 @@
-import { IActiviteType, ITitreActivite, ITitreDemarche } from '../../types'
+import { IActiviteType, ITitreActivite, ITitreDemarche } from '../../types.js'
 
-import { titreActivitesBuild } from './titre-activites-build'
+import { titreActivitesBuild } from './titre-activites-build.js'
 
 import {
   titreActivitesGra,
@@ -8,7 +8,7 @@ import {
   activiteTypeGra,
   activiteTypeGrp,
   titreDemarches
-} from './__mocks__/titre-activites-build-titres'
+} from './__mocks__/titre-activites-build-titres.js'
 import { describe, expect, test } from 'vitest'
 describe("construction des activités d'un titre", () => {
   const aujourdhui = '2021-01-01'

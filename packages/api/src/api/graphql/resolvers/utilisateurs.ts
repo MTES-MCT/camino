@@ -9,12 +9,12 @@ import {
   IUtilisateur,
   IUtilisateurCreation,
   IUtilisateursColonneId
-} from '../../../types'
+} from '../../../types.js'
 
-import { login as cerbereLogin } from '../../../tools/api-cerbere/index'
+import { login as cerbereLogin } from '../../../tools/api-cerbere/index.js'
 
-import { emailsSend } from '../../../tools/api-mailjet/emails'
-import { fieldsBuild } from './_fields-build'
+import { emailsSend } from '../../../tools/api-mailjet/emails.js'
+import { fieldsBuild } from './_fields-build.js'
 
 import {
   userGet,
@@ -25,15 +25,14 @@ import {
   utilisateurUpsert,
   userByEmailGet,
   utilisateursCount
-} from '../../../database/queries/utilisateurs'
+} from '../../../database/queries/utilisateurs.js'
 
-import { utilisateurUpdationValidate } from '../../../business/validations/utilisateur-updation-validate'
-import { emailCheck } from '../../../tools/email-check'
-import { utilisateurEditionCheck } from '../../_permissions/utilisateur'
-import { userFormat } from '../../_format/users'
-import { newsletterSubscriberUpdate } from '../../../tools/api-mailjet/newsletter'
-import { userSuper } from '../../../database/user-super'
-import dateFormat from 'dateformat'
+import { utilisateurUpdationValidate } from '../../../business/validations/utilisateur-updation-validate.js'
+import { emailCheck } from '../../../tools/email-check.js'
+import { utilisateurEditionCheck } from '../../_permissions/utilisateur.js'
+import { userFormat } from '../../_format/users.js'
+import { newsletterSubscriberUpdate } from '../../../tools/api-mailjet/newsletter.js'
+import { userSuper } from '../../../database/user-super.js'
 import {
   isSuper,
   Role,
@@ -41,7 +40,8 @@ import {
   isAdministration,
   isAdministrationAdmin,
   isBureauDEtudes
-} from 'camino-common/src/roles'
+} from 'camino-common/src/roles.js'
+import { getCurrent } from 'camino-common/src/date.js'
 
 const TOKEN_TTL = '5m'
 
@@ -348,7 +348,7 @@ const utilisateurCreer = async (
       {
         id: await userIdGenerate(),
         ...utilisateur,
-        dateCreation: dateFormat(new Date(), 'dd-mm-yyyy')
+        dateCreation: getCurrent()
       } as IUtilisateur,
       { fields: {} }
     )

@@ -1,4 +1,4 @@
-import { ITitreEtape } from '../../types'
+import { ITitreEtape } from '../../types.js'
 
 // si il y a un dépot de la demande
 // -> retourne la date de cette étape

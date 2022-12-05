@@ -1,9 +1,9 @@
-import { TitreTypeId } from '../static/titresTypes'
-import { EtapeTypeId } from '../static/etapesTypes'
-import { DemarcheTypeId } from '../static/demarchesTypes'
-import { canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck } from './titres-etapes'
-import { User } from '../roles'
-import { ADMINISTRATION_IDS } from '../static/administrations'
+import { TitreTypeId } from '../static/titresTypes.js'
+import { EtapeTypeId } from '../static/etapesTypes.js'
+import { DemarcheTypeId } from '../static/demarchesTypes.js'
+import { canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck } from './titres-etapes.js'
+import { User } from '../roles.js'
+import { ADMINISTRATION_IDS } from '../static/administrations.js'
 import { test, expect } from 'vitest'
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([

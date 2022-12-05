@@ -3,35 +3,39 @@ import {
   StatistiquesMinerauxMetauxMetropole,
   StatistiquesMinerauxMetauxMetropoleSels,
   substancesFiscalesStats
-} from 'camino-common/src/statistiques'
-import { CaminoAnnee, valideAnnee, anneeSuivante } from 'camino-common/src/date'
-import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites'
-import { knex } from '../../../knex'
-import { userSuper } from '../../../database/user-super'
-import { titresGet } from '../../../database/queries/titres'
-import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
+} from 'camino-common/src/statistiques.js'
+import {
+  CaminoAnnee,
+  anneeSuivante,
+  toCaminoAnnee
+} from 'camino-common/src/date.js'
+import { fromUniteFiscaleToUnite } from 'camino-common/src/static/unites.js'
+import { knex } from '../../../knex.js'
+import { userSuper } from '../../../database/user-super.js'
+import { titresGet } from '../../../database/queries/titres.js'
+import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 import {
   SubstanceFiscaleId,
   SubstancesFiscale,
   SUBSTANCES_FISCALES_IDS
-} from 'camino-common/src/static/substancesFiscales'
+} from 'camino-common/src/static/substancesFiscales.js'
 import {
   CodePostal,
   Departements,
   departementsMetropole,
   toDepartementId
-} from 'camino-common/src/static/departement'
-import { REGION_IDS } from 'camino-common/src/static/region'
+} from 'camino-common/src/static/departement.js'
+import { REGION_IDS } from 'camino-common/src/static/region.js'
 import {
   apiOpenfiscaCalculate,
   OpenfiscaRequest,
   redevanceCommunale,
   redevanceDepartementale,
   substanceFiscaleToInput
-} from '../../../tools/api-openfisca'
-import { onlyUnique } from 'camino-common/src/typescript-tools'
-import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
-import { evolutionTitres } from './evolution-titres'
+} from '../../../tools/api-openfisca/index.js'
+import { onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
+import { evolutionTitres } from './evolution-titres.js'
 
 export const getMinerauxMetauxMetropolesStatsInside =
   async (): Promise<StatistiquesMinerauxMetauxMetropole> => {
@@ -178,17 +182,17 @@ const buildSubstances = async (): Promise<
     {}
   )
   // 2022-09-30 Valeurs fournies par Laure dans mattermost : https://mattermost.incubateur.net/camino/pl/3n4y958n6idwbrr4me5rkma1oy
-  bauxiteResult[valideAnnee('2009')] = 178.7
-  bauxiteResult[valideAnnee('2010')] = 132.302
-  bauxiteResult[valideAnnee('2011')] = 117.7
-  bauxiteResult[valideAnnee('2012')] = 65.336
-  bauxiteResult[valideAnnee('2013')] = 109.602
-  bauxiteResult[valideAnnee('2014')] = 71.07
-  bauxiteResult[valideAnnee('2015')] = 80.578
-  bauxiteResult[valideAnnee('2016')] = 112.445
-  bauxiteResult[valideAnnee('2017')] = 131.012
-  bauxiteResult[valideAnnee('2018')] = 138.8
-  bauxiteResult[valideAnnee('2019')] = 120.76
+  bauxiteResult[toCaminoAnnee('2009')] = 178.7
+  bauxiteResult[toCaminoAnnee('2010')] = 132.302
+  bauxiteResult[toCaminoAnnee('2011')] = 117.7
+  bauxiteResult[toCaminoAnnee('2012')] = 65.336
+  bauxiteResult[toCaminoAnnee('2013')] = 109.602
+  bauxiteResult[toCaminoAnnee('2014')] = 71.07
+  bauxiteResult[toCaminoAnnee('2015')] = 80.578
+  bauxiteResult[toCaminoAnnee('2016')] = 112.445
+  bauxiteResult[toCaminoAnnee('2017')] = 131.012
+  bauxiteResult[toCaminoAnnee('2018')] = 138.8
+  bauxiteResult[toCaminoAnnee('2019')] = 120.76
 
   // TODO 2022-10-03 Problème de type postgres (jsonb ou numeric trop gros?), même avec du cast, on obtient des string
   const resultSel: {
@@ -254,7 +258,7 @@ const buildSubstances = async (): Promise<
   )
 
   // Valeurs fournies par Laure : https://trello.com/c/d6YDa4Ao/341-cas-france-relance-dashboard-grand-public-compl%C3%A8te-les-statistiques-v3-sel
-  selsStats.naca[valideAnnee(2009)] = {
+  selsStats.naca[toCaminoAnnee(2009)] = {
     [REGION_IDS['Auvergne-Rhône-Alpes']]: 635.592,
     [REGION_IDS['Bourgogne-Franche-Comté']]: 7.684,
     [REGION_IDS['Grand Est']]: 2692.7,
@@ -262,7 +266,7 @@ const buildSubstances = async (): Promise<
     [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 274.732,
     [REGION_IDS.Occitanie]: 867.001
   }
-  selsStats.naca[valideAnnee(2010)] = {
+  selsStats.naca[toCaminoAnnee(2010)] = {
     [REGION_IDS['Auvergne-Rhône-Alpes']]: 579.385,
     [REGION_IDS['Bourgogne-Franche-Comté']]: 11.645,
     [REGION_IDS['Grand Est']]: 2995.599,
@@ -270,7 +274,7 @@ const buildSubstances = async (): Promise<
     [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 500.564,
     [REGION_IDS.Occitanie]: 990.091
   }
-  selsStats.naca[valideAnnee(2011)] = {
+  selsStats.naca[toCaminoAnnee(2011)] = {
     [REGION_IDS['Auvergne-Rhône-Alpes']]: 959.442,
     [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
     [REGION_IDS['Grand Est']]: 2959.7,
@@ -278,7 +282,7 @@ const buildSubstances = async (): Promise<
     [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 421.48,
     [REGION_IDS.Occitanie]: 958.849
   }
-  selsStats.naca[valideAnnee(2012)] = {
+  selsStats.naca[toCaminoAnnee(2012)] = {
     [REGION_IDS['Auvergne-Rhône-Alpes']]: 936.78,
     [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
     [REGION_IDS['Grand Est']]: 2426.62,
@@ -286,7 +290,7 @@ const buildSubstances = async (): Promise<
     [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 1042.67,
     [REGION_IDS.Occitanie]: 797.099
   }
-  selsStats.naca[valideAnnee(2013)] = {
+  selsStats.naca[toCaminoAnnee(2013)] = {
     [REGION_IDS['Auvergne-Rhône-Alpes']]: 907.994,
     [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
     [REGION_IDS['Grand Est']]: 2703.049,
@@ -294,7 +298,7 @@ const buildSubstances = async (): Promise<
     [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 1300.854,
     [REGION_IDS.Occitanie]: 1010.892
   }
-  selsStats.naca[valideAnnee(2014)] = {
+  selsStats.naca[toCaminoAnnee(2014)] = {
     [REGION_IDS['Auvergne-Rhône-Alpes']]: 763.55,
     [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
     [REGION_IDS['Grand Est']]: 1552.197,
@@ -302,7 +306,7 @@ const buildSubstances = async (): Promise<
     [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 843.83,
     [REGION_IDS.Occitanie]: 1062.216
   }
-  selsStats.naca[valideAnnee(2015)] = {
+  selsStats.naca[toCaminoAnnee(2015)] = {
     [REGION_IDS['Auvergne-Rhône-Alpes']]: 799.949,
     [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
     [REGION_IDS['Grand Est']]: 2444.74,
@@ -310,7 +314,7 @@ const buildSubstances = async (): Promise<
     [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 135.02,
     [REGION_IDS.Occitanie]: 1007.542
   }
-  selsStats.naca[valideAnnee(2016)] = {
+  selsStats.naca[toCaminoAnnee(2016)] = {
     [REGION_IDS['Auvergne-Rhône-Alpes']]: 830.577,
     [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
     [REGION_IDS['Grand Est']]: 2377.175,
@@ -318,7 +322,7 @@ const buildSubstances = async (): Promise<
     [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 95.859,
     [REGION_IDS.Occitanie]: 926.388
   }
-  selsStats.naca[valideAnnee(2017)] = {
+  selsStats.naca[toCaminoAnnee(2017)] = {
     [REGION_IDS['Auvergne-Rhône-Alpes']]: 869.676,
     [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
     [REGION_IDS['Grand Est']]: 2585.934,
@@ -326,7 +330,7 @@ const buildSubstances = async (): Promise<
     [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 91.718,
     [REGION_IDS.Occitanie]: 1082.021
   }
-  selsStats.naca[valideAnnee(2018)] = {
+  selsStats.naca[toCaminoAnnee(2018)] = {
     [REGION_IDS['Auvergne-Rhône-Alpes']]: 870.718,
     [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
     [REGION_IDS['Grand Est']]: 2481.271,
@@ -334,7 +338,7 @@ const buildSubstances = async (): Promise<
     [REGION_IDS["Provence-Alpes-Côte d'Azur"]]: 150.524,
     [REGION_IDS.Occitanie]: 997.862
   }
-  selsStats.naca[valideAnnee(2019)] = {
+  selsStats.naca[toCaminoAnnee(2019)] = {
     [REGION_IDS['Auvergne-Rhône-Alpes']]: 792.394,
     [REGION_IDS['Bourgogne-Franche-Comté']]: 0,
     [REGION_IDS['Grand Est']]: 2537.412,

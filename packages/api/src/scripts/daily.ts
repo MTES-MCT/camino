@@ -1,6 +1,6 @@
 import '../init'
 
-import daily from '../business/daily'
+import daily from '../business/daily.js'
 
 daily()
   .then(() => {

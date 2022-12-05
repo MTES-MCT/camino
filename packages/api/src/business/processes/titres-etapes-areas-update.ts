@@ -4,19 +4,19 @@ import {
   geojsonIntersectsSecteursMaritime,
   geojsonIntersectsForets,
   geojsonIntersectsSDOM
-} from '../../tools/geojson'
-import { titresEtapesGet } from '../../database/queries/titres-etapes'
-import TitresCommunes from '../../database/models/titres-communes'
-import TitresForets from '../../database/models/titres-forets'
-import { userSuper } from '../../database/user-super'
-import TitresSDOMZones from '../../database/models/titres--sdom-zones'
-import { Feature } from '@turf/helpers'
-import TitresEtapes from '../../database/models/titres-etapes'
+} from '../../tools/geojson.js'
+import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
+import TitresCommunes from '../../database/models/titres-communes.js'
+import TitresForets from '../../database/models/titres-forets.js'
+import { userSuper } from '../../database/user-super.js'
+import TitresSDOMZones from '../../database/models/titres--sdom-zones.js'
+import { Feature } from 'geojson'
+import TitresEtapes from '../../database/models/titres-etapes.js'
 import {
   getSecteurMaritime,
   SecteursMaritimes
-} from 'camino-common/src/static/facades'
-import { knex } from '../../knex'
+} from 'camino-common/src/static/facades.js'
+import { knex } from '../../knex.js'
 
 /**
  * Met à jour tous les territoires d’une liste d’étapes

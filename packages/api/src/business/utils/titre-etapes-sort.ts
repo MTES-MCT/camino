@@ -1,11 +1,11 @@
-import { DemarcheId, IDemarcheType, ITitreEtape } from '../../types'
+import { DemarcheId, IDemarcheType, ITitreEtape } from '../../types.js'
 import {
   demarcheDefinitionFind,
   IDemarcheDefinition,
   IDemarcheDefinitionRestrictions,
   isDemarcheDefinitionMachine
-} from '../rules-demarches/definitions'
-import { toMachineEtapes } from '../rules-demarches/machine-common'
+} from '../rules-demarches/definitions.js'
+import { toMachineEtapes } from '../rules-demarches/machine-common.js'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
 export const titreEtapesSortDescByOrdre = <

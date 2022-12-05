@@ -2,30 +2,33 @@ import { FileUpload } from 'graphql-upload'
 import {
   AdministrationId,
   AdministrationTypeId
-} from 'camino-common/src/static/administrations'
-import { CodePostal, DepartementId } from 'camino-common/src/static/departement'
-import { RegionId } from 'camino-common/src/static/region'
-import { GeoSystemeId } from 'camino-common/src/static/geoSystemes'
-import { Role } from 'camino-common/src/roles'
-import { DomaineId } from 'camino-common/src/static/domaines'
-import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
-import { PaysId } from 'camino-common/src/static/pays'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts'
-import { Couleur } from 'camino-common/src/static/couleurs'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
-import { UniteId } from 'camino-common/src/static/unites'
-import { FrequenceId } from 'camino-common/src/static/frequence'
-import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts'
-import { TitreStatutId } from 'camino-common/src/static/titresStatuts'
-import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts'
-import { TitreReference } from 'camino-common/src/titres-references'
-import { DocumentType } from 'camino-common/src/static/documentsTypes'
-import { SecteursMaritimes } from 'camino-common/src/static/facades'
-import { CaminoDate } from 'camino-common/src/date'
-import { EntrepriseId } from 'camino-common/src/entreprise'
+} from 'camino-common/src/static/administrations.js'
+import {
+  CodePostal,
+  DepartementId
+} from 'camino-common/src/static/departement.js'
+import { RegionId } from 'camino-common/src/static/region.js'
+import { GeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
+import { Role } from 'camino-common/src/roles.js'
+import { DomaineId } from 'camino-common/src/static/domaines.js'
+import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes.js'
+import { PaysId } from 'camino-common/src/static/pays.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
+import { Couleur } from 'camino-common/src/static/couleurs.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
+import { UniteId } from 'camino-common/src/static/unites.js'
+import { FrequenceId } from 'camino-common/src/static/frequence.js'
+import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
+import { TitreStatutId } from 'camino-common/src/static/titresStatuts.js'
+import { PhaseStatutId } from 'camino-common/src/static/phasesStatuts.js'
+import { TitreReference } from 'camino-common/src/titres-references.js'
+import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
+import { SecteursMaritimes } from 'camino-common/src/static/facades.js'
+import { CaminoDate } from 'camino-common/src/date.js'
+import { EntrepriseId } from 'camino-common/src/entreprise.js'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -538,7 +541,7 @@ interface ITitreActivite {
   slug?: string
   titreId: string
   titre?: ITitre | null
-  date: string
+  date: CaminoDate
   typeId: string
   type?: IActiviteType | null
   statutId: string
@@ -547,7 +550,7 @@ interface ITitreActivite {
   annee: number
   utilisateurId?: string | null
   utilisateur?: IUtilisateur | null
-  dateSaisie?: string
+  dateSaisie?: CaminoDate
   contenu?: IContenu | null
   sections: ISection[]
   documents?: IDocument[] | null

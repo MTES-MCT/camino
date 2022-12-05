@@ -1,13 +1,13 @@
 import { Model, Modifiers, Pojo, QueryContext } from 'objection'
 
-import { ITitreActivite } from '../../types'
-import { idGenerate } from './_format/id-create'
-import ActivitesTypes from './activites-types'
-import Titres from './titres'
-import ActivitesStatuts from './activites-statuts'
-import Utilisateurs from './utilisateurs'
-import DocumentsTypes from './documents-types'
-import Document from './documents'
+import { ITitreActivite } from '../../types.js'
+import { idGenerate } from './_format/id-create.js'
+import ActivitesTypes from './activites-types.js'
+import Titres from './titres.js'
+import ActivitesStatuts from './activites-statuts.js'
+import Utilisateurs from './utilisateurs.js'
+import DocumentsTypes from './documents-types.js'
+import Document from './documents.js'
 
 interface TitresActivites extends ITitreActivite {}
 

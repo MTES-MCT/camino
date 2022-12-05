@@ -1,9 +1,9 @@
 import { Model, Modifiers } from 'objection'
-import { IActiviteType } from '../../types'
-import TitresTypes from './titres-types'
-import Administrations from './administrations'
-import DocumentsTypes from './documents-types'
-import ActivitesTypesPays from './activites-types--pays'
+import { IActiviteType } from '../../types.js'
+import TitresTypes from './titres-types.js'
+import Administrations from './administrations.js'
+import DocumentsTypes from './documents-types.js'
+import ActivitesTypesPays from './activites-types--pays.js'
 
 interface ActivitesTypes extends IActiviteType {}
 

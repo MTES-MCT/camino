@@ -1,21 +1,21 @@
-import { IAdministration, ITitreEtape, ICommune } from '../../types'
+import { IAdministration, ITitreEtape, ICommune } from '../../types.js'
 
-import { titresEtapesGet } from '../../database/queries/titres-etapes'
-import { userSuper } from '../../database/user-super'
+import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
+import { userSuper } from '../../database/user-super.js'
 import {
   DepartementId,
   Departements
-} from 'camino-common/src/static/departement'
+} from 'camino-common/src/static/departement.js'
 import {
   getDepartementsBySecteurs,
   SecteursMaritimes
-} from 'camino-common/src/static/facades'
-import { onlyUnique } from 'camino-common/src/typescript-tools'
+} from 'camino-common/src/static/facades.js'
+import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import {
   AdministrationId,
   sortedAdministrations
-} from 'camino-common/src/static/administrations'
-import { knex } from '../../knex'
+} from 'camino-common/src/static/administrations.js'
+import { knex } from '../../knex.js'
 
 interface ITitreEtapeAdministrationLocale {
   titreEtapeAdministrationsLocalesOld: AdministrationId[]

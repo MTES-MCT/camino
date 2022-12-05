@@ -1,8 +1,8 @@
-import { IDemarcheType, ITitre, ITitreEtape, ITitreType } from '../../types'
+import { IDemarcheType, ITitre, ITitreEtape, ITitreType } from '../../types.js'
 
-import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate'
-import { newDemarcheId } from '../../database/models/_format/id-create'
-import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'
+import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { EtapesTypesEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { describe, test, expect } from 'vitest'
 describe('teste titreDemarcheUpdatedEtatValidate', () => {
   test('ajoute une étape à une démarche vide', () => {

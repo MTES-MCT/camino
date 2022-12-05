@@ -1,16 +1,16 @@
-import { ITitreEtape, IUtilisateur } from '../../types'
+import { ITitreEtape, IUtilisateur } from '../../types.js'
 
-import { titreEtapeUpdate } from '../../database/queries/titres-etapes'
-import { titresDemarchesGet } from '../../database/queries/titres-demarches'
+import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
+import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
 import {
   etapeSectionsDictionaryBuild,
   titreEtapeHeritageContenuFind
-} from '../utils/titre-etape-heritage-contenu-find'
-import { userSuper } from '../../database/user-super'
+} from '../utils/titre-etape-heritage-contenu-find.js'
+import { userSuper } from '../../database/user-super.js'
 import {
   titreEtapesSortAscByOrdre,
   titreEtapesSortDescByOrdre
-} from '../utils/titre-etapes-sort'
+} from '../utils/titre-etapes-sort.js'
 
 export const titresEtapesHeritageContenuUpdate = async (
   user: IUtilisateur,

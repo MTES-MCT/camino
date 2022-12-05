@@ -2,5 +2,5 @@
   "watch": ["src"],
   "ext": "ts, js, graphql",
   "ignore": [".git", "node_modules", "*.test.ts", "*.test.integration.ts"],
-  "exec": "node -r ts-node/register/transpile-only --inspect ./src/index.ts"
+  "exec": "node --loader ts-node/esm/transpile-only --inspect ./src/index.ts"
 }

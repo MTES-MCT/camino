@@ -1,5 +1,5 @@
-import { titreTerritoiresFind } from './titres'
-import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
+import { titreTerritoiresFind } from './titres.js'
+import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement.js'
 import { describe, expect, test } from 'vitest'
 describe('titreTerritoiresFind', () => {
   test('titreTerritoiresFind uniquement des communes', () => {

@@ -1,9 +1,9 @@
-import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape } from './metas'
-import TitresDemarches from '../../../database/models/titres-demarches'
-import { IEtapeType } from '../../../types'
-import { newDemarcheId } from '../../../database/models/_format/id-create'
-import { ArmOctMachine } from '../../../business/rules-demarches/arm/oct.machine'
-import { toCaminoDate } from 'camino-common/src/date'
+import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape } from './metas.js'
+import TitresDemarches from '../../../database/models/titres-demarches.js'
+import { IEtapeType } from '../../../types.js'
+import { newDemarcheId } from '../../../database/models/_format/id-create.js'
+import { ArmOctMachine } from '../../../business/rules-demarches/arm/oct.machine.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 
 describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {

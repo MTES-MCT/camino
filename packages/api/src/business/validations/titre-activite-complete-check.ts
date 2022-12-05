@@ -1,7 +1,7 @@
-import { IContenu, IDocument, ISection } from '../../types'
+import { IContenu, IDocument, ISection } from '../../types.js'
 
-import { documentsTypesValidate } from './documents-types-validate'
-import { DocumentType } from 'camino-common/src/static/documentsTypes'
+import { documentsTypesValidate } from './documents-types-validate.js'
+import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 
 export const titreActiviteCompleteCheck = (
   sections: ISection[],

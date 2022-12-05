@@ -3,19 +3,19 @@ import {
   IFields,
   IUtilisateur,
   ITitreEtapeJustificatif
-} from '../../types'
-import options from './_options'
-import graphBuild from './graph/build'
-import { fieldsFormat } from './graph/fields-format'
+} from '../../types.js'
+import options from './_options.js'
+import graphBuild from './graph/build.js'
+import { fieldsFormat } from './graph/fields-format.js'
 
-import TitresEtapes, { DBTitresEtapes } from '../models/titres-etapes'
-import TitresEtapesJustificatifs from '../models/titres-etapes-justificatifs'
-import { titresEtapesQueryModify } from './permissions/titres-etapes'
+import TitresEtapes, { DBTitresEtapes } from '../models/titres-etapes.js'
+import TitresEtapesJustificatifs from '../models/titres-etapes-justificatifs.js'
+import { titresEtapesQueryModify } from './permissions/titres-etapes.js'
 import {
   createJournalCreate,
   patchJournalCreate,
   upsertJournalCreate
-} from './journaux'
+} from './journaux.js'
 
 const titresEtapesQueryBuild = (
   { fields }: { fields?: IFields },

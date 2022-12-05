@@ -1,5 +1,5 @@
 // valide la date et la position de l'étape en fonction des autres étapes
-import { ITitreEtape, IContenu, Index } from '../../types'
+import { ITitreEtape, IContenu, Index } from '../../types.js'
 
 import {
   ITitreCondition,
@@ -7,7 +7,7 @@ import {
   IEtapeTypeIdCondition,
   IDemarcheDefinitionRestrictions,
   IDemarcheDefinitionRestrictionsProps
-} from '../rules-demarches/definitions'
+} from '../rules-demarches/definitions.js'
 
 const contenuConditionMatch = (
   condition: IContenuElementCondition,

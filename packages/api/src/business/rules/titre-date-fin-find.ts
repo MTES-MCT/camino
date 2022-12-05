@@ -1,7 +1,7 @@
-import { ITitreDemarche } from '../../types'
+import { ITitreDemarche } from '../../types.js'
 
-import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc'
-import titreDemarcheDateFinAndDureeFind from './titre-demarche-date-fin-duree-find'
+import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc.js'
+import titreDemarcheDateFinAndDureeFind from './titre-demarche-date-fin-duree-find.js'
 
 export const titreDateFinFind = (titreDemarches: ITitreDemarche[]) => {
   // la dernière démarche dont le statut est acceptée ou terminée

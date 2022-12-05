@@ -1,6 +1,6 @@
-import { emailsForAdministrationsGet } from './_titre-etape-email'
-import { IUtilisateur } from '../../../types'
-import { userSuper } from '../../../database/user-super'
+import { emailsForAdministrationsGet } from './_titre-etape-email.js'
+import { IUtilisateur } from '../../../types.js'
+import { userSuper } from '../../../database/user-super.js'
 import { expect, test } from 'vitest'
 
 test('envoie un email sur une étape non existante', () => {

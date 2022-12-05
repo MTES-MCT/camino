@@ -1,13 +1,13 @@
-import { titresEtapesOrdreUpdate } from './titres-etapes-ordre-update'
-import { titreEtapeUpdate } from '../../database/queries/titres-etapes'
-import { titresDemarchesGet } from '../../database/queries/titres-demarches'
+import { titresEtapesOrdreUpdate } from './titres-etapes-ordre-update.js'
+import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
+import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
 
 import {
   titresDemarchesEtapes,
   titresDemarchesEtapesVides
-} from './__mocks__/titres-etapes-ordre-update-demarches'
-import TitresDemarches from '../../database/models/titres-demarches'
-import { userSuper } from '../../database/user-super'
+} from './__mocks__/titres-etapes-ordre-update-demarches.js'
+import TitresDemarches from '../../database/models/titres-demarches.js'
+import { userSuper } from '../../database/user-super.js'
 import { vi, afterEach, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres-etapes', () => ({
   titreEtapeUpdate: vi.fn().mockResolvedValue(true)

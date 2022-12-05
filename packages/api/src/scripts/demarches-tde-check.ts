@@ -1,5 +1,5 @@
 import '../init'
-import { titreTypeDemarcheTypeEtapeTypeCheck } from '../tools/demarches/tde-check'
+import { titreTypeDemarcheTypeEtapeTypeCheck } from '../tools/demarches/tde-check.js'
 
 titreTypeDemarcheTypeEtapeTypeCheck()
   .then(() => {

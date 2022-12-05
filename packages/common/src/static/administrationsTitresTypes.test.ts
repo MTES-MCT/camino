@@ -1,6 +1,6 @@
-import { AdministrationId, ADMINISTRATION_IDS } from './administrations'
-import { isAssociee, isGestionnaire, getTitreTypeIdsByAdministration } from './administrationsTitresTypes'
-import { TitresTypesIds, TitreTypeId } from './titresTypes'
+import { AdministrationId, ADMINISTRATION_IDS } from './administrations.js'
+import { isAssociee, isGestionnaire, getTitreTypeIdsByAdministration } from './administrationsTitresTypes.js'
+import { TitresTypesIds, TitreTypeId } from './titresTypes.js'
 import { test, expect } from 'vitest'
 
 interface AdministrationsWithTitreTypeId {

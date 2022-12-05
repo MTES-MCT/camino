@@ -1,19 +1,19 @@
 import { raw, QueryBuilder, RawBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types'
+import { IUtilisateur } from '../../../types.js'
 
-import Titres from '../../models/titres'
-import TitresEtapes from '../../models/titres-etapes'
-import TitresDemarches from '../../models/titres-demarches'
+import Titres from '../../models/titres.js'
+import TitresEtapes from '../../models/titres-etapes.js'
+import TitresDemarches from '../../models/titres-demarches.js'
 
-import { titresEtapesQueryModify } from './titres-etapes'
+import { titresEtapesQueryModify } from './titres-etapes.js'
 import {
   titresQueryModify,
   titresDemarchesAdministrationsModificationQuery
-} from './titres'
-import { administrationsEtapesTypesPropsQuery } from './metas'
-import { administrationsTitresQuery } from './administrations'
-import { entreprisesTitresQuery } from './entreprises'
+} from './titres.js'
+import { administrationsEtapesTypesPropsQuery } from './metas.js'
+import { administrationsTitresQuery } from './administrations.js'
+import { entreprisesTitresQuery } from './entreprises.js'
 import {
   isSuper,
   isAdministration,
@@ -21,7 +21,7 @@ import {
   isAdministrationAdmin,
   isAdministrationEditeur,
   isBureauDEtudes
-} from 'camino-common/src/roles'
+} from 'camino-common/src/roles.js'
 
 export const titresDemarchesQueryModify = (
   q: QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>,

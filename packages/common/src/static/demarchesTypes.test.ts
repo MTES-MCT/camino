@@ -1,4 +1,4 @@
-import { DemarchesTypesIds, DEMARCHES_TYPES_IDS, isDemarcheTypeId, isDemarcheTypeOctroi, isDemarcheTypeWithPhase } from './demarchesTypes'
+import { DemarchesTypesIds, DEMARCHES_TYPES_IDS, isDemarcheTypeId, isDemarcheTypeOctroi, isDemarcheTypeWithPhase } from './demarchesTypes.js'
 import { test, expect } from 'vitest'
 
 test('isDemarcheTypeId', () => {

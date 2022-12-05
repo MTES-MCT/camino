@@ -1,4 +1,4 @@
-import { IFields } from '../../types'
+import { IFields } from '../../types.js'
 
 export const titreEtapeFormatFields = {
   geojsonMultiPolygon: {},

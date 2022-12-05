@@ -1,5 +1,5 @@
-import { ITitreEtape, IEtapeType, ITitreDemarche } from '../../types'
-import { titreInSurvieProvisoire } from './titre-statut-id-find'
+import { ITitreEtape, IEtapeType, ITitreDemarche } from '../../types.js'
+import { titreInSurvieProvisoire } from './titre-statut-id-find.js'
 const titreDemarchePublicLectureFind = (
   publicLecture: boolean,
   demarcheTypeId: string,

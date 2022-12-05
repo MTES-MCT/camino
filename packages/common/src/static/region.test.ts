@@ -1,4 +1,4 @@
-import { isRegionId } from './region'
+import { isRegionId } from './region.js'
 import { test, expect } from 'vitest'
 
 test('isRegionId', () => {

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { ISectionElement } from '../../../types'
+import { ISectionElement } from '../../../types.js'
 import { describe, test, expect } from 'vitest'
 
-import { heritageContenuValidate } from './heritage-contenu-validate'
+import { heritageContenuValidate } from './heritage-contenu-validate.js'
 
 describe('vérifie la structure json de heritageContenu', () => {
   test('la structure est correcte', () => {

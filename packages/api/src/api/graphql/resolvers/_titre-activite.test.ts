@@ -1,12 +1,12 @@
 import {
   productionCheck,
   titreActiviteAdministrationsEmailsGet
-} from './_titre-activite'
-import { IAdministrationActiviteTypeEmail, IContenu } from '../../../types'
+} from './_titre-activite.js'
+import { IAdministrationActiviteTypeEmail, IContenu } from '../../../types.js'
 import {
   AdministrationId,
   ADMINISTRATION_IDS
-} from 'camino-common/src/static/administrations'
+} from 'camino-common/src/static/administrations.js'
 import { describe, expect, test } from 'vitest'
 
 describe('teste la construction des emails lors du dépôt d’une activité', () => {

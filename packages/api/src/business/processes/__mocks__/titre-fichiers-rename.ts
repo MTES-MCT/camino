@@ -1,4 +1,4 @@
-import { ITitre } from '../../../types'
+import { ITitre } from '../../../types.js'
 
 const titreNew = {
   id: 'new-titre-id',

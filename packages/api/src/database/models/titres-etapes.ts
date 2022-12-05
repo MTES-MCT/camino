@@ -1,21 +1,21 @@
 import { Model, Pojo, QueryContext } from 'objection'
 
-import { ITitreEtape, ITitrePoint } from '../../types'
+import { ITitreEtape, ITitrePoint } from '../../types.js'
 
 import {
   heritagePropsFormat,
   heritageContenuFormat
-} from './_format/titre-etape-heritage'
-import { idGenerate } from './_format/id-create'
-import EtapesTypes from './etapes-types'
-import TitresDemarches from './titres-demarches'
-import TitresPoints from './titres-points'
-import Entreprises from './entreprises'
-import Document from './documents'
-import Communes from './communes'
-import Forets from './forets'
-import SDOMZones from './sdom-zones'
-import Journaux from './journaux'
+} from './_format/titre-etape-heritage.js'
+import { idGenerate } from './_format/id-create.js'
+import EtapesTypes from './etapes-types.js'
+import TitresDemarches from './titres-demarches.js'
+import TitresPoints from './titres-points.js'
+import Entreprises from './entreprises.js'
+import Document from './documents.js'
+import Communes from './communes.js'
+import Forets from './forets.js'
+import SDOMZones from './sdom-zones.js'
+import Journaux from './journaux.js'
 
 export interface DBTitresEtapes extends ITitreEtape {
   archive: boolean

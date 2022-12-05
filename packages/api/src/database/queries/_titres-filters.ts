@@ -1,16 +1,16 @@
 import { QueryBuilder, raw } from 'objection'
 
-import { stringSplit } from './_utils'
+import { stringSplit } from './_utils.js'
 
-import Titres from '../models/titres'
-import TitresDemarches from '../models/titres-demarches'
-import TitresActivites from '../models/titres-activites'
+import Titres from '../models/titres.js'
+import TitresDemarches from '../models/titres-demarches.js'
+import TitresActivites from '../models/titres-activites.js'
 import {
   DepartementId,
   departements
-} from 'camino-common/src/static/departement'
-import { regions } from 'camino-common/src/static/region'
-import { isPaysId } from 'camino-common/src/static/pays'
+} from 'camino-common/src/static/departement.js'
+import { regions } from 'camino-common/src/static/region.js'
+import { isPaysId } from 'camino-common/src/static/pays.js'
 
 type ITitreTableName = 'titres' | 'titre'
 type ITitreRootName = 'titres' | 'titresDemarches' | 'titresActivites'

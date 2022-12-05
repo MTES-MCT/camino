@@ -1,6 +1,6 @@
-import { ITitreDemarche } from '../../../types'
-import { newDemarcheId } from '../../../database/models/_format/id-create'
-import { toCaminoDate } from 'camino-common/src/date'
+import { ITitreDemarche } from '../../../types.js'
+import { newDemarcheId } from '../../../database/models/_format/id-create.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 
 const titreDemarchesOctDateFin = [
   {

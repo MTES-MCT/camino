@@ -1,11 +1,11 @@
-import { titreActiviteStatutIdFind } from './titre-activite-statut-id-find'
+import { titreActiviteStatutIdFind } from './titre-activite-statut-id-find.js'
 import { describe, expect, test } from 'vitest'
 import {
   titreActiviteFermee,
   titreActiviteDeposee,
   titreActiviteAbsenteDelaiDepasse,
   titreActiviteEnCoursDelaiNonDepasse
-} from './__mocks__/titre-activite-statut-id-find-activites'
+} from './__mocks__/titre-activite-statut-id-find-activites.js'
 
 describe("statut d'une activité", () => {
   test('une activité dont le statut est “fermé" garde le statut "fermé"', () => {

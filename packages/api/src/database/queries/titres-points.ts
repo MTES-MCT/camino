@@ -1,9 +1,9 @@
-import { ITitrePoint, ITitrePointReference } from '../../types'
+import { ITitrePoint, ITitrePointReference } from '../../types.js'
 
-import options from './_options'
+import options from './_options.js'
 
-import TitresPoints from '../models/titres-points'
-import TitresPointsReferences from '../models/titres-points-references'
+import TitresPoints from '../models/titres-points.js'
+import TitresPointsReferences from '../models/titres-points-references.js'
 
 const titresPointsGet = async () =>
   TitresPoints.query().withGraphFetched(options.points.graph)

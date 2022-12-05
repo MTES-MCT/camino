@@ -1,7 +1,7 @@
 import { mkdirSync, readFileSync, rmdirSync } from 'fs'
 import { vi, beforeEach, afterEach, describe, expect, test } from 'vitest'
-import fileRename from './file-rename'
-import fileCreate from './file-create'
+import fileRename from './file-rename.js'
+import fileCreate from './file-create.js'
 
 console.error = vi.fn()
 console.info = vi.fn()

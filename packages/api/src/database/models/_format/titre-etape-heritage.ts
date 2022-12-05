@@ -1,6 +1,6 @@
-import { IHeritageProps, IFields, IHeritageContenu } from '../../../types'
-import { userSuper } from '../../user-super'
-import { titreEtapeGet } from '../../queries/titres-etapes'
+import { IHeritageProps, IFields, IHeritageContenu } from '../../../types.js'
+import { userSuper } from '../../user-super.js'
+import { titreEtapeGet } from '../../queries/titres-etapes.js'
 
 const heritagePropsFormat = async (heritageProps: IHeritageProps) => {
   for (const propId of Object.keys(heritageProps)) {

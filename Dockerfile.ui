@@ -1,6 +1,6 @@
 #https://github.com/fabriziocucci/vuejs.org/blob/7f9aa12833c085b97a826df3ba240f7d9e069e1b/src/v2/cookbook/dockerize-vuejs-app.md
 
-FROM node:18.7-alpine as build-stage
+FROM node:19.1-alpine as build-stage
 LABEL maintainer=francois.romain@beta.gouv.fr
 ARG GIT_SHA
 ENV GIT_SHA=${GIT_SHA}
@@ -15,14 +15,13 @@ RUN CI=true make install
 COPY ./ /app/
 RUN make build/ui
 
-FROM node:18.7-alpine as production-stage
+FROM node:19.1-alpine as production-stage
 
 COPY --from=build-stage /app/package*.json ./
 COPY --from=build-stage /app/packages/ui/package.json ./packages/ui/package.json
-# Doit être supprimer quand on enlève l'express serveur frontal qui sert à rien
 COPY Makefile /app/Makefile
 RUN apk add make && cd /app && CI=true make install/prod
 COPY --from=build-stage /app/packages/ui/dist ./packages/ui/dist
 COPY --from=build-stage /app/packages/ui/index.js ./packages/ui/index.js
 
-CMD ["npm", "start", "-w", "packages/ui"]
+CMD ["make", "start/ui"]

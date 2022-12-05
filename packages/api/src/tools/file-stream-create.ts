@@ -1,6 +1,6 @@
 import { createWriteStream, unlink } from 'fs'
 
-import errorLog from './error-log'
+import errorLog from './error-log.js'
 
 const fileStreamCreate = async (stream: any, path: string) =>
   new Promise((resolve, reject) => {

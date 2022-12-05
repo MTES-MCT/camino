@@ -1,5 +1,5 @@
 import { Model } from 'objection'
-import { ITitreTypeDemarcheTypeEtapeTypeJustificatifType } from '../../types'
+import { ITitreTypeDemarcheTypeEtapeTypeJustificatifType } from '../../types.js'
 
 interface TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes
   extends ITitreTypeDemarcheTypeEtapeTypeJustificatifType {}

@@ -1,7 +1,7 @@
-import { graphQLCall, queryImport } from '../../../tests/_utils/index'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
 
-import { dbManager } from '../../../tests/db-manager'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
+import { dbManager } from '../../../tests/db-manager.js'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { beforeAll, afterAll, test, expect, describe, vi } from 'vitest'
 
 console.info = vi.fn()

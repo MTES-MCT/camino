@@ -1,9 +1,9 @@
-import { IPropsTitreEtapesIds, propsTitreEtapeIdKeys } from '../../types'
+import { IPropsTitreEtapesIds, propsTitreEtapeIdKeys } from '../../types.js'
 
-import { titresGet, titreUpdate } from '../../database/queries/titres'
-import { titrePropTitreEtapeFind } from '../rules/titre-prop-etape-find'
-import { objectsDiffer } from '../../tools/index'
-import { userSuper } from '../../database/user-super'
+import { titresGet, titreUpdate } from '../../database/queries/titres.js'
+import { titrePropTitreEtapeFind } from '../rules/titre-prop-etape-find.js'
+import { objectsDiffer } from '../../tools/index.js'
+import { userSuper } from '../../database/user-super.js'
 
 export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
   console.info()

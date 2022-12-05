@@ -1,5 +1,5 @@
-import { AdministrationId } from './static/administrations'
-import { isNotNullNorUndefined } from './typescript-tools'
+import { AdministrationId } from './static/administrations.js'
+import { isNotNullNorUndefined } from './typescript-tools.js'
 export const ROLES = ['super', 'admin', 'editeur', 'lecteur', 'entreprise', 'bureau d’études', 'defaut'] as const
 export type Role = typeof ROLES[number]
 type UserEntreprise = { role: 'entreprise'; administrationId: undefined; entreprises: string[] }

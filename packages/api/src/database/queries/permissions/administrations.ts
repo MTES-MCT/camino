@@ -1,25 +1,25 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types'
+import { IUtilisateur } from '../../../types.js'
 
-import { knex } from '../../../knex'
+import { knex } from '../../../knex.js'
 
-import AdministrationsModel from '../../models/administrations'
-import Utilisateurs from '../../models/utilisateurs'
-import { utilisateursQueryModify } from './utilisateurs'
+import AdministrationsModel from '../../models/administrations.js'
+import Utilisateurs from '../../models/utilisateurs.js'
+import { utilisateursQueryModify } from './utilisateurs.js'
 import {
   isAdministrationAdmin,
   isAdministrationEditeur,
   isSuper
-} from 'camino-common/src/roles'
+} from 'camino-common/src/roles.js'
 import {
   AdministrationId,
   Administrations,
   sortedAdministrations
-} from 'camino-common/src/static/administrations'
-import { Departements } from 'camino-common/src/static/departement'
-import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+} from 'camino-common/src/static/administrations.js'
+import { Departements } from 'camino-common/src/static/departement.js'
+import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 const administrationsQueryModify = (
   q: QueryBuilder<

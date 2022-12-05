@@ -8,29 +8,29 @@
  * You should have received a copy of the GNU Affero General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-import './init'
+import './init.js'
 import compression from 'compression'
 import cors from 'cors'
 import express from 'express'
 import rateLimit from 'express-rate-limit'
 import * as Sentry from '@sentry/node'
 
-import { port, url } from './config/index'
-import { rest } from './server/rest'
-import { graphql } from './server/graphql'
-import { authJwt, authJwtError } from './server/auth-jwt'
-import { authBasic } from './server/auth-basic'
+import { port, url } from './config/index.js'
+import { rest } from './server/rest.js'
+import { graphql } from './server/graphql.js'
+import { authJwt, authJwtError } from './server/auth-jwt.js'
+import { authBasic } from './server/auth-basic.js'
 import {
   restUpload,
   graphqlUpload,
   uploadAllowedMiddleware
-} from './server/upload'
-import { databaseInit } from './database/init'
+} from './server/upload.js'
+import { databaseInit } from './database/init.js'
 
-import { consoleOverride } from './config/logger'
+import { consoleOverride } from './config/logger.js'
 import cookieParser from 'cookie-parser'
-import { filesInit } from './config/files'
-import { geoSystemesInit } from './config/proj4'
+import { filesInit } from './config/files.js'
+import { geoSystemesInit } from './config/proj4.js'
 
 consoleOverride()
 geoSystemesInit()
@@ -52,7 +52,7 @@ filesInit().then(() => {
       max: 100, // Limit each IP to 100 requests per `window` (here, per 1 minute)
       standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
       legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-      skip: (request, _response) => {
+      skip: (request: any, _response: any) => {
         // On n'applique pas de rate limiting sur le televersement des fichiers
         return request.url.startsWith('/televersement')
       }

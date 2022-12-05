@@ -1,6 +1,6 @@
 import { serialize, deserialize } from 'v8'
 
-import { Index } from '../types'
+import { Index } from '../types.js'
 
 export const dupRemove = (key: string, ...arrays: Index<any>[][]) =>
   arrays.reduce(

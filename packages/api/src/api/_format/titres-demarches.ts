@@ -1,8 +1,8 @@
-import { IFields, ITitreDemarche } from '../../types'
+import { IFields, ITitreDemarche } from '../../types.js'
 
-import { titreEtapeFormat } from './titres-etapes'
-import { titreFormat } from './titres'
-import { titreDemarcheFormatFields } from './_fields'
+import { titreEtapeFormat } from './titres-etapes.js'
+import { titreFormat } from './titres.js'
+import { titreDemarcheFormatFields } from './_fields.js'
 
 export const titreDemarcheFormat = (
   titreDemarche: ITitreDemarche,

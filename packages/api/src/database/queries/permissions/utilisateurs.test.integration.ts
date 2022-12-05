@@ -1,12 +1,12 @@
-import { IUtilisateur } from '../../../types'
+import { IUtilisateur } from '../../../types.js'
 
-import { dbManager } from '../../../../tests/db-manager'
-import Utilisateurs from '../../models/utilisateurs'
-import { utilisateursGet } from '../utilisateurs'
-import { Administrations } from 'camino-common/src/static/administrations'
-import options from '../_options'
+import { dbManager } from '../../../../tests/db-manager.js'
+import Utilisateurs from '../../models/utilisateurs.js'
+import { utilisateursGet } from '../utilisateurs.js'
+import { Administrations } from 'camino-common/src/static/administrations.js'
+import options from '../_options.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
-import { Role } from 'camino-common/src/roles'
+import { Role } from 'camino-common/src/roles.js'
 console.info = vi.fn()
 console.error = vi.fn()
 beforeAll(async () => {

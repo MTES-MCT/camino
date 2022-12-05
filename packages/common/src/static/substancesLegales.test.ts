@@ -1,4 +1,4 @@
-import { isSubstanceLegale } from './substancesLegales'
+import { isSubstanceLegale } from './substancesLegales.js'
 import { test, expect } from 'vitest'
 
 test('isSubstanceLegale', () => {

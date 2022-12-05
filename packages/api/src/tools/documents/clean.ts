@@ -1,9 +1,9 @@
-import Document from '../../database/models/documents'
-import { documentFilePathFind } from './document-path-find'
+import Document from '../../database/models/documents.js'
+import { documentFilePathFind } from './document-path-find.js'
 import * as fs from 'fs'
-import { documentSupprimer } from '../../api/graphql/resolvers/documents'
-import { userSuper } from '../../database/user-super'
-import { datesDiffInDays } from 'camino-common/src/date'
+import { documentSupprimer } from '../../api/graphql/resolvers/documents.js'
+import { userSuper } from '../../database/user-super.js'
+import { datesDiffInDays } from 'camino-common/src/date.js'
 
 export const documentsClean = async () => {
   console.info()

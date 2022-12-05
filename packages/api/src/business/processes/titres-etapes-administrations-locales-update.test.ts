@@ -1,14 +1,14 @@
-import { titresEtapesAdministrationsLocalesUpdate } from './titres-etapes-administrations-locales-update'
-import { titresEtapesGet } from '../../database/queries/titres-etapes'
+import { titresEtapesAdministrationsLocalesUpdate } from './titres-etapes-administrations-locales-update.js'
+import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
 
 import {
   titresEtapesCommunesVides,
   titresEtapesCommunesMemeCommune
-} from './__mocks__/titres-etapes-administrations-locales-update-etapes'
-import { ICommune, ITitreEtape } from '../../types'
-import { newDemarcheId } from '../../database/models/_format/id-create'
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
-import { toCaminoDate } from 'camino-common/src/date'
+} from './__mocks__/titres-etapes-administrations-locales-update-etapes.js'
+import { ICommune, ITitreEtape } from '../../types.js'
+import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres-etapes', () => ({
   titresEtapesGet: vi.fn()

@@ -1,5 +1,5 @@
 import '../init'
-import { monthly } from '../business/monthly'
+import { monthly } from '../business/monthly.js'
 
 monthly()
   .then(() => {

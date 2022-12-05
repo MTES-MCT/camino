@@ -1,9 +1,9 @@
-import { ITitreDemarche, ITitreEtape } from '../../types'
+import { ITitreDemarche, ITitreEtape } from '../../types.js'
 
-import { titreDemarchePublicFind } from './titre-demarche-public-find'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { newDemarcheId } from '../../database/models/_format/id-create'
-import { toCaminoDate } from 'camino-common/src/date'
+import { titreDemarchePublicFind } from './titre-demarche-public-find.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 const etapesBuild = (etapesProps: Partial<ITitreEtape>[]) =>
   etapesProps.map(

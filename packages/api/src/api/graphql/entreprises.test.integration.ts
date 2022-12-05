@@ -1,26 +1,26 @@
-import { ITitreEtapeJustificatif } from '../../types'
-import { dbManager } from '../../../tests/db-manager'
-import { graphQLCall, queryImport } from '../../../tests/_utils/index'
+import { ITitreEtapeJustificatif } from '../../types.js'
+import { dbManager } from '../../../tests/db-manager.js'
+import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
 import {
   entreprisesEtablissementsFetch,
   entreprisesFetch,
   tokenInitialize
-} from '../../tools/api-insee/fetch'
+} from '../../tools/api-insee/fetch.js'
 import {
   entreprise,
   entrepriseAndEtablissements
-} from '../../../tests/__mocks__/fetch-insee-api'
-import { entrepriseUpsert } from '../../database/queries/entreprises'
-import { titreCreate } from '../../database/queries/titres'
-import { documentCreate } from '../../database/queries/documents'
+} from '../../../tests/__mocks__/fetch-insee-api.js'
+import { entrepriseUpsert } from '../../database/queries/entreprises.js'
+import { titreCreate } from '../../database/queries/titres.js'
+import { documentCreate } from '../../database/queries/documents.js'
 import {
   titreEtapeCreate,
   titresEtapesJustificatifsUpsert
-} from '../../database/queries/titres-etapes'
-import { titreDemarcheCreate } from '../../database/queries/titres-demarches'
-import { userSuper } from '../../database/user-super'
-import { toCaminoDate } from 'camino-common/src/date'
-import { newEntrepriseId } from 'camino-common/src/entreprise'
+} from '../../database/queries/titres-etapes.js'
+import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
+import { userSuper } from '../../database/user-super.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
+import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import {
   beforeAll,
   beforeEach,

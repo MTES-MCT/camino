@@ -1,6 +1,6 @@
 import { Model } from 'objection'
 
-import { IActiviteTypeDocumentType } from '../../types'
+import { IActiviteTypeDocumentType } from '../../types.js'
 
 interface ActivitesTypesDocumentsTypes extends IActiviteTypeDocumentType {}
 

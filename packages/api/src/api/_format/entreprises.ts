@@ -1,6 +1,6 @@
-import { IEntreprise } from '../../types'
+import { IEntreprise } from '../../types.js'
 
-import { titresFormat } from './titres'
+import { titresFormat } from './titres.js'
 
 /**
  * Formate une entreprise en fonction du profil de l'utilisateur

@@ -1,9 +1,9 @@
-import { ITitrePoint, ITitrePointReference } from '../../types'
+import { ITitrePoint, ITitrePointReference } from '../../types.js'
 
 import {
   titrePointReferenceCreate,
   titresPointsGet
-} from '../../database/queries/titres-points'
+} from '../../database/queries/titres-points.js'
 
 const titreEtapePointsReferencesNewFind = (titrePoints: ITitrePoint[]) =>
   titrePoints.reduce((acc: ITitrePointReference[], titrePoint) => {

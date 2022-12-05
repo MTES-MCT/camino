@@ -1,9 +1,9 @@
-import { toCaminoDate } from 'camino-common/src/date'
-import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
-import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
-import { TitresStatutIds } from 'camino-common/src/static/titresStatuts'
-import { newDemarcheId } from '../../../database/models/_format/id-create'
-import { ITitreDemarche, ITitreEtape, ITitrePhase } from '../../../types'
+import { toCaminoDate } from 'camino-common/src/date.js'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
+import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
+import { newDemarcheId } from '../../../database/models/_format/id-create.js'
+import { ITitreDemarche, ITitreEtape, ITitrePhase } from '../../../types.js'
 
 const titreDemarchesOctPointsMut = {
   statutId: TitresStatutIds.Valide,

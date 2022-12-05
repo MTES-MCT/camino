@@ -1,6 +1,6 @@
 import { writeFile } from 'fs'
 
-import errorLog from './error-log'
+import errorLog from './error-log.js'
 
 const fileCreate = async (name: string, content: string) =>
   new Promise((resolve, reject) => {

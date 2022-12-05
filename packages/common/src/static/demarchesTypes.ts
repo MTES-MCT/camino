@@ -1,4 +1,4 @@
-import { Definition } from '../definition'
+import { Definition } from '../definition.js'
 
 interface DemarchesDefinition<T> extends Definition<T> {
   titulaires?: boolean

@@ -5,24 +5,24 @@ import {
   ISection,
   IContenusTitreEtapesIds,
   ITitreDemarche
-} from '../../types'
+} from '../../types.js'
 
 import {
   geojsonFeatureMultiPolygon,
   geojsonFeatureCollectionPoints
-} from '../../tools/geojson'
+} from '../../tools/geojson.js'
 
-import { entrepriseFormat } from './entreprises'
-import { titreActiviteFormat } from './titres-activites'
-import { titreDemarcheFormat } from './titres-demarches'
-import { titreFormatFields } from './_fields'
+import { entrepriseFormat } from './entreprises.js'
+import { titreActiviteFormat } from './titres-activites.js'
+import { titreDemarcheFormat } from './titres-demarches.js'
+import { titreFormatFields } from './_fields.js'
 import {
   AdministrationId,
   Administrations,
   ADMINISTRATION_TYPES
-} from 'camino-common/src/static/administrations'
-import { onlyUnique } from 'camino-common/src/typescript-tools'
-import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes'
+} from 'camino-common/src/static/administrations.js'
+import { onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
 
 const titreTypeSectionsFormat = (
   contenusTitreEtapesIds: IContenusTitreEtapesIds,

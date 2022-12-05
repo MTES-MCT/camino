@@ -1,6 +1,6 @@
 import { unlink } from 'fs'
 
-import errorLog from './error-log'
+import errorLog from './error-log.js'
 
 const fileDelete = async (path: string) =>
   new Promise((resolve, reject) =>

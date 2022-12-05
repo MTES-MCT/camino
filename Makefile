@@ -13,22 +13,11 @@ docs/generate-schema:
 	cat docs-sources/assets/architecture.puml | docker run --rm -i agileek/plantuml:1.2022.3 > docs-sources/docs/img/architecture.svg
 
 daily:
-ifdef CAMINO_STAGE
-	@echo 'lancement du daily en mode prod'
 	npm run daily -w packages/api
-else
-	@echo 'lancement du daily en mode dev(local)'
-	npm run dev:daily -w packages/api
-endif
 
 monthly:
-ifdef CAMINO_STAGE
-	@echo 'lancement du monthly en mode prod'
 	npm run monthly -w packages/api
-else
-	@echo 'lancement du monthly en mode dev(local)'
-	npm run dev:monthly -w packages/api
-endif
+
 
 
 test: test/ui test/api test/common
@@ -84,6 +73,26 @@ build/ui:
 
 build/api:
 	npm run build -w packages/api
+
+start/api:
+ifdef CAMINO_STAGE
+	@echo 'lancement du backend en mode prod'
+	npm start -w packages/api
+else
+	@echo 'lancement du backend en mode dev(local)'
+	npm run dev -w packages/api
+endif
+	
+
+start/ui:
+ifdef CAMINO_STAGE
+	@echo 'lancement du frontend en mode prod'
+	npm start -w packages/ui
+else
+	@echo 'lancement du frontend en mode dev(local)'
+	npm run dev -w packages/ui
+endif
+	
 
 ifeq (${INPUT_ENV}, dev)
 CD_TOKEN:=${CD_TOKEN_DEV}

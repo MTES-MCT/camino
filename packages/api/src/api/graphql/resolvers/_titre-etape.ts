@@ -8,33 +8,33 @@ import {
   ITitreDemarche,
   ITitreEtape,
   ITitrePointReference
-} from '../../../types'
+} from '../../../types.js'
 
-import { geoConvert } from '../../../tools/geo-convert'
+import { geoConvert } from '../../../tools/geo-convert.js'
 
 import {
   titreEtapeHeritagePropsFind,
   titreEtapePropsIds
-} from '../../../business/utils/titre-etape-heritage-props-find'
+} from '../../../business/utils/titre-etape-heritage-props-find.js'
 import {
   etapeSectionsDictionaryBuild,
   titreEtapeHeritageContenuFind
-} from '../../../business/utils/titre-etape-heritage-contenu-find'
-import { etapeTypeSectionsFormat } from '../../_format/etapes-types'
+} from '../../../business/utils/titre-etape-heritage-contenu-find.js'
+import { etapeTypeSectionsFormat } from '../../_format/etapes-types.js'
 import {
   titreEtapesSortAscByOrdre,
   titreEtapesSortDescByOrdre
-} from '../../../business/utils/titre-etapes-sort'
-import { GeoSystemes } from 'camino-common/src/static/geoSystemes'
-import { geojsonIntersectsSDOM, GeoJsonResult } from '../../../tools/geojson'
-import { Feature } from '@turf/helpers'
-import SdomZones from '../../../database/models/sdom-zones'
-import { SDOMZoneIds } from 'camino-common/src/static/sdom'
+} from '../../../business/utils/titre-etapes-sort.js'
+import { GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
+import { geojsonIntersectsSDOM, GeoJsonResult } from '../../../tools/geojson.js'
+import { Feature } from 'geojson'
+import SdomZones from '../../../database/models/sdom-zones.js'
+import { SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import {
   DocumentTypeId,
   DocumentType,
   DOCUMENTS_TYPES_IDS
-} from 'camino-common/src/static/documentsTypes'
+} from 'camino-common/src/static/documentsTypes.js'
 
 const titreEtapePointsCalc = <
   T extends {

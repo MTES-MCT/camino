@@ -1,7 +1,7 @@
-import { ITitreDemarche } from '../../types'
+import { ITitreDemarche } from '../../types.js'
 
-import { titreStatutIdFind } from '../rules/titre-statut-id-find'
-import { titreDemarchesEtapesRebuild } from './titre-demarches-etapes-rebuild'
+import { titreStatutIdFind } from '../rules/titre-statut-id-find.js'
+import { titreDemarchesEtapesRebuild } from './titre-demarches-etapes-rebuild.js'
 
 /**
  * Vérifie la validité du titre pendant la période

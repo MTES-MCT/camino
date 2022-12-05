@@ -5,18 +5,18 @@ import {
   IAdministrationTitreTypeTitreStatut,
   IFields,
   IUtilisateur
-} from '../../types'
+} from '../../types.js'
 
-import graphBuild from './graph/build'
-import { fieldsFormat } from './graph/fields-format'
-import options from './_options'
+import graphBuild from './graph/build.js'
+import { fieldsFormat } from './graph/fields-format.js'
+import options from './_options.js'
 
-import Administrations from '../models/administrations'
-import { administrationsQueryModify } from './permissions/administrations'
-import AdministrationsTitresTypesTitresStatuts from '../models/administrations-titres-types-titres-statuts'
-import AdministrationsTitresTypesEtapesTypes from '../models/administrations-titres-types-etapes-types'
-import AdministrationsActivitesTypes from '../models/administrations-activites-types'
-import AdministrationsActivitesTypesEmails from '../models/administrations-activites-types-emails'
+import Administrations from '../models/administrations.js'
+import { administrationsQueryModify } from './permissions/administrations.js'
+import AdministrationsTitresTypesTitresStatuts from '../models/administrations-titres-types-titres-statuts.js'
+import AdministrationsTitresTypesEtapesTypes from '../models/administrations-titres-types-etapes-types.js'
+import AdministrationsActivitesTypes from '../models/administrations-activites-types.js'
+import AdministrationsActivitesTypesEmails from '../models/administrations-activites-types-emails.js'
 
 const administrationsQueryBuild = (
   { fields }: { fields?: IFields },

@@ -1,5 +1,5 @@
-import { getDepartementsByIds, getSecteurMaritime } from './facades'
-import { DEPARTEMENT_IDS } from './departement'
+import { getDepartementsByIds, getSecteurMaritime } from './facades.js'
+import { DEPARTEMENT_IDS } from './departement.js'
 import { test, expect } from 'vitest'
 
 test('getDepartementsByIds', () => {

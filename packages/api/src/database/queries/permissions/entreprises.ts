@@ -1,24 +1,24 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types'
+import { IUtilisateur } from '../../../types.js'
 
-import { knex } from '../../../knex'
+import { knex } from '../../../knex.js'
 
-import Entreprises from '../../models/entreprises'
-import Utilisateurs from '../../models/utilisateurs'
-import Titres from '../../models/titres'
-import Documents from '../../models/documents'
+import Entreprises from '../../models/entreprises.js'
+import Utilisateurs from '../../models/utilisateurs.js'
+import Titres from '../../models/titres.js'
+import Documents from '../../models/documents.js'
 
-import { titresQueryModify } from './titres'
-import { utilisateursQueryModify } from './utilisateurs'
-import { documentsQueryModify } from './documents'
+import { titresQueryModify } from './titres.js'
+import { utilisateursQueryModify } from './utilisateurs.js'
+import { documentsQueryModify } from './documents.js'
 import {
   isAdministrationAdmin,
   isAdministrationEditeur,
   isBureauDEtudes,
   isEntreprise,
   isSuper
-} from 'camino-common/src/roles'
+} from 'camino-common/src/roles.js'
 
 const entreprisesQueryModify = (
   q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>,

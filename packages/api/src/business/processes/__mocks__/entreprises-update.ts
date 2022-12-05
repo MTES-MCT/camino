@@ -1,5 +1,5 @@
-import Entreprises from '../../../database/models/entreprises'
-import EntreprisesEtablissements from '../../../database/models/entreprises-etablissements'
+import Entreprises from '../../../database/models/entreprises.js'
+import EntreprisesEtablissements from '../../../database/models/entreprises-etablissements.js'
 
 const dbEntreprisesCreees = [
   { id: 'pipo', legalSiren: undefined, nom: 'pipo' },

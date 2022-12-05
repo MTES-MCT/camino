@@ -1,4 +1,4 @@
-import { anneePrecedente, anneeSuivante, datesDiffInDays, daysBetween, getAnnee, isAnnee, toCaminoDate, valideAnnee } from './date'
+import { anneePrecedente, anneeSuivante, datesDiffInDays, daysBetween, getAnnee, isAnnee, toCaminoDate, toCaminoAnnee } from './date.js'
 import { test, expect } from 'vitest'
 test.each([
   ['2020-06-02T13:35:11.366Z', '2021-06-03T13:35:11.366Z', 366],
@@ -25,14 +25,14 @@ test('isAnnee', () => {
   expect(isAnnee('20220')).toBe(false)
 })
 
-test('valideAnnee', () => {
-  expect(valideAnnee('2022')).toBe('2022')
-  expect(valideAnnee('1812')).toBe('1812')
-  expect(valideAnnee(2022)).toBe('2022')
-  expect(valideAnnee(1812)).toBe('1812')
-  expect(() => valideAnnee('toto')).toThrowErrorMatchingInlineSnapshot(`"l'année toto n'est pas une année valide"`)
-  expect(() => valideAnnee('12')).toThrowErrorMatchingInlineSnapshot(`"l'année 12 n'est pas une année valide"`)
-  expect(() => valideAnnee('20220')).toThrowErrorMatchingInlineSnapshot(`"l'année 20220 n'est pas une année valide"`)
+test('toCaminoAnnee', () => {
+  expect(toCaminoAnnee('2022')).toBe('2022')
+  expect(toCaminoAnnee('1812')).toBe('1812')
+  expect(toCaminoAnnee(2022)).toBe('2022')
+  expect(toCaminoAnnee(1812)).toBe('1812')
+  expect(() => toCaminoAnnee('toto')).toThrowErrorMatchingInlineSnapshot(`"l'année toto n'est pas une année valide"`)
+  expect(() => toCaminoAnnee('12')).toThrowErrorMatchingInlineSnapshot(`"l'année 12 n'est pas une année valide"`)
+  expect(() => toCaminoAnnee('20220')).toThrowErrorMatchingInlineSnapshot(`"l'année 20220 n'est pas une année valide"`)
 })
 
 test('daysBetween', () => {
@@ -44,8 +44,8 @@ test('daysBetween', () => {
   expect(daysBetween(toCaminoDate('2021-01-02'), toCaminoDate('2021-01-01'))).toBe(-1)
 })
 test('anneeSuivante', () => {
-  expect(anneeSuivante(valideAnnee('2022'))).toBe(valideAnnee('2023'))
+  expect(anneeSuivante(toCaminoAnnee('2022'))).toBe(toCaminoAnnee('2023'))
 })
 test('anneePrecedente', () => {
-  expect(anneePrecedente(valideAnnee('2022'))).toBe(valideAnnee('2021'))
+  expect(anneePrecedente(toCaminoAnnee('2022'))).toBe(toCaminoAnnee('2021'))
 })

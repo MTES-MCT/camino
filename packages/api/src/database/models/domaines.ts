@@ -1,7 +1,7 @@
 import { Model, Modifiers } from 'objection'
 
-import { IDomaine } from '../../types'
-import TitresTypes from './titres-types'
+import { IDomaine } from '../../types.js'
+import TitresTypes from './titres-types.js'
 
 interface Domaines extends IDomaine {}
 

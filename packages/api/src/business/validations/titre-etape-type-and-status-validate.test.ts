@@ -1,7 +1,7 @@
-import { IEtapeType } from '../../types'
+import { IEtapeType } from '../../types.js'
 
-import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate'
-import { titreEtapeDemarcheEtapeTypeFind } from '../utils/titre-etape-demarche-etape-type-find'
+import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
+import { titreEtapeDemarcheEtapeTypeFind } from '../utils/titre-etape-demarche-etape-type-find.js'
 import { vi, describe, test, expect } from 'vitest'
 vi.mock('../utils/titre-etape-demarche-etape-type-find', () => ({
   titreEtapeDemarcheEtapeTypeFind: vi.fn()

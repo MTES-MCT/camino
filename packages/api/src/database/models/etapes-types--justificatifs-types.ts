@@ -1,5 +1,5 @@
 import { Model } from 'objection'
-import { IEtapeTypeJustificatifType } from '../../types'
+import { IEtapeTypeJustificatifType } from '../../types.js'
 
 interface EtapesTypesJustificatifsTypes extends IEtapeTypeJustificatifType {}
 

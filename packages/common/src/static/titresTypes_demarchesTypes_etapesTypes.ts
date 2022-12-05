@@ -1,10 +1,10 @@
-import { isNotNullNorUndefined, onlyUnique } from '../typescript-tools'
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeId } from './demarchesTypes'
-import { DocumentsTypes, DOCUMENTS_TYPES_IDS, DocumentType, DocumentTypeId, isDocumentTypeId } from './documentsTypes'
-import { DomaineId, DOMAINES_IDS, isDomaineId } from './domaines'
-import { ETAPES_TYPES, EtapeTypeId, isEtapeTypeId } from './etapesTypes'
-import { isTitreTypeType, TITRES_TYPES_TYPES_IDS, TitreTypeTypeId } from './titresTypesTypes'
-import { TitreTypeId, toTitreTypeId } from './titresTypes'
+import { isNotNullNorUndefined, onlyUnique } from '../typescript-tools.js'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeId } from './demarchesTypes.js'
+import { DocumentsTypes, DOCUMENTS_TYPES_IDS, DocumentType, DocumentTypeId, isDocumentTypeId } from './documentsTypes.js'
+import { DomaineId, DOMAINES_IDS, isDomaineId } from './domaines.js'
+import { ETAPES_TYPES, EtapeTypeId, isEtapeTypeId } from './etapesTypes.js'
+import { isTitreTypeType, TITRES_TYPES_TYPES_IDS, TitreTypeTypeId } from './titresTypesTypes.js'
+import { TitreTypeId, toTitreTypeId } from './titresTypes.js'
 
 const EtapesTypesDocumentsTypes: { [key in EtapeTypeId]?: DocumentTypeId[] } = {
   [ETAPES_TYPES.avisDeDirectionRegionaleDesAffairesCulturelles]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires, DOCUMENTS_TYPES_IDS.avis],

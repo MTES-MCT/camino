@@ -1,5 +1,5 @@
-import { PAYS_IDS } from './pays'
-import { RegionId, Regions } from './region'
+import { PAYS_IDS } from './pays.js'
+import { RegionId, Regions } from './region.js'
 
 export const DEPARTEMENT_IDS = {
   Ain: '01',

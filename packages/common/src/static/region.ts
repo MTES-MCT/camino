@@ -1,4 +1,4 @@
-import { PaysId } from './pays'
+import { PaysId } from './pays.js'
 
 export const REGION_IDS = {
   Guadeloupe: '01',

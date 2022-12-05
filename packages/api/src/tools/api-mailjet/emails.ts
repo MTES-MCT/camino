@@ -1,8 +1,8 @@
 import { convert } from 'html-to-text'
 import emailRegex from 'email-regex'
 
-import { mailjet } from './index'
-import { EmailTemplateId } from './types'
+import { mailjet } from './index.js'
+import { EmailTemplateId } from './types.js'
 
 const from = {
   email: process.env.API_MAILJET_EMAIL,

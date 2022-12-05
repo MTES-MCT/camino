@@ -1,4 +1,4 @@
-import { ReferenceTypeId } from './static/referencesTypes'
+import { ReferenceTypeId } from './static/referencesTypes.js'
 
 export interface TitreReference {
   referenceTypeId: ReferenceTypeId

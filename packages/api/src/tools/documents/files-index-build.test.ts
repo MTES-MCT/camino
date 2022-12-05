@@ -1,4 +1,4 @@
-import { filesIndexBuild } from './files-index-build'
+import { filesIndexBuild } from './files-index-build.js'
 import { expect, test } from 'vitest'
 
 test('filesIndexBuild', () => {

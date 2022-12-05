@@ -1,5 +1,5 @@
 import '../init'
-import { etapeStatutCheck } from '../tools/demarches/etape-statut-check'
+import { etapeStatutCheck } from '../tools/demarches/etape-statut-check.js'
 
 etapeStatutCheck()
   .then(() => {

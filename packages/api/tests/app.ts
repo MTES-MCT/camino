@@ -1,10 +1,10 @@
 import express from 'express'
 
-import { graphql } from '../src/server/graphql'
-import { authJwt } from '../src/server/auth-jwt'
-import { restUpload, uploadAllowedMiddleware } from '../src/server/upload'
+import { graphql } from '../src/server/graphql.js'
+import { authJwt } from '../src/server/auth-jwt.js'
+import { restUpload, uploadAllowedMiddleware } from '../src/server/upload.js'
 import cookieParser from 'cookie-parser'
-import { rest } from '../src/server/rest'
+import { rest } from '../src/server/rest.js'
 
 const app = express()
 app.disable('x-powered-by')

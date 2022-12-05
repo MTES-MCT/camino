@@ -1,7 +1,7 @@
 // classe les démarches selon la date de leur première étape
 // puis par ordre si les dates sont identiques
-import { ITitreDemarche } from '../../types'
-import { titreEtapesSortAscByOrdre } from './titre-etapes-sort'
+import { ITitreDemarche } from '../../types.js'
+import { titreEtapesSortAscByOrdre } from './titre-etapes-sort.js'
 
 const titreDemarcheSortAsc = (titreElements: ITitreDemarche[]) =>
   titreElements.slice().sort((a, b) => {

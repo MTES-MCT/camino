@@ -1,17 +1,17 @@
 import '../../init'
 
-import { titresDemarchesGet } from '../../database/queries/titres-demarches'
-import { userSuper } from '../../database/user-super'
-import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find'
+import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
+import { userSuper } from '../../database/user-super.js'
+import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find.js'
 import { writeFileSync } from 'fs'
 import {
   Etape,
   toMachineEtapes
-} from '../../business/rules-demarches/machine-common'
+} from '../../business/rules-demarches/machine-common.js'
 import {
   demarchesDefinitions,
   isDemarcheDefinitionMachine
-} from '../../business/rules-demarches/definitions'
+} from '../../business/rules-demarches/definitions.js'
 
 const writeEtapesForTest = async () => {
   const demarcheDefinitionMachines = demarchesDefinitions.filter(

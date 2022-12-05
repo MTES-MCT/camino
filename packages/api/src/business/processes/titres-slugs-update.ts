@@ -1,9 +1,9 @@
-import { Index, ITitre } from '../../types'
+import { Index, ITitre } from '../../types.js'
 
-import { titresGet } from '../../database/queries/titres'
-import { userSuper } from '../../database/user-super'
+import { titresGet } from '../../database/queries/titres.js'
+import { userSuper } from '../../database/user-super.js'
 
-import { titreSlugAndRelationsUpdate } from '../utils/titre-slug-and-relations-update'
+import { titreSlugAndRelationsUpdate } from '../utils/titre-slug-and-relations-update.js'
 
 // met à jour les slugs de titre
 const titreSlugsUpdate = async (titre: ITitre) => {

@@ -1,9 +1,9 @@
-import { ITitreDemarche, IPropId } from '../../types'
+import { ITitreDemarche, IPropId } from '../../types.js'
 
 import {
   titreContenuTitreEtapeFind,
   titrePropTitreEtapeFind
-} from './titre-prop-etape-find'
+} from './titre-prop-etape-find.js'
 
 import {
   titreDemarchesOctPointsMut,
@@ -20,9 +20,9 @@ import {
   titreDemarchesMutPointsMod,
   titreDemarchesProModPhaseEch,
   titreDemarchesOctTitulairesACO
-} from './__mocks__/titre-prop-etape-find-demarches'
-import { newDemarcheId } from '../../database/models/_format/id-create'
-import { toCaminoDate } from 'camino-common/src/date'
+} from './__mocks__/titre-prop-etape-find-demarches.js'
+import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
 
 describe("id de l'étape d'une propriété valide (dé-normalise)", () => {

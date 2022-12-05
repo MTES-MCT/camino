@@ -1,18 +1,18 @@
-import { CustomResponse } from '../express-type'
+import { CustomResponse } from '../express-type.js'
 import express from 'express'
 import {
   StatistiquesMinerauxMetauxMetropole,
   StatistiquesDGTM,
   StatistiquesGuyaneRest
-} from 'camino-common/src/statistiques'
-import { getMinerauxMetauxMetropolesStatsInside } from './metaux-metropole'
+} from 'camino-common/src/statistiques.js'
+import { getMinerauxMetauxMetropolesStatsInside } from './metaux-metropole.js'
 
-import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations'
-import { userGet } from '../../../database/queries/utilisateurs'
-import { IUser } from '../../../types'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
+import { userGet } from '../../../database/queries/utilisateurs.js'
+import { IUser } from '../../../types.js'
 import { constants } from 'http2'
-import { getDGTMStatsInside } from './dgtm'
-import { getGuyaneStatsInside } from './guyane'
+import { getDGTMStatsInside } from './dgtm.js'
+import { getGuyaneStatsInside } from './guyane.js'
 
 export const getDGTMStats = async (
   req: express.Request,

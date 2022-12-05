@@ -1,5 +1,5 @@
-import { filesPathCheck } from './files-path-check'
-import { IndexFile } from './_types'
+import { filesPathCheck } from './files-path-check.js'
+import { IndexFile } from './_types.js'
 import { expect, test } from 'vitest'
 
 test('filesPathCheck', () => {

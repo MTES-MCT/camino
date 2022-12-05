@@ -1,4 +1,4 @@
-import { Couleur } from './couleurs'
+import { Couleur } from './couleurs.js'
 
 export const ETAPES_STATUTS = {
   ACCEPTE: 'acc',

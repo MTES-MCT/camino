@@ -1,10 +1,10 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types'
+import { IUtilisateur } from '../../../types.js'
 
-import Utilisateurs from '../../models/utilisateurs'
-import Entreprises from '../../models/entreprises'
-import { entreprisesQueryModify } from './entreprises'
+import Utilisateurs from '../../models/utilisateurs.js'
+import Entreprises from '../../models/entreprises.js'
+import { entreprisesQueryModify } from './entreprises.js'
 import {
   isAdministrationAdmin,
   isAdministrationEditeur,
@@ -13,7 +13,7 @@ import {
   isDefault,
   isEntreprise,
   isSuper
-} from 'camino-common/src/roles'
+} from 'camino-common/src/roles.js'
 
 export const utilisateursQueryModify = (
   q: QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>,

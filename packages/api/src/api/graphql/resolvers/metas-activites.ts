@@ -1,16 +1,16 @@
 import { GraphQLResolveInfo } from 'graphql'
-import { IToken } from '../../../types'
+import { IToken } from '../../../types.js'
 
-import { fieldsBuild } from './_fields-build'
-import { userGet } from '../../../database/queries/utilisateurs'
+import { fieldsBuild } from './_fields-build.js'
+import { userGet } from '../../../database/queries/utilisateurs.js'
 import {
   activitesStatutsGet,
   activitesTypesDocumentsTypesGet,
   activitesTypesGet,
   activitesTypesPaysGet,
   activitesTypesTitresTypesGet
-} from '../../../database/queries/metas-activites'
-import { isSuper } from 'camino-common/src/roles'
+} from '../../../database/queries/metas-activites.js'
+import { isSuper } from 'camino-common/src/roles.js'
 
 const activitesTypes = async (
   _: never,

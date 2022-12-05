@@ -1,4 +1,4 @@
-import TitresEtapes from '../../../database/models/titres-etapes'
+import TitresEtapes from '../../../database/models/titres-etapes.js'
 
 export const titresEtapesCommunesVides = [
   {

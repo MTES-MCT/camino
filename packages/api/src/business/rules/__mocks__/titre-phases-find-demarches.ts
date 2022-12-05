@@ -1,5 +1,5 @@
-import { ITitreDemarche } from '../../../types'
-import { newDemarcheId } from '../../../database/models/_format/id-create'
+import { ITitreDemarche } from '../../../types.js'
+import { newDemarcheId } from '../../../database/models/_format/id-create.js'
 
 const titreDemarcheOctDpuAcc = {
   id: 'h-cx-courdemanges-1988-oct01',

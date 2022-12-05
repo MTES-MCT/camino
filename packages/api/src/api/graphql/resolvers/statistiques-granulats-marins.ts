@@ -1,14 +1,14 @@
 import camelcase from 'camelcase'
 
-import { ITitre, ITitreActivite } from '../../../types'
+import { ITitre, ITitreActivite } from '../../../types.js'
 
-import { titresGet } from '../../../database/queries/titres'
-import { titresActivitesGet } from '../../../database/queries/titres-activites'
-import { userSuper } from '../../../database/user-super'
+import { titresGet } from '../../../database/queries/titres.js'
+import { titresActivitesGet } from '../../../database/queries/titres-activites.js'
+import { userSuper } from '../../../database/user-super.js'
 import {
   concessionsValidesBuild,
   titresSurfaceIndexBuild
-} from './statistiques'
+} from './statistiques.js'
 
 const statistiquesGranulatsMarinsActivitesFind = (
   titresActivites: ITitreActivite[],

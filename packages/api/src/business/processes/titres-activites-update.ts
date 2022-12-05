@@ -1,17 +1,16 @@
-import dateFormat from 'dateformat'
+import { ITitreActivite } from '../../types.js'
 
-import { ITitreActivite } from '../../types'
-
-import { titreActiviteTypeCheck } from '../utils/titre-activite-type-check'
-import { anneesBuild } from '../../tools/annees-build'
-import { titresActivitesUpsert } from '../../database/queries/titres-activites'
-import { titreActivitesBuild } from '../rules/titre-activites-build'
-import { titresGet } from '../../database/queries/titres'
-import { activitesTypesGet } from '../../database/queries/metas-activites'
-import { userSuper } from '../../database/user-super'
-import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails'
-import { activitesUrlGet } from '../utils/urls-get'
-import { EmailTemplateId } from '../../tools/api-mailjet/types'
+import { titreActiviteTypeCheck } from '../utils/titre-activite-type-check.js'
+import { anneesBuild } from '../../tools/annees-build.js'
+import { titresActivitesUpsert } from '../../database/queries/titres-activites.js'
+import { titreActivitesBuild } from '../rules/titre-activites-build.js'
+import { titresGet } from '../../database/queries/titres.js'
+import { activitesTypesGet } from '../../database/queries/metas-activites.js'
+import { userSuper } from '../../database/user-super.js'
+import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
+import { activitesUrlGet } from '../utils/urls-get.js'
+import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
+import { getCurrent } from 'camino-common/src/date.js'
 
 export const titresActivitesUpdate = async (titresIds?: string[]) => {
   console.info()
@@ -43,7 +42,7 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
     }
   })
 
-  const aujourdhui = dateFormat(new Date(), 'yyyy-mm-dd')
+  const aujourdhui = getCurrent()
 
   const titresActivitesCreated = activitesTypes.reduce(
     (acc: ITitreActivite[], activiteType) => {

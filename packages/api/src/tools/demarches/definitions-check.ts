@@ -4,11 +4,11 @@ import {
   IEtapeTypeIdCondition,
   isDemarcheDefinitionRestriction,
   DemarcheDefinitionRestriction
-} from '../../business/rules-demarches/definitions'
-import { titresDemarchesGet } from '../../database/queries/titres-demarches'
-import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate'
-import { userSuper } from '../../database/user-super'
-import TitresTypesDemarchesTypesEtapesTypes from '../../database/models/titres-types--demarches-types-etapes-types'
+} from '../../business/rules-demarches/definitions.js'
+import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
+import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
+import { userSuper } from '../../database/user-super.js'
+import TitresTypesDemarchesTypesEtapesTypes from '../../database/models/titres-types--demarches-types-etapes-types.js'
 
 const etapeTypeIdsGet = (contraintes?: IEtapeTypeIdCondition[][]) => {
   const etapeTypeIds = [] as string[]

@@ -1,4 +1,4 @@
-import { mailjet } from './index'
+import { mailjet } from './index.js'
 
 interface IContactListAdd {
   ListID: number

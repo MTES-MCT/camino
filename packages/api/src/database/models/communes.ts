@@ -1,6 +1,6 @@
 import { Model } from 'objection'
 
-import { ICommune } from '../../types'
+import { ICommune } from '../../types.js'
 
 interface Communes extends ICommune {}
 

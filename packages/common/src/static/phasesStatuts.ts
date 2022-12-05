@@ -1,4 +1,4 @@
-import { Couleur } from './couleurs'
+import { Couleur } from './couleurs.js'
 
 export const PHASES_STATUTS_IDS = {
   Echu: 'ech',

@@ -1,4 +1,4 @@
-import { ITitrePoint } from '../../../types'
+import { ITitrePoint } from '../../../types.js'
 
 const titreEtapePointsValides = [
   {

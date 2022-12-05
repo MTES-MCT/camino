@@ -1,9 +1,9 @@
-import { titresGet, titreUpdate } from '../../database/queries/titres'
-import { titreDateFinFind } from '../rules/titre-date-fin-find'
-import { titreDateDebutFind } from '../rules/titre-date-debut-find'
-import { titreDateDemandeFind } from '../rules/titre-date-demande-find'
-import { userSuper } from '../../database/user-super'
-import { DBTitre } from '../../database/models/titres'
+import { titresGet, titreUpdate } from '../../database/queries/titres.js'
+import { titreDateFinFind } from '../rules/titre-date-fin-find.js'
+import { titreDateDebutFind } from '../rules/titre-date-debut-find.js'
+import { titreDateDemandeFind } from '../rules/titre-date-demande-find.js'
+import { userSuper } from '../../database/user-super.js'
+import { DBTitre } from '../../database/models/titres.js'
 
 export const titresDatesUpdate = async (titresIds?: string[]) => {
   console.info()

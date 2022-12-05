@@ -1,13 +1,13 @@
-import { dbManager } from '../../../tests/db-manager'
+import { dbManager } from '../../../tests/db-manager.js'
 import {
   creationCheck,
   modificationCheck,
   visibleCheck
-} from '../../../tests/_utils/administrations-permissions'
-import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../../database/models/titres-types--demarches-types-etapes-types-justificatifs-types'
+} from '../../../tests/_utils/administrations-permissions.js'
+import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../../database/models/titres-types--demarches-types-etapes-types-justificatifs-types.js'
 import { afterAll, beforeAll, describe, test, vi } from 'vitest'
-import { AdministrationId } from 'camino-common/src/static/administrations'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
   default: vi.fn()

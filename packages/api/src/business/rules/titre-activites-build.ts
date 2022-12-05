@@ -1,28 +1,27 @@
-import dateFormat from 'dateformat'
-
 import {
   IActiviteType,
   ITitreActivite,
   ISection,
   ISectionElement,
   ITitreDemarche
-} from '../../types'
+} from '../../types.js'
 
-import { titreEtapePropFind } from './titre-etape-prop-find'
-import { titreActiviteValideCheck } from '../utils/titre-activite-valide-check'
+import { titreEtapePropFind } from './titre-etape-prop-find.js'
+import { titreActiviteValideCheck } from '../utils/titre-activite-valide-check.js'
 import {
   SubstanceFiscale,
   substancesFiscalesBySubstanceLegale
-} from 'camino-common/src/static/substancesFiscales'
-import { UNITES, Unites } from 'camino-common/src/static/unites'
-import { sortedDevises } from 'camino-common/src/static/devise'
-import { exhaustiveCheck } from '../../tools/exhaustive-type-check'
+} from 'camino-common/src/static/substancesFiscales.js'
+import { UNITES, Unites } from 'camino-common/src/static/unites.js'
+import { sortedDevises } from 'camino-common/src/static/devise.js'
+import { exhaustiveCheck } from '../../tools/exhaustive-type-check.js'
 import {
   FrequenceId,
   Frequences,
   getNumberOfMonths
-} from 'camino-common/src/static/frequence'
-import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
+} from 'camino-common/src/static/frequence.js'
+import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
 
 const substancesFiscalesFind = (
   substances: SubstanceLegaleId[]
@@ -197,9 +196,8 @@ const titreActiviteBuild = (
 
   // la date de fin de l'activité est le premier jour du mois
   // du début de la période suivante, en fonction de la fréquence
-  const date = dateFormat(
-    new Date(annee, periodeId * getNumberOfMonths(frequenceId), 1),
-    'yyyy-mm-dd'
+  const date = toCaminoDate(
+    new Date(annee, periodeId * getNumberOfMonths(frequenceId), 1)
   )
 
   const titreActiviteIsValide = titreActiviteValideCheck(

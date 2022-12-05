@@ -1,16 +1,16 @@
 import { QueryBuilder, raw } from 'objection'
 
-import { IUtilisateur } from '../../../types'
+import { IUtilisateur } from '../../../types.js'
 
-import Documents from '../../models/documents'
-import TitresEtapesJustificatifs from '../../models/titres-etapes-justificatifs'
-import ActivitesTypesDocumentsTypes from '../../models/activites-types--documents-types'
+import Documents from '../../models/documents.js'
+import TitresEtapesJustificatifs from '../../models/titres-etapes-justificatifs.js'
+import ActivitesTypesDocumentsTypes from '../../models/activites-types--documents-types.js'
 import {
   isBureauDEtudes,
   isDefault,
   isEntreprise
-} from 'camino-common/src/roles'
-import TitresEtapes from '../../models/titres-etapes'
+} from 'camino-common/src/roles.js'
+import TitresEtapes from '../../models/titres-etapes.js'
 
 const documentsQueryModify = (
   q: QueryBuilder<Documents, Documents | Documents[]>,
