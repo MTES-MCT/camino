@@ -1,7 +1,6 @@
 import 'dotenv/config'
-import { join } from 'path'
 import { knexSnakeCaseMappers } from 'objection'
-import path from 'node:path'
+import path, { join } from 'node:path'
 import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
