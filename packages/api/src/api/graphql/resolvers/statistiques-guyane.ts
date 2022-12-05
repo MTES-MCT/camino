@@ -7,6 +7,7 @@ import { titresActivitesGet } from '../../../database/queries/titres-activites.j
 import { userSuper } from '../../../database/user-super.js'
 import { titresSurfaceIndexBuild } from './statistiques.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { anneePrecedente, CaminoAnnee, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date.js'
 
 const statistiquesGuyaneActivitesBuild = (
   sectionId: string,
@@ -106,16 +107,16 @@ const statistiquesGuyaneInstantBuild = (titres: ITitre[]) => {
 const statistiquesGuyaneAnneeBuild = (
   titres: ITitre[],
   titresActivites: ITitreActivite[],
-  annee: number
+  annee: CaminoAnnee
 ) => {
-  const titresFiltered = titresSurfaceIndexBuild(titres, annee)
+  const titresFiltered = titresSurfaceIndexBuild(titres, +annee)
 
   const { titresArm, titresPrm, titresAxm, titresCxm } =
     statistiquesGuyaneTitresBuild(titresFiltered)
 
   // les activités de type grp de l'année
   const titresActivitesGrpFiltered = titresActivites.filter(
-    ta => ta.annee === annee && ta.typeId === 'grp'
+    ta => ta.annee === +annee && ta.typeId === 'grp'
   )
   const statistiquesActivitesGrp = statistiquesGuyaneActivitesBuild(
     'renseignements',
@@ -132,7 +133,7 @@ const statistiquesGuyaneAnneeBuild = (
   )
   // les activités de type gra et grx de l'année
   const titresActivitesGraFiltered = titresActivites.filter(
-    ta => ta.annee === annee && (ta.typeId === 'gra' || ta.typeId === 'grx')
+    ta => ta.annee === +annee && (ta.typeId === 'gra' || ta.typeId === 'grx')
   )
   const statistiquesActivitesGra = statistiquesGuyaneActivitesBuild(
     'substancesFiscales',
@@ -145,10 +146,10 @@ const statistiquesGuyaneAnneeBuild = (
   )
 
   // Pour les années 2017 et 2018, on affiche les chiffres "DRFIP" soit : pour 2017 : 1 485 kg  et pour 2018 : 1320 kg.
-  if (annee === 2017) {
+  if (annee === toCaminoAnnee(2017)) {
     // les rapports annuels n'existaient pas en 2017
     statistiquesActivitesGra.auru = 1485
-  } else if (annee === 2018) {
+  } else if (annee === toCaminoAnnee(2018)) {
     // à l'époque  l'or net annuel était déclaré "à coté" de la production d'or brut du 4ème trimestre, ce qui a provoqué la confusion des opérateurs et des erreurs en cascade.
     statistiquesActivitesGra.auru = 1320
   }
@@ -190,10 +191,15 @@ const statistiquesGuyaneAnneeBuild = (
 
 export const statistiquesGuyane = async () => {
   try {
-    const anneeCurrent = new Date().getFullYear()
+    let anneeCurrent = getCurrentAnnee()
     // un tableau avec les 5 dernières années
     const annees = Array.from(Array(6).keys())
-      .map(e => anneeCurrent - e)
+      .map(_id => {
+        const monAnnee = anneeCurrent
+        anneeCurrent = anneePrecedente(anneeCurrent)
+
+        return monAnnee
+      })
       .reverse()
 
     const titres = await titresGet(
@@ -212,7 +218,11 @@ export const statistiquesGuyane = async () => {
     )
 
     const titresActivites = await titresActivitesGet(
-      { titresTerritoires: 'guyane', annees, typesIds: ['grp', 'gra', 'grx'] },
+      {
+        titresTerritoires: 'guyane',
+        annees: annees.map(annee => +annee),
+        typesIds: ['grp', 'gra', 'grx']
+      },
       { fields: { titre: { id: {} } } },
       userSuper
     )
