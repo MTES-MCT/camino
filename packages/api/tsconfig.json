@@ -6,8 +6,8 @@
     "esModuleInterop": true,
     "inlineSources": false,
     "lib": ["es2020", "dom"],
-    "module": "es2020",
-    "moduleResolution": "node",
+    "module": "ES2020",
+    "moduleResolution": "Node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -29,7 +29,5 @@
       "turf-center": ["./src/@types/turf-center"],
       "tus-node-server": ["./src/@types/tus-node-server"]
     }
-  },
-  "exclude": ["node_modules", "**/__mocks__/*"],
-  "include": ["src/**/*", "sources/**/*", "../common/src/**/*"]
+  }
 }

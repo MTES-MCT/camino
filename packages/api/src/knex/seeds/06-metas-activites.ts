@@ -1,11 +1,13 @@
 import seeding from '../seeding.js'
 /* eslint-disable camelcase */
+import { createRequire } from 'node:module'
+const require = createRequire(import.meta.url)
 
-import activitesStatuts from '../../../sources/activites-statuts.json' assert { type: 'json' }
-import activitesTypes from '../../../sources/activites-types.json' assert { type: 'json' }
-import activitesTypes__titresTypes from '../../../sources/activites-types--titres-types.json' assert { type: 'json' }
-import activitesTypes_pays from '../../../sources/activites-types--pays.json' assert { type: 'json' }
-import activitesTypes_documentsTypes from '../../../sources/activites-types--documents-types.json' assert { type: 'json' }
+const activitesStatuts = require('../../../sources/activites-statuts.json')
+const activitesTypes = require('../../../sources/activites-types.json')
+const activitesTypes__titresTypes = require('../../../sources/activites-types--titres-types.json')
+const activitesTypes_pays = require('../../../sources/activites-types--pays.json')
+const activitesTypes_documentsTypes = require('../../../sources/activites-types--documents-types.json')
 
 export const seed = seeding(async ({ insert }) => {
   await insert('activitesStatuts', activitesStatuts)

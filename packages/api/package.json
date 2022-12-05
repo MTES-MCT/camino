@@ -6,10 +6,7 @@
   "main": "./src/index.js",
   "type": "module",
   "scripts": {
-    "bim": "npm i && npm run build && npm run db:recreate && npm run db:import",
-    "build": "npm run build:api && npm run build:common",
-    "build:api": "rm -rf dist && tsc && mkdir -p ./dist/api/src/api/graphql && cp -r ./src/api/graphql/schemas ./dist/api/src/api/graphql",
-    "build:common": "cd ../common/ && tsc",
+    "build": "tsc",
     "daily": "node --loader ts-node/esm/transpile-only ./src/scripts/daily.ts",
     "monthly": "node --loader ts-node/esm/transpile-only ./src/scripts/monthly.ts",
     "db:dump": "pg_dump --host=localhost --username=postgres --clean --if-exists --format=c --no-owner --no-privileges --dbname=camino --file=./backups/camino.sql",
@@ -29,8 +26,8 @@
     "lint": "prettier --write . && eslint --fix .",
     "start": "node --loader ts-node/esm/transpile-only ./src/index.ts",
     "test": "npm run test:unit && npm run test:integration",
-    "test:unit": "NODE_OPTIONS='--loader ts-node/esm/transpile-only' vitest --environment node --root src/ --config ../vitest.unit.config.ts",
-    "test:integration": "NODE_OPTIONS='--loader ts-node/esm/transpile-only' JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret vitest --environment node --root src/ --config ../vitest.integration.config.ts",
+    "test:unit": "vitest --environment node --root src/ --config ../vitest.unit.config.ts",
+    "test:integration": "NODE_OPTIONS='--loader ts-node/esm' JWT_SECRET=secret-tests JWT_SECRET_REFRESH=refresh-secret vitest --environment node --root src/ --config ../vitest.integration.config.ts",
     "test:generate-data": "node --loader ts-node/esm/transpile-only src/tools/demarches/tests-creation.ts",
     "ci:lint": "prettier --check . && eslint ."
   },

@@ -4,7 +4,7 @@ import { Model } from 'objection'
 let knexInstance = null as unknown as Knex
 
 const knexInit = (knexConfig: Knex.Config) => {
-  knexInstance = knex.default(knexConfig)
+  knexInstance = knex(knexConfig)
   Model.knex(knexInstance)
 }
 

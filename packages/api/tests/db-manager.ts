@@ -66,7 +66,7 @@ class DbManager {
       ...knexSnakeCaseMappers()
     }
 
-    return knex.default(knexConfig)
+    return knex(knexConfig)
   }
 
   private static checkKnexInstance(

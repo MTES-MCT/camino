@@ -1,16 +1,18 @@
 import seeding from '../seeding.js'
 /* eslint-disable camelcase */
+import { createRequire } from 'node:module'
+const require = createRequire(import.meta.url)
 
-import domaines from '../../../sources/domaines.json' assert { type: 'json' }
-import titresTypesTypes from '../../../sources/titres-types-types.json' assert { type: 'json' }
-import titresTypes from '../../../sources/titres-types.json' assert { type: 'json' }
-import demarchesTypes from '../../../sources/demarches-types.json' assert { type: 'json' }
-import titresTypes__demarchesTypes from '../../../sources/titres-types--demarches-types.json' assert { type: 'json' }
-import etapesTypes from '../../../sources/etapes-types.json' assert { type: 'json' }
-import titresTypes_demarchesTypes_etapesTypes from '../../../sources/titres-types--demarches-types--etapes-types.json' assert { type: 'json' }
-import etapesTypes_justificatifsTypes from '../../../sources/etapes-types--justificatifs-types.json' assert { type: 'json' }
-import entreprises_documentsTypes from '../../../sources/entreprises--documents-types.json' assert { type: 'json' }
-import documentsTypes from '../../../sources/documents-types.json' assert { type: 'json' }
+const domaines = require('../../../sources/domaines.json')
+const titresTypesTypes = require('../../../sources/titres-types-types.json')
+const titresTypes = require('../../../sources/titres-types.json')
+const demarchesTypes = require('../../../sources/demarches-types.json')
+const titresTypes__demarchesTypes = require('../../../sources/titres-types--demarches-types.json')
+const etapesTypes = require('../../../sources/etapes-types.json')
+const titresTypes_demarchesTypes_etapesTypes = require('../../../sources/titres-types--demarches-types--etapes-types.json')
+const etapesTypes_justificatifsTypes = require('../../../sources/etapes-types--justificatifs-types.json')
+const entreprises_documentsTypes = require('../../../sources/entreprises--documents-types.json')
+const documentsTypes = require('../../../sources/documents-types.json')
 
 export const seed = seeding(async ({ insert }) => {
   await Promise.all([

@@ -28,6 +28,9 @@ const communesUpdate = async () => {
   )
 
   console.info('Traitement du fichier des communes')
+  if (communesFetch.body === null) {
+    throw new Error('Les communes sont vides')
+  }
   const pipeline = chain([
     new Readable().wrap(communesFetch.body),
     Pick.withParser({ filter: 'features' }),
@@ -89,7 +92,9 @@ const communesUpdate = async () => {
 
 const geoguyaneFileGet = async (path: string) => {
   const dataUrlFetch = await fetch(path)
-  const dataUrlJson = await dataUrlFetch.json()
+  const dataUrlJson = await dataUrlFetch
+    .json()
+    .then(value => value as { data: any })
 
   console.info('Téléchargement des données', dataUrlJson.data)
   const foretsZip = await fetch(dataUrlJson.data)
@@ -157,7 +162,9 @@ const secteursMaritimeUpdates = async () => {
   const secteursUrl =
     'https://gisdata.cerema.fr/arcgis/rest/services/Carte_vocation_dsf_2020/MapServer/0/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=secteur%2Cfacade%2COBJECTID%2Cid&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&having=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&historicMoment=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentOnly=false&datumTransformation=&parameterValues=&rangeValues=&quantizationParameters=&f=geojson'
 
-  const secteurs = await (await fetch(secteursUrl)).json()
+  const secteurs = await (await fetch(secteursUrl))
+    .json()
+    .then(value => value as { features: any[] })
 
   const secteurIdsKnown: number[] = (
     await knex.select('id').from('secteurs_maritime_postgis')

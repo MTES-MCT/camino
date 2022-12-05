@@ -1,9 +1,12 @@
 import seeding from '../seeding.js'
 /* eslint-disable camelcase */
 
-import administrations_activitesTypes from '../../../sources/administrations--activites-types.json' assert { type: 'json' }
-import administrations__titresTypes__titresStatuts from '../../../sources/administrations--titres-types--titres-statuts.json' assert { type: 'json' }
-import administrations__titresTypes__etapesTypes from '../../../sources/administrations--titres-types--etapes-types.json' assert { type: 'json' }
+import { createRequire } from 'node:module'
+const require = createRequire(import.meta.url)
+
+const administrations_activitesTypes = require('../../../sources/administrations--activites-types.json')
+const administrations__titresTypes__titresStatuts = require('../../../sources/administrations--titres-types--titres-statuts.json')
+const administrations__titresTypes__etapesTypes = require('../../../sources/administrations--titres-types--etapes-types.json')
 
 export const seed = seeding(async ({ insert }) => {
   await Promise.all([

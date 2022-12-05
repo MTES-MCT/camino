@@ -6,14 +6,14 @@
     "esModuleInterop": true,
     "inlineSources": false,
     "lib": ["es2020", "dom"],
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ES2020",
+    "moduleResolution": "Node",
     "noFallthroughCasesInSwitch": true,
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "outDir": ".",
-    "rootDir": ".",
+    "outDir": "dist",
+    "rootDir": "./src",
     "strict": true,
     "strictNullChecks": true,
     "sourceMap": false,
@@ -21,7 +21,5 @@
     "types": ["node"],
     "resolveJsonModule": true,
     "noEmit": true
-  },
-  "exclude": ["node_modules"],
-  "include": ["src/**/*"],
+  }
 }
