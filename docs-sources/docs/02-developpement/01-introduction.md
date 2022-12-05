@@ -48,7 +48,7 @@ npm run db:user -w packages/api
 ### Développement
 
 ```bash
-# démarre le serveur avec nodemon
+# démarre le serveur
 npm run dev -w packages/api
 ```
 
