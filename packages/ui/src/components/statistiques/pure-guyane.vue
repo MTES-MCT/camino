@@ -24,7 +24,7 @@
           <div class="tablet-blob-1-4">
             <p class="h0 text-center">
               <LoadingElement v-slot="{ item }" :data="data">
-                {{ item.graphql.titresArm }}
+                {{ item.data.titresArm }}
               </LoadingElement>
             </p>
             <p class="bold text-center">Autorisations de recherche</p>
@@ -48,7 +48,7 @@
           <div class="tablet-blob-1-4">
             <p class="h0 text-center">
               <LoadingElement v-slot="{ item }" :data="data">
-                {{ item.graphql.titresPrm }}
+                {{ item.data.titresPrm }}
               </LoadingElement>
             </p>
             <p class="bold text-center">Permis exclusifs de recherches</p>
@@ -72,7 +72,7 @@
           <div class="tablet-blob-1-2">
             <p class="h0 text-center">
               <LoadingElement v-slot="{ item }" :data="data">
-                {{ numberFormat(item.graphql.surfaceExploration) }} ha
+                {{ numberFormat(item.data.surfaceExploration) }} ha
               </LoadingElement>
             </p>
             <p class="bold text-center">
@@ -89,7 +89,7 @@
           <div class="tablet-blob-1-4">
             <p class="h0 text-center">
               <LoadingElement v-slot="{ item }" :data="data">
-                {{ item.graphql.titresAxm }}
+                {{ item.data.titresAxm }}
               </LoadingElement>
             </p>
             <p class="bold text-center">Autorisations d'exploitation</p>
@@ -113,7 +113,7 @@
           <div class="tablet-blob-1-4">
             <p class="h0 text-center">
               <LoadingElement v-slot="{ item }" :data="data">
-                {{ item.graphql.titresCxm }}
+                {{ item.data.titresCxm }}
               </LoadingElement>
             </p>
             <p class="bold text-center">Concessions</p>
@@ -137,7 +137,7 @@
           <div class="tablet-blob-1-4">
             <p class="h0 text-center">
               <LoadingElement v-slot="{ item }" :data="data">
-                {{ numberFormat(item.graphql.surfaceExploitation) }} ha
+                {{ numberFormat(item.data.surfaceExploitation) }} ha
               </LoadingElement>
             </p>
             <p class="bold text-center">
@@ -175,7 +175,7 @@
     <div class="line-neutral width-full mb" />
     <LoadingElement v-slot="{ item }" :data="data">
       <GuyaneActivite
-        :statistiqueGuyane="item.statistiques[tabActive]"
+        :statistiqueGuyane="item.parAnnee[tabActive]"
         :enConstruction="enConstruction(tabActive)"
         class="mb-xxl"
       />
@@ -195,28 +195,28 @@
         <hr />
 
         <LoadingElement v-slot="{ item }" :data="data">
-          <BarChart :chartConfiguration="armChartConfiguration(item.rest)" />
+          <BarChart :chartConfiguration="armChartConfiguration(item.data)" />
         </LoadingElement>
       </div>
       <div class="mb-xl">
         <h3>Permis de recherches</h3>
         <hr />
         <LoadingElement v-slot="{ item }" :data="data">
-          <BarChart :chartConfiguration="prmChartConfiguration(item.rest)" />
+          <BarChart :chartConfiguration="prmChartConfiguration(item.data)" />
         </LoadingElement>
       </div>
       <div class="mb-xl">
         <h3>Autorisations d'exploitation</h3>
         <hr />
         <LoadingElement v-slot="{ item }" :data="data">
-          <BarChart :chartConfiguration="axmChartConfiguration(item.rest)" />
+          <BarChart :chartConfiguration="axmChartConfiguration(item.data)" />
         </LoadingElement>
       </div>
       <div class="mb-xl">
         <h3>Concessions</h3>
         <hr />
         <LoadingElement v-slot="{ item }" :data="data">
-          <BarChart :chartConfiguration="cxmChartConfiguration(item.rest)" />
+          <BarChart :chartConfiguration="cxmChartConfiguration(item.data)" />
         </LoadingElement>
       </div>
     </div>
@@ -234,7 +234,7 @@ import { Ref, ref, computed, onMounted, withDefaults } from 'vue'
 
 import {
   StatistiquesGuyane,
-  StatistiquesGuyaneRest
+  StatistiquesGuyaneData
 } from 'camino-common/src/statistiques'
 import { CHART_COLORS } from '../_charts/utils'
 import { ChartConfiguration, ChartData } from 'chart.js'
@@ -335,7 +335,7 @@ const defaultConfiguration = (data: ChartData): ChartConfiguration => ({
 
 const armChartConfiguration = (
   // eslint-disable-next-line no-undef
-  data: StatistiquesGuyaneRest
+  data: StatistiquesGuyaneData
 ): ChartConfiguration => {
   const annees: CaminoAnnee[] = [...Object.keys(data.arm.depot)].filter(isAnnee)
   const chartData: ChartData = {
@@ -376,7 +376,7 @@ const armChartConfiguration = (
 }
 
 const prmChartConfiguration = (
-  data: StatistiquesGuyaneRest
+  data: StatistiquesGuyaneData
 ): ChartConfiguration => {
   const annees: CaminoAnnee[] = [...Object.keys(data.prm.depot)].filter(isAnnee)
   const chartData: ChartData = {
@@ -417,7 +417,7 @@ const prmChartConfiguration = (
 }
 
 const axmChartConfiguration = (
-  data: StatistiquesGuyaneRest
+  data: StatistiquesGuyaneData
 ): ChartConfiguration => {
   const annees: CaminoAnnee[] = [...Object.keys(data.axm.depot)].filter(isAnnee)
   const chartData: ChartData = {
@@ -457,7 +457,7 @@ const axmChartConfiguration = (
 }
 
 const cxmChartConfiguration = (
-  data: StatistiquesGuyaneRest
+  data: StatistiquesGuyaneData
 ): ChartConfiguration => {
   const annees: CaminoAnnee[] = [...Object.keys(data.cxm.depot)].filter(isAnnee)
   const chartData: ChartData = {

@@ -1,10 +1,11 @@
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
-import { StatistiquesGuyaneRest } from 'camino-common/src/statistiques.js'
+import { StatistiquesGuyaneData } from 'camino-common/src/statistiques.js'
+import { statistiquesGuyane } from '../../graphql/resolvers/statistiques-guyane.js'
 import { evolutionTitres } from './evolution-titres.js'
 
 export const getGuyaneStatsInside =
-  async (): Promise<StatistiquesGuyaneRest> => {
+  async (): Promise<StatistiquesGuyaneData> => {
     const guyane = [DEPARTEMENT_IDS.Guyane]
     const armData = await evolutionTitres(
       TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE,
@@ -23,10 +24,13 @@ export const getGuyaneStatsInside =
       guyane
     )
 
+    const fromObjection = await statistiquesGuyane()
+
     return {
       arm: armData,
       prm: prmData,
       axm: axmData,
-      cxm: cxmData
+      cxm: cxmData,
+      ...fromObjection
     }
   }

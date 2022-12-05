@@ -94,10 +94,10 @@
 
 <script setup lang="ts">
 import numberFormat from '@/utils/number-format'
-import { StatistiquesGuyaneGraphQL } from 'camino-common/src/statistiques'
+import { StatistiquesGuyaneActivite } from 'camino-common/src/statistiques'
 
 defineProps<{
-  statistiqueGuyane: StatistiquesGuyaneGraphQL
+  statistiqueGuyane: StatistiquesGuyaneActivite
   enConstruction: boolean
 }>()
 </script>
