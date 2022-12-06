@@ -43,6 +43,7 @@ import {
   utilisateursLignesBuild
 } from './utilisateurs/table'
 import Icon from './_ui/icon.vue'
+import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 
 export default {
   name: 'Utilisateurs',
@@ -109,11 +110,7 @@ export default {
 
   methods: {
     async init() {
-      if (
-        !this.user ||
-        !this.user.sections ||
-        !this.user.sections.utilisateurs
-      ) {
+      if (!canReadUtilisateurs(this.user)) {
         await this.$store.dispatch('pageError')
       } else {
         this.visible = true

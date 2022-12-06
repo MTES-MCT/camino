@@ -1,4 +1,4 @@
-import { IFormat, Index, IUser } from '../types.js'
+import { IFormat, Index, IUtilisateur } from '../types.js'
 
 import express from 'express'
 import { join } from 'path'
@@ -92,7 +92,7 @@ const restDownload =
     next: express.NextFunction
   ) => {
     try {
-      const user = req.user as unknown as IUser | undefined
+      const user = req.user as unknown as IUtilisateur | undefined
       const result = await resolver(
         { query: req.query, params: req.params },
         user?.id

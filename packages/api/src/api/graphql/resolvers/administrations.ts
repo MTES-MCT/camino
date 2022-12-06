@@ -27,7 +27,10 @@ import { administrationFormat } from '../../_format/administrations.js'
 import { emailCheck } from '../../../tools/email-check.js'
 import { userGet } from '../../../database/queries/utilisateurs.js'
 import { isSuper } from 'camino-common/src/roles.js'
-import { canReadActivitesTypesEmails } from 'camino-common/src/permissions/administrations.js'
+import {
+  canReadActivitesTypesEmails,
+  canReadAdministrations
+} from 'camino-common/src/permissions/administrations.js'
 import administrationsActivitesTypesEmails from '../../../database/models/administrations-activites-types-emails.js'
 import { isAdministrationId } from 'camino-common/src/static/administrations.js'
 
@@ -38,6 +41,10 @@ const administration = async (
 ) => {
   try {
     const user = await userGet(context.user?.id)
+
+    if (!canReadAdministrations(user)) {
+      return null
+    }
     const fields = fieldsBuild(info)
 
     const administration = await administrationGet(id, { fields }, user)
@@ -86,6 +93,10 @@ const administrations = async (
 ) => {
   try {
     const user = await userGet(context.user?.id)
+
+    if (!canReadAdministrations(user)) {
+      return []
+    }
     const fields = fieldsBuild(info)
 
     const administrations = await administrationsGet({ fields }, user)

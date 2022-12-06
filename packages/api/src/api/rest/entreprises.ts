@@ -1,7 +1,12 @@
 import { userGet } from '../../database/queries/utilisateurs.js'
 
 import express from 'express'
-import { ICommune, IContenuValeur, IEntreprise, IUser } from '../../types.js'
+import {
+  ICommune,
+  IContenuValeur,
+  IEntreprise,
+  IUtilisateur
+} from '../../types.js'
 import {
   Fiscalite,
   FiscaliteFrance,
@@ -354,7 +359,7 @@ export const fiscalite = async (
   req: express.Request<{ entrepriseId?: EntrepriseId; annee?: CaminoAnnee }>,
   res: CustomResponse<Fiscalite>
 ) => {
-  const userId = (req.user as unknown as IUser | undefined)?.id
+  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
 
   const user = await userGet(userId)
 

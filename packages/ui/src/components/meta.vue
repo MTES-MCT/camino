@@ -40,6 +40,7 @@
 <script>
 import Loader from './_ui/loader.vue'
 import metasIndex from '../store/metas-definitions'
+import { canReadMetas } from 'camino-common/src/permissions/metas'
 
 export default {
   components: {
@@ -104,7 +105,7 @@ export default {
 
   methods: {
     async get() {
-      if (!this.user || !this.user.sections || !this.user.sections.metas) {
+      if (!canReadMetas(this.user)) {
         await this.$store.dispatch('pageError')
       } else {
         await this.$store.dispatch('meta/get', this.id)

@@ -758,10 +758,6 @@ interface ITitreTypeDemarcheTypeEtapeType {
   justificatifsTypes?: DocumentType[] | null
 }
 
-interface IUser extends IUtilisateur {
-  sections: Index<boolean>
-}
-
 interface IUtilisateur {
   id: string
   email?: string | null
@@ -880,7 +876,6 @@ export {
   ITitreTypeDemarcheTypeEtapeType,
   ITitreTypeDemarcheTypeEtapeTypeJustificatifType,
   ITitreEntreprise,
-  IUser,
   IUtilisateur,
   IUtilisateurTitre,
   IUtilisateurCreation,

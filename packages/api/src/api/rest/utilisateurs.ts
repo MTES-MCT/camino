@@ -6,7 +6,7 @@ import {
 } from '../../database/queries/utilisateurs.js'
 import express from 'express'
 import { CustomResponse } from './express-type.js'
-import { IFormat, IUser, IUtilisateursColonneId } from '../../types.js'
+import { IFormat, IUtilisateur, IUtilisateursColonneId } from '../../types.js'
 import { constants } from 'http2'
 import {
   isSubscribedToNewsLetter,
@@ -25,7 +25,7 @@ export const isSubscribedToNewsletter = async (
   req: express.Request<{ id?: string }>,
   res: CustomResponse<boolean>
 ) => {
-  const userId = (req.user as unknown as IUser | undefined)?.id
+  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
   const user = await userGet(userId)
 
   if (!req.params.id) {
@@ -50,7 +50,7 @@ export const manageNewsletterSubscription = async (
   req: express.Request<{ id?: string }>,
   res: CustomResponse<boolean>
 ) => {
-  const userId = (req.user as unknown as IUser | undefined)?.id
+  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
   const user = await userGet(userId)
 
   if (!req.params.id) {
@@ -88,7 +88,7 @@ export const generateQgisToken = async (
   req: express.Request,
   res: CustomResponse<QGISToken>
 ) => {
-  const userEmail = (req.user as unknown as IUser | undefined)?.email
+  const userEmail = (req.user as unknown as IUtilisateur | undefined)?.email
   if (!userEmail) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
 

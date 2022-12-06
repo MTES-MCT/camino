@@ -181,7 +181,7 @@ const eventTrack = (event: {
 }) => {
   if (matomo) {
     // @ts-ignore
-    matomo?.trackEvent(event.categorie, event.action, event.nom)
+    matomo.trackEvent(event.categorie, event.action, event.nom)
   }
 }
 </script>

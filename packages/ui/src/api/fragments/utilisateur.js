@@ -18,15 +18,6 @@ export const fragmentUtilisateur = gql`
     suppression
     permissionModification
     utilisateursCreation
-
-    sections {
-      activites
-      administrations
-      utilisateurs
-      metas
-      journaux
-      travaux
-    }
   }
 
   ${fragmentEntreprises}

@@ -3,6 +3,7 @@ import { userGet } from '../../../database/queries/utilisateurs.js'
 import { IToken } from '../../../types.js'
 import { GraphQLResolveInfo } from 'graphql'
 import { fieldsBuild } from './_fields-build.js'
+import { canReadJournaux } from 'camino-common/src/permissions/journaux.js'
 
 export interface IJournauxQueryParams {
   page: number
@@ -18,6 +19,9 @@ export const journaux = async (
 ) => {
   try {
     const user = await userGet(context.user?.id)
+    if (!canReadJournaux(user)) {
+      return []
+    }
     const fields = fieldsBuild(info)
 
     const { results, total } = await journauxGet(

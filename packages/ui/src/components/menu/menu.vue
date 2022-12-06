@@ -34,7 +34,7 @@
                 Démarches
               </router-link>
             </li>
-            <li v-if="sections.travaux">
+            <li v-if="canReadTravaux(user)">
               <router-link
                 id="cmn-menu-menu-a-travaux"
                 :to="{ name: 'travaux' }"
@@ -46,9 +46,12 @@
             </li>
           </ul>
         </div>
-        <div v-if="sections.activites" class="tablet-blob-1-4 border-l pl-s">
+        <div
+          v-if="canReadActivites(user)"
+          class="tablet-blob-1-4 border-l pl-s"
+        >
           <ul class="list-sans mb-0">
-            <li v-if="sections.activites">
+            <li>
               <router-link
                 id="cmn-menu-menu-a-activites"
                 :to="{ name: 'activites' }"
@@ -62,7 +65,7 @@
         </div>
         <div class="tablet-blob-1-4 border-l pl-s">
           <ul class="list-sans mb-0">
-            <li v-if="sections.administrations">
+            <li v-if="canReadAdministrations(user)">
               <router-link
                 id="cmn-menu-menu-a-administrations"
                 :to="{ name: 'administrations' }"
@@ -82,7 +85,7 @@
                 Entreprises
               </router-link>
             </li>
-            <li v-if="sections.utilisateurs">
+            <li v-if="canReadUtilisateurs(user)">
               <router-link
                 id="cmn-menu-menu-a-utilisateurs"
                 :to="{ name: 'utilisateurs' }"
@@ -116,7 +119,7 @@
                 Statistiques
               </router-link>
             </li>
-            <li v-if="sections.metas">
+            <li v-if="canReadMetas(user)">
               <router-link
                 id="cmn-menu-menu-a-metas"
                 :to="{ name: 'metas' }"
@@ -126,7 +129,7 @@
                 Métas
               </router-link>
             </li>
-            <li v-if="sections.journaux">
+            <li v-if="canReadJournaux(user)">
               <router-link
                 id="cmn-menu-menu-a-journaux"
                 :to="{ name: 'journaux' }"
@@ -142,59 +145,48 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'MainMenu',
+<script setup lang="ts">
+import { computed, inject } from 'vue'
+import { useStore } from 'vuex'
+import { canReadMetas } from 'camino-common/src/permissions/metas'
+import { canReadJournaux } from 'camino-common/src/permissions/journaux'
+import { canReadAdministrations } from 'camino-common/src/permissions/administrations'
+import { canReadActivites } from 'camino-common/src/permissions/activites'
+import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
+import { canReadTravaux } from 'camino-common/src/permissions/travaux'
+import { User } from 'camino-common/src/roles.js'
 
-  computed: {
-    user() {
-      return this.$store.state.user.element
-    },
+const store = useStore()
+const matomo = inject('matomo', null)
 
-    hasEntreprises() {
-      return this.$store.getters['user/hasEntreprises']
-    },
-    isONF() {
-      return this.$store.getters['user/isONF']
-    },
-    isPTMG() {
-      return this.$store.getters['user/isPTMG']
-    },
-    isDREAL() {
-      return this.$store.getters['user/isDREAL']
-    },
+const user = computed<User>(() => store.state.user.element)
+const hasEntreprises = computed<boolean>(
+  () => store.getters['user/hasEntreprises']
+)
+const isONF = computed<boolean>(() => store.getters['user/isONF'])
+const isPTMG = computed<boolean>(() => store.getters['user/isPTMG'])
+const isDREAL = computed<boolean>(() => store.getters['user/isDREAL'])
 
-    sections() {
-      return this.user && this.user.sections ? this.user.sections : {}
-    },
+const dashboardLabel = computed<string | null>(() => {
+  if (hasEntreprises.value) {
+    return 'Mes titres'
+  }
+  if (isONF.value) {
+    return 'Tableau de bord ONF'
+  }
+  if (isPTMG.value) {
+    return 'Tableau de bord PTMG'
+  }
+  if (isDREAL.value) {
+    return 'Tableau de bord'
+  }
+  return null
+})
 
-    dashboardLabel() {
-      if (this.hasEntreprises) {
-        return 'Mes titres'
-      }
-      if (this.isONF) {
-        return 'Tableau de bord ONF'
-      }
-      if (this.isPTMG) {
-        return 'Tableau de bord PTMG'
-      }
-      if (this.isDREAL) {
-        return 'Tableau de bord'
-      }
-      return null
-    },
-
-    menu() {
-      return this.$store.state.menu
-    }
-  },
-
-  methods: {
-    eventTrack(id) {
-      if (this.$matomo) {
-        this.$matomo.trackEvent('menu-sections', 'menu-section', id)
-      }
-    }
+const eventTrack = (id: string) => {
+  if (matomo) {
+    // @ts-ignore
+    matomo.trackEvent('menu-sections', 'menu-section', id)
   }
 }
 </script>

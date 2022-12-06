@@ -3,6 +3,10 @@ import { AdministrationId, Administrations, sortedAdministrations } from '../sta
 import { Departements } from '../static/departement.js'
 
 export const canReadActivitesTypesEmails = (user: User, administrationId: AdministrationId) => {
+  if (!canReadAdministrations(user)) {
+    return false
+  }
+
   if (isSuper(user) || (isAdministration(user) && Administrations[user.administrationId].typeId === 'min')) {
     // Utilisateur super ou membre de ministère (admin ou éditeur) : tous les droits
     return true
@@ -26,3 +30,5 @@ export const canReadActivitesTypesEmails = (user: User, administrationId: Admini
 
   return false
 }
+
+export const canReadAdministrations = (user: User) => isSuper(user) || isAdministration(user)

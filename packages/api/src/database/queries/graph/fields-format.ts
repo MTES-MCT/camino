@@ -140,11 +140,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
       fields.documents = { id: {} }
     }
   }
-  if (['utilisateurs', 'utilisateur'].includes(parent)) {
-    if (fields.sections) {
-      delete fields.sections
-    }
-  }
 
   // on a besoin des activités si elles sont absentes
   // pour calculer le nombre d'activités par type

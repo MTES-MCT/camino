@@ -278,7 +278,6 @@ export default {
         id
       }))
 
-      delete utilisateur.sections
       delete utilisateur.modification
       delete utilisateur.suppression
 
