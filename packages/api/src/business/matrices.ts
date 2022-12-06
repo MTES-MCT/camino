@@ -233,7 +233,7 @@ export const buildMatrices = (
             `Un seul titulaire doit être présent sur le titre ${titre.id}`
           )
         }
-        const titulaireTitre = titre?.titulaires?.[0]
+        const titulaireTitre = titre.titulaires[0]
 
         return {
           communePrincipale,
@@ -243,10 +243,10 @@ export const buildMatrices = (
           sip,
           index: count,
           titulaire: {
-            nom: titulaireTitre?.nom ?? '',
-            rue: titulaireTitre?.adresse ?? '',
-            codepostal: titulaireTitre?.codePostal ?? '',
-            siren: titulaireTitre?.legalSiren ?? ''
+            nom: titulaireTitre.nom,
+            rue: titulaireTitre.adresse ?? '',
+            codepostal: titulaireTitre.codePostal ?? '',
+            siren: titulaireTitre.legalSiren ?? ''
           },
           titreLabel,
           departementLabel: departement,
