@@ -200,10 +200,6 @@ const entreprises = computed<Entreprise[]>(() => {
   return store.state.user.metas.entreprisesTitresCreation
 })
 
-const entreprise = computed<Entreprise | undefined>(() => {
-  return entreprises.value.find(e => e.id === titreDemande.value.entrepriseId)
-})
-
 const entrepriseOuBureauDEtudeCheck = computed<boolean>(() => {
   return isEntreprise(user.value) || isBureauDEtudes(user.value)
 })
@@ -234,13 +230,6 @@ const loadLinkableTitresByTypeId = computed(() => {
     return () => Promise.resolve([])
   }
 })
-
-watch(
-  () => entreprises,
-  () => {
-    init()
-  }
-)
 
 onMounted(async () => {
   await init()
