@@ -1,5 +1,9 @@
 import fetch, { Response } from 'node-fetch'
-import { SubstanceFiscale } from 'camino-common/src/static/substancesFiscales.js'
+import {
+  SubstanceFiscale,
+  SubstanceFiscaleId,
+  SubstancesFiscales
+} from 'camino-common/src/static/substancesFiscales.js'
 import { Unite, Unites } from 'camino-common/src/static/unites.js'
 type Attribute =
   | 'surface_communale'
@@ -95,9 +99,12 @@ interface OpenfiscaCommon {
   }
 }
 
+export type OpenfiscaTarifs = Record<
+  SubstanceFiscaleId,
+  { tarifDepartemental: number; tarifCommunal: number }
+>
 export interface OpenfiscaConstants {
-  tarifDepartemental: number
-  tarifCommunal: number
+  substances: OpenfiscaTarifs
   tarifTaxeMinierePME: number
   tarifTaxeMiniereAutre: number
 }
@@ -138,6 +145,12 @@ export const apiOpenfiscaCalculate = async (
   return apiOpenfiscaFetch<OpenfiscaResponse>(call)
 }
 
+type InitSubstance = {
+  [key in SubstanceFiscaleId]?: {
+    tarifDepartemental: number
+    tarifCommunal: number
+  }
+}
 export const apiOpenfiscaConstantsFetch = async (
   annee: number
 ): Promise<OpenfiscaConstants> => {
@@ -165,15 +178,22 @@ export const apiOpenfiscaConstantsFetch = async (
     'taxes/guyane/categories/autre'
   )
 
+  const substances: InitSubstance = {}
   // TODO 2022-08-09 : faire passer la substance en parametre le jour où on fait des matrices autre que Guyane
-  const tarifCommunal = await getParameter('redevances/communales/aurifere')
-  const tarifDepartemental = await getParameter(
-    'redevances/departementales/aurifere'
-  )
+  for (const substance of SubstancesFiscales) {
+    const nom = substance.openFisca?.nom ?? substance.nom
+    const tarifCommunal = await getParameter(`redevances/communales/${nom}`)
+    const tarifDepartemental = await getParameter(
+      `redevances/departementales/${nom}`
+    )
+    substances[substance.id] = {
+      tarifCommunal,
+      tarifDepartemental
+    }
+  }
 
   return {
-    tarifCommunal,
-    tarifDepartemental,
+    substances: substances as Required<InitSubstance>,
     tarifTaxeMinierePME,
     tarifTaxeMiniereAutre
   }

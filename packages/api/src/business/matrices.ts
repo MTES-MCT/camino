@@ -1,11 +1,12 @@
-import '../init'
+import '../init.js'
 import { titresGet } from '../database/queries/titres.js'
 import { titresActivitesGet } from '../database/queries/titres-activites.js'
 import {
   apiOpenfiscaCalculate,
   apiOpenfiscaConstantsFetch,
   OpenfiscaConstants,
-  OpenfiscaResponse
+  OpenfiscaResponse,
+  OpenfiscaTarifs
 } from '../tools/api-openfisca/index.js'
 import { bodyBuilder, toFiscalite } from '../api/rest/entreprises.js'
 import { userSuper } from '../database/user-super.js'
@@ -123,6 +124,7 @@ type Matrice1121 = {
   "Numéro de l'article du rôle": string | undefined
 }
 
+type Titulaire = { nom: string; rue: string; codepostal: string; siren: string }
 type Matrices = {
   communePrincipale: ICommune
   commune: ICommune
@@ -130,7 +132,7 @@ type Matrices = {
   quantiteOrExtrait: string
   sip: Sips
   index: number
-  titulaireLabel: string
+  titulaire: Titulaire
   departementLabel: string
   titreLabel: string
   surfaceCommunaleProportionnee: number
@@ -154,18 +156,8 @@ const precisionGramme = (x: number): string => {
   return x.toFixed(3)
 }
 
-const titulaireToString = (
-  titre: Pick<ITitre, 'id' | 'titulaires'>
-): string => {
-  if (titre.titulaires?.length !== 1) {
-    throw new Error(
-      `Un seul titulaire doit être présent sur le titre ${titre.id}`
-    )
-  }
-
-  const titulaireTitre = titre?.titulaires?.[0]
-
-  return `${titulaireTitre?.nom} - ${titulaireTitre?.adresse} - ${titulaireTitre?.legalSiren} SIREN`
+const titulaireToString = (titulaire: Titulaire): string => {
+  return `${titulaire.nom} - ${titulaire.rue} - ${titulaire.siren} SIREN`
 }
 
 // VISIBLE FOR TESTING
@@ -186,7 +178,6 @@ export const buildMatrices = (
   const rawLines: Matrices[] = titres
     .filter(titre => !!result.titres[titre.id])
     .flatMap(titre => {
-      const titulaireLabel = titulaireToString(titre)
       const communePrincipaleId =
         result.titres[titre.id]?.commune_principale_exploitation?.[
           anneePrecedente
@@ -237,6 +228,13 @@ export const buildMatrices = (
           sip = 'kourou'
         }
 
+        if (titre.titulaires?.length !== 1) {
+          throw new Error(
+            `Un seul titulaire doit être présent sur le titre ${titre.id}`
+          )
+        }
+        const titulaireTitre = titre?.titulaires?.[0]
+
         return {
           communePrincipale,
           commune,
@@ -244,7 +242,12 @@ export const buildMatrices = (
           quantiteOrExtrait: precisionGramme(quantiteOrExtrait),
           sip,
           index: count,
-          titulaireLabel,
+          titulaire: {
+            nom: titulaireTitre?.nom ?? '',
+            rue: titulaireTitre?.adresse ?? '',
+            codepostal: titulaireTitre?.codePostal ?? '',
+            siren: titulaireTitre?.legalSiren ?? ''
+          },
           titreLabel,
           departementLabel: departement,
           surfaceCommunaleProportionnee,
@@ -260,15 +263,16 @@ export const buildMatrices = (
       "Numéro d'ordre de la matrice": line.index,
       "Commune du lieu principal d'exploitation": line.communePrincipale.nom,
       'Désignation et adresse des concessionnaires, titulaires de permis d’exploitation ou exploitants':
-        line.titulaireLabel,
+        titulaireToString(line.titulaire),
       'Nature des substances extraites': 'Minerais aurifères',
       'Base des redevances | Nature': "Kilogramme d'or contenu",
       'Base des redevances | Quantités': line.quantiteOrExtrait,
       'Redevance départementale | Tarifs':
-        openfiscaConstants.tarifDepartemental,
+        openfiscaConstants.substances.auru.tarifDepartemental,
       'Redevance départementale | Montant net':
         fiscalite.redevanceDepartementale,
-      'Redevance communale | Tarifs': openfiscaConstants.tarifCommunal,
+      'Redevance communale | Tarifs':
+        openfiscaConstants.substances.auru.tarifCommunal,
       'Redevance communale | Montant net redevance des mines':
         fiscalite.redevanceCommunale,
       'Total redevance des mines':
@@ -293,7 +297,7 @@ export const buildMatrices = (
   const matrice1122 = rawLines.map(line => {
     return {
       "Numéro d'ordre de la matrice": line.index,
-      'Désignation des concessionnaires': line.titulaireLabel,
+      'Désignation des concessionnaires': titulaireToString(line.titulaire),
       'Désignation des concessions': line.titreLabel,
       'Départements sur le territoire desquels fonctionnent les exploitations':
         line.departementLabel,
@@ -421,7 +425,7 @@ export const buildMatrices = (
         toAdd.push({
           circonscriptionDe: sip?.nom ?? '',
           articlesDeRoles: line.index,
-          designationDesExploitants: line.titulaireLabel,
+          designationDesExploitants: titulaireToString(line.titulaire),
           departements: line.departementLabel,
           // TODO 2022-09-19 on est dans une impasse, impossible de répartir correctement la redevance entre la commune principale et les autres.
           // pour le moment, on fait comme les années précédences, en attendant une correction
@@ -616,7 +620,7 @@ export const matrices = async (annee: number) => {
     )
     await new Promise<void>(resolve => {
       carbone.render(
-        'packages/api/src/business/resources/matrice_1403-SD_2022.ods',
+        'src/business/resources/matrice_1403-SD_2022.ods',
         {
           '1403': matrice1403,
           total,
@@ -727,7 +731,7 @@ export const matrices = async (annee: number) => {
       )
     await new Promise<void>(resolve => {
       carbone.render(
-        'packages/api/src/business/resources/matrice_1404-SD_2022.ods',
+        'src/business/resources/matrice_1404-SD_2022.ods',
         {
           ...matrice1404,
           total: total1404,
@@ -749,8 +753,7 @@ export const matrices = async (annee: number) => {
         article: number
         entreprise: string
         quantite: string
-        tarifCommunal: number
-        tarifDepartemental: number
+        substances: OpenfiscaTarifs
         taxePME: number
         taxeAutre: number
         redevanceCommunale: number
@@ -771,10 +774,9 @@ export const matrices = async (annee: number) => {
       } else {
         const matrice = {
           article: matriceLine.index,
-          entreprise: matriceLine.titulaireLabel,
+          substances: openfiscaConstants.substances,
+          entreprise: titulaireToString(matriceLine.titulaire),
           quantite: matriceLine.quantiteOrExtrait,
-          tarifCommunal: openfiscaConstants.tarifCommunal,
-          tarifDepartemental: openfiscaConstants.tarifDepartemental,
           taxePME: openfiscaConstants.tarifTaxeMinierePME,
           taxeAutre: openfiscaConstants.tarifTaxeMiniereAutre,
           redevanceCommunale: matriceLine.fiscalite.redevanceCommunale,
@@ -800,20 +802,23 @@ export const matrices = async (annee: number) => {
         matrice1401[matriceLine.sip].push(matrice)
         await new Promise<void>(resolve => {
           carbone.render(
-            'packages/api/src/business/resources/matrice_1402-SD_2022.ods',
+            'src/business/resources/matrice_1402-SD_2022.ods',
             {
               ...matrice,
               departement: matriceLine.departementLabel,
               commune: matriceLine.commune.nom,
               role: matriceLine.titreLabel,
-              annee
+              titulaire: matriceLine.titulaire,
+              titreLabel: matriceLine.titreLabel,
+              annee,
+              anneeSuivante: annee + 1
             },
             function (err, result) {
               if (err) {
                 return console.error(err)
               }
               fs.writeFileSync(
-                `1402_${annee}_${matriceLine.index}_${matriceLine.titreLabel}.ods`,
+                `1402_${annee}_${matriceLine.sip}_${matriceLine.index}_${matriceLine.titreLabel}_${matriceLine.titulaire.nom}.ods`,
                 result
               )
               resolve()
@@ -833,7 +838,7 @@ export const matrices = async (annee: number) => {
             (montantTotalSommeALEtat * 4.4) / 8
           )
           carbone.render(
-            'packages/api/src/business/resources/matrice_1401-SD_2022.ods',
+            'src/business/resources/matrice_1401-SD_2022.ods',
             {
               valeurs: matrice1401[sip],
               nombreArticles: matrice1401[sip].length,

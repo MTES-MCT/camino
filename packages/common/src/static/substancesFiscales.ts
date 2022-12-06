@@ -265,7 +265,7 @@ export const SubstancesFiscale: {
     nom: 'oxyde de lithium',
     description: 'Li2O contenu dans les minerais de lithium',
     openFisca: {
-      nom: 'lithium_li20'
+      nom: 'lithium'
     }
   },
   mang: {
