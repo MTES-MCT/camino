@@ -33,6 +33,7 @@ import { Departements } from 'camino-common/src/static/departement.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { CaminoAnnee, isAnnee } from 'camino-common/src/date.js'
+import { EntrepriseId } from 'camino-common/src/entreprise.js'
 
 const conversion = (
   substanceFiscale: SubstanceFiscale,
@@ -350,7 +351,7 @@ export const responseExtractor = (
 }
 
 export const fiscalite = async (
-  req: express.Request<{ entrepriseId?: string; annee?: CaminoAnnee }>,
+  req: express.Request<{ entrepriseId?: EntrepriseId; annee?: CaminoAnnee }>,
   res: CustomResponse<Fiscalite>
 ) => {
   const userId = (req.user as unknown as IUser | undefined)?.id
