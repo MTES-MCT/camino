@@ -176,7 +176,7 @@
             </div>
           </div>
 
-          <QgisToken :generateTokenCall="generateToken" />
+          <QgisToken v-if="isMe" :generateTokenCall="generateToken" />
         </div>
       </template>
     </Accordion>
@@ -229,6 +229,10 @@ export default {
 
     loaded() {
       return !!this.utilisateur
+    },
+
+    isMe() {
+      return this.user.id === this.utilisateur.id
     }
   },
 
