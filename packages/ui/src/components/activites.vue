@@ -28,7 +28,7 @@ import Downloads from './_common/downloads.vue'
 
 import filtres from './activites/filtres'
 import { activitesColonnes, activitesLignesBuild } from './activites/table'
-import { canReadActivites } from 'camino-common/src/permissions/activites.js'
+import { canReadActivites } from 'camino-common/src/permissions/activites'
 
 export default {
   name: 'Activites',
