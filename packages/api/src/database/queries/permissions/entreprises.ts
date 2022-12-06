@@ -1,4 +1,4 @@
-import { raw, QueryBuilder } from 'objection'
+import { QueryBuilder } from 'objection'
 
 import { IUtilisateur } from '../../../types.js'
 
@@ -12,39 +12,12 @@ import Documents from '../../models/documents.js'
 import { titresQueryModify } from './titres.js'
 import { utilisateursQueryModify } from './utilisateurs.js'
 import { documentsQueryModify } from './documents.js'
-import {
-  isAdministrationAdmin,
-  isAdministrationEditeur,
-  isBureauDEtudes,
-  isEntreprise,
-  isSuper
-} from 'camino-common/src/roles.js'
 
 const entreprisesQueryModify = (
   q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>,
   user: IUtilisateur | null | undefined
 ) => {
   q.select('entreprises.*')
-
-  if (
-    isSuper(user) ||
-    isAdministrationAdmin(user) ||
-    isAdministrationEditeur(user)
-  ) {
-    q.select(raw('true').as('modification'))
-  } else if (isEntreprise(user) || isBureauDEtudes(user)) {
-    const utilisateurEntreprise = Utilisateurs.query().leftJoin(
-      'utilisateurs__entreprises as u_e',
-      b => {
-        b.on(knex.raw('?? = ??', ['u_e.entrepriseId', 'entreprises.id']))
-        b.andOn(knex.raw('?? = ?', ['u_e.utilisateurId', user.id]))
-      }
-    )
-
-    q.select(raw('exists (?)', [utilisateurEntreprise]).as('modification'))
-  } else {
-    q.select(raw('false').as('modification'))
-  }
 
   q.modifyGraph('titulaireTitres', a =>
     titresQueryModify(a as QueryBuilder<Titres, Titres | Titres[]>, user)

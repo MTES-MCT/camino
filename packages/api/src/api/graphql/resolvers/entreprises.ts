@@ -17,6 +17,10 @@ import { emailCheck } from '../../../tools/email-check.js'
 import { apiInseeEntrepriseAndEtablissementsGet } from '../../../tools/api-insee/index.js'
 import { userGet } from '../../../database/queries/utilisateurs.js'
 import { EntrepriseId } from 'camino-common/src/entreprise.js'
+import {
+  canCreateEntreprise,
+  canEditEntreprise
+} from 'camino-common/src/permissions/entreprises.js'
 
 const entreprise = async (
   { id }: { id: string },
@@ -160,7 +164,7 @@ const entrepriseCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!user?.entreprisesCreation) throw new Error('droits insuffisants')
+    if (!canCreateEntreprise(user)) throw new Error('droits insuffisants')
 
     const errors = []
 
@@ -219,7 +223,8 @@ const entrepriseModifier = async (
   try {
     const user = await userGet(context.user?.id)
 
-    if (!user?.entreprisesCreation) throw new Error('droits insuffisants')
+    if (!canEditEntreprise(user, entreprise.id))
+      throw new Error('droits insuffisants')
 
     const errors = []
 

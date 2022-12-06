@@ -30,6 +30,7 @@ import { userGet } from '../../../database/queries/utilisateurs.js'
 import { userSuper } from '../../../database/user-super.js'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
+import { canEditEntreprise } from 'camino-common/src/permissions/entreprises.js'
 
 const errorEtapesAssocieesUpdate = (
   etapesAssociees: ITitreEtape[],
@@ -96,7 +97,8 @@ const documentPermissionsCheck = async (
 
     if (!entreprise) throw new Error("l'entreprise n'existe pas")
 
-    if (!entreprise.modification) throw new Error('droits insuffisants')
+    if (!canEditEntreprise(user, entreprise.id))
+      throw new Error('droits insuffisants')
   } else if (document.titreActiviteId) {
     // si l'activité est récupérée depuis la base
     // alors on a le droit de la visualiser, donc de l'éditer

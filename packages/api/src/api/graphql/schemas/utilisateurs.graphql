@@ -18,7 +18,6 @@ type Utilisateur {
   modification: Boolean
   suppression: Boolean
   permissionModification: Boolean
-  entreprisesCreation: Boolean
   utilisateursCreation: Boolean
 
   sections: Sections
