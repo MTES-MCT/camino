@@ -287,7 +287,12 @@ exports[`matrices > buildMatrices 1`] = `
       "surfaceCommunale": 19805494,
       "surfaceCommunaleProportionnee": 1,
       "titreLabel": "slug-titre-1",
-      "titulaireLabel": "titulaire1 - ladresse1 - legalSiren1 SIREN",
+      "titulaire": {
+        "codepostal": "",
+        "nom": "titulaire1",
+        "rue": "ladresse1",
+        "siren": "legalSiren1",
+      },
     },
     {
       "commune": {
@@ -316,7 +321,12 @@ exports[`matrices > buildMatrices 1`] = `
       "surfaceCommunale": 323907,
       "surfaceCommunaleProportionnee": 0.3191007,
       "titreLabel": "slug-titre-2",
-      "titulaireLabel": "titulaire2 - ladresse2 - legalSiren2 SIREN",
+      "titulaire": {
+        "codepostal": "",
+        "nom": "titulaire2",
+        "rue": "ladresse2",
+        "siren": "legalSiren2",
+      },
     },
     {
       "commune": {
@@ -345,7 +355,12 @@ exports[`matrices > buildMatrices 1`] = `
       "surfaceCommunale": 691155,
       "surfaceCommunaleProportionnee": 0.6808993,
       "titreLabel": "slug-titre-2",
-      "titulaireLabel": "titulaire2 - ladresse2 - legalSiren2 SIREN",
+      "titulaire": {
+        "codepostal": "",
+        "nom": "titulaire2",
+        "rue": "ladresse2",
+        "siren": "legalSiren2",
+      },
     },
     {
       "commune": {
@@ -374,7 +389,12 @@ exports[`matrices > buildMatrices 1`] = `
       "surfaceCommunale": 1005053,
       "surfaceCommunaleProportionnee": 1,
       "titreLabel": "slug-titre-3",
-      "titulaireLabel": "titulaire3 - ladresse3 - legalSiren3 SIREN",
+      "titulaire": {
+        "codepostal": "",
+        "nom": "titulaire3",
+        "rue": "ladresse3",
+        "siren": "legalSiren3",
+      },
     },
   ],
 }
