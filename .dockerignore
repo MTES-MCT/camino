@@ -6,3 +6,6 @@ Dockerfile*
 .env
 docker-compose*
 infra/cd/.cargo_docker
+infra/cd/target
+packages/api/backups
+packages/api/sources

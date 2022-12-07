@@ -1,11 +1,8 @@
-const dotenv = require('dotenv')
 const path = require('path')
 const { defineConfig } = require('vite')
 const vue = require('@vitejs/plugin-vue')
 const inject = require('@rollup/plugin-inject')
 const { visualizer } = require('rollup-plugin-visualizer')
-
-dotenv.config({ path: path.resolve(process.cwd(), '../../.env') })
 
 const commitHash = process.env.GIT_SHA
   ? process.env.GIT_SHA

@@ -35,6 +35,8 @@ import {
   getMinerauxMetauxMetropolesStats
 } from '../api/rest/statistiques/index.js'
 import { CaminoRestRoutes } from 'camino-common/src/rest.js'
+import { CaminoConfig } from 'camino-common/src/static/config.js'
+import { CustomResponse } from '../api/rest/express-type.js'
 const contentTypes = {
   csv: 'text/csv',
   geojson: 'application/geojson',
@@ -137,6 +139,36 @@ const restDownload =
       next(e)
     }
   }
+
+export const config = async (
+  _req: express.Request,
+  res: CustomResponse<CaminoConfig>
+) => {
+  const config: CaminoConfig = {
+    sentryDsn: process.env.SENTRY_DSN,
+    caminoStage: process.env.CAMINO_STAGE,
+    environment: process.env.ENV ?? 'dev',
+    uiHost: process.env.UI_HOST,
+    matomoHost: process.env.API_MATOMO_URL,
+    matomoSiteId: process.env.API_MATOMO_ID
+  }
+
+  res.json(config)
+}
+rest.get('/config', restCatcher(config))
+
+rest.get('/stream/version', async (_req, res) => {
+  const headers = {
+    'Content-Type': 'text/event-stream',
+    Connection: 'keep-alive',
+    'Cache-Control': 'no-cache'
+  }
+
+  res.writeHead(200, headers)
+  res.write(`id: ${Date.now()}\n`)
+  res.write(`event: version\n`)
+  res.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
+})
 
 rest.post('/titres/:id/titreLiaisons', restCatcher(postTitreLiaisons))
 rest.get('/titres/:id/titreLiaisons', restCatcher(getTitreLiaisons))

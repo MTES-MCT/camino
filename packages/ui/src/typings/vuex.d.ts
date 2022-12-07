@@ -1,4 +1,5 @@
-import { Store } from 'vuex'
+import type { CaminoConfig } from 'camino-common/src/static/config'
+import type { Store } from 'vuex'
 
 /* eslint-disable no-unused-vars */
 
@@ -13,6 +14,8 @@ declare module '@vue/runtime-core' {
 }
 
 declare global {
+  var caminoConfig: CaminoConfig
+
   interface ReadonlyArray<T> {
     includes<U>(_x: U & (T & U extends never ? never : unknown)): boolean
   }

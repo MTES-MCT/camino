@@ -15,13 +15,6 @@ RUN CI=true make install
 COPY ./ /app/
 RUN make build/ui
 
-FROM node:19.1-alpine as production-stage
-
-COPY --from=build-stage /app/package*.json ./
-COPY --from=build-stage /app/packages/ui/package.json ./packages/ui/package.json
-COPY Makefile .
-RUN apk add make && CI=true make install/prod
-COPY --from=build-stage /app/packages/ui/dist ./packages/ui/dist
-COPY --from=build-stage /app/packages/ui/index.js ./packages/ui/index.js
-
-CMD ["make", "start/ui"]
+FROM nginx:1.23.2
+ADD ui_nginx.conf /etc/nginx/templates/default.conf.template
+COPY --from=build-stage /app/packages/ui/dist /usr/share/nginx/html
