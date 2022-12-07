@@ -42,13 +42,13 @@
               >
                 <td>
                   <CaminoDomaine
-                    :domaineId="ttts.titreType.domaine.id"
+                    :domaineId="TitresTypes[ttts.titreType.id].domaineId"
                     class="mt-s"
                   />
                 </td>
                 <td>
                   <span class="small bold cap-first mt-s">{{
-                    ttts.titreType.type.nom
+                    TitresTypesTypes[TitresTypes[ttts.titreType.id].typeId].nom
                   }}</span>
                 </td>
                 <td>
@@ -120,18 +120,18 @@
               >
                 <td>
                   <CaminoDomaine
-                    :domaineId="ttet.titreType.domaine.id"
+                    :domaineId="TitresTypes[ttet.titreType.id].domaineId"
                     class="mt-s"
                   />
                 </td>
                 <td>
                   <span class="small bold cap-first mt-s">{{
-                    ttet.titreType.type.nom
+                    TitresTypesTypes[TitresTypes[ttet.titreType.id].typeId].nom
                   }}</span>
                 </td>
                 <td>
                   <span class="small bold cap-first mt-s">{{
-                    ttet.etapeType.nom
+                    EtapesTypes[ttet.etapeType.id].nom
                   }}</span>
                 </td>
                 <td>
@@ -185,7 +185,7 @@
               >
                 <td>
                   <span class="cap-first"
-                    >{{ activiteType.nom }} ({{
+                    >{{ ActivitesTypes[activiteType.id].nom }} ({{
                       activiteType.id.toUpperCase()
                     }})
                   </span>
@@ -225,21 +225,23 @@ import {
 } from 'camino-common/src/static/titresStatuts'
 import PureTitresTypes from './pure-titres-types.vue'
 import { AdministrationId } from 'camino-common/src/static/administrations'
+import { ActivitesTypes } from 'camino-common/src/static/activitesTypes'
+import { TitresTypes } from 'camino-common/src/static/titresTypes'
+import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { onMounted, ref } from 'vue'
-import { ApiClient } from '@/api/api-client'
+import { AdministrationMetas, ApiClient } from '@/api/api-client'
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '../_ui/pure-loader.vue'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { DomaineId } from 'camino-common/src/static/domaines'
-import { EtapeTypeId } from 'camino-common/src/static/etapesTypes'
-import { ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
 
 const props = defineProps<{
   administrationId: AdministrationId
   apiClient: Pick<ApiClient, 'administrationMetas'>
 }>()
 
-const administrationMetas = ref<AsyncData<>>({ status: 'LOADING' })
+const administrationMetas = ref<AsyncData<AdministrationMetas>>({
+  status: 'LOADING'
+})
 
 const getTitreStatut = (titreStatutId: TitreStatutId) =>
   TitresStatuts[titreStatutId]
