@@ -40,8 +40,6 @@ const fragmentEntreprise = gql`
     documents {
       ...document
     }
-
-    modification
   }
 
   ${fragmentTitres}

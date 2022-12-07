@@ -108,16 +108,6 @@ class Entreprises extends Model {
       delete json.utilisateursIds
     }
 
-    delete json.modification
-
-    return json
-  }
-
-  public $formatDatabaseJson(json: Pojo) {
-    delete json.modification
-
-    json = super.$formatDatabaseJson(json)
-
     return json
   }
 }

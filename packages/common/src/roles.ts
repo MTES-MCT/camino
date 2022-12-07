@@ -1,11 +1,13 @@
+import { EntrepriseId } from './entreprise.js'
 import { AdministrationId } from './static/administrations.js'
 import { isNotNullNorUndefined } from './typescript-tools.js'
 export const ROLES = ['super', 'admin', 'editeur', 'lecteur', 'entreprise', 'bureau d’études', 'defaut'] as const
 export type Role = typeof ROLES[number]
-type UserEntreprise = { role: 'entreprise'; administrationId: undefined; entreprises: string[] }
+type UserEntreprise = { role: 'entreprise'; administrationId: undefined; entreprises?: { id: EntrepriseId }[] | null }
 type UserBureaudEtudes = {
   role: 'bureau d’études'
   administrationId: undefined
+  entreprises?: { id: EntrepriseId }[] | null
 }
 type UserAdmin = { role: 'admin'; administrationId: AdministrationId }
 type UserLecteur = { role: 'lecteur'; administrationId: AdministrationId }
@@ -13,7 +15,7 @@ type UserEditeur = { role: 'editeur'; administrationId: AdministrationId }
 type UserSuper = { role: 'super'; administrationId: undefined }
 type UserDefaut = { role: 'defaut'; administrationId: undefined }
 
-export type User = { role: Role; administrationId: undefined | null | AdministrationId } | undefined | null
+export type User = { role: Role; administrationId: undefined | null | AdministrationId; entreprises?: { id: EntrepriseId }[] | null } | undefined | null
 
 export const isSuper = (user: User): user is UserSuper => userPermissionCheck(user, 'super')
 

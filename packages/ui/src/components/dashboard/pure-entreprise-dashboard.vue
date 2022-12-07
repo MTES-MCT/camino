@@ -50,6 +50,7 @@ import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { fiscaliteVisible } from 'camino-common/src/fiscalite'
 import { User } from 'camino-common/src/roles'
+import { EntrepriseId } from 'camino-common/src/entreprise'
 
 const data = ref<AsyncData<TitreEntreprise[]>>({ status: 'LOADING' })
 
@@ -57,7 +58,7 @@ const entrepriseTitres = (entreprises: TitreEntreprise[]): TableAutoRow[] =>
   titresLignesBuild(entreprises, props.displayActivites)
 const props = defineProps<{
   user: User
-  entrepriseId: string
+  entrepriseId: EntrepriseId
   // TODO 2022-03-22: type the graphql
   getEntreprisesTitres: () => Promise<TitreEntreprise[]>
   displayActivites: boolean

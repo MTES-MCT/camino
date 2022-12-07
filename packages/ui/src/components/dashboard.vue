@@ -34,6 +34,7 @@ import { useRouter } from 'vue-router'
 import { titres } from '@/api/titres'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
+import { EntrepriseId } from 'camino-common/src/entreprise'
 
 const store = useStore()
 const router = useRouter()
@@ -41,7 +42,7 @@ const router = useRouter()
 const user = store.state.user.element
 const activites: boolean = user?.sections?.activites ?? false
 
-const entreprisesIds: string[] = []
+const entreprisesIds: EntrepriseId[] = []
 const hasEntreprises: boolean = store.getters['user/hasEntreprises']
 
 const isONF: boolean = store.getters['user/isONF']
@@ -52,7 +53,7 @@ if (hasEntreprises) {
   // TODO 2022-03-17: type the store
   const entreprises = store.getters['user/user']?.entreprises ?? []
   entreprisesIds.push(
-    ...entreprises.map((entreprise: { id: string }) => entreprise.id)
+    ...entreprises.map((entreprise: { id: EntrepriseId }) => entreprise.id)
   )
 } else if (!isONF && !isPTMG && !isDREAL && !isDGTM) {
   store.commit('titres/reset')

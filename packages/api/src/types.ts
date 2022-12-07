@@ -354,7 +354,6 @@ interface IEntreprise {
   utilisateurs?: IUtilisateur[] | null
   titulaireTitres?: ITitre[] | null
   amodiataireTitres?: ITitre[] | null
-  modification?: boolean | null
   archive?: boolean | null
 }
 
@@ -780,7 +779,6 @@ interface IUtilisateur {
   modification?: boolean | null
   suppression?: boolean | null
   permissionModification?: boolean | null
-  entreprisesCreation?: boolean | null
   utilisateursCreation?: boolean | null
   refreshToken?: string | null
   qgisToken?: string | null

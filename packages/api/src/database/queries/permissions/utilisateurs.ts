@@ -105,16 +105,6 @@ export const utilisateursQueryModify = (
     q.select(raw('false').as('permissionModification'))
   }
 
-  if (
-    isSuper(user) ||
-    isAdministrationAdmin(user) ||
-    isAdministrationEditeur(user)
-  ) {
-    q.select(raw('true').as('entreprisesCreation'))
-  } else {
-    q.select(raw('false').as('entreprisesCreation'))
-  }
-
   if (isSuper(user) || isAdministrationAdmin(user)) {
     q.select(raw('true').as('utilisateursCreation'))
   } else {

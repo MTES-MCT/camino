@@ -10,7 +10,7 @@
         <span class="cap-first"> Profil </span>
       </template>
 
-      <template v-if="entreprise.modification" #buttons>
+      <template v-if="canEditEntreprise(user, entreprise.id)" #buttons>
         <DocumentAddButton
           :route="route"
           :document="documentNew"
@@ -139,11 +139,11 @@
         <div v-if="entreprise.documents.length">
           <h4 class="px-m pt mb-0">Documents</h4>
           <Documents
-            :boutonModification="entreprise.modification"
+            :boutonModification="canEditEntreprise(user, entreprise.id)"
             :boutonSuppression="canDeleteDocument(entreprise, user)"
             :route="route"
             :documents="entreprise.documents"
-            :etiquette="entreprise.modification"
+            :etiquette="canEditEntreprise(user, entreprise.id)"
             :parentId="entreprise.id"
             :title="nom"
             repertoire="entreprises"
@@ -221,6 +221,27 @@ import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { fetchWithJson } from '@/api/client-rest'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
+import { EntrepriseId } from 'camino-common/src/entreprise'
+import { canEditEntreprise } from 'camino-common/src/permissions/entreprises'
+
+type Entreprise = {
+  id: EntrepriseId
+  nom: string
+  telephone: string
+  email: string
+  legalSiren: string
+  legalForme: string
+  adresse: string
+  codePostal: string
+  commune: string
+  url: string
+  documents: any[]
+  archive: boolean
+  titulaireTitres: any[]
+  amodiataireTitres: any[]
+  utilisateurs: any[]
+  etablissements: any[]
+}
 
 const store = useStore()
 const vueRoute = useRoute()
@@ -243,7 +264,7 @@ const annees = computed(() => {
   }
   return annees
 })
-const entreprise = computed(() => store.state.entreprise.element)
+const entreprise = computed<Entreprise>(() => store.state.entreprise.element)
 const nom = computed(() => (entreprise.value && entreprise.value.nom) ?? '-')
 const utilisateurs = computed(() => entreprise.value.utilisateurs)
 const utilisateursLignes = computed(() =>
@@ -312,12 +333,9 @@ const editPopupOpen = () => {
   })
 }
 
-const canDeleteDocument = (
-  entreprise: { modification?: boolean },
-  user: User
-): boolean => {
+const canDeleteDocument = (entreprise: Entreprise, user: User): boolean => {
   return (
-    (entreprise.modification ?? false) &&
+    canEditEntreprise(user, entreprise.id) &&
     (isSuper(user) ||
       isAdministrationAdmin(user) ||
       isAdministrationEditeur(user))

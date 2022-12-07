@@ -36,8 +36,6 @@ type Entreprise {
 
   archive: Boolean
   operateur: Boolean
-
-  modification: Boolean
 }
 
 type EntrepriseEtablissement {

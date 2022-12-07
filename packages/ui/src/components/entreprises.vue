@@ -10,7 +10,7 @@
     :initialized="initialized"
     @params-update="paramsUpdate"
   >
-    <template v-if="user && user.entreprisesCreation" #addButton>
+    <template v-if="canCreateEntreprise" #addButton>
       <button
         class="btn small rnd-xs py-s px-m full-x flex mb-s"
         @click="addPopupOpen"
@@ -34,6 +34,7 @@
 import Liste from './_common/liste.vue'
 import Downloads from './_common/downloads.vue'
 import EntrepriseAddPopup from './entreprise/add-popup.vue'
+import { canCreateEntreprise } from 'camino-common/src/permissions/entreprises'
 
 import filtres from './entreprises/filtres'
 import {
@@ -78,6 +79,9 @@ export default {
 
     initialized() {
       return this.$store.state.entreprises.initialized
+    },
+    canCreateEntreprise() {
+      return canCreateEntreprise(this.user)
     }
   },
 
