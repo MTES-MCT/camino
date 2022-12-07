@@ -28,6 +28,7 @@ import Downloads from './_common/downloads.vue'
 
 import filtres from './activites/filtres'
 import { activitesColonnes, activitesLignesBuild } from './activites/table'
+import { canReadActivites } from 'camino-common/src/permissions/activites'
 
 export default {
   name: 'Activites',
@@ -92,7 +93,7 @@ export default {
 
   methods: {
     async init() {
-      if (!this.user || !this.user.sections || !this.user.sections.activites) {
+      if (!canReadActivites(this.user)) {
         await this.$store.dispatch('pageError')
       } else {
         this.visible = true

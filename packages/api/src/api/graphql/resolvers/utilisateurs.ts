@@ -30,7 +30,6 @@ import {
 import { utilisateurUpdationValidate } from '../../../business/validations/utilisateur-updation-validate.js'
 import { emailCheck } from '../../../tools/email-check.js'
 import { utilisateurEditionCheck } from '../../_permissions/utilisateur.js'
-import { userFormat } from '../../_format/users.js'
 import { newsletterSubscriberUpdate } from '../../../tools/api-mailjet/newsletter.js'
 import { userSuper } from '../../../database/user-super.js'
 import {
@@ -42,6 +41,7 @@ import {
   isBureauDEtudes
 } from 'camino-common/src/roles.js'
 import { getCurrent } from 'camino-common/src/date.js'
+import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs.js'
 
 const TOKEN_TTL = '5m'
 
@@ -68,6 +68,9 @@ const utilisateur = async (
 ) => {
   try {
     const user = await userGet(context.user?.id)
+    if (!canReadUtilisateurs(user)) {
+      return null
+    }
     const fields = fieldsBuild(info)
     const utilisateur = await utilisateurGet(id, { fields }, user)
 
@@ -106,6 +109,10 @@ const utilisateurs = async (
 ) => {
   try {
     const user = await userGet(context.user?.id)
+
+    if (!canReadUtilisateurs(user)) {
+      return []
+    }
     const fields = fieldsBuild(info)
 
     const [utilisateurs, total] = await Promise.all([
@@ -162,7 +169,7 @@ const moi = async (_: never, context: IToken, info: GraphQLResolveInfo) => {
 
     const utilisateur = await utilisateurGet(user.id, { fields }, user)
 
-    return userFormat(utilisateur!)
+    return utilisateur
   } catch (e) {
     console.error(e)
 
@@ -210,7 +217,7 @@ const utilisateurConnecter = async (
       user
     )
 
-    return userFormat(utilisateur!)
+    return utilisateur
   } catch (e) {
     console.error(e)
 
@@ -275,7 +282,7 @@ const utilisateurCerbereConnecter = async (
 
     await userTokensCreate(utilisateur!, res)
 
-    return userFormat(utilisateur!)
+    return utilisateur
   } catch (e) {
     console.error(e)
 
@@ -661,7 +668,7 @@ const utilisateurMotDePasseInitialiser = async ({
       { fields: {} }
     )
 
-    return userFormat(utilisateurUpdated)
+    return utilisateurUpdated
   } catch (e) {
     console.error(e)
 
@@ -761,7 +768,7 @@ const utilisateurEmailModifier = async (
 
     await userTokensCreate(utilisateur!, context.res)
 
-    return userFormat(utilisateurUpdated)
+    return utilisateurUpdated
   } catch (e) {
     console.error(e)
 

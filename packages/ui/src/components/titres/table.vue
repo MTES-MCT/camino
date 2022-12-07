@@ -6,7 +6,7 @@
 import AutoTable from '../_ui/table-auto.vue'
 
 import { titresColonnes, titresLignesBuild } from './table-utils'
-
+import { canReadActivites } from 'camino-common/src/permissions/activites'
 export default {
   name: 'Titres',
 
@@ -20,7 +20,7 @@ export default {
     activitesCol() {
       const user = this.$store.state.user.element
 
-      return user && user.sections.activites
+      return canReadActivites(user)
     },
 
     colonnes() {

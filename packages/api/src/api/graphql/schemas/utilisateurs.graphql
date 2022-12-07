@@ -19,8 +19,6 @@ type Utilisateur {
   suppression: Boolean
   permissionModification: Boolean
   utilisateursCreation: Boolean
-
-  sections: Sections
 }
 
 type Utilisateurs {
@@ -30,15 +28,6 @@ type Utilisateurs {
   colonne: String
   ordre: String
   total: Int
-}
-
-type Sections {
-  activites: Boolean
-  administrations: Boolean
-  utilisateurs: Boolean
-  metas: Boolean
-  journaux: Boolean
-  travaux: Boolean
 }
 
 input InputUtilisateurModification {

@@ -14,6 +14,7 @@
 <script>
 import Liste from './_common/liste.vue'
 import { metasColonnes, metasLignesBuild } from './metas/table'
+import { canReadMetas } from 'camino-common/src/permissions/metas'
 
 export default {
   name: 'Metas',
@@ -67,7 +68,7 @@ export default {
 
   methods: {
     async init() {
-      if (!this.user || !this.user.sections || !this.user.sections.metas) {
+      if (!canReadMetas(this.user)) {
         await this.$store.dispatch('pageError')
       } else {
         this.visible = true

@@ -12,7 +12,7 @@ import express from 'express'
 import { constants } from 'http2'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
-import { ITitre, IUser, ITitreDemarche, IUtilisateur } from '../../types.js'
+import { ITitre, ITitreDemarche, IUtilisateur } from '../../types.js'
 import {
   CommonTitreDREAL,
   CommonTitreONF,
@@ -58,7 +58,7 @@ export const titresONF = async (
   req: express.Request,
   res: CustomResponse<CommonTitreONF[]>
 ) => {
-  const userId = (req.user as unknown as IUser | undefined)?.id
+  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
 
   const user = await userGet(userId)
 
@@ -205,7 +205,7 @@ export const titresPTMG = async (
   req: express.Request,
   res: CustomResponse<CommonTitrePTMG[]>
 ) => {
-  const userId = (req.user as unknown as IUser | undefined)?.id
+  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
 
   const user = await userGet(userId)
 
@@ -257,7 +257,7 @@ export const titresDREAL = async (
   req: express.Request,
   res: CustomResponse<CommonTitreDREAL[]>
 ) => {
-  const userId = (req.user as unknown as IUser | undefined)?.id
+  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
 
   const user = await userGet(userId)
 
@@ -442,7 +442,7 @@ export const postTitreLiaisons = async (
   req: express.Request<{ id?: string }>,
   res: CustomResponse<TitreLinks>
 ) => {
-  const userId = (req.user as unknown as IUser | undefined)?.id
+  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
 
   const user = await userGet(userId)
 
@@ -499,7 +499,7 @@ export const getTitreLiaisons = async (
   req: express.Request<{ id?: string }>,
   res: CustomResponse<TitreLinks>
 ) => {
-  const userId = (req.user as unknown as IUser | undefined)?.id
+  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
 
   const user = await userGet(userId)
 

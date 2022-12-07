@@ -38,6 +38,7 @@ import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { getCurrent } from 'camino-common/src/date.js'
+import { canReadActivites } from 'camino-common/src/permissions/activites.js'
 
 /**
  * Retourne une activité
@@ -56,6 +57,10 @@ const activite = async (
 ) => {
   try {
     const user = await userGet(context.user?.id)
+    if (!canReadActivites(user)) {
+      return null
+    }
+
     const fields = fieldsBuild(info)
 
     const titreActivite = await titreActiviteGet(id, { fields }, user)
@@ -133,6 +138,11 @@ const activites = async (
 ) => {
   try {
     const user = await userGet(context.user?.id)
+
+    if (!canReadActivites(user)) {
+      return []
+    }
+
     const fields = fieldsBuild(info)
 
     if (!intervalle) {

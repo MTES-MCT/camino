@@ -4,7 +4,7 @@
     :getEntreprisesTitres="getEntreprisesTitres"
     :user="user"
     :entrepriseId="entreprisesIds[0]"
-    :displayActivites="activites"
+    :displayActivites="canReadActivites(user)"
   />
   <PureONFDashboard v-else-if="isONF" :getOnfTitres="getOnfTitres" />
   <PurePTMGDashboard v-else-if="isPTMG" :getPtmgTitres="getPtmgTitres" />
@@ -34,13 +34,13 @@ import { useRouter } from 'vue-router'
 import { titres } from '@/api/titres'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
+import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 
 const store = useStore()
 const router = useRouter()
 
 const user = store.state.user.element
-const activites: boolean = user?.sections?.activites ?? false
 
 const entreprisesIds: EntrepriseId[] = []
 const hasEntreprises: boolean = store.getters['user/hasEntreprises']

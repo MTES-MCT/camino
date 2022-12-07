@@ -9,7 +9,7 @@ import { getMinerauxMetauxMetropolesStatsInside } from './metaux-metropole.js'
 
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { userGet } from '../../../database/queries/utilisateurs.js'
-import { IUser } from '../../../types.js'
+import { IUtilisateur } from '../../../types.js'
 import { constants } from 'http2'
 import { getDGTMStatsInside } from './dgtm.js'
 import { getGuyaneStatsInside } from './guyane.js'
@@ -18,7 +18,7 @@ export const getDGTMStats = async (
   req: express.Request,
   res: CustomResponse<StatistiquesDGTM>
 ) => {
-  const userId = (req.user as unknown as IUser | undefined)?.id
+  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
 
   const user = await userGet(userId)
 
