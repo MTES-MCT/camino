@@ -12,6 +12,7 @@ import store from './store'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { CaminoConfig } from 'camino-common/src/static/config'
 import { fetchWithJson } from './api/client-rest'
+let applicationVersion = localStorage.getItem('caminoApplicationVersion')
 
 Promise.resolve().then(async (): Promise<void> => {
   const app = createApp(App)
@@ -20,6 +21,19 @@ Promise.resolve().then(async (): Promise<void> => {
     CaminoRestRoutes.config,
     {}
   )
+  const eventSource = new EventSource('/apiUrl/stream/version')
+
+  eventSource.addEventListener('version', event => {
+    if (applicationVersion === null) {
+      localStorage.setItem('caminoApplicationVersion', event.data)
+      applicationVersion = event.data
+    }
+    if (event.data !== applicationVersion) {
+      localStorage.setItem('caminoApplicationVersion', event.data)
+      eventSource.close()
+      window.location.reload()
+    }
+  })
   if (configFromJson.caminoStage) {
     try {
       if (!configFromJson.sentryDsn) throw new Error('dsn manquant')
@@ -67,16 +81,6 @@ Promise.resolve().then(async (): Promise<void> => {
     } catch (e) {
       console.error('erreur : matomo :', e)
     }
-
-    const eventSource = new EventSource('/apiUrl/stream/version')
-
-    eventSource.addEventListener('version', event => {
-      // @ts-ignore
-      if (event.data !== applicationVersion) {
-        eventSource.close()
-        window.location.reload()
-      }
-    })
   }
   app.use(router)
   app.use(store)

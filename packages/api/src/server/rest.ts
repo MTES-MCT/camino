@@ -168,6 +168,7 @@ rest.get('/stream/version', async (_req, res) => {
   res.write(`id: ${Date.now()}\n`)
   res.write(`event: version\n`)
   res.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
+  res.flush()
 })
 
 rest.post('/titres/:id/titreLiaisons', restCatcher(postTitreLiaisons))
