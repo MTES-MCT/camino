@@ -12,7 +12,7 @@ import store from './store'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { CaminoConfig } from 'camino-common/src/static/config'
 import { fetchWithJson } from './api/client-rest'
-let applicationVersion = localStorage.getItem('caminoApplicationVersion')
+let caminoApplicationVersion = localStorage.getItem('caminoApplicationVersion')
 
 Promise.resolve().then(async (): Promise<void> => {
   const app = createApp(App)
@@ -24,12 +24,15 @@ Promise.resolve().then(async (): Promise<void> => {
   const eventSource = new EventSource('/stream/version')
 
   eventSource.addEventListener('version', event => {
-    if (applicationVersion === null) {
+    if (
+      caminoApplicationVersion === null ||
+      caminoApplicationVersion === undefined
+    ) {
       localStorage.setItem('caminoApplicationVersion', event.data)
-      applicationVersion = event.data
-    }
-    if (event.data !== applicationVersion) {
+      caminoApplicationVersion = event.data
+    } else if (event.data !== caminoApplicationVersion) {
       localStorage.setItem('caminoApplicationVersion', event.data)
+      caminoApplicationVersion = event.data
       eventSource.close()
       window.location.reload()
     }
@@ -48,9 +51,7 @@ Promise.resolve().then(async (): Promise<void> => {
             tracingOrigins: ['localhost', configFromJson.uiHost, /^\//]
           })
         ],
-        /* global applicationVersion */
-        // @ts-ignore
-        release: `camino-ui-${applicationVersion}`
+        release: `camino-ui-${caminoApplicationVersion}`
       })
     } catch (e) {
       console.error('erreur : Sentry :', e)
