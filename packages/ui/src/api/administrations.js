@@ -47,14 +47,18 @@ const administration = apiGraphQLFetch(gql`
     administration(id: $id) {
       ...administration
     }
+  }
 
+  ${fragmentAdministration}
+`)
+
+export const administrationActivitesTypesEmails = apiGraphQLFetch(gql`
+  query AdministrationActivitesTypesEmails($id: ID!) {
     administrationActivitesTypesEmails(id: $id) {
       email
       activiteTypeId
     }
   }
-
-  ${fragmentAdministration}
 `)
 
 const administrationActiviteTypeUpdate = apiGraphQLFetch(gql`

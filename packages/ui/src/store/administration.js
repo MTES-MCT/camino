@@ -11,7 +11,6 @@ import {
 
 const state = {
   element: null,
-  activitesTypesEmails: [],
   metas: {
     domaines: [],
     titresStatuts: [],
@@ -54,9 +53,9 @@ const actions = {
     try {
       commit('loadingAdd', 'administration', { root: true })
 
-      const data = await administration({ id })
+      const adminis = await administration({ id })
 
-      commit('set', data)
+      commit('set', adminis)
     } catch (e) {
       dispatch('apiError', e, { root: true })
     } finally {
@@ -223,14 +222,12 @@ const mutations = {
     })
   },
 
-  set(state, data) {
-    state.element = data.administration
-    state.activitesTypesEmails = data.administrationActivitesTypesEmails
+  set(state, administration) {
+    state.element = administration
   },
 
   reset(state) {
     state.element = null
-    state.activitesTypesEmails = []
   }
 }
 

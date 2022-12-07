@@ -150,18 +150,20 @@
       />
     </div>
 
-    <div v-if="canRead">
-      <div class="line-neutral width-full mb-xxl" />
-      <h2>Emails</h2>
-      <AdministrationActiviteTypeEmail
-        :administration="administration"
-        :activitesTypes="activitesTypes"
-        :activitesTypesEmails="activitesTypesEmails"
-        @emailUpdate="activiteTypeEmailUpdate"
-        @emailDelete="activiteTypeEmailDelete"
-      />
-    </div>
-
+    <LoadingElement v-slot="{ item }" :data="asyncActivitesTypesEmails">
+      <div v-if="item.length && canReadActivitesTypesEmails">
+        {{ item }}
+        <div class="line-neutral width-full mb-xxl" />
+        <h2>Emails</h2>
+        <AdministrationActiviteTypeEmail
+          :administration="administration"
+          :activitesTypes="activitesTypes"
+          :activitesTypesEmails="item"
+          @emailUpdate="activiteTypeEmailUpdate"
+          @emailDelete="activiteTypeEmailDelete"
+        />
+      </div>
+    </LoadingElement>
     <div v-if="isSuper(user)" class="mb-xxl">
       <div class="line-neutral width-full mb-xxl" />
       <h2>Permissions</h2>
@@ -175,6 +177,7 @@
 import Accordion from './_ui/accordion.vue'
 import Loader from './_ui/loader.vue'
 import UiTable from './_ui/table.vue'
+import LoadingElement from './_ui/pure-loader.vue'
 import AdministrationPermission from './administration/permissions.vue'
 import AdministrationActiviteTypeEmail from './administration/activites-types-emails.vue'
 
@@ -190,6 +193,7 @@ import { isSuper } from 'camino-common/src/roles'
 import { canReadActivitesTypesEmails } from 'camino-common/src/permissions/administrations'
 import { Departements } from 'camino-common/src/static/departement'
 import { Regions } from 'camino-common/src/static/region'
+import { administrationActivitesTypesEmails } from '../api/administrations.js'
 
 export default {
   components: {
@@ -197,28 +201,21 @@ export default {
     Loader,
     UiTable,
     AdministrationPermission,
-    AdministrationActiviteTypeEmail
+    AdministrationActiviteTypeEmail,
+    LoadingElement
   },
 
   data() {
     return {
-      utilisateursColonnes
+      utilisateursColonnes,
+      asyncActivitesTypesEmails: { status: 'LOADING' }
     }
   },
 
   computed: {
-    canRead() {
-      return (
-        this.activitesTypes.length &&
-        canReadActivitesTypesEmails(this.user, this.administration.id)
-      )
-    },
     administration() {
       const element = this.$store.state.administration.element
       return { ...element, ...Administrations[this.$route.params.id] }
-    },
-    activitesTypesEmails() {
-      return this.$store.state.administration.activitesTypesEmails
     },
     type() {
       const typeId = this.administration?.typeId
@@ -258,6 +255,10 @@ export default {
       return this.administration.regionId
         ? Regions[this.administration.regionId]
         : undefined
+    },
+
+    canReadActivitesTypesEmails() {
+      return canReadActivitesTypesEmails(this.user, this.administration.id)
     }
   },
 
@@ -283,6 +284,26 @@ export default {
     async get() {
       await this.$store.dispatch('administration/init')
       await this.$store.dispatch('administration/get', this.$route.params.id)
+
+      if (this.canReadActivitesTypesEmails) {
+        try {
+          const activitesTypesEmails = await administrationActivitesTypesEmails(
+            { id: this.administration.id }
+          )
+          this.asyncActivitesTypesEmails = {
+            status: 'LOADED',
+            value: activitesTypesEmails
+          }
+        } catch (e) {
+          console.log('error', e)
+          this.asyncActivitesTypesEmails = {
+            status: 'ERROR',
+            message: e.message ?? 'something wrong happened'
+          }
+        }
+      } else {
+        this.asyncActivitesTypesEmails = { status: 'LOADED', value: [] }
+      }
     },
 
     isSuper(user) {
