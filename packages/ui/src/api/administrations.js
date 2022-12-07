@@ -61,6 +61,20 @@ export const administrationActivitesTypesEmails = apiGraphQLFetch(gql`
   }
 `)
 
+export const administrationUtilisateurs = apiGraphQLFetch(gql`
+  query AdministrationUtilisateurs($id: ID!) {
+    administration(id: $id) {
+      utilisateurs {
+        id
+        nom
+        prenom
+        role
+        email
+      }
+    }
+  }
+`)
+
 const administrationActiviteTypeUpdate = apiGraphQLFetch(gql`
   mutation AdministrationActiviteTypeModifier(
     $administrationActiviteType: InputAdministrationActiviteType!

@@ -4,7 +4,6 @@ import { fragmentUtilisateur } from './utilisateur'
 const fragmentAdministration = gql`
   fragment administration on Administration {
     id
-    emailsModification
     utilisateurs {
       ...utilisateur
     }

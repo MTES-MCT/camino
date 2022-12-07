@@ -21,9 +21,9 @@
           <tr>
             <th>Type d'activité</th>
             <th>Email</th>
-            <th v-if="administration.emailsModification" width="1">Actions</th>
+            <th v-if="canEditEmails" width="1">Actions</th>
           </tr>
-          <tr v-if="administration.emailsModification">
+          <tr v-if="canEditEmails">
             <td>
               <select
                 v-model="activiteTypeNew.activiteTypeId"
@@ -67,7 +67,7 @@
             <td>
               {{ activiteTypeEmail.email }}
             </td>
-            <td v-if="administration.emailsModification">
+            <td v-if="canEditEmails">
               <button
                 class="btn-border py-s px-m my--xs rnd-xs flex-right"
                 @click="activiteTypeEmailDelete(activiteTypeEmail)"
@@ -87,6 +87,12 @@ import ButtonPlus from '../_ui/button-plus.vue'
 import emailValidator from 'email-validator'
 import { defineComponent, PropType } from 'vue'
 import Icon from '@/components/_ui/icon.vue'
+import {
+  ActivitesTypes,
+  ActivitesTypesId
+} from 'camino-common/src/static/activitesTypes'
+import { User } from 'camino-common/src/roles'
+import { canEditEmails } from 'camino-common/src/permissions/administrations'
 
 export default defineComponent({
   components: {
@@ -96,13 +102,11 @@ export default defineComponent({
 
   props: {
     administration: { type: Object, required: true },
-    activitesTypes: {
-      type: Array as PropType<{ id: string; nom: string }[]>,
-      required: true,
-      default: () => []
-    },
+    user: { type: Object as PropType<User>, required: true },
     activitesTypesEmails: {
-      type: Array as PropType<{ activiteTypeId: string; email: string }[]>,
+      type: Array as PropType<
+        { activiteTypeId: ActivitesTypesId; email: string }[]
+      >,
       required: true,
       default: () => []
     }
@@ -115,7 +119,8 @@ export default defineComponent({
       activiteTypeNew: {
         activiteTypeId: null,
         email: null
-      }
+      },
+      activitesTypes: Object.values(ActivitesTypes)
     }
   },
 
@@ -129,7 +134,11 @@ export default defineComponent({
     },
 
     isFullyNotifiable() {
-      return ['dea', 'dre', 'min'].includes(this.administration?.type?.id)
+      return ['dea', 'dre', 'min'].includes(this.administration?.typeId)
+    },
+
+    canEditEmails() {
+      return canEditEmails(this.user, this.administration.id)
     }
   },
 
@@ -160,10 +169,8 @@ export default defineComponent({
       })
     },
 
-    activiteTypeIdLabelize(activiteTypeId: string) {
-      const activiteType = this.activitesTypes.find(
-        ({ id }) => id === activiteTypeId
-      )
+    activiteTypeIdLabelize(activiteTypeId: ActivitesTypesId) {
+      const activiteType = ActivitesTypes[activiteTypeId]
 
       return activiteType ? this.activiteTypeLabelize(activiteType) : ''
     },

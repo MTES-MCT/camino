@@ -1,5 +1,15 @@
 import ActivitesTypesEmails from './activites-types-emails.vue'
 import { Meta, Story } from '@storybook/vue3'
+import {
+  ActivitesTypesId,
+  ACTIVITES_TYPES_IDS
+} from 'camino-common/src/static/activitesTypes'
+import { User } from '@sentry/vue'
+import {
+  Administration,
+  Administrations,
+  ADMINISTRATION_IDS
+} from 'camino-common/src/static/administrations'
 
 const meta: Meta = {
   title: 'Components/Administration/ActivitesTypesEmails',
@@ -8,34 +18,21 @@ const meta: Meta = {
 export default meta
 
 type Props = {
-  administration: unknown
-  activitesTypes: { id: string; nom: string }[]
-  activitesTypesEmails: { activiteTypeId: string; nom: string; email: string }[]
-}
-
-const administration = {
-  id: 'id',
-  email: 'foo@bar.co',
-  nom: 'nom',
-  emailsModification: false
+  administration: Administration
+  user: User
+  activitesTypesEmails: { activiteTypeId: ActivitesTypesId; email: string }[]
 }
 
 const activitesTypesEmails = [
   {
-    activiteTypeId: 'grx',
-    nom: "rapport d'exploitation (autorisations M)",
+    activiteTypeId:
+      ACTIVITES_TYPES_IDS["rapport d'exploitation (autorisations M)"],
     email: 'foo@bar.co'
   },
   {
-    activiteTypeId: 'pma',
-    nom: 'rapport d’intensité d’exploration',
+    activiteTypeId: ACTIVITES_TYPES_IDS['rapport d’intensité d’exploration'],
     email: 'toto@tata.com'
   }
-]
-
-const activitesTypes = [
-  { id: 'grx', nom: "Rapport d'exploitation (autorisations M)" },
-  { id: 'pma', nom: 'Rapport d’intensité d’exploration' }
 ]
 
 const Template: Story<Props> = (args: Props) => ({
@@ -48,29 +45,30 @@ const Template: Story<Props> = (args: Props) => ({
 
 export const EmailLectureVisible = Template.bind({})
 EmailLectureVisible.args = {
-  administration,
-  activitesTypes,
+  administration: Administrations['aut-97300-01'],
   activitesTypesEmails
 }
 
 export const EmailLectureAndModificationVisible = Template.bind({})
 EmailLectureAndModificationVisible.args = {
-  administration: {
-    ...administration,
-    emailsModification: true
+  administration: Administrations['aut-97300-01'],
+  user: {
+    role: 'admin',
+    administrationId:
+      ADMINISTRATION_IDS[
+        "DAJ - MINISTÈRE DE L'ECONOMIE, DES FINANCES ET DE LA RELANCE"
+      ]
   },
-  activitesTypes,
   activitesTypesEmails
 }
 
 export const EmailLectureAndModificationSurAdministrationVisible =
   Template.bind({})
 EmailLectureAndModificationSurAdministrationVisible.args = {
-  administration: {
-    ...administration,
-    emailsModification: true,
-    type: { id: 'dea' }
+  administration: Administrations[ADMINISTRATION_IDS['DREAL - BRETAGNE']],
+  user: {
+    role: 'admin',
+    administrationId: ADMINISTRATION_IDS['DREAL - BRETAGNE']
   },
-  activitesTypes,
   activitesTypesEmails
 }
