@@ -156,21 +156,6 @@ export const config = async (
   res.json(config)
 }
 rest.get('/config', restCatcher(config))
-
-rest.get('/stream/version', async (_req, res) => {
-  const headers = {
-    'Content-Type': 'text/event-stream',
-    Connection: 'keep-alive',
-    'Cache-Control': 'no-cache'
-  }
-
-  res.writeHead(200, headers)
-  res.write(`id: ${Date.now()}\n`)
-  res.write(`event: version\n`)
-  res.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
-  res.flush()
-})
-
 rest.post('/titres/:id/titreLiaisons', restCatcher(postTitreLiaisons))
 rest.get('/titres/:id/titreLiaisons', restCatcher(getTitreLiaisons))
 rest.get('/titres/:id', restDownload(titre))

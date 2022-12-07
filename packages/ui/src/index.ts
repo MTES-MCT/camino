@@ -21,7 +21,7 @@ Promise.resolve().then(async (): Promise<void> => {
     CaminoRestRoutes.config,
     {}
   )
-  const eventSource = new EventSource('/apiUrl/stream/version')
+  const eventSource = new EventSource('/stream/version')
 
   eventSource.addEventListener('version', event => {
     if (applicationVersion === null) {
