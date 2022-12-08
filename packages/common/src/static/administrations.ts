@@ -189,7 +189,9 @@ export const ADMINISTRATION_IDS = {
 
 export type AdministrationId = typeof ADMINISTRATION_IDS[keyof typeof ADMINISTRATION_IDS]
 
-export const isAdministrationId = (id: string | null | undefined): id is AdministrationId => Object.values(ADMINISTRATION_IDS).includes(id)
+export const isAdministrationId = (id: string | string[] | null | undefined): id is AdministrationId => {
+  return typeof id !== 'object' && Object.values(ADMINISTRATION_IDS).includes(id)
+}
 
 export interface Administration<T = AdministrationId> {
   id: T

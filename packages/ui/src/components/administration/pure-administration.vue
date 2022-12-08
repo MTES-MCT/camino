@@ -172,7 +172,10 @@
       <div class="line-neutral width-full mb-xxl" />
       <h2>Permissions</h2>
 
-      <AdministrationPermission :administration="administration" />
+      <AdministrationPermission
+        :administrationId="administrationId"
+        :apiClient="apiClient"
+      />
     </div>
   </div>
 </template>
@@ -206,7 +209,14 @@ import { AsyncData } from '@/api/client-rest'
 const props = defineProps<{
   administrationId: AdministrationId
   user: User
-  apiClient: ApiClient
+  apiClient: Pick<
+    ApiClient,
+    | 'activitesTypesEmails'
+    | 'administrationUtilisateurs'
+    | 'administrationMetas'
+    | 'administrationActiviteTypeEmailUpdate'
+    | 'administrationActiviteTypeEmailDelete'
+  >
 }>()
 
 const administration = computed<Administration>(

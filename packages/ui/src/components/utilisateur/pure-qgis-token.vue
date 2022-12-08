@@ -48,14 +48,16 @@ const generateToken = async () => {
   }
 }
 
-const copyToClipboard = (token: string) => {
-  navigator.clipboard.writeText(token)
-  messages.value.push({
-    type: 'success',
-    value: "Le jeton vient d'être copié dans votre presse papier"
-  })
-  setTimeout(() => {
-    messages.value.shift()
-  }, 4500)
+const copyToClipboard = (token: string | undefined) => {
+  if (token) {
+    navigator.clipboard.writeText(token)
+    messages.value.push({
+      type: 'success',
+      value: "Le jeton vient d'être copié dans votre presse papier"
+    })
+    setTimeout(() => {
+      messages.value.shift()
+    }, 4500)
+  }
 }
 </script>

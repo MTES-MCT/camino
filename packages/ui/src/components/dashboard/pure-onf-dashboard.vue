@@ -30,10 +30,8 @@
     </div>
     <Error
       v-if="status === 'ERROR'"
-      :message="{
-        type: 'error',
-        value: 'Le serveur est inaccessible, veuillez réessayer plus tard'
-      }"
+      couleur="error"
+      message="Le serveur est inaccessible, veuillez réessayer plus tard"
     />
   </div>
 </template>

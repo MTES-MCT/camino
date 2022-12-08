@@ -4,7 +4,8 @@ import {
   AdministrationId,
   ADMINISTRATION_IDS
 } from 'camino-common/src/static/administrations'
-import { ApiClient } from '@/api/api-client.js'
+import { ApiClient } from '@/api/api-client'
+import { administrationMetas } from './permissions.stub'
 
 const meta: Meta = {
   title: 'Components/Administration/Permissions',
@@ -30,41 +31,7 @@ export const Default = Template.bind(
   {
     administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
     apiClient: {
-      administrationMetas: () =>
-        Promise.resolve({
-          titresTypesTitresStatuts: [
-            {
-              titreType: {
-                id: 'axm'
-              },
-              titreStatutId: 'val',
-              titresModificationInterdit: true,
-              etapesModificationInterdit: false,
-              demarchesModificationInterdit: true
-            }
-          ],
-          activitesTypes: [
-            {
-              id: 'gra',
-              modificationInterdit: true,
-              lectureInterdit: false
-            }
-          ],
-          titresTypesEtapesTypes: [
-            {
-              etapeType: {
-                id: 'dpu'
-              },
-              titreType: {
-                id: 'axm'
-              },
-              titreStatutId: 'val',
-              creationInterdit: true,
-              modificationInterdit: false,
-              lectureInterdit: true
-            }
-          ]
-        })
+      administrationMetas
     }
   }
 )

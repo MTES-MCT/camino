@@ -12,7 +12,7 @@
 
     <main class="main">
       <div class="container">
-        <Error v-if="error" :message="error" />
+        <Error v-if="error" :couleur="error.type" :message="error.value" />
         <RouterView v-else-if="loaded" />
       </div>
     </main>

@@ -1,16 +1,11 @@
 <template>
-  <div class="mb p-s color-bg" :class="`bg-${message.type}`">
-    {{ message.value }}
+  <div class="mb p-s color-bg" :class="`bg-${couleur}`">
+    {{ message }}
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    message: {
-      type: Object,
-      default: () => ({})
-    }
-  }
-}
+<script setup lang="ts">
+import { Couleur } from 'camino-common/src/static/couleurs'
+
+defineProps<{ couleur: Couleur; message: string }>()
 </script>

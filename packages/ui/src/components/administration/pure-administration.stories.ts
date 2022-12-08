@@ -5,8 +5,9 @@ import {
   ADMINISTRATION_IDS
 } from 'camino-common/src/static/administrations'
 import { User } from 'camino-common/src/roles'
-import { ActiviteTypeEmail, ApiClient } from '@/api/api-client'
+import { ApiClient } from '@/api/api-client'
 import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes'
+import { administrationMetas } from './permissions.stub'
 
 const meta: Meta = {
   title: 'Page/Administration',
@@ -18,7 +19,14 @@ export default meta
 type Props = {
   administrationId: AdministrationId
   user: User
-  apiClient: ApiClient
+  apiClient: Pick<
+    ApiClient,
+    | 'activitesTypesEmails'
+    | 'administrationUtilisateurs'
+    | 'administrationMetas'
+    | 'administrationActiviteTypeEmailUpdate'
+    | 'administrationActiviteTypeEmailDelete'
+  >
 }
 
 const Template: Story<Props> = (args: Props) => ({
@@ -57,12 +65,9 @@ export const Default = Template.bind(
             administrationId: undefined
           }
         ]),
-      administrationActiviteTypeEmailUpdate: activiteTypeEmail => {
-        console.log(`update ${activiteTypeEmail}`)
-      },
-      administrationActiviteTypeEmailDelete: activiteTypeEmail => {
-        console.log(`delete ${activiteTypeEmail}`)
-      }
+      administrationActiviteTypeEmailUpdate: () => Promise.resolve(),
+      administrationActiviteTypeEmailDelete: () => Promise.resolve(),
+      administrationMetas
     }
   }
 )

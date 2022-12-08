@@ -230,9 +230,10 @@ import { TitresTypes } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { onMounted, ref } from 'vue'
-import { AdministrationMetas, ApiClient } from '@/api/api-client'
+import { ApiClient } from '@/api/api-client'
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '../_ui/pure-loader.vue'
+import { AdministrationMetas } from './administration-api-client'
 
 const props = defineProps<{
   administrationId: AdministrationId
