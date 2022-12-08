@@ -52,16 +52,16 @@ endif
 
 install:
 ifdef CI
-	npm set-script prepare ""
+	npm pkg delete scripts
 endif
 	npm ci
 
 
 install/prod:
 ifdef CI
-	npm set-script prepare ""
+	npm pkg delete scripts
 endif
-	npm ci --only=prod
+	npm ci --omit=dev
 
 
 build: build/common build/api build/ui

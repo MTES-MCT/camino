@@ -1,9 +1,15 @@
+FROM node:19.1-alpine as build-stage
+COPY ./package-lock.json /app/
+COPY ./Makefile /app/Makefile
+COPY ./package.json /app
+COPY ./packages/api/ /app/packages/api
+COPY ./packages/common/ /app/packages/common
+
 FROM node:19.1-alpine
 WORKDIR /
 
 RUN apk add make
-COPY ./ /
-
+COPY --from=build-stage /app /
 RUN CI=true make install/prod
 
 ENTRYPOINT ["make", "start/api"]
