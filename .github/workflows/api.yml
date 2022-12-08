@@ -12,6 +12,20 @@ on:
         description: 'le token docker'
         required: true
 jobs:
+  type:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '19.1'
+          cache: 'npm'
+      - name: Npm install
+        run: make install
+      - name: Build
+        run: make build/api
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -85,7 +99,7 @@ jobs:
             token: ${{ secrets.CODECOV_TOKEN }}
             flags: api-integration, api
   build:
-    needs: [unit-test, integration-test, lint]
+    needs: [unit-test, integration-test, lint, type]
     runs-on: ubuntu-latest
 
     steps:
