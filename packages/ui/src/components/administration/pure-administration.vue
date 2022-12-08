@@ -151,22 +151,20 @@
       </div>
     </LoadingElement>
 
-    <LoadingElement v-slot="{ item }" :data="activitesTypesEmails">
-      <div
-        v-if="
-          item.length && canReadActivitesTypesEmails(user, administrationId)
-        "
-      >
-        <div class="line-neutral width-full mb-xxl" />
-        <h2>Emails</h2>
-        <AdministrationActiviteTypeEmail
-          :user="user"
-          :administration="administration"
-          :activitesTypesEmails="item"
-          @emailUpdate="apiClient.administrationActiviteTypeEmailUpdate"
-          @emailDelete="apiClient.administrationActiviteTypeEmailDelete"
-        />
-      </div>
+    <LoadingElement
+      v-if="canReadActivitesTypesEmails(user, administrationId)"
+      v-slot="{ item }"
+      :data="activitesTypesEmails"
+    >
+      <div class="line-neutral width-full mb-xxl" />
+      <h2>Emails</h2>
+      <AdministrationActiviteTypeEmail
+        :user="user"
+        :administration="administration"
+        :activitesTypesEmails="item"
+        @emailUpdate="apiClient.administrationActiviteTypeEmailUpdate"
+        @emailDelete="apiClient.administrationActiviteTypeEmailDelete"
+      />
     </LoadingElement>
     <div v-if="isSuper(user)" class="mb-xxl">
       <div class="line-neutral width-full mb-xxl" />
@@ -203,15 +201,16 @@ import { canReadActivitesTypesEmails } from 'camino-common/src/permissions/admin
 import { Departement, Departements } from 'camino-common/src/static/departement'
 import { Region, Regions } from 'camino-common/src/static/region'
 import { computed, onMounted, ref } from 'vue'
-import { ActiviteTypeEmail, ApiClient, Utilisateur } from '@/api/api-client'
+import { ApiClient, Utilisateur } from '@/api/api-client'
 import { AsyncData } from '@/api/client-rest'
+import { ActiviteTypeEmail } from './administration-api-client'
 
 const props = defineProps<{
   administrationId: AdministrationId
   user: User
   apiClient: Pick<
     ApiClient,
-    | 'activitesTypesEmails'
+    | 'administrationActivitesTypesEmails'
     | 'administrationUtilisateurs'
     | 'administrationMetas'
     | 'administrationActiviteTypeEmailUpdate'
@@ -241,16 +240,20 @@ const activitesTypesEmails = ref<AsyncData<ActiviteTypeEmail[]>>({
 const utilisateurs = ref<AsyncData<Utilisateur[]>>({ status: 'LOADING' })
 
 onMounted(async () => {
-  try {
-    activitesTypesEmails.value = {
-      status: 'LOADED',
-      value: await props.apiClient.activitesTypesEmails(props.administrationId)
-    }
-  } catch (e: any) {
-    console.error('error', e)
-    activitesTypesEmails.value = {
-      status: 'ERROR',
-      message: e.message ?? "Une erreur s'est produite"
+  if (canReadActivitesTypesEmails(props.user, props.administrationId)) {
+    try {
+      activitesTypesEmails.value = {
+        status: 'LOADED',
+        value: await props.apiClient.administrationActivitesTypesEmails(
+          props.administrationId
+        )
+      }
+    } catch (e: any) {
+      console.error('error', e)
+      activitesTypesEmails.value = {
+        status: 'ERROR',
+        message: e.message ?? "Une erreur s'est produite"
+      }
     }
   }
 

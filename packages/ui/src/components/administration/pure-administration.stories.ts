@@ -21,7 +21,7 @@ type Props = {
   user: User
   apiClient: Pick<
     ApiClient,
-    | 'activitesTypesEmails'
+    | 'administrationActivitesTypesEmails'
     | 'administrationUtilisateurs'
     | 'administrationMetas'
     | 'administrationActiviteTypeEmailUpdate'
@@ -46,7 +46,7 @@ export const Default = Template.bind(
       administrationId: undefined
     },
     apiClient: {
-      activitesTypesEmails: (_: AdministrationId) =>
+      administrationActivitesTypesEmails: (_: AdministrationId) =>
         Promise.resolve([
           {
             email: 'toto@toto.com',
