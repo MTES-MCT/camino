@@ -1,43 +1,12 @@
-FROM node:19.1-alpine as build-stage
-WORKDIR /app
+FROM node:19.1-alpine
+WORKDIR /
 
 RUN apk add make
-COPY package*.json /app/
-COPY packages/common/package.json /app/packages/common/package.json
-COPY packages/api/package.json /app/packages/api/package.json
-COPY Makefile /app/Makefile
+COPY ./package-lock.json /
+COPY ./Makefile /Makefile
+COPY ./package.json /
+COPY ./packages/api/ /packages/api
+COPY ./packages/common/ /packages/common
+RUN CI=true make install/prod
 
-RUN CI=true make install
-
-COPY ./ /app/
-RUN npm run build -w packages/api && \
-    rm -rf /app/node_modules/ && \
-    rm -rf /app/packages/api/node_modules/ && \
-    rm -rf /app/packages/ui/node_modules/ && \
-    rm -rf /app/packages/common/node_modules/ && \
-    CI=true make install/prod
-
-FROM node:19.1-alpine as production-stage
-
-# TODO 2022-07-13 : on profite que
-# - l'utilisateur a le même id sur toutes les machines
-# - ansible crée les dossiers avec les bons droits
-RUN apk add make && adduser -u 1002 -D nonroot
-
-USER nonroot
-
-COPY --chown=nonroot:nonroot --from=build-stage /app/package.json ./
-COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/package.json ./packages/api/
-COPY --chown=nonroot:nonroot --from=build-stage /app/packages/common/package.json ./packages/common/
-COPY --chown=nonroot:nonroot --from=build-stage /app/node_modules ./node_modules/
-COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/node_modules /packages/api/node_modules/
-COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/src ./packages/api/src/
-COPY --chown=nonroot:nonroot --from=build-stage /app/packages/api/tsconfig.json ./packages/api/
-COPY --chown=nonroot:nonroot --from=build-stage /app/packages/common/src ./packages/common/src/
-COPY --chown=nonroot:nonroot --from=build-stage /app/packages/common/tsconfig.json ./packages/common/
-COPY --chown=nonroot:nonroot Makefile .
-
-# Ce n'est pas nécessaire pour les environnements de prod (le dossier est crée par ansible et monté) mais est plus correct pour pouvoir utiliser l'image sans problème de droit au démarrage
-RUN mkdir -p /packages/api/files
-
-CMD ["make", "start/api"]
+ENTRYPOINT ["make", "start/api"]

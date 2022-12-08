@@ -9,3 +9,8 @@ infra/cd/.cargo_docker
 infra/cd/target
 packages/api/backups
 packages/api/sources
+packages/api/files
+packages/api/api-cache
+packages/api/coverage
+packages/api/docs
+packages/ui/coverage
