@@ -51,6 +51,19 @@ module.exports = defineConfig({
       '/televersement': {
         target: process.env.API_URL,
         changeOrigin: true
+      },
+      '/stream/version': {
+        target: process.env.API_URL,
+        changeOrigin: true,
+        // fix https://github.com/http-party/node-http-proxy/issues/1520
+        onProxyRes: (proxyRes, req, res) => {
+          res.on('close', () => {
+            if (!res.finished) {
+              console.info('client closed http con, close proxy con')
+              proxyRes.destroy()
+            }
+          })
+        }
       }
     }
   }

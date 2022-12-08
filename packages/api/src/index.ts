@@ -68,6 +68,19 @@ filesInit().then(() => {
       authBasic
     )
 
+    app.get('/stream/version', async (_req, res) => {
+      const headers = {
+        'Content-Type': 'text/event-stream',
+        Connection: 'keep-alive',
+        'Cache-Control': 'no-cache'
+      }
+
+      res.writeHead(200, headers)
+      res.write(`id: ${Date.now()}\n`)
+      res.write(`event: version\n`)
+      res.write(`data: ${process.env.APPLICATION_VERSION}\n\n`)
+      res.flush()
+    })
     app.use(express.urlencoded({ extended: true }), express.json(), rest)
 
     app.use('/televersement', uploadAllowedMiddleware, restUpload())

@@ -21,7 +21,6 @@ describe('api client', () => {
   beforeEach(() => {
     delete window.location
     window.location = { reload: vi.fn() }
-    process.env.NODE_ENV = 'production'
   })
 
   afterEach(() => {

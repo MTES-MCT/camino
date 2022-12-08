@@ -9,43 +9,65 @@ import App from './app.vue'
 
 import router from './router'
 import store from './store'
+import { CaminoRestRoutes } from 'camino-common/src/rest'
+import { CaminoConfig } from 'camino-common/src/static/config'
+import { fetchWithJson } from './api/client-rest'
+let caminoApplicationVersion = localStorage.getItem('caminoApplicationVersion')
 
-Promise.resolve().then(async () => {
+Promise.resolve().then(async (): Promise<void> => {
   const app = createApp(App)
   sync(store, router)
-  if (import.meta.env.PROD) {
+  const configFromJson: CaminoConfig = await fetchWithJson(
+    CaminoRestRoutes.config,
+    {}
+  )
+  const eventSource = new EventSource('/stream/version')
+
+  eventSource.addEventListener('version', event => {
+    if (
+      caminoApplicationVersion === null ||
+      caminoApplicationVersion === undefined
+    ) {
+      localStorage.setItem('caminoApplicationVersion', event.data)
+      caminoApplicationVersion = event.data
+    } else if (event.data !== caminoApplicationVersion) {
+      localStorage.setItem('caminoApplicationVersion', event.data)
+      caminoApplicationVersion = event.data
+      eventSource.close()
+      window.location.reload()
+    }
+  })
+  if (configFromJson.caminoStage) {
     try {
-      const sentryResponse = await fetch('/sentryOptions')
-      const options = await sentryResponse.json()
-      if (!options.dsn) throw new Error('dsn manquant')
+      if (!configFromJson.sentryDsn) throw new Error('dsn manquant')
       Sentry.init({
         app,
-        dsn: options.dsn,
-        environment: options.environment ? options.environment : 'production',
+        dsn: configFromJson.sentryDsn,
+        environment: configFromJson.environment,
         autoSessionTracking: false,
         integrations: [
           new BrowserTracing({
             routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-            tracingOrigins: ['localhost', options.host, /^\//]
+            tracingOrigins: ['localhost', configFromJson.uiHost, /^\//]
           })
         ],
-        /* global applicationVersion */
-        // @ts-ignore
-        release: `camino-ui-${applicationVersion}`
+        release: `camino-ui-${caminoApplicationVersion}`
       })
     } catch (e) {
       console.error('erreur : Sentry :', e)
     }
     try {
-      const response = await fetch('/matomoOptions')
-      const options = await response.json()
-      if (!options || !options.host || !options.siteId || !options.environment)
+      if (
+        !configFromJson.matomoHost ||
+        !configFromJson.matomoSiteId ||
+        !configFromJson.environment
+      )
         throw new Error('host et/ou siteId manquant(s)')
 
       const matomo = await VueMatomo({
-        host: options.host,
-        siteId: options.siteId,
-        environnement: options.environment,
+        host: configFromJson.matomoHost,
+        siteId: configFromJson.matomoSiteId,
+        environnement: configFromJson.environment,
         router,
         store,
         requireConsent: false,
@@ -60,16 +82,6 @@ Promise.resolve().then(async () => {
     } catch (e) {
       console.error('erreur : matomo :', e)
     }
-
-    const eventSource = new EventSource('/stream/version')
-
-    eventSource.addEventListener('version', event => {
-      // @ts-ignore
-      if (event.data !== applicationVersion) {
-        eventSource.close()
-        window.location.reload()
-      }
-    })
   }
   app.use(router)
   app.use(store)
