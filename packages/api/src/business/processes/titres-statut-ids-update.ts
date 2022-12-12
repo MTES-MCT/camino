@@ -12,7 +12,6 @@ export const titresStatutIdsUpdate = async (titresIds?: string[]) => {
     {
       fields: {
         demarches: {
-          type: { id: {} },
           phase: { id: {} },
           etapes: { points: { id: {} } }
         }
@@ -25,11 +24,7 @@ export const titresStatutIdsUpdate = async (titresIds?: string[]) => {
   const aujourdhui = getCurrent()
 
   for (const titre of titres) {
-    const titreStatutId = titreStatutIdFind(
-      aujourdhui,
-      titre.demarches,
-      titre.typeId
-    )
+    const titreStatutId = titreStatutIdFind(aujourdhui, titre.demarches)
 
     if (titreStatutId !== titre.titreStatutId) {
       await titreUpdate(titre.id, { titreStatutId })

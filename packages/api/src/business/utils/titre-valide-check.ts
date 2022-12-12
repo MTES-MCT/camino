@@ -36,11 +36,7 @@ export const titreValideCheck = (
   )
 
   // si le titre a le statut "modification en instance" au moment de dateDebut
-  const titreStatutId = titreStatutIdFind(
-    dateDebut,
-    newTitreDemarches,
-    titreTypeId
-  )
+  const titreStatutId = titreStatutIdFind(dateDebut, newTitreDemarches)
 
   if (titreStatutId === 'mod') return true
 

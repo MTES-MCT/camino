@@ -5,8 +5,7 @@ import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.j
 
 export const titreStatutIdFind = (
   aujourdhui: string,
-  demarches: ITitreDemarche[] | null | undefined,
-  titreTypeId: string
+  demarches: ITitreDemarche[] | null | undefined
 ) => {
   const titreDemarches = demarches
     ? demarches.filter(d => !d.type!.travaux)
@@ -51,7 +50,7 @@ export const titreStatutIdFind = (
     return 'val'
   }
 
-  if (titreInSurvieProvisoire(titreDemarches, titreTypeId)) {
+  if (titreInSurvieProvisoire(titreDemarches)) {
     return 'mod'
   }
 
@@ -59,14 +58,12 @@ export const titreStatutIdFind = (
   return 'ech'
 }
 
-// si le titre est un PER M ou W, ou une AXM
 // et qu'une démarche de prolongation est déposée et a été déposée avant l'échéance de l'octroi ou d’une prolongation précédente
 // -> le statut du titre est modification en instance (survie provisoire)
 export const titreInSurvieProvisoire = (
-  demarches: ITitreDemarche[] | null | undefined,
-  titreTypeId: string
+  demarches: ITitreDemarche[] | null | undefined
 ): boolean => {
-  if (demarches?.length && ['prm', 'prw', 'axm'].includes(titreTypeId)) {
+  if (demarches?.length) {
     const octroi = demarches.find(d => d.typeId === 'oct')
 
     if (octroi) {
