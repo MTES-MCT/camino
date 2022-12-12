@@ -260,7 +260,7 @@ const props = withDefaults(
   { currentDate: getCurrent() }
 )
 
-const tabs = computed<Array<CaminoAnnee>>(() => {
+const tabs = computed<CaminoAnnee[]>(() => {
   let annee = getAnnee(props.currentDate)
   return [0, 1, 2, 3, 4]
     .map(_id => {
@@ -280,10 +280,15 @@ const enConstruction = (annee: CaminoAnnee): boolean => {
   // Le 1er septembre 2023 on enlève le bandeau sur l’année 2022
   return props.currentDate < toCaminoDate(`${anneeSuivante(annee)}-09-01`)
 }
-const tabActive: Ref<CaminoAnnee> = ref(
-  tabs.value.findLast(annee => !enConstruction(annee)) ??
-    getAnnee(props.currentDate)
-)
+const tabActive: Ref<CaminoAnnee> = ref(getAnnee(props.currentDate))
+
+const anneeLaPlusRecenteConsolidee = tabs.value
+  .slice()
+  .reverse()
+  .find(annee => !enConstruction(annee))
+if (anneeLaPlusRecenteConsolidee) {
+  tabActive.value = anneeLaPlusRecenteConsolidee
+}
 
 onMounted(async () => {
   try {
