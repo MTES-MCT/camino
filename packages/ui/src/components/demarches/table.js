@@ -1,7 +1,7 @@
 import { markRaw } from 'vue'
 import Nom from '../_common/nom.vue'
 import Statut from '../_common/statut.vue'
-import CaminoDomaine from '../_common/domaine.vue'
+import { Domaine as CaminoDomaine } from '../_common/domaine'
 import List from '../_ui/list.vue'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'

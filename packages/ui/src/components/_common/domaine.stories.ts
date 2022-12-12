@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/vue3'
-import Domaine from './domaine.vue'
+import { Domaine } from './domaine'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
 
 const meta: Meta = {
@@ -28,7 +28,7 @@ export const AllDomaines = () => ({
       ${Object.values(DOMAINES_IDS)
         .map(
           domaine =>
-            `<tr><td>${domaine}</td><td><Domaine domaine-id="${domaine}" /></td></tr>`
+            `<tr><td>${domaine}</td><td><Domaine domaineId="${domaine}" /></td></tr>`
         )
         .join('')}
     </table>

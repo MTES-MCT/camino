@@ -1,7 +1,7 @@
 import { markRaw } from 'vue'
 import TagList from '../_ui/tag-list.vue'
 import List from '../_ui/list.vue'
-import CaminoDomaine from '../_common/domaine.vue'
+import { Domaine as CaminoDomaine } from '../_common/domaine'
 import TitreNom from '../_common/titre-nom.vue'
 import TitreTypeTypeNom from '../_common/titre-type-type-nom.vue'
 import CoordonneesIcone from '../_common/coordonnees-icone.vue'

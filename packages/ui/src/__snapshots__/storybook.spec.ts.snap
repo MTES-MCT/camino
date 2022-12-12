@@ -7803,8 +7803,7 @@ exports[`Storybook Smoke Test > Components/common/TitreTypeSelect > Default 1`] 
       </select></div>
   </div>
   <hr>
-  <!--v-if-->
-  <hr>
+  <!---->
 </div>"
 `;
 
@@ -7819,8 +7818,7 @@ exports[`Storybook Smoke Test > Components/common/TitreTypeSelect > Entreprise 1
       </select></div>
   </div>
   <hr>
-  <!--v-if-->
-  <hr>
+  <!---->
 </div>"
 `;
 

@@ -57,7 +57,7 @@ import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/admini
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { TitresTypes, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
-import CaminoDomaine from '@/components/_common/domaine.vue'
+import { Domaine as CaminoDomaine } from '@/components/_common/domaine'
 import Icon from '@/components/_ui/icon.vue'
 
 const props = defineProps<{ administrationId: AdministrationId }>()

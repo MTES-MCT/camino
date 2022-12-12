@@ -139,20 +139,11 @@ import {
   ReferenceTypeId,
   sortedReferencesTypes
 } from 'camino-common/src/static/referencesTypes'
-import TitreTypeSelect from './_common/titre-type-select.vue'
+import { TitreTypeSelect } from './_common/titre-type-select'
 import Icon from '@/components/_ui/icon.vue'
-import {
-  isAdministrationAdmin,
-  isAdministrationEditeur,
-  isBureauDEtudes,
-  isEntreprise,
-  isSuper
-} from 'camino-common/src/roles'
+import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import PureTitresLink from '@/components/titre/pure-titres-link.vue'
-import {
-  canCreateTitre,
-  getLinkConfig
-} from 'camino-common/src/permissions/titres'
+import { getLinkConfig } from 'camino-common/src/permissions/titres'
 import {
   loadLinkableTitres,
   TitresLinkConfig
