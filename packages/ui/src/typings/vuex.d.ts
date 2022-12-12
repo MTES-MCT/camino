@@ -19,9 +19,5 @@ declare global {
 
   interface Array<T> {
     includes<U>(_x: U & (T & U extends never ? never : unknown)): boolean
-    findLast(
-      predicate: (value: T, index: number, obj: T[]) => unknown,
-      thisArg?: any
-    ): T | undefined
   }
 }
