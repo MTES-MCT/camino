@@ -2,6 +2,7 @@ import { ITitreDemarche } from '../../types.js'
 
 import { titreDateFinFind } from './titre-date-fin-find.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 
 export const titreStatutIdFind = (
   aujourdhui: string,
@@ -87,7 +88,11 @@ export const titreInSurvieProvisoire = (
             return false
           }
 
-          let demandeProlongation = d.etapes?.find(e => e.typeId === 'mfr')
+          let demandeProlongation = d.etapes?.find(
+            e =>
+              e.typeId === 'mfr' &&
+              e.statutId !== ETAPES_STATUTS.EN_CONSTRUCTION
+          )
           if (!demandeProlongation) {
             demandeProlongation = d.etapes?.find(e => e.typeId === 'mdp')
           }

@@ -3,6 +3,7 @@ import {
   titreStatutIdFind
 } from './titre-statut-id-find.js'
 
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 import {
   titreDemarchesIndefini,
   titreDemarchesValide,
@@ -206,5 +207,52 @@ describe("statut d'un titre", () => {
         }
       ])
     ).toEqual(true)
+  })
+
+  test('ne prend pas en compte des demandes en construction pour calucler la survie provisoire', () => {
+    expect(
+      titreInSurvieProvisoire([
+        {
+          id: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
+          titreId: 'm-pr-saint-pierre-2014',
+          type: { id: 'pro', nom: 'unused', ordre: 1, etapesTypes: [] },
+          typeId: 'pro',
+          statutId: 'eco',
+          ordre: 2,
+          etapes: [
+            {
+              date: toCaminoDate('2020-01-01'),
+              typeId: 'mfr',
+              statutId: ETAPES_STATUTS.EN_CONSTRUCTION,
+              id: 'id',
+              titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
+              ordre: 1,
+              dateDebut: null,
+              dateFin: toCaminoDate('2020-10-01')
+            }
+          ]
+        },
+        {
+          id: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
+          titreId: 'm-pr-saint-pierre-2014',
+          type: { id: 'oct', nom: 'unused', ordre: 2, etapesTypes: [] },
+          typeId: 'oct',
+          statutId: 'acc',
+          ordre: 1,
+          etapes: [
+            {
+              id: 'm-pr-saint-pierre-2014-oct01-dex01',
+              titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
+              typeId: 'dex',
+              statutId: 'acc',
+              ordre: 1,
+              date: toCaminoDate('1014-04-01'),
+              dateDebut: null,
+              dateFin: toCaminoDate('2020-04-01')
+            }
+          ]
+        }
+      ])
+    ).toEqual(false)
   })
 })
