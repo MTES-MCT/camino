@@ -281,10 +281,8 @@ const routes: RouteRecordRaw[] = [
     name: 'erreur',
     component: Error,
     props: {
-      message: {
-        type: 'error',
-        value: 'Page introuvable'
-      }
+      couleur: 'error',
+      message: 'Page introuvable'
     }
   }
 ]

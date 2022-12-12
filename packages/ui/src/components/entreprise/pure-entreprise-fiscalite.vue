@@ -39,31 +39,20 @@
         v-if="data.status === 'LOADED' && isFiscaliteGuyane(data.value)"
       >
         <div>c. Taxe minière sur l’or de Guyane</div>
-        <LoadingElement
-          v-slot="{ item }"
-          :data="data"
-          class="fiscalite-value"
-          >{{ currencyFormat(item.guyane.taxeAurifereBrute) }}</LoadingElement
-        >
+        <div class="fiscalite-value">
+          {{ currencyFormat(data.value.guyane.taxeAurifereBrute) }}
+        </div>
         <div>
           d. Investissements déductibles de la taxe perçue pour la région de
           Guyane
         </div>
-        <LoadingElement
-          v-slot="{ item }"
-          :data="data"
-          class="fiscalite-value"
-          >{{
-            currencyFormat(item.guyane.totalInvestissementsDeduits)
-          }}</LoadingElement
-        >
+        <div class="fiscalite-value">
+          {{ currencyFormat(data.value.guyane.totalInvestissementsDeduits) }}
+        </div>
         <div>e. Montant net de taxe minière sur l’or de Guyane (c-d)</div>
-        <LoadingElement
-          v-slot="{ item }"
-          :data="data"
-          class="fiscalite-value"
-          >{{ currencyFormat(montantNetTaxeAurifere(item)) }}</LoadingElement
-        >
+        <div class="fiscalite-value">
+          {{ currencyFormat(montantNetTaxeAurifere(data.value)) }}
+        </div>
       </template>
       <div>
         f. Frais de gestion de fiscalité directe locale (a+b{{

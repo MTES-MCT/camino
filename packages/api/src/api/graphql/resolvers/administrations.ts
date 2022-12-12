@@ -28,6 +28,7 @@ import { emailCheck } from '../../../tools/email-check.js'
 import { userGet } from '../../../database/queries/utilisateurs.js'
 import { isSuper } from 'camino-common/src/roles.js'
 import {
+  canEditEmails,
   canReadActivitesTypesEmails,
   canReadAdministrations
 } from 'camino-common/src/permissions/administrations.js'
@@ -258,7 +259,7 @@ const administrationActiviteTypeEmailCreer = async (
       user
     )
 
-    if (!administration || !administration.emailsModification) {
+    if (!administration || !canEditEmails(user, administration.id)) {
       throw new Error('droits insuffisants')
     }
 
@@ -303,7 +304,7 @@ const administrationActiviteTypeEmailSupprimer = async (
       user
     )
 
-    if (!administration || !administration.emailsModification) {
+    if (!administration || !canEditEmails(user, administration.id)) {
       throw new Error('droits insuffisants')
     }
 

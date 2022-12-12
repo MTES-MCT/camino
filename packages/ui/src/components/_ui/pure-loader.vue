@@ -19,11 +19,11 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T extends any">
 import { AsyncData } from '@/api/client-rest'
 import HelpTooltip from '@/components/_ui/help-tooltip.vue'
 
-defineProps<{ data: AsyncData<any> }>()
+defineProps<{ data: AsyncData<T> }>()
 </script>
 <style scoped>
 .top-level {

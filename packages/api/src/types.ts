@@ -266,7 +266,6 @@ interface IAdministration {
   activitesTypes?: IActiviteType[] | null
   utilisateurs?: IUtilisateur[] | null
   associee?: boolean | null
-  emailsModification?: boolean
   modification?: boolean | null
   activitesTypesEmails?: (IActiviteType & { email: string })[]
 }

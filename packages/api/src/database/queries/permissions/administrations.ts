@@ -7,17 +7,8 @@ import { knex } from '../../../knex.js'
 import AdministrationsModel from '../../models/administrations.js'
 import Utilisateurs from '../../models/utilisateurs.js'
 import { utilisateursQueryModify } from './utilisateurs.js'
-import {
-  isAdministrationAdmin,
-  isAdministrationEditeur,
-  isSuper
-} from 'camino-common/src/roles.js'
-import {
-  AdministrationId,
-  Administrations,
-  sortedAdministrations
-} from 'camino-common/src/static/administrations.js'
-import { Departements } from 'camino-common/src/static/departement.js'
+import { isSuper } from 'camino-common/src/roles.js'
+import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
@@ -35,45 +26,6 @@ const administrationsQueryModify = (
 
   if (isSuper(user)) {
     q.select(raw('true').as('modification'))
-  }
-
-  if (
-    isSuper(user) ||
-    ((isAdministrationAdmin(user) || isAdministrationEditeur(user)) &&
-      Administrations[user.administrationId].typeId === 'min')
-  ) {
-    // Utilisateur super ou membre de ministère (admin ou éditeur) : tous les droits
-    q.select(raw('true').as('emailsModification'))
-  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    // Membre d'une DREAL/DEAL vis-à-vis de la DREAL elle-même,
-    // ou d'un DREAL/DEAL vis-à-vis d'une administration qui dépend d'elles
-    // Admin ou éditeur : modifications
-    // Admin, éditeur ou lecteur : lecture
-
-    const administration = Administrations[user.administrationId]
-    if (administration.regionId) {
-      const departementIds = Object.values(Departements)
-        .filter(({ regionId }) => regionId === administration.regionId)
-        .map(({ id }) => id)
-      // On récupère toutes les administrations départementales qui sont de la même région que l’administration régionale de l’utilisateur
-      const administrationIds = sortedAdministrations
-        .filter(({ departementId }) => departementIds.includes(departementId))
-        .map(({ id }) => id)
-
-      if (administration.typeId === 'dre' || administration.typeId === 'dea') {
-        administrationIds.push(user.administrationId)
-      }
-      if (administrationIds.length) {
-        q.select(
-          raw(
-            `administrations.id IN (${administrationIds
-              .map(() => '?')
-              .join(',')})`,
-            administrationIds
-          ).as('emailsModification')
-        )
-      }
-    }
   }
 
   q.modifyGraph('utilisateurs', b => {

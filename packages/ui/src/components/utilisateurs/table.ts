@@ -2,10 +2,12 @@ import List from '../_ui/list.vue'
 import {
   isAdministration,
   isBureauDEtudes,
-  isEntreprise
+  isEntreprise,
+  User
 } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
 import { Column } from '@/components/_ui/table-auto.type'
+import { Utilisateur } from '@/api/api-client'
 
 export const utilisateursColonnes: Column[] = [
   {
@@ -35,16 +37,14 @@ export const utilisateursColonnes: Column[] = [
   }
 ]
 
-export const utilisateursLignesBuild = (utilisateurs: any) =>
-  utilisateurs.map((utilisateur: any) => {
+export const utilisateursLignesBuild = (utilisateurs: Utilisateur[]) =>
+  utilisateurs.map(utilisateur => {
     let elements
 
     if (isAdministration(utilisateur)) {
       elements = [Administrations[utilisateur.administrationId].abreviation]
     } else if (isEntreprise(utilisateur) || isBureauDEtudes(utilisateur)) {
-      elements = (utilisateur as any).entreprises.map(
-        ({ nom }: { nom: any }) => nom
-      )
+      elements = utilisateur.entreprises?.map(({ nom }) => nom)
     }
 
     const lien =

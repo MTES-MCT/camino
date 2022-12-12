@@ -23,7 +23,6 @@ type Administration {
   commune: String
   cedex: String
   utilisateurs: [Utilisateur]
-  emailsModification: Boolean
   titresTypesTitresStatuts: [TitreTypeTitreStatut]
   titresTypesEtapesTypes: [TitreTypeEtapeType]
   activitesTypes: [ActiviteType]

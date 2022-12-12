@@ -17,9 +17,7 @@ export interface FiscaliteGuyane extends FiscaliteFrance {
   }
 }
 
-export const isFiscaliteGuyane = (fiscalite: Fiscalite): fiscalite is FiscaliteGuyane => {
-  return 'guyane' in fiscalite
-}
+export const isFiscaliteGuyane = (fiscalite: Fiscalite): fiscalite is FiscaliteGuyane => 'guyane' in fiscalite
 
 export const montantNetTaxeAurifere = (fiscalite: Fiscalite) => (isFiscaliteGuyane(fiscalite) ? fiscalite.guyane.taxeAurifere : 0)
 
