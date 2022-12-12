@@ -68,7 +68,7 @@ export const titreInSurvieProvisoire = (
 
     if (octroi) {
       const dateFin = titreDateFinFind(
-        demarches.filter(({ typeId }) => ['oct', 'pr1'].includes(typeId))
+        demarches.filter(({ typeId }) => ['oct', 'pr1', 'pro'].includes(typeId))
       )
 
       if (

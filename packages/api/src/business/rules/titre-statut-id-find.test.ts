@@ -1,4 +1,7 @@
-import { titreStatutIdFind } from './titre-statut-id-find.js'
+import {
+  titreInSurvieProvisoire,
+  titreStatutIdFind
+} from './titre-statut-id-find.js'
 
 import {
   titreDemarchesIndefini,
@@ -139,5 +142,69 @@ describe("statut d'un titre", () => {
         }
       ])
     ).toEqual('mod')
+  })
+
+  test('un titre est en modification en instance si une prolongation est créée après une prolongation qui est toujours valide', () => {
+    expect(
+      titreInSurvieProvisoire([
+        {
+          id: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
+          titreId: 'm-pr-saint-pierre-2014',
+          type: { id: 'pro', nom: 'unused', ordre: 1, etapesTypes: [] },
+          typeId: 'pro',
+          statutId: 'eco',
+          ordre: 3,
+          etapes: [
+            {
+              date: toCaminoDate('2020-06-01'),
+              typeId: 'mfr',
+              statutId: 'fai',
+              id: 'id',
+              titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro02')
+            }
+          ]
+        },
+        {
+          id: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
+          titreId: 'm-pr-saint-pierre-2014',
+          type: { id: 'pro', nom: 'unused', ordre: 1, etapesTypes: [] },
+          typeId: 'pro',
+          statutId: 'acc',
+          ordre: 2,
+          etapes: [
+            {
+              date: toCaminoDate('2020-01-01'),
+              typeId: 'dex',
+              statutId: 'acc',
+              id: 'id',
+              titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
+              ordre: 1,
+              dateDebut: null,
+              dateFin: toCaminoDate('2020-10-01')
+            }
+          ]
+        },
+        {
+          id: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
+          titreId: 'm-pr-saint-pierre-2014',
+          type: { id: 'oct', nom: 'unused', ordre: 2, etapesTypes: [] },
+          typeId: 'oct',
+          statutId: 'acc',
+          ordre: 1,
+          etapes: [
+            {
+              id: 'm-pr-saint-pierre-2014-oct01-dex01',
+              titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
+              typeId: 'dex',
+              statutId: 'acc',
+              ordre: 1,
+              date: toCaminoDate('1014-04-01'),
+              dateDebut: null,
+              dateFin: toCaminoDate('2020-04-01')
+            }
+          ]
+        }
+      ])
+    ).toEqual(true)
   })
 })
