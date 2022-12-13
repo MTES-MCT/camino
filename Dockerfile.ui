@@ -16,6 +16,10 @@ COPY ./ /app/
 RUN make build/ui
 
 FROM nginx:1.23.2
-RUN apt-get update && apt-get install -y nginx-extras
+RUN apt-get update &&  \
+    apt-get install -y nginx-extras && \
+    apt-get clean && \
+    apt-get autoclean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 ADD ui_nginx.conf /etc/nginx/templates/default.conf.template
 COPY --from=build-stage /app/packages/ui/dist /usr/share/nginx/html
