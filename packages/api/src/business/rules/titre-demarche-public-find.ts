@@ -173,7 +173,7 @@ const titreDemarchePublicLectureFind = (
     titreTypeId === 'prm' &&
     titreEtape.typeId === 'mdp' &&
     ['pr1', 'pr2'].includes(demarcheTypeId) &&
-    titreInSurvieProvisoire(demarches, titreTypeId)
+    titreInSurvieProvisoire(demarches)
   ) {
     return true
   }

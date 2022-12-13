@@ -2,11 +2,13 @@ import { ITitreDemarche } from '../../types.js'
 
 import { titreDateFinFind } from './titre-date-fin-find.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 
 export const titreStatutIdFind = (
   aujourdhui: string,
-  demarches: ITitreDemarche[] | null | undefined,
-  titreTypeId: string
+  demarches: ITitreDemarche[] | null | undefined
 ) => {
   const titreDemarches = demarches
     ? demarches.filter(d => !d.type!.travaux)
@@ -51,7 +53,7 @@ export const titreStatutIdFind = (
     return 'val'
   }
 
-  if (titreInSurvieProvisoire(titreDemarches, titreTypeId)) {
+  if (titreInSurvieProvisoire(titreDemarches)) {
     return 'mod'
   }
 
@@ -59,25 +61,35 @@ export const titreStatutIdFind = (
   return 'ech'
 }
 
-// si le titre est un PER M ou W, ou une AXM
 // et qu'une démarche de prolongation est déposée et a été déposée avant l'échéance de l'octroi ou d’une prolongation précédente
 // -> le statut du titre est modification en instance (survie provisoire)
 export const titreInSurvieProvisoire = (
-  demarches: ITitreDemarche[] | null | undefined,
-  titreTypeId: string
+  demarches: ITitreDemarche[] | null | undefined
 ): boolean => {
-  if (demarches?.length && ['prm', 'prw', 'axm'].includes(titreTypeId)) {
-    const octroi = demarches.find(d => d.typeId === 'oct')
+  if (demarches?.length) {
+    const octroi = demarches.find(d => d.typeId === DEMARCHES_TYPES_IDS.Octroi)
 
     if (octroi) {
       const dateFin = titreDateFinFind(
-        demarches.filter(({ typeId }) => ['oct', 'pr1'].includes(typeId))
+        demarches.filter(({ typeId }) =>
+          [
+            DEMARCHES_TYPES_IDS.Octroi,
+            DEMARCHES_TYPES_IDS.Prolongation1,
+            DEMARCHES_TYPES_IDS.Prolongation
+          ].includes(typeId)
+        )
       )
 
       if (
         dateFin &&
         demarches.some(d => {
-          if (!['pr1', 'pr2', 'pro'].includes(d.typeId)) {
+          if (
+            ![
+              DEMARCHES_TYPES_IDS.Prolongation1,
+              DEMARCHES_TYPES_IDS.Prolongation2,
+              DEMARCHES_TYPES_IDS.Prolongation
+            ].includes(d.typeId)
+          ) {
             return false
           }
 
@@ -90,9 +102,15 @@ export const titreInSurvieProvisoire = (
             return false
           }
 
-          let demandeProlongation = d.etapes?.find(e => e.typeId === 'mfr')
+          let demandeProlongation = d.etapes?.find(
+            e =>
+              e.typeId === ETAPES_TYPES.demande &&
+              e.statutId !== ETAPES_STATUTS.EN_CONSTRUCTION
+          )
           if (!demandeProlongation) {
-            demandeProlongation = d.etapes?.find(e => e.typeId === 'mdp')
+            demandeProlongation = d.etapes?.find(
+              e => e.typeId === ETAPES_TYPES.depotDeLaDemande
+            )
           }
 
           return demandeProlongation && demandeProlongation.date < dateFin
