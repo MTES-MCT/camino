@@ -1,5 +1,4 @@
 {{ $CurrentContainer := where $ "ID" .Docker.CurrentContainerID | first }}
-
 {{ define "upstream" }}
 	{{ if .Address }}
 		{{/* If we got the containers from swarm and this container's port is published to host, use host IP:PORT */}}
@@ -64,6 +63,8 @@
 		ssl_prefer_server_ciphers on;
 	{{ end }}
 {{ end }}
+
+client_max_body_size 30m;
 
 # If we receive X-Forwarded-Proto, pass it through; otherwise, pass along the
 # scheme used to connect to this server
