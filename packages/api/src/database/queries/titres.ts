@@ -76,7 +76,7 @@ const titresColonnes = {
   domaine: { id: 'domaineId', groupBy: ['titres.domaineId'] },
   coordonnees: { id: 'coordonnees', groupBy: [] },
   type: { id: 'type:type.nom', relation: 'type.type' },
-  statut: { id: 'titreStatutId', groupBy: ['titres.titresStatutId'] },
+  statut: { id: 'titreStatutId', groupBy: ['titres.titreStatutId'] },
   activites: { id: 'activites', groupBy: [] },
   titulaires: {
     id: raw(`STRING_AGG("titulaires"."nom", ' ; ')`),
