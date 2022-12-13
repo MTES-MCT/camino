@@ -2,7 +2,9 @@ import { ITitreDemarche } from '../../types.js'
 
 import { titreDateFinFind } from './titre-date-fin-find.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 
 export const titreStatutIdFind = (
   aujourdhui: string,
@@ -65,17 +67,29 @@ export const titreInSurvieProvisoire = (
   demarches: ITitreDemarche[] | null | undefined
 ): boolean => {
   if (demarches?.length) {
-    const octroi = demarches.find(d => d.typeId === 'oct')
+    const octroi = demarches.find(d => d.typeId === DEMARCHES_TYPES_IDS.Octroi)
 
     if (octroi) {
       const dateFin = titreDateFinFind(
-        demarches.filter(({ typeId }) => ['oct', 'pr1', 'pro'].includes(typeId))
+        demarches.filter(({ typeId }) =>
+          [
+            DEMARCHES_TYPES_IDS.Octroi,
+            DEMARCHES_TYPES_IDS.Prolongation1,
+            DEMARCHES_TYPES_IDS.Prolongation
+          ].includes(typeId)
+        )
       )
 
       if (
         dateFin &&
         demarches.some(d => {
-          if (!['pr1', 'pr2', 'pro'].includes(d.typeId)) {
+          if (
+            ![
+              DEMARCHES_TYPES_IDS.Prolongation1,
+              DEMARCHES_TYPES_IDS.Prolongation2,
+              DEMARCHES_TYPES_IDS.Prolongation
+            ].includes(d.typeId)
+          ) {
             return false
           }
 
@@ -90,11 +104,13 @@ export const titreInSurvieProvisoire = (
 
           let demandeProlongation = d.etapes?.find(
             e =>
-              e.typeId === 'mfr' &&
+              e.typeId === ETAPES_TYPES.demande &&
               e.statutId !== ETAPES_STATUTS.EN_CONSTRUCTION
           )
           if (!demandeProlongation) {
-            demandeProlongation = d.etapes?.find(e => e.typeId === 'mdp')
+            demandeProlongation = d.etapes?.find(
+              e => e.typeId === ETAPES_TYPES.depotDeLaDemande
+            )
           }
 
           return demandeProlongation && demandeProlongation.date < dateFin
