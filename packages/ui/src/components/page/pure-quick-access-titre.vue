@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import SimpleTypeahead from '@/components/_ui/typeahead.vue'
 import { Titre } from './pure-quick-access-titres.type'
-import Domaine from '@/components/_common/domaine.vue'
+import { Domaine } from '@/components/_common/domaine'
 import {
   TitresTypesTypes,
   TitreTypeTypeId

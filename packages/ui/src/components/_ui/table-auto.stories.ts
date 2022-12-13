@@ -2,7 +2,7 @@ import Table from './table-auto.vue'
 import { Meta, Story } from '@storybook/vue3'
 import { markRaw } from 'vue'
 import TitreNom from '../_common/titre-nom.vue'
-import CaminoDomaine from '../_common/domaine.vue'
+import { Domaine } from '../_common/domaine'
 import TitreTypeTypeNom from '../_common/titre-type-type-nom.vue'
 import Statut from '../_common/statut.vue'
 import { Column, InitialSort, TableAutoRow } from './table-auto.type'
@@ -69,7 +69,7 @@ const rows: TableAutoRow[] = [0, 1, 2, 3].map(row => {
         value: `220222_${row}`
       },
       domaine: {
-        component: markRaw(CaminoDomaine),
+        component: markRaw(Domaine),
         props: {
           domaineId: 'm'
         },

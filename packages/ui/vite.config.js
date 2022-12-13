@@ -2,6 +2,7 @@ const dotenv = require('dotenv')
 const path = require('path')
 const { defineConfig } = require('vite')
 const vue = require('@vitejs/plugin-vue')
+const vueJsx = require('@vitejs/plugin-vue-jsx')
 const inject = require('@rollup/plugin-inject')
 const { visualizer } = require('rollup-plugin-visualizer')
 
@@ -12,7 +13,7 @@ const commitHash = process.env.GIT_SHA
   : require('child_process').execSync('git rev-parse --short HEAD').toString()
 
 module.exports = defineConfig({
-  plugins: [vue(), visualizer()],
+  plugins: [vue(), vueJsx(), visualizer()],
   root: 'src',
   resolve: {
     alias: {
@@ -20,7 +21,10 @@ module.exports = defineConfig({
     }
   },
   test: {
-    setupFiles: ['./__mocks__/setupVitest.js']
+    setupFiles: ['./__mocks__/setupVitest.js'],
+    transformMode: {
+      web: [/\.[jt]sx$/]
+    }
   },
   // suite à l’ajout de la lib jsondiffpatch, il faut injecter process
   // => https://github.com/avkonst/hookstate/issues/118

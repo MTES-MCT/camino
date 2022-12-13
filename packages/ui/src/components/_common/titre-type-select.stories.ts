@@ -1,8 +1,5 @@
-import TitreTypeSelect from './titre-type-select.vue'
+import { TitreTypeSelect, Props } from './titre-type-select'
 import { Meta, Story } from '@storybook/vue3'
-import { DomaineId } from 'camino-common/src/static/domaines'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { User } from 'camino-common/src/roles'
 
 const meta: Meta = {
   title: 'Components/common/TitreTypeSelect',
@@ -10,14 +7,6 @@ const meta: Meta = {
   argTypes: {}
 }
 export default meta
-
-type Props = {
-  element: {
-    domaineId: DomaineId | undefined
-    titreTypeId: TitreTypeId | undefined | null
-  }
-  user: User
-}
 
 const Template: Story<Props> = (args: Props) => ({
   components: { TitreTypeSelect },

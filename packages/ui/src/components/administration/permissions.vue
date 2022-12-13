@@ -216,7 +216,7 @@
 </template>
 
 <script setup lang="ts">
-import CaminoDomaine from '../_common/domaine.vue'
+import { Domaine as CaminoDomaine } from '../_common/domaine'
 import Statut from '../_common/statut.vue'
 import Icon from '../_ui/icon.vue'
 import {
