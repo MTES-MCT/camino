@@ -429,7 +429,6 @@ export const EtapesTypesEtapesStatuts = {
   saisineDeLautoriteEnvironnementale: { FAIT: { etapeTypeId: 'wse', etapeStatutId: 'fai', ordre: 1 } as EtapeTypeEtapeStatut },
   saisineDesServicesDeLEtat: { FAIT: { etapeTypeId: 'wss', etapeStatutId: 'fai', ordre: 1 } as EtapeTypeEtapeStatut },
   transmissionDuProjetDePrescriptionsAuDemandeur: { FAIT: { etapeTypeId: 'wtp', etapeStatutId: 'fai', ordre: 1 } as EtapeTypeEtapeStatut },
-  decisionAdministrative_duy: { FAIT: { etapeTypeId: 'duy', etapeStatutId: 'fai', ordre: 1 } as EtapeTypeEtapeStatut },
   receptionDeComplements_wco: { FAIT: { etapeTypeId: 'wco', etapeStatutId: 'fai', ordre: 1 } as EtapeTypeEtapeStatut },
   avisDeLaDDT_M_: { FAIT: { etapeTypeId: 'wdt', etapeStatutId: 'fai', ordre: 1 } as EtapeTypeEtapeStatut }
 } as const

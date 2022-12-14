@@ -368,12 +368,6 @@
     "entreprises_lecture": true
   },
   {
-    "id": "duy",
-    "nom": "décision administrative",
-    "description": "Refus ou acceptation à l’issue d’une instruction.",
-    "ordre": 235
-  },
-  {
     "id": "ede",
     "nom": "expertise DREAL ou DGTM service eau",
     "description": "Instruction de demande sur la réglementation ayant trait à l’eau par les services de la DGTM.\n",
