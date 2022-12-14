@@ -40,7 +40,11 @@ const Template: Story<Props> = (args: Props) => ({
 export const Single = Template.bind({})
 Single.args = {
   id: 'ello',
-  items: [{ id: 'id1', titre: 'titreItem' }],
+  items: [
+    { id: 'id1', titre: 'titreItem1' },
+    { id: 'id2', titre: 'titreItem2' },
+    { id: 'id3', titre: 'titreItem3' }
+  ],
   placeholder: 'placeholder',
   minInputLength: 3,
   type: 'single',

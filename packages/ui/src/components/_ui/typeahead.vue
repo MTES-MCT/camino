@@ -1,31 +1,51 @@
 <template>
   <div :id="wrapperId" class="typeahead">
     <div class="flex typeahead-wrapper p-xs">
-      <Chip
-        v-for="item in selectedItems"
-        :key="itemKey(item)"
-        :nom="itemChipLabel(item)"
-        class="mr-xs mb-xs mt-xs"
-        @onDelete="unselectItem(item)"
-      />
+      <template v-if="type === 'multiple'">
+        <Chip
+          v-for="item in selectedItems"
+          :key="itemKey(item)"
+          :nom="itemChipLabel(item)"
+          class="mr-xs mb-xs mt-xs"
+          @onDelete="unselectItem(item)"
+        />
 
-      <input
-        v-if="type === 'multiple' || selectedItems.length === 0"
-        :id="id"
-        ref="myTypeaheadInput"
-        v-model="input"
-        class="typeahead-input"
-        type="text"
-        :placeholder="placeholder"
-        autocomplete="off"
-        @input="onInput"
-        @focus="onFocus"
-        @blur="onBlur"
-        @keydown.down.prevent="onArrowDown"
-        @keydown.up.prevent="onArrowUp"
-        @keyup.enter.prevent="selectCurrentSelection"
-        @keydown.delete="deleteLastSelected"
-      />
+        <input
+          :id="id"
+          ref="myTypeaheadInput"
+          v-model="input"
+          class="typeahead-input"
+          type="text"
+          :placeholder="placeholder"
+          autocomplete="off"
+          @input="onInput"
+          @focus="onFocus"
+          @blur="onBlur"
+          @keydown.down.prevent="onArrowDown"
+          @keydown.up.prevent="onArrowUp"
+          @keyup.enter.prevent="selectCurrentSelection"
+          @keydown.delete="deleteLastSelected"
+        />
+      </template>
+      <template v-else>
+        <input
+          :id="id"
+          ref="myTypeaheadInput"
+          v-model="input"
+          class="typeahead-input"
+          type="text"
+          :placeholder="placeholder"
+          autocomplete="off"
+          @click="onClick"
+          @input="onInput"
+          @focus="onFocus"
+          @blur="onBlur"
+          @keydown.down.prevent="onArrowDown"
+          @keydown.up.prevent="onArrowUp"
+          @keyup.enter.prevent="selectCurrentSelection"
+          @keydown.delete="deleteLastSelected"
+        />
+      </template>
     </div>
 
     <div v-if="isListVisible" class="typeahead-list">
@@ -87,11 +107,18 @@ watch(
   () => props.overrideItems,
   newItems => {
     selectedItems.value = getItems(newItems)
+    if (!selectedItems.value.length) {
+      input.value = ''
+    }
   },
   { deep: true }
 )
 const selectedItems = ref<T[]>(getItems(props.overrideItems)) as Ref<T[]>
-const input = ref<string>('')
+const input = ref<string>(
+  props.type === 'single' && props.overrideItems?.length
+    ? props.itemChipLabel(getItems(props.overrideItems)[0])
+    : ''
+)
 const isInputFocused = ref<boolean>(false)
 const currentSelectionIndex = ref<number>(0)
 
@@ -109,6 +136,10 @@ const onFocus = () => {
 }
 const onBlur = () => {
   isInputFocused.value = false
+}
+const onClick = () => {
+  input.value = ''
+  selectedItems.value.pop()
 }
 const onArrowDown = () => {
   if (
@@ -174,7 +205,11 @@ const deleteLastSelected = () => {
 }
 
 const selectItem = (item: T) => {
-  input.value = ''
+  if (props.type === 'multiple') {
+    input.value = ''
+  } else {
+    input.value = props.itemChipLabel(item)
+  }
   currentSelectionIndex.value = 0
   document.getElementById(props.id)?.blur()
 
