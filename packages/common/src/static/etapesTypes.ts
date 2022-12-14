@@ -51,7 +51,6 @@ export const ETAPES_TYPES = {
   publicationDeDecisionAuJORF: 'dpu',
   publicationDeDecisionAdministrativeAuJORF: 'dup',
   decisionAdministrative: 'dux',
-  decisionAdministrative_duy: 'duy',
   expertiseDREALOuDGTMServiceEau: 'ede',
   expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_: 'edm',
   expertiseDeLOfficeNationalDesForets: 'eof',
@@ -427,11 +426,7 @@ export const EtapesTypes: { [key in EtapeTypeId]: Omit<Definition<key>, 'ordre'>
     nom: 'décision administrative',
     description: 'Refus ou acceptation à l’issue d’une instruction.'
   },
-  duy: {
-    id: 'duy',
-    nom: 'décision administrative',
-    description: 'Refus ou acceptation à l’issue d’une instruction.'
-  },
+
   ede: {
     id: 'ede',
     nom: 'expertise DREAL ou DGTM service eau',
