@@ -1,14 +1,9 @@
 import { CaminoDate } from 'camino-common/src/date'
-import { Etape } from 'camino-common/src/etape'
 import {
   EtapeStatut,
   EtapeStatutId
 } from 'camino-common/src/static/etapesStatuts'
-import {
-  EtapesTypes,
-  EtapeTypeId,
-  isEtapeTypeId
-} from 'camino-common/src/static/etapesTypes'
+import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { UnionToIntersection } from 'chart.js/types/utils'
 import { computed, watch, ref } from 'vue'
@@ -42,6 +37,7 @@ declare type EmitFn<
 type Emit = EmitFn<{
   completeUpdate: (e: boolean) => true
   'update:etape': (e: Props['etape']) => true
+  typeUpdate: (e: EtapeTypeId) => true
 }>
 
 // FIXME si on met ça dans la function, ça ne marche pas
@@ -138,9 +134,10 @@ export function TypeEdit(
             // FIXME dans les params de SimpleTypeahead, le typage n’est pas découvert tout seul
             itemKey={item => item as EtapeTypeId}
             itemChipLabel={item => EtapesTypes[item as EtapeTypeId].nom}
-            onSelectItem={(typeId: EtapeTypeId) =>
-              (etape.type = { id: typeId })
-            }
+            onSelectItem={(typeId: EtapeTypeId) => {
+              etape.type = { id: typeId }
+              emit('typeUpdate', typeId)
+            }}
             onOnInput={(searchTerm: string) =>
               (etapeTypeSearch.value = searchTerm)
             }

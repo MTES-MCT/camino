@@ -12,12 +12,11 @@
       <TypeEdit
         :etape="etape"
         :userIsAdmin="userIsAdmin"
-        :etapesTypes="etapesTypes"
-        :etapeType="etapeType"
+        :etapesTypesIds="etapesTypesIds"
         :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction"
         @update:etape="newValue => $emit('update:etape', newValue)"
-        @type-update="typeUpdate"
-        @complete-update="typeCompleteUpdate"
+        @typeUpdate="typeUpdate"
+        @completeUpdate="typeCompleteUpdate"
       />
     </Accordion>
 
@@ -136,7 +135,7 @@
 
 <script>
 import Accordion from './accordion.vue'
-import TypeEdit from './type-edit.vue'
+import { TypeEdit } from './type-edit'
 import FondamentalesEdit from './fondamentales-edit.vue'
 import PointsEdit from './points-edit.vue'
 import SectionsEdit from './sections-edit.vue'
@@ -194,10 +193,10 @@ export default {
   },
 
   computed: {
-    etapesTypes() {
-      return this.$store.state.titreEtapeEdition.metas.etapesTypes.filter(
-        t => t.etapesCreation
-      )
+    etapesTypesIds() {
+      return this.$store.state.titreEtapeEdition.metas.etapesTypes
+        .filter(t => t.etapesCreation)
+        .map(t => t.id)
     },
 
     documentsTypes() {
