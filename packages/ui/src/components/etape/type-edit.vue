@@ -29,14 +29,18 @@
         <h5>Type</h5>
       </div>
       <div class="mb tablet-blob-2-3">
-        <select :value="etapeType?.id" class="p-s" @change="typeUpdate($event)">
+        <select
+          :value="etape.type?.id"
+          class="p-s"
+          @change="typeUpdate($event)"
+        >
           <option
-            v-for="eType in etapesTypes"
-            :key="eType.id"
-            :value="eType.id"
-            :disabled="etapeType?.id === eType.id"
+            v-for="eTypeId in etapesTypesIds"
+            :key="eTypeId"
+            :value="eTypeId"
+            :disabled="etape.type?.id === eTypeId"
           >
-            {{ eType.nom }}
+            {{ eTypeId }}
           </option>
         </select>
       </div>
@@ -71,14 +75,14 @@
 <script>
 import InputDate from '../_ui/input-date.vue'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
+import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 
 export default {
   components: { InputDate },
   props: {
     userIsAdmin: { type: Boolean, required: true },
     etape: { type: Object, required: true },
-    etapeType: { type: Object, default: () => ({}) },
-    etapesTypes: { type: Array, required: true },
+    etapesTypesIds: { type: Array, required: true },
     etapeIsDemandeEnConstruction: { type: Boolean, default: false }
   },
 
@@ -86,17 +90,17 @@ export default {
 
   computed: {
     etapesStatuts() {
-      return getEtapesStatuts(this.etapeType?.id)
+      return getEtapesStatuts(this.etape.type?.id)
     },
 
     complete() {
       if (this.userIsAdmin) {
         return this.etapeIsDemandeEnConstruction
-          ? !!(this.etapeType && this.etape.date)
-          : !!(this.etapeType && this.etape.date && this.etape.statutId)
+          ? !!(this.etape.type?.id && this.etape.date)
+          : !!(this.etape.type?.id && this.etape.date && this.etape.statutId)
       }
 
-      return !!this.etapeType.id
+      return !!this.etape.type?.id
     }
   },
 
