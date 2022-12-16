@@ -168,9 +168,17 @@ onMounted(() => {
       attribution: 'cerema'
     }
   )
+  const RedevanceArcheologiePreventive = L.tileLayer(
+    'https://services.data.shom.fr/INSPIRE/wmts?layer=RAP_PYR_PNG_3857_WMTS&style=normal&tilematrixset=3857&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image/png&TileMatrix={z}&TileCol={x}&TileRow={y}',
+    {
+      attribution: 'shom'
+    }
+  )
   const overlayMaps = {
     [sdomOverlayName]: SDOM,
     'Façades maritimes': Facades,
+    'Limite de la redevance d’archéologie préventive':
+      RedevanceArcheologiePreventive,
     Contours: geojsonLayer,
     Points: markerLayer
   }
