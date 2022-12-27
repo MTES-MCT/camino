@@ -9,6 +9,7 @@ import { entrepriseFormat } from './entreprises.js'
 import { titreEtapeFormatFields } from './_fields.js'
 import { titreDemarcheFormat } from './titres-demarches.js'
 import { titreEtapeCompleteValidate } from '../../business/validations/titre-etape-updation-validate.js'
+import { SDOMZones } from 'camino-common/src/static/sdom.js'
 
 const titreEtapeFormat = (
   titreEtape: ITitreEtape,
@@ -70,7 +71,7 @@ const titreEtapeFormat = (
       titreEtape.documents,
       titreEtape.type!.justificatifsTypes!,
       titreEtape.justificatifs,
-      titreEtape.sdomZones
+      titreEtape.sdomZones?.map(id => SDOMZones[id]) ?? []
     )
 
     titreEtape.deposable = errors.length === 0

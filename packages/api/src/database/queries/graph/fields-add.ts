@@ -81,6 +81,10 @@ export const titresFieldsAdd = (fields: IFields) => {
       fields.pointsEtape = { id: {} }
     }
   }
+  if (fields.sdomZones) {
+    delete fields.sdomZones
+    fields.sdomZonesRaw = { id: {} }
+  }
 
   return fields
 }

@@ -40,6 +40,8 @@ const titresQueryBuild = (
 
   const q = Titres.query().withGraphFetched(graph)
 
+  console.log('fields', fields)
+  console.log('graph', graph)
   titresQueryModify(q, user, demandeEnCours)
 
   return q
@@ -59,6 +61,7 @@ const titreGet = async (
   { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean },
   user: IUtilisateur | null | undefined
 ): Promise<DBTitre | undefined> => {
+  console.log('titreGet', fields)
   const q = titresQueryBuild({ fields }, user)
 
   q.context({ fetchHeritage })
@@ -180,8 +183,7 @@ const titresGet = async (
     // sinon les résultats 'null' apparaissent toujours en premier
     if (colonne === 'activites') {
       q.orderByRaw(
-        `"activites_absentes" + "activites_en_construction" ${
-          ordre === 'asc' ? 'asc nulls first' : 'desc nulls last'
+        `"activites_absentes" + "activites_en_construction" ${ordre === 'asc' ? 'asc nulls first' : 'desc nulls last'
         }`
       )
     } else if (colonne === 'coordonnees') {

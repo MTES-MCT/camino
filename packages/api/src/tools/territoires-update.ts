@@ -5,7 +5,6 @@ import Communes from '../database/models/communes.js'
 import JSZip from 'jszip'
 import Forets from '../database/models/forets.js'
 import { Readable } from 'stream'
-import SDOMZones from '../database/models/sdom-zones.js'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import {
   assertsFacade,
@@ -246,7 +245,6 @@ const sdomZonesUpdate = async () => {
 
     console.info('Traitement du fichier de la ' + zone.nom)
 
-    const sdomZonesIdsKnown = (await SDOMZones.query()).map(({ id }) => id)
     const sdomZonesPostgisIdsKnown: string[] = (
       await knex.select('id').from('sdom_zones_postgis')
     ).map(({ id }: { id: string }) => id)
@@ -267,16 +265,6 @@ const sdomZonesUpdate = async () => {
         await knex('sdom_zones_postgis').insert({
           id: zone.id,
           geometry: result.rows[0].result
-        })
-      }
-      if (sdomZonesIdsKnown.includes(zone.id)) {
-        await knex('sdom_zones').where('id', zone.id).update({
-          nom: zone.nom
-        })
-      } else {
-        await knex('sdom_zones').insert({
-          id: zone.id,
-          nom: zone.nom
         })
       }
     } catch (e) {

@@ -3,7 +3,6 @@ import {
   IEtapeType,
   IHeritageContenu,
   IHeritageProps,
-  ISDOMZone,
   ISection,
   ITitreDemarche,
   ITitreEtape,
@@ -28,15 +27,14 @@ import {
 import { GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { geojsonIntersectsSDOM, GeoJsonResult } from '../../../tools/geojson.js'
 import { Feature } from 'geojson'
-import SdomZones from '../../../database/models/sdom-zones.js'
-import { SDOMZoneIds } from 'camino-common/src/static/sdom.js'
+import { SDOMZoneIds, SDOMZone, SDOMZones } from 'camino-common/src/static/sdom.js'
 import {
   DocumentTypeId,
   DocumentType,
   DOCUMENTS_TYPES_IDS
 } from 'camino-common/src/static/documentsTypes.js'
 
-const titreEtapePointsCalc = <
+export const titreEtapePointsCalc = <
   T extends {
     references: ITitrePointReference[]
     coordonnees: ICoordonnees
@@ -206,7 +204,7 @@ const titreEtapeHeritageContenuBuild = (
   return { contenu, heritageContenu }
 }
 
-const titreEtapeHeritageBuild = (
+export const titreEtapeHeritageBuild = (
   date: string,
   etapeType: IEtapeType,
   titreDemarche: ITitreDemarche,
@@ -247,17 +245,17 @@ const titreEtapeHeritageBuild = (
 
 export const titreEtapeSdomZonesGet = async (
   geoJson: Feature<any>
-): Promise<GeoJsonResult<ISDOMZone[]>> => {
+): Promise<GeoJsonResult<SDOMZone[]>> => {
   const sdomZoneIds = await geojsonIntersectsSDOM(geoJson)
 
   return {
     fallback: sdomZoneIds.fallback,
-    data: await SdomZones.query().whereIn('id', sdomZoneIds.data)
+    data: sdomZoneIds.data.map(id => SDOMZones[id])
   }
 }
 
-const documentTypeIdsBySdomZonesGet = (
-  sdomZones: ISDOMZone[] | null | undefined,
+export const documentTypeIdsBySdomZonesGet = (
+  sdomZones: SDOMZone[] | null | undefined,
   titreTypeId: string,
   demarcheTypeId: string,
   etapeTypeId: string
@@ -282,10 +280,4 @@ const documentTypeIdsBySdomZonesGet = (
   }
 
   return documentTypeIds
-}
-
-export {
-  titreEtapeHeritageBuild,
-  titreEtapePointsCalc,
-  documentTypeIdsBySdomZonesGet
 }

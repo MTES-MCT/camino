@@ -15,14 +15,16 @@ import { titreContenuFormat } from './_format/titre-contenu.js'
 import { idGenerate } from './_format/id-create.js'
 import slugify from '@sindresorhus/slugify'
 import cryptoRandomString from 'crypto-random-string'
-import SDOMZones from './sdom-zones.js'
 import TitresActivites from './titres-activites.js'
+import TitresSDOMZones from './titres--sdom-zones.js'
+import { SDOMZone, SDOMZoneId, SDOMZones } from 'camino-common/src/static/sdom.js'
 
 export interface DBTitre extends ITitre {
+  sdomZonesRaw?: { sdomZoneId: SDOMZoneId }[]
   archive: boolean
 }
 
-interface Titres extends DBTitre {}
+interface Titres extends DBTitre { }
 
 class Titres extends Model {
   public static tableName = 'titres'
@@ -52,6 +54,16 @@ class Titres extends Model {
     }
   }
 
+  static get virtualAttributes() {
+    return ['sdomZones']
+  }
+  get sdomZones(): SDOMZone[] {
+    if (!this.sdomZonesRaw) {
+      return []
+    }
+
+    return this.sdomZonesRaw.map(({ sdomZoneId }) => SDOMZones[sdomZoneId])
+  }
   static relationMappings = () => ({
     domaine: {
       relation: Model.BelongsToOneRelation,
@@ -163,16 +175,13 @@ class Titres extends Model {
         to: 'forets.id'
       }
     },
-    sdomZones: {
-      relation: Model.ManyToManyRelation,
-      modelClass: SDOMZones,
+
+    sdomZonesRaw: {
+      relation: Model.HasManyRelation,
+      modelClass: TitresSDOMZones,
       join: {
         from: ref('titres.propsTitreEtapesIds:points').castText(),
-        through: {
-          from: 'titres__sdomZones.titreEtapeId',
-          to: 'titres__sdomZones.sdomZoneId'
-        },
-        to: 'sdomZones.id'
+        to: 'titres__sdomZones.titreEtapeId',
       }
     },
 

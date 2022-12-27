@@ -5,7 +5,6 @@ import {
   IDecisionAnnexeContenu,
   IDocument,
   IEtapeType,
-  ISDOMZone,
   ISectionElement,
   ITitreEtape,
   ITitrePoint,
@@ -76,6 +75,7 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes.js'
 import { getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
+import { SDOMZone } from 'camino-common/src/static/sdom.js'
 
 const statutIdAndDateGet = (
   etape: ITitreEtape,
@@ -105,6 +105,7 @@ const etape = async (
   context: IToken,
   info: GraphQLResolveInfo
 ) => {
+  console.log('zizi')
   try {
     const user = await userGet(context.user?.id)
 
@@ -114,11 +115,15 @@ const etape = async (
       fields.type = { id: {} }
     }
 
+    console.log('field', fields)
+
     const titreEtape = await titreEtapeGet(
       id,
       { fields, fetchHeritage: true },
       user
     )
+
+    console.log('ça passe')
 
     if (!titreEtape) {
       throw new Error("l'étape n'existe pas")
@@ -301,10 +306,10 @@ const etapeCreer = async (
 
     const justificatifs = etape.justificatifIds?.length
       ? await documentsGet(
-          { ids: etape.justificatifIds },
-          { fields: { type: { id: {} } } },
-          userSuper
-        )
+        { ids: etape.justificatifIds },
+        { fields: { type: { id: {} } } },
+        userSuper
+      )
       : null
     delete etape.justificatifIds
     etape.justificatifs = justificatifs
@@ -312,14 +317,14 @@ const etapeCreer = async (
     const documentIds = etape.documentIds || []
     const documents = documentIds.length
       ? await documentsGet(
-          { ids: documentIds },
-          { fields: { type: { id: {} } } },
-          userSuper
-        )
+        { ids: documentIds },
+        { fields: { type: { id: {} } } },
+        userSuper
+      )
       : null
     delete etape.documentIds
 
-    const sdomZones = [] as ISDOMZone[]
+    const sdomZones: SDOMZone[] = []
     let titreEtapePoints = null
     if (etape.points?.length) {
       titreEtapePoints = titreEtapePointsCalc(etape.points)
@@ -484,10 +489,10 @@ const etapeModifier = async (
 
     const justificatifs = etape.justificatifIds?.length
       ? await documentsGet(
-          { ids: etape.justificatifIds },
-          { fields: { type: { id: {} } } },
-          userSuper
-        )
+        { ids: etape.justificatifIds },
+        { fields: { type: { id: {} } } },
+        userSuper
+      )
       : null
     delete etape.justificatifIds
     etape.justificatifs = justificatifs
@@ -495,14 +500,14 @@ const etapeModifier = async (
     const documentIds = etape.documentIds || []
     const documents = documentIds.length
       ? await documentsGet(
-          { ids: documentIds },
-          { fields: { type: { id: {} } } },
-          userSuper
-        )
+        { ids: documentIds },
+        { fields: { type: { id: {} } } },
+        userSuper
+      )
       : null
     delete etape.documentIds
 
-    const sdomZones = [] as ISDOMZone[]
+    const sdomZones: SDOMZone[] = []
     let titreEtapePoints = null
     if (etape.points?.length) {
       titreEtapePoints = titreEtapePointsCalc(etape.points)

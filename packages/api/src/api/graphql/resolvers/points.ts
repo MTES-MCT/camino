@@ -1,4 +1,4 @@
-import { ISDOMZone, ITitrePoint, IToken, IUtilisateur } from '../../../types.js'
+import { ITitrePoint, IToken, IUtilisateur } from '../../../types.js'
 
 import { FileUpload } from 'graphql-upload'
 import { Stream } from 'stream'
@@ -37,7 +37,7 @@ import {
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
-import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
+import { SDOMZone, SDOMZoneId, SDOMZoneIds, SDOMZones } from 'camino-common/src/static/sdom.js'
 
 const stream2buffer = async (stream: Stream): Promise<Buffer> => {
   return new Promise<Buffer>((resolve, reject) => {
@@ -60,7 +60,7 @@ interface IPerimetreInformations {
   surface: number
   documentTypeIds: string[]
   alertes: IPerimetreAlerte[]
-  sdomZones: ISDOMZone[]
+  sdomZones: SDOMZone[]
 }
 
 export const pointsImporter = async (
@@ -163,12 +163,12 @@ export const pointsImporter = async (
 
 const sdomZonesInformationsGet = async (
   etapePoints: ITitrePoint[],
-  etapeSdomZones: ISDOMZone[],
+  etapeSdomZones: SDOMZone[],
   titreTypeId: string,
   demarcheTypeId: string,
   etapeTypeId: string,
   titrePoints: ITitrePoint[],
-  titreSdomZones: ISDOMZone[],
+  titreSdomZones: SDOMZone[],
   titreId: string,
   user: IUtilisateur
 ) => {
@@ -225,11 +225,10 @@ const sdomZonesInformationsGet = async (
         )
         .forEach(t =>
           alertes.push({
-            message: `Le titre ${t.nom} au statut « ${
-              isNotNullNorUndefined(t.titreStatutId)
-                ? TitresStatuts[t.titreStatutId].nom
-                : ''
-            } » est superposé à ce titre`,
+            message: `Le titre ${t.nom} au statut « ${isNotNullNorUndefined(t.titreStatutId)
+              ? TitresStatuts[t.titreStatutId].nom
+              : ''
+              } » est superposé à ce titre`,
             url: `/titres/${t.slug}`
           })
         )
@@ -272,7 +271,7 @@ export const perimetreInformations = async (
       throw new Error('droits insuffisants')
     }
 
-    const sdomZones = [] as ISDOMZone[]
+    const sdomZones = [] as SDOMZone[]
     let titreEtapePoints = [] as ITitrePoint[]
     if (points && points.length > 2) {
       titreEtapePoints = titreEtapePointsCalc(points)
@@ -313,7 +312,7 @@ export const perimetreInformations = async (
       demarche.typeId,
       etapeTypeId,
       titre!.points || [],
-      titre!.sdomZones || [],
+      titre?.sdomZones?.map(id => SDOMZones[id]) ?? [],
       titre!.id,
       user
     )
@@ -345,8 +344,8 @@ export const titreEtapePerimetreInformations = async (
       titreEtapeId,
       {
         fields: {
-          sdomZones: { id: {} },
-          demarche: { titre: { sdomZones: { id: {} }, points: { id: {} } } }
+          sdomZonesRaw: { id: {} },
+          demarche: { titre: { sdomZonesRaw: { id: {} }, points: { id: {} } } }
         }
       },
       user
@@ -356,7 +355,7 @@ export const titreEtapePerimetreInformations = async (
       throw new Error('droits insuffisants')
     }
 
-    const sdomZones = etape.sdomZones || []
+    const sdomZones = etape.sdomZones?.map(id => SDOMZones[id]) ?? []
 
     const informations = await sdomZonesInformationsGet(
       etape.points || [],
@@ -365,7 +364,7 @@ export const titreEtapePerimetreInformations = async (
       etape.demarche!.typeId,
       etape.typeId,
       etape.demarche!.titre!.points || [],
-      etape.demarche!.titre!.sdomZones || [],
+      etape.demarche?.titre?.sdomZones?.map(id => SDOMZones[id]) ?? [],
       etape.demarche!.titreId,
       user
     )

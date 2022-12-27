@@ -4,7 +4,6 @@ import {
   ITitre,
   ISection,
   IDocument,
-  ISDOMZone,
   IContenu,
   ITitreEntreprise
 } from '../../types.js'
@@ -34,6 +33,7 @@ import {
   DocumentsTypes
 } from 'camino-common/src/static/documentsTypes.js'
 import { User } from 'camino-common/src/roles.js'
+import { SDOMZone } from 'camino-common/src/static/sdom.js'
 const numberProps = ['duree', 'surface'] as unknown as [keyof ITitreEtape]
 
 const dateProps = ['date', 'dateDebut', 'dateFin'] as unknown as [
@@ -49,7 +49,7 @@ export const titreEtapeUpdationValidate = (
   documents: IDocument[] | null | undefined,
   justificatifsTypes: DocumentType[],
   justificatifs: IDocument[] | null | undefined,
-  sdomZones: ISDOMZone[] | null | undefined,
+  sdomZones: SDOMZone[] | null | undefined,
   user: User,
   titreEtapeOld?: ITitreEtape
 ) => {
@@ -89,8 +89,7 @@ export const titreEtapeUpdationValidate = (
     entreprisesHaveChanged(titreEtape.titulaires, titreEtapeOld?.titulaires)
   ) {
     errors.push(
-      `une autorisation ${
-        titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"
+      `une autorisation ${titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"
       } ne peut pas inclure de titulaires`
     )
   }
@@ -104,8 +103,7 @@ export const titreEtapeUpdationValidate = (
     entreprisesHaveChanged(titreEtape.amodiataires, titreEtapeOld?.amodiataires)
   ) {
     errors.push(
-      `une autorisation ${
-        titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"
+      `une autorisation ${titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"
       } ne peut pas inclure d'amodiataires`
     )
   }
@@ -185,7 +183,7 @@ export const titreEtapeCompleteValidate = (
   documents: IDocument[] | null | undefined,
   justificatifsTypes: DocumentType[],
   justificatifs: IDocument[] | null | undefined,
-  sdomZones: ISDOMZone[] | null | undefined
+  sdomZones: SDOMZone[] | null | undefined
 ) => {
   const errors = [] as string[]
   // les éléments non optionnel des sections sont renseignés
