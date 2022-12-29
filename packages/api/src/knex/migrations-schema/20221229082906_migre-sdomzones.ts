@@ -16,6 +16,7 @@ export const up = async (knex: Knex) => {
   );`)
 
   await knex.schema.dropTable('titres__sdom_zones')
+  await knex.schema.dropTable('sdom_zones')
 }
 
 export const down = () => ({})
