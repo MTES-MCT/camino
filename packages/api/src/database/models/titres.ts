@@ -16,15 +16,12 @@ import { idGenerate } from './_format/id-create.js'
 import slugify from '@sindresorhus/slugify'
 import cryptoRandomString from 'crypto-random-string'
 import TitresActivites from './titres-activites.js'
-import TitresSDOMZones from './titres--sdom-zones.js'
-import { SDOMZone, SDOMZoneId, SDOMZones } from 'camino-common/src/static/sdom.js'
 
 export interface DBTitre extends ITitre {
-  sdomZonesRaw?: { sdomZoneId: SDOMZoneId }[]
   archive: boolean
 }
 
-interface Titres extends DBTitre { }
+interface Titres extends DBTitre {}
 
 class Titres extends Model {
   public static tableName = 'titres'
@@ -54,16 +51,6 @@ class Titres extends Model {
     }
   }
 
-  static get virtualAttributes() {
-    return ['sdomZones']
-  }
-  get sdomZones(): SDOMZone[] {
-    if (!this.sdomZonesRaw) {
-      return []
-    }
-
-    return this.sdomZonesRaw.map(({ sdomZoneId }) => SDOMZones[sdomZoneId])
-  }
   static relationMappings = () => ({
     domaine: {
       relation: Model.BelongsToOneRelation,
@@ -175,16 +162,6 @@ class Titres extends Model {
         to: 'forets.id'
       }
     },
-
-    sdomZonesRaw: {
-      relation: Model.HasManyRelation,
-      modelClass: TitresSDOMZones,
-      join: {
-        from: ref('titres.propsTitreEtapesIds:points').castText(),
-        to: 'titres__sdomZones.titreEtapeId',
-      }
-    },
-
     activites: {
       relation: Model.HasManyRelation,
       modelClass: TitresActivites,
@@ -232,12 +209,15 @@ class Titres extends Model {
     if (this.pointsEtape === null) {
       this.secteursMaritime = []
       this.administrationsLocales = []
+      this.sdomZones = []
     } else if (this.pointsEtape === undefined) {
       this.secteursMaritime = undefined
       this.administrationsLocales = undefined
+      this.sdomZones = undefined
     } else {
       this.secteursMaritime = this.pointsEtape.secteursMaritime
       this.administrationsLocales = this.pointsEtape.administrationsLocales
+      this.sdomZones = this.pointsEtape.sdomZones
     }
   }
 

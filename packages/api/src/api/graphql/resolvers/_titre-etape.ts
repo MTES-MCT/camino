@@ -27,7 +27,11 @@ import {
 import { GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { geojsonIntersectsSDOM, GeoJsonResult } from '../../../tools/geojson.js'
 import { Feature } from 'geojson'
-import { SDOMZoneIds, SDOMZone, SDOMZones } from 'camino-common/src/static/sdom.js'
+import {
+  SDOMZoneIds,
+  SDOMZone,
+  SDOMZones
+} from 'camino-common/src/static/sdom.js'
 import {
   DocumentTypeId,
   DocumentType,

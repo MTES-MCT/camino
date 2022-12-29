@@ -11,7 +11,6 @@ import {
 import { PaysId, PAYS_IDS } from 'camino-common/src/static/pays'
 import { Regions } from 'camino-common/src/static/region'
 import { SDOMZoneId, SDOMZones } from 'camino-common/src/static/sdom'
-import { Props } from '../_common/domaine'
 import TagList from '../_ui/tag-list.vue'
 
 export interface TerritoiresCommune {

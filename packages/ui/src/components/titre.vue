@@ -100,7 +100,7 @@ import ActivitesPills from './_common/pills.vue'
 
 import TitreHeader from './titre/header.vue'
 import TitreInfos from './titre/infos.vue'
-import TitreTerritoires from './titre/territoires'
+import { Territoires as TitreTerritoires } from './titre/territoires'
 import TitreRepertoire from './titre/repertoire.vue'
 import TitreDemarches from './titre/demarches.vue'
 import TitreActivitesList from './activites/list.vue'

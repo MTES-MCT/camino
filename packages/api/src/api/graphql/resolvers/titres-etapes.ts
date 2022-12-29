@@ -105,7 +105,6 @@ const etape = async (
   context: IToken,
   info: GraphQLResolveInfo
 ) => {
-  console.log('zizi')
   try {
     const user = await userGet(context.user?.id)
 
@@ -115,15 +114,11 @@ const etape = async (
       fields.type = { id: {} }
     }
 
-    console.log('field', fields)
-
     const titreEtape = await titreEtapeGet(
       id,
       { fields, fetchHeritage: true },
       user
     )
-
-    console.log('ça passe')
 
     if (!titreEtape) {
       throw new Error("l'étape n'existe pas")
@@ -306,10 +301,10 @@ const etapeCreer = async (
 
     const justificatifs = etape.justificatifIds?.length
       ? await documentsGet(
-        { ids: etape.justificatifIds },
-        { fields: { type: { id: {} } } },
-        userSuper
-      )
+          { ids: etape.justificatifIds },
+          { fields: { type: { id: {} } } },
+          userSuper
+        )
       : null
     delete etape.justificatifIds
     etape.justificatifs = justificatifs
@@ -317,10 +312,10 @@ const etapeCreer = async (
     const documentIds = etape.documentIds || []
     const documents = documentIds.length
       ? await documentsGet(
-        { ids: documentIds },
-        { fields: { type: { id: {} } } },
-        userSuper
-      )
+          { ids: documentIds },
+          { fields: { type: { id: {} } } },
+          userSuper
+        )
       : null
     delete etape.documentIds
 
@@ -489,10 +484,10 @@ const etapeModifier = async (
 
     const justificatifs = etape.justificatifIds?.length
       ? await documentsGet(
-        { ids: etape.justificatifIds },
-        { fields: { type: { id: {} } } },
-        userSuper
-      )
+          { ids: etape.justificatifIds },
+          { fields: { type: { id: {} } } },
+          userSuper
+        )
       : null
     delete etape.justificatifIds
     etape.justificatifs = justificatifs
@@ -500,10 +495,10 @@ const etapeModifier = async (
     const documentIds = etape.documentIds || []
     const documents = documentIds.length
       ? await documentsGet(
-        { ids: documentIds },
-        { fields: { type: { id: {} } } },
-        userSuper
-      )
+          { ids: documentIds },
+          { fields: { type: { id: {} } } },
+          userSuper
+        )
       : null
     delete etape.documentIds
 

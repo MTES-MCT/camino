@@ -89,7 +89,8 @@ export const titreEtapeUpdationValidate = (
     entreprisesHaveChanged(titreEtape.titulaires, titreEtapeOld?.titulaires)
   ) {
     errors.push(
-      `une autorisation ${titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"
+      `une autorisation ${
+        titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"
       } ne peut pas inclure de titulaires`
     )
   }
@@ -103,7 +104,8 @@ export const titreEtapeUpdationValidate = (
     entreprisesHaveChanged(titreEtape.amodiataires, titreEtapeOld?.amodiataires)
   ) {
     errors.push(
-      `une autorisation ${titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"
+      `une autorisation ${
+        titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"
       } ne peut pas inclure d'amodiataires`
     )
   }

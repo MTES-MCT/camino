@@ -9,7 +9,6 @@ import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
 import TitresCommunes from '../../database/models/titres-communes.js'
 import TitresForets from '../../database/models/titres-forets.js'
 import { userSuper } from '../../database/user-super.js'
-import TitresSDOMZones from '../../database/models/titres--sdom-zones.js'
 import { Feature } from 'geojson'
 import { ITitreEtape } from '../../types.js'
 import {
@@ -35,8 +34,7 @@ export const titresEtapesAreasUpdate = async (
       fields: {
         points: { id: {} },
         communes: { id: {} },
-        forets: { id: {} },
-        sdomZones: { id: {} }
+        forets: { id: {} }
       }
     },
     userSuper
@@ -81,28 +79,11 @@ async function intersectSdom(
       console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
     }
   }
-  for (const sdomZoneId of sdomZonesIds.data) {
-    if (!titreEtape.sdomZones.some(id => id === sdomZoneId)) {
-      await TitresSDOMZones.query().insert({
-        titreEtapeId: titreEtape.id,
-        sdomZoneId
-      })
-      console.info(
-        `Ajout de la zone du SDOM ${sdomZoneId} sur l'étape ${titreEtape.id}`
-      )
-    }
-  }
-  for (const sdomZoneId of titreEtape.sdomZones) {
-    if (!sdomZonesIds.data.some(id => id === sdomZoneId)) {
-      await TitresSDOMZones.query()
-        .delete()
-        .where('titreEtapeId', titreEtape.id)
-        .andWhere('sdomZoneId', sdomZoneId)
-      console.info(
-        `Suppression de la zone du SDOM ${sdomZoneId} sur l'étape ${titreEtape.id}`
-      )
-    }
-  }
+  await knex.raw(
+    `update titres_etapes set sdom_zones = '["${sdomZonesIds.data.join(
+      '","'
+    )}"]' where id ='${titreEtape.id}'`
+  )
 }
 
 async function intersectForets(

@@ -25,7 +25,6 @@ const titresEtapesQueryBuild = (
     ? graphBuild(fields, 'etapes', fieldsFormat)
     : options.titresEtapes.graph
 
-  console.log('graph', graph)
   const q = TitresEtapes.query().withGraphFetched(graph)
 
   titresEtapesQueryModify(q, user)

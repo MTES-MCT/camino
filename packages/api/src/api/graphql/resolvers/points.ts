@@ -37,7 +37,12 @@ import {
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
-import { SDOMZone, SDOMZoneId, SDOMZoneIds, SDOMZones } from 'camino-common/src/static/sdom.js'
+import {
+  SDOMZone,
+  SDOMZoneId,
+  SDOMZoneIds,
+  SDOMZones
+} from 'camino-common/src/static/sdom.js'
 
 const stream2buffer = async (stream: Stream): Promise<Buffer> => {
   return new Promise<Buffer>((resolve, reject) => {
@@ -177,9 +182,9 @@ const sdomZonesInformationsGet = async (
   const points = etapeType!.fondamentale ? etapePoints : titrePoints
   const zones = etapeType!.fondamentale ? etapeSdomZones : titreSdomZones
 
-  const alertes = [] as IPerimetreAlerte[]
+  const alertes: IPerimetreAlerte[] = []
 
-  // si c’est une demande d’AXM, on doit afficher un alerte si on est en zone 0 ou 1 du Sdom
+  // si c’est une demande d’AXM, on doit afficher une alerte si on est en zone 0 ou 1 du Sdom
   if (titreTypeId === 'axm' && ['mfr', 'mcr'].includes(etapeTypeId)) {
     const zone = zones.find(s =>
       [
@@ -225,10 +230,11 @@ const sdomZonesInformationsGet = async (
         )
         .forEach(t =>
           alertes.push({
-            message: `Le titre ${t.nom} au statut « ${isNotNullNorUndefined(t.titreStatutId)
-              ? TitresStatuts[t.titreStatutId].nom
-              : ''
-              } » est superposé à ce titre`,
+            message: `Le titre ${t.nom} au statut « ${
+              isNotNullNorUndefined(t.titreStatutId)
+                ? TitresStatuts[t.titreStatutId].nom
+                : ''
+            } » est superposé à ce titre`,
             url: `/titres/${t.slug}`
           })
         )
@@ -271,13 +277,13 @@ export const perimetreInformations = async (
       throw new Error('droits insuffisants')
     }
 
-    const sdomZones = [] as SDOMZone[]
-    let titreEtapePoints = [] as ITitrePoint[]
+    const sdomZones: SDOMZone[] = []
+    let titreEtapePoints: ITitrePoint[] = []
     if (points && points.length > 2) {
       titreEtapePoints = titreEtapePointsCalc(points)
 
       const geojsonFeatures = geojsonFeatureMultiPolygon(
-        titreEtapePoints as ITitrePoint[]
+        titreEtapePoints
       ) as Feature
 
       const result = await titreEtapeSdomZonesGet(geojsonFeatures)
@@ -300,7 +306,7 @@ export const perimetreInformations = async (
     const titre = await titreGet(
       demarche.titreId,
       {
-        fields: { sdomZones: { id: {} }, points: { id: {} } }
+        fields: { points: { id: {} } }
       },
       userSuper
     )
@@ -344,8 +350,7 @@ export const titreEtapePerimetreInformations = async (
       titreEtapeId,
       {
         fields: {
-          sdomZonesRaw: { id: {} },
-          demarche: { titre: { sdomZonesRaw: { id: {} }, points: { id: {} } } }
+          demarche: { titre: { points: { id: {} } } }
         }
       },
       user

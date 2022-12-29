@@ -15,14 +15,11 @@ import Document from './documents.js'
 import Communes from './communes.js'
 import Forets from './forets.js'
 import Journaux from './journaux.js'
-import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
-import TitresSDOMZones from './titres--sdom-zones.js'
 
 export interface DBTitresEtapes extends ITitreEtape {
-  sdomZonesRaw?: { sdomZoneId: SDOMZoneId }[]
   archive: boolean
 }
-interface TitresEtapes extends DBTitresEtapes { }
+interface TitresEtapes extends DBTitresEtapes {}
 class TitresEtapes extends Model {
   public static tableName = 'titresEtapes'
 
@@ -53,20 +50,10 @@ class TitresEtapes extends Model {
       archive: { type: 'boolean' },
       substances: { type: ['array', 'null'] },
       secteursMaritime: { type: ['array', 'null'] },
-      administrationsLocales: { type: ['array', 'null'] }
+      administrationsLocales: { type: ['array', 'null'] },
+      sdomZones: { type: ['array', 'null'] }
     }
   }
-  static get virtualAttributes() {
-    return ['sdomZones']
-  }
-  get sdomZones(): SDOMZoneId[] {
-    if (!this.sdomZonesRaw) {
-      return []
-    }
-
-    return this.sdomZonesRaw.map(({ sdomZoneId }) => sdomZoneId)
-  }
-
 
   static relationMappings = () => ({
     type: {
@@ -172,15 +159,6 @@ class TitresEtapes extends Model {
         to: 'forets.id'
       }
     },
-    sdomZonesRaw: {
-      relation: Model.HasManyRelation,
-      modelClass: TitresSDOMZones,
-      join: {
-        from: 'titresEtapes.id',
-        to: 'titres__sdomZones.titreEtapeId',
-      }
-    },
-
     journaux: {
       relation: Model.HasManyRelation,
       modelClass: Journaux,

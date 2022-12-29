@@ -29,7 +29,7 @@ import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 import { SecteursMaritimes } from 'camino-common/src/static/facades.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { EntrepriseId } from 'camino-common/src/entreprise.js'
-import { SDOMZone, SDOMZoneId } from 'camino-common/src/static/sdom'
+import { SDOMZoneId } from 'camino-common/src/static/sdom'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -367,7 +367,7 @@ interface IEtapeTypeDocumentType {
   optionnel?: boolean
 }
 
-interface IEtapeTypeJustificatifType extends IEtapeTypeDocumentType { }
+interface IEtapeTypeJustificatifType extends IEtapeTypeDocumentType {}
 
 interface ITitreTypeDemarcheTypeEtapeTypeJustificatifType
   extends IEtapeTypeDocumentType {
@@ -395,7 +395,7 @@ interface IEtapeType {
   entreprisesLecture?: boolean | null
 }
 
-interface IForet extends IArea { }
+interface IForet extends IArea {}
 
 type IGeoJsonProperties = Index<string | number>
 
@@ -516,7 +516,7 @@ interface ITitre {
   surface?: number | null
   communes?: ICommune[] | null
   forets?: IForet[] | null
-  sdomZones?: SDOMZone[] | null
+  sdomZones?: SDOMZoneId[] | null
   pointsEtape?: ITitreEtape | null
   secteursMaritime?: SecteursMaritimes[] | null
   demarches?: ITitreDemarche[]
@@ -568,10 +568,6 @@ interface ITitreCommune extends ITitreArea {
 
 interface ITitreForet extends ITitreArea {
   foretId: string
-}
-
-interface ITitreSDOMZone extends ITitreArea {
-  sdomZoneId: SDOMZoneId
 }
 
 interface ITitreEtapeJustificatif {
@@ -658,7 +654,7 @@ interface ITitreEtape {
   justificatifIds?: string[] | null
   communes?: ICommune[] | null
   forets?: IForet[] | null
-  sdomZones?: SDOMZoneId[]
+  sdomZones?: SDOMZoneId[] | null
   secteursMaritime?: SecteursMaritimes[] | null
   incertitudes?: ITitreIncertitudes | null
   contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
@@ -858,7 +854,6 @@ export {
   ITitreActivite,
   ITitreCommune,
   ITitreForet,
-  ITitreSDOMZone,
   ITitreArea,
   ITitreDemarche,
   IDocument,

@@ -116,7 +116,7 @@ type Titre {
   forets: [Foret]
 
   "Zones du SDOM de Guyane"
-  sdomZones: [SDOMZone]
+  sdomZones: [String]
 
   "Secteurs Maritime"
   secteursMaritime: [String]

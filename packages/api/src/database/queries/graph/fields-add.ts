@@ -75,15 +75,12 @@ export const titresFieldsAdd = (fields: IFields) => {
   if (
     fields.secteursMaritime ||
     fields.administrationsLocale ||
-    fields.administrations
+    fields.administrations ||
+    fields.sdomZones
   ) {
     if (!fields.pointsEtape) {
       fields.pointsEtape = { id: {} }
     }
-  }
-  if (fields.sdomZones) {
-    delete fields.sdomZones
-    fields.sdomZonesRaw = { id: {} }
   }
 
   return fields
