@@ -1,5 +1,4 @@
-import Territoires from './territoires.vue'
-import { TerritoiresProps } from './territoires.type'
+import { TerritoiresProps, Territoires } from './territoires'
 import { Meta, Story } from '@storybook/vue3'
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 
@@ -42,7 +41,7 @@ OnlySdomZones.args = {
   forets: [],
   communes: [],
   secteursMaritimes: [],
-  sdomZones: [{ nom: 'Zone 1' }, { nom: 'Zone 3' }]
+  sdomZones: ['1', '2']
 }
 export const OnlySecteursMaritimes = Template.bind({})
 OnlySecteursMaritimes.args = {
@@ -57,7 +56,7 @@ export const All = Template.bind({})
 All.args = {
   surface: 4,
   forets: [{ nom: 'Forêt 1' }, { nom: 'Forêt 2' }],
-  sdomZones: [{ nom: 'Zone 1' }, { nom: 'Zone 3' }],
+  sdomZones: ['1', '0'],
   communes: [
     { nom: 'Flée', departementId: DEPARTEMENT_IDS.Sarthe },
     { nom: 'Montval-sur-loir', departementId: DEPARTEMENT_IDS.Sarthe },
