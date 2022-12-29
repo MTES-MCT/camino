@@ -67,11 +67,8 @@ export const titresEtapesAreasUpdate = async (
 }
 async function intersectSdom(
   multipolygonGeojson: Feature,
-  titreEtape?: Pick<ITitreEtape, 'sdomZones' | 'id'>
+  titreEtape: Pick<ITitreEtape, 'sdomZones' | 'id'>
 ) {
-  if (!titreEtape?.sdomZones) {
-    throw new Error('les zones du SDOM de l’étape ne sont pas chargées')
-  }
   const sdomZonesIds = await geojsonIntersectsSDOM(multipolygonGeojson)
 
   if (sdomZonesIds.fallback) {
@@ -79,11 +76,13 @@ async function intersectSdom(
       console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
     }
   }
-  await knex.raw(
-    `update titres_etapes set sdom_zones = '["${sdomZonesIds.data.join(
-      '","'
-    )}"]' where id ='${titreEtape.id}'`
-  )
+  if (sdomZonesIds.data.length > 0) {
+    await knex.raw(
+      `update titres_etapes set sdom_zones = '["${sdomZonesIds.data.join(
+        '","'
+      )}"]' where id ='${titreEtape.id}'`
+    )
+  }
 }
 
 async function intersectForets(

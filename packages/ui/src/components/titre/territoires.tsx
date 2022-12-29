@@ -24,7 +24,7 @@ export interface TerritoiresForet {
 export interface TerritoiresProps {
   surface?: number
   forets: TerritoiresForet[]
-  sdomZones: SDOMZoneId[]
+  sdomZones?: SDOMZoneId[]
   communes: TerritoiresCommune[]
   secteursMaritimes: SecteursMaritimes[]
 }
@@ -108,8 +108,8 @@ function Forets(forets: TerritoiresForet[]) {
   ) : null
 }
 
-function SdomZones(sdomZones: SDOMZoneId[]) {
-  return sdomZones.length ? (
+function SdomZones(sdomZones?: SDOMZoneId[]) {
+  return sdomZones && sdomZones?.length ? (
     <div>
       <div>
         <h6 class="mb-s">Zones du SDOM</h6>
@@ -151,7 +151,7 @@ function Surface(surface?: number) {
 function TerritoiresSansSurface(props: TerritoiresProps) {
   return props.communes.length ||
     props.forets.length ||
-    props.sdomZones.length ||
+    props.sdomZones?.length ||
     props.secteursMaritimes.length ? (
     <div class="tablet-blob-3-4">
       <h5>Territoires</h5>
