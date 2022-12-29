@@ -77,11 +77,25 @@ async function intersectSdom(
     }
   }
   if (sdomZonesIds.data.length > 0) {
-    await knex.raw(
-      `update titres_etapes set sdom_zones = '["${sdomZonesIds.data.join(
-        '","'
-      )}"]' where id ='${titreEtape.id}'`
-    )
+    if (
+      sdomZonesIds.data.length !== titreEtape.sdomZones?.length ||
+      titreEtape.sdomZones?.some(
+        (elem, index) => elem !== sdomZonesIds.data[index]
+      )
+    ) {
+      console.info(
+        `nouvelles zones du sdom pour l'étape ${
+          titreEtape.id
+        }. Anciennes: ${JSON.stringify(
+          titreEtape.sdomZones
+        )}, nouvelles: ${JSON.stringify(sdomZonesIds.data)}`
+      )
+      await knex.raw(
+        `update titres_etapes set sdom_zones = '["${sdomZonesIds.data.join(
+          '","'
+        )}"]' where id ='${titreEtape.id}'`
+      )
+    }
   }
 }
 

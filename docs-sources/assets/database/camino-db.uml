@@ -174,13 +174,6 @@ entity "**entreprises__documents_types**" {
   --
 }
 
-entity "**entreprises__titres_types**" {
-  + ""entreprise_id"": //character varying(255) [PK][FK]//
-  + ""titre_type_id"": //character varying(255) [PK][FK]//
-  --
-  ""titres_creation"": //boolean //
-}
-
 entity "**entreprises_etablissements**" {
   + ""id"": //character varying(64) [PK]//
   --
@@ -194,16 +187,12 @@ entity "**entreprises_etablissements**" {
 entity "**etapes_types**" {
   + ""id"": //character varying(3) [PK]//
   --
-  ""parent_id"": //character varying(3) [FK]//
   ""nom"": //character varying(128) //
   ""description"": //text //
   *""ordre"": //integer //
   ""fondamentale"": //boolean //
   ""unique"": //boolean //
   ""acceptation_auto"": //boolean //
-  ""legal_ref"": //character varying(255) //
-  ""legal_lien"": //character varying(255) //
-  ""date_debut"": //character varying(10) //
   ""date_fin"": //character varying(10) //
   ""sections"": //jsonb[] //
   ""public_lecture"": //boolean //
@@ -255,12 +244,6 @@ entity "**knex_migrations_lock**" {
   ""is_locked"": //integer //
 }
 
-entity "**sdom_zones**" {
-  + ""id"": //character varying(30) [PK]//
-  --
-  *""nom"": //character varying(255) //
-}
-
 entity "**sdom_zones_postgis**" {
   + ""id"": //character varying(30) [PK]//
   --
@@ -303,12 +286,6 @@ entity "**titres**" {
   *""references"": //jsonb //
 }
 
-entity "**titres__sdom_zones**" {
-  + ""titre_etape_id"": //character varying(128) [PK][FK]//
-  + ""sdom_zone_id"": //character varying(30) [PK][FK]//
-  --
-}
-
 entity "**titres__titres**" {
   + ""titre_from_id"": //character varying(255) [PK][FK]//
   + ""titre_to_id"": //character varying(255) [PK][FK]//
@@ -330,13 +307,6 @@ entity "**titres_activites**" {
   ""sections"": //jsonb[] //
   ""suppression"": //boolean //
   ""slug"": //character varying(255) //
-}
-
-entity "**titres_administrations_gestionnaires**" {
-  + ""titre_id"": //character varying(128) [PK][FK]//
-  + ""administration_id"": //character varying(64) [PK][FK]//
-  --
-  ""associee"": //boolean //
 }
 
 entity "**titres_amodiataires**" {
@@ -396,6 +366,7 @@ entity "**titres_etapes**" {
   *""substances"": //jsonb //
   ""secteurs_maritime"": //jsonb //
   ""administrations_locales"": //jsonb //
+  ""sdom_zones"": //jsonb //
 }
 
 entity "**titres_etapes_justificatifs**" {
@@ -594,17 +565,7 @@ entity "**utilisateurs__titres**" {
 
 "**entreprises__documents_types**"  ||-||  "**documents_types**"
 
-"**entreprises__titres_types**"   }--  "**entreprises**"
-
-"**entreprises__titres_types**"   }--  "**entreprises**"
-
-"**entreprises__titres_types**"   }--  "**titres_types**"
-
-"**entreprises__titres_types**"   }--  "**titres_types**"
-
 "**entreprises_etablissements**"   }--  "**entreprises**"
-
-"**etapes_types**"   }--  "**etapes_types**"
 
 "**etapes_types__justificatifs_types**"   }--  "**entreprises__documents_types**"
 
@@ -624,14 +585,6 @@ entity "**utilisateurs__titres**" {
 
 "**titres**"   }--  "**titres_types**"
 
-"**titres__sdom_zones**"   }--  "**sdom_zones**"
-
-"**titres__sdom_zones**"   }--  "**sdom_zones**"
-
-"**titres__sdom_zones**"   }--  "**titres_etapes**"
-
-"**titres__sdom_zones**"   }--  "**titres_etapes**"
-
 "**titres__titres**"   }--  "**titres**"
 
 "**titres__titres**"   }--  "**titres**"
@@ -647,14 +600,6 @@ entity "**utilisateurs__titres**" {
 "**titres_activites**"   }--  "**activites_types**"
 
 "**titres_activites**"   }--  "**utilisateurs**"
-
-"**titres_administrations_gestionnaires**"   }--  "**administrations**"
-
-"**titres_administrations_gestionnaires**"   }--  "**administrations**"
-
-"**titres_administrations_gestionnaires**"   }--  "**titres**"
-
-"**titres_administrations_gestionnaires**"   }--  "**titres**"
 
 "**titres_amodiataires**"   }--  "**entreprises**"
 
