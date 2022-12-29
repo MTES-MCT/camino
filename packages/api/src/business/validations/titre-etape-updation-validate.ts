@@ -33,7 +33,7 @@ import {
   DocumentsTypes
 } from 'camino-common/src/static/documentsTypes.js'
 import { User } from 'camino-common/src/roles.js'
-import { SDOMZone } from 'camino-common/src/static/sdom.js'
+import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 const numberProps = ['duree', 'surface'] as unknown as [keyof ITitreEtape]
 
 const dateProps = ['date', 'dateDebut', 'dateFin'] as unknown as [
@@ -49,7 +49,7 @@ export const titreEtapeUpdationValidate = (
   documents: IDocument[] | null | undefined,
   justificatifsTypes: DocumentType[],
   justificatifs: IDocument[] | null | undefined,
-  sdomZones: SDOMZone[] | null | undefined,
+  sdomZones: SDOMZoneId[] | null | undefined,
   user: User,
   titreEtapeOld?: ITitreEtape
 ) => {
@@ -185,7 +185,7 @@ export const titreEtapeCompleteValidate = (
   documents: IDocument[] | null | undefined,
   justificatifsTypes: DocumentType[],
   justificatifs: IDocument[] | null | undefined,
-  sdomZones: SDOMZone[] | null | undefined
+  sdomZones: SDOMZoneId[] | null | undefined
 ) => {
   const errors = [] as string[]
   // les éléments non optionnel des sections sont renseignés

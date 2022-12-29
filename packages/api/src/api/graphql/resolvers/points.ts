@@ -168,12 +168,12 @@ export const pointsImporter = async (
 
 const sdomZonesInformationsGet = async (
   etapePoints: ITitrePoint[],
-  etapeSdomZones: SDOMZone[],
+  etapeSdomZones: SDOMZoneId[],
   titreTypeId: string,
   demarcheTypeId: string,
   etapeTypeId: string,
   titrePoints: ITitrePoint[],
-  titreSdomZones: SDOMZone[],
+  titreSdomZones: SDOMZoneId[],
   titreId: string,
   user: IUtilisateur
 ) => {
@@ -186,16 +186,16 @@ const sdomZonesInformationsGet = async (
 
   // si c’est une demande d’AXM, on doit afficher une alerte si on est en zone 0 ou 1 du Sdom
   if (titreTypeId === 'axm' && ['mfr', 'mcr'].includes(etapeTypeId)) {
-    const zone = zones.find(s =>
+    const zoneId = zones.find(id =>
       [
         SDOMZoneIds.Zone0,
         SDOMZoneIds.Zone0Potentielle,
         SDOMZoneIds.Zone1
-      ].includes(s.id as SDOMZoneId)
+      ].includes(id)
     )
-    if (zone) {
+    if (zoneId) {
       alertes.push({
-        message: `Le périmètre renseigné est dans une zone du Sdom interdite à l’exploitation minière : ${zone.nom}`
+        message: `Le périmètre renseigné est dans une zone du Sdom interdite à l’exploitation minière : ${SDOMZones[zoneId].nom}`
       })
     }
 
@@ -277,7 +277,7 @@ export const perimetreInformations = async (
       throw new Error('droits insuffisants')
     }
 
-    const sdomZones: SDOMZone[] = []
+    const sdomZones: SDOMZoneId[] = []
     let titreEtapePoints: ITitrePoint[] = []
     if (points && points.length > 2) {
       titreEtapePoints = titreEtapePointsCalc(points)
@@ -318,12 +318,16 @@ export const perimetreInformations = async (
       demarche.typeId,
       etapeTypeId,
       titre!.points || [],
-      titre?.sdomZones?.map(id => SDOMZones[id]) ?? [],
+      titre?.sdomZones ?? [],
       titre!.id,
       user
     )
 
-    return { ...informations, sdomZones, points: titreEtapePoints }
+    return {
+      ...informations,
+      sdomZones: sdomZones.map(id => SDOMZones[id]),
+      points: titreEtapePoints
+    }
   } catch (e) {
     console.error(e)
 
@@ -364,12 +368,12 @@ export const titreEtapePerimetreInformations = async (
 
     const informations = await sdomZonesInformationsGet(
       etape.points || [],
-      sdomZones,
+      etape?.sdomZones ?? [],
       etape.demarche!.titre!.typeId,
       etape.demarche!.typeId,
       etape.typeId,
       etape.demarche!.titre!.points || [],
-      etape.demarche?.titre?.sdomZones?.map(id => SDOMZones[id]) ?? [],
+      etape.demarche?.titre?.sdomZones ?? [],
       etape.demarche!.titreId,
       user
     )
