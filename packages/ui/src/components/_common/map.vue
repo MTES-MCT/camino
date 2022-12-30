@@ -54,7 +54,7 @@ import {
   leafletGeojsonBuild,
   leafletDivIconBuild
 } from '../_map/leaflet.ts'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 
 export default {
   components: { Icon, MapPattern, Mapo },

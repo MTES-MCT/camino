@@ -42,7 +42,7 @@ import {
   utilisateursColonnes,
   utilisateursLignesBuild
 } from './utilisateurs/table'
-import Icon from './_ui/icon.vue'
+import { Icon } from './_ui/icon'
 import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 
 export default {

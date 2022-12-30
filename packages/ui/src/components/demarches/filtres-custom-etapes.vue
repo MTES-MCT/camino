@@ -77,7 +77,7 @@
 
 <script>
 import InputDate from '../_ui/input-date.vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
 export default {

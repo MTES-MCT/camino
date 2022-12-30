@@ -77,7 +77,7 @@ import Mapo from '../_map/index.vue'
 import MapPattern from '../_map/pattern.vue'
 import { leafletGeojsonBoundsGet } from '../_map/leaflet'
 import { clustersBuild, layersBuild, zones } from './map.js'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import { sortedDomaines } from 'camino-common/src/static/domaines'
 
 export default {

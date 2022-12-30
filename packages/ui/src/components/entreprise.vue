@@ -214,7 +214,7 @@ import {
   isSuper,
   User
 } from 'camino-common/src/roles'
-import Icon from './_ui/icon.vue'
+import { Icon } from './_ui/icon'
 import { CaminoAnnee, toCaminoAnnee } from 'camino-common/src/date'
 import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'

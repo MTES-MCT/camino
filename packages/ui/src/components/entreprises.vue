@@ -41,7 +41,7 @@ import {
   entreprisesColonnes,
   entreprisesLignesBuild
 } from './entreprises/table'
-import Icon from './_ui/icon.vue'
+import { Icon } from './_ui/icon'
 
 export default {
   name: 'Entreprises',

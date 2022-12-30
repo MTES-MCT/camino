@@ -15,7 +15,7 @@
 
 <script setup lang="ts" generic="T extends any">
 import { saveAs } from 'file-saver'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { ChartConfiguration } from 'chart.js'
 import { AsyncData } from '@/api/client-rest'

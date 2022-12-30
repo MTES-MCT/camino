@@ -63,7 +63,7 @@
 import CaminoMap from './map.vue'
 import Points from './points.vue'
 import Download from './download.vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 
 export default {
   components: {

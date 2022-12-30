@@ -155,7 +155,7 @@ import Statut from '../_common/statut.vue'
 import RemovePopup from './remove.vue'
 import DeposePopup from './depose-popup.vue'
 import HelpTooltip from '../_ui/help-tooltip.vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 
 export default {

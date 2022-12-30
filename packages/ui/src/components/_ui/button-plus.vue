@@ -5,5 +5,5 @@
 </template>
 
 <script setup lang="ts">
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 </script>

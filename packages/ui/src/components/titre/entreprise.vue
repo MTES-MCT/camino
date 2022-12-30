@@ -126,7 +126,7 @@
 import { dateFormat } from '@/utils'
 import Accordion from '../_ui/accordion.vue'
 import Tag from '../_ui/tag.vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 
 export default {
   components: {

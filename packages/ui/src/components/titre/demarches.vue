@@ -35,7 +35,7 @@
 <script>
 import TitreDemarche from './demarche.vue'
 import EditPopup from './demarche-edit-popup.vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 
 export default {
   components: {

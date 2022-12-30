@@ -86,7 +86,7 @@
 import ButtonPlus from '../_ui/button-plus.vue'
 import emailValidator from 'email-validator'
 import { defineComponent, PropType } from 'vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import {
   ActivitesTypes,
   ActivitesTypesId

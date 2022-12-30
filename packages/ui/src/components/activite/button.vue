@@ -24,7 +24,7 @@
 
 <script>
 import DeposePopup from './depose-popup.vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 
 export default {
   components: { Icon },

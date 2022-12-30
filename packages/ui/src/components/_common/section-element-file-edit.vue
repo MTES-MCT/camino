@@ -28,7 +28,7 @@
 
 <script>
 import InputFile from '../_ui/input-file.vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 
 export default {
   components: { Icon, InputFile },

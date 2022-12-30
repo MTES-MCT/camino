@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 
 defineProps<{
   alertes?: { message: string; url: string }[]

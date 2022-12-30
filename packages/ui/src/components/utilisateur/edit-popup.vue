@@ -243,7 +243,7 @@
 import Popup from '../_ui/popup.vue'
 import Loader from '../_ui/loader.vue'
 import { sortedAdministrations } from 'camino-common/src/static/administrations'
-import Icon from '../_ui/icon.vue'
+import { Icon } from '../_ui/icon'
 import {
   isAdministration,
   isAdministrationAdmin,

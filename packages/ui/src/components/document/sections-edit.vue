@@ -180,7 +180,7 @@
 import InputDate from '../_ui/input-date.vue'
 import InputFile from '../_ui/input-file.vue'
 import Messages from '../_ui/messages.vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import {
   isAdministrationAdmin,
   isAdministrationEditeur,

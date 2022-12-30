@@ -89,7 +89,7 @@
 <script setup lang="ts">
 import Popup from '../_ui/popup.vue'
 
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import { computed, ComputedRef, inject, onMounted, onUnmounted, ref } from 'vue'
 import {
   ReferenceTypeId,

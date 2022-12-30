@@ -80,7 +80,7 @@ import {
 import { computed } from 'vue'
 import HeritageEdit from '@/components/etape/heritage-edit.vue'
 import TagList from '@/components/_ui/tag-list.vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import {
   EtapeFondamentale,
