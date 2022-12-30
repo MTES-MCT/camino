@@ -1,5 +1,23 @@
 # Déploiement de Camino
 
-- Tout commit sur master déploie automatiquement camino en dev (dev.camino.beta.gouv.fr)
-- Pour déployer en preprod, il faut déclencher manuellement le workflow https://github.com/MTES-MCT/camino/actions/workflows/cd.yml avec l'environnement de preprod et le hash de commit que l'on souhaite déployer
-- Pour déployer en prod, il suffit de faire pointer la branche `release-candidate` sur le commit que l'on souhaite déployer en production
+## DEV https://dev.camino.beta.gouv.fr
+
+> Merger une pull-request
+
+Tout push sur la branche [master](https://github.com/MTES-MCT/camino/tree/master) déclenche la [CI](https://github.com/MTES-MCT/camino/actions/workflows/ci.yml?query=branch%3Amaster), qui, en cas de succès, déclenche le déploiement.
+
+## PREPROD https://preprod.camino.beta.gouv.fr
+
+> Faire pointer la branche **preprod** sur le commit à livrer en preprod
+
+Tout push sur la branche [preprod](https://github.com/MTES-MCT/camino/tree/preprod) déclenche la [CD](https://github.com/MTES-MCT/camino/actions/workflows/deploy.yml?query=branch%3Apreprod).
+
+
+## PROD https://camino.beta.gouv.fr
+
+> Faire pointer la branche **prod** sur le commit à livrer en prod
+
+Tout push sur la branche [prod](https://github.com/MTES-MCT/camino/tree/prod) déclenche la [CD](https://github.com/MTES-MCT/camino/actions/workflows/deploy.yml?query=branch%3Aprod).
+Avant de déployer, une [release github](https://github.com/MTES-MCT/camino/releases) est faite, qui contiendra toutes les features/bugfixes embarqués dans cette livraison depuis la version précédente
+
+

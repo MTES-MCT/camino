@@ -1,10 +1,12 @@
-name: Release
+name: Deploy
 on:
   push:
     branches:
-      - release-candidate
+      - prod
+      - preprod
 jobs:
   release-github:
+    if: github.ref == 'refs/heads/prod'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,7 +22,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npx semantic-release
-  deploy:
+  deploy-prod:
+    if: github.ref == 'refs/heads/prod'
     needs: release-github
     uses: ./.github/workflows/cd.yml
     secrets:
@@ -29,4 +32,14 @@ jobs:
       CD_TOKEN_PROD: ${{ secrets.CD_TOKEN_PROD }}
     with:
       deploy_environment: prod
+      git_sha: ${{ github.sha }}
+  deploy-preprod:
+    if: github.ref == 'refs/heads/preprod'
+    uses: ./.github/workflows/cd.yml
+    secrets:
+      CD_TOKEN_DEV: ${{ secrets.CD_TOKEN_DEV }}
+      CD_TOKEN_PREPROD: ${{ secrets.CD_TOKEN_PREPROD }}
+      CD_TOKEN_PROD: ${{ secrets.CD_TOKEN_PROD }}
+    with:
+      deploy_environment: preprod
       git_sha: ${{ github.sha }}
