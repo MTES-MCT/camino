@@ -85,6 +85,7 @@
       "node": true
     },
     "globals": {
+      "JSX": "readonly",
       "defineProps": "readonly",
       "defineEmits": "readonly",
       "T": "readonly",
