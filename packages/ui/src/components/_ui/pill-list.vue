@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import Pill from './pill.vue'
+import { Pill } from './pill'
 
 export default {
   components: {

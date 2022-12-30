@@ -26,7 +26,7 @@ import { ref } from 'vue'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { QGISToken } from 'camino-common/src/utilisateur'
 import Messages from '@/components/_ui/messages.vue'
-import Pill from '@/components/_ui/pill.vue'
+import { Pill } from '@/components/_ui/pill'
 
 const props = defineProps<{ generateTokenCall: () => Promise<QGISToken> }>()
 const data = ref<AsyncData<QGISToken>>({ status: 'LOADED', value: {} })

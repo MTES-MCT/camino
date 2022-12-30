@@ -186,7 +186,7 @@
 <script>
 import { cloneAndClean } from '../utils/index'
 import Accordion from './_ui/accordion.vue'
-import Pill from './_ui/pill.vue'
+import { Pill } from './_ui/pill'
 import Loader from './_ui/loader.vue'
 import UtilisateurEditPopup from './utilisateur/edit-popup.vue'
 import UtilisateurRemovePopup from './utilisateur/remove-popup.vue'
