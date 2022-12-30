@@ -3,7 +3,8 @@ name: GitGuardian scan
 on:
   push:
     branches-ignore:
-      - release-candidate
+      - preprod
+      - prod
       - master
 
 jobs:

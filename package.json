@@ -49,7 +49,7 @@
   },
   "release": {
     "branches": [
-      "release-candidate"
+      "prod"
     ],
     "plugins": [
       "@semantic-release/commit-analyzer",
