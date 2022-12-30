@@ -45,7 +45,8 @@
     "@types/react": "file:stub/types__react",
     "husky": "^8.0.1",
     "lint-staged": "^13.0.3",
-    "semantic-release": "^19.0.4"
+    "semantic-release": "^19.0.4",
+    "semantic-release-mattermost": "^1.1.1"
   },
   "release": {
     "branches": [
@@ -54,7 +55,8 @@
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
-      "@semantic-release/github"
+      "@semantic-release/github",
+      "semantic-release-mattermost"
     ]
   }
 }
