@@ -1,6 +1,6 @@
 import { markRaw } from 'vue'
 import List from '../_ui/list.vue'
-import Statut from '../_common/statut.vue'
+import { Statut } from '../_common/statut'
 import { getPeriode } from 'camino-common/src/static/frequence'
 
 const activitesColonnes = [

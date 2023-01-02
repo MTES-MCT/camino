@@ -82,7 +82,7 @@ import ActiviteButton from './button.vue'
 import Accordion from '../_ui/accordion.vue'
 import HelpTooltip from '../_ui/help-tooltip.vue'
 import UiSection from '../_common/section.vue'
-import Statut from '../_common/statut.vue'
+import { Statut } from '../_common/statut'
 
 import Documents from '../documents/list.vue'
 import { dateFormat } from '@/utils'

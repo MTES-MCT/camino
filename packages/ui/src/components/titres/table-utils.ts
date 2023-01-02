@@ -6,7 +6,7 @@ import TitreNom from '../_common/titre-nom.vue'
 import TitreTypeTypeNom from '../_common/titre-type-type-nom.vue'
 import CoordonneesIcone from '../_common/coordonnees-icone.vue'
 import ActivitesPills from '../_common/pills.vue'
-import Statut from '../_common/statut.vue'
+import { Statut } from '../_common/statut'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import {
   TitresTypesTypes,

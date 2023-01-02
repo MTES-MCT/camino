@@ -1,22 +1,9 @@
+import { Couleur } from 'camino-common/src/static/couleurs'
+import { DomaineId } from 'camino-common/src/static/domaines'
 import { EmitsOptions, HTMLAttributes, SetupContext } from 'vue'
 
 export type Props = {
-  color?:
-    | 'bg-neutral'
-    | 'bg-error'
-    | 'bg-info'
-    | 'bg-neutral'
-    | 'bg-success'
-    | 'bg-warning'
-    | 'bg-domaine-c'
-    | 'bg-domaine-f'
-    | 'bg-domaine-g'
-    | 'bg-domaine-h'
-    | 'bg-domaine-i'
-    | 'bg-domaine-m'
-    | 'bg-domaine-r'
-    | 'bg-domaine-s'
-    | 'bg-domaine-w'
+  color?: `bg-${Couleur}` | `bg-domaine-${DomaineId}`
 } & HTMLAttributes
 
 export function Pill(

@@ -1,4 +1,4 @@
-import Statut from './statut.vue'
+import { Statut, Props } from './statut'
 import { Meta, Story } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
@@ -8,11 +8,6 @@ const meta: Meta = {
   argTypes: {}
 }
 export default meta
-
-type Props = {
-  nom?: string
-  color?: string
-}
 
 const Template: Story<Props> = (args: Props) => ({
   components: { Statut },
@@ -25,10 +20,11 @@ const Template: Story<Props> = (args: Props) => ({
   }
 })
 
-export const Default = Template.bind({})
-Default.args = {}
-export const WithColor = Template.bind({})
-WithColor.args = {
-  nom: 'Mon statut',
-  color: 'success'
-}
+export const Default = Template.bind({}, {})
+export const WithColor = Template.bind(
+  {},
+  {
+    nom: 'Mon statut',
+    color: 'success'
+  }
+)

@@ -32,7 +32,7 @@
 
 <script>
 import { Pill } from '../_ui/pill'
-import Statut from '../_common/statut.vue'
+import { Statut } from '../_common/statut'
 
 export default {
   name: 'DefinitionEntree',

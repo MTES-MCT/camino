@@ -170,7 +170,7 @@ import Tag from '../_ui/tag.vue'
 import TagList from '../_ui/tag-list.vue'
 import Dot from '../_ui/dot.vue'
 import Section from '../_common/section.vue'
-import Statut from '../_common/statut.vue'
+import { Statut } from '../_common/statut'
 import { dateFormat } from '@/utils'
 import PureTitresLinkForm from './pure-titres-link-form.vue'
 import {
