@@ -1,6 +1,6 @@
 import { markRaw } from 'vue'
-import FiltresTitresDomaines from '../_common/filtres/domaines.vue'
-import FiltresTitresStatuts from '../_common/filtres/statuts.vue'
+import { FiltresDomaines as FiltresTitresDomaines } from '../_common/filtres/domaines'
+import { FiltresStatuts as FiltresTitresStatuts } from '../_common/filtres/statuts'
 import FiltresEtapes from './filtres-custom-etapes.vue'
 import { elementsFormat } from '../../utils/index'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'

@@ -49,6 +49,694 @@ exports[`Storybook Smoke Test > Common/Domaine > AllDomaines 1`] = `
 
 exports[`Storybook Smoke Test > Common/Domaine > Default 1`] = `"<span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span>"`;
 
+exports[`Storybook Smoke Test > Common/Filtres/Domaines > AllDomaines 1`] = `
+"<div style=\\"height: 100%; width: 100%; background: white;\\">
+  <table>
+    <tr>
+      <th>Domaines</th>
+      <th>Rendu</th>
+    </tr>
+    <tr>
+      <td>m</td>
+      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
+    </tr>
+    <tr>
+      <td>c</td>
+      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-c color-bg pill py-xs px-s\\">c </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
+    </tr>
+    <tr>
+      <td>f</td>
+      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-f color-bg pill py-xs px-s\\">f </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
+    </tr>
+    <tr>
+      <td>g</td>
+      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-g color-bg pill py-xs px-s\\">g </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
+    </tr>
+    <tr>
+      <td>h</td>
+      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-h color-bg pill py-xs px-s\\">h </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
+    </tr>
+    <tr>
+      <td>r</td>
+      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-r color-bg pill py-xs px-s\\">r </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
+    </tr>
+    <tr>
+      <td>s</td>
+      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-s color-bg pill py-xs px-s\\">s </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
+    </tr>
+    <tr>
+      <td>w</td>
+      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-w color-bg pill py-xs px-s\\">w </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
+    </tr>
+    <tr>
+      <td>i</td>
+      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-i color-bg pill py-xs px-s\\">i </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
+    </tr>
+  </table>
+</div>"
+`;
+
+exports[`Storybook Smoke Test > Common/Filtres/Statuts > AllStatuts 1`] = `
+"<div style=\\"height: 100%; width: 100%; background: white;\\">
+  <table>
+    <tr>
+      <th>Statuts</th>
+      <th>Rendu</th>
+    </tr>
+    <tr>
+      <td>dmc</td>
+      <td><span class=\\"cap-first small bold inline-block mb-s\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">demande classée</span></span></td>
+    </tr>
+    <tr>
+      <td>dmi</td>
+      <td><span class=\\"cap-first small bold inline-block mb-s\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></td>
+    </tr>
+    <tr>
+      <td>ech</td>
+      <td><span class=\\"cap-first small bold inline-block mb-s\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></td>
+    </tr>
+    <tr>
+      <td>ind</td>
+      <td><span class=\\"cap-first small bold inline-block mb-s\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">indéterminé</span></span></td>
+    </tr>
+    <tr>
+      <td>mod</td>
+      <td><span class=\\"cap-first small bold inline-block mb-s\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">modification en instance</span></span></td>
+    </tr>
+    <tr>
+      <td>val</td>
+      <td><span class=\\"cap-first small bold inline-block mb-s\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">valide</span></span></td>
+    </tr>
+  </table>
+</div>"
+`;
+
+exports[`Storybook Smoke Test > Common/Filtres/Types > AllTypes 1`] = `
+"<div style=\\"height: 100%; width: 100%; background: white;\\"><svg class=\\"absolute z--100\\">
+    <defs>
+      <g>
+        <g>
+          <pattern id=\\"pattern-ap-m\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M-1,4 l2,0 M6,4 l2,0\\" class=\\"svg-stroke-domaine-m\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ap-c\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M-1,4 l2,0 M6,4 l2,0\\" class=\\"svg-stroke-domaine-c\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ap-f\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M-1,4 l2,0 M6,4 l2,0\\" class=\\"svg-stroke-domaine-f\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ap-g\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M-1,4 l2,0 M6,4 l2,0\\" class=\\"svg-stroke-domaine-g\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ap-h\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M-1,4 l2,0 M6,4 l2,0\\" class=\\"svg-stroke-domaine-h\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ap-r\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M-1,4 l2,0 M6,4 l2,0\\" class=\\"svg-stroke-domaine-r\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ap-s\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M-1,4 l2,0 M6,4 l2,0\\" class=\\"svg-stroke-domaine-s\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ap-w\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M-1,4 l2,0 M6,4 l2,0\\" class=\\"svg-stroke-domaine-w\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ap-i\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M-1,4 l2,0 M6,4 l2,0\\" class=\\"svg-stroke-domaine-i\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ap\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M-1,4 l2,0 M6,4 l2,0\\" class=\\"svg-stroke\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+        </g>
+      </g>
+      <g>
+        <g>
+          <pattern id=\\"pattern-ar-m\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M1,4 l4,0 M3,2 l0,4\\" class=\\"svg-stroke-domaine-m\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ar-c\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M1,4 l4,0 M3,2 l0,4\\" class=\\"svg-stroke-domaine-c\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ar-f\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M1,4 l4,0 M3,2 l0,4\\" class=\\"svg-stroke-domaine-f\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ar-g\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M1,4 l4,0 M3,2 l0,4\\" class=\\"svg-stroke-domaine-g\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ar-h\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M1,4 l4,0 M3,2 l0,4\\" class=\\"svg-stroke-domaine-h\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ar-r\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M1,4 l4,0 M3,2 l0,4\\" class=\\"svg-stroke-domaine-r\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ar-s\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M1,4 l4,0 M3,2 l0,4\\" class=\\"svg-stroke-domaine-s\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ar-w\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M1,4 l4,0 M3,2 l0,4\\" class=\\"svg-stroke-domaine-w\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ar-i\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M1,4 l4,0 M3,2 l0,4\\" class=\\"svg-stroke-domaine-i\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ar\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M1,4 l4,0 M3,2 l0,4\\" class=\\"svg-stroke\\" stroke-width=\\"2\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+        </g>
+      </g>
+      <g>
+        <g>
+          <pattern id=\\"pattern-ax-m\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-m\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ax-c\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-c\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ax-f\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-f\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ax-g\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-g\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ax-h\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-h\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ax-r\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-r\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ax-s\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-s\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ax-w\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-w\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ax-i\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-i\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-ax\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+        </g>
+      </g>
+      <g>
+        <g>
+          <pattern id=\\"pattern-cx-m\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-m\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-cx-c\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-c\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-cx-f\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-f\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-cx-g\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-g\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-cx-h\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-h\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-cx-r\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-r\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-cx-s\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-s\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-cx-w\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-w\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-cx-i\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-i\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-cx\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+        </g>
+      </g>
+      <g>
+        <g>
+          <pattern id=\\"pattern-in-m\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0\\" class=\\"svg-stroke-domaine-m\\" stroke-width=\\"1\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-in-c\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0\\" class=\\"svg-stroke-domaine-c\\" stroke-width=\\"1\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-in-f\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0\\" class=\\"svg-stroke-domaine-f\\" stroke-width=\\"1\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-in-g\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0\\" class=\\"svg-stroke-domaine-g\\" stroke-width=\\"1\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-in-h\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0\\" class=\\"svg-stroke-domaine-h\\" stroke-width=\\"1\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-in-r\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0\\" class=\\"svg-stroke-domaine-r\\" stroke-width=\\"1\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-in-s\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0\\" class=\\"svg-stroke-domaine-s\\" stroke-width=\\"1\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-in-w\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0\\" class=\\"svg-stroke-domaine-w\\" stroke-width=\\"1\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-in-i\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0\\" class=\\"svg-stroke-domaine-i\\" stroke-width=\\"1\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-in\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(0)\\">
+            <path d=\\"M0,4 a3,3 0 1,0 6,0 a 3,3 0 1,0 -6,0\\" class=\\"svg-stroke\\" stroke-width=\\"1\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+        </g>
+      </g>
+      <g>
+        <g>
+          <pattern id=\\"pattern-pc-m\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(90)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-m\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pc-c\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(90)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-c\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pc-f\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(90)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-f\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pc-g\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(90)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-g\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pc-h\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(90)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-h\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pc-r\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(90)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-r\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pc-s\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(90)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-s\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pc-w\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(90)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-w\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pc-i\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(90)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-i\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pc\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(90)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+        </g>
+      </g>
+      <g>
+        <g>
+          <pattern id=\\"pattern-pr-m\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M4,4 l0,0\\" class=\\"svg-stroke-domaine-m\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pr-c\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M4,4 l0,0\\" class=\\"svg-stroke-domaine-c\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pr-f\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M4,4 l0,0\\" class=\\"svg-stroke-domaine-f\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pr-g\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M4,4 l0,0\\" class=\\"svg-stroke-domaine-g\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pr-h\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M4,4 l0,0\\" class=\\"svg-stroke-domaine-h\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pr-r\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M4,4 l0,0\\" class=\\"svg-stroke-domaine-r\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pr-s\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M4,4 l0,0\\" class=\\"svg-stroke-domaine-s\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pr-w\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M4,4 l0,0\\" class=\\"svg-stroke-domaine-w\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pr-i\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M4,4 l0,0\\" class=\\"svg-stroke-domaine-i\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-pr\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(45)\\">
+            <path d=\\"M4,4 l0,0\\" class=\\"svg-stroke\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+        </g>
+      </g>
+      <g>
+        <g>
+          <pattern id=\\"pattern-px-m\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(135)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-m\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-px-c\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(135)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-c\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-px-f\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(135)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-f\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-px-g\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(135)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-g\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-px-h\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(135)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-h\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-px-r\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(135)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-r\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-px-s\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(135)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-s\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-px-w\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(135)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-w\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-px-i\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(135)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke-domaine-i\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+          <pattern id=\\"pattern-px\\" patternUnits=\\"userSpaceOnUse\\" width=\\"8\\" height=\\"8\\" patternTransform=\\"rotate(135)\\">
+            <path d=\\"M0,0 l8,0 M0,8 l8,0\\" class=\\"svg-stroke\\" stroke-width=\\"5\\" stroke-linecap=\\"round\\" fill=\\"none\\"></path>
+          </pattern>
+        </g>
+      </g>
+    </defs>
+  </svg>
+  <table>
+    <tr>
+      <th>Types</th>
+      <th>Rendu</th>
+    </tr>
+    <tr>
+      <td>ap</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ap\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de prospections préalables</span></span></td>
+    </tr>
+    <tr>
+      <td>ar</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ar\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>ax</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ax\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>cx</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-cx\\"></rect></svg><span class=\\"cap-first h6 bold\\">concession</span></span></td>
+    </tr>
+    <tr>
+      <td>in</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-in\\"></rect></svg><span class=\\"cap-first h6 bold\\">indéterminé</span></span></td>
+    </tr>
+    <tr>
+      <td>pc</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pc\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de carrières</span></span></td>
+    </tr>
+    <tr>
+      <td>pr</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pr\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>px</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-px\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>ap-m</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ap-m\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de prospections préalables</span></span></td>
+    </tr>
+    <tr>
+      <td>ap-c</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ap-c\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de prospections préalables</span></span></td>
+    </tr>
+    <tr>
+      <td>ap-f</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ap-f\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de prospections préalables</span></span></td>
+    </tr>
+    <tr>
+      <td>ap-g</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ap-g\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de prospections préalables</span></span></td>
+    </tr>
+    <tr>
+      <td>ap-h</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ap-h\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de prospections préalables</span></span></td>
+    </tr>
+    <tr>
+      <td>ap-r</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ap-r\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de prospections préalables</span></span></td>
+    </tr>
+    <tr>
+      <td>ap-s</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ap-s\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de prospections préalables</span></span></td>
+    </tr>
+    <tr>
+      <td>ap-w</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ap-w\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de prospections préalables</span></span></td>
+    </tr>
+    <tr>
+      <td>ap-i</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ap-i\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de prospections préalables</span></span></td>
+    </tr>
+    <tr>
+      <td>ar-m</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ar-m\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>ar-c</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ar-c\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>ar-f</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ar-f\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>ar-g</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ar-g\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>ar-h</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ar-h\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>ar-r</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ar-r\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>ar-s</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ar-s\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>ar-w</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ar-w\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>ar-i</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ar-i\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>ax-m</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ax-m\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>ax-c</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ax-c\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>ax-f</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ax-f\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>ax-g</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ax-g\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>ax-h</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ax-h\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>ax-r</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ax-r\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>ax-s</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ax-s\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>ax-w</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ax-w\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>ax-i</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-ax-i\\"></rect></svg><span class=\\"cap-first h6 bold\\">autorisation d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>cx-m</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-cx-m\\"></rect></svg><span class=\\"cap-first h6 bold\\">concession</span></span></td>
+    </tr>
+    <tr>
+      <td>cx-c</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-cx-c\\"></rect></svg><span class=\\"cap-first h6 bold\\">concession</span></span></td>
+    </tr>
+    <tr>
+      <td>cx-f</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-cx-f\\"></rect></svg><span class=\\"cap-first h6 bold\\">concession</span></span></td>
+    </tr>
+    <tr>
+      <td>cx-g</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-cx-g\\"></rect></svg><span class=\\"cap-first h6 bold\\">concession</span></span></td>
+    </tr>
+    <tr>
+      <td>cx-h</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-cx-h\\"></rect></svg><span class=\\"cap-first h6 bold\\">concession</span></span></td>
+    </tr>
+    <tr>
+      <td>cx-r</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-cx-r\\"></rect></svg><span class=\\"cap-first h6 bold\\">concession</span></span></td>
+    </tr>
+    <tr>
+      <td>cx-s</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-cx-s\\"></rect></svg><span class=\\"cap-first h6 bold\\">concession</span></span></td>
+    </tr>
+    <tr>
+      <td>cx-w</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-cx-w\\"></rect></svg><span class=\\"cap-first h6 bold\\">concession</span></span></td>
+    </tr>
+    <tr>
+      <td>cx-i</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-cx-i\\"></rect></svg><span class=\\"cap-first h6 bold\\">concession</span></span></td>
+    </tr>
+    <tr>
+      <td>in-m</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-in-m\\"></rect></svg><span class=\\"cap-first h6 bold\\">indéterminé</span></span></td>
+    </tr>
+    <tr>
+      <td>in-c</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-in-c\\"></rect></svg><span class=\\"cap-first h6 bold\\">indéterminé</span></span></td>
+    </tr>
+    <tr>
+      <td>in-f</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-in-f\\"></rect></svg><span class=\\"cap-first h6 bold\\">indéterminé</span></span></td>
+    </tr>
+    <tr>
+      <td>in-g</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-in-g\\"></rect></svg><span class=\\"cap-first h6 bold\\">indéterminé</span></span></td>
+    </tr>
+    <tr>
+      <td>in-h</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-in-h\\"></rect></svg><span class=\\"cap-first h6 bold\\">indéterminé</span></span></td>
+    </tr>
+    <tr>
+      <td>in-r</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-in-r\\"></rect></svg><span class=\\"cap-first h6 bold\\">indéterminé</span></span></td>
+    </tr>
+    <tr>
+      <td>in-s</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-in-s\\"></rect></svg><span class=\\"cap-first h6 bold\\">indéterminé</span></span></td>
+    </tr>
+    <tr>
+      <td>in-w</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-in-w\\"></rect></svg><span class=\\"cap-first h6 bold\\">indéterminé</span></span></td>
+    </tr>
+    <tr>
+      <td>in-i</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-in-i\\"></rect></svg><span class=\\"cap-first h6 bold\\">indéterminé</span></span></td>
+    </tr>
+    <tr>
+      <td>pc-m</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pc-m\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de carrières</span></span></td>
+    </tr>
+    <tr>
+      <td>pc-c</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pc-c\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de carrières</span></span></td>
+    </tr>
+    <tr>
+      <td>pc-f</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pc-f\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de carrières</span></span></td>
+    </tr>
+    <tr>
+      <td>pc-g</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pc-g\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de carrières</span></span></td>
+    </tr>
+    <tr>
+      <td>pc-h</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pc-h\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de carrières</span></span></td>
+    </tr>
+    <tr>
+      <td>pc-r</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pc-r\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de carrières</span></span></td>
+    </tr>
+    <tr>
+      <td>pc-s</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pc-s\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de carrières</span></span></td>
+    </tr>
+    <tr>
+      <td>pc-w</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pc-w\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de carrières</span></span></td>
+    </tr>
+    <tr>
+      <td>pc-i</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pc-i\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de carrières</span></span></td>
+    </tr>
+    <tr>
+      <td>pr-m</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pr-m\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>pr-c</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pr-c\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>pr-f</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pr-f\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>pr-g</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pr-g\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>pr-h</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pr-h\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>pr-r</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pr-r\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>pr-s</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pr-s\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>pr-w</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pr-w\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>pr-i</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-pr-i\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis exclusif de recherches</span></span></td>
+    </tr>
+    <tr>
+      <td>px-m</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-px-m\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>px-c</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-px-c\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>px-f</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-px-f\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>px-g</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-px-g\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>px-h</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-px-h\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>px-r</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-px-r\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>px-s</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-px-s\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>px-w</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-px-w\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis d'exploitation</span></span></td>
+    </tr>
+    <tr>
+      <td>px-i</td>
+      <td><span><svg width=\\"24\\" height=\\"24\\" class=\\"mr-s mb--xs\\"><rect width=\\"24\\" height=\\"24\\" class=\\"svg-fill-pattern-px-i\\"></rect></svg><span class=\\"cap-first h6 bold\\">permis d'exploitation</span></span></td>
+    </tr>
+  </table>
+</div>"
+`;
+
 exports[`Storybook Smoke Test > Components/Activite/Preview > ACompleter 1`] = `
 "<div class=\\"flex flex-direction-column rnd-s border bg-bg\\" sub=\\"true\\">
   <div class=\\"accordion-header flex rnd-s\\">

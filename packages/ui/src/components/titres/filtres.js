@@ -1,8 +1,8 @@
 import { markRaw } from 'vue'
 
-import FiltresDomaines from '../_common/filtres/domaines.vue'
-import FiltresStatuts from '../_common/filtres/statuts.vue'
-import FiltresTypes from '../_common/filtres/types.vue'
+import { FiltresDomaines } from '../_common/filtres/domaines'
+import { FiltresStatuts } from '../_common/filtres/statuts'
+import { FiltresTypes } from '../_common/filtres/types'
 
 import { elementsFormat } from '../../utils/index'
 import { titresFiltres, titresRechercherByNom } from '@/api/titres'
