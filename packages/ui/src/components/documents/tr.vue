@@ -119,7 +119,7 @@ import { cloneAndClean, dateFormat } from '../../utils/index'
 import Tag from '../_ui/tag.vue'
 import DocumentEditPopup from '../document/edit-popup.vue'
 import DocumentRemovePopup from '../document/remove-popup.vue'
-import HelpTooltip from '../_ui/help-tooltip.vue'
+import { HelpTooltip } from '../_ui/help-tooltip'
 import { Icon } from '@/components/_ui/icon'
 
 export default {

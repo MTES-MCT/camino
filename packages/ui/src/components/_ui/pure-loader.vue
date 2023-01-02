@@ -21,7 +21,7 @@
 
 <script setup lang="ts" generic="T extends any">
 import { AsyncData } from '@/api/client-rest'
-import HelpTooltip from '@/components/_ui/help-tooltip.vue'
+import { HelpTooltip } from '@/components/_ui/help-tooltip'
 
 defineProps<{ data: AsyncData<T> }>()
 </script>

@@ -80,7 +80,7 @@
 <script setup lang="ts">
 import ActiviteButton from './button.vue'
 import Accordion from '../_ui/accordion.vue'
-import HelpTooltip from '../_ui/help-tooltip.vue'
+import { HelpTooltip } from '../_ui/help-tooltip'
 import UiSection from '../_common/section.vue'
 import { Statut } from '../_common/statut'
 

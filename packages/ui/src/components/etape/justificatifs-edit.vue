@@ -104,7 +104,7 @@
 import { dateFormat } from '@/utils'
 import DocumentEditPopup from '../document/edit-popup.vue'
 import Tag from '../_ui/tag.vue'
-import HelpTooltip from '../_ui/help-tooltip.vue'
+import { HelpTooltip } from '../_ui/help-tooltip'
 import { Icon } from '@/components/_ui/icon'
 
 export default {

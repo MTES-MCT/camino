@@ -1,22 +1,3 @@
-<template>
-  <div class="tooltip">
-    <h6 class="tooltip-content">
-      <slot />
-    </h6>
-    <Icon :name="icon" size="M" />
-  </div>
-</template>
-
-<script setup lang="ts">
-import { withDefaults } from 'vue'
-
-import { Icon as IconType } from './iconSpriteType'
-import { Icon } from './icon'
-
-withDefaults(defineProps<{ icon?: IconType }>(), { icon: 'help' })
-</script>
-
-<style scoped>
 .tooltip {
   position: relative;
   width: var(--unit);
@@ -45,4 +26,3 @@ withDefaults(defineProps<{ icon?: IconType }>(), { icon: 'help' })
 .tooltip:hover .tooltip-content {
   visibility: visible;
 }
-</style>

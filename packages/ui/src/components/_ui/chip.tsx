@@ -1,5 +1,5 @@
 import { Couleur } from 'camino-common/src/static/couleurs'
-import { EmitsOptions, SetupContext } from 'vue'
+import { SetupContext } from 'vue'
 import styles from './chip.module.css'
 
 export interface Props {
@@ -9,7 +9,7 @@ export interface Props {
 
 export function Chip(
   props: Props,
-  context: Omit<SetupContext<EmitsOptions>, 'expose'>
+  context: Omit<SetupContext<{ onDelete: () => {} }>, 'expose'>
 ) {
   return (
     <button

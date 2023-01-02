@@ -100,7 +100,7 @@
 <script>
 import { dateFormat } from '@/utils'
 import Loader from './_ui/loader.vue'
-import HelpTooltip from './_ui/help-tooltip.vue'
+import { HelpTooltip } from './_ui/help-tooltip'
 import SectionsEdit from './_common/sections-edit.vue'
 import DocumentsEdit from './document/multi-edit.vue'
 import DeposePopup from './activite/depose-popup.vue'
