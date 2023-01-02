@@ -23,9 +23,9 @@ export type Props = {
 }
 
 type Emits = {
-  completeUpdate: (e: boolean) => true
-  'update:etape': (e: Props['etape']) => true
-  typeUpdate: (e: EtapeTypeId) => true
+  completeUpdate: (e: boolean) => void
+  'update:etape': (e: Props['etape']) => void
+  typeUpdate: (e: EtapeTypeId) => void
 }
 
 const SelectDate = (etape: Props['etape']) => {
@@ -87,7 +87,7 @@ export const TypeEdit = caminoDefineComponent<Props, Emits>({
     const etapeTypeSearch = ref<string>('')
 
     const completeUpdate = () => {
-      // TODO comment mieux gérer la modification de la props
+      // TODO 2023-01-02: comment mieux gérer la modification de la props
       emit('completeUpdate', complete.value)
       emit('update:etape', props.etape)
     }

@@ -36,9 +36,11 @@ const Template: Story<Props> = (args: Props) => ({
   },
   template: `<TypeEdit  v-bind="args" :etape="etape" @complete-update="completeUpdate" @type-update="typeUpdate" @update:etape="updateEtape" />`
 })
-export const Simple = Template.bind({})
-Simple.args = {
-  userIsAdmin: true,
-  etapesTypesIds,
-  etapeIsDemandeEnConstruction: false
-}
+export const Simple = Template.bind(
+  {},
+  {
+    userIsAdmin: true,
+    etapesTypesIds,
+    etapeIsDemandeEnConstruction: false
+  }
+)
