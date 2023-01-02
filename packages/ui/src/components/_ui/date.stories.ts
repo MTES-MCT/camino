@@ -1,5 +1,6 @@
-import Date from './date.vue'
+import { Date, Props } from './date'
 import { Meta, Story } from '@storybook/vue3'
+import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 
 const meta: Meta = {
   title: 'UI/Date',
@@ -7,10 +8,6 @@ const meta: Meta = {
   argTypes: {}
 }
 export default meta
-
-type Props = {
-  date: string
-}
 
 const Template: Story<Props> = (args: Props) => ({
   components: { Date },
@@ -20,11 +17,15 @@ const Template: Story<Props> = (args: Props) => ({
   template: `<Date v-bind="args" />`
 })
 
-export const Default = Template.bind({})
-Default.args = {
-  date: '2022-05-03'
-}
-export const UneDateEtrange = Template.bind({})
-UneDateEtrange.args = {
-  date: 'Une date'
-}
+export const Default = Template.bind(
+  {},
+  {
+    date: toCaminoDate('2022-05-03')
+  }
+)
+export const UneDateEtrange = Template.bind(
+  {},
+  {
+    date: 'Une date' as CaminoDate
+  }
+)

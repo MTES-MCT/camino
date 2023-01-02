@@ -56,7 +56,7 @@ import {
   titulairesCell
 } from '@/components/titres/table-utils'
 import { CommonTitreONF } from 'camino-common/src/titres'
-import DateComponent from '../_ui/date.vue'
+import { Date as DateComponent } from '../_ui/date'
 import { datesDiffInDays } from 'camino-common/src/date'
 
 const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
