@@ -168,7 +168,7 @@ import {
 import { Pill } from '../_ui/pill'
 import Tag from '../_ui/tag.vue'
 import TagList from '../_ui/tag-list.vue'
-import Dot from '../_ui/dot.vue'
+import { Dot } from '../_ui/dot'
 import Section from '../_common/section.vue'
 import { Statut } from '../_common/statut'
 import { dateFormat } from '@/utils'
