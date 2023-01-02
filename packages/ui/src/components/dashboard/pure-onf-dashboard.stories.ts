@@ -1,21 +1,16 @@
-import PureONFDashboard from './pure-onf-dashboard.vue'
+import { PureONFDashboard, Props } from './pure-onf-dashboard'
 import { Meta, Story } from '@storybook/vue3'
 import { CommonTitreONF } from 'camino-common/src/titres'
+import titre from '@/store/titre'
 
 const meta: Meta = {
   title: 'Components/PureONFDashboard',
   component: PureONFDashboard,
   argTypes: {
-    getOnfTitres: { name: 'function', required: true },
-    displayActivites: { name: 'boolean' }
+    getOnfTitres: { name: 'function', required: true }
   }
 }
 export default meta
-
-type Props = {
-  getOnfTitres: () => Promise<CommonTitreONF[]>
-  displayActivites: boolean
-}
 
 const onfs: CommonTitreONF[] = [
   {
@@ -108,19 +103,30 @@ const Template: Story<Props> = (args: Props) => ({
   template: '<div><PureONFDashboard v-bind="args" /></div>'
 })
 
-export const Ok = Template.bind({})
-Ok.args = {
-  getOnfTitres: () => Promise.resolve(onfs),
-  displayActivites: true
-}
+export const Ok = Template.bind(
+  {},
+  {
+    getOnfTitres: () => Promise.resolve(onfs)
+  }
+)
 
-export const Loading = Template.bind({})
-Loading.args = {
-  getOnfTitres: () => new Promise<CommonTitreONF[]>(resolve => {}),
-  displayActivites: true
-}
-export const WithError = Template.bind({})
-WithError.args = {
-  getOnfTitres: () => Promise.reject(new Error('because reasons')),
-  displayActivites: true
-}
+export const OkSansAttenteDeONF = Template.bind(
+  {},
+  {
+    getOnfTitres: () =>
+      Promise.resolve(onfs.map(titre => ({ ...titre, enAttenteDeONF: false })))
+  }
+)
+
+export const Loading = Template.bind(
+  {},
+  {
+    getOnfTitres: () => new Promise<CommonTitreONF[]>(resolve => {})
+  }
+)
+export const WithError = Template.bind(
+  {},
+  {
+    getOnfTitres: () => Promise.reject(new Error('because reasons'))
+  }
+)

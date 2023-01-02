@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import PureEntrepriseDashboard from '@/components/dashboard/pure-entreprise-dashboard.vue'
-import PureONFDashboard from '@/components/dashboard/pure-onf-dashboard.vue'
+import { PureONFDashboard } from '@/components/dashboard/pure-onf-dashboard'
 import PurePTMGDashboard from '@/components/dashboard/pure-ptmg-dashboard.vue'
 import PureDREALDashboard from '@/components/dashboard/pure-dreal-dashboard.vue'
 import { fetchWithJson } from '@/api/client-rest'

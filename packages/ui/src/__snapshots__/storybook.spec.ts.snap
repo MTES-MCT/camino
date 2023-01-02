@@ -7268,7 +7268,7 @@ exports[`Storybook Smoke Test > Components/PureEntrepriseFiscalite > WithError 1
 
 exports[`Storybook Smoke Test > Components/PureONFDashboard > Loading 1`] = `
 "<div>
-  <div displayactivites=\\"true\\">
+  <div>
     <div class=\\"desktop-blobs\\">
       <div class=\\"desktop-blob-2-3\\">
         <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord ONF</h1>
@@ -7277,15 +7277,15 @@ exports[`Storybook Smoke Test > Components/PureONFDashboard > Loading 1`] = `
     <div class=\\"loaders fixed p\\">
       <div class=\\"loader\\"></div>
     </div>
-    <!--v-if-->
-    <!--v-if-->
+    <!---->
+    <!---->
   </div>
 </div>"
 `;
 
 exports[`Storybook Smoke Test > Components/PureONFDashboard > Ok 1`] = `
 "<div>
-  <div displayactivites=\\"true\\">
+  <div>
     <div class=\\"desktop-blobs\\">
       <div class=\\"desktop-blob-2-3\\">
         <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord ONF</h1>
@@ -7294,15 +7294,32 @@ exports[`Storybook Smoke Test > Components/PureONFDashboard > Ok 1`] = `
     <div class=\\"loaders fixed p\\">
       <div class=\\"loader\\"></div>
     </div>
-    <!--v-if-->
-    <!--v-if-->
+    <!---->
+    <!---->
+  </div>
+</div>"
+`;
+
+exports[`Storybook Smoke Test > Components/PureONFDashboard > OkSansAttenteDeONF 1`] = `
+"<div>
+  <div>
+    <div class=\\"desktop-blobs\\">
+      <div class=\\"desktop-blob-2-3\\">
+        <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord ONF</h1>
+      </div>
+    </div>
+    <div class=\\"loaders fixed p\\">
+      <div class=\\"loader\\"></div>
+    </div>
+    <!---->
+    <!---->
   </div>
 </div>"
 `;
 
 exports[`Storybook Smoke Test > Components/PureONFDashboard > WithError 1`] = `
 "<div>
-  <div displayactivites=\\"true\\">
+  <div>
     <div class=\\"desktop-blobs\\">
       <div class=\\"desktop-blob-2-3\\">
         <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord ONF</h1>
@@ -7311,8 +7328,8 @@ exports[`Storybook Smoke Test > Components/PureONFDashboard > WithError 1`] = `
     <div class=\\"loaders fixed p\\">
       <div class=\\"loader\\"></div>
     </div>
-    <!--v-if-->
-    <!--v-if-->
+    <!---->
+    <!---->
   </div>
 </div>"
 `;
