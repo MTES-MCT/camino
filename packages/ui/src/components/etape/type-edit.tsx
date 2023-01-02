@@ -1,3 +1,4 @@
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { CaminoDate } from 'camino-common/src/date'
 import {
   EtapeStatut,
@@ -5,7 +6,6 @@ import {
 } from 'camino-common/src/static/etapesStatuts'
 import { EtapesTypes, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
-import { UnionToIntersection } from 'chart.js/types/utils'
 import { computed, watch, ref, defineComponent, Prop } from 'vue'
 import InputDate from '../_ui/input-date.vue'
 import SimpleTypehead from '../_ui/typeahead.vue'
@@ -22,23 +22,11 @@ export type Props = {
   etapeIsDemandeEnConstruction?: boolean
 }
 
-// FIXME est-ce qu’on peut mieux typer que ça ?
-declare type EmitFn<
-  Options,
-  Event extends keyof Options = keyof Options
-> = UnionToIntersection<
-  {
-    [key in Event]: Options[key] extends (...args: infer Args) => any
-      ? (event: key, ...args: Args) => void
-      : never
-  }[Event]
->
-
-type Emit = EmitFn<{
+type Emits = {
   completeUpdate: (e: boolean) => true
   'update:etape': (e: Props['etape']) => true
   typeUpdate: (e: EtapeTypeId) => true
-}>
+}
 
 const SelectDate = (etape: Props['etape']) => {
   return (
@@ -94,13 +82,12 @@ const SelectStatut = (etape: Props['etape'], etapesStatuts: EtapeStatut[]) => {
   )
 }
 
-export const TypeEdit = defineComponent<Props, Emit>({
-  emits: ['completeUpdate', 'update:etape', 'typeUpdate'],
-  setup(props: Props, { emit }: { emit: Emit }) {
+export const TypeEdit = caminoDefineComponent<Props, Emits>({
+  setup(props: Props, { emit }) {
     const etapeTypeSearch = ref<string>('')
 
     const completeUpdate = () => {
-      // FIXME comment mieux gérer la modification de la props
+      // TODO comment mieux gérer la modification de la props
       emit('completeUpdate', complete.value)
       emit('update:etape', props.etape)
     }
@@ -117,9 +104,9 @@ export const TypeEdit = defineComponent<Props, Emit>({
       props.etape.type?.id ? getEtapesStatuts(props.etape.type?.id) : []
     )
 
-    const etapeTypeExistante = computed<(EtapeTypeId | undefined)[]>(() => [
-      props.etape.type?.id
-    ])
+    const etapeTypeExistante = computed<EtapeTypeId[]>(() =>
+      props.etape.type?.id ? [props.etape.type?.id] : []
+    )
 
     const complete = computed<boolean>(() => {
       if (props.userIsAdmin) {
@@ -164,9 +151,8 @@ export const TypeEdit = defineComponent<Props, Emit>({
               items={etapesTypesIdsFiltered.value}
               overrideItems={etapeTypeExistante.value}
               minInputLength={0}
-              // FIXME dans les params de SimpleTypeahead, le typage n’est pas découvert tout seul
-              itemKey={item => item as EtapeTypeId}
-              itemChipLabel={item => EtapesTypes[item as EtapeTypeId].nom}
+              itemKey={item => item}
+              itemChipLabel={item => EtapesTypes[item].nom}
               onSelectItem={(typeId: EtapeTypeId) => {
                 props.etape.type = { id: typeId }
                 etapeTypeSearch.value = ''

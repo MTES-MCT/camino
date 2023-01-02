@@ -1,10 +1,7 @@
 import { Props, TypeEdit } from './type-edit'
 import { Meta, Story } from '@storybook/vue3'
-import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
-import {
-  EtapeStatutId,
-  ETAPES_STATUTS
-} from 'camino-common/src/static/etapesStatuts'
+import { toCaminoDate } from 'camino-common/src/date'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
 import {
   EtapeTypeId,
   ETAPES_TYPES,
