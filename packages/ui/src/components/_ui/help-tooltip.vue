@@ -11,7 +11,7 @@
 import { withDefaults } from 'vue'
 
 import { Icon as IconType } from './iconSpriteType'
-import Icon from './icon.vue'
+import { Icon } from './icon'
 
 withDefaults(defineProps<{ icon?: IconType }>(), { icon: 'help' })
 </script>

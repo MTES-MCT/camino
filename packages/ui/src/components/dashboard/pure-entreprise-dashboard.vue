@@ -45,7 +45,7 @@ import {
   titresLignesBuild
 } from '@/components/titres/table-utils'
 import { useRouter } from 'vue-router'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { fiscaliteVisible } from 'camino-common/src/fiscalite'

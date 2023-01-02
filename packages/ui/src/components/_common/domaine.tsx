@@ -1,5 +1,5 @@
 import { DomaineId, DOMAINES_IDS } from 'camino-common/src/static/domaines'
-import Pill from '../_ui/pill.vue'
+import { Pill } from '../_ui/pill'
 
 export type Props = {
   domaineId?: DomaineId

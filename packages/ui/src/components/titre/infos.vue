@@ -165,12 +165,12 @@ import {
   ReferencesTypes,
   ReferenceTypeId
 } from 'camino-common/src/static/referencesTypes'
-import Pill from '../_ui/pill.vue'
+import { Pill } from '../_ui/pill'
 import Tag from '../_ui/tag.vue'
 import TagList from '../_ui/tag-list.vue'
 import Dot from '../_ui/dot.vue'
 import Section from '../_common/section.vue'
-import Statut from '../_common/statut.vue'
+import { Statut } from '../_common/statut'
 import { dateFormat } from '@/utils'
 import PureTitresLinkForm from './pure-titres-link-form.vue'
 import {
@@ -200,6 +200,7 @@ import {
   phaseStatuts
 } from 'camino-common/src/static/phasesStatuts'
 import { TitreReference } from 'camino-common/src/titres-references'
+import { DomaineId } from 'camino-common/src/static/domaines'
 
 export interface Entreprise {
   id: string
@@ -211,7 +212,7 @@ export interface Entreprise {
 const props = defineProps<{
   titre: {
     id: string
-    domaine: { id: string }
+    domaine: { id: DomaineId }
     titreStatutId: TitreStatutId
     demarches: {
       id: string

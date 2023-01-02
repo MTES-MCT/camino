@@ -61,7 +61,7 @@
 <script>
 import EditPopup from './edit-popup.vue'
 import RemovePopup from './remove-popup.vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 
 export default {
   components: { Icon },

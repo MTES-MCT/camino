@@ -4,7 +4,7 @@ import { markRaw } from 'vue'
 import TitreNom from '../_common/titre-nom.vue'
 import { Domaine } from '../_common/domaine'
 import TitreTypeTypeNom from '../_common/titre-type-type-nom.vue'
-import Statut from '../_common/statut.vue'
+import { Statut } from '../_common/statut'
 import { Column, InitialSort, TableAutoRow } from './table-auto.type'
 
 const meta: Meta = {

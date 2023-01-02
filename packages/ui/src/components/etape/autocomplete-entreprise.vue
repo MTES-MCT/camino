@@ -44,7 +44,7 @@
 <script setup lang="ts">
 import Typeahead from '@/components/_ui/typeahead.vue'
 import { computed, ref, watch, withDefaults } from 'vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import { EtapeEntreprise } from 'camino-common/src/etape'
 import { EntrepriseId, Entreprise } from 'camino-common/src/entreprise'
 

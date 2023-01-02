@@ -56,7 +56,7 @@
 
 <script>
 import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 
 export default {
   components: { Icon },

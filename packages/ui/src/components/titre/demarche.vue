@@ -75,11 +75,11 @@
 </template>
 
 <script>
-import Statut from '../_common/statut.vue'
+import { Statut } from '../_common/statut'
 import TitreEtape from '../etape/preview.vue'
 import EditPopup from './demarche-edit-popup.vue'
 import RemovePopup from './demarche-remove-popup.vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 
 export default {

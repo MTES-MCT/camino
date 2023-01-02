@@ -97,7 +97,7 @@ import { AdministrationId } from 'camino-common/src/static/administrations'
 import PureTitresLink from './pure-titres-link.vue'
 import { AsyncData } from '@/api/client-rest'
 import LoadingData from '@/components/_ui/pure-loader.vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 

@@ -267,7 +267,7 @@ import HeritageEdit from './heritage-edit.vue'
 import PointsImportPopup from './points-import-popup.vue'
 import Points from '../_common/points.vue'
 import InputNumber from '../_ui/input-number.vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import HelpTooltip from '@/components/_ui/help-tooltip.vue'
 
 export default {

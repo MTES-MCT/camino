@@ -1,7 +1,6 @@
-import Pill from './pill.vue'
+import { Pill, Props } from './pill'
 import { Meta, Story } from '@storybook/vue3'
 
-// More on default export: https://storybook.js.org/docs/vue/writing-stories/introduction#default-export
 const meta: Meta = {
   title: 'Ui/Pill',
   component: Pill,
@@ -10,10 +9,6 @@ const meta: Meta = {
   }
 }
 export default meta
-
-type Props = {
-  color?: string
-}
 
 const Template: Story<Props> = (args: Props) => ({
   components: { Pill },
@@ -25,7 +20,9 @@ const Template: Story<Props> = (args: Props) => ({
 
 export const Primary = Template.bind({})
 
-export const Error = Template.bind({})
-Error.args = {
-  color: 'bg-error'
-}
+export const Error = Template.bind(
+  {},
+  {
+    color: 'bg-error'
+  }
+)

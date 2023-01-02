@@ -51,7 +51,7 @@
 import { valeurFind } from '../../utils/contenu'
 import SectionElementMultiple from './section-element-multiple.vue'
 import numberFormat from '@/utils/number-format'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 
 export default {
   name: 'SectionElement',

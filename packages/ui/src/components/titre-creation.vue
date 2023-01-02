@@ -140,7 +140,7 @@ import {
   sortedReferencesTypes
 } from 'camino-common/src/static/referencesTypes'
 import { TitreTypeSelect } from './_common/titre-type-select'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import PureTitresLink from '@/components/titre/pure-titres-link.vue'
 import { getLinkConfig } from 'camino-common/src/permissions/titres'

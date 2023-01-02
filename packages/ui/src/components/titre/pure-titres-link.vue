@@ -39,7 +39,7 @@ import {
   LoadLinkableTitres,
   TitresLinkConfig
 } from './pure-titres-link.type'
-import Statut from '@/components/_common/statut.vue'
+import { Statut } from '@/components/_common/statut'
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { TitreLink } from 'camino-common/src/titres'

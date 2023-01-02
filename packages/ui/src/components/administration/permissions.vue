@@ -217,8 +217,8 @@
 
 <script setup lang="ts">
 import { Domaine as CaminoDomaine } from '../_common/domaine'
-import Statut from '../_common/statut.vue'
-import Icon from '../_ui/icon.vue'
+import { Statut } from '../_common/statut'
+import { Icon } from '../_ui/icon'
 import {
   TitresStatuts,
   TitreStatutId

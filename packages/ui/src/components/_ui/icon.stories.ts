@@ -1,5 +1,5 @@
 import { Meta } from '@storybook/vue3'
-import Icon from './icon.vue'
+import { Icon } from './icon'
 import { icons } from './iconSpriteType'
 
 const meta: Meta = {
