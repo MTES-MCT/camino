@@ -1,12 +1,13 @@
 import type { Icon as IconType } from './iconSpriteType'
 import { IconSprite } from './iconSprite'
+import { HTMLAttributes } from 'vue'
 
 export type Size = 'S' | 'M'
-export interface Props {
+export type Props = {
   name: IconType
   size: Size
   color?: string
-}
+} & HTMLAttributes
 
 const heightAndWidth = (size?: Size): '16px' | '24px' => {
   switch (size) {

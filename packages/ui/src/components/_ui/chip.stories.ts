@@ -1,4 +1,4 @@
-import Chip from './chip.vue'
+import { Chip, Props } from './chip'
 import { Meta, Story } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
@@ -8,11 +8,6 @@ const meta: Meta = {
   argTypes: {}
 }
 export default meta
-
-type Props = {
-  nom: string
-  color?: string
-}
 
 const Template: Story<Props> = (args: Props) => ({
   components: { Chip },

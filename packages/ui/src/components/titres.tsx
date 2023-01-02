@@ -1,5 +1,5 @@
 import { defineComponent, computed, onMounted, inject } from 'vue'
-import Icon from '@/components/_ui/icon.vue'
+import { Icon } from '@/components/_ui/icon'
 import { Router, useRouter } from 'vue-router'
 import { TitresTypesIds } from 'camino-common/src/static/titresTypes'
 import { canCreateTitre } from 'camino-common/src/permissions/titres'

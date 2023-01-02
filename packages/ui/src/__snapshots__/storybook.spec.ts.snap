@@ -9110,9 +9110,9 @@ exports[`Storybook Smoke Test > Pages/PureQuickAccessTitre > Simple 1`] = `
 </div>"
 `;
 
-exports[`Storybook Smoke Test > UI/Chip > Default 1`] = `"<button class=\\"bg-neutral chip pl-m pr-m\\" data-v-3398cce3=\\"\\">Ma chip <span data-v-3398cce3=\\"\\">x</span></button>"`;
+exports[`Storybook Smoke Test > UI/Chip > Default 1`] = `"<button class=\\"bg-neutral pl-m pr-m _chip_de71b9\\">Ma chip <span>x</span></button>"`;
 
-exports[`Storybook Smoke Test > UI/Chip > WithColor 1`] = `"<button class=\\"bg-success chip pl-m pr-m\\" data-v-3398cce3=\\"\\">Ma chip <span data-v-3398cce3=\\"\\">x</span></button>"`;
+exports[`Storybook Smoke Test > UI/Chip > WithColor 1`] = `"<button class=\\"bg-success pl-m pr-m _chip_de71b9\\">Ma chip <span>x</span></button>"`;
 
 exports[`Storybook Smoke Test > UI/Date > Default 1`] = `"<div style=\\"white-space: nowrap;\\">03 / 05 / 2022</div>"`;
 
@@ -9265,7 +9265,7 @@ exports[`Storybook Smoke Test > UI/Typeahead > Multiple 1`] = `
 
 exports[`Storybook Smoke Test > UI/Typeahead > MultipleWithInitialItems 1`] = `
 "<div id=\\"multiple_wrapper\\" class=\\"typeahead\\" style=\\"width: 800px;\\" data-v-5c99e422=\\"\\">
-  <div class=\\"flex typeahead-wrapper p-xs\\" data-v-5c99e422=\\"\\"><button class=\\"bg-neutral chip pl-m pr-m mr-xs mb-xs mt-xs\\" data-v-3398cce3=\\"\\" data-v-5c99e422=\\"\\">titreItem1 <span data-v-3398cce3=\\"\\">x</span></button><button class=\\"bg-neutral chip pl-m pr-m mr-xs mb-xs mt-xs\\" data-v-3398cce3=\\"\\" data-v-5c99e422=\\"\\">titreItem2 <span data-v-3398cce3=\\"\\">x</span></button><input id=\\"multiple\\" class=\\"typeahead-input\\" type=\\"text\\" placeholder=\\"placeholder\\" autocomplete=\\"off\\" data-v-5c99e422=\\"\\"></div>
+  <div class=\\"flex typeahead-wrapper p-xs\\" data-v-5c99e422=\\"\\"><button class=\\"bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs\\" data-v-5c99e422=\\"\\">titreItem1 <span>x</span></button><button class=\\"bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs\\" data-v-5c99e422=\\"\\">titreItem2 <span>x</span></button><input id=\\"multiple\\" class=\\"typeahead-input\\" type=\\"text\\" placeholder=\\"placeholder\\" autocomplete=\\"off\\" data-v-5c99e422=\\"\\"></div>
   <!--v-if-->
 </div>"
 `;

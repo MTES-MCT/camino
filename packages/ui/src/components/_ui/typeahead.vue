@@ -52,7 +52,7 @@
 
 <script setup lang="ts" generic="K, T extends K">
 import { computed, Ref, ref, watch, withDefaults } from 'vue'
-import Chip from './chip.vue'
+import { Chip } from './chip'
 
 export type Props<K, T extends K> = {
   id?: string
