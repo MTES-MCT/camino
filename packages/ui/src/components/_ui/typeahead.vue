@@ -36,7 +36,6 @@
           type="text"
           :placeholder="placeholder"
           autocomplete="off"
-          @click="onClick"
           @input="onInput"
           @focus="onFocus"
           @blur="onBlur"
@@ -107,9 +106,6 @@ watch(
   () => props.overrideItems,
   newItems => {
     selectedItems.value = getItems(newItems)
-    if (!selectedItems.value.length) {
-      input.value = ''
-    }
   },
   { deep: true }
 )
@@ -136,10 +132,6 @@ const onFocus = () => {
 }
 const onBlur = () => {
   isInputFocused.value = false
-}
-const onClick = () => {
-  input.value = ''
-  selectedItems.value.pop()
 }
 const onArrowDown = () => {
   if (
@@ -194,7 +186,9 @@ const selectCurrentSelection = (event: KeyboardEvent) => {
     event.stopPropagation()
   }
 
-  myTypeaheadInput?.value?.focus?.()
+  if (props.type === 'multiple') {
+    myTypeaheadInput?.value?.focus?.()
+  }
 }
 
 const deleteLastSelected = () => {
