@@ -9,42 +9,23 @@
           class="mr-xs mb-xs mt-xs"
           @onDelete="unselectItem(item)"
         />
-
-        <input
-          :id="id"
-          ref="myTypeaheadInput"
-          v-model="input"
-          class="typeahead-input"
-          type="text"
-          :placeholder="placeholder"
-          autocomplete="off"
-          @input="onInput"
-          @focus="onFocus"
-          @blur="onBlur"
-          @keydown.down.prevent="onArrowDown"
-          @keydown.up.prevent="onArrowUp"
-          @keyup.enter.prevent="selectCurrentSelection"
-          @keydown.delete="deleteLastSelected"
-        />
       </template>
-      <template v-else>
-        <input
-          :id="id"
-          ref="myTypeaheadInput"
-          v-model="input"
-          class="typeahead-input"
-          type="text"
-          :placeholder="placeholder"
-          autocomplete="off"
-          @input="onInput"
-          @focus="onFocus"
-          @blur="onBlur"
-          @keydown.down.prevent="onArrowDown"
-          @keydown.up.prevent="onArrowUp"
-          @keyup.enter.prevent="selectCurrentSelection"
-          @keydown.delete="deleteLastSelected"
-        />
-      </template>
+      <input
+        :id="id"
+        ref="myTypeaheadInput"
+        v-model="input"
+        class="typeahead-input"
+        type="text"
+        :placeholder="placeholder"
+        autocomplete="off"
+        @input="onInput"
+        @focus="onFocus"
+        @blur="onBlur"
+        @keydown.down.prevent="onArrowDown"
+        @keydown.up.prevent="onArrowUp"
+        @keyup.enter.prevent="selectCurrentSelection"
+        @keydown.delete="deleteLastSelected"
+      />
     </div>
 
     <div v-if="isListVisible" class="typeahead-list">
