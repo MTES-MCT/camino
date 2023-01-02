@@ -1,6 +1,6 @@
 <template>
   <div>
-    <LoadingData v-slot="{ item }" :data="titresLinks">
+    <LoadingElement v-slot="{ item }" :data="titresLinks">
       <div v-if="item.amont.length || canLink">
         <h5>
           Titre{{ linkConfig && linkConfig.count === 'multiple' ? 's' : '' }} à
@@ -75,7 +75,7 @@
           </ul>
         </div>
       </div>
-    </LoadingData>
+    </LoadingElement>
   </div>
 </template>
 
@@ -96,7 +96,7 @@ import { User } from 'camino-common/src/roles'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import PureTitresLink from './pure-titres-link.vue'
 import { AsyncData } from '@/api/client-rest'
-import LoadingData from '@/components/_ui/pure-loader.vue'
+import { LoadingElement } from '@/components/_ui/pure-loader'
 import { Icon } from '@/components/_ui/icon'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreLink, TitreLinks } from 'camino-common/src/titres'

@@ -323,7 +323,7 @@
 import ChartWithExport from '../_charts/chart-with-export.vue'
 
 import { AsyncData } from '@/api/client-rest'
-import LoadingElement from '@/components/_ui/pure-loader.vue'
+import { LoadingElement } from '@/components/_ui/pure-loader'
 import { numberFormat } from '@/utils/number-format'
 import { CaminoAnnee, isAnnee } from 'camino-common/src/date'
 import { StatistiquesMinerauxMetauxMetropole } from 'camino-common/src/statistiques'

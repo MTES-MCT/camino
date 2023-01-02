@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { AsyncData } from '@/api/client-rest'
 import { ref } from 'vue'
-import LoadingElement from '@/components/_ui/pure-loader.vue'
+import { LoadingElement } from '@/components/_ui/pure-loader'
 import { QGISToken } from 'camino-common/src/utilisateur'
 import Messages from '@/components/_ui/messages.vue'
 import { Pill } from '@/components/_ui/pill'

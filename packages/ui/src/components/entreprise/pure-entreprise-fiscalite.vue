@@ -78,7 +78,7 @@ import {
   montantNetTaxeAurifere,
   fraisGestion
 } from 'camino-common/src/fiscalite'
-import LoadingElement from '@/components/_ui/pure-loader.vue'
+import { LoadingElement } from '@/components/_ui/pure-loader'
 import { AsyncData } from '@/api/client-rest'
 import { CaminoAnnee } from 'camino-common/src/date'
 

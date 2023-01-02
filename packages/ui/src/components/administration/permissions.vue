@@ -232,7 +232,7 @@ import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 import { onMounted, ref } from 'vue'
 import { ApiClient } from '@/api/api-client'
 import { AsyncData } from '@/api/client-rest'
-import LoadingElement from '../_ui/pure-loader.vue'
+import { LoadingElement } from '../_ui/pure-loader'
 import { AdministrationMetas } from './administration-api-client'
 
 const props = defineProps<{

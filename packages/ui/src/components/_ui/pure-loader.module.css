@@ -1,0 +1,21 @@
+.top-level {
+  position: relative;
+  min-width: var(--unit);
+  min-height: var(--unit);
+}
+@keyframes spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spinner {
+  position: absolute;
+  box-sizing: border-box;
+  width: var(--unit);
+  height: var(--unit);
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: var(--dsfr-bf500);
+  border-bottom-color: var(--dsfr-bf500);
+  animation: spinner 0.8s ease infinite;
+}

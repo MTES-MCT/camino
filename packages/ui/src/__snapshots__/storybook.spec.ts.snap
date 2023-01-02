@@ -2590,8 +2590,10 @@ exports[`Storybook Smoke Test > Components/Administration/Permissions > Default 
       </div>
     </div>
   </div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
@@ -3120,8 +3122,10 @@ exports[`Storybook Smoke Test > Components/Administration/Permissions > Loading 
       </div>
     </div>
   </div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
@@ -3650,8 +3654,10 @@ exports[`Storybook Smoke Test > Components/Administration/Permissions > error 1`
       </div>
     </div>
   </div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
@@ -6395,12 +6401,16 @@ exports[`Storybook Smoke Test > Components/PureDrealDashboard > Loading 1`] = `
   <!--v-if-->
   <div class=\\"line-neutral width-full mb-l\\"></div>
   <h3>Titres</h3>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
   <h4>Titres en cours d’instruction</h4>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
@@ -6415,12 +6425,16 @@ exports[`Storybook Smoke Test > Components/PureDrealDashboard > Ok 1`] = `
   <!--v-if-->
   <div class=\\"line-neutral width-full mb-l\\"></div>
   <h3>Titres</h3>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
   <h4>Titres en cours d’instruction</h4>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
@@ -6435,12 +6449,16 @@ exports[`Storybook Smoke Test > Components/PureDrealDashboard > WithError 1`] = 
   <!--v-if-->
   <div class=\\"line-neutral width-full mb-l\\"></div>
   <h3>Titres</h3>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
   <h4>Titres en cours d’instruction</h4>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
@@ -6575,8 +6593,10 @@ exports[`Storybook Smoke Test > Components/PureEntrepriseDashboard > Loading 1`]
           <use href=\\"#icon-plus\\"></use>
         </svg></button></div>
   </div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
@@ -6711,8 +6731,10 @@ exports[`Storybook Smoke Test > Components/PureEntrepriseDashboard > Ok 1`] = `
           <use href=\\"#icon-plus\\"></use>
         </svg></button></div>
   </div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
@@ -6847,8 +6869,10 @@ exports[`Storybook Smoke Test > Components/PureEntrepriseDashboard > OkWithoutAc
           <use href=\\"#icon-plus\\"></use>
         </svg></button></div>
   </div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
@@ -6983,8 +7007,10 @@ exports[`Storybook Smoke Test > Components/PureEntrepriseDashboard > OkWithoutFi
           <use href=\\"#icon-plus\\"></use>
         </svg></button></div>
   </div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
@@ -7119,8 +7145,10 @@ exports[`Storybook Smoke Test > Components/PureEntrepriseDashboard > WithError 1
           <use href=\\"#icon-plus\\"></use>
         </svg></button></div>
   </div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
@@ -7133,21 +7161,29 @@ exports[`Storybook Smoke Test > Components/PureEntrepriseFiscalite > Guyane 1`] 
   <div class=\\"line-neutral mb\\" data-v-b91681b0=\\"\\"></div>Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2021 <br data-v-b91681b0=\\"\\"><strong data-v-b91681b0=\\"\\">Cotisations</strong>
   <div class=\\"fiscalite-table\\" data-v-b91681b0=\\"\\">
     <div data-v-b91681b0=\\"\\">a. Redevance communale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <div data-v-b91681b0=\\"\\">b. Redevance départementale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <!--v-if-->
     <div data-v-b91681b0=\\"\\"> f. Frais de gestion de fiscalité directe locale (a+b)X 8% </div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <div data-v-b91681b0=\\"\\">Somme à payer auprès du comptable (2)</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
   </div>
 </div>"
@@ -7162,21 +7198,29 @@ exports[`Storybook Smoke Test > Components/PureEntrepriseFiscalite > GuyaneAnnee
   <!--v-if--><strong data-v-b91681b0=\\"\\">Cotisations</strong>
   <div class=\\"fiscalite-table\\" data-v-b91681b0=\\"\\">
     <div data-v-b91681b0=\\"\\">a. Redevance communale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <div data-v-b91681b0=\\"\\">b. Redevance départementale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <!--v-if-->
     <div data-v-b91681b0=\\"\\"> f. Frais de gestion de fiscalité directe locale (a+b)X 8% </div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <div data-v-b91681b0=\\"\\">Somme à payer auprès du comptable (2)</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
   </div>
 </div>"
@@ -7190,21 +7234,29 @@ exports[`Storybook Smoke Test > Components/PureEntrepriseFiscalite > Loading 1`]
   <div class=\\"line-neutral mb\\" data-v-b91681b0=\\"\\"></div>Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2021 <br data-v-b91681b0=\\"\\"><strong data-v-b91681b0=\\"\\">Cotisations</strong>
   <div class=\\"fiscalite-table\\" data-v-b91681b0=\\"\\">
     <div data-v-b91681b0=\\"\\">a. Redevance communale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <div data-v-b91681b0=\\"\\">b. Redevance départementale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <!--v-if-->
     <div data-v-b91681b0=\\"\\"> f. Frais de gestion de fiscalité directe locale (a+b)X 8% </div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <div data-v-b91681b0=\\"\\">Somme à payer auprès du comptable (2)</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
   </div>
 </div>"
@@ -7218,21 +7270,29 @@ exports[`Storybook Smoke Test > Components/PureEntrepriseFiscalite > Ok 1`] = `
   <div class=\\"line-neutral mb\\" data-v-b91681b0=\\"\\"></div>Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2021 <br data-v-b91681b0=\\"\\"><strong data-v-b91681b0=\\"\\">Cotisations</strong>
   <div class=\\"fiscalite-table\\" data-v-b91681b0=\\"\\">
     <div data-v-b91681b0=\\"\\">a. Redevance communale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <div data-v-b91681b0=\\"\\">b. Redevance départementale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <!--v-if-->
     <div data-v-b91681b0=\\"\\"> f. Frais de gestion de fiscalité directe locale (a+b)X 8% </div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <div data-v-b91681b0=\\"\\">Somme à payer auprès du comptable (2)</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
   </div>
 </div>"
@@ -7246,21 +7306,29 @@ exports[`Storybook Smoke Test > Components/PureEntrepriseFiscalite > WithError 1
   <div class=\\"line-neutral mb\\" data-v-b91681b0=\\"\\"></div>Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2021 <br data-v-b91681b0=\\"\\"><strong data-v-b91681b0=\\"\\">Cotisations</strong>
   <div class=\\"fiscalite-table\\" data-v-b91681b0=\\"\\">
     <div data-v-b91681b0=\\"\\">a. Redevance communale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <div data-v-b91681b0=\\"\\">b. Redevance départementale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <!--v-if-->
     <div data-v-b91681b0=\\"\\"> f. Frais de gestion de fiscalité directe locale (a+b)X 8% </div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
     <div data-v-b91681b0=\\"\\">Somme à payer auprès du comptable (2)</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_ab4c75 fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b91681b0=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_ab4c75\\"></div>
     </div>
   </div>
 </div>"
@@ -7387,32 +7455,40 @@ exports[`Storybook Smoke Test > Components/PurePTMGDashboard > WithError 1`] = `
 
 exports[`Storybook Smoke Test > Components/Titre/PureTitresLinkForm > AxmWithAlreadySelectedTitre 1`] = `
 "<div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
 
 exports[`Storybook Smoke Test > Components/Titre/PureTitresLinkForm > DefautCantUpdateLinks 1`] = `
 "<div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
 
 exports[`Storybook Smoke Test > Components/Titre/PureTitresLinkForm > FusionWithAlreadySelectedTitre 1`] = `
 "<div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
 
 exports[`Storybook Smoke Test > Components/Titre/PureTitresLinkForm > TitreWithTitreLinksLoading 1`] = `
 "<div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
 </div>"
 `;
@@ -7582,38 +7658,50 @@ exports[`Storybook Smoke Test > Components/Titre/Territoires > OnlySurface 1`] =
 `;
 
 exports[`Storybook Smoke Test > Components/Titre/TitresLink > AXM 1`] = `
-"<div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-  <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+"<div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+  <!---->
+  <!---->
+  <div class=\\"_spinner_ab4c75\\"></div>
 </div>"
 `;
 
 exports[`Storybook Smoke Test > Components/Titre/TitresLink > AXMWithAlreadySelectedTitre 1`] = `
-"<div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-  <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+"<div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+  <!---->
+  <!---->
+  <div class=\\"_spinner_ab4c75\\"></div>
 </div>"
 `;
 
 exports[`Storybook Smoke Test > Components/Titre/TitresLink > DemarcheFusion 1`] = `
-"<div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-  <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+"<div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+  <!---->
+  <!---->
+  <div class=\\"_spinner_ab4c75\\"></div>
 </div>"
 `;
 
 exports[`Storybook Smoke Test > Components/Titre/TitresLink > DemarcheFusionWithAlreadySelectedTitre 1`] = `
-"<div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-  <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+"<div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+  <!---->
+  <!---->
+  <div class=\\"_spinner_ab4c75\\"></div>
 </div>"
 `;
 
 exports[`Storybook Smoke Test > Components/Titre/TitresLink > Loading 1`] = `
-"<div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-  <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+"<div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+  <!---->
+  <!---->
+  <div class=\\"_spinner_ab4c75\\"></div>
 </div>"
 `;
 
 exports[`Storybook Smoke Test > Components/Titre/TitresLink > WithError 1`] = `
-"<div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-  <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+"<div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+  <!---->
+  <!---->
+  <div class=\\"_spinner_ab4c75\\"></div>
 </div>"
 `;
 
@@ -7627,8 +7715,10 @@ exports[`Storybook Smoke Test > Components/Utilisateur/QGISToken > Default 1`] =
     <h5>Jeton QGIS</h5>
   </div>
   <div class=\\"tablet-blob-3-4\\">
-    <div class=\\"top-level\\" style=\\"\\" data-v-b0094f72=\\"\\">
+    <div class=\\"_top-level_ab4c75\\" style=\\"\\">
       <!--v-if--><button class=\\"btn btn-secondary\\"> Générer un jeton QGIS </button>
+      <!---->
+      <!---->
     </div>
     <transition-group-stub></transition-group-stub>
   </div>
@@ -7898,11 +7988,15 @@ exports[`Storybook Smoke Test > Page/Administration > Default 1`] = `
     </div>
     <!--v-if-->
   </div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
   <div class=\\"mb-xxl\\">
     <div class=\\"line-neutral width-full mb-xxl\\"></div>
@@ -8180,8 +8274,10 @@ exports[`Storybook Smoke Test > Page/Administration > Default 1`] = `
           </div>
         </div>
       </div>
-      <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-        <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+      <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+        <!---->
+        <!---->
+        <div class=\\"_spinner_ab4c75\\"></div>
       </div>
     </div>
   </div>
@@ -9135,15 +9231,21 @@ exports[`Storybook Smoke Test > UI/Date > Default 1`] = `"<div style=\\"white-sp
 
 exports[`Storybook Smoke Test > UI/Date > UneDateEtrange 1`] = `"<div style=\\"white-space: nowrap;\\">undefined / undefined / Une date</div>"`;
 
-exports[`Storybook Smoke Test > UI/Loader > All 1`] = `
+exports[`Storybook Smoke Test > UI/LoadingElement > All 1`] = `
 "<div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_ab4c75\\"></div>
   </div>
-  <div class=\\"top-level\\" style=\\"\\" data-v-b0094f72=\\"\\">La valeur de l’item est : chargé</div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div data-v-b0094f72=\\"\\">
-      <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+  <div class=\\"_top-level_ab4c75\\" style=\\"\\">La valeur de l’item est : chargé
+    <!---->
+    <!---->
+  </div>
+  <div class=\\"_top-level_ab4c75\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <div>
+      <div class=\\"_tooltip_4f6ea8\\">
         <h6 class=\\"_tooltip-content_4f6ea8\\">Erreur</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\"><svg aria-hidden=\\"true\\" style=\\"position: absolute; width: 0px; height: 0px; overflow: hidden;\\" xmlns=\\"http://www.w3.org/2000/svg\\">
             <symbol id=\\"icon-at\\" viewBox=\\"0 0 24 24\\">
               <title>at</title>
@@ -9269,6 +9371,7 @@ exports[`Storybook Smoke Test > UI/Loader > All 1`] = `
         </svg>
       </div>
     </div>
+    <!---->
   </div>
 </div>"
 `;
