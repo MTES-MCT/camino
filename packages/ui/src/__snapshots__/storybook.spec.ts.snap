@@ -96,53 +96,6 @@ exports[`Storybook Smoke Test > Common/Filtres/Domaine > AllDomaines 1`] = `
 </div>"
 `;
 
-exports[`Storybook Smoke Test > Common/Filtres/Domaines > AllDomaines 1`] = `
-"<div style=\\"height: 100%; width: 100%; background: white;\\">
-  <table>
-    <tr>
-      <th>Domaines</th>
-      <th>Rendu</th>
-    </tr>
-    <tr>
-      <td>m</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
-    </tr>
-    <tr>
-      <td>c</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-c color-bg pill py-xs px-s\\">c </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
-    </tr>
-    <tr>
-      <td>f</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-f color-bg pill py-xs px-s\\">f </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
-    </tr>
-    <tr>
-      <td>g</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-g color-bg pill py-xs px-s\\">g </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
-    </tr>
-    <tr>
-      <td>h</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-h color-bg pill py-xs px-s\\">h </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
-    </tr>
-    <tr>
-      <td>r</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-r color-bg pill py-xs px-s\\">r </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
-    </tr>
-    <tr>
-      <td>s</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-s color-bg pill py-xs px-s\\">s </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
-    </tr>
-    <tr>
-      <td>w</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-w color-bg pill py-xs px-s\\">w </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
-    </tr>
-    <tr>
-      <td>i</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-i color-bg pill py-xs px-s\\">i </span></span><span class=\\"cap-first h6 bold\\"><!----></span></span></td>
-    </tr>
-  </table>
-</div>"
-`;
-
 exports[`Storybook Smoke Test > Common/Filtres/Statuts > AllStatuts 1`] = `
 "<div style=\\"height: 100%; width: 100%; background: white;\\">
   <table>
