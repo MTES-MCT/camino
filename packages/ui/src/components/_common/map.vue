@@ -1,7 +1,5 @@
 <template>
   <div class="bg-alt">
-    <MapPattern :domainesIds="[domaineId]" :typesIds="[titreTypeId]" />
-
     <Mapo
       ref="map"
       :geojsonLayers="geojsonLayers"
@@ -47,7 +45,6 @@
 
 <script>
 import Mapo from '../_map/index.vue'
-import MapPattern from '../_map/pattern.vue'
 
 import {
   leafletMarkerBuild,
@@ -57,7 +54,7 @@ import {
 import { Icon } from '@/components/_ui/icon'
 
 export default {
-  components: { Icon, MapPattern, Mapo },
+  components: { Icon, Mapo },
 
   props: {
     geojson: { type: Object, required: true },

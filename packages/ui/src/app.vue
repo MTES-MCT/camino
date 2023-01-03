@@ -1,5 +1,6 @@
 <template>
   <div class="page relative">
+    <MapPattern />
     <Transition name="slide" mode="out-in">
       <component :is="menu.component" v-if="menu.component" />
     </Transition>
@@ -68,6 +69,8 @@
 import Messages from './components/_ui/messages.vue'
 import PageHeader from './components/page/header.vue'
 import PageFooter from './components/page/footer.vue'
+import { MapPattern } from './components/_map/pattern'
+
 import Error from './components/error.vue'
 import { computed, inject } from 'vue'
 import { useStore } from 'vuex'

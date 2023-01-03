@@ -5,7 +5,7 @@ import {
   TITRES_TYPES_TYPES_IDS
 } from 'camino-common/src/static/titresTypesTypes'
 import { FiltresTypes, Props } from './types'
-import MapPattern from '../../_map/pattern.vue'
+import { MapPattern } from '../../_map/pattern'
 
 const meta: Meta = {
   title: 'Common/Filtres/Types',
@@ -15,10 +15,7 @@ export default meta
 
 export const AllTypes: Story<Props> = () => (
   <div style="height:100%;width:100%;background:white">
-    <MapPattern
-      domainesIds={Object.values(DOMAINES_IDS)}
-      typesIds={Object.values(TITRES_TYPES_TYPES_IDS)}
-    />
+    <MapPattern />
     <table>
       <tr>
         <th>Types</th>
