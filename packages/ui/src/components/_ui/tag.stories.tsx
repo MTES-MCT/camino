@@ -7,6 +7,6 @@ const meta: Meta = {
 }
 export default meta
 
-export const Normal: StoryFn = args => <Tag>Tag</Tag>
-export const Mini: StoryFn = args => <Tag mini={true}>Tag</Tag>
-export const Erreur: StoryFn = args => <Tag color="bg-error">Tag</Tag>
+export const Normal: StoryFn = args => <Tag text="Tag" />
+export const Mini: StoryFn = args => <Tag text="Tag" mini={true} />
+export const Erreur: StoryFn = args => <Tag text="Tag" color="bg-error" />

@@ -72,11 +72,15 @@
                 <Tag
                   v-if="point.subsidiaire && !point.lot"
                   :mini="true"
+                  text="Subsidiaire"
                   color="bg-info"
-                >
-                  Subsidiaire
-                </Tag>
-                <Tag v-if="point.lot" :mini="true" color="bg-info"> Lot </Tag>
+                />
+                <Tag
+                  v-if="point.lot"
+                  :mini="true"
+                  color="bg-info"
+                  text=" Lot "
+                />
                 {{ point.description }}
               </p>
             </div>

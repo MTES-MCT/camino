@@ -113,9 +113,8 @@
                 :mini="true"
                 color="bg-info"
                 class="ml-xs"
-              >
-                Opérateur
-              </Tag>
+                text="Opérateur"
+              />
             </router-link>
           </li>
         </ul>
@@ -139,9 +138,8 @@
                 :mini="true"
                 color="bg-info"
                 class="ml-xs"
-              >
-                Opérateur
-              </Tag>
+                text="Opérateur"
+              />
             </router-link>
           </li>
         </ul>
@@ -167,7 +165,7 @@ import {
 } from 'camino-common/src/static/referencesTypes'
 import { Pill } from '../_ui/pill'
 import { Tag } from '../_ui/tag'
-import TagList from '../_ui/tag-list.vue'
+import { TagList } from '../_ui/tag-list'
 import { Dot } from '../_ui/dot'
 import Section from '../_common/section.vue'
 import { Statut } from '../_common/statut'

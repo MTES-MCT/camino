@@ -163,9 +163,8 @@
                 :mini="true"
                 color="bg-info"
                 class="ml-xs"
-              >
-                Opérateur
-              </Tag>
+                text="Opérateur"
+              />
             </li>
           </ul>
         </template>
@@ -212,9 +211,8 @@
                 :mini="true"
                 color="bg-info"
                 class="ml-xs"
-              >
-                Opérateur
-              </Tag>
+                text="Opérateur"
+              />
             </li>
           </ul>
         </template>

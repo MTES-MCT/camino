@@ -15,24 +15,24 @@
           :mini="true"
           color="bg-info"
           class="ml-xs"
-        >
-          Public
-        </Tag>
+          text="Public"
+        />
+
         <Tag
           v-if="document.entreprisesLecture && !document.publicLecture"
           :mini="true"
           color="bg-info"
           class="ml-xs"
-        >
-          Entreprise
-        </Tag>
+          text="Entreprise"
+        />
       </span>
       <Tag
         v-if="manquant && manquantShow"
         color="bg-warning"
         class="ml-xs"
         :mini="true"
-        >Fichier manquant</Tag
+        text="Fichier manquant"
+      />
       >
     </td>
     <td class="nowrap pt-m">

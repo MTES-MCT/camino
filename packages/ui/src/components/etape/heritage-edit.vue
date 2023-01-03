@@ -11,8 +11,8 @@
           "
           :mini="true"
           color="bg-info"
-          >Incertain
-        </Tag>
+          text="Incertain"
+        />
       </div>
       <p class="h6 italic mb-s">
         Hérité de :

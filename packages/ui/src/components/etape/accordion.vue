@@ -8,9 +8,8 @@
           :mini="true"
           color="bg-warning"
           class="ml-s mt-xs"
-        >
-          Incomplet
-        </Tag>
+          text="Incomplet"
+        />
 
         <HelpTooltip v-if="step.help" :text="step.help" class="ml-m" />
       </div>

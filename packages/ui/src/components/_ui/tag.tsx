@@ -1,10 +1,11 @@
 import { Couleur } from 'camino-common/src/static/couleurs'
-import { FunctionalComponent, renderSlot } from 'vue'
+import { FunctionalComponent, HTMLAttributes } from 'vue'
 
-export interface Props {
+export type Props = {
   color?: `bg-${Couleur}`
   mini?: boolean
-}
+  text: string
+} & HTMLAttributes
 
 export const Tag: FunctionalComponent<Props> = (props, context) => {
   let css: string = props.color ?? 'bg-neutral'
@@ -17,9 +18,7 @@ export const Tag: FunctionalComponent<Props> = (props, context) => {
 
   return (
     <span class="bold cap-first small">
-      <span class={`${css} rnd-xs color-bg box`}>
-        {renderSlot(context.slots, 'default')}
-      </span>
+      <span class={`${css} rnd-xs color-bg box`}>{props.text}</span>
     </span>
   )
 }

@@ -16,9 +16,8 @@
           :mini="true"
           color="bg-info"
           class="ml-xs"
-        >
-          Incertain
-        </Tag>
+          text="Incertain"
+        />
       </h5>
 
       <h3 class="cap-first mb-s">{{ etape.type.nom }}</h3>

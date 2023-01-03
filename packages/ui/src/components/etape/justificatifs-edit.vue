@@ -50,9 +50,13 @@
                 class="ml-xs"
               />
             </span>
-            <Tag v-if="!j.id" :mini="true" color="bg-warning" class="ml-xs">
-              Manquant
-            </Tag>
+            <Tag
+              v-if="!j.id"
+              :mini="true"
+              color="bg-warning"
+              class="ml-xs"
+              text="Manquant"
+            />
           </div>
           <div class="tablet-blob-2-3">
             <div class="flex mb-s">

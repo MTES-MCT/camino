@@ -9,9 +9,8 @@
             :mini="true"
             color="bg-info"
             class="ml-xs"
-          >
-            Incertain
-          </Tag>
+            text="Incertain"
+          />
         </h5>
       </div>
       <div class="tablet-blob-3-4">
@@ -30,9 +29,8 @@
             :mini="true"
             color="bg-info"
             class="ml-xs"
-          >
-            Incertain
-          </Tag>
+            text="Incertain"
+          />
         </h5>
       </div>
       <div class="tablet-blob-3-4">
@@ -50,9 +48,8 @@
             :mini="true"
             color="bg-info"
             class="ml-xs"
-          >
-            Incertain
-          </Tag>
+            text="Incertain"
+          />
         </h5>
       </div>
       <div class="tablet-blob-3-4">
@@ -74,9 +71,8 @@
             :mini="true"
             color="bg-info"
             class="ml-xs"
-          >
-            Incertain
-          </Tag>
+            text="Incertain"
+          />
         </h5>
       </div>
       <div class="tablet-blob-3-4">
@@ -103,9 +99,8 @@
             :mini="true"
             color="bg-info"
             class="ml-xs"
-          >
-            Incertain
-          </Tag>
+            text="Incertain"
+          />
         </h5>
       </div>
       <div class="tablet-blob-3-4">
@@ -129,9 +124,8 @@
             :mini="true"
             color="bg-info"
             class="ml-xs"
-          >
-            Incertain
-          </Tag>
+            text="Incertain"
+          />
         </h5>
       </div>
       <div class="tablet-blob-3-4">
@@ -150,7 +144,7 @@
 <script setup lang="ts">
 import { dateFormat } from '@/utils'
 import { etablissementNameFind } from '../../utils/entreprise'
-import TagList from '../_ui/tag-list.vue'
+import { TagList } from '../_ui/tag-list'
 import { Tag } from '../_ui/tag'
 import PropDuree from './prop-duree.vue'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
