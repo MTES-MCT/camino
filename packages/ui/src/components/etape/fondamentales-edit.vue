@@ -163,9 +163,8 @@
                 :mini="true"
                 color="bg-info"
                 class="ml-xs"
-              >
-                Opérateur
-              </Tag>
+                text="Opérateur"
+              />
             </li>
           </ul>
         </template>
@@ -212,9 +211,8 @@
                 :mini="true"
                 color="bg-info"
                 class="ml-xs"
-              >
-                Opérateur
-              </Tag>
+                text="Opérateur"
+              />
             </li>
           </ul>
         </template>
@@ -236,7 +234,7 @@
 
 <script setup lang="ts">
 import { dateFormat } from '../../utils/index'
-import Tag from '../_ui/tag.vue'
+import { Tag } from '../_ui/tag'
 import InputDate from '../_ui/input-date.vue'
 import InputNumber from '../_ui/input-number.vue'
 import HeritageEdit from './heritage-edit.vue'

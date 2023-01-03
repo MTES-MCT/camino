@@ -6,9 +6,12 @@
           <span class="cap-first">{{ element.nom }}</span>
         </h5>
         <p v-if="element.optionnel" class="h6 italic mb-0">Optionnel</p>
-        <Tag v-else-if="!complete" color="bg-warning" :mini="true"
-          >Incomplet</Tag
-        >
+        <Tag
+          v-else-if="!complete"
+          color="bg-warning"
+          :mini="true"
+          text="Incomplet"
+        />
       </div>
 
       <div
@@ -44,7 +47,7 @@ import {
   elementsCompleteCheck
 } from '../../utils/contenu'
 import SectionElementEdit from './section-element-input-edit.vue'
-import Tag from '../_ui/tag.vue'
+import { Tag } from '../_ui/tag'
 
 export default {
   components: { SectionElementEdit, Tag },

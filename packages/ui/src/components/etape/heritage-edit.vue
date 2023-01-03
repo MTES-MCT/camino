@@ -11,8 +11,8 @@
           "
           :mini="true"
           color="bg-info"
-          >Incertain
-        </Tag>
+          text="Incertain"
+        />
       </div>
       <p class="h6 italic mb-s">
         Hérité de :
@@ -39,7 +39,7 @@
 >
 // TODO 2022-11-16 normalement T devrait étendre EtapeHeritage<P>, mais il y a un bug avec vite qui empêche de lancer l'appli en mode dev
 import { hasValeurCheck } from '@/utils/contenu'
-import Tag from '@/components/_ui/tag.vue'
+import { Tag } from '@/components/_ui/tag'
 import { dateFormat } from '@/utils'
 import { computed } from 'vue'
 import { HeritageProp } from 'camino-common/src/etape'

@@ -44,13 +44,19 @@
           <div class="tablet-blob-1-3 flex flex-center">
             <h5 class="mt-s">{{ j.type.nom }}</h5>
             <span>
-              <HelpTooltip v-if="j.type.description" class="ml-xs">
-                {{ j.type.description }}
-              </HelpTooltip>
+              <HelpTooltip
+                v-if="j.type.description"
+                :text="j.type.description"
+                class="ml-xs"
+              />
             </span>
-            <Tag v-if="!j.id" :mini="true" color="bg-warning" class="ml-xs">
-              Manquant
-            </Tag>
+            <Tag
+              v-if="!j.id"
+              :mini="true"
+              color="bg-warning"
+              class="ml-xs"
+              text="Manquant"
+            />
           </div>
           <div class="tablet-blob-2-3">
             <div class="flex mb-s">
@@ -103,8 +109,8 @@
 <script>
 import { dateFormat } from '@/utils'
 import DocumentEditPopup from '../document/edit-popup.vue'
-import Tag from '../_ui/tag.vue'
-import HelpTooltip from '../_ui/help-tooltip.vue'
+import { Tag } from '../_ui/tag'
+import { HelpTooltip } from '../_ui/help-tooltip'
 import { Icon } from '@/components/_ui/icon'
 
 export default {

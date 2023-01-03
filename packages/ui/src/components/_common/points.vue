@@ -72,11 +72,15 @@
                 <Tag
                   v-if="point.subsidiaire && !point.lot"
                   :mini="true"
+                  text="Subsidiaire"
                   color="bg-info"
-                >
-                  Subsidiaire
-                </Tag>
-                <Tag v-if="point.lot" :mini="true" color="bg-info"> Lot </Tag>
+                />
+                <Tag
+                  v-if="point.lot"
+                  :mini="true"
+                  color="bg-info"
+                  text=" Lot "
+                />
                 {{ point.description }}
               </p>
             </div>
@@ -97,7 +101,7 @@
 
 <script>
 import { etapeGroupesBuild } from '../../utils/titre-etape-edit'
-import Tag from '../_ui/tag.vue'
+import { Tag } from '../_ui/tag'
 import pointReference from './point-reference.vue'
 import { Unites, UNITE_IDS } from 'camino-common/src/static/unites'
 

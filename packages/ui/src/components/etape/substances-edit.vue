@@ -79,7 +79,7 @@ import {
 } from 'camino-common/src/static/substancesLegales'
 import { computed } from 'vue'
 import HeritageEdit from '@/components/etape/heritage-edit.vue'
-import TagList from '@/components/_ui/tag-list.vue'
+import { TagList } from '@/components/_ui/tag-list'
 import { Icon } from '@/components/_ui/icon'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import {

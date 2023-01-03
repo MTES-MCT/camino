@@ -16,9 +16,8 @@
           :mini="true"
           color="bg-info"
           class="ml-xs"
-        >
-          Incertain
-        </Tag>
+          text="Incertain"
+        />
       </h5>
 
       <h3 class="cap-first mb-s">{{ etape.type.nom }}</h3>
@@ -26,9 +25,7 @@
       <div class="mb-xs flex flex-center">
         <Statut :color="etapeStatut.couleur" :nom="statutNom" />
 
-        <HelpTooltip v-if="demandeHelp" class="ml-m">{{
-          demandeHelp
-        }}</HelpTooltip>
+        <HelpTooltip v-if="demandeHelp" :text="demandeHelp" class="ml-m" />
       </div>
     </template>
 
@@ -150,11 +147,11 @@ import Fondamentales from './fondamentales.vue'
 import UiSection from '../_common/section.vue'
 import Documents from '../documents/list.vue'
 import Accordion from '../_ui/accordion.vue'
-import Tag from '../_ui/tag.vue'
+import { Tag } from '../_ui/tag'
 import { Statut } from '../_common/statut'
 import RemovePopup from './remove.vue'
 import DeposePopup from './depose-popup.vue'
-import HelpTooltip from '../_ui/help-tooltip.vue'
+import { HelpTooltip } from '../_ui/help-tooltip'
 import { Icon } from '@/components/_ui/icon'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 

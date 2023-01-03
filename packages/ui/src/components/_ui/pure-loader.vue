@@ -11,9 +11,7 @@
       <slot :item="data.value" />
     </template>
     <div v-else-if="data.status === 'ERROR'">
-      <HelpTooltip icon="error-warning">
-        {{ data.message }}
-      </HelpTooltip>
+      <HelpTooltip icon="error-warning" :text="data.message" />
     </div>
     <div v-else class="spinner"></div>
   </div>
@@ -21,7 +19,7 @@
 
 <script setup lang="ts" generic="T extends any">
 import { AsyncData } from '@/api/client-rest'
-import HelpTooltip from '@/components/_ui/help-tooltip.vue'
+import { HelpTooltip } from '@/components/_ui/help-tooltip'
 
 defineProps<{ data: AsyncData<T> }>()
 </script>

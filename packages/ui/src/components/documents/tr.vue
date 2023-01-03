@@ -3,9 +3,11 @@
     <td class="nowrap pt-m flex flex-center">
       <span class="bold">{{ document.type.nom }}</span>
       <span>
-        <HelpTooltip v-if="helpShow && document.type.description" class="ml-xs">
-          {{ document.type.description }}
-        </HelpTooltip>
+        <HelpTooltip
+          v-if="helpShow && document.type.description"
+          :text="document.type.description"
+          class="ml-xs"
+        />
       </span>
       <span v-if="etiquette">
         <Tag
@@ -13,24 +15,24 @@
           :mini="true"
           color="bg-info"
           class="ml-xs"
-        >
-          Public
-        </Tag>
+          text="Public"
+        />
+
         <Tag
           v-if="document.entreprisesLecture && !document.publicLecture"
           :mini="true"
           color="bg-info"
           class="ml-xs"
-        >
-          Entreprise
-        </Tag>
+          text="Entreprise"
+        />
       </span>
       <Tag
         v-if="manquant && manquantShow"
         color="bg-warning"
         class="ml-xs"
         :mini="true"
-        >Fichier manquant</Tag
+        text="Fichier manquant"
+      />
       >
     </td>
     <td class="nowrap pt-m">
@@ -116,10 +118,10 @@
 
 <script>
 import { cloneAndClean, dateFormat } from '../../utils/index'
-import Tag from '../_ui/tag.vue'
+import { Tag } from '../_ui/tag'
 import DocumentEditPopup from '../document/edit-popup.vue'
 import DocumentRemovePopup from '../document/remove-popup.vue'
-import HelpTooltip from '../_ui/help-tooltip.vue'
+import { HelpTooltip } from '../_ui/help-tooltip'
 import { Icon } from '@/components/_ui/icon'
 
 export default {

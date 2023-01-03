@@ -1,5 +1,5 @@
 import { markRaw } from 'vue'
-import TagList from '../_ui/tag-list.vue'
+import { TagList } from '../_ui/tag-list'
 import List from '../_ui/list.vue'
 import { Domaine as CaminoDomaine } from '../_common/domaine'
 import TitreNom from '../_common/titre-nom.vue'

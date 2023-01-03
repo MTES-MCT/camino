@@ -26,10 +26,11 @@
           <span class="cap-first">{{ activite.type.nom }}</span>
         </h3>
 
-        <HelpTooltip v-if="shouldDisplayHelp" class="ml-m">
-          Tous les champs doivent être remplis même s’il n’y a pas eu
-          d’extraction. Le cas échéant, indiquer seulement 0, puis enregistrer.
-        </HelpTooltip>
+        <HelpTooltip
+          v-if="shouldDisplayHelp"
+          text="Tous les champs doivent être remplis même s’il n’y a pas eu d’extraction. Le cas échéant, indiquer seulement 0, puis enregistrer."
+          class="ml-m"
+        />
       </div>
 
       <!-- eslint-disable vue/no-v-html -->
@@ -100,7 +101,7 @@
 <script>
 import { dateFormat } from '@/utils'
 import Loader from './_ui/loader.vue'
-import HelpTooltip from './_ui/help-tooltip.vue'
+import { HelpTooltip } from './_ui/help-tooltip'
 import SectionsEdit from './_common/sections-edit.vue'
 import DocumentsEdit from './document/multi-edit.vue'
 import DeposePopup from './activite/depose-popup.vue'

@@ -24,7 +24,7 @@ import {
 } from 'camino-common/src/static/administrations'
 import { elementsFormat } from '@/utils'
 import { computed, ref, markRaw } from 'vue'
-import Tag from '@/components/_ui/tag.vue'
+import { Tag } from '@/components/_ui/tag'
 
 const colonnes = [
   {
@@ -126,10 +126,8 @@ const lignes = computed(() => {
         nom: { value: administration.nom, class: 'h6' },
         type: {
           component: markRaw(Tag),
-          props: { mini: true },
-          class: 'mb--xs',
-          value: type.nom,
-          slot: true
+          props: { mini: true, text: type.nom },
+          class: 'mb--xs'
         }
       }
 

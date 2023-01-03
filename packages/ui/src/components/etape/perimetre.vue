@@ -4,9 +4,13 @@
       <div class="tablet-blob-1-4">
         <h5>
           Périmètre
-          <Tag v-if="incertitude" :mini="true" color="bg-info" class="ml-xs">
-            Incertain
-          </Tag>
+          <Tag
+            v-if="incertitude"
+            :mini="true"
+            color="bg-info"
+            class="ml-xs"
+            text="Incertain"
+          />
         </h5>
       </div>
 
@@ -31,9 +35,8 @@
             :mini="true"
             color="bg-info"
             class="ml-xs"
-          >
-            Incertain
-          </Tag>
+            text="Incertain"
+          />
         </h5>
       </div>
       <div class="tablet-blob-3-4">
@@ -45,7 +48,7 @@
 
 <script>
 import Perimetre from '../_common/perimetre.vue'
-import Tag from '../_ui/tag.vue'
+import { Tag } from '../_ui/tag'
 import numberFormat from '@/utils/number-format'
 
 export default {

@@ -8,13 +8,10 @@
           :mini="true"
           color="bg-warning"
           class="ml-s mt-xs"
-        >
-          Incomplet
-        </Tag>
+          text="Incomplet"
+        />
 
-        <HelpTooltip v-if="step.help" class="ml-m">
-          {{ step.help }}
-        </HelpTooltip>
+        <HelpTooltip v-if="step.help" :text="step.help" class="ml-m" />
       </div>
     </template>
 
@@ -26,9 +23,9 @@
 
 <script>
 import Accordion from '../_ui/accordion.vue'
-import HelpTooltip from '../_ui/help-tooltip.vue'
+import { HelpTooltip } from '../_ui/help-tooltip'
 
-import Tag from '../_ui/tag.vue'
+import { Tag } from '../_ui/tag'
 
 export default {
   components: { Accordion, Tag, HelpTooltip },
