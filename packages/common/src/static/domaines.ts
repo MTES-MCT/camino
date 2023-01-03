@@ -13,8 +13,8 @@ export const DOMAINES_IDS = {
 } as const
 
 export type DomaineId = typeof DOMAINES_IDS[keyof typeof DOMAINES_IDS]
-
-export const Domaines: { [key in DomaineId]: Definition<key> } = {
+export type Domaine<T = DomaineId> = Definition<T>
+export const Domaines: { [key in DomaineId]: Domaine<key> } = {
   c: {
     id: 'c',
     nom: 'carrières',

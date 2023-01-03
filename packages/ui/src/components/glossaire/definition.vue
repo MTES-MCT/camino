@@ -1,10 +1,5 @@
 <template>
   <div>
-    <MapPattern
-      v-if="definition.id === 'tty'"
-      :domainesIds="['h']"
-      :typesIds="entrees.map(t => t.id)"
-    />
     <h2>{{ definition.nom }}</h2>
     <!-- eslint-disable-next-line vue/no-v-html -->
     <p v-if="definition.description" v-html="definition.description" />
@@ -21,13 +16,12 @@
 
 <script>
 import DefinitionEntree from './definition-entree.vue'
-import MapPattern from '../_map/pattern.vue'
 
 // TODO 2022-03-25: disconnect from store
 export default {
   name: 'Definition',
 
-  components: { DefinitionEntree, MapPattern },
+  components: { DefinitionEntree },
 
   props: {
     definition: { type: Object, required: true },

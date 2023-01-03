@@ -8,8 +8,6 @@
       @map-update="titresPreferencesUpdate"
     />
 
-    <MapPattern :domainesIds="domainesIds" :typesIds="typesIds" />
-
     <div class="container overflow-auto">
       <div class="desktop-blobs">
         <div class="desktop-blob-1-2 desktop-flex">
@@ -74,7 +72,6 @@
 <script>
 import { nextTick } from 'vue'
 import Mapo from '../_map/index.vue'
-import MapPattern from '../_map/pattern.vue'
 import { leafletGeojsonBoundsGet } from '../_map/leaflet'
 import { clustersBuild, layersBuild, zones } from './map.js'
 import { Icon } from '@/components/_ui/icon'
@@ -83,8 +80,7 @@ import { sortedDomaines } from 'camino-common/src/static/domaines'
 export default {
   components: {
     Icon,
-    Mapo,
-    MapPattern
+    Mapo
   },
 
   props: {
@@ -127,14 +123,6 @@ export default {
 
     domaines() {
       return sortedDomaines
-    },
-
-    domainesIds() {
-      return this.domaines.map(({ id }) => id)
-    },
-
-    typesIds() {
-      return this.$store.state.titres.metas.types.map(({ id }) => id)
     },
 
     preferences() {
