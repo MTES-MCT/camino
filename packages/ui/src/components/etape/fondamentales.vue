@@ -72,7 +72,8 @@
           <Tag
             v-if="etape.incertitudes && etape.incertitudes.titulaires"
             :mini="true"
-            color="bg-info ml-xs"
+            color="bg-info"
+            class="ml-xs"
           >
             Incertain
           </Tag>
@@ -150,7 +151,7 @@
 import { dateFormat } from '@/utils'
 import { etablissementNameFind } from '../../utils/entreprise'
 import TagList from '../_ui/tag-list.vue'
-import Tag from '../_ui/tag.vue'
+import { Tag } from '../_ui/tag'
 import PropDuree from './prop-duree.vue'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 import { EtapeEntreprise, EtapeFondamentale } from 'camino-common/src/etape'

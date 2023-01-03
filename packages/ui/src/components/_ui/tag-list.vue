@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import Tag from './tag.vue'
+import { Tag } from './tag'
 
 export default {
   components: {

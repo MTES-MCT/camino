@@ -28,7 +28,7 @@
 import Accordion from '../_ui/accordion.vue'
 import { HelpTooltip } from '../_ui/help-tooltip'
 
-import Tag from '../_ui/tag.vue'
+import { Tag } from '../_ui/tag'
 
 export default {
   components: { Accordion, Tag, HelpTooltip },

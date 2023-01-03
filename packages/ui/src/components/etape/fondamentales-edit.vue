@@ -236,7 +236,7 @@
 
 <script setup lang="ts">
 import { dateFormat } from '../../utils/index'
-import Tag from '../_ui/tag.vue'
+import { Tag } from '../_ui/tag'
 import InputDate from '../_ui/input-date.vue'
 import InputNumber from '../_ui/input-number.vue'
 import HeritageEdit from './heritage-edit.vue'

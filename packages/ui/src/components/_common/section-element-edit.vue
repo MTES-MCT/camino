@@ -44,7 +44,7 @@ import {
   elementsCompleteCheck
 } from '../../utils/contenu'
 import SectionElementEdit from './section-element-input-edit.vue'
-import Tag from '../_ui/tag.vue'
+import { Tag } from '../_ui/tag'
 
 export default {
   components: { SectionElementEdit, Tag },

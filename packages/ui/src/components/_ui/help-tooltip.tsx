@@ -1,16 +1,16 @@
 import { Icon as IconType } from './iconSpriteType'
 import { Icon } from './icon'
-import { EmitsOptions, SetupContext } from 'vue'
+import { FunctionalComponent } from 'vue'
 import styles from './help-tooltip.module.css'
 
 export interface Props {
   icon?: IconType
 }
 
-export function HelpTooltip(
-  props: Props,
-  context: Omit<SetupContext<EmitsOptions>, 'expose'>
-): JSX.Element {
+export const HelpTooltip: FunctionalComponent<Props> = (
+  props,
+  context
+): JSX.Element => {
   return (
     <div class={styles.tooltip}>
       <h6 class={styles['tooltip-content']}>

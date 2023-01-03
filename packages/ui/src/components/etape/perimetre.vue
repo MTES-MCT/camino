@@ -45,7 +45,7 @@
 
 <script>
 import Perimetre from '../_common/perimetre.vue'
-import Tag from '../_ui/tag.vue'
+import { Tag } from '../_ui/tag'
 import numberFormat from '@/utils/number-format'
 
 export default {

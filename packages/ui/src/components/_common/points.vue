@@ -97,7 +97,7 @@
 
 <script>
 import { etapeGroupesBuild } from '../../utils/titre-etape-edit'
-import Tag from '../_ui/tag.vue'
+import { Tag } from '../_ui/tag'
 import pointReference from './point-reference.vue'
 import { Unites, UNITE_IDS } from 'camino-common/src/static/unites'
 

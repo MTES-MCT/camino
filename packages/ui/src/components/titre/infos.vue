@@ -166,7 +166,7 @@ import {
   ReferenceTypeId
 } from 'camino-common/src/static/referencesTypes'
 import { Pill } from '../_ui/pill'
-import Tag from '../_ui/tag.vue'
+import { Tag } from '../_ui/tag'
 import TagList from '../_ui/tag-list.vue'
 import { Dot } from '../_ui/dot'
 import Section from '../_common/section.vue'
