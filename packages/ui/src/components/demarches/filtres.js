@@ -1,5 +1,5 @@
 import { markRaw } from 'vue'
-import { FiltresDomaines as FiltresTitresDomaines } from '../_common/filtres/domaines'
+import { FiltreDomaine } from '../_common/filtres/domaine'
 import { FiltresStatuts as FiltresTitresStatuts } from '../_common/filtres/statuts'
 import FiltresEtapes from './filtres-custom-etapes.vue'
 import { elementsFormat } from '../../utils/index'
@@ -94,7 +94,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedDomaines,
-    component: markRaw(FiltresTitresDomaines)
+    component: markRaw(FiltreDomaine)
   },
   {
     id: 'titresTypesIds',

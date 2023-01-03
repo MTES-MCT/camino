@@ -1,5 +1,4 @@
 import { Couleur } from 'camino-common/src/static/couleurs'
-import { DomaineId } from 'camino-common/src/static/domaines'
 import { Statut } from '../statut'
 
 export type Props = {
