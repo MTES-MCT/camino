@@ -176,7 +176,7 @@
             </div>
           </div>
 
-          <QgisToken v-if="isMe" :generateTokenCall="generateToken" />
+          <QGisToken v-if="isMe" :generateTokenCall="generateToken" />
         </div>
       </template>
     </Accordion>
@@ -195,7 +195,7 @@ import UtilisateurEmailPopup from './utilisateur/email-popup.vue'
 import { isAdministration, isSuper } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
 import { Icon } from './_ui/icon'
-import QgisToken from './utilisateur/pure-qgis-token.vue'
+import { QGisToken } from './utilisateur/pure-qgis-token'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { fetchWithJson } from '@/api/client-rest'
 
@@ -205,7 +205,7 @@ export default {
     Accordion,
     Pill,
     Loader,
-    QgisToken
+    QGisToken
   },
   data: () => ({
     userUnwatch: null,

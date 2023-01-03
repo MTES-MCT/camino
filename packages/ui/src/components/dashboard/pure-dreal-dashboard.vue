@@ -64,7 +64,7 @@ import {
 } from '@/components/titres/table-utils'
 import { CommonTitreDREAL } from 'camino-common/src/titres'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
-import { LoadingElement } from '@/components/_ui/pure-loader'
+import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { AsyncData } from '@/api/client-rest'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
 

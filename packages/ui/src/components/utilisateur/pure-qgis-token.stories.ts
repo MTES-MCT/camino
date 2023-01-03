@@ -1,24 +1,19 @@
 import { Meta, Story } from '@storybook/vue3'
-import Component from './pure-qgis-token.vue'
-import { QGISToken } from 'camino-common/src/utilisateur'
+import { QGisToken, Props } from './pure-qgis-token'
 
 const meta: Meta = {
   title: 'Components/Utilisateur/QGISToken',
-  component: Component,
+  component: QGisToken,
   argTypes: {}
 }
 export default meta
 
-type Props = {
-  generateTokenCall: () => Promise<QGISToken>
-}
-
 const Template: Story<Props> = (args: Props) => ({
-  components: { Component },
+  components: { QGisToken },
   setup() {
     return { args }
   },
-  template: '<Component v-bind="args" />'
+  template: '<QGisToken v-bind="args" />'
 })
 
 export const Default = Template.bind({})

@@ -181,7 +181,7 @@
 <script setup lang="ts">
 import Accordion from '../_ui/accordion.vue'
 import UiTable from '../_ui/table.vue'
-import { LoadingElement } from '../_ui/pure-loader'
+import LoadingElement from '../_ui/pure-loader.vue'
 import AdministrationPermission from './permissions.vue'
 import AdministrationActiviteTypeEmail from './activites-types-emails.vue'
 

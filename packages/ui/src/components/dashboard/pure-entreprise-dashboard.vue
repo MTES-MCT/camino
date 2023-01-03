@@ -47,7 +47,7 @@ import {
 import { useRouter } from 'vue-router'
 import { Icon } from '@/components/_ui/icon'
 import { AsyncData } from '@/api/client-rest'
-import { LoadingElement } from '@/components/_ui/pure-loader'
+import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { fiscaliteVisible } from 'camino-common/src/fiscalite'
 import { User } from 'camino-common/src/roles'
 import { EntrepriseId } from 'camino-common/src/entreprise'

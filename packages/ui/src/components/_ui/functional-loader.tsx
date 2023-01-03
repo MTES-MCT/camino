@@ -1,16 +1,13 @@
 import { AsyncData } from '@/api/client-rest'
 import { HelpTooltip } from '@/components/_ui/help-tooltip'
-import { EmitsOptions, SetupContext } from 'vue'
-import styles from './pure-loader.module.css'
+import styles from './functional-loader.module.css'
 
 export interface Props<T> {
   data: AsyncData<T>
+  renderItem: (item: T) => JSX.Element
 }
 
-export function LoadingElement<T>(
-  props: Props<T>,
-  context: Omit<SetupContext<EmitsOptions>, 'expose'>
-): JSX.Element {
+export const LoadingElement = <T,>(props: Props<T>) => {
   return (
     <div
       class={styles['top-level']}
@@ -20,8 +17,8 @@ export function LoadingElement<T>(
           : ''
       }
     >
-      {props.data.status === 'LOADED' && context.slots.default
-        ? context.slots.default({ item: props.data.value })
+      {props.data.status === 'LOADED'
+        ? props.renderItem(props.data.value)
         : null}
       {props.data.status === 'ERROR' ? (
         <div>
