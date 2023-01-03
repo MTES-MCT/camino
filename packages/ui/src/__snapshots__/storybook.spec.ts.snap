@@ -217,7 +217,7 @@ exports[`Storybook Smoke Test > Components/Activite/Preview > AideVisible 1`] = 
       <div class=\\"flex\\">
         <h3 class=\\"mb-s\\"><span class=\\"cap-first\\">Gra</span></h3>
         <div class=\\"_tooltip_4f6ea8 ml-m\\">
-          <h6 class=\\"_tooltip-content_4f6ea8\\"> Si votre déclaration est complète, cliquez sur déposer. Cliquez sur le crayon pour modifier. </h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"help\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\"><svg aria-hidden=\\"true\\" style=\\"position: absolute; width: 0px; height: 0px; overflow: hidden;\\" xmlns=\\"http://www.w3.org/2000/svg\\">
+          <h6 class=\\"_tooltip-content_4f6ea8\\">Si votre déclaration est complète, cliquez sur déposer. Cliquez sur le crayon pour modifier.</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"help\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\"><svg aria-hidden=\\"true\\" style=\\"position: absolute; width: 0px; height: 0px; overflow: hidden;\\" xmlns=\\"http://www.w3.org/2000/svg\\">
               <symbol id=\\"icon-at\\" viewBox=\\"0 0 24 24\\">
                 <title>at</title>
                 <path d=\\"M20 12a8 8 0 1 0-3.562 6.657l1.11 1.664A9.953 9.953 0 0 1 12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10v1.5a3.5 3.5 0 0 1-6.396 1.966A5 5 0 1 1 15 8H17v5.5a1.5 1.5 0 0 0 3 0V12zm-8-3a3 3 0 1 0 0 6 3 3 0 0 0 0-6z\\"></path>

@@ -22,7 +22,7 @@ export const LoadingElement = <T,>(props: Props<T>) => {
         : null}
       {props.data.status === 'ERROR' ? (
         <div>
-          <HelpTooltip icon="error-warning">{props.data.message}</HelpTooltip>
+          <HelpTooltip icon="error-warning" text={props.data.message} />
         </div>
       ) : null}
       {props.data.status === 'LOADING' ? (

@@ -5,6 +5,7 @@ import styles from './help-tooltip.module.css'
 
 export interface Props {
   icon?: IconType
+  text: string
 }
 
 export const HelpTooltip: FunctionalComponent<Props> = (
@@ -13,9 +14,7 @@ export const HelpTooltip: FunctionalComponent<Props> = (
 ): JSX.Element => {
   return (
     <div class={styles.tooltip}>
-      <h6 class={styles['tooltip-content']}>
-        {context.slots.default ? context.slots.default() : null}
-      </h6>
+      <h6 class={styles['tooltip-content']}>{props.text}</h6>
       <Icon name={props.icon ?? 'help'} size="M" />
     </div>
   )

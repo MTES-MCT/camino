@@ -26,9 +26,7 @@
       <div class="mb-xs flex flex-center">
         <Statut :color="etapeStatut.couleur" :nom="statutNom" />
 
-        <HelpTooltip v-if="demandeHelp" class="ml-m">{{
-          demandeHelp
-        }}</HelpTooltip>
+        <HelpTooltip v-if="demandeHelp" :text="demandeHelp" class="ml-m" />
       </div>
     </template>
 

@@ -12,8 +12,11 @@ const Template: Story<Props> = (args: Props) => ({
   setup() {
     return { args }
   },
-  template: '<HelpTooltip v-bind="args">Tooltip text</HelpTooltip>'
+  template: '<HelpTooltip v-bind="args"/>'
 })
 
-export const Simple = Template.bind({}, {})
-export const WithDifferentIcon = Template.bind({}, { icon: 'download' })
+export const Simple = Template.bind({}, { text: 'Tooltip text' })
+export const WithDifferentIcon = Template.bind(
+  {},
+  { icon: 'download', text: 'Tooltip text' }
+)

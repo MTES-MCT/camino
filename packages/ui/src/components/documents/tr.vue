@@ -3,9 +3,11 @@
     <td class="nowrap pt-m flex flex-center">
       <span class="bold">{{ document.type.nom }}</span>
       <span>
-        <HelpTooltip v-if="helpShow && document.type.description" class="ml-xs">
-          {{ document.type.description }}
-        </HelpTooltip>
+        <HelpTooltip
+          v-if="helpShow && document.type.description"
+          :text="document.type.description"
+          class="ml-xs"
+        />
       </span>
       <span v-if="etiquette">
         <Tag

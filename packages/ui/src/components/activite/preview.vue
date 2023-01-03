@@ -20,10 +20,11 @@
         <h3 class="mb-s">
           <span class="cap-first">{{ activite.type.nom }}</span>
         </h3>
-        <HelpTooltip v-if="shouldDisplayHelp" class="ml-m">
-          Si votre déclaration est complète, cliquez sur déposer. Cliquez sur le
-          crayon pour modifier.
-        </HelpTooltip>
+        <HelpTooltip
+          v-if="shouldDisplayHelp"
+          text="Si votre déclaration est complète, cliquez sur déposer. Cliquez sur le crayon pour modifier."
+          class="ml-m"
+        />
       </div>
       <Statut :color="activite.statut.couleur" :nom="statutNom" class="mb-xs" />
     </template>

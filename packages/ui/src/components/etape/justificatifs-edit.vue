@@ -44,9 +44,11 @@
           <div class="tablet-blob-1-3 flex flex-center">
             <h5 class="mt-s">{{ j.type.nom }}</h5>
             <span>
-              <HelpTooltip v-if="j.type.description" class="ml-xs">
-                {{ j.type.description }}
-              </HelpTooltip>
+              <HelpTooltip
+                v-if="j.type.description"
+                :text="j.type.description"
+                class="ml-xs"
+              />
             </span>
             <Tag v-if="!j.id" :mini="true" color="bg-warning" class="ml-xs">
               Manquant

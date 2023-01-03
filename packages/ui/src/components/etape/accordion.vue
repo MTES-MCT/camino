@@ -12,9 +12,7 @@
           Incomplet
         </Tag>
 
-        <HelpTooltip v-if="step.help" class="ml-m">
-          {{ step.help }}
-        </HelpTooltip>
+        <HelpTooltip v-if="step.help" :text="step.help" class="ml-m" />
       </div>
     </template>
 
