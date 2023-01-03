@@ -7448,8 +7448,8 @@ exports[`Storybook Smoke Test > Components/Titre/Territoires > All 1`] = `
       <div>
         <h6 class=\\"mb-s\\">Zones du SDOM</h6>
         <ul class=\\"list-inline\\">
-          <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box\\">Zone 1</span></span></li>
-          <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box\\">Zone 3</span></span></li>
+          <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box\\">ZONE 1, activité minière interdite sauf exploitation souterraine et recherches aériennes</span></span></li>
+          <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box\\">ZONE 0, activité minière interdite</span></span></li>
         </ul>
       </div>
     </div>
@@ -7473,20 +7473,20 @@ exports[`Storybook Smoke Test > Components/Titre/Territoires > All 1`] = `
 exports[`Storybook Smoke Test > Components/Titre/Territoires > Empty 1`] = `
 "<div class=\\"tablet-blobs mb-xl\\">
   <div class=\\"tablet-blob-1-4\\">
-    <!--v-if-->
+    <!---->
   </div>
-  <!--v-if-->
+  <!---->
 </div>"
 `;
 
 exports[`Storybook Smoke Test > Components/Titre/Territoires > OnlyForets 1`] = `
 "<div class=\\"tablet-blobs mb-xl\\">
   <div class=\\"tablet-blob-1-4\\">
-    <!--v-if-->
+    <!---->
   </div>
   <div class=\\"tablet-blob-3-4\\">
     <h5>Territoires</h5>
-    <!--v-if-->
+    <!---->
     <div>
       <div>
         <h6 class=\\"mb-s\\">Forêts</h6>
@@ -7496,8 +7496,8 @@ exports[`Storybook Smoke Test > Components/Titre/Territoires > OnlyForets 1`] = 
         </ul>
       </div>
     </div>
-    <!--v-if-->
-    <!--v-if-->
+    <!---->
+    <!---->
   </div>
 </div>"
 `;
@@ -7505,22 +7505,22 @@ exports[`Storybook Smoke Test > Components/Titre/Territoires > OnlyForets 1`] = 
 exports[`Storybook Smoke Test > Components/Titre/Territoires > OnlySdomZones 1`] = `
 "<div class=\\"tablet-blobs mb-xl\\">
   <div class=\\"tablet-blob-1-4\\">
-    <!--v-if-->
+    <!---->
   </div>
   <div class=\\"tablet-blob-3-4\\">
     <h5>Territoires</h5>
-    <!--v-if-->
-    <!--v-if-->
+    <!---->
+    <!---->
     <div>
       <div>
         <h6 class=\\"mb-s\\">Zones du SDOM</h6>
         <ul class=\\"list-inline\\">
-          <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box\\">Zone 1</span></span></li>
-          <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box\\">Zone 3</span></span></li>
+          <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box\\">ZONE 1, activité minière interdite sauf exploitation souterraine et recherches aériennes</span></span></li>
+          <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s py-xxs px-xs rnd-xs color-bg box\\">ZONE 2, activité minière autorisée sous contrainte</span></span></li>
         </ul>
       </div>
     </div>
-    <!--v-if-->
+    <!---->
   </div>
 </div>"
 `;
@@ -7528,13 +7528,13 @@ exports[`Storybook Smoke Test > Components/Titre/Territoires > OnlySdomZones 1`]
 exports[`Storybook Smoke Test > Components/Titre/Territoires > OnlySecteursMaritimes 1`] = `
 "<div class=\\"tablet-blobs mb-xl\\">
   <div class=\\"tablet-blob-1-4\\">
-    <!--v-if-->
+    <!---->
   </div>
   <div class=\\"tablet-blob-3-4\\">
     <h5>Territoires</h5>
-    <!--v-if-->
-    <!--v-if-->
-    <!--v-if-->
+    <!---->
+    <!---->
+    <!---->
     <div>
       <h6 class=\\"mb-s\\">Méditerranée</h6>
       <ul class=\\"list-inline\\">
@@ -7560,7 +7560,7 @@ exports[`Storybook Smoke Test > Components/Titre/Territoires > OnlySurface 1`] =
       <p>4 km² environ</p>
     </div>
   </div>
-  <!--v-if-->
+  <!---->
 </div>"
 `;
 

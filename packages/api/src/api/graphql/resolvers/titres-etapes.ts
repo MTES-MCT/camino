@@ -5,7 +5,6 @@ import {
   IDecisionAnnexeContenu,
   IDocument,
   IEtapeType,
-  ISDOMZone,
   ISectionElement,
   ITitreEtape,
   ITitrePoint,
@@ -34,10 +33,7 @@ import { titreEtapeUpdationValidate } from '../../../business/validations/titre-
 
 import { fieldsBuild } from './_fields-build.js'
 import { titreDemarcheUpdatedEtatValidate } from '../../../business/validations/titre-demarche-etat-validate.js'
-import {
-  titreEtapeFormat,
-  titreEtapeFormatFields
-} from '../../_format/titres-etapes.js'
+import { titreEtapeFormat } from '../../_format/titres-etapes.js'
 import {
   etapeTypeGet,
   titreTypeDemarcheTypeEtapeTypeGet
@@ -76,6 +72,8 @@ import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes.js'
 import { getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
+import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
+import { titreEtapeFormatFields } from '../../_format/_fields.js'
 
 const statutIdAndDateGet = (
   etape: ITitreEtape,
@@ -319,7 +317,7 @@ const etapeCreer = async (
       : null
     delete etape.documentIds
 
-    const sdomZones = [] as ISDOMZone[]
+    const sdomZones: SDOMZoneId[] = []
     let titreEtapePoints = null
     if (etape.points?.length) {
       titreEtapePoints = titreEtapePointsCalc(etape.points)
@@ -502,7 +500,7 @@ const etapeModifier = async (
       : null
     delete etape.documentIds
 
-    const sdomZones = [] as ISDOMZone[]
+    const sdomZones: SDOMZoneId[] = []
     let titreEtapePoints = null
     if (etape.points?.length) {
       titreEtapePoints = titreEtapePointsCalc(etape.points)

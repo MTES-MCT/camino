@@ -15,7 +15,6 @@ import { titreContenuFormat } from './_format/titre-contenu.js'
 import { idGenerate } from './_format/id-create.js'
 import slugify from '@sindresorhus/slugify'
 import cryptoRandomString from 'crypto-random-string'
-import SDOMZones from './sdom-zones.js'
 import TitresActivites from './titres-activites.js'
 
 export interface DBTitre extends ITitre {
@@ -163,19 +162,6 @@ class Titres extends Model {
         to: 'forets.id'
       }
     },
-    sdomZones: {
-      relation: Model.ManyToManyRelation,
-      modelClass: SDOMZones,
-      join: {
-        from: ref('titres.propsTitreEtapesIds:points').castText(),
-        through: {
-          from: 'titres__sdomZones.titreEtapeId',
-          to: 'titres__sdomZones.sdomZoneId'
-        },
-        to: 'sdomZones.id'
-      }
-    },
-
     activites: {
       relation: Model.HasManyRelation,
       modelClass: TitresActivites,
@@ -223,12 +209,15 @@ class Titres extends Model {
     if (this.pointsEtape === null) {
       this.secteursMaritime = []
       this.administrationsLocales = []
+      this.sdomZones = []
     } else if (this.pointsEtape === undefined) {
       this.secteursMaritime = undefined
       this.administrationsLocales = undefined
+      this.sdomZones = undefined
     } else {
       this.secteursMaritime = this.pointsEtape.secteursMaritime
       this.administrationsLocales = this.pointsEtape.administrationsLocales
+      this.sdomZones = this.pointsEtape.sdomZones
     }
   }
 

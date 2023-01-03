@@ -1,4 +1,4 @@
-import { ISDOMZone, ITitrePoint, IToken, IUtilisateur } from '../../../types.js'
+import { ITitrePoint, IToken, IUtilisateur } from '../../../types.js'
 
 import { FileUpload } from 'graphql-upload'
 import { Stream } from 'stream'
@@ -37,7 +37,12 @@ import {
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
-import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
+import {
+  SDOMZone,
+  SDOMZoneId,
+  SDOMZoneIds,
+  SDOMZones
+} from 'camino-common/src/static/sdom.js'
 
 const stream2buffer = async (stream: Stream): Promise<Buffer> => {
   return new Promise<Buffer>((resolve, reject) => {
@@ -60,7 +65,7 @@ interface IPerimetreInformations {
   surface: number
   documentTypeIds: string[]
   alertes: IPerimetreAlerte[]
-  sdomZones: ISDOMZone[]
+  sdomZones: SDOMZone[]
 }
 
 export const pointsImporter = async (
@@ -163,12 +168,12 @@ export const pointsImporter = async (
 
 const sdomZonesInformationsGet = async (
   etapePoints: ITitrePoint[],
-  etapeSdomZones: ISDOMZone[],
+  etapeSdomZones: SDOMZoneId[],
   titreTypeId: string,
   demarcheTypeId: string,
   etapeTypeId: string,
   titrePoints: ITitrePoint[],
-  titreSdomZones: ISDOMZone[],
+  titreSdomZones: SDOMZoneId[],
   titreId: string,
   user: IUtilisateur
 ) => {
@@ -177,20 +182,20 @@ const sdomZonesInformationsGet = async (
   const points = etapeType!.fondamentale ? etapePoints : titrePoints
   const zones = etapeType!.fondamentale ? etapeSdomZones : titreSdomZones
 
-  const alertes = [] as IPerimetreAlerte[]
+  const alertes: IPerimetreAlerte[] = []
 
-  // si c’est une demande d’AXM, on doit afficher un alerte si on est en zone 0 ou 1 du Sdom
+  // si c’est une demande d’AXM, on doit afficher une alerte si on est en zone 0 ou 1 du Sdom
   if (titreTypeId === 'axm' && ['mfr', 'mcr'].includes(etapeTypeId)) {
-    const zone = zones.find(s =>
+    const zoneId = zones.find(id =>
       [
         SDOMZoneIds.Zone0,
         SDOMZoneIds.Zone0Potentielle,
         SDOMZoneIds.Zone1
-      ].includes(s.id as SDOMZoneId)
+      ].includes(id)
     )
-    if (zone) {
+    if (zoneId) {
       alertes.push({
-        message: `Le périmètre renseigné est dans une zone du Sdom interdite à l’exploitation minière : ${zone.nom}`
+        message: `Le périmètre renseigné est dans une zone du Sdom interdite à l’exploitation minière : ${SDOMZones[zoneId].nom}`
       })
     }
 
@@ -272,13 +277,13 @@ export const perimetreInformations = async (
       throw new Error('droits insuffisants')
     }
 
-    const sdomZones = [] as ISDOMZone[]
-    let titreEtapePoints = [] as ITitrePoint[]
+    const sdomZones: SDOMZoneId[] = []
+    let titreEtapePoints: ITitrePoint[] = []
     if (points && points.length > 2) {
       titreEtapePoints = titreEtapePointsCalc(points)
 
       const geojsonFeatures = geojsonFeatureMultiPolygon(
-        titreEtapePoints as ITitrePoint[]
+        titreEtapePoints
       ) as Feature
 
       const result = await titreEtapeSdomZonesGet(geojsonFeatures)
@@ -301,7 +306,7 @@ export const perimetreInformations = async (
     const titre = await titreGet(
       demarche.titreId,
       {
-        fields: { sdomZones: { id: {} }, points: { id: {} } }
+        fields: { points: { id: {} } }
       },
       userSuper
     )
@@ -313,12 +318,16 @@ export const perimetreInformations = async (
       demarche.typeId,
       etapeTypeId,
       titre!.points || [],
-      titre!.sdomZones || [],
+      titre?.sdomZones ?? [],
       titre!.id,
       user
     )
 
-    return { ...informations, sdomZones, points: titreEtapePoints }
+    return {
+      ...informations,
+      sdomZones: sdomZones.map(id => SDOMZones[id]),
+      points: titreEtapePoints
+    }
   } catch (e) {
     console.error(e)
 
@@ -345,8 +354,7 @@ export const titreEtapePerimetreInformations = async (
       titreEtapeId,
       {
         fields: {
-          sdomZones: { id: {} },
-          demarche: { titre: { sdomZones: { id: {} }, points: { id: {} } } }
+          demarche: { titre: { points: { id: {} } } }
         }
       },
       user
@@ -356,16 +364,16 @@ export const titreEtapePerimetreInformations = async (
       throw new Error('droits insuffisants')
     }
 
-    const sdomZones = etape.sdomZones || []
+    const sdomZones = etape.sdomZones?.map(id => SDOMZones[id]) ?? []
 
     const informations = await sdomZonesInformationsGet(
       etape.points || [],
-      sdomZones,
+      etape?.sdomZones ?? [],
       etape.demarche!.titre!.typeId,
       etape.demarche!.typeId,
       etape.typeId,
       etape.demarche!.titre!.points || [],
-      etape.demarche!.titre!.sdomZones || [],
+      etape.demarche?.titre?.sdomZones ?? [],
       etape.demarche!.titreId,
       user
     )

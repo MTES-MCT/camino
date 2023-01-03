@@ -29,6 +29,7 @@ import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 import { SecteursMaritimes } from 'camino-common/src/static/facades.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { EntrepriseId } from 'camino-common/src/entreprise.js'
+import { SDOMZoneId } from 'camino-common/src/static/sdom'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -395,7 +396,6 @@ interface IEtapeType {
 }
 
 interface IForet extends IArea {}
-interface ISDOMZone extends IArea {}
 
 type IGeoJsonProperties = Index<string | number>
 
@@ -516,7 +516,7 @@ interface ITitre {
   surface?: number | null
   communes?: ICommune[] | null
   forets?: IForet[] | null
-  sdomZones?: ISDOMZone[] | null
+  sdomZones?: SDOMZoneId[] | null
   pointsEtape?: ITitreEtape | null
   secteursMaritime?: SecteursMaritimes[] | null
   demarches?: ITitreDemarche[]
@@ -568,10 +568,6 @@ interface ITitreCommune extends ITitreArea {
 
 interface ITitreForet extends ITitreArea {
   foretId: string
-}
-
-interface ITitreSDOMZone extends ITitreArea {
-  sdomZoneId: string
 }
 
 interface ITitreEtapeJustificatif {
@@ -658,7 +654,7 @@ interface ITitreEtape {
   justificatifIds?: string[] | null
   communes?: ICommune[] | null
   forets?: IForet[] | null
-  sdomZones?: ISDOMZone[] | null
+  sdomZones?: SDOMZoneId[] | null
   secteursMaritime?: SecteursMaritimes[] | null
   incertitudes?: ITitreIncertitudes | null
   contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
@@ -844,7 +840,6 @@ export {
   IEntrepriseEtablissement,
   IEtapeType,
   IForet,
-  ISDOMZone,
   IGeoJson,
   IGeoJsonProperties,
   IGeometry,
@@ -859,7 +854,6 @@ export {
   ITitreActivite,
   ITitreCommune,
   ITitreForet,
-  ITitreSDOMZone,
   ITitreArea,
   ITitreDemarche,
   IDocument,

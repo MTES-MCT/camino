@@ -27,15 +27,6 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
 exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 3`] = `
 [
   {
-    "sdomZoneId": "1",
-    "titreEtapeId": "titreEtapeIdUniquePourMiseAJourAreas",
-  },
-]
-`;
-
-exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 4`] = `
-[
-  {
     "administrationsLocales": null,
     "archive": false,
     "communes": [
@@ -71,10 +62,7 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
     "incertitudes": null,
     "ordre": null,
     "sdomZones": [
-      {
-        "id": "1",
-        "nom": "Zone 1",
-      },
+      "1",
     ],
     "secteursMaritime": [],
     "slug": "titreDemarcheIdUniquePourMiseAJourAreas-mfr99",
@@ -87,9 +75,10 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
 ]
 `;
 
-exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 5`] = `
+exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du SDOM sur une étape 4`] = `
 [
   {
+    "administrationsLocales": null,
     "archive": false,
     "communes": [
       {
@@ -121,17 +110,41 @@ exports[`titresEtapesAreasUpdate > met à jour les communes, forêts et zone du 
     ],
     "id": "titreIdUniquePourMiseAJourAreas",
     "nom": "nom-titreIdUniquePourMiseAJourAreas",
+    "pointsEtape": {
+      "administrationsLocales": null,
+      "archive": false,
+      "contenu": null,
+      "date": "2022-03-09",
+      "dateDebut": null,
+      "dateFin": null,
+      "decisionsAnnexesContenu": null,
+      "decisionsAnnexesSections": null,
+      "duree": null,
+      "heritageContenu": null,
+      "heritageProps": null,
+      "id": "titreEtapeIdUniquePourMiseAJourAreas",
+      "incertitudes": null,
+      "ordre": null,
+      "sdomZones": [
+        "1",
+      ],
+      "secteursMaritime": [],
+      "slug": "titreDemarcheIdUniquePourMiseAJourAreas-mfr99",
+      "statutId": "aco",
+      "substances": [],
+      "surface": null,
+      "titreDemarcheId": "titreDemarcheIdUniquePourMiseAJourAreas",
+      "typeId": "mfr",
+    },
     "propsTitreEtapesIds": {
       "points": "titreEtapeIdUniquePourMiseAJourAreas",
     },
     "publicLecture": false,
     "references": [],
     "sdomZones": [
-      {
-        "id": "1",
-        "nom": "Zone 1",
-      },
+      "1",
     ],
+    "secteursMaritime": [],
     "slug": "slug-titreIdUniquePourMiseAJourAreas",
     "titreStatutId": "val",
     "typeId": "arm",

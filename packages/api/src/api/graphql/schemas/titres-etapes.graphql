@@ -76,6 +76,9 @@ type Etape {
   "Territoires du titre"
   communes: [Commune]
 
+  "Zones du SDOM"
+  sdomZones: [String]
+
   "Documents relatifs à l'étape"
   documents: [Document]
 

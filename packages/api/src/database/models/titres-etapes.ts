@@ -14,7 +14,6 @@ import Entreprises from './entreprises.js'
 import Document from './documents.js'
 import Communes from './communes.js'
 import Forets from './forets.js'
-import SDOMZones from './sdom-zones.js'
 import Journaux from './journaux.js'
 
 export interface DBTitresEtapes extends ITitreEtape {
@@ -51,7 +50,8 @@ class TitresEtapes extends Model {
       archive: { type: 'boolean' },
       substances: { type: ['array', 'null'] },
       secteursMaritime: { type: ['array', 'null'] },
-      administrationsLocales: { type: ['array', 'null'] }
+      administrationsLocales: { type: ['array', 'null'] },
+      sdomZones: { type: ['array', 'null'] }
     }
   }
 
@@ -157,18 +157,6 @@ class TitresEtapes extends Model {
           to: 'titresForets.foretId'
         },
         to: 'forets.id'
-      }
-    },
-    sdomZones: {
-      relation: Model.ManyToManyRelation,
-      modelClass: SDOMZones,
-      join: {
-        from: 'titresEtapes.id',
-        through: {
-          from: 'titres__sdomZones.titreEtapeId',
-          to: 'titres__sdomZones.sdomZoneId'
-        },
-        to: 'sdomZones.id'
       }
     },
     journaux: {

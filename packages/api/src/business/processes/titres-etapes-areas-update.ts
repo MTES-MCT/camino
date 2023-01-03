@@ -9,9 +9,8 @@ import { titresEtapesGet } from '../../database/queries/titres-etapes.js'
 import TitresCommunes from '../../database/models/titres-communes.js'
 import TitresForets from '../../database/models/titres-forets.js'
 import { userSuper } from '../../database/user-super.js'
-import TitresSDOMZones from '../../database/models/titres--sdom-zones.js'
 import { Feature } from 'geojson'
-import TitresEtapes from '../../database/models/titres-etapes.js'
+import { ITitreEtape } from '../../types.js'
 import {
   getSecteurMaritime,
   SecteursMaritimes
@@ -35,8 +34,7 @@ export const titresEtapesAreasUpdate = async (
       fields: {
         points: { id: {} },
         communes: { id: {} },
-        forets: { id: {} },
-        sdomZones: { id: {} }
+        forets: { id: {} }
       }
     },
     userSuper
@@ -69,11 +67,8 @@ export const titresEtapesAreasUpdate = async (
 }
 async function intersectSdom(
   multipolygonGeojson: Feature,
-  titreEtape: Pick<TitresEtapes, 'sdomZones' | 'id'>
+  titreEtape: Pick<ITitreEtape, 'sdomZones' | 'id'>
 ) {
-  if (!titreEtape.sdomZones) {
-    throw new Error('les zones du SDOM de l’étape ne sont pas chargées')
-  }
   const sdomZonesIds = await geojsonIntersectsSDOM(multipolygonGeojson)
 
   if (sdomZonesIds.fallback) {
@@ -81,25 +76,24 @@ async function intersectSdom(
       console.warn(`utilisation du fallback pour l'étape ${titreEtape.id}`)
     }
   }
-  for (const sdomZoneId of sdomZonesIds.data) {
-    if (!titreEtape.sdomZones.some(({ id }) => id === sdomZoneId)) {
-      await TitresSDOMZones.query().insert({
-        titreEtapeId: titreEtape.id,
-        sdomZoneId
-      })
-      console.info(
-        `Ajout de la zone du SDOM ${sdomZoneId} sur l'étape ${titreEtape.id}`
+  if (sdomZonesIds.data.length > 0) {
+    if (
+      sdomZonesIds.data.length !== titreEtape.sdomZones?.length ||
+      titreEtape.sdomZones?.some(
+        (elem, index) => elem !== sdomZonesIds.data[index]
       )
-    }
-  }
-  for (const sdomZone of titreEtape.sdomZones) {
-    if (!sdomZonesIds.data.some(id => id === sdomZone.id)) {
-      await TitresSDOMZones.query()
-        .delete()
-        .where('titreEtapeId', titreEtape.id)
-        .andWhere('sdomZoneId', sdomZone.id)
+    ) {
       console.info(
-        `Suppression de la zone du SDOM ${sdomZone.id} sur l'étape ${titreEtape.id}`
+        `nouvelles zones du sdom pour l'étape ${
+          titreEtape.id
+        }. Anciennes: ${JSON.stringify(
+          titreEtape.sdomZones
+        )}, nouvelles: ${JSON.stringify(sdomZonesIds.data)}`
+      )
+      await knex.raw(
+        `update titres_etapes set sdom_zones = '["${sdomZonesIds.data.join(
+          '","'
+        )}"]' where id ='${titreEtape.id}'`
       )
     }
   }
@@ -107,7 +101,7 @@ async function intersectSdom(
 
 async function intersectForets(
   multipolygonGeojson: Feature,
-  titreEtape: Pick<TitresEtapes, 'forets' | 'id'>
+  titreEtape: Pick<ITitreEtape, 'forets' | 'id'>
 ) {
   if (!titreEtape.forets) {
     throw new Error('les forêts de l’étape ne sont pas chargées')
@@ -142,7 +136,7 @@ async function intersectForets(
 
 async function intersectCommunes(
   multipolygonGeojson: Feature,
-  titreEtape: Pick<TitresEtapes, 'communes' | 'id'>
+  titreEtape: Pick<ITitreEtape, 'communes' | 'id'>
 ) {
   if (!titreEtape.communes) {
     throw new Error('les communes de l’étape ne sont pas chargées')
@@ -191,7 +185,7 @@ async function intersectCommunes(
 
 async function intersectSecteursMaritime(
   multipolygonGeojson: Feature,
-  titreEtape: Pick<TitresEtapes, 'secteursMaritime' | 'id'>
+  titreEtape: Pick<ITitreEtape, 'secteursMaritime' | 'id'>
 ) {
   const secteurMaritimeIds = await geojsonIntersectsSecteursMaritime(
     multipolygonGeojson

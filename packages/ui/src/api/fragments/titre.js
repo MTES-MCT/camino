@@ -68,10 +68,7 @@ const fragmentTitre = gql`
       nom
     }
 
-    sdomZones {
-      nom
-    }
-
+    sdomZones
     secteursMaritime
 
     contenu

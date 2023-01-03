@@ -9,8 +9,10 @@ import { entrepriseFormat } from './entreprises.js'
 import { titreEtapeFormatFields } from './_fields.js'
 import { titreDemarcheFormat } from './titres-demarches.js'
 import { titreEtapeCompleteValidate } from '../../business/validations/titre-etape-updation-validate.js'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
+import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 
-const titreEtapeFormat = (
+export const titreEtapeFormat = (
   titreEtape: ITitreEtape,
   fields = titreEtapeFormatFields,
   documentTypeData: DocumentTypeData | null = null
@@ -57,8 +59,8 @@ const titreEtapeFormat = (
   titreEtape.amodiataires = titreEtape.amodiataires?.map(entrepriseFormat)
 
   if (
-    titreEtape.typeId === 'mfr' &&
-    titreEtape.statutId === 'aco' &&
+    titreEtape.typeId === ETAPES_TYPES.demande &&
+    titreEtape.statutId === ETAPES_STATUTS.EN_CONSTRUCTION &&
     titreEtape.modification
   ) {
     const errors = titreEtapeCompleteValidate(
@@ -78,5 +80,3 @@ const titreEtapeFormat = (
 
   return titreEtape
 }
-
-export { titreEtapeFormatFields, titreEtapeFormat }

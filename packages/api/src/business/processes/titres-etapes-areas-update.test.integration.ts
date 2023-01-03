@@ -14,7 +14,6 @@ import {
   SinnamaryPerimetre
 } from './__mocks__/titres-etapes-areas-update.js'
 import TitresForets from '../../database/models/titres-forets.js'
-import TitresSDOMZones from '../../database/models/titres--sdom-zones.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { SDOMZoneIds } from 'camino-common/src/static/sdom.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
@@ -70,18 +69,11 @@ describe('titresEtapesAreasUpdate', () => {
 
     // Pour simplifier le test, on utilise des forêts en tant que zone de sdom
     await knex!.raw(
-      `insert into sdom_zones (nom, id) values ('Zone 1', '${SDOMZoneIds.Zone1}')`
-    )
-    await knex!.raw(
-      `insert into sdom_zones (nom, id) values ('Zone 2', '${SDOMZoneIds.Zone2}')`
-    )
-    await knex!.raw(
       `insert into sdom_zones_postgis (id, geometry) values ('${SDOMZoneIds.Zone1}','${foret2BranchesPerimetre}')`
     )
     await knex!.raw(
       `insert into sdom_zones_postgis (id, geometry) values ('${SDOMZoneIds.Zone2}','${foretReginaPerimetre}')`
     )
-
     const titreId = 'titreIdUniquePourMiseAJourAreas'
     await Titres.query().insert({
       id: titreId,
@@ -113,7 +105,8 @@ describe('titresEtapesAreasUpdate', () => {
         typeId: 'mfr',
         statutId: 'aco',
         titreDemarcheId,
-        archive: false
+        archive: false,
+        sdomZones: [SDOMZoneIds.Zone2]
       }
     ])
 
@@ -163,12 +156,6 @@ describe('titresEtapesAreasUpdate', () => {
     // ajoute la forêt Regina
     await TitresForets.query().insert({ titreEtapeId, foretId: reginaId })
 
-    // ajoute la zone 2
-    await TitresSDOMZones.query().insert({
-      titreEtapeId,
-      sdomZoneId: SDOMZoneIds.Zone2
-    })
-
     await titresEtapesAreasUpdate([titreEtapeId])
 
     expect(
@@ -178,21 +165,17 @@ describe('titresEtapesAreasUpdate', () => {
       await TitresForets.query().where('titreEtapeId', titreEtapeId)
     ).toMatchSnapshot()
     expect(
-      await TitresSDOMZones.query().where('titreEtapeId', titreEtapeId)
-    ).toMatchSnapshot()
-    expect(
       await TitresEtapes.query()
         .where('id', titreEtapeId)
-        .withGraphFetched('[sdomZones, forets, communes]')
+        .withGraphFetched('[forets, communes]')
     ).toMatchSnapshot()
-
     await Titres.query()
       .patch({ propsTitreEtapesIds: { points: titreEtapeId } })
       .where({ id: titreId })
     expect(
       await Titres.query()
         .where('id', titreId)
-        .withGraphFetched('[sdomZones, forets, communes]')
+        .withGraphFetched('[pointsEtape, forets, communes]')
     ).toMatchSnapshot()
   })
 })

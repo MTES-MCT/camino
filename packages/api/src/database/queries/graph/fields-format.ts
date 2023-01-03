@@ -187,10 +187,6 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
     if (!fields.points) {
       fields.points = { id: {} }
     }
-
-    if (!fields.sdomZones) {
-      fields.sdomZones = { id: {} }
-    }
   }
 
   return fields

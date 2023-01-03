@@ -3,7 +3,6 @@ import {
   IEtapeType,
   IHeritageContenu,
   IHeritageProps,
-  ISDOMZone,
   ISection,
   ITitreDemarche,
   ITitreEtape,
@@ -28,15 +27,19 @@ import {
 import { GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 import { geojsonIntersectsSDOM, GeoJsonResult } from '../../../tools/geojson.js'
 import { Feature } from 'geojson'
-import SdomZones from '../../../database/models/sdom-zones.js'
-import { SDOMZoneIds } from 'camino-common/src/static/sdom.js'
+import { SDOMZoneIds, SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import {
   DocumentTypeId,
   DocumentType,
   DOCUMENTS_TYPES_IDS
 } from 'camino-common/src/static/documentsTypes.js'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
+import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
+import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
+import { toTitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
-const titreEtapePointsCalc = <
+export const titreEtapePointsCalc = <
   T extends {
     references: ITitrePointReference[]
     coordonnees: ICoordonnees
@@ -206,7 +209,7 @@ const titreEtapeHeritageContenuBuild = (
   return { contenu, heritageContenu }
 }
 
-const titreEtapeHeritageBuild = (
+export const titreEtapeHeritageBuild = (
   date: string,
   etapeType: IEtapeType,
   titreDemarche: ITitreDemarche,
@@ -247,17 +250,17 @@ const titreEtapeHeritageBuild = (
 
 export const titreEtapeSdomZonesGet = async (
   geoJson: Feature<any>
-): Promise<GeoJsonResult<ISDOMZone[]>> => {
+): Promise<GeoJsonResult<SDOMZoneId[]>> => {
   const sdomZoneIds = await geojsonIntersectsSDOM(geoJson)
 
   return {
     fallback: sdomZoneIds.fallback,
-    data: await SdomZones.query().whereIn('id', sdomZoneIds.data)
+    data: sdomZoneIds.data
   }
 }
 
-const documentTypeIdsBySdomZonesGet = (
-  sdomZones: ISDOMZone[] | null | undefined,
+export const documentTypeIdsBySdomZonesGet = (
+  sdomZones: SDOMZoneId[] | null | undefined,
   titreTypeId: string,
   demarcheTypeId: string,
   etapeTypeId: string
@@ -266,11 +269,15 @@ const documentTypeIdsBySdomZonesGet = (
 
   // Pour les demandes d’octroi d’AXM
   if (
-    etapeTypeId === 'mfr' &&
-    demarcheTypeId === 'oct' &&
-    titreTypeId === 'axm'
+    etapeTypeId === ETAPES_TYPES.demande &&
+    demarcheTypeId === DEMARCHES_TYPES_IDS.Octroi &&
+    titreTypeId ===
+      toTitreTypeId(
+        TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION,
+        DOMAINES_IDS.METAUX
+      )
   ) {
-    if (sdomZones?.find(z => z.id === SDOMZoneIds.Zone2)) {
+    if (sdomZones?.find(id => id === SDOMZoneIds.Zone2)) {
       // dans la zone 2 du SDOM les documents suivants sont obligatoires:
       documentTypeIds.push(DOCUMENTS_TYPES_IDS.noticeDImpactRenforcee)
       documentTypeIds.push(
@@ -282,10 +289,4 @@ const documentTypeIdsBySdomZonesGet = (
   }
 
   return documentTypeIds
-}
-
-export {
-  titreEtapeHeritageBuild,
-  titreEtapePointsCalc,
-  documentTypeIdsBySdomZonesGet
 }
