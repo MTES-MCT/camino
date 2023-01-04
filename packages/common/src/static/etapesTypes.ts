@@ -172,8 +172,8 @@ export type EtapeTypeId = typeof ETAPES_TYPES[keyof typeof ETAPES_TYPES]
 export type EtapeTypeKey = keyof typeof ETAPES_TYPES
 
 export const etapesTypesIds = Object.values(ETAPES_TYPES)
-
-export const EtapesTypes: { [key in EtapeTypeId]: Omit<Definition<key>, 'ordre'> } = {
+export type EtapeType<T = EtapeTypeId> = Omit<Definition<T>, 'ordre'>
+export const EtapesTypes: { [key in EtapeTypeId]: EtapeType<key> } = {
   aac: {
     id: 'aac',
     nom: 'avis de direction régionale des affaires culturelles',
