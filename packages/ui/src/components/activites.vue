@@ -24,7 +24,7 @@
 
 <script>
 import Liste from './_common/liste.vue'
-import Downloads from './_common/downloads.vue'
+import { Downloads } from './_common/downloads'
 
 import filtres from './activites/filtres'
 import { activitesColonnes, activitesLignesBuild } from './activites/table'

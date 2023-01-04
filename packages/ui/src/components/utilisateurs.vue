@@ -34,7 +34,7 @@
 
 <script>
 import Liste from './_common/liste.vue'
-import Downloads from './_common/downloads.vue'
+import { Downloads } from './_common/downloads'
 import UtilisateurEditPopup from './utilisateur/edit-popup.vue'
 
 import filtres from './utilisateurs/filtres'

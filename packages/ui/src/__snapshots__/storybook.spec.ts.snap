@@ -2565,6 +2565,25 @@ exports[`Storybook Smoke Test > Components/Utilisateur/QGISToken > Default 1`] =
 </div>"
 `;
 
+exports[`Storybook Smoke Test > Components/common/Downloads > Default 1`] = `
+"<div class=\\"relative flex flex-direction-column dropdown full-x\\">
+  <div class=\\"absolute border rnd-s bg-bg full-x overflow-hidden\\"><button class=\\" accordion-header flex btn-alt py-s px-s full-x\\">
+      <div><span class=\\"h6\\">Téléchargements</span></div>
+      <div class=\\"flex flex-right flex-end\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <use href=\\"#icon-chevron-bas\\"></use>
+        </svg></div>
+    </button>
+    <div class=\\"overflow-hidden\\">
+      <div class=\\"overflow-hidden\\">
+        <transition-stub>
+          <!---->
+        </transition-stub>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
 exports[`Storybook Smoke Test > Components/common/SectionElement > AucunFichier 1`] = `
 "<div class=\\"tablet-blobs\\">
   <div class=\\"tablet-blob-1-4\\">
@@ -3464,6 +3483,48 @@ exports[`Storybook Smoke Test > UI/Chip > WithColor 1`] = `"<button class=\\"bg-
 exports[`Storybook Smoke Test > UI/Date > Default 1`] = `"<div style=\\"white-space: nowrap;\\">03 / 05 / 2022</div>"`;
 
 exports[`Storybook Smoke Test > UI/Date > UneDateEtrange 1`] = `"<div style=\\"white-space: nowrap;\\">undefined / undefined / Une date</div>"`;
+
+exports[`Storybook Smoke Test > UI/Dropdown > Default 1`] = `
+"<div class=\\"relative flex flex-direction-column dropdown\\">
+  <div class=\\"absolute border rnd-s bg-bg full-x overflow-hidden\\"><button class=\\" accordion-header flex btn-alt py-s px-s full-x\\">
+      <div>
+        <h2>Titre</h2>
+      </div>
+      <div class=\\"flex flex-right flex-end\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <use href=\\"#icon-chevron-bas\\"></use>
+        </svg></div>
+    </button>
+    <div class=\\"overflow-hidden\\">
+      <div class=\\"overflow-hidden\\">
+        <transition-stub>
+          <!---->
+        </transition-stub>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Smoke Test > UI/Dropdown > Opened 1`] = `
+"<div class=\\"relative flex flex-direction-column dropdown\\">
+  <div class=\\"absolute border rnd-s bg-bg full-x overflow-hidden\\"><button class=\\"rnd-t-s border-b-s accordion-header flex btn-alt py-s px-s full-x\\">
+      <div>
+        <h6>Titre</h6>
+      </div>
+      <div class=\\"flex flex-right flex-end\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-haut\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <use href=\\"#icon-chevron-haut\\"></use>
+        </svg></div>
+    </button>
+    <div class=\\"overflow-hidden\\">
+      <div class=\\"opened\\">
+        <transition-stub>
+          <h5>Contenu</h5>
+        </transition-stub>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
 
 exports[`Storybook Smoke Test > UI/FunctionalLoader > All 1`] = `
 "<div>

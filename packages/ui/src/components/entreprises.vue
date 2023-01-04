@@ -32,7 +32,7 @@
 
 <script>
 import Liste from './_common/liste.vue'
-import Downloads from './_common/downloads.vue'
+import { Downloads } from './_common/downloads'
 import EntrepriseAddPopup from './entreprise/add-popup.vue'
 import { canCreateEntreprise } from 'camino-common/src/permissions/entreprises'
 
