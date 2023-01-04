@@ -1,5 +1,4 @@
 import type { Icon as IconType } from './iconSpriteType'
-import { IconSprite } from './iconSprite'
 import { HTMLAttributes } from 'vue'
 
 export type Size = 'S' | 'M'
@@ -33,7 +32,6 @@ export function Icon(props: Props): JSX.Element {
       fill={props.color ?? '#666'}
       tabindex="-1"
     >
-      <IconSprite />
       <use href={`#icon-${props.name}`} />
     </svg>
   )

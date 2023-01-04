@@ -1,6 +1,7 @@
 import '../src/styles/styles.css'
 import { app } from '@storybook/vue3'
 import { h } from 'vue'
+import { IconSprite } from '@/components/_ui/iconSprite'
 
 app.component('router-link', h('a', { type: 'primary' }))
 export const parameters = {
@@ -12,3 +13,10 @@ export const parameters = {
     }
   }
 }
+
+export const decorators = [
+  story => ({
+    components: { story, IconSprite },
+    template: '<div style="margin: 3em;"><IconSprite /><story /></div>'
+  })
+]

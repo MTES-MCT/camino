@@ -1,6 +1,7 @@
 import { Meta } from '@storybook/vue3'
 import { Icon } from './icon'
 import { icons } from './iconSpriteType'
+import { IconSprite } from '@/components/_ui/iconSprite'
 
 const meta: Meta = {
   title: 'Ui/Icons',
@@ -22,9 +23,10 @@ export const IconAllSize = () => ({
 })
 
 export const AllIcons = () => ({
-  components: { Icon },
+  components: { Icon, IconSprite },
   template: `
     <div style="height:100%;width:100%;background:white">
+      <IconSprite/>
       <table>
       <tr><th>Name</th><th>Component</th></tr>
         ${icons
