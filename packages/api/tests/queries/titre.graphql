@@ -60,11 +60,7 @@ fragment activite on Activite {
     id
     nom
   }
-  statut {
-    id
-    nom
-    couleur
-  }
+  activiteStatutId
   modification
   dateSaisie
   periodeId

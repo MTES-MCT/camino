@@ -35,7 +35,7 @@ describe('teste les requêtes sur les activités', () => {
       typeId: 'grx',
       titreId,
       date: getCurrent(),
-      statutId: 'dep',
+      activiteStatutId: 'dep',
       periodeId: 1,
       annee: 2000
     })

@@ -2,6 +2,28 @@
 
 exports[`statuts > peut voir tous les statuts 1`] = `
 {
+  "activitesStatuts": [
+    {
+      "couleur": "error",
+      "id": "abs",
+      "nom": "absent",
+    },
+    {
+      "couleur": "success",
+      "id": "dep",
+      "nom": "déposé",
+    },
+    {
+      "couleur": "warning",
+      "id": "enc",
+      "nom": "en construction",
+    },
+    {
+      "couleur": "neutral",
+      "id": "fer",
+      "nom": "cloturé",
+    },
+  ],
   "departements": [
     {
       "id": "10",
