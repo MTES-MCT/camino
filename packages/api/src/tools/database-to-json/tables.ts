@@ -1,6 +1,5 @@
 // Liste des noms des tables à sauvegarder au format json
 export const tables = [
-  { name: 'activites_statuts', orderBy: ['id'] },
   { name: 'activites_types', orderBy: ['id'] },
   {
     name: 'activites_types__documents_types',

@@ -2,6 +2,7 @@ import { markRaw } from 'vue'
 import List from '../_ui/list.vue'
 import { Statut } from '../_common/statut'
 import { getPeriode } from 'camino-common/src/static/frequence'
+import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
 
 const activitesColonnes = [
   {
@@ -30,6 +31,7 @@ const activitesColonnes = [
 
 const activitesLignesBuild = activites =>
   activites.map(activite => {
+    const activiteStatut = ActivitesStatuts[activite.activiteStatutId]
     const columns = {
       titre: { value: activite.titre.nom },
       titulaires: {
@@ -48,10 +50,10 @@ const activitesLignesBuild = activites =>
       statut: {
         component: markRaw(Statut),
         props: {
-          color: activite.statut.couleur,
-          nom: activite.statut.nom
+          color: activiteStatut.couleur,
+          nom: activiteStatut.nom
         },
-        value: activite.statut.nom
+        value: activiteStatut.nom
       }
     }
 

@@ -1611,3 +1611,5 @@ export const ActivitesTypes: {
       '<p>La production annuelle est requise en vertu des <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663105" target="_blank">article 1519</a>, <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663002" target="_blank">article 1587</a> et <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000006306371" target="_blank">article 1588</a> du code général des impôts relatifs au calcul de la redevance départementale et communale des mines (RDCM).</p><p><a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000021822128" target="_blank">article 47</a> du décret 2006-798 du 6 juillet 2006.</p>'
   }
 }
+
+export const sortedActivitesTypes = Object.values(ActivitesTypes).sort((a, b) => a.ordre - b.ordre)

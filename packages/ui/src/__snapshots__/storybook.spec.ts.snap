@@ -8,7 +8,7 @@ exports[`Storybook Tests > Components/Activite/Preview > ACompleter 1`] = `
       <div class=\\"flex\\">
         <h3 class=\\"mb-s\\"><span class=\\"cap-first\\">Gra</span></h3>
         <!--v-if-->
-      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-info color-bg pill py-xs px-s\\">En construction (incomplet)</span></span>
+      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">en construction (incomplet)</span></span>
     </div>
     <div class=\\"overflow-hidden flex flex-end flex-right\\">
       <!--v-if-->
@@ -52,7 +52,7 @@ exports[`Storybook Tests > Components/Activite/Preview > AideVisible 1`] = `
             <use href=\\"#icon-help\\"></use>
           </svg>
         </div>
-      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-info color-bg pill py-xs px-s\\">En construction</span></span>
+      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">en construction</span></span>
     </div>
     <div class=\\"overflow-hidden flex flex-end flex-right\\">
       <!--v-if-->
@@ -92,7 +92,7 @@ exports[`Storybook Tests > Components/Activite/Preview > FermeParDefaut 1`] = `
       <div class=\\"flex\\">
         <h3 class=\\"mb-s\\"><span class=\\"cap-first\\">Gra</span></h3>
         <!--v-if-->
-      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-error color-bg pill py-xs px-s\\">Fermée</span></span>
+      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">cloturé</span></span>
     </div>
     <div class=\\"overflow-hidden flex flex-end flex-right\\"><button class=\\"btn-alt py-s px-m rnd-br-s\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-chevron-bas\\"></use>
@@ -127,7 +127,7 @@ exports[`Storybook Tests > Components/Activite/Preview > OuvertParDefaut 1`] = `
       <div class=\\"flex\\">
         <h3 class=\\"mb-s\\"><span class=\\"cap-first\\">Gra</span></h3>
         <!--v-if-->
-      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-error color-bg pill py-xs px-s\\">Fermée</span></span>
+      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">cloturé</span></span>
     </div>
     <div class=\\"overflow-hidden flex flex-end flex-right\\"><button class=\\"btn-alt py-s px-m\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-haut\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-chevron-haut\\"></use>
@@ -162,7 +162,7 @@ exports[`Storybook Tests > Components/Activite/Preview > Supprimable 1`] = `
       <div class=\\"flex\\">
         <h3 class=\\"mb-s\\"><span class=\\"cap-first\\">Gra</span></h3>
         <!--v-if-->
-      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-info color-bg pill py-xs px-s\\">En construction (incomplet)</span></span>
+      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">en construction (incomplet)</span></span>
     </div>
     <div class=\\"overflow-hidden flex flex-end flex-right\\"><button class=\\"cmn-activite-btn-supprimer btn small py-s px-m flex mr-px\\" title=\\"supprimer l'activité'\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"delete\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-delete\\"></use>

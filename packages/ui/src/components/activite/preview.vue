@@ -26,7 +26,7 @@
           class="ml-m"
         />
       </div>
-      <Statut :color="activite.statut.couleur" :nom="statutNom" class="mb-xs" />
+      <Statut :color="activiteStatut.couleur" :nom="statutNom" class="mb-xs" />
     </template>
     <template #buttons>
       <button
@@ -47,7 +47,8 @@
       </div>
       <div v-if="activite.dateSaisie" class="border-b-s px-m pt-m">
         <h5>
-          Date de {{ activite.statut.id === 'dep' ? 'dépôt' : 'modification' }}
+          Date de
+          {{ activite.activiteStatutId === 'dep' ? 'dépôt' : 'modification' }}
         </h5>
         <p>{{ dateFormat(activite.dateSaisie) }}</p>
       </div>
@@ -93,6 +94,10 @@ import { getPeriode } from 'camino-common/src/static/frequence'
 import { withDefaults, ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import { Activite } from './preview.types'
+import {
+  ActivitesStatut,
+  ActivitesStatuts
+} from 'camino-common/src/static/activitesStatuts'
 
 const props = withDefaults(
   defineProps<{ activite: Activite; route: unknown; initialOpened: boolean }>(),
@@ -101,6 +106,9 @@ const props = withDefaults(
 
 const store = useStore()
 const opened = ref<boolean>(props.initialOpened)
+const activiteStatut = computed<ActivitesStatut>(
+  () => ActivitesStatuts[props.activite.activiteStatutId]
+)
 
 const documentPopupTitle = computed<string>(() => {
   return `${props.activite.type.nom} | ${getPeriode(
@@ -110,7 +118,7 @@ const documentPopupTitle = computed<string>(() => {
 })
 
 const isEnConstruction = computed<boolean>(() => {
-  return props.activite.statut.id === 'enc'
+  return props.activite.activiteStatutId === 'enc'
 })
 
 const isActiviteDeposable = computed<boolean>(() => {
@@ -119,8 +127,8 @@ const isActiviteDeposable = computed<boolean>(() => {
 
 const statutNom = computed<string>(() => {
   return isEnConstruction.value && !isActiviteDeposable.value
-    ? `${props.activite.statut.nom} (incomplet)`
-    : props.activite.statut.nom
+    ? `${activiteStatut.value.nom} (incomplet)`
+    : activiteStatut.value.nom
 })
 
 const shouldDisplayHelp = computed<boolean>(() => {

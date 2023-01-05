@@ -13,7 +13,6 @@ import {
 
 import {
   activitesTypes,
-  activitesStatuts,
   activitesTypesDocumentsTypes,
   activitesTypesPays
 } from '@/api/metas-activites'
@@ -24,6 +23,7 @@ import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { phasesStatuts } from 'camino-common/src/static/phasesStatuts'
 import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypesTypes_domaine_titresStatuts'
+import { activitesStatuts } from 'camino-common/src/static/activitesStatuts'
 
 const labelGet = entity => (entity ? `${entity.id} - ${entity.nom}` : '')
 
@@ -394,7 +394,7 @@ const metasIndex = {
     ]
   },
   'activites-statuts': {
-    get: activitesStatuts,
+    get: () => activitesStatuts,
     nom: 'Statuts des activités',
     colonnes: [
       { id: 'id', nom: 'Id' },

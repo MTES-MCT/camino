@@ -9,6 +9,7 @@ import {
   concessionsValidesBuild,
   titresSurfaceIndexBuild
 } from './statistiques.js'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
 const statistiquesGranulatsMarinsActivitesFind = (
   titresActivites: ITitreActivite[],
@@ -18,7 +19,8 @@ const statistiquesGranulatsMarinsActivitesFind = (
     (acc: { [key: string]: number }, ta) => {
       acc.rapportProductionCount++
 
-      if (ta.statutId === 'dep') acc.activitesDeposesQuantiteCount++
+      if (ta.activiteStatutId === ACTIVITES_STATUTS_IDS.DEPOSE)
+        acc.activitesDeposesQuantiteCount++
 
       props.forEach(prop => {
         if (

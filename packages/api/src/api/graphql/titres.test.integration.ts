@@ -5,6 +5,8 @@ import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { ITitre } from '../../types.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
+
 import {
   vi,
   afterEach,
@@ -167,7 +169,7 @@ const titreWithActiviteGrp: ITitre = {
       id: 'titre-id-grp-2020-03',
       date: toCaminoDate('2020-10-01'),
       typeId: 'grp',
-      statutId: 'abs',
+      activiteStatutId: ACTIVITES_STATUTS_IDS.ABSENT,
       periodeId: 3,
       annee: 2020,
       utilisateurId: null,
@@ -226,7 +228,7 @@ const titreActivites: ITitre = {
       titreId: 'titre-id',
       typeId: 'grp',
       date: toCaminoDate('2020-01-01'),
-      statutId: 'dep',
+      activiteStatutId: ACTIVITES_STATUTS_IDS.DEPOSE,
       periodeId: 1,
       annee: 2020,
       sections: [
@@ -255,7 +257,7 @@ const titreActivites: ITitre = {
       titreId: 'titre-id',
       typeId: 'gra',
       date: toCaminoDate('2020-01-01'),
-      statutId: 'dep',
+      activiteStatutId: ACTIVITES_STATUTS_IDS.DEPOSE,
       periodeId: 1,
       annee: 2020,
       sections: [

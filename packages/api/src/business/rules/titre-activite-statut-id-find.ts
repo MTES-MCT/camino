@@ -1,5 +1,9 @@
 import { ITitreActivite } from '../../types.js'
 import { dateAddMonths } from '../../tools/date.js'
+import {
+  ACTIVITES_STATUTS_IDS,
+  ActivitesStatutId
+} from 'camino-common/src/static/activitesStatuts.js'
 
 /**
  * Trouve le statut d'une activité
@@ -11,10 +15,14 @@ import { dateAddMonths } from '../../tools/date.js'
 export const titreActiviteStatutIdFind = (
   titreActivite: ITitreActivite,
   aujourdhui: string
-) => {
+): ActivitesStatutId => {
   // si l'activité a un statut différent de "déposé" ou "fermé"
 
-  if (!['dep', 'fer'].includes(titreActivite.statutId)) {
+  if (
+    ![ACTIVITES_STATUTS_IDS.DEPOSE, ACTIVITES_STATUTS_IDS.CLOTURE].includes(
+      titreActivite.activiteStatutId
+    )
+  ) {
     const dateDelai = dateAddMonths(
       titreActivite.date,
       titreActivite.type!.delaiMois
@@ -24,12 +32,12 @@ export const titreActiviteStatutIdFind = (
     // passe le statut de l'activité à "fermé"
 
     if (aujourdhui > dateDelai) {
-      return 'fer'
+      return ACTIVITES_STATUTS_IDS.CLOTURE
     }
 
-    return titreActivite.statutId
+    return titreActivite.activiteStatutId
   }
 
   // sinon retourne le statut de l'activité
-  return titreActivite.statutId
+  return titreActivite.activiteStatutId
 }

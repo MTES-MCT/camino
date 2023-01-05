@@ -1,32 +1,26 @@
 import { ITitreActivite } from '../../../types.js'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
-const titreActiviteFermee = {
-  statutId: 'fer',
+export const titreActiviteFermee = {
+  activiteStatutId: ACTIVITES_STATUTS_IDS.CLOTURE,
   date: '1000-01-01',
   type: { delaiMois: 3 }
 } as ITitreActivite
 
-const titreActiviteDeposee = {
-  statutId: 'dep',
+export const titreActiviteDeposee = {
+  activiteStatutId: ACTIVITES_STATUTS_IDS.DEPOSE,
   date: '1000-01-01',
   type: { delaiMois: 3 }
 } as ITitreActivite
 
-const titreActiviteAbsenteDelaiDepasse = {
-  statutId: 'abs',
+export const titreActiviteAbsenteDelaiDepasse = {
+  activiteStatutId: ACTIVITES_STATUTS_IDS.ABSENT,
   date: '1000-01-01',
   type: { delaiMois: 3 }
 } as ITitreActivite
 
-const titreActiviteEnCoursDelaiNonDepasse = {
-  statutId: 'enc',
+export const titreActiviteEnCoursDelaiNonDepasse = {
+  activiteStatutId: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION,
   date: '3000-01-01',
   type: { delaiMois: 3 }
 } as ITitreActivite
-
-export {
-  titreActiviteFermee,
-  titreActiviteDeposee,
-  titreActiviteAbsenteDelaiDepasse,
-  titreActiviteEnCoursDelaiNonDepasse
-}

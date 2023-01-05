@@ -30,6 +30,7 @@ import { SecteursMaritimes } from 'camino-common/src/static/facades.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { EntrepriseId } from 'camino-common/src/entreprise.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom'
+import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -121,12 +122,6 @@ type ITitreActiviteColonneId = 'titreNom' | 'titulaire' | 'periode' | 'statut'
 
 type IUtilisateursColonneId = 'nom' | 'prenom' | 'email' | 'role'
 type IEntrepriseColonneId = 'nom' | 'siren'
-
-interface IActiviteStatut {
-  id: string
-  nom: string
-  couleur: Couleur
-}
 
 interface IContenuId {
   sectionId: string
@@ -542,8 +537,7 @@ interface ITitreActivite {
   date: CaminoDate
   typeId: string
   type?: IActiviteType | null
-  statutId: string
-  statut?: IActiviteStatut | null
+  activiteStatutId: ActivitesStatutId
   periodeId: number
   annee: number
   utilisateurId?: string | null
@@ -818,7 +812,6 @@ export {
   Index,
   IFields,
   IFormat,
-  IActiviteStatut,
   IActiviteType,
   IActiviteTypeDocumentType,
   ISection,

@@ -368,7 +368,6 @@ export const activites = async (
     {
       fields: {
         type: { id: {} },
-        statut: { id: {} },
         titre: { communes: { id: {} } }
       }
     },

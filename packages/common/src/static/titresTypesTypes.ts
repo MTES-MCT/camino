@@ -74,4 +74,6 @@ export const TitresTypesTypes: {
 
 const titreTypesTypeIds = Object.values(TITRES_TYPES_TYPES_IDS)
 
+export const sortedTitreTypesTypes = Object.values(TitresTypesTypes).sort((a, b) => a.ordre - b.ordre)
+
 export const isTitreTypeType = (titreTypeType: string | undefined | null): titreTypeType is TitreTypeTypeId => titreTypesTypeIds.includes(titreTypeType)

@@ -14,6 +14,7 @@ import { newDemarcheId } from '../../models/_format/id-create.js'
 import { getCurrent, toCaminoDate } from 'camino-common/src/date.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
+import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -66,7 +67,7 @@ describe('documentSupprimer', () => {
     }
   )
 
-  test.each<[boolean | undefined, string, boolean]>([
+  test.each<[boolean | undefined, ActivitesStatutId, boolean]>([
     [true, 'enc', true],
     [false, 'enc', true],
     [undefined, 'enc', true],
@@ -75,7 +76,7 @@ describe('documentSupprimer', () => {
     [undefined, 'dep', false]
   ])(
     'vérifie la possibilité de supprimer un document optionnel ou non d’une activité (utilisateur super)',
-    async (optionnel, statutId, suppression) => {
+    async (optionnel, activiteStatutId, suppression) => {
       // suppression de la clé étrangère sur le titre pour ne pas avoir à tout créer
       await TitresActivites.query().delete()
       await Document.query().delete()
@@ -93,7 +94,7 @@ describe('documentSupprimer', () => {
         typeId: 'grx',
         titreId: '',
         date: getCurrent(),
-        statutId,
+        activiteStatutId,
         periodeId: 1,
         annee: 2000
       })

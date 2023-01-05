@@ -78,7 +78,7 @@ const titresActivitesFiltersQueryModify = (
   }
 
   if (statutsIds) {
-    q.whereIn('titresActivites.statutId', statutsIds)
+    q.whereIn('titresActivites.activiteStatutId', statutsIds)
   }
 
   if (titresIds) {
@@ -188,7 +188,7 @@ const titresActivitesColonnes = {
   },
   annee: { id: 'annee' },
   periode: { id: 'periodeId' },
-  statut: { id: 'statutId' }
+  statut: { id: 'activiteStatutId' }
 } as Index<IColonne<string | RawBuilder>>
 
 /**

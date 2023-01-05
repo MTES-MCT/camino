@@ -3,33 +3,13 @@ import { apiGraphQLFetch } from './_client'
 
 import {
   fragmentActiviteType,
-  fragmentActiviteStatut,
   fragmentActiviteTypeDocumentType,
   fragmentActiviteTypePays
 } from './fragments/metas-activites'
 
-import { fragmentTitreTypeType } from './fragments/metas'
-
 const activitesMetas = apiGraphQLFetch(
   gql`
     query MetasActivites {
-      activitesTypes {
-        ...activiteType
-      }
-      activitesStatuts {
-        ...activiteStatut
-      }
-
-      types {
-        ...titreTypeType
-      }
-
-      statuts {
-        id
-        nom
-        couleur
-      }
-
       entreprises {
         elements {
           id
@@ -37,12 +17,6 @@ const activitesMetas = apiGraphQLFetch(
         }
       }
     }
-
-    ${fragmentActiviteType}
-
-    ${fragmentActiviteStatut}
-
-    ${fragmentTitreTypeType}
   `
 )
 
@@ -55,18 +29,6 @@ const activitesTypes = apiGraphQLFetch(
     }
 
     ${fragmentActiviteType}
-  `
-)
-
-const activitesStatuts = apiGraphQLFetch(
-  gql`
-    query ActivitesStatuts {
-      activitesStatuts {
-        ...activiteStatut
-      }
-    }
-
-    ${fragmentActiviteStatut}
   `
 )
 
@@ -97,7 +59,6 @@ const activitesTypesPays = apiGraphQLFetch(
 export {
   activitesMetas,
   activitesTypes,
-  activitesStatuts,
   activitesTypesDocumentsTypes,
   activitesTypesPays
 }

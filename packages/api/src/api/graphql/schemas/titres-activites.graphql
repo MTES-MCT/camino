@@ -17,7 +17,7 @@ type Activite {
   slug: String
   type: ActiviteType!
   titre: Titre
-  statut: ActiviteStatut!
+  activiteStatutId: String!
   date: String!
   dateSaisie: String
   periodeId: Int

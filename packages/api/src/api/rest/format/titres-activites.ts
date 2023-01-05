@@ -11,6 +11,7 @@ import {
 } from 'camino-common/src/static/substancesFiscales.js'
 import { UniteId, Unites } from 'camino-common/src/static/unites.js'
 import { getPeriode } from 'camino-common/src/static/frequence.js'
+import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts.js'
 
 const titreActiviteContenuFormat = (contenu: IContenu, sections: ISection[]) =>
   sections.reduce((resSections: Index<IContenuValeur>, section) => {
@@ -46,7 +47,7 @@ const titreActiviteContenuFormat = (contenu: IContenu, sections: ISection[]) =>
     return Object.assign(resSections, r)
   }, {})
 
-const titresActivitesFormatTable = (activites: ITitreActivite[]) =>
+export const titresActivitesFormatTable = (activites: ITitreActivite[]) =>
   activites.map(activite => {
     const contenu =
       activite.contenu && activite.sections?.length
@@ -57,7 +58,7 @@ const titresActivitesFormatTable = (activites: ITitreActivite[]) =>
       id: activite.slug,
       titre_id: activite.titre!.slug,
       type: activite.type!.nom,
-      statut: activite.statut!.nom,
+      statut: ActivitesStatuts[activite.activiteStatutId].nom,
       titulaires: activite.titre?.titulaires?.map(({ nom }) => nom).join(';'),
       communes: activite.titre?.communes?.map(({ nom }) => nom).join(';'),
       annee: activite.annee,
@@ -66,5 +67,3 @@ const titresActivitesFormatTable = (activites: ITitreActivite[]) =>
       ...contenu
     }
   })
-
-export { titresActivitesFormatTable }

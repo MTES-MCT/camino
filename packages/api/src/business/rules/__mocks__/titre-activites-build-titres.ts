@@ -50,7 +50,7 @@ const titreActivitesGra = [
     titreId: 'titre-id',
     date: '2019-01-01',
     typeId: 'gra',
-    statutId: 'abs',
+    activiteStatutId: 'abs',
     periodeId: 1,
     annee: 2018,
     sections: [
@@ -103,7 +103,7 @@ const titreActivitesGrp = [
     titreId: 'titre-id',
     date: '2018-04-01',
     typeId: 'grp',
-    statutId: 'abs',
+    activiteStatutId: 'abs',
     periodeId: 1,
     annee: 2018,
     sections: [
@@ -133,7 +133,7 @@ const titreActivitesGrp = [
     titreId: 'titre-id',
     date: '2018-07-01',
     typeId: 'grp',
-    statutId: 'abs',
+    activiteStatutId: 'abs',
     periodeId: 2,
     annee: 2018,
     sections: [
@@ -156,7 +156,7 @@ const titreActivitesGrp = [
     titreId: 'titre-id',
     date: '2018-10-01',
     typeId: 'grp',
-    statutId: 'abs',
+    activiteStatutId: 'abs',
     periodeId: 3,
     annee: 2018,
     sections: [
@@ -186,7 +186,7 @@ const titreActivitesGrp = [
     titreId: 'titre-id',
     date: '2019-01-01',
     typeId: 'grp',
-    statutId: 'abs',
+    activiteStatutId: 'abs',
     periodeId: 4,
     annee: 2018,
     sections: [

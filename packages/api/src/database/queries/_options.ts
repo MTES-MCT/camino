@@ -174,7 +174,7 @@ const activitesTypes = {
   }
 }
 
-const titresActivitesRelateTrue = ['type', 'statut', 'utilisateur']
+const titresActivitesRelateTrue = ['type', 'utilisateur']
 
 const titresActivitesRelateFalse = [
   ...activitesTypesRelateFalse.map(k => `type.${k}`),
@@ -182,7 +182,7 @@ const titresActivitesRelateFalse = [
 ]
 
 const titresActivites = {
-  graph: `[type.${activitesTypes.graph}, statut, utilisateur]`,
+  graph: `[type.${activitesTypes.graph}, utilisateur]`,
   update: {
     relate: titresActivitesRelateTrue,
     unrelate: titresActivitesRelateTrue,

@@ -4,7 +4,6 @@ import { ITitreActivite } from '../../types.js'
 import { idGenerate } from './_format/id-create.js'
 import ActivitesTypes from './activites-types.js'
 import Titres from './titres.js'
-import ActivitesStatuts from './activites-statuts.js'
 import Utilisateurs from './utilisateurs.js'
 import DocumentsTypes from './documents-types.js'
 import Document from './documents.js'
@@ -17,7 +16,14 @@ class TitresActivites extends Model {
   public static jsonSchema = {
     type: 'object',
 
-    required: ['titreId', 'date', 'typeId', 'statutId', 'periodeId', 'annee'],
+    required: [
+      'titreId',
+      'date',
+      'typeId',
+      'activiteStatutId',
+      'periodeId',
+      'annee'
+    ],
 
     properties: {
       id: { type: 'string' },
@@ -28,7 +34,7 @@ class TitresActivites extends Model {
       dateSaisie: { type: ['string', 'null'] },
       contenu: { type: ['object', 'null'] },
       typeId: { type: 'string', maxLength: 3 },
-      statutId: { type: 'string', maxLength: 3 },
+      activiteStatutId: { type: 'string', maxLength: 3 },
       periodeId: { type: 'integer' },
       annee: { type: 'integer' },
       sections: {}
@@ -51,15 +57,6 @@ class TitresActivites extends Model {
       join: {
         from: 'titresActivites.titreId',
         to: 'titres.id'
-      }
-    },
-
-    statut: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: ActivitesStatuts,
-      join: {
-        from: 'titresActivites.statutId',
-        to: 'activitesStatuts.id'
       }
     },
 
