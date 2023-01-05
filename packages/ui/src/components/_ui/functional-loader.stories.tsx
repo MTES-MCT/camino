@@ -3,7 +3,7 @@ import { Meta, StoryFn } from '@storybook/vue3'
 import { AsyncData } from '@/api/client-rest'
 
 const meta: Meta = {
-  title: 'UI/FunctionalLoader',
+  title: 'Components/UI/FunctionalLoader',
   component: LoadingElement
 }
 export default meta

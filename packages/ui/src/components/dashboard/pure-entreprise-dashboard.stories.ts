@@ -5,7 +5,7 @@ import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 import { User } from 'camino-common/src/roles'
 
 const meta: Meta = {
-  title: 'Components/PureEntrepriseDashboard',
+  title: 'Components/Dashboard/Entreprise',
   component: PureEntrepriseDashboard,
   argTypes: {
     getEntreprisesTitres: { name: 'function', required: true },

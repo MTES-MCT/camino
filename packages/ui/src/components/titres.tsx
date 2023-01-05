@@ -6,7 +6,7 @@ import { canCreateTitre } from 'camino-common/src/permissions/titres'
 import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
 import Filtres from './titres/filtres.vue'
-import Downloads from './_common/downloads.vue'
+import { Downloads } from './_common/downloads'
 import CaminoMap from './titres/map.vue'
 import UiTable from './titres/table-pagination.vue'
 

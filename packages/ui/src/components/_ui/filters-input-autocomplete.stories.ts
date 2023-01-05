@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
-  title: 'Ui/FiltersInputAutoComplete',
+  title: 'Components/Ui/FiltersInputAutoComplete',
   component: FiltersInputAutocomplete,
   argTypes: {
     rows: { name: 'array', value: 'string', required: true },

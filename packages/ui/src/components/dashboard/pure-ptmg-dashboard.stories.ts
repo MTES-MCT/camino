@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/vue3'
 import { CommonTitrePTMG } from 'camino-common/src/titres'
 
 const meta: Meta = {
-  title: 'Components/PurePTMGDashboard',
+  title: 'Components/Dashboard/PTMG',
   component: PurePTMGDashboard,
   argTypes: {
     getPtmgTitres: { name: 'function', required: true },

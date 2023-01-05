@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/vue3'
 import { Couleur } from 'camino-common/src/static/couleurs'
 
 const meta: Meta = {
-  title: 'Page/Error',
+  title: 'Components/Error',
   component: Error,
   argTypes: {}
 }

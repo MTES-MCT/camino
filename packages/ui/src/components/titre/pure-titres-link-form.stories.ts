@@ -13,7 +13,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 
 const meta: Meta = {
-  title: 'Components/Titre/PureTitresLinkForm',
+  title: 'Components/Titre/TitresLinkForm',
   component: PureTitresLinkForm,
   argTypes: {}
 }

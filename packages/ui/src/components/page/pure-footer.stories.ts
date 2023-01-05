@@ -1,10 +1,8 @@
 import PureFooter from './pure-footer.vue'
 import { Meta, Story } from '@storybook/vue3'
-import { Titre } from './pure-quick-access-titres.type'
-import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
-  title: 'Pages/PureFooter',
+  title: 'Components/Pages/Footer',
   component: PureFooter,
   argTypes: {}
 }

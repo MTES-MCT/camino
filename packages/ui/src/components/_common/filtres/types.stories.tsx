@@ -8,7 +8,7 @@ import { FiltresTypes, Props } from './types'
 import { MapPattern } from '../../_map/pattern'
 
 const meta: Meta = {
-  title: 'Common/Filtres/Types',
+  title: 'Components/Common/Filtres/Types',
   component: FiltresTypes
 }
 export default meta

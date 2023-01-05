@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/vue3'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date'
 
 const meta: Meta = {
-  title: 'UI/Date',
+  title: 'Components/UI/Date',
   component: Date,
   argTypes: {}
 }

@@ -8,7 +8,7 @@ import { Statut } from '../_common/statut'
 import { Column, InitialSort, TableAutoRow } from './table-auto.type'
 
 const meta: Meta = {
-  title: 'Ui/TableAuto',
+  title: 'Components/UI/TableAuto',
   component: Table,
   argTypes: {
     rows: { name: 'array', value: 'string', required: true },

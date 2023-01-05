@@ -4,7 +4,7 @@ import { StatistiquesGuyane } from 'camino-common/src/statistiques.js'
 import PureGuyane from './pure-guyane.vue'
 
 const meta: Meta = {
-  title: 'Components/NoStoryshots/Statistiques/Guyane',
+  title: 'Components/Statistiques/Guyane',
   component: PureGuyane,
   argTypes: {}
 }
@@ -450,14 +450,14 @@ const data: Promise<StatistiquesGuyane> = Promise.resolve({
   }
 })
 
-export const Default = Template.bind(
+export const DefaultNoSnapshot = Template.bind(
   {},
   {
     getStats: () => data
   }
 )
 
-export const DateSetTo20220830 = Template.bind(
+export const DateSetTo20220830NoSnapshot = Template.bind(
   {},
   {
     getStats: () => data,
@@ -465,7 +465,7 @@ export const DateSetTo20220830 = Template.bind(
   }
 )
 
-export const DateSetTo20220902 = Template.bind(
+export const DateSetTo20220902NoSnapshot = Template.bind(
   {},
   {
     getStats: () => data,

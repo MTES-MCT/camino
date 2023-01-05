@@ -24,7 +24,7 @@
 
 <script>
 import Liste from '../_common/liste.vue'
-import Downloads from '../_common/downloads.vue'
+import { Downloads } from '../_common/downloads'
 import paramsEventTrack from '../../utils/matomo-tracker.js'
 
 import { demarchesColonnes, demarchesLignesBuild } from './table'

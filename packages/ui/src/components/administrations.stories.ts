@@ -2,7 +2,7 @@ import Administrations from './administrations.vue'
 import { Meta, Story } from '@storybook/vue3'
 
 const meta: Meta = {
-  title: 'Page/Administrations',
+  title: 'Components/Administrations',
   component: Administrations,
   argTypes: {}
 }

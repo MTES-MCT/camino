@@ -2,9 +2,9 @@ import PureDrealDashboard from './pure-dreal-dashboard.vue'
 import { Meta, Story } from '@storybook/vue3'
 import { CommonTitreDREAL } from 'camino-common/src/titres'
 import { StatistiquesDGTM } from 'camino-common/src/statistiques'
-import { titresDreal } from './testData'
+import { statistiquesDGTMFake, titresDreal } from './testData'
 const meta: Meta = {
-  title: 'Components/PureDrealDashboard',
+  title: 'Components/Dashboard/DREAL',
   component: PureDrealDashboard,
   argTypes: {
     getEntreprisesTitres: { name: 'function', required: true },
@@ -40,6 +40,15 @@ export const Ok = Template.bind(
         avisAXM: {},
         producteursOr: {}
       })
+  }
+)
+
+export const DGTMNoSnapshot = Template.bind(
+  {},
+  {
+    getDrealTitres: () => Promise.resolve(titresDreal),
+    isDGTM: true,
+    getDgtmStats: () => Promise.resolve(statistiquesDGTMFake)
   }
 )
 

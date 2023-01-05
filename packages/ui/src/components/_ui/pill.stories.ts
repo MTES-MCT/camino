@@ -2,7 +2,7 @@ import { Pill, Props } from './pill'
 import { Meta, Story } from '@storybook/vue3'
 
 const meta: Meta = {
-  title: 'Ui/Pill',
+  title: 'Components/Ui/Pill',
   component: Pill,
   argTypes: {
     color: String

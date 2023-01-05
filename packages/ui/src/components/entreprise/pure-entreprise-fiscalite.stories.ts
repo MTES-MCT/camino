@@ -4,7 +4,7 @@ import { Fiscalite } from 'camino-common/src/fiscalite'
 import { CaminoAnnee, toCaminoAnnee } from 'camino-common/src/date'
 
 const meta: Meta = {
-  title: 'Components/PureEntrepriseFiscalite',
+  title: 'Components/Entreprise/Fiscalite',
   component: PureEntrepriseFiscalite,
   argTypes: {}
 }

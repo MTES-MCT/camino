@@ -20,22 +20,25 @@ vi.mock('vue-router', () => ({
 
 vi.mock('vuex', () => ({ useStore: vi.fn() }))
 
-describe('Storybook Smoke Test', async () => {
+describe('Storybook Tests', async () => {
   const modules = await Promise.all(
     Object.values(import.meta.glob<StoryFile>('../**/*.stories.ts*')).map(fn =>
       fn()
     )
   )
   describe.each(
-    modules.map(module => ({ name: module.default.title, module }))
+    modules.map(module => {
+      return { name: module.default.title, module }
+    })
   )('$name', ({ name, module }) => {
-    test
-      .skipIf(name?.includes('NoStoryshots'))
-      .each(
-        Object.entries<ContextedStory<unknown>>(composeStories(module)).map(
-          ([name, story]) => ({ name, story })
+    test.skipIf(name?.includes('NoStoryshots')).each(
+      Object.entries<ContextedStory<unknown>>(composeStories(module))
+        .map(([name, story]) => ({ name, story }))
+        .filter(
+          env =>
+            name?.includes('NoStoryshots') || !env.name?.includes('NoSnapshot')
         )
-      )('$name', ({ story }) => {
+    )('$name', ({ story }) => {
       const mounted = render(story(), {
         global: {
           components: { 'router-link': h('a', { type: 'primary' }) }

@@ -4,7 +4,7 @@ import { icons } from './iconSpriteType'
 import { IconSprite } from '@/components/_ui/iconSprite'
 
 const meta: Meta = {
-  title: 'Ui/Icons',
+  title: 'Components/Ui/Icons',
   component: Icon
 }
 export default meta

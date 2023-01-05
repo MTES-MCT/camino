@@ -21,7 +21,7 @@
           :points="etape.points"
           :geojsonMultiPolygon="geojsonMultiPolygon"
           :tabId="tabId"
-          @tab-update="tabUpdate"
+          :tabUpdate="tabUpdate"
         />
       </div>
     </div>
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import Perimetre from '../_common/perimetre.vue'
+import { Perimetre } from '../_common/perimetre'
 import { Tag } from '../_ui/tag'
 import numberFormat from '@/utils/number-format'
 

@@ -10,7 +10,7 @@ import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes'
 import { administrationMetas } from './permissions.stub'
 
 const meta: Meta = {
-  title: 'Page/Administration',
+  title: 'Components/Administration/Administration',
   component: Administration,
   argTypes: {}
 }
