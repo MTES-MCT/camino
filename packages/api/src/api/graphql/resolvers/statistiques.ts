@@ -14,6 +14,7 @@ import { isAdministration } from 'camino-common/src/roles.js'
 import { Administrations } from 'camino-common/src/static/administrations.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
 const ACTIVITE_ANNEE_DEBUT = 2018
 
@@ -24,7 +25,7 @@ const statistiquesGlobales = async (): Promise<Statistiques> => {
     const titresActivitesDepose = titresActivites.filter(
       titreActivite =>
         titreActivite.annee >= ACTIVITE_ANNEE_DEBUT &&
-        titreActivite.statutId === 'dep'
+        titreActivite.activiteStatutId === ACTIVITES_STATUTS_IDS.DEPOSE
     ).length
 
     const titresActivitesBeneficesEntreprise = Math.round(

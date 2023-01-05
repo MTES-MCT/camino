@@ -56,7 +56,7 @@ describe("état d'une activité", () => {
     api.activite.mockResolvedValue({
       id: 27,
       contenu: [],
-      statut: { id: 'dep' }
+      activitesStatutId: 'dep'
     })
 
     await store.dispatch('titreActivite/get', 27)
@@ -64,7 +64,7 @@ describe("état d'une activité", () => {
     expect(store.state.titreActivite.element).toEqual({
       id: 27,
       contenu: [],
-      statut: { id: 'dep' }
+      activitesStatutId: 'dep'
     })
 
     expect(mutations.loadingRemove).toHaveBeenCalled()

@@ -1,6 +1,6 @@
 import { FrequenceId } from 'camino-common/src/static/frequence'
 
-import { Couleur } from 'camino-common/src/static/couleurs'
+import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts'
 import { CaminoDate } from 'camino-common/src/date'
 
 export interface Activite {
@@ -16,11 +16,7 @@ export interface Activite {
     frequenceId: FrequenceId | undefined
     description: string
   }
-  statut: {
-    id: string
-    nom: string
-    couleur: Couleur
-  }
+  activiteStatutId: ActivitesStatutId
   deposable: boolean
   annee: number
   periodeId: number

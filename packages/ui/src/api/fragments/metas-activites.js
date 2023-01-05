@@ -19,14 +19,6 @@ const fragmentActiviteType = gql`
   ${fragmentDocumentType}
 `
 
-const fragmentActiviteStatut = gql`
-  fragment activiteStatut on ActiviteStatut {
-    id
-    nom
-    couleur
-  }
-`
-
 const fragmentActiviteTypeDocumentType = gql`
   fragment activiteTypeDocumentType on ActiviteTypeDocumentType {
     activiteTypeId
@@ -44,7 +36,6 @@ const fragmentActiviteTypePays = gql`
 
 export {
   fragmentActiviteType,
-  fragmentActiviteStatut,
   fragmentActiviteTypeDocumentType,
   fragmentActiviteTypePays
 }

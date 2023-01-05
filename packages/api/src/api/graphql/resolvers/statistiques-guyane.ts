@@ -13,6 +13,7 @@ import {
   getCurrentAnnee,
   toCaminoAnnee
 } from 'camino-common/src/date.js'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
 const statistiquesGuyaneActivitesBuild = (
   sectionId: string,
@@ -22,7 +23,7 @@ const statistiquesGuyaneActivitesBuild = (
   titresActivites.reduce((acc: { [key: string]: number }, ta) => {
     acc.rapportProductionOrCount++
 
-    if (ta.statutId === 'dep') {
+    if (ta.activiteStatutId === ACTIVITES_STATUTS_IDS.DEPOSE) {
       acc.activitesDeposesQuantiteCount++
     }
 

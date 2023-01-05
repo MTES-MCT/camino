@@ -2,7 +2,9 @@
   <div class="flex">
     <button
       class="cmn-activite-btn-remplir btn small flex py-s px-m rnd-0 mr-px"
-      :class="{ 'btn-primary': activite.statut.id !== 'enc' && buttonText }"
+      :class="{
+        'btn-primary': activite.activiteStatutId !== 'enc' && buttonText
+      }"
       @click="activiteEditPopupOpen"
     >
       <div v-if="buttonText" class="my-xxs">
@@ -11,7 +13,7 @@
       <Icon v-else size="M" name="pencil" />
     </button>
     <button
-      v-if="activite.statut.id === 'enc'"
+      v-if="activite.activiteStatutId === 'enc'"
       class="cmn-activite-btn-depose btn btn-primary small flex rnd-0"
       :disabled="!activite.deposable"
       :class="{ disabled: !activite.deposable }"
@@ -34,10 +36,12 @@ export default {
 
   computed: {
     buttonText() {
-      if (this.activite.deposable || this.activite.statut.id === 'dep') {
+      if (this.activite.deposable || this.activite.activiteStatutId === 'dep') {
         return null
       }
-      return this.activite.statut.id === 'abs' ? 'Remplir…' : 'Compléter…'
+      return this.activite.activiteStatutId === 'abs'
+        ? 'Remplir…'
+        : 'Compléter…'
     }
   },
 

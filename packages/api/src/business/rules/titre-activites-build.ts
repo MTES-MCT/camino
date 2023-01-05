@@ -15,6 +15,7 @@ import {
 import { UNITES, Unites } from 'camino-common/src/static/unites.js'
 import { sortedDevises } from 'camino-common/src/static/devise.js'
 import { exhaustiveCheck } from '../../tools/exhaustive-type-check.js'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 import {
   FrequenceId,
   Frequences,
@@ -227,7 +228,7 @@ const titreActiviteBuild = (
     titreId,
     date,
     typeId,
-    statutId: 'abs',
+    activiteStatutId: ACTIVITES_STATUTS_IDS.ABSENT,
     periodeId,
     annee,
     sections

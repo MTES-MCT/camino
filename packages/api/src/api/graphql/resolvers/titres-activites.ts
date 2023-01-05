@@ -7,6 +7,7 @@ import {
   IToken,
   IUtilisateur
 } from '../../../types.js'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
 import { titreActiviteEmailsSend } from './_titre-activite.js'
 import {
@@ -238,7 +239,7 @@ const activiteDeposer = async (
       throw new Error('droits insuffisants')
 
     await titreActiviteUpdateQuery(activite.id, {
-      statutId: 'dep',
+      activiteStatutId: ACTIVITES_STATUTS_IDS.DEPOSE,
       utilisateurId: user.id,
       dateSaisie: getCurrent()
     })
@@ -339,7 +340,7 @@ const activiteModifier = async (
 
     activite.utilisateurId = user.id
     activite.dateSaisie = getCurrent()
-    activite.statutId = 'enc'
+    activite.activiteStatutId = ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
 
     if (activite.contenu) {
       activite.contenu = titreActiviteContenuFormat(

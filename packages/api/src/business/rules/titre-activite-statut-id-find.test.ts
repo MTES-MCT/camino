@@ -11,13 +11,13 @@ describe("statut d'une activité", () => {
   test('une activité dont le statut est “fermé" garde le statut "fermé"', () => {
     expect(
       titreActiviteStatutIdFind(titreActiviteFermee, '2020-12-31')
-    ).toEqual(titreActiviteFermee.statutId)
+    ).toEqual(titreActiviteFermee.activiteStatutId)
   })
 
   test('une activité dont le statut est “déposé" garde le statut "déposé"', () => {
     expect(
       titreActiviteStatutIdFind(titreActiviteDeposee, '2020-12-31')
-    ).toEqual(titreActiviteDeposee.statutId)
+    ).toEqual(titreActiviteDeposee.activiteStatutId)
   })
 
   test('une activité dont statut est "abs" et le délai est dépassé a le statut “fermé', () => {
@@ -32,6 +32,6 @@ describe("statut d'une activité", () => {
         titreActiviteEnCoursDelaiNonDepasse,
         '2020-12-31'
       )
-    ).toEqual(titreActiviteEnCoursDelaiNonDepasse.statutId)
+    ).toEqual(titreActiviteEnCoursDelaiNonDepasse.activiteStatutId)
   })
 })

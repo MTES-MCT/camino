@@ -3,6 +3,7 @@ import { ITitreActivite, ISection, IContenu } from '../../types.js'
 import { titreSectionsFormat } from './titres-sections.js'
 
 import { titreActiviteCompleteCheck } from '../../business/validations/titre-activite-complete-check.js'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
 export const titreActiviteContenuFormat = (
   sections: ISection[],
@@ -40,7 +41,10 @@ export const titreActiviteFormat = (ta: ITitreActivite) => {
     ta.contenu = titreActiviteContenuFormat(ta.sections, ta.contenu, 'read')
   }
 
-  if (ta.statutId === 'enc' && ta.modification) {
+  if (
+    ta.activiteStatutId === ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION &&
+    ta.modification
+  ) {
     ta.deposable = titreActiviteCompleteCheck(
       ta.sections,
       ta.contenu,

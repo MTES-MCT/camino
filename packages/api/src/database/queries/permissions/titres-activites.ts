@@ -54,8 +54,8 @@ const titreActivitesCount = (
 
       titresActivitesCountQuery.select(
         raw('count(??) FILTER (WHERE ?? = ?)', [
-          'activitesCount.statutId',
-          'activitesCount.statutId',
+          'activitesCount.activiteStatutId',
+          'activitesCount.activiteStatutId',
           id
         ]).as(name)
       )
@@ -194,7 +194,7 @@ const titresActivitesPropsQueryModify = (
     // l'activité doit avoir un statut `absente ou `en cours`
     q.select(
       raw('(case when ?? in (?, ?) then true else false end)', [
-        'titresActivites.statutId',
+        'titresActivites.activiteStatutId',
         'abs',
         'enc'
       ]).as('modification')

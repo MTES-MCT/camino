@@ -49,13 +49,13 @@ describe("état d'une activité", () => {
 
   test('enregistre une activité sur un titre', async () => {
     const apiMock = api.activiteModifier.mockResolvedValue({
-      statut: { id: 'enc' }
+      activiteStatutId: 'enc'
     })
 
     await store.dispatch('titreActiviteEdition/update', {
       id: 27,
       contenu: [],
-      statut: { id: 'enc' },
+      activiteStatutId: 'enc',
       documents: [
         { id: 'toto', desc: 'desc', type: { id: 'aaa' } },
         { id: 'titi', type: { id: 'titi' } }
@@ -80,7 +80,7 @@ describe("état d'une activité", () => {
     await store.dispatch('titreActiviteEdition/update', {
       id: 27,
       contenu: [],
-      statut: { id: 'dep' }
+      activiteStatutId: 'dep'
     })
 
     expect(apiMock).toHaveBeenCalled()
@@ -95,7 +95,7 @@ describe("état d'une activité", () => {
     api.activite.mockResolvedValue({
       id: 27,
       contenu: [],
-      statut: { id: 'dep' },
+      activiteStatutId: 'dep',
       sections: []
     })
 

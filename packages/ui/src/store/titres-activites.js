@@ -17,7 +17,6 @@ const state = {
   metas: {
     types: [],
     annees: anneesGet(new Date().getFullYear()),
-    statuts: [],
     titresTypes: [],
     titresStatuts: [],
     titresEntreprises: []
@@ -87,9 +86,6 @@ const mutations = Object.assign({}, listeMutations, {
       if (id === 'activitesTypes') {
         metaId = 'types'
         paramId = 'typesIds'
-      } else if (id === 'activitesStatuts') {
-        metaId = 'statuts'
-        paramId = 'statutsIds'
       } else if (id === 'types') {
         metaId = 'titresTypes'
         paramId = 'titresTypesIds'

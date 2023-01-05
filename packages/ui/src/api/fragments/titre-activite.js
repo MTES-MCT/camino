@@ -1,7 +1,7 @@
 import gql from 'graphql-tag'
 import { fragmentTitresEntreprises } from './entreprises'
 import { fragmentDocument } from './documents'
-import { fragmentActiviteType, fragmentActiviteStatut } from './metas-activites'
+import { fragmentActiviteType } from './metas-activites'
 
 const fragmentTitreActivite = gql`
   fragment titreActivite on Activite {
@@ -10,9 +10,7 @@ const fragmentTitreActivite = gql`
     type {
       ...activiteType
     }
-    statut {
-      ...activiteStatut
-    }
+    activiteStatutId
     date
     annee
     periodeId
@@ -30,8 +28,6 @@ const fragmentTitreActivite = gql`
   }
 
   ${fragmentActiviteType}
-
-  ${fragmentActiviteStatut}
 
   ${fragmentDocument}
 `
@@ -53,11 +49,7 @@ const fragmentActivites = gql`
     type {
       ...activiteType
     }
-    statut {
-      id
-      nom
-      couleur
-    }
+    activiteStatutId
     date
     annee
     periodeId
@@ -93,11 +85,7 @@ const fragmentActivite = gql`
     type {
       ...activiteType
     }
-    statut {
-      id
-      nom
-      couleur
-    }
+    activiteStatutId
     date
     annee
     periodeId

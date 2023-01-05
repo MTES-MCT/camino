@@ -101,7 +101,11 @@ const documentTypeActiviteTypeQuery = (
     .whereRaw('?? = ??', ['activiteTypeId', 'titresActivites.typeId'])
     .andWhereRaw('?? = ??', ['documentTypeId', typeIdAlias])
     .andWhereRaw('?? is not true', ['optionnel'])
-    .andWhereRaw('?? not in (?, ?)', ['titresActivites.statutId', 'abs', 'enc'])
+    .andWhereRaw('?? not in (?, ?)', [
+      'titresActivites.activiteStatutId',
+      'abs',
+      'enc'
+    ])
 
 const etapeTypeDocumentTypeUsedCheck = async (
   etapeTypeId: string,

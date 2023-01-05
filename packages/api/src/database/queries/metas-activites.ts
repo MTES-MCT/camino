@@ -6,7 +6,6 @@ import { fieldsFormat } from './graph/fields-format.js'
 
 import ActivitesTypes from '../models/activites-types.js'
 import ActivitesTypesTitresTypes from '../models/activites-types--titres-types.js'
-import ActivitesStatuts from '../models/activites-statuts.js'
 import ActivitesTypesDocumentsTypes from '../models/activites-types--documents-types.js'
 import ActivitesTypesPays from '../models/activites-types--pays.js'
 
@@ -17,8 +16,6 @@ export const activitesTypesGet = async ({ fields }: { fields?: IFields }) => {
 
   return ActivitesTypes.query().withGraphFetched(graph).modify('orderAsc')
 }
-
-export const activitesStatutsGet = async () => ActivitesStatuts.query()
 
 export const activitesTypesTitresTypesGet = async () =>
   ActivitesTypesTitresTypes.query()

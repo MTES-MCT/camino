@@ -17,14 +17,17 @@ export const titresActivitesStatutIdsUpdate = async () => {
 
   const titresActivitesUpdated = [] as string[]
   for (const titreActivite of titresActivites) {
-    const statutId = titreActiviteStatutIdFind(titreActivite, aujourdhui)
+    const activiteStatutId = titreActiviteStatutIdFind(
+      titreActivite,
+      aujourdhui
+    )
 
-    if (titreActivite.statutId !== statutId) {
-      await titreActiviteUpdate(titreActivite.id, { statutId })
+    if (titreActivite.activiteStatutId !== activiteStatutId) {
+      await titreActiviteUpdate(titreActivite.id, { activiteStatutId })
 
       console.info(
         'titre / activité : statut (mise à jour) ->',
-        `${titreActivite.id}: ${statutId}`
+        `${titreActivite.id}: ${activiteStatutId}`
       )
 
       titresActivitesUpdated.push(titreActivite.id)

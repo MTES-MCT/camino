@@ -34,11 +34,7 @@ const activite: Activite = {
     frequenceId: 'ann',
     description: 'description du type'
   },
-  statut: {
-    id: 'fer',
-    nom: 'Fermée',
-    couleur: 'error'
-  },
+  activiteStatutId: 'fer',
   deposable: false,
   annee: 2022,
   periodeId: 1,
