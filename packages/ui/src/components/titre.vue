@@ -22,7 +22,7 @@
       :isMain="true"
       :tabId="geoTabId"
       :geojsonMultiPolygon="titre.geojsonMultiPolygon"
-      @tab-update="geoTabUpdate"
+      :tabUpdate="geoTabUpdate"
     />
 
     <TitreTerritoires
@@ -95,7 +95,7 @@
 
 <script>
 import Loader from './_ui/loader.vue'
-import Perimetre from './_common/perimetre.vue'
+import { Perimetre } from './_common/perimetre'
 import ActivitesPills from './_common/pills.vue'
 
 import TitreHeader from './titre/header.vue'

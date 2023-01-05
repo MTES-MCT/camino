@@ -2,7 +2,7 @@ import Loader from './pure-loader.vue'
 import { Meta, Story } from '@storybook/vue3'
 
 const meta: Meta = {
-  title: 'UI/Loader',
+  title: 'Components/UI/Loader',
   component: Loader,
   argTypes: {}
 }

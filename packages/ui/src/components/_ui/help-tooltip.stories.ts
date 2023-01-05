@@ -2,7 +2,7 @@ import { Meta, Story } from '@storybook/vue3'
 import { HelpTooltip, Props } from './help-tooltip'
 
 const meta: Meta<Props> = {
-  title: 'Ui/HelpTooltip',
+  title: 'Components/Ui/HelpTooltip',
   component: HelpTooltip
 }
 export default meta

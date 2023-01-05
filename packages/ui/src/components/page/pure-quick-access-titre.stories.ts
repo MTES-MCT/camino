@@ -4,7 +4,7 @@ import { Titre } from './pure-quick-access-titres.type'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
-  title: 'Pages/PureQuickAccessTitre',
+  title: 'Components/Page/QuickAccessTitre',
   component: PureQuickAccessTitre,
   argTypes: {
     titres: { name: 'array', value: 'string', required: true }

@@ -6,7 +6,7 @@ import {
 import { FiltresStatuts, Props } from './statuts'
 
 const meta: Meta = {
-  title: 'Common/Filtres/Statuts',
+  title: 'Components/Common/Filtres/Statuts',
   component: FiltresStatuts
 }
 export default meta

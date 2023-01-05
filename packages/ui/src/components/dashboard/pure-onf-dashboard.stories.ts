@@ -1,10 +1,9 @@
 import { PureONFDashboard, Props } from './pure-onf-dashboard'
 import { Meta, Story } from '@storybook/vue3'
 import { CommonTitreONF } from 'camino-common/src/titres'
-import titre from '@/store/titre'
 
 const meta: Meta = {
-  title: 'Components/PureONFDashboard',
+  title: 'Components/Dashboard/ONF',
   component: PureONFDashboard,
   argTypes: {
     getOnfTitres: { name: 'function', required: true }

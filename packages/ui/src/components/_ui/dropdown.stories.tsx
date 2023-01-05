@@ -2,7 +2,7 @@ import { Meta, Story } from '@storybook/vue3'
 import { Dropdown, Props } from './dropdown'
 
 const meta: Meta = {
-  title: 'UI/Dropdown',
+  title: 'Components/UI/Dropdown',
   component: Dropdown
 }
 export default meta

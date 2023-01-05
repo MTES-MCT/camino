@@ -37,12 +37,10 @@ export const Dropdown = defineComponent<Props>({
             </div>
           </button>
 
-          <div class="overflow-hidden">
-            <div class={open.value ? 'opened' : 'overflow-hidden'}>
-              <Transition name="slide">
-                {open.value ? props.content() : null}
-              </Transition>
-            </div>
+          <div class={`${open.value ? 'opened' : ''} overflow-hidden`}>
+            <Transition name="slide">
+              {open.value ? props.content() : null}
+            </Transition>
           </div>
         </div>
       </div>

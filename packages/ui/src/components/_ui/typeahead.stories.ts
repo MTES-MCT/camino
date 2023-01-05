@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
-  title: 'UI/Typeahead',
+  title: 'Components/UI/Typeahead',
   component: Typeahead,
   argTypes: {}
 }

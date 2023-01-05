@@ -3,7 +3,7 @@ import { sortedDomaines } from 'camino-common/src/static/domaines'
 import { FiltreDomaine, Props } from './domaine'
 
 const meta: Meta = {
-  title: 'Common/Filtres/Domaine',
+  title: 'Components/Common/Filtres/Domaine',
   component: FiltreDomaine
 }
 export default meta

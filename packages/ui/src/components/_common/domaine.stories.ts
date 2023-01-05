@@ -3,7 +3,7 @@ import { Domaine } from './domaine'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
 
 const meta: Meta = {
-  title: 'Common/Domaine',
+  title: 'Components/Common/Domaine',
   component: Domaine,
   argTypes: {
     domaineId: { name: 'string', required: false }

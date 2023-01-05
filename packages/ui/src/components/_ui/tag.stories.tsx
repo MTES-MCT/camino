@@ -2,7 +2,7 @@ import { Tag, Props } from './tag'
 import { Meta, StoryFn } from '@storybook/vue3'
 
 const meta: Meta = {
-  title: 'UI/Tag',
+  title: 'Components/UI/Tag',
   component: Tag
 }
 export default meta

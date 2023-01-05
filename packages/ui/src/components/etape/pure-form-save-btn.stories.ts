@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
-  title: 'Components/Etape/PureFormSaveBtn',
+  title: 'Components/Etape/FormSaveBtn',
   component: PureFormSaveBtn,
   argTypes: {}
 }
