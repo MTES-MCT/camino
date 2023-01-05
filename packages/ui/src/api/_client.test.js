@@ -33,9 +33,9 @@ describe('api client', () => {
     })
 
     const res = await apiGraphQLFetch(gql`
-      query fakeQuery {
-        toto {
-          id
+      query Statuts {
+        statuts {
+          nom
         }
       }
     `)()
@@ -50,9 +50,9 @@ describe('api client', () => {
     try {
       await apiGraphQLFetch(
         gql`
-          query fakeQuery {
-            toto {
-              id
+          query Statuts {
+            statuts {
+              nom
             }
           }
         `

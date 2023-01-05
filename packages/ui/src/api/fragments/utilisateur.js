@@ -1,5 +1,4 @@
 import gql from 'graphql-tag'
-import { fragmentEntreprises } from './entreprises'
 
 export const fragmentUtilisateur = gql`
   fragment utilisateur on Utilisateur {
@@ -10,7 +9,11 @@ export const fragmentUtilisateur = gql`
     telephoneMobile
     telephoneFixe
     entreprises {
-      ...entreprises
+      id
+      nom
+      paysId
+      legalSiren
+      legalEtranger
     }
     administrationId
     role
@@ -19,6 +22,4 @@ export const fragmentUtilisateur = gql`
     permissionModification
     utilisateursCreation
   }
-
-  ${fragmentEntreprises}
 `

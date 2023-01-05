@@ -24,6 +24,8 @@ jobs:
     uses: ./.github/workflows/common.yml
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+  graphql:
+    uses: ./.github/workflows/graphql.yml
   doc:
     runs-on: ubuntu-latest
     steps:
@@ -61,7 +63,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: docker push caminofr/camino-openfisca:${GITHUB_SHA}
   deploy:
-    needs: [ui, api, common, doc, openfisca]
+    needs: [ui, api, common, doc, openfisca, graphql]
     if: github.ref == 'refs/heads/master'
     uses: ./.github/workflows/cd.yml
     secrets:
