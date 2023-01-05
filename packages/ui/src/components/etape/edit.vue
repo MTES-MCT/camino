@@ -9,6 +9,13 @@
       :enConstruction="enConstruction"
       @toggle="toggle('type')"
     >
+      <DateEdit
+        v-if="userIsAdmin"
+        :date="etape.date"
+        :incertitude="etape.incertitudes.date"
+        :onDateChanged="onDateChanged"
+        :onIncertitudeChanged="onIncertitudeChanged"
+      />
       <TypeEdit
         :etape="etape"
         :userIsAdmin="userIsAdmin"
@@ -136,6 +143,7 @@
 <script>
 import Accordion from './accordion.vue'
 import { TypeEdit } from './type-edit'
+import { DateEdit } from './date-edit'
 import FondamentalesEdit from './fondamentales-edit.vue'
 import PointsEdit from './points-edit.vue'
 import SectionsEdit from './sections-edit.vue'
@@ -152,7 +160,8 @@ export default {
     PointsEdit,
     SectionsEdit,
     DocumentsEdit,
-    JustificatifsEdit
+    JustificatifsEdit,
+    DateEdit
   },
 
   props: {
@@ -226,6 +235,7 @@ export default {
 
     complete() {
       return (
+        this.etape.date &&
         this.typeComplete &&
         this.stepFondamentalesComplete &&
         this.stepPerimetreComplete &&
@@ -437,6 +447,16 @@ export default {
           .getElementById(`step-${stepId}`)
           .scrollIntoView({ behavior: 'smooth' })
       }, 500)
+    },
+
+    onDateChanged(date) {
+      this.etape.date = date
+      this.$emit('update:etape', this.etape)
+    },
+
+    onIncertitudeChanged(incertitude) {
+      this.etape.incertitudes.date = incertitude
+      this.$emit('update:etape', this.etape)
     }
   }
 }

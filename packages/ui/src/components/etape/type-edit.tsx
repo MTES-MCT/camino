@@ -11,15 +11,12 @@ import {
 } from 'camino-common/src/static/etapesTypes'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { computed, watch, ref } from 'vue'
-import InputDate from '../_ui/input-date.vue'
 import { TypeAhead } from '../_ui/typeahead'
 
 export type Props = {
   userIsAdmin: boolean
   etape: {
     statutId: EtapeStatutId | null
-    incertitudes: { date: boolean }
-    date?: CaminoDate
     type?: { id: EtapeTypeId }
   }
   etapesTypesIds: EtapeTypeId[]
@@ -30,33 +27,6 @@ type Emits = {
   completeUpdate: (e: boolean) => void
   'update:etape': (e: Props['etape']) => void
   typeUpdate: (e: EtapeTypeId) => void
-}
-
-const SelectDate = (etape: Props['etape']) => {
-  return (
-    <div class="tablet-blobs">
-      <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-        <h5>Date</h5>
-      </div>
-      <div class="tablet-blob-2-3">
-        <InputDate v-model={etape.date} class="mb-s" />
-        <div class="h6">
-          {etape.date ? (
-            <label>
-              <input
-                v-model={etape.incertitudes.date}
-                type="checkbox"
-                class="mr-xs"
-              />
-              Incertain
-            </label>
-          ) : null}
-        </div>
-      </div>
-
-      <hr />
-    </div>
-  )
 }
 
 const SelectStatut = (etape: Props['etape'], etapesStatuts: EtapeStatut[]) => {
@@ -115,8 +85,8 @@ export const TypeEdit = caminoDefineComponent<Props, Emits>({
     const complete = computed<boolean>(() => {
       if (props.userIsAdmin) {
         return props.etapeIsDemandeEnConstruction
-          ? !!(props.etape.type?.id && props.etape.date)
-          : !!(props.etape.type?.id && props.etape.date && props.etape.statutId)
+          ? !!props.etape.type?.id
+          : !!(props.etape.type?.id && props.etape.statutId)
       }
 
       return !!props.etape.type?.id
@@ -141,8 +111,6 @@ export const TypeEdit = caminoDefineComponent<Props, Emits>({
 
     return () => (
       <div>
-        {props.userIsAdmin ? SelectDate(props.etape) : null}
-
         <div class="tablet-blobs">
           <div class="tablet-blob-1-3 tablet-pt-s pb-s">
             <h5>Type</h5>
