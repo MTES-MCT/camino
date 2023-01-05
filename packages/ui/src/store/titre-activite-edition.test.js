@@ -105,7 +105,7 @@ describe("état d'une activité", () => {
       id: 27,
       contenu: {},
       sections: [],
-      statut: { id: 'dep' }
+      activiteStatutId: 'dep'
     })
 
     expect(mutations.loadingRemove).toHaveBeenCalled()

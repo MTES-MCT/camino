@@ -7,25 +7,9 @@ import {
   fragmentActiviteTypePays
 } from './fragments/metas-activites'
 
-import { fragmentTitreTypeType } from './fragments/metas'
-
 const activitesMetas = apiGraphQLFetch(
   gql`
     query MetasActivites {
-      activitesTypes {
-        ...activiteType
-      }
-
-      types {
-        ...titreTypeType
-      }
-
-      statuts {
-        id
-        nom
-        couleur
-      }
-
       entreprises {
         elements {
           id
@@ -33,10 +17,6 @@ const activitesMetas = apiGraphQLFetch(
         }
       }
     }
-
-    ${fragmentActiviteType}
-
-    ${fragmentTitreTypeType}
   `
 )
 

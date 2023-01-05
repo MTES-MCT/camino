@@ -2,6 +2,8 @@ import Preview from './preview.vue'
 import { Meta, Story } from '@storybook/vue3'
 import { Activite } from './preview.types'
 import { toCaminoDate } from 'camino-common/src/date'
+import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts'
+
 const meta: Meta = {
   title: 'Components/Activite/Preview',
   component: Preview
@@ -34,7 +36,7 @@ const activite: Activite = {
     frequenceId: 'ann',
     description: 'description du type'
   },
-  activiteStatutId: 'fer',
+  activiteStatutId: ACTIVITES_STATUTS_IDS.CLOTURE,
   deposable: false,
   annee: 2022,
   periodeId: 1,
@@ -68,7 +70,7 @@ export const AideVisible = Template.bind(
       ...activite,
       deposable: true,
       modification: true,
-      statut: { id: 'enc', nom: 'En construction', couleur: 'info' }
+      activiteStatutId: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
     },
     route: 'fakeRoute',
     initialOpened: false
@@ -82,7 +84,7 @@ export const ACompleter = Template.bind(
       ...activite,
       deposable: false,
       modification: true,
-      statut: { id: 'enc', nom: 'En construction', couleur: 'info' }
+      activiteStatutId: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
     },
     route: 'fakeRoute',
     initialOpened: false
@@ -97,7 +99,7 @@ export const Supprimable = Template.bind(
       suppression: true,
       deposable: false,
       modification: true,
-      statut: { id: 'enc', nom: 'En construction', couleur: 'info' }
+      activiteStatutId: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
     },
     route: 'fakeRoute',
     initialOpened: false

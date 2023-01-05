@@ -15,10 +15,7 @@ const state = {
   elements: [],
   total: 0,
   metas: {
-    types: [],
     annees: anneesGet(new Date().getFullYear()),
-    titresTypes: [],
-    titresStatuts: [],
     titresEntreprises: []
   },
   definitions: [
@@ -79,45 +76,11 @@ const actions = listeActionsBuild(
 
 const mutations = Object.assign({}, listeMutations, {
   metasSet(state, data) {
-    Object.keys(data).forEach(id => {
-      let metaId
-      let paramId
-
-      if (id === 'activitesTypes') {
-        metaId = 'types'
-        paramId = 'typesIds'
-      } else if (id === 'types') {
-        metaId = 'titresTypes'
-        paramId = 'titresTypesIds'
-      } else if (id === 'statuts') {
-        metaId = 'titresStatuts'
-        paramId = 'titresStatutsIds'
-      } else if (id === 'entreprises') {
-        metaId = 'titresEntreprises'
-        paramId = 'titresEntreprisesIds'
-        data[id] = data[id].elements
-      }
-
-      if (metaId) {
-        const param = state.definitions.find(p => p.id === metaId)
-        if (param && param.type && param.type === 'numbers') {
-          state.metas[metaId] = data[id].map(annee => {
-            return { id: annee, nom: annee }
-          })
-        } else {
-          state.metas[metaId] = data[id]
-        }
-      }
-
-      if (paramId) {
-        const definition = state.definitions.find(p => p.id === paramId)
-        if (definition && definition.type && definition.type === 'numbers') {
-          definition.values = data[id]
-        } else {
-          definition.values = data[id].map(e => e.id)
-        }
-      }
-    })
+    state.metas.titresEntreprises = data.elements
+    const definition = state.definitions.find(
+      p => p.id === 'titresEntreprisesIds'
+    )
+    definition.values = data.elements.map(e => e.id)
   }
 })
 

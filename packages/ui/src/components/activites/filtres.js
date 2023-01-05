@@ -9,6 +9,7 @@ import { titresFiltres, titresRechercherByNom } from '@/api/titres'
 import { activitesStatuts } from 'camino-common/src/static/activitesStatuts'
 import { sortedActivitesTypes } from 'camino-common/src/static/activitesTypes'
 import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { sortedTitreTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 
 const filtres = [
   {
@@ -62,9 +63,8 @@ const filtres = [
     name: 'Types de titre',
     type: 'checkboxes',
     value: [],
-    elements: [],
-    component: markRaw(FiltresTypes),
-    elementsFormat
+    elements: sortedTitreTypesTypes,
+    component: markRaw(FiltresTypes)
   },
   {
     id: 'titresStatutsIds',
