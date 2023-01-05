@@ -10,7 +10,7 @@ export type Props<T extends TypeAheadRecord, K extends keyof T> = {
   placeholder: string
   type: 'single' | 'multiple'
   items: T[]
-  overrideItems?: Pick<T, Props<T, K>['itemKey']>[]
+  overrideItems?: (Pick<T, K> & Partial<Omit<T, K>>)[]
   minInputLength: number
   itemChipLabel: (key: T) => string
   displayItemInList?: (item: T) => JSX.Element
@@ -26,10 +26,24 @@ const isEventWithTarget = (
 
 const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
   defineComponent<Props<T, K>>({
+    props: [
+      'id',
+      'placeholder',
+      'itemKey',
+      'type',
+      'items',
+      'overrideItems',
+      'minInputLength',
+      'itemChipLabel',
+      'displayItemInList',
+      'onSelectItem',
+      'onSelectItems',
+      'onInput'
+    ] as unknown as undefined,
     setup(props) {
       const id = props.id ?? `typeahead_${(Math.random() * 1000).toFixed()}`
       const wrapperId = computed(() => `${id}_wrapper`)
-      const getItems = (items: Pick<T, Props<T, K>['itemKey']>[]): T[] =>
+      const getItems = (items: (Pick<T, K> & Partial<Omit<T, K>>)[]): T[] =>
         items
           .map(o =>
             props.items.find(i => i[props.itemKey] === o[props.itemKey])
@@ -252,20 +266,6 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
   })
 
 const HiddenTypeAhead = GenericTypeAhead()
-HiddenTypeAhead.props = [
-  'id',
-  'placeholder',
-  'itemKey',
-  'type',
-  'items',
-  'overrideItems',
-  'minInputLength',
-  'itemChipLabel',
-  'displayItemInList',
-  'onSelectItem',
-  'onSelectItems',
-  'onInput'
-]
 export const TypeAhead = <T extends TypeAheadRecord, K extends keyof T>(
   props: Props<T, K>
 ): JSX.Element => {
@@ -278,13 +278,9 @@ export const TypeAhead = <T extends TypeAheadRecord, K extends keyof T>(
       minInputLength={props.minInputLength}
       type={props.type}
       overrideItems={props.overrideItems}
-      // @ts-ignore
       itemChipLabel={props.itemChipLabel}
-      // @ts-ignore
       displayItemInList={props.displayItemInList}
-      // @ts-ignore
       onSelectItem={props.onSelectItem}
-      // @ts-ignore
       onSelectItems={props.onSelectItems}
       onInput={props.onInput}
     />
