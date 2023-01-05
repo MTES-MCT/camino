@@ -18,12 +18,9 @@
       />
       <TypeEdit
         :etape="etape"
-        :userIsAdmin="userIsAdmin"
         :etapesTypesIds="etapesTypesIds"
         :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction"
-        @update:etape="newValue => $emit('update:etape', newValue)"
-        @typeUpdate="typeUpdate"
-        @completeUpdate="typeCompleteUpdate"
+        :onEtapeChange="onEtapeTypeChange"
       />
     </Accordion>
 
@@ -186,7 +183,6 @@ export default {
       documentsComplete: false,
       justificatifsComplete: false,
       decisionsAnnexesComplete: false,
-      typeComplete: false,
       justificatifs: false,
       opened: {
         type: true,
@@ -233,9 +229,24 @@ export default {
       return this.etape.statutId === 'aco'
     },
 
+    typeComplete() {
+      if (!this.stepType) {
+        return true
+      }
+
+      if (!this.etape.date || !this.etape.type) {
+        return false
+      }
+
+      if (this.userIsAdmin && this.etapeIsDemandeEnConstruction) {
+        return true
+      }
+
+      return !!this.etape.statutId
+    },
+
     complete() {
       return (
-        this.etape.date &&
         this.typeComplete &&
         this.stepFondamentalesComplete &&
         this.stepPerimetreComplete &&
@@ -369,7 +380,6 @@ export default {
   },
 
   created() {
-    this.typeCompleteUpdate()
     this.completeUpdate()
 
     if (this.etapeType?.id === 'mfr') {
@@ -418,11 +428,6 @@ export default {
       )
     },
 
-    typeCompleteUpdate(complete) {
-      this.typeComplete = complete || !this.stepType
-      this.$emit('type-complete-update', this.typeComplete)
-    },
-
     async typeUpdate(typeId) {
       await this.$store.dispatch('titreEtapeEdition/heritageGet', { typeId })
     },
@@ -456,6 +461,12 @@ export default {
 
     onIncertitudeChanged(incertitude) {
       this.etape.incertitudes.date = incertitude
+      this.$emit('update:etape', this.etape)
+    },
+
+    onEtapeTypeChange(etapeStatutId, etapeTypeId) {
+      this.etape.statutId = etapeStatutId
+      this.etape.type.id = etapeTypeId
       this.$emit('update:etape', this.etape)
     }
   }

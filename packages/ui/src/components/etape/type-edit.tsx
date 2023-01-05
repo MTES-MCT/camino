@@ -1,8 +1,7 @@
-import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { CaminoDate } from 'camino-common/src/date'
 import {
   EtapeStatut,
-  EtapeStatutId
+  EtapeStatutId,
+  isStatut
 } from 'camino-common/src/static/etapesStatuts'
 import {
   EtapesTypes,
@@ -10,26 +9,47 @@ import {
   EtapeTypeId
 } from 'camino-common/src/static/etapesTypes'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
-import { computed, watch, ref } from 'vue'
+import { computed, watch, ref, FunctionalComponent, defineComponent } from 'vue'
 import { TypeAhead } from '../_ui/typeahead'
 
 export type Props = {
-  userIsAdmin: boolean
   etape: {
     statutId: EtapeStatutId | null
     type?: { id: EtapeTypeId }
   }
   etapesTypesIds: EtapeTypeId[]
   etapeIsDemandeEnConstruction?: boolean
+  onEtapeChange: (
+    statutId: EtapeStatutId | null,
+    typeId: EtapeTypeId | null
+  ) => void
 }
 
-type Emits = {
-  completeUpdate: (e: boolean) => void
-  'update:etape': (e: Props['etape']) => void
-  typeUpdate: (e: EtapeTypeId) => void
+// FIXME 2023-01-03 : add to typescript vue type utils
+const isEventWithTarget = (
+  event: any
+): event is InputEvent & { target: HTMLInputElement } => event.target
+
+interface SelectStatutProps {
+  statutId: EtapeStatutId | null
+  typeId: EtapeTypeId | null
+  onStatutChange: (statutId: EtapeStatutId | null) => void
 }
 
-const SelectStatut = (etape: Props['etape'], etapesStatuts: EtapeStatut[]) => {
+const SelectStatut: FunctionalComponent<SelectStatutProps> = (
+  props: SelectStatutProps
+): JSX.Element => {
+  const etapesStatuts: EtapeStatut[] = props.typeId
+    ? getEtapesStatuts(props.typeId)
+    : []
+
+  let etapeStatutIdSelected: EtapeStatutId | null = props.statutId
+
+  if (etapeStatutIdSelected === null && etapesStatuts.length === 1) {
+    etapeStatutIdSelected = etapesStatuts[0].id
+    props.onStatutChange(etapeStatutIdSelected)
+  }
+
   return (
     <div>
       <div class="tablet-blobs">
@@ -37,12 +57,26 @@ const SelectStatut = (etape: Props['etape'], etapesStatuts: EtapeStatut[]) => {
           <h5>Statut</h5>
         </div>
         <div class="mb tablet-blob-2-3">
-          <select v-model={etape.statutId} class="p-s">
+          <select
+            onChange={event =>
+              props.onStatutChange(
+                isEventWithTarget(event) && isStatut(event.target.value)
+                  ? event.target.value
+                  : null
+              )
+            }
+            class="p-s"
+          >
+            <option
+              value={null}
+              selected={etapeStatutIdSelected === null}
+            ></option>
             {etapesStatuts.map(etapeStatut => (
               <option
                 key={etapeStatut.id}
                 value={etapeStatut.id}
-                disabled={etape.statutId === etapeStatut.id}
+                selected={etapeStatutIdSelected === etapeStatut.id}
+                disabled={etapeStatutIdSelected === etapeStatut.id}
               >
                 {etapeStatut.nom}
               </option>
@@ -56,15 +90,9 @@ const SelectStatut = (etape: Props['etape'], etapesStatuts: EtapeStatut[]) => {
   )
 }
 
-export const TypeEdit = caminoDefineComponent<Props, Emits>({
-  setup(props: Props, { emit }) {
+export const TypeEdit = defineComponent<Props>({
+  setup(props: Props) {
     const etapeTypeSearch = ref<string>('')
-
-    const completeUpdate = () => {
-      // TODO 2023-01-02: comment mieux gérer la modification de la props
-      emit('completeUpdate', complete.value)
-      emit('update:etape', props.etape)
-    }
 
     const etapesTypesFiltered = computed<EtapeType[]>(() =>
       props.etapesTypesIds
@@ -74,40 +102,9 @@ export const TypeEdit = caminoDefineComponent<Props, Emits>({
         })
     )
 
-    const etapesStatuts = computed<EtapeStatut[]>(() =>
-      props.etape.type?.id ? getEtapesStatuts(props.etape.type?.id) : []
-    )
-
     const etapeTypeExistante = computed<Pick<EtapeType, 'id'>[]>(() =>
       props.etape.type?.id ? [{ id: props.etape.type?.id }] : []
     )
-
-    const complete = computed<boolean>(() => {
-      if (props.userIsAdmin) {
-        return props.etapeIsDemandeEnConstruction
-          ? !!props.etape.type?.id
-          : !!(props.etape.type?.id && props.etape.statutId)
-      }
-
-      return !!props.etape.type?.id
-    })
-
-    watch(
-      () => complete.value,
-      () => completeUpdate()
-    )
-    watch(
-      () => etapesStatuts.value,
-      () => {
-        if (etapesStatuts.value.length === 1) {
-          props.etape.statutId = etapesStatuts.value[0].id
-        } else {
-          props.etape.statutId = null
-        }
-      }
-    )
-
-    completeUpdate()
 
     return () => (
       <div>
@@ -127,9 +124,8 @@ export const TypeEdit = caminoDefineComponent<Props, Emits>({
               itemChipLabel={item => item.nom}
               onSelectItem={(type: EtapeType | undefined) => {
                 if (type) {
-                  props.etape.type = { id: type.id }
                   etapeTypeSearch.value = ''
-                  emit('typeUpdate', type.id)
+                  props.onEtapeChange(null, type.id)
                 }
               }}
               onInput={(searchTerm: string) =>
@@ -140,17 +136,23 @@ export const TypeEdit = caminoDefineComponent<Props, Emits>({
         </div>
         <hr />
 
-        {etapesStatuts.value.length && !props.etapeIsDemandeEnConstruction
-          ? SelectStatut(props.etape, etapesStatuts.value)
-          : null}
+        {props.etapeIsDemandeEnConstruction ? null : (
+          <SelectStatut
+            typeId={props.etape?.type?.id ?? null}
+            statutId={props.etape.statutId}
+            onStatutChange={statutId =>
+              props.onEtapeChange(statutId, props.etape.type?.id ?? null)
+            }
+          />
+        )}
       </div>
     )
   }
 })
 
 TypeEdit.props = [
-  'userIsAdmin',
   'etape',
+  'onEtapeChange',
   'etapesTypesIds',
   'etapeIsDemandeEnConstruction'
 ]
