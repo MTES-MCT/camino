@@ -188,7 +188,7 @@ describe("construction des activités d'un titre", () => {
       [
         {
           id: 'demarche-id',
-          statutId: 'acc',
+          activiteStatutId: 'acc',
           typeId: 'oct',
           type: {},
           phase: { dateDebut: '2018-01-01', dateFin: '2018-12-31' }
