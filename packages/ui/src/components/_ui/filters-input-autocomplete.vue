@@ -3,23 +3,23 @@
     <h5>{{ filter.name }}</h5>
     <hr class="mb-s" />
 
-    <Typeahead
+    <TypeAhead
       :id="'filters_autocomplete_' + filter.name"
+      itemKey="id"
       :placeholder="filter.name"
       type="multiple"
       :items="items"
       :overrideItems="overrideItems"
       :minInputLength="filter.lazy ? 3 : 1"
       :itemChipLabel="item => item.nom"
-      :itemKey="item => item.id"
-      @selectItems="updateHandler"
-      @onInput="search"
+      :onSelectItems="updateHandler"
+      :onInput="search"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import Typeahead from '@/components/_ui/typeahead.vue'
+import { TypeAhead } from '@/components/_ui/typeahead'
 import { onMounted, ref, watch } from 'vue'
 export type Element = { id: string; nom: string }
 

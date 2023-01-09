@@ -86,20 +86,23 @@ export default {
   },
 
   watch: {
-    opened(isOpened) {
-      // Overflow "hidden" est nécessaire pour l'animation d'ouverture/fermeture,
-      // mais est retiré pour éviter un bug visuel avec les infobulles.
-      // Le timeout est nécessaire pour ajuster l'overflow dans l'état requis,
-      // tout en permettant à l'animation d'ouverture de se jouer correctement.
-      if (!isOpened) {
-        clearTimeout(this.animationTimeout)
-        this.isOverflowHidden = true
-      } else {
-        this.animationTimeout = setTimeout(
-          () => (this.isOverflowHidden = false),
-          1000
-        )
-      }
+    opened: {
+      handler: function (isOpened) {
+        // Overflow "hidden" est nécessaire pour l'animation d'ouverture/fermeture,
+        // mais est retiré pour éviter un bug visuel avec les infobulles.
+        // Le timeout est nécessaire pour ajuster l'overflow dans l'état requis,
+        // tout en permettant à l'animation d'ouverture de se jouer correctement.
+        if (!isOpened) {
+          clearTimeout(this.animationTimeout)
+          this.isOverflowHidden = true
+        } else {
+          this.animationTimeout = setTimeout(
+            () => (this.isOverflowHidden = false),
+            1000
+          )
+        }
+      },
+      immediate: true
     }
   },
 
