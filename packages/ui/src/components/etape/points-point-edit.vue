@@ -40,7 +40,7 @@ export default {
   props: {
     point: { type: Object, default: () => ({}) },
     geoSystemeIds: { type: Array, required: true },
-    geoSystemeOpposableId: { type: String, required: true }
+    geoSystemeOpposableId: { type: String, required: false, default: undefined }
   },
 
   emits: ['update:point'],

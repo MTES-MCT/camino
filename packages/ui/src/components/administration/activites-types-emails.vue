@@ -102,7 +102,8 @@ export default defineComponent({
 
   props: {
     administration: { type: Object, required: true },
-    user: { type: Object as PropType<User>, required: true },
+    // TODO user est required, mais vu qu’il peut-être null on a des warnings dans la console
+    user: { type: Object as PropType<User>, required: false, default: null },
     activitesTypesEmails: {
       type: Array as PropType<
         { activiteTypeId: ActivitesTypesId; email: string }[]
