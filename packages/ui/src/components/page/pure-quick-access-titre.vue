@@ -1,21 +1,30 @@
 <template>
-  <TypeAhead
+  <SimpleTypeahead
     id="quick-access-titre"
-    itemKey="id"
     placeholder="Rechercher un titre"
     type="single"
     :items="titres"
     :overrideItems="overrideItems"
     :minInputLength="3"
+    :itemKey="item => item.id"
     :itemChipLabel="item => item.nom"
-    :onSelectItem="selectItem"
-    :onInput="event => debounce(() => emit('onSearch', event))"
-    :displayItemInList="display"
-  />
+    @selectItem="selectItem"
+    @onInput="debounce(() => emit('onSearch', $event))"
+  >
+    <template #default="{ item }">
+      <div class="flex flex-center">
+        <Domaine :domaineId="item.domaine.id" class="mr-s" />
+        <span class="cap-first bold">
+          {{ item.nom }}
+        </span>
+        <span class="ml-xs"> ({{ titreTypeGetById(item.type.type.id) }}) </span>
+      </div>
+    </template>
+  </SimpleTypeahead>
 </template>
 
-<script setup lang="tsx">
-import { TypeAhead } from '@/components/_ui/typeahead'
+<script setup lang="ts">
+import SimpleTypeahead from '@/components/_ui/typeahead.vue'
 import { Titre } from './pure-quick-access-titres.type'
 import { Domaine } from '@/components/_common/domaine'
 import {
@@ -24,15 +33,6 @@ import {
 } from 'camino-common/src/static/titresTypesTypes'
 import { ref } from 'vue'
 
-const display = (item: Titre) => {
-  return (
-    <div class="flex flex-center">
-      <Domaine domaineId={item.domaine.id} class="mr-s" />
-      <span class="cap-first bold">{item.nom}</span>
-      <span class="ml-xs"> ({titreTypeGetById(item.type.type.id)}) </span>
-    </div>
-  )
-}
 const emit = defineEmits<{
   (e: 'onSelectedTitre', titre: Titre | undefined): void
   (e: 'onSearch', searchTerm: string): void

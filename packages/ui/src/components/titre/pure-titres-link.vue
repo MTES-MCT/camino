@@ -1,26 +1,38 @@
 <template>
   <LoadingElement :data="data">
-    <TypeAhead
+    <SimpleTypeahead
       id="titre-link-typeahead"
-      itemKey="id"
       :placeholder="
         config.type === 'single' ? 'Lier un titre' : 'Lier plusieurs titres'
       "
       :type="config.type"
       :items="titresFiltered"
+      :itemKey="item => item.id"
       :itemChipLabel="item => item.nom"
       :overrideItems="selectedTitres"
       :minInputLength="1"
-      :onSelectItem="onSelectItem"
-      :onSelectItems="onSelectItems"
-      :onInput="onSearch"
-      :displayItemInList="display"
-    />
+      @selectItem="onSelectItem"
+      @selectItems="onSelectItems"
+      @onInput="onSearch"
+    >
+      <template #default="{ item }">
+        <div class="flex flex-center">
+          <Statut
+            :color="titreStatut(item.titreStatutId).couleur"
+            :nom="titreStatut(item.titreStatutId).nom"
+          />
+          <span class="cap-first bold ml-m">{{ item.nom }}</span>
+          <span class="ml-m" style="margin-left: auto">{{
+            getDateDebutEtDateFin(item)
+          }}</span>
+        </div>
+      </template>
+    </SimpleTypeahead>
   </LoadingElement>
 </template>
 
-<script lang="tsx" setup>
-import { TypeAhead } from '@/components/_ui/typeahead'
+<script lang="ts" setup>
+import SimpleTypeahead from '@/components/_ui/typeahead.vue'
 import { computed, onMounted, ref, watch } from 'vue'
 import {
   LinkableTitre,
@@ -36,20 +48,6 @@ import {
   TitreStatutId
 } from 'camino-common/src/static/titresStatuts'
 
-const display = (item: LinkableTitre) => {
-  return (
-    <div class="flex flex-center">
-      <Statut
-        color={titreStatut(item.titreStatutId).couleur}
-        nom={titreStatut(item.titreStatutId).nom}
-      />
-      <span class="cap-first bold ml-m">{item.nom}</span>
-      <span class="ml-m" style="margin-left: auto">
-        {getDateDebutEtDateFin(item)}
-      </span>
-    </div>
-  )
-}
 const props = defineProps<{
   config: TitresLinkConfig
   loadLinkableTitres: LoadLinkableTitres

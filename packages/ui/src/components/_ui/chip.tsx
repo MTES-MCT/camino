@@ -1,12 +1,11 @@
 import { Couleur } from 'camino-common/src/static/couleurs'
-import { FunctionalComponent, HTMLAttributes } from 'vue'
+import { FunctionalComponent } from 'vue'
 import styles from './chip.module.css'
 
-export type Props = {
-  color?: `bg-${Couleur}`
+export interface Props {
+  color: `bg-${Couleur}`
   nom: string
-  onDeleteClicked?: () => void
-} & HTMLAttributes
+}
 
 export const Chip: FunctionalComponent<Props, ['onDelete']> = (
   props,
@@ -15,10 +14,7 @@ export const Chip: FunctionalComponent<Props, ['onDelete']> = (
   return (
     <button
       class={`${props.color ?? 'bg-neutral'} pl-m pr-m ${styles.chip}`}
-      onClick={() => {
-        props.onDeleteClicked?.()
-        context.emit('onDelete')
-      }}
+      onClick={() => context.emit('onDelete')}
     >
       {props.nom} <span>x</span>
     </button>

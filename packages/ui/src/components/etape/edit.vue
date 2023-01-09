@@ -9,18 +9,15 @@
       :enConstruction="enConstruction"
       @toggle="toggle('type')"
     >
-      <DateEdit
-        v-if="userIsAdmin"
-        :date="etape.date"
-        :incertitude="etape.incertitudes.date"
-        :onDateChanged="onDateChanged"
-        :onIncertitudeChanged="onIncertitudeChanged"
-      />
       <TypeEdit
         :etape="etape"
-        :etapesTypesIds="etapesTypesIds"
+        :userIsAdmin="userIsAdmin"
+        :etapesTypes="etapesTypes"
+        :etapeType="etapeType"
         :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction"
-        :onEtapeChange="onEtapeTypeChange"
+        @update:etape="newValue => $emit('update:etape', newValue)"
+        @type-update="typeUpdate"
+        @complete-update="typeCompleteUpdate"
       />
     </Accordion>
 
@@ -139,8 +136,7 @@
 
 <script>
 import Accordion from './accordion.vue'
-import { TypeEdit } from './type-edit'
-import { DateEdit } from './date-edit'
+import TypeEdit from './type-edit.vue'
 import FondamentalesEdit from './fondamentales-edit.vue'
 import PointsEdit from './points-edit.vue'
 import SectionsEdit from './sections-edit.vue'
@@ -157,8 +153,7 @@ export default {
     PointsEdit,
     SectionsEdit,
     DocumentsEdit,
-    JustificatifsEdit,
-    DateEdit
+    JustificatifsEdit
   },
 
   props: {
@@ -183,6 +178,7 @@ export default {
       documentsComplete: false,
       justificatifsComplete: false,
       decisionsAnnexesComplete: false,
+      typeComplete: false,
       justificatifs: false,
       opened: {
         type: true,
@@ -198,10 +194,10 @@ export default {
   },
 
   computed: {
-    etapesTypesIds() {
-      return this.$store.state.titreEtapeEdition.metas.etapesTypes
-        .filter(t => t.etapesCreation)
-        .map(t => t.id)
+    etapesTypes() {
+      return this.$store.state.titreEtapeEdition.metas.etapesTypes.filter(
+        t => t.etapesCreation
+      )
     },
 
     documentsTypes() {
@@ -227,22 +223,6 @@ export default {
 
     enConstruction() {
       return this.etape.statutId === 'aco'
-    },
-
-    typeComplete() {
-      if (!this.stepType) {
-        return true
-      }
-
-      if (!this.etape.date || !this.etape.type) {
-        return false
-      }
-
-      if (this.userIsAdmin && this.etapeIsDemandeEnConstruction) {
-        return true
-      }
-
-      return !!this.etape.statutId
     },
 
     complete() {
@@ -380,7 +360,7 @@ export default {
   },
 
   created() {
-    this.typeCompleteUpdate(this.typeComplete)
+    this.typeCompleteUpdate()
     this.completeUpdate()
 
     if (this.etapeType?.id === 'mfr') {
@@ -429,6 +409,15 @@ export default {
       )
     },
 
+    typeCompleteUpdate(complete) {
+      this.typeComplete = complete || !this.stepType
+      this.$emit('type-complete-update', this.typeComplete)
+    },
+
+    async typeUpdate(typeId) {
+      await this.$store.dispatch('titreEtapeEdition/heritageGet', { typeId })
+    },
+
     completeUpdate() {
       this.$emit('complete-update', this.complete)
     },
@@ -449,28 +438,6 @@ export default {
           .getElementById(`step-${stepId}`)
           .scrollIntoView({ behavior: 'smooth' })
       }, 500)
-    },
-
-    onDateChanged(date) {
-      this.etape.date = date
-      this.$emit('update:etape', this.etape)
-    },
-
-    onIncertitudeChanged(incertitude) {
-      this.etape.incertitudes.date = incertitude
-      this.$emit('update:etape', this.etape)
-    },
-
-    async onEtapeTypeChange(etapeStatutId, etapeTypeId) {
-      this.etape.statutId = etapeStatutId
-      if (this.etape.type.id !== etapeTypeId) {
-        this.etape.type.id = etapeTypeId
-        await this.$store.dispatch('titreEtapeEdition/heritageGet', {
-          typeId: etapeTypeId
-        })
-      }
-      this.$emit('type-complete-update', this.typeComplete)
-      this.$emit('update:etape', this.etape)
     }
   }
 }
