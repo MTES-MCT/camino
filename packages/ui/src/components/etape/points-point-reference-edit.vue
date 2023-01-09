@@ -42,7 +42,11 @@ export default {
 
   props: {
     geoSysteme: { type: Object, required: true },
-    geoSystemeOpposableId: { type: String, required: true },
+    geoSystemeOpposableId: {
+      type: String,
+      required: false,
+      default: undefined
+    },
     pointReferences: { type: Object, required: true }
   },
 

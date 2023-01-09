@@ -678,7 +678,7 @@ onMounted(async () => {
     bauxiteTabUpdate(anneesBauxite.value[anneesBauxite.value.length - 1])
     selsTabUpdate(anneesSels.value[anneesSels.value.length - 1])
   } catch (e: any) {
-    console.log('error', e)
+    console.error(e)
     data.value = {
       status: 'ERROR',
       message: e.message ?? "Une erreur s'est produite"

@@ -4,12 +4,12 @@ import {
   ActivitesTypesId,
   ACTIVITES_TYPES_IDS
 } from 'camino-common/src/static/activitesTypes'
-import { User } from '@sentry/vue'
 import {
   Administration,
   Administrations,
   ADMINISTRATION_IDS
 } from 'camino-common/src/static/administrations'
+import { User } from 'camino-common/src/roles'
 
 const meta: Meta = {
   title: 'Components/Administration/ActivitesTypesEmails',
@@ -46,6 +46,7 @@ const Template: Story<Props> = (args: Props) => ({
 export const EmailLectureVisible = Template.bind({})
 EmailLectureVisible.args = {
   administration: Administrations['aut-97300-01'],
+  user: null,
   activitesTypesEmails
 }
 
