@@ -9,7 +9,7 @@ import {
   EtapeTypeId
 } from 'camino-common/src/static/etapesTypes'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
-import { computed, watch, ref, FunctionalComponent, defineComponent } from 'vue'
+import { computed, ref, FunctionalComponent, defineComponent } from 'vue'
 import { TypeAhead } from '../_ui/typeahead'
 
 export type Props = {
@@ -67,10 +67,9 @@ const SelectStatut: FunctionalComponent<SelectStatutProps> = (
             }
             class="p-s"
           >
-            <option
-              value={null}
-              selected={etapeStatutIdSelected === null}
-            ></option>
+            {etapesStatuts.length > 1 && etapeStatutIdSelected === null ? (
+              <option value={null} selected={true}></option>
+            ) : null}
             {etapesStatuts.map(etapeStatut => (
               <option
                 key={etapeStatut.id}
@@ -93,6 +92,8 @@ const SelectStatut: FunctionalComponent<SelectStatutProps> = (
 export const TypeEdit = defineComponent<Props>({
   setup(props: Props) {
     const etapeTypeSearch = ref<string>('')
+    const etapeTypeId = ref<EtapeTypeId | null>(props.etape.type?.id ?? null)
+    const etapeStatutId = ref<EtapeStatutId | null>(props.etape.statutId)
 
     const etapesTypesFiltered = computed<EtapeType[]>(() =>
       props.etapesTypesIds
@@ -103,7 +104,7 @@ export const TypeEdit = defineComponent<Props>({
     )
 
     const etapeTypeExistante = computed<Pick<EtapeType, 'id'>[]>(() =>
-      props.etape.type?.id ? [{ id: props.etape.type?.id }] : []
+      etapeTypeId.value ? [{ id: etapeTypeId.value }] : []
     )
 
     return () => (
@@ -125,7 +126,9 @@ export const TypeEdit = defineComponent<Props>({
               onSelectItem={(type: EtapeType | undefined) => {
                 if (type) {
                   etapeTypeSearch.value = ''
-                  props.onEtapeChange(null, type.id)
+                  etapeStatutId.value = null
+                  etapeTypeId.value = type.id
+                  props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
                 }
               }}
               onInput={(searchTerm: string) =>
@@ -138,11 +141,12 @@ export const TypeEdit = defineComponent<Props>({
 
         {props.etapeIsDemandeEnConstruction ? null : (
           <SelectStatut
-            typeId={props.etape?.type?.id ?? null}
-            statutId={props.etape.statutId}
-            onStatutChange={statutId =>
-              props.onEtapeChange(statutId, props.etape.type?.id ?? null)
-            }
+            typeId={etapeTypeId.value}
+            statutId={etapeStatutId.value}
+            onStatutChange={statutId => {
+              etapeStatutId.value = statutId
+              props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
+            }}
           />
         )}
       </div>

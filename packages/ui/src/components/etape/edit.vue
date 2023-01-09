@@ -380,6 +380,7 @@ export default {
   },
 
   created() {
+    this.typeCompleteUpdate(this.typeComplete)
     this.completeUpdate()
 
     if (this.etapeType?.id === 'mfr') {
@@ -428,10 +429,6 @@ export default {
       )
     },
 
-    async typeUpdate(typeId) {
-      await this.$store.dispatch('titreEtapeEdition/heritageGet', { typeId })
-    },
-
     completeUpdate() {
       this.$emit('complete-update', this.complete)
     },
@@ -464,9 +461,15 @@ export default {
       this.$emit('update:etape', this.etape)
     },
 
-    onEtapeTypeChange(etapeStatutId, etapeTypeId) {
+    async onEtapeTypeChange(etapeStatutId, etapeTypeId) {
       this.etape.statutId = etapeStatutId
-      this.etape.type.id = etapeTypeId
+      if (this.etape.type.id !== etapeTypeId) {
+        this.etape.type.id = etapeTypeId
+        await this.$store.dispatch('titreEtapeEdition/heritageGet', {
+          typeId: etapeTypeId
+        })
+      }
+      this.$emit('type-complete-update', this.typeComplete)
       this.$emit('update:etape', this.etape)
     }
   }
