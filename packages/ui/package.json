@@ -86,6 +86,7 @@
       "node": true
     },
     "globals": {
+      "HTMLOrSVGElement": "readonly",
       "JSX": "readonly",
       "defineProps": "readonly",
       "defineEmits": "readonly",
@@ -112,6 +113,14 @@
       "no-unused-vars": 0,
       "vue/multi-word-component-names": 0
     },
+    "overrides": [
+      {
+        "files" : ["*.tsx"],
+        "rules": {
+          "vue/require-explicit-emits": 0
+        }
+      }
+    ],
     "parserOptions": {
       "parser": "@typescript-eslint/parser"
     }

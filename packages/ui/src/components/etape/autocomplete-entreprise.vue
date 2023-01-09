@@ -25,24 +25,23 @@
         </button>
       </div>
     </div>
-    <Typeahead
+    <TypeAhead
       id="autocomplete_entreprise"
+      itemKey="id"
       :placeholder="placeholder"
       type="single"
       :items="selectableEntities"
       :overrideItems="overrideItems"
       :minInputLength="2"
       :itemChipLabel="item => item.nom"
-      :itemKey="item => item.id"
-      @selectItem="addEntity"
-      @onInput="inputValue = $event"
-    >
-    </Typeahead>
+      :onSelectItem="addEntity"
+      :onInput="event => (inputValue = event)"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import Typeahead from '@/components/_ui/typeahead.vue'
+import { TypeAhead } from '@/components/_ui/typeahead'
 import { computed, ref, watch, withDefaults } from 'vue'
 import { Icon } from '@/components/_ui/icon'
 import { EtapeEntreprise } from 'camino-common/src/etape'
