@@ -12,6 +12,7 @@ import {
   demarchesDefinitions,
   isDemarcheDefinitionMachine
 } from '../../business/rules-demarches/definitions.js'
+import { ajouteJour } from 'camino-common/src/date.js'
 
 const writeEtapesForTest = async () => {
   const demarcheDefinitionMachines = demarchesDefinitions.filter(
@@ -40,12 +41,15 @@ const writeEtapesForTest = async () => {
       .filter(demarche => {
         const date = titreDemarcheDepotDemandeDateFind(demarche.etapes!)
 
-        return (date ?? '') > demarcheDefinition.dateDebut
+        return (
+          (date ?? '') > demarcheDefinition.dateDebut &&
+          !demarcheDefinition.demarcheIdExceptions?.includes(demarche.id)
+        )
       })
       .filter(({ titreId }) => {
         if (
-          // décision du propriétaire du sol avant le dépôt de la demande
           [
+            // décision du propriétaire du sol avant le dépôt de la demande
             'EI4lAxLbhdFOoHb6LWL0y9pO',
             'e8ZYqaA9HB3bXuOeRlXz5g76',
             // visibilité publique
@@ -63,6 +67,7 @@ const writeEtapesForTest = async () => {
         return true
       })
       .map((demarche, index) => {
+        const decalageJour = Math.floor(Math.random() * 100)
         const etapes: Etape[] = toMachineEtapes(
           demarche?.etapes
             ?.sort((a, b) => (a.ordre ?? 0) - (b.ordre ?? 0))
@@ -96,8 +101,8 @@ const writeEtapesForTest = async () => {
           )
         }
 
-        const etapesAnonymes = etapes.map((etape, index) => {
-          return { ...etape, date: index.toString() }
+        const etapesAnonymes = etapes.map(etape => {
+          return { ...etape, date: ajouteJour(etape.date, decalageJour) }
         })
 
         return {

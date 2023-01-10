@@ -1,4 +1,4 @@
-import { anneePrecedente, anneeSuivante, datesDiffInDays, daysBetween, getAnnee, isAnnee, toCaminoDate, toCaminoAnnee } from './date.js'
+import { ajouteJour, anneePrecedente, anneeSuivante, datesDiffInDays, daysBetween, getAnnee, isAnnee, toCaminoDate, toCaminoAnnee } from './date.js'
 import { test, expect } from 'vitest'
 test.each([
   ['2020-06-02T13:35:11.366Z', '2021-06-03T13:35:11.366Z', 366],
@@ -48,4 +48,12 @@ test('anneeSuivante', () => {
 })
 test('anneePrecedente', () => {
   expect(anneePrecedente(toCaminoAnnee('2022'))).toBe(toCaminoAnnee('2021'))
+})
+test('ajouteJour', () => {
+  expect(ajouteJour(toCaminoDate('2022-01-01'), 0)).toBe(toCaminoDate('2022-01-01'))
+  expect(ajouteJour(toCaminoDate('2022-01-01'), 1)).toBe(toCaminoDate('2022-01-02'))
+  expect(ajouteJour(toCaminoDate('2022-01-01'), 30)).toBe(toCaminoDate('2022-01-31'))
+  expect(ajouteJour(toCaminoDate('2022-01-01'), 60)).toBe(toCaminoDate('2022-03-02'))
+  expect(ajouteJour(toCaminoDate('2024-01-01'), 60)).toBe(toCaminoDate('2024-03-01'))
+  expect(ajouteJour(toCaminoDate('2024-01-01'), -1)).toBe(toCaminoDate('2023-12-31'))
 })

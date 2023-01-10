@@ -112,7 +112,11 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
     dateDebut: '2020-09-30',
     demarcheIdExceptions: [
       newDemarcheId('C3rs92l1eci3mLvsAGkv7gVV'),
-      newDemarcheId('YEWeODXiFb7xKJB2OQlTyc14')
+      newDemarcheId('YEWeODXiFb7xKJB2OQlTyc14'),
+      // avis dgtm moins de 31 jours après la saisine des services
+      newDemarcheId('DnlpUvzF24KvQ3tgzIbACA7N'),
+      newDemarcheId('rI65CiKLiMrT4PRGsEuwPg3P'),
+      newDemarcheId('ktPyoaDYzJi2faPMtAeKFZ5l')
     ]
   }
 ]

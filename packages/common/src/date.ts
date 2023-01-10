@@ -66,3 +66,7 @@ export function toCaminoAnnee(annee: string | number): CaminoAnnee {
 
   return annee
 }
+
+export function ajouteJour(date: CaminoDate, jours: number): CaminoDate {
+  return toCaminoDate(new Date(new Date(date).getTime() + jours * 24 * 60 * 60 * 1000))
+}
