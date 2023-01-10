@@ -19,11 +19,7 @@
       </div>
     </main>
 
-    <footer class="footer">
-      <div class="container">
-        <PageFooter />
-      </div>
-    </footer>
+    <PageFooter />
 
     <div class="messages">
       <Messages id="cmn-app-messages" :messages="messages" />

@@ -1,203 +1,214 @@
 import { FunctionalComponent } from 'vue'
-import dsfr from './dsfr.module.css'
-
 export interface Props {
   version: string
 }
 
 export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
-  <footer class={dsfr['fr-footer']} role="contentinfo" id="footer">
-    <div class={dsfr['fr-footer__top']}>
-      <div class={dsfr['fr-container']}>
-        <div
-          class={`${dsfr['fr-grid-row']} ${dsfr['fr-grid-row--start']} ${dsfr['fr-grid-row--gutters']}`}
-        >
-          <div
-            class={`${dsfr['fr-col-12']} ${dsfr['fr-col-sm-6']}  ${dsfr['fr-col-md-3']} `}
-          >
-            <h3 class={dsfr['fr-footer__top-cat']}>Nous contacter</h3>
-            <ul class={dsfr['fr-footer__top-list']}>
-              <li>
-                <a
-                  class={dsfr['fr-footer__top-link']}
-                  href="https://camino.gitbook.io/guide-dutilisation/a-propos/contact"
-                >
-                  Contact
-                </a>
-              </li>
-              <li>
-                <router-link class={dsfr['fr-footer__top-link']} to="/a-propos">
-                  À propos
-                </router-link>
-              </li>
-            </ul>
-          </div>
-          <div
-            class={`${dsfr['fr-col-12']} ${dsfr['fr-col-sm-6']}  ${dsfr['fr-col-md-3']} `}
-          >
-            <h3 class={dsfr['fr-footer__top-cat']}>Utiliser Camino</h3>
-            <ul class={dsfr['fr-footer__top-list']}>
-              <li>
-                <a
-                  class={dsfr['fr-footer__top-link']}
-                  href="https://camino.gitbook.io/guide-dutilisation/camino/glossaire"
-                >
-                  Glossaire
-                </a>
-              </li>
-              <li>
-                <a
-                  class={dsfr['fr-footer__top-link']}
-                  href="https://camino.gitbook.io/guide-dutilisation/camino/guide-dutilisation"
-                >
-                  Tutoriel
-                </a>
-              </li>
-              <li>
-                <a
-                  class={dsfr['fr-footer__top-link']}
-                  href="https://docs.camino.beta.gouv.fr/"
-                >
-                  API
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div
-            class={`${dsfr['fr-col-12']} ${dsfr['fr-col-sm-6']}  ${dsfr['fr-col-md-3']} `}
-          >
-            <h3 class={dsfr['fr-footer__top-cat']}>Indicateurs</h3>
-            <ul class={dsfr['fr-footer__top-list']}>
-              <li>
-                <router-link
-                  className={dsfr['fr-footer__top-link']}
-                  to="/statistiques"
-                >
-                  Statistiques
-                </router-link>
-              </li>
-            </ul>
-          </div>
-          <div
-            class={`${dsfr['fr-col-12']} ${dsfr['fr-col-sm-6']}  ${dsfr['fr-col-md-3']} `}
-          >
-            <h3 class={dsfr['fr-footer__top-cat']}>Lien externes</h3>
-            <ul class={dsfr['fr-footer__top-list']}>
-              <li>
-                <a
-                  class={dsfr['fr-footer__top-link']}
-                  href="http://www.minergies.fr/"
-                >
-                  Minergies
-                </a>
-              </li>
-              <li>
-                <a
-                  class={dsfr['fr-footer__top-link']}
-                  href="https://www.mineralinfo.fr/"
-                >
-                  MinéralInfos
-                </a>
-              </li>
-            </ul>
+  <footer class="dsfr" role="contentinfo" id="footer">
+    <div class="fr-footer">
+      <div class="fr-footer__top">
+        <div class="fr-container">
+          <div class="fr-grid-row fr-grid-row--start fr-grid-row--gutters">
+            <div class="fr-col-12 fr-col-sm-6 fr-col-md-3">
+              <h3 class="fr-footer__top-cat">Nous contacter</h3>
+              <ul class="fr-footer__top-list">
+                <li>
+                  <a
+                    class="fr-footer__top-link"
+                    href="https://camino.gitbook.io/guide-dutilisation/a-propos/contact"
+                    target="_blank"
+                  >
+                    Contact
+                  </a>
+                </li>
+                <li>
+                  <router-link class="fr-footer__top-link" to="/a-propos">
+                    À propos
+                  </router-link>
+                </li>
+              </ul>
+            </div>
+            <div class="fr-col-12 fr-col-sm-6 fr-col-md-3">
+              <h3 class="fr-footer__top-cat">Utiliser Camino</h3>
+              <ul class="fr-footer__top-list">
+                <li>
+                  <a
+                    class="fr-footer__top-link"
+                    href="https://camino.gitbook.io/guide-dutilisation/camino/glossaire"
+                    target="_blank"
+                  >
+                    Glossaire
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="fr-footer__top-link"
+                    href="https://camino.gitbook.io/guide-dutilisation/camino/guide-dutilisation"
+                    target="_blank"
+                  >
+                    Tutoriel
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="fr-footer__top-link"
+                    href="https://docs.camino.beta.gouv.fr/"
+                    target="_blank"
+                  >
+                    API
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="fr-col-12 fr-col-sm-6 fr-col-md-3">
+              <h3 class="fr-footer__top-cat">Indicateurs</h3>
+              <ul class="fr-footer__top-list">
+                <li>
+                  <router-link class="fr-footer__top-link" to="/statistiques">
+                    Statistiques
+                  </router-link>
+                </li>
+              </ul>
+            </div>
+            <div class="fr-col-12 fr-col-sm-6 fr-col-md-3">
+              <h3 class="fr-footer__top-cat">Lien externes</h3>
+              <ul class="fr-footer__top-list">
+                <li>
+                  <a
+                    class="fr-footer__top-link"
+                    href="http://www.minergies.fr/"
+                    target="_blank"
+                  >
+                    Minergies
+                  </a>
+                </li>
+                <li>
+                  <a
+                    class="fr-footer__top-link"
+                    href="https://www.mineralinfo.fr/"
+                    target="_blank"
+                  >
+                    MinéralInfos
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class={dsfr['fr-container']}>
-      <div class={dsfr['fr-footer__body3']}>
-        <div class={`${dsfr['fr-footer__brand']} ${dsfr['fr-enlarge-link']}`}>
-          <a
-            href="/"
-            title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)"
-          >
-            <p class={dsfr['fr-logo']}>
-              {' '}
-              Intitulé <br />
-              officiel
+      <div class="fr-container">
+        <div class="fr-footer__body">
+          <div class="fr-footer__brand fr-enlarge-link">
+            <p class="fr-logo">
+              Ministère <br />
+              de la transition <br />
+              écologique
             </p>
-          </a>
-        </div>
-        <div class={dsfr['fr-footer__content']}>
-          <p class={dsfr['fr-footer__content-desc']}>Lorem [...] elit ut.</p>
-          <ul class={dsfr['fr-footer__content-list']}>
-            <li class={dsfr['fr-footer__content-item']}>
-              <a
-                class={dsfr['fr-footer__content-link']}
-                target="_blank"
-                href="https://legifrance.gouv.fr"
-              >
-                legifrance.gouv.fr
-              </a>
-            </li>
-            <li class={dsfr['fr-footer__content-item']}>
-              <a
-                class={dsfr['fr-footer__content-link']}
-                target="_blank"
-                href="https://gouvernement.fr"
-              >
-                gouvernement.fr
-              </a>
-            </li>
-            <li class={dsfr['fr-footer__content-item']}>
-              <a
-                class={dsfr['fr-footer__content-link']}
-                target="_blank"
-                href="https://service-public.fr"
-              >
-                service-public.fr
-              </a>
-            </li>
-            <li class={dsfr['fr-footer__content-item']}>
-              <a
-                class={dsfr['fr-footer__content-link']}
-                target="_blank"
-                href="https://data.gouv.fr"
-              >
-                data.gouv.fr
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class={dsfr['fr-footer__bottom']}>
-        <ul class={dsfr['fr-footer__bottom-list']}>
-          <li class={dsfr['fr-footer__bottom-item']}>
-            <a class={dsfr['fr-footer__bottom-link']} href="#">
-              Plan du site
-            </a>
-          </li>
-          <li class={dsfr['fr-footer__bottom-item']}>
-            <a class={dsfr['fr-footer__bottom-link']} href="#">
-              Accessibilité : non/partiellement/totalement conforme
-            </a>
-          </li>
-          <li class={dsfr['fr-footer__bottom-item']}>
-            <a class={dsfr['fr-footer__bottom-link']} href="#">
-              Mentions légales
-            </a>
-          </li>
-          <li class={dsfr['fr-footer__bottom-item']}>
-            <a class={dsfr['fr-footer__bottom-link']} href="#">
-              Données personnelles
-            </a>
-          </li>
-          <li class={dsfr['fr-footer__bottom-item']}>
-            <a class={dsfr['fr-footer__bottom-link']} href="#">
-              Gestion des cookies
-            </a>
-          </li>
-        </ul>
-        <div class={dsfr['fr-footer__bottom-copy']}>
-          <p>
-            Sauf mention contraire, tous les contenus de ce site sont sous{' '}
             <a
-              href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
-              target="_blank"
+              class="fr-footer__brand-link"
+              href="/"
+              title="Retour à l’accueil du site - Camino - République Française"
             >
-              licence etalab-2.0
+              <img
+                class="fr-footer__logo"
+                style="width:9rem;"
+                src="/img/logo-fabriquenumerique.svg"
+                alt="La fabrique numérique"
+              />
             </a>
-          </p>
+          </div>
+          <div class="fr-footer__content">
+            {/* <p class="fr-footer__content-desc"> */}
+            {/*  <NewsletterForm/> */}
+            {/* </p> */}
+            <ul class="fr-footer__content-list">
+              <li class="fr-footer__content-item">
+                <a
+                  class="fr-footer__content-link"
+                  target="_blank"
+                  href="https://economie.gouv.fr"
+                >
+                  economie.gouv.fr
+                </a>
+              </li>
+              <li class="fr-footer__content-item">
+                <a
+                  class="fr-footer__content-link"
+                  target="_blank"
+                  href="https://ecologie.gouv.fr"
+                >
+                  ecologie.gouv.fr
+                </a>
+              </li>
+              <li class="fr-footer__content-item">
+                <a
+                  class="fr-footer__content-link"
+                  target="_blank"
+                  href="https://onf.fr"
+                >
+                  onf.fr
+                </a>
+              </li>
+              <li class="fr-footer__content-item">
+                <a
+                  class="fr-footer__content-link"
+                  target="_blank"
+                  href="https://legifrance.gouv.fr"
+                >
+                  legifrance.gouv.fr
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="fr-footer__bottom" style="width: 100%;">
+            <ul class="fr-footer__bottom-list">
+              <li class="fr-footer__bottom-item">
+                <a class="fr-footer__bottom-link" href="#">
+                  Accessibilité : non conforme
+                </a>
+              </li>
+              <li class="fr-footer__bottom-item">
+                <a
+                  class="fr-footer__bottom-link"
+                  href="https://camino.gitbook.io/guide-dutilisation/a-propos/mentions-legales"
+                  target="_blank"
+                >
+                  Mentions légales
+                </a>
+              </li>
+              <li class="fr-footer__bottom-item">
+                <a
+                  class="fr-footer__bottom-link"
+                  href="https://camino.gitbook.io/guide-dutilisation/a-propos/cgu"
+                  target="_blank"
+                >
+                  CGU
+                </a>
+              </li>
+              <li class="fr-footer__bottom-item">
+                <a
+                  class="fr-footer__bottom-link"
+                  href={
+                    'https://github.com/MTES-MCT/camino/commit/' + props.version
+                  }
+                  target="_blank"
+                >
+                  Version {props.version.substring(0, 7)}
+                </a>
+              </li>
+            </ul>
+            <div class="fr-footer__bottom-copy">
+              <p>
+                Sauf mention contraire, tous les contenus de ce site sont sous{' '}
+                <a
+                  href="https://github.com/MTES-MCT/camino/blob/master/license.md"
+                  target="_blank"
+                >
+                  licence GNU AGPLv3
+                </a>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
