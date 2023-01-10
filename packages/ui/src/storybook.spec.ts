@@ -22,8 +22,8 @@ vi.mock('vuex', () => ({ useStore: vi.fn() }))
 
 describe('Storybook Tests', async () => {
   const modules = await Promise.all(
-    Object.values(import.meta.glob<StoryFile>('../**/*.stories.ts*')).map(fn =>
-      fn()
+    Object.values(import.meta.glob<StoryFile>('../**/*.stories.ts(x)?')).map(
+      fn => fn()
     )
   )
   describe.each(

@@ -3,7 +3,7 @@
     v-if="hasEntreprises"
     :getEntreprisesTitres="getEntreprisesTitres"
     :user="user"
-    :entrepriseId="entreprisesIds[0]"
+    :entreprises="entreprises"
     :displayActivites="canReadActivites(user)"
   />
   <PureONFDashboard v-else-if="isONF" :getOnfTitres="getOnfTitres" />
@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import PureEntrepriseDashboard from '@/components/dashboard/pure-entreprise-dashboard.vue'
+import { PureEntrepriseDashboard } from '@/components/dashboard/pure-entreprise-dashboard'
 import { PureONFDashboard } from '@/components/dashboard/pure-onf-dashboard'
 import PurePTMGDashboard from '@/components/dashboard/pure-ptmg-dashboard.vue'
 import PureDREALDashboard from '@/components/dashboard/pure-dreal-dashboard.vue'
@@ -49,9 +49,9 @@ const isONF: boolean = store.getters['user/isONF']
 const isPTMG: boolean = store.getters['user/isPTMG']
 const isDREAL: boolean = store.getters['user/isDREAL']
 const isDGTM: boolean = store.getters['user/isDGTM']
+const entreprises = store.getters['user/user']?.entreprises ?? []
 if (hasEntreprises) {
   // TODO 2022-03-17: type the store
-  const entreprises = store.getters['user/user']?.entreprises ?? []
   entreprisesIds.push(
     ...entreprises.map((entreprise: { id: EntrepriseId }) => entreprise.id)
   )
