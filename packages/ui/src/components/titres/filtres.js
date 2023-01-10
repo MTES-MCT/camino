@@ -1,9 +1,3 @@
-import { markRaw } from 'vue'
-
-import { FiltreDomaine } from '../_common/filtres/domaine'
-import { FiltresStatuts } from '../_common/filtres/statuts'
-import { FiltresTypes } from '../_common/filtres/types'
-
 import { elementsFormat } from '../../utils/index'
 import { titresFiltres, titresRechercherByNom } from '@/api/titres'
 import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
@@ -54,7 +48,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedDomaines,
-    component: markRaw(FiltreDomaine)
+    component: 'FiltreDomaine'
   },
   {
     id: 'typesIds',
@@ -62,7 +56,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: [],
-    component: markRaw(FiltresTypes),
+    component: 'FiltresTypes',
     elementsFormat
   },
   {
@@ -71,7 +65,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: [],
-    component: markRaw(FiltresStatuts),
+    component: 'FiltresStatuts',
     elementsFormat
   }
 ]
