@@ -10,7 +10,7 @@ const fieldsOrderAsc = [
 const fieldsToRemove = ['coordonnees', 'incertitudes', 'heritageProps']
 const titreFieldsToRemove: string[] = ['geojsonCentre', 'references']
 const geoFieldsToReplace = ['geojsonPoints', 'geojsonMultiPolygon']
-const titrePropsEtapesFields = ['surface']
+const titrePropsEtapesFields = ['surface', 'substances']
 
 interface IFields {
   [key: string]: IFields
