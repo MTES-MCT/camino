@@ -159,3 +159,12 @@ deploy/preprod:
 
 deploy/prod:
 	$(MAKE) DEPLOY_URL=camino.beta.gouv.fr _deploy
+
+dsfr/generate:
+	mkdir tmp
+	cp node_modules/@gouvfr/dsfr/dist/dsfr.css tmp/_dsfr.scss
+	echo ".dsfr { @import './_dsfr.scss';}" > tmp/dsfr.scss
+	npx sass --no-source-map tmp/dsfr.scss packages/ui/src/styles/dsfr/dsfr.css
+	rm -r tmp
+	cp -r node_modules/@gouvfr/dsfr/dist/icons packages/ui/src/styles/dsfr/
+	cp -r node_modules/@gouvfr/dsfr/dist/fonts packages/ui/src/styles/dsfr/

@@ -4586,6 +4586,73 @@ exports[`Storybook Tests > Components/Page/QuickAccessTitre > Simple 1`] = `
 </div>"
 `;
 
+exports[`Storybook Tests > Components/Pages/Footer > Default 1`] = `
+"<footer class=\\"dsfr\\" role=\\"contentinfo\\" id=\\"footer\\">
+  <div class=\\"fr-footer\\">
+    <div class=\\"fr-footer__top\\">
+      <div class=\\"fr-container\\">
+        <div class=\\"fr-grid-row fr-grid-row--start fr-grid-row--gutters\\">
+          <div class=\\"fr-col-12 fr-col-sm-6 fr-col-md-3\\">
+            <h3 class=\\"fr-footer__top-cat\\">Nous contacter</h3>
+            <ul class=\\"fr-footer__top-list\\">
+              <li><a class=\\"fr-footer__top-link\\" href=\\"https://camino.gitbook.io/guide-dutilisation/a-propos/contact\\" target=\\"_blank\\">Contact</a></li>
+              <li><a type=\\"primary\\" class=\\"fr-footer__top-link\\" to=\\"/a-propos\\">À propos</a></li>
+            </ul>
+          </div>
+          <div class=\\"fr-col-12 fr-col-sm-6 fr-col-md-3\\">
+            <h3 class=\\"fr-footer__top-cat\\">Utiliser Camino</h3>
+            <ul class=\\"fr-footer__top-list\\">
+              <li><a class=\\"fr-footer__top-link\\" href=\\"https://camino.gitbook.io/guide-dutilisation/camino/glossaire\\" target=\\"_blank\\">Glossaire</a></li>
+              <li><a class=\\"fr-footer__top-link\\" href=\\"https://camino.gitbook.io/guide-dutilisation/camino/guide-dutilisation\\" target=\\"_blank\\">Tutoriel</a></li>
+              <li><a class=\\"fr-footer__top-link\\" href=\\"https://docs.camino.beta.gouv.fr/\\" target=\\"_blank\\">API</a></li>
+            </ul>
+          </div>
+          <div class=\\"fr-col-12 fr-col-sm-6 fr-col-md-3\\">
+            <h3 class=\\"fr-footer__top-cat\\">Indicateurs</h3>
+            <ul class=\\"fr-footer__top-list\\">
+              <li><a type=\\"primary\\" class=\\"fr-footer__top-link\\" to=\\"/statistiques\\">Statistiques</a></li>
+            </ul>
+          </div>
+          <div class=\\"fr-col-12 fr-col-sm-6 fr-col-md-3\\">
+            <h3 class=\\"fr-footer__top-cat\\">Lien externes</h3>
+            <ul class=\\"fr-footer__top-list\\">
+              <li><a class=\\"fr-footer__top-link\\" href=\\"http://www.minergies.fr/\\" target=\\"_blank\\">Minergies</a></li>
+              <li><a class=\\"fr-footer__top-link\\" href=\\"https://www.mineralinfo.fr/\\" target=\\"_blank\\">MinéralInfos</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=\\"fr-container\\">
+      <div class=\\"fr-footer__body\\">
+        <div class=\\"fr-footer__brand fr-enlarge-link\\">
+          <p class=\\"fr-logo\\">Ministère <br>de la transition <br>écologique</p><a class=\\"fr-footer__brand-link\\" href=\\"/\\" title=\\"Retour à l’accueil du site - Camino - République Française\\"><img class=\\"fr-footer__logo\\" style=\\"width: 9rem;\\" src=\\"/img/logo-fabriquenumerique.svg\\" alt=\\"La fabrique numérique\\"></a>
+        </div>
+        <div class=\\"fr-footer__content\\">
+          <ul class=\\"fr-footer__content-list\\">
+            <li class=\\"fr-footer__content-item\\"><a class=\\"fr-footer__content-link\\" target=\\"_blank\\" href=\\"https://economie.gouv.fr\\">economie.gouv.fr</a></li>
+            <li class=\\"fr-footer__content-item\\"><a class=\\"fr-footer__content-link\\" target=\\"_blank\\" href=\\"https://ecologie.gouv.fr\\">ecologie.gouv.fr</a></li>
+            <li class=\\"fr-footer__content-item\\"><a class=\\"fr-footer__content-link\\" target=\\"_blank\\" href=\\"https://onf.fr\\">onf.fr</a></li>
+            <li class=\\"fr-footer__content-item\\"><a class=\\"fr-footer__content-link\\" target=\\"_blank\\" href=\\"https://legifrance.gouv.fr\\">legifrance.gouv.fr</a></li>
+          </ul>
+        </div>
+        <div class=\\"fr-footer__bottom\\" style=\\"width: 100%;\\">
+          <ul class=\\"fr-footer__bottom-list\\">
+            <li class=\\"fr-footer__bottom-item\\"><a class=\\"fr-footer__bottom-link\\" href=\\"#\\">Accessibilité : non conforme</a></li>
+            <li class=\\"fr-footer__bottom-item\\"><a class=\\"fr-footer__bottom-link\\" href=\\"https://camino.gitbook.io/guide-dutilisation/a-propos/mentions-legales\\" target=\\"_blank\\">Mentions légales</a></li>
+            <li class=\\"fr-footer__bottom-item\\"><a class=\\"fr-footer__bottom-link\\" href=\\"https://camino.gitbook.io/guide-dutilisation/a-propos/cgu\\" target=\\"_blank\\">CGU</a></li>
+            <li class=\\"fr-footer__bottom-item\\"><a class=\\"fr-footer__bottom-link\\" href=\\"https://github.com/MTES-MCT/camino/commit/310c30f5b4d779cd4bc17316f4b026292bb95c10\\" target=\\"_blank\\">Version 310c30f</a></li>
+          </ul>
+          <div class=\\"fr-footer__bottom-copy\\">
+            <p>Sauf mention contraire, tous les contenus de ce site sont sous <a href=\\"https://github.com/MTES-MCT/camino/blob/master/license.md\\" target=\\"_blank\\">licence GNU AGPLv3</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>"
+`;
+
 exports[`Storybook Tests > Components/Pages/Footer > WithNewsletter 1`] = `
 "<footer class=\\"footer\\">
   <div class=\\"container\\">
