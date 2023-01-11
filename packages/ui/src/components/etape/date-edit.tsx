@@ -1,6 +1,7 @@
 import { CaminoDate } from 'camino-common/src/date'
 import { FunctionalComponent } from 'vue'
 import InputDate from '../_ui/input-date.vue'
+import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 
 export type Props = {
   incertitude?: boolean
@@ -8,11 +9,6 @@ export type Props = {
   onDateChanged: (date: CaminoDate) => void
   onIncertitudeChanged: (incertitude: boolean) => void
 }
-
-// FIXME 2023-01-03 : add to typescript vue type utils
-const isEventWithTarget = (
-  event: any
-): event is InputEvent & { target: HTMLInputElement } => event.target
 
 export const DateEdit: FunctionalComponent<Props> = props => {
   return (

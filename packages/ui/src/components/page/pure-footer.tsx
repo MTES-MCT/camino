@@ -1,6 +1,8 @@
 import { FunctionalComponent } from 'vue'
+import { NewsletterForm } from './footer/newsletter-form'
 export interface Props {
   version: string
+  displayNewsletter: boolean
 }
 
 export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
@@ -118,9 +120,11 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
             </a>
           </div>
           <div class="fr-footer__content">
-            {/* <p class="fr-footer__content-desc"> */}
-            {/*  <NewsletterForm/> */}
-            {/* </p> */}
+            {props.displayNewsletter ? (
+              <p class="fr-footer__content-desc">
+                <NewsletterForm />
+              </p>
+            ) : null}
             <ul class="fr-footer__content-list">
               <li class="fr-footer__content-item">
                 <a

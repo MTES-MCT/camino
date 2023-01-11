@@ -11,6 +11,7 @@ import {
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { computed, ref, FunctionalComponent, defineComponent } from 'vue'
 import { TypeAhead } from '../_ui/typeahead'
+import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 
 export type Props = {
   etape: {
@@ -24,11 +25,6 @@ export type Props = {
     typeId: EtapeTypeId | null
   ) => void
 }
-
-// FIXME 2023-01-03 : add to typescript vue type utils
-const isEventWithTarget = (
-  event: any
-): event is InputEvent & { target: HTMLInputElement } => event.target
 
 interface SelectStatutProps {
   statutId: EtapeStatutId | null
