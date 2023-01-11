@@ -1,4 +1,4 @@
-import { dateValidate } from '../../../tools/date.js'
+import { dateValidate } from 'camino-common/src/date.js'
 import { ITitreActivite, ITitreEtape } from '../../../types.js'
 
 /**

@@ -1,6 +1,5 @@
+import { dateValidate } from 'camino-common/src/date.js'
 import { IDocument } from '../../types.js'
-
-import { dateValidate } from '../../tools/date.js'
 
 export const documentInputValidate = async (document: IDocument) => {
   const errors = [] as string[]

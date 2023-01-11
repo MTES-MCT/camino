@@ -113,9 +113,7 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
     demarcheIdExceptions: [
       newDemarcheId('C3rs92l1eci3mLvsAGkv7gVV'),
       newDemarcheId('YEWeODXiFb7xKJB2OQlTyc14'),
-      // avis dgtm moins de 31 jours après la saisine des services
-      newDemarcheId('DnlpUvzF24KvQ3tgzIbACA7N'),
-      newDemarcheId('rI65CiKLiMrT4PRGsEuwPg3P'),
+      // avis dgtm moins de 30 jours après la saisine des services
       newDemarcheId('ktPyoaDYzJi2faPMtAeKFZ5l')
     ]
   }

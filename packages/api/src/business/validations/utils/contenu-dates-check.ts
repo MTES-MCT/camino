@@ -1,6 +1,5 @@
+import { dateValidate } from 'camino-common/src/date.js'
 import { ISection, IContenu } from '../../../types.js'
-
-import { dateValidate } from '../../../tools/date.js'
 
 export const contenuDatesCheck = (sections: ISection[], contenu: IContenu) => {
   const errors = sections.reduce(

@@ -4,7 +4,11 @@ import { CaminoCommonContext, DBEtat, Etape, tags } from '../machine-common.js'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
-import { CaminoDate, daysBetween } from 'camino-common/src/date.js'
+import {
+  CaminoDate,
+  dateAddMonths,
+  daysBetween
+} from 'camino-common/src/date.js'
 
 type FaireSaisineDesServices = {
   date: CaminoDate
@@ -237,7 +241,10 @@ const peutRendreAvisDREAL = (
 ): boolean => {
   return (
     context.saisineDesServices.faite &&
-    daysBetween(context.saisineDesServices.date, event.date) > 31
+    daysBetween(
+      dateAddMonths(context.saisineDesServices.date, 1),
+      event.date
+    ) >= 0
   )
 }
 

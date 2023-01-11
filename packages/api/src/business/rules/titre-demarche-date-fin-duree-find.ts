@@ -6,9 +6,12 @@ import {
 } from '../utils/titre-etapes-sort.js'
 
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find.js'
-import { dateAddMonths, datesSubtract } from '../../tools/date.js'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import {
+  dateAddMonths,
+  datesSubtract,
+  toCaminoDate
+} from 'camino-common/src/date.js'
 
 // entrée
 // - les démarches d'un titre

@@ -12,7 +12,12 @@ import {
   demarchesDefinitions,
   isDemarcheDefinitionMachine
 } from '../../business/rules-demarches/definitions.js'
-import { ajouteJour } from 'camino-common/src/date.js'
+import {
+  dateAddDays,
+  daysBetween,
+  moveToDayInMonth
+} from 'camino-common/src/date.js'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 
 const writeEtapesForTest = async () => {
   const demarcheDefinitionMachines = demarchesDefinitions.filter(
@@ -67,7 +72,6 @@ const writeEtapesForTest = async () => {
         return true
       })
       .map((demarche, index) => {
-        const decalageJour = Math.floor(Math.random() * 100)
         const etapes: Etape[] = toMachineEtapes(
           demarche?.etapes
             ?.sort((a, b) => (a.ordre ?? 0) - (b.ordre ?? 0))
@@ -80,6 +84,16 @@ const writeEtapesForTest = async () => {
 
               return etape
             }) ?? []
+        )
+        // Pour anonymiser la date en gardant les délai en mois entre la saisine et l'apd,
+        // on trouve la date de saisine et on calcule un delta random pour tomber dans le même mois
+        const firstSaisineDate =
+          etapes.find(
+            etape => etape.etapeTypeId === ETAPES_TYPES.saisineDesServices
+          )?.date ?? etapes[0].date
+        const decalageJour = daysBetween(
+          firstSaisineDate,
+          moveToDayInMonth(firstSaisineDate, Math.floor(Math.random() * 28))
         )
         try {
           if (!demarcheDefinition.machine.isEtapesOk(etapes)) {
@@ -102,7 +116,7 @@ const writeEtapesForTest = async () => {
         }
 
         const etapesAnonymes = etapes.map(etape => {
-          return { ...etape, date: ajouteJour(etape.date, decalageJour) }
+          return { ...etape, date: dateAddDays(etape.date, decalageJour) }
         })
 
         return {
