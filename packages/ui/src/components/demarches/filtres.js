@@ -1,6 +1,4 @@
 import { markRaw } from 'vue'
-import { FiltreDomaine } from '../_common/filtres/domaine'
-import { FiltresStatuts as FiltresTitresStatuts } from '../_common/filtres/statuts'
 import FiltresEtapes from './filtres-custom-etapes.vue'
 import { elementsFormat } from '../../utils/index'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
@@ -94,7 +92,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedDomaines,
-    component: markRaw(FiltreDomaine)
+    component: 'FiltreDomaine'
   },
   {
     id: 'titresTypesIds',
@@ -110,7 +108,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: [],
-    component: markRaw(FiltresTitresStatuts),
+    component: 'FiltresStatuts',
     elementsFormat
   },
   {
@@ -154,7 +152,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedDemarchesStatuts,
-    component: markRaw(FiltresTitresStatuts)
+    component: 'FiltresStatuts'
   },
   {
     id: 'etapesInclues',
