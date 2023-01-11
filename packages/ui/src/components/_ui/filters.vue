@@ -87,7 +87,7 @@
 <script>
 import Accordion from './accordion.vue'
 import { FiltersInput } from './filters-input'
-import FiltersCheckboxes from './filters-checkboxes.vue'
+import { FiltersCheckboxes } from './filters-checkboxes'
 import { FiltersSelects } from './filters-selects'
 import FiltersInputAutocomplete from './filters-input-autocomplete.vue'
 import { Icon } from '@/components/_ui/icon'
