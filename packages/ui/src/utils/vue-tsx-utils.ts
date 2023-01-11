@@ -41,3 +41,7 @@ export function caminoDefineComponent<
 ): DefineComponent<Props, RawBindings, D, C, M, Mixin, Extends, E, EE> {
   return defineComponent(options)
 }
+
+export const isEventWithTarget = (
+  event: any
+): event is FocusEvent & { target: HTMLInputElement } => event.target

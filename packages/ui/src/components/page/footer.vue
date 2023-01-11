@@ -1,5 +1,5 @@
 <template>
-  <PureFooter :version="version" />
+  <PureFooter :version="version" :displayNewsletter="displayNewsletter" />
 </template>
 
 <script setup lang="ts">
@@ -13,7 +13,7 @@ const version = computed(() => {
   // @ts-ignore
   return applicationVersion
 })
-// const displayNewsletter = computed(() => {
-//   return !store.state.user.element
-// })
+const displayNewsletter = computed(() => {
+  return !store.state.user.element
+})
 </script>

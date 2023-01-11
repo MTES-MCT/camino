@@ -163,7 +163,9 @@ deploy/prod:
 dsfr/generate:
 	mkdir tmp
 	cp node_modules/@gouvfr/dsfr/dist/dsfr.css tmp/_dsfr.scss
-	echo ".dsfr { @import './_dsfr.scss';}" > tmp/dsfr.scss
+	cp node_modules/@gouvfr/dsfr/dist/utility/utility.css tmp/_utility.scss
+	sed -i 's/..\/icons/.\/icons/g' tmp/_utility.scss
+	echo ".dsfr { @import './_dsfr.scss'; @import './_utility.scss'}" > tmp/dsfr.scss
 	npx sass --no-source-map tmp/dsfr.scss packages/ui/src/styles/dsfr/dsfr.css
 	rm -r tmp
 	sed -i 's/.dsfr :root/:root/g' packages/ui/src/styles/dsfr/dsfr.css

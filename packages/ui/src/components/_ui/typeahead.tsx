@@ -1,6 +1,7 @@
 import { computed, defineComponent, Ref, ref, watch } from 'vue'
 import { Chip } from './chip'
 import styles from './typeahead.module.css'
+import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 
 type TypeAheadRecord = Record<string | symbol | number, any>
 
@@ -18,11 +19,6 @@ export type Props<T extends TypeAheadRecord, K extends keyof T> = {
   onSelectItems?: (item: T[]) => void
   onInput?: (item: string) => void
 }
-
-// FIXME 2023-01-03 : add to typescript vue type utils
-const isEventWithTarget = (
-  event: any
-): event is FocusEvent & { target: HTMLInputElement } => event.target
 
 const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
   defineComponent<Props<T, K>>({
