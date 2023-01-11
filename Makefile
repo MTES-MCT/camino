@@ -166,5 +166,6 @@ dsfr/generate:
 	echo ".dsfr { @import './_dsfr.scss';}" > tmp/dsfr.scss
 	npx sass --no-source-map tmp/dsfr.scss packages/ui/src/styles/dsfr/dsfr.css
 	rm -r tmp
+	sed -i 's/.dsfr :root/:root/g' packages/ui/src/styles/dsfr/dsfr.css
 	cp -r node_modules/@gouvfr/dsfr/dist/icons packages/ui/src/styles/dsfr/
 	cp -r node_modules/@gouvfr/dsfr/dist/fonts packages/ui/src/styles/dsfr/
