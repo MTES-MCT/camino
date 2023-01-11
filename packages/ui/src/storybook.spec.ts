@@ -38,13 +38,18 @@ describe('Storybook Tests', async () => {
           env =>
             name?.includes('NoStoryshots') || !env.name?.includes('NoSnapshot')
         )
-    )('$name', ({ story }) => {
+    )('$name', async ({ story }) => {
       const mounted = render(story(), {
         global: {
           components: { 'router-link': h('a', { type: 'primary' }) }
         }
       })
-      expect(mounted.html()).toMatchSnapshot()
+      await new Promise<void>(resolve =>
+        setTimeout(() => {
+          expect(mounted.html()).toMatchSnapshot()
+          resolve()
+        }, 1)
+      )
     })
   })
 })
