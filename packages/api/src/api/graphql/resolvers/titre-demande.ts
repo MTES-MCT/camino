@@ -121,77 +121,78 @@ export const titreDemandeCreer = async (
       titulaires: [titulaire]
     }
 
-    let decisionsAnnexesEtapeTypeIds: EtapeTypeId[] = []
-    if (titreDemande.typeId === 'axm') {
-      // si c’est une AXM, d’après l’arbre d’instructions il y a 2 décisions annexes
-      // - la décision du propriétaire du sol (asl)
-      // - la décision de la mission autorité environnementale (dae)
-      decisionsAnnexesEtapeTypeIds = ['asl', 'dae']
-    }
-    if (decisionsAnnexesEtapeTypeIds.length) {
-      titreEtape.decisionsAnnexesSections = []
+    if (isBureauDEtudes(user) || isEntreprise(user)) {
+      let decisionsAnnexesEtapeTypeIds: EtapeTypeId[] = []
+      if (titreDemande.typeId === 'axm') {
+        // si c’est une AXM, d’après l’arbre d’instructions il y a 2 décisions annexes
+        // - la décision du propriétaire du sol (asl)
+        // - la décision de la mission autorité environnementale (dae)
+        decisionsAnnexesEtapeTypeIds = ['asl', 'dae']
+      }
+      if (decisionsAnnexesEtapeTypeIds.length) {
+        titreEtape.decisionsAnnexesSections = []
 
-      for (const etapeTypeId of decisionsAnnexesEtapeTypeIds) {
-        const etapeType = await etapeTypeGet(etapeTypeId, {
-          fields: { id: {} }
-        })
-
-        const etapesStatuts = getEtapesStatuts(etapeTypeId)
-
-        const elements: ISectionElement[] = []
-        if (etapeType?.sections?.length) {
-          etapeType.sections.forEach(section => {
-            section.elements?.forEach(element => {
-              elements.push({ ...element, sectionId: section.id })
-            })
-          })
-        }
-
-        const decisionAnnexeSections: ISection = {
-          id: etapeTypeId,
-          nom: etapeType!.nom,
-          elements: [
-            {
-              id: 'date',
-              nom: 'Date',
-              type: 'date'
-            },
-            {
-              id: 'statutId',
-              nom: 'Statut',
-              type: 'select',
-              valeurs: etapesStatuts.map(statut => ({
-                id: statut.id,
-                nom: statut.nom
-              }))
-            },
-            ...elements
-          ]
-        }
-
-        const titreTypeType = getTitreTypeType(titreDemande.typeId)
-        const documents = getDocuments(
-          titreTypeType,
-          titreDemande.domaineId,
-          titreDemarche.typeId,
-          etapeTypeId
-        )
-
-        documents
-          ?.filter(dt => !dt.optionnel)
-          .forEach(dt => {
-            decisionAnnexeSections.elements!.push({
-              id: dt.id,
-              nom: dt.nom!,
-              type: 'file'
-            })
+        for (const etapeTypeId of decisionsAnnexesEtapeTypeIds) {
+          const etapeType = await etapeTypeGet(etapeTypeId, {
+            fields: { id: {} }
           })
 
-        titreEtape.decisionsAnnexesSections.push(decisionAnnexeSections)
+          const etapesStatuts = getEtapesStatuts(etapeTypeId)
+
+          const elements: ISectionElement[] = []
+          if (etapeType?.sections?.length) {
+            etapeType.sections.forEach(section => {
+              section.elements?.forEach(element => {
+                elements.push({ ...element, sectionId: section.id })
+              })
+            })
+          }
+
+          const decisionAnnexeSections: ISection = {
+            id: etapeTypeId,
+            nom: etapeType!.nom,
+            elements: [
+              {
+                id: 'date',
+                nom: 'Date',
+                type: 'date'
+              },
+              {
+                id: 'statutId',
+                nom: 'Statut',
+                type: 'select',
+                valeurs: etapesStatuts.map(statut => ({
+                  id: statut.id,
+                  nom: statut.nom
+                }))
+              },
+              ...elements
+            ]
+          }
+
+          const titreTypeType = getTitreTypeType(titreDemande.typeId)
+          const documents = getDocuments(
+            titreTypeType,
+            titreDemande.domaineId,
+            titreDemarche.typeId,
+            etapeTypeId
+          )
+
+          documents
+            ?.filter(dt => !dt.optionnel)
+            .forEach(dt => {
+              decisionAnnexeSections.elements!.push({
+                id: dt.id,
+                nom: dt.nom!,
+                type: 'file'
+              })
+            })
+
+          titreEtape.decisionsAnnexesSections.push(decisionAnnexeSections)
+        }
       }
     }
     const updatedTitreEtape = await titreEtapeUpsert(titreEtape, user, titreId)
-
     await titreEtapeUpdateTask(
       updatedTitreEtape.id,
       titreEtape.titreDemarcheId,

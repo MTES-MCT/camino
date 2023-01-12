@@ -459,7 +459,10 @@ export default {
 
     async onEtapeTypeChange(etapeStatutId, etapeTypeId) {
       this.etape.statutId = etapeStatutId
-      if (this.etape.type.id !== etapeTypeId) {
+      if (this.etape.type?.id !== etapeTypeId) {
+        if (!this.etape.type) {
+          this.etape.type = {}
+        }
         this.etape.type.id = etapeTypeId
         await this.$store.dispatch('titreEtapeEdition/heritageGet', {
           typeId: etapeTypeId
