@@ -1,6 +1,7 @@
 import { filesPathCheck } from './files-path-check.js'
 import { IndexFile } from './_types.js'
 import { expect, test } from 'vitest'
+import { toCaminoDate } from 'camino-common/src/date.js'
 
 test('filesPathCheck', () => {
   const fileIndex = {
@@ -14,7 +15,7 @@ test('filesPathCheck', () => {
       document: {
         id: 'file3',
         typeId: 'not',
-        date: '2020-08-04'
+        date: toCaminoDate('2020-08-04')
       },
       path: 'demarches/anotherFolder/file3.pdf'
     },
@@ -22,7 +23,7 @@ test('filesPathCheck', () => {
       document: {
         id: 'file2',
         typeId: 'not',
-        date: '2020-08-04'
+        date: toCaminoDate('2020-08-04')
       },
       path: 'file2.pdf'
     }

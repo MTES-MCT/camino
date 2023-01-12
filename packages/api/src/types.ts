@@ -142,7 +142,7 @@ interface IContenuElement {
 }
 
 interface IDecisionAnnexeContenuElement extends IContenuElement {
-  date: string
+  date: CaminoDate
   statutId: EtapeStatutId
   [elementId: string]: IContenuValeur
 }

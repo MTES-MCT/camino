@@ -19,6 +19,7 @@ import {
   expect,
   vi
 } from 'vitest'
+import { toCaminoDate } from 'camino-common/src/date.js'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
@@ -198,25 +199,25 @@ describe('etapeCreer', () => {
     await documentCreate({
       id: 'dom',
       typeId: 'dom',
-      date: '2020-01-01',
+      date: toCaminoDate('2020-01-01'),
       uri: 'https://camino.beta.gouv.fr'
     })
     await documentCreate({
       id: 'for',
       typeId: 'for',
-      date: '2020-01-01',
+      date: toCaminoDate('2020-01-01'),
       uri: 'https://camino.beta.gouv.fr'
     })
     await documentCreate({
       id: 'jpa',
       typeId: 'jpa',
-      date: '2020-01-01',
+      date: toCaminoDate('2020-01-01'),
       uri: 'https://camino.beta.gouv.fr'
     })
     await documentCreate({
       id: 'pla',
       typeId: 'pla',
-      date: '2020-01-01',
+      date: toCaminoDate('2020-01-01'),
       uri: 'https://camino.beta.gouv.fr'
     })
     const res = await graphQLCall(

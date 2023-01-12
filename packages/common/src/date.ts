@@ -18,7 +18,7 @@ const checkValidCaminoDate = (str: string): str is CaminoDate => {
 
 export const toCaminoDate = (date: Date | string): CaminoDate => {
   if (typeof date === 'string') {
-    if (checkValidCaminoDate(date)) {
+    if (checkValidCaminoDate(date) && !isNaN(new Date(date).getTime())) {
       return date
     } else {
       throw new Error(`Invalid date string: ${date}`)

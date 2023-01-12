@@ -23,8 +23,13 @@ test.each([
   expect(datesDiffInDays(new Date(date1), new Date(date2))).toBe(days)
 })
 
+test('toCaminoDate', () => {
+  expect(() => toCaminoDate('123123')).toThrowError()
+  expect(() => toCaminoDate(new Date('plop'))).toThrowError()
+})
+
 test('getAnnee', () => {
-  expect(getAnnee(toCaminoDate('2022-12-52'))).toBe('2022')
+  expect(getAnnee(toCaminoDate('2022-12-01'))).toBe('2022')
   expect(getAnnee(toCaminoDate('1812-01-02'))).toBe('1812')
   expect(() => getAnnee(toCaminoDate('toto'))).toThrowErrorMatchingInlineSnapshot(`"Invalid date string: toto"`)
   expect(() => getAnnee(toCaminoDate('12'))).toThrowErrorMatchingInlineSnapshot(`"Invalid date string: 12"`)
@@ -66,23 +71,23 @@ test('anneePrecedente', () => {
 test("retourne une erreur si aucune date n'est fournie", () => {
   let tested = dateValidate(null)
 
-  expect(tested).toBe({ valid: false, error: 'Date manquante' })
+  expect(tested).toStrictEqual({ valid: false, error: 'Date manquante' })
 
   tested = dateValidate(undefined)
 
-  expect(tested).toBe({ valid: false, error: 'Date manquante' })
+  expect(tested).toStrictEqual({ valid: false, error: 'Date manquante' })
 })
 
-test('retourne null si la date est valide', () => {
+test('retourne la date si elle est valide', () => {
   const res = dateValidate('1910-01-01')
 
-  expect(res).toBe({ valid: true, date: toCaminoDate('1910-01-01') })
+  expect(res).toStrictEqual({ valid: true, date: toCaminoDate('1910-01-01') })
 })
 
-test('retourne une erreur la date est invalide', () => {
-  const res = dateValidate('1910-123123123-123123113')
+test.each(['1910-123123123-123123113', '2000-42-42'])('retourne une erreur la date est invalide', date => {
+  const res = dateValidate(date)
 
-  expect(res).toBe({ valid: false, error: 'Date invalide' })
+  expect(res).toStrictEqual({ valid: false, error: 'Date invalide' })
 })
 
 test.each([

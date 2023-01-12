@@ -57,7 +57,7 @@ describe('documentSupprimer', () => {
       await documentCreate({
         id: documentId,
         typeId: 'dec',
-        date: '',
+        date: toCaminoDate('2023-01-12'),
         titreEtapeId: 'titreEtapeId'
       })
 
@@ -103,7 +103,7 @@ describe('documentSupprimer', () => {
       await documentCreate({
         id: documentId,
         typeId: 'dec',
-        date: '',
+        date: toCaminoDate('2023-01-12'),
         titreActiviteId: 'titreActiviteId'
       })
 
@@ -145,7 +145,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
     await documentCreate({
       id: documentId,
       typeId: 'dec',
-      date: '',
+      date: toCaminoDate('2023-01-12'),
       titreEtapeId: 'titreEtapeId'
     })
 
@@ -178,7 +178,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
     await documentCreate({
       id: documentId,
       typeId: 'arr',
-      date: '',
+      date: toCaminoDate('2023-01-12'),
       titreEtapeId: 'titreEtapeId'
     })
 

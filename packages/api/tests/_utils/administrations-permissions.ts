@@ -238,7 +238,7 @@ export const creationCheck = async (
       await documentCreate({
         id,
         typeId: documentTypeId,
-        date: '2020-01-01',
+        date: toCaminoDate('2020-01-01'),
         uri: 'https://camino.beta.gouv.fr'
       })
     }

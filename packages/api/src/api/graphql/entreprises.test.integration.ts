@@ -277,7 +277,7 @@ describe('entreprise', () => {
     await documentCreate({
       id: documentId,
       typeId: 'fac',
-      date: '',
+      date: toCaminoDate('2023-01-12'),
       entrepriseId
     })
 
@@ -304,7 +304,7 @@ describe('entreprise', () => {
     await documentCreate({
       id: documentId,
       typeId: 'fac',
-      date: '',
+      date: toCaminoDate('2023-01-12'),
       entrepriseId
     })
 
