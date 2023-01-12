@@ -1,11 +1,12 @@
 import { titresActivitesGet } from '../../database/queries/titres-activites.js'
 import { userSuper } from '../../database/user-super.js'
-import { dateAddDays, dateAddMonths } from '../../tools/date.js'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
 import { activitesUrlGet } from '../utils/urls-get.js'
 import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
 import {
   anneePrecedente,
+  dateAddDays,
+  dateAddMonths,
   getAnnee,
   getCurrent
 } from 'camino-common/src/date.js'

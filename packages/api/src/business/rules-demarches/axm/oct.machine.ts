@@ -1,10 +1,24 @@
 import { assign, createMachine } from 'xstate'
 import { CaminoMachine } from '../machine-helper.js'
-import { CaminoCommonContext, DBEtat, tags } from '../machine-common.js'
+import { CaminoCommonContext, DBEtat, Etape, tags } from '../machine-common.js'
 import { EtapesTypesEtapesStatuts as ETES } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
+import {
+  CaminoDate,
+  dateAddMonths,
+  daysBetween
+} from 'camino-common/src/date.js'
 
+type FaireSaisineDesServices = {
+  date: CaminoDate
+  type: 'FAIRE_SAISINE_DES_SERVICES'
+}
+
+type RendreAvisDreal = {
+  date: CaminoDate
+  type: 'RENDRE_AVIS_DREAL'
+}
 // FIXME
 // ? vérifier la visibilité classement sans suite (@laure)
 // ? brancher le calcul de la visibilité
@@ -24,8 +38,8 @@ export type AXMOctXStateEvent =
   | { type: 'MODIFIER_LA_DEMANDE' }
   | { type: 'FAIRE_SAISINE_COLLECTIVITES_LOCALES' }
   | { type: 'RENDRE_AVIS_DUN_MAIRE' }
-  | { type: 'RENDRE_AVIS_DREAL' }
-  | { type: 'FAIRE_SAISINE_DES_SERVICES' }
+  | RendreAvisDreal
+  | FaireSaisineDesServices
   | { type: 'RENDRE_AVIS_DGTM_MNBST' }
   | { type: 'FAIRE_SAISINE_COMMISSION_DEPARTEMENTALE_DES_MINES' }
   | { type: 'RENDRE_AVIS_COMMISSION_DEPARTEMENTALE_DES_MINES' }
@@ -39,7 +53,7 @@ export type AXMOctXStateEvent =
   | { type: 'NOTIFIER_COLLECTIVITES_LOCALES' }
   | { type: 'RENDRE_DECISION_ABROGATION' }
   | { type: 'RENDRE_DECISION_RETRAIT' }
-  | { type: 'RENDRE_AVIS_DGTMAUCUL' }
+  | { type: 'RENDRE_AVIS_DGTMAUCL' }
   | {
       type: 'RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI'
     }
@@ -60,7 +74,9 @@ export type AXMOctXStateEvent =
   | { type: 'FAIRE_DESISTEMENT_DEMANDEUR' }
   | { type: 'FAIRE_CLASSEMENT_SANS_SUITE' }
 
-const trad: { [key in AXMOctXStateEvent['type']]: DBEtat } = {
+type Event = AXMOctXStateEvent['type']
+
+const trad: { [key in Event]: DBEtat } = {
   FAIRE_DEMANDE: ETES.demande,
   DEPOSER_DEMANDE: ETES.depotDeLaDemande,
   RENDRE_DAE_EXEMPTEE: {
@@ -134,7 +150,7 @@ const trad: { [key in AXMOctXStateEvent['type']]: DBEtat } = {
   NOTIFIER_COLLECTIVITES_LOCALES: ETES.notificationDesCollectivitesLocales,
   RENDRE_DECISION_ABROGATION: ETES.abrogationDeLaDecision,
   RENDRE_DECISION_RETRAIT: ETES.retraitDeLaDecision,
-  RENDRE_AVIS_DGTMAUCUL:
+  RENDRE_AVIS_DGTMAUCL:
     ETES.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_,
   RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI:
     ETES.avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi,
@@ -165,6 +181,11 @@ const trad: { [key in AXMOctXStateEvent['type']]: DBEtat } = {
   FAIRE_CLASSEMENT_SANS_SUITE: ETES.classementSansSuite
 }
 
+// Related to https://github.com/Microsoft/TypeScript/issues/12870
+export const EVENTS = Object.keys(trad) as Array<
+  Extract<keyof typeof trad, string>
+>
+
 // basé sur https://cacoo.com/diagrams/iUPEVBYNBjsiirfE/249D0
 export class AxmOctMachine extends CaminoMachine<
   AxmContext,
@@ -173,14 +194,60 @@ export class AxmOctMachine extends CaminoMachine<
   constructor() {
     super(axmOctMachine, trad)
   }
+
+  eventFrom(etape: Etape): AXMOctXStateEvent {
+    const entries = Object.entries(trad).filter(
+      (entry): entry is [Event, DBEtat] => EVENTS.includes(entry[0])
+    )
+
+    const entry = entries.find(([_key, dbEtat]) => {
+      return Object.values(dbEtat).some(
+        dbEtatSingle =>
+          dbEtatSingle.etapeTypeId === etape.etapeTypeId &&
+          dbEtatSingle.etapeStatutId === etape.etapeStatutId
+      )
+    })
+
+    if (entry) {
+      const eventFromEntry = entry[0]
+      switch (eventFromEntry) {
+        case 'FAIRE_SAISINE_DES_SERVICES':
+        case 'RENDRE_AVIS_DREAL': {
+          return { type: eventFromEntry, date: etape.date }
+        }
+        default:
+          // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          return { type: eventFromEntry }
+      }
+    }
+    throw new Error(`no event from ${JSON.stringify(etape)}`)
+  }
 }
+
+type SaisineDesServices = { faite: false } | { faite: true; date: CaminoDate }
 interface AxmContext extends CaminoCommonContext {
   demandeFaite: boolean
   daeRequiseOuDemandeDeposee: boolean
   decisionDuProprietaireDuSolFavorableSansReserve: boolean
   saisineDesCollectivitesLocalesFaite: boolean
-  saisineDesServicesFaite: boolean
+  saisineDesServices: SaisineDesServices
 }
+
+const peutRendreAvisDREAL = (
+  context: AxmContext,
+  event: RendreAvisDreal
+): boolean => {
+  return (
+    context.saisineDesServices.faite &&
+    daysBetween(
+      dateAddMonths(context.saisineDesServices.date, 1),
+      event.date
+    ) >= 0
+  )
+}
+
 const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
   predictableActionArguments: true,
   id: 'AXMOct',
@@ -190,7 +257,7 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
     demandeFaite: false,
     decisionDuProprietaireDuSolFavorableSansReserve: false,
     saisineDesCollectivitesLocalesFaite: false,
-    saisineDesServicesFaite: false,
+    saisineDesServices: { faite: false },
     daeRequiseOuDemandeDeposee: false,
     visibilite: 'confidentielle'
   },
@@ -359,7 +426,7 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
               always: {
                 target: 'rendreAvisDrealAFaire',
                 cond: (context: AxmContext) =>
-                  context.saisineDesServicesFaite &&
+                  context.saisineDesServices.faite &&
                   context.saisineDesCollectivitesLocalesFaite &&
                   context.decisionDuProprietaireDuSolFavorableSansReserve
               }
@@ -367,8 +434,11 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
             rendreAvisDrealAFaire: {
               tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
               on: {
-                RENDRE_AVIS_DREAL:
-                  '#saisineOuAvisCommissionDepartementaleDesMinesARendre'
+                RENDRE_AVIS_DREAL: {
+                  cond: peutRendreAvisDREAL,
+                  target:
+                    '#saisineOuAvisCommissionDepartementaleDesMinesARendre'
+                }
               }
             }
           }
@@ -420,12 +490,14 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
               on: {
                 FAIRE_SAISINE_DES_SERVICES: {
                   target: 'avisDesServicesARendre',
-                  cond: context => !context.saisineDesServicesFaite,
-                  actions: assign<
-                    AxmContext,
-                    { type: 'FAIRE_SAISINE_DES_SERVICES' }
-                  >({
-                    saisineDesServicesFaite: true
+                  cond: context => !context.saisineDesServices.faite,
+                  actions: assign<AxmContext, FaireSaisineDesServices>({
+                    saisineDesServices: (context, event) => {
+                      return {
+                        faite: true,
+                        date: event.date
+                      }
+                    }
                   })
                 }
               }
@@ -464,7 +536,7 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
                   initial: 'avisDGTMAUCULARendre',
                   states: {
                     avisDGTMAUCULARendre: {
-                      on: { RENDRE_AVIS_DGTMAUCUL: 'avisDGTMAUCULRendu' }
+                      on: { RENDRE_AVIS_DGTMAUCL: 'avisDGTMAUCULRendu' }
                     },
                     avisDGTMAUCULRendu: { type: 'final' }
                   }
@@ -600,8 +672,10 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
     avisDREALARendre: {
       tags: [tags.responsable[ADMINISTRATION_IDS['DGTM - GUYANE']]],
       on: {
-        RENDRE_AVIS_DREAL:
-          'saisineOuAvisCommissionDepartementaleDesMinesARendre'
+        RENDRE_AVIS_DREAL: {
+          cond: peutRendreAvisDREAL,
+          target: 'saisineOuAvisCommissionDepartementaleDesMinesARendre'
+        }
       }
     },
     saisineOuAvisCommissionDepartementaleDesMinesARendre: {

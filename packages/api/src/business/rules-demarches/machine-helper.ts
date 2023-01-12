@@ -65,6 +65,8 @@ export abstract class CaminoMachine<
     this.events = Object.keys(trad) as Array<CaminoEvent['type']>
   }
 
+  abstract eventFrom(etape: Etape): CaminoEvent
+
   protected caminoXStateEventToEtapes(
     event: CaminoEvent
   ): Omit<Etape, 'date'>[] {
@@ -74,32 +76,6 @@ export abstract class CaminoMachine<
       etapeTypeId,
       etapeStatutId
     }))
-  }
-
-  // visibleForTesting
-  public eventFrom(etape: Etape): CaminoEvent {
-    const entries = Object.entries(this.trad).filter(
-      (entry): entry is [CaminoEvent['type'], DBEtat] =>
-        this.events.includes(entry[0])
-    )
-
-    const entry = entries.find(([_key, dbEtat]) => {
-      return Object.values(dbEtat).some(
-        dbEtatSingle =>
-          dbEtatSingle.etapeTypeId === etape.etapeTypeId &&
-          dbEtatSingle.etapeStatutId === etape.etapeStatutId
-      )
-    })
-
-    if (entry) {
-      const eventFromEntry = entry[0]
-
-      // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      return { type: eventFromEntry }
-    }
-    throw new Error(`no event from ${JSON.stringify(etape)}`)
   }
 
   // visibleForTesting

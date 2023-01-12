@@ -142,7 +142,7 @@ interface IContenuElement {
 }
 
 interface IDecisionAnnexeContenuElement extends IContenuElement {
-  date: string
+  date: CaminoDate
   statutId: EtapeStatutId
   [elementId: string]: IContenuValeur
 }
@@ -595,7 +595,7 @@ interface ITitreDemarche {
 interface IDocument {
   id: string
   typeId: string
-  date: string
+  date: CaminoDate
   description?: string | null
   type?: DocumentType | null
   fichier?: boolean | null

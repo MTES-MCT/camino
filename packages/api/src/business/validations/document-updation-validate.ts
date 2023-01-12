@@ -1,14 +1,13 @@
+import { dateValidate } from 'camino-common/src/date.js'
 import { IDocument } from '../../types.js'
 
-import { dateValidate } from '../../tools/date.js'
+export const documentUpdationValidate = (document: IDocument): string[] => {
+  const errors: string[] = []
 
-export const documentUpdationValidate = async (document: IDocument) => {
-  const errors = [] as string[]
+  const dateCheck = dateValidate(document.date)
 
-  const error = dateValidate(document.date)
-
-  if (error) {
-    errors.push(error)
+  if (!dateCheck.valid) {
+    errors.push(dateCheck.error)
   }
 
   return errors

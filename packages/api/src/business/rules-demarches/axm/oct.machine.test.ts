@@ -99,7 +99,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
     ])
   })
 
-  test('peut faire l’avis du DREAL sans aucun autre avis', () => {
+  test('peut faire l’avis du DREAL sans aucun autre avis 30 jours après la saisine des services', () => {
     const service = orderAndInterpretMachine(axmOctMachine, [
       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
       {
@@ -126,7 +126,7 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         ...ETES
           .avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement
           .FAVORABLE,
-        date: toCaminoDate('2022-04-15')
+        date: toCaminoDate('2022-06-15')
       }
     ])
     expect(service).canOnlyTransitionTo(axmOctMachine, [
@@ -165,25 +165,25 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         ...ETES
           .avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement
           .FAVORABLE,
-        date: toCaminoDate('2022-04-15')
+        date: toCaminoDate('2022-06-15')
       },
       {
         ...ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.AJOURNE,
-        date: toCaminoDate('2022-04-16')
+        date: toCaminoDate('2022-06-16')
       },
       {
         ...ETES
           .avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement
           .FAVORABLE,
-        date: toCaminoDate('2022-04-17')
+        date: toCaminoDate('2022-06-17')
       },
       {
         ...ETES.saisineDeLaCommissionDepartementaleDesMines_CDM_.FAIT,
-        date: toCaminoDate('2022-04-18')
+        date: toCaminoDate('2022-06-18')
       },
       {
         ...ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE,
-        date: toCaminoDate('2022-04-18')
+        date: toCaminoDate('2022-06-18')
       }
     ])
     expect(service).canOnlyTransitionTo(axmOctMachine, [
@@ -403,37 +403,37 @@ describe('vérifie l’arbre d’octroi d’AXM', () => {
         ...ETES
           .avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement
           .FAVORABLE,
-        date: toCaminoDate('2022-04-20')
+        date: toCaminoDate('2022-05-20')
       },
       {
         ...ETES.saisineDeLaCommissionDepartementaleDesMines_CDM_.FAIT,
-        date: toCaminoDate('2022-04-21')
+        date: toCaminoDate('2022-05-21')
       },
       {
         ...ETES.avisDeLaCommissionDepartementaleDesMines_CDM_.FAVORABLE,
-        date: toCaminoDate('2022-04-22')
+        date: toCaminoDate('2022-05-22')
       },
       {
         ...ETES.saisineDeLautoriteSignataire.FAIT,
-        date: toCaminoDate('2022-04-23')
+        date: toCaminoDate('2022-05-23')
       },
       {
         ...ETES.decisionDeLadministration.ACCEPTE,
-        date: toCaminoDate('2022-04-24')
+        date: toCaminoDate('2022-05-24')
       },
       {
         ...ETES.notificationDesCollectivitesLocales.FAIT,
-        date: toCaminoDate('2022-04-25')
+        date: toCaminoDate('2022-05-25')
       },
       {
         ...ETES.publicationDansUnJournalLocalOuNational.FAIT,
-        date: toCaminoDate('2022-04-26')
+        date: toCaminoDate('2022-05-26')
       },
       {
         ...ETES.publicationDeDecisionAuRecueilDesActesAdministratifs.FAIT,
-        date: toCaminoDate('2022-04-27')
+        date: toCaminoDate('2022-05-27')
       },
-      { ...ETES.notificationAuDemandeur.FAIT, date: toCaminoDate('2022-04-28') }
+      { ...ETES.notificationAuDemandeur.FAIT, date: toCaminoDate('2022-05-28') }
     ]
     const service = orderAndInterpretMachine(axmOctMachine, etapes)
     expect(service).canOnlyTransitionTo(axmOctMachine, [

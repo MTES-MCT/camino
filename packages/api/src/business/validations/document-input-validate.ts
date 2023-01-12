@@ -1,9 +1,8 @@
+import { dateValidate } from 'camino-common/src/date.js'
 import { IDocument } from '../../types.js'
 
-import { dateValidate } from '../../tools/date.js'
-
-export const documentInputValidate = async (document: IDocument) => {
-  const errors = [] as string[]
+export const documentInputValidate = (document: IDocument): string[] => {
+  const errors: string[] = []
 
   if (!document.id && !document.typeId) {
     errors.push('type de fichier manquant')
@@ -13,9 +12,9 @@ export const documentInputValidate = async (document: IDocument) => {
     errors.push('extension du fichier manquante')
   }
 
-  const dateError = dateValidate(document.date)
-  if (dateError) {
-    errors.push(dateError)
+  const dateCheck = dateValidate(document.date)
+  if (!dateCheck.valid) {
+    errors.push(dateCheck.error)
   }
 
   return errors

@@ -1,9 +1,9 @@
 import { ITitreActivite } from '../../types.js'
-import { dateAddMonths } from '../../tools/date.js'
 import {
   ACTIVITES_STATUTS_IDS,
   ActivitesStatutId
 } from 'camino-common/src/static/activitesStatuts.js'
+import { dateAddMonths } from 'camino-common/src/date.js'
 
 /**
  * Trouve le statut d'une activité

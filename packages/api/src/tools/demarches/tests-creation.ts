@@ -12,6 +12,12 @@ import {
   demarchesDefinitions,
   isDemarcheDefinitionMachine
 } from '../../business/rules-demarches/definitions.js'
+import {
+  dateAddDays,
+  daysBetween,
+  setDayInMonth
+} from 'camino-common/src/date.js'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 
 const writeEtapesForTest = async () => {
   const demarcheDefinitionMachines = demarchesDefinitions.filter(
@@ -40,12 +46,15 @@ const writeEtapesForTest = async () => {
       .filter(demarche => {
         const date = titreDemarcheDepotDemandeDateFind(demarche.etapes!)
 
-        return (date ?? '') > demarcheDefinition.dateDebut
+        return (
+          (date ?? '') > demarcheDefinition.dateDebut &&
+          !demarcheDefinition.demarcheIdExceptions?.includes(demarche.id)
+        )
       })
       .filter(({ titreId }) => {
         if (
-          // décision du propriétaire du sol avant le dépôt de la demande
           [
+            // décision du propriétaire du sol avant le dépôt de la demande
             'EI4lAxLbhdFOoHb6LWL0y9pO',
             'e8ZYqaA9HB3bXuOeRlXz5g76',
             // visibilité publique
@@ -76,6 +85,16 @@ const writeEtapesForTest = async () => {
               return etape
             }) ?? []
         )
+        // Pour anonymiser la date en gardant les délai en mois entre la saisine et l'apd,
+        // on trouve la date de saisine et on calcule un delta random pour tomber dans le même mois
+        const firstSaisineDate =
+          etapes.find(
+            etape => etape.etapeTypeId === ETAPES_TYPES.saisineDesServices
+          )?.date ?? etapes[0].date
+        const decalageJour = daysBetween(
+          firstSaisineDate,
+          setDayInMonth(firstSaisineDate, Math.floor(Math.random() * 28))
+        )
         try {
           if (!demarcheDefinition.machine.isEtapesOk(etapes)) {
             etapes.splice(
@@ -96,8 +115,8 @@ const writeEtapesForTest = async () => {
           )
         }
 
-        const etapesAnonymes = etapes.map((etape, index) => {
-          return { ...etape, date: index.toString() }
+        const etapesAnonymes = etapes.map(etape => {
+          return { ...etape, date: dateAddDays(etape.date, decalageJour) }
         })
 
         return {

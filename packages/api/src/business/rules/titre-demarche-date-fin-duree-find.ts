@@ -6,9 +6,12 @@ import {
 } from '../utils/titre-etapes-sort.js'
 
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find.js'
-import { dateAddMonths, datesSubtract } from '../../tools/date.js'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
-import { toCaminoDate } from 'camino-common/src/date.js'
+import {
+  dateAddMonths,
+  monthsBetween,
+  toCaminoDate
+} from 'camino-common/src/date.js'
 
 // entrée
 // - les démarches d'un titre
@@ -174,7 +177,7 @@ const titreDemarcheOctroiDateFinAndDureeFind = (
   // la durée et la date de fin sont cumulées avec la durée accumulée
   if (dateFin) {
     return {
-      duree: datesSubtract(dateDebut, dateFin!) + dureeAcc,
+      duree: monthsBetween(dateDebut, dateFin!) + dureeAcc,
       dateFin: dateAddMonths(dateFin, dureeAcc)
     }
   }
@@ -186,7 +189,7 @@ const titreDemarcheOctroiDateFinAndDureeFind = (
     // https://www.legifrance.gouv.fr/affichCodeArticle.do?cidTexte=LEGITEXT000023501962&idArticle=LEGIARTI000023504741
     dateFin = toCaminoDate('2018-12-31')
     // on calcule la durée que sépare la date de début et la date de fin
-    duree = datesSubtract(dateDebut, dateFin!)
+    duree = monthsBetween(dateDebut, dateFin!)
     // on met à jour la date de fin avec la durée accumulée
     dateFin = dateAddMonths(dateFin, dureeAcc)
   } else {

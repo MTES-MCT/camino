@@ -18,7 +18,7 @@ const checkValidCaminoDate = (str: string): str is CaminoDate => {
 
 export const toCaminoDate = (date: Date | string): CaminoDate => {
   if (typeof date === 'string') {
-    if (checkValidCaminoDate(date)) {
+    if (checkValidCaminoDate(date) && !isNaN(new Date(date).getTime())) {
       return date
     } else {
       throw new Error(`Invalid date string: ${date}`)
@@ -65,4 +65,43 @@ export function toCaminoAnnee(annee: string | number): CaminoAnnee {
   checkValideAnnee(annee)
 
   return annee
+}
+
+export const dateValidate = (str: CaminoDate | string | undefined | null): { valid: true; date: CaminoDate } | { valid: false; error: 'Date manquante' | 'Date invalide' } => {
+  if (!str) return { valid: false, error: 'Date manquante' }
+
+  if (typeof str === 'string') {
+    try {
+      return { valid: true, date: toCaminoDate(str) }
+    } catch (e) {
+      return { valid: false, error: 'Date invalide' }
+    }
+  }
+
+  return { valid: true, date: str }
+}
+
+export const dateAddDays = (date: CaminoDate, days: number): CaminoDate => {
+  const [y, m, d] = date.split('-')
+
+  return toCaminoDate(new Date(+y, +m - 1, +d + days))
+}
+
+export const dateAddMonths = (date: CaminoDate, months: number): CaminoDate => {
+  const [y, m, d] = date.split('-')
+
+  return toCaminoDate(new Date(+y, +m - 1 + months, +d))
+}
+
+export const monthsBetween = (dateDebut: string, dateFin: string) => {
+  const [yDebut, mDebut] = dateDebut.split('-')
+  const [yFin, mFin] = dateFin.split('-')
+
+  return +yFin * 12 + +mFin - (+yDebut * 12 + +mDebut)
+}
+
+export function setDayInMonth(date: CaminoDate, day: number): CaminoDate {
+  const [y, m] = date.split('-')
+
+  return toCaminoDate(new Date(+y, +m - 1, +day))
 }
