@@ -1,10 +1,5 @@
-import errorLog from '../error-log.js'
 import { entrepriseEtablissementsFormat, entrepriseFormat } from './format.js'
-import {
-  entreprisesFetch,
-  entreprisesEtablissementsFetch,
-  tokenInitialize
-} from './fetch.js'
+import { entreprisesFetch, entreprisesEtablissementsFetch } from './fetch.js'
 import { IEntreprise, IEntrepriseEtablissement } from '../../types.js'
 
 // cherche les établissements des entreprises
@@ -13,14 +8,6 @@ export const apiInseeEntreprisesEtablissementsGet = async (
   sirenIds: string[]
 ) => {
   if (!sirenIds.length) return []
-
-  const token = await tokenInitialize()
-
-  if (!token) {
-    errorLog('API Insee: impossible de se connecter')
-
-    return []
-  }
 
   const entreprises = await entreprisesEtablissementsFetch(sirenIds)
 
@@ -38,14 +25,6 @@ export const apiInseeEntreprisesEtablissementsGet = async (
 // cherche les adresses des entreprises
 // retourne des objets du modèle Entreprise
 export const apiInseeEntreprisesGet = async (sirenIds: string[]) => {
-  const token = await tokenInitialize()
-
-  if (!token) {
-    errorLog('API Insee: impossible de se connecter')
-
-    return []
-  }
-
   const entreprises = await entreprisesFetch(sirenIds)
 
   if (!entreprises || !Array.isArray(entreprises)) {
@@ -64,12 +43,6 @@ export const apiInseeEntreprisesGet = async (sirenIds: string[]) => {
 export const apiInseeEntrepriseAndEtablissementsGet = async (
   sirenId: string
 ) => {
-  const token = await tokenInitialize()
-
-  if (!token) {
-    throw new Error('API Insee: impossible de se connecter')
-  }
-
   const entreprises = await apiInseeEntreprisesGet([sirenId])
   if (!entreprises) {
     throw new Error('API Insee: erreur')
