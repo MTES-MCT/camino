@@ -10,29 +10,42 @@ import {
 } from './types.js'
 
 import errorLog from '../error-log.js'
+import {
+  CaminoDate,
+  dateAddDays,
+  daysBetween,
+  getCurrent
+} from 'camino-common/src/date.js'
 
 const MAX_CALLS_MINUTE = 30
 const MAX_RESULTS = 20
-
+const TOKEN_VALIDITY_IN_DAYS = 1
 // token local au fichier
 // utilise `tokenInitialize` pour l'initialiser
-let apiToken = ''
+let apiToken: { validUntil: CaminoDate; token: string } | null = null
 
 const { API_INSEE_URL, API_INSEE_KEY, API_INSEE_SECRET } = process.env
 
-export const tokenInitialize = async () => {
-  if (apiToken) return apiToken
+// VisibleForTesting
+export const tokenInitialize = async (
+  tokenFetchCall = tokenFetch,
+  today = getCurrent()
+): Promise<string> => {
+  if (apiToken && daysBetween(apiToken.validUntil, today) < 0)
+    return apiToken.token
 
   try {
-    const result = await tokenFetch()
-
-    apiToken = result ? result.access_token : ''
-
-    if (!apiToken) {
+    const result = await tokenFetchCall()
+    if (result) {
+      apiToken = {
+        validUntil: dateAddDays(today, TOKEN_VALIDITY_IN_DAYS),
+        token: result.access_token
+      }
+    } else {
       throw new Error('pas de token après requête')
     }
 
-    return apiToken
+    return apiToken.token
   } catch (e: any) {
     errorLog(
       "API Insee: impossible de générer le token de l'API INSEE ",
@@ -43,11 +56,11 @@ export const tokenInitialize = async () => {
         e
     )
 
-    return null
+    throw e
   }
 }
 
-const tokenFetch = async () => {
+const tokenFetch = async (): Promise<IApiSirenQueryToken | null> => {
   try {
     if (!API_INSEE_URL) {
       throw new Error(
@@ -56,7 +69,10 @@ const tokenFetch = async () => {
     }
 
     console.info(
-      `API Insee: récupération du token ${API_INSEE_KEY}:${API_INSEE_SECRET}`
+      `API Insee: récupération du token ${API_INSEE_KEY?.substring(
+        0,
+        5
+      )}...:${API_INSEE_SECRET?.substring(0, 5)}...`
     )
 
     const auth = Buffer.from(`${API_INSEE_KEY}:${API_INSEE_SECRET}`).toString(
@@ -99,6 +115,7 @@ const tokenFetch = async () => {
 }
 
 const typeFetch = async (type: 'siren' | 'siret', q: string) => {
+  const token = await tokenInitialize()
   try {
     if (!API_INSEE_URL) {
       throw new Error(
@@ -114,7 +131,7 @@ const typeFetch = async (type: 'siren' | 'siret', q: string) => {
         method: 'GET',
         headers: {
           Accept: 'application/json',
-          Authorization: `Bearer ${apiToken}`
+          Authorization: `Bearer ${token}`
         }
       }
     )
