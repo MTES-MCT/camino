@@ -19,6 +19,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                     class="fr-footer__top-link"
                     href="https://camino.gitbook.io/guide-dutilisation/a-propos/contact"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     Contact
                   </a>
@@ -38,6 +39,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                     class="fr-footer__top-link"
                     href="https://camino.gitbook.io/guide-dutilisation/camino/glossaire"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     Glossaire
                   </a>
@@ -47,6 +49,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                     class="fr-footer__top-link"
                     href="https://camino.gitbook.io/guide-dutilisation/camino/guide-dutilisation"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     Tutoriel
                   </a>
@@ -56,6 +59,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                     class="fr-footer__top-link"
                     href="https://docs.camino.beta.gouv.fr/"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     API
                   </a>
@@ -80,6 +84,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                     class="fr-footer__top-link"
                     href="http://www.minergies.fr/"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     Minergies
                   </a>
@@ -89,6 +94,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                     class="fr-footer__top-link"
                     href="https://www.mineralinfo.fr/"
                     target="_blank"
+                    rel="noopener noreferrer"
                   >
                     MinéralInfos
                   </a>
@@ -131,6 +137,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                   class="fr-footer__content-link"
                   target="_blank"
                   href="https://economie.gouv.fr"
+                  rel="noopener noreferrer"
                 >
                   economie.gouv.fr
                 </a>
@@ -140,6 +147,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                   class="fr-footer__content-link"
                   target="_blank"
                   href="https://ecologie.gouv.fr"
+                  rel="noopener noreferrer"
                 >
                   ecologie.gouv.fr
                 </a>
@@ -149,6 +157,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                   class="fr-footer__content-link"
                   target="_blank"
                   href="https://onf.fr"
+                  rel="noopener noreferrer"
                 >
                   onf.fr
                 </a>
@@ -158,6 +167,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                   class="fr-footer__content-link"
                   target="_blank"
                   href="https://legifrance.gouv.fr"
+                  rel="noopener noreferrer"
                 >
                   legifrance.gouv.fr
                 </a>
@@ -176,6 +186,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                   class="fr-footer__bottom-link"
                   href="https://camino.gitbook.io/guide-dutilisation/a-propos/mentions-legales"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Mentions légales
                 </a>
@@ -185,6 +196,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                   class="fr-footer__bottom-link"
                   href="https://camino.gitbook.io/guide-dutilisation/a-propos/cgu"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   CGU
                 </a>
@@ -196,6 +208,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                     'https://github.com/MTES-MCT/camino/commit/' + props.version
                   }
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Version {props.version.substring(0, 7)}
                 </a>
@@ -207,6 +220,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
                 <a
                   href="https://github.com/MTES-MCT/camino/blob/master/license.md"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   licence GNU AGPLv3
                 </a>
