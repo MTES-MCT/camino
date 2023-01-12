@@ -1,8 +1,4 @@
-import { FiltresStatuts } from '../_common/filtres/statuts'
-import { FiltreDomaine } from '../_common/filtres/domaine'
-import { FiltresTypes } from '../_common/filtres/types'
 import { elementsFormat } from '../../utils/index'
-import { markRaw } from 'vue'
 import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
 import { sortedDomaines } from 'camino-common/src/static/domaines'
 import { titresFiltres, titresRechercherByNom } from '@/api/titres'
@@ -56,7 +52,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedDomaines,
-    component: markRaw(FiltreDomaine)
+    component: 'FiltreDomaine'
   },
   {
     id: 'titresTypesIds',
@@ -64,7 +60,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedTitreTypesTypes,
-    component: markRaw(FiltresTypes)
+    component: 'FiltresTypes'
   },
   {
     id: 'titresStatutsIds',
@@ -72,7 +68,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedTitresStatuts,
-    component: markRaw(FiltresStatuts)
+    component: 'FiltresStatuts'
   },
   {
     id: 'typesIds',
@@ -87,7 +83,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: activitesStatuts,
-    component: markRaw(FiltresStatuts)
+    component: 'FiltresStatuts'
   },
   {
     id: 'annees',

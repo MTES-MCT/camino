@@ -278,9 +278,10 @@ export const titresLignesBuild = (
       substances: {
         component: markRaw(TagList),
         props: {
-          elements: titre.substances?.map(
-            substanceId => SubstancesLegale[substanceId].nom
-          )
+          elements:
+            titre.substances?.map(
+              substanceId => SubstancesLegale[substanceId].nom
+            ) ?? []
         },
         class: 'mb--xs',
         value: titre.substances

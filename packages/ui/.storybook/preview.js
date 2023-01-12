@@ -3,7 +3,10 @@ import { app } from '@storybook/vue3'
 import { h } from 'vue'
 import { IconSprite } from '@/components/_ui/iconSprite'
 
-app.component('router-link', h('a', { type: 'primary' }))
+app.component(
+  'router-link',
+  h('a', { type: 'primary', href: 'href_for_storybook_in_preview.js' })
+)
 export const parameters = {
   actions: { argTypesRegex: '^on.*' },
   controls: {

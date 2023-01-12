@@ -142,7 +142,7 @@ export const utilisateurs = async (
       ordre,
       entrepriseIds: entrepriseIds?.split(','),
       administrationIds: administrationIds?.split(','),
-      roles: roles?.split(',').filter(isRole) ?? [],
+      roles: roles?.split(',').filter(isRole),
       noms,
       emails
     },
