@@ -15,7 +15,7 @@ import {
 import {
   dateAddDays,
   daysBetween,
-  moveToDayInMonth
+  setDayInMonth
 } from 'camino-common/src/date.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 
@@ -93,7 +93,7 @@ const writeEtapesForTest = async () => {
           )?.date ?? etapes[0].date
         const decalageJour = daysBetween(
           firstSaisineDate,
-          moveToDayInMonth(firstSaisineDate, Math.floor(Math.random() * 28))
+          setDayInMonth(firstSaisineDate, Math.floor(Math.random() * 28))
         )
         try {
           if (!demarcheDefinition.machine.isEtapesOk(etapes)) {

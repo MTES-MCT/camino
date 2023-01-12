@@ -16,8 +16,8 @@ export const propsDatesCheck = <T extends ITitreActivite | ITitreEtape>(
 ) => {
   const errors = propsNames.reduce((errors: string[], propId) => {
     if (element[propId]) {
-      const error = dateValidate(element[propId] as unknown as string)
-      if (error) {
+      const dateCheck = dateValidate(element[propId] as unknown as string)
+      if (!dateCheck.valid) {
         errors.push(`le champ "${String(propId)}" n'est pas une date valide`)
       }
     }

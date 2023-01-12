@@ -67,41 +67,40 @@ export function toCaminoAnnee(annee: string | number): CaminoAnnee {
   return annee
 }
 
-export const dateValidate = (str: string | undefined | null) => {
-  if (!str) return 'Date manquante'
+export const dateValidate = (str: CaminoDate | string | undefined | null): { valid: true; date: CaminoDate } | { valid: false; error: 'Date manquante' | 'Date invalide' } => {
+  if (!str) return { valid: false, error: 'Date manquante' }
 
-  const date = new Date(str)
-
-  if (date.toString() === 'Invalid Date') {
-    return 'Date invalide'
+  if (typeof str === 'string') {
+    try {
+      return { valid: true, date: toCaminoDate(str) }
+    } catch (e) {
+      return { valid: false, error: 'Date invalide' }
+    }
   }
 
-  return null
+  return { valid: true, date: str }
 }
 
-// ajoute une durée en jours à une string au format YYYY-MM-DD
 export const dateAddDays = (date: CaminoDate, days: number): CaminoDate => {
   const [y, m, d] = date.split('-')
 
   return toCaminoDate(new Date(+y, +m - 1, +d + days))
 }
 
-// ajoute une durée en mois à une string au format YYYY-MM-DD
 export const dateAddMonths = (date: CaminoDate, months: number): CaminoDate => {
   const [y, m, d] = date.split('-')
 
   return toCaminoDate(new Date(+y, +m - 1 + months, +d))
 }
 
-// calcul le nombre de mois entre 2 dates
-export const datesSubtract = (dateDebut: string, dateFin: string) => {
+export const monthsBetween = (dateDebut: string, dateFin: string) => {
   const [yDebut, mDebut] = dateDebut.split('-')
   const [yFin, mFin] = dateFin.split('-')
 
   return +yFin * 12 + +mFin - (+yDebut * 12 + +mDebut)
 }
 
-export function moveToDayInMonth(date: CaminoDate, day: number): CaminoDate {
+export function setDayInMonth(date: CaminoDate, day: number): CaminoDate {
   const [y, m] = date.split('-')
 
   return toCaminoDate(new Date(+y, +m - 1, +day))

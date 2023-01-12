@@ -7,10 +7,10 @@ export const contenuDatesCheck = (sections: ISection[], contenu: IContenu) => {
       section.elements && contenu[section.id]
         ? section.elements.reduce((errors, element) => {
             if (element.type === 'date' && contenu[section.id][element.id]) {
-              const error = dateValidate(
+              const dateCheck = dateValidate(
                 contenu[section.id][element.id] as string
               )
-              if (error) {
+              if (!dateCheck.valid) {
                 errors.push(
                   `le champ "${element.id}" n'est pas une date valide`
                 )

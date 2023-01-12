@@ -9,9 +9,9 @@ import {
   toCaminoAnnee,
   dateAddDays,
   dateAddMonths,
-  datesSubtract,
   dateValidate,
-  moveToDayInMonth
+  setDayInMonth,
+  monthsBetween
 } from './date.js'
 import { test, expect } from 'vitest'
 test.each([
@@ -64,21 +64,25 @@ test('anneePrecedente', () => {
   expect(anneePrecedente(toCaminoAnnee('2022'))).toBe(toCaminoAnnee('2021'))
 })
 test("retourne une erreur si aucune date n'est fournie", () => {
-  const res = dateValidate(null)
+  let tested = dateValidate(null)
 
-  expect(res).toBe('Date manquante')
+  expect(tested).toBe({ valid: false, error: 'Date manquante' })
+
+  tested = dateValidate(undefined)
+
+  expect(tested).toBe({ valid: false, error: 'Date manquante' })
 })
 
 test('retourne null si la date est valide', () => {
   const res = dateValidate('1910-01-01')
 
-  expect(res).toBe(null)
+  expect(res).toBe({ valid: true, date: toCaminoDate('1910-01-01') })
 })
 
 test('retourne une erreur la date est invalide', () => {
   const res = dateValidate('1910-123123123-123123113')
 
-  expect(res).toBe('Date invalide')
+  expect(res).toBe({ valid: false, error: 'Date invalide' })
 })
 
 test.each([
@@ -111,10 +115,10 @@ test.each([
   ['2020-03-10', '2020-01-07', 2],
   ['2021-01-01', '2020-01-01', 12]
 ])('calcul le nombre de mois entre 2 dates', (dateFin, dateDebut, months) => {
-  expect(datesSubtract(dateDebut, dateFin)).toBe(months)
+  expect(monthsBetween(dateDebut, dateFin)).toBe(months)
 })
 
-test('moveToDayInMonth', () => {
-  expect(moveToDayInMonth(toCaminoDate('2022-01-01'), 3)).toBe(toCaminoDate('2022-01-03'))
-  expect(moveToDayInMonth(toCaminoDate('2022-01-31'), 3)).toBe(toCaminoDate('2022-01-03'))
+test('setDayInMonth', () => {
+  expect(setDayInMonth(toCaminoDate('2022-01-01'), 3)).toBe(toCaminoDate('2022-01-03'))
+  expect(setDayInMonth(toCaminoDate('2022-01-31'), 3)).toBe(toCaminoDate('2022-01-03'))
 })

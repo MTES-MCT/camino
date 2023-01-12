@@ -595,7 +595,7 @@ interface ITitreDemarche {
 interface IDocument {
   id: string
   typeId: string
-  date: string
+  date: CaminoDate
   description?: string | null
   type?: DocumentType | null
   fichier?: boolean | null
