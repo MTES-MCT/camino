@@ -458,16 +458,18 @@ export default {
     },
 
     async onEtapeTypeChange(etapeStatutId, etapeTypeId) {
-      this.etape.statutId = etapeStatutId
       if (this.etape.type?.id !== etapeTypeId) {
         if (!this.etape.type) {
           this.etape.type = {}
         }
-        this.etape.type.id = etapeTypeId
         await this.$store.dispatch('titreEtapeEdition/heritageGet', {
           typeId: etapeTypeId
         })
       }
+      // TODO 2023-01-13 Il faut que les données soient mises après l'appel au store, sinon l'étape est réinitialisée.
+      // Pour que ça soit propre, il faut arrêter de bouger le même objet pour diverses raisons, et maintenir une étape minimaliste à part
+      this.etape.statutId = etapeStatutId
+      this.etape.type.id = etapeTypeId
       this.$emit('type-complete-update', this.typeComplete)
       this.$emit('update:etape', this.etape)
     }
