@@ -50,6 +50,33 @@ else
 	npm run test:integration -w packages/api -- --coverage
 endif
 
+lint/ui:
+ifndef CI
+	npm run lint --workspace=packages/ui
+else
+	npm run lint:check --workspace=packages/ui
+endif
+
+
+lint/api:
+ifndef CI
+	npm run lint --workspace=packages/api
+else
+	npm run ci:lint --workspace=packages/api
+endif
+
+
+
+lint/common:
+ifndef CI
+	npm run format --workspace=packages/common
+else
+	npm run lint --workspace=packages/common
+endif
+	
+
+lint: lint/ui lint/api lint/common
+
 install:
 ifdef CI
 	npm pkg delete scripts

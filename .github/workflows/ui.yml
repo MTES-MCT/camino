@@ -22,10 +22,11 @@ jobs:
         with:
           node-version: '19.1'
           cache: 'npm'
-      - name: Test units
-        run: |
-          make install
-          npm run lint:check --workspace=packages/ui
+      - name: Install
+        run:  make install
+      - name: Lint
+        run: make lint/ui
+          
   test:
     runs-on: ubuntu-latest
     steps:

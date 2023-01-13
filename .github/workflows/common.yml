@@ -16,10 +16,10 @@ jobs:
         with:
           node-version: '19.1'
           cache: 'npm'
-      - name: Npm install
+      - name: Install
         run: make install
       - name: Lint
-        run: npm run lint --workspace=packages/common
+        run: make lint/common
   test:
     runs-on: ubuntu-latest
     steps:
@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: '19.1'
           cache: 'npm'
-      - name: Npm install
+      - name: Install
         run: make install
       - name: Unit tests
         run: make test/common
