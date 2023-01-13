@@ -176,9 +176,15 @@ export abstract class CaminoMachine<
         }
       }
     }
-    const result = this.goTo(sortedEtapes, initialState)
+    try {
+      const result = this.goTo(sortedEtapes, initialState)
 
-    return result.valid
+      return result.valid
+    } catch (e) {
+      console.warn(e)
+
+      return false
+    }
   }
 
   private goTo(
