@@ -48,11 +48,13 @@
               />
             </td>
             <td>
-              <ButtonPlus
-                class="py-s px-m"
+              <button
+                class="py-s px-m btn rnd-xs p-s"
                 :disabled="!activiteTypeNewActive"
                 @click="activiteTypeEmailUpdate"
-              />
+              >
+                <Icon name="plus" size="M" />
+              </button>
             </td>
           </tr>
           <tr
@@ -83,7 +85,6 @@
 </template>
 
 <script lang="ts">
-import ButtonPlus from '../_ui/button-plus.vue'
 import emailValidator from 'email-validator'
 import { defineComponent, PropType } from 'vue'
 import { Icon } from '@/components/_ui/icon'
@@ -96,8 +97,7 @@ import { canEditEmails } from 'camino-common/src/permissions/administrations'
 
 export default defineComponent({
   components: {
-    Icon,
-    ButtonPlus
+    Icon
   },
 
   props: {

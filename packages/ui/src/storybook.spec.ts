@@ -44,12 +44,8 @@ describe('Storybook Tests', async () => {
           components: { 'router-link': h('a', { type: 'primary' }) }
         }
       })
-      await new Promise<void>(resolve =>
-        setTimeout(() => {
-          expect(mounted.html()).toMatchSnapshot()
-          resolve()
-        }, 1)
-      )
+      await new Promise<void>(resolve => setTimeout(() => resolve(), 1))
+      expect(mounted.html()).toMatchSnapshot()
     })
   })
 })
