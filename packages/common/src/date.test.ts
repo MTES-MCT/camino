@@ -11,7 +11,9 @@ import {
   dateAddMonths,
   dateValidate,
   setDayInMonth,
-  monthsBetween
+  monthsBetween,
+  dateFormat,
+  checkValideAnnee
 } from './date.js'
 import { test, expect } from 'vitest'
 test.each([
@@ -26,6 +28,14 @@ test.each([
 test('toCaminoDate', () => {
   expect(() => toCaminoDate('123123')).toThrowError()
   expect(() => toCaminoDate(new Date('plop'))).toThrowError()
+})
+
+test('dateFormat', () => {
+  expect(dateFormat(toCaminoDate('2022-12-01'))).toBe('01-12-2022')
+})
+
+test('checkValideAnnee', () => {
+  expect(() => checkValideAnnee('2022')).not.toThrowError()
 })
 
 test('getAnnee', () => {
