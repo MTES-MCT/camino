@@ -2,13 +2,6 @@
 hide circle
 skinparam linetype ortho
 
-entity "**activites_statuts**" {
-  + ""id"": //character varying(3) [PK]//
-  --
-  *""nom"": //character varying(255) //
-  *""couleur"": //character varying(16) //
-}
-
 entity "**activites_types**" {
   + ""id"": //character varying(3) [PK]//
   --
@@ -301,7 +294,7 @@ entity "**titres_activites**" {
   ""date_saisie"": //character varying(10) //
   ""contenu"": //jsonb //
   *""type_id"": //character varying(3) [FK]//
-  *""statut_id"": //character varying(3) [FK]//
+  *""activite_statut_id"": //character varying(3) //
   ""annee"": //integer //
   ""periode_id"": //integer //
   ""sections"": //jsonb[] //
@@ -592,8 +585,6 @@ entity "**utilisateurs__titres**" {
 "**titres__titres**"   }--  "**titres**"
 
 "**titres__titres**"   }--  "**titres**"
-
-"**titres_activites**"   }--  "**activites_statuts**"
 
 "**titres_activites**"   }--  "**titres**"
 
