@@ -7,8 +7,8 @@
   "scripts": {
     "test": "vitest --environment node --root src/",
     "build": "tsc",
-    "format": "prettier --write src",
-    "lint": "eslint --fix"
+    "format": "prettier --write src && eslint --fix src",
+    "lint": "prettier --check src && eslint src"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.34.0",

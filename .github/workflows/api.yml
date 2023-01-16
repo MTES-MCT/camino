@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '19.1'
           cache: 'npm'
-      - name: Npm install
+      - name: Install
         run: make install
       - name: Build
         run: make build/api
@@ -36,10 +36,10 @@ jobs:
         with:
           node-version: '19.1'
           cache: 'npm'
-      - name: Npm install
+      - name: Install
         run: make install
       - name: Lint
-        run: npm run ci:lint --workspace=packages/api
+        run: make lint/api
   unit-test:
     runs-on: ubuntu-latest
     steps:
@@ -50,7 +50,7 @@ jobs:
         with:
           node-version: '19.1'
           cache: 'npm'
-      - name: Npm install
+      - name: Install
         run: make install
       - name: Unit tests
         run: make test/api-unit
