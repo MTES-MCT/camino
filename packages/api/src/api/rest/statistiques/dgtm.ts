@@ -111,7 +111,7 @@ export const getDGTMStatsInside = async (
     .select(
       'titresEtapes.date',
       'titres.typeId',
-      'titres_etapes.sdom_zones as sdomZoneIds'
+      'titre_etape_point.sdom_zones as sdomZoneIds'
     )
     .distinct('titres.id')
     .from('titresEtapes')
