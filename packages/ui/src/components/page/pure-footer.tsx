@@ -5,6 +5,7 @@ export interface Props {
   displayNewsletter: boolean
 }
 
+// FIXME matomo sur stats et glossaire ?
 export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
   <footer class="dsfr" role="contentinfo" id="footer">
     <div class="fr-footer">

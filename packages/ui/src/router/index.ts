@@ -25,18 +25,9 @@ const MetaDemarche = () => import('../components/meta-demarche.vue')
 const MetaEtape = () => import('../components/meta-etape.vue')
 const MetaActivite = () => import('../components/meta-activite.vue')
 const Metas = () => import('../components/metas.vue')
-const Glossaire = () => import('../components/glossaire.vue')
 const Error = () => import('../components/error.vue')
 const UserPasswordInit = () => import('../components/user/password-init.vue')
 const UserAdd = () => import('../components/user/add.vue')
-const Contacts = () => import('../components/content/contacts.vue')
-const About = () => import('../components/content/about.vue')
-const Accessibilite = () => import('../components/content/accessibilite.vue')
-const Contribution = () => import('../components/content/contribution.vue')
-const MentionsLegales = () =>
-  import('../components/content/mentions-legales.vue')
-const Cgu = () => import('../components/content/cgu.vue')
-const Cgu1 = () => import('../components/content/cgu-1-0-0.vue')
 const StatistiquesGlobales = () =>
   import('../components/statistiques/globales.vue')
 const Statistiques = () => import('../components/statistiques.vue')
@@ -172,51 +163,6 @@ const routes: RouteRecordRaw[] = [
     path: '/activites/:id/edition',
     name: 'activite-edition',
     component: ActiviteEdition
-  },
-  {
-    path: '/glossaire',
-    name: 'glossaire',
-    component: Glossaire,
-    children: [
-      {
-        path: ':slug',
-        name: 'definition',
-        component: Glossaire
-      }
-    ]
-  },
-  {
-    path: '/contacts',
-    name: 'contacts',
-    component: Contacts
-  },
-  {
-    path: '/a-propos',
-    name: 'a-propos',
-    component: About
-  },
-  {
-    path: '/accessibilite',
-    name: 'accessibilite',
-    component: Accessibilite
-  },
-  {
-    path: '/contribution',
-    name: 'contribution',
-    component: Contribution
-  },
-  {
-    path: '/mentions-legales',
-    component: MentionsLegales
-  },
-  {
-    path: '/cgu',
-    component: Cgu
-  },
-  {
-    path: '/cgu/1-0-0',
-    name: 'cgu-1-0-0',
-    component: Cgu1
   },
   {
     path: '/mot-de-passe',
