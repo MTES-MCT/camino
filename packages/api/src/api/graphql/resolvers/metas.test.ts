@@ -1,172 +1,137 @@
-import { etapesTypesPossibleACetteDateOuALaPlaceDeLEtape } from './metas.js'
-import TitresDemarches from '../../../database/models/titres-demarches.js'
+import {
+  etapesTypesPossibleACetteDateOuALaPlaceDeLEtape,
+  TitreEtapeForMachine
+} from './metas.js'
 import { IEtapeType } from '../../../types.js'
-import { newDemarcheId } from '../../../database/models/_format/id-create.js'
 import { ArmOctMachine } from '../../../business/rules-demarches/arm/oct.machine.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 
 describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
-  const demarche: Pick<TitresDemarches, 'etapes'> = {
-    etapes: [
-      {
-        id: 'etapeId16',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'sco',
-        statutId: 'fai',
-        ordre: 16,
-        date: toCaminoDate('2020-08-17'),
-        contenu: { arm: { mecanise: true } },
-        slug: 'demarcheSlug-sco01'
-      },
-      {
-        id: 'etapeId1',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'mfr',
-        statutId: 'fai',
-        ordre: 1,
-        date: toCaminoDate('2019-09-19'),
-        slug: 'demarcheSlug-mfr01',
-        contenu: { arm: { mecanise: true, franchissements: 19 } }
-      },
-      {
-        id: 'etapeId5',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'mcp',
-        statutId: 'com',
-        ordre: 5,
-        date: toCaminoDate('2019-11-27'),
-        slug: 'demarcheSlug-mcp01'
-      },
-      {
-        id: 'etapeId10',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'aof',
-        statutId: 'fav',
-        ordre: 10,
-        date: toCaminoDate('2019-12-04'),
-        slug: 'demarcheSlug-aof01'
-      },
-      {
-        id: 'etapeId9',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'eof',
-        statutId: 'fai',
-        ordre: 9,
-        date: toCaminoDate('2019-12-04'),
-        slug: 'demarcheSlug-eof01'
-      },
-      {
-        id: 'etapeId14',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'pfc',
-        statutId: 'fai',
-        ordre: 14,
-        date: toCaminoDate('2020-05-22'),
-        slug: 'demarcheSlug-pfc01'
-      },
-      {
-        id: 'etapeId8',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'mcr',
-        statutId: 'fav',
-        ordre: 8,
-        date: toCaminoDate('2019-12-04'),
-        slug: 'demarcheSlug-mcr01'
-      },
-      {
-        id: 'etapeId4',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'pfd',
-        statutId: 'fai',
-        ordre: 4,
-        date: toCaminoDate('2019-11-20'),
-        slug: 'demarcheSlug-pfd01'
-      },
-      {
-        id: 'etapeId15',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'vfc',
-        statutId: 'fai',
-        ordre: 15,
-        date: toCaminoDate('2020-05-22'),
-        slug: 'demarcheSlug-vfc01'
-      },
-      {
-        id: 'etapeId13',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'mnb',
-        statutId: 'fai',
-        ordre: 13,
-        date: toCaminoDate('2020-05-18'),
-        slug: 'demarcheSlug-mnb01'
-      },
-      {
-        id: 'etapeId12',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'aca',
-        statutId: 'fav',
-        ordre: 12,
-        date: toCaminoDate('2020-05-13'),
-        slug: 'demarcheSlug-aca01'
-      },
-      {
-        id: 'etapeId6',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'rde',
-        statutId: 'fav',
-        ordre: 6,
-        date: toCaminoDate('2019-12-04'),
-        slug: 'demarcheSlug-rde01',
-        contenu: { arm: { franchissements: 19 } }
-      },
-      {
-        id: 'etapeId2',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'mdp',
-        statutId: 'fai',
-        ordre: 2,
-        date: toCaminoDate('2019-09-20'),
-        slug: 'demarcheSlug-mdp01'
-      },
-      {
-        id: 'etapeId7',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'vfd',
-        statutId: 'fai',
-        ordre: 7,
-        date: toCaminoDate('2019-12-04'),
-        slug: 'demarcheSlug-vfd01'
-      },
-      {
-        id: 'etapeId11',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'sca',
-        statutId: 'fai',
-        ordre: 11,
-        date: toCaminoDate('2020-05-04'),
-        slug: 'demarcheSlug-sca01'
-      },
-      {
-        id: 'etapeId3',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'dae',
-        statutId: 'exe',
-        ordre: 3,
-        date: toCaminoDate('2019-10-11'),
-        slug: 'demarcheSlug-dae01'
-      },
-      {
-        id: 'etapeId17',
-        titreDemarcheId: newDemarcheId('demarcheId'),
-        typeId: 'aco',
-        statutId: 'fai',
-        ordre: 17,
-        date: toCaminoDate('2022-05-05'),
-        slug: 'demarcheSlug-aco01'
-      }
-    ]
-  }
+  const etapes: TitreEtapeForMachine[] = [
+    {
+      id: 'etapeId16',
+      typeId: 'sco',
+      statutId: 'fai',
+      ordre: 16,
+      date: toCaminoDate('2020-08-17'),
+      contenu: { arm: { mecanise: true } }
+    },
+    {
+      id: 'etapeId1',
+      typeId: 'mfr',
+      statutId: 'fai',
+      ordre: 1,
+      date: toCaminoDate('2019-09-19'),
+      contenu: { arm: { mecanise: true, franchissements: 19 } }
+    },
+    {
+      id: 'etapeId5',
+      typeId: 'mcp',
+      statutId: 'com',
+      ordre: 5,
+      date: toCaminoDate('2019-11-27')
+    },
+    {
+      id: 'etapeId10',
+      typeId: 'aof',
+      statutId: 'fav',
+      ordre: 10,
+      date: toCaminoDate('2019-12-04')
+    },
+    {
+      id: 'etapeId9',
+      typeId: 'eof',
+      statutId: 'fai',
+      ordre: 9,
+      date: toCaminoDate('2019-12-04')
+    },
+    {
+      id: 'etapeId14',
+      typeId: 'pfc',
+      statutId: 'fai',
+      ordre: 14,
+      date: toCaminoDate('2020-05-22')
+    },
+    {
+      id: 'etapeId8',
+      typeId: 'mcr',
+      statutId: 'fav',
+      ordre: 8,
+      date: toCaminoDate('2019-12-04')
+    },
+    {
+      id: 'etapeId4',
+      typeId: 'pfd',
+      statutId: 'fai',
+      ordre: 4,
+      date: toCaminoDate('2019-11-20')
+    },
+    {
+      id: 'etapeId15',
+      typeId: 'vfc',
+      statutId: 'fai',
+      ordre: 15,
+      date: toCaminoDate('2020-05-22')
+    },
+    {
+      id: 'etapeId13',
+      typeId: 'mnb',
+      statutId: 'fai',
+      ordre: 13,
+      date: toCaminoDate('2020-05-18')
+    },
+    {
+      id: 'etapeId12',
+      typeId: 'aca',
+      statutId: 'fav',
+      ordre: 12,
+      date: toCaminoDate('2020-05-13')
+    },
+    {
+      id: 'etapeId6',
+      typeId: 'rde',
+      statutId: 'fav',
+      ordre: 6,
+      date: toCaminoDate('2019-12-04'),
+      contenu: { arm: { franchissements: 19 } }
+    },
+    {
+      id: 'etapeId2',
+      typeId: 'mdp',
+      statutId: 'fai',
+      ordre: 2,
+      date: toCaminoDate('2019-09-20')
+    },
+    {
+      id: 'etapeId7',
+      typeId: 'vfd',
+      statutId: 'fai',
+      ordre: 7,
+      date: toCaminoDate('2019-12-04')
+    },
+    {
+      id: 'etapeId11',
+      typeId: 'sca',
+      statutId: 'fai',
+      ordre: 11,
+      date: toCaminoDate('2020-05-04')
+    },
+    {
+      id: 'etapeId3',
+      typeId: 'dae',
+      statutId: 'exe',
+      ordre: 3,
+      date: toCaminoDate('2019-10-11')
+    },
+    {
+      id: 'etapeId17',
+      typeId: 'aco',
+      statutId: 'fai',
+      ordre: 17,
+      date: toCaminoDate('2022-05-05')
+    }
+  ]
 
   // TODO 2022-05-09 sortir EtapeType de la base et le mettre dans le common
   const etapesTypes: IEtapeType[] = [
@@ -1234,23 +1199,23 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   ]
   const machine = new ArmOctMachine()
   test('modifie une étape existante', () => {
-    const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
       machine,
-      demarche,
+      etapes,
       'etapeId3',
       toCaminoDate('2019-10-11'),
       etapesTypes
     )
-    expect(etapes).toHaveLength(1)
-    expect(etapes.map(({ id }) => id)).toStrictEqual(['dae'])
+    expect(tested).toHaveLength(1)
+    expect(tested.map(({ id }) => id)).toStrictEqual(['dae'])
   })
 
   test('modifie une étape existante à la même date devrait permettre de recréer la même étape', () => {
-    for (const etape of demarche?.etapes ?? []) {
+    for (const etape of etapes ?? []) {
       const etapesTypesPossibles =
         etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
           machine,
-          demarche,
+          etapes,
           etape.id,
           etape.date,
           etapesTypes
@@ -1268,138 +1233,263 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
   })
 
   test('ajoute une nouvelle étape à la fin', () => {
-    const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
       machine,
-      demarche,
+      etapes,
       undefined,
       toCaminoDate('2022-05-06'),
       etapesTypes
     )
-    expect(etapes).toHaveLength(1)
-    expect(etapes[0].id).toBe('mnv')
+    expect(tested).toHaveLength(1)
+    expect(tested[0].id).toBe('mnv')
   })
 
   test('ajoute une nouvelle étape en plein milieu', () => {
-    const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
       machine,
-      demarche,
+      etapes,
       undefined,
       toCaminoDate('2019-12-04'),
       etapesTypes
     )
-    expect(etapes.map(({ id }) => id)).toStrictEqual(['mod'])
+    expect(tested.map(({ id }) => id)).toStrictEqual(['mod'])
   })
 
   test('peut faire une dae, une rde et pfd AVANT la mfr', () => {
-    const demarche: Pick<TitresDemarches, 'etapes'> = {
-      etapes: [
-        {
-          id: 'idMfr',
-          titreDemarcheId: newDemarcheId(''),
-          typeId: 'mfr',
-          statutId: 'fai',
-          date: toCaminoDate('2022-05-16'),
-          contenu: { arm: { mecanise: true, franchissements: 2 } }
-        },
-        {
-          id: 'idMdp',
-          titreDemarcheId: newDemarcheId(''),
-          typeId: 'mdp',
-          statutId: 'fai',
-          date: toCaminoDate('2022-05-17')
-        }
-      ]
-    }
-    const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+    const etapes: TitreEtapeForMachine[] = [
+      {
+        id: 'idMfr',
+
+        typeId: 'mfr',
+        statutId: 'fai',
+        date: toCaminoDate('2022-05-16'),
+        contenu: { arm: { mecanise: true, franchissements: 2 } }
+      },
+      {
+        id: 'idMdp',
+
+        typeId: 'mdp',
+        statutId: 'fai',
+        date: toCaminoDate('2022-05-17')
+      }
+    ]
+
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
       machine,
-      demarche,
+      etapes,
       undefined,
       toCaminoDate('2019-12-04'),
       etapesTypes
     )
-    expect(etapes.map(({ id }) => id)).toStrictEqual(['dae', 'pfd', 'rde'])
+    expect(tested.map(({ id }) => id)).toStrictEqual(['dae', 'pfd', 'rde'])
   })
 
   test('peut faire que une pfd AVANT la mfr non mecanisee', () => {
-    const demarche: Pick<TitresDemarches, 'etapes'> = {
-      etapes: [
-        {
-          id: 'idMfr',
-          titreDemarcheId: newDemarcheId(''),
-          typeId: 'mfr',
-          statutId: 'fai',
-          date: toCaminoDate('2022-05-16'),
-          contenu: { arm: { mecanise: false } }
-        },
-        {
-          id: 'idMdp',
-          titreDemarcheId: newDemarcheId(''),
-          typeId: 'mdp',
-          statutId: 'fai',
-          date: toCaminoDate('2022-05-17')
-        }
-      ]
-    }
-    const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+    const etapes: TitreEtapeForMachine[] = [
+      {
+        id: 'idMfr',
+        typeId: 'mfr',
+        statutId: 'fai',
+        date: toCaminoDate('2022-05-16'),
+        contenu: { arm: { mecanise: false } }
+      },
+      {
+        id: 'idMdp',
+        typeId: 'mdp',
+        statutId: 'fai',
+        date: toCaminoDate('2022-05-17')
+      }
+    ]
+
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
       machine,
-      demarche,
+      etapes,
       undefined,
       toCaminoDate('2019-12-04'),
       etapesTypes
     )
-    expect(etapes.map(({ id }) => id)).toStrictEqual(['pfd'])
+    expect(tested.map(({ id }) => id)).toStrictEqual(['pfd'])
   })
-  test('peut faire une completude (mcp) le même jour que le dépôt (mdp) de la demande', () => {
-    const demarche: Pick<TitresDemarches, 'etapes'> = {
-      etapes: [
-        {
-          id: 'id3',
-          titreDemarcheId: newDemarcheId(''),
-          typeId: 'mfr',
-          statutId: 'fai',
-          date: toCaminoDate('2022-06-23'),
-          contenu: {
-            arm: {
-              mecanise: true,
-              franchissements: 4
-            }
-          },
-          ordre: 3
+
+  test('peut faire refuser une rde après une demande mécanisée', () => {
+    console.warn = vi.fn()
+    const etapes: TitreEtapeForMachine[] = [
+      {
+        id: 'idMfr',
+        date: toCaminoDate('2021-11-02'),
+        typeId: 'mfr',
+        statutId: 'fai',
+        contenu: {
+          arm: {
+            mecanise: true,
+            franchissements: 9
+          }
         },
-        {
-          id: 'id1',
-          titreDemarcheId: newDemarcheId(''),
-          typeId: 'dae',
-          statutId: 'exe',
-          date: toCaminoDate('2021-06-22'),
-          ordre: 1
+        ordre: 3
+      },
+      {
+        id: 'idrcm',
+        date: toCaminoDate('2021-11-17'),
+        typeId: 'rcm',
+        statutId: 'fai',
+        contenu: {
+          arm: {
+            mecanise: true,
+            franchissements: 9
+          }
         },
-        {
-          id: 'id4',
-          titreDemarcheId: newDemarcheId(''),
-          typeId: 'mdp',
-          statutId: 'fai',
-          date: toCaminoDate('2022-07-01'),
-          ordre: 4
-        },
-        {
-          id: 'id2',
-          titreDemarcheId: newDemarcheId(''),
-          typeId: 'pfd',
-          statutId: 'fai',
-          date: toCaminoDate('2021-07-05'),
-          ordre: 2
-        }
-      ]
-    }
-    const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+        ordre: 7
+      },
+      {
+        id: 'idMcp',
+        date: toCaminoDate('2021-11-05'),
+        typeId: 'mcp',
+        statutId: 'inc',
+        ordre: 5
+      },
+      {
+        id: 'idmcp',
+        date: toCaminoDate('2021-11-17'),
+        typeId: 'mcp',
+        statutId: 'com',
+        ordre: 8
+      },
+      {
+        id: 'ideof',
+        date: toCaminoDate('2021-11-22'),
+        typeId: 'eof',
+        statutId: 'fai',
+        ordre: 11
+      },
+      {
+        id: 'iddae',
+        date: toCaminoDate('2021-10-15'),
+        typeId: 'dae',
+        statutId: 'exe',
+
+        ordre: 1
+      },
+      {
+        id: 'idmcr',
+        date: toCaminoDate('2021-11-22'),
+        typeId: 'mcr',
+        statutId: 'fav',
+        contenu: null,
+        ordre: 10
+      },
+      {
+        id: 'idmcb',
+        date: toCaminoDate('2021-12-09'),
+        typeId: 'mcb',
+        statutId: 'fai',
+
+        ordre: 13
+      },
+      {
+        id: 'idedm',
+        date: toCaminoDate('2021-11-30'),
+        typeId: 'edm',
+        statutId: 'fav',
+        ordre: 12
+      },
+      {
+        id: 'idvfd',
+        date: toCaminoDate('2021-11-19'),
+        typeId: 'vfd',
+        statutId: 'fai',
+        ordre: 9
+      },
+      {
+        id: 'idpfd',
+        date: toCaminoDate('2021-10-26'),
+        typeId: 'pfd',
+        statutId: 'fai',
+        ordre: 2
+      },
+      {
+        id: 'idmdp',
+        date: toCaminoDate('2021-11-02'),
+        typeId: 'mdp',
+        statutId: 'fai',
+        ordre: 4
+      },
+      {
+        id: 'idmcm',
+        date: toCaminoDate('2021-11-05'),
+        typeId: 'mcm',
+        statutId: 'fai',
+        ordre: 6
+      }
+    ]
+
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
       machine,
-      demarche,
+      etapes,
       undefined,
       toCaminoDate('2022-07-01'),
       etapesTypes
     )
-    expect(etapes.map(({ id }) => id)).toStrictEqual([
+    expect(tested.map(({ id }) => id)).toStrictEqual([
+      'mcb',
+      'rcb',
+      'mod',
+      'css',
+      'ede',
+      'rde',
+      'mia',
+      'aof',
+      'des'
+    ])
+    vi.resetAllMocks()
+  })
+  test('peut faire une completude (mcp) le même jour que le dépôt (mdp) de la demande', () => {
+    const etapes: TitreEtapeForMachine[] = [
+      {
+        id: 'id3',
+        typeId: 'mfr',
+        statutId: 'fai',
+        date: toCaminoDate('2022-06-23'),
+        contenu: {
+          arm: {
+            mecanise: true,
+            franchissements: 4
+          }
+        },
+        ordre: 3
+      },
+      {
+        id: 'id1',
+        typeId: 'dae',
+        statutId: 'exe',
+        date: toCaminoDate('2021-06-22'),
+        ordre: 1
+      },
+      {
+        id: 'id4',
+
+        typeId: 'mdp',
+        statutId: 'fai',
+        date: toCaminoDate('2022-07-01'),
+        ordre: 4
+      },
+      {
+        id: 'id2',
+
+        typeId: 'pfd',
+        statutId: 'fai',
+        date: toCaminoDate('2021-07-05'),
+        ordre: 2
+      }
+    ]
+
+    const tested = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+      machine,
+      etapes,
+      undefined,
+      toCaminoDate('2022-07-01'),
+      etapesTypes
+    )
+    expect(tested.map(({ id }) => id)).toStrictEqual([
       'mcb',
       'mod',
       'mcp',

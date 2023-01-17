@@ -3,6 +3,7 @@ import {
   IDocumentRepertoire,
   IEtapeType,
   IFields,
+  ITitreEtape,
   IToken
 } from '../../../types.js'
 
@@ -32,7 +33,6 @@ import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes.js'
 
 import { UNITES } from 'camino-common/src/static/unites.js'
 import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort.js'
-import TitresDemarches from '../../../database/models/titres-demarches.js'
 import { Pays, PaysList } from 'camino-common/src/static/pays.js'
 import {
   Departement,
@@ -129,16 +129,20 @@ export const demarchesStatuts = async () => {
     throw e
   }
 }
+
+export type TitreEtapeForMachine = Pick<
+  ITitreEtape,
+  'ordre' | 'id' | 'typeId' | 'statutId' | 'date' | 'contenu'
+>
 // VISIBLE_FOR_TESTING
 export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
   machine: CaminoMachines,
-  titreDemarche: Pick<TitresDemarches, 'etapes'>,
+  etapes: TitreEtapeForMachine[],
   titreEtapeId: string | undefined,
   date: CaminoDate,
   etapesTypes: IEtapeType[]
 ): IEtapeType[] => {
-  if (!titreDemarche.etapes) throw new Error('les étapes ne sont pas chargées')
-  const sortedEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes)
+  const sortedEtapes = titreEtapesSortAscByOrdre(etapes)
   const etapesAvant: Etape[] = []
   const etapesApres: Etape[] = []
   if (titreEtapeId) {
@@ -241,9 +245,11 @@ const demarcheEtapesTypesGet = async (
   )
 
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {
+    if (!titreDemarche.etapes)
+      throw new Error('les étapes ne sont pas chargées')
     etapesTypes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
       demarcheDefinition.machine,
-      titreDemarche,
+      titreDemarche.etapes,
       titreEtapeId,
       date,
       etapesTypes

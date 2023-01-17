@@ -1,5 +1,4 @@
 import { toCaminoDate } from 'camino-common/src/date.js'
-import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { ITitreEtape } from '../../types.js'
 import { toMachineEtapes } from './machine-common.js'
 import { describe, expect, test } from 'vitest'
@@ -8,11 +7,9 @@ describe('toMachineEtapes', () => {
     expect(
       toMachineEtapes([
         {
-          id: 'id',
           typeId: 'mfr',
           statutId: 'fai',
-          date: toCaminoDate('2022-01-01'),
-          titreDemarcheId: newDemarcheId('idDemarche')
+          date: toCaminoDate('2022-01-01')
         }
       ])
     ).toEqual([
@@ -26,11 +23,9 @@ describe('toMachineEtapes', () => {
     expect(
       toMachineEtapes([
         {
-          id: 'id',
           typeId: 'mfr',
           statutId: 'fai',
           date: toCaminoDate('2022-01-01'),
-          titreDemarcheId: newDemarcheId('idDemarche'),
           contenu: { arm: { mecanise: true } }
         }
       ])

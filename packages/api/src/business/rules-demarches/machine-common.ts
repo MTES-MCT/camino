@@ -26,7 +26,12 @@ export interface CaminoCommonContext {
   visibilite: 'confidentielle' | 'publique'
 }
 
-export const toMachineEtapes = (etapes: ITitreEtape[]): Etape[] => {
+export const toMachineEtapes = (
+  etapes: Pick<
+    ITitreEtape,
+    'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu'
+  >[]
+): Etape[] => {
   // FIXME si on appelle titreEtapesSortAscByOrdre on se retrouve avec une grosse dépendance cyclique
   return etapes
     .slice()
@@ -34,7 +39,9 @@ export const toMachineEtapes = (etapes: ITitreEtape[]): Etape[] => {
     .map(dbEtape => toMachineEtape(dbEtape))
 }
 
-const toMachineEtape = (dbEtape: ITitreEtape): Etape => {
+const toMachineEtape = (
+  dbEtape: Pick<ITitreEtape, 'typeId' | 'statutId' | 'date' | 'contenu'>
+): Etape => {
   let typeId
   if (isEtapeTypeId(dbEtape.typeId)) {
     typeId = dbEtape.typeId
