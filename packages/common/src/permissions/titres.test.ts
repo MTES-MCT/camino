@@ -1,4 +1,4 @@
-import { canCreateTitre, canLinkTitres, getLinkConfig } from './titres.js'
+import { assertsCanCreateTitre, canCreateTitre, canLinkTitres, getLinkConfig } from './titres.js'
 import { TitresTypesIds, TitreTypeId } from '../static/titresTypes.js'
 import { User } from '../roles.js'
 import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations.js'
@@ -55,5 +55,38 @@ test.each<[User, AdministrationId[], boolean]>([
 })
 
 test.each<TitreTypeId>(TitresTypesIds)('vérifie si une entreprise peut créer un titre de type %p', titreTypeId => {
-  expect(canCreateTitre({ role: 'entreprise', administrationId: null }, titreTypeId)).toMatchSnapshot()
+  const user: User = { role: 'entreprise', administrationId: null }
+  const actual = canCreateTitre(user, titreTypeId)
+  expect(actual).toMatchSnapshot()
+  if (actual) {
+    assertsCanCreateTitre(user, titreTypeId)
+  } else {
+    expect(() => assertsCanCreateTitre(user, titreTypeId)).toThrowError('permissions insuffisantes')
+  }
+})
+test.each<TitreTypeId>(TitresTypesIds)('vérifie si un utilisateur super peut créer un titre de type %p', titreTypeId => {
+  const user: User = { role: 'super', administrationId: null }
+  expect(canCreateTitre(user, titreTypeId)).toBe(true)
+  expect(() => assertsCanCreateTitre(user, titreTypeId)).not.toThrowError()
+})
+
+test.each<TitreTypeId>(TitresTypesIds)('vérifie si un utilisateur administrateur lecteur ne peut pas créer de titre de type %p', titreTypeId => {
+  const user: User = { role: 'lecteur', administrationId: ADMINISTRATION_IDS['DEAL - MARTINIQUE'] }
+  expect(canCreateTitre(user, titreTypeId)).toBe(false)
+  expect(() => assertsCanCreateTitre(user, titreTypeId)).toThrowError('permissions insuffisantes')
+})
+
+test.each<AdministrationId>(Object.values(ADMINISTRATION_IDS))('vérifie si un utilisateur administrateur admin %p peut créer des titres', administrationId => {
+  const result: { [key in TitreTypeId]?: boolean } = {}
+  const user: User = { role: 'admin', administrationId }
+  for (const titreTypeid of TitresTypesIds) {
+    result[titreTypeid] = canCreateTitre(user, titreTypeid)
+    if (result[titreTypeid]) {
+      assertsCanCreateTitre(user, titreTypeid)
+    } else {
+      expect(() => assertsCanCreateTitre(user, titreTypeid)).toThrowError('permissions insuffisantes')
+    }
+  }
+
+  expect(result).toMatchSnapshot()
 })

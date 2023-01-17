@@ -39,7 +39,7 @@ export const getAnnee = (date: CaminoDate): CaminoAnnee => {
 }
 
 export const dateFormat = (date: CaminoDate): CaminoDateFormated => {
-  return `${date.substring(8)}—${date.substring(5, 7)}-${date.substring(0, 4)}` as CaminoDateFormated
+  return `${date.substring(8)}-${date.substring(5, 7)}-${date.substring(0, 4)}` as CaminoDateFormated
 }
 
 export const getCurrent = () => toCaminoDate(new Date())
