@@ -179,7 +179,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
               <li class="fr-footer__bottom-item">
                 <a
                   class="fr-footer__bottom-link"
-                  href="https://camino.gitbook.io/guide-dutilisation/a-propos/cgu"
+                  href="https://camino.gitbook.io/guide-dutilisation/a-propos/accessibilite"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

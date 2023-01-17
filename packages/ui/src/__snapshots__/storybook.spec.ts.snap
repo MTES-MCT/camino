@@ -4665,7 +4665,7 @@ exports[`Storybook Tests > Components/Pages/Footer > AvecNewsletter 1`] = `
         </div>
         <div class=\\"fr-footer__bottom\\" style=\\"width: 100%;\\">
           <ul class=\\"fr-footer__bottom-list\\">
-            <li class=\\"fr-footer__bottom-item\\"><a class=\\"fr-footer__bottom-link\\" href=\\"https://camino.gitbook.io/guide-dutilisation/a-propos/cgu\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">Accessibilité : non conforme</a></li>
+            <li class=\\"fr-footer__bottom-item\\"><a class=\\"fr-footer__bottom-link\\" href=\\"https://camino.gitbook.io/guide-dutilisation/a-propos/accessibilite\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">Accessibilité : non conforme</a></li>
             <li class=\\"fr-footer__bottom-item\\"><a class=\\"fr-footer__bottom-link\\" href=\\"https://camino.gitbook.io/guide-dutilisation/a-propos/mentions-legales\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">Mentions légales</a></li>
             <li class=\\"fr-footer__bottom-item\\"><a class=\\"fr-footer__bottom-link\\" href=\\"https://camino.gitbook.io/guide-dutilisation/a-propos/cgu\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">CGU</a></li>
             <li class=\\"fr-footer__bottom-item\\"><a class=\\"fr-footer__bottom-link\\" href=\\"https://github.com/MTES-MCT/camino/commit/310c30f5b4d779cd4bc17316f4b026292bb95c10\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">Version 310c30f</a></li>
@@ -4733,7 +4733,7 @@ exports[`Storybook Tests > Components/Pages/Footer > SansNewsletter 1`] = `
         </div>
         <div class=\\"fr-footer__bottom\\" style=\\"width: 100%;\\">
           <ul class=\\"fr-footer__bottom-list\\">
-            <li class=\\"fr-footer__bottom-item\\"><a class=\\"fr-footer__bottom-link\\" href=\\"https://camino.gitbook.io/guide-dutilisation/a-propos/cgu\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">Accessibilité : non conforme</a></li>
+            <li class=\\"fr-footer__bottom-item\\"><a class=\\"fr-footer__bottom-link\\" href=\\"https://camino.gitbook.io/guide-dutilisation/a-propos/accessibilite\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">Accessibilité : non conforme</a></li>
             <li class=\\"fr-footer__bottom-item\\"><a class=\\"fr-footer__bottom-link\\" href=\\"https://camino.gitbook.io/guide-dutilisation/a-propos/mentions-legales\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">Mentions légales</a></li>
             <li class=\\"fr-footer__bottom-item\\"><a class=\\"fr-footer__bottom-link\\" href=\\"https://camino.gitbook.io/guide-dutilisation/a-propos/cgu\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">CGU</a></li>
             <li class=\\"fr-footer__bottom-item\\"><a class=\\"fr-footer__bottom-link\\" href=\\"https://github.com/MTES-MCT/camino/commit/310c30f5b4d779cd4bc17316f4b026292bb95c10\\" target=\\"_blank\\" rel=\\"noopener noreferrer\\">Version 310c30f</a></li>
