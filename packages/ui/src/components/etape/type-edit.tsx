@@ -43,12 +43,7 @@ const SelectStatut: FunctionalComponent<SelectStatutProps> = (
     ? getEtapesStatuts(props.typeId)
     : []
 
-  let etapeStatutIdSelected: EtapeStatutId | null = props.statutId
-
-  if (etapeStatutIdSelected === null && etapesStatuts.length === 1) {
-    etapeStatutIdSelected = etapesStatuts[0].id
-    props.onStatutChange(etapeStatutIdSelected)
-  }
+  const etapeStatutIdSelected: EtapeStatutId | null = props.statutId
 
   return (
     <div>
@@ -126,7 +121,13 @@ export const TypeEdit = defineComponent<Props>({
               onSelectItem={(type: EtapeType | undefined) => {
                 if (type) {
                   etapeTypeSearch.value = ''
-                  etapeStatutId.value = null
+                  const statuts = getEtapesStatuts(type.id)
+                  if (statuts.length === 1) {
+                    etapeStatutId.value = statuts[0].id
+                  } else {
+                    etapeStatutId.value = null
+                  }
+
                   etapeTypeId.value = type.id
                   props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
                 }

@@ -29,6 +29,18 @@ export const Simple: Story = () => (
   />
 )
 
+export const DemandeAvecUnSeulStatut: Story = () => (
+  <TypeEdit
+    onEtapeChange={onEtapeChange}
+    etapeIsDemandeEnConstruction={false}
+    etapesTypesIds={etapesTypesIds}
+    etape={{
+      statutId: null,
+      type: { id: ETAPES_TYPES.classementSansSuite }
+    }}
+  />
+)
+
 export const DemandeSansStatut: Story = () => (
   <TypeEdit
     onEtapeChange={onEtapeChange}
