@@ -818,7 +818,7 @@ export const matrices = async (annee: number) => {
                 return console.error(err)
               }
               fs.writeFileSync(
-                `1402_${annee}_${matriceLine.sip}_${matriceLine.index}_${matriceLine.titreLabel}_${matriceLine.titulaire.nom}.ods`,
+                `1402_${annee}_${matriceLine.sip}_${matriceLine.index}_${matriceLine.titulaire.nom}_${matriceLine.titreLabel}.ods`,
                 result
               )
               resolve()
