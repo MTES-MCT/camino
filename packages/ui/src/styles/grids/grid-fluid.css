@@ -77,11 +77,6 @@
   flex: 0 1 calc(33.33333% - var(--unit-s));
 }
 
-.blob-mini-2-3 {
-  margin-right: var(--unit-s);
-  flex: 0 1 calc(66.66667% - var(--unit-s));
-}
-
 .blob-mini-1-2 {
   margin-right: var(--unit-s);
   flex: 0 1 calc(50% - var(--unit-s));

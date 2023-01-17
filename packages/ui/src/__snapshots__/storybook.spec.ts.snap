@@ -4723,33 +4723,7 @@ exports[`Storybook Tests > Components/Pages/Footer > SansNewsletter 1`] = `
           <p class=\\"fr-logo\\">Ministère <br>de la transition <br>écologique</p><a class=\\"fr-footer__brand-link\\" href=\\"/\\" title=\\"Retour à l’accueil du site - Camino - République Française\\"><img class=\\"fr-footer__logo\\" style=\\"width: 9rem;\\" src=\\"/img/logo-fabriquenumerique.svg\\" alt=\\"La fabrique numérique\\"></a>
         </div>
         <div class=\\"fr-footer__content\\">
-          <p class=\\"fr-footer__content-desc\\">
-          <div>
-            <div class=\\"fr-follow\\">
-              <div class=\\"fr-container\\">
-                <div class=\\"fr-grid-row\\">
-                  <div class=\\"fr-col-12\\">
-                    <div class=\\"fr-follow__newsletter\\">
-                      <div>
-                        <h2 class=\\"fr-h5\\">Abonnez-vous à notre lettre d’information</h2>
-                      </div>
-                      <div>
-                        <form>
-                          <div class=\\"fr-input-group fr-input-group--error\\"><label class=\\"fr-label\\" for=\\"newsletter-email\\"> Votre adresse électronique (ex. : nom@domaine.fr) </label>
-                            <div class=\\"fr-input-wrap fr-input-wrap--addon\\"><input class=\\"fr-input \\" title=\\"Votre adresse électronique (ex. : nom@domaine.fr)\\" autocomplete=\\"email\\" aria-describedby=\\"newsletter-email-hint-text newsletter-email-messages\\" placeholder=\\"Votre adresse électronique (ex. : nom@domaine.fr)\\" id=\\"newsletter-email\\" type=\\"email\\"><button class=\\"fr-btn \\" id=\\"newsletter-button\\" title=\\"S‘abonner à notre lettre d’information\\" type=\\"submit\\"> S'abonner</button></div>
-                            <!---->
-                            <div class=\\"fr-messages-group\\" id=\\"newsletter-email-messages\\" aria-live=\\"assertive\\"></div>
-                          </div>
-                          <p id=\\"newsletter-email-hint-text\\" class=\\"fr-hint-text\\">En renseignant votre adresse électronique, vous acceptez de recevoir nos actualités par courriel. Vous pouvez vous désinscrire à tout moment à l’aide des liens de désinscription ou en nous contactant.</p>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          </p>
+          <!---->
           <ul class=\\"fr-footer__content-list\\">
             <li class=\\"fr-footer__content-item\\"><a class=\\"fr-footer__content-link\\" target=\\"_blank\\" href=\\"https://economie.gouv.fr\\" rel=\\"noopener noreferrer\\">economie.gouv.fr</a></li>
             <li class=\\"fr-footer__content-item\\"><a class=\\"fr-footer__content-link\\" target=\\"_blank\\" href=\\"https://ecologie.gouv.fr\\" rel=\\"noopener noreferrer\\">ecologie.gouv.fr</a></li>
