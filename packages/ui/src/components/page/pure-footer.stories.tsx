@@ -18,6 +18,6 @@ export const AvecNewsletter: Story = () => (
 export const SansNewsletter: Story = () => (
   <PureFooter
     version="310c30f5b4d779cd4bc17316f4b026292bb95c10"
-    displayNewsletter={true}
+    displayNewsletter={false}
   />
 )
