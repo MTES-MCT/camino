@@ -226,7 +226,7 @@ exports[`Storybook Tests > Components/Administration/ActivitesTypesEmails > Emai
               <option value=\\"wrp\\">Rapport d'exploitation (permis et concessions W) (WRP)</option>
             </select></td>
           <td><input type=\\"email\\" class=\\"py-xs mt-xs\\" placeholder=\\"Email\\"></td>
-          <td><button class=\\"btn rnd-xs p-s py-s px-m\\" disabled=\\"\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"plus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <td><button class=\\"py-s px-m btn rnd-xs p-s\\" disabled=\\"\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"plus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                 <use href=\\"#icon-plus\\"></use>
               </svg></button></td>
         </tr>
@@ -279,7 +279,7 @@ exports[`Storybook Tests > Components/Administration/ActivitesTypesEmails > Emai
               <option value=\\"wrp\\">Rapport d'exploitation (permis et concessions W) (WRP)</option>
             </select></td>
           <td><input type=\\"email\\" class=\\"py-xs mt-xs\\" placeholder=\\"Email\\"></td>
-          <td><button class=\\"btn rnd-xs p-s py-s px-m\\" disabled=\\"\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"plus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <td><button class=\\"py-s px-m btn rnd-xs p-s\\" disabled=\\"\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"plus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                 <use href=\\"#icon-plus\\"></use>
               </svg></button></td>
         </tr>
@@ -465,7 +465,7 @@ exports[`Storybook Tests > Components/Administration/Administration > Default 1`
                   <option value=\\"wrp\\">Rapport d'exploitation (permis et concessions W) (WRP)</option>
                 </select></td>
               <td><input type=\\"email\\" class=\\"py-xs mt-xs\\" placeholder=\\"Email\\"></td>
-              <td><button class=\\"btn rnd-xs p-s py-s px-m\\" disabled=\\"\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"plus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+              <td><button class=\\"py-s px-m btn rnd-xs p-s\\" disabled=\\"\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"plus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                     <use href=\\"#icon-plus\\"></use>
                   </svg></button></td>
             </tr>
@@ -2252,45 +2252,167 @@ exports[`Storybook Tests > Components/Common/Filtres/Types > AllTypes 1`] = `
 
 exports[`Storybook Tests > Components/Dashboard/DGTMStats > Loading 1`] = `
 "<div style=\\"display: grid; grid-template-columns: 1fr 1fr 1fr;\\">
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_3306d0\\"></div>
   </div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_3306d0\\"></div>
   </div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_3306d0\\"></div>
   </div>
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Dashboard/DGTMStats > WithError 1`] = `
 "<div style=\\"display: grid; grid-template-columns: 1fr 1fr 1fr;\\">
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div data-v-b0094f72=\\"\\">
-      <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <div>
+      <div class=\\"_tooltip_4f6ea8\\">
         <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-error-warning\\"></use>
         </svg>
       </div>
     </div>
+    <!---->
   </div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div data-v-b0094f72=\\"\\">
-      <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <div>
+      <div class=\\"_tooltip_4f6ea8\\">
         <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-error-warning\\"></use>
         </svg>
       </div>
     </div>
+    <!---->
   </div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div data-v-b0094f72=\\"\\">
-      <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <div>
+      <div class=\\"_tooltip_4f6ea8\\">
         <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-error-warning\\"></use>
         </svg>
       </div>
+    </div>
+    <!---->
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Dashboard/DGTMStatsFull > Loading 1`] = `
+"<div class=\\"width-full-p\\">
+  <div style=\\"display: grid; grid-template-columns: 1fr 1fr 1fr;\\">
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_3306d0\\"></div>
+    </div>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_3306d0\\"></div>
+    </div>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_3306d0\\"></div>
+    </div>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_3306d0\\"></div>
+    </div>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_3306d0\\"></div>
+    </div>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_3306d0\\"></div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Dashboard/DGTMStatsFull > WithError 1`] = `
+"<div class=\\"width-full-p\\">
+  <div style=\\"display: grid; grid-template-columns: 1fr 1fr 1fr;\\">
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <div>
+        <div class=\\"_tooltip_4f6ea8\\">
+          <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+            <use href=\\"#icon-error-warning\\"></use>
+          </svg>
+        </div>
+      </div>
+      <!---->
+    </div>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <div>
+        <div class=\\"_tooltip_4f6ea8\\">
+          <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+            <use href=\\"#icon-error-warning\\"></use>
+          </svg>
+        </div>
+      </div>
+      <!---->
+    </div>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <div>
+        <div class=\\"_tooltip_4f6ea8\\">
+          <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+            <use href=\\"#icon-error-warning\\"></use>
+          </svg>
+        </div>
+      </div>
+      <!---->
+    </div>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <div>
+        <div class=\\"_tooltip_4f6ea8\\">
+          <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+            <use href=\\"#icon-error-warning\\"></use>
+          </svg>
+        </div>
+      </div>
+      <!---->
+    </div>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <div>
+        <div class=\\"_tooltip_4f6ea8\\">
+          <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+            <use href=\\"#icon-error-warning\\"></use>
+          </svg>
+        </div>
+      </div>
+      <!---->
+    </div>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <div>
+        <div class=\\"_tooltip_4f6ea8\\">
+          <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+            <use href=\\"#icon-error-warning\\"></use>
+          </svg>
+        </div>
+      </div>
+      <!---->
     </div>
   </div>
 </div>"
@@ -2303,15 +2425,19 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > Loading 1`] = `
       <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord </h1>
     </div>
   </div>
-  <!--v-if-->
+  <!---->
   <div class=\\"line-neutral width-full mb-l\\"></div>
   <h3>Titres</h3>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_3306d0\\"></div>
   </div>
   <h4>Titres en cours d’instruction</h4>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_3306d0\\"></div>
   </div>
 </div>"
 `;
@@ -2323,10 +2449,10 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > Ok 1`] = `
       <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord </h1>
     </div>
   </div>
-  <!--v-if-->
+  <!---->
   <div class=\\"line-neutral width-full mb-l\\"></div>
   <h3>Titres</h3>
-  <div class=\\"top-level\\" style=\\"\\" data-v-b0094f72=\\"\\">
+  <div class=\\"_top-level_3306d0\\" style=\\"\\">
     <h4>Titres en attente de la DREAL</h4>
     <div class=\\"mb-xxl\\">
       <div class=\\"overflow-scroll-x mb\\">
@@ -2369,9 +2495,11 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > Ok 1`] = `
         </div>
       </div>
     </div>
+    <!---->
+    <!---->
   </div>
   <h4>Titres en cours d’instruction</h4>
-  <div class=\\"top-level\\" style=\\"\\" data-v-b0094f72=\\"\\">
+  <div class=\\"_top-level_3306d0\\" style=\\"\\">
     <div class=\\"width-full-p\\">
       <div class=\\"overflow-scroll-x mb\\">
         <div class=\\"table\\">
@@ -2457,6 +2585,8 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > Ok 1`] = `
         </div>
       </div>
     </div>
+    <!---->
+    <!---->
   </div>
 </div>"
 `;
@@ -2468,27 +2598,31 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > WithError 1`] = `
       <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord </h1>
     </div>
   </div>
-  <!--v-if-->
+  <!---->
   <div class=\\"line-neutral width-full mb-l\\"></div>
   <h3>Titres</h3>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div data-v-b0094f72=\\"\\">
-      <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <div>
+      <div class=\\"_tooltip_4f6ea8\\">
         <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-error-warning\\"></use>
         </svg>
       </div>
     </div>
+    <!---->
   </div>
   <h4>Titres en cours d’instruction</h4>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div data-v-b0094f72=\\"\\">
-      <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <div>
+      <div class=\\"_tooltip_4f6ea8\\">
         <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-error-warning\\"></use>
         </svg>
       </div>
     </div>
+    <!---->
   </div>
 </div>"
 `;
@@ -3356,142 +3490,144 @@ exports[`Storybook Tests > Components/Dashboard/ONF > WithError 1`] = `
 
 exports[`Storybook Tests > Components/Dashboard/PTMG > Loading 1`] = `
 "<div>
-  <div displayactivites=\\"true\\">
-    <div class=\\"desktop-blobs\\">
-      <div class=\\"desktop-blob-2-3\\">
-        <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord PTMG</h1>
-      </div>
+  <div class=\\"desktop-blobs\\">
+    <div class=\\"desktop-blob-2-3\\">
+      <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord PTMG</h1>
     </div>
-    <div class=\\"loaders fixed p\\">
-      <div class=\\"loader\\"></div>
-    </div>
-    <!--v-if-->
-    <!--v-if-->
+  </div>
+  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_3306d0\\"></div>
   </div>
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Dashboard/PTMG > Ok 1`] = `
 "<div>
-  <div displayactivites=\\"true\\">
-    <div class=\\"desktop-blobs\\">
-      <div class=\\"desktop-blob-2-3\\">
-        <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord PTMG</h1>
-      </div>
+  <div class=\\"desktop-blobs\\">
+    <div class=\\"desktop-blob-2-3\\">
+      <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord PTMG</h1>
     </div>
-    <!--v-if-->
-    <div>
-      <div class=\\"line-neutral width-full mb-l\\"></div>
-      <h3>ARM en attente</h3>
-      <div class=\\"mb-xxl\\">
-        <div class=\\"overflow-scroll-x mb\\">
-          <div class=\\"table\\">
-            <div class=\\"tr\\">
-              <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-                  <!--v-if-->
-                </button></div>
-              <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
-                    <use href=\\"#icon-chevron-bas\\"></use>
-                  </svg></button></div>
-              <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
-                  <!--v-if-->
-                </button></div>
-              <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
-                  <!--v-if-->
-                </button></div>
-            </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
-              <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
-              <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
-              <div class=\\"td min-width-8\\">
-                <ul class=\\"list-prefix mb--xs\\"></ul>
-              </div>
-              <div class=\\"td min-width-10\\">
-                <ul class=\\"list-prefix mb--xs\\">
-                  <li class=\\"h6\\">Titulaire1</li>
-                </ul>
-              </div>
-            </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
-              <div class=\\"td min-width-8\\"><span class=\\"bold\\">Second Nom de titre</span></div>
-              <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
-              <div class=\\"td min-width-8\\">
-                <ul class=\\"list-prefix mb--xs\\">
-                  <li class=\\"h6\\">PTMG : 2010-001</li>
-                  <li class=\\"h6\\">PTMG : 2010-000</li>
-                </ul>
-              </div>
-              <div class=\\"td min-width-10\\">
-                <ul class=\\"list-prefix mb--xs\\">
-                  <li class=\\"h6\\">Titulaire3</li>
-                </ul>
-              </div>
-            </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
-              <div class=\\"td min-width-8\\"><span class=\\"bold\\">Quatrième Nom de titre</span></div>
-              <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
-              <div class=\\"td min-width-8\\">
-                <ul class=\\"list-prefix mb--xs\\">
-                  <li class=\\"h6\\">PTMG : 2010-001</li>
-                  <li class=\\"h6\\">PTMG : 2010-000</li>
-                </ul>
-              </div>
-              <div class=\\"td min-width-10\\">
-                <ul class=\\"list-prefix mb--xs\\">
-                  <li class=\\"h6\\">Titulaire 8</li>
-                </ul>
-              </div>
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class=\\"line-neutral width-full mb-l\\"></div>
-      <h3>ARM en cours d’instruction</h3>
-      <div class=\\"width-full-p\\">
-        <div class=\\"overflow-scroll-x mb\\">
-          <div class=\\"table\\">
-            <div class=\\"tr\\">
-              <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-                  <!--v-if-->
-                </button></div>
-              <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
-                    <use href=\\"#icon-chevron-bas\\"></use>
-                  </svg></button></div>
-              <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
-                  <!--v-if-->
-                </button></div>
-              <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
-                  <!--v-if-->
-                </button></div>
-            </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
-              <div class=\\"td min-width-8\\"><span class=\\"bold\\">third-name</span></div>
-              <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
-              <div class=\\"td min-width-8\\">
-                <ul class=\\"list-prefix mb--xs\\"></ul>
-              </div>
-              <div class=\\"td min-width-10\\">
-                <ul class=\\"list-prefix mb--xs\\">
-                  <li class=\\"h6\\">Titulaire1</li>
-                </ul>
-              </div>
-            </a>
-          </div>
+  </div>
+  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+    <div class=\\"line-neutral width-full mb-l\\"></div>
+    <h3>ARM en attente</h3>
+    <div class=\\"mb-xxl\\">
+      <div class=\\"overflow-scroll-x mb\\">
+        <div class=\\"table\\">
+          <div class=\\"tr\\">
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
+                <!--v-if-->
+              </button></div>
+            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+                  <use href=\\"#icon-chevron-bas\\"></use>
+                </svg></button></div>
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
+                <!--v-if-->
+              </button></div>
+            <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
+                <!--v-if-->
+              </button></div>
+          </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+            <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
+            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\"></ul>
+            </div>
+            <div class=\\"td min-width-10\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Titulaire1</li>
+              </ul>
+            </div>
+          </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+            <div class=\\"td min-width-8\\"><span class=\\"bold\\">Second Nom de titre</span></div>
+            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">PTMG : 2010-001</li>
+                <li class=\\"h6\\">PTMG : 2010-000</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-10\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Titulaire3</li>
+              </ul>
+            </div>
+          </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+            <div class=\\"td min-width-8\\"><span class=\\"bold\\">Quatrième Nom de titre</span></div>
+            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">PTMG : 2010-001</li>
+                <li class=\\"h6\\">PTMG : 2010-000</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-10\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Titulaire 8</li>
+              </ul>
+            </div>
+          </a>
         </div>
       </div>
     </div>
-    <!--v-if-->
+    <div class=\\"line-neutral width-full mb-l\\"></div>
+    <h3>ARM en cours d’instruction</h3>
+    <div class=\\"width-full-p\\">
+      <div class=\\"overflow-scroll-x mb\\">
+        <div class=\\"table\\">
+          <div class=\\"tr\\">
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
+                <!--v-if-->
+              </button></div>
+            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+                  <use href=\\"#icon-chevron-bas\\"></use>
+                </svg></button></div>
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
+                <!--v-if-->
+              </button></div>
+            <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
+                <!--v-if-->
+              </button></div>
+          </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+            <div class=\\"td min-width-8\\"><span class=\\"bold\\">third-name</span></div>
+            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\"></ul>
+            </div>
+            <div class=\\"td min-width-10\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Titulaire1</li>
+              </ul>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <!---->
+    <!---->
   </div>
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Dashboard/PTMG > WithError 1`] = `
 "<div>
-  <div displayactivites=\\"true\\">
-    <div class=\\"desktop-blobs\\">
-      <div class=\\"desktop-blob-2-3\\">
-        <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord PTMG</h1>
+  <div class=\\"desktop-blobs\\">
+    <div class=\\"desktop-blob-2-3\\">
+      <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord PTMG</h1>
+    </div>
+  </div>
+  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <div>
+      <div class=\\"_tooltip_4f6ea8\\">
+        <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <use href=\\"#icon-error-warning\\"></use>
+        </svg>
       </div>
     </div>
-    <!--v-if-->
-    <!--v-if-->
-    <div class=\\"mb p-s color-bg bg-error\\">Le serveur est inaccessible, veuillez réessayer plus tard</div>
+    <!---->
   </div>
 </div>"
 `;
@@ -4927,8 +5063,10 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Loa
       <hr data-v-ff85ba74=\\"\\">
     </div>
     <div data-v-ff85ba74=\\"\\">
-      <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-        <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+        <!---->
+        <!---->
+        <div class=\\"_spinner_3306d0\\"></div>
       </div>
     </div>
     <div data-v-ff85ba74=\\"\\">
@@ -4947,8 +5085,10 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Loa
       <h3 data-v-ff85ba74=\\"\\">Sels (sel de sodium, sel de potassium, sel gemme…)</h3>
       <hr data-v-ff85ba74=\\"\\">
     </div>
-    <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_3306d0\\"></div>
     </div>
     <div data-v-ff85ba74=\\"\\">
       <h4 data-v-ff85ba74=\\"\\">Fiscalité minière</h4>
@@ -4974,15 +5114,19 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Loa
   <div class=\\"mb-xl\\" data-v-ff85ba74=\\"\\">
     <h3 data-v-ff85ba74=\\"\\">Permis Exclusif de Recherche (PER)</h3>
     <hr data-v-ff85ba74=\\"\\">
-    <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_3306d0\\"></div>
     </div>
   </div>
   <div class=\\"mb-xl\\" data-v-ff85ba74=\\"\\">
     <h3 data-v-ff85ba74=\\"\\">Concession</h3>
     <hr data-v-ff85ba74=\\"\\">
-    <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_3306d0\\"></div>
     </div>
   </div>
 </div>"
@@ -5110,14 +5254,16 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
       <hr data-v-ff85ba74=\\"\\">
     </div>
     <div data-v-ff85ba74=\\"\\">
-      <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-        <div data-v-b0094f72=\\"\\">
-          <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+        <!---->
+        <div>
+          <div class=\\"_tooltip_4f6ea8\\">
             <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
               <use href=\\"#icon-error-warning\\"></use>
             </svg>
           </div>
         </div>
+        <!---->
       </div>
     </div>
     <div data-v-ff85ba74=\\"\\">
@@ -5142,14 +5288,16 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
       <h3 data-v-ff85ba74=\\"\\">Sels (sel de sodium, sel de potassium, sel gemme…)</h3>
       <hr data-v-ff85ba74=\\"\\">
     </div>
-    <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-      <div data-v-b0094f72=\\"\\">
-        <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+      <!---->
+      <div>
+        <div class=\\"_tooltip_4f6ea8\\">
           <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
             <use href=\\"#icon-error-warning\\"></use>
           </svg>
         </div>
       </div>
+      <!---->
     </div>
     <div data-v-ff85ba74=\\"\\">
       <h4 data-v-ff85ba74=\\"\\">Fiscalité minière</h4>
@@ -5181,27 +5329,31 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
   <div class=\\"mb-xl\\" data-v-ff85ba74=\\"\\">
     <h3 data-v-ff85ba74=\\"\\">Permis Exclusif de Recherche (PER)</h3>
     <hr data-v-ff85ba74=\\"\\">
-    <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-      <div data-v-b0094f72=\\"\\">
-        <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+      <!---->
+      <div>
+        <div class=\\"_tooltip_4f6ea8\\">
           <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
             <use href=\\"#icon-error-warning\\"></use>
           </svg>
         </div>
       </div>
+      <!---->
     </div>
   </div>
   <div class=\\"mb-xl\\" data-v-ff85ba74=\\"\\">
     <h3 data-v-ff85ba74=\\"\\">Concession</h3>
     <hr data-v-ff85ba74=\\"\\">
-    <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-      <div data-v-b0094f72=\\"\\">
-        <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+      <!---->
+      <div>
+        <div class=\\"_tooltip_4f6ea8\\">
           <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
             <use href=\\"#icon-error-warning\\"></use>
           </svg>
         </div>
       </div>
+      <!---->
     </div>
   </div>
 </div>"

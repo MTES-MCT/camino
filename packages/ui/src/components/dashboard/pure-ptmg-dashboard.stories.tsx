@@ -1,21 +1,12 @@
-import PurePTMGDashboard from './pure-ptmg-dashboard.vue'
+import { PurePTMGDashboard } from './pure-ptmg-dashboard'
 import { Meta, Story } from '@storybook/vue3'
 import { CommonTitrePTMG } from 'camino-common/src/titres'
 
 const meta: Meta = {
   title: 'Components/Dashboard/PTMG',
-  component: PurePTMGDashboard,
-  argTypes: {
-    getPtmgTitres: { name: 'function', required: true },
-    displayActivites: { name: 'boolean' }
-  }
+  component: PurePTMGDashboard
 }
 export default meta
-
-type Props = {
-  getPtmgTitres: () => Promise<CommonTitrePTMG[]>
-  displayActivites: boolean
-}
 
 const titres: CommonTitrePTMG[] = [
   {
@@ -88,27 +79,16 @@ const titres: CommonTitrePTMG[] = [
   }
 ]
 
-const Template: Story<Props> = (args: Props) => ({
-  components: { PurePTMGDashboard },
-  setup() {
-    return { args }
-  },
-  template: '<div><PurePTMGDashboard v-bind="args" /></div>'
-})
-
-export const Ok = Template.bind({})
-Ok.args = {
-  getPtmgTitres: () => Promise.resolve(titres),
-  displayActivites: true
-}
-
-export const Loading = Template.bind({})
-Loading.args = {
-  getPtmgTitres: () => new Promise<CommonTitrePTMG[]>(resolve => {}),
-  displayActivites: true
-}
-export const WithError = Template.bind({})
-WithError.args = {
-  getPtmgTitres: () => Promise.reject(new Error('because reasons')),
-  displayActivites: true
-}
+export const Ok: Story = () => (
+  <PurePTMGDashboard getPtmgTitres={() => Promise.resolve(titres)} />
+)
+export const Loading: Story = () => (
+  <PurePTMGDashboard
+    getPtmgTitres={() => new Promise<CommonTitrePTMG[]>(resolve => {})}
+  />
+)
+export const WithError: Story = () => (
+  <PurePTMGDashboard
+    getPtmgTitres={() => Promise.reject(new Error('because reasons'))}
+  />
+)

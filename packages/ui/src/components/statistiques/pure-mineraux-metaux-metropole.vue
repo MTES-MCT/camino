@@ -320,7 +320,7 @@
 </template>
 
 <script setup lang="ts">
-import ChartWithExport from '../_charts/chart-with-export.vue'
+import { ChartWithExport } from '../_charts/chart-with-export'
 
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '@/components/_ui/pure-loader.vue'

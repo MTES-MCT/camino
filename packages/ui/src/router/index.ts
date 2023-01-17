@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import store from '../store'
 
-import Dashboard from '../components/dashboard.vue'
-import DGTMStats from '../components/dashboard/dgtm-stats-full.vue'
+import { Dashboard } from '../components/dashboard'
+import { DGTMStatsFull } from '../components/dashboard/dgtm-stats-full'
 import Titre from '../components/titre.vue'
 import { Titres } from '../components/titres'
 import Demarches from '../components/demarches.vue'
@@ -56,7 +56,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/dashboard/dgtmstats',
     name: 'Stats DGTM',
-    component: DGTMStats
+    component: DGTMStatsFull
   },
   {
     path: '/titres',
