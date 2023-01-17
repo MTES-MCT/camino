@@ -43,12 +43,12 @@ export const getDGTMStatsInside = async (
     id: string
     dateDebut: CaminoDate
     typeId: TitreTypeId
-    sdomZoneId: SDOMZoneId | null
+    sdomZoneIds: SDOMZoneId[] | null
   }[] = await knex
     .select(
       'titresPhases.dateDebut',
       'titres.typeId',
-      'titres__sdom_zones.sdom_zone_id'
+      'titres_etapes.sdom_zones as sdomZoneIds'
     )
     .distinct('titres.id')
     .from('titresPhases')
@@ -56,9 +56,6 @@ export const getDGTMStatsInside = async (
     .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
     .joinRaw(
       "left join titres_etapes on titres_etapes.id = titres.props_titre_etapes_ids ->> 'points'"
-    )
-    .joinRaw(
-      "left join titres__sdom_zones on titres__sdom_zones.titre_etape_id = titres.props_titre_etapes_ids ->> 'points'"
     )
     .where('titresDemarches.typeId', 'oct')
     .andWhere('titresPhases.dateDebut', '>=', `${anneeDepartStats}-01-01`)
@@ -96,10 +93,10 @@ export const getDGTMStatsInside = async (
     }
 
     result.depotEtInstructions[annee].totalTitresOctroyes++
-    if (phase.sdomZoneId === null) {
+    if (!phase.sdomZoneIds || phase.sdomZoneIds.length === 0) {
       result.sdom[annee]['3'].octroye++
     } else {
-      result.sdom[annee][phase.sdomZoneId].octroye++
+      phase.sdomZoneIds.forEach(zoneId => result.sdom[annee][zoneId].octroye++)
     }
     if (phase.typeId === 'axm') {
       result.depotEtInstructions[annee].totalAXMOctroyees++
@@ -109,12 +106,12 @@ export const getDGTMStatsInside = async (
   const etapeDeposees: {
     date: CaminoDate
     typeId: TitreTypeId
-    sdomZoneId: SDOMZoneId | null
+    sdomZoneIds: SDOMZoneId[] | null
   }[] = await knex
     .select(
       'titresEtapes.date',
       'titres.typeId',
-      'titres__sdom_zones.sdom_zone_id'
+      'titres_etapes.sdom_zones as sdomZoneIds'
     )
     .distinct('titres.id')
     .from('titresEtapes')
@@ -122,9 +119,6 @@ export const getDGTMStatsInside = async (
     .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
     .joinRaw(
       "left join titres_etapes titre_etape_point on titre_etape_point.id = titres.props_titre_etapes_ids ->> 'points'"
-    )
-    .joinRaw(
-      "left join titres__sdom_zones on titres__sdom_zones.titre_etape_id = titres.props_titre_etapes_ids ->> 'points'"
     )
     .where('titresEtapes.archive', false)
     .where('titresEtapes.typeId', 'mdp')
@@ -165,10 +159,10 @@ export const getDGTMStatsInside = async (
     }
 
     result.depotEtInstructions[annee].totalTitresDeposes++
-    if (etape.sdomZoneId === null) {
+    if (!etape.sdomZoneIds || etape.sdomZoneIds.length === 0) {
       result.sdom[annee][3].depose++
     } else {
-      result.sdom[annee][etape.sdomZoneId].depose++
+      etape.sdomZoneIds.forEach(zoneId => result.sdom[annee][zoneId].depose++)
     }
 
     if (etape.typeId === 'axm') {
@@ -197,9 +191,6 @@ export const getDGTMStatsInside = async (
     .leftJoin('titres', 'titresDemarches.titreId', 'titres.id')
     .joinRaw(
       "left join titres_etapes on titres_etapes.id = titres.props_titre_etapes_ids ->> 'points'"
-    )
-    .joinRaw(
-      "left join titres__sdom_zones on titres__sdom_zones.titre_etape_id = titres.props_titre_etapes_ids ->> 'points'"
     )
     .joinRaw(
       `left join titres_etapes depot_de_la_demande on (depot_de_la_demande.titre_demarche_id = "titres_demarches"."id" and depot_de_la_demande.type_id = '${ETAPES_TYPES.depotDeLaDemande}')`
