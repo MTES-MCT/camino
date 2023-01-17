@@ -236,10 +236,6 @@ i,
   text-align: right;
 }
 
-.mono {
-  font-family: 'Lucida Sans Typewriter', monaco, 'Lucida Console', monospace;
-}
-
 dt {
   display: inline-block;
 }

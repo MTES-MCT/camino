@@ -12,7 +12,7 @@
       Coordonnées en {{ etapeGeoSysteme.nom }} ({{ etapeGeoSystemeUniteNom }})
     </h5>
     <textarea
-      class="p-s mb-s mono"
+      class="p-s mb-s"
       :value="point.references.join('\n')"
       placeholder="1,4769;47,3469"
       @blur="pointsLotUpdate($event)"
@@ -23,7 +23,7 @@
       <ul class="list-prefix">
         <li>
           Une paire de coordonnées
-          <span class="mono bg-alt p-xxs color-text">x;y</span>
+          <span class="bg-alt p-xxs color-text">x;y</span>
           par ligne, séparées par un point-virgule, sans espace.
         </li>
         <li>Au format décimal, quelle que soit l'unité.</li>
@@ -31,7 +31,7 @@
       </ul>
       <p class="mb-s">
         Exemple:
-        <span class="mono bg-alt px-xs py-xxs color-text">1,4769;47,3469</span>
+        <span class="bg-alt px-xs py-xxs color-text">1,4769;47,3469</span>
       </p>
     </div>
   </div>

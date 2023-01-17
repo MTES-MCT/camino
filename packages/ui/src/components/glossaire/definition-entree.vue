@@ -5,7 +5,7 @@
         <Pill
           v-if="id === 'dom'"
           :color="`bg-domaine-${entree.id}`"
-          class="mr-xs mono mt--s"
+          class="mr-xs mt--s"
         >
           {{ entree.id }}
         </Pill>

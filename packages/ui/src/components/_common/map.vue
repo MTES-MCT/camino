@@ -102,7 +102,7 @@ export default {
           }
 
           const icon = leafletDivIconBuild({
-            className: `small mono border-bg color-text py-xs px-s inline-block leaflet-marker-camino cap pill bg-bg`,
+            className: `small border-bg color-text py-xs px-s inline-block leaflet-marker-camino cap pill bg-bg`,
             html: point.nom,
             iconSize: null,
             iconAnchor: [15.5, 38]

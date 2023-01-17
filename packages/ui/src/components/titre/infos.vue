@@ -3,7 +3,7 @@
     <div class="desktop-blob-1-2">
       <div class="rnd-b-s bg-alt pt px overflow-auto">
         <h4 class="mb">
-          <Pill :color="`bg-domaine-${titre.domaine.id}`" class="mono mr-s">
+          <Pill :color="`bg-domaine-${titre.domaine.id}`" class="mr-s">
             {{ titre.domaine.id }}
           </Pill>
           <span class="cap-first">
