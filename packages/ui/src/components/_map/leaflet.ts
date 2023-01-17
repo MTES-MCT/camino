@@ -1,4 +1,3 @@
-import 'leaflet'
 import type {
   LatLngExpression,
   Icon,
