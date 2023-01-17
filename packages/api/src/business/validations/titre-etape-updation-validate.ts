@@ -64,6 +64,7 @@ export const titreEtapeUpdationValidate = (
   errors.push(...errorsHeritageContenu)
 
   if (
+    !(titreEtape.heritageProps?.duree?.actif ?? false) &&
     !canEditDuree(titre.typeId, titreDemarche.typeId) &&
     (titreEtape.duree ?? 0) !== (titreEtapeOld?.duree ?? 0)
   ) {
