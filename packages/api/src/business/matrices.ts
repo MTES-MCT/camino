@@ -124,7 +124,13 @@ type Matrice1121 = {
   "Numéro de l'article du rôle": string | undefined
 }
 
-type Titulaire = { nom: string; rue: string; codepostal: string; siren: string }
+type Titulaire = {
+  nom: string
+  rue: string
+  codepostal: string
+  commune: string
+  siren: string
+}
 type Matrices = {
   communePrincipale: ICommune
   commune: ICommune
@@ -246,6 +252,7 @@ export const buildMatrices = (
             nom: titulaireTitre.nom,
             rue: titulaireTitre.adresse ?? '',
             codepostal: titulaireTitre.codePostal ?? '',
+            commune: titulaireTitre.commune ?? '',
             siren: titulaireTitre.legalSiren ?? ''
           },
           titreLabel,

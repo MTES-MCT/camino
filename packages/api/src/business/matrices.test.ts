@@ -2,6 +2,7 @@ import { buildMatrices } from './matrices.js'
 import { ITitre } from '../types.js'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { describe, expect, test } from 'vitest'
+import { checkCodePostal } from 'camino-common/src/static/departement.js'
 describe('matrices', () => {
   test('buildMatrices', () => {
     const openFiscaResponse = {
@@ -131,6 +132,8 @@ describe('matrices', () => {
             id: newEntrepriseId(''),
             nom: 'titulaire3',
             adresse: 'ladresse3',
+            codePostal: checkCodePostal('97311'),
+            commune: 'Saint-Laurent-du-Maroni',
             legalSiren: 'legalSiren3'
           }
         ],

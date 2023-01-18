@@ -172,3 +172,6 @@ dsfr/generate:
 	sed -i 's/.dsfr :root/:root/g' packages/ui/src/styles/dsfr/dsfr.css
 	cp -r node_modules/@gouvfr/dsfr/dist/icons packages/ui/src/styles/dsfr/
 	cp -r node_modules/@gouvfr/dsfr/dist/fonts packages/ui/src/styles/dsfr/
+
+matrices:
+	npm run matrices -w packages/api
