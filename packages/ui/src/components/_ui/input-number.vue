@@ -12,6 +12,7 @@
 import { textNumberFormat, textToNumberFormat } from '../../utils'
 import { numberFormat } from '../../utils/number-format'
 import { computed } from 'vue'
+import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 
 const props = withDefaults(
   defineProps<{
@@ -50,8 +51,4 @@ const textToNumberFormatFunc = (event: FocusEvent) => {
     emits('update:modelValue', number)
   }
 }
-
-const isEventWithTarget = (
-  event: any
-): event is FocusEvent & { target: HTMLInputElement } => event.target
 </script>

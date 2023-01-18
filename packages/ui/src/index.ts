@@ -15,6 +15,7 @@ import { fetchWithJson } from './api/client-rest'
 let caminoApplicationVersion = localStorage.getItem('caminoApplicationVersion')
 
 Promise.resolve().then(async (): Promise<void> => {
+  import('./styles/dsfr/dsfr.css')
   const app = createApp(App)
   sync(store, router)
   const configFromJson: CaminoConfig = await fetchWithJson(

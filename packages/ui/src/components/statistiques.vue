@@ -49,6 +49,11 @@ export default {
   },
 
   created() {
+    if (this.$matomo) {
+      // @ts-ignore
+      this.$matomo.trackEvent('menu-sections', 'menu-section', 'statistiques')
+    }
+
     if (this.$route.name === 'statistiques') {
       this.$router.replace({ name: 'statistiques-globales' })
     }

@@ -115,7 +115,9 @@
     },
     "overrides": [
       {
-        "files" : ["*.tsx"],
+        "files": [
+          "*.tsx"
+        ],
         "rules": {
           "vue/require-explicit-emits": 0
         }

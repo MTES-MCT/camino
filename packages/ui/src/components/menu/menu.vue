@@ -99,26 +99,6 @@
         </div>
         <div class="tablet-blob-1-4 border-l pl-s">
           <ul class="list-sans mb-0">
-            <li>
-              <router-link
-                id="cmn-menu-menu-a-glossaire"
-                :to="{ name: 'glossaire' }"
-                class="btn-menu text-decoration-none bold"
-                @click="eventTrack('glossaire')"
-              >
-                Glossaire
-              </router-link>
-            </li>
-            <li>
-              <router-link
-                id="cmn-menu-menu-a-statistiques"
-                :to="{ name: 'statistiques' }"
-                class="btn-menu text-decoration-none bold"
-                @click="eventTrack('statistiques')"
-              >
-                Statistiques
-              </router-link>
-            </li>
             <li v-if="canReadMetas(user)">
               <router-link
                 id="cmn-menu-menu-a-metas"
