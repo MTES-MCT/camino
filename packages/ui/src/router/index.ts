@@ -28,8 +28,10 @@ const Metas = () => import('../components/metas.vue')
 const Error = () => import('../components/error.vue')
 const UserPasswordInit = () => import('../components/user/password-init.vue')
 const UserAdd = () => import('../components/user/add.vue')
-const StatistiquesGlobales = () =>
-  import('../components/statistiques/globales.vue')
+const StatistiquesGlobales = async () => {
+  const { Globales } = await import('../components/statistiques/globales')
+  return Globales
+}
 const Statistiques = () => import('../components/statistiques.vue')
 const StatsGuyane = async () => {
   const { Guyane } = await import('../components/statistiques/guyane')
