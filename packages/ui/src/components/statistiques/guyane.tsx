@@ -14,7 +14,7 @@ import {
   StatistiquesGuyaneData
 } from 'camino-common/src/statistiques'
 import { GuyaneActivite } from './guyane-activite'
-import BarChart from '../_charts/configurable-chart.vue'
+import { ConfigurableChart } from '../_charts/configurable-chart'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { numberFormat } from '@/utils/number-format'
 
@@ -55,6 +55,9 @@ const getStats = async (): Promise<StatistiquesGuyane> => {
 export const Guyane: FunctionalComponent = () => (
   <PureGuyane getStats={getStats} />
 )
+
+// Demandé par le router car utilisé dans un import asynchrone /shrug
+Guyane.displayName = 'Guyane'
 
 const defaultConfiguration = (data: ChartData): ChartConfiguration => ({
   type: 'bar',
@@ -520,7 +523,7 @@ export const PureGuyane = defineComponent<Props>({
             <LoadingElement
               data={data.value}
               renderItem={item => (
-                <BarChart
+                <ConfigurableChart
                   chartConfiguration={armChartConfiguration(item.data)}
                 />
               )}
@@ -532,7 +535,7 @@ export const PureGuyane = defineComponent<Props>({
             <LoadingElement
               data={data.value}
               renderItem={item => (
-                <BarChart
+                <ConfigurableChart
                   chartConfiguration={prmChartConfiguration(item.data)}
                 />
               )}
@@ -544,7 +547,7 @@ export const PureGuyane = defineComponent<Props>({
             <LoadingElement
               data={data.value}
               renderItem={item => (
-                <BarChart
+                <ConfigurableChart
                   chartConfiguration={axmChartConfiguration(item.data)}
                 />
               )}
@@ -556,7 +559,7 @@ export const PureGuyane = defineComponent<Props>({
             <LoadingElement
               data={data.value}
               renderItem={item => (
-                <BarChart
+                <ConfigurableChart
                   chartConfiguration={cxmChartConfiguration(item.data)}
                 />
               )}

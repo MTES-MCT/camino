@@ -3,7 +3,7 @@ import { Icon } from '@/components/_ui/icon'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { ChartConfiguration } from 'chart.js'
 import { AsyncData } from '@/api/client-rest'
-import ConfigurableChart from './configurable-chart.vue'
+import { ConfigurableChart } from './configurable-chart'
 
 export interface Props<T> {
   data: AsyncData<T>
