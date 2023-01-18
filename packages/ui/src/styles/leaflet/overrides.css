@@ -377,7 +377,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 .leaflet-control-zoom-in,
 .leaflet-control-zoom-out {
-  font: bold 18px 'Lucida Console', Monaco, monospace;
   text-indent: 1px;
 }
 

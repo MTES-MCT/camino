@@ -166,10 +166,13 @@ dsfr/generate:
 	cp node_modules/@gouvfr/dsfr/dist/dsfr.css tmp/_dsfr.scss
 	cp node_modules/@gouvfr/dsfr/dist/utility/utility.css tmp/_utility.scss
 	sed -i 's/..\/icons/.\/icons/g' tmp/_utility.scss
-	echo ".dsfr { @import './_dsfr.scss'; @import './_utility.scss'}" > tmp/dsfr.scss
+	sed -n "/\@font-face {/,/}/p" tmp/_dsfr.scss > tmp/font-face.scss
+	sed -i "/\@font-face {/,/}/d" tmp/_dsfr.scss
+	echo "@import './font-face.scss'; .dsfr { @import './_dsfr.scss'; @import './_utility.scss'}" > tmp/dsfr.scss
 	npx sass --no-source-map tmp/dsfr.scss packages/ui/src/styles/dsfr/dsfr.css
 	rm -r tmp
 	sed -i 's/.dsfr :root/:root/g' packages/ui/src/styles/dsfr/dsfr.css
+	sed -i 's/.dsfr body/body/g' packages/ui/src/styles/dsfr/dsfr.css
 	cp -r node_modules/@gouvfr/dsfr/dist/icons packages/ui/src/styles/dsfr/
 	cp -r node_modules/@gouvfr/dsfr/dist/fonts packages/ui/src/styles/dsfr/
 
