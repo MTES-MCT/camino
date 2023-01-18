@@ -5119,152 +5119,168 @@ exports[`Storybook Tests > Components/Statistiques/Guyane > WithError 1`] = `
 `;
 
 exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Loading 1`] = `
-"<div class=\\"content\\" data-v-ff85ba74=\\"\\">
-  <div id=\\"etat\\" class=\\"mb-xxl mt\\" data-v-ff85ba74=\\"\\">
-    <h2 data-v-ff85ba74=\\"\\"> État du domaine minier des substances non énergétiques, en métropole, en temps réel </h2><span class=\\"separator\\" data-v-ff85ba74=\\"\\"></span>
-    <p data-v-ff85ba74=\\"\\"> Les données affichées ici sont celles contenues dans la base de donnée Camino. Elles sont susceptibles d’évoluer chaque jour au grès des décisions et de la fin de validité des titres et autorisations. </p>
-    <p data-v-ff85ba74=\\"\\"> Les surfaces cumulées concernées par un titre ou une autorisation n’impliquent pas qu’elles sont effectivement explorées ou exploitées sur tout ou partie de l'année. Les travaux miniers font l’objet de déclarations ou d’autorisations distinctes portant sur une partie seulement de la surface des titres miniers. </p>
-    <div class=\\"mb-xxl\\" data-v-ff85ba74=\\"\\">
-      <h3 data-v-ff85ba74=\\"\\">Titres d’exploration</h3>
-      <hr data-v-ff85ba74=\\"\\">
-      <div class=\\"tablet-blobs\\" data-v-ff85ba74=\\"\\">
-        <div class=\\"tablet-blob-1-3\\" data-v-ff85ba74=\\"\\">
-          <p class=\\"h0 text-center\\" data-v-ff85ba74=\\"\\">
-          <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-            <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+"<div class=\\"content\\">
+  <div id=\\"etat\\" class=\\"mb-xxl mt\\">
+    <h2>État du domaine minier des substances non énergétiques, en métropole, en temps réel</h2><span class=\\"separator\\"></span>
+    <p>Les données affichées ici sont celles contenues dans la base de donnée Camino. Elles sont susceptibles d’évoluer chaque jour au grès des décisions et de la fin de validité des titres et autorisations.</p>
+    <p>Les surfaces cumulées concernées par un titre ou une autorisation n’impliquent pas qu’elles sont effectivement explorées ou exploitées sur tout ou partie de l'année. Les travaux miniers font l’objet de déclarations ou d’autorisations distinctes portant sur une partie seulement de la surface des titres miniers.</p>
+    <div class=\\"mb-xxl\\">
+      <h3>Titres d’exploration</h3>
+      <hr>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-3\\">
+          <p class=\\"h0 text-center\\">
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <!---->
+            <div class=\\"_spinner_3306d0\\"></div>
           </div>
           </p>
-          <div data-v-ff85ba74=\\"\\">
-            <p class=\\"bold text-center\\" data-v-ff85ba74=\\"\\"> Demande en cours d'instruction (initiale et modification en instance) </p>
+          <div>
+            <p class=\\"bold text-center\\">Demandeen cours d'instruction (initiale et modification en instance)</p>
           </div>
-          <p class=\\"h6 text-center\\" data-v-ff85ba74=\\"\\"><a type=\\"primary\\" to=\\"[object Object]\\"> Voir les titres </a></p>
+          <p class=\\"h6 text-center\\"><a type=\\"primary\\" to=\\"[object Object]\\">Voir les titres</a></p>
         </div>
-        <div class=\\"tablet-blob-1-3\\" data-v-ff85ba74=\\"\\">
-          <p class=\\"h0 text-center\\" data-v-ff85ba74=\\"\\">
-          <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-            <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+        <div class=\\"tablet-blob-1-3\\">
+          <p class=\\"h0 text-center\\">
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <!---->
+            <div class=\\"_spinner_3306d0\\"></div>
           </div>
           </p>
-          <p class=\\"bold text-center\\" data-v-ff85ba74=\\"\\">Permis exclusifs de recherches</p>
-          <p class=\\"h6 text-center\\" data-v-ff85ba74=\\"\\"><a type=\\"primary\\" to=\\"[object Object]\\"> Voir les titres </a></p>
+          <p class=\\"bold text-center\\">Permis exclusifs de recherches</p>
+          <p class=\\"h6 text-center\\"><a type=\\"primary\\" to=\\"[object Object]\\">Voir les titres</a></p>
         </div>
-        <div class=\\"tablet-blob-1-3\\" data-v-ff85ba74=\\"\\">
-          <p class=\\"h0 text-center\\" data-v-ff85ba74=\\"\\">
-          <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-            <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+        <div class=\\"tablet-blob-1-3\\">
+          <p class=\\"h0 text-center\\">
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <!---->
+            <div class=\\"_spinner_3306d0\\"></div>
           </div>
           </p>
-          <p class=\\"bold text-center\\" data-v-ff85ba74=\\"\\"> Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploration </p>
+          <p class=\\"bold text-center\\">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploration</p>
         </div>
       </div>
     </div>
-    <div class=\\"mb-xxl\\" data-v-ff85ba74=\\"\\">
-      <h3 data-v-ff85ba74=\\"\\">Titres d’exploitation</h3>
-      <hr data-v-ff85ba74=\\"\\">
-      <div class=\\"tablet-blobs\\" data-v-ff85ba74=\\"\\">
-        <div class=\\"tablet-blob-1-3\\" data-v-ff85ba74=\\"\\">
-          <p class=\\"h0 text-center\\" data-v-ff85ba74=\\"\\">
-          <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-            <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div class=\\"mb-xxl\\">
+      <h3>Titres d’exploitation</h3>
+      <hr>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-3\\">
+          <p class=\\"h0 text-center\\">
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <!---->
+            <div class=\\"_spinner_3306d0\\"></div>
           </div>
           </p>
-          <div data-v-ff85ba74=\\"\\">
-            <p class=\\"bold text-center\\" data-v-ff85ba74=\\"\\"> Demande en cours d'instruction (initiale et modification en instance) </p>
+          <div>
+            <p class=\\"bold text-center\\">Demandeen cours d'instruction (initiale et modification en instance)</p>
           </div>
-          <p class=\\"h6 text-center\\" data-v-ff85ba74=\\"\\"><a type=\\"primary\\" to=\\"[object Object]\\"> Voir les titres </a></p>
+          <p class=\\"h6 text-center\\"><a type=\\"primary\\" to=\\"[object Object]\\">Voir les titres</a></p>
         </div>
-        <div class=\\"tablet-blob-1-3\\" data-v-ff85ba74=\\"\\">
-          <p class=\\"h0 text-center\\" data-v-ff85ba74=\\"\\">
-          <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-            <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+        <div class=\\"tablet-blob-1-3\\">
+          <p class=\\"h0 text-center\\">
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <!---->
+            <div class=\\"_spinner_3306d0\\"></div>
           </div>
           </p>
-          <div data-v-ff85ba74=\\"\\">
-            <p class=\\"bold text-center\\" data-v-ff85ba74=\\"\\"> Concession</p>
+          <div>
+            <p class=\\"bold text-center\\">Concession</p>
           </div>
-          <p class=\\"h6 text-center\\" data-v-ff85ba74=\\"\\"><a type=\\"primary\\" to=\\"[object Object]\\"> Voir les titres </a></p>
+          <p class=\\"h6 text-center\\"><a type=\\"primary\\" to=\\"[object Object]\\">Voir les titres</a></p>
         </div>
-        <div class=\\"tablet-blob-1-3\\" data-v-ff85ba74=\\"\\">
-          <p class=\\"h0 text-center\\" data-v-ff85ba74=\\"\\">
-          <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-            <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+        <div class=\\"tablet-blob-1-3\\">
+          <p class=\\"h0 text-center\\">
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <!---->
+            <div class=\\"_spinner_3306d0\\"></div>
           </div>
           </p>
-          <p class=\\"bold text-center\\" data-v-ff85ba74=\\"\\"> Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploitation </p>
+          <p class=\\"bold text-center\\">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploitation</p>
         </div>
       </div>
     </div>
   </div>
-  <div class=\\"line-neutral width-full mb\\" data-v-ff85ba74=\\"\\"></div>
-  <h2 data-v-ff85ba74=\\"\\"> Production annuelle et fiscalité minière des ressources minérales non énergétiques, par famille de substances </h2><span class=\\"separator\\" data-v-ff85ba74=\\"\\"></span>
-  <p class=\\"mb-xl\\" data-v-ff85ba74=\\"\\"> Données contenues dans la base de données Camino, stabilisées pour l’année n-1. </p>
-  <div class=\\"grid-container\\" data-v-ff85ba74=\\"\\">
-    <div style=\\"grid-column-end: span 2;\\" data-v-ff85ba74=\\"\\">
-      <h3 data-v-ff85ba74=\\"\\">Bauxite</h3>
-      <hr data-v-ff85ba74=\\"\\">
+  <div class=\\"line-neutral width-full mb\\"></div>
+  <h2>Production annuelle et fiscalité minière des ressources minérales non énergétiques, par famille de substances</h2><span class=\\"separator\\"></span>
+  <p class=\\"mb-xl\\">Données contenues dans la base de données Camino, stabilisées pour l’année n-1.</p>
+  <div class=\\"_grid-container_72aebd\\">
+    <div style=\\"grid-column-end: span 2;\\">
+      <h3>Bauxite</h3>
+      <hr>
     </div>
-    <div data-v-ff85ba74=\\"\\">
-      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+    <div>
+      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
         <!---->
         <!---->
         <div class=\\"_spinner_3306d0\\"></div>
       </div>
     </div>
-    <div data-v-ff85ba74=\\"\\">
-      <h4 data-v-ff85ba74=\\"\\">Fiscalité minière</h4>
-      <p data-v-ff85ba74=\\"\\"> Les données sont calculées à partir des données de production. Il s'agit des sommes dûes et non des recettes effectivement perçues par les finances publiques. </p>
-      <div class=\\"flex\\" data-v-ff85ba74=\\"\\"></div>
-      <div class=\\"line-neutral mb\\" data-v-ff85ba74=\\"\\"></div>
-      <p data-v-ff85ba74=\\"\\"> Sommes dûes par les opérateurs miniers exploitant de la bauxite au titre des redevances départementale et communale des mines, hors frais de gestion </p>
-      <p class=\\"h1 text-center color-info bold\\" data-v-ff85ba74=\\"\\">
-      <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-        <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div>
+      <h4>Fiscalité minière</h4>
+      <p>Les données sont calculées à partir des données de production. Il s'agit des sommes dûes et non des recettes effectivement perçues par les finances publiques.</p>
+      <div class=\\"flex\\"></div>
+      <div class=\\"line-neutral mb\\"></div>
+      <p>Sommes dûes par les opérateurs miniers exploitant de la bauxite au titre des redevances départementale et communale des mines, hors frais de gestion</p>
+      <p class=\\"h1 text-center color-info bold\\">
+      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+        <!---->
+        <!---->
+        <div class=\\"_spinner_3306d0\\"></div>
       </div>
       </p>
     </div>
-    <div style=\\"grid-column-end: span 2;\\" data-v-ff85ba74=\\"\\">
-      <h3 data-v-ff85ba74=\\"\\">Sels (sel de sodium, sel de potassium, sel gemme…)</h3>
-      <hr data-v-ff85ba74=\\"\\">
+    <div style=\\"grid-column-end: span 2;\\">
+      <h3>Sels (sel de sodium, sel de potassium, sel gemme…)</h3>
+      <hr>
     </div>
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <!---->
       <div class=\\"_spinner_3306d0\\"></div>
     </div>
-    <div data-v-ff85ba74=\\"\\">
-      <h4 data-v-ff85ba74=\\"\\">Fiscalité minière</h4>
-      <p data-v-ff85ba74=\\"\\"> Les données sont calculées à partir des données de production. Il s'agit des sommes dûes et non des recettes effectivement perçues par les finances publiques. </p>
-      <div class=\\"flex\\" data-v-ff85ba74=\\"\\"></div>
-      <div class=\\"line-neutral mb\\" data-v-ff85ba74=\\"\\"></div>
-      <p data-v-ff85ba74=\\"\\"> Sommes dûes par les opérateurs miniers exploitant des sels au titre des redevances départementale et communale des mines, hors frais de gestion </p>
-      <p class=\\"h1 text-center color-info bold\\" data-v-ff85ba74=\\"\\">
-      <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-        <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div>
+      <h4>Fiscalité minière</h4>
+      <p>Les données sont calculées à partir des données de production. Il s'agit des sommes dûes et non des recettes effectivement perçues par les finances publiques.</p>
+      <div class=\\"flex\\"></div>
+      <div class=\\"line-neutral mb\\"></div>
+      <p>Sommes dûes par les opérateurs miniers exploitant des sels au titre des redevances départementale et communale des mines, hors frais de gestion</p>
+      <p class=\\"h1 text-center color-info bold\\">
+      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+        <!---->
+        <!---->
+        <div class=\\"_spinner_3306d0\\"></div>
       </div>
       </p>
     </div>
-    <div style=\\"grid-column-end: span 2;\\" data-v-ff85ba74=\\"\\">
-      <h3 data-v-ff85ba74=\\"\\">Autres substances</h3>
-      <hr data-v-ff85ba74=\\"\\">
+    <div style=\\"grid-column-end: span 2;\\">
+      <h3>Autres substances</h3>
+      <hr>
     </div>
-    <div style=\\"grid-column-end: span 2;\\" data-v-ff85ba74=\\"\\"> Pour les autres substances de mines exploitées en métropole, l'agrégation des données n'est pas possible en raison du nombre limité d'exploitant par type de substance. <br data-v-ff85ba74=\\"\\"><br data-v-ff85ba74=\\"\\"> Au titre du secret des informations économiques et financières, les volumes d'exploitation ne sont pas communicables. </div>
+    <div style=\\"grid-column-end: span 2;\\">Pour les autres substances de mines exploitées en métropole, l'agrégation des données n'est pas possible en raison du nombre limité d'exploitant par type de substance.<br><br>Au titre du secret des informations économiques et financières, les volumes d'exploitation ne sont pas communicables.</div>
   </div>
-  <div class=\\"line-neutral width-full mb mt\\" data-v-ff85ba74=\\"\\"></div>
-  <h2 data-v-ff85ba74=\\"\\">Evolution du nombre de titre et de leur surface</h2><span class=\\"separator\\" data-v-ff85ba74=\\"\\"></span>
-  <p class=\\"mb-xl\\" data-v-ff85ba74=\\"\\"> Les données affichées ici sont celles contenues dans la base de donnée Camino. Ces données concernent exclusivement le territoire métropolitain. </p>
-  <div class=\\"mb-xl\\" data-v-ff85ba74=\\"\\">
-    <h3 data-v-ff85ba74=\\"\\">Permis Exclusif de Recherche (PER)</h3>
-    <hr data-v-ff85ba74=\\"\\">
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+  <div class=\\"line-neutral width-full mb mt\\"></div>
+  <h2>Evolution du nombre de titre et de leur surface</h2><span class=\\"separator\\"></span>
+  <p class=\\"mb-xl\\">Les données affichées ici sont celles contenues dans la base de donnée Camino. Ces données concernent exclusivement le territoire métropolitain.</p>
+  <div class=\\"mb-xl\\">
+    <h3>Permis Exclusif de Recherche (PER)</h3>
+    <hr>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <!---->
       <div class=\\"_spinner_3306d0\\"></div>
     </div>
   </div>
-  <div class=\\"mb-xl\\" data-v-ff85ba74=\\"\\">
-    <h3 data-v-ff85ba74=\\"\\">Concession</h3>
-    <hr data-v-ff85ba74=\\"\\">
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+  <div class=\\"mb-xl\\">
+    <h3>Concession</h3>
+    <hr>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <!---->
       <div class=\\"_spinner_3306d0\\"></div>
@@ -5274,128 +5290,140 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Loa
 `;
 
 exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > WithError 1`] = `
-"<div class=\\"content\\" data-v-ff85ba74=\\"\\">
-  <div id=\\"etat\\" class=\\"mb-xxl mt\\" data-v-ff85ba74=\\"\\">
-    <h2 data-v-ff85ba74=\\"\\"> État du domaine minier des substances non énergétiques, en métropole, en temps réel </h2><span class=\\"separator\\" data-v-ff85ba74=\\"\\"></span>
-    <p data-v-ff85ba74=\\"\\"> Les données affichées ici sont celles contenues dans la base de donnée Camino. Elles sont susceptibles d’évoluer chaque jour au grès des décisions et de la fin de validité des titres et autorisations. </p>
-    <p data-v-ff85ba74=\\"\\"> Les surfaces cumulées concernées par un titre ou une autorisation n’impliquent pas qu’elles sont effectivement explorées ou exploitées sur tout ou partie de l'année. Les travaux miniers font l’objet de déclarations ou d’autorisations distinctes portant sur une partie seulement de la surface des titres miniers. </p>
-    <div class=\\"mb-xxl\\" data-v-ff85ba74=\\"\\">
-      <h3 data-v-ff85ba74=\\"\\">Titres d’exploration</h3>
-      <hr data-v-ff85ba74=\\"\\">
-      <div class=\\"tablet-blobs\\" data-v-ff85ba74=\\"\\">
-        <div class=\\"tablet-blob-1-3\\" data-v-ff85ba74=\\"\\">
-          <p class=\\"h0 text-center\\" data-v-ff85ba74=\\"\\">
-          <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-            <div data-v-b0094f72=\\"\\">
-              <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+"<div class=\\"content\\">
+  <div id=\\"etat\\" class=\\"mb-xxl mt\\">
+    <h2>État du domaine minier des substances non énergétiques, en métropole, en temps réel</h2><span class=\\"separator\\"></span>
+    <p>Les données affichées ici sont celles contenues dans la base de donnée Camino. Elles sont susceptibles d’évoluer chaque jour au grès des décisions et de la fin de validité des titres et autorisations.</p>
+    <p>Les surfaces cumulées concernées par un titre ou une autorisation n’impliquent pas qu’elles sont effectivement explorées ou exploitées sur tout ou partie de l'année. Les travaux miniers font l’objet de déclarations ou d’autorisations distinctes portant sur une partie seulement de la surface des titres miniers.</p>
+    <div class=\\"mb-xxl\\">
+      <h3>Titres d’exploration</h3>
+      <hr>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-3\\">
+          <p class=\\"h0 text-center\\">
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <div>
+              <div class=\\"_tooltip_4f6ea8\\">
                 <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                   <use href=\\"#icon-error-warning\\"></use>
                 </svg>
               </div>
             </div>
+            <!---->
           </div>
           </p>
-          <div data-v-ff85ba74=\\"\\">
-            <p class=\\"bold text-center\\" data-v-ff85ba74=\\"\\"> Demande en cours d'instruction (initiale et modification en instance) </p>
+          <div>
+            <p class=\\"bold text-center\\">Demandeen cours d'instruction (initiale et modification en instance)</p>
           </div>
-          <p class=\\"h6 text-center\\" data-v-ff85ba74=\\"\\"><a type=\\"primary\\" to=\\"[object Object]\\"> Voir les titres </a></p>
+          <p class=\\"h6 text-center\\"><a type=\\"primary\\" to=\\"[object Object]\\">Voir les titres</a></p>
         </div>
-        <div class=\\"tablet-blob-1-3\\" data-v-ff85ba74=\\"\\">
-          <p class=\\"h0 text-center\\" data-v-ff85ba74=\\"\\">
-          <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-            <div data-v-b0094f72=\\"\\">
-              <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+        <div class=\\"tablet-blob-1-3\\">
+          <p class=\\"h0 text-center\\">
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <div>
+              <div class=\\"_tooltip_4f6ea8\\">
                 <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                   <use href=\\"#icon-error-warning\\"></use>
                 </svg>
               </div>
             </div>
+            <!---->
           </div>
           </p>
-          <p class=\\"bold text-center\\" data-v-ff85ba74=\\"\\">Permis exclusifs de recherches</p>
-          <p class=\\"h6 text-center\\" data-v-ff85ba74=\\"\\"><a type=\\"primary\\" to=\\"[object Object]\\"> Voir les titres </a></p>
+          <p class=\\"bold text-center\\">Permis exclusifs de recherches</p>
+          <p class=\\"h6 text-center\\"><a type=\\"primary\\" to=\\"[object Object]\\">Voir les titres</a></p>
         </div>
-        <div class=\\"tablet-blob-1-3\\" data-v-ff85ba74=\\"\\">
-          <p class=\\"h0 text-center\\" data-v-ff85ba74=\\"\\">
-          <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-            <div data-v-b0094f72=\\"\\">
-              <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+        <div class=\\"tablet-blob-1-3\\">
+          <p class=\\"h0 text-center\\">
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <div>
+              <div class=\\"_tooltip_4f6ea8\\">
                 <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                   <use href=\\"#icon-error-warning\\"></use>
                 </svg>
               </div>
             </div>
+            <!---->
           </div>
           </p>
-          <p class=\\"bold text-center\\" data-v-ff85ba74=\\"\\"> Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploration </p>
+          <p class=\\"bold text-center\\">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploration</p>
         </div>
       </div>
     </div>
-    <div class=\\"mb-xxl\\" data-v-ff85ba74=\\"\\">
-      <h3 data-v-ff85ba74=\\"\\">Titres d’exploitation</h3>
-      <hr data-v-ff85ba74=\\"\\">
-      <div class=\\"tablet-blobs\\" data-v-ff85ba74=\\"\\">
-        <div class=\\"tablet-blob-1-3\\" data-v-ff85ba74=\\"\\">
-          <p class=\\"h0 text-center\\" data-v-ff85ba74=\\"\\">
-          <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-            <div data-v-b0094f72=\\"\\">
-              <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+    <div class=\\"mb-xxl\\">
+      <h3>Titres d’exploitation</h3>
+      <hr>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-3\\">
+          <p class=\\"h0 text-center\\">
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <div>
+              <div class=\\"_tooltip_4f6ea8\\">
                 <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                   <use href=\\"#icon-error-warning\\"></use>
                 </svg>
               </div>
             </div>
+            <!---->
           </div>
           </p>
-          <div data-v-ff85ba74=\\"\\">
-            <p class=\\"bold text-center\\" data-v-ff85ba74=\\"\\"> Demande en cours d'instruction (initiale et modification en instance) </p>
+          <div>
+            <p class=\\"bold text-center\\">Demandeen cours d'instruction (initiale et modification en instance)</p>
           </div>
-          <p class=\\"h6 text-center\\" data-v-ff85ba74=\\"\\"><a type=\\"primary\\" to=\\"[object Object]\\"> Voir les titres </a></p>
+          <p class=\\"h6 text-center\\"><a type=\\"primary\\" to=\\"[object Object]\\">Voir les titres</a></p>
         </div>
-        <div class=\\"tablet-blob-1-3\\" data-v-ff85ba74=\\"\\">
-          <p class=\\"h0 text-center\\" data-v-ff85ba74=\\"\\">
-          <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-            <div data-v-b0094f72=\\"\\">
-              <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+        <div class=\\"tablet-blob-1-3\\">
+          <p class=\\"h0 text-center\\">
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <div>
+              <div class=\\"_tooltip_4f6ea8\\">
                 <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                   <use href=\\"#icon-error-warning\\"></use>
                 </svg>
               </div>
             </div>
+            <!---->
           </div>
           </p>
-          <div data-v-ff85ba74=\\"\\">
-            <p class=\\"bold text-center\\" data-v-ff85ba74=\\"\\"> Concession</p>
+          <div>
+            <p class=\\"bold text-center\\">Concession</p>
           </div>
-          <p class=\\"h6 text-center\\" data-v-ff85ba74=\\"\\"><a type=\\"primary\\" to=\\"[object Object]\\"> Voir les titres </a></p>
+          <p class=\\"h6 text-center\\"><a type=\\"primary\\" to=\\"[object Object]\\">Voir les titres</a></p>
         </div>
-        <div class=\\"tablet-blob-1-3\\" data-v-ff85ba74=\\"\\">
-          <p class=\\"h0 text-center\\" data-v-ff85ba74=\\"\\">
-          <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-            <div data-v-b0094f72=\\"\\">
-              <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+        <div class=\\"tablet-blob-1-3\\">
+          <p class=\\"h0 text-center\\">
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <div>
+              <div class=\\"_tooltip_4f6ea8\\">
                 <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                   <use href=\\"#icon-error-warning\\"></use>
                 </svg>
               </div>
             </div>
+            <!---->
           </div>
           </p>
-          <p class=\\"bold text-center\\" data-v-ff85ba74=\\"\\"> Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploitation </p>
+          <p class=\\"bold text-center\\">Surfaces cumulées des titres pouvant faire l'objet d'une activité d’exploitation</p>
         </div>
       </div>
     </div>
   </div>
-  <div class=\\"line-neutral width-full mb\\" data-v-ff85ba74=\\"\\"></div>
-  <h2 data-v-ff85ba74=\\"\\"> Production annuelle et fiscalité minière des ressources minérales non énergétiques, par famille de substances </h2><span class=\\"separator\\" data-v-ff85ba74=\\"\\"></span>
-  <p class=\\"mb-xl\\" data-v-ff85ba74=\\"\\"> Données contenues dans la base de données Camino, stabilisées pour l’année n-1. </p>
-  <div class=\\"grid-container\\" data-v-ff85ba74=\\"\\">
-    <div style=\\"grid-column-end: span 2;\\" data-v-ff85ba74=\\"\\">
-      <h3 data-v-ff85ba74=\\"\\">Bauxite</h3>
-      <hr data-v-ff85ba74=\\"\\">
+  <div class=\\"line-neutral width-full mb\\"></div>
+  <h2>Production annuelle et fiscalité minière des ressources minérales non énergétiques, par famille de substances</h2><span class=\\"separator\\"></span>
+  <p class=\\"mb-xl\\">Données contenues dans la base de données Camino, stabilisées pour l’année n-1.</p>
+  <div class=\\"_grid-container_72aebd\\">
+    <div style=\\"grid-column-end: span 2;\\">
+      <h3>Bauxite</h3>
+      <hr>
     </div>
-    <div data-v-ff85ba74=\\"\\">
-      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+    <div>
+      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
         <!---->
         <div>
           <div class=\\"_tooltip_4f6ea8\\">
@@ -5407,29 +5435,31 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
         <!---->
       </div>
     </div>
-    <div data-v-ff85ba74=\\"\\">
-      <h4 data-v-ff85ba74=\\"\\">Fiscalité minière</h4>
-      <p data-v-ff85ba74=\\"\\"> Les données sont calculées à partir des données de production. Il s'agit des sommes dûes et non des recettes effectivement perçues par les finances publiques. </p>
-      <div class=\\"flex\\" data-v-ff85ba74=\\"\\"></div>
-      <div class=\\"line-neutral mb\\" data-v-ff85ba74=\\"\\"></div>
-      <p data-v-ff85ba74=\\"\\"> Sommes dûes par les opérateurs miniers exploitant de la bauxite au titre des redevances départementale et communale des mines, hors frais de gestion </p>
-      <p class=\\"h1 text-center color-info bold\\" data-v-ff85ba74=\\"\\">
-      <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-        <div data-v-b0094f72=\\"\\">
-          <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+    <div>
+      <h4>Fiscalité minière</h4>
+      <p>Les données sont calculées à partir des données de production. Il s'agit des sommes dûes et non des recettes effectivement perçues par les finances publiques.</p>
+      <div class=\\"flex\\"></div>
+      <div class=\\"line-neutral mb\\"></div>
+      <p>Sommes dûes par les opérateurs miniers exploitant de la bauxite au titre des redevances départementale et communale des mines, hors frais de gestion</p>
+      <p class=\\"h1 text-center color-info bold\\">
+      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+        <!---->
+        <div>
+          <div class=\\"_tooltip_4f6ea8\\">
             <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
               <use href=\\"#icon-error-warning\\"></use>
             </svg>
           </div>
         </div>
+        <!---->
       </div>
       </p>
     </div>
-    <div style=\\"grid-column-end: span 2;\\" data-v-ff85ba74=\\"\\">
-      <h3 data-v-ff85ba74=\\"\\">Sels (sel de sodium, sel de potassium, sel gemme…)</h3>
-      <hr data-v-ff85ba74=\\"\\">
+    <div style=\\"grid-column-end: span 2;\\">
+      <h3>Sels (sel de sodium, sel de potassium, sel gemme…)</h3>
+      <hr>
     </div>
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <div>
         <div class=\\"_tooltip_4f6ea8\\">
@@ -5440,37 +5470,39 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
       </div>
       <!---->
     </div>
-    <div data-v-ff85ba74=\\"\\">
-      <h4 data-v-ff85ba74=\\"\\">Fiscalité minière</h4>
-      <p data-v-ff85ba74=\\"\\"> Les données sont calculées à partir des données de production. Il s'agit des sommes dûes et non des recettes effectivement perçues par les finances publiques. </p>
-      <div class=\\"flex\\" data-v-ff85ba74=\\"\\"></div>
-      <div class=\\"line-neutral mb\\" data-v-ff85ba74=\\"\\"></div>
-      <p data-v-ff85ba74=\\"\\"> Sommes dûes par les opérateurs miniers exploitant des sels au titre des redevances départementale et communale des mines, hors frais de gestion </p>
-      <p class=\\"h1 text-center color-info bold\\" data-v-ff85ba74=\\"\\">
-      <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-ff85ba74=\\"\\">
-        <div data-v-b0094f72=\\"\\">
-          <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+    <div>
+      <h4>Fiscalité minière</h4>
+      <p>Les données sont calculées à partir des données de production. Il s'agit des sommes dûes et non des recettes effectivement perçues par les finances publiques.</p>
+      <div class=\\"flex\\"></div>
+      <div class=\\"line-neutral mb\\"></div>
+      <p>Sommes dûes par les opérateurs miniers exploitant des sels au titre des redevances départementale et communale des mines, hors frais de gestion</p>
+      <p class=\\"h1 text-center color-info bold\\">
+      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+        <!---->
+        <div>
+          <div class=\\"_tooltip_4f6ea8\\">
             <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
               <use href=\\"#icon-error-warning\\"></use>
             </svg>
           </div>
         </div>
+        <!---->
       </div>
       </p>
     </div>
-    <div style=\\"grid-column-end: span 2;\\" data-v-ff85ba74=\\"\\">
-      <h3 data-v-ff85ba74=\\"\\">Autres substances</h3>
-      <hr data-v-ff85ba74=\\"\\">
+    <div style=\\"grid-column-end: span 2;\\">
+      <h3>Autres substances</h3>
+      <hr>
     </div>
-    <div style=\\"grid-column-end: span 2;\\" data-v-ff85ba74=\\"\\"> Pour les autres substances de mines exploitées en métropole, l'agrégation des données n'est pas possible en raison du nombre limité d'exploitant par type de substance. <br data-v-ff85ba74=\\"\\"><br data-v-ff85ba74=\\"\\"> Au titre du secret des informations économiques et financières, les volumes d'exploitation ne sont pas communicables. </div>
+    <div style=\\"grid-column-end: span 2;\\">Pour les autres substances de mines exploitées en métropole, l'agrégation des données n'est pas possible en raison du nombre limité d'exploitant par type de substance.<br><br>Au titre du secret des informations économiques et financières, les volumes d'exploitation ne sont pas communicables.</div>
   </div>
-  <div class=\\"line-neutral width-full mb mt\\" data-v-ff85ba74=\\"\\"></div>
-  <h2 data-v-ff85ba74=\\"\\">Evolution du nombre de titre et de leur surface</h2><span class=\\"separator\\" data-v-ff85ba74=\\"\\"></span>
-  <p class=\\"mb-xl\\" data-v-ff85ba74=\\"\\"> Les données affichées ici sont celles contenues dans la base de donnée Camino. Ces données concernent exclusivement le territoire métropolitain. </p>
-  <div class=\\"mb-xl\\" data-v-ff85ba74=\\"\\">
-    <h3 data-v-ff85ba74=\\"\\">Permis Exclusif de Recherche (PER)</h3>
-    <hr data-v-ff85ba74=\\"\\">
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+  <div class=\\"line-neutral width-full mb mt\\"></div>
+  <h2>Evolution du nombre de titre et de leur surface</h2><span class=\\"separator\\"></span>
+  <p class=\\"mb-xl\\">Les données affichées ici sont celles contenues dans la base de donnée Camino. Ces données concernent exclusivement le territoire métropolitain.</p>
+  <div class=\\"mb-xl\\">
+    <h3>Permis Exclusif de Recherche (PER)</h3>
+    <hr>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <div>
         <div class=\\"_tooltip_4f6ea8\\">
@@ -5482,10 +5514,10 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
       <!---->
     </div>
   </div>
-  <div class=\\"mb-xl\\" data-v-ff85ba74=\\"\\">
-    <h3 data-v-ff85ba74=\\"\\">Concession</h3>
-    <hr data-v-ff85ba74=\\"\\">
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\" data-v-ff85ba74=\\"\\">
+  <div class=\\"mb-xl\\">
+    <h3>Concession</h3>
+    <hr>
+    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <div>
         <div class=\\"_tooltip_4f6ea8\\">

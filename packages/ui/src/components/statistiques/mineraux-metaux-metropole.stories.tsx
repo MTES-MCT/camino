@@ -1,4 +1,4 @@
-import PureMinerauxMetauxMetropole from './pure-mineraux-metaux-metropole.vue'
+import { PureMinerauxMetauxMetropole } from './mineraux-metaux-metropole'
 import { Meta, Story } from '@storybook/vue3'
 import { StatistiquesMinerauxMetauxMetropole } from 'camino-common/src/statistiques'
 import { toCaminoAnnee } from 'camino-common/src/date'
@@ -10,21 +10,9 @@ const meta: Meta = {
 }
 export default meta
 
-type Props = { getStats: () => Promise<StatistiquesMinerauxMetauxMetropole> }
-
-const Template: Story<Props> = (args: Props) => ({
-  components: { PureMinerauxMetauxMetropole },
-  setup() {
-    return { args }
-  },
-
-  template: '<PureMinerauxMetauxMetropole v-bind="args" />'
-})
-
-export const DefaultNoSnapshot = Template.bind(
-  {},
-  {
-    getStats: () =>
+export const DefaultNoSnapshot: Story = () => (
+  <PureMinerauxMetauxMetropole
+    getStats={() =>
       Promise.resolve({
         substances: {
           aloh: {
@@ -266,20 +254,19 @@ export const DefaultNoSnapshot = Template.bind(
           }
         }
       })
-  }
+    }
+  />
 )
 
-export const Loading = Template.bind(
-  {},
-  {
-    getStats: () =>
+export const Loading: Story = () => (
+  <PureMinerauxMetauxMetropole
+    getStats={() =>
       new Promise<StatistiquesMinerauxMetauxMetropole>(resolve => {})
-  }
+    }
+  />
 )
-
-export const WithError = Template.bind(
-  {},
-  {
-    getStats: () => Promise.reject(new Error('because reasons'))
-  }
+export const WithError: Story = () => (
+  <PureMinerauxMetauxMetropole
+    getStats={() => Promise.reject(new Error('because reasons'))}
+  />
 )

@@ -37,8 +37,12 @@ const StatsGuyane = async () => {
 }
 const StatistiquesGranulatsMarins = () =>
   import('../components/statistiques/granulats-marins.vue')
-const StatistiquesMinerauxMetauxMetropole = () =>
-  import('../components/statistiques/mineraux-metaux-metropole.vue')
+const StatistiquesMinerauxMetauxMetropole = async () => {
+  const { MinerauxMetauxMetropole } = await import(
+    '../components/statistiques/mineraux-metaux-metropole'
+  )
+  return MinerauxMetauxMetropole
+}
 const Journaux = () => import('../components/journaux.vue')
 
 const routes: RouteRecordRaw[] = [
