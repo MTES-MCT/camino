@@ -1,17 +1,55 @@
 import Loader from '../_ui/loader.vue'
 import { statistiquesGlobales } from '@/api/statistiques'
-import { defineComponent, onMounted, ref , FunctionalComponent } from 'vue'
-import { Statistiques } from 'camino-common/src/statistiques'
+import { defineComponent, onMounted, ref, FunctionalComponent } from 'vue'
+import { QuantiteParMois, Statistiques } from 'camino-common/src/statistiques'
 
 import LineChart from '../_charts/line.vue'
 import PieChart from '../_charts/pie.vue'
 import { numberFormat } from '@/utils/number-format'
-import { statsLineFormat } from './_utils'
 import {
   ADMINISTRATION_TYPE_IDS_ARRAY,
   AdministrationTypeId,
   sortedAdministrationTypes
 } from 'camino-common/src/static/administrations'
+
+const statsLineFormat = ({
+  stats,
+  labelY
+}: {
+  stats: QuantiteParMois[]
+  labelY: string
+}) =>
+  stats.reduce<{
+    labels: string[]
+    datasets: {
+      label: string
+      data: number[]
+      fill: 'start'
+      tension: number
+      backgroundColor: string
+      borderColor: string
+    }[]
+  }>(
+    (acc, stat) => {
+      acc.labels.push(stat.mois)
+      acc.datasets[0].data.push(stat.quantite)
+
+      return acc
+    },
+    {
+      labels: [],
+      datasets: [
+        {
+          label: labelY,
+          data: [],
+          fill: 'start',
+          tension: 0.5,
+          backgroundColor: 'rgba(118, 182, 189, 0.2)',
+          borderColor: 'rgb(118, 182, 189)'
+        }
+      ]
+    }
+  )
 export const Globales = defineComponent({
   setup() {
     const statistiques = ref<Statistiques | null>(null)
@@ -164,9 +202,7 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
             <LineChart
               data={statsLineFormat({
                 stats: props.statistiques.recherches,
-                labelY: 'recherches',
-                labelX: 'mois',
-                id: 'quantite'
+                labelY: 'recherches'
               })}
             />
           </div>
@@ -259,9 +295,7 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
             <LineChart
               data={statsLineFormat({
                 stats: props.statistiques.titresModifies,
-                labelY: 'titres modifiés',
-                labelX: 'mois',
-                id: 'quantite'
+                labelY: 'titres modifiés'
               })}
             />
           </div>

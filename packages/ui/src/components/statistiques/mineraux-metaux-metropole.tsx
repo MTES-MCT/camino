@@ -1,4 +1,4 @@
-import { fetchWithJson , AsyncData } from '@/api/client-rest'
+import { fetchWithJson, AsyncData } from '@/api/client-rest'
 import { StatistiquesMinerauxMetauxMetropole } from 'camino-common/src/statistiques'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { ChartWithExport } from '../_charts/chart-with-export'

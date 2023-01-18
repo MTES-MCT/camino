@@ -37,8 +37,12 @@ const StatsGuyane = async () => {
   const { Guyane } = await import('../components/statistiques/guyane')
   return Guyane
 }
-const StatistiquesGranulatsMarins = () =>
-  import('../components/statistiques/granulats-marins.vue')
+const StatistiquesGranulatsMarins = async () => {
+  const { GranulatsMarins } = await import(
+    '../components/statistiques/granulats-marins'
+  )
+  return GranulatsMarins
+}
 const StatistiquesMinerauxMetauxMetropole = async () => {
   const { MinerauxMetauxMetropole } = await import(
     '../components/statistiques/mineraux-metaux-metropole'
