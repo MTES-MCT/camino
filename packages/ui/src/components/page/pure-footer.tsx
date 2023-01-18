@@ -105,7 +105,7 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
         </div>
       </div>
       <div class="fr-container">
-        <div class="fr-footer__body">
+        <div class="fr-footer__body" style="margin-bottom: 0;">
           <div class="fr-footer__brand fr-enlarge-link">
             <p class="fr-logo">
               Ministère <br />

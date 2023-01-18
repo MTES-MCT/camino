@@ -4624,7 +4624,7 @@ exports[`Storybook Tests > Components/Pages/Footer > AvecNewsletter 1`] = `
       </div>
     </div>
     <div class=\\"fr-container\\">
-      <div class=\\"fr-footer__body\\">
+      <div class=\\"fr-footer__body\\" style=\\"margin-bottom: 0px;\\">
         <div class=\\"fr-footer__brand fr-enlarge-link\\">
           <p class=\\"fr-logo\\">Ministère <br>de la transition <br>écologique</p><a class=\\"fr-footer__brand-link\\" href=\\"/\\" title=\\"Retour à l’accueil du site - Camino - République Française\\"><img class=\\"fr-footer__logo\\" style=\\"width: 9rem;\\" src=\\"/img/logo-fabriquenumerique.svg\\" alt=\\"La fabrique numérique\\"></a>
         </div>
@@ -4718,7 +4718,7 @@ exports[`Storybook Tests > Components/Pages/Footer > SansNewsletter 1`] = `
       </div>
     </div>
     <div class=\\"fr-container\\">
-      <div class=\\"fr-footer__body\\">
+      <div class=\\"fr-footer__body\\" style=\\"margin-bottom: 0px;\\">
         <div class=\\"fr-footer__brand fr-enlarge-link\\">
           <p class=\\"fr-logo\\">Ministère <br>de la transition <br>écologique</p><a class=\\"fr-footer__brand-link\\" href=\\"/\\" title=\\"Retour à l’accueil du site - Camino - République Française\\"><img class=\\"fr-footer__logo\\" style=\\"width: 9rem;\\" src=\\"/img/logo-fabriquenumerique.svg\\" alt=\\"La fabrique numérique\\"></a>
         </div>
