@@ -85,11 +85,6 @@ exports[`getDocuments surcharge 2`] = `
     "optionnel": true,
   },
   {
-    "id": "pla",
-    "nom": "Plan",
-    "optionnel": true,
-  },
-  {
     "id": "rec",
     "nom": "Récépissé \\"Loi sur l'eau\\"",
     "optionnel": true,

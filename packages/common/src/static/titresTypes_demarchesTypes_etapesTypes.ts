@@ -84,7 +84,7 @@ const EtapesTypesDocumentsTypes: { [key in EtapeTypeId]?: DocumentTypeId[] } = {
     DOCUMENTS_TYPES_IDS.notificationDeDecision,
     DOCUMENTS_TYPES_IDS.ordonnanceDuRoi,
     DOCUMENTS_TYPES_IDS.ordonnance,
-    DOCUMENTS_TYPES_IDS.plan
+    DOCUMENTS_TYPES_IDS.documentsCartographiques
   ],
   [ETAPES_TYPES.publicationDeDecisionAuJORF]: [
     DOCUMENTS_TYPES_IDS.arreteMinisteriel,
@@ -143,7 +143,7 @@ const EtapesTypesDocumentsTypes: { [key in EtapeTypeId]?: DocumentTypeId[] } = {
     DOCUMENTS_TYPES_IDS.lettreDeDemande,
     DOCUMENTS_TYPES_IDS.lettre,
     DOCUMENTS_TYPES_IDS.noticeDIncidence,
-    DOCUMENTS_TYPES_IDS.plan,
+    DOCUMENTS_TYPES_IDS.documentsCartographiques,
     DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau
   ],
   [ETAPES_TYPES.demandeDinformations]: [DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements],
@@ -194,7 +194,7 @@ const EtapesTypesDocumentsTypes: { [key in EtapeTypeId]?: DocumentTypeId[] } = {
     DOCUMENTS_TYPES_IDS.facture,
     DOCUMENTS_TYPES_IDS.kbis,
     DOCUMENTS_TYPES_IDS.noticeDIncidence,
-    DOCUMENTS_TYPES_IDS.plan,
+    DOCUMENTS_TYPES_IDS.documentsCartographiques,
     DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau
   ],
   [ETAPES_TYPES.receptionDeComplements]: [DOCUMENTS_TYPES_IDS.documentsCartographiques, DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, DOCUMENTS_TYPES_IDS.lettre],
@@ -258,7 +258,7 @@ const EtapesTypesDocumentsTypes: { [key in EtapeTypeId]?: DocumentTypeId[] } = {
     DOCUMENTS_TYPES_IDS.ficheDePresentation,
     DOCUMENTS_TYPES_IDS.identificationDeMateriel,
     DOCUMENTS_TYPES_IDS.noticeDIncidence,
-    DOCUMENTS_TYPES_IDS.plan
+    DOCUMENTS_TYPES_IDS.documentsCartographiques
   ],
   [ETAPES_TYPES.memoireEnReponseDeLexploitant_ParRapportALavisDeLAE_]: [DOCUMENTS_TYPES_IDS.dossier],
   [ETAPES_TYPES.memoireEnReponseDeLexploitant]: [DOCUMENTS_TYPES_IDS.dossier],
@@ -270,7 +270,7 @@ const EtapesTypesDocumentsTypes: { [key in EtapeTypeId]?: DocumentTypeId[] } = {
   [ETAPES_TYPES.arreteDeSecondDonnerActe]: [DOCUMENTS_TYPES_IDS.arreteDeSecondDonneActe_ap2],
   [ETAPES_TYPES.arretePrefectoralDePremierDonnerActe_DADT_]: [DOCUMENTS_TYPES_IDS.arreteDePremierDonneActe_ap1, DOCUMENTS_TYPES_IDS.rapport],
   [ETAPES_TYPES.arretePrefectoralDeSursisAStatuer]: [DOCUMENTS_TYPES_IDS.arretePrefectoral],
-  [ETAPES_TYPES.receptionDeComplements_wrc]: [DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, DOCUMENTS_TYPES_IDS.plan],
+  [ETAPES_TYPES.receptionDeComplements_wrc]: [DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, DOCUMENTS_TYPES_IDS.documentsCartographiques],
   [ETAPES_TYPES.rapportDeLaDreal]: [DOCUMENTS_TYPES_IDS.projetDePrescriptions, DOCUMENTS_TYPES_IDS.rapport],
   [ETAPES_TYPES.recevabilite]: [DOCUMENTS_TYPES_IDS.avis, DOCUMENTS_TYPES_IDS.courrierDeNotificationDeLaRecevabilite, DOCUMENTS_TYPES_IDS.rapportDeRecevabilite],
   [ETAPES_TYPES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement_wrl]: [DOCUMENTS_TYPES_IDS.rapport],
@@ -292,7 +292,7 @@ const TDEDocumentsTypes: {
           [DOCUMENTS_TYPES_IDS.dossierDeDemande]: { optionnel: false },
           [DOCUMENTS_TYPES_IDS.formulaireDeDemande]: { optionnel: false },
           [DOCUMENTS_TYPES_IDS.justificatifDePaiement]: { optionnel: false },
-          [DOCUMENTS_TYPES_IDS.plan]: { optionnel: false }
+          [DOCUMENTS_TYPES_IDS.documentsCartographiques]: { optionnel: false }
         }
       }
     }
