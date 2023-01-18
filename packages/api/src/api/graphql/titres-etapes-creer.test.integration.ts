@@ -215,8 +215,8 @@ describe('etapeCreer', () => {
       uri: 'https://camino.beta.gouv.fr'
     })
     await documentCreate({
-      id: 'pla',
-      typeId: 'pla',
+      id: 'car',
+      typeId: 'car',
       date: toCaminoDate('2020-01-01'),
       uri: 'https://camino.beta.gouv.fr'
     })
@@ -246,7 +246,7 @@ describe('etapeCreer', () => {
             }
           },
           substances: ['auru'],
-          documentIds: ['dom', 'for', 'jpa', 'pla'],
+          documentIds: ['dom', 'for', 'jpa', 'car'],
           points: [
             {
               groupe: 1,
