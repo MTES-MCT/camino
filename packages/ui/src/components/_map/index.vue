@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import L, {
+import type {
   LatLngBoundsExpression,
   LatLngExpression,
   Map,
@@ -11,7 +11,9 @@ import L, {
   LayersControlEvent,
   LeafletEvent
 } from 'leaflet'
+
 import { ref, onMounted, markRaw, watch } from 'vue'
+import { FeatureGroup, layerGroup } from 'leaflet'
 
 const map = ref<HTMLDivElement | null>(null)
 const leafletComponent = ref<Map | null>(null)
@@ -23,8 +25,8 @@ const props = defineProps<{ geojsonLayers: Layer[]; markerLayers: Layer[] }>()
 const sdomOverlayName = 'SDOM (schéma départemental d’orientation minière)'
 const brgmBaseLayerName = 'BRGM / Cartes géologiques 1/50 000'
 
-const geojsonLayer = L.layerGroup([])
-const markerLayer = L.layerGroup([])
+const geojsonLayer = layerGroup([])
+const markerLayer = layerGroup([])
 
 watch(
   () => props.geojsonLayers,
@@ -76,7 +78,7 @@ const positionSet = (position: { zoom: number; center: LatLngExpression }) => {
 }
 
 const allFit = () => {
-  const featureGroup = new L.FeatureGroup(markerLayer.getLayers())
+  const featureGroup = new FeatureGroup(markerLayer.getLayers())
   updateCenterAndZoomOnly.value = true
   boundsFit(featureGroup.getBounds())
 }
