@@ -143,7 +143,6 @@ const EtapesTypesDocumentsTypes: { [key in EtapeTypeId]?: DocumentTypeId[] } = {
     DOCUMENTS_TYPES_IDS.lettreDeDemande,
     DOCUMENTS_TYPES_IDS.lettre,
     DOCUMENTS_TYPES_IDS.noticeDIncidence,
-    DOCUMENTS_TYPES_IDS.documentsCartographiques,
     DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau
   ],
   [ETAPES_TYPES.demandeDinformations]: [DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements],
@@ -194,7 +193,6 @@ const EtapesTypesDocumentsTypes: { [key in EtapeTypeId]?: DocumentTypeId[] } = {
     DOCUMENTS_TYPES_IDS.facture,
     DOCUMENTS_TYPES_IDS.kbis,
     DOCUMENTS_TYPES_IDS.noticeDIncidence,
-    DOCUMENTS_TYPES_IDS.documentsCartographiques,
     DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau
   ],
   [ETAPES_TYPES.receptionDeComplements]: [DOCUMENTS_TYPES_IDS.documentsCartographiques, DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, DOCUMENTS_TYPES_IDS.lettre],
@@ -257,8 +255,7 @@ const EtapesTypesDocumentsTypes: { [key in EtapeTypeId]?: DocumentTypeId[] } = {
     DOCUMENTS_TYPES_IDS.dossier,
     DOCUMENTS_TYPES_IDS.ficheDePresentation,
     DOCUMENTS_TYPES_IDS.identificationDeMateriel,
-    DOCUMENTS_TYPES_IDS.noticeDIncidence,
-    DOCUMENTS_TYPES_IDS.documentsCartographiques
+    DOCUMENTS_TYPES_IDS.noticeDIncidence
   ],
   [ETAPES_TYPES.memoireEnReponseDeLexploitant_ParRapportALavisDeLAE_]: [DOCUMENTS_TYPES_IDS.dossier],
   [ETAPES_TYPES.memoireEnReponseDeLexploitant]: [DOCUMENTS_TYPES_IDS.dossier],
