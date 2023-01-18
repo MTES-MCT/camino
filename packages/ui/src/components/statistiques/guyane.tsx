@@ -1,16 +1,22 @@
-import { FunctionalComponent , Ref, ref, computed, onMounted, defineComponent } from 'vue'
-import { fetchWithJson , AsyncData } from '@/api/client-rest'
+import {
+  FunctionalComponent,
+  Ref,
+  ref,
+  computed,
+  onMounted,
+  defineComponent
+} from 'vue'
+import { fetchWithJson, AsyncData } from '@/api/client-rest'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
 import {
   StatistiquesGuyane,
   StatistiquesGuyaneActivite,
   StatistiquesGuyaneData
 } from 'camino-common/src/statistiques'
-import GuyaneActivite from './guyane-activite.vue'
+import { GuyaneActivite } from './guyane-activite'
 import BarChart from '../_charts/configurable-chart.vue'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { numberFormat } from '@/utils/number-format'
-
 
 import { CHART_COLORS } from '../_charts/utils'
 import { ChartConfiguration, ChartData } from 'chart.js'
@@ -494,7 +500,6 @@ export const PureGuyane = defineComponent<Props>({
             <GuyaneActivite
               statistiqueGuyane={item.parAnnee[tabActive.value]}
               enConstruction={enConstruction(tabActive.value)}
-              class="mb-xxl"
             />
           )}
         />
