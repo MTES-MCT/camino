@@ -5,7 +5,6 @@ export interface Props {
   displayNewsletter: boolean
 }
 
-// FIXME matomo sur stats et glossaire ?
 export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
   <footer class="dsfr" role="contentinfo" id="footer">
     <div class="fr-footer">
@@ -178,7 +177,12 @@ export const PureFooter: FunctionalComponent<Props> = (props: Props) => (
           <div class="fr-footer__bottom" style="width: 100%;">
             <ul class="fr-footer__bottom-list">
               <li class="fr-footer__bottom-item">
-                <a class="fr-footer__bottom-link" href="#">
+                <a
+                  class="fr-footer__bottom-link"
+                  href="https://camino.gitbook.io/guide-dutilisation/a-propos/cgu"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Accessibilité : non conforme
                 </a>
               </li>
