@@ -289,6 +289,7 @@ exports[`matrices > buildMatrices 1`] = `
       "titreLabel": "slug-titre-1",
       "titulaire": {
         "codepostal": "",
+        "commune": "",
         "nom": "titulaire1",
         "rue": "ladresse1",
         "siren": "legalSiren1",
@@ -323,6 +324,7 @@ exports[`matrices > buildMatrices 1`] = `
       "titreLabel": "slug-titre-2",
       "titulaire": {
         "codepostal": "",
+        "commune": "",
         "nom": "titulaire2",
         "rue": "ladresse2",
         "siren": "legalSiren2",
@@ -357,6 +359,7 @@ exports[`matrices > buildMatrices 1`] = `
       "titreLabel": "slug-titre-2",
       "titulaire": {
         "codepostal": "",
+        "commune": "",
         "nom": "titulaire2",
         "rue": "ladresse2",
         "siren": "legalSiren2",
@@ -390,7 +393,8 @@ exports[`matrices > buildMatrices 1`] = `
       "surfaceCommunaleProportionnee": 1,
       "titreLabel": "slug-titre-3",
       "titulaire": {
-        "codepostal": "",
+        "codepostal": "97311",
+        "commune": "Saint-Laurent-du-Maroni",
         "nom": "titulaire3",
         "rue": "ladresse3",
         "siren": "legalSiren3",
