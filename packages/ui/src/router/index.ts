@@ -31,7 +31,10 @@ const UserAdd = () => import('../components/user/add.vue')
 const StatistiquesGlobales = () =>
   import('../components/statistiques/globales.vue')
 const Statistiques = () => import('../components/statistiques.vue')
-const StatistiquesGuyane = () => import('../components/statistiques/guyane.vue')
+const StatsGuyane = async () => {
+  const { Guyane } = await import('../components/statistiques/guyane')
+  return Guyane
+}
 const StatistiquesGranulatsMarins = () =>
   import('../components/statistiques/granulats-marins.vue')
 const StatistiquesMinerauxMetauxMetropole = () =>
@@ -191,7 +194,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'guyane',
         name: 'statistiques-guyane',
-        component: StatistiquesGuyane
+        component: StatsGuyane
       },
       {
         path: 'globales',
