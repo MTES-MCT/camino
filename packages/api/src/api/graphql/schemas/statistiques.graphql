@@ -35,30 +35,3 @@ type StatistiquesGlobales {
   reutilisations: Int
   utilisateurs: UtilisateursStatistique
 }
-
-type StatistiqueAnneeTitre {
-  quantite: Int
-  surface: Float
-}
-
-type StatistiquesGranulatsMarinsAnnee {
-  annee: Int
-  titresPrw: StatistiqueAnneeTitre
-  titresPxw: StatistiqueAnneeTitre
-  titresCxw: StatistiqueAnneeTitre
-  volume: Int
-  masse: Int
-  activitesDeposesQuantite: Int
-  activitesDeposesRatio: Int
-  concessionsValides: StatistiqueAnneeTitre
-}
-
-type StatistiquesGranulatsMarins {
-  annees: [StatistiquesGranulatsMarinsAnnee]
-  surfaceExploration: Int
-  surfaceExploitation: Int
-  titresInstructionExploration: Int
-  titresValPrw: Int
-  titresInstructionExploitation: Int
-  titresValCxw: Int
-}

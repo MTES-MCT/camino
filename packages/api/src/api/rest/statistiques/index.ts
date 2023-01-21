@@ -3,7 +3,8 @@ import express from 'express'
 import {
   StatistiquesMinerauxMetauxMetropole,
   StatistiquesDGTM,
-  StatistiquesGuyaneData
+  StatistiquesGuyaneData,
+  StatistiquesGranulatsMarins
 } from 'camino-common/src/statistiques.js'
 import { getMinerauxMetauxMetropolesStatsInside } from './metaux-metropole.js'
 
@@ -13,6 +14,7 @@ import { IUtilisateur } from '../../../types.js'
 import { constants } from 'http2'
 import { getDGTMStatsInside } from './dgtm.js'
 import { getGuyaneStatsInside } from './guyane.js'
+import { statistiquesGranulatsMarins } from './granulats-marins.js'
 
 export const getDGTMStats = async (
   req: express.Request,
@@ -52,6 +54,19 @@ export const getGuyaneStats = async (
 ): Promise<void> => {
   try {
     res.json(await getGuyaneStatsInside())
+  } catch (e) {
+    console.error(e)
+
+    throw e
+  }
+}
+
+export const getGranulatsMarinsStats = async (
+  _req: express.Request,
+  res: CustomResponse<StatistiquesGranulatsMarins>
+): Promise<void> => {
+  try {
+    res.json(await statistiquesGranulatsMarins())
   } catch (e) {
     console.error(e)
 

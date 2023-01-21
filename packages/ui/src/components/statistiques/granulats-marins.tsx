@@ -1,22 +1,15 @@
-import { computed, defineComponent, onMounted, ref } from 'vue'
-import Loader from '../_ui/loader.vue'
-import { GranulatsMarinsActivite, StatAnnee } from './granulats-marins-activite'
+import { defineComponent, onMounted, ref } from 'vue'
+import { GranulatsMarinsActivite } from './granulats-marins-activite'
 import BarChart from '../_charts/bar.vue'
 import { numberFormat } from '@/utils/number-format'
-import { useStore } from 'vuex'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
-
-interface Data {
-  statistiquesGranulatsMarins: {
-    annees: StatAnnee[]
-    surfaceExploration: number
-    surfaceExploitation: number
-    titresInstructionExploration: number
-    titresValPrw: number
-    titresInstructionExploitation: number
-    titresValCxw: number
-  }
-}
+import {
+  StatistiqueGranulatsMarinsStatAnnee,
+  StatistiquesGranulatsMarins
+} from 'camino-common/src/statistiques.js'
+import { AsyncData, fetchWithJson } from '@/api/client-rest'
+import { CaminoRestRoutes } from 'camino-common/src/rest'
+import { LoadingElement } from '../_ui/functional-loader'
 
 const ids = [
   'titresPrw',
@@ -25,7 +18,7 @@ const ids = [
   'concessionsValides'
 ] as const
 
-const suggestedMaxCalc = (annees: StatAnnee[]) =>
+const suggestedMaxCalc = (annees: StatistiqueGranulatsMarinsStatAnnee[]) =>
   Math.max(
     ...annees.reduce<number[]>((acc, annee) => {
       acc.push(...ids.map(id => annee[id].quantite))
@@ -42,7 +35,7 @@ const statsBarFormat = ({
   labelBar,
   labelLine
 }: {
-  annees: StatAnnee[]
+  annees: StatistiqueGranulatsMarinsStatAnnee[]
   id?: typeof ids[number]
   bar: 'volume' | 'quantite'
   line: 'masse' | 'surface'
@@ -99,90 +92,34 @@ const statsBarFormat = ({
     }
   )
 
+const getStats = async (): Promise<StatistiquesGranulatsMarins> => {
+  const data: StatistiquesGranulatsMarins = await fetchWithJson(
+    CaminoRestRoutes.statistiquesGranulatsMarins,
+    {}
+  )
+  return data
+}
 export const GranulatsMarins = defineComponent({
   setup() {
-    const loaded = ref(false)
+    const statistiquesGranulatsMarins = ref<
+      AsyncData<{
+        raw: StatistiquesGranulatsMarins
+        statistiques: Record<number, StatistiqueGranulatsMarinsStatAnnee>
+        statsAnneesAfter2010: StatistiqueGranulatsMarinsStatAnnee[]
+      }>
+    >({ status: 'LOADING' })
     const anneeActive = ref(0)
-    const store = useStore()
-    const statistiquesGranulatsMarins = computed<
-      Data['statistiquesGranulatsMarins']
-    >(() => {
-      return store.state.statistiques.granulatsMarins
-    })
-
-    const statistiques = computed<Record<number, StatAnnee>>(() => {
-      return statistiquesGranulatsMarins.value.annees.reduce<
-        Record<string, any>
-      >((acc, statsAnnee) => {
-        acc[statsAnnee.annee] = statsAnnee
-
-        return acc
-      }, {})
-    })
-
-    const anneeCurrent = computed(() => {
-      return new Date().getFullYear()
-    })
-
-    const annees = computed(() => {
-      return statsAnneesAfter2010.value.map(annee => {
-        const id = annee.annee
-        return {
-          id,
-          nom: id.toString(),
-          enConstruction: id === anneeCurrent.value - 1 // l'année en cours n'étant pas affichée, seule l'année précédente est affichée à partir du 1er avril de l'année courante
-        }
-      })
-    })
-
-    const suggestedMaxProduction = computed(() => {
-      return Math.max(...statsAnneesAfter2010.value.map(annee => annee.volume))
-    })
-
-    const statsAnneesAfter2010 = computed(() => {
-      const statsAnneesAfter2010 =
-        statistiquesGranulatsMarins.value.annees.filter(
-          annee => annee.annee >= 2010 && annee.annee < anneeCurrent.value
-        )
-
-      // affichage des données de l'année n-2 à partir du 1er avril de l'année en cours
-      const toggleDate = new Date(anneeCurrent.value, 3, 1)
-      const beforeToggleDate =
-        new Date().getTime() < Date.parse(toggleDate.toString())
-
-      return beforeToggleDate
-        ? statsAnneesAfter2010.filter(
-            annee => annee.annee < anneeCurrent.value - 1
-          )
-        : statsAnneesAfter2010
-    })
-
-    const pexAnneeCurrent = computed(() => {
-      const statistiquesGranulatsMarinsAnneeCurrent =
-        statistiquesGranulatsMarins.value.annees.find(
-          annee => annee.annee === anneeCurrent.value
-        )
-      return (
-        (statistiquesGranulatsMarinsAnneeCurrent?.titresPxw?.quantite ?? 0) > 0
-      )
-    })
-
-    const get = async () => {
-      await store.dispatch('statistiques/get', 'granulatsMarins')
-
-      if (!loaded.value) {
-        loaded.value = true
-      }
-    }
+    const anneeCurrent = new Date().getFullYear()
 
     const anneeSelect = (event: Event) => {
       if (isEventWithTarget(event)) {
         anneeActive.value = Number(event.target.value)
       }
     }
-    const suggestedMaxTitres = (titreType: typeof ids[number]) => {
-      const annees = statistiquesGranulatsMarins.value.annees
-
+    const suggestedMaxTitres = (
+      titreType: typeof ids[number],
+      annees: StatistiqueGranulatsMarinsStatAnnee[]
+    ) => {
       // si le nombre maximum de titres est inférieur à 10
       if (
         titreType &&
@@ -196,366 +133,522 @@ export const GranulatsMarins = defineComponent({
     }
 
     onMounted(async () => {
-      anneeActive.value = anneeCurrent.value - 2
-      await get()
+      anneeActive.value = anneeCurrent - 2
+      try {
+        const data = await getStats()
+
+        const statistiques = data.annees.reduce<Record<string, any>>(
+          (acc, statsAnnee) => {
+            acc[statsAnnee.annee] = statsAnnee
+            return acc
+          },
+          {}
+        )
+
+        const statsAnneesAfter2010 = data.annees.filter(
+          annee => annee.annee >= 2010 && annee.annee < anneeCurrent
+        )
+
+        // FIXME à tester avec storybook
+        // affichage des données de l'année n-2 à partir du 1er avril de l'année en cours
+        const toggleDate = new Date(anneeCurrent, 3, 1)
+        const beforeToggleDate =
+          new Date().getTime() < Date.parse(toggleDate.toString())
+
+        statistiquesGranulatsMarins.value = {
+          status: 'LOADED',
+          value: {
+            raw: data,
+            statistiques,
+            statsAnneesAfter2010: beforeToggleDate
+              ? statsAnneesAfter2010.filter(
+                  annee => annee.annee < anneeCurrent - 1
+                )
+              : statsAnneesAfter2010
+          }
+        }
+      } catch (ex: any) {
+        statistiquesGranulatsMarins.value = {
+          status: 'ERROR',
+          message: ex.message ?? 'something wrong happened'
+        }
+        console.error(ex)
+      }
     })
 
     return () => (
       <>
-        {!loaded.value ? (
-          <Loader class="content" />
-        ) : (
-          <div class="content">
-            <div id="etat" class="mb-xxl mt">
-              <h2>État du domaine minier en temps réel</h2>
-              <span class="separator" />
-              <p>
-                Les données affichées ici sont celles contenues dans la base de
-                donnée Camino. Elles sont susceptibles d’évoluer chaque jour au
-                grès des décisions et de la fin de validité des titres et
-                autorisations.
-              </p>
-              <p>
-                Les surfaces cumulées concernées par un titre ou une
-                autorisation n’impliquent pas qu’elles sont effectivement
-                explorées ou exploitées sur tout ou partie de l'année. Les
-                travaux miniers font l’objet de déclarations ou d’autorisations
-                distinctes portant sur une partie seulement de la surface des
-                titres miniers.
-              </p>
-              <div class="mb-xxl">
-                <h3>Titres d’exploration</h3>
-                <hr />
-                <div class="tablet-blobs">
-                  <div class="tablet-blob-1-3">
-                    <p class="h0 text-center">
-                      {
-                        statistiquesGranulatsMarins.value
-                          .titresInstructionExploration
-                      }
-                    </p>
-                    {statistiquesGranulatsMarins.value
-                      .titresInstructionExploration > 1 ? (
-                      <div>
-                        <p class="bold text-center">
-                          Demandes en cours d'instruction (initiale et
-                          modification en instance)
-                        </p>
-                      </div>
-                    ) : (
-                      <div>
-                        <p class="bold text-center">
-                          Demande en cours d'instruction (initiale et
-                          modification en instance)
-                        </p>
-                      </div>
-                    )}
-                    <p class="h6 text-center">
-                      <router-link
-                        to={{
-                          name: 'titres',
-                          query: {
-                            domainesIds: 'w',
-                            typesIds: 'ar,ap,pr',
-                            statutsIds: 'dmi,mod',
-                            vueId: 'table'
-                          }
-                        }}
-                      >
-                        Voir les titres
-                      </router-link>
-                    </p>
-                  </div>
-                  <div class="tablet-blob-1-3">
-                    <p class="h0 text-center">
-                      {statistiquesGranulatsMarins.value.titresValPrw}
-                    </p>
-                    <p class="bold text-center">
-                      Permis exclusifs de recherches
-                    </p>
-                    <p class="h6 text-center">
-                      <router-link
-                        to={{
-                          name: 'titres',
-                          query: {
-                            domainesIds: 'w',
-                            typesIds: 'pr',
-                            statutsIds: 'val',
-                            vueId: 'table'
-                          }
-                        }}
-                      >
-                        Voir les titres
-                      </router-link>
-                    </p>
-                  </div>
-                  <div class="tablet-blob-1-3">
-                    <p class="h0 text-center">
-                      {numberFormat(
-                        statistiquesGranulatsMarins.value.surfaceExploration
-                      )}
-                      ha
-                    </p>
-                    <p class="bold text-center">
-                      Surfaces cumulées des titres pouvant faire l'objet d'une
-                      activité d’exploration
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div class="mb-xxl">
-                <h3>Titres d’exploitation</h3>
-                <hr />
-                <div class="tablet-blobs">
-                  <div class="tablet-blob-1-3">
-                    <p class="h0 text-center">
-                      {
-                        statistiquesGranulatsMarins.value
-                          .titresInstructionExploitation
-                      }
-                    </p>
-                    {statistiquesGranulatsMarins.value
-                      .titresInstructionExploitation > 1 ? (
-                      <div>
-                        <p class="bold text-center">
-                          Demandes en cours d'instruction (initiale et
-                          modification en instance)
-                        </p>
-                      </div>
-                    ) : (
-                      <div v-else>
-                        <p class="bold text-center">
-                          Demande en cours d'instruction (initiale et
-                          modification en instance)
-                        </p>
-                      </div>
-                    )}
-                    <p class="h6 text-center">
-                      <router-link
-                        to={{
-                          name: 'titres',
-                          query: {
-                            domainesIds: 'w',
-                            typesIds: 'ax,cx,px',
-                            statutsIds: 'dmi,mod',
-                            vueId: 'table'
-                          }
-                        }}
-                      >
-                        Voir les titres
-                      </router-link>
-                    </p>
-                  </div>
-                  <div class="tablet-blob-1-3">
-                    <p class="h0 text-center">
-                      {statistiquesGranulatsMarins.value.titresValCxw}
-                    </p>
-                    {statistiquesGranulatsMarins.value.titresValCxw > 1 ? (
-                      <div>
-                        <p class="bold text-center">Concessions</p>
-                      </div>
-                    ) : (
-                      <div>
-                        <p class="bold text-center">Concession</p>
-                      </div>
-                    )}
-                    <p class="h6 text-center">
-                      <router-link
-                        to={{
-                          name: 'titres',
-                          query: {
-                            domainesIds: 'w',
-                            typesIds: 'cx',
-                            statutsIds: 'val',
-                            vueId: 'table'
-                          }
-                        }}
-                      >
-                        Voir les titres
-                      </router-link>
-                    </p>
-                  </div>
-                  <div class="tablet-blob-1-3">
-                    <p class="h0 text-center">
-                      {numberFormat(
-                        statistiquesGranulatsMarins.value.surfaceExploitation
-                      )}
-                      ha
-                    </p>
-                    <p class="bold text-center">
-                      Surfaces cumulées des titres pouvant faire l'objet d'une
-                      activité d’exploitation
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="line-neutral width-full mb" />
-
-            <h2>Production annuelle</h2>
+        <div class="content">
+          <div id="etat" class="mb-xxl mt">
+            <h2>État du domaine minier en temps réel</h2>
             <span class="separator" />
-            <p class="mb-xl">
-              Données contenues dans la base de données Camino, stabilisées pour
-              l’année n-1.
+            <p>
+              Les données affichées ici sont celles contenues dans la base de
+              donnée Camino. Elles sont susceptibles d’évoluer chaque jour au
+              grès des décisions et de la fin de validité des titres et
+              autorisations.
             </p>
-
-            <div class="tablet-pt-s pb-s">
-              <BarChart
-                data={statsBarFormat({
-                  annees: statsAnneesAfter2010.value,
-                  bar: 'volume',
-                  line: 'masse',
-                  labelBar: 'Volume en m³',
-                  labelLine: 'Tonnage'
-                })}
-                suggestedMax={suggestedMaxProduction.value}
-              />
-            </div>
-
-            <div class="line-neutral width-full mb-xl" />
-            <h5>Sélectionner une année</h5>
-
-            <select class="p-s mb-l full" onChange={anneeSelect}>
-              {annees.value.map(annee => (
-                <option
-                  key={annee.id}
-                  value={annee.id}
-                  selected={anneeActive.value === annee.id}
-                >
-                  {annee.nom}
-                </option>
-              ))}
-            </select>
-
-            <GranulatsMarinsActivite
-              statistiqueGranulatsMarins={statistiques.value[anneeActive.value]}
-              enConstruction={
-                annees.value.find(t => t.id === anneeActive.value)
-                  ?.enConstruction
-              }
-            />
-            <div class="line-neutral width-full mb-xl" />
-
-            <div id="evolution" class="mb-xxl">
-              <h2>Titres octroyés et surface</h2>
-              <span class="separator" />
-              <p>
-                Données contenues dans la base de données Camino, concernant
-                exclusivement le territoire français.
-              </p>
-              <h3>Permis exclusif de recherche (PER) octroyés</h3>
+            <p>
+              Les surfaces cumulées concernées par un titre ou une autorisation
+              n’impliquent pas qu’elles sont effectivement explorées ou
+              exploitées sur tout ou partie de l'année. Les travaux miniers font
+              l’objet de déclarations ou d’autorisations distinctes portant sur
+              une partie seulement de la surface des titres miniers.
+            </p>
+            <div class="mb-xxl">
+              <h3>Titres d’exploration</h3>
               <hr />
-              <div class="tablet-float-blobs clearfix">
-                <div class="tablet-float-blob-1-3 mb-xl mt">
+              <div class="tablet-blobs">
+                <div class="tablet-blob-1-3">
                   <p class="h0 text-center">
-                    {
-                      statistiques.value[anneeCurrent.value - 1].titresPrw
-                        .quantite
-                    }
+                    <LoadingElement
+                      data={statistiquesGranulatsMarins.value}
+                      renderItem={item => (
+                        <>{item.raw.titresInstructionExploration}</>
+                      )}
+                    />
                   </p>
-                  <p>Permis exclusifs de recherches octroyés l’an dernier</p>
-                </div>
-                <div class="tablet-float-blob-2-3 relative mb-xl">
-                  <BarChart
-                    data={statsBarFormat({
-                      annees: statistiquesGranulatsMarins.value.annees,
-                      id: 'titresPrw',
-                      bar: 'quantite',
-                      line: 'surface',
-                      labelBar: 'Permis de recherches',
-                      labelLine: 'Surface des permis de recherches (ha)'
-                    })}
-                    suggestedMax={suggestedMaxTitres('titresPrw')}
+
+                  <LoadingElement
+                    data={statistiquesGranulatsMarins.value}
+                    renderItem={item => {
+                      if (item.raw.titresInstructionExploration > 1) {
+                        return (
+                          <div>
+                            <p class="bold text-center">
+                              Demandes en cours d'instruction (initiale et
+                              modification en instance)
+                            </p>
+                          </div>
+                        )
+                      } else {
+                        return (
+                          <div>
+                            <p class="bold text-center">
+                              Demande en cours d'instruction (initiale et
+                              modification en instance)
+                            </p>
+                          </div>
+                        )
+                      }
+                    }}
                   />
-                </div>
-              </div>
-              {pexAnneeCurrent.value ? (
-                <div>
-                  <h3>Permis d'exploitation (PEX) octroyés</h3>
-                  <hr />
-                  <div class="tablet-float-blobs clearfix">
-                    <div class="tablet-float-blob-1-3 mb-xl mt">
-                      <p class="h0 text-center">
-                        {
-                          statistiques.value[anneeCurrent.value - 1].titresPxw
-                            .quantite
+                  <p class="h6 text-center">
+                    <router-link
+                      to={{
+                        name: 'titres',
+                        query: {
+                          domainesIds: 'w',
+                          typesIds: 'ar,ap,pr',
+                          statutsIds: 'dmi,mod',
+                          vueId: 'table'
                         }
-                      </p>
-                      <p>Permis d’exploitation octroyés l’an dernier</p>
-                    </div>
-                    <div class="tablet-float-blob-2-3 relative mb-xl">
-                      <BarChart
-                        data={statsBarFormat({
-                          annees: statistiquesGranulatsMarins.value.annees,
-                          id: 'titresPxw',
-                          bar: 'quantite',
-                          line: 'surface',
-                          labelBar: "Permis d'exploitation",
-                          labelLine: "Surface des permis d'exploitation (ha)"
-                        })}
-                        suggestedMax={suggestedMaxTitres('titresPxw')}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ) : null}
-
-              <h3>Concessions octroyées</h3>
-              <hr />
-              <div class="tablet-float-blobs clearfix">
-                <div class="tablet-float-blob-1-3 mb-xl mt">
-                  <p class="h0 text-center">
-                    {
-                      statistiques.value[anneeCurrent.value - 1].titresCxw
-                        .quantite
-                    }
+                      }}
+                    >
+                      Voir les titres
+                    </router-link>
                   </p>
-                  <p>Concessions octroyées l’an dernier</p>
                 </div>
-                <div class="tablet-float-blob-2-3 relative mb-xl">
-                  <BarChart
-                    data={statsBarFormat({
-                      annees: statistiquesGranulatsMarins.value.annees,
-                      id: 'titresCxw',
-                      bar: 'quantite',
-                      line: 'surface',
-                      labelBar: 'Concessions',
-                      labelLine: 'Surfaces des concessions (ha)'
-                    })}
-                    suggestedMax={suggestedMaxTitres('titresCxw')}
-                  />
+                <div class="tablet-blob-1-3">
+                  <p class="h0 text-center">
+                    <LoadingElement
+                      data={statistiquesGranulatsMarins.value}
+                      renderItem={item => <>{item.raw.titresValPrw}</>}
+                    />
+                  </p>
+                  <p class="bold text-center">Permis exclusifs de recherches</p>
+                  <p class="h6 text-center">
+                    <router-link
+                      to={{
+                        name: 'titres',
+                        query: {
+                          domainesIds: 'w',
+                          typesIds: 'pr',
+                          statutsIds: 'val',
+                          vueId: 'table'
+                        }
+                      }}
+                    >
+                      Voir les titres
+                    </router-link>
+                  </p>
+                </div>
+                <div class="tablet-blob-1-3">
+                  <p class="h0 text-center">
+                    <LoadingElement
+                      data={statistiquesGranulatsMarins.value}
+                      renderItem={item => (
+                        <>{numberFormat(item.raw.surfaceExploration)} ha</>
+                      )}
+                    />
+                  </p>
+                  <p class="bold text-center">
+                    Surfaces cumulées des titres pouvant faire l'objet d'une
+                    activité d’exploration
+                  </p>
                 </div>
               </div>
-              <h3>Concessions valides</h3>
+            </div>
+            <div class="mb-xxl">
+              <h3>Titres d’exploitation</h3>
               <hr />
-              <div class="tablet-float-blobs clearfix">
-                <div class="tablet-float-blob-1-3 mb-xl mt">
+              <div class="tablet-blobs">
+                <div class="tablet-blob-1-3">
                   <p class="h0 text-center">
-                    {
-                      statistiques.value[anneeCurrent.value - 1]
-                        .concessionsValides.quantite
-                    }
+                    <LoadingElement
+                      data={statistiquesGranulatsMarins.value}
+                      renderItem={item => (
+                        <>{item.raw.titresInstructionExploitation}</>
+                      )}
+                    />
                   </p>
-                  <p>Concessions valides l’an dernier</p>
-                </div>
-                <div class="tablet-float-blob-2-3 relative mb-xl">
-                  <BarChart
-                    data={statsBarFormat({
-                      annees: statistiquesGranulatsMarins.value.annees,
-                      id: 'concessionsValides',
-                      bar: 'quantite',
-                      line: 'surface',
-                      labelBar: 'Concessions',
-                      labelLine: 'Surfaces des concessions (ha)'
-                    })}
-                    suggestedMax={suggestedMaxTitres('concessionsValides')}
+                  <LoadingElement
+                    data={statistiquesGranulatsMarins.value}
+                    renderItem={item => {
+                      if (item.raw.titresInstructionExploitation > 1) {
+                        return (
+                          <div>
+                            <p class="bold text-center">
+                              Demandes en cours d'instruction (initiale et
+                              modification en instance)
+                            </p>
+                          </div>
+                        )
+                      } else {
+                        return (
+                          <div>
+                            <p class="bold text-center">
+                              Demande en cours d'instruction (initiale et
+                              modification en instance)
+                            </p>
+                          </div>
+                        )
+                      }
+                    }}
                   />
+
+                  <p class="h6 text-center">
+                    <router-link
+                      to={{
+                        name: 'titres',
+                        query: {
+                          domainesIds: 'w',
+                          typesIds: 'ax,cx,px',
+                          statutsIds: 'dmi,mod',
+                          vueId: 'table'
+                        }
+                      }}
+                    >
+                      Voir les titres
+                    </router-link>
+                  </p>
+                </div>
+                <div class="tablet-blob-1-3">
+                  <p class="h0 text-center">
+                    <LoadingElement
+                      data={statistiquesGranulatsMarins.value}
+                      renderItem={item => <>{item.raw.titresValCxw}</>}
+                    />
+                  </p>
+                  <LoadingElement
+                    data={statistiquesGranulatsMarins.value}
+                    renderItem={item => (
+                      <div>
+                        <p class="bold text-center">
+                          Concession{item.raw.titresValCxw > 1 ? 's' : ''}
+                        </p>
+                      </div>
+                    )}
+                  />
+
+                  <p class="h6 text-center">
+                    <router-link
+                      to={{
+                        name: 'titres',
+                        query: {
+                          domainesIds: 'w',
+                          typesIds: 'cx',
+                          statutsIds: 'val',
+                          vueId: 'table'
+                        }
+                      }}
+                    >
+                      Voir les titres
+                    </router-link>
+                  </p>
+                </div>
+                <div class="tablet-blob-1-3">
+                  <p class="h0 text-center">
+                    <LoadingElement
+                      data={statistiquesGranulatsMarins.value}
+                      renderItem={item => (
+                        <>{numberFormat(item.raw.surfaceExploitation)} ha</>
+                      )}
+                    />
+                  </p>
+                  <p class="bold text-center">
+                    Surfaces cumulées des titres pouvant faire l'objet d'une
+                    activité d’exploitation
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-        )}
+
+          <div class="line-neutral width-full mb" />
+
+          <h2>Production annuelle</h2>
+          <span class="separator" />
+          <p class="mb-xl">
+            Données contenues dans la base de données Camino, stabilisées pour
+            l’année n-1.
+          </p>
+
+          <div class="tablet-pt-s pb-s">
+            <LoadingElement
+              data={statistiquesGranulatsMarins.value}
+              renderItem={({ statsAnneesAfter2010 }) => {
+                return (
+                  <BarChart
+                    data={statsBarFormat({
+                      annees: statsAnneesAfter2010,
+                      bar: 'volume',
+                      line: 'masse',
+                      labelBar: 'Volume en m³',
+                      labelLine: 'Tonnage'
+                    })}
+                    suggestedMax={Math.max(
+                      ...statsAnneesAfter2010.map(annee => annee.volume)
+                    )}
+                  />
+                )
+              }}
+            />
+          </div>
+
+          <div class="line-neutral width-full mb-xl" />
+          <h5>Sélectionner une année</h5>
+
+          <LoadingElement
+            data={statistiquesGranulatsMarins.value}
+            renderItem={item => {
+              const annees = item.statsAnneesAfter2010.map(annee => {
+                const id = annee.annee
+                return {
+                  id,
+                  nom: id.toString(),
+                  enConstruction: id === anneeCurrent - 1 // l'année en cours n'étant pas affichée, seule l'année précédente est affichée à partir du 1er avril de l'année courante
+                }
+              })
+              return (
+                <>
+                  <select class="p-s mb-l full" onChange={anneeSelect}>
+                    {annees.map(annee => (
+                      <option
+                        key={annee.id}
+                        value={annee.id}
+                        selected={anneeActive.value === annee.id}
+                      >
+                        {annee.nom}
+                      </option>
+                    ))}
+                  </select>
+
+                  <GranulatsMarinsActivite
+                    statistiqueGranulatsMarins={
+                      item.statistiques[anneeActive.value]
+                    }
+                    enConstruction={
+                      annees.find(t => t.id === anneeActive.value)
+                        ?.enConstruction
+                    }
+                  />
+                </>
+              )
+            }}
+          />
+
+          <div class="line-neutral width-full mb-xl" />
+
+          <div id="evolution" class="mb-xxl">
+            <h2>Titres octroyés et surface</h2>
+            <span class="separator" />
+            <p>
+              Données contenues dans la base de données Camino, concernant
+              exclusivement le territoire français.
+            </p>
+            <h3>Permis exclusif de recherche (PER) octroyés</h3>
+            <hr />
+            <div class="tablet-float-blobs clearfix">
+              <div class="tablet-float-blob-1-3 mb-xl mt">
+                <p class="h0 text-center">
+                  <LoadingElement
+                    data={statistiquesGranulatsMarins.value}
+                    renderItem={item => (
+                      <>
+                        {item.statistiques[anneeCurrent - 1].titresPrw.quantite}
+                      </>
+                    )}
+                  />
+                </p>
+                <p>Permis exclusifs de recherches octroyés l’an dernier</p>
+              </div>
+              <div class="tablet-float-blob-2-3 relative mb-xl">
+                <LoadingElement
+                  data={statistiquesGranulatsMarins.value}
+                  renderItem={item => (
+                    <BarChart
+                      data={statsBarFormat({
+                        annees: item.raw.annees,
+                        id: 'titresPrw',
+                        bar: 'quantite',
+                        line: 'surface',
+                        labelBar: 'Permis de recherches',
+                        labelLine: 'Surface des permis de recherches (ha)'
+                      })}
+                      suggestedMax={suggestedMaxTitres(
+                        'titresPrw',
+                        item.raw.annees
+                      )}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+            <LoadingElement
+              data={statistiquesGranulatsMarins.value}
+              renderItem={({ statistiques, raw }) => {
+                const statistiquesGranulatsMarinsAnneeCurrent = raw.annees.find(
+                  annee => annee.annee === anneeCurrent
+                )
+                const pexAnneeCurrent =
+                  (statistiquesGranulatsMarinsAnneeCurrent?.titresPxw
+                    ?.quantite ?? 0) > 0
+
+                return (
+                  <>
+                    {pexAnneeCurrent ? (
+                      <div>
+                        <h3>Permis d'exploitation (PEX) octroyés</h3>
+                        <hr />
+                        <div class="tablet-float-blobs clearfix">
+                          <div class="tablet-float-blob-1-3 mb-xl mt">
+                            <p class="h0 text-center">
+                              {
+                                statistiques[anneeCurrent - 1].titresPxw
+                                  .quantite
+                              }
+                            </p>
+                            <p>Permis d’exploitation octroyés l’an dernier</p>
+                          </div>
+                          <div class="tablet-float-blob-2-3 relative mb-xl">
+                            <BarChart
+                              data={statsBarFormat({
+                                annees: raw.annees,
+                                id: 'titresPxw',
+                                bar: 'quantite',
+                                line: 'surface',
+                                labelBar: "Permis d'exploitation",
+                                labelLine:
+                                  "Surface des permis d'exploitation (ha)"
+                              })}
+                              suggestedMax={suggestedMaxTitres(
+                                'titresPxw',
+                                raw.annees
+                              )}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div></div>
+                    )}
+                  </>
+                )
+              }}
+            />
+
+            <h3>Concessions octroyées</h3>
+            <hr />
+            <div class="tablet-float-blobs clearfix">
+              <div class="tablet-float-blob-1-3 mb-xl mt">
+                <p class="h0 text-center">
+                  <LoadingElement
+                    data={statistiquesGranulatsMarins.value}
+                    renderItem={item => (
+                      <>
+                        {item.statistiques[anneeCurrent - 1].titresCxw.quantite}
+                      </>
+                    )}
+                  />
+                </p>
+                <p>Concessions octroyées l’an dernier</p>
+              </div>
+              <div class="tablet-float-blob-2-3 relative mb-xl">
+                <LoadingElement
+                  data={statistiquesGranulatsMarins.value}
+                  renderItem={item => (
+                    <BarChart
+                      data={statsBarFormat({
+                        annees: item.raw.annees,
+                        id: 'titresCxw',
+                        bar: 'quantite',
+                        line: 'surface',
+                        labelBar: 'Concessions',
+                        labelLine: 'Surfaces des concessions (ha)'
+                      })}
+                      suggestedMax={suggestedMaxTitres(
+                        'titresCxw',
+                        item.raw.annees
+                      )}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+            <h3>Concessions valides</h3>
+            <hr />
+            <div class="tablet-float-blobs clearfix">
+              <div class="tablet-float-blob-1-3 mb-xl mt">
+                <p class="h0 text-center">
+                  <LoadingElement
+                    data={statistiquesGranulatsMarins.value}
+                    renderItem={item => (
+                      <>
+                        {
+                          item.statistiques[anneeCurrent - 1].concessionsValides
+                            .quantite
+                        }
+                      </>
+                    )}
+                  />
+                </p>
+                <p>Concessions valides l’an dernier</p>
+              </div>
+              <div class="tablet-float-blob-2-3 relative mb-xl">
+                <LoadingElement
+                  data={statistiquesGranulatsMarins.value}
+                  renderItem={item => (
+                    <BarChart
+                      data={statsBarFormat({
+                        annees: item.raw.annees,
+                        id: 'concessionsValides',
+                        bar: 'quantite',
+                        line: 'surface',
+                        labelBar: 'Concessions',
+                        labelLine: 'Surfaces des concessions (ha)'
+                      })}
+                      suggestedMax={suggestedMaxTitres(
+                        'concessionsValides',
+                        item.raw.annees
+                      )}
+                    />
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </>
     )
   }

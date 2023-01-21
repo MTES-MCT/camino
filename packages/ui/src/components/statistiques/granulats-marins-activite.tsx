@@ -1,33 +1,10 @@
 import { numberFormat } from '@/utils/number-format'
+import { StatistiqueGranulatsMarinsStatAnnee } from 'camino-common/src/statistiques.js'
 import { FunctionalComponent } from 'vue'
-
-export interface StatAnnee {
-  annee: number
-  titresPrw: {
-    quantite: number
-    surface: number
-  }
-  titresPxw: {
-    quantite: number
-    surface: number
-  }
-  titresCxw: {
-    quantite: number
-    surface: number
-  }
-  volume: number
-  masse: number
-  activitesDeposesQuantite: number
-  activitesDeposesRatio: number
-  concessionsValides: {
-    quantite: number
-    surface: number
-  }
-}
 
 interface Props {
   enConstruction?: boolean
-  statistiqueGranulatsMarins: StatAnnee
+  statistiqueGranulatsMarins: StatistiqueGranulatsMarinsStatAnnee
 }
 
 export const GranulatsMarinsActivite: FunctionalComponent<Props> = props => (
@@ -44,8 +21,7 @@ export const GranulatsMarinsActivite: FunctionalComponent<Props> = props => (
         {props.statistiqueGranulatsMarins.activitesDeposesQuantite > 3 ? (
           <div>
             <p class="h0 text-center">
-              {numberFormat(props.statistiqueGranulatsMarins.volume)}
-              m³
+              {numberFormat(props.statistiqueGranulatsMarins.volume)} m³
             </p>
           </div>
         ) : (
@@ -59,7 +35,7 @@ export const GranulatsMarinsActivite: FunctionalComponent<Props> = props => (
         {props.statistiqueGranulatsMarins.activitesDeposesQuantite > 3 ? (
           <div>
             <p class="h0 text-center">
-              {numberFormat(props.statistiqueGranulatsMarins.masse)}t
+              {numberFormat(props.statistiqueGranulatsMarins.masse)} t
             </p>
           </div>
         ) : (
