@@ -10,6 +10,14 @@ import {
 import { AsyncData, fetchWithJson } from '@/api/client-rest'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { LoadingElement } from '../_ui/functional-loader'
+import {
+  CaminoAnnee,
+  CaminoDate,
+  getAnnee,
+  getCurrent,
+  toCaminoAnnee,
+  toCaminoDate
+} from 'camino-common/src/date'
 
 const ids = [
   'titresPrw',
@@ -99,8 +107,20 @@ const getStats = async (): Promise<StatistiquesGranulatsMarins> => {
   )
   return data
 }
+
 export const GranulatsMarins = defineComponent({
   setup() {
+    return () => <PureGranulatsMarins getStatistiques={getStats} />
+  }
+})
+
+interface Props {
+  currentDate?: CaminoDate
+  getStatistiques: () => Promise<StatistiquesGranulatsMarins>
+}
+export const PureGranulatsMarins = defineComponent<Props>({
+  props: ['currentDate', 'getStatistiques'] as unknown as undefined,
+  setup(props) {
     const statistiquesGranulatsMarins = ref<
       AsyncData<{
         raw: StatistiquesGranulatsMarins
@@ -109,7 +129,8 @@ export const GranulatsMarins = defineComponent({
       }>
     >({ status: 'LOADING' })
     const anneeActive = ref(0)
-    const anneeCurrent = new Date().getFullYear()
+    const currentDate = props.currentDate ? props.currentDate : getCurrent()
+    const anneeCurrent = Number(getAnnee(currentDate))
 
     const anneeSelect = (event: Event) => {
       if (isEventWithTarget(event)) {
@@ -135,7 +156,7 @@ export const GranulatsMarins = defineComponent({
     onMounted(async () => {
       anneeActive.value = anneeCurrent - 2
       try {
-        const data = await getStats()
+        const data = await props.getStatistiques()
 
         const statistiques = data.annees.reduce<Record<string, any>>(
           (acc, statsAnnee) => {
@@ -149,11 +170,9 @@ export const GranulatsMarins = defineComponent({
           annee => annee.annee >= 2010 && annee.annee < anneeCurrent
         )
 
-        // FIXME à tester avec storybook
         // affichage des données de l'année n-2 à partir du 1er avril de l'année en cours
-        const toggleDate = new Date(anneeCurrent, 3, 1)
-        const beforeToggleDate =
-          new Date().getTime() < Date.parse(toggleDate.toString())
+        const toggleDate = toCaminoDate(`${anneeCurrent}-04-01`)
+        const beforeToggleDate = currentDate < toggleDate
 
         statistiquesGranulatsMarins.value = {
           status: 'LOADED',
