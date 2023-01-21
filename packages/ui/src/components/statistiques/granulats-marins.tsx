@@ -1,34 +1,10 @@
 import { computed, defineComponent, onMounted, ref } from 'vue'
 import Loader from '../_ui/loader.vue'
-import GranulatsMarinsActivite from './granulats-marins-activite.vue'
+import { GranulatsMarinsActivite, StatAnnee } from './granulats-marins-activite'
 import BarChart from '../_charts/bar.vue'
 import { numberFormat } from '@/utils/number-format'
 import { useStore } from 'vuex'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
-
-interface StatAnnee {
-  annee: number
-  titresPrw: {
-    quantite: number
-    surface: number
-  }
-  titresPxw: {
-    quantite: number
-    surface: number
-  }
-  titresCxw: {
-    quantite: number
-    surface: number
-  }
-  volume: number
-  masse: number
-  activitesDeposesQuantite: number
-  activitesDeposesRatio: number
-  concessionsValides: {
-    quantite: number
-    surface: number
-  }
-}
 
 interface Data {
   statistiquesGranulatsMarins: {
@@ -458,7 +434,6 @@ export const GranulatsMarins = defineComponent({
                 annees.value.find(t => t.id === anneeActive.value)
                   ?.enConstruction
               }
-              class="mb-xxl"
             />
             <div class="line-neutral width-full mb-xl" />
 
