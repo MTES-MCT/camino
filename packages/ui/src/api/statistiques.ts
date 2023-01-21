@@ -37,45 +37,6 @@ export const statistiquesGlobales = apiGraphQLFetch(gql`
   }
 `)
 
-export const statistiquesGuyane = apiGraphQLFetch(gql`
-  query StatistiquesGuyane {
-    statistiquesGuyane {
-      surfaceExploration
-      surfaceExploitation
-      titresArm
-      titresPrm
-      titresAxm
-      titresCxm
-      annees {
-        annee
-        titresArm {
-          quantite
-          surface
-        }
-        titresPrm {
-          quantite
-          surface
-        }
-        titresAxm {
-          quantite
-          surface
-        }
-        titresCxm {
-          quantite
-          surface
-        }
-        orNet
-        carburantConventionnel
-        carburantDetaxe
-        mercure
-        environnementCout
-        effectifs
-        activitesDeposesQuantite
-        activitesDeposesRatio
-      }
-    }
-  }
-`)
 export const statistiquesGranulatsMarins = apiGraphQLFetch(gql`
   query StatistiquesGranulatsMarins {
     statistiquesGranulatsMarins {

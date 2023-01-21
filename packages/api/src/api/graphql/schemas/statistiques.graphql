@@ -36,32 +36,6 @@ type StatistiquesGlobales {
   utilisateurs: UtilisateursStatistique
 }
 
-type StatistiquesGuyane {
-  surfaceExploration: Int
-  surfaceExploitation: Int
-  titresArm: Int
-  titresPrm: Int
-  titresAxm: Int
-  titresCxm: Int
-  annees: [StatistiquesGuyaneAnnee]
-}
-
-type StatistiquesGuyaneAnnee {
-  annee: Int
-  titresArm: StatistiqueAnneeTitre
-  titresPrm: StatistiqueAnneeTitre
-  titresAxm: StatistiqueAnneeTitre
-  titresCxm: StatistiqueAnneeTitre
-  orNet: Int
-  carburantConventionnel: Int
-  carburantDetaxe: Int
-  mercure: Int
-  environnementCout: Int
-  effectifs: Int
-  activitesDeposesQuantite: Int
-  activitesDeposesRatio: Int
-}
-
 type StatistiqueAnneeTitre {
   quantite: Int
   surface: Float
