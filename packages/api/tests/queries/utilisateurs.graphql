@@ -1,14 +1,16 @@
 query Utilisateurs(
   $administrationIds: [ID!]
   $entrepriseIds: [ID!]
-  $noms: [String!]
+  $noms: String!
 ) {
   utilisateurs(
     administrationIds: $administrationIds
     entrepriseIds: $entrepriseIds
     noms: $noms
   ) {
-    ...utilisateur
+    elements {
+      ...utilisateur
+    }
   }
 }
 
