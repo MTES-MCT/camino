@@ -125,7 +125,8 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
     titreTypeId: 'pxg',
     demarcheTypeIds: ['oct'],
     machine: new PxgOctMachine(),
-    dateDebut: toCaminoDate('2000-01-01')
+    // https://camino.beta.gouv.fr/titres/g-px-vallee-arena-2020
+    dateDebut: toCaminoDate('2021-01-01')
   }
 ]
 

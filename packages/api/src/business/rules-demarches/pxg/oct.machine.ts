@@ -36,6 +36,8 @@ export type PXGOctXStateEvent =
   | { type: 'RENDRE_DECISION_ADMINISTRATION_DEFAVORABLE' }
   | { type: 'NOTIFICATION_DU_DEMANDEUR' }
   | { type: 'PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS' }
+  | { type: 'FAIRE_DESISTEMENT_DEMANDEUR' }
+  | { type: 'FAIRE_CLASSEMENT_SANS_SUITE' }
 
 type Event = PXGOctXStateEvent['type']
 
@@ -89,7 +91,9 @@ const trad: { [key in Event]: DBEtat } = {
   },
   NOTIFICATION_DU_DEMANDEUR: ETES.notificationAuDemandeur,
   PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS:
-    ETES.publicationDeDecisionAuRecueilDesActesAdministratifs
+    ETES.publicationDeDecisionAuRecueilDesActesAdministratifs,
+  FAIRE_DESISTEMENT_DEMANDEUR: ETES.desistementDuDemandeur,
+  FAIRE_CLASSEMENT_SANS_SUITE: ETES.classementSansSuite
 }
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
@@ -139,10 +143,7 @@ interface PxgContext extends CaminoCommonContext {
   avisAutoriteEnvironnementaleFaite: boolean
 }
 
-const peutRendreAvisDREAL = (
-  context: PxgContext,
-  _event: { type: 'RENDRE_AVIS_DREAL' }
-): boolean => {
+const peutRendreAvisDREAL = (context: PxgContext): boolean => {
   return (
     context.saisineDesServicesFaite &&
     context.saisineDesCollectivitesLocalesFaites &&
@@ -161,7 +162,24 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
     saisineDesCollectivitesLocalesFaites: false,
     avisAutoriteEnvironnementaleFaite: false
   },
-  on: {},
+  on: {
+    FAIRE_DESISTEMENT_DEMANDEUR: {
+      cond: context =>
+        [
+          DemarchesStatutsIds.Depose,
+          DemarchesStatutsIds.EnInstruction
+        ].includes(context.demarcheStatut),
+      target: 'desistementDuDemandeurRendu'
+    },
+    FAIRE_CLASSEMENT_SANS_SUITE: {
+      cond: context =>
+        [
+          DemarchesStatutsIds.Depose,
+          DemarchesStatutsIds.EnInstruction
+        ].includes(context.demarcheStatut),
+      target: 'classementSansSuiteRendu'
+    }
+  },
   states: {
     demandeAFaire: {
       on: {
@@ -207,6 +225,26 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
     saisinesAFaire: {
       type: 'parallel',
       states: {
+        rendreAvisDrealMachine: {
+          initial: 'rendreAvisDrealPasEncorePossible',
+          states: {
+            rendreAvisDrealPasEncorePossible: {
+              always: {
+                target: 'rendreAvisDrealAFaire',
+                cond: peutRendreAvisDREAL
+              }
+            },
+            rendreAvisDrealAFaire: {
+              on: {
+                RENDRE_AVIS_DREAL: {
+                  cond: peutRendreAvisDREAL,
+                  target:
+                    '#transmissionDuProjetDePrescriptionsAuDemandeurAFaire'
+                }
+              }
+            }
+          }
+        },
         saisineDesServicesMachine: {
           initial: 'saisineDesServicesAFaire',
           states: {
@@ -425,6 +463,7 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
       }
     },
     transmissionDuProjetDePrescriptionsAuDemandeurAFaire: {
+      id: 'transmissionDuProjetDePrescriptionsAuDemandeurAFaire',
       on: {
         TRANSMETTRE_PROJET_DE_PRESCRIPTIONS_AU_DEMANDEUR:
           'avisDuDemandeurSurLesPrescriptionsProposeesAFaire'
@@ -516,6 +555,20 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
             }
           }
         }
-      }
+      },
+    desistementDuDemandeurRendu: {
+      type: 'final',
+      entry: assign<PxgContext>({
+        demarcheStatut: DemarchesStatutsIds.Desiste,
+        visibilite: 'publique'
+      })
+    },
+    classementSansSuiteRendu: {
+      type: 'final',
+      entry: assign<PxgContext>({
+        demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
+        visibilite: 'publique'
+      })
+    }
   }
 })
