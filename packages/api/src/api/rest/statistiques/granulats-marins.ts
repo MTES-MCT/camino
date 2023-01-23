@@ -8,8 +8,12 @@ import { userSuper } from '../../../database/user-super.js'
 import {
   concessionsValidesBuild,
   titresSurfaceIndexBuild
-} from './statistiques.js'
+} from '../../graphql/resolvers/statistiques.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
+import {
+  StatistiqueGranulatsMarinsStatAnnee,
+  StatistiquesGranulatsMarins
+} from 'camino-common/src/statistiques.js'
 
 const statistiquesGranulatsMarinsActivitesFind = (
   titresActivites: ITitreActivite[],
@@ -74,7 +78,9 @@ const statistiquesGranulatsMarinsTitresGet = (
     }
   )
 
-const statistiquesGranulatsMarinsInstantBuild = (titres: ITitre[]) => {
+const statistiquesGranulatsMarinsInstantBuild = (
+  titres: ITitre[]
+): Omit<StatistiquesGranulatsMarins, 'annees'> => {
   const statsInstant = titres.reduce(
     (acc, titre) => {
       if (
@@ -129,7 +135,7 @@ const statistiquesGranulatsMarinsAnneeBuild = (
   titres: ITitre[],
   titresActivites: ITitreActivite[],
   annee: number
-) => {
+): StatistiqueGranulatsMarinsStatAnnee => {
   // les titres créés dans l'année et leur surface lors de l'octroi
   const titresFiltered = titresSurfaceIndexBuild(titres, annee)
 
@@ -168,49 +174,52 @@ const statistiquesGranulatsMarinsAnneeBuild = (
   }
 }
 
-const statistiquesGranulatsMarins = async () => {
-  try {
-    const anneeCurrent = new Date().getFullYear()
-    // un tableau avec les années depuis 2006
-    const annees = Array.from(Array(anneeCurrent - 2006 + 1).keys())
-      .map(e => anneeCurrent - e)
-      .reverse()
+export const statistiquesGranulatsMarins =
+  async (): Promise<StatistiquesGranulatsMarins> => {
+    try {
+      const anneeCurrent = new Date().getFullYear()
+      // un tableau avec les années depuis 2006
+      const annees = Array.from(Array(anneeCurrent - 2006 + 1).keys())
+        .map(e => anneeCurrent - e)
+        .reverse()
 
-    const titres = await titresGet(
-      {
-        domainesIds: ['w'],
-        typesIds: ['ar', 'ap', 'pr', 'ax', 'px', 'cx']
-      },
-      {
-        fields: {
-          surfaceEtape: { id: {} },
-          demarches: { phase: { id: {} }, etapes: { id: {} }, type: { id: {} } }
-        }
-      },
-      userSuper
-    )
+      const titres = await titresGet(
+        {
+          domainesIds: ['w'],
+          typesIds: ['ar', 'ap', 'pr', 'ax', 'px', 'cx']
+        },
+        {
+          fields: {
+            surfaceEtape: { id: {} },
+            demarches: {
+              phase: { id: {} },
+              etapes: { id: {} },
+              type: { id: {} }
+            }
+          }
+        },
+        userSuper
+      )
 
-    const titresActivites = await titresActivitesGet(
-      { annees, typesIds: ['wrp'] },
-      {
-        fields: {
-          titre: { id: {} }
-        }
-      },
-      userSuper
-    )
+      const titresActivites = await titresActivitesGet(
+        { annees, typesIds: ['wrp'] },
+        {
+          fields: {
+            titre: { id: {} }
+          }
+        },
+        userSuper
+      )
 
-    return {
-      annees: annees.map(annee =>
-        statistiquesGranulatsMarinsAnneeBuild(titres, titresActivites, annee)
-      ),
-      ...statistiquesGranulatsMarinsInstantBuild(titres)
+      return {
+        annees: annees.map(annee =>
+          statistiquesGranulatsMarinsAnneeBuild(titres, titresActivites, annee)
+        ),
+        ...statistiquesGranulatsMarinsInstantBuild(titres)
+      }
+    } catch (e) {
+      console.error(e)
+
+      throw e
     }
-  } catch (e) {
-    console.error(e)
-
-    throw e
   }
-}
-
-export { statistiquesGranulatsMarins }

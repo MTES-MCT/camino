@@ -31,6 +31,7 @@ import {
 } from '../api/rest/utilisateurs.js'
 import {
   getDGTMStats,
+  getGranulatsMarinsStats,
   getGuyaneStats,
   getMinerauxMetauxMetropolesStats
 } from '../api/rest/statistiques/index.js'
@@ -169,6 +170,11 @@ rest.get(
   restCatcher(getMinerauxMetauxMetropolesStats)
 )
 rest.get(CaminoRestRoutes.statistiquesGuyane, restCatcher(getGuyaneStats))
+rest.get(
+  CaminoRestRoutes.statistiquesGranulatsMarins,
+  restCatcher(getGranulatsMarinsStats)
+)
+
 rest.get(CaminoRestRoutes.statistiquesDGTM, restCatcher(getDGTMStats))
 rest.get('/demarches', restDownload(demarches))
 rest.get('/activites', restDownload(activites))

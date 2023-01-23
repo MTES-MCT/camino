@@ -1,4 +1,4 @@
-import PureGlobales from './pure-globales.vue'
+import { PureGlobales } from './globales'
 import { Meta, Story } from '@storybook/vue3'
 import { Statistiques } from 'camino-common/src/statistiques'
 
@@ -9,21 +9,9 @@ const meta: Meta = {
 }
 export default meta
 
-type Props = { statistiques: Statistiques }
-
-const Template: Story<Props> = (args: Props) => ({
-  components: { PureGlobales },
-  setup() {
-    return { args }
-  },
-
-  template: '<PureGlobales v-bind="args" />>'
-})
-
-export const DefaultNoSnapshot = Template.bind(
-  {},
-  {
-    statistiques: {
+export const DefaultNoSnapshot: Story = () => (
+  <PureGlobales
+    statistiques={{
       titresActivitesBeneficesEntreprise: 678,
       titresActivitesBeneficesAdministration: 339,
       recherches: [
@@ -72,6 +60,6 @@ export const DefaultNoSnapshot = Template.bind(
         rattachesAUneEntreprise: 128,
         visiteursAuthentifies: 124
       }
-    }
-  }
+    }}
+  />
 )

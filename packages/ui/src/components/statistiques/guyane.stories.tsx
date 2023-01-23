@@ -1,7 +1,7 @@
 import { Meta, Story } from '@storybook/vue3'
-import { toCaminoAnnee } from 'camino-common/src/date.js'
+import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date.js'
 import { StatistiquesGuyane } from 'camino-common/src/statistiques.js'
-import PureGuyane from './pure-guyane.vue'
+import { PureGuyane } from './guyane'
 
 const meta: Meta = {
   title: 'Components/Statistiques/Guyane',
@@ -9,19 +9,6 @@ const meta: Meta = {
   argTypes: {}
 }
 export default meta
-
-type Props = {
-  getStats: () => Promise<StatistiquesGuyane>
-}
-
-const Template: Story<Props> = (args: Props) => ({
-  components: { PureGuyane },
-  setup() {
-    return { args }
-  },
-
-  template: '<PureGuyane v-bind="args" />'
-})
 
 const data: Promise<StatistiquesGuyane> = Promise.resolve({
   data: {
@@ -450,39 +437,18 @@ const data: Promise<StatistiquesGuyane> = Promise.resolve({
   }
 })
 
-export const DefaultNoSnapshot = Template.bind(
-  {},
-  {
-    getStats: () => data
-  }
+export const DefaultNoSnapshot: Story = () => (
+  <PureGuyane getStats={() => data} />
 )
-
-export const DateSetTo20220830NoSnapshot = Template.bind(
-  {},
-  {
-    getStats: () => data,
-    currentDate: '2022-08-30'
-  }
+export const DateSetTo20220830NoSnapshot: Story = () => (
+  <PureGuyane getStats={() => data} currentDate={toCaminoDate('2022-08-30')} />
 )
-
-export const DateSetTo20220902NoSnapshot = Template.bind(
-  {},
-  {
-    getStats: () => data,
-    currentDate: '2022-09-02'
-  }
+export const DateSetTo20220902NoSnapshot: Story = () => (
+  <PureGuyane getStats={() => data} currentDate={toCaminoDate('2022-09-02')} />
 )
-
-export const Loading = Template.bind(
-  {},
-  {
-    getStats: () => new Promise<any>(resolve => {})
-  }
+export const Loading: Story = () => (
+  <PureGuyane getStats={() => new Promise<any>(resolve => {})} />
 )
-
-export const WithError = Template.bind(
-  {},
-  {
-    getStats: () => Promise.reject(new Error('because reasons'))
-  }
+export const WithError: Story = () => (
+  <PureGuyane getStats={() => Promise.reject(new Error('because reasons'))} />
 )

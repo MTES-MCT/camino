@@ -28,14 +28,27 @@ const Metas = () => import('../components/metas.vue')
 const Error = () => import('../components/error.vue')
 const UserPasswordInit = () => import('../components/user/password-init.vue')
 const UserAdd = () => import('../components/user/add.vue')
-const StatistiquesGlobales = () =>
-  import('../components/statistiques/globales.vue')
+const StatistiquesGlobales = async () => {
+  const { Globales } = await import('../components/statistiques/globales')
+  return Globales
+}
 const Statistiques = () => import('../components/statistiques.vue')
-const StatistiquesGuyane = () => import('../components/statistiques/guyane.vue')
-const StatistiquesGranulatsMarins = () =>
-  import('../components/statistiques/granulats-marins.vue')
-const StatistiquesMinerauxMetauxMetropole = () =>
-  import('../components/statistiques/mineraux-metaux-metropole.vue')
+const StatsGuyane = async () => {
+  const { Guyane } = await import('../components/statistiques/guyane')
+  return Guyane
+}
+const StatistiquesGranulatsMarins = async () => {
+  const { GranulatsMarins } = await import(
+    '../components/statistiques/granulats-marins'
+  )
+  return GranulatsMarins
+}
+const StatistiquesMinerauxMetauxMetropole = async () => {
+  const { MinerauxMetauxMetropole } = await import(
+    '../components/statistiques/mineraux-metaux-metropole'
+  )
+  return MinerauxMetauxMetropole
+}
 const Journaux = () => import('../components/journaux.vue')
 
 const routes: RouteRecordRaw[] = [
@@ -191,7 +204,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'guyane',
         name: 'statistiques-guyane',
-        component: StatistiquesGuyane
+        component: StatsGuyane
       },
       {
         path: 'globales',

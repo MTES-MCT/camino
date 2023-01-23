@@ -120,8 +120,6 @@ import {
   activiteDeposer
 } from './resolvers/titres-activites.js'
 import { statistiquesGlobales } from './resolvers/statistiques.js'
-import { statistiquesGuyane } from './resolvers/statistiques-guyane.js'
-import { statistiquesGranulatsMarins } from './resolvers/statistiques-granulats-marins.js'
 
 import { titreDemandeCreer } from './resolvers/titre-demande.js'
 import {
@@ -169,8 +167,6 @@ export default {
   utilisateur,
   utilisateurs,
   statistiquesGlobales,
-  statistiquesGuyane,
-  statistiquesGranulatsMarins,
   activite,
   activites,
   administrationsTypes,

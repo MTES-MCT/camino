@@ -210,9 +210,6 @@ type Query {
 
   "Statistiques"
   statistiquesGlobales: StatistiquesGlobales
-  statistiquesGuyane: StatistiquesGuyane
-  statistiquesGranulatsMarins: StatistiquesGranulatsMarins
-
   documents(entreprisesIds: [ID!]): [Document]
 
   "Définitions et descriptions"

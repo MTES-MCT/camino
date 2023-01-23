@@ -5,6 +5,7 @@ export const CaminoRestRoutes = {
   config: '/config',
   statistiquesMinerauxMetauxMetropole: '/statistiques/minerauxMetauxMetropole',
   statistiquesGuyane: '/statistiques/guyane',
+  statistiquesGranulatsMarins: '/statistiques/granulatsMarins',
   titresONF: '/titresONF',
   titresPTMG: '/titresPTMG',
   titresDREAL: '/titresDREAL',

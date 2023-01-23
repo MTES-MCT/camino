@@ -139,3 +139,37 @@ export type StatistiquesGuyane = {
   data: StatistiquesGuyaneData
   parAnnee: Record<CaminoAnnee, StatistiquesGuyaneActivite>
 }
+
+export interface StatistiqueGranulatsMarinsStatAnnee {
+  annee: number
+  titresPrw: {
+    quantite: number
+    surface: number
+  }
+  titresPxw: {
+    quantite: number
+    surface: number
+  }
+  titresCxw: {
+    quantite: number
+    surface: number
+  }
+  volume: number
+  masse: number
+  activitesDeposesQuantite: number
+  activitesDeposesRatio: number
+  concessionsValides: {
+    quantite: number
+    surface: number
+  }
+}
+
+export interface StatistiquesGranulatsMarins {
+  annees: StatistiqueGranulatsMarinsStatAnnee[]
+  surfaceExploration: number
+  surfaceExploitation: number
+  titresInstructionExploration: number
+  titresValPrw: number
+  titresInstructionExploitation: number
+  titresValCxw: number
+}
