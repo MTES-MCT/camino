@@ -38,6 +38,7 @@ export const ETAPES_TYPES = {
   avisDeLaCaisseGeneraleDeSecuriteSociale: 'ass',
   avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_: 'auc',
   consultationDesAdministrationsCentrales: 'cac',
+  consultationCLEDuSAGE: 'ccs',
   concertationInterministerielle: 'cim',
   saisineDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst_: 'cod',
   confirmationDeLaccordDuProprietaireDuSol: 'cps',
@@ -365,6 +366,7 @@ export const EtapesTypes: { [key in EtapeTypeId]: EtapeType<key> } = {
     nom: 'consultation des administrations centrales',
     description: ''
   },
+  ccs: { id: 'ccs', nom: 'consultation CLE du SAGE', description: `consultation de la Commission Locale de L'Eau du Schéma d'Aménagement et de Gestion des Eaux` },
   cim: {
     id: 'cim',
     nom: 'concertation interministérielle',

@@ -5,21 +5,22 @@ import {
 import { restrictionsArmRet } from './arm/ret.js'
 import { ArmOctMachine } from './arm/oct.machine.js'
 import { expect, test } from 'vitest'
+import { toCaminoDate } from 'camino-common/src/date.js'
 
 test('isDemarcheDefinitionMachine', () => {
   expect(
     isDemarcheDefinitionMachine({
-      titreTypeId: '',
+      titreTypeId: 'pxm',
       demarcheTypeIds: [],
-      dateDebut: '',
+      dateDebut: toCaminoDate('2022-01-01'),
       machine: new ArmOctMachine()
     })
   ).toBe(true)
   expect(
     isDemarcheDefinitionMachine({
-      titreTypeId: '',
+      titreTypeId: 'pxm',
       demarcheTypeIds: [],
-      dateDebut: '',
+      dateDebut: toCaminoDate('2022-01-01'),
       restrictions: restrictionsArmRet
     })
   ).toBe(false)
@@ -28,17 +29,17 @@ test('isDemarcheDefinitionMachine', () => {
 test('isDemarcheDefinitionRestriction', () => {
   expect(
     isDemarcheDefinitionRestriction({
-      titreTypeId: '',
+      titreTypeId: 'pxm',
       demarcheTypeIds: [],
-      dateDebut: '',
+      dateDebut: toCaminoDate('2022-01-01'),
       machine: new ArmOctMachine()
     })
   ).toBe(false)
   expect(
     isDemarcheDefinitionRestriction({
-      titreTypeId: '',
+      titreTypeId: 'pxm',
       demarcheTypeIds: [],
-      dateDebut: '',
+      dateDebut: toCaminoDate('2022-01-01'),
       restrictions: restrictionsArmRet
     })
   ).toBe(true)

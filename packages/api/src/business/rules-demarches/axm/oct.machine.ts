@@ -532,13 +532,13 @@ const axmOctMachine = createMachine<AxmContext, AXMOctXStateEvent>({
                     avisDgtmMNBSTRendu: { type: 'final' }
                   }
                 },
-                avisDGTMAUCULMachine: {
-                  initial: 'avisDGTMAUCULARendre',
+                avisDGTMAUCLMachine: {
+                  initial: 'avisDGTMAUCLARendre',
                   states: {
-                    avisDGTMAUCULARendre: {
-                      on: { RENDRE_AVIS_DGTMAUCL: 'avisDGTMAUCULRendu' }
+                    avisDGTMAUCLARendre: {
+                      on: { RENDRE_AVIS_DGTMAUCL: 'avisDGTMAUCLRendu' }
                     },
-                    avisDGTMAUCULRendu: { type: 'final' }
+                    avisDGTMAUCLRendu: { type: 'final' }
                   }
                 },
                 avisDirectionEntrepriseConcurrenceConsommationTravailEmploiMachine:
