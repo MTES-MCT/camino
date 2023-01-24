@@ -17,8 +17,7 @@
     <Preview
       :etape="etape"
       :demarcheType="demarcheType"
-      :titreTypeType="titreTypeType"
-      :domaineId="domaineId"
+      :titreTypeId="titre.typeId"
       :titreNom="titre.nom"
       :titreId="titre.id"
       :opened="opened"
@@ -61,14 +60,8 @@ export default {
     titre() {
       return this.demarche ? this.demarche.titre : ''
     },
-    domaineId() {
-      return this.titre ? this.titre.domaine.id : ''
-    },
-    titreType() {
-      return this.titre ? this.titre.type : ''
-    },
-    titreTypeType() {
-      return this.titreType ? this.titreType.type : {}
+    titreTypeId() {
+      return this.titre ? this.titre.typeId : ''
     }
   },
   watch: {

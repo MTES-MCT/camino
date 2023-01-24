@@ -41,8 +41,7 @@
       :user="user"
       :events="events"
       :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction"
-      :domaineId="domaineId"
-      :titreTypeId="titreTypeTypeId"
+      :titreTypeId="titre.typeId"
       :documentPopupTitle="documentPopupTitle"
       :etapeType="etapeType"
       @complete-update="completeUpdate"
@@ -162,18 +161,6 @@ export default {
       return this.demarche.titre
     },
 
-    domaineId() {
-      return this.titre ? this.titre.domaine.id : ''
-    },
-
-    titreType() {
-      return this.titre ? this.titre.type : ''
-    },
-
-    titreTypeTypeId() {
-      return this.titreType ? this.titreType.type.id : ''
-    },
-
     dateIsVisible() {
       return !this.editedEtape.date
     },
@@ -217,8 +204,7 @@ export default {
     helpVisible() {
       return (
         !this.userIsAdmin &&
-        this.domaineId === 'm' &&
-        ['ax', 'ar'].includes(this.titreTypeTypeId) &&
+        ['axm', 'arm'].includes(this.titre.typeId) &&
         this.etapeType.id === 'mfr'
       )
     }

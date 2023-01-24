@@ -17,6 +17,12 @@ import {
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
 import {
+  getDomaineId,
+  getTitreTypeType
+} from 'camino-common/src/static/titresTypes.js'
+import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes.js'
+import { Domaines } from 'camino-common/src/static/domaines.js'
+import {
   getDepartementsBySecteurs,
   getFacadesComputed,
   SecteursMaritimes
@@ -75,8 +81,8 @@ export const titresTableFormat = (titres: ITitre[]) =>
     const titreNew = {
       id: titre.slug,
       nom: titre.nom,
-      type: titre.type!.type.nom,
-      domaine: titre.domaine!.nom,
+      type: TitresTypesTypes[getTitreTypeType(titre.typeId)].nom,
+      domaine: Domaines[getDomaineId(titre.typeId)].nom,
       date_debut: titre.dateDebut,
       date_fin: titre.dateFin,
       date_demande: titre.dateDemande,
@@ -141,8 +147,8 @@ const titreGeojsonPropertiesFormat = (titre: ITitre) => {
   return {
     id: titre.slug,
     nom: titre.nom,
-    type: titre.type!.type.nom,
-    domaine: titre.domaine!.nom,
+    type: TitresTypesTypes[getTitreTypeType(titre.typeId)].nom,
+    domaine: Domaines[getDomaineId(titre.typeId)].nom,
     date_debut: titre.dateDebut,
     date_fin: titre.dateFin,
     date_demande: titre.dateDemande,

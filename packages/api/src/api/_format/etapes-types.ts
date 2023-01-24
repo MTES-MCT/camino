@@ -15,9 +15,7 @@ import { titreSectionsFormat } from './titres-sections.js'
 
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes.js'
 import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
-import { getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
-import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes.js'
-import { DomaineId } from 'camino-common/src/static/domaines.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
@@ -74,8 +72,7 @@ const documentsTypesFormat = (
   return result
 }
 export interface DocumentTypeData {
-  domaineId: DomaineId
-  titreTypeTypeId: TitreTypeTypeId
+  titreTypeId: TitreTypeId
   demarcheTypeId: DemarcheTypeId
   etapeTypeId: EtapeTypeId
 }
@@ -94,27 +91,23 @@ const etapeTypeFormat = (
     )
 
     if (documentTypeData === null) {
-      const domaineId = etape?.demarche?.titre?.domaineId
       const typeId = etape?.demarche?.titre?.typeId
       if (!typeId) {
         throw new Error(
           `le type du titre de l'étape ${etape.id} n'est pas chargé`
         )
       }
-      const titreTypeTypeId = getTitreTypeType(typeId)
       const demarcheTypeId = etape?.demarche?.typeId
       const etapeTypeId = etape?.typeId
 
       etapeType.documentsTypes = getDocuments(
-        titreTypeTypeId,
-        domaineId,
+        typeId,
         demarcheTypeId,
         etapeTypeId
       )
     } else {
       etapeType.documentsTypes = getDocuments(
-        documentTypeData.titreTypeTypeId,
-        documentTypeData.domaineId,
+        documentTypeData.titreTypeId,
         documentTypeData.demarcheTypeId,
         documentTypeData.etapeTypeId
       )

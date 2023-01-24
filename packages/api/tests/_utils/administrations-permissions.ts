@@ -23,11 +23,7 @@ import {
   idGenerate,
   newDemarcheId
 } from '../../src/database/models/_format/id-create.js'
-import {
-  getDomaineId,
-  getTitreTypeType,
-  TitreTypeId
-} from 'camino-common/src/static/titresTypes.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes.js'
 import { documentCreate } from '../../src/database/queries/documents.js'
 import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes.js'
@@ -113,12 +109,10 @@ export const creationCheck = async (
     a => a.id === administrationId
   )!
 
-  const domaineId = getDomaineId(titreTypeId)
   if (cible === 'titres') {
     const titre = {
       nom: `${titreTypeId}-${cible}-admin-${administrationId}`,
-      typeId: titreTypeId,
-      domaineId
+      typeId: titreTypeId
     }
 
     const titreCreerQuery = queryImport('titre-creer')
@@ -221,10 +215,8 @@ export const creationCheck = async (
     const titreDemarcheId =
       demarcheCreated.body.data.demarcheCreer.demarches[0].id
 
-    const titreTypeType = getTitreTypeType(titreTypeId)
     const documentTypesIds = getDocuments(
-      titreTypeType,
-      domaineId,
+      titreTypeId,
       demarcheType.id,
       etapeTypeId
     )
@@ -392,8 +384,7 @@ const titreCreerSuper = async (administrationId: string, titreTypeId: string) =>
     {
       titre: {
         nom: `titre-${titreTypeId!}-cree-${administrationId!}`,
-        typeId: titreTypeId!,
-        domaineId: titreTypeId!.slice(-1)
+        typeId: titreTypeId!
       }
     },
     'super'
@@ -428,7 +419,6 @@ const titreBuild = (
     nom: 'nom titre',
     typeId: titreTypeId,
     titreStatutId: 'val',
-    domaineId: getDomaineId(titreTypeId),
     propsTitreEtapesIds: { points: `${titreId}-demarche-id-etape-id` },
     demarches: [
       {

@@ -95,8 +95,7 @@ describe('documentSupprimer', () => {
       {
         nom: '',
         typeId: 'arm',
-        propsTitreEtapesIds: {},
-        domaineId: 'm'
+        propsTitreEtapesIds: {}
       },
       {}
     )
@@ -150,8 +149,7 @@ describe('documentSupprimer', () => {
       {
         nom: '',
         typeId: 'arm',
-        propsTitreEtapesIds: {},
-        domaineId: 'm'
+        propsTitreEtapesIds: {}
       },
       {}
     )

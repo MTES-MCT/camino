@@ -39,7 +39,6 @@ const formatCheck = (formats: string[], format: string) => {
 
 const titreFields = {
   type: { type: { id: {} } },
-  domaine: { id: {} },
   substancesEtape: { id: {} },
   titulaires: { id: {} },
   amodiataires: { id: {} },

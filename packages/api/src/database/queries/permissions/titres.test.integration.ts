@@ -53,7 +53,6 @@ describe('titresQueryModify', () => {
 
         const mockTitre: Omit<ITitre, 'id'> = {
           nom: 'titre1',
-          domaineId: 'm',
           typeId: 'arm',
           entreprisesLecture,
           propsTitreEtapesIds: { titulaires: etapeId },
@@ -105,7 +104,6 @@ describe('titresQueryModify', () => {
     }) => {
       const mockTitre = {
         nom: 'titre1',
-        domaineId: 'm',
         typeId: titreTypeId,
         titreStatutId,
         demarches: [
@@ -223,7 +221,6 @@ describe('titresQueryModify', () => {
         const mockTitre: ITitre = {
           id,
           nom: 'titre1',
-          domaineId: 'm',
           typeId,
           titreStatutId: statutId,
           publicLecture,
@@ -280,7 +277,6 @@ describe('titresQueryModify', () => {
           id: titreId,
           nom: idGenerate(),
           titreStatutId: 'val',
-          domaineId: 'm',
           typeId: 'arm'
         })
 
@@ -308,7 +304,6 @@ describe('titresQueryModify', () => {
           id: titreId,
           nom: idGenerate(),
           titreStatutId: 'val',
-          domaineId: 'm',
           typeId: 'arm'
         })
 
@@ -336,7 +331,6 @@ describe('titresQueryModify', () => {
         await Titres.query().insert({
           nom: idGenerate(),
           titreStatutId: 'val',
-          domaineId: 'm',
           typeId: 'arm'
         })
 
@@ -362,7 +356,6 @@ describe('titresQueryModify', () => {
       await Titres.query().insert({
         nom: idGenerate(),
         titreStatutId: 'val',
-        domaineId: 'm',
         typeId: 'arm'
       })
 
@@ -392,7 +385,6 @@ describe('titresQueryModify', () => {
         await Titres.query().insert({
           nom: idGenerate(),
           titreStatutId: 'val',
-          domaineId: 'm',
           typeId: 'arm'
         })
         const q = Titres.query()
@@ -419,7 +411,6 @@ describe('titresQueryModify', () => {
           id: archivedTitreId,
           nom: archivedTitreId,
           titreStatutId: 'val',
-          domaineId: 'm',
           typeId: 'arm',
           archive: true
         },
@@ -427,7 +418,6 @@ describe('titresQueryModify', () => {
           id: titreId,
           nom: titreId,
           titreStatutId: 'val',
-          domaineId: 'm',
           typeId: 'arm',
           archive: false
         }

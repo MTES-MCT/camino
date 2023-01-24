@@ -35,7 +35,6 @@ afterAll(async () => {
 const titrePublicLectureFalse: ITitre = {
   id: 'titre-id',
   nom: 'mon titre',
-  domaineId: 'm',
   typeId: 'arm',
   publicLecture: false,
   propsTitreEtapesIds: {}
@@ -44,7 +43,6 @@ const titrePublicLectureFalse: ITitre = {
 const titreDemarchesPubliques: ITitre = {
   id: 'titre-id',
   nom: 'mon titre',
-  domaineId: 'm',
   typeId: 'arm',
   publicLecture: true,
   propsTitreEtapesIds: {},
@@ -66,7 +64,6 @@ const titreDemarchesPubliques: ITitre = {
 const titreEtapesPubliques: ITitre = {
   id: 'titre-id',
   nom: 'mon titre',
-  domaineId: 'm',
   typeId: 'arm',
   publicLecture: true,
   propsTitreEtapesIds: { points: 'titre-id-demarche-id-dpu' },
@@ -159,7 +156,6 @@ const titreEtapesPubliques: ITitre = {
 const titreWithActiviteGrp: ITitre = {
   id: 'titre-id',
   nom: 'mon titre',
-  domaineId: 'm',
   typeId: 'axm',
   publicLecture: true,
   propsTitreEtapesIds: { points: 'titre-id-demarche-id-dpu' },
@@ -218,7 +214,6 @@ const titreWithActiviteGrp: ITitre = {
 const titreActivites: ITitre = {
   id: 'titre-id',
   nom: 'mon titre',
-  domaineId: 'm',
   typeId: 'arm',
   publicLecture: true,
   propsTitreEtapesIds: {},
@@ -289,7 +284,6 @@ describe('titre', () => {
     const titrePublicLecture: ITitre = {
       id: 'titre-id',
       nom: 'mon titre',
-      domaineId: 'm',
       typeId: 'arm',
       publicLecture: true,
       propsTitreEtapesIds: {}
@@ -454,7 +448,7 @@ describe('titreCreer', () => {
 
   test('ne peut pas créer un titre (utilisateur anonyme)', async () => {
     const res = await graphQLCall(titreCreerQuery, {
-      titre: { nom: 'titre', typeId: 'arm', domaineId: 'm' }
+      titre: { nom: 'titre', typeId: 'arm' }
     })
 
     expect(res.body.errors[0].message).toBe('permissions insuffisantes')
@@ -463,7 +457,7 @@ describe('titreCreer', () => {
   test("ne peut pas créer un titre prm (un utilisateur 'entreprise')", async () => {
     const res = await graphQLCall(
       titreCreerQuery,
-      { titre: { nom: 'titre', typeId: 'prm', domaineId: 'm' } },
+      { titre: { nom: 'titre', typeId: 'prm' } },
       'entreprise'
     )
 
@@ -473,7 +467,7 @@ describe('titreCreer', () => {
   test("crée un titre (un utilisateur 'super')", async () => {
     const res = await graphQLCall(
       titreCreerQuery,
-      { titre: { nom: 'titre', typeId: 'arm', domaineId: 'm' } },
+      { titre: { nom: 'titre', typeId: 'arm' } },
       'super'
     )
 
@@ -486,7 +480,7 @@ describe('titreCreer', () => {
   test("ne peut pas créer un titre AXM (un utilisateur 'admin' PTMG)", async () => {
     const res = await graphQLCall(
       titreCreerQuery,
-      { titre: { nom: 'titre', typeId: 'axm', domaineId: 'm' } },
+      { titre: { nom: 'titre', typeId: 'axm' } },
       'admin',
       ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
@@ -497,7 +491,7 @@ describe('titreCreer', () => {
   test("ne peut pas créer un titre ARM (un utilisateur 'admin' Déal Guyane)", async () => {
     const res = await graphQLCall(
       titreCreerQuery,
-      { titre: { nom: 'titre', typeId: 'arm', domaineId: 'm' } },
+      { titre: { nom: 'titre', typeId: 'arm' } },
       'admin',
       ADMINISTRATION_IDS['DGTM - GUYANE']
     )
@@ -508,7 +502,7 @@ describe('titreCreer', () => {
   test("crée un titre ARM (un utilisateur 'admin' PTMG)", async () => {
     const res = await graphQLCall(
       titreCreerQuery,
-      { titre: { nom: 'titre', typeId: 'arm', domaineId: 'm' } },
+      { titre: { nom: 'titre', typeId: 'arm' } },
       'admin',
       ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
     )
@@ -529,7 +523,6 @@ describe('titreModifier', () => {
     const titre = await titreCreate(
       {
         nom: 'mon titre',
-        domaineId: 'm',
         typeId: 'arm',
         propsTitreEtapesIds: {}
       },
@@ -602,7 +595,6 @@ describe('titreModifier', () => {
     const titre = await titreCreate(
       {
         nom: 'mon titre échu',
-        domaineId: 'm',
         typeId: 'arm',
         titreStatutId: 'ech',
         propsTitreEtapesIds: {}
@@ -648,7 +640,6 @@ describe('titreSupprimer', () => {
     const titre = await titreCreate(
       {
         nom: 'mon titre',
-        domaineId: 'm',
         typeId: 'arm',
         propsTitreEtapesIds: {}
       },

@@ -40,6 +40,11 @@ import {
 } from 'camino-common/src/static/referencesTypes'
 import { TitreReference } from 'camino-common/src/titres-references'
 import {
+  getDomaineId,
+  getTitreTypeType,
+  TitreTypeId
+} from 'camino-common/src/static/titresTypes'
+import {
   getDepartementsBySecteurs,
   SecteursMaritimes
 } from 'camino-common/src/static/facades'
@@ -55,16 +60,9 @@ export interface TitreEntreprise {
   communes?: { departementId: DepartementId }[]
   secteursMaritime?: [SecteursMaritimes]
   references?: TitreReference[]
-  domaineId: DomaineId
-  domaine: { id: DomaineId; nom: string }
   coordonnees?: { x: number; y: number }
   // id devrait être une union
-  type: {
-    id: string
-    typeId: string
-    domaineId: DomaineId
-    type: { id: TitreTypeTypeId; nom: string }
-  }
+  typeId: TitreTypeId
   titreStatutId: TitreStatutId
   substances: SubstanceLegaleId[]
   titulaires: Titulaire[]
@@ -231,11 +229,14 @@ export const domaineCell = (titre: { domaineId: DomaineId }) => ({
   value: titre.domaineId
 })
 
-export const typeCell = (titre: { typeId: TitreTypeTypeId }) => ({
-  component: markRaw(TitreTypeTypeNom),
-  props: { nom: TitresTypesTypes[titre.typeId].nom },
-  value: TitresTypesTypes[titre.typeId].nom
-})
+export const typeCell = (typeId: TitreTypeId) => {
+  const titreTypeType = TitresTypesTypes[getTitreTypeType(typeId)]
+  return {
+    component: markRaw(TitreTypeTypeNom),
+    props: { nom: titreTypeType.nom },
+    value: titreTypeType.nom
+  }
+}
 export const activitesCell = (titre: {
   activitesAbsentes: number | null
   activitesEnConstruction: number | null
@@ -267,13 +268,13 @@ export const titresLignesBuild = (
 
     const columns: { [key in string]: ComponentColumnData | TextColumnData } = {
       nom: nomCell(titre),
-      domaine: domaineCell({ domaineId: titre.domaine.id }),
+      domaine: domaineCell({ domaineId: getDomaineId(titre.typeId) }),
       coordonnees: {
         component: markRaw(CoordonneesIcone),
         props: { coordonnees: titre.coordonnees },
         value: titre.coordonnees ? '·' : ''
       },
-      type: typeCell({ typeId: titre.type.type.id }),
+      type: typeCell(titre.typeId),
       statut: statutCell(titre),
       substances: {
         component: markRaw(TagList),

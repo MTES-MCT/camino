@@ -48,7 +48,6 @@ describe('metas permissions queries', () => {
           id: titreId,
           nom: idGenerate(),
           titreStatutId: 'val',
-          domaineId: 'm',
           typeId: titreTypeId
         })
 

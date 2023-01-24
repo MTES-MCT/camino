@@ -2736,7 +2736,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > Ok 1`] = `
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Aachen</span></div>
             <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">concession</span></div>
             <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-error color-bg pill py-xs px-s\\">3</span></span></span><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">2</span></span></span></div>
@@ -2872,7 +2872,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithMultipleEntre
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Aachen</span></div>
             <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">concession</span></div>
             <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-error color-bg pill py-xs px-s\\">3</span></span></span><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">2</span></span></span></div>
@@ -3000,7 +3000,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithoutActivities
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Aachen</span></div>
             <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">concession</span></div>
             <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
             <div class=\\"td min-width-6\\">
               <ul class=\\"list-inline mb--xs\\">
@@ -3093,8 +3093,8 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithoutFiscalite 
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Amadis 5</span></div>
-            <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
-            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></div>
+            <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-w color-bg pill py-xs px-s\\">w</span></span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de prospections préalables</span></div>
             <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">valide</span></span></div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">

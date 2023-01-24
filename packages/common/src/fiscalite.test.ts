@@ -1,4 +1,4 @@
-import { fiscaliteVisible, fraisGestion } from './fiscalite.js'
+import { fiscaliteVisibleByDomaines, fraisGestion } from './fiscalite.js'
 import { test, expect } from 'vitest'
 import { User } from './roles.js'
 import { newEntrepriseId } from './entreprise.js'
@@ -34,19 +34,12 @@ test.each<{ user: User; visible: boolean }>([
   { user: { role: 'lecteur', administrationId: 'aut-97300-01' }, visible: true },
   { user: { role: 'super', administrationId: undefined }, visible: true }
 ])('fiscaliteVisible $user | $visible', ({ user, visible }) => {
-  expect(fiscaliteVisible(user, newEntrepriseId('1234'), [{ domaineId: 'm' }])).toEqual(visible)
+  expect(fiscaliteVisibleByDomaines(user, newEntrepriseId('1234'), ['m'])).toEqual(visible)
 })
 
 test('fiscaliteVisible avec les titres', () => {
-  expect(fiscaliteVisible({ role: 'super', administrationId: undefined }, newEntrepriseId('1234'), [{ domaineId: 'm' }, { domaineId: 'w' }])).toEqual(true)
-  expect(
-    fiscaliteVisible({ role: 'entreprise', administrationId: undefined, entreprises: [{ id: newEntrepriseId('1234') }] }, newEntrepriseId('1234'), [
-      { domaineId: 'g' },
-      { domaineId: 'r' },
-      { domaineId: 's' },
-      { domaineId: 'w' }
-    ])
-  ).toEqual(false)
-  expect(fiscaliteVisible({ role: 'entreprise', administrationId: undefined, entreprises: [{ id: newEntrepriseId('1234') }] }, newEntrepriseId('1234'), [])).toEqual(false)
-  expect(() => fiscaliteVisible({ role: 'super', administrationId: undefined }, newEntrepriseId('1234'), [{}])).toThrowErrorMatchingInlineSnapshot(`"le domaineId d'un titre est obligatoire"`)
+  expect(fiscaliteVisibleByDomaines({ role: 'super', administrationId: undefined }, newEntrepriseId('1234'), ['m', 'w'])).toEqual(true)
+  expect(fiscaliteVisibleByDomaines({ role: 'entreprise', administrationId: undefined, entreprises: [{ id: newEntrepriseId('1234') }] }, newEntrepriseId('1234'), ['g', 'r', 's', 'w'])).toEqual(false)
+  expect(fiscaliteVisibleByDomaines({ role: 'entreprise', administrationId: undefined, entreprises: [{ id: newEntrepriseId('1234') }] }, newEntrepriseId('1234'), [])).toEqual(false)
+  expect(() => fiscaliteVisibleByDomaines({ role: 'super', administrationId: undefined }, newEntrepriseId('1234'), [])).toEqual(false)
 })

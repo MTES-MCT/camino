@@ -97,7 +97,7 @@ export const PureDrealDashboard = defineComponent<Props>({
           [key in Columns]: ComponentColumnData | TextColumnData
         } = {
           nom: nomCell(titre),
-          type: typeCell(titre),
+          type: typeCell(titre.typeId),
           statut: statutCell(titre),
           activites: activitesCell(titre),
           references: referencesCell(titre),

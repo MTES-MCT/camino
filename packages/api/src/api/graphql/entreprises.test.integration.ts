@@ -250,7 +250,6 @@ describe('entreprise', () => {
 
     const titre = await titreCreate(
       {
-        domaineId: 'm',
         nom: '',
         typeId: 'arm',
         propsTitreEtapesIds: {}

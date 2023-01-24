@@ -8,7 +8,6 @@ type TitreDemandeIds {
 input InputTitreDemande {
   nom: String!
   entrepriseId: ID!
-  domaineId: ID!
   typeId: ID!
   references: [InputReference]
   titreFromIds: [ID]

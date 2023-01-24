@@ -30,6 +30,9 @@
     <TitreTypeSelect
       v-if="titreDemande.entrepriseId"
       v-model:element="titreDemande"
+      :domaineId="
+        titreDemande.typeId ? getDomaineId(titreDemande.typeId) : undefined
+      "
       :user="user"
     />
 
@@ -148,10 +151,9 @@ import {
   loadLinkableTitres,
   TitresLinkConfig
 } from '@/components/titre/pure-titres-link.type'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
-import { TitreTypeId } from 'camino-common/src/static/titresTypes'
-import { DomaineId } from 'camino-common/src/static/domaines'
+import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 type Entreprise = {
   id: string
@@ -160,12 +162,11 @@ type Entreprise = {
 
 const titreDemande = ref<{
   entrepriseId?: string
-  domaineId: DomaineId | undefined
   typeId: TitreTypeId | undefined | null
   nom?: string
   titreFromIds?: string[]
   references: { referenceTypeId: ReferenceTypeId | ''; nom: string }[]
-}>({ references: [], domaineId: undefined, typeId: undefined })
+}>({ references: [], typeId: undefined })
 const saveRef = ref<any>(null)
 const store = useStore()
 
@@ -256,7 +257,6 @@ const entrepriseUpdate = (event: Event) => {
   titreDemande.value = {
     entrepriseId: (event.target as HTMLSelectElement)?.value,
     references: [],
-    domaineId: undefined,
     typeId: undefined
   }
 }

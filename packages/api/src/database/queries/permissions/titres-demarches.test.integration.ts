@@ -44,7 +44,6 @@ describe('titresDemarchesQueryModify', () => {
             id: titreId,
             nom: titreId,
             titreStatutId: 'val',
-            domaineId: 'm',
             typeId: 'arm',
             archive: false
           }
@@ -98,7 +97,6 @@ describe('titresDemarchesQueryModify', () => {
             id: titreId,
             nom: titreId,
             titreStatutId: 'val',
-            domaineId: 'm',
             typeId: 'arm',
             archive: false
           }
@@ -147,7 +145,6 @@ describe('titresDemarchesQueryModify', () => {
           id: titreId,
           nom: titreId,
           titreStatutId: 'val',
-          domaineId: 'm',
           typeId: 'arm',
           archive: false
         }

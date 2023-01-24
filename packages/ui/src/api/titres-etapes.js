@@ -41,15 +41,7 @@ const titreEtapeMetas = apiGraphQLFetch(
           id
           slug
           nom
-          domaine {
-            id
-          }
-          type {
-            id
-            type {
-              id
-            }
-          }
+          typeId
         }
       }
 

@@ -1,5 +1,4 @@
-import { DomaineId } from 'camino-common/src/static/domaines'
-import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { FunctionalComponent } from 'vue'
 import { Icon } from '../_ui/icon'
 import { Icon as IconSprite } from '../_ui/iconSpriteType'
@@ -11,8 +10,7 @@ export type TabId = 'carte' | 'points'
 export interface Props {
   points?: unknown[]
   geojsonMultiPolygon: object
-  domaineId: DomaineId
-  titreTypeId: TitreTypeTypeId
+  titreTypeId: TitreTypeId
   titreId?: string
   isMain?: boolean
   tabId?: TabId
@@ -76,7 +74,6 @@ export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
           class={`${isMain ? 'width-full' : ''}`}
           geojson={props.geojsonMultiPolygon}
           points={props.points}
-          domaineId={props.domaineId}
           titreTypeId={props.titreTypeId}
           isMain={props.isMain}
         />

@@ -16,7 +16,6 @@
 
       <div class="tablet-blob-3-4">
         <Perimetre
-          :domaineId="domaineId"
           :titreTypeId="titreTypeId"
           :points="etape.points"
           :geojsonMultiPolygon="geojsonMultiPolygon"
@@ -57,7 +56,6 @@ export default {
   props: {
     etape: { type: Object, required: true },
     geojsonMultiPolygon: { type: Object, required: true },
-    domaineId: { type: String, required: true },
     titreTypeId: { type: String, required: true },
     incertitude: { type: Boolean, default: false }
   },

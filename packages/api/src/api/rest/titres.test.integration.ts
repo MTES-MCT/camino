@@ -22,7 +22,6 @@ beforeAll(async () => {
   await titreCreate(
     {
       nom: 'mon titre simple',
-      domaineId: 'm',
       typeId: 'arm',
       titreStatutId: 'val',
       propsTitreEtapesIds: {}
@@ -119,7 +118,6 @@ async function createTitreWithEtapes(
   const titre = await titreCreate(
     {
       nom: nomTitre,
-      domaineId: 'm',
       typeId: 'arm',
       titreStatutId: 'val',
       propsTitreEtapesIds: {},
@@ -202,7 +200,6 @@ describe('titresLiaisons', () => {
     const axm = await titreCreate(
       {
         nom: 'mon axm simple',
-        domaineId: 'm',
         typeId: 'axm',
         titreStatutId: 'val',
         propsTitreEtapesIds: {}

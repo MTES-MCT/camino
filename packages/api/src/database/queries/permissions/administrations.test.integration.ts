@@ -41,7 +41,6 @@ describe('administrationsTitresQuery', () => {
       const mockTitre = {
         id: 'monTitreId',
         nom: 'monTitreNom',
-        domaineId: 'm',
         titreStatutId: 'ech',
         typeId: 'arm'
       } as ITitre

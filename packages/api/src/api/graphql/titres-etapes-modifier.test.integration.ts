@@ -53,7 +53,6 @@ async function etapeCreate() {
   const titre = await titreCreate(
     {
       nom: 'mon titre',
-      domaineId: 'm',
       typeId: 'arm',
       propsTitreEtapesIds: {}
     },

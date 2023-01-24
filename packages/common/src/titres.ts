@@ -1,15 +1,14 @@
-import { DomaineId } from './static/domaines.js'
-import { TitreTypeTypeId } from './static/titresTypesTypes.js'
 import { TitreStatutId } from './static/titresStatuts.js'
 import { TitreReference } from './titres-references.js'
 import { EtapeTypeId } from './static/etapesTypes.js'
 import { CaminoDate } from './date.js'
+import { TitreTypeId } from './static/titresTypes'
 
 export interface CommonTitre {
   id: string
   slug: string
   nom: string
-  domaineId: DomaineId
+  typeId: TitreTypeId
   titreStatutId: TitreStatutId
   references: TitreReference[]
   titulaires: { nom: string }[]
@@ -20,7 +19,6 @@ export interface CommonTitrePTMG extends CommonTitre {
 }
 
 export interface CommonTitreDREAL extends CommonTitre {
-  typeId: TitreTypeTypeId
   activitesAbsentes: number
   activitesEnConstruction: number
   derniereEtape: { etapeTypeId: EtapeTypeId; date: CaminoDate } | null

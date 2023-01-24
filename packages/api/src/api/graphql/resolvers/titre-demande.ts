@@ -33,7 +33,6 @@ import { checkTitreLinks } from '../../../business/validations/titre-links-valid
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes.js'
-import { getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
 export const titreDemandeCreer = async (
@@ -58,7 +57,6 @@ export const titreDemandeCreer = async (
       {
         nom: titreDemande.nom,
         typeId: titreDemande.typeId,
-        domaineId: titreDemande.domaineId,
         references: titreDemande.references,
         propsTitreEtapesIds: {}
       },
@@ -170,10 +168,8 @@ export const titreDemandeCreer = async (
             ]
           }
 
-          const titreTypeType = getTitreTypeType(titreDemande.typeId)
           const documents = getDocuments(
-            titreTypeType,
-            titreDemande.domaineId,
+            titreDemande.typeId,
             titreDemarche.typeId,
             etapeTypeId
           )

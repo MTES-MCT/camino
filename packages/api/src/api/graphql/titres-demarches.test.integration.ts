@@ -37,7 +37,6 @@ describe('demarcheCreer', () => {
     const titre = await titreCreate(
       {
         nom: 'mon titre',
-        domaineId: 'm',
         typeId: 'arm',
         propsTitreEtapesIds: {},
         publicLecture: true
@@ -56,7 +55,6 @@ describe('demarcheCreer', () => {
     const titre = await titreCreate(
       {
         nom: 'mon titre',
-        domaineId: 'm',
         typeId: 'arm',
         propsTitreEtapesIds: {},
         publicLecture: true
@@ -77,7 +75,7 @@ describe('demarcheCreer', () => {
   test('peut créer une démarche (utilisateur super)', async () => {
     const resTitreCreer = await graphQLCall(
       queryImport('titre-creer'),
-      { titre: { nom: 'titre', typeId: 'arm', domaineId: 'm' } },
+      { titre: { nom: 'titre', typeId: 'arm' } },
       'super'
     )
 
@@ -107,7 +105,7 @@ describe('demarcheCreer', () => {
   test('peut créer une démarche (utilisateur admin)', async () => {
     const resTitreCreer = await graphQLCall(
       queryImport('titre-creer'),
-      { titre: { nom: 'titre', typeId: 'arm', domaineId: 'm' } },
+      { titre: { nom: 'titre', typeId: 'arm' } },
       'super'
     )
 
@@ -128,7 +126,6 @@ describe('demarcheCreer', () => {
     const titre = await titreCreate(
       {
         nom: 'mon titre échu',
-        domaineId: 'm',
         typeId: 'arm',
         titreStatutId: 'ech',
         propsTitreEtapesIds: {}
@@ -315,7 +312,6 @@ const demarcheCreate = async () => {
   const titre = await titreCreate(
     {
       nom: 'mon titre',
-      domaineId: 'm',
       typeId: 'arm',
       propsTitreEtapesIds: {}
     },

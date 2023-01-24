@@ -254,11 +254,7 @@ import {
 import { EtapeEntreprise, EtapeFondamentale } from 'camino-common/src/etape'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import {
-  TitreTypeId,
-  toTitreTypeId
-} from 'camino-common/src/static/titresTypes'
-import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
+import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes'
 import { watch, computed, ref } from 'vue'
 import { Entreprise, EntrepriseId } from 'camino-common/src/entreprise'
@@ -266,9 +262,8 @@ import { User } from 'camino-common/src/roles'
 
 const props = defineProps<{
   etape: EtapeFondamentale
-  domaineId: DomaineId
   demarcheTypeId: DemarcheTypeId
-  titreTypeTypeId: TitreTypeTypeId
+  titreTypeId: TitreTypeId
   user: User
   entreprises: Entreprise[]
 }>()
@@ -289,9 +284,7 @@ const entreprisesDisabled = computed<EntrepriseId[]>(() =>
   [...props.etape.amodiataires, ...props.etape.titulaires].map(({ id }) => id)
 )
 
-const titreTypeId = computed<TitreTypeId>(() =>
-  toTitreTypeId(props.titreTypeTypeId, props.domaineId)
-)
+const domaineId = computed<DomaineId>(() => getDomaineId(props.titreTypeId))
 
 const titulairesLength = computed<number>(() => {
   return props.etape.titulaires.filter(({ id }) => id).length
@@ -305,7 +298,7 @@ const dureeOptionalCheck = computed<boolean>(() => {
   return titreEtapesDureeOptionalCheck(
     props.etape.type.id,
     props.demarcheTypeId,
-    toTitreTypeId(props.titreTypeTypeId, props.domaineId)
+    props.titreTypeId
   )
 })
 

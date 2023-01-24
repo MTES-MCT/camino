@@ -6,6 +6,11 @@ import List from '../_ui/list.vue'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
+import {
+  getDomaineId,
+  getTitreTypeType
+} from 'camino-common/src/static/titresTypes'
+import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 
 const demarchesColonnes = [
   { id: 'titreNom', name: 'Titre' },
@@ -24,17 +29,20 @@ const demarchesColonnes = [
 const demarchesLignesBuild = demarches =>
   demarches.map(demarche => {
     const titreStatut = TitresStatuts[demarche.titre.titreStatutId]
+    const domaineId = getDomaineId(demarche.titre.typeId)
+    const titreTypeType =
+      TitresTypesTypes[getTitreTypeType(demarche.titre.typeId)]
     const columns = {
       titreNom: { value: demarche.titre.nom },
       titreDomaine: {
         component: markRaw(CaminoDomaine),
-        props: { domaineId: demarche.titre.domaine.id },
-        value: demarche.titre.domaine.id
+        props: { domaineId },
+        value: domaineId
       },
       titreType: {
         component: markRaw(Nom),
-        props: { nom: demarche.titre.type.type.nom },
-        value: demarche.titre.type.type.nom
+        props: { nom: titreTypeType.nom },
+        value: titreTypeType.nom
       },
       titreStatut: {
         component: markRaw(Statut),

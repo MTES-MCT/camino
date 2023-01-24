@@ -168,14 +168,7 @@ const titresRechercherByNom = apiGraphQLFetch(
         elements {
           id
           nom
-          domaine {
-            id
-          }
-          type {
-            type {
-              id
-            }
-          }
+          typeId
         }
       }
     }
@@ -190,14 +183,7 @@ export const titresRechercherByReferences = apiGraphQLFetch(
         elements {
           id
           nom
-          domaine {
-            id
-          }
-          type {
-            type {
-              id
-            }
-          }
+          typeId
         }
       }
     }
