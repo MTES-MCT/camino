@@ -2,9 +2,7 @@ import { getDocuments } from './titresTypes_demarchesTypes_etapesTypes.js'
 import { test, expect } from 'vitest'
 
 test('getDocuments erreurs', () => {
-  expect(() => getDocuments()).toThrowErrorMatchingInlineSnapshot(
-    `"il manque des éléments pour trouver les documents domaineId: 'undefined', titreTypeType: undefined, demarcheId: undefined, etapeTypeId: undefined"`
-  )
+  expect(() => getDocuments()).toThrowErrorMatchingInlineSnapshot('"il manque des éléments pour trouver les documents titreTypeId: \'undefined\', demarcheId: undefined, etapeTypeId: undefined"')
 })
 
 test('getDocuments pas de surcharge mais pas de documents', () => {

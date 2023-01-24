@@ -114,8 +114,7 @@ export const DefaultNoSnapshot: Story = () => (
   <>
     <MapPattern />
     <Perimetre
-      domaineId="m"
-      titreTypeId="ax"
+      titreTypeId="axm"
       points={points}
       geojsonMultiPolygon={geojsonMultiPolygon}
       titreId="id"
@@ -128,8 +127,7 @@ export const NoMap: Story = () => (
   <>
     <MapPattern />
     <Perimetre
-      domaineId="m"
-      titreTypeId="ax"
+      titreTypeId="axm"
       geojsonMultiPolygon={geojsonMultiPolygon}
       titreId="id"
       tabUpdate={tabUpdate}

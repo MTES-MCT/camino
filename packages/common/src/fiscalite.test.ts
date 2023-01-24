@@ -41,5 +41,5 @@ test('fiscaliteVisible avec les titres', () => {
   expect(fiscaliteVisibleByDomaines({ role: 'super', administrationId: undefined }, newEntrepriseId('1234'), ['m', 'w'])).toEqual(true)
   expect(fiscaliteVisibleByDomaines({ role: 'entreprise', administrationId: undefined, entreprises: [{ id: newEntrepriseId('1234') }] }, newEntrepriseId('1234'), ['g', 'r', 's', 'w'])).toEqual(false)
   expect(fiscaliteVisibleByDomaines({ role: 'entreprise', administrationId: undefined, entreprises: [{ id: newEntrepriseId('1234') }] }, newEntrepriseId('1234'), [])).toEqual(false)
-  expect(() => fiscaliteVisibleByDomaines({ role: 'super', administrationId: undefined }, newEntrepriseId('1234'), [])).toEqual(false)
+  expect(fiscaliteVisibleByDomaines({ role: 'super', administrationId: undefined }, newEntrepriseId('1234'), [])).toEqual(false)
 })
