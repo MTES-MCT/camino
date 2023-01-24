@@ -35,6 +35,9 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTi
   'dre-nouvelle-aquitaine-01': {
     pxg: { gestionnaire: true, associee: false }
   },
+  'dre-bretagne-01': {
+    pxg: { gestionnaire: true, associee: false }
+  },
   'min-dajb-01': {
     apc: { gestionnaire: false, associee: true },
     aph: { gestionnaire: false, associee: true },

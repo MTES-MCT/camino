@@ -290,7 +290,7 @@ const titreEtapeUpdationBusinessValidate = (
   titre: ITitre
 ) => {
   const errors = []
-
+  // FIXME à ne pas faire si on est dans une machine, car c'est elle qui vérifie si le type d'étape est dans la machine
   // 1. le type d'étape correspond à la démarche et au type de titre
   const titreEtapeTypeAndStatusErrors = titreEtapeTypeAndStatusValidate(
     titreEtape.typeId,
