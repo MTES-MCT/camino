@@ -6,8 +6,8 @@ import { EtapeStatutId, ETAPES_STATUTS } from '../static/etapesStatuts.js'
 import { TITRES_TYPES_IDS_DEMAT } from './titres.js'
 import { AdministrationId } from '../static/administrations.js'
 import { isGestionnaire } from '../static/administrationsTitresTypes.js'
-import { restrictions as statutRestrictions } from '../static/administrationsTitresTypesTitresStatuts.js'
-import { restrictions as typeRestrictions } from '../static/administrationsTitresTypesEtapesTypes.js'
+import { canAdministrationModifyTitreStatutId } from '../static/administrationsTitresTypesTitresStatuts.js'
+import { canAdministrationCreateEtapeTypeId } from '../static/administrationsTitresTypesEtapesTypes.js'
 
 import { TitreStatutId } from '../static/titresStatuts.js'
 
@@ -86,17 +86,7 @@ export const canCreateEtape = (
     return true
   } else if (isAdministrationAdmin(user)) {
     if (isGestionnaire(user.administrationId) || titresAdministrationsLocales.includes(user.administrationId)) {
-      const { etapesModificationInterdit } = statutRestrictions(user.administrationId, titre.typeId, titre.statutId)
-      if (etapesModificationInterdit) {
-        return false
-      }
-
-      const { creationInterdit } = typeRestrictions(user.administrationId, titre.typeId, etapeTypeId)
-      if (creationInterdit) {
-        return false
-      }
-
-      return true
+      return canAdministrationModifyTitreStatutId(user.administrationId, titre.typeId, titre.statutId) && canAdministrationCreateEtapeTypeId(user.administrationId, titre.typeId, etapeTypeId)
     }
   } else if (isEntreprise(user) || isBureauDEtudes(user)) {
     return (
