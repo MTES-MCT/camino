@@ -1,7 +1,15 @@
 import { ETAPES_TYPES, EtapeTypeId } from '../static/etapesTypes.js'
 import { TitreTypeId } from '../static/titresTypes.js'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeWithPhase } from '../static/demarchesTypes.js'
-import { isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from '../roles.js'
+import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from '../roles.js'
+import { EtapeStatutId, ETAPES_STATUTS } from '../static/etapesStatuts.js'
+import { TITRES_TYPES_IDS_DEMAT } from './titres.js'
+import { AdministrationId } from '../static/administrations.js'
+import { isGestionnaire } from '../static/administrationsTitresTypes.js'
+import { restrictions as statutRestrictions } from '../static/administrationsTitresTypesTitresStatuts.js'
+import { restrictions as typeRestrictions } from '../static/administrationsTitresTypesEtapesTypes.js'
+
+import { TitreStatutId } from '../static/titresStatuts.js'
 
 export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
@@ -63,4 +71,43 @@ export const canEditDuree = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheT
 
   // la durée pour les ARM est fixée à 4 mois par l’API
   return titreTypeId !== 'arm'
+}
+
+export const canCreateEtape = (
+  user: User,
+  etapeTypeId: EtapeTypeId,
+  etapeStatutId: EtapeStatutId | null,
+  titreTitulaires: { id: string }[],
+  titresAdministrationsLocales: AdministrationId[],
+  demarcheTypeId: DemarcheTypeId,
+  titre: { typeId: TitreTypeId; statutId: TitreStatutId }
+): boolean => {
+  if (isSuper(user)) {
+    return true
+  } else if (isAdministrationAdmin(user)) {
+    if (isGestionnaire(user.administrationId) || titresAdministrationsLocales.includes(user.administrationId)) {
+      const { etapesModificationInterdit } = statutRestrictions(user.administrationId, titre.typeId, titre.statutId)
+      if (etapesModificationInterdit) {
+        return false
+      }
+
+      const { creationInterdit } = typeRestrictions(user.administrationId, titre.typeId, etapeTypeId)
+      if (creationInterdit) {
+        return false
+      }
+
+      return true
+    }
+  } else if (isEntreprise(user) || isBureauDEtudes(user)) {
+    return (
+      (user.entreprises?.length ?? 0) > 0 &&
+      demarcheTypeId === DEMARCHES_TYPES_IDS.Octroi &&
+      etapeTypeId === ETAPES_TYPES.demande &&
+      etapeStatutId === ETAPES_STATUTS.EN_CONSTRUCTION &&
+      TITRES_TYPES_IDS_DEMAT.includes(titre.typeId) &&
+      titreTitulaires.some(({ id }) => user.entreprises?.some(entreprise => id === entreprise.id))
+    )
+  }
+
+  return false
 }

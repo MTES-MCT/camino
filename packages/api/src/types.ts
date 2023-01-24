@@ -382,7 +382,6 @@ interface IEtapeType {
   sectionsSpecifiques?: ISection[] | null
   titreTypeId?: string | null
   demarcheTypeId?: string | null
-  etapesCreation?: boolean | null
   unique?: boolean | null
   documentsTypes?: DocumentType[]
   justificatifsTypes?: DocumentType[]

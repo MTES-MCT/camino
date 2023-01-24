@@ -20,7 +20,6 @@ const titreEtapeEtapesTypes = apiGraphQLFetch(
         nom
         description
         fondamentale
-        etapesCreation
       }
     }
   `

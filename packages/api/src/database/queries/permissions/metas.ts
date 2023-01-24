@@ -167,39 +167,6 @@ const etapesTypesQueryModify = (
       b.orWhere('td.publicLecture', true)
     })
   }
-
-  // propriété 'etapesCreation' en fonction du profil de l'utilisateur
-  if (isSuper(user)) {
-    q.select(raw('true').as('etapesCreation'))
-  } else if (isAdministration(user)) {
-    if (titreDemarcheId) {
-      const etapesCreationQuery = administrationsEtapesTypesPropsQuery(
-        user.administrationId,
-        titreEtapeId ? 'modification' : 'creation'
-      )
-        .where('demarchesModification.id', titreDemarcheId)
-        .whereRaw('?? = ??', ['t_d_e.etapeTypeId', 'etapesTypes.id'])
-
-      q.select(etapesCreationQuery.as('etapesCreation'))
-    } else {
-      q.select(raw('false').as('etapesCreation'))
-    }
-  } else if (isEntreprise(user) || isBureauDEtudes(user)) {
-    if (titreEtapeId && user?.entreprises?.length) {
-      const etapesCreationQuery = entreprisesEtapesTypesPropsQuery(
-        user.entreprises.map(({ id }) => id)
-      )
-        .andWhere('e_te.id', titreEtapeId)
-        .andWhereRaw('?? = ??', ['e_te.typeId', 'etapesTypes.id'])
-
-      q.select(etapesCreationQuery.as('etapesCreation'))
-    } else {
-      q.select(raw('false').as('etapesCreation'))
-    }
-  } else {
-    q.select(raw('false').as('etapesCreation'))
-  }
-
   // fileCreate('dev/tmp/etapes-types.sql', format(q.toKnexQuery().toString()))
 }
 

@@ -164,8 +164,6 @@ type EtapeType {
   publicLecture: Boolean
   entreprisesLecture: Boolean
 
-  etapesCreation: Boolean
-
   documentsTypes: [DocumentType]
 
   justificatifsTypes: [DocumentType]

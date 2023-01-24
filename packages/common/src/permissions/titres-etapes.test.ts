@@ -1,10 +1,13 @@
 import { TitreTypeId } from '../static/titresTypes.js'
 import { EtapeTypeId } from '../static/etapesTypes.js'
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
-import { canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck } from './titres-etapes.js'
+import { canCreateEtape, canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck } from './titres-etapes.js'
 import { User } from '../roles.js'
-import { ADMINISTRATION_IDS } from '../static/administrations.js'
+import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations.js'
 import { test, expect } from 'vitest'
+import { TitreStatutId } from '../static/titresStatuts.js'
+import { newEntrepriseId } from '../entreprise.js'
+import { EtapeStatutId } from '../static/etapesStatuts.js'
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'arm', optional: false },
@@ -65,3 +68,110 @@ test.each<{ titreTypeId: TitreTypeId; user: User; canEdit: boolean }>([
 ])('canEditTitulaires $titreTypeId | $user | $canEdit', ({ titreTypeId, user, canEdit }) => {
   expect(canEditTitulaires(titreTypeId, user)).toEqual(canEdit)
 })
+
+test.each<{
+  user: User
+  etapeTypeId: EtapeTypeId
+  etapeStatutId: EtapeStatutId | null
+  titreTitulaires: { id: string }[]
+  titresAdministrationsLocales: AdministrationId[]
+  demarcheTypeId: DemarcheTypeId
+  titre: { typeId: TitreTypeId; statutId: TitreStatutId }
+  canCreate: boolean
+}>([
+  {
+    user: { role: 'super', administrationId: undefined },
+    etapeTypeId: 'aac',
+    etapeStatutId: null,
+    titreTitulaires: [],
+    titresAdministrationsLocales: [],
+    demarcheTypeId: 'amo',
+    titre: { typeId: 'apc', statutId: 'dmc' },
+    canCreate: true
+  },
+  {
+    user: { role: 'defaut', administrationId: undefined },
+    etapeTypeId: 'aac',
+    etapeStatutId: null,
+    titreTitulaires: [],
+    titresAdministrationsLocales: [],
+    demarcheTypeId: 'amo',
+    titre: { typeId: 'apc', statutId: 'dmc' },
+    canCreate: false
+  },
+  {
+    user: { role: 'editeur', administrationId: 'ope-brgm-01' },
+    etapeTypeId: 'aac',
+    etapeStatutId: null,
+    titreTitulaires: [],
+    titresAdministrationsLocales: [],
+    demarcheTypeId: 'amo',
+    titre: { typeId: 'apc', statutId: 'dmc' },
+    canCreate: false
+  },
+  {
+    user: { role: 'lecteur', administrationId: 'ope-brgm-01' },
+    etapeTypeId: 'aac',
+    etapeStatutId: null,
+    titreTitulaires: [],
+    titresAdministrationsLocales: [],
+    demarcheTypeId: 'amo',
+    titre: { typeId: 'apc', statutId: 'dmc' },
+    canCreate: false
+  },
+  {
+    user: { role: 'entreprise', administrationId: undefined, entreprises: [{ id: newEntrepriseId('1') }] },
+    etapeTypeId: 'aac',
+    etapeStatutId: null,
+    titreTitulaires: [{ id: newEntrepriseId('1') }],
+    titresAdministrationsLocales: [],
+    demarcheTypeId: 'amo',
+    titre: { typeId: 'apc', statutId: 'dmc' },
+    canCreate: false
+  },
+  {
+    user: { role: 'entreprise', administrationId: undefined, entreprises: [{ id: newEntrepriseId('1') }] },
+    etapeTypeId: 'mfr',
+    etapeStatutId: 'aco',
+    titreTitulaires: [{ id: newEntrepriseId('1') }],
+    titresAdministrationsLocales: [],
+    demarcheTypeId: 'oct',
+    titre: { typeId: 'arm', statutId: 'dmc' },
+    canCreate: true
+  },
+  {
+    user: { role: 'admin', administrationId: 'ope-brgm-01' },
+    etapeTypeId: 'mfr',
+    etapeStatutId: 'aco',
+    titreTitulaires: [],
+    titresAdministrationsLocales: ['ope-brgm-01'],
+    demarcheTypeId: 'oct',
+    titre: { typeId: 'arm', statutId: 'dmc' },
+    canCreate: true
+  },
+  {
+    user: { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] },
+    etapeTypeId: 'mfr',
+    etapeStatutId: null,
+    titreTitulaires: [],
+    titresAdministrationsLocales: ['ope-brgm-01'],
+    demarcheTypeId: 'oct',
+    titre: { typeId: 'arm', statutId: 'dmc' },
+    canCreate: false
+  },
+  {
+    user: { role: 'admin', administrationId: ADMINISTRATION_IDS['GENDARMERIE NATIONALE - GUYANE'] },
+    etapeTypeId: 'aca',
+    etapeStatutId: null,
+    titreTitulaires: [],
+    titresAdministrationsLocales: ['ope-brgm-01'],
+    demarcheTypeId: 'oct',
+    titre: { typeId: 'arm', statutId: 'dmc' },
+    canCreate: false
+  }
+])(
+  'canCreateEtape $user | $etapeTypeId | $etapeStatutId | $titreTitulaires | $titresAdministrationsLocales | $demarcheTypeId | $titre | $canCreate',
+  ({ user, etapeTypeId, etapeStatutId, titreTitulaires, titresAdministrationsLocales, demarcheTypeId, titre, canCreate }) => {
+    expect(canCreateEtape(user, etapeTypeId, etapeStatutId, titreTitulaires, titresAdministrationsLocales, demarcheTypeId, titre)).toEqual(canCreate)
+  }
+)

@@ -200,7 +200,6 @@ export default {
   computed: {
     etapesTypesIds() {
       return this.$store.state.titreEtapeEdition.metas.etapesTypes
-        .filter(t => t.etapesCreation)
         .map(t => t.id)
     },
 
