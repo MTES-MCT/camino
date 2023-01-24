@@ -14,14 +14,6 @@ export const tables = [
     name: 'administrations__activites_types',
     orderBy: ['activite_type_id', 'administration_id']
   },
-  {
-    name: 'administrations__titres_types__etapes_types',
-    orderBy: ['administration_id', 'titre_type_id', 'etape_type_id']
-  },
-  {
-    name: 'administrations__titres_types__titres_statuts',
-    orderBy: ['administration_id', 'titre_type_id', 'titre_statut_id']
-  },
   // la table 'caches' n'est pas utile dans les json
   // { name: 'caches',orderBy: ['id'] },
   { name: 'communes', orderBy: ['id'] },

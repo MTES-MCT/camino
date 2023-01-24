@@ -2,6 +2,34 @@ import { AdministrationId, ADMINISTRATION_IDS } from './administrations.js'
 import { EtapeTypeId, ETAPES_TYPES } from './etapesTypes.js'
 import { TitreTypeId } from './titresTypes.js'
 
+// TODO 2023-01-24: à supprimer le jour où on supprime la table administrations--titres-types--etapes-types
+export const toDbATE = () => {
+  return Object.keys(AdministrationsTitresTypesEtapesTypes).flatMap(administrationId => {
+    return (
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      Object.keys(AdministrationsTitresTypesEtapesTypes[administrationId]).flatMap(titreTypeId =>
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        Object.keys(AdministrationsTitresTypesEtapesTypes[administrationId][titreTypeId]).flatMap(etapeTypeId => {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          const value = AdministrationsTitresTypesEtapesTypes[administrationId][titreTypeId][etapeTypeId]
+
+          return {
+            administration_id: administrationId,
+            titre_type_id: titreTypeId,
+            etape_type_id: etapeTypeId,
+            lecture_interdit: value.lectureInterdit,
+            creation_interdit: value.creationInterdit,
+            modification_interdit: value.modificationInterdit
+          }
+        })
+      )
+    )
+  })
+}
+
 // TODO 2023-01-24: on n'a exposé uniquement creationInterdit
 const restrictions = (
   administrationId: AdministrationId,
@@ -12,7 +40,7 @@ const restrictions = (
   creationInterdit: boolean
   modificationInterdit: boolean
 } => {
-  const restriction = AdministrationsTitresTypesTitresStatuts[administrationId]?.[titreTypeId]?.[etapeTypeId]
+  const restriction = AdministrationsTitresTypesEtapesTypes[administrationId]?.[titreTypeId]?.[etapeTypeId]
 
   if (restriction !== undefined) {
     return restriction
@@ -25,7 +53,7 @@ export const canAdministrationCreateEtapeTypeId = (administrationId: Administrat
   return !restrictions(administrationId, titreTypeId, etapeTypeId).creationInterdit
 }
 
-const AdministrationsTitresTypesTitresStatuts: {
+const AdministrationsTitresTypesEtapesTypes: {
   [key in AdministrationId]?: {
     [key in TitreTypeId]?: {
       [key in EtapeTypeId]?: {

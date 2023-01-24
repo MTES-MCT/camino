@@ -6,7 +6,6 @@ import {
 } from '../../src/types.js'
 
 import { graphQLCall, queryImport } from './index.js'
-import { administrationsWithRelations } from './administrations.js'
 
 import Titres from '../../src/database/models/titres.js'
 import DemarchesTypes from '../../src/database/models/demarches-types.js'
@@ -18,7 +17,10 @@ import {
 import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritage-props-find.js'
 import { etapeTypeSectionsFormat } from '../../src/api/_format/etapes-types.js'
 import { Role } from 'camino-common/src/roles.js'
-import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import {
+  AdministrationId,
+  sortedAdministrations
+} from 'camino-common/src/static/administrations.js'
 import {
   idGenerate,
   newDemarcheId
@@ -44,7 +46,7 @@ export const visibleCheck = async (
 ) => {
   const titreQuery = queryImport('titre')
 
-  const administration = administrationsWithRelations.find(
+  const administration = sortedAdministrations.find(
     a => a.id === administrationId
   )!
 
@@ -109,7 +111,7 @@ export const creationCheck = async (
   cible: string,
   titreTypeId: TitreTypeId
 ) => {
-  const administration = administrationsWithRelations.find(
+  const administration = sortedAdministrations.find(
     a => a.id === administrationId
   )!
 
@@ -323,7 +325,7 @@ export const modificationCheck = async (
   locale?: boolean,
   etapeTypeId?: EtapeTypeId
 ) => {
-  const administration = administrationsWithRelations.find(
+  const administration = sortedAdministrations.find(
     a => a.id === administrationId
   )!
 

@@ -199,8 +199,9 @@ export default {
 
   computed: {
     etapesTypesIds() {
-      return this.$store.state.titreEtapeEdition.metas.etapesTypes
-        .map(t => t.id)
+      return this.$store.state.titreEtapeEdition.metas.etapesTypes.map(
+        t => t.id
+      )
     },
 
     documentsTypes() {
