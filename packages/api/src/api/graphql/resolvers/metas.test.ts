@@ -141,7 +141,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       toCaminoDate('2019-10-11')
     )
     expect(tested).toHaveLength(1)
-    expect(tested.map(({ etapeTypeId }) => etapeTypeId)).toStrictEqual(['dae'])
+    expect(tested).toStrictEqual(['dae'])
   })
 
   test('modifie une étape existante à la même date devrait permettre de recréer la même étape', () => {
@@ -161,7 +161,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
         )
       }
       expect(etapesTypesPossibles.length).toBeGreaterThan(0)
-      expect(etapesTypesPossibles.map(({ etapeTypeId }) => etapeTypeId)).toContain(etape.typeId)
+      expect(etapesTypesPossibles).toContain(etape.typeId)
     }
   })
 
@@ -173,7 +173,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       toCaminoDate('2022-05-06')
     )
     expect(tested).toHaveLength(1)
-    expect(tested[0].etapeTypeId).toBe('mnv')
+    expect(tested[0]).toBe('mnv')
   })
 
   test('ajoute une nouvelle étape en plein milieu', () => {
@@ -183,7 +183,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       undefined,
       toCaminoDate('2019-12-04')
     )
-    expect(tested.map(({ etapeTypeId }) => etapeTypeId)).toStrictEqual(['mod'])
+    expect(tested).toStrictEqual(['mod'])
   })
 
   test('peut faire une dae, une rde et pfd AVANT la mfr', () => {
@@ -211,7 +211,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       undefined,
       toCaminoDate('2019-12-04')
     )
-    expect(tested.map(({ etapeTypeId }) => etapeTypeId)).toStrictEqual(['dae', 'pfd', 'rde'])
+    expect(tested).toStrictEqual(['rde', 'pfd', 'dae'])
   })
 
   test('peut faire que une pfd AVANT la mfr non mecanisee', () => {
@@ -237,7 +237,7 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       undefined,
       toCaminoDate('2019-12-04')
     )
-    expect(tested.map(({ etapeTypeId }) => etapeTypeId)).toStrictEqual(['pfd'])
+    expect(tested).toStrictEqual(['pfd'])
   })
 
   test('peut faire refuser une rde après une demande mécanisée', () => {
@@ -357,16 +357,16 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       undefined,
       toCaminoDate('2022-07-01')
     )
-    expect(tested.map(({ etapeTypeId }) => etapeTypeId)).toStrictEqual([
-      'mcb',
+    expect(tested).toStrictEqual([
       'rcb',
-      'mod',
-      'css',
-      'ede',
       'rde',
-      'mia',
+      'mcb',
+      'mod',
+      'des',
+      'css',
       'aof',
-      'des'
+      'mia',
+      'ede'
     ])
     vi.resetAllMocks()
   })
@@ -416,13 +416,6 @@ describe('etapesTypesPossibleACetteDateOuALaPlaceDeLEtape', function () {
       undefined,
       toCaminoDate('2022-07-01')
     )
-    expect(tested.map(({ etapeTypeId }) => etapeTypeId)).toStrictEqual([
-      'mcb',
-      'mod',
-      'mcp',
-      'css',
-      'rde',
-      'des'
-    ])
+    expect(tested).toStrictEqual(['mcp', 'mod', 'des', 'css', 'rde', 'mcb'])
   })
 })
