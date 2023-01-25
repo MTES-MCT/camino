@@ -22,11 +22,6 @@
 <script lang="tsx" setup>
 import { TypeAhead } from '@/components/_ui/typeahead'
 import { computed, onMounted, ref, watch } from 'vue'
-import {
-  LinkableTitre,
-  LoadLinkableTitres,
-  TitresLinkConfig
-} from './pure-titres-link.type'
 import { Statut } from '@/components/_common/statut'
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
@@ -35,6 +30,10 @@ import {
   TitresStatuts,
   TitreStatutId
 } from 'camino-common/src/static/titresStatuts'
+import {
+  LinkableTitre,
+  TitresLinkConfig
+} from '@/components/titre/pure-titres-link-form-api-client'
 
 const display = (item: LinkableTitre) => {
   return (
@@ -52,7 +51,7 @@ const display = (item: LinkableTitre) => {
 }
 const props = defineProps<{
   config: TitresLinkConfig
-  loadLinkableTitres: LoadLinkableTitres
+  loadLinkableTitres: () => Promise<LinkableTitre[]>
 }>()
 
 const emit = defineEmits<{
