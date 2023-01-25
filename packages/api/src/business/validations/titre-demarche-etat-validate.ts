@@ -149,6 +149,7 @@ export const titreDemarcheUpdatedEtatValidate = (
 
     return titreDemarchesErrors
   }
+
   // si on essaye d’ajouter ou de modifier une demande non déposée
   if (
     titreEtape.typeId === 'mfr' &&

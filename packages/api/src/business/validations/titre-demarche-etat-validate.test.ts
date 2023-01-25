@@ -175,16 +175,27 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
 
   test("ajoute une étape à une démarche sans arbre d'instruction", () => {
     const valid = titreDemarcheUpdatedEtatValidate(
-      { id: 'oct' } as IDemarcheType,
+      { id: 'oct', nom: 'oct' } as IDemarcheType,
       {
         typeId: 'arm',
         type: {
           id: 'arm',
           contenuIds: []
         } as unknown as ITitreType,
-        demarches: [{ typeId: 'oct' }]
+        demarches: [
+          {
+            typeId: 'oct',
+            type: {
+              id: 'oct',
+              nom: 'oct',
+              etapesTypes: [
+                { id: 'mfr', titreTypeId: 'arm', demarcheTypeId: 'oct' }
+              ]
+            } as IDemarcheType
+          }
+        ]
       } as ITitre,
-      { typeId: 'mfr', date: '1030-01-01' } as ITitreEtape,
+      { typeId: 'mfr', date: '1030-01-01', statutId: 'fai' } as ITitreEtape,
       newDemarcheId()
     )
 

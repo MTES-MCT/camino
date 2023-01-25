@@ -73,6 +73,8 @@ import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesType
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
+import { canCreateEtape } from 'camino-common/src/permissions/titres-etapes.js'
+import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 
 const statutIdAndDateGet = (
   etape: ITitreEtape,
@@ -350,6 +352,23 @@ const etapeCreer = async (
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
     }
+    if (
+      !canCreateEtape(
+        user,
+        etapeType.id,
+        etape.statutId,
+        titreDemarche.titre.titulaires ?? [],
+        titreDemarche.titre.administrationsLocales ?? [],
+        titreDemarche.typeId,
+        {
+          typeId: titreDemarche.titre.typeId,
+          statutId:
+            titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine
+        }
+      )
+    ) {
+      throw new Error('droits insuffisants pour créer cette étape')
+    }
 
     if (titreEtapePoints) {
       etape.points = titreEtapePoints
@@ -395,6 +414,7 @@ const etapeCreer = async (
       titreDemarche.titreId
     )
     const fields = fieldsBuild(info)
+
     etapeUpdated = await titreEtapeGet(etapeUpdated.id, { fields }, user)
 
     return titreEtapeFormat(etapeUpdated!)
