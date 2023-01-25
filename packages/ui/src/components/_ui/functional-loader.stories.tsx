@@ -14,11 +14,11 @@ const error: AsyncData<string> = { status: 'ERROR', message: 'Erreur' }
 
 export const All: StoryFn = args => (
   <div>
-    <LoadingElement data={loading} renderItem={() => <></>} />
+    <LoadingElement data={loading} renderItem={() => null} />
     <LoadingElement
       data={loaded}
       renderItem={item => <>La valeur de l’item est : {item}</>}
     />
-    <LoadingElement data={error} renderItem={() => <></>} />
+    <LoadingElement data={error} renderItem={() => null} />
   </div>
 )

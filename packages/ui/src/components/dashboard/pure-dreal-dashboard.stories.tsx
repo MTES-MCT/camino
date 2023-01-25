@@ -28,6 +28,24 @@ export const Ok: Story = () => (
   />
 )
 
+export const OkWithoutBlockedTitres: Story = () => (
+  <PureDrealDashboard
+    getDrealTitres={() =>
+      Promise.resolve(titresDreal.filter(t => !t.enAttenteDeDREAL))
+    }
+    isDGTM={false}
+    getDgtmStats={() =>
+      Promise.resolve({
+        depotEtInstructions: {},
+        sdom: {},
+        delais: {},
+        avisAXM: {},
+        producteursOr: {}
+      })
+    }
+  />
+)
+
 export const DGTMNoSnapshot: Story = () => (
   <PureDrealDashboard
     getDrealTitres={() => Promise.resolve(titresDreal)}

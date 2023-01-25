@@ -2591,6 +2591,114 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > Ok 1`] = `
 </div>"
 `;
 
+exports[`Storybook Tests > Components/Dashboard/DREAL > OkWithoutBlockedTitres 1`] = `
+"<div>
+  <div class=\\"desktop-blobs\\">
+    <div class=\\"desktop-blob-2-3\\">
+      <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord </h1>
+    </div>
+  </div>
+  <!---->
+  <div class=\\"line-neutral width-full mb-l\\"></div>
+  <h3>Titres</h3>
+  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+    <!---->
+    <!---->
+    <!---->
+  </div>
+  <h4>Titres en cours d’instruction</h4>
+  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+    <div class=\\"width-full-p\\">
+      <div class=\\"overflow-scroll-x mb\\">
+        <div class=\\"table\\">
+          <div class=\\"tr\\">
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
+                <!--v-if-->
+              </button></div>
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Type
+                <!--v-if-->
+              </button></div>
+            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut
+                <!--v-if-->
+              </button></div>
+            <div class=\\"th nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Activités <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+                  <use href=\\"#icon-chevron-bas\\"></use>
+                </svg></button></div>
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
+                <!--v-if-->
+              </button></div>
+            <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
+                <!--v-if-->
+              </button></div>
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Dernière étape
+                <!--v-if-->
+              </button></div>
+          </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+            <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">permis exclusif de recherches</span></div>
+            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td min-width-5\\">
+              <div class=\\"mb--s\\">
+                <!--v-if-->
+                <!--v-if-->
+              </div>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\"></ul>
+            </div>
+            <div class=\\"td min-width-10\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Titulaire1</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\"><span class=\\"\\">recevabilité de la demande (2022-01-01)</span></div>
+          </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+            <div class=\\"td min-width-8\\"><span class=\\"bold\\">third-name</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">permis exclusif de recherches</span></div>
+            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td min-width-5\\">
+              <div class=\\"mb--s\\">
+                <!--v-if--><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">3</span></span></span>
+              </div>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\"></ul>
+            </div>
+            <div class=\\"td min-width-10\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Titulaire1</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\"><span class=\\"\\">recevabilité de la demande (2022-01-01)</span></div>
+          </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+            <div class=\\"td min-width-8\\"><span class=\\"bold\\">Quatrième Nom de titre</span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
+            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td min-width-5\\">
+              <div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-error color-bg pill py-xs px-s\\">2</span></span></span><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">8</span></span></span></div>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">PTMG : 2010-001</li>
+                <li class=\\"h6\\">PTMG : 2010-000</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-10\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Titulaire 8</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\"><span class=\\"\\">recevabilité de la demande (2022-01-01)</span></div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <!---->
+    <!---->
+  </div>
+</div>"
+`;
+
 exports[`Storybook Tests > Components/Dashboard/DREAL > WithError 1`] = `
 "<div>
   <div class=\\"desktop-blobs\\">

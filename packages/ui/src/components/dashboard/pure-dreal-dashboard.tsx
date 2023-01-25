@@ -178,7 +178,7 @@ export const PureDrealDashboard = defineComponent<Props>({
                 </>
               )
             }
-            return <></>
+            return null
           }}
         />
         <h4>Titres en cours d’instruction</h4>

@@ -4,7 +4,7 @@ import styles from './functional-loader.module.css'
 
 export interface Props<T> {
   data: AsyncData<T>
-  renderItem: (item: T) => JSX.Element
+  renderItem: (item: T) => JSX.Element | null
 }
 
 export const LoadingElement = <T,>(props: Props<T>) => {
