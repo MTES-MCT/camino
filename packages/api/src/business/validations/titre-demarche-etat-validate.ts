@@ -127,9 +127,7 @@ export const titreDemarcheUpdatedEtatValidate = (
     titreDemarcheEtapesNew,
     demarcheId
   )
-
-  // pas de validation pour les démarches qui n'ont pas d'arbre d’instructions
-  if (!demarcheDefinition) return []
+  const titreDemarchesErrors: string[] = []
 
   // vérifie que la démarche existe dans le titre
   const titreDemarche = titre.demarches?.find(d => d.typeId === demarcheType.id)
@@ -138,7 +136,19 @@ export const titreDemarcheUpdatedEtatValidate = (
       'le titre ne contient pas la démarche en cours de modification'
     )
   }
+  // pas de validation pour les démarches qui n'ont pas d'arbre d’instructions
+  if (!demarcheDefinition) {
+    // le type d'étape correspond à la démarche et au type de titre
+    const titreEtapeTypeAndStatusErrors = titreEtapeTypeAndStatusValidate(
+      titreEtape.typeId,
+      titreEtape.statutId,
+      titreDemarche.type!.etapesTypes,
+      titreDemarche.type!.nom
+    )
+    titreDemarchesErrors.push(...titreEtapeTypeAndStatusErrors)
 
+    return titreDemarchesErrors
+  }
   // si on essaye d’ajouter ou de modifier une demande non déposée
   if (
     titreEtape.typeId === 'mfr' &&
@@ -164,8 +174,6 @@ export const titreDemarcheUpdatedEtatValidate = (
       te => te.statutId !== 'aco'
     )
   }
-
-  const titreDemarchesErrors: string[] = []
 
   // vérifie que toutes les étapes existent dans l’arbre
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {

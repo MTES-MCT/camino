@@ -30,7 +30,7 @@ export const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
   // TODO: forcer la présence des démarches sur le titre
   // https://stackoverflow.com/questions/40510611/typescript-interface-require-one-of-two-properties-to-exist/49725198#49725198
 
-  const titresDemarchesUpdated = [] as string[]
+  const titresDemarchesUpdated: string[] = []
 
   for (const titre of titres) {
     for (const titreDemarche of titre.demarches!) {

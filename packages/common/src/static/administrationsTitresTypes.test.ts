@@ -10,22 +10,42 @@ interface AdministrationsWithTitreTypeId {
 
 const administrations: AdministrationsWithTitreTypeId[] = Object.values(ADMINISTRATION_IDS).flatMap(administrationId => TitresTypesIds.map(titreTypeId => ({ administrationId, titreTypeId })))
 
-test.each<AdministrationId>(Object.values(ADMINISTRATION_IDS))('vérifie si l’administration %p est gestionnaire', administrationId => {
-  expect(isGestionnaire(administrationId)).toMatchSnapshot()
+test('vérifie si l’administration est gestionnaire', () => {
+  const result: { [key in AdministrationId]?: boolean } = {}
+  Object.values(ADMINISTRATION_IDS).forEach(administrationId => {
+    result[administrationId] = isGestionnaire(administrationId)
+  })
+  expect(result).toMatchSnapshot()
 })
 
-test.each<AdministrationsWithTitreTypeId>(administrations)('vérifie si l’administration %p est gestionnaire', ({ administrationId, titreTypeId }) => {
-  expect(isGestionnaire(administrationId, titreTypeId)).toMatchSnapshot()
+test('vérifie si l’administration est gestionnaire par rapport au titreType', () => {
+  const result: { [key in AdministrationId]?: { [key in TitreTypeId]?: boolean } } = {}
+  administrations.forEach(({ administrationId, titreTypeId }) => {
+    ;(result[administrationId] ??= {})[titreTypeId] = isGestionnaire(administrationId, titreTypeId)
+  })
+  expect(result).toMatchSnapshot()
 })
 
-test.each<AdministrationId>(Object.values(ADMINISTRATION_IDS))('vérifie si l’administration %p est associée', administrationId => {
-  expect(isAssociee(administrationId)).toMatchSnapshot()
+test('vérifie si l’administration est associée', () => {
+  const result: { [key in AdministrationId]?: boolean } = {}
+  Object.values(ADMINISTRATION_IDS).forEach(administrationId => {
+    result[administrationId] = isAssociee(administrationId)
+  })
+  expect(result).toMatchSnapshot()
 })
 
-test.each<AdministrationsWithTitreTypeId>(administrations)('vérifie si l’administration %p est associée', ({ administrationId, titreTypeId }) => {
-  expect(isAssociee(administrationId, titreTypeId)).toMatchSnapshot()
+test('vérifie si l’administration est associée par rapport au titreType', () => {
+  const result: { [key in AdministrationId]?: { [key in TitreTypeId]?: boolean } } = {}
+  administrations.forEach(({ administrationId, titreTypeId }) => {
+    ;(result[administrationId] ??= {})[titreTypeId] = isAssociee(administrationId, titreTypeId)
+  })
+  expect(result).toMatchSnapshot()
 })
 
-test.each<AdministrationId>(Object.values(ADMINISTRATION_IDS))('vérifie tous les droits sur les types de titre pour l’administration %p', administrationId =>
-  expect(getTitreTypeIdsByAdministration(administrationId)).toMatchSnapshot()
-)
+test('vérifie tous les droits sur les types de titre pour l’administration', () => {
+  const result: { [key in AdministrationId]?: { titreTypeId: TitreTypeId; gestionnaire: boolean; associee: boolean }[] } = {}
+  Object.values(ADMINISTRATION_IDS).forEach(administrationId => {
+    result[administrationId] = getTitreTypeIdsByAdministration(administrationId)
+  })
+  expect(result).toMatchSnapshot()
+})

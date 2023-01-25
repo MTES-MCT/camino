@@ -76,17 +76,21 @@ test.each<TitreTypeId>(TitresTypesIds)('vérifie si un utilisateur administrateu
   expect(() => assertsCanCreateTitre(user, titreTypeId)).toThrowError('permissions insuffisantes')
 })
 
-test.each<AdministrationId>(Object.values(ADMINISTRATION_IDS))('vérifie si un utilisateur administrateur admin %p peut créer des titres', administrationId => {
-  const result: { [key in TitreTypeId]?: boolean } = {}
-  const user: User = { role: 'admin', administrationId }
-  for (const titreTypeid of TitresTypesIds) {
-    result[titreTypeid] = canCreateTitre(user, titreTypeid)
-    if (result[titreTypeid]) {
-      assertsCanCreateTitre(user, titreTypeid)
-    } else {
-      expect(() => assertsCanCreateTitre(user, titreTypeid)).toThrowError('permissions insuffisantes')
+test('vérifie si un utilisateur administrateur admin peut créer des titres', () => {
+  const result: { [key in AdministrationId]?: { [key in TitreTypeId]?: boolean } } = {}
+
+  Object.values(ADMINISTRATION_IDS).forEach(administrationId => {
+    const user: User = { role: 'admin', administrationId }
+    for (const titreTypeid of TitresTypesIds) {
+      const itCan = canCreateTitre(user, titreTypeid)
+      ;(result[administrationId] ??= {})[titreTypeid] = itCan
+      if (itCan) {
+        assertsCanCreateTitre(user, titreTypeid)
+      } else {
+        expect(() => assertsCanCreateTitre(user, titreTypeid)).toThrowError('permissions insuffisantes')
+      }
     }
-  }
+  })
 
   expect(result).toMatchSnapshot()
 })

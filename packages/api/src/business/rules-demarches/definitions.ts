@@ -131,8 +131,8 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
 ]
 
 export const demarcheDefinitionFind = (
-  titreTypeId: string,
-  demarcheTypeId: string,
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
   titreEtapes: Pick<ITitreEtape, 'date' | 'typeId'>[] | undefined,
   demarcheId: DemarcheId
 ): IDemarcheDefinition | undefined => {

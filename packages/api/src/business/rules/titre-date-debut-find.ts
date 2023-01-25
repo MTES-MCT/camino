@@ -7,10 +7,11 @@ import {
 } from '../utils/titre-etapes-sort.js'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 const titreDemarcheDateDebutFind = (
   titreDemarche: ITitreDemarche,
-  titreTypeId: string
+  titreTypeId: TitreTypeId
 ) => {
   // retourne la dernière étape de publication si celle-ci possède une date de début
   const etapePublicationHasDateDebut = titreEtapesSortDescByOrdre(
@@ -49,7 +50,7 @@ const titreDemarcheDateDebutFind = (
 
 export const titreDateDebutFind = (
   titreDemarches: ITitreDemarche[],
-  titreTypeId: string
+  titreTypeId: TitreTypeId
 ) => {
   // la première démarche d'octroi dont le statut est acceptée ou terminée
   const titreDemarchesSorted = titreDemarchesSortAsc(

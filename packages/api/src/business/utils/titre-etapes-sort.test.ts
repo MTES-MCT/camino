@@ -78,7 +78,7 @@ describe('trie les étapes', () => {
         titreEtapesMemesDatesOrdreDesc,
         newDemarcheId(),
         null,
-        'titre-type-id'
+        'arm'
       )
     ).toMatchObject(titreEtapesMemesDatesOrdreAscResult)
   })
@@ -97,11 +97,11 @@ describe('trie les étapes', () => {
           id: 'amo',
           etapesTypes
         } as IDemarcheType,
-        'titre-type-id'
+        'arm'
       )
     ).toMatchObject([
-      { typeId: 'dex', ordre: 2, date: '1988-03-06' },
       { typeId: 'dpu', ordre: 2, date: '1988-03-06' },
+      { typeId: 'dex', ordre: 2, date: '1988-03-06' },
       { typeId: 'xxx', ordre: 2, date: '1988-03-06' }
     ])
   })
