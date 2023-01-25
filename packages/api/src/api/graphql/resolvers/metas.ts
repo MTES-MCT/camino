@@ -40,7 +40,10 @@ import {
 } from 'camino-common/src/static/departement.js'
 import { Region, Regions } from 'camino-common/src/static/region.js'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts.js'
-import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts.js'
+import {
+  sortedTitresStatuts,
+  TitresStatutIds
+} from 'camino-common/src/static/titresStatuts.js'
 import {
   Etape,
   toMachineEtapes
@@ -49,6 +52,12 @@ import { CaminoMachines } from '../../../business/rules-demarches/machines.js'
 import { phasesStatuts as staticPhasesStatuts } from 'camino-common/src/static/phasesStatuts.js'
 import { sortedReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
+import graphBuild from '../../../database/queries/graph/build.js'
+import { fieldsFormat } from '../../../database/queries/graph/fields-format.js'
+import EtapesTypes from '../../../database/models/etapes-types.js'
+import { canCreateEtape } from 'camino-common/src/permissions/titres-etapes.js'
+import { onlyUnique } from 'camino-common/src/typescript-tools.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 
 export const devises = async () => devisesGet()
 
@@ -139,9 +148,8 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
   machine: CaminoMachines,
   etapes: TitreEtapeForMachine[],
   titreEtapeId: string | undefined,
-  date: CaminoDate,
-  etapesTypes: IEtapeType[]
-): IEtapeType[] => {
+  date: CaminoDate
+): EtapeTypeId[] => {
   const sortedEtapes = titreEtapesSortAscByOrdre(etapes)
   const etapesAvant: Etape[] = []
   const etapesApres: Etape[] = []
@@ -168,11 +176,9 @@ export const etapesTypesPossibleACetteDateOuALaPlaceDeLEtape = (
     return machine.isEtapesOk(newEtapes)
   })
 
-  etapesTypes = etapesTypes.filter(et =>
-    etapesPossibles.map(({ etapeTypeId }) => etapeTypeId).includes(et.id)
-  )
-
-  return etapesTypes
+  return etapesPossibles
+    .map(({ etapeTypeId }) => etapeTypeId)
+    .filter(onlyUnique)
 }
 
 const demarcheEtapesTypesGet = async (
@@ -193,7 +199,9 @@ const demarcheEtapesTypesGet = async (
         type: { etapesTypes: { id: {} } },
         titre: {
           type: { demarchesTypes: { id: {} } },
-          demarches: { etapes: { id: {} } }
+          demarches: { etapes: { id: {} } },
+          pointsEtape: { id: {} },
+          titulaires: { id: {} }
         },
         etapes: { type: { id: {} } }
       }
@@ -237,38 +245,63 @@ const demarcheEtapesTypesGet = async (
     titreDemarche.id
   )
 
-  // dans un premier temps on récupère toutes les étapes possibles pour cette démarche
-  let etapesTypes: IEtapeType[] = await etapesTypesGet(
-    { titreDemarcheId, titreEtapeId },
-    { fields, uniqueCheck: !demarcheDefinition },
-    user
-  )
-
+  const etapesTypes: IEtapeType[] = []
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {
     if (!titreDemarche.etapes)
       throw new Error('les étapes ne sont pas chargées')
-    etapesTypes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
+    const etapes = etapesTypesPossibleACetteDateOuALaPlaceDeLEtape(
       demarcheDefinition.machine,
       titreDemarche.etapes,
       titreEtapeId,
-      date,
-      etapesTypes
+      date
+    )
+    const graph = fields ? graphBuild(fields, 'etapesTypes', fieldsFormat) : []
+
+    etapesTypes.push(
+      ...(await EtapesTypes.query()
+        .whereIn('id', etapes)
+        .orderBy('ordre')
+        .withGraphFetched(graph))
     )
   } else {
-    etapesTypes = etapesTypes.filter(etapeType =>
-      etapeTypeIsValidCheck(
-        etapeType,
-        date,
-        titre,
-        titreDemarche.type!,
-        titreDemarche.id,
-        titreDemarche.etapes,
-        titreEtape
+    // dans un premier temps on récupère toutes les étapes possibles pour cette démarche
+    etapesTypes.push(
+      ...(
+        await etapesTypesGet(
+          { titreDemarcheId, titreEtapeId },
+          { fields, uniqueCheck: !demarcheDefinition },
+          user
+        )
+      ).filter(etapeType =>
+        etapeTypeIsValidCheck(
+          etapeType,
+          date,
+          titre,
+          titreDemarche.type!,
+          titreDemarche.id,
+          titreDemarche.etapes,
+          titreEtape
+        )
       )
     )
   }
 
-  return etapesTypes
+  return etapesTypes.filter(etapeType =>
+    canCreateEtape(
+      user,
+      etapeType.id,
+      titreEtapeId && etapeType.id === titreEtape?.typeId
+        ? titreEtape?.statutId ?? null
+        : null,
+      titre.titulaires ?? [],
+      titre.administrationsLocales ?? [],
+      titreDemarche.typeId,
+      {
+        typeId: titre.typeId,
+        statutId: titre.titreStatutId ?? TitresStatutIds.Indetermine
+      }
+    )
+  )
 }
 
 export const etapesTypes = async (

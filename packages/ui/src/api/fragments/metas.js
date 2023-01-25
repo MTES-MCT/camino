@@ -80,7 +80,6 @@ const fragmentEtapeType = gql`
     acceptationAuto
     publicLecture
     entreprisesLecture
-    etapesCreation
     documentsTypes {
       ...documentType
     }
