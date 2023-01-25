@@ -4,7 +4,7 @@ import { DocumentsTypes, DOCUMENTS_TYPES_IDS, DocumentType, DocumentTypeId, isDo
 import { DomaineId, DOMAINES_IDS, isDomaineId } from './domaines.js'
 import { ETAPES_TYPES, EtapeTypeId, isEtapeTypeId } from './etapesTypes.js'
 import { isTitreTypeType, TITRES_TYPES_TYPES_IDS, TitreTypeTypeId } from './titresTypesTypes.js'
-import { TitreTypeId, toTitreTypeId } from './titresTypes.js'
+import { getDomaineId, getTitreTypeType, TitreTypeId, toTitreTypeId } from './titresTypes.js'
 
 const EtapesTypesDocumentsTypes: { [key in EtapeTypeId]?: DocumentTypeId[] } = {
   [ETAPES_TYPES.avisDeDirectionRegionaleDesAffairesCulturelles]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires, DOCUMENTS_TYPES_IDS.avis],
@@ -375,8 +375,10 @@ export const toSpecificDocuments = (): {
     })
     .filter(isNotNullNorUndefined)
 }
-export const getDocuments = (titreTypeType?: TitreTypeTypeId, domaineId?: DomaineId, demarcheId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): DocumentType[] => {
-  if (isNotNullNorUndefined(domaineId) && isNotNullNorUndefined(titreTypeType) && isNotNullNorUndefined(demarcheId) && isNotNullNorUndefined(etapeTypeId)) {
+export const getDocuments = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): DocumentType[] => {
+  if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheId) && isNotNullNorUndefined(etapeTypeId)) {
+    const domaineId = getDomaineId(titreTypeId)
+    const titreTypeType = getTitreTypeType(titreTypeId)
     const documentsIds = EtapesTypesDocumentsTypes[etapeTypeId] ?? []
     documentsIds.push(...Object.keys(TDEDocumentsTypes[titreTypeType]?.[domaineId]?.[demarcheId]?.[etapeTypeId] ?? {}).filter(isDocumentTypeId))
 
@@ -391,6 +393,6 @@ export const getDocuments = (titreTypeType?: TitreTypeTypeId, domaineId?: Domain
       return document
     })
   } else {
-    throw new Error(`il manque des éléments pour trouver les documents domaineId: '${domaineId}', titreTypeType: ${titreTypeType}, demarcheId: ${demarcheId}, etapeTypeId: ${etapeTypeId}`)
+    throw new Error(`il manque des éléments pour trouver les documents titreTypeId: '${titreTypeId}', demarcheId: ${demarcheId}, etapeTypeId: ${etapeTypeId}`)
   }
 }

@@ -8,8 +8,7 @@ export const titresDreal: CommonTitreDREAL[] = [
     id: 'firstId',
     slug: 'first-id-slug',
     nom: 'first-name',
-    domaineId: 'm',
-    typeId: 'pr',
+    typeId: 'prm',
     titreStatutId: 'dmi',
     references: [],
     titulaires: [
@@ -27,8 +26,7 @@ export const titresDreal: CommonTitreDREAL[] = [
     id: 'secondId',
     slug: 'second-slug',
     nom: 'Second Nom de titre',
-    domaineId: 'm',
-    typeId: 'pr',
+    typeId: 'prm',
     titreStatutId: 'dmi',
     references: [
       {
@@ -52,8 +50,7 @@ export const titresDreal: CommonTitreDREAL[] = [
     id: 'thirdId',
     slug: 'third-id-slug',
     nom: 'third-name',
-    domaineId: 'm',
-    typeId: 'pr',
+    typeId: 'prm',
     titreStatutId: 'dmi',
     references: [],
     titulaires: [
@@ -71,8 +68,7 @@ export const titresDreal: CommonTitreDREAL[] = [
     id: 'fourthId',
     slug: 'fourth-slug',
     nom: 'Quatrième Nom de titre',
-    domaineId: 'c',
-    typeId: 'ar',
+    typeId: 'arc',
     titreStatutId: 'dmi',
     references: [
       {

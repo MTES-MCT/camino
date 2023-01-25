@@ -22,8 +22,7 @@
       v-for="demarche in demarches"
       :key="demarche.id"
       :demarche="demarche"
-      :domaineId="titre.domaine.id"
-      :titreType="titre.type"
+      :titreTypeId="titre.typeId"
       :titreNom="titre.nom"
       :titreId="titre.id"
       :tabId="tabId"
@@ -67,7 +66,7 @@ export default {
         component: EditPopup,
         props: {
           demarche,
-          titreTypeId: this.titre.type.id,
+          titreTypeId: this.titre.typeId,
           titreNom: this.titre.nom,
           creation: true,
           tabId: this.tabId

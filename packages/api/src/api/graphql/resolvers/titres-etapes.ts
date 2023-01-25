@@ -70,7 +70,6 @@ import { isEtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { Feature } from 'geojson'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes.js'
-import { getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
@@ -200,11 +199,9 @@ const etapeHeritage = async (
         `le type du titre de l'étape ${titreEtape.id} n'est pas chargé`
       )
     }
-    const titreTypeTypeId = getTitreTypeType(titreTypeId)
 
     return titreEtapeFormat(titreEtape, titreEtapeFormatFields, {
-      domaineId: titreDemarche!.titre!.domaineId,
-      titreTypeTypeId,
+      titreTypeId,
       demarcheTypeId: titreDemarche!.typeId,
       etapeTypeId: etapeType!.id
     })
@@ -338,18 +335,12 @@ const etapeCreer = async (
         `le type du titre de la ${titreDemarche.id} n'est pas chargé`
       )
     }
-    const titreTypeTypeId = getTitreTypeType(typeId)
     const rulesErrors = titreEtapeUpdationValidate(
       etape,
       titreDemarche,
       titreDemarche.titre,
       sections,
-      getDocuments(
-        titreTypeTypeId,
-        titreDemarche.titre?.domaineId,
-        titreDemarche.typeId,
-        etape.typeId
-      ),
+      getDocuments(typeId, titreDemarche.typeId, etape.typeId),
       documents,
       justificatifsTypes,
       justificatifs,
@@ -522,18 +513,12 @@ const etapeModifier = async (
         `le type du titre de la ${titreDemarche.id} n'est pas chargé`
       )
     }
-    const titreTypeTypeId = getTitreTypeType(typeId)
     const rulesErrors = titreEtapeUpdationValidate(
       etape,
       titreDemarche,
       titreDemarche.titre,
       sections,
-      getDocuments(
-        titreTypeTypeId,
-        titreDemarche.titre.domaineId,
-        titreDemarche.typeId,
-        etape.typeId
-      ),
+      getDocuments(typeId, titreDemarche.typeId, etape.typeId),
       documents,
       justificatifsTypes,
       justificatifs,

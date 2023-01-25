@@ -60,8 +60,7 @@
       :key="etape.id"
       :etape="etape"
       :demarcheType="demarche.type"
-      :titreTypeType="titreType.type"
-      :domaineId="domaineId"
+      :titreTypeId="titreTypeId"
       :titreId="titreId"
       :titreNom="titreNom"
       :opened="etapeOpened[etape.id]"
@@ -93,8 +92,7 @@ export default {
     demarche: { type: Object, required: true },
     titreNom: { type: String, required: true },
     titreId: { type: String, required: true },
-    titreType: { type: Object, required: true },
-    domaineId: { type: String, required: true },
+    titreTypeId: { type: String, required: true },
     tabId: { type: String, required: true }
   },
 
@@ -133,8 +131,7 @@ export default {
         component: EditPopup,
         props: {
           demarche,
-          types: this.titreType.demarchesTypes,
-          titreTypeId: this.titreType.id,
+          titreTypeId: this.titreTypeId,
           titreNom: this.titreNom,
           tabId: this.tabId
         }
@@ -154,7 +151,7 @@ export default {
           id: this.demarche.id,
           typeNom: this.demarche.type.nom,
           titreNom: this.titreNom,
-          titreTypeId: this.titreType.id
+          titreTypeId: this.titreTypeId
         }
       })
 

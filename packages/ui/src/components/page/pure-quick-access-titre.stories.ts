@@ -35,14 +35,12 @@ Simple.args = {
     {
       id: '1',
       nom: 'monTitre',
-      domaine: { id: 'm' },
-      type: { type: { id: 'ar' } }
+      typeId: 'arm'
     },
     {
       id: '1',
       nom: 'monSecondTitre',
-      domaine: { id: 'g' },
-      type: { type: { id: 'ar' } }
+      typeId: 'arg'
     }
   ]
 }

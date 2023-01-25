@@ -20,20 +20,7 @@ const titres: TitreEntreprise[] = [
     id: 'jp25TIfyQiXM987fAGc2DX4N',
     slug: 'm-cx-aachen-1810',
     nom: 'Aachen',
-    domaineId: 'm',
-    type: {
-      id: 'cxm',
-      typeId: 'cx',
-      domaineId: 'm',
-      type: {
-        id: 'ar',
-        nom: 'autorisation de recherches'
-      }
-    },
-    domaine: {
-      id: 'm',
-      nom: 'minéraux et métaux'
-    },
+    typeId: 'cxm',
     coordonnees: {
       x: 6.049336777414595,
       y: 49.45057350532248
@@ -60,20 +47,7 @@ const titres: TitreEntreprise[] = [
     id: 'mlWyShEGu8v7eYmsUhfiAMbs',
     slug: 'm-ax-amadis-5-2022',
     nom: 'Amadis 5',
-    domaineId: 'm',
-    type: {
-      id: 'axm',
-      typeId: 'ax',
-      domaineId: 'm',
-      type: {
-        id: 'ax',
-        nom: "autorisation d'exploitation"
-      }
-    },
-    domaine: {
-      id: 'm',
-      nom: 'minéraux et métaux'
-    },
+    typeId: 'axm',
     titreStatutId: 'val',
     substances: ['auru'],
     activitesEnConstruction: 1,
@@ -138,20 +112,7 @@ export const OkWithoutFiscalite: Story = () => (
           id: 'mlWyShEGu8v7eYmsUhfiAMbs',
           slug: 'm-ax-amadis-5-2022',
           nom: 'Amadis 5',
-          domaineId: 'w',
-          type: {
-            id: 'axw',
-            typeId: 'ax',
-            domaineId: 'w',
-            type: {
-              id: 'ax',
-              nom: "autorisation d'exploitation"
-            }
-          },
-          domaine: {
-            id: 'm',
-            nom: 'minéraux et métaux'
-          },
+          typeId: 'apw',
           titreStatutId: 'val',
           substances: ['auru'],
           activitesEnConstruction: null,

@@ -38,13 +38,8 @@ type Titre {
   nom: String
 
   "Type du titre"
-  type: TitreType!
-
-  "Domaine minier auquel se rattache le titre"
-  domaine: Domaine!
-
-  "DomaineId minier auquel se rattache le titre"
-  domaineId: String
+  typeId: String!
+  type: TitreType
 
   "Références métier du titre"
   references: [Reference]
@@ -145,7 +140,6 @@ type Reference {
 input InputTitreCreation {
   nom: String!
   typeId: ID!
-  domaineId: ID!
   references: [InputReference]
 }
 

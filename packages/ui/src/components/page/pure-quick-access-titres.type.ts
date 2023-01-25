@@ -1,13 +1,12 @@
-import { DomaineId } from 'camino-common/src/static/domaines'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 
 export interface Titre {
   id: string
   nom: string
-  domaine: {
-    id: DomaineId
-  }
-  type: {
+
+  typeId: TitreTypeId
+  type?: {
     type: {
       id: TitreTypeTypeId
     }

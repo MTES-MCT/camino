@@ -25,7 +25,6 @@ describe('teste les requêtes sur les activités', () => {
       id: titreId,
       nom: idGenerate(),
       titreStatutId: 'val',
-      domaineId: 'm',
       typeId: 'arm'
     })
 

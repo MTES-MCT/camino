@@ -33,7 +33,6 @@
         :mini="true"
         text="Fichier manquant"
       />
-      >
     </td>
     <td class="nowrap pt-m">
       {{ dateFormat(document.date) }}

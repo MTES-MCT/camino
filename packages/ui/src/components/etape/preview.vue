@@ -56,8 +56,7 @@
         <Perimetre
           v-if="etape.points && etape.points.length"
           :etape="etape"
-          :domaineId="domaineId"
-          :titreTypeId="titreTypeType.id"
+          :titreTypeId="titreTypeId"
           :geojsonMultiPolygon="etape.geojsonMultiPolygon"
           :incertitude="!!etape.incertitudes?.points"
         />
@@ -154,6 +153,8 @@ import DeposePopup from './depose-popup.vue'
 import { HelpTooltip } from '../_ui/help-tooltip'
 import { Icon } from '@/components/_ui/icon'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
+import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
+import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
 
 export default {
   components: {
@@ -171,8 +172,7 @@ export default {
   props: {
     etape: { type: Object, required: true },
     demarcheType: { type: Object, required: true },
-    titreTypeType: { type: Object, required: true },
-    domaineId: { type: String, required: true },
+    titreTypeId: { type: String, required: true },
     titreNom: { type: String, required: true },
     titreId: { type: String, required: true },
     opened: { type: Boolean, default: false }
@@ -245,10 +245,7 @@ export default {
     },
     demandeHelp() {
       if (!this.userIsAdmin && this.etape.type.id === 'mfr') {
-        if (
-          this.domaineId === 'm' &&
-          ['ar', 'ax'].includes(this.titreTypeType.id)
-        ) {
+        if (['arm', 'axm'].includes(this.titreTypeId)) {
           if (this.etapeStatut.id === 'aco') {
             return 'Si vous avez ajouté tous les documents spécifiques à la demande et justificatifs d’entreprise, et que vous considérez que votre demande est complète, vous pouvez la déposer en cliquant sur « Déposer … ». L’ONF et le PTMG seront ainsi notifiés et pourront instruire votre demande.'
           } else {
@@ -315,7 +312,7 @@ export default {
           etapeId: this.etape.id,
           demarcheTypeNom: this.demarcheType.nom,
           titreNom: this.titreNom,
-          titreTypeNom: this.titreTypeType.nom
+          titreTypeNom: TitresTypesTypes[getTitreTypeType(this.titreTypeId)].nom
         }
       })
 

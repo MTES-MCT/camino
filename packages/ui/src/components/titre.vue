@@ -16,8 +16,7 @@
     <Perimetre
       v-if="titre.geojsonMultiPolygon && titre.points"
       :titreId="titre.id"
-      :domaineId="titre.domaine.id"
-      :titreTypeId="titre.type.type.id"
+      :titreTypeId="titre.typeId"
       :points="titre.points"
       :isMain="true"
       :tabId="geoTabId"

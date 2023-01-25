@@ -6,6 +6,7 @@ import {
   sortedDomaines
 } from 'camino-common/src/static/domaines'
 import {
+  getDomaineId,
   getTitreTypeTypeByDomaineId,
   TitreTypeId,
   toTitreTypeId
@@ -14,13 +15,14 @@ import {
   TitresTypesTypes,
   TitreTypeType
 } from 'camino-common/src/static/titresTypesTypes'
-import { defineComponent, computed, onMounted } from 'vue'
+import { defineComponent, computed, onMounted, ref } from 'vue'
+import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 
 export interface Props {
   element: {
-    domaineId: DomaineId | undefined
     typeId: TitreTypeId | undefined | null
   }
+  domaineId: DomaineId | undefined
   user: User
 }
 
@@ -44,9 +46,12 @@ const titresTypeTypes = (
   return undefined
 }
 
-const TypeSelect = ({ user, element }: Props) => {
-  const domaine = element.domaineId
-  if (isDomaineId(domaine)) {
+const TypeSelect = ({
+  user,
+  element,
+  domaineId
+}: Props): JSX.Element | null => {
+  if (isDomaineId(domaineId)) {
     return (
       <>
         <div class="tablet-blobs">
@@ -59,11 +64,11 @@ const TypeSelect = ({ user, element }: Props) => {
               class="p-s mr"
               disabled={!titresTypeTypes}
             >
-              {titresTypeTypes(user, element.domaineId)?.map(titreTypeType => {
+              {titresTypeTypes(user, domaineId)?.map(titreTypeType => {
                 return (
                   <option
                     key={titreTypeType.id}
-                    value={toTitreTypeId(titreTypeType.id, domaine)}
+                    value={toTitreTypeId(titreTypeType.id, domaineId)}
                   >
                     {titreTypeType.nom}
                   </option>
@@ -81,6 +86,12 @@ const TypeSelect = ({ user, element }: Props) => {
 
 export const TitreTypeSelect = defineComponent<Props>({
   setup(props) {
+    const domaineRef = ref<Props['domaineId']>(
+      props.element.typeId
+        ? getDomaineId(props.element.typeId)
+        : props.domaineId
+    )
+
     const domainesFiltered = computed<Domaine[]>(() =>
       sortedDomaines.filter(d =>
         getTitreTypeTypeByDomaineId(d.id).some(titreTypeTypeId =>
@@ -89,14 +100,16 @@ export const TitreTypeSelect = defineComponent<Props>({
       )
     )
 
-    const domaineUpdate = () => {
-      const titreTypes = titresTypeTypes(props.user, props.element.domaineId)
-      // Si on a que 1 choix, on le sélectionne directement
-      if (props.element.domaineId && titreTypes?.length === 1) {
-        props.element.typeId = toTitreTypeId(
-          titreTypes[0].id,
-          props.element.domaineId
-        )
+    const domaineUpdate = (domaineId: DomaineId | undefined) => {
+      domaineRef.value = domaineId
+      if (domaineId) {
+        const titreTypes = titresTypeTypes(props.user, domaineId)
+        // Si on a que 1 choix, on le sélectionne directement
+        if (titreTypes?.length === 1) {
+          props.element.typeId = toTitreTypeId(titreTypes[0].id, domaineId)
+        } else {
+          props.element.typeId = null
+        }
       } else {
         props.element.typeId = null
       }
@@ -104,9 +117,9 @@ export const TitreTypeSelect = defineComponent<Props>({
     onMounted(() => {
       // Si l’utilisateur peut sélectionner que 1 domaine, on le sélectionne
       if (domainesFiltered.value.length === 1) {
-        props.element.domaineId = domainesFiltered.value[0].id
+        domaineRef.value = domainesFiltered.value[0].id
       }
-      domaineUpdate()
+      domaineUpdate(domaineRef.value)
     })
 
     return () => (
@@ -118,9 +131,15 @@ export const TitreTypeSelect = defineComponent<Props>({
 
           <div class="mb tablet-blob-2-3">
             <select
-              v-model={props.element.domaineId}
+              value={domaineRef.value}
               class="p-s mr"
-              onSelect={domaineUpdate}
+              onChange={event =>
+                domaineUpdate(
+                  isEventWithTarget(event) && isDomaineId(event.target.value)
+                    ? event.target.value
+                    : undefined
+                )
+              }
             >
               {domainesFiltered.value.map(domaine => {
                 return (
@@ -133,10 +152,14 @@ export const TitreTypeSelect = defineComponent<Props>({
           </div>
         </div>
         <hr />
-        {TypeSelect(props)}
+        <TypeSelect
+          element={props.element}
+          user={props.user}
+          domaineId={domaineRef.value}
+        ></TypeSelect>
       </div>
     )
   }
 })
 
-TitreTypeSelect.props = ['user', 'element']
+TitreTypeSelect.props = ['user', 'element', 'domaineId']

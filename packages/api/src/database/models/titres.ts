@@ -2,20 +2,22 @@ import { Model, Pojo, QueryContext, ref } from 'objection'
 
 import { ITitre } from '../../types.js'
 import Communes from './communes.js'
-import Domaines from './domaines.js'
 import Entreprises from './entreprises.js'
 import TitresDemarches from './titres-demarches.js'
 import TitresEtapes from './titres-etapes.js'
 import TitresPoints from './titres-points.js'
 import Types from './titres-types.js'
 import Forets from './forets.js'
-
 import { titreInsertFormat } from './_format/titre-insert.js'
 import { titreContenuFormat } from './_format/titre-contenu.js'
 import { idGenerate } from './_format/id-create.js'
 import slugify from '@sindresorhus/slugify'
 import cryptoRandomString from 'crypto-random-string'
 import TitresActivites from './titres-activites.js'
+import {
+  getDomaineId,
+  getTitreTypeType
+} from 'camino-common/src/static/titresTypes.js'
 
 export interface DBTitre extends ITitre {
   archive: boolean
@@ -28,12 +30,11 @@ class Titres extends Model {
 
   public static jsonSchema = {
     type: 'object',
-    required: ['nom', 'domaineId', 'typeId'],
+    required: ['nom', 'typeId'],
     properties: {
       id: { type: 'string' },
       slug: { type: 'string' },
       nom: { type: 'string' },
-      domaineId: { type: 'string', maxLength: 1 },
       typeId: { type: 'string', maxLength: 3 },
       titreStatutId: { type: 'string', maxLength: 3 },
       dateDebut: { type: ['string', 'null'] },
@@ -52,12 +53,6 @@ class Titres extends Model {
   }
 
   static relationMappings = () => ({
-    domaine: {
-      relation: Model.BelongsToOneRelation,
-      modelClass: Domaines,
-      join: { from: 'titres.domaineId', to: 'domaines.id' }
-    },
-
     type: {
       relation: Model.BelongsToOneRelation,
       modelClass: Types,
@@ -180,10 +175,10 @@ class Titres extends Model {
       this.id = idGenerate()
     }
 
-    if (!this.slug && this.domaineId && this.typeId && this.nom) {
-      this.slug = `${this.domaineId}-${this.typeId.slice(0, -1)}-${slugify(
-        this.nom
-      )}-${cryptoRandomString({ length: 4 })}`
+    if (!this.slug && this.typeId && this.nom) {
+      this.slug = `${getDomaineId(this.typeId)}-${getTitreTypeType(
+        this.typeId
+      )}-${slugify(this.nom)}-${cryptoRandomString({ length: 4 })}`
     }
 
     return super.$beforeInsert(context)

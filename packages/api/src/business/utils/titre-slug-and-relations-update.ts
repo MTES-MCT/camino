@@ -24,15 +24,21 @@ import {
   titrePointUpdate
 } from '../../database/queries/titres-points.js'
 import { titreActiviteUpdate } from '../../database/queries/titres-activites.js'
+import {
+  getDomaineId,
+  getTitreTypeType
+} from 'camino-common/src/static/titresTypes.js'
 
 const titreSlugFind = (titre: ITitre) => {
-  const { domaineId, type, nom } = titre
+  const { typeId, nom } = titre
   const demarcheOctroiDateDebut = titreDemarcheOctroiDateDebutFind(
     titre.demarches
   )
 
   return slugify(
-    `${domaineId}-${type!.typeId}-${nom}-${demarcheOctroiDateDebut.slice(0, 4)}`
+    `${getDomaineId(typeId)}-${getTitreTypeType(
+      typeId
+    )}-${nom}-${demarcheOctroiDateDebut.slice(0, 4)}`
   )
 }
 

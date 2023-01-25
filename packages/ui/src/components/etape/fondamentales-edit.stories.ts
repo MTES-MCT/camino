@@ -3,8 +3,7 @@ import { Meta, Story } from '@storybook/vue3'
 import { EtapeFondamentale } from 'camino-common/src/etape'
 import { Entreprise, newEntrepriseId } from 'camino-common/src/entreprise'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
-import { DomaineId } from 'camino-common/src/static/domaines'
-import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { toCaminoDate } from 'camino-common/src/date'
 import { User } from 'camino-common/src/roles'
 
@@ -17,9 +16,8 @@ export default meta
 
 type Props = {
   etape: EtapeFondamentale
-  domaineId: DomaineId
   demarcheTypeId: DemarcheTypeId
-  titreTypeTypeId: TitreTypeTypeId
+  titreTypeId: TitreTypeId
   user: User
   entreprises: Entreprise[]
 }
@@ -97,9 +95,8 @@ export const ArmDemandeONF = Template.bind(
   {},
   {
     etape,
-    domaineId: 'm',
     demarcheTypeId: 'oct',
-    titreTypeTypeId: 'ar',
+    titreTypeId: 'arm',
     user: { role: 'admin', administrationId: 'ope-onf-973-01' },
     entreprises: [
       {
@@ -115,9 +112,8 @@ export const ArmDemandeOperateur = Template.bind(
   {},
   {
     etape,
-    domaineId: 'm',
     demarcheTypeId: 'oct',
-    titreTypeTypeId: 'ar',
+    titreTypeId: 'arm',
     user: { role: 'entreprise', administrationId: undefined },
     entreprises: [
       {
@@ -133,9 +129,8 @@ export const ArmJorfONF = Template.bind(
   {},
   {
     etape: { ...etape, type: { id: 'dpu', nom: 'Jorf' } },
-    domaineId: 'm',
     demarcheTypeId: 'oct',
-    titreTypeTypeId: 'ar',
+    titreTypeId: 'arm',
     user: { role: 'admin', administrationId: 'ope-onf-973-01' },
     entreprises: [
       {
@@ -151,9 +146,8 @@ export const AxmDemandeONF = Template.bind(
   {},
   {
     etape,
-    domaineId: 'm',
     demarcheTypeId: 'oct',
-    titreTypeTypeId: 'ax',
+    titreTypeId: 'axm',
     user: { role: 'admin', administrationId: 'ope-onf-973-01' },
     entreprises: [
       {
@@ -169,9 +163,8 @@ export const PrmDemandeONF = Template.bind(
   {},
   {
     etape,
-    domaineId: 'm',
     demarcheTypeId: 'oct',
-    titreTypeTypeId: 'pr',
+    titreTypeId: 'prm',
     user: { role: 'admin', administrationId: 'ope-onf-973-01' },
     entreprises: [
       {
@@ -187,9 +180,8 @@ export const PrmDeplacementDePerimetreONF = Template.bind(
   {},
   {
     etape,
-    domaineId: 'm',
     demarcheTypeId: 'dep',
-    titreTypeTypeId: 'pr',
+    titreTypeId: 'prm',
     user: { role: 'admin', administrationId: 'ope-onf-973-01' },
     entreprises: [
       {

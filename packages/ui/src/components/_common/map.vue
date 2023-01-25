@@ -52,6 +52,10 @@ import {
   leafletDivIconBuild
 } from '../_map/leaflet.ts'
 import { Icon } from '@/components/_ui/icon'
+import {
+  getDomaineId,
+  getTitreTypeType
+} from 'camino-common/src/static/titresTypes'
 
 export default {
   components: { Icon, Mapo },
@@ -59,7 +63,6 @@ export default {
   props: {
     geojson: { type: Object, required: true },
     points: { type: Array, default: () => [] },
-    domaineId: { type: String, required: true },
     titreTypeId: { type: String, required: true },
     isMain: { type: Boolean, default: false }
   },
@@ -81,9 +84,12 @@ export default {
     },
 
     geojsonLayers() {
+      const domaineId = getDomaineId(this.titreTypeId)
+      const titreTypeTypeId = getTitreTypeType(this.titreTypeId)
+
       const className = this.patternVisible
-        ? `svg-fill-pattern-${this.titreTypeId}-${this.domaineId}`
-        : `svg-fill-domaine-${this.domaineId}`
+        ? `svg-fill-pattern-${titreTypeTypeId}-${domaineId}`
+        : `svg-fill-domaine-${domaineId}`
 
       const options = {
         style: { fillOpacity: 0.75, weight: 1, color: 'white', className }

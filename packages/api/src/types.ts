@@ -484,8 +484,6 @@ interface ITitre {
   id: string
   slug?: string
   nom: string
-  domaineId: DomaineId
-  domaine?: IDomaine | null
   typeId: TitreTypeId
   type?: ITitreType | null
   titreStatutId?: TitreStatutId | null

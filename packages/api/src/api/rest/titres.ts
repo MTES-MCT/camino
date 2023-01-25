@@ -84,8 +84,8 @@ export const titresONF = async (
           slug: titre.slug,
           nom: titre.nom,
           titreStatutId: titre.titreStatutId,
+          typeId: titre.typeId,
           references,
-          domaineId: titre.domaineId,
           titulaires: titre.titulaires,
           dateCompletudePTMG,
           dateReceptionONF,
@@ -98,9 +98,9 @@ export const titresONF = async (
 }
 
 type TitreSanitize = NotNullableKeys<
-  Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId' | 'domaineId'>>
+  Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId' | 'typeId'>>
 > &
-  Pick<ITitre, 'typeId' | 'id' | 'nom'>
+  Pick<ITitre, 'id' | 'nom'>
 type TitreDemarcheSanitize = NotNullableKeys<
   Required<Pick<ITitreDemarche, 'etapes' | 'typeId'>>
 >
@@ -221,7 +221,7 @@ export const titresPTMG = async (
         id: titre.id,
         slug: titre.slug,
         nom: titre.nom,
-        domaineId: titre.domaineId,
+        typeId: titre.typeId,
         titreStatutId: titre.titreStatutId,
         references,
         titulaires: titre.titulaires,
@@ -238,12 +238,7 @@ type DrealTitreSanitize = NotNullableKeys<
 > &
   Pick<
     ITitre,
-    | 'typeId'
-    | 'id'
-    | 'nom'
-    | 'domaineId'
-    | 'activitesEnConstruction'
-    | 'activitesAbsentes'
+    'typeId' | 'id' | 'nom' | 'activitesEnConstruction' | 'activitesAbsentes'
   >
 
 type TitreDrealAvecReferences = {
@@ -410,9 +405,8 @@ export const titresDREAL = async (
             slug: titre.slug,
             nom: titre.nom,
             titreStatutId: titre.titreStatutId,
-            typeId: titre.type.typeId,
+            typeId: titre.typeId,
             references,
-            domaineId: titre.domaineId,
             titulaires: titre.titulaires,
             // pour une raison inconnue les chiffres sortent parfois en tant que string...., par exemple pour les titres
             activitesEnConstruction:

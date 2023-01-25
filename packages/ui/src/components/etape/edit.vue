@@ -36,8 +36,7 @@
       <FondamentalesEdit
         :etape="etape"
         :demarcheTypeId="demarcheTypeId"
-        :domaineId="domaineId"
-        :titreTypeTypeId="titreTypeId"
+        :titreTypeId="titreTypeId"
         :user="user"
         :entreprises="entreprises"
         @update:etape="newValue => $emit('update:etape', newValue)"
@@ -165,7 +164,6 @@ export default {
     etape: { type: Object, required: true },
     demarcheTypeId: { type: String, required: true },
     etapeType: { type: Object, default: null },
-    domaineId: { type: String, required: true },
     titreTypeId: { type: String, required: true },
     events: { type: Object, required: true },
     user: { type: Object, required: true },
@@ -173,7 +171,13 @@ export default {
     documentPopupTitle: { type: String, required: true }
   },
 
-  emits: ['complete-update', 'type-complete-update', 'change', 'update:etape'],
+  emits: [
+    'complete-update',
+    'type-complete-update',
+    'change',
+    'update:etape',
+    'update:events'
+  ],
 
   data() {
     return {
@@ -321,7 +325,7 @@ export default {
         steps.push({ id: 'decisionsAnnexes', name: 'Décisions annexes' })
       }
 
-      const titreTypeHelp = this.help[this.titreTypeId + this.domaineId]
+      const titreTypeHelp = this.help[this.titreTypeId]
       if (titreTypeHelp) {
         steps.forEach(step => {
           step.help = titreTypeHelp[step.id]

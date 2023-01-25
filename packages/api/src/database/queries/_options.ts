@@ -199,15 +199,12 @@ const domaines = {
 
 const titresRelateTrue = [
   'type',
-  'domaine',
   ...titresActivitesRelateTrue.map(k => `activites.${k}`),
   ...titresDemarchesRelateTrue.map(k => `demarches.${k}`)
 ]
 
 const titresRelateFalse = [
   ...titresTypesRelateFalse.map(k => `type.${k}`),
-  'domaine.titresTypes',
-  ...titresTypesRelateFalse.map(k => `domaine.titresTypes.${k}`),
   'points',
   'points.references',
   'communes',
@@ -230,7 +227,6 @@ const titresRelateFalse = [
 const titres = {
   graph: `[
     type.${titresTypes.graph},
-    domaine.${domaines.graph},
     points(orderAsc).${points.graph},
     titulaires.${entreprises.graph},
     amodiataires.${entreprises.graph},

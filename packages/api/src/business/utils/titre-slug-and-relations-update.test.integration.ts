@@ -33,7 +33,6 @@ describe('vérifie la mis à jour des slugs sur les relations d’un titre', () 
 
     const titre = await titreAdd({
       nom: 'titre-nom',
-      domaineId: 'm',
       typeId: 'arm',
       propsTitreEtapesIds: {},
       slug: 'toto'
@@ -52,7 +51,6 @@ describe('vérifie la mis à jour des slugs sur les relations d’un titre', () 
 
     const titre = await titreAdd({
       nom: 'titre-nom',
-      domaineId: 'm',
       typeId: 'arm',
       propsTitreEtapesIds: {},
       slug: 'm-ar-titre-nom-0000'
@@ -71,7 +69,6 @@ describe('vérifie la mis à jour des slugs sur les relations d’un titre', () 
 
     const titrePojo = {
       nom: 'titre-nom',
-      domaineId: 'm',
       typeId: 'arm',
       propsTitreEtapesIds: {}
     } as ITitre
@@ -93,7 +90,6 @@ describe('vérifie la mis à jour des slugs sur les relations d’un titre', () 
 
     const titrePojo = {
       nom: 'titre-nom',
-      domaineId: 'm',
       typeId: 'arm',
       propsTitreEtapesIds: {}
     } as ITitre
@@ -114,7 +110,6 @@ describe('vérifie la mis à jour des slugs sur les relations d’un titre', () 
 
     const titre = await titreAdd({
       nom: 'titre-nom',
-      domaineId: 'm',
       typeId: 'arm',
       propsTitreEtapesIds: {},
       slug: 'm-ar-titre-nom-0000',

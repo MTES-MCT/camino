@@ -3,11 +3,14 @@
     <div class="desktop-blob-1-2">
       <div class="rnd-b-s bg-alt pt px overflow-auto">
         <h4 class="mb">
-          <Pill :color="`bg-domaine-${titre.domaine.id}`" class="mono mr-s">
-            {{ titre.domaine.id }}
+          <Pill
+            :color="`bg-domaine-${getDomaineId(titre.typeId)}`"
+            class="mono mr-s"
+          >
+            {{ getDomaineId(titre.typeId) }}
           </Pill>
           <span class="cap-first">
-            {{ TitresTypesTypes[type.typeId].nom }}
+            {{ TitresTypesTypes[getTitreTypeType(titre.typeId)].nom }}
           </span>
         </h4>
 
@@ -75,7 +78,7 @@
         :user="user"
         :titre="{
           id: titre.id,
-          typeId: type.id,
+          typeId: titre.typeId,
           administrations: titre.administrations,
           demarches: titre.demarches.map(d => ({ typeId: d.type.id }))
         }"
@@ -178,7 +181,12 @@ import {
 } from '@/components/titre/pure-titres-link.type'
 import { User } from 'camino-common/src/roles'
 import { computed } from 'vue'
-import { TitresTypes, TitreTypeId } from 'camino-common/src/static/titresTypes'
+import {
+  getDomaineId,
+  getTitreTypeType,
+  TitresTypes,
+  TitreTypeId
+} from 'camino-common/src/static/titresTypes'
 import {
   DemarchesTypes,
   DemarcheTypeId
@@ -210,7 +218,10 @@ export interface Entreprise {
 const props = defineProps<{
   titre: {
     id: string
-    domaine: { id: DomaineId }
+    typeId: TitreTypeId
+    type: {
+      sections: { id: string; elements: { id: string }[] }[]
+    }
     titreStatutId: TitreStatutId
     demarches: {
       id: string
@@ -223,10 +234,6 @@ const props = defineProps<{
     }[]
     contenu: { [sectionId: string]: { [elementId: string]: unknown } }
     administrations: AdministrationId[]
-    type: {
-      id: TitreTypeId
-      sections: { id: string; elements: { id: string }[] }[]
-    }
     titulaires: Entreprise[]
     amodiataires: Entreprise[]
     substances: SubstanceLegaleId[]
@@ -249,6 +256,5 @@ const hasContenu = computed(
     )
 )
 
-const type = computed(() => TitresTypes[props.titre.type.id])
 const titreStatut = computed(() => TitresStatuts[props.titre.titreStatutId])
 </script>

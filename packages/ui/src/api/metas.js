@@ -7,7 +7,6 @@ import {
   fragmentEtapeType,
   fragmentDocumentType,
   fragmentTitreType,
-  fragmentTitreTypeTitreStatut,
   fragmentTitreTypeDemarcheType,
   fragmentTitreTypeDemarcheTypeEtapeType,
   fragmentEtapeTypeDocumentType,

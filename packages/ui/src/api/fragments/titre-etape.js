@@ -2,11 +2,7 @@ import gql from 'graphql-tag'
 import { fragmentTitreEntreprises } from './entreprises'
 import { fragmentPoint } from './point'
 import { fragmentGeojsonMultiPolygon } from './geojson'
-import {
-  fragmentDemarcheType,
-  fragmentDocumentType,
-  fragmentTitreType
-} from './metas'
+import { fragmentDemarcheType, fragmentDocumentType } from './metas'
 
 import { fragmentDocument } from './documents'
 import { fragmentCommune } from '@/api/fragments/commune'
@@ -244,13 +240,7 @@ const fragmentEtape = gql`
         id
         slug
         nom
-        domaine {
-          id
-          nom
-        }
-        type {
-          ...titreType
-        }
+        typeId
       }
     }
     ordre
@@ -308,8 +298,6 @@ const fragmentEtape = gql`
   }
 
   ${fragmentDemarcheType}
-
-  ${fragmentTitreType}
 
   ${fragmentTitreEntreprises}
 

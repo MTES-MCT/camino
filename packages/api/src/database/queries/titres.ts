@@ -73,7 +73,7 @@ const titreGet = async (
 
 const titresColonnes = {
   nom: { id: 'nom', groupBy: ['titres.nom'] },
-  domaine: { id: 'domaineId', groupBy: ['titres.domaineId'] },
+  domaine: { id: raw(`SUBSTRING( titres.type_id, 3, 1 )`), groupBy: [] },
   coordonnees: { id: 'coordonnees', groupBy: [] },
   type: { id: 'type:type.nom', relation: 'type.type' },
   statut: { id: 'titreStatutId', groupBy: ['titres.titreStatutId'] },

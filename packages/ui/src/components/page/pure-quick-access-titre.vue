@@ -18,18 +18,24 @@
 import { TypeAhead } from '@/components/_ui/typeahead'
 import { Titre } from './pure-quick-access-titres.type'
 import { Domaine } from '@/components/_common/domaine'
+import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import {
-  TitresTypesTypes,
-  TitreTypeTypeId
-} from 'camino-common/src/static/titresTypesTypes'
+  getDomaineId,
+  getTitreTypeType,
+  TitreTypeId
+} from 'camino-common/src/static/titresTypes'
+import { DomaineId } from 'camino-common/src/static/domaines'
 import { ref } from 'vue'
 
 const display = (item: Titre) => {
   return (
     <div class="flex flex-center">
-      <Domaine domaineId={item.domaine.id} class="mr-s" />
+      <Domaine
+        domaineId={domaineIdGetByTitreTypeId(item.typeId)}
+        class="mr-s"
+      />
       <span class="cap-first bold">{item.nom}</span>
-      <span class="ml-xs"> ({titreTypeGetById(item.type.type.id)}) </span>
+      <span class="ml-xs"> ({titreTypeTypeGetById(item.typeId)}) </span>
     </div>
   )
 }
@@ -54,7 +60,10 @@ const selectItem = (item: Titre | undefined) => {
   emit('onSelectedTitre', item)
 }
 
-const titreTypeGetById = (id: TitreTypeTypeId) => TitresTypesTypes[id].nom
+const titreTypeTypeGetById = (id: TitreTypeId): string =>
+  TitresTypesTypes[getTitreTypeType(id)].nom
+const domaineIdGetByTitreTypeId = (id: TitreTypeId): DomaineId =>
+  getDomaineId(id)
 
 const debounce = createDebounce()
 

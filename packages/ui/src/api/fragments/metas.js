@@ -92,14 +92,6 @@ const fragmentEtapeType = gql`
   ${fragmentDocumentType}
 `
 
-const fragmentTitreTypeTitreStatut = gql`
-  fragment titreTypeTitreStatut on TitreTypeTitreStatut {
-    titreTypeId
-    titreStatutId
-    publicLecture
-  }
-`
-
 const fragmentTitreTypeDemarcheType = gql`
   fragment titreTypeDemarcheType on TitreTypeDemarcheType {
     titreTypeId
@@ -161,7 +153,6 @@ export {
   fragmentDemarcheType,
   fragmentTitreType,
   fragmentDocumentType,
-  fragmentTitreTypeTitreStatut,
   fragmentTitreTypeDemarcheType,
   fragmentTitreTypeDemarcheTypeEtapeType,
   fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType,

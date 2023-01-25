@@ -14,9 +14,5 @@ fragment titre on Titre {
       nom
     }
   }
-  domaine {
-    id
-    nom
-  }
   titreStatutId
 }

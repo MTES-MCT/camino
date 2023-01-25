@@ -1,6 +1,5 @@
 import gql from 'graphql-tag'
 
-import { fragmentTitreType } from './metas'
 import { fragmentTitreDemarche } from './titre-demarche'
 import { fragmentTitreActivite } from './titre-activite'
 import {
@@ -18,13 +17,9 @@ const fragmentTitre = gql`
     id
     slug
     nom
+    typeId
     type {
-      ...titreType
       sections
-    }
-    domaine {
-      id
-      nom
     }
     titreStatutId
     references {
@@ -97,8 +92,6 @@ const fragmentTitre = gql`
   ${fragmentGeojsonMultiPolygon}
 
   ${fragmentCommune}
-
-  ${fragmentTitreType}
 `
 
 const fragmentTitres = gql`
@@ -106,14 +99,7 @@ const fragmentTitres = gql`
     id
     slug
     nom
-    type {
-      ...titreType
-    }
-    domaineId
-    domaine {
-      id
-      nom
-    }
+    typeId
     coordonnees {
       x
       y
@@ -140,8 +126,6 @@ const fragmentTitres = gql`
   }
 
   ${fragmentTitresEntreprises}
-
-  ${fragmentTitreType}
 `
 
 const fragmentTitreGeo = gql`
@@ -149,13 +133,7 @@ const fragmentTitreGeo = gql`
     id
     slug
     nom
-    type {
-      ...titreType
-    }
-    domaine {
-      id
-      nom
-    }
+    typeId
     titreStatutId
     titulaires {
       ...titresEntreprises
@@ -171,7 +149,6 @@ const fragmentTitreGeo = gql`
     }
   }
   ${fragmentTitresEntreprises}
-  ${fragmentTitreType}
 `
 
 const fragmentTitresGeo = gql`
@@ -199,21 +176,13 @@ const fragmentDemarchesTitre = gql`
     id
     slug
     nom
-    type {
-      ...titreType
-    }
-    domaine {
-      id
-      nom
-    }
+    typeId
     titreStatutId
     references {
       referenceTypeId
       nom
     }
   }
-
-  ${fragmentTitreType}
 `
 
 export {

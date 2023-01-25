@@ -1,7 +1,8 @@
 import { EntrepriseId } from './entreprise.js'
 import { isAdministration, isEntreprise, isSuper, User } from './roles.js'
-import { DOMAINES_IDS } from './static/domaines.js'
+import { DomaineId, DOMAINES_IDS } from './static/domaines.js'
 import { CommonTitre } from './titres.js'
+import { getDomaineId } from './static/titresTypes.js'
 
 export type Fiscalite = FiscaliteGuyane | FiscaliteFrance
 export interface FiscaliteFrance {
@@ -24,15 +25,18 @@ export const montantNetTaxeAurifere = (fiscalite: Fiscalite) => (isFiscaliteGuya
 export const fraisGestion = (fiscalite: Fiscalite): number =>
   Number.parseFloat(((fiscalite.redevanceDepartementale + fiscalite.redevanceCommunale + montantNetTaxeAurifere(fiscalite)) * 0.08).toFixed(2))
 
-export const fiscaliteVisible = (user: User, entrepriseId: EntrepriseId, titres: Partial<Pick<CommonTitre, 'domaineId'>>[]): boolean => {
-  if (user) {
+export const fiscaliteVisible = (user: User, entrepriseId: EntrepriseId, titres: Partial<Pick<CommonTitre, 'typeId'>>[]): boolean => {
+  return fiscaliteVisibleByDomaines(
+    user,
+    entrepriseId,
+    titres.filter((titre): titre is Pick<CommonTitre, 'typeId'> => !!titre.typeId).map(({ typeId }) => getDomaineId(typeId))
+  )
+}
+export const fiscaliteVisibleByDomaines = (user: User, entrepriseId: EntrepriseId, domaineIds: DomaineId[]): boolean => {
+  if (user && domaineIds.length > 0) {
     if (
-      titres.every(titre => {
-        if (!titre.domaineId) {
-          throw new Error("le domaineId d'un titre est obligatoire")
-        }
-
-        return [DOMAINES_IDS.GEOTHERMIE, DOMAINES_IDS.GRANULATS_MARINS, DOMAINES_IDS.SOUTERRAIN, DOMAINES_IDS.RADIOACTIF].includes(titre.domaineId)
+      domaineIds.every(domaineId => {
+        return [DOMAINES_IDS.GEOTHERMIE, DOMAINES_IDS.GRANULATS_MARINS, DOMAINES_IDS.SOUTERRAIN, DOMAINES_IDS.RADIOACTIF].includes(domaineId)
       })
     ) {
       return false

@@ -2,17 +2,15 @@ import { getDocuments } from './titresTypes_demarchesTypes_etapesTypes.js'
 import { test, expect } from 'vitest'
 
 test('getDocuments erreurs', () => {
-  expect(() => getDocuments()).toThrowErrorMatchingInlineSnapshot(
-    `"il manque des éléments pour trouver les documents domaineId: 'undefined', titreTypeType: undefined, demarcheId: undefined, etapeTypeId: undefined"`
-  )
+  expect(() => getDocuments()).toThrowErrorMatchingInlineSnapshot('"il manque des éléments pour trouver les documents titreTypeId: \'undefined\', demarcheId: undefined, etapeTypeId: undefined"')
 })
 
 test('getDocuments pas de surcharge mais pas de documents', () => {
-  expect(getDocuments('ap', 'm', 'amo', 'abs')).toMatchInlineSnapshot('[]')
+  expect(getDocuments('apm', 'amo', 'abs')).toMatchInlineSnapshot('[]')
 })
 
 test('getDocuments pas de surcharge', () => {
-  expect(getDocuments('ap', 'm', 'amo', 'wfo')).toMatchInlineSnapshot(`
+  expect(getDocuments('apm', 'amo', 'wfo')).toMatchInlineSnapshot(`
     [
       {
         "id": "dcl",
@@ -24,7 +22,7 @@ test('getDocuments pas de surcharge', () => {
 })
 
 test('getDocuments surcharge', () => {
-  expect(getDocuments('ax', 'm', 'oct', 'dae')).toMatchInlineSnapshot(`
+  expect(getDocuments('axm', 'oct', 'dae')).toMatchInlineSnapshot(`
     [
       {
         "description": undefined,
@@ -55,7 +53,7 @@ test('getDocuments surcharge', () => {
     ]
   `)
 
-  expect(getDocuments('ax', 'm', 'oct', 'mfr')).toMatchSnapshot()
+  expect(getDocuments('axm', 'oct', 'mfr')).toMatchSnapshot()
 
-  expect(getDocuments('ax', 'm', 'oct', 'dae')).not.toEqual(getDocuments('ax', 'm', 'ces', 'dae'))
+  expect(getDocuments('axm', 'oct', 'dae')).not.toEqual(getDocuments('axm', 'ces', 'dae'))
 })

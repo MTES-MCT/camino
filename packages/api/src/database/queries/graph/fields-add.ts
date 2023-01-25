@@ -13,10 +13,6 @@ export const fieldsTitreAdd = (fields: IFields) => {
     fields.titre.type = { id: {}, type: { id: {} } }
   }
 
-  if (!fields.titre.domaine) {
-    fields.titre.domaine = { id: {} }
-  }
-
   if (!fields.titre.titulaires) {
     fields.titre.titulaires = { id: {} }
   }

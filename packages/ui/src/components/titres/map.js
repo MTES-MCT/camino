@@ -6,6 +6,10 @@ import {
   leafletIconBuild
 } from '../_map/leaflet'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
+import {
+  getDomaineId,
+  getTitreTypeType
+} from 'camino-common/src/static/titresTypes'
 
 const leafletCoordinatesFind = geojson => {
   const coordinates = geojson.geometry.coordinates
@@ -95,7 +99,7 @@ const layersBuild = (titres, router) =>
         return { geojsons, markers }
 
       const titreId = titre.id || index
-      const domaineId = titre.domaine.id
+      const domaineId = getDomaineId(titre.typeId)
       const icon = leafletIconBuild({
         iconUrl: iconUrlFind(domaineId),
         iconSize: [32, 40],
@@ -153,7 +157,9 @@ const layersBuild = (titres, router) =>
       marker.bindPopup(popupHtml, popupOptions)
       marker.on(methods)
 
-      const className = `svg-fill-pattern-${titre.type.type.id}-${domaineId}`
+      const className = `svg-fill-pattern-${getTitreTypeType(
+        titre.typeId
+      )}-${domaineId}`
       const geojsonOptions = {
         style: { fillOpacity: 0.75, weight: 1, color: 'white', className },
         onEachFeature: (feature, layer) => {

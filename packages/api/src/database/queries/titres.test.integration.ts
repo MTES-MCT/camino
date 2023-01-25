@@ -22,7 +22,6 @@ describe('teste les requêtes sur les titres', () => {
       const titre = await Titres.query().insert({
         nom: idGenerate(),
         titreStatutId: 'val',
-        domaineId: 'm',
         typeId: 'arm'
       })
       expect(titre.archive).toBeFalsy()

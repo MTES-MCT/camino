@@ -6,6 +6,12 @@ import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
+import {
+  getDomaineId,
+  getTitreTypeType
+} from 'camino-common/src/static/titresTypes.js'
+import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes.js'
+import { Domaines } from 'camino-common/src/static/domaines.js'
 
 const etapesDatesStatutsBuild = (titreDemarche: ITitreDemarche) => {
   if (!titreDemarche.etapes?.length) return null
@@ -51,8 +57,9 @@ export const titresDemarchesFormatTable = (titresDemarches: ITitreDemarche[]) =>
     const titreDemarcheNew = {
       titre_id: titre.slug,
       titre_nom: titre.nom,
-      titre_domaine: titre.domaine!.nom,
-      titre_type: titre.type!.type.nom,
+
+      titre_domaine: Domaines[getDomaineId(titre.typeId)].nom,
+      titre_type: TitresTypesTypes[getTitreTypeType(titre.typeId)].nom,
       titre_statut: isNotNullNorUndefined(titre.titreStatutId)
         ? TitresStatuts[titre.titreStatutId].nom
         : '',

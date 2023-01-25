@@ -5,7 +5,6 @@ exports[`titresONF > teste la récupération des données pour l'ONF 1`] = `
   "dateCARM": "",
   "dateCompletudePTMG": "2022-03-10",
   "dateReceptionONF": "",
-  "domaineId": "m",
   "enAttenteDeONF": true,
   "id": Any<String>,
   "nom": "titre1",
@@ -38,6 +37,7 @@ exports[`titresONF > teste la récupération des données pour l'ONF 1`] = `
       "url": null,
     },
   ],
+  "typeId": "arm",
 }
 `;
 
@@ -46,7 +46,6 @@ exports[`titresONF > teste la récupération des données pour l'ONF 2`] = `
   "dateCARM": "",
   "dateCompletudePTMG": "",
   "dateReceptionONF": "",
-  "domaineId": "m",
   "enAttenteDeONF": false,
   "id": Any<String>,
   "nom": "titre2",
@@ -79,12 +78,12 @@ exports[`titresONF > teste la récupération des données pour l'ONF 2`] = `
       "url": null,
     },
   ],
+  "typeId": "arm",
 }
 `;
 
 exports[`titresPTMG > teste la récupération des données pour le PTMG 1`] = `
 {
-  "domaineId": "m",
   "enAttenteDePTMG": false,
   "id": Any<String>,
   "nom": "titre1",
@@ -117,12 +116,12 @@ exports[`titresPTMG > teste la récupération des données pour le PTMG 1`] = `
       "url": null,
     },
   ],
+  "typeId": "arm",
 }
 `;
 
 exports[`titresPTMG > teste la récupération des données pour le PTMG 2`] = `
 {
-  "domaineId": "m",
   "enAttenteDePTMG": true,
   "id": Any<String>,
   "nom": "titre2",
@@ -155,5 +154,6 @@ exports[`titresPTMG > teste la récupération des données pour le PTMG 2`] = `
       "url": null,
     },
   ],
+  "typeId": "arm",
 }
 `;

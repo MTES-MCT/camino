@@ -49,22 +49,6 @@ const domainesGet = async (
   return q
 }
 
-const domaineGet = async (
-  id: string,
-  { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
-) => {
-  const graph = fields
-    ? graphBuild(fields, 'titre', fieldsFormat)
-    : options.domaines.graph
-
-  const q = Domaines.query().withGraphFetched(graph).findById(id)
-
-  domainesQueryModify(q, user)
-
-  return q
-}
-
 const titresTypesGet = async (_: never, { fields }: { fields?: IFields }) => {
   const graph = fields
     ? graphBuild(fields, 'titresTypes', fieldsFormat)
@@ -270,7 +254,6 @@ const documentTypeGet = async (id: string) =>
   DocumentsTypes.query().findById(id)
 
 export {
-  domaineGet,
   domainesGet,
   titresTypesTypesGet,
   titresTypesGet,

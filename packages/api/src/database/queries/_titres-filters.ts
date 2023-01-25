@@ -76,13 +76,21 @@ export const titresFiltersQueryModify = (
       q.leftJoinRelated('titre')
     }
 
-    q.whereIn(`${name}.domaineId`, domainesIds)
+    q.whereRaw(
+      `SUBSTRING( ${name}.type_id, 3, 1 ) in (${domainesIds
+        .map(() => '?')
+        .join(',')})`,
+      domainesIds
+    )
   }
 
   if (typesIds) {
-    q.leftJoinRelated(jointureFormat(name, 'type'))
-
-    q.whereIn(fieldFormat(name, 'type.typeId'), typesIds)
+    q.whereRaw(
+      `SUBSTRING( ${name}.type_id, 1, 2 ) in (${typesIds
+        .map(() => '?')
+        .join(',')})`,
+      typesIds
+    )
   }
 
   if (statutsIds) {
