@@ -6,7 +6,7 @@ on:
       - prod
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 jobs:
   ui:
     uses: ./.github/workflows/ui.yml
