@@ -2,9 +2,8 @@ import TitresLink from './pure-titres-link.vue'
 import { Meta, Story } from '@storybook/vue3'
 import {
   LinkableTitre,
-  LoadLinkableTitres,
   TitresLinkConfig
-} from './pure-titres-link.type'
+} from '@/components/titre/pure-titres-link-form-api-client'
 
 const meta: Meta = {
   title: 'Components/Titre/TitresLink',
@@ -15,7 +14,7 @@ export default meta
 
 type Props = {
   config: TitresLinkConfig
-  loadLinkableTitres: LoadLinkableTitres
+  loadLinkableTitres: () => Promise<LinkableTitre[]>
 }
 const titres: LinkableTitre[] = [
   {

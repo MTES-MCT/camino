@@ -11,7 +11,7 @@
             v-if="titreLinkConfig"
             :config="titreLinkConfig"
             :loadLinkableTitres="
-              loadLinkableTitres(titre.typeId, titre.demarches)
+              apiClient.loadLinkableTitres(titre.typeId, titre.demarches)
             "
             @onSelectedTitres="onSelectedTitres"
           />
@@ -85,12 +85,6 @@ import {
   getLinkConfig
 } from 'camino-common/src/permissions/titres'
 import { computed, onMounted, ref, watch } from 'vue'
-import {
-  TitresLinkConfig,
-  LoadLinkableTitres,
-  LinkTitres,
-  LoadTitreLinks
-} from './pure-titres-link.type'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { User } from 'camino-common/src/roles'
 import { AdministrationId } from 'camino-common/src/static/administrations'
@@ -100,6 +94,8 @@ import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { Icon } from '@/components/_ui/icon'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreLink, TitreLinks } from 'camino-common/src/titres'
+import { ApiClient } from '@/api/api-client'
+import { TitresLinkConfig } from '@/components/titre/pure-titres-link-form-api-client'
 
 const props = defineProps<{
   user: User
@@ -109,12 +105,10 @@ const props = defineProps<{
     administrations: AdministrationId[]
     demarches: { typeId: DemarcheTypeId }[]
   }
-  loadTitreLinks: LoadTitreLinks
-  loadLinkableTitres: (
-    titreTypeId: TitreTypeId,
-    demarches: { typeId: DemarcheTypeId }[]
-  ) => LoadLinkableTitres
-  linkTitres: LinkTitres
+  apiClient: Pick<
+    ApiClient,
+    'loadTitreLinks' | 'loadLinkableTitres' | 'linkTitres'
+  >
 }>()
 
 const emit = defineEmits<{
@@ -144,7 +138,7 @@ watch(
 const init = async () => {
   titresLinks.value = { status: 'LOADING' }
   try {
-    const result = await props.loadTitreLinks(props.titre.id)
+    const result = await props.apiClient.loadTitreLinks(props.titre.id)
     titresLinks.value = { status: 'LOADED', value: result }
   } catch (e: any) {
     titresLinks.value = {
@@ -189,7 +183,7 @@ const onSelectedTitres = (titres: TitreLink[]) => {
 const saveLink = async () => {
   titresLinks.value = { status: 'LOADING' }
   try {
-    const links = await props.linkTitres(
+    const links = await props.apiClient.linkTitres(
       props.titre.id,
       selectedTitres.value.map(({ id }) => id)
     )

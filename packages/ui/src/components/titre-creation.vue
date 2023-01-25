@@ -147,13 +147,11 @@ import { Icon } from '@/components/_ui/icon'
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import PureTitresLink from '@/components/titre/pure-titres-link.vue'
 import { getLinkConfig } from 'camino-common/src/permissions/titres'
-import {
-  loadLinkableTitres,
-  TitresLinkConfig
-} from '@/components/titre/pure-titres-link.type'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { apiClient } from '@/api/api-client'
+import { TitresLinkConfig } from '@/components/titre/pure-titres-link-form-api-client'
 
 type Entreprise = {
   id: string
@@ -217,7 +215,7 @@ const linkConfig = computed(() => {
 
 const loadLinkableTitresByTypeId = computed(() => {
   if (titreDemande.value.typeId) {
-    return loadLinkableTitres(titreDemande.value.typeId, [])
+    return apiClient.loadLinkableTitres(titreDemande.value.typeId, [])
   } else {
     return () => Promise.resolve([])
   }

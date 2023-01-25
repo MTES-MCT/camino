@@ -11,7 +11,12 @@
 
     <TitreHeader :titre="titre" @titre-event-track="eventTrack" />
 
-    <TitreInfos :titre="titre" :user="user" class="mb" />
+    <TitreInfos
+      :titre="titre"
+      :user="user"
+      :apiClient="apiClient()"
+      class="mb"
+    />
 
     <Perimetre
       v-if="titre.geojsonMultiPolygon && titre.points"
@@ -98,12 +103,13 @@ import { Perimetre } from './_common/perimetre'
 import ActivitesPills from './_common/pills.vue'
 
 import TitreHeader from './titre/header.vue'
-import TitreInfos from './titre/infos.vue'
+import { Infos as TitreInfos } from './titre/infos'
 import { Territoires as TitreTerritoires } from './titre/territoires'
 import TitreRepertoire from './titre/repertoire.vue'
 import TitreDemarches from './titre/demarches.vue'
 import TitreActivitesList from './activites/list.vue'
 import Journaux from './journaux/journaux.vue'
+import { apiClient } from '@/api/api-client'
 
 export default {
   components: {
@@ -187,6 +193,9 @@ export default {
   },
 
   methods: {
+    apiClient() {
+      return apiClient
+    },
     async get() {
       const titreId = this.$route.params.id
       await this.$store.dispatch('titre/get', titreId)
