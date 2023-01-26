@@ -1,6 +1,6 @@
 import { CaminoDate } from 'camino-common/src/date'
 import { FunctionalComponent } from 'vue'
-import InputDate from '../_ui/input-date.vue'
+import { InputDate } from '../_ui/input-date'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 
 export type Props = {
@@ -18,8 +18,8 @@ export const DateEdit: FunctionalComponent<Props> = props => {
       </div>
       <div class="tablet-blob-2-3">
         <InputDate
-          modelValue={props.date}
-          onUpdate:modelValue={props.onDateChanged}
+          dateChanged={props.onDateChanged}
+          initialValue={props.date}
           class="mb-s"
         />
         <div class="h6">

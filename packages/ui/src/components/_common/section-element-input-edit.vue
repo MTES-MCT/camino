@@ -24,7 +24,8 @@
 
     <InputDate
       v-else-if="element.type === 'date'"
-      v-model="contenu[element.id]"
+      :inputValue="contenu[element.id]"
+      :dateChanged="dateChanged"
     />
 
     <textarea
@@ -115,7 +116,7 @@
 </template>
 
 <script>
-import InputDate from '../_ui/input-date.vue'
+import { InputDate } from '../_ui/input-date'
 import InputNumber from '../_ui/input-number.vue'
 import SectionElementMultipleEdit from './section-element-multiple-edit.vue'
 import SectionElementFileEdit from './section-element-file-edit.vue'
@@ -158,6 +159,12 @@ export default {
       }
     }
     this.$emit('update:contenu', this.contenu)
+  },
+
+  methods: {
+    dateChanged(date) {
+      this.contenu[this.element.id] = date
+    }
   }
 }
 </script>

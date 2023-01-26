@@ -49,7 +49,10 @@
             <p class="h6 italic mb-0">Optionnel</p>
           </div>
           <div class="blob-3-4">
-            <InputDate v-model="filter.value[n].dateDebut" />
+            <InputDate
+              :initialValue="filter.value[n].dateDebut"
+              :dateChanged="date => dateDebutChanged(n, date)"
+            />
           </div>
         </div>
         <div class="blobs mb-s">
@@ -58,7 +61,10 @@
             <p class="h6 italic mb-0">Optionnel</p>
           </div>
           <div class="blob-3-4">
-            <InputDate v-model="filter.value[n].dateFin" />
+            <InputDate
+              :initialValue="filter.value[n].dateFin"
+              :dateChanged="date => dateFinChanged(n, date)"
+            />
           </div>
         </div>
       </div>
@@ -76,7 +82,7 @@
 </template>
 
 <script>
-import InputDate from '../_ui/input-date.vue'
+import { InputDate } from '../_ui/input-date'
 import { Icon } from '@/components/_ui/icon'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 
@@ -88,6 +94,12 @@ export default {
   },
 
   methods: {
+    dateDebutChanged(n, date) {
+      this.filter.value[n].dateDebut = date
+    },
+    dateFinChanged(n, date) {
+      this.filter.value[n].dateFin = date
+    },
     statutsFind(n) {
       return getEtapesStatuts(this.filter.value[n].typeId)
     },
