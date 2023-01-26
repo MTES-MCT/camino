@@ -28,6 +28,7 @@ import {
   SecteursMaritimes
 } from 'camino-common/src/static/facades.js'
 import { Administrations } from 'camino-common/src/static/administrations.js'
+import { titreContenuFormat } from '../titre-contenu'
 
 const getFacadesMaritimeCell = (
   secteursMaritime: SecteursMaritimes[],
@@ -126,7 +127,7 @@ export const titresTableFormat = (titres: ITitre[]) =>
         .join(separator),
       geojson: JSON.stringify(titre.geojsonMultiPolygon),
       ...titreReferences,
-      ...titreContenuTableFormat(titre.contenu)
+      ...titreContenuTableFormat(titreContenuFormat(titre))
     }
 
     return titreNew
@@ -192,7 +193,7 @@ const titreGeojsonPropertiesFormat = (titre: ITitre) => {
             }`
         )
         .join(separator),
-    ...titreContenuTableFormat(titre.contenu)
+    ...titreContenuTableFormat(titreContenuFormat(titre))
   }
 }
 

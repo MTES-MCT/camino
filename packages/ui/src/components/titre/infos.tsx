@@ -33,6 +33,7 @@ import {
 } from 'camino-common/src/static/phasesStatuts'
 import { TitreReference } from 'camino-common/src/titres-references'
 import { ApiClient } from '@/api/api-client'
+import { LoadingElement } from '@/components/_ui/functional-loader'
 
 export interface Entreprise {
   id: string
@@ -45,12 +46,6 @@ export interface Props {
   titre: {
     id: string
     typeId: TitreTypeId
-    type: {
-      sections: {
-        id: string
-        elements: { id: string; nom?: string; description?: string }[]
-      }[]
-    }
     titreStatutId: TitreStatutId
     demarches: {
       id: string
@@ -112,17 +107,39 @@ const Entreprises = ({
   ) : null
 }
 
+const InfosSections = ({
+  titre
+}: {
+  titre: Pick<Props['titre'], 'id' | 'contenu'>
+}): JSX.Element | null => {
+  if (!titre.contenu) {
+    return null
+  }
+  const hasContenu = titre.type.sections?.some(s =>
+    s.elements.some(
+      e => titre.contenu[s.id] && titre.contenu[s.id][e.id] !== undefined
+    )
+  )
+
+  const renderItem = (sections: any[]): JSX.Element | null =>
+    sections?.length ? (
+      <>
+        {sections.map(s => (
+          <Section
+            key={s.id}
+            entete={false}
+            section={s}
+            contenu={titre.contenu[s.id]}
+          />
+        ))}
+      </>
+    ) : null
+
+  return <LoadingElement data={} renderItem={renderItem}></LoadingElement>
+}
+
 export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
   const phases = titre.demarches.filter(d => d.phase)
-
-  const hasContenu =
-    titre.contenu &&
-    titre.type.sections &&
-    titre.type.sections.some(s =>
-      s.elements.some(
-        e => titre.contenu[s.id] && titre.contenu[s.id][e.id] !== undefined
-      )
-    )
 
   const titreStatut = TitresStatuts[titre.titreStatutId]
 
@@ -228,27 +245,10 @@ export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
           </div>
         ) : null}
 
-        <Entreprises
-          entreprises={titre.titulaires}
-          label={'Titulaire'}
-        ></Entreprises>
-        <Entreprises
-          entreprises={titre.amodiataires}
-          label={'Amodiataire'}
-        ></Entreprises>
+        <Entreprises entreprises={titre.titulaires} label={'Titulaire'} />
+        <Entreprises entreprises={titre.amodiataires} label={'Amodiataire'} />
 
-        {hasContenu ? (
-          <div>
-            {titre.type.sections.map(s => (
-              <Section
-                key={s.id}
-                entete={false}
-                section={s}
-                contenu={titre.contenu[s.id]}
-              />
-            ))}
-          </div>
-        ) : null}
+        <InfosSections />
       </div>
     </div>
   )

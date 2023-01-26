@@ -1,11 +1,4 @@
-import {
-  ITitre,
-  IGeoJson,
-  IFields,
-  ISection,
-  IContenusTitreEtapesIds,
-  ITitreDemarche
-} from '../../types.js'
+import { ITitre, IGeoJson, IFields } from '../../types.js'
 
 import {
   geojsonFeatureMultiPolygon,
@@ -23,82 +16,6 @@ import {
 } from 'camino-common/src/static/administrations.js'
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
-
-const titreTypeSectionsFormat = (
-  contenusTitreEtapesIds: IContenusTitreEtapesIds,
-  demarches: ITitreDemarche[]
-) => {
-  const sections = [] as ISection[]
-
-  Object.keys(contenusTitreEtapesIds).some(sectionId => {
-    if (!contenusTitreEtapesIds![sectionId]) return false
-
-    Object.keys(contenusTitreEtapesIds![sectionId]).some(elementId => {
-      const etapeId = contenusTitreEtapesIds![sectionId][elementId]
-
-      if (!etapeId) return false
-
-      demarches!.some(d => {
-        if (!d.etapes) return false
-
-        const etape = d.etapes.find(e => e.id === etapeId)
-
-        if (!etape) return false
-
-        // sinon, si l'étape correspond à l'id de `contenusTitreEtapesIds`
-        // et que l'étape n'a ni contenu ni section ni l'élément qui nous intéresse
-        // on ne cherche pas plus loin
-        if (
-          !etape.contenu ||
-          !etape.contenu[sectionId] ||
-          etape.contenu[sectionId][elementId] === undefined ||
-          !etape.type?.sections
-        ) {
-          return false
-        }
-
-        const etapeSection = etape.type.sections.find(s => s.id === sectionId)
-
-        if (!etapeSection || !etapeSection.elements) return false
-
-        const etapeElement = etapeSection.elements.find(e => e.id === elementId)
-
-        if (!etapeElement) return false
-
-        // ajoute la section dans le titre si elle n'existe pas encore
-        let titreTypeSection = sections.find(s => s.id === sectionId)
-
-        if (!titreTypeSection) {
-          titreTypeSection = { ...etapeSection, elements: [] }
-
-          sections.push(titreTypeSection)
-        }
-
-        if (!titreTypeSection.elements) {
-          titreTypeSection.elements = []
-        }
-
-        // ajoute l'élément dans les sections du titre s'il n'existe pas encore
-        const titreElement = titreTypeSection.elements.find(
-          e => e.id === elementId
-        )
-
-        if (!titreElement) {
-          titreTypeSection.elements.push(etapeElement)
-        }
-
-        // continue l'itération
-        return false
-      })
-
-      return false
-    })
-
-    return false
-  })
-
-  return sections
-}
 
 // optimisation possible pour un expert SQL
 // remplacer le contenu de ce fichier
@@ -143,17 +60,6 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
   if (fields.demarches && t.demarches?.length) {
     t.demarches = t.demarches.map(td =>
       titreDemarcheFormat(td, fields.demarches)
-    )
-  }
-
-  if (
-    fields.type?.sections &&
-    t.contenusTitreEtapesIds &&
-    t.demarches?.length
-  ) {
-    t.type!.sections = titreTypeSectionsFormat(
-      t.contenusTitreEtapesIds,
-      t.demarches
     )
   }
 

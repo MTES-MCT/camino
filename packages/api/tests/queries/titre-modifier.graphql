@@ -8,11 +8,6 @@ fragment titre on Titre {
   id
   slug
   nom
-  type {
-    id
-    type {
-      nom
-    }
-  }
+  typeId
   titreStatutId
 }

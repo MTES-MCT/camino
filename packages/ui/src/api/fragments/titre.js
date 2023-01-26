@@ -18,9 +18,6 @@ const fragmentTitre = gql`
     slug
     nom
     typeId
-    type {
-      sections
-    }
     titreStatutId
     references {
       referenceTypeId

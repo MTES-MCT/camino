@@ -31,7 +31,6 @@ const fragmentTitreType = gql`
       id
       nom
     }
-    contenuIds
   }
   ${fragmentTitreTypeType}
 `

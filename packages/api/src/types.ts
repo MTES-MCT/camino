@@ -519,7 +519,6 @@ interface ITitre {
   entreprisesLecture?: boolean | null
   contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
   propsTitreEtapesIds: IPropsTitreEtapesIds
-  contenu?: IContenu | null
   doublonTitreId?: string | null
   confidentiel?: boolean | null
 }
@@ -720,6 +719,7 @@ interface ITitreType {
   archive?: boolean | null
   type: ITitreTypeType
   demarchesTypes?: IDemarcheType[] | null
+  // FIXME à bouger dans le code static (pas obligatoirement dans le common, car c’est utilisé que par le back)
   contenuIds?: IContenuId[] | null
   sections?: ISection[] | null
 }
