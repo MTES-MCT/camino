@@ -5,6 +5,7 @@ import {
   isDemarcheTypeWithPhase
 } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreEtapePhaseFind } from './titre-demarche-date-fin-duree-find.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 /**
  * Vérifie si la démarche donne lieu à une phase
@@ -16,7 +17,7 @@ import { TitreEtapePhaseFind } from './titre-demarche-date-fin-duree-find.js'
 export const titreDemarchePhaseCheck = (
   titreDemarcheTypeId: DemarcheTypeId,
   titreDemarcheStatutId: string,
-  titreTypeId: string,
+  titreTypeId: TitreTypeId,
   titreEtapes?: TitreEtapePhaseFind[] | null
 ) => {
   // si

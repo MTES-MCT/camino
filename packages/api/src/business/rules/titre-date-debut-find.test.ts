@@ -37,11 +37,11 @@ describe("date de début d'une démarche", () => {
   })
 
   test("retourne null si il n'y a pas de démarche d'octroi", () => {
-    expect(titreDateDebutFind(titreDemarchesSansOctroi, 'ddd')).toBeNull()
+    expect(titreDateDebutFind(titreDemarchesSansOctroi, 'apc')).toBeNull()
   })
 
   test("retourne null si la démarche d'octroi ne contient pas d'étape qui remplit les conditions", () => {
-    expect(titreDateDebutFind(titreDemarchesSansDateDebut, 'ddd')).toBeNull()
+    expect(titreDateDebutFind(titreDemarchesSansDateDebut, 'apc')).toBeNull()
   })
 
   test("retourne null si l'étape de la démarche d'octroi qui remplit les conditions ne contient pas de date", () => {

@@ -430,7 +430,11 @@ export const EtapesTypesEtapesStatuts = {
   saisineDesServicesDeLEtat: { FAIT: { etapeTypeId: 'wss', etapeStatutId: 'fai', ordre: 1 } as EtapeTypeEtapeStatut },
   transmissionDuProjetDePrescriptionsAuDemandeur: { FAIT: { etapeTypeId: 'wtp', etapeStatutId: 'fai', ordre: 1 } as EtapeTypeEtapeStatut },
   receptionDeComplements_wco: { FAIT: { etapeTypeId: 'wco', etapeStatutId: 'fai', ordre: 1 } as EtapeTypeEtapeStatut },
-  avisDeLaDDT_M_: { FAIT: { etapeTypeId: 'wdt', etapeStatutId: 'fai', ordre: 1 } as EtapeTypeEtapeStatut }
+  avisDeLaDDT_M_: { FAIT: { etapeTypeId: 'wdt', etapeStatutId: 'fai', ordre: 1 } as EtapeTypeEtapeStatut },
+  consultationCLEDuSAGE: {
+    FAVORABLE: { etapeTypeId: 'ccs', etapeStatutId: 'fav', ordre: 1 } as EtapeTypeEtapeStatut,
+    DEFAVORABLE: { etapeTypeId: 'ccs', etapeStatutId: 'def', ordre: 2 } as EtapeTypeEtapeStatut
+  }
 } as const
 
 const isEtapesTypesEtapesStatutsKey = (value: string): value is keyof typeof EtapesTypesEtapesStatuts => {

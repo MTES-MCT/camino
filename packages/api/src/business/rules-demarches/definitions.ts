@@ -7,7 +7,11 @@ import { titreDemarcheDepotDemandeDateFind } from '../rules/titre-demarche-depot
 import { CaminoMachines } from './machines.js'
 import { ArmOctMachine } from './arm/oct.machine.js'
 import { AxmOctMachine } from './axm/oct.machine.js'
+import { PxgOctMachine } from './pxg/oct.machine.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 export interface IEtapeTypeIdCondition {
   etapeTypeId?: string
@@ -48,9 +52,9 @@ export const isDemarcheDefinitionMachine = (
 }
 
 interface DemarcheDefinitionCommon {
-  titreTypeId: string
-  demarcheTypeIds: string[]
-  dateDebut: string
+  titreTypeId: TitreTypeId
+  demarcheTypeIds: DemarcheTypeId[]
+  dateDebut: CaminoDate
   demarcheIdExceptions?: DemarcheId[]
 }
 export interface DemarcheDefinitionRestriction
@@ -84,44 +88,51 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
     titreTypeId: 'arm',
     demarcheTypeIds: ['oct'],
     machine: new ArmOctMachine(),
-    dateDebut: '2019-10-31'
+    dateDebut: toCaminoDate('2019-10-31')
   },
   {
     titreTypeId: 'arm',
     demarcheTypeIds: ['ret'],
     restrictions: restrictionsArmRet,
-    dateDebut: '2019-10-31'
+    dateDebut: toCaminoDate('2019-10-31')
   },
   {
     titreTypeId: 'arm',
     demarcheTypeIds: ['ren', 'pro'],
     restrictions: restrictionsArmRenPro,
-    dateDebut: '2019-10-31'
+    dateDebut: toCaminoDate('2019-10-31')
   },
   {
     titreTypeId: 'prm',
     demarcheTypeIds: ['oct'],
     restrictions: etatsDefinitionPrmOct,
-    dateDebut: '2019-10-31'
+    dateDebut: toCaminoDate('2019-10-31')
   },
   {
     titreTypeId: 'axm',
     demarcheTypeIds: ['oct'],
     machine: new AxmOctMachine(),
     // https://camino.beta.gouv.fr/titres/m-ax-crique-tumuc-humac-2020
-    dateDebut: '2020-09-30',
+    dateDebut: toCaminoDate('2020-09-30'),
     demarcheIdExceptions: [
       newDemarcheId('C3rs92l1eci3mLvsAGkv7gVV'),
       newDemarcheId('YEWeODXiFb7xKJB2OQlTyc14'),
       // avis dgtm moins de 30 jours après la saisine des services
       newDemarcheId('ktPyoaDYzJi2faPMtAeKFZ5l')
     ]
+  },
+  {
+    titreTypeId: 'pxg',
+    demarcheTypeIds: ['oct'],
+    machine: new PxgOctMachine(),
+    // https://camino.beta.gouv.fr/titres/g-px-vallee-arena-2020
+    dateDebut: toCaminoDate('2021-01-01')
   }
 ]
 
 export const demarcheDefinitionFind = (
-  titreTypeId: string,
-  demarcheTypeId: string,
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
   titreEtapes: Pick<ITitreEtape, 'date' | 'typeId'>[] | undefined,
   demarcheId: DemarcheId
 ): IDemarcheDefinition | undefined => {

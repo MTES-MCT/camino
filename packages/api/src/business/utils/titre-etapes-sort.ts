@@ -6,6 +6,7 @@ import {
   isDemarcheDefinitionMachine
 } from '../rules-demarches/definitions.js'
 import { toMachineEtapes } from '../rules-demarches/machine-common.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
 export const titreEtapesSortDescByOrdre = <
@@ -24,7 +25,7 @@ export const titreEtapesSortAscByDate = (
   titreEtapes: ITitreEtape[],
   demarcheId: DemarcheId,
   demarcheType?: IDemarcheType | null,
-  titreTypeId?: string
+  titreTypeId?: TitreTypeId
 ): ITitreEtape[] => {
   let demarcheDefinitionRestrictions = undefined as
     | IDemarcheDefinitionRestrictions

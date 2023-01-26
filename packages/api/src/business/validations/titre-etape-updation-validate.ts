@@ -8,7 +8,6 @@ import {
   ITitreEntreprise
 } from '../../types.js'
 
-import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
 import { titreEtapePointsValidate } from './titre-etape-points-validate.js'
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'
 import { heritageContenuValidate } from './utils/heritage-contenu-validate.js'
@@ -290,19 +289,7 @@ const titreEtapeUpdationBusinessValidate = (
   titre: ITitre
 ) => {
   const errors = []
-
-  // 1. le type d'étape correspond à la démarche et au type de titre
-  const titreEtapeTypeAndStatusErrors = titreEtapeTypeAndStatusValidate(
-    titreEtape.typeId,
-    titreEtape.statutId,
-    titreDemarche.type!.etapesTypes,
-    titreDemarche.type!.nom
-  )
-  if (titreEtapeTypeAndStatusErrors.length) {
-    errors.push(...titreEtapeTypeAndStatusErrors)
-  }
-
-  // 2. la date de l'étape est possible
+  // 1. la date de l'étape est possible
   // en fonction de l'ordre des types d'étapes de la démarche
   const demarcheUpdatedErrors = titreDemarcheUpdatedEtatValidate(
     titreDemarche.type!,
@@ -315,7 +302,7 @@ const titreEtapeUpdationBusinessValidate = (
     errors.push(...demarcheUpdatedErrors)
   }
 
-  // 3. les références de points sont bien renseignées
+  // 2. les références de points sont bien renseignées
   if (titreEtape.points) {
     const error = titreEtapePointsValidate(titreEtape.points)
     if (error) {

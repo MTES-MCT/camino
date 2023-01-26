@@ -105,7 +105,28 @@ describe('etapeCreer', () => {
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
   })
 
-  test('ne peut pas créer une étape mia avec un statut fav (utilisateur admin)', async () => {
+  test('ne peut pas créer une étape de mia faite avec le ptmg', async () => {
+    const titreDemarcheId = await demarcheCreate()
+
+    const res = await graphQLCall(
+      etapeCreerQuery,
+      {
+        etape: {
+          typeId: 'mia',
+          statutId: 'fai',
+          titreDemarcheId,
+          date: '2018-01-01'
+        }
+      },
+      'admin',
+      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+    )
+
+    expect(res.body.errors[0].message).toBe(
+      'droits insuffisants pour créer cette étape'
+    )
+  })
+  test('ne peut pas créer une étape incohérente (mia avec statut fav) (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
 
     const res = await graphQLCall(

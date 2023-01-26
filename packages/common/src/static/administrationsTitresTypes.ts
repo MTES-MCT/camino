@@ -23,7 +23,8 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTi
   },
   'dre-aura-01': {
     cxm: { gestionnaire: false, associee: false },
-    prm: { gestionnaire: false, associee: false }
+    prm: { gestionnaire: false, associee: false },
+    pxg: { gestionnaire: true, associee: false }
   },
   'dre-bfc-01': {
     cxm: { gestionnaire: false, associee: false },

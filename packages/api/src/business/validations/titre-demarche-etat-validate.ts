@@ -18,6 +18,7 @@ import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort.js'
 import { titreEtapeEtatValidate } from './titre-etape-etat-validate.js'
 import { objectClone } from '../../tools/index.js'
 import { toMachineEtapes } from '../rules-demarches/machine-common.js'
+import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
 
 const titreDemarcheEtapesBuild = (
   titreEtape: ITitreEtape,
@@ -126,9 +127,7 @@ export const titreDemarcheUpdatedEtatValidate = (
     titreDemarcheEtapesNew,
     demarcheId
   )
-
-  // pas de validation pour les démarches qui n'ont pas d'arbre d’instructions
-  if (!demarcheDefinition) return []
+  const titreDemarchesErrors: string[] = []
 
   // vérifie que la démarche existe dans le titre
   const titreDemarche = titre.demarches?.find(d => d.typeId === demarcheType.id)
@@ -136,6 +135,19 @@ export const titreDemarcheUpdatedEtatValidate = (
     throw new Error(
       'le titre ne contient pas la démarche en cours de modification'
     )
+  }
+  // pas de validation pour les démarches qui n'ont pas d'arbre d’instructions
+  if (!demarcheDefinition) {
+    // le type d'étape correspond à la démarche et au type de titre
+    const titreEtapeTypeAndStatusErrors = titreEtapeTypeAndStatusValidate(
+      titreEtape.typeId,
+      titreEtape.statutId,
+      titreDemarche.type!.etapesTypes,
+      titreDemarche.type!.nom
+    )
+    titreDemarchesErrors.push(...titreEtapeTypeAndStatusErrors)
+
+    return titreDemarchesErrors
   }
 
   // si on essaye d’ajouter ou de modifier une demande non déposée
@@ -164,8 +176,6 @@ export const titreDemarcheUpdatedEtatValidate = (
     )
   }
 
-  const titreDemarchesErrors: string[] = []
-
   // vérifie que toutes les étapes existent dans l’arbre
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {
     try {
@@ -182,6 +192,15 @@ export const titreDemarcheUpdatedEtatValidate = (
       titreDemarchesErrors.push('la démarche n’est pas valide')
     }
   } else {
+    // le type d'étape correspond à la démarche et au type de titre
+    const titreEtapeTypeAndStatusErrors = titreEtapeTypeAndStatusValidate(
+      titreEtape.typeId,
+      titreEtape.statutId,
+      titreDemarche.type!.etapesTypes,
+      titreDemarche.type!.nom
+    )
+    titreDemarchesErrors.push(...titreEtapeTypeAndStatusErrors)
+
     const etapeTypeIdsValid = Object.keys(demarcheDefinition.restrictions)
 
     const etapeInconnue = titreDemarcheEtapesNew.find(

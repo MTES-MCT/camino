@@ -15,6 +15,8 @@ import {
   DemarcheStatutId,
   DemarchesStatutsIds
 } from 'camino-common/src/static/demarchesStatuts.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 
 const titreEtapesDecisivesCommunesTypes = ['css', 'rtd', 'abd', 'and']
 
@@ -177,7 +179,7 @@ const titreDemarcheUnilateralStatutIdFind = (
 
 const titreDemarcheDemandeStatutIdFind = (
   titreDemarcheEtapes: ITitreEtape[],
-  titreTypeId: string
+  titreTypeId: TitreTypeId
 ): DemarcheStatutId => {
   // filtre les types d'étapes qui ont un impact
   // sur le statut de la démarche de demande
@@ -371,9 +373,9 @@ const titreDemarcheTravauxStatutIdFind = (
  */
 
 export const titreDemarcheStatutIdFind = (
-  demarcheTypeId: string,
+  demarcheTypeId: DemarcheTypeId,
   titreDemarcheEtapes: ITitreEtape[],
-  titreTypeId: string,
+  titreTypeId: TitreTypeId,
   demarcheId: DemarcheId
 ): DemarcheStatutId => {
   // si la démarche ne contient pas d'étapes

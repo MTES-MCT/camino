@@ -2,6 +2,7 @@ import { ITitreDemarche } from '../../types.js'
 
 import { titreStatutIdFind } from '../rules/titre-statut-id-find.js'
 import { titreDemarchesEtapesRebuild } from './titre-demarches-etapes-rebuild.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 /**
  * Vérifie la validité du titre pendant la période
@@ -15,7 +16,7 @@ export const titreValideCheck = (
   titreDemarches: ITitreDemarche[],
   dateDebut: string,
   dateFin: string,
-  titreTypeId: string,
+  titreTypeId: TitreTypeId,
   hasDemarcheDeposee = false
 ) => {
   const demarches = titreDemarches.filter(d => !d.type!.travaux)

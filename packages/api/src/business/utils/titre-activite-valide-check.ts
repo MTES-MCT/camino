@@ -2,6 +2,7 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { ITitreDemarche } from '../../types.js'
 
 import { titreValideCheck } from './titre-valide-check.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 /**
  * Vérifie si une activité doit exister
@@ -21,7 +22,7 @@ export const titreActiviteValideCheck = (
   annee: number,
   months: number,
   titreDemarches: ITitreDemarche[],
-  titreTypeId: string
+  titreTypeId: TitreTypeId
 ) => {
   // si la date de fin de l'activité n'est pas passée
   // on ne crée pas l'activité

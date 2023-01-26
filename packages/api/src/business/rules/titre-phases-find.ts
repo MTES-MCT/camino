@@ -11,6 +11,7 @@ import {
 import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
 import { titreDemarcheAnnulationDateFinFind } from './titre-demarche-annulation-date-fin-find.js'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 /**
  * trouve une démarche acceptée ou terminée qui est
@@ -40,7 +41,7 @@ const titreDemarcheAnnulationFind = (
 export const titrePhasesFind = (
   titreDemarches: TitreDemarchePhaseFind[],
   aujourdhui: string,
-  titreTypeId: string
+  titreTypeId: TitreTypeId
 ) => {
   // filtre les démarches qui donnent lieu à des phases
   const titreDemarchesFiltered = titreDemarches.filter(titreDemarche =>
@@ -112,7 +113,7 @@ const titrePhaseDateDebutFind = (
   titreDemarche: TitreDemarchePhaseFind,
   titrePhases: ITitrePhase[],
   index: number,
-  titreTypeId: string
+  titreTypeId: TitreTypeId
 ) => {
   // si
   // - la démarche est un octroi

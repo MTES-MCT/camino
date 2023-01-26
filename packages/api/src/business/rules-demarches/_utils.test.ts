@@ -24,6 +24,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { vi, expect, test } from 'vitest'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 test('teste EtatsValidate', () => {
   const octEtatsValidate = demarcheEtatsValidate('ren', 'arm', '2021-01-01')
 
@@ -89,7 +90,7 @@ export const etapesTypesGet = (demarcheTypeId: string, titreTypeId: string) => {
 }
 
 export const demarcheEtatsValidate = (
-  demarcheTypeId: string,
+  demarcheTypeId: DemarcheTypeId,
   titreTypeId: TitreTypeId,
   date: string
 ) => {

@@ -23,6 +23,7 @@ import {
 } from 'camino-common/src/static/frequence.js'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 const substancesFiscalesFind = (
   substances: SubstanceLegaleId[]
@@ -94,7 +95,7 @@ export const titreActiviteSectionsBuild = (
   periodeId: number,
   date: string,
   titreDemarches: ITitreDemarche[],
-  titreTypeId: string
+  titreTypeId: TitreTypeId
 ) => {
   return sections.reduce((newSections: ISection[], s) => {
     let elements = [] as ISectionElement[]
@@ -188,7 +189,7 @@ const titreActiviteBuild = (
   aujourdhui: string,
   titreId: string,
   titreDemarches: ITitreDemarche[],
-  titreTypeId: string,
+  titreTypeId: TitreTypeId,
   titreActivites?: ITitreActivite[] | null
 ) => {
   // si l'activité existe déjà
@@ -252,7 +253,7 @@ export const titreActivitesBuild = (
   annees: number[],
   aujourdhui: string,
   titreId: string,
-  titreTypeId: string,
+  titreTypeId: TitreTypeId,
   titreDemarches?: ITitreDemarche[] | null,
   titreActivites?: ITitreActivite[] | null
 ) => {

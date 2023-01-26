@@ -1,6 +1,7 @@
 import { ITitreDemarche, ITitreEtape } from '../../types.js'
 import { titreDemarchePhaseCheck } from '../rules/titre-demarche-phase-check.js'
 import { titreDemarcheStatutIdFind } from '../rules/titre-demarche-statut-id-find.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
 /**
  * Filtre les étapes antérieures à une date
@@ -22,7 +23,7 @@ const titreEtapesFilter = (titreEtapes: ITitreEtape[], date: string) =>
 export const titreDemarchesEtapesRebuild = (
   date: string,
   titreDemarches: ITitreDemarche[],
-  titreTypeId: string
+  titreTypeId: TitreTypeId
 ) =>
   titreDemarches.reduce((acc: ITitreDemarche[], td) => {
     if (!td.etapes) return acc
