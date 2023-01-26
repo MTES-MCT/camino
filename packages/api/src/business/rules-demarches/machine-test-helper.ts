@@ -1,4 +1,4 @@
-import { Etape } from './machine-common.js'
+import { CaminoCommonContext, Etape } from './machine-common.js'
 import { EventObject } from 'xstate/lib/types.js'
 import { interpret } from 'xstate'
 import { CaminoMachine } from './machine-helper.js'
@@ -56,8 +56,11 @@ expect.extend({
   }
 })
 
-export const interpretMachine = <T extends EventObject>(
-  machine: CaminoMachine<any, T>,
+export const interpretMachine = <
+  T extends EventObject,
+  C extends CaminoCommonContext
+>(
+  machine: CaminoMachine<C, T>,
   etapes: readonly Etape[]
 ) => {
   const service = interpret(machine.machine)
@@ -93,8 +96,11 @@ export const interpretMachine = <T extends EventObject>(
   return service
 }
 
-export const orderAndInterpretMachine = <T extends EventObject>(
-  machine: CaminoMachine<any, T>,
+export const orderAndInterpretMachine = <
+  T extends EventObject,
+  C extends CaminoCommonContext
+>(
+  machine: CaminoMachine<C, T>,
   etapes: readonly Etape[]
 ) => {
   return interpretMachine(machine, machine.orderMachine(etapes))

@@ -23,7 +23,8 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTi
   },
   'dre-aura-01': {
     cxm: { gestionnaire: false, associee: false },
-    prm: { gestionnaire: false, associee: false }
+    prm: { gestionnaire: false, associee: false },
+    pxg: { gestionnaire: true, associee: false }
   },
   'dre-bfc-01': {
     cxm: { gestionnaire: false, associee: false },
@@ -33,9 +34,6 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTi
     pcc: { gestionnaire: true, associee: false }
   },
   'dre-nouvelle-aquitaine-01': {
-    pxg: { gestionnaire: true, associee: false }
-  },
-  'dre-bretagne-01': {
     pxg: { gestionnaire: true, associee: false }
   },
   'min-dajb-01': {

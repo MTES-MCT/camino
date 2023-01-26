@@ -140,6 +140,7 @@ export class PxgOctMachine extends CaminoMachine<
 interface PxgContext extends CaminoCommonContext {
   saisineDesServicesFaite: boolean
   saisineDesCollectivitesLocalesFaites: boolean
+  saisineAutoriteEnvironnementaleFaite: boolean
   avisAutoriteEnvironnementaleFaite: boolean
 }
 
@@ -160,6 +161,7 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
     visibilite: 'confidentielle',
     saisineDesServicesFaite: false,
     saisineDesCollectivitesLocalesFaites: false,
+    saisineAutoriteEnvironnementaleFaite: false,
     avisAutoriteEnvironnementaleFaite: false
   },
   on: {
@@ -256,7 +258,13 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
                     PxgContext,
                     { type: 'FAIRE_SAISINES_DES_SERVICES' }
                   >({
-                    saisineDesServicesFaite: true
+                    saisineDesServicesFaite: true,
+                    demarcheStatut: (context, _event) => {
+                      return context.saisineDesCollectivitesLocalesFaites &&
+                        context.saisineAutoriteEnvironnementaleFaite
+                        ? DemarchesStatutsIds.EnInstruction
+                        : context.demarcheStatut
+                    }
                   })
                 }
               }
@@ -379,7 +387,13 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
                     PxgContext,
                     { type: 'FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES' }
                   >({
-                    saisineDesCollectivitesLocalesFaites: true
+                    saisineDesCollectivitesLocalesFaites: true,
+                    demarcheStatut: (context, _event) => {
+                      return context.saisineAutoriteEnvironnementaleFaite &&
+                        context.saisineDesServicesFaite
+                        ? DemarchesStatutsIds.EnInstruction
+                        : context.demarcheStatut
+                    }
                   })
                 }
               }
@@ -424,8 +438,21 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
           states: {
             saisineAutoriteEnvironnementaleAFaire: {
               on: {
-                FAIRE_SAISINE_AUTORITE_ENVIRONNEMENTALE:
-                  'avisAutoriteEnvironnementaleAFaire'
+                FAIRE_SAISINE_AUTORITE_ENVIRONNEMENTALE: {
+                  target: 'avisAutoriteEnvironnementaleAFaire',
+                  actions: assign<
+                    PxgContext,
+                    { type: 'FAIRE_SAISINE_AUTORITE_ENVIRONNEMENTALE' }
+                  >({
+                    saisineAutoriteEnvironnementaleFaite: true,
+                    demarcheStatut: (context, _event) => {
+                      return context.saisineDesCollectivitesLocalesFaites &&
+                        context.saisineDesServicesFaite
+                        ? DemarchesStatutsIds.EnInstruction
+                        : context.demarcheStatut
+                    }
+                  })
+                }
               }
             },
             avisAutoriteEnvironnementaleAFaire: {
