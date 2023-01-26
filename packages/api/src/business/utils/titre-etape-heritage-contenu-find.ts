@@ -51,8 +51,7 @@ const heritageContenuFind = (
       if (
         (oldValue !== undefined || value !== null) &&
         (oldValue !== null || value !== undefined) &&
-        ((elementType !== 'multiple' && oldValue !== value) ||
-          JSON.stringify(oldValue) !== JSON.stringify(value))
+        oldValue !== value
       ) {
         hasChanged = true
       }

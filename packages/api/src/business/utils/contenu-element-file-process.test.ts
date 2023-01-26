@@ -2,12 +2,7 @@ import { FileUpload } from 'graphql-upload'
 import { ReadStream } from 'fs'
 import { afterEach, vi, describe, test, expect } from 'vitest'
 
-import {
-  IContenu,
-  IContenuElement,
-  ISection,
-  ITitreEtape
-} from '../../types.js'
+import { IContenu, ISection, ITitreEtape } from '../../types.js'
 
 import {
   contenuElementFilesCreate,
@@ -77,46 +72,6 @@ describe('sectionsContenuAndFilesGet', () => {
     })
   })
 
-  test('si contenu avec element multiple sans nouveau fichier alors contenu identique', () => {
-    const contenu = {
-      arm: {
-        mecanise: true,
-        franchissements: 3,
-        machines: [
-          { marque: 'toto', justificatif: 'nomdefichier.pdf' },
-          { marque: 'titi', justificatif: 'nomdefichier.pdf' }
-        ]
-      }
-    }
-    expect(
-      sectionsContenuAndFilesGet(contenu, [
-        {
-          id: 'arm',
-          elements: [
-            { id: 'mecanise', nom: 'mecanise', type: 'checkbox' },
-            { id: 'franchissements', nom: 'franchissements', type: 'number' },
-            {
-              id: 'machines',
-              nom: 'machines',
-              type: 'multiple',
-              elements: [
-                {
-                  id: 'marque',
-                  nom: 'marque',
-                  type: 'text'
-                },
-                { id: 'justificatif', nom: 'justificatif', type: 'file' }
-              ]
-            }
-          ]
-        }
-      ])
-    ).toMatchObject({
-      contenu: objectClone(contenu),
-      newFiles: []
-    })
-  })
-
   test('si contenu avec nouveau fichier alors contenu modifié', () => {
     const contenu = {
       arm: {
@@ -142,53 +97,6 @@ describe('sectionsContenuAndFilesGet', () => {
     expect(res).toMatchObject({
       contenu: newContenu,
       newFiles: [{ filename: 'prefix-super.pdf' }]
-    })
-  })
-
-  test('si contenu avec element multiple avec nouveau fichier alors contenu modifié', () => {
-    const contenu = {
-      arm: {
-        mecanise: true,
-        franchissements: 3,
-        machines: [
-          { marque: 'toto', justificatif: 'nomdefichier.pdf' },
-          {
-            marque: 'titi',
-            justificatif: { file: { filename: 'fichier2.pdf' } as FileUpload }
-          }
-        ]
-      }
-    }
-
-    const newContenu = objectClone(contenu) as IContenu
-    const elements = newContenu.arm.machines as IContenuElement[]
-    elements[1].justificatif = 'prefix-fichier2.pdf'
-
-    const res = sectionsContenuAndFilesGet(contenu, [
-      {
-        id: 'arm',
-        elements: [
-          { id: 'mecanise', nom: 'mecanise', type: 'checkbox' },
-          { id: 'franchissements', nom: 'franchissements', type: 'number' },
-          {
-            id: 'machines',
-            nom: 'machines',
-            type: 'multiple',
-            elements: [
-              {
-                id: 'marque',
-                nom: 'marque',
-                type: 'text'
-              },
-              { id: 'justificatif', nom: 'justificatif', type: 'file' }
-            ]
-          }
-        ]
-      }
-    ])
-    expect(res).toMatchObject({
-      contenu: newContenu,
-      newFiles: [{ filename: 'prefix-fichier2.pdf' }]
     })
   })
 })

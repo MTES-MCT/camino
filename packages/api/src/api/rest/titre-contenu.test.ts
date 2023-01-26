@@ -1,9 +1,9 @@
-import { titreContenuFormat } from './titre-contenu.js'
+import { contenuFormat } from './titre-contenu.js'
 import { describe, test, expect } from 'vitest'
 describe('formatage du contenu', () => {
   test("formate le contenu d'un titre", () => {
     expect(
-      titreContenuFormat({
+      contenuFormat({
         contenusTitreEtapesIds: {
           section: { prop1: 'etape-id', prop2: 'etape-id' }
         },
@@ -26,20 +26,9 @@ describe('formatage du contenu', () => {
     ).toMatchObject({ section: { prop1: 'valeur 1', prop2: 'valeur 2' } })
   })
 
-  test("retourne un contenu vide si le trire n'a pas de démarches ou d'étapes", () => {
+  test("retourne un contenu vide si le titre n'a pas de démarches ou d'étapes", () => {
     expect(
-      titreContenuFormat({
-        contenusTitreEtapesIds: {
-          section: {
-            prop: 'etape-id'
-          }
-        },
-        demarches: undefined
-      })
-    ).toMatchObject({})
-
-    expect(
-      titreContenuFormat({
+      contenuFormat({
         contenusTitreEtapesIds: {
           section: {
             prop: 'etape-id'
@@ -50,7 +39,7 @@ describe('formatage du contenu', () => {
     ).toMatchObject({})
 
     expect(
-      titreContenuFormat({
+      contenuFormat({
         contenusTitreEtapesIds: {
           section: {
             prop: 'etape-id'
@@ -61,7 +50,7 @@ describe('formatage du contenu', () => {
     ).toMatchObject({})
 
     expect(
-      titreContenuFormat({
+      contenuFormat({
         contenusTitreEtapesIds: {
           section: {
             prop: 'etape-id'

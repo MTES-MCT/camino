@@ -193,7 +193,6 @@ type ISectionElementType =
   | 'checkboxes'
   | 'select'
   | 'radio'
-  | 'multiple'
   | 'file'
 
 interface ISectionElement {
@@ -209,7 +208,6 @@ interface ISectionElement {
   referenceUniteRatio?: number
   uniteId?: UniteId
   optionnel?: boolean
-  elements?: ISectionElement[]
   sectionId?: string
 }
 

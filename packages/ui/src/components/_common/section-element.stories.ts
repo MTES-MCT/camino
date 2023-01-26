@@ -11,7 +11,7 @@ export default meta
 type Props = {
   element: {
     id: string
-    type: 'file' | 'multiple' | string
+    type: 'file' | string
     nom: string
     description: string
   }

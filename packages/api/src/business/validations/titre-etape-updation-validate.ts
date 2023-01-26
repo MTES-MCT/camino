@@ -331,29 +331,6 @@ const contenuCompleteValidate = (
           errors.push(
             `l’élément "${e.nom}" de la section "${s.nom}" est obligatoire`
           )
-        } else if (e.type === 'multiple') {
-          const values = contenu[s.id][e.id] as []
-          if (!values?.length) {
-            errors.push(
-              `l’élément "${e.nom}" de la section "${s.nom}" est obligatoire`
-            )
-          } else {
-            e.elements?.forEach(prop => {
-              if (!prop.optionnel) {
-                values.forEach(v => {
-                  if (
-                    !v[prop.id] ||
-                    v[prop.id] === undefined ||
-                    v[prop.id] === null
-                  ) {
-                    errors.push(
-                      `le champ "${prop.id}" de l’élément "${e.nom}" de la section "${s.nom}" est obligatoire`
-                    )
-                  }
-                })
-              }
-            })
-          }
         }
       }
     })

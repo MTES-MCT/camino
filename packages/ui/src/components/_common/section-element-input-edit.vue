@@ -98,13 +98,6 @@
       </select>
     </div>
 
-    <div v-else-if="element.type === 'multiple'">
-      <SectionElementMultipleEdit
-        v-model:contenu="contenu[element.id]"
-        :element="element"
-      />
-    </div>
-
     <div v-else-if="element.type === 'file'">
       <SectionElementFileEdit
         :contenu="contenu"
@@ -118,7 +111,6 @@
 <script>
 import { InputDate } from '../_ui/input-date'
 import InputNumber from '../_ui/input-number.vue'
-import SectionElementMultipleEdit from './section-element-multiple-edit.vue'
 import SectionElementFileEdit from './section-element-file-edit.vue'
 import numberFormat from '@/utils/number-format'
 
@@ -126,7 +118,6 @@ export default {
   components: {
     InputDate,
     InputNumber,
-    SectionElementMultipleEdit,
     SectionElementFileEdit
   },
 

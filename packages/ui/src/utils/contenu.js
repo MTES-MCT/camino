@@ -38,13 +38,6 @@ const elementsCompleteCheck = (elements, sectionContenu, complete) =>
       if (sectionContenu[e.id].length) {
         elementComplete = true
       }
-    } else if (e.type === 'multiple') {
-      elementComplete =
-        sectionContenu[e.id] &&
-        sectionContenu[e.id].length &&
-        sectionContenu[e.id].reduce((acc, element) => {
-          return acc && elementsCompleteCheck(e.elements, element, true)
-        }, true)
     } else {
       elementComplete =
         sectionContenu[e.id] !== undefined &&

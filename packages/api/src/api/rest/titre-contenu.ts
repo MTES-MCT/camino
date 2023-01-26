@@ -8,7 +8,26 @@ import type {
 import { titreGet } from '../../database/queries/titres.js'
 import { NotNullableKeys } from 'camino-common/src/typescript-tools.js'
 
-export const titreContenuFormat = ({
+const has = <
+  T extends Record<string | symbol | number, any>,
+  K extends keyof T
+>(
+  key: K,
+  x: T
+): x is Required<NotNullableKeys<Pick<T, K>>> & T => key in x
+export const titreContenuFormat = (titre: ITitre) => {
+  if (
+    !has('contenusTitreEtapesIds', titre) ||
+    !has('demarches', titre) ||
+    !titre.demarches.length
+  ) {
+    return null
+  }
+
+  return contenuFormat(titre)
+}
+
+export const contenuFormat = ({
   demarches,
   contenusTitreEtapesIds
 }: {
@@ -159,14 +178,6 @@ export const titreSectionsAndContenuGet = async (
     user
   )
 
-  const has = <
-    T extends Record<string | symbol | number, any>,
-    K extends keyof T
-  >(
-    key: K,
-    x: T
-  ): x is Required<NotNullableKeys<Pick<T, K>>> & T => key in x
-
   if (
     !titre ||
     !has('contenusTitreEtapesIds', titre) ||
@@ -177,7 +188,7 @@ export const titreSectionsAndContenuGet = async (
   }
 
   return {
-    contenu: titreContenuFormat(titre),
+    contenu: contenuFormat(titre),
     sections: titreSectionsGet(titre)
   }
 }
