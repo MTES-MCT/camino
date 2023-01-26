@@ -9,6 +9,8 @@ export type PXGOctXStateEvent =
   | { type: 'DEPOSER_DEMANDE' }
   | { type: 'DEMANDER_COMPLEMENTS_POUR_RECEVABILITE' }
   | { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }
+  | { type: 'FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE' }
+  | { type: 'RECEVOIR_MODIFICATION_DE_LA_DEMANDE' }
   | { type: 'RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE' }
   | { type: 'FAIRE_SAISINES_DES_SERVICES' }
   | { type: 'RENDRE_AVIS_DGTM_MNBST' }
@@ -49,6 +51,10 @@ const trad: { [key in Event]: DBEtat } = {
   FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
     FAVORABLE: ETES.recevabiliteDeLaDemande.FAVORABLE
   },
+  FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: {
+    DEFAVORABLE: ETES.recevabiliteDeLaDemande.DEFAVORABLE
+  },
+  RECEVOIR_MODIFICATION_DE_LA_DEMANDE: ETES.modificationDeLaDemande,
   RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE:
     ETES.receptionDeComplements_RecevabiliteDeLaDemande_,
   FAIRE_SAISINES_DES_SERVICES: ETES.saisineDesServices,
@@ -206,7 +212,8 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
             demarcheStatut: DemarchesStatutsIds.Depose,
             visibilite: 'publique'
           })
-        }
+        },
+        FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire'
       }
     },
     complementsPourRecevabiliteAFaire: {
@@ -221,7 +228,13 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
             demarcheStatut: DemarchesStatutsIds.Depose,
             visibilite: 'publique'
           })
-        }
+        },
+        FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire'
+      }
+    },
+    modificationDeLaDemandeAFaire: {
+      on: {
+        RECEVOIR_MODIFICATION_DE_LA_DEMANDE: 'recevabiliteDeLaDemandeAFaire'
       }
     },
     saisinesAFaire: {

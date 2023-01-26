@@ -53,6 +53,37 @@ describe('vérifie l’arbre d’octroi des PXG', () => {
     )
   })
 
+  test('peut modifier une demande', () => {
+    const etapes = [
+      { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
+      { ...ETES.depotDeLaDemande.FAIT, date: toCaminoDate('2022-04-15') },
+      {
+        ...ETES.demandeDeComplements_RecevabiliteDeLaDemande_.FAIT,
+        date: toCaminoDate('2022-04-16')
+      },
+      {
+        ...ETES.receptionDeComplements_RecevabiliteDeLaDemande_.FAIT,
+        date: toCaminoDate('2022-04-16')
+      },
+      {
+        ...ETES.recevabiliteDeLaDemande.DEFAVORABLE,
+        date: toCaminoDate('2022-04-17')
+      },
+      {
+        ...ETES.modificationDeLaDemande.FAIT,
+        date: toCaminoDate('2022-04-18')
+      },
+      {
+        ...ETES.recevabiliteDeLaDemande.FAVORABLE,
+        date: toCaminoDate('2022-04-19')
+      }
+    ]
+    const service = orderAndInterpretMachine(pxgOctMachine, etapes)
+    expect(service.getSnapshot().context.demarcheStatut).toBe(
+      DemarchesStatutsIds.Depose
+    )
+  })
+
   test('peut construire une demande complète', () => {
     const etapes = [
       { ...ETES.demande.FAIT, date: toCaminoDate('2022-04-14') },
@@ -86,6 +117,10 @@ describe('vérifie l’arbre d’octroi des PXG', () => {
       },
       {
         ...ETES.avisDeLautoriteEnvironnementale.FAVORABLE,
+        date: toCaminoDate('2022-04-21')
+      },
+      {
+        ...ETES.consultationCLEDuSAGE.FAVORABLE,
         date: toCaminoDate('2022-04-21')
       },
       {
