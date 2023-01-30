@@ -291,6 +291,7 @@ export class ArmOctMachine extends CaminoMachine<OctARMContext, XStateEvent> {
       case 'FAIRE_DEMANDE': {
         return [
           { type: event, mecanise: false, franchissements: null },
+          { type: event, mecanise: false, franchissements: 3 },
           { type: event, mecanise: true, franchissements: null },
           { type: event, mecanise: true, franchissements: 0 },
           { type: event, mecanise: true, franchissements: 2 }
@@ -547,10 +548,6 @@ const armOctMachine = createMachine<OctARMContext, XStateEvent>({
                               isMecanise(context.mecanisation) &&
                               !event.mecanise
                             ) {
-                              return false
-                            }
-
-                            if (!event.mecanise && event.franchissements) {
                               return false
                             }
 
