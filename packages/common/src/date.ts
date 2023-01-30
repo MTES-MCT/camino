@@ -16,6 +16,15 @@ const checkValidCaminoDate = (str: string): str is CaminoDate => {
   return str.match(/^\d{4}-\d{2}-\d{2}$/) !== null
 }
 
+export const isCaminoDate = (date: string): date is CaminoDate => {
+  try {
+    toCaminoDate(date)
+
+    return true
+  } catch {
+    return false
+  }
+}
 export const toCaminoDate = (date: Date | string): CaminoDate => {
   if (typeof date === 'string') {
     if (checkValidCaminoDate(date) && !isNaN(new Date(date).getTime())) {
@@ -36,6 +45,14 @@ export type CaminoAnnee = string & { __camino: 'Annee' }
 
 export const getAnnee = (date: CaminoDate): CaminoAnnee => {
   return toCaminoAnnee(date.substring(0, 4))
+}
+
+export const getMois = (date: CaminoDate): number => {
+  return Number(date.substring(5, 7))
+}
+
+export const getDay = (date: CaminoDate): number => {
+  return Number(date.substring(8, 10))
 }
 
 export const dateFormat = (date: CaminoDate): CaminoDateFormated => {

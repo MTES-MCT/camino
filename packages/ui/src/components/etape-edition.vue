@@ -30,7 +30,11 @@
         <h5>Date</h5>
       </div>
       <div class="tablet-blob-2-3">
-        <InputDate v-model="newDate" class="mb" />
+        <InputDate
+          :initialValue="newDate"
+          :dateChanged="dateChanged"
+          class="mb"
+        />
       </div>
     </div>
 
@@ -93,8 +97,9 @@
 <script>
 import { cap, dateFormat } from '@/utils'
 import Loader from './_ui/loader.vue'
-import InputDate from './_ui/input-date.vue'
+import { InputDate } from './_ui/input-date'
 import Edit from './etape/edit.vue'
+import { getCurrent } from 'camino-common/src/date'
 import FormSaveBtn from './etape/pure-form-save-btn.vue'
 import DeposePopup from './etape/depose-popup.vue'
 
@@ -115,7 +120,7 @@ export default {
       isFormDirty: false,
       typeComplete: false,
       promptMsg: 'Quitter le formulaire sans enregistrer les changements ?',
-      newDate: new Date().toISOString().slice(0, 10),
+      newDate: getCurrent(),
       events: { saveKeyUp: true }
     }
   },
@@ -231,6 +236,9 @@ export default {
   },
 
   methods: {
+    dateChanged(date) {
+      this.newDate = date
+    },
     async init() {
       await this.$store.dispatch('titreEtapeEdition/init', {
         titreDemarcheId: this.$route.query['demarche-id'],

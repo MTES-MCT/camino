@@ -67,7 +67,11 @@
           propId="dateDebut"
         >
           <template #write>
-            <InputDate v-model="etape.dateDebut" class="mb-s" />
+            <InputDate
+              :initialValue="etape.dateDebut"
+              :dateChanged="dateDebutChanged"
+              class="mb-s"
+            />
             <div v-if="etape.dateDebut" class="h6">
               <label>
                 <input
@@ -105,7 +109,11 @@
           propId="dateFin"
         >
           <template #write>
-            <InputDate v-model="etape.dateFin" class="mb-s" />
+            <InputDate
+              :initialValue="etape.dateFin"
+              :dateChanged="dateFinChanged"
+              class="mb-s"
+            />
             <div v-if="etape.dateFin" class="h6">
               <label>
                 <input
@@ -235,11 +243,12 @@
 <script setup lang="ts">
 import { dateFormat } from '../../utils/index'
 import { Tag } from '../_ui/tag'
-import InputDate from '../_ui/input-date.vue'
+import { InputDate } from '../_ui/input-date'
 import InputNumber from '../_ui/input-number.vue'
 import HeritageEdit from './heritage-edit.vue'
 import PropDuree from './prop-duree.vue'
 import AutocompleteEntreprise from './autocomplete-entreprise.vue'
+import { CaminoDate } from 'camino-common/src/date'
 
 import { etablissementNameFind } from '@/utils/entreprise'
 import SubstancesEdit from '@/components/etape/substances-edit.vue'
@@ -283,6 +292,14 @@ const mois = ref<number>(
 const entreprisesDisabled = computed<EntrepriseId[]>(() =>
   [...props.etape.amodiataires, ...props.etape.titulaires].map(({ id }) => id)
 )
+
+const dateDebutChanged = (date: CaminoDate) => {
+  props.etape.dateDebut = date
+}
+
+const dateFinChanged = (date: CaminoDate) => {
+  props.etape.dateFin = date
+}
 
 const domaineId = computed<DomaineId>(() => getDomaineId(props.titreTypeId))
 

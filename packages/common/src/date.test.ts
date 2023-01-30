@@ -13,7 +13,9 @@ import {
   setDayInMonth,
   monthsBetween,
   dateFormat,
-  checkValideAnnee
+  checkValideAnnee,
+  getMois,
+  getDay
 } from './date.js'
 import { test, expect } from 'vitest'
 test.each([
@@ -44,6 +46,17 @@ test('getAnnee', () => {
   expect(() => getAnnee(toCaminoDate('toto'))).toThrowErrorMatchingInlineSnapshot(`"Invalid date string: toto"`)
   expect(() => getAnnee(toCaminoDate('12'))).toThrowErrorMatchingInlineSnapshot(`"Invalid date string: 12"`)
   expect(() => getAnnee(toCaminoDate('20220'))).toThrowErrorMatchingInlineSnapshot(`"Invalid date string: 20220"`)
+})
+
+test('getMois', () => {
+  expect(getMois(toCaminoDate('2022-12-01'))).toBe(12)
+  expect(getMois(toCaminoDate('1812-01-02'))).toBe(1)
+})
+
+test('getDay', () => {
+  expect(getDay(toCaminoDate('2022-12-01'))).toBe(1)
+  expect(getDay(toCaminoDate('1812-01-02'))).toBe(2)
+  expect(getDay(toCaminoDate('1812-01-24'))).toBe(24)
 })
 
 test('isAnnee', () => {

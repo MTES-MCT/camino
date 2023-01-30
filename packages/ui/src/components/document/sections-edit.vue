@@ -5,7 +5,11 @@
         <h5>Date</h5>
       </div>
       <div class="tablet-blob-2-3">
-        <InputDate v-model="document.date" class="mb" />
+        <InputDate
+          :initialValue="document.date"
+          :dateChanged="dateChanged"
+          class="mb"
+        />
       </div>
     </div>
 
@@ -177,7 +181,7 @@
 </template>
 
 <script>
-import InputDate from '../_ui/input-date.vue'
+import { InputDate } from '../_ui/input-date'
 import InputFile from '../_ui/input-file.vue'
 import Messages from '../_ui/messages.vue'
 import { Icon } from '@/components/_ui/icon'
@@ -259,6 +263,9 @@ export default {
   },
 
   methods: {
+    dateChanged(date) {
+      this.document.date = date
+    },
     fileChange({
       target: {
         validity,
