@@ -18,6 +18,8 @@ jobs:
         with:
           node-version: '19.1'
           cache: 'npm'
+      - name: Install
+        run: make install
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
