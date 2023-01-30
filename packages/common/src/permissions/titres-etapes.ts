@@ -1,7 +1,7 @@
 import { ETAPES_TYPES, EtapeTypeId } from '../static/etapesTypes.js'
 import { TitreTypeId } from '../static/titresTypes.js'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeWithPhase } from '../static/demarchesTypes.js'
-import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from '../roles.js'
+import { isAdministration, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from '../roles.js'
 import { EtapeStatutId, ETAPES_STATUTS } from '../static/etapesStatuts.js'
 import { TITRES_TYPES_IDS_DEMAT } from './titres.js'
 import { AdministrationId } from '../static/administrations.js'
@@ -84,7 +84,7 @@ export const canCreateEtape = (
 ): boolean => {
   if (isSuper(user)) {
     return true
-  } else if (isAdministrationAdmin(user)) {
+  } else if (isAdministration(user)) {
     if (isGestionnaire(user.administrationId) || titresAdministrationsLocales.includes(user.administrationId)) {
       return canAdministrationModifyTitreStatutId(user.administrationId, titre.typeId, titre.statutId) && canAdministrationCreateEtapeTypeId(user.administrationId, titre.typeId, etapeTypeId)
     }
