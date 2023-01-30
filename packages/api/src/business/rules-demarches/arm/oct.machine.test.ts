@@ -1574,17 +1574,15 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     ])
   })
 
-  test('ne peut pas faire une "mfr" non mécanisée avec un franchissement d’eau', () => {
-    expect(() =>
-      orderAndInterpretMachine([
-        {
-          etapeTypeId: 'mfr',
-          etapeStatutId: 'fai',
-          date: toCaminoDate('2019-12-10'),
-          contenu: { arm: { mecanise: false, franchissements: 3 } }
-        }
-      ])
-    ).toThrowErrorMatchingSnapshot()
+  test('peut faire une "mfr" non mécanisée avec un franchissement d’eau', () => {
+    orderAndInterpretMachine([
+      {
+        etapeTypeId: 'mfr',
+        etapeStatutId: 'fai',
+        date: toCaminoDate('2019-12-10'),
+        contenu: { arm: { mecanise: false, franchissements: 3 } }
+      }
+    ])
   })
 
   // pour regénérer le oct.cas.json: `npm run test:generate-data -w packages/api`
