@@ -3,8 +3,6 @@
 # ATTENTION, QUAND UN DEV PART, IL FAUT ALLER SUPPRIMER SON ACCẼS SUR LES MACHINES
 # Example : `sudo deluser --remove-home mbitard` puis sudo groupdel mbitard
 users:
-  - nom: bcousin
-    ssh: https://github.com/bbbenja.keys
   - nom: mbitard
     ssh: https://github.com/MichaelBitard.keys
   - nom: vincent
