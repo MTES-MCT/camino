@@ -18,7 +18,7 @@ const checkValidCaminoDate = (str: string): str is CaminoDate => {
 
 export const isCaminoDate = (date: string): date is CaminoDate => {
   try {
-    toCaminoDate(toCaminoDate(date))
+    toCaminoDate(date)
 
     return true
   } catch {
