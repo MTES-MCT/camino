@@ -8,6 +8,10 @@ import {
   PureTitresLinkFormApiClient,
   pureTitresLinkFormApiClient
 } from '@/components/titre/pure-titres-link-form-api-client'
+import {
+  TitreApiClient,
+  titreApiClient
+} from '../components/titre/titre-api-client'
 
 export type Utilisateur = {
   id: string
@@ -19,9 +23,11 @@ export type Utilisateur = {
 
 export interface ApiClient
   extends AdministrationApiClient,
-    PureTitresLinkFormApiClient {}
+    PureTitresLinkFormApiClient,
+    TitreApiClient {}
 
 export const apiClient: ApiClient = {
   ...administrationApiClient,
-  ...pureTitresLinkFormApiClient
+  ...pureTitresLinkFormApiClient,
+  ...titreApiClient
 }

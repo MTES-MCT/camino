@@ -28,7 +28,7 @@ import {
   SecteursMaritimes
 } from 'camino-common/src/static/facades.js'
 import { Administrations } from 'camino-common/src/static/administrations.js'
-import { titreContenuFormat } from '../titre-contenu'
+import { titreContenuFormat } from '../titre-contenu.js'
 
 const getFacadesMaritimeCell = (
   secteursMaritime: SecteursMaritimes[],

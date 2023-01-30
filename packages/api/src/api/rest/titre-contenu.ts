@@ -1,12 +1,16 @@
 import type {
   IContenu,
-  ISection,
   ITitre,
   ITitreEtape,
   IUtilisateur
 } from '../../types.js'
 import { titreGet } from '../../database/queries/titres.js'
 import { NotNullableKeys } from 'camino-common/src/typescript-tools.js'
+import { Section } from 'camino-common/src/titres.js'
+import express from 'express'
+
+import { CustomResponse } from './express-type.js'
+import { userGet } from '../../database/queries/utilisateurs.js'
 
 const has = <
   T extends Record<string | symbol | number, any>,
@@ -75,98 +79,104 @@ export const contenuFormat = ({
   return contenu
 }
 
-export const titreSectionsGet = ({
-  demarches,
-  contenusTitreEtapesIds
-}: {
-  demarches: {
-    etapes?: Pick<ITitreEtape, 'id' | 'contenu' | 'type'>[] | undefined | null
-  }[]
-  contenusTitreEtapesIds: NonNullable<
-    Required<ITitre['contenusTitreEtapesIds']>
-  >
-}): ISection[] => {
-  const sections: ISection[] = []
+const titreSectionsGet = (
+  {
+    demarches,
+    contenusTitreEtapesIds
+  }: {
+    demarches: {
+      etapes?: Pick<ITitreEtape, 'id' | 'contenu' | 'type'>[] | undefined | null
+    }[]
+    contenusTitreEtapesIds: NonNullable<
+      Required<ITitre['contenusTitreEtapesIds']>
+    >
+  },
+  contenu: IContenu
+): Section[] => {
+  const sections: Section[] = []
 
-  Object.keys(contenusTitreEtapesIds).some(sectionId => {
-    if (!contenusTitreEtapesIds[sectionId]) return false
+  Object.keys(contenusTitreEtapesIds).forEach(sectionId => {
+    if (contenusTitreEtapesIds[sectionId]) {
+      Object.keys(contenusTitreEtapesIds[sectionId]).forEach(elementId => {
+        const etapeId = contenusTitreEtapesIds[sectionId][elementId]
 
-    Object.keys(contenusTitreEtapesIds[sectionId]).some(elementId => {
-      const etapeId = contenusTitreEtapesIds[sectionId][elementId]
+        if (etapeId) {
+          demarches.forEach(d => {
+            if (d.etapes) {
+              const etape = d.etapes.find(e => e.id === etapeId)
 
-      if (!etapeId) return false
+              if (etape) {
+                // sinon, si l'étape correspond à l'id de `contenusTitreEtapesIds`
+                // et que l'étape n'a ni contenu ni section ni l'élément qui nous intéresse
+                // on ne cherche pas plus loin
+                if (
+                  etape.contenu &&
+                  etape.contenu[sectionId] &&
+                  etape.contenu[sectionId][elementId] !== undefined &&
+                  etape.type?.sections
+                ) {
+                  const etapeSection = etape.type.sections.find(
+                    s => s.id === sectionId
+                  )
 
-      demarches.some(d => {
-        if (!d.etapes) return false
+                  if (etapeSection && etapeSection.elements) {
+                    const etapeElement = etapeSection.elements.find(
+                      e => e.id === elementId
+                    )
 
-        const etape = d.etapes.find(e => e.id === etapeId)
+                    if (etapeElement) {
+                      // ajoute la section dans le titre si elle n'existe pas encore
+                      let titreTypeSection = sections.find(
+                        s => s.id === sectionId
+                      )
 
-        if (!etape) return false
+                      if (!titreTypeSection) {
+                        titreTypeSection = { ...etapeSection, elements: [] }
 
-        // sinon, si l'étape correspond à l'id de `contenusTitreEtapesIds`
-        // et que l'étape n'a ni contenu ni section ni l'élément qui nous intéresse
-        // on ne cherche pas plus loin
-        if (
-          !etape.contenu ||
-          !etape.contenu[sectionId] ||
-          etape.contenu[sectionId][elementId] === undefined ||
-          !etape.type?.sections
-        ) {
-          return false
+                        sections.push(titreTypeSection)
+                      }
+
+                      if (!titreTypeSection.elements) {
+                        titreTypeSection.elements = []
+                      }
+
+                      // ajoute l'élément dans les sections du titre s'il n'existe pas encore
+                      const titreElement = titreTypeSection.elements.find(
+                        e => e.id === elementId
+                      )
+                      const value = contenu[sectionId][elementId]
+                      if (value !== null) {
+                        if (!titreElement) {
+                          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                          // @ts-ignore
+                          titreTypeSection.elements.push({
+                            ...etapeElement,
+                            value
+                          })
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          })
         }
-
-        const etapeSection = etape.type.sections.find(s => s.id === sectionId)
-
-        if (!etapeSection || !etapeSection.elements) return false
-
-        const etapeElement = etapeSection.elements.find(e => e.id === elementId)
-
-        if (!etapeElement) return false
-
-        // ajoute la section dans le titre si elle n'existe pas encore
-        let titreTypeSection = sections.find(s => s.id === sectionId)
-
-        if (!titreTypeSection) {
-          titreTypeSection = { ...etapeSection, elements: [] }
-
-          sections.push(titreTypeSection)
-        }
-
-        if (!titreTypeSection.elements) {
-          titreTypeSection.elements = []
-        }
-
-        // ajoute l'élément dans les sections du titre s'il n'existe pas encore
-        const titreElement = titreTypeSection.elements.find(
-          e => e.id === elementId
-        )
-
-        if (!titreElement) {
-          titreTypeSection.elements.push(etapeElement)
-        }
-
-        // continue l'itération
-        return false
       })
-
-      return false
-    })
-
-    return false
+    }
   })
 
   return sections
 }
 
-export const titreSectionsAndContenuGet = async (
+const titreSectionsAndContenuGet = async (
   titreId: string,
   user: IUtilisateur | null | undefined
-): Promise<{ contenu: IContenu; sections: ISection[] } | null> => {
+): Promise<Section[]> => {
   const titre = await titreGet(
     titreId,
     {
       fields: {
-        contenusTitreEtapesIds: { id: {} },
         demarches: {
           type: { etapesTypes: { id: {} } },
           etapes: {
@@ -181,14 +191,34 @@ export const titreSectionsAndContenuGet = async (
   if (
     !titre ||
     !has('contenusTitreEtapesIds', titre) ||
+    !titre.contenusTitreEtapesIds ||
     !has('demarches', titre) ||
     !titre.demarches.length
   ) {
-    return null
+    return []
   }
 
-  return {
-    contenu: contenuFormat(titre),
-    sections: titreSectionsGet(titre)
+  const contenu = contenuFormat(titre)
+  const sections = titreSectionsGet(titre, contenu)
+
+  return sections
+}
+
+export const getTitresSections = async (
+  req: express.Request,
+  res: CustomResponse<Section[]>
+): Promise<void> => {
+  try {
+    const titreId: string | undefined = req.params.titreId
+    if (!titreId) {
+      throw new Error('le paramètre titreId est obligatoire')
+    }
+    const userId = (req.user as unknown as IUtilisateur | undefined)?.id
+    const user = await userGet(userId)
+    res.json(await titreSectionsAndContenuGet(titreId, user))
+  } catch (e) {
+    console.error(e)
+
+    throw e
   }
 }

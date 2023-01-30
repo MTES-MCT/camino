@@ -63,8 +63,6 @@ const fragmentTitre = gql`
     sdomZones
     secteursMaritime
 
-    contenu
-
     modification
     suppression
     doublonTitre {

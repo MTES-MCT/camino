@@ -3,7 +3,6 @@ import { Pill } from '../_ui/pill'
 import { Tag } from '../_ui/tag'
 import { TagList } from '../_ui/tag-list'
 import { Dot } from '../_ui/dot'
-import Section from '../_common/section.vue'
 import { Statut } from '../_common/statut'
 import { dateFormat } from '@/utils'
 import PureTitresLinkForm from './pure-titres-link-form.vue'
@@ -32,8 +31,12 @@ import {
   phaseStatuts
 } from 'camino-common/src/static/phasesStatuts'
 import { TitreReference } from 'camino-common/src/titres-references'
-import { ApiClient } from '@/api/api-client'
+import { apiClient, ApiClient } from '@/api/api-client'
 import { LoadingElement } from '@/components/_ui/functional-loader'
+import { Sections } from '../_common/section'
+import { defineComponent, onMounted, ref } from 'vue'
+import { AsyncData } from '../../api/client-rest'
+import { Section } from 'camino-common/src/titres'
 
 export interface Entreprise {
   id: string
@@ -66,7 +69,7 @@ export interface Props {
   user: User
   apiClient: Pick<
     ApiClient,
-    'loadTitreLinks' | 'loadLinkableTitres' | 'linkTitres'
+    'loadTitreLinks' | 'loadLinkableTitres' | 'linkTitres' | 'loadTitreSections'
   >
 }
 
@@ -107,36 +110,36 @@ const Entreprises = ({
   ) : null
 }
 
-const InfosSections = ({
-  titre
-}: {
+type InfosSectionsProps = {
   titre: Pick<Props['titre'], 'id' | 'contenu'>
-}): JSX.Element | null => {
-  if (!titre.contenu) {
-    return null
-  }
-  const hasContenu = titre.type.sections?.some(s =>
-    s.elements.some(
-      e => titre.contenu[s.id] && titre.contenu[s.id][e.id] !== undefined
-    )
-  )
-
-  const renderItem = (sections: any[]): JSX.Element | null =>
-    sections?.length ? (
-      <>
-        {sections.map(s => (
-          <Section
-            key={s.id}
-            entete={false}
-            section={s}
-            contenu={titre.contenu[s.id]}
-          />
-        ))}
-      </>
-    ) : null
-
-  return <LoadingElement data={} renderItem={renderItem}></LoadingElement>
+  apiClient: Pick<ApiClient, 'loadTitreSections'>
 }
+const InfosSections = defineComponent<InfosSectionsProps>({
+  props: ['titre'] as unknown as undefined,
+  setup(props) {
+    const load = ref<AsyncData<Section[]>>({ status: 'LOADING' })
+
+    onMounted(async () => {
+      try {
+        const data = await apiClient.loadTitreSections(props.titre.id)
+        load.value = { status: 'LOADED', value: data }
+      } catch (e: any) {
+        console.error('error', e)
+        load.value = {
+          status: 'ERROR',
+          message: e.message ?? "Une erreur s'est produite"
+        }
+      }
+    })
+
+    return () => (
+      <LoadingElement
+        data={load.value}
+        renderItem={item => <Sections sections={item} />}
+      />
+    )
+  }
+})
 
 export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
   const phases = titre.demarches.filter(d => d.phase)
@@ -248,7 +251,7 @@ export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
         <Entreprises entreprises={titre.titulaires} label={'Titulaire'} />
         <Entreprises entreprises={titre.amodiataires} label={'Amodiataire'} />
 
-        <InfosSections />
+        <InfosSections titre={titre} apiClient={apiClient} />
       </div>
     </div>
   )

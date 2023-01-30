@@ -1,4 +1,4 @@
-import numberFormat from './number-format'
+import { numberFormat } from './number-format'
 import { dateFormat } from './index'
 
 const contenuBuild = (sections, elementContenu) =>
@@ -55,6 +55,9 @@ const contenuCompleteCheck = (sections, contenu) =>
     return elementsCompleteCheck(s.elements, contenu[s.id], complete)
   }, true)
 
+/**
+ * @deprecated voir la nouvelle méthode dans section-element.tsx
+ */
 const valeurFind = ({ id, type, valeurs }, contenu) => {
   if (contenu[id] === undefined || contenu[id] === '') {
     return '–'

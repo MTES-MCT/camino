@@ -18,7 +18,7 @@ import { titreEtapeEtatValidate } from './titre-etape-etat-validate.js'
 import { objectClone } from '../../tools/index.js'
 import { toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
-import { contenuFormat } from '../../api/rest/titre-contenu'
+import { contenuFormat } from '../../api/rest/titre-contenu.js'
 
 const titreDemarcheEtapesBuild = (
   titreEtape: ITitreEtape,

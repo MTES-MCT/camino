@@ -35,3 +35,84 @@ export interface CommonTitreONF extends CommonTitre {
 
 export type TitreLink = Pick<CommonTitre, 'id' | 'nom'>
 export type TitreLinks = { amont: TitreLink[]; aval: TitreLink[] }
+
+type BasicElement = {
+  id: string
+  nom?: string
+  description?: string
+  dateDebut?: CaminoDate
+  dateFin?: CaminoDate
+}
+
+type DateElement = {
+  type: 'date'
+  value: CaminoDate
+} & BasicElement
+
+type FileElement = {
+  type: 'file'
+  value: string
+} & BasicElement
+
+type TextElement = {
+  type: 'text'
+  value: string
+} & BasicElement
+
+type NumberElement = {
+  type: 'number' | 'integer'
+  value: number
+} & BasicElement
+
+type RadioElement = {
+  type: 'radio'
+  value: boolean
+} & BasicElement
+
+type CheckboxesElement = {
+  type: 'checkboxes'
+  options: { id: string; nom: string }[]
+  value: string[]
+} & BasicElement
+
+type SelectElement = {
+  type: 'select'
+  options: { id: string; nom: string }[]
+  value: string
+} & BasicElement
+
+export type Element = FileElement | DateElement | TextElement | NumberElement | RadioElement | CheckboxesElement | SelectElement
+
+export const isTextElement = (element: Element): element is TextElement => {
+  return element.type === 'text'
+}
+
+export const isFileElement = (element: Element): element is FileElement => {
+  return element.type === 'file'
+}
+
+export const isDateElement = (element: Element): element is DateElement => {
+  return element.type === 'date'
+}
+
+export const isNumberElement = (element: Element): element is NumberElement => {
+  return element.type === 'number' || element.type === 'integer'
+}
+
+export const isRadioElement = (element: Element): element is RadioElement => {
+  return element.type === 'radio'
+}
+
+export const isCheckboxesElement = (element: Element): element is CheckboxesElement => {
+  return element.type === 'checkboxes'
+}
+
+export const isSelectElement = (element: Element): element is SelectElement => {
+  return element.type === 'select'
+}
+
+export interface Section {
+  id: string
+  nom?: string
+  elements: Element[]
+}

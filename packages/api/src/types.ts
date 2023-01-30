@@ -133,7 +133,6 @@ type IContenuValeur =
   | number
   | string[]
   | boolean
-  | IContenuElement[]
   | { file: FileUpload }
   | null
 
