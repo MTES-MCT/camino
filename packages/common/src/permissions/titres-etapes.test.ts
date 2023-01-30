@@ -150,6 +150,26 @@ test.each<{
     canCreate: true
   },
   {
+    user: { role: 'editeur', administrationId: 'ope-brgm-01' },
+    etapeTypeId: 'mfr',
+    etapeStatutId: 'aco',
+    titreTitulaires: [],
+    titresAdministrationsLocales: ['ope-brgm-01'],
+    demarcheTypeId: 'oct',
+    titre: { typeId: 'arm', statutId: 'dmc' },
+    canCreate: true
+  },
+  {
+    user: { role: 'lecteur', administrationId: 'ope-brgm-01' },
+    etapeTypeId: 'mfr',
+    etapeStatutId: 'aco',
+    titreTitulaires: [],
+    titresAdministrationsLocales: ['ope-brgm-01'],
+    demarcheTypeId: 'oct',
+    titre: { typeId: 'arm', statutId: 'dmc' },
+    canCreate: true
+  },
+  {
     user: { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] },
     etapeTypeId: 'mfr',
     etapeStatutId: null,

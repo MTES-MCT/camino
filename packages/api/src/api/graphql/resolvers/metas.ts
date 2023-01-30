@@ -318,7 +318,7 @@ export const etapesTypes = async (
   },
   context: IToken,
   info: GraphQLResolveInfo
-) => {
+): Promise<IEtapeType[]> => {
   try {
     const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)

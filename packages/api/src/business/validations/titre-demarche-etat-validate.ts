@@ -138,6 +138,9 @@ export const titreDemarcheUpdatedEtatValidate = (
   }
   // pas de validation pour les démarches qui n'ont pas d'arbre d’instructions
   if (!demarcheDefinition) {
+    if (!titreEtape.statutId) {
+      return []
+    }
     // le type d'étape correspond à la démarche et au type de titre
     const titreEtapeTypeAndStatusErrors = titreEtapeTypeAndStatusValidate(
       titreEtape.typeId,
