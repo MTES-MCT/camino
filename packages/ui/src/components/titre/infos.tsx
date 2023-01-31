@@ -31,7 +31,7 @@ import {
   phaseStatuts
 } from 'camino-common/src/static/phasesStatuts'
 import { TitreReference } from 'camino-common/src/titres-references'
-import { apiClient, ApiClient } from '@/api/api-client'
+import { ApiClient } from '@/api/api-client'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { Sections } from '../_common/section'
 import { defineComponent, onMounted, ref } from 'vue'
@@ -115,13 +115,13 @@ type InfosSectionsProps = {
   apiClient: Pick<ApiClient, 'loadTitreSections'>
 }
 const InfosSections = defineComponent<InfosSectionsProps>({
-  props: ['titre'] as unknown as undefined,
+  props: ['titre', 'apiClient'] as unknown as undefined,
   setup(props) {
     const load = ref<AsyncData<Section[]>>({ status: 'LOADING' })
 
     onMounted(async () => {
       try {
-        const data = await apiClient.loadTitreSections(props.titre.id)
+        const data = await props.apiClient.loadTitreSections(props.titre.id)
         load.value = { status: 'LOADED', value: data }
       } catch (e: any) {
         console.error('error', e)
