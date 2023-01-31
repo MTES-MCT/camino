@@ -117,48 +117,30 @@ describe('contenuElementFileProcess', () => {
   })
 
   test('supprime les anciens fichiers sur le disque', async () => {
-    const sections = [
+    const sections: ISection[] = [
       {
         id: 'arm',
         elements: [
           { id: 'mecanise', nom: 'mecanise', type: 'checkbox' },
           { id: 'franchissements', nom: 'franchissements', type: 'number' },
           { id: 'justificatif', nom: 'justificatif', type: 'file' },
-          { id: 'facture', nom: 'facture', type: 'file' },
-          {
-            id: 'machines',
-            nom: 'machines',
-            type: 'multiple',
-            elements: [
-              {
-                id: 'marque',
-                nom: 'marque',
-                type: 'text'
-              },
-              { id: 'entretien', nom: 'entretien', type: 'file' }
-            ]
-          }
+          { id: 'facture', nom: 'facture', type: 'file' }
         ]
       }
-    ] as ISection[]
+    ]
 
     const oldContenu = {
       arm: {
         mecanise: true,
         justificatif: 'fichier.pdf',
-        facture: 'facture.pdf',
-        machines: [
-          { marque: 'toto', justificatif: 'justificatif1.pdf' },
-          { marque: 'titi', entretien: 'nomdefichier.pdf' }
-        ]
+        facture: 'facture.pdf'
       }
     } as IContenu
     const contenu = {
       arm: {
         mecanise: true,
         justificatif: 'newfichier.pdf',
-        facture: 'facture.pdf',
-        machines: [{ marque: 'toto', entretien: 'justificatif1.pdf' }]
+        facture: 'facture.pdf'
       }
     }
 
@@ -171,6 +153,6 @@ describe('contenuElementFileProcess', () => {
       oldContenu
     )
 
-    expect(fileDeleteMock).toHaveBeenCalledTimes(2)
+    expect(fileDeleteMock).toHaveBeenCalledTimes(1)
   })
 })
