@@ -29,7 +29,7 @@ const titreSectionElementFormat = (element: ISectionElement) => {
 }
 
 // - ne conserve que les sections qui contiennent des élements
-const titreSectionsFormat = (sections: ISection[]) =>
+export const titreSectionsFormat = (sections: ISection[]) =>
   sections.reduce((sections: ISection[], { id, nom, elements }) => {
     if (elements?.length) {
       const newElements = objectClone(elements)
@@ -43,5 +43,3 @@ const titreSectionsFormat = (sections: ISection[]) =>
 
     return sections
   }, [])
-
-export { titreSectionsFormat }

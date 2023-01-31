@@ -79,20 +79,17 @@ export const contenuFormat = ({
   return contenu
 }
 
-const titreSectionsGet = (
-  {
-    demarches,
-    contenusTitreEtapesIds
-  }: {
-    demarches: {
-      etapes?: Pick<ITitreEtape, 'id' | 'contenu' | 'type'>[] | undefined | null
-    }[]
-    contenusTitreEtapesIds: NonNullable<
-      Required<ITitre['contenusTitreEtapesIds']>
-    >
-  },
-  contenu: IContenu
-): Section[] => {
+const titreSectionsGet = ({
+  demarches,
+  contenusTitreEtapesIds
+}: {
+  demarches: {
+    etapes?: Pick<ITitreEtape, 'id' | 'contenu' | 'type'>[] | undefined | null
+  }[]
+  contenusTitreEtapesIds: NonNullable<
+    Required<ITitre['contenusTitreEtapesIds']>
+  >
+}): Section[] => {
   const sections: Section[] = []
 
   Object.keys(contenusTitreEtapesIds).forEach(sectionId => {
@@ -144,13 +141,13 @@ const titreSectionsGet = (
                       const titreElement = titreTypeSection.elements.find(
                         e => e.id === elementId
                       )
-                      const value = contenu[sectionId][elementId]
+                      const value = etape.contenu[sectionId][elementId]
                       if (value !== null) {
                         if (!titreElement) {
-                          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                          // @ts-ignore
                           titreTypeSection.elements.push({
                             ...etapeElement,
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-ignore
                             value
                           })
                         }
@@ -198,10 +195,29 @@ const titreSectionsAndContenuGet = async (
     return []
   }
 
-  const contenu = contenuFormat(titre)
-  const sections = titreSectionsGet(titre, contenu)
+  titre.demarches.forEach(demarche =>
+    demarche.etapes?.forEach(etape => {
+      if (!etape.type) {
+        throw new Error('le type d’étape doit être chargé')
+      }
 
-  return sections
+      if (etape.sectionsSpecifiques) {
+        const etapeTypeSections = etape.type.sections
+
+        const aggregateSections = etape.sectionsSpecifiques
+        if (etapeTypeSections?.length) {
+          etapeTypeSections.forEach(s => {
+            if (etape.sectionsSpecifiques?.every(({ id }) => id !== s.id)) {
+              aggregateSections.push(s)
+            }
+          })
+        }
+        etape.type.sections = aggregateSections
+      }
+    })
+  )
+
+  return titreSectionsGet(titre)
 }
 
 export const getTitresSections = async (
