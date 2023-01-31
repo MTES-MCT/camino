@@ -5,6 +5,7 @@ import { userAdd } from '../knex/user-add.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import { toDbATE } from 'camino-common/src/static/administrationsTitresTypesEtapesTypes.js'
 import { toDbATT } from 'camino-common/src/static/administrationsTitresTypesTitresStatuts.js'
+import { daily } from '../business/daily.js'
 
 export const databaseInit = async () => {
   await knex.migrate.latest()
@@ -17,6 +18,11 @@ export const databaseInit = async () => {
     .table('administrations__titresTypes__etapesTypes')
     .insert(toDbATE())
   await createAdminUserAtStartup()
+
+  if (process.env.CAMINO_STAGE) {
+    // pas de await pour ne pas bloquer le démarrage de l’appli
+    daily()
+  }
 }
 
 const createAdminUserAtStartup = async () => {

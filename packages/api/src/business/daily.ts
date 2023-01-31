@@ -21,7 +21,7 @@ import { logsUpdate } from './_logs-update.js'
 import { userSuper } from '../database/user-super.js'
 import { titresActivitesRelanceSend } from './processes/titres-activites-relance-send.js'
 
-const daily = async () => {
+export const daily = async () => {
   try {
     console.info()
     console.info('- - -')
@@ -86,5 +86,3 @@ const daily = async () => {
     throw e
   }
 }
-
-export default daily
