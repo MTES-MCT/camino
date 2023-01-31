@@ -1,5 +1,5 @@
 import '../init.js'
-import daily from '../business/daily.js'
+import { daily } from '../business/daily.js'
 import documentsCheck from '../tools/documents/check.js'
 import { matomoCacheInit } from '../tools/api-matomo/index.js'
 import demarchesDefinitionsCheck from '../tools/demarches/definitions-check.js'
