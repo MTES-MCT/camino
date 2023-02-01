@@ -45,7 +45,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Push Docker image to the Docker Hub
-        if: github.ref == 'refs/heads/master'
         run: docker push caminofr/camino-api-docs:${GITHUB_SHA}
   openfisca:
     runs-on: ubuntu-latest
@@ -60,11 +59,9 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Push Docker image to the Docker Hub
-        if: github.ref == 'refs/heads/master'
         run: docker push caminofr/camino-openfisca:${GITHUB_SHA}
   deploy:
     needs: [ui, api, common, doc, openfisca, graphql]
-    if: github.ref == 'refs/heads/master'
     uses: ./.github/workflows/cd.yml
     secrets:
       CD_TOKEN_DEV: ${{ secrets.CD_TOKEN_DEV }}
