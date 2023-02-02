@@ -325,7 +325,8 @@ const TDEDocumentsTypes: {
         [DOCUMENTS_TYPES_IDS.schemaDePenetrationDuMassifForestier]: {
           optionnel: false,
           description: "le schéma de pénétration du massif forestier proposé par le pétitionnaire pour l'acheminement du matériel lourd et la desserte du chantier (décret 2001-204, art. 5 bis)"
-        }
+        },
+        [DOCUMENTS_TYPES_IDS.lettreDeDemande]: { optionnel: false }
       }
     }
   }
