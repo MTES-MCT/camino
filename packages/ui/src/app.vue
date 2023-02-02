@@ -8,7 +8,7 @@
 
     <header class="header">
       <div class="container">
-        <PageHeader :loaded="loaded" />
+        <Header :loaded="loaded" />
       </div>
     </header>
 
@@ -19,7 +19,7 @@
       </div>
     </main>
 
-    <PageFooter />
+    <Footer />
 
     <div class="messages">
       <Messages id="cmn-app-messages" :messages="messages" />
@@ -64,8 +64,8 @@
 
 <script lang="ts" setup>
 import Messages from './components/_ui/messages.vue'
-import PageHeader from './components/page/header.vue'
-import PageFooter from './components/page/footer.vue'
+import { Header } from './components/page/header'
+import { Footer } from './components/page/footer'
 import { MapPattern } from './components/_map/pattern'
 import { IconSprite } from './components/_ui/iconSprite'
 

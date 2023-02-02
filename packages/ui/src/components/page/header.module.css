@@ -1,0 +1,42 @@
+@import '@/styles/settings.css';
+
+.header-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+.search {
+  grid-row-start: 1;
+  grid-column-start: 2;
+  grid-column-end: 2;
+}
+
+@media (--viewport-tablet) {
+  .header-container {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media (--viewport-desktop) {
+  .header-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .search {
+    grid-row-start: 2;
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+}
+
+@media (--viewport-large) {
+  .header-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .search {
+    grid-row-start: 1;
+    grid-column-start: 2;
+    grid-column-end: 2;
+  }
+}
