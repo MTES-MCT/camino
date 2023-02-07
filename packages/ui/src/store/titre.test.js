@@ -175,6 +175,7 @@ describe('état du titre sélectionné', () => {
   })
 
   test('la tab des activités est visible si il existe au moins une activité', () => {
+    store.state.user = { element: { role: 'defaut' } }
     store.state.titre.element = { activites: [{}], demarches: [] }
     expect(store.getters['titre/tabs']).toMatchObject([
       { id: 'demarches' },

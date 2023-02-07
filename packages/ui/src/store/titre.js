@@ -33,11 +33,10 @@ const getters = {
         tabs.push({ id: 'activites', nom: 'Activités' })
       }
 
-      const user = rootState.user.element
       if (
         getters.travaux.length ||
         canCreateTravaux(
-          user,
+          rootState.user.element,
           state.element.typeId,
           state.element.administrations
         )
