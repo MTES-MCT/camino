@@ -578,10 +578,6 @@ exports[`statuts > peut voir tous les statuts 1`] = `
       "id": "s",
       "nom": "stockages souterrains",
     },
-    {
-      "id": "i",
-      "nom": "indéterminé",
-    },
   ],
   "geoSystemes": [
     {
