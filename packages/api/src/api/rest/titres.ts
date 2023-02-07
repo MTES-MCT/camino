@@ -285,7 +285,7 @@ export const titresDREAL = async (
           throw new Error('le statut du titre est obligatoire')
         }
 
-        if (!titre.administrationsLocales) {
+        if (titre.administrationsLocales === undefined) {
           throw new Error('les administrations locales doivent être chargées')
         }
 
@@ -295,10 +295,14 @@ export const titresDREAL = async (
             user,
             titre.typeId,
             titre.titreStatutId,
-            titre.administrationsLocales
+            titre.administrationsLocales ?? []
           ) ??
             false) ||
-          (canCreateTravaux(user, titre.typeId, titre.administrationsLocales) ??
+          (canCreateTravaux(
+            user,
+            titre.typeId,
+            titre.administrationsLocales ?? []
+          ) ??
             false)
         )
       })

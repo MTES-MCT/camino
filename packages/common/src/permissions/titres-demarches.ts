@@ -1,9 +1,9 @@
-import { isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from '../roles'
-import { TitreTypeId } from '../static/titresTypes'
-import { isGestionnaire } from '../static/administrationsTitresTypes'
-import { TitreStatutId } from '../static/titresStatuts'
-import { canAdministrationModifyDemarches } from '../static/administrationsTitresTypesTitresStatuts'
-import { AdministrationId, Administrations } from '../static/administrations'
+import { isAdministrationAdmin, isAdministrationEditeur, isSuper, User } from '../roles.js'
+import { TitreTypeId } from '../static/titresTypes.js'
+import { isGestionnaire } from '../static/administrationsTitresTypes.js'
+import { TitreStatutId } from '../static/titresStatuts.js'
+import { canAdministrationModifyDemarches } from '../static/administrationsTitresTypesTitresStatuts.js'
+import { AdministrationId, Administrations } from '../static/administrations.js'
 
 export const canCreateDemarche = (user: User, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId, administrations: AdministrationId[]): boolean => {
   if (isSuper(user)) {

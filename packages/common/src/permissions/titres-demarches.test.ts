@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
-import { AdministrationId } from '../static/administrations'
-import { Role } from '../roles'
-import { canCreateTravaux } from './titres-demarches'
+import { AdministrationId } from '../static/administrations.js'
+import { Role } from '../roles.js'
+import { canCreateTravaux } from './titres-demarches.js'
 
 describe('canCreateTravaux', () => {
   test.each<[AdministrationId, boolean]>([
