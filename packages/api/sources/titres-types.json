@@ -65,11 +65,6 @@
     "type_id": "cx"
   },
   {
-    "id": "cxi",
-    "domaine_id": "i",
-    "type_id": "cx"
-  },
-  {
     "id": "cxm",
     "domaine_id": "m",
     "type_id": "cx"
@@ -112,11 +107,6 @@
   {
     "id": "inh",
     "domaine_id": "h",
-    "type_id": "in"
-  },
-  {
-    "id": "ini",
-    "domaine_id": "i",
     "type_id": "in"
   },
   {
@@ -178,11 +168,6 @@
         "sectionId": "prx"
       }
     ]
-  },
-  {
-    "id": "pri",
-    "domaine_id": "i",
-    "type_id": "pr"
   },
   {
     "id": "prm",
@@ -257,11 +242,6 @@
   {
     "id": "pxh",
     "domaine_id": "h",
-    "type_id": "px"
-  },
-  {
-    "id": "pxi",
-    "domaine_id": "i",
     "type_id": "px"
   },
   {
