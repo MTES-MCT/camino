@@ -116,9 +116,9 @@ export default {
     },
 
     types() {
-      return this.$store.state.titreDemarche.metas.types
-        .filter(t => (this.tabId === 'travaux' ? t.travaux : !t.travaux))
-        .filter(t => t.demarchesCreation)
+      return this.$store.state.titreDemarche.metas.types.filter(t =>
+        this.tabId === 'travaux' ? t.travaux : !t.travaux
+      )
     },
 
     complete() {

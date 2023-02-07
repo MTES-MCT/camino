@@ -89,10 +89,9 @@ export const domaines = async (
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
-    return await domainesGet(null as never, { fields }, user)
+    return await domainesGet(null as never, { fields })
   } catch (e) {
     console.error(e)
 
@@ -118,10 +117,9 @@ export const demarchesTypes = async (
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
-    return await demarchesTypesGet({ titreId, travaux }, { fields }, user)
+    return await demarchesTypesGet({ titreId, travaux }, { fields })
   } catch (e) {
     console.error(e)
 

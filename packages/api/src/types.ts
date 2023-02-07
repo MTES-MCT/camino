@@ -300,7 +300,7 @@ interface IDemarcheType {
   exception?: boolean | null
   etapesTypes: IEtapeType[]
   titreTypeId?: string | null
-  demarchesCreation?: boolean | null
+
   travaux?: boolean
 }
 
