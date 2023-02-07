@@ -2,6 +2,7 @@ import { titre, titreCreer, titreModifier, titreSupprimer } from '../api/titres'
 
 import router from '../router'
 import { utilisateurTitreAbonner } from '../api/utilisateurs-titres'
+import { canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
 
 const state = {
   element: null,
@@ -27,12 +28,22 @@ const getters = {
   tabs(state, getters, rootState, rootGetters) {
     const tabs = [{ id: 'demarches', nom: 'Droits miniers' }]
 
-    if (state.element?.activites?.length) {
-      tabs.push({ id: 'activites', nom: 'Activités' })
-    }
+    if (state.element) {
+      if (state.element.activites?.length) {
+        tabs.push({ id: 'activites', nom: 'Activités' })
+      }
 
-    if (getters.travaux.length || state.element?.travauxCreation) {
-      tabs.push({ id: 'travaux', nom: 'Travaux' })
+      const user = rootState.user.element
+      if (
+        getters.travaux.length ||
+        canCreateTravaux(
+          user,
+          state.element.typeId,
+          state.element.administrations
+        )
+      ) {
+        tabs.push({ id: 'travaux', nom: 'Travaux' })
+      }
     }
 
     if (rootGetters['user/userIsSuper']) {

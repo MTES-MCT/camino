@@ -9,12 +9,10 @@ import {
   titresConfidentielSelect,
   titresModificationSelectQuery,
   titresQueryModify,
-  titresTravauxCreationQuery,
   titresVisibleByEntrepriseQuery
 } from './titres.js'
 import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts.js'
 import { userSuper } from '../../user-super.js'
-import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { Role } from 'camino-common/src/roles.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
@@ -257,65 +255,6 @@ describe('titresQueryModify', () => {
         } else {
           expect(res[0].confidentiel).toBeFalsy()
         }
-      }
-    )
-  })
-
-  describe('titresTravauxCreationQuery', () => {
-    test.each<[AdministrationId, boolean]>([
-      ['dre-ile-de-france-01', false],
-      ['dea-guadeloupe-01', false],
-      ['min-mtes-dgec-01', false],
-      ['pre-42218-01', false],
-      ['ope-ptmg-973-01', false]
-    ])(
-      'Vérifie si le $administrationId, peut créer des travaux ($travauxCreation)',
-      async (administrationId, travauxCreation) => {
-        const titreId = idGenerate()
-
-        await Titres.query().insert({
-          id: titreId,
-          nom: idGenerate(),
-          titreStatutId: 'val',
-          typeId: 'arm'
-        })
-
-        const q = Titres.query()
-        titresTravauxCreationQuery(q, {
-          role: 'admin',
-          administrationId
-        })
-
-        const titre = (await q.first()) as ITitre
-
-        expect(titre.travauxCreation ?? false).toEqual(travauxCreation)
-      }
-    )
-    test.each<[Role, boolean]>([
-      ['super', true],
-      ['entreprise', false],
-      ['defaut', false]
-    ])(
-      'Vérifie si un profil $role peut créer des travaux',
-      async (role, travauxCreation) => {
-        const titreId = idGenerate()
-
-        await Titres.query().insert({
-          id: titreId,
-          nom: idGenerate(),
-          titreStatutId: 'val',
-          typeId: 'arm'
-        })
-
-        const q = Titres.query()
-        titresTravauxCreationQuery(q, {
-          role,
-          administrationId: undefined
-        })
-
-        const titre = (await q.first()) as ITitre
-
-        expect(titre.travauxCreation ?? false).toEqual(travauxCreation)
       }
     )
   })

@@ -45,6 +45,10 @@ import {
   EtapeTypeId
 } from 'camino-common/src/static/etapesTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
+import {
+  canCreateDemarche,
+  canCreateTravaux
+} from 'camino-common/src/permissions/titres-demarches.js'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,
@@ -271,17 +275,33 @@ export const titresDREAL = async (
     const titresAutorises = await titresGet(
       filters,
       {
-        fields: { id: {} }
+        fields: { pointsEtape: { id: {} } }
       },
       user
     )
     const titresAutorisesIds = titresAutorises
-      .filter(
-        ({ modification, demarchesCreation, travauxCreation }) =>
-          (modification ?? false) ||
-          (demarchesCreation ?? false) ||
-          (travauxCreation ?? false)
-      )
+      .filter(titre => {
+        if (!titre.titreStatutId) {
+          throw new Error('le statut du titre est obligatoire')
+        }
+
+        if (!titre.administrationsLocales) {
+          throw new Error('les administrations locales doivent être chargées')
+        }
+
+        return (
+          (titre.modification ?? false) ||
+          (canCreateDemarche(
+            user,
+            titre.typeId,
+            titre.titreStatutId,
+            titre.administrationsLocales
+          ) ??
+            false) ||
+          (canCreateTravaux(user, titre.typeId, titre.administrationsLocales) ??
+            false)
+        )
+      })
       .map(({ id }) => id)
     const titres = await titresGet(
       { ...filters, ids: titresAutorisesIds, colonne: 'nom' },

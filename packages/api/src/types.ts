@@ -517,8 +517,6 @@ interface ITitre {
   suppression?: boolean | null
   publicLecture?: boolean | null
   entreprisesLecture?: boolean | null
-  travauxCreation?: boolean | null
-  demarchesCreation?: boolean | null
   contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
   propsTitreEtapesIds: IPropsTitreEtapesIds
   contenu?: IContenu | null

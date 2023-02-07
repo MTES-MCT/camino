@@ -75,6 +75,7 @@
 
     <TitreDemarches
       v-if="tabId === 'demarches'"
+      :user="user"
       :demarches="demarches"
       :tabId="tabId"
       @event-track="eventTrack"
@@ -90,6 +91,7 @@
       v-if="tabId === 'travaux'"
       :demarches="travaux"
       :tabId="tabId"
+      :user="user"
       @titre-event-track="eventTrack"
     />
 
