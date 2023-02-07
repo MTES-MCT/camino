@@ -1,9 +1,9 @@
-import { isNotNullNorUndefined } from '../typescript-tools.js'
+import { isNotNullNorUndefined, getKeys } from '../typescript-tools.js'
 import { DemarcheTypeId, isDemarcheTypeOctroi } from './demarchesTypes.js'
-import { DomaineId, DOMAINES_IDS, isDomaineId } from './domaines.js'
+import { DomaineId } from './domaines.js'
 import { TitresStatutIds, TitreStatutId } from './titresStatuts.js'
-import { TitreTypeId, toTitreTypeId } from './titresTypes.js'
-import { TITRES_TYPES_TYPES_IDS, TitreTypeTypeId, isTitreTypeType } from './titresTypesTypes.js'
+import { TITRES_TYPES_IDS, TitreTypeId, toTitreTypeId, isTitreType } from './titresTypes.js'
+import { TitreTypeTypeId } from './titresTypesTypes.js'
 
 export const titrePublicFind = (
   titreStatutId: TitreStatutId | null | undefined,
@@ -32,59 +32,55 @@ export const titrePublicFind = (
 }
 
 const isTitrePublicLecture = (titreTypeType: TitreTypeTypeId, domaineId: DomaineId, titreStatutId: TitreStatutId): boolean => {
-  return titresPublicLecture[titreTypeType]?.[domaineId]?.includes(titreStatutId) ?? false
+  return titresPublicLecture[toTitreTypeId(titreTypeType, domaineId)]?.includes(titreStatutId) ?? false
 }
 
-const titresPublicLecture: { [key in TitreTypeTypeId]?: { [key in DomaineId]?: TitreStatutId[] } } = {
-  [TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_PROSPECTION]: {
-    [DOMAINES_IDS.CARRIERES]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.HYDROCARBURE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.METAUX]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.GRANULATS_MARINS]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide]
-  },
-  [TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE]: {
-    [DOMAINES_IDS.CARRIERES]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.GEOTHERMIE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.METAUX]: [TitresStatutIds.DemandeClassee, TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide]
-  },
-  [TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION]: {
-    [DOMAINES_IDS.METAUX]: [TitresStatutIds.DemandeClassee, TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide]
-  },
-  [TITRES_TYPES_TYPES_IDS.CONCESSION]: {
-    [DOMAINES_IDS.FOSSILES]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.GEOTHERMIE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.HYDROCARBURE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.METAUX]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.RADIOACTIF]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.SOUTERRAIN]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.GRANULATS_MARINS]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide]
-  },
-  [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_CARRIERES]: {
-    [DOMAINES_IDS.CARRIERES]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide]
-  },
-  [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES]: {
-    [DOMAINES_IDS.FOSSILES]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.GEOTHERMIE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.HYDROCARBURE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.METAUX]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.RADIOACTIF]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.SOUTERRAIN]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.GRANULATS_MARINS]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide]
-  },
-  [TITRES_TYPES_TYPES_IDS.PERMIS_D_EXPLOITATION]: {
-    [DOMAINES_IDS.GEOTHERMIE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.HYDROCARBURE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.METAUX]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.RADIOACTIF]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-    [DOMAINES_IDS.GRANULATS_MARINS]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide]
-  }
+const titresPublicLecture: { [key in TitreTypeId]: TitreStatutId[] } = {
+  [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_HYDROCARBURE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_METAUX]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_CARRIERES]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_GEOTHERMIE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: [
+    TitresStatutIds.DemandeClassee,
+    TitresStatutIds.DemandeInitiale,
+    TitresStatutIds.Echu,
+    TitresStatutIds.ModificationEnInstance,
+    TitresStatutIds.Valide
+  ],
+  [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: [
+    TitresStatutIds.DemandeClassee,
+    TitresStatutIds.DemandeInitiale,
+    TitresStatutIds.Echu,
+    TitresStatutIds.ModificationEnInstance,
+    TitresStatutIds.Valide
+  ],
+  [TITRES_TYPES_IDS.CONCESSION_FOSSILES]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.CONCESSION_GEOTHERMIE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.CONCESSION_HYDROCARBURE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.CONCESSION_METAUX]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.CONCESSION_RADIOACTIF]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.CONCESSION_SOUTERRAIN]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.CONCESSION_GRANULATS_MARINS]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_CARRIERES_CARRIERES]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_FOSSILES]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_HYDROCARBURE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_RADIOACTIF]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_SOUTERRAIN]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_HYDROCARBURE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_RADIOACTIF]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
+  [TITRES_TYPES_IDS.INDETERMINE_METAUX]: [TitresStatutIds.Echu],
+  [TITRES_TYPES_IDS.INDETERMINE_RADIOACTIF]: [TitresStatutIds.Echu],
+  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_FOSSILES]: [TitresStatutIds.Echu]
 }
 
-export const titreTypesStatutsTitresPublicLecture: { titreTypeId: TitreTypeId; titreStatutId: TitreStatutId; publicLecture: boolean }[] = Object.keys(titresPublicLecture)
-  .filter(isTitreTypeType)
-  .flatMap(keyType => {
-    return Object.keys(titresPublicLecture[keyType] ?? [])
-      .filter(isDomaineId)
-      .flatMap(keyDomaine => titresPublicLecture[keyType]?.[keyDomaine]?.flatMap(statut => ({ titreTypeId: toTitreTypeId(keyType, keyDomaine), titreStatutId: statut, publicLecture: true })))
-  })
+export const titreTypesStatutsTitresPublicLecture: { titreTypeId: TitreTypeId; titreStatutId: TitreStatutId; publicLecture: boolean }[] = getKeys(titresPublicLecture, isTitreType)
+  .flatMap(keyType => titresPublicLecture[keyType].map(statut => ({ titreTypeId: keyType, titreStatutId: statut, publicLecture: true })))
   .filter(isNotNullNorUndefined)

@@ -8,8 +8,7 @@ export const DOMAINES_IDS = {
   HYDROCARBURE: 'h',
   RADIOACTIF: 'r',
   SOUTERRAIN: 's',
-  GRANULATS_MARINS: 'w',
-  INDETERMINE: 'i'
+  GRANULATS_MARINS: 'w'
 } as const
 
 export type DomaineId = typeof DOMAINES_IDS[keyof typeof DOMAINES_IDS]
@@ -40,12 +39,6 @@ export const Domaines: { [key in DomaineId]: Domaine<key> } = {
     nom: 'hydrocarbures liquides ou gazeux',
     description: "Domaine minier auquel appartiennent des hydrocarbures qu'ils soient sous forme liquide ou gazeuse.",
     ordre: 4
-  },
-  i: {
-    id: 'i',
-    nom: 'indéterminé',
-    description: 'Domaine indéterminé',
-    ordre: 9
   },
   m: {
     id: 'm',

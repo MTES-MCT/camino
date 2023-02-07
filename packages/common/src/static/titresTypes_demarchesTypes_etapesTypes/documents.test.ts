@@ -1,4 +1,4 @@
-import { getDocuments } from './titresTypes_demarchesTypes_etapesTypes.js'
+import { getDocuments } from './documents.js'
 import { test, expect } from 'vitest'
 
 test('getDocuments erreurs', () => {

@@ -1,12 +1,10 @@
-import { isNotNullNorUndefined, onlyUnique } from '../typescript-tools.js'
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeId } from './demarchesTypes.js'
-import { DocumentsTypes, DOCUMENTS_TYPES_IDS, DocumentType, DocumentTypeId, isDocumentTypeId } from './documentsTypes.js'
-import { DomaineId, DOMAINES_IDS, isDomaineId } from './domaines.js'
-import { ETAPES_TYPES, EtapeTypeId, isEtapeTypeId } from './etapesTypes.js'
-import { isTitreTypeType, TITRES_TYPES_TYPES_IDS, TitreTypeTypeId } from './titresTypesTypes.js'
-import { getDomaineId, getTitreTypeType, TitreTypeId, toTitreTypeId } from './titresTypes.js'
+import { isNotNullNorUndefined, onlyUnique } from '../../typescript-tools.js'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeId } from './../demarchesTypes.js'
+import { DocumentsTypes, DOCUMENTS_TYPES_IDS, DocumentType, DocumentTypeId, isDocumentTypeId } from './../documentsTypes.js'
+import { ETAPES_TYPES, EtapeTypeId, isEtapeTypeId } from './../etapesTypes.js'
+import { TitreTypeId, TITRES_TYPES_IDS, isTitreType } from './../titresTypes.js'
 
-const EtapesTypesDocumentsTypes: { [key in EtapeTypeId]?: DocumentTypeId[] } = {
+const EtapesTypesDocumentsTypes = {
   [ETAPES_TYPES.avisDeDirectionRegionaleDesAffairesCulturelles]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires, DOCUMENTS_TYPES_IDS.avis],
   [ETAPES_TYPES.avisDeLaDirectionDalimentationDeLagricultureEtDeLaForet]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires],
   [ETAPES_TYPES.abrogationDeLaDecision]: [DOCUMENTS_TYPES_IDS.arrete],
@@ -275,56 +273,58 @@ const EtapesTypesDocumentsTypes: { [key in EtapeTypeId]?: DocumentTypeId[] } = {
   [ETAPES_TYPES.saisineDeLautoriteEnvironnementale]: [DOCUMENTS_TYPES_IDS.courrierDeSaisineDuPrefet, DOCUMENTS_TYPES_IDS.lettreDeSaisineDuPrefet],
   [ETAPES_TYPES.saisineDesServicesDeLEtat]: [DOCUMENTS_TYPES_IDS.courrierDeSaisineDuPrefet],
   [ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur]: [DOCUMENTS_TYPES_IDS.arretePrefectoral]
+} as const
+
+type EtapesTypesEtapesTypesDocumentsTypes = keyof typeof EtapesTypesDocumentsTypes
+
+const isEtapesTypesEtapesTypesDocumentsTypes = (etapeTypeId?: EtapeTypeId): etapeTypeId is EtapesTypesEtapesTypesDocumentsTypes => {
+  return Object.keys(EtapesTypesDocumentsTypes).includes(etapeTypeId)
 }
 
 const TDEDocumentsTypes: {
-  [key in TitreTypeTypeId]?: { [key in DomaineId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: { [key in DocumentTypeId]?: { optionnel: boolean; description?: string } } } } }
+  [key in TitreTypeId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: { [key in DocumentTypeId]?: { optionnel: boolean; description?: string } } } }
 } = {
-  [TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE]: {
-    [DOMAINES_IDS.METAUX]: {
-      [DEMARCHES_TYPES_IDS.Octroi]: {
-        [ETAPES_TYPES.demande]: {
-          [DOCUMENTS_TYPES_IDS.decisionCasParCas]: { optionnel: true },
-          [DOCUMENTS_TYPES_IDS.dossierLoiSurLEau]: { optionnel: true },
-          [DOCUMENTS_TYPES_IDS.dossierDeDemande]: { optionnel: false },
-          [DOCUMENTS_TYPES_IDS.formulaireDeDemande]: { optionnel: false },
-          [DOCUMENTS_TYPES_IDS.justificatifDePaiement]: { optionnel: false },
-          [DOCUMENTS_TYPES_IDS.documentsCartographiques]: { optionnel: false }
-        }
+  [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
+    [DEMARCHES_TYPES_IDS.Octroi]: {
+      [ETAPES_TYPES.demande]: {
+        [DOCUMENTS_TYPES_IDS.decisionCasParCas]: { optionnel: true },
+        [DOCUMENTS_TYPES_IDS.dossierLoiSurLEau]: { optionnel: true },
+        [DOCUMENTS_TYPES_IDS.dossierDeDemande]: { optionnel: false },
+        [DOCUMENTS_TYPES_IDS.formulaireDeDemande]: { optionnel: false },
+        [DOCUMENTS_TYPES_IDS.justificatifDePaiement]: { optionnel: false },
+        [DOCUMENTS_TYPES_IDS.documentsCartographiques]: { optionnel: false }
       }
     }
   },
-  [TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES]: {
-    [DOMAINES_IDS.GEOTHERMIE]: { [DEMARCHES_TYPES_IDS.MutationPartielle]: { [ETAPES_TYPES.decisionDeLadministration]: { [DOCUMENTS_TYPES_IDS.arrete]: { optionnel: true } } } }
+  [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE]: {
+    [DEMARCHES_TYPES_IDS.MutationPartielle]: { [ETAPES_TYPES.decisionDeLadministration]: { [DOCUMENTS_TYPES_IDS.arrete]: { optionnel: true } } }
   },
-  [TITRES_TYPES_TYPES_IDS.CONCESSION]: { [DOMAINES_IDS.METAUX]: { [DEMARCHES_TYPES_IDS.Renonciation]: { [ETAPES_TYPES.decisionImplicite]: { [DOCUMENTS_TYPES_IDS.courrier]: { optionnel: true } } } } },
-  [TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION]: {
-    [DOMAINES_IDS.METAUX]: {
-      [DEMARCHES_TYPES_IDS.Octroi]: {
-        [ETAPES_TYPES.decisionDuProprietaireDuSol]: { [DOCUMENTS_TYPES_IDS.lettre]: { optionnel: false, description: "Avis suite à la demande d'accord du propriétaire du sol" } },
-        [ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: { [DOCUMENTS_TYPES_IDS.arretePrefectoral]: { optionnel: false } },
-        [ETAPES_TYPES.demande]: {
-          [DOCUMENTS_TYPES_IDS.documentsCartographiques]: { optionnel: false, description: 'Plan à l’échelle 1/50 000ème ou 1/100 000ème' },
-          [DOCUMENTS_TYPES_IDS.identificationDeMateriel]: {
-            optionnel: false,
-            description:
-              'la liste et la valeur du matériel d’extraction et de\n traitement que le demandeur détient ou qu’il \nenvisage d’acquérir ainsi que, dans ce dernier\n cas, le financement correspondant. Ces pièces \nsont demandées au titre de la justification des \ncapacités financières du\ndemandeur \n(décret 2001-204, art. 7)'
-          },
-          [DOCUMENTS_TYPES_IDS.justificationDExistenceDuGisement]: { optionnel: true },
-          [DOCUMENTS_TYPES_IDS.lettre]: { optionnel: true },
-          [DOCUMENTS_TYPES_IDS.mesuresPrevuesPourRehabiliterLeSite]: {
-            optionnel: false,
-            description:
-              'la définition des mesures prévues par le pétitionnaire pour réhabiliter le site après exploitation, notamment la nature et les modalités de revégétalisation envisagée. (décret 2001-204, art. 5 bis)'
-          },
-          [DOCUMENTS_TYPES_IDS.methodesPourLExecutionDesTravaux]: { optionnel: false, description: 'descriptif des méthodes envisagées pour l’exécution des travaux ((décret 2001-204, art. 6)' },
-          [DOCUMENTS_TYPES_IDS.noticeDImpact]: { optionnel: true },
-          [DOCUMENTS_TYPES_IDS.noticeDImpactRenforcee]: { optionnel: true, description: 'Obligatoire pour les AEX hors de la zone 2 du SDOM' },
-          [DOCUMENTS_TYPES_IDS.programmeDesTravaux]: { optionnel: false, description: 'Description du phasage et planigramme des travaux. (décret 2001-204, art. 5)' },
-          [DOCUMENTS_TYPES_IDS.schemaDePenetrationDuMassifForestier]: {
-            optionnel: false,
-            description: "le schéma de pénétration du massif forestier proposé par le pétitionnaire pour l'acheminement du matériel lourd et la desserte du chantier (décret 2001-204, art. 5 bis)"
-          }
+  [TITRES_TYPES_IDS.CONCESSION_METAUX]: { [DEMARCHES_TYPES_IDS.Renonciation]: { [ETAPES_TYPES.decisionImplicite]: { [DOCUMENTS_TYPES_IDS.courrier]: { optionnel: true } } } },
+  [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: {
+    [DEMARCHES_TYPES_IDS.Octroi]: {
+      [ETAPES_TYPES.decisionDuProprietaireDuSol]: { [DOCUMENTS_TYPES_IDS.lettre]: { optionnel: false, description: "Avis suite à la demande d'accord du propriétaire du sol" } },
+      [ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: { [DOCUMENTS_TYPES_IDS.arretePrefectoral]: { optionnel: false } },
+      [ETAPES_TYPES.demande]: {
+        [DOCUMENTS_TYPES_IDS.documentsCartographiques]: { optionnel: false, description: 'Plan à l’échelle 1/50 000ème ou 1/100 000ème' },
+        [DOCUMENTS_TYPES_IDS.identificationDeMateriel]: {
+          optionnel: false,
+          description:
+            'la liste et la valeur du matériel d’extraction et de\n traitement que le demandeur détient ou qu’il \nenvisage d’acquérir ainsi que, dans ce dernier\n cas, le financement correspondant. Ces pièces \nsont demandées au titre de la justification des \ncapacités financières du\ndemandeur \n(décret 2001-204, art. 7)'
+        },
+        [DOCUMENTS_TYPES_IDS.justificationDExistenceDuGisement]: { optionnel: true },
+        [DOCUMENTS_TYPES_IDS.lettre]: { optionnel: true },
+        [DOCUMENTS_TYPES_IDS.mesuresPrevuesPourRehabiliterLeSite]: {
+          optionnel: false,
+          description:
+            'la définition des mesures prévues par le pétitionnaire pour réhabiliter le site après exploitation, notamment la nature et les modalités de revégétalisation envisagée. (décret 2001-204, art. 5 bis)'
+        },
+        [DOCUMENTS_TYPES_IDS.methodesPourLExecutionDesTravaux]: { optionnel: false, description: 'descriptif des méthodes envisagées pour l’exécution des travaux ((décret 2001-204, art. 6)' },
+        [DOCUMENTS_TYPES_IDS.noticeDImpact]: { optionnel: true },
+        [DOCUMENTS_TYPES_IDS.noticeDImpactRenforcee]: { optionnel: true, description: 'Obligatoire pour les AEX hors de la zone 2 du SDOM' },
+        [DOCUMENTS_TYPES_IDS.programmeDesTravaux]: { optionnel: false, description: 'Description du phasage et planigramme des travaux. (décret 2001-204, art. 5)' },
+        [DOCUMENTS_TYPES_IDS.schemaDePenetrationDuMassifForestier]: {
+          optionnel: false,
+          description: "le schéma de pénétration du massif forestier proposé par le pétitionnaire pour l'acheminement du matériel lourd et la desserte du chantier (décret 2001-204, art. 5 bis)"
         }
       }
     }
@@ -350,40 +350,35 @@ export const toSpecificDocuments = (): {
   description?: string | undefined
 }[] => {
   return Object.entries(TDEDocumentsTypes)
-    .flatMap(([titreTypeTypeId, domaines]) => {
-      return Object.entries(domaines).flatMap(([domaineId, demarcheTypeIds]) => {
-        return Object.entries(demarcheTypeIds).flatMap(([demarcheTypeId, etapeTypeIds]) => {
-          return Object.entries(etapeTypeIds).flatMap(([etapeTypeId, documentTypeIds]) => {
-            return Object.entries(documentTypeIds).flatMap(([documentTypeId, documentType]) => {
-              if (isDomaineId(domaineId) && isTitreTypeType(titreTypeTypeId) && isEtapeTypeId(etapeTypeId) && isDocumentTypeId(documentTypeId) && isDemarcheTypeId(demarcheTypeId)) {
-                const titreTypeId = toTitreTypeId(titreTypeTypeId, domaineId)
-
-                return {
-                  ...documentType,
-                  titreTypeId,
-                  demarcheTypeId,
-                  etapeTypeId,
-                  documentTypeId
-                }
-              } else {
-                return null
+    .flatMap(([titreTypeId, demarcheTypeIds]) => {
+      return Object.entries(demarcheTypeIds).flatMap(([demarcheTypeId, etapeTypeIds]) => {
+        return Object.entries(etapeTypeIds).flatMap(([etapeTypeId, documentTypeIds]) => {
+          return Object.entries(documentTypeIds).flatMap(([documentTypeId, documentType]) => {
+            if (isTitreType(titreTypeId) && isEtapeTypeId(etapeTypeId) && isDocumentTypeId(documentTypeId) && isDemarcheTypeId(demarcheTypeId)) {
+              return {
+                ...documentType,
+                titreTypeId,
+                demarcheTypeId,
+                etapeTypeId,
+                documentTypeId
               }
-            })
+            } else {
+              return null
+            }
           })
         })
       })
     })
     .filter(isNotNullNorUndefined)
 }
+
 export const getDocuments = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): DocumentType[] => {
-  if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheId) && isNotNullNorUndefined(etapeTypeId)) {
-    const domaineId = getDomaineId(titreTypeId)
-    const titreTypeType = getTitreTypeType(titreTypeId)
-    const documentsIds = EtapesTypesDocumentsTypes[etapeTypeId] ?? []
-    documentsIds.push(...Object.keys(TDEDocumentsTypes[titreTypeType]?.[domaineId]?.[demarcheId]?.[etapeTypeId] ?? {}).filter(isDocumentTypeId))
+  if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheId) && isEtapesTypesEtapesTypesDocumentsTypes(etapeTypeId)) {
+    const documentsIds: DocumentTypeId[] = [...EtapesTypesDocumentsTypes[etapeTypeId]]
+    documentsIds.push(...Object.keys(TDEDocumentsTypes[titreTypeId]?.[demarcheId]?.[etapeTypeId] ?? {}).filter(isDocumentTypeId))
 
     return documentsIds.filter(onlyUnique).map(documentTypeId => {
-      const documentSpecifique = TDEDocumentsTypes[titreTypeType]?.[domaineId]?.[demarcheId]?.[etapeTypeId]?.[documentTypeId]
+      const documentSpecifique = TDEDocumentsTypes[titreTypeId]?.[demarcheId]?.[etapeTypeId]?.[documentTypeId]
       const document = { ...DocumentsTypes[documentTypeId], optionnel: true }
       if (documentSpecifique) {
         document.optionnel = documentSpecifique.optionnel

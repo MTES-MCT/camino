@@ -7,10 +7,48 @@ interface Definition<T> {
   typeId: TitreTypeTypeId
 }
 
-// prettier-ignore
-export const TitresTypesIds = [ 'apc', 'aph', 'apm', 'apw', 'arc', 'arg', 'arm', 'axm', 'cxf', 'cxg', 'cxh', 'cxi', 'cxm', 'cxr', 'cxs', 'cxw', 'inh', 'ini', 'inm', 'inr', 'pcc', 'prf', 'prg', 'prh', 'pri', 'prm', 'prr', 'prs', 'prw', 'pxf', 'pxg', 'pxh', 'pxi', 'pxm', 'pxr', 'pxw' ] as const
+export const TITRES_TYPES_IDS = {
+  AUTORISATION_DE_PROSPECTION_CARRIERES: 'apc',
+  AUTORISATION_DE_PROSPECTION_HYDROCARBURE: 'aph',
+  AUTORISATION_DE_PROSPECTION_METAUX: 'apm',
+  AUTORISATION_DE_PROSPECTION_GRANULATS_MARINS: 'apw',
 
-export type TitreTypeId = typeof TitresTypesIds[number]
+  AUTORISATION_DE_RECHERCHE_CARRIERES: 'arc',
+  AUTORISATION_DE_RECHERCHE_GEOTHERMIE: 'arg',
+  AUTORISATION_DE_RECHERCHE_METAUX: 'arm',
+
+  AUTORISATION_D_EXPLOITATION_METAUX: 'axm',
+
+  CONCESSION_FOSSILES: 'cxf',
+  CONCESSION_GEOTHERMIE: 'cxg',
+  CONCESSION_HYDROCARBURE: 'cxh',
+  CONCESSION_METAUX: 'cxm',
+  CONCESSION_RADIOACTIF: 'cxr',
+  CONCESSION_SOUTERRAIN: 'cxs',
+  CONCESSION_GRANULATS_MARINS: 'cxw',
+  INDETERMINE_METAUX: 'inm',
+  INDETERMINE_RADIOACTIF: 'inr',
+  PERMIS_EXCLUSIF_DE_CARRIERES_CARRIERES: 'pcc',
+
+  PERMIS_EXCLUSIF_DE_RECHERCHES_FOSSILES: 'prf',
+  PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE: 'prg',
+  PERMIS_EXCLUSIF_DE_RECHERCHES_HYDROCARBURE: 'prh',
+  PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX: 'prm',
+  PERMIS_EXCLUSIF_DE_RECHERCHES_RADIOACTIF: 'prr',
+  PERMIS_EXCLUSIF_DE_RECHERCHES_SOUTERRAIN: 'prs',
+  PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS: 'prw',
+
+  PERMIS_D_EXPLOITATION_FOSSILES: 'pxf',
+  PERMIS_D_EXPLOITATION_GEOTHERMIE: 'pxg',
+  PERMIS_D_EXPLOITATION_HYDROCARBURE: 'pxh',
+  PERMIS_D_EXPLOITATION_METAUX: 'pxm',
+  PERMIS_D_EXPLOITATION_RADIOACTIF: 'pxr',
+  PERMIS_D_EXPLOITATION_GRANULATS_MARINS: 'pxw'
+} as const
+
+export const TitresTypesIds = Object.values(TITRES_TYPES_IDS)
+
+export type TitreTypeId = typeof TITRES_TYPES_IDS[keyof typeof TITRES_TYPES_IDS]
 
 export const TitresTypes: {
   [key in TitreTypeId]: Definition<key>
@@ -26,20 +64,16 @@ export const TitresTypes: {
   cxf: { id: 'cxf', domaineId: 'f', typeId: 'cx' },
   cxg: { id: 'cxg', domaineId: 'g', typeId: 'cx' },
   cxh: { id: 'cxh', domaineId: 'h', typeId: 'cx' },
-  cxi: { id: 'cxi', domaineId: 'i', typeId: 'cx' },
   cxm: { id: 'cxm', domaineId: 'm', typeId: 'cx' },
   cxr: { id: 'cxr', domaineId: 'r', typeId: 'cx' },
   cxs: { id: 'cxs', domaineId: 's', typeId: 'cx' },
   cxw: { id: 'cxw', domaineId: 'w', typeId: 'cx' },
-  inh: { id: 'inh', domaineId: 'h', typeId: 'in' },
-  ini: { id: 'ini', domaineId: 'i', typeId: 'in' },
   inm: { id: 'inm', domaineId: 'm', typeId: 'in' },
   inr: { id: 'inr', domaineId: 'r', typeId: 'in' },
   pcc: { id: 'pcc', domaineId: 'c', typeId: 'pc' },
   prf: { id: 'prf', domaineId: 'f', typeId: 'pr' },
   prg: { id: 'prg', domaineId: 'g', typeId: 'pr' },
   prh: { id: 'prh', domaineId: 'h', typeId: 'pr' },
-  pri: { id: 'pri', domaineId: 'i', typeId: 'pr' },
   prm: { id: 'prm', domaineId: 'm', typeId: 'pr' },
   prr: { id: 'prr', domaineId: 'r', typeId: 'pr' },
   prs: { id: 'prs', domaineId: 's', typeId: 'pr' },
@@ -47,7 +81,6 @@ export const TitresTypes: {
   pxf: { id: 'pxf', domaineId: 'f', typeId: 'px' },
   pxg: { id: 'pxg', domaineId: 'g', typeId: 'px' },
   pxh: { id: 'pxh', domaineId: 'h', typeId: 'px' },
-  pxi: { id: 'pxi', domaineId: 'i', typeId: 'px' },
   pxm: { id: 'pxm', domaineId: 'm', typeId: 'px' },
   pxr: { id: 'pxr', domaineId: 'r', typeId: 'px' },
   pxw: { id: 'pxw', domaineId: 'w', typeId: 'px' }

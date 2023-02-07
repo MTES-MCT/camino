@@ -26,7 +26,7 @@ import {
   newDemarcheId
 } from '../../src/database/models/_format/id-create.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes.js'
+import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { documentCreate } from '../../src/database/queries/documents.js'
 import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'

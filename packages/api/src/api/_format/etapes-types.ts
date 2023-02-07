@@ -13,7 +13,7 @@ import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-de
 import { dupRemove } from '../../tools/index.js'
 import { titreSectionsFormat } from './titres-sections.js'
 
-import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes.js'
+import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
