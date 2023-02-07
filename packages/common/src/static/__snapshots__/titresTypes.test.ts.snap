@@ -29,16 +29,6 @@ exports[`getTitreTypeTypeByDomaineId %p h 1`] = `
 [
   "ap",
   "cx",
-  "in",
-  "pr",
-  "px",
-]
-`;
-
-exports[`getTitreTypeTypeByDomaineId %p i 1`] = `
-[
-  "cx",
-  "in",
   "pr",
   "px",
 ]

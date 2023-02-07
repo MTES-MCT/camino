@@ -3,7 +3,7 @@
   --color-domaine-f: #4a515d;
   --color-domaine-g: #c94f17;
   --color-domaine-h: #c2266a;
-  --color-domaine-i: #aaaaaa;
+
   --color-domaine-m: #376faa;
   --color-domaine-r: #a0aa31;
   --color-domaine-s: #7657b5;
@@ -56,10 +56,6 @@
   background: var(--color-domaine-h);
 }
 
-.bg-domaine-i {
-  background: var(--color-domaine-i);
-}
-
 .bg-domaine-m {
   background: var(--color-domaine-m);
 }
@@ -87,9 +83,6 @@
 }
 .svg-fill-domaine-h {
   fill: var(--color-domaine-h);
-}
-.svg-fill-domaine-i {
-  fill: var(--color-domaine-i);
 }
 .svg-fill-domaine-m {
   fill: var(--color-domaine-m);
@@ -260,32 +253,6 @@
 }
 .svg-fill-pattern-in-h {
   fill: url(#pattern-in-h);
-}
-
-/* i */
-.svg-fill-pattern-ax-i {
-  fill: url(#pattern-ax-i);
-}
-.svg-fill-pattern-cx-i {
-  fill: url(#pattern-cx-i);
-}
-.svg-fill-pattern-pc-i {
-  fill: url(#pattern-pc-i);
-}
-.svg-fill-pattern-px-i {
-  fill: url(#pattern-px-i);
-}
-.svg-fill-pattern-ap-i {
-  fill: url(#pattern-ap-i);
-}
-.svg-fill-pattern-ar-i {
-  fill: url(#pattern-ar-i);
-}
-.svg-fill-pattern-pr-i {
-  fill: url(#pattern-pr-i);
-}
-.svg-fill-pattern-in-i {
-  fill: url(#pattern-in-i);
 }
 
 /* m */

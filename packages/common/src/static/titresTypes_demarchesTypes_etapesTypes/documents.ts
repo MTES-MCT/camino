@@ -373,7 +373,10 @@ export const toSpecificDocuments = (): {
 }
 
 export const getDocuments = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): DocumentType[] => {
-  if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheId) && isEtapesTypesEtapesTypesDocumentsTypes(etapeTypeId)) {
+  if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheId) && isNotNullNorUndefined(etapeTypeId)) {
+    if (!isEtapesTypesEtapesTypesDocumentsTypes(etapeTypeId)) {
+      return []
+    }
     const documentsIds: DocumentTypeId[] = [...EtapesTypesDocumentsTypes[etapeTypeId]]
     documentsIds.push(...Object.keys(TDEDocumentsTypes[titreTypeId]?.[demarcheId]?.[etapeTypeId] ?? {}).filter(isDocumentTypeId))
 

@@ -1,4 +1,4 @@
-import { titrePublicFind } from 'camino-common/src/static/titresTypesTypes_domaine_titresStatuts.js'
+import { titrePublicFind } from 'camino-common/src/static/titresTypes_titresStatuts.js'
 import { titresGet, titreUpdate } from '../../database/queries/titres.js'
 import { userSuper } from '../../database/user-super.js'
 
@@ -30,8 +30,7 @@ export const titresPublicUpdate = async (titresIds?: string[]) => {
   for (const titre of titres) {
     const { publicLecture, entreprisesLecture } = titrePublicFind(
       titre.titreStatutId,
-      titre.type?.typeId,
-      titre.type?.domaineId,
+      titre.typeId,
       titre.demarches || []
     )
 

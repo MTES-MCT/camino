@@ -14,7 +14,7 @@ import { GraphQLResolveInfo } from 'graphql'
 import { fieldsBuild } from './_fields-build.js'
 import { isSuper } from 'camino-common/src/roles.js'
 import { toSpecificDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
-import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypesTypes_domaine_titresStatuts.js'
+import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypes_titresStatuts.js'
 
 const titresTypes = async (
   _: never,

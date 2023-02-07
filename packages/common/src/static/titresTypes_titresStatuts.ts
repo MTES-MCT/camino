@@ -1,26 +1,23 @@
 import { isNotNullNorUndefined, getKeys } from '../typescript-tools.js'
 import { DemarcheTypeId, isDemarcheTypeOctroi } from './demarchesTypes.js'
-import { DomaineId } from './domaines.js'
 import { TitresStatutIds, TitreStatutId } from './titresStatuts.js'
-import { TITRES_TYPES_IDS, TitreTypeId, toTitreTypeId, isTitreType } from './titresTypes.js'
-import { TitreTypeTypeId } from './titresTypesTypes.js'
+import { TITRES_TYPES_IDS, TitreTypeId, isTitreType } from './titresTypes.js'
 
 export const titrePublicFind = (
   titreStatutId: TitreStatutId | null | undefined,
-  titreTypeTypeId: TitreTypeTypeId | undefined,
-  domaineId: DomaineId | undefined,
+  titreTypeId: TitreTypeId | undefined,
   titreDemarches: { typeId: DemarcheTypeId; publicLecture?: boolean | undefined | null }[]
 ) => {
   const entreprisesLecture = true
   let publicLecture = false
-  if (!titreStatutId || !titreTypeTypeId || !domaineId) {
+  if (!titreStatutId || !titreTypeId) {
     return { publicLecture, entreprisesLecture }
   }
 
   // si le type de titre associé au domaine associé au statut du titre est public
   // et la démarche d'octroi (virtuelle ou non) est publique
   // alors le titre est public
-  if (isTitrePublicLecture(titreTypeTypeId, domaineId, titreStatutId)) {
+  if (isTitrePublicLecture(titreTypeId, titreStatutId)) {
     const titreDemarcheOctroi = titreDemarches.find(d => isDemarcheTypeOctroi(d.typeId) && d.publicLecture)
 
     if (titreDemarcheOctroi) {
@@ -31,8 +28,8 @@ export const titrePublicFind = (
   return { publicLecture, entreprisesLecture }
 }
 
-const isTitrePublicLecture = (titreTypeType: TitreTypeTypeId, domaineId: DomaineId, titreStatutId: TitreStatutId): boolean => {
-  return titresPublicLecture[toTitreTypeId(titreTypeType, domaineId)]?.includes(titreStatutId) ?? false
+const isTitrePublicLecture = (titreTypeId: TitreTypeId, titreStatutId: TitreStatutId): boolean => {
+  return titresPublicLecture[titreTypeId]?.includes(titreStatutId) ?? false
 }
 
 const titresPublicLecture: { [key in TitreTypeId]: TitreStatutId[] } = {
@@ -76,9 +73,9 @@ const titresPublicLecture: { [key in TitreTypeId]: TitreStatutId[] } = {
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_RADIOACTIF]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
-  [TITRES_TYPES_IDS.INDETERMINE_METAUX]: [TitresStatutIds.Echu],
-  [TITRES_TYPES_IDS.INDETERMINE_RADIOACTIF]: [TitresStatutIds.Echu],
-  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_FOSSILES]: [TitresStatutIds.Echu]
+  [TITRES_TYPES_IDS.INDETERMINE_METAUX]: [],
+  [TITRES_TYPES_IDS.INDETERMINE_RADIOACTIF]: [],
+  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_FOSSILES]: []
 }
 
 export const titreTypesStatutsTitresPublicLecture: { titreTypeId: TitreTypeId; titreStatutId: TitreStatutId; publicLecture: boolean }[] = getKeys(titresPublicLecture, isTitreType)
