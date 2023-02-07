@@ -24,12 +24,6 @@
     "ordre": 4
   },
   {
-    "id": "i",
-    "nom": "indéterminé",
-    "description": "Domaine indéterminé",
-    "ordre": 9
-  },
-  {
     "id": "m",
     "nom": "minéraux et métaux",
     "description": "Domaine minier auquel appartiennent les substances minérales non énergétiques et non radioactives classées dans la catégorie des substances de mines, notemment certains métaux, gaz, sels et terres-rares.",

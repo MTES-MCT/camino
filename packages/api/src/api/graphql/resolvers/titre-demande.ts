@@ -32,7 +32,7 @@ import {
 import { checkTitreLinks } from '../../../business/validations/titre-links-validate.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
-import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes.js'
+import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
 export const titreDemandeCreer = async (

@@ -22,7 +22,7 @@ import { Domaines } from 'camino-common/src/static/domaines'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { phasesStatuts } from 'camino-common/src/static/phasesStatuts'
-import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypesTypes_domaine_titresStatuts'
+import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/titresTypes_titresStatuts'
 import { activitesStatuts } from 'camino-common/src/static/activitesStatuts'
 
 const labelGet = entity => (entity ? `${entity.id} - ${entity.nom}` : '')
