@@ -46,27 +46,27 @@ type BasicElement = {
 
 type DateElement = {
   type: 'date'
-  value: CaminoDate
+  value: CaminoDate | undefined
 } & BasicElement
 
 type FileElement = {
   type: 'file'
-  value: string
+  value: string | undefined
 } & BasicElement
 
 type TextElement = {
   type: 'text'
-  value: string
+  value: string | undefined
 } & BasicElement
 
 type NumberElement = {
   type: 'number' | 'integer'
-  value: number
+  value: number | undefined
 } & BasicElement
 
 type RadioElement = {
   type: 'radio'
-  value: boolean
+  value: boolean | undefined
 } & BasicElement
 
 type CheckboxesElement = {
@@ -78,7 +78,7 @@ type CheckboxesElement = {
 type SelectElement = {
   type: 'select'
   options: { id: string; nom: string }[]
-  value: string
+  value: string | undefined
 } & BasicElement
 
 export type Element = FileElement | DateElement | TextElement | NumberElement | RadioElement | CheckboxesElement | SelectElement

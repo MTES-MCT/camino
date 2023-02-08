@@ -33,7 +33,7 @@ import {
 import { TitreReference } from 'camino-common/src/titres-references'
 import { ApiClient } from '@/api/api-client'
 import { LoadingElement } from '@/components/_ui/functional-loader'
-import { Sections } from '../_common/section'
+import { Sections } from '../_common/new-section'
 import { defineComponent, onMounted, ref } from 'vue'
 import { AsyncData } from '../../api/client-rest'
 import { Section } from 'camino-common/src/titres'

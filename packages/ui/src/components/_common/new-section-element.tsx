@@ -23,7 +23,7 @@ const valeurFind = (element: Props['element']) => {
     return '–'
   }
 
-  if (isNumberElement(element)) {
+  if (isNumberElement(element) && element.value !== undefined) {
     return numberFormat(element.value)
   }
 
@@ -62,30 +62,28 @@ export const SectionElement = (props: Props): JSX.Element => {
         </div>
       ) : null}
       <div class={`${props.element.nom ? 'tablet-blob-3-4' : 'tablet-blob-1'}`}>
-        {isFileElement(props.element) ? (
+        {props.element.value && isFileElement(props.element) ? (
           <div class="flex h6 pb-xs">
             <span class="mt-xs flex bold">
               <Icon size="S" name="file" class="mr-xs" />
               {props.element.value.slice(5)}
             </span>
-
-            {props.element.value ? (
-              <button
-                class="btn-border py-xs px-s rnd-xs flex-right mt--xs"
-                onClick={() =>
-                  isFileElement(props.element)
-                    ? props.fileDownload(props.element.value)
-                    : {}
-                }
-              >
-                <Icon size="M" name="download" />
-              </button>
-            ) : null}
+            <button
+              class="btn-border py-xs px-s rnd-xs flex-right mt--xs"
+              onClick={() =>
+                props.element.value && isFileElement(props.element)
+                  ? props.fileDownload(props.element.value)
+                  : {}
+              }
+            >
+              <Icon size="M" name="download" />
+            </button>
           </div>
         ) : (
           <p class={`cap-first ${props.element.description ? 'mb-s' : ''}`}>
             {valeurFind(props.element)}
             {props.element.id === 'volumeGranulatsExtrait' &&
+            props.element.value !== undefined &&
             isNumberElement(props.element) ? (
               <span>
                 m3. Soit l’équivalent de{' '}

@@ -7488,7 +7488,7 @@ exports[`Storybook Tests > Components/common/Section > Default 1`] = `
       <h5>Mécanisation</h5>
     </div>
     <div class=\\"tablet-blob-3-4\\">
-      <p class=\\"cap-first \\">–
+      <p class=\\"cap-first \\">Oui
         <!---->
       </p>
       <!---->
@@ -7499,7 +7499,7 @@ exports[`Storybook Tests > Components/common/Section > Default 1`] = `
       <h5>Franchissements de cours d'eau</h5>
     </div>
     <div class=\\"tablet-blob-3-4\\">
-      <p class=\\"cap-first mb-s\\">–
+      <p class=\\"cap-first mb-s\\">3
         <!---->
       </p>
       <p class=\\"h6\\"><span>Nombre de franchissements de cours d'eau</span></p>

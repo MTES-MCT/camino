@@ -8,7 +8,7 @@ export const Sections = (props: {
   return props.sections?.length ? (
     <>
       {props.sections.map(s => (
-        <Section
+        <NewSection
           key={s.id}
           entete={false}
           section={s}
@@ -25,7 +25,7 @@ interface Props {
   date?: CaminoDate
   fileDownload: (file: string) => void
 }
-export const Section = (props: Props): JSX.Element => {
+export const NewSection = (props: Props): JSX.Element => {
   const entete = props.entete ?? true
 
   const elements = props.section.elements.filter(
