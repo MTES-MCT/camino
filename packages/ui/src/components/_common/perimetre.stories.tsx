@@ -2,6 +2,7 @@ import { action } from '@storybook/addon-actions'
 import { Meta, Story } from '@storybook/vue3'
 import { MapPattern } from '../_map/pattern'
 import { Perimetre } from './perimetre'
+import { MultiPolygon, Feature } from 'geojson'
 
 const meta: Meta = {
   title: 'Components/common/Perimetre',
@@ -91,8 +92,9 @@ const points = [
     ]
   }
 ]
-const geojsonMultiPolygon = {
+const geojsonMultiPolygon: Feature<MultiPolygon> = {
   type: 'Feature',
+  properties: {},
   geometry: {
     type: 'MultiPolygon',
     coordinates: [

@@ -3,13 +3,13 @@ import { FunctionalComponent } from 'vue'
 import { Icon } from '../_ui/icon'
 import { Icon as IconSprite } from '../_ui/iconSpriteType'
 import { Download } from './download'
-import CaminoMap from './map.vue'
+import { CamionCommonMap, Props as CaminoCommonMapProps } from './map'
 import Points from './points.vue'
 
 export type TabId = 'carte' | 'points'
 export interface Props {
-  points?: unknown[]
-  geojsonMultiPolygon: object
+  points?: CaminoCommonMapProps['points']
+  geojsonMultiPolygon: CaminoCommonMapProps['geojson']
   titreTypeId: TitreTypeId
   titreId?: string
   isMain?: boolean
@@ -70,7 +70,7 @@ export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
       <div class={`${isMain ? 'width-full' : ''} line-neutral`} />
 
       {props.points && props.geojsonMultiPolygon && tabId === 'carte' ? (
-        <CaminoMap
+        <CamionCommonMap
           class={`${isMain ? 'width-full' : ''}`}
           geojson={props.geojsonMultiPolygon}
           points={props.points}

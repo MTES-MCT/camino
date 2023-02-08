@@ -7,7 +7,7 @@ import { useStore } from 'vuex'
 import { User } from 'camino-common/src/roles'
 import Filtres from './titres/filtres.vue'
 import { Downloads } from './_common/downloads'
-import CaminoMap from './titres/map.vue'
+import { CaminoTitresMap } from './titres/map'
 import UiTable from './titres/table-pagination.vue'
 
 function DemandeTitreButton(user: User, router: Router) {
@@ -41,7 +41,7 @@ function AfficheData(
   if (initialized) {
     switch (vueId) {
       case 'carte':
-        return <CaminoMap titres={titres} />
+        return <CaminoTitresMap titres={titres} />
       case 'table':
         return <UiTable titres={titres} total={total} />
     }
