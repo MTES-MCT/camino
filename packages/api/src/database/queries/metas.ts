@@ -8,7 +8,6 @@ import options from './_options.js'
 import graphBuild from './graph/build.js'
 import { fieldsFormat } from './graph/fields-format.js'
 
-import DemarchesTypes from '../models/demarches-types.js'
 import DocumentsTypes from '../models/documents-types.js'
 import Domaines from '../models/domaines.js'
 import EtapesTypes from '../models/etapes-types.js'
@@ -18,13 +17,12 @@ import { etapesTypesQueryModify } from './permissions/metas.js'
 
 import TitresTypes from '../models/titres-types.js'
 import TitresTypesDemarchesTypesEtapesTypes from '../models/titres-types--demarches-types-etapes-types.js'
-import TitresTypesDemarchesTypes from '../models/titres-types--demarches-types.js'
 import EtapesTypesJustificatifsTypes from '../models/etapes-types--justificatifs-types.js'
 import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../models/titres-types--demarches-types-etapes-types-justificatifs-types.js'
-import Titres from '../models/titres.js'
 import { sortedDevises } from 'camino-common/src/static/devise.js'
 import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
 import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
+import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 
 const titresTypesTypesGet = async () =>
   TitresTypesTypes.query().orderBy('ordre')
@@ -44,9 +42,6 @@ const titresTypesGet = async (_: never, { fields }: { fields?: IFields }) => {
 
   return TitresTypes.query().withGraphFetched(graph).orderBy('id')
 }
-
-const titresTypesDemarchesTypesGet = async () =>
-  TitresTypesDemarchesTypes.query().orderBy(['titreTypeId', 'demarcheTypeId'])
 
 const titresTypesDemarchesTypesEtapesTypesGet = async () =>
   TitresTypesDemarchesTypesEtapesTypes.query().orderBy([
@@ -91,38 +86,6 @@ const etapesTypesJustificatifsTypesGet = async () =>
     'etapeTypeId',
     'documentTypeId'
   ])
-
-const demarchesTypesGet = async (
-  { titreId, travaux }: { titreId?: string; travaux?: boolean },
-  { fields }: { fields?: IFields }
-) => {
-  const graph = fields
-    ? graphBuild(fields, 'demarchesTypes', fieldsFormat)
-    : options.demarchesTypes.graph
-
-  const q = DemarchesTypes.query().withGraphFetched(graph).orderBy('ordre')
-
-  // si titreId
-  // -> restreint aux types de démarches du type du titre
-  if (titreId) {
-    q.whereExists(
-      Titres.query()
-        .findById(titreId)
-        .joinRelated('type.demarchesTypes')
-        .whereRaw('?? = ??', ['type:demarchesTypes.id', 'demarchesTypes.id'])
-    )
-  }
-
-  if (travaux === false || travaux === true) {
-    if (travaux) {
-      q.where('demarchesTypes.travaux', travaux)
-    } else {
-      q.whereRaw('?? is not true', ['demarchesTypes.travaux'])
-    }
-  }
-
-  return q
-}
 
 const demarchesStatutsGet = () => sortedDemarchesStatuts
 
@@ -231,14 +194,12 @@ export {
   domainesGet,
   titresTypesTypesGet,
   titresTypesGet,
-  demarchesTypesGet,
   demarchesStatutsGet,
   etapesTypesGet,
   etapeTypeGet,
   devisesGet,
   documentsTypesGet,
   documentTypeGet,
-  titresTypesDemarchesTypesGet,
   titresTypesDemarchesTypesEtapesTypesGet,
   titreTypeDemarcheTypeEtapeTypeGet,
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypesGet,

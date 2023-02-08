@@ -41,7 +41,6 @@ describe('liste des demarches', () => {
   })
 
   test('enregistre les métas', () => {
-    const demarchesTypes = [{ id: 'oct', nom: 'octroi' }]
 
     const statuts = [
       { id: 'val', nom: 'valide', couleur: 'success' },
@@ -54,7 +53,6 @@ describe('liste des demarches', () => {
     const etapesTypes = [{ id: 'dpu', nom: 'publication au Jorf' }]
 
     store.commit('titresDemarches/metasSet', {
-      demarchesTypes,
       statuts,
       types,
       etapesTypes,
@@ -62,7 +60,6 @@ describe('liste des demarches', () => {
     })
 
     expect(store.state.titresDemarches.metas).toEqual({
-      types: demarchesTypes,
       titresTypes: types,
       titresStatuts: statuts,
       etapesTypes

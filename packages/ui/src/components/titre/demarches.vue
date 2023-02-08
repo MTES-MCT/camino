@@ -29,7 +29,7 @@
 
 <script>
 import TitreDemarche from './demarche.vue'
-import EditPopup from './demarche-edit-popup.vue'
+import { DemarcheEditPopup } from './demarche-edit-popup'
 import { Icon } from '@/components/_ui/icon'
 import {
   canCreateDemarche,
@@ -78,17 +78,15 @@ export default {
   methods: {
     demarcheAddPopupOpen() {
       const demarche = {
-        typeId: null,
         titreId: this.titre.id
       }
 
       this.$store.commit('popupOpen', {
-        component: EditPopup,
+        component: DemarcheEditPopup,
         props: {
           demarche,
           titreTypeId: this.titre.typeId,
           titreNom: this.titre.nom,
-          creation: true,
           tabId: this.tabId
         }
       })

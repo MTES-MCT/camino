@@ -183,7 +183,7 @@
 <script>
 import { InputDate } from '../_ui/input-date'
 import InputFile from '../_ui/input-file.vue'
-import Messages from '../_ui/messages.vue'
+import { Messages } from '../_ui/messages'
 import { Icon } from '@/components/_ui/icon'
 import {
   isAdministrationAdmin,

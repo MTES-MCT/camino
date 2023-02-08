@@ -4,7 +4,6 @@ import { userGet } from '../../../database/queries/utilisateurs.js'
 
 import {
   titresTypesGet,
-  titresTypesDemarchesTypesGet,
   titresTypesDemarchesTypesEtapesTypesGet,
   etapesTypesDocumentsTypesGet,
   etapesTypesJustificatifsTypesGet,
@@ -46,23 +45,6 @@ const titresTypesTitresStatuts = (_: never) => {
   return titreTypesStatutsTitresPublicLecture
 }
 
-const titresTypesDemarchesTypes = async (_: never, context: IToken) => {
-  try {
-    const user = await userGet(context.user?.id)
-
-    if (!isSuper(user)) {
-      throw new Error('droits insuffisants')
-    }
-
-    const titresTypesDemarchesTypes = await titresTypesDemarchesTypesGet()
-
-    return titresTypesDemarchesTypes
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
 //
 
 const titresTypesDemarchesTypesEtapesTypes = async (
@@ -159,7 +141,6 @@ const etapesTypesJustificatifsTypes = async (_: never, context: IToken) => {
 export {
   titresTypes,
   titresTypesTitresStatuts,
-  titresTypesDemarchesTypes,
   titresTypesDemarchesTypesEtapesTypes,
   titresTypesDemarchesTypesEtapesTypesDocumentsTypes,
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,

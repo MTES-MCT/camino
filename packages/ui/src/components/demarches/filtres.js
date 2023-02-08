@@ -6,6 +6,7 @@ import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
 import { sortedDomaines } from 'camino-common/src/static/domaines'
 import { titresFiltres, titresRechercherByNom } from '@/api/titres'
 import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
+import { sortedDemarchesTypes } from "camino-common/src/static/demarchesTypes"
 
 const etapesElementsFormat = (id, metas) => metas.etapesTypes
 const etapesLabelFormat = f =>
@@ -144,7 +145,7 @@ const filtres = [
     name: 'Types',
     type: 'checkboxes',
     value: [],
-    elementsFormat
+    elements: sortedDemarchesTypes
   },
   {
     id: 'statutsIds',

@@ -9,7 +9,6 @@ import {
 
 import {
   demarchesStatutsGet,
-  demarchesTypesGet,
   devisesGet,
   documentsTypesGet,
   domainesGet,
@@ -58,6 +57,7 @@ import EtapesTypes from '../../../database/models/etapes-types.js'
 import { canCreateEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 
 export const devises = async () => devisesGet()
 
@@ -111,21 +111,7 @@ export const types = async () => {
 
 export const statuts = () => sortedTitresStatuts
 
-export const demarchesTypes = async (
-  { titreId, travaux }: { titreId?: string; travaux?: boolean },
-  context: IToken,
-  info: GraphQLResolveInfo
-) => {
-  try {
-    const fields = fieldsBuild(info)
-
-    return await demarchesTypesGet({ titreId, travaux }, { fields })
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
+export const demarchesTypes = () => sortedDemarchesTypes
 
 export const demarchesStatuts = async () => {
   try {
@@ -196,7 +182,7 @@ const demarcheEtapesTypesGet = async (
       fields: {
         type: { etapesTypes: { id: {} } },
         titre: {
-          type: { demarchesTypes: { id: {} } },
+          type: {id: {} },
           demarches: { etapes: { id: {} } },
           pointsEtape: { id: {} },
           titulaires: { id: {} }

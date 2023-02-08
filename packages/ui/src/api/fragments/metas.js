@@ -89,21 +89,6 @@ const fragmentEtapeType = gql`
   ${fragmentDocumentType}
 `
 
-const fragmentTitreTypeDemarcheType = gql`
-  fragment titreTypeDemarcheType on TitreTypeDemarcheType {
-    titreTypeId
-    demarcheTypeId
-    dureeMax
-    acceptationImplicite
-    delaiImplicite
-    delaiRecours
-    legalRef
-    legaleLien
-    dateDebut
-    dateFin
-  }
-`
-
 const fragmentTitreTypeDemarcheTypeEtapeType = gql`
   fragment titreTypeDemarcheTypeEtapeType on TitreTypeDemarcheTypeEtapeType {
     titreTypeId
@@ -150,7 +135,6 @@ export {
   fragmentDemarcheType,
   fragmentTitreType,
   fragmentDocumentType,
-  fragmentTitreTypeDemarcheType,
   fragmentTitreTypeDemarcheTypeEtapeType,
   fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType,
   fragmentEtapeTypeDocumentType,

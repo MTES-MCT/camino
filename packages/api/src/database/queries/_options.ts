@@ -11,7 +11,7 @@ const demarchesTypes = {
 }
 
 const titresTypes = {
-  graph: `[demarchesTypes(orderAsc).${demarchesTypes.graph}, type]`
+  graph: `[type]`
 }
 
 const documentsRelateTrue = ['type']
@@ -112,9 +112,7 @@ const titresEtapes = {
 }
 
 const titresTypesRelateFalse = [
-  'type',
-  'demarchesTypes',
-  'demarchesTypes.etapesTypes'
+  'type'
 ]
 
 const titresDemarchesRelateTrue = [

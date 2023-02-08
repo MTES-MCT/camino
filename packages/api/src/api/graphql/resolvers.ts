@@ -85,7 +85,6 @@ import {
 import {
   titresTypes,
   titresTypesTitresStatuts,
-  titresTypesDemarchesTypes,
   titresTypesDemarchesTypesEtapesTypes,
   titresTypesDemarchesTypesEtapesTypesDocumentsTypes,
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
@@ -174,7 +173,6 @@ export default {
   regions,
   departements,
   titresTypesTitresStatuts,
-  titresTypesDemarchesTypes,
   titresTypesDemarchesTypesEtapesTypes,
   titresTypesDemarchesTypesEtapesTypesDocumentsTypes,
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,

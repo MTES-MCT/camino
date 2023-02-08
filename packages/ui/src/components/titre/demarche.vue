@@ -76,7 +76,7 @@
 <script>
 import { Statut } from '../_common/statut'
 import TitreEtape from '../etape/preview.vue'
-import EditPopup from './demarche-edit-popup.vue'
+import { DemarcheEditPopup } from './demarche-edit-popup'
 import RemovePopup from './demarche-remove-popup.vue'
 import { Icon } from '@/components/_ui/icon'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
@@ -128,7 +128,7 @@ export default {
       demarche.id = this.demarche.id
 
       this.$store.commit('popupOpen', {
-        component: EditPopup,
+        component: DemarcheEditPopup,
         props: {
           demarche,
           titreTypeId: this.titreTypeId,

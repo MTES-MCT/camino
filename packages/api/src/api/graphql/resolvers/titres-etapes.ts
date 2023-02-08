@@ -266,7 +266,6 @@ const etapeCreer = async (
         fields: {
           type: { etapesTypes: { id: {} } },
           titre: {
-            type: { demarchesTypes: { id: {} } },
             demarches: { etapes: { id: {} } }
           },
           etapes: { type: { id: {} } }
@@ -462,7 +461,6 @@ const etapeModifier = async (
         fields: {
           type: { etapesTypes: { id: {} } },
           titre: {
-            type: { demarchesTypes: { id: {} } },
             demarches: { etapes: { id: {} } }
           },
           etapes: { type: { id: {} } }
@@ -838,7 +836,6 @@ const etapeSupprimer = async (
         fields: {
           type: { etapesTypes: { id: {} } },
           titre: {
-            type: { demarchesTypes: { id: {} } },
             demarches: { etapes: { id: {} } }
           },
           etapes: { type: { id: {} } }

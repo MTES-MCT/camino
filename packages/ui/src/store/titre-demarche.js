@@ -1,29 +1,9 @@
 import {
-  demarcheMetas,
-  demarcheCreer,
-  demarcheModifier,
   demarcheSupprimer
 } from '../api/titres-demarches'
 
-const state = {
-  metas: {
-    types: []
-  }
-}
 
 const actions = {
-  async init({ commit }, demarche) {
-    try {
-      commit('loadingAdd', 'titreDemarcheInit', { root: true })
-      const data = await demarcheMetas(demarche)
-
-      commit('metasSet', { types: data })
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'titreDemarcheInit', { root: true })
-    }
-  },
 
   async add({ commit, dispatch }, demarche) {
     try {
@@ -89,17 +69,9 @@ const actions = {
   }
 }
 
-const mutations = {
-  metasSet(state, data) {
-    Object.keys(data).forEach(id => {
-      state.metas[id] = data[id]
-    })
-  }
-}
+
 
 export default {
   namespaced: true,
-  state,
-  actions,
-  mutations
+  actions
 }

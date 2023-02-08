@@ -279,3 +279,5 @@ export const isDemarcheTypeWithPhase = (demarcheTypeId: DemarcheTypeId): boolean
 
   return demarchesTypesWithPhases.includes(demarcheTypeId)
 }
+
+export const sortedDemarchesTypes = Object.values(DemarchesTypes).sort((a, b) => a.ordre - b.ordre)
