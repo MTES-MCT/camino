@@ -69,9 +69,10 @@ exports[`getDocuments surcharge 2`] = `
     "optionnel": true,
   },
   {
+    "description": undefined,
     "id": "lem",
     "nom": "Lettre de demande",
-    "optionnel": true,
+    "optionnel": false,
   },
   {
     "description": undefined,
