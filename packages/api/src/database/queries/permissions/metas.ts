@@ -6,24 +6,19 @@ import { knex } from '../../../knex.js'
 // import fileCreate from '../../../tools/file-create'
 // import { format } from 'sql-formatter'
 
-import Domaines from '../../models/domaines.js'
-import DemarchesTypes from '../../models/demarches-types.js'
 import EtapesTypes from '../../models/etapes-types.js'
 import TitresEtapes from '../../models/titres-etapes.js'
 import TitresTypesDemarchesTypesEtapesTypes from '../../models/titres-types--demarches-types-etapes-types.js'
 
-import { titresDemarchesAdministrationsModificationQuery } from './titres.js'
 import {
   administrationsTitresTypesTitresStatutsModify,
   administrationsTitresTypesEtapesTypesModify,
   administrationsTitresQuery
 } from './administrations.js'
 import {
-  isAdministration,
   isBureauDEtudes,
   isDefault,
-  isEntreprise,
-  isSuper
+  isEntreprise
 } from 'camino-common/src/roles.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { TITRES_TYPES_IDS_DEMAT } from 'camino-common/src/permissions/titres.js'
@@ -89,13 +84,6 @@ const entreprisesEtapesTypesPropsQuery = (entreprisesIds: string[]) =>
     .whereIn('demarche:titre.typeId', TITRES_TYPES_IDS_DEMAT)
     .whereIn('titulaires.id', entreprisesIds)
     .first()
-
-const domainesQueryModify = (
-  q: QueryBuilder<Domaines, Domaines | Domaines[] | undefined>,
-  _user: IUtilisateur | null | undefined
-) => {
-  q.select('domaines.*')
-}
 
 const etapesTypesQueryModify = (
   q: QueryBuilder<EtapesTypes, EtapesTypes | EtapesTypes[]>,
@@ -170,49 +158,7 @@ const etapesTypesQueryModify = (
   // fileCreate('dev/tmp/etapes-types.sql', format(q.toKnexQuery().toString()))
 }
 
-export const demarchesCreationQuery = (
-  q: QueryBuilder<DemarchesTypes, DemarchesTypes | DemarchesTypes[]>,
-  user: Pick<IUtilisateur, 'role' | 'administrationId'> | null | undefined,
-  { titreId, titreIdAlias }: { titreId?: string; titreIdAlias?: string }
-) => {
-  let demarchesCreation = raw('false')
-  if (isSuper(user)) {
-    demarchesCreation = raw('true')
-  } else if (isAdministration(user) && (titreId || titreIdAlias)) {
-    const titresModificationQuery =
-      titresDemarchesAdministrationsModificationQuery(
-        user.administrationId,
-        'demarchesTypes'
-      )
-    if (titreId) {
-      titresModificationQuery.where('titresModification.id', titreId)
-    } else {
-      titresModificationQuery.whereRaw('?? = ??', [
-        'titresModification.id',
-        titreIdAlias
-      ])
-    }
-
-    demarchesCreation = titresModificationQuery
-  }
-
-  q.select(demarchesCreation.as('demarchesCreation'))
-}
-
-const demarchesTypesQueryModify = (
-  q: QueryBuilder<DemarchesTypes, DemarchesTypes | DemarchesTypes[]>,
-  user: Pick<IUtilisateur, 'role' | 'administrationId'> | null | undefined,
-  { titreId, titreIdAlias }: { titreId?: string; titreIdAlias?: string } = {}
-): void => {
-  q.select('demarchesTypes.*')
-
-  // propriété 'demarchesCreation' selon le profil de l'utilisateur
-  demarchesCreationQuery(q, user, { titreId, titreIdAlias })
-}
-
 export {
-  demarchesTypesQueryModify,
-  domainesQueryModify,
   administrationsEtapesTypesPropsQuery,
   entreprisesEtapesTypesPropsQuery,
   etapesTypesQueryModify

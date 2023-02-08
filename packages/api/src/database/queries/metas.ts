@@ -14,11 +14,7 @@ import Domaines from '../models/domaines.js'
 import EtapesTypes from '../models/etapes-types.js'
 import TitresTypesTypes from '../models/titres-types-types.js'
 
-import {
-  demarchesTypesQueryModify,
-  domainesQueryModify,
-  etapesTypesQueryModify
-} from './permissions/metas.js'
+import { etapesTypesQueryModify } from './permissions/metas.js'
 
 import TitresTypes from '../models/titres-types.js'
 import TitresTypesDemarchesTypesEtapesTypes from '../models/titres-types--demarches-types-etapes-types.js'
@@ -33,20 +29,12 @@ import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes
 const titresTypesTypesGet = async () =>
   TitresTypesTypes.query().orderBy('ordre')
 
-const domainesGet = async (
-  _: never,
-  { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
-) => {
+const domainesGet = async (_: never, { fields }: { fields?: IFields }) => {
   const graph = fields
     ? graphBuild(fields, 'titre', fieldsFormat)
     : options.domaines.graph
 
-  const q = Domaines.query().withGraphFetched(graph).orderBy('ordre')
-
-  domainesQueryModify(q, user)
-
-  return q
+  return Domaines.query().withGraphFetched(graph).orderBy('ordre')
 }
 
 const titresTypesGet = async (_: never, { fields }: { fields?: IFields }) => {
@@ -106,8 +94,7 @@ const etapesTypesJustificatifsTypesGet = async () =>
 
 const demarchesTypesGet = async (
   { titreId, travaux }: { titreId?: string; travaux?: boolean },
-  { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  { fields }: { fields?: IFields }
 ) => {
   const graph = fields
     ? graphBuild(fields, 'demarchesTypes', fieldsFormat)
@@ -134,20 +121,7 @@ const demarchesTypesGet = async (
     }
   }
 
-  demarchesTypesQueryModify(q, user, { titreId })
-
   return q
-}
-
-const demarcheTypeGet = async (
-  id: string,
-  { titreId }: { titreId: string },
-  user: IUtilisateur | null | undefined
-) => {
-  const q = DemarchesTypes.query()
-  demarchesTypesQueryModify(q, user, { titreId })
-
-  return q.findById(id)
 }
 
 const demarchesStatutsGet = () => sortedDemarchesStatuts
@@ -258,7 +232,6 @@ export {
   titresTypesTypesGet,
   titresTypesGet,
   demarchesTypesGet,
-  demarcheTypeGet,
   demarchesStatutsGet,
   etapesTypesGet,
   etapeTypeGet,

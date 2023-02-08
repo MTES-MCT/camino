@@ -71,7 +71,7 @@ type Titre {
   "Amodiataires du titre dans son dernier état de validité"
   amodiataires: [Entreprise]
 
-  "Administrations en charge du titre dans son dernier état de validité"
+  "Administrations gestionnaires ou locales en charge du titre dans son dernier état de validité"
   administrations: [String]
 
   "Territoires du titre dans son dernier état de validité"
@@ -118,9 +118,7 @@ type Titre {
 
   modification: Boolean
   suppression: Boolean
-  demarchesCreation: Boolean
 
-  travauxCreation: Boolean
   doublonTitre: Titre
 
   "L’utilisateur est abonné au titre"

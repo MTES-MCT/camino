@@ -27,7 +27,14 @@ import { titreGet } from '../../../database/queries/titres.js'
 import titreDemarcheUpdateTask from '../../../business/titre-demarche-update.js'
 import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate.js'
 import { userGet } from '../../../database/queries/utilisateurs.js'
-import { demarcheTypeGet } from '../../../database/queries/metas.js'
+import {
+  DemarchesTypes,
+  isDemarcheTypeId
+} from 'camino-common/src/static/demarchesTypes.js'
+import {
+  canCreateTravaux,
+  canCreateDemarche
+} from 'camino-common/src/permissions/titres-demarches.js'
 
 const demarche = async (
   { id }: { id: string },
@@ -178,18 +185,41 @@ const demarcheCreer = async (
   try {
     const user = await userGet(context.user?.id)
 
-    const titre = await titreGet(demarche.titreId, { fields: {} }, user)
-
-    if (!titre) throw new Error("le titre n'existe pas")
-
-    const titreDemarcheType = await demarcheTypeGet(
-      demarche.typeId,
-      { titreId: titre.id },
+    const titre = await titreGet(
+      demarche.titreId,
+      { fields: { pointsEtape: { id: {} } } },
       user
     )
 
-    if (!titreDemarcheType || !titreDemarcheType.demarchesCreation)
+    if (!titre) throw new Error("le titre n'existe pas")
+
+    if (!isDemarcheTypeId(demarche.typeId)) {
       throw new Error('droits insuffisants')
+    }
+    const titreDemarcheType = DemarchesTypes[demarche.typeId]
+    if (titre.administrationsLocales === undefined) {
+      throw new Error('les administrations locales doivent être chargées')
+    }
+    if (!titre.titreStatutId) {
+      throw new Error('le statut du titre est obligatoire')
+    }
+    if (
+      titreDemarcheType.travaux &&
+      !canCreateTravaux(user, titre.typeId, titre.administrationsLocales ?? [])
+    ) {
+      throw new Error('droits insuffisants')
+    }
+    if (
+      !titreDemarcheType.travaux &&
+      !canCreateDemarche(
+        user,
+        titre.typeId,
+        titre.titreStatutId,
+        titre.administrationsLocales ?? []
+      )
+    ) {
+      throw new Error('droits insuffisants')
+    }
 
     const demarcheCreated = await titreDemarcheCreate(demarche)
 

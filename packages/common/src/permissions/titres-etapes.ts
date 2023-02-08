@@ -6,7 +6,7 @@ import { EtapeStatutId, ETAPES_STATUTS } from '../static/etapesStatuts.js'
 import { TITRES_TYPES_IDS_DEMAT } from './titres.js'
 import { AdministrationId } from '../static/administrations.js'
 import { isGestionnaire } from '../static/administrationsTitresTypes.js'
-import { canAdministrationModifyTitreStatutId } from '../static/administrationsTitresTypesTitresStatuts.js'
+import { canAdministrationModifyEtapes } from '../static/administrationsTitresTypesTitresStatuts.js'
 import { canAdministrationCreateEtapeTypeId } from '../static/administrationsTitresTypesEtapesTypes.js'
 
 import { TitreStatutId } from '../static/titresStatuts.js'
@@ -86,7 +86,7 @@ export const canCreateEtape = (
     return true
   } else if (isAdministration(user)) {
     if (isGestionnaire(user.administrationId) || titresAdministrationsLocales.includes(user.administrationId)) {
-      return canAdministrationModifyTitreStatutId(user.administrationId, titre.typeId, titre.statutId) && canAdministrationCreateEtapeTypeId(user.administrationId, titre.typeId, etapeTypeId)
+      return canAdministrationModifyEtapes(user.administrationId, titre.typeId, titre.statutId) && canAdministrationCreateEtapeTypeId(user.administrationId, titre.typeId, etapeTypeId)
     }
   } else if (isEntreprise(user) || isBureauDEtudes(user)) {
     return (

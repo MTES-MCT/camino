@@ -30,8 +30,11 @@ export const toDbATT = () => {
   })
 }
 
-export const canAdministrationModifyTitreStatutId = (administrationId: AdministrationId, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId): boolean => {
+export const canAdministrationModifyEtapes = (administrationId: AdministrationId, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId): boolean => {
   return !restrictions(administrationId, titreTypeId, titreStatutId).etapesModificationInterdit
+}
+export const canAdministrationModifyDemarches = (administrationId: AdministrationId, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId): boolean => {
+  return !restrictions(administrationId, titreTypeId, titreStatutId).demarchesModificationInterdit
 }
 
 const restrictions = (

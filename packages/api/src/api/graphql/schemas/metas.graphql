@@ -103,8 +103,6 @@ type DemarcheType {
 
   "Ids des types d'étape déjà présents sur cette démarche"
   etapesTypesIds: [ID]
-
-  demarchesCreation: Boolean
 }
 
 "Statut d'une démarche applicable à un titre minier"

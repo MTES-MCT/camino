@@ -1,10 +1,6 @@
 <template>
   <div>
-    <div
-      v-if="
-        tabId === 'travaux' ? titre.travauxCreation : titre.demarchesCreation
-      "
-    >
+    <div v-if="canCreate">
       <button
         class="btn small rnd-xs py-s px-m full-x flex mb"
         @click="demarcheAddPopupOpen"
@@ -35,6 +31,10 @@
 import TitreDemarche from './demarche.vue'
 import EditPopup from './demarche-edit-popup.vue'
 import { Icon } from '@/components/_ui/icon'
+import {
+  canCreateDemarche,
+  canCreateTravaux
+} from 'camino-common/src/permissions/titres-demarches'
 
 export default {
   components: {
@@ -44,7 +44,8 @@ export default {
 
   props: {
     demarches: { type: Array, default: () => [] },
-    tabId: { type: String, required: true }
+    tabId: { type: String, required: true },
+    user: { type: Object, required: true }
   },
 
   emits: ['event-track'],
@@ -52,6 +53,25 @@ export default {
   computed: {
     titre() {
       return this.$store.state.titre.element
+    },
+    canCreate() {
+      if (this.titre) {
+        if (this.tabId === 'travaux') {
+          return canCreateTravaux(
+            this.user,
+            this.titre.typeId,
+            this.titre.administrations
+          )
+        } else {
+          return canCreateDemarche(
+            this.user,
+            this.titre.typeId,
+            this.titre.titreStatutId,
+            this.titre.administrations
+          )
+        }
+      }
+      return false
     }
   },
 

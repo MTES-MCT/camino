@@ -27,8 +27,6 @@ import {
 import TitresEtapes from '../../models/titres-etapes.js'
 import AdministrationsModel from '../../models/administrations.js'
 import UtilisateursTitres from '../../models/utilisateurs--titres.js'
-import DemarchesTypes from '../../models/demarches-types.js'
-import { demarchesCreationQuery } from './metas.js'
 import {
   isAdministration,
   isAdministrationAdmin,
@@ -74,18 +72,6 @@ const titresDemarchesAdministrationsModificationQuery = (
     .alias('titresModification')
     .select(raw('true'))
     .whereExists(administrationQuery)
-}
-
-export const titresTravauxCreationQuery = (
-  q: QueryBuilder<Titres, Titres | Titres[]>,
-  user: Pick<IUtilisateur, 'role' | 'administrationId'> | null | undefined
-) => {
-  const demarchesTypesQuery = DemarchesTypes.query().where('travaux', true)
-  demarchesCreationQuery(demarchesTypesQuery, user, {
-    titreIdAlias: 'titres.id'
-  })
-
-  q.select(raw('true = ANY(?)', [demarchesTypesQuery]).as('travauxCreation'))
 }
 
 export const titresVisibleByEntrepriseQuery = (
@@ -212,31 +198,9 @@ const titresQueryModify = (
     // fileCreate('test.sql', sqlFormatter.format(q.toKnexQuery().toString()))
   }
 
-  if (isSuper(user)) {
-    q.select(raw('true').as('demarchesCreation'))
-  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    q.select(
-      administrationsTitresQuery(user.administrationId, 'titres', {
-        isGestionnaire: true,
-        isLocale: true
-      })
-        .modify(
-          administrationsTitresTypesTitresStatutsModify,
-          'demarches',
-          'titres'
-        )
-        .select(raw('true'))
-        .as('demarchesCreation')
-    )
-  } else {
-    q.select(raw('false').as('demarchesCreation'))
-  }
-
   q.select(titresModificationSelectQuery(q, user).as('modification'))
 
   q.select(raw(`${isSuper(user)}`).as('suppression'))
-
-  titresTravauxCreationQuery(q, user)
 
   if (user) {
     q.select(

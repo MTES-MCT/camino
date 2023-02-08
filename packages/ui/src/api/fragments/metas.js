@@ -48,7 +48,6 @@ const fragmentDemarcheType = gql`
     titulaires
     exception
     renouvelable
-    demarchesCreation
     titreTypeId
     travaux
   }
