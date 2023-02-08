@@ -1,4 +1,4 @@
-import numberFormat from './number-format'
+import { numberFormat } from './number-format'
 import { dateFormat } from './index'
 
 const contenuBuild = (sections, elementContenu) =>
@@ -38,13 +38,6 @@ const elementsCompleteCheck = (elements, sectionContenu, complete) =>
       if (sectionContenu[e.id].length) {
         elementComplete = true
       }
-    } else if (e.type === 'multiple') {
-      elementComplete =
-        sectionContenu[e.id] &&
-        sectionContenu[e.id].length &&
-        sectionContenu[e.id].reduce((acc, element) => {
-          return acc && elementsCompleteCheck(e.elements, element, true)
-        }, true)
     } else {
       elementComplete =
         sectionContenu[e.id] !== undefined &&
@@ -62,6 +55,9 @@ const contenuCompleteCheck = (sections, contenu) =>
     return elementsCompleteCheck(s.elements, contenu[s.id], complete)
   }, true)
 
+/**
+ * @deprecated voir la nouvelle méthode dans common/src/titres.ts
+ */
 const valeurFind = ({ id, type, valeurs }, contenu) => {
   if (contenu[id] === undefined || contenu[id] === '') {
     return '–'

@@ -6,6 +6,7 @@ export const CaminoRestRoutes = {
   statistiquesMinerauxMetauxMetropole: '/statistiques/minerauxMetauxMetropole',
   statistiquesGuyane: '/statistiques/guyane',
   statistiquesGranulatsMarins: '/statistiques/granulatsMarins',
+  titreSections: '/titreSections/:titreId',
   titresONF: '/titresONF',
   titresPTMG: '/titresPTMG',
   titresDREAL: '/titresDREAL',

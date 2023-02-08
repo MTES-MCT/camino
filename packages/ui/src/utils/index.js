@@ -7,7 +7,7 @@ const dateFormat = dateString => {
 
   const [y, m, d] = dateString.split('-')
 
-  return `${d} / ${m} / ${y}`
+  return `${d}-${m}-${y}`
 }
 
 const textNumberFormat = (text, options) => {

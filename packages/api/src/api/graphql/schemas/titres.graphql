@@ -39,7 +39,6 @@ type Titre {
 
   "Type du titre"
   typeId: String!
-  type: TitreType
 
   "Références métier du titre"
   references: [Reference]
@@ -91,9 +90,6 @@ type Titre {
 
   "Surface en Km² du titre dans son dernier état de validité"
   surface: Float
-
-  "Propriétés spécifiques au titre"
-  contenu: Json
 
   "Activités"
   activites: [Activite]

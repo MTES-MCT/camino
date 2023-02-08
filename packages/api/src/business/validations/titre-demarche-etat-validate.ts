@@ -13,12 +13,12 @@ import {
   isDemarcheDefinitionMachine
 } from '../rules-demarches/definitions.js'
 import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find.js'
-import { titreContenuFormat } from '../../database/models/_format/titre-contenu.js'
 import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort.js'
 import { titreEtapeEtatValidate } from './titre-etape-etat-validate.js'
 import { objectClone } from '../../tools/index.js'
 import { toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
+import { contenuFormat } from '../../api/rest/titre-contenu.js'
 
 const titreDemarcheEtapesBuild = (
   titreEtape: ITitreEtape,
@@ -88,7 +88,7 @@ export const titreDemarcheEtatValidate = (
 
     let contenu = null
     if (contenusTitreEtapesIds) {
-      contenu = titreContenuFormat(contenusTitreEtapesIds, [demarche])
+      contenu = contenuFormat({ demarches: [demarche], contenusTitreEtapesIds })
     }
 
     const titreEtapeErrors = titreEtapeEtatValidate(

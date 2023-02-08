@@ -28,14 +28,9 @@
           />
         </template>
         <template #read>
-          <p v-if="element.type !== 'multiple'" class="pt-s py-xs mb-0">
+          <p class="pt-s py-xs mb-0">
             {{ valeur }}
           </p>
-          <SectionElementMultiple
-            v-else
-            :contenu="contenu[element.id]"
-            :element="element"
-          />
         </template>
 
         <!-- eslint-disable vue/no-v-html -->
@@ -51,11 +46,9 @@
 import { valeurFind, hasValeurCheck } from '@/utils/contenu'
 import SectionElementEdit from '../_common/section-element-input-edit.vue'
 import SectionElementHeritageEdit from './section-element-heritage-edit.vue'
-import SectionElementMultiple from '../_common/section-element-multiple.vue'
 
 export default {
   components: {
-    SectionElementMultiple,
     SectionElementEdit,
     SectionElementHeritageEdit
   },

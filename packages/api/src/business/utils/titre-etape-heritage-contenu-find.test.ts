@@ -189,7 +189,7 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
     }
     const prevTitreEtape = {
       id: 'prevEtapeId',
-      contenu: { section: { element: [{ meca: 'toto' }] } } as IContenu,
+      contenu: { section: { element: '2022-01-01' } } as IContenu,
       heritageContenu
     } as ITitreEtape
 
@@ -203,17 +203,13 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
       [prevTitreEtape.id]: [
         {
           id: 'section',
-          elements: [
-            { id: 'element', type: 'multiple', elements: [{ id: 'meca' }] }
-          ]
+          elements: [{ id: 'element', type: 'date' }]
         }
       ],
       [titreEtape.id]: [
         {
           id: 'section',
-          elements: [
-            { id: 'element', type: 'multiple', elements: [{ id: 'meca' }] }
-          ]
+          elements: [{ id: 'element', type: 'date' }]
         }
       ]
     } as Index<ISection[]>

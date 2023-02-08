@@ -49,12 +49,6 @@ const metasIndex = {
         elements: Object.values(TitresTypesTypes),
         display: titreTypeTypeId =>
           `${titreTypeTypeId} - ${TitresTypesTypes[titreTypeTypeId].nom}`
-      },
-      {
-        id: 'contenuIds',
-        nom: "Type d'étape des propriétés",
-        type: 'json',
-        optional: true
       }
     ]
   },

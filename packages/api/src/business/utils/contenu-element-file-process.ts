@@ -4,7 +4,6 @@ import { join } from 'path'
 
 import {
   IContenu,
-  IContenuElement,
   IContenuValeur,
   IDocumentRepertoire,
   ISection,
@@ -35,31 +34,6 @@ const sectionElementContenuAndFilesGet = (
       fileUpload.file.filename = fileName
       newFiles.push(fileUpload?.file)
       newValue = fileName
-    }
-  } else if (sectionElement?.type === 'multiple') {
-    newValue = [] as IContenuElement[]
-    const contenuValeurMultiple = contenuValeur as IContenuElement[]
-
-    for (const childContenuValeur of contenuValeurMultiple) {
-      const childContenuElement = {} as IContenuElement
-      if (sectionElement.elements) {
-        sectionElement.elements.forEach(childSectionElement => {
-          const childResult = sectionElementContenuAndFilesGet(
-            childContenuValeur[childSectionElement.id],
-            childSectionElement
-          )
-          if (
-            childResult.newValue !== undefined &&
-            childResult.newValue !== null
-          ) {
-            childContenuElement[childSectionElement.id] = childResult.newValue
-          }
-          if (childResult.newFiles?.length) {
-            newFiles.push(...childResult.newFiles)
-          }
-        })
-        newValue.push(childContenuElement)
-      }
     }
   }
 
@@ -137,20 +111,6 @@ const sectionElementFilesGet = (
   if (sectionElement.type === 'file') {
     if (contenuValeur) {
       files.push(contenuValeur as string)
-    }
-  } else if (sectionElement.type === 'multiple') {
-    // si on est sur un element de type multiple,
-    // on doit parcourir toutes les valeurs qui le composent sur chaque élément
-    const contenuValeurMultiple = contenuValeur as IContenuElement[]
-    if (contenuValeurMultiple?.length) {
-      contenuValeurMultiple.forEach(childElement => {
-        sectionElement.elements!.forEach(childSectionElement => {
-          const childContenuElement = childElement[childSectionElement.id]
-          files.push(
-            ...sectionElementFilesGet(childSectionElement, childContenuElement)
-          )
-        })
-      })
     }
   }
 

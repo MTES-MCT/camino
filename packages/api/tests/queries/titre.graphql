@@ -7,12 +7,7 @@ query Titre($id: ID!) {
 fragment titre on Titre {
   id
   nom
-  type {
-    id
-    type {
-      nom
-    }
-  }
+  typeId
   titreStatutId
   references {
     referenceTypeId

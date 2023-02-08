@@ -24,13 +24,6 @@
         </button>
       </div>
 
-      <SectionElementMultiple
-        v-else-if="element.type === 'multiple'"
-        :contenu="contenu[element.id]"
-        :element="element"
-        @file-download="fileDownload"
-      />
-
       <p v-else class="cap-first" :class="{ 'mb-s': element.description }">
         {{ valeur }}
         <span
@@ -49,13 +42,12 @@
 
 <script>
 import { valeurFind } from '../../utils/contenu'
-import SectionElementMultiple from './section-element-multiple.vue'
 import numberFormat from '@/utils/number-format'
 import { Icon } from '@/components/_ui/icon'
 
 export default {
   name: 'SectionElement',
-  components: { Icon, SectionElementMultiple },
+  components: { Icon },
   props: {
     element: { type: Object, required: true },
     contenu: { type: Object, required: true }

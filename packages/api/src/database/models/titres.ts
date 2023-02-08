@@ -9,7 +9,6 @@ import TitresPoints from './titres-points.js'
 import Types from './titres-types.js'
 import Forets from './forets.js'
 import { titreInsertFormat } from './_format/titre-insert.js'
-import { titreContenuFormat } from './_format/titre-contenu.js'
 import { idGenerate } from './_format/id-create.js'
 import slugify from '@sindresorhus/slugify'
 import cryptoRandomString from 'crypto-random-string'
@@ -185,13 +184,6 @@ class Titres extends Model {
   }
 
   $afterFind() {
-    if (this.contenusTitreEtapesIds) {
-      this.contenu = titreContenuFormat(
-        this.contenusTitreEtapesIds,
-        this.demarches
-      )
-    }
-
     if (this.substancesEtape === null) {
       this.substances = []
     } else if (this.substancesEtape === undefined) {

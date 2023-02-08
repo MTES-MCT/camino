@@ -30,7 +30,7 @@ exports[`Storybook Tests > Components/Activite/Preview > ACompleter 1`] = `
           </div>
           <div class=\\"border-b-s px-m pt-m\\">
             <h5> Date de modification</h5>
-            <p>01 / 01 / 2022</p>
+            <p>01-01-2022</p>
           </div>
           <!--v-if-->
         </div>
@@ -74,7 +74,7 @@ exports[`Storybook Tests > Components/Activite/Preview > AideVisible 1`] = `
           </div>
           <div class=\\"border-b-s px-m pt-m\\">
             <h5> Date de modification</h5>
-            <p>01 / 01 / 2022</p>
+            <p>01-01-2022</p>
           </div>
           <!--v-if-->
         </div>
@@ -109,7 +109,7 @@ exports[`Storybook Tests > Components/Activite/Preview > FermeParDefaut 1`] = `
           </div>
           <div class=\\"border-b-s px-m pt-m\\">
             <h5> Date de modification</h5>
-            <p>01 / 01 / 2022</p>
+            <p>01-01-2022</p>
           </div>
           <!--v-if-->
         </div>
@@ -144,7 +144,7 @@ exports[`Storybook Tests > Components/Activite/Preview > OuvertParDefaut 1`] = `
           </div>
           <div class=\\"border-b-s px-m pt-m\\">
             <h5> Date de modification</h5>
-            <p>01 / 01 / 2022</p>
+            <p>01-01-2022</p>
           </div>
           <!--v-if-->
         </div>
@@ -185,7 +185,7 @@ exports[`Storybook Tests > Components/Activite/Preview > Supprimable 1`] = `
           </div>
           <div class=\\"border-b-s px-m pt-m\\">
             <h5> Date de modification</h5>
-            <p>01 / 01 / 2022</p>
+            <p>01-01-2022</p>
           </div>
           <!--v-if-->
         </div>
@@ -3286,7 +3286,7 @@ exports[`Storybook Tests > Components/Dashboard/ONF > Ok 1`] = `
                 </ul>
               </div>
               <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">23 / 03 / 2022</div>
+                <div style=\\"white-space: nowrap;\\">23-03-2022</div>
               </div>
             </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
               <div class=\\"td min-width-8\\"><span class=\\"bold\\">Quatrième Nom de titre</span></div>
@@ -3303,7 +3303,7 @@ exports[`Storybook Tests > Components/Dashboard/ONF > Ok 1`] = `
                 </ul>
               </div>
               <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">23 / 03 / 2022</div>
+                <div style=\\"white-space: nowrap;\\">23-03-2022</div>
               </div>
             </a>
           </div>
@@ -3451,13 +3451,13 @@ exports[`Storybook Tests > Components/Dashboard/ONF > OkSansAttenteDeONF 1`] = `
                 </ul>
               </div>
               <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">23 / 03 / 2022</div>
+                <div style=\\"white-space: nowrap;\\">23-03-2022</div>
               </div>
               <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">24 / 03 / 2022</div>
+                <div style=\\"white-space: nowrap;\\">24-03-2022</div>
               </div>
               <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">12 / 04 / 2022</div>
+                <div style=\\"white-space: nowrap;\\">12-04-2022</div>
               </div>
               <div class=\\"td\\"><span class=\\"\\">19</span></div>
             </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
@@ -3498,13 +3498,13 @@ exports[`Storybook Tests > Components/Dashboard/ONF > OkSansAttenteDeONF 1`] = `
                 </ul>
               </div>
               <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">23 / 03 / 2022</div>
+                <div style=\\"white-space: nowrap;\\">23-03-2022</div>
               </div>
               <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">24 / 03 / 2022</div>
+                <div style=\\"white-space: nowrap;\\">24-03-2022</div>
               </div>
               <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">12 / 04 / 2022</div>
+                <div style=\\"white-space: nowrap;\\">12-04-2022</div>
               </div>
               <div class=\\"td\\"><span class=\\"\\">19</span></div>
             </a>
@@ -3907,7 +3907,7 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmDemandeONF 1`
           <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
         </ul>
         <div class=\\"mb-s\\"><span class=\\"bold cap-first small\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></div>
-        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01 / 01 / 2022) </p>
+        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01-01-2022) </p>
       </div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
     </div>
   </div>
@@ -3930,7 +3930,7 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmDemandeOperat
           <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
         </ul>
         <div class=\\"mb-s\\"><span class=\\"bold cap-first small\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></div>
-        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01 / 01 / 2022) </p>
+        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01-01-2022) </p>
       </div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
     </div>
   </div>
@@ -4033,7 +4033,7 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > ArmJorfONF 1`] =
           <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
         </ul>
         <div class=\\"mb-s\\"><span class=\\"bold cap-first small\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></div>
-        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01 / 01 / 2022) </p>
+        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01-01-2022) </p>
       </div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
     </div>
   </div>
@@ -4091,7 +4091,7 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > AxmDemandeONF 1`
           <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
         </ul>
         <div class=\\"mb-s\\"><span class=\\"bold cap-first small\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></div>
-        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01 / 01 / 2022) </p>
+        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01-01-2022) </p>
       </div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
     </div>
   </div>
@@ -4225,7 +4225,7 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDemandeONF 1`
           <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
         </ul>
         <div class=\\"mb-s\\"><span class=\\"bold cap-first small\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></div>
-        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01 / 01 / 2022) </p>
+        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01-01-2022) </p>
       </div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
     </div>
   </div>
@@ -4286,7 +4286,7 @@ exports[`Storybook Tests > Components/Etape/FondamentalesEdit > PrmDeplacementDe
           <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">argent</span></span></li>
         </ul>
         <div class=\\"mb-s\\"><span class=\\"bold cap-first small\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></div>
-        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01 / 01 / 2022) </p>
+        <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">étape précédente</span> (01-01-2022) </p>
       </div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
     </div>
   </div>
@@ -4383,7 +4383,7 @@ exports[`Storybook Tests > Components/Etape/SubstancesEdit > AvecHeritage 1`] = 
         <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">or</span></span></li>
       </ul>
       <div class=\\"mb-s\\"><span class=\\"bold cap-first small\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Incertain</span></span></div>
-      <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">Demande</span> (01 / 01 / 2020) </p>
+      <p class=\\"h6 italic mb-s\\"> Hérité de : <span class=\\"cap-first\\">Demande</span> (01-01-2020) </p>
     </div><button class=\\"btn full-x rnd-xs py-s px-m small mb-s\\">Modifier</button>
   </div>
 </div>"
@@ -6077,14 +6077,14 @@ exports[`Storybook Tests > Components/Titre/Infos > Default 1`] = `
           <tr>
             <td class=\\"max-width-1\\"><span class=\\"bg-neutral pill dot mr-xs mt-xs\\"></span></td>
             <td><span class=\\"cap-first bold h5 mb-0\\">octroi</span></td>
-            <td><span class=\\"h5 mb-0\\">01 / 01 / 2020</span></td>
-            <td><span class=\\"h5 mb-0\\">01 / 01 / 2022</span></td>
+            <td><span class=\\"h5 mb-0\\">01-01-2020</span></td>
+            <td><span class=\\"h5 mb-0\\">01-01-2022</span></td>
           </tr>
           <tr>
             <td class=\\"max-width-1\\"><span class=\\"bg-success pill dot mr-xs mt-xs\\"></span></td>
             <td><span class=\\"cap-first bold h5 mb-0\\">prolongation</span></td>
-            <td><span class=\\"h5 mb-0\\">01 / 01 / 2022</span></td>
-            <td><span class=\\"h5 mb-0\\">01 / 01 / 2025</span></td>
+            <td><span class=\\"h5 mb-0\\">01-01-2022</span></td>
+            <td><span class=\\"h5 mb-0\\">01-01-2025</span></td>
           </tr>
         </table>
       </div>
@@ -6141,21 +6141,34 @@ exports[`Storybook Tests > Components/Titre/Infos > Default 1`] = `
           </a></li>
       </ul>
     </div>
-    <div>
+    <div class=\\"_top-level_3306d0\\" style=\\"\\">
       <div>
-        <!--v-if-->
+        <!---->
         <div class=\\"tablet-blobs\\">
           <div class=\\"tablet-blob-1-4\\">
-            <h5>Mécanisation</h5>
+            <h5>element</h5>
+          </div>
+          <div class=\\"tablet-blob-3-4\\">
+            <p class=\\"cap-first \\">Oui
+              <!---->
+            </p>
+            <!---->
+          </div>
+        </div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-4\\">
+            <h5>Second élément</h5>
           </div>
           <div class=\\"tablet-blob-3-4\\">
             <p class=\\"cap-first mb-s\\">Oui
-              <!--v-if-->
-            </p><!-- eslint-disable vue/no-v-html -->
-            <p class=\\"h6\\"><span>Est-ce que c’est mécanisé</span></p>
+              <!---->
+            </p>
+            <p class=\\"h6\\"><span>avec description</span></p>
           </div>
         </div>
       </div>
+      <!---->
+      <!---->
     </div>
   </div>
 </div>"
@@ -6178,7 +6191,11 @@ exports[`Storybook Tests > Components/Titre/Infos > Empty 1`] = `
     <!---->
     <!---->
     <!---->
-    <!---->
+    <div class=\\"_top-level_3306d0\\" style=\\"\\">
+      <!---->
+      <!---->
+      <!---->
+    </div>
   </div>
 </div>"
 `;
@@ -6491,9 +6508,9 @@ exports[`Storybook Tests > Components/UI/Chip > Default 1`] = `"<button class=\\
 
 exports[`Storybook Tests > Components/UI/Chip > WithColor 1`] = `"<button class=\\"bg-success pl-m pr-m _chip_de71b9\\">Ma chip <span>x</span></button>"`;
 
-exports[`Storybook Tests > Components/UI/Date > Default 1`] = `"<div style=\\"white-space: nowrap;\\">03 / 05 / 2022</div>"`;
+exports[`Storybook Tests > Components/UI/Date > Default 1`] = `"<div style=\\"white-space: nowrap;\\">03-05-2022</div>"`;
 
-exports[`Storybook Tests > Components/UI/Date > UneDateEtrange 1`] = `"<div style=\\"white-space: nowrap;\\">undefined / undefined / Une date</div>"`;
+exports[`Storybook Tests > Components/UI/Date > UneDateEtrange 1`] = `"<div style=\\"white-space: nowrap;\\">undefined-undefined-Une date</div>"`;
 
 exports[`Storybook Tests > Components/UI/Dropdown > Default 1`] = `
 "<div class=\\"relative flex flex-direction-column dropdown\\">
@@ -7145,6 +7162,48 @@ exports[`Storybook Tests > Components/common/Downloads > Default 1`] = `
 </div>"
 `;
 
+exports[`Storybook Tests > Components/common/OldSectionElement > AucunFichier 1`] = `
+"<div class=\\"tablet-blobs\\">
+  <div class=\\"tablet-blob-1-4\\">
+    <h5>nom de l'élément</h5>
+  </div>
+  <div class=\\"tablet-blob-3-4\\">
+    <div class=\\"flex h6 pb-xs\\"><span class=\\"mt-xs flex bold\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"16px\\" height=\\"16px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"file\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"mr-xs\\"><use href=\\"#icon-file\\"></use></svg> Aucun fichier</span>
+      <!--v-if-->
+    </div><!-- eslint-disable vue/no-v-html -->
+    <p class=\\"h6\\"><span>description</span></p>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/common/OldSectionElement > Default 1`] = `
+"<div class=\\"tablet-blobs\\">
+  <div class=\\"tablet-blob-1-4\\">
+    <h5>nom de l'élément</h5>
+  </div>
+  <div class=\\"tablet-blob-3-4\\">
+    <p class=\\"cap-first mb-s\\">–
+      <!--v-if-->
+    </p><!-- eslint-disable vue/no-v-html -->
+    <p class=\\"h6\\"><span>description</span></p>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/common/OldSectionElement > UnFichier 1`] = `
+"<div class=\\"tablet-blobs\\">
+  <div class=\\"tablet-blob-1-4\\">
+    <h5>nom de l'élément</h5>
+  </div>
+  <div class=\\"tablet-blob-3-4\\">
+    <div class=\\"flex h6 pb-xs\\"><span class=\\"mt-xs flex bold\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"16px\\" height=\\"16px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"file\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"mr-xs\\"><use href=\\"#icon-file\\"></use></svg> nom du fichier</span><button class=\\"btn-border py-xs px-s rnd-xs flex-right mt--xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"download\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <use href=\\"#icon-download\\"></use>
+        </svg></button></div><!-- eslint-disable vue/no-v-html -->
+    <p class=\\"h6\\"><span>description</span></p>
+  </div>
+</div>"
+`;
+
 exports[`Storybook Tests > Components/common/Perimetre > NoMap 1`] = `
 "<svg class=\\"absolute z--100\\">
   <defs>
@@ -7421,43 +7480,168 @@ exports[`Storybook Tests > Components/common/Perimetre > NoMap 1`] = `
 </div>"
 `;
 
-exports[`Storybook Tests > Components/common/SectionElement > AucunFichier 1`] = `
+exports[`Storybook Tests > Components/common/Section > Default 1`] = `
+"<div>
+  <!---->
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Mécanisation</h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p class=\\"cap-first \\">Oui
+        <!---->
+      </p>
+      <!---->
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Franchissements de cours d'eau</h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p class=\\"cap-first mb-s\\">3
+        <!---->
+      </p>
+      <p class=\\"h6\\"><span>Nombre de franchissements de cours d'eau</span></p>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/common/Section > WithoutContent 1`] = `
+"<div>
+  <!---->
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Mécanisation</h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p class=\\"cap-first \\">–
+        <!---->
+      </p>
+      <!---->
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Franchissements de cours d'eau</h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p class=\\"cap-first mb-s\\">–
+        <!---->
+      </p>
+      <p class=\\"h6\\"><span>Nombre de franchissements de cours d'eau</span></p>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/common/SectionElement > Checkboxes 1`] = `
 "<div class=\\"tablet-blobs\\">
   <div class=\\"tablet-blob-1-4\\">
-    <h5>nom de l'élément</h5>
+    <h5>Une checkbox</h5>
   </div>
   <div class=\\"tablet-blob-3-4\\">
-    <div class=\\"flex h6 pb-xs\\"><span class=\\"mt-xs flex bold\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"16px\\" height=\\"16px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"file\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"mr-xs\\"><use href=\\"#icon-file\\"></use></svg> Aucun fichier</span>
-      <!--v-if-->
-    </div><!-- eslint-disable vue/no-v-html -->
+    <p class=\\"cap-first \\">Option 1, Option 3
+      <!---->
+    </p>
+    <!---->
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/common/SectionElement > Date 1`] = `
+"<div class=\\"tablet-blobs\\">
+  <div class=\\"tablet-blob-1-4\\">
+    <h5>Une date</h5>
+  </div>
+  <div class=\\"tablet-blob-3-4\\">
+    <p class=\\"cap-first mb-s\\">01-01-2022
+      <!---->
+    </p>
     <p class=\\"h6\\"><span>description</span></p>
   </div>
 </div>"
 `;
 
-exports[`Storybook Tests > Components/common/SectionElement > Default 1`] = `
+exports[`Storybook Tests > Components/common/SectionElement > File 1`] = `
 "<div class=\\"tablet-blobs\\">
   <div class=\\"tablet-blob-1-4\\">
-    <h5>nom de l'élément</h5>
+    <h5>Un fichier</h5>
   </div>
   <div class=\\"tablet-blob-3-4\\">
-    <p class=\\"cap-first mb-s\\">–
-      <!--v-if-->
-    </p><!-- eslint-disable vue/no-v-html -->
-    <p class=\\"h6\\"><span>description</span></p>
-  </div>
-</div>"
-`;
-
-exports[`Storybook Tests > Components/common/SectionElement > UnFichier 1`] = `
-"<div class=\\"tablet-blobs\\">
-  <div class=\\"tablet-blob-1-4\\">
-    <h5>nom de l'élément</h5>
-  </div>
-  <div class=\\"tablet-blob-3-4\\">
-    <div class=\\"flex h6 pb-xs\\"><span class=\\"mt-xs flex bold\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"16px\\" height=\\"16px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"file\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"mr-xs\\"><use href=\\"#icon-file\\"></use></svg> nom du fichier</span><button class=\\"btn-border py-xs px-s rnd-xs flex-right mt--xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"download\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+    <div class=\\"flex h6 pb-xs\\"><span class=\\"mt-xs flex bold\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"16px\\" height=\\"16px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"file\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"mr-xs\\"><use href=\\"#icon-file\\"></use></svg>fichier.pdf</span><button class=\\"btn-border py-xs px-s rnd-xs flex-right mt--xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"download\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-download\\"></use>
-        </svg></button></div><!-- eslint-disable vue/no-v-html -->
+        </svg></button></div>
+    <p class=\\"h6\\"><span>description</span></p>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/common/SectionElement > Number 1`] = `
+"<div class=\\"tablet-blobs\\">
+  <div class=\\"tablet-blob-1-4\\">
+    <h5>Un nombre</h5>
+  </div>
+  <div class=\\"tablet-blob-3-4\\">
+    <p class=\\"cap-first \\">2
+      <!---->
+    </p>
+    <!---->
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/common/SectionElement > Radio 1`] = `
+"<div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Un radio bouton</h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p class=\\"cap-first \\">Oui
+        <!---->
+      </p>
+      <!---->
+    </div>
+  </div>
+  <div class=\\"tablet-blobs\\">
+    <div class=\\"tablet-blob-1-4\\">
+      <h5>Un autre radio bouton</h5>
+    </div>
+    <div class=\\"tablet-blob-3-4\\">
+      <p class=\\"cap-first \\">Non
+        <!---->
+      </p>
+      <!---->
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/common/SectionElement > Select 1`] = `
+"<div class=\\"tablet-blobs\\">
+  <div class=\\"tablet-blob-1-4\\">
+    <h5>Un select</h5>
+  </div>
+  <div class=\\"tablet-blob-3-4\\">
+    <p class=\\"cap-first \\">Option 1
+      <!---->
+    </p>
+    <!---->
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/common/SectionElement > Text 1`] = `
+"<div class=\\"tablet-blobs\\">
+  <div class=\\"tablet-blob-1-4\\">
+    <h5>nom de l'élément</h5>
+  </div>
+  <div class=\\"tablet-blob-3-4\\">
+    <p class=\\"cap-first mb-s\\">Valeur
+      <!---->
+    </p>
     <p class=\\"h6\\"><span>description</span></p>
   </div>
 </div>"

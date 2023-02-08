@@ -9,7 +9,6 @@ import {
   ITitreDemarche,
   ITitreEtape,
   ITitreType,
-  IContenu,
   ITitreTypeDemarcheTypeEtapeType
 } from '../../types.js'
 
@@ -18,7 +17,6 @@ import {
   demarcheDefinitionFind,
   isDemarcheDefinitionRestriction
 } from './definitions.js'
-import { titreContenuFormat } from '../../database/models/_format/titre-contenu.js'
 import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
@@ -42,7 +40,6 @@ vi.mock('../utils/props-titre-etapes-ids-find', () => ({
   contenusTitreEtapesIdsFind: vi.fn()
 }))
 
-const titreContenuFormatMock = vi.mocked(titreContenuFormat, true)
 const contenusTitreEtapesIdsFindMock = vi.mocked(
   contenusTitreEtapesIdsFind,
   true
@@ -101,7 +98,6 @@ export const demarcheEtatsValidate = (
     titre: Partial<ITitre> = {}
   ) => {
     contenusTitreEtapesIdsFindMock.mockReturnValue({})
-    titreContenuFormatMock.mockReturnValue(titre.contenu as IContenu)
 
     const demarcheDefinitions = demarcheDefinitionFind(
       titreTypeId,

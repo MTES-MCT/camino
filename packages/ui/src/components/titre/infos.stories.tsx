@@ -1,6 +1,6 @@
 import { Meta, Story } from '@storybook/vue3'
 import { Infos, Props } from './infos'
-import { TitreLink, TitreLinks } from 'camino-common/src/titres'
+import { Section, TitreLink, TitreLinks } from 'camino-common/src/titres'
 
 const meta: Meta = {
   title: 'Components/Titre/Infos',
@@ -17,6 +17,25 @@ const apiClient: Props['apiClient'] = {
   linkTitres: () =>
     new Promise<TitreLinks>(resolve =>
       resolve({ aval: titresTo, amont: titresFrom })
+    ),
+  loadTitreSections: (_titreId: string) =>
+    new Promise<Section[]>(resolve =>
+      resolve([
+        {
+          id: 'id',
+          nom: 'Nom de section',
+          elements: [
+            { id: 'element', nom: 'element', type: 'radio', value: true },
+            {
+              id: 'element2',
+              nom: 'Second élément',
+              description: 'avec description',
+              type: 'radio',
+              value: true
+            }
+          ]
+        }
+      ])
     )
 }
 
@@ -25,20 +44,6 @@ export const Default: Story = () => (
     titre={{
       id: 'fakeId',
       typeId: 'arm',
-      type: {
-        sections: [
-          {
-            elements: [
-              {
-                id: 'mecanisation',
-                nom: 'Mécanisation',
-                description: 'Est-ce que c’est mécanisé'
-              }
-            ],
-            id: 'arm'
-          }
-        ]
-      },
       contenu: { arm: { mecanisation: true } },
       titreStatutId: 'val',
       demarches: [
@@ -97,9 +102,6 @@ export const Empty: Story = () => (
     titre={{
       id: 'fakeId',
       typeId: 'arm',
-      type: {
-        sections: []
-      },
       contenu: {},
       titreStatutId: 'dmi',
       demarches: [],
@@ -114,7 +116,9 @@ export const Empty: Story = () => (
       loadLinkableTitres: () => () => Promise.resolve([]),
       loadTitreLinks: () => Promise.resolve({ aval: [], amont: [] }),
       linkTitres: () =>
-        new Promise<TitreLinks>(resolve => resolve({ aval: [], amont: [] }))
+        new Promise<TitreLinks>(resolve => resolve({ aval: [], amont: [] })),
+      loadTitreSections: (_titreId: string) =>
+        new Promise<Section[]>(resolve => resolve([]))
     }}
   ></Infos>
 )

@@ -35,7 +35,7 @@ curl -aT $FILE_PATH $FTP_URL
 # Renome le fichier et écrase l’ancien backup
 mv $FILE_PATH /srv/backups/$FILE_SUFFIX
 # Vérifie qu’on a seulement les 20 derniers backups sur le ftp
-if [ $(curl -l $FTP_URL | grep $FILE_SUFFIX | wc -l) -gt 20 ]
+if [ $(curl -l $FTP_URL | grep $FILE_SUFFIX | wc -l) -gt 15 ]
 then
 	# Supprime le backup le plus ancien
 	fileToDelete=$(curl -l $FTP_URL | grep $FILE_SUFFIX | head -n 1)

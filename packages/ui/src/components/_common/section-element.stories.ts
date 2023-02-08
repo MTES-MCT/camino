@@ -2,7 +2,7 @@ import SectionElement from './section-element.vue'
 import { Meta, Story } from '@storybook/vue3'
 
 const meta: Meta = {
-  title: 'Components/common/SectionElement',
+  title: 'Components/common/OldSectionElement',
   component: SectionElement,
   argTypes: {}
 }
@@ -11,7 +11,7 @@ export default meta
 type Props = {
   element: {
     id: string
-    type: 'file' | 'multiple' | string
+    type: 'file' | string
     nom: string
     description: string
   }
