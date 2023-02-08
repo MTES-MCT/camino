@@ -5,32 +5,15 @@ import type {
   IUtilisateur
 } from '../../types.js'
 import { titreGet } from '../../database/queries/titres.js'
-import { NotNullableKeys } from 'camino-common/src/typescript-tools.js'
 import { Section } from 'camino-common/src/titres.js'
 import express from 'express'
 
 import { CustomResponse } from './express-type.js'
 import { userGet } from '../../database/queries/utilisateurs.js'
 
-const has = <
-  T extends Record<string | symbol | number, any>,
-  K extends keyof T
->(
-  key: K,
-  x: T
-): x is Required<NotNullableKeys<Pick<T, K>>> & T => key in x
-export const titreContenuFormat = (titre: ITitre) => {
-  if (
-    !has('contenusTitreEtapesIds', titre) ||
-    !has('demarches', titre) ||
-    !titre.demarches.length
-  ) {
-    return null
-  }
-
-  return contenuFormat(titre)
-}
-
+/**
+ * @deprecated utiliser titreSectionsGet
+ */
 export const contenuFormat = ({
   demarches,
   contenusTitreEtapesIds
@@ -78,18 +61,54 @@ export const contenuFormat = ({
 
   return contenu
 }
-
-const titreSectionsGet = ({
+export const titreSectionsGet = ({
   demarches,
   contenusTitreEtapesIds
 }: {
-  demarches: {
-    etapes?: Pick<ITitreEtape, 'id' | 'contenu' | 'type'>[] | undefined | null
-  }[]
-  contenusTitreEtapesIds: NonNullable<
-    Required<ITitre['contenusTitreEtapesIds']>
-  >
+  demarches?:
+    | {
+        etapes?:
+          | Pick<
+              ITitreEtape,
+              'id' | 'contenu' | 'type' | 'sectionsSpecifiques'
+            >[]
+          | undefined
+          | null
+      }[]
+    | null
+    | undefined
+  contenusTitreEtapesIds?: ITitre['contenusTitreEtapesIds']
 }): Section[] => {
+  if (demarches === undefined) {
+    throw new Error('les démarches doivent être chargées')
+  }
+
+  if (!contenusTitreEtapesIds || !demarches) {
+    return []
+  }
+
+  demarches.forEach(demarche =>
+    demarche.etapes?.forEach(etape => {
+      if (!etape.type) {
+        throw new Error('le type d’étape doit être chargé')
+      }
+
+      if (etape.sectionsSpecifiques) {
+        const etapeTypeSections = etape.type.sections
+
+        const aggregateSections = etape.sectionsSpecifiques
+        if (etapeTypeSections?.length) {
+          etapeTypeSections.forEach(s => {
+            if (etape.sectionsSpecifiques?.every(({ id }) => id !== s.id)) {
+              aggregateSections.push(s)
+            }
+          })
+        }
+        etape.type.sections = aggregateSections
+      }
+    })
+  )
+
   const sections: Section[] = []
 
   Object.keys(contenusTitreEtapesIds).forEach(sectionId => {
@@ -166,60 +185,6 @@ const titreSectionsGet = ({
   return sections
 }
 
-const titreSectionsAndContenuGet = async (
-  titreId: string,
-  user: IUtilisateur | null | undefined
-): Promise<Section[]> => {
-  const titre = await titreGet(
-    titreId,
-    {
-      fields: {
-        demarches: {
-          type: { etapesTypes: { id: {} } },
-          etapes: {
-            type: { id: {} }
-          }
-        }
-      }
-    },
-    user
-  )
-
-  if (
-    !titre ||
-    !has('contenusTitreEtapesIds', titre) ||
-    !titre.contenusTitreEtapesIds ||
-    !has('demarches', titre) ||
-    !titre.demarches.length
-  ) {
-    return []
-  }
-
-  titre.demarches.forEach(demarche =>
-    demarche.etapes?.forEach(etape => {
-      if (!etape.type) {
-        throw new Error('le type d’étape doit être chargé')
-      }
-
-      if (etape.sectionsSpecifiques) {
-        const etapeTypeSections = etape.type.sections
-
-        const aggregateSections = etape.sectionsSpecifiques
-        if (etapeTypeSections?.length) {
-          etapeTypeSections.forEach(s => {
-            if (etape.sectionsSpecifiques?.every(({ id }) => id !== s.id)) {
-              aggregateSections.push(s)
-            }
-          })
-        }
-        etape.type.sections = aggregateSections
-      }
-    })
-  )
-
-  return titreSectionsGet(titre)
-}
-
 export const getTitresSections = async (
   req: express.Request,
   res: CustomResponse<Section[]>
@@ -231,7 +196,28 @@ export const getTitresSections = async (
     }
     const userId = (req.user as unknown as IUtilisateur | undefined)?.id
     const user = await userGet(userId)
-    res.json(await titreSectionsAndContenuGet(titreId, user))
+
+    let result: Section[] = []
+    const titre = await titreGet(
+      titreId,
+      {
+        fields: {
+          demarches: {
+            type: { etapesTypes: { id: {} } },
+            etapes: {
+              type: { id: {} }
+            }
+          }
+        }
+      },
+      user
+    )
+
+    if (titre) {
+      result = titreSectionsGet(titre)
+    }
+
+    res.json(result)
   } catch (e) {
     console.error(e)
 

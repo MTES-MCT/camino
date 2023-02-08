@@ -56,7 +56,7 @@ const contenuCompleteCheck = (sections, contenu) =>
   }, true)
 
 /**
- * @deprecated voir la nouvelle méthode dans section-element.tsx
+ * @deprecated voir la nouvelle méthode dans common/src/titres.ts
  */
 const valeurFind = ({ id, type, valeurs }, contenu) => {
   if (contenu[id] === undefined || contenu[id] === '') {

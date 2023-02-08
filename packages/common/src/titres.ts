@@ -1,8 +1,9 @@
 import { TitreStatutId } from './static/titresStatuts.js'
 import { TitreReference } from './titres-references.js'
 import { EtapeTypeId } from './static/etapesTypes.js'
-import { CaminoDate } from './date.js'
-import { TitreTypeId } from './static/titresTypes'
+import { CaminoDate, dateFormat } from './date.js'
+import { TitreTypeId } from './static/titresTypes.js'
+import { numberFormat } from './number.js'
 
 export interface CommonTitre {
   id: string
@@ -115,4 +116,41 @@ export interface Section {
   id: string
   nom?: string
   elements: Element[]
+}
+
+export const valeurFind = (element: Element): string => {
+  if (element.value === undefined || element.value === '') {
+    return '–'
+  }
+
+  if (isNumberElement(element)) {
+    return numberFormat(element.value)
+  }
+
+  if (isCheckboxesElement(element)) {
+    return element.value
+      .map(id => {
+        const option = element.options.find(e => e.id === id)
+        
+return option ? option.nom : undefined
+      })
+      .filter(valeur => !!valeur)
+      .join(', ')
+  }
+
+  if (isSelectElement(element)) {
+    return element.options.find(v => v.id === element.value)?.nom ?? '–'
+  }
+
+  if (isDateElement(element)) {
+    return dateFormat(element.value)
+  }
+
+  if (isRadioElement(element)) {
+    if (element.value === true) return 'Oui'
+    else if (element.value === false) return 'Non'
+    else return '–'
+  }
+
+  return element.value
 }

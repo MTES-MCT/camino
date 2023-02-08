@@ -2,55 +2,14 @@ import { numberFormat } from '@/utils/number-format'
 import { Icon } from '@/components/_ui/icon'
 import {
   Element,
-  isCheckboxesElement,
   isFileElement,
-  isSelectElement,
   isNumberElement,
-  isRadioElement,
-  isDateElement
+  valeurFind
 } from 'camino-common/src/titres'
-import { dateFormat } from '../../utils'
 
 export interface Props {
   element: Element
   fileDownload: (file: string) => void
-}
-
-const valeurFind = (element: Props['element']) => {
-  const myContenu = element.value
-
-  if (myContenu === undefined || myContenu === '') {
-    return '–'
-  }
-
-  if (isNumberElement(element) && element.value !== undefined) {
-    return numberFormat(element.value)
-  }
-
-  if (isCheckboxesElement(element)) {
-    return element.value
-      .map(id => {
-        const option = element.options.find(e => e.id === id)
-        return option ? option.nom : undefined
-      })
-      .filter(valeur => !!valeur)
-      .join(', ')
-  }
-
-  if (isSelectElement(element)) {
-    return element.options.find(v => v.id === element.value)?.nom
-  }
-
-  if (isDateElement(element)) {
-    return dateFormat(element.value)
-  }
-
-  if (isRadioElement(element)) {
-    if (element.value === true) return 'Oui'
-    else if (element.value === false) return 'Non'
-  }
-
-  return myContenu
 }
 
 export const SectionElement = (props: Props): JSX.Element => {

@@ -46,7 +46,13 @@ const titreFields = {
   points: { id: {} },
   communes: { id: {} },
   forets: { id: {} },
-  pointsEtape: { id: {} }
+  pointsEtape: { id: {} },
+  demarches: {
+    type: { etapesTypes: { id: {} } },
+    etapes: {
+      type: { id: {} }
+    }
+  }
 }
 
 interface ITitreInput {

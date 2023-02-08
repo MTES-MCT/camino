@@ -1,12 +1,4 @@
-import decamelize from 'decamelize'
-
-import {
-  ITitre,
-  Index,
-  IContenuValeur,
-  IContenu,
-  ICommune
-} from '../../../types.js'
+import { ITitre, Index, ICommune } from '../../../types.js'
 import { Departements } from 'camino-common/src/static/departement.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { SubstancesLegale } from 'camino-common/src/static/substancesLegales.js'
@@ -28,7 +20,8 @@ import {
   SecteursMaritimes
 } from 'camino-common/src/static/facades.js'
 import { Administrations } from 'camino-common/src/static/administrations.js'
-import { titreContenuFormat } from '../titre-contenu.js'
+import { valeurFind } from 'camino-common/src/titres.js'
+import { titreSectionsGet } from '../titre-contenu.js'
 
 const getFacadesMaritimeCell = (
   secteursMaritime: SecteursMaritimes[],
@@ -38,24 +31,22 @@ const getFacadesMaritimeCell = (
     .map(({ facade, secteurs }) => `${facade} (${secteurs.join(', ')})`)
     .join(separator)
 
-const titreContenuTableFormat = (contenu?: IContenu | null) =>
-  contenu
-    ? Object.keys(contenu).reduce(
-        (props: Index<IContenuValeur>, section) =>
-          contenu && contenu[section]
-            ? Object.keys(contenu[section]).reduce((props, element) => {
-                if (contenu && contenu[section][element]) {
-                  const propNom = decamelize(element).replace('_id', '')
+const titreContenuTableFormat = (titre: ITitre): Record<string, string> => {
+  const sections = titreSectionsGet(titre)
 
-                  props[propNom] = contenu[section][element] as IContenuValeur
-                }
+  return sections.reduce((result, section) => {
+    const subResult = section.elements.reduce<Record<string, string>>(
+      (acc, element) => {
+        acc[element.nom ?? element.id] = valeurFind(element)
 
-                return props
-              }, props)
-            : props,
-        {}
-      )
-    : {}
+        return acc
+      },
+      {}
+    )
+
+    return { ...result, ...subResult }
+  }, {})
+}
 
 export const titresTableFormat = (titres: ITitre[]) =>
   titres.map(titre => {
@@ -127,7 +118,7 @@ export const titresTableFormat = (titres: ITitre[]) =>
         .join(separator),
       geojson: JSON.stringify(titre.geojsonMultiPolygon),
       ...titreReferences,
-      ...titreContenuTableFormat(titreContenuFormat(titre))
+      ...titreContenuTableFormat(titre)
     }
 
     return titreNew
@@ -193,7 +184,7 @@ const titreGeojsonPropertiesFormat = (titre: ITitre) => {
             }`
         )
         .join(separator),
-    ...titreContenuTableFormat(titreContenuFormat(titre))
+    ...titreContenuTableFormat(titre)
   }
 }
 
