@@ -3,15 +3,42 @@ import { statistiquesGlobales } from '@/api/statistiques'
 import { defineComponent, onMounted, ref, FunctionalComponent } from 'vue'
 import { QuantiteParMois, Statistiques } from 'camino-common/src/statistiques'
 
-import LineChart from '../_charts/line.vue'
-import PieChart from '../_charts/pie.vue'
+import type { ChartConfiguration } from 'chart.js'
+
 import { numberFormat } from '@/utils/number-format'
 import {
   ADMINISTRATION_TYPE_IDS_ARRAY,
   AdministrationTypeId,
   sortedAdministrationTypes
 } from 'camino-common/src/static/administrations'
+import { ConfigurableChart } from '../_charts/configurable-chart'
 
+const pieConfiguration = (
+  data: ChartConfiguration<'pie'>['data']
+): ChartConfiguration<'pie'> => ({
+  type: 'pie',
+  data,
+  options: {
+    locale: 'fr-FR',
+    aspectRatio: 1.33
+  }
+})
+
+const lineConfiguration = (
+  data: ChartConfiguration<'line'>['data']
+): ChartConfiguration<'line'> => ({
+  type: 'line',
+  data,
+  options: {
+    locale: 'fr-FR',
+    responsive: true,
+    aspectRatio: 1.33,
+    interaction: {
+      mode: 'index',
+      intersect: false
+    }
+  }
+})
 const statsLineFormat = ({
   stats,
   labelY
@@ -199,11 +226,13 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
             </div>
           </div>
           <div class="tablet-float-blob-2-3 mb-xxl">
-            <LineChart
-              data={statsLineFormat({
-                stats: props.statistiques.recherches,
-                labelY: 'recherches'
-              })}
+            <ConfigurableChart
+              chartConfiguration={lineConfiguration(
+                statsLineFormat({
+                  stats: props.statistiques.recherches,
+                  labelY: 'recherches'
+                })
+              )}
             />
           </div>
         </div>
@@ -240,7 +269,9 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
             style="justify-content: center"
           >
             <div style="width: 70%">
-              <PieChart data={utilisateurs} />
+              <ConfigurableChart
+                chartConfiguration={pieConfiguration(utilisateurs)}
+              />
             </div>
           </div>
         </div>
@@ -262,7 +293,9 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
             style="justify-content: center"
           >
             <div style="width: 70%">
-              <PieChart data={utilisateursAdminChart} />
+              <ConfigurableChart
+                chartConfiguration={pieConfiguration(utilisateursAdminChart)}
+              />
             </div>
           </div>
         </div>
@@ -292,11 +325,13 @@ export const PureGlobales: FunctionalComponent<Props> = props => {
             </p>
           </div>
           <div class="tablet-float-blob-2-3 mb-xxl">
-            <LineChart
-              data={statsLineFormat({
-                stats: props.statistiques.titresModifies,
-                labelY: 'titres modifiés'
-              })}
+            <ConfigurableChart
+              chartConfiguration={lineConfiguration(
+                statsLineFormat({
+                  stats: props.statistiques.titresModifies,
+                  labelY: 'titres modifiés'
+                })
+              )}
             />
           </div>
         </div>
