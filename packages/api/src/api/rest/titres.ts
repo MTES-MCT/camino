@@ -291,19 +291,17 @@ export const titresDREAL = async (
 
         return (
           (titre.modification ?? false) ||
-          (canCreateDemarche(
+          canCreateDemarche(
             user,
             titre.typeId,
             titre.titreStatutId,
             titre.administrationsLocales ?? []
-          ) ??
-            false) ||
-          (canCreateTravaux(
+          ) ||
+          canCreateTravaux(
             user,
             titre.typeId,
             titre.administrationsLocales ?? []
-          ) ??
-            false)
+          )
         )
       })
       .map(({ id }) => id)
