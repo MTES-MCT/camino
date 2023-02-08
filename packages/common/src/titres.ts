@@ -84,10 +84,6 @@ type SelectElement = {
 
 export type Element = FileElement | DateElement | TextElement | NumberElement | RadioElement | CheckboxesElement | SelectElement
 
-export const isTextElement = (element: Element): element is TextElement => {
-  return element.type === 'text'
-}
-
 export const isFileElement = (element: Element): element is FileElement => {
   return element.type === 'file'
 }
@@ -131,8 +127,8 @@ export const valeurFind = (element: Element): string => {
     return element.value
       .map(id => {
         const option = element.options.find(e => e.id === id)
-        
-return option ? option.nom : undefined
+
+        return option ? option.nom : undefined
       })
       .filter(valeur => !!valeur)
       .join(', ')
@@ -147,9 +143,9 @@ return option ? option.nom : undefined
   }
 
   if (isRadioElement(element)) {
-    if (element.value === true) return 'Oui'
-    else if (element.value === false) return 'Non'
-    else return '–'
+    if (element.value === undefined) return '–'
+    else if (element.value) return 'Oui'
+    else return 'Non'
   }
 
   return element.value
