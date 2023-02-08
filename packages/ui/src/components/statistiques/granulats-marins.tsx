@@ -1,6 +1,6 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import { GranulatsMarinsActivite } from './granulats-marins-activite'
-import BarChart from '../_charts/bar.vue'
+import { ConfigurableChart } from '../_charts/configurable-chart'
 import { numberFormat } from '@/utils/number-format'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import {
@@ -11,13 +11,12 @@ import { AsyncData, fetchWithJson } from '@/api/client-rest'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { LoadingElement } from '../_ui/functional-loader'
 import {
-  CaminoAnnee,
   CaminoDate,
   getAnnee,
   getCurrent,
-  toCaminoAnnee,
   toCaminoDate
 } from 'camino-common/src/date'
+import type { ChartConfiguration } from 'chart.js'
 
 const ids = [
   'titresPrw',
@@ -49,12 +48,12 @@ const statsBarFormat = ({
   line: 'masse' | 'surface'
   labelBar: string
   labelLine: string
-}) =>
+}): ChartConfiguration<'bar' | 'line'>['data'] =>
   annees.reduce<{
     labels: number[]
     datasets: {
       type: 'line' | 'bar'
-      label: unknown
+      label: string
       yAxisID: 'line' | 'bar'
       fill?: 'start'
       tension?: number
@@ -107,6 +106,28 @@ const getStats = async (): Promise<StatistiquesGranulatsMarins> => {
   )
   return data
 }
+
+const barChartConfig = (
+  data: ChartConfiguration<'bar' | 'line'>['data'],
+  suggestedMax: number
+): ChartConfiguration<'bar' | 'line'> => ({
+  type: 'bar',
+  data,
+  options: {
+    locale: 'fr-FR',
+    aspectRatio: 2,
+    responsive: true,
+    scales: {
+      bar: { min: 0, suggestedMax },
+      line: { min: 0, position: 'right' }
+    },
+    plugins: {
+      legend: {
+        reverse: true
+      }
+    }
+  }
+})
 
 export const GranulatsMarins = defineComponent({
   setup() {
@@ -428,16 +449,18 @@ export const PureGranulatsMarins = defineComponent<Props>({
               data={statistiquesGranulatsMarins.value}
               renderItem={({ statsAnneesAfter2010 }) => {
                 return (
-                  <BarChart
-                    data={statsBarFormat({
-                      annees: statsAnneesAfter2010,
-                      bar: 'volume',
-                      line: 'masse',
-                      labelBar: 'Volume en m³',
-                      labelLine: 'Tonnage'
-                    })}
-                    suggestedMax={Math.max(
-                      ...statsAnneesAfter2010.map(annee => annee.volume)
+                  <ConfigurableChart
+                    chartConfiguration={barChartConfig(
+                      statsBarFormat({
+                        annees: statsAnneesAfter2010,
+                        bar: 'volume',
+                        line: 'masse',
+                        labelBar: 'Volume en m³',
+                        labelLine: 'Tonnage'
+                      }),
+                      Math.max(
+                        ...statsAnneesAfter2010.map(annee => annee.volume)
+                      )
                     )}
                   />
                 )
@@ -516,18 +539,17 @@ export const PureGranulatsMarins = defineComponent<Props>({
                 <LoadingElement
                   data={statistiquesGranulatsMarins.value}
                   renderItem={item => (
-                    <BarChart
-                      data={statsBarFormat({
-                        annees: item.raw.annees,
-                        id: 'titresPrw',
-                        bar: 'quantite',
-                        line: 'surface',
-                        labelBar: 'Permis de recherches',
-                        labelLine: 'Surface des permis de recherches (ha)'
-                      })}
-                      suggestedMax={suggestedMaxTitres(
-                        'titresPrw',
-                        item.raw.annees
+                    <ConfigurableChart
+                      chartConfiguration={barChartConfig(
+                        statsBarFormat({
+                          annees: item.raw.annees,
+                          id: 'titresPrw',
+                          bar: 'quantite',
+                          line: 'surface',
+                          labelBar: 'Permis de recherches',
+                          labelLine: 'Surface des permis de recherches (ha)'
+                        }),
+                        suggestedMaxTitres('titresPrw', item.raw.annees)
                       )}
                     />
                   )}
@@ -561,19 +583,18 @@ export const PureGranulatsMarins = defineComponent<Props>({
                             <p>Permis d’exploitation octroyés l’an dernier</p>
                           </div>
                           <div class="tablet-float-blob-2-3 relative mb-xl">
-                            <BarChart
-                              data={statsBarFormat({
-                                annees: raw.annees,
-                                id: 'titresPxw',
-                                bar: 'quantite',
-                                line: 'surface',
-                                labelBar: "Permis d'exploitation",
-                                labelLine:
-                                  "Surface des permis d'exploitation (ha)"
-                              })}
-                              suggestedMax={suggestedMaxTitres(
-                                'titresPxw',
-                                raw.annees
+                            <ConfigurableChart
+                              chartConfiguration={barChartConfig(
+                                statsBarFormat({
+                                  annees: raw.annees,
+                                  id: 'titresPxw',
+                                  bar: 'quantite',
+                                  line: 'surface',
+                                  labelBar: "Permis d'exploitation",
+                                  labelLine:
+                                    "Surface des permis d'exploitation (ha)"
+                                }),
+                                suggestedMaxTitres('titresPxw', raw.annees)
                               )}
                             />
                           </div>
@@ -607,18 +628,17 @@ export const PureGranulatsMarins = defineComponent<Props>({
                 <LoadingElement
                   data={statistiquesGranulatsMarins.value}
                   renderItem={item => (
-                    <BarChart
-                      data={statsBarFormat({
-                        annees: item.raw.annees,
-                        id: 'titresCxw',
-                        bar: 'quantite',
-                        line: 'surface',
-                        labelBar: 'Concessions',
-                        labelLine: 'Surfaces des concessions (ha)'
-                      })}
-                      suggestedMax={suggestedMaxTitres(
-                        'titresCxw',
-                        item.raw.annees
+                    <ConfigurableChart
+                      chartConfiguration={barChartConfig(
+                        statsBarFormat({
+                          annees: item.raw.annees,
+                          id: 'titresCxw',
+                          bar: 'quantite',
+                          line: 'surface',
+                          labelBar: 'Concessions',
+                          labelLine: 'Surfaces des concessions (ha)'
+                        }),
+                        suggestedMaxTitres('titresCxw', item.raw.annees)
                       )}
                     />
                   )}
@@ -648,18 +668,20 @@ export const PureGranulatsMarins = defineComponent<Props>({
                 <LoadingElement
                   data={statistiquesGranulatsMarins.value}
                   renderItem={item => (
-                    <BarChart
-                      data={statsBarFormat({
-                        annees: item.raw.annees,
-                        id: 'concessionsValides',
-                        bar: 'quantite',
-                        line: 'surface',
-                        labelBar: 'Concessions',
-                        labelLine: 'Surfaces des concessions (ha)'
-                      })}
-                      suggestedMax={suggestedMaxTitres(
-                        'concessionsValides',
-                        item.raw.annees
+                    <ConfigurableChart
+                      chartConfiguration={barChartConfig(
+                        statsBarFormat({
+                          annees: item.raw.annees,
+                          id: 'concessionsValides',
+                          bar: 'quantite',
+                          line: 'surface',
+                          labelBar: 'Concessions',
+                          labelLine: 'Surfaces des concessions (ha)'
+                        }),
+                        suggestedMaxTitres(
+                          'concessionsValides',
+                          item.raw.annees
+                        )
                       )}
                     />
                   )}
