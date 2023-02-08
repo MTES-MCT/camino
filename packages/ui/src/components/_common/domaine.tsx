@@ -1,11 +1,12 @@
 import { DomaineId, DOMAINES_IDS } from 'camino-common/src/static/domaines'
+import { FunctionalComponent, HTMLAttributes } from 'vue'
 import { Pill } from '../_ui/pill'
 
 export type Props = {
   domaineId?: DomaineId
-}
+} & HTMLAttributes
 
-export function Domaine(props: Props) {
+export const Domaine: FunctionalComponent<Props> = props => {
   let domaine = props.domaineId
   if (domaine === undefined) {
     domaine = DOMAINES_IDS.METAUX

@@ -1,4 +1,4 @@
-import { PureFooter } from './pure-footer'
+import { PureFooter } from './footer'
 import { Meta, Story } from '@storybook/vue3'
 
 const meta: Meta = {
