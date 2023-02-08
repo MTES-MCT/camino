@@ -11,12 +11,16 @@ import {
   Legend,
   Tooltip,
   Title,
-  ChartConfiguration
+  ChartConfiguration,
+  PieController,
+  ArcElement
 } from 'chart.js'
 import { ref, onMounted, onUnmounted, defineComponent } from 'vue'
 
 Chart.register(
   LinearScale,
+  PieController,
+  ArcElement,
   BarController,
   CategoryScale,
   BarElement,
