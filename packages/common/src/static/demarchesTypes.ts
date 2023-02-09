@@ -1,6 +1,6 @@
 import { Definition } from '../definition.js'
 
-interface DemarchesDefinition<T> extends Definition<T> {
+export interface DemarcheType<T = DemarcheTypeId> extends Definition<T> {
   titulaires?: boolean
   renouvelable?: boolean
   travaux?: boolean
@@ -41,7 +41,7 @@ export const DemarchesTypesIds = Object.values(DEMARCHES_TYPES_IDS)
 export type DemarcheTypeId = typeof DEMARCHES_TYPES_IDS[keyof typeof DEMARCHES_TYPES_IDS]
 
 export const DemarchesTypes: {
-  [key in DemarcheTypeId]: DemarchesDefinition<key>
+  [key in DemarcheTypeId]: DemarcheType<key>
 } = {
   amo: {
     id: 'amo',

@@ -1,5 +1,5 @@
-import { DEMARCHES_TYPES_IDS } from './demarchesTypes.js'
-import { TITRES_TYPES_IDS } from './titresTypes.js'
+import { DEMARCHES_TYPES_IDS, DemarcheType, DemarchesTypes } from './demarchesTypes.js'
+import { TITRES_TYPES_IDS, TitreTypeId } from './titresTypes.js'
 
 const demarchesEverywhere = [
   DEMARCHES_TYPES_IDS.AutorisationDOuvertureDeTravaux,
@@ -217,3 +217,14 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation
   ]
 } as const
+
+
+
+//  FIXME Tests
+export const getDemarchesTypesByTitreType = (titreTypeId: TitreTypeId): DemarcheType[] => {
+
+  return TITRES_TYPES_DEMARCHES_TYPES[titreTypeId]
+  .map(demarcheTypeId => DemarchesTypes[demarcheTypeId])
+  .sort((a, b) => a.ordre - b.ordre)
+  
+}

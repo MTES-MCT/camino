@@ -69,6 +69,15 @@
       @toggle="etapeToggle(etape.id)"
     />
 
+
+    <DemarcheEditPopup v-if="open" 
+          :close="() => open = !open" 
+          :demarche="myDemarche"
+          :apiClient="apiClient"
+          :titreTypeId="titreTypeId"
+          :titreNom="titreNom"
+          :tabId="tabId"
+    />
     <div class="line width-full my-xxl" />
   </div>
 </template>
@@ -80,12 +89,15 @@ import { DemarcheEditPopup } from './demarche-edit-popup'
 import RemovePopup from './demarche-remove-popup.vue'
 import { Icon } from '@/components/_ui/icon'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
+import { demarcheApiClient } from "./demarche-api-client";
+
 
 export default {
   components: {
     Icon,
     Statut,
-    TitreEtape
+    TitreEtape,
+    DemarcheEditPopup
   },
 
   props: {
@@ -98,7 +110,25 @@ export default {
 
   emits: ['titre-event-track'],
 
+data: () => {
+  return {open: false}
+},
   computed: {
+    apiClient() {
+      return demarcheApiClient
+    },
+    myDemarche() {
+
+      const demarche = {}
+
+      demarche.description = this.demarche.description
+      demarche.typeId = this.demarche.type.id
+      demarche.titreId = this.titreId
+      demarche.id = this.demarche.id
+
+      return demarche
+    },
+
     etapeOpened() {
       return this.$store.state.titre.opened.etapes
     },
@@ -120,23 +150,7 @@ export default {
 
   methods: {
     editPopupOpen() {
-      const demarche = {}
-
-      demarche.description = this.demarche.description
-      demarche.typeId = this.demarche.type.id
-      demarche.titreId = this.titreId
-      demarche.id = this.demarche.id
-
-      this.$store.commit('popupOpen', {
-        component: DemarcheEditPopup,
-        props: {
-          demarche,
-          titreTypeId: this.titreTypeId,
-          titreNom: this.titreNom,
-          tabId: this.tabId
-        }
-      })
-
+      this.open = !this.open
       this.eventTrack({
         categorie: 'titre-sections',
         action: `${this.eventPrefix}_editer`,

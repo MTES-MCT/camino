@@ -1,35 +1,53 @@
 import { isTitreType, TitresTypes, TitreTypeId } from "camino-common/src/static/titresTypes";
 import { TitresTypesTypes } from "camino-common/src/static/titresTypesTypes";
-import { computed, defineComponent, inject, onMounted, onUnmounted, ref } from "vue";
-import { useStore } from "vuex";
+import { computed, defineComponent, inject, ref } from "vue";
 import { FunctionalPopup } from "../_ui/functional-popup";
-import { sortedDemarchesTypes, DemarcheTypeId, isDemarcheTypeId } from "camino-common/src/static/demarchesTypes"
+import { DemarcheTypeId, isDemarcheTypeId } from "camino-common/src/static/demarchesTypes"
+import { getDemarchesTypesByTitreType } from "camino-common/src/static/titresTypesDemarchesTypes"
 import { isEventWithTarget } from "@/utils/vue-tsx-utils";
 import { DemarcheApiClient } from "./demarche-api-client";
-import { AsyncData } from "@/api/client-rest";
-import { LoadingElement } from "../_ui/functional-loader";
+import { useStore } from "vuex";
 
-interface Props {
+
+export interface Props {
   demarche: { titreId: string, id?: string, typeId?: DemarcheTypeId, description?: string }
   titreNom: string
   titreTypeId: TitreTypeId
   tabId: string,
   apiClient: DemarcheApiClient
+  close: () => void
+  reload: () => void
+  displayMessage: () => void
 }
 
-export const DemarcheEditPopup = defineComponent<Props>({
-  props: ['demarche', 'titreNom', 'titreTypeId', 'tabId', 'apiClient'] as unknown as undefined,
+export const DemarcheEditPopup = defineComponent<Omit<Props, 'reload' | 'displayMessage'>>({
+  props: ['demarche', 'titreNom', 'titreTypeId', 'tabId', 'apiClient', 'close'] as unknown as undefined,
   setup(props) {
     const store = useStore()
+  return () => (<PureDemarcheEditPopup 
+    apiClient={props.apiClient} 
+    close={props.close} 
+    demarche={props.demarche} 
+    titreTypeId={props.titreTypeId} 
+    titreNom={props.titreNom} 
+    tabId={props.tabId} 
+    reload={() => store.dispatch('titre/get', props.demarche.titreId, {root: true})}
+    displayMessage={() => store.dispatch(
+      'messageAdd',
+      { value: `le titre a été mis à jour`, type: 'success' },
+      { root: true }
+    )}
+    />)
+
+  }})
+
+
+export const PureDemarcheEditPopup = defineComponent<Props>({
+  props: ['demarche', 'titreNom', 'titreTypeId', 'tabId', 'apiClient', 'close', 'reload', 'displayMessage'] as unknown as undefined,
+  setup(props) {
     const matomo = inject('matomo', null)
-
-
-    const demarcheProcess = ref<AsyncData<null>>({status: "LOADED", value: null })
     const typeId = ref<DemarcheTypeId | null>(props.demarche.typeId ?? null)
     const description = ref<string>(props.demarche.description ?? '')
-
-
-    const saveButton = ref<HTMLButtonElement | null>(null)
 
     const titreTypeNom = computed(() => {
       return isTitreType(props.titreTypeId)
@@ -43,18 +61,10 @@ export const DemarcheEditPopup = defineComponent<Props>({
       } démarche ${props.tabId === 'travaux' ? 'de travaux' : ''}`
     })
 
-    const messages = computed(() =>  {
-      return store.state.popup.messages ?? []
-    })
-
     const types = computed(() => {
-      return sortedDemarchesTypes.filter(t =>
+      return getDemarchesTypesByTitreType(props.titreTypeId).filter(t =>
         props.tabId === 'travaux' ? t.travaux : !t.travaux
       )
-    })
-
-    const complete = computed<boolean>(()=> {
-      return !!typeId.value
     })
 
 
@@ -117,79 +127,27 @@ export const DemarcheEditPopup = defineComponent<Props>({
         </span>
       </span>
     </h6>
-    <h2 class="cap-first">
+    <h2>
       { label.value }
     </h2>
   </div>)
-  const footer = () => (<div class="tablet-blobs">
-      <div class="tablet-blob-1-3 mb tablet-mb-0">
-        <button class="btn-border rnd-xs p-s full-x" onClick={cancel}>
-          Annuler
-        </button>
-      </div>
-      <div class="tablet-blob-2-3">
-        <LoadingElement data={demarcheProcess.value} renderItem={() => <button
-          ref={saveButton}
-          disabled={!complete.value}
-          class={`${!complete.value ? 'disabled': ''} btn btn-primary`}
-          onClick={save}
-        >
-          Enregistrer
-        </button>} />
-      </div>
-    </div>)
+ 
 
 const save = async () => {
   if (typeId.value) {
-    demarcheProcess.value = {status: 'LOADING'}
-
-    try {
     const demarche = {titreId: props.demarche.titreId, typeId: typeId.value, description: description.value}
     if (props.demarche.id) {
       await props.apiClient.updateDemarche({...demarche, id: props.demarche.id})
     } else {
       await props.apiClient.createDemarche(demarche)
     }
-
-    demarcheProcess.value = {status: 'LOADED', value: null}
-  }  catch (e: any) {
-    console.error('error', e)
-    demarcheProcess.value = {
-      status: 'ERROR',
-      message: e.message ?? 'something wrong happened'
-    }
+    props.displayMessage()
+    props.reload()
   }
-
-
   if (matomo) {
     // @ts-ignore
     matomo.trackEvent('titre-sections', `titre-${props.tabId}-enregistrer`, demarche.id)
-  }
-  }
+  }  
 }
-
-const cancel = () => {
-  store.commit('popupClose')
-}
-
-const keyup = (e: KeyboardEvent) =>  {
-  if ((e.which || e.keyCode) === 27) {
-    cancel()
-  } else if ((e.which || e.keyCode) === 13) {
-    if (complete.value) {
-      saveButton.value?.focus()
-      save()
-    }
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('keyup', keyup)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('keyup', keyup)
-})
-
-  return () => (<FunctionalPopup messages={messages.value} header={header} footer={footer} content={content} />)
+  return () => (<FunctionalPopup header={header} content={content} canValidate={!!typeId.value} close={props.close} validate={save} />)
 }})
