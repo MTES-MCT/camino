@@ -5,7 +5,6 @@ const state = {
   elements: [],
   total: 0,
   metas: {
-    types: [],
     etapesTypes: [],
     titresTypes: [],
     titresStatuts: [],
@@ -81,7 +80,6 @@ const mutations = Object.assign({}, listeMutations, {
   reset(state) {
     listeMutations.reset(state)
     state.metas = {
-      types: [],
       etapesTypes: [],
       titresTypes: [],
       titresStatuts: [],
@@ -115,10 +113,7 @@ const mutations = Object.assign({}, listeMutations, {
       let metaId
       let paramsIds
 
-      if (id === 'demarchesTypes') {
-        metaId = 'types'
-        paramsIds = ['typesIds']
-      } else if (id === 'etapesTypes') {
+      if (id === 'etapesTypes') {
         metaId = 'etapesTypes'
         paramsIds = ['etapesInclues', 'etapesExclues']
       } else if (id === 'statuts') {

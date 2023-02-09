@@ -3,7 +3,6 @@ import { Model, Modifiers } from 'objection'
 import { ITitreType } from '../../types.js'
 
 import Domaines from './domaines.js'
-import DemarchesTypes from './demarches-types.js'
 import TitresTypesTypes from './titres-types-types.js'
 
 interface TitresTypes extends ITitreType {}
@@ -40,29 +39,6 @@ class TitresTypes extends Model {
       join: {
         from: 'titresTypes.domaineId',
         to: 'domaines.id'
-      }
-    },
-
-    demarchesTypes: {
-      relation: Model.ManyToManyRelation,
-      modelClass: DemarchesTypes,
-      join: {
-        from: 'titresTypes.id',
-        through: {
-          from: 'titresTypes__demarchesTypes.titreTypeId',
-          to: 'titresTypes__demarchesTypes.demarcheTypeId',
-          extra: [
-            'dureeMax',
-            'acceptationImplicite',
-            'delaiImplicite',
-            'delaiRecours',
-            'legalRef',
-            'legalLien',
-            'dateDebut',
-            'dateFin'
-          ]
-        },
-        to: 'demarchesTypes.id'
       }
     }
   })

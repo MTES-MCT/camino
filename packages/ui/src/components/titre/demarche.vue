@@ -69,6 +69,26 @@
       @toggle="etapeToggle(etape.id)"
     />
 
+    <DemarcheEditPopup
+      v-if="openEditPopup"
+      :close="() => (openEditPopup = !openEditPopup)"
+      :demarche="myDemarche"
+      :apiClient="apiClient"
+      :titreTypeId="titreTypeId"
+      :titreNom="titreNom"
+      :tabId="tabId"
+    />
+    <DemarcheRemovePopup
+      v-if="openRemovePopup"
+      :close="() => (openRemovePopup = !openRemovePopup)"
+      :demarcheId="demarche.id"
+      :apiClient="apiClient"
+      :titreTypeId="titreTypeId"
+      :titreNom="titreNom"
+      :titreId="titreId"
+      :demarcheTypeId="demarche.type.id"
+    />
+
     <div class="line width-full my-xxl" />
   </div>
 </template>
@@ -76,16 +96,19 @@
 <script>
 import { Statut } from '../_common/statut'
 import TitreEtape from '../etape/preview.vue'
-import EditPopup from './demarche-edit-popup.vue'
-import RemovePopup from './demarche-remove-popup.vue'
+import { DemarcheEditPopup } from './demarche-edit-popup'
+import { DemarcheRemovePopup } from './demarche-remove-popup'
 import { Icon } from '@/components/_ui/icon'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
+import { demarcheApiClient } from './demarche-api-client'
 
 export default {
   components: {
     Icon,
     Statut,
-    TitreEtape
+    TitreEtape,
+    DemarcheEditPopup,
+    DemarcheRemovePopup
   },
 
   props: {
@@ -98,7 +121,24 @@ export default {
 
   emits: ['titre-event-track'],
 
+  data: () => {
+    return { openEditPopup: false, openRemovePopup: false }
+  },
   computed: {
+    apiClient() {
+      return demarcheApiClient
+    },
+    myDemarche() {
+      const demarche = {}
+
+      demarche.description = this.demarche.description
+      demarche.typeId = this.demarche.type.id
+      demarche.titreId = this.titreId
+      demarche.id = this.demarche.id
+
+      return demarche
+    },
+
     etapeOpened() {
       return this.$store.state.titre.opened.etapes
     },
@@ -120,23 +160,7 @@ export default {
 
   methods: {
     editPopupOpen() {
-      const demarche = {}
-
-      demarche.description = this.demarche.description
-      demarche.typeId = this.demarche.type.id
-      demarche.titreId = this.titreId
-      demarche.id = this.demarche.id
-
-      this.$store.commit('popupOpen', {
-        component: EditPopup,
-        props: {
-          demarche,
-          titreTypeId: this.titreTypeId,
-          titreNom: this.titreNom,
-          tabId: this.tabId
-        }
-      })
-
+      this.openEditPopup = !this.openEditPopup
       this.eventTrack({
         categorie: 'titre-sections',
         action: `${this.eventPrefix}_editer`,
@@ -145,16 +169,7 @@ export default {
     },
 
     removePopupOpen() {
-      this.$store.commit('popupOpen', {
-        component: RemovePopup,
-        props: {
-          id: this.demarche.id,
-          typeNom: this.demarche.type.nom,
-          titreNom: this.titreNom,
-          titreTypeId: this.titreTypeId
-        }
-      })
-
+      this.openRemovePopup = !this.openRemovePopup
       this.eventTrack({
         categorie: 'titre-sections',
         action: `${this.eventPrefix}_supprimer`,

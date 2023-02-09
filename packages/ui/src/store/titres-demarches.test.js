@@ -16,13 +16,11 @@ describe('liste des demarches', () => {
   beforeEach(() => {
     titresDemarches.state = {
       metas: {
-        types: [],
         etapesTypes: [],
         titresTypes: [],
         titresStatuts: []
       },
       definitions: [
-        { id: 'typesIds', type: 'strings', values: [] },
         { id: 'statutsIds', type: 'strings', values: [] },
         { id: 'etapesInclues', type: 'objects', values: [] },
         { id: 'etapesExclues', type: 'objects', values: [] },
@@ -41,8 +39,6 @@ describe('liste des demarches', () => {
   })
 
   test('enregistre les métas', () => {
-    const demarchesTypes = [{ id: 'oct', nom: 'octroi' }]
-
     const statuts = [
       { id: 'val', nom: 'valide', couleur: 'success' },
       { id: 'ech', nom: 'échu', couleur: 'neutral' }
@@ -54,7 +50,6 @@ describe('liste des demarches', () => {
     const etapesTypes = [{ id: 'dpu', nom: 'publication au Jorf' }]
 
     store.commit('titresDemarches/metasSet', {
-      demarchesTypes,
       statuts,
       types,
       etapesTypes,
@@ -62,14 +57,12 @@ describe('liste des demarches', () => {
     })
 
     expect(store.state.titresDemarches.metas).toEqual({
-      types: demarchesTypes,
       titresTypes: types,
       titresStatuts: statuts,
       etapesTypes
     })
 
     expect(store.state.titresDemarches.definitions).toEqual([
-      { values: ['oct'], id: 'typesIds', type: 'strings' },
       { values: [], id: 'statutsIds', type: 'strings' },
       { values: ['dpu'], id: 'etapesInclues', type: 'objects' },
       { values: ['dpu'], id: 'etapesExclues', type: 'objects' },

@@ -3,7 +3,7 @@ import { QGISToken } from 'camino-common/src/utilisateur'
 import { defineComponent, ref } from 'vue'
 import { Pill } from '../_ui/pill'
 import { LoadingElement } from '../_ui/functional-loader'
-import Messages from '@/components/_ui/messages.vue'
+import { Messages } from '@/components/_ui/messages'
 
 export interface Props {
   generateTokenCall: () => Promise<QGISToken>

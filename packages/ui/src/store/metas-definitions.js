@@ -3,7 +3,6 @@ import {
   etapesTypes,
   documentsTypes,
   titresTypes,
-  titresTypesDemarchesTypes,
   titresTypesDemarchesTypesEtapesTypes,
   etapesTypesDocumentsTypes,
   etapesTypesJustificatifsTypes,
@@ -111,47 +110,6 @@ const metasIndex = {
       },
       { id: 'travaux', nom: 'Travaux', type: Boolean, optional: true }
     ]
-  },
-  'titres-types--demarches-types': {
-    get: titresTypesDemarchesTypes,
-    nom: 'Types des titres | Types des démarches',
-    colonnes: [
-      {
-        id: 'titreTypeId',
-        nom: 'Type de titre',
-        type: 'entities',
-        entities: 'titres-types'
-      },
-      {
-        id: 'demarcheTypeId',
-        nom: 'Type de démarche',
-        type: 'entities',
-        entities: 'demarches-types'
-      },
-      { id: 'dureeMax', nom: 'Durée maximale', type: Number, optional: true },
-      {
-        id: 'delaiImplicite',
-        nom: 'Délai implicite',
-        type: Number,
-        optional: true
-      },
-      {
-        id: 'delaiRecours',
-        nom: 'Délai de recours',
-        type: Number,
-        optional: true
-      },
-      { id: 'legalRef', nom: 'Référence légale', type: String, optional: true },
-      {
-        id: 'legalLien',
-        nom: 'Lien de la référence légale',
-        type: String,
-        optional: true
-      },
-      { id: 'dateDebut', nom: 'Date de début', type: String, optional: true },
-      { id: 'dateFin', nom: 'Date de fin', type: String, optional: true }
-    ],
-    ids: ['titreTypeId', 'demarcheTypeId']
   },
   'phases-statuts': {
     get: () => phasesStatuts,

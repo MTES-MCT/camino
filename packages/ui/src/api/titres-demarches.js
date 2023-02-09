@@ -1,28 +1,11 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
-import { fragmentDemarcheType } from './fragments/metas'
 import { fragmentDemarches } from './fragments/titres-demarches'
 
 const demarchesMetas = apiGraphQLFetch(
   gql`
     query MetasDemarches($travaux: Boolean) {
-      types {
-        id
-        nom
-      }
-
-      statuts {
-        id
-        nom
-        couleur
-      }
-
-      demarchesTypes(travaux: $travaux) {
-        id
-        nom
-      }
-
       etapesTypes(travaux: $travaux) {
         id
         nom
@@ -35,18 +18,6 @@ const demarchesMetas = apiGraphQLFetch(
         }
       }
     }
-  `
-)
-
-const demarcheMetas = apiGraphQLFetch(
-  gql`
-    query MetasDemarche($titreId: ID!) {
-      demarchesTypes(titreId: $titreId) {
-        ...demarcheType
-      }
-    }
-
-    ${fragmentDemarcheType}
   `
 )
 
@@ -101,35 +72,4 @@ const demarches = apiGraphQLFetch(
   `
 )
 
-const demarcheCreer = apiGraphQLFetch(gql`
-  mutation DemarcheCreer($demarche: InputDemarcheCreation!) {
-    demarcheCreer(demarche: $demarche) {
-      slug
-    }
-  }
-`)
-
-const demarcheModifier = apiGraphQLFetch(gql`
-  mutation DemarcheModifier($demarche: InputDemarcheModification!) {
-    demarcheModifier(demarche: $demarche) {
-      slug
-    }
-  }
-`)
-
-const demarcheSupprimer = apiGraphQLFetch(gql`
-  mutation DemarcheSupprimer($id: ID!) {
-    demarcheSupprimer(id: $id) {
-      slug
-    }
-  }
-`)
-
-export {
-  demarchesMetas,
-  demarches,
-  demarcheMetas,
-  demarcheCreer,
-  demarcheModifier,
-  demarcheSupprimer
-}
+export { demarchesMetas, demarches }

@@ -24,13 +24,24 @@
       :tabId="tabId"
       @event-track="eventTrack"
     />
+    <DemarcheEditPopup
+      v-if="open"
+      :close="() => (open = !open)"
+      :demarche="myDemarche"
+      :apiClient="apiClient"
+      :titreTypeId="titre.typeId"
+      :titreNom="titre.nom"
+      :tabId="tabId"
+    />
   </div>
 </template>
 
 <script>
 import TitreDemarche from './demarche.vue'
-import EditPopup from './demarche-edit-popup.vue'
+import { DemarcheEditPopup } from './demarche-edit-popup'
 import { Icon } from '@/components/_ui/icon'
+import { demarcheApiClient } from './demarche-api-client'
+
 import {
   canCreateDemarche,
   canCreateTravaux
@@ -39,7 +50,8 @@ import {
 export default {
   components: {
     Icon,
-    TitreDemarche
+    TitreDemarche,
+    DemarcheEditPopup
   },
 
   props: {
@@ -49,10 +61,22 @@ export default {
   },
 
   emits: ['event-track'],
-
+  data: () => {
+    return { open: false }
+  },
   computed: {
     titre() {
       return this.$store.state.titre.element
+    },
+    apiClient() {
+      return demarcheApiClient
+    },
+    myDemarche() {
+      const demarche = {}
+
+      demarche.titreId = this.titre.id
+
+      return demarche
     },
     canCreate() {
       if (this.titre) {
@@ -77,21 +101,7 @@ export default {
 
   methods: {
     demarcheAddPopupOpen() {
-      const demarche = {
-        typeId: null,
-        titreId: this.titre.id
-      }
-
-      this.$store.commit('popupOpen', {
-        component: EditPopup,
-        props: {
-          demarche,
-          titreTypeId: this.titre.typeId,
-          titreNom: this.titre.nom,
-          creation: true,
-          tabId: this.tabId
-        }
-      })
+      this.open = !this.open
 
       this.eventTrack({
         categorie: 'titre-sections',

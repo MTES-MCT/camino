@@ -119,7 +119,7 @@ type Query {
   activitesStatuts: [ActiviteStatut]
 
   "Types de démarches"
-  demarchesTypes(titreId: ID, travaux: Boolean): [DemarcheType]
+  demarchesTypes: [DemarcheType]
 
   "Statuts de démarches"
   demarchesStatuts: [DemarcheStatut]
@@ -171,7 +171,6 @@ type Query {
 
   titresTypesTitresStatuts: [TitreTypeTitreStatut]
 
-  titresTypesDemarchesTypes: [TitreTypeDemarcheType]
   titresTypesDemarchesTypesEtapesTypes: [TitreTypeDemarcheTypeEtapeType]
   titresTypesDemarchesTypesEtapesTypesDocumentsTypes: [TitreTypeDemarcheTypeEtapeTypeDocumentType]
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypes: [TitreTypeDemarcheTypeEtapeTypeDocumentType]

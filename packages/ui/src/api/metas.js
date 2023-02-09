@@ -7,7 +7,6 @@ import {
   fragmentEtapeType,
   fragmentDocumentType,
   fragmentTitreType,
-  fragmentTitreTypeDemarcheType,
   fragmentTitreTypeDemarcheTypeEtapeType,
   fragmentEtapeTypeDocumentType,
   fragmentEtapeTypeJustificatifType,
@@ -86,19 +85,6 @@ const titresTypes = apiGraphQLFetch(
   `
 )
 
-// tables de jointure
-const titresTypesDemarchesTypes = apiGraphQLFetch(
-  gql`
-    query TitresTypesDemarchesTypes {
-      titresTypesDemarchesTypes {
-        ...titreTypeDemarcheType
-      }
-    }
-
-    ${fragmentTitreTypeDemarcheType}
-  `
-)
-
 const titresTypesDemarchesTypesEtapesTypes = apiGraphQLFetch(
   gql`
     query TitresTypesDemarchesTypesEtapesTypes {
@@ -166,7 +152,6 @@ export {
   etapesTypes,
   documentsTypes,
   titresTypes,
-  titresTypesDemarchesTypes,
   titresTypesDemarchesTypesEtapesTypes,
   titresTypesDemarchesTypesEtapesTypesDocumentsTypes,
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,

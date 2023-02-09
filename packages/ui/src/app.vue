@@ -63,7 +63,7 @@
 </template>
 
 <script lang="ts" setup>
-import Messages from './components/_ui/messages.vue'
+import { Messages } from './components/_ui/messages'
 import { Header } from './components/page/header'
 import { Footer } from './components/page/footer'
 import { MapPattern } from './components/_map/pattern'

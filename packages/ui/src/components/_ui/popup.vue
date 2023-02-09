@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import Messages from './messages.vue'
+import { Messages } from './messages'
 export default {
   name: 'UiSystemPopup',
 

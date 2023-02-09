@@ -422,19 +422,6 @@ interface ITitreTypeEtapeType {
   etapeType?: IEtapeType | null
 }
 
-interface ITitreTypeDemarcheType {
-  titreTypeId: string
-  demarcheTypeId: string
-  dureeMax?: number | null
-  acceptationImplicite?: boolean | null
-  delaiImplicite?: number | null
-  delaiRecours?: number | null
-  legalRef?: string | null
-  legaleLien?: string | null
-  dateDebut?: string | null
-  dateFin?: string | null
-}
-
 interface IActiviteTypeTitreType {
   titreTypeId: string
   titreType?: ITitreType | null
@@ -716,7 +703,6 @@ interface ITitreType {
   typeId: TitreTypeTypeId
   archive?: boolean | null
   type: ITitreTypeType
-  demarchesTypes?: IDemarcheType[] | null
   // FIXME à bouger dans le code static (pas obligatoirement dans le common, car c’est utilisé que par le back)
   contenuIds?: IContenuId[] | null
   sections?: ISection[] | null
@@ -829,7 +815,6 @@ export {
   IGeoJson,
   IGeoJsonProperties,
   IGeometry,
-  ITitreTypeDemarcheType,
   IActiviteTypeTitreType,
   IEtapeTypeJustificatifType,
   IAdministrationTitreTypeTitreStatut,
