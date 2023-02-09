@@ -69,15 +69,26 @@
       @toggle="etapeToggle(etape.id)"
     />
 
-
-    <DemarcheEditPopup v-if="open" 
-          :close="() => open = !open" 
-          :demarche="myDemarche"
-          :apiClient="apiClient"
-          :titreTypeId="titreTypeId"
-          :titreNom="titreNom"
-          :tabId="tabId"
+    <DemarcheEditPopup
+      v-if="openEditPopup"
+      :close="() => (openEditPopup = !openEditPopup)"
+      :demarche="myDemarche"
+      :apiClient="apiClient"
+      :titreTypeId="titreTypeId"
+      :titreNom="titreNom"
+      :tabId="tabId"
     />
+    <DemarcheRemovePopup
+      v-if="openRemovePopup"
+      :close="() => (openRemovePopup = !openRemovePopup)"
+      :demarcheId="demarche.id"
+      :apiClient="apiClient"
+      :titreTypeId="titreTypeId"
+      :titreNom="titreNom"
+      :titreId="titreId"
+      :demarcheTypeId="demarche.type.id"
+    />
+
     <div class="line width-full my-xxl" />
   </div>
 </template>
@@ -86,18 +97,18 @@
 import { Statut } from '../_common/statut'
 import TitreEtape from '../etape/preview.vue'
 import { DemarcheEditPopup } from './demarche-edit-popup'
-import RemovePopup from './demarche-remove-popup.vue'
+import { DemarcheRemovePopup } from './demarche-remove-popup'
 import { Icon } from '@/components/_ui/icon'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
-import { demarcheApiClient } from "./demarche-api-client";
-
+import { demarcheApiClient } from './demarche-api-client'
 
 export default {
   components: {
     Icon,
     Statut,
     TitreEtape,
-    DemarcheEditPopup
+    DemarcheEditPopup,
+    DemarcheRemovePopup
   },
 
   props: {
@@ -110,15 +121,14 @@ export default {
 
   emits: ['titre-event-track'],
 
-data: () => {
-  return {open: false}
-},
+  data: () => {
+    return { openEditPopup: false, openRemovePopup: false }
+  },
   computed: {
     apiClient() {
       return demarcheApiClient
     },
     myDemarche() {
-
       const demarche = {}
 
       demarche.description = this.demarche.description
@@ -150,7 +160,7 @@ data: () => {
 
   methods: {
     editPopupOpen() {
-      this.open = !this.open
+      this.openEditPopup = !this.openEditPopup
       this.eventTrack({
         categorie: 'titre-sections',
         action: `${this.eventPrefix}_editer`,
@@ -159,16 +169,7 @@ data: () => {
     },
 
     removePopupOpen() {
-      this.$store.commit('popupOpen', {
-        component: RemovePopup,
-        props: {
-          id: this.demarche.id,
-          typeNom: this.demarche.type.nom,
-          titreNom: this.titreNom,
-          titreTypeId: this.titreTypeId
-        }
-      })
-
+      this.openRemovePopup = !this.openRemovePopup
       this.eventTrack({
         categorie: 'titre-sections',
         action: `${this.eventPrefix}_supprimer`,

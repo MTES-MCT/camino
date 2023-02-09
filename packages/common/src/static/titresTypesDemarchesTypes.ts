@@ -218,13 +218,6 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
   ]
 } as const
 
-
-
-//  FIXME Tests
 export const getDemarchesTypesByTitreType = (titreTypeId: TitreTypeId): DemarcheType[] => {
-
-  return TITRES_TYPES_DEMARCHES_TYPES[titreTypeId]
-  .map(demarcheTypeId => DemarchesTypes[demarcheTypeId])
-  .sort((a, b) => a.ordre - b.ordre)
-  
+  return TITRES_TYPES_DEMARCHES_TYPES[titreTypeId].map(demarcheTypeId => DemarchesTypes[demarcheTypeId]).sort((a, b) => a.ordre - b.ordre)
 }

@@ -6,7 +6,6 @@ import router from '../router'
 import { urlQueryUpdate } from '../utils/url'
 
 import titre from './titre'
-import titreDemarche from './titre-demarche'
 import titreCreation from './titre-creation'
 import titreEtape from './titre-etape'
 import titreEtapeEdition from './titre-etape-edition'
@@ -27,7 +26,6 @@ import journaux from './journaux'
 
 const modules = {
   titre,
-  titreDemarche,
   titreCreation,
   titreEtape,
   titreEtapeEdition,

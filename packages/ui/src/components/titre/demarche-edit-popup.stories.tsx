@@ -8,7 +8,6 @@ const meta: Meta = {
 }
 export default meta
 
-
 const create = action('create')
 const update = action('update')
 const close = action('close')
@@ -17,15 +16,42 @@ const reload = action('reload')
 const displayMessage = action('displayMessage')
 
 const apiClient: Props['apiClient'] = {
-  createDemarche: (demarche) => {
+  createDemarche: demarche => {
     create(demarche)
     return new Promise(resolve => setTimeout(() => resolve(), 1000))
   },
-  updateDemarche: (demarche) => {
+  updateDemarche: demarche => {
     update(demarche)
     return new Promise(resolve => setTimeout(() => resolve(), 1000))
   }
 }
 
-export const Create: Story = () => <PureDemarcheEditPopup reload={reload} displayMessage={displayMessage} apiClient={apiClient} close={close} demarche={{titreId:'titreId'}} titreTypeId={'apc'} titreNom="Nom du titre" tabId="demarches" />
-export const Edit: Story = () => <PureDemarcheEditPopup reload={reload} displayMessage={displayMessage} apiClient={apiClient} close={close} demarche={{titreId:'titreId', id: 'demarcheId', typeId: 'amo', description: 'description'}} titreTypeId={'apc'} titreNom="Nom du titre" tabId="demarches" />
+export const Create: Story = () => (
+  <PureDemarcheEditPopup
+    reload={reload}
+    displayMessage={displayMessage}
+    apiClient={apiClient}
+    close={close}
+    demarche={{ titreId: 'titreId' }}
+    titreTypeId={'apc'}
+    titreNom="Nom du titre"
+    tabId="demarches"
+  />
+)
+export const Edit: Story = () => (
+  <PureDemarcheEditPopup
+    reload={reload}
+    displayMessage={displayMessage}
+    apiClient={apiClient}
+    close={close}
+    demarche={{
+      titreId: 'titreId',
+      id: 'demarcheId',
+      typeId: 'amo',
+      description: 'description'
+    }}
+    titreTypeId={'apc'}
+    titreNom="Nom du titre"
+    tabId="demarches"
+  />
+)

@@ -3,42 +3,53 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import gql from 'graphql-tag'
 
 export interface InputDemarcheCreation {
-  titreId: string, typeId: DemarcheTypeId, description: string
+  titreId: string
+  typeId: DemarcheTypeId
+  description: string
 }
-
 
 export type InputDemarcheUpdation = InputDemarcheCreation & {
   id: string
 }
 
-
 export interface DemarcheApiClient {
   createDemarche: (demarche: InputDemarcheCreation) => Promise<void>
   updateDemarche: (demarche: InputDemarcheUpdation) => Promise<void>
+  deleteDemarche: (demarcheId: string) => Promise<void>
 }
 
 export const demarcheApiClient: DemarcheApiClient = {
-
   createDemarche: async (demarche): Promise<void> => {
     await apiGraphQLFetch(gql`
-    mutation DemarcheCreer($demarche: InputDemarcheCreation!) {
-      demarcheCreer(demarche: $demarche) {
-        slug
+      mutation DemarcheCreer($demarche: InputDemarcheCreation!) {
+        demarcheCreer(demarche: $demarche) {
+          slug
+        }
       }
-    }`)({
-          demarche
-        })
+    `)({
+      demarche
+    })
   },
 
   updateDemarche: async (demarche): Promise<void> => {
     await apiGraphQLFetch(gql`
-    mutation DemarcheModifier($demarche: InputDemarcheModification!) {
-      demarcheModifier(demarche: $demarche) {
-        slug
+      mutation DemarcheModifier($demarche: InputDemarcheModification!) {
+        demarcheModifier(demarche: $demarche) {
+          slug
+        }
       }
-    }
-  `)({
-          demarche
-        })
-  } 
+    `)({
+      demarche
+    })
+  },
+
+  deleteDemarche: async (demarcheId: string): Promise<void> => {
+    await apiGraphQLFetch(gql`
+      mutation DemarcheSupprimer($id: ID!) {
+        demarcheSupprimer(id: $id) {
+          slug
+        }
+      }
+    `)({ id: demarcheId })
+  }
 }

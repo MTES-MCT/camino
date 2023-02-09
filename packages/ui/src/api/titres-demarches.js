@@ -72,17 +72,4 @@ const demarches = apiGraphQLFetch(
   `
 )
 
-
-const demarcheSupprimer = apiGraphQLFetch(gql`
-  mutation DemarcheSupprimer($id: ID!) {
-    demarcheSupprimer(id: $id) {
-      slug
-    }
-  }
-`)
-
-export {
-  demarchesMetas,
-  demarches,
-  demarcheSupprimer
-}
+export { demarchesMetas, demarches }

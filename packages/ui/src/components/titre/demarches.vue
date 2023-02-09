@@ -24,8 +24,9 @@
       :tabId="tabId"
       @event-track="eventTrack"
     />
-    <DemarcheEditPopup v-if="open" 
-      :close="() => open = !open" 
+    <DemarcheEditPopup
+      v-if="open"
+      :close="() => (open = !open)"
       :demarche="myDemarche"
       :apiClient="apiClient"
       :titreTypeId="titre.typeId"
@@ -39,7 +40,7 @@
 import TitreDemarche from './demarche.vue'
 import { DemarcheEditPopup } from './demarche-edit-popup'
 import { Icon } from '@/components/_ui/icon'
-import { demarcheApiClient } from "./demarche-api-client";
+import { demarcheApiClient } from './demarche-api-client'
 
 import {
   canCreateDemarche,
@@ -61,7 +62,7 @@ export default {
 
   emits: ['event-track'],
   data: () => {
-    return {open: false}
+    return { open: false }
   },
   computed: {
     titre() {
@@ -71,7 +72,6 @@ export default {
       return demarcheApiClient
     },
     myDemarche() {
-
       const demarche = {}
 
       demarche.titreId = this.titre.id
@@ -108,7 +108,6 @@ export default {
         action: `titre-${this.tabId}_ajouter`,
         nom: this.$route.params.id
       })
-
     },
 
     eventTrack(event) {

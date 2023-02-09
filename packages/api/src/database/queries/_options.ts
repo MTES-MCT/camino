@@ -111,9 +111,7 @@ const titresEtapes = {
   }
 }
 
-const titresTypesRelateFalse = [
-  'type'
-]
+const titresTypesRelateFalse = ['type']
 
 const titresDemarchesRelateTrue = [
   'type',

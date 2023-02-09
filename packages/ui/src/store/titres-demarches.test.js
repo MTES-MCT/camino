@@ -16,13 +16,11 @@ describe('liste des demarches', () => {
   beforeEach(() => {
     titresDemarches.state = {
       metas: {
-        types: [],
         etapesTypes: [],
         titresTypes: [],
         titresStatuts: []
       },
       definitions: [
-        { id: 'typesIds', type: 'strings', values: [] },
         { id: 'statutsIds', type: 'strings', values: [] },
         { id: 'etapesInclues', type: 'objects', values: [] },
         { id: 'etapesExclues', type: 'objects', values: [] },
@@ -41,7 +39,6 @@ describe('liste des demarches', () => {
   })
 
   test('enregistre les métas', () => {
-
     const statuts = [
       { id: 'val', nom: 'valide', couleur: 'success' },
       { id: 'ech', nom: 'échu', couleur: 'neutral' }
@@ -66,7 +63,6 @@ describe('liste des demarches', () => {
     })
 
     expect(store.state.titresDemarches.definitions).toEqual([
-      { values: ['oct'], id: 'typesIds', type: 'strings' },
       { values: [], id: 'statutsIds', type: 'strings' },
       { values: ['dpu'], id: 'etapesInclues', type: 'objects' },
       { values: ['dpu'], id: 'etapesExclues', type: 'objects' },

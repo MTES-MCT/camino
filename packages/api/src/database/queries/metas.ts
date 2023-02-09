@@ -22,7 +22,6 @@ import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../models/ti
 import { sortedDevises } from 'camino-common/src/static/devise.js'
 import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
 import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
-import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
 
 const titresTypesTypesGet = async () =>
   TitresTypesTypes.query().orderBy('ordre')

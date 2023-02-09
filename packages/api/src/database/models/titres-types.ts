@@ -3,7 +3,6 @@ import { Model, Modifiers } from 'objection'
 import { ITitreType } from '../../types.js'
 
 import Domaines from './domaines.js'
-import DemarchesTypes from './demarches-types.js'
 import TitresTypesTypes from './titres-types-types.js'
 
 interface TitresTypes extends ITitreType {}
@@ -42,7 +41,6 @@ class TitresTypes extends Model {
         to: 'domaines.id'
       }
     }
-
   })
 
   public static modifiers: Modifiers = {
