@@ -28,8 +28,8 @@ import titreDemarcheUpdateTask from '../../../business/titre-demarche-update.js'
 import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate.js'
 import { userGet } from '../../../database/queries/utilisateurs.js'
 import {
-  DemarchesTypes,
-  isDemarcheTypeId
+  isDemarcheTypeId,
+isTravaux
 } from 'camino-common/src/static/demarchesTypes.js'
 import {
   canCreateTravaux,
@@ -196,21 +196,21 @@ const demarcheCreer = async (
     if (!isDemarcheTypeId(demarche.typeId)) {
       throw new Error('droits insuffisants')
     }
-    const titreDemarcheType = DemarchesTypes[demarche.typeId]
     if (titre.administrationsLocales === undefined) {
       throw new Error('les administrations locales doivent être chargées')
     }
     if (!titre.titreStatutId) {
       throw new Error('le statut du titre est obligatoire')
     }
+
     if (
-      titreDemarcheType.travaux &&
+      isTravaux(demarche.typeId) &&
       !canCreateTravaux(user, titre.typeId, titre.administrationsLocales ?? [])
     ) {
       throw new Error('droits insuffisants')
     }
     if (
-      !titreDemarcheType.travaux &&
+      !isTravaux(demarche.typeId) &&
       !canCreateDemarche(
         user,
         titre.typeId,

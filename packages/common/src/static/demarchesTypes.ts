@@ -1,15 +1,27 @@
 import { Definition } from '../definition.js'
 
 export interface DemarcheType<T = DemarcheTypeId> extends Definition<T> {
-  titulaires?: boolean
-  renouvelable?: boolean
-  travaux?: boolean
-  substances?: boolean
-  points?: boolean
-  duree?: boolean
-  exception?: boolean
-  auto?: boolean
+  titulaires: boolean
+  renouvelable: boolean
+  travaux: boolean
+  substances: boolean
+  points: boolean
+  duree: boolean
+  exception: boolean
+  auto: boolean
 }
+
+const defaultOptions: {[key in keyof Omit<DemarcheType<DemarcheTypeId>, keyof Definition<DemarcheTypeId>>]: false} = {
+  titulaires: false,
+  renouvelable: false,
+  travaux: false,
+  substances: false,
+  points: false,
+  duree: false,
+  exception: false,
+  auto: false
+}
+  
 export const DEMARCHES_TYPES_IDS = {
   Amodiation: 'amo',
   AutorisationDOuvertureDeTravaux: 'aom',
@@ -42,6 +54,7 @@ export type DemarcheTypeId = typeof DEMARCHES_TYPES_IDS[keyof typeof DEMARCHES_T
 
 export const DemarchesTypes = {
   amo: {
+    ...defaultOptions,
     id: 'amo',
     nom: 'amodiation',
     description:
@@ -51,6 +64,7 @@ export const DemarchesTypes = {
     renouvelable: true
   },
   aom: {
+    ...defaultOptions,
     id: 'aom',
     nom: "Autorisation d'ouverture de travaux",
     description: "Autorisation d'ouverture de travaux",
@@ -58,6 +72,7 @@ export const DemarchesTypes = {
     travaux: true
   },
   ces: {
+    ...defaultOptions,
     id: 'ces',
     nom: 'cession',
     description:
@@ -66,6 +81,7 @@ export const DemarchesTypes = {
     titulaires: true
   },
   con: {
+    ...defaultOptions,
     id: 'con',
     nom: 'conversion',
     description:
@@ -74,6 +90,7 @@ export const DemarchesTypes = {
     substances: true
   },
   dam: {
+    ...defaultOptions,
     id: 'dam',
     nom: "Déclaration d'arrêt définitif des travaux",
     description: "Déclaration d'arrêt définitif des travaux",
@@ -81,6 +98,7 @@ export const DemarchesTypes = {
     travaux: true
   },
   dec: {
+    ...defaultOptions,
     id: 'dec',
     nom: 'déchéance',
     description:
@@ -89,6 +107,7 @@ export const DemarchesTypes = {
     titulaires: true
   },
   dep: {
+    ...defaultOptions,
     id: 'dep',
     nom: 'déplacement de périmètre',
     description:
@@ -98,6 +117,7 @@ export const DemarchesTypes = {
     renouvelable: true
   },
   dot: {
+    ...defaultOptions,
     id: 'dot',
     nom: "Déclaration d'ouverture de travaux",
     description: "Déclaration d'ouverture de travaux",
@@ -105,6 +125,7 @@ export const DemarchesTypes = {
     travaux: true
   },
   exp: {
+    ...defaultOptions,
     id: 'exp',
     nom: 'extension de périmètre',
     description: "Démarche appliquée aux permis exclusifs de recherches, permis d'exploitation de minéraux et métaux et concessions pour étendre leurs périmètres.",
@@ -114,6 +135,7 @@ export const DemarchesTypes = {
     renouvelable: true
   },
   exs: {
+    ...defaultOptions,
     id: 'exs',
     nom: 'extension de substance',
     description:
@@ -124,6 +146,7 @@ export const DemarchesTypes = {
     renouvelable: true
   },
   fus: {
+    ...defaultOptions,
     id: 'fus',
     nom: 'fusion',
     description:
@@ -135,6 +158,7 @@ export const DemarchesTypes = {
     renouvelable: true
   },
   mut: {
+    ...defaultOptions,
     id: 'mut',
     nom: 'mutation',
     description:
@@ -146,6 +170,7 @@ export const DemarchesTypes = {
     renouvelable: true
   },
   oct: {
+    ...defaultOptions,
     id: 'oct',
     nom: 'octroi',
     description: 'Démarche à l’initiative d’une personne physique ou morale en vue de l’obtention d’une autorisation ou d’un titre minier pour une première période de validité définie.',
@@ -156,6 +181,7 @@ export const DemarchesTypes = {
     titulaires: true
   },
   pr1: {
+    ...defaultOptions,
     id: 'pr1',
     nom: 'prolongation 1',
     description:
@@ -165,6 +191,7 @@ export const DemarchesTypes = {
     points: true
   },
   pr2: {
+    ...defaultOptions,
     id: 'pr2',
     nom: 'prolongation 2',
     description:
@@ -174,6 +201,7 @@ export const DemarchesTypes = {
     points: true
   },
   pre: {
+    ...defaultOptions,
     id: 'pre',
     nom: 'prolongation exceptionnelle',
     description:
@@ -183,6 +211,7 @@ export const DemarchesTypes = {
     exception: true
   },
   pro: {
+    ...defaultOptions,
     id: 'pro',
     nom: 'prolongation',
     description:
@@ -193,6 +222,7 @@ export const DemarchesTypes = {
     renouvelable: true
   },
   prr: {
+    ...defaultOptions,
     id: 'prr',
     nom: 'prorogation',
     description:
@@ -203,6 +233,7 @@ export const DemarchesTypes = {
     renouvelable: true
   },
   ren: {
+    ...defaultOptions,
     id: 'ren',
     nom: 'renonciation',
     description:
@@ -214,6 +245,7 @@ export const DemarchesTypes = {
     renouvelable: true
   },
   res: {
+    ...defaultOptions,
     id: 'res',
     nom: "résiliation anticipée d'amodiation",
     description:
@@ -223,6 +255,7 @@ export const DemarchesTypes = {
     renouvelable: true
   },
   ret: {
+    ...defaultOptions,
     id: 'ret',
     nom: 'retrait',
     description:
@@ -231,6 +264,7 @@ export const DemarchesTypes = {
     duree: true
   },
   vct: {
+    ...defaultOptions,
     id: 'vct',
     nom: "demande de titre d'exploitation",
     description:
@@ -244,6 +278,7 @@ export const DemarchesTypes = {
     auto: true
   },
   vut: {
+    ...defaultOptions,
     id: 'vut',
     nom: 'mutation partielle',
     description:
@@ -283,3 +318,7 @@ export const isDemarcheTypeWithPhase = (demarcheTypeId: DemarcheTypeId): boolean
 }
 
 export const sortedDemarchesTypes = Object.values(DemarchesTypes).sort((a, b) => a.ordre - b.ordre)
+
+export const isTravaux = (demarcheTypeId: DemarcheTypeId): boolean => {
+  return DemarchesTypes[demarcheTypeId].travaux
+}

@@ -1,5 +1,5 @@
 // valide la date et la position de l'étape en fonction des autres étapes
-import {
+import type {
   ITitre,
   ITitreEtape,
   IDemarcheType,
@@ -19,6 +19,7 @@ import { objectClone } from '../../tools/index.js'
 import { toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { titreEtapeTypeAndStatusValidate } from './titre-etape-type-and-status-validate.js'
 import { contenuFormat } from '../../api/rest/titre-contenu.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 
 const titreDemarcheEtapesBuild = (
   titreEtape: ITitreEtape,
@@ -55,7 +56,7 @@ const titreDemarcheEtapesBuild = (
 // vérifie que  la démarche est valide par rapport aux définitions des types d'étape
 export const titreDemarcheEtatValidate = (
   demarcheDefinitionRestrictions: IDemarcheDefinitionRestrictions,
-  demarcheType: IDemarcheType,
+  demarcheTypeId: DemarcheTypeId,
   titreDemarche: ITitreDemarche,
   titreEtapes: ITitreEtape[],
   titre: ITitre
@@ -67,7 +68,7 @@ export const titreDemarcheEtatValidate = (
   titreEtapes = titreEtapesSortAscByDate(
     titreEtapes,
     titreDemarche.id,
-    demarcheType,
+    demarcheTypeId,
     titre.typeId
   )
 
@@ -217,7 +218,7 @@ export const titreDemarcheUpdatedEtatValidate = (
     titreDemarchesErrors.push(
       ...titreDemarcheEtatValidate(
         demarcheDefinition.restrictions,
-        demarcheType,
+        demarcheType.id,
         titreDemarche,
         titreDemarcheEtapesNew,
         titre
