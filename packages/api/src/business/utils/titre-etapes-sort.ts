@@ -127,21 +127,14 @@ export const titreEtapesSortAscByDate = (
 
       // on utilise l'ordre du type d'étape
 
-      if (!demarcheType?.etapesTypes?.length) {
+      if (!demarcheType) {
         return a.ordre! - b.ordre!
       }
 
-      const aType = demarcheType.etapesTypes.find(
-        et => et.id === a.typeId && et.titreTypeId === titreTypeId
-      )
+      const aIndex: number = getOrdreTDE(titreTypeId, demarcheType.id, a.typeId)
+      const bIndex: number = getOrdreTDE(titreTypeId, demarcheType.id, b.typeId)
 
-      const bType = demarcheType.etapesTypes.find(
-        et => et.id === b.typeId && et.titreTypeId === titreTypeId
-      )
-
-      if (aType && bType) return aType.ordre - bType.ordre
-
-      return a.ordre! - b.ordre!
+      return aIndex - bIndex
     })
   }
 }

@@ -1,4 +1,4 @@
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../demarchesTypes.js'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId, TravauxIds } from '../demarchesTypes.js'
 import { ETAPES_TYPES, EtapeTypeId } from '../etapesTypes.js'
 import { TITRES_TYPES_IDS, TitreTypeId } from '../titresTypes.js'
 import { TITRES_TYPES_DEMARCHES_TYPES } from '../titresTypesDemarchesTypes.js'
@@ -81,7 +81,7 @@ const travaux = {
     ETAPES_TYPES.arreteDeSecondDonnerActe,
     ETAPES_TYPES.porterAConnaissance
   ]
-} as const
+} as const satisfies {[key in TravauxIds]: readonly EtapeTypeId[]}
 
 export const TDE = {
   [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES]: {
@@ -3772,3 +3772,16 @@ export const TDE = {
     ]
   }
 } as const satisfies {[key in TitreTypeId]: {[other in typeof TITRES_TYPES_DEMARCHES_TYPES[key][number]]: readonly EtapeTypeId[]}}
+
+type TDEDemarchesSubObject = typeof TDE[keyof typeof TDE]
+
+const isDemarcheTypeFromTitreType = (demarches: TDEDemarchesSubObject, demarcheTypeId: DemarcheTypeId): demarcheTypeId is keyof TDEDemarchesSubObject => {
+  return Object.keys(demarches).findIndex(demarcheId => demarcheId === demarcheTypeId) !== -1
+}
+// FIXME tests
+export const getEtapesTDE = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId): readonly EtapeTypeId[] => {
+  if (isDemarcheTypeFromTitreType( TDE[titreTypeId], demarcheTypeId)) {
+    return TDE[titreTypeId][demarcheTypeId]
+  }
+  return []
+}

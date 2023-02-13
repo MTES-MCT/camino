@@ -40,9 +40,7 @@ export const DemarchesTypesIds = Object.values(DEMARCHES_TYPES_IDS)
 
 export type DemarcheTypeId = typeof DEMARCHES_TYPES_IDS[keyof typeof DEMARCHES_TYPES_IDS]
 
-export const DemarchesTypes: {
-  [key in DemarcheTypeId]: DemarcheType<key>
-} = {
+export const DemarchesTypes = {
   amo: {
     id: 'amo',
     nom: 'amodiation',
@@ -257,7 +255,11 @@ export const DemarchesTypes: {
     renouvelable: true,
     auto: true
   }
-} as const
+} as const satisfies { [key in DemarcheTypeId]: DemarcheType<key> }
+
+type FilterSettings<S extends typeof DemarchesTypes[keyof typeof DemarchesTypes] = typeof DemarchesTypes[keyof typeof DemarchesTypes]> = S extends { travaux: true } ? S["id"] : never
+
+export type TravauxIds = FilterSettings
 
 export const isDemarcheTypeId = (demarcheTypeId: string | undefined | null): demarcheTypeId is DemarcheTypeId => DemarchesTypesIds.includes(demarcheTypeId)
 
