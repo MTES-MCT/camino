@@ -11,7 +11,7 @@ export const REFERENCES_TYPES_IDS = {
   RNTM: 'rnt'
 } as const
 
-export type ReferenceTypeId = typeof REFERENCES_TYPES_IDS[keyof typeof REFERENCES_TYPES_IDS]
+export type ReferenceTypeId = (typeof REFERENCES_TYPES_IDS)[keyof typeof REFERENCES_TYPES_IDS]
 export type ReferenceType<T = ReferenceTypeId> = {
   id: T
   nom: string

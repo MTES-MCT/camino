@@ -81,10 +81,15 @@ export const tags = {
   }
 } as const
 
-export type Intervenant = keyof typeof tags['responsable']
+export type Intervenant = keyof (typeof tags)['responsable']
 
 export const intervenants = Object.keys(tags.responsable) as Array<
   keyof typeof tags.responsable
 >
 
-export type DBEtat = { [key in EtapeStatutKey]?: EtapeTypeEtapeStatut<EtapeTypeId, typeof ETAPES_STATUTS[key]> }
+export type DBEtat = {
+  [key in EtapeStatutKey]?: EtapeTypeEtapeStatut<
+    EtapeTypeId,
+    (typeof ETAPES_STATUTS)[key]
+  >
+}

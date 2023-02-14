@@ -5,6 +5,7 @@ import { TITRES_TYPES_DEMARCHES_TYPES } from '../titresTypesDemarchesTypes.js'
 
 const travaux = {
   [DEMARCHES_TYPES_IDS.AutorisationDOuvertureDeTravaux]: [
+    ETAPES_TYPES.demandeDautorisationDouvertureDeTravauxMiniers_AOTM_,
     ETAPES_TYPES.depotDeLaDemande_wdd,
     ETAPES_TYPES.demandeDeComplements_AOTMOuDOTM_,
     ETAPES_TYPES.receptionDeComplements_wrc,
@@ -30,14 +31,16 @@ const travaux = {
     ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs_wpa,
     ETAPES_TYPES.abandonDeLaDemande,
     ETAPES_TYPES.decisionDeLadministration_wdm,
-    ETAPES_TYPES.arreteDouvertureDesTravauxMiniers,
-    ETAPES_TYPES.demandeDautorisationDouvertureDeTravauxMiniers_AOTM_
+    ETAPES_TYPES.arreteDouvertureDesTravauxMiniers
   ],
   [DEMARCHES_TYPES_IDS.DeclarationDOuvertureDeTravaux]: [
+    ETAPES_TYPES.declarationDouvertureDeTravauxMiniers_DOTM_,
     ETAPES_TYPES.depotDeLaDemande_wdd,
     ETAPES_TYPES.demandeDeComplements_AOTMOuDOTM_,
     ETAPES_TYPES.receptionDeComplements_wrc,
+    ETAPES_TYPES.recevabilite,
     ETAPES_TYPES.avisDeReception,
+    ETAPES_TYPES.saisineDesServicesDeLEtat,
     ETAPES_TYPES.avisDunServiceAdministratifLocal_wal,
     ETAPES_TYPES.avisDeLaDirectionDepartementaleDesTerritoiresEtDeLaMerDDT_M_,
     ETAPES_TYPES.avisDeLautoriteMilitaire_wam,
@@ -45,19 +48,20 @@ const travaux = {
     ETAPES_TYPES.avisDeDirectionRegionaleDesAffairesCulturellesDRAC,
     ETAPES_TYPES.avisDuPrefetMaritime_wap,
     ETAPES_TYPES.avisDesAutresInstances,
+    ETAPES_TYPES.rapportDeLaDreal,
+    ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur,
     ETAPES_TYPES.avisDuDemandeurSurLesPrescriptionsProposees,
     ETAPES_TYPES.donneActeDeLaDeclaration_DOTM_,
-    ETAPES_TYPES.abandonDeLaDemande,
-    ETAPES_TYPES.declarationDouvertureDeTravauxMiniers_DOTM_,
-    ETAPES_TYPES.recevabilite,
-    ETAPES_TYPES.saisineDesServicesDeLEtat,
-    ETAPES_TYPES.rapportDeLaDreal,
-    ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur
+    ETAPES_TYPES.abandonDeLaDemande
   ],
   [DEMARCHES_TYPES_IDS.DeclarationDArretDefinitifDesTravaux]: [
+    ETAPES_TYPES.declarationDarretDefinitifDeTravaux_DADT_,
     ETAPES_TYPES.depotDeLaDemande_wdd,
     ETAPES_TYPES.demandeDeComplements_DADT_,
+    ETAPES_TYPES.receptionDeComplements_wrc,
+    ETAPES_TYPES.recevabilite,
     ETAPES_TYPES.avisDeReception,
+    ETAPES_TYPES.saisineDesServicesDeLEtat,
     ETAPES_TYPES.avisDunServiceAdministratifLocal_wal,
     ETAPES_TYPES.avisDeLaDirectionDepartementaleDesTerritoiresEtDeLaMerDDT_M_,
     ETAPES_TYPES.avisDeLautoriteMilitaire_wam,
@@ -65,23 +69,19 @@ const travaux = {
     ETAPES_TYPES.avisDeDirectionRegionaleDesAffairesCulturellesDRAC,
     ETAPES_TYPES.avisDuPrefetMaritime_wap,
     ETAPES_TYPES.avisDesAutresInstances,
-    ETAPES_TYPES.avisDuDemandeurSurLesPrescriptionsProposees,
-    ETAPES_TYPES.arreteDePrescriptionsComplementaires,
-    ETAPES_TYPES.memoireDeFinDeTravaux,
-    ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs_wpa,
-    ETAPES_TYPES.declarationDarretDefinitifDeTravaux_DADT_,
-    ETAPES_TYPES.receptionDeComplements_wrc,
-    ETAPES_TYPES.recevabilite,
-    ETAPES_TYPES.saisineDesServicesDeLEtat,
     ETAPES_TYPES.arretePrefectoralDeSursisAStatuer,
     ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur,
+    ETAPES_TYPES.avisDuDemandeurSurLesPrescriptionsProposees,
     ETAPES_TYPES.rapportDeLaDreal,
     ETAPES_TYPES.arretePrefectoralDePremierDonnerActe_DADT_,
+    ETAPES_TYPES.arreteDePrescriptionsComplementaires,
+    ETAPES_TYPES.memoireDeFinDeTravaux,
     ETAPES_TYPES.recolement,
     ETAPES_TYPES.arreteDeSecondDonnerActe,
+    ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs_wpa,
     ETAPES_TYPES.porterAConnaissance
   ]
-} as const satisfies {[key in TravauxIds]: readonly EtapeTypeId[]}
+} as const satisfies { [key in TravauxIds]: readonly EtapeTypeId[] }
 
 export const TDE = {
   [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES]: {
@@ -512,8 +512,8 @@ export const TDE = {
     [DEMARCHES_TYPES_IDS.Octroi]: [
       ETAPES_TYPES.demande,
       ETAPES_TYPES.depotDeLaDemande,
-      ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
       ETAPES_TYPES.decisionDuProprietaireDuSol,
+      ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
       ETAPES_TYPES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
       ETAPES_TYPES.modificationDeLaDemande,
       ETAPES_TYPES.desistementDuDemandeur,
@@ -1605,10 +1605,8 @@ export const TDE = {
       ETAPES_TYPES.classementSansSuite
     ]
   },
-  [TITRES_TYPES_IDS.INDETERMINE_METAUX]: { 
-    [DEMARCHES_TYPES_IDS.Octroi]: [ETAPES_TYPES.informationsHistoriquesIncompletes] },
-  [TITRES_TYPES_IDS.INDETERMINE_RADIOACTIF]: { 
-    [DEMARCHES_TYPES_IDS.Octroi]: [ETAPES_TYPES.informationsHistoriquesIncompletes] },
+  [TITRES_TYPES_IDS.INDETERMINE_METAUX]: { [DEMARCHES_TYPES_IDS.Octroi]: [ETAPES_TYPES.informationsHistoriquesIncompletes] },
+  [TITRES_TYPES_IDS.INDETERMINE_RADIOACTIF]: { [DEMARCHES_TYPES_IDS.Octroi]: [ETAPES_TYPES.informationsHistoriquesIncompletes] },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_CARRIERES_CARRIERES]: {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Amodiation]: [
@@ -3075,8 +3073,9 @@ export const TDE = {
       ETAPES_TYPES.classementSansSuite
     ]
   },
-  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_FOSSILES]: { 
-    [DEMARCHES_TYPES_IDS.Octroi]: [ETAPES_TYPES.publicationDeDecisionAuJORF] },
+  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_FOSSILES]: {
+    [DEMARCHES_TYPES_IDS.Octroi]: [ETAPES_TYPES.publicationDeDecisionAuJORF]
+  },
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_HYDROCARBURE]: {
     ...travaux,
     [DEMARCHES_TYPES_IDS.Amodiation]: [
@@ -3771,17 +3770,18 @@ export const TDE = {
       ETAPES_TYPES.classementSansSuite
     ]
   }
-} as const satisfies {[key in TitreTypeId]: {[other in typeof TITRES_TYPES_DEMARCHES_TYPES[key][number]]: readonly EtapeTypeId[]}}
+} as const satisfies { [key in TitreTypeId]: { [other in (typeof TITRES_TYPES_DEMARCHES_TYPES)[key][number]]: readonly EtapeTypeId[] } }
 
-type TDEDemarchesSubObject = typeof TDE[keyof typeof TDE]
+type TDEDemarchesSubObject = (typeof TDE)[keyof typeof TDE]
 
 const isDemarcheTypeFromTitreType = (demarches: TDEDemarchesSubObject, demarcheTypeId: DemarcheTypeId): demarcheTypeId is keyof TDEDemarchesSubObject => {
   return Object.keys(demarches).findIndex(demarcheId => demarcheId === demarcheTypeId) !== -1
 }
 // FIXME tests
 export const getEtapesTDE = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId): readonly EtapeTypeId[] => {
-  if (isDemarcheTypeFromTitreType( TDE[titreTypeId], demarcheTypeId)) {
+  if (isDemarcheTypeFromTitreType(TDE[titreTypeId], demarcheTypeId)) {
     return TDE[titreTypeId][demarcheTypeId]
   }
+
   return []
 }

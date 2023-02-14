@@ -23,7 +23,12 @@ export const titreEtapesSortAscByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(
 ): T[] => titreEtapes.slice().sort((a, b) => a.ordre! - b.ordre!)
 
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
-export const titreEtapesSortAscByDate = <T extends Pick<ITitreEtape, "ordre" | "typeId" | "statutId" | "date" | "contenu" | "titreDemarcheId">>(
+export const titreEtapesSortAscByDate = <
+  T extends Pick<
+    ITitreEtape,
+    'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'
+  >
+>(
   titreEtapes: T[],
   demarcheId: DemarcheId,
   demarcheTypeId: DemarcheTypeId,
@@ -34,11 +39,11 @@ export const titreEtapesSortAscByDate = <T extends Pick<ITitreEtape, "ordre" | "
     | undefined
 
   const demarcheDefinition = demarcheDefinitionFind(
-      titreTypeId,
-      demarcheTypeId,
-      titreEtapes,
-      demarcheId
-    )
+    titreTypeId,
+    demarcheTypeId,
+    titreEtapes,
+    demarcheId
+  )
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {
     const etapes = demarcheDefinition.machine.orderMachine(
       toMachineEtapes(titreEtapes)
@@ -128,13 +133,15 @@ export const titreEtapesSortAscByDate = <T extends Pick<ITitreEtape, "ordre" | "
       const aTypeIndex = etapes.findIndex(e => e === a.typeId)
       const bTypeIndex = etapes.findIndex(e => e === b.typeId)
 
-      if( aTypeIndex === -1 || bTypeIndex === -1){
-        console.warn(`${demarcheId}: les étapes ${a.typeId} ou ${b.typeId} ne devraient pas être possible pour une démarche de type ${demarcheTypeId}`)
+      if (aTypeIndex === -1 || bTypeIndex === -1) {
+        console.warn(
+          `${demarcheId}: les étapes ${a.typeId} ou ${b.typeId} ne devraient pas être possible pour une démarche de type ${demarcheTypeId}`
+        )
+
         return a.ordre! - b.ordre!
       }
 
       return aTypeIndex - bTypeIndex
-
     })
   }
 }

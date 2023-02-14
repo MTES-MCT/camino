@@ -1,4 +1,4 @@
-import { IUtilisateur } from '../types.js'
+import { DemarcheId, IUtilisateur } from '../types.js'
 import { titreDemarcheGet } from '../database/queries/titres-demarches.js'
 
 import { titresActivitesUpdate } from './processes/titres-activites-update.js'
@@ -25,7 +25,7 @@ import { titresEtapesDepotCreate } from './processes/titres-demarches-depot-crea
 
 const titreEtapeUpdate = async (
   titreEtapeId: string | null,
-  titreDemarcheId: string,
+  titreDemarcheId: DemarcheId,
   user: IUtilisateur
 ) => {
   try {
@@ -45,9 +45,10 @@ const titreEtapeUpdate = async (
       throw new Error(`la démarche ${titreDemarche} n'existe pas`)
     }
 
-    const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(user, [
+    const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(
+      user,
       titreDemarcheId
-    ])
+    )
 
     const titresEtapesHeritagePropsUpdated =
       await titresEtapesHeritagePropsUpdate(user, [titreDemarcheId])

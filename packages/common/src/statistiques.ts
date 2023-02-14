@@ -46,9 +46,9 @@ export const substancesFiscalesStats = [
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage
 ] as const
 
-export type SubstancesFiscalesStats = typeof substancesFiscalesStats[number]
+export type SubstancesFiscalesStats = (typeof substancesFiscalesStats)[number]
 export const titreTypeIdDelais = [TitresTypes.axm.id, TitresTypes.prm.id, TitresTypes.cxm.id] as const
-export type TitreTypeIdDelai = typeof titreTypeIdDelais[number]
+export type TitreTypeIdDelai = (typeof titreTypeIdDelais)[number]
 
 export interface StatistiquesDGTM {
   depotEtInstructions: Record<CaminoAnnee, DepotEtInstructionStat>

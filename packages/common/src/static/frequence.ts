@@ -10,7 +10,7 @@ interface Definition<T> {
   periodes_nom: string
   values: readonly string[]
 }
-export type FrequenceId = typeof FREQUENCES_IDS[keyof typeof FREQUENCES_IDS]
+export type FrequenceId = (typeof FREQUENCES_IDS)[keyof typeof FREQUENCES_IDS]
 export const Frequences: { [key in FrequenceId]: Definition<key> } = {
   ann: {
     id: 'ann',

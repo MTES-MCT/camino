@@ -30,7 +30,7 @@ const vues = [
   { id: 'table', icon: 'list' }
 ] as const
 
-type VueId = typeof vues[number]['id']
+type VueId = (typeof vues)[number]['id']
 
 function AfficheData(
   initialized: boolean,

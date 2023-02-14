@@ -31,7 +31,7 @@ interface Props {
   titres: TitreWithPoint[]
 }
 
-type ZoneId = typeof zones[number]['id']
+type ZoneId = (typeof zones)[number]['id']
 export const CaminoTitresMap = defineComponent<Props>({
   props: ['titres'] as unknown as undefined,
   setup(props) {

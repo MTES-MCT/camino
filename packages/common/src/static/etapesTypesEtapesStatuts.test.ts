@@ -6,4 +6,3 @@ import { test, expect } from 'vitest'
 test('getEtapesStatuts', () => {
   expect(getEtapesStatuts(ETAPES_TYPES.abandonDeLaDemande)).toStrictEqual([EtapesStatuts.fai])
 })
-

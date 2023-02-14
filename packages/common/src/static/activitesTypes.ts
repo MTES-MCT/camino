@@ -14,7 +14,7 @@ export const ACTIVITES_TYPES_IDS = {
 
 export const ActivitesTypesIds = Object.values(ACTIVITES_TYPES_IDS)
 
-export type ActivitesTypesId = typeof ACTIVITES_TYPES_IDS[keyof typeof ACTIVITES_TYPES_IDS]
+export type ActivitesTypesId = (typeof ACTIVITES_TYPES_IDS)[keyof typeof ACTIVITES_TYPES_IDS]
 
 export type ActiviteType<T = ActivitesTypesId> = {
   id: T

@@ -20,7 +20,7 @@ export interface Pays<T = PaysId> {
   nom: string
 }
 
-export type PaysId = typeof PAYS_IDS[keyof typeof PAYS_IDS]
+export type PaysId = (typeof PAYS_IDS)[keyof typeof PAYS_IDS]
 
 export const PaysList: { [key in PaysId]: Pays<key> } = {
   BL: { id: 'BL', nom: "Collectivité d'outre-mer de Saint-Barthélemy" },

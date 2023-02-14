@@ -94,7 +94,7 @@ export const propsTitreEtapeIdKeys = [
   'substances',
   'surface'
 ] as const
-export type PropsTitreEtapeIdKeys = typeof propsTitreEtapeIdKeys[number]
+export type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
 
 type IPropId =
   | PropsTitreEtapeIdKeys
@@ -308,7 +308,7 @@ export const DOCUMENTS_REPERTOIRES = [
   'entreprises',
   'tmp'
 ] as const
-type IDocumentRepertoire = typeof DOCUMENTS_REPERTOIRES[number]
+type IDocumentRepertoire = (typeof DOCUMENTS_REPERTOIRES)[number]
 
 interface IDomaine {
   id: string

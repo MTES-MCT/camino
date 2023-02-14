@@ -7,7 +7,7 @@ export const ACTIVITES_STATUTS_IDS = {
   CLOTURE: 'fer'
 } as const
 
-export type ActivitesStatutId = typeof ACTIVITES_STATUTS_IDS[keyof typeof ACTIVITES_STATUTS_IDS]
+export type ActivitesStatutId = (typeof ACTIVITES_STATUTS_IDS)[keyof typeof ACTIVITES_STATUTS_IDS]
 export type ActivitesStatut<T = ActivitesStatutId> = {
   id: T
   nom: string

@@ -33,7 +33,7 @@ export interface GeoSysteme<T = GeoSystemeId> {
   definitionProj4: string // https://github.com/josueggh/proj4-list/blob/master/list.js
 }
 
-export type GeoSystemeId = typeof GEO_SYSTEME_IDS[keyof typeof GEO_SYSTEME_IDS]
+export type GeoSystemeId = (typeof GEO_SYSTEME_IDS)[keyof typeof GEO_SYSTEME_IDS]
 
 export const GeoSystemes: { [key in GeoSystemeId]: GeoSysteme<key> } = {
   '2154': {

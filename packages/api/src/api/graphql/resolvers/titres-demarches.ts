@@ -29,7 +29,7 @@ import { titreDemarcheUpdationValidate } from '../../../business/validations/tit
 import { userGet } from '../../../database/queries/utilisateurs.js'
 import {
   isDemarcheTypeId,
-isTravaux
+  isTravaux
 } from 'camino-common/src/static/demarchesTypes.js'
 import {
   canCreateTravaux,

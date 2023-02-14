@@ -169,7 +169,7 @@ export const ETAPES_TYPES = {
   transmissionDuProjetDePrescriptionsAuDemandeur: 'wtp'
 } as const
 
-export type EtapeTypeId = typeof ETAPES_TYPES[keyof typeof ETAPES_TYPES]
+export type EtapeTypeId = (typeof ETAPES_TYPES)[keyof typeof ETAPES_TYPES]
 export type EtapeTypeKey = keyof typeof ETAPES_TYPES
 
 export const etapesTypesIds = Object.values(ETAPES_TYPES)

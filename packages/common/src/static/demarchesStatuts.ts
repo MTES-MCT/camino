@@ -15,7 +15,7 @@ export const DemarchesStatutsIds = {
   Termine: 'ter'
 } as const
 
-export type DemarcheStatutId = typeof DemarchesStatutsIds[keyof typeof DemarchesStatutsIds]
+export type DemarcheStatutId = (typeof DemarchesStatutsIds)[keyof typeof DemarchesStatutsIds]
 
 export type DemarcheStatut<T = DemarcheStatutId> = Definition<T> & { couleur: Couleur }
 

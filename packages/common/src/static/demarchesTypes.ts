@@ -11,7 +11,7 @@ export interface DemarcheType<T = DemarcheTypeId> extends Definition<T> {
   auto: boolean
 }
 
-const defaultOptions: {[key in keyof Omit<DemarcheType<DemarcheTypeId>, keyof Definition<DemarcheTypeId>>]: false} = {
+const defaultOptions: { [key in keyof Omit<DemarcheType<DemarcheTypeId>, keyof Definition<DemarcheTypeId>>]: false } = {
   titulaires: false,
   renouvelable: false,
   travaux: false,
@@ -21,7 +21,7 @@ const defaultOptions: {[key in keyof Omit<DemarcheType<DemarcheTypeId>, keyof De
   exception: false,
   auto: false
 }
-  
+
 export const DEMARCHES_TYPES_IDS = {
   Amodiation: 'amo',
   AutorisationDOuvertureDeTravaux: 'aom',
@@ -50,7 +50,7 @@ export const DEMARCHES_TYPES_IDS = {
 
 export const DemarchesTypesIds = Object.values(DEMARCHES_TYPES_IDS)
 
-export type DemarcheTypeId = typeof DEMARCHES_TYPES_IDS[keyof typeof DEMARCHES_TYPES_IDS]
+export type DemarcheTypeId = (typeof DEMARCHES_TYPES_IDS)[keyof typeof DEMARCHES_TYPES_IDS]
 
 export const DemarchesTypes = {
   amo: {
@@ -292,7 +292,7 @@ export const DemarchesTypes = {
   }
 } as const satisfies { [key in DemarcheTypeId]: DemarcheType<key> }
 
-type FilterSettings<S extends typeof DemarchesTypes[keyof typeof DemarchesTypes] = typeof DemarchesTypes[keyof typeof DemarchesTypes]> = S extends { travaux: true } ? S["id"] : never
+type FilterSettings<S extends (typeof DemarchesTypes)[keyof typeof DemarchesTypes] = (typeof DemarchesTypes)[keyof typeof DemarchesTypes]> = S extends { travaux: true } ? S['id'] : never
 
 export type TravauxIds = FilterSettings
 

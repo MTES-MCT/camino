@@ -65,7 +65,7 @@ const sels = [
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage,
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage
 ] as const
-type Sels = typeof sels[number]
+type Sels = (typeof sels)[number]
 
 type StatistiquesMinerauxMetauxMetropoleInstantBuild = Pick<
   StatistiquesMinerauxMetauxMetropole,

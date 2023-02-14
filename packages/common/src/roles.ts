@@ -2,7 +2,7 @@ import { EntrepriseId } from './entreprise.js'
 import { AdministrationId } from './static/administrations.js'
 import { isNotNullNorUndefined } from './typescript-tools.js'
 export const ROLES = ['super', 'admin', 'editeur', 'lecteur', 'entreprise', 'bureau d’études', 'defaut'] as const
-export type Role = typeof ROLES[number]
+export type Role = (typeof ROLES)[number]
 type UserEntreprise = { role: 'entreprise'; administrationId: undefined; entreprises?: { id: EntrepriseId }[] | null }
 type UserBureaudEtudes = {
   role: 'bureau d’études'
