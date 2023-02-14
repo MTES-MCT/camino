@@ -27,7 +27,7 @@ export interface Region<T = RegionId> {
   paysId: PaysId
 }
 
-export type RegionId = typeof REGION_IDS[keyof typeof REGION_IDS]
+export type RegionId = (typeof REGION_IDS)[keyof typeof REGION_IDS]
 
 export const regionsIds = Object.values(REGION_IDS)
 

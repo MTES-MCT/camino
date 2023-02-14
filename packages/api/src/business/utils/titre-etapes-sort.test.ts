@@ -1,4 +1,4 @@
-import { IDemarcheType, IEtapeType, ITitreEtape } from '../../types.js'
+import { ITitreEtape } from '../../types.js'
 
 import {
   titreEtapesSortAscByDate,
@@ -7,6 +7,10 @@ import {
 } from './titre-etapes-sort.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { vi, describe, test, expect } from 'vitest'
+import { toCaminoDate } from 'camino-common/src/date.js'
+import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
+import { TITRES_TYPES_IDS } from 'camino-common/src/static/titresTypes.js'
+import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 
 const titreEtapesSortedDescResult = [
   { typeId: 'dpu', ordre: 2, date: '1988-03-11' },
@@ -20,12 +24,9 @@ const titreEtapesSortedAsc = [
 
 const titreEtapesSortedDesc = titreEtapesSortedAsc.slice().reverse()
 
-const etapesTypes = [
-  { id: 'dex', nom: 'dex', ordre: 100, titreTypeId: 'titre-type-id' },
-  { id: 'dpu', nom: 'dpu', ordre: 200, titreTypeId: 'titre-type-id' }
-] as IEtapeType[]
-
 console.error = vi.fn()
+console.warn = vi.fn()
+
 describe('trie les étapes', () => {
   test('des étapes organisées par ordre décroissant sont triées par ordre croissant', () => {
     expect(titreEtapesSortAscByOrdre(titreEtapesSortedDesc)).toMatchObject(
@@ -53,21 +54,46 @@ describe('trie les étapes', () => {
 
   test('des étapes organisées par date décroissante sont triées par date croissante', () => {
     expect(
-      titreEtapesSortAscByDate(titreEtapesSortedDesc, newDemarcheId())
+      titreEtapesSortAscByDate(
+        titreEtapesSortedDesc,
+        newDemarcheId(),
+        'oct',
+        'prh'
+      )
     ).toMatchObject(titreEtapesSortedAsc)
   })
 
   test('des étapes organisées par date croissante restent triées par date croissante', () => {
     expect(
-      titreEtapesSortAscByDate(titreEtapesSortedAsc, newDemarcheId())
+      titreEtapesSortAscByDate(
+        titreEtapesSortedAsc,
+        newDemarcheId(),
+        'oct',
+        'prh'
+      )
     ).toMatchObject(titreEtapesSortedAsc)
   })
 
   test('des étapes avec les mêmes dates organisées par ordre décroissant sont triées par ordre croissant', () => {
-    const titreEtapesMemesDatesOrdreDesc = [
-      { typeId: 'dpu', ordre: 2, date: '1988-03-06' },
-      { typeId: 'dex', ordre: 1, date: '1988-03-06' }
-    ] as ITitreEtape[]
+    const titreEtapesMemesDatesOrdreDesc: Pick<
+      ITitreEtape,
+      'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'
+    >[] = [
+      {
+        typeId: 'dex',
+        ordre: 2,
+        date: toCaminoDate('1988-03-06'),
+        titreDemarcheId: newDemarcheId(),
+        statutId: 'fai'
+      },
+      {
+        typeId: 'dpu',
+        ordre: 1,
+        date: toCaminoDate('1988-03-06'),
+        titreDemarcheId: newDemarcheId(),
+        statutId: 'fav'
+      }
+    ]
 
     const titreEtapesMemesDatesOrdreAscResult = titreEtapesMemesDatesOrdreDesc
       .slice()
@@ -77,89 +103,102 @@ describe('trie les étapes', () => {
       titreEtapesSortAscByDate(
         titreEtapesMemesDatesOrdreDesc,
         newDemarcheId(),
-        null,
+        'oct',
         'arm'
       )
     ).toMatchObject(titreEtapesMemesDatesOrdreAscResult)
   })
 
   test('des étapes avec les mêmes dates sont triées par ordre de type croissant', () => {
-    const titreEtapesMemesDatesOrdreEtapesTypesDesc = [
-      { typeId: 'dpu', ordre: 2, date: '1988-03-06' },
-      { typeId: 'dex', ordre: 2, date: '1988-03-06' },
-      { typeId: 'xxx', ordre: 2, date: '1988-03-06' }
-    ] as ITitreEtape[]
+    const titreDemarcheId = newDemarcheId('1')
+    const titreEtapesMemesDatesOrdreEtapesTypesDesc: Pick<
+      ITitreEtape,
+      'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'
+    >[] = [
+      {
+        typeId: ETAPES_TYPES.initiationDeLaDemarcheDeRetrait,
+        ordre: 2,
+        date: toCaminoDate('1988-03-06'),
+        titreDemarcheId,
+        statutId: 'fav'
+      },
+      {
+        typeId: ETAPES_TYPES.classementSansSuite,
+        ordre: 2,
+        date: toCaminoDate('1988-03-06'),
+        titreDemarcheId,
+        statutId: 'fav'
+      },
+      {
+        typeId: ETAPES_TYPES.decisionAdministrative,
+        ordre: 2,
+        date: toCaminoDate('1988-03-06'),
+        titreDemarcheId,
+        statutId: 'fav'
+      }
+    ]
     expect(
       titreEtapesSortAscByDate(
         titreEtapesMemesDatesOrdreEtapesTypesDesc,
-        newDemarcheId(),
-        {
-          id: 'amo',
-          etapesTypes
-        } as IDemarcheType,
-        'arm'
+        titreDemarcheId,
+        DEMARCHES_TYPES_IDS.Retrait,
+        TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX
       )
     ).toMatchObject([
-      { typeId: 'dpu', ordre: 2, date: '1988-03-06' },
-      { typeId: 'dex', ordre: 2, date: '1988-03-06' },
-      { typeId: 'xxx', ordre: 2, date: '1988-03-06' }
+      {
+        typeId: ETAPES_TYPES.initiationDeLaDemarcheDeRetrait,
+        ordre: 2,
+        date: '1988-03-06',
+        statutId: 'fav',
+        titreDemarcheId
+      },
+      {
+        typeId: ETAPES_TYPES.decisionAdministrative,
+        ordre: 2,
+        date: '1988-03-06',
+        statutId: 'fav',
+        titreDemarcheId
+      },
+      {
+        typeId: ETAPES_TYPES.classementSansSuite,
+        ordre: 2,
+        date: '1988-03-06',
+        statutId: 'fav',
+        titreDemarcheId
+      }
     ])
   })
 
-  test('des étapes avec les mêmes dates sont triées par ordre de type croissant', () => {
-    const etapes = [
+  test('tri selon l’arbre si les étapes ont la même date', () => {
+    const etapes: Pick<
+      ITitreEtape,
+      'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'
+    >[] = [
       {
-        typeId: 'dpu',
-        ordre: 1,
-        date: '1988-03-06'
+        typeId: 'pfd',
+        date: toCaminoDate('2020-01-01'),
+        statutId: 'fai',
+        titreDemarcheId: newDemarcheId()
       },
       {
-        typeId: 'dex',
-        ordre: 2,
-        date: '1988-03-06'
+        typeId: 'mfr',
+        date: toCaminoDate('2020-01-01'),
+        statutId: 'fai',
+        titreDemarcheId: newDemarcheId()
+      },
+      {
+        typeId: 'mdp',
+        date: toCaminoDate('2020-01-01'),
+        statutId: 'fai',
+        titreDemarcheId: newDemarcheId()
       }
-    ] as ITitreEtape[]
-
-    expect(
-      titreEtapesSortAscByDate(etapes, newDemarcheId(), {
-        id: 'amo',
-        etapesTypes: [
-          { id: 'dex', nom: 'dex', ordre: 100 },
-          { id: 'dpu', nom: 'dpu', ordre: 100 }
-        ] as IEtapeType[]
-      } as IDemarcheType)
-    ).toMatchObject(etapes)
-  })
-
-  test('des étapes avec les mêmes dates sont triées par ordre croissant', () => {
-    const titreEtapesMemesDatesMemeOrdreDesc = [
-      { typeId: 'dex', ordre: 2, date: '1988-03-06' },
-      { typeId: 'dex', ordre: 1, date: '1988-03-06' }
-    ] as ITitreEtape[]
-
-    expect(
-      titreEtapesSortAscByDate(
-        titreEtapesMemesDatesMemeOrdreDesc,
-        newDemarcheId(),
-        {
-          etapesTypes
-        } as IDemarcheType
-      )
-    ).toMatchObject(titreEtapesMemesDatesMemeOrdreDesc.slice().reverse())
-  })
-
-  test('tri selon l’arbre si les étapes ont la même date', () => {
-    const etapes = [
-      { typeId: 'pfd', date: '2020-01-01', statutId: 'fai' },
-      { typeId: 'mfr', date: '2020-01-01', statutId: 'fai' },
-      { typeId: 'mdp', date: '2020-01-01', statutId: 'fai' }
-    ] as ITitreEtape[]
+    ]
 
     const result = titreEtapesSortAscByDate(
       etapes,
       newDemarcheId(),
-      { id: 'oct' } as IDemarcheType,
-      'arm'
+      DEMARCHES_TYPES_IDS.Octroi,
+      TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
     )
     expect(result[0].typeId).toEqual('pfd')
     expect(result[1].typeId).toEqual('mfr')
@@ -167,41 +206,39 @@ describe('trie les étapes', () => {
   })
 
   test("retourne une erreur si le type d'étape est absent dans la définition", () => {
-    const etapes = [
-      { typeId: 'mcr', date: '2020-01-01', statutId: 'fai' },
-      { typeId: 'bof', date: '2020-01-01', statutId: 'fai' },
-      { typeId: 'vfd', date: '2020-01-01', statutId: 'fai' }
-    ] as ITitreEtape[]
+    const etapes: Pick<
+      ITitreEtape,
+      'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'
+    >[] = [
+      {
+        typeId: 'mcr',
+        date: toCaminoDate('2020-01-01'),
+        statutId: 'fai',
+        titreDemarcheId: newDemarcheId()
+      },
+      {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        typeId: 'bof',
+        date: toCaminoDate('2020-01-01'),
+        statutId: 'fai',
+        titreDemarcheId: newDemarcheId()
+      },
+      {
+        typeId: 'vfd',
+        date: toCaminoDate('2020-01-01'),
+        statutId: 'fai',
+        titreDemarcheId: newDemarcheId()
+      }
+    ]
 
     expect(() =>
       titreEtapesSortAscByDate(
         etapes,
         newDemarcheId(),
-        { id: 'oct' } as IDemarcheType,
-        'arm'
+        DEMARCHES_TYPES_IDS.Octroi,
+        TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX
       )
     ).toThrowErrorMatchingInlineSnapshot(`"l'état bof est inconnu"`)
-  })
-
-  test('sur un otroi d’ARM la rcm est après la mcp', () => {
-    const etapes = [
-      { typeId: 'rcm', date: '2018-01-01' },
-      { typeId: 'mcp', date: '2018-01-01' }
-    ] as ITitreEtape[]
-
-    const result = titreEtapesSortAscByDate(
-      etapes,
-      newDemarcheId(),
-      {
-        id: 'oct',
-        etapesTypes: [
-          { id: 'rcm', ordre: 1006, titreTypeId: 'arm' },
-          { id: 'mcp', ordre: 1000, titreTypeId: 'arm' }
-        ]
-      } as IDemarcheType,
-      'arm'
-    )
-    expect(result[0].typeId).toEqual('mcp')
-    expect(result[1].typeId).toEqual('rcm')
   })
 })

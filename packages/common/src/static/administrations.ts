@@ -4,7 +4,7 @@ import { DepartementId } from './departement.js'
 
 export const ADMINISTRATION_TYPE_IDS_ARRAY = ['aut', 'dea', 'dre', 'min', 'ope', 'pre'] as const
 
-export type AdministrationTypeId = typeof ADMINISTRATION_TYPE_IDS_ARRAY[number]
+export type AdministrationTypeId = (typeof ADMINISTRATION_TYPE_IDS_ARRAY)[number]
 
 export const ADMINISTRATION_TYPE_IDS: Record<string, AdministrationTypeId> = {
   AUTORITE: 'aut',
@@ -187,7 +187,7 @@ export const ADMINISTRATION_IDS = {
   'PRÉFECTURE - MAYOTTE': 'pre-97611-01'
 } as const
 
-export type AdministrationId = typeof ADMINISTRATION_IDS[keyof typeof ADMINISTRATION_IDS]
+export type AdministrationId = (typeof ADMINISTRATION_IDS)[keyof typeof ADMINISTRATION_IDS]
 
 export const isAdministrationId = (id: string | string[] | null | undefined): id is AdministrationId => {
   return typeof id !== 'object' && Object.values(ADMINISTRATION_IDS).includes(id)

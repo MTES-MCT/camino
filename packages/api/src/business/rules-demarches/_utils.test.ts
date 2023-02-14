@@ -3,7 +3,6 @@ import decamelize from 'decamelize'
 import camelcase from 'camelcase'
 
 import {
-  IDemarcheType,
   IEtapeType,
   ITitre,
   ITitreDemarche,
@@ -91,8 +90,6 @@ export const demarcheEtatsValidate = (
   titreTypeId: TitreTypeId,
   date: string
 ) => {
-  const etapesTypes = etapesTypesGet(demarcheTypeId, titreTypeId)
-
   return (
     titreDemarcheEtapes: Partial<ITitreEtape>[],
     titre: Partial<ITitre> = {}
@@ -123,10 +120,7 @@ export const demarcheEtatsValidate = (
 
     return titreDemarcheEtatValidate(
       demarcheDefinitionRestrictions!,
-      {
-        id: demarcheTypeId,
-        etapesTypes
-      } as IDemarcheType,
+      demarcheTypeId,
       titreDemarche,
       titreDemarcheEtapes as ITitreEtape[],
       titre as ITitre

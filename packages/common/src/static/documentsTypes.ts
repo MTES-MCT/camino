@@ -111,7 +111,7 @@ export const DOCUMENTS_TYPES_IDS = {
   avisDeSituationAuRepertoireSirene: 'sir'
 } as const
 
-export type DocumentTypeId = typeof DOCUMENTS_TYPES_IDS[keyof typeof DOCUMENTS_TYPES_IDS]
+export type DocumentTypeId = (typeof DOCUMENTS_TYPES_IDS)[keyof typeof DOCUMENTS_TYPES_IDS]
 
 export const DocumentsTypes: { [key in DocumentTypeId]: Definition<key> } = {
   aac: { id: 'aac', nom: "Avis d'un service de l'administration centrale" },

@@ -304,7 +304,8 @@ export const getDGTMStatsInside = async (
       statut_id: Extract<EtapeStatutId, 'dre' | 'fav' | 'fre' | 'def' | 'ajo'>
       count: string
     }[]
-  } = await knex.raw(`select substring(te.date, 0, 5) as annee, te.type_id, te.statut_id, count(*)
+  } =
+    await knex.raw(`select substring(te.date, 0, 5) as annee, te.type_id, te.statut_id, count(*)
   from titres_etapes te
   left join titres_demarches td on te.titre_demarche_id = td.id
   left join titres t on td.titre_id = t.id

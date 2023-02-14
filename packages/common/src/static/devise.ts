@@ -6,7 +6,7 @@ export const DEVISES_IDS = {
   FrancsPacifique: 'XPF'
 } as const
 
-export type DeviseId = typeof DEVISES_IDS[keyof typeof DEVISES_IDS]
+export type DeviseId = (typeof DEVISES_IDS)[keyof typeof DEVISES_IDS]
 export type Devise<T = DeviseId> = Omit<Definition<T>, 'description'>
 export const Devises: { [key in DeviseId]: Devise<key> } = {
   EUR: { id: 'EUR', nom: 'Euros', ordre: 1 },

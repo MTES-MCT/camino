@@ -85,8 +85,8 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Prolongation,
     DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation
   ],
-  [TITRES_TYPES_IDS.INDETERMINE_METAUX]: [...demarchesEverywhere],
-  [TITRES_TYPES_IDS.INDETERMINE_RADIOACTIF]: [...demarchesEverywhere],
+  [TITRES_TYPES_IDS.INDETERMINE_METAUX]: [DEMARCHES_TYPES_IDS.Octroi],
+  [TITRES_TYPES_IDS.INDETERMINE_RADIOACTIF]: [DEMARCHES_TYPES_IDS.Octroi],
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_CARRIERES_CARRIERES]: [
     ...demarchesEverywhere,
     DEMARCHES_TYPES_IDS.Amodiation,
@@ -162,7 +162,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Prolongation2,
     DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation
   ],
-  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_FOSSILES]: [...demarchesEverywhere],
+  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_FOSSILES]: [DEMARCHES_TYPES_IDS.Octroi],
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE]: [
     ...demarchesEverywhere,
     DEMARCHES_TYPES_IDS.Amodiation,
@@ -218,6 +218,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
   ]
 } as const
 
+export type TitresTypesDemarchesTypes = typeof TITRES_TYPES_DEMARCHES_TYPES
 export const getDemarchesTypesByTitreType = (titreTypeId: TitreTypeId): DemarcheType[] => {
   return TITRES_TYPES_DEMARCHES_TYPES[titreTypeId].map(demarcheTypeId => DemarchesTypes[demarcheTypeId]).sort((a, b) => a.ordre - b.ordre)
 }

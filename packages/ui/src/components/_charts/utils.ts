@@ -9,7 +9,7 @@ export const CHART_COLORS = {
   black: 'rgb(0, 0, 0)'
 } as const
 
-type ChartColor = typeof CHART_COLORS[keyof typeof CHART_COLORS]
+type ChartColor = (typeof CHART_COLORS)[keyof typeof CHART_COLORS]
 
 const chartColors: readonly ChartColor[] = Object.values(CHART_COLORS)
 

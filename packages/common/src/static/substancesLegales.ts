@@ -202,7 +202,7 @@ export const SUBSTANCES_LEGALES_IDS = {
   hydrogène: 'hydrog'
 } as const
 
-export type SubstanceLegaleId = typeof SUBSTANCES_LEGALES_IDS[keyof typeof SUBSTANCES_LEGALES_IDS]
+export type SubstanceLegaleId = (typeof SUBSTANCES_LEGALES_IDS)[keyof typeof SUBSTANCES_LEGALES_IDS]
 
 export interface SubstanceLegale<T = SubstanceLegaleId> {
   id: T

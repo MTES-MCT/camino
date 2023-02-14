@@ -20,7 +20,7 @@ export const ETAPES_STATUTS = {
   NON_APPLICABLE: 'nul',
   PROGRAMME: 'pro'
 } as const
-export type EtapeStatutId = typeof ETAPES_STATUTS[keyof typeof ETAPES_STATUTS]
+export type EtapeStatutId = (typeof ETAPES_STATUTS)[keyof typeof ETAPES_STATUTS]
 export type EtapeStatutKey = keyof typeof ETAPES_STATUTS
 
 const etapesStatutsIds = Object.values(ETAPES_STATUTS)

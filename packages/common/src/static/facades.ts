@@ -78,8 +78,8 @@ const FACADES = Object.keys(facades) as FacadesMaritimes[]
 const SECTEURS = Object.values(facades).flatMap(f => Object.keys(f)) as SecteursMaritimes[]
 
 export type FacadesMaritimes = keyof typeof facades
-export type SecteursMaritimes = { [Key in FacadesMaritimes]: keyof typeof facades[Key] }[FacadesMaritimes]
-type sect = { [Facade in FacadesMaritimes]: { [Secteur in keyof typeof facades[Facade]]: typeof facades[Facade][Secteur] }[keyof typeof facades[Facade]] }[FacadesMaritimes]
+export type SecteursMaritimes = { [Key in FacadesMaritimes]: keyof (typeof facades)[Key] }[FacadesMaritimes]
+type sect = { [Facade in FacadesMaritimes]: { [Secteur in keyof (typeof facades)[Facade]]: (typeof facades)[Facade][Secteur] }[keyof (typeof facades)[Facade]] }[FacadesMaritimes]
 export type SecteursMaritimesIds = sect['ids'][number]
 
 export const getDepartementsByIds = (ids: SecteursMaritimesIds[]): DepartementId[] => {
@@ -152,7 +152,7 @@ export function assertsFacade(facade: unknown): asserts facade is FacadesMaritim
   }
 }
 
-export function assertsSecteur<T extends FacadesMaritimes>(facade: T, secteur: unknown): asserts secteur is keyof typeof facades[T] {
+export function assertsSecteur<T extends FacadesMaritimes>(facade: T, secteur: unknown): asserts secteur is keyof (typeof facades)[T] {
   if (!Object.keys(facades[facade]).includes(secteur)) {
     throw new Error(`Le secteur ${secteur} n’existe pas`)
   }

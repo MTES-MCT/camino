@@ -77,8 +77,8 @@ export const PureDrealDashboard = defineComponent<Props>({
     const initialColumnId = columns[3].id
 
     type Columns =
-      | typeof columns[number]['id']
-      | typeof columnsEnAttente[number]['id']
+      | (typeof columns)[number]['id']
+      | (typeof columnsEnAttente)[number]['id']
 
     const prochainesEtapesCell = (titre: CommonTitreDREAL) => ({
       component: markRaw(List),

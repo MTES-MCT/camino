@@ -15,5 +15,5 @@ export const CaminoRestRoutes = {
   generateQgisToken: '/utilisateur/generateQgisToken'
 } as const
 
-export type CaminoRestRoute = typeof CaminoRestRoutes[keyof typeof CaminoRestRoutes]
+export type CaminoRestRoute = (typeof CaminoRestRoutes)[keyof typeof CaminoRestRoutes]
 export const ALL_CAMINO_REST_ROUTES: CaminoRestRoute[] = Object.values(CaminoRestRoutes)

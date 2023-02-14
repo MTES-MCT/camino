@@ -29,7 +29,7 @@ import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 import { SecteursMaritimes } from 'camino-common/src/static/facades.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { EntrepriseId } from 'camino-common/src/entreprise.js'
-import { SDOMZoneId } from 'camino-common/src/static/sdom'
+import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
 
 enum TitreEtapesTravauxTypes {
@@ -94,7 +94,7 @@ export const propsTitreEtapeIdKeys = [
   'substances',
   'surface'
 ] as const
-export type PropsTitreEtapeIdKeys = typeof propsTitreEtapeIdKeys[number]
+export type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
 
 type IPropId =
   | PropsTitreEtapeIdKeys
@@ -308,7 +308,7 @@ export const DOCUMENTS_REPERTOIRES = [
   'entreprises',
   'tmp'
 ] as const
-type IDocumentRepertoire = typeof DOCUMENTS_REPERTOIRES[number]
+type IDocumentRepertoire = (typeof DOCUMENTS_REPERTOIRES)[number]
 
 interface IDomaine {
   id: string

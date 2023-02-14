@@ -26,7 +26,7 @@ export interface Unite<T = UniteId> {
 
 export type UniteOpenfiscaId = 'kg' | '100kg' | 't' | '100t' | 'kt' | '100km3'
 
-export type UniteId = typeof UNITE_IDS[keyof typeof UNITE_IDS]
+export type UniteId = (typeof UNITE_IDS)[keyof typeof UNITE_IDS]
 
 export const Unites: { [key in UniteId]: Unite<key> } = {
   deg: { id: 'deg', nom: 'degré', symbole: 'º', referenceUniteId: null, referenceUniteRatio: null },

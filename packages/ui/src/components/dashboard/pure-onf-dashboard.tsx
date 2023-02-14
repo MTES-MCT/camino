@@ -69,7 +69,7 @@ const columns = [
 
 const initialColumnId = columns[1].id
 
-type Columns = typeof columns[number]['id']
+type Columns = (typeof columns)[number]['id']
 
 const dateCell = (date: string) => ({
   component: markRaw(DateComponent),

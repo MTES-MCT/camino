@@ -43,7 +43,7 @@ const statsBarFormat = ({
   labelLine
 }: {
   annees: StatistiqueGranulatsMarinsStatAnnee[]
-  id?: typeof ids[number]
+  id?: (typeof ids)[number]
   bar: 'volume' | 'quantite'
   line: 'masse' | 'surface'
   labelBar: string
@@ -159,7 +159,7 @@ export const PureGranulatsMarins = defineComponent<Props>({
       }
     }
     const suggestedMaxTitres = (
-      titreType: typeof ids[number],
+      titreType: (typeof ids)[number],
       annees: StatistiqueGranulatsMarinsStatAnnee[]
     ) => {
       // si le nombre maximum de titres est inférieur à 10

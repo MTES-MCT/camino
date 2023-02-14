@@ -11,7 +11,7 @@ export const DOMAINES_IDS = {
   GRANULATS_MARINS: 'w'
 } as const
 
-export type DomaineId = typeof DOMAINES_IDS[keyof typeof DOMAINES_IDS]
+export type DomaineId = (typeof DOMAINES_IDS)[keyof typeof DOMAINES_IDS]
 export type Domaine<T = DomaineId> = Definition<T>
 export const Domaines: { [key in DomaineId]: Domaine<key> } = {
   c: {

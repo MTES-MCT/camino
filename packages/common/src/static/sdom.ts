@@ -7,7 +7,7 @@ export const SDOMZoneIds = {
   Zone2: '2'
 } as const
 
-export type SDOMZoneId = typeof SDOMZoneIds[keyof typeof SDOMZoneIds]
+export type SDOMZoneId = (typeof SDOMZoneIds)[keyof typeof SDOMZoneIds]
 
 export type SDOMZone<T = SDOMZoneId> = Pick<Definition<T>, 'id' | 'nom'>
 

@@ -57,7 +57,7 @@ const filtres = [
     elementsFormat
   }
 ]
-type ColonneId = typeof colonnes[number]['id']
+type ColonneId = (typeof colonnes)[number]['id']
 const metas = {
   types: sortedAdministrationTypes
 }

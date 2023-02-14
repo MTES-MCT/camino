@@ -48,7 +48,7 @@ export const TITRES_TYPES_IDS = {
 
 export const TitresTypesIds = Object.values(TITRES_TYPES_IDS)
 
-export type TitreTypeId = typeof TITRES_TYPES_IDS[keyof typeof TITRES_TYPES_IDS]
+export type TitreTypeId = (typeof TITRES_TYPES_IDS)[keyof typeof TITRES_TYPES_IDS]
 
 export const TitresTypes: {
   [key in TitreTypeId]: Definition<key>

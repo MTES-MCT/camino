@@ -2,6 +2,7 @@ import { IContenu, ITitreEtape } from '../../types.js'
 import {
   EtapeStatutId,
   EtapeStatutKey,
+  ETAPES_STATUTS,
   isStatut
 } from 'camino-common/src/static/etapesStatuts.js'
 import {
@@ -80,10 +81,15 @@ export const tags = {
   }
 } as const
 
-export type Intervenant = keyof typeof tags['responsable']
+export type Intervenant = keyof (typeof tags)['responsable']
 
 export const intervenants = Object.keys(tags.responsable) as Array<
   keyof typeof tags.responsable
 >
 
-export type DBEtat = { [key in EtapeStatutKey]?: EtapeTypeEtapeStatut }
+export type DBEtat = {
+  [key in EtapeStatutKey]?: EtapeTypeEtapeStatut<
+    EtapeTypeId,
+    (typeof ETAPES_STATUTS)[key]
+  >
+}

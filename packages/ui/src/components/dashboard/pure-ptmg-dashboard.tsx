@@ -28,7 +28,7 @@ const columns = [
   referencesColumn,
   titulairesColumn
 ] as const
-type Columns = typeof columns[number]['id']
+type Columns = (typeof columns)[number]['id']
 
 const titresLignesBuild = (
   titres: CommonTitrePTMG[]

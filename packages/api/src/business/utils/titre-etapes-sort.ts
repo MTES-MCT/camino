@@ -1,12 +1,14 @@
-import { DemarcheId, IDemarcheType, ITitreEtape } from '../../types.js'
+import { DemarcheId, ITitreEtape } from '../../types.js'
 import {
   demarcheDefinitionFind,
-  IDemarcheDefinition,
   IDemarcheDefinitionRestrictions,
   isDemarcheDefinitionMachine
 } from '../rules-demarches/definitions.js'
 import { toMachineEtapes } from '../rules-demarches/machine-common.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { getEtapesTDE } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/index.js'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 
 // classe les étapes selon leur ordre inverse: 3, 2, 1.
 export const titreEtapesSortDescByOrdre = <
@@ -21,26 +23,27 @@ export const titreEtapesSortAscByOrdre = <T extends Pick<ITitreEtape, 'ordre'>>(
 ): T[] => titreEtapes.slice().sort((a, b) => a.ordre! - b.ordre!)
 
 // classe les étapes selon leur dates, ordre et etapesTypes.ordre le cas échéant
-export const titreEtapesSortAscByDate = (
-  titreEtapes: ITitreEtape[],
+export const titreEtapesSortAscByDate = <
+  T extends Pick<
+    ITitreEtape,
+    'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'titreDemarcheId'
+  >
+>(
+  titreEtapes: T[],
   demarcheId: DemarcheId,
-  demarcheType?: IDemarcheType | null,
-  titreTypeId?: TitreTypeId
-): ITitreEtape[] => {
+  demarcheTypeId: DemarcheTypeId,
+  titreTypeId: TitreTypeId
+): T[] => {
   let demarcheDefinitionRestrictions = undefined as
     | IDemarcheDefinitionRestrictions
     | undefined
 
-  let demarcheDefinition = undefined as IDemarcheDefinition | undefined
-
-  if (titreTypeId && demarcheType?.id) {
-    demarcheDefinition = demarcheDefinitionFind(
-      titreTypeId,
-      demarcheType.id,
-      titreEtapes,
-      demarcheId
-    )
-  }
+  const demarcheDefinition = demarcheDefinitionFind(
+    titreTypeId,
+    demarcheTypeId,
+    titreEtapes,
+    demarcheId
+  )
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {
     const etapes = demarcheDefinition.machine.orderMachine(
       toMachineEtapes(titreEtapes)
@@ -62,9 +65,7 @@ export const titreEtapesSortAscByDate = (
             te.statutId === etape.etapeStatutId
         )
       )
-      .filter(
-        (te: ITitreEtape | undefined): te is ITitreEtape => te !== undefined
-      )
+      .filter(isNotNullNorUndefined)
   } else {
     demarcheDefinitionRestrictions = demarcheDefinition?.restrictions
 
@@ -84,7 +85,7 @@ export const titreEtapesSortAscByDate = (
 
         if (!bRestriction) {
           console.error(
-            `impossible de trier l’étape ${b.id} car son type ${b.typeId} n’existe pas dans les définitions`
+            `${demarcheId}: impossible de trier l’étape car son type ${b.typeId} n’existe pas dans les définitions`
           )
 
           return -1
@@ -94,7 +95,7 @@ export const titreEtapesSortAscByDate = (
 
         if (!aRestriction) {
           console.error(
-            `impossible de trier l’étape ${a.id} car son type ${a.typeId} n’existe pas dans les définitions`
+            `${demarcheId}: impossible de trier l’étape car son type ${a.typeId} n’existe pas dans les définitions`
           )
 
           return -1
@@ -127,21 +128,20 @@ export const titreEtapesSortAscByDate = (
 
       // on utilise l'ordre du type d'étape
 
-      if (!demarcheType?.etapesTypes?.length) {
+      const etapes = getEtapesTDE(titreTypeId, demarcheTypeId)
+
+      const aTypeIndex = etapes.findIndex(e => e === a.typeId)
+      const bTypeIndex = etapes.findIndex(e => e === b.typeId)
+
+      if (aTypeIndex === -1 || bTypeIndex === -1) {
+        console.warn(
+          `${demarcheId}: les étapes ${a.typeId} ou ${b.typeId} ne devraient pas être possible pour une démarche de type ${demarcheTypeId}`
+        )
+
         return a.ordre! - b.ordre!
       }
 
-      const aType = demarcheType.etapesTypes.find(
-        et => et.id === a.typeId && et.titreTypeId === titreTypeId
-      )
-
-      const bType = demarcheType.etapesTypes.find(
-        et => et.id === b.typeId && et.titreTypeId === titreTypeId
-      )
-
-      if (aType && bType) return aType.ordre - bType.ordre
-
-      return a.ordre! - b.ordre!
+      return aTypeIndex - bTypeIndex
     })
   }
 }

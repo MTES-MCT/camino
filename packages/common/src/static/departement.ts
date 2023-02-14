@@ -132,7 +132,7 @@ export const toDepartementId = (codePostal: CodePostal): DepartementId => {
   throw new Error(`impossible de trouver l'id de département dans le code postal ${codePostal}`)
 }
 
-export type DepartementId = typeof DEPARTEMENT_IDS[keyof typeof DEPARTEMENT_IDS]
+export type DepartementId = (typeof DEPARTEMENT_IDS)[keyof typeof DEPARTEMENT_IDS]
 
 export const Departements: { [key in DepartementId]: Departement<key> } = {
   '01': { id: '01', nom: 'Ain', regionId: '84' },

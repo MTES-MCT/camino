@@ -37,7 +37,7 @@ export const SUBSTANCES_FISCALES_IDS = {
   zinc: 'zinc'
 } as const
 
-export type SubstanceFiscaleId = typeof SUBSTANCES_FISCALES_IDS[keyof typeof SUBSTANCES_FISCALES_IDS]
+export type SubstanceFiscaleId = (typeof SUBSTANCES_FISCALES_IDS)[keyof typeof SUBSTANCES_FISCALES_IDS]
 
 export interface SubstanceFiscale<T = SubstanceFiscaleId> {
   id: T

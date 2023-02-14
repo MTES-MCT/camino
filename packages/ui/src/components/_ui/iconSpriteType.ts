@@ -31,4 +31,4 @@ export const icons = [
   'refresh',
   'x'
 ] as const
-export type Icon = typeof icons[number]
+export type Icon = (typeof icons)[number]

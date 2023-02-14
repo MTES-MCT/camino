@@ -14,7 +14,7 @@ export const TitresStatutIds = {
   Valide: 'val'
 } as const
 
-export type TitreStatutId = typeof TitresStatutIds[keyof typeof TitresStatutIds]
+export type TitreStatutId = (typeof TitresStatutIds)[keyof typeof TitresStatutIds]
 
 export const TitresStatuts: {
   [key in TitreStatutId]: TitreStatutDefinition<key>

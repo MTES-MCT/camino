@@ -1,38 +1,119 @@
-import { IUtilisateur } from '../../types.js'
+import { DemarcheId, IContenu, ITitreEtape, IUtilisateur } from '../../types.js'
 
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import { titreEtapesSortAscByDate } from '../utils/titre-etapes-sort.js'
-import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
-import { userSuper } from '../../database/user-super.js'
+import { knex } from '../../knex.js'
+import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
+import { CaminoDate } from 'camino-common/src/date.js'
 
 export const titresEtapesOrdreUpdate = async (
   user: IUtilisateur,
-  titresDemarchesIds?: string[]
+  demarcheId?: DemarcheId
 ) => {
   console.info()
   console.info('ordre des étapes…')
 
-  const titresDemarches = await titresDemarchesGet(
-    { titresDemarchesIds },
-    {
-      fields: {
-        etapes: { id: {} },
-        type: { etapesTypes: { id: {} } },
-        titre: { id: {} }
+  const etapes: {
+    rows: {
+      titre_id: string
+      titre_type_id: TitreTypeId
+      id: string
+      ordre: number
+      type_id: EtapeTypeId
+      statut_id: EtapeStatutId
+      date: CaminoDate
+      contenu: IContenu
+      demarche_id: DemarcheId
+      demarche_type_id: DemarcheTypeId
+    }[]
+  } =
+    await knex.raw(`SELECT titre.id as titre_id, titre.type_id as titre_type_id, etape.id, etape.ordre, etape.type_id, etape.statut_id, etape.date, etape.contenu, demarche.id as demarche_id, demarche.type_id as demarche_type_id
+  from titres_etapes etape
+      join titres_demarches demarche on etape.titre_demarche_id = demarche.id
+      join titres titre on demarche.titre_id = titre.id
+      where etape.archive = false
+      and demarche.archive = false
+      and titre.archive = false
+      ${demarcheId ? `and demarche.id = '${demarcheId}'` : ''}
+  order by demarche.id, etape.ordre`)
+
+  const titresDemarches = etapes.rows.reduce<{
+    [key: DemarcheId]: {
+      etapes: Pick<
+        ITitreEtape,
+        | 'id'
+        | 'ordre'
+        | 'typeId'
+        | 'statutId'
+        | 'date'
+        | 'contenu'
+        | 'titreDemarcheId'
+      >[]
+      id: DemarcheId
+      typeId: DemarcheTypeId
+      titreTypeId: TitreTypeId
+      titreId: string
+    }
+  }>((acc, row) => {
+    if (!acc[row.demarche_id]) {
+      acc[row.demarche_id] = {
+        etapes: [],
+        id: row.demarche_id,
+        titreId: row.titre_id,
+        titreTypeId: row.titre_type_id,
+        typeId: row.demarche_type_id
       }
-    },
-    userSuper
-  )
+    }
 
-  const titresEtapesIdsUpdated = [] as string[]
+    acc[row.demarche_id].etapes.push({
+      id: row.id,
+      ordre: row.ordre,
+      typeId: row.type_id,
+      statutId: row.statut_id,
+      date: row.date,
+      contenu: row.contenu,
+      titreDemarcheId: row.demarche_id
+    })
 
-  for (const titreDemarche of titresDemarches) {
+    return acc
+  }, {})
+
+  return titresEtapesOrdreUpdateVisibleForTesting(user, titresDemarches)
+}
+
+export const titresEtapesOrdreUpdateVisibleForTesting = async (
+  user: IUtilisateur,
+  titresDemarches: {
+    [key: DemarcheId]: {
+      etapes: Pick<
+        ITitreEtape,
+        | 'id'
+        | 'ordre'
+        | 'typeId'
+        | 'statutId'
+        | 'date'
+        | 'contenu'
+        | 'titreDemarcheId'
+      >[]
+      id: DemarcheId
+      typeId: DemarcheTypeId
+      titreTypeId: TitreTypeId
+      titreId: string
+    }
+  }
+): Promise<string[]> => {
+  const titresEtapesIdsUpdated: string[] = []
+
+  for (const titreDemarche of Object.values(titresDemarches)) {
     if (titreDemarche.etapes) {
       const etapes = titreEtapesSortAscByDate(
         titreDemarche.etapes,
         titreDemarche.id,
-        titreDemarche.type,
-        titreDemarche.titre?.typeId
+        titreDemarche.typeId,
+        titreDemarche.titreTypeId
       )
       for (let index = 0; index < etapes.length; index++) {
         const titreEtape = etapes[index]
