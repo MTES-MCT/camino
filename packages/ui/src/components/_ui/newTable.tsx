@@ -1,10 +1,17 @@
-import { defineComponent } from "vue";
+import { defineComponent, watch } from "vue";
 import { Icon } from '@/components/_ui/icon'
 
 
 type ColumnIds = Props['columns'][number]['id']
+type Column = {id: string, noSort: boolean, class: string, name: string}
+type Row = {
+  id: string
+  link: string
+  columns: Record<string, unknown>
+}
 interface Props {
-  columns: {id: string, noSort: boolean, class: string, name: string}[]
+  columns: Column[]
+  rows: Row[]
   update: (column: ColumnIds, order: 'asc' | 'desc') => void
   column: ColumnIds
   order: 'asc' | 'desc'
@@ -21,7 +28,21 @@ export const Table = defineComponent<Props>({setup(props) {
         props.update(colId, props.order)
       }
     }
-  },
+  }
+
+  const columnInit = () => {
+    if (props.rows.length && !props.columns.some(c => c.id === props.column)) {
+      sort(props.columns[0].id)
+    }
+  }
+
+  watch(
+    () => props.columns,
+    (columns: Column[]) => {
+      columnInit()
+    },
+    { immediate: true }
+  )
   return () => (<div>
     <div class="overflow-scroll-x mb">
       <div class="table">
@@ -46,42 +67,39 @@ export const Table = defineComponent<Props>({setup(props) {
           </div>))}
         </div>
 
-        // <router-link
-        //   v-for="row in rows"
-        //   :key="row.id"
-        //   :to="row.link"
-        //   class="tr tr-link text-decoration-none"
-        // >
-        //   <div
-        //     v-for="col in columns"
-        //     :key="col.id"
-        //     class="td"
-        //     :class="col.class"
-        //   >
-        //     <component
-        //       :is="row.columns[col.id].component"
-        //       v-if="
-        //         row.columns[col.id] &&
-        //         row.columns[col.id].component &&
-        //         row.columns[col.id].slot
-        //       "
-        //       v-bind="row.columns[col.id].props"
-        //       :class="row.columns[col.id].class"
-        //       >{{ row.columns[col.id].value }}</component
-        //     >
-        //     <component
-        //       :is="row.columns[col.id].component"
-        //       v-else-if="row.columns[col.id] && row.columns[col.id].component"
-        //       v-bind="row.columns[col.id].props"
-        //       :class="row.columns[col.id].class"
-        //     />
-        //     <span
-        //       v-else-if="row.columns[col.id] && row.columns[col.id].value"
-        //       :class="row.columns[col.id].class"
-        //       >{{ row.columns[col.id].value }}</span
-        //     >
-        //   </div>
-        // </router-link>
+        {props.rows.map(row => (<router-link
+          key={row.id}
+          to={row.link}
+          class="tr tr-link text-decoration-none"
+        >
+          {props.columns.map(col => (
+            <div key={col.id} class={`td ${col.class}`}>
+            <component
+              is={row.columns[col.id].component}
+              v-if="
+                row.columns[col.id] &&
+                row.columns[col.id].component &&
+                row.columns[col.id].slot
+              "
+              v-bind={row.columns[col.id].props}
+              class={row.columns[col.id].class}
+              >{ row.columns[col.id].value }</component
+            >
+            <component
+              :is="row.columns[col.id].component"
+              v-else-if="row.columns[col.id] && row.columns[col.id].component"
+              v-bind="row.columns[col.id].props"
+              :class="row.columns[col.id].class"
+            />
+            <span
+              v-else-if="row.columns[col.id] && row.columns[col.id].value"
+              :class="row.columns[col.id].class"
+              >{{ row.columns[col.id].value }}</span>
+          </div>
+
+          ))}
+          
+        </router-link>))}
       </div>
     </div>
   </div>)
@@ -106,22 +124,9 @@ export default {
 
   emits: ['params-update'],
 
-  watch: {
-    columns: 'columnInit'
-  },
-
-  methods: {
-    update(params) {
-      this.$emit('params-update', params)
-    },
-
     
 
-    columnInit() {
-      if (this.rows.length && !this.columns.some(c => c.id === this.column)) {
-        this.sort(this.columns[0].id)
-      }
-    }
+    
   }
 }
 </script> */}
