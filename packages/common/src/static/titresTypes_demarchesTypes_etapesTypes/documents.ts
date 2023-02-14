@@ -1,8 +1,9 @@
 import { isNotNullNorUndefined, onlyUnique } from '../../typescript-tools.js'
-import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeId } from './../demarchesTypes.js'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from './../demarchesTypes.js'
 import { DocumentsTypes, DOCUMENTS_TYPES_IDS, DocumentType, DocumentTypeId, isDocumentTypeId } from './../documentsTypes.js'
 import { ETAPES_TYPES, EtapeTypeId, isEtapeTypeId } from './../etapesTypes.js'
-import { TitreTypeId, TITRES_TYPES_IDS, isTitreType } from './../titresTypes.js'
+import { TitreTypeId, TITRES_TYPES_IDS } from './../titresTypes.js'
+import { TDEType } from './index.js'
 
 const EtapesTypesDocumentsTypes = {
   [ETAPES_TYPES.avisDeDirectionRegionaleDesAffairesCulturelles]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires, DOCUMENTS_TYPES_IDS.avis],
@@ -281,9 +282,7 @@ const isEtapesTypesEtapesTypesDocumentsTypes = (etapeTypeId?: EtapeTypeId): etap
   return Object.keys(EtapesTypesDocumentsTypes).includes(etapeTypeId)
 }
 
-const TDEDocumentsTypes: {
-  [key in TitreTypeId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: { [key in DocumentTypeId]?: { optionnel: boolean; description?: string } } } }
-} = {
+const TDEDocumentsTypes = {
   [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.demande]: {
@@ -330,7 +329,13 @@ const TDEDocumentsTypes: {
       }
     }
   }
-} as const
+} as const satisfies {
+  [titreKey in TitreTypeId]?: {
+    [demarcheKey in keyof TDEType[titreKey]]?: {
+      [key in Extract<TDEType[titreKey][demarcheKey], readonly EtapeTypeId[]>[number]]?: { [key in DocumentTypeId]?: { optionnel: boolean; description?: string } }
+    }
+  }
+}
 
 export const toDocuments = (): { etapeTypeId: EtapeTypeId; documentTypeId: DocumentTypeId; optionnel: boolean; description: string | null }[] => {
   return Object.entries(EtapesTypesDocumentsTypes).flatMap(([key, values]) => {
@@ -342,47 +347,19 @@ export const toDocuments = (): { etapeTypeId: EtapeTypeId; documentTypeId: Docum
   })
 }
 
-export const toSpecificDocuments = (): {
-  titreTypeId?: TitreTypeId
-  demarcheTypeId?: DemarcheTypeId
-  etapeTypeId?: EtapeTypeId
-  documentTypeId: DocumentTypeId
-  optionnel: boolean
-  description?: string | undefined
-}[] => {
-  return Object.entries(TDEDocumentsTypes)
-    .flatMap(([titreTypeId, demarcheTypeIds]) => {
-      return Object.entries(demarcheTypeIds).flatMap(([demarcheTypeId, etapeTypeIds]) => {
-        return Object.entries(etapeTypeIds).flatMap(([etapeTypeId, documentTypeIds]) => {
-          return Object.entries(documentTypeIds).flatMap(([documentTypeId, documentType]) => {
-            if (isTitreType(titreTypeId) && isEtapeTypeId(etapeTypeId) && isDocumentTypeId(documentTypeId) && isDemarcheTypeId(demarcheTypeId)) {
-              return {
-                ...documentType,
-                titreTypeId,
-                demarcheTypeId,
-                etapeTypeId,
-                documentTypeId
-              }
-            } else {
-              return null
-            }
-          })
-        })
-      })
-    })
-    .filter(isNotNullNorUndefined)
-}
-
 export const getDocuments = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): DocumentType[] => {
   if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheId) && isNotNullNorUndefined(etapeTypeId)) {
-    if (!isEtapesTypesEtapesTypesDocumentsTypes(etapeTypeId)) {
-      return []
-    }
-    const documentsIds: DocumentTypeId[] = [...EtapesTypesDocumentsTypes[etapeTypeId]]
-    documentsIds.push(...Object.keys(TDEDocumentsTypes[titreTypeId]?.[demarcheId]?.[etapeTypeId] ?? {}).filter(isDocumentTypeId))
+    const documentsIds: DocumentTypeId[] = []
 
-    return documentsIds.filter(onlyUnique).map(documentTypeId => {
-      const documentSpecifique = TDEDocumentsTypes[titreTypeId]?.[demarcheId]?.[etapeTypeId]?.[documentTypeId]
+    if (isEtapesTypesEtapesTypesDocumentsTypes(etapeTypeId)) {
+      documentsIds.push(...EtapesTypesDocumentsTypes[etapeTypeId])
+    }
+    type TDEDocumentsTypesUnleashed = { [key in TitreTypeId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: { [key in DocumentTypeId]: { optionnel: boolean; description?: string } } } } }
+
+    documentsIds.push(...Object.keys((TDEDocumentsTypes as TDEDocumentsTypesUnleashed)[titreTypeId]?.[demarcheId]?.[etapeTypeId] ?? {}).filter(isDocumentTypeId))
+    
+return documentsIds.filter(onlyUnique).map(documentTypeId => {
+      const documentSpecifique = (TDEDocumentsTypes as TDEDocumentsTypesUnleashed)[titreTypeId]?.[demarcheId]?.[etapeTypeId]?.[documentTypeId]
       const document = { ...DocumentsTypes[documentTypeId], optionnel: true }
       if (documentSpecifique) {
         document.optionnel = documentSpecifique.optionnel

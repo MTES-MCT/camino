@@ -3772,6 +3772,7 @@ export const TDE = {
   }
 } as const satisfies { [key in TitreTypeId]: { [other in TitresTypesDemarchesTypes[key][number]]: readonly EtapeTypeId[] } }
 
+export type TDEType = typeof TDE
 type TDEDemarchesSubObject = (typeof TDE)[keyof typeof TDE]
 
 const isDemarcheTypeFromTitreType = (demarches: TDEDemarchesSubObject, demarcheTypeId: DemarcheTypeId): demarcheTypeId is keyof TDEDemarchesSubObject => {
