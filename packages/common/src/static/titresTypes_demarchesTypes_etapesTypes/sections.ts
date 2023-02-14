@@ -1,9 +1,33 @@
 import { CaminoDate, toCaminoDate } from '../../date.js'
-import { DEMARCHES_TYPES_IDS } from '../demarchesTypes.js'
-import { TITRES_TYPES_IDS } from '../titresTypes.js'
+import { DEMARCHES_TYPES_IDS, DemarcheTypeId } from '../demarchesTypes.js'
+import { TITRES_TYPES_IDS, TitreTypeId } from '../titresTypes.js'
 import { ETAPES_TYPES, EtapeTypeId } from './../etapesTypes.js'
 import { TDEType } from './index.js'
+import { DeepReadonly, isNotNullNorUndefined } from '../../typescript-tools.js'
 
+const gestionDeLaDemandeDeComplements: Section[] = [
+  {
+    id: 'mcox',
+    nom: 'Gestion de la demande de compléments',
+    elements: [
+      {
+        id: 'delaifixe',
+        nom: 'Délai fixé (jour)',
+        type: 'number',
+        optionnel: true,
+        description:
+          "Nombre de jours accordés pour produire les compléments demandés. Le delai au delà duquel une décision implicite se forme est suspendu dès réception de cette demande et jusqu'à la production des compléments. Au delà du délai fixé, la demande est suceptible d'être classée sans suite ou instruite en l'état."
+      },
+      {
+        id: 'datear',
+        nom: 'Accusé de réception',
+        type: 'date',
+        optionnel: true,
+        description: "Date de l'accusé de réception de la demande de compléments à compter de laquelle commence à courrir le délai accordé pour produire les compléments."
+      }
+    ]
+  }
+]
 const suiviDeLaDemarche: Section[] = [
   {
     id: 'suivi',
@@ -19,6 +43,120 @@ const suiviDeLaDemarche: Section[] = [
     ]
   }
 ]
+
+const EtapesTypesSections = {
+  [ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: [
+    {
+      id: 'mea',
+      nom: 'Mission autorité environnementale',
+      elements: [
+        {
+          id: 'arrete',
+          nom: 'Arrêté préfectoral',
+          type: 'text',
+          optionnel: true,
+          description: "Numéro de l'arrêté préfectoral portant décision dans le cadre de l’examen au cas par cas du projet d’autorisation de recherche minière"
+        }
+      ]
+    }
+  ],
+  [ETAPES_TYPES.paiementDesFraisDeDossier]: [
+    {
+      id: 'paiement',
+      nom: 'Informations sur le paiement',
+      elements: [
+        { id: 'frais', nom: 'Frais de dossier', type: 'number', optionnel: true, description: 'Montant en euro des frais de dossier payés' },
+        { id: 'virement', nom: 'Virement banquaire ou postal', type: 'text', optionnel: true, description: 'Référence communiquée par le demandeur à sa banque' }
+      ]
+    }
+  ],
+  [ETAPES_TYPES.demandeDeComplements]: gestionDeLaDemandeDeComplements,
+  [ETAPES_TYPES.demandeDeComplements_CompletudeDeLaDemande_]: gestionDeLaDemandeDeComplements,
+  [ETAPES_TYPES.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: gestionDeLaDemandeDeComplements,
+  [ETAPES_TYPES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_]: gestionDeLaDemandeDeComplements,
+  [ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_]: gestionDeLaDemandeDeComplements,
+  [ETAPES_TYPES.demandeDeComplements_SaisineDeLaCARM_]: gestionDeLaDemandeDeComplements,
+  [ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau]: [
+    {
+      id: 'deal',
+      nom: 'DEAL',
+      elements: [
+        { id: 'numero-dossier-deal-eau', nom: 'Numéro de dossier', type: 'text', optionnel: true, description: 'Numéro de dossier DEAL Service eau' },
+        { id: 'numero-recepisse', nom: 'Numéro de récépissé', type: 'text', optionnel: true, description: 'Numéro de récépissé émis par la DEAL Service eau' }
+      ]
+    }
+  ],
+  [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: [
+    { id: 'paiement', nom: 'Informations sur le paiement', elements: [{ id: 'facture', nom: 'Facture ONF', type: 'text', optionnel: true, description: "Numéro de facture émise par l'ONF" }] }
+  ],
+  [ETAPES_TYPES.expertiseDREALOuDGTMServiceEau]: [
+    {
+      id: 'deal',
+      nom: 'DEAL service eau',
+      elements: [
+        { id: 'motifs', nom: 'Motifs', type: 'textarea', optionnel: true, description: "élément d'expertise" },
+        { id: 'agent', nom: 'Agent', type: 'text', optionnel: true, description: "Prénom et nom de l'agent chargé de l'expertise" }
+      ]
+    }
+  ],
+  [ETAPES_TYPES.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_]: [
+    {
+      id: 'deal',
+      nom: 'DEAL service mines',
+      elements: [
+        { id: 'motifs', nom: 'Motifs', type: 'textarea', optionnel: true, description: "élément d'expertise" },
+        { id: 'agent', nom: 'Agent', type: 'text', optionnel: true, description: "Prénom et nom de l'agent chargé de l'expertise" }
+      ]
+    }
+  ],
+  [ETAPES_TYPES.notificationAuPrefet]: [
+    {
+      id: 'nppx',
+      nom: 'Note au préfet',
+      elements: [
+        { id: 'info', nom: 'Informations complémentaires', type: 'textarea', optionnel: true, description: 'Informations complémentaires accompagnant la notification de la décision au préfet' }
+      ]
+    }
+  ],
+  [ETAPES_TYPES.notificationAuDemandeur]: suiviDeLaDemarche,
+  [ETAPES_TYPES.notificationAuDemandeur_AjournementDeLaCARM_]: [
+    { id: 'suivi', nom: 'Suivi de la démarche', elements: [{ id: 'dateReception', nom: 'Date de réception', type: 'date', optionnel: true, description: 'Date de réception de la notification' }] }
+  ],
+  [ETAPES_TYPES.notificationAuDemandeur_AvisFavorableDeLaCARM_]: suiviDeLaDemarche,
+  [ETAPES_TYPES.notificationAuDemandeur_ClassementSansSuite_]: suiviDeLaDemarche,
+  [ETAPES_TYPES.notificationAuDemandeur_AvisDefavorable_]: suiviDeLaDemarche,
+  [ETAPES_TYPES.notificationAuDemandeur_SignatureDeLautorisationDeRechercheMiniere_]: suiviDeLaDemarche,
+  [ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_]: suiviDeLaDemarche,
+  [ETAPES_TYPES.notificationAuDemandeur_InitiationDeLaDemarcheDeRetrait_]: suiviDeLaDemarche,
+  [ETAPES_TYPES.paiementDesFraisDeDossierComplementaires]: [
+    {
+      id: 'paiement',
+      nom: 'Informations sur le paiement',
+      elements: [
+        { id: 'fraisComplementaires', nom: 'Frais de dossier complémentaires', type: 'number', optionnel: true, description: 'Montant en euro des frais de dossier complémentaires payés' },
+        { id: 'virement', nom: 'Virement banquaire ou postal', type: 'text', optionnel: true, description: 'Référence communiquée par le demandeur à sa banque' }
+      ]
+    }
+  ],
+  [ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires]: [
+    { id: 'paiement', nom: 'Informations sur le paiement', elements: [{ id: 'facture', nom: 'Facture ONF', type: 'text', optionnel: true, description: "Numéro de facture émise par l'ONF" }] }
+  ],
+  [ETAPES_TYPES.noteInterneSignalee]: [
+    {
+      id: 'nisi',
+      nom: 'Note interne signalée',
+      elements: [
+        {
+          id: 'note',
+          nom: "Notes réservées à l'administration",
+          type: 'textarea',
+          optionnel: true,
+          description: "Informations internes importantes pour la compréhension du suivi de l'instruction de la démarche"
+        }
+      ]
+    }
+  ]
+} as const satisfies { [key in EtapeTypeId]?: DeepReadonly<Section[]> }
 
 const proprietesDeLaConcession: Section[] = [
   {
@@ -262,7 +400,15 @@ const TDESections = {
             { id: 'motifs', nom: 'Motifs', type: 'textarea', optionnel: true, description: "Élément d'expertise" },
             { id: 'expert', nom: 'Expert', type: 'text', optionnel: true, description: "Agent ONF qui a réalisé l'expertise" },
             { id: 'agent', nom: 'Agent', type: 'text', optionnel: true, description: 'Chargé de mission foncier du Service Aménagement du Territoire' },
-            { id: 'dateDebut', nom: 'Date de début', type: 'date', dateFin: toCaminoDate('2018-02-07'), dateDebut: toCaminoDate('2003-07-24'), optionnel: true, description: 'Date de début de l’expertise' }
+            {
+              id: 'dateDebut',
+              nom: 'Date de début',
+              type: 'date',
+              dateFin: toCaminoDate('2018-02-07'),
+              dateDebut: toCaminoDate('2003-07-24'),
+              optionnel: true,
+              description: 'Date de début de l’expertise'
+            }
           ]
         }
       ],
@@ -295,12 +441,12 @@ const TDESections = {
       ]
     },
     [DEMARCHES_TYPES_IDS.Prolongation]: {
-      [ETAPES_TYPES.notificationAuDemandeur_AvisDefavorable_]:suiviDeLaDemarche,
-      [ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_]:suiviDeLaDemarche
+      [ETAPES_TYPES.notificationAuDemandeur_AvisDefavorable_]: suiviDeLaDemarche,
+      [ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_]: suiviDeLaDemarche
     },
     [DEMARCHES_TYPES_IDS.Renonciation]: {
-      [ETAPES_TYPES.notificationAuDemandeur_AvisDefavorable_]:suiviDeLaDemarche,
-      [ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_]:suiviDeLaDemarche
+      [ETAPES_TYPES.notificationAuDemandeur_AvisDefavorable_]: suiviDeLaDemarche,
+      [ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_]: suiviDeLaDemarche
     }
   },
   [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: {
@@ -727,14 +873,13 @@ const TDESections = {
       [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisDExploitation
     }
   }
-} satisfies {
+} as const satisfies {
   [titreKey in keyof TDEType]?: {
     [demarcheKey in keyof TDEType[titreKey]]?: {
-      [key in Extract<TDEType[titreKey][demarcheKey], readonly EtapeTypeId[]>[number]]?: Section[]
+      [key in Extract<TDEType[titreKey][demarcheKey], readonly EtapeTypeId[]>[number]]?: DeepReadonly<Section[]>
     }
   }
 }
-
 
 export interface Section {
   id: string
@@ -778,7 +923,41 @@ export type CheckboxesElement = {
 
 export type SelectElement = {
   type: 'select'
-} & ({options: { id: string; nom: string }[]} | {
-  valeursMetasNom: 'devises' | 'unites'}) & BasicElement
+} & (
+  | { options: { id: string; nom: string }[] }
+  | {
+      valeursMetasNom: 'devises' | 'unites'
+    }
+) &
+  BasicElement
 
 export type SectionsElement = FileElement | DateElement | TextElement | NumberElement | RadioElement | CheckboxesElement | SelectElement
+
+type EtapesTypesEtapesTypesSections = keyof typeof EtapesTypesSections
+
+const isEtapesTypesEtapesTypesSections = (etapeTypeId?: EtapeTypeId): etapeTypeId is EtapesTypesEtapesTypesSections => {
+  return Object.keys(EtapesTypesSections).includes(etapeTypeId)
+}
+
+// FIXME tests
+export const getSections = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): DeepReadonly<Section>[] => {
+  if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheId) && isNotNullNorUndefined(etapeTypeId)) {
+    const sections: DeepReadonly<Section>[] = []
+
+    type TDESectionsTypesUnleashed = { [key in TitreTypeId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: DeepReadonly<Section[]> } } }
+
+    sections.push(...((TDESections as TDESectionsTypesUnleashed)[titreTypeId]?.[demarcheId]?.[etapeTypeId] ?? []))
+
+    if (isEtapesTypesEtapesTypesSections(etapeTypeId)) {
+      EtapesTypesSections[etapeTypeId].forEach(section => {
+        if (!sections.some(({ id }) => id === section.id)) {
+          sections.push(section)
+        }
+      })
+    }
+    
+return sections
+  } else {
+    throw new Error(`il manque des éléments pour trouver les sections titreTypeId: '${titreTypeId}', demarcheId: ${demarcheId}, etapeTypeId: ${etapeTypeId}`)
+  }
+}

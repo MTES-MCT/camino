@@ -49,33 +49,40 @@ type BasicElement = {
 
 type DateElementWithValue = {
   value: CaminoDate | undefined
-} & BasicElement & DateElement
+} & BasicElement &
+  DateElement
 
 type FileElementWithValue = {
   value: string | undefined
-} & BasicElement & FileElement
+} & BasicElement &
+  FileElement
 
 type TextElementWithValue = {
   value: string | undefined
-} & BasicElement & TextElement
+} & BasicElement &
+  TextElement
 
 type NumberElementWithValue = {
   value: number | undefined
-} & BasicElement & NumberElement
+} & BasicElement &
+  NumberElement
 
 type RadioElementWithValue = {
   value: boolean | undefined
-} & BasicElement & RadioElement
+} & BasicElement &
+  RadioElement
 
 type CheckboxesElementWithValue = {
   options: { id: string; nom: string }[]
-  value: string[] 
-} & BasicElement & CheckboxesElement
+  value: string[]
+} & BasicElement &
+  CheckboxesElement
 
 type SelectElementWithValue = {
   options: { id: string; nom: string }[]
   value: string | undefined
-} & BasicElement & SelectElement
+} & BasicElement &
+  SelectElement
 
 export type ElementWithValue = FileElementWithValue | DateElementWithValue | TextElementWithValue | NumberElementWithValue | RadioElementWithValue | CheckboxesElementWithValue | SelectElementWithValue
 
