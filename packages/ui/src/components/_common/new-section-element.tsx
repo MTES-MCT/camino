@@ -1,14 +1,14 @@
 import { numberFormat } from '@/utils/number-format'
 import { Icon } from '@/components/_ui/icon'
 import {
-  Element,
+  ElementWithValue,
   isFileElement,
   isNumberElement,
   valeurFind
 } from 'camino-common/src/titres'
 
 export interface Props {
-  element: Element
+  element: ElementWithValue
   fileDownload: (file: string) => void
 }
 

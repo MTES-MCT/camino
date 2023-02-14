@@ -4,6 +4,7 @@ import { EtapeTypeId } from './static/etapesTypes.js'
 import { CaminoDate, dateFormat } from './date.js'
 import { TitreTypeId } from './static/titresTypes.js'
 import { numberFormat } from './number.js'
+import { CheckboxesElement, DateElement, FileElement, NumberElement, RadioElement, SelectElement, TextElement } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
 export interface CommonTitre {
   id: string
@@ -43,78 +44,72 @@ type BasicElement = {
   description?: string
   dateDebut?: CaminoDate
   dateFin?: CaminoDate
+  optionnel?: boolean
 }
 
-type DateElement = {
-  type: 'date'
+type DateElementWithValue = {
   value: CaminoDate | undefined
-} & BasicElement
+} & BasicElement & DateElement
 
-type FileElement = {
-  type: 'file'
+type FileElementWithValue = {
   value: string | undefined
-} & BasicElement
+} & BasicElement & FileElement
 
-type TextElement = {
-  type: 'text'
+type TextElementWithValue = {
   value: string | undefined
-} & BasicElement
+} & BasicElement & TextElement
 
-type NumberElement = {
-  type: 'number' | 'integer'
+type NumberElementWithValue = {
   value: number | undefined
-} & BasicElement
+} & BasicElement & NumberElement
 
-type RadioElement = {
-  type: 'radio'
+type RadioElementWithValue = {
   value: boolean | undefined
-} & BasicElement
+} & BasicElement & RadioElement
 
-type CheckboxesElement = {
-  type: 'checkboxes'
+type CheckboxesElementWithValue = {
   options: { id: string; nom: string }[]
-  value: string[]
-} & BasicElement
+  value: string[] 
+} & BasicElement & CheckboxesElement
 
-type SelectElement = {
-  type: 'select'
+type SelectElementWithValue = {
   options: { id: string; nom: string }[]
   value: string | undefined
-} & BasicElement
+} & BasicElement & SelectElement
 
-export type Element = FileElement | DateElement | TextElement | NumberElement | RadioElement | CheckboxesElement | SelectElement
+export type ElementWithValue = FileElementWithValue | DateElementWithValue | TextElementWithValue | NumberElementWithValue | RadioElementWithValue | CheckboxesElementWithValue | SelectElementWithValue
 
-export const isFileElement = (element: Element): element is FileElement => {
+export const isFileElement = (element: ElementWithValue): element is FileElementWithValue => {
   return element.type === 'file'
 }
 
-export const isDateElement = (element: Element): element is DateElement => {
+export const isDateElement = (element: ElementWithValue): element is DateElementWithValue => {
   return element.type === 'date'
 }
 
-export const isNumberElement = (element: Element): element is NumberElement => {
+export const isNumberElement = (element: ElementWithValue): element is NumberElementWithValue => {
   return element.type === 'number' || element.type === 'integer'
 }
 
-export const isRadioElement = (element: Element): element is RadioElement => {
-  return element.type === 'radio'
+export const isRadioElement = (element: ElementWithValue): element is RadioElementWithValue => {
+  return element.type === 'radio' || element.type === 'checkbox'
 }
 
-export const isCheckboxesElement = (element: Element): element is CheckboxesElement => {
+export const isCheckboxesElement = (element: ElementWithValue): element is CheckboxesElementWithValue => {
   return element.type === 'checkboxes'
 }
 
-export const isSelectElement = (element: Element): element is SelectElement => {
+export const isSelectElement = (element: ElementWithValue): element is SelectElementWithValue => {
   return element.type === 'select'
 }
 
 export interface Section {
   id: string
   nom?: string
-  elements: Element[]
+  elements: ElementWithValue[]
 }
 
-export const valeurFind = (element: Element): string => {
+export const valeurFind = (element: ElementWithValue): string => {
   if (element.value === undefined || element.value === '') {
     return '–'
   }

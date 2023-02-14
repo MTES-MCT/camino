@@ -357,8 +357,8 @@ export const getDocuments = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTyp
     type TDEDocumentsTypesUnleashed = { [key in TitreTypeId]?: { [key in DemarcheTypeId]?: { [key in EtapeTypeId]?: { [key in DocumentTypeId]: { optionnel: boolean; description?: string } } } } }
 
     documentsIds.push(...Object.keys((TDEDocumentsTypes as TDEDocumentsTypesUnleashed)[titreTypeId]?.[demarcheId]?.[etapeTypeId] ?? {}).filter(isDocumentTypeId))
-    
-return documentsIds.filter(onlyUnique).map(documentTypeId => {
+
+    return documentsIds.filter(onlyUnique).map(documentTypeId => {
       const documentSpecifique = (TDEDocumentsTypes as TDEDocumentsTypesUnleashed)[titreTypeId]?.[demarcheId]?.[etapeTypeId]?.[documentTypeId]
       const document = { ...DocumentsTypes[documentTypeId], optionnel: true }
       if (documentSpecifique) {
