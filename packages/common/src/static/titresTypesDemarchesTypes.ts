@@ -10,7 +10,7 @@ const demarchesEverywhere = [
   DEMARCHES_TYPES_IDS.Retrait
 ]
 
-export const TITRES_TYPES_DEMARCHES_TYPES = {
+const TITRES_TYPES_DEMARCHES_TYPES = {
   [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES]: [...demarchesEverywhere],
   [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_HYDROCARBURE]: [...demarchesEverywhere],
   [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_METAUX]: [...demarchesEverywhere],
@@ -218,6 +218,7 @@ export const TITRES_TYPES_DEMARCHES_TYPES = {
   ]
 } as const
 
+export type TitresTypesDemarchesTypes = typeof TITRES_TYPES_DEMARCHES_TYPES
 export const getDemarchesTypesByTitreType = (titreTypeId: TitreTypeId): DemarcheType[] => {
   return TITRES_TYPES_DEMARCHES_TYPES[titreTypeId].map(demarcheTypeId => DemarchesTypes[demarcheTypeId]).sort((a, b) => a.ordre - b.ordre)
 }

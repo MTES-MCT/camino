@@ -16,8 +16,6 @@ export const titresEtapesOrdreUpdate = async (
   console.info()
   console.info('ordre des étapes…')
 
-  // FIXME ajouter condition sur titresDemarchesIds
-
   const etapes: {
     rows: {
       titre_id: string
@@ -41,8 +39,6 @@ export const titresEtapesOrdreUpdate = async (
       and titre.archive = false
       ${demarcheId ? `and demarche.id = '${demarcheId}'` : ''}
   order by demarche.id, etape.ordre`)
-
-  const titresEtapesIdsUpdated: string[] = []
 
   const titresDemarches = etapes.rows.reduce<{
     [key: DemarcheId]: {
@@ -84,6 +80,32 @@ export const titresEtapesOrdreUpdate = async (
 
     return acc
   }, {})
+
+  return titresEtapesOrdreUpdateVisibleForTesting(user, titresDemarches)
+}
+
+export const titresEtapesOrdreUpdateVisibleForTesting = async (
+  user: IUtilisateur,
+  titresDemarches: {
+    [key: DemarcheId]: {
+      etapes: Pick<
+        ITitreEtape,
+        | 'id'
+        | 'ordre'
+        | 'typeId'
+        | 'statutId'
+        | 'date'
+        | 'contenu'
+        | 'titreDemarcheId'
+      >[]
+      id: DemarcheId
+      typeId: DemarcheTypeId
+      titreTypeId: TitreTypeId
+      titreId: string
+    }
+  }
+): Promise<string[]> => {
+  const titresEtapesIdsUpdated: string[] = []
 
   for (const titreDemarche of Object.values(titresDemarches)) {
     if (titreDemarche.etapes) {

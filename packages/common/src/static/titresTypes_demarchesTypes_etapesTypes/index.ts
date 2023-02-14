@@ -1,7 +1,7 @@
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId, TravauxIds } from '../demarchesTypes.js'
 import { ETAPES_TYPES, EtapeTypeId } from '../etapesTypes.js'
 import { TITRES_TYPES_IDS, TitreTypeId } from '../titresTypes.js'
-import { TITRES_TYPES_DEMARCHES_TYPES } from '../titresTypesDemarchesTypes.js'
+import { TitresTypesDemarchesTypes } from '../titresTypesDemarchesTypes.js'
 
 const travaux = {
   [DEMARCHES_TYPES_IDS.AutorisationDOuvertureDeTravaux]: [
@@ -3770,7 +3770,7 @@ export const TDE = {
       ETAPES_TYPES.classementSansSuite
     ]
   }
-} as const satisfies { [key in TitreTypeId]: { [other in (typeof TITRES_TYPES_DEMARCHES_TYPES)[key][number]]: readonly EtapeTypeId[] } }
+} as const satisfies { [key in TitreTypeId]: { [other in TitresTypesDemarchesTypes[key][number]]: readonly EtapeTypeId[] } }
 
 type TDEDemarchesSubObject = (typeof TDE)[keyof typeof TDE]
 
