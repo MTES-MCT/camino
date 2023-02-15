@@ -2,4 +2,4 @@
 base_host: camino.beta.gouv.fr
 mailjet_contact_list_id: 10250369
 mailjet_exploitants_guyane_list_id: 1981093
-keycloak_client_id: camino-prod
+keycloak_client_id: camino
