@@ -1,4 +1,9 @@
-import { DemarcheId, IContenu, IHeritageContenu, ITitreEtape } from '../../types.js'
+import {
+  DemarcheId,
+  IContenu,
+  IHeritageContenu,
+  ITitreEtape
+} from '../../types.js'
 
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import { titreEtapeHeritageContenuFind } from '../utils/titre-etape-heritage-contenu-find.js'
