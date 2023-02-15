@@ -97,18 +97,6 @@ const titresTypesDemarchesTypesEtapesTypes = apiGraphQLFetch(
   `
 )
 
-const titresTypesDemarchesTypesEtapesTypesDocumentsTypes = apiGraphQLFetch(
-  gql`
-    query titresTypesDemarchesTypesEtapesTypesDocumentsTypes {
-      titresTypesDemarchesTypesEtapesTypesDocumentsTypes {
-        ...titreTypeDemarcheTypeEtapeTypeDocumentType
-      }
-    }
-
-    ${fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType}
-  `
-)
-
 const titresTypesDemarchesTypesEtapesTypesJustificatifsTypes = apiGraphQLFetch(
   gql`
     query titresTypesDemarchesTypesEtapesTypesJustificatifsTypes {
@@ -153,7 +141,6 @@ export {
   documentsTypes,
   titresTypes,
   titresTypesDemarchesTypesEtapesTypes,
-  titresTypesDemarchesTypesEtapesTypesDocumentsTypes,
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
   etapesTypesDocumentsTypes,
   etapesTypesJustificatifsTypes

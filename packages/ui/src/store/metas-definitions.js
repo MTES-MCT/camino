@@ -6,7 +6,6 @@ import {
   titresTypesDemarchesTypesEtapesTypes,
   etapesTypesDocumentsTypes,
   etapesTypesJustificatifsTypes,
-  titresTypesDemarchesTypesEtapesTypesDocumentsTypes,
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypes
 } from '@/api/metas'
 
@@ -195,39 +194,6 @@ const metasIndex = {
       { id: 'ordre', nom: 'Ordre', type: Number }
     ],
     ids: ['titreTypeId', 'demarcheTypeId', 'etapeTypeId']
-  },
-  'titres-types--demarches-types--etapes-types--documents-types': {
-    get: titresTypesDemarchesTypesEtapesTypesDocumentsTypes,
-    nom: 'Types des titres | Types des démarches | Types des étapes | Types des documents',
-    colonnes: [
-      {
-        id: 'titreTypeId',
-        nom: 'Type de titre',
-        type: 'entities',
-        entities: 'titres-types'
-      },
-      {
-        id: 'demarcheTypeId',
-        nom: 'Type de démarche',
-        type: 'entities',
-        entities: 'demarches-types'
-      },
-      {
-        id: 'etapeTypeId',
-        nom: "Type d'étape",
-        type: 'entities',
-        entities: 'etapes-types'
-      },
-      {
-        id: 'documentTypeId',
-        nom: 'Type de document',
-        type: 'entities',
-        entities: 'documents-types'
-      },
-      { id: 'optionnel', nom: 'Optionnel', type: Boolean, optional: true },
-      { id: 'description', nom: 'Description', type: String, optional: true }
-    ],
-    ids: ['titreTypeId', 'demarcheTypeId', 'etapeTypeId', 'documentTypeId']
   },
   'titres-types--demarches-types--etapes-types--justificatifs-types': {
     get: titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,

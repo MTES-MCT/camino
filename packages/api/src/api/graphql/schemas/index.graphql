@@ -172,7 +172,6 @@ type Query {
   titresTypesTitresStatuts: [TitreTypeTitreStatut]
 
   titresTypesDemarchesTypesEtapesTypes: [TitreTypeDemarcheTypeEtapeType]
-  titresTypesDemarchesTypesEtapesTypesDocumentsTypes: [TitreTypeDemarcheTypeEtapeTypeDocumentType]
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypes: [TitreTypeDemarcheTypeEtapeTypeDocumentType]
   etapesTypesDocumentsTypes: [EtapeTypeDocumentType]
   etapesTypesJustificatifsTypes: [EtapeTypeJustificatifType]

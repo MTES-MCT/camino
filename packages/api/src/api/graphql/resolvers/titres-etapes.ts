@@ -193,7 +193,9 @@ const etapeHeritage = async (
       etapeType!,
       titreDemarche!,
       sections,
-      justificatifsTypes
+      justificatifsTypes,
+      titreDemarche!.titre!.typeId,
+      titreDemarche!.typeId
     )
     const titreTypeId = titreDemarche?.titre?.typeId
     if (!titreTypeId) {
