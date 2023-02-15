@@ -1,0 +1,26 @@
+- name: swap file path
+  ansible.builtin.set_fact: swap_file_path=/swapfile
+- name: Create swap file
+  command: dd if=/dev/zero of={{ swap_file_path }} bs=1024 count=1024k
+  become: True
+- name: Change swap file permissions
+  file: path="{{ swap_file_path }}"
+        owner=root
+        group=root
+        mode=0600
+  become: True
+- name: Make swap file
+  command: "mkswap {{ swap_file_path }}"
+  become: True
+- name: Write swap entry in fstab
+  mount: name=none
+         src={{ swap_file_path }}
+         fstype=swap
+         opts=sw
+         passno=0
+         dump=0
+         state=present
+  become: True
+- name: Mount swap
+  command: "swapon {{ swap_file_path }}"
+  become: True

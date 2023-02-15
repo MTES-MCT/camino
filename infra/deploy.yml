@@ -3,6 +3,8 @@
   vars:
     git_user_uid: 1002
   roles:
+    - role: swap
+      when: ansible_swaptotal_mb < 1
     - role: init
     - role: user
     - role: nginx
