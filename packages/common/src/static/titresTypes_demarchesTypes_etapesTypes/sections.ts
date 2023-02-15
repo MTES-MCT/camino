@@ -204,10 +204,6 @@ const caracteristiquesARM: Section[] = [
 
 const TDESections = {
   [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
-    [DEMARCHES_TYPES_IDS.Retrait]: {
-      [ETAPES_TYPES.notificationAuDemandeur_InitiationDeLaDemarcheDeRetrait_]: suiviDeLaDemarche,
-      [ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_]: suiviDeLaDemarche
-    },
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__]: [
         { id: 'arm', nom: 'Caractéristiques ARM', elements: [{ id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio', description: '' }] }
@@ -436,33 +432,6 @@ const TDESections = {
           elements: [
             { id: 'signataire', nom: 'Signataire ONF', type: 'text', optionnel: true, description: "Prénom et nom du représentant légal du titulaire de l'ONF" },
             { id: 'titulaire', nom: 'Signataire titulaire', type: 'text', optionnel: true, description: "Prénom et nom du représentant légal du titulaire de l'autorisation" }
-          ]
-        }
-      ]
-    },
-    [DEMARCHES_TYPES_IDS.Prolongation]: {
-      [ETAPES_TYPES.notificationAuDemandeur_AvisDefavorable_]: suiviDeLaDemarche,
-      [ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_]: suiviDeLaDemarche
-    },
-    [DEMARCHES_TYPES_IDS.Renonciation]: {
-      [ETAPES_TYPES.notificationAuDemandeur_AvisDefavorable_]: suiviDeLaDemarche,
-      [ETAPES_TYPES.notificationAuDemandeur_SignatureDeLavenantALautorisationDeRechercheMiniere_]: suiviDeLaDemarche
-    }
-  },
-  [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: {
-    [DEMARCHES_TYPES_IDS.Octroi]: {
-      [ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: [
-        {
-          id: 'mea',
-          nom: 'Mission autorité environnementale',
-          elements: [
-            {
-              id: 'arrete',
-              nom: 'Arrêté préfectoral',
-              type: 'text',
-              optionnel: true,
-              description: "Numéro de l'arrêté préfectoral portant décision dans le cadre de l’examen au cas par cas du projet d’autorisation de recherche minière"
-            }
           ]
         }
       ]
@@ -939,7 +908,6 @@ const isEtapesTypesEtapesTypesSections = (etapeTypeId?: EtapeTypeId): etapeTypeI
   return Object.keys(EtapesTypesSections).includes(etapeTypeId)
 }
 
-// FIXME tests
 export const getSections = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheTypeId, etapeTypeId?: EtapeTypeId): DeepReadonly<Section>[] => {
   if (isNotNullNorUndefined(titreTypeId) && isNotNullNorUndefined(demarcheId) && isNotNullNorUndefined(etapeTypeId)) {
     const sections: DeepReadonly<Section>[] = []
@@ -955,8 +923,8 @@ export const getSections = (titreTypeId?: TitreTypeId, demarcheId?: DemarcheType
         }
       })
     }
-    
-return sections
+
+    return sections
   } else {
     throw new Error(`il manque des éléments pour trouver les sections titreTypeId: '${titreTypeId}', demarcheId: ${demarcheId}, etapeTypeId: ${etapeTypeId}`)
   }
