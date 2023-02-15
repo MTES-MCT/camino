@@ -15,7 +15,6 @@
     "db:prod-fetch": "scp -P 212 $u@camino.beta.gouv.fr:/srv/backups/camino.sql backups/",
     "db:public-import": "pg_restore --host=localhost --username=postgres --clean --if-exists --no-owner --no-privileges --dbname=camino ./backups/camino-public.sql",
     "db:recreate": "dropdb --host=localhost --username=postgres camino && createdb --host=localhost --username=postgres camino",
-    "db:user": "node --loader ts-node/esm/transpile-only ./src/knex/cli-user-add.ts",
     "db:migrate": "node --loader ts-node/esm/transpile-only ./src/knex/migrate.ts",
     "db:add-migration": "NODE_OPTIONS='--loader ts-node/esm/transpile-only' knex migrate:make",
     "dev": "node --watch --loader ts-node/esm/transpile-only --inspect ./src/index.ts",

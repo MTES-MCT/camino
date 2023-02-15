@@ -2,6 +2,7 @@ import '../../init.js'
 import Utilisateurs from '../../database/models/utilisateurs.js'
 import { writeFileSync } from 'fs'
 
+// TODO 2023-02-15: une fois https://github.com/MTES-MCT/camino/pull/98 livrée en prod, supprimer ce script, ainsi que le champ mot de passe dans la table utilisateur
 export const main = async () => {
   const utilisateurs = await Utilisateurs.query().whereNotNull('email')
 
