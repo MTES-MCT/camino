@@ -1,25 +1,14 @@
-import {
-  IContenu,
-  IEtapeType,
-  IHeritageContenu,
-  Index,
-  ISection,
-  ITitreEtape
-} from '../../types.js'
+import { IContenu, IHeritageContenu, ITitreEtape } from '../../types.js'
 
 import { objectClone } from '../../tools/index.js'
 
-import { etapeTypeSectionsFormat } from '../../api/_format/etapes-types.js'
 import {
-  etapeSectionsDictionaryBuild,
   heritageContenuFind,
   titreEtapeHeritageContenuFind
 } from './titre-etape-heritage-contenu-find.js'
-import { vi, describe, test, expect } from 'vitest'
-
-vi.mock('../../api/_format/etapes-types', () => ({
-  etapeTypeSectionsFormat: vi.fn()
-}))
+import { describe, test, expect } from 'vitest'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
 describe('retourne le contenu spécifique d’un élément d’une section en fonction de son héritage', () => {
   test('l’étape n’est pas modifiée si elle n’a pas d’étape précédente et qu’elle n’a aucun héritage d’actif', () => {
@@ -30,9 +19,7 @@ describe('retourne le contenu spécifique d’un élément d’une section en fo
       heritageContenu
     } as ITitreEtape
 
-    expect(
-      heritageContenuFind('section', 'element', 'checkbox', titreEtape)
-    ).toEqual({
+    expect(heritageContenuFind('section', 'element', titreEtape)).toEqual({
       actif: false,
       hasChanged: false,
       value: undefined,
@@ -58,7 +45,6 @@ describe('retourne le contenu spécifique d’un élément d’une section en fo
       heritageContenuFind(
         'section',
         'element',
-        'checkbox',
         titreEtape,
         titreEtapePrecedente
       )
@@ -93,7 +79,6 @@ describe('retourne le contenu spécifique d’un élément d’une section en fo
       heritageContenuFind(
         'section',
         'element',
-        'text',
         titreEtape,
         titreEtapePrecedente
       )
@@ -129,7 +114,6 @@ describe('retourne le contenu spécifique d’un élément d’une section en fo
       heritageContenuFind(
         'section',
         'element',
-        'text',
         titreEtape,
         titreEtapePrecedente
       )
@@ -151,14 +135,14 @@ describe('retourne le contenu spécifique d’un élément d’une section en fo
       } as IHeritageContenu
     } as ITitreEtape
 
-    expect(
-      heritageContenuFind('section', 'element', 'text', titreEtape, null)
-    ).toEqual({
-      hasChanged: true,
-      actif: false,
-      value: titreEtape.contenu!.section.element,
-      etapeId: undefined
-    })
+    expect(heritageContenuFind('section', 'element', titreEtape, null)).toEqual(
+      {
+        hasChanged: true,
+        actif: false,
+        value: titreEtape.contenu!.section.element,
+        etapeId: undefined
+      }
+    )
   })
 })
 
@@ -199,7 +183,7 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
     } as ITitreEtape
     titreEtape.heritageContenu!.section.element.actif = true
 
-    const dictionary = {
+    const dictionary: Record<string, DeepReadonly<Section>[]> = {
       [prevTitreEtape.id]: [
         {
           id: 'section',
@@ -212,7 +196,7 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
           elements: [{ id: 'element', type: 'date' }]
         }
       ]
-    } as Index<ISection[]>
+    }
 
     expect(
       titreEtapeHeritageContenuFind(
@@ -245,10 +229,14 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
     } as ITitreEtape
     titreEtape.heritageContenu!.section.element.actif = true
 
-    const dictionary = {
-      [prevTitreEtape.id]: [{ id: 'section', elements: [{ id: 'element' }] }],
-      [titreEtape.id]: [{ id: 'section', elements: [{ id: 'element' }] }]
-    } as Index<ISection[]>
+    const dictionary: Record<string, DeepReadonly<Section>[]> = {
+      [prevTitreEtape.id]: [
+        { id: 'section', elements: [{ id: 'element', type: 'text' }] }
+      ],
+      [titreEtape.id]: [
+        { id: 'section', elements: [{ id: 'element', type: 'text' }] }
+      ]
+    }
 
     expect(
       titreEtapeHeritageContenuFind(
@@ -283,10 +271,14 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
     titreEtape.heritageContenu!.section.element.actif = true
     titreEtape.heritageContenu!.section.element.etapeId = 'prevEtapeId'
 
-    const dictionary = {
-      [prevTitreEtape.id]: [{ id: 'section', elements: [{ id: 'element' }] }],
-      [titreEtape.id]: [{ id: 'section', elements: [{ id: 'element' }] }]
-    } as Index<ISection[]>
+    const dictionary: Record<string, DeepReadonly<Section>[]> = {
+      [prevTitreEtape.id]: [
+        { id: 'section', elements: [{ id: 'element', type: 'text' }] }
+      ],
+      [titreEtape.id]: [
+        { id: 'section', elements: [{ id: 'element', type: 'text' }] }
+      ]
+    }
 
     expect(
       titreEtapeHeritageContenuFind(
@@ -321,10 +313,14 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
     titreEtape.heritageContenu!.section.element.actif = true
     titreEtape.heritageContenu!.section.element.etapeId = 'prevEtapeId'
 
-    const dictionary = {
-      [prevTitreEtape.id]: [{ id: 'section', elements: [{ id: 'element' }] }],
-      [titreEtape.id]: [{ id: 'section', elements: [{ id: 'element' }] }]
-    } as Index<ISection[]>
+    const dictionary: Record<string, DeepReadonly<Section>[]> = {
+      [prevTitreEtape.id]: [
+        { id: 'section', elements: [{ id: 'element', type: 'text' }] }
+      ],
+      [titreEtape.id]: [
+        { id: 'section', elements: [{ id: 'element', type: 'text' }] }
+      ]
+    }
 
     expect(
       titreEtapeHeritageContenuFind(
@@ -339,42 +335,5 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
         section: { element: { actif: true, etapeId: prevTitreEtape.id } }
       }
     })
-  })
-})
-
-describe('construit le dictionnaire les sections', () => {
-  const etapeTypeSectionsFormatMock = vi.mocked(etapeTypeSectionsFormat, true)
-
-  test('retourne un dictionnaire vide', () => {
-    const dictionary = etapeSectionsDictionaryBuild([])
-    expect(dictionary).toEqual({})
-  })
-
-  test('retourne un dictionnaire vide car pas de sections', () => {
-    etapeTypeSectionsFormatMock.mockReturnValue([])
-
-    const dictionary = etapeSectionsDictionaryBuild([
-      { id: 'etapeId', type: { id: 'mfr' } as IEtapeType }
-    ] as ITitreEtape[])
-    expect(dictionary).toEqual({})
-  })
-
-  test('retourne un dictionnaire avec les sections par étapes', () => {
-    const sections = {
-      id: 'section1',
-      nom: 'sectionOne',
-      elements: [{ id: 'element1', nom: 'elementOne' }]
-    }
-    etapeTypeSectionsFormatMock.mockReturnValue([sections] as ISection[])
-
-    const etape = {
-      id: 'etapeId',
-      type: {
-        id: 'mfr'
-      } as IEtapeType
-    } as ITitreEtape
-
-    const dictionary = etapeSectionsDictionaryBuild([etape])
-    expect(dictionary).toEqual({ [etape.id]: [sections] })
   })
 })

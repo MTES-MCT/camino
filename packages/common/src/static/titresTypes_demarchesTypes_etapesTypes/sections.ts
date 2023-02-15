@@ -208,6 +208,13 @@ const TDESections = {
       [ETAPES_TYPES.receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__]: [
         { id: 'arm', nom: 'Caractéristiques ARM', elements: [{ id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio', description: '' }] }
       ],
+      [ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau]: [
+        {
+          id: 'arm',
+          nom: 'Caractéristiques ARM',
+          elements: [{ id: 'franchissements', nom: "Franchissements de cours d'eau", type: 'integer', optionnel: true, description: "Nombre de franchissements de cours d'eau" }]
+        }
+      ],
       [ETAPES_TYPES.receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_]: [
         {
           id: 'arm',

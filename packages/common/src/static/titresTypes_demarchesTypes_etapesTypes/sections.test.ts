@@ -9,22 +9,41 @@ test('getSections pas de surcharge mais pas de sections', () => {
   expect(getSections('apm', 'amo', 'abs')).toMatchInlineSnapshot('[]')
 })
 
-// ATTENTION, pour le moment il n'y a pas de surcharge (mais le code le prévoit)
-// Le jour où il y'a une surcharge ajoutée, modifier ce test pour tester vraiment une surcharge
-test('getSections pas de surcharge', () => {
-  expect(getSections('arm', 'oct', 'rcd')).toMatchInlineSnapshot(`
+test('getSections surcharge', () => {
+  expect(getSections('arm', 'oct', 'rde')).toMatchInlineSnapshot(`
     [
       {
         "elements": [
           {
-            "description": "",
-            "id": "mecanise",
-            "nom": "Prospection mécanisée",
-            "type": "radio",
+            "description": "Nombre de franchissements de cours d'eau",
+            "id": "franchissements",
+            "nom": "Franchissements de cours d'eau",
+            "optionnel": true,
+            "type": "integer",
           },
         ],
         "id": "arm",
         "nom": "Caractéristiques ARM",
+      },
+      {
+        "elements": [
+          {
+            "description": "Numéro de dossier DEAL Service eau",
+            "id": "numero-dossier-deal-eau",
+            "nom": "Numéro de dossier",
+            "optionnel": true,
+            "type": "text",
+          },
+          {
+            "description": "Numéro de récépissé émis par la DEAL Service eau",
+            "id": "numero-recepisse",
+            "nom": "Numéro de récépissé",
+            "optionnel": true,
+            "type": "text",
+          },
+        ],
+        "id": "deal",
+        "nom": "DEAL",
       },
     ]
   `)

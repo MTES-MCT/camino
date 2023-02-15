@@ -15,10 +15,7 @@ import {
   titreEtapeHeritagePropsFind,
   titreEtapePropsIds
 } from '../../../business/utils/titre-etape-heritage-props-find.js'
-import {
-  etapeSectionsDictionaryBuild,
-  titreEtapeHeritageContenuFind
-} from '../../../business/utils/titre-etape-heritage-contenu-find.js'
+import { titreEtapeHeritageContenuFind } from '../../../business/utils/titre-etape-heritage-contenu-find.js'
 import { etapeTypeSectionsFormat } from '../../_format/etapes-types.js'
 import {
   titreEtapesSortAscByOrdre,
@@ -34,10 +31,21 @@ import {
   DOCUMENTS_TYPES_IDS
 } from 'camino-common/src/static/documentsTypes.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
-import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
+import {
+  DEMARCHES_TYPES_IDS,
+  DemarcheTypeId
+} from 'camino-common/src/static/demarchesTypes.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
-import { toTitreTypeId } from 'camino-common/src/static/titresTypes.js'
+import {
+  TitreTypeId,
+  toTitreTypeId
+} from 'camino-common/src/static/titresTypes.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import {
+  getSections,
+  Section
+} from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
 export const titreEtapePointsCalc = <
   T extends {
@@ -129,6 +137,8 @@ const titreEtapeHeritageContenuBuild = (
   date: string,
   etapeType: IEtapeType,
   sections: ISection[],
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
   titreEtapes?: ITitreEtape[] | null
 ) => {
   if (!titreEtapes) {
@@ -148,8 +158,13 @@ const titreEtapeHeritageContenuBuild = (
 
   titreEtapesFiltered.splice(0, 0, titreEtape)
 
-  const etapeSectionsDictionary =
-    etapeSectionsDictionaryBuild(titreEtapesFiltered)
+  const etapeSectionsDictionary = titreEtapesFiltered.reduce<{
+    [etapeId: string]: DeepReadonly<Section>[]
+  }>((acc, e) => {
+    acc[e.id] = getSections(titreTypeId, demarcheTypeId, e.typeId)
+
+    return acc
+  }, {})
 
   titreEtape.heritageContenu = sections.reduce(
     (heritageContenu: IHeritageContenu, section) => {
@@ -214,7 +229,9 @@ export const titreEtapeHeritageBuild = (
   etapeType: IEtapeType,
   titreDemarche: ITitreDemarche,
   sectionsSpecifiques: ISection[],
-  justificatifsTypesSpecifiques: DocumentType[]
+  justificatifsTypesSpecifiques: DocumentType[],
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId
 ) => {
   let titreEtape = {} as ITitreEtape
 
@@ -233,6 +250,8 @@ export const titreEtapeHeritageBuild = (
       date,
       etapeType,
       sectionsSpecifiques,
+      titreTypeId,
+      demarcheTypeId,
       titreDemarche.etapes
     )
 

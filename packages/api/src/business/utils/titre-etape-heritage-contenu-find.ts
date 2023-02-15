@@ -1,18 +1,12 @@
-import {
-  IContenuValeur,
-  Index,
-  ISection,
-  ISectionElementType,
-  ITitreEtape
-} from '../../types.js'
+import { IContenuValeur, Index, ITitreEtape } from '../../types.js'
 
-import { etapeTypeSectionsFormat } from '../../api/_format/etapes-types.js'
+import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 
-const heritageContenuFind = (
+export const heritageContenuFind = (
   sectionId: string,
   elementId: string,
-  elementType: ISectionElementType,
-  titreEtape: ITitreEtape,
+  titreEtape: Pick<ITitreEtape, 'contenu' | 'heritageContenu'>,
   prevTitreEtape?: ITitreEtape | null
 ) => {
   let hasChanged = false
@@ -69,10 +63,10 @@ const heritageContenuFind = (
   return { hasChanged, value, etapeId, actif }
 }
 
-const titreEtapeHeritageContenuFind = (
+export const titreEtapeHeritageContenuFind = (
   titreEtapes: ITitreEtape[],
-  titreEtape: ITitreEtape,
-  etapeSectionsDictionary: Index<ISection[]>
+  titreEtape: Pick<ITitreEtape, 'id' | 'contenu' | 'heritageContenu'>,
+  etapeSectionsDictionary: Index<DeepReadonly<Section>[]>
 ) => {
   const sections = etapeSectionsDictionary[titreEtape.id]
 
@@ -100,7 +94,6 @@ const titreEtapeHeritageContenuFind = (
           } = heritageContenuFind(
             section.id,
             element.id,
-            element.type,
             titreEtape,
             prevTitreEtape
           )
@@ -142,24 +135,4 @@ const titreEtapeHeritageContenuFind = (
       hasChanged: false
     }
   )
-}
-
-const etapeSectionsDictionaryBuild = (titreEtapes: ITitreEtape[]) =>
-  titreEtapes.reduce((acc: { [id: string]: ISection[] }, e) => {
-    const sections = etapeTypeSectionsFormat(
-      e.type!.sections,
-      e.sectionsSpecifiques
-    )
-
-    if (sections.length) {
-      acc[e.id] = sections
-    }
-
-    return acc
-  }, {})
-
-export {
-  etapeSectionsDictionaryBuild,
-  titreEtapeHeritageContenuFind,
-  heritageContenuFind
 }
