@@ -1,15 +1,5 @@
 @import '@/styles/settings.css';
 
-.header-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
-.search {
-  grid-row-start: 1;
-  grid-column-start: 2;
-  grid-column-end: 2;
-}
-
 @media (--viewport-tablet) {
   .header-container {
     display: grid;
