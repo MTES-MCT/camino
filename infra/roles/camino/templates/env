@@ -22,7 +22,7 @@ KEYCLOAK_RESET_PASSWORD_URL=https://auth.{{ base_host }}/realms/Camino/protocol/
 
 # tokens jwt
 # attention il faut garder les doubles "" pour interpréter correctement les retours à la ligne
-JWT_SECRET="{{ jwt_secret }}"
+JWT_SECRET="-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxxWXL49hPNv4CTPTXwfm28qOzH/j1nDkXKMPiwK0d8w2tUyQAGPv44eb07jdaIx1n55/61nlC5KgaPQCqaoTSIW5l7pCMKeyY4F/bWSKmlOTZChAYsQdtjmrBpZZqTHVcEARUl9IibL1Fji0g2k4rxNm8mGrfhjh+hOR/oeNPY78/0eihVnMPApQAyV/G64PLUhLYYXd980q2HDJcM04ead5T0O6C6ADzevgGI1shY1yKQyZedBGin/ZMkZ86C5QVO6gejFlF+ngKdOkoZZyNDnZZAa7fFjZV54ujI80Jv2ZVTH/xnsQJ2VKssHvh6QrowOjIDrRRR+CQxAp3zOpjwIDAQAB\\n-----END PUBLIC KEY-----"
 JWT_SECRET_ALGORITHM='RS256'
 KEYCLOAK_CLIENT_ID={{ keycloak_client_id }}
 KEYCLOAK_CLIENT_SECRET={{ keycloak_client_secret }}
