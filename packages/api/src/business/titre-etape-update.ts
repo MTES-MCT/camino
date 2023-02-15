@@ -56,9 +56,9 @@ const titreEtapeUpdate = async (
       await titresEtapesHeritageContenuUpdate(user, titreDemarcheId)
 
     const titreId = titreDemarche.titreId
-    const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate([
+    const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(
       titreId
-    ])
+    )
     const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate([
       titreId
     ])

@@ -16,7 +16,6 @@ export const titresPublicUpdate = async (titresIds?: string[]) => {
     { ids: titresIds },
     {
       fields: {
-        type: { id: {} },
         demarches: { id: {} }
       }
     },
