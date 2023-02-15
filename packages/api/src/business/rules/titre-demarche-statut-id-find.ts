@@ -16,7 +16,10 @@ import {
   DemarchesStatutsIds
 } from 'camino-common/src/static/demarchesStatuts.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
+import {
+  DemarcheTypeId,
+  TravauxIds
+} from 'camino-common/src/static/demarchesTypes.js'
 
 const titreEtapesDecisivesCommunesTypes = ['css', 'rtd', 'abd', 'and']
 
@@ -62,7 +65,11 @@ const titreDemarchesDemandesTypes = [
   'vct'
 ]
 
-const titreDemarchesTravauxTypes = ['aom', 'dam', 'dot']
+const titreDemarchesTravauxTypes = [
+  'aom',
+  'dam',
+  'dot'
+] as const satisfies readonly TravauxIds[]
 
 const titreEtapesDecisivesUnilateralesTypes = [
   'ide',
@@ -77,7 +84,7 @@ const titreEtapesDecisivesUnilateralesTypes = [
 const titreDemarchesUnilateralesTypes = ['ret', 'prr', 'dec']
 
 const titresDemarcheCommunesStatutIdFind = (
-  titreEtapeRecent: ITitreEtape
+  titreEtapeRecent: Pick<ITitreEtape, 'typeId' | 'statutId'>
 ): DemarcheStatutId | null => {
   //  - le type de l’étape est classement sans suite (css)
   //  - le titre est une ARM
@@ -115,7 +122,7 @@ const titresDemarcheCommunesStatutIdFind = (
 }
 
 const titreDemarcheUnilateralStatutIdFind = (
-  titreDemarcheEtapes: ITitreEtape[]
+  titreDemarcheEtapes: Pick<ITitreEtape, 'typeId' | 'ordre' | 'statutId'>[]
 ): DemarcheStatutId => {
   // filtre les types d'étapes qui ont un impact
   // sur le statut de la démarche de demande
@@ -178,7 +185,7 @@ const titreDemarcheUnilateralStatutIdFind = (
 }
 
 const titreDemarcheDemandeStatutIdFind = (
-  titreDemarcheEtapes: ITitreEtape[],
+  titreDemarcheEtapes: Pick<ITitreEtape, 'typeId' | 'ordre' | 'statutId'>[],
   titreTypeId: TitreTypeId
 ): DemarcheStatutId => {
   // filtre les types d'étapes qui ont un impact
@@ -295,7 +302,7 @@ const titreDemarcheDemandeStatutIdFind = (
 }
 
 const titreDemarcheTravauxStatutIdFind = (
-  titreDemarcheEtapes: ITitreEtape[],
+  titreDemarcheEtapes: Pick<ITitreEtape, 'ordre' | 'typeId'>[],
   demarcheTypeId: string
 ): DemarcheStatutId => {
   if (titreDemarcheEtapes.length === 0) {
@@ -374,7 +381,10 @@ const titreDemarcheTravauxStatutIdFind = (
 
 export const titreDemarcheStatutIdFind = (
   demarcheTypeId: DemarcheTypeId,
-  titreDemarcheEtapes: ITitreEtape[],
+  titreDemarcheEtapes: Pick<
+    ITitreEtape,
+    'typeId' | 'date' | 'ordre' | 'statutId' | 'contenu'
+  >[],
   titreTypeId: TitreTypeId,
   demarcheId: DemarcheId
 ): DemarcheStatutId => {

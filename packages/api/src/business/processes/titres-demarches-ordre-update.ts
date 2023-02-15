@@ -18,12 +18,12 @@ export const titresDemarchesOrdreUpdate = async (titresIds?: string[]) => {
   const titresDemarchesIdsUpdated = [] as string[]
 
   for (const titre of titres) {
-    const titreDemarchesSorted = titreDemarchesSortAsc(
+    const titreDemarchesSorted: ITitreDemarche[] = titreDemarchesSortAsc(
       titre.demarches!
-    ) as ITitreDemarche[]
+    )
 
     for (const titreDemarche of titreDemarchesSorted) {
-      const index: number = titreDemarchesSorted.indexOf(titreDemarche)
+      const index = titreDemarchesSorted.indexOf(titreDemarche)
       if (titreDemarche.ordre !== index + 1) {
         await titreDemarcheUpdate(titreDemarche.id, {
           ordre: index + 1

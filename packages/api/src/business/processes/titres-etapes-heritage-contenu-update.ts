@@ -23,8 +23,12 @@ import { CaminoDate } from 'camino-common/src/date.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { knex } from '../../knex.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
+import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 
-export const getDemarches = async (demarcheId?: DemarcheId) => {
+export const getDemarches = async (
+  demarcheId?: DemarcheId,
+  titreId?: string
+) => {
   const etapes: {
     rows: {
       titre_id: string
@@ -38,9 +42,10 @@ export const getDemarches = async (demarcheId?: DemarcheId) => {
       heritage_contenu: IHeritageContenu
       demarche_id: DemarcheId
       demarche_type_id: DemarcheTypeId
+      demarche_statut_id: DemarcheStatutId
     }[]
   } =
-    await knex.raw(`SELECT titre.id as titre_id, titre.type_id as titre_type_id, etape.id, etape.ordre, etape.type_id, etape.statut_id, etape.date, etape.contenu, etape.heritage_contenu, demarche.id as demarche_id, demarche.type_id as demarche_type_id
+    await knex.raw(`SELECT titre.id as titre_id, titre.type_id as titre_type_id, etape.id, etape.ordre, etape.type_id, etape.statut_id, etape.date, etape.contenu, etape.heritage_contenu, demarche.id as demarche_id, demarche.type_id as demarche_type_id, demarche.statut_id as demarche_statut_id
   from titres_etapes etape
       join titres_demarches demarche on etape.titre_demarche_id = demarche.id
       join titres titre on demarche.titre_id = titre.id
@@ -48,6 +53,8 @@ export const getDemarches = async (demarcheId?: DemarcheId) => {
       and demarche.archive = false
       and titre.archive = false
       ${demarcheId ? `and demarche.id = '${demarcheId}'` : ''}
+      ${titreId ? `and titre.id = '${titreId}'` : ''}
+
   order by demarche.id, etape.ordre`)
 
   return etapes.rows.reduce<{
@@ -67,6 +74,7 @@ export const getDemarches = async (demarcheId?: DemarcheId) => {
       typeId: DemarcheTypeId
       titreTypeId: TitreTypeId
       titreId: string
+      statutId: DemarcheStatutId
     }
   }>((acc, row) => {
     if (!acc[row.demarche_id]) {
@@ -75,7 +83,8 @@ export const getDemarches = async (demarcheId?: DemarcheId) => {
         id: row.demarche_id,
         titreId: row.titre_id,
         titreTypeId: row.titre_type_id,
-        typeId: row.demarche_type_id
+        typeId: row.demarche_type_id,
+        statutId: row.demarche_statut_id
       }
     }
 

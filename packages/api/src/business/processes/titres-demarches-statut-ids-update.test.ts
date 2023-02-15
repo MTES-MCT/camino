@@ -1,44 +1,100 @@
 import { titresDemarchesStatutIdUpdate } from './titres-demarches-statut-ids-update.js'
-import { titresGet } from '../../database/queries/titres.js'
-
-import {
-  titresDemarchesStatutModifie,
-  titresDemarchesStatutIdentique,
-  titresDemarchesSansEtape
-} from './__mocks__/titres-demarches-statut-ids-update-demarches.js'
 import { vi, describe, expect, test } from 'vitest'
+import { getDemarches } from './titres-etapes-heritage-contenu-update.js'
+import { newDemarcheId } from '../../database/models/_format/id-create.js'
+import { toCaminoDate } from 'camino-common/src/date.js'
+
+vi.mock('./titres-etapes-heritage-contenu-update', () => ({
+  getDemarches: vi.fn().mockResolvedValue(true)
+}))
+
 vi.mock('../../database/queries/titres-demarches', () => ({
   titreDemarcheUpdate: vi.fn().mockResolvedValue(true)
 }))
 
-vi.mock('../../database/queries/titres', () => ({
-  __esModule: true,
-  titresGet: vi.fn()
-}))
-
-const titresGetMock = vi.mocked(titresGet, true)
+const getDemarchesMock = vi.mocked(getDemarches, true)
 
 console.info = vi.fn()
 
 describe("statut des démarches d'un titre", () => {
   test("met à jour le statut d'une démarche", async () => {
-    titresGetMock.mockResolvedValue(titresDemarchesStatutModifie)
+    getDemarchesMock.mockResolvedValue({
+      [newDemarcheId('')]: {
+        id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+        titreId: 'h-cx-courdemanges-1988',
+        titreTypeId: 'cxh',
+        typeId: 'oct',
+        statutId: 'rej',
+        etapes: [
+          {
+            id: 'h-cx-courdemanges-1988-oct01-dpu01',
+            titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+            typeId: 'dpu',
+            statutId: 'acc',
+            ordre: 2,
+            date: toCaminoDate('1988-03-11')
+          },
+          {
+            id: 'h-cx-courdemanges-1988-oct01-dex01',
+            titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+            typeId: 'dex',
+            statutId: 'acc',
+            ordre: 1,
+            date: toCaminoDate('1988-03-06')
+          }
+        ]
+      }
+    })
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate()
 
     expect(titresDemarchesStatutUpdated.length).toEqual(1)
   })
 
   test("ne met pas à jour le statut d'une démarche", async () => {
-    titresGetMock.mockResolvedValue(titresDemarchesStatutIdentique)
+    getDemarchesMock.mockResolvedValue({
+      [newDemarcheId('')]: {
+        id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+        titreId: 'h-cx-courdemanges-1988',
+        titreTypeId: 'cxh',
+        typeId: 'oct',
+        statutId: 'acc',
+        etapes: [
+          {
+            id: 'h-cx-courdemanges-1988-oct01-dpu01',
+            titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+            typeId: 'dpu',
+            statutId: 'acc',
+            ordre: 2,
+            date: toCaminoDate('1988-03-11')
+          },
+          {
+            id: 'h-cx-courdemanges-1988-oct01-dex01',
+            titreDemarcheId: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+            typeId: 'dex',
+            statutId: 'acc',
+            ordre: 1,
+            date: toCaminoDate('1988-03-06')
+          }
+        ]
+      }
+    })
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate()
 
     expect(titresDemarchesStatutUpdated.length).toEqual(0)
   })
 
   test("ne met pas à jour le statut d'une démarche sans étape", async () => {
-    titresGetMock.mockResolvedValue(titresDemarchesSansEtape)
+    getDemarchesMock.mockResolvedValue({
+      [newDemarcheId('')]: {
+        id: newDemarcheId('h-cx-courdemanges-1988-oct01'),
+        titreId: 'h-cx-courdemanges-1988',
+        titreTypeId: 'cxh',
+        typeId: 'oct',
+        statutId: 'ind',
+        etapes: []
+      }
+    })
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate()
-
     expect(titresDemarchesStatutUpdated.length).toEqual(0)
   })
 })
