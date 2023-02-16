@@ -3,7 +3,6 @@ import cryptoRandomString from 'crypto-random-string'
 
 import {
   Context,
-  formatUser,
   IUtilisateur,
   IUtilisateurCreation,
   IUtilisateursColonneId
