@@ -11,8 +11,8 @@ import { Icon } from '@/components/_ui/icon'
 import { useRouter } from 'vue-router'
 import { LoadingElement } from '../_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
-import { TableAutoRow } from '../_ui/table-auto.type'
-import TableAuto from '../_ui/table-auto.vue'
+import { TableAuto } from '../_ui/table-auto'
+import { TableRow } from '../_ui/newTable'
 
 export interface Props {
   user: User
@@ -40,7 +40,7 @@ export const PureEntrepriseDashboard = defineComponent<Props>({
   setup(props: Props) {
     const data = ref<AsyncData<TitreEntreprise[]>>({ status: 'LOADING' })
 
-    const entrepriseTitres = (entreprises: TitreEntreprise[]): TableAutoRow[] =>
+    const entrepriseTitres = (entreprises: TitreEntreprise[]): TableRow[] =>
       titresLignesBuild(entreprises, props.displayActivites)
     const entrepriseUrl = (entrepriseId: EntrepriseId) =>
       `/entreprises/${entrepriseId}`

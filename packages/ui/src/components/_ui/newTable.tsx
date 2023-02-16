@@ -1,132 +1,166 @@
-import { defineComponent, watch } from "vue";
+import { defineComponent, watch } from 'vue'
 import { Icon } from '@/components/_ui/icon'
 
+type SortOrder = 'asc' | 'desc'
 
-type ColumnIds = Props['columns'][number]['id']
-type Column = {id: string, noSort: boolean, class: string, name: string}
-type Row = {
-  id: string
-  link: string
-  columns: Record<string, unknown>
+export interface TableSortEvent {
+  column: string
+  order: SortOrder
 }
+
+export interface InitialSort {
+  column: string
+  order: SortOrder
+}
+
+export interface ComponentColumnData {
+  component: unknown
+  props: { [key in string]: unknown }
+  class?: string
+  value: string | string[] | number | undefined
+}
+
+export interface TextColumnData {
+  value: string
+  class?: string
+}
+
+export interface TableRow<T extends string = string> {
+  id: string
+  link: {
+    name: string
+    params: {
+      id: string
+    }
+  }
+  columns: {
+    [key in T]: ComponentColumnData | TextColumnData
+  }
+}
+
+export interface Column<T = string> {
+  id: T
+  name: string
+  class?: string[]
+  noSort?: boolean
+}
+
+export const isComponentColumnData = (
+  columnRow: ComponentColumnData | TextColumnData
+): columnRow is ComponentColumnData => {
+  return 'component' in columnRow
+}
+
 interface Props {
-  columns: Column[]
-  rows: Row[]
-  update: (column: ColumnIds, order: 'asc' | 'desc') => void
-  column: ColumnIds
+  columns: readonly Column[]
+  rows: TableRow[]
+  update: (event: TableSortEvent) => void
+  column: Props['columns'][number]['id']
   order: 'asc' | 'desc'
 }
 
-export const Table = defineComponent<Props>({setup(props) {
-
-  const sort = (colId: ColumnIds) => {
-    if (!props.columns.find(c => c.id === colId)?.noSort) {
-      if (props.column === colId) {
-        const order = props.order === 'asc' ? 'desc' : 'asc'
-        props.update(props.column, order)
-      } else {
-        props.update(colId, props.order)
+export const Table = defineComponent<Props>({
+  props: [
+    'columns',
+    'rows',
+    'update',
+    'column',
+    'order'
+  ] as unknown as undefined,
+  setup(props) {
+    const sort = (colId: Props['column']) => {
+      if (!props.columns.find(c => c.id === colId)?.noSort) {
+        if (props.column === colId) {
+          const order = props.order === 'asc' ? 'desc' : 'asc'
+          props.update({ column: props.column, order })
+        } else {
+          props.update({ column: colId, order: props.order })
+        }
       }
     }
-  }
 
-  const columnInit = () => {
-    if (props.rows.length && !props.columns.some(c => c.id === props.column)) {
-      sort(props.columns[0].id)
+    const columnInit = () => {
+      if (
+        props.rows.length &&
+        !props.columns.some(c => c.id === props.column)
+      ) {
+        sort(props.columns[0].id)
+      }
+    }
+
+    watch(
+      () => props.columns,
+      _columns => {
+        columnInit()
+      },
+      { immediate: true }
+    )
+    return () => (
+      <div>
+        <div class="overflow-scroll-x mb">
+          <div class="table">
+            <div class="tr">
+              {props.columns.map(col => (
+                <div
+                  key={col.id}
+                  class={`th nowrap ${(col.class ?? []).join(' ')}`}
+                  onClick={() => sort(col.id)}
+                >
+                  <button
+                    class={`btn-menu full-x p-0${
+                      col.noSort ? ' disabled' : ''
+                    }`}
+                  >
+                    {col.name || (props.column === col.id ? '' : '–')}
+                    {!col.noSort && props.column === col.id ? (
+                      <Icon
+                        class="right"
+                        size="M"
+                        name={
+                          props.order === 'asc' ? 'chevron-bas' : 'chevron-haut'
+                        }
+                      />
+                    ) : null}
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            {props.rows.map(row => (
+              <router-link
+                key={row.id}
+                to={row.link}
+                class="tr tr-link text-decoration-none"
+              >
+                {props.columns.map(col => (
+                  <div key={col.id} class={`td ${(col.class ?? []).join(' ')}`}>
+                    <displayColumn data={row.columns[col.id]} />
+                  </div>
+                ))}
+              </router-link>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+})
+
+const displayColumn = (props: {
+  data: ComponentColumnData | TextColumnData
+}): JSX.Element => {
+  if (isComponentColumnData(props.data)) {
+    const myComp = props.data.component
+
+    if (props.data.value) {
+      return (
+        <myComp {...props.data.props} class={props.data.class ?? ''}>
+          {props.data.value}
+        </myComp>
+      )
+    } else {
+      return <myComp {...props.data.props} class={props.data.class ?? ''} />
     }
   }
-
-  watch(
-    () => props.columns,
-    (columns: Column[]) => {
-      columnInit()
-    },
-    { immediate: true }
-  )
-  return () => (<div>
-    <div class="overflow-scroll-x mb">
-      <div class="table">
-        <div class="tr">
-          {props.columns.map(col => (<div
-            key={col.id}
-            class={`th nowrap ${col.class}`}
-            onClick={() => sort(col.id)}
-          >
-            <button
-              class={`${col.noSort ? 'disabled': ''} btn-menu full-x p-0`}
-            >
-              { col.name || (props.column === col.id ? '' : '–') }
-              {!col.noSort && props.column === col.id ? (<Icon
-                v-if="!col.noSort && column === col.id"
-                class="right"
-                size="M"
-                name={props.order === 'asc' ? 'chevron-bas' : 'chevron-haut'}
-              />) : null}
-              
-            </button>
-          </div>))}
-        </div>
-
-        {props.rows.map(row => (<router-link
-          key={row.id}
-          to={row.link}
-          class="tr tr-link text-decoration-none"
-        >
-          {props.columns.map(col => (
-            <div key={col.id} class={`td ${col.class}`}>
-            <component
-              is={row.columns[col.id].component}
-              v-if="
-                row.columns[col.id] &&
-                row.columns[col.id].component &&
-                row.columns[col.id].slot
-              "
-              v-bind={row.columns[col.id].props}
-              class={row.columns[col.id].class}
-              >{ row.columns[col.id].value }</component
-            >
-            <component
-              :is="row.columns[col.id].component"
-              v-else-if="row.columns[col.id] && row.columns[col.id].component"
-              v-bind="row.columns[col.id].props"
-              :class="row.columns[col.id].class"
-            />
-            <span
-              v-else-if="row.columns[col.id] && row.columns[col.id].value"
-              :class="row.columns[col.id].class"
-              >{{ row.columns[col.id].value }}</span>
-          </div>
-
-          ))}
-          
-        </router-link>))}
-      </div>
-    </div>
-  </div>)
-}})
-
-{
-/* <template>
-  
-</template>
-
-<script>
-import { Icon } from '@/components/_ui/icon'
-export default {
-  name: 'UiTable',
-  components: { Icon },
-  props: {
-    rows: { type: Array, required: true },
-    columns: { type: Array, required: true },
-    order: { type: String, default: 'asc' },
-    column: { type: String, default: '' }
-  },
-
-  emits: ['params-update'],
-
-    
-
-    
-  }
+  return <span class={props.data.class ?? ''}>{props.data.value}</span>
 }
-</script> */}

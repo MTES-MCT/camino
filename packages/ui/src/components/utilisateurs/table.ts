@@ -2,12 +2,11 @@ import List from '../_ui/list.vue'
 import {
   isAdministration,
   isBureauDEtudes,
-  isEntreprise,
-  User
+  isEntreprise
 } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
-import { Column } from '@/components/_ui/table-auto.type'
 import { Utilisateur } from '@/api/api-client'
+import { Column } from '../_ui/newTable'
 
 export const utilisateursColonnes: Column[] = [
   {

@@ -2394,23 +2394,23 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > Ok 1`] = `
       <div class=\\"overflow-scroll-x mb\\">
         <div class=\\"table\\">
           <div class=\\"tr\\">
-            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-                <!--v-if-->
-              </button></div>
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+                  <use href=\\"#icon-chevron-bas\\"></use>
+                </svg></button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Type
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Dernière étape
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Prochaines étapes
-                <!--v-if-->
+                <!---->
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Second Nom de titre</span></div>
@@ -2441,25 +2441,25 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > Ok 1`] = `
         <div class=\\"table\\">
           <div class=\\"tr\\">
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Type
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Activités <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+            <div class=\\"th nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Activités<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
                   <use href=\\"#icon-chevron-bas\\"></use>
                 </svg></button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Dernière étape
-                <!--v-if-->
+                <!---->
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
@@ -2549,25 +2549,25 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > OkWithoutBlockedTitres 1
         <div class=\\"table\\">
           <div class=\\"tr\\">
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Type
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Activités <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+            <div class=\\"th nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Activités<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
                   <use href=\\"#icon-chevron-bas\\"></use>
                 </svg></button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Dernière étape
-                <!--v-if-->
+                <!---->
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
@@ -2706,41 +2706,41 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > Ok 1`] = `
         <div class=\\"table\\">
           <div class=\\"tr\\">
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">–
-                <!--v-if-->
+            <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">–
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Type
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
                   <use href=\\"#icon-chevron-bas\\"></use>
                 </svg></button></div>
             <div class=\\"th nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Activités
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-6\\"><button class=\\"btn-menu full-x p-0 disabled\\">Substances
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Carte
-                <!--v-if-->
+            <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Carte
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Régions
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Départements
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
-                <!--v-if-->
+                <!---->
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Amadis 5</span></div>
-            <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></div>
             <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">valide</span></span></div>
             <div class=\\"td min-width-5\\">
@@ -2753,7 +2753,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > Ok 1`] = `
                 <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">or</span></span></li>
               </ul>
             </div>
-            <div class=\\"td\\">
+            <div class=\\"td \\">
               <!--v-if-->
             </div>
             <div class=\\"td min-width-10\\">
@@ -2779,7 +2779,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > Ok 1`] = `
             </div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Aachen</span></div>
-            <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">concession</span></div>
             <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
             <div class=\\"td min-width-5\\">
@@ -2790,7 +2790,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > Ok 1`] = `
                 <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">fer</span></span></li>
               </ul>
             </div>
-            <div class=\\"td\\">
+            <div class=\\"td \\">
               <div class=\\"p-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"16px\\" height=\\"16px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"globe\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                   <use href=\\"#icon-globe\\"></use>
                 </svg></div>
@@ -2842,41 +2842,41 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithMultipleEntre
         <div class=\\"table\\">
           <div class=\\"tr\\">
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">–
-                <!--v-if-->
+            <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">–
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Type
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
                   <use href=\\"#icon-chevron-bas\\"></use>
                 </svg></button></div>
             <div class=\\"th nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Activités
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-6\\"><button class=\\"btn-menu full-x p-0 disabled\\">Substances
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Carte
-                <!--v-if-->
+            <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Carte
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Régions
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Départements
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
-                <!--v-if-->
+                <!---->
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Amadis 5</span></div>
-            <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></div>
             <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">valide</span></span></div>
             <div class=\\"td min-width-5\\">
@@ -2889,7 +2889,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithMultipleEntre
                 <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">or</span></span></li>
               </ul>
             </div>
-            <div class=\\"td\\">
+            <div class=\\"td \\">
               <!--v-if-->
             </div>
             <div class=\\"td min-width-10\\">
@@ -2915,7 +2915,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithMultipleEntre
             </div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Aachen</span></div>
-            <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">concession</span></div>
             <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
             <div class=\\"td min-width-5\\">
@@ -2926,7 +2926,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithMultipleEntre
                 <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">fer</span></span></li>
               </ul>
             </div>
-            <div class=\\"td\\">
+            <div class=\\"td \\">
               <div class=\\"p-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"16px\\" height=\\"16px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"globe\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                   <use href=\\"#icon-globe\\"></use>
                 </svg></div>
@@ -2978,38 +2978,38 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithoutActivities
         <div class=\\"table\\">
           <div class=\\"tr\\">
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">–
-                <!--v-if-->
+            <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">–
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Type
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
                   <use href=\\"#icon-chevron-bas\\"></use>
                 </svg></button></div>
             <div class=\\"th nowrap min-width-6\\"><button class=\\"btn-menu full-x p-0 disabled\\">Substances
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Carte
-                <!--v-if-->
+            <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Carte
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Régions
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Départements
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
-                <!--v-if-->
+                <!---->
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Amadis 5</span></div>
-            <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></div>
             <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">valide</span></span></div>
             <div class=\\"td min-width-6\\">
@@ -3017,7 +3017,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithoutActivities
                 <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">or</span></span></li>
               </ul>
             </div>
-            <div class=\\"td\\">
+            <div class=\\"td \\">
               <!--v-if-->
             </div>
             <div class=\\"td min-width-10\\">
@@ -3043,7 +3043,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithoutActivities
             </div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Aachen</span></div>
-            <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">concession</span></div>
             <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
             <div class=\\"td min-width-6\\">
@@ -3051,7 +3051,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithoutActivities
                 <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">fer</span></span></li>
               </ul>
             </div>
-            <div class=\\"td\\">
+            <div class=\\"td \\">
               <div class=\\"p-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"16px\\" height=\\"16px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"globe\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                   <use href=\\"#icon-globe\\"></use>
                 </svg></div>
@@ -3103,41 +3103,41 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithoutFiscalite 
         <div class=\\"table\\">
           <div class=\\"tr\\">
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">–
-                <!--v-if-->
+            <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">–
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Type
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
                   <use href=\\"#icon-chevron-bas\\"></use>
                 </svg></button></div>
             <div class=\\"th nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Activités
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-6\\"><button class=\\"btn-menu full-x p-0 disabled\\">Substances
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Carte
-                <!--v-if-->
+            <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Carte
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Régions
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Départements
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
-                <!--v-if-->
+                <!---->
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Amadis 5</span></div>
-            <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-w color-bg pill py-xs px-s\\">w</span></span></div>
+            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-w color-bg pill py-xs px-s\\">w</span></span></div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de prospections préalables</span></div>
             <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">valide</span></span></div>
             <div class=\\"td min-width-5\\">
@@ -3151,7 +3151,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithoutFiscalite 
                 <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">or</span></span></li>
               </ul>
             </div>
-            <div class=\\"td\\">
+            <div class=\\"td \\">
               <!--v-if-->
             </div>
             <div class=\\"td min-width-10\\">
@@ -3243,19 +3243,19 @@ exports[`Storybook Tests > Components/Dashboard/ONF > Ok 1`] = `
           <div class=\\"table\\">
             <div class=\\"tr\\">
               <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-                  <!--v-if-->
+                  <!---->
                 </button></div>
-              <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+              <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
                     <use href=\\"#icon-chevron-bas\\"></use>
                   </svg></button></div>
               <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
-                  <!--v-if-->
+                  <!---->
                 </button></div>
               <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
-                  <!--v-if-->
+                  <!---->
                 </button></div>
-              <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Date complétude PTMG
-                  <!--v-if-->
+              <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Date complétude PTMG
+                  <!---->
                 </button></div>
             </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
               <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
@@ -3268,8 +3268,8 @@ exports[`Storybook Tests > Components/Dashboard/ONF > Ok 1`] = `
                   <li class=\\"h6\\">Titulaire1</li>
                 </ul>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\"></div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\"></div>
               </div>
             </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
               <div class=\\"td min-width-8\\"><span class=\\"bold\\">Second Nom de titre</span></div>
@@ -3285,8 +3285,8 @@ exports[`Storybook Tests > Components/Dashboard/ONF > Ok 1`] = `
                   <li class=\\"h6\\">Titulaire3</li>
                 </ul>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">23-03-2022</div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\">23-03-2022</div>
               </div>
             </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
               <div class=\\"td min-width-8\\"><span class=\\"bold\\">Quatrième Nom de titre</span></div>
@@ -3302,8 +3302,8 @@ exports[`Storybook Tests > Components/Dashboard/ONF > Ok 1`] = `
                   <li class=\\"h6\\">Titulaire 8</li>
                 </ul>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">23-03-2022</div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\">23-03-2022</div>
               </div>
             </a>
           </div>
@@ -3316,28 +3316,28 @@ exports[`Storybook Tests > Components/Dashboard/ONF > Ok 1`] = `
           <div class=\\"table\\">
             <div class=\\"tr\\">
               <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-                  <!--v-if-->
+                  <!---->
                 </button></div>
-              <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+              <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
                     <use href=\\"#icon-chevron-bas\\"></use>
                   </svg></button></div>
               <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
-                  <!--v-if-->
+                  <!---->
                 </button></div>
               <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
-                  <!--v-if-->
+                  <!---->
                 </button></div>
-              <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Date complétude PTMG
-                  <!--v-if-->
+              <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Date complétude PTMG
+                  <!---->
                 </button></div>
-              <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Date réception ONF
-                  <!--v-if-->
+              <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Date réception ONF
+                  <!---->
                 </button></div>
-              <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Date CARM
-                  <!--v-if-->
+              <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Date CARM
+                  <!---->
                 </button></div>
-              <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Délai jour CARM ONF
-                  <!--v-if-->
+              <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Délai jour CARM ONF
+                  <!---->
                 </button></div>
             </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
               <div class=\\"td min-width-8\\"><span class=\\"bold\\">third-name</span></div>
@@ -3350,18 +3350,16 @@ exports[`Storybook Tests > Components/Dashboard/ONF > Ok 1`] = `
                   <li class=\\"h6\\">Titulaire1</li>
                 </ul>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\"></div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\"></div>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\"></div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\"></div>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\"></div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\"></div>
               </div>
-              <div class=\\"td\\">
-                <!--v-if-->
-              </div>
+              <div class=\\"td \\"><span class=\\"\\"></span></div>
             </a>
           </div>
         </div>
@@ -3390,28 +3388,28 @@ exports[`Storybook Tests > Components/Dashboard/ONF > OkSansAttenteDeONF 1`] = `
           <div class=\\"table\\">
             <div class=\\"tr\\">
               <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-                  <!--v-if-->
+                  <!---->
                 </button></div>
-              <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+              <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
                     <use href=\\"#icon-chevron-bas\\"></use>
                   </svg></button></div>
               <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
-                  <!--v-if-->
+                  <!---->
                 </button></div>
               <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
-                  <!--v-if-->
+                  <!---->
                 </button></div>
-              <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Date complétude PTMG
-                  <!--v-if-->
+              <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Date complétude PTMG
+                  <!---->
                 </button></div>
-              <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Date réception ONF
-                  <!--v-if-->
+              <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Date réception ONF
+                  <!---->
                 </button></div>
-              <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Date CARM
-                  <!--v-if-->
+              <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Date CARM
+                  <!---->
                 </button></div>
-              <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Délai jour CARM ONF
-                  <!--v-if-->
+              <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Délai jour CARM ONF
+                  <!---->
                 </button></div>
             </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
               <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
@@ -3424,18 +3422,16 @@ exports[`Storybook Tests > Components/Dashboard/ONF > OkSansAttenteDeONF 1`] = `
                   <li class=\\"h6\\">Titulaire1</li>
                 </ul>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\"></div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\"></div>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\"></div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\"></div>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\"></div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\"></div>
               </div>
-              <div class=\\"td\\">
-                <!--v-if-->
-              </div>
+              <div class=\\"td \\"><span class=\\"\\"></span></div>
             </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
               <div class=\\"td min-width-8\\"><span class=\\"bold\\">Second Nom de titre</span></div>
               <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
@@ -3450,16 +3446,16 @@ exports[`Storybook Tests > Components/Dashboard/ONF > OkSansAttenteDeONF 1`] = `
                   <li class=\\"h6\\">Titulaire3</li>
                 </ul>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">23-03-2022</div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\">23-03-2022</div>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">24-03-2022</div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\">24-03-2022</div>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">12-04-2022</div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\">12-04-2022</div>
               </div>
-              <div class=\\"td\\"><span class=\\"\\">19</span></div>
+              <div class=\\"td \\"><span class=\\"\\">19</span></div>
             </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
               <div class=\\"td min-width-8\\"><span class=\\"bold\\">third-name</span></div>
               <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
@@ -3471,18 +3467,16 @@ exports[`Storybook Tests > Components/Dashboard/ONF > OkSansAttenteDeONF 1`] = `
                   <li class=\\"h6\\">Titulaire1</li>
                 </ul>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\"></div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\"></div>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\"></div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\"></div>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\"></div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\"></div>
               </div>
-              <div class=\\"td\\">
-                <!--v-if-->
-              </div>
+              <div class=\\"td \\"><span class=\\"\\"></span></div>
             </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
               <div class=\\"td min-width-8\\"><span class=\\"bold\\">Quatrième Nom de titre</span></div>
               <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
@@ -3497,16 +3491,16 @@ exports[`Storybook Tests > Components/Dashboard/ONF > OkSansAttenteDeONF 1`] = `
                   <li class=\\"h6\\">Titulaire 8</li>
                 </ul>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">23-03-2022</div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\">23-03-2022</div>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">24-03-2022</div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\">24-03-2022</div>
               </div>
-              <div class=\\"td\\">
-                <div style=\\"white-space: nowrap;\\">12-04-2022</div>
+              <div class=\\"td \\">
+                <div style=\\"white-space: nowrap;\\" class=\\"\\">12-04-2022</div>
               </div>
-              <div class=\\"td\\"><span class=\\"\\">19</span></div>
+              <div class=\\"td \\"><span class=\\"\\">19</span></div>
             </a>
           </div>
         </div>
@@ -3562,16 +3556,16 @@ exports[`Storybook Tests > Components/Dashboard/PTMG > Ok 1`] = `
         <div class=\\"table\\">
           <div class=\\"tr\\">
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
                   <use href=\\"#icon-chevron-bas\\"></use>
                 </svg></button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
-                <!--v-if-->
+                <!---->
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
@@ -3623,16 +3617,16 @@ exports[`Storybook Tests > Components/Dashboard/PTMG > Ok 1`] = `
         <div class=\\"table\\">
           <div class=\\"tr\\">
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-                <!--v-if-->
+                <!---->
               </button></div>
-            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
                   <use href=\\"#icon-chevron-bas\\"></use>
                 </svg></button></div>
             <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
-                <!--v-if-->
+                <!---->
               </button></div>
             <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
-                <!--v-if-->
+                <!---->
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">third-name</span></div>
@@ -6803,45 +6797,45 @@ exports[`Storybook Tests > Components/UI/TableAuto > Simple 1`] = `
   <div class=\\"overflow-scroll-x mb\\">
     <div class=\\"table\\">
       <div class=\\"tr\\">
-        <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+        <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
               <use href=\\"#icon-chevron-bas\\"></use>
             </svg></button></div>
-        <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">–
-            <!--v-if-->
+        <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">–
+            <!---->
           </button></div>
         <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Type
-            <!--v-if-->
+            <!---->
           </button></div>
         <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut
-            <!--v-if-->
+            <!---->
           </button></div>
-        <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Test
-            <!--v-if-->
+        <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Test
+            <!---->
           </button></div>
       </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_0</span></div>
-        <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 0</span></span></div>
-        <div class=\\"td\\"><span class=\\"\\">Test value 0</span></div>
+        <div class=\\"td \\"><span class=\\"\\">Test value 0</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_1</span></div>
-        <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 1</span></span></div>
-        <div class=\\"td\\"><span class=\\"\\">Test value 1</span></div>
+        <div class=\\"td \\"><span class=\\"\\">Test value 1</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_2</span></div>
-        <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 2</span></span></div>
-        <div class=\\"td\\"><span class=\\"\\">Test value 2</span></div>
+        <div class=\\"td \\"><span class=\\"\\">Test value 2</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_3</span></div>
-        <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 3</span></span></div>
-        <div class=\\"td\\"><span class=\\"\\">Test value 3</span></div>
+        <div class=\\"td \\"><span class=\\"\\">Test value 3</span></div>
       </a>
     </div>
   </div>
@@ -6854,44 +6848,44 @@ exports[`Storybook Tests > Components/UI/TableAuto > SortedByStatusAsc 1`] = `
     <div class=\\"table\\">
       <div class=\\"tr\\">
         <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
-            <!--v-if-->
+            <!---->
           </button></div>
-        <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">–
-            <!--v-if-->
+        <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">–
+            <!---->
           </button></div>
         <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Type
-            <!--v-if-->
+            <!---->
           </button></div>
-        <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut <svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-haut\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+        <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-haut\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
               <use href=\\"#icon-chevron-haut\\"></use>
             </svg></button></div>
-        <div class=\\"th nowrap\\"><button class=\\"btn-menu full-x p-0\\">Test
-            <!--v-if-->
+        <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Test
+            <!---->
           </button></div>
       </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_3</span></div>
-        <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 3</span></span></div>
-        <div class=\\"td\\"><span class=\\"\\">Test value 3</span></div>
+        <div class=\\"td \\"><span class=\\"\\">Test value 3</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_2</span></div>
-        <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 2</span></span></div>
-        <div class=\\"td\\"><span class=\\"\\">Test value 2</span></div>
+        <div class=\\"td \\"><span class=\\"\\">Test value 2</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_1</span></div>
-        <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 1</span></span></div>
-        <div class=\\"td\\"><span class=\\"\\">Test value 1</span></div>
+        <div class=\\"td \\"><span class=\\"\\">Test value 1</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_0</span></div>
-        <div class=\\"td\\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
         <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 0</span></span></div>
-        <div class=\\"td\\"><span class=\\"\\">Test value 0</span></div>
+        <div class=\\"td \\"><span class=\\"\\">Test value 0</span></div>
       </a>
     </div>
   </div>

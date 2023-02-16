@@ -1,12 +1,6 @@
 import { defineComponent, markRaw, onMounted, ref } from 'vue'
-import TableAuto from '../_ui/table-auto.vue'
+import { TableAuto } from '../_ui/table-auto'
 import List from '../_ui/list.vue'
-import {
-  Column,
-  ComponentColumnData,
-  TableAutoRow,
-  TextColumnData
-} from '../_ui/table-auto.type'
 import { PureDGTMStats } from './pure-dgtm-stats'
 import {
   nomColumn,
@@ -27,6 +21,12 @@ import { StatistiquesDGTM } from 'camino-common/src/statistiques'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
 import { EtapesTypes } from 'camino-common/src/static/etapesTypes'
+import {
+  Column,
+  ComponentColumnData,
+  TableRow,
+  TextColumnData
+} from '../_ui/newTable'
 
 export interface Props {
   getDrealTitres: () => Promise<CommonTitreDREAL[]>
@@ -70,8 +70,8 @@ export const PureDrealDashboard = defineComponent<Props>({
   setup(props) {
     const data = ref<
       AsyncData<{
-        drealTitres: TableAutoRow[]
-        drealTitresBloques: TableAutoRow[]
+        drealTitres: TableRow[]
+        drealTitresBloques: TableRow[]
       }>
     >({ status: 'LOADING' })
     const initialColumnId = columns[3].id
@@ -91,7 +91,7 @@ export const PureDrealDashboard = defineComponent<Props>({
     })
     const titresLignesBuild = (
       titres: CommonTitreDREAL[]
-    ): TableAutoRow<Columns>[] => {
+    ): TableRow<Columns>[] => {
       return titres.map(titre => {
         const columns: {
           [key in Columns]: ComponentColumnData | TextColumnData

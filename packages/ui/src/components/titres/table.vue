@@ -1,16 +1,16 @@
 <template>
-  <AutoTable :columns="colonnes" :rows="lignes" class="width-full-p" />
+  <TableAuto :columns="colonnes" :rows="lignes" class="width-full-p" />
 </template>
 
 <script>
-import AutoTable from '../_ui/table-auto.vue'
+import { TableAuto } from '../_ui/table-auto'
 
 import { titresColonnes, titresLignesBuild } from './table-utils'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 export default {
   name: 'Titres',
 
-  components: { AutoTable },
+  components: { TableAuto },
 
   props: {
     titres: { type: Array, required: true }
