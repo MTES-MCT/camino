@@ -32,7 +32,7 @@ import { filesInit } from './config/files.js'
 import { geoSystemesInit } from './config/proj4.js'
 import { userLoader } from './server/user-loader.js'
 import { connectedCatcher } from './server/connected-catcher.js'
-import cookieParser  from 'cookie-parser'
+import cookieParser from 'cookie-parser'
 
 consoleOverride()
 geoSystemesInit()
@@ -68,7 +68,7 @@ filesInit().then(() => {
       authBasic,
       userLoader,
       cookieParser(),
-      connectedCatcher,
+      connectedCatcher
     )
 
     app.get('/stream/version', async (_req, res) => {

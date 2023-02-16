@@ -39,7 +39,6 @@ import { EntrepriseId } from 'camino-common/src/entreprise.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { ActivitesStatutId } from 'camino-common/src/static/activitesStatuts.js'
-import { Response } from 'express'
 
 enum TitreEtapesTravauxTypes {
   DemandeAutorisationOuverture = 'wfa',
@@ -810,7 +809,7 @@ interface IUtilisateurTitre {
 }
 
 type IUtilisateurCreation = Omit<IUtilisateur, 'id'>
-export type Context = { user: User, res: Response }
+export type Context = { user: User }
 
 type IFormat = 'xlsx' | 'csv' | 'ods' | 'geojson' | 'json' | 'pdf' | 'zip'
 

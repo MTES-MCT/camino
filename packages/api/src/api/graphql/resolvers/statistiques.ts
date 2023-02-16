@@ -58,9 +58,12 @@ const statistiquesGlobales = async (): Promise<Statistiques> => {
       )
     }).length
     // TODO 2022-05-11 serait plus performant avec plusieurs petites requêtes sql ?
-    const utilisateursInDb = await Utilisateurs.query().whereNot('role', 'super').whereNotNull('email').withGraphFetched({
-      entreprises: {}
-    })
+    const utilisateursInDb = await Utilisateurs.query()
+      .whereNot('role', 'super')
+      .whereNotNull('email')
+      .withGraphFetched({
+        entreprises: {}
+      })
 
     const utilisateurs: StatistiquesUtilisateurs = utilisateursInDb
       .map(formatUser)

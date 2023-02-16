@@ -53,8 +53,15 @@ export const moi = async (
     res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
   } else {
     try {
-      const utilisateur = await utilisateurGet(user.id, { fields: {entreprises: {id: {}} }}, user)
-      res.cookie('shouldBeConnected', "resistance is futile")
+      const utilisateur = await utilisateurGet(
+        user.id,
+        { fields: { entreprises: { id: {} } } },
+        user
+      )
+      res.cookie(
+        'shouldBeConnected',
+        'anyValueIsGood, We just check the presence of this cookie'
+      )
       res.json(formatUser(utilisateur!))
     } catch (e) {
       console.error(e)
