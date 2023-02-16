@@ -6,7 +6,13 @@ import {
 } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
 import { Utilisateur } from '@/api/api-client'
-import { Column } from '../_ui/newTable'
+import {
+  Column,
+  ComponentColumnData,
+  TableRow,
+  TextColumnData
+} from '../_ui/newTable'
+import { markRaw } from 'vue'
 
 export const utilisateursColonnes: Column[] = [
   {
@@ -36,7 +42,9 @@ export const utilisateursColonnes: Column[] = [
   }
 ]
 
-export const utilisateursLignesBuild = (utilisateurs: Utilisateur[]) =>
+export const utilisateursLignesBuild = (
+  utilisateurs: Utilisateur[]
+): TableRow[] =>
   utilisateurs.map(utilisateur => {
     let elements
 
@@ -46,10 +54,10 @@ export const utilisateursLignesBuild = (utilisateurs: Utilisateur[]) =>
       elements = utilisateur.entreprises?.map(({ nom }) => nom)
     }
 
-    const lien =
+    const lien: ComponentColumnData | TextColumnData =
       elements && elements.length
         ? {
-            component: List,
+            component: markRaw(List),
             props: {
               elements,
               mini: true
@@ -59,7 +67,7 @@ export const utilisateursLignesBuild = (utilisateurs: Utilisateur[]) =>
           }
         : { value: '' }
 
-    const columns = {
+    const columns: TableRow['columns'] = {
       prenom: { value: utilisateur.prenom || '–' },
       nom: { value: utilisateur.nom || '–' },
       email: { value: utilisateur.email || '–', class: ['h6'] },

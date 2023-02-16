@@ -15,7 +15,10 @@ import ActiviteEdition from '../components/activite-edition.vue'
 import Travaux from '../components/travaux.vue'
 const Utilisateur = () => import('../components/utilisateur.vue')
 const Utilisateurs = () => import('../components/utilisateurs.vue')
-const Entreprise = () => import('../components/entreprise.vue')
+const Entreprise = async () => {
+  const { Entreprise } = await import('../components/entreprise')
+  return Entreprise
+}
 const Entreprises = () => import('../components/entreprises.vue')
 const Administration = () => import('../components/administration.vue')
 const Administrations = () => import('../components/administrations.vue')

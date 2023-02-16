@@ -65,7 +65,6 @@ export const TableAuto = defineComponent<Props>({
       myRows.sort(sortFunction)
       sort.column = event.column
       sort.order = event.order
-      console.log('sort', sort)
     }
 
     return () => (

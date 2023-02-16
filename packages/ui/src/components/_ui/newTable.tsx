@@ -22,7 +22,7 @@ export interface ComponentColumnData {
 
 export interface TextColumnData {
   value: string
-  class?: string
+  class?: string[]
 }
 
 export interface TableRow<T extends string = string> {
@@ -59,6 +59,7 @@ interface Props {
   order: 'asc' | 'desc'
 }
 
+// FIXME TEST
 export const Table = defineComponent<Props>({
   props: [
     'columns',
@@ -162,5 +163,7 @@ const displayColumn = (props: {
       return <myComp {...props.data.props} class={props.data.class ?? ''} />
     }
   }
-  return <span class={props.data.class ?? ''}>{props.data.value}</span>
+  return (
+    <span class={props.data.class?.join(' ') ?? ''}>{props.data.value}</span>
+  )
 }
