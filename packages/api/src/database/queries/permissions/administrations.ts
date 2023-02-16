@@ -1,13 +1,11 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types.js'
-
 import { knex } from '../../../knex.js'
 
 import AdministrationsModel from '../../models/administrations.js'
 import Utilisateurs from '../../models/utilisateurs.js'
 import { utilisateursQueryModify } from './utilisateurs.js'
-import { isSuper } from 'camino-common/src/roles.js'
+import { isSuper, User } from 'camino-common/src/roles.js'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
@@ -17,7 +15,7 @@ const administrationsQueryModify = (
     AdministrationsModel,
     AdministrationsModel | AdministrationsModel[]
   >,
-  user: IUtilisateur | null | undefined
+  user: User
 ): QueryBuilder<
   AdministrationsModel,
   AdministrationsModel | AdministrationsModel[]

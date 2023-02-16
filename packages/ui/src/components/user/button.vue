@@ -8,7 +8,6 @@
 </template>
 
 <script>
-import UserLoginPopup from './login-popup.vue'
 import PureButton from './pure-button.vue'
 
 export default {
@@ -25,7 +24,9 @@ export default {
 
   methods: {
     popupOpen() {
-      this.$store.commit('popupOpen', { component: UserLoginPopup })
+      window.location.replace(
+        '/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href)
+      )
     },
     goToUser() {
       this.eventTrack()

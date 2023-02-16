@@ -1,17 +1,15 @@
 import { QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types.js'
-
 import Journaux from '../../models/journaux.js'
 import { utilisateursQueryModify } from './utilisateurs.js'
 import Utilisateurs from '../../models/utilisateurs.js'
 import { titresQueryModify } from './titres.js'
 import Titres from '../../models/titres.js'
-import { isSuper } from 'camino-common/src/roles.js'
+import { isSuper, User } from 'camino-common/src/roles.js'
 
 export const journauxQueryModify = (
   q: QueryBuilder<Journaux, Journaux | Journaux[]>,
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   q.select('journaux.*')
 

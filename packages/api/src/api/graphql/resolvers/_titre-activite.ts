@@ -10,6 +10,7 @@ import {
 
 import { emailsSend } from '../../../tools/api-mailjet/emails.js'
 import { titreUrlGet } from '../../../business/utils/urls-get.js'
+import { UserNotNull } from 'camino-common/src/roles.js'
 import { getPeriode } from 'camino-common/src/static/frequence.js'
 import {
   AdministrationId,
@@ -81,7 +82,7 @@ ${listHtml}
 const titreActiviteEmailFormat = (
   { contenu, titreId, dateSaisie, sections }: ITitreActivite,
   emailTitle: string,
-  user: IUtilisateur
+  user: UserNotNull
 ) => {
   const titreUrl = titreUrlGet(titreId)
 
@@ -208,7 +209,7 @@ export const titreActiviteAdministrationsEmailsGet = (
 const titreActiviteEmailsSend = async (
   activite: ITitreActivite,
   titreNom: string,
-  user: IUtilisateur,
+  user: UserNotNull,
   utilisateurs: IUtilisateur[] | undefined | null,
   administrationIds: AdministrationId[]
 ) => {

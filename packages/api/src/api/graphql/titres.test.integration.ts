@@ -3,6 +3,7 @@ import { graphQLCall, queryImport } from '../../../tests/_utils/index.js'
 import { titreCreate } from '../../database/queries/titres.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { ITitre } from '../../types.js'
+import { userSuper } from '../../database/user-super'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
@@ -289,7 +290,7 @@ describe('titre', () => {
       propsTitreEtapesIds: {}
     }
     await titreCreate(titrePublicLecture, {})
-    const res = await graphQLCall(titreQuery, { id: 'titre-id' })
+    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
@@ -299,7 +300,7 @@ describe('titre', () => {
 
   test('ne peut pas voir un titre qui n\'est pas en "lecture publique" (utilisateur anonyme)', async () => {
     await titreCreate(titrePublicLectureFalse, {})
-    const res = await graphQLCall(titreQuery, { id: 'titre-id' })
+    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({ titre: null })
@@ -307,7 +308,7 @@ describe('titre', () => {
 
   test('ne peut voir que les démarches qui sont en "lecture publique" (utilisateur anonyme)', async () => {
     await titreCreate(titreDemarchesPubliques, {})
-    const res = await graphQLCall(titreQuery, { id: 'titre-id' })
+    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
@@ -322,7 +323,7 @@ describe('titre', () => {
 
   test('ne peut pas voir les activités (utilisateur anonyme)', async () => {
     await titreCreate(titreActivites, {})
-    const res = await graphQLCall(titreQuery, { id: 'titre-id' })
+    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
@@ -336,7 +337,7 @@ describe('titre', () => {
 
   test('ne peut voir que les étapes qui sont en "lecture publique" (utilisateur anonyme)', async () => {
     await titreCreate(titreEtapesPubliques, {})
-    const res = await graphQLCall(titreQuery, { id: 'titre-id' })
+    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
@@ -358,8 +359,7 @@ describe('titre', () => {
     const res = await graphQLCall(
       titreQuery,
       { id: 'titre-id' },
-      'admin',
-      ADMINISTRATION_IDS['DGTM - GUYANE']
+      { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -387,8 +387,10 @@ describe('titre', () => {
     const res = await graphQLCall(
       titreQuery,
       { id: 'titre-id' },
-      'admin',
-      ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+      }
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -417,8 +419,7 @@ describe('titre', () => {
     const res = await graphQLCall(
       titreQuery,
       { id: 'titre-id' },
-      'admin',
-      ADMINISTRATION_IDS['DGTM - GUYANE']
+      { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -432,8 +433,7 @@ describe('titre', () => {
     const res = await graphQLCall(
       titreQuery,
       { id: 'titre-id' },
-      'admin',
-      ADMINISTRATION_IDS.CACEM
+      { role: 'admin', administrationId: ADMINISTRATION_IDS.CACEM }
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -447,9 +447,13 @@ describe('titreCreer', () => {
   const titreCreerQuery = queryImport('titre-creer')
 
   test('ne peut pas créer un titre (utilisateur anonyme)', async () => {
-    const res = await graphQLCall(titreCreerQuery, {
-      titre: { nom: 'titre', typeId: 'arm' }
-    })
+    const res = await graphQLCall(
+      titreCreerQuery,
+      {
+        titre: { nom: 'titre', typeId: 'arm' }
+      },
+      undefined
+    )
 
     expect(res.body.errors[0].message).toBe('permissions insuffisantes')
   })
@@ -458,7 +462,7 @@ describe('titreCreer', () => {
     const res = await graphQLCall(
       titreCreerQuery,
       { titre: { nom: 'titre', typeId: 'prm' } },
-      'entreprise'
+      { role: 'entreprise', entreprises: [] }
     )
 
     expect(res.body.errors[0].message).toBe('permissions insuffisantes')
@@ -468,7 +472,7 @@ describe('titreCreer', () => {
     const res = await graphQLCall(
       titreCreerQuery,
       { titre: { nom: 'titre', typeId: 'arm' } },
-      'super'
+      userSuper
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -481,8 +485,10 @@ describe('titreCreer', () => {
     const res = await graphQLCall(
       titreCreerQuery,
       { titre: { nom: 'titre', typeId: 'axm' } },
-      'admin',
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      }
     )
 
     expect(res.body.errors[0].message).toBe('permissions insuffisantes')
@@ -492,8 +498,7 @@ describe('titreCreer', () => {
     const res = await graphQLCall(
       titreCreerQuery,
       { titre: { nom: 'titre', typeId: 'arm' } },
-      'admin',
-      ADMINISTRATION_IDS['DGTM - GUYANE']
+      { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }
     )
 
     expect(res.body.errors[0].message).toBe('permissions insuffisantes')
@@ -503,8 +508,10 @@ describe('titreCreer', () => {
     const res = await graphQLCall(
       titreCreerQuery,
       { titre: { nom: 'titre', typeId: 'arm' } },
-      'admin',
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      }
     )
 
     expect(res.body.errors).toBeUndefined()
@@ -532,9 +539,13 @@ describe('titreModifier', () => {
   })
 
   test('ne peut pas modifier un titre (utilisateur anonyme)', async () => {
-    const res = await graphQLCall(titreModifierQuery, {
-      titre: { id, nom: 'mon titre modifié' }
-    })
+    const res = await graphQLCall(
+      titreModifierQuery,
+      {
+        titre: { id, nom: 'mon titre modifié' }
+      },
+      undefined
+    )
 
     expect(res.body.errors[0].message).toMatch(/le titre n'existe pas/)
   })
@@ -545,19 +556,19 @@ describe('titreModifier', () => {
       {
         titre: { id, nom: 'mon titre modifié' }
       },
-      'entreprise'
+      { role: 'entreprise', entreprises: [] }
     )
 
     expect(res.body.errors[0].message).toMatch(/le titre n'existe pas/)
   })
 
-  test("modifie un titre (un utilisateur 'super')", async () => {
+  test('modifie un titre (un utilisateur userSuper)', async () => {
     const res = await graphQLCall(
       titreModifierQuery,
       {
         titre: { id, nom: 'mon titre modifié' }
       },
-      'super'
+      userSuper
     )
 
     expect(res.body).toMatchObject({
@@ -576,8 +587,10 @@ describe('titreModifier', () => {
       {
         titre: { id, nom: 'mon titre modifié' }
       },
-      'admin',
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      }
     )
 
     expect(res.body).toMatchObject({
@@ -610,8 +623,10 @@ describe('titreModifier', () => {
           nom: 'mon titre échu modifié'
         }
       },
-      'admin',
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+      }
     )
 
     expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
@@ -623,8 +638,7 @@ describe('titreModifier', () => {
       {
         titre: { id, nom: 'mon titre modifié' }
       },
-      'admin',
-      ADMINISTRATION_IDS['DGTM - GUYANE']
+      { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }
     )
 
     expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
@@ -649,12 +663,12 @@ describe('titreSupprimer', () => {
   })
 
   test('ne peut pas supprimer un titre (utilisateur anonyme)', async () => {
-    const res = await graphQLCall(titreSupprimerQuery, { id })
+    const res = await graphQLCall(titreSupprimerQuery, { id }, undefined)
     expect(res.body.errors[0].message).toMatch(/le titre n'existe pas/)
   })
 
   test('peut supprimer un titre (utilisateur super)', async () => {
-    const res = await graphQLCall(titreSupprimerQuery, { id }, 'super')
+    const res = await graphQLCall(titreSupprimerQuery, { id }, userSuper)
 
     expect(res.body).toMatchObject({
       data: { titreSupprimer: expect.any(String) }
@@ -662,7 +676,11 @@ describe('titreSupprimer', () => {
   })
 
   test('ne peut pas supprimer un titre inexistant (utilisateur super)', async () => {
-    const res = await graphQLCall(titreSupprimerQuery, { id: 'toto' }, 'super')
+    const res = await graphQLCall(
+      titreSupprimerQuery,
+      { id: 'toto' },
+      userSuper
+    )
 
     expect(res.body.errors[0].message).toMatch(/le titre n'existe pas/)
   })

@@ -1,10 +1,9 @@
-import { IUtilisateur } from '../types.js'
+import { UserNotNull } from 'camino-common/src/roles.js'
 
-export const userSuper: IUtilisateur = {
+export const userSuper: UserNotNull = {
   id: 'super',
   email: 'camino@beta.gouv.fr',
   nom: 'Camino',
-  role: 'super',
-  dateCreation: '2022-05-12',
-  administrationId: undefined
+  prenom: '',
+  role: 'super'
 }

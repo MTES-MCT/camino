@@ -7,6 +7,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreLink, TitreLinks } from 'camino-common/src/titres'
 import { ApiClient } from '@/api/api-client'
 import { LinkableTitre } from '@/components/titre/pure-titres-link-form-api-client'
+import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Titre/TitresLinkForm',
@@ -92,14 +93,14 @@ const apiClient: Props['apiClient'] = {
 
 export const AxmWithAlreadySelectedTitre = Template.bind({})
 AxmWithAlreadySelectedTitre.args = {
-  user: { role: 'super', administrationId: undefined },
+  user: { role: 'super', ...testBlankUser },
   titre: { typeId: 'axm', administrations: [], id: 'titreId', demarches: [] },
   apiClient
 }
 
 export const FusionWithAlreadySelectedTitre = Template.bind({})
 FusionWithAlreadySelectedTitre.args = {
-  user: { role: 'super', administrationId: undefined },
+  user: { role: 'super', ...testBlankUser },
   titre: {
     typeId: 'cxm',
     administrations: [],
@@ -111,7 +112,7 @@ FusionWithAlreadySelectedTitre.args = {
 
 export const TitreWithTitreLinksLoading = Template.bind({})
 TitreWithTitreLinksLoading.args = {
-  user: { role: 'super', administrationId: undefined },
+  user: { role: 'super', ...testBlankUser },
   titre: { typeId: 'axm', administrations: [], id: 'titreId', demarches: [] },
   apiClient: {
     ...apiClient,
@@ -121,7 +122,7 @@ TitreWithTitreLinksLoading.args = {
 
 export const DefautCantUpdateLinks = Template.bind({})
 DefautCantUpdateLinks.args = {
-  user: { role: 'defaut', administrationId: undefined },
+  user: { role: 'defaut', ...testBlankUser },
   titre: { typeId: 'axm', administrations: [], id: 'titreId', demarches: [] },
   apiClient
 }

@@ -1,15 +1,4 @@
-import {
-  moi,
-  utilisateurConnecter,
-  utilisateurCerbereTokenCreer,
-  utilisateurCerbereUrlObtenir,
-  utilisateurCreationMessageEnvoyer,
-  utilisateurCreer,
-  utilisateurMotDePasseMessageEnvoyer,
-  utilisateurMotDePasseInitialiser,
-  userMetas,
-  utilisateurDeconnecter
-} from '../api/utilisateurs'
+import { utilisateurCreer, userMetas } from '../api/utilisateurs'
 
 import router from '../router'
 import {
@@ -22,6 +11,8 @@ import {
   isAdministrationEditeur,
   isSuper
 } from 'camino-common/src/roles'
+import { fetchWithJson } from '@/api/client-rest'
+import { CaminoRestRoutes } from 'camino-common/src/rest'
 
 const state = {
   element: null,
@@ -52,7 +43,8 @@ const actions = {
   async identify({ commit, dispatch }) {
     try {
       commit('loadingAdd', 'userMoi', { root: true })
-      const data = await moi()
+
+      const data = await fetchWithJson(CaminoRestRoutes.moi, {})
 
       commit('set', data)
 
@@ -62,126 +54,6 @@ const actions = {
     } finally {
       commit('loadingRemove', 'userMoi', { root: true })
       commit('load')
-    }
-  },
-
-  async login({ commit, dispatch }, { email, motDePasse }) {
-    try {
-      commit('loadingAdd', 'userLogin', { root: true })
-
-      commit('popupMessagesRemove', null, { root: true })
-
-      const utilisateur = await utilisateurConnecter({ email, motDePasse })
-
-      commit('set', utilisateur)
-      commit('popupClose', null, { root: true })
-      dispatch(
-        'messageAdd',
-        {
-          value: `bienvenue ${utilisateur.prenom} ${utilisateur.nom}`,
-          type: 'success'
-        },
-        { root: true }
-      )
-
-      await dispatch('init')
-      dispatch('errorRemove', null, { root: true })
-
-      return true
-    } catch (e) {
-      commit('reset')
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-
-      return false
-    } finally {
-      commit('loadingRemove', 'userLogin', { root: true })
-    }
-  },
-  async cerbereUrlGet({ commit }, url) {
-    try {
-      commit('popupMessagesRemove', null, { root: true })
-      commit('loadingAdd', 'cerbereUrlGet', { root: true })
-
-      const data = await utilisateurCerbereUrlObtenir({ url })
-
-      return data
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'cerbereUrlGet', { root: true })
-    }
-  },
-
-  async cerbereLogin({ commit, dispatch }, { ticket }) {
-    try {
-      commit('loadingAdd', 'userCerbereLogin', { root: true })
-
-      const utilisateur = await utilisateurCerbereTokenCreer({ ticket })
-
-      commit('set', utilisateur)
-      dispatch(
-        'messageAdd',
-        {
-          value: `bienvenue ${utilisateur.prenom} ${utilisateur.nom}`,
-          type: 'success'
-        },
-        { root: true }
-      )
-
-      await dispatch('init')
-      dispatch('errorRemove', null, { root: true })
-    } catch (e) {
-      commit('reset')
-    } finally {
-      commit('loadingRemove', 'userCerbereLogin', { root: true })
-      commit('load')
-    }
-  },
-
-  async logout({ commit, dispatch }) {
-    try {
-      commit('loadingAdd', 'userLogout', { root: true })
-
-      commit('popupMessagesRemove', null, { root: true })
-
-      await utilisateurDeconnecter()
-
-      dispatch(
-        'messageAdd',
-        { value: `vous êtes déconnecté`, type: 'success' },
-        { root: true }
-      )
-
-      commit('menuClose', null, { root: true })
-      commit('reset')
-      dispatch('errorRemove', null, { root: true })
-    } catch (e) {
-      dispatch('messageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'userLogout', { root: true })
-    }
-  },
-
-  async addEmail({ commit, dispatch }, email) {
-    try {
-      commit('popupMessagesRemove', null, { root: true })
-      commit('loadingAdd', 'userAddEmail', { root: true })
-
-      await utilisateurCreationMessageEnvoyer({ email })
-
-      commit('popupClose', null, { root: true })
-      dispatch(
-        'messageAdd',
-        {
-          value: 'un email pour créer votre compte a été envoyé',
-          type: 'success'
-        },
-        { root: true }
-      )
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'userAddEmail', { root: true })
     }
   },
 
@@ -202,11 +74,6 @@ const actions = {
           { root: true }
         )
 
-        await dispatch('login', {
-          email: data.email,
-          motDePasse: utilisateur.motDePasse
-        })
-
         if (newsletter) {
           await fetch(`/apiUrl/utilisateurs/${data.id}/newsletter`, {
             headers: { 'Content-Type': 'application/json' },
@@ -221,65 +88,6 @@ const actions = {
       dispatch('messageAdd', { value: e, type: 'error' }, { root: true })
     } finally {
       commit('loadingRemove', 'userAdd', { root: true })
-    }
-  },
-
-  async passwordInitEmail({ commit, dispatch }, email) {
-    try {
-      commit('popupMessagesRemove', null, { root: true })
-      commit('loadingAdd', 'utilisateurPasswordInitEmail', { root: true })
-
-      const data = await utilisateurMotDePasseMessageEnvoyer({
-        email
-      })
-      commit('popupClose', null, { root: true })
-      dispatch('messageAdd', { value: data, type: 'success' }, { root: true })
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'utilisateurPasswordInitEmail', {
-        root: true
-      })
-    }
-  },
-
-  async passwordInit(
-    { commit, dispatch },
-    { motDePasse1, motDePasse2, token }
-  ) {
-    try {
-      commit('loadingAdd', 'utilisateurPasswordInit', { root: true })
-
-      const utilisateur = await utilisateurMotDePasseInitialiser({
-        motDePasse1,
-        motDePasse2,
-        token
-      })
-
-      dispatch(
-        'messageAdd',
-        {
-          value: 'mot de passe mis à jour',
-          type: 'success'
-        },
-        { root: true }
-      )
-
-      router.push({ name: 'titres' })
-
-      commit('set', utilisateur)
-      dispatch(
-        'messageAdd',
-        {
-          value: `bienvenue ${utilisateur.prenom} ${utilisateur.nom}`,
-          type: 'success'
-        },
-        { root: true }
-      )
-    } catch (e) {
-      dispatch('messageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'utilisateurPasswordInit', { root: true })
     }
   },
 

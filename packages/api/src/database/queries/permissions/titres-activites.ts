@@ -1,7 +1,5 @@
 import { raw, QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types.js'
-
 import { knex } from '../../../knex.js'
 
 import Titres from '../../models/titres.js'
@@ -19,7 +17,8 @@ import {
   isAdministrationAdmin,
   isAdministrationEditeur,
   isEntreprise,
-  isSuper
+  isSuper,
+  User
 } from 'camino-common/src/roles.js'
 
 const activiteStatuts = [
@@ -39,7 +38,7 @@ const activiteStatuts = [
 
 const titreActivitesCount = (
   q: QueryBuilder<Titres, Titres | Titres[]>,
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   q.groupBy('titres.id')
 
@@ -122,7 +121,7 @@ const titreActivitesCount = (
 
 const titresActivitesQueryModify = (
   q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>,
-  user: IUtilisateur | null | undefined,
+  user: User,
   select = true
 ) => {
   if (select) {
@@ -166,7 +165,7 @@ const titresActivitesQueryModify = (
 
 const titresActivitesPropsQueryModify = (
   q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>,
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   q.select('titresActivites.*')
 

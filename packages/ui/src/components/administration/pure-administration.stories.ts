@@ -8,6 +8,7 @@ import { User } from 'camino-common/src/roles'
 import { ApiClient } from '@/api/api-client'
 import { ACTIVITES_TYPES_IDS } from 'camino-common/src/static/activitesTypes'
 import { administrationMetas } from './permissions.stub'
+import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Administration/Administration',
@@ -43,7 +44,7 @@ export const Default = Template.bind(
     administrationId: ADMINISTRATION_IDS.BRGM,
     user: {
       role: 'super',
-      administrationId: undefined
+      ...testBlankUser
     },
     apiClient: {
       administrationActivitesTypesEmails: (_: AdministrationId) =>

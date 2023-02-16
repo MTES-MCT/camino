@@ -8,11 +8,12 @@ import {
   UpsertGraphOptions
 } from 'objection'
 import { journauxQueryModify } from './permissions/journaux.js'
-import { IFields, IUtilisateur } from '../../types.js'
+import { IFields } from '../../types.js'
 import graphBuild from './graph/build.js'
 import { fieldsFormat } from './graph/fields-format.js'
 import options from './_options.js'
 import { IJournauxQueryParams } from '../../api/graphql/resolvers/journaux.js'
+import { User } from 'camino-common/src/roles'
 
 const diffPatcher = create({
   // on filtre certaines proprietés qu’on ne souhaite pas voir apparaitre dans les journaux
@@ -23,7 +24,7 @@ const diffPatcher = create({
 export const journauxGet = async (
   params: IJournauxQueryParams,
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const graph = fields
     ? graphBuild(fields, 'journaux', fieldsFormat)

@@ -1,9 +1,4 @@
-import {
-  ITitreEtape,
-  IFields,
-  IUtilisateur,
-  ITitreEtapeJustificatif
-} from '../../types.js'
+import { ITitreEtape, IFields, ITitreEtapeJustificatif } from '../../types.js'
 import options from './_options.js'
 import graphBuild from './graph/build.js'
 import { fieldsFormat } from './graph/fields-format.js'
@@ -16,10 +11,11 @@ import {
   patchJournalCreate,
   upsertJournalCreate
 } from './journaux.js'
+import { User, UserNotNull } from 'camino-common/src/roles'
 
 const titresEtapesQueryBuild = (
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const graph = fields
     ? graphBuild(fields, 'etapes', fieldsFormat)
@@ -38,7 +34,7 @@ const titresEtapesQueryBuild = (
 const titreEtapeGet = async (
   titreEtapeId: string,
   { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const q = titresEtapesQueryBuild({ fields }, user)
 
@@ -64,7 +60,7 @@ const titresEtapesGet = async (
     titresDemarchesIds?: string[] | null
   } = {},
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ): Promise<ITitreEtape[]> => {
   const q = titresEtapesQueryBuild({ fields }, user)
 
@@ -87,7 +83,7 @@ const titresEtapesGet = async (
 
 const titreEtapeCreate = async (
   titreEtape: Omit<ITitreEtape, 'id'>,
-  user: IUtilisateur,
+  user: UserNotNull,
   titreId: string
 ) => {
   const newValue = await TitresEtapes.query()
@@ -102,7 +98,7 @@ const titreEtapeCreate = async (
 const titreEtapeUpdate = async (
   id: string,
   titreEtape: Partial<DBTitresEtapes>,
-  user: IUtilisateur,
+  user: UserNotNull,
   titreId: string
 ): Promise<TitresEtapes> => {
   return patchJournalCreate<TitresEtapes>(
@@ -116,7 +112,7 @@ const titreEtapeUpdate = async (
 
 const titreEtapeUpsert = async (
   titreEtape: Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id'>,
-  user: IUtilisateur,
+  user: UserNotNull,
   titreId: string
 ) =>
   upsertJournalCreate<TitresEtapes>(

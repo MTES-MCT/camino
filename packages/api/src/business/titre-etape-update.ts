@@ -1,4 +1,4 @@
-import { DemarcheId, IUtilisateur } from '../types.js'
+import { DemarcheId } from '../types.js'
 import { titreDemarcheGet } from '../database/queries/titres-demarches.js'
 
 import { titresActivitesUpdate } from './processes/titres-activites-update.js'
@@ -22,11 +22,12 @@ import { titresCoordonneesUpdate } from './processes/titres-coordonnees-update.j
 import { titresActivitesPropsUpdate } from './processes/titres-activites-props-update.js'
 import { userSuper } from '../database/user-super.js'
 import { titresEtapesDepotCreate } from './processes/titres-demarches-depot-create.js'
+import { UserNotNull } from 'camino-common/src/roles'
 
 const titreEtapeUpdate = async (
   titreEtapeId: string | null,
   titreDemarcheId: DemarcheId,
-  user: IUtilisateur
+  user: UserNotNull
 ) => {
   try {
     console.info()

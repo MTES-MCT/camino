@@ -1,7 +1,5 @@
 import { raw, QueryBuilder, RawBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types.js'
-
 import Titres from '../../models/titres.js'
 import TitresEtapes from '../../models/titres-etapes.js'
 import TitresDemarches from '../../models/titres-demarches.js'
@@ -20,12 +18,13 @@ import {
   isEntreprise,
   isAdministrationAdmin,
   isAdministrationEditeur,
-  isBureauDEtudes
+  isBureauDEtudes,
+  User
 } from 'camino-common/src/roles.js'
 
 export const titresDemarchesQueryModify = (
   q: QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>,
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   q.select('titresDemarches.*')
     .where('titresDemarches.archive', false)
@@ -109,7 +108,7 @@ export const titresDemarchesQueryModify = (
 const titreDemarcheModificationSelectQuery = (
   q: QueryBuilder<TitresDemarches, TitresDemarches | TitresDemarches[]>,
   demarcheAlias: string,
-  user: IUtilisateur | null | undefined
+  user: User
 ): void => {
   let modificationQuery = raw('false')
   if (isSuper(user)) {
@@ -128,7 +127,7 @@ const titreDemarcheModificationSelectQuery = (
 
 export const titreDemarcheSuppressionSelectQuery = (
   demarcheAlias: string,
-  user: IUtilisateur | null | undefined
+  user: User
 ): RawBuilder => {
   if (isSuper(user)) {
     return raw('true')
@@ -150,10 +149,7 @@ export const titreDemarcheSuppressionSelectQuery = (
   return raw('false')
 }
 
-const titreEtapesCreationQuery = (
-  demarcheAlias: string,
-  user: IUtilisateur | null | undefined
-) => {
+const titreEtapesCreationQuery = (demarcheAlias: string, user: User) => {
   if (isSuper(user)) {
     return raw('true')
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {

@@ -56,7 +56,7 @@ const titreEtapeDepotConfirmationEmailsSend = async (
     if (emails?.length) {
       await emailConfirmationDepotSend(emails, {
         titreTypeNom,
-        titulaireNom: titulaire.nom,
+        titulaireNom: titulaire.nom ?? '',
         titreUrl,
         titreNom
       })

@@ -13,9 +13,7 @@
     <Loader v-if="!loaded" />
     <div v-else>
       <div v-if="action === 'create'">
-        <p>
-          Renseignez au moins l'email, le mot de passe, le prénom et le nom.
-        </p>
+        <p>Renseignez au moins l'email, le prénom et le nom.</p>
         <hr />
       </div>
       <div v-if="formIsVisible" class="tablet-blobs">
@@ -29,24 +27,6 @@
             class="p-s"
             placeholder="Email"
           />
-        </div>
-      </div>
-
-      <div v-if="action === 'create'">
-        <hr />
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-            <h5>Mot de passe</h5>
-          </div>
-          <div class="mb tablet-blob-2-3">
-            <input
-              v-model="utilisateur.motDePasse"
-              type="password"
-              class="p-s mb-s"
-              placeholder="Mot de passe"
-            />
-            <p class="h6 mb-0">8 caractères minimum.</p>
-          </div>
         </div>
       </div>
 
@@ -314,8 +294,7 @@ export default {
         this.action === 'create'
           ? this.utilisateur.nom &&
             this.utilisateur.prenom &&
-            this.utilisateur.email &&
-            this.utilisateur.motDePasse
+            this.utilisateur.email
           : this.utilisateur.nom &&
             this.utilisateur.prenom &&
             this.utilisateur.id &&
@@ -378,7 +357,6 @@ export default {
         const utilisateur = JSON.parse(JSON.stringify(this.utilisateur))
 
         delete utilisateur.permissionModification
-        delete utilisateur.utilisateursCreation
 
         if (!this.utilisateurIsAdministration) {
           utilisateur.administrationId = undefined

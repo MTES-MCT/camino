@@ -1,8 +1,7 @@
 import express from 'express'
 import { Server, FileStore } from 'tus-node-server'
 import { graphqlUploadExpress } from 'graphql-upload'
-import { userGet } from '../database/queries/utilisateurs.js'
-import { isDefault } from 'camino-common/src/roles.js'
+import { isDefault, User } from 'camino-common/src/roles.js'
 
 // Téléversement REST
 const uploadAllowedMiddleware = async (
@@ -10,16 +9,16 @@ const uploadAllowedMiddleware = async (
   res: express.Response,
   next: express.NextFunction
 ) => {
-  const userId = (req as any).user?.id
+  try {
+    if (isDefault(req.user as User)) {
+      res.sendStatus(403)
 
-  const user = await userGet(userId)
-
-  if (isDefault(user)) {
-    res.sendStatus(403)
-
-    return
+      return
+    }
+    next()
+  } catch (e: any) {
+    res.status(500).send(e.message)
   }
-  next()
 }
 
 const restUpload = () => {

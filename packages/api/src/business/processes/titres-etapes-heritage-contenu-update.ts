@@ -2,8 +2,7 @@ import {
   DemarcheId,
   IContenu,
   IHeritageContenu,
-  ITitreEtape,
-  IUtilisateur
+  ITitreEtape
 } from '../../types.js'
 
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
@@ -12,6 +11,7 @@ import {
   titreEtapesSortAscByOrdre,
   titreEtapesSortDescByOrdre
 } from '../utils/titre-etapes-sort.js'
+import { UserNotNull } from 'camino-common/src/roles'
 import {
   getSections,
   Section
@@ -103,7 +103,7 @@ export const getDemarches = async (
   }, {})
 }
 export const titresEtapesHeritageContenuUpdate = async (
-  user: IUtilisateur,
+  user: UserNotNull,
   demarcheId?: DemarcheId
 ) => {
   console.info()

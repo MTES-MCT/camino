@@ -1,18 +1,16 @@
 import {
-  userByEmailGet,
-  userGet,
   utilisateurGet,
   utilisateursGet
 } from '../../database/queries/utilisateurs.js'
 import express from 'express'
 import { CustomResponse } from './express-type.js'
-import { IFormat, IUtilisateur, IUtilisateursColonneId } from '../../types.js'
+import { formatUser, IFormat, IUtilisateursColonneId } from '../../types.js'
 import { constants } from 'http2'
 import {
   isSubscribedToNewsLetter,
   newsletterSubscriberUpdate
 } from '../../tools/api-mailjet/newsletter.js'
-import { isRole } from 'camino-common/src/roles.js'
+import { isRole, User } from 'camino-common/src/roles.js'
 import { utilisateursFormatTable } from './format/utilisateurs.js'
 import { tableConvert } from './_convert.js'
 import { fileNameCreate } from '../../tools/file-name-create.js'
@@ -25,8 +23,7 @@ export const isSubscribedToNewsletter = async (
   req: express.Request<{ id?: string }>,
   res: CustomResponse<boolean>
 ) => {
-  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
-  const user = await userGet(userId)
+  const user = req.user as User
 
   if (!req.params.id) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
@@ -46,12 +43,39 @@ export const isSubscribedToNewsletter = async (
   }
 }
 
+export const moi = async (
+  req: express.Request<{ id?: string }>,
+  res: CustomResponse<User>
+) => {
+  res.clearCookie('shouldBeConnected')
+  const user = req.user as User
+  if (!user) {
+    res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+  } else {
+    try {
+      const utilisateur = await utilisateurGet(
+        user.id,
+        { fields: { entreprises: { id: {} } } },
+        user
+      )
+      res.cookie(
+        'shouldBeConnected',
+        'anyValueIsGood, We just check the presence of this cookie'
+      )
+      res.json(formatUser(utilisateur!))
+    } catch (e) {
+      console.error(e)
+      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+      throw e
+    }
+  }
+}
+
 export const manageNewsletterSubscription = async (
   req: express.Request<{ id?: string }>,
   res: CustomResponse<boolean>
 ) => {
-  const userId = (req.user as unknown as IUtilisateur | undefined)?.id
-  const user = await userGet(userId)
+  const user = req.user as User
 
   if (!req.params.id) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
@@ -88,13 +112,7 @@ export const generateQgisToken = async (
   req: express.Request,
   res: CustomResponse<QGISToken>
 ) => {
-  const userEmail = (req.user as unknown as IUtilisateur | undefined)?.email
-  if (!userEmail) {
-    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
-
-    return
-  }
-  const user = await userByEmailGet(userEmail)
+  const user = req.user as User
 
   if (!user) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
@@ -102,7 +120,7 @@ export const generateQgisToken = async (
     const token = idGenerate()
     await knex('utilisateurs')
       .update({ qgis_token: bcrypt.hashSync(token, 10) })
-      .where('email', userEmail)
+      .where('email', user.email)
     res.send({ token })
   }
 }
@@ -132,10 +150,8 @@ export const utilisateurs = async (
       emails
     }
   }: { query: IUtilisateursQueryInput },
-  userId?: string
+  user: User
 ) => {
-  const user = await userGet(userId)
-
   const utilisateurs = await utilisateursGet(
     {
       colonne,

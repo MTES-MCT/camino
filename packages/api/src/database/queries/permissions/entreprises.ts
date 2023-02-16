@@ -1,7 +1,5 @@
 import { QueryBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types.js'
-
 import { knex } from '../../../knex.js'
 
 import Entreprises from '../../models/entreprises.js'
@@ -12,10 +10,11 @@ import Documents from '../../models/documents.js'
 import { titresQueryModify } from './titres.js'
 import { utilisateursQueryModify } from './utilisateurs.js'
 import { documentsQueryModify } from './documents.js'
+import { User } from 'camino-common/src/roles.js'
 
 const entreprisesQueryModify = (
   q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>,
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   q.select('entreprises.*')
 

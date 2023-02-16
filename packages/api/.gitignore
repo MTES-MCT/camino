@@ -33,3 +33,4 @@ cron.log
 .eslintcache
 /*.ods
 /*.csv
+keycloak.json

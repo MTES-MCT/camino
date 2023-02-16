@@ -1,16 +1,17 @@
-import { IEtapeType, ITitreEtape, IUtilisateur } from '../../../types.js'
+import { IEtapeType, ITitreEtape, formatUser } from '../../../types.js'
 
 import { emailsSend } from '../../../tools/api-mailjet/emails.js'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
 import { utilisateursTitresGet } from '../../../database/queries/utilisateurs.js'
 import { titreUrlGet } from '../../../business/utils/urls-get.js'
 import { EmailAdministration } from '../../../tools/api-mailjet/types.js'
+import { UserNotNull } from 'camino-common/src/roles.js'
 
 const emailForAdministrationContentFormat = (
   titreTypeId: string,
   etapeNom: string,
   titreId: string,
-  user: IUtilisateur
+  user: UserNotNull
 ) => {
   const titreUrl = titreUrlGet(titreId)
 
@@ -44,7 +45,7 @@ export const emailsForAdministrationsGet = (
   demarcheTypeId: string,
   titreId: string,
   titreTypeId: string,
-  user: IUtilisateur,
+  user: UserNotNull,
   oldEtape?: Pick<ITitreEtape, 'statutId'>
 ): { subject: string; content: string; emails: string[] } | null => {
   if (!etape) {
@@ -106,7 +107,7 @@ const titreEtapeAdministrationsEmailsSend = async (
   demarcheTypeId: string,
   titreId: string,
   titreTypeId: string,
-  user: IUtilisateur,
+  user: UserNotNull,
   oldEtape?: ITitreEtape
 ) => {
   const emailsForAdministrations = emailsForAdministrationsGet(
@@ -145,14 +146,17 @@ const titreEtapeUtilisateursEmailsSend = async (
     .filter(utilisateur => !!utilisateur && !!utilisateur.email)
 
   for (const utilisateur of utilisateurs) {
-    // On vérifie que l’utilisateur puisse voir l’étape
-    const titreEtape = await titreEtapeGet(
-      etape.id,
-      { fields: { id: {} } },
-      utilisateur
-    )
-    if (titreEtape) {
-      utilisateursEmails.push(utilisateur!.email!)
+    if (utilisateur) {
+      const user = formatUser(utilisateur)
+      // On vérifie que l’utilisateur puisse voir l’étape
+      const titreEtape = await titreEtapeGet(
+        etape.id,
+        { fields: { id: {} } },
+        user
+      )
+      if (titreEtape) {
+        utilisateursEmails.push(user.email)
+      }
     }
   }
 

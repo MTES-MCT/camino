@@ -6,6 +6,7 @@ import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { toCaminoDate } from 'camino-common/src/date'
 import { User } from 'camino-common/src/roles'
+import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Etape/FondamentalesEdit',
@@ -97,7 +98,11 @@ export const ArmDemandeONF = Template.bind(
     etape,
     demarcheTypeId: 'oct',
     titreTypeId: 'arm',
-    user: { role: 'admin', administrationId: 'ope-onf-973-01' },
+    user: {
+      role: 'admin',
+      administrationId: 'ope-onf-973-01',
+      ...testBlankUser
+    },
     entreprises: [
       {
         id: newEntrepriseId('optionId1'),
@@ -114,7 +119,7 @@ export const ArmDemandeOperateur = Template.bind(
     etape,
     demarcheTypeId: 'oct',
     titreTypeId: 'arm',
-    user: { role: 'entreprise', administrationId: undefined },
+    user: { role: 'entreprise', entreprises: [], ...testBlankUser },
     entreprises: [
       {
         id: newEntrepriseId('optionId1'),
@@ -131,7 +136,11 @@ export const ArmJorfONF = Template.bind(
     etape: { ...etape, type: { id: 'dpu', nom: 'Jorf' } },
     demarcheTypeId: 'oct',
     titreTypeId: 'arm',
-    user: { role: 'admin', administrationId: 'ope-onf-973-01' },
+    user: {
+      role: 'admin',
+      administrationId: 'ope-onf-973-01',
+      ...testBlankUser
+    },
     entreprises: [
       {
         id: newEntrepriseId('optionId1'),
@@ -148,7 +157,11 @@ export const AxmDemandeONF = Template.bind(
     etape,
     demarcheTypeId: 'oct',
     titreTypeId: 'axm',
-    user: { role: 'admin', administrationId: 'ope-onf-973-01' },
+    user: {
+      role: 'admin',
+      administrationId: 'ope-onf-973-01',
+      ...testBlankUser
+    },
     entreprises: [
       {
         id: newEntrepriseId('optionId1'),
@@ -165,7 +178,11 @@ export const PrmDemandeONF = Template.bind(
     etape,
     demarcheTypeId: 'oct',
     titreTypeId: 'prm',
-    user: { role: 'admin', administrationId: 'ope-onf-973-01' },
+    user: {
+      role: 'admin',
+      administrationId: 'ope-onf-973-01',
+      ...testBlankUser
+    },
     entreprises: [
       {
         id: newEntrepriseId('optionId1'),
@@ -182,7 +199,11 @@ export const PrmDeplacementDePerimetreONF = Template.bind(
     etape,
     demarcheTypeId: 'dep',
     titreTypeId: 'prm',
-    user: { role: 'admin', administrationId: 'ope-onf-973-01' },
+    user: {
+      role: 'admin',
+      administrationId: 'ope-onf-973-01',
+      ...testBlankUser
+    },
     entreprises: [
       {
         id: newEntrepriseId('optionId1'),

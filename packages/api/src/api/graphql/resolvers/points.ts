@@ -1,4 +1,4 @@
-import { ITitrePoint, IToken, IUtilisateur } from '../../../types.js'
+import { ITitrePoint, Context } from '../../../types.js'
 
 import { FileUpload } from 'graphql-upload'
 import { Stream } from 'stream'
@@ -20,7 +20,6 @@ import {
   geojsonSurface
 } from '../../../tools/geojson.js'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
-import { userGet } from '../../../database/queries/utilisateurs.js'
 import { etapeTypeGet } from '../../../database/queries/metas.js'
 import { titreGet, titresGet } from '../../../database/queries/titres.js'
 import { userSuper } from '../../../database/user-super.js'
@@ -32,7 +31,8 @@ import {
 import {
   isSuper,
   isAdministrationAdmin,
-  isAdministrationEditeur
+  isAdministrationEditeur,
+  User
 } from 'camino-common/src/roles.js'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
@@ -80,7 +80,7 @@ export const pointsImporter = async (
     demarcheId: string
     etapeTypeId: string
   },
-  context: IToken
+  context: Context
 ): Promise<
   IPerimetreInformations & {
     points: Omit<ITitrePoint, 'id' | 'titreEtapeId'>[]
@@ -175,7 +175,7 @@ const sdomZonesInformationsGet = async (
   titrePoints: ITitrePoint[],
   titreSdomZones: SDOMZoneId[],
   titreId: string,
-  user: IUtilisateur
+  user: User
 ) => {
   const etapeType = await etapeTypeGet(etapeTypeId, { fields: { id: {} } })
   // si c’est une étape fondamentale on récupère les informations directement sur l’étape
@@ -268,11 +268,9 @@ export const perimetreInformations = async (
     demarcheId: string
     etapeTypeId: string
   },
-  context: IToken
+  { user }: Context
 ): Promise<IPerimetreInformations & { points: ITitrePoint[] }> => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!user) {
       throw new Error('droits insuffisants')
     }
@@ -341,11 +339,9 @@ export const titreEtapePerimetreInformations = async (
   }: {
     titreEtapeId: string
   },
-  context: IToken
+  { user }: Context
 ): Promise<IPerimetreInformations> => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!user) {
       throw new Error('droits insuffisants')
     }

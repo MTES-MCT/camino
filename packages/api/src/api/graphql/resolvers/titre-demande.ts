@@ -1,15 +1,11 @@
 import {
-  IToken,
   ITitreDemande,
   ITitreEtape,
   ISection,
   ITitreEntreprise,
+  Context,
   ISectionElement
 } from '../../../types.js'
-import {
-  userGet,
-  utilisateurTitreCreate
-} from '../../../database/queries/utilisateurs.js'
 import { etapeTypeGet } from '../../../database/queries/metas.js'
 import {
   titreCreate,
@@ -32,6 +28,7 @@ import {
 import { checkTitreLinks } from '../../../business/validations/titre-links-validate.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import { utilisateurTitreCreate } from '../../../database/queries/utilisateurs.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
@@ -39,11 +36,9 @@ export const titreDemandeCreer = async (
   {
     titreDemande
   }: { titreDemande: ITitreDemande & { titreFromIds?: string[] } },
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     assertsCanCreateTitre(user, titreDemande.typeId)
 
     if (isEntreprise(user) || isBureauDEtudes(user)) {

@@ -1,12 +1,12 @@
 import { test, expect } from 'vitest'
 import { newEntrepriseId } from '../entreprise.js'
-import { User } from '../roles.js'
 import { ADMINISTRATION_IDS } from '../static/administrations.js'
 import { canEditEntreprise, canCreateEntreprise } from './entreprises.js'
+import { testBlankUser, TestUser } from '../tests-utils'
 
 const entrepriseId = newEntrepriseId('entrepriseId')
-test.each<[User, boolean]>([
-  [{ role: 'super', administrationId: undefined }, true],
+test.each<[TestUser, boolean]>([
+  [{ role: 'super' }, true],
   [
     {
       role: 'admin',
@@ -28,17 +28,17 @@ test.each<[User, boolean]>([
     },
     false
   ],
-  [{ role: 'entreprise', administrationId: undefined, entreprises: [{ id: entrepriseId }] }, true],
-  [{ role: 'bureau d’études', administrationId: undefined, entreprises: [{ id: entrepriseId }] }, true],
-  [{ role: 'bureau d’études', administrationId: undefined, entreprises: [{ id: newEntrepriseId('autreEntrepriseId') }] }, false],
-  [{ role: 'bureau d’études', administrationId: undefined, entreprises: [] }, false],
-  [{ role: 'defaut', administrationId: undefined }, false]
+  [{ role: 'entreprise', entreprises: [{ id: entrepriseId }] }, true],
+  [{ role: 'bureau d’études', entreprises: [{ id: entrepriseId }] }, true],
+  [{ role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('autreEntrepriseId') }] }, false],
+  [{ role: 'bureau d’études', entreprises: [] }, false],
+  [{ role: 'defaut' }, false]
 ])('l’utilisateur %p peut modifier une entreprise %p', async (user, modification) => {
-  expect(canEditEntreprise(user, entrepriseId)).toEqual(modification)
+  expect(canEditEntreprise({ ...user, ...testBlankUser }, entrepriseId)).toEqual(modification)
 })
 
-test.each<[User, boolean]>([
-  [{ role: 'super', administrationId: undefined }, true],
+test.each<[TestUser, boolean]>([
+  [{ role: 'super' }, true],
   [
     {
       role: 'admin',
@@ -60,11 +60,43 @@ test.each<[User, boolean]>([
     },
     false
   ],
-  [{ role: 'entreprise', administrationId: undefined, entreprises: [{ id: entrepriseId }] }, false],
-  [{ role: 'bureau d’études', administrationId: undefined, entreprises: [{ id: entrepriseId }] }, false],
-  [{ role: 'bureau d’études', administrationId: undefined, entreprises: [{ id: newEntrepriseId('autreEntrepriseId') }] }, false],
-  [{ role: 'bureau d’études', administrationId: undefined, entreprises: [] }, false],
-  [{ role: 'defaut', administrationId: undefined }, false]
+  [{ role: 'entreprise', entreprises: [{ id: entrepriseId }] }, false],
+  [{ role: 'bureau d’études', entreprises: [{ id: entrepriseId }] }, false],
+  [{ role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('autreEntrepriseId') }] }, false],
+  [{ role: 'bureau d’études', entreprises: [] }, false],
+  [{ role: 'defaut' }, false]
+])('l’utilisateur %p peut créer une entreprise %p', async (user, creation) => {
+  expect(canCreateEntreprise({ ...user, ...testBlankUser })).toEqual(creation)
+})
+
+test.each<[TestUser, boolean]>([
+  [{ role: 'super' }, true],
+  [
+    {
+      role: 'admin',
+      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+    },
+    true
+  ],
+  [
+    {
+      role: 'editeur',
+      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+    },
+    true
+  ],
+  [
+    {
+      role: 'lecteur',
+      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+    },
+    false
+  ],
+  [{ role: 'entreprise', entreprises: [{ id: entrepriseId }] }, false],
+  [{ role: 'bureau d’études', entreprises: [{ id: entrepriseId }] }, false],
+  [{ role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('autreEntrepriseId') }] }, false],
+  [{ role: 'bureau d’études', entreprises: [] }, false],
+  [{ role: 'defaut' }, false]
 ])('l’utilisateur %p peut créer une entreprise %p', async (user, modification) => {
-  expect(canCreateEntreprise(user)).toEqual(modification)
+  expect(canCreateEntreprise({ ...user, ...testBlankUser })).toEqual(modification)
 })

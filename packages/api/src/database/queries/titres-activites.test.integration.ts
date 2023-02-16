@@ -1,9 +1,9 @@
 import { titresActivitesGet } from './titres-activites.js'
 import TitresActivites from '../models/titres-activites.js'
 import { dbManager } from '../../../tests/db-manager.js'
-import { IUtilisateur } from '../../types.js'
 import { idGenerate } from '../models/_format/id-create.js'
 import Titres from '../models/titres.js'
+import { UserNotNull } from 'camino-common/src/roles.js'
 import { beforeAll, expect, afterAll, test, describe, vi } from 'vitest'
 import { getCurrent } from 'camino-common/src/date.js'
 console.info = vi.fn()
@@ -39,14 +39,13 @@ describe('teste les requêtes sur les activités', () => {
       annee: 2000
     })
 
-    const adminDGALN: IUtilisateur = {
+    const adminDGALN: UserNotNull = {
       id: 'utilisateurId',
       role: 'admin',
       nom: 'utilisateurNom',
+      prenom: 'utilisateurPrenom',
       email: 'utilisateurEmail',
-      motDePasse: 'utilisateurMotdepasse',
-      administrationId: 'min-mtes-dgaln-01',
-      dateCreation: '2022-05-12'
+      administrationId: 'min-mtes-dgaln-01'
     }
 
     const actual = await titresActivitesGet(

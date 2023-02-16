@@ -19,7 +19,7 @@ describe('substances', () => {
   }
 }`,
       {},
-      'defaut'
+      { role: 'defaut' }
     )
 
     expect(res.body.data).toMatchSnapshot()

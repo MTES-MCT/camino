@@ -1,6 +1,6 @@
 import { transaction, Transaction } from 'objection'
 
-import { IDocument, IFields, IUtilisateur } from '../../types.js'
+import { IDocument, IFields } from '../../types.js'
 
 import options from './_options.js'
 import graphBuild from './graph/build.js'
@@ -8,11 +8,12 @@ import { fieldsFormat } from './graph/fields-format.js'
 
 import Document from '../models/documents.js'
 import { documentsQueryModify } from './permissions/documents.js'
+import { User } from 'camino-common/src/roles'
 
 const documentGet = async (
   documentId: string,
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const graph = fields
     ? graphBuild(fields, 'documents', fieldsFormat)
@@ -30,7 +31,7 @@ const documentGet = async (
 const documentsGet = async (
   { ids, entreprisesIds }: { ids?: string[]; entreprisesIds?: string[] },
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const graph = fields
     ? graphBuild(fields, 'documents', fieldsFormat)

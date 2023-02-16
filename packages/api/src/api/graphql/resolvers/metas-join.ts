@@ -1,6 +1,4 @@
-import { IToken } from '../../../types.js'
-
-import { userGet } from '../../../database/queries/utilisateurs.js'
+import { Context } from '../../../types.js'
 
 import {
   titresTypesGet,
@@ -16,12 +14,10 @@ import { titreTypesStatutsTitresPublicLecture } from 'camino-common/src/static/t
 
 const titresTypes = async (
   _: never,
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -48,11 +44,9 @@ const titresTypesTitresStatuts = (_: never) => {
 
 const titresTypesDemarchesTypesEtapesTypes = async (
   _: never,
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -71,11 +65,9 @@ const titresTypesDemarchesTypesEtapesTypes = async (
 
 const titresTypesDemarchesTypesEtapesTypesJustificatifsTypes = async (
   _: never,
-  context: IToken
+  { user }: Context
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -91,10 +83,8 @@ const titresTypesDemarchesTypesEtapesTypesJustificatifsTypes = async (
   }
 }
 
-const etapesTypesDocumentsTypes = async (_: never, context: IToken) => {
+const etapesTypesDocumentsTypes = async (_: never, { user }: Context) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }
@@ -109,10 +99,8 @@ const etapesTypesDocumentsTypes = async (_: never, context: IToken) => {
   }
 }
 
-const etapesTypesJustificatifsTypes = async (_: never, context: IToken) => {
+const etapesTypesJustificatifsTypes = async (_: never, { user }: Context) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!isSuper(user)) {
       throw new Error('droits insuffisants')
     }

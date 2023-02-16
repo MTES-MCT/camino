@@ -10,16 +10,18 @@ interface IAuthRequestHttp extends http.IncomingMessage {
   }
 }
 
-export const graphql = graphqlHTTP((req: IAuthRequestHttp, res) => ({
-  context: { user: req.user, res },
-  customFormatErrorFn: err => ({
-    locations: err.locations,
-    message: err.message,
-    path: err.path,
-    stack: err.stack ? err.stack.split('\n') : []
-  }),
-  graphiql: true,
-  pretty: true,
-  rootValue,
-  schema
-}))
+export const graphql = graphqlHTTP(async (req: IAuthRequestHttp, res) => {
+  return {
+    context: { user: req.user, res },
+    customFormatErrorFn: err => ({
+      locations: err.locations,
+      message: err.message,
+      path: err.path,
+      stack: err.stack ? err.stack.split('\n') : []
+    }),
+    graphiql: true,
+    pretty: true,
+    rootValue,
+    schema
+  }
+})

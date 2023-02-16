@@ -7,28 +7,21 @@ import {
 } from '../../types.js'
 
 import { documentGet } from '../../database/queries/documents.js'
-import { userGet } from '../../database/queries/utilisateurs.js'
 import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
 import { documentRepertoireFind } from '../../tools/documents/document-repertoire-find.js'
 import { documentFilePathFind } from '../../tools/documents/document-path-find.js'
 
 import JSZip from 'jszip'
 import { statSync, readFileSync } from 'fs'
+import { User } from 'camino-common/src/roles'
 
-const etapeTelecharger = async (
+export const etapeTelecharger = async (
   { params: { etapeId } }: { params: { etapeId?: string } },
-  userId?: string
+  user: User
 ) => {
   if (!etapeId) {
     throw new Error("id d'étape absent")
   }
-
-  const user = await userGet(userId)
-
-  if (!user) {
-    throw new Error("l'utilisateur n'existe pas")
-  }
-
   const titreEtape = await titreEtapeGet(
     etapeId,
     {
@@ -87,15 +80,13 @@ const etapeTelecharger = async (
   }
 }
 
-const fichier = async (
+export const fichier = async (
   { params: { documentId } }: { params: { documentId?: string } },
-  userId?: string
+  user: User
 ) => {
   if (!documentId) {
     throw new Error('id du document absent')
   }
-
-  const user = await userGet(userId)
 
   const document = await documentGet(
     documentId,
@@ -176,11 +167,11 @@ const etapeIdPathGet = (
   return null
 }
 
-const etapeFichier = async (
+export const etapeFichier = async (
   {
     params: { etapeId, fichierNom }
   }: { params: { etapeId?: string; fichierNom?: string } },
-  userId?: string
+  user: User
 ) => {
   if (!etapeId) {
     throw new Error('id de l’étape absent')
@@ -188,8 +179,6 @@ const etapeFichier = async (
   if (!fichierNom) {
     throw new Error('nom du fichier absent')
   }
-
-  const user = await userGet(userId)
 
   const etape = await titreEtapeGet(etapeId, { fields: {} }, user)
 
@@ -230,5 +219,3 @@ const etapeFichier = async (
     filePath
   }
 }
-
-export { fichier, etapeFichier, etapeTelecharger }

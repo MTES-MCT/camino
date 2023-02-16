@@ -1,9 +1,9 @@
 import { dbManager } from '../../../tests/db-manager.js'
+import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { vi, afterAll, beforeAll, describe, test, expect } from 'vitest'
-import { Role } from 'camino-common/src/roles.js'
 import { uploadAllowedMiddleware } from '../../server/upload.js'
-import { utilisateurCreate } from '../../database/queries/utilisateurs.js'
 import { Request, Response } from 'express'
+import { TestUser } from 'camino-common/src/tests-utils.js'
 
 console.info = vi.fn()
 describe('téléversement de fichier par rest (tus)', () => {
@@ -16,32 +16,36 @@ describe('téléversement de fichier par rest (tus)', () => {
   })
 
   describe('permission de téléverser', () => {
-    test.each<[{ role: Role; code: number }]>([
-      [{ role: 'admin', code: 200 }],
-      [{ role: 'super', code: 200 }],
-      [{ role: 'editeur', code: 200 }],
-      [{ role: 'lecteur', code: 200 }],
-      [{ role: 'entreprise', code: 200 }],
-      [{ role: 'defaut', code: 403 }]
+    test.each<[TestUser, number]>([
+      [
+        {
+          role: 'admin',
+          administrationId: ADMINISTRATION_IDS['DGTM - GUYANE']
+        },
+        200
+      ],
+      [{ role: 'super' }, 200],
+      [
+        {
+          role: 'editeur',
+          administrationId: ADMINISTRATION_IDS['DGTM - GUYANE']
+        },
+        200
+      ],
+      [
+        {
+          role: 'lecteur',
+          administrationId: ADMINISTRATION_IDS['DGTM - GUYANE']
+        },
+        200
+      ],
+      [{ role: 'entreprise', entreprises: [] }, 200],
+      [{ role: 'defaut' }, 403]
     ])(
-      'retourne le code $code pour un utilisateur "$role"',
-      async ({ role, code }) => {
+      'retourne le code $code pour un utilisateur "$user"',
+      async (user, code) => {
         vi.resetAllMocks()
-        const id = `upload-${role}`
-        await utilisateurCreate(
-          {
-            id,
-            prenom: `prenom-${role}`,
-            nom: `nom-${role}`,
-            email: `${id}@camino.local`,
-            motDePasse: 'mot-de-passe',
-            dateCreation: '2022-11-19',
-            role,
-            administrationId: undefined
-          },
-          {}
-        )
-        const req = { user: { id } } as unknown as Request
+        const req = { user } as unknown as Request
         const res = { sendStatus: vi.fn() } as unknown as Response
         const next = vi.fn()
         await uploadAllowedMiddleware(req, res, next)

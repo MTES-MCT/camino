@@ -8,7 +8,7 @@ exports[`envoie un email sur un octroi d'AEX 1`] = `
   <hr>
   
   <b>Lien</b> : <a href=\\"undefined/titres/titreId\\">undefined/titres/titreId</a> <br>
-  <b>Effectué par</b> : undefined Camino (camino@beta.gouv.fr)<br>
+  <b>Effectué par</b> :  Camino (camino@beta.gouv.fr)<br>
   
   ",
   "emails": [
@@ -26,7 +26,7 @@ exports[`envoie un email sur un octroi d'ARM 1`] = `
   <hr>
   
   <b>Lien</b> : <a href=\\"undefined/titres/titreId\\">undefined/titres/titreId</a> <br>
-  <b>Effectué par</b> : undefined Camino (camino@beta.gouv.fr)<br>
+  <b>Effectué par</b> :  Camino (camino@beta.gouv.fr)<br>
   
   ",
   "emails": [

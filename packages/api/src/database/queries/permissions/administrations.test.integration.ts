@@ -1,5 +1,10 @@
 import { dbManager } from '../../../../tests/db-manager.js'
-import { IUtilisateur, IAdministration, ITitre } from '../../../types.js'
+import {
+  IUtilisateur,
+  IAdministration,
+  ITitre,
+  formatUser
+} from '../../../types.js'
 
 import Titres from '../../models/titres.js'
 import Utilisateurs from '../../models/utilisateurs.js'
@@ -16,6 +21,8 @@ import {
 import { idGenerate } from '../../models/_format/id-create.js'
 import options from '../_options.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
+
+import { testBlankUser } from 'camino-common/src/tests-utils.js'
 console.info = vi.fn()
 console.error = vi.fn()
 
@@ -89,11 +96,10 @@ describe('administrationsQueryModify', () => {
     })
 
     const mockUser: IUtilisateur = {
+      ...testBlankUser,
       id: idGenerate(),
       role: 'super',
-      administrationId: mockAdministration.id,
       email: 'email' + idGenerate(),
-      motDePasse: 'motdepasse',
       dateCreation: '2022-05-12'
     }
 
@@ -104,7 +110,7 @@ describe('administrationsQueryModify', () => {
 
     const q = administrationsQueryModify(
       Administrations.query().where('id', mockAdministration.id),
-      mockUser
+      formatUser(mockUser)
     )
     const res = (await q
       .withGraphFetched({ activitesTypesEmails: {} })

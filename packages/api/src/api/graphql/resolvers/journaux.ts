@@ -1,8 +1,7 @@
 import { journauxGet } from '../../../database/queries/journaux.js'
-import { userGet } from '../../../database/queries/utilisateurs.js'
-import { IToken } from '../../../types.js'
 import { GraphQLResolveInfo } from 'graphql'
 import { fieldsBuild } from './_fields-build.js'
+import { Context } from '../../../types.js'
 import { canReadJournaux } from 'camino-common/src/permissions/journaux.js'
 
 export interface IJournauxQueryParams {
@@ -14,11 +13,10 @@ export interface IJournauxQueryParams {
 
 export const journaux = async (
   params: IJournauxQueryParams,
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     if (!canReadJournaux(user)) {
       return []
     }

@@ -249,7 +249,7 @@ export const buildMatrices = (
           sip,
           index: count,
           titulaire: {
-            nom: titulaireTitre.nom,
+            nom: titulaireTitre.nom ?? '',
             rue: titulaireTitre.adresse ?? '',
             codepostal: titulaireTitre.codePostal ?? '',
             commune: titulaireTitre.commune ?? '',

@@ -1,10 +1,10 @@
 import { GraphQLResolveInfo } from 'graphql'
 import {
+  Context,
   IDocumentRepertoire,
   IEtapeType,
   IFields,
-  ITitreEtape,
-  IToken
+  ITitreEtape
 } from '../../../types.js'
 
 import {
@@ -15,8 +15,6 @@ import {
   etapesTypesGet,
   titresTypesTypesGet
 } from '../../../database/queries/metas.js'
-
-import { userGet } from '../../../database/queries/utilisateurs.js'
 
 import { fieldsBuild } from './_fields-build.js'
 import { etapeTypeIsValidCheck } from '../../_format/etapes-types.js'
@@ -29,7 +27,7 @@ import {
 import { userSuper } from '../../../database/user-super.js'
 import { sortedAdministrationTypes } from 'camino-common/src/static/administrations.js'
 import { sortedGeoSystemes } from 'camino-common/src/static/geoSystemes.js'
-
+import { User } from 'camino-common/src/roles'
 import { UNITES } from 'camino-common/src/static/unites.js'
 import { titreEtapesSortAscByOrdre } from '../../../business/utils/titre-etapes-sort.js'
 import { Pays, PaysList } from 'camino-common/src/static/pays.js'
@@ -85,7 +83,7 @@ export const referencesTypes = () => sortedReferencesTypes
 
 export const domaines = async (
   _: never,
-  context: IToken,
+  _context: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
@@ -172,10 +170,8 @@ const demarcheEtapesTypesGet = async (
     date
   }: { titreDemarcheId: string; date: CaminoDate; titreEtapeId?: string },
   { fields }: { fields: IFields },
-  userId?: string
+  user: User
 ) => {
-  const user = await userGet(userId)
-
   const titreDemarche = await titreDemarcheGet(
     titreDemarcheId,
     {
@@ -300,11 +296,10 @@ export const etapesTypes = async (
     date?: CaminoDate
     travaux?: boolean
   },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ): Promise<IEtapeType[]> => {
   try {
-    const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
     // si création ou édition d'une étape de démarche
@@ -317,7 +312,7 @@ export const etapesTypes = async (
       return demarcheEtapesTypesGet(
         { titreDemarcheId, date, titreEtapeId },
         { fields },
-        context.user?.id
+        user
       )
     }
 

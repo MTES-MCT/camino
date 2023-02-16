@@ -5,9 +5,10 @@ import {
   visibleCheck
 } from '../../../tests/_utils/administrations-permissions.js'
 import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../../database/models/titres-types--demarches-types-etapes-types-justificatifs-types.js'
-import { afterAll, beforeAll, describe, test, vi } from 'vitest'
+import { afterAll, beforeEach, beforeAll, describe, test, vi } from 'vitest'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
+import Utilisateurs from '../../database/models/utilisateurs'
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
   default: vi.fn()
@@ -23,6 +24,10 @@ vi.mock('../../tools/file-delete', () => ({
 }))
 console.info = vi.fn()
 console.error = vi.fn()
+
+beforeEach(async () => {
+  await Utilisateurs.query().delete()
+})
 beforeAll(async () => {
   await dbManager.populateDb()
 

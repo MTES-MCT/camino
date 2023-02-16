@@ -1,7 +1,7 @@
 import { emailsForAdministrationsGet } from './_titre-etape-email.js'
-import { IUtilisateur } from '../../../types.js'
 import { userSuper } from '../../../database/user-super.js'
 import { expect, test } from 'vitest'
+import { UserNotNull } from 'camino-common/src/roles.js'
 
 test('envoie un email sur une étape non existante', () => {
   const actual = emailsForAdministrationsGet(
@@ -17,13 +17,12 @@ test('envoie un email sur une étape non existante', () => {
   expect(actual).toBe(null)
 })
 
-const user: IUtilisateur = {
+const user: UserNotNull = {
   id: 'super',
   email: 'camino@beta.gouv.fr',
   nom: 'Camino',
-  role: 'super',
-  dateCreation: '2022-05-12',
-  administrationId: undefined
+  prenom: '',
+  role: 'super'
 }
 
 test("envoie un email sur un octroi d'AEX", () => {

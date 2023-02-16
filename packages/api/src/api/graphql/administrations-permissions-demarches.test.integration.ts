@@ -4,11 +4,18 @@ import {
   creationCheck,
   modificationCheck
 } from '../../../tests/_utils/administrations-permissions.js'
-import { beforeAll, afterAll, test, describe, vi } from 'vitest'
+import { beforeEach, beforeAll, afterAll, test, describe, vi } from 'vitest'
 import { AdministrationId } from 'camino-common/src/static/administrations.js'
+import Utilisateurs from '../../database/models/utilisateurs.js'
 
 console.info = vi.fn()
 console.error = vi.fn()
+
+// TODO 2022-06-27 we have a strange behavior between tests
+beforeEach(async () => {
+  await Utilisateurs.query().delete()
+})
+
 beforeAll(async () => {
   await dbManager.populateDb()
 })

@@ -3,9 +3,11 @@ import { IUtilisateur } from '../../types.js'
 import { userGet } from '../../database/queries/utilisateurs.js'
 
 import {
-  isAdministration,
+  isAdministrationRole,
   isAdministrationAdmin,
-  isSuper
+  isSuper,
+  User,
+  isAdministration
 } from 'camino-common/src/roles.js'
 
 /**
@@ -18,7 +20,7 @@ import {
  */
 
 export const utilisateurUpdationValidate = async (
-  user: IUtilisateur,
+  user: User,
   utilisateur: IUtilisateur
 ) => {
   const utilisateurOld = await userGet(utilisateur.id)
@@ -26,16 +28,23 @@ export const utilisateurUpdationValidate = async (
   if (!utilisateurOld) return ["l'utilisateur n'existe pas"]
 
   if (!isSuper(user)) {
-    if (isAdministration(utilisateur) && !utilisateur.administrationId) {
+    if (
+      isAdministrationRole(utilisateur.role) &&
+      !utilisateur.administrationId
+    ) {
       return ["l'utilisateur doit être associé à une administration"]
     }
 
     // si le user n'est pas admin
     if (!isAdministrationAdmin(user)) {
       //   ni les administrations
+
       if (
-        (utilisateurOld.administrationId || utilisateur.administrationId) &&
-        utilisateurOld.administrationId !== utilisateur.administrationId
+        isAdministrationRole(utilisateur.role) !==
+          isAdministrationRole(utilisateurOld.role) ||
+        (isAdministrationRole(utilisateur.role) &&
+          isAdministration(utilisateurOld) &&
+          utilisateurOld.administrationId !== utilisateur.administrationId)
       ) {
         return ['droits insuffisants pour modifier les administrations']
       }
@@ -46,7 +55,10 @@ export const utilisateurUpdationValidate = async (
     // sinon, le user est admin
 
     // si le user modifie l'administration de l'utilisateur
-    if (utilisateurOld.administrationId !== utilisateur.administrationId) {
+    if (
+      !isAdministration(utilisateurOld) ||
+      utilisateurOld.administrationId !== utilisateur.administrationId
+    ) {
       // si le user n'a pas les droits sur l'administration
       if (user.administrationId !== utilisateur.administrationId) {
         // alors il ne peut modifier les administrations

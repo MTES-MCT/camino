@@ -34,9 +34,6 @@ type Query {
   "Version de l'API"
   version: String
 
-  "Utilisateur en fonction du token"
-  moi: Utilisateur
-
   "Titre minier en fonction de son id"
   titre(id: ID!): Titre
 
@@ -251,18 +248,6 @@ type Query {
 Ces requêtes sont __protégées__. Elles nécessitent une authentification par token (jwt) et un niveau de permission suffisant.
 """
 type Mutation {
-  "Connecte l'utilisateur en fonction de ses identifiants"
-  utilisateurConnecter(email: String!, motDePasse: String!): Utilisateur
-
-  "Déconnecte l'utilisateur"
-  utilisateurDeconnecter: Boolean
-
-  "Connecte l'utilisateur en fonction du ticket Cerbère"
-  utilisateurCerbereConnecter(ticket: String!): Utilisateur
-
-  "Connecte l'utilisateur en fonction du ticket Cerbère"
-  utilisateurCerbereUrlObtenir(url: String!): String
-
   "Crée un utilisateur"
   utilisateurCreer(
     utilisateur: InputUtilisateurCreation!
@@ -274,33 +259,6 @@ type Mutation {
 
   "Supprime un utilisateur"
   utilisateurSupprimer(id: ID!): Utilisateur
-
-  "Modifie le mot de passe d'un utilisateur"
-  utilisateurMotDePasseModifier(
-    id: ID!
-    motDePasse: String!
-    motDePasseNouveau1: String!
-    motDePasseNouveau2: String!
-  ): Utilisateur
-
-  "Envoie un email à un utilisateur contenant une url pour modifier son mot de passe"
-  utilisateurMotDePasseMessageEnvoyer(email: String!): String
-
-  "Envoie un email à un utilisateur contenant une url pour créer son compte"
-  utilisateurCreationMessageEnvoyer(email: String!): String
-
-  "Initialise un mot de passe utilisateur"
-  utilisateurMotDePasseInitialiser(
-    motDePasse1: String!
-    motDePasse2: String!
-    token: String!
-  ): Utilisateur
-
-  "Envoie un email à l’utisateur pour vérifier non nouvel email"
-  utilisateurEmailMessageEnvoyer(email: String!): String
-
-  "Modifie l’email de l’utilisateur à l’aide du token reçu dans l’email de vérification"
-  utilisateurEmailModifier(emailToken: String!): Utilisateur
 
   "Abonne ou désabonne l’utilisateur à un titre"
   utilisateurTitreAbonner(titreId: String!, abonner: Boolean!): Boolean

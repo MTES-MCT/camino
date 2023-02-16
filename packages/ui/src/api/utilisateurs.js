@@ -77,48 +77,6 @@ const utilisateurs = apiGraphQLFetch(
   `
 )
 
-const utilisateurConnecter = apiGraphQLFetch(gql`
-  mutation utilisateurConnecter($email: String!, $motDePasse: String!) {
-    utilisateurConnecter(email: $email, motDePasse: $motDePasse) {
-      ...utilisateur
-    }
-  }
-
-  ${fragmentUtilisateur}
-`)
-
-const utilisateurDeconnecter = apiGraphQLFetch(gql`
-  mutation utilisateurDeconnecter {
-    utilisateurDeconnecter
-  }
-`)
-
-const utilisateurCerbereTokenCreer = apiGraphQLFetch(gql`
-  mutation UtilisateurCerbereTokenCreer($ticket: String!) {
-    utilisateurCerbereConnecter(ticket: $ticket) {
-      ...utilisateur
-    }
-  }
-
-  ${fragmentUtilisateur}
-`)
-
-const utilisateurCerbereUrlObtenir = apiGraphQLFetch(gql`
-  mutation UtilisateurCerbereUrlObtenir($url: String!) {
-    utilisateurCerbereUrlObtenir(url: $url)
-  }
-`)
-
-const moi = apiGraphQLFetch(gql`
-  query Moi {
-    moi {
-      ...utilisateur
-    }
-  }
-
-  ${fragmentUtilisateur}
-`)
-
 const utilisateurModifier = apiGraphQLFetch(gql`
   mutation UtilisateurModifier($utilisateur: InputUtilisateurModification!) {
     utilisateurModifier(utilisateur: $utilisateur) {
@@ -152,72 +110,6 @@ const utilisateurSupprimer = apiGraphQLFetch(gql`
   ${fragmentUtilisateur}
 `)
 
-const utilisateurMotDePasseModifier = apiGraphQLFetch(gql`
-  mutation UtilisateurMotDePasseModifier(
-    $id: ID!
-    $motDePasse: String!
-    $motDePasseNouveau1: String!
-    $motDePasseNouveau2: String!
-  ) {
-    utilisateurMotDePasseModifier(
-      id: $id
-      motDePasse: $motDePasse
-      motDePasseNouveau1: $motDePasseNouveau1
-      motDePasseNouveau2: $motDePasseNouveau2
-    ) {
-      ...utilisateur
-    }
-  }
-
-  ${fragmentUtilisateur}
-`)
-
-const utilisateurMotDePasseInitialiser = apiGraphQLFetch(gql`
-  mutation UtilisateurMotDePasseInitialiser(
-    $motDePasse1: String!
-    $motDePasse2: String!
-    $token: String!
-  ) {
-    utilisateurMotDePasseInitialiser(
-      motDePasse1: $motDePasse1
-      motDePasse2: $motDePasse2
-      token: $token
-    ) {
-      ...utilisateur
-    }
-  }
-
-  ${fragmentUtilisateur}
-`)
-
-const utilisateurMotDePasseMessageEnvoyer = apiGraphQLFetch(gql`
-  mutation UtilisateurMotDePasseMessageEnvoyer($email: String!) {
-    utilisateurMotDePasseMessageEnvoyer(email: $email)
-  }
-`)
-
-const utilisateurCreationMessageEnvoyer = apiGraphQLFetch(gql`
-  mutation UtilisateurCreationMessageEnvoyer($email: String!) {
-    utilisateurCreationMessageEnvoyer(email: $email)
-  }
-`)
-
-const utilisateurEmailMessageEnvoyer = apiGraphQLFetch(gql`
-  mutation UtilisateurEmailMessageEnvoyer($email: String!) {
-    utilisateurEmailMessageEnvoyer(email: $email)
-  }
-`)
-
-const utilisateurEmailModifier = apiGraphQLFetch(gql`
-  mutation UtilisateurEmailModifier($emailToken: String!) {
-    utilisateurEmailModifier(emailToken: $emailToken) {
-      ...utilisateur
-    }
-  }
-
-  ${fragmentUtilisateur}
-`)
-
 const newsletterInscrire = apiGraphQLFetch(gql`
   mutation NewsletterInscrire($email: String!) {
     newsletterInscrire(email: $email)
@@ -229,19 +121,8 @@ export {
   utilisateurMetas,
   utilisateur,
   utilisateurs,
-  moi,
-  utilisateurConnecter,
-  utilisateurDeconnecter,
-  utilisateurCerbereTokenCreer,
-  utilisateurCerbereUrlObtenir,
   utilisateurModifier,
   utilisateurCreer,
   utilisateurSupprimer,
-  utilisateurMotDePasseModifier,
-  utilisateurMotDePasseInitialiser,
-  utilisateurMotDePasseMessageEnvoyer,
-  utilisateurCreationMessageEnvoyer,
-  utilisateurEmailMessageEnvoyer,
-  utilisateurEmailModifier,
   newsletterInscrire
 }

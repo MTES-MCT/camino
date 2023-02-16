@@ -3,6 +3,7 @@
 // type the Return types of these routes
 export const CaminoRestRoutes = {
   config: '/config',
+  moi: '/moi',
   statistiquesMinerauxMetauxMetropole: '/statistiques/minerauxMetauxMetropole',
   statistiquesGuyane: '/statistiques/guyane',
   statistiquesGranulatsMarins: '/statistiques/granulatsMarins',

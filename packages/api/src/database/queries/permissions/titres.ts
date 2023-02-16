@@ -1,7 +1,5 @@
 import { QueryBuilder, raw, RawBuilder } from 'objection'
 
-import { IUtilisateur } from '../../../types.js'
-
 // import sqlFormatter from 'sql-formatter'
 // import fileCreate from '../../../tools/file-create'
 
@@ -33,7 +31,8 @@ import {
   isAdministrationEditeur,
   isBureauDEtudes,
   isEntreprise,
-  isSuper
+  isSuper,
+  User
 } from 'camino-common/src/roles.js'
 import {
   AdministrationId,
@@ -130,7 +129,7 @@ export const titresConfidentielSelect = (
 
 export const titresModificationSelectQuery = (
   q: QueryBuilder<Titres, Titres | Titres[]>,
-  user: Pick<IUtilisateur, 'role' | 'administrationId'> | null | undefined
+  user: User
 ): QueryBuilder<AdministrationsModel> | RawBuilder => {
   if (isSuper(user)) {
     return raw('true')
@@ -147,7 +146,7 @@ export const titresModificationSelectQuery = (
 
 const titresQueryModify = (
   q: QueryBuilder<Titres, Titres | Titres[]>,
-  user: IUtilisateur | null | undefined,
+  user: User,
   demandeEnCours?: boolean | null
 ) => {
   q.select('titres.*').where('titres.archive', false)

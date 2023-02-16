@@ -1,15 +1,10 @@
-import type {
-  IContenu,
-  ITitre,
-  ITitreEtape,
-  IUtilisateur
-} from '../../types.js'
+import type { IContenu, ITitre, ITitreEtape } from '../../types.js'
 import { titreGet } from '../../database/queries/titres.js'
 import { Section } from 'camino-common/src/titres.js'
 import express from 'express'
 
 import { CustomResponse } from './express-type.js'
-import { userGet } from '../../database/queries/utilisateurs.js'
+import { User } from 'camino-common/src/roles.js'
 
 /**
  * @deprecated utiliser titreSectionsGet
@@ -194,8 +189,8 @@ export const getTitresSections = async (
     if (!titreId) {
       throw new Error('le paramètre titreId est obligatoire')
     }
-    const userId = (req.user as unknown as IUtilisateur | undefined)?.id
-    const user = await userGet(userId)
+
+    const user = req.user as User
 
     let result: Section[] = []
     const titre = await titreGet(

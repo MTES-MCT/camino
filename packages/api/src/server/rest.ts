@@ -1,14 +1,14 @@
-import { IFormat, Index, IUtilisateur } from '../types.js'
+import { IFormat, Index } from '../types.js'
 
 import express from 'express'
 import { join } from 'path'
 
 import {
-  titre,
-  titres,
-  demarches,
   activites,
-  entreprises
+  demarches,
+  entreprises,
+  titre,
+  titres
 } from '../api/rest/index.js'
 import {
   etapeFichier,
@@ -27,8 +27,10 @@ import {
   generateQgisToken,
   isSubscribedToNewsletter,
   manageNewsletterSubscription,
+  moi,
   utilisateurs
 } from '../api/rest/utilisateurs.js'
+import { logout, resetPassword } from '../api/rest/keycloak.js'
 import {
   getDGTMStats,
   getGranulatsMarinsStats,
@@ -38,6 +40,7 @@ import {
 import { CaminoRestRoutes } from 'camino-common/src/rest.js'
 import { CaminoConfig } from 'camino-common/src/static/config.js'
 import { CustomResponse } from '../api/rest/express-type.js'
+import { User } from 'camino-common/src/roles.js'
 import { getTitresSections } from '../api/rest/titre-contenu.js'
 const contentTypes = {
   csv: 'text/csv',
@@ -63,7 +66,7 @@ type IRestResolver = (
     params: Index<unknown>
     query: Index<unknown>
   },
-  userId?: string
+  user: User
 ) => Promise<IRestResolverResult | null>
 
 export const rest = express.Router()
@@ -73,6 +76,7 @@ type ExpressRoute = (
   res: express.Response,
   next: express.NextFunction
 ) => Promise<void>
+
 const restCatcher =
   (expressCall: ExpressRoute) =>
   async (
@@ -96,10 +100,12 @@ const restDownload =
     next: express.NextFunction
   ) => {
     try {
-      const user = req.user as unknown as IUtilisateur | undefined
+      // TODO 2022-10-12 mieux typer
+      const user = req.user as User
+
       const result = await resolver(
         { query: req.query, params: req.params },
-        user?.id
+        user
       )
 
       if (!result) {
@@ -186,6 +192,7 @@ rest.post(
   '/utilisateurs/:id/newsletter',
   restCatcher(manageNewsletterSubscription)
 )
+rest.get(CaminoRestRoutes.moi, restCatcher(moi))
 rest.get('/utilisateurs/:id/newsletter', restCatcher(isSubscribedToNewsletter))
 rest.get('/utilisateurs', restDownload(utilisateurs))
 rest.get(CaminoRestRoutes.fiscaliteEntreprise, restCatcher(fiscalite))
@@ -193,11 +200,13 @@ rest.get('/entreprises', restDownload(entreprises))
 rest.get('/fichiers/:documentId', restDownload(fichier))
 rest.get('/etape/zip/:etapeId', restDownload(etapeTelecharger))
 rest.get('/etape/:etapeId/:fichierNom', restDownload(etapeFichier))
+rest.get('/deconnecter', restCatcher(logout))
+rest.get('/changerMotDePasse', restCatcher(resetPassword))
 
 rest.use(
   (
     err: Error,
-    req: express.Request,
+    _req: express.Request,
     res: express.Response,
     next: express.NextFunction
   ) => {

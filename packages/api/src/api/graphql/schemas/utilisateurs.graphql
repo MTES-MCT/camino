@@ -18,7 +18,6 @@ type Utilisateur {
   modification: Boolean
   suppression: Boolean
   permissionModification: Boolean
-  utilisateursCreation: Boolean
 }
 
 type Utilisateurs {
@@ -45,7 +44,6 @@ input InputUtilisateurModification {
 
 input InputUtilisateurCreation {
   email: String!
-  motDePasse: String!
   nom: String!
   prenom: String!
   telephoneMobile: String

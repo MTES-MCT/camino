@@ -3,7 +3,6 @@ import { raw, QueryBuilder, RawBuilder } from 'objection'
 import {
   ITitreActivite,
   IFields,
-  IUtilisateur,
   ITitreActiviteColonneId,
   Index,
   IColonne
@@ -22,7 +21,8 @@ import {
 } from './permissions/titres-activites.js'
 import {
   isAdministrationAdmin,
-  isAdministrationEditeur
+  isAdministrationEditeur,
+  User
 } from 'camino-common/src/roles.js'
 
 /**
@@ -113,7 +113,7 @@ const titresActivitesFiltersQueryModify = (
 
 const titreActivitesQueryBuild = (
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const graph = fields
     ? graphBuild(fieldsTitreAdd(fields), 'activite', fieldsFormat)
@@ -149,7 +149,7 @@ const titreActivitesQueryBuild = (
 const titreActiviteGet = async (
   id: string,
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const q = titreActivitesQueryBuild({ fields }, user)
 
@@ -250,7 +250,7 @@ const titresActivitesGet = async (
     titresIds?: string[] | null
   },
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const q = titreActivitesQueryBuild({ fields }, user)
 
@@ -345,7 +345,7 @@ const titresActivitesCount = async (
     titresStatutsIds?: string[] | null
   },
   { fields }: { fields?: IFields },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const q = titreActivitesQueryBuild({ fields }, user)
 

@@ -4,17 +4,14 @@ import * as router from '../router'
 import * as api from '../api/utilisateurs'
 
 import utilisateur from './utilisateur'
-import { vi, describe, expect, beforeEach, test } from 'vitest'
+import { vi, describe, beforeEach, test, expect } from 'vitest'
 
 vi.mock('../api/utilisateurs', () => ({
   utilisateurMetas: vi.fn(),
   utilisateur: vi.fn(),
   utilisateurCreer: vi.fn(),
   utilisateurModifier: vi.fn(),
-  utilisateurSupprimer: vi.fn(),
-  utilisateurMotDePasseModifier: vi.fn(),
-  utilisateurEmailMessageEnvoyer: vi.fn(),
-  utilisateurEmailModifier: vi.fn()
+  utilisateurSupprimer: vi.fn()
 }))
 
 vi.mock('../router', () => ({
@@ -289,129 +286,5 @@ describe("état de l'utilisateur consulté", () => {
     expect(apiMock).toHaveBeenCalled()
     expect(apiMock).toHaveBeenCalledWith({ id: 46 })
     expect(mutations.popupMessageAdd).toHaveBeenCalled()
-  })
-
-  test("modifie le mot de passe d'un utilisateur", async () => {
-    const apiMock = api.utilisateurMotDePasseModifier.mockResolvedValue({
-      id: 46,
-      mdp: 'jour',
-      nom: 'jean',
-      prenom: 'peuplut'
-    })
-    await store.dispatch('utilisateur/passwordUpdate', {
-      id: 46,
-      motDePasse: 'bon',
-      motDePasseNouveau1: 'jour',
-      motDePasseNouveau2: 'jour'
-    })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      id: 46,
-      motDePasse: 'bon',
-      motDePasseNouveau1: 'jour',
-      motDePasseNouveau2: 'jour'
-    })
-    expect(mutations.popupClose).toHaveBeenCalled()
-    expect(actions.messageAdd).toHaveBeenCalled()
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-  })
-
-  test("retourne une erreur de l'api lors de la modification du mot de passe", async () => {
-    const apiMock = api.utilisateurMotDePasseModifier.mockRejectedValue(
-      new Error("erreur dans l'api")
-    )
-    await store.dispatch('utilisateur/passwordUpdate', {
-      id: 46,
-      motDePasse: 'bon',
-      motDePasseNouveau1: 'jour',
-      motDePasseNouveau2: 'jour'
-    })
-
-    expect(apiMock).toHaveBeenCalled()
-    expect(apiMock).toHaveBeenCalledWith({
-      id: 46,
-      motDePasse: 'bon',
-      motDePasseNouveau1: 'jour',
-      motDePasseNouveau2: 'jour'
-    })
-    expect(mutations.popupMessageAdd).toHaveBeenCalled()
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-  })
-
-  test('vérifie le nouvel email', async () => {
-    const apiMock = api.utilisateurEmailMessageEnvoyer.mockResolvedValue({})
-    await store.dispatch('utilisateur/emailVerification', {
-      email: 'fakeEmail'
-    })
-
-    expect(mutations.loadingAdd).toHaveBeenCalled()
-    expect(apiMock).toHaveBeenCalledWith({
-      email: 'fakeEmail'
-    })
-    expect(mutations.popupClose).toHaveBeenCalled()
-    expect(actions.messageAdd).toHaveBeenCalledWith(expect.any(Object), {
-      type: 'success',
-      value: 'un email de vérification vient de vous être envoyé'
-    })
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-  })
-
-  test("retourne une erreur de l'api lors de la vérification de son nouvel email", async () => {
-    const apiMock = api.utilisateurEmailMessageEnvoyer.mockRejectedValue(
-      new Error("erreur dans l'api")
-    )
-    await store.dispatch('utilisateur/emailVerification', {
-      email: 'fakeEmail'
-    })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      email: 'fakeEmail'
-    })
-
-    expect(mutations.loadingAdd).toHaveBeenCalled()
-    expect(mutations.popupMessageAdd).toHaveBeenCalledWith(expect.any(Object), {
-      type: 'error',
-      value: new Error("erreur dans l'api")
-    })
-    expect(mutations.popupClose).not.toHaveBeenCalled()
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-  })
-
-  test('modifie son propre email', async () => {
-    const apiMock = api.utilisateurEmailModifier.mockResolvedValue({})
-    await store.dispatch('utilisateur/emailUpdate', {
-      emailToken: 'fakeToken'
-    })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      emailToken: 'fakeToken'
-    })
-    expect(mutations.loadingAdd).toHaveBeenCalled()
-    expect(actions.messageAdd).toHaveBeenCalledWith(expect.any(Object), {
-      type: 'success',
-      value: 'votre email a été modifié avec succés'
-    })
-
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-  })
-
-  test("retourne une erreur de l'api lors de la modification de son email", async () => {
-    const apiMock = api.utilisateurEmailModifier.mockRejectedValue(
-      new Error("erreur dans l'api")
-    )
-    await store.dispatch('utilisateur/emailUpdate', {
-      emailToken: 'fakeToken'
-    })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      emailToken: 'fakeToken'
-    })
-
-    expect(mutations.loadingAdd).toHaveBeenCalled()
-    expect(actions.messageAdd).toHaveBeenCalledWith(expect.any(Object), {
-      type: 'error',
-      value: new Error("erreur dans l'api")
-    })
-    expect(mutations.loadingRemove).toHaveBeenCalled()
   })
 })

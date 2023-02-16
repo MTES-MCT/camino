@@ -1,54 +1,95 @@
-import { isEntreprise, isSuper, isAdministration, isAdministrationEditeur, isAdministrationAdmin, isAdministrationLecteur, isDefault, isRole, ROLES, isBureauDEtudes } from './roles.js'
+import {
+  isEntreprise,
+  isSuper,
+  isAdministration,
+  isAdministrationEditeur,
+  isAdministrationAdmin,
+  isAdministrationLecteur,
+  isDefault,
+  isRole,
+  ROLES,
+  isBureauDEtudes,
+  BaseUserNotNull
+} from './roles.js'
 import { ADMINISTRATION_IDS } from './static/administrations.js'
 import { test, expect, describe } from 'vitest'
 const administrationId = ADMINISTRATION_IDS.CACEM
 describe('role', () => {
+  const baseRole: Omit<BaseUserNotNull, 'role'> = {
+    email: '',
+    id: '',
+    nom: '',
+    prenom: ''
+  }
   test('isSuper', () => {
-    expect(isSuper({ role: 'super', administrationId: undefined })).toBe(true)
-    expect(isSuper({ role: 'entreprise', administrationId: undefined })).toBe(false)
+    expect(isSuper({ ...baseRole, role: 'super' })).toBe(true)
+    expect(isSuper({ ...baseRole, role: 'entreprise', entreprises: [] })).toBe(false)
     expect(isSuper(undefined)).toBe(false)
   })
 
   test('isAdministration', () => {
-    expect(isAdministration({ role: 'admin', administrationId: undefined })).toBe(false)
-    expect(isAdministration({ role: 'editeur', administrationId: undefined })).toBe(false)
-    expect(isAdministration({ role: 'lecteur', administrationId: undefined })).toBe(false)
-    expect(isAdministration({ role: 'super', administrationId: undefined })).toBe(false)
+    expect(isAdministration({ ...baseRole, role: 'super' })).toBe(false)
     expect(isAdministration(undefined)).toBe(false)
 
-    expect(isAdministration({ role: 'admin', administrationId })).toBe(true)
-    expect(isAdministration({ role: 'editeur', administrationId })).toBe(true)
-    expect(isAdministration({ role: 'lecteur', administrationId })).toBe(true)
+    expect(isAdministration({ ...baseRole, role: 'admin', administrationId })).toBe(true)
+    expect(isAdministration({ ...baseRole, role: 'editeur', administrationId })).toBe(true)
+    expect(isAdministration({ ...baseRole, role: 'lecteur', administrationId })).toBe(true)
   })
   test('isAdministrationAdmin', () => {
-    expect(isAdministrationAdmin({ role: 'admin', administrationId: undefined })).toBe(false)
-    expect(isAdministrationAdmin({ role: 'admin', administrationId })).toBe(true)
-    expect(isAdministrationAdmin({ role: 'editeur', administrationId })).toBe(false)
+    expect(isAdministrationAdmin({ ...baseRole, role: 'admin', administrationId })).toBe(true)
+    expect(isAdministrationAdmin({ ...baseRole, role: 'editeur', administrationId })).toBe(false)
   })
   test('isAdministrationEditeur', () => {
-    expect(isAdministrationEditeur({ role: 'editeur', administrationId: undefined })).toBe(false)
-    expect(isAdministrationEditeur({ role: 'editeur', administrationId })).toBe(true)
+    expect(
+      isAdministrationEditeur({
+        ...baseRole,
+        role: 'editeur',
+        administrationId
+      })
+    ).toBe(true)
   })
 
   test('isAdministrationLecteur', () => {
-    expect(isAdministrationLecteur({ role: 'lecteur', administrationId: undefined })).toBe(false)
-    expect(isAdministrationLecteur({ role: 'lecteur', administrationId })).toBe(true)
-    expect(isAdministrationLecteur({ role: 'admin', administrationId: undefined })).toBe(false)
+    expect(
+      isAdministrationLecteur({
+        ...baseRole,
+        role: 'lecteur',
+        administrationId
+      })
+    ).toBe(true)
   })
 
   test('isEntreprise', () => {
-    expect(isEntreprise({ role: 'entreprise', administrationId: undefined })).toBe(true)
-    expect(isEntreprise({ role: 'defaut', administrationId: undefined })).toBe(false)
+    expect(
+      isEntreprise({
+        ...baseRole,
+        role: 'entreprise',
+        entreprises: []
+      })
+    ).toBe(true)
+    expect(isEntreprise({ ...baseRole, role: 'defaut' })).toBe(false)
   })
   test('isBureauDEtudes', () => {
-    expect(isBureauDEtudes({ role: 'bureau d’études', administrationId: undefined })).toBe(true)
-    expect(isBureauDEtudes({ role: 'defaut', administrationId: undefined })).toBe(false)
+    expect(
+      isBureauDEtudes({
+        ...baseRole,
+        role: 'bureau d’études',
+        entreprises: []
+      })
+    ).toBe(true)
+    expect(isBureauDEtudes({ ...baseRole, role: 'defaut' })).toBe(false)
   })
   test('isDefault', () => {
     expect(isDefault(undefined)).toBe(true)
     expect(isDefault(null)).toBe(true)
-    expect(isDefault({ role: 'defaut', administrationId: undefined })).toBe(true)
-    expect(isDefault({ role: 'entreprise', administrationId: undefined })).toBe(false)
+    expect(isDefault({ ...baseRole, role: 'defaut' })).toBe(true)
+    expect(
+      isDefault({
+        ...baseRole,
+        role: 'entreprise',
+        entreprises: []
+      })
+    ).toBe(false)
   })
 })
 

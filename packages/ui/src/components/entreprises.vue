@@ -34,7 +34,6 @@
 import Liste from './_common/liste.vue'
 import { Downloads } from './_common/downloads'
 import EntrepriseAddPopup from './entreprise/add-popup.vue'
-import { canCreateEntreprise } from 'camino-common/src/permissions/entreprises'
 
 import filtres from './entreprises/filtres'
 import {
@@ -42,6 +41,7 @@ import {
   entreprisesLignesBuild
 } from './entreprises/table'
 import { Icon } from './_ui/icon'
+import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs'
 
 export default {
   name: 'Entreprises',
@@ -59,6 +59,10 @@ export default {
   computed: {
     user() {
       return this.$store.state.user.element
+    },
+
+    canCreateEntreprise() {
+      return canCreateEntreprise(this.user)
     },
 
     entreprises() {
@@ -79,9 +83,6 @@ export default {
 
     initialized() {
       return this.$store.state.entreprises.initialized
-    },
-    canCreateEntreprise() {
-      return canCreateEntreprise(this.user)
     }
   },
 

@@ -3,7 +3,7 @@ import { FileUpload } from 'graphql-upload'
 import { join } from 'path'
 import cryptoRandomString from 'crypto-random-string'
 
-import { IDocument, IToken, ITitreEtape, IUtilisateur } from '../../../types.js'
+import { Context, IDocument, ITitreEtape } from '../../../types.js'
 
 import fileDelete from '../../../tools/file-delete.js'
 import fileStreamCreate from '../../../tools/file-stream-create.js'
@@ -26,10 +26,9 @@ import { titreActiviteGet } from '../../../database/queries/titres-activites.js'
 import { documentInputValidate } from '../../../business/validations/document-input-validate.js'
 import { documentUpdationValidate } from '../../../business/validations/document-updation-validate.js'
 import { entrepriseGet } from '../../../database/queries/entreprises.js'
-import { userGet } from '../../../database/queries/utilisateurs.js'
 import { userSuper } from '../../../database/user-super.js'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
-import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
+import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
 import { canEditEntreprise } from 'camino-common/src/permissions/entreprises.js'
 
 const errorEtapesAssocieesUpdate = (
@@ -55,12 +54,10 @@ const documentFileCreate = async (
 
 const documents = async (
   { entreprisesIds }: { entreprisesIds?: string[] },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
-
     const fields = fieldsBuild(info)
     const documents = await documentsGet({ entreprisesIds }, { fields }, user)
 
@@ -72,10 +69,7 @@ const documents = async (
   }
 }
 
-const documentPermissionsCheck = async (
-  document: IDocument,
-  user: IUtilisateur | null | undefined
-) => {
+const documentPermissionsCheck = async (document: IDocument, user: User) => {
   if (!user) throw new Error('droits insuffisants')
 
   if (document.titreEtapeId) {
@@ -116,11 +110,10 @@ const documentPermissionsCheck = async (
 
 const documentCreer = async (
   { document }: { document: IDocument },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
     if (!user) {
@@ -177,11 +170,10 @@ const documentCreer = async (
 
 const documentModifier = async (
   { document }: { document: IDocument },
-  context: IToken,
+  { user }: Context,
   info: GraphQLResolveInfo
 ) => {
   try {
-    const user = await userGet(context.user?.id)
     const fields = fieldsBuild(info)
 
     if (!user) {
@@ -255,10 +247,8 @@ const documentModifier = async (
   }
 }
 
-const documentSupprimer = async ({ id }: { id: string }, context: IToken) => {
+const documentSupprimer = async ({ id }: { id: string }, { user }: Context) => {
   try {
-    const user = await userGet(context.user?.id)
-
     if (!user) throw new Error('droits insuffisants')
 
     const documentOld = await documentGet(
@@ -313,7 +303,7 @@ const documentSupprimer = async ({ id }: { id: string }, context: IToken) => {
 }
 
 const documentsLier = async (
-  context: IToken,
+  { user }: Context,
   documentIds: string[],
   parentId: string,
   propParentId: 'titreActiviteId' | 'titreEtapeId',
@@ -326,7 +316,7 @@ const documentsLier = async (
       const documentId = documentIds.find(id => id === oldDocumentId)
 
       if (!documentId) {
-        await documentSupprimer({ id: oldDocumentId }, context)
+        await documentSupprimer({ id: oldDocumentId }, { user })
       }
     }
   }

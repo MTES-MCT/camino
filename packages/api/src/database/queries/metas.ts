@@ -1,6 +1,6 @@
 import { raw } from 'objection'
 
-import { IDocumentRepertoire, IFields, IUtilisateur } from '../../types.js'
+import { IFields, IDocumentRepertoire } from '../../types.js'
 
 import { knex } from '../../knex.js'
 
@@ -22,6 +22,7 @@ import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../models/ti
 import { sortedDevises } from 'camino-common/src/static/devise.js'
 import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
 import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
+import { User } from 'camino-common/src/roles.js'
 
 const titresTypesTypesGet = async () =>
   TitresTypesTypes.query().orderBy('ordre')
@@ -99,7 +100,7 @@ const etapesTypesGet = async (
     travaux?: boolean
   },
   { fields, uniqueCheck = true }: { fields?: IFields; uniqueCheck?: boolean },
-  user: IUtilisateur | null | undefined
+  user: User
 ) => {
   const graph = fields ? graphBuild(fields, 'etapesTypes', fieldsFormat) : []
 

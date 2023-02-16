@@ -31,24 +31,12 @@
       <template v-if="utilisateur.modification" #buttons>
         <button
           v-if="(user && user.id === utilisateur.id) || isSuper(user)"
-          id="cmn-utilisateur-button-password-popup"
           class="btn-alt py-s px-m"
           title="changer de mot de passe"
-          @click="passwordPopupOpen"
+          @click="passwordUpdate"
         >
           <Icon size="M" name="key" />
         </button>
-
-        <button
-          v-if="user && user.id === utilisateur.id"
-          id="cmn-utilisateur-button-email-popup"
-          class="btn-alt py-s px-m"
-          title="changer d'email"
-          @click="emailPopupOpen"
-        >
-          <Icon size="M" name="at" />
-        </button>
-
         <button
           id="cmn-utilisateur-button-popup-editer"
           class="btn-alt py-s px-m"
@@ -190,8 +178,6 @@ import { Pill } from './_ui/pill'
 import Loader from './_ui/loader.vue'
 import UtilisateurEditPopup from './utilisateur/edit-popup.vue'
 import UtilisateurRemovePopup from './utilisateur/remove-popup.vue'
-import UtilisateurPasswordPopup from './utilisateur/password-popup.vue'
-import UtilisateurEmailPopup from './utilisateur/email-popup.vue'
 import { isAdministration, isSuper } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
 import { Icon } from './_ui/icon'
@@ -251,11 +237,13 @@ export default {
   },
 
   methods: {
+    passwordUpdate() {
+      window.location.replace('/apiUrl/changerMotDePasse')
+    },
     async logout() {
       this.eventTrack('deconnexion')
       this.userUnwatch()
-      await this.$store.dispatch('user/logout')
-      await this.$router.push({ name: 'homepage', force: true })
+      window.location.replace('/apiUrl/deconnecter')
     },
     eventTrack(id) {
       if (this.$matomo) {
@@ -301,21 +289,6 @@ export default {
         props: {
           utilisateur: cloneAndClean(this.utilisateur)
         }
-      })
-    },
-
-    passwordPopupOpen() {
-      this.$store.commit('popupOpen', {
-        component: UtilisateurPasswordPopup,
-        props: {
-          utilisateur: cloneAndClean(this.utilisateur)
-        }
-      })
-    },
-
-    emailPopupOpen() {
-      this.$store.commit('popupOpen', {
-        component: UtilisateurEmailPopup
       })
     },
 

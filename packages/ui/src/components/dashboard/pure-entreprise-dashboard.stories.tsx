@@ -4,6 +4,7 @@ import { TitreEntreprise } from '@/components/titres/table-utils'
 import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 import { User } from 'camino-common/src/roles'
 import { newEntrepriseId } from 'camino-common/src/entreprise'
+import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Dashboard/Entreprise',
@@ -82,7 +83,7 @@ const Template: Story<Props> = (args: Props) => ({
 
 export const Ok: Story = () => (
   <PureEntrepriseDashboard
-    user={{ role: 'super', administrationId: undefined }}
+    user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
     entreprises={[{ id: newEntrepriseId('id'), nom: 'entreprise1' }]}
     getEntreprisesTitres={() => Promise.resolve(titres)}
@@ -91,7 +92,7 @@ export const Ok: Story = () => (
 
 export const OkWithMultipleEntreprises: Story = () => (
   <PureEntrepriseDashboard
-    user={{ role: 'super', administrationId: undefined }}
+    user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
     entreprises={[
       { id: newEntrepriseId('id'), nom: 'entreprise1' },
@@ -103,7 +104,7 @@ export const OkWithMultipleEntreprises: Story = () => (
 
 export const OkWithoutFiscalite: Story = () => (
   <PureEntrepriseDashboard
-    user={{ role: 'super', administrationId: undefined }}
+    user={{ role: 'super', ...testBlankUser }}
     displayActivites={true}
     entreprises={[]}
     getEntreprisesTitres={() =>
@@ -142,7 +143,7 @@ export const OkWithoutFiscalite: Story = () => (
 
 export const OkWithoutActivities: Story = () => (
   <PureEntrepriseDashboard
-    user={{ role: 'super', administrationId: undefined }}
+    user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
     entreprises={[{ id: newEntrepriseId('id'), nom: 'entreprise1' }]}
     getEntreprisesTitres={() => Promise.resolve(titres)}
@@ -151,7 +152,7 @@ export const OkWithoutActivities: Story = () => (
 
 export const Loading: Story = () => (
   <PureEntrepriseDashboard
-    user={{ role: 'super', administrationId: undefined }}
+    user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
     entreprises={[{ id: newEntrepriseId('id'), nom: 'entreprise1' }]}
     getEntreprisesTitres={() => new Promise<TitreEntreprise[]>(resolve => {})}
@@ -160,7 +161,7 @@ export const Loading: Story = () => (
 
 export const WithError: Story = () => (
   <PureEntrepriseDashboard
-    user={{ role: 'super', administrationId: undefined }}
+    user={{ role: 'super', ...testBlankUser }}
     displayActivites={false}
     entreprises={[{ id: newEntrepriseId('id'), nom: 'entreprise1' }]}
     getEntreprisesTitres={() => Promise.reject(new Error('because reasons'))}
