@@ -23,7 +23,11 @@ import {
   User
 } from 'camino-common/src/roles'
 import { Icon } from './_ui/icon'
-import { CaminoAnnee, toCaminoAnnee } from 'camino-common/src/date'
+import {
+  CaminoAnnee,
+  getCurrentAnnee,
+  toCaminoAnnee
+} from 'camino-common/src/date'
 import {
   computed,
   onBeforeUnmount,
@@ -57,12 +61,14 @@ type EntrepriseType = {
   etablissements: any[]
 }
 
-// FIXME SPLIT with PureEntreprise and TEST
 export const Entreprise = defineComponent({
   setup() {
     const store = useStore()
     const vueRoute = useRoute()
-
+    const entreprise = computed<EntrepriseType>(
+      () => store.state.entreprise.element
+    )
+    const user = computed<User>(() => store.state.user.element)
     const getFiscaliteEntreprise = async (
       annee: CaminoAnnee
     ): Promise<Fiscalite> =>
@@ -71,52 +77,6 @@ export const Entreprise = defineComponent({
         entrepriseId: entreprise.value.id
       })
 
-    const annees = computed(() => {
-      const anneeDepart = 2021
-      const anneeCourante = new Date().getFullYear()
-      const caminoAnneeCourante = toCaminoAnnee(anneeCourante.toString())
-      let anneeAAjouter = anneeDepart
-      const annees = [toCaminoAnnee(anneeAAjouter.toString())]
-      while (annees[annees.length - 1] !== caminoAnneeCourante) {
-        anneeAAjouter++
-        annees.push(toCaminoAnnee(anneeAAjouter.toString()))
-      }
-      return annees
-    })
-    const entreprise = computed<EntrepriseType>(
-      () => store.state.entreprise.element
-    )
-    const nom = computed(
-      () => (entreprise.value && entreprise.value.nom) ?? '-'
-    )
-    const utilisateurs = computed(() => entreprise.value.utilisateurs)
-    const utilisateursLignes = computed(() =>
-      utilisateursLignesBuild(utilisateurs.value)
-    )
-    const titulaireTitres = computed(() => entreprise.value.titulaireTitres)
-    const amodiataireTitres = computed(() => entreprise.value.amodiataireTitres)
-    const user = computed(() => store.state.user.element)
-    const loaded = computed(() => !!entreprise.value)
-    const documentNew = computed(() => ({
-      entrepriseId: entreprise.value.id,
-      entreprisesLecture: false,
-      publicLecture: false,
-      fichier: null,
-      fichierNouveau: null,
-      fichierTypeId: null,
-      typeId: ''
-    }))
-
-    const route = computed(() => ({
-      id: entreprise.value.id,
-      name: 'entreprise'
-    }))
-    const fiscaliteVisible = computed(() =>
-      fiscaliteVisibleFunc(user.value, entreprise.value.id, [
-        ...titulaireTitres.value,
-        ...amodiataireTitres.value
-      ])
-    )
     const get = async () => {
       await store.dispatch('entreprise/get', vueRoute.params.id)
     }
@@ -142,6 +102,7 @@ export const Entreprise = defineComponent({
       store.commit('entreprise/reset')
     })
 
+    // TODO 2023-02-16: redonner la responsabilité au composant de gérer sa propre popup, et bouger ça dans le composant Pure
     const editPopupOpen = () => {
       const entrepriseEdit = {
         id: entreprise.value.id,
@@ -158,6 +119,83 @@ export const Entreprise = defineComponent({
         }
       })
     }
+    const anneeCourante = getCurrentAnnee()
+
+    return () => (
+      <PureEntreprise
+        currentYear={anneeCourante}
+        editPopupOpen={editPopupOpen}
+        entreprise={entreprise.value}
+        getFiscaliteEntreprise={getFiscaliteEntreprise}
+        user={user.value}
+      />
+    )
+  }
+})
+
+interface Props {
+  entreprise?: EntrepriseType
+  getFiscaliteEntreprise: (annee: CaminoAnnee) => Promise<Fiscalite>
+  user: User
+  editPopupOpen: () => void
+  currentYear: CaminoAnnee
+}
+// FIXME SPLIT with PureEntreprise and TEST
+export const PureEntreprise = defineComponent<Props>({
+  props: [
+    'entreprise',
+    'getFiscaliteEntreprise',
+    'user',
+    'editPopupOpen',
+    'currentYear'
+  ] as unknown as undefined,
+  setup(props) {
+    const annees = computed(() => {
+      const anneeDepart = 2021
+
+      let anneeAAjouter = anneeDepart
+      const annees = [toCaminoAnnee(anneeAAjouter.toString())]
+      while (annees[annees.length - 1] !== props.currentYear) {
+        anneeAAjouter++
+        annees.push(toCaminoAnnee(anneeAAjouter.toString()))
+      }
+      return annees
+    })
+
+    const nom = computed(
+      () => (props.entreprise && props.entreprise.nom) ?? '-'
+    )
+    const utilisateurs = computed(() => props.entreprise?.utilisateurs ?? [])
+    const utilisateursLignes = computed(() =>
+      utilisateursLignesBuild(utilisateurs.value)
+    )
+    const titulaireTitres = computed(
+      () => props.entreprise?.titulaireTitres ?? []
+    )
+    const amodiataireTitres = computed(
+      () => props.entreprise?.amodiataireTitres ?? []
+    )
+    const loaded = computed(() => !!props.entreprise)
+    const documentNew = computed(() => ({
+      entrepriseId: props.entreprise?.id,
+      entreprisesLecture: false,
+      publicLecture: false,
+      fichier: null,
+      fichierNouveau: null,
+      fichierTypeId: null,
+      typeId: ''
+    }))
+
+    const route = computed(() => ({
+      id: props.entreprise?.id,
+      name: 'entreprise'
+    }))
+    const fiscaliteVisible = computed(() =>
+      fiscaliteVisibleFunc(props.user, props.entreprise?.id, [
+        ...titulaireTitres.value,
+        ...amodiataireTitres.value
+      ])
+    )
 
     const canDeleteDocument = (
       entreprise: EntrepriseType,
@@ -180,8 +218,8 @@ export const Entreprise = defineComponent({
             <Accordion class="mb-xxl" slotSub={true} slotButtons={true}>
               {{
                 title: () => <span class="cap-first"> Profil </span>,
-                button: () => {
-                  if (canEditEntreprise(user.value, entreprise.value.id)) {
+                buttons: () => {
+                  if (canEditEntreprise(props.user, props.entreprise?.id)) {
                     return (
                       <>
                         {' '}
@@ -192,7 +230,10 @@ export const Entreprise = defineComponent({
                           repertoire="entreprises"
                           class="btn py-s px-m mr-px"
                         />
-                        <button class="btn py-s px-m" onClick={editPopupOpen}>
+                        <button
+                          class="btn py-s px-m"
+                          onClick={props.editPopupOpen}
+                        >
                           <Icon size="M" name="pencil" />
                         </button>
                       </>
@@ -209,7 +250,7 @@ export const Entreprise = defineComponent({
                           <h5>Siren</h5>
                         </div>
                         <div class="tablet-blob-3-4">
-                          <p>{entreprise.value.legalSiren}</p>
+                          <p>{props.entreprise?.legalSiren}</p>
                         </div>
                       </div>
 
@@ -218,7 +259,7 @@ export const Entreprise = defineComponent({
                           <h5>Forme juridique</h5>
                         </div>
                         <div class="tablet-blob-3-4">
-                          <p>{entreprise.value.legalForme}</p>
+                          <p>{props.entreprise?.legalForme}</p>
                         </div>
                       </div>
 
@@ -226,14 +267,14 @@ export const Entreprise = defineComponent({
                         <div class="tablet-blob-1-4">
                           <h5>
                             Établissement
-                            {entreprise.value.etablissements.length > 1
+                            {(props.entreprise?.etablissements?.length ?? 0) > 1
                               ? 's'
                               : ''}
                           </h5>
                         </div>
                         <div class="tablet-blob-3-4">
                           <ul class="list-sans">
-                            {entreprise.value.etablissements.map(e => (
+                            {props.entreprise?.etablissements?.map(e => (
                               <li key={e.id}>
                                 <h6 class="inline-block">
                                   {dateFormat(e.dateDebut)}
@@ -251,10 +292,10 @@ export const Entreprise = defineComponent({
                         </div>
                         <div class="tablet-blob-3-4">
                           <p>
-                            {entreprise.value.adresse}
+                            {props.entreprise?.adresse}
                             <br />
-                            {entreprise.value.codePostal}
-                            {entreprise.value.commune}
+                            {props.entreprise?.codePostal}
+                            {props.entreprise?.commune}
                           </p>
                         </div>
                       </div>
@@ -265,11 +306,7 @@ export const Entreprise = defineComponent({
                         </div>
                         <div class="tablet-blob-3-4">
                           <p class="word-break">
-                            {entreprise.value.telephone ? (
-                              <span>{entreprise.value.telephone}</span>
-                            ) : (
-                              <span>–</span>
-                            )}
+                            <span>{props.entreprise?.telephone ?? '–'}</span>
                           </p>
                         </div>
                       </div>
@@ -280,12 +317,12 @@ export const Entreprise = defineComponent({
                         </div>
                         <div class="tablet-blob-3-4">
                           <p class="word-break">
-                            {entreprise.value.email ? (
+                            {props.entreprise?.email ? (
                               <a
-                                href={`mailto:${entreprise.value.email}`}
+                                href={`mailto:${props.entreprise.email}`}
                                 class="btn small bold py-xs px-s rnd"
                               >
-                                {entreprise.value.email}
+                                {props.entreprise.email}
                               </a>
                             ) : (
                               <span>–</span>
@@ -300,12 +337,12 @@ export const Entreprise = defineComponent({
                         </div>
                         <div class="tablet-blob-3-4">
                           <p class="word-break">
-                            {entreprise.value.url ? (
+                            {props.entreprise?.url ? (
                               <a
-                                href={entreprise.value.url}
+                                href={props.entreprise.url}
                                 class="btn small bold py-xs px-s rnd"
                               >
-                                {entreprise.value.url}
+                                {props.entreprise.url}
                               </a>
                             ) : (
                               <span>–</span>
@@ -319,30 +356,30 @@ export const Entreprise = defineComponent({
                           <h5>Archivée</h5>
                         </div>
                         <div class="tablet-blob-3-4">
-                          <p>{entreprise.value.archive ? 'Oui' : 'Non'}</p>
+                          <p>{props.entreprise?.archive ? 'Oui' : 'Non'}</p>
                         </div>
                       </div>
                     </div>
 
-                    {entreprise.value.documents.length ? (
+                    {props.entreprise?.documents.length ? (
                       <div>
                         <h4 class="px-m pt mb-0">Documents</h4>
                         <Documents
                           boutonModification={canEditEntreprise(
-                            user.value,
-                            entreprise.value.id
+                            props.user,
+                            props.entreprise.id
                           )}
                           boutonSuppression={canDeleteDocument(
-                            entreprise.value,
-                            user.value
+                            props.entreprise,
+                            props.user
                           )}
                           route={route.value}
-                          documents={entreprise.value.documents}
+                          documents={props.entreprise.documents}
                           etiquette={canEditEntreprise(
-                            user.value,
-                            entreprise.value.id
+                            props.user,
+                            props.entreprise.id
                           )}
-                          parentId={entreprise.value.id}
+                          parentId={props.entreprise.id}
                           title={nom.value}
                           repertoire="entreprises"
                           class="px-m"
@@ -358,7 +395,7 @@ export const Entreprise = defineComponent({
                 <div class="line-neutral width-full mb-xxl" />
                 <h3>Fiscalité</h3>
                 <EntrepriseFiscalite
-                  getFiscaliteEntreprise={getFiscaliteEntreprise}
+                  getFiscaliteEntreprise={props.getFiscaliteEntreprise}
                   anneeCourante={annees.value[annees.value.length - 1]}
                   annees={annees.value}
                 />

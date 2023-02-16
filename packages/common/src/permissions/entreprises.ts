@@ -9,7 +9,7 @@ export const canCreateEntreprise = (user: User): boolean => {
   return false
 }
 
-export const canEditEntreprise = (user: User, entrepriseId: EntrepriseId): boolean => {
+export const canEditEntreprise = (user: User, entrepriseId?: EntrepriseId): boolean => {
   if (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     return true
   }

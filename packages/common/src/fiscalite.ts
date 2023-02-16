@@ -25,14 +25,14 @@ export const montantNetTaxeAurifere = (fiscalite: Fiscalite) => (isFiscaliteGuya
 export const fraisGestion = (fiscalite: Fiscalite): number =>
   Number.parseFloat(((fiscalite.redevanceDepartementale + fiscalite.redevanceCommunale + montantNetTaxeAurifere(fiscalite)) * 0.08).toFixed(2))
 
-export const fiscaliteVisible = (user: User, entrepriseId: EntrepriseId, titres: Partial<Pick<CommonTitre, 'typeId'>>[]): boolean => {
+export const fiscaliteVisible = (user: User, entrepriseId: EntrepriseId | undefined, titres: Partial<Pick<CommonTitre, 'typeId'>>[]): boolean => {
   return fiscaliteVisibleByDomaines(
     user,
     entrepriseId,
     titres.filter((titre): titre is Pick<CommonTitre, 'typeId'> => !!titre.typeId).map(({ typeId }) => getDomaineId(typeId))
   )
 }
-export const fiscaliteVisibleByDomaines = (user: User, entrepriseId: EntrepriseId, domaineIds: DomaineId[]): boolean => {
+export const fiscaliteVisibleByDomaines = (user: User, entrepriseId: EntrepriseId | undefined, domaineIds: DomaineId[]): boolean => {
   if (user && domaineIds.length > 0) {
     if (
       domaineIds.every(domaineId => {
