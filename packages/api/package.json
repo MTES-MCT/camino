@@ -102,6 +102,7 @@
   },
   "devDependencies": {
     "@types/carbone": "^3.2.1",
+    "@types/cookie-parser": "^1.4.3",
     "@types/stream-json": "^1.7.2",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
