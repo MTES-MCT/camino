@@ -1,16 +1,19 @@
 import { createStore } from 'vuex'
 import { createApp } from 'vue'
 import * as api from '../api/utilisateurs'
-
+import { fetchWithJson } from '../api/client-rest'
 import user from './user'
 
 import { vi, describe, test, beforeEach, expect } from 'vitest'
 import { testBlankUser, TestUser } from 'camino-common/src/tests-utils'
 
 vi.mock('../api/utilisateurs', () => ({
-  moi: vi.fn(),
   utilisateurCreer: vi.fn(),
   userMetas: vi.fn()
+}))
+
+vi.mock('../api/client-rest', () => ({
+  fetchWithJson: vi.fn()
 }))
 
 vi.mock('../router', () => [])
@@ -95,7 +98,7 @@ describe("état de l'utilisateur connecté", () => {
   })
 
   test("identifie l'utilisateur si un token valide est présent", async () => {
-    const apiMock = api.moi.mockResolvedValue(userInfo)
+    const apiMock = fetchWithJson.mockResolvedValue(userInfo)
 
     store = createStore({ modules: { user, map }, actions, mutations })
 

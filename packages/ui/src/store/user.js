@@ -1,4 +1,4 @@
-import { moi, utilisateurCreer, userMetas } from '../api/utilisateurs'
+import { utilisateurCreer, userMetas } from '../api/utilisateurs'
 
 import router from '../router'
 import {
@@ -11,6 +11,8 @@ import {
   isAdministrationEditeur,
   isSuper
 } from 'camino-common/src/roles'
+import { fetchWithJson } from '@/api/client-rest'
+import { CaminoRestRoutes } from 'camino-common/src/rest'
 
 const state = {
   element: null,
@@ -41,7 +43,8 @@ const actions = {
   async identify({ commit, dispatch }) {
     try {
       commit('loadingAdd', 'userMoi', { root: true })
-      const data = await moi()
+
+      const data = await fetchWithJson(CaminoRestRoutes.moi, {})
 
       commit('set', data)
 

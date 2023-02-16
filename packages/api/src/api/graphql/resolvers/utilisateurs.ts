@@ -145,22 +145,6 @@ const utilisateurs = async (
   }
 }
 
-const moi = async (_: never, { user }: Context, info: GraphQLResolveInfo) => {
-  try {
-    if (!user) return null
-
-    const fields = fieldsBuild(info)
-
-    const utilisateur = await utilisateurGet(user.id, { fields }, user)
-
-    return formatUser(utilisateur!)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
 const utilisateurCreer = async (
   { utilisateur }: { utilisateur: IUtilisateurCreation; token?: string },
   { user }: Context
@@ -323,7 +307,6 @@ const newsletterInscrire = async ({ email }: { email: string }) => {
 export {
   utilisateur,
   utilisateurs,
-  moi,
   utilisateurCreer,
   utilisateurModifier,
   utilisateurSupprimer,

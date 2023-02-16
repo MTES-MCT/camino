@@ -27,6 +27,7 @@ import {
   generateQgisToken,
   isSubscribedToNewsletter,
   manageNewsletterSubscription,
+  moi,
   utilisateurs
 } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
@@ -191,6 +192,7 @@ rest.post(
   '/utilisateurs/:id/newsletter',
   restCatcher(manageNewsletterSubscription)
 )
+rest.get(CaminoRestRoutes.moi, restCatcher(moi))
 rest.get('/utilisateurs/:id/newsletter', restCatcher(isSubscribedToNewsletter))
 rest.get('/utilisateurs', restDownload(utilisateurs))
 rest.get(CaminoRestRoutes.fiscaliteEntreprise, restCatcher(fiscalite))

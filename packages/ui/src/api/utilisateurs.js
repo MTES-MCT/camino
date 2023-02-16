@@ -77,16 +77,6 @@ const utilisateurs = apiGraphQLFetch(
   `
 )
 
-const moi = apiGraphQLFetch(gql`
-  query Moi {
-    moi {
-      ...utilisateur
-    }
-  }
-
-  ${fragmentUtilisateur}
-`)
-
 const utilisateurModifier = apiGraphQLFetch(gql`
   mutation UtilisateurModifier($utilisateur: InputUtilisateurModification!) {
     utilisateurModifier(utilisateur: $utilisateur) {
@@ -131,7 +121,6 @@ export {
   utilisateurMetas,
   utilisateur,
   utilisateurs,
-  moi,
   utilisateurModifier,
   utilisateurCreer,
   utilisateurSupprimer,

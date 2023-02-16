@@ -34,9 +34,6 @@ type Query {
   "Version de l'API"
   version: String
 
-  "Utilisateur en fonction du token"
-  moi: Utilisateur
-
   "Titre minier en fonction de son id"
   titre(id: ID!): Titre
 

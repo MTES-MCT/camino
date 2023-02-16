@@ -36,7 +36,6 @@ import {
 import {
   utilisateur,
   utilisateurs,
-  moi,
   utilisateurCreer,
   utilisateurModifier,
   utilisateurSupprimer,
@@ -147,7 +146,6 @@ export default {
   titre,
   titres,
   substances,
-  moi,
   entreprise,
   entreprises,
   administration,

@@ -4,7 +4,7 @@ import {
 } from '../../database/queries/utilisateurs.js'
 import express from 'express'
 import { CustomResponse } from './express-type.js'
-import { IFormat, IUtilisateursColonneId } from '../../types.js'
+import { formatUser, IFormat, IUtilisateursColonneId } from '../../types.js'
 import { constants } from 'http2'
 import {
   isSubscribedToNewsLetter,
@@ -39,6 +39,27 @@ export const isSubscribedToNewsletter = async (
     } else {
       const subscribed = await isSubscribedToNewsLetter(utilisateur.email)
       res.json(subscribed)
+    }
+  }
+}
+
+export const moi = async (
+  req: express.Request<{ id?: string }>,
+  res: CustomResponse<User>
+) => {
+  res.clearCookie('shouldBeConnected')
+  const user = req.user as User
+  if (!user) {
+    res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+  } else {
+    try {
+      const utilisateur = await utilisateurGet(user.id, { fields: {entreprises: {id: {}} }}, user)
+      res.cookie('shouldBeConnected', "resistance is futile")
+      res.json(formatUser(utilisateur!))
+    } catch (e) {
+      console.error(e)
+      res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+      throw e
     }
   }
 }

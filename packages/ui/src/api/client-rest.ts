@@ -50,14 +50,17 @@ export const fetchWithJson = async <U, T extends CaminoRestRoute>(
     method,
     headers: { 'Content-Type': 'application/json' }
   })
-  const body = await fetched.json()
   if (fetched.ok) {
+    const body = await fetched.json()
     return body
   }
+  if (fetched.status === 403){
+      window.location.replace(
+        '/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href)
+      )
+  }
   console.error(
-    `Une erreur s'est produite lors de la récupération des données ${JSON.stringify(
-      body
-    )}`
+    `Une erreur s'est produite lors de la récupération des données ${await fetched.text()}`
   )
   throw new Error(
     `Une erreur s'est produite lors de la récupération des données`
