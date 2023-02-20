@@ -20,7 +20,10 @@ const Entreprise = async () => {
   return Entreprise
 }
 const Entreprises = () => import('../components/entreprises.vue')
-const Administration = () => import('../components/administration.vue')
+const Administration = async () => {
+  const { Administration } = await import('../components/administration')
+  return Administration
+}
 const Administrations = () => import('../components/administrations.vue')
 const Meta = () => import('../components/meta.vue')
 const MetaTitre = () => import('../components/meta-titre.vue')

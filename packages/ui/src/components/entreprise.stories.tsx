@@ -1,12 +1,8 @@
 import { EntrepriseType, PureEntreprise } from './entreprise'
 import { Meta, Story } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
-import { toCaminoAnnee, toCaminoDate } from 'camino-common/src/date'
-import {
-  Entreprise,
-  EntrepriseEtablissement,
-  newEntrepriseId
-} from 'camino-common/src/entreprise'
+import { toCaminoAnnee } from 'camino-common/src/date'
+import { Entreprise, newEntrepriseId } from 'camino-common/src/entreprise'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
