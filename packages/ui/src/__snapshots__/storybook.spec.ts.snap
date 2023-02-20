@@ -3670,6 +3670,560 @@ exports[`Storybook Tests > Components/Dashboard/PTMG > WithError 1`] = `
 </div>"
 `;
 
+exports[`Storybook Tests > Components/Entreprise > Complet 1`] = `
+"<div>
+  <h5>Entreprise</h5>
+  <h1>An Entreprise</h1>
+  <div class=\\"flex flex-direction-column rnd-s border bg-bg mb-xxl\\">
+    <div class=\\"accordion-header flex rnd-t-s border-b-s\\">
+      <div class=\\"py-s px-m\\"><span class=\\"cap-first\\"> Profil </span></div>
+      <div class=\\"overflow-hidden flex flex-end flex-right\\"> <button class=\\"flex small btn py-s px-m mr-px\\">
+          <!--v-if--><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"file-add\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"flex-right\\">
+            <use href=\\"#icon-file-add\\"></use>
+          </svg>
+        </button><button class=\\"btn py-s px-m\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+            <use href=\\"#icon-pencil\\"></use>
+          </svg></button>
+        <div class=\\"py-s\\"></div>
+      </div>
+    </div>
+    <div class=\\"px-m pt-m border-b-s\\">
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Siren</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <p>SIREN</p>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Forme juridique</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <p>SAS, société par actions simplifiée</p>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Établissements</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <ul class=\\"list-sans\\">
+            <li>
+              <h6 class=\\"inline-block\\">16-09-2013</h6>: Nouvel établissement
+            </li>
+            <li>
+              <h6 class=\\"inline-block\\">01-02-2013</h6>: Ancien établissement
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Adresse</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <p>21 par ici<br>38240CETTE COMUNE</p>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Téléphone</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <p class=\\"word-break\\"><span>telephone</span></p>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Email</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <p class=\\"word-break\\"><a href=\\"mailto:email\\" class=\\"btn small bold py-xs px-s rnd\\">email</a></p>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Site</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <p class=\\"word-break\\"><a href=\\"url\\" class=\\"btn small bold py-xs px-s rnd\\">url</a></p>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Archivée</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <p>Non</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h4 class=\\"px-m pt mb-0\\">Documents</h4>
+      <div class=\\"overflow-scroll-x px-m\\">
+        <table>
+          <tr>
+            <th>Nom</th>
+            <th>Date</th>
+            <th class=\\"full-x-\\">Description</th>
+            <th></th>
+          </tr>
+          <tr class=\\"h6\\">
+            <td class=\\"nowrap pt-m flex flex-center\\"><span class=\\"bold\\">Kbis</span><span><!--v-if--></span><span><!--v-if--><span class=\\"bold cap-first small ml-xs\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Entreprise</span></span></span>
+              <!--v-if-->
+            </td>
+            <td class=\\"nowrap pt-m\\">26-08-2019</td>
+            <td class=\\"pt-m\\">Kbis</td>
+            <td class=\\"flex text-right\\"><button class=\\"btn rnd-l-xs py-s px-m my--xs mr-px\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                  <use href=\\"#icon-pencil\\"></use>
+                </svg></button><button class=\\"btn py-s px-m my--xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"delete\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                  <use href=\\"#icon-delete\\"></use>
+                </svg></button><a class=\\"btn-border py-s px-m my--xs rnd-r-xs\\" href=\\"/apiUrl/fichiers/idDocument\\" target=\\"_blank\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"download\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                  <use href=\\"#icon-download\\"></use>
+                </svg></a>
+              <!--v-if-->
+              <!--v-if-->
+            </td>
+          </tr>
+          <tr class=\\"h6\\">
+            <td class=\\"nowrap pt-m flex flex-center\\"><span class=\\"bold\\">Identification de matériel</span><span><!--v-if--></span><span><!--v-if--><span class=\\"bold cap-first small ml-xs\\"><span class=\\"bg-info py-xxs px-xs rnd-xs color-bg box\\">Entreprise</span></span></span>
+              <!--v-if-->
+            </td>
+            <td class=\\"nowrap pt-m\\">26-08-2019</td>
+            <td class=\\"pt-m\\">Identification pelle mécanique</td>
+            <td class=\\"flex text-right\\">
+              <!--v-if-->
+              <!--v-if--><a class=\\"btn-border py-s px-m my--xs rnd-r-xs\\" href=\\"/apiUrl/fichiers/idDocument2\\" target=\\"_blank\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"download\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                  <use href=\\"#icon-download\\"></use>
+                </svg></a>
+              <!--v-if-->
+              <!--v-if-->
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+  <div class=\\"mb-xxl\\">
+    <div class=\\"line-neutral width-full mb-xxl\\"></div>
+    <h3>Fiscalité</h3>
+    <div data-v-b91681b0=\\"\\"> Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère) <div class=\\"flex\\" data-v-b91681b0=\\"\\">
+        <div class=\\"mr-xs\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2021\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2021</button></div>
+        <div class=\\"mr-xs\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2022\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2022</button></div>
+        <div class=\\"mr-xs active\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2023\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2023</button></div>
+      </div>
+      <div class=\\"line-neutral mb\\" data-v-b91681b0=\\"\\"></div>Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2022 <br data-v-b91681b0=\\"\\"><strong data-v-b91681b0=\\"\\">Cotisations</strong>
+      <div class=\\"fiscalite-table\\" data-v-b91681b0=\\"\\">
+        <div data-v-b91681b0=\\"\\">a. Redevance communale</div>
+        <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">200,00&nbsp;€</div>
+        <div data-v-b91681b0=\\"\\">b. Redevance départementale</div>
+        <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">78,00&nbsp;€</div>
+        <div data-v-b91681b0=\\"\\">c. Taxe minière sur l’or de Guyane</div>
+        <div class=\\"fiscalite-value\\" data-v-b91681b0=\\"\\">38,00&nbsp;€</div>
+        <div data-v-b91681b0=\\"\\"> d. Investissements déductibles de la taxe perçue pour la région de Guyane </div>
+        <div class=\\"fiscalite-value\\" data-v-b91681b0=\\"\\">1,00&nbsp;€</div>
+        <div data-v-b91681b0=\\"\\">e. Montant net de taxe minière sur l’or de Guyane (c-d)</div>
+        <div class=\\"fiscalite-value\\" data-v-b91681b0=\\"\\">12,00&nbsp;€</div>
+        <div data-v-b91681b0=\\"\\"> f. Frais de gestion de fiscalité directe locale (a+b+e)X 8% </div>
+        <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">23,20&nbsp;€</div>
+        <div data-v-b91681b0=\\"\\">Somme à payer auprès du comptable (2)</div>
+        <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">313,20&nbsp;€</div>
+      </div>
+    </div>
+  </div>
+  <div class=\\"mb-xxl\\">
+    <div class=\\"line-neutral width-full mb-xxl\\"></div>
+    <h3>Utilisateurs</h3>
+    <div class=\\"line width-full\\"></div>
+    <div class=\\"width-full-p\\">
+      <div class=\\"overflow-scroll-x mb\\">
+        <div class=\\"table\\">
+          <div class=\\"tr\\">
+            <div class=\\"th nowrap min-width-6\\"><button class=\\"btn-menu full-x p-0\\">Nom<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+                  <use href=\\"#icon-chevron-bas\\"></use>
+                </svg></button></div>
+            <div class=\\"th nowrap min-width-6\\"><button class=\\"btn-menu full-x p-0\\">Prénom
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Email
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-6\\"><button class=\\"btn-menu full-x p-0\\">Rôle
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-6\\"><button class=\\"btn-menu full-x p-0 disabled\\">Lien
+                <!---->
+              </button></div>
+          </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+            <div class=\\"td min-width-6\\"><span class=\\"\\">Nom user</span></div>
+            <div class=\\"td min-width-6\\"><span class=\\"\\">Prénon</span></div>
+            <div class=\\"td \\"><span class=\\"h6\\">email@plop.wu</span></div>
+            <div class=\\"td min-width-6\\"><span class=\\"bg-neutral color-bg pill py-xs px-s small bold\\">entreprise</span></div>
+            <div class=\\"td min-width-6\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Nom entreprise</li>
+              </ul>
+            </div>
+          </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+            <div class=\\"td min-width-6\\"><span class=\\"\\">Other user</span></div>
+            <div class=\\"td min-width-6\\"><span class=\\"\\">Other prenom</span></div>
+            <div class=\\"td \\"><span class=\\"h6\\">anotheremail@nothing.wu</span></div>
+            <div class=\\"td min-width-6\\"><span class=\\"bg-neutral color-bg pill py-xs px-s small bold\\">entreprise</span></div>
+            <div class=\\"td min-width-6\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Nom entreprise</li>
+              </ul>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class=\\"mb-xxl\\">
+    <div class=\\"line-neutral width-full mb-xxl\\"></div>
+    <h3>Titres miniers et autorisations</h3>
+    <div class=\\"line width-full\\"></div>
+    <div class=\\"width-full-p\\">
+      <div class=\\"overflow-scroll-x mb\\">
+        <div class=\\"table\\">
+          <div class=\\"tr\\">
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+                  <use href=\\"#icon-chevron-bas\\"></use>
+                </svg></button></div>
+            <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">–
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Type
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Activités
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-6\\"><button class=\\"btn-menu full-x p-0 disabled\\">Substances
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Carte
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Régions
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Départements
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
+                <!---->
+              </button></div>
+          </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+            <div class=\\"td min-width-8\\"><span class=\\"bold\\">Nom titre 3</span></div>
+            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
+            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
+            <div class=\\"td min-width-5\\">
+              <div class=\\"mb--s\\">
+                <!--v-if-->
+                <!--v-if-->
+              </div>
+            </div>
+            <div class=\\"td min-width-6\\">
+              <ul class=\\"list-inline mb--xs\\">
+                <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">or</span></span></li>
+              </ul>
+            </div>
+            <div class=\\"td \\">
+              <div class=\\"p-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"16px\\" height=\\"16px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"globe\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                  <use href=\\"#icon-globe\\"></use>
+                </svg></div>
+            </div>
+            <div class=\\"td min-width-10\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Nom entreprise</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Guyane</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Guyane</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\"></ul>
+            </div>
+          </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+            <div class=\\"td min-width-8\\"><span class=\\"bold\\">NomTitre</span></div>
+            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></div>
+            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
+            <div class=\\"td min-width-5\\">
+              <div class=\\"mb--s\\">
+                <!--v-if-->
+                <!--v-if-->
+              </div>
+            </div>
+            <div class=\\"td min-width-6\\">
+              <ul class=\\"list-inline mb--xs\\">
+                <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">or</span></span></li>
+              </ul>
+            </div>
+            <div class=\\"td \\">
+              <div class=\\"p-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"16px\\" height=\\"16px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"globe\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                  <use href=\\"#icon-globe\\"></use>
+                </svg></div>
+            </div>
+            <div class=\\"td min-width-10\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Nom entreprise</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Guyane</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Guyane</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">DEAL : plop/toto</li>
+              </ul>
+            </div>
+          </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+            <div class=\\"td min-width-8\\"><span class=\\"bold\\">titre 1 nom</span></div>
+            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
+            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
+            <div class=\\"td min-width-5\\">
+              <div class=\\"mb--s\\">
+                <!--v-if-->
+                <!--v-if-->
+              </div>
+            </div>
+            <div class=\\"td min-width-6\\">
+              <ul class=\\"list-inline mb--xs\\">
+                <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">or</span></span></li>
+              </ul>
+            </div>
+            <div class=\\"td \\">
+              <div class=\\"p-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"16px\\" height=\\"16px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"globe\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                  <use href=\\"#icon-globe\\"></use>
+                </svg></div>
+            </div>
+            <div class=\\"td min-width-10\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Nom entreprise</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Guyane</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Guyane</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\"></ul>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class=\\"mb-xxl\\">
+    <div class=\\"line width-full my-xxl\\"></div>
+    <h3>Titres miniers et autorisations (amodiataire)</h3>
+    <div class=\\"line width-full\\"></div>
+    <div class=\\"width-full-p\\">
+      <div class=\\"overflow-scroll-x mb\\">
+        <div class=\\"table\\">
+          <div class=\\"tr\\">
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+                  <use href=\\"#icon-chevron-bas\\"></use>
+                </svg></button></div>
+            <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">–
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Type
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Activités
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-6\\"><button class=\\"btn-menu full-x p-0 disabled\\">Substances
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Carte
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-10\\"><button class=\\"btn-menu full-x p-0\\">Titulaires
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Régions
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Départements
+                <!---->
+              </button></div>
+            <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0 disabled\\">Références
+                <!---->
+              </button></div>
+          </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+            <div class=\\"td min-width-8\\"><span class=\\"bold\\">Nom titre 3</span></div>
+            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
+            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
+            <div class=\\"td min-width-5\\">
+              <div class=\\"mb--s\\">
+                <!--v-if-->
+                <!--v-if-->
+              </div>
+            </div>
+            <div class=\\"td min-width-6\\">
+              <ul class=\\"list-inline mb--xs\\">
+                <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">or</span></span></li>
+              </ul>
+            </div>
+            <div class=\\"td \\">
+              <div class=\\"p-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"16px\\" height=\\"16px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"globe\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                  <use href=\\"#icon-globe\\"></use>
+                </svg></div>
+            </div>
+            <div class=\\"td min-width-10\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Nom entreprise</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Guyane</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\">
+                <li class=\\"h6\\">Guyane</li>
+              </ul>
+            </div>
+            <div class=\\"td min-width-8\\">
+              <ul class=\\"list-prefix mb--xs\\"></ul>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Entreprise > Loading 1`] = `"<div class=\\"mb\\">Chargement…</div>"`;
+
+exports[`Storybook Tests > Components/Entreprise > NonConnecte 1`] = `
+"<div>
+  <h5>Entreprise</h5>
+  <h1>nom entreprise</h1>
+  <div class=\\"flex flex-direction-column rnd-s border bg-bg mb-xxl\\">
+    <div class=\\"accordion-header flex rnd-t-s border-b-s\\">
+      <div class=\\"py-s px-m\\"><span class=\\"cap-first\\"> Profil </span></div>
+      <div class=\\"overflow-hidden flex flex-end flex-right\\">
+        <div class=\\"py-s\\"></div>
+      </div>
+    </div>
+    <div class=\\"px-m pt-m border-b-s\\">
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Siren</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <p>siren</p>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Forme juridique</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <p>forme</p>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Établissement</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <ul class=\\"list-sans\\"></ul>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Adresse</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <p>adresse<br>code postalcommune</p>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Téléphone</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <p class=\\"word-break\\"><span>telephone</span></p>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Email</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <p class=\\"word-break\\"><a href=\\"mailto:email@entreprise.fr\\" class=\\"btn small bold py-xs px-s rnd\\">email@entreprise.fr</a></p>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Site</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <p class=\\"word-break\\"><a href=\\"http://urlentreprise\\" class=\\"btn small bold py-xs px-s rnd\\">http://urlentreprise</a></p>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Archivée</h5>
+        </div>
+        <div class=\\"tablet-blob-3-4\\">
+          <p>Non</p>
+        </div>
+      </div>
+    </div>
+    <!---->
+    <!--v-if-->
+  </div>
+  <!---->
+  <!---->
+  <!---->
+  <!---->
+</div>"
+`;
+
 exports[`Storybook Tests > Components/Entreprise/Fiscalite > Guyane 1`] = `
 "<div data-v-b91681b0=\\"\\"> Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère) <div class=\\"flex\\" data-v-b91681b0=\\"\\">
     <div class=\\"mr-xs\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2021\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2021</button></div>

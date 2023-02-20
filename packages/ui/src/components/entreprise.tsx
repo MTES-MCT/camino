@@ -1,7 +1,7 @@
 import Accordion from './_ui/accordion.vue'
 import Loader from './_ui/loader.vue'
 import { TableAuto } from './_ui/table-auto'
-import TitresTable from './titres/table.vue'
+import { TitresTable } from './titres/table'
 import EntrepriseEditPopup from './entreprise/edit-popup.vue'
 import DocumentAddButton from './document/button-add.vue'
 import Documents from './documents/list.vue'
@@ -41,8 +41,10 @@ import { fetchWithJson } from '@/api/client-rest'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 import { canEditEntreprise } from 'camino-common/src/permissions/entreprises'
+import { Utilisateur } from '@/api/api-client'
+import { TitreEntreprise } from './titres/table-utils'
 
-type EntrepriseType = {
+export type EntrepriseType = {
   id: EntrepriseId
   nom: string
   telephone: string
@@ -55,9 +57,9 @@ type EntrepriseType = {
   url: string
   documents: any[]
   archive: boolean
-  titulaireTitres: any[]
-  amodiataireTitres: any[]
-  utilisateurs: any[]
+  titulaireTitres: TitreEntreprise[]
+  amodiataireTitres: TitreEntreprise[]
+  utilisateurs: Utilisateur[]
   etablissements: any[]
 }
 
@@ -420,7 +422,7 @@ export const PureEntreprise = defineComponent<Props>({
                 <div class="line-neutral width-full mb-xxl" />
                 <h3>Titres miniers et autorisations</h3>
                 <div class="line width-full" />
-                <TitresTable titres={titulaireTitres.value} />
+                <TitresTable titres={titulaireTitres.value} user={props.user} />
               </div>
             ) : null}
 
@@ -429,7 +431,10 @@ export const PureEntreprise = defineComponent<Props>({
                 <div class="line width-full my-xxl" />
                 <h3>Titres miniers et autorisations (amodiataire)</h3>
                 <div class="line width-full" />
-                <TitresTable titres={amodiataireTitres.value} />
+                <TitresTable
+                  titres={amodiataireTitres.value}
+                  user={props.user}
+                />
               </div>
             ) : null}
           </div>
