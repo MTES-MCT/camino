@@ -94,7 +94,7 @@ const updateHandler = (e: Element[]) => {
 const search = async (value: string) => {
   if (props.filter.lazy) {
     const result = await props.filter.search(value)
-    items.value = [...result.elements]
+    items.value = [...selectedItems.value, ...result.elements]
     for (const element of result.elements) {
       allKnownItems.value[element.id] = element
     }
@@ -102,8 +102,10 @@ const search = async (value: string) => {
     // C'est étrange, il va falloir corriger tout ça un jour
     props.filter.elements = [...Object.values(allKnownItems.value)]
   } else {
-    items.value = props.filter.elements.filter(item =>
-      item.nom.toLowerCase().includes(value.toLowerCase())
+    items.value = props.filter.elements.filter(
+      item =>
+        item.nom.toLowerCase().includes(value.toLowerCase()) ||
+        selectedItems.value.some(({ id }) => id === item.id)
     )
   }
 }
