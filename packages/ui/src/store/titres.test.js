@@ -30,10 +30,7 @@ describe('liste des titres', () => {
       elements: [],
       total: 0,
       vueId: 'carte',
-      metas: {
-        types: [],
-        statuts: []
-      },
+      metas: {},
       params: {
         table: {
           page: 1,
@@ -60,6 +57,7 @@ describe('liste des titres', () => {
         { id: 'substances', type: 'string' },
         { id: 'noms', type: 'string' },
         { id: 'entreprises', type: 'string' },
+        { id: 'entreprisesIds', type: 'strings', values: [] },
         { id: 'references', type: 'string' },
         { id: 'territoires', type: 'string' },
         { id: 'page', type: 'number', value: 1, min: 0 },
@@ -113,15 +111,7 @@ describe('liste des titres', () => {
 
   test('initialise le composant', async () => {
     const apiMetasMock = api.titresMetas.mockResolvedValue({
-      types: [
-        { id: 'ifr', nom: 'Ifremer' },
-        { id: 'dge', nom: 'DGEC' }
-      ],
-      statuts: [
-        { id: 'fait', nom: 'fait' },
-        { id: 'afa', nom: '` faire`' }
-      ],
-      truc: [{ id: 'id-truc' }]
+      elements: [{ id: 'entrepriseId' }]
     })
 
     const apiMock = api.titres.mockResolvedValue({
@@ -133,16 +123,6 @@ describe('liste des titres', () => {
 
     expect(apiMetasMock).toHaveBeenCalled()
     expect(apiMock).not.toHaveBeenCalled()
-    expect(store.state.titres.metas).toEqual({
-      types: [
-        { id: 'ifr', nom: 'Ifremer' },
-        { id: 'dge', nom: 'DGEC' }
-      ],
-      statuts: [
-        { id: 'fait', nom: 'fait' },
-        { id: 'afa', nom: '` faire`' }
-      ]
-    })
 
     expect(mutations.loadingRemove).toHaveBeenCalled()
     expect(store.state.titres.initialized).toBeTruthy()

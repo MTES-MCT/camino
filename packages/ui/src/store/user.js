@@ -1,4 +1,4 @@
-import { utilisateurCreer, userMetas } from '../api/utilisateurs'
+import { utilisateurCreer } from '../api/utilisateurs'
 
 import router from '../router'
 import {
@@ -16,9 +16,6 @@ import { CaminoRestRoutes } from 'camino-common/src/rest'
 
 const state = {
   element: null,
-  metas: {
-    entreprisesTitresCreation: []
-  },
   preferences: {
     carte: { markerLayersId: 'clusters' }
   },
@@ -26,29 +23,13 @@ const state = {
 }
 
 const actions = {
-  async init({ commit, dispatch }) {
-    try {
-      commit('loadingAdd', 'userInit', { root: true })
-
-      const data = await userMetas()
-
-      commit('metasSet', data)
-    } catch (e) {
-      dispatch('apiError', e, { root: true })
-    } finally {
-      commit('loadingRemove', 'userInit', { root: true })
-    }
-  },
-
-  async identify({ commit, dispatch }) {
+  async identify({ commit }) {
     try {
       commit('loadingAdd', 'userMoi', { root: true })
 
       const data = await fetchWithJson(CaminoRestRoutes.moi, {})
 
       commit('set', data)
-
-      await dispatch('init')
     } catch (e) {
       commit('reset')
     } finally {
@@ -194,11 +175,6 @@ const mutations = {
 
   reset(state) {
     state.element = null
-    state.metas.entreprisesTitresCreation = []
-  },
-
-  metasSet(state, data) {
-    state.metas.entreprisesTitresCreation = data
   }
 }
 

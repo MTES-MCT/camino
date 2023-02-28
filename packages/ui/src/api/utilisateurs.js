@@ -4,18 +4,6 @@ import { apiGraphQLFetch } from './_client'
 import { fragmentUtilisateur } from './fragments/utilisateur'
 import { fragmentEntreprises } from './fragments/entreprises'
 
-const userMetas = apiGraphQLFetch(
-  gql`
-    query MetasUser {
-      entreprisesTitresCreation {
-        ...entreprises
-      }
-    }
-
-    ${fragmentEntreprises}
-  `
-)
-
 const utilisateurMetas = apiGraphQLFetch(
   gql`
     query UtilisateurMetas {
@@ -117,7 +105,6 @@ const newsletterInscrire = apiGraphQLFetch(gql`
 `)
 
 export {
-  userMetas,
   utilisateurMetas,
   utilisateur,
   utilisateurs,

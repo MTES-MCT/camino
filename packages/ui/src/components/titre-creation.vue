@@ -152,6 +152,7 @@ import { useStore } from 'vuex'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { apiClient } from '@/api/api-client'
 import { TitresLinkConfig } from '@/components/titre/pure-titres-link-form-api-client'
+import { entreprisesTitresCreation } from '@/api/entreprises'
 
 type Entreprise = {
   id: string
@@ -186,9 +187,7 @@ const user = computed(() => {
   return store.state.user.element
 })
 
-const entreprises = computed<Entreprise[]>(() => {
-  return store.state.user.metas.entreprisesTitresCreation
-})
+const entreprises = ref<Entreprise[]>([])
 
 const entrepriseOuBureauDEtudeCheck = computed<boolean>(() => {
   return isEntreprise(user.value) || isBureauDEtudes(user.value)
@@ -242,9 +241,13 @@ const keyUp = (e: KeyboardEvent) => {
 }
 
 const init = async () => {
-  if (!entreprises.value.length) {
+  const data = await entreprisesTitresCreation()
+
+  if (!data.length) {
     await store.dispatch('pageError')
   }
+
+  entreprises.value = data
 
   if (entreprises.value?.length === 1) {
     titreDemande.value.entrepriseId = entreprises.value[0].id

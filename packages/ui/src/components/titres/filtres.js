@@ -2,6 +2,8 @@ import { elementsFormat } from '../../utils/index'
 import { titresFiltres, titresRechercherByNom } from '@/api/titres'
 import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
 import { sortedDomaines } from 'camino-common/src/static/domaines'
+import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
+import { sortedTitreTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 
 const filtres = [
   {
@@ -55,18 +57,16 @@ const filtres = [
     name: 'Types',
     type: 'checkboxes',
     value: [],
-    elements: [],
-    component: 'FiltresTypes',
-    elementsFormat
+    elements: sortedTitreTypesTypes,
+    component: 'FiltresTypes'
   },
   {
     id: 'statutsIds',
     name: 'Statuts',
     type: 'checkboxes',
     value: [],
-    elements: [],
-    component: 'FiltresStatuts',
-    elementsFormat
+    elements: sortedTitresStatuts,
+    component: 'FiltresStatuts'
   }
 ]
 
