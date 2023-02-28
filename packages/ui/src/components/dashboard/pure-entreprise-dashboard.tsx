@@ -101,7 +101,7 @@ export const PureEntrepriseDashboard = defineComponent<Props>({
                         <router-link
                           to={entrepriseUrl(props.entreprises[0].id)}
                           target="_blank"
-                          class="p-s bg-info color-bg mb"
+                          class="p-s color-bg mb"
                         >
                           {props.entreprises[0].nom}
                         </router-link>
@@ -118,7 +118,7 @@ export const PureEntrepriseDashboard = defineComponent<Props>({
                             <router-link
                               to={entrepriseUrl(entreprise.id)}
                               target="_blank"
-                              class="p-s bg-info color-bg mb"
+                              class="p-s color-bg mb"
                             >
                               {entreprise.nom}
                             </router-link>

@@ -2700,7 +2700,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > Ok 1`] = `
         </svg></button></div>
   </div>
   <div class=\\"_top-level_3306d0\\" style=\\"\\">
-    <div class=\\"p-s bg-info color-bg mb\\">Découvrez l'estimation de votre fiscalité minière pour<a type=\\"primary\\" to=\\"/entreprises/id\\" target=\\"_blank\\" class=\\"p-s bg-info color-bg mb\\">entreprise1</a></div>
+    <div class=\\"p-s bg-info color-bg mb\\">Découvrez l'estimation de votre fiscalité minière pour<a type=\\"primary\\" to=\\"/entreprises/id\\" target=\\"_blank\\" class=\\"p-s color-bg mb\\">entreprise1</a></div>
     <div class=\\"width-full-p\\">
       <div class=\\"overflow-scroll-x mb\\">
         <div class=\\"table\\">
@@ -2836,7 +2836,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithMultipleEntre
         </svg></button></div>
   </div>
   <div class=\\"_top-level_3306d0\\" style=\\"\\">
-    <div class=\\"p-s bg-info color-bg mb\\">Découvrez l'estimation de votre fiscalité minière pour vos entreprises :<a type=\\"primary\\" to=\\"/entreprises/id\\" target=\\"_blank\\" class=\\"p-s bg-info color-bg mb\\">entreprise1</a><a type=\\"primary\\" to=\\"/entreprises/id2\\" target=\\"_blank\\" class=\\"p-s bg-info color-bg mb\\">entreprise2</a></div>
+    <div class=\\"p-s bg-info color-bg mb\\">Découvrez l'estimation de votre fiscalité minière pour vos entreprises :<a type=\\"primary\\" to=\\"/entreprises/id\\" target=\\"_blank\\" class=\\"p-s color-bg mb\\">entreprise1</a><a type=\\"primary\\" to=\\"/entreprises/id2\\" target=\\"_blank\\" class=\\"p-s color-bg mb\\">entreprise2</a></div>
     <div class=\\"width-full-p\\">
       <div class=\\"overflow-scroll-x mb\\">
         <div class=\\"table\\">
@@ -2972,7 +2972,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithoutActivities
         </svg></button></div>
   </div>
   <div class=\\"_top-level_3306d0\\" style=\\"\\">
-    <div class=\\"p-s bg-info color-bg mb\\">Découvrez l'estimation de votre fiscalité minière pour<a type=\\"primary\\" to=\\"/entreprises/id\\" target=\\"_blank\\" class=\\"p-s bg-info color-bg mb\\">entreprise1</a></div>
+    <div class=\\"p-s bg-info color-bg mb\\">Découvrez l'estimation de votre fiscalité minière pour<a type=\\"primary\\" to=\\"/entreprises/id\\" target=\\"_blank\\" class=\\"p-s color-bg mb\\">entreprise1</a></div>
     <div class=\\"width-full-p\\">
       <div class=\\"overflow-scroll-x mb\\">
         <div class=\\"table\\">
