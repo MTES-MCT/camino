@@ -1,7 +1,6 @@
 import { dbManager } from '../../../tests/db-manager.js'
 import {
   creationCheck,
-  modificationCheck,
   visibleCheck
 } from '../../../tests/_utils/administrations-permissions.js'
 import TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes from '../../database/models/titres-types--demarches-types-etapes-types-justificatifs-types.js'
@@ -135,85 +134,5 @@ describe('Création des étapes', () => {
     'un utilisateur admin de l’administration $administrationId peut créer une étape mfr sur un titre PXM',
     async administrationId =>
       creationCheck(administrationId, true, 'etapes', 'pxm')
-  )
-})
-
-describe('Modification des étapes', () => {
-  test.each<[AdministrationId, boolean, EtapeTypeId]>([
-    ['ope-onf-973-01', true, 'mcr'],
-    ['min-mtes-dgaln-01', true, 'mcr']
-  ])(
-    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre ARM : $modifier',
-    async (administrationId, modifier, etapeTypeId) =>
-      modificationCheck(
-        administrationId,
-        modifier,
-        'etapes',
-        'arm',
-        false,
-        etapeTypeId
-      )
-  )
-
-  test.each<[AdministrationId, boolean, EtapeTypeId]>([
-    ['ope-onf-973-01', false, 'mcr'],
-    ['dea-guyane-01', true, 'mcr'],
-    ['min-mtes-dgaln-01', true, 'mcr']
-  ])(
-    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre AXM : $modifier',
-    async (administrationId, modifier, etapeTypeId) =>
-      modificationCheck(
-        administrationId,
-        modifier,
-        'etapes',
-        'axm',
-        false,
-        etapeTypeId
-      )
-  )
-
-  test.each<[AdministrationId, boolean, EtapeTypeId]>([
-    ['min-mtes-dgaln-01', true, 'mcr']
-  ])(
-    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre CXM : $modifier',
-    async (administrationId, modifier, etapeTypeId) =>
-      modificationCheck(
-        administrationId,
-        modifier,
-        'etapes',
-        'cxm',
-        false,
-        etapeTypeId
-      )
-  )
-
-  test.each<[AdministrationId, boolean, EtapeTypeId]>([
-    ['min-mtes-dgaln-01', true, 'mcr']
-  ])(
-    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre PRM : $modifier',
-    async (administrationId, modifier, etapeTypeId) =>
-      modificationCheck(
-        administrationId,
-        modifier,
-        'etapes',
-        'prm',
-        false,
-        etapeTypeId
-      )
-  )
-
-  test.each<[AdministrationId, boolean, EtapeTypeId]>([
-    ['min-mtes-dgaln-01', true, 'mcr']
-  ])(
-    'un utilisateur admin de l’administration $administrationId peut modifier une étape $etapeTypeId sur un titre PXM : $modifier',
-    async (administrationId, modifier, etapeTypeId) =>
-      modificationCheck(
-        administrationId,
-        modifier,
-        'etapes',
-        'pxm',
-        false,
-        etapeTypeId
-      )
   )
 })

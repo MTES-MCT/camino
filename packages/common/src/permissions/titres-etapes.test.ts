@@ -195,3 +195,20 @@ test.each<{
     expect(canCreateOrEditEtape({ ...user, ...testBlankUser }, etapeTypeId, etapeStatutId, titreTitulaires, titresAdministrationsLocales, demarcheTypeId, titre, 'creation')).toEqual(canCreate)
   }
 )
+
+test.each<{
+  administrationId: AdministrationId
+  titreTypeId: TitreTypeId
+  canEdit: boolean
+}>([
+  { administrationId: 'min-mtes-dgaln-01', titreTypeId: 'prm', canEdit: true },
+  { administrationId: 'min-mtes-dgaln-01', titreTypeId: 'pxm', canEdit: true },
+  { administrationId: 'min-mtes-dgaln-01', titreTypeId: 'cxm', canEdit: true },
+  { administrationId: 'min-mtes-dgaln-01', titreTypeId: 'axm', canEdit: true },
+  { administrationId: 'dea-guyane-01', titreTypeId: 'axm', canEdit: true },
+  { administrationId: 'ope-onf-973-01', titreTypeId: 'axm', canEdit: false },
+  { administrationId: 'min-mtes-dgaln-01', titreTypeId: 'arm', canEdit: true },
+  { administrationId: 'ope-onf-973-01', titreTypeId: 'arm', canEdit: true }
+])('un utilisateur admin d’une administration peut modifier une étape mcr sur un titre: $canEdit', ({ administrationId, titreTypeId, canEdit }) => {
+  expect(canCreateOrEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', 'fai', [], [], 'oct', { typeId: titreTypeId, statutId: 'val' }, 'modification')).toBe(canEdit)
+})
