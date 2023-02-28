@@ -16,15 +16,11 @@
       </div>
       <div class="tablet-blob-1-2 flex">
         <div
-          v-if="
-            demarche.modification ||
-            demarche.suppression ||
-            demarche.etapesCreation
-          "
+          v-if="demarche.modification || demarche.suppression || canCreateEtape"
           class="flex-right flex"
         >
           <button
-            v-if="demarche.etapesCreation"
+            v-if="canCreateEtape"
             class="btn small rnd-l-xs py-s px-m flex mr-px"
             :class="{
               'rnd-r-xs': !demarche.suppression && !demarche.modification
@@ -36,7 +32,7 @@
           <button
             v-if="demarche.modification"
             class="btn py-s px-m mr-px"
-            :class="{ 'rnd-l-xs': !demarche.etapesCreation }"
+            :class="{ 'rnd-l-xs': !canCreateEtape }"
             @click="editPopupOpen"
           >
             <Icon size="M" name="pencil" />
@@ -45,7 +41,7 @@
             v-if="demarche.suppression"
             class="btn rnd-r-xs py-s px-m mr-px"
             :class="{
-              'rnd-l-xs': !demarche.modification && !demarche.etapesCreation
+              'rnd-l-xs': !demarche.modification && !canCreateEtape
             }"
             @click="removePopupOpen"
           >
@@ -64,6 +60,9 @@
       :titreId="titreId"
       :titreNom="titreNom"
       :opened="etapeOpened[etape.id]"
+      :titreStatutId="titreStatutId"
+      :titreAdministrations="titreAdministrations"
+      :user="user"
       @event-track="eventTrack"
       @close="etapeClose(etape.id)"
       @toggle="etapeToggle(etape.id)"
@@ -100,6 +99,7 @@ import { DemarcheEditPopup } from './demarche-edit-popup'
 import { DemarcheRemovePopup } from './demarche-remove-popup'
 import { Icon } from '@/components/_ui/icon'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
+import { canCreateEtapeByDemarche } from 'camino-common/src/permissions/titres-demarches'
 import { demarcheApiClient } from './demarche-api-client'
 
 export default {
@@ -116,7 +116,10 @@ export default {
     titreNom: { type: String, required: true },
     titreId: { type: String, required: true },
     titreTypeId: { type: String, required: true },
-    tabId: { type: String, required: true }
+    titreStatutId: { type: String, required: true },
+    titreAdministrations: { type: Array, required: true },
+    tabId: { type: String, required: true },
+    user: { type: Object, required: true }
   },
 
   emits: ['titre-event-track'],
@@ -155,6 +158,16 @@ export default {
 
     statut() {
       return DemarchesStatuts[this.demarche.statutId]
+    },
+
+    canCreateEtape() {
+      return canCreateEtapeByDemarche(
+        this.user,
+        this.titreTypeId,
+        this.demarche.type.id,
+        this.titreAdministrations,
+        this.titreStatutId
+      )
     }
   },
 

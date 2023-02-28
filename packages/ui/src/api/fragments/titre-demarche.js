@@ -23,7 +23,6 @@ export const fragmentTitreDemarche = gql`
     }
 
     modification
-    etapesCreation
     suppression
   }
 

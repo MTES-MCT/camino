@@ -143,6 +143,7 @@ export const titresEtapesQueryModify = (
     })
   }
 
+  // TODO 2023-02-28 TDE à supprimer pour pouvoir supprimer TDE de la bdd, mais nécessite de revoir l’héritage cf 2023-02-28 TDE
   q.select(titreEtapeModificationQueryBuild(user).as('modification'))
 
   q.modifyGraph('demarche', b => {

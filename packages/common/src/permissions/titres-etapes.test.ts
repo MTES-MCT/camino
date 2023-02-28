@@ -1,12 +1,12 @@
 import { TitreTypeId } from '../static/titresTypes.js'
 import { EtapeTypeId } from '../static/etapesTypes.js'
 import { DemarcheTypeId } from '../static/demarchesTypes.js'
-import { canCreateEtape, canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck } from './titres-etapes.js'
+import { canCreateOrEditEtape, canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck } from './titres-etapes.js'
 import { AdministrationId, ADMINISTRATION_IDS } from '../static/administrations.js'
 import { test, expect } from 'vitest'
 import { TestUser, testBlankUser } from '../tests-utils.js'
 import { TitreStatutId } from '../static/titresStatuts.js'
-import { newEntrepriseId } from '../entreprise.js'
+import { EntrepriseId, newEntrepriseId } from '../entreprise.js'
 import { EtapeStatutId } from '../static/etapesStatuts.js'
 
 test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeId: TitreTypeId; optional: boolean }>([
@@ -73,7 +73,7 @@ test.each<{
   user: TestUser
   etapeTypeId: EtapeTypeId
   etapeStatutId: EtapeStatutId | null
-  titreTitulaires: { id: string }[]
+  titreTitulaires: { id: EntrepriseId }[]
   titresAdministrationsLocales: AdministrationId[]
   demarcheTypeId: DemarcheTypeId
   titre: { typeId: TitreTypeId; statutId: TitreStatutId }
@@ -81,51 +81,51 @@ test.each<{
 }>([
   {
     user: { role: 'super' },
-    etapeTypeId: 'aac',
+    etapeTypeId: 'mfr',
     etapeStatutId: null,
     titreTitulaires: [],
     titresAdministrationsLocales: [],
-    demarcheTypeId: 'amo',
+    demarcheTypeId: 'ren',
     titre: { typeId: 'apc', statutId: 'dmc' },
     canCreate: true
   },
   {
     user: { role: 'defaut' },
-    etapeTypeId: 'aac',
+    etapeTypeId: 'mfr',
     etapeStatutId: null,
     titreTitulaires: [],
     titresAdministrationsLocales: [],
-    demarcheTypeId: 'amo',
+    demarcheTypeId: 'ren',
     titre: { typeId: 'apc', statutId: 'dmc' },
     canCreate: false
   },
   {
     user: { role: 'editeur', administrationId: 'ope-brgm-01' },
-    etapeTypeId: 'aac',
+    etapeTypeId: 'mfr',
     etapeStatutId: null,
     titreTitulaires: [],
     titresAdministrationsLocales: [],
-    demarcheTypeId: 'amo',
+    demarcheTypeId: 'ren',
     titre: { typeId: 'apc', statutId: 'dmc' },
     canCreate: false
   },
   {
     user: { role: 'lecteur', administrationId: 'ope-brgm-01' },
-    etapeTypeId: 'aac',
+    etapeTypeId: 'mfr',
     etapeStatutId: null,
     titreTitulaires: [],
     titresAdministrationsLocales: [],
-    demarcheTypeId: 'amo',
+    demarcheTypeId: 'ren',
     titre: { typeId: 'apc', statutId: 'dmc' },
     canCreate: false
   },
   {
     user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1') }] },
-    etapeTypeId: 'aac',
+    etapeTypeId: 'mfr',
     etapeStatutId: null,
     titreTitulaires: [{ id: newEntrepriseId('1') }],
     titresAdministrationsLocales: [],
-    demarcheTypeId: 'amo',
+    demarcheTypeId: 'ren',
     titre: { typeId: 'apc', statutId: 'dmc' },
     canCreate: false
   },
@@ -167,7 +167,7 @@ test.each<{
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
     titre: { typeId: 'arm', statutId: 'dmc' },
-    canCreate: true
+    canCreate: false
   },
   {
     user: { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] },
@@ -192,6 +192,6 @@ test.each<{
 ])(
   'canCreateEtape $user | $etapeTypeId | $etapeStatutId | $titreTitulaires | $titresAdministrationsLocales | $demarcheTypeId | $titre | $canCreate',
   ({ user, etapeTypeId, etapeStatutId, titreTitulaires, titresAdministrationsLocales, demarcheTypeId, titre, canCreate }) => {
-    expect(canCreateEtape({ ...user, ...testBlankUser }, etapeTypeId, etapeStatutId, titreTitulaires, titresAdministrationsLocales, demarcheTypeId, titre)).toEqual(canCreate)
+    expect(canCreateOrEditEtape({ ...user, ...testBlankUser }, etapeTypeId, etapeStatutId, titreTitulaires, titresAdministrationsLocales, demarcheTypeId, titre, 'creation')).toEqual(canCreate)
   }
 )

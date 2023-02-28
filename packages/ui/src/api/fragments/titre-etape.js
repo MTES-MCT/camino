@@ -155,7 +155,6 @@ const fragmentTitreEtape = gql`
     decisionsAnnexesSections
     decisionsAnnexesContenu
 
-    modification
     deposable
   }
 
@@ -293,8 +292,6 @@ const fragmentEtape = gql`
     heritageContenu
     decisionsAnnexesSections
     decisionsAnnexesContenu
-
-    modification
   }
 
   ${fragmentDemarcheType}

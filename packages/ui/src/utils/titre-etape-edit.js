@@ -183,7 +183,6 @@ const etapeEditFormat = etape => {
   }
 
   delete etape.communes
-  delete etape.modification
   delete etape.points
   delete etape.geojsonPoints
   delete etape.geojsonMultiPolygon

@@ -575,7 +575,7 @@ interface ITitreDemarche {
   entreprisesLecture?: boolean | null
   modification?: boolean | null
   suppression?: boolean | null
-  etapesCreation?: boolean | null
+
   etapes?: ITitreEtape[]
 }
 

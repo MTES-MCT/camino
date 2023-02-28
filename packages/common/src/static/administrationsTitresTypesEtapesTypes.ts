@@ -49,8 +49,8 @@ const restrictions = (
   return { lectureInterdit: false, creationInterdit: false, modificationInterdit: false }
 }
 
-export const canAdministrationCreateEtapeTypeId = (administrationId: AdministrationId, titreTypeId: TitreTypeId, etapeTypeId: EtapeTypeId): boolean => {
-  return !restrictions(administrationId, titreTypeId, etapeTypeId).creationInterdit
+export const canAdministrationEtapeTypeId = (administrationId: AdministrationId, titreTypeId: TitreTypeId, etapeTypeId: EtapeTypeId, permission: 'creation' | 'modification'): boolean => {
+  return !restrictions(administrationId, titreTypeId, etapeTypeId)[`${permission}Interdit`]
 }
 
 const AdministrationsTitresTypesEtapesTypes: {

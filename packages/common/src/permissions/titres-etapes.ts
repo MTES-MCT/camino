@@ -1,15 +1,17 @@
 import { ETAPES_TYPES, EtapeTypeId } from '../static/etapesTypes.js'
 import { TitreTypeId } from '../static/titresTypes.js'
 import { DEMARCHES_TYPES_IDS, DemarcheTypeId, isDemarcheTypeWithPhase } from '../static/demarchesTypes.js'
-import { isAdministration, isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from '../roles.js'
+import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper, User } from '../roles.js'
 import { EtapeStatutId, ETAPES_STATUTS } from '../static/etapesStatuts.js'
 import { TITRES_TYPES_IDS_DEMAT } from './titres.js'
 import { AdministrationId } from '../static/administrations.js'
 import { isGestionnaire } from '../static/administrationsTitresTypes.js'
 import { canAdministrationModifyEtapes } from '../static/administrationsTitresTypesTitresStatuts.js'
-import { canAdministrationCreateEtapeTypeId } from '../static/administrationsTitresTypesEtapesTypes.js'
+import { canAdministrationEtapeTypeId } from '../static/administrationsTitresTypesEtapesTypes.js'
 
 import { TitreStatutId } from '../static/titresStatuts.js'
+import { EntrepriseId } from '../entreprise.js'
+import { isTDEExist } from '../static/titresTypes_demarchesTypes_etapesTypes/index.js'
 
 export const dureeOptionalCheck = (etapeTypeId: EtapeTypeId, demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId): boolean => {
   if (titreTypeId !== 'axm' && titreTypeId !== 'arm') {
@@ -73,20 +75,25 @@ export const canEditDuree = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheT
   return titreTypeId !== 'arm'
 }
 
-export const canCreateEtape = (
+export const canCreateOrEditEtape = (
   user: User,
   etapeTypeId: EtapeTypeId,
   etapeStatutId: EtapeStatutId | null,
-  titreTitulaires: { id: string }[],
+  titulaires: { id: EntrepriseId }[],
   titresAdministrationsLocales: AdministrationId[],
   demarcheTypeId: DemarcheTypeId,
-  titre: { typeId: TitreTypeId; statutId: TitreStatutId }
+  titre: { typeId: TitreTypeId; statutId: TitreStatutId },
+  permission: 'creation' | 'modification'
 ): boolean => {
+  if (!isTDEExist(titre.typeId, demarcheTypeId, etapeTypeId)) {
+    return false
+  }
+
   if (isSuper(user)) {
     return true
-  } else if (isAdministration(user)) {
+  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     if (isGestionnaire(user.administrationId) || titresAdministrationsLocales.includes(user.administrationId)) {
-      return canAdministrationModifyEtapes(user.administrationId, titre.typeId, titre.statutId) && canAdministrationCreateEtapeTypeId(user.administrationId, titre.typeId, etapeTypeId)
+      return canAdministrationModifyEtapes(user.administrationId, titre.typeId, titre.statutId) && canAdministrationEtapeTypeId(user.administrationId, titre.typeId, etapeTypeId, permission)
     }
   } else if (isEntreprise(user) || isBureauDEtudes(user)) {
     return (
@@ -95,7 +102,7 @@ export const canCreateEtape = (
       etapeTypeId === ETAPES_TYPES.demande &&
       etapeStatutId === ETAPES_STATUTS.EN_CONSTRUCTION &&
       TITRES_TYPES_IDS_DEMAT.includes(titre.typeId) &&
-      titreTitulaires.some(({ id }) => user.entreprises?.some(entreprise => id === entreprise.id))
+      titulaires.some(({ id }) => user.entreprises?.some(entreprise => id === entreprise.id))
     )
   }
 

@@ -54,7 +54,6 @@ type Demarche {
 
   modification: Boolean
   suppression: Boolean
-  etapesCreation: Boolean
 }
 
 "Phase d'un titre minier"

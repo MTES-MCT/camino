@@ -3786,3 +3786,11 @@ export const getEtapesTDE = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheT
 
   return []
 }
+
+export const isTDEExist = (titreTypeId: TitreTypeId, demarcheTypeId: DemarcheTypeId, etapeTypeId: EtapeTypeId): boolean => {
+  if (isDemarcheTypeFromTitreType(TDE[titreTypeId], demarcheTypeId)) {
+    return (TDE[titreTypeId][demarcheTypeId] as readonly EtapeTypeId[]).includes(etapeTypeId)
+  }
+
+  return false
+}

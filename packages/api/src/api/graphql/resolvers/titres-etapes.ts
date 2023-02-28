@@ -71,7 +71,7 @@ import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
 import { CaminoDate, toCaminoDate } from 'camino-common/src/date.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 import { titreEtapeFormatFields } from '../../_format/_fields.js'
-import { canCreateEtape } from 'camino-common/src/permissions/titres-etapes.js'
+import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 
 const statutIdAndDateGet = (
@@ -252,8 +252,6 @@ const etapeCreer = async (
 
     if (!titreDemarche) throw new Error("la démarche n'existe pas")
 
-    if (!titreDemarche.etapesCreation) throw new Error('droits insuffisants')
-
     titreDemarche = await titreDemarcheGet(
       etape.titreDemarcheId,
       {
@@ -346,7 +344,7 @@ const etapeCreer = async (
       throw new Error(rulesErrors.join(', '))
     }
     if (
-      !canCreateEtape(
+      !canCreateOrEditEtape(
         user,
         etapeType.id,
         etape.statutId,
@@ -357,7 +355,8 @@ const etapeCreer = async (
           typeId: titreDemarche.titre.typeId,
           statutId:
             titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine
-        }
+        },
+        'creation'
       )
     ) {
       throw new Error('droits insuffisants pour créer cette étape')
@@ -434,15 +433,42 @@ const etapeModifier = async (
         fields: {
           documents: { id: {} },
           titulaires: { id: {} },
-          amodiataires: { id: {} }
+          amodiataires: { id: {} },
+          demarche: { titre: { pointsEtape: { id: {} } } }
         }
       },
       user
     )
 
     if (!titreEtapeOld) throw new Error("l'étape n'existe pas")
+    if (!titreEtapeOld.titulaires) {
+      throw new Error('Les titulaires de l’étape ne sont pas chargés')
+    }
+    if (
+      !titreEtapeOld.demarche ||
+      !titreEtapeOld.demarche.titre ||
+      !titreEtapeOld.demarche.titre.administrationsLocales ||
+      !titreEtapeOld.demarche.titre.titreStatutId
+    ) {
+      throw new Error('la démarche n’est pas chargée complètement')
+    }
 
-    if (!titreEtapeOld.modification) throw new Error('droits insuffisants')
+    if (
+      !canCreateOrEditEtape(
+        user,
+        titreEtapeOld.typeId,
+        titreEtapeOld.statutId,
+        titreEtapeOld.titulaires,
+        titreEtapeOld.demarche.titre.administrationsLocales,
+        titreEtapeOld.demarche.typeId,
+        {
+          typeId: titreEtapeOld.demarche.titre.typeId,
+          statutId: titreEtapeOld.demarche.titre.titreStatutId
+        },
+        'modification'
+      )
+    )
+      throw new Error('droits insuffisants')
 
     if (titreEtapeOld.titreDemarcheId !== etape.titreDemarcheId)
       throw new Error("la démarche n'existe pas")
@@ -813,11 +839,46 @@ const etapeSupprimer = async (
       throw new Error("l'étape n'existe pas")
     }
 
-    const titreEtape = await titreEtapeGet(id, { fields: { id: {} } }, user)
+    const titreEtape = await titreEtapeGet(
+      id,
+      {
+        fields: {
+          titulaires: { id: {} },
+          demarche: { titre: { pointsEtape: { id: {} } } }
+        }
+      },
+      user
+    )
 
     if (!titreEtape) throw new Error("l'étape n'existe pas")
+    if (!titreEtape.titulaires) {
+      throw new Error('Les titulaires de l’étape ne sont pas chargés')
+    }
+    if (
+      !titreEtape.demarche ||
+      !titreEtape.demarche.titre ||
+      !titreEtape.demarche.titre.administrationsLocales ||
+      !titreEtape.demarche.titre.titreStatutId
+    ) {
+      throw new Error('la démarche n’est pas chargée complètement')
+    }
 
-    if (!titreEtape.modification) throw new Error('droits insuffisants')
+    if (
+      !canCreateOrEditEtape(
+        user,
+        titreEtape.typeId,
+        titreEtape.statutId,
+        titreEtape.titulaires,
+        titreEtape.demarche.titre.administrationsLocales,
+        titreEtape.demarche.typeId,
+        {
+          typeId: titreEtape.demarche.titre.typeId,
+          statutId: titreEtape.demarche.titre.titreStatutId
+        },
+        'modification'
+      )
+    )
+      throw new Error('droits insuffisants')
 
     const titreDemarche = await titreDemarcheGet(
       titreEtape.titreDemarcheId,

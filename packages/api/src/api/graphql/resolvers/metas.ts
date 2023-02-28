@@ -52,7 +52,7 @@ import { CaminoDate } from 'camino-common/src/date.js'
 import graphBuild from '../../../database/queries/graph/build.js'
 import { fieldsFormat } from '../../../database/queries/graph/fields-format.js'
 import EtapesTypes from '../../../database/models/etapes-types.js'
-import { canCreateEtape } from 'camino-common/src/permissions/titres-etapes.js'
+import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes.js'
@@ -267,7 +267,7 @@ const demarcheEtapesTypesGet = async (
   }
 
   return etapesTypes.filter(etapeType =>
-    canCreateEtape(
+    canCreateOrEditEtape(
       user,
       etapeType.id,
       titreEtapeId && etapeType.id === titreEtape?.typeId
@@ -279,7 +279,8 @@ const demarcheEtapesTypesGet = async (
       {
         typeId: titre.typeId,
         statutId: titre.titreStatutId ?? TitresStatutIds.Indetermine
-      }
+      },
+      'creation'
     )
   )
 }

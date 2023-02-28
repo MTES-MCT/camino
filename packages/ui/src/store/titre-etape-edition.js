@@ -77,10 +77,6 @@ const actions = {
       if (id) {
         const newEtape = await etape({ id })
 
-        if (!newEtape?.modification) {
-          throw new Error()
-        }
-
         commit('set', etapeEditFormat(newEtape))
 
         commit('heritageLoaded', true)

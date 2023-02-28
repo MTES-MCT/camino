@@ -85,8 +85,7 @@ describe('étapes', () => {
     const apiMockEtape = api.etape.mockResolvedValue({
       id: 'etape-id',
       titreDemarcheId: 'demarche-id',
-      date: '2020-01-01',
-      modification: true
+      date: '2020-01-01'
     })
 
     await store.dispatch('titreEtapeEdition/init', {

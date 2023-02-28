@@ -98,7 +98,6 @@ type Etape {
   "Le contenu des décisions annexes nécessaires à la demande"
   decisionsAnnexesContenu: Json
 
-  modification: Boolean
   deposable: Boolean
 }
 
