@@ -76,7 +76,7 @@ test.each<{
   titreTitulaires: { id: EntrepriseId }[]
   titresAdministrationsLocales: AdministrationId[]
   demarcheTypeId: DemarcheTypeId
-  titre: { typeId: TitreTypeId; statutId: TitreStatutId }
+  titre: { typeId: TitreTypeId; titreStatutId: TitreStatutId }
   canCreate: boolean
 }>([
   {
@@ -86,7 +86,7 @@ test.each<{
     titreTitulaires: [],
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
-    titre: { typeId: 'apc', statutId: 'dmc' },
+    titre: { typeId: 'apc', titreStatutId: 'dmc' },
     canCreate: true
   },
   {
@@ -96,7 +96,7 @@ test.each<{
     titreTitulaires: [],
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
-    titre: { typeId: 'apc', statutId: 'dmc' },
+    titre: { typeId: 'apc', titreStatutId: 'dmc' },
     canCreate: false
   },
   {
@@ -106,7 +106,7 @@ test.each<{
     titreTitulaires: [],
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
-    titre: { typeId: 'apc', statutId: 'dmc' },
+    titre: { typeId: 'apc', titreStatutId: 'dmc' },
     canCreate: false
   },
   {
@@ -116,7 +116,7 @@ test.each<{
     titreTitulaires: [],
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
-    titre: { typeId: 'apc', statutId: 'dmc' },
+    titre: { typeId: 'apc', titreStatutId: 'dmc' },
     canCreate: false
   },
   {
@@ -126,7 +126,7 @@ test.each<{
     titreTitulaires: [{ id: newEntrepriseId('1') }],
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
-    titre: { typeId: 'apc', statutId: 'dmc' },
+    titre: { typeId: 'apc', titreStatutId: 'dmc' },
     canCreate: false
   },
   {
@@ -136,7 +136,7 @@ test.each<{
     titreTitulaires: [{ id: newEntrepriseId('1') }],
     titresAdministrationsLocales: [],
     demarcheTypeId: 'oct',
-    titre: { typeId: 'arm', statutId: 'dmc' },
+    titre: { typeId: 'arm', titreStatutId: 'dmc' },
     canCreate: true
   },
   {
@@ -146,7 +146,7 @@ test.each<{
     titreTitulaires: [],
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
-    titre: { typeId: 'arm', statutId: 'dmc' },
+    titre: { typeId: 'arm', titreStatutId: 'dmc' },
     canCreate: true
   },
   {
@@ -156,7 +156,7 @@ test.each<{
     titreTitulaires: [],
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
-    titre: { typeId: 'arm', statutId: 'dmc' },
+    titre: { typeId: 'arm', titreStatutId: 'dmc' },
     canCreate: true
   },
   {
@@ -166,7 +166,7 @@ test.each<{
     titreTitulaires: [],
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
-    titre: { typeId: 'arm', statutId: 'dmc' },
+    titre: { typeId: 'arm', titreStatutId: 'dmc' },
     canCreate: false
   },
   {
@@ -176,7 +176,7 @@ test.each<{
     titreTitulaires: [],
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
-    titre: { typeId: 'arm', statutId: 'dmc' },
+    titre: { typeId: 'arm', titreStatutId: 'dmc' },
     canCreate: false
   },
   {
@@ -186,7 +186,7 @@ test.each<{
     titreTitulaires: [],
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
-    titre: { typeId: 'arm', statutId: 'dmc' },
+    titre: { typeId: 'arm', titreStatutId: 'dmc' },
     canCreate: false
   }
 ])(
@@ -210,5 +210,5 @@ test.each<{
   { administrationId: 'min-mtes-dgaln-01', titreTypeId: 'arm', canEdit: true },
   { administrationId: 'ope-onf-973-01', titreTypeId: 'arm', canEdit: true }
 ])('un utilisateur admin d’une administration peut modifier une étape mcr sur un titre: $canEdit', ({ administrationId, titreTypeId, canEdit }) => {
-  expect(canCreateOrEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', 'fai', [], [], 'oct', { typeId: titreTypeId, statutId: 'val' }, 'modification')).toBe(canEdit)
+  expect(canCreateOrEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', 'fai', [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' }, 'modification')).toBe(canEdit)
 })

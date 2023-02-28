@@ -278,7 +278,7 @@ const demarcheEtapesTypesGet = async (
       titreDemarche.typeId,
       {
         typeId: titre.typeId,
-        statutId: titre.titreStatutId ?? TitresStatutIds.Indetermine
+        titreStatutId: titre.titreStatutId ?? TitresStatutIds.Indetermine
       },
       'creation'
     )

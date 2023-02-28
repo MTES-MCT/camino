@@ -109,7 +109,7 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
         titreEtape.demarche.typeId,
         {
           typeId: titreEtape.demarche.titre.typeId,
-          statutId: titreEtape.demarche.titre.titreStatutId
+          titreStatutId: titreEtape.demarche.titre.titreStatutId
         },
         'modification'
       )

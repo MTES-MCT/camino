@@ -46,5 +46,5 @@ export const canCreateEtapeByDemarche = (
 ): boolean => {
   const etapeTypeIds = getEtapesTDE(titreTypeId, demarcheTypeId)
 
-  return etapeTypeIds.some(etapeTypeId => canCreateOrEditEtape(user, etapeTypeId, null, [], titresAdministrationsLocales, demarcheTypeId, { typeId: titreTypeId, statutId: titreStatutId }, 'creation'))
+  return etapeTypeIds.some(etapeTypeId => canCreateOrEditEtape(user, etapeTypeId, null, [], titresAdministrationsLocales, demarcheTypeId, { typeId: titreTypeId, titreStatutId }, 'creation'))
 }

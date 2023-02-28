@@ -268,7 +268,7 @@ export default {
         this.etape.titulaires,
         this.titreAdministrations,
         this.demarcheType.id,
-        { typeId: this.titreTypeId, statutId: this.titreStatutId },
+        { typeId: this.titreTypeId, titreStatutId: this.titreStatutId },
         'modification'
       )
     }

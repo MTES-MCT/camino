@@ -353,7 +353,7 @@ const etapeCreer = async (
         titreDemarche.typeId,
         {
           typeId: titreDemarche.titre.typeId,
-          statutId:
+          titreStatutId:
             titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine
         },
         'creation'
@@ -463,7 +463,7 @@ const etapeModifier = async (
         titreEtapeOld.demarche.typeId,
         {
           typeId: titreEtapeOld.demarche.titre.typeId,
-          statutId: titreEtapeOld.demarche.titre.titreStatutId
+          titreStatutId: titreEtapeOld.demarche.titre.titreStatutId
         },
         'modification'
       )
@@ -873,7 +873,7 @@ const etapeSupprimer = async (
         titreEtape.demarche.typeId,
         {
           typeId: titreEtape.demarche.titre.typeId,
-          statutId: titreEtape.demarche.titre.titreStatutId
+          titreStatutId: titreEtape.demarche.titre.titreStatutId
         },
         'modification'
       )

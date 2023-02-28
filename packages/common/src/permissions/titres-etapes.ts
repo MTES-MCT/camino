@@ -82,7 +82,7 @@ export const canCreateOrEditEtape = (
   titulaires: { id: EntrepriseId }[],
   titresAdministrationsLocales: AdministrationId[],
   demarcheTypeId: DemarcheTypeId,
-  titre: { typeId: TitreTypeId; statutId: TitreStatutId },
+  titre: { typeId: TitreTypeId; titreStatutId: TitreStatutId },
   permission: 'creation' | 'modification'
 ): boolean => {
   if (!isTDEExist(titre.typeId, demarcheTypeId, etapeTypeId)) {
@@ -93,7 +93,7 @@ export const canCreateOrEditEtape = (
     return true
   } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
     if (isGestionnaire(user.administrationId) || titresAdministrationsLocales.includes(user.administrationId)) {
-      return canAdministrationModifyEtapes(user.administrationId, titre.typeId, titre.statutId) && canAdministrationEtapeTypeId(user.administrationId, titre.typeId, etapeTypeId, permission)
+      return canAdministrationModifyEtapes(user.administrationId, titre.typeId, titre.titreStatutId) && canAdministrationEtapeTypeId(user.administrationId, titre.typeId, etapeTypeId, permission)
     }
   } else if (isEntreprise(user) || isBureauDEtudes(user)) {
     return (
