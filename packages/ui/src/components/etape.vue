@@ -20,6 +20,9 @@
       :titreTypeId="titre.typeId"
       :titreNom="titre.nom"
       :titreId="titre.id"
+      :titreStatutId="titre.titreStatutId"
+      :user="user"
+      :titreAdministrations="titre.administrations"
       :opened="opened"
     />
   </div>

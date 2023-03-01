@@ -9,7 +9,6 @@ import {
   titresQueryModify,
   titresDemarchesAdministrationsModificationQuery
 } from './titres.js'
-import { administrationsEtapesTypesPropsQuery } from './metas.js'
 import { administrationsTitresQuery } from './administrations.js'
 import { entreprisesTitresQuery } from './entreprises.js'
 import {
@@ -85,10 +84,6 @@ export const titresDemarchesQueryModify = (
     )
   )
 
-  q.select(
-    titreEtapesCreationQuery('titresDemarches', user).as('etapesCreation')
-  )
-
   q.modifyGraph('etapes', b => {
     titresEtapesQueryModify(
       b as QueryBuilder<TitresEtapes, TitresEtapes | TitresEtapes[]>,
@@ -147,22 +142,4 @@ export const titreDemarcheSuppressionSelectQuery = (
   }
 
   return raw('false')
-}
-
-const titreEtapesCreationQuery = (demarcheAlias: string, user: User) => {
-  if (isSuper(user)) {
-    return raw('true')
-  } else if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    return (
-      administrationsEtapesTypesPropsQuery(user.administrationId, 'creation')
-        // filtre selon la démarche
-        .whereRaw('?? = ??', [
-          'demarchesModification.id',
-          `${demarcheAlias}.id`
-        ])
-        .groupBy('demarchesModification.id')
-    )
-  } else {
-    return raw('false')
-  }
 }

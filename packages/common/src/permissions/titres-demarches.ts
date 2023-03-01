@@ -4,6 +4,9 @@ import { isGestionnaire } from '../static/administrationsTitresTypes.js'
 import { TitreStatutId } from '../static/titresStatuts.js'
 import { canAdministrationModifyDemarches } from '../static/administrationsTitresTypesTitresStatuts.js'
 import { AdministrationId, Administrations } from '../static/administrations.js'
+import { getEtapesTDE } from '../static/titresTypes_demarchesTypes_etapesTypes/index.js'
+import { DemarcheTypeId } from '../static/demarchesTypes.js'
+import { canCreateOrEditEtape } from './titres-etapes.js'
 
 export const canCreateDemarche = (user: User, titreTypeId: TitreTypeId, titreStatutId: TitreStatutId, administrations: AdministrationId[]): boolean => {
   if (isSuper(user)) {
@@ -32,4 +35,16 @@ export const canCreateTravaux = (user: User, titreTypeId: TitreTypeId, administr
   }
 
   return false
+}
+
+export const canCreateEtapeByDemarche = (
+  user: User,
+  titreTypeId: TitreTypeId,
+  demarcheTypeId: DemarcheTypeId,
+  titresAdministrationsLocales: AdministrationId[],
+  titreStatutId: TitreStatutId
+): boolean => {
+  const etapeTypeIds = getEtapesTDE(titreTypeId, demarcheTypeId)
+
+  return etapeTypeIds.some(etapeTypeId => canCreateOrEditEtape(user, etapeTypeId, null, [], titresAdministrationsLocales, demarcheTypeId, { typeId: titreTypeId, titreStatutId }, 'creation'))
 }

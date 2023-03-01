@@ -320,7 +320,7 @@ export const creationCheck = async (
 export const modificationCheck = async (
   administrationId: AdministrationId,
   modifier: boolean,
-  cible: string,
+  cible: 'titres' | 'demarches',
   titreTypeId: TitreTypeId,
   locale?: boolean,
   etapeTypeId?: EtapeTypeId

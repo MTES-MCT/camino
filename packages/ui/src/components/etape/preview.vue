@@ -4,7 +4,7 @@
     :opened="opened"
     class="mb-s"
     :slotDefault="hasSections || hasFondamentales || hasDocuments"
-    :slotButtons="etape.modification"
+    :slotButtons="canEdit"
     @close="close"
     @toggle="toggle"
   >
@@ -29,7 +29,7 @@
       </div>
     </template>
 
-    <template v-if="etape.modification" #buttons>
+    <template v-if="canEdit" #buttons>
       <button
         v-if="etapeIsDemandeEnConstruction"
         class="btn btn-primary flex small rnd-0"
@@ -82,7 +82,7 @@
           :boutonSuppression="false"
           :boutonModification="false"
           :documents="etape.documents"
-          :etiquette="etape.modification"
+          :etiquette="canEdit"
           :parentId="etape.id"
           :parentTypeId="etape.type.id"
           repertoire="demarches"
@@ -99,7 +99,7 @@
           :boutonModification="false"
           :boutonSuppression="false"
           :documents="etape.justificatifs"
-          :etiquette="etape.modification"
+          :etiquette="canEdit"
           :parentId="etape.id"
           :parentTypeId="etape.type.id"
           repertoire="'entreprises'"
@@ -155,6 +155,7 @@ import { Icon } from '@/components/_ui/icon'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { getTitreTypeType } from 'camino-common/src/static/titresTypes'
+import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes'
 
 export default {
   components: {
@@ -175,7 +176,10 @@ export default {
     titreTypeId: { type: String, required: true },
     titreNom: { type: String, required: true },
     titreId: { type: String, required: true },
-    opened: { type: Boolean, default: false }
+    opened: { type: Boolean, default: false },
+    titreStatutId: { type: String, required: true },
+    titreAdministrations: { type: Array, required: true },
+    user: { type: Object, required: true }
   },
 
   emits: ['close', 'toggle'],
@@ -255,6 +259,18 @@ export default {
       }
 
       return null
+    },
+    canEdit() {
+      return canCreateOrEditEtape(
+        this.user,
+        this.etape.type.id,
+        this.etape.statutId,
+        this.etape.titulaires,
+        this.titreAdministrations,
+        this.demarcheType.id,
+        { typeId: this.titreTypeId, titreStatutId: this.titreStatutId },
+        'modification'
+      )
     }
   },
 

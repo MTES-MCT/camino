@@ -21,7 +21,10 @@
       :titreTypeId="titre.typeId"
       :titreNom="titre.nom"
       :titreId="titre.id"
+      :titreStatutId="titre.titreStatutId"
+      :titreAdministrations="titre.administrations"
       :tabId="tabId"
+      :user="user"
       @event-track="eventTrack"
     />
     <DemarcheEditPopup

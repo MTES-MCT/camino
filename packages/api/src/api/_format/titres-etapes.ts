@@ -49,6 +49,7 @@ export const titreEtapeFormat = (
     }
   }
 
+  // TODO 2023-02-28 TDE il faut enlever heritageProps et heritageContenu de graphql
   if (!titreEtape.modification) {
     delete titreEtape.heritageProps
     delete titreEtape.heritageContenu

@@ -110,7 +110,6 @@ fragment etape on Etape {
   documents {
     ...document
   }
-  modification
 }
 
 fragment entreprise on Entreprise {

@@ -218,8 +218,6 @@ const etapeSaveFormat = etape => {
     }
   })
 
-  delete etape.modification
-
   delete etape.demarche
 
   etape.substances = etape.substances?.filter(substanceId => !!substanceId)

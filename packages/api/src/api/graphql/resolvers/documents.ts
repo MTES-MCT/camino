@@ -30,6 +30,7 @@ import { userSuper } from '../../../database/user-super.js'
 import { documentFilePathFind } from '../../../tools/documents/document-path-find.js'
 import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
 import { canEditEntreprise } from 'camino-common/src/permissions/entreprises.js'
+import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 
 const errorEtapesAssocieesUpdate = (
   etapesAssociees: ITitreEtape[],
@@ -75,13 +76,46 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
   if (document.titreEtapeId) {
     const titreEtape = await titreEtapeGet(
       document.titreEtapeId,
-      { fields: {} },
+      {
+        fields: {
+          titulaires: { id: {} },
+          demarche: { titre: { pointsEtape: { id: {} } } }
+        }
+      },
       user
     )
 
     if (!titreEtape) throw new Error("l’étape n'existe pas")
 
-    if (!titreEtape.modification) throw new Error('droits insuffisants')
+    if (!titreEtape.titulaires) {
+      throw new Error('Les titulaires de l’étape ne sont pas chargés')
+    }
+    if (
+      !titreEtape.demarche ||
+      !titreEtape.demarche.titre ||
+      !titreEtape.demarche.titre.administrationsLocales ||
+      !titreEtape.demarche.titre.titreStatutId
+    ) {
+      throw new Error('la démarche n’est pas chargée complètement')
+    }
+
+    if (
+      !canCreateOrEditEtape(
+        user,
+        titreEtape.typeId,
+        titreEtape.statutId,
+        titreEtape.titulaires,
+        titreEtape.demarche.titre.administrationsLocales,
+        titreEtape.demarche.typeId,
+        {
+          typeId: titreEtape.demarche.titre.typeId,
+          titreStatutId: titreEtape.demarche.titre.titreStatutId
+        },
+        'modification'
+      )
+    ) {
+      throw new Error('droits insuffisants')
+    }
   } else if (document.entrepriseId) {
     const entreprise = await entrepriseGet(
       document.entrepriseId,
