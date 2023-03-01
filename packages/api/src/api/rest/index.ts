@@ -33,6 +33,10 @@ import { matomo } from '../../tools/matomo.js'
 import { stringSplit } from '../../database/queries/_utils.js'
 import { isRole, User } from 'camino-common/src/roles.js'
 import { utilisateursFormatTable } from './format/utilisateurs.js'
+import { isDepartementId } from 'camino-common/src/static/departement.js'
+import { isRegionId } from 'camino-common/src/static/region.js'
+import { isPaysId } from 'camino-common/src/static/pays.js'
+import { isFacade } from 'camino-common/src/static/facades.js'
 
 const formatCheck = (formats: string[], format: string) => {
   if (!formats.includes(format)) {
@@ -105,6 +109,11 @@ interface ITitresQueryInput {
   entreprisesIds?: string | null
   references?: string | null
   territoires?: string | null
+  communes?: string | null
+  departements?: string | null
+  regions?: string | null
+  pays?: string | null
+  facadesMaritimes?: string | null
   perimetre?: number[] | null
 }
 
@@ -122,6 +131,11 @@ export const titres = async (
       entreprisesIds,
       references,
       territoires,
+      communes,
+      departements,
+      regions,
+      pays,
+      facadesMaritimes,
       perimetre
     }
   }: { query: ITitresQueryInput },
@@ -141,6 +155,11 @@ export const titres = async (
       substancesIds: substancesIds ? stringSplit(substancesIds) : null,
       references,
       territoires,
+      communes,
+      departements: departements?.split(',').filter(isDepartementId),
+      regions: regions?.split(',').filter(isRegionId),
+      pays: pays?.split(',').filter(isPaysId),
+      facadesMaritimes: facadesMaritimes?.split(',').filter(isFacade),
       perimetre,
       demandeEnCours: true
     },
