@@ -49,6 +49,7 @@ const StatistiquesMinerauxMetauxMetropole = async () => {
   return MinerauxMetauxMetropole
 }
 const Journaux = () => import('../components/journaux.vue')
+const About = () => import('../components/content/about.vue')
 
 const routes: RouteRecordRaw[] = [
   {
@@ -214,6 +215,11 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/stats',
     redirect: 'statistiques'
+  },
+  {
+    path: '/a-propos',
+    name: 'a-propos',
+    component: About
   },
   {
     name: 'homepage',
