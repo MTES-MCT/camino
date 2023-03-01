@@ -12,16 +12,6 @@ import {
 const titresMetas = apiGraphQLFetch(
   gql`
     query TitresMetas {
-      types {
-        ...titreTypeType
-      }
-
-      statuts {
-        id
-        nom
-        couleur
-      }
-
       entreprises {
         elements {
           id
@@ -29,8 +19,6 @@ const titresMetas = apiGraphQLFetch(
         }
       }
     }
-
-    ${fragmentTitreTypeType}
   `
 )
 

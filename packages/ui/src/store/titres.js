@@ -8,10 +8,7 @@ const getDefaultState = () => {
     elements: [],
     total: 0,
     vueId: 'carte',
-    metas: {
-      types: [],
-      statuts: []
-    },
+    metas: {},
     definitions: [
       { id: 'typesIds', type: 'strings', values: [] },
       { id: 'domainesIds', type: 'strings', values: [] },
@@ -266,24 +263,9 @@ const mutations = Object.assign(
   listeMutationsWithDefaultState(getDefaultState),
   {
     metasSet(state, data) {
-      Object.keys(data).forEach(id => {
-        let paramId
-        if (id === 'types') {
-          paramId = 'typesIds'
-        } else if (id === 'statuts') {
-          paramId = 'statutsIds'
-        } else if (id === 'entreprises') {
-          paramId = 'entreprisesIds'
-          data[id] = data[id].elements
-        }
-
-        if (paramId) {
-          state.metas[id] = data[id]
-          const definition = state.definitions.find(p => p.id === paramId)
-
-          definition.values = data[id].map(e => e.id)
-        }
-      })
+      state.metas.entreprises = data.elements
+      const definition = state.definitions.find(p => p.id === 'entreprisesIds')
+      definition.values = data.elements.map(e => e.id)
     },
 
     vueSet(state, vueId) {

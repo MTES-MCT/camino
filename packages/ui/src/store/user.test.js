@@ -5,11 +5,10 @@ import { fetchWithJson } from '../api/client-rest'
 import user from './user'
 
 import { vi, describe, test, beforeEach, expect } from 'vitest'
-import { testBlankUser, TestUser } from 'camino-common/src/tests-utils'
+import { testBlankUser } from 'camino-common/src/tests-utils'
 
 vi.mock('../api/utilisateurs', () => ({
-  utilisateurCreer: vi.fn(),
-  userMetas: vi.fn()
+  utilisateurCreer: vi.fn()
 }))
 
 vi.mock('../api/client-rest', () => ({
@@ -42,7 +41,6 @@ describe("état de l'utilisateur connecté", () => {
 
     user.state = {
       element: null,
-      metas: {},
       preferences: {
         carte: {}
       }
@@ -73,28 +71,6 @@ describe("état de l'utilisateur connecté", () => {
 
     const app = createApp({})
     app.use(store)
-  })
-
-  test("initialise les métas de l'utilisateur connecté", async () => {
-    const apiMock = api.userMetas.mockResolvedValue([])
-
-    await store.dispatch('user/init')
-
-    expect(apiMock).toHaveBeenCalled()
-    expect(store.state.user.metas).toEqual({ entreprisesTitresCreation: [] })
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-  })
-
-  test("retourne une erreur si l'api ne répond pas", async () => {
-    const apiMock = api.userMetas.mockRejectedValue(
-      new Error("erreur de l'api")
-    )
-
-    await store.dispatch('user/init')
-
-    expect(apiMock).toHaveBeenCalled()
-    expect(mutations.loadingRemove).toHaveBeenCalled()
-    expect(actions.apiError).toHaveBeenCalled()
   })
 
   test("identifie l'utilisateur si un token valide est présent", async () => {

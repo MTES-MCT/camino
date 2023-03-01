@@ -4,7 +4,7 @@ import { apiGraphQLFetch } from './_client'
 import { fragmentEntreprises } from './fragments/entreprises'
 import { fragmentEntreprise } from './fragments/entreprise'
 
-const entreprise = apiGraphQLFetch(
+export const entreprise = apiGraphQLFetch(
   gql`
     query Entreprise($id: ID!) {
       entreprise(id: $id) {
@@ -16,7 +16,7 @@ const entreprise = apiGraphQLFetch(
   `
 )
 
-const entreprises = apiGraphQLFetch(gql`
+export const entreprises = apiGraphQLFetch(gql`
   query Entreprises(
     $intervalle: Int
     $page: Int
@@ -43,7 +43,7 @@ const entreprises = apiGraphQLFetch(gql`
   ${fragmentEntreprises}
 `)
 
-const entrepriseCreer = apiGraphQLFetch(gql`
+export const entrepriseCreer = apiGraphQLFetch(gql`
   mutation EntrepriseCreer($entreprise: InputEntrepriseCreation!) {
     entrepriseCreer(entreprise: $entreprise) {
       ...entreprise
@@ -53,7 +53,7 @@ const entrepriseCreer = apiGraphQLFetch(gql`
   ${fragmentEntreprise}
 `)
 
-const entrepriseModifier = apiGraphQLFetch(gql`
+export const entrepriseModifier = apiGraphQLFetch(gql`
   mutation EntrepriseModifier($entreprise: InputEntrepriseModification!) {
     entrepriseModifier(entreprise: $entreprise) {
       ...entreprise
@@ -63,4 +63,13 @@ const entrepriseModifier = apiGraphQLFetch(gql`
   ${fragmentEntreprise}
 `)
 
-export { entreprise, entreprises, entrepriseCreer, entrepriseModifier }
+export const entreprisesTitresCreation = apiGraphQLFetch(
+  gql`
+    query EntreprisesTitresCreation {
+      entreprisesTitresCreation {
+        nom
+        id
+      }
+    }
+  `
+)
