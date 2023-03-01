@@ -64,7 +64,6 @@ const fragmentTitre = gql`
     secteursMaritime
 
     modification
-    suppression
     doublonTitre {
       id
       nom

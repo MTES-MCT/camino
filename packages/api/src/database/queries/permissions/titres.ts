@@ -199,8 +199,6 @@ const titresQueryModify = (
 
   q.select(titresModificationSelectQuery(q, user).as('modification'))
 
-  q.select(raw(`${isSuper(user)}`).as('suppression'))
-
   if (user) {
     q.select(
       UtilisateursTitres.query()

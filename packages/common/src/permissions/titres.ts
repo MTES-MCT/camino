@@ -52,3 +52,5 @@ export const canCreateTitre = (user: User, titreTypeId: TitreTypeId | undefined)
 
   return false
 }
+
+export const canDeleteTitre = (user: User): boolean => isSuper(user)

@@ -27,8 +27,8 @@
               class="btn-border small px-m py-s lh-2"
               :class="{
                 'rnd-l-xs': !user,
-                'rnd-r-xs': !titre.suppression || !titre.modification,
-                'mr-px': titre.suppression || titre.modification
+                'rnd-r-xs': !suppression || !titre.modification,
+                'mr-px': suppression || titre.modification
               }"
               @click="emailSend"
             >
@@ -37,13 +37,13 @@
             <button
               v-if="titre.modification"
               class="btn py-s px-m mr-px"
-              :class="{ 'rnd-r-xs': !titre.suppression }"
+              :class="{ 'rnd-r-xs': !suppression }"
               @click="editPopupOpen"
             >
               <Icon size="M" name="pencil" />
             </button>
             <button
-              v-if="titre.suppression"
+              v-if="suppression"
               class="btn rnd-r-xs py-s px-m"
               @click="removePopupOpen"
             >
@@ -62,6 +62,7 @@
 import EditPopup from './edit-popup.vue'
 import RemovePopup from './remove-popup.vue'
 import { Icon } from '@/components/_ui/icon'
+import { canDeleteTitre } from 'camino-common/src/permissions/titres'
 
 export default {
   components: { Icon },
@@ -77,6 +78,9 @@ export default {
   computed: {
     user() {
       return this.$store.state.user.element
+    },
+    suppression() {
+      return canDeleteTitre(this.user)
     }
   },
   methods: {
