@@ -52,7 +52,8 @@ Promise.resolve().then(async (): Promise<void> => {
             tracingOrigins: ['localhost', configFromJson.uiHost, /^\//]
           })
         ],
-        release: `camino-ui-${caminoApplicationVersion}`
+        release: `camino-ui-${caminoApplicationVersion}`,
+        logErrors: true
       })
     } catch (e) {
       console.error('erreur : Sentry :', e)
