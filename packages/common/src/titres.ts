@@ -5,6 +5,8 @@ import { CaminoDate, dateFormat } from './date.js'
 import { TitreTypeId } from './static/titresTypes.js'
 import { numberFormat } from './number.js'
 import { CheckboxesElement, DateElement, FileElement, NumberElement, RadioElement, SelectElement, TextElement } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { UniteId, Unites } from './static/unites.js'
+import { DeviseId, Devises } from './static/devise.js'
 
 export interface CommonTitre {
   id: string
@@ -78,11 +80,19 @@ type CheckboxesElementWithValue = {
 } & BasicElement &
   CheckboxesElement
 
-type SelectElementWithValue = {
-  options: { id: string; nom: string }[]
-  value: string | undefined
-} & BasicElement &
-  SelectElement
+type SelectElementWithValue = BasicElement &
+  SelectElement &
+  (
+    | { options: { id: string; nom: string }[]; value: string | undefined }
+    | {
+        valeursMetasNom: 'unites'
+        value: UniteId | undefined
+      }
+    | {
+        valeursMetasNom: 'devises'
+        value: DeviseId | undefined
+      }
+  )
 
 export type ElementWithValue = FileElementWithValue | DateElementWithValue | TextElementWithValue | NumberElementWithValue | RadioElementWithValue | CheckboxesElementWithValue | SelectElementWithValue
 
@@ -108,6 +118,10 @@ export const isCheckboxesElement = (element: ElementWithValue): element is Check
 
 export const isSelectElement = (element: ElementWithValue): element is SelectElementWithValue => {
   return element.type === 'select'
+}
+
+const isSelectOptionsElement = (element: SelectElementWithValue): element is SelectElementWithValue & { options: { id: string; nom: string }[] } => {
+  return Object.keys(element).includes('options')
 }
 
 export interface Section {
@@ -137,7 +151,18 @@ export const valeurFind = (element: ElementWithValue): string => {
   }
 
   if (isSelectElement(element)) {
-    return element.options.find(v => v.id === element.value)?.nom ?? '–'
+    if (isSelectOptionsElement(element)) {
+      return element.options.find(v => v.id === element.value)?.nom ?? '–'
+    } else {
+      switch (element.valeursMetasNom) {
+        case 'devises':
+          return element.value ? Devises[element.value].nom : ''
+        case 'unites':
+          return element.value ? Unites[element.value].nom : ''
+        default:
+          return ''
+      }
+    }
   }
 
   if (isDateElement(element)) {
