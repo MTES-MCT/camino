@@ -7,10 +7,18 @@ import TitresDemarches from '../models/titres-demarches.js'
 import TitresActivites from '../models/titres-activites.js'
 import {
   DepartementId,
-  departements
+  departements as departementsStatic
 } from 'camino-common/src/static/departement.js'
-import { regions } from 'camino-common/src/static/region.js'
-import { isPaysId } from 'camino-common/src/static/pays.js'
+import {
+  RegionId,
+  regions as regionsStatic
+} from 'camino-common/src/static/region.js'
+import { isPaysId, PaysId } from 'camino-common/src/static/pays.js'
+import {
+  FacadesMaritimes,
+  getSecteurs
+} from 'camino-common/src/static/facades.js'
+import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 
 type ITitreTableName = 'titres' | 'titre'
 type ITitreRootName = 'titres' | 'titresDemarches' | 'titresActivites'
@@ -37,7 +45,12 @@ export const titresFiltersQueryModify = (
     noms,
     entreprises,
     references,
-    territoires
+    territoires,
+    communes,
+    departements,
+    regions,
+    pays,
+    facadesMaritimes
   }: {
     ids?: string[] | null
     perimetre?: number[] | null
@@ -50,6 +63,11 @@ export const titresFiltersQueryModify = (
     entreprises?: string | null
     references?: string | null
     territoires?: string | null
+    communes?: string | null
+    departements?: DepartementId[] | null
+    regions?: RegionId[] | null
+    pays?: PaysId[] | null
+    facadesMaritimes?: FacadesMaritimes[] | null
   } = {},
   q:
     | QueryBuilder<Titres, Titres[]>
@@ -206,6 +224,7 @@ export const titresFiltersQueryModify = (
     q.groupBy(`${root}.id`)
   }
 
+  // TODO 2023-03-01: demander à didier leclerc de mettre à jour le plugin camino qgis pour utiliser le split communes/regions/departements...
   if (territoires) {
     const territoiresArray = stringSplit(territoires)
 
@@ -214,29 +233,29 @@ export const titresFiltersQueryModify = (
         const result: DepartementId[] = []
         if (isPaysId(territoire)) {
           result.push(
-            ...regions
+            ...regionsStatic
               .filter(({ paysId }) => paysId === territoire)
               .flatMap(({ id }) =>
-                departements
+                departementsStatic
                   .filter(({ regionId }) => id === regionId)
                   .map(({ id }) => id)
               )
           )
         } else {
           result.push(
-            ...regions
+            ...regionsStatic
               .filter(({ nom }) =>
                 nom.toLowerCase().includes(territoire.toLowerCase())
               )
               .flatMap(({ id }) =>
-                departements
+                departementsStatic
                   .filter(({ regionId }) => id === regionId)
                   .map(({ id }) => id)
               )
           )
 
           result.push(
-            ...departements
+            ...departementsStatic
               .filter(
                 ({ nom, id }) =>
                   nom.toLowerCase().includes(territoire.toLowerCase()) ||
@@ -262,5 +281,67 @@ export const titresFiltersQueryModify = (
         b.orWhereIn(fieldFormat(name, 'communes.departementId'), departementIds)
       })
       .groupBy(`${root}.id`)
+  }
+
+  if (communes) {
+    const communesArray = stringSplit(communes)
+    q.leftJoinRelated(`${jointureFormat(name, 'communes')} as communesFilter`)
+      .where(b => {
+        communesArray.forEach(t => {
+          b.orWhereRaw(`lower(??) like ?`, [
+            fieldFormat(name, 'communesFilter.nom'),
+            `%${t.toLowerCase()}%`
+          ])
+          b.orWhereRaw(`?? = ?`, [fieldFormat(name, 'communesFilter.id'), t])
+        })
+      })
+      .groupBy(`${root}.id`)
+  }
+  const departementIds: DepartementId[] = []
+  if (departements) {
+    departementIds.push(...departements)
+  }
+
+  if (regions) {
+    departementIds.push(
+      ...departementsStatic
+        .filter(({ regionId }) => regions.includes(regionId))
+        .map(({ id }) => id)
+    )
+  }
+
+  if (pays) {
+    departementIds.push(
+      ...regionsStatic
+        .filter(({ paysId }) => pays.includes(paysId))
+        .flatMap(({ id }) =>
+          departementsStatic
+            .filter(({ regionId }) => id === regionId)
+            .map(({ id }) => id)
+        )
+    )
+  }
+
+  if (departementIds.length > 0) {
+    q.leftJoinRelated(
+      `${jointureFormat(name, 'communes')} as departementsFilter`
+    )
+      .whereIn(
+        fieldFormat(name, 'departementsFilter.departementId'),
+        departementIds.filter(onlyUnique)
+      )
+      .groupBy(`${root}.id`)
+  }
+
+  if (facadesMaritimes && facadesMaritimes.length > 0) {
+    const secteurs = facadesMaritimes.flatMap(facade => getSecteurs(facade))
+    if (name === 'titre') {
+      q.leftJoinRelated('titre')
+    }
+    q.leftJoinRelated(jointureFormat(name, 'pointsEtape'))
+    q.whereRaw(
+      `?? ?| array[${secteurs.map(secteur => `'${secteur}'`).join(',')}]`,
+      fieldFormat(name, 'pointsEtape.secteursMaritime')
+    )
   }
 }

@@ -55,6 +55,11 @@ type Query {
     entreprises: String
     references: String
     territoires: String
+    communes: String
+    departements: [String]
+    regions: [String]
+    pays: [String]
+    facadesMaritimes: [String]
     demandeEnCours: Boolean
   ): Titres
 
