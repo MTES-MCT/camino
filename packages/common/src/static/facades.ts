@@ -73,7 +73,7 @@ const facades = {
     'Plaine orientale et large Est de la Corse': { ids: [34], secteurId: '30', departementIds: [] }
   }
 }
-const FACADES = Object.keys(facades) as FacadesMaritimes[]
+export const FACADES = Object.keys(facades) as FacadesMaritimes[]
 const SECTEURS = Object.values(facades).flatMap(f => Object.keys(f)) as SecteursMaritimes[]
 
 export type FacadesMaritimes = keyof typeof facades

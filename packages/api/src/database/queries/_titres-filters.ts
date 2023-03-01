@@ -340,7 +340,9 @@ export const titresFiltersQueryModify = (
     }
     q.leftJoinRelated(jointureFormat(name, 'pointsEtape'))
     q.whereRaw(
-      `?? ?| array[${secteurs.map(secteur => `'${secteur}'`).join(',')}]`,
+      `?? \\?| array[${secteurs
+        .map(secteur => `E'${secteur.replaceAll("'", "\\'")}'`)
+        .join(',')}]`,
       fieldFormat(name, 'pointsEtape.secteursMaritime')
     )
   }

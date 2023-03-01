@@ -4,6 +4,10 @@ import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
 import { sortedDomaines } from 'camino-common/src/static/domaines'
 import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { sortedTitreTypesTypes } from 'camino-common/src/static/titresTypesTypes'
+import { departements } from 'camino-common/src/static/departement'
+import { regions } from 'camino-common/src/static/region'
+import { pays } from 'camino-common/src/static/pays'
+import { FACADES } from 'camino-common/src/static/facades'
 
 const filtres = [
   {
@@ -38,11 +42,40 @@ const filtres = [
     placeholder: 'Référence DGEC, DEAL, DEB, BRGM, Ifremer, …'
   },
   {
-    id: 'territoires',
+    id: 'communes',
     type: 'input',
     value: '',
-    name: 'Territoires',
-    placeholder: 'Commune, département, région, …'
+    name: 'Communes',
+    placeholder: 'Communes'
+  },
+  {
+    id: 'departements',
+    name: 'Départements',
+    type: 'autocomplete',
+    value: [],
+    elements: departements
+  },
+  {
+    id: 'regions',
+    name: 'Régions',
+    type: 'autocomplete',
+    value: [],
+    elements: regions
+  },
+  {
+    id: 'pays',
+    name: 'Pays',
+    type: 'autocomplete',
+    value: [],
+    elements: pays
+  },
+
+  {
+    id: 'facadesMaritimes',
+    name: 'Façades Maritimes',
+    type: 'autocomplete',
+    value: [],
+    elements: FACADES.map(facade => ({ id: facade, nom: facade }))
   },
   {
     id: 'domainesIds',
