@@ -164,6 +164,8 @@ const DisplayColumn = (props: {
     }
   }
   return (
-    <span class={(props.data.class ?? []).join(' ') ?? ''}>{props.data.value}</span>
+    <span class={(props.data.class ?? []).join(' ') ?? ''}>
+      {props.data.value}
+    </span>
   )
 }

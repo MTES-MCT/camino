@@ -1,5 +1,5 @@
 import Error from './error.vue'
-import { apiClient , ApiClient, Utilisateur } from '@/api/api-client'
+import { apiClient, ApiClient, Utilisateur } from '@/api/api-client'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 

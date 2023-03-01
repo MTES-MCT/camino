@@ -8,7 +8,7 @@ import { User } from 'camino-common/src/roles'
 import Filtres from './titres/filtres.vue'
 import { Downloads } from './_common/downloads'
 import { CaminoTitresMap } from './titres/map'
-import {TablePagination} from './titres/table-pagination'
+import { TablePagination } from './titres/table-pagination'
 
 function DemandeTitreButton(user: User, router: Router) {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {

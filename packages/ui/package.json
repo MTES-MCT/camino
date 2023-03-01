@@ -9,7 +9,7 @@
     "dev:update": "npm-check-updates && npm install && npm audit fix",
     "start": "node ./index.js",
     "test": "vitest --environment jsdom --root src/",
-    "lint": "prettier --write src && eslint --fix --ext .js,.ts,.vue src",
+    "lint": "prettier --write src && eslint --fix --ext .js,.ts,.tsx,.vue src",
     "lint:check": "prettier --check src && eslint src",
     "storybook": "start-storybook -p 6006",
     "storybook:build": "build-storybook",

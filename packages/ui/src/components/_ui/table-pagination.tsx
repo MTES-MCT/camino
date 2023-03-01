@@ -1,8 +1,7 @@
-import { computed, defineComponent } from "vue";
-import {Column, Table, TableRow, TableSortEvent} from './newTable'
+import { computed, defineComponent } from 'vue'
+import { Column, Table, TableRow, TableSortEvent } from './newTable'
 import { Pagination } from './pagination'
 import { Ranges } from './ranges'
-
 
 export interface Params {
   page?: number
@@ -14,15 +13,25 @@ interface Props {
   total: number
   range?: number
   page?: number
-  column?: string,
-  order?: 'asc' | 'desc',
+  column?: string
+  order?: 'asc' | 'desc'
   pagination?: boolean
   paramsUpdate: (params: Params | TableSortEvent) => void
 }
 
 // FIXME TEST
 export const TablePagination = defineComponent<Props>({
-  props: ['columns', 'rows', 'total', 'range', 'page', 'column', 'order', 'pagination', 'paramsUpdate'] as unknown as undefined, 
+  props: [
+    'columns',
+    'rows',
+    'total',
+    'range',
+    'page',
+    'column',
+    'order',
+    'pagination',
+    'paramsUpdate'
+  ] as unknown as undefined,
   setup(props) {
     const update = (params: Params | TableSortEvent) => {
       if (!Object.keys(params).includes('page') && pagination.value) {
@@ -61,35 +70,37 @@ export const TablePagination = defineComponent<Props>({
     })
     return () => (
       <div>
-    <Table
-      column={column.value}
-      columns={props.columns}
-      order={order.value}
-      rows={props.rows}
-      class="width-full-p"
-      update={update}
-    />
-
-{pagination.value ? (<div class="desktop-blobs">
-      <div class="desktop-blob-3-4">
-        <Pagination
-          active={page.value}
-          total={pages.value}
-          visibles={5}
-          pageChange={pageUpdate}
+        <Table
+          column={column.value}
+          columns={props.columns}
+          order={order.value}
+          rows={props.rows}
+          class="width-full-p"
+          update={update}
         />
+
+        {pagination.value ? (
+          <div class="desktop-blobs">
+            <div class="desktop-blob-3-4">
+              <Pagination
+                active={page.value}
+                total={pages.value}
+                visibles={5}
+                pageChange={pageUpdate}
+              />
+            </div>
+            <div class="desktop-blob-1-4">
+              {props.total > 10 ? (
+                <Ranges
+                  ranges={[10, 50, 200, 500]}
+                  range={range.value}
+                  rangeUpdate={rangeUpdate}
+                />
+              ) : null}
+            </div>
+          </div>
+        ) : null}
       </div>
-      <div class="desktop-blob-1-4">
-        { props.total > 10 ? (<Ranges
-          ranges={[10, 50, 200, 500]}
-          range={range.value}
-          rangeUpdate={rangeUpdate}
-        />) : null}
-        
-      </div>
-    </div>) : null}
-    
-  </div>
     )
   }
 })
