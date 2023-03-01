@@ -35,7 +35,7 @@
 
     <div class="line-neutral width-full" />
 
-    <UiTable
+    <TablePagination
       :columns="colonnes"
       :rows="lignes"
       :column="params.table.colonne"
@@ -44,19 +44,19 @@
       :page="params.table.page"
       :pagination="pagination"
       :total="total"
-      @params-update="paramsTableUpdate"
+      :paramsUpdate="paramsTableUpdate"
     />
   </div>
 </template>
 
 <script>
-import UiTable from '../_ui/table-pagination.vue'
+import { TablePagination } from '../_ui/table-pagination'
 import Filtres from './filtres.vue'
 
 export default {
   name: 'Liste',
 
-  components: { Filtres, UiTable },
+  components: { Filtres, TablePagination },
 
   props: {
     nom: { type: String, required: true },

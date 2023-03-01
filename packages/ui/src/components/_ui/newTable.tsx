@@ -135,7 +135,7 @@ export const Table = defineComponent<Props>({
               >
                 {props.columns.map(col => (
                   <div key={col.id} class={`td ${(col.class ?? []).join(' ')}`}>
-                    <displayColumn data={row.columns[col.id]} />
+                    <DisplayColumn data={row.columns[col.id]} />
                   </div>
                 ))}
               </router-link>
@@ -147,7 +147,7 @@ export const Table = defineComponent<Props>({
   }
 })
 
-const displayColumn = (props: {
+const DisplayColumn = (props: {
   data: ComponentColumnData | TextColumnData
 }): JSX.Element => {
   if (isComponentColumnData(props.data)) {
@@ -164,6 +164,6 @@ const displayColumn = (props: {
     }
   }
   return (
-    <span class={props.data.class?.join(' ') ?? ''}>{props.data.value}</span>
+    <span class={(props.data.class ?? []).join(' ') ?? ''}>{props.data.value}</span>
   )
 }

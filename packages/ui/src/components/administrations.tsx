@@ -1,30 +1,15 @@
-<template>
-  <Liste
-    nom="administrations"
-    :filtres="filtres"
-    :colonnes="colonnes"
-    :lignes="lignes"
-    :elements="lignes"
-    :params="params"
-    :metas="metas"
-    :total="administrations.length"
-    :initialized="true"
-    @params-update="paramsUpdate"
-  >
-  </Liste>
-</template>
-
-<script setup lang="ts">
+import { defineComponent } from "vue";
 import Liste from './_common/liste.vue'
 import {
   ADMINISTRATION_TYPES,
-  Administrations,
+  Administrations as Adms,
   AdministrationTypeId,
   sortedAdministrationTypes
 } from 'camino-common/src/static/administrations'
 import { elementsFormat } from '@/utils'
 import { computed, ref, markRaw } from 'vue'
 import { Tag } from '@/components/_ui/tag'
+import { ComponentColumnData, TableRow, TextColumnData } from "./_ui/newTable";
 
 const colonnes = [
   {
@@ -58,9 +43,33 @@ const filtres = [
   }
 ]
 type ColonneId = (typeof colonnes)[number]['id']
+
+
+
+type ParamsFiltre = {
+  section: 'filtres'
+  params: { noms: string; typesIds: AdministrationTypeId[] }
+}
+type ParamsTable = {
+  section: 'table'
+  params: { colonne: ColonneId; ordre: 'asc' | 'desc' }
+}
+
+const isParamsFiltre = (
+  options: ParamsFiltre | ParamsTable
+): options is ParamsFiltre => options.section === 'filtres'
+
+
+
 const metas = {
   types: sortedAdministrationTypes
 }
+
+const administrations = Object.values(Adms)
+
+export const Administrations = defineComponent({
+  setup() {
+
 
 const params = ref<{
   table: { page: 0; colonne: ColonneId; ordre: 'asc' | 'desc' }
@@ -79,9 +88,7 @@ const listState = ref<{ noms: string; typesIds: AdministrationTypeId[] }>({
   typesIds: []
 })
 
-const administrations = Object.values(Administrations)
-
-const lignes = computed(() => {
+const lignes = computed<TableRow[]>(() => {
   return [...administrations]
     .filter(a => {
       if (listState.value.noms.length) {
@@ -121,13 +128,14 @@ const lignes = computed(() => {
     .map(administration => {
       const type = ADMINISTRATION_TYPES[administration.typeId]
 
-      const columns = {
+      const columns:Record<string, ComponentColumnData | TextColumnData> = {
         abreviation: { value: administration.abreviation },
-        nom: { value: administration.nom, class: 'h6' },
+        nom: { value: administration.nom, class: ['h6'] },
         type: {
           component: markRaw(Tag),
           props: { mini: true, text: type.nom },
-          class: 'mb--xs'
+          class: 'mb--xs',
+          value: 'unused'
         }
       }
 
@@ -138,20 +146,6 @@ const lignes = computed(() => {
       }
     })
 })
-
-type ParamsFiltre = {
-  section: 'filtres'
-  params: { noms: string; typesIds: AdministrationTypeId[] }
-}
-type ParamsTable = {
-  section: 'table'
-  params: { colonne: ColonneId; ordre: 'asc' | 'desc' }
-}
-
-const isParamsFiltre = (
-  options: ParamsFiltre | ParamsTable
-): options is ParamsFiltre => options.section === 'filtres'
-
 const paramsUpdate = (options: ParamsFiltre | ParamsTable) => {
   if (isParamsFiltre(options)) {
     listState.value.noms = options.params.noms.toLowerCase()
@@ -161,4 +155,17 @@ const paramsUpdate = (options: ParamsFiltre | ParamsTable) => {
     params.value.table.colonne = options.params.colonne
   }
 }
-</script>
+    return () => (<Liste
+      nom="administrations"
+      filtres={filtres}
+      colonnes={colonnes}
+      lignes={lignes.value}
+      elements={lignes.value}
+      params={params.value}
+      metas={metas}
+      total={administrations.length}
+      initialized={true}
+      onParamsUpdate={paramsUpdate}
+    />)
+  }
+})
