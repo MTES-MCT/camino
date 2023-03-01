@@ -26,7 +26,7 @@ services:
       - ./.env:/.env
   db:
     container_name: camino_api_db
-    image: postgis/postgis:12-3.2
+    image: postgis/postgis:12-3.3
     environment:
       PGUSER: ${PGUSER}
       POSTGRES_USER: ${PGUSER}
