@@ -16,7 +16,10 @@ import {
 } from '../../../database/queries/titres.js'
 
 import titreUpdateTask from '../../../business/titre-update.js'
-import { assertsCanCreateTitre } from 'camino-common/src/permissions/titres.js'
+import {
+  assertsCanCreateTitre,
+  canDeleteTitre
+} from 'camino-common/src/permissions/titres.js'
 
 const titre = async (
   { id }: { id: string },
@@ -213,7 +216,7 @@ const titreSupprimer = async ({ id }: { id: string }, { user }: Context) => {
 
   if (!titreOld) throw new Error("le titre n'existe pas")
 
-  if (!titreOld.suppression) throw new Error('droits insuffisants')
+  if (!canDeleteTitre(user)) throw new Error('droits insuffisants')
 
   await titreArchive(id)
 

@@ -1,9 +1,10 @@
-import { assertsCanCreateTitre, canCreateTitre, canLinkTitres, getLinkConfig } from './titres.js'
+import { assertsCanCreateTitre, canCreateTitre, canDeleteTitre, canLinkTitres, getLinkConfig } from './titres.js'
 import { TitresTypesIds, TitreTypeId } from '../static/titresTypes.js'
 import { ADMINISTRATION_IDS, AdministrationId } from '../static/administrations.js'
 import { test, expect } from 'vitest'
 import { testBlankUser, TestUser } from '../tests-utils.js'
 import { User } from '../roles.js'
+import { newEntrepriseId } from '../entreprise.js'
 
 test('getTitreFromTypeId pas de fusions', () => {
   const titreFromTypeId = TitresTypesIds.reduce<{
@@ -80,4 +81,14 @@ test('vérifie si un utilisateur administrateur admin peut créer des titres', (
   })
 
   expect(result).toMatchSnapshot()
+})
+
+test('canDeleteTitre', () => {
+  expect(canDeleteTitre({ role: 'super', ...testBlankUser })).toEqual(true)
+  expect(canDeleteTitre({ role: 'admin', administrationId: 'min-mtes-dgaln-01', ...testBlankUser })).toEqual(false)
+  expect(canDeleteTitre({ role: 'editeur', administrationId: 'min-mtes-dgaln-01', ...testBlankUser })).toEqual(false)
+  expect(canDeleteTitre({ role: 'lecteur', administrationId: 'min-mtes-dgaln-01', ...testBlankUser })).toEqual(false)
+  expect(canDeleteTitre({ role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId') }], ...testBlankUser })).toEqual(false)
+  expect(canDeleteTitre({ role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('entrepriseId') }], ...testBlankUser })).toEqual(false)
+  expect(canDeleteTitre({ role: 'defaut', ...testBlankUser })).toEqual(false)
 })

@@ -113,7 +113,6 @@ type Titre {
   secteursMaritime: [String]
 
   modification: Boolean
-  suppression: Boolean
 
   doublonTitre: Titre
 

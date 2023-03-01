@@ -507,7 +507,6 @@ interface ITitre {
   demarches?: ITitreDemarche[]
   activites?: ITitreActivite[] | null
   modification?: boolean | null
-  suppression?: boolean | null
   publicLecture?: boolean | null
   entreprisesLecture?: boolean | null
   contenusTitreEtapesIds?: IContenusTitreEtapesIds | null
