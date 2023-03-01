@@ -16,7 +16,7 @@ import {
 import Error from '@/components/error.vue'
 import { CommonTitreONF } from 'camino-common/src/titres'
 import { datesDiffInDays } from 'camino-common/src/date'
-import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/newTable'
+import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 export interface Props {
   getOnfTitres: () => Promise<CommonTitreONF[]>
 }

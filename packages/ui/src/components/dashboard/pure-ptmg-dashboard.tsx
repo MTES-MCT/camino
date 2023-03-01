@@ -14,7 +14,7 @@ import {
 import { CommonTitrePTMG } from 'camino-common/src/titres'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
-import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/newTable'
+import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 
 export interface Props {
   getPtmgTitres: () => Promise<CommonTitrePTMG[]>

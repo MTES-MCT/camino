@@ -1,15 +1,15 @@
-import { Column, TableAuto } from './table-auto'
+import { Column, Table, TableRow } from './table'
 import { Meta, Story } from '@storybook/vue3'
 import { markRaw } from 'vue'
 import TitreNom from '../_common/titre-nom.vue'
 import { Domaine } from '../_common/domaine'
 import TitreTypeTypeNom from '../_common/titre-type-type-nom.vue'
 import { Statut } from '../_common/statut'
-import { TableRow } from './table'
+import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
   title: 'Components/UI/Table',
-  component: TableAuto
+  component: Table
 }
 export default meta
 
@@ -84,13 +84,13 @@ const rows: TableRow[] = [0, 1, 2, 3].map(row => {
   }
 })
 
-export const TableAutoSimple: Story = () => (
-  <TableAuto rows={rows} columns={columns} />
-)
-export const TableAutoSortedByStatusAsc: Story = () => (
-  <TableAuto
+const update = action('update')
+export const Simple: Story = () => (
+  <Table
     rows={rows}
     columns={columns}
-    initialSort={{ column: 'statut', order: 'desc' }}
+    column="nom"
+    order="asc"
+    update={update}
   />
 )

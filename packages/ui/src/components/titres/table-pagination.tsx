@@ -10,7 +10,7 @@ import {
   titresColonnes,
   titresLignesBuild
 } from './table-utils'
-import { TableSortEvent } from '../_ui/newTable'
+import { TableSortEvent } from '../_ui/table'
 
 interface Props {
   titres: TitreEntreprise[]

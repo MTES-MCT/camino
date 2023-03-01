@@ -26,7 +26,7 @@ import {
   ComponentColumnData,
   TableRow,
   TextColumnData
-} from '../_ui/newTable'
+} from '../_ui/table'
 
 export interface Props {
   getDrealTitres: () => Promise<CommonTitreDREAL[]>

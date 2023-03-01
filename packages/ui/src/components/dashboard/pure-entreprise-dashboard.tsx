@@ -12,7 +12,7 @@ import { useRouter } from 'vue-router'
 import { LoadingElement } from '../_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
 import { TableAuto } from '../_ui/table-auto'
-import { TableRow } from '../_ui/newTable'
+import { TableRow } from '../_ui/table'
 
 export interface Props {
   user: User

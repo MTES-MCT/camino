@@ -7361,7 +7361,148 @@ exports[`Storybook Tests > Components/UI/Popup > NotValid 1`] = `
 </div>"
 `;
 
-exports[`Storybook Tests > Components/UI/TableAuto > Simple 1`] = `
+exports[`Storybook Tests > Components/UI/Table > PaginationSimple 1`] = `
+"<div>
+  <div class=\\"width-full-p\\">
+    <div class=\\"overflow-scroll-x mb\\">
+      <div class=\\"table\\">
+        <div class=\\"tr\\">
+          <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom
+              <!---->
+            </button></div>
+          <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">–
+              <!---->
+            </button></div>
+          <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Type
+              <!---->
+            </button></div>
+          <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut
+              <!---->
+            </button></div>
+          <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Test
+              <!---->
+            </button></div>
+        </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+          <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_0</span></div>
+          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 0</span></span></div>
+          <div class=\\"td \\"><span class=\\"\\">Test value 0</span></div>
+        </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+          <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_1</span></div>
+          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 1</span></span></div>
+          <div class=\\"td \\"><span class=\\"\\">Test value 1</span></div>
+        </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+          <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_2</span></div>
+          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 2</span></span></div>
+          <div class=\\"td \\"><span class=\\"\\">Test value 2</span></div>
+        </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+          <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_3</span></div>
+          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 3</span></span></div>
+          <div class=\\"td \\"><span class=\\"\\">Test value 3</span></div>
+        </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+          <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_4</span></div>
+          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 4</span></span></div>
+          <div class=\\"td \\"><span class=\\"\\">Test value 4</span></div>
+        </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+          <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_5</span></div>
+          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 5</span></span></div>
+          <div class=\\"td \\"><span class=\\"\\">Test value 5</span></div>
+        </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+          <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_6</span></div>
+          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 6</span></span></div>
+          <div class=\\"td \\"><span class=\\"\\">Test value 6</span></div>
+        </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+          <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_7</span></div>
+          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 7</span></span></div>
+          <div class=\\"td \\"><span class=\\"\\">Test value 7</span></div>
+        </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+          <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_8</span></div>
+          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 8</span></span></div>
+          <div class=\\"td \\"><span class=\\"\\">Test value 8</span></div>
+        </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+          <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_9</span></div>
+          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 9</span></span></div>
+          <div class=\\"td \\"><span class=\\"\\">Test value 9</span></div>
+        </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+          <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_10</span></div>
+          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 10</span></span></div>
+          <div class=\\"td \\"><span class=\\"\\">Test value 10</span></div>
+        </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+          <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_11</span></div>
+          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 11</span></span></div>
+          <div class=\\"td \\"><span class=\\"\\">Test value 11</span></div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class=\\"desktop-blobs\\">
+    <div class=\\"desktop-blob-3-4\\">
+      <ul class=\\"list-inline\\">
+        <li class=\\"mr-xs\\"><button disabled=\\"\\" class=\\"btn-border rnd-xs px-m py-s\\">«</button></li>
+        <li class=\\"mr-xs\\"><button disabled=\\"\\" class=\\"btn-border rnd-xs px-m py-s\\">‹</button></li>
+        <!---->
+        <li class=\\"mr-xs active\\"><button class=\\"btn-border rnd-xs px-m py-s\\">1</button></li>
+        <li class=\\"mr-xs \\"><button class=\\"btn-border rnd-xs px-m py-s\\">2</button></li>
+        <li class=\\"mr-xs \\"><button class=\\"btn-border rnd-xs px-m py-s\\">3</button></li>
+        <li class=\\"mr-xs \\"><button class=\\"btn-border rnd-xs px-m py-s\\">4</button></li>
+        <li class=\\"mr-xs \\"><button class=\\"btn-border rnd-xs px-m py-s\\">5</button></li>
+        <li class=\\"mr-xs\\">
+          <div class=\\"px-m py-s\\">…</div>
+        </li>
+        <li class=\\"mr-xs\\"><button class=\\"btn-border rnd-xs px-m py-s\\">›</button></li>
+        <li class=\\"mr-xs\\"><button class=\\"btn-border rnd-xs px-m py-s\\">»</button></li>
+      </ul>
+    </div>
+    <div class=\\"desktop-blob-1-4\\">
+      <div class=\\"flex flex-direction-column rnd-s border bg-bg mb\\"><button class=\\"rnd-s accordion-header flex btn-alt py-s px-s\\">
+          <div><span> Éléments </span></div>
+          <div class=\\"flex flex-right flex-end\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+              <use href=\\"#icon-chevron-bas\\"></use>
+            </svg></div>
+        </button>
+        <!--v-if-->
+        <div class=\\"overflow-hidden\\">
+          <transition-stub>
+            <div style=\\"display: none;\\">
+              <ul class=\\"list-sans mt-m px-m\\">
+                <li><label><input type=\\"radio\\" class=\\"mr-s\\" value=\\"10\\">10</label></li>
+                <li><label><input type=\\"radio\\" class=\\"mr-s\\" value=\\"50\\">50</label></li>
+                <li><label><input type=\\"radio\\" class=\\"mr-s\\" value=\\"200\\">200</label></li>
+                <li><label><input type=\\"radio\\" class=\\"mr-s\\" value=\\"500\\">500</label></li>
+              </ul>
+            </div>
+          </transition-stub>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/UI/Table > Simple 1`] = `
 "<div>
   <div class=\\"overflow-scroll-x mb\\">
     <div class=\\"table\\">
@@ -7411,7 +7552,57 @@ exports[`Storybook Tests > Components/UI/TableAuto > Simple 1`] = `
 </div>"
 `;
 
-exports[`Storybook Tests > Components/UI/TableAuto > SortedByStatusAsc 1`] = `
+exports[`Storybook Tests > Components/UI/Table > TableAutoSimple 1`] = `
+"<div>
+  <div class=\\"overflow-scroll-x mb\\">
+    <div class=\\"table\\">
+      <div class=\\"tr\\">
+        <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Nom<svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"right\\">
+              <use href=\\"#icon-chevron-bas\\"></use>
+            </svg></button></div>
+        <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">–
+            <!---->
+          </button></div>
+        <div class=\\"th nowrap min-width-8\\"><button class=\\"btn-menu full-x p-0\\">Type
+            <!---->
+          </button></div>
+        <div class=\\"th nowrap nowrap min-width-5\\"><button class=\\"btn-menu full-x p-0\\">Statut
+            <!---->
+          </button></div>
+        <div class=\\"th nowrap \\"><button class=\\"btn-menu full-x p-0\\">Test
+            <!---->
+          </button></div>
+      </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+        <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_0</span></div>
+        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 0</span></span></div>
+        <div class=\\"td \\"><span class=\\"\\">Test value 0</span></div>
+      </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+        <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_1</span></div>
+        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 1</span></span></div>
+        <div class=\\"td \\"><span class=\\"\\">Test value 1</span></div>
+      </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+        <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_2</span></div>
+        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 2</span></span></div>
+        <div class=\\"td \\"><span class=\\"\\">Test value 2</span></div>
+      </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
+        <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_3</span></div>
+        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
+        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 3</span></span></div>
+        <div class=\\"td \\"><span class=\\"\\">Test value 3</span></div>
+      </a>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/UI/Table > TableAutoSortedByStatusAsc 1`] = `
 "<div>
   <div class=\\"overflow-scroll-x mb\\">
     <div class=\\"table\\">

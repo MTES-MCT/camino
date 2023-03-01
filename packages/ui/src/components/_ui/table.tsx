@@ -59,7 +59,6 @@ interface Props {
   order: 'asc' | 'desc'
 }
 
-// FIXME TEST
 export const Table = defineComponent<Props>({
   props: [
     'columns',

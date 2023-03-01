@@ -1,5 +1,5 @@
 import { reactive, watch, defineComponent } from 'vue'
-import { InitialSort, TableRow, TableSortEvent, Table } from './newTable'
+import { InitialSort, TableRow, TableSortEvent, Table } from './table'
 
 export interface Column<T = string> {
   id: T

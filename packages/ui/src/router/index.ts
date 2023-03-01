@@ -24,7 +24,10 @@ const Administration = async () => {
   const { Administration } = await import('../components/administration')
   return Administration
 }
-const Administrations = () => import('../components/administrations.vue')
+const Administrations = async () => {
+  const { Administrations } = await import('../components/administrations')
+  return Administrations
+}
 const Meta = () => import('../components/meta.vue')
 const MetaTitre = () => import('../components/meta-titre.vue')
 const MetaDemarche = () => import('../components/meta-demarche.vue')

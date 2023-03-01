@@ -8,7 +8,7 @@ import {
 } from 'camino-common/src/static/administrations'
 import { elementsFormat } from '@/utils'
 import { Tag } from '@/components/_ui/tag'
-import { ComponentColumnData, TableRow, TextColumnData } from './_ui/newTable'
+import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
 
 const colonnes = [
   {

@@ -40,7 +40,7 @@ import {
   SecteursMaritimes
 } from 'camino-common/src/static/facades'
 import { Column } from '../_ui/table-auto'
-import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/newTable'
+import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 
 interface Titulaire {
   id: string

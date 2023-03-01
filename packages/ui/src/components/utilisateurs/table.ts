@@ -11,7 +11,7 @@ import {
   ComponentColumnData,
   TableRow,
   TextColumnData
-} from '../_ui/newTable'
+} from '../_ui/table'
 import { markRaw } from 'vue'
 
 export const utilisateursColonnes: Column[] = [
