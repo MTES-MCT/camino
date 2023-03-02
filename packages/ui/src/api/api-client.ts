@@ -12,6 +12,7 @@ import {
   TitreApiClient,
   titreApiClient
 } from '../components/titre/titre-api-client'
+import { UtilisateurApiClient, utilisateurApiClient } from '@/components/utilisateur/utilisateur-api-client'
 
 export type Utilisateur = {
   id: string
@@ -24,10 +25,12 @@ export type Utilisateur = {
 export interface ApiClient
   extends AdministrationApiClient,
     PureTitresLinkFormApiClient,
-    TitreApiClient {}
+    TitreApiClient,
+    UtilisateurApiClient {}
 
 export const apiClient: ApiClient = {
   ...administrationApiClient,
   ...pureTitresLinkFormApiClient,
-  ...titreApiClient
+  ...titreApiClient,
+  ...utilisateurApiClient
 }

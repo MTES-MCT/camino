@@ -1,6 +1,3 @@
-import { utilisateurCreer } from '../api/utilisateurs'
-
-import router from '../router'
 import {
   ADMINISTRATION_IDS,
   ADMINISTRATION_TYPES,
@@ -35,40 +32,6 @@ const actions = {
     } finally {
       commit('loadingRemove', 'userMoi', { root: true })
       commit('load')
-    }
-  },
-
-  async add({ commit, dispatch }, { utilisateur, token }) {
-    try {
-      commit('loadingAdd', 'userAdd', { root: true })
-      const newsletter = utilisateur.newsletter ?? false
-      delete utilisateur.newsletter
-      const data = await utilisateurCreer({ utilisateur, token })
-
-      if (data) {
-        dispatch(
-          'messageAdd',
-          {
-            value: `utilisateur ${data.prenom} ${data.nom} ajouté`,
-            type: 'success'
-          },
-          { root: true }
-        )
-
-        if (newsletter) {
-          await fetch(`/apiUrl/utilisateurs/${data.id}/newsletter`, {
-            headers: { 'Content-Type': 'application/json' },
-            method: 'POST',
-            body: JSON.stringify({ newsletter: true })
-          })
-        }
-
-        router.push({ name: 'titres' })
-      }
-    } catch (e) {
-      dispatch('messageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'userAdd', { root: true })
     }
   },
 

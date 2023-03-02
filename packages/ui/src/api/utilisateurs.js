@@ -4,7 +4,7 @@ import { apiGraphQLFetch } from './_client'
 import { fragmentUtilisateur } from './fragments/utilisateur'
 import { fragmentEntreprises } from './fragments/entreprises'
 
-const utilisateurMetas = apiGraphQLFetch(
+export const utilisateurMetas = apiGraphQLFetch(
   gql`
     query UtilisateurMetas {
       entreprises {
@@ -18,7 +18,7 @@ const utilisateurMetas = apiGraphQLFetch(
   `
 )
 
-const utilisateur = apiGraphQLFetch(
+export const utilisateur = apiGraphQLFetch(
   gql`
     query Utilisateur($id: ID!) {
       utilisateur(id: $id) {
@@ -30,7 +30,7 @@ const utilisateur = apiGraphQLFetch(
   `
 )
 
-const utilisateurs = apiGraphQLFetch(
+export const utilisateurs = apiGraphQLFetch(
   gql`
     query Utilisateurs(
       $intervalle: Int
@@ -65,51 +65,9 @@ const utilisateurs = apiGraphQLFetch(
   `
 )
 
-const utilisateurModifier = apiGraphQLFetch(gql`
-  mutation UtilisateurModifier($utilisateur: InputUtilisateurModification!) {
-    utilisateurModifier(utilisateur: $utilisateur) {
-      ...utilisateur
-    }
-  }
 
-  ${fragmentUtilisateur}
-`)
-
-const utilisateurCreer = apiGraphQLFetch(gql`
-  mutation UtilisateurCreer(
-    $utilisateur: InputUtilisateurCreation!
-    $token: String
-  ) {
-    utilisateurCreer(utilisateur: $utilisateur, token: $token) {
-      ...utilisateur
-    }
-  }
-
-  ${fragmentUtilisateur}
-`)
-
-const utilisateurSupprimer = apiGraphQLFetch(gql`
-  mutation UtilisateurSupprimer($id: ID!) {
-    utilisateurSupprimer(id: $id) {
-      ...utilisateur
-    }
-  }
-
-  ${fragmentUtilisateur}
-`)
-
-const newsletterInscrire = apiGraphQLFetch(gql`
+export const newsletterInscrire = apiGraphQLFetch(gql`
   mutation NewsletterInscrire($email: String!) {
     newsletterInscrire(email: $email)
   }
 `)
-
-export {
-  utilisateurMetas,
-  utilisateur,
-  utilisateurs,
-  utilisateurModifier,
-  utilisateurCreer,
-  utilisateurSupprimer,
-  newsletterInscrire
-}
