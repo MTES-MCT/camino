@@ -8,16 +8,7 @@ import CoordonneesIcone from '../_common/coordonnees-icone.vue'
 import ActivitesPills from '../_common/pills.vue'
 import { Statut } from '../_common/statut'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import {
-  TitresTypesTypes,
-  TitreTypeTypeId
-} from 'camino-common/src/static/titresTypesTypes'
-import {
-  Column,
-  ComponentColumnData,
-  TableAutoRow,
-  TextColumnData
-} from '@/components/_ui/table-auto.type'
+import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import {
   Departement,
   DepartementId,
@@ -48,6 +39,8 @@ import {
   getDepartementsBySecteurs,
   SecteursMaritimes
 } from 'camino-common/src/static/facades'
+import { Column } from '../_ui/table-auto'
+import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 
 interface Titulaire {
   id: string
@@ -112,7 +105,7 @@ export const activiteColumn: Column<'activites'> = {
   id: 'activites',
   name: 'Activités',
   class: ['min-width-5'],
-  sort: (statut1: TableAutoRow, statut2: TableAutoRow) => {
+  sort: (statut1: TableRow, statut2: TableRow) => {
     const row1Statut = statut1.columns.activites.value
     const row2Statut = statut2.columns.activites.value
     if (typeof row1Statut === 'number' && typeof row2Statut === 'number') {
@@ -126,7 +119,7 @@ export const statutColumn: Column<'statut'> = {
   id: 'statut',
   name: 'Statut',
   class: ['nowrap', 'min-width-5'],
-  sort: (statut1: TableAutoRow, statut2: TableAutoRow) => {
+  sort: (statut1: TableRow, statut2: TableRow) => {
     const row1Statut = statut1.columns.statut.value
     const row2Statut = statut2.columns.statut.value
     if (isTitreStatut(row1Statut) && isTitreStatut(row2Statut)) {
@@ -252,7 +245,7 @@ export const titresLignesBuild = (
   titres: TitreEntreprise[],
   activitesCol: boolean,
   ordre = 'asc'
-): TableAutoRow[] =>
+): TableRow[] =>
   titres.map(titre => {
     const departements: Departement[] = [
       ...(titre.communes?.map(({ departementId }) => departementId) ?? []),

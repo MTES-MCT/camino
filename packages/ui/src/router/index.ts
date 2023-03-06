@@ -15,10 +15,19 @@ import ActiviteEdition from '../components/activite-edition.vue'
 import Travaux from '../components/travaux.vue'
 const Utilisateur = () => import('../components/utilisateur.vue')
 const Utilisateurs = () => import('../components/utilisateurs.vue')
-const Entreprise = () => import('../components/entreprise.vue')
+const Entreprise = async () => {
+  const { Entreprise } = await import('../components/entreprise')
+  return Entreprise
+}
 const Entreprises = () => import('../components/entreprises.vue')
-const Administration = () => import('../components/administration.vue')
-const Administrations = () => import('../components/administrations.vue')
+const Administration = async () => {
+  const { Administration } = await import('../components/administration')
+  return Administration
+}
+const Administrations = async () => {
+  const { Administrations } = await import('../components/administrations')
+  return Administrations
+}
 const Meta = () => import('../components/meta.vue')
 const MetaTitre = () => import('../components/meta-titre.vue')
 const MetaDemarche = () => import('../components/meta-demarche.vue')

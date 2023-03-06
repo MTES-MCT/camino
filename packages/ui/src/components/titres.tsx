@@ -8,7 +8,7 @@ import { User } from 'camino-common/src/roles'
 import Filtres from './titres/filtres.vue'
 import { Downloads } from './_common/downloads'
 import { CaminoTitresMap } from './titres/map'
-import UiTable from './titres/table-pagination.vue'
+import { TablePagination } from './titres/table-pagination'
 
 function DemandeTitreButton(user: User, router: Router) {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
@@ -43,7 +43,7 @@ function AfficheData(
       case 'carte':
         return <CaminoTitresMap titres={titres} />
       case 'table':
-        return <UiTable titres={titres} total={total} />
+        return <TablePagination titres={titres} total={total} />
     }
   } else {
     return <div class="table-view mb-xxl mt">…</div>

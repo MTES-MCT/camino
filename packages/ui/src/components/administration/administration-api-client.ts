@@ -86,6 +86,10 @@ export const administrationApiClient: AdministrationApiClient = {
             prenom
             role
             email
+            administrationId
+            entreprises {
+              id
+            }
           }
         }
       }
@@ -109,7 +113,7 @@ export const administrationApiClient: AdministrationApiClient = {
           id
         }
       }
-    `)(activiteTypeEmail),
+    `)({ administrationActiviteTypeEmail: activiteTypeEmail }),
 
   administrationActiviteTypeEmailDelete: async (
     activiteTypeEmail: ActiviteTypeEmail & {
@@ -126,7 +130,7 @@ export const administrationApiClient: AdministrationApiClient = {
           id
         }
       }
-    `)(activiteTypeEmail),
+    `)({ administrationActiviteTypeEmail: activiteTypeEmail }),
 
   administrationMetas: async (administrationId: AdministrationId) =>
     await apiGraphQLFetch(gql`

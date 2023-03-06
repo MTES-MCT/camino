@@ -1,10 +1,6 @@
 import { defineComponent, onMounted, ref } from 'vue'
-import TableAuto from '../_ui/table-auto.vue'
-import {
-  ComponentColumnData,
-  TableAutoRow,
-  TextColumnData
-} from '../_ui/table-auto.type'
+import { TableAuto } from '../_ui/table-auto'
+
 import {
   nomColumn,
   nomCell,
@@ -18,6 +14,7 @@ import {
 import { CommonTitrePTMG } from 'camino-common/src/titres'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { AsyncData } from '@/api/client-rest'
+import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 
 export interface Props {
   getPtmgTitres: () => Promise<CommonTitrePTMG[]>
@@ -30,9 +27,7 @@ const columns = [
 ] as const
 type Columns = (typeof columns)[number]['id']
 
-const titresLignesBuild = (
-  titres: CommonTitrePTMG[]
-): TableAutoRow<Columns>[] => {
+const titresLignesBuild = (titres: CommonTitrePTMG[]): TableRow<Columns>[] => {
   return titres.map(titre => {
     const columns: { [key in Columns]: ComponentColumnData | TextColumnData } =
       {
@@ -54,8 +49,8 @@ export const PurePTMGDashboard = defineComponent<Props>({
   setup(props) {
     const data = ref<
       AsyncData<{
-        ptmgTitres: TableAutoRow[]
-        ptmgTitresBloques: TableAutoRow[]
+        ptmgTitres: TableRow[]
+        ptmgTitresBloques: TableRow[]
       }>
     >({ status: 'LOADING' })
 

@@ -1,7 +1,5 @@
 import { defineComponent, inject, markRaw, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
-import { useStore } from 'vuex'
-import TableAuto from '../_ui/table-auto.vue'
+import { TableAuto } from '../_ui/table-auto'
 import { Date as DateComponent } from '../_ui/date'
 
 import {
@@ -17,12 +15,8 @@ import {
 
 import Error from '@/components/error.vue'
 import { CommonTitreONF } from 'camino-common/src/titres'
-import {
-  ComponentColumnData,
-  TableAutoRow,
-  TextColumnData
-} from '../_ui/table-auto.type'
 import { datesDiffInDays } from 'camino-common/src/date'
+import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 export interface Props {
   getOnfTitres: () => Promise<CommonTitreONF[]>
 }
@@ -47,7 +41,7 @@ const columns = [
   {
     id: 'delaiJourONFCARM',
     name: 'Délai jour CARM ONF',
-    sort: (firstElement: TableAutoRow, secondElement: TableAutoRow) => {
+    sort: (firstElement: TableRow, secondElement: TableRow) => {
       const row1Number = firstElement.columns.delaiJourONFCARM.value
       const row2Number = secondElement.columns.delaiJourONFCARM.value
       if (typeof row1Number === 'string' && typeof row2Number === 'string') {
@@ -77,9 +71,7 @@ const dateCell = (date: string) => ({
   value: date
 })
 
-const titresLignesBuild = (
-  titres: CommonTitreONF[]
-): TableAutoRow<Columns>[] => {
+const titresLignesBuild = (titres: CommonTitreONF[]): TableRow<Columns>[] => {
   return titres.map(titre => {
     let delai = ''
     if (titre.dateCARM !== '' && titre.dateReceptionONF !== '') {
@@ -110,8 +102,8 @@ const titresLignesBuild = (
 export const PureONFDashboard = defineComponent<Props>({
   setup(props) {
     const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
-    const onfTitres = ref<TableAutoRow[]>([])
-    const onfTitresBloques = ref<TableAutoRow[]>([])
+    const onfTitres = ref<TableRow[]>([])
+    const onfTitresBloques = ref<TableRow[]>([])
     onMounted(async () => {
       try {
         const titres = await props.getOnfTitres()

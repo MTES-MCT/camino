@@ -27,10 +27,10 @@
     "lint": "npm run lint --workspaces"
   },
   "lint-staged": {
-    "packages/ui/**/*.{js,ts,vue,tsx}": "eslint --cache --fix",
-    "packages/ui/**/*.{js,ts,css,vue,tsx}": "prettier --write",
-    "packages/api/**/*.{js,ts}": "eslint --cache --fix",
-    "packages/api/**/*.{ts,js,graphql,md}": "prettier --write",
+    "packages/ui/**/*.{js,ts,vue,tsx}": ["eslint --cache --fix", "prettier --write"],
+    "packages/ui/**/*.css": "prettier --write",
+    "packages/api/**/*.{js,ts}": ["eslint --cache --fix", "prettier --write"],
+    "packages/api/**/*.{graphql,md}": "prettier --write",
     "packages/common/**/*.ts": [
       "npm run format -w packages/common"
     ],

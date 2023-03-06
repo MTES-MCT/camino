@@ -1,28 +1,17 @@
-import Table from './table-auto.vue'
+import { Column, TableAuto } from './table-auto'
 import { Meta, Story } from '@storybook/vue3'
 import { markRaw } from 'vue'
 import TitreNom from '../_common/titre-nom.vue'
 import { Domaine } from '../_common/domaine'
 import TitreTypeTypeNom from '../_common/titre-type-type-nom.vue'
 import { Statut } from '../_common/statut'
-import { Column, InitialSort, TableAutoRow } from './table-auto.type'
+import { TableRow } from './table'
 
 const meta: Meta = {
-  title: 'Components/UI/TableAuto',
-  component: Table,
-  argTypes: {
-    rows: { name: 'array', value: 'string', required: true },
-    columns: { name: 'array', value: 'string', required: true },
-    initialSort: { name: 'object' }
-  }
+  title: 'Components/UI/Table',
+  component: TableAuto
 }
 export default meta
-
-type Props = {
-  rows: TableAutoRow[]
-  columns: Column[]
-  initialSort?: InitialSort
-}
 
 const columns: Column[] = [
   {
@@ -50,7 +39,7 @@ const columns: Column[] = [
   }
 ]
 
-const rows: TableAutoRow[] = [0, 1, 2, 3].map(row => {
+const rows: TableRow[] = [0, 1, 2, 3].map(row => {
   return {
     id: `elementId${row}`,
     link: {
@@ -95,23 +84,13 @@ const rows: TableAutoRow[] = [0, 1, 2, 3].map(row => {
   }
 })
 
-const Template: Story<Props> = (args: Props) => ({
-  components: { Table },
-  setup() {
-    return { args }
-  },
-  template: '<Table v-bind="args" />'
-})
-
-export const Simple = Template.bind({})
-Simple.args = {
-  rows,
-  columns
-}
-
-export const SortedByStatusAsc = Template.bind({})
-SortedByStatusAsc.args = {
-  rows,
-  columns,
-  initialSort: { column: 'statut', order: 'desc' }
-}
+export const TableAutoSimple: Story = () => (
+  <TableAuto rows={rows} columns={columns} />
+)
+export const TableAutoSortedByStatusAsc: Story = () => (
+  <TableAuto
+    rows={rows}
+    columns={columns}
+    initialSort={{ column: 'statut', order: 'desc' }}
+  />
+)
