@@ -4,6 +4,8 @@ import { elementsFormat } from '../../utils/index'
 import { EtapesStatuts } from 'camino-common/src/static/etapesStatuts'
 import { SubstancesLegales } from 'camino-common/src/static/substancesLegales'
 import { sortedDomaines } from 'camino-common/src/static/domaines'
+import { sortedTitreTypesTypes } from 'camino-common/src/static/titresTypesTypes'
+import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { titresFiltres, titresRechercherByNom } from '@/api/titres'
 import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 import { sortedDemarchesTypes } from 'camino-common/src/static/demarchesTypes'
@@ -100,17 +102,15 @@ const filtres = [
     name: 'Types de titre',
     type: 'checkboxes',
     value: [],
-    elements: [],
-    elementsFormat
+    elements: sortedTitreTypesTypes
   },
   {
     id: 'titresStatutsIds',
     name: 'Statuts de titre',
     type: 'checkboxes',
     value: [],
-    elements: [],
-    component: 'FiltresStatuts',
-    elementsFormat
+    elements: sortedTitresStatuts,
+    component: 'FiltresStatuts'
   },
   {
     id: 'titresEntreprisesIds',
