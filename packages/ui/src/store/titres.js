@@ -17,7 +17,10 @@ const getDefaultState = () => {
       { id: 'titresIds', type: 'strings', values: [] },
       { id: 'entreprisesIds', type: 'strings', values: [] },
       { id: 'references', type: 'string' },
-      { id: 'territoires', type: 'string' },
+      { id: 'communes', type: 'string' },
+      { id: 'departements', type: 'strings', values: [] },
+      { id: 'regions', type: 'strings', values: [] },
+      { id: 'facadesMaritimes', type: 'strings', values: [] },
       { id: 'page', type: 'number', value: 1, min: 0 },
       { id: 'intervalle', type: 'number', min: 10, max: 500 },
       {
@@ -57,7 +60,10 @@ const getDefaultState = () => {
         titresIds: [],
         entreprisesIds: '',
         references: '',
-        territoires: ''
+        communes: '',
+        departements: [],
+        regions: [],
+        facadesMaritimes: []
       }
     },
     initialized: false

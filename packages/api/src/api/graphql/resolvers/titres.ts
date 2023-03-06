@@ -20,6 +20,9 @@ import {
   assertsCanCreateTitre,
   canDeleteTitre
 } from 'camino-common/src/permissions/titres.js'
+import { DepartementId } from 'camino-common/src/static/departement.js'
+import { RegionId } from 'camino-common/src/static/region.js'
+import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
 
 const titre = async (
   { id }: { id: string },
@@ -58,6 +61,10 @@ const titres = async (
     entreprises,
     references,
     territoires,
+    communes,
+    departements,
+    regions,
+    facadesMaritimes,
     demandeEnCours
   }: {
     intervalle?: number | null
@@ -76,6 +83,10 @@ const titres = async (
     entreprises: string
     references: string
     territoires: string
+    communes: string
+    departements: DepartementId[]
+    regions: RegionId[]
+    facadesMaritimes: FacadesMaritimes[]
     demandeEnCours: boolean | null
   },
   { user }: Context,
@@ -102,6 +113,10 @@ const titres = async (
           entreprises,
           references,
           territoires,
+          communes,
+          departements,
+          regions,
+          facadesMaritimes,
           demandeEnCours
         },
         { fields },
@@ -119,6 +134,10 @@ const titres = async (
           entreprises,
           references,
           territoires,
+          communes,
+          departements,
+          regions,
+          facadesMaritimes,
           demandeEnCours
         },
         { fields: {} },

@@ -19,6 +19,9 @@ import { titresFiltersQueryModify } from './_titres-filters.js'
 import TitresDemarches from '../models/titres-demarches.js'
 import TitresEtapes from '../models/titres-etapes.js'
 import { User } from 'camino-common/src/roles'
+import { DepartementId } from 'camino-common/src/static/departement.js'
+import { RegionId } from 'camino-common/src/static/region.js'
+import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
 
 /**
  * Construit la requête pour récupérer certains champs de titres filtrés
@@ -111,6 +114,10 @@ const titresGet = async (
     entreprises,
     references,
     territoires,
+    communes,
+    departements,
+    regions,
+    facadesMaritimes,
     slugs,
     demandeEnCours
   }: {
@@ -129,6 +136,10 @@ const titresGet = async (
     entreprises?: string | null
     references?: string | null
     territoires?: string | null
+    communes?: string | null
+    departements?: DepartementId[] | null
+    regions?: RegionId[] | null
+    facadesMaritimes?: FacadesMaritimes[] | null
     slugs?: string[] | null
     demandeEnCours?: boolean | null
   } = {},
@@ -153,7 +164,11 @@ const titresGet = async (
       noms,
       entreprises,
       references,
-      territoires
+      territoires,
+      communes,
+      departements,
+      regions,
+      facadesMaritimes
     },
     q
   )
@@ -232,6 +247,10 @@ const titresCount = async (
     entreprises,
     references,
     territoires,
+    communes,
+    departements,
+    regions,
+    facadesMaritimes,
     demandeEnCours
   }: {
     ids?: string[] | null
@@ -244,6 +263,10 @@ const titresCount = async (
     entreprises?: string | null
     references?: string | null
     territoires?: string | null
+    communes?: string | null
+    departements?: DepartementId[] | null
+    regions?: RegionId[] | null
+    facadesMaritimes?: FacadesMaritimes[] | null
     demandeEnCours?: boolean | null
   } = {},
   { fields }: { fields?: IFields },
@@ -262,7 +285,11 @@ const titresCount = async (
       noms,
       entreprises,
       references,
-      territoires
+      territoires,
+      communes,
+      departements,
+      regions,
+      facadesMaritimes
     },
     q
   )

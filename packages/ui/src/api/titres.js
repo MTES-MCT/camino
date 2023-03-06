@@ -1,7 +1,6 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
-import { fragmentTitreTypeType } from './fragments/metas'
 import {
   fragmentTitre,
   fragmentTitres,
@@ -44,7 +43,10 @@ const titresGeoPolygon = apiGraphQLFetch(
       $substancesIds: [ID!]
       $entreprisesIds: [ID!]
       $references: String
-      $territoires: String
+      $communes: String
+      $departements: [String]
+      $regions: [String]
+      $facadesMaritimes: [String]
       $perimetre: [Float!]
     ) {
       titres(
@@ -55,7 +57,10 @@ const titresGeoPolygon = apiGraphQLFetch(
         substancesIds: $substancesIds
         entreprisesIds: $entreprisesIds
         references: $references
-        territoires: $territoires
+        communes: $communes
+        departements: $departements
+        regions: $regions
+        facadesMaritimes: $facadesMaritimes
         perimetre: $perimetre
         demandeEnCours: true
       ) {
@@ -80,7 +85,10 @@ const titresGeo = apiGraphQLFetch(
       $substancesIds: [ID!]
       $entreprisesIds: [ID!]
       $references: String
-      $territoires: String
+      $communes: String
+      $departements: [String]
+      $regions: [String]
+      $facadesMaritimes: [String]
       $perimetre: [Float!]
     ) {
       titres(
@@ -91,7 +99,10 @@ const titresGeo = apiGraphQLFetch(
         substancesIds: $substancesIds
         entreprisesIds: $entreprisesIds
         references: $references
-        territoires: $territoires
+        communes: $communes
+        departements: $departements
+        regions: $regions
+        facadesMaritimes: $facadesMaritimes
         perimetre: $perimetre
         demandeEnCours: true
       ) {
@@ -121,7 +132,10 @@ const titres = apiGraphQLFetch(
       $noms: String
       $entreprisesIds: [ID!]
       $references: String
-      $territoires: String
+      $communes: String
+      $departements: [String]
+      $regions: [String]
+      $facadesMaritimes: [String]
     ) {
       titres(
         intervalle: $intervalle
@@ -136,7 +150,10 @@ const titres = apiGraphQLFetch(
         noms: $noms
         entreprisesIds: $entreprisesIds
         references: $references
-        territoires: $territoires
+        communes: $communes
+        departements: $departements
+        regions: $regions
+        facadesMaritimes: $facadesMaritimes
       ) {
         elements {
           ...titres
