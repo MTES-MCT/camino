@@ -2,11 +2,13 @@ import { IUtilisateur, IUtilisateurCreation } from '../../types.js'
 import { emailCheck } from '../../tools/email-check.js'
 import {
   isAdministrationRole,
-  isEntrepriseOrBureauDetudeRole
+  isEntrepriseOrBureauDetudeRole,
+  User,
+  UserNotNull
 } from 'camino-common/src/roles.js'
 
-const utilisateurEditionCheck = (
-  utilisateur: IUtilisateur | IUtilisateurCreation
+export const utilisateurEditionCheck = (
+  utilisateur: UserNotNull
 ) => {
   const errors = []
 
@@ -14,23 +16,5 @@ const utilisateurEditionCheck = (
     errors.push('adresse email invalide')
   }
 
-  if (!isAdministrationRole(utilisateur.role) && utilisateur.administrationId) {
-    errors.push(
-      "le rôle de cet utilisateur ne permet pas de l'associer à une administration"
-    )
-  }
-
-  if (
-    !isEntrepriseOrBureauDetudeRole(utilisateur.role) &&
-    utilisateur.entreprises &&
-    utilisateur.entreprises.length
-  ) {
-    errors.push(
-      "le rôle de cet utilisateur ne permet pas de l'associer à une entreprise"
-    )
-  }
-
   return errors
 }
-
-export { utilisateurEditionCheck }

@@ -14,10 +14,6 @@ type Utilisateur {
   entreprises: [Entreprise]
   role: ID
   preferences: Json
-
-  modification: Boolean
-  suppression: Boolean
-  permissionModification: Boolean
 }
 
 type Utilisateurs {

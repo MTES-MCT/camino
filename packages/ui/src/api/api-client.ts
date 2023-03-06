@@ -19,6 +19,8 @@ export type Utilisateur = {
   prenom: string
   nom: string
   email: string
+  telephoneFixe?: string
+  telephoneMobile?: string
   entreprises?: Entreprise[]
 } & User
 

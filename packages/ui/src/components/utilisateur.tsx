@@ -15,6 +15,7 @@ import { utilisateurApiClient } from "./utilisateur/utilisateur-api-client";
 import { Utilisateur as ApiUser } from "@/api/api-client";
 import { LoadingElement } from "./_ui/functional-loader";
 import { RemovePopup } from "./utilisateur/remove-popup";
+import { canEditUtilisateur } from "camino-common/src/permissions/utilisateurs";
 
 // TODO 2023-03-02: create pureUtilisateur and test
 export const Utilisateur = defineComponent({
@@ -148,8 +149,36 @@ export const Utilisateur = defineComponent({
       }
     }
   }
-  const updateUtilisateur = async (utilisateur: ApiUser) => {
-    await apiClient.updateUtilisateur(utilisateur)
+  const updateUtilisateur = async (utilisateur: ApiUser, newsletter: boolean) => {
+    try {
+    
+      await apiClient.updateUtilisateur(utilisateur)
+      // FIXME use fetchWithJson
+      // FIXME DO THAT IN create user in utilisateurs
+      await fetch(`/apiUrl/utilisateurs/${utilisateur.id}/newsletter`, {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify({newsletter: newsletter})
+      })
+      store.dispatch(
+        'messageAdd',
+        {
+          value: `l'utilisateur ${utilisateur.prenom} ${utilisateur.nom} a été modifié`,
+          type: 'success'
+        },
+        { root: true }
+      )
+    } catch (e) {
+      store.dispatch(
+        'messageAdd',
+        {
+          value: `Erreur lors de la modification de l'utilisateur ${utilisateur.prenom} ${utilisateur.nom}`,
+          type: 'error'
+        },
+        { root: true }
+      )
+    }
+    await get()
   }
     return () => (<div>
       <h5>Utilisateur</h5>
@@ -172,7 +201,7 @@ export const Utilisateur = defineComponent({
         {{ 
           title: () => <span> Profil </span>,
           buttons: () => (
-          <LoadingElement data={utilisateur.value} renderItem={(item) => (<>{item.modification ? (<>
+          <LoadingElement data={utilisateur.value} renderItem={(item) => (<>{canEditUtilisateur(user.value, item) ? (<>
           {isMe.value ? (<button
             class="btn-alt py-s px-m"
             title="changer de mot de passe"
@@ -248,14 +277,14 @@ export const Utilisateur = defineComponent({
             </div>
           </div>
 
-          <LoadingElement data={utilisateur.value} renderItem={(item) => (<>{item.permissionModification ? (<div class="tablet-blobs">
+          <LoadingElement data={utilisateur.value} renderItem={(item) => <div class="tablet-blobs">
             <div class="tablet-blob-1-4">
               <h5>Permissions</h5>
             </div>
             <div class="tablet-blob-3-4">
               {item.role ? (<Pill class="mb">{ item.role }</Pill>) : (<p>–</p>)}
             </div>
-          </div>) : null}</>)} />
+          </div>} />
 
           
 

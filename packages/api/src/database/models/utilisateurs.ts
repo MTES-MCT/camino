@@ -51,9 +51,6 @@ class Utilisateurs extends Model {
   })
 
   public $parseJson(json: Pojo) {
-    delete json.modification
-    delete json.suppression
-    delete json.permissionModification
 
     json = super.$parseJson(json)
 
@@ -61,9 +58,6 @@ class Utilisateurs extends Model {
   }
 
   public $formatDatabaseJson(json: Pojo) {
-    delete json.modification
-    delete json.suppression
-    delete json.permissionModification
 
     json = super.$formatDatabaseJson(json)
 

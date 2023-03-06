@@ -22,7 +22,7 @@ import { Role, User } from 'camino-common/src/roles.js'
 const userGet = async (userId?: string): Promise<User> => {
   if (!userId) return null
 
-  const user = await Utilisateurs.query().findById(userId)
+  const user = await Utilisateurs.query().withGraphFetched('[entreprises]').findById(userId)
   if (user) {
     const q = utilisateursQueryBuild(
       {

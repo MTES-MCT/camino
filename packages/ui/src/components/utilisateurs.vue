@@ -35,7 +35,7 @@
 <script>
 import Liste from './_common/liste.vue'
 import { Downloads } from './_common/downloads'
-import UtilisateurEditPopup from './utilisateur/edit-popup.vue'
+// import UtilisateurEditPopup from './utilisateur/edit-popup.vue'
 
 import filtres from './utilisateurs/filtres'
 import {
@@ -130,17 +130,17 @@ export default {
     },
 
     addPopupOpen() {
-      this.$store.commit('popupOpen', {
-        component: UtilisateurEditPopup,
-        props: {
-          utilisateur: {
-            role: 'defaut',
-            entreprises: []
-          },
-          subscription: { newsletter: false },
-          action: 'create'
-        }
-      })
+      // this.$store.commit('popupOpen', {
+      //   component: UtilisateurEditPopup,
+      //   props: {
+      //     utilisateur: {
+      //       role: 'defaut',
+      //       entreprises: []
+      //     },
+      //     subscription: { newsletter: false },
+      //     action: 'create'
+      //   }
+      // })
     }
   }
 }

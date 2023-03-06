@@ -6,6 +6,7 @@ export type EntrepriseEtablissement = { dateDebut: CaminoDate; dateFin: CaminoDa
 export interface Entreprise {
   id: EntrepriseId
   nom: string
+  legalSiren?:string
   etablissements: EntrepriseEtablissement[]
 }
 

@@ -1,9 +1,8 @@
 import { Utilisateur } from "@/api/api-client";
-import { Role, User } from "camino-common/src/roles";
+import { isAdministrationRole, isEntrepriseOrBureauDetudeRole, Role, User } from "camino-common/src/roles";
 import { computed, defineComponent, onMounted, ref, watch } from "vue";
 import { FunctionalPopup } from "../_ui/functional-popup";
-import { sortedAdministrations } from 'camino-common/src/static/administrations'
-import { Icon } from '../_ui/icon'
+import { isAdministrationId, sortedAdministrations } from 'camino-common/src/static/administrations'
 import {
   isAdministration,
   isAdministrationAdmin,
@@ -13,26 +12,43 @@ import {
   ROLES
 } from 'camino-common/src/roles'
 import router from '@/router'
-import { Entreprise, newEntrepriseId } from "camino-common/src/entreprise";
+import { Entreprise } from "camino-common/src/entreprise";
 import { AsyncData } from "@/api/client-rest";
 import { LoadingElement } from "../_ui/functional-loader";
 import { cloneAndClean } from "@/utils";
+import { InputAutocomplete, Element } from "../_ui/filters-input-autocomplete";
+import { isNotNullNorUndefined } from "camino-common/src/typescript-tools";
+import { getAssignableRoles } from "camino-common/src/permissions/utilisateurs";
+import { isEventWithTarget } from "@/utils/vue-tsx-utils";
 
 interface Props {
   user: User
   getEntreprises: () => Promise<Entreprise[]>
   close: () => void
   values: 
-  { action: 'edit', utilisateur: Utilisateur,  subscription: boolean, update: (utilisateur: Utilisateur) => Promise<void>} | 
-  { action: 'create', create: (utilisateur: Utilisateur) => Promise<{id: string}> }
+  { action: 'edit', utilisateur: Utilisateur,  subscription: boolean, update: (utilisateur: Utilisateur, subscription :boolean) => Promise<void>} | 
+  { action: 'create', create: (utilisateur: Utilisateur, subscription: boolean) => Promise<{id: string}> }
 }
 
 const formIsVisible = (user: User): boolean =>  {
   return isSuper(user) || isAdministrationAdmin(user)
 }
+
 export const EditPopup = defineComponent<Props>({
   props: ['user', 'getEntreprises', 'values', 'close'] as unknown as undefined,
     setup(props) {
+
+      const assignableRoles = getAssignableRoles(props.user)
+      const onSelectEntreprises = (elements: Element[], entreprises: Entreprise[]) => {
+        console.log('bite')
+        const entrs = elements.map(({id}) => entreprises.find(({id: entrId}) => id === entrId )).filter(isNotNullNorUndefined)
+
+        if (!utilisateurPopup.value.entreprises) {
+          utilisateurPopup.value.entreprises = entrs
+        } else {
+          utilisateurPopup.value.entreprises.splice(0,utilisateurPopup.value.entreprises.length, ...entrs)
+        }
+      }
       const entreprises = ref<AsyncData<Entreprise[]>>({status: 'LOADING'})
       onMounted(async () => {
         try {
@@ -62,7 +78,7 @@ export const EditPopup = defineComponent<Props>({
           return false
         }
   
-        if (!utilisateurEntreprisesLength.value) {
+        if (isEntrepriseOrBureauDetudeRole(utilisateurPopup.value.role) && !utilisateurPopup.value.entreprises?.length ) {
           return false
         }
   
@@ -74,15 +90,14 @@ export const EditPopup = defineComponent<Props>({
   
         return true
       })
-  
-      const utilisateurEntreprisesLength = computed(() => {
-        return (isEntreprise(utilisateurPopup.value) || isBureauDEtudes(utilisateurPopup.value)) && utilisateurPopup.value.entreprises?.filter(({ id }) => id).length
-      })
 
+      const selectAdministration = (e: Event) => {
+        if (isEventWithTarget(e) && isAdministration(utilisateurPopup.value) && isAdministrationId(e.target.value)) {
+          utilisateurPopup.value.administrationId = e.target.value
+        }
+      }
       const title = props.values.action === 'create' ? "Création d'un compte utilisateur" : 'Modification du compte utilisateur'
       const utilisateurPopup = ref<Utilisateur>(props.values.action === 'edit' ? cloneAndClean(props.values.utilisateur) : {nom: '', id: 'unused', email: '', prenom: '', role: 'defaut'})
-      console.log('prout', props.values.utilisateur)
-      console.log('prout2', utilisateurPopup.value)
       const subscription = ref<boolean>(props.values.action === 'edit' ? props.values.subscription : false)
 
       const content = () => (<div>
@@ -164,7 +179,7 @@ export const EditPopup = defineComponent<Props>({
           </div>
         </div>
   
-        {utilisateurPopup.value.permissionModification ? (<div>
+        {assignableRoles.length > 0 ? (<div>
           <hr />
           <div class="tablet-blobs">
             <div class="tablet-blob-1-3 tablet-pt-s pb-s">
@@ -172,7 +187,7 @@ export const EditPopup = defineComponent<Props>({
             </div>
             <div class="mb tablet-blob-2-3">
               <ul class="list-inline mb-0 tablet-pt-s">
-                {ROLES.map(role => (<li key={role} class="mb-xs">
+                {assignableRoles.map(role => (<li key={role} class="mb-xs">
                   <button
                     class={`btn-flash small py-xs px-s pill cap-first mr-xs ${utilisateurPopup.value.role === role ? 'active' : ''}`}
                     onClick={() => roleToggle(role)}
@@ -190,66 +205,26 @@ export const EditPopup = defineComponent<Props>({
             <hr />
             <h3 class="mb-s">Entreprises</h3>
             <LoadingElement data={entreprises.value} renderItem={(items) => (<div>
-              {/* FIXME UTILISER UN FILTERS-INPUT-AUTOCOMPLETE */}
-              PROUT { utilisateurPopup.value.entreprises[0].nom }
-            {utilisateurPopup.value.entreprises ? (<div>{utilisateurPopup.value.entreprises.map((entreprise, n) => (<div key={n}>
-              <div
-                class={`flex full-x ${utilisateurEntreprisesLength ? 'mb-s' : 'mb'}`}
-              >
-                <select
-                  id="cmn-utilisateur-edit-popup-entreprise-select"
-                  value={utilisateurPopup.value.entreprises[n].id}
-                  class="p-s mr-s"
-                >
-                  {items.map(e => (<option
-                    
-                    key={e.id}
-                    value={{ id: e.id }}
-                    selected={utilisateurPopup.value.entreprises?.find(({ id }) => id === e.id) === undefined}
-                    disabled={
-                      utilisateurPopup.value.entreprises?.find(({ id }) => id === e.id) !== undefined
-                    }
-                  >
-                    { e.nom }
-                  </option>))}
-                  
-                </select>
-                <div class="flex-right">
-                  <button
-                    class="btn py-s px-m rnd-xs"
-                    onClick={() => entrepriseRemove(n)}
-                  >
-                    <Icon name="minus" size="M" />
-                  </button>
-                </div>
-              </div>
-            </div>
-            ))}</div>) : null}
+              {/* FIXME BUG AUTOCOMPLETE */}
+              <InputAutocomplete filter={{
+  id: 'entreprises',
+  name: 'Entreprises',
+  value: utilisateurPopup.value.entreprises?.map(({id}) => id as string) ?? [],
+  elements: items,
+  lazy: false
+}}
+onSelectItems={(elements) => onSelectEntreprises(elements, items)}/>
             </div>)}/>
-            
-            
-  
-            { !utilisateurPopup.value.entreprises?.some(({ id }) => id === '') ? (
-                          <button
-                          id="cmn-utilisateur-edit-popup-entreprise-button-ajouter"
-                          class="btn small rnd-xs py-s px-m full-x flex mb"
-                          onClick={entrepriseAdd}
-                        >
-                          <span class="mt-xxs">Ajouter une entreprise</span>
-                          <Icon name="plus" size="M" class="flex-right" />
-                        </button>
-            ) : null }
-
           </div>
           ) : null}
           
   
-              {isAdministration(utilisateurPopup.value) ? (<div>
+              {isSuper(props.user) && isAdministration(utilisateurPopup.value) ? (<div>
             <hr />
             <h3 class="mb-s">Administration</h3>
   
             <div class="flex full-x mb">
-              <select value={utilisateurPopup.value.administrationId} class="p-s mr-s">
+              <select onChange={selectAdministration} value={utilisateurPopup.value.administrationId} class="p-s mr-s">
                 {sortedAdministrations.map(a => (<option key={a.id} value={a.id}>
                   { a.abreviation }
                 </option>))}
@@ -269,7 +244,8 @@ export const EditPopup = defineComponent<Props>({
           <div class="mb tablet-blob-2-3">
             <label class="tablet-pt-s">
               <input
-                value={subscription.value}
+                checked={subscription.value}
+                onInput={() => subscription.value = !subscription.value}
                 type="checkbox"
                 class="p-s mt-s mb-s mr-xs"
               />
@@ -283,17 +259,14 @@ const save = async () => {
   if (complete.value) {
     const utilisateur = JSON.parse(JSON.stringify(utilisateurPopup.value))
 
-    delete utilisateur.permissionModification
 
     if (!isAdministration(utilisateurPopup.value)) {
       utilisateur.administrationId = undefined
     }
 
     if (isEntreprise(utilisateurPopup.value) || isBureauDEtudes(utilisateurPopup.value)) {
-      utilisateur.entreprises = utilisateur.entreprises.filter(
-        ({ id }) => id
-      )
-    } else {``
+      utilisateur.entreprises = utilisateur.entreprises.map(({ id }) => ({id}))
+    } else {
       utilisateur.entreprises = []
     }
 
@@ -303,7 +276,7 @@ const save = async () => {
         utilisateur.role = 'defaut'
       }
 
-      const utilisateurSaved = await props.values.create(utilisateur)
+      const utilisateurSaved = await props.values.create(utilisateur, subscription.value)
 
       // const utilisateurSaved = await this.$store.dispatch(
       //   'utilisateur/add',
@@ -313,35 +286,28 @@ const save = async () => {
       utilisateurId = utilisateurSaved.id
     } else {
       // await this.$store.dispatch('utilisateur/update', utilisateur)
-      await props.values.update(utilisateur)
+      await props.values.update(utilisateur, subscription.value)
     }
 
-    // FIXME use fetchWithJson
-    await fetch(`/apiUrl/utilisateurs/${utilisateurId}/newsletter`, {
-      headers: { 'Content-Type': 'application/json' },
-      method: 'POST',
-      body: JSON.stringify({newsletter: subscription.value})
-    })
 
-    await router.push({
-      name: 'utilisateur',
-      params: { id: utilisateurId }
-    })
+
+    if (props.values.action === 'create') {
+      await router.push({
+        name: 'utilisateur',
+        params: { id: utilisateurId }
+      })
+    }
   }
 }
 
-const roleToggle = (role: Role) => {
-  utilisateurPopup.value.role = role
-}
+      const roleToggle = (role: Role) => {
+        utilisateurPopup.value.role = role
+        if( isAdministration(props.user) && isAdministration(utilisateurPopup.value)){
+          utilisateurPopup.value.administrationId = props.user.administrationId
+        }
+      }
 
-const entrepriseAdd= () => {
-  utilisateurPopup.value.entreprises?.push({ id: newEntrepriseId('') })
-}
-
-const entrepriseRemove = (index: number) => {
-  utilisateurPopup.value.entreprises?.splice(index, 1)
-}
-
+      
       return () => (<FunctionalPopup 
         title={title} 
         content={content} 

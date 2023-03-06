@@ -7,65 +7,72 @@ import {
   isAdministrationAdmin,
   isSuper,
   User,
-  isAdministration
+  isAdministration,
+  UserNotNull,
+  isEntrepriseOrBureauDetudeRole,
+  isEntrepriseOrBureauDEtude,
+  isDefautRole,
+  isSuperRole
 } from 'camino-common/src/roles.js'
+import { canEditUtilisateur, getAssignableRoles } from 'camino-common/src/permissions/utilisateurs.js'
+import { equalStringArrays } from '../../tools/index.js'
+import { emailCheck } from '../../tools/email-check.js'
+import { isAdministrationId } from 'camino-common/src/static/administrations.js'
+
+
+const isUser = (utilisateur: Omit<IUtilisateur, 'dateCreation'>): utilisateur is UserNotNull => {
+  if (utilisateur.email && !emailCheck(utilisateur.email)) {
+    return false
+  }
+  if ((isSuperRole(utilisateur.role) || isDefautRole(utilisateur.role)) && utilisateur.administrationId === undefined && utilisateur.entreprises?.length === 0) {
+    return true
+  }
+
+  if (isAdministrationRole(utilisateur.role) && isAdministrationId(utilisateur.administrationId) && utilisateur.entreprises?.length === 0) {
+    return true
+  }
+  if (isEntrepriseOrBureauDetudeRole(utilisateur.role) && utilisateur.administrationId === undefined && (utilisateur.entreprises?.length ?? 0) > 0) {
+    return true
+  }
+  return  false
+}
 
 /**
  * Valide la mise à jour d'un utilisateur
  *
  * @param user - utilisateur qui fait la modification
  * @param utilisateur - utilisateur modifié
- *
- * @returns une liste de messages d'erreur si l'utilisateur n'a pas le droit de faire les modifications
  */
-
-export const utilisateurUpdationValidate = async (
+// FIXME add thorough tests
+// FIXME DO the createUser
+export const utilisateurUpdationValidate = (
   user: User,
-  utilisateur: IUtilisateur
+  utilisateur: IUtilisateur,
+  utilisateurOld: User
 ) => {
-  const utilisateurOld = await userGet(utilisateur.id)
-
-  if (!utilisateurOld) return ["l'utilisateur n'existe pas"]
-
-  if (!isSuper(user)) {
-    if (
-      isAdministrationRole(utilisateur.role) &&
-      !utilisateur.administrationId
-    ) {
-      return ["l'utilisateur doit être associé à une administration"]
-    }
-
-    // si le user n'est pas admin
-    if (!isAdministrationAdmin(user)) {
-      //   ni les administrations
-
-      if (
-        isAdministrationRole(utilisateur.role) !==
-          isAdministrationRole(utilisateurOld.role) ||
-        (isAdministrationRole(utilisateur.role) &&
-          isAdministration(utilisateurOld) &&
-          utilisateurOld.administrationId !== utilisateur.administrationId)
-      ) {
-        return ['droits insuffisants pour modifier les administrations']
-      }
-
-      return []
-    }
-
-    // sinon, le user est admin
-
-    // si le user modifie l'administration de l'utilisateur
-    if (
-      !isAdministration(utilisateurOld) ||
-      utilisateurOld.administrationId !== utilisateur.administrationId
-    ) {
-      // si le user n'a pas les droits sur l'administration
-      if (user.administrationId !== utilisateur.administrationId) {
-        // alors il ne peut modifier les administrations
-        return ["droits admin insuffisants pour modifier l'administration"]
-      }
-    }
+  if (!isUser(utilisateur)) {
+    throw new Error('utilisateur incorrect')
   }
 
-  return []
+  if (!utilisateurOld) {
+    throw new Error("l'utilisateur n'existe pas")
+  }
+
+  if (!canEditUtilisateur(user, utilisateurOld) || !canEditUtilisateur(user, utilisateur)) {
+    throw new Error('droits insuffisants')
+  }
+
+  if (!isSuper(user)) {
+    if(utilisateur.role !== utilisateurOld.role && !getAssignableRoles(user).includes(utilisateur.role)){
+      throw new Error('droits insuffisants pour modifier les rôles')
+    }
+
+    if( isAdministration(utilisateurOld)  && utilisateur.administrationId !== utilisateurOld.administrationId ){
+      throw new Error('droits insuffisants pour modifier les administrations')
+    }
+
+    if( !isAdministrationAdmin(user) && isEntrepriseOrBureauDEtude(utilisateurOld) && !equalStringArrays(utilisateurOld.entreprises.map(({id}) => id).sort(), (utilisateur.entreprises ?? []).map(({id}) => id).sort()) ){
+      throw new Error('droits insuffisants pour modifier les entreprises')
+    }
+  }
 }

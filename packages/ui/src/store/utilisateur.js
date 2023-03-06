@@ -1,6 +1,6 @@
-import {
-  utilisateurMetas,
-} from '../api/utilisateurs'
+// import {
+//   utilisateurMetas,
+// } from '../api/utilisateurs'
 
 import router from '../router'
 
@@ -13,19 +13,19 @@ const state = {
 }
 
 const actions = {
-  async init({ commit }) {
-    commit('loadingAdd', 'utilisateurInit', { root: true })
+  // async init({ commit }) {
+  //   commit('loadingAdd', 'utilisateurInit', { root: true })
 
-    try {
-      const data = await utilisateurMetas()
+  //   try {
+  //     const data = await utilisateurMetas()
 
-      commit('metasSet', data)
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'utilisateurInit', { root: true })
-    }
-  },
+  //     commit('metasSet', data)
+  //   } catch (e) {
+  //     commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
+  //   } finally {
+  //     commit('loadingRemove', 'utilisateurInit', { root: true })
+  //   }
+  // },
 
   // async add({ commit, dispatch }, utilisateur) {
   //   commit('popupMessagesRemove', null, { root: true })

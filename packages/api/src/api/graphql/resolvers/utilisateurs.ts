@@ -22,23 +22,23 @@ import {
 } from '../../../database/queries/utilisateurs.js'
 
 import { utilisateurUpdationValidate } from '../../../business/validations/utilisateur-updation-validate.js'
-import { utilisateurEditionCheck } from '../../_permissions/utilisateur.js'
 import { newsletterSubscriberUpdate } from '../../../tools/api-mailjet/newsletter.js'
 import {
   isAdministrationAdmin,
-  isAdministrationAdminRole,
   isAdministrationRole,
   isEntrepriseOrBureauDetudeRole,
   isSuper,
   isSuperRole,
-  Role
+  Role,
+  UserNotNull
 } from 'camino-common/src/roles.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import {
   canReadUtilisateurs,
   canCreateUtilisateur,
-  canReadUtilisateur
+  canReadUtilisateur,
 } from 'camino-common/src/permissions/utilisateurs.js'
+import { emailCheck } from '../../../tools/email-check.js'
 
 export const userIdGenerate = async (): Promise<string> => {
   const id = cryptoRandomString({ length: 6 })
@@ -158,16 +158,14 @@ const utilisateurCreer = async (
     )
       throw new Error('droits insuffisants')
 
-    const errors = utilisateurEditionCheck(utilisateur)
+      if (utilisateur.email && !emailCheck(utilisateur.email)) {
+        throw new Error('adresse email invalide')
+      }
 
     const utilisateurWithTheSameEmail = await userByEmailGet(utilisateur.email!)
 
     if (utilisateurWithTheSameEmail) {
-      errors.push('un utilisateur avec cet email existe déjà')
-    }
-
-    if (errors.length) {
-      throw new Error(errors.join(', '))
+      throw new Error('un utilisateur avec cet email existe déjà')
     }
 
     if (
@@ -215,37 +213,14 @@ const utilisateurModifier = async (
   info: GraphQLResolveInfo
 ) => {
   try {
-    const isAdmin = isAdministrationAdmin(user)
+    const utilisateurOld = await userGet(utilisateur.id)
 
-    if (
-      !user ||
-      (!canCreateUtilisateur(user) &&
-        (user.id !== utilisateur.id || user.email !== utilisateur.email)) ||
-      (utilisateur.role &&
-        !isSuper(user) &&
-        (!isAdmin ||
-          isSuperRole(utilisateur.role) ||
-          isAdministrationAdminRole(utilisateur.role)))
-    ) {
-      throw new Error('droits insuffisants')
+    utilisateurUpdationValidate(user, utilisateur, utilisateurOld)
+
+    // Thanks Objection
+    if( !isAdministrationRole(utilisateur.role)){
+      utilisateur.administrationId = null
     }
-
-    const errors = utilisateurEditionCheck(utilisateur)
-
-    const errorsValidate = await utilisateurUpdationValidate(user, utilisateur)
-
-    if (errorsValidate.length) {
-      errors.push(...errorsValidate)
-    }
-
-    if (errors.length) {
-      throw new Error(errors.join(', '))
-    }
-
-    if (!isAdministrationRole(utilisateur.role)) {
-      utilisateur.administrationId = undefined
-    }
-
     if (!isEntrepriseOrBureauDetudeRole(utilisateur.role)) {
       utilisateur.entreprises = []
     }

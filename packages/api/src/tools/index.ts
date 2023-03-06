@@ -2,6 +2,13 @@ import { serialize, deserialize } from 'v8'
 
 import { Index } from '../types.js'
 
+export const equalStringArrays =(arr1: string[], arr2: string[]): boolean => 
+(arr1.length == arr2.length
+    && arr1.every((u, i) => {
+        return u === arr2[i]
+    })
+)
+
 export const dupRemove = (key: string, ...arrays: Index<any>[][]) =>
   arrays.reduce(
     (result, array) =>

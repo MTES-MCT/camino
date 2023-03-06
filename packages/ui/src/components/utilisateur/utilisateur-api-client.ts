@@ -52,11 +52,9 @@ createUtilisateur: async (utilisateur: Omit<Utilisateur, 'id'>) => {
     $token: String
   ) {
     utilisateurCreer(utilisateur: $utilisateur, token: $token) {
-      ...utilisateur
+      id
     }
   }
-
-  ${fragmentUtilisateur}
 `)({utilisateur})
 return data
 
@@ -65,11 +63,9 @@ updateUtilisateur: async (utilisateur: Utilisateur) => {
     await apiGraphQLFetch(gql`
   mutation UtilisateurModifier($utilisateur: InputUtilisateurModification!) {
     utilisateurModifier(utilisateur: $utilisateur) {
-      ...utilisateur
+      id
     }
   }
-
-  ${fragmentUtilisateur}
 `)({utilisateur})
 },
 getEntreprises: async () => {

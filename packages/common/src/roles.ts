@@ -37,6 +37,8 @@ export const isAdministration = (user: User): user is UserLecteur | UserAdmin | 
 export const isAdministrationAdmin = (user: User): user is UserAdmin => userPermissionCheck(user, 'admin')
 export const isAdministrationEditeur = (user: User): user is UserEditeur => userPermissionCheck(user, 'editeur')
 export const isAdministrationLecteur = (user: User): user is UserLecteur => userPermissionCheck(user, 'lecteur')
+export const isEntrepriseOrBureauDEtude = (user: User): user is UserEntreprise | UserBureaudEtudes => isEntreprise(user) || isBureauDEtudes(user)
+
 export const isEntreprise = (user: User): user is UserEntreprise => userPermissionCheck(user, 'entreprise')
 export const isBureauDEtudes = (user: User): user is UserBureaudEtudes => userPermissionCheck(user, 'bureau d’études')
 export const isDefault = (user: User): user is UserDefaut | undefined => !user || userPermissionCheck(user, 'defaut')
@@ -53,4 +55,6 @@ export type UserNotNull = UserSuper | UserDefaut | AdminUserNotNull | Entreprise
 export const isAdministrationRole = (role: Role): role is AdministrationRole => ['admin', 'editeur', 'lecteur'].includes(role)
 export const isAdministrationAdminRole = (role: Role): role is 'admin' => role === 'admin'
 export const isSuperRole = (role: Role): role is 'super' => role === 'super'
+export const isDefautRole = (role: Role): role is 'defaut' => role === 'defaut'
+
 export const isEntrepriseOrBureauDetudeRole = (role: Role): role is EntrepriseOrBureauDetudeRole => ['entreprise', 'bureau d’études'].includes(role)
