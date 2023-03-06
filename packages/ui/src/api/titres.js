@@ -46,7 +46,6 @@ const titresGeoPolygon = apiGraphQLFetch(
       $communes: String
       $departements: [String]
       $regions: [String]
-      $pays: [String]
       $facadesMaritimes: [String]
       $perimetre: [Float!]
     ) {
@@ -61,7 +60,6 @@ const titresGeoPolygon = apiGraphQLFetch(
         communes: $communes
         departements: $departements
         regions: $regions
-        pays: $pays
         facadesMaritimes: $facadesMaritimes
         perimetre: $perimetre
         demandeEnCours: true
@@ -90,7 +88,6 @@ const titresGeo = apiGraphQLFetch(
       $communes: String
       $departements: [String]
       $regions: [String]
-      $pays: [String]
       $facadesMaritimes: [String]
       $perimetre: [Float!]
     ) {
@@ -105,7 +102,6 @@ const titresGeo = apiGraphQLFetch(
         communes: $communes
         departements: $departements
         regions: $regions
-        pays: $pays
         facadesMaritimes: $facadesMaritimes
         perimetre: $perimetre
         demandeEnCours: true
@@ -139,7 +135,6 @@ const titres = apiGraphQLFetch(
       $communes: String
       $departements: [String]
       $regions: [String]
-      $pays: [String]
       $facadesMaritimes: [String]
     ) {
       titres(
@@ -158,7 +153,6 @@ const titres = apiGraphQLFetch(
         communes: $communes
         departements: $departements
         regions: $regions
-        pays: $pays
         facadesMaritimes: $facadesMaritimes
       ) {
         elements {

@@ -20,7 +20,6 @@ const getDefaultState = () => {
       { id: 'communes', type: 'string' },
       { id: 'departements', type: 'strings', values: [] },
       { id: 'regions', type: 'strings', values: [] },
-      { id: 'pays', type: 'strings', values: [] },
       { id: 'facadesMaritimes', type: 'strings', values: [] },
       { id: 'page', type: 'number', value: 1, min: 0 },
       { id: 'intervalle', type: 'number', min: 10, max: 500 },
@@ -64,7 +63,6 @@ const getDefaultState = () => {
         communes: '',
         departements: [],
         regions: [],
-        pays: [],
         facadesMaritimes: []
       }
     },

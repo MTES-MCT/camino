@@ -21,7 +21,6 @@ import TitresEtapes from '../models/titres-etapes.js'
 import { User } from 'camino-common/src/roles'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
-import { PaysId } from 'camino-common/src/static/pays.js'
 import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
 
 /**
@@ -118,7 +117,6 @@ const titresGet = async (
     communes,
     departements,
     regions,
-    pays,
     facadesMaritimes,
     slugs,
     demandeEnCours
@@ -141,7 +139,6 @@ const titresGet = async (
     communes?: string | null
     departements?: DepartementId[] | null
     regions?: RegionId[] | null
-    pays?: PaysId[] | null
     facadesMaritimes?: FacadesMaritimes[] | null
     slugs?: string[] | null
     demandeEnCours?: boolean | null
@@ -171,7 +168,6 @@ const titresGet = async (
       communes,
       departements,
       regions,
-      pays,
       facadesMaritimes
     },
     q
@@ -254,7 +250,6 @@ const titresCount = async (
     communes,
     departements,
     regions,
-    pays,
     facadesMaritimes,
     demandeEnCours
   }: {
@@ -271,7 +266,6 @@ const titresCount = async (
     communes?: string | null
     departements?: DepartementId[] | null
     regions?: RegionId[] | null
-    pays?: PaysId[] | null
     facadesMaritimes?: FacadesMaritimes[] | null
     demandeEnCours?: boolean | null
   } = {},
@@ -295,7 +289,6 @@ const titresCount = async (
       communes,
       departements,
       regions,
-      pays,
       facadesMaritimes
     },
     q

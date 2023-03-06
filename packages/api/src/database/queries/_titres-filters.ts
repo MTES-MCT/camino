@@ -13,7 +13,7 @@ import {
   RegionId,
   regions as regionsStatic
 } from 'camino-common/src/static/region.js'
-import { isPaysId, PaysId } from 'camino-common/src/static/pays.js'
+import { isPaysId } from 'camino-common/src/static/pays.js'
 import {
   FacadesMaritimes,
   getSecteurs
@@ -49,7 +49,6 @@ export const titresFiltersQueryModify = (
     communes,
     departements,
     regions,
-    pays,
     facadesMaritimes
   }: {
     ids?: string[] | null
@@ -66,7 +65,6 @@ export const titresFiltersQueryModify = (
     communes?: string | null
     departements?: DepartementId[] | null
     regions?: RegionId[] | null
-    pays?: PaysId[] | null
     facadesMaritimes?: FacadesMaritimes[] | null
   } = {},
   q:
@@ -307,18 +305,6 @@ export const titresFiltersQueryModify = (
       ...departementsStatic
         .filter(({ regionId }) => regions.includes(regionId))
         .map(({ id }) => id)
-    )
-  }
-
-  if (pays) {
-    departementIds.push(
-      ...regionsStatic
-        .filter(({ paysId }) => pays.includes(paysId))
-        .flatMap(({ id }) =>
-          departementsStatic
-            .filter(({ regionId }) => id === regionId)
-            .map(({ id }) => id)
-        )
     )
   }
 

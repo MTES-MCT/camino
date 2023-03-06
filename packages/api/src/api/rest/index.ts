@@ -35,7 +35,6 @@ import { isRole, User } from 'camino-common/src/roles.js'
 import { utilisateursFormatTable } from './format/utilisateurs.js'
 import { isDepartementId } from 'camino-common/src/static/departement.js'
 import { isRegionId } from 'camino-common/src/static/region.js'
-import { isPaysId } from 'camino-common/src/static/pays.js'
 import { isFacade } from 'camino-common/src/static/facades.js'
 
 const formatCheck = (formats: string[], format: string) => {
@@ -112,7 +111,6 @@ interface ITitresQueryInput {
   communes?: string | null
   departements?: string | null
   regions?: string | null
-  pays?: string | null
   facadesMaritimes?: string | null
   perimetre?: number[] | null
 }
@@ -134,7 +132,6 @@ export const titres = async (
       communes,
       departements,
       regions,
-      pays,
       facadesMaritimes,
       perimetre
     }
@@ -158,7 +155,6 @@ export const titres = async (
       communes,
       departements: departements?.split(',').filter(isDepartementId),
       regions: regions?.split(',').filter(isRegionId),
-      pays: pays?.split(',').filter(isPaysId),
       facadesMaritimes: facadesMaritimes?.split(',').filter(isFacade),
       perimetre,
       demandeEnCours: true

@@ -6,7 +6,6 @@ import { sortedTitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { sortedTitreTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { departements } from 'camino-common/src/static/departement'
 import { regions } from 'camino-common/src/static/region'
-import { pays } from 'camino-common/src/static/pays'
 import { FACADES } from 'camino-common/src/static/facades'
 
 const filtres = [
@@ -62,14 +61,6 @@ const filtres = [
     value: [],
     elements: regions
   },
-  {
-    id: 'pays',
-    name: 'Pays',
-    type: 'autocomplete',
-    value: [],
-    elements: pays
-  },
-
   {
     id: 'facadesMaritimes',
     name: 'Façades Maritimes',

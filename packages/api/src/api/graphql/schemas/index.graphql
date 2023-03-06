@@ -58,7 +58,6 @@ type Query {
     communes: String
     departements: [String]
     regions: [String]
-    pays: [String]
     facadesMaritimes: [String]
     demandeEnCours: Boolean
   ): Titres

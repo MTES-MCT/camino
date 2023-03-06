@@ -22,7 +22,6 @@ import {
 } from 'camino-common/src/permissions/titres.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
-import { PaysId } from 'camino-common/src/static/pays.js'
 import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
 
 const titre = async (
@@ -65,7 +64,6 @@ const titres = async (
     communes,
     departements,
     regions,
-    pays,
     facadesMaritimes,
     demandeEnCours
   }: {
@@ -88,7 +86,6 @@ const titres = async (
     communes: string
     departements: DepartementId[]
     regions: RegionId[]
-    pays: PaysId[]
     facadesMaritimes: FacadesMaritimes[]
     demandeEnCours: boolean | null
   },
@@ -119,7 +116,6 @@ const titres = async (
           communes,
           departements,
           regions,
-          pays,
           facadesMaritimes,
           demandeEnCours
         },
@@ -141,7 +137,6 @@ const titres = async (
           communes,
           departements,
           regions,
-          pays,
           facadesMaritimes,
           demandeEnCours
         },
