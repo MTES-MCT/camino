@@ -1,0 +1,18 @@
+@startuml
+User -> Keycloak: Login
+Keycloak --> User: Set credentials (cookie)
+
+User -> Keycloak: Impersonate user
+Keycloak --> User: Set new user credentials (cookie)
+
+User -> Oauth2Proxy: Go to sign_in url
+Oauth2Proxy --> User: Redirect to keycloak openid-connect
+
+User -> Keycloak: Set cookie and 
+Keycloak --> User: redirect to oauth2_proxy oauth2/callback
+
+User -> Oauth2Proxy: Set oauth2_proxy cookie
+Oauth2Proxy --> User: Redirect to the targeted website
+
+User -> Website: access impersonated
+@enduml
