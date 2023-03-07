@@ -103,7 +103,7 @@ export const PureUtilisateur = defineComponent<Props>({
   props: [
     'user',
     'logout',
-    'deleteUser',
+    'deleteUtilisateur',
     'utilisateurId',
     'apiClient',
     'updateUtilisateur',
