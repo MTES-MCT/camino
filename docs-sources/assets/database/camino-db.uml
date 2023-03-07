@@ -263,7 +263,6 @@ entity "**titres**" {
   --
   *""nom"": //character varying(255) //
   *""type_id"": //character varying(3) [FK]//
-  *""domaine_id"": //character varying(1) [FK]//
   *""titre_statut_id"": //character varying(3) //
   ""date_debut"": //character varying(10) //
   ""date_fin"": //character varying(10) //
@@ -424,20 +423,6 @@ entity "**titres_types**" {
   ""archive"": //boolean //
 }
 
-entity "**titres_types__demarches_types**" {
-  + ""titre_type_id"": //character varying(3) [PK][FK]//
-  + ""demarche_type_id"": //character varying(3) [PK][FK]//
-  --
-  ""duree_max"": //integer //
-  ""acceptation_implicite"": //boolean //
-  ""delai_implicite"": //character varying(255) //
-  ""delai_recours"": //character varying(255) //
-  ""legal_ref"": //character varying(255) //
-  ""legal_lien"": //character varying(255) //
-  ""date_debut"": //character varying(10) //
-  ""date_fin"": //character varying(10) //
-}
-
 entity "**titres_types__demarches_types__etapes_types**" {
   + ""titre_type_id"": //character varying(3) [PK][FK]//
   + ""demarche_type_id"": //character varying(7) [PK][FK]//
@@ -469,7 +454,7 @@ entity "**utilisateurs**" {
   + ""id"": //character varying(255) [PK]//
   --
   ""email"": //character varying(255) //
-  *""mot_de_passe"": //character varying(255) //
+  ""mot_de_passe"": //character varying(255) //
   ""nom"": //character varying(255) //
   ""prenom"": //character varying(255) //
   ""telephone_fixe"": //character varying(255) //
@@ -574,8 +559,6 @@ entity "**utilisateurs__titres**" {
 
 "**journaux**"   }--  "**titres**"
 
-"**titres**"   }--  "**domaines**"
-
 "**titres**"   }--  "**titres_types**"
 
 "**titres__titres**"   }--  "**titres**"
@@ -661,14 +644,6 @@ entity "**utilisateurs__titres**" {
 "**titres_types**"   }--  "**titres_types_types**"
 
 "**titres_types**"   }--  "**titres_types_types**"
-
-"**titres_types__demarches_types**"   }--  "**demarches_types**"
-
-"**titres_types__demarches_types**"   }--  "**demarches_types**"
-
-"**titres_types__demarches_types**"   }--  "**titres_types**"
-
-"**titres_types__demarches_types**"   }--  "**titres_types**"
 
 "**titres_types__demarches_types__etapes_types**"   }--  "**demarches_types**"
 
