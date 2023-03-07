@@ -38,6 +38,7 @@
             <InputAutocomplete
               v-if="input.type === 'autocomplete'"
               :filter="input"
+              :onSelectItems="unused"
             />
             <FiltersInput v-else :filter="input" />
           </template>
@@ -184,6 +185,7 @@ export default {
         this.validate()
       }
     },
+    unused() {},
 
     inputsErase() {
       this.inputs.forEach(filter => {

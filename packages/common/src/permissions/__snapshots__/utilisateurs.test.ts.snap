@@ -1,0 +1,48 @@
+// Vitest Snapshot v1
+
+exports[`getAssignableRoles 1`] = `
+[
+  {
+    "assignableRoles": [
+      "super",
+      "admin",
+      "editeur",
+      "lecteur",
+      "entreprise",
+      "bureau d’études",
+      "defaut",
+    ],
+    "role": "super",
+  },
+  {
+    "assignableRoles": [
+      "lecteur",
+      "editeur",
+      "entreprise",
+      "bureau d’études",
+      "defaut",
+    ],
+    "role": "admin",
+  },
+  {
+    "assignableRoles": [],
+    "role": "editeur",
+  },
+  {
+    "assignableRoles": [],
+    "role": "lecteur",
+  },
+  {
+    "assignableRoles": [],
+    "role": "entreprise",
+  },
+  {
+    "assignableRoles": [],
+    "role": "bureau d’études",
+  },
+  {
+    "assignableRoles": [],
+    "role": "defaut",
+  },
+]
+`;

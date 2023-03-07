@@ -6,24 +6,26 @@ export const canReadUtilisateurs = (user: User) => isSuper(user) || isAdministra
 
 export const canReadUtilisateur = (user: User, id: string) => user?.id === id || canReadUtilisateurs(user)
 export const canEditUtilisateur = (user: User, utilisateur: User) => {
-    if (isSuper(user) ) {
-        return true
-    }
-    if (isAdministrationAdmin(user) && (isAdministrationEditeur(utilisateur) || isAdministrationLecteur(utilisateur)) && user.administrationId === utilisateur.administrationId ) {
-        return true
-    }
-    if (user?.id === utilisateur?.id) {
-        return true
-    }
-    return false
+  if (isSuper(user)) {
+    return true
+  }
+  if (isAdministrationAdmin(user) && (isAdministrationEditeur(utilisateur) || isAdministrationLecteur(utilisateur)) && user.administrationId === utilisateur.administrationId) {
+    return true
+  }
+  if (user?.id === utilisateur?.id) {
+    return true
+  }
+
+  return false
 }
 
-export const getAssignableRoles = (user: User): readonly Role[]  => {
-    if (isSuper(user) ) {
-        return ROLES
-    }
-    if (isAdministrationAdmin(user)) {
-        return ['lecteur', 'editeur', 'entreprise', 'bureau d’études', 'defaut']
-    }
-    return []
+export const getAssignableRoles = (user: User): readonly Role[] => {
+  if (isSuper(user)) {
+    return ROLES
+  }
+  if (isAdministrationAdmin(user)) {
+    return ['lecteur', 'editeur', 'entreprise', 'bureau d’études', 'defaut']
+  }
+
+  return []
 }

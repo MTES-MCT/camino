@@ -2,6 +2,7 @@ import { computed, defineComponent, Ref, ref, watch } from 'vue'
 import { Chip } from './chip'
 import styles from './typeahead.module.css'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 type TypeAheadRecord = Record<string | symbol | number, any>
 
@@ -44,7 +45,7 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
           .map(o =>
             props.items.find(i => i[props.itemKey] === o[props.itemKey])
           )
-          .filter((o): o is T => !!o)
+          .filter(isNotNullNorUndefined)
       const selectedItems = ref<T[]>(
         getItems(props.overrideItems ?? [])
       ) as Ref<T[]>

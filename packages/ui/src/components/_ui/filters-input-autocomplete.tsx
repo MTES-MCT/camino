@@ -1,14 +1,13 @@
-import { defineComponent, onMounted, ref, watch } from "vue";
+import { defineComponent, onMounted, ref, watch } from 'vue'
 import { TypeAhead } from '@/components/_ui/typeahead'
+import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 export type Element = { id: string; nom: string }
-
 
 type RemoteFilter = {
   lazy: true
   search: (input: string) => Promise<{ elements: Element[] }>
   load: (ids: string[]) => Promise<{ elements: Element[] }>
 }
-
 
 type LocalFilter = {
   lazy: false
@@ -19,19 +18,19 @@ type Filter = {
   value: string[]
   elements: Element[]
   name: string
-}  & (LocalFilter | RemoteFilter)
+} & (LocalFilter | RemoteFilter)
 interface Props {
   filter: Filter
   onSelectItems: (e: Element[]) => void
 }
 export const InputAutocomplete = defineComponent<Props>({
   props: ['filter', 'onSelectItems'] as unknown as undefined,
-  setup(props) {    
+  setup(props) {
     const selectedItems = ref<Element[]>([])
     const items = ref<Element[]>(props.filter.elements)
     const allKnownItems = ref<Record<string, Element>>({})
     const overrideItems = ref<Element[]>([])
-    
+
     watch(
       () => props.filter.value,
       newValues => {
@@ -39,14 +38,14 @@ export const InputAutocomplete = defineComponent<Props>({
           overrideItems.value =
             newValues
               .map(id => allKnownItems.value[id])
-              .filter(
-                (elem: Element | undefined): elem is Element => elem !== undefined
-              ) ?? []
+              .filter(isNotNullNorUndefined) ?? []
+
+          selectedItems.value = overrideItems.value
         }
       },
-      { deep: true, immediate: true }
+      { deep: true }
     )
-    
+
     onMounted(async () => {
       if (props.filter.lazy && props.filter.value?.length) {
         const result = await props.filter.load(props.filter.value)
@@ -68,16 +67,17 @@ export const InputAutocomplete = defineComponent<Props>({
           .filter(
             (elem: Element | undefined): elem is Element => elem !== undefined
           )
+        selectedItems.value = overrideItems.value
       }
     })
-    
+
     const updateHandler = (e: Element[]) => {
       selectedItems.value = e
       // TODO 2022-04-08: ceci est pour le composant parent, une fois refactoré, utiliser uniquement le onSelectItems
       props.filter.value = e.map(({ id }) => id)
       props.onSelectItems(e)
     }
-    
+
     const search = async (value: string) => {
       if (props.filter.lazy) {
         const result = await props.filter.search(value)
@@ -97,22 +97,24 @@ export const InputAutocomplete = defineComponent<Props>({
       }
     }
 
-    return () => (<div class="mb">
-    <h5>{ props.filter.name }</h5>
-    <hr class="mb-s" />
+    return () => (
+      <div class="mb">
+        <h5>{props.filter.name}</h5>
+        <hr class="mb-s" />
 
-    <TypeAhead
-      id={'filters_autocomplete_' + props.filter.name}
-      itemKey="id"
-      placeholder={props.filter.name}
-      type="multiple"
-      items={items.value}
-      overrideItems={overrideItems.value}
-      minInputLength={props.filter.lazy ? 3 : 1}
-      itemChipLabel={item => item.nom}
-      onSelectItems={updateHandler}
-      onInput={search}
-    />
-  </div>)
+        <TypeAhead
+          id={'filters_autocomplete_' + props.filter.name}
+          itemKey="id"
+          placeholder={props.filter.name}
+          type="multiple"
+          items={items.value}
+          overrideItems={overrideItems.value}
+          minInputLength={props.filter.lazy ? 3 : 1}
+          itemChipLabel={item => item.nom}
+          onSelectItems={updateHandler}
+          onInput={search}
+        />
+      </div>
+    )
   }
 })
