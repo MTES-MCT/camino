@@ -51,8 +51,8 @@ const isUser = (
   ) {
     return true
   }
-  
-return false
+
+  return false
 }
 
 const userIsCorrect = (
