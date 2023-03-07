@@ -1,23 +1,18 @@
 import { Utilisateur } from '@/api/api-client'
 import {
-  isAdministrationRole,
   isEntrepriseOrBureauDetudeRole,
   Role,
   User,
   isAdministration,
-  isAdministrationAdmin,
   isBureauDEtudes,
   isEntreprise,
-  isSuper,
-  ROLES
+  isSuper
 } from 'camino-common/src/roles'
-import { computed, defineComponent, onMounted, ref, watch } from 'vue'
-import { FunctionalPopup } from '../_ui/functional-popup'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import {
   isAdministrationId,
   sortedAdministrations
 } from 'camino-common/src/static/administrations'
-import router from '@/router'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
@@ -26,36 +21,24 @@ import { InputAutocomplete, Element } from '../_ui/filters-input-autocomplete'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 import { getAssignableRoles } from 'camino-common/src/permissions/utilisateurs'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { FunctionalPopup } from '../_ui/functional-popup'
 
 interface Props {
   user: User
   getEntreprises: () => Promise<Entreprise[]>
   close: () => void
-  values:
-    | {
-        action: 'edit'
-        utilisateur: Utilisateur
-        subscription: boolean
-        update: (
-          utilisateur: Utilisateur,
-          subscription: boolean
-        ) => Promise<void>
-      }
-    | {
-        action: 'create'
-        create: (
-          utilisateur: Utilisateur,
-          subscription: boolean
-        ) => Promise<{ id: string }>
-      }
-}
-
-const formIsVisible = (user: User): boolean => {
-  return isSuper(user) || isAdministrationAdmin(user)
+  utilisateur: Omit<Utilisateur, 'nom' | 'prenom'>
+  update: (utilisateur: Utilisateur) => Promise<void>
 }
 
 export const EditPopup = defineComponent<Props>({
-  props: ['user', 'getEntreprises', 'values', 'close'] as unknown as undefined,
+  props: [
+    'user',
+    'getEntreprises',
+    'utilisateur',
+    'update',
+    'close'
+  ] as unknown as undefined,
   setup(props) {
     const assignableRoles = getAssignableRoles(props.user)
     const onSelectEntreprises = (
@@ -91,14 +74,10 @@ export const EditPopup = defineComponent<Props>({
     })
     const complete = computed(() => {
       const formComplete =
-        props.values.action === 'create'
-          ? utilisateurPopup.value.nom &&
-            utilisateurPopup.value.prenom &&
-            utilisateurPopup.value.email
-          : utilisateurPopup.value.nom &&
-            utilisateurPopup.value.prenom &&
-            utilisateurPopup.value.id &&
-            utilisateurPopup.value.email
+        utilisateurPopup.value.nom &&
+        utilisateurPopup.value.prenom &&
+        utilisateurPopup.value.id &&
+        utilisateurPopup.value.email
 
       if (!formComplete) {
         return false
@@ -130,74 +109,10 @@ export const EditPopup = defineComponent<Props>({
         utilisateurPopup.value.administrationId = e.target.value
       }
     }
-    const title =
-      props.values.action === 'create'
-        ? "Création d'un compte utilisateur"
-        : 'Modification du compte utilisateur'
-    const utilisateurPopup = ref<Utilisateur>(
-      props.values.action === 'edit'
-        ? cloneAndClean(props.values.utilisateur)
-        : { nom: '', id: 'unused', email: '', prenom: '', role: 'defaut' }
-    )
-    const subscription = ref<boolean>(
-      props.values.action === 'edit' ? props.values.subscription : false
-    )
+    const utilisateurPopup = ref<Utilisateur>(cloneAndClean(props.utilisateur))
 
     const content = () => (
       <div>
-        {props.values.action === 'create' ? (
-          <div>
-            <p>Renseignez au moins l'email, le prénom et le nom.</p>
-            <hr />
-          </div>
-        ) : null}
-        {formIsVisible(props.user) ? (
-          <div class="tablet-blobs">
-            <div class="mb tablet-blob-1-3 tablet-pt-s pb-s">
-              <h5>Email</h5>
-            </div>
-            <div class="mb tablet-blob-2-3">
-              <input
-                value={utilisateurPopup.value.email}
-                type="email"
-                class="p-s"
-                placeholder="Email"
-              />
-            </div>
-          </div>
-        ) : null}
-
-        <hr />
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-            <h5>Prénom</h5>
-          </div>
-          <div class="mb tablet-blob-2-3">
-            <input
-              value={utilisateurPopup.value.prenom}
-              type="text"
-              class="p-s"
-              placeholder="Prénom"
-            />
-          </div>
-        </div>
-
-        <hr />
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-            <h5>Nom</h5>
-          </div>
-          <div class="mb tablet-blob-2-3">
-            <input
-              value={utilisateurPopup.value.nom}
-              type="text"
-              class="p-s"
-              placeholder="Nom"
-            />
-          </div>
-        </div>
-
-        <hr />
         <div class="tablet-blobs">
           <div class="tablet-blob-1-3 tablet-pt-s pb-s">
             <h5>Téléphone fixe</h5>
@@ -305,24 +220,6 @@ export const EditPopup = defineComponent<Props>({
             ) : null}
           </div>
         ) : null}
-
-        <hr />
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-            <h5>Newsletter</h5>
-          </div>
-          <div class="mb tablet-blob-2-3">
-            <label class="tablet-pt-s">
-              <input
-                checked={subscription.value}
-                onInput={() => (subscription.value = !subscription.value)}
-                type="checkbox"
-                class="p-s mt-s mb-s mr-xs"
-              />
-              {subscription.value ? <span>Inscrit</span> : null}
-            </label>
-          </div>
-        </div>
       </div>
     )
 
@@ -345,34 +242,7 @@ export const EditPopup = defineComponent<Props>({
           utilisateur.entreprises = []
         }
 
-        let utilisateurId = utilisateur.id
-        if (props.values.action === 'create') {
-          if (!utilisateur.role) {
-            utilisateur.role = 'defaut'
-          }
-
-          const utilisateurSaved = await props.values.create(
-            utilisateur,
-            subscription.value
-          )
-
-          // const utilisateurSaved = await this.$store.dispatch(
-          //   'utilisateur/add',
-          //   utilisateur
-          // )
-
-          utilisateurId = utilisateurSaved.id
-        } else {
-          // await this.$store.dispatch('utilisateur/update', utilisateur)
-          await props.values.update(utilisateur, subscription.value)
-        }
-
-        if (props.values.action === 'create') {
-          await router.push({
-            name: 'utilisateur',
-            params: { id: utilisateurId }
-          })
-        }
+        await props.update(utilisateur)
       }
     }
 
@@ -388,7 +258,7 @@ export const EditPopup = defineComponent<Props>({
 
     return () => (
       <FunctionalPopup
-        title={title}
+        title={`Modification du compte ${props.utilisateur.email}`}
         content={content}
         validate={{ text: 'Enregistrer', can: complete.value, action: save }}
         close={props.close}

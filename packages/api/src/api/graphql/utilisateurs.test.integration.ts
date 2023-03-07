@@ -1,14 +1,10 @@
-import { app } from '../../../tests/app.js'
 import {
   graphQLCall,
   queryImport,
-  tokenCreate,
   userGenerate
 } from '../../../tests/_utils/index.js'
 import { userAdd } from '../../knex/user-add.js'
-import request from 'supertest'
 import { dbManager } from '../../../tests/db-manager.js'
-import { Administrations } from 'camino-common/src/static/administrations.js'
 import { Knex } from 'knex'
 import {
   expect,
@@ -46,13 +42,17 @@ describe('utilisateurModifier', () => {
           id: 'test',
           prenom: 'toto-updated',
           nom: 'test-updated',
-          email: 'test@camino.local'
+          email: 'test@camino.local',
+          role: 'defaut',
+          entreprises: []
         }
       },
       undefined
     )
 
-    expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
+    expect(res.body.errors[0].message).toMatchInlineSnapshot(
+      '"l\'utilisateur n\'existe pas"'
+    )
   })
 
   test('peut modifier son compte utilisateur', async () => {
@@ -64,7 +64,9 @@ describe('utilisateurModifier', () => {
           id: user.id,
           prenom: 'toto-updated',
           nom: 'test-updated',
-          email: user.email
+          email: user.email,
+          role: 'defaut',
+          entreprises: []
         }
       },
       {
@@ -75,189 +77,6 @@ describe('utilisateurModifier', () => {
     expect(res.body.errors).toBeUndefined()
     expect(res.body).toMatchObject({
       data: { utilisateurModifier: { id: user.id } }
-    })
-  })
-})
-
-describe('utilisateursCreer', () => {
-  const utilisateurCreerQuery = queryImport('utilisateur-creer')
-
-  test("ne peut pas créer de compte sans token ou si le token ne contient pas d'email", async () => {
-    const res = await graphQLCall(
-      utilisateurCreerQuery,
-      {
-        utilisateur: {
-          prenom: 'toto',
-          nom: 'test',
-          email: 'test@camino.local'
-        }
-      },
-      undefined
-    )
-
-    expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
-  })
-
-  test('crée un compte utilisateur si le token contient son email', async () => {
-    const token = tokenCreate({ email: 'test2@camino.local' })
-
-    const req = request(app)
-      .post('/')
-      .send({
-        query: utilisateurCreerQuery,
-        variables: {
-          utilisateur: {
-            prenom: 'toto',
-            nom: 'test',
-            email: 'test2@camino.local'
-          }
-        }
-      })
-
-    req.set('x-forwarded-access-token', token)
-    const res = await req
-
-    expect(res.body.errors).toBeUndefined()
-    expect(res.body).toMatchObject({
-      data: { utilisateurCreer: { prenom: 'toto' } }
-    })
-  })
-
-  test("en tant que 'defaut', ne peut pas créer de compte 'super'", async () => {
-    const res = await graphQLCall(
-      utilisateurCreerQuery,
-      {
-        utilisateur: {
-          prenom: 'toto',
-          nom: 'test',
-          email: 'test@camino.local',
-          role: 'super'
-        }
-      },
-      { role: 'defaut' }
-    )
-
-    expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
-  })
-
-  test("en tant que 'defaut', ne peut pas créer de compte avec un email différent", async () => {
-    const token = tokenCreate({ id: 'defaut', email: 'test@camino.local' })
-
-    const res = await request(app)
-      .post('/')
-      .send({
-        query: utilisateurCreerQuery,
-        variables: {
-          utilisateur: {
-            prenom: 'toto',
-            nom: 'test',
-            email: 'autre@camino.local'
-          }
-        }
-      })
-      .set('Authorization', `Bearer ${token}`)
-
-    expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
-  })
-
-  test("en tant que 'super', peut créer un compte utilisateur 'super'", async () => {
-    const res = await graphQLCall(
-      utilisateurCreerQuery,
-      {
-        utilisateur: {
-          prenom: 'toto',
-          nom: 'test',
-          email: 'test@camino.local',
-          role: 'super'
-        }
-      },
-      { role: 'super' }
-    )
-
-    expect(res.body.errors).toBeUndefined()
-    expect(res.body).toMatchObject({
-      data: { utilisateurCreer: { prenom: 'toto' } }
-    })
-  })
-
-  test("en tant que 'defaut', ne peut pas être associé à une administration", async () => {
-    const res = await graphQLCall(
-      utilisateurCreerQuery,
-      {
-        utilisateur: {
-          prenom: 'toto',
-          nom: 'test',
-          email: 'test@camino.local',
-          administrationId: Administrations['aut-97300-01'].id
-        }
-      },
-      { role: 'defaut' }
-    )
-
-    expect(res.body.errors[0].message).toMatch(/droits insuffisants/)
-  })
-
-  test("en tant qu'admin', peut être associé à une administrations", async () => {
-    const administration = Administrations['aut-97300-01']
-    const res = await graphQLCall(
-      utilisateurCreerQuery,
-      {
-        utilisateur: {
-          prenom: 'test',
-          nom: 'test',
-          email: 'test@camino.local',
-          role: 'admin',
-          administrationId: administration.id
-        }
-      },
-      { role: 'super' }
-    )
-
-    expect(res.body.errors).toBeUndefined()
-    expect(res.body).toMatchObject({
-      data: { utilisateurCreer: { prenom: 'test' } }
-    })
-  })
-
-  test("ne peut pas être associé à une entreprise (utilisateur 'defaut')", async () => {
-    const res = await graphQLCall(
-      utilisateurCreerQuery,
-      {
-        utilisateur: {
-          prenom: 'toto',
-          nom: 'test',
-          email: 'test@camino.local',
-          entreprises: [{ id: 'entreprise' }]
-        }
-      },
-      { role: 'super' }
-    )
-
-    expect(res.body.errors[0].message).toBe(
-      "le rôle de cet utilisateur ne permet pas de l'associer à une entreprise"
-    )
-  })
-
-  test("peut être associé à une entreprise (utilisateur 'entreprise')", async () => {
-    await knex('entreprises').insert({ id: 'entreprise', nom: 'entre' })
-
-    const res = await graphQLCall(
-      utilisateurCreerQuery,
-      {
-        utilisateur: {
-          prenom: 'toto',
-          nom: 'test',
-          email: 'test@camino.local',
-          role: 'entreprise',
-          entreprises: [{ id: 'entreprise' }]
-        }
-      },
-      { role: 'super' }
-    )
-
-    expect(res.body.errors).toBeUndefined()
-    expect(res.body).toMatchObject({
-      data: { utilisateurCreer: { prenom: 'toto' } }
     })
   })
 })

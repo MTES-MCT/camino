@@ -10,7 +10,8 @@ import {
   isEntrepriseOrBureauDetudeRole,
   isEntrepriseOrBureauDEtude,
   isDefautRole,
-  isSuperRole
+  isSuperRole,
+  isRole
 } from 'camino-common/src/roles.js'
 import {
   canEditUtilisateur,
@@ -27,6 +28,9 @@ const isUser = (
   >
 ): utilisateur is UserNotNull => {
   if (!utilisateur.email || !emailCheck(utilisateur.email)) {
+    return false
+  }
+  if (!isRole(utilisateur.role)) {
     return false
   }
   if (
@@ -62,7 +66,6 @@ const userIsCorrect = (
   >
 ): boolean => isUser(utilisateur)
 
-// FIXME DO the createUser
 export const utilisateurUpdationValidate = (
   user: User,
   utilisateur: Pick<

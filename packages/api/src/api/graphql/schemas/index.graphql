@@ -252,12 +252,6 @@ type Query {
 Ces requêtes sont __protégées__. Elles nécessitent une authentification par token (jwt) et un niveau de permission suffisant.
 """
 type Mutation {
-  "Crée un utilisateur"
-  utilisateurCreer(
-    utilisateur: InputUtilisateurCreation!
-    token: String
-  ): Utilisateur
-
   "Modifie un utilisateur"
   utilisateurModifier(utilisateur: InputUtilisateurModification!): Utilisateur
 

@@ -4,16 +4,22 @@ import { fragmentUtilisateur } from '@/api/fragments/utilisateur'
 import { apiGraphQLFetch } from '@/api/_client'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
+import { QGISToken } from 'camino-common/src/utilisateur'
+
 import gql from 'graphql-tag'
-import { fetchWithJson } from '../../api/client-rest'
+import { fetchWithJson, postWithJson } from '../../api/client-rest'
 
 export interface UtilisateurApiClient {
   getUtilisateur: (userId: string) => Promise<Utilisateur>
   getUtilisateurNewsletter: (userId: string) => Promise<boolean>
+  updateUtilisateurNewsletter: (
+    userId: string,
+    subscribe: boolean
+  ) => Promise<void>
   removeUtilisateur: (userId: string) => Promise<void>
   updateUtilisateur: (user: Utilisateur) => Promise<void>
-  createUtilisateur: (user: Omit<Utilisateur, 'id'>) => Promise<Utilisateur>
   getEntreprises: () => Promise<Entreprise[]>
+  getQGISToken: () => Promise<QGISToken>
 }
 
 export const utilisateurApiClient: UtilisateurApiClient = {
@@ -38,6 +44,13 @@ export const utilisateurApiClient: UtilisateurApiClient = {
       'get'
     )
   },
+  updateUtilisateurNewsletter: async (userId: string, newsletter: boolean) => {
+    return await postWithJson(
+      CaminoRestRoutes.newsletter,
+      { id: userId },
+      { newsletter }
+    )
+  },
   removeUtilisateur: async (userId: string) => {
     await apiGraphQLFetch(gql`
       mutation UtilisateurSupprimer($id: ID!) {
@@ -48,19 +61,6 @@ export const utilisateurApiClient: UtilisateurApiClient = {
 
       ${fragmentUtilisateur}
     `)({ id: userId })
-  },
-  createUtilisateur: async (utilisateur: Omit<Utilisateur, 'id'>) => {
-    const data = await apiGraphQLFetch(gql`
-      mutation UtilisateurCreer(
-        $utilisateur: InputUtilisateurCreation!
-        $token: String
-      ) {
-        utilisateurCreer(utilisateur: $utilisateur, token: $token) {
-          id
-        }
-      }
-    `)({ utilisateur })
-    return data
   },
   updateUtilisateur: async (utilisateur: Utilisateur) => {
     await apiGraphQLFetch(gql`
@@ -88,5 +88,7 @@ export const utilisateurApiClient: UtilisateurApiClient = {
       `
     )()
     return elements
-  }
+  },
+  getQGISToken: async () =>
+    fetchWithJson(CaminoRestRoutes.generateQgisToken, {}, 'post')
 }
