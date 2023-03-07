@@ -15,10 +15,8 @@ const state = {
 const actions = {
   // async init({ commit }) {
   //   commit('loadingAdd', 'utilisateurInit', { root: true })
-
   //   try {
   //     const data = await utilisateurMetas()
-
   //     commit('metasSet', data)
   //   } catch (e) {
   //     commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
@@ -26,16 +24,13 @@ const actions = {
   //     commit('loadingRemove', 'utilisateurInit', { root: true })
   //   }
   // },
-
   // async add({ commit, dispatch }, utilisateur) {
   //   commit('popupMessagesRemove', null, { root: true })
   //   commit('popupLoad', null, { root: true })
   //   commit('loadingAdd', 'utilisateurAdd', { root: true })
   //   try {
   //     const data = await utilisateurCreer({ utilisateur })
-
   //     commit('popupClose', null, { root: true })
-
   //     dispatch(
   //       'messageAdd',
   //       {
@@ -44,7 +39,6 @@ const actions = {
   //       },
   //       { root: true }
   //     )
-
   //     return data
   //   } catch (e) {
   //     commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
@@ -52,21 +46,16 @@ const actions = {
   //     commit('loadingRemove', 'utilisateurAdd', { root: true })
   //   }
   // },
-
   // async update({ commit, dispatch, rootState }, utilisateur) {
   //   commit('popupMessagesRemove', null, { root: true })
   //   commit('popupLoad', null, { root: true })
   //   commit('loadingAdd', 'utilisateurUpdate', { root: true })
-
   //   try {
   //     const data = await utilisateurModifier({ utilisateur })
-
   //     commit('popupClose', null, { root: true })
-
   //     if (utilisateur.id === rootState.user.element.id) {
   //       commit('user/set', data, { root: true })
   //     }
-
   //     await dispatch(
   //       'reload',
   //       { name: 'utilisateur', id: data.id },

@@ -14,15 +14,19 @@ const meta: Meta = {
 export default meta
 
 const onSelectItems = action('onSelectItems')
-export const Default: Story =  () => (<InputAutocomplete filter={{
-  id: 'id',
-  name: 'Items',
-  value: [],
-  elements: [
-    { id: 'id1', nom: 'name1' },
-    { id: 'id2', nom: 'name2' },
-    { id: 'id3', nom: 'name3' }
-  ],
-  lazy: false
-}}
-onSelectItems={onSelectItems}/>)
+export const Default: Story = () => (
+  <InputAutocomplete
+    filter={{
+      id: 'id',
+      name: 'Items',
+      value: [],
+      elements: [
+        { id: 'id1', nom: 'name1' },
+        { id: 'id2', nom: 'name2' },
+        { id: 'id3', nom: 'name3' }
+      ],
+      lazy: false
+    }}
+    onSelectItems={onSelectItems}
+  />
+)

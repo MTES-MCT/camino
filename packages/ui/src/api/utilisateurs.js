@@ -65,7 +65,6 @@ export const utilisateurs = apiGraphQLFetch(
   `
 )
 
-
 export const newsletterInscrire = apiGraphQLFetch(gql`
   mutation NewsletterInscrire($email: String!) {
     newsletterInscrire(email: $email)

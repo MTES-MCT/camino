@@ -12,9 +12,13 @@ export default meta
 const deleteUser = action('deleteUser')
 const close = action('close')
 
-export const Default: Story = () => (<RemovePopup utilisateur={{nom: 'Nom', prenom: 'Prénom'}} deleteUser={() => {
-  deleteUser()
-  return Promise.resolve()
-}} 
-close={close}
-/>)
+export const Default: Story = () => (
+  <RemovePopup
+    utilisateur={{ nom: 'Nom', prenom: 'Prénom' }}
+    deleteUser={() => {
+      deleteUser()
+      return Promise.resolve()
+    }}
+    close={close}
+  />
+)

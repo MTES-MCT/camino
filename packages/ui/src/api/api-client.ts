@@ -12,7 +12,10 @@ import {
   TitreApiClient,
   titreApiClient
 } from '../components/titre/titre-api-client'
-import { UtilisateurApiClient, utilisateurApiClient } from '@/components/utilisateur/utilisateur-api-client'
+import {
+  UtilisateurApiClient,
+  utilisateurApiClient
+} from '@/components/utilisateur/utilisateur-api-client'
 
 export type Utilisateur = {
   id: string

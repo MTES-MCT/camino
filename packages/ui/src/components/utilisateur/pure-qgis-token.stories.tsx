@@ -8,8 +8,12 @@ const meta: Meta = {
 }
 export default meta
 
-
-export const Default: Story = () => (<QGisToken generateTokenCall={() =>
-  new Promise(resolve =>
-    setTimeout(() => resolve({ token: 'token123' }), 1000)
-  )}/>)
+export const Default: Story = () => (
+  <QGisToken
+    generateTokenCall={() =>
+      new Promise(resolve =>
+        setTimeout(() => resolve({ token: 'token123' }), 1000)
+      )
+    }
+  />
+)

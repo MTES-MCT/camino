@@ -14,7 +14,7 @@ import EtapeEdition from '../components/etape-edition.vue'
 import ActiviteEdition from '../components/activite-edition.vue'
 import Travaux from '../components/travaux.vue'
 const Utilisateur = async () => {
-  const {Utilisateur} = await import('../components/utilisateur')
+  const { Utilisateur } = await import('../components/utilisateur')
   return Utilisateur
 }
 const Utilisateurs = () => import('../components/utilisateurs.vue')

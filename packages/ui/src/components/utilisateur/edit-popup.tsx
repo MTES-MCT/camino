@@ -3,8 +3,7 @@ import {
   isAdministrationRole,
   isEntrepriseOrBureauDetudeRole,
   Role,
-  User
-,
+  User,
   isAdministration,
   isAdministrationAdmin,
   isBureauDEtudes,

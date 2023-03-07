@@ -17,72 +17,76 @@ export interface UtilisateurApiClient {
 }
 
 export const utilisateurApiClient: UtilisateurApiClient = {
-    getUtilisateur: async (userId: string) => {
+  getUtilisateur: async (userId: string) => {
     const data = await apiGraphQLFetch(gql`
-    query Utilisateur($id: ID!) {
-      utilisateur(id: $id) {
-        ...utilisateur
+      query Utilisateur($id: ID!) {
+        utilisateur(id: $id) {
+          ...utilisateur
+        }
       }
-    }
 
-    ${fragmentUtilisateur}
-  `)({
-    id: userId
-  })
-  return data
-},
-getUtilisateurNewsletter: async (userId: string) => {
-    return await fetchWithJson(CaminoRestRoutes.newsletter, {id: userId}, 'get')
-},
-removeUtilisateur: async (userId: string) => {
+      ${fragmentUtilisateur}
+    `)({
+      id: userId
+    })
+    return data
+  },
+  getUtilisateurNewsletter: async (userId: string) => {
+    return await fetchWithJson(
+      CaminoRestRoutes.newsletter,
+      { id: userId },
+      'get'
+    )
+  },
+  removeUtilisateur: async (userId: string) => {
     await apiGraphQLFetch(gql`
-  mutation UtilisateurSupprimer($id: ID!) {
-    utilisateurSupprimer(id: $id) {
-      ...utilisateur
-    }
-  }
+      mutation UtilisateurSupprimer($id: ID!) {
+        utilisateurSupprimer(id: $id) {
+          ...utilisateur
+        }
+      }
 
-  ${fragmentUtilisateur}
-`)({id: userId})
-},
-createUtilisateur: async (utilisateur: Omit<Utilisateur, 'id'>) => {
-   const data = await apiGraphQLFetch(gql`
-  mutation UtilisateurCreer(
-    $utilisateur: InputUtilisateurCreation!
-    $token: String
-  ) {
-    utilisateurCreer(utilisateur: $utilisateur, token: $token) {
-      id
-    }
-  }
-`)({utilisateur})
-return data
-
-},
-updateUtilisateur: async (utilisateur: Utilisateur) => {
+      ${fragmentUtilisateur}
+    `)({ id: userId })
+  },
+  createUtilisateur: async (utilisateur: Omit<Utilisateur, 'id'>) => {
+    const data = await apiGraphQLFetch(gql`
+      mutation UtilisateurCreer(
+        $utilisateur: InputUtilisateurCreation!
+        $token: String
+      ) {
+        utilisateurCreer(utilisateur: $utilisateur, token: $token) {
+          id
+        }
+      }
+    `)({ utilisateur })
+    return data
+  },
+  updateUtilisateur: async (utilisateur: Utilisateur) => {
     await apiGraphQLFetch(gql`
-  mutation UtilisateurModifier($utilisateur: InputUtilisateurModification!) {
-    utilisateurModifier(utilisateur: $utilisateur) {
-      id
-    }
-  }
-`)({utilisateur})
-},
-getEntreprises: async () => {
+      mutation UtilisateurModifier(
+        $utilisateur: InputUtilisateurModification!
+      ) {
+        utilisateurModifier(utilisateur: $utilisateur) {
+          id
+        }
+      }
+    `)({ utilisateur })
+  },
+  getEntreprises: async () => {
     const { elements } = await apiGraphQLFetch(
-        gql`
-          query UtilisateurMetas {
-            entreprises {
-              elements {
-                ...entreprises
-              }
+      gql`
+        query UtilisateurMetas {
+          entreprises {
+            elements {
+              ...entreprises
             }
           }
-      
-          ${fragmentEntreprises}
-        `
-      )()
-      return elements
-      
-}
+        }
+
+        ${fragmentEntreprises}
+      `
+    )()
+    return elements
+  }
 }
