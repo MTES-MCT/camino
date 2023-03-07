@@ -29,14 +29,13 @@ import {
   isEntrepriseOrBureauDetudeRole,
   isSuper,
   isSuperRole,
-  Role,
-  UserNotNull
+  Role
 } from 'camino-common/src/roles.js'
 import { getCurrent } from 'camino-common/src/date.js'
 import {
   canReadUtilisateurs,
   canCreateUtilisateur,
-  canReadUtilisateur,
+  canReadUtilisateur
 } from 'camino-common/src/permissions/utilisateurs.js'
 import { emailCheck } from '../../../tools/email-check.js'
 
@@ -158,9 +157,9 @@ const utilisateurCreer = async (
     )
       throw new Error('droits insuffisants')
 
-      if (utilisateur.email && !emailCheck(utilisateur.email)) {
-        throw new Error('adresse email invalide')
-      }
+    if (utilisateur.email && !emailCheck(utilisateur.email)) {
+      throw new Error('adresse email invalide')
+    }
 
     const utilisateurWithTheSameEmail = await userByEmailGet(utilisateur.email!)
 
@@ -218,7 +217,7 @@ const utilisateurModifier = async (
     utilisateurUpdationValidate(user, utilisateur, utilisateurOld)
 
     // Thanks Objection
-    if( !isAdministrationRole(utilisateur.role)){
+    if (!isAdministrationRole(utilisateur.role)) {
       utilisateur.administrationId = null
     }
     if (!isEntrepriseOrBureauDetudeRole(utilisateur.role)) {

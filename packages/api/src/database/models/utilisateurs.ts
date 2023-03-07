@@ -51,14 +51,12 @@ class Utilisateurs extends Model {
   })
 
   public $parseJson(json: Pojo) {
-
     json = super.$parseJson(json)
 
     return json
   }
 
   public $formatDatabaseJson(json: Pojo) {
-
     json = super.$formatDatabaseJson(json)
 
     return json
