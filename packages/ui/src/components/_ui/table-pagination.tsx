@@ -11,18 +11,22 @@ export interface Params {
   range?: number
 }
 interface Props {
-  columns: readonly Column[]
-  rows: TableRow[]
-  total: number
-  range?: Range
-  page?: number
+  data: {
+    columns: readonly Column[]
+    rows: TableRow[]
+    total: number
+  }
+  pagination: {
+    active?: boolean
+    range?: Range
+    page?: number
+  }
   column?: string
   order?: 'asc' | 'desc'
-  pagination?: boolean
   paramsUpdate: (params: Params | TableSortEvent) => void
 }
 
-export const TablePagination = caminoDefineComponent<Props>(['columns', 'rows', 'total', 'range', 'page', 'column', 'order', 'pagination', 'paramsUpdate'], props => {
+export const TablePagination = caminoDefineComponent<Props>(['data', 'column', 'order', 'pagination', 'paramsUpdate'], props => {
   const update = (params: Params | TableSortEvent) => {
     if (!Object.keys(params).includes('page') && pagination.value) {
       Object.assign(params, { page: 1 })
@@ -38,10 +42,10 @@ export const TablePagination = caminoDefineComponent<Props>(['columns', 'rows', 
     update({ page })
   }
   const range = computed(() => {
-    return props.range ?? 200
+    return props.pagination.range ?? 200
   })
   const page = computed(() => {
-    return props.page ?? 1
+    return props.pagination.page ?? 1
   })
 
   const column = computed(() => {
@@ -53,21 +57,21 @@ export const TablePagination = caminoDefineComponent<Props>(['columns', 'rows', 
   })
 
   const pagination = computed(() => {
-    return props.pagination ?? true
+    return props.pagination.active ?? true
   })
   const pages = computed(() => {
-    return Math.ceil(props.total / range.value)
+    return Math.ceil(props.data.total / range.value)
   })
   return () => (
     <div>
-      <Table column={column.value} columns={props.columns} order={order.value} rows={props.rows} class="width-full-p" update={update} />
+      <Table column={column.value} columns={props.data.columns} order={order.value} rows={props.data.rows} class="width-full-p" update={update} />
 
       {pagination.value ? (
         <div class="desktop-blobs">
           <div class="desktop-blob-3-4">
             <Pagination active={page.value} total={pages.value} visibles={5} pageChange={pageUpdate} />
           </div>
-          <div class="desktop-blob-1-4">{props.total > 10 ? <Ranges range={range.value} rangeUpdate={rangeUpdate} /> : null}</div>
+          <div class="desktop-blob-1-4">{props.data.total > 10 ? <Ranges range={range.value} rangeUpdate={rangeUpdate} /> : null}</div>
         </div>
       ) : null}
     </div>

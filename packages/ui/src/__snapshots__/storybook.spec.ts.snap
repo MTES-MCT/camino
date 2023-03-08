@@ -7037,60 +7037,72 @@ exports[`Storybook Tests > Components/Titre/Territoires > OnlySurface 1`] = `
 `;
 
 exports[`Storybook Tests > Components/Titre/TitresLink > AXM 1`] = `
-"<div class=\\"top-level\\" style=\\"\\" data-v-b0094f72=\\"\\">
+"<div class=\\"\\" style=\\"\\">
   <div id=\\"titre-link-typeahead_wrapper\\" class=\\"_typeahead_8eddf1\\">
     <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
       <!----><input id=\\"titre-link-typeahead\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Lier un titre\\" autocomplete=\\"off\\">
     </div>
     <!---->
   </div>
+  <!---->
+  <!---->
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Titre/TitresLink > AXMWithAlreadySelectedTitre 1`] = `
-"<div class=\\"top-level\\" style=\\"\\" data-v-b0094f72=\\"\\">
+"<div class=\\"\\" style=\\"\\">
   <div id=\\"titre-link-typeahead_wrapper\\" class=\\"_typeahead_8eddf1\\">
     <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\">
       <!----><input id=\\"titre-link-typeahead\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Lier un titre\\" autocomplete=\\"off\\">
     </div>
     <!---->
   </div>
+  <!---->
+  <!---->
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Titre/TitresLink > DemarcheFusion 1`] = `
-"<div class=\\"top-level\\" style=\\"\\" data-v-b0094f72=\\"\\">
+"<div class=\\"\\" style=\\"\\">
   <div id=\\"titre-link-typeahead_wrapper\\" class=\\"_typeahead_8eddf1\\">
     <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\"><input id=\\"titre-link-typeahead\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Lier plusieurs titres\\" autocomplete=\\"off\\"></div>
     <!---->
   </div>
+  <!---->
+  <!---->
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Titre/TitresLink > DemarcheFusionWithAlreadySelectedTitre 1`] = `
-"<div class=\\"top-level\\" style=\\"\\" data-v-b0094f72=\\"\\">
+"<div class=\\"\\" style=\\"\\">
   <div id=\\"titre-link-typeahead_wrapper\\" class=\\"_typeahead_8eddf1\\">
     <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\"><button class=\\"bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs\\">Abttis Coucou <span>x</span></button><button class=\\"bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs\\">Affluent Crique Saint Bernard <span>x</span></button><input id=\\"titre-link-typeahead\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Lier plusieurs titres\\" autocomplete=\\"off\\"></div>
     <!---->
   </div>
+  <!---->
+  <!---->
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Titre/TitresLink > Loading 1`] = `
-"<div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-  <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+"<div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+  <!---->
+  <!---->
+  <div class=\\"_spinner_3306d0\\"></div>
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Titre/TitresLink > WithError 1`] = `
-"<div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-  <div data-v-b0094f72=\\"\\">
-    <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+"<div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
+  <!---->
+  <div>
+    <div class=\\"_tooltip_4f6ea8\\">
       <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
         <use href=\\"#icon-error-warning\\"></use>
       </svg>
     </div>
   </div>
+  <!---->
 </div>"
 `;
 

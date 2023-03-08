@@ -91,16 +91,18 @@ export const InputAutocomplete = caminoDefineComponent<Props>(['filter', 'onSele
       <hr class="mb-s" />
 
       <TypeAhead
-        id={'filters_autocomplete_' + props.filter.name}
-        itemKey="id"
-        placeholder={props.filter.name}
-        type="multiple"
-        items={items.value}
-        overrideItems={overrideItems.value}
-        minInputLength={props.filter.lazy ? 3 : 1}
-        itemChipLabel={item => item.nom}
-        onSelectItems={updateHandler}
-        onInput={search}
+        props={{
+          id: 'filters_autocomplete_' + props.filter.name,
+          itemKey: 'id',
+          placeholder: props.filter.name,
+          type: 'multiple',
+          items: items.value,
+          overrideItems: overrideItems.value,
+          minInputLength: props.filter.lazy ? 3 : 1,
+          itemChipLabel: item => item.nom,
+          onSelectItems: updateHandler,
+          onInput: search,
+        }}
       />
     </div>
   )

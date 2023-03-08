@@ -15,12 +15,12 @@ import { isSuper, User } from 'camino-common/src/roles'
 import { canReadActivitesTypesEmails } from 'camino-common/src/permissions/administrations'
 import { Departement, Departements } from 'camino-common/src/static/departement'
 import { Region, Regions } from 'camino-common/src/static/region'
-import { computed, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { AsyncData } from '@/api/client-rest'
 import { ActiviteTypeEmail } from './administration/administration-api-client'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
-export const Administration = caminoDefineComponent([], () => {
+export const Administration = defineComponent(() => {
   const store = useStore()
   const route = useRoute()
 

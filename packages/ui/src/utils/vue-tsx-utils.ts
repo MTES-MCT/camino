@@ -1,7 +1,17 @@
 import { DefineComponent, defineComponent, RenderFunction, SetupContext } from 'vue'
 
+type PushFront<TailT extends any[], HeadT> = ((head: HeadT, ...tail: TailT) => void) extends (...arr: infer ArrT) => void ? ArrT : never
+
+type CalculatePermutations<U extends string | number | symbol, ResultT extends any[] = []> = {
+  [k in U]: [Exclude<U, k>] extends [never] ? PushFront<ResultT, k> : CalculatePermutations<Exclude<U, k>, PushFront<ResultT, k>>
+}[U]
+
+type TupMax<T, Max extends number, A extends T[] = []> = Max extends A['length'] ? A : TupMax<T, Max, [...A, T]>
+
+// var test: CalculatePermutations<ABunchOfTypes> = [ ];
+
 // TODO 2023-03-08: supprimer ça le jour où https://github.com/vuejs/rfcs/discussions/282 est implémenté
-export function caminoDefineComponent<T>(props: (keyof T)[], setup: (props: Readonly<T>, ctx: SetupContext) => RenderFunction): DefineComponent<T> {
+export function caminoDefineComponent<T>(props: CalculatePermutations<keyof T>, setup: (props: Readonly<T>, ctx: SetupContext) => RenderFunction): DefineComponent<T> {
   const r = defineComponent(setup)
   r.props = props
   return r

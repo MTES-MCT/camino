@@ -72,29 +72,31 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapesTypesIds',
         </div>
         <div class="mb tablet-blob-2-3">
           <TypeAhead
-            id="select-etape-type"
-            type="single"
-            placeholder=""
-            items={etapesTypesFiltered.value}
-            overrideItems={etapeTypeExistante.value}
-            minInputLength={0}
-            itemKey="id"
-            itemChipLabel={item => item.nom}
-            onSelectItem={(type: EtapeType | undefined) => {
-              if (type) {
-                etapeTypeSearch.value = ''
-                const statuts = getEtapesStatuts(type.id)
-                if (statuts.length === 1) {
-                  etapeStatutId.value = statuts[0].id
-                } else {
-                  etapeStatutId.value = null
-                }
+            props={{
+              id: 'select-etape-type',
+              type: 'single',
+              placeholder: '',
+              items: etapesTypesFiltered.value,
+              overrideItems: etapeTypeExistante.value,
+              minInputLength: 0,
+              itemKey: 'id',
+              itemChipLabel: item => item.nom,
+              onSelectItem: (type: EtapeType | undefined) => {
+                if (type) {
+                  etapeTypeSearch.value = ''
+                  const statuts = getEtapesStatuts(type.id)
+                  if (statuts.length === 1) {
+                    etapeStatutId.value = statuts[0].id
+                  } else {
+                    etapeStatutId.value = null
+                  }
 
-                etapeTypeId.value = type.id
-                props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
-              }
+                  etapeTypeId.value = type.id
+                  props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
+                }
+              },
+              onInput: (searchTerm: string) => (etapeTypeSearch.value = searchTerm),
             }}
-            onInput={(searchTerm: string) => (etapeTypeSearch.value = searchTerm)}
           />
         </div>
       </div>

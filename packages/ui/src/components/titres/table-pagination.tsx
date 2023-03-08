@@ -63,13 +63,18 @@ export const TablePagination = caminoDefineComponent<Props>(['titres', 'total'],
 
   return () => (
     <UITablePagination
+      data={{
+        columns: colonnes.value,
+        rows: lignes.value,
+        total: props.total,
+      }}
+      pagination={{
+        active: true,
+        page: preferences.value.page,
+        range: preferences.value.intervalle,
+      }}
       column={preferences.value.colonne}
-      columns={colonnes.value}
       order={preferences.value.ordre}
-      page={preferences.value.page}
-      range={preferences.value.intervalle}
-      rows={lignes.value}
-      total={props.total}
       paramsUpdate={preferencesUpdate}
     />
   )

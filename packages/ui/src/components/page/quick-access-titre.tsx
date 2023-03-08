@@ -92,17 +92,19 @@ export const PureQuickAccessTitre = caminoDefineComponent<Props>(['titres', 'onS
 
   return () => (
     <TypeAhead
-      id="quick-access-titre"
-      itemKey="id"
-      placeholder="Rechercher un titre"
-      type="single"
-      items={props.titres}
-      overrideItems={overrideItems.value}
-      minInputLength={3}
-      itemChipLabel={item => item.nom}
-      onSelectItem={selectItem}
-      onInput={event => debounce(() => props.onSearch(event))}
-      displayItemInList={display}
+      props={{
+        id: 'quick-access-titre',
+        itemKey: 'id',
+        placeholder: 'Rechercher un titre',
+        type: 'single',
+        items: props.titres,
+        overrideItems: overrideItems.value,
+        minInputLength: 3,
+        itemChipLabel: item => item.nom,
+        onSelectItem: selectItem,
+        onInput: event => debounce(() => props.onSearch(event)),
+        displayItemInList: display,
+      }}
     />
   )
 })

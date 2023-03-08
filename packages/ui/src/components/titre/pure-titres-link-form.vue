@@ -4,7 +4,7 @@
       <div v-if="item.amont.length || canLink">
         <h5>Titre{{ linkConfig && linkConfig.count === 'multiple' ? 's' : '' }} à l’origine de ce titre</h5>
         <div v-if="mode === 'edit'">
-          <PureTitresLink v-if="titreLinkConfig" :config="titreLinkConfig" :loadLinkableTitres="apiClient.loadLinkableTitres(titre.typeId, titre.demarches)" @onSelectedTitres="onSelectedTitres" />
+          <TitresLink v-if="titreLinkConfig" :config="titreLinkConfig" :loadLinkableTitres="apiClient.loadLinkableTitres(titre.typeId, titre.demarches)" @onSelectedTitres="onSelectedTitres" />
           <div class="flex mt-m" style="flex-direction: row-reverse">
             <button class="btn-primary ml-s" style="flex: 0 1 min-content" @click="saveLink">Enregistrer</button>
             <button class="btn-secondary" style="flex: 0 1 min-content" @click="mode = 'read'">Annuler</button>
@@ -48,7 +48,7 @@ import { computed, onMounted, ref, watch } from 'vue'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { User } from 'camino-common/src/roles'
 import { AdministrationId } from 'camino-common/src/static/administrations'
-import PureTitresLink from './pure-titres-link.vue'
+import { TitresLink } from './pure-titres-link'
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { Icon } from '@/components/_ui/icon'

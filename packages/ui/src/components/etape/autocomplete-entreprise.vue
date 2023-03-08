@@ -16,23 +16,12 @@
         </button>
       </div>
     </div>
-    <TypeAhead
-      id="autocomplete_entreprise"
-      itemKey="id"
-      :placeholder="placeholder"
-      type="single"
-      :items="selectableEntities"
-      :overrideItems="overrideItems"
-      :minInputLength="2"
-      :itemChipLabel="item => item.nom"
-      :onSelectItem="addEntity"
-      :onInput="event => (inputValue = event)"
-    />
+    <TypeAhead :props="typeAheadProps" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { TypeAhead } from '@/components/_ui/typeahead'
+import { TypeAhead, TypeAheadType } from '@/components/_ui/typeahead'
 import { computed, ref, watch, withDefaults } from 'vue'
 import { Icon } from '@/components/_ui/icon'
 import { EtapeEntreprise } from 'camino-common/src/etape'
@@ -95,4 +84,19 @@ const toggleOperator = (entity: EtapeEntreprise) => {
 }
 
 const getEntrepriseNom = (entity: EtapeEntreprise) => props.allEntities.find(({ id }) => id === entity.id)?.nom ?? ''
+
+const itemKey: keyof Entreprise = 'id'
+const type: TypeAheadType = 'single'
+const typeAheadProps = {
+  id: 'autocomplete_entreprise',
+  itemKey,
+  placeholder: props.placeholder,
+  type,
+  items: selectableEntities.value,
+  overrideItems: overrideItems.value,
+  minInputLength: 2,
+  itemChipLabel: (item: Entreprise) => item.nom,
+  onSelectItem: addEntity,
+  onInput: (event: string) => (inputValue.value = event),
+}
 </script>

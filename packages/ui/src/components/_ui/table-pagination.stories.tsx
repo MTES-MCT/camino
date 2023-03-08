@@ -86,4 +86,17 @@ const rows: TableRow[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(row => {
 })
 
 const paramsUpdate = action('paramsUpdate')
-export const PaginationSimple: Story = () => <TablePagination rows={rows} columns={columns} total={200} paramsUpdate={paramsUpdate} pagination={true} range={10} />
+export const PaginationSimple: Story = () => (
+  <TablePagination
+    data={{
+      rows,
+      columns,
+      total: 200,
+    }}
+    paramsUpdate={paramsUpdate}
+    pagination={{
+      active: true,
+      range: 10,
+    }}
+  />
+)
