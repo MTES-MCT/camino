@@ -15,8 +15,8 @@ class Domaines extends Model {
     properties: {
       id: { type: 'string', maxLength: 1 },
       nom: { type: 'string' },
-      ordre: { type: 'integer' }
-    }
+      ordre: { type: 'integer' },
+    },
   }
 
   static relationMappings = () => ({
@@ -25,9 +25,9 @@ class Domaines extends Model {
       modelClass: TitresTypes,
       join: {
         from: 'domaines.id',
-        to: 'titresTypes.domaineId'
-      }
-    }
+        to: 'titresTypes.domaineId',
+      },
+    },
 
     // ça pourrait servir, mais…
     // types: {
@@ -47,7 +47,7 @@ class Domaines extends Model {
   public static modifiers: Modifiers = {
     orderAsc: builder => {
       builder.orderBy('ordre', 'asc')
-    }
+    },
   }
 }
 

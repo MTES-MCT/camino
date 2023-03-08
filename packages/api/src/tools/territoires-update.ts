@@ -6,11 +6,7 @@ import JSZip from 'jszip'
 import Forets from '../database/models/forets.js'
 import { Readable } from 'stream'
 import { SDOMZoneId, SDOMZoneIds } from 'camino-common/src/static/sdom.js'
-import {
-  assertsFacade,
-  assertsSecteur,
-  secteurAJour
-} from 'camino-common/src/static/facades.js'
+import { assertsFacade, assertsSecteur, secteurAJour } from 'camino-common/src/static/facades.js'
 import { createRequire } from 'node:module'
 const require = createRequire(import.meta.url)
 const { streamArray } = require('stream-json/streamers/StreamArray')
@@ -18,17 +14,11 @@ const { withParser } = require('stream-json/filters/Pick')
 const { chain } = require('stream-chain')
 
 const communesUpdate = async () => {
-  const communesIdsKnown: string[] = (await Communes.query()).map(
-    ({ id }) => id
-  )
-  const communesPostgisIdsKnown: string[] = (
-    await knex.select('id').from('communes_postgis')
-  ).map(({ id }: { id: string }) => id)
+  const communesIdsKnown: string[] = (await Communes.query()).map(({ id }) => id)
+  const communesPostgisIdsKnown: string[] = (await knex.select('id').from('communes_postgis')).map(({ id }: { id: string }) => id)
   console.info('Téléchargement du fichier des communes')
 
-  const communesFetch = await fetch(
-    'http://etalab-datasets.geo.data.gouv.fr/contours-administratifs/latest/geojson/communes-5m.geojson'
-  )
+  const communesFetch = await fetch('http://etalab-datasets.geo.data.gouv.fr/contours-administratifs/latest/geojson/communes-5m.geojson')
 
   console.info('Traitement du fichier des communes')
   if (communesFetch.body === null) {
@@ -44,40 +34,34 @@ const communesUpdate = async () => {
       }
       const commune = value
       try {
-        const result = await knex.raw(
-          `select ST_MakeValid(ST_MULTI(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
-            commune.geometry
-          )}'), 4326))) as result`
-        )
+        const result = await knex.raw(`select ST_MakeValid(ST_MULTI(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(commune.geometry)}'), 4326))) as result`)
 
         if (communesPostgisIdsKnown.includes(commune.properties.code)) {
-          await knex('communes_postgis')
-            .where('id', commune.properties.code)
-            .update({
-              geometry: result.rows[0].result
-            })
+          await knex('communes_postgis').where('id', commune.properties.code).update({
+            geometry: result.rows[0].result,
+          })
         } else {
           await knex('communes_postgis').insert({
             id: commune.properties.code,
-            geometry: result.rows[0].result
+            geometry: result.rows[0].result,
           })
         }
         if (communesIdsKnown.includes(commune.properties.code)) {
           await knex('communes').where('id', commune.properties.code).update({
             nom: commune.properties.nom,
-            departementId: commune.properties.departement
+            departementId: commune.properties.departement,
           })
         } else {
           await knex('communes').insert({
             id: commune.properties.code,
             nom: commune.properties.nom,
-            departementId: commune.properties.departement
+            departementId: commune.properties.departement,
           })
         }
       } catch (e) {
         console.error(commune.properties.nom, e)
       }
-    }
+    },
   ])
   const promise = new Promise<void>((resolve, reject) => {
     pipeline.on('error', (error: any) => {
@@ -95,9 +79,7 @@ const communesUpdate = async () => {
 
 const geoguyaneFileGet = async (path: string) => {
   const dataUrlFetch = await fetch(path)
-  const dataUrlJson = await dataUrlFetch
-    .json()
-    .then((value: any) => value as { data: any })
+  const dataUrlJson = await dataUrlFetch.json().then((value: any) => value as { data: any })
 
   console.info('Téléchargement des données', dataUrlJson.data)
   const foretsZip = await fetch(dataUrlJson.data)
@@ -117,39 +99,33 @@ const foretsUpdate = async () => {
   const geojson = await geoguyaneFileGet(foretsUrlGenerator)
 
   const foretsIdsKnown = (await Forets.query()).map(({ id }) => id)
-  const foretsPostgisIdsKnown: string[] = (
-    await knex.select('id').from('forets_postgis')
-  ).map(({ id }: { id: string }) => id)
+  const foretsPostgisIdsKnown: string[] = (await knex.select('id').from('forets_postgis')).map(({ id }: { id: string }) => id)
 
   console.info('Traitement du fichier des forets')
 
   for (const foret of geojson.features) {
     try {
-      const result = await knex.raw(
-        `select ST_MakeValid(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
-          foret.geometry
-        )}'), 4326)) as result`
-      )
+      const result = await knex.raw(`select ST_MakeValid(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(foret.geometry)}'), 4326)) as result`)
 
       const id = foret.properties.code_for
       if (foretsPostgisIdsKnown.includes(id)) {
         await knex('forets_postgis').where('id', id).update({
-          geometry: result.rows[0].result
+          geometry: result.rows[0].result,
         })
       } else {
         await knex('forets_postgis').insert({
           id,
-          geometry: result.rows[0].result
+          geometry: result.rows[0].result,
         })
       }
       if (foretsIdsKnown.includes(id)) {
         await knex('forets').where('id', id).update({
-          nom: foret.properties.foret
+          nom: foret.properties.foret,
         })
       } else {
         await knex('forets').insert({
           id,
-          nom: foret.properties.foret
+          nom: foret.properties.foret,
         })
       }
     } catch (e) {
@@ -165,13 +141,9 @@ const secteursMaritimeUpdates = async () => {
   const secteursUrl =
     'https://gisdata.cerema.fr/arcgis/rest/services/Carte_vocation_dsf_2020/MapServer/0/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=secteur%2Cfacade%2COBJECTID%2Cid&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&having=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&historicMoment=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentOnly=false&datumTransformation=&parameterValues=&rangeValues=&quantizationParameters=&f=geojson'
 
-  const secteurs = await (await fetch(secteursUrl))
-    .json()
-    .then((value: any) => value as { features: any[] })
+  const secteurs = await (await fetch(secteursUrl)).json().then((value: any) => value as { features: any[] })
 
-  const secteurIdsKnown: number[] = (
-    await knex.select('id').from('secteurs_maritime_postgis')
-  ).map(({ id }: any) => id)
+  const secteurIdsKnown: number[] = (await knex.select('id').from('secteurs_maritime_postgis')).map(({ id }: any) => id)
   for (const secteur of secteurs.features) {
     try {
       const id: number = secteur.id
@@ -183,25 +155,19 @@ const secteursMaritimeUpdates = async () => {
       assertsSecteur(nomFacade, nomSecteur)
 
       if (!secteurAJour(nomFacade, nomSecteur, id, secteurId)) {
-        throw new Error(
-          `L'id ou le secteur id a changé '${nomFacade}', '${nomSecteur}', '${secteurId}', '${id}'`
-        )
+        throw new Error(`L'id ou le secteur id a changé '${nomFacade}', '${nomSecteur}', '${secteurId}', '${id}'`)
       }
 
-      const result = await knex.raw(
-        `select ST_MakeValid(ST_Multi(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
-          secteur.geometry
-        )}'), 4326))) as result`
-      )
+      const result = await knex.raw(`select ST_MakeValid(ST_Multi(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(secteur.geometry)}'), 4326))) as result`)
 
       if (secteurIdsKnown.includes(id)) {
         await knex('secteurs_maritime_postgis').where('id', id).update({
-          geometry: result.rows[0].result
+          geometry: result.rows[0].result,
         })
       } else {
         await knex('secteurs_maritime_postgis').insert({
           id,
-          geometry: result.rows[0].result
+          geometry: result.rows[0].result,
         })
       }
     } catch (e) {
@@ -219,23 +185,23 @@ const sdomZonesUpdate = async () => {
     {
       id: SDOMZoneIds.Zone0Potentielle,
       nom: 'ZONE 0, potentielle',
-      url: 'https://telecarto.geoguyane.fr/?email=&direct=MQ%3D%3D&mode=prodige&data_type=vector&service_idx=1&format=anNvbg%3D%3D&projection=NDMyNg%3D%3D&data=UE9TVEdJU19EQVRBJTNBem9uZV8wX3BvdGVudGllbGxlX3NfOTcz&metadata_id=NjYwMzYwMjE%3D&bTerritoire=0&territoire_type=&territoire_data=&territoire_area=%25&extractionattributaire_couche=&restricted_area_field=%25&restricted_area_buffer=%25'
+      url: 'https://telecarto.geoguyane.fr/?email=&direct=MQ%3D%3D&mode=prodige&data_type=vector&service_idx=1&format=anNvbg%3D%3D&projection=NDMyNg%3D%3D&data=UE9TVEdJU19EQVRBJTNBem9uZV8wX3BvdGVudGllbGxlX3NfOTcz&metadata_id=NjYwMzYwMjE%3D&bTerritoire=0&territoire_type=&territoire_data=&territoire_area=%25&extractionattributaire_couche=&restricted_area_field=%25&restricted_area_buffer=%25',
     },
     {
       id: SDOMZoneIds.Zone0,
       nom: 'ZONE 0, activité minière interdite',
-      url: 'https://telecarto.geoguyane.fr/?email=&direct=MQ%3D%3D&mode=prodige&data_type=vector&service_idx=1&format=anNvbg%3D%3D&projection=NDMyNg%3D%3D&data=UE9TVEdJU19EQVRBJTNBem9uZV8wX3NfOTcz&metadata_id=NjYwMzU4ODE%3D&bTerritoire=0&territoire_type=&territoire_data=&territoire_area=%25&extractionattributaire_couche=&restricted_area_field=%25&restricted_area_buffer=%25'
+      url: 'https://telecarto.geoguyane.fr/?email=&direct=MQ%3D%3D&mode=prodige&data_type=vector&service_idx=1&format=anNvbg%3D%3D&projection=NDMyNg%3D%3D&data=UE9TVEdJU19EQVRBJTNBem9uZV8wX3NfOTcz&metadata_id=NjYwMzU4ODE%3D&bTerritoire=0&territoire_type=&territoire_data=&territoire_area=%25&extractionattributaire_couche=&restricted_area_field=%25&restricted_area_buffer=%25',
     },
     {
       id: SDOMZoneIds.Zone1,
       nom: 'ZONE 1, activité minière interdite sauf exploitation souterraine et recherches aériennes',
-      url: 'https://telecarto.geoguyane.fr/?email=&direct=MQ%3D%3D&mode=prodige&data_type=vector&service_idx=1&format=anNvbg%3D%3D&projection=NDMyNg%3D%3D&data=UE9TVEdJU19EQVRBJTNBem9uZV8xX3NfOTcz&metadata_id=NjYwMzU4ODI%3D&bTerritoire=0&territoire_type=&territoire_data=&territoire_area=%25&extractionattributaire_couche=&restricted_area_field=%25&restricted_area_buffer=%25'
+      url: 'https://telecarto.geoguyane.fr/?email=&direct=MQ%3D%3D&mode=prodige&data_type=vector&service_idx=1&format=anNvbg%3D%3D&projection=NDMyNg%3D%3D&data=UE9TVEdJU19EQVRBJTNBem9uZV8xX3NfOTcz&metadata_id=NjYwMzU4ODI%3D&bTerritoire=0&territoire_type=&territoire_data=&territoire_area=%25&extractionattributaire_couche=&restricted_area_field=%25&restricted_area_buffer=%25',
     },
     {
       id: SDOMZoneIds.Zone2,
       nom: 'ZONE 2, activité minière autorisée sous contrainte',
-      url: 'https://telecarto.geoguyane.fr/?email=&direct=MQ%3D%3D&mode=prodige&data_type=vector&service_idx=1&format=anNvbg%3D%3D&projection=NDMyNg%3D%3D&data=UE9TVEdJU19EQVRBJTNBem9uZV8yX3NfOTcz&metadata_id=NjYwMzU4ODM%3D&bTerritoire=0&territoire_type=&territoire_data=&territoire_area=%25&extractionattributaire_couche=&restricted_area_field=%25&restricted_area_buffer=%25'
-    }
+      url: 'https://telecarto.geoguyane.fr/?email=&direct=MQ%3D%3D&mode=prodige&data_type=vector&service_idx=1&format=anNvbg%3D%3D&projection=NDMyNg%3D%3D&data=UE9TVEdJU19EQVRBJTNBem9uZV8yX3NfOTcz&metadata_id=NjYwMzU4ODM%3D&bTerritoire=0&territoire_type=&territoire_data=&territoire_area=%25&extractionattributaire_couche=&restricted_area_field=%25&restricted_area_buffer=%25',
+    },
   ]
 
   for (const zone of zones) {
@@ -245,26 +211,20 @@ const sdomZonesUpdate = async () => {
 
     console.info('Traitement du fichier de la ' + zone.nom)
 
-    const sdomZonesPostgisIdsKnown: string[] = (
-      await knex.select('id').from('sdom_zones_postgis')
-    ).map(({ id }: { id: string }) => id)
+    const sdomZonesPostgisIdsKnown: string[] = (await knex.select('id').from('sdom_zones_postgis')).map(({ id }: { id: string }) => id)
 
     try {
       const zoneFeature = geojson.features[0]
-      const result = await knex.raw(
-        `select ST_MakeValid(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(
-          zoneFeature.geometry
-        )}'), 4326)) as result`
-      )
+      const result = await knex.raw(`select ST_MakeValid(ST_SetSRID(ST_GeomFromGeoJSON('${JSON.stringify(zoneFeature.geometry)}'), 4326)) as result`)
 
       if (sdomZonesPostgisIdsKnown.includes(zone.id)) {
         await knex('sdom_zones_postgis').where('id', zone.id).update({
-          geometry: result.rows[0].result
+          geometry: result.rows[0].result,
         })
       } else {
         await knex('sdom_zones_postgis').insert({
           id: zone.id,
-          geometry: result.rows[0].result
+          geometry: result.rows[0].result,
         })
       }
     } catch (e) {

@@ -34,8 +34,4 @@ const fragmentActiviteTypePays = gql`
   }
 `
 
-export {
-  fragmentActiviteType,
-  fragmentActiviteTypeDocumentType,
-  fragmentActiviteTypePays
-}
+export { fragmentActiviteType, fragmentActiviteTypeDocumentType, fragmentActiviteTypePays }

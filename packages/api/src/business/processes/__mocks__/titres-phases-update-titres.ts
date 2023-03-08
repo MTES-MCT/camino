@@ -11,10 +11,10 @@ const titresSansPhase = [
         typeId: 'oct',
         statutId: 'acc',
         ordre: 1,
-        etapes: []
-      }
-    ]
-  } as unknown as Titres
+        etapes: [],
+      },
+    ],
+  } as unknown as Titres,
 ]
 
 const titresUnePhase = [
@@ -34,7 +34,7 @@ const titresUnePhase = [
             statutId: 'acc',
             ordre: 2,
             date: '2200-01-01',
-            dateFin: '2500-01-01'
+            dateFin: '2500-01-01',
           },
           {
             id: 'h-cx-courdemanges-1988-oct01-dex01',
@@ -42,12 +42,12 @@ const titresUnePhase = [
             statutId: 'acc',
             ordre: 1,
             date: '2200-01-01',
-            dateFin: '2500-01-01'
-          }
-        ]
-      }
-    ]
-  } as Titres
+            dateFin: '2500-01-01',
+          },
+        ],
+      },
+    ],
+  } as Titres,
 ]
 
 const titrePhase = [
@@ -55,8 +55,8 @@ const titrePhase = [
     titreDemarcheId: 'h-cx-courdemanges-1988-oct01',
     dateFin: '2500-01-01',
     dateDebut: '2200-01-01',
-    phaseStatutId: 'val'
-  }
+    phaseStatutId: 'val',
+  },
 ] as ITitrePhase[]
 
 const titresUnePhaseMiseAJour = [
@@ -73,7 +73,7 @@ const titresUnePhaseMiseAJour = [
           titreDemarcheId: 'h-cx-courdemanges-1988-oct01',
           dateFin: '2500-01-01',
           dateDebut: '2300-01-01',
-          phaseStatutId: 'val'
+          phaseStatutId: 'val',
         },
         etapes: [
           {
@@ -82,7 +82,7 @@ const titresUnePhaseMiseAJour = [
             statutId: 'acc',
             ordre: 2,
             date: '2200-01-01',
-            dateFin: '2500-01-01'
+            dateFin: '2500-01-01',
           },
           {
             id: 'h-cx-courdemanges-1988-oct01-dex01',
@@ -90,12 +90,12 @@ const titresUnePhaseMiseAJour = [
             statutId: 'acc',
             ordre: 1,
             date: '2200-01-01',
-            dateFin: '2500-01-01'
-          }
-        ]
-      }
-    ]
-  } as Titres
+            dateFin: '2500-01-01',
+          },
+        ],
+      },
+    ],
+  } as Titres,
 ]
 
 const titresPhaseASupprimer = [
@@ -112,12 +112,12 @@ const titresPhaseASupprimer = [
           titreDemarcheId: 'h-cx-courdemanges-1988-oct01',
           dateFin: '2500-01-01',
           dateDebut: '2200-01-01',
-          statutId: 'val'
+          statutId: 'val',
         },
-        etapes: []
-      }
-    ]
-  } as unknown as Titres
+        etapes: [],
+      },
+    ],
+  } as unknown as Titres,
 ]
 
 const titresUnePhaseSansChangement = [
@@ -134,7 +134,7 @@ const titresUnePhaseSansChangement = [
           titreDemarcheId: 'h-cx-courdemanges-1988-oct01',
           dateFin: '2500-01-01',
           dateDebut: '2200-01-01',
-          phaseStatutId: 'val'
+          phaseStatutId: 'val',
         },
         etapes: [
           {
@@ -143,7 +143,7 @@ const titresUnePhaseSansChangement = [
             statutId: 'acc',
             ordre: 2,
             date: '2200-01-01',
-            dateFin: '2500-01-01'
+            dateFin: '2500-01-01',
           },
           {
             id: 'h-cx-courdemanges-1988-oct01-dex01',
@@ -151,19 +151,12 @@ const titresUnePhaseSansChangement = [
             statutId: 'acc',
             ordre: 1,
             date: '2200-01-01',
-            dateFin: '2500-01-01'
-          }
-        ]
-      }
-    ]
-  } as Titres
+            dateFin: '2500-01-01',
+          },
+        ],
+      },
+    ],
+  } as Titres,
 ]
 
-export {
-  titresSansPhase,
-  titresUnePhase,
-  titrePhase,
-  titresUnePhaseMiseAJour,
-  titresPhaseASupprimer,
-  titresUnePhaseSansChangement
-}
+export { titresSansPhase, titresUnePhase, titrePhase, titresUnePhaseMiseAJour, titresPhaseASupprimer, titresUnePhaseSansChangement }

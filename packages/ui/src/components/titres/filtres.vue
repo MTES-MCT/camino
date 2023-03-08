@@ -1,12 +1,5 @@
 <template>
-  <Filtres
-    :filtres="filtres"
-    :initialized="initialized"
-    :metas="metas"
-    :params="params"
-    @params-update="paramsFiltresUpdate"
-    @toggle="filtresToggle"
-  />
+  <Filtres :filtres="filtres" :initialized="initialized" :metas="metas" :params="params" @params-update="paramsFiltresUpdate" @toggle="filtresToggle" />
 </template>
 
 <script>
@@ -18,12 +11,12 @@ export default {
   components: { Filtres },
 
   props: {
-    initialized: { type: Boolean, required: true }
+    initialized: { type: Boolean, required: true },
   },
 
   data() {
     return {
-      filtres
+      filtres,
     }
   },
 
@@ -38,39 +31,33 @@ export default {
 
     definitions() {
       return this.$store.state.titres.definitions
-    }
+    },
   },
 
   methods: {
     paramsFiltresUpdate(params) {
       this.$store.dispatch('titres/paramsSet', {
         section: 'filtres',
-        params
+        params,
       })
 
       this.$store.dispatch('titres/paramsSet', {
         section: 'table',
-        params: { page: 1 }
+        params: { page: 1 },
       })
 
       this.paramsEventTrack(params)
     },
 
     paramsEventTrack(params) {
-      paramsEventTrack(
-        params,
-        this.definitions,
-        this.$matomo,
-        'titres',
-        'filtres'
-      )
+      paramsEventTrack(params, this.definitions, this.$matomo, 'titres', 'filtres')
     },
 
     filtresToggle(opened) {
       if (opened) {
         this.paramsEventTrack()
       }
-    }
-  }
+    },
+  },
 }
 </script>

@@ -13,33 +13,17 @@
 
     <p class="bold">
       Souhaitez vous supprimer le document
-      <span class="color-inverse">{{ document.type.nom }}</span> de
-      <span class="color-inverse">{{ title }}</span> ?
+      <span class="color-inverse">{{ document.type.nom }}</span> de <span class="color-inverse">{{ title }}</span> ?
     </p>
-    <div class="bg-warning color-bg p-s mb-l">
-      <span class="bold"> Attention </span>: cette opération est définitive et
-      ne peut pas être annulée.
-    </div>
+    <div class="bg-warning color-bg p-s mb-l"><span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.</div>
 
     <template #footer>
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 mb tablet-mb-0">
-          <button
-            v-if="!loading"
-            class="btn-border rnd-xs p-s full-x"
-            @click="cancel"
-          >
-            Annuler
-          </button>
+          <button v-if="!loading" class="btn-border rnd-xs p-s full-x" @click="cancel">Annuler</button>
         </div>
         <div class="tablet-blob-2-3">
-          <button
-            v-if="!loading"
-            class="btn-flash rnd-xs p-s full-x"
-            @click="remove"
-          >
-            Supprimer
-          </button>
+          <button v-if="!loading" class="btn-flash rnd-xs p-s full-x" @click="remove">Supprimer</button>
           <div v-else class="p-s full-x bold">Suppression en cours…</div>
         </div>
       </div>
@@ -54,13 +38,13 @@ export default {
   name: 'CaminoDocumentRemovePopup',
 
   components: {
-    Popup
+    Popup,
   },
 
   props: {
     title: { type: String, default: '' },
     route: { type: Object, required: true },
-    document: { type: Object, default: () => ({}) }
+    document: { type: Object, default: () => ({}) },
   },
 
   computed: {
@@ -70,7 +54,7 @@ export default {
 
     loading() {
       return this.$store.state.popup.loading
-    }
+    },
   },
 
   created() {
@@ -85,7 +69,7 @@ export default {
     async remove() {
       await this.$store.dispatch('document/remove', {
         id: this.document.id,
-        route: this.route
+        route: this.route,
       })
     },
 
@@ -99,7 +83,7 @@ export default {
       } else if ((e.which || e.keyCode) === 13) {
         this.remove()
       }
-    }
-  }
+    },
+  },
 }
 </script>

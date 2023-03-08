@@ -2,10 +2,7 @@ import { Model, Pojo, QueryContext } from 'objection'
 
 import { ITitreEtape, ITitrePoint } from '../../types.js'
 
-import {
-  heritagePropsFormat,
-  heritageContenuFormat
-} from './_format/titre-etape-heritage.js'
+import { heritagePropsFormat, heritageContenuFormat } from './_format/titre-etape-heritage.js'
 import { idGenerate } from './_format/id-create.js'
 import EtapesTypes from './etapes-types.js'
 import TitresDemarches from './titres-demarches.js'
@@ -51,8 +48,8 @@ class TitresEtapes extends Model {
       substances: { type: ['array', 'null'] },
       secteursMaritime: { type: ['array', 'null'] },
       administrationsLocales: { type: ['array', 'null'] },
-      sdomZones: { type: ['array', 'null'] }
-    }
+      sdomZones: { type: ['array', 'null'] },
+    },
   }
 
   static relationMappings = () => ({
@@ -61,8 +58,8 @@ class TitresEtapes extends Model {
       modelClass: EtapesTypes,
       join: {
         from: 'titresEtapes.typeId',
-        to: 'etapesTypes.id'
-      }
+        to: 'etapesTypes.id',
+      },
     },
 
     demarche: {
@@ -70,8 +67,8 @@ class TitresEtapes extends Model {
       modelClass: TitresDemarches,
       join: {
         from: 'titresEtapes.titreDemarcheId',
-        to: 'titresDemarches.id'
-      }
+        to: 'titresDemarches.id',
+      },
     },
 
     points: {
@@ -79,8 +76,8 @@ class TitresEtapes extends Model {
       modelClass: TitresPoints,
       join: {
         from: 'titresEtapes.id',
-        to: 'titresPoints.titreEtapeId'
-      }
+        to: 'titresPoints.titreEtapeId',
+      },
     },
 
     titulaires: {
@@ -91,10 +88,10 @@ class TitresEtapes extends Model {
         through: {
           from: 'titresTitulaires.titreEtapeId',
           to: 'titresTitulaires.entrepriseId',
-          extra: ['operateur']
+          extra: ['operateur'],
         },
-        to: 'entreprises.id'
-      }
+        to: 'entreprises.id',
+      },
     },
 
     amodiataires: {
@@ -105,10 +102,10 @@ class TitresEtapes extends Model {
         through: {
           from: 'titresAmodiataires.titreEtapeId',
           to: 'titresAmodiataires.entrepriseId',
-          extra: ['operateur']
+          extra: ['operateur'],
         },
-        to: 'entreprises.id'
-      }
+        to: 'entreprises.id',
+      },
     },
 
     documents: {
@@ -116,8 +113,8 @@ class TitresEtapes extends Model {
       modelClass: Document,
       join: {
         from: 'titresEtapes.id',
-        to: 'documents.titreEtapeId'
-      }
+        to: 'documents.titreEtapeId',
+      },
     },
 
     justificatifs: {
@@ -127,10 +124,10 @@ class TitresEtapes extends Model {
         from: 'titresEtapes.id',
         through: {
           from: 'titresEtapesJustificatifs.titreEtapeId',
-          to: 'titresEtapesJustificatifs.documentId'
+          to: 'titresEtapesJustificatifs.documentId',
         },
-        to: 'documents.id'
-      }
+        to: 'documents.id',
+      },
     },
 
     communes: {
@@ -141,10 +138,10 @@ class TitresEtapes extends Model {
         through: {
           from: 'titresCommunes.titreEtapeId',
           to: 'titresCommunes.communeId',
-          extra: ['surface']
+          extra: ['surface'],
         },
-        to: 'communes.id'
-      }
+        to: 'communes.id',
+      },
     },
 
     forets: {
@@ -154,19 +151,19 @@ class TitresEtapes extends Model {
         from: 'titresEtapes.id',
         through: {
           from: 'titresForets.titreEtapeId',
-          to: 'titresForets.foretId'
+          to: 'titresForets.foretId',
         },
-        to: 'forets.id'
-      }
+        to: 'forets.id',
+      },
     },
     journaux: {
       relation: Model.HasManyRelation,
       modelClass: Journaux,
       join: {
         from: 'titresEtapes.id',
-        to: 'journaux.elementId'
-      }
-    }
+        to: 'journaux.elementId',
+      },
+    },
   })
 
   async $beforeInsert(context: QueryContext) {
@@ -229,11 +226,7 @@ class TitresEtapes extends Model {
 
     if (json.incertitudes) {
       Object.keys(json.incertitudes).forEach(id => {
-        if (
-          !json.incertitudes[id] ||
-          !(json[id] || json[id] === 0) ||
-          (Array.isArray(json[id]) && !json[id].length)
-        ) {
+        if (!json.incertitudes[id] || !(json[id] || json[id] === 0) || (Array.isArray(json[id]) && !json[id].length)) {
           delete json.incertitudes[id]
         }
       })

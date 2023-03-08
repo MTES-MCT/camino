@@ -20,8 +20,8 @@ class Journaux extends Model {
       elementId: { type: 'string' },
       titreId: { type: 'string' },
       operation: { enum: ['create', 'update', 'delete'] },
-      differences: { type: ['object', 'null'] }
-    }
+      differences: { type: ['object', 'null'] },
+    },
   }
 
   static relationMappings = () => ({
@@ -30,17 +30,17 @@ class Journaux extends Model {
       modelClass: Utilisateurs,
       join: {
         from: 'journaux.utilisateurId',
-        to: 'utilisateurs.id'
-      }
+        to: 'utilisateurs.id',
+      },
     },
     titre: {
       relation: Model.BelongsToOneRelation,
       modelClass: Titres,
       join: {
         from: 'journaux.titreId',
-        to: 'titres.id'
-      }
-    }
+        to: 'titres.id',
+      },
+    },
   })
 
   async $beforeInsert(queryContext: any) {

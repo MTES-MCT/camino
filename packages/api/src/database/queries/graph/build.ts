@@ -41,16 +41,10 @@ const fieldsToArray = (fields: IFields, format: IFieldsFormat) => {
 // - parent: (string) le nom du parent
 // - format: (function)
 // out: string "[cle1, cle2.[cle3, cle4]]"
-const fieldsToString = (
-  fields: IFields,
-  parent: string,
-  format: IFieldsFormat
-) => {
+const fieldsToString = (fields: IFields, parent: string, format: IFieldsFormat) => {
   const fieldsArray = fieldsToArray(format(fields, parent), format)
 
-  return fieldsArray.length > 1
-    ? `[${fieldsArray.join(', ')}]`
-    : fieldsArray.toString()
+  return fieldsArray.length > 1 ? `[${fieldsArray.join(', ')}]` : fieldsArray.toString()
 }
 
 // optimise la requête Sql en demandant uniquement les champs
@@ -62,11 +56,7 @@ const fieldsToString = (
 // out: string de graph pour la requête avec objection
 
 // TODO: à refactoriser. est-ce que le paramètre root sert encore à quelque chose ?
-const graphBuild = (
-  fields: IFields,
-  root = 'root',
-  format: IFieldsFormat = (fields: IFields) => fields
-) => {
+const graphBuild = (fields: IFields, root = 'root', format: IFieldsFormat = (fields: IFields) => fields) => {
   fields = objectClone(fields)
 
   // in: AST de la requête GraphQl

@@ -1,12 +1,7 @@
 <template>
   <label v-bind="$attrs">
     Choisir un fichier…
-    <input
-      type="file"
-      class="p-xs mb-0"
-      :accept="accept"
-      @change="$emit('change', $event)"
-    />
+    <input type="file" class="p-xs mb-0" :accept="accept" @change="$emit('change', $event)" />
   </label>
 </template>
 
@@ -17,10 +12,10 @@ export default defineComponent({
   props: {
     accept: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
 
-  emits: ['change']
+  emits: ['change'],
 })
 </script>

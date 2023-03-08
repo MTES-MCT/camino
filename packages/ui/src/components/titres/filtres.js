@@ -17,56 +17,56 @@ const filtres = [
     name: 'Noms',
     lazy: true,
     search: value => titresRechercherByNom({ noms: value, intervalle: 100 }),
-    load: value => titresFiltres({ titresIds: value })
+    load: value => titresFiltres({ titresIds: value }),
   },
   {
     id: 'entreprisesIds',
     type: 'autocomplete',
     value: [],
     name: 'Entreprises',
-    elementsFormat
+    elementsFormat,
   },
   {
     id: 'substancesIds',
     type: 'autocomplete',
     value: [],
     elements: SubstancesLegales,
-    name: 'Substances'
+    name: 'Substances',
   },
   {
     id: 'references',
     type: 'input',
     value: '',
     name: 'Références',
-    placeholder: 'Référence DGEC, DEAL, DEB, BRGM, Ifremer, …'
+    placeholder: 'Référence DGEC, DEAL, DEB, BRGM, Ifremer, …',
   },
   {
     id: 'communes',
     type: 'input',
     value: '',
     name: 'Communes',
-    placeholder: 'Communes'
+    placeholder: 'Communes',
   },
   {
     id: 'departements',
     name: 'Départements',
     type: 'autocomplete',
     value: [],
-    elements: departements
+    elements: departements,
   },
   {
     id: 'regions',
     name: 'Régions',
     type: 'autocomplete',
     value: [],
-    elements: regions
+    elements: regions,
   },
   {
     id: 'facadesMaritimes',
     name: 'Façades Maritimes',
     type: 'autocomplete',
     value: [],
-    elements: FACADES.map(facade => ({ id: facade, nom: facade }))
+    elements: FACADES.map(facade => ({ id: facade, nom: facade })),
   },
   {
     id: 'domainesIds',
@@ -74,7 +74,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedDomaines,
-    component: 'FiltreDomaine'
+    component: 'FiltreDomaine',
   },
   {
     id: 'typesIds',
@@ -82,7 +82,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedTitreTypesTypes,
-    component: 'FiltresTypes'
+    component: 'FiltresTypes',
   },
   {
     id: 'statutsIds',
@@ -90,8 +90,8 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedTitresStatuts,
-    component: 'FiltresStatuts'
-  }
+    component: 'FiltresStatuts',
+  },
 ]
 
 export default filtres

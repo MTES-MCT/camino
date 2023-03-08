@@ -3,8 +3,8 @@ const referenceBuild = (id, x, y, geoSystemeId, opposable) => {
     geoSystemeId,
     coordonnees: {
       x,
-      y
-    }
+      y,
+    },
   }
 
   if (id) {
@@ -18,41 +18,18 @@ const referenceBuild = (id, x, y, geoSystemeId, opposable) => {
   return reference
 }
 
-const pointReferencesBuild = (
-  references,
-  geoSystemeIds,
-  geoSystemeOpposableId
-) =>
+const pointReferencesBuild = (references, geoSystemeIds, geoSystemeOpposableId) =>
   Object.keys(references).reduce((pointReferences, geoSystemeId) => {
-    if (
-      geoSystemeIds.includes(geoSystemeId) &&
-      references[geoSystemeId].x &&
-      references[geoSystemeId].y &&
-      geoSystemeId
-    ) {
+    if (geoSystemeIds.includes(geoSystemeId) && references[geoSystemeId].x && references[geoSystemeId].y && geoSystemeId) {
       pointReferences.push(
-        referenceBuild(
-          references[geoSystemeId].id,
-          references[geoSystemeId].x,
-          references[geoSystemeId].y,
-          geoSystemeId,
-          geoSystemeIds.length > 1 && geoSystemeId === geoSystemeOpposableId
-        )
+        referenceBuild(references[geoSystemeId].id, references[geoSystemeId].x, references[geoSystemeId].y, geoSystemeId, geoSystemeIds.length > 1 && geoSystemeId === geoSystemeOpposableId)
       )
     }
 
     return pointReferences
   }, [])
 
-const pointsLotBuild = (
-  { references, description },
-  pointsLength,
-  lot,
-  contour,
-  groupe,
-  opposable,
-  geoSystemeId
-) =>
+const pointsLotBuild = ({ references, description }, pointsLength, lot, contour, groupe, opposable, geoSystemeId) =>
   references.reduce((points, { x, y, id }) => {
     const isValid = x && y
 
@@ -65,7 +42,7 @@ const pointsLotBuild = (
         groupe,
         contour,
         point: pointsLength + points.length + 1,
-        references: [referenceBuild(id, x, y, geoSystemeId, opposable)]
+        references: [referenceBuild(id, x, y, geoSystemeId, opposable)],
       }
 
       points.push(point)
@@ -74,48 +51,23 @@ const pointsLotBuild = (
     return points
   }, [])
 
-const contourBuild = (
-  contour,
-  contourIndex,
-  groupeIndex,
-  geoSystemeIds,
-  geoSystemeOpposableId
-) => {
+const contourBuild = (contour, contourIndex, groupeIndex, geoSystemeIds, geoSystemeOpposableId) => {
   const { points } = contour.reduce(
     ({ points, lotIndex }, point) => {
       if (!point.lot) {
         const newPoint = JSON.parse(JSON.stringify(point))
-        newPoint.references = pointReferencesBuild(
-          newPoint.references,
-          geoSystemeIds,
-          geoSystemeOpposableId
-        )
+        newPoint.references = pointReferencesBuild(newPoint.references, geoSystemeIds, geoSystemeOpposableId)
 
         // si il y a au moins une référence
         // si il y a plusieurs géo-système, au moins une référence doit être opposable
-        if (
-          newPoint.references.length &&
-          (geoSystemeIds.length === 1 ||
-            (geoSystemeIds.length > 1 &&
-              !!newPoint.references.find(r => r.opposable)))
-        ) {
+        if (newPoint.references.length && (geoSystemeIds.length === 1 || (geoSystemeIds.length > 1 && !!newPoint.references.find(r => r.opposable)))) {
           newPoint.groupe = groupeIndex
           newPoint.contour = contourIndex
           newPoint.point = points.length + 1
           points.push(newPoint)
         }
       } else if (point.references.length) {
-        points = points.concat(
-          pointsLotBuild(
-            point,
-            points.length,
-            lotIndex,
-            contourIndex,
-            groupeIndex,
-            geoSystemeIds.length > 1,
-            geoSystemeOpposableId
-          )
-        )
+        points = points.concat(pointsLotBuild(point, points.length, lotIndex, contourIndex, groupeIndex, geoSystemeIds.length > 1, geoSystemeOpposableId))
         lotIndex += 1
       }
 
@@ -127,21 +79,10 @@ const contourBuild = (
   return points
 }
 
-const groupeBuild = (
-  contours,
-  groupeIndex,
-  geoSystemeIds,
-  geoSystemeOpposableId
-) => {
+const groupeBuild = (contours, groupeIndex, geoSystemeIds, geoSystemeOpposableId) => {
   const { points } = contours.reduce(
     ({ points, contourIndex }, contour) => {
-      const pointsNew = contourBuild(
-        contour,
-        contourIndex,
-        groupeIndex,
-        geoSystemeIds,
-        geoSystemeOpposableId
-      )
+      const pointsNew = contourBuild(contour, contourIndex, groupeIndex, geoSystemeIds, geoSystemeOpposableId)
 
       if (pointsNew.length) {
         points = points.concat(pointsNew)
@@ -159,12 +100,7 @@ const groupeBuild = (
 const pointsBuild = (groupes, geoSystemeIds, geoSystemeOpposableId) => {
   const { points } = groupes.reduce(
     ({ points, groupeIndex }, groupe) => {
-      const pointsNew = groupeBuild(
-        groupe,
-        groupeIndex,
-        geoSystemeIds,
-        geoSystemeOpposableId
-      )
+      const pointsNew = groupeBuild(groupe, groupeIndex, geoSystemeIds, geoSystemeOpposableId)
 
       if (pointsNew.length) {
         points = points.concat(pointsNew)
@@ -185,9 +121,7 @@ const etapeSaveFormat = etape => {
   etape.decisionsAnnexesContenu = decisionsAnnexesContenu
 
   etape.justificatifIds = etape.justificatifs?.map(({ id }) => id)
-  etape.documentIds = etape.documents
-    ?.filter(d => d.id !== d.typeId)
-    .map(({ id }) => id)
+  etape.documentIds = etape.documents?.filter(d => d.id !== d.typeId).map(({ id }) => id)
 
   if (etape.type) {
     etape.typeId = etape.type.id
@@ -201,10 +135,7 @@ const etapeSaveFormat = etape => {
     delete etape.contenu
   }
 
-  if (
-    !etape.decisionsAnnexesContenu ||
-    !Object.keys(etape.decisionsAnnexesContenu).length
-  ) {
+  if (!etape.decisionsAnnexesContenu || !Object.keys(etape.decisionsAnnexesContenu).length) {
     delete etape.decisionsAnnexesContenu
   }
 
@@ -231,16 +162,8 @@ const etapeSaveFormat = etape => {
     }
   })
 
-  if (
-    etape.geoSystemeIds &&
-    etape.geoSystemeIds.length &&
-    etape.groupes.length
-  ) {
-    etape.points = pointsBuild(
-      etape.groupes,
-      etape.geoSystemeIds,
-      etape.geoSystemeOpposableId || etape.geoSystemeIds[0]
-    )
+  if (etape.geoSystemeIds && etape.geoSystemeIds.length && etape.groupes.length) {
+    etape.points = pointsBuild(etape.groupes, etape.geoSystemeIds, etape.geoSystemeOpposableId || etape.geoSystemeIds[0])
   } else {
     etape.points = null
 

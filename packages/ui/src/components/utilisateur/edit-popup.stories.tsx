@@ -8,7 +8,7 @@ import { EditPopup } from './edit-popup'
 const meta: Meta = {
   title: 'Components/Utilisateur/EditPopup',
   component: EditPopup,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -19,11 +19,7 @@ export const SuperEditDefaut: Story = () => (
   <EditPopup
     user={{ ...testBlankUser, role: 'super' }}
     utilisateur={{ id: 'id', email: 'email@gmail.fr', role: 'defaut' }}
-    getEntreprises={() =>
-      Promise.resolve([
-        { id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }
-      ])
-    }
+    getEntreprises={() => Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }])}
     update={user => {
       editUser(user)
       return Promise.resolve()
@@ -40,18 +36,14 @@ const utilisateurAdmin: Utilisateur = {
   role: 'lecteur',
   telephoneFixe: '0102030405',
   telephoneMobile: '0601020304',
-  administrationId: 'aut-97300-01'
+  administrationId: 'aut-97300-01',
 }
 
 export const SuperEditLecteur: Story = () => (
   <EditPopup
     user={{ ...testBlankUser, role: 'super' }}
     utilisateur={utilisateurAdmin}
-    getEntreprises={() =>
-      Promise.resolve([
-        { id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }
-      ])
-    }
+    getEntreprises={() => Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }])}
     update={user => {
       editUser(user)
       return Promise.resolve()
@@ -67,15 +59,9 @@ export const SuperEditEntreprise: Story = () => (
       id: 'id',
       email: 'email@gmail.fr',
       role: 'entreprise',
-      entreprises: [
-        { id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }
-      ]
+      entreprises: [{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }],
     }}
-    getEntreprises={() =>
-      Promise.resolve([
-        { id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }
-      ])
-    }
+    getEntreprises={() => Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }])}
     update={user => {
       editUser(user)
       return Promise.resolve()
@@ -88,11 +74,7 @@ export const AdminEditLecteur: Story = () => (
   <EditPopup
     user={{ ...testBlankUser, role: 'admin', administrationId: 'aut-97300-01' }}
     utilisateur={utilisateurAdmin}
-    getEntreprises={() =>
-      Promise.resolve([
-        { id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }
-      ])
-    }
+    getEntreprises={() => Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }])}
     update={user => {
       editUser(user)
       return Promise.resolve()

@@ -6,6 +6,6 @@ export default defineConfig({
     threads: false,
     setupFiles: '../tests/vitestSetup.ts',
     testTimeout: 10000,
-    hookTimeout: 30000
-  }
+    hookTimeout: 30000,
+  },
 })

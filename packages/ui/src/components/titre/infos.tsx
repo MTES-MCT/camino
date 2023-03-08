@@ -7,29 +7,13 @@ import { Statut } from '../_common/statut'
 import { dateFormat } from '@/utils'
 import PureTitresLinkForm from './pure-titres-link-form.vue'
 import { User } from 'camino-common/src/roles'
-import {
-  getDomaineId,
-  getTitreTypeType,
-  TitreTypeId
-} from 'camino-common/src/static/titresTypes'
-import {
-  DemarchesTypes,
-  DemarcheTypeId
-} from 'camino-common/src/static/demarchesTypes'
+import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { DemarchesTypes, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
-import {
-  SubstanceLegaleId,
-  SubstancesLegale
-} from 'camino-common/src/static/substancesLegales'
-import {
-  TitresStatuts,
-  TitreStatutId
-} from 'camino-common/src/static/titresStatuts'
-import {
-  PhaseStatutId,
-  phaseStatuts
-} from 'camino-common/src/static/phasesStatuts'
+import { SubstanceLegaleId, SubstancesLegale } from 'camino-common/src/static/substancesLegales'
+import { TitresStatuts, TitreStatutId } from 'camino-common/src/static/titresStatuts'
+import { PhaseStatutId, phaseStatuts } from 'camino-common/src/static/phasesStatuts'
 import { TitreReference } from 'camino-common/src/titres-references'
 import { ApiClient } from '@/api/api-client'
 import { LoadingElement } from '@/components/_ui/functional-loader'
@@ -67,41 +51,20 @@ export interface Props {
     references: TitreReference[]
   }
   user: User
-  apiClient: Pick<
-    ApiClient,
-    'loadTitreLinks' | 'loadLinkableTitres' | 'linkTitres' | 'loadTitreSections'
-  >
+  apiClient: Pick<ApiClient, 'loadTitreLinks' | 'loadLinkableTitres' | 'linkTitres' | 'loadTitreSections'>
 }
 
-const Entreprises = ({
-  entreprises,
-  label
-}: {
-  entreprises: Entreprise[] | undefined
-  label: 'Titulaire' | 'Amodiataire'
-}): JSX.Element | null => {
+const Entreprises = ({ entreprises, label }: { entreprises: Entreprise[] | undefined; label: 'Titulaire' | 'Amodiataire' }): JSX.Element | null => {
   return entreprises?.length ? (
     <div class="mb">
       <h5>{entreprises.length > 1 ? `${label}s` : label}</h5>
       <ul class="list-inline">
         {entreprises.map(e => (
           <li key={e.id} class="mb-xs mr-xs">
-            <router-link
-              to={{ name: 'entreprise', params: { id: e.id } }}
-              class="btn-border small p-s rnd-xs mr-xs"
-            >
-              <span class="mr-xs">
-                {e.legalSiren ? `${e.nom} (${e.legalSiren})` : e.nom}
-              </span>
+            <router-link to={{ name: 'entreprise', params: { id: e.id } }} class="btn-border small p-s rnd-xs mr-xs">
+              <span class="mr-xs">{e.legalSiren ? `${e.nom} (${e.legalSiren})` : e.nom}</span>
 
-              {e.operateur ? (
-                <Tag
-                  mini={true}
-                  color="bg-info"
-                  class="ml-xs"
-                  text="Opérateur"
-                />
-              ) : null}
+              {e.operateur ? <Tag mini={true} color="bg-info" class="ml-xs" text="Opérateur" /> : null}
             </router-link>
           </li>
         ))}
@@ -127,18 +90,13 @@ const InfosSections = defineComponent<InfosSectionsProps>({
         console.error('error', e)
         load.value = {
           status: 'ERROR',
-          message: e.message ?? "Une erreur s'est produite"
+          message: e.message ?? "Une erreur s'est produite",
         }
       }
     })
 
-    return () => (
-      <LoadingElement
-        data={load.value}
-        renderItem={item => <Sections sections={item} />}
-      />
-    )
-  }
+    return () => <LoadingElement data={load.value} renderItem={item => <Sections sections={item} />} />
+  },
 })
 
 export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
@@ -151,15 +109,10 @@ export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
       <div class="desktop-blob-1-2">
         <div class="rnd-b-s bg-alt pt px overflow-auto">
           <h4 class="mb">
-            <Pill
-              color={`bg-domaine-${getDomaineId(titre.typeId)}`}
-              class="mono mr-s"
-            >
+            <Pill color={`bg-domaine-${getDomaineId(titre.typeId)}`} class="mono mr-s">
               {getDomaineId(titre.typeId)}
             </Pill>
-            <span class="cap-first">
-              {TitresTypesTypes[getTitreTypeType(titre.typeId)].nom}
-            </span>
+            <span class="cap-first">{TitresTypesTypes[getTitreTypeType(titre.typeId)].nom}</span>
           </h4>
 
           <div class="mb">
@@ -178,27 +131,16 @@ export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
                 {phases.map(demarche => (
                   <tr key={demarche.id}>
                     <td class="max-width-1">
-                      <Dot
-                        class="mt-xs"
-                        color={`bg-${
-                          phaseStatuts[demarche.phase.phaseStatutId].couleur
-                        }`}
-                      />
+                      <Dot class="mt-xs" color={`bg-${phaseStatuts[demarche.phase.phaseStatutId].couleur}`} />
                     </td>
                     <td>
-                      <span class="cap-first bold h5 mb-0">
-                        {DemarchesTypes[demarche.type.id].nom}
-                      </span>
+                      <span class="cap-first bold h5 mb-0">{DemarchesTypes[demarche.type.id].nom}</span>
                     </td>
                     <td>
-                      <span class="h5 mb-0">
-                        {dateFormat(demarche.phase.dateDebut)}
-                      </span>
+                      <span class="h5 mb-0">{dateFormat(demarche.phase.dateDebut)}</span>
                     </td>
                     <td>
-                      <span class="h5 mb-0">
-                        {dateFormat(demarche.phase.dateFin)}
-                      </span>
+                      <span class="h5 mb-0">{dateFormat(demarche.phase.dateFin)}</span>
                     </td>
                   </tr>
                 ))}
@@ -211,11 +153,7 @@ export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
               <ul class="list-prefix h6">
                 {titre.references.map(reference => (
                   <li key={reference.nom}>
-                    {reference.referenceTypeId ? (
-                      <span class="word-break fixed-width bold">
-                        {ReferencesTypes[reference.referenceTypeId].nom}
-                      </span>
-                    ) : null}
+                    {reference.referenceTypeId ? <span class="word-break fixed-width bold">{ReferencesTypes[reference.referenceTypeId].nom}</span> : null}
                     {reference.nom}
                   </li>
                 ))}
@@ -232,7 +170,7 @@ export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
             id: titre.id,
             typeId: titre.typeId,
             administrations: titre.administrations,
-            demarches: titre.demarches.map(d => ({ typeId: d.type.id }))
+            demarches: titre.demarches.map(d => ({ typeId: d.type.id })),
           }}
           apiClient={apiClient}
         />
@@ -240,11 +178,7 @@ export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
         {titre.substances?.length ? (
           <div class="mb">
             <h5>Substances</h5>
-            <TagList
-              elements={titre.substances?.map(
-                substanceId => SubstancesLegale[substanceId].nom
-              )}
-            />
+            <TagList elements={titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom)} />
           </div>
         ) : null}
 

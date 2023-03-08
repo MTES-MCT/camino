@@ -15,16 +15,8 @@ export const up = (knex: Knex) =>
     })
     .createTable('titresTypes', table => {
       table.string('id', 3).primary().notNullable()
-      table
-        .string('domaineId', 1)
-        .index()
-        .references('domaines.id')
-        .notNullable()
-      table
-        .string('typeId', 3)
-        .index()
-        .references('titresTypesTypes.id')
-        .notNullable()
+      table.string('domaineId', 1).index().references('domaines.id').notNullable()
+      table.string('typeId', 3).index().references('titresTypesTypes.id').notNullable()
       table.specificType('contenuIds', 'jsonb[]')
       table.boolean('archive')
       table.unique(['domaineId', 'typeId'])
@@ -37,24 +29,10 @@ export const up = (knex: Knex) =>
       table.integer('ordre')
     })
     .createTable('titresTypes__titresStatuts', table => {
-      table
-        .string('titreTypeId')
-        .index()
-        .references('titresTypes.id')
-        .notNullable()
-      table
-        .string('titreStatutId')
-        .index()
-        .references('titresStatuts.id')
-        .notNullable()
+      table.string('titreTypeId').index().references('titresTypes.id').notNullable()
+      table.string('titreStatutId').index().references('titresStatuts.id').notNullable()
       table.boolean('publicLecture')
       table.primary(['titreTypeId', 'titreStatutId'])
     })
 
-export const down = (knex: Knex) =>
-  knex.schema
-    .dropTable('titresTypesTypes')
-    .dropTable('domaines')
-    .dropTable('titresTypes__titresStatuts')
-    .dropTable('titresTypes')
-    .dropTable('titresStatuts')
+export const down = (knex: Knex) => knex.schema.dropTable('titresTypesTypes').dropTable('domaines').dropTable('titresTypes__titresStatuts').dropTable('titresTypes').dropTable('titresStatuts')

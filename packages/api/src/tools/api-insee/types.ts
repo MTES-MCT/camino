@@ -1,5 +1,4 @@
-export interface IApiSirenUniteLegalePeriode
-  extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite {
+export interface IApiSirenUniteLegalePeriode extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite {
   dateDebut: Date
   dateFin: Date
 }
@@ -17,9 +16,7 @@ export interface IApiSirenUnionUniteLegaleEtablissmentUnite {
   sigleUniteLegale: string | null
 }
 
-export interface IApiSirenEtablissementUnite
-  extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite,
-    IApiSirenUnionUniteLegaleEtablissmentUnite {
+export interface IApiSirenEtablissementUnite extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite, IApiSirenUnionUniteLegaleEtablissmentUnite {
   categorieEntreprise: string
   categorieJuridiqueUniteLegale: string
   dateCreationUniteLegale: Date | null
@@ -43,8 +40,7 @@ export interface IApiSirenEtablissement {
   uniteLegale: IApiSirenEtablissementUnite
 }
 
-export interface IApiSirenUniteLegale
-  extends IApiSirenUnionUniteLegaleEtablissmentUnite {
+export interface IApiSirenUniteLegale extends IApiSirenUnionUniteLegaleEtablissmentUnite {
   siren: string
   periodesUniteLegale: IApiSirenUniteLegalePeriode[]
 }

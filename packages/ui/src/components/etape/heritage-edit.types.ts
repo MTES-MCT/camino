@@ -1,10 +1,7 @@
 import { CaminoDate } from 'camino-common/src/date'
 import { Etape } from 'camino-common/src/etape'
 
-export type EtapeHeritageProps = keyof Omit<
-  Etape,
-  'incertitudes' | 'type' | 'heritageProps' | 'contenu' | 'date'
->
+export type EtapeHeritageProps = keyof Omit<Etape, 'incertitudes' | 'type' | 'heritageProps' | 'contenu' | 'date'>
 
 // TODO 2022-11-16 ça devrait être cette définition, cf heritage-edit.vue
 // export type EtapeHeritage<

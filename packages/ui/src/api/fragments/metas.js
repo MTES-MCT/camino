@@ -138,5 +138,5 @@ export {
   fragmentTitreTypeDemarcheTypeEtapeType,
   fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType,
   fragmentEtapeTypeDocumentType,
-  fragmentEtapeTypeJustificatifType
+  fragmentEtapeTypeJustificatifType,
 }

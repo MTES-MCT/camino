@@ -6,10 +6,7 @@ import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes.js'
-import {
-  getDomaineId,
-  getTitreTypeType
-} from 'camino-common/src/static/titresTypes.js'
+import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes.js'
 import { Domaines } from 'camino-common/src/static/domaines.js'
 
@@ -48,11 +45,7 @@ export const titresDemarchesFormatTable = (titresDemarches: ITitreDemarche[]) =>
 
     const etapesTypesStatuts = etapesDatesStatutsBuild(titreDemarche)
 
-    const etapeWithPoints = titreDemarche.etapes
-      ? titreEtapesSortDescByOrdre(titreDemarche.etapes).find(
-          etape => etape.points?.length
-        )
-      : undefined
+    const etapeWithPoints = titreDemarche.etapes ? titreEtapesSortDescByOrdre(titreDemarche.etapes).find(etape => etape.points?.length) : undefined
 
     const titreDemarcheNew = {
       titre_id: titre.slug,
@@ -60,36 +53,20 @@ export const titresDemarchesFormatTable = (titresDemarches: ITitreDemarche[]) =>
 
       titre_domaine: Domaines[getDomaineId(titre.typeId)].nom,
       titre_type: TitresTypesTypes[getTitreTypeType(titre.typeId)].nom,
-      titre_statut: isNotNullNorUndefined(titre.titreStatutId)
-        ? TitresStatuts[titre.titreStatutId].nom
-        : '',
+      titre_statut: isNotNullNorUndefined(titre.titreStatutId) ? TitresStatuts[titre.titreStatutId].nom : '',
       type: titreDemarche.type!.nom,
       statut: DemarchesStatuts[titreDemarche.statutId!].nom,
       description: titreDemarche.description,
-      titre_references: titre.references
-        ?.map(r => `${ReferencesTypes[r.referenceTypeId].nom} : ${r.nom}`)
-        .join(';'),
+      titre_references: titre.references?.map(r => `${ReferencesTypes[r.referenceTypeId].nom} : ${r.nom}`).join(';'),
       titulaires_noms: titre.titulaires!.map(e => e.nom).join(';'),
-      titulaires_adresses: titre
-        .titulaires!.map(e => `${e.adresse} ${e.codePostal} ${e.commune}`)
-        .join(';'),
-      titulaires_legal: titre
-        .titulaires!.map(e => e.legalEtranger || e.legalSiren)
-        .join(';'),
+      titulaires_adresses: titre.titulaires!.map(e => `${e.adresse} ${e.codePostal} ${e.commune}`).join(';'),
+      titulaires_legal: titre.titulaires!.map(e => e.legalEtranger || e.legalSiren).join(';'),
       amodiataires_noms: titre.amodiataires!.map(e => e.nom).join(';'),
-      amodiataires_adresses: titre
-        .amodiataires!.map(e => `${e.adresse} ${e.codePostal} ${e.commune}`)
-        .join(';'),
-      amodiataires_legal: titre
-        .amodiataires!.map(e => e.legalEtranger || e.legalSiren)
-        .join(';'),
+      amodiataires_adresses: titre.amodiataires!.map(e => `${e.adresse} ${e.codePostal} ${e.commune}`).join(';'),
+      amodiataires_legal: titre.amodiataires!.map(e => e.legalEtranger || e.legalSiren).join(';'),
       ...etapesTypesStatuts,
-      forets: etapeWithPoints
-        ? etapeWithPoints.forets?.map(f => f.nom).join(';')
-        : '',
-      communes: etapeWithPoints
-        ? etapeWithPoints.communes?.map(f => f.nom).join(';')
-        : ''
+      forets: etapeWithPoints ? etapeWithPoints.forets?.map(f => f.nom).join(';') : '',
+      communes: etapeWithPoints ? etapeWithPoints.communes?.map(f => f.nom).join(';') : '',
     }
 
     return titreDemarcheNew

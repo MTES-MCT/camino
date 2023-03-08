@@ -1,10 +1,6 @@
 <template>
   <div v-if="entreprises.length">
-    <div
-      v-for="(e, eId) in entreprisesJustificatifsIndex"
-      :key="eId"
-      class="mb-xs"
-    >
+    <div v-for="(e, eId) in entreprisesJustificatifsIndex" :key="eId" class="mb-xs">
       <div class="flex">
         <h4>{{ e.nom }}</h4>
       </div>
@@ -17,19 +13,9 @@
             <h5 class="mt-s">Ajouter un justificatif existant</h5>
           </div>
           <div class="tablet-blob-2-3">
-            <select
-              class="p-s mb-s"
-              value="undefined"
-              @change="justificatifAdd(eId, $event)"
-            >
-              <option value="undefined" :disabled="true">
-                Sélectionner un type de justificatif
-              </option>
-              <option
-                v-for="jt in justificatifsTypes"
-                :key="jt.id"
-                :value="jt.id"
-              >
+            <select class="p-s mb-s" value="undefined" @change="justificatifAdd(eId, $event)">
+              <option value="undefined" :disabled="true">Sélectionner un type de justificatif</option>
+              <option v-for="jt in justificatifsTypes" :key="jt.id" :value="jt.id">
                 {{ jt.nom }}
               </option>
             </select>
@@ -44,56 +30,27 @@
           <div class="tablet-blob-1-3 flex flex-center">
             <h5 class="mt-s">{{ j.type.nom }}</h5>
             <span>
-              <HelpTooltip
-                v-if="j.type.description"
-                :text="j.type.description"
-                class="ml-xs"
-              />
+              <HelpTooltip v-if="j.type.description" :text="j.type.description" class="ml-xs" />
             </span>
-            <Tag
-              v-if="!j.id"
-              :mini="true"
-              color="bg-warning"
-              class="ml-xs"
-              text="Manquant"
-            />
+            <Tag v-if="!j.id" :mini="true" color="bg-warning" class="ml-xs" text="Manquant" />
           </div>
           <div class="tablet-blob-2-3">
             <div class="flex mb-s">
-              <select
-                class="p-s"
-                :value="j.id"
-                @change="justificatifsUpdate(j, e.nom, eId, $event)"
-              >
+              <select class="p-s" :value="j.id" @change="justificatifsUpdate(j, e.nom, eId, $event)">
                 <template v-if="j.documents.length">
-                  <option
-                    v-for="d in j.documents"
-                    :key="d.id"
-                    :value="d.id"
-                    :disabled="justificatifs.some(j => j.id === d.id)"
-                  >
-                    {{ d.type.nom }} : {{ d.description }} ({{
-                      dateFormat(d.date)
-                    }})
+                  <option v-for="d in j.documents" :key="d.id" :value="d.id" :disabled="justificatifs.some(j => j.id === d.id)">
+                    {{ d.type.nom }} : {{ d.description }} ({{ dateFormat(d.date) }})
                   </option>
                 </template>
                 <option v-else></option>
-                <option value="newDocument">
-                  Ajouter un nouveau justificatif
-                </option>
+                <option value="newDocument">Ajouter un nouveau justificatif</option>
               </select>
 
               <div v-if="j.id" class="flex-right flex flex-center ml-s">
-                <button
-                  class="btn-border py-s px-m rnd-l-xs"
-                  @click="justificatifRemove(eId, index)"
-                >
+                <button class="btn-border py-s px-m rnd-l-xs" @click="justificatifRemove(eId, index)">
                   <Icon size="M" name="delete" />
                 </button>
-                <button
-                  class="btn-border py-s px-m rnd-r-xs"
-                  @click="justificatifDownload(eId, index)"
-                >
+                <button class="btn-border py-s px-m rnd-r-xs" @click="justificatifDownload(eId, index)">
                   <Icon size="M" name="download" />
                 </button>
               </div>
@@ -118,7 +75,7 @@ export default {
   props: {
     justificatifs: { type: Array, required: true },
     justificatifsTypes: { type: Array, required: true },
-    entreprises: { type: Array, required: true }
+    entreprises: { type: Array, required: true },
   },
 
   emits: ['complete-update'],
@@ -126,7 +83,7 @@ export default {
   data() {
     return {
       entreprisesJustificatifsIndex: {},
-      entreprisesDocumentsIndex: {}
+      entreprisesDocumentsIndex: {},
     }
   },
 
@@ -142,18 +99,15 @@ export default {
         })
       })
 
-      return this.justificatifsTypes.every(
-        jt =>
-          jt.optionnel || justificatifs.find(({ type }) => type.id === jt.id)
-      )
-    }
+      return this.justificatifsTypes.every(jt => jt.optionnel || justificatifs.find(({ type }) => type.id === jt.id))
+    },
   },
 
   watch: {
     complete: 'completeUpdate',
     entreprises: { handler: 'reset', deep: true },
     justificatifsTypes: { handler: 'reset', deep: true },
-    justificatifs: { handler: 'indexReset', deep: true }
+    justificatifs: { handler: 'indexReset', deep: true },
   },
 
   created() {
@@ -181,7 +135,7 @@ export default {
         //  }}
         this.entreprisesJustificatifsIndex[e.id] = {
           nom: e.nom,
-          justificatifs: []
+          justificatifs: [],
         }
 
         this.justificatifsTypes.forEach(type => {
@@ -189,23 +143,21 @@ export default {
           const documentsIds = documents.map(({ id }) => id)
           this.entreprisesDocumentsIndex[e.id][type.id] = documents
 
-          const justificatifs = this.justificatifs.filter(j =>
-            documentsIds.includes(j.id)
-          )
+          const justificatifs = this.justificatifs.filter(j => documentsIds.includes(j.id))
 
           if (justificatifs.length) {
             justificatifs.forEach(j => {
               this.entreprisesJustificatifsIndex[e.id].justificatifs.push({
                 id: j.id,
                 type,
-                documents
+                documents,
               })
             })
           } else if (!type.optionnel) {
             this.entreprisesJustificatifsIndex[e.id].justificatifs.push({
               id: '',
               type,
-              documents
+              documents,
             })
           }
         })
@@ -220,7 +172,7 @@ export default {
       this.entreprisesJustificatifsIndex[entrepriseId].justificatifs.push({
         id: '',
         type,
-        documents
+        documents,
       })
 
       event.target.value = undefined
@@ -247,16 +199,16 @@ export default {
               fichier: null,
               fichierNouveau: null,
               fichierTypeId: null,
-              typeId: justificatif.type.id
+              typeId: justificatif.type.id,
             },
             action: {
               name: 'titreEtapeEdition/entrepriseDocumentAdd',
-              params: { entrepriseId }
+              params: { entrepriseId },
             },
             repertoire: 'entreprises',
             documentsTypes: this.justificatifsTypes,
-            title: entrepriseNom
-          }
+            title: entrepriseNom,
+          },
         })
       } else {
         justificatif.id = event.target.value
@@ -265,17 +217,13 @@ export default {
     },
 
     justificatifRemove(entrepriseId, index) {
-      this.entreprisesJustificatifsIndex[entrepriseId].justificatifs.splice(
-        index,
-        1
-      )
+      this.entreprisesJustificatifsIndex[entrepriseId].justificatifs.splice(index, 1)
 
       this.justificatifsReset()
     },
 
     async justificatifDownload(entrepriseId, index) {
-      const document =
-        this.entreprisesJustificatifsIndex[entrepriseId].justificatifs[index]
+      const document = this.entreprisesJustificatifsIndex[entrepriseId].justificatifs[index]
       await this.$store.dispatch('downloadDocument', document)
     },
 
@@ -283,15 +231,13 @@ export default {
       this.justificatifs.splice(0, this.justificatifs.length)
 
       Object.keys(this.entreprisesJustificatifsIndex).forEach(eId => {
-        this.entreprisesJustificatifsIndex[eId].justificatifs.forEach(
-          ({ id }) => {
-            if (!id) return
+        this.entreprisesJustificatifsIndex[eId].justificatifs.forEach(({ id }) => {
+          if (!id) return
 
-            this.justificatifs.push({ id })
-          }
-        )
+          this.justificatifs.push({ id })
+        })
       })
-    }
-  }
+    },
+  },
 }
 </script>

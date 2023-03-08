@@ -13,10 +13,7 @@ const titreDemarcheSortAsc = (titreElements: ITitreDemarche[]) =>
     if (aHasEtapes && !bHasEtapes) return -1
 
     if (!aHasEtapes && !bHasEtapes) {
-      return (
-        ((a.type && a.type.ordre) || Infinity) -
-        ((b.type && b.type.ordre) || Infinity)
-      )
+      return ((a.type && a.type.ordre) || Infinity) - ((b.type && b.type.ordre) || Infinity)
     }
 
     const dateA = titreEtapesSortAscByOrdre(a.etapes!)[0].date

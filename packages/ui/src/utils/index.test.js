@@ -1,18 +1,11 @@
-import {
-  dateFormat,
-  textNumberFormat,
-  textToNumberFormat,
-  cloneAndClean,
-  elementsFormat,
-  paramsBuild
-} from './index'
+import { dateFormat, textNumberFormat, textToNumberFormat, cloneAndClean, elementsFormat, paramsBuild } from './index'
 import { describe, expect, test } from 'vitest'
 
 // dateFormat
 describe('dateFormat', () => {
   const cases = [
     ['2020-01-01', '01-01-2020'],
-    ['2020-11-16', '16-11-2020']
+    ['2020-11-16', '16-11-2020'],
   ]
 
   test.each(cases)('formate la date %s en %s', (input, output) => {
@@ -39,29 +32,21 @@ describe('textNumberFormat et textToNumberFormat', () => {
     ['-1,2ab c.,34', { negative: false, integer: false }, '1,234', 1.234],
     ['-1,2ab c.,34', { negative: true, integer: false }, '-1,234', -1.234],
     ['-1,2ab c.,34', { negative: true, integer: true }, '-1', -1],
-    ['azerty', { negative: true, integer: true }, '', null]
+    ['azerty', { negative: true, integer: true }, '', null],
   ]
 
-  test.each(cases)(
-    'formate %s avec les options %o en texte %s',
-    (input, options, resText, resNumber) => {
-      expect(textNumberFormat(input, options)).toEqual(resText)
-    }
-  )
+  test.each(cases)('formate %s avec les options %o en texte %s', (input, options, resText, resNumber) => {
+    expect(textNumberFormat(input, options)).toEqual(resText)
+  })
 
-  test.each(cases)(
-    'formate %s avec les options %o en nombre %i',
-    (input, options, resText, resNumber) => {
-      expect(textToNumberFormat(resText)).toEqual(resNumber)
-    }
-  )
+  test.each(cases)('formate %s avec les options %o en nombre %i', (input, options, resText, resNumber) => {
+    expect(textToNumberFormat(resText)).toEqual(resNumber)
+  })
 })
 
 describe('cloneAndClean', () => {
   test(`transforme un json en occultant les propriétés __typename`, () =>
-    expect(
-      cloneAndClean({ id: 'id', value: 'value', __typename: 'typename' })
-    ).toEqual({ id: 'id', value: 'value', __typename: undefined }))
+    expect(cloneAndClean({ id: 'id', value: 'value', __typename: 'typename' })).toEqual({ id: 'id', value: 'value', __typename: undefined }))
 })
 
 describe('elementsFormat', () => {
@@ -75,16 +60,16 @@ describe('elementsFormat', () => {
       m: 'minéraux et métaux',
       r: 'éléments radioactifs',
       s: 'stockages souterrains',
-      w: 'granulats marins'
+      w: 'granulats marins',
     },
     statuts: {},
-    types: {}
+    types: {},
   }
 
   const cases = [
     ['domaines', 'domainesIds'],
     ['statuts', 'statutsIds'],
-    ['types', 'typesIds']
+    ['types', 'typesIds'],
   ]
 
   test.each(cases)('formate les %s', (nom, id) => {
@@ -100,7 +85,7 @@ describe('paramsBuild', () => {
     { id: 'ordre', type: 'string', elements: ['asc', 'desc'] },
     { id: 'typesIds', type: 'strings', elements: ['aaa', 'bbb'] },
     { id: 'noms', type: 'string' },
-    { id: 'numbers', type: 'numbers' }
+    { id: 'numbers', type: 'numbers' },
   ]
 
   const preferences = {
@@ -110,7 +95,7 @@ describe('paramsBuild', () => {
     colonne: 'type',
     noms: 'one two',
     typesIds: ['aaa'],
-    numbers: ['1', '2']
+    numbers: ['1', '2'],
   }
 
   test('formate les paramètres', () => {
@@ -121,7 +106,7 @@ describe('paramsBuild', () => {
       colonne: 'type',
       noms: 'one two',
       typesIds: ['aaa'],
-      numbers: [1, 2]
+      numbers: [1, 2],
     })
   })
 })

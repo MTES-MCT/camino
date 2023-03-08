@@ -1,13 +1,10 @@
 import { Meta, Story } from '@storybook/vue3'
-import {
-  TitresStatutIds,
-  TitresStatuts
-} from 'camino-common/src/static/titresStatuts'
+import { TitresStatutIds, TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { FiltresStatuts, Props } from './statuts'
 
 const meta: Meta = {
   title: 'Components/Common/Filtres/Statuts',
-  component: FiltresStatuts
+  component: FiltresStatuts,
 }
 export default meta
 
@@ -25,7 +22,7 @@ export const AllStatuts: Story<Props> = () => (
             <FiltresStatuts
               element={{
                 couleur: TitresStatuts[statut].couleur,
-                nom: TitresStatuts[statut].nom
+                nom: TitresStatuts[statut].nom,
               }}
             />
           </td>

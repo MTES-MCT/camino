@@ -7,23 +7,21 @@ const actions = {
       commit('loadingAdd', 'titreCreationAdd', { root: true })
 
       if (titreDemande.references) {
-        titreDemande.references = titreDemande.references.filter(
-          reference => reference.nom
-        )
+        titreDemande.references = titreDemande.references.filter(reference => reference.nom)
       }
 
       const data = await titreDemandeCreer({ titreDemande })
 
       await router.push({
         name: 'etape-edition',
-        params: { id: data.titreEtapeId }
+        params: { id: data.titreEtapeId },
       })
 
       dispatch(
         'messageAdd',
         {
           value: 'la demande de titre a été créée',
-          type: 'success'
+          type: 'success',
         },
         { root: true }
       )
@@ -32,10 +30,10 @@ const actions = {
     } finally {
       commit('loadingRemove', 'titreCreationAdd', { root: true })
     }
-  }
+  },
 }
 
 export default {
   namespaced: true,
-  actions
+  actions,
 }

@@ -12,7 +12,7 @@ describe("état d'une activité", () => {
       { id: 2000, nom: 2000 },
       { id: 1999, nom: 1999 },
       { id: 1998, nom: 1998 },
-      { id: 1997, nom: 1997 }
+      { id: 1997, nom: 1997 },
     ])
   })
 })

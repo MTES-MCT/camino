@@ -2,7 +2,7 @@ import { activite, activiteModifier } from '../api/titres-activites'
 import { documentsRequiredAdd } from '../utils/documents'
 
 const state = {
-  element: null
+  element: null,
 }
 
 const actions = {
@@ -32,17 +32,15 @@ const actions = {
         activite: {
           id: activite.id,
           contenu: activite.contenu,
-          documentIds: activite.documents
-            ?.filter(d => d.id !== d.type.id)
-            .map(({ id }) => id)
-        }
+          documentIds: activite.documents?.filter(d => d.id !== d.type.id).map(({ id }) => id),
+        },
       })
 
       await dispatch(
         'messageAdd',
         {
           value: `l'activité a été enregistrée`,
-          type: 'success'
+          type: 'success',
         },
         { root: true }
       )
@@ -56,11 +54,7 @@ const actions = {
   async documentInit({ state, commit, rootGetters }, documents) {
     const documentsTypes = state.element.type.documentsTypes
 
-    const newDocuments = documentsRequiredAdd(
-      documents,
-      documentsTypes,
-      rootGetters['user/userIsAdmin']
-    )
+    const newDocuments = documentsRequiredAdd(documents, documentsTypes, rootGetters['user/userIsAdmin'])
 
     commit('documentsSet', newDocuments)
   },
@@ -82,17 +76,14 @@ const actions = {
       'documentInit',
       state.element.documents.filter(d => d.id !== id)
     )
-  }
+  },
 }
 
 const mutations = {
   set(state, activite) {
     activite.contenu = activite.sections?.reduce((sections, s) => {
       sections[s.id] = s.elements.reduce((elements, e) => {
-        const value =
-          activite.contenu &&
-          activite.contenu[s.id] &&
-          activite.contenu[s.id][e.id]
+        const value = activite.contenu && activite.contenu[s.id] && activite.contenu[s.id][e.id]
 
         elements[e.id] = value || e.type !== 'checkboxes' ? value : []
 
@@ -111,12 +102,12 @@ const mutations = {
 
   reset(state) {
     state.element = null
-  }
+  },
 }
 
 export default {
   namespaced: true,
   actions,
   mutations,
-  state
+  state,
 }

@@ -9,7 +9,7 @@ import {
   defineComponent,
   EmitsOptions,
   MethodOptions,
-  Prop
+  Prop,
 } from 'vue'
 
 export function caminoDefineComponent<
@@ -24,24 +24,8 @@ export function caminoDefineComponent<
   EE extends string = string,
   I extends ComponentInjectOptions = {},
   II extends string = string
->(
-  options: ComponentOptionsWithoutProps<
-    Props,
-    RawBindings,
-    D,
-    C,
-    M,
-    Mixin,
-    Extends,
-    E,
-    EE,
-    I,
-    II
-  >
-): DefineComponent<Props, RawBindings, D, C, M, Mixin, Extends, E, EE> {
+>(options: ComponentOptionsWithoutProps<Props, RawBindings, D, C, M, Mixin, Extends, E, EE, I, II>): DefineComponent<Props, RawBindings, D, C, M, Mixin, Extends, E, EE> {
   return defineComponent(options)
 }
 
-export const isEventWithTarget = (
-  event: any
-): event is FocusEvent & { target: HTMLInputElement } => event.target
+export const isEventWithTarget = (event: any): event is FocusEvent & { target: HTMLInputElement } => event.target

@@ -5,7 +5,7 @@ import { Statistiques } from 'camino-common/src/statistiques'
 const meta: Meta = {
   title: 'Components/Statistiques/GlobalesNoStoryshots',
   component: PureGlobales,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -26,7 +26,7 @@ export const DefaultNoSnapshot: Story = () => (
         { mois: '2022-01', quantite: 5358 },
         { mois: '2022-02', quantite: 5162 },
         { mois: '2022-03', quantite: 6769 },
-        { mois: '2022-04', quantite: 2612 }
+        { mois: '2022-04', quantite: 2612 },
       ],
       titresModifies: [
         { mois: '2021-05', quantite: 0 },
@@ -40,7 +40,7 @@ export const DefaultNoSnapshot: Story = () => (
         { mois: '2022-01', quantite: 178 },
         { mois: '2022-02', quantite: 189 },
         { mois: '2022-03', quantite: 223 },
-        { mois: '2022-04', quantite: 147 }
+        { mois: '2022-04', quantite: 147 },
       ],
       actions: 27.6,
       sessionDuree: 8,
@@ -55,11 +55,11 @@ export const DefaultNoSnapshot: Story = () => (
           dre: 38,
           min: 26,
           ope: 24,
-          pre: 8
+          pre: 8,
         },
         rattachesAUneEntreprise: 128,
-        visiteursAuthentifies: 124
-      }
+        visiteursAuthentifies: 124,
+      },
     }}
   />
 )

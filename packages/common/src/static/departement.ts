@@ -102,7 +102,7 @@ export const DEPARTEMENT_IDS = {
   Martinique: '972',
   Guyane: '973',
   'La Réunion': '974',
-  Mayotte: '976'
+  Mayotte: '976',
 } as const
 
 export interface Departement<T = DepartementId> {
@@ -235,7 +235,7 @@ export const Departements: { [key in DepartementId]: Departement<key> } = {
   '972': { id: '972', nom: 'Martinique', regionId: '02' },
   '973': { id: '973', nom: 'Guyane', regionId: '03' },
   '974': { id: '974', nom: 'La Réunion', regionId: '04' },
-  '976': { id: '976', nom: 'Mayotte', regionId: '06' }
+  '976': { id: '976', nom: 'Mayotte', regionId: '06' },
 }
 
 const departementIds = Object.values(DEPARTEMENT_IDS)

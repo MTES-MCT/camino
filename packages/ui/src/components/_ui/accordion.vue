@@ -6,7 +6,7 @@
       :class="{
         'rnd-t-s': opened || slotSub,
         'rnd-s': !opened && !slotSub,
-        'border-b-s': opened || slotSub
+        'border-b-s': opened || slotSub,
       }"
     >
       <div class="py-s px-m">
@@ -15,12 +15,7 @@
 
       <div class="overflow-hidden flex flex-end flex-right">
         <slot name="buttons" />
-        <button
-          v-if="slotDefault"
-          class="btn-alt py-s px-m"
-          :class="{ 'rnd-br-s': !opened }"
-          @click="toggle"
-        >
+        <button v-if="slotDefault" class="btn-alt py-s px-m" :class="{ 'rnd-br-s': !opened }" @click="toggle">
           <Icon size="M" :name="opened ? 'chevron-haut' : 'chevron-bas'" />
         </button>
         <div v-else class="py-s" style="width: calc(2.5 * var(--unit))" />
@@ -32,7 +27,7 @@
       :class="{
         'rnd-t-s': opened || slotSub,
         'rnd-s': !opened && !slotSub,
-        'border-b-s': opened || slotSub
+        'border-b-s': opened || slotSub,
       }"
       class="accordion-header flex btn-alt py-s px-s"
       @click="toggle"
@@ -73,7 +68,7 @@ export default {
 
     slotButtons: { type: Boolean, default: false },
 
-    slotDefault: { type: Boolean, default: false }
+    slotDefault: { type: Boolean, default: false },
   },
 
   emits: ['toggle'],
@@ -81,7 +76,7 @@ export default {
   data() {
     return {
       isOverflowHidden: true,
-      animationTimeout: null
+      animationTimeout: null,
     }
   },
 
@@ -96,20 +91,17 @@ export default {
           clearTimeout(this.animationTimeout)
           this.isOverflowHidden = true
         } else {
-          this.animationTimeout = setTimeout(
-            () => (this.isOverflowHidden = false),
-            1000
-          )
+          this.animationTimeout = setTimeout(() => (this.isOverflowHidden = false), 1000)
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
 
   methods: {
     toggle() {
       this.$emit('toggle')
-    }
-  }
+    },
+  },
 }
 </script>

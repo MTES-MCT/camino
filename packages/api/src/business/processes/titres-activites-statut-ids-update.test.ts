@@ -1,14 +1,11 @@
 import { titresActivitesStatutIdsUpdate } from './titres-activites-statut-ids-update.js'
 import { titresActivitesGet } from '../../database/queries/titres-activites.js'
 
-import {
-  titresActivitesDelaiDepasse,
-  titresActivitesDelaiNonDepasse
-} from './__mocks__/titres-activites-statut-ids-update-activites.js'
+import { titresActivitesDelaiDepasse, titresActivitesDelaiNonDepasse } from './__mocks__/titres-activites-statut-ids-update-activites.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres-activites', () => ({
   titreActiviteUpdate: vi.fn().mockResolvedValue(true),
-  titresActivitesGet: vi.fn()
+  titresActivitesGet: vi.fn(),
 }))
 
 const titresActivitesGetMock = vi.mocked(titresActivitesGet, true)

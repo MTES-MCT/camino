@@ -8,16 +8,7 @@ import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
-import {
-  vi,
-  afterEach,
-  beforeEach,
-  afterAll,
-  beforeAll,
-  describe,
-  test,
-  expect
-} from 'vitest'
+import { vi, afterEach, beforeEach, afterAll, beforeAll, describe, test, expect } from 'vitest'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -38,7 +29,7 @@ const titrePublicLectureFalse: ITitre = {
   nom: 'mon titre',
   typeId: 'arm',
   publicLecture: false,
-  propsTitreEtapesIds: {}
+  propsTitreEtapesIds: {},
 }
 
 const titreDemarchesPubliques: ITitre = {
@@ -52,15 +43,15 @@ const titreDemarchesPubliques: ITitre = {
       id: newDemarcheId('titre-id-demarche-oct'),
       titreId: 'titre-id',
       typeId: 'oct',
-      publicLecture: true
+      publicLecture: true,
     },
     {
       id: newDemarcheId('titre-id-demarche-pro'),
       titreId: 'titre-id',
       typeId: 'pro',
-      publicLecture: false
-    }
-  ]
+      publicLecture: false,
+    },
+  ],
 }
 const titreEtapesPubliques: ITitre = {
   id: 'titre-id',
@@ -82,7 +73,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 8,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: toCaminoDate('2020-02-02')
+          date: toCaminoDate('2020-02-02'),
         },
         {
           id: 'titre-id-demarche-id-eof',
@@ -90,7 +81,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 7,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: toCaminoDate('2020-02-02')
+          date: toCaminoDate('2020-02-02'),
         },
         {
           id: 'titre-id-demarche-id-edm',
@@ -98,7 +89,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 6,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: toCaminoDate('2020-02-02')
+          date: toCaminoDate('2020-02-02'),
         },
         {
           id: 'titre-id-demarche-id-ede',
@@ -106,7 +97,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 5,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: toCaminoDate('2020-02-02')
+          date: toCaminoDate('2020-02-02'),
         },
         {
           id: 'titre-id-demarche-id-pfd',
@@ -114,7 +105,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 4,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: toCaminoDate('2020-02-02')
+          date: toCaminoDate('2020-02-02'),
         },
         {
           id: 'titre-id-demarche-id-pfc',
@@ -122,7 +113,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 3,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: toCaminoDate('2020-02-02')
+          date: toCaminoDate('2020-02-02'),
         },
         {
           id: 'titre-id-demarche-id-vfd',
@@ -130,7 +121,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 2,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: toCaminoDate('2020-02-02')
+          date: toCaminoDate('2020-02-02'),
         },
         {
           id: 'titre-id-demarche-id-vfc',
@@ -138,7 +129,7 @@ const titreEtapesPubliques: ITitre = {
           ordre: 1,
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
-          date: toCaminoDate('2020-02-02')
+          date: toCaminoDate('2020-02-02'),
         },
         {
           id: 'titre-id-demarche-id-dpu',
@@ -147,11 +138,11 @@ const titreEtapesPubliques: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
-          administrationsLocales: ['dea-guyane-01']
-        }
-      ]
-    }
-  ]
+          administrationsLocales: ['dea-guyane-01'],
+        },
+      ],
+    },
+  ],
 }
 
 const titreWithActiviteGrp: ITitre = {
@@ -178,18 +169,18 @@ const titreWithActiviteGrp: ITitre = {
               id: 'orBrut',
               nom: 'Or brut extrait (g)',
               type: 'number',
-              description: 'Masse d’or brut'
+              description: 'Masse d’or brut',
             },
             {
               id: 'orExtrait',
               nom: 'Or extrait (g)',
               type: 'number',
-              description: "Masse d'or brut extrait au cours du trimestre."
-            }
-          ]
-        }
-      ]
-    }
+              description: "Masse d'or brut extrait au cours du trimestre.",
+            },
+          ],
+        },
+      ],
+    },
   ],
   demarches: [
     {
@@ -205,11 +196,11 @@ const titreWithActiviteGrp: ITitre = {
           titreDemarcheId: newDemarcheId('titre-id-demarche-id'),
           statutId: 'acc',
           date: toCaminoDate('2020-02-02'),
-          administrationsLocales: ['dea-guyane-01']
-        }
-      ]
-    }
-  ]
+          administrationsLocales: ['dea-guyane-01'],
+        },
+      ],
+    },
+  ],
 }
 
 const titreActivites: ITitre = {
@@ -236,17 +227,17 @@ const titreActivites: ITitre = {
               nom: 'Or brut extrait (g)',
               type: 'number',
               dateDebut: '2018-01-01',
-              description: 'Masse d’or brut'
+              description: 'Masse d’or brut',
             },
             {
               id: 'orExtrait',
               nom: 'Or extrait (g)',
               type: 'number',
-              description: "Masse d'or brut extrait au cours du trimestre."
-            }
-          ]
-        }
-      ]
+              description: "Masse d'or brut extrait au cours du trimestre.",
+            },
+          ],
+        },
+      ],
     },
     {
       id: 'titre-id-activites-pro',
@@ -264,19 +255,19 @@ const titreActivites: ITitre = {
               id: 'orBrut',
               nom: 'Or brut extrait (g)',
               type: 'number',
-              description: 'Masse d’or brut'
+              description: 'Masse d’or brut',
             },
             {
               id: 'orExtrait',
               nom: 'Or extrait (g)',
               type: 'number',
-              description: "Masse d'or brut extrait au cours du trimestre."
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              description: "Masse d'or brut extrait au cours du trimestre.",
+            },
+          ],
+        },
+      ],
+    },
+  ],
 }
 describe('titre', () => {
   const titreQuery = queryImport('titre')
@@ -287,14 +278,14 @@ describe('titre', () => {
       nom: 'mon titre',
       typeId: 'arm',
       publicLecture: true,
-      propsTitreEtapesIds: {}
+      propsTitreEtapesIds: {},
     }
     await titreCreate(titrePublicLecture, {})
     const res = await graphQLCall(titreQuery, { id: 'titre-id' }, undefined)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
-      titre: { id: 'titre-id' }
+      titre: { id: 'titre-id' },
     })
   })
 
@@ -314,8 +305,8 @@ describe('titre', () => {
     expect(res.body.data).toMatchObject({
       titre: {
         id: 'titre-id',
-        demarches: [{ id: 'titre-id-demarche-oct' }]
-      }
+        demarches: [{ id: 'titre-id-demarche-oct' }],
+      },
     })
 
     expect(res.body.data.titre.demarches.length).toEqual(1)
@@ -328,8 +319,8 @@ describe('titre', () => {
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
       titre: {
-        id: 'titre-id'
-      }
+        id: 'titre-id',
+      },
     })
 
     expect(res.body.data.titre.activites.length).toEqual(0)
@@ -346,27 +337,23 @@ describe('titre', () => {
         demarches: [
           {
             id: 'titre-id-demarche-id',
-            etapes: [{ id: 'titre-id-demarche-id-dpu' }]
-          }
-        ]
-      }
+            etapes: [{ id: 'titre-id-demarche-id-dpu' }],
+          },
+        ],
+      },
     })
     expect(res.body.data.titre.demarches[0].etapes.length).toEqual(1)
   })
 
   test('ne peut pas voir certaines étapes (utilisateur DGTM)', async () => {
     await titreCreate(titreEtapesPubliques, {})
-    const res = await graphQLCall(
-      titreQuery,
-      { id: 'titre-id' },
-      { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }
-    )
+    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data.titre.demarches[0].etapes).toHaveLength(8)
     expect(
       res.body.data.titre.demarches[0].etapes.map(({ id }: { id: string }) => ({
-        id
+        id,
       }))
     ).toEqual(
       expect.arrayContaining([
@@ -377,7 +364,7 @@ describe('titre', () => {
         { id: 'titre-id-demarche-id-pfc' },
         { id: 'titre-id-demarche-id-pfd' },
         { id: 'titre-id-demarche-id-vfc' },
-        { id: 'titre-id-demarche-id-vfd' }
+        { id: 'titre-id-demarche-id-vfd' },
       ])
     )
   })
@@ -389,7 +376,7 @@ describe('titre', () => {
       { id: 'titre-id' },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+        administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
       }
     )
 
@@ -397,7 +384,7 @@ describe('titre', () => {
     expect(res.body.data.titre.demarches[0].etapes.length).toEqual(9)
     expect(
       res.body.data.titre.demarches[0].etapes.map(({ id }: { id: string }) => ({
-        id
+        id,
       }))
     ).toEqual(
       expect.arrayContaining([
@@ -409,36 +396,28 @@ describe('titre', () => {
         { id: 'titre-id-demarche-id-vfc' },
         { id: 'titre-id-demarche-id-vfd' },
         { id: 'titre-id-demarche-id-ede' },
-        { id: 'titre-id-demarche-id-dpu' }
+        { id: 'titre-id-demarche-id-dpu' },
       ])
     )
   })
 
   test('peut modifier les activités GRP (utilisateur DEAL Guyane)', async () => {
     await titreCreate(titreWithActiviteGrp, {})
-    const res = await graphQLCall(
-      titreQuery,
-      { id: 'titre-id' },
-      { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }
-    )
+    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
-      titre: { activites: [{ modification: true }] }
+      titre: { activites: [{ modification: true }] },
     })
   })
 
   test('ne peut pas voir les activités GRP (utilisateur CACEM)', async () => {
     await titreCreate(titreWithActiviteGrp, {})
-    const res = await graphQLCall(
-      titreQuery,
-      { id: 'titre-id' },
-      { role: 'admin', administrationId: ADMINISTRATION_IDS.CACEM }
-    )
+    const res = await graphQLCall(titreQuery, { id: 'titre-id' }, { role: 'admin', administrationId: ADMINISTRATION_IDS.CACEM })
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data).toMatchObject({
-      titre: { activites: [] }
+      titre: { activites: [] },
     })
   })
 })
@@ -450,7 +429,7 @@ describe('titreCreer', () => {
     const res = await graphQLCall(
       titreCreerQuery,
       {
-        titre: { nom: 'titre', typeId: 'arm' }
+        titre: { nom: 'titre', typeId: 'arm' },
       },
       undefined
     )
@@ -459,25 +438,17 @@ describe('titreCreer', () => {
   })
 
   test("ne peut pas créer un titre prm (un utilisateur 'entreprise')", async () => {
-    const res = await graphQLCall(
-      titreCreerQuery,
-      { titre: { nom: 'titre', typeId: 'prm' } },
-      { role: 'entreprise', entreprises: [] }
-    )
+    const res = await graphQLCall(titreCreerQuery, { titre: { nom: 'titre', typeId: 'prm' } }, { role: 'entreprise', entreprises: [] })
 
     expect(res.body.errors[0].message).toBe('permissions insuffisantes')
   })
 
   test("crée un titre (un utilisateur 'super')", async () => {
-    const res = await graphQLCall(
-      titreCreerQuery,
-      { titre: { nom: 'titre', typeId: 'arm' } },
-      userSuper
-    )
+    const res = await graphQLCall(titreCreerQuery, { titre: { nom: 'titre', typeId: 'arm' } }, userSuper)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body).toMatchObject({
-      data: { titreCreer: { slug: 'm-ar-titre-0000', nom: 'titre' } }
+      data: { titreCreer: { slug: 'm-ar-titre-0000', nom: 'titre' } },
     })
   })
 
@@ -487,7 +458,7 @@ describe('titreCreer', () => {
       { titre: { nom: 'titre', typeId: 'axm' } },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       }
     )
 
@@ -495,11 +466,7 @@ describe('titreCreer', () => {
   })
 
   test("ne peut pas créer un titre ARM (un utilisateur 'admin' Déal Guyane)", async () => {
-    const res = await graphQLCall(
-      titreCreerQuery,
-      { titre: { nom: 'titre', typeId: 'arm' } },
-      { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }
-    )
+    const res = await graphQLCall(titreCreerQuery, { titre: { nom: 'titre', typeId: 'arm' } }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
 
     expect(res.body.errors[0].message).toBe('permissions insuffisantes')
   })
@@ -510,13 +477,13 @@ describe('titreCreer', () => {
       { titre: { nom: 'titre', typeId: 'arm' } },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       }
     )
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body).toMatchObject({
-      data: { titreCreer: { slug: 'm-ar-titre-0000', nom: 'titre' } }
+      data: { titreCreer: { slug: 'm-ar-titre-0000', nom: 'titre' } },
     })
   })
 })
@@ -531,7 +498,7 @@ describe('titreModifier', () => {
       {
         nom: 'mon titre',
         typeId: 'arm',
-        propsTitreEtapesIds: {}
+        propsTitreEtapesIds: {},
       },
       {}
     )
@@ -542,7 +509,7 @@ describe('titreModifier', () => {
     const res = await graphQLCall(
       titreModifierQuery,
       {
-        titre: { id, nom: 'mon titre modifié' }
+        titre: { id, nom: 'mon titre modifié' },
       },
       undefined
     )
@@ -554,7 +521,7 @@ describe('titreModifier', () => {
     const res = await graphQLCall(
       titreModifierQuery,
       {
-        titre: { id, nom: 'mon titre modifié' }
+        titre: { id, nom: 'mon titre modifié' },
       },
       { role: 'entreprise', entreprises: [] }
     )
@@ -566,7 +533,7 @@ describe('titreModifier', () => {
     const res = await graphQLCall(
       titreModifierQuery,
       {
-        titre: { id, nom: 'mon titre modifié' }
+        titre: { id, nom: 'mon titre modifié' },
       },
       userSuper
     )
@@ -575,9 +542,9 @@ describe('titreModifier', () => {
       data: {
         titreModifier: {
           slug: 'm-ar-mon-titre-modifie-0000',
-          nom: 'mon titre modifié'
-        }
-      }
+          nom: 'mon titre modifié',
+        },
+      },
     })
   })
 
@@ -585,11 +552,11 @@ describe('titreModifier', () => {
     const res = await graphQLCall(
       titreModifierQuery,
       {
-        titre: { id, nom: 'mon titre modifié' }
+        titre: { id, nom: 'mon titre modifié' },
       },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       }
     )
 
@@ -598,9 +565,9 @@ describe('titreModifier', () => {
         titreModifier: {
           id,
           slug: 'm-ar-mon-titre-modifie-0000',
-          nom: 'mon titre modifié'
-        }
-      }
+          nom: 'mon titre modifié',
+        },
+      },
     })
   })
 
@@ -610,7 +577,7 @@ describe('titreModifier', () => {
         nom: 'mon titre échu',
         typeId: 'arm',
         titreStatutId: 'ech',
-        propsTitreEtapesIds: {}
+        propsTitreEtapesIds: {},
       },
       {}
     )
@@ -620,12 +587,12 @@ describe('titreModifier', () => {
       {
         titre: {
           id: titre.id,
-          nom: 'mon titre échu modifié'
-        }
+          nom: 'mon titre échu modifié',
+        },
       },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       }
     )
 
@@ -636,7 +603,7 @@ describe('titreModifier', () => {
     const res = await graphQLCall(
       titreModifierQuery,
       {
-        titre: { id, nom: 'mon titre modifié' }
+        titre: { id, nom: 'mon titre modifié' },
       },
       { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }
     )
@@ -655,7 +622,7 @@ describe('titreSupprimer', () => {
       {
         nom: 'mon titre',
         typeId: 'arm',
-        propsTitreEtapesIds: {}
+        propsTitreEtapesIds: {},
       },
       {}
     )
@@ -671,16 +638,12 @@ describe('titreSupprimer', () => {
     const res = await graphQLCall(titreSupprimerQuery, { id }, userSuper)
 
     expect(res.body).toMatchObject({
-      data: { titreSupprimer: expect.any(String) }
+      data: { titreSupprimer: expect.any(String) },
     })
   })
 
   test('ne peut pas supprimer un titre inexistant (utilisateur super)', async () => {
-    const res = await graphQLCall(
-      titreSupprimerQuery,
-      { id: 'toto' },
-      userSuper
-    )
+    const res = await graphQLCall(titreSupprimerQuery, { id: 'toto' }, userSuper)
 
     expect(res.body.errors[0].message).toMatch(/le titre n'existe pas/)
   })

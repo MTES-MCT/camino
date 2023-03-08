@@ -5,11 +5,11 @@ import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
 vi.mock('./titres-etapes-heritage-contenu-update', () => ({
-  getDemarches: vi.fn().mockResolvedValue(true)
+  getDemarches: vi.fn().mockResolvedValue(true),
 }))
 
 vi.mock('../../database/queries/titres-demarches', () => ({
-  titreDemarcheUpdate: vi.fn().mockResolvedValue(true)
+  titreDemarcheUpdate: vi.fn().mockResolvedValue(true),
 }))
 
 const getDemarchesMock = vi.mocked(getDemarches, true)
@@ -32,7 +32,7 @@ describe("statut des démarches d'un titre", () => {
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 2,
-            date: toCaminoDate('1988-03-11')
+            date: toCaminoDate('1988-03-11'),
           },
           {
             id: 'h-cx-courdemanges-1988-oct01-dex01',
@@ -40,10 +40,10 @@ describe("statut des démarches d'un titre", () => {
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
-            date: toCaminoDate('1988-03-06')
-          }
-        ]
-      }
+            date: toCaminoDate('1988-03-06'),
+          },
+        ],
+      },
     })
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate()
 
@@ -65,7 +65,7 @@ describe("statut des démarches d'un titre", () => {
             typeId: 'dpu',
             statutId: 'acc',
             ordre: 2,
-            date: toCaminoDate('1988-03-11')
+            date: toCaminoDate('1988-03-11'),
           },
           {
             id: 'h-cx-courdemanges-1988-oct01-dex01',
@@ -73,10 +73,10 @@ describe("statut des démarches d'un titre", () => {
             typeId: 'dex',
             statutId: 'acc',
             ordre: 1,
-            date: toCaminoDate('1988-03-06')
-          }
-        ]
-      }
+            date: toCaminoDate('1988-03-06'),
+          },
+        ],
+      },
     })
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate()
 
@@ -91,8 +91,8 @@ describe("statut des démarches d'un titre", () => {
         titreTypeId: 'cxh',
         typeId: 'oct',
         statutId: 'ind',
-        etapes: []
-      }
+        etapes: [],
+      },
     })
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate()
     expect(titresDemarchesStatutUpdated.length).toEqual(0)

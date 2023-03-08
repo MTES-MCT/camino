@@ -6,33 +6,19 @@
           <span class="cap-first">{{ element.nom }}</span>
         </h5>
         <p v-if="element.optionnel" class="h6 italic mb-0">Optionnel</p>
-        <Tag
-          v-else-if="!complete"
-          color="bg-warning"
-          :mini="true"
-          text="Incomplet"
-        />
+        <Tag v-else-if="!complete" color="bg-warning" :mini="true" text="Incomplet" />
       </div>
 
       <div
         :class="{
           'tablet-blob-2-3': element.nom,
-          'tablet-blob-1': !element.nom
+          'tablet-blob-1': !element.nom,
         }"
       >
-        <SectionElementEdit
-          :contenu="contenu"
-          class="mb-s"
-          :element="element"
-          @update:contenu="newValue => $emit('update:contenu', newValue)"
-        />
+        <SectionElementEdit :contenu="contenu" class="mb-s" :element="element" @update:contenu="newValue => $emit('update:contenu', newValue)" />
 
         <!-- eslint-disable vue/no-v-html -->
-        <p
-          v-if="element.description || hasValeur"
-          class="h6"
-          v-html="element.description"
-        />
+        <p v-if="element.description || hasValeur" class="h6" v-html="element.description" />
       </div>
     </div>
 
@@ -41,11 +27,7 @@
 </template>
 
 <script>
-import {
-  valeurFind,
-  hasValeurCheck,
-  elementsCompleteCheck
-} from '../../utils/contenu'
+import { valeurFind, hasValeurCheck, elementsCompleteCheck } from '../../utils/contenu'
 import SectionElementEdit from './section-element-input-edit.vue'
 import { Tag } from '../_ui/tag'
 
@@ -54,7 +36,7 @@ export default {
 
   props: {
     contenu: { type: Object, required: true },
-    element: { type: Object, required: true }
+    element: { type: Object, required: true },
   },
   emits: ['update:contenu'],
 
@@ -69,7 +51,7 @@ export default {
 
     complete() {
       return elementsCompleteCheck([this.element], this.contenu, true)
-    }
-  }
+    },
+  },
 }
 </script>

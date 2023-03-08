@@ -24,12 +24,7 @@
       </div>
       <div class="mb tablet-blob-2-3">
         <div>
-          <input
-            v-model="entreprise.legalSiren"
-            type="text"
-            class="p-s"
-            placeholder="123456789"
-          />
+          <input v-model="entreprise.legalSiren" type="text" class="p-s" placeholder="123456789" />
         </div>
       </div>
     </div>
@@ -37,20 +32,10 @@
     <template #footer>
       <div v-if="!loading" class="tablet-blobs">
         <div class="tablet-blob-1-3 mb tablet-mb-0">
-          <button class="btn-border rnd-xs p-s full-x" @click="cancel">
-            Annuler
-          </button>
+          <button class="btn-border rnd-xs p-s full-x" @click="cancel">Annuler</button>
         </div>
         <div class="tablet-blob-2-3">
-          <button
-            ref="save-button"
-            class="btn btn-primary"
-            :disabled="!complete"
-            :class="{ disabled: !complete }"
-            @click="save"
-          >
-            Enregistrer
-          </button>
+          <button ref="save-button" class="btn btn-primary" :disabled="!complete" :class="{ disabled: !complete }" @click="save">Enregistrer</button>
         </div>
       </div>
       <div v-else class="p-s full-x bold">Enregistrement en cours…</div>
@@ -65,13 +50,13 @@ export default {
   name: 'CaminoEntrepriseEditPopup',
 
   components: {
-    Popup
+    Popup,
   },
 
   data() {
     return {
       entreprise: { legalSiren: '', paysId: 'fr' },
-      pays: [{ id: 'fr', nom: 'France' }]
+      pays: [{ id: 'fr', nom: 'France' }],
     }
   },
 
@@ -89,11 +74,8 @@ export default {
     },
 
     sirenValide() {
-      return (
-        this.entreprise.legalSiren &&
-        this.entreprise.legalSiren.match('[0-9]{9}$')
-      )
-    }
+      return this.entreprise.legalSiren && this.entreprise.legalSiren.match('[0-9]{9}$')
+    },
   },
 
   created() {
@@ -130,7 +112,7 @@ export default {
 
     errorsRemove() {
       this.$store.commit('popupMessagesRemove')
-    }
-  }
+    },
+  },
 }
 </script>

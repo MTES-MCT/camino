@@ -4,13 +4,7 @@
       {{ section.nom }}
     </h4>
 
-    <SectionElement
-      v-for="e in elements"
-      :key="e.id"
-      :element="e"
-      :contenu="contenu"
-      @file-download="fileDownload"
-    />
+    <SectionElement v-for="e in elements" :key="e.id" :element="e" :contenu="contenu" @file-download="fileDownload" />
   </div>
 </template>
 
@@ -19,14 +13,14 @@ import SectionElement from './section-element.vue'
 
 export default {
   components: {
-    SectionElement
+    SectionElement,
   },
 
   props: {
     entete: { type: Boolean, default: true },
     section: { type: Object, required: true },
     contenu: { type: Object, default: () => ({}) },
-    date: { type: String, default: '' }
+    date: { type: String, default: '' },
   },
 
   emits: ['file-download'],
@@ -37,16 +31,15 @@ export default {
         e =>
           !this.date ||
           // si la date existe, vérifie qu'elle est dans les bornes de l'élément
-          ((!e.dateDebut || e.dateDebut < this.date) &&
-            (!e.dateFin || e.dateFin >= this.date))
+          ((!e.dateDebut || e.dateDebut < this.date) && (!e.dateFin || e.dateFin >= this.date))
       )
-    }
+    },
   },
 
   methods: {
     fileDownload(fichier) {
       this.$emit('file-download', fichier)
-    }
-  }
+    },
+  },
 }
 </script>

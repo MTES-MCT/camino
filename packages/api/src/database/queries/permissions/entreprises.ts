@@ -12,10 +12,7 @@ import { utilisateursQueryModify } from './utilisateurs.js'
 import { documentsQueryModify } from './documents.js'
 import { User } from 'camino-common/src/roles.js'
 
-const entreprisesQueryModify = (
-  q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>,
-  user: User
-) => {
+const entreprisesQueryModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, user: User) => {
   q.select('entreprises.*')
 
   q.modifyGraph('titulaireTitres', a =>
@@ -33,30 +30,17 @@ const entreprisesQueryModify = (
   )
 
   q.modifyGraph('utilisateurs', b => {
-    utilisateursQueryModify(
-      b as QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>,
-      user
-    )
+    utilisateursQueryModify(b as QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>, user)
   })
 
   q.modifyGraph('documents', b => {
-    documentsQueryModify(
-      b as QueryBuilder<Documents, Documents | Documents[]>,
-      user
-    )
+    documentsQueryModify(b as QueryBuilder<Documents, Documents | Documents[]>, user)
   })
 
   return q
 }
 
-const entreprisesTitresQuery = (
-  entreprisesIds: string[],
-  titreAlias: string,
-  {
-    isTitulaire,
-    isAmodiataire
-  }: { isTitulaire?: boolean; isAmodiataire?: boolean } = {}
-) => {
+const entreprisesTitresQuery = (entreprisesIds: string[], titreAlias: string, { isTitulaire, isAmodiataire }: { isTitulaire?: boolean; isAmodiataire?: boolean } = {}) => {
   const q = Entreprises.query().whereIn('entreprises.id', entreprisesIds)
 
   if (isTitulaire) {
@@ -80,35 +64,15 @@ const entreprisesTitresQuery = (
   return q
 }
 
-const entreprisesTitulairesModify = (
-  q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>,
-  entreprisesIds: string[],
-  titreAlias: string
-) => {
+const entreprisesTitulairesModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, entreprisesIds: string[], titreAlias: string) => {
   q.leftJoin('titresTitulaires as t_t', b => {
-    b.on(
-      knex.raw('?? ->> ? = ??', [
-        `${titreAlias}.propsTitreEtapesIds`,
-        'titulaires',
-        't_t.titreEtapeId'
-      ])
-    ).onIn('t_t.entrepriseId', entreprisesIds)
+    b.on(knex.raw('?? ->> ? = ??', [`${titreAlias}.propsTitreEtapesIds`, 'titulaires', 't_t.titreEtapeId'])).onIn('t_t.entrepriseId', entreprisesIds)
   })
 }
 
-const entreprisesAmodiatairesModify = (
-  q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>,
-  entreprisesIds: string[],
-  titreAlias: string
-) => {
+const entreprisesAmodiatairesModify = (q: QueryBuilder<Entreprises, Entreprises | Entreprises[]>, entreprisesIds: string[], titreAlias: string) => {
   q.leftJoin('titresAmodiataires as t_a', b => {
-    b.on(
-      knex.raw('?? ->> ? = ??', [
-        `${titreAlias}.propsTitreEtapesIds`,
-        'amodiataires',
-        't_a.titreEtapeId'
-      ])
-    ).onIn('t_a.entrepriseId', entreprisesIds)
+    b.on(knex.raw('?? ->> ? = ??', [`${titreAlias}.propsTitreEtapesIds`, 'amodiataires', 't_a.titreEtapeId'])).onIn('t_a.entrepriseId', entreprisesIds)
   })
 }
 

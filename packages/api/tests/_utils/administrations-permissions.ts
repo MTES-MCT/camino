@@ -1,25 +1,14 @@
-import {
-  IDemarcheType,
-  IEtapeType,
-  ITitre,
-  ITitreTypeDemarcheTypeEtapeType
-} from '../../src/types.js'
+import { IDemarcheType, IEtapeType, ITitre, ITitreTypeDemarcheTypeEtapeType } from '../../src/types.js'
 
 import { graphQLCall, queryImport } from './index.js'
 
 import Titres from '../../src/database/models/titres.js'
 import DemarchesTypes from '../../src/database/models/demarches-types.js'
 import options from '../../src/database/queries/_options.js'
-import {
-  etapeTypeGet,
-  titreTypeDemarcheTypeEtapeTypeGet
-} from '../../src/database/queries/metas.js'
+import { etapeTypeGet, titreTypeDemarcheTypeEtapeTypeGet } from '../../src/database/queries/metas.js'
 import { titreEtapePropsIds } from '../../src/business/utils/titre-etape-heritage-props-find.js'
 import { etapeTypeSectionsFormat } from '../../src/api/_format/etapes-types.js'
-import {
-  idGenerate,
-  newDemarcheId
-} from '../../src/database/models/_format/id-create.js'
+import { idGenerate, newDemarcheId } from '../../src/database/models/_format/id-create.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { documentCreate } from '../../src/database/queries/documents.js'
@@ -27,10 +16,7 @@ import { isGestionnaire } from 'camino-common/src/static/administrationsTitresTy
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { expect } from 'vitest'
-import {
-  AdministrationId,
-  sortedAdministrations
-} from 'camino-common/src/static/administrations.js'
+import { AdministrationId, sortedAdministrations } from 'camino-common/src/static/administrations.js'
 import { TestUser } from 'camino-common/src/tests-utils.js'
 export const visibleCheck = async (
   administrationId: AdministrationId,
@@ -42,18 +28,14 @@ export const visibleCheck = async (
 ) => {
   const titreQuery = queryImport('titre')
 
-  const administration = sortedAdministrations.find(
-    a => a.id === administrationId
-  )!
+  const administration = sortedAdministrations.find(a => a.id === administrationId)!
 
   const gestionnaire = isGestionnaire(administration.id)
 
   const titre = titreBuild(
     {
-      titreId: `${titreTypeId}${
-        locale ? '-local' : ''
-      }-${cible}-admin-${administrationId}`,
-      titreTypeId
+      titreId: `${titreTypeId}${locale ? '-local' : ''}-${cible}-admin-${administrationId}`,
+      titreTypeId,
     },
     gestionnaire ? administrationId : undefined,
     locale ? administrationId : undefined,
@@ -67,7 +49,7 @@ export const visibleCheck = async (
     { id: titre.id },
     {
       role: 'admin',
-      administrationId: administration.id
+      administrationId: administration.id,
     }
   )
 
@@ -83,70 +65,54 @@ export const visibleCheck = async (
     if (visible) {
       expect(res.body.data.titre.demarches).not.toBeNull()
       expect(res.body.data.titre.demarches![0]).not.toBeNull()
-      expect(res.body.data.titre.demarches![0]!.id).toEqual(
-        titre.demarches![0]!.id
-      )
+      expect(res.body.data.titre.demarches![0]!.id).toEqual(titre.demarches![0]!.id)
     } else {
-      expect(res.body.data.titre ? res.body.data.titre.demarches : []).toEqual(
-        []
-      )
+      expect(res.body.data.titre ? res.body.data.titre.demarches : []).toEqual([])
     }
   } else if (cible === 'etapes') {
     if (visible) {
       expect(res.body.data.titre.demarches![0]!.etapes).not.toBeNull()
-      expect(res.body.data.titre.demarches![0]!.etapes![0]!.id).toEqual(
-        titre.demarches![0]!.etapes![0]!.id
-      )
+      expect(res.body.data.titre.demarches![0]!.etapes![0]!.id).toEqual(titre.demarches![0]!.etapes![0]!.id)
     } else {
       expect(res.body.data.titre.demarches![0]!.etapes).toEqual([])
     }
   }
 }
 
-export const creationCheck = async (
-  administrationId: string,
-  creer: boolean,
-  cible: string,
-  titreTypeId: TitreTypeId
-) => {
-  const administration = sortedAdministrations.find(
-    a => a.id === administrationId
-  )!
+export const creationCheck = async (administrationId: string, creer: boolean, cible: string, titreTypeId: TitreTypeId) => {
+  const administration = sortedAdministrations.find(a => a.id === administrationId)!
 
   if (cible === 'titres') {
     const titre = {
       nom: `${titreTypeId}-${cible}-admin-${administrationId}`,
-      typeId: titreTypeId
+      typeId: titreTypeId,
     }
 
     const titreCreerQuery = queryImport('titre-creer')
     const res = await graphQLCall(
       titreCreerQuery,
       {
-        titre
+        titre,
       },
       {
         role: 'admin',
-        administrationId: administration.id
+        administrationId: administration.id,
       }
     )
 
     if (creer) {
       expect(res.body.data).toMatchObject({
-        titreCreer: { nom: titre.nom }
+        titreCreer: { nom: titre.nom },
       })
     } else {
       expect(res.body.errors[0].message).toBe('permissions insuffisantes')
     }
   } else if (cible === 'demarches') {
     const titreCreated = await titreCreerSuper(administrationId, titreTypeId)
-    const res = await demarcheCreerProfil(
-      titreCreated.body.data.titreCreer.id,
-      {
-        role: 'admin',
-        administrationId: administration.id
-      }
-    )
+    const res = await demarcheCreerProfil(titreCreated.body.data.titreCreer.id, {
+      role: 'admin',
+      administrationId: administration.id,
+    })
 
     if (creer) {
       expect(res.body.errors).toBeUndefined()
@@ -157,29 +123,22 @@ export const creationCheck = async (
   } else if (cible === 'etapes') {
     const titreCreated = await titreCreerSuper(administrationId, titreTypeId)
 
-    const demarcheCreated = await demarcheCreerProfil(
-      titreCreated.body.data.titreCreer.id,
-      { role: 'super' }
-    )
+    const demarcheCreated = await demarcheCreerProfil(titreCreated.body.data.titreCreer.id, { role: 'super' })
 
     expect(demarcheCreated.body.errors).toBeUndefined()
 
     const etapeTypeId = 'mfr'
     const etapeType = (await etapeTypeGet(etapeTypeId, {
-      fields: {}
+      fields: {},
     })) as IEtapeType
 
-    const demarcheType = (await DemarchesTypes.query()
-      .withGraphFetched(options.demarchesTypes.graph)
-      .findById(
-        demarcheCreated.body.data.demarcheCreer.demarches[0].type!.id
-      )) as IDemarcheType
+    const demarcheType = (await DemarchesTypes.query().withGraphFetched(options.demarchesTypes.graph).findById(demarcheCreated.body.data.demarcheCreer.demarches[0].type!.id)) as IDemarcheType
 
     const tde = (await titreTypeDemarcheTypeEtapeTypeGet(
       {
         titreTypeId,
         demarcheTypeId: demarcheType.id,
-        etapeTypeId: etapeType.id
+        etapeTypeId: etapeType.id,
       },
       { fields: { id: {} } }
     )) as ITitreTypeDemarcheTypeEtapeType
@@ -220,14 +179,9 @@ export const creationCheck = async (
       return acc
     }, {} as any)
 
-    const titreDemarcheId =
-      demarcheCreated.body.data.demarcheCreer.demarches[0].id
+    const titreDemarcheId = demarcheCreated.body.data.demarcheCreer.demarches[0].id
 
-    const documentTypesIds = getDocuments(
-      titreTypeId,
-      demarcheType.id,
-      etapeTypeId
-    )
+    const documentTypesIds = getDocuments(titreTypeId, demarcheType.id, etapeTypeId)
       .filter(({ optionnel }) => !optionnel)
       .map(({ id }) => id)
     const documentIds = []
@@ -239,7 +193,7 @@ export const creationCheck = async (
         id,
         typeId: documentTypeId,
         date: toCaminoDate('2020-01-01'),
-        uri: 'https://camino.beta.gouv.fr'
+        uri: 'https://camino.beta.gouv.fr',
       })
     }
     const res = await graphQLCall(
@@ -270,39 +224,31 @@ export const creationCheck = async (
               groupe: 1,
               contour: 1,
               point: 1,
-              references: [
-                { geoSystemeId: '4326', coordonnees: { x: 1, y: 2 } }
-              ]
+              references: [{ geoSystemeId: '4326', coordonnees: { x: 1, y: 2 } }],
             },
             {
               groupe: 1,
               contour: 1,
               point: 2,
-              references: [
-                { geoSystemeId: '4326', coordonnees: { x: 2, y: 2 } }
-              ]
+              references: [{ geoSystemeId: '4326', coordonnees: { x: 2, y: 2 } }],
             },
             {
               groupe: 1,
               contour: 1,
               point: 3,
-              references: [
-                { geoSystemeId: '4326', coordonnees: { x: 2, y: 1 } }
-              ]
+              references: [{ geoSystemeId: '4326', coordonnees: { x: 2, y: 1 } }],
             },
             {
               groupe: 1,
               contour: 1,
               point: 4,
-              references: [
-                { geoSystemeId: '4326', coordonnees: { x: 1, y: 1 } }
-              ]
-            }
-          ]
-        }
+              references: [{ geoSystemeId: '4326', coordonnees: { x: 1, y: 1 } }],
+            },
+          ],
+        },
       },
       {
-        role: 'super'
+        role: 'super',
       }
     )
 
@@ -310,9 +256,7 @@ export const creationCheck = async (
       expect(res.body.errors).toBeUndefined()
       expect(res.body.data).toMatchObject({ etapeCreer: {} })
     } else {
-      expect(res.body.errors[0].message).toBe(
-        'droits insuffisants pour créer cette étape'
-      )
+      expect(res.body.errors[0].message).toBe('droits insuffisants pour créer cette étape')
     }
   }
 }
@@ -325,18 +269,14 @@ export const modificationCheck = async (
   locale?: boolean,
   etapeTypeId?: EtapeTypeId
 ) => {
-  const administration = sortedAdministrations.find(
-    a => a.id === administrationId
-  )!
+  const administration = sortedAdministrations.find(a => a.id === administrationId)!
 
   const gestionnaire = isGestionnaire(administrationId)
 
   const titre = titreBuild(
     {
-      titreId: `${titreTypeId}${
-        locale ? '-local' : ''
-      }${etapeTypeId}-${cible}-modification-admin-${administrationId}`,
-      titreTypeId
+      titreId: `${titreTypeId}${locale ? '-local' : ''}${etapeTypeId}-${cible}-modification-admin-${administrationId}`,
+      titreTypeId,
     },
     gestionnaire ? administrationId : undefined,
     locale ? administrationId : undefined,
@@ -349,7 +289,7 @@ export const modificationCheck = async (
     { id: titre.id },
     {
       role: 'admin',
-      administrationId: administration.id
+      administrationId: administration.id,
     }
   )
 
@@ -357,18 +297,16 @@ export const modificationCheck = async (
     if (modifier) {
       expect(res.body.errors).toBeUndefined()
       expect(res.body.data.titre).toMatchObject({
-        modification: true
+        modification: true,
       })
     } else {
-      expect(
-        res.body.data.titre ? res.body.data.titre.modification : null
-      ).toBeNull()
+      expect(res.body.data.titre ? res.body.data.titre.modification : null).toBeNull()
     }
   } else if (cible === 'demarches') {
     if (modifier) {
       expect(res.body.errors).toBeUndefined()
       expect(res.body.data.titre.demarches![0]).toMatchObject({
-        modification: true
+        modification: true,
       })
     } else {
       expect(res.body.errors).toBeUndefined()
@@ -380,7 +318,7 @@ export const modificationCheck = async (
     if (modifier) {
       expect(res.body.errors).toBeUndefined()
       expect(res.body.data.titre.demarches![0]!.etapes![0]).toMatchObject({
-        modification: true
+        modification: true,
       })
     } else {
       const etapes = res.body.data.titre.demarches![0]!.etapes
@@ -396,25 +334,20 @@ const titreCreerSuper = async (administrationId: string, titreTypeId: string) =>
     {
       titre: {
         nom: `titre-${titreTypeId!}-cree-${administrationId!}`,
-        typeId: titreTypeId!
-      }
+        typeId: titreTypeId!,
+      },
     },
     {
-      role: 'super'
+      role: 'super',
     }
   )
 
-const demarcheCreerProfil = async (titreId: string, user: TestUser) =>
-  graphQLCall(
-    queryImport('titre-demarche-creer'),
-    { demarche: { titreId, typeId: 'oct' } },
-    user
-  )
+const demarcheCreerProfil = async (titreId: string, user: TestUser) => graphQLCall(queryImport('titre-demarche-creer'), { demarche: { titreId, typeId: 'oct' } }, user)
 
 const titreBuild = (
   {
     titreId,
-    titreTypeId
+    titreTypeId,
   }: {
     titreId: string
     titreTypeId: TitreTypeId
@@ -442,14 +375,12 @@ const titreBuild = (
             titreDemarcheId: newDemarcheId(`${titreId}-demarche-id`),
             statutId: 'enc',
             date: toCaminoDate('2020-01-01'),
-            administrationsLocales: administrationIdLocale
-              ? [administrationIdLocale]
-              : []
-          }
-        ]
-      }
+            administrationsLocales: administrationIdLocale ? [administrationIdLocale] : [],
+          },
+        ],
+      },
     ],
-    publicLecture: false
+    publicLecture: false,
   }
 
   return titre

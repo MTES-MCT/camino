@@ -8,7 +8,7 @@ const state = {
     etapesTypes: [],
     titresTypes: [],
     titresStatuts: [],
-    titresEntreprises: []
+    titresEntreprises: [],
   },
   definitions: [
     { id: 'typesIds', type: 'strings', values: [] },
@@ -28,28 +28,20 @@ const state = {
     {
       id: 'colonne',
       type: 'string',
-      values: [
-        'titreNom',
-        'titreDomaine',
-        'titreType',
-        'titreStatut',
-        'type',
-        'statut',
-        'reference'
-      ]
+      values: ['titreNom', 'titreDomaine', 'titreType', 'titreStatut', 'type', 'statut', 'reference'],
     },
     {
       id: 'ordre',
       type: 'string',
-      values: ['asc', 'desc']
-    }
+      values: ['asc', 'desc'],
+    },
   ],
   params: {
     table: {
       page: 1,
       intervalle: 200,
       ordre: 'asc',
-      colonne: null
+      colonne: null,
     },
     filtres: {
       typesIds: [],
@@ -63,18 +55,13 @@ const state = {
       titresEntreprisesIds: [],
       titresSubstancesIds: [],
       titresReferences: '',
-      titresTerritoires: ''
-    }
+      titresTerritoires: '',
+    },
   },
-  initialized: false
+  initialized: false,
 }
 
-const actions = listeActionsBuild(
-  'titresDemarches',
-  'démarches',
-  demarches,
-  demarchesMetas
-)
+const actions = listeActionsBuild('titresDemarches', 'démarches', demarches, demarchesMetas)
 
 const mutations = Object.assign({}, listeMutations, {
   reset(state) {
@@ -83,14 +70,14 @@ const mutations = Object.assign({}, listeMutations, {
       etapesTypes: [],
       titresTypes: [],
       titresStatuts: [],
-      titresEntreprises: []
+      titresEntreprises: [],
     }
     state.params = {
       table: {
         page: 1,
         intervalle: 200,
         ordre: 'asc',
-        colonne: null
+        colonne: null,
       },
       filtres: {
         typesIds: [],
@@ -104,8 +91,8 @@ const mutations = Object.assign({}, listeMutations, {
         titresEntreprisesIds: [],
         titresSubstancesIds: [],
         titresReferences: '',
-        titresTerritoires: ''
-      }
+        titresTerritoires: '',
+      },
     }
   },
   metasSet(state, data) {
@@ -139,12 +126,12 @@ const mutations = Object.assign({}, listeMutations, {
         })
       }
     })
-  }
+  },
 })
 
 export default {
   namespaced: true,
   state,
   actions,
-  mutations
+  mutations,
 }

@@ -1,11 +1,4 @@
-import type {
-  LatLngExpression,
-  Icon,
-  DivIcon,
-  GeoJSONOptions,
-  DivIconOptions,
-  IconOptions
-} from 'leaflet'
+import type { LatLngExpression, Icon, DivIcon, GeoJSONOptions, DivIconOptions, IconOptions } from 'leaflet'
 import { GeoJsonObject } from 'geojson'
 import 'leaflet.markercluster'
 import 'leaflet-gesture-handling'
@@ -25,22 +18,14 @@ L.Marker.prototype.options.icon = L.icon({
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
   tooltipAnchor: [16, -28],
-  shadowSize: [41, 41]
+  shadowSize: [41, 41],
 })
 
-export const leafletMarkerBuild = (
-  latLng: LatLngExpression,
-  icon: Icon | DivIcon | undefined
-) => L.marker(latLng, { icon })
+export const leafletMarkerBuild = (latLng: LatLngExpression, icon: Icon | DivIcon | undefined) => L.marker(latLng, { icon })
 
-export const leafletGeojsonBuild = (
-  geojson: GeoJsonObject | undefined,
-  options?: GeoJSONOptions<any> | undefined
-) => L.geoJSON(geojson, options)
+export const leafletGeojsonBuild = (geojson: GeoJsonObject | undefined, options?: GeoJSONOptions<any> | undefined) => L.geoJSON(geojson, options)
 
-export const leafletMarkerClusterGroupBuild = (
-  divIconOptions: DivIconOptions
-) =>
+export const leafletMarkerClusterGroupBuild = (divIconOptions: DivIconOptions) =>
   L.markerClusterGroup({
     iconCreateFunction(cluster) {
       const childCount = cluster.getChildCount()
@@ -61,15 +46,11 @@ export const leafletMarkerClusterGroupBuild = (
     showCoverageOnHover: false,
     maxClusterRadius(x) {
       return 2048 / Math.pow(x, 2)
-    }
+    },
   })
 
-export const leafletGeojsonCenterFind = (geojson: GeoJsonObject | undefined) =>
-  L.geoJSON(geojson).getBounds().getCenter()
+export const leafletGeojsonCenterFind = (geojson: GeoJsonObject | undefined) => L.geoJSON(geojson).getBounds().getCenter()
 
-export const leafletDivIconBuild = (divIconOptions: DivIconOptions) =>
-  L.divIcon(divIconOptions)
-export const leafletIconBuild = (iconOptions: IconOptions) =>
-  L.icon(iconOptions)
-export const leafletGeojsonBoundsGet = (zone: GeoJsonObject | undefined) =>
-  L.geoJSON(zone).getBounds()
+export const leafletDivIconBuild = (divIconOptions: DivIconOptions) => L.divIcon(divIconOptions)
+export const leafletIconBuild = (iconOptions: IconOptions) => L.icon(iconOptions)
+export const leafletGeojsonBoundsGet = (zone: GeoJsonObject | undefined) => L.geoJSON(zone).getBounds()

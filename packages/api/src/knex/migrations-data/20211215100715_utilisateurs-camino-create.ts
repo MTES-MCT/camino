@@ -5,7 +5,7 @@ import { userSuper } from '../../database/user-super.js'
 export const up = async (knex: Knex) => {
   await knex('utilisateurs').insert({
     ...userSuper,
-    motDePasse: idGenerate()
+    motDePasse: idGenerate(),
   })
 }
 export const down = () => ({})

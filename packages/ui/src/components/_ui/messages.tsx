@@ -15,5 +15,5 @@ export const Messages = defineComponent<Props>({
         ))}
       </TransitionGroup>
     )
-  }
+  },
 })

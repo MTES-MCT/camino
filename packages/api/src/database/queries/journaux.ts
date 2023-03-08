@@ -1,12 +1,6 @@
 import Journaux from '../models/journaux.js'
 import { create } from 'jsondiffpatch'
-import {
-  Model,
-  PartialModelGraph,
-  RelationExpression,
-  Transaction,
-  UpsertGraphOptions
-} from 'objection'
+import { Model, PartialModelGraph, RelationExpression, Transaction, UpsertGraphOptions } from 'objection'
 import { journauxQueryModify } from './permissions/journaux.js'
 import { IFields } from '../../types.js'
 import graphBuild from './graph/build.js'
@@ -17,28 +11,18 @@ import { User } from 'camino-common/src/roles'
 
 const diffPatcher = create({
   // on filtre certaines proprietés qu’on ne souhaite pas voir apparaitre dans les journaux
-  propertyFilter: (name: string) =>
-    !['slug', 'ordre', 'demarche', 'heritageProps'].includes(name)
+  propertyFilter: (name: string) => !['slug', 'ordre', 'demarche', 'heritageProps'].includes(name),
 })
 
-export const journauxGet = async (
-  params: IJournauxQueryParams,
-  { fields }: { fields?: IFields },
-  user: User
-) => {
-  const graph = fields
-    ? graphBuild(fields, 'journaux', fieldsFormat)
-    : options.journaux.graph
+export const journauxGet = async (params: IJournauxQueryParams, { fields }: { fields?: IFields }, user: User) => {
+  const graph = fields ? graphBuild(fields, 'journaux', fieldsFormat) : options.journaux.graph
 
   const q = Journaux.query().withGraphFetched(graph)
   q.modify(journauxQueryModify, user)
 
   if (params.recherche) {
     q.leftJoinRelated('titre as titreRecherche')
-    q.whereRaw(`lower(??) like ?`, [
-      'titreRecherche.nom',
-      `%${params.recherche.toLowerCase()}%`
-    ])
+    q.whereRaw(`lower(??) like ?`, ['titreRecherche.nom', `%${params.recherche.toLowerCase()}%`])
   }
 
   if (params.titreId) {
@@ -50,13 +34,7 @@ export const journauxGet = async (
   return q.page(params.page - 1, params.intervalle)
 }
 
-export const deleteJournalCreate = async (
-  id: string,
-  model: typeof Model,
-  userId: string,
-  titreId: string,
-  trx?: Transaction
-) => {
+export const deleteJournalCreate = async (id: string, model: typeof Model, userId: string, titreId: string, trx?: Transaction) => {
   const oldValue = await model.query(trx).findById(id)
 
   await Journaux.query(trx).insert({
@@ -64,35 +42,23 @@ export const deleteJournalCreate = async (
     operation: 'delete',
     utilisateurId: userId,
     titreId,
-    differences: diffPatcher.diff(oldValue, {})
+    differences: diffPatcher.diff(oldValue, {}),
   })
 }
 
-export const createJournalCreate = async (
-  id: string,
-  userId: string,
-  titreId: string
-) => {
+export const createJournalCreate = async (id: string, userId: string, titreId: string) => {
   await Journaux.query().insert({
     elementId: id,
     operation: 'create',
     utilisateurId: userId,
-    titreId
+    titreId,
   })
 }
 
-export const patchJournalCreate = async <T extends Model>(
-  id: string,
-  partialEntity: Partial<T>,
-  model: typeof Model,
-  userId: string,
-  titreId: string
-): Promise<T> => {
+export const patchJournalCreate = async <T extends Model>(id: string, partialEntity: Partial<T>, model: typeof Model, userId: string, titreId: string): Promise<T> => {
   const oldValue = await model.query().findById(id)
 
-  const oldPartialValue = (
-    Object.keys(partialEntity) as Array<keyof Model>
-  ).reduce((result, key) => {
+  const oldPartialValue = (Object.keys(partialEntity) as Array<keyof Model>).reduce((result, key) => {
     result[key] = oldValue![key]
 
     return result
@@ -100,7 +66,7 @@ export const patchJournalCreate = async <T extends Model>(
 
   const result = await model.query().patchAndFetchById(id, {
     ...partialEntity,
-    id
+    id,
   })
 
   const differences = diffPatcher.diff(oldPartialValue, partialEntity)
@@ -111,7 +77,7 @@ export const patchJournalCreate = async <T extends Model>(
       utilisateurId: userId,
       operation: 'update',
       differences,
-      titreId
+      titreId,
     })
   }
 
@@ -127,20 +93,11 @@ export const upsertJournalCreate = async <T extends Model>(
   userId: string,
   titreId: string
 ): Promise<T> => {
-  const oldValue = id
-    ? await model
-        .query()
-        .findById(id)
-        .withGraphFetched(relations)
-        .returning('*')
-    : undefined
+  const oldValue = id ? await model.query().findById(id).withGraphFetched(relations).returning('*') : undefined
 
   // on ne peut pas utiliser returning('*'),
   // car certains attributs de entity restent présents alors qu’ils sont enlevés avant l’enregistrement
-  const newModel = await model
-    .query()
-    .upsertGraph(entity, options)
-    .returning('id')
+  const newModel = await model.query().upsertGraph(entity, options).returning('id')
 
   const newValue = await model
     .query()
@@ -166,7 +123,7 @@ export const upsertJournalCreate = async <T extends Model>(
     utilisateurId: userId,
     operation,
     differences,
-    titreId
+    titreId,
   })
 
   return newValue as T

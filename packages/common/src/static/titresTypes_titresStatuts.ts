@@ -44,14 +44,14 @@ const titresPublicLecture: { [key in TitreTypeId]: TitreStatutId[] } = {
     TitresStatutIds.DemandeInitiale,
     TitresStatutIds.Echu,
     TitresStatutIds.ModificationEnInstance,
-    TitresStatutIds.Valide
+    TitresStatutIds.Valide,
   ],
   [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: [
     TitresStatutIds.DemandeClassee,
     TitresStatutIds.DemandeInitiale,
     TitresStatutIds.Echu,
     TitresStatutIds.ModificationEnInstance,
-    TitresStatutIds.Valide
+    TitresStatutIds.Valide,
   ],
   [TITRES_TYPES_IDS.CONCESSION_FOSSILES]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.Echu, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
   [TITRES_TYPES_IDS.CONCESSION_GEOTHERMIE]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
@@ -75,7 +75,7 @@ const titresPublicLecture: { [key in TitreTypeId]: TitreStatutId[] } = {
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: [TitresStatutIds.DemandeInitiale, TitresStatutIds.ModificationEnInstance, TitresStatutIds.Valide],
   [TITRES_TYPES_IDS.INDETERMINE_METAUX]: [],
   [TITRES_TYPES_IDS.INDETERMINE_RADIOACTIF]: [],
-  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_FOSSILES]: []
+  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_FOSSILES]: [],
 }
 
 export const titreTypesStatutsTitresPublicLecture: { titreTypeId: TitreTypeId; titreStatutId: TitreStatutId; publicLecture: boolean }[] = getKeys(titresPublicLecture, isTitreType)

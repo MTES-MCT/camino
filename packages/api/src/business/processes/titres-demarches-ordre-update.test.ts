@@ -1,17 +1,14 @@
 import { titresDemarchesOrdreUpdate } from './titres-demarches-ordre-update.js'
 import { titresGet } from '../../database/queries/titres.js'
 
-import {
-  titresDemarchesDesordonnees,
-  titresDemarchesOrdonnees
-} from './__mocks__/titres-demarches-ordre-update-demarches.js'
+import { titresDemarchesDesordonnees, titresDemarchesOrdonnees } from './__mocks__/titres-demarches-ordre-update-demarches.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres', () => ({
-  titresGet: vi.fn()
+  titresGet: vi.fn(),
 }))
 
 vi.mock('../../database/queries/titres-demarches', () => ({
-  titreDemarcheUpdate: vi.fn().mockResolvedValue(true)
+  titreDemarcheUpdate: vi.fn().mockResolvedValue(true),
 }))
 
 const titresGetMock = vi.mocked(titresGet, true)

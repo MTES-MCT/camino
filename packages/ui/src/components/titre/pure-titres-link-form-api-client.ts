@@ -27,22 +27,16 @@ export type LinkableTitre = TitreLink & {
 export interface PureTitresLinkFormApiClient {
   linkTitres: (titreId: string, titreFromIds: string[]) => Promise<TitreLinks>
   loadTitreLinks: (titreId: string) => Promise<TitreLinks>
-  loadLinkableTitres: (
-    titreTypeId: TitreTypeId,
-    demarches: { typeId: DemarcheTypeId }[]
-  ) => () => Promise<LinkableTitre[]>
+  loadLinkableTitres: (titreTypeId: TitreTypeId, demarches: { typeId: DemarcheTypeId }[]) => () => Promise<LinkableTitre[]>
 }
 
 export const pureTitresLinkFormApiClient: PureTitresLinkFormApiClient = {
-  linkTitres: async (
-    titreId: string,
-    titreFromIds: string[]
-  ): Promise<TitreLinks> => {
+  linkTitres: async (titreId: string, titreFromIds: string[]): Promise<TitreLinks> => {
     return (
       await fetch(`/apiUrl/titres/${titreId}/titreLiaisons`, {
         method: 'post',
         body: JSON.stringify(titreFromIds),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       })
     ).json()
   },
@@ -51,42 +45,36 @@ export const pureTitresLinkFormApiClient: PureTitresLinkFormApiClient = {
     return (await fetch(`/apiUrl/titres/${titreId}/titreLiaisons`)).json()
   },
 
-  loadLinkableTitres:
-    (titreTypeId: TitreTypeId, demarches: { typeId: DemarcheTypeId }[]) =>
-    async () => {
-      const linkConfig = getLinkConfig(titreTypeId, demarches)
+  loadLinkableTitres: (titreTypeId: TitreTypeId, demarches: { typeId: DemarcheTypeId }[]) => async () => {
+    const linkConfig = getLinkConfig(titreTypeId, demarches)
 
-      if (linkConfig) {
-        const titreTypeFrom = TitresTypes[linkConfig.typeId]
-        const result = await apiGraphQLFetch(
-          gql`
-            query Titres($typesIds: [ID!], $domainesIds: [ID!]) {
-              titres(
-                typesIds: $typesIds
-                domainesIds: $domainesIds
-                statutsIds: ["ech", "mod", "val"]
-              ) {
-                elements {
-                  id
-                  nom
-                  titreStatutId
-                  demarches {
-                    phase {
-                      dateDebut
-                      dateFin
-                    }
+    if (linkConfig) {
+      const titreTypeFrom = TitresTypes[linkConfig.typeId]
+      const result = await apiGraphQLFetch(
+        gql`
+          query Titres($typesIds: [ID!], $domainesIds: [ID!]) {
+            titres(typesIds: $typesIds, domainesIds: $domainesIds, statutsIds: ["ech", "mod", "val"]) {
+              elements {
+                id
+                nom
+                titreStatutId
+                demarches {
+                  phase {
+                    dateDebut
+                    dateFin
                   }
                 }
               }
             }
-          `
-        )({
-          typesIds: [titreTypeFrom.typeId],
-          domainesIds: [titreTypeFrom.domaineId]
-        })
-        return result.elements
-      } else {
-        return []
-      }
+          }
+        `
+      )({
+        typesIds: [titreTypeFrom.typeId],
+        domainesIds: [titreTypeFrom.domaineId],
+      })
+      return result.elements
+    } else {
+      return []
     }
+  },
 }

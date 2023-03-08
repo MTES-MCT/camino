@@ -8,8 +8,8 @@ const meta: Meta = {
   component: PureButton,
   argTypes: {
     user: Object,
-    menuActive: Boolean
-  }
+    menuActive: Boolean,
+  },
 }
 export default meta
 
@@ -22,24 +22,23 @@ const Template: Story<Props> = (args: Props) => ({
   setup() {
     return { args }
   },
-  template:
-    '<PureButton @onConnectionClicked="onConnectionClicked" @onUserClicked="onUserClicked" v-bind="args" />',
+  template: '<PureButton @onConnectionClicked="onConnectionClicked" @onUserClicked="onUserClicked" v-bind="args" />',
   methods: {
     onConnectionClicked: action('onConnectionClicked'),
-    onUserClicked: action('onUserClicked')
-  }
+    onUserClicked: action('onUserClicked'),
+  },
 })
 
 export const NotConnected = Template.bind({})
 NotConnected.args = {
-  menuActive: false
+  menuActive: false,
 }
 const user: User = {
   nom: 'Nom',
-  prenom: 'prenom'
+  prenom: 'prenom',
 }
 export const Connected = Template.bind({})
 Connected.args = {
   user,
-  menuActive: false
+  menuActive: false,
 }

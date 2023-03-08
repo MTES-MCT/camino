@@ -1,11 +1,6 @@
 import { CustomResponse } from '../express-type.js'
 import express from 'express'
-import {
-  StatistiquesMinerauxMetauxMetropole,
-  StatistiquesDGTM,
-  StatistiquesGuyaneData,
-  StatistiquesGranulatsMarins
-} from 'camino-common/src/statistiques.js'
+import { StatistiquesMinerauxMetauxMetropole, StatistiquesDGTM, StatistiquesGuyaneData, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques.js'
 import { getMinerauxMetauxMetropolesStatsInside } from './metaux-metropole.js'
 
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
@@ -15,10 +10,7 @@ import { getGuyaneStatsInside } from './guyane.js'
 import { isAdministration, User } from 'camino-common/src/roles.js'
 import { statistiquesGranulatsMarins } from './granulats-marins.js'
 
-export const getDGTMStats = async (
-  req: express.Request,
-  res: CustomResponse<StatistiquesDGTM>
-) => {
+export const getDGTMStats = async (req: express.Request, res: CustomResponse<StatistiquesDGTM>) => {
   const user = req.user as User
 
   const administrationId = ADMINISTRATION_IDS['DGTM - GUYANE']
@@ -32,10 +24,7 @@ export const getDGTMStats = async (
   }
 }
 
-export const getMinerauxMetauxMetropolesStats = async (
-  _req: express.Request,
-  res: CustomResponse<StatistiquesMinerauxMetauxMetropole>
-): Promise<void> => {
+export const getMinerauxMetauxMetropolesStats = async (_req: express.Request, res: CustomResponse<StatistiquesMinerauxMetauxMetropole>): Promise<void> => {
   try {
     res.json(await getMinerauxMetauxMetropolesStatsInside())
   } catch (e) {
@@ -45,10 +34,7 @@ export const getMinerauxMetauxMetropolesStats = async (
   }
 }
 
-export const getGuyaneStats = async (
-  _req: express.Request,
-  res: CustomResponse<StatistiquesGuyaneData>
-): Promise<void> => {
+export const getGuyaneStats = async (_req: express.Request, res: CustomResponse<StatistiquesGuyaneData>): Promise<void> => {
   try {
     res.json(await getGuyaneStatsInside())
   } catch (e) {
@@ -58,10 +44,7 @@ export const getGuyaneStats = async (
   }
 }
 
-export const getGranulatsMarinsStats = async (
-  _req: express.Request,
-  res: CustomResponse<StatistiquesGranulatsMarins>
-): Promise<void> => {
+export const getGranulatsMarinsStats = async (_req: express.Request, res: CustomResponse<StatistiquesGranulatsMarins>): Promise<void> => {
   try {
     res.json(await statistiquesGranulatsMarins())
   } catch (e) {

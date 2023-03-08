@@ -14,25 +14,11 @@ import {
   ChartConfiguration,
   PieController,
   ArcElement,
-  ChartType
+  ChartType,
 } from 'chart.js'
 import { ref, onMounted, onUnmounted, defineComponent } from 'vue'
 
-Chart.register(
-  LinearScale,
-  PieController,
-  ArcElement,
-  BarController,
-  CategoryScale,
-  BarElement,
-  LineController,
-  PointElement,
-  LineElement,
-  Filler,
-  Legend,
-  Tooltip,
-  Title
-)
+Chart.register(LinearScale, PieController, ArcElement, BarController, CategoryScale, BarElement, LineController, PointElement, LineElement, Filler, Legend, Tooltip, Title)
 interface Props<TType extends ChartType> {
   chartConfiguration: ChartConfiguration<TType>
 }
@@ -60,13 +46,11 @@ const GenericConfigurableChart = <TType extends ChartType>() =>
       })
 
       return () => <canvas ref={myCanvas} />
-    }
+    },
   })
 
 const HiddenConfigurableChart = GenericConfigurableChart()
-export const ConfigurableChart = <TType extends ChartType = ChartType>(
-  props: Props<TType>
-): JSX.Element => {
+export const ConfigurableChart = <TType extends ChartType = ChartType>(props: Props<TType>): JSX.Element => {
   return (
     // TODO 2023-02-13: see https://github.com/chartjs/Chart.js/issues/10896#issuecomment-1374822435
     // @ts-ignore

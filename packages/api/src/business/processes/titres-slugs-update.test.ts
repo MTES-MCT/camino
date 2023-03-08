@@ -6,21 +6,18 @@ import { titresGet } from '../../database/queries/titres.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../utils/titre-slug-and-relations-update', () => ({
   __esModule: true,
-  titreSlugAndRelationsUpdate: vi.fn()
+  titreSlugAndRelationsUpdate: vi.fn(),
 }))
 
 vi.mock('../../database/queries/titres', () => ({
   __esModule: true,
   titreIdUpdate: vi.fn().mockResolvedValue(true),
   titreGet: vi.fn().mockResolvedValue(true),
-  titresGet: vi.fn().mockResolvedValue(true)
+  titresGet: vi.fn().mockResolvedValue(true),
 }))
 
 const titresGetMock = vi.mocked(titresGet, true)
-const titreSlugAndRelationsUpdateMock = vi.mocked(
-  titreSlugAndRelationsUpdate,
-  true
-)
+const titreSlugAndRelationsUpdateMock = vi.mocked(titreSlugAndRelationsUpdate, true)
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -34,7 +31,7 @@ describe("mise à jour du slug d'un titre", () => {
     titresGetMock.mockResolvedValue([titre])
     titreSlugAndRelationsUpdateMock.mockResolvedValue({
       hasChanged: true,
-      slug
+      slug,
     })
 
     const titresUpdatedIndex = await titresSlugsUpdate()

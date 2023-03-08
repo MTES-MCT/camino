@@ -1,13 +1,6 @@
 import { RawBuilder, QueryBuilder } from 'objection'
 
-import {
-  IFields,
-  IUtilisateursColonneId,
-  IColonne,
-  IUtilisateurTitre,
-  IUtilisateur,
-  formatUser
-} from '../../types.js'
+import { IFields, IUtilisateursColonneId, IColonne, IUtilisateurTitre, IUtilisateur, formatUser } from '../../types.js'
 
 import options from './_options.js'
 import graphBuild from './graph/build.js'
@@ -22,15 +15,13 @@ import { Role, User } from 'camino-common/src/roles.js'
 const userGet = async (userId?: string): Promise<User> => {
   if (!userId) return null
 
-  const user = await Utilisateurs.query()
-    .withGraphFetched('[entreprises]')
-    .findById(userId)
+  const user = await Utilisateurs.query().withGraphFetched('[entreprises]').findById(userId)
   if (user) {
     const q = utilisateursQueryBuild(
       {
         fields: {
-          entreprises: { id: {} }
-        }
+          entreprises: { id: {} },
+        },
       },
       formatUser(user)
     )
@@ -44,13 +35,8 @@ const userGet = async (userId?: string): Promise<User> => {
   return undefined
 }
 
-const utilisateursQueryBuild = (
-  { fields }: { fields?: IFields },
-  user: User
-) => {
-  const graph = fields
-    ? graphBuild(fields, 'utilisateur', fieldsFormat)
-    : options.utilisateurs.graph
+const utilisateursQueryBuild = ({ fields }: { fields?: IFields }, user: User) => {
+  const graph = fields ? graphBuild(fields, 'utilisateur', fieldsFormat) : options.utilisateurs.graph
 
   const q = Utilisateurs.query().withGraphFetched(graph)
 
@@ -66,7 +52,7 @@ const utilisateursFiltersQueryModify = (
     administrationIds,
     roles,
     noms,
-    emails
+    emails,
   }: {
     ids?: string[]
     entrepriseIds?: string[]
@@ -100,10 +86,7 @@ const utilisateursFiltersQueryModify = (
     nomsArray.forEach(s => {
       q.where(b => {
         fields.forEach(f => {
-          b.orWhereRaw(`lower(??) like ?`, [
-            `utilisateurs.${f}`,
-            `%${s.toLowerCase()}%`
-          ])
+          b.orWhereRaw(`lower(??) like ?`, [`utilisateurs.${f}`, `%${s.toLowerCase()}%`])
         })
       })
     })
@@ -111,10 +94,7 @@ const utilisateursFiltersQueryModify = (
 
   if (emails) {
     q.where(b => {
-      b.whereRaw(`LOWER(??) LIKE LOWER(?)`, [
-        'utilisateurs.email',
-        `%${emails}%`
-      ])
+      b.whereRaw(`LOWER(??) LIKE LOWER(?)`, ['utilisateurs.email', `%${emails}%`])
     })
   }
 
@@ -123,17 +103,14 @@ const utilisateursFiltersQueryModify = (
 
 const userByEmailGet = async (email: string | null | undefined) => {
   if (email) {
-    const user: IUtilisateur | undefined = await Utilisateurs.query()
-      .withGraphFetched('[entreprises]')
-      .where('utilisateurs.email', email)
-      .first()
+    const user: IUtilisateur | undefined = await Utilisateurs.query().withGraphFetched('[entreprises]').where('utilisateurs.email', email).first()
 
     if (user) {
       const q = utilisateursQueryBuild(
         {
           fields: {
-            entreprises: { id: {} }
-          }
+            entreprises: { id: {} },
+          },
         },
         formatUser(user)
       )
@@ -145,11 +122,7 @@ const userByEmailGet = async (email: string | null | undefined) => {
   return undefined
 }
 
-const utilisateurGet = async (
-  id: string,
-  { fields }: { fields?: IFields } = {},
-  user: User
-) => {
+const utilisateurGet = async (id: string, { fields }: { fields?: IFields } = {}, user: User) => {
   const q = utilisateursQueryBuild({ fields }, user)
 
   return q.findById(id)
@@ -158,14 +131,11 @@ const utilisateurGet = async (
 // lien = administration ou entreprise(s) en relation avec l'utilisateur :
 // on trie sur la concaténation du nom de l'administration
 // avec l'aggrégation ordonnée(STRING_AGG) des noms des entreprises
-const utilisateursColonnes: Record<
-  IUtilisateursColonneId,
-  IColonne<string | RawBuilder>
-> = {
+const utilisateursColonnes: Record<IUtilisateursColonneId, IColonne<string | RawBuilder>> = {
   nom: { id: 'nom' },
   prenom: { id: 'prenom' },
   email: { id: 'email' },
-  role: { id: 'role' }
+  role: { id: 'role' },
 }
 const utilisateursGet = async (
   {
@@ -178,7 +148,7 @@ const utilisateursGet = async (
     administrationIds,
     roles,
     noms,
-    emails
+    emails,
   }: {
     intervalle?: number | null
     page?: number | null
@@ -203,7 +173,7 @@ const utilisateursGet = async (
       administrationIds,
       roles,
       noms,
-      emails
+      emails,
     },
     q
   )
@@ -232,7 +202,7 @@ const utilisateursCount = async (
     administrationIds,
     roles,
     noms,
-    emails
+    emails,
   }: {
     ids?: string[]
     entrepriseIds?: string[]
@@ -246,61 +216,32 @@ const utilisateursCount = async (
 ) => {
   const q = utilisateursQueryBuild({ fields }, user)
 
-  utilisateursFiltersQueryModify(
-    { ids, entrepriseIds, administrationIds, roles, noms, emails },
-    q
-  )
+  utilisateursFiltersQueryModify({ ids, entrepriseIds, administrationIds, roles, noms, emails }, q)
 
   return q.resultSize()
 }
 
-const utilisateurCreate = async (
-  utilisateur: IUtilisateur,
-  { fields }: { fields?: IFields }
-) =>
+const utilisateurCreate = async (utilisateur: IUtilisateur, { fields }: { fields?: IFields }) =>
   Utilisateurs.query()
     .insertGraph(utilisateur, options.utilisateurs.update)
-    .withGraphFetched(
-      fields
-        ? graphBuild(fields, 'utilisateur', fieldsFormat)
-        : options.utilisateurs.graph
-    )
+    .withGraphFetched(fields ? graphBuild(fields, 'utilisateur', fieldsFormat) : options.utilisateurs.graph)
     .first()
 
-const utilisateurUpsert = async (
-  utilisateur: IUtilisateur,
-  { fields }: { fields?: IFields }
-) =>
+const utilisateurUpsert = async (utilisateur: IUtilisateur, { fields }: { fields?: IFields }) =>
   Utilisateurs.query()
     .upsertGraphAndFetch(utilisateur, options.utilisateurs.update)
-    .withGraphFetched(
-      fields
-        ? graphBuild(fields, 'utilisateur', fieldsFormat)
-        : options.utilisateurs.graph
-    )
+    .withGraphFetched(fields ? graphBuild(fields, 'utilisateur', fieldsFormat) : options.utilisateurs.graph)
 
-const utilisateurUpdate = async (
-  id: string,
-  utilisateur: Partial<IUtilisateur>
-) => Utilisateurs.query().patch(utilisateur).findById(id)
+const utilisateurUpdate = async (id: string, utilisateur: Partial<IUtilisateur>) => Utilisateurs.query().patch(utilisateur).findById(id)
 
-const utilisateurTitreCreate = async (utilisateurTitre: IUtilisateurTitre) =>
-  UtilisateursTitres.query().insert(utilisateurTitre)
+const utilisateurTitreCreate = async (utilisateurTitre: IUtilisateurTitre) => UtilisateursTitres.query().insert(utilisateurTitre)
 
-const utilisateurTitreDelete = async (utilisateurId: string, titreId: string) =>
-  UtilisateursTitres.query().deleteById([utilisateurId, titreId])
+const utilisateurTitreDelete = async (utilisateurId: string, titreId: string) => UtilisateursTitres.query().deleteById([utilisateurId, titreId])
 
-const utilisateursTitresGet = async (
-  titreId: string,
-  { fields }: { fields?: IFields }
-) =>
+const utilisateursTitresGet = async (titreId: string, { fields }: { fields?: IFields }) =>
   UtilisateursTitres.query()
     .where('titreId', titreId)
-    .withGraphFetched(
-      fields
-        ? graphBuild(fields, 'utilisateursTitres', fieldsFormat)
-        : options.utilisateursTitres.graph
-    )
+    .withGraphFetched(fields ? graphBuild(fields, 'utilisateursTitres', fieldsFormat) : options.utilisateursTitres.graph)
 
 export {
   userGet,
@@ -313,5 +254,5 @@ export {
   utilisateurUpdate,
   utilisateurTitreCreate,
   utilisateurTitreDelete,
-  utilisateursTitresGet
+  utilisateursTitresGet,
 }

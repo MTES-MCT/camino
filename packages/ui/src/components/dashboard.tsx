@@ -4,11 +4,7 @@ import { PureONFDashboard } from '@/components/dashboard/pure-onf-dashboard'
 import { PurePTMGDashboard } from '@/components/dashboard/pure-ptmg-dashboard'
 import { PureDrealDashboard } from '@/components/dashboard/pure-dreal-dashboard'
 import { fetchWithJson } from '@/api/client-rest'
-import {
-  CommonTitreDREAL,
-  CommonTitreONF,
-  CommonTitrePTMG
-} from 'camino-common/src/titres'
+import { CommonTitreDREAL, CommonTitreONF, CommonTitrePTMG } from 'camino-common/src/titres'
 
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
@@ -18,14 +14,10 @@ import { CaminoRestRoutes } from 'camino-common/src/rest'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { EntrepriseId } from 'camino-common/src/entreprise'
 
-const getOnfTitres = async (): Promise<CommonTitreONF[]> =>
-  fetchWithJson(CaminoRestRoutes.titresONF, {})
-const getPtmgTitres = async (): Promise<CommonTitrePTMG[]> =>
-  fetchWithJson(CaminoRestRoutes.titresPTMG, {})
-const getDrealTitres = async (): Promise<CommonTitreDREAL[]> =>
-  fetchWithJson(CaminoRestRoutes.titresDREAL, {})
-const getDgtmStats = async (): Promise<StatistiquesDGTM> =>
-  fetchWithJson(CaminoRestRoutes.statistiquesDGTM, {})
+const getOnfTitres = async (): Promise<CommonTitreONF[]> => fetchWithJson(CaminoRestRoutes.titresONF, {})
+const getPtmgTitres = async (): Promise<CommonTitrePTMG[]> => fetchWithJson(CaminoRestRoutes.titresPTMG, {})
+const getDrealTitres = async (): Promise<CommonTitreDREAL[]> => fetchWithJson(CaminoRestRoutes.titresDREAL, {})
+const getDgtmStats = async (): Promise<StatistiquesDGTM> => fetchWithJson(CaminoRestRoutes.statistiquesDGTM, {})
 
 export const Dashboard = defineComponent({
   setup() {
@@ -44,9 +36,7 @@ export const Dashboard = defineComponent({
     const entreprises = store.getters['user/user']?.entreprises ?? []
     if (hasEntreprises) {
       // TODO 2022-03-17: type the store
-      entreprisesIds.push(
-        ...entreprises.map((entreprise: { id: EntrepriseId }) => entreprise.id)
-      )
+      entreprisesIds.push(...entreprises.map((entreprise: { id: EntrepriseId }) => entreprise.id))
     } else if (!isONF && !isPTMG && !isDREAL && !isDGTM) {
       store.commit('titres/reset')
       store.dispatch('titres/init')
@@ -58,27 +48,14 @@ export const Dashboard = defineComponent({
 
     let dashboard = <div>Loading</div>
     if (hasEntreprises) {
-      dashboard = (
-        <PureEntrepriseDashboard
-          getEntreprisesTitres={getEntreprisesTitres}
-          user={user}
-          entreprises={entreprises}
-          displayActivites={canReadActivites(user)}
-        />
-      )
+      dashboard = <PureEntrepriseDashboard getEntreprisesTitres={getEntreprisesTitres} user={user} entreprises={entreprises} displayActivites={canReadActivites(user)} />
     } else if (isONF) {
       dashboard = <PureONFDashboard getOnfTitres={getOnfTitres} />
     } else if (isPTMG) {
       dashboard = <PurePTMGDashboard getPtmgTitres={getPtmgTitres} />
     } else if (isDREAL || isDGTM) {
-      dashboard = (
-        <PureDrealDashboard
-          getDrealTitres={getDrealTitres}
-          isDGTM={isDGTM}
-          getDgtmStats={getDgtmStats}
-        />
-      )
+      dashboard = <PureDrealDashboard getDrealTitres={getDrealTitres} isDGTM={isDGTM} getDgtmStats={getDgtmStats} />
     }
     return () => <dashboard />
-  }
+  },
 })

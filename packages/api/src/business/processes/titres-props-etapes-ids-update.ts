@@ -18,10 +18,10 @@ export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
           etapes: {
             points: { id: {} },
             titulaires: { id: {} },
-            amodiataires: { id: {} }
-          }
-        }
-      }
+            amodiataires: { id: {} },
+          },
+        },
+      },
     },
     userSuper
   )
@@ -29,32 +29,20 @@ export const titresPropsEtapesIdsUpdate = async (titresIds?: string[]) => {
   const titresPropsEtapesIdsUpdated = [] as string[]
 
   for (const titre of titres) {
-    const propsTitreEtapesIds = propsTitreEtapeIdKeys.reduce(
-      (propsTitreEtapesIds: IPropsTitreEtapesIds, propId) => {
-        const titreEtape = titrePropTitreEtapeFind(
-          propId,
-          titre.demarches!,
-          titre.titreStatutId!
-        )
+    const propsTitreEtapesIds = propsTitreEtapeIdKeys.reduce((propsTitreEtapesIds: IPropsTitreEtapesIds, propId) => {
+      const titreEtape = titrePropTitreEtapeFind(propId, titre.demarches!, titre.titreStatutId!)
 
-        if (titreEtape) {
-          propsTitreEtapesIds[propId] = titreEtape.id
-        }
+      if (titreEtape) {
+        propsTitreEtapesIds[propId] = titreEtape.id
+      }
 
-        return propsTitreEtapesIds
-      },
-      {}
-    )
+      return propsTitreEtapesIds
+    }, {})
 
     if (objectsDiffer(propsTitreEtapesIds, titre.propsTitreEtapesIds)) {
       await titreUpdate(titre.id, { propsTitreEtapesIds })
 
-      console.info(
-        "titre : ids d'étapes des props (mise à jour) ->",
-        `${titre.id} : ${JSON.stringify(
-          propsTitreEtapesIds
-        )} | ${JSON.stringify(titre.propsTitreEtapesIds)}`
-      )
+      console.info("titre : ids d'étapes des props (mise à jour) ->", `${titre.id} : ${JSON.stringify(propsTitreEtapesIds)} | ${JSON.stringify(titre.propsTitreEtapesIds)}`)
 
       titresPropsEtapesIdsUpdated.push(titre.id)
     }

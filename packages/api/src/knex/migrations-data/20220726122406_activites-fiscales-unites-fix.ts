@@ -1,9 +1,6 @@
 import { UniteId } from 'camino-common/src/static/unites.js'
 import { Knex } from 'knex'
-const {
-  SUBSTANCES_FISCALES_IDS,
-  SubstancesFiscale
-} = require('camino-common/src/static/substancesFiscales')
+const { SUBSTANCES_FISCALES_IDS, SubstancesFiscale } = require('camino-common/src/static/substancesFiscales')
 const { Unites } = require('camino-common/src/static/unites')
 export const up = async (knex: Knex) => {
   const activites: {
@@ -24,15 +21,9 @@ export const up = async (knex: Knex) => {
 
     let updated = false
 
-    const substancesNeedFix = [
-      SUBSTANCES_FISCALES_IDS['pyrite de fer'],
-      SUBSTANCES_FISCALES_IDS['minerais de fer'],
-      SUBSTANCES_FISCALES_IDS['schistes carbobitumineux et schistes bitumineux']
-    ]
+    const substancesNeedFix = [SUBSTANCES_FISCALES_IDS['pyrite de fer'], SUBSTANCES_FISCALES_IDS['minerais de fer'], SUBSTANCES_FISCALES_IDS['schistes carbobitumineux et schistes bitumineux']]
 
-    const sectionSubstancesFiscales = activite.sections?.find(
-      section => section.id === 'substancesFiscales'
-    )
+    const sectionSubstancesFiscales = activite.sections?.find(section => section.id === 'substancesFiscales')
 
     if (sectionSubstancesFiscales) {
       for (const element of sectionSubstancesFiscales.elements) {

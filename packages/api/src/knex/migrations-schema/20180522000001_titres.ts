@@ -6,12 +6,7 @@ export const up = (knex: Knex) =>
     table.string('nom').notNullable()
     table.string('typeId', 3).index().references('titresTypes.id').notNullable()
     table.string('domaineId', 1).index().references('domaines.id').notNullable()
-    table
-      .string('statutId', 3)
-      .index()
-      .references('titresStatuts.id')
-      .notNullable()
-      .defaultTo('ind')
+    table.string('statutId', 3).index().references('titresStatuts.id').notNullable().defaultTo('ind')
     table.string('dateDebut', 10)
     table.string('dateFin', 10)
     table.string('dateDemande', 10)

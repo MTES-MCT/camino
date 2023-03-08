@@ -5,7 +5,7 @@ import { administrationMetas } from './permissions.stub'
 
 const meta: Meta = {
   title: 'Components/Administration/Permissions',
-  component: Permissions
+  component: Permissions,
 }
 export default meta
 
@@ -13,7 +13,7 @@ export const Default: Story = () => (
   <Permissions
     administrationId={ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']}
     apiClient={{
-      administrationMetas
+      administrationMetas,
     }}
   />
 )
@@ -22,7 +22,7 @@ export const error: Story = () => (
   <Permissions
     administrationId={ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']}
     apiClient={{
-      administrationMetas: () => Promise.reject(new Error(''))
+      administrationMetas: () => Promise.reject(new Error('')),
     }}
   />
 )
@@ -31,7 +31,7 @@ export const Loading: Story = () => (
   <Permissions
     administrationId={ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']}
     apiClient={{
-      administrationMetas: () => new Promise(() => ({}))
+      administrationMetas: () => new Promise(() => ({})),
     }}
   />
 )

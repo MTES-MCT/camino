@@ -7,7 +7,7 @@ import { vi, describe, expect, beforeEach, test } from 'vitest'
 vi.mock('../api/titres-etapes', () => ({
   etape: vi.fn(),
   etapeDeposer: vi.fn(),
-  etapeSupprimer: vi.fn()
+  etapeSupprimer: vi.fn(),
 }))
 
 console.info = vi.fn()
@@ -19,14 +19,14 @@ describe('étapes', () => {
 
   beforeEach(() => {
     titreEtape.state = {
-      element: null
+      element: null,
     }
 
     actions = {
       pageError: vi.fn(),
       apiError: vi.fn(),
       reload: vi.fn(),
-      messageAdd: vi.fn()
+      messageAdd: vi.fn(),
     }
 
     mutations = {
@@ -37,7 +37,7 @@ describe('étapes', () => {
       fileLoad: vi.fn(),
       popupMessagesRemove: vi.fn(),
       popupClose: vi.fn(),
-      popupMessageAdd: vi.fn()
+      popupMessageAdd: vi.fn(),
     }
 
     store = createStore({
@@ -45,8 +45,8 @@ describe('étapes', () => {
       mutations,
       modules: {
         titreEtape,
-        titre: { namespaced: true, mutations: { open: vi.fn() } }
-      }
+        titre: { namespaced: true, mutations: { open: vi.fn() } },
+      },
     })
 
     const app = createApp({})
@@ -86,9 +86,7 @@ describe('étapes', () => {
   })
 
   test("retourne une erreur si l'API retourne une erreur lors du dépot d'une étape", async () => {
-    const apiMock = api.etapeDeposer.mockRejectedValue(
-      new Error("erreur de l'api")
-    )
+    const apiMock = api.etapeDeposer.mockRejectedValue(new Error("erreur de l'api"))
     await store.dispatch('titreEtape/depose', 14)
 
     expect(apiMock).toHaveBeenCalledWith({ id: 14 })
@@ -104,9 +102,7 @@ describe('étapes', () => {
   })
 
   test("retourne une erreur si l'API retourne une erreur lors de la suppression d'une étape", async () => {
-    const apiMock = api.etapeSupprimer.mockRejectedValue(
-      new Error("erreur de l'api")
-    )
+    const apiMock = api.etapeSupprimer.mockRejectedValue(new Error("erreur de l'api"))
     await store.dispatch('titreEtape/remove', 14)
 
     expect(apiMock).toHaveBeenCalledWith({ id: 14 })

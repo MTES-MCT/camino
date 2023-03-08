@@ -5,7 +5,7 @@ import { action } from '@storybook/addon-actions'
 const meta: Meta = {
   title: 'Components/UI/Chip',
   component: Chip,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -16,16 +16,16 @@ const Template: Story<Props> = (args: Props) => ({
   },
   template: `<Chip v-bind="args" @onDelete='onDelete' />`,
   methods: {
-    onDelete: action('onDelete')
-  }
+    onDelete: action('onDelete'),
+  },
 })
 
 export const Default = Template.bind({})
 Default.args = {
-  nom: 'Ma chip'
+  nom: 'Ma chip',
 }
 export const WithColor = Template.bind({})
 WithColor.args = {
   nom: 'Ma chip',
-  color: 'bg-success'
+  color: 'bg-success',
 }

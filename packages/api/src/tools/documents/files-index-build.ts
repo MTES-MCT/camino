@@ -8,9 +8,7 @@ export const filesIndexBuild = (path = './files'): Index<string> => {
 
   return filesNames.reduce((res: Index<string>, fileName) => {
     if (fileName) {
-      res[basename(fileName.split('/').pop()!, '.pdf')] = fileName.substring(
-        path.length + 1
-      )
+      res[basename(fileName.split('/').pop()!, '.pdf')] = fileName.substring(path.length + 1)
     }
 
     return res

@@ -6,13 +6,13 @@ import { vi, describe, expect, beforeEach, test } from 'vitest'
 
 vi.mock('../router', () => ({
   push: () => {},
-  replace: () => {}
+  replace: () => {},
 }))
 
 vi.mock('../api/entreprises', () => ({
   entreprise: vi.fn(),
   entrepriseCreer: vi.fn(),
-  entrepriseModifier: vi.fn()
+  entrepriseModifier: vi.fn(),
 }))
 
 console.info = vi.fn()
@@ -26,14 +26,14 @@ describe("état de l'entreprise sélectionnée", () => {
     entreprise.state = {
       element: null,
       metas: {
-        domaines: []
-      }
+        domaines: [],
+      },
     }
     actions = {
       pageError: vi.fn(),
       apiError: vi.fn(),
       reload: vi.fn(),
-      messageAdd: vi.fn()
+      messageAdd: vi.fn(),
     }
 
     mutations = {
@@ -43,13 +43,13 @@ describe("état de l'entreprise sélectionnée", () => {
       popupMessagesRemove: vi.fn(),
       popupClose: vi.fn(),
       popupMessageAdd: vi.fn(),
-      messageAdd: vi.fn()
+      messageAdd: vi.fn(),
     }
 
     store = createStore({
       modules: { entreprise },
       mutations,
-      actions
+      actions,
     })
 
     const app = createApp({})
@@ -73,9 +73,7 @@ describe("état de l'entreprise sélectionnée", () => {
   })
 
   test("retourne une erreur de l'api dans l'obtention de l'entreprise", async () => {
-    const apiMock = api.entreprise.mockRejectedValue(
-      new Error("l'api ne répond pas")
-    )
+    const apiMock = api.entreprise.mockRejectedValue(new Error("l'api ne répond pas"))
     await store.dispatch('entreprise/get', 71)
 
     expect(apiMock).toHaveBeenCalledWith({ id: 71 })
@@ -93,37 +91,35 @@ describe("état de l'entreprise sélectionnée", () => {
   test('ajoute une entreprise', async () => {
     const apiMock = api.entrepriseCreer.mockResolvedValue({
       id: 71,
-      nom: 'toto'
+      nom: 'toto',
     })
 
     await store.dispatch('entreprise/add', {
       legalSiren: '123456789',
-      paysId: 'fr'
+      paysId: 'fr',
     })
 
     expect(apiMock).toHaveBeenCalledWith({
       entreprise: {
         legalSiren: '123456789',
-        paysId: 'fr'
-      }
+        paysId: 'fr',
+      },
     })
     expect(mutations.popupClose).toHaveBeenCalled()
   })
 
   test("retourne une erreur si l'API retourne une erreur lors de l'ajout d'une entreprise", async () => {
-    const apiMock = api.entrepriseCreer.mockRejectedValue(
-      new Error('erreur api')
-    )
+    const apiMock = api.entrepriseCreer.mockRejectedValue(new Error('erreur api'))
     await store.dispatch('entreprise/add', {
       legalSiren: '123456789',
-      paysId: 'fr'
+      paysId: 'fr',
     })
 
     expect(apiMock).toHaveBeenCalledWith({
       entreprise: {
         legalSiren: '123456789',
-        paysId: 'fr'
-      }
+        paysId: 'fr',
+      },
     })
 
     expect(mutations.popupMessageAdd).toHaveBeenCalled()
@@ -132,37 +128,35 @@ describe("état de l'entreprise sélectionnée", () => {
   test('modifie une entreprise', async () => {
     const apiMock = api.entrepriseModifier.mockResolvedValue({
       id: 71,
-      nom: 'toto'
+      nom: 'toto',
     })
 
     await store.dispatch('entreprise/update', {
       legalSiren: '123456789',
-      paysId: 'fr'
+      paysId: 'fr',
     })
 
     expect(apiMock).toHaveBeenCalledWith({
       entreprise: {
         legalSiren: '123456789',
-        paysId: 'fr'
-      }
+        paysId: 'fr',
+      },
     })
     expect(mutations.popupClose).toHaveBeenCalled()
   })
 
   test("retourne une erreur si l'API retourne une erreur lors de la modification d'une entreprise", async () => {
-    const apiMock = api.entrepriseModifier.mockRejectedValue(
-      new Error('erreur api')
-    )
+    const apiMock = api.entrepriseModifier.mockRejectedValue(new Error('erreur api'))
     await store.dispatch('entreprise/update', {
       legalSiren: '123456789',
-      paysId: 'fr'
+      paysId: 'fr',
     })
 
     expect(apiMock).toHaveBeenCalledWith({
       entreprise: {
         legalSiren: '123456789',
-        paysId: 'fr'
-      }
+        paysId: 'fr',
+      },
     })
 
     expect(mutations.popupMessageAdd).toHaveBeenCalled()

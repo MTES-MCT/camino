@@ -1,12 +1,4 @@
-import {
-  ITitreEtape,
-  ITitreDemarche,
-  ITitre,
-  ISection,
-  IDocument,
-  IContenu,
-  ITitreEntreprise
-} from '../../types.js'
+import { ITitreEtape, ITitreDemarche, ITitre, ISection, IDocument, IContenu, ITitreEntreprise } from '../../types.js'
 
 import { titreEtapePointsValidate } from './titre-etape-points-validate.js'
 import { titreDemarcheUpdatedEtatValidate } from './titre-demarche-etat-validate.js'
@@ -18,26 +10,15 @@ import { contenuDatesCheck } from './utils/contenu-dates-check.js'
 import { documentsTypesValidate } from './documents-types-validate.js'
 import { documentTypeIdsBySdomZonesGet } from '../../api/graphql/resolvers/_titre-etape.js'
 import { objectClone } from '../../tools/index.js'
-import {
-  canEditAmodiataires,
-  canEditDates,
-  canEditDuree,
-  canEditTitulaires,
-  dureeOptionalCheck
-} from 'camino-common/src/permissions/titres-etapes.js'
+import { canEditAmodiataires, canEditDates, canEditDuree, canEditTitulaires, dureeOptionalCheck } from 'camino-common/src/permissions/titres-etapes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import {
-  DocumentType,
-  DocumentsTypes
-} from 'camino-common/src/static/documentsTypes.js'
+import { DocumentType, DocumentsTypes } from 'camino-common/src/static/documentsTypes.js'
 import { User } from 'camino-common/src/roles.js'
 import { SDOMZoneId } from 'camino-common/src/static/sdom.js'
 const numberProps = ['duree', 'surface'] as unknown as [keyof ITitreEtape]
 
-const dateProps = ['date', 'dateDebut', 'dateFin'] as unknown as [
-  keyof ITitreEtape
-]
+const dateProps = ['date', 'dateDebut', 'dateFin'] as unknown as [keyof ITitreEtape]
 
 export const titreEtapeUpdationValidate = (
   titreEtape: ITitreEtape,
@@ -55,24 +36,15 @@ export const titreEtapeUpdationValidate = (
   const errors = []
 
   // le champ heritageContenu est cohérent avec les sections
-  const errorsHeritageContenu = heritageContenuValidate(
-    sections,
-    titreEtape.heritageContenu
-  )
+  const errorsHeritageContenu = heritageContenuValidate(sections, titreEtape.heritageContenu)
 
   errors.push(...errorsHeritageContenu)
 
-  if (
-    !(titreEtape.heritageProps?.duree?.actif ?? false) &&
-    !canEditDuree(titre.typeId, titreDemarche.typeId) &&
-    (titreEtape.duree ?? 0) !== (titreEtapeOld?.duree ?? 0)
-  ) {
+  if (!(titreEtape.heritageProps?.duree?.actif ?? false) && !canEditDuree(titre.typeId, titreDemarche.typeId) && (titreEtape.duree ?? 0) !== (titreEtapeOld?.duree ?? 0)) {
     errors.push('impossible d’éditer la durée')
   }
 
-  if (
-    !canEditDates(titre.typeId, titreDemarche.typeId, titreEtape.typeId, user)
-  ) {
+  if (!canEditDates(titre.typeId, titreDemarche.typeId, titreEtape.typeId, user)) {
     if ((titreEtape.dateDebut ?? '') !== (titreEtapeOld?.dateDebut ?? '')) {
       errors.push('impossible d’éditer la date de début')
     }
@@ -84,30 +56,16 @@ export const titreEtapeUpdationValidate = (
   if (titreEtapeOld && !titreEtapeOld.titulaires) {
     throw new Error('les titulaires ne sont pas chargés')
   }
-  if (
-    !canEditTitulaires(titre.typeId, user) &&
-    entreprisesHaveChanged(titreEtape.titulaires, titreEtapeOld?.titulaires)
-  ) {
-    errors.push(
-      `une autorisation ${
-        titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"
-      } ne peut pas inclure de titulaires`
-    )
+  if (!canEditTitulaires(titre.typeId, user) && entreprisesHaveChanged(titreEtape.titulaires, titreEtapeOld?.titulaires)) {
+    errors.push(`une autorisation ${titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"} ne peut pas inclure de titulaires`)
   }
 
   if (titreEtapeOld && !titreEtapeOld.amodiataires) {
     throw new Error('les amodiataires ne sont pas chargés')
   }
 
-  if (
-    !canEditAmodiataires(titre.typeId, user) &&
-    entreprisesHaveChanged(titreEtape.amodiataires, titreEtapeOld?.amodiataires)
-  ) {
-    errors.push(
-      `une autorisation ${
-        titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"
-      } ne peut pas inclure d'amodiataires`
-    )
+  if (!canEditAmodiataires(titre.typeId, user) && entreprisesHaveChanged(titreEtape.amodiataires, titreEtapeOld?.amodiataires)) {
+    errors.push(`une autorisation ${titre.typeId === 'arm' ? 'de recherche' : "d'exploitation"} ne peut pas inclure d'amodiataires`)
   }
 
   if (sections.length) {
@@ -154,19 +112,7 @@ export const titreEtapeUpdationValidate = (
 
   // 4. si l’étape n’est pas en cours de construction
   if (titreEtape.statutId !== 'aco') {
-    errors.push(
-      ...titreEtapeCompleteValidate(
-        titreEtape,
-        titre.typeId,
-        titreDemarche.typeId,
-        sections,
-        documentsTypes,
-        documents,
-        justificatifsTypes,
-        justificatifs,
-        sdomZones
-      )
-    )
+    errors.push(...titreEtapeCompleteValidate(titreEtape, titre.typeId, titreDemarche.typeId, sections, documentsTypes, documents, justificatifsTypes, justificatifs, sdomZones))
   }
 
   if (errors.length) {
@@ -195,36 +141,22 @@ export const titreEtapeCompleteValidate = (
 
   // les décisions annexes sont complètes
   if (titreEtape.decisionsAnnexesSections) {
-    errors.push(
-      ...contenuCompleteValidate(
-        titreEtape.decisionsAnnexesSections,
-        titreEtape.decisionsAnnexesContenu
-      )
-    )
+    errors.push(...contenuCompleteValidate(titreEtape.decisionsAnnexesSections, titreEtape.decisionsAnnexesContenu))
   }
 
   const dts = (objectClone(documentsTypes) || []) as DocumentType[]
   if (sdomZones?.length) {
     // Ajoute les documents obligatoires en fonction des zones du SDOM
-    const documentTypeIds = documentTypeIdsBySdomZonesGet(
-      sdomZones,
-      titreTypeId,
-      demarcheTypeId,
-      titreEtape.typeId
-    )
+    const documentTypeIds = documentTypeIdsBySdomZonesGet(sdomZones, titreTypeId, demarcheTypeId, titreEtape.typeId)
 
-    documentTypeIds?.forEach(dtId =>
-      dts.push({ id: dtId, nom: DocumentsTypes[dtId].nom, optionnel: false })
-    )
+    documentTypeIds?.forEach(dtId => dts.push({ id: dtId, nom: DocumentsTypes[dtId].nom, optionnel: false }))
   }
 
   // les fichiers obligatoires sont tous renseignés et complets
   if (dts!.length) {
     // ajoute des documents obligatoires pour les arm mécanisées
     if (titreTypeId === 'arm' && titreEtape.contenu && titreEtape.contenu.arm) {
-      dts
-        .filter(dt => ['doe', 'dep'].includes(dt.id))
-        .forEach(dt => (dt.optionnel = !titreEtape.contenu?.arm.mecanise))
+      dts.filter(dt => ['doe', 'dep'].includes(dt.id)).forEach(dt => (dt.optionnel = !titreEtape.contenu?.arm.mecanise))
     }
     const documentsErrors = documentsTypesValidate(documents, dts)
     if (documentsErrors.length) {
@@ -236,12 +168,8 @@ export const titreEtapeCompleteValidate = (
   const justificatifsTypesIds = [] as string[]
   if (justificatifs?.length) {
     for (const justificatif of justificatifs) {
-      if (
-        !justificatifsTypes.map(({ id }) => id).includes(justificatif!.typeId)
-      ) {
-        errors.push(
-          `impossible de lier un justificatif de type ${justificatif!.typeId}`
-        )
+      if (!justificatifsTypes.map(({ id }) => id).includes(justificatif!.typeId)) {
+        errors.push(`impossible de lier un justificatif de type ${justificatif!.typeId}`)
       }
       justificatifsTypesIds.push(justificatif!.typeId)
     }
@@ -264,40 +192,23 @@ export const titreEtapeCompleteValidate = (
     }
 
     // il doit exister au moins une substance
-    if (
-      !titreEtape.substances ||
-      !titreEtape.substances.length ||
-      !titreEtape.substances.some(substanceId => !!substanceId)
-    ) {
+    if (!titreEtape.substances || !titreEtape.substances.length || !titreEtape.substances.some(substanceId => !!substanceId)) {
       errors.push('au moins une substance doit être renseignée')
     }
   }
 
-  if (
-    !titreEtape.duree &&
-    !dureeOptionalCheck(titreEtape.typeId, demarcheTypeId, titreTypeId)
-  ) {
+  if (!titreEtape.duree && !dureeOptionalCheck(titreEtape.typeId, demarcheTypeId, titreTypeId)) {
     errors.push('la durée doit être renseignée')
   }
 
   return errors
 }
 
-const titreEtapeUpdationBusinessValidate = (
-  titreEtape: ITitreEtape,
-  titreDemarche: ITitreDemarche,
-  titre: ITitre
-) => {
+const titreEtapeUpdationBusinessValidate = (titreEtape: ITitreEtape, titreDemarche: ITitreDemarche, titre: ITitre) => {
   const errors = []
   // 1. la date de l'étape est possible
   // en fonction de l'ordre des types d'étapes de la démarche
-  const demarcheUpdatedErrors = titreDemarcheUpdatedEtatValidate(
-    titreDemarche.type!,
-    titre,
-    titreEtape,
-    titreDemarche.id,
-    titreDemarche.etapes!
-  )
+  const demarcheUpdatedErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.type!, titre, titreEtape, titreDemarche.id, titreDemarche.etapes!)
   if (demarcheUpdatedErrors.length) {
     errors.push(...demarcheUpdatedErrors)
   }
@@ -313,24 +224,13 @@ const titreEtapeUpdationBusinessValidate = (
   return errors
 }
 
-const contenuCompleteValidate = (
-  sections: ISection[],
-  contenu: IContenu | null | undefined
-): string[] => {
+const contenuCompleteValidate = (sections: ISection[], contenu: IContenu | null | undefined): string[] => {
   const errors: string[] = []
   sections.forEach(s =>
     s.elements?.forEach(e => {
       if (!e.optionnel && !['radio', 'checkbox'].includes(e.type)) {
-        if (
-          !contenu ||
-          !contenu[s.id] ||
-          contenu[s.id][e.id] === undefined ||
-          contenu[s.id][e.id] === null ||
-          contenu[s.id][e.id] === ''
-        ) {
-          errors.push(
-            `l’élément "${e.nom}" de la section "${s.nom}" est obligatoire`
-          )
+        if (!contenu || !contenu[s.id] || contenu[s.id][e.id] === undefined || contenu[s.id][e.id] === null || contenu[s.id][e.id] === '') {
+          errors.push(`l’élément "${e.nom}" de la section "${s.nom}" est obligatoire`)
         }
       }
     })
@@ -339,10 +239,7 @@ const contenuCompleteValidate = (
   return errors
 }
 
-const entreprisesHaveChanged = (
-  newValue: ITitreEntreprise[] | undefined | null,
-  oldValue: ITitreEntreprise[] | undefined | null
-): boolean => {
+const entreprisesHaveChanged = (newValue: ITitreEntreprise[] | undefined | null, oldValue: ITitreEntreprise[] | undefined | null): boolean => {
   if (!newValue && !oldValue) {
     return false
   }
@@ -355,8 +252,5 @@ const entreprisesHaveChanged = (
     return false
   }
 
-  return newValue.some(
-    (v, i) =>
-      oldValue?.[i].id !== v.id || oldValue?.[i].operateur !== v.operateur
-  )
+  return newValue.some((v, i) => oldValue?.[i].id !== v.id || oldValue?.[i].operateur !== v.operateur)
 }

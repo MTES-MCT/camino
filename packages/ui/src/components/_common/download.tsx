@@ -15,7 +15,7 @@ async function download(props: Props) {
   props.onClicked()
   const query = new URLSearchParams({
     format: props.format,
-    ...props.query
+    ...props.query,
   }).toString()
 
   const url = `/${props.section}?${query}`

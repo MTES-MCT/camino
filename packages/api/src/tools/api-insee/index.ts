@@ -4,9 +4,7 @@ import { IEntreprise, IEntrepriseEtablissement } from '../../types.js'
 
 // cherche les établissements des entreprises
 // retourne des objets du modèle EntrepriseEtablissements
-export const apiInseeEntreprisesEtablissementsGet = async (
-  sirenIds: string[]
-) => {
+export const apiInseeEntreprisesEtablissementsGet = async (sirenIds: string[]) => {
   if (!sirenIds.length) return []
 
   const entreprises = await entreprisesEtablissementsFetch(sirenIds)
@@ -40,9 +38,7 @@ export const apiInseeEntreprisesGet = async (sirenIds: string[]) => {
   }, [])
 }
 
-export const apiInseeEntrepriseAndEtablissementsGet = async (
-  sirenId: string
-) => {
+export const apiInseeEntrepriseAndEtablissementsGet = async (sirenId: string) => {
   const entreprises = await apiInseeEntreprisesGet([sirenId])
   if (!entreprises) {
     throw new Error('API Insee: erreur')
@@ -51,9 +47,7 @@ export const apiInseeEntrepriseAndEtablissementsGet = async (
   const [entreprise] = entreprises
   if (!entreprise) return null
 
-  entreprise.etablissements = await apiInseeEntreprisesEtablissementsGet([
-    sirenId
-  ])
+  entreprise.etablissements = await apiInseeEntreprisesEtablissementsGet([sirenId])
 
   return entreprise
 }

@@ -1,19 +1,9 @@
 // valide la date et la position de l'étape en fonction des autres étapes
 import { ITitreEtape, IContenu, Index } from '../../types.js'
 
-import {
-  ITitreCondition,
-  IContenuElementCondition,
-  IEtapeTypeIdCondition,
-  IDemarcheDefinitionRestrictions,
-  IDemarcheDefinitionRestrictionsProps
-} from '../rules-demarches/definitions.js'
+import { ITitreCondition, IContenuElementCondition, IEtapeTypeIdCondition, IDemarcheDefinitionRestrictions, IDemarcheDefinitionRestrictionsProps } from '../rules-demarches/definitions.js'
 
-const contenuConditionMatch = (
-  condition: IContenuElementCondition,
-  obj: Index<any> | null,
-  keys: string[] | null = null
-) => {
+const contenuConditionMatch = (condition: IContenuElementCondition, obj: Index<any> | null, keys: string[] | null = null) => {
   // si les conditions sont testées plusieurs fois, (dans une boucle par ex)
   // alors les clés de l'objet de condition peuvent être passées optionnellement
   // pour ne pas les recalculer à chaque fois
@@ -40,43 +30,21 @@ const contenuConditionMatch = (
   })
 }
 
-const sameContenuCheck = (
-  conditionTitre: ITitreCondition,
-  contenu: IContenu | null
-) =>
-  conditionTitre.contenu &&
-  Object.keys(conditionTitre.contenu).every(key =>
-    contenuConditionMatch(
-      conditionTitre.contenu[key],
-      contenu ? contenu[key] : null
-    )
-  )
+const sameContenuCheck = (conditionTitre: ITitreCondition, contenu: IContenu | null) =>
+  conditionTitre.contenu && Object.keys(conditionTitre.contenu).every(key => contenuConditionMatch(conditionTitre.contenu[key], contenu ? contenu[key] : null))
 
-const titreEtapeTypeIdRestrictionsFind = (
-  demarcheDefinitionRestrictions: IDemarcheDefinitionRestrictions,
-  etapeTypeId: string
-) => {
+const titreEtapeTypeIdRestrictionsFind = (demarcheDefinitionRestrictions: IDemarcheDefinitionRestrictions, etapeTypeId: string) => {
   const etapeTypeIdDefinitions = demarcheDefinitionRestrictions[etapeTypeId]
 
   if (etapeTypeIdDefinitions) {
     return etapeTypeIdDefinitions
   }
 
-  throw new Error(
-    `l’étape ${etapeTypeId} n’existe pas dans cet arbre d’instructions`
-  )
+  throw new Error(`l’étape ${etapeTypeId} n’existe pas dans cet arbre d’instructions`)
 }
 
-const etapesEnAttenteGet = (
-  etapeTypeIdDefinitions: IDemarcheDefinitionRestrictions,
-  titreDemarcheEtapes: ITitreEtape[]
-) => {
-  return etapesSuivantesEnAttenteGet(
-    titreDemarcheEtapes,
-    titreDemarcheEtapes,
-    [],
-    etapeTypeIdDefinitions
-  )
+const etapesEnAttenteGet = (etapeTypeIdDefinitions: IDemarcheDefinitionRestrictions, titreDemarcheEtapes: ITitreEtape[]) => {
+  return etapesSuivantesEnAttenteGet(titreDemarcheEtapes, titreDemarcheEtapes, [], etapeTypeIdDefinitions)
 }
 
 const etapesSuivantesEnAttenteGet = (
@@ -93,24 +61,15 @@ const etapesSuivantesEnAttenteGet = (
   const etapesSuivantes = titreDemarcheEtapesSuivantes.slice(1)
 
   if (!etapesEnAttente || !etapesEnAttente.length) {
-    return etapesSuivantesEnAttenteGet(
-      titreDemarcheEtapes,
-      etapesSuivantes,
-      [etapeCourante],
-      etapeTypeIdDefinitions
-    )
+    return etapesSuivantesEnAttenteGet(titreDemarcheEtapes, etapesSuivantes, [etapeCourante], etapeTypeIdDefinitions)
   }
 
-  const etapeCouranteConditions = etapeTypeIdDefinitions[
-    etapeCourante.typeId
-  ] as IDemarcheDefinitionRestrictionsProps
+  const etapeCouranteConditions = etapeTypeIdDefinitions[etapeCourante.typeId] as IDemarcheDefinitionRestrictionsProps
 
   // on cherche quelles étapes en attente ont permis d’atteindre cette étape
   if (etapeCouranteConditions.justeApres) {
     etapesEnAttente.forEach(etape => {
-      const predicatCheck = etapeCouranteConditions!
-        .justeApres!.flat()
-        .find(c => c?.etapeTypeId === etape.typeId)
+      const predicatCheck = etapeCouranteConditions!.justeApres!.flat().find(c => c?.etapeTypeId === etape.typeId)
 
       if (predicatCheck) {
         // si cette étape a permis d’atteindre l’étape courante, alors on la remplace dans les étapes en attente
@@ -118,9 +77,7 @@ const etapesSuivantesEnAttenteGet = (
           const etapeSeparationHas = etapeTypeIdDefinitions[e.typeId]
 
           if (etapeSeparationHas && etapeSeparationHas.separation) {
-            return !etapeSeparationHas.separation!.includes(
-              etapeCourante.typeId!
-            )
+            return !etapeSeparationHas.separation!.includes(etapeCourante.typeId!)
           }
 
           return e.typeId !== etape.typeId
@@ -131,16 +88,10 @@ const etapesSuivantesEnAttenteGet = (
 
   if (etapeCouranteConditions.apres) {
     titreDemarcheEtapes.forEach(etape => {
-      const predicatCheck = etapeCouranteConditions
-        .apres!.flat()
-        .find(c => c?.etapeTypeId === etape.typeId)
+      const predicatCheck = etapeCouranteConditions.apres!.flat().find(c => c?.etapeTypeId === etape.typeId)
 
       if (predicatCheck) {
-        if (
-          (etapeCouranteConditions.justeApres.length &&
-            etapeCouranteConditions.justeApres[0].length) ||
-          !etapeCouranteConditions.final
-        ) {
+        if ((etapeCouranteConditions.justeApres.length && etapeCouranteConditions.justeApres[0].length) || !etapeCouranteConditions.final) {
           etapesEnAttente = etapesEnAttente.filter(
             e =>
               !etapeCouranteConditions.justeApres
@@ -157,20 +108,10 @@ const etapesSuivantesEnAttenteGet = (
   }
   etapesEnAttente.push(etapeCourante)
 
-  return etapesSuivantesEnAttenteGet(
-    titreDemarcheEtapes,
-    etapesSuivantes,
-    etapesEnAttente,
-    etapeTypeIdDefinitions
-  )
+  return etapesSuivantesEnAttenteGet(titreDemarcheEtapes, etapesSuivantes, etapesEnAttente, etapeTypeIdDefinitions)
 }
 
-const etapeTypeIdConditionsCheck = (
-  contenu: IContenu | null,
-  titreEtapesEnAttente: ITitreEtape[],
-  conditions: IEtapeTypeIdCondition[][],
-  titreDemarcheEtapes: ITitreEtape[]
-) =>
+const etapeTypeIdConditionsCheck = (contenu: IContenu | null, titreEtapesEnAttente: ITitreEtape[], conditions: IEtapeTypeIdCondition[][], titreDemarcheEtapes: ITitreEtape[]) =>
   conditions.some(condition =>
     condition.every(c => {
       if (c.titre && !sameContenuCheck(c.titre, contenu)) {
@@ -202,80 +143,28 @@ const etapesEnAttenteToString = (titreEtapesEnAttente: ITitreEtape[]) =>
     .map(t => `"${t}"`)
     .join(', ')
 
-const titreEtapeEtatValidate = (
-  etapeTypeIdDefinitions: IDemarcheDefinitionRestrictions,
-  etapeTypeId: string,
-  titreDemarcheEtapes: ITitreEtape[],
-  contenu: IContenu | null
-) => {
+const titreEtapeEtatValidate = (etapeTypeIdDefinitions: IDemarcheDefinitionRestrictions, etapeTypeId: string, titreDemarcheEtapes: ITitreEtape[], contenu: IContenu | null) => {
   const errors = []
-  const titreEtapesEnAttente = etapesEnAttenteGet(
-    etapeTypeIdDefinitions,
-    titreDemarcheEtapes
-  )
+  const titreEtapesEnAttente = etapesEnAttenteGet(etapeTypeIdDefinitions, titreDemarcheEtapes)
 
   if (titreEtapesEnAttente.find(e => e.typeId === etapeTypeId)) {
-    errors.push(
-      `l’étape "${etapeTypeId}" ne peut-être effecutée 2 fois d’affilée`
-    )
+    errors.push(`l’étape "${etapeTypeId}" ne peut-être effecutée 2 fois d’affilée`)
   }
 
-  const titreEtapeRestrictions = titreEtapeTypeIdRestrictionsFind(
-    etapeTypeIdDefinitions,
-    etapeTypeId
-  )
+  const titreEtapeRestrictions = titreEtapeTypeIdRestrictionsFind(etapeTypeIdDefinitions, etapeTypeId)
 
   const { avant, apres, justeApres } = titreEtapeRestrictions
 
-  if (
-    !errors.length &&
-    avant &&
-    etapeTypeIdConditionsCheck(
-      contenu,
-      titreDemarcheEtapes,
-      avant,
-      titreDemarcheEtapes
-    )
-  ) {
-    errors.push(
-      `l’étape "${etapeTypeId}" n’est plus possible après ${etapesEnAttenteToString(
-        titreEtapesEnAttente
-      )}`
-    )
+  if (!errors.length && avant && etapeTypeIdConditionsCheck(contenu, titreDemarcheEtapes, avant, titreDemarcheEtapes)) {
+    errors.push(`l’étape "${etapeTypeId}" n’est plus possible après ${etapesEnAttenteToString(titreEtapesEnAttente)}`)
   }
 
-  if (
-    !errors.length &&
-    apres &&
-    !etapeTypeIdConditionsCheck(
-      contenu,
-      titreDemarcheEtapes,
-      apres,
-      titreDemarcheEtapes
-    )
-  ) {
-    errors.push(
-      `l’étape "${etapeTypeId}" n’est pas possible après ${etapesEnAttenteToString(
-        titreEtapesEnAttente
-      )}`
-    )
+  if (!errors.length && apres && !etapeTypeIdConditionsCheck(contenu, titreDemarcheEtapes, apres, titreDemarcheEtapes)) {
+    errors.push(`l’étape "${etapeTypeId}" n’est pas possible après ${etapesEnAttenteToString(titreEtapesEnAttente)}`)
   }
 
-  if (
-    !errors.length &&
-    justeApres.length &&
-    !etapeTypeIdConditionsCheck(
-      contenu,
-      titreEtapesEnAttente,
-      justeApres,
-      titreDemarcheEtapes
-    )
-  ) {
-    errors.push(
-      `l’étape "${etapeTypeId}" n’est pas possible juste après ${etapesEnAttenteToString(
-        titreEtapesEnAttente
-      )}`
-    )
+  if (!errors.length && justeApres.length && !etapeTypeIdConditionsCheck(contenu, titreEtapesEnAttente, justeApres, titreDemarcheEtapes)) {
+    errors.push(`l’étape "${etapeTypeId}" n’est pas possible juste après ${etapesEnAttenteToString(titreEtapesEnAttente)}`)
   }
 
   if (!errors.length) {
@@ -289,8 +178,4 @@ const titreEtapeEtatValidate = (
   return errors
 }
 
-export {
-  titreEtapeEtatValidate,
-  etapesSuivantesEnAttenteGet,
-  titreEtapeTypeIdRestrictionsFind
-}
+export { titreEtapeEtatValidate, etapesSuivantesEnAttenteGet, titreEtapeTypeIdRestrictionsFind }

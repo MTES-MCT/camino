@@ -5,7 +5,7 @@ import { createStore } from 'vuex'
 import { vi, describe, expect, beforeEach, test } from 'vitest'
 
 vi.mock('../router', () => ({
-  push: () => {}
+  push: () => {},
 }))
 
 vi.mock('../api/titres', () => ({
@@ -14,7 +14,7 @@ vi.mock('../api/titres', () => ({
   titreCreer: vi.fn(),
   titreModifier: vi.fn(),
   titreSupprimer: vi.fn(),
-  utilisateurTitreAbonner: vi.fn()
+  utilisateurTitreAbonner: vi.fn(),
 }))
 
 console.info = vi.fn()
@@ -28,20 +28,20 @@ describe('état du titre sélectionné', () => {
     titre.state = {
       element: null,
       metas: {
-        referencesTypes: []
+        referencesTypes: [],
       },
       opened: {
         etapes: {},
         activites: { 'activite-id': false },
-        travaux: {}
-      }
+        travaux: {},
+      },
     }
 
     actions = {
       pageError: vi.fn(),
       apiError: vi.fn(),
       reload: vi.fn(),
-      messageAdd: vi.fn()
+      messageAdd: vi.fn(),
     }
 
     mutations = {
@@ -50,13 +50,13 @@ describe('état du titre sélectionné', () => {
       popupLoad: vi.fn(),
       popupMessagesRemove: vi.fn(),
       popupClose: vi.fn(),
-      popupMessageAdd: vi.fn()
+      popupMessageAdd: vi.fn(),
     }
 
     store = createStore({
       modules: { titre },
       actions,
-      mutations
+      mutations,
     })
 
     const app = createApp({})
@@ -125,9 +125,7 @@ describe('état du titre sélectionné', () => {
   })
 
   test("retourne une erreur si l'API retourne une erreur lors de la suppression d'un titre", async () => {
-    const apiMock = api.titreSupprimer.mockRejectedValue(
-      new Error("error de l'api")
-    )
+    const apiMock = api.titreSupprimer.mockRejectedValue(new Error("error de l'api"))
     await store.dispatch('titre/remove', 83)
 
     expect(apiMock).toHaveBeenCalledWith({ id: 83 })
@@ -177,19 +175,13 @@ describe('état du titre sélectionné', () => {
   test('la tab des activités est visible si il existe au moins une activité', () => {
     store.state.user = { element: { role: 'defaut' } }
     store.state.titre.element = { activites: [{}], demarches: [] }
-    expect(store.getters['titre/tabs']).toMatchObject([
-      { id: 'demarches' },
-      { id: 'activites' }
-    ])
+    expect(store.getters['titre/tabs']).toMatchObject([{ id: 'demarches' }, { id: 'activites' }])
   })
 
   test('la tab des travaux est visible si il existe au moins un travaux', () => {
     store.state.titre.element = {
-      demarches: [{ type: { travaux: true } }]
+      demarches: [{ type: { travaux: true } }],
     }
-    expect(store.getters['titre/tabs']).toMatchObject([
-      { id: 'demarches' },
-      { id: 'travaux' }
-    ])
+    expect(store.getters['titre/tabs']).toMatchObject([{ id: 'demarches' }, { id: 'travaux' }])
   })
 })

@@ -8,17 +8,8 @@
         <h5>Entreprise</h5>
       </div>
       <div class="tablet-blob-2-3">
-        <select
-          class="p-s mb"
-          :value="titreDemande?.entrepriseId"
-          @change="entrepriseUpdate"
-        >
-          <option
-            v-for="e in entreprises"
-            :key="e.id"
-            :value="e.id"
-            :disabled="titreDemande.entrepriseId === e.id"
-          >
+        <select class="p-s mb" :value="titreDemande?.entrepriseId" @change="entrepriseUpdate">
+          <option v-for="e in entreprises" :key="e.id" :value="e.id" :disabled="titreDemande.entrepriseId === e.id">
             {{ e.nom }}
           </option>
         </select>
@@ -27,14 +18,7 @@
 
     <hr />
 
-    <TitreTypeSelect
-      v-if="titreDemande.entrepriseId"
-      v-model:element="titreDemande"
-      :domaineId="
-        titreDemande.typeId ? getDomaineId(titreDemande.typeId) : undefined
-      "
-      :user="user"
-    />
+    <TitreTypeSelect v-if="titreDemande.entrepriseId" v-model:element="titreDemande" :domaineId="titreDemande.typeId ? getDomaineId(titreDemande.typeId) : undefined" :user="user" />
 
     <div v-if="titreDemande.typeId">
       <div class="tablet-blobs">
@@ -48,35 +32,16 @@
       <hr />
     </div>
 
-    <div
-      v-if="
-        titreDemande.typeId &&
-        titreDemande.entrepriseId &&
-        !entrepriseOuBureauDEtudeCheck
-      "
-    >
+    <div v-if="titreDemande.typeId && titreDemande.entrepriseId && !entrepriseOuBureauDEtudeCheck">
       <h3 class="mb-s">Références</h3>
       <p class="h6 italic">Optionnel</p>
-      <div
-        v-for="(reference, index) in titreDemande.references"
-        :key="index"
-        class="flex full-x mb-s"
-      >
+      <div v-for="(reference, index) in titreDemande.references" :key="index" class="flex full-x mb-s">
         <select v-model="reference.referenceTypeId" class="p-s mr-s">
-          <option
-            v-for="referenceType in sortedReferencesTypes"
-            :key="referenceType.id"
-            :value="referenceType.id"
-          >
+          <option v-for="referenceType in sortedReferencesTypes" :key="referenceType.id" :value="referenceType.id">
             {{ referenceType.nom }}
           </option>
         </select>
-        <input
-          v-model="reference.nom"
-          type="text"
-          class="p-s mr-s"
-          placeholder="valeur"
-        />
+        <input v-model="reference.nom" type="text" class="p-s mr-s" placeholder="valeur" />
         <div class="flex-right">
           <button class="btn py-s px-m rnd-xs" @click="referenceRemove(index)">
             <Icon name="minus" size="M" />
@@ -84,14 +49,7 @@
         </div>
       </div>
 
-      <button
-        v-if="
-          titreDemande.references &&
-          !titreDemande.references.find(r => !r.referenceTypeId || !r.nom)
-        "
-        class="btn small rnd-xs py-s px-m full-x mb flex"
-        @click="referenceAdd"
-      >
+      <button v-if="titreDemande.references && !titreDemande.references.find(r => !r.referenceTypeId || !r.nom)" class="btn small rnd-xs py-s px-m full-x mb flex" @click="referenceAdd">
         <span class="mt-xxs">Ajouter une référence</span>
         <Icon name="plus" size="M" class="flex-right" />
       </button>
@@ -102,17 +60,10 @@
     <div v-if="titreDemande.typeId && linkConfig">
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-          <h5>
-            Titre {{ linkConfig.count === 'multiple' ? 's' : '' }} à l’origine
-            de cette nouvelle demande
-          </h5>
+          <h5>Titre {{ linkConfig.count === 'multiple' ? 's' : '' }} à l’origine de cette nouvelle demande</h5>
         </div>
         <div class="tablet-blob-2-3">
-          <PureTitresLink
-            :config="titreLinkConfig"
-            :loadLinkableTitres="loadLinkableTitresByTypeId"
-            @onSelectedTitres="onSelectedTitres"
-          />
+          <PureTitresLink :config="titreLinkConfig" :loadLinkableTitres="loadLinkableTitresByTypeId" @onSelectedTitres="onSelectedTitres" />
         </div>
       </div>
       <hr />
@@ -121,16 +72,7 @@
     <div class="tablet-blobs mb">
       <div class="tablet-blob-1-3" />
       <div class="tablet-blob-2-3">
-        <button
-          v-if="!loading"
-          id="cmn-titre-activite-edit-popup-button-enregistrer"
-          :ref="saveRef"
-          :disabled="!complete"
-          class="btn btn-primary"
-          @click="save"
-        >
-          Créer le titre
-        </button>
+        <button v-if="!loading" id="cmn-titre-activite-edit-popup-button-enregistrer" :ref="saveRef" :disabled="!complete" class="btn btn-primary" @click="save">Créer le titre</button>
         <div v-else class="p-s full-x bold">Enregistrement en cours…</div>
       </div>
     </div>
@@ -138,10 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ReferenceTypeId,
-  sortedReferencesTypes
-} from 'camino-common/src/static/referencesTypes'
+import { ReferenceTypeId, sortedReferencesTypes } from 'camino-common/src/static/referencesTypes'
 import { TitreTypeSelect } from './_common/titre-type-select'
 import { Icon } from '@/components/_ui/icon'
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
@@ -173,13 +112,13 @@ const titreLinkConfig = computed<TitresLinkConfig>(() => {
   if (linkConfig.value?.count === 'single') {
     return {
       type: 'single',
-      selectedTitreId: null
+      selectedTitreId: null,
     }
   }
 
   return {
     type: 'multiple',
-    selectedTitreIds: []
+    selectedTitreIds: [],
   }
 })
 
@@ -194,11 +133,7 @@ const entrepriseOuBureauDEtudeCheck = computed<boolean>(() => {
 })
 
 const complete = computed(() => {
-  return (
-    titreDemande.value.entrepriseId &&
-    titreDemande.value.typeId &&
-    titreDemande.value.nom
-  )
+  return titreDemande.value.entrepriseId && titreDemande.value.typeId && titreDemande.value.nom
 })
 
 const loading = computed(() => {
@@ -258,7 +193,7 @@ const entrepriseUpdate = (event: Event) => {
   titreDemande.value = {
     entrepriseId: (event.target as HTMLSelectElement)?.value,
     references: [],
-    typeId: undefined
+    typeId: undefined,
   }
 }
 

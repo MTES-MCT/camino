@@ -18,7 +18,7 @@ export const REGION_IDS = {
   Occitanie: '76',
   'Auvergne-Rhône-Alpes': '84',
   "Provence-Alpes-Côte d'Azur": '93',
-  Corse: '94'
+  Corse: '94',
 } as const
 
 export interface Region<T = RegionId> {
@@ -53,6 +53,6 @@ export const Regions: { [key in RegionId]: Region<key> } = {
   '76': { id: '76', nom: 'Occitanie', paysId: 'FR' },
   '84': { id: '84', nom: 'Auvergne-Rhône-Alpes', paysId: 'FR' },
   '93': { id: '93', nom: "Provence-Alpes-Côte d'Azur", paysId: 'FR' },
-  '94': { id: '94', nom: 'Corse', paysId: 'FR' }
+  '94': { id: '94', nom: 'Corse', paysId: 'FR' },
 }
 export const regions = Object.values(Regions)

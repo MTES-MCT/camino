@@ -1,15 +1,9 @@
-import {
-  utilisateurTitreCreate,
-  utilisateurTitreDelete
-} from '../../../database/queries/utilisateurs.js'
+import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../../database/queries/utilisateurs.js'
 
 import { titreGet } from '../../../database/queries/titres.js'
 import { Context } from '../../../types.js'
 
-const utilisateurTitreAbonner = async (
-  { titreId, abonner }: { titreId: string; abonner: boolean },
-  { user }: Context
-) => {
+const utilisateurTitreAbonner = async ({ titreId, abonner }: { titreId: string; abonner: boolean }, { user }: Context) => {
   try {
     if (!user) {
       throw new Error('droits insuffisants')

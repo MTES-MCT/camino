@@ -23,17 +23,7 @@ interface Props {
 }
 
 export const TablePagination = defineComponent<Props>({
-  props: [
-    'columns',
-    'rows',
-    'total',
-    'range',
-    'page',
-    'column',
-    'order',
-    'pagination',
-    'paramsUpdate'
-  ] as unknown as undefined,
+  props: ['columns', 'rows', 'total', 'range', 'page', 'column', 'order', 'pagination', 'paramsUpdate'] as unknown as undefined,
   setup(props) {
     const update = (params: Params | TableSortEvent) => {
       if (!Object.keys(params).includes('page') && pagination.value) {
@@ -72,35 +62,19 @@ export const TablePagination = defineComponent<Props>({
     })
     return () => (
       <div>
-        <Table
-          column={column.value}
-          columns={props.columns}
-          order={order.value}
-          rows={props.rows}
-          class="width-full-p"
-          update={update}
-        />
+        <Table column={column.value} columns={props.columns} order={order.value} rows={props.rows} class="width-full-p" update={update} />
 
         {pagination.value ? (
           <div class="desktop-blobs">
             <div class="desktop-blob-3-4">
-              <Pagination
-                active={page.value}
-                total={pages.value}
-                visibles={5}
-                pageChange={pageUpdate}
-              />
+              <Pagination active={page.value} total={pages.value} visibles={5} pageChange={pageUpdate} />
             </div>
-            <div class="desktop-blob-1-4">
-              {props.total > 10 ? (
-                <Ranges range={range.value} rangeUpdate={rangeUpdate} />
-              ) : null}
-            </div>
+            <div class="desktop-blob-1-4">{props.total > 10 ? <Ranges range={range.value} rangeUpdate={rangeUpdate} /> : null}</div>
           </div>
         ) : null}
       </div>
     )
-  }
+  },
 })
 
 interface RangeProps {
@@ -119,12 +93,7 @@ const Ranges = defineComponent<RangeProps>({
     }
 
     return () => (
-      <Accordion
-        class="mb"
-        opened={opened.value}
-        slotDefault={true}
-        onToggle={toggle}
-      >
+      <Accordion class="mb" opened={opened.value} slotDefault={true} onToggle={toggle}>
         {{
           title: () => <span> Éléments </span>,
           default: () => (
@@ -151,11 +120,11 @@ const Ranges = defineComponent<RangeProps>({
                 </li>
               ))}
             </ul>
-          )
+          ),
         }}
       </Accordion>
     )
-  }
+  },
 })
 
 interface PaginationProps {
@@ -193,20 +162,12 @@ const Pagination: FunctionalComponent<PaginationProps> = props => {
   return (
     <ul class="list-inline">
       <li class="mr-xs">
-        <button
-          disabled={active === 1}
-          class="btn-border rnd-xs px-m py-s"
-          onClick={() => props.pageChange(1)}
-        >
+        <button disabled={active === 1} class="btn-border rnd-xs px-m py-s" onClick={() => props.pageChange(1)}>
           «
         </button>
       </li>
       <li class="mr-xs">
-        <button
-          disabled={active === 1}
-          class="btn-border rnd-xs px-m py-s"
-          onClick={() => props.pageChange(active - 1)}
-        >
+        <button disabled={active === 1} class="btn-border rnd-xs px-m py-s" onClick={() => props.pageChange(active - 1)}>
           ‹
         </button>
       </li>
@@ -218,10 +179,7 @@ const Pagination: FunctionalComponent<PaginationProps> = props => {
 
       {pages().map(page => (
         <li key={page} class={`mr-xs ${active === page ? 'active' : ''}`}>
-          <button
-            class="btn-border rnd-xs px-m py-s"
-            onClick={() => props.pageChange(page)}
-          >
+          <button class="btn-border rnd-xs px-m py-s" onClick={() => props.pageChange(page)}>
             {page}
           </button>
         </li>
@@ -234,20 +192,12 @@ const Pagination: FunctionalComponent<PaginationProps> = props => {
       ) : null}
 
       <li class="mr-xs">
-        <button
-          disabled={active === total}
-          class="btn-border rnd-xs px-m py-s"
-          onClick={() => props.pageChange(active + 1)}
-        >
+        <button disabled={active === total} class="btn-border rnd-xs px-m py-s" onClick={() => props.pageChange(active + 1)}>
           ›
         </button>
       </li>
       <li class="mr-xs">
-        <button
-          disabled={active === total}
-          class="btn-border rnd-xs px-m py-s"
-          onClick={() => props.pageChange(total)}
-        >
+        <button disabled={active === total} class="btn-border rnd-xs px-m py-s" onClick={() => props.pageChange(total)}>
           »
         </button>
       </li>

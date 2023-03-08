@@ -27,7 +27,7 @@ export const QGisToken = defineComponent<Props>({
       } catch (e: any) {
         data.value = {
           status: 'ERROR',
-          message: e.message ?? 'something wrong happened'
+          message: e.message ?? 'something wrong happened',
         }
       }
     }
@@ -37,7 +37,7 @@ export const QGisToken = defineComponent<Props>({
         navigator.clipboard.writeText(token)
         messages.value.push({
           type: 'success',
-          value: "Le jeton vient d'être copié dans votre presse papier"
+          value: "Le jeton vient d'être copié dans votre presse papier",
         })
         setTimeout(() => {
           messages.value.shift()
@@ -53,10 +53,7 @@ export const QGisToken = defineComponent<Props>({
             <>
               {item.token ? (
                 <div class="mb-s">
-                  Voici le jeton généré{' '}
-                  <Pill onClick={() => copyToClipboard(item.token)}>
-                    {item.token}
-                  </Pill>
+                  Voici le jeton généré <Pill onClick={() => copyToClipboard(item.token)}>{item.token}</Pill>
                   <br />
                   Assurez-vous de le copier, vous ne pourrez plus le revoir !
                 </div>
@@ -71,5 +68,5 @@ export const QGisToken = defineComponent<Props>({
         <Messages messages={messages.value} />
       </>
     )
-  }
+  },
 })

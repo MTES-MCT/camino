@@ -20,11 +20,7 @@ import { rest } from './server/rest.js'
 import { graphql } from './server/graphql.js'
 import { authJwt } from './server/auth-jwt.js'
 import { authBasic } from './server/auth-basic.js'
-import {
-  restUpload,
-  graphqlUpload,
-  uploadAllowedMiddleware
-} from './server/upload.js'
+import { restUpload, graphqlUpload, uploadAllowedMiddleware } from './server/upload.js'
 import { databaseInit } from './database/init.js'
 
 import { consoleOverride } from './config/logger.js'
@@ -44,7 +40,7 @@ filesInit().then(() => {
     if (process.env.API_SENTRY_URL) {
       Sentry.init({
         dsn: process.env.API_SENTRY_URL,
-        environment: process.env.ENV === 'prod' ? 'production' : process.env.ENV
+        environment: process.env.ENV === 'prod' ? 'production' : process.env.ENV,
       })
       app.use(Sentry.Handlers.requestHandler())
     }
@@ -57,25 +53,16 @@ filesInit().then(() => {
       skip: (request: any, _response: any) => {
         // On n'applique pas de rate limiting sur le televersement des fichiers
         return request.url.startsWith('/televersement')
-      }
+      },
     })
 
-    app.use(
-      cors({ credentials: true, exposedHeaders: ['Content-disposition'] }),
-      compression(),
-      limiter,
-      authJwt,
-      authBasic,
-      userLoader,
-      cookieParser(),
-      connectedCatcher
-    )
+    app.use(cors({ credentials: true, exposedHeaders: ['Content-disposition'] }), compression(), limiter, authJwt, authBasic, userLoader, cookieParser(), connectedCatcher)
 
     app.get('/stream/version', async (_req, res) => {
       const headers = {
         'Content-Type': 'text/event-stream',
         Connection: 'keep-alive',
-        'Cache-Control': 'no-cache'
+        'Cache-Control': 'no-cache',
       }
 
       res.writeHead(200, headers)

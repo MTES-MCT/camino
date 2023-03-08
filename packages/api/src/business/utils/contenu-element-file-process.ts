@@ -2,23 +2,13 @@ import { FileUpload } from 'graphql-upload'
 import cryptoRandomString from 'crypto-random-string'
 import { join } from 'path'
 
-import {
-  IContenu,
-  IContenuValeur,
-  IDocumentRepertoire,
-  ISection,
-  ISectionElement,
-  ITitreEtape
-} from '../../types.js'
+import { IContenu, IContenuValeur, IDocumentRepertoire, ISection, ISectionElement, ITitreEtape } from '../../types.js'
 
 import dirCreate from '../../tools/dir-create.js'
 import fileStreamCreate from '../../tools/file-stream-create.js'
 import fileDelete from '../../tools/file-delete.js'
 
-const sectionElementContenuAndFilesGet = (
-  contenuValeur: IContenuValeur,
-  sectionElement: ISectionElement
-) => {
+const sectionElementContenuAndFilesGet = (contenuValeur: IContenuValeur, sectionElement: ISectionElement) => {
   const newFiles = [] as FileUpload[]
   let newValue = contenuValeur as IContenuValeur | null
 
@@ -29,7 +19,7 @@ const sectionElementContenuAndFilesGet = (
 
     if (fileUpload?.file) {
       const fileName = `${cryptoRandomString({
-        length: 4
+        length: 4,
       })}-${fileUpload.file.filename}`
       fileUpload.file.filename = fileName
       newFiles.push(fileUpload?.file)
@@ -40,31 +30,19 @@ const sectionElementContenuAndFilesGet = (
   return { newValue, newFiles }
 }
 
-const sectionsContenuAndFilesGet = (
-  contenu: IContenu | undefined | null,
-  sections: ISection[]
-) => {
+const sectionsContenuAndFilesGet = (contenu: IContenu | undefined | null, sections: ISection[]) => {
   const newFiles = [] as FileUpload[]
   if (contenu) {
     Object.keys(contenu)
       .filter(sectionId => contenu![sectionId])
       .forEach(sectionId =>
         Object.keys(contenu![sectionId]).forEach(elementId => {
-          const sectionElement = sections
-            .find(s => s.id === sectionId)
-            ?.elements?.find(e => e.id === elementId)
+          const sectionElement = sections.find(s => s.id === sectionId)?.elements?.find(e => e.id === elementId)
 
           if (sectionElement) {
-            const sectionElementResult = sectionElementContenuAndFilesGet(
-              contenu[sectionId][elementId],
-              sectionElement
-            )
+            const sectionElementResult = sectionElementContenuAndFilesGet(contenu[sectionId][elementId], sectionElement)
 
-            if (
-              !sectionElementResult ||
-              sectionElementResult.newValue === undefined ||
-              sectionElementResult.newValue === null
-            ) {
+            if (!sectionElementResult || sectionElementResult.newValue === undefined || sectionElementResult.newValue === null) {
               delete contenu[sectionId][elementId]
             } else {
               contenu[sectionId][elementId] = sectionElementResult.newValue
@@ -81,19 +59,14 @@ const sectionsContenuAndFilesGet = (
   return { contenu, newFiles }
 }
 
-const contenuFilesGet = (
-  contenu: IContenu | null | undefined,
-  sections: ISection[]
-) => {
+const contenuFilesGet = (contenu: IContenu | null | undefined, sections: ISection[]) => {
   const files = [] as string[]
   if (contenu) {
     sections
       .filter(section => section.elements)
       .forEach(section =>
         section.elements!.forEach(element => {
-          const contenuValeur = contenu[section.id]
-            ? contenu[section.id][element.id]
-            : null
+          const contenuValeur = contenu[section.id] ? contenu[section.id][element.id] : null
 
           files.push(...sectionElementFilesGet(element, contenuValeur))
         })
@@ -103,10 +76,7 @@ const contenuFilesGet = (
   return files
 }
 
-const sectionElementFilesGet = (
-  sectionElement: ISectionElement,
-  contenuValeur: IContenuValeur | null
-) => {
+const sectionElementFilesGet = (sectionElement: ISectionElement, contenuValeur: IContenuValeur | null) => {
   const files = [] as string[]
   if (sectionElement.type === 'file') {
     if (contenuValeur) {
@@ -117,16 +87,9 @@ const sectionElementFilesGet = (
   return files
 }
 
-const contenuFilesPathGet = (
-  repertoire: IDocumentRepertoire,
-  parentId: string
-) => `files/${repertoire}/${parentId}`
+const contenuFilesPathGet = (repertoire: IDocumentRepertoire, parentId: string) => `files/${repertoire}/${parentId}`
 
-const contenuElementFilesCreate = async (
-  newFiles: FileUpload[],
-  repertoire: IDocumentRepertoire,
-  parentId: string
-) => {
+const contenuElementFilesCreate = async (newFiles: FileUpload[], repertoire: IDocumentRepertoire, parentId: string) => {
   if (newFiles.length) {
     const dirPath = `files/${repertoire}/${parentId}`
     await dirCreate(join(process.cwd(), dirPath))
@@ -135,10 +98,7 @@ const contenuElementFilesCreate = async (
       if (file) {
         const { createReadStream } = file
 
-        await fileStreamCreate(
-          createReadStream(),
-          join(process.cwd(), `${dirPath}/${file.filename}`)
-        )
+        await fileStreamCreate(createReadStream(), join(process.cwd(), `${dirPath}/${file.filename}`))
       }
     }
   }
@@ -179,10 +139,4 @@ const contenuElementFilesDelete = async (
   }
 }
 
-export {
-  contenuElementFilesCreate,
-  contenuElementFilesDelete,
-  sectionsContenuAndFilesGet,
-  contenuFilesGet,
-  contenuFilesPathGet
-}
+export { contenuElementFilesCreate, contenuElementFilesDelete, sectionsContenuAndFilesGet, contenuFilesGet, contenuFilesPathGet }

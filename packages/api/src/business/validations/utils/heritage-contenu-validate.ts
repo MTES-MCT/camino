@@ -1,15 +1,9 @@
 import { ISection, IHeritageContenu } from '../../../types.js'
 
-export const heritageContenuValidate = (
-  sections?: ISection[] | null,
-  heritageContenu?: IHeritageContenu | null
-) => {
+export const heritageContenuValidate = (sections?: ISection[] | null, heritageContenu?: IHeritageContenu | null) => {
   const errors = [] as string[]
 
-  if (
-    (!heritageContenu || !Object.keys(heritageContenu).length) &&
-    !sections?.length
-  ) {
+  if ((!heritageContenu || !Object.keys(heritageContenu).length) && !sections?.length) {
     return errors
   }
 
@@ -25,19 +19,13 @@ export const heritageContenuValidate = (
         const heritageElement = heritageSection[element.id]
 
         if (!heritageElement) {
-          errors.push(
-            `l’élement "${element.id}" de la section "${section.id}" n’a pas d’héritage`
-          )
+          errors.push(`l’élement "${element.id}" de la section "${section.id}" n’a pas d’héritage`)
         } else {
           Object.keys(heritageElement).forEach(attribute => {
             if (attribute !== 'actif') {
-              errors.push(
-                `le champ "${attribute}" de l’élement "${element.id}" de la section "${section.id}" est inconnu`
-              )
+              errors.push(`le champ "${attribute}" de l’élement "${element.id}" de la section "${section.id}" est inconnu`)
             } else if (typeof heritageElement.actif !== 'boolean') {
-              errors.push(
-                `le champ "actif" de l’élement "${element.id}" de la section "${section.id}" doit être un booléen`
-              )
+              errors.push(`le champ "actif" de l’élement "${element.id}" de la section "${section.id}" doit être un booléen`)
             }
           })
         }
@@ -53,9 +41,7 @@ export const heritageContenuValidate = (
       } else {
         Object.keys(heritageContenu[sectionId]).forEach(elementId => {
           if (!section.elements?.find(e => e.id === elementId)) {
-            errors.push(
-              `l’élement "${elementId}" de la section "${sectionId}" est inconnu`
-            )
+            errors.push(`l’élement "${elementId}" de la section "${sectionId}" est inconnu`)
           }
         })
       }

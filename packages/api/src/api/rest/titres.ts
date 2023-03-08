@@ -1,33 +1,16 @@
 import { titreGet, titresGet } from '../../database/queries/titres.js'
 
-import {
-  ADMINISTRATION_IDS,
-  ADMINISTRATION_TYPE_IDS,
-  AdministrationId,
-  Administrations
-} from 'camino-common/src/static/administrations.js'
+import { ADMINISTRATION_IDS, ADMINISTRATION_TYPE_IDS, AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
 import express from 'express'
 import { constants } from 'http2'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
 import { ITitre, ITitreDemarche } from '../../types.js'
-import {
-  CommonTitreDREAL,
-  CommonTitreONF,
-  CommonTitrePTMG,
-  TitreLink,
-  TitreLinks
-} from 'camino-common/src/titres.js'
-import {
-  demarcheDefinitionFind,
-  isDemarcheDefinitionMachine
-} from '../../business/rules-demarches/definitions.js'
+import { CommonTitreDREAL, CommonTitreONF, CommonTitrePTMG, TitreLink, TitreLinks } from 'camino-common/src/titres.js'
+import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
 import { CustomResponse } from './express-type.js'
 import { userSuper } from '../../database/user-super.js'
-import {
-  NotNullableKeys,
-  onlyUnique
-} from 'camino-common/src/typescript-tools.js'
+import { NotNullableKeys, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import TitresTitres from '../../database/models/titres--titres.js'
 import { titreAdministrationsGet } from '../_format/titres.js'
 import { canLinkTitres } from 'camino-common/src/permissions/titres.js'
@@ -36,29 +19,20 @@ import { checkTitreLinks } from '../../business/validations/titre-links-validate
 import { toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
 import { TitreReference } from 'camino-common/src/titres-references.js'
 import { DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
-import {
-  ETAPES_TYPES,
-  EtapeTypeId
-} from 'camino-common/src/static/etapesTypes.js'
+import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 import { isAdministration, User } from 'camino-common/src/roles.js'
-import {
-  canCreateDemarche,
-  canCreateTravaux
-} from 'camino-common/src/permissions/titres-demarches.js'
+import { canCreateDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches.js'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,
   ETAPES_TYPES.desistementDuDemandeur,
   ETAPES_TYPES.noteInterneSignalee,
   ETAPES_TYPES.decisionImplicite,
-  ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_
+  ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_,
 ]
 
-export const titresONF = async (
-  req: express.Request,
-  res: CustomResponse<CommonTitreONF[]>
-) => {
+export const titresONF = async (req: express.Request, res: CustomResponse<CommonTitreONF[]>) => {
   const user = req.user as User
 
   if (!user) {
@@ -71,46 +45,36 @@ export const titresONF = async (
     } else {
       const titresAvecOctroiArm = await titresArmAvecOctroi(user, onf)
       res.json(
-        titresAvecOctroiArm.map(
-          ({ titre, references, octARM, blockedByMe }) => {
-            const dateCompletudePTMG =
-              octARM.etapes.find(etape => etape.typeId === 'mcp')?.date || ''
+        titresAvecOctroiArm.map(({ titre, references, octARM, blockedByMe }) => {
+          const dateCompletudePTMG = octARM.etapes.find(etape => etape.typeId === 'mcp')?.date || ''
 
-            const dateReceptionONF =
-              octARM.etapes.find(etape => etape.typeId === 'mcr')?.date || ''
+          const dateReceptionONF = octARM.etapes.find(etape => etape.typeId === 'mcr')?.date || ''
 
-            const dateCARM =
-              octARM.etapes.find(etape => etape.typeId === 'sca')?.date || ''
+          const dateCARM = octARM.etapes.find(etape => etape.typeId === 'sca')?.date || ''
 
-            return {
-              id: titre.id,
-              slug: titre.slug,
-              nom: titre.nom,
-              titreStatutId: titre.titreStatutId,
-              typeId: titre.typeId,
-              references,
-              titulaires: titre.titulaires.map(entreprise => ({
-                nom: entreprise.nom ?? ''
-              })),
-              dateCompletudePTMG,
-              dateReceptionONF,
-              dateCARM,
-              enAttenteDeONF: blockedByMe
-            }
+          return {
+            id: titre.id,
+            slug: titre.slug,
+            nom: titre.nom,
+            titreStatutId: titre.titreStatutId,
+            typeId: titre.typeId,
+            references,
+            titulaires: titre.titulaires.map(entreprise => ({
+              nom: entreprise.nom ?? '',
+            })),
+            dateCompletudePTMG,
+            dateReceptionONF,
+            dateCARM,
+            enAttenteDeONF: blockedByMe,
           }
-        )
+        })
       )
     }
   }
 }
 
-type TitreSanitize = NotNullableKeys<
-  Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId' | 'typeId'>>
-> &
-  Pick<ITitre, 'id' | 'nom'>
-type TitreDemarcheSanitize = NotNullableKeys<
-  Required<Pick<ITitreDemarche, 'etapes' | 'typeId'>>
->
+type TitreSanitize = NotNullableKeys<Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId' | 'typeId'>>> & Pick<ITitre, 'id' | 'nom'>
+type TitreDemarcheSanitize = NotNullableKeys<Required<Pick<ITitreDemarche, 'etapes' | 'typeId'>>>
 
 type TitreArmAvecOctroi = {
   titre: TitreSanitize
@@ -119,19 +83,16 @@ type TitreArmAvecOctroi = {
   blockedByMe: boolean
 }
 
-async function titresArmAvecOctroi(
-  user: User,
-  administrationId: AdministrationId
-) {
+async function titresArmAvecOctroi(user: User, administrationId: AdministrationId) {
   const filters = {
     domainesIds: [DOMAINES_IDS.METAUX],
     typesIds: [TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE],
-    statutsIds: ['dmi', 'mod', 'val']
+    statutsIds: ['dmi', 'mod', 'val'],
   }
   const titresAutorises = await titresGet(
     filters,
     {
-      fields: { id: {} }
+      fields: { id: {} },
     },
     user
   )
@@ -141,8 +102,8 @@ async function titresArmAvecOctroi(
     {
       fields: {
         titulaires: { id: {} },
-        demarches: { etapes: { id: {} } }
-      }
+        demarches: { etapes: { id: {} } },
+      },
     },
     userSuper
   )
@@ -179,53 +140,35 @@ async function titresArmAvecOctroi(
         return null
       }
 
-      const dd = demarcheDefinitionFind(
-        titre.typeId,
-        octARM.typeId,
-        octARM.etapes,
-        octARM.id
-      )
+      const dd = demarcheDefinitionFind(titre.typeId, octARM.typeId, octARM.etapes, octARM.id)
       const hasMachine = isDemarcheDefinitionMachine(dd)
-      const blockedByMe: boolean =
-        hasMachine &&
-        dd.machine
-          .whoIsBlocking(toMachineEtapes(octARM.etapes))
-          .includes(administrationId)
+      const blockedByMe: boolean = hasMachine && dd.machine.whoIsBlocking(toMachineEtapes(octARM.etapes)).includes(administrationId)
 
       // TODO 2022-06-08 wait for typescript to get better at type interpolation
       return {
         titre: titre as TitreSanitize,
         references,
         octARM: octARM as TitreDemarcheSanitize,
-        blockedByMe
+        blockedByMe,
       }
     })
-    .filter(
-      (titre: TitreArmAvecOctroi | null): titre is TitreArmAvecOctroi =>
-        titre !== null
-    )
+    .filter((titre: TitreArmAvecOctroi | null): titre is TitreArmAvecOctroi => titre !== null)
 
   return titresAvecOctroiArm
 }
 
-export const titresPTMG = async (
-  req: express.Request,
-  res: CustomResponse<CommonTitrePTMG[]>
-) => {
+export const titresPTMG = async (req: express.Request, res: CustomResponse<CommonTitrePTMG[]>) => {
   const user = req.user as User
 
   if (!user) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
-    const administrationId =
-      ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+    const administrationId = ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
 
     if (!isAdministration(user) || user.administrationId !== administrationId) {
       res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
     } else {
-      const titresFormated: CommonTitrePTMG[] = (
-        await titresArmAvecOctroi(user, administrationId)
-      ).map(({ titre, references, blockedByMe }) => {
+      const titresFormated: CommonTitrePTMG[] = (await titresArmAvecOctroi(user, administrationId)).map(({ titre, references, blockedByMe }) => {
         return {
           id: titre.id,
           slug: titre.slug,
@@ -234,9 +177,9 @@ export const titresPTMG = async (
           titreStatutId: titre.titreStatutId,
           references,
           titulaires: titre.titulaires.map(entreprise => ({
-            nom: entreprise.nom ?? ''
+            nom: entreprise.nom ?? '',
           })),
-          enAttenteDePTMG: blockedByMe
+          enAttenteDePTMG: blockedByMe,
         }
       })
 
@@ -245,44 +188,28 @@ export const titresPTMG = async (
   }
 }
 
-type DrealTitreSanitize = NotNullableKeys<
-  Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId' | 'type'>>
-> &
-  Pick<
-    ITitre,
-    'typeId' | 'id' | 'nom' | 'activitesEnConstruction' | 'activitesAbsentes'
-  >
+type DrealTitreSanitize = NotNullableKeys<Required<Pick<ITitre, 'slug' | 'titulaires' | 'titreStatutId' | 'type'>>> &
+  Pick<ITitre, 'typeId' | 'id' | 'nom' | 'activitesEnConstruction' | 'activitesAbsentes'>
 
 type TitreDrealAvecReferences = {
   titre: DrealTitreSanitize
   references: TitreReference[]
-} & Pick<
-  CommonTitreDREAL,
-  'prochainesEtapes' | 'derniereEtape' | 'enAttenteDeDREAL'
->
-export const titresDREAL = async (
-  req: express.Request,
-  res: CustomResponse<CommonTitreDREAL[]>
-) => {
+} & Pick<CommonTitreDREAL, 'prochainesEtapes' | 'derniereEtape' | 'enAttenteDeDREAL'>
+export const titresDREAL = async (req: express.Request, res: CustomResponse<CommonTitreDREAL[]>) => {
   const user = req.user as User
 
   if (!user) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
-    if (
-      isAdministration(user) &&
-      [ADMINISTRATION_TYPE_IDS.DEAL, ADMINISTRATION_TYPE_IDS.DREAL].includes(
-        Administrations[user.administrationId].typeId
-      )
-    ) {
+    if (isAdministration(user) && [ADMINISTRATION_TYPE_IDS.DEAL, ADMINISTRATION_TYPE_IDS.DREAL].includes(Administrations[user.administrationId].typeId)) {
       const filters = {
-        statutsIds: ['dmi', 'mod']
+        statutsIds: ['dmi', 'mod'],
       }
 
       const titresAutorises = await titresGet(
         filters,
         {
-          fields: { pointsEtape: { id: {} } }
+          fields: { pointsEtape: { id: {} } },
         },
         user
       )
@@ -298,17 +225,8 @@ export const titresDREAL = async (
 
           return (
             (titre.modification ?? false) ||
-            canCreateDemarche(
-              user,
-              titre.typeId,
-              titre.titreStatutId,
-              titre.administrationsLocales ?? []
-            ) ||
-            canCreateTravaux(
-              user,
-              titre.typeId,
-              titre.administrationsLocales ?? []
-            )
+            canCreateDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales ?? []) ||
+            canCreateTravaux(user, titre.typeId, titre.administrationsLocales ?? [])
           )
         })
         .map(({ id }) => id)
@@ -319,8 +237,8 @@ export const titresDREAL = async (
             type: { id: {} },
             titulaires: { id: {} },
             activites: { id: {} },
-            demarches: { etapes: { id: {} } }
-          }
+            demarches: { etapes: { id: {} } },
+          },
         },
         userSuper
       )
@@ -353,10 +271,7 @@ export const titresDREAL = async (
             throw new Error('les démarches ne sont pas chargées')
           }
 
-          const demarcheLaPlusRecente = titre.demarches.sort(
-            ({ ordre: ordreA }, { ordre: ordreB }) =>
-              (ordreA ?? 0) - (ordreB ?? 0)
-          )[titre.demarches?.length - 1]
+          const demarcheLaPlusRecente = titre.demarches.sort(({ ordre: ordreA }, { ordre: ordreB }) => (ordreA ?? 0) - (ordreB ?? 0))[titre.demarches?.length - 1]
           let enAttenteDeDREAL = false
           const prochainesEtapes: EtapeTypeId[] = []
           let derniereEtape: {
@@ -367,31 +282,16 @@ export const titresDREAL = async (
             if (!demarcheLaPlusRecente.etapes) {
               throw new Error('les étapes ne sont pas chargées')
             }
-            if (
-              demarcheLaPlusRecente.statutId ===
-              DemarchesStatutsIds.EnConstruction
-            ) {
+            if (demarcheLaPlusRecente.statutId === DemarchesStatutsIds.EnConstruction) {
               return null
             } else {
-              const etapesDerniereDemarche = toMachineEtapes(
-                demarcheLaPlusRecente.etapes
-              )
-              derniereEtape =
-                etapesDerniereDemarche[etapesDerniereDemarche.length - 1]
-              const dd = demarcheDefinitionFind(
-                titre.typeId,
-                demarcheLaPlusRecente.typeId,
-                demarcheLaPlusRecente.etapes,
-                demarcheLaPlusRecente.id
-              )
+              const etapesDerniereDemarche = toMachineEtapes(demarcheLaPlusRecente.etapes)
+              derniereEtape = etapesDerniereDemarche[etapesDerniereDemarche.length - 1]
+              const dd = demarcheDefinitionFind(titre.typeId, demarcheLaPlusRecente.typeId, demarcheLaPlusRecente.etapes, demarcheLaPlusRecente.id)
               if (isDemarcheDefinitionMachine(dd)) {
                 try {
-                  enAttenteDeDREAL = dd.machine
-                    .whoIsBlocking(etapesDerniereDemarche)
-                    .includes(user.administrationId)
-                  const nextEtapes = dd.machine.possibleNextEtapes(
-                    etapesDerniereDemarche
-                  )
+                  enAttenteDeDREAL = dd.machine.whoIsBlocking(etapesDerniereDemarche).includes(user.administrationId)
+                  const nextEtapes = dd.machine.possibleNextEtapes(etapesDerniereDemarche)
                   prochainesEtapes.push(
                     ...nextEtapes
                       .map(etape => etape.etapeTypeId)
@@ -399,10 +299,7 @@ export const titresDREAL = async (
                       .filter(etape => !etapesAMasquer.includes(etape))
                   )
                 } catch (e) {
-                  console.error(
-                    `Impossible de traiter le titre ${titre.id} car la démarche ${demarcheLaPlusRecente.typeId} n'est pas valide`,
-                    e
-                  )
+                  console.error(`Impossible de traiter le titre ${titre.id} car la démarche ${demarcheLaPlusRecente.typeId} n'est pas valide`, e)
                 }
               }
             }
@@ -413,45 +310,27 @@ export const titresDREAL = async (
             references,
             enAttenteDeDREAL,
             derniereEtape,
-            prochainesEtapes
+            prochainesEtapes,
           }
         })
-        .filter(
-          (
-            titre: TitreDrealAvecReferences | null
-          ): titre is TitreDrealAvecReferences => titre !== null
-        )
-        .map(
-          ({
-            titre,
+        .filter((titre: TitreDrealAvecReferences | null): titre is TitreDrealAvecReferences => titre !== null)
+        .map(({ titre, references, enAttenteDeDREAL, derniereEtape, prochainesEtapes }) => {
+          return {
+            id: titre.id,
+            slug: titre.slug,
+            nom: titre.nom,
+            titreStatutId: titre.titreStatutId,
+            typeId: titre.typeId,
             references,
+            titulaires: titre.titulaires,
+            // pour une raison inconnue les chiffres sortent parfois en tant que string...., par exemple pour les titres
+            activitesEnConstruction: typeof titre.activitesEnConstruction === 'string' ? parseInt(titre.activitesEnConstruction, 10) : titre.activitesEnConstruction ?? 0,
+            activitesAbsentes: typeof titre.activitesAbsentes === 'string' ? parseInt(titre.activitesAbsentes, 10) : titre.activitesAbsentes ?? 0,
             enAttenteDeDREAL,
             derniereEtape,
-            prochainesEtapes
-          }) => {
-            return {
-              id: titre.id,
-              slug: titre.slug,
-              nom: titre.nom,
-              titreStatutId: titre.titreStatutId,
-              typeId: titre.typeId,
-              references,
-              titulaires: titre.titulaires,
-              // pour une raison inconnue les chiffres sortent parfois en tant que string...., par exemple pour les titres
-              activitesEnConstruction:
-                typeof titre.activitesEnConstruction === 'string'
-                  ? parseInt(titre.activitesEnConstruction, 10)
-                  : titre.activitesEnConstruction ?? 0,
-              activitesAbsentes:
-                typeof titre.activitesAbsentes === 'string'
-                  ? parseInt(titre.activitesAbsentes, 10)
-                  : titre.activitesAbsentes ?? 0,
-              enAttenteDeDREAL,
-              derniereEtape,
-              prochainesEtapes
-            }
+            prochainesEtapes,
           }
-        )
+        })
 
       res.json(titresFormated)
     } else {
@@ -460,23 +339,16 @@ export const titresDREAL = async (
   }
 }
 const isStringArray = (stuff: any): stuff is string[] => {
-  return (
-    stuff instanceof Array && stuff.every(value => typeof value === 'string')
-  )
+  return stuff instanceof Array && stuff.every(value => typeof value === 'string')
 }
-export const postTitreLiaisons = async (
-  req: express.Request<{ id?: string }>,
-  res: CustomResponse<TitreLinks>
-) => {
+export const postTitreLiaisons = async (req: express.Request<{ id?: string }>, res: CustomResponse<TitreLinks>) => {
   const user = req.user as User
 
   const titreId: string | undefined = req.params.id
   const titreFromIds = req.body
 
   if (!isStringArray(titreFromIds)) {
-    throw new Error(
-      `un tableau est attendu en corps de message : '${titreFromIds}'`
-    )
+    throw new Error(`un tableau est attendu en corps de message : '${titreFromIds}'`)
   }
 
   if (!titreId) {
@@ -488,8 +360,8 @@ export const postTitreLiaisons = async (
     {
       fields: {
         pointsEtape: { id: {} },
-        demarches: { id: {} }
-      }
+        demarches: { id: {} },
+      },
     },
     user
   )
@@ -497,18 +369,13 @@ export const postTitreLiaisons = async (
   if (!titre) throw new Error("le titre n'existe pas")
 
   const administrations = titreAdministrationsGet(titre)
-  if (!canLinkTitres(user, administrations))
-    throw new Error('droits insuffisants')
+  if (!canLinkTitres(user, administrations)) throw new Error('droits insuffisants')
 
   if (!titre.demarches) {
     throw new Error('les démarches ne sont pas chargées')
   }
 
-  const titresFrom = await titresGet(
-    { ids: titreFromIds },
-    { fields: { id: {} } },
-    user
-  )
+  const titresFrom = await titresGet({ ids: titreFromIds }, { fields: { id: {} } }, user)
 
   checkTitreLinks(titre, titreFromIds, titresFrom, titre.demarches)
 
@@ -516,13 +383,10 @@ export const postTitreLiaisons = async (
 
   res.json({
     amont: await titreLinksGet(titreId, 'titreFromId', user),
-    aval: await titreLinksGet(titreId, 'titreToId', user)
+    aval: await titreLinksGet(titreId, 'titreToId', user),
   })
 }
-export const getTitreLiaisons = async (
-  req: express.Request<{ id?: string }>,
-  res: CustomResponse<TitreLinks>
-) => {
+export const getTitreLiaisons = async (req: express.Request<{ id?: string }>, res: CustomResponse<TitreLinks>) => {
   const user = req.user as User
 
   const titreId: string | undefined = req.params.id
@@ -536,28 +400,17 @@ export const getTitreLiaisons = async (
     } else {
       res.json({
         amont: await titreLinksGet(titreId, 'titreFromId', user),
-        aval: await titreLinksGet(titreId, 'titreToId', user)
+        aval: await titreLinksGet(titreId, 'titreToId', user),
       })
     }
   }
 }
 
-const titreLinksGet = async (
-  titreId: string,
-  link: 'titreToId' | 'titreFromId',
-  user: User
-): Promise<TitreLink[]> => {
-  const titresTitres = await TitresTitres.query().where(
-    link === 'titreToId' ? 'titreFromId' : 'titreToId',
-    titreId
-  )
+const titreLinksGet = async (titreId: string, link: 'titreToId' | 'titreFromId', user: User): Promise<TitreLink[]> => {
+  const titresTitres = await TitresTitres.query().where(link === 'titreToId' ? 'titreFromId' : 'titreToId', titreId)
   const titreIds = titresTitres.map(r => r[link])
 
-  const titres = await titresGet(
-    { ids: titreIds },
-    { fields: { id: {} } },
-    user
-  )
+  const titres = await titresGet({ ids: titreIds }, { fields: { id: {} } }, user)
 
   return titres.map(({ id, nom }) => ({ id, nom }))
 }

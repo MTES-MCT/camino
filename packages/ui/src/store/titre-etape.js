@@ -1,7 +1,7 @@
 import { etape, etapeDeposer, etapeSupprimer } from '../api/titres-etapes'
 
 const stateInitial = {
-  element: null
+  element: null,
 }
 
 const state = JSON.parse(JSON.stringify(stateInitial))
@@ -35,11 +35,7 @@ const actions = {
       await etapeDeposer({ id: etapeId })
 
       commit('popupClose', null, { root: true })
-      dispatch(
-        'messageAdd',
-        { value: `la demande a été déposée`, type: 'success' },
-        { root: true }
-      )
+      dispatch('messageAdd', { value: `la demande a été déposée`, type: 'success' }, { root: true })
     } catch (e) {
       commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
     } finally {
@@ -56,28 +52,24 @@ const actions = {
 
       commit('popupClose', null, { root: true })
       await dispatch('reload', { name: 'titre', id: data.slug }, { root: true })
-      dispatch(
-        'messageAdd',
-        { value: `le titre a été mis à jour`, type: 'success' },
-        { root: true }
-      )
+      dispatch('messageAdd', { value: `le titre a été mis à jour`, type: 'success' }, { root: true })
     } catch (e) {
       commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
     } finally {
       commit('loadingRemove', 'titreEtapeRemove', { root: true })
     }
-  }
+  },
 }
 
 const mutations = {
   set(state, { etape }) {
     state.element = etape
-  }
+  },
 }
 
 export default {
   namespaced: true,
   state,
   actions,
-  mutations
+  mutations,
 }

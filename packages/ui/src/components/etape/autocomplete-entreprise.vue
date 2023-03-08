@@ -7,20 +7,11 @@
         </div>
 
         <label style="flex: auto; user-select: none">
-          <input
-            :checked="entity.operateur"
-            type="checkbox"
-            class="mr-xs"
-            @change="toggleOperator(entity)"
-          />
+          <input :checked="entity.operateur" type="checkbox" class="mr-xs" @change="toggleOperator(entity)" />
           Opérateur
         </label>
 
-        <button
-          class="btn py-s px-m rnd-xs"
-          style=""
-          @click="removeEntity(entity)"
-        >
+        <button class="btn py-s px-m rnd-xs" style="" @click="removeEntity(entity)">
           <Icon name="minus" size="M" />
         </button>
       </div>
@@ -56,7 +47,7 @@ const props = withDefaults(
   }>(),
   {
     nonSelectableEntities: () => [],
-    selectedEntities: () => []
+    selectedEntities: () => [],
   }
 )
 
@@ -80,15 +71,8 @@ watch(
 const selectableEntities = computed(() =>
   props.allEntities
     .filter(entity => !props.nonSelectableEntities.some(id => id === entity.id))
-    .filter(
-      entity =>
-        !mySelectedEntities.value.some(
-          mySelectedEntitiy => mySelectedEntitiy.id === entity.id
-        )
-    )
-    .filter(entity =>
-      entity.nom.toLowerCase().includes(inputValue.value.toLowerCase())
-    )
+    .filter(entity => !mySelectedEntities.value.some(mySelectedEntitiy => mySelectedEntitiy.id === entity.id))
+    .filter(entity => entity.nom.toLowerCase().includes(inputValue.value.toLowerCase()))
 )
 
 const addEntity = (entity: Entreprise | undefined) => {
@@ -101,9 +85,7 @@ const addEntity = (entity: Entreprise | undefined) => {
 }
 
 const removeEntity = (entity: EtapeEntreprise) => {
-  mySelectedEntities.value = mySelectedEntities.value.filter(
-    e => e.id !== entity.id
-  )
+  mySelectedEntities.value = mySelectedEntities.value.filter(e => e.id !== entity.id)
   emit('onEntreprisesUpdate', mySelectedEntities.value)
 }
 
@@ -112,6 +94,5 @@ const toggleOperator = (entity: EtapeEntreprise) => {
   emit('onEntreprisesUpdate', mySelectedEntities.value)
 }
 
-const getEntrepriseNom = (entity: EtapeEntreprise) =>
-  props.allEntities.find(({ id }) => id === entity.id)?.nom ?? ''
+const getEntrepriseNom = (entity: EtapeEntreprise) => props.allEntities.find(({ id }) => id === entity.id)?.nom ?? ''
 </script>

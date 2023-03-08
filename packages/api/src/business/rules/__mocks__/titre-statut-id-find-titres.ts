@@ -2,9 +2,7 @@ import { ITitreDemarche } from '../../../types.js'
 import { newDemarcheId } from '../../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
-const titreDemarchesIndefini: ITitreDemarche[] = [
-  { statutId: 'ind', type: { id: 'oct' } }
-] as ITitreDemarche[]
+const titreDemarchesIndefini: ITitreDemarche[] = [{ statutId: 'ind', type: { id: 'oct' } }] as ITitreDemarche[]
 
 const titreDemarchesValide: ITitreDemarche[] = [
   {
@@ -23,10 +21,10 @@ const titreDemarchesValide: ITitreDemarche[] = [
         ordre: 1,
         date: toCaminoDate('2014-04-01'),
         dateDebut: null,
-        dateFin: toCaminoDate('3014-04-01')
-      }
-    ]
-  }
+        dateFin: toCaminoDate('3014-04-01'),
+      },
+    ],
+  },
 ]
 
 const titreDemarchesEchu: ITitreDemarche[] = [
@@ -46,10 +44,10 @@ const titreDemarchesEchu: ITitreDemarche[] = [
         ordre: 1,
         date: toCaminoDate('1014-04-01'),
         dateDebut: null,
-        dateFin: toCaminoDate('2014-04-01')
-      }
-    ]
-  }
+        dateFin: toCaminoDate('2014-04-01'),
+      },
+    ],
+  },
 ]
 
 const titreDemarchesOctroiInstruction: ITitreDemarche[] = [
@@ -59,8 +57,8 @@ const titreDemarchesOctroiInstruction: ITitreDemarche[] = [
     type: { id: 'oct', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'ins',
-    ordre: 1
-  }
+    ordre: 1,
+  },
 ]
 
 const titreDemarchesOctroiDepose: ITitreDemarche[] = [
@@ -70,8 +68,8 @@ const titreDemarchesOctroiDepose: ITitreDemarche[] = [
     type: { id: 'oct', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'dep',
-    ordre: 1
-  }
+    ordre: 1,
+  },
 ]
 
 const titreDemarchesOctroiRejete: ITitreDemarche[] = [
@@ -81,8 +79,8 @@ const titreDemarchesOctroiRejete: ITitreDemarche[] = [
     type: { id: 'oct', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'rej',
-    ordre: 1
-  }
+    ordre: 1,
+  },
 ]
 
 const titreDemarchesOctroiClasse: ITitreDemarche[] = [
@@ -92,8 +90,8 @@ const titreDemarchesOctroiClasse: ITitreDemarche[] = [
     type: { id: 'oct', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'cls',
-    ordre: 1
-  }
+    ordre: 1,
+  },
 ]
 
 const titreDemarchesOctroiRetire: ITitreDemarche[] = [
@@ -103,8 +101,8 @@ const titreDemarchesOctroiRetire: ITitreDemarche[] = [
     type: { id: 'oct', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'des',
-    ordre: 1
-  }
+    ordre: 1,
+  },
 ]
 
 const titreDemarchesInstruction: ITitreDemarche[] = [
@@ -114,7 +112,7 @@ const titreDemarchesInstruction: ITitreDemarche[] = [
     type: { id: 'mut', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'mut',
     statutId: 'ins',
-    ordre: 1
+    ordre: 1,
   },
   {
     id: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
@@ -122,8 +120,8 @@ const titreDemarchesInstruction: ITitreDemarche[] = [
     type: { id: 'oct', nom: 'unused', ordre: 1, etapesTypes: [] },
     typeId: 'oct',
     statutId: 'acc',
-    ordre: 1
-  }
+    ordre: 1,
+  },
 ]
 
 const titrePERDemarchesProlongation: ITitreDemarche[] = [
@@ -140,9 +138,9 @@ const titrePERDemarchesProlongation: ITitreDemarche[] = [
         typeId: 'mfr',
         statutId: 'fai',
         id: 'id',
-        titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro01')
-      }
-    ]
+        titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
+      },
+    ],
   },
   {
     id: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
@@ -160,10 +158,10 @@ const titrePERDemarchesProlongation: ITitreDemarche[] = [
         ordre: 1,
         date: toCaminoDate('1014-04-01'),
         dateDebut: null,
-        dateFin: toCaminoDate('2020-04-01')
-      }
-    ]
-  }
+        dateFin: toCaminoDate('2020-04-01'),
+      },
+    ],
+  },
 ]
 
 export {
@@ -176,5 +174,5 @@ export {
   titreDemarchesOctroiClasse,
   titreDemarchesOctroiRetire,
   titreDemarchesInstruction,
-  titrePERDemarchesProlongation
+  titrePERDemarchesProlongation,
 }

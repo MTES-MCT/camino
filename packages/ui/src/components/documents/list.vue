@@ -35,7 +35,7 @@ import DocumentTr from './tr.vue'
 
 export default {
   components: {
-    DocumentTr
+    DocumentTr,
   },
 
   props: {
@@ -52,7 +52,7 @@ export default {
     boutonModification: { type: Boolean, default: false },
     boutonSuppression: { type: Boolean, default: false },
     manquantShow: { type: Boolean, default: false },
-    helpShow: { type: Boolean, default: false }
-  }
+    helpShow: { type: Boolean, default: false },
+  },
 }
 </script>

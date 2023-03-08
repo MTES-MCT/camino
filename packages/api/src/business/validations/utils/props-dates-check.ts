@@ -10,10 +10,7 @@ import { ITitreActivite, ITitreEtape } from '../../../types.js'
  *
  */
 
-export const propsDatesCheck = <T extends ITitreActivite | ITitreEtape>(
-  propsNames: [keyof T],
-  element: T
-) => {
+export const propsDatesCheck = <T extends ITitreActivite | ITitreEtape>(propsNames: [keyof T], element: T) => {
   const errors = propsNames.reduce((errors: string[], propId) => {
     if (element[propId]) {
       const dateCheck = dateValidate(element[propId] as unknown as string)

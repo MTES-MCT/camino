@@ -1,7 +1,4 @@
-import {
-  titreInSurvieProvisoire,
-  titreStatutIdFind
-} from './titre-statut-id-find.js'
+import { titreInSurvieProvisoire, titreStatutIdFind } from './titre-statut-id-find.js'
 
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 import {
@@ -14,7 +11,7 @@ import {
   titreDemarchesOctroiClasse,
   titreDemarchesOctroiRetire,
   titreDemarchesInstruction,
-  titrePERDemarchesProlongation
+  titrePERDemarchesProlongation,
 } from './__mocks__/titre-statut-id-find-titres.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
@@ -40,45 +37,31 @@ describe("statut d'un titre", () => {
   })
 
   test("le statut d'un titre dont l'unique démarche est un octroi en instruction est “dmi”", () => {
-    expect(
-      titreStatutIdFind(aujourdhui, titreDemarchesOctroiInstruction)
-    ).toEqual('dmi')
+    expect(titreStatutIdFind(aujourdhui, titreDemarchesOctroiInstruction)).toEqual('dmi')
   })
 
   test("le statut d'un titre dont l'unique démarche est un octroi déposé est “dmi”", () => {
-    expect(titreStatutIdFind(aujourdhui, titreDemarchesOctroiDepose)).toEqual(
-      'dmi'
-    )
+    expect(titreStatutIdFind(aujourdhui, titreDemarchesOctroiDepose)).toEqual('dmi')
   })
 
   test("le statut d'un titre dont l'unique démarche est un octroi rejeté est “dmc”", () => {
-    expect(titreStatutIdFind(aujourdhui, titreDemarchesOctroiRejete)).toEqual(
-      'dmc'
-    )
+    expect(titreStatutIdFind(aujourdhui, titreDemarchesOctroiRejete)).toEqual('dmc')
   })
 
   test("le statut d'un titre dont l'unique démarche est un octroi classé sans suite est “dmc”", () => {
-    expect(titreStatutIdFind(aujourdhui, titreDemarchesOctroiClasse)).toEqual(
-      'dmc'
-    )
+    expect(titreStatutIdFind(aujourdhui, titreDemarchesOctroiClasse)).toEqual('dmc')
   })
 
   test("le statut d'un titre dont l'unique démarche est un octroi retiré est “dmc”", () => {
-    expect(titreStatutIdFind(aujourdhui, titreDemarchesOctroiRetire)).toEqual(
-      'dmc'
-    )
+    expect(titreStatutIdFind(aujourdhui, titreDemarchesOctroiRetire)).toEqual('dmc')
   })
 
   test("le statut d'un titre avec une démarche en instruction est “mod”", () => {
-    expect(titreStatutIdFind(aujourdhui, titreDemarchesInstruction)).toEqual(
-      'mod'
-    )
+    expect(titreStatutIdFind(aujourdhui, titreDemarchesInstruction)).toEqual('mod')
   })
 
   test("le statut d'un titre PER M ou W avec une prolongation déposée est “mod”", () => {
-    expect(
-      titreStatutIdFind(aujourdhui, titrePERDemarchesProlongation)
-    ).toEqual('mod')
+    expect(titreStatutIdFind(aujourdhui, titrePERDemarchesProlongation)).toEqual('mod')
   })
 
   test("le statut d'un titre PER M ou W avec une prolongation2 déposée est “mod”", () => {
@@ -97,9 +80,9 @@ describe("statut d'un titre", () => {
               typeId: 'mfr',
               statutId: 'fai',
               id: 'id',
-              titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro02')
-            }
-          ]
+              titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro02'),
+            },
+          ],
         },
         {
           id: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
@@ -117,9 +100,9 @@ describe("statut d'un titre", () => {
               titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
               ordre: 1,
               dateDebut: null,
-              dateFin: toCaminoDate('2020-10-01')
-            }
-          ]
+              dateFin: toCaminoDate('2020-10-01'),
+            },
+          ],
         },
         {
           id: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
@@ -137,10 +120,10 @@ describe("statut d'un titre", () => {
               ordre: 1,
               date: toCaminoDate('1014-04-01'),
               dateDebut: null,
-              dateFin: toCaminoDate('2020-04-01')
-            }
-          ]
-        }
+              dateFin: toCaminoDate('2020-04-01'),
+            },
+          ],
+        },
       ])
     ).toEqual('mod')
   })
@@ -161,9 +144,9 @@ describe("statut d'un titre", () => {
               typeId: 'mfr',
               statutId: 'fai',
               id: 'id',
-              titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro02')
-            }
-          ]
+              titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro02'),
+            },
+          ],
         },
         {
           id: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
@@ -181,9 +164,9 @@ describe("statut d'un titre", () => {
               titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
               ordre: 1,
               dateDebut: null,
-              dateFin: toCaminoDate('2020-10-01')
-            }
-          ]
+              dateFin: toCaminoDate('2020-10-01'),
+            },
+          ],
         },
         {
           id: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
@@ -201,10 +184,10 @@ describe("statut d'un titre", () => {
               ordre: 1,
               date: toCaminoDate('1014-04-01'),
               dateDebut: null,
-              dateFin: toCaminoDate('2020-04-01')
-            }
-          ]
-        }
+              dateFin: toCaminoDate('2020-04-01'),
+            },
+          ],
+        },
       ])
     ).toEqual(true)
   })
@@ -228,9 +211,9 @@ describe("statut d'un titre", () => {
               titreDemarcheId: newDemarcheId('m-pr-saint-pierre-2014-pro01'),
               ordre: 1,
               dateDebut: null,
-              dateFin: toCaminoDate('2020-10-01')
-            }
-          ]
+              dateFin: toCaminoDate('2020-10-01'),
+            },
+          ],
         },
         {
           id: newDemarcheId('m-pr-saint-pierre-2014-oct01'),
@@ -248,10 +231,10 @@ describe("statut d'un titre", () => {
               ordre: 1,
               date: toCaminoDate('1014-04-01'),
               dateDebut: null,
-              dateFin: toCaminoDate('2020-04-01')
-            }
-          ]
-        }
+              dateFin: toCaminoDate('2020-04-01'),
+            },
+          ],
+        },
       ])
     ).toEqual(false)
   })

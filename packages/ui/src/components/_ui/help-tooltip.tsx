@@ -8,10 +8,7 @@ export interface Props {
   text: string
 }
 
-export const HelpTooltip: FunctionalComponent<Props> = (
-  props,
-  context
-): JSX.Element => {
+export const HelpTooltip: FunctionalComponent<Props> = (props, context): JSX.Element => {
   return (
     <div class={styles.tooltip}>
       <h6 class={styles['tooltip-content']}>{props.text}</h6>

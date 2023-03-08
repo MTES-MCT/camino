@@ -6,39 +6,19 @@
         <p v-if="dureeOptionalCheck" class="h6 italic mb-0">Optionnel</p>
       </div>
 
-      <HeritageEdit
-        v-model:prop="etape.heritageProps.duree"
-        class="tablet-blob-2-3"
-        propId="duree"
-      >
+      <HeritageEdit v-model:prop="etape.heritageProps.duree" class="tablet-blob-2-3" propId="duree">
         <template #write>
           <div class="blobs-mini">
             <div class="blob-mini-1-2">
-              <InputNumber
-                v-model="ans"
-                :integer="true"
-                placeholder="années"
-                class="py-s mb-s"
-                @blur="updateDuree"
-              />
+              <InputNumber v-model="ans" :integer="true" placeholder="années" class="py-s mb-s" @blur="updateDuree" />
             </div>
             <div class="blob-mini-1-2">
-              <InputNumber
-                v-model="mois"
-                :integer="true"
-                placeholder="mois"
-                class="p-s"
-                @blur="updateDuree"
-              />
+              <InputNumber v-model="mois" :integer="true" placeholder="mois" class="p-s" @blur="updateDuree" />
             </div>
           </div>
           <div v-if="ans || mois" class="h6">
             <label>
-              <input
-                v-model="etape.incertitudes.duree"
-                type="checkbox"
-                class="mr-xs"
-              />
+              <input v-model="etape.incertitudes.duree" type="checkbox" class="mr-xs" />
               Incertain
             </label>
           </div>
@@ -53,32 +33,18 @@
       <hr />
     </div>
 
-    <template
-      v-if="canEditDates(titreTypeId, demarcheTypeId, etape.type.id, user)"
-    >
+    <template v-if="canEditDates(titreTypeId, demarcheTypeId, etape.type.id, user)">
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
           <h5 class="mb-0">Date de début</h5>
           <p class="h6 italic mb-0">Optionnel</p>
         </div>
-        <HeritageEdit
-          v-model:prop="etape.heritageProps.dateDebut"
-          class="tablet-blob-2-3"
-          propId="dateDebut"
-        >
+        <HeritageEdit v-model:prop="etape.heritageProps.dateDebut" class="tablet-blob-2-3" propId="dateDebut">
           <template #write>
-            <InputDate
-              :initialValue="etape.dateDebut"
-              :dateChanged="dateDebutChanged"
-              class="mb-s"
-            />
+            <InputDate :initialValue="etape.dateDebut" :dateChanged="dateDebutChanged" class="mb-s" />
             <div v-if="etape.dateDebut" class="h6">
               <label>
-                <input
-                  v-model="etape.incertitudes.dateDebut"
-                  type="checkbox"
-                  class="mr-xs"
-                />
+                <input v-model="etape.incertitudes.dateDebut" type="checkbox" class="mr-xs" />
                 Incertain
               </label>
             </div>
@@ -94,33 +60,19 @@
       <hr />
     </template>
 
-    <template
-      v-if="canEditDates(titreTypeId, demarcheTypeId, etape.type.id, user)"
-    >
+    <template v-if="canEditDates(titreTypeId, demarcheTypeId, etape.type.id, user)">
       <div class="tablet-blobs">
         <hr />
         <div class="tablet-blob-1-3 tablet-pt-s pb-s">
           <h5 class="mb-0">Date d'échéance</h5>
           <p class="h6 italic mb-0">Optionnel</p>
         </div>
-        <HeritageEdit
-          v-model:prop="etape.heritageProps.dateFin"
-          class="tablet-blob-2-3"
-          propId="dateFin"
-        >
+        <HeritageEdit v-model:prop="etape.heritageProps.dateFin" class="tablet-blob-2-3" propId="dateFin">
           <template #write>
-            <InputDate
-              :initialValue="etape.dateFin"
-              :dateChanged="dateFinChanged"
-              class="mb-s"
-            />
+            <InputDate :initialValue="etape.dateFin" :dateChanged="dateFinChanged" class="mb-s" />
             <div v-if="etape.dateFin" class="h6">
               <label>
-                <input
-                  v-model="etape.incertitudes.dateFin"
-                  type="checkbox"
-                  class="mr-xs"
-                />
+                <input v-model="etape.incertitudes.dateFin" type="checkbox" class="mr-xs" />
                 Incertain
               </label>
             </div>
@@ -138,11 +90,7 @@
     <template v-if="canEditTitulaires(titreTypeId, user)">
       <h3 class="mb-s">Titulaires</h3>
       <p class="h6 italic">Optionnel</p>
-      <HeritageEdit
-        v-model:prop="etape.heritageProps.titulaires"
-        propId="titulaires"
-        :isArray="true"
-      >
+      <HeritageEdit v-model:prop="etape.heritageProps.titulaires" propId="titulaires" :isArray="true">
         <template #write>
           <AutocompleteEntreprise
             :allEntities="entreprises"
@@ -153,11 +101,7 @@
           />
           <div class="h6 mt-s">
             <label v-if="titulairesLength">
-              <input
-                v-model="etape.incertitudes.titulaires"
-                type="checkbox"
-                class="mr-xs"
-              />
+              <input v-model="etape.incertitudes.titulaires" type="checkbox" class="mr-xs" />
               Incertain
             </label>
           </div>
@@ -166,13 +110,7 @@
           <ul class="list-prefix">
             <li v-for="t in heritagePropEtape.titulaires" :key="t.id">
               {{ getEntrepriseNom(t) }}
-              <Tag
-                v-if="t.operateur"
-                :mini="true"
-                color="bg-info"
-                class="ml-xs"
-                text="Opérateur"
-              />
+              <Tag v-if="t.operateur" :mini="true" color="bg-info" class="ml-xs" text="Opérateur" />
             </li>
           </ul>
         </template>
@@ -186,11 +124,7 @@
       <h3 class="mb-s">Amodiataires</h3>
       <p class="h6 italic">Optionnel</p>
 
-      <HeritageEdit
-        v-model:prop="etape.heritageProps.amodiataires"
-        propId="amodiataires"
-        :isArray="true"
-      >
+      <HeritageEdit v-model:prop="etape.heritageProps.amodiataires" propId="amodiataires" :isArray="true">
         <template #write>
           <AutocompleteEntreprise
             :allEntities="entreprises"
@@ -201,11 +135,7 @@
           />
           <div class="h6 mt-s">
             <label v-if="amodiatairesLength">
-              <input
-                v-model="etape.incertitudes.amodiataires"
-                type="checkbox"
-                class="mr-xs"
-              />
+              <input v-model="etape.incertitudes.amodiataires" type="checkbox" class="mr-xs" />
               Incertain
             </label>
           </div>
@@ -214,13 +144,7 @@
           <ul class="list-prefix">
             <li v-for="t in heritagePropEtape.amodiataires" :key="t.id">
               {{ getEntrepriseNom(t) }}
-              <Tag
-                v-if="t.operateur"
-                :mini="true"
-                color="bg-info"
-                class="ml-xs"
-                text="Opérateur"
-              />
+              <Tag v-if="t.operateur" :mini="true" color="bg-info" class="ml-xs" text="Opérateur" />
             </li>
           </ul>
         </template>
@@ -229,12 +153,7 @@
       <hr />
     </template>
 
-    <SubstancesEdit
-      :substances="etape.substances"
-      :heritageProps="etape.heritageProps"
-      :incertitudes="etape.incertitudes"
-      :domaineId="domaineId"
-    />
+    <SubstancesEdit :substances="etape.substances" :heritageProps="etape.heritageProps" :incertitudes="etape.incertitudes" :domaineId="domaineId" />
 
     <hr />
   </div>
@@ -252,13 +171,7 @@ import { CaminoDate } from 'camino-common/src/date'
 
 import { etablissementNameFind } from '@/utils/entreprise'
 import SubstancesEdit from '@/components/etape/substances-edit.vue'
-import {
-  dureeOptionalCheck as titreEtapesDureeOptionalCheck,
-  canEditAmodiataires,
-  canEditTitulaires,
-  canEditDuree,
-  canEditDates
-} from 'camino-common/src/permissions/titres-etapes'
+import { dureeOptionalCheck as titreEtapesDureeOptionalCheck, canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates } from 'camino-common/src/permissions/titres-etapes'
 
 import { EtapeEntreprise, EtapeFondamentale } from 'camino-common/src/etape'
 import { DomaineId } from 'camino-common/src/static/domaines'
@@ -282,16 +195,10 @@ const emits = defineEmits<{
   (e: 'update:etape', etape: EtapeFondamentale): void
 }>()
 
-const ans = ref<number>(
-  props.etape.duree ? Math.floor(props.etape.duree / 12) : 0
-)
-const mois = ref<number>(
-  props.etape.duree ? Math.floor(props.etape.duree % 12) : 0
-)
+const ans = ref<number>(props.etape.duree ? Math.floor(props.etape.duree / 12) : 0)
+const mois = ref<number>(props.etape.duree ? Math.floor(props.etape.duree % 12) : 0)
 
-const entreprisesDisabled = computed<EntrepriseId[]>(() =>
-  [...props.etape.amodiataires, ...props.etape.titulaires].map(({ id }) => id)
-)
+const entreprisesDisabled = computed<EntrepriseId[]>(() => [...props.etape.amodiataires, ...props.etape.titulaires].map(({ id }) => id))
 
 const dateDebutChanged = (date: CaminoDate) => {
   props.etape.dateDebut = date
@@ -312,19 +219,11 @@ const amodiatairesLength = computed<number>(() => {
 })
 
 const dureeOptionalCheck = computed<boolean>(() => {
-  return titreEtapesDureeOptionalCheck(
-    props.etape.type.id,
-    props.demarcheTypeId,
-    props.titreTypeId
-  )
+  return titreEtapesDureeOptionalCheck(props.etape.type.id, props.demarcheTypeId, props.titreTypeId)
 })
 
 const complete = computed<boolean>(() => {
-  return (
-    props.etape.type.id !== ETAPES_TYPES.demande ||
-    (props.etape.substances?.filter(substanceId => !!substanceId)?.length > 0 &&
-      (dureeOptionalCheck.value || !!ans.value || !!mois.value))
-  )
+  return props.etape.type.id !== ETAPES_TYPES.demande || (props.etape.substances?.filter(substanceId => !!substanceId)?.length > 0 && (dureeOptionalCheck.value || !!ans.value || !!mois.value))
 })
 
 const completeUpdate = () => {
@@ -371,40 +270,27 @@ watch<EtapeFondamentale>(
 const titulairesUpdate = (titulaires: EtapeEntreprise[]) => {
   const newTitulaires = titulaires.map(titulaire => ({
     id: titulaire.id,
-    operateur: titulaire.operateur
+    operateur: titulaire.operateur,
   }))
-  props.etape.titulaires.splice(
-    0,
-    props.etape.titulaires.length,
-    ...newTitulaires
-  )
+  props.etape.titulaires.splice(0, props.etape.titulaires.length, ...newTitulaires)
 }
 
 const amodiatairesUpdate = (amodiataires: EtapeEntreprise[]) => {
   const newAmodiataires = amodiataires.map(amodiataire => ({
     id: amodiataire.id,
-    operateur: amodiataire.operateur
+    operateur: amodiataire.operateur,
   }))
-  props.etape.amodiataires.splice(
-    0,
-    props.etape.amodiataires.length,
-    ...newAmodiataires
-  )
+  props.etape.amodiataires.splice(0, props.etape.amodiataires.length, ...newAmodiataires)
 }
 
 const getEntrepriseNom = (etapeEntreprise: EtapeEntreprise): string => {
-  const entreprise = props.entreprises.find(
-    ({ id }) => id === etapeEntreprise.id
-  )
+  const entreprise = props.entreprises.find(({ id }) => id === etapeEntreprise.id)
 
   if (!entreprise) {
     return ''
   }
 
-  return (
-    etablissementNameFind(entreprise.etablissements, props.etape.date) ||
-    entreprise.nom
-  )
+  return etablissementNameFind(entreprise.etablissements, props.etape.date) || entreprise.nom
 }
 
 const updateDuree = (): void => {

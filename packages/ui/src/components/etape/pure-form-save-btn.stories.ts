@@ -5,7 +5,7 @@ import { action } from '@storybook/addon-actions'
 const meta: Meta = {
   title: 'Components/Etape/FormSaveBtn',
   component: PureFormSaveBtn,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -20,12 +20,11 @@ const Template: Story<Props> = (args: Props) => ({
   setup() {
     return { args }
   },
-  template:
-    '<PureFormSaveBtn v-bind="args" @save="onSave" @depose="onDepose" />',
+  template: '<PureFormSaveBtn v-bind="args" @save="onSave" @depose="onDepose" />',
   methods: {
     onSave: action('save'),
-    onDepose: action('depose')
-  }
+    onDepose: action('depose'),
+  },
 })
 
 export const DemandeEnConstructionIncomplete = Template.bind({})
@@ -33,7 +32,7 @@ DemandeEnConstructionIncomplete.args = {
   canSave: true,
   showDepose: true,
   canDepose: false,
-  alertes: [{ message: 'alerte', url: 'google.com' }]
+  alertes: [{ message: 'alerte', url: 'google.com' }],
 }
 
 export const DemandeEnConstructionComplete = Template.bind({})
@@ -41,7 +40,7 @@ DemandeEnConstructionComplete.args = {
   canSave: true,
   showDepose: true,
   canDepose: true,
-  alertes: [{ message: 'alerte', url: 'google.com' }]
+  alertes: [{ message: 'alerte', url: 'google.com' }],
 }
 
 export const CompletudeDeLaDemandeImcomplete = Template.bind({})
@@ -49,7 +48,7 @@ CompletudeDeLaDemandeImcomplete.args = {
   canSave: false,
   showDepose: false,
   canDepose: true,
-  alertes: [{ message: 'alerte', url: 'google.com' }]
+  alertes: [{ message: 'alerte', url: 'google.com' }],
 }
 
 export const CompletudeDeLaDemandeComplete = Template.bind({})
@@ -57,12 +56,12 @@ CompletudeDeLaDemandeComplete.args = {
   canSave: true,
   showDepose: false,
   canDepose: true,
-  alertes: [{ message: 'alerte', url: 'google.com' }]
+  alertes: [{ message: 'alerte', url: 'google.com' }],
 }
 
 export const SansMessage = Template.bind({})
 SansMessage.args = {
   canSave: true,
   showDepose: true,
-  canDepose: true
+  canDepose: true,
 }

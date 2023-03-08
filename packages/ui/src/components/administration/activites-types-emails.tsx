@@ -1,61 +1,34 @@
 import emailValidator from 'email-validator'
 import { defineComponent, PropType, ref, computed } from 'vue'
 import { Icon } from '@/components/_ui/icon'
-import {
-  ActivitesTypes,
-  ActivitesTypesId
-} from 'camino-common/src/static/activitesTypes'
+import { ActivitesTypes, ActivitesTypesId } from 'camino-common/src/static/activitesTypes'
 import { User } from 'camino-common/src/roles'
 import { canEditEmails } from 'camino-common/src/permissions/administrations'
-import {
-  Administration,
-  AdministrationId,
-  Administrations
-} from 'camino-common/src/static/administrations'
+import { Administration, AdministrationId, Administrations } from 'camino-common/src/static/administrations'
 
 interface Props {
   administrationId: AdministrationId
   user: User
   activitesTypesEmails: { activiteTypeId: ActivitesTypesId; email: string }[]
-  emailUpdate: (
-    administrationId: AdministrationId,
-    activiteTypeId: ActivitesTypesId,
-    email: string
-  ) => void
-  emailDelete: (
-    administrationId: AdministrationId,
-    activiteTypeId: ActivitesTypesId,
-    email: string
-  ) => void
+  emailUpdate: (administrationId: AdministrationId, activiteTypeId: ActivitesTypesId, email: string) => void
+  emailDelete: (administrationId: AdministrationId, activiteTypeId: ActivitesTypesId, email: string) => void
 }
 
 export const ActivitesTypesEmails = defineComponent<Props>({
-  props: [
-    'administrationId',
-    'user',
-    'activitesTypesEmails',
-    'emailUpdate',
-    'emailDelete'
-  ] as unknown as undefined,
+  props: ['administrationId', 'user', 'activitesTypesEmails', 'emailUpdate', 'emailDelete'] as unknown as undefined,
   setup(props) {
-    const administration = computed<Administration>(
-      () => Administrations[props.administrationId]
-    )
+    const administration = computed<Administration>(() => Administrations[props.administrationId])
     const activiteTypeNew = ref<{
       activiteTypeId: ActivitesTypesId | null
       email: string | null
     }>({
       activiteTypeId: null,
-      email: null
+      email: null,
     })
     const activitesTypes = ref(Object.values(ActivitesTypes))
 
     const activiteTypeNewActive = computed<boolean>(() => {
-      return !!(
-        activiteTypeNew.value.activiteTypeId &&
-        activiteTypeNew.value.email &&
-        emailValidator.validate(activiteTypeNew.value.email)
-      )
+      return !!(activiteTypeNew.value.activiteTypeId && activiteTypeNew.value.email && emailValidator.validate(activiteTypeNew.value.email))
     })
 
     const isFullyNotifiable = computed(() => {
@@ -76,13 +49,7 @@ export const ActivitesTypesEmails = defineComponent<Props>({
       activiteTypeNew.value.email = null
     }
 
-    const activiteTypeEmailDelete = async ({
-      activiteTypeId,
-      email
-    }: {
-      email: string
-      activiteTypeId: ActivitesTypesId
-    }) => {
+    const activiteTypeEmailDelete = async ({ activiteTypeId, email }: { email: string; activiteTypeId: ActivitesTypesId }) => {
       props.emailDelete(props.administrationId, activiteTypeId, email)
     }
 
@@ -92,17 +59,8 @@ export const ActivitesTypesEmails = defineComponent<Props>({
       return activiteType ? activiteTypeLabelize(activiteType) : ''
     }
 
-    const activiteTypeLabelize = (activiteType: {
-      nom: string
-      id: string
-    }) => {
-      return (
-        activiteType.nom.charAt(0).toUpperCase() +
-        activiteType.nom.slice(1) +
-        ' (' +
-        activiteType.id.toUpperCase() +
-        ')'
-      )
+    const activiteTypeLabelize = (activiteType: { nom: string; id: string }) => {
+      return activiteType.nom.charAt(0).toUpperCase() + activiteType.nom.slice(1) + ' (' + activiteType.id.toUpperCase() + ')'
     }
 
     return () => (
@@ -136,10 +94,7 @@ export const ActivitesTypesEmails = defineComponent<Props>({
               {canEditEmailsComp.value ? (
                 <tr>
                   <td>
-                    <select
-                      v-model={activiteTypeNew.value.activiteTypeId}
-                      class="py-xs px-s mr-s mt-xs"
-                    >
+                    <select v-model={activiteTypeNew.value.activiteTypeId} class="py-xs px-s mr-s mt-xs">
                       {activitesTypes.value.map(activiteType => (
                         <option key={activiteType.id} value={activiteType.id}>
                           {activiteTypeLabelize(activiteType)}
@@ -161,11 +116,7 @@ export const ActivitesTypesEmails = defineComponent<Props>({
                     />
                   </td>
                   <td>
-                    <button
-                      class="py-s px-m btn rnd-xs p-s"
-                      disabled={!activiteTypeNewActive.value}
-                      onClick={activiteTypeEmailUpdate}
-                    >
+                    <button class="py-s px-m btn rnd-xs p-s" disabled={!activiteTypeNewActive.value} onClick={activiteTypeEmailUpdate}>
                       <Icon name="plus" size="M" />
                     </button>
                   </td>
@@ -173,25 +124,14 @@ export const ActivitesTypesEmails = defineComponent<Props>({
               ) : null}
 
               {props.activitesTypesEmails.map(activiteTypeEmail => (
-                <tr
-                  key={
-                    activiteTypeEmail.activiteTypeId + activiteTypeEmail.email
-                  }
-                >
+                <tr key={activiteTypeEmail.activiteTypeId + activiteTypeEmail.email}>
                   <td>
-                    <span class="cap-first">
-                      {activiteTypeIdLabelize(activiteTypeEmail.activiteTypeId)}
-                    </span>
+                    <span class="cap-first">{activiteTypeIdLabelize(activiteTypeEmail.activiteTypeId)}</span>
                   </td>
                   <td>{activiteTypeEmail.email}</td>
                   {canEditEmailsComp.value ? (
                     <td>
-                      <button
-                        class="btn-border py-s px-m my--xs rnd-xs flex-right"
-                        onClick={() =>
-                          activiteTypeEmailDelete(activiteTypeEmail)
-                        }
-                      >
+                      <button class="btn-border py-s px-m my--xs rnd-xs flex-right" onClick={() => activiteTypeEmailDelete(activiteTypeEmail)}>
                         <Icon name="delete" size="M" />
                       </button>
                     </td>
@@ -203,5 +143,5 @@ export const ActivitesTypesEmails = defineComponent<Props>({
         </div>
       </div>
     )
-  }
+  },
 })

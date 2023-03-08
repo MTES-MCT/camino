@@ -10,13 +10,7 @@ const run = async () => {
       console.info(chalk.cyan(`already up to date\n`))
     }
 
-    console.info(
-      chalk.green(
-        `batch ${latestBatchNo} run: ${latestLog.length} migrations \n`
-      ) +
-        chalk.cyan(latestLog.join('\n')) +
-        '\n'
-    )
+    console.info(chalk.green(`batch ${latestBatchNo} run: ${latestLog.length} migrations \n`) + chalk.cyan(latestLog.join('\n')) + '\n')
 
     console.info('migrations terminées')
     process.exit()

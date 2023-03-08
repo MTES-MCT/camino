@@ -8,8 +8,7 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
  * @param titreEtapes - étapes d'une démarche
  * @param date - date
  */
-const titreEtapesFilter = (titreEtapes: ITitreEtape[], date: string) =>
-  titreEtapes.filter(titreEtape => titreEtape.date <= date)
+const titreEtapesFilter = (titreEtapes: ITitreEtape[], date: string) => titreEtapes.filter(titreEtape => titreEtape.date <= date)
 
 /**
  * Reconstruit les démarches et étapes antérieures à une date
@@ -20,11 +19,7 @@ const titreEtapesFilter = (titreEtapes: ITitreEtape[], date: string) =>
  * @returns démarches du titre
  */
 
-export const titreDemarchesEtapesRebuild = (
-  date: string,
-  titreDemarches: ITitreDemarche[],
-  titreTypeId: TitreTypeId
-) =>
+export const titreDemarchesEtapesRebuild = (date: string, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) =>
   titreDemarches.reduce((acc: ITitreDemarche[], td) => {
     if (!td.etapes) return acc
 
@@ -35,21 +30,9 @@ export const titreDemarchesEtapesRebuild = (
 
       titreDemarche.etapes = titreEtapesFiltered
 
-      titreDemarche.statutId = titreDemarcheStatutIdFind(
-        titreDemarche.typeId,
-        titreDemarche.etapes,
-        titreTypeId,
-        titreDemarche.id
-      )
+      titreDemarche.statutId = titreDemarcheStatutIdFind(titreDemarche.typeId, titreDemarche.etapes, titreTypeId, titreDemarche.id)
 
-      if (
-        !titreDemarchePhaseCheck(
-          titreDemarche.typeId,
-          titreDemarche.statutId,
-          titreTypeId,
-          titreDemarche.etapes
-        )
-      ) {
+      if (!titreDemarchePhaseCheck(titreDemarche.typeId, titreDemarche.statutId, titreTypeId, titreDemarche.etapes)) {
         delete titreDemarche.phase
       }
 

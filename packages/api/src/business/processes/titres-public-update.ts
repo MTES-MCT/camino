@@ -16,8 +16,8 @@ export const titresPublicUpdate = async (titresIds?: string[]) => {
     { ids: titresIds },
     {
       fields: {
-        demarches: { id: {} }
-      }
+        demarches: { id: {} },
+      },
     },
     userSuper
   )
@@ -27,11 +27,7 @@ export const titresPublicUpdate = async (titresIds?: string[]) => {
   const titresUpdated = [] as string[]
 
   for (const titre of titres) {
-    const { publicLecture, entreprisesLecture } = titrePublicFind(
-      titre.titreStatutId,
-      titre.typeId,
-      titre.demarches || []
-    )
+    const { publicLecture, entreprisesLecture } = titrePublicFind(titre.titreStatutId, titre.typeId, titre.demarches || [])
 
     const patch = {} as ITitrePatch
 
@@ -46,10 +42,7 @@ export const titresPublicUpdate = async (titresIds?: string[]) => {
     if (Object.keys(patch).length) {
       await titreUpdate(titre.id, patch)
 
-      console.info(
-        'titre : public (mise à jour) ->',
-        `${titre.id} : ${JSON.stringify(patch)}`
-      )
+      console.info('titre : public (mise à jour) ->', `${titre.id} : ${JSON.stringify(patch)}`)
 
       titresUpdated.push(titre.id)
     }

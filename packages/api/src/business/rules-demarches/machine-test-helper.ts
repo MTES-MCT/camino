@@ -4,10 +4,7 @@ import { interpret } from 'xstate'
 import { CaminoMachine } from './machine-helper.js'
 import { expect } from 'vitest'
 interface CustomMatchers<R = unknown> {
-  canOnlyTransitionTo<T extends EventObject>(
-    machine: CaminoMachine<any, T>,
-    _events: EventObject['type'][]
-  ): R
+  canOnlyTransitionTo<T extends EventObject>(machine: CaminoMachine<any, T>, _events: EventObject['type'][]): R
 }
 
 declare global {
@@ -21,11 +18,7 @@ declare global {
   }
 }
 expect.extend({
-  canOnlyTransitionTo<T extends EventObject>(
-    service: any,
-    machine: CaminoMachine<any, T>,
-    events: T['type'][]
-  ) {
+  canOnlyTransitionTo<T extends EventObject>(service: any, machine: CaminoMachine<any, T>, events: T['type'][]) {
     events.sort()
     const passEvents: EventObject['type'][] = service.state.nextEvents
       .filter((event: string) => machine.isEvent(event))
@@ -36,33 +29,21 @@ expect.extend({
       })
 
     passEvents.sort()
-    if (
-      passEvents.length !== events.length ||
-      passEvents.some((entry, index) => entry !== events[index])
-    ) {
+    if (passEvents.length !== events.length || passEvents.some((entry, index) => entry !== events[index])) {
       return {
         pass: false,
-        message: () =>
-          `Expected possible transitions to be ['${events.join(
-            "','"
-          )}'] but were ['${passEvents.join("','")}']`
+        message: () => `Expected possible transitions to be ['${events.join("','")}'] but were ['${passEvents.join("','")}']`,
       }
     }
 
     return {
       pass: true,
-      message: () => 'OK'
+      message: () => 'OK',
     }
-  }
+  },
 })
 
-export const interpretMachine = <
-  T extends EventObject,
-  C extends CaminoCommonContext
->(
-  machine: CaminoMachine<C, T>,
-  etapes: readonly Etape[]
-) => {
+export const interpretMachine = <T extends EventObject, C extends CaminoCommonContext>(machine: CaminoMachine<C, T>, etapes: readonly Etape[]) => {
   const service = interpret(machine.machine)
 
   service.start()
@@ -73,15 +54,9 @@ export const interpretMachine = <
 
     if (!service.state.can(event)) {
       throw new Error(
-        `Error: cannot execute step: '${JSON.stringify(
-          etapeAFaire
-        )}' after '${JSON.stringify(
-          etapes
-            .slice(0, i)
-            .map(etape => etape.etapeTypeId + '_' + etape.etapeStatutId)
-        )}'. The event ${JSON.stringify(
-          event
-        )} should be one of '${service.state.nextEvents
+        `Error: cannot execute step: '${JSON.stringify(etapeAFaire)}' after '${JSON.stringify(
+          etapes.slice(0, i).map(etape => etape.etapeTypeId + '_' + etape.etapeStatutId)
+        )}'. The event ${JSON.stringify(event)} should be one of '${service.state.nextEvents
           .filter(event => machine.isEvent(event))
           .filter((event: EventObject['type']) => {
             const events = machine.toPotentialCaminoXStateEvent(event)
@@ -96,12 +71,6 @@ export const interpretMachine = <
   return service
 }
 
-export const orderAndInterpretMachine = <
-  T extends EventObject,
-  C extends CaminoCommonContext
->(
-  machine: CaminoMachine<C, T>,
-  etapes: readonly Etape[]
-) => {
+export const orderAndInterpretMachine = <T extends EventObject, C extends CaminoCommonContext>(machine: CaminoMachine<C, T>, etapes: readonly Etape[]) => {
   return interpretMachine(machine, machine.orderMachine(etapes))
 }

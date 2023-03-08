@@ -2,10 +2,7 @@ import { FunctionalComponent } from 'vue'
 import { AdministrationId } from 'camino-common/src/static/administrations'
 import { getTitreTypeIdsByAdministration } from 'camino-common/src/static/administrationsTitresTypes'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import {
-  TitresTypes as TT,
-  TitreTypeId
-} from 'camino-common/src/static/titresTypes'
+import { TitresTypes as TT, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { Domaine as CaminoDomaine } from '@/components/_common/domaine'
 import { Icon } from '@/components/_ui/icon'
@@ -22,9 +19,7 @@ type AdministrationTitresTypes = {
   associee: boolean
 }
 
-const titresTypes = (
-  administrationId: AdministrationId
-): AdministrationTitresTypes[] => {
+const titresTypes = (administrationId: AdministrationId): AdministrationTitresTypes[] => {
   return getTitreTypeIdsByAdministration(administrationId).map(att => {
     const titreType = TT[att.titreTypeId]
     return {
@@ -32,7 +27,7 @@ const titresTypes = (
       domaineId: titreType.domaineId,
       titreTypeTypeNom: TitresTypesTypes[titreType.typeId].nom,
       gestionnaire: att.gestionnaire,
-      associee: att.associee
+      associee: att.associee,
     }
   })
 }
@@ -44,13 +39,10 @@ export const TitresTypes: FunctionalComponent<Props> = props => (
     <div class="h6">
       <ul class="list-prefix">
         <li>
-          Un utilisateur d'une <b>administration gestionnaire</b> peut créer et
-          modifier les titres et leur contenu.
+          Un utilisateur d'une <b>administration gestionnaire</b> peut créer et modifier les titres et leur contenu.
         </li>
         <li>
-          Un utilisateur d'une <b>administration associée</b> peut voir les
-          titres non-publics. Cette administration n'apparaît pas sur les pages
-          des titres.
+          Un utilisateur d'une <b>administration associée</b> peut voir les titres non-publics. Cette administration n'apparaît pas sur les pages des titres.
         </li>
       </ul>
     </div>
@@ -72,21 +64,13 @@ export const TitresTypes: FunctionalComponent<Props> = props => (
                 <CaminoDomaine domaineId={titreType.domaineId} class="mt-s" />
               </td>
               <td>
-                <span class="small bold cap-first mt-s">
-                  {titreType.titreTypeTypeNom}
-                </span>
+                <span class="small bold cap-first mt-s">{titreType.titreTypeTypeNom}</span>
               </td>
               <td>
-                <Icon
-                  name={titreType.gestionnaire ? 'checkbox' : 'checkbox-blank'}
-                  size="M"
-                />
+                <Icon name={titreType.gestionnaire ? 'checkbox' : 'checkbox-blank'} size="M" />
               </td>
               <td>
-                <Icon
-                  name={titreType.associee ? 'checkbox' : 'checkbox-blank'}
-                  size="M"
-                />
+                <Icon name={titreType.associee ? 'checkbox' : 'checkbox-blank'} size="M" />
               </td>
             </tr>
           ))}

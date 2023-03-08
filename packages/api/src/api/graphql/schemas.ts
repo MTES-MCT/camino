@@ -4,7 +4,7 @@ import path, { join } from 'node:path'
 import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const schema = loadSchemaSync(join(__dirname, './schemas/index.graphql'), {
-  loaders: [new GraphQLFileLoader()]
+  loaders: [new GraphQLFileLoader()],
 })
 
 export default schema

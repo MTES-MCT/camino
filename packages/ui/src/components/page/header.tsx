@@ -22,18 +22,13 @@ export const Header = defineComponent<Props>({
     return () => (
       <div class={`mb ${styles['header-container']}`}>
         <div class="pt-m">
-          <router-link
-            to={{ name: 'homepage' }}
-            class="flex text-decoration-none"
-          >
+          <router-link to={{ name: 'homepage' }} class="flex text-decoration-none">
             <img src="/img/logo-rf.svg" alt="logo" class="logo mr" />
             <div>
               <p class="mb-0 mt-xs title">
                 camino<span class="color-neutral">.beta.gouv.fr</span>
               </p>
-              <p class="h6 mb-0 bold color-text">
-                Le cadastre minier numérique ouvert
-              </p>
+              <p class="h6 mb-0 bold color-text">Le cadastre minier numérique ouvert</p>
             </div>
           </router-link>
         </div>
@@ -58,5 +53,5 @@ export const Header = defineComponent<Props>({
         </div>
       </div>
     )
-  }
+  },
 })

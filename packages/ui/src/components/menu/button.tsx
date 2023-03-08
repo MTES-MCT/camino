@@ -20,21 +20,11 @@ export const MenuButton = defineComponent({
     }
 
     return () => (
-      <div
-        class={`${
-          menu.value.component && menu.value.component.name === 'MainMenu'
-            ? 'active'
-            : ''
-        }`}
-      >
-        <button
-          id="cmn-menu-button-button-menu"
-          class="btn-border small pill p-s"
-          onClick={() => menuToggle()}
-        >
+      <div class={`${menu.value.component && menu.value.component.name === 'MainMenu' ? 'active' : ''}`}>
+        <button id="cmn-menu-button-button-menu" class="btn-border small pill p-s" onClick={() => menuToggle()}>
           <Icon size="M" name="menu" />
         </button>
       </div>
     )
-  }
+  },
 })

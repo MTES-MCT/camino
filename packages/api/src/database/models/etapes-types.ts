@@ -24,8 +24,8 @@ class EtapesTypes extends Model {
       unique: { type: ['boolean', 'null'] },
       ordre: { type: 'integer' },
       publicLecture: { type: 'boolean' },
-      entreprisesLecture: { type: 'boolean' }
-    }
+      entreprisesLecture: { type: 'boolean' },
+    },
   }
 
   static relationMappings = () => ({
@@ -34,8 +34,8 @@ class EtapesTypes extends Model {
       modelClass: AdministrationsTitresTypesEtapesTypes,
       join: {
         from: 'etapesTypes.id',
-        to: 'administrations__titresTypes__etapesTypes.etapeTypeId'
-      }
+        to: 'administrations__titresTypes__etapesTypes.etapeTypeId',
+      },
     },
 
     justificatifsTypes: {
@@ -48,18 +48,18 @@ class EtapesTypes extends Model {
           to: 'etapesTypes__justificatifsTypes.documentTypeId',
           extra: {
             optionnel: 'optionnel',
-            descriptionSpecifique: 'description'
-          }
+            descriptionSpecifique: 'description',
+          },
         },
-        to: 'documentsTypes.id'
-      }
-    }
+        to: 'documentsTypes.id',
+      },
+    },
   })
 
   public static modifiers: Modifiers = {
     orderAsc: builder => {
       builder.orderBy('etapesTypes.ordre', 'asc')
-    }
+    },
   }
 }
 

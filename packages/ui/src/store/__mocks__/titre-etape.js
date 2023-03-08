@@ -3,50 +3,50 @@ const titreEtapeMetas = {
   entreprises: {
     elements: [
       { id: 'ent-1', nom: '1' },
-      { id: 'ent-2', nom: '2' }
-    ]
+      { id: 'ent-2', nom: '2' },
+    ],
   },
   demarche: {
     id: 'demarche-id',
     type: { nom: 'nom de la démarche' },
-    titre: { nom: 'nom du titre', domaine: { id: 'm' } }
-  }
+    titre: { nom: 'nom du titre', domaine: { id: 'm' } },
+  },
 }
 
 const titreEtapeMetasRes = {
   etapesTypes: [
     { id: 'w', nom: 'granulats' },
-    { id: 'c', nom: 'carrières' }
+    { id: 'c', nom: 'carrières' },
   ],
   substances: [],
   entreprises: [
     { id: 'ent-1', nom: '1' },
-    { id: 'ent-2', nom: '2' }
+    { id: 'ent-2', nom: '2' },
   ],
   demarche: {
     id: 'demarche-id',
     type: { nom: 'nom de la démarche' },
-    titre: { nom: 'nom du titre', domaine: { id: 'm' } }
-  }
+    titre: { nom: 'nom du titre', domaine: { id: 'm' } },
+  },
 }
 
 const titreEtapeMetasRes2 = {
   substances: [],
   entreprises: [
     { id: 'ent-1', nom: '1' },
-    { id: 'ent-2', nom: '2' }
+    { id: 'ent-2', nom: '2' },
   ],
   demarche: {
     id: 'demarche-id',
     type: { nom: 'nom de la démarche' },
-    titre: { nom: 'nom du titre', domaine: { id: 'm' } }
+    titre: { nom: 'nom du titre', domaine: { id: 'm' } },
   },
-  etapesTypes: []
+  etapesTypes: [],
 }
 
 const titreEtapeEtapesTypes = [
   { id: 'w', nom: 'granulats' },
-  { id: 'c', nom: 'carrières' }
+  { id: 'c', nom: 'carrières' },
 ]
 
 const titreEtapeEdited = {
@@ -62,7 +62,7 @@ const titreEtapeEdited = {
   incertitudes: {},
   substances: [],
   documents: [],
-  justificatifs: []
+  justificatifs: [],
 }
 
 const titreEtapeCreation = {
@@ -79,7 +79,7 @@ const titreEtapeCreation = {
   statutId: '',
   substances: [],
   documents: [],
-  justificatifs: []
+  justificatifs: [],
 }
 
 const titreEtapeHeritage1 = {
@@ -87,11 +87,11 @@ const titreEtapeHeritage1 = {
   titreDemarcheId: 'demarche-id',
   date: '2020-01-02',
   incertitudes: {
-    date: undefined
+    date: undefined,
   },
   statutId: '',
   type: {
-    id: 'new-etape-type-id'
+    id: 'new-etape-type-id',
   },
   dateDebut: undefined,
   dateFin: undefined,
@@ -105,39 +105,39 @@ const titreEtapeHeritage1 = {
   geoSystemeOpposableId: null,
   contenu: {
     sectionId1: { elementId1: 'valeur', elementId2: 'valeur' },
-    sectionId2: {}
+    sectionId2: {},
   },
   heritageProps: {},
   heritageContenu: {
     sectionId1: {
       elementId1: { etape: { id: 'etape-id' }, actif: true },
-      elementId2: { etape: { id: 'etape-id' }, actif: false }
+      elementId2: { etape: { id: 'etape-id' }, actif: false },
     },
     sectionId2: {
-      elementId1: { etape: { id: 'etape-id' }, actif: true }
-    }
+      elementId1: { etape: { id: 'etape-id' }, actif: true },
+    },
   },
-  documents: []
+  documents: [],
 }
 
 const titreEtapeHeritageRes1 = {
   type: {
-    id: 'new-etape-type-id'
+    id: 'new-etape-type-id',
   },
   heritageProps: {},
   heritageContenu: {
     sectionId1: {
       elementId1: { etape: { id: 'etape-id' }, actif: true },
-      elementId2: { etape: { id: 'etape-id' }, actif: false }
+      elementId2: { etape: { id: 'etape-id' }, actif: false },
     },
     sectionId2: {
-      elementId1: { etape: { id: 'etape-id' }, actif: true }
+      elementId1: { etape: { id: 'etape-id' }, actif: true },
     },
-    sectionId3: {}
+    sectionId3: {},
   },
   contenu: {
-    sectionId1: { elementId1: 'valeur', elementId2: 'valeur' }
-  }
+    sectionId1: { elementId1: 'valeur', elementId2: 'valeur' },
+  },
 }
 
 const titreEtapeHeritage2 = {
@@ -155,17 +155,17 @@ const titreEtapeHeritage2 = {
   titreDemarcheId: 'demarche-id',
   titulaires: [],
   type: {
-    id: 'new-etape-type-id'
-  }
+    id: 'new-etape-type-id',
+  },
 }
 
 const titreEtapeHeritageRes2 = {
   type: {
-    id: 'new-etape-type-id'
+    id: 'new-etape-type-id',
   },
   heritageProps: {},
   heritageContenu: {},
-  contenu: {}
+  contenu: {},
 }
 
 export {
@@ -178,5 +178,5 @@ export {
   titreEtapeHeritage1,
   titreEtapeHeritageRes1,
   titreEtapeHeritage2,
-  titreEtapeHeritageRes2
+  titreEtapeHeritageRes2,
 }

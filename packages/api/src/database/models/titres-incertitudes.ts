@@ -21,8 +21,8 @@ class TitresIncertitudes extends Model {
       substances: { type: ['null', 'boolean'] },
       titulaires: { type: ['null', 'boolean'] },
       amodiataires: { type: ['null', 'boolean'] },
-      administrations: { type: ['null', 'boolean'] }
-    }
+      administrations: { type: ['null', 'boolean'] },
+    },
   }
 
   public static idColumn = 'titreEtapeId'

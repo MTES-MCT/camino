@@ -1,13 +1,6 @@
 import { numberFormat } from '@/utils/number-format'
-import {
-  DepartementId,
-  Departements
-} from 'camino-common/src/static/departement'
-import {
-  getFacadesComputed,
-  SecteursMaritimes,
-  FacadeComputed
-} from 'camino-common/src/static/facades'
+import { DepartementId, Departements } from 'camino-common/src/static/departement'
+import { getFacadesComputed, SecteursMaritimes, FacadeComputed } from 'camino-common/src/static/facades'
 import { PaysId, PAYS_IDS } from 'camino-common/src/static/pays'
 import { Regions } from 'camino-common/src/static/region'
 import { SDOMZoneId, SDOMZones } from 'camino-common/src/static/sdom'
@@ -49,19 +42,17 @@ function CommunesEtRegions(communes: TerritoiresCommune[]) {
           id: region.id,
           paysId: region.paysId,
           nom: region.nom,
-          departements: []
+          departements: [],
         }
         acc.push(regionToUpdate)
       }
 
-      let departementToUpdate = regionToUpdate.departements.find(
-        ({ id }) => id === departement.id
-      )
+      let departementToUpdate = regionToUpdate.departements.find(({ id }) => id === departement.id)
       if (!departementToUpdate) {
         departementToUpdate = {
           id: departement.id,
           nom: departement.nom,
-          communes: []
+          communes: [],
         }
         regionToUpdate.departements.push(departementToUpdate)
       }
@@ -79,11 +70,7 @@ function CommunesEtRegions(communes: TerritoiresCommune[]) {
               {region.departements.map(departement => {
                 return (
                   <div key={departement.id}>
-                    <h6 class="mb-s">
-                      {region.paysId === PAYS_IDS['République Française']
-                        ? region.nom + ' / ' + departement.nom
-                        : region.nom}
-                    </h6>
+                    <h6 class="mb-s">{region.paysId === PAYS_IDS['République Française'] ? region.nom + ' / ' + departement.nom : region.nom}</h6>
                     <TagList elements={departement.communes} />
                   </div>
                 )
@@ -121,8 +108,7 @@ function SdomZones(sdomZones?: SDOMZoneId[]) {
 
 function SecteursMaritimesTsx(secteursMaritimes: SecteursMaritimes[]) {
   if (secteursMaritimes.length) {
-    const facadesMaritime: FacadeComputed[] =
-      getFacadesComputed(secteursMaritimes)
+    const facadesMaritime: FacadeComputed[] = getFacadesComputed(secteursMaritimes)
     return (
       <>
         {facadesMaritime.map(facade => {
@@ -149,10 +135,7 @@ function Surface(surface?: number) {
 }
 
 function TerritoiresSansSurface(props: TerritoiresProps) {
-  return props.communes.length ||
-    props.forets.length ||
-    props.sdomZones?.length ||
-    props.secteursMaritimes.length ? (
+  return props.communes.length || props.forets.length || props.sdomZones?.length || props.secteursMaritimes.length ? (
     <div class="tablet-blob-3-4">
       <h5>Territoires</h5>
       {CommunesEtRegions(props.communes)}

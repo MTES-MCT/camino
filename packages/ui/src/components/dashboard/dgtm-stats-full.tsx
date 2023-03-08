@@ -11,7 +11,7 @@ import {
   delaiChartConfiguration,
   delaiPerConcessionChartConfiguration,
   producteursOrChartConfiguration,
-  avisAXMChartConfiguration
+  avisAXMChartConfiguration,
 } from './dgtm-stats'
 
 export interface Props {
@@ -22,14 +22,7 @@ export const DGTMStatsFull = defineComponent<Props>({
   setup(props) {
     const data = ref<AsyncData<StatistiquesDGTM>>({ status: 'LOADING' })
 
-    const charts = [
-      sdomChartConfiguration,
-      depotChartConfiguration,
-      delaiChartConfiguration,
-      delaiPerConcessionChartConfiguration,
-      producteursOrChartConfiguration,
-      avisAXMChartConfiguration
-    ]
+    const charts = [sdomChartConfiguration, depotChartConfiguration, delaiChartConfiguration, delaiPerConcessionChartConfiguration, producteursOrChartConfiguration, avisAXMChartConfiguration]
 
     onMounted(async () => {
       try {
@@ -37,17 +30,14 @@ export const DGTMStatsFull = defineComponent<Props>({
           const stats = await props.getDgtmStats()
           data.value = { status: 'LOADED', value: stats }
         } else {
-          const stats = await fetchWithJson(
-            CaminoRestRoutes.statistiquesDGTM,
-            {}
-          )
+          const stats = await fetchWithJson(CaminoRestRoutes.statistiquesDGTM, {})
           data.value = { status: 'LOADED', value: stats }
         }
       } catch (e: any) {
         console.log('error', e)
         data.value = {
           status: 'ERROR',
-          message: e.message ?? 'something wrong happened'
+          message: e.message ?? 'something wrong happened',
         }
       }
     })
@@ -55,13 +45,10 @@ export const DGTMStatsFull = defineComponent<Props>({
       <div class="width-full-p">
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr">
           {charts.map(chart => (
-            <ChartWithExport
-              data={data.value}
-              getConfiguration={data => chart(data)}
-            />
+            <ChartWithExport data={data.value} getConfiguration={data => chart(data)} />
           ))}
         </div>
       </div>
     )
-  }
+  },
 })

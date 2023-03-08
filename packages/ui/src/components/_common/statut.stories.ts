@@ -5,7 +5,7 @@ import { action } from '@storybook/addon-actions'
 const meta: Meta = {
   title: 'Components/common/Statut',
   component: Statut,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -16,8 +16,8 @@ const Template: Story<Props> = (args: Props) => ({
   },
   template: `<Statut v-bind="args" @onDelete='onDelete' />`,
   methods: {
-    onDelete: action('onDelete')
-  }
+    onDelete: action('onDelete'),
+  },
 })
 
 export const Default = Template.bind({}, {})
@@ -25,6 +25,6 @@ export const WithColor = Template.bind(
   {},
   {
     nom: 'Mon statut',
-    color: 'success'
+    color: 'success',
   }
 )

@@ -1,21 +1,14 @@
 import { Model } from 'objection'
 import { ITitreTypeDemarcheTypeEtapeTypeJustificatifType } from '../../types.js'
 
-interface TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes
-  extends ITitreTypeDemarcheTypeEtapeTypeJustificatifType {}
+interface TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes extends ITitreTypeDemarcheTypeEtapeTypeJustificatifType {}
 
 class TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes extends Model {
-  public static tableName =
-    'titresTypes__demarchesTypes__etapesTypes__justificatifsT'
+  public static tableName = 'titresTypes__demarchesTypes__etapesTypes__justificatifsT'
 
   public static jsonSchema = {
     type: 'object',
-    required: [
-      'titreTypeId',
-      'demarcheTypeId',
-      'etapeTypeId',
-      'documentTypeId'
-    ],
+    required: ['titreTypeId', 'demarcheTypeId', 'etapeTypeId', 'documentTypeId'],
 
     properties: {
       titreTypeId: { type: 'string', maxLength: 3 },
@@ -23,16 +16,11 @@ class TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes extends Model {
       etapeTypeId: { type: 'string', maxLength: 3 },
       documentTypeId: { type: 'string', maxLength: 3 },
       optionnel: { type: 'boolean' },
-      description: { type: ['string', 'null'] }
-    }
+      description: { type: ['string', 'null'] },
+    },
   }
 
-  public static idColumn = [
-    'titreTypeId',
-    'demarcheTypeId',
-    'etapeTypeId',
-    'documentTypeId'
-  ]
+  public static idColumn = ['titreTypeId', 'demarcheTypeId', 'etapeTypeId', 'documentTypeId']
 }
 
 export default TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes

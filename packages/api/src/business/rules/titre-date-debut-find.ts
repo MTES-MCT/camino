@@ -1,26 +1,14 @@
 import { ITitreDemarche } from '../../types.js'
 
 import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc.js'
-import {
-  titreEtapesSortDescByOrdre,
-  titreEtapesSortAscByOrdre
-} from '../utils/titre-etapes-sort.js'
+import { titreEtapesSortDescByOrdre, titreEtapesSortAscByOrdre } from '../utils/titre-etapes-sort.js'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 
-const titreDemarcheDateDebutFind = (
-  titreDemarche: ITitreDemarche,
-  titreTypeId: TitreTypeId
-) => {
+const titreDemarcheDateDebutFind = (titreDemarche: ITitreDemarche, titreTypeId: TitreTypeId) => {
   // retourne la dernière étape de publication si celle-ci possède une date de début
-  const etapePublicationHasDateDebut = titreEtapesSortDescByOrdre(
-    titreDemarche.etapes!
-  ).find(
-    titreEtape =>
-      titreEtapePublicationCheck(titreEtape.typeId, titreTypeId) &&
-      titreEtape.dateDebut
-  )
+  const etapePublicationHasDateDebut = titreEtapesSortDescByOrdre(titreDemarche.etapes!).find(titreEtape => titreEtapePublicationCheck(titreEtape.typeId, titreTypeId) && titreEtape.dateDebut)
 
   // si cette démarche a une étape de publication qui possède une date de début
   if (etapePublicationHasDateDebut) {
@@ -29,9 +17,7 @@ const titreDemarcheDateDebutFind = (
   }
 
   // retourne la première étape de publication de la démarche
-  const titreEtapePublicationFirst = titreEtapesSortAscByOrdre(
-    titreDemarche.etapes!
-  ).find(te => titreEtapePublicationCheck(te.typeId, titreTypeId))
+  const titreEtapePublicationFirst = titreEtapesSortAscByOrdre(titreDemarche.etapes!).find(te => titreEtapePublicationCheck(te.typeId, titreTypeId))
 
   // si la démarche n'a pas d'étape de publication
   if (!titreEtapePublicationFirst) {
@@ -48,19 +34,10 @@ const titreDemarcheDateDebutFind = (
  * @param titreTypeId - id du type du titre
  */
 
-export const titreDateDebutFind = (
-  titreDemarches: ITitreDemarche[],
-  titreTypeId: TitreTypeId
-) => {
+export const titreDateDebutFind = (titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) => {
   // la première démarche d'octroi dont le statut est acceptée ou terminée
-  const titreDemarchesSorted = titreDemarchesSortAsc(
-    titreDemarches
-  ) as ITitreDemarche[]
-  const titreDemarche = titreDemarchesSorted.find(
-    titreDemarche =>
-      ['acc', 'ter'].includes(titreDemarche.statutId!) &&
-      isDemarcheTypeOctroi(titreDemarche.typeId)
-  )
+  const titreDemarchesSorted = titreDemarchesSortAsc(titreDemarches) as ITitreDemarche[]
+  const titreDemarche = titreDemarchesSorted.find(titreDemarche => ['acc', 'ter'].includes(titreDemarche.statutId!) && isDemarcheTypeOctroi(titreDemarche.typeId))
 
   if (!titreDemarche) return null
 

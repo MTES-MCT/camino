@@ -45,9 +45,7 @@ export interface Column<T = string> {
   noSort?: boolean
 }
 
-export const isComponentColumnData = (
-  columnRow: ComponentColumnData | TextColumnData
-): columnRow is ComponentColumnData => {
+export const isComponentColumnData = (columnRow: ComponentColumnData | TextColumnData): columnRow is ComponentColumnData => {
   return 'component' in columnRow
 }
 
@@ -60,13 +58,7 @@ interface Props {
 }
 
 export const Table = defineComponent<Props>({
-  props: [
-    'columns',
-    'rows',
-    'update',
-    'column',
-    'order'
-  ] as unknown as undefined,
+  props: ['columns', 'rows', 'update', 'column', 'order'] as unknown as undefined,
   setup(props) {
     const sort = (colId: Props['column']) => {
       if (!props.columns.find(c => c.id === colId)?.noSort) {
@@ -80,10 +72,7 @@ export const Table = defineComponent<Props>({
     }
 
     const columnInit = () => {
-      if (
-        props.rows.length &&
-        !props.columns.some(c => c.id === props.column)
-      ) {
+      if (props.rows.length && !props.columns.some(c => c.id === props.column)) {
         sort(props.columns[0].id)
       }
     }
@@ -101,37 +90,17 @@ export const Table = defineComponent<Props>({
           <div class="table">
             <div class="tr">
               {props.columns.map(col => (
-                <div
-                  key={col.id}
-                  class={`th nowrap ${(col.class ?? []).join(' ')}`}
-                  onClick={() => sort(col.id)}
-                >
-                  <button
-                    class={`btn-menu full-x p-0${
-                      col.noSort ? ' disabled' : ''
-                    }`}
-                  >
+                <div key={col.id} class={`th nowrap ${(col.class ?? []).join(' ')}`} onClick={() => sort(col.id)}>
+                  <button class={`btn-menu full-x p-0${col.noSort ? ' disabled' : ''}`}>
                     {col.name || (props.column === col.id ? '' : '–')}
-                    {!col.noSort && props.column === col.id ? (
-                      <Icon
-                        class="right"
-                        size="M"
-                        name={
-                          props.order === 'asc' ? 'chevron-bas' : 'chevron-haut'
-                        }
-                      />
-                    ) : null}
+                    {!col.noSort && props.column === col.id ? <Icon class="right" size="M" name={props.order === 'asc' ? 'chevron-bas' : 'chevron-haut'} /> : null}
                   </button>
                 </div>
               ))}
             </div>
 
             {props.rows.map(row => (
-              <router-link
-                key={row.id}
-                to={row.link}
-                class="tr tr-link text-decoration-none"
-              >
+              <router-link key={row.id} to={row.link} class="tr tr-link text-decoration-none">
                 {props.columns.map(col => (
                   <div key={col.id} class={`td ${(col.class ?? []).join(' ')}`}>
                     <DisplayColumn data={row.columns[col.id]} />
@@ -143,12 +112,10 @@ export const Table = defineComponent<Props>({
         </div>
       </div>
     )
-  }
+  },
 })
 
-const DisplayColumn = (props: {
-  data: ComponentColumnData | TextColumnData
-}): JSX.Element => {
+const DisplayColumn = (props: { data: ComponentColumnData | TextColumnData }): JSX.Element => {
   if (isComponentColumnData(props.data)) {
     const myComp = props.data.component
 
@@ -162,9 +129,5 @@ const DisplayColumn = (props: {
       return <myComp {...props.data.props} class={props.data.class ?? ''} />
     }
   }
-  return (
-    <span class={(props.data.class ?? []).join(' ') ?? ''}>
-      {props.data.value}
-    </span>
-  )
+  return <span class={(props.data.class ?? []).join(' ') ?? ''}>{props.data.value}</span>
 }

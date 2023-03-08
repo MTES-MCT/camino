@@ -8,8 +8,8 @@ export const titresEtapesCommunesVides = [
     statutId: 'acc',
     ordre: 2,
     date: '1988-03-11',
-    communes: []
-  }
+    communes: [],
+  },
 ] as unknown as TitresEtapes[]
 
 export const titresEtapesCommunesMemeCommune = [
@@ -20,6 +20,6 @@ export const titresEtapesCommunesMemeCommune = [
     statutId: 'acc',
     ordre: 2,
     date: '1988-03-11',
-    communes: [{ departementId: '29' }, { departementId: '29' }]
-  }
+    communes: [{ departementId: '29' }, { departementId: '29' }],
+  },
 ] as unknown as TitresEtapes[]

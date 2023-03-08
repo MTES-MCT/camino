@@ -1,23 +1,12 @@
 import { dbManager } from '../../../../tests/db-manager.js'
-import {
-  IUtilisateur,
-  IAdministration,
-  ITitre,
-  formatUser
-} from '../../../types.js'
+import { IUtilisateur, IAdministration, ITitre, formatUser } from '../../../types.js'
 
 import Titres from '../../models/titres.js'
 import Utilisateurs from '../../models/utilisateurs.js'
 import AdministrationsActivitesTypesEmails from '../../models/administrations-activites-types-emails.js'
 import Administrations from '../../models/administrations.js'
-import {
-  AdministrationId,
-  Administrations as CommonAdministrations
-} from 'camino-common/src/static/administrations.js'
-import {
-  administrationsTitresQuery,
-  administrationsQueryModify
-} from './administrations.js'
+import { AdministrationId, Administrations as CommonAdministrations } from 'camino-common/src/static/administrations.js'
+import { administrationsTitresQuery, administrationsQueryModify } from './administrations.js'
 import { idGenerate } from '../../models/_format/id-create.js'
 import options from '../_options.js'
 import { expect, test, describe, afterAll, beforeAll, vi } from 'vitest'
@@ -39,42 +28,33 @@ describe('administrationsTitresQuery', () => {
     ['ope-brgm-01', false],
     ['ope-onf-973-01', true],
     ['pre-97302-01', true],
-    ['ope-ptmg-973-01', true]
-  ])(
-    "Vérifie l'écriture de la requête sur les titres dont une administration a des droits sur le type",
-    async (administrationId, visible) => {
-      await Titres.query().delete()
+    ['ope-ptmg-973-01', true],
+  ])("Vérifie l'écriture de la requête sur les titres dont une administration a des droits sur le type", async (administrationId, visible) => {
+    await Titres.query().delete()
 
-      const mockTitre = {
-        id: 'monTitreId',
-        nom: 'monTitreNom',
-        titreStatutId: 'ech',
-        typeId: 'arm'
-      } as ITitre
+    const mockTitre = {
+      id: 'monTitreId',
+      nom: 'monTitreNom',
+      titreStatutId: 'ech',
+      typeId: 'arm',
+    } as ITitre
 
-      await Titres.query().insertGraph(mockTitre)
+    await Titres.query().insertGraph(mockTitre)
 
-      const administrationQuery = administrationsTitresQuery(
-        administrationId,
-        'titres',
-        {
-          isGestionnaire: true,
-          isAssociee: true
-        }
-      )
+    const administrationQuery = administrationsTitresQuery(administrationId, 'titres', {
+      isGestionnaire: true,
+      isAssociee: true,
+    })
 
-      const q = Titres.query()
-        .where('id', 'monTitreId')
-        .andWhereRaw('exists(?)', [administrationQuery])
+    const q = Titres.query().where('id', 'monTitreId').andWhereRaw('exists(?)', [administrationQuery])
 
-      const titreRes = await q.first()
-      if (visible) {
-        expect(titreRes).toMatchObject(mockTitre)
-      } else {
-        expect(titreRes).toBeUndefined()
-      }
+    const titreRes = await q.first()
+    if (visible) {
+      expect(titreRes).toMatchObject(mockTitre)
+    } else {
+      expect(titreRes).toBeUndefined()
     }
-  )
+  })
 })
 
 describe('administrationsQueryModify', () => {
@@ -86,13 +66,13 @@ describe('administrationsQueryModify', () => {
     await AdministrationsActivitesTypesEmails.query().insert({
       administrationId: mockAdministration.id,
       email,
-      activiteTypeId: 'grx'
+      activiteTypeId: 'grx',
     })
 
     await AdministrationsActivitesTypesEmails.query().insert({
       administrationId: mockAdministration.id,
       email: 'foo@bar.cc',
-      activiteTypeId: 'grx'
+      activiteTypeId: 'grx',
     })
 
     const mockUser: IUtilisateur = {
@@ -100,21 +80,13 @@ describe('administrationsQueryModify', () => {
       id: idGenerate(),
       role: 'super',
       email: 'email' + idGenerate(),
-      dateCreation: '2022-05-12'
+      dateCreation: '2022-05-12',
     }
 
-    await Utilisateurs.query().insertGraph(
-      mockUser,
-      options.utilisateurs.update
-    )
+    await Utilisateurs.query().insertGraph(mockUser, options.utilisateurs.update)
 
-    const q = administrationsQueryModify(
-      Administrations.query().where('id', mockAdministration.id),
-      formatUser(mockUser)
-    )
-    const res = (await q
-      .withGraphFetched({ activitesTypesEmails: {} })
-      .first()) as IAdministration
+    const q = administrationsQueryModify(Administrations.query().where('id', mockAdministration.id), formatUser(mockUser))
+    const res = (await q.withGraphFetched({ activitesTypesEmails: {} }).first()) as IAdministration
     expect(res.activitesTypesEmails).toHaveLength(2)
   })
 })

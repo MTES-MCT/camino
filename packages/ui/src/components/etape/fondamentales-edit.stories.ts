@@ -11,7 +11,7 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 const meta: Meta = {
   title: 'Components/Etape/FondamentalesEdit',
   component: FondatementalesEditComponent,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -26,7 +26,7 @@ type Props = {
 const etape: EtapeFondamentale = {
   type: {
     id: 'mfr',
-    nom: 'demande'
+    nom: 'demande',
   },
   contenu: {},
   date: toCaminoDate('2022-02-02'),
@@ -40,20 +40,20 @@ const etape: EtapeFondamentale = {
     dateFin: false,
     amodiataires: false,
     titulaires: true,
-    substances: false
+    substances: false,
   },
   substances: ['arse'],
   titulaires: [{ id: newEntrepriseId('optionId1'), operateur: true }],
   amodiataires: [],
   heritageProps: {
     dateDebut: {
-      actif: false
+      actif: false,
     },
     dateFin: {
-      actif: false
+      actif: false,
     },
     duree: {
-      actif: false
+      actif: false,
     },
     substances: {
       actif: true,
@@ -61,19 +61,19 @@ const etape: EtapeFondamentale = {
         date: toCaminoDate('2022-01-01'),
         type: {
           id: 'mfr',
-          nom: 'étape précédente'
+          nom: 'étape précédente',
         },
         substances: ['arge'],
-        incertitudes: { substances: true }
-      }
+        incertitudes: { substances: true },
+      },
     },
     titulaires: {
-      actif: false
+      actif: false,
     },
     amodiataires: {
-      actif: false
-    }
-  }
+      actif: false,
+    },
+  },
 }
 const Template: Story<Props> = (args: Props) => ({
   components: { FondatementalesEditComponent },
@@ -86,10 +86,10 @@ const Template: Story<Props> = (args: Props) => ({
       handler: function (newValue) {
         this.etapeData = newValue.etape
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
-  template: '<FondatementalesEditComponent v-bind="args" :etape="etapeData"/>'
+  template: '<FondatementalesEditComponent v-bind="args" :etape="etapeData"/>',
 })
 
 export const ArmDemandeONF = Template.bind(
@@ -101,15 +101,15 @@ export const ArmDemandeONF = Template.bind(
     user: {
       role: 'admin',
       administrationId: 'ope-onf-973-01',
-      ...testBlankUser
+      ...testBlankUser,
     },
     entreprises: [
       {
         id: newEntrepriseId('optionId1'),
         nom: 'optionNom1',
-        etablissements: []
-      }
-    ]
+        etablissements: [],
+      },
+    ],
   }
 )
 
@@ -124,9 +124,9 @@ export const ArmDemandeOperateur = Template.bind(
       {
         id: newEntrepriseId('optionId1'),
         nom: 'optionNom1',
-        etablissements: []
-      }
-    ]
+        etablissements: [],
+      },
+    ],
   }
 )
 
@@ -139,15 +139,15 @@ export const ArmJorfONF = Template.bind(
     user: {
       role: 'admin',
       administrationId: 'ope-onf-973-01',
-      ...testBlankUser
+      ...testBlankUser,
     },
     entreprises: [
       {
         id: newEntrepriseId('optionId1'),
         nom: 'optionNom1',
-        etablissements: []
-      }
-    ]
+        etablissements: [],
+      },
+    ],
   }
 )
 
@@ -160,15 +160,15 @@ export const AxmDemandeONF = Template.bind(
     user: {
       role: 'admin',
       administrationId: 'ope-onf-973-01',
-      ...testBlankUser
+      ...testBlankUser,
     },
     entreprises: [
       {
         id: newEntrepriseId('optionId1'),
         nom: 'optionNom1',
-        etablissements: []
-      }
-    ]
+        etablissements: [],
+      },
+    ],
   }
 )
 
@@ -181,15 +181,15 @@ export const PrmDemandeONF = Template.bind(
     user: {
       role: 'admin',
       administrationId: 'ope-onf-973-01',
-      ...testBlankUser
+      ...testBlankUser,
     },
     entreprises: [
       {
         id: newEntrepriseId('optionId1'),
         nom: 'optionNom1',
-        etablissements: []
-      }
-    ]
+        etablissements: [],
+      },
+    ],
   }
 )
 
@@ -202,14 +202,14 @@ export const PrmDeplacementDePerimetreONF = Template.bind(
     user: {
       role: 'admin',
       administrationId: 'ope-onf-973-01',
-      ...testBlankUser
+      ...testBlankUser,
     },
     entreprises: [
       {
         id: newEntrepriseId('optionId1'),
         nom: 'optionNom1',
-        etablissements: []
-      }
-    ]
+        etablissements: [],
+      },
+    ],
   }
 )

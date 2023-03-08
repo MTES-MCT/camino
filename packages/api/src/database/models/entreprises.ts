@@ -31,8 +31,8 @@ class Entreprises extends Model {
       email: { type: ['string', 'null'] },
       telephone: { type: ['string', 'null'] },
       url: { type: ['string', 'null'] },
-      archive: { type: 'boolean' }
-    }
+      archive: { type: 'boolean' },
+    },
   }
 
   static relationMappings = () => ({
@@ -41,8 +41,8 @@ class Entreprises extends Model {
       modelClass: EntreprisesEtablissements,
       join: {
         from: 'entreprises.id',
-        to: 'entreprisesEtablissements.entrepriseId'
-      }
+        to: 'entreprisesEtablissements.entrepriseId',
+      },
     },
 
     utilisateurs: {
@@ -52,10 +52,10 @@ class Entreprises extends Model {
         from: 'entreprises.id',
         through: {
           from: 'utilisateurs__entreprises.entrepriseId',
-          to: 'utilisateurs__entreprises.utilisateurId'
+          to: 'utilisateurs__entreprises.utilisateurId',
         },
-        to: 'utilisateurs.id'
-      }
+        to: 'utilisateurs.id',
+      },
     },
 
     titulaireTitres: {
@@ -65,10 +65,10 @@ class Entreprises extends Model {
         from: 'entreprises.id',
         through: {
           from: 'titresTitulaires.entrepriseId',
-          to: 'titresTitulaires.titreEtapeId'
+          to: 'titresTitulaires.titreEtapeId',
         },
-        to: ref('titres.propsTitreEtapesIds:titulaires').castText()
-      }
+        to: ref('titres.propsTitreEtapesIds:titulaires').castText(),
+      },
     },
 
     amodiataireTitres: {
@@ -78,10 +78,10 @@ class Entreprises extends Model {
         from: 'entreprises.id',
         through: {
           from: 'titresAmodiataires.entrepriseId',
-          to: 'titresAmodiataires.titreEtapeId'
+          to: 'titresAmodiataires.titreEtapeId',
         },
-        to: ref('titres.propsTitreEtapesIds:amodiataires').castText()
-      }
+        to: ref('titres.propsTitreEtapesIds:amodiataires').castText(),
+      },
     },
 
     documents: {
@@ -89,9 +89,9 @@ class Entreprises extends Model {
       modelClass: Document,
       join: {
         from: 'entreprises.id',
-        to: 'documents.entrepriseId'
-      }
-    }
+        to: 'documents.entrepriseId',
+      },
+    },
   })
 
   public $parseJson(json: Pojo) {
@@ -102,7 +102,7 @@ class Entreprises extends Model {
 
     if (json.utilisateursIds) {
       json.utilisateurs = json.utilisateursIds.map((id: string) => ({
-        id
+        id,
       }))
 
       delete json.utilisateursIds

@@ -13,8 +13,8 @@ test('fraisGestion', () => {
       guyane: {
         taxeAurifere: 100,
         taxeAurifereBrute: 0,
-        totalInvestissementsDeduits: 0
-      }
+        totalInvestissementsDeduits: 0,
+      },
     })
   ).toBe(16)
 
@@ -47,7 +47,7 @@ test('fiscaliteVisible avec les titres', () => {
       { typeId: 'prg' },
       { typeId: 'prr' },
       { typeId: 'prs' },
-      { typeId: 'prw' }
+      { typeId: 'prw' },
     ])
   ).toEqual(false)
   expect(fiscaliteVisible({ role: 'entreprise', entreprises: [{ id: newEntrepriseId(newEntrepriseId('1234')) }], ...roleLessUser }, newEntrepriseId('1234'), [])).toEqual(false)

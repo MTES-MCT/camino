@@ -14,9 +14,9 @@ const titresDemarchesDesordonnees = [
             id: 'm-pr-saint-pierre-2014-oct01-dpu01',
             titreDemarcheId: 'm-pr-saint-pierre-2014-oct01',
             typeId: 'dpu',
-            statutId: 'acc'
-          }
-        ]
+            statutId: 'acc',
+          },
+        ],
       },
       {
         id: 'm-pr-saint-pierre-2014-pro01',
@@ -29,12 +29,12 @@ const titresDemarchesDesordonnees = [
             id: 'm-pr-saint-pierre-2014-pro01-dpu01',
             titreDemarcheId: 'm-pr-saint-pierre-2014-pro01',
             typeId: 'dpu',
-            statutId: 'acc'
-          }
-        ]
-      }
-    ]
-  }
+            statutId: 'acc',
+          },
+        ],
+      },
+    ],
+  },
 ] as Titres[]
 
 const titresDemarchesOrdonnees = [
@@ -51,9 +51,9 @@ const titresDemarchesOrdonnees = [
             id: 'm-pr-saint-pierre-2014-oct01-dpu01',
             titreDemarcheId: 'm-pr-saint-pierre-2014-oct01',
             typeId: 'dpu',
-            statutId: 'acc'
-          }
-        ]
+            statutId: 'acc',
+          },
+        ],
       },
       {
         id: 'm-pr-saint-pierre-2014-pro01',
@@ -66,12 +66,12 @@ const titresDemarchesOrdonnees = [
             id: 'm-pr-saint-pierre-2014-pro01-dpu01',
             titreDemarcheId: 'm-pr-saint-pierre-2014-pro01',
             typeId: 'dpu',
-            statutId: 'acc'
-          }
-        ]
-      }
-    ]
-  }
+            statutId: 'acc',
+          },
+        ],
+      },
+    ],
+  },
 ] as Titres[]
 
 export { titresDemarchesDesordonnees, titresDemarchesOrdonnees }

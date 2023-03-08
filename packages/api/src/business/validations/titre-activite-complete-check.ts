@@ -3,22 +3,12 @@ import { IContenu, IDocument, ISection } from '../../types.js'
 import { documentsTypesValidate } from './documents-types-validate.js'
 import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 
-export const titreActiviteCompleteCheck = (
-  sections: ISection[],
-  contenu?: IContenu | null,
-  documents?: IDocument[] | null,
-  documentsTypes?: DocumentType[]
-) => {
+export const titreActiviteCompleteCheck = (sections: ISection[], contenu?: IContenu | null, documents?: IDocument[] | null, documentsTypes?: DocumentType[]) => {
   const activiteComplete = sections.every(s =>
     s.elements?.every(
       e =>
         e.optionnel ||
-        (contenu &&
-          (e.type === 'checkboxes'
-            ? (contenu[s.id][e.id] as string[]).length
-            : contenu[s.id][e.id] !== undefined &&
-              contenu[s.id][e.id] !== null &&
-              contenu[s.id][e.id] !== ''))
+        (contenu && (e.type === 'checkboxes' ? (contenu[s.id][e.id] as string[]).length : contenu[s.id][e.id] !== undefined && contenu[s.id][e.id] !== null && contenu[s.id][e.id] !== ''))
     )
   )
 

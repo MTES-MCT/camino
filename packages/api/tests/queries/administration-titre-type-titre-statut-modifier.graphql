@@ -1,9 +1,5 @@
-mutation AdministrationTitreTypeTitreStatutModifier(
-  $administrationTitreTypeTitreStatut: InputAdministrationTitreTypeTitreStatut!
-) {
-  administrationTitreTypeTitreStatutModifier(
-    administrationTitreTypeTitreStatut: $administrationTitreTypeTitreStatut
-  ) {
+mutation AdministrationTitreTypeTitreStatutModifier($administrationTitreTypeTitreStatut: InputAdministrationTitreTypeTitreStatut!) {
+  administrationTitreTypeTitreStatutModifier(administrationTitreTypeTitreStatut: $administrationTitreTypeTitreStatut) {
     ...administration
   }
 }

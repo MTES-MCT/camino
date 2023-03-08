@@ -9,7 +9,7 @@ import {
   isRole,
   ROLES,
   isBureauDEtudes,
-  BaseUserNotNull
+  BaseUserNotNull,
 } from './roles.js'
 import { ADMINISTRATION_IDS } from './static/administrations.js'
 import { test, expect, describe } from 'vitest'
@@ -19,7 +19,7 @@ describe('role', () => {
     email: '',
     id: '',
     nom: '',
-    prenom: ''
+    prenom: '',
   }
   test('isSuper', () => {
     expect(isSuper({ ...baseRole, role: 'super' })).toBe(true)
@@ -44,7 +44,7 @@ describe('role', () => {
       isAdministrationEditeur({
         ...baseRole,
         role: 'editeur',
-        administrationId
+        administrationId,
       })
     ).toBe(true)
   })
@@ -54,7 +54,7 @@ describe('role', () => {
       isAdministrationLecteur({
         ...baseRole,
         role: 'lecteur',
-        administrationId
+        administrationId,
       })
     ).toBe(true)
   })
@@ -64,7 +64,7 @@ describe('role', () => {
       isEntreprise({
         ...baseRole,
         role: 'entreprise',
-        entreprises: []
+        entreprises: [],
       })
     ).toBe(true)
     expect(isEntreprise({ ...baseRole, role: 'defaut' })).toBe(false)
@@ -74,7 +74,7 @@ describe('role', () => {
       isBureauDEtudes({
         ...baseRole,
         role: 'bureau d’études',
-        entreprises: []
+        entreprises: [],
       })
     ).toBe(true)
     expect(isBureauDEtudes({ ...baseRole, role: 'defaut' })).toBe(false)
@@ -87,7 +87,7 @@ describe('role', () => {
       isDefault({
         ...baseRole,
         role: 'entreprise',
-        entreprises: []
+        entreprises: [],
       })
     ).toBe(false)
   })

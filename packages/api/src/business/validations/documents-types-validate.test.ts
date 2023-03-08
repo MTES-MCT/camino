@@ -15,16 +15,12 @@ describe('teste documentsTypesValidate', () => {
   })
 
   test('tous les documents sont optionnels', () => {
-    const errors = documentsTypesValidate([], [
-      { id: 'arr', optionnel: true }
-    ] as DocumentType[])
+    const errors = documentsTypesValidate([], [{ id: 'arr', optionnel: true }] as DocumentType[])
     expect(errors).toHaveLength(0)
   })
 
   test('il manque un document obligatoire', () => {
-    const errors = documentsTypesValidate(null, [
-      { id: 'arr', optionnel: false }
-    ] as DocumentType[])
+    const errors = documentsTypesValidate(null, [{ id: 'arr', optionnel: false }] as DocumentType[])
     expect(errors).toHaveLength(1)
   })
 
@@ -34,8 +30,8 @@ describe('teste documentsTypesValidate', () => {
         {
           typeId: 'arr',
           fichier: true,
-          fichierTypeId: 'pdf'
-        }
+          fichierTypeId: 'pdf',
+        },
       ] as IDocument[],
       [{ id: 'arr', optionnel: false }] as DocumentType[]
     )
@@ -48,8 +44,8 @@ describe('teste documentsTypesValidate', () => {
         {
           typeId: 'arr',
           fichierTypeId: 'pdf',
-          date: '2002-10-10'
-        }
+          date: '2002-10-10',
+        },
       ] as IDocument[],
       [{ id: 'arr', optionnel: false }] as DocumentType[]
     )
@@ -63,8 +59,8 @@ describe('teste documentsTypesValidate', () => {
           typeId: 'arr',
           fichier: true,
           fichierTypeId: 'pdf',
-          date: '2002-10-10'
-        }
+          date: '2002-10-10',
+        },
       ] as IDocument[],
       [{ id: 'arr', optionnel: false }] as DocumentType[]
     )

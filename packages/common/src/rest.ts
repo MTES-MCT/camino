@@ -14,7 +14,7 @@ export const CaminoRestRoutes = {
   titresDREAL: '/titresDREAL',
   statistiquesDGTM: '/statistiques/dgtm',
   fiscaliteEntreprise: '/entreprises/:entrepriseId/fiscalite/:annee',
-  generateQgisToken: '/utilisateur/generateQgisToken'
+  generateQgisToken: '/utilisateur/generateQgisToken',
 } as const
 
 export type CaminoRestRoute = (typeof CaminoRestRoutes)[keyof typeof CaminoRestRoutes]

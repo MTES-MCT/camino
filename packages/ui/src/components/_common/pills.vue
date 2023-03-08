@@ -16,7 +16,7 @@ export default {
   components: { Statut },
   props: {
     activitesAbsentes: { type: Number, default: 0 },
-    activitesEnConstruction: { type: Number, default: 0 }
-  }
+    activitesEnConstruction: { type: Number, default: 0 },
+  },
 }
 </script>

@@ -2,10 +2,7 @@
   <Loader v-if="!loaded" />
   <div v-else>
     <h6>
-      <router-link
-        :to="{ name: 'titre', params: { id: titre.slug } }"
-        class="cap-first"
-      >
+      <router-link :to="{ name: 'titre', params: { id: titre.slug } }" class="cap-first">
         {{ titre.nom }}
       </router-link>
       <span class="color-neutral"> | </span>
@@ -37,7 +34,7 @@ export default {
 
   data() {
     return {
-      opened: true
+      opened: true,
     }
   },
 
@@ -65,7 +62,7 @@ export default {
     },
     titreTypeId() {
       return this.titre ? this.titre.typeId : ''
-    }
+    },
   },
   watch: {
     '$route.params.id': function (id) {
@@ -73,7 +70,7 @@ export default {
         this.get()
       }
     },
-    user: 'get'
+    user: 'get',
   },
 
   async created() {
@@ -83,7 +80,7 @@ export default {
   methods: {
     async get() {
       await this.$store.dispatch('titreEtape/get', this.$route.params.id)
-    }
-  }
+    },
+  },
 }
 </script>

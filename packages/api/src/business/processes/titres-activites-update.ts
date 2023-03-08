@@ -23,12 +23,12 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
         demarches: {
           type: { id: {} },
           phase: { id: {} },
-          etapes: { id: {} }
+          etapes: { id: {} },
         },
         communes: { id: {} },
         activites: { id: {} },
-        titulaires: { utilisateurs: { id: {} } }
-      }
+        titulaires: { utilisateurs: { id: {} } },
+      },
     },
     userSuper
   )
@@ -38,41 +38,28 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
       titresTypes: { id: {} },
       administrations: { id: {} },
       documentsTypes: { id: {} },
-      activitesTypesPays: { id: {} }
-    }
+      activitesTypesPays: { id: {} },
+    },
   })
 
   const aujourdhui = getCurrent()
 
-  const titresActivitesCreated = activitesTypes.reduce(
-    (acc: ITitreActivite[], activiteType) => {
-      const annees = anneesBuild(activiteType.dateDebut, aujourdhui)
-      if (!annees.length) return acc
+  const titresActivitesCreated = activitesTypes.reduce((acc: ITitreActivite[], activiteType) => {
+    const annees = anneesBuild(activiteType.dateDebut, aujourdhui)
+    if (!annees.length) return acc
 
-      acc.push(
-        ...titres.reduce((acc: ITitreActivite[], titre) => {
-          if (!titreActiviteTypeCheck(activiteType, titre)) return acc
+    acc.push(
+      ...titres.reduce((acc: ITitreActivite[], titre) => {
+        if (!titreActiviteTypeCheck(activiteType, titre)) return acc
 
-          acc.push(
-            ...titreActivitesBuild(
-              activiteType,
-              annees,
-              aujourdhui,
-              titre.id,
-              titre.typeId,
-              titre.demarches,
-              titre.activites
-            )
-          )
+        acc.push(...titreActivitesBuild(activiteType, annees, aujourdhui, titre.id, titre.typeId, titre.demarches, titre.activites))
 
-          return acc
-        }, [])
-      )
+        return acc
+      }, [])
+    )
 
-      return acc
-    },
-    []
-  )
+    return acc
+  }, [])
 
   if (titresActivitesCreated.length) {
     await titresActivitesUpsert(titresActivitesCreated)
@@ -96,19 +83,12 @@ export const titresActivitesUpdate = async (titresIds?: string[]) => {
 
     // envoi d’email aux opérateurs pour les prévenir de l’ouverture des déclarations
     if (emails.size) {
-      await emailsWithTemplateSend(
-        [...emails],
-        EmailTemplateId.ACTIVITES_NOUVELLES,
-        {
-          activitesUrl: activitesUrlGet({ statutsIds: ['abs', 'enc'] })
-        }
-      )
+      await emailsWithTemplateSend([...emails], EmailTemplateId.ACTIVITES_NOUVELLES, {
+        activitesUrl: activitesUrlGet({ statutsIds: ['abs', 'enc'] }),
+      })
     }
 
-    console.info(
-      'titre / activités (création) ->',
-      titresActivitesCreated.map(ta => ta.titreId).join(', ')
-    )
+    console.info('titre / activités (création) ->', titresActivitesCreated.map(ta => ta.titreId).join(', '))
   }
 
   return titresActivitesCreated.map(ta => ta.titreId)

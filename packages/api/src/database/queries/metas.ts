@@ -24,37 +24,27 @@ import { sortedDemarchesStatuts } from 'camino-common/src/static/demarchesStatut
 import { toDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { User } from 'camino-common/src/roles.js'
 
-const titresTypesTypesGet = async () =>
-  TitresTypesTypes.query().orderBy('ordre')
+const titresTypesTypesGet = async () => TitresTypesTypes.query().orderBy('ordre')
 
 const domainesGet = async (_: never, { fields }: { fields?: IFields }) => {
-  const graph = fields
-    ? graphBuild(fields, 'titre', fieldsFormat)
-    : options.domaines.graph
+  const graph = fields ? graphBuild(fields, 'titre', fieldsFormat) : options.domaines.graph
 
   return Domaines.query().withGraphFetched(graph).orderBy('ordre')
 }
 
 const titresTypesGet = async (_: never, { fields }: { fields?: IFields }) => {
-  const graph = fields
-    ? graphBuild(fields, 'titresTypes', fieldsFormat)
-    : options.titresTypes.graph
+  const graph = fields ? graphBuild(fields, 'titresTypes', fieldsFormat) : options.titresTypes.graph
 
   return TitresTypes.query().withGraphFetched(graph).orderBy('id')
 }
 
-const titresTypesDemarchesTypesEtapesTypesGet = async () =>
-  TitresTypesDemarchesTypesEtapesTypes.query().orderBy([
-    'titreTypeId',
-    'demarcheTypeId',
-    'etapeTypeId'
-  ])
+const titresTypesDemarchesTypesEtapesTypesGet = async () => TitresTypesDemarchesTypesEtapesTypes.query().orderBy(['titreTypeId', 'demarcheTypeId', 'etapeTypeId'])
 
 const titreTypeDemarcheTypeEtapeTypeGet = async (
   {
     titreTypeId,
     demarcheTypeId,
-    etapeTypeId
+    etapeTypeId,
   }: {
     titreTypeId: string
     demarcheTypeId: string
@@ -62,30 +52,17 @@ const titreTypeDemarcheTypeEtapeTypeGet = async (
   },
   { fields }: { fields?: IFields }
 ) => {
-  const graph = fields
-    ? graphBuild(fields, 'titresTypesDemarchesTypesEtapesTypes', fieldsFormat)
-    : []
+  const graph = fields ? graphBuild(fields, 'titresTypesDemarchesTypesEtapesTypes', fieldsFormat) : []
 
-  return TitresTypesDemarchesTypesEtapesTypes.query()
-    .findById([titreTypeId, demarcheTypeId, etapeTypeId])
-    .withGraphFetched(graph)
+  return TitresTypesDemarchesTypesEtapesTypes.query().findById([titreTypeId, demarcheTypeId, etapeTypeId]).withGraphFetched(graph)
 }
 
 const titresTypesDemarchesTypesEtapesTypesJustificatifsTypesGet = async () =>
-  TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes.query().orderBy([
-    'titreTypeId',
-    'demarcheTypeId',
-    'etapeTypeId',
-    'documentTypeId'
-  ])
+  TitresTypesDemarchesTypesEtapesTypesJustificatifsTypes.query().orderBy(['titreTypeId', 'demarcheTypeId', 'etapeTypeId', 'documentTypeId'])
 
 const etapesTypesDocumentsTypesGet = () => toDocuments()
 
-const etapesTypesJustificatifsTypesGet = async () =>
-  EtapesTypesJustificatifsTypes.query().orderBy([
-    'etapeTypeId',
-    'documentTypeId'
-  ])
+const etapesTypesJustificatifsTypesGet = async () => EtapesTypesJustificatifsTypes.query().orderBy(['etapeTypeId', 'documentTypeId'])
 
 const demarchesStatutsGet = () => sortedDemarchesStatuts
 
@@ -93,7 +70,7 @@ const etapesTypesGet = async (
   {
     titreDemarcheId,
     titreEtapeId,
-    travaux
+    travaux,
   }: {
     titreDemarcheId?: string
     titreEtapeId?: string
@@ -110,16 +87,14 @@ const etapesTypesGet = async (
     etapesTypesQueryModify(q, user, {
       titreDemarcheId,
       titreEtapeId,
-      uniqueCheck
+      uniqueCheck,
     })
   } else {
     q.orderBy('ordre')
   }
 
   if (travaux === false || travaux === true) {
-    const travauxQuery = TitresTypesDemarchesTypesEtapesTypes.query()
-      .leftJoinRelated('demarcheType')
-      .whereRaw('?? = ??', ['etapeTypeId', 'etapesTypes.id'])
+    const travauxQuery = TitresTypesDemarchesTypesEtapesTypes.query().leftJoinRelated('demarcheType').whereRaw('?? = ??', ['etapeTypeId', 'etapesTypes.id'])
     if (travaux) {
       travauxQuery.where('demarcheType.travaux', travaux)
     } else {
@@ -139,13 +114,7 @@ const etapeTypeGet = async (id: string, { fields }: { fields?: IFields }) => {
 
 const devisesGet = () => sortedDevises
 
-const documentsTypesGet = async ({
-  repertoire,
-  typeId
-}: {
-  repertoire?: IDocumentRepertoire
-  typeId?: string
-}) => {
+const documentsTypesGet = async ({ repertoire, typeId }: { repertoire?: IDocumentRepertoire; typeId?: string }) => {
   const q = DocumentsTypes.query().orderBy('nom')
 
   q.select('documentsTypes.*')
@@ -169,17 +138,11 @@ const documentsTypesGet = async ({
       if (typeId) {
         q.join('etapesTypes__justificatifsTypes as et_jt', b => {
           b.on(knex.raw('?? = ?', ['et_jt.etapeTypeId', typeId]))
-          b.on(
-            knex.raw('?? = ??', ['et_jt.documentTypeId', 'documentsTypes.id'])
-          )
+          b.on(knex.raw('?? = ??', ['et_jt.documentTypeId', 'documentsTypes.id']))
         })
         q.select(raw('?? is true', ['et_jt.optionnel']).as('optionnel'))
       } else {
-        q.join(
-          'entreprises__documentsTypes as e_dt',
-          'e_dt.documentTypeId',
-          'documentsTypes.id'
-        )
+        q.join('entreprises__documentsTypes as e_dt', 'e_dt.documentTypeId', 'documentsTypes.id')
       }
     }
   }
@@ -187,8 +150,7 @@ const documentsTypesGet = async ({
   return q
 }
 
-const documentTypeGet = async (id: string) =>
-  DocumentsTypes.query().findById(id)
+const documentTypeGet = async (id: string) => DocumentsTypes.query().findById(id)
 
 export {
   domainesGet,
@@ -204,5 +166,5 @@ export {
   titreTypeDemarcheTypeEtapeTypeGet,
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypesGet,
   etapesTypesDocumentsTypesGet,
-  etapesTypesJustificatifsTypesGet
+  etapesTypesJustificatifsTypesGet,
 }

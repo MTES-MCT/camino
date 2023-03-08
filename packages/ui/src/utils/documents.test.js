@@ -12,13 +12,7 @@ describe('documents', () => {
     ${true}
     ${false}
   `('ajoute un document obligatoire manquant', ({ userIsAdmin }) => {
-    expect(
-      documentsRequiredAdd(
-        undefined,
-        [{ optionnel: false, id: 'aaa' }],
-        userIsAdmin
-      )
-    ).toEqual([
+    expect(documentsRequiredAdd(undefined, [{ optionnel: false, id: 'aaa' }], userIsAdmin)).toEqual([
       {
         date: TODAY,
         entreprisesLecture: userIsAdmin,
@@ -31,25 +25,19 @@ describe('documents', () => {
         suppression: false,
         type: {
           id: 'aaa',
-          optionnel: false
+          optionnel: false,
         },
-        typeId: 'aaa'
-      }
+        typeId: 'aaa',
+      },
     ])
   })
 
   test('supprime le document avec un type inexistant', () => {
-    expect(
-      documentsRequiredAdd(
-        [{ typeId: 'aaa' }, { typeId: 'ddd' }],
-        [{ optionnel: false, id: 'aaa' }],
-        true
-      )
-    ).toEqual([
+    expect(documentsRequiredAdd([{ typeId: 'aaa' }, { typeId: 'ddd' }], [{ optionnel: false, id: 'aaa' }], true)).toEqual([
       {
         typeId: 'aaa',
-        suppression: true
-      }
+        suppression: true,
+      },
     ])
   })
 })

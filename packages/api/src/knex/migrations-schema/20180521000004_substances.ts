@@ -12,17 +12,9 @@ export const up = (knex: Knex) => {
     .createTable('substancesLegales', table => {
       table.string('id').primary()
       table.string('nom').notNullable()
-      table
-        .string('domaineId', 1)
-        .notNullable()
-        .index()
-        .references('domaines.id')
+      table.string('domaineId', 1).notNullable().index().references('domaines.id')
       table.text('description')
-      table
-        .string('substanceLegaleCodeId')
-        .index()
-        .references('substancesLegalesCodes.id')
-        .notNullable()
+      table.string('substanceLegaleCodeId').index().references('substancesLegalesCodes.id').notNullable()
     })
     .createTable('substances', table => {
       table.string('id', 4).primary()
@@ -32,26 +24,13 @@ export const up = (knex: Knex) => {
       table.string('description', 2048)
     })
     .createTable('substances__substancesLegales', table => {
-      table
-        .string('substanceId')
-        .index()
-        .references('substances.id')
-        .notNullable()
-        .onDelete('CASCADE')
-      table
-        .string('substanceLegaleId')
-        .index()
-        .references('substancesLegales.id')
-        .notNullable()
+      table.string('substanceId').index().references('substances.id').notNullable().onDelete('CASCADE')
+      table.string('substanceLegaleId').index().references('substancesLegales.id').notNullable()
       table.primary(['substanceId', 'substanceLegaleId'])
     })
     .createTable('substancesFiscales', table => {
       table.string('id', 4).primary()
-      table
-        .string('substanceLegaleId')
-        .index()
-        .references('substancesLegales.id')
-        .notNullable()
+      table.string('substanceLegaleId').index().references('substancesLegales.id').notNullable()
       table.string('uniteId').index().references('unites.id').notNullable()
       table.string('redevanceUniteId').index().references('unites.id')
       table.string('nom').notNullable()
@@ -60,9 +39,5 @@ export const up = (knex: Knex) => {
 }
 
 export const down = (knex: Knex) => {
-  return knex.schema
-    .dropTable('substances__substancesLegales')
-    .dropTable('substances')
-    .dropTable('substancesLegales')
-    .dropTable('substancesLegalesCodes')
+  return knex.schema.dropTable('substances__substancesLegales').dropTable('substances').dropTable('substancesLegales').dropTable('substancesLegalesCodes')
 }

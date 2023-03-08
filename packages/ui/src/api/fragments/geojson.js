@@ -57,9 +57,4 @@ const fragmentPerimetreInformations = gql`
   ${fragmentPerimetreAlerte}
 `
 
-export {
-  fragmentGeojsonPoints,
-  fragmentGeojsonMultiPolygon,
-  fragmentPerimetreInformations,
-  fragmentPerimetreAlerte
-}
+export { fragmentGeojsonPoints, fragmentGeojsonMultiPolygon, fragmentPerimetreInformations, fragmentPerimetreAlerte }

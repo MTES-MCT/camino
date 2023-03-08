@@ -6,20 +6,11 @@ import { fieldsFormat } from './graph/fields-format.js'
 import TitresEtapes, { DBTitresEtapes } from '../models/titres-etapes.js'
 import TitresEtapesJustificatifs from '../models/titres-etapes-justificatifs.js'
 import { titresEtapesQueryModify } from './permissions/titres-etapes.js'
-import {
-  createJournalCreate,
-  patchJournalCreate,
-  upsertJournalCreate
-} from './journaux.js'
+import { createJournalCreate, patchJournalCreate, upsertJournalCreate } from './journaux.js'
 import { User, UserNotNull } from 'camino-common/src/roles'
 
-const titresEtapesQueryBuild = (
-  { fields }: { fields?: IFields },
-  user: User
-) => {
-  const graph = fields
-    ? graphBuild(fields, 'etapes', fieldsFormat)
-    : options.titresEtapes.graph
+const titresEtapesQueryBuild = ({ fields }: { fields?: IFields }, user: User) => {
+  const graph = fields ? graphBuild(fields, 'etapes', fieldsFormat) : options.titresEtapes.graph
 
   const q = TitresEtapes.query().withGraphFetched(graph)
 
@@ -31,11 +22,7 @@ const titresEtapesQueryBuild = (
 }
 
 // utilisé dans le daily et le resolver des documents uniquement
-const titreEtapeGet = async (
-  titreEtapeId: string,
-  { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean },
-  user: User
-) => {
+const titreEtapeGet = async (titreEtapeId: string, { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean }, user: User) => {
   const q = titresEtapesQueryBuild({ fields }, user)
 
   q.context({ fetchHeritage })
@@ -53,7 +40,7 @@ const titresEtapesGet = async (
   {
     titresEtapesIds,
     etapesTypesIds,
-    titresDemarchesIds
+    titresDemarchesIds,
   }: {
     titresEtapesIds?: string[] | null
     etapesTypesIds?: string[] | null
@@ -81,62 +68,24 @@ const titresEtapesGet = async (
   return q
 }
 
-const titreEtapeCreate = async (
-  titreEtape: Omit<ITitreEtape, 'id'>,
-  user: UserNotNull,
-  titreId: string
-) => {
-  const newValue = await TitresEtapes.query()
-    .insertAndFetch(titreEtape)
-    .withGraphFetched(options.titresEtapes.graph)
+const titreEtapeCreate = async (titreEtape: Omit<ITitreEtape, 'id'>, user: UserNotNull, titreId: string) => {
+  const newValue = await TitresEtapes.query().insertAndFetch(titreEtape).withGraphFetched(options.titresEtapes.graph)
 
   await createJournalCreate(newValue.id, user.id, titreId)
 
   return newValue
 }
 
-const titreEtapeUpdate = async (
-  id: string,
-  titreEtape: Partial<DBTitresEtapes>,
-  user: UserNotNull,
-  titreId: string
-): Promise<TitresEtapes> => {
-  return patchJournalCreate<TitresEtapes>(
-    id,
-    titreEtape,
-    TitresEtapes,
-    user.id,
-    titreId
-  )
+const titreEtapeUpdate = async (id: string, titreEtape: Partial<DBTitresEtapes>, user: UserNotNull, titreId: string): Promise<TitresEtapes> => {
+  return patchJournalCreate<TitresEtapes>(id, titreEtape, TitresEtapes, user.id, titreId)
 }
 
-const titreEtapeUpsert = async (
-  titreEtape: Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id'>,
-  user: UserNotNull,
-  titreId: string
-) =>
-  upsertJournalCreate<TitresEtapes>(
-    titreEtape.id,
-    titreEtape,
-    TitresEtapes,
-    options.titresEtapes.update,
-    options.titresEtapes.graph,
-    user.id,
-    titreId
-  )
+const titreEtapeUpsert = async (titreEtape: Partial<Pick<ITitreEtape, 'id'>> & Omit<ITitreEtape, 'id'>, user: UserNotNull, titreId: string) =>
+  upsertJournalCreate<TitresEtapes>(titreEtape.id, titreEtape, TitresEtapes, options.titresEtapes.update, options.titresEtapes.graph, user.id, titreId)
 
-const titresEtapesJustificatifsUpsert = async (
-  titresEtapesJustificatifs: ITitreEtapeJustificatif[]
-) =>
+const titresEtapesJustificatifsUpsert = async (titresEtapesJustificatifs: ITitreEtapeJustificatif[]) =>
   TitresEtapesJustificatifs.query().upsertGraph(titresEtapesJustificatifs, {
-    insertMissing: true
+    insertMissing: true,
   })
 
-export {
-  titresEtapesGet,
-  titreEtapeGet,
-  titreEtapeCreate,
-  titreEtapeUpdate,
-  titreEtapeUpsert,
-  titresEtapesJustificatifsUpsert
-}
+export { titresEtapesGet, titreEtapeGet, titreEtapeCreate, titreEtapeUpdate, titreEtapeUpsert, titresEtapesJustificatifsUpsert }

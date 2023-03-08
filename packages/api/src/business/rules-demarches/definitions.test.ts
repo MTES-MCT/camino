@@ -1,7 +1,4 @@
-import {
-  isDemarcheDefinitionMachine,
-  isDemarcheDefinitionRestriction
-} from './definitions.js'
+import { isDemarcheDefinitionMachine, isDemarcheDefinitionRestriction } from './definitions.js'
 import { restrictionsArmRet } from './arm/ret.js'
 import { ArmOctMachine } from './arm/oct.machine.js'
 import { expect, test } from 'vitest'
@@ -13,7 +10,7 @@ test('isDemarcheDefinitionMachine', () => {
       titreTypeId: 'pxm',
       demarcheTypeIds: [],
       dateDebut: toCaminoDate('2022-01-01'),
-      machine: new ArmOctMachine()
+      machine: new ArmOctMachine(),
     })
   ).toBe(true)
   expect(
@@ -21,7 +18,7 @@ test('isDemarcheDefinitionMachine', () => {
       titreTypeId: 'pxm',
       demarcheTypeIds: [],
       dateDebut: toCaminoDate('2022-01-01'),
-      restrictions: restrictionsArmRet
+      restrictions: restrictionsArmRet,
     })
   ).toBe(false)
   expect(isDemarcheDefinitionMachine(undefined)).toBe(false)
@@ -32,7 +29,7 @@ test('isDemarcheDefinitionRestriction', () => {
       titreTypeId: 'pxm',
       demarcheTypeIds: [],
       dateDebut: toCaminoDate('2022-01-01'),
-      machine: new ArmOctMachine()
+      machine: new ArmOctMachine(),
     })
   ).toBe(false)
   expect(
@@ -40,7 +37,7 @@ test('isDemarcheDefinitionRestriction', () => {
       titreTypeId: 'pxm',
       demarcheTypeIds: [],
       dateDebut: toCaminoDate('2022-01-01'),
-      restrictions: restrictionsArmRet
+      restrictions: restrictionsArmRet,
     })
   ).toBe(true)
 })

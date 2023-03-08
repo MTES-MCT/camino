@@ -134,7 +134,8 @@
     "arrowParens": "avoid",
     "proseWrap": "never",
     "bracketSpacing": true,
-    "trailingComma": "none"
+    "trailingComma": "es5",
+    "printWidth": 200
   },
   "postcss": {
     "plugins": {

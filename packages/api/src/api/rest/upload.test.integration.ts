@@ -20,41 +20,38 @@ describe('téléversement de fichier par rest (tus)', () => {
       [
         {
           role: 'admin',
-          administrationId: ADMINISTRATION_IDS['DGTM - GUYANE']
+          administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
         },
-        200
+        200,
       ],
       [{ role: 'super' }, 200],
       [
         {
           role: 'editeur',
-          administrationId: ADMINISTRATION_IDS['DGTM - GUYANE']
+          administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
         },
-        200
+        200,
       ],
       [
         {
           role: 'lecteur',
-          administrationId: ADMINISTRATION_IDS['DGTM - GUYANE']
+          administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'],
         },
-        200
+        200,
       ],
       [{ role: 'entreprise', entreprises: [] }, 200],
-      [{ role: 'defaut' }, 403]
-    ])(
-      'retourne le code $code pour un utilisateur "$user"',
-      async (user, code) => {
-        vi.resetAllMocks()
-        const req = { user } as unknown as Request
-        const res = { sendStatus: vi.fn() } as unknown as Response
-        const next = vi.fn()
-        await uploadAllowedMiddleware(req, res, next)
-        if (code !== 200) {
-          expect(res.sendStatus).toBeCalledWith(code)
-        } else {
-          expect(next).toBeCalled()
-        }
+      [{ role: 'defaut' }, 403],
+    ])('retourne le code $code pour un utilisateur "$user"', async (user, code) => {
+      vi.resetAllMocks()
+      const req = { user } as unknown as Request
+      const res = { sendStatus: vi.fn() } as unknown as Response
+      const next = vi.fn()
+      await uploadAllowedMiddleware(req, res, next)
+      if (code !== 200) {
+        expect(res.sendStatus).toBeCalledWith(code)
+      } else {
+        expect(next).toBeCalled()
       }
-    )
+    })
   })
 })

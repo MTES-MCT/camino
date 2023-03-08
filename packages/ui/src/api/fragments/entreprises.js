@@ -58,9 +58,4 @@ const fragmentTitresEntreprises = gql`
   }
 `
 
-export {
-  fragmentEntreprises,
-  fragmentTitreEntreprises,
-  fragmentTitresEntreprises,
-  fragmentEtapeMetasEntreprises
-}
+export { fragmentEntreprises, fragmentTitreEntreprises, fragmentTitresEntreprises, fragmentEtapeMetasEntreprises }

@@ -17,26 +17,23 @@
 import numberFormat from '../../utils/number-format'
 export default {
   props: {
-    references: { type: Object, required: true }
+    references: { type: Object, required: true },
   },
 
   computed: {
     pointReference() {
       if (this.references && this.references.x && this.references.y) {
-        return [
-          numberFormat(this.round(this.references.x)),
-          numberFormat(this.round(this.references.y))
-        ]
+        return [numberFormat(this.round(this.references.x)), numberFormat(this.round(this.references.y))]
       }
 
       return ['–', '–']
-    }
+    },
   },
 
   methods: {
     round(v) {
       return Math.round(Number.parseFloat(v) * 1000000) / 1000000
-    }
-  }
+    },
+  },
 }
 </script>

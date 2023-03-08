@@ -44,18 +44,18 @@ describe('comparaison entre des tableaux', () => {
       'id',
       [
         { id: 1, nom: 'nom-1' },
-        { id: 2, nom: 'nom-2' }
+        { id: 2, nom: 'nom-2' },
       ],
       [
         { id: 1, nom: 'nom-1-bis' },
-        { id: 3, nom: 'nom-3' }
+        { id: 3, nom: 'nom-3' },
       ]
     )
 
     expect(res).toEqual([
       { id: 1, nom: 'nom-1' },
       { id: 2, nom: 'nom-2' },
-      { id: 3, nom: 'nom-3' }
+      { id: 3, nom: 'nom-3' },
     ])
   })
 
@@ -64,11 +64,11 @@ describe('comparaison entre des tableaux', () => {
       'id',
       [
         { id: 1, nom: 'nom-1' },
-        { id: 2, nom: 'nom-2' }
+        { id: 2, nom: 'nom-2' },
       ],
       [
         { id: 1, nom: 'nom-1-bis' },
-        { id: 3, nom: 'nom-3' }
+        { id: 3, nom: 'nom-3' },
       ]
     )
 

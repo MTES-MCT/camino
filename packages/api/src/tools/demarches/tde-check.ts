@@ -15,8 +15,8 @@ export const titreTypeDemarcheTypeEtapeTypeCheck = async () => {
     {
       fields: {
         titre: { id: {} },
-        etapes: { type: { id: {} } }
-      }
+        etapes: { type: { id: {} } },
+      },
     },
     userSuper
   )
@@ -26,21 +26,8 @@ export const titreTypeDemarcheTypeEtapeTypeCheck = async () => {
   demarches.forEach(d => {
     const etapesTypes = d.etapes?.map(({ type }) => type)
     etapesTypes?.forEach(etapeType => {
-      if (
-        !tde.find(
-          t =>
-            t.titreTypeId === d.titre!.typeId &&
-            t.demarcheTypeId === d.typeId &&
-            t.etapeTypeId === etapeType!.id
-        )
-      ) {
-        console.info(
-          `erreur sur le titre https://camino.beta.gouv.fr/titres/${
-            d.titre!.id
-          }, TDE inconnu ${d.titre!.typeId} ${d.typeId} ${etapeType!.id} (${
-            etapeType!.nom
-          })`
-        )
+      if (!tde.find(t => t.titreTypeId === d.titre!.typeId && t.demarcheTypeId === d.typeId && t.etapeTypeId === etapeType!.id)) {
+        console.info(`erreur sur le titre https://camino.beta.gouv.fr/titres/${d.titre!.id}, TDE inconnu ${d.titre!.typeId} ${d.typeId} ${etapeType!.id} (${etapeType!.nom})`)
         errorsNb++
       }
     })

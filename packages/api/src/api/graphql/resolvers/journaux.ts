@@ -11,22 +11,14 @@ export interface IJournauxQueryParams {
   titreId: string
 }
 
-export const journaux = async (
-  params: IJournauxQueryParams,
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+export const journaux = async (params: IJournauxQueryParams, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     if (!canReadJournaux(user)) {
       return []
     }
     const fields = fieldsBuild(info)
 
-    const { results, total } = await journauxGet(
-      params,
-      { fields: fields.elements },
-      user
-    )
+    const { results, total } = await journauxGet(params, { fields: fields.elements }, user)
 
     if (!results.length) return { elements: [], total: 0 }
 
@@ -34,7 +26,7 @@ export const journaux = async (
       elements: results,
       page: params.page,
       intervalle: params.intervalle,
-      total
+      total,
     }
   } catch (e) {
     console.error(e)

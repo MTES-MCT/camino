@@ -10,7 +10,7 @@ describe('canCreateDemarche', () => {
     ['min-mtes-dgec-01', false],
     ['pre-42218-01', false],
     ['ope-ptmg-973-01', true],
-    ['dea-guyane-01', false]
+    ['dea-guyane-01', false],
   ])('Vérifie si l’administration peut créer des démarches', async (administrationId, creation) => {
     expect(canCreateDemarche({ role: 'admin', administrationId, ...testBlankUser }, 'arm', 'val', [])).toEqual(creation)
   })
@@ -26,7 +26,7 @@ describe('canCreateDemarche', () => {
   test.each<[TestUser, boolean]>([
     [{ role: 'super' }, true],
     [{ role: 'entreprise', entreprises: [] }, false],
-    [{ role: 'defaut' }, false]
+    [{ role: 'defaut' }, false],
   ])('Vérifie si un profil peut créer des travaux', async (user, creation) => {
     expect(canCreateDemarche({ ...user, ...testBlankUser }, 'arm', 'val', [])).toEqual(creation)
   })
@@ -39,7 +39,7 @@ describe('canCreateTravaux', () => {
     ['min-mtes-dgec-01', false],
     ['pre-42218-01', false],
     ['ope-ptmg-973-01', false],
-    ['dea-guyane-01', false]
+    ['dea-guyane-01', false],
   ])('Vérifie si l’administration peut créer des travaux', async (administrationId, creation) => {
     expect(canCreateTravaux({ role: 'admin', administrationId, ...testBlankUser }, 'arm', [])).toEqual(creation)
   })
@@ -51,7 +51,7 @@ describe('canCreateTravaux', () => {
   test.each<[TestUser, boolean]>([
     [{ role: 'super' }, true],
     [{ role: 'entreprise', entreprises: [] }, false],
-    [{ role: 'defaut' }, false]
+    [{ role: 'defaut' }, false],
   ])('Vérifie si un profil peut créer des travaux', async (user, creation) => {
     expect(canCreateTravaux({ ...user, ...testBlankUser }, 'arm', [])).toEqual(creation)
   })

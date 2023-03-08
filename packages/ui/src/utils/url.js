@@ -9,10 +9,7 @@ const valueClean = (value, definition) => {
     return value
   }
 
-  if (
-    (definition.type === 'strings' || definition.type === 'numbers') &&
-    definition.values
-  ) {
+  if ((definition.type === 'strings' || definition.type === 'numbers') && definition.values) {
     value = value
       .reduce((acc, v) => {
         if (definition.values.includes(v)) {
@@ -31,9 +28,7 @@ const valueClean = (value, definition) => {
   }
 
   if (definition.type === 'string') {
-    return definition.values && !definition.values.includes(value)
-      ? null
-      : value
+    return definition.values && !definition.values.includes(value) ? null : value
   }
 
   if (definition.type === 'objects') {
@@ -97,11 +92,7 @@ const valueStringify = (id, value, definitions) => {
 
   const definition = definitions.find(p => p.id === id)
 
-  if (
-    definition.type === 'strings' ||
-    definition.type === 'tuple' ||
-    definition.type === 'numbers'
-  ) {
+  if (definition.type === 'strings' || definition.type === 'tuple' || definition.type === 'numbers') {
     return value.length ? value.join(',') : null
   }
 
@@ -179,7 +170,7 @@ const urlQueryUpdate = (params, sourceQuery, definitions) =>
     },
     {
       query: {},
-      status: null
+      status: null,
     }
   )
 

@@ -52,8 +52,6 @@ describe('renomme des fichiers', () => {
     await fileCreate(pathGet('first/toto.txt'), 'contenu du fichier')
     await fileRename(pathGet('first/toto.txt'), pathGet('second/tata.txt'))
 
-    expect(readFileSync(pathGet('second/tata.txt'), 'utf8')).toBe(
-      'contenu du fichier'
-    )
+    expect(readFileSync(pathGet('second/tata.txt'), 'utf8')).toBe('contenu du fichier')
   })
 })

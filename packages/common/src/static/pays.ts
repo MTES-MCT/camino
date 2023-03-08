@@ -12,7 +12,7 @@ export const PAYS_IDS = {
   'Terres Australes Françaises': 'TF',
   'Wallis-et-Futuna': 'WF',
   'Clipperton (Île)': 'XX',
-  'Département de Mayotte': 'YT'
+  'Département de Mayotte': 'YT',
 } as const
 
 export interface Pays<T = PaysId> {
@@ -36,7 +36,7 @@ export const PaysList: { [key in PaysId]: Pays<key> } = {
   TF: { id: 'TF', nom: 'Terres Australes Françaises' },
   WF: { id: 'WF', nom: 'Wallis-et-Futuna' },
   XX: { id: 'XX', nom: 'Clipperton (Île)' },
-  YT: { id: 'YT', nom: 'Département de Mayotte' }
+  YT: { id: 'YT', nom: 'Département de Mayotte' },
 }
 
 const PAYS_IDS_LIST = Object.values(PAYS_IDS)

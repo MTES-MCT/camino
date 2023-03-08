@@ -4,28 +4,20 @@ export const up = async (knex: Knex) => {
 
   const titresSubstances: any[] = await knex('titres_substances')
 
-  const groupByTitres: Record<string, any> = titresSubstances.reduce(
-    (acc, ts) => {
-      if (!acc[ts.titreEtapeId]) {
-        acc[ts.titreEtapeId] = []
-      }
-      acc[ts.titreEtapeId].push(ts)
+  const groupByTitres: Record<string, any> = titresSubstances.reduce((acc, ts) => {
+    if (!acc[ts.titreEtapeId]) {
+      acc[ts.titreEtapeId] = []
+    }
+    acc[ts.titreEtapeId].push(ts)
 
-      return acc
-    },
-    {}
-  )
+    return acc
+  }, {})
 
   for (const titreSubstances of Object.values(groupByTitres)) {
-    titreSubstances.sort(
-      (a: { ordre: number }, b: { ordre: number }) => a.ordre - b.ordre
-    )
+    titreSubstances.sort((a: { ordre: number }, b: { ordre: number }) => a.ordre - b.ordre)
     for (let index = 0; index < titreSubstances.length; index++) {
       const ts = titreSubstances[index]
-      await knex('titres_substances')
-        .where('titreEtapeId', ts.titreEtapeId)
-        .where('substanceId', ts.substanceId)
-        .update('ordre', index)
+      await knex('titres_substances').where('titreEtapeId', ts.titreEtapeId).where('substanceId', ts.substanceId).update('ordre', index)
     }
   }
 }

@@ -15,10 +15,10 @@ const titreDemarcheOctEtapeMen = [
         typeId: 'men',
         statutId: 'dep',
         ordre: 1,
-        date: '1988-03-11'
-      }
-    ]
-  }
+        date: '1988-03-11',
+      },
+    ],
+  },
 ] as ITitreDemarche[]
 
 const titreDemarcheOctSansEtapes = [
@@ -28,8 +28,8 @@ const titreDemarcheOctSansEtapes = [
     typeId: 'oct',
     statutId: 'acc',
     ordre: 1,
-    etapes: []
-  }
+    etapes: [],
+  },
 ] as ITitreDemarche[]
 
 const titreDemarcheOctSansEtapeMen = [
@@ -46,14 +46,10 @@ const titreDemarcheOctSansEtapeMen = [
         typeId: 'dex',
         statutId: 'acc',
         ordre: 1,
-        date: '1988-03-11'
-      }
-    ]
-  }
+        date: '1988-03-11',
+      },
+    ],
+  },
 ] as ITitreDemarche[]
 
-export {
-  titreDemarcheOctEtapeMen,
-  titreDemarcheOctSansEtapes,
-  titreDemarcheOctSansEtapeMen
-}
+export { titreDemarcheOctEtapeMen, titreDemarcheOctSansEtapes, titreDemarcheOctSansEtapeMen }

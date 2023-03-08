@@ -1,8 +1,7 @@
 import { TODAY } from './index'
 
 const documentsRequiredAdd = (documents, documentsTypes, userIsAdmin) => {
-  const typeGet = document =>
-    document.type ? document.type.id : document.typeId
+  const typeGet = document => (document.type ? document.type.id : document.typeId)
 
   // supprime tous les documents temporaires
   documents = documents?.filter(d => d.id !== typeGet(d))
@@ -16,10 +15,7 @@ const documentsRequiredAdd = (documents, documentsTypes, userIsAdmin) => {
 
   // crée les documents dont le type est obligatoires si ils n'existent pas
   documentsTypes?.forEach(documentType => {
-    if (
-      !documentType.optionnel &&
-      !newDocuments.find(d => typeGet(d) === documentType.id)
-    ) {
+    if (!documentType.optionnel && !newDocuments.find(d => typeGet(d) === documentType.id)) {
       newDocuments.push({
         id: documentType.id,
         typeId: documentType.id,
@@ -31,7 +27,7 @@ const documentsRequiredAdd = (documents, documentsTypes, userIsAdmin) => {
         fichierTypeId: null,
         date: TODAY,
         modification: true,
-        suppression: false
+        suppression: false,
       })
     }
   })

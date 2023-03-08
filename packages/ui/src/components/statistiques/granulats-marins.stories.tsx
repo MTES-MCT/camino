@@ -5,7 +5,7 @@ import { toCaminoDate } from 'camino-common/src/date'
 const meta: Meta = {
   title: 'Components/Statistiques/GranulatsMarins',
   component: PureGranulatsMarins,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -20,7 +20,7 @@ const data = {
       masse: 0,
       activitesDeposesQuantite: 0,
       activitesDeposesRatio: 0,
-      concessionsValides: { quantite: 8, surface: 3340 }
+      concessionsValides: { quantite: 8, surface: 3340 },
     },
     {
       annee: 2007,
@@ -31,7 +31,7 @@ const data = {
       masse: 0,
       activitesDeposesQuantite: 0,
       activitesDeposesRatio: 0,
-      concessionsValides: { quantite: 9, surface: 4340 }
+      concessionsValides: { quantite: 9, surface: 4340 },
     },
     {
       annee: 2008,
@@ -42,7 +42,7 @@ const data = {
       masse: 0,
       activitesDeposesQuantite: 0,
       activitesDeposesRatio: 0,
-      concessionsValides: { quantite: 11, surface: 5317 }
+      concessionsValides: { quantite: 11, surface: 5317 },
     },
     {
       annee: 2009,
@@ -53,7 +53,7 @@ const data = {
       masse: 0,
       activitesDeposesQuantite: 0,
       activitesDeposesRatio: 0,
-      concessionsValides: { quantite: 11, surface: 5317 }
+      concessionsValides: { quantite: 11, surface: 5317 },
     },
     {
       annee: 2010,
@@ -64,7 +64,7 @@ const data = {
       masse: 4454046,
       activitesDeposesQuantite: 9,
       activitesDeposesRatio: 60,
-      concessionsValides: { quantite: 12, surface: 5324 }
+      concessionsValides: { quantite: 12, surface: 5324 },
     },
     {
       annee: 2011,
@@ -75,7 +75,7 @@ const data = {
       masse: 4643521,
       activitesDeposesQuantite: 11,
       activitesDeposesRatio: 58,
-      concessionsValides: { quantite: 16, surface: 8852 }
+      concessionsValides: { quantite: 16, surface: 8852 },
     },
     {
       annee: 2012,
@@ -86,7 +86,7 @@ const data = {
       masse: 4749210,
       activitesDeposesQuantite: 12,
       activitesDeposesRatio: 71,
-      concessionsValides: { quantite: 16, surface: 13802 }
+      concessionsValides: { quantite: 16, surface: 13802 },
     },
     {
       annee: 2013,
@@ -97,7 +97,7 @@ const data = {
       masse: 5205372,
       activitesDeposesQuantite: 16,
       activitesDeposesRatio: 76,
-      concessionsValides: { quantite: 20, surface: 17498 }
+      concessionsValides: { quantite: 20, surface: 17498 },
     },
     {
       annee: 2014,
@@ -108,7 +108,7 @@ const data = {
       masse: 4154154,
       activitesDeposesQuantite: 16,
       activitesDeposesRatio: 84,
-      concessionsValides: { quantite: 18, surface: 16521 }
+      concessionsValides: { quantite: 18, surface: 16521 },
     },
     {
       annee: 2015,
@@ -119,7 +119,7 @@ const data = {
       masse: 4264723,
       activitesDeposesQuantite: 17,
       activitesDeposesRatio: 85,
-      concessionsValides: { quantite: 19, surface: 16921 }
+      concessionsValides: { quantite: 19, surface: 16921 },
     },
     {
       annee: 2016,
@@ -130,7 +130,7 @@ const data = {
       masse: 4275493,
       activitesDeposesQuantite: 17,
       activitesDeposesRatio: 85,
-      concessionsValides: { quantite: 19, surface: 16921 }
+      concessionsValides: { quantite: 19, surface: 16921 },
     },
     {
       annee: 2017,
@@ -141,7 +141,7 @@ const data = {
       masse: 4999512,
       activitesDeposesQuantite: 19,
       activitesDeposesRatio: 86,
-      concessionsValides: { quantite: 21, surface: 17841 }
+      concessionsValides: { quantite: 21, surface: 17841 },
     },
     {
       annee: 2018,
@@ -152,7 +152,7 @@ const data = {
       masse: 5451237,
       activitesDeposesQuantite: 19,
       activitesDeposesRatio: 90,
-      concessionsValides: { quantite: 21, surface: 17841 }
+      concessionsValides: { quantite: 21, surface: 17841 },
     },
     {
       annee: 2019,
@@ -163,7 +163,7 @@ const data = {
       masse: 5497390,
       activitesDeposesQuantite: 18,
       activitesDeposesRatio: 86,
-      concessionsValides: { quantite: 21, surface: 18071 }
+      concessionsValides: { quantite: 21, surface: 18071 },
     },
     {
       annee: 2020,
@@ -174,7 +174,7 @@ const data = {
       masse: 5621503,
       activitesDeposesQuantite: 21,
       activitesDeposesRatio: 100,
-      concessionsValides: { quantite: 21, surface: 18071 }
+      concessionsValides: { quantite: 21, surface: 18071 },
     },
     {
       annee: 2021,
@@ -185,7 +185,7 @@ const data = {
       masse: 6508080,
       activitesDeposesQuantite: 21,
       activitesDeposesRatio: 100,
-      concessionsValides: { quantite: 21, surface: 18071 }
+      concessionsValides: { quantite: 21, surface: 18071 },
     },
     {
       annee: 2022,
@@ -196,7 +196,7 @@ const data = {
       masse: 919566,
       activitesDeposesQuantite: 1,
       activitesDeposesRatio: 5,
-      concessionsValides: { quantite: 20, surface: 17967 }
+      concessionsValides: { quantite: 20, surface: 17967 },
     },
     {
       annee: 2023,
@@ -207,8 +207,8 @@ const data = {
       masse: 0,
       activitesDeposesQuantite: 0,
       activitesDeposesRatio: 0,
-      concessionsValides: { quantite: 20, surface: 17967 }
-    }
+      concessionsValides: { quantite: 20, surface: 17967 },
+    },
   ],
   surfaceExploration: 43386,
   surfaceExploitation: 17967,
@@ -218,27 +218,12 @@ const data = {
   titresValCxw: 19,
   titresDmiCxw: null,
   titresModCxw: null,
-  titresModPrw: null
+  titresModPrw: null,
 }
 
-export const DefaultNoSnapshot: Story = () => (
-  <PureGranulatsMarins getStatistiques={() => Promise.resolve(data)} />
-)
+export const DefaultNoSnapshot: Story = () => <PureGranulatsMarins getStatistiques={() => Promise.resolve(data)} />
 
-export const EnConstruction20210402NoSnapshot: Story = () => (
-  <PureGranulatsMarins
-    getStatistiques={() => Promise.resolve(data)}
-    currentDate={toCaminoDate('2021-04-02')}
-  />
-)
+export const EnConstruction20210402NoSnapshot: Story = () => <PureGranulatsMarins getStatistiques={() => Promise.resolve(data)} currentDate={toCaminoDate('2021-04-02')} />
 
-export const Loading: Story = () => (
-  <PureGranulatsMarins
-    getStatistiques={() => new Promise<any>(resolve => {})}
-  />
-)
-export const WithError: Story = () => (
-  <PureGranulatsMarins
-    getStatistiques={() => Promise.reject(new Error('because reasons'))}
-  />
-)
+export const Loading: Story = () => <PureGranulatsMarins getStatistiques={() => new Promise<any>(resolve => {})} />
+export const WithError: Story = () => <PureGranulatsMarins getStatistiques={() => Promise.reject(new Error('because reasons'))} />

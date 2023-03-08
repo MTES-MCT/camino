@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
   title: 'Components/Titre/DemarcheRemovePopup',
-  component: PureDemarcheRemovePopup
+  component: PureDemarcheRemovePopup,
 }
 export default meta
 
@@ -18,7 +18,7 @@ const apiClient: Props['apiClient'] = {
   deleteDemarche: demarcheId => {
     deleteAction(demarcheId)
     return new Promise(resolve => setTimeout(() => resolve(), 1000))
-  }
+  },
 }
 
 export const Main: Story = () => (

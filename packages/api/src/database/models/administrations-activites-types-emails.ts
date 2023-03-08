@@ -2,8 +2,7 @@ import { Model } from 'objection'
 
 import { IAdministrationActiviteTypeEmail } from '../../types.js'
 
-interface AdministrationsActivitesTypesEmails
-  extends IAdministrationActiviteTypeEmail {}
+interface AdministrationsActivitesTypesEmails extends IAdministrationActiviteTypeEmail {}
 
 class AdministrationsActivitesTypesEmails extends Model {
   public static tableName = 'administrations__activitesTypes__emails'
@@ -15,8 +14,8 @@ class AdministrationsActivitesTypesEmails extends Model {
     properties: {
       administrationId: { type: 'string', maxLength: 64 },
       activiteTypeId: { type: 'string', maxLength: 3 },
-      email: { type: 'string' }
-    }
+      email: { type: 'string' },
+    },
   }
 
   public static idColumn = ['administrationId', 'activiteTypeId']

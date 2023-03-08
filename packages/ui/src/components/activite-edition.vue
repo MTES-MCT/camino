@@ -4,20 +4,14 @@
     <Loader v-if="!loaded" />
     <div v-else>
       <h6>
-        <router-link
-          :to="{ name: 'titre', params: { id: activite.titre.slug } }"
-          class="cap-first"
-        >
+        <router-link :to="{ name: 'titre', params: { id: activite.titre.slug } }" class="cap-first">
           {{ activite.titre.nom }}
         </router-link>
       </h6>
       <h5>
         {{ dateFormat(activite.date) }} |
         <span class="cap-first"
-          ><span v-if="activite.periodeId && activite.type.frequenceId"
-            >{{ getPeriodeVue(activite.type.frequenceId, activite.periodeId) }}
-          </span>
-          {{ activite.annee }}</span
+          ><span v-if="activite.periodeId && activite.type.frequenceId">{{ getPeriodeVue(activite.type.frequenceId, activite.periodeId) }} </span> {{ activite.annee }}</span
         >
       </h5>
 
@@ -26,46 +20,22 @@
           <span class="cap-first">{{ activite.type.nom }}</span>
         </h3>
 
-        <HelpTooltip
-          v-if="shouldDisplayHelp"
-          text="Tous les champs doivent être remplis même s’il n’y a pas eu d’extraction. Le cas échéant, indiquer seulement 0, puis enregistrer."
-          class="ml-m"
-        />
+        <HelpTooltip v-if="shouldDisplayHelp" text="Tous les champs doivent être remplis même s’il n’y a pas eu d’extraction. Le cas échéant, indiquer seulement 0, puis enregistrer." class="ml-m" />
       </div>
 
       <!-- eslint-disable vue/no-v-html -->
-      <div
-        v-if="activite.type.description"
-        class="h6"
-        v-html="activite.type.description"
-      />
+      <div v-if="activite.type.description" class="h6" v-html="activite.type.description" />
 
       <div class="p-s bg-info color-bg mb">
         Besoin d'aide pour remplir ce rapport ?
-        <router-link
-          to="/contacts"
-          target="_blank"
-          class="p-s bg-info color-bg mb"
-          >Contactez-nous
-        </router-link>
+        <router-link to="/contacts" target="_blank" class="p-s bg-info color-bg mb">Contactez-nous </router-link>
       </div>
       <div v-if="shouldDisplayFiscaliteHelp" class="p-s bg-info color-bg mb">
-        Les données déclarées sur Camino/Activités permettent de calculer une
-        estimation de votre fiscalité minière, consultable sur
-        <router-link
-          :to="entrepriseUrl"
-          target="_blank"
-          class="bg-info color-bg mb"
-          >votre page entreprise
-        </router-link>
+        Les données déclarées sur Camino/Activités permettent de calculer une estimation de votre fiscalité minière, consultable sur
+        <router-link :to="entrepriseUrl" target="_blank" class="bg-info color-bg mb">votre page entreprise </router-link>
       </div>
 
-      <SectionsEdit
-        :contenu="activite.contenu"
-        :sections="activite.sections"
-        @contenu-update="activite.contenu = $event"
-        @complete-update="sectionsComplete = $event"
-      />
+      <SectionsEdit :contenu="activite.contenu" :sections="activite.sections" @contenu-update="activite.contenu = $event" @complete-update="sectionsComplete = $event" />
 
       <DocumentsEdit
         v-model:documents="activite.documents"
@@ -84,14 +54,7 @@
           <button class="btn btn-secondary" @click="save">Enregistrer</button>
         </div>
         <div class="tablet-blob-1-3">
-          <button
-            ref="save-button"
-            class="btn btn-primary"
-            :disabled="!sectionsComplete || !documentsComplete"
-            @click="activiteDepotPopupOpen"
-          >
-            Enregistrer et déposer
-          </button>
+          <button ref="save-button" class="btn btn-primary" :disabled="!sectionsComplete || !documentsComplete" @click="activiteDepotPopupOpen">Enregistrer et déposer</button>
         </div>
       </div>
     </div>
@@ -115,7 +78,7 @@ export default {
     return {
       events: { saveKeyUp: true },
       documentsComplete: false,
-      sectionsComplete: false
+      sectionsComplete: false,
     }
   },
 
@@ -148,10 +111,7 @@ export default {
       return !!this.$store.state.popup.component
     },
     shouldDisplayFiscaliteHelp() {
-      return (
-        ['grp', 'gra', 'grx'].includes(this.activite.type.id) &&
-        this.entrepriseUrl !== null
-      )
+      return ['grp', 'gra', 'grx'].includes(this.activite.type.id) && this.entrepriseUrl !== null
     },
     entrepriseUrl() {
       let entreprise = null
@@ -160,17 +120,15 @@ export default {
       } else if (this.activite.titre.titulaires.length === 1) {
         entreprise = this.activite.titre.titulaires[0]
       } else {
-        console.warn(
-          `l'activité ${this.activite.id} du titre ${this.activite.titre.slug} possède plusieurs titulaires`
-        )
+        console.warn(`l'activité ${this.activite.id} du titre ${this.activite.titre.slug} possède plusieurs titulaires`)
       }
 
       return entreprise !== null ? `/entreprises/${entreprise.id}` : null
-    }
+    },
   },
 
   watch: {
-    user: 'init'
+    user: 'init',
   },
 
   async created() {
@@ -204,10 +162,10 @@ export default {
               this.eventTrack({
                 categorie: 'titre-activite',
                 action: 'titre-activite_depot',
-                nom: this.$route.params.id
+                nom: this.$route.params.id,
               })
-            }
-          }
+            },
+          },
         })
       }
     },
@@ -221,7 +179,7 @@ export default {
       this.eventTrack({
         categorie: 'activite',
         action: 'activite-enregistrer',
-        nom: this.activite.nom
+        nom: this.activite.nom,
       })
 
       await router.back()
@@ -234,12 +192,7 @@ export default {
     },
 
     keyUp(e) {
-      if (
-        (e.which || e.keyCode) === 13 &&
-        this.events.saveKeyUp &&
-        !this.isPopupOpen &&
-        !this.loading
-      ) {
+      if ((e.which || e.keyCode) === 13 && this.events.saveKeyUp && !this.isPopupOpen && !this.loading) {
         this.$refs['save-button'].focus()
         this.save()
       }
@@ -247,7 +200,7 @@ export default {
 
     dateFormat(date) {
       return dateFormat(date)
-    }
-  }
+    },
+  },
 }
 </script>

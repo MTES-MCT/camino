@@ -8,7 +8,7 @@ describe('etapeEditFormat', () => {
     expect(
       etapeEditFormat({
         __typename: 'etape',
-        id: 'etape-id'
+        id: 'etape-id',
       })
     ).toEqual({
       id: 'etape-id',
@@ -21,7 +21,7 @@ describe('etapeEditFormat', () => {
       contenu: {},
       incertitudes: {},
       documents: [],
-      justificatifs: []
+      justificatifs: [],
     })
 
     expect(
@@ -39,12 +39,12 @@ describe('etapeEditFormat', () => {
                 opposable: true,
                 geoSystemeId: GEO_SYSTEME_IDS.WGS84,
                 coordonnees: { x: 1.5, y: 1 },
-                id: 'ref'
-              }
-            ]
-          }
+                id: 'ref',
+              },
+            ],
+          },
         ],
-        justificatifs: [{ id: 'toto', nom: 'name' }]
+        justificatifs: [{ id: 'toto', nom: 'name' }],
       })
     ).toEqual({
       id: 'etape-id',
@@ -60,19 +60,19 @@ describe('etapeEditFormat', () => {
               description: undefined,
               nom: undefined,
               references: {
-                [GEO_SYSTEME_IDS.WGS84]: { id: 'ref', x: 1.5, y: 1 }
+                [GEO_SYSTEME_IDS.WGS84]: { id: 'ref', x: 1.5, y: 1 },
               },
               lot: undefined,
-              subsidiaire: undefined
-            }
-          ]
-        ]
+              subsidiaire: undefined,
+            },
+          ],
+        ],
       ],
       substances: [],
       contenu: {},
       incertitudes: {},
       documents: [],
-      justificatifs: [{ id: 'toto', nom: 'name' }]
+      justificatifs: [{ id: 'toto', nom: 'name' }],
     })
 
     expect(
@@ -94,9 +94,9 @@ describe('etapeEditFormat', () => {
               {
                 geoSystemeId: GEO_SYSTEME_IDS.WGS84,
                 coordonnees: { x: 1.5, y: 1 },
-                id: 'ref'
-              }
-            ]
+                id: 'ref',
+              },
+            ],
           },
           {
             id: 'point-id-113',
@@ -108,9 +108,9 @@ describe('etapeEditFormat', () => {
               {
                 geoSystemeId: GEO_SYSTEME_IDS.WGS84,
                 coordonnees: { x: 1.5, y: 3 },
-                id: 'ref3'
-              }
-            ]
+                id: 'ref3',
+              },
+            ],
           },
           {
             id: 'point-id-114',
@@ -123,15 +123,15 @@ describe('etapeEditFormat', () => {
                 geoSystemeId: GEO_SYSTEME_IDS.WGS84,
 
                 coordonnees: { x: 1.5, y: 4 },
-                id: 'ref2'
-              }
-            ]
-          }
+                id: 'ref2',
+              },
+            ],
+          },
         ],
         contenu: { 'prop-id': 'prop-value' },
         incertitudes: { amodiataires: true },
         substances: ['auru'],
-        documents: [{ type: { id: 'act' } }]
+        documents: [{ type: { id: 'act' } }],
       })
     ).toEqual({
       id: 'etape-id',
@@ -150,29 +150,29 @@ describe('etapeEditFormat', () => {
               description: undefined,
               nom: undefined,
               references: {
-                [GEO_SYSTEME_IDS.WGS84]: { id: 'ref', x: 1.5, y: 1 }
+                [GEO_SYSTEME_IDS.WGS84]: { id: 'ref', x: 1.5, y: 1 },
               },
               lot: undefined,
-              subsidiaire: undefined
+              subsidiaire: undefined,
             },
             {
               id: 'point-id-113',
               description: undefined,
               references: [
                 { id: 'ref3', x: 1.5, y: 3 },
-                { id: 'ref2', x: 1.5, y: 4 }
+                { id: 'ref2', x: 1.5, y: 4 },
               ],
               lot: 1,
-              subsidiaire: undefined
-            }
-          ]
-        ]
+              subsidiaire: undefined,
+            },
+          ],
+        ],
       ],
       substances: ['auru'],
       contenu: { 'prop-id': 'prop-value' },
       incertitudes: { amodiataires: true },
       documents: [{ fichierNouveau: null, typeId: 'act', type: { id: 'act' } }],
-      justificatifs: []
+      justificatifs: [],
     })
   })
 })

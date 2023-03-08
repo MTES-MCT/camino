@@ -3,9 +3,7 @@
     <TypeAhead
       id="titre-link-typeahead"
       itemKey="id"
-      :placeholder="
-        config.type === 'single' ? 'Lier un titre' : 'Lier plusieurs titres'
-      "
+      :placeholder="config.type === 'single' ? 'Lier un titre' : 'Lier plusieurs titres'"
       :type="config.type"
       :items="titresFiltered"
       :itemChipLabel="item => item.nom"
@@ -26,22 +24,13 @@ import { Statut } from '@/components/_common/statut'
 import { AsyncData } from '@/api/client-rest'
 import LoadingElement from '@/components/_ui/pure-loader.vue'
 import { TitreLink } from 'camino-common/src/titres'
-import {
-  TitresStatuts,
-  TitreStatutId
-} from 'camino-common/src/static/titresStatuts'
-import {
-  LinkableTitre,
-  TitresLinkConfig
-} from '@/components/titre/pure-titres-link-form-api-client'
+import { TitresStatuts, TitreStatutId } from 'camino-common/src/static/titresStatuts'
+import { LinkableTitre, TitresLinkConfig } from '@/components/titre/pure-titres-link-form-api-client'
 
 const display = (item: LinkableTitre) => {
   return (
     <div class="flex flex-center">
-      <Statut
-        color={titreStatut(item.titreStatutId).couleur}
-        nom={titreStatut(item.titreStatutId).nom}
-      />
+      <Statut color={titreStatut(item.titreStatutId).couleur} nom={titreStatut(item.titreStatutId).nom} />
       <span class="cap-first bold ml-m">{item.nom}</span>
       <span class="ml-m" style="margin-left: auto">
         {getDateDebutEtDateFin(item)}
@@ -71,10 +60,7 @@ const init = async () => {
 
     data.value = { status: 'LOADED', value: titresLinkables }
     const titreIds: string[] = []
-    if (
-      props.config.type === 'single' &&
-      props.config.selectedTitreId !== null
-    ) {
+    if (props.config.type === 'single' && props.config.selectedTitreId !== null) {
       titreIds.push(props.config.selectedTitreId)
     }
     if (props.config.type === 'multiple') {
@@ -82,9 +68,7 @@ const init = async () => {
     }
 
     if (titreIds.length) {
-      const selectedTitreList = data.value.value.filter(({ id }) =>
-        titreIds.includes(id)
-      )
+      const selectedTitreList = data.value.value.filter(({ id }) => titreIds.includes(id))
       if (selectedTitreList) {
         selectedTitres.value.push(...selectedTitreList)
       }
@@ -92,7 +76,7 @@ const init = async () => {
   } catch (e: any) {
     data.value = {
       status: 'ERROR',
-      message: e.message ?? 'something wrong happened'
+      message: e.message ?? 'something wrong happened',
     }
   }
 }
@@ -113,11 +97,7 @@ onMounted(async () => {
 
 const titresFiltered = computed(() => {
   if (data.value.status === 'LOADED') {
-    return search.value.length
-      ? data.value.value.filter(({ nom }) =>
-          nom.toLowerCase().includes(search.value)
-        )
-      : data.value.value
+    return search.value.length ? data.value.value.filter(({ nom }) => nom.toLowerCase().includes(search.value)) : data.value.value
   }
   return []
 })
@@ -135,9 +115,7 @@ const onSelectItems = (titres: TitreLink[]) => {
 
 const getDateDebutEtDateFin = (titre: LinkableTitre): string => {
   const titreLinkDemarches = titre.demarches.filter(({ phase }) => phase)
-  const dateDebut = titreLinkDemarches
-    .map(({ phase }) => phase?.dateDebut)
-    .sort()[0]
+  const dateDebut = titreLinkDemarches.map(({ phase }) => phase?.dateDebut).sort()[0]
   const dateFin = titreLinkDemarches
     .map(({ phase }) => phase?.dateFin)
     .sort()
@@ -145,6 +123,5 @@ const getDateDebutEtDateFin = (titre: LinkableTitre): string => {
 
   return `${dateDebut} - ${dateFin}`
 }
-const titreStatut = (titreStatutId: TitreStatutId) =>
-  TitresStatuts[titreStatutId]
+const titreStatut = (titreStatutId: TitreStatutId) => TitresStatuts[titreStatutId]
 </script>

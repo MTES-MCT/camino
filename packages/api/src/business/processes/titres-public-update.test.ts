@@ -1,15 +1,12 @@
 import { titresPublicUpdate } from './titres-public-update.js'
 import { titresGet } from '../../database/queries/titres.js'
 
-import {
-  titresPublicModifie,
-  titresPublicIdentique
-} from './__mocks__/titres-public-update-titres.js'
+import { titresPublicModifie, titresPublicIdentique } from './__mocks__/titres-public-update-titres.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres', () => ({
   __esModule: true,
   titreUpdate: vi.fn().mockResolvedValue(true),
-  titresGet: vi.fn()
+  titresGet: vi.fn(),
 }))
 
 const titresGetMock = vi.mocked(titresGet, true)

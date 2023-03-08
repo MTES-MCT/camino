@@ -34,69 +34,43 @@ type ParseUrlParams<url> = url extends `${infer path}(${infer optionalPath})`
   ? { [k in param]: string }
   : {}
 
-export const fetchWithJson = async <U, T extends CaminoRestRoute>(
-  path: T,
-  params: ParseUrlParams<T>,
-  method: 'post' | 'get' | 'put' | 'delete' = 'get'
-): Promise<any> => {
+export const fetchWithJson = async <U, T extends CaminoRestRoute>(path: T, params: ParseUrlParams<T>, method: 'post' | 'get' | 'put' | 'delete' = 'get'): Promise<any> => {
   const uiPath = getUiRestRoute(path)
-  let url = Object.entries<string>(params).reduce<string>(
-    (uiPath, [key, value]) => uiPath.replace(`:${key}`, value),
-    uiPath
-  )
+  let url = Object.entries<string>(params).reduce<string>((uiPath, [key, value]) => uiPath.replace(`:${key}`, value), uiPath)
   // clean url
   url = url.replace(/(\(|\)|\/?:[^/]+)/g, '')
   const fetched = await fetch(url, {
     method,
-    headers: { 'Content-Type': 'application/json' }
+    headers: { 'Content-Type': 'application/json' },
   })
   if (fetched.ok) {
     const body = await fetched.json()
     return body
   }
   if (fetched.status === 403) {
-    window.location.replace(
-      '/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href)
-    )
+    window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
   }
-  console.error(
-    `Une erreur s'est produite lors de la récupération des données ${await fetched.text()}`
-  )
-  throw new Error(
-    `Une erreur s'est produite lors de la récupération des données`
-  )
+  console.error(`Une erreur s'est produite lors de la récupération des données ${await fetched.text()}`)
+  throw new Error(`Une erreur s'est produite lors de la récupération des données`)
 }
 
-export const postWithJson = async <U, T extends CaminoRestRoute>(
-  path: T,
-  params: ParseUrlParams<T>,
-  body: unknown
-): Promise<any> => {
+export const postWithJson = async <U, T extends CaminoRestRoute>(path: T, params: ParseUrlParams<T>, body: unknown): Promise<any> => {
   const uiPath = getUiRestRoute(path)
-  let url = Object.entries<string>(params).reduce<string>(
-    (uiPath, [key, value]) => uiPath.replace(`:${key}`, value),
-    uiPath
-  )
+  let url = Object.entries<string>(params).reduce<string>((uiPath, [key, value]) => uiPath.replace(`:${key}`, value), uiPath)
   // clean url
   url = url.replace(/(\(|\)|\/?:[^/]+)/g, '')
   const fetched = await fetch(url, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   })
   if (fetched.ok) {
     const body = await fetched.json()
     return body
   }
   if (fetched.status === 403) {
-    window.location.replace(
-      '/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href)
-    )
+    window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
   }
-  console.error(
-    `Une erreur s'est produite lors de la récupération des données ${await fetched.text()}`
-  )
-  throw new Error(
-    `Une erreur s'est produite lors de la récupération des données`
-  )
+  console.error(`Une erreur s'est produite lors de la récupération des données ${await fetched.text()}`)
+  throw new Error(`Une erreur s'est produite lors de la récupération des données`)
 }

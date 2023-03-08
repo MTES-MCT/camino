@@ -1,13 +1,5 @@
-import {
-  EtapeStatut,
-  EtapeStatutId,
-  isStatut
-} from 'camino-common/src/static/etapesStatuts'
-import {
-  EtapesTypes,
-  EtapeType,
-  EtapeTypeId
-} from 'camino-common/src/static/etapesTypes'
+import { EtapeStatut, EtapeStatutId, isStatut } from 'camino-common/src/static/etapesStatuts'
+import { EtapesTypes, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
 import { computed, ref, FunctionalComponent, defineComponent } from 'vue'
 import { TypeAhead } from '../_ui/typeahead'
@@ -20,10 +12,7 @@ export type Props = {
   }
   etapesTypesIds: EtapeTypeId[]
   etapeIsDemandeEnConstruction?: boolean
-  onEtapeChange: (
-    statutId: EtapeStatutId | null,
-    typeId: EtapeTypeId | null
-  ) => void
+  onEtapeChange: (statutId: EtapeStatutId | null, typeId: EtapeTypeId | null) => void
 }
 
 interface SelectStatutProps {
@@ -32,12 +21,8 @@ interface SelectStatutProps {
   onStatutChange: (statutId: EtapeStatutId | null) => void
 }
 
-const SelectStatut: FunctionalComponent<SelectStatutProps> = (
-  props: SelectStatutProps
-): JSX.Element => {
-  const etapesStatuts: EtapeStatut[] = props.typeId
-    ? getEtapesStatuts(props.typeId)
-    : []
+const SelectStatut: FunctionalComponent<SelectStatutProps> = (props: SelectStatutProps): JSX.Element => {
+  const etapesStatuts: EtapeStatut[] = props.typeId ? getEtapesStatuts(props.typeId) : []
 
   const etapeStatutIdSelected: EtapeStatutId | null = props.statutId
 
@@ -48,26 +33,10 @@ const SelectStatut: FunctionalComponent<SelectStatutProps> = (
           <h5>Statut</h5>
         </div>
         <div class="mb tablet-blob-2-3">
-          <select
-            onChange={event =>
-              props.onStatutChange(
-                isEventWithTarget(event) && isStatut(event.target.value)
-                  ? event.target.value
-                  : null
-              )
-            }
-            class="p-s"
-          >
-            {etapesStatuts.length > 1 && etapeStatutIdSelected === null ? (
-              <option value={null} selected={true}></option>
-            ) : null}
+          <select onChange={event => props.onStatutChange(isEventWithTarget(event) && isStatut(event.target.value) ? event.target.value : null)} class="p-s">
+            {etapesStatuts.length > 1 && etapeStatutIdSelected === null ? <option value={null} selected={true}></option> : null}
             {etapesStatuts.map(etapeStatut => (
-              <option
-                key={etapeStatut.id}
-                value={etapeStatut.id}
-                selected={etapeStatutIdSelected === etapeStatut.id}
-                disabled={etapeStatutIdSelected === etapeStatut.id}
-              >
+              <option key={etapeStatut.id} value={etapeStatut.id} selected={etapeStatutIdSelected === etapeStatut.id} disabled={etapeStatutIdSelected === etapeStatut.id}>
                 {etapeStatut.nom}
               </option>
             ))}
@@ -94,9 +63,7 @@ export const TypeEdit = defineComponent<Props>({
         })
     )
 
-    const etapeTypeExistante = computed<Pick<EtapeType, 'id'>[]>(() =>
-      etapeTypeId.value ? [{ id: etapeTypeId.value }] : []
-    )
+    const etapeTypeExistante = computed<Pick<EtapeType, 'id'>[]>(() => (etapeTypeId.value ? [{ id: etapeTypeId.value }] : []))
 
     return () => (
       <div>
@@ -128,9 +95,7 @@ export const TypeEdit = defineComponent<Props>({
                   props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
                 }
               }}
-              onInput={(searchTerm: string) =>
-                (etapeTypeSearch.value = searchTerm)
-              }
+              onInput={(searchTerm: string) => (etapeTypeSearch.value = searchTerm)}
             />
           </div>
         </div>
@@ -148,12 +113,7 @@ export const TypeEdit = defineComponent<Props>({
         )}
       </div>
     )
-  }
+  },
 })
 
-TypeEdit.props = [
-  'etape',
-  'onEtapeChange',
-  'etapesTypesIds',
-  'etapeIsDemandeEnConstruction'
-]
+TypeEdit.props = ['etape', 'onEtapeChange', 'etapesTypesIds', 'etapeIsDemandeEnConstruction']

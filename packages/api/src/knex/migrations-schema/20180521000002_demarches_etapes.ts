@@ -15,16 +15,8 @@ export const up = (knex: Knex) => {
       table.boolean('auto')
     })
     .createTable('titresTypes__demarchesTypes', table => {
-      table
-        .string('titreTypeId', 3)
-        .index()
-        .references('titresTypes.id')
-        .notNullable()
-      table
-        .string('demarcheTypeId', 3)
-        .index()
-        .references('demarchesTypes.id')
-        .notNullable()
+      table.string('titreTypeId', 3).index().references('titresTypes.id').notNullable()
+      table.string('demarcheTypeId', 3).index().references('demarchesTypes.id').notNullable()
       table.integer('dureeMax')
       table.boolean('acceptationImplicite')
       table.string('delaiImplicite')
@@ -65,22 +57,10 @@ export const up = (knex: Knex) => {
       table.boolean('entreprisesLecture')
     })
     .createTable('titresTypes__demarchesTypes__etapesTypes', table => {
-      table
-        .string('titreTypeId', 3)
-        .index()
-        .references('titresTypes.id')
-        .notNullable()
+      table.string('titreTypeId', 3).index().references('titresTypes.id').notNullable()
       table.integer('ordre')
-      table
-        .string('demarcheTypeId', 7)
-        .index()
-        .references('demarchesTypes.id')
-        .notNullable()
-      table
-        .string('etapeTypeId', 3)
-        .index()
-        .references('etapesTypes.id')
-        .notNullable()
+      table.string('demarcheTypeId', 7).index().references('demarchesTypes.id').notNullable()
+      table.string('etapeTypeId', 3).index().references('etapesTypes.id').notNullable()
       table.specificType('sections', 'jsonb[]')
       table.primary(['titreTypeId', 'demarcheTypeId', 'etapeTypeId'])
     })
@@ -91,16 +71,8 @@ export const up = (knex: Knex) => {
       table.string('couleur', 16).notNullable()
     })
     .createTable('etapesTypes__etapesStatuts', table => {
-      table
-        .string('etapeTypeId', 3)
-        .index()
-        .references('etapesTypes.id')
-        .notNullable()
-      table
-        .string('etapeStatutId', 3)
-        .index()
-        .references('etapesStatuts.id')
-        .notNullable()
+      table.string('etapeTypeId', 3).index().references('etapesTypes.id').notNullable()
+      table.string('etapeStatutId', 3).index().references('etapesStatuts.id').notNullable()
       table.integer('ordre')
       table.primary(['etapeTypeId', 'etapeStatutId'])
     })
@@ -110,71 +82,32 @@ export const up = (knex: Knex) => {
       table.text('description')
     })
     .createTable('etapesTypes__documentsTypes', table => {
-      table
-        .string('etapeTypeId', 3)
-        .index()
-        .references('etapesTypes.id')
-        .notNullable()
-        .onDelete('CASCADE')
-      table
-        .string('documentTypeId', 3)
-        .index()
-        .references('documentsTypes.id')
-        .notNullable()
+      table.string('etapeTypeId', 3).index().references('etapesTypes.id').notNullable().onDelete('CASCADE')
+      table.string('documentTypeId', 3).index().references('documentsTypes.id').notNullable()
       table.boolean('optionnel')
       table.text('description')
       table.primary(['etapeTypeId', 'documentTypeId'])
     })
-    .createTable(
-      'titresTypes__demarchesTypes__etapesTypes__documentsTypes',
-      table => {
-        table.string('titreTypeId', 3).index().notNullable()
-        table.string('demarcheTypeId', 7).index().notNullable()
-        table.string('etapeTypeId', 3).index().notNullable()
-        table
-          .string('documentTypeId', 3)
-          .index()
-          .references('documentsTypes.id')
-          .notNullable()
-        table.boolean('optionnel')
-        table.text('description')
-        table.primary([
-          'titreTypeId',
-          'demarcheTypeId',
-          'etapeTypeId',
-          'documentTypeId'
-        ])
-        table
-          .foreign(['titreTypeId', 'demarcheTypeId', 'etapeTypeId'])
-          .references(['titreTypeId', 'demarcheTypeId', 'etapeTypeId'])
-          .inTable('titresTypes__demarchesTypes__etapesTypes')
-      }
-    )
-    .createTable(
-      'titresTypes__demarchesTypes__etapesTypes__justificatifsT',
-      table => {
-        table.string('titreTypeId', 3).index().notNullable()
-        table.string('demarcheTypeId', 7).index().notNullable()
-        table.string('etapeTypeId', 3).index().notNullable()
-        table
-          .string('documentTypeId', 3)
-          .index()
-          .references('documentsTypes.id')
-          .notNullable()
-        table.boolean('optionnel')
-        table.text('description')
-        table.primary([
-          'titreTypeId',
-          'demarcheTypeId',
-          'etapeTypeId',
-          'documentTypeId'
-        ])
-        table
-          .foreign(['titreTypeId', 'demarcheTypeId', 'etapeTypeId'])
-          .references(['titreTypeId', 'demarcheTypeId', 'etapeTypeId'])
-          .inTable('titresTypes__demarchesTypes__etapesTypes')
-      }
-    )
+    .createTable('titresTypes__demarchesTypes__etapesTypes__documentsTypes', table => {
+      table.string('titreTypeId', 3).index().notNullable()
+      table.string('demarcheTypeId', 7).index().notNullable()
+      table.string('etapeTypeId', 3).index().notNullable()
+      table.string('documentTypeId', 3).index().references('documentsTypes.id').notNullable()
+      table.boolean('optionnel')
+      table.text('description')
+      table.primary(['titreTypeId', 'demarcheTypeId', 'etapeTypeId', 'documentTypeId'])
+      table.foreign(['titreTypeId', 'demarcheTypeId', 'etapeTypeId']).references(['titreTypeId', 'demarcheTypeId', 'etapeTypeId']).inTable('titresTypes__demarchesTypes__etapesTypes')
+    })
+    .createTable('titresTypes__demarchesTypes__etapesTypes__justificatifsT', table => {
+      table.string('titreTypeId', 3).index().notNullable()
+      table.string('demarcheTypeId', 7).index().notNullable()
+      table.string('etapeTypeId', 3).index().notNullable()
+      table.string('documentTypeId', 3).index().references('documentsTypes.id').notNullable()
+      table.boolean('optionnel')
+      table.text('description')
+      table.primary(['titreTypeId', 'demarcheTypeId', 'etapeTypeId', 'documentTypeId'])
+      table.foreign(['titreTypeId', 'demarcheTypeId', 'etapeTypeId']).references(['titreTypeId', 'demarcheTypeId', 'etapeTypeId']).inTable('titresTypes__demarchesTypes__etapesTypes')
+    })
 }
 
 export const down = (knex: Knex) => {

@@ -4,7 +4,7 @@ import { Meta, Story } from '@storybook/vue3'
 const meta: Meta = {
   title: 'Components/Administrations',
   component: Administrations,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 

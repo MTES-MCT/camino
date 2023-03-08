@@ -6,15 +6,7 @@ import { userSuper } from '../../database/user-super.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
-import {
-  afterAll,
-  beforeAll,
-  afterEach,
-  describe,
-  test,
-  expect,
-  vi
-} from 'vitest'
+import { afterAll, beforeAll, afterEach, describe, test, expect, vi } from 'vitest'
 
 console.info = vi.fn()
 console.error = vi.fn()
@@ -39,7 +31,7 @@ describe('demarcheCreer', () => {
         nom: 'mon titre',
         typeId: 'arm',
         propsTitreEtapesIds: {},
-        publicLecture: true
+        publicLecture: true,
       },
       {}
     )
@@ -47,7 +39,7 @@ describe('demarcheCreer', () => {
     const res = await graphQLCall(
       demarcheCreerQuery,
       {
-        demarche: { titreId: titre.id, typeId: 'dpu' }
+        demarche: { titreId: titre.id, typeId: 'dpu' },
       },
       undefined
     )
@@ -61,7 +53,7 @@ describe('demarcheCreer', () => {
         nom: 'mon titre',
         typeId: 'arm',
         propsTitreEtapesIds: {},
-        publicLecture: true
+        publicLecture: true,
       },
       {}
     )
@@ -71,7 +63,7 @@ describe('demarcheCreer', () => {
       { demarche: { titreId: titre.id, typeId: 'dpu' } },
       {
         role: 'editeur',
-        administrationId: 'ope-onf-973-01'
+        administrationId: 'ope-onf-973-01',
       }
     )
 
@@ -79,19 +71,11 @@ describe('demarcheCreer', () => {
   })
 
   test('peut créer une démarche (utilisateur super)', async () => {
-    const resTitreCreer = await graphQLCall(
-      queryImport('titre-creer'),
-      { titre: { nom: 'titre', typeId: 'arm' } },
-      userSuper
-    )
+    const resTitreCreer = await graphQLCall(queryImport('titre-creer'), { titre: { nom: 'titre', typeId: 'arm' } }, userSuper)
 
     const titreId = resTitreCreer.body.data.titreCreer.id
 
-    const res = await graphQLCall(
-      demarcheCreerQuery,
-      { demarche: { titreId, typeId: 'oct' } },
-      userSuper
-    )
+    const res = await graphQLCall(demarcheCreerQuery, { demarche: { titreId, typeId: 'oct' } }, userSuper)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body).toMatchObject({ data: { demarcheCreer: {} } })
@@ -103,7 +87,7 @@ describe('demarcheCreer', () => {
       { demarche: { titreId: 'unknown', typeId: 'oct' } },
       {
         role: 'admin',
-        administrationId: 'ope-onf-973-01'
+        administrationId: 'ope-onf-973-01',
       }
     )
 
@@ -111,11 +95,7 @@ describe('demarcheCreer', () => {
   })
 
   test('peut créer une démarche (utilisateur admin)', async () => {
-    const resTitreCreer = await graphQLCall(
-      queryImport('titre-creer'),
-      { titre: { nom: 'titre', typeId: 'arm' } },
-      userSuper
-    )
+    const resTitreCreer = await graphQLCall(queryImport('titre-creer'), { titre: { nom: 'titre', typeId: 'arm' } }, userSuper)
 
     const titreId = resTitreCreer.body.data.titreCreer.id
 
@@ -124,7 +104,7 @@ describe('demarcheCreer', () => {
       { demarche: { titreId, typeId: 'oct' } },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       }
     )
 
@@ -138,7 +118,7 @@ describe('demarcheCreer', () => {
         nom: 'mon titre échu',
         typeId: 'arm',
         titreStatutId: 'ech',
-        propsTitreEtapesIds: {}
+        propsTitreEtapesIds: {},
       },
       {}
     )
@@ -148,7 +128,7 @@ describe('demarcheCreer', () => {
       { demarche: { titreId: titre.id, typeId: 'oct' } },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       }
     )
 
@@ -163,7 +143,7 @@ describe('demarcheModifier', () => {
     const res = await graphQLCall(
       demarcheModifierQuery,
       {
-        demarche: { id: 'toto', titreId: '', typeId: '' }
+        demarche: { id: 'toto', titreId: '', typeId: '' },
       },
       undefined
     )
@@ -172,11 +152,7 @@ describe('demarcheModifier', () => {
   })
 
   test('ne peut pas modifier une démarche (utilisateur editeur)', async () => {
-    const res = await graphQLCall(
-      demarcheModifierQuery,
-      { demarche: { id: 'toto', titreId: '', typeId: '' } },
-      { role: 'editeur', administrationId: 'ope-onf-973-01' }
-    )
+    const res = await graphQLCall(demarcheModifierQuery, { demarche: { id: 'toto', titreId: '', typeId: '' } }, { role: 'editeur', administrationId: 'ope-onf-973-01' })
 
     expect(res.body.errors[0].message).toBe('la démarche n’existe pas')
   })
@@ -184,22 +160,14 @@ describe('demarcheModifier', () => {
   test('peut modifier une démarche (utilisateur super)', async () => {
     const { demarcheId, titreId } = await demarcheCreate()
 
-    const res = await graphQLCall(
-      demarcheModifierQuery,
-      { demarche: { id: demarcheId, titreId, typeId: 'pro' } },
-      userSuper
-    )
+    const res = await graphQLCall(demarcheModifierQuery, { demarche: { id: demarcheId, titreId, typeId: 'pro' } }, userSuper)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data.demarcheModifier.demarches[0].type.id).toBe('pro')
   })
 
   test('ne peut pas modifier une démarche avec un titre inexistant (utilisateur super)', async () => {
-    const res = await graphQLCall(
-      demarcheModifierQuery,
-      { demarche: { id: 'toto', titreId: '', typeId: '' } },
-      userSuper
-    )
+    const res = await graphQLCall(demarcheModifierQuery, { demarche: { id: 'toto', titreId: '', typeId: '' } }, userSuper)
 
     expect(res.body.errors[0].message).toBe('la démarche n’existe pas')
   })
@@ -212,7 +180,7 @@ describe('demarcheModifier', () => {
       { demarche: { id: demarcheId, titreId, typeId: 'pro' } },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       }
     )
 
@@ -223,11 +191,7 @@ describe('demarcheModifier', () => {
   test('ne peut pas modifier une démarche d’un titre ARM en DEA (utilisateur admin)', async () => {
     const { demarcheId, titreId } = await demarcheCreate()
 
-    const res = await graphQLCall(
-      demarcheModifierQuery,
-      { demarche: { id: demarcheId, titreId, typeId: 'pro' } },
-      { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] }
-    )
+    const res = await graphQLCall(demarcheModifierQuery, { demarche: { id: demarcheId, titreId, typeId: 'pro' } }, { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] })
 
     expect(res.body.errors[0].message).toBe('droits insuffisants')
   })
@@ -235,11 +199,7 @@ describe('demarcheModifier', () => {
   test('ne peut modifier une démarche inexistante', async () => {
     const { titreId } = await demarcheCreate()
 
-    const res = await graphQLCall(
-      demarcheModifierQuery,
-      { demarche: { id: 'wrongId', titreId, typeId: 'pro' } },
-      userSuper
-    )
+    const res = await graphQLCall(demarcheModifierQuery, { demarche: { id: 'wrongId', titreId, typeId: 'pro' } }, userSuper)
 
     expect(res.body.errors).toHaveLength(1)
     expect(res.body.errors[0].message).toBe('la démarche n’existe pas')
@@ -254,7 +214,7 @@ describe('demarcheModifier', () => {
         typeId: 'mno',
         titreDemarcheId: demarcheId,
         statutId: 'acc',
-        date: toCaminoDate('2020-01-01')
+        date: toCaminoDate('2020-01-01'),
       },
       userSuper,
       titreId
@@ -266,16 +226,14 @@ describe('demarcheModifier', () => {
         demarche: {
           id: demarcheId,
           titreId,
-          typeId: 'pro'
-        }
+          typeId: 'pro',
+        },
       },
       userSuper
     )
 
     expect(res.body.errors).toHaveLength(1)
-    expect(res.body.errors[0].message).toBe(
-      'impossible de modifier le type d’une démarche si celle-ci a déjà une ou plusieurs étapes'
-    )
+    expect(res.body.errors[0].message).toBe('impossible de modifier le type d’une démarche si celle-ci a déjà une ou plusieurs étapes')
   })
 })
 
@@ -286,7 +244,7 @@ describe('demarcheSupprimer', () => {
     const res = await graphQLCall(
       demarcheSupprimerQuery,
       {
-        id: 'toto'
+        id: 'toto',
       },
       userSuper
     )
@@ -294,32 +252,20 @@ describe('demarcheSupprimer', () => {
   })
 
   test('ne peut pas supprimer une démarche (utilisateur admin)', async () => {
-    const res = await graphQLCall(
-      demarcheSupprimerQuery,
-      { id: 'toto' },
-      { role: 'admin', administrationId: 'ope-onf-973-01' }
-    )
+    const res = await graphQLCall(demarcheSupprimerQuery, { id: 'toto' }, { role: 'admin', administrationId: 'ope-onf-973-01' })
 
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
   })
 
   test('ne peut pas supprimer une démarche inexistante (utilisateur super)', async () => {
-    const res = await graphQLCall(
-      demarcheSupprimerQuery,
-      { id: 'toto' },
-      userSuper
-    )
+    const res = await graphQLCall(demarcheSupprimerQuery, { id: 'toto' }, userSuper)
 
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
   })
 
   test('peut supprimer une démarche (utilisateur super)', async () => {
     const { demarcheId } = await demarcheCreate()
-    const res = await graphQLCall(
-      demarcheSupprimerQuery,
-      { id: demarcheId },
-      userSuper
-    )
+    const res = await graphQLCall(demarcheSupprimerQuery, { id: demarcheId }, userSuper)
 
     expect(res.body.errors).toBeUndefined()
     expect(res.body.data.demarcheSupprimer.demarches.length).toBe(0)
@@ -331,21 +277,17 @@ const demarcheCreate = async () => {
     {
       nom: 'mon titre',
       typeId: 'arm',
-      propsTitreEtapesIds: {}
+      propsTitreEtapesIds: {},
     },
     {}
   )
 
-  const resDemarchesCreer = await graphQLCall(
-    queryImport('titre-demarche-creer'),
-    { demarche: { titreId: titre.id, typeId: 'oct' } },
-    userSuper
-  )
+  const resDemarchesCreer = await graphQLCall(queryImport('titre-demarche-creer'), { demarche: { titreId: titre.id, typeId: 'oct' } }, userSuper)
 
   expect(resDemarchesCreer.body.errors).toBeUndefined()
 
   return {
     titreId: resDemarchesCreer.body.data.demarcheCreer.id,
-    demarcheId: resDemarchesCreer.body.data.demarcheCreer.demarches[0].id
+    demarcheId: resDemarchesCreer.body.data.demarcheCreer.demarches[0].id,
   }
 }

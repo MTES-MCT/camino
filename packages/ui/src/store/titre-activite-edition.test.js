@@ -6,7 +6,7 @@ import { vi, describe, expect, beforeEach, test } from 'vitest'
 
 vi.mock('../api/titres-activites', () => ({
   activiteModifier: vi.fn(),
-  activite: vi.fn()
+  activite: vi.fn(),
 }))
 console.info = vi.fn()
 
@@ -22,12 +22,12 @@ describe("état d'une activité", () => {
       reload: vi.fn(),
       messageAdd: vi.fn(),
       pageError: vi.fn(),
-      apiError: vi.fn()
+      apiError: vi.fn(),
     }
 
     mutations = {
       loadingAdd: vi.fn(),
-      loadingRemove: vi.fn()
+      loadingRemove: vi.fn(),
     }
 
     store = createStore({
@@ -36,11 +36,11 @@ describe("état d'une activité", () => {
         titre: {
           namespaced: true,
           state: { element: { id: 5 } },
-          mutations: {}
-        }
+          mutations: {},
+        },
       },
       mutations,
-      actions
+      actions,
     })
 
     const app = createApp({})
@@ -49,7 +49,7 @@ describe("état d'une activité", () => {
 
   test('enregistre une activité sur un titre', async () => {
     const apiMock = api.activiteModifier.mockResolvedValue({
-      activiteStatutId: 'enc'
+      activiteStatutId: 'enc',
     })
 
     await store.dispatch('titreActiviteEdition/update', {
@@ -58,8 +58,8 @@ describe("état d'une activité", () => {
       activiteStatutId: 'enc',
       documents: [
         { id: 'toto', desc: 'desc', type: { id: 'aaa' } },
-        { id: 'titi', type: { id: 'titi' } }
-      ]
+        { id: 'titi', type: { id: 'titi' } },
+      ],
     })
 
     expect(mutations.loadingRemove).toHaveBeenCalled()
@@ -68,24 +68,22 @@ describe("état d'une activité", () => {
       activite: {
         id: 27,
         contenu: [],
-        documentIds: ['toto']
-      }
+        documentIds: ['toto'],
+      },
     })
   })
 
   test("erreur dans l'api lors de l'enregistrement d'une activité", async () => {
-    const apiMock = api.activiteModifier.mockRejectedValue(
-      new Error("l'api ne répond pas")
-    )
+    const apiMock = api.activiteModifier.mockRejectedValue(new Error("l'api ne répond pas"))
     await store.dispatch('titreActiviteEdition/update', {
       id: 27,
       contenu: [],
-      activiteStatutId: 'dep'
+      activiteStatutId: 'dep',
     })
 
     expect(apiMock).toHaveBeenCalled()
     expect(apiMock).toHaveBeenCalledWith({
-      activite: { id: 27, contenu: [], documents: undefined }
+      activite: { id: 27, contenu: [], documents: undefined },
     })
     expect(actions.apiError).toHaveBeenCalled()
     expect(actions.messageAdd).not.toHaveBeenCalled()
@@ -96,7 +94,7 @@ describe("état d'une activité", () => {
       id: 27,
       contenu: [],
       activiteStatutId: 'dep',
-      sections: []
+      sections: [],
     })
 
     await store.dispatch('titreActiviteEdition/init', 27)
@@ -105,7 +103,7 @@ describe("état d'une activité", () => {
       id: 27,
       contenu: {},
       sections: [],
-      activiteStatutId: 'dep'
+      activiteStatutId: 'dep',
     })
 
     expect(mutations.loadingRemove).toHaveBeenCalled()
@@ -120,9 +118,7 @@ describe("état d'une activité", () => {
   })
 
   test("retourne une erreur de l'api dans l'obtention de l'activité", async () => {
-    const apiMock = api.activite.mockRejectedValue(
-      new Error("l'api ne répond pas")
-    )
+    const apiMock = api.activite.mockRejectedValue(new Error("l'api ne répond pas"))
     await store.dispatch('titreActiviteEdition/init', 'activite-id')
 
     expect(apiMock).toHaveBeenCalledWith({ id: 'activite-id' })
@@ -139,46 +135,42 @@ describe("état d'une activité", () => {
   test('ajoute un nouveau document', async () => {
     const type = { id: 'type-id', optionnel: false }
     store.state.titreActiviteEdition.element = {
-      type: { id: 'gpr', documentsTypes: [type] }
+      type: { id: 'gpr', documentsTypes: [type] },
     }
 
     await store.dispatch('titreActiviteEdition/documentAdd', {
-      document: { id: 'document-id', type }
+      document: { id: 'document-id', type },
     })
 
     expect(store.state.titreActiviteEdition.element.documents).toHaveLength(1)
-    expect(store.state.titreActiviteEdition.element.documents[0].id).toEqual(
-      'document-id'
-    )
+    expect(store.state.titreActiviteEdition.element.documents[0].id).toEqual('document-id')
   })
 
   test('remplace un document existant par un nouveau', async () => {
     const type = { id: 'type-id', optionnel: false }
     store.state.titreActiviteEdition.element = {
       documents: [{ id: 'document-id1' }],
-      type: { id: 'gpr', documentsTypes: [type] }
+      type: { id: 'gpr', documentsTypes: [type] },
     }
 
     await store.dispatch('titreActiviteEdition/documentAdd', {
       document: { id: 'document-id2', type },
-      idOld: 'document-id1'
+      idOld: 'document-id1',
     })
 
     expect(store.state.titreActiviteEdition.element.documents).toHaveLength(1)
-    expect(store.state.titreActiviteEdition.element.documents[0].id).toEqual(
-      'document-id2'
-    )
+    expect(store.state.titreActiviteEdition.element.documents[0].id).toEqual('document-id2')
   })
 
   test('supprime un document', async () => {
     const type = { id: 'type-id', optionnel: true }
     store.state.titreActiviteEdition.element = {
       documents: [{ id: 'document-id' }],
-      type: { id: 'gpr', documentsTypes: [type] }
+      type: { id: 'gpr', documentsTypes: [type] },
     }
 
     await store.dispatch('titreActiviteEdition/documentRemove', {
-      id: 'document-id'
+      id: 'document-id',
     })
 
     expect(store.state.titreActiviteEdition.element.documents).toHaveLength(0)

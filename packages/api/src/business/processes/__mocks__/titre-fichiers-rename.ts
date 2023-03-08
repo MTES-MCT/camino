@@ -12,21 +12,21 @@ const titreNew = {
             {
               id: 'new-titre-id-demarche-01-etape-01-document-01',
               fichier: true,
-              fichierTypeId: 'pdf'
+              fichierTypeId: 'pdf',
             },
             {
-              id: 'new-titre-id-demarche-01-etape-01-document-02'
+              id: 'new-titre-id-demarche-01-etape-01-document-02',
             },
             {
               id: 'new-titre-id-demarche-01-etape-01-document-03',
               fichier: true,
-              fichierTypeId: 'pdf'
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              fichierTypeId: 'pdf',
+            },
+          ],
+        },
+      ],
+    },
+  ],
 } as ITitre
 
 const titreNewSansDemarches = { id: 'new-titre-id' } as ITitre
@@ -38,12 +38,9 @@ const titreNewSansEtapes = {
     { id: 'new-titre-id-demarche-02' },
     {
       id: 'new-titre-id-demarche-03',
-      etapes: [
-        { id: 'new-titre-id-demarche-03-etape-01', documents: [] },
-        { id: 'new-titre-id-demarche-03-etape-02' }
-      ]
-    }
-  ]
+      etapes: [{ id: 'new-titre-id-demarche-03-etape-01', documents: [] }, { id: 'new-titre-id-demarche-03-etape-02' }],
+    },
+  ],
 } as ITitre
 
 const titreNewDemarchesSansChangement = {
@@ -58,24 +55,19 @@ const titreNewDemarchesSansChangement = {
             {
               id: 'old-titre-id-demarche-01-etape-01-document-01',
               fichier: true,
-              fichierTypeId: 'pdf'
+              fichierTypeId: 'pdf',
             },
             { id: 'old-titre-id-demarche-01-etape-01-document-02' },
             {
               id: 'old-titre-id-demarche-01-etape-01-document-03',
               fichier: true,
-              fichierTypeId: 'pdf'
-            }
-          ]
-        }
-      ]
-    }
-  ]
+              fichierTypeId: 'pdf',
+            },
+          ],
+        },
+      ],
+    },
+  ],
 } as ITitre
 
-export {
-  titreNew,
-  titreNewSansDemarches,
-  titreNewSansEtapes,
-  titreNewDemarchesSansChangement
-}
+export { titreNew, titreNewSansDemarches, titreNewSansEtapes, titreNewDemarchesSansChangement }

@@ -1,18 +1,7 @@
 import { Utilisateur } from '@/api/api-client'
-import {
-  isEntrepriseOrBureauDetudeRole,
-  Role,
-  User,
-  isAdministration,
-  isBureauDEtudes,
-  isEntreprise,
-  isSuper
-} from 'camino-common/src/roles'
+import { isEntrepriseOrBureauDetudeRole, Role, User, isAdministration, isBureauDEtudes, isEntreprise, isSuper } from 'camino-common/src/roles'
 import { computed, defineComponent, onMounted, ref } from 'vue'
-import {
-  isAdministrationId,
-  sortedAdministrations
-} from 'camino-common/src/static/administrations'
+import { isAdministrationId, sortedAdministrations } from 'camino-common/src/static/administrations'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '../_ui/functional-loader'
@@ -32,31 +21,16 @@ interface Props {
 }
 
 export const EditPopup = defineComponent<Props>({
-  props: [
-    'user',
-    'getEntreprises',
-    'utilisateur',
-    'update',
-    'close'
-  ] as unknown as undefined,
+  props: ['user', 'getEntreprises', 'utilisateur', 'update', 'close'] as unknown as undefined,
   setup(props) {
     const assignableRoles = getAssignableRoles(props.user)
-    const onSelectEntreprises = (
-      elements: Element[],
-      entreprises: Entreprise[]
-    ) => {
-      const entrs = elements
-        .map(({ id }) => entreprises.find(({ id: entrId }) => id === entrId))
-        .filter(isNotNullNorUndefined)
+    const onSelectEntreprises = (elements: Element[], entreprises: Entreprise[]) => {
+      const entrs = elements.map(({ id }) => entreprises.find(({ id: entrId }) => id === entrId)).filter(isNotNullNorUndefined)
 
       if (!utilisateurPopup.value.entreprises) {
         utilisateurPopup.value.entreprises = entrs
       } else {
-        utilisateurPopup.value.entreprises.splice(
-          0,
-          utilisateurPopup.value.entreprises.length,
-          ...entrs
-        )
+        utilisateurPopup.value.entreprises.splice(0, utilisateurPopup.value.entreprises.length, ...entrs)
       }
     }
     const entreprises = ref<AsyncData<Entreprise[]>>({ status: 'LOADING' })
@@ -68,32 +42,22 @@ export const EditPopup = defineComponent<Props>({
         console.error('error', e)
         entreprises.value = {
           status: 'ERROR',
-          message: e.message ?? "Une erreur s'est produite"
+          message: e.message ?? "Une erreur s'est produite",
         }
       }
     })
     const complete = computed(() => {
-      const formComplete =
-        utilisateurPopup.value.nom &&
-        utilisateurPopup.value.prenom &&
-        utilisateurPopup.value.id &&
-        utilisateurPopup.value.email
+      const formComplete = utilisateurPopup.value.nom && utilisateurPopup.value.prenom && utilisateurPopup.value.id && utilisateurPopup.value.email
 
       if (!formComplete) {
         return false
       }
 
-      if (
-        isEntrepriseOrBureauDetudeRole(utilisateurPopup.value.role) &&
-        !utilisateurPopup.value.entreprises?.length
-      ) {
+      if (isEntrepriseOrBureauDetudeRole(utilisateurPopup.value.role) && !utilisateurPopup.value.entreprises?.length) {
         return false
       }
 
-      if (
-        isAdministration(utilisateurPopup.value) &&
-        !utilisateurPopup.value.administrationId
-      ) {
+      if (isAdministration(utilisateurPopup.value) && !utilisateurPopup.value.administrationId) {
         return false
       }
 
@@ -101,11 +65,7 @@ export const EditPopup = defineComponent<Props>({
     })
 
     const selectAdministration = (e: Event) => {
-      if (
-        isEventWithTarget(e) &&
-        isAdministration(utilisateurPopup.value) &&
-        isAdministrationId(e.target.value)
-      ) {
+      if (isEventWithTarget(e) && isAdministration(utilisateurPopup.value) && isAdministrationId(e.target.value)) {
         utilisateurPopup.value.administrationId = e.target.value
       }
     }
@@ -118,12 +78,7 @@ export const EditPopup = defineComponent<Props>({
             <h5>Téléphone fixe</h5>
           </div>
           <div class="mb tablet-blob-2-3">
-            <input
-              value={utilisateurPopup.value.telephoneFixe}
-              type="text"
-              class="p-s"
-              placeholder="0100000000"
-            />
+            <input value={utilisateurPopup.value.telephoneFixe} type="text" class="p-s" placeholder="0100000000" />
           </div>
         </div>
 
@@ -133,12 +88,7 @@ export const EditPopup = defineComponent<Props>({
             <h5>Téléphone mobile</h5>
           </div>
           <div class="mb tablet-blob-2-3">
-            <input
-              value={utilisateurPopup.value.telephoneMobile}
-              type="text"
-              class="p-s"
-              placeholder="0100000000"
-            />
+            <input value={utilisateurPopup.value.telephoneMobile} type="text" class="p-s" placeholder="0100000000" />
           </div>
         </div>
 
@@ -153,12 +103,7 @@ export const EditPopup = defineComponent<Props>({
                 <ul class="list-inline mb-0 tablet-pt-s">
                   {assignableRoles.map(role => (
                     <li key={role} class="mb-xs">
-                      <button
-                        class={`btn-flash small py-xs px-s pill cap-first mr-xs ${
-                          utilisateurPopup.value.role === role ? 'active' : ''
-                        }`}
-                        onClick={() => roleToggle(role)}
-                      >
+                      <button class={`btn-flash small py-xs px-s pill cap-first mr-xs ${utilisateurPopup.value.role === role ? 'active' : ''}`} onClick={() => roleToggle(role)}>
                         {role}
                       </button>
                     </li>
@@ -167,8 +112,7 @@ export const EditPopup = defineComponent<Props>({
               </div>
             </div>
 
-            {isEntreprise(utilisateurPopup.value) ||
-            isBureauDEtudes(utilisateurPopup.value) ? (
+            {isEntreprise(utilisateurPopup.value) || isBureauDEtudes(utilisateurPopup.value) ? (
               <div>
                 <hr />
                 <h3 class="mb-s">Entreprises</h3>
@@ -181,16 +125,11 @@ export const EditPopup = defineComponent<Props>({
                         filter={{
                           id: 'entreprises',
                           name: 'Entreprises',
-                          value:
-                            utilisateurPopup.value.entreprises?.map(
-                              ({ id }) => id
-                            ) ?? [],
+                          value: utilisateurPopup.value.entreprises?.map(({ id }) => id) ?? [],
                           elements: items,
-                          lazy: false
+                          lazy: false,
                         }}
-                        onSelectItems={elements =>
-                          onSelectEntreprises(elements, items)
-                        }
+                        onSelectItems={elements => onSelectEntreprises(elements, items)}
                       />
                     </div>
                   )}
@@ -204,11 +143,7 @@ export const EditPopup = defineComponent<Props>({
                 <h3 class="mb-s">Administration</h3>
 
                 <div class="flex full-x mb">
-                  <select
-                    onChange={selectAdministration}
-                    value={utilisateurPopup.value.administrationId}
-                    class="p-s mr-s"
-                  >
+                  <select onChange={selectAdministration} value={utilisateurPopup.value.administrationId} class="p-s mr-s">
                     {sortedAdministrations.map(a => (
                       <option key={a.id} value={a.id}>
                         {a.abreviation}
@@ -231,13 +166,8 @@ export const EditPopup = defineComponent<Props>({
           utilisateur.administrationId = undefined
         }
 
-        if (
-          isEntreprise(utilisateurPopup.value) ||
-          isBureauDEtudes(utilisateurPopup.value)
-        ) {
-          utilisateur.entreprises = utilisateur.entreprises.map(
-            ({ id }: { id: string }) => ({ id })
-          )
+        if (isEntreprise(utilisateurPopup.value) || isBureauDEtudes(utilisateurPopup.value)) {
+          utilisateur.entreprises = utilisateur.entreprises.map(({ id }: { id: string }) => ({ id }))
         } else {
           utilisateur.entreprises = []
         }
@@ -248,21 +178,13 @@ export const EditPopup = defineComponent<Props>({
 
     const roleToggle = (role: Role) => {
       utilisateurPopup.value.role = role
-      if (
-        isAdministration(props.user) &&
-        isAdministration(utilisateurPopup.value)
-      ) {
+      if (isAdministration(props.user) && isAdministration(utilisateurPopup.value)) {
         utilisateurPopup.value.administrationId = props.user.administrationId
       }
     }
 
     return () => (
-      <FunctionalPopup
-        title={`Modification du compte ${props.utilisateur.email}`}
-        content={content}
-        validate={{ text: 'Enregistrer', can: complete.value, action: save }}
-        close={props.close}
-      />
+      <FunctionalPopup title={`Modification du compte ${props.utilisateur.email}`} content={content} validate={{ text: 'Enregistrer', can: complete.value, action: save }} close={props.close} />
     )
-  }
+  },
 })

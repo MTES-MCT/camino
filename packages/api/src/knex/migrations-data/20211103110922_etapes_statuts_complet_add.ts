@@ -4,47 +4,35 @@ export const up = async (knex: Knex) => {
     {
       id: 'com',
       nom: 'complet',
-      couleur: 'success'
+      couleur: 'success',
     },
     {
       id: 'inc',
       nom: 'incomplet',
-      couleur: 'error'
-    }
+      couleur: 'error',
+    },
   ])
 
   await knex('etapes_types__etapes_statuts').insert([
     {
       etape_type_id: 'mcp',
       etape_statut_id: 'com',
-      ordre: 1
+      ordre: 1,
     },
     {
       etape_type_id: 'mcp',
       etape_statut_id: 'inc',
-      ordre: 2
-    }
+      ordre: 2,
+    },
   ])
 
-  await knex('titres_etapes')
-    .where('type_id', 'mcp')
-    .where('statut_id', 'fav')
-    .update('statut_id', 'com')
+  await knex('titres_etapes').where('type_id', 'mcp').where('statut_id', 'fav').update('statut_id', 'com')
 
-  await knex('titres_etapes')
-    .where('type_id', 'mcp')
-    .where('statut_id', 'def')
-    .update('statut_id', 'inc')
+  await knex('titres_etapes').where('type_id', 'mcp').where('statut_id', 'def').update('statut_id', 'inc')
 
-  await knex('etapes_types__etapes_statuts')
-    .where('etape_type_id', 'mcp')
-    .where('etape_statut_id', 'fav')
-    .del()
+  await knex('etapes_types__etapes_statuts').where('etape_type_id', 'mcp').where('etape_statut_id', 'fav').del()
 
-  return knex('etapes_types__etapes_statuts')
-    .where('etape_type_id', 'mcp')
-    .where('etape_statut_id', 'def')
-    .del()
+  return knex('etapes_types__etapes_statuts').where('etape_type_id', 'mcp').where('etape_statut_id', 'def').del()
 }
 
 export const down = () => ({})

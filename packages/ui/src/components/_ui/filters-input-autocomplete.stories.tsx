@@ -8,8 +8,8 @@ const meta: Meta = {
   argTypes: {
     rows: { name: 'array', value: 'string', required: true },
     columns: { name: 'array', value: 'string', required: true },
-    initialSort: { name: 'object' }
-  }
+    initialSort: { name: 'object' },
+  },
 }
 export default meta
 
@@ -23,9 +23,9 @@ export const Default: Story = () => (
       elements: [
         { id: 'id1', nom: 'name1' },
         { id: 'id2', nom: 'name2' },
-        { id: 'id3', nom: 'name3' }
+        { id: 'id3', nom: 'name3' },
       ],
-      lazy: false
+      lazy: false,
     }}
     onSelectItems={onSelectItems}
   />

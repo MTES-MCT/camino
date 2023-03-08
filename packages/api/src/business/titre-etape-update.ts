@@ -24,11 +24,7 @@ import { userSuper } from '../database/user-super.js'
 import { titresEtapesDepotCreate } from './processes/titres-demarches-depot-create.js'
 import { UserNotNull } from 'camino-common/src/roles'
 
-const titreEtapeUpdate = async (
-  titreEtapeId: string | null,
-  titreDemarcheId: DemarcheId,
-  user: UserNotNull
-) => {
+const titreEtapeUpdate = async (titreEtapeId: string | null, titreDemarcheId: DemarcheId, user: UserNotNull) => {
   try {
     console.info()
     console.info('- - -')
@@ -37,7 +33,7 @@ const titreEtapeUpdate = async (
     const titreDemarche = await titreDemarcheGet(
       titreDemarcheId,
       {
-        fields: {}
+        fields: {},
       },
       userSuper
     )
@@ -46,30 +42,18 @@ const titreEtapeUpdate = async (
       throw new Error(`la démarche ${titreDemarche} n'existe pas`)
     }
 
-    const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(
-      user,
-      titreDemarcheId
-    )
+    const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(user, titreDemarcheId)
 
-    const titresEtapesHeritagePropsUpdated =
-      await titresEtapesHeritagePropsUpdate(user, [titreDemarcheId])
-    const titresEtapesHeritageContenuUpdated =
-      await titresEtapesHeritageContenuUpdate(user, titreDemarcheId)
+    const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(user, [titreDemarcheId])
+    const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(user, titreDemarcheId)
 
     const titreId = titreDemarche.titreId
-    const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(
-      titreId
-    )
-    const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate([
-      titreId
-    ])
-    const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate([
-      titreId
-    ])
+    const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate(titreId)
+    const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate([titreId])
+    const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate([titreId])
     const titresStatutIdUpdated = await titresStatutIdsUpdate([titreId])
     const titresPublicUpdated = await titresPublicUpdate([titreId])
-    const [titresPhasesUpdated = [], titresPhasesDeleted = []] =
-      await titresPhasesUpdate([titreId])
+    const [titresPhasesUpdated = [], titresPhasesDeleted = []] = await titresPhasesUpdate([titreId])
     const titresDatesUpdated = await titresDatesUpdate([titreId])
 
     // si l'étape est supprimée, pas de mise à jour
@@ -77,24 +61,15 @@ const titreEtapeUpdate = async (
       await titresEtapesAreasUpdate([titreEtapeId])
     }
 
-    const { titresEtapesAdministrationsLocalesUpdated = [] } =
-      await titresEtapesAdministrationsLocalesUpdate(
-        titreEtapeId ? [titreEtapeId] : undefined
-      )
+    const { titresEtapesAdministrationsLocalesUpdated = [] } = await titresEtapesAdministrationsLocalesUpdate(titreEtapeId ? [titreEtapeId] : undefined)
 
-    const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate([
-      titreId
-    ])
+    const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate([titreId])
 
-    const titresContenusEtapesIdsUpdated = await titresContenusEtapesIdsUpdate([
-      titreId
-    ])
+    const titresContenusEtapesIdsUpdated = await titresContenusEtapesIdsUpdate([titreId])
 
     const titresCoordonneesUpdated = await titresCoordonneesUpdate([titreId])
     const titresActivitesCreated = await titresActivitesUpdate([titreId])
-    const titresActivitesPropsUpdated = await titresActivitesPropsUpdate([
-      titreId
-    ])
+    const titresActivitesPropsUpdated = await titresActivitesPropsUpdate([titreId])
 
     const titresUpdatedIndex = await titresSlugsUpdate([titreId])
 
@@ -110,16 +85,13 @@ const titreEtapeUpdate = async (
       titresPhasesUpdated,
       titresPhasesDeleted,
       titresDatesUpdated,
-      titresEtapesAdministrationsLocalesUpdated:
-        titresEtapesAdministrationsLocalesUpdated.map(
-          ({ titreEtapeId }) => titreEtapeId
-        ),
+      titresEtapesAdministrationsLocalesUpdated: titresEtapesAdministrationsLocalesUpdated.map(({ titreEtapeId }) => titreEtapeId),
       titresPropsEtapesIdsUpdated,
       titresContenusEtapesIdsUpdated,
       titresCoordonneesUpdated,
       titresActivitesCreated,
       titresActivitesPropsUpdated,
-      titresUpdatedIndex
+      titresUpdatedIndex,
     })
 
     await titresEtapesDepotCreate(titreDemarcheId)

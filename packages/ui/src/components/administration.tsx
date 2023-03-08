@@ -9,18 +9,8 @@ import { LoadingElement } from './_ui/functional-loader'
 import { Permissions } from './administration/permissions'
 import { ActivitesTypesEmails } from './administration/activites-types-emails'
 
-import {
-  utilisateursColonnes,
-  utilisateursLignesBuild
-} from './utilisateurs/table'
-import {
-  ADMINISTRATION_TYPES,
-  Administrations,
-  AdministrationId,
-  Administration as Adm,
-  AdministrationType,
-  isAdministrationId
-} from 'camino-common/src/static/administrations'
+import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
+import { ADMINISTRATION_TYPES, Administrations, AdministrationId, Administration as Adm, AdministrationType, isAdministrationId } from 'camino-common/src/static/administrations'
 import { isSuper, User } from 'camino-common/src/roles'
 import { canReadActivitesTypesEmails } from 'camino-common/src/permissions/administrations'
 import { Departement, Departements } from 'camino-common/src/static/departement'
@@ -45,17 +35,13 @@ export const Administration = defineComponent({
     return () => (
       <>
         {administrationId.value ? (
-          <PureAdministration
-            administrationId={administrationId.value}
-            user={user.value}
-            apiClient={apiClient}
-          />
+          <PureAdministration administrationId={administrationId.value} user={user.value} apiClient={apiClient} />
         ) : (
           <Error message="Administration inconnue" couleur="error" />
         )}
       </>
     )
-  }
+  },
 })
 
 interface Props {
@@ -63,54 +49,40 @@ interface Props {
   user: User
   apiClient: Pick<
     ApiClient,
-    | 'administrationActivitesTypesEmails'
-    | 'administrationUtilisateurs'
-    | 'administrationMetas'
-    | 'administrationActiviteTypeEmailUpdate'
-    | 'administrationActiviteTypeEmailDelete'
+    'administrationActivitesTypesEmails' | 'administrationUtilisateurs' | 'administrationMetas' | 'administrationActiviteTypeEmailUpdate' | 'administrationActiviteTypeEmailDelete'
   >
 }
 export const PureAdministration = defineComponent<Props>({
   props: ['administrationId', 'user', 'apiClient'] as unknown as undefined,
   setup(props) {
-    const administration = computed<Adm>(
-      () => Administrations[props.administrationId]
-    )
-    const type = computed<AdministrationType>(
-      () => ADMINISTRATION_TYPES[administration.value.typeId]
-    )
+    const administration = computed<Adm>(() => Administrations[props.administrationId])
+    const type = computed<AdministrationType>(() => ADMINISTRATION_TYPES[administration.value.typeId])
     const departement = computed<Departement | undefined>(() => {
-      return administration.value.departementId
-        ? Departements[administration.value.departementId]
-        : undefined
+      return administration.value.departementId ? Departements[administration.value.departementId] : undefined
     })
     const region = computed<Region | undefined>(() => {
-      return administration.value.regionId
-        ? Regions[administration.value.regionId]
-        : undefined
+      return administration.value.regionId ? Regions[administration.value.regionId] : undefined
     })
     const activitesTypesEmails = ref<AsyncData<ActiviteTypeEmail[]>>({
-      status: 'LOADING'
+      status: 'LOADING',
     })
     const utilisateurs = ref<AsyncData<Utilisateur[]>>({ status: 'LOADING' })
 
     const loadActivitesTypesEmails = async () => {
       if (canReadActivitesTypesEmails(props.user, props.administrationId)) {
         activitesTypesEmails.value = {
-          status: 'LOADING'
+          status: 'LOADING',
         }
         try {
           activitesTypesEmails.value = {
             status: 'LOADED',
-            value: await props.apiClient.administrationActivitesTypesEmails(
-              props.administrationId
-            )
+            value: await props.apiClient.administrationActivitesTypesEmails(props.administrationId),
           }
         } catch (e: any) {
           console.error('error', e)
           activitesTypesEmails.value = {
             status: 'ERROR',
-            message: e.message ?? "Une erreur s'est produite"
+            message: e.message ?? "Une erreur s'est produite",
           }
         }
       }
@@ -120,15 +92,13 @@ export const PureAdministration = defineComponent<Props>({
       try {
         utilisateurs.value = {
           status: 'LOADED',
-          value: await props.apiClient.administrationUtilisateurs(
-            props.administrationId
-          )
+          value: await props.apiClient.administrationUtilisateurs(props.administrationId),
         }
       } catch (e: any) {
         console.error('error', e)
         utilisateurs.value = {
           status: 'ERROR',
-          message: e.message ?? "Une erreur s'est produite"
+          message: e.message ?? "Une erreur s'est produite",
         }
       }
     })
@@ -138,9 +108,7 @@ export const PureAdministration = defineComponent<Props>({
         <h1>{administration.value.abreviation}</h1>
         <Accordion class="mb-xxl" slotSub={true} slotButtons={true}>
           {{
-            title: () => (
-              <span class="cap-first">{administration.value.nom}</span>
-            ),
+            title: () => <span class="cap-first">{administration.value.nom}</span>,
             sub: () => (
               <div class="px-m pt-m border-b-s">
                 <div class="tablet-blobs">
@@ -201,10 +169,7 @@ export const PureAdministration = defineComponent<Props>({
                   <div class="tablet-blob-3-4">
                     <p class="word-break">
                       {administration.value.email ? (
-                        <a
-                          href={`mailto:${administration.value.email}`}
-                          class="btn small bold py-xs px-s rnd"
-                        >
+                        <a href={`mailto:${administration.value.email}`} class="btn small bold py-xs px-s rnd">
                           {administration.value.email}
                         </a>
                       ) : (
@@ -221,10 +186,7 @@ export const PureAdministration = defineComponent<Props>({
                   <div class="tablet-blob-3-4">
                     <p class="word-break">
                       {administration.value.url ? (
-                        <a
-                          href={administration.value.url}
-                          class="btn small bold py-xs px-s rnd"
-                        >
+                        <a href={administration.value.url} class="btn small bold py-xs px-s rnd">
                           {administration.value.url}
                         </a>
                       ) : (
@@ -261,15 +223,13 @@ export const PureAdministration = defineComponent<Props>({
                     <div class="tablet-blob-1-4" />
                     <div class="tablet-blob-3-4">
                       <p class="h6 mb">
-                        Un utilisateur d'une <b>administration locale</b> peut
-                        créer et modifier le contenu des titres du territoire
-                        concerné.
+                        Un utilisateur d'une <b>administration locale</b> peut créer et modifier le contenu des titres du territoire concerné.
                       </p>
                     </div>
                   </div>
                 ) : null}
               </div>
-            )
+            ),
           }}
         </Accordion>
 
@@ -280,11 +240,7 @@ export const PureAdministration = defineComponent<Props>({
               <div class="line-neutral width-full mb-xxl" />
               <h2>Utilisateurs</h2>
               <div class="line width-full" />
-              <TableAuto
-                class="width-full-p"
-                columns={utilisateursColonnes}
-                rows={utilisateursLignesBuild(item)}
-              />
+              <TableAuto class="width-full-p" columns={utilisateursColonnes} rows={utilisateursLignesBuild(item)} />
             </div>
           )}
         />
@@ -305,7 +261,7 @@ export const PureAdministration = defineComponent<Props>({
                     props.apiClient.administrationActiviteTypeEmailUpdate({
                       activiteTypeId,
                       email,
-                      administrationId
+                      administrationId,
                     })
                     loadActivitesTypesEmails()
                   }}
@@ -313,7 +269,7 @@ export const PureAdministration = defineComponent<Props>({
                     props.apiClient.administrationActiviteTypeEmailDelete({
                       activiteTypeId,
                       email,
-                      administrationId
+                      administrationId,
                     })
                     loadActivitesTypesEmails()
                   }}
@@ -326,12 +282,9 @@ export const PureAdministration = defineComponent<Props>({
           <div class="line-neutral width-full mb-xxl" />
           <h2>Permissions</h2>
 
-          <Permissions
-            administrationId={props.administrationId}
-            apiClient={props.apiClient}
-          />
+          <Permissions administrationId={props.administrationId} apiClient={props.apiClient} />
         </div>
       </div>
     )
-  }
+  },
 })

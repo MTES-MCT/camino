@@ -14,7 +14,7 @@ test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeI
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'axm', optional: false },
   { etapeTypeId: 'dex', demarcheTypeId: 'oct', titreTypeId: 'axm', optional: true },
   { etapeTypeId: 'mfr', demarcheTypeId: 'oct', titreTypeId: 'prm', optional: true },
-  { etapeTypeId: 'mfr', demarcheTypeId: 'dep', titreTypeId: 'arm', optional: true }
+  { etapeTypeId: 'mfr', demarcheTypeId: 'dep', titreTypeId: 'arm', optional: true },
 ])('dureeOptionalCheck $etapeTypeId | $demarcheTypeId | $titreTypeId | $optional', ({ etapeTypeId, demarcheTypeId, titreTypeId, optional }) => {
   expect(dureeOptionalCheck(etapeTypeId, demarcheTypeId, titreTypeId)).toEqual(optional)
 })
@@ -22,7 +22,7 @@ test.each<{ etapeTypeId: EtapeTypeId; demarcheTypeId: DemarcheTypeId; titreTypeI
 test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; canEdit: boolean }>([
   { titreTypeId: 'arm', demarcheTypeId: 'dep', canEdit: false },
   { titreTypeId: 'arm', demarcheTypeId: 'dec', canEdit: false },
-  { titreTypeId: 'axm', demarcheTypeId: 'dec', canEdit: true }
+  { titreTypeId: 'axm', demarcheTypeId: 'dec', canEdit: true },
 ])('canEditDuree $titreTypeId | $demarcheTypeId | $canEdit', ({ titreTypeId, demarcheTypeId, canEdit }) => expect(canEditDuree(titreTypeId, demarcheTypeId)).toEqual(canEdit))
 
 test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; etapeTypeId: EtapeTypeId; user: TestUser; canEdit: boolean }>([
@@ -32,7 +32,7 @@ test.each<{ titreTypeId: TitreTypeId; demarcheTypeId: DemarcheTypeId; etapeTypeI
   { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'super' }, canEdit: true },
   { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
   { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dec', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
-  { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dep', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: false }
+  { titreTypeId: 'prm', etapeTypeId: 'mfr', demarcheTypeId: 'dep', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: false },
 ])('canEditDate $titreTypeId | $demarcheTypeId | $etapeTypeId | $user | $canEdit', ({ titreTypeId, demarcheTypeId, etapeTypeId, user, canEdit }) => {
   expect(canEditDates(titreTypeId, demarcheTypeId, etapeTypeId, { ...user, ...testBlankUser })).toEqual(canEdit)
 })
@@ -44,7 +44,7 @@ test.each<{ titreTypeId: TitreTypeId; user: TestUser; canEdit: boolean }>([
   { titreTypeId: 'prm', user: { role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
   { titreTypeId: 'prm', user: { role: 'editeur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
   { titreTypeId: 'prm', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: false },
-  { titreTypeId: 'prm', user: { role: 'defaut' }, canEdit: false }
+  { titreTypeId: 'prm', user: { role: 'defaut' }, canEdit: false },
 ])('canEditAmodiataires $titreTypeId | $user | $canEdit', ({ titreTypeId, user, canEdit }) => {
   expect(canEditAmodiataires(titreTypeId, { ...user, ...testBlankUser })).toEqual(canEdit)
 })
@@ -64,7 +64,7 @@ test.each<{ titreTypeId: TitreTypeId; user: TestUser; canEdit: boolean }>([
   { titreTypeId: 'arm', user: { role: 'admin', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
   { titreTypeId: 'arm', user: { role: 'editeur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: true },
   { titreTypeId: 'arm', user: { role: 'lecteur', administrationId: ADMINISTRATION_IDS.BRGM }, canEdit: false },
-  { titreTypeId: 'arm', user: { role: 'defaut' }, canEdit: false }
+  { titreTypeId: 'arm', user: { role: 'defaut' }, canEdit: false },
 ])('canEditTitulaires $titreTypeId | $user | $canEdit', ({ titreTypeId, user, canEdit }) => {
   expect(canEditTitulaires(titreTypeId, { ...user, ...testBlankUser })).toEqual(canEdit)
 })
@@ -87,7 +87,7 @@ test.each<{
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
     titre: { typeId: 'apc', titreStatutId: 'dmc' },
-    canCreate: true
+    canCreate: true,
   },
   {
     user: { role: 'defaut' },
@@ -97,7 +97,7 @@ test.each<{
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
     titre: { typeId: 'apc', titreStatutId: 'dmc' },
-    canCreate: false
+    canCreate: false,
   },
   {
     user: { role: 'editeur', administrationId: 'ope-brgm-01' },
@@ -107,7 +107,7 @@ test.each<{
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
     titre: { typeId: 'apc', titreStatutId: 'dmc' },
-    canCreate: false
+    canCreate: false,
   },
   {
     user: { role: 'lecteur', administrationId: 'ope-brgm-01' },
@@ -117,7 +117,7 @@ test.each<{
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
     titre: { typeId: 'apc', titreStatutId: 'dmc' },
-    canCreate: false
+    canCreate: false,
   },
   {
     user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1') }] },
@@ -127,7 +127,7 @@ test.each<{
     titresAdministrationsLocales: [],
     demarcheTypeId: 'ren',
     titre: { typeId: 'apc', titreStatutId: 'dmc' },
-    canCreate: false
+    canCreate: false,
   },
   {
     user: { role: 'entreprise', entreprises: [{ id: newEntrepriseId('1') }] },
@@ -137,7 +137,7 @@ test.each<{
     titresAdministrationsLocales: [],
     demarcheTypeId: 'oct',
     titre: { typeId: 'arm', titreStatutId: 'dmc' },
-    canCreate: true
+    canCreate: true,
   },
   {
     user: { role: 'admin', administrationId: 'ope-brgm-01' },
@@ -147,7 +147,7 @@ test.each<{
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
     titre: { typeId: 'arm', titreStatutId: 'dmc' },
-    canCreate: true
+    canCreate: true,
   },
   {
     user: { role: 'editeur', administrationId: 'ope-brgm-01' },
@@ -157,7 +157,7 @@ test.each<{
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
     titre: { typeId: 'arm', titreStatutId: 'dmc' },
-    canCreate: true
+    canCreate: true,
   },
   {
     user: { role: 'lecteur', administrationId: 'ope-brgm-01' },
@@ -167,7 +167,7 @@ test.each<{
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
     titre: { typeId: 'arm', titreStatutId: 'dmc' },
-    canCreate: false
+    canCreate: false,
   },
   {
     user: { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] },
@@ -177,7 +177,7 @@ test.each<{
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
     titre: { typeId: 'arm', titreStatutId: 'dmc' },
-    canCreate: false
+    canCreate: false,
   },
   {
     user: { role: 'admin', administrationId: ADMINISTRATION_IDS['GENDARMERIE NATIONALE - GUYANE'] },
@@ -187,8 +187,8 @@ test.each<{
     titresAdministrationsLocales: ['ope-brgm-01'],
     demarcheTypeId: 'oct',
     titre: { typeId: 'arm', titreStatutId: 'dmc' },
-    canCreate: false
-  }
+    canCreate: false,
+  },
 ])(
   'canCreateEtape $user | $etapeTypeId | $etapeStatutId | $titreTitulaires | $titresAdministrationsLocales | $demarcheTypeId | $titre | $canCreate',
   ({ user, etapeTypeId, etapeStatutId, titreTitulaires, titresAdministrationsLocales, demarcheTypeId, titre, canCreate }) => {
@@ -208,7 +208,7 @@ test.each<{
   { administrationId: 'dea-guyane-01', titreTypeId: 'axm', canEdit: true },
   { administrationId: 'ope-onf-973-01', titreTypeId: 'axm', canEdit: false },
   { administrationId: 'min-mtes-dgaln-01', titreTypeId: 'arm', canEdit: true },
-  { administrationId: 'ope-onf-973-01', titreTypeId: 'arm', canEdit: true }
+  { administrationId: 'ope-onf-973-01', titreTypeId: 'arm', canEdit: true },
 ])('un utilisateur admin d’une administration peut modifier une étape mcr sur un titre: $canEdit', ({ administrationId, titreTypeId, canEdit }) => {
   expect(canCreateOrEditEtape({ role: 'admin', administrationId, ...testBlankUser }, 'mcr', 'fai', [], [], 'oct', { typeId: titreTypeId, titreStatutId: 'val' }, 'modification')).toBe(canEdit)
 })

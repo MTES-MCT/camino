@@ -7,7 +7,7 @@
 <script>
 export default {
   props: {
-    nom: { type: String, default: 'indéfini' }
-  }
+    nom: { type: String, default: 'indéfini' },
+  },
 }
 </script>

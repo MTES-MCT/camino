@@ -1,12 +1,5 @@
 <template>
-  <div
-    class="top-level"
-    :style="
-      data.status !== 'LOADED'
-        ? { display: 'flex', ['justify-content']: 'center' }
-        : ''
-    "
-  >
+  <div class="top-level" :style="data.status !== 'LOADED' ? { display: 'flex', ['justify-content']: 'center' } : ''">
     <template v-if="data.status === 'LOADED'">
       <slot :item="data.value" />
     </template>

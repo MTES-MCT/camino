@@ -7,11 +7,11 @@ import Titres from '../../database/models/titres.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres', () => ({
   titreUpdate: vi.fn().mockResolvedValue(true),
-  titresGet: vi.fn()
+  titresGet: vi.fn(),
 }))
 
 vi.mock('../rules/titre-prop-etape-find', () => ({
-  titrePropTitreEtapeFind: vi.fn()
+  titrePropTitreEtapeFind: vi.fn(),
 }))
 
 const titresGetMock = vi.mocked(titresGet, true)
@@ -22,11 +22,9 @@ console.info = vi.fn()
 describe("propriétés (étape) d'un titre", () => {
   test('trouve 8 propriétés dans les étapes', async () => {
     titrePropTitreEtapeFindMock.mockReturnValue({
-      id: 'etape-id'
+      id: 'etape-id',
     } as ITitreEtape)
-    titresGetMock.mockResolvedValue([
-      { propsTitreEtapesIds: { titulaires: null } } as unknown as Titres
-    ])
+    titresGetMock.mockResolvedValue([{ propsTitreEtapesIds: { titulaires: null } } as unknown as Titres])
 
     const titresUpdatedRequests = await titresPropsEtapesIdsUpdate()
 
@@ -36,9 +34,7 @@ describe("propriétés (étape) d'un titre", () => {
 
   test("supprime un id d'étape qui est null dans les étapes", async () => {
     titrePropTitreEtapeFindMock.mockReturnValue(null)
-    titresGetMock.mockResolvedValue([
-      { propsTitreEtapesIds: { titulaires: null } } as unknown as Titres
-    ])
+    titresGetMock.mockResolvedValue([{ propsTitreEtapesIds: { titulaires: null } } as unknown as Titres])
 
     const titresUpdatedRequests = await titresPropsEtapesIdsUpdate()
 
@@ -47,9 +43,7 @@ describe("propriétés (étape) d'un titre", () => {
 
   test('ne trouve pas de propriétés dans les étapes', async () => {
     titrePropTitreEtapeFindMock.mockReturnValue(null)
-    titresGetMock.mockResolvedValue([
-      { propsTitreEtapesIds: {} } as unknown as Titres
-    ])
+    titresGetMock.mockResolvedValue([{ propsTitreEtapesIds: {} } as unknown as Titres])
 
     const titresUpdatedRequests = await titresPropsEtapesIdsUpdate()
 

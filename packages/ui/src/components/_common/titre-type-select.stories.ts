@@ -5,7 +5,7 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 const meta: Meta = {
   title: 'Components/common/TitreTypeSelect',
   component: TitreTypeSelect,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -14,21 +14,21 @@ const Template: Story<Props> = (args: Props) => ({
   data: () => ({
     element: {
       domaineId: undefined,
-      titreTypeId: undefined
-    }
+      titreTypeId: undefined,
+    },
   }),
   setup() {
     return { args }
   },
-  template: '<TitreTypeSelect  v-bind="args" :element="element" />'
+  template: '<TitreTypeSelect  v-bind="args" :element="element" />',
 })
 
 export const Default = Template.bind({})
 Default.args = {
-  user: { role: 'super', ...testBlankUser }
+  user: { role: 'super', ...testBlankUser },
 }
 
 export const Entreprise = Template.bind({})
 Entreprise.args = {
-  user: { role: 'entreprise', entreprises: [], ...testBlankUser }
+  user: { role: 'entreprise', entreprises: [], ...testBlankUser },
 }

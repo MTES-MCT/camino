@@ -28,29 +28,24 @@ export const daily = async () => {
     console.info('mise à jour quotidienne')
 
     const titresEtapesOrdreUpdated = await titresEtapesOrdreUpdate(userSuper)
-    const titresEtapesHeritagePropsUpdated =
-      await titresEtapesHeritagePropsUpdate(userSuper)
-    const titresEtapesHeritageContenuUpdated =
-      await titresEtapesHeritageContenuUpdate(userSuper)
+    const titresEtapesHeritagePropsUpdated = await titresEtapesHeritagePropsUpdate(userSuper)
+    const titresEtapesHeritageContenuUpdated = await titresEtapesHeritageContenuUpdate(userSuper)
     const titresDemarchesStatutUpdated = await titresDemarchesStatutIdUpdate()
     const titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate()
     const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate()
     const titresStatutIdUpdated = await titresStatutIdsUpdate()
     const titresPublicUpdated = await titresPublicUpdate()
-    const [titresPhasesUpdated = [], titresPhasesDeleted = []] =
-      await titresPhasesUpdate()
+    const [titresPhasesUpdated = [], titresPhasesDeleted = []] = await titresPhasesUpdate()
     const titresDatesUpdated = await titresDatesUpdate()
     const pointsReferencesCreated = await titresPointsReferencesCreate()
-    const { titresEtapesAdministrationsLocalesUpdated } =
-      await titresEtapesAdministrationsLocalesUpdate()
+    const { titresEtapesAdministrationsLocalesUpdated } = await titresEtapesAdministrationsLocalesUpdate()
     const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate()
     const titresContenusEtapesIdsUpdated = await titresContenusEtapesIdsUpdate()
 
     const titresCoordonneesUpdated = await titresCoordonneesUpdate()
     const titresActivitesCreated = await titresActivitesUpdate()
     const titresActivitesRelanceSent = await titresActivitesRelanceSend()
-    const titresActivitesStatutIdsUpdated =
-      await titresActivitesStatutIdsUpdate()
+    const titresActivitesStatutIdsUpdated = await titresActivitesStatutIdsUpdate()
     const titresActivitesPropsUpdated = await titresActivitesPropsUpdate()
     const titresUpdatedIndex = await titresSlugsUpdate()
 
@@ -67,10 +62,7 @@ export const daily = async () => {
       titresPhasesDeleted,
       titresDatesUpdated,
       pointsReferencesCreated,
-      titresEtapesAdministrationsLocalesUpdated:
-        titresEtapesAdministrationsLocalesUpdated.map(
-          ({ titreEtapeId }) => titreEtapeId
-        ),
+      titresEtapesAdministrationsLocalesUpdated: titresEtapesAdministrationsLocalesUpdated.map(({ titreEtapeId }) => titreEtapeId),
       titresPropsEtapesIdsUpdated,
       titresContenusEtapesIdsUpdated,
       titresCoordonneesUpdated,
@@ -78,7 +70,7 @@ export const daily = async () => {
       titresActivitesRelanceSent,
       titresActivitesStatutIdsUpdated,
       titresActivitesPropsUpdated,
-      titresUpdatedIndex
+      titresUpdatedIndex,
     })
   } catch (e) {
     console.info('erreur:', e)

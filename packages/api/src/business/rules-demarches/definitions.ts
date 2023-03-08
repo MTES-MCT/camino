@@ -32,22 +32,15 @@ export interface IDemarcheDefinitionRestrictionsProps {
   justeApres: IEtapeTypeIdCondition[][]
 }
 
-export interface IDemarcheDefinitionRestrictionsElements
-  extends IDemarcheDefinitionRestrictionsProps {
+export interface IDemarcheDefinitionRestrictionsElements extends IDemarcheDefinitionRestrictionsProps {
   etapeTypeId?: string
 }
-export type IDemarcheDefinition =
-  | DemarcheDefinitionRestriction
-  | DemarcheDefinitionMachine
+export type IDemarcheDefinition = DemarcheDefinitionRestriction | DemarcheDefinitionMachine
 
-export const isDemarcheDefinitionRestriction = (
-  dd: IDemarcheDefinition | undefined
-): dd is DemarcheDefinitionRestriction => {
+export const isDemarcheDefinitionRestriction = (dd: IDemarcheDefinition | undefined): dd is DemarcheDefinitionRestriction => {
   return dd !== undefined && 'restrictions' in dd
 }
-export const isDemarcheDefinitionMachine = (
-  dd: IDemarcheDefinition | undefined
-): dd is DemarcheDefinitionMachine => {
+export const isDemarcheDefinitionMachine = (dd: IDemarcheDefinition | undefined): dd is DemarcheDefinitionMachine => {
   return dd !== undefined && 'machine' in dd
 }
 
@@ -57,8 +50,7 @@ interface DemarcheDefinitionCommon {
   dateDebut: CaminoDate
   demarcheIdExceptions?: DemarcheId[]
 }
-export interface DemarcheDefinitionRestriction
-  extends DemarcheDefinitionCommon {
+export interface DemarcheDefinitionRestriction extends DemarcheDefinitionCommon {
   restrictions: IDemarcheDefinitionRestrictions
 }
 export interface DemarcheDefinitionMachine extends DemarcheDefinitionCommon {
@@ -88,25 +80,25 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
     titreTypeId: 'arm',
     demarcheTypeIds: ['oct'],
     machine: new ArmOctMachine(),
-    dateDebut: toCaminoDate('2019-10-31')
+    dateDebut: toCaminoDate('2019-10-31'),
   },
   {
     titreTypeId: 'arm',
     demarcheTypeIds: ['ret'],
     restrictions: restrictionsArmRet,
-    dateDebut: toCaminoDate('2019-10-31')
+    dateDebut: toCaminoDate('2019-10-31'),
   },
   {
     titreTypeId: 'arm',
     demarcheTypeIds: ['ren', 'pro'],
     restrictions: restrictionsArmRenPro,
-    dateDebut: toCaminoDate('2019-10-31')
+    dateDebut: toCaminoDate('2019-10-31'),
   },
   {
     titreTypeId: 'prm',
     demarcheTypeIds: ['oct'],
     restrictions: etatsDefinitionPrmOct,
-    dateDebut: toCaminoDate('2019-10-31')
+    dateDebut: toCaminoDate('2019-10-31'),
   },
   {
     titreTypeId: 'axm',
@@ -118,16 +110,16 @@ export const demarchesDefinitions: IDemarcheDefinition[] = [
       newDemarcheId('C3rs92l1eci3mLvsAGkv7gVV'),
       newDemarcheId('YEWeODXiFb7xKJB2OQlTyc14'),
       // avis dgtm moins de 30 jours après la saisine des services
-      newDemarcheId('ktPyoaDYzJi2faPMtAeKFZ5l')
-    ]
+      newDemarcheId('ktPyoaDYzJi2faPMtAeKFZ5l'),
+    ],
   },
   {
     titreTypeId: 'pxg',
     demarcheTypeIds: ['oct'],
     machine: new PxgOctMachine(),
     // https://camino.beta.gouv.fr/titres/g-px-vallee-arena-2020
-    dateDebut: toCaminoDate('2021-01-01')
-  }
+    dateDebut: toCaminoDate('2021-01-01'),
+  },
 ]
 
 export const demarcheDefinitionFind = (
@@ -140,12 +132,7 @@ export const demarcheDefinitionFind = (
 
   const definition = demarchesDefinitions
     .sort((a, b) => b.dateDebut.localeCompare(a.dateDebut))
-    .find(
-      d =>
-        (!date || d.dateDebut < date) &&
-        d.titreTypeId === titreTypeId &&
-        d.demarcheTypeIds.includes(demarcheTypeId)
-    )
+    .find(d => (!date || d.dateDebut < date) && d.titreTypeId === titreTypeId && d.demarcheTypeIds.includes(demarcheTypeId))
 
   if (definition?.demarcheIdExceptions?.includes(demarcheId)) {
     return undefined

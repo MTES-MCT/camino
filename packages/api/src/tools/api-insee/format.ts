@@ -1,10 +1,4 @@
-import {
-  IApiSirenEtablissement,
-  IApiSirenUniteLegalePeriode,
-  IApiSirenUnionUniteLegalePeriodeEtablissmentUnite,
-  IApiSirenUnionUniteLegaleEtablissmentUnite,
-  IApiSirenUniteLegale
-} from './types.js'
+import { IApiSirenEtablissement, IApiSirenUniteLegalePeriode, IApiSirenUnionUniteLegalePeriodeEtablissmentUnite, IApiSirenUnionUniteLegaleEtablissmentUnite, IApiSirenUniteLegale } from './types.js'
 import { IEntrepriseEtablissement, IEntreprise } from '../../types.js'
 
 import inseePays from './definitions/pays.js'
@@ -14,28 +8,15 @@ import inseeTypesVoies from './definitions/voies.js'
 import { checkCodePostal } from 'camino-common/src/static/departement.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
-interface IApiSirenNomFormat
-  extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite,
-    IApiSirenUnionUniteLegaleEtablissmentUnite {}
+interface IApiSirenNomFormat extends IApiSirenUnionUniteLegalePeriodeEtablissmentUnite, IApiSirenUnionUniteLegaleEtablissmentUnite {}
 
-const nomIndividuFormat = (
-  nomUniteLegale: string,
-  prenomUsuelUniteLegale?: string | null,
-  sexeUniteLegale?: 'F' | 'M' | null
-) =>
-  `${sexeUniteLegale === 'F' ? 'MADAME' : 'MONSIEUR'} ${
-    prenomUsuelUniteLegale || ''
-  } ${nomUniteLegale}`
+const nomIndividuFormat = (nomUniteLegale: string, prenomUsuelUniteLegale?: string | null, sexeUniteLegale?: 'F' | 'M' | null) =>
+  `${sexeUniteLegale === 'F' ? 'MADAME' : 'MONSIEUR'} ${prenomUsuelUniteLegale || ''} ${nomUniteLegale}`
 
-const nomEntrepriseFormat = (
-  denominationUniteLegale?: string | null,
-  denominationUsuelle1UniteLegale?: string | null,
-  sigleUniteLegale?: string | null
-) => {
+const nomEntrepriseFormat = (denominationUniteLegale?: string | null, denominationUsuelle1UniteLegale?: string | null, sigleUniteLegale?: string | null) => {
   const denomination = denominationUniteLegale && denominationUniteLegale.trim()
 
-  const denominationUsuelle =
-    denominationUsuelle1UniteLegale && denominationUsuelle1UniteLegale.trim()
+  const denominationUsuelle = denominationUsuelle1UniteLegale && denominationUsuelle1UniteLegale.trim()
 
   const sigle = sigleUniteLegale && sigleUniteLegale.trim()
 
@@ -59,36 +40,14 @@ const nomEntrepriseFormat = (
 }
 
 const nomFormat = (
-  {
-    denominationUniteLegale,
-    denominationUsuelle1UniteLegale,
-    nomUniteLegale,
-    prenomUsuelUniteLegale,
-    sexeUniteLegale,
-    sigleUniteLegale
-  }: Partial<IApiSirenNomFormat>,
+  { denominationUniteLegale, denominationUsuelle1UniteLegale, nomUniteLegale, prenomUsuelUniteLegale, sexeUniteLegale, sigleUniteLegale }: Partial<IApiSirenNomFormat>,
   nomEntrepriseUsuel?: boolean
 ) =>
-  (nomUniteLegale &&
-  (!nomEntrepriseUsuel ||
-    (!denominationUniteLegale &&
-      !denominationUsuelle1UniteLegale &&
-      !sigleUniteLegale))
-    ? nomIndividuFormat(
-        nomUniteLegale!,
-        prenomUsuelUniteLegale,
-        sexeUniteLegale
-      )
-    : nomEntrepriseFormat(
-        denominationUniteLegale,
-        denominationUsuelle1UniteLegale,
-        sigleUniteLegale
-      )) || 'Indéfini'
+  (nomUniteLegale && (!nomEntrepriseUsuel || (!denominationUniteLegale && !denominationUsuelle1UniteLegale && !sigleUniteLegale))
+    ? nomIndividuFormat(nomUniteLegale!, prenomUsuelUniteLegale, sexeUniteLegale)
+    : nomEntrepriseFormat(denominationUniteLegale, denominationUsuelle1UniteLegale, sigleUniteLegale)) || 'Indéfini'
 
-const entrepriseEtablissementFormat = (
-  uniteLegale: IApiSirenUniteLegale,
-  uniteLegalePeriode: IApiSirenUniteLegalePeriode
-) => {
+const entrepriseEtablissementFormat = (uniteLegale: IApiSirenUniteLegale, uniteLegalePeriode: IApiSirenUniteLegalePeriode) => {
   const entrepriseId = `fr-${uniteLegale.siren}`
   const nic = uniteLegalePeriode.nicSiegeUniteLegale || 'xxxxx'
   const dateDebut = toCaminoDate(uniteLegalePeriode.dateDebut)
@@ -100,7 +59,7 @@ const entrepriseEtablissementFormat = (
     entrepriseId,
     nom,
     dateDebut,
-    legalSiret
+    legalSiret,
   } as IEntrepriseEtablissement
 
   if (uniteLegalePeriode.dateFin) {
@@ -110,36 +69,24 @@ const entrepriseEtablissementFormat = (
   return etablissement
 }
 
-export const entrepriseEtablissementsFormat = (
-  uniteLegale: IApiSirenUniteLegale
-) => {
+export const entrepriseEtablissementsFormat = (uniteLegale: IApiSirenUniteLegale) => {
   // periodesUniteLegale est un tableau
   // classé par ordre de fin chronologique décroissant
-  if (
-    !uniteLegale.periodesUniteLegale ||
-    !uniteLegale.periodesUniteLegale.length
-  ) {
+  if (!uniteLegale.periodesUniteLegale || !uniteLegale.periodesUniteLegale.length) {
     return []
   }
 
-  const entrepriseEtablissements = uniteLegale.periodesUniteLegale.map(
-    uniteLegalePeriode =>
-      entrepriseEtablissementFormat(uniteLegale, uniteLegalePeriode)
-  )
+  const entrepriseEtablissements = uniteLegale.periodesUniteLegale.map(uniteLegalePeriode => entrepriseEtablissementFormat(uniteLegale, uniteLegalePeriode))
 
   return entrepriseEtablissements
 }
 
-export const entrepriseFormat = ({
-  uniteLegale,
-  adresseEtablissement: adresse,
-  siren
-}: IApiSirenEtablissement) => {
+export const entrepriseFormat = ({ uniteLegale, adresseEtablissement: adresse, siren }: IApiSirenEtablissement) => {
   const id = `fr-${siren}`
 
   const entreprise = {
     id,
-    legalSiren: siren
+    legalSiren: siren,
   } as IEntreprise
 
   const nom = nomFormat(uniteLegale, true)
@@ -166,9 +113,7 @@ export const entrepriseFormat = ({
   }
 
   if (adresse.typeVoieEtablissement) {
-    const typeVoie = inseeTypesVoies.find(
-      t => t.id === adresse.typeVoieEtablissement
-    )
+    const typeVoie = inseeTypesVoies.find(t => t.id === adresse.typeVoieEtablissement)
     if (typeVoie) {
       entreprise.adresse += `${typeVoie.nom} `
     }
@@ -186,43 +131,31 @@ export const entrepriseFormat = ({
     try {
       entreprise.codePostal = checkCodePostal(adresse.codePostalEtablissement)
     } catch (e) {
-      console.warn(
-        `erreur lors du formatage de l'entreprise '${entreprise.id}', ${e}`
-      )
+      console.warn(`erreur lors du formatage de l'entreprise '${entreprise.id}', ${e}`)
     }
   }
 
-  const commune =
-    adresse.libelleCommuneEtablissement ||
-    adresse.libelleCommuneEtrangerEtablissement
+  const commune = adresse.libelleCommuneEtablissement || adresse.libelleCommuneEtrangerEtablissement
 
   if (commune) {
     entreprise.commune = commune
   }
 
   if (uniteLegale.categorieJuridiqueUniteLegale) {
-    const categorie = inseeCategoriesJuridiques.find(
-      c => c.code === uniteLegale.categorieJuridiqueUniteLegale
-    )
+    const categorie = inseeCategoriesJuridiques.find(c => c.code === uniteLegale.categorieJuridiqueUniteLegale)
     if (categorie) {
       entreprise.legalForme = categorie.nom
     } else {
-      console.error(
-        `API Insee: catégorie juridique introuvable : ${uniteLegale.categorieJuridiqueUniteLegale}`
-      )
+      console.error(`API Insee: catégorie juridique introuvable : ${uniteLegale.categorieJuridiqueUniteLegale}`)
     }
   }
 
   if (adresse.codePaysEtrangerEtablissement) {
-    const pays = inseePays.find(
-      p => p.cog === adresse.codePaysEtrangerEtablissement
-    )
+    const pays = inseePays.find(p => p.cog === adresse.codePaysEtrangerEtablissement)
     if (pays) {
       entreprise.paysId = pays.codeiso2
     } else {
-      console.error(
-        `API Insee: code pays introuvable: ${adresse.codePaysEtrangerEtablissement}`
-      )
+      console.error(`API Insee: code pays introuvable: ${adresse.codePaysEtrangerEtablissement}`)
     }
   } else {
     entreprise.paysId = 'FR'

@@ -19,7 +19,7 @@ describe('etapeSaveFormat', () => {
         groupes: [],
         substances: [],
         contenu: {},
-        incertitudes: {}
+        incertitudes: {},
       })
     ).toEqual({
       amodiataires: [],
@@ -32,7 +32,7 @@ describe('etapeSaveFormat', () => {
       substances: [],
       titreDemarcheId: 'demarche-id',
       titulaires: [],
-      typeId: 'mfr'
+      typeId: 'mfr',
     })
 
     expect(
@@ -52,25 +52,25 @@ describe('etapeSaveFormat', () => {
               {
                 references: {
                   'geo-systeme-id': { id: 'id1', x: 1.5, y: 1 },
-                  'geo-systeme-id-2': { x: undefined, y: undefined }
-                }
+                  'geo-systeme-id-2': { x: undefined, y: undefined },
+                },
               },
               {
                 references: {
                   'geo-systeme-id': { x: undefined, y: undefined },
-                  'geo-systeme-id-2': { id: 'id3', x: 1.5, y: 1 }
-                }
-              }
-            ]
-          ]
+                  'geo-systeme-id-2': { id: 'id3', x: 1.5, y: 1 },
+                },
+              },
+            ],
+          ],
         ],
         substances: [],
         contenu: {},
         incertitudes: {},
         heritageProps: { 'prop-id': { etape: {}, actif: true } },
         heritageContenu: {
-          'section-id': { 'element-id': { etape: {}, actif: true } }
-        }
+          'section-id': { 'element-id': { etape: {}, actif: true } },
+        },
       })
     ).toEqual({
       amodiataires: [],
@@ -87,10 +87,10 @@ describe('etapeSaveFormat', () => {
               coordonnees: { x: 1.5, y: 1 },
               geoSystemeId: 'geo-systeme-id',
               opposable: true,
-              id: 'id1'
-            }
-          ]
-        }
+              id: 'id1',
+            },
+          ],
+        },
       ],
       statutId: '',
       substances: [],
@@ -98,9 +98,9 @@ describe('etapeSaveFormat', () => {
       titulaires: [],
       heritageProps: { 'prop-id': { actif: true } },
       heritageContenu: {
-        'section-id': { 'element-id': { actif: true } }
+        'section-id': { 'element-id': { actif: true } },
       },
-      typeId: 'mfr'
+      typeId: 'mfr',
     })
 
     expect(
@@ -119,45 +119,45 @@ describe('etapeSaveFormat', () => {
             [
               {
                 references: {
-                  'geo-systeme-id': { id: '1', x: 1.5, y: null }
+                  'geo-systeme-id': { id: '1', x: 1.5, y: null },
                 },
                 lot: undefined,
-                subsidiaire: undefined
+                subsidiaire: undefined,
               },
               {
                 references: { 'geo-systeme-id': { id: '2', x: 1.5, y: 1 } },
                 lot: undefined,
-                subsidiaire: undefined
+                subsidiaire: undefined,
               },
               {
                 description: undefined,
                 references: [
                   { id: '3', x: 1.5, y: 3 },
-                  { id: '4', x: 1.5, y: 4 }
+                  { id: '4', x: 1.5, y: 4 },
                 ],
                 lot: 1,
-                subsidiaire: undefined
+                subsidiaire: undefined,
               },
               {
                 description: undefined,
                 references: [],
                 lot: 2,
-                subsidiaire: undefined
+                subsidiaire: undefined,
               },
               {
                 description: undefined,
                 references: ['reference invalide'],
                 lot: 3,
-                subsidiaire: undefined
-              }
-            ]
+                subsidiaire: undefined,
+              },
+            ],
           ],
-          [[]]
+          [[]],
         ],
         substances: ['substance-id-1', undefined],
         contenu: { 'prop-id': 'prop-value' },
         incertitudes: { amodiataires: true },
-        documents: [{ id: 'tmp', typeId: 'tmp' }, { id: 'doc-id' }]
+        documents: [{ id: 'tmp', typeId: 'tmp' }, { id: 'doc-id' }],
       })
     ).toEqual({
       amodiataires: [],
@@ -174,9 +174,9 @@ describe('etapeSaveFormat', () => {
             {
               id: '2',
               coordonnees: { x: 1.5, y: 1 },
-              geoSystemeId: 'geo-systeme-id'
-            }
-          ]
+              geoSystemeId: 'geo-systeme-id',
+            },
+          ],
         },
         {
           contour: 1,
@@ -189,10 +189,10 @@ describe('etapeSaveFormat', () => {
             {
               coordonnees: { x: 1.5, y: 3 },
               geoSystemeId: 'geo-systeme-id',
-              id: '3'
-            }
+              id: '3',
+            },
           ],
-          subsidiaire: true
+          subsidiaire: true,
         },
         {
           contour: 1,
@@ -205,18 +205,18 @@ describe('etapeSaveFormat', () => {
             {
               coordonnees: { x: 1.5, y: 4 },
               geoSystemeId: 'geo-systeme-id',
-              id: '4'
-            }
+              id: '4',
+            },
           ],
-          subsidiaire: true
-        }
+          subsidiaire: true,
+        },
       ],
       statutId: 'etape-statut-id',
       substances: ['substance-id-1'],
       titreDemarcheId: 'demarche-id',
       titulaires: [{ id: 'titulaire-id' }],
       typeId: 'etape-type-id',
-      documentIds: ['doc-id']
+      documentIds: ['doc-id'],
     })
   })
 })

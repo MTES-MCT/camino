@@ -1,15 +1,10 @@
-import {
-  documentMetas,
-  documentCreer,
-  documentModifier,
-  documentSupprimer
-} from '../api/documents'
+import { documentMetas, documentCreer, documentModifier, documentSupprimer } from '../api/documents'
 import { uploadCall } from '../api/_upload'
 
 const state = {
   metas: {
-    documentsTypes: []
-  }
+    documentsTypes: [],
+  },
 }
 
 const actions = {
@@ -53,35 +48,29 @@ const actions = {
         })
       }
 
-      const nomTemporaire = uploadURL
-        ? uploadURL.substring(uploadURL.lastIndexOf('/') + 1)
-        : null
+      const nomTemporaire = uploadURL ? uploadURL.substring(uploadURL.lastIndexOf('/') + 1) : null
 
       const idOld = document.id
       try {
         if (!document.id) {
           documentReturned = await documentCreer({
-            document: { ...documentToSend, nomTemporaire }
+            document: { ...documentToSend, nomTemporaire },
           })
         } else {
           delete documentToSend.typeId
           documentReturned = await documentModifier({
-            document: { ...documentToSend, nomTemporaire }
+            document: { ...documentToSend, nomTemporaire },
           })
         }
 
-        dispatch(
-          'messageAdd',
-          { value: `le document a été mis à jour`, type: 'success' },
-          { root: true }
-        )
+        dispatch('messageAdd', { value: `le document a été mis à jour`, type: 'success' }, { root: true })
 
         dispatch('refreshAfterUpsert', {
           route,
           idOld,
           titreEtapeId: document.titreEtapeId,
           document: documentReturned,
-          action
+          action,
         })
 
         // Ne ferme la popup automatiquement que si tout s'est passé sans erreur
@@ -96,10 +85,7 @@ const actions = {
     }
   },
 
-  async refreshAfterUpsert(
-    { commit, dispatch },
-    { route, idOld, titreEtapeId, document, action }
-  ) {
+  async refreshAfterUpsert({ commit, dispatch }, { route, idOld, titreEtapeId, document, action }) {
     if (route) {
       await dispatch('reload', route, { root: true })
 
@@ -135,11 +121,7 @@ const actions = {
       if (route) {
         commit('popupClose', null, { root: true })
 
-        dispatch(
-          'messageAdd',
-          { value: `le document a été supprimé`, type: 'success' },
-          { root: true }
-        )
+        dispatch('messageAdd', { value: `le document a été supprimé`, type: 'success' }, { root: true })
         await dispatch('reload', route, { root: true })
       }
     } catch (e) {
@@ -147,7 +129,7 @@ const actions = {
     } finally {
       commit('loadingRemove', 'documentRemove', { root: true })
     }
-  }
+  },
 }
 
 const mutations = {
@@ -157,12 +139,12 @@ const mutations = {
 
   uploadProgress(state, progress) {
     state.upload.progress = progress
-  }
+  },
 }
 
 export default {
   namespaced: true,
   state,
   actions,
-  mutations
+  mutations,
 }

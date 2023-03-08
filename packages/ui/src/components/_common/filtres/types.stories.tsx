@@ -1,15 +1,12 @@
 import { Meta, Story } from '@storybook/vue3'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines'
-import {
-  TitresTypesTypes,
-  TITRES_TYPES_TYPES_IDS
-} from 'camino-common/src/static/titresTypesTypes'
+import { TitresTypesTypes, TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes'
 import { FiltresTypes, Props } from './types'
 import { MapPattern } from '../../_map/pattern'
 
 const meta: Meta = {
   title: 'Components/Common/Filtres/Types',
-  component: FiltresTypes
+  component: FiltresTypes,
 }
 export default meta
 
@@ -25,9 +22,7 @@ export const AllTypes: Story<Props> = () => (
         <tr>
           <td>{type}</td>
           <td>
-            <FiltresTypes
-              element={{ id: type, nom: TitresTypesTypes[type].nom }}
-            />
+            <FiltresTypes element={{ id: type, nom: TitresTypesTypes[type].nom }} />
           </td>
         </tr>
       ))}
@@ -41,7 +36,7 @@ export const AllTypes: Story<Props> = () => (
               <FiltresTypes
                 element={{
                   id: `${type}-${domaine}`,
-                  nom: TitresTypesTypes[type].nom
+                  nom: TitresTypesTypes[type].nom,
                 }}
               />
             </td>

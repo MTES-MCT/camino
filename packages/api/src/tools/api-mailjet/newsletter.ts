@@ -5,35 +5,24 @@ interface IContactListAdd {
   Action: string
 }
 
-const newsLetterContactListId = Number(
-  process.env.API_MAILJET_CONTACTS_LIST_ID!
-)
-const exploitantsGuyaneContactListId = Number(
-  process.env.API_MAILJET_EXPLOITANTS_GUYANE_LIST_ID!
-)
+const newsLetterContactListId = Number(process.env.API_MAILJET_CONTACTS_LIST_ID!)
+const exploitantsGuyaneContactListId = Number(process.env.API_MAILJET_EXPLOITANTS_GUYANE_LIST_ID!)
 
-export const isSubscribedToNewsLetter = async (
-  email: string | null | undefined
-): Promise<boolean> => {
+export const isSubscribedToNewsLetter = async (email: string | null | undefined): Promise<boolean> => {
   return isSubscribed(newsLetterContactListId, email)
 }
 
-const isSubscribed = async (
-  contactListId: number,
-  email: string | null | undefined
-): Promise<boolean> => {
+const isSubscribed = async (contactListId: number, email: string | null | undefined): Promise<boolean> => {
   if (email) {
-    const recipientsResult = await mailjet
-      .get('listrecipient', { version: 'v3' })
-      .request(
-        {},
-        {
-          ContactEmail: email,
-          ContactsList: contactListId,
-          Unsub: false,
-          countOnly: true
-        }
-      )
+    const recipientsResult = await mailjet.get('listrecipient', { version: 'v3' }).request(
+      {},
+      {
+        ContactEmail: email,
+        ContactsList: contactListId,
+        Unsub: false,
+        countOnly: true,
+      }
+    )
 
     // TODO 2022-08-30 en attente d'un meilleur typage https://github.com/mailjet/mailjet-apiv3-nodejs/issues/217
     return (recipientsResult.body as { Count: number }).Count > 0
@@ -42,17 +31,13 @@ const isSubscribed = async (
   return false
 }
 
-const contactListSubscribe = async (
-  email: string,
-  contactListId: number,
-  Action: 'addforce' | 'unsub'
-) => {
+const contactListSubscribe = async (email: string, contactListId: number, Action: 'addforce' | 'unsub') => {
   const contactResult = (await mailjet
     .post('contact', { version: 'v3' })
     .id(encodeURIComponent(email))
     .action('managecontactslists')
     .request({
-      ContactsLists: [{ Action, ListID: contactListId }]
+      ContactsLists: [{ Action, ListID: contactListId }],
     })) as { body: { Data: IContactListAdd[] } }
 
   const contactListAdded = contactResult.body.Data[0]
@@ -73,33 +58,24 @@ const contactAdd = async (email: string): Promise<void> => {
 }
 
 // TODO 2022-09-27 nettoyer la liste des mails déjà sur la liste mailjet.
-export const exploitantsGuyaneSubscriberUpdate = async (
-  users: { email: string; nom: string }[]
-): Promise<void> => {
-  console.info(
-    `ajout de ${users.length} utilisateurs à la liste ${exploitantsGuyaneContactListId}`
-  )
+export const exploitantsGuyaneSubscriberUpdate = async (users: { email: string; nom: string }[]): Promise<void> => {
+  console.info(`ajout de ${users.length} utilisateurs à la liste ${exploitantsGuyaneContactListId}`)
   const contacts = users.map(user => ({
     Email: user.email,
     Name: user.nom,
     IsExcludedFromCampaigns: false,
-    Properties: 'object'
+    Properties: 'object',
   }))
   await mailjet
     .post('contact', { version: 'v3' })
     .action('managemanycontacts')
     .request({
       Contacts: contacts,
-      ContactsLists: [
-        { Action: 'addforce', ListID: exploitantsGuyaneContactListId }
-      ]
+      ContactsLists: [{ Action: 'addforce', ListID: exploitantsGuyaneContactListId }],
     })
 }
 
-export const newsletterSubscriberUpdate = async (
-  email: string | undefined | null,
-  subscribed: boolean
-): Promise<string> => {
+export const newsletterSubscriberUpdate = async (email: string | undefined | null, subscribed: boolean): Promise<string> => {
   if (!email) {
     return ''
   }
@@ -116,10 +92,7 @@ export const newsletterSubscriberUpdate = async (
       return 'email désinscrit à la newsletter'
     }
   } catch (e: any) {
-    console.error(
-      'une erreur est apparue lors de la communication avec mailjet',
-      e
-    )
+    console.error('une erreur est apparue lors de la communication avec mailjet', e)
     throw new Error(e)
   }
 }

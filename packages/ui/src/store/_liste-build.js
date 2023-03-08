@@ -35,10 +35,7 @@ const listeActionsBuild = (id, name, elements, metas) => ({
 
       await dispatch('urlQueryUpdate')
 
-      const p = paramsBuild(
-        state.definitions,
-        Object.assign({}, state.params.filtres, state.params.table)
-      )
+      const p = paramsBuild(state.definitions, Object.assign({}, state.params.filtres, state.params.table))
 
       const data = await elements({ ...p, ...state.additionalParams })
 
@@ -55,7 +52,7 @@ const listeActionsBuild = (id, name, elements, metas) => ({
         'messageAdd',
         {
           value: `mise à jour : ${name}`,
-          type: 'success'
+          type: 'success',
         },
         { root: true }
       )
@@ -87,11 +84,7 @@ const listeActionsBuild = (id, name, elements, metas) => ({
   async paramsFromQueryUpdate({ rootState, state, commit }) {
     let hasChanged = false
 
-    const tableParams = urlQueryParamsGet(
-      state.params.table,
-      rootState.route.query,
-      state.definitions
-    )
+    const tableParams = urlQueryParamsGet(state.params.table, rootState.route.query, state.definitions)
 
     if (Object.keys(tableParams).length) {
       commit('paramsSet', { section: 'table', params: tableParams })
@@ -99,11 +92,7 @@ const listeActionsBuild = (id, name, elements, metas) => ({
     }
 
     if (state.params.filtres) {
-      const filtresParams = urlQueryParamsGet(
-        state.params.filtres,
-        rootState.route.query,
-        state.definitions
-      )
+      const filtresParams = urlQueryParamsGet(state.params.filtres, rootState.route.query, state.definitions)
 
       if (Object.keys(filtresParams).length) {
         commit('paramsSet', { section: 'filtres', params: filtresParams })
@@ -118,13 +107,9 @@ const listeActionsBuild = (id, name, elements, metas) => ({
     if (state.params.filtres) {
       const params = Object.assign(state.params.filtres, state.params.table)
 
-      await dispatch(
-        'urlQueryUpdate',
-        { params, definitions: state.definitions },
-        { root: true }
-      )
+      await dispatch('urlQueryUpdate', { params, definitions: state.definitions }, { root: true })
     }
-  }
+  },
 })
 
 export const listeMutationsWithDefaultState = getDefaultState => {
@@ -133,7 +118,7 @@ export const listeMutationsWithDefaultState = getDefaultState => {
       // Merge rather than replace so we don't lose observers
       // https://github.com/vuejs/vuex/issues/1118
       Object.assign(state, getDefaultState())
-    }
+    },
   })
 }
 
@@ -164,7 +149,7 @@ export const listeMutations = {
 
   init(state) {
     state.initialized = true
-  }
+  },
 }
 
 export { listeActionsBuild }

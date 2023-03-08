@@ -8,6 +8,6 @@ import Page from './demarches/page.vue'
 export default {
   name: 'Demarches',
 
-  components: { Page }
+  components: { Page },
 }
 </script>

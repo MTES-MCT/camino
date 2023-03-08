@@ -1,23 +1,14 @@
 import express from 'express'
 import { knex } from '../knex.js'
 import { userIdGenerate } from '../api/graphql/resolvers/utilisateurs.js'
-import {
-  userByEmailGet,
-  utilisateurCreate
-} from '../database/queries/utilisateurs.js'
+import { userByEmailGet, utilisateurCreate } from '../database/queries/utilisateurs.js'
 import { emailsSend } from '../tools/api-mailjet/emails.js'
 import { formatUser } from '../types.js'
 import { getCurrent } from 'camino-common/src/date.js'
 
-export const userLoader = async (
-  req: express.Request,
-  _res: express.Response,
-  next: express.NextFunction
-) => {
+export const userLoader = async (req: express.Request, _res: express.Response, next: express.NextFunction) => {
   try {
-    const reqUser = req.user as
-      | { email?: string; family_name?: string; given_name?: string }
-      | undefined
+    const reqUser = req.user as { email?: string; family_name?: string; given_name?: string } | undefined
     if (reqUser?.email) {
       let user = await userByEmailGet(reqUser.email)
       if (!user) {
@@ -35,7 +26,7 @@ export const userLoader = async (
             role: 'defaut',
             nom: reqUser.family_name,
             prenom: reqUser.given_name,
-            dateCreation: getCurrent()
+            dateCreation: getCurrent(),
           },
           { fields: { entreprises: { id: {} } } }
         )
@@ -45,14 +36,9 @@ export const userLoader = async (
           `Nouvel utilisateur ${user.email} créé`,
           `L'utilisateur ${user.nom} ${user.prenom} vient de se créer un compte : ${process.env.OAUTH_URL}/utilisateurs/${user.id}`
         )
-      } else if (
-        user.nom !== reqUser.family_name ||
-        user.prenom !== reqUser.given_name
-      ) {
+      } else if (user.nom !== reqUser.family_name || user.prenom !== reqUser.given_name) {
         // mise à jour du nom et du prénom de l’utilisateur
-        await knex('utilisateurs')
-          .update({ nom: reqUser.family_name, prenom: reqUser.given_name })
-          .where('email', reqUser.email)
+        await knex('utilisateurs').update({ nom: reqUser.family_name, prenom: reqUser.given_name }).where('email', reqUser.email)
         user.nom = reqUser.family_name
         user.prenom = reqUser.given_name
       }

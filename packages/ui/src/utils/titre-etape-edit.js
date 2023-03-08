@@ -3,10 +3,7 @@ import { GeoSystemes } from 'camino-common/src/static/geoSystemes'
 
 const referencesBuild = references =>
   references.reduce(
-    (
-      { pointGeoSystemesIndex, pointReferences },
-      { geoSystemeId, coordonnees, id }
-    ) => {
+    ({ pointGeoSystemesIndex, pointReferences }, { geoSystemeId, coordonnees, id }) => {
       pointGeoSystemesIndex[geoSystemeId] = GeoSystemes[geoSystemeId]
 
       pointReferences[geoSystemeId] = { ...coordonnees }
@@ -28,33 +25,13 @@ const geoSystemeOpposableIdFind = references => {
 
 const groupeBuild = (points, geoSystemeOpposableId) =>
   points.reduce(
-    (
-      {
-        groupes,
-        geoSystemesIndex,
-        lotCurrent,
-        pointIndex,
-        contourIndexPrevious,
-        groupeIndexPrevious
-      },
-      { nom, description, contour, groupe, references, lot, subsidiaire, id }
-    ) => {
-      const { pointReferences, pointGeoSystemesIndex } =
-        referencesBuild(references)
+    ({ groupes, geoSystemesIndex, lotCurrent, pointIndex, contourIndexPrevious, groupeIndexPrevious }, { nom, description, contour, groupe, references, lot, subsidiaire, id }) => {
+      const { pointReferences, pointGeoSystemesIndex } = referencesBuild(references)
 
-      const lotGeoSystemeId =
-        geoSystemeOpposableId || Object.keys(pointGeoSystemesIndex)[0]
+      const lotGeoSystemeId = geoSystemeOpposableId || Object.keys(pointGeoSystemesIndex)[0]
 
-      if (
-        lot &&
-        lotCurrent &&
-        lotCurrent === lot &&
-        groupe === groupeIndexPrevious &&
-        contour === contourIndexPrevious
-      ) {
-        groupes[groupe - 1][contour - 1][pointIndex - 1].references.push(
-          pointReferences[lotGeoSystemeId]
-        )
+      if (lot && lotCurrent && lotCurrent === lot && groupe === groupeIndexPrevious && contour === contourIndexPrevious) {
+        groupes[groupe - 1][contour - 1][pointIndex - 1].references.push(pointReferences[lotGeoSystemeId])
       } else {
         if (!groupes[groupe - 1]) {
           groupes[groupe - 1] = []
@@ -68,7 +45,7 @@ const groupeBuild = (points, geoSystemeOpposableId) =>
           description,
           lot,
           subsidiaire,
-          references: lot ? [pointReferences[lotGeoSystemeId]] : pointReferences
+          references: lot ? [pointReferences[lotGeoSystemeId]] : pointReferences,
         }
 
         if (id) {
@@ -89,14 +66,11 @@ const groupeBuild = (points, geoSystemeOpposableId) =>
 
       return {
         groupes,
-        geoSystemesIndex: Object.assign(
-          geoSystemesIndex,
-          pointGeoSystemesIndex
-        ),
+        geoSystemesIndex: Object.assign(geoSystemesIndex, pointGeoSystemesIndex),
         lotCurrent,
         pointIndex,
         contourIndexPrevious,
-        groupeIndexPrevious
+        groupeIndexPrevious,
       }
     },
     {
@@ -105,29 +79,25 @@ const groupeBuild = (points, geoSystemeOpposableId) =>
       lotCurrent: null,
       pointIndex: 0,
       contourIndexPrevious: 1,
-      groupeIndexPrevious: 1
+      groupeIndexPrevious: 1,
     }
   )
 
 const etapeGroupesBuild = points => {
   const geoSystemeOpposableId = geoSystemeOpposableIdFind(points[0].references)
 
-  const { groupes, geoSystemesIndex } = groupeBuild(
-    points,
-    geoSystemeOpposableId
-  )
+  const { groupes, geoSystemesIndex } = groupeBuild(points, geoSystemeOpposableId)
 
   return {
     groupes,
     geoSystemes: Object.keys(geoSystemesIndex).map(id => geoSystemesIndex[id]),
-    geoSystemeOpposableId
+    geoSystemeOpposableId,
   }
 }
 
 const etapePointsFormat = (etape, points) => {
   if (points && points.length) {
-    const { groupes, geoSystemes, geoSystemeOpposableId } =
-      etapeGroupesBuild(points)
+    const { groupes, geoSystemes, geoSystemeOpposableId } = etapeGroupesBuild(points)
 
     etape.groupes = groupes
     etape.geoSystemeIds = geoSystemes.map(({ id }) => id)
@@ -151,7 +121,7 @@ const etapeEditFormat = etape => {
     if (etape[propId]) {
       etape[propId] = etape[propId].map(({ id, operateur }) => ({
         id,
-        operateur
+        operateur,
       }))
     } else {
       etape[propId] = []
@@ -196,9 +166,4 @@ const documentEtapeFormat = document => {
 
   return document
 }
-export {
-  etapeEditFormat,
-  etapeGroupesBuild,
-  documentEtapeFormat,
-  etapePointsFormat
-}
+export { etapeEditFormat, etapeGroupesBuild, documentEtapeFormat, etapePointsFormat }

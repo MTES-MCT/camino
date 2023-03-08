@@ -4,50 +4,47 @@ import { etatComplementsGet, etatInformationsGet } from '../etat-cycles.js'
 // https://cacoo.com/diagrams/nStw2pYe0PKBs1lp/B1B05
 const restrictionsArmRenPro: IDemarcheDefinitionRestrictions = {
   mfr: {
-    justeApres: []
+    justeApres: [],
   },
   mdp: {
     justeApres: [[{ etapeTypeId: 'mfr' }]],
-    separation: ['mcr']
+    separation: ['mcr'],
   },
   mod: {
-    justeApres: [[{ etapeTypeId: 'mdp' }]]
+    justeApres: [[{ etapeTypeId: 'mdp' }]],
   },
   ...etatComplementsGet('mca', 'rca', {
     etapeTypeId: 'mcr',
-    justeApres: [[{ etapeTypeId: 'mdp' }], [{ etapeTypeId: 'mod' }]]
+    justeApres: [[{ etapeTypeId: 'mdp' }], [{ etapeTypeId: 'mod' }]],
   }),
   ...etatInformationsGet('mio', 'rio', {
     etapeTypeId: 'eof',
-    justeApres: [[{ etapeTypeId: 'mcr', statutId: 'fav' }]]
+    justeApres: [[{ etapeTypeId: 'mcr', statutId: 'fav' }]],
   }),
   ...etatInformationsGet('mia', 'ria', {
     etapeTypeId: 'aof',
-    justeApres: [[{ etapeTypeId: 'eof' }]]
+    justeApres: [[{ etapeTypeId: 'eof' }]],
   }),
   aco: {
-    justeApres: [
-      [{ etapeTypeId: 'aof', statutId: 'fav' }],
-      [{ etapeTypeId: 'mnv' }]
-    ]
+    justeApres: [[{ etapeTypeId: 'aof', statutId: 'fav' }], [{ etapeTypeId: 'mnv' }]],
   },
   mnv: {
-    justeApres: [[{ etapeTypeId: 'aco' }]]
+    justeApres: [[{ etapeTypeId: 'aco' }]],
   },
   mnd: {
-    justeApres: [[{ etapeTypeId: 'aof', statutId: 'def' }]]
+    justeApres: [[{ etapeTypeId: 'aof', statutId: 'def' }]],
   },
   css: {
-    justeApres: [[{ etapeTypeId: 'mcr', statutId: 'def' }]]
+    justeApres: [[{ etapeTypeId: 'mcr', statutId: 'def' }]],
   },
   mnc: {
-    justeApres: [[{ etapeTypeId: 'css' }]]
+    justeApres: [[{ etapeTypeId: 'css' }]],
   },
   des: {
     justeApres: [],
     apres: [[{ etapeTypeId: 'mdp' }]],
-    avant: [[{ etapeTypeId: 'css' }], [{ etapeTypeId: 'aof' }]]
-  }
+    avant: [[{ etapeTypeId: 'css' }], [{ etapeTypeId: 'aof' }]],
+  },
 }
 
 export { restrictionsArmRenPro }

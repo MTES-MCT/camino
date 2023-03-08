@@ -10,7 +10,7 @@ import {
   fragmentTitreTypeDemarcheTypeEtapeType,
   fragmentEtapeTypeDocumentType,
   fragmentEtapeTypeJustificatifType,
-  fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType
+  fragmentTitreTypeDemarcheTypeEtapeTypeDocumentType,
 } from './fragments/metas'
 
 const titresTypesTypes = apiGraphQLFetch(
@@ -143,5 +143,5 @@ export {
   titresTypesDemarchesTypesEtapesTypes,
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
   etapesTypesDocumentsTypes,
-  etapesTypesJustificatifsTypes
+  etapesTypesJustificatifsTypes,
 }

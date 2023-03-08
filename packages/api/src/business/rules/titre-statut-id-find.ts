@@ -6,13 +6,8 @@ import { DEMARCHES_TYPES_IDS } from 'camino-common/src/static/demarchesTypes.js'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 
-export const titreStatutIdFind = (
-  aujourdhui: string,
-  demarches: ITitreDemarche[] | null | undefined
-) => {
-  const titreDemarches = demarches
-    ? demarches.filter(d => !d.type!.travaux)
-    : null
+export const titreStatutIdFind = (aujourdhui: string, demarches: ITitreDemarche[] | null | undefined) => {
+  const titreDemarches = demarches ? demarches.filter(d => !d.type!.travaux) : null
 
   if (!titreDemarches || !titreDemarches.length) return 'ind'
 
@@ -21,13 +16,7 @@ export const titreStatutIdFind = (
   if (titreDemarches.every(d => d.statutId === 'ind')) return 'ind'
 
   // s'il y a une seule démarche (octroi)
-  if (
-    titreDemarches.length === 1 &&
-    ['oct', 'vut', 'vct'].includes(titreDemarches[0].typeId) &&
-    ['eco', 'ins', 'dep', 'rej', 'cls', 'des'].includes(
-      titreDemarches[0].statutId!
-    )
-  ) {
+  if (titreDemarches.length === 1 && ['oct', 'vut', 'vct'].includes(titreDemarches[0].typeId) && ['eco', 'ins', 'dep', 'rej', 'cls', 'des'].includes(titreDemarches[0].statutId!)) {
     // si le statut de la démarche est en instruction ou déposée
     // -> le statut du titre est demande initiale
     if (['eco', 'ins', 'dep'].includes(titreDemarches[0].statutId!)) {
@@ -63,54 +52,27 @@ export const titreStatutIdFind = (
 
 // et qu'une démarche de prolongation est déposée et a été déposée avant l'échéance de l'octroi ou d’une prolongation précédente
 // -> le statut du titre est modification en instance (survie provisoire)
-export const titreInSurvieProvisoire = (
-  demarches: ITitreDemarche[] | null | undefined
-): boolean => {
+export const titreInSurvieProvisoire = (demarches: ITitreDemarche[] | null | undefined): boolean => {
   if (demarches?.length) {
     const octroi = demarches.find(d => d.typeId === DEMARCHES_TYPES_IDS.Octroi)
 
     if (octroi) {
-      const dateFin = titreDateFinFind(
-        demarches.filter(({ typeId }) =>
-          [
-            DEMARCHES_TYPES_IDS.Octroi,
-            DEMARCHES_TYPES_IDS.Prolongation1,
-            DEMARCHES_TYPES_IDS.Prolongation
-          ].includes(typeId)
-        )
-      )
+      const dateFin = titreDateFinFind(demarches.filter(({ typeId }) => [DEMARCHES_TYPES_IDS.Octroi, DEMARCHES_TYPES_IDS.Prolongation1, DEMARCHES_TYPES_IDS.Prolongation].includes(typeId)))
 
       if (
         dateFin &&
         demarches.some(d => {
-          if (
-            ![
-              DEMARCHES_TYPES_IDS.Prolongation1,
-              DEMARCHES_TYPES_IDS.Prolongation2,
-              DEMARCHES_TYPES_IDS.Prolongation
-            ].includes(d.typeId)
-          ) {
+          if (![DEMARCHES_TYPES_IDS.Prolongation1, DEMARCHES_TYPES_IDS.Prolongation2, DEMARCHES_TYPES_IDS.Prolongation].includes(d.typeId)) {
             return false
           }
 
-          if (
-            ![
-              DemarchesStatutsIds.EnConstruction,
-              DemarchesStatutsIds.Depose
-            ].includes(d.statutId)
-          ) {
+          if (![DemarchesStatutsIds.EnConstruction, DemarchesStatutsIds.Depose].includes(d.statutId)) {
             return false
           }
 
-          let demandeProlongation = d.etapes?.find(
-            e =>
-              e.typeId === ETAPES_TYPES.demande &&
-              e.statutId !== ETAPES_STATUTS.EN_CONSTRUCTION
-          )
+          let demandeProlongation = d.etapes?.find(e => e.typeId === ETAPES_TYPES.demande && e.statutId !== ETAPES_STATUTS.EN_CONSTRUCTION)
           if (!demandeProlongation) {
-            demandeProlongation = d.etapes?.find(
-              e => e.typeId === ETAPES_TYPES.depotDeLaDemande
-            )
+            demandeProlongation = d.etapes?.find(e => e.typeId === ETAPES_TYPES.depotDeLaDemande)
           }
 
           return demandeProlongation && demandeProlongation.date < dateFin

@@ -6,10 +6,7 @@ import { contenuDatesCheck } from './utils/contenu-dates-check.js'
 
 const datePropsNames = ['date'] as [keyof ITitreActivite]
 
-export const titreActiviteInputValidate = (
-  titreActivite: ITitreActivite,
-  activiteSections: ISection[]
-) => {
+export const titreActiviteInputValidate = (titreActivite: ITitreActivite, activiteSections: ISection[]) => {
   const errors = []
 
   // 1. le format des dates est correct
@@ -19,10 +16,7 @@ export const titreActiviteInputValidate = (
   }
 
   if (titreActivite.contenu && activiteSections) {
-    const errorsSections = contenuDatesCheck(
-      activiteSections,
-      titreActivite.contenu
-    )
+    const errorsSections = contenuDatesCheck(activiteSections, titreActivite.contenu)
     if (errorsSections) {
       errors.push(errorsSections)
     }
@@ -30,10 +24,7 @@ export const titreActiviteInputValidate = (
 
   // 3. les champs number n'ont pas de durée négative
   if (titreActivite.contenu && activiteSections) {
-    const errorsContenu = contenuNumbersCheck(
-      activiteSections,
-      titreActivite.contenu
-    )
+    const errorsContenu = contenuNumbersCheck(activiteSections, titreActivite.contenu)
     if (errorsContenu) {
       errors.push(errorsContenu)
     }

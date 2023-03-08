@@ -108,7 +108,7 @@ export const DOCUMENTS_TYPES_IDS = {
   rapportDIntensiteDExploration: 'rie',
   rapportSocialEtEconomiqueDExploration: 'rse',
   schemaDePenetrationDuMassifForestier: 'sch',
-  avisDeSituationAuRepertoireSirene: 'sir'
+  avisDeSituationAuRepertoireSirene: 'sir',
 } as const
 
 export type DocumentTypeId = (typeof DOCUMENTS_TYPES_IDS)[keyof typeof DOCUMENTS_TYPES_IDS]
@@ -209,7 +209,7 @@ export const DocumentsTypes: { [key in DocumentTypeId]: Definition<key> } = {
   rie: { id: 'rie', nom: 'Rapport d’intensité d’exploration' },
   rse: { id: 'rse', nom: "Rapport social et économique d'exploration" },
   sch: { id: 'sch', nom: 'Schéma de pénétration du massif forestier' },
-  sir: { id: 'sir', nom: 'Avis de situation au répertoire Sirene' }
+  sir: { id: 'sir', nom: 'Avis de situation au répertoire Sirene' },
 }
 
 const documentsTypesIds = Object.values(DOCUMENTS_TYPES_IDS)

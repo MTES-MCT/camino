@@ -1,11 +1,6 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import {
-  ITitreDemarche,
-  ITitreEtapeFiltre,
-  ITitreDemarcheColonneId,
-  Context
-} from '../../../types.js'
+import { ITitreDemarche, ITitreEtapeFiltre, ITitreDemarcheColonneId, Context } from '../../../types.js'
 
 import { fieldsBuild } from './_fields-build.js'
 
@@ -13,33 +8,16 @@ import { titreFormat } from '../../_format/titres.js'
 
 import { titreDemarcheFormat } from '../../_format/titres-demarches.js'
 
-import {
-  titreDemarcheGet,
-  titresDemarchesCount,
-  titresDemarchesGet,
-  titreDemarcheCreate,
-  titreDemarcheUpdate,
-  titreDemarcheArchive
-} from '../../../database/queries/titres-demarches.js'
+import { titreDemarcheGet, titresDemarchesCount, titresDemarchesGet, titreDemarcheCreate, titreDemarcheUpdate, titreDemarcheArchive } from '../../../database/queries/titres-demarches.js'
 
 import { titreGet } from '../../../database/queries/titres.js'
 
 import titreDemarcheUpdateTask from '../../../business/titre-demarche-update.js'
 import { titreDemarcheUpdationValidate } from '../../../business/validations/titre-demarche-updation-validate.js'
-import {
-  isDemarcheTypeId,
-  isTravaux
-} from 'camino-common/src/static/demarchesTypes.js'
-import {
-  canCreateTravaux,
-  canCreateDemarche
-} from 'camino-common/src/permissions/titres-demarches.js'
+import { isDemarcheTypeId, isTravaux } from 'camino-common/src/static/demarchesTypes.js'
+import { canCreateTravaux, canCreateDemarche } from 'camino-common/src/permissions/titres-demarches.js'
 
-const demarche = async (
-  { id }: { id: string },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const demarche = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -75,7 +53,7 @@ const demarches = async (
     titresSubstancesIds,
     titresReferences,
     titresTerritoires,
-    travaux
+    travaux,
   }: {
     page?: number | null
     intervalle?: number | null
@@ -128,7 +106,7 @@ const demarches = async (
           titresSubstancesIds,
           titresReferences,
           titresTerritoires,
-          travaux
+          travaux,
         },
         { fields: fields.elements },
         user
@@ -147,16 +125,14 @@ const demarches = async (
           titresSubstancesIds,
           titresReferences,
           titresTerritoires,
-          travaux
+          travaux,
         },
         { fields: {} },
         user
-      )
+      ),
     ])
 
-    const demarchesFormatted = titresDemarches.map(titreDemarche =>
-      titreDemarcheFormat(titreDemarche, fields.elements)
-    )
+    const demarchesFormatted = titresDemarches.map(titreDemarche => titreDemarcheFormat(titreDemarche, fields.elements))
 
     return {
       elements: demarchesFormatted,
@@ -164,7 +140,7 @@ const demarches = async (
       intervalle,
       ordre,
       colonne,
-      total
+      total,
     }
   } catch (e) {
     console.error(e)
@@ -173,17 +149,9 @@ const demarches = async (
   }
 }
 
-const demarcheCreer = async (
-  { demarche }: { demarche: ITitreDemarche },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const demarcheCreer = async ({ demarche }: { demarche: ITitreDemarche }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
-    const titre = await titreGet(
-      demarche.titreId,
-      { fields: { pointsEtape: { id: {} } } },
-      user
-    )
+    const titre = await titreGet(demarche.titreId, { fields: { pointsEtape: { id: {} } } }, user)
 
     if (!titre) throw new Error("le titre n'existe pas")
 
@@ -197,21 +165,10 @@ const demarcheCreer = async (
       throw new Error('le statut du titre est obligatoire')
     }
 
-    if (
-      isTravaux(demarche.typeId) &&
-      !canCreateTravaux(user, titre.typeId, titre.administrationsLocales ?? [])
-    ) {
+    if (isTravaux(demarche.typeId) && !canCreateTravaux(user, titre.typeId, titre.administrationsLocales ?? [])) {
       throw new Error('droits insuffisants')
     }
-    if (
-      !isTravaux(demarche.typeId) &&
-      !canCreateDemarche(
-        user,
-        titre.typeId,
-        titre.titreStatutId,
-        titre.administrationsLocales ?? []
-      )
-    ) {
+    if (!isTravaux(demarche.typeId) && !canCreateDemarche(user, titre.typeId, titre.titreStatutId, titre.administrationsLocales ?? [])) {
       throw new Error('droits insuffisants')
     }
 
@@ -221,11 +178,7 @@ const demarcheCreer = async (
 
     const fields = fieldsBuild(info)
 
-    const titreUpdated = await titreGet(
-      demarcheCreated.titreId,
-      { fields },
-      user
-    )
+    const titreUpdated = await titreGet(demarcheCreated.titreId, { fields }, user)
 
     return titreUpdated && titreFormat(titreUpdated)
   } catch (e) {
@@ -235,18 +188,14 @@ const demarcheCreer = async (
   }
 }
 
-const demarcheModifier = async (
-  { demarche }: { demarche: ITitreDemarche },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const demarcheModifier = async ({ demarche }: { demarche: ITitreDemarche }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     if (!user) throw new Error('droits insuffisants')
 
     const demarcheOld = await titreDemarcheGet(
       demarche.id,
       {
-        fields: { etapes: { id: {} } }
+        fields: { etapes: { id: {} } },
       },
       user
     )
@@ -257,13 +206,9 @@ const demarcheModifier = async (
 
     if (!demarcheOld.modification) throw new Error('droits insuffisants')
 
-    if (demarcheOld.titreId !== demarche.titreId)
-      throw new Error('le titre n’existe pas')
+    if (demarcheOld.titreId !== demarche.titreId) throw new Error('le titre n’existe pas')
 
-    const rulesErrors = await titreDemarcheUpdationValidate(
-      demarche,
-      demarcheOld
-    )
+    const rulesErrors = await titreDemarcheUpdationValidate(demarche, demarcheOld)
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
@@ -285,17 +230,9 @@ const demarcheModifier = async (
   }
 }
 
-const demarcheSupprimer = async (
-  { id }: { id: string },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const demarcheSupprimer = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
-    const demarcheOld = await titreDemarcheGet(
-      id,
-      { fields: { etapes: { id: {} } } },
-      user
-    )
+    const demarcheOld = await titreDemarcheGet(id, { fields: { etapes: { id: {} } } }, user)
 
     if (!demarcheOld) throw new Error("la démarche n'existe pas")
 
@@ -317,10 +254,4 @@ const demarcheSupprimer = async (
   }
 }
 
-export {
-  demarche,
-  demarches,
-  demarcheCreer,
-  demarcheModifier,
-  demarcheSupprimer
-}
+export { demarche, demarches, demarcheCreer, demarcheModifier, demarcheSupprimer }

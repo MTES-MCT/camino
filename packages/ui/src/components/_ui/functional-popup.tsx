@@ -43,25 +43,25 @@ export const FunctionalPopup = defineComponent<Props>({
 
     const validateProcess = ref<AsyncData<null>>({
       status: 'LOADED',
-      value: null
+      value: null,
     })
 
     const validate = async () => {
       if (canValidate.value) {
         validateProcess.value = {
-          status: 'LOADING'
+          status: 'LOADING',
         }
         try {
           await props.validate.action()
           validateProcess.value = {
             status: 'LOADED',
-            value: null
+            value: null,
           }
         } catch (e: any) {
           console.error('error', e)
           validateProcess.value = {
             status: 'ERROR',
-            message: e.message ?? 'something wrong happened'
+            message: e.message ?? 'something wrong happened',
           }
         }
         props.close()
@@ -69,14 +69,8 @@ export const FunctionalPopup = defineComponent<Props>({
     }
 
     return () => (
-      <div
-        class="absolute full bg-inverse-alpha z-2"
-        onClick={() => props.close()}
-      >
-        <div
-          class="popup fixed shadow full bg-bg"
-          onClick={e => e.stopPropagation()}
-        >
+      <div class="absolute full bg-inverse-alpha z-2" onClick={() => props.close()}>
+        <div class="popup fixed shadow full bg-bg" onClick={e => e.stopPropagation()}>
           <div class="popup-header px-l pt-l">
             <h2>{props.title}</h2>
           </div>
@@ -84,10 +78,7 @@ export const FunctionalPopup = defineComponent<Props>({
           <div class="popup-footer px-l pt pb-l">
             <div class="tablet-blobs">
               <div class="tablet-blob-1-3 mb tablet-mb-0">
-                <button
-                  class="btn-border rnd-xs p-s full-x"
-                  onClick={() => props.close()}
-                >
+                <button class="btn-border rnd-xs p-s full-x" onClick={() => props.close()}>
                   Annuler
                 </button>
               </div>
@@ -98,9 +89,7 @@ export const FunctionalPopup = defineComponent<Props>({
                     <button
                       ref={validateButton}
                       disabled={!canValidate.value}
-                      class={`${
-                        !canValidate.value ? 'disabled' : ''
-                      } btn btn-primary`}
+                      class={`${!canValidate.value ? 'disabled' : ''} btn btn-primary`}
                       onClick={e => {
                         e.stopPropagation()
                         return validate()
@@ -116,5 +105,5 @@ export const FunctionalPopup = defineComponent<Props>({
         </div>
       </div>
     )
-  }
+  },
 })

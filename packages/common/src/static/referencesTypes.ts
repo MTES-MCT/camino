@@ -8,7 +8,7 @@ export const REFERENCES_TYPES_IDS = {
   NomDUsage: 'nus',
   ONF: 'onf',
   PTMG: 'ptm',
-  RNTM: 'rnt'
+  RNTM: 'rnt',
 } as const
 
 export type ReferenceTypeId = (typeof REFERENCES_TYPES_IDS)[keyof typeof REFERENCES_TYPES_IDS]
@@ -26,7 +26,7 @@ export const ReferencesTypes: { [key in ReferenceTypeId]: ReferenceType<key> } =
   nus: { id: 'nus', nom: "Nom d'usage" },
   onf: { id: 'onf', nom: 'ONF' },
   ptm: { id: 'ptm', nom: 'PTMG' },
-  rnt: { id: 'rnt', nom: 'RNTM' }
+  rnt: { id: 'rnt', nom: 'RNTM' },
 }
 
 export const sortedReferencesTypes = Object.values(ReferencesTypes).sort((a, b) => a.nom.localeCompare(b.nom))

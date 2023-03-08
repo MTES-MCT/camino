@@ -5,7 +5,7 @@ import { UNITES } from 'camino-common/src/static/unites.js'
 const activiteTypeGra = {
   id: 'gra',
   frequenceId: 'ann',
-  sections: [{ id: 'substancesFiscales' }]
+  sections: [{ id: 'substancesFiscales' }],
 } as IActiviteType
 
 const activiteTypeGrp = {
@@ -21,7 +21,7 @@ const activiteTypeGrp = {
           nom: 'Nom champ 1',
           type: 'number',
           optionnel: true,
-          description: 'Description champs 1'
+          description: 'Description champs 1',
         },
         {
           id: 'champ-2',
@@ -29,7 +29,7 @@ const activiteTypeGrp = {
           type: 'checkboxes',
           valeurs: [{ id: 'un', nom: 'Uno' }],
           dateFin: '2018-04-01',
-          description: 'Description champs 2'
+          description: 'Description champs 2',
         },
         {
           id: 'champ-3',
@@ -38,11 +38,11 @@ const activiteTypeGrp = {
           valeursMetasNom: 'unites',
           dateDebut: '2018-07-01',
           description: 'Description champs 3',
-          periodesIds: [3]
-        }
-      ]
-    }
-  ]
+          periodesIds: [3],
+        },
+      ],
+    },
+  ],
 } as IActiviteType
 
 const titreActivitesGra = [
@@ -63,39 +63,36 @@ const titreActivitesGra = [
             type: 'number',
             description: '<b>g (gramme)</b> contenu dans les minerais',
             referenceUniteRatio: 0.001,
-            uniteId: SubstancesFiscale.auru.uniteId
+            uniteId: SubstancesFiscale.auru.uniteId,
           },
           {
             id: SubstancesFiscale.naca.id,
             nom: SubstancesFiscale.naca.nom,
             type: 'number',
-            description:
-              '<b>x 1000 t (millier de tonnes)</b> extrait par abattage net livré',
+            description: '<b>x 1000 t (millier de tonnes)</b> extrait par abattage net livré',
             referenceUniteRatio: 1000000,
-            uniteId: SubstancesFiscale.naca.uniteId
+            uniteId: SubstancesFiscale.naca.uniteId,
           },
           {
-            description:
-              '<b>x 1000 t (millier de tonnes)</b> extrait en dissolution par sondage et livré raffiné',
+            description: '<b>x 1000 t (millier de tonnes)</b> extrait en dissolution par sondage et livré raffiné',
             id: SubstancesFiscale.nacb.id,
             nom: SubstancesFiscale.nacb.nom,
             referenceUniteRatio: 1000000,
             type: 'number',
-            uniteId: SubstancesFiscale.nacb.uniteId
+            uniteId: SubstancesFiscale.nacb.uniteId,
           },
           {
-            description:
-              '<b>x 1000 t (millier de tonnes)</b> extrait en dissolution par sondage et livré en dissolution',
+            description: '<b>x 1000 t (millier de tonnes)</b> extrait en dissolution par sondage et livré en dissolution',
             id: SubstancesFiscale.nacc.id,
             nom: SubstancesFiscale.nacc.nom,
             referenceUniteRatio: 1000000,
             type: 'number',
-            uniteId: SubstancesFiscale.nacc.uniteId
-          }
-        ]
-      }
-    ]
-  }
+            uniteId: SubstancesFiscale.nacc.uniteId,
+          },
+        ],
+      },
+    ],
+  },
 ]
 
 const titreActivitesGrp = [
@@ -115,19 +112,19 @@ const titreActivitesGrp = [
             nom: 'Nom champ 1',
             optionnel: true,
             type: 'number',
-            description: 'Description champs 1'
+            description: 'Description champs 1',
           },
           {
             id: 'champ-2',
             nom: 'Nom champs 2',
             type: 'checkboxes',
             description: 'Description champs 2',
-            valeurs: [{ id: 'un', nom: 'Uno' }]
-          }
+            valeurs: [{ id: 'un', nom: 'Uno' }],
+          },
         ],
-        nom: 'Renseignements'
-      }
-    ]
+        nom: 'Renseignements',
+      },
+    ],
   },
   {
     titreId: 'titre-id',
@@ -145,12 +142,12 @@ const titreActivitesGrp = [
             nom: 'Nom champ 1',
             optionnel: true,
             type: 'number',
-            description: 'Description champs 1'
-          }
+            description: 'Description champs 1',
+          },
         ],
-        nom: 'Renseignements'
-      }
-    ]
+        nom: 'Renseignements',
+      },
+    ],
   },
   {
     titreId: 'titre-id',
@@ -168,19 +165,19 @@ const titreActivitesGrp = [
             nom: 'Nom champ 1',
             optionnel: true,
             type: 'number',
-            description: 'Description champs 1'
+            description: 'Description champs 1',
           },
           {
             id: 'champ-3',
             nom: 'Nom champs 3',
             type: 'checkboxes',
             description: 'Description champs 3',
-            valeurs: UNITES
-          }
+            valeurs: UNITES,
+          },
         ],
-        nom: 'Renseignements'
-      }
-    ]
+        nom: 'Renseignements',
+      },
+    ],
   },
   {
     titreId: 'titre-id',
@@ -198,13 +195,13 @@ const titreActivitesGrp = [
             nom: 'Nom champ 1',
             optionnel: true,
             type: 'number',
-            description: 'Description champs 1'
-          }
+            description: 'Description champs 1',
+          },
         ],
-        nom: 'Renseignements'
-      }
-    ]
-  }
+        nom: 'Renseignements',
+      },
+    ],
+  },
 ]
 
 const titreDemarches = [
@@ -220,16 +217,10 @@ const titreDemarches = [
         date: '2018-01-01',
         typeId: 'dpu',
         statutId: 'fai',
-        substances: ['auru', 'nacl', null]
-      }
-    ]
-  } as ITitreDemarche
+        substances: ['auru', 'nacl', null],
+      },
+    ],
+  } as ITitreDemarche,
 ]
 
-export {
-  titreActivitesGra,
-  titreActivitesGrp,
-  activiteTypeGra,
-  activiteTypeGrp,
-  titreDemarches
-}
+export { titreActivitesGra, titreActivitesGrp, activiteTypeGra, activiteTypeGrp, titreDemarches }

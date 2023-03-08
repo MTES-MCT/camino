@@ -22,13 +22,13 @@ describe('teste les requêtes sur les démarches', () => {
       const titre = await Titres.query().insert({
         nom: idGenerate(),
         titreStatutId: 'val',
-        typeId: 'arm'
+        typeId: 'arm',
       })
 
       const demarche = await TitresDemarches.query().insert({
         titreId: titre.id,
         typeId: 'oct',
-        statutId: 'eco'
+        statutId: 'eco',
       })
       expect(demarche.archive).toBeFalsy()
 
@@ -37,16 +37,14 @@ describe('teste les requêtes sur les démarches', () => {
           titreDemarcheId: demarche.id,
           typeId: 'mfr',
           statutId: 'aco',
-          date: toCaminoDate('2020-02-02')
+          date: toCaminoDate('2020-02-02'),
         })
         expect(etape.archive).toBeFalsy()
       }
 
       await titreDemarcheArchive(demarche.id)
 
-      const archiveDemarche = await TitresDemarches.query()
-        .findById(demarche.id)
-        .withGraphFetched('etapes')
+      const archiveDemarche = await TitresDemarches.query().findById(demarche.id).withGraphFetched('etapes')
 
       expect(archiveDemarche).not.toBeUndefined()
       expect(archiveDemarche?.archive).toBe(true)

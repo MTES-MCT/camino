@@ -1,45 +1,15 @@
 import GraphQLJSON from 'graphql-type-json'
 import { GraphQLUpload } from 'graphql-upload'
 
-import {
-  titre,
-  titres,
-  titreCreer,
-  titreSupprimer,
-  titreModifier
-} from './resolvers/titres.js'
+import { titre, titres, titreCreer, titreSupprimer, titreModifier } from './resolvers/titres.js'
 
-import {
-  etape,
-  etapeHeritage,
-  etapeCreer,
-  etapeModifier,
-  etapeSupprimer,
-  etapeDeposer
-} from './resolvers/titres-etapes.js'
+import { etape, etapeHeritage, etapeCreer, etapeModifier, etapeSupprimer, etapeDeposer } from './resolvers/titres-etapes.js'
 
-import {
-  documents,
-  documentCreer,
-  documentModifier,
-  documentSupprimer
-} from './resolvers/documents.js'
+import { documents, documentCreer, documentModifier, documentSupprimer } from './resolvers/documents.js'
 
-import {
-  demarche,
-  demarches,
-  demarcheCreer,
-  demarcheModifier,
-  demarcheSupprimer
-} from './resolvers/titres-demarches.js'
+import { demarche, demarches, demarcheCreer, demarcheModifier, demarcheSupprimer } from './resolvers/titres-demarches.js'
 
-import {
-  utilisateur,
-  utilisateurs,
-  utilisateurModifier,
-  utilisateurSupprimer,
-  newsletterInscrire
-} from './resolvers/utilisateurs.js'
+import { utilisateur, utilisateurs, utilisateurModifier, utilisateurSupprimer, newsletterInscrire } from './resolvers/utilisateurs.js'
 
 import {
   devises,
@@ -59,16 +29,10 @@ import {
   administrationsTypes,
   regions,
   departements,
-  pays
+  pays,
 } from './resolvers/metas.js'
 
-import {
-  activitesTypes,
-  activitesStatuts,
-  activitesTypesTitresTypes,
-  activitesTypesDocumentsTypes,
-  activitesTypesPays
-} from './resolvers/metas-activites.js'
+import { activitesTypes, activitesStatuts, activitesTypesTitresTypes, activitesTypesDocumentsTypes, activitesTypesPays } from './resolvers/metas-activites.js'
 
 import {
   titresTypes,
@@ -76,18 +40,12 @@ import {
   titresTypesDemarchesTypesEtapesTypes,
   titresTypesDemarchesTypesEtapesTypesJustificatifsTypes,
   etapesTypesDocumentsTypes,
-  etapesTypesJustificatifsTypes
+  etapesTypesJustificatifsTypes,
 } from './resolvers/metas-join.js'
 
 import { substances } from './resolvers/substances.js'
 
-import {
-  entreprise,
-  entreprises,
-  entrepriseCreer,
-  entrepriseModifier,
-  entreprisesTitresCreation
-} from './resolvers/entreprises.js'
+import { entreprise, entreprises, entrepriseCreer, entrepriseModifier, entreprisesTitresCreation } from './resolvers/entreprises.js'
 import {
   administration,
   administrations,
@@ -96,23 +54,13 @@ import {
   administrationActiviteTypeModifier,
   administrationActiviteTypeEmailCreer,
   administrationActiviteTypeEmailSupprimer,
-  administrationActivitesTypesEmails
+  administrationActivitesTypesEmails,
 } from './resolvers/administrations.js'
-import {
-  activite,
-  activites,
-  activiteModifier,
-  activiteSupprimer,
-  activiteDeposer
-} from './resolvers/titres-activites.js'
+import { activite, activites, activiteModifier, activiteSupprimer, activiteDeposer } from './resolvers/titres-activites.js'
 import { statistiquesGlobales } from './resolvers/statistiques.js'
 
 import { titreDemandeCreer } from './resolvers/titre-demande.js'
-import {
-  pointsImporter,
-  perimetreInformations,
-  titreEtapePerimetreInformations
-} from './resolvers/points.js'
+import { pointsImporter, perimetreInformations, titreEtapePerimetreInformations } from './resolvers/points.js'
 import { journaux } from './resolvers/journaux.js'
 import { utilisateurTitreAbonner } from './resolvers/utilisateurs-titres.js'
 
@@ -203,5 +151,5 @@ export default {
   administrationActiviteTypeModifier,
   administrationActiviteTypeEmailCreer,
   administrationActiviteTypeEmailSupprimer,
-  titreDemandeCreer
+  titreDemandeCreer,
 }

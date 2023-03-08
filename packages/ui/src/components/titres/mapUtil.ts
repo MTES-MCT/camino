@@ -1,37 +1,18 @@
-import {
-  leafletMarkerClusterGroupBuild,
-  leafletGeojsonCenterFind,
-  leafletGeojsonBuild,
-  leafletMarkerBuild,
-  leafletIconBuild
-} from '../_map/leaflet'
+import { leafletMarkerClusterGroupBuild, leafletGeojsonCenterFind, leafletGeojsonBuild, leafletMarkerBuild, leafletIconBuild } from '../_map/leaflet'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
-import {
-  getDomaineId,
-  getTitreTypeType
-} from 'camino-common/src/static/titresTypes'
+import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { DomaineId, sortedDomaines } from 'camino-common/src/static/domaines'
-import {
-  DivIconOptions,
-  GeoJSONOptions,
-  LeafletEventHandlerFnMap,
-  Map,
-  Marker,
-  MarkerClusterGroup,
-  PopupOptions
-} from 'leaflet'
+import { DivIconOptions, GeoJSONOptions, LeafletEventHandlerFnMap, Map, Marker, MarkerClusterGroup, PopupOptions } from 'leaflet'
 import { Router } from 'vue-router'
 import { CommonTitre } from 'camino-common/src/titres'
 import { GeoJsonObject } from 'geojson'
 
-const leafletCoordinatesFind = (geojson: {
-  geometry: { coordinates: [number, number] }
-}) => {
+const leafletCoordinatesFind = (geojson: { geometry: { coordinates: [number, number] } }) => {
   const coordinates = geojson.geometry.coordinates
 
   return {
     lng: coordinates[0],
-    lat: coordinates[1]
+    lat: coordinates[1],
   }
 }
 export const zones = [
@@ -41,8 +22,8 @@ export const zones = [
     type: 'LineString',
     coordinates: [
       [-5, 41],
-      [10, 51]
-    ]
+      [10, 51],
+    ],
   },
   {
     id: 'gf',
@@ -50,8 +31,8 @@ export const zones = [
     type: 'LineString',
     coordinates: [
       [-55, 6],
-      [-51, 2]
-    ]
+      [-51, 2],
+    ],
   },
   {
     id: 'oi',
@@ -59,8 +40,8 @@ export const zones = [
     type: 'LineString',
     coordinates: [
       [39, -23],
-      [58, -13]
-    ]
+      [58, -13],
+    ],
   },
   {
     id: 'an',
@@ -68,27 +49,24 @@ export const zones = [
     type: 'LineString',
     coordinates: [
       [-64, 15],
-      [-59, 16]
-    ]
-  }
+      [-59, 16],
+    ],
+  },
 ] as const
 
 export const clustersBuild = () =>
-  sortedDomaines.reduce<{ [key in DomaineId]?: MarkerClusterGroup }>(
-    (clusters, { id }) => {
-      const divIconOptions: DivIconOptions = {
-        html: id.toUpperCase(),
-        className: `py-xs px-s pill small mono color-bg bold bg-domaine-${id}`,
-        iconSize: undefined,
-        iconAnchor: [0, 0]
-      }
+  sortedDomaines.reduce<{ [key in DomaineId]?: MarkerClusterGroup }>((clusters, { id }) => {
+    const divIconOptions: DivIconOptions = {
+      html: id.toUpperCase(),
+      className: `py-xs px-s pill small mono color-bg bold bg-domaine-${id}`,
+      iconSize: undefined,
+      iconAnchor: [0, 0],
+    }
 
-      clusters[id] = leafletMarkerClusterGroupBuild(divIconOptions)
+    clusters[id] = leafletMarkerClusterGroupBuild(divIconOptions)
 
-      return clusters
-    },
-    {}
-  )
+    return clusters
+  }, {})
 
 const domainesColors: Record<DomaineId, string> = {
   c: '#b88847',
@@ -98,7 +76,7 @@ const domainesColors: Record<DomaineId, string> = {
   m: '#376faa',
   r: '#a0aa31',
   s: '#7657b5',
-  w: '#1ea88c'
+  w: '#1ea88c',
 } as const
 
 const iconUrlFind = (domaineId: DomaineId) => {
@@ -121,48 +99,34 @@ export type CaminoMarker = {
 export const layersBuild = (titres: TitreWithPoint[], router: Router) =>
   titres.reduce<{ geojsons: Record<string, any>; markers: CaminoMarker[] }>(
     ({ geojsons, markers }, titre, index) => {
-      if (!titre.geojsonMultiPolygon && !titre.geojsonCentre)
-        return { geojsons, markers }
+      if (!titre.geojsonMultiPolygon && !titre.geojsonCentre) return { geojsons, markers }
 
       const titreId = titre.id || index
       const domaineId = getDomaineId(titre.typeId)
       const icon = leafletIconBuild({
         iconUrl: iconUrlFind(domaineId),
         iconSize: [32, 40],
-        iconAnchor: [16, 40]
+        iconAnchor: [16, 40],
       })
 
-      const latLng = titre.geojsonCentre
-        ? leafletCoordinatesFind(titre.geojsonCentre)
-        : leafletGeojsonCenterFind(titre.geojsonMultiPolygon)
+      const latLng = titre.geojsonCentre ? leafletCoordinatesFind(titre.geojsonCentre) : leafletGeojsonCenterFind(titre.geojsonMultiPolygon)
 
       const marker = leafletMarkerBuild(latLng, icon)
 
-      const popupHtmlTitulaires =
-        titre.titulaires && titre.titulaires.length
-          ? titre.titulaires.map(tt => `<li>${tt.nom}</li>`).join('')
-          : ''
+      const popupHtmlTitulaires = titre.titulaires && titre.titulaires.length ? titre.titulaires.map(tt => `<li>${tt.nom}</li>`).join('') : ''
 
-      const statut = titre.titreStatutId
-        ? TitresStatuts[titre.titreStatutId]
-        : { couleur: 'error', nom: 'Inconnu' }
-      const popupHtml = `<h4 class="mb-s">${
-        titre.nom ? titre.nom : ''
-      }</h4><div class="mb-m"><span class="rnd py-xxs px-s cap-first mb-0 bold color-bg h6 bg-${
-        statut.couleur
-      }">${
+      const statut = titre.titreStatutId ? TitresStatuts[titre.titreStatutId] : { couleur: 'error', nom: 'Inconnu' }
+      const popupHtml = `<h4 class="mb-s">${titre.nom ? titre.nom : ''}</h4><div class="mb-m"><span class="rnd py-xxs px-s cap-first mb-0 bold color-bg h6 bg-${statut.couleur}">${
         statut.nom
       }</span></div><ul class="list-prefix h6">${popupHtmlTitulaires}</ul>`
 
       const popupOptions: PopupOptions = {
         closeButton: false,
         offset: [0, -24],
-        autoPan: false
+        autoPan: false,
       }
 
-      const titreRoute = titre.slug
-        ? { name: 'titre', params: { id: titre.slug } }
-        : null
+      const titreRoute = titre.slug ? { name: 'titre', params: { id: titre.slug } } : null
 
       marker.bindPopup(popupHtml, popupOptions)
 
@@ -177,25 +141,20 @@ export const layersBuild = (titres: TitreWithPoint[], router: Router) =>
         },
         mouseout(_e) {
           marker.closePopup()
-        }
+        },
       }
       marker.on(methods)
 
-      const className = `svg-fill-pattern-${getTitreTypeType(
-        titre.typeId
-      )}-${domaineId}`
+      const className = `svg-fill-pattern-${getTitreTypeType(titre.typeId)}-${domaineId}`
       const geojsonOptions: GeoJSONOptions = {
         style: { fillOpacity: 0.75, weight: 1, color: 'white', className },
         onEachFeature: (_feature, layer) => {
           layer.bindPopup(popupHtml, popupOptions)
           layer.on(methods)
-        }
+        },
       }
 
-      const geojson = leafletGeojsonBuild(
-        titre.geojsonMultiPolygon,
-        geojsonOptions
-      )
+      const geojson = leafletGeojsonBuild(titre.geojsonMultiPolygon, geojsonOptions)
 
       if (marker) {
         markers.push({ marker, id: titreId, domaineId })

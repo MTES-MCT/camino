@@ -8,5 +8,5 @@ export const Downloads = defineComponent<Omit<Props, 'route' | 'matomo'>>({
     const route = useRoute()
     const matomo = inject('matomo', undefined)
     return () => <PureDownloads {...props} route={route} matomo={matomo} />
-  }
+  },
 })

@@ -8,7 +8,7 @@ vi.mock('../api/titres', () => ({
   titres: vi.fn(),
   titresGeo: vi.fn(),
   titresGeoPolygon: vi.fn(),
-  titresMetas: vi.fn()
+  titresMetas: vi.fn(),
 }))
 
 console.info = vi.fn()
@@ -36,7 +36,7 @@ describe('liste des titres', () => {
           page: 1,
           intervalle: 200,
           ordre: 'asc',
-          colonne: 'nom'
+          colonne: 'nom',
         },
         carte: { zoom: null, centre: [], perimetre: [] },
         filtres: {
@@ -47,8 +47,8 @@ describe('liste des titres', () => {
           territoires: null,
           noms: 's',
           domainesIds: ['c', 'w'],
-          statutsIds: ['val']
-        }
+          statutsIds: ['val'],
+        },
       },
       definitions: [
         { id: 'typesIds', type: 'strings', values: [] },
@@ -65,44 +65,44 @@ describe('liste des titres', () => {
         {
           id: 'colonne',
           type: 'string',
-          values: ['nom', 'domaine', 'type', 'statut', 'activitesTotal']
+          values: ['nom', 'domaine', 'type', 'statut', 'activitesTotal'],
         },
         {
           id: 'ordre',
           type: 'string',
-          values: ['asc', 'desc']
-        }
+          values: ['asc', 'desc'],
+        },
       ],
       urlDefinitions: [
         { id: 'zoom', type: 'number', min: 1, max: 18 },
         { id: 'centre', type: 'tuple' },
-        { id: 'vueId', type: 'string', values: ['carte', 'table'] }
+        { id: 'vueId', type: 'string', values: ['carte', 'table'] },
       ],
-      initialized: false
+      initialized: false,
     }
 
     mutations = {
       loadingAdd: vi.fn(),
-      loadingRemove: vi.fn()
+      loadingRemove: vi.fn(),
     }
 
     actions = {
       apiError: vi.fn(),
       messageAdd: vi.fn(),
-      urlQueryUpdate: vi.fn()
+      urlQueryUpdate: vi.fn(),
     }
 
     route = {
       namespaced: true,
       state: {
-        query: {}
-      }
+        query: {},
+      },
     }
 
     store = createStore({
       modules: { titres, route },
       mutations,
-      actions
+      actions,
     })
 
     const app = createApp({})
@@ -111,12 +111,12 @@ describe('liste des titres', () => {
 
   test('initialise le composant', async () => {
     const apiMetasMock = api.titresMetas.mockResolvedValue({
-      elements: [{ id: 'entrepriseId' }]
+      elements: [{ id: 'entrepriseId' }],
     })
 
     const apiMock = api.titres.mockResolvedValue({
       elements: [{ id: 'titre-id', nom: 'Nom du titre' }],
-      total: 1
+      total: 1,
     })
 
     await store.dispatch('titres/init')
@@ -133,15 +133,11 @@ describe('liste des titres', () => {
 
     expect(apiMock).toHaveBeenCalled()
 
-    expect(store.state.titres.elements).toEqual([
-      { id: 'titre-id', nom: 'Nom du titre' }
-    ])
+    expect(store.state.titres.elements).toEqual([{ id: 'titre-id', nom: 'Nom du titre' }])
   })
 
   test("retourne une erreur si l'api ne répond pas", async () => {
-    const apiMock = api.titresMetas.mockRejectedValue(
-      new Error("erreur de l'api")
-    )
+    const apiMock = api.titresMetas.mockRejectedValue(new Error("erreur de l'api"))
 
     await store.dispatch('titres/init')
 
@@ -154,7 +150,7 @@ describe('liste des titres', () => {
   test('obtient la liste des titres dans la vue "carte"', async () => {
     const apiMock = api.titresGeoPolygon.mockResolvedValue({
       elements: titresCarte,
-      total: 4
+      total: 4,
     })
 
     store.state.titres.initialized = true
@@ -166,7 +162,7 @@ describe('liste des titres', () => {
       noms: 's',
       domainesIds: ['c', 'w'],
       statutsIds: ['val'],
-      entreprises: 'fr-'
+      entreprises: 'fr-',
     })
     expect(store.state.titres.elements).toEqual(titresCarte)
   })
@@ -174,7 +170,7 @@ describe('liste des titres', () => {
   test('obtient la liste des titres dans la vue "carte" sans les périmètres', async () => {
     const apiMock = api.titresGeo.mockResolvedValue({
       elements: titresCarte,
-      total: 4
+      total: 4,
     })
 
     store.state.titres.initialized = true
@@ -186,7 +182,7 @@ describe('liste des titres', () => {
       noms: 's',
       domainesIds: ['c', 'w'],
       statutsIds: ['val'],
-      entreprises: 'fr-'
+      entreprises: 'fr-',
     })
     expect(store.state.titres.elements).toEqual(titresCarte)
   })
@@ -194,7 +190,7 @@ describe('liste des titres', () => {
   test('obtient la liste des titres dans la vue "table"', async () => {
     const apiMock = api.titres.mockResolvedValue({
       elements: titresListe,
-      total: 3
+      total: 3,
     })
     store.state.titres.initialized = true
     store.state.titres.vueId = 'table'
@@ -209,7 +205,7 @@ describe('liste des titres', () => {
       page: 1,
       intervalle: 200,
       ordre: 'asc',
-      colonne: 'nom'
+      colonne: 'nom',
     })
     expect(store.state.titres.elements).toEqual(titresListe)
 
@@ -219,9 +215,7 @@ describe('liste des titres', () => {
   })
 
   test("retourne une erreur si l'api ne repond pas", async () => {
-    const apiMock = api.titresGeo.mockRejectedValue(
-      new Error("l'api ne répond pas")
-    )
+    const apiMock = api.titresGeo.mockRejectedValue(new Error("l'api ne répond pas"))
     store.state.titres.initialized = true
 
     await store.dispatch('titres/get')
@@ -230,7 +224,7 @@ describe('liste des titres', () => {
       noms: 's',
       domainesIds: ['c', 'w'],
       statutsIds: ['val'],
-      entreprises: 'fr-'
+      entreprises: 'fr-',
     })
 
     expect(actions.apiError).toHaveBeenCalled()
@@ -239,20 +233,18 @@ describe('liste des titres', () => {
   test('change la vue et recharges les titres', async () => {
     const apiTableMock = api.titres.mockResolvedValue({
       elements: [{ id: 'titre-id', nom: 'Nom du titre' }],
-      total: 1
+      total: 1,
     })
     const apiGeoMock = api.titresGeo.mockResolvedValue({
       elements: [{ id: 'titre-id-geo', nom: 'Nom du titre' }],
-      total: 1
+      total: 1,
     })
 
     store.state.titres.elements = [{ id: 'titre-id-init', nom: 'Nom du titre' }]
 
     await store.dispatch('titres/vueSet', 'carte')
 
-    expect(store.state.titres.elements).toEqual([
-      { id: 'titre-id-init', nom: 'Nom du titre' }
-    ])
+    expect(store.state.titres.elements).toEqual([{ id: 'titre-id-init', nom: 'Nom du titre' }])
 
     store.state.titres.initialized = true
 
@@ -261,9 +253,7 @@ describe('liste des titres', () => {
     expect(apiTableMock).toHaveBeenCalled()
     expect(store.state.titres.vueId).toEqual('table')
 
-    expect(store.state.titres.elements).toEqual([
-      { id: 'titre-id', nom: 'Nom du titre' }
-    ])
+    expect(store.state.titres.elements).toEqual([{ id: 'titre-id', nom: 'Nom du titre' }])
 
     await store.dispatch('titres/vueSet', 'carte')
 
@@ -275,11 +265,11 @@ describe('liste des titres', () => {
   test("met à jour la liste si les paramètres d'url changent", async () => {
     const apiTableMock = api.titres.mockResolvedValue({
       elements: [{ id: 'titre-id-table', nom: 'Nom du titre' }],
-      total: 1
+      total: 1,
     })
     const apiGeoMock = api.titresGeo.mockResolvedValue({
       elements: [{ id: 'titre-id-geo', nom: 'Nom du titre' }],
-      total: 1
+      total: 1,
     })
 
     await store.dispatch('titres/routeUpdate')
@@ -295,9 +285,7 @@ describe('liste des titres', () => {
 
     expect(apiTableMock).toHaveBeenCalled()
 
-    expect(store.state.titres.elements).toEqual([
-      { id: 'titre-id-table', nom: 'Nom du titre' }
-    ])
+    expect(store.state.titres.elements).toEqual([{ id: 'titre-id-table', nom: 'Nom du titre' }])
 
     expect(store.state.titres.params.table.page).toEqual(4)
 
@@ -309,9 +297,7 @@ describe('liste des titres', () => {
 
     expect(apiGeoMock).toHaveBeenCalled()
 
-    expect(store.state.titres.elements).toEqual([
-      { id: 'titre-id-geo', nom: 'Nom du titre' }
-    ])
+    expect(store.state.titres.elements).toEqual([{ id: 'titre-id-geo', nom: 'Nom du titre' }])
   })
 
   test('initialise les paramètres de filtre', async () => {
@@ -325,7 +311,7 @@ describe('liste des titres', () => {
 
     await store.dispatch('titres/paramsSet', {
       section: 'carte',
-      params: { zoom: 5 }
+      params: { zoom: 5 },
     })
   })
 })

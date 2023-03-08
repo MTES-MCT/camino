@@ -17,11 +17,11 @@ export const graphql = graphqlHTTP(async (req: IAuthRequestHttp, res) => {
       locations: err.locations,
       message: err.message,
       path: err.path,
-      stack: err.stack ? err.stack.split('\n') : []
+      stack: err.stack ? err.stack.split('\n') : [],
     }),
     graphiql: true,
     pretty: true,
     rootValue,
-    schema
+    schema,
   }
 })

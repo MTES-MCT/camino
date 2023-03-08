@@ -6,17 +6,11 @@
       <div v-else class="border p-s mb-s">Non renseigné</div>
       <p class="h6 italic mb-s">
         Hérité de :
-        <span class="cap-first">{{ prop.etape.type.nom }}</span> ({{
-          dateFormat(prop.etape.date)
-        }})
+        <span class="cap-first">{{ prop.etape.type.nom }}</span> ({{ dateFormat(prop.etape.date) }})
       </p>
     </div>
     <slot />
-    <button
-      v-if="prop.etape"
-      class="btn full-x rnd-xs py-s px-m small mb-s"
-      @click="prop.actif = !prop.actif"
-    >
+    <button v-if="prop.etape" class="btn full-x rnd-xs py-s px-m small mb-s" @click="prop.actif = !prop.actif">
       {{ buttonText }}
     </button>
   </div>
@@ -35,15 +29,10 @@ const props = defineProps<{
   sectionId: string
 }>()
 
-const buttonText = computed<string>(() =>
-  props.prop.actif ? 'Modifier' : `Hériter de l'étape précédente`
-)
+const buttonText = computed<string>(() => (props.prop.actif ? 'Modifier' : `Hériter de l'étape précédente`))
 
 const hasHeritage = computed<boolean>(() => {
-  const contenu =
-    props.prop.etape &&
-    props.prop.etape.contenu &&
-    props.prop.etape.contenu[props.sectionId]
+  const contenu = props.prop.etape && props.prop.etape.contenu && props.prop.etape.contenu[props.sectionId]
 
   return hasValeurCheck(props.propId, contenu)
 })

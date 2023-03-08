@@ -43,7 +43,7 @@ export const TITRES_TYPES_IDS = {
   PERMIS_D_EXPLOITATION_HYDROCARBURE: 'pxh',
   PERMIS_D_EXPLOITATION_METAUX: 'pxm',
   PERMIS_D_EXPLOITATION_RADIOACTIF: 'pxr',
-  PERMIS_D_EXPLOITATION_GRANULATS_MARINS: 'pxw'
+  PERMIS_D_EXPLOITATION_GRANULATS_MARINS: 'pxw',
 } as const
 
 export const TitresTypesIds = Object.values(TITRES_TYPES_IDS)
@@ -83,7 +83,7 @@ export const TitresTypes: {
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_HYDROCARBURE]: { id: 'pxh', domaineId: 'h', typeId: 'px' },
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: { id: 'pxm', domaineId: 'm', typeId: 'px' },
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_RADIOACTIF]: { id: 'pxr', domaineId: 'r', typeId: 'px' },
-  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: { id: 'pxw', domaineId: 'w', typeId: 'px' }
+  [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: { id: 'pxw', domaineId: 'w', typeId: 'px' },
 } as const
 
 export const isTitreType = (titreType: string | undefined | null): titreType is TitreTypeId => TitresTypesIds.includes(titreType)

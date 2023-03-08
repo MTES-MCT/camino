@@ -22,8 +22,8 @@ class Utilisateurs extends Model {
       telephoneMobile: { type: ['string', 'null'] },
       role: { type: 'string' },
       preferences: { type: ['object', 'null'] },
-      administrationId: { type: ['string', 'null'] }
-    }
+      administrationId: { type: ['string', 'null'] },
+    },
   }
 
   static relationMappings = () => ({
@@ -34,10 +34,10 @@ class Utilisateurs extends Model {
         from: 'utilisateurs.id',
         through: {
           from: 'utilisateurs__entreprises.utilisateurId',
-          to: 'utilisateurs__entreprises.entrepriseId'
+          to: 'utilisateurs__entreprises.entrepriseId',
         },
-        to: 'entreprises.id'
-      }
+        to: 'entreprises.id',
+      },
     },
 
     administration: {
@@ -45,9 +45,9 @@ class Utilisateurs extends Model {
       modelClass: Administrations,
       join: {
         from: 'utilisateurs.administrationId',
-        to: 'administrations.id'
-      }
-    }
+        to: 'administrations.id',
+      },
+    },
   })
 
   public $parseJson(json: Pojo) {

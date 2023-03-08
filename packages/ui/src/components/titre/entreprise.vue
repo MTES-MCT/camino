@@ -1,34 +1,15 @@
 <template>
-  <Accordion
-    class="mb"
-    :opened="opened"
-    :slotDefault="true"
-    :slotButtons="true"
-    @close="close"
-    @toggle="toggle"
-  >
+  <Accordion class="mb" :opened="opened" :slotDefault="true" :slotButtons="true" @close="close" @toggle="toggle">
     <template #title>
       <h4 class="mb-0">
         {{ entrepriseNameFind(entreprise) }}
       </h4>
-      <Tag
-        v-if="entreprise.operateur"
-        :color="'bg-info'"
-        :mini="true"
-        text="Opérateur"
-      />
+      <Tag v-if="entreprise.operateur" :color="'bg-info'" :mini="true" text="Opérateur" />
     </template>
 
     <template #buttons>
-      <router-link
-        :to="{ name: 'entreprise', params: { id: entreprise.id } }"
-        class="btn-alt py-s px-m"
-      >
-        <Icon
-          name="external-link"
-          size="M"
-          @click="eventTrack('titre-entreprise_acceder')"
-        />
+      <router-link :to="{ name: 'entreprise', params: { id: entreprise.id } }" class="btn-alt py-s px-m">
+        <Icon name="external-link" size="M" @click="eventTrack('titre-entreprise_acceder')" />
       </router-link>
     </template>
 
@@ -51,14 +32,9 @@
         </div>
       </div>
 
-      <div
-        v-if="entreprise.etablissements && entreprise.etablissements.length"
-        class="large-blobs"
-      >
+      <div v-if="entreprise.etablissements && entreprise.etablissements.length" class="large-blobs">
         <div class="large-blob-1-4">
-          <h5>
-            Établissement{{ entreprise.etablissements.length > 1 ? 's' : '' }}
-          </h5>
+          <h5>Établissement{{ entreprise.etablissements.length > 1 ? 's' : '' }}</h5>
         </div>
         <div class="large-blob-3-4">
           <ul class="list-sans">
@@ -100,10 +76,7 @@
         </div>
         <div class="large-blob-3-4">
           <p class="word-break">
-            <a
-              :href="`mailto:${entreprise.email}`"
-              class="btn small bold py-xs px-s rnd"
-            >
+            <a :href="`mailto:${entreprise.email}`" class="btn small bold py-xs px-s rnd">
               {{ entreprise.email }}
             </a>
           </p>
@@ -135,21 +108,21 @@ export default {
   components: {
     Icon,
     Accordion,
-    Tag
+    Tag,
   },
 
   props: {
     entreprise: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
 
   emits: ['titre-event-track'],
 
   data() {
     return {
-      opened: false
+      opened: false,
     }
   },
 
@@ -166,7 +139,7 @@ export default {
         this.entreprise.email ||
         this.entreprise.url
       )
-    }
+    },
   },
 
   methods: {
@@ -174,10 +147,7 @@ export default {
       return (
         entreprise.nom ||
         // trouve l'établissement le plus récent
-        entreprise.etablissements.reduce(
-          (res, e) => (res && res.dateDebut > e.dateDebut ? res : e),
-          null
-        ).nom
+        entreprise.etablissements.reduce((res, e) => (res && res.dateDebut > e.dateDebut ? res : e), null).nom
       )
     },
 
@@ -196,13 +166,13 @@ export default {
       this.$emit('titre-event-track', {
         categorie: 'titre-sections',
         action,
-        nom: this.$route.params.id
+        nom: this.$route.params.id,
       })
     },
 
     dateFormat(date) {
       return dateFormat(date)
-    }
-  }
+    },
+  },
 }
 </script>

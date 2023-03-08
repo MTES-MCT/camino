@@ -34,7 +34,7 @@ export const SUBSTANCES_FISCALES_IDS = {
   soufre: 'souf',
   uranium: 'uran',
   'oxyde de tungstène (WO3)': 'wolf',
-  zinc: 'zinc'
+  zinc: 'zinc',
 } as const
 
 export type SubstanceFiscaleId = (typeof SUBSTANCES_FISCALES_IDS)[keyof typeof SUBSTANCES_FISCALES_IDS]
@@ -63,14 +63,14 @@ export const SubstancesFiscale: {
     substanceLegaleId: 'aloh',
     uniteId: 'mtk',
     nom: 'bauxite',
-    description: 'bauxite nettes livrées'
+    description: 'bauxite nettes livrées',
   },
   anti: {
     id: 'anti',
     substanceLegaleId: 'anti',
     uniteId: 'mtt',
     nom: 'antimoine',
-    description: 'contenu dans les minerais'
+    description: 'contenu dans les minerais',
   },
   arge: {
     id: 'arge',
@@ -79,15 +79,15 @@ export const SubstancesFiscale: {
     nom: 'argent',
     description: 'contenu dans les minerais',
     openFisca: {
-      nom: 'argentifere'
-    }
+      nom: 'argentifere',
+    },
   },
   arse: {
     id: 'arse',
     substanceLegaleId: 'arse',
     uniteId: 'mtk',
     nom: 'arsenic',
-    description: 'contenu dans les minerais'
+    description: 'contenu dans les minerais',
   },
   auru: {
     id: 'auru',
@@ -97,22 +97,22 @@ export const SubstancesFiscale: {
     description: 'contenu dans les minerais',
     openFisca: {
       nom: 'aurifere',
-      unite: 'mkg'
-    }
+      unite: 'mkg',
+    },
   },
   bism: {
     id: 'bism',
     substanceLegaleId: 'bism',
     uniteId: 'mtt',
     nom: 'bismuth',
-    description: 'contenu dans les minerais'
+    description: 'contenu dans les minerais',
   },
   cfxa: {
     id: 'cfxa',
     substanceLegaleId: 'cfxx',
     uniteId: 'mtc',
     nom: 'charbon',
-    description: 'net extrait'
+    description: 'net extrait',
   },
   cfxb: {
     id: 'cfxb',
@@ -121,8 +121,8 @@ export const SubstancesFiscale: {
     nom: 'lignites',
     description: "net livré pour les lignites d'un pouvoir calorifique égal ou supérieur à 13 MJ/kg",
     openFisca: {
-      nom: 'lignites_ge_13'
-    }
+      nom: 'lignites_ge_13',
+    },
   },
   cfxc: {
     id: 'cfxc',
@@ -131,8 +131,8 @@ export const SubstancesFiscale: {
     nom: 'lignites',
     description: "net livré pour les lignites d'un pouvoir calorifique inférieur à 13 MJ/kg",
     openFisca: {
-      nom: 'lignites_lt_13'
-    }
+      nom: 'lignites_lt_13',
+    },
   },
   coox: {
     id: 'coox',
@@ -141,15 +141,15 @@ export const SubstancesFiscale: {
     nom: 'gaz carbonique',
     description: 'extrait à 1 bar et 15 °C',
     openFisca: {
-      nom: 'gaz_carbonique'
-    }
+      nom: 'gaz_carbonique',
+    },
   },
   cuiv: {
     id: 'cuiv',
     substanceLegaleId: 'cuiv',
     uniteId: 'mtt',
     nom: 'cuivre',
-    description: 'contenu dans les minerais'
+    description: 'contenu dans les minerais',
   },
   etai: {
     id: 'etai',
@@ -158,8 +158,8 @@ export const SubstancesFiscale: {
     nom: 'étain',
     description: 'contenu dans les minerais',
     openFisca: {
-      nom: 'etain'
-    }
+      nom: 'etain',
+    },
   },
   fera: {
     id: 'fera',
@@ -168,8 +168,8 @@ export const SubstancesFiscale: {
     nom: 'pyrite de fer',
     description: 'net livré',
     openFisca: {
-      nom: 'fer_pyrite'
-    }
+      nom: 'fer_pyrite',
+    },
   },
   ferb: {
     id: 'ferb',
@@ -178,15 +178,15 @@ export const SubstancesFiscale: {
     nom: 'minerais de fer',
     description: 'net livré',
     openFisca: {
-      nom: 'fer'
-    }
+      nom: 'fer',
+    },
   },
   fluo: {
     id: 'fluo',
     substanceLegaleId: 'fluo',
     uniteId: 'mtk',
     nom: 'fluorine',
-    description: 'net livré'
+    description: 'net livré',
   },
   hyda: {
     id: 'hyda',
@@ -195,8 +195,8 @@ export const SubstancesFiscale: {
     nom: 'calcaires et grès bitumineux ou asphaltiques',
     description: "net livré (non destinés à la distillation pour production d'huiles ou d'essences)",
     openFisca: {
-      nom: 'bitume_non_distillation'
-    }
+      nom: 'bitume_non_distillation',
+    },
   },
   hydb: {
     id: 'hydb',
@@ -205,8 +205,8 @@ export const SubstancesFiscale: {
     nom: 'schistes carbobitumineux et schistes bitumineux',
     description: 'net livré (à traiter par distillation pour en extraire des huiles et des essences)',
     openFisca: {
-      nom: 'bitume_distillation'
-    }
+      nom: 'bitume_distillation',
+    },
   },
   hydc: {
     id: 'hydc',
@@ -215,8 +215,8 @@ export const SubstancesFiscale: {
     nom: 'pétrole brut',
     description: 'net extrait',
     openFisca: {
-      nom: 'petrole_brut'
-    }
+      nom: 'petrole_brut',
+    },
   },
   hydd: {
     id: 'hydd',
@@ -225,8 +225,8 @@ export const SubstancesFiscale: {
     nom: 'propane et le butane',
     description: 'net livré',
     openFisca: {
-      nom: 'propane'
-    }
+      nom: 'propane',
+    },
   },
   hyde: {
     id: 'hyde',
@@ -235,8 +235,8 @@ export const SubstancesFiscale: {
     nom: 'essence de dégazolinage',
     description: 'net livré',
     openFisca: {
-      nom: 'degazolinage'
-    }
+      nom: 'degazolinage',
+    },
   },
   hydf: {
     id: 'hydf',
@@ -245,8 +245,8 @@ export const SubstancesFiscale: {
     nom: 'gaz naturel',
     description: 'extrait des gisements',
     openFisca: {
-      nom: 'gaz_naturel'
-    }
+      nom: 'gaz_naturel',
+    },
   },
   kclx: {
     id: 'kclx',
@@ -255,8 +255,8 @@ export const SubstancesFiscale: {
     nom: 'oxyde de potassium',
     description: 'K2O contenu dans les sels de potassium',
     openFisca: {
-      nom: 'potassium'
-    }
+      nom: 'potassium',
+    },
   },
   lith: {
     id: 'lith',
@@ -265,8 +265,8 @@ export const SubstancesFiscale: {
     nom: 'oxyde de lithium',
     description: 'Li2O contenu dans les minerais de lithium',
     openFisca: {
-      nom: 'lithium'
-    }
+      nom: 'lithium',
+    },
   },
   mang: {
     id: 'mang',
@@ -275,8 +275,8 @@ export const SubstancesFiscale: {
     nom: 'manganèse',
     description: 'contenu dans les minerais',
     openFisca: {
-      nom: 'manganese'
-    }
+      nom: 'manganese',
+    },
   },
   moly: {
     id: 'moly',
@@ -285,8 +285,8 @@ export const SubstancesFiscale: {
     nom: 'molybdène',
     description: 'contenu dans les minerais',
     openFisca: {
-      nom: 'molybdene'
-    }
+      nom: 'molybdene',
+    },
   },
   naca: {
     id: 'naca',
@@ -295,8 +295,8 @@ export const SubstancesFiscale: {
     nom: 'sel (chlorure de sodium)',
     description: 'extrait par abattage net livré',
     openFisca: {
-      nom: 'sel_abattage'
-    }
+      nom: 'sel_abattage',
+    },
   },
   nacb: {
     id: 'nacb',
@@ -305,8 +305,8 @@ export const SubstancesFiscale: {
     nom: 'sel (chlorure de sodium)',
     description: 'extrait en dissolution par sondage et livré raffiné',
     openFisca: {
-      nom: 'sel_raffine'
-    }
+      nom: 'sel_raffine',
+    },
   },
   nacc: {
     id: 'nacc',
@@ -315,29 +315,29 @@ export const SubstancesFiscale: {
     nom: 'sel (chlorure de sodium contenu)',
     description: 'extrait en dissolution par sondage et livré en dissolution',
     openFisca: {
-      nom: 'sel_dissolution'
-    }
+      nom: 'sel_dissolution',
+    },
   },
   plom: {
     id: 'plom',
     substanceLegaleId: 'plom',
     uniteId: 'mtc',
     nom: 'plomb',
-    description: 'contenu dans les minerais'
+    description: 'contenu dans les minerais',
   },
   souf: {
     id: 'souf',
     substanceLegaleId: 'souf',
     uniteId: 'mtt',
     nom: 'soufre',
-    description: 'contenu dans les minerais de soufre autres que les pyrites de fer'
+    description: 'contenu dans les minerais de soufre autres que les pyrites de fer',
   },
   uran: {
     id: 'uran',
     substanceLegaleId: 'uran',
     uniteId: 'mkc',
     nom: 'uranium',
-    description: 'contenu dans les minerais'
+    description: 'contenu dans les minerais',
   },
   wolf: {
     id: 'wolf',
@@ -346,16 +346,16 @@ export const SubstancesFiscale: {
     nom: 'oxyde de tungstène (WO3)',
     description: 'contenu dans les minerais',
     openFisca: {
-      nom: 'tungstene'
-    }
+      nom: 'tungstene',
+    },
   },
   zinc: {
     id: 'zinc',
     substanceLegaleId: 'zinc',
     uniteId: 'mtc',
     nom: 'zinc',
-    description: 'contenu dans les minerais'
-  }
+    description: 'contenu dans les minerais',
+  },
 }
 
 export const SubstancesFiscales = Object.values(SubstancesFiscale)

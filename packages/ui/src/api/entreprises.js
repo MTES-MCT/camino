@@ -17,22 +17,8 @@ export const entreprise = apiGraphQLFetch(
 )
 
 export const entreprises = apiGraphQLFetch(gql`
-  query Entreprises(
-    $intervalle: Int
-    $page: Int
-    $colonne: String
-    $ordre: String
-    $noms: String
-    $etapeId: ID
-  ) {
-    entreprises(
-      intervalle: $intervalle
-      page: $page
-      colonne: $colonne
-      ordre: $ordre
-      noms: $noms
-      etapeId: $etapeId
-    ) {
+  query Entreprises($intervalle: Int, $page: Int, $colonne: String, $ordre: String, $noms: String, $etapeId: ID) {
+    entreprises(intervalle: $intervalle, page: $page, colonne: $colonne, ordre: $ordre, noms: $noms, etapeId: $etapeId) {
       elements {
         ...entreprises
       }

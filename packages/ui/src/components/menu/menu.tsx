@@ -14,9 +14,7 @@ export const MainMenu = defineComponent({
     const matomo = inject('matomo', null)
 
     const user = computed<User>(() => store.state.user.element)
-    const hasEntreprises = computed<boolean>(
-      () => store.getters['user/hasEntreprises']
-    )
+    const hasEntreprises = computed<boolean>(() => store.getters['user/hasEntreprises'])
     const isONF = computed<boolean>(() => store.getters['user/isONF'])
     const isPTMG = computed<boolean>(() => store.getters['user/isPTMG'])
     const isDREAL = computed<boolean>(() => store.getters['user/isDREAL'])
@@ -51,45 +49,25 @@ export const MainMenu = defineComponent({
               <ul class="list-sans mb-0">
                 {dashboardLabel.value ? (
                   <li>
-                    <router-link
-                      id="cmn-menu-menu-a-dashboard"
-                      to={{ name: 'dashboard' }}
-                      class="btn-menu text-decoration-none bold"
-                      onClick={() => eventTrack('dashboard')}
-                    >
+                    <router-link id="cmn-menu-menu-a-dashboard" to={{ name: 'dashboard' }} class="btn-menu text-decoration-none bold" onClick={() => eventTrack('dashboard')}>
                       {dashboardLabel.value}
                     </router-link>
                   </li>
                 ) : null}
 
                 <li>
-                  <router-link
-                    id="cmn-menu-menu-a-titres"
-                    to={{ name: 'titres' }}
-                    class="btn-menu text-decoration-none bold"
-                    onClick={() => eventTrack('titres')}
-                  >
+                  <router-link id="cmn-menu-menu-a-titres" to={{ name: 'titres' }} class="btn-menu text-decoration-none bold" onClick={() => eventTrack('titres')}>
                     Titres miniers et autorisations
                   </router-link>
                 </li>
                 <li>
-                  <router-link
-                    id="cmn-menu-menu-a-demarches"
-                    to={{ name: 'demarches' }}
-                    class="btn-menu text-decoration-none bold"
-                    onClick={() => eventTrack('demarches')}
-                  >
+                  <router-link id="cmn-menu-menu-a-demarches" to={{ name: 'demarches' }} class="btn-menu text-decoration-none bold" onClick={() => eventTrack('demarches')}>
                     Démarches
                   </router-link>
                 </li>
                 {canReadTravaux(user.value) ? (
                   <li>
-                    <router-link
-                      id="cmn-menu-menu-a-travaux"
-                      to={{ name: 'travaux' }}
-                      class="btn-menu text-decoration-none bold"
-                      onClick={() => eventTrack('travaux')}
-                    >
+                    <router-link id="cmn-menu-menu-a-travaux" to={{ name: 'travaux' }} class="btn-menu text-decoration-none bold" onClick={() => eventTrack('travaux')}>
                       Travaux
                     </router-link>
                   </li>
@@ -100,12 +78,7 @@ export const MainMenu = defineComponent({
               <div class="tablet-blob-1-4 border-l pl-s">
                 <ul class="list-sans mb-0">
                   <li>
-                    <router-link
-                      id="cmn-menu-menu-a-activites"
-                      to={{ name: 'activites' }}
-                      class="btn-menu text-decoration-none bold"
-                      onClick={() => eventTrack('activites')}
-                    >
+                    <router-link id="cmn-menu-menu-a-activites" to={{ name: 'activites' }} class="btn-menu text-decoration-none bold" onClick={() => eventTrack('activites')}>
                       Activités
                     </router-link>
                   </li>
@@ -117,34 +90,19 @@ export const MainMenu = defineComponent({
               <ul class="list-sans mb-0">
                 {canReadAdministrations(user.value) ? (
                   <li>
-                    <router-link
-                      id="cmn-menu-menu-a-administrations"
-                      to={{ name: 'administrations' }}
-                      class="btn-menu text-decoration-none bold"
-                      onClick={() => eventTrack('administrations')}
-                    >
+                    <router-link id="cmn-menu-menu-a-administrations" to={{ name: 'administrations' }} class="btn-menu text-decoration-none bold" onClick={() => eventTrack('administrations')}>
                       Administrations
                     </router-link>
                   </li>
                 ) : null}
                 <li>
-                  <router-link
-                    id="cmn-menu-menu-a-entreprises"
-                    to={{ name: 'entreprises' }}
-                    class="btn-menu text-decoration-none bold"
-                    onClick={() => eventTrack('entreprises')}
-                  >
+                  <router-link id="cmn-menu-menu-a-entreprises" to={{ name: 'entreprises' }} class="btn-menu text-decoration-none bold" onClick={() => eventTrack('entreprises')}>
                     Entreprises
                   </router-link>
                 </li>
                 {canReadUtilisateurs(user.value) ? (
                   <li>
-                    <router-link
-                      id="cmn-menu-menu-a-utilisateurs"
-                      to={{ name: 'utilisateurs' }}
-                      class="btn-menu text-decoration-none bold"
-                      onClick={() => eventTrack('utilisateurs')}
-                    >
+                    <router-link id="cmn-menu-menu-a-utilisateurs" to={{ name: 'utilisateurs' }} class="btn-menu text-decoration-none bold" onClick={() => eventTrack('utilisateurs')}>
                       Utilisateurs
                     </router-link>
                   </li>
@@ -155,12 +113,7 @@ export const MainMenu = defineComponent({
               <ul class="list-sans mb-0">
                 {canReadMetas(user.value) ? (
                   <li>
-                    <router-link
-                      id="cmn-menu-menu-a-metas"
-                      to={{ name: 'metas' }}
-                      class="btn-menu text-decoration-none bold"
-                      onClick={() => eventTrack('metas')}
-                    >
+                    <router-link id="cmn-menu-menu-a-metas" to={{ name: 'metas' }} class="btn-menu text-decoration-none bold" onClick={() => eventTrack('metas')}>
                       Métas
                     </router-link>
                   </li>
@@ -168,11 +121,7 @@ export const MainMenu = defineComponent({
 
                 {canReadJournaux(user.value) ? (
                   <li>
-                    <router-link
-                      id="cmn-menu-menu-a-journaux"
-                      to={{ name: 'journaux' }}
-                      class="btn-menu text-decoration-none bold"
-                    >
+                    <router-link id="cmn-menu-menu-a-journaux" to={{ name: 'journaux' }} class="btn-menu text-decoration-none bold">
                       Journaux
                     </router-link>
                   </li>
@@ -183,5 +132,5 @@ export const MainMenu = defineComponent({
         </div>
       </div>
     )
-  }
+  },
 })

@@ -5,17 +5,12 @@
     </template>
 
     <p class="bold">Souhaitez vous effectuer le dépôt ?</p>
-    <div class="bg-warning color-bg p-s mb-l">
-      <span class="bold"> Attention </span>: cette opération est définitive et
-      ne peut pas être annulée.
-    </div>
+    <div class="bg-warning color-bg p-s mb-l"><span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.</div>
 
     <template #footer>
       <div v-if="!loading" class="tablet-blobs">
         <div class="tablet-blob-1-3 mb tablet-mb-0">
-          <button class="btn-border rnd-xs p-s full-x" @click="cancel">
-            Annuler
-          </button>
+          <button class="btn-border rnd-xs p-s full-x" @click="cancel">Annuler</button>
         </div>
         <div class="tablet-blob-2-3">
           <button class="btn btn-primary" @click="depose">Déposer</button>

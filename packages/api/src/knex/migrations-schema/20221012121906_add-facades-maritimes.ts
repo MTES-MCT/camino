@@ -15,22 +15,12 @@ export const up = async (knex: Knex) => {
       )`
   )
 
-  await knex.raw(
-    'CREATE INDEX index_geo_secteurs_maritime on secteurs_maritime_postgis using spgist (geometry)'
-  )
+  await knex.raw('CREATE INDEX index_geo_secteurs_maritime on secteurs_maritime_postgis using spgist (geometry)')
 
   await knex.schema.createTable('titres__secteurs_maritime', table => {
     table.string('titre_etape_id', 128).notNullable().index()
-    table
-      .foreign('titre_etape_id')
-      .references('titres_etapes.id')
-      .onUpdate('CASCADE')
-      .onDelete('CASCADE')
-    table
-      .integer('secteur_maritime_id')
-      .notNullable()
-      .index()
-      .references('secteurs_maritime.id')
+    table.foreign('titre_etape_id').references('titres_etapes.id').onUpdate('CASCADE').onDelete('CASCADE')
+    table.integer('secteur_maritime_id').notNullable().index().references('secteurs_maritime.id')
     table.primary(['titre_etape_id', 'secteur_maritime_id'])
   })
 }

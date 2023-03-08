@@ -19,7 +19,7 @@ export interface Props {
 
 const tabs: { id: TabId; nom: Capitalize<TabId>; icon: IconSprite }[] = [
   { id: 'carte', nom: 'Carte', icon: 'globe' },
-  { id: 'points', nom: 'Points', icon: 'list' }
+  { id: 'points', nom: 'Points', icon: 'list' },
 ]
 export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
   const isMain = props.isMain ?? false
@@ -30,13 +30,7 @@ export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
       <div class="tablet-blobs tablet-flex-direction-reverse">
         <div class="tablet-blob-1-2 flex">
           {props.points?.length && titreId ? (
-            <Download
-              section={`titres/${titreId}`}
-              format="geojson"
-              class="btn-border small pill pl pr-m py-s flex-right"
-              onClicked={() => {}}
-              query={{}}
-            >
+            <Download section={`titres/${titreId}`} format="geojson" class="btn-border small pill pl pr-m py-s flex-right" onClicked={() => {}} query={{}}>
               geojson
             </Download>
           ) : null}
@@ -45,15 +39,9 @@ export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
         <div class="tablet-blob-1-2 flex">
           {tabs.map(tab => {
             return (
-              <div
-                key={tab.id}
-                class={`${tabId === tab.id ? 'active' : ''} mr-xs`}
-              >
+              <div key={tab.id} class={`${tabId === tab.id ? 'active' : ''} mr-xs`}>
                 {tabId !== tab.id ? (
-                  <button
-                    class="p-m btn-tab rnd-t-s"
-                    onClick={() => props.tabUpdate(tab.id)}
-                  >
+                  <button class="p-m btn-tab rnd-t-s" onClick={() => props.tabUpdate(tab.id)}>
                     <Icon name={tab.icon} size="M" />
                   </button>
                 ) : (
@@ -70,13 +58,7 @@ export const Perimetre: FunctionalComponent<Props> = (props: Props) => {
       <div class={`${isMain ? 'width-full' : ''} line-neutral`} />
 
       {props.points && props.geojsonMultiPolygon && tabId === 'carte' ? (
-        <CamionCommonMap
-          class={`${isMain ? 'width-full' : ''}`}
-          geojson={props.geojsonMultiPolygon}
-          points={props.points}
-          titreTypeId={props.titreTypeId}
-          isMain={props.isMain}
-        />
+        <CamionCommonMap class={`${isMain ? 'width-full' : ''}`} geojson={props.geojsonMultiPolygon} points={props.points} titreTypeId={props.titreTypeId} isMain={props.isMain} />
       ) : null}
 
       {props.points && tabId === 'points' ? (

@@ -5,12 +5,12 @@ vi.mock('../src/tools/api-mailjet/emails', () => ({
   __esModule: true,
   ...origEmails,
   emailsSend: vi.fn().mockImplementation(a => a),
-  emailsWithTemplateSend: vi.fn().mockImplementation(a => a)
+  emailsWithTemplateSend: vi.fn().mockImplementation(a => a),
 }))
 
 vi.mock('../src/tools/api-mailjet/newsletter', () => ({
   __esModule: true,
-  newsletterSubscriberUpdate: vi.fn().mockImplementation(() => 'succès')
+  newsletterSubscriberUpdate: vi.fn().mockImplementation(() => 'succès'),
 }))
 
 function assertObject(stuff: unknown): asserts stuff is object {
@@ -32,6 +32,6 @@ vi.mock('../src/server/upload', async () => {
       return (_: Request, res: Response) => {
         res.sendStatus(200)
       }
-    })
+    }),
   }
 })

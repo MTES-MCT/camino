@@ -4,9 +4,7 @@ export const up = async (knex: Knex) => {
     table.jsonb('administrations_locales').index()
   })
 
-  await knex.raw(
-    "update titres set props_titre_etapes_ids = props_titre_etapes_ids  - 'administrations'"
-  )
+  await knex.raw("update titres set props_titre_etapes_ids = props_titre_etapes_ids  - 'administrations'")
   await knex.raw(`update titres_etapes te set administrations_locales = (
     select administrations from (
       select 

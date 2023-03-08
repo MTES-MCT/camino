@@ -9,10 +9,7 @@ import { QGisToken } from './utilisateur/qgis-token'
 import { AsyncData } from '@/api/client-rest'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
-import {
-  UtilisateurApiClient,
-  utilisateurApiClient
-} from './utilisateur/utilisateur-api-client'
+import { UtilisateurApiClient, utilisateurApiClient } from './utilisateur/utilisateur-api-client'
 import { Utilisateur as ApiUser } from '@/api/api-client'
 import { LoadingElement } from './_ui/functional-loader'
 import { RemovePopup } from './utilisateur/remove-popup'
@@ -42,7 +39,7 @@ export const Utilisateur = defineComponent({
         'messageAdd',
         {
           value: `l'utilisateur ${utilisateur.prenom} ${utilisateur.nom} a été supprimé`,
-          type: 'success'
+          type: 'success',
         },
         { root: true }
       )
@@ -56,7 +53,7 @@ export const Utilisateur = defineComponent({
           'messageAdd',
           {
             value: `l'utilisateur ${utilisateur.prenom} ${utilisateur.nom} a été modifié`,
-            type: 'success'
+            type: 'success',
           },
           { root: true }
         )
@@ -65,7 +62,7 @@ export const Utilisateur = defineComponent({
           'messageAdd',
           {
             value: `Erreur lors de la modification de l'utilisateur ${utilisateur.prenom} ${utilisateur.nom}`,
-            type: 'error'
+            type: 'error',
           },
           { root: true }
         )
@@ -74,9 +71,7 @@ export const Utilisateur = defineComponent({
     const passwordUpdate = () => {
       window.location.replace('/apiUrl/changerMotDePasse')
     }
-    const utilisateurId = Array.isArray(route.params.id)
-      ? route.params.id[0]
-      : route.params.id
+    const utilisateurId = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
     return () => (
       <PureUtilisateur
         passwordUpdate={passwordUpdate}
@@ -88,7 +83,7 @@ export const Utilisateur = defineComponent({
         deleteUtilisateur={deleteUtilisateur}
       />
     )
-  }
+  },
 })
 interface Props {
   user: User
@@ -100,15 +95,7 @@ interface Props {
   passwordUpdate: () => void
 }
 export const PureUtilisateur = defineComponent<Props>({
-  props: [
-    'user',
-    'logout',
-    'deleteUtilisateur',
-    'utilisateurId',
-    'apiClient',
-    'updateUtilisateur',
-    'passwordUpdate'
-  ] as unknown as undefined,
+  props: ['user', 'logout', 'deleteUtilisateur', 'utilisateurId', 'apiClient', 'updateUtilisateur', 'passwordUpdate'] as unknown as undefined,
   setup(props) {
     watch(
       () => props.user,
@@ -128,33 +115,29 @@ export const PureUtilisateur = defineComponent<Props>({
 
     const get = async () => {
       try {
-        const utilisateurFromApi = await props.apiClient.getUtilisateur(
-          props.utilisateurId
-        )
+        const utilisateurFromApi = await props.apiClient.getUtilisateur(props.utilisateurId)
         utilisateur.value = {
           status: 'LOADED',
-          value: utilisateurFromApi
+          value: utilisateurFromApi,
         }
       } catch (e: any) {
         console.error('error', e)
         utilisateur.value = {
           status: 'ERROR',
-          message: e.message ?? "Une erreur s'est produite"
+          message: e.message ?? "Une erreur s'est produite",
         }
       }
       if (isMe.value) {
         try {
           subscription.value = {
             status: 'LOADED',
-            value: await props.apiClient.getUtilisateurNewsletter(
-              props.utilisateurId
-            )
+            value: await props.apiClient.getUtilisateurNewsletter(props.utilisateurId),
           }
         } catch (e: any) {
           console.error('error', e)
           subscription.value = {
             status: 'ERROR',
-            message: e.message ?? "Une erreur s'est produite"
+            message: e.message ?? "Une erreur s'est produite",
           }
         }
       }
@@ -176,27 +159,21 @@ export const PureUtilisateur = defineComponent<Props>({
       await get()
     }
 
-    const updateSubscription = async (
-      utilisateurId: string,
-      newsletterChecked: boolean
-    ) => {
+    const updateSubscription = async (utilisateurId: string, newsletterChecked: boolean) => {
       subscription.value = { status: 'LOADING' }
       try {
-        await props.apiClient.updateUtilisateurNewsletter(
-          utilisateurId,
-          newsletterChecked
-        )
+        await props.apiClient.updateUtilisateurNewsletter(utilisateurId, newsletterChecked)
         // Hack for mailjet latency
         await new Promise(resolve => setTimeout(resolve, 500))
         subscription.value = {
           status: 'LOADED',
-          value: newsletterChecked
+          value: newsletterChecked,
         }
       } catch (e: any) {
         console.error('error', e)
         subscription.value = {
           status: 'ERROR',
-          message: e.message ?? "Une erreur s'est produite"
+          message: e.message ?? "Une erreur s'est produite",
         }
       }
     }
@@ -205,20 +182,11 @@ export const PureUtilisateur = defineComponent<Props>({
         <h5>Utilisateur</h5>
         <div class="flex">
           <h1>
-            <LoadingElement
-              data={utilisateur.value}
-              renderItem={item => (
-                <>{item ? `${item.prenom || '–'} ${item.nom || '–'}` : '–'}</>
-              )}
-            />
+            <LoadingElement data={utilisateur.value} renderItem={item => <>{item ? `${item.prenom || '–'} ${item.nom || '–'}` : '–'}</>} />
           </h1>
 
           {isMe.value ? (
-            <button
-              id="cmn-user-menu-button-deconnexion"
-              class="btn-menu text-decoration-none bold p-0 flex-right"
-              onClick={() => props.logout()}
-            >
+            <button id="cmn-user-menu-button-deconnexion" class="btn-menu text-decoration-none bold p-0 flex-right" onClick={() => props.logout()}>
               Déconnexion
             </button>
           ) : null}
@@ -235,11 +203,7 @@ export const PureUtilisateur = defineComponent<Props>({
                     {canEditUtilisateur(props.user, item) ? (
                       <>
                         {isMe.value ? (
-                          <button
-                            class="btn-alt py-s px-m"
-                            title="changer de mot de passe"
-                            onClick={props.passwordUpdate}
-                          >
+                          <button class="btn-alt py-s px-m" title="changer de mot de passe" onClick={props.passwordUpdate}>
                             <Icon size="M" name="key" />
                           </button>
                         ) : null}
@@ -278,20 +242,14 @@ export const PureUtilisateur = defineComponent<Props>({
                   <div class="tablet-blob-1-4">
                     <h5>Prénom</h5>
                   </div>
-                  <LoadingElement
-                    data={utilisateur.value}
-                    renderItem={item => <p>{item.prenom || '–'}</p>}
-                  />
+                  <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.prenom || '–'}</p>} />
                 </div>
 
                 <div class="tablet-blobs">
                   <div class="tablet-blob-1-4">
                     <h5>Nom</h5>
                   </div>
-                  <LoadingElement
-                    data={utilisateur.value}
-                    renderItem={item => <p>{item.nom || '–'}</p>}
-                  />
+                  <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.nom || '–'}</p>} />
                 </div>
 
                 <div class="tablet-blobs">
@@ -299,10 +257,7 @@ export const PureUtilisateur = defineComponent<Props>({
                     <h5>Email</h5>
                   </div>
                   <div>
-                    <LoadingElement
-                      data={utilisateur.value}
-                      renderItem={item => <p>{item.email || '–'}</p>}
-                    />
+                    <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.email || '–'}</p>} />
                   </div>
                 </div>
 
@@ -310,38 +265,21 @@ export const PureUtilisateur = defineComponent<Props>({
                   <div class="tablet-blob-1-4">
                     <h5>Téléphone fixe</h5>
                   </div>
-                  <LoadingElement
-                    data={utilisateur.value}
-                    renderItem={item => <p>{item.telephoneFixe || '–'}</p>}
-                  />
+                  <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.telephoneFixe || '–'}</p>} />
                 </div>
 
                 <div class="tablet-blobs">
                   <div class="tablet-blob-1-4">
                     <h5>Téléphone mobile</h5>
                   </div>
-                  <LoadingElement
-                    data={utilisateur.value}
-                    renderItem={item => <p>{item.telephoneMobile || '–'}</p>}
-                  />
+                  <LoadingElement data={utilisateur.value} renderItem={item => <p>{item.telephoneMobile || '–'}</p>} />
                 </div>
 
                 <div class="tablet-blobs">
                   <div class="tablet-blob-1-4">
                     <h5>Permissions</h5>
                   </div>
-                  <LoadingElement
-                    data={utilisateur.value}
-                    renderItem={item => (
-                      <>
-                        {item.role ? (
-                          <Pill class="mb">{item.role}</Pill>
-                        ) : (
-                          <p>–</p>
-                        )}
-                      </>
-                    )}
-                  />
+                  <LoadingElement data={utilisateur.value} renderItem={item => <>{item.role ? <Pill class="mb">{item.role}</Pill> : <p>–</p>}</>} />
                 </div>
 
                 <LoadingElement
@@ -351,9 +289,7 @@ export const PureUtilisateur = defineComponent<Props>({
                       {item.entreprises?.length ? (
                         <div class="tablet-blobs">
                           <div class="tablet-blob-1-4">
-                            <h5>
-                              Entreprise{item.entreprises.length > 1 ? 's' : ''}
-                            </h5>
+                            <h5>Entreprise{item.entreprises.length > 1 ? 's' : ''}</h5>
                           </div>
 
                           <div>
@@ -363,13 +299,11 @@ export const PureUtilisateur = defineComponent<Props>({
                                   <router-link
                                     to={{
                                       name: 'entreprise',
-                                      params: { id: e.id }
+                                      params: { id: e.id },
                                     }}
                                     class="btn-border small p-s rnd-xs mr-xs"
                                   >
-                                    {e.legalSiren
-                                      ? `${e.nom} (${e.legalSiren})`
-                                      : e.nom}
+                                    {e.legalSiren ? `${e.nom} (${e.legalSiren})` : e.nom}
                                   </router-link>
                                 </li>
                               ))}
@@ -385,16 +319,7 @@ export const PureUtilisateur = defineComponent<Props>({
                           </div>
 
                           <div class="tablet-blob-3-4">
-                            {`${
-                              Administrations[item.administrationId].abreviation
-                            }${
-                              Administrations[item.administrationId].service
-                                ? ` - ${
-                                    Administrations[item.administrationId]
-                                      .service
-                                  }`
-                                : ''
-                            }`}
+                            {`${Administrations[item.administrationId].abreviation}${Administrations[item.administrationId].service ? ` - ${Administrations[item.administrationId].service}` : ''}`}
                           </div>
                         </div>
                       ) : null}
@@ -414,10 +339,7 @@ export const PureUtilisateur = defineComponent<Props>({
                           <input
                             onInput={e => {
                               if (isEventWithTarget(e)) {
-                                updateSubscription(
-                                  props.utilisateurId,
-                                  e.target.checked
-                                )
+                                updateSubscription(props.utilisateurId, e.target.checked)
                               }
                             }}
                             type="checkbox"
@@ -436,19 +358,13 @@ export const PureUtilisateur = defineComponent<Props>({
                   </>
                 ) : null}
               </div>
-            )
+            ),
           }}
         </Accordion>
         {removePopup.value && utilisateur.value.status === 'LOADED' ? (
-          <RemovePopup
-            close={() => (removePopup.value = !removePopup.value)}
-            utilisateur={utilisateur.value.value}
-            deleteUser={deleteUser}
-          />
+          <RemovePopup close={() => (removePopup.value = !removePopup.value)} utilisateur={utilisateur.value.value} deleteUser={deleteUser} />
         ) : null}
-        {editPopup.value &&
-        utilisateur.value.status === 'LOADED' &&
-        subscription.value.status === 'LOADED' ? (
+        {editPopup.value && utilisateur.value.status === 'LOADED' && subscription.value.status === 'LOADED' ? (
           <EditPopup
             close={() => (editPopup.value = !editPopup.value)}
             utilisateur={utilisateur.value.value}
@@ -459,5 +375,5 @@ export const PureUtilisateur = defineComponent<Props>({
         ) : null}
       </div>
     )
-  }
+  },
 })

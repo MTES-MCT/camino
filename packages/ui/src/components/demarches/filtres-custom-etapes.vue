@@ -7,11 +7,7 @@
       <div class="flex mb-s">
         <select v-model="value.typeId" class="p-s mr-s" @change="valueReset(n)">
           <option value="">–</option>
-          <option
-            v-for="type in filter.elements"
-            :key="type.id"
-            :value="type.id"
-          >
+          <option v-for="type in filter.elements" :key="type.id" :value="type.id">
             {{ type.nom }}
           </option>
         </select>
@@ -27,17 +23,9 @@
             <p class="h6 italic mb-0">Optionnel</p>
           </div>
           <div class="blob-3-4">
-            <select
-              v-model="value.statutId"
-              class="p-s mr-s cap-first"
-              @change="statutValueReset(n)"
-            >
+            <select v-model="value.statutId" class="p-s mr-s cap-first" @change="statutValueReset(n)">
               <option :value="''">–</option>
-              <option
-                v-for="statut in statutsFind(n)"
-                :key="statut.id"
-                :value="statut.id"
-              >
+              <option v-for="statut in statutsFind(n)" :key="statut.id" :value="statut.id">
                 {{ statut.nom }}
               </option>
             </select>
@@ -49,10 +37,7 @@
             <p class="h6 italic mb-0">Optionnel</p>
           </div>
           <div class="blob-3-4">
-            <InputDate
-              :initialValue="filter.value[n].dateDebut"
-              :dateChanged="date => dateDebutChanged(n, date)"
-            />
+            <InputDate :initialValue="filter.value[n].dateDebut" :dateChanged="date => dateDebutChanged(n, date)" />
           </div>
         </div>
         <div class="blobs mb-s">
@@ -61,20 +46,13 @@
             <p class="h6 italic mb-0">Optionnel</p>
           </div>
           <div class="blob-3-4">
-            <InputDate
-              :initialValue="filter.value[n].dateFin"
-              :dateChanged="date => dateFinChanged(n, date)"
-            />
+            <InputDate :initialValue="filter.value[n].dateFin" :dateChanged="date => dateFinChanged(n, date)" />
           </div>
         </div>
       </div>
       <hr class="mb-s" />
     </div>
-    <button
-      v-if="!filter.value || !filter.value.some(v => v.typeId === '')"
-      class="btn rnd-xs py-s px-m full-x flex mb-s h6"
-      @click="valueAdd"
-    >
+    <button v-if="!filter.value || !filter.value.some(v => v.typeId === '')" class="btn rnd-xs py-s px-m full-x flex mb-s h6" @click="valueAdd">
       <span class="mt-xxs">Ajouter un type d'étape</span>
       <Icon name="plus" size="M" class="flex-right" />
     </button>
@@ -90,7 +68,7 @@ export default {
   components: { Icon, InputDate },
 
   props: {
-    filter: { type: Object, required: true }
+    filter: { type: Object, required: true },
   },
 
   methods: {
@@ -121,7 +99,7 @@ export default {
       if (!this.filter.value[n].statutId) {
         delete this.filter.value[n].statutId
       }
-    }
-  }
+    },
+  },
 }
 </script>

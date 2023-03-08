@@ -9,7 +9,7 @@ export const up = async (knex: Knex) => {
       titreTypeId: t.id,
       demarcheTypeId,
       etapeTypeId,
-      ordre: 230
+      ordre: 230,
     })
   }
 }

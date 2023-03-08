@@ -15,8 +15,8 @@ class TitresTypesTypes extends Model {
     properties: {
       id: { type: 'string', maxLength: 3 },
       nom: { type: 'string' },
-      ordre: { type: 'integer' }
-    }
+      ordre: { type: 'integer' },
+    },
   }
 
   static relationMappings = () => ({
@@ -25,15 +25,15 @@ class TitresTypesTypes extends Model {
       modelClass: TitresTypes,
       join: {
         from: 'titresTypesTypes.id',
-        to: 'titresTypes.typeId'
-      }
-    }
+        to: 'titresTypes.typeId',
+      },
+    },
   })
 
   public static modifiers: Modifiers = {
     orderAsc: builder => {
       builder.orderBy('ordre', 'asc')
-    }
+    },
   }
 }
 

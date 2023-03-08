@@ -11,12 +11,12 @@ export default {
   props: {
     elements: {
       type: Array,
-      default: () => []
+      default: () => [],
     },
     mini: {
       type: Boolean,
-      default: false
-    }
-  }
+      default: false,
+    },
+  },
 }
 </script>

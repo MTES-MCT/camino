@@ -14,7 +14,7 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.avisDUnServiceDeLAdministrationCentrale,
     DOCUMENTS_TYPES_IDS.avisDuConseilGeneralDeLEconomie_cge,
     DOCUMENTS_TYPES_IDS.avis,
-    DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines
+    DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines,
   ],
   [ETAPES_TYPES.avisDuneCollectiviteLocale]: [DOCUMENTS_TYPES_IDS.avis],
   [ETAPES_TYPES.avenantALautorisationDeRechercheMiniere]: [
@@ -22,7 +22,7 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.contrat,
     DOCUMENTS_TYPES_IDS.convention,
     DOCUMENTS_TYPES_IDS.decision,
-    DOCUMENTS_TYPES_IDS.notificationDeDecision
+    DOCUMENTS_TYPES_IDS.notificationDeDecision,
   ],
   [ETAPES_TYPES.avisDeLaDirectionRegionaleDesFinancesPubliques]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires, DOCUMENTS_TYPES_IDS.avis],
   [ETAPES_TYPES.avisDeLaGendarmerieNationale]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires],
@@ -35,12 +35,12 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.avis,
     DOCUMENTS_TYPES_IDS.contrat,
     DOCUMENTS_TYPES_IDS.lettre,
-    DOCUMENTS_TYPES_IDS.motif
+    DOCUMENTS_TYPES_IDS.motif,
   ],
   [ETAPES_TYPES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement]: [
     DOCUMENTS_TYPES_IDS.avisDuDirecteurRegionalChargeDesMines,
     DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines,
-    DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines
+    DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines,
   ],
   [ETAPES_TYPES.avisDuConseilDEtat]: [DOCUMENTS_TYPES_IDS.avis],
   [ETAPES_TYPES.avisDeLetatMajorOrpaillageEtPecheIllicite_EMOPI_]: [DOCUMENTS_TYPES_IDS.avisDesServicesCivilsEtMilitaires],
@@ -61,14 +61,14 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.arrete,
     DOCUMENTS_TYPES_IDS.decisionCasParCas,
     DOCUMENTS_TYPES_IDS.lettre,
-    DOCUMENTS_TYPES_IDS.notificationDeDecision
+    DOCUMENTS_TYPES_IDS.notificationDeDecision,
   ],
   [ETAPES_TYPES.desistementDuDemandeur]: [
     DOCUMENTS_TYPES_IDS.accuseDeReceptionDUneDemande,
     DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande,
     DOCUMENTS_TYPES_IDS.lettre,
     DOCUMENTS_TYPES_IDS.motif,
-    DOCUMENTS_TYPES_IDS.notes
+    DOCUMENTS_TYPES_IDS.notes,
   ],
   [ETAPES_TYPES.decisionDeLadministration]: [
     DOCUMENTS_TYPES_IDS.arreteMinisteriel,
@@ -83,7 +83,7 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.notificationDeDecision,
     DOCUMENTS_TYPES_IDS.ordonnanceDuRoi,
     DOCUMENTS_TYPES_IDS.ordonnance,
-    DOCUMENTS_TYPES_IDS.documentsCartographiques
+    DOCUMENTS_TYPES_IDS.documentsCartographiques,
   ],
   [ETAPES_TYPES.publicationDeDecisionAuJORF]: [
     DOCUMENTS_TYPES_IDS.arreteMinisteriel,
@@ -93,7 +93,7 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.decret,
     DOCUMENTS_TYPES_IDS.decision,
     DOCUMENTS_TYPES_IDS.ordonnance,
-    DOCUMENTS_TYPES_IDS.publicationAuJorf
+    DOCUMENTS_TYPES_IDS.publicationAuJorf,
   ],
   [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: [DOCUMENTS_TYPES_IDS.arrete, DOCUMENTS_TYPES_IDS.publicationAuJorf],
   [ETAPES_TYPES.decisionAdministrative]: [DOCUMENTS_TYPES_IDS.arrete],
@@ -105,14 +105,14 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.arretePrefectoral,
     DOCUMENTS_TYPES_IDS.lettre,
     DOCUMENTS_TYPES_IDS.notes,
-    DOCUMENTS_TYPES_IDS.publicationAuJorf
+    DOCUMENTS_TYPES_IDS.publicationAuJorf,
   ],
   [ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_]: [DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements, DOCUMENTS_TYPES_IDS.lettreDeDemande],
   [ETAPES_TYPES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_]: [
     DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements,
     DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande,
     DOCUMENTS_TYPES_IDS.dossierLoiSurLEau,
-    DOCUMENTS_TYPES_IDS.lettre
+    DOCUMENTS_TYPES_IDS.lettre,
   ],
   [ETAPES_TYPES.demandeDeComplements]: [DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements, DOCUMENTS_TYPES_IDS.lettre, DOCUMENTS_TYPES_IDS.rapportDeRecevabilite],
   [ETAPES_TYPES.completudeDeLaDemande]: [DOCUMENTS_TYPES_IDS.ficheDeCompletude],
@@ -122,7 +122,7 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.lettre,
     DOCUMENTS_TYPES_IDS.notes,
     DOCUMENTS_TYPES_IDS.rapportDeRecevabilite,
-    DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines
+    DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines,
   ],
   [ETAPES_TYPES.depotDeLaDemande]: [DOCUMENTS_TYPES_IDS.accuseDeReceptionDUneDemande],
   [ETAPES_TYPES.demande]: [
@@ -142,7 +142,7 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.lettreDeDemande,
     DOCUMENTS_TYPES_IDS.lettre,
     DOCUMENTS_TYPES_IDS.noticeDIncidence,
-    DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau
+    DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau,
   ],
   [ETAPES_TYPES.demandeDinformations]: [DOCUMENTS_TYPES_IDS.courrierDeDemandeDeComplements],
   [ETAPES_TYPES.notificationAuDemandeur_AjournementDeLaCARM_]: [DOCUMENTS_TYPES_IDS.lettre],
@@ -154,7 +154,7 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.avenant,
     DOCUMENTS_TYPES_IDS.contrat,
     DOCUMENTS_TYPES_IDS.lettre,
-    DOCUMENTS_TYPES_IDS.notificationDeDecision
+    DOCUMENTS_TYPES_IDS.notificationDeDecision,
   ],
   [ETAPES_TYPES.modificationDeLaDemande]: [
     DOCUMENTS_TYPES_IDS.accuseDeReceptionDUneDemande,
@@ -163,7 +163,7 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.lettreDeDemande,
     DOCUMENTS_TYPES_IDS.lettre,
     DOCUMENTS_TYPES_IDS.notificationDeDecision,
-    DOCUMENTS_TYPES_IDS.notes
+    DOCUMENTS_TYPES_IDS.notes,
   ],
   [ETAPES_TYPES.noteInterneSignalee]: [DOCUMENTS_TYPES_IDS.arreteMinisteriel],
   [ETAPES_TYPES.paiementDesFraisDeDossierComplementaires]: [DOCUMENTS_TYPES_IDS.facture],
@@ -176,7 +176,7 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.dossierDeDemande,
     DOCUMENTS_TYPES_IDS.dossier,
     DOCUMENTS_TYPES_IDS.lettreDeDemande,
-    DOCUMENTS_TYPES_IDS.notes
+    DOCUMENTS_TYPES_IDS.notes,
   ],
   [ETAPES_TYPES.receptionDeComplements_RecevabiliteDeLaDemande_]: [DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande],
   [ETAPES_TYPES.receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_]: [DOCUMENTS_TYPES_IDS.documentsCartographiques, DOCUMENTS_TYPES_IDS.dossierLoiSurLEau],
@@ -184,7 +184,7 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.avisDuConseilGeneralDeLEconomie_cge,
     DOCUMENTS_TYPES_IDS.avis,
     DOCUMENTS_TYPES_IDS.notes,
-    DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines
+    DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines,
   ],
   [ETAPES_TYPES.receptionDeComplements_CompletudeDeLaDemande_]: [
     DOCUMENTS_TYPES_IDS.documentsCartographiques,
@@ -192,7 +192,7 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.facture,
     DOCUMENTS_TYPES_IDS.kbis,
     DOCUMENTS_TYPES_IDS.noticeDIncidence,
-    DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau
+    DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau,
   ],
   [ETAPES_TYPES.receptionDeComplements]: [DOCUMENTS_TYPES_IDS.documentsCartographiques, DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande, DOCUMENTS_TYPES_IDS.lettre],
   [ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau]: [DOCUMENTS_TYPES_IDS.arretePrefectoral, DOCUMENTS_TYPES_IDS.recepisse_LoiSurLEau],
@@ -201,7 +201,7 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.complementsAuDossierDeDemande,
     DOCUMENTS_TYPES_IDS.lettreDeDemande,
     DOCUMENTS_TYPES_IDS.lettre,
-    DOCUMENTS_TYPES_IDS.notes
+    DOCUMENTS_TYPES_IDS.notes,
   ],
   [ETAPES_TYPES.rapportDuConseilDEtat]: [DOCUMENTS_TYPES_IDS.extraitDuRegistreDesDeliberationsDeLaSectionDesTravauxPublicDuConseilDEtat],
   [ETAPES_TYPES.publicationDeDecisionAuRecueilDesActesAdministratifs]: [DOCUMENTS_TYPES_IDS.arrete],
@@ -212,12 +212,12 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.lettre,
     DOCUMENTS_TYPES_IDS.notes,
     DOCUMENTS_TYPES_IDS.rapportDeLAdministrationCentraleChargeDesMines,
-    DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines
+    DOCUMENTS_TYPES_IDS.rapportDeLaDirectionRegionaleChargeeDesMines,
   ],
   [ETAPES_TYPES.saisineDesCollectivitesLocales]: [
     DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesDeLAdministrationCentrale,
     DOCUMENTS_TYPES_IDS.lettreDeSaisineDesServicesCivilsEtMilitaires,
-    DOCUMENTS_TYPES_IDS.lettre
+    DOCUMENTS_TYPES_IDS.lettre,
   ],
   [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: [DOCUMENTS_TYPES_IDS.contrat, DOCUMENTS_TYPES_IDS.convention, DOCUMENTS_TYPES_IDS.lettre],
   [ETAPES_TYPES.saisineDuConseilDEtat]: [DOCUMENTS_TYPES_IDS.lettreDeSaisineDuConseilDEtat],
@@ -254,7 +254,7 @@ const EtapesTypesDocumentsTypes = {
     DOCUMENTS_TYPES_IDS.dossier,
     DOCUMENTS_TYPES_IDS.ficheDePresentation,
     DOCUMENTS_TYPES_IDS.identificationDeMateriel,
-    DOCUMENTS_TYPES_IDS.noticeDIncidence
+    DOCUMENTS_TYPES_IDS.noticeDIncidence,
   ],
   [ETAPES_TYPES.memoireEnReponseDeLexploitant_ParRapportALavisDeLAE_]: [DOCUMENTS_TYPES_IDS.dossier],
   [ETAPES_TYPES.memoireEnReponseDeLexploitant]: [DOCUMENTS_TYPES_IDS.dossier],
@@ -273,7 +273,7 @@ const EtapesTypesDocumentsTypes = {
   [ETAPES_TYPES.recolement]: [DOCUMENTS_TYPES_IDS.pvDeRecolement],
   [ETAPES_TYPES.saisineDeLautoriteEnvironnementale]: [DOCUMENTS_TYPES_IDS.courrierDeSaisineDuPrefet, DOCUMENTS_TYPES_IDS.lettreDeSaisineDuPrefet],
   [ETAPES_TYPES.saisineDesServicesDeLEtat]: [DOCUMENTS_TYPES_IDS.courrierDeSaisineDuPrefet],
-  [ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur]: [DOCUMENTS_TYPES_IDS.arretePrefectoral]
+  [ETAPES_TYPES.transmissionDuProjetDePrescriptionsAuDemandeur]: [DOCUMENTS_TYPES_IDS.arretePrefectoral],
 } as const
 
 type EtapesTypesEtapesTypesDocumentsTypes = keyof typeof EtapesTypesDocumentsTypes
@@ -291,12 +291,12 @@ const TDEDocumentsTypes = {
         [DOCUMENTS_TYPES_IDS.dossierDeDemande]: { optionnel: false },
         [DOCUMENTS_TYPES_IDS.formulaireDeDemande]: { optionnel: false },
         [DOCUMENTS_TYPES_IDS.justificatifDePaiement]: { optionnel: false },
-        [DOCUMENTS_TYPES_IDS.documentsCartographiques]: { optionnel: false }
-      }
-    }
+        [DOCUMENTS_TYPES_IDS.documentsCartographiques]: { optionnel: false },
+      },
+    },
   },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE]: {
-    [DEMARCHES_TYPES_IDS.MutationPartielle]: { [ETAPES_TYPES.decisionDeLadministration]: { [DOCUMENTS_TYPES_IDS.arrete]: { optionnel: true } } }
+    [DEMARCHES_TYPES_IDS.MutationPartielle]: { [ETAPES_TYPES.decisionDeLadministration]: { [DOCUMENTS_TYPES_IDS.arrete]: { optionnel: true } } },
   },
   [TITRES_TYPES_IDS.CONCESSION_METAUX]: { [DEMARCHES_TYPES_IDS.Renonciation]: { [ETAPES_TYPES.decisionImplicite]: { [DOCUMENTS_TYPES_IDS.courrier]: { optionnel: true } } } },
   [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: {
@@ -308,14 +308,14 @@ const TDEDocumentsTypes = {
         [DOCUMENTS_TYPES_IDS.identificationDeMateriel]: {
           optionnel: false,
           description:
-            'la liste et la valeur du matériel d’extraction et de\n traitement que le demandeur détient ou qu’il \nenvisage d’acquérir ainsi que, dans ce dernier\n cas, le financement correspondant. Ces pièces \nsont demandées au titre de la justification des \ncapacités financières du\ndemandeur \n(décret 2001-204, art. 7)'
+            'la liste et la valeur du matériel d’extraction et de\n traitement que le demandeur détient ou qu’il \nenvisage d’acquérir ainsi que, dans ce dernier\n cas, le financement correspondant. Ces pièces \nsont demandées au titre de la justification des \ncapacités financières du\ndemandeur \n(décret 2001-204, art. 7)',
         },
         [DOCUMENTS_TYPES_IDS.justificationDExistenceDuGisement]: { optionnel: true },
         [DOCUMENTS_TYPES_IDS.lettre]: { optionnel: true },
         [DOCUMENTS_TYPES_IDS.mesuresPrevuesPourRehabiliterLeSite]: {
           optionnel: false,
           description:
-            'la définition des mesures prévues par le pétitionnaire pour réhabiliter le site après exploitation, notamment la nature et les modalités de revégétalisation envisagée. (décret 2001-204, art. 5 bis)'
+            'la définition des mesures prévues par le pétitionnaire pour réhabiliter le site après exploitation, notamment la nature et les modalités de revégétalisation envisagée. (décret 2001-204, art. 5 bis)',
         },
         [DOCUMENTS_TYPES_IDS.methodesPourLExecutionDesTravaux]: { optionnel: false, description: 'descriptif des méthodes envisagées pour l’exécution des travaux ((décret 2001-204, art. 6)' },
         [DOCUMENTS_TYPES_IDS.noticeDImpact]: { optionnel: true },
@@ -323,12 +323,12 @@ const TDEDocumentsTypes = {
         [DOCUMENTS_TYPES_IDS.programmeDesTravaux]: { optionnel: false, description: 'Description du phasage et planigramme des travaux. (décret 2001-204, art. 5)' },
         [DOCUMENTS_TYPES_IDS.schemaDePenetrationDuMassifForestier]: {
           optionnel: false,
-          description: "le schéma de pénétration du massif forestier proposé par le pétitionnaire pour l'acheminement du matériel lourd et la desserte du chantier (décret 2001-204, art. 5 bis)"
+          description: "le schéma de pénétration du massif forestier proposé par le pétitionnaire pour l'acheminement du matériel lourd et la desserte du chantier (décret 2001-204, art. 5 bis)",
         },
-        [DOCUMENTS_TYPES_IDS.lettreDeDemande]: { optionnel: false }
-      }
-    }
-  }
+        [DOCUMENTS_TYPES_IDS.lettreDeDemande]: { optionnel: false },
+      },
+    },
+  },
 } as const satisfies {
   [titreKey in TitreTypeId]?: {
     [demarcheKey in keyof TDEType[titreKey]]?: {

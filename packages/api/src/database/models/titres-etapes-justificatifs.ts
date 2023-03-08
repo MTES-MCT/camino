@@ -14,8 +14,8 @@ class TitresEtapesJustificatifs extends Model {
 
     properties: {
       documentId: { type: 'string', maxLength: 128 },
-      titreEtapeId: { type: 'string', maxLength: 128 }
-    }
+      titreEtapeId: { type: 'string', maxLength: 128 },
+    },
   }
 
   public static idColumn = ['documentId', 'titreEtapeId']
@@ -26,17 +26,17 @@ class TitresEtapesJustificatifs extends Model {
       modelClass: TitresEtapes,
       join: {
         from: 'titresEtapesJustificatifs.titreEtapeId',
-        to: 'titresEtapes.id'
-      }
+        to: 'titresEtapes.id',
+      },
     },
     document: {
       relation: Model.BelongsToOneRelation,
       modelClass: Document,
       join: {
         from: 'titresEtapesJustificatifs.documentId',
-        to: 'documents.id'
-      }
-    }
+        to: 'documents.id',
+      },
+    },
   })
 }
 

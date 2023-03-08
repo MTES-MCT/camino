@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
   title: 'Components/UI/TypeAhead',
-  component: TypeAhead
+  component: TypeAhead,
 }
 export default meta
 
@@ -17,7 +17,7 @@ const onInput = action('onInput')
 const items: Item[] = [
   { id: 'id1', titre: 'titreItem1' },
   { id: 'id2', titre: 'titreItem2' },
-  { id: 'id3', titre: 'titreItem3' }
+  { id: 'id3', titre: 'titreItem3' },
 ]
 
 export const Single: Story = () => (
@@ -54,7 +54,7 @@ export const Multiple: Story = () => (
       { id: 'idTitreItem12', titre: 'titreItem12' },
       { id: 'idTitreItem13', titre: 'titreItem13' },
       { id: 'idTitreItem14', titre: 'titreItem14' },
-      { id: 'idTitreItem15', titre: 'titreItem15' }
+      { id: 'idTitreItem15', titre: 'titreItem15' },
     ]}
     placeholder="placeholder"
     minInputLength={3}
@@ -85,16 +85,12 @@ export const MultipleWithInitialItems: Story = () => (
       { id: 'idTitreItem12', titre: 'titreItem12' },
       { id: 'idTitreItem13', titre: 'titreItem13' },
       { id: 'idTitreItem14', titre: 'titreItem14' },
-      { id: 'idTitreItem15', titre: 'titreItem15' }
+      { id: 'idTitreItem15', titre: 'titreItem15' },
     ]}
     placeholder="placeholder"
     minInputLength={3}
     type="multiple"
-    overrideItems={[
-      { id: 'idTitreItem1' },
-      { id: 'idTitreItemNotInItems' },
-      { id: 'idTitreItem2' }
-    ]}
+    overrideItems={[{ id: 'idTitreItem1' }, { id: 'idTitreItemNotInItems' }, { id: 'idTitreItem2' }]}
     itemChipLabel={item => item.titre}
     onInput={onInput}
     onSelectItem={selectItem}

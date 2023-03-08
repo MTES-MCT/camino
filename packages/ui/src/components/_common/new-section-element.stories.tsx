@@ -6,7 +6,7 @@ import { toCaminoDate } from 'camino-common/src/date'
 const meta: Meta = {
   title: 'Components/common/SectionElement',
   component: SectionElement,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -20,7 +20,7 @@ export const Text: Story = () => (
       type: 'text',
       nom: "nom de l'élément",
       description: 'description',
-      value: 'Valeur'
+      value: 'Valeur',
     }}
   />
 )
@@ -33,7 +33,7 @@ export const File: Story = () => (
       type: 'file',
       nom: 'Un fichier',
       description: 'description',
-      value: 'superfichier.pdf'
+      value: 'superfichier.pdf',
     }}
   />
 )
@@ -46,7 +46,7 @@ export const Date: Story = () => (
       type: 'date',
       nom: 'Une date',
       description: 'description',
-      value: toCaminoDate('2022-01-01')
+      value: toCaminoDate('2022-01-01'),
     }}
   />
 )
@@ -63,8 +63,8 @@ export const Checkboxes: Story = () => (
         { id: 'option1', nom: 'Option 1' },
         { id: 'option2', nom: 'Option 2' },
         { id: 'option3', nom: 'Option 3' },
-        { id: 'option4', nom: 'Option 4' }
-      ]
+        { id: 'option4', nom: 'Option 4' },
+      ],
     }}
   />
 )
@@ -81,8 +81,8 @@ export const Select: Story = () => (
         { id: 'option1', nom: 'Option 1' },
         { id: 'option2', nom: 'Option 2' },
         { id: 'option3', nom: 'Option 3' },
-        { id: 'option4', nom: 'Option 4' }
-      ]
+        { id: 'option4', nom: 'Option 4' },
+      ],
     }}
   />
 )
@@ -94,7 +94,7 @@ export const Number: Story = () => (
       id: 'id',
       type: 'number',
       nom: 'Un nombre',
-      value: 2
+      value: 2,
     }}
   />
 )
@@ -107,7 +107,7 @@ export const Radio: Story = () => (
         id: 'id',
         type: 'radio',
         nom: 'Un radio bouton',
-        value: true
+        value: true,
       }}
     />
     <SectionElement
@@ -116,7 +116,7 @@ export const Radio: Story = () => (
         id: 'id',
         type: 'radio',
         nom: 'Un autre radio bouton',
-        value: false
+        value: false,
       }}
     />
   </div>

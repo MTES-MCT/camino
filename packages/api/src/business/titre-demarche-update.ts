@@ -15,10 +15,7 @@ import { titresCoordonneesUpdate } from './processes/titres-coordonnees-update.j
 import { titresActivitesPropsUpdate } from './processes/titres-activites-props-update.js'
 import { userSuper } from '../database/user-super.js'
 
-const titreDemarcheUpdate = async (
-  titreDemarcheId: string | null,
-  titreId: string
-) => {
+const titreDemarcheUpdate = async (titreDemarcheId: string | null, titreId: string) => {
   try {
     console.info()
     console.info('- - -')
@@ -35,30 +32,19 @@ const titreDemarcheUpdate = async (
     // si c'est une création ou modification
     // pas une suppression
     if (titreDemarcheId) {
-      titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate([
-        titreId
-      ])
+      titresDemarchesPublicUpdated = await titresDemarchesPublicUpdate([titreId])
     }
 
-    const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate([
-      titreId
-    ])
+    const titresDemarchesOrdreUpdated = await titresDemarchesOrdreUpdate([titreId])
     const titresStatutIdUpdated = await titresStatutIdsUpdate([titreId])
     const titresPublicUpdated = await titresPublicUpdate([titreId])
-    const [titresPhasesUpdated = [], titresPhasesDeleted = []] =
-      await titresPhasesUpdate([titreId])
+    const [titresPhasesUpdated = [], titresPhasesDeleted = []] = await titresPhasesUpdate([titreId])
     const titresDatesUpdated = await titresDatesUpdate([titreId])
-    const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate([
-      titreId
-    ])
-    const titresContenusEtapesIdsUpdated = await titresContenusEtapesIdsUpdate([
-      titreId
-    ])
+    const titresPropsEtapesIdsUpdated = await titresPropsEtapesIdsUpdate([titreId])
+    const titresContenusEtapesIdsUpdated = await titresContenusEtapesIdsUpdate([titreId])
     const titresCoordonneesUpdated = await titresCoordonneesUpdate([titreId])
     const titresActivitesCreated = await titresActivitesUpdate([titreId])
-    const titresActivitesPropsUpdated = await titresActivitesPropsUpdate([
-      titreId
-    ])
+    const titresActivitesPropsUpdated = await titresActivitesPropsUpdate([titreId])
 
     const titresUpdatedIndex = await titresSlugsUpdate([titreId])
 
@@ -75,7 +61,7 @@ const titreDemarcheUpdate = async (
       titresCoordonneesUpdated,
       titresActivitesCreated,
       titresActivitesPropsUpdated,
-      titresUpdatedIndex
+      titresUpdatedIndex,
     })
   } catch (e) {
     console.error(`erreur: titreDemarcheUpdate ${titreId}`)

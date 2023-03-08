@@ -1,12 +1,5 @@
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
-import {
-  CaminoDate,
-  getAnnee,
-  getDay,
-  getMois,
-  isCaminoDate,
-  toCaminoDate
-} from 'camino-common/src/date'
+import { CaminoDate, getAnnee, getDay, getMois, isCaminoDate, toCaminoDate } from 'camino-common/src/date'
 import { defineComponent, ref } from 'vue'
 
 interface Props {
@@ -14,20 +7,7 @@ interface Props {
   dateChanged: (date: CaminoDate) => void
 }
 
-const monthNames = [
-  'janvier',
-  'février',
-  'mars',
-  'avril',
-  'mai',
-  'juin',
-  'juillet',
-  'aout',
-  'septembre',
-  'octobre',
-  'novembre',
-  'décembre'
-] as const
+const monthNames = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'décembre'] as const
 
 const yearMin = 1750
 const yearMax = 2099
@@ -73,12 +53,7 @@ export const InputDate = defineComponent<Props>({
         let date = null
         while (dayMax > 28) {
           try {
-            date = toCaminoDate(
-              `${yearId.value}-${String(monthId.value).padStart(
-                2,
-                '0'
-              )}-${String(dayId.value).padStart(2, '0')}`
-            )
+            date = toCaminoDate(`${yearId.value}-${String(monthId.value).padStart(2, '0')}-${String(dayId.value).padStart(2, '0')}`)
             dayMax = 1
           } catch (ex) {
             dayId.value = dayId.value - 1
@@ -94,15 +69,7 @@ export const InputDate = defineComponent<Props>({
     return () => (
       <div class="blobs-mini">
         <div class="blob-mini-1-3">
-          <input
-            value={dayId.value}
-            type="number"
-            min="1"
-            max="31"
-            placeholder="jour"
-            class="text-right p-s"
-            onChange={changeDay}
-          />
+          <input value={dayId.value} type="number" min="1" max="31" placeholder="jour" class="text-right p-s" onChange={changeDay} />
         </div>
         <div class="blob-mini-1-3">
           <select value={monthId.value} class="mr-s p-s" onChange={changeMonth}>
@@ -117,17 +84,9 @@ export const InputDate = defineComponent<Props>({
           </select>
         </div>
         <div class="blob-mini-1-3">
-          <input
-            value={yearId.value}
-            type="number"
-            min={yearMin}
-            max={yearMax}
-            placeholder="année"
-            class="text-right p-s"
-            onChange={changeYear}
-          />
+          <input value={yearId.value} type="number" min={yearMin} max={yearMax} placeholder="année" class="text-right p-s" onChange={changeYear} />
         </div>
       </div>
     )
-  }
+  },
 })

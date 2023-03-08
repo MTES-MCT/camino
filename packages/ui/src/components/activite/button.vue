@@ -3,7 +3,7 @@
     <button
       class="cmn-activite-btn-remplir btn small flex py-s px-m rnd-0 mr-px"
       :class="{
-        'btn-primary': activite.activiteStatutId !== 'enc' && buttonText
+        'btn-primary': activite.activiteStatutId !== 'enc' && buttonText,
       }"
       @click="activiteEditPopupOpen"
     >
@@ -31,7 +31,7 @@ import { Icon } from '@/components/_ui/icon'
 export default {
   components: { Icon },
   props: {
-    activite: { type: Object, default: () => ({}) }
+    activite: { type: Object, default: () => ({}) },
   },
 
   computed: {
@@ -39,10 +39,8 @@ export default {
       if (this.activite.deposable || this.activite.activiteStatutId === 'dep') {
         return null
       }
-      return this.activite.activiteStatutId === 'abs'
-        ? 'Remplir…'
-        : 'Compléter…'
-    }
+      return this.activite.activiteStatutId === 'abs' ? 'Remplir…' : 'Compléter…'
+    },
   },
 
   methods: {
@@ -51,15 +49,14 @@ export default {
         component: DeposePopup,
         props: {
           activite: this.activite,
-          onDepotDone: () =>
-            this.$store.dispatch(`titreActivite/get`, this.activite.id)
-        }
+          onDepotDone: () => this.$store.dispatch(`titreActivite/get`, this.activite.id),
+        },
       })
 
       this.eventTrack({
         categorie: 'titre-activite',
         action: 'titre-activite_depot',
-        nom: this.$route.params.id
+        nom: this.$route.params.id,
       })
     },
 
@@ -72,9 +69,9 @@ export default {
     activiteEditPopupOpen() {
       this.$router.push({
         name: 'activite-edition',
-        params: { id: this.activite.slug }
+        params: { id: this.activite.slug },
       })
-    }
-  }
+    },
+  },
 }
 </script>

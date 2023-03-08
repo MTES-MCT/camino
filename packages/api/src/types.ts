@@ -1,22 +1,9 @@
 import { FileUpload } from 'graphql-upload'
-import {
-  AdministrationId,
-  AdministrationTypeId
-} from 'camino-common/src/static/administrations.js'
-import {
-  CodePostal,
-  DepartementId
-} from 'camino-common/src/static/departement.js'
+import { AdministrationId, AdministrationTypeId } from 'camino-common/src/static/administrations.js'
+import { CodePostal, DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
 import { GeoSystemeId } from 'camino-common/src/static/geoSystemes.js'
-import {
-  BaseUserNotNull,
-  isAdministrationRole,
-  isEntrepriseOrBureauDetudeRole,
-  Role,
-  User,
-  UserNotNull
-} from 'camino-common/src/roles.js'
+import { BaseUserNotNull, isAdministrationRole, isEntrepriseOrBureauDetudeRole, Role, User, UserNotNull } from 'camino-common/src/roles.js'
 import { DomaineId } from 'camino-common/src/static/domaines.js'
 import { TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes.js'
 import { PaysId } from 'camino-common/src/static/pays.js'
@@ -78,7 +65,7 @@ enum TitreEtapesTravauxTypes {
   Recolement = 'wrt',
   Abandon = 'wab',
   DecisionAdmin = 'wdm',
-  PorterAConnaissance = 'wpb'
+  PorterAConnaissance = 'wpb',
 }
 
 interface IFields {
@@ -95,36 +82,14 @@ interface IColonne<T> {
   groupBy?: boolean | string[]
 }
 
-export const propsTitreEtapeIdKeys = [
-  'points',
-  'titulaires',
-  'amodiataires',
-  'substances',
-  'surface'
-] as const
+export const propsTitreEtapeIdKeys = ['points', 'titulaires', 'amodiataires', 'substances', 'surface'] as const
 export type PropsTitreEtapeIdKeys = (typeof propsTitreEtapeIdKeys)[number]
 
-type IPropId =
-  | PropsTitreEtapeIdKeys
-  | 'administrationsLocales'
-  | 'communes'
-  | 'forets'
+type IPropId = PropsTitreEtapeIdKeys | 'administrationsLocales' | 'communes' | 'forets'
 
-type ITitreColonneId =
-  | 'nom'
-  | 'domaine'
-  | 'coordonnees'
-  | 'type'
-  | 'statut'
-  | 'activites'
+type ITitreColonneId = 'nom' | 'domaine' | 'coordonnees' | 'type' | 'statut' | 'activites'
 
-type ITitreDemarcheColonneId =
-  | 'titreNom'
-  | 'titreDomaine'
-  | 'titreType'
-  | 'titreStatut'
-  | 'type'
-  | 'statut'
+type ITitreDemarcheColonneId = 'titreNom' | 'titreDomaine' | 'titreType' | 'titreStatut' | 'type' | 'statut'
 
 type ITitreActiviteColonneId = 'titreNom' | 'titulaire' | 'periode' | 'statut'
 
@@ -136,14 +101,7 @@ interface IContenuId {
   elementId: string
 }
 
-type IContenuValeur =
-  | string
-  | number
-  | string[]
-  | boolean
-  | IContenuElement[]
-  | { file: FileUpload }
-  | null
+type IContenuValeur = string | number | string[] | boolean | IContenuElement[] | { file: FileUpload } | null
 
 interface IContenuElement {
   [elementId: string]: IContenuValeur
@@ -191,17 +149,7 @@ interface ISection {
 
 type IValeurMetasNom = 'devises' | 'unites'
 
-type ISectionElementType =
-  | 'integer'
-  | 'number'
-  | 'text'
-  | 'date'
-  | 'textarea'
-  | 'checkbox'
-  | 'checkboxes'
-  | 'select'
-  | 'radio'
-  | 'file'
+type ISectionElementType = 'integer' | 'number' | 'text' | 'date' | 'textarea' | 'checkbox' | 'checkboxes' | 'select' | 'radio' | 'file'
 
 interface ISectionElement {
   id: string
@@ -310,12 +258,7 @@ interface IDemarcheType {
   travaux?: boolean
 }
 
-export const DOCUMENTS_REPERTOIRES = [
-  'demarches',
-  'activites',
-  'entreprises',
-  'tmp'
-] as const
+export const DOCUMENTS_REPERTOIRES = ['demarches', 'activites', 'entreprises', 'tmp'] as const
 type IDocumentRepertoire = (typeof DOCUMENTS_REPERTOIRES)[number]
 
 interface IDomaine {
@@ -370,8 +313,7 @@ interface IEtapeTypeDocumentType {
 
 interface IEtapeTypeJustificatifType extends IEtapeTypeDocumentType {}
 
-interface ITitreTypeDemarcheTypeEtapeTypeJustificatifType
-  extends IEtapeTypeDocumentType {
+interface ITitreTypeDemarcheTypeEtapeTypeJustificatifType extends IEtapeTypeDocumentType {
   titreTypeId: string
   demarcheTypeId: string
 }
@@ -769,7 +711,7 @@ export const formatUser = (userInBdd: IUtilisateur): UserNotNull => {
     id: userInBdd.id,
     nom: userInBdd.nom,
     prenom: userInBdd.prenom,
-    email: userInBdd.email
+    email: userInBdd.email,
   }
   if (isAdministrationRole(userInBdd.role)) {
     if (!isNotNullNorUndefined(userInBdd.administrationId)) {
@@ -779,7 +721,7 @@ export const formatUser = (userInBdd: IUtilisateur): UserNotNull => {
     return {
       ...baseUser,
       role: userInBdd.role,
-      administrationId: userInBdd.administrationId
+      administrationId: userInBdd.administrationId,
     }
   }
 
@@ -791,7 +733,7 @@ export const formatUser = (userInBdd: IUtilisateur): UserNotNull => {
     return {
       ...baseUser,
       role: userInBdd.role,
-      entreprises: userInBdd.entreprises
+      entreprises: userInBdd.entreprises,
     }
   }
 
@@ -899,5 +841,5 @@ export {
   IActiviteTypePays,
   ITitreDemande,
   IJournaux,
-  IDecisionAnnexeContenu
+  IDecisionAnnexeContenu,
 }

@@ -15,12 +15,7 @@ describe('listes', () => {
   let route
   const liste = { namespaced: true }
 
-  liste.actions = listeActionsBuild(
-    'elements',
-    'élements',
-    listeElementsGet,
-    listeMetasGet
-  )
+  liste.actions = listeActionsBuild('elements', 'élements', listeElementsGet, listeMetasGet)
 
   liste.mutations = Object.assign({}, listeMutations, {
     metasSet(state, metas) {
@@ -28,7 +23,7 @@ describe('listes', () => {
 
       const definition = state.definitions.find(p => p.id === 'typesIds')
       definition.elements = metas.map(e => e.id)
-    }
+    },
   })
 
   beforeEach(() => {
@@ -36,7 +31,7 @@ describe('listes', () => {
     liste.state = {
       elements: null,
       metas: {
-        types: []
+        types: [],
       },
       definitions: [
         { id: 'page', type: 'number', min: 0 },
@@ -44,32 +39,32 @@ describe('listes', () => {
         {
           id: 'colonne',
           type: 'string',
-          elements: ['nom', 'type', 'abreviation']
+          elements: ['nom', 'type', 'abreviation'],
         },
         { id: 'ordre', type: 'string', elements: ['asc', 'desc'] },
-        { id: 'typesIds', type: 'strings', elements: [] }
+        { id: 'typesIds', type: 'strings', elements: [] },
       ],
       params: {
         table: { page: 1, intervalle: 200, ordre: 'asc', colonne: null },
-        filtres: { typesIds: [] }
+        filtres: { typesIds: [] },
       },
-      initialized: false
+      initialized: false,
     }
 
     mutations = {
       loadingAdd: vi.fn(),
-      loadingRemove: vi.fn()
+      loadingRemove: vi.fn(),
     }
 
     actions = {
       apiError: vi.fn(),
       messageAdd: vi.fn(),
-      urlQueryUpdate: vi.fn()
+      urlQueryUpdate: vi.fn(),
     }
 
     route = {
       namespaced: true,
-      state: { query: {} }
+      state: { query: {} },
     }
 
     // eslint-disable-next-line vue/one-component-per-file
@@ -78,7 +73,7 @@ describe('listes', () => {
     store = createStore({
       modules: { liste, route },
       mutations,
-      actions
+      actions,
     })
 
     app.use(store)
@@ -87,13 +82,13 @@ describe('listes', () => {
   test('initialise une liste', async () => {
     const types = [
       { id: 'ope', nom: 'Opérateur' },
-      { id: 'dea', nom: 'Déal' }
+      { id: 'dea', nom: 'Déal' },
     ]
     const apiMetasMock = listeMetasGet.mockResolvedValue(types)
 
     const apiMock = listeElementsGet.mockResolvedValue({
       elements: [{ id: 'el-1', nom: 'élement 1' }],
-      total: 1
+      total: 1,
     })
 
     await store.dispatch('liste/init')
@@ -101,13 +96,9 @@ describe('listes', () => {
     expect(apiMetasMock).toHaveBeenCalled()
     expect(apiMock).toHaveBeenCalled()
     expect(store.state.liste.metas).toEqual({ types })
-    expect(
-      store.state.liste.definitions.find(d => d.id === 'typesIds')
-    ).toEqual({ id: 'typesIds', type: 'strings', elements: ['ope', 'dea'] })
+    expect(store.state.liste.definitions.find(d => d.id === 'typesIds')).toEqual({ id: 'typesIds', type: 'strings', elements: ['ope', 'dea'] })
     expect(store.state.liste.initialized).toBeTruthy()
-    expect(store.state.liste.elements).toEqual([
-      { id: 'el-1', nom: 'élement 1' }
-    ])
+    expect(store.state.liste.elements).toEqual([{ id: 'el-1', nom: 'élement 1' }])
 
     await store.dispatch('liste/init')
 
@@ -117,9 +108,7 @@ describe('listes', () => {
   })
 
   test("retourne une erreur si l'api renvoit une erreur", async () => {
-    const apiMetasMock = listeMetasGet.mockRejectedValue(
-      new Error("erreur de l'api")
-    )
+    const apiMetasMock = listeMetasGet.mockRejectedValue(new Error("erreur de l'api"))
 
     await store.dispatch('liste/init')
 
@@ -129,9 +118,7 @@ describe('listes', () => {
     expect(store.state.liste.initialized).toBeFalsy()
 
     store.state.liste.initialized = true
-    const apiMock = listeElementsGet.mockRejectedValue(
-      new Error("erreur de l'api")
-    )
+    const apiMock = listeElementsGet.mockRejectedValue(new Error("erreur de l'api"))
 
     await store.dispatch('liste/get')
 
@@ -142,14 +129,14 @@ describe('listes', () => {
   test('modifie les paramètres de filtre', async () => {
     const apiMock = listeElementsGet.mockResolvedValue({
       elements: [{ id: 'el-1', nom: 'élement 1' }],
-      total: 1
+      total: 1,
     })
 
     store.state.liste.params.table.page = 2
 
     await store.dispatch('liste/paramsSet', {
       section: 'filtres',
-      params: { typesIds: ['dea'] }
+      params: { typesIds: ['dea'] },
     })
 
     expect(apiMock).not.toHaveBeenCalled()
@@ -160,7 +147,7 @@ describe('listes', () => {
     await store.dispatch('liste/paramsSet', {
       section: 'table',
       params: { ordre: 'desc' },
-      pageReset: true
+      pageReset: true,
     })
 
     expect(apiMock).toHaveBeenCalled()
@@ -168,17 +155,15 @@ describe('listes', () => {
       page: 1,
       intervalle: 200,
       ordre: 'desc',
-      colonne: null
+      colonne: null,
     })
-    expect(store.state.liste.elements).toEqual([
-      { id: 'el-1', nom: 'élement 1' }
-    ])
+    expect(store.state.liste.elements).toEqual([{ id: 'el-1', nom: 'élement 1' }])
   })
 
   test("met à jour la liste si les paramètres d'url changent", async () => {
     const apiMock = listeElementsGet.mockResolvedValue({
       elements: [{ id: 'el-1', nom: 'élement 1' }],
-      total: 1
+      total: 1,
     })
 
     await store.dispatch('liste/routeUpdate')
@@ -193,9 +178,7 @@ describe('listes', () => {
 
     expect(apiMock).toHaveBeenCalled()
 
-    expect(store.state.liste.elements).toEqual([
-      { id: 'el-1', nom: 'élement 1' }
-    ])
+    expect(store.state.liste.elements).toEqual([{ id: 'el-1', nom: 'élement 1' }])
   })
 })
 
@@ -220,30 +203,30 @@ describe('listes sans metas', () => {
         {
           id: 'colonne',
           type: 'string',
-          elements: ['nom', 'type', 'abreviation']
-        }
+          elements: ['nom', 'type', 'abreviation'],
+        },
       ],
       params: {
-        table: { page: 1, intervalle: 200, ordre: 'asc', colonne: null }
+        table: { page: 1, intervalle: 200, ordre: 'asc', colonne: null },
       },
-      initialized: false
+      initialized: false,
     }
 
     mutations = {
       loadingAdd: vi.fn(),
-      loadingRemove: vi.fn()
+      loadingRemove: vi.fn(),
     }
 
     actions = {
       apiError: vi.fn(),
       messageAdd: vi.fn(),
-      urlQueryUpdate: vi.fn()
+      urlQueryUpdate: vi.fn(),
     }
 
     route = {
       state: {
-        query: {}
-      }
+        query: {},
+      },
     }
 
     // eslint-disable-next-line vue/one-component-per-file
@@ -252,7 +235,7 @@ describe('listes sans metas', () => {
     store = createStore({
       modules: { liste, route },
       mutations,
-      actions
+      actions,
     })
 
     app.use(store)
@@ -261,15 +244,13 @@ describe('listes sans metas', () => {
   test('initialise une liste sans metas', async () => {
     const apiMock = listeElementsGet.mockResolvedValue({
       elements: [{ id: 'el-1', nom: 'élement 1' }],
-      total: 1
+      total: 1,
     })
 
     await store.dispatch('liste/init')
 
     expect(apiMock).toHaveBeenCalled()
     expect(store.state.liste.initialized).toBeTruthy()
-    expect(store.state.liste.elements).toEqual([
-      { id: 'el-1', nom: 'élement 1' }
-    ])
+    expect(store.state.liste.elements).toEqual([{ id: 'el-1', nom: 'élement 1' }])
   })
 })

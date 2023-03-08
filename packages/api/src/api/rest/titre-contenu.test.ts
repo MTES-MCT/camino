@@ -1,15 +1,12 @@
 import { contenuFormat, titreSectionsGet } from './titre-contenu.js'
 import { describe, test, expect } from 'vitest'
-import {
-  ETAPES_TYPES,
-  EtapesTypes
-} from 'camino-common/src/static/etapesTypes.js'
+import { ETAPES_TYPES, EtapesTypes } from 'camino-common/src/static/etapesTypes.js'
 describe('formatage du contenu', () => {
   test("formate le contenu d'un titre", () => {
     expect(
       contenuFormat({
         contenusTitreEtapesIds: {
-          section: { prop1: 'etape-id', prop2: 'etape-id' }
+          section: { prop1: 'etape-id', prop2: 'etape-id' },
         },
         demarches: [
           {
@@ -19,13 +16,13 @@ describe('formatage du contenu', () => {
                 contenu: {
                   section: {
                     prop1: 'valeur 1',
-                    prop2: 'valeur 2'
-                  }
-                }
-              }
-            ]
-          }
-        ]
+                    prop2: 'valeur 2',
+                  },
+                },
+              },
+            ],
+          },
+        ],
       })
     ).toMatchObject({ section: { prop1: 'valeur 1', prop2: 'valeur 2' } })
   })
@@ -35,10 +32,10 @@ describe('formatage du contenu', () => {
       contenuFormat({
         contenusTitreEtapesIds: {
           section: {
-            prop: 'etape-id'
-          }
+            prop: 'etape-id',
+          },
         },
-        demarches: []
+        demarches: [],
       })
     ).toMatchObject({})
 
@@ -46,10 +43,10 @@ describe('formatage du contenu', () => {
       contenuFormat({
         contenusTitreEtapesIds: {
           section: {
-            prop: 'etape-id'
-          }
+            prop: 'etape-id',
+          },
         },
-        demarches: [{ etapes: null }]
+        demarches: [{ etapes: null }],
       })
     ).toMatchObject({})
 
@@ -57,10 +54,10 @@ describe('formatage du contenu', () => {
       contenuFormat({
         contenusTitreEtapesIds: {
           section: {
-            prop: 'etape-id'
-          }
+            prop: 'etape-id',
+          },
         },
-        demarches: [{ etapes: [] }]
+        demarches: [{ etapes: [] }],
       })
     ).toMatchObject({})
   })
@@ -71,7 +68,7 @@ describe('titreSectionsGet', () => {
     expect(
       titreSectionsGet({
         contenusTitreEtapesIds: {
-          section: { prop1: 'etape-id', prop2: 'etape-id' }
+          section: { prop1: 'etape-id', prop2: 'etape-id' },
         },
         demarches: [
           {
@@ -86,21 +83,21 @@ describe('titreSectionsGet', () => {
                       id: 'section',
                       elements: [
                         { id: 'prop1', nom: 'Prop 1', type: 'text' },
-                        { id: 'prop2', nom: 'Prop 2', type: 'number' }
-                      ]
-                    }
-                  ]
+                        { id: 'prop2', nom: 'Prop 2', type: 'number' },
+                      ],
+                    },
+                  ],
                 },
                 contenu: {
                   section: {
                     prop1: 'valeur 1',
-                    prop2: 2
-                  }
-                }
-              }
-            ]
-          }
-        ]
+                    prop2: 2,
+                  },
+                },
+              },
+            ],
+          },
+        ],
       })
     ).toMatchInlineSnapshot(`
       [

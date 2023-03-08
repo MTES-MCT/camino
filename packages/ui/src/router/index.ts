@@ -48,15 +48,11 @@ const StatsGuyane = async () => {
   return Guyane
 }
 const StatistiquesGranulatsMarins = async () => {
-  const { GranulatsMarins } = await import(
-    '../components/statistiques/granulats-marins'
-  )
+  const { GranulatsMarins } = await import('../components/statistiques/granulats-marins')
   return GranulatsMarins
 }
 const StatistiquesMinerauxMetauxMetropole = async () => {
-  const { MinerauxMetauxMetropole } = await import(
-    '../components/statistiques/mineraux-metaux-metropole'
-  )
+  const { MinerauxMetauxMetropole } = await import('../components/statistiques/mineraux-metaux-metropole')
   return MinerauxMetauxMetropole
 }
 const Journaux = () => import('../components/journaux.vue')
@@ -66,127 +62,127 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: Dashboard
+    component: Dashboard,
   },
   {
     path: '/dashboard/dgtmstats',
     name: 'Stats DGTM',
-    component: DGTMStatsFull
+    component: DGTMStatsFull,
   },
   {
     path: '/titres',
     name: 'titres',
-    component: Titres
+    component: Titres,
   },
   {
     path: '/titres/creation',
     name: 'titre-creation',
-    component: TitreCreation
+    component: TitreCreation,
   },
   {
     path: '/titres/:id',
     name: 'titre',
-    component: Titre
+    component: Titre,
   },
   {
     path: '/demarches',
     name: 'demarches',
-    component: Demarches
+    component: Demarches,
   },
   {
     path: '/travaux',
     name: 'travaux',
-    component: Travaux
+    component: Travaux,
   },
   {
     path: '/etapes/:id',
     name: 'etape',
-    component: Etape
+    component: Etape,
   },
   {
     path: '/etapes/creation',
     name: 'etape-creation',
-    component: EtapeEdition
+    component: EtapeEdition,
   },
   {
     path: '/etapes/:id/edition',
     name: 'etape-edition',
-    component: EtapeEdition
+    component: EtapeEdition,
   },
   {
     path: '/utilisateurs',
     name: 'utilisateurs',
-    component: Utilisateurs
+    component: Utilisateurs,
   },
   {
     path: '/utilisateurs/:id',
     name: 'utilisateur',
-    component: Utilisateur
+    component: Utilisateur,
   },
   {
     path: '/entreprises',
     name: 'entreprises',
-    component: Entreprises
+    component: Entreprises,
   },
   {
     path: '/entreprises/:id',
     name: 'entreprise',
-    component: Entreprise
+    component: Entreprise,
   },
   {
     path: '/administrations',
     name: 'administrations',
-    component: Administrations
+    component: Administrations,
   },
   {
     path: '/administrations/:id',
     name: 'administration',
-    component: Administration
+    component: Administration,
   },
   {
     path: '/metas',
     name: 'metas',
-    component: Metas
+    component: Metas,
   },
   {
     path: '/metas/titre',
     name: 'meta-titre',
-    component: MetaTitre
+    component: MetaTitre,
   },
   {
     path: '/metas/demarche',
     name: 'meta-demarche',
-    component: MetaDemarche
+    component: MetaDemarche,
   },
   {
     path: '/metas/etape',
     name: 'meta-etape',
-    component: MetaEtape
+    component: MetaEtape,
   },
   {
     path: '/metas/activite',
     name: 'meta-activite',
-    component: MetaActivite
+    component: MetaActivite,
   },
   {
     path: '/metas/:id',
     name: 'meta',
-    component: Meta
+    component: Meta,
   },
   {
     path: '/activites',
     name: 'activites',
-    component: Activites
+    component: Activites,
   },
   {
     path: '/activites/:id',
     name: 'activite',
-    component: Activite
+    component: Activite,
   },
   {
     path: '/activites/:id/edition',
     name: 'activite-edition',
-    component: ActiviteEdition
+    component: ActiviteEdition,
   },
   {
     path: '/statistiques',
@@ -196,41 +192,41 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'guyane',
         name: 'statistiques-guyane',
-        component: StatsGuyane
+        component: StatsGuyane,
       },
       {
         path: 'globales',
         name: 'statistiques-globales',
-        component: StatistiquesGlobales
+        component: StatistiquesGlobales,
       },
       {
         path: 'granulats-marins',
         name: 'statistiques-granulats-marins',
-        component: StatistiquesGranulatsMarins
+        component: StatistiquesGranulatsMarins,
       },
       {
         path: 'mineraux-metaux-metropole',
         name: 'statistiques-mineraux-metaux-metropole',
-        component: StatistiquesMinerauxMetauxMetropole
-      }
-    ]
+        component: StatistiquesMinerauxMetauxMetropole,
+      },
+    ],
   },
   { path: '/journaux', name: 'journaux', component: Journaux },
   // url /stats : demande de Samuel
   // pour avoir une uniformité entre toutes les start-ups
   {
     path: '/stats',
-    redirect: 'statistiques'
+    redirect: 'statistiques',
   },
   {
     path: '/a-propos',
     name: 'a-propos',
-    component: About
+    component: About,
   },
   {
     name: 'homepage',
     path: '/',
-    redirect: { name: 'dashboard', replace: true }
+    redirect: { name: 'dashboard', replace: true },
   },
   {
     path: '/:pathMatch(.*)*',
@@ -238,9 +234,9 @@ const routes: RouteRecordRaw[] = [
     component: Error,
     props: {
       couleur: 'error',
-      message: 'Page introuvable'
-    }
-  }
+      message: 'Page introuvable',
+    },
+  },
 ]
 
 const history = createWebHistory()
@@ -249,7 +245,7 @@ const router = createRouter({
   routes,
   history,
   linkActiveClass: 'active',
-  linkExactActiveClass: 'exact-active'
+  linkExactActiveClass: 'exact-active',
 })
 
 router.isReady().then(async () => {})

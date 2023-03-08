@@ -4,7 +4,7 @@ export const ACTIVITES_STATUTS_IDS = {
   ABSENT: 'abs',
   EN_CONSTRUCTION: 'enc',
   DEPOSE: 'dep',
-  CLOTURE: 'fer'
+  CLOTURE: 'fer',
 } as const
 
 export type ActivitesStatutId = (typeof ACTIVITES_STATUTS_IDS)[keyof typeof ACTIVITES_STATUTS_IDS]
@@ -17,23 +17,23 @@ export const ActivitesStatuts: { [key in ActivitesStatutId]: ActivitesStatut<key
   abs: {
     id: 'abs',
     nom: 'absent',
-    couleur: 'error'
+    couleur: 'error',
   },
   dep: {
     id: 'dep',
     nom: 'déposé',
-    couleur: 'success'
+    couleur: 'success',
   },
   enc: {
     id: 'enc',
     nom: 'en construction',
-    couleur: 'warning'
+    couleur: 'warning',
   },
   fer: {
     id: 'fer',
     nom: 'cloturé',
-    couleur: 'neutral'
-  }
+    couleur: 'neutral',
+  },
 }
 
 export const activitesStatutsIds = Object.values(ACTIVITES_STATUTS_IDS)

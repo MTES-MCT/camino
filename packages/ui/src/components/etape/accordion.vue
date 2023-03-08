@@ -3,13 +3,7 @@
     <template #title>
       <div class="flex flex-center">
         <h2 class="cap-first mb-0">{{ step.name }}</h2>
-        <Tag
-          v-if="!complete"
-          :mini="true"
-          color="bg-warning"
-          class="ml-s mt-xs"
-          text="Incomplet"
-        />
+        <Tag v-if="!complete" :mini="true" color="bg-warning" class="ml-s mt-xs" text="Incomplet" />
 
         <HelpTooltip v-if="step.help" :text="step.help" class="ml-m" />
       </div>
@@ -33,7 +27,7 @@ export default {
     step: { type: Object, required: true },
     opened: { type: Boolean, required: true },
     complete: { type: Boolean, required: true },
-    enConstruction: { type: Boolean, required: true }
+    enConstruction: { type: Boolean, required: true },
   },
 
   emits: ['toggle'],
@@ -41,7 +35,7 @@ export default {
   methods: {
     toggle() {
       this.$emit('toggle')
-    }
-  }
+    },
+  },
 }
 </script>

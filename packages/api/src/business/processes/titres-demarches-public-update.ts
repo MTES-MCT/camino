@@ -20,9 +20,9 @@ export const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
       fields: {
         demarches: {
           type: { etapesTypes: { id: {} } },
-          etapes: { id: {} }
-        }
-      }
+          etapes: { id: {} },
+        },
+      },
     },
     userSuper
   )
@@ -34,22 +34,11 @@ export const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
 
   for (const titre of titres) {
     for (const titreDemarche of titre.demarches!) {
-      const titreDemarcheEtapes = titreEtapesSortAscByOrdre(
-        titreDemarche.etapes ?? []
-      )
+      const titreDemarcheEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes ?? [])
 
-      const demarcheTypeEtapesTypes = titreDemarche.type!.etapesTypes!.filter(
-        et => et.titreTypeId === titre.typeId
-      )
+      const demarcheTypeEtapesTypes = titreDemarche.type!.etapesTypes!.filter(et => et.titreTypeId === titre.typeId)
 
-      const { publicLecture, entreprisesLecture } = titreDemarchePublicFind(
-        titreDemarche.typeId,
-        demarcheTypeEtapesTypes,
-        titreDemarcheEtapes,
-        titre.id,
-        titre.demarches,
-        titre.typeId
-      )
+      const { publicLecture, entreprisesLecture } = titreDemarchePublicFind(titreDemarche.typeId, demarcheTypeEtapesTypes, titreDemarcheEtapes, titre.id, titre.demarches, titre.typeId)
 
       const patch = {} as ITitreDemarchePatch
 
@@ -64,10 +53,7 @@ export const titresDemarchesPublicUpdate = async (titresIds?: string[]) => {
       if (Object.keys(patch).length) {
         await titreDemarcheUpdate(titreDemarche.id, patch)
 
-        console.info(
-          'titre / démarche : publique (mise à jour) ->',
-          `${titreDemarche.id}: ${JSON.stringify(patch)}`
-        )
+        console.info('titre / démarche : publique (mise à jour) ->', `${titreDemarche.id}: ${JSON.stringify(patch)}`)
 
         titresDemarchesUpdated.push(titreDemarche.id)
       }

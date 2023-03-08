@@ -2,24 +2,17 @@ import { Index } from '../../types.js'
 import { IndexFile } from './_types.js'
 import { matchFuzzy } from './_utils.js'
 
-export const documentsFilesCheck = (
-  documentsIndex: IndexFile,
-  filesIndex: Index<string>
-) => {
+export const documentsFilesCheck = (documentsIndex: IndexFile, filesIndex: Index<string>) => {
   const documentsFichiersMissing = Object.keys(documentsIndex)
     .filter(documentId => !filesIndex[documentId])
     .sort()
 
   if (documentsFichiersMissing.length) {
-    console.info(
-      `${documentsFichiersMissing.length} documents en base de données n'ont pas de fichiers correspondants`
-    )
+    console.info(`${documentsFichiersMissing.length} documents en base de données n'ont pas de fichiers correspondants`)
 
     documentsFichiersMissing.forEach(documentId => {
       const document = documentsIndex[documentId].document
-      console.info(
-        `-      ${documentId}.${document.fichierTypeId} -> ${document.titreEtapeId}`
-      )
+      console.info(`-      ${documentId}.${document.fichierTypeId} -> ${document.titreEtapeId}`)
 
       const matches = matchFuzzy(documentId, filesIndex)
 
@@ -30,8 +23,6 @@ export const documentsFilesCheck = (
       }
     })
   } else {
-    console.info(
-      'tous les documents en base de données ont des fichiers correspondants'
-    )
+    console.info('tous les documents en base de données ont des fichiers correspondants')
   }
 }

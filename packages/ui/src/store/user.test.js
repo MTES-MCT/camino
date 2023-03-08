@@ -8,11 +8,11 @@ import { vi, describe, test, beforeEach, expect } from 'vitest'
 import { testBlankUser } from 'camino-common/src/tests-utils'
 
 vi.mock('../api/utilisateurs', () => ({
-  utilisateurCreer: vi.fn()
+  utilisateurCreer: vi.fn(),
 }))
 
 vi.mock('../api/client-rest', () => ({
-  fetchWithJson: vi.fn()
+  fetchWithJson: vi.fn(),
 }))
 
 vi.mock('../router', () => [])
@@ -36,20 +36,20 @@ describe("état de l'utilisateur connecté", () => {
       nom: 'lataupe',
       role: 'admin',
       entreprise: 'macdo',
-      email: 'rene@la.taupe'
+      email: 'rene@la.taupe',
     }
 
     user.state = {
       element: null,
       preferences: {
-        carte: {}
-      }
+        carte: {},
+      },
     }
 
     actions = {
       messageAdd: vi.fn(),
       errorRemove: vi.fn(),
-      apiError: vi.fn()
+      apiError: vi.fn(),
     }
 
     mutations = {
@@ -58,7 +58,7 @@ describe("état de l'utilisateur connecté", () => {
       popupClose: vi.fn(),
       popupMessageAdd: vi.fn(),
       loadingRemove: vi.fn(),
-      menuClose: vi.fn()
+      menuClose: vi.fn(),
     }
 
     map = { state: {} }
@@ -66,7 +66,7 @@ describe("état de l'utilisateur connecté", () => {
     store = createStore({
       modules: { user, map },
       actions,
-      mutations
+      mutations,
     })
 
     const app = createApp({})
@@ -86,7 +86,7 @@ describe("état de l'utilisateur connecté", () => {
       nom: 'lataupe',
       email: 'rene@la.taupe',
       role: 'admin',
-      entreprise: 'macdo'
+      entreprise: 'macdo',
     })
     expect(apiMock).toHaveBeenCalled()
   })
@@ -130,14 +130,14 @@ describe("état de l'utilisateur connecté", () => {
       id: 66,
       prenom: 'rene',
       nom: 'lataupe',
-      role: 'admin'
+      role: 'admin',
     })
 
     expect(store.state.user.element).toEqual({
       id: 66,
       prenom: 'rene',
       nom: 'lataupe',
-      role: 'admin'
+      role: 'admin',
     })
     expect(store.state.user.element.entreprise).toBeUndefined()
   })
@@ -147,15 +147,12 @@ describe("état de l'utilisateur connecté", () => {
     [{ role: 'admin', administrationId: 'dea-guadeloupe-01' }, true],
     [{ role: 'editeur', administrationId: 'dea-guadeloupe-01' }, true],
     [{ role: 'entreprise', entreprises: [] }, false],
-    [undefined, false]
-  ])(
-    'ajoute un utilisateur au store avec le role $role et vérifie si il est admin $isAdmin',
-    (user, isAdmin) => {
-      store.commit('user/set', {
-        ...testBlankUser,
-        ...user
-      })
-      expect(store.getters['user/userIsAdmin']).toEqual(isAdmin)
-    }
-  )
+    [undefined, false],
+  ])('ajoute un utilisateur au store avec le role $role et vérifie si il est admin $isAdmin', (user, isAdmin) => {
+    store.commit('user/set', {
+      ...testBlankUser,
+      ...user,
+    })
+    expect(store.getters['user/userIsAdmin']).toEqual(isAdmin)
+  })
 })

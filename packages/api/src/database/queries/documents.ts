@@ -10,14 +10,8 @@ import Document from '../models/documents.js'
 import { documentsQueryModify } from './permissions/documents.js'
 import { User } from 'camino-common/src/roles'
 
-const documentGet = async (
-  documentId: string,
-  { fields }: { fields?: IFields },
-  user: User
-) => {
-  const graph = fields
-    ? graphBuild(fields, 'documents', fieldsFormat)
-    : options.documents.graph
+const documentGet = async (documentId: string, { fields }: { fields?: IFields }, user: User) => {
+  const graph = fields ? graphBuild(fields, 'documents', fieldsFormat) : options.documents.graph
 
   const q = Document.query().withGraphFetched(graph)
 
@@ -28,14 +22,8 @@ const documentGet = async (
   return document as IDocument
 }
 
-const documentsGet = async (
-  { ids, entreprisesIds }: { ids?: string[]; entreprisesIds?: string[] },
-  { fields }: { fields?: IFields },
-  user: User
-) => {
-  const graph = fields
-    ? graphBuild(fields, 'documents', fieldsFormat)
-    : options.documents.graph
+const documentsGet = async ({ ids, entreprisesIds }: { ids?: string[]; entreprisesIds?: string[] }, { fields }: { fields?: IFields }, user: User) => {
+  const graph = fields ? graphBuild(fields, 'documents', fieldsFormat) : options.documents.graph
 
   const q = Document.query().withGraphFetched(graph)
 
@@ -52,27 +40,16 @@ const documentsGet = async (
   return q
 }
 
-const documentCreate = async (document: IDocument, tr?: Transaction) =>
-  Document.query(tr)
-    .withGraphFetched(options.documents.graph)
-    .insertAndFetch(document)
+const documentCreate = async (document: IDocument, tr?: Transaction) => Document.query(tr).withGraphFetched(options.documents.graph).insertAndFetch(document)
 
-const documentUpsert = async (document: IDocument, tr?: Transaction) =>
-  Document.query(tr)
-    .upsertGraph(document, options.documents.update)
-    .withGraphFetched(options.documents.graph)
-    .returning('*')
+const documentUpsert = async (document: IDocument, tr?: Transaction) => Document.query(tr).upsertGraph(document, options.documents.update).withGraphFetched(options.documents.graph).returning('*')
 
 const documentUpdate = async (id: string, props: Partial<IDocument>) =>
   Document.query()
     .withGraphFetched(options.documents.graph)
     .patchAndFetchById(id, { ...props, id })
 
-const documentDelete = async (id: string, tr?: Transaction) =>
-  Document.query(tr)
-    .deleteById(id)
-    .withGraphFetched(options.documents.graph)
-    .returning('*')
+const documentDelete = async (id: string, tr?: Transaction) => Document.query(tr).deleteById(id).withGraphFetched(options.documents.graph).returning('*')
 
 const documentIdUpdate = async (documentOldId: string, document: IDocument) => {
   const knex = Document.knex()
@@ -84,11 +61,4 @@ const documentIdUpdate = async (documentOldId: string, document: IDocument) => {
   })
 }
 
-export {
-  documentGet,
-  documentsGet,
-  documentCreate,
-  documentUpdate,
-  documentDelete,
-  documentIdUpdate
-}
+export { documentGet, documentsGet, documentCreate, documentUpdate, documentDelete, documentIdUpdate }

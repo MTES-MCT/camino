@@ -17,7 +17,7 @@ const titreUpdate = async (titreId: string) => {
     logsUpdate({
       titresPublicUpdated,
       titresActivitesCreated,
-      titresUpdatedIndex
+      titresUpdatedIndex,
     })
   } catch (e) {
     console.error(`erreur: titreUpdate ${titreId}`)

@@ -40,7 +40,7 @@ const modules = {
   titreActivite,
   titreActiviteEdition,
   titresActivites,
-  journaux
+  journaux,
 }
 
 const state = {
@@ -52,16 +52,12 @@ const state = {
   loading: [],
   fileLoading: {
     loaded: 0,
-    total: 0
-  }
+    total: 0,
+  },
 }
 
 function isOnPristineLandingPage(query) {
-  return (
-    query.centre === '46.227103425310766,2.499999999999991' &&
-    query.vueId === 'carte' &&
-    Object.keys(query).length === 3
-  )
+  return query.centre === '46.227103425310766,2.499999999999991' && query.vueId === 'carte' && Object.keys(query).length === 3
 }
 
 const actions = {
@@ -73,7 +69,7 @@ const actions = {
     commit('messageAdd', {
       id,
       type: 'error',
-      value: `Erreur : ${error}`
+      value: `Erreur : ${error}`,
     })
 
     setTimeout(() => {
@@ -87,12 +83,12 @@ const actions = {
     if (getters['user/user'] !== null) {
       commit('errorUpdate', {
         type: 'error',
-        value: `Erreur: page introuvable`
+        value: `Erreur: page introuvable`,
       })
     } else {
       commit('errorUpdate', {
         type: 'info',
-        value: `Vous n'avez pas accès à cette page, veuillez vous connecter.`
+        value: `Vous n'avez pas accès à cette page, veuillez vous connecter.`,
       })
     }
   },
@@ -144,7 +140,7 @@ const actions = {
       saveAs(document.fichierNouveau)
       dispatch('messageAdd', {
         type: 'success',
-        value: `fichier téléchargé : ${document.fichierNouveau.name}`
+        value: `fichier téléchargé : ${document.fichierNouveau.name}`,
       })
     } else {
       await dispatch('download', `/fichiers/${document.id}`)
@@ -157,7 +153,7 @@ const actions = {
 
       dispatch('messageAdd', {
         type: 'success',
-        value: `fichier téléchargé`
+        value: `fichier téléchargé`,
       })
     } catch (e) {
       dispatch('apiError', `téléchargement : ${path}, ${e}`)
@@ -168,11 +164,7 @@ const actions = {
   },
 
   async urlQueryUpdate({ rootState }, { params, definitions }) {
-    const { status, query } = urlQueryUpdate(
-      params,
-      rootState.route.query,
-      definitions
-    )
+    const { status, query } = urlQueryUpdate(params, rootState.route.query, definitions)
 
     if (status === 'updated') {
       await router.push({ query })
@@ -183,7 +175,7 @@ const actions = {
     if (isOnPristineLandingPage(query)) {
       history.replaceState({}, null, '/')
     }
-  }
+  },
 }
 
 const mutations = {
@@ -250,7 +242,7 @@ const mutations = {
   fileLoad(state, { loaded, total }) {
     state.fileLoading.loaded = loaded
     state.fileLoading.total = total
-  }
+  },
 }
 
 export { state, actions, mutations }
@@ -259,5 +251,5 @@ export default createStore({
   state,
   actions,
   mutations,
-  modules
+  modules,
 })

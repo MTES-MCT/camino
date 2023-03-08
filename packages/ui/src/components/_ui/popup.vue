@@ -19,11 +19,11 @@ export default {
   name: 'UiSystemPopup',
 
   components: {
-    Messages
+    Messages,
   },
 
   props: {
-    messages: { type: Array, default: () => [] }
-  }
+    messages: { type: Array, default: () => [] },
+  },
 }
 </script>

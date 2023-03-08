@@ -22,7 +22,7 @@ describe('teste les requêtes sur les titres', () => {
       const titre = await Titres.query().insert({
         nom: idGenerate(),
         titreStatutId: 'val',
-        typeId: 'arm'
+        typeId: 'arm',
       })
       expect(titre.archive).toBeFalsy()
 
@@ -30,7 +30,7 @@ describe('teste les requêtes sur les titres', () => {
         const demarche = await TitresDemarches.query().insert({
           titreId: titre.id,
           typeId: 'oct',
-          statutId: 'eco'
+          statutId: 'eco',
         })
         expect(demarche.archive).toBeFalsy()
 
@@ -39,7 +39,7 @@ describe('teste les requêtes sur les titres', () => {
             titreDemarcheId: demarche.id,
             typeId: 'mfr',
             statutId: 'aco',
-            date: toCaminoDate('2020-02-02')
+            date: toCaminoDate('2020-02-02'),
           })
           expect(etape.archive).toBeFalsy()
         }
@@ -52,19 +52,13 @@ describe('teste les requêtes sur les titres', () => {
       expect(archiveTitre).not.toBeUndefined()
       expect(archiveTitre?.archive).toBe(true)
 
-      const archiveDemarches = await TitresDemarches.query().where(
-        'titreId',
-        archiveTitre!.id
-      )
+      const archiveDemarches = await TitresDemarches.query().where('titreId', archiveTitre!.id)
       expect(archiveDemarches).toHaveLength(3)
 
       for (const demarche of archiveDemarches) {
         expect(demarche.archive).toBe(true)
 
-        const archiveEtapes = await TitresEtapes.query().where(
-          'titreDemarcheId',
-          demarche.id
-        )
+        const archiveEtapes = await TitresEtapes.query().where('titreDemarcheId', demarche.id)
         expect(archiveEtapes).toHaveLength(3)
 
         for (const etape of archiveDemarches) {

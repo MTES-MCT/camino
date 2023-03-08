@@ -7,35 +7,32 @@ import Titres from '../../database/models/titres.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres', () => ({
   titreUpdate: vi.fn().mockResolvedValue(true),
-  titresGet: vi.fn()
+  titresGet: vi.fn(),
 }))
 
 vi.mock('../rules/titre-prop-etape-find', () => ({
-  titreContenuTitreEtapeFind: vi.fn()
+  titreContenuTitreEtapeFind: vi.fn(),
 }))
 
 const titresGetMock = vi.mocked(titresGet, true)
-const titreContenuTitreEtapeFindMock = vi.mocked(
-  titreContenuTitreEtapeFind,
-  true
-)
+const titreContenuTitreEtapeFindMock = vi.mocked(titreContenuTitreEtapeFind, true)
 
 console.info = vi.fn()
 
 describe("propriétés (contenu) d'un titre", () => {
   test('ajoute 2 nouvelles propriétés dans les props du titre', async () => {
     titreContenuTitreEtapeFindMock.mockReturnValue({
-      id: 'etape-id'
+      id: 'etape-id',
     } as ITitreEtape)
     titresGetMock.mockResolvedValue([
       {
         type: {
           contenuIds: [
             { sectionId: 'arm', elementId: 'mecanise' },
-            { sectionId: 'arm', elementId: 'agent' }
-          ]
-        }
-      } as unknown as Titres
+            { sectionId: 'arm', elementId: 'agent' },
+          ],
+        },
+      } as unknown as Titres,
     ])
 
     const titresUpdatedRequests = await titresContenusEtapesIdsUpdate()
@@ -45,15 +42,15 @@ describe("propriétés (contenu) d'un titre", () => {
 
   test('ajoute 1 nouvelle propriété dans les props du titre', async () => {
     titreContenuTitreEtapeFindMock.mockReturnValue({
-      id: 'etape-id'
+      id: 'etape-id',
     } as ITitreEtape)
     titresGetMock.mockResolvedValue([
       {
         type: {
-          contenuIds: [{ sectionId: 'arm', elementId: 'mecanise' }]
+          contenuIds: [{ sectionId: 'arm', elementId: 'mecanise' }],
         },
-        contenusTitreEtapesIds: {}
-      } as unknown as Titres
+        contenusTitreEtapesIds: {},
+      } as unknown as Titres,
     ])
 
     const titresUpdatedRequests = await titresContenusEtapesIdsUpdate()
@@ -63,15 +60,15 @@ describe("propriétés (contenu) d'un titre", () => {
 
   test('met à jour 1 propriété dans les props du titre', async () => {
     titreContenuTitreEtapeFindMock.mockReturnValue({
-      id: 'new-etape-id'
+      id: 'new-etape-id',
     } as ITitreEtape)
     titresGetMock.mockResolvedValue([
       {
         type: {
-          contenuIds: [{ sectionId: 'arm', elementId: 'mecanise' }]
+          contenuIds: [{ sectionId: 'arm', elementId: 'mecanise' }],
         },
-        contenusTitreEtapesIds: { arm: { mecanise: 'old-etape-id' } }
-      } as unknown as Titres
+        contenusTitreEtapesIds: { arm: { mecanise: 'old-etape-id' } },
+      } as unknown as Titres,
     ])
 
     const titresUpdatedRequests = await titresContenusEtapesIdsUpdate()
@@ -81,15 +78,15 @@ describe("propriétés (contenu) d'un titre", () => {
 
   test('ne met pas à jour de propriété dans les props du titre', async () => {
     titreContenuTitreEtapeFindMock.mockReturnValue({
-      id: 'etape-id'
+      id: 'etape-id',
     } as ITitreEtape)
     titresGetMock.mockResolvedValue([
       {
         type: {
-          contenuIds: [{ sectionId: 'arm', elementId: 'mecanise' }]
+          contenuIds: [{ sectionId: 'arm', elementId: 'mecanise' }],
         },
-        contenusTitreEtapesIds: { arm: { mecanise: 'etape-id' } }
-      } as unknown as Titres
+        contenusTitreEtapesIds: { arm: { mecanise: 'etape-id' } },
+      } as unknown as Titres,
     ])
 
     const titresUpdatedRequests = await titresContenusEtapesIdsUpdate()
@@ -101,10 +98,10 @@ describe("propriétés (contenu) d'un titre", () => {
     titresGetMock.mockResolvedValue([
       {
         type: {
-          contenuIds: [{ sectionId: 'arm', elementId: 'mecanise' }]
+          contenuIds: [{ sectionId: 'arm', elementId: 'mecanise' }],
         },
-        contenusTitreEtapesIds: { arm: { mecanise: 'etape-id' } }
-      } as unknown as Titres
+        contenusTitreEtapesIds: { arm: { mecanise: 'etape-id' } },
+      } as unknown as Titres,
     ])
 
     const titresUpdatedRequests = await titresContenusEtapesIdsUpdate()
@@ -117,15 +114,15 @@ describe("propriétés (contenu) d'un titre", () => {
     titresGetMock.mockResolvedValue([
       {
         type: {
-          contenuIds: [{ sectionId: 'arm', elementId: 'mecanise' }]
+          contenuIds: [{ sectionId: 'arm', elementId: 'mecanise' }],
         },
         contenusTitreEtapesIds: {
           arm: {
             mecanise: 'etape-id',
-            xxx: { facture: 'etape-id' }
-          }
-        }
-      } as unknown as Titres
+            xxx: { facture: 'etape-id' },
+          },
+        },
+      } as unknown as Titres,
     ])
 
     const titresUpdatedRequests = await titresContenusEtapesIdsUpdate()
@@ -135,9 +132,7 @@ describe("propriétés (contenu) d'un titre", () => {
 
   test("ne met pas à jour un titre qui n'a pas de configuration de props", async () => {
     titreContenuTitreEtapeFindMock.mockReturnValue(null)
-    titresGetMock.mockResolvedValue([
-      { type: { contenuIds: null } } as unknown as Titres
-    ])
+    titresGetMock.mockResolvedValue([{ type: { contenuIds: null } } as unknown as Titres])
 
     const titresUpdatedRequests = await titresContenusEtapesIdsUpdate()
 

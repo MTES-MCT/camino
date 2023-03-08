@@ -4,8 +4,7 @@
 */
 
 :root {
-  --transition: opacity 0.25s, background-color 0.25s, border 0.25s,
-    box-shadow 0.25s, fill 0.25s;
+  --transition: opacity 0.25s, background-color 0.25s, border 0.25s, box-shadow 0.25s, fill 0.25s;
 }
 
 .btn-menu,

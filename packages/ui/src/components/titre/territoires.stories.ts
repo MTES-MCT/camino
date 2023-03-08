@@ -5,7 +5,7 @@ import { DEPARTEMENT_IDS } from 'camino-common/src/static/departement'
 const meta: Meta = {
   title: 'Components/Titre/Territoires',
   component: Territoires,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -14,7 +14,7 @@ const Template: Story<TerritoiresProps> = (args: TerritoiresProps) => ({
   setup() {
     return { args }
   },
-  template: '<Territoires v-bind="args" />'
+  template: '<Territoires v-bind="args" />',
 })
 
 export const OnlySurface = Template.bind(
@@ -23,7 +23,7 @@ export const OnlySurface = Template.bind(
     surface: 4,
     forets: [],
     communes: [],
-    secteursMaritimes: []
+    secteursMaritimes: [],
   }
 )
 
@@ -34,7 +34,7 @@ export const OnlyForets = Template.bind(
     sdomZones: [],
     communes: [],
     secteursMaritimes: [],
-    forets: [{ nom: 'Forêt 1' }, { nom: 'Forêt 2' }]
+    forets: [{ nom: 'Forêt 1' }, { nom: 'Forêt 2' }],
   }
 )
 
@@ -45,7 +45,7 @@ export const OnlySdomZones = Template.bind(
     forets: [],
     communes: [],
     secteursMaritimes: [],
-    sdomZones: ['1', '2']
+    sdomZones: ['1', '2'],
   }
 )
 export const OnlySecteursMaritimes = Template.bind(
@@ -55,7 +55,7 @@ export const OnlySecteursMaritimes = Template.bind(
     forets: [],
     sdomZones: [],
     communes: [],
-    secteursMaritimes: ['Balagne', 'Bretagne nord', 'Bretagne sud']
+    secteursMaritimes: ['Balagne', 'Bretagne nord', 'Bretagne sud'],
   }
 )
 
@@ -69,13 +69,10 @@ export const All = Template.bind(
       { nom: 'Flée', departementId: DEPARTEMENT_IDS.Sarthe },
       { nom: 'Montval-sur-loir', departementId: DEPARTEMENT_IDS.Sarthe },
       { nom: 'Tours', departementId: DEPARTEMENT_IDS['Indre-et-Loire'] },
-      { nom: 'Ville de Guyane', departementId: DEPARTEMENT_IDS.Guyane }
+      { nom: 'Ville de Guyane', departementId: DEPARTEMENT_IDS.Guyane },
     ],
-    secteursMaritimes: ['Balagne', 'Bretagne nord', 'Bretagne sud']
+    secteursMaritimes: ['Balagne', 'Bretagne nord', 'Bretagne sud'],
   }
 )
 
-export const Empty = Template.bind(
-  {},
-  { forets: [], communes: [], secteursMaritimes: [] }
-)
+export const Empty = Template.bind({}, { forets: [], communes: [], secteursMaritimes: [] })

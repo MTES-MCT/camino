@@ -1,8 +1,4 @@
-import type {
-  ITitreDemarche,
-  ITitreEntreprise,
-  ITitreEtape
-} from '../../types.js'
+import type { ITitreDemarche, ITitreEntreprise, ITitreEtape } from '../../types.js'
 
 import { titreEtapeUpsert } from '../../database/queries/titres-etapes.js'
 import { titreDemarcheGet } from '../../database/queries/titres-demarches.js'
@@ -12,10 +8,7 @@ import { titreEtapeAdministrationsEmailsSend } from '../../api/graphql/resolvers
 import { demarcheDefinitionFind } from '../rules-demarches/definitions.js'
 import { titreUrlGet } from '../utils/urls-get.js'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
-import {
-  EmailTemplateId,
-  EmailAdministration
-} from '../../tools/api-mailjet/types.js'
+import { EmailTemplateId, EmailAdministration } from '../../tools/api-mailjet/types.js'
 import { getCurrent } from 'camino-common/src/date.js'
 
 const emailConfirmationDepotSend = async (
@@ -27,62 +20,41 @@ const emailConfirmationDepotSend = async (
     titreNom: string
   }
 ) => {
-  await emailsWithTemplateSend(
-    emails,
-    EmailTemplateId.DEMARCHE_CONFIRMATION_DEPOT,
-    {
-      ...params,
-      emailONF: EmailAdministration.ONF,
-      emailDGTM: EmailAdministration.DGTM
-    }
-  )
+  await emailsWithTemplateSend(emails, EmailTemplateId.DEMARCHE_CONFIRMATION_DEPOT, {
+    ...params,
+    emailONF: EmailAdministration.ONF,
+    emailDGTM: EmailAdministration.DGTM,
+  })
 }
 
 // envoie un email de confirmation à l’opérateur
-const titreEtapeDepotConfirmationEmailsSend = async (
-  titreDemarche: ITitreDemarche,
-  etape: ITitreEtape,
-  titulaires: ITitreEntreprise[]
-) => {
+const titreEtapeDepotConfirmationEmailsSend = async (titreDemarche: ITitreDemarche, etape: ITitreEtape, titulaires: ITitreEntreprise[]) => {
   const titreUrl = titreUrlGet(titreDemarche.titreId)
   const titreNom = titreDemarche.titre!.nom
   const titreTypeNom = titreDemarche.titre!.type!.type!.nom
 
   for (const titulaire of titulaires) {
-    const emails = titulaire.utilisateurs
-      ?.map(u => u.email)
-      .filter(email => !!email) as string[]
+    const emails = titulaire.utilisateurs?.map(u => u.email).filter(email => !!email) as string[]
 
     if (emails?.length) {
       await emailConfirmationDepotSend(emails, {
         titreTypeNom,
         titulaireNom: titulaire.nom ?? '',
         titreUrl,
-        titreNom
+        titreNom,
       })
     }
   }
 }
 
 // visibleForTesting
-export const titreDemarcheDepotCheck = (
-  titreDemarche: ITitreDemarche
-): boolean => {
-  const demarcheDefinition = demarcheDefinitionFind(
-    titreDemarche.titre!.typeId,
-    titreDemarche.typeId,
-    titreDemarche.etapes,
-    titreDemarche.id
-  )
+export const titreDemarcheDepotCheck = (titreDemarche: ITitreDemarche): boolean => {
+  const demarcheDefinition = demarcheDefinitionFind(titreDemarche.titre!.typeId, titreDemarche.typeId, titreDemarche.etapes, titreDemarche.id)
   // On peut déposer automatiquement seulement les démarches qui possèdent un arbre d’instructions
   if (!demarcheDefinition) return false
   if (titreDemarche.titre!.typeId === 'arm' && titreDemarche.typeId === 'oct') {
     // Si on a pas de demande faite
-    if (
-      !titreDemarche.etapes?.find(
-        e => e.typeId === 'mfr' && e.statutId === 'fai'
-      )
-    ) {
+    if (!titreDemarche.etapes?.find(e => e.typeId === 'mfr' && e.statutId === 'fai')) {
       return false
     }
 
@@ -98,36 +70,17 @@ export const titreEtapeDepotCreate = async (titreDemarche: ITitreDemarche) => {
     titreDemarcheId: titreDemarche.id,
     typeId: 'mdp',
     statutId: 'fai',
-    date: getCurrent()
+    date: getCurrent(),
   } as ITitreEtape
 
-  titreEtapeDepot = await titreEtapeUpsert(
-    titreEtapeDepot,
-    userSuper,
-    titreDemarche.titreId
-  )
-  await titreEtapeUpdateTask(
-    titreEtapeDepot.id,
-    titreEtapeDepot.titreDemarcheId,
-    userSuper
-  )
-  await titreEtapeAdministrationsEmailsSend(
-    titreEtapeDepot,
-    titreEtapeDepot.type!,
-    titreDemarche.typeId,
-    titreDemarche.titreId,
-    titreDemarche.titre!.typeId,
-    userSuper
-  )
+  titreEtapeDepot = await titreEtapeUpsert(titreEtapeDepot, userSuper, titreDemarche.titreId)
+  await titreEtapeUpdateTask(titreEtapeDepot.id, titreEtapeDepot.titreDemarcheId, userSuper)
+  await titreEtapeAdministrationsEmailsSend(titreEtapeDepot, titreEtapeDepot.type!, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, userSuper)
 
   const titulaires = titreDemarche.titre?.titulaires
 
   if (titulaires?.length) {
-    await titreEtapeDepotConfirmationEmailsSend(
-      titreDemarche,
-      titreEtapeDepot,
-      titulaires
-    )
+    await titreEtapeDepotConfirmationEmailsSend(titreDemarche, titreEtapeDepot, titulaires)
   }
 }
 export const titresEtapesDepotCreate = async (demarcheId: string) => {
@@ -141,9 +94,9 @@ export const titresEtapesDepotCreate = async (demarcheId: string) => {
         etapes: { id: {} },
         titre: {
           type: { type: { id: {} } },
-          titulaires: { utilisateurs: { id: {} } }
-        }
-      }
+          titulaires: { utilisateurs: { id: {} } },
+        },
+      },
     },
     userSuper
   )

@@ -1,19 +1,12 @@
 import { ITitre, IGeoJson, IFields } from '../../types.js'
 
-import {
-  geojsonFeatureMultiPolygon,
-  geojsonFeatureCollectionPoints
-} from '../../tools/geojson.js'
+import { geojsonFeatureMultiPolygon, geojsonFeatureCollectionPoints } from '../../tools/geojson.js'
 
 import { entrepriseFormat } from './entreprises.js'
 import { titreActiviteFormat } from './titres-activites.js'
 import { titreDemarcheFormat } from './titres-demarches.js'
 import { titreFormatFields } from './_fields.js'
-import {
-  AdministrationId,
-  Administrations,
-  ADMINISTRATION_TYPES
-} from 'camino-common/src/static/administrations.js'
+import { AdministrationId, Administrations, ADMINISTRATION_TYPES } from 'camino-common/src/static/administrations.js'
 import { onlyUnique } from 'camino-common/src/typescript-tools.js'
 import { getGestionnairesByTitreTypeId } from 'camino-common/src/static/administrationsTitresTypes.js'
 
@@ -30,7 +23,7 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
       points: t.points,
       secteursMaritime: t.secteursMaritime,
       forets: t.forets,
-      communes: t.communes
+      communes: t.communes,
     } as ITitre
   }
 
@@ -41,9 +34,7 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
   }
 
   if (fields.geojsonPoints && t.points?.length) {
-    t.geojsonPoints = geojsonFeatureCollectionPoints(
-      t.points
-    ) as unknown as IGeoJson
+    t.geojsonPoints = geojsonFeatureCollectionPoints(t.points) as unknown as IGeoJson
   }
 
   if (fields.geojsonCentre && t.coordonnees && t.propsTitreEtapesIds.points) {
@@ -51,16 +42,14 @@ export const titreFormat = (t: ITitre, fields: IFields = titreFormatFields) => {
       type: 'Feature',
       geometry: {
         type: 'Point',
-        coordinates: [t.coordonnees.x, t.coordonnees.y]
+        coordinates: [t.coordonnees.x, t.coordonnees.y],
       },
-      properties: { etapeId: t.propsTitreEtapesIds.points }
+      properties: { etapeId: t.propsTitreEtapesIds.points },
     }
   }
 
   if (fields.demarches && t.demarches?.length) {
-    t.demarches = t.demarches.map(td =>
-      titreDemarcheFormat(td, fields.demarches)
-    )
+    t.demarches = t.demarches.map(td => titreDemarcheFormat(td, fields.demarches))
   }
 
   if (fields.surface && t.surfaceEtape) {
@@ -98,11 +87,7 @@ export const titreAdministrationsGet = (titre: ITitre): AdministrationId[] => {
   return ids
     .filter(onlyUnique)
     .map(id => Administrations[id])
-    .sort(
-      (a, b) =>
-        ADMINISTRATION_TYPES[a.typeId].ordre -
-        ADMINISTRATION_TYPES[b.typeId].ordre
-    )
+    .sort((a, b) => ADMINISTRATION_TYPES[a.typeId].ordre - ADMINISTRATION_TYPES[b.typeId].ordre)
     .map(({ id }) => id)
 }
 

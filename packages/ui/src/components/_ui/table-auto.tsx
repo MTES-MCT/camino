@@ -20,7 +20,7 @@ export const TableAuto = defineComponent<Props>({
   setup(props) {
     const sort = reactive<TableSortEvent>({
       column: props?.initialSort?.column ?? props.columns[0].id,
-      order: props?.initialSort?.order ?? 'asc'
+      order: props?.initialSort?.order ?? 'asc',
     })
     const myRows = reactive<TableRow[]>([...props.rows])
     handleChange(sort)
@@ -67,14 +67,6 @@ export const TableAuto = defineComponent<Props>({
       sort.order = event.order
     }
 
-    return () => (
-      <Table
-        columns={props.columns}
-        rows={myRows}
-        column={sort.column}
-        order={sort.order}
-        update={handleChange}
-      />
-    )
-  }
+    return () => <Table columns={props.columns} rows={myRows} column={sort.column} order={sort.order} update={handleChange} />
+  },
 })

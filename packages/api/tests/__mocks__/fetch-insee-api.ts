@@ -1,7 +1,4 @@
-import {
-  IApiSirenEtablissement,
-  IApiSirenUniteLegale
-} from '../../src/tools/api-insee/types.js'
+import { IApiSirenEtablissement, IApiSirenUniteLegale } from '../../src/tools/api-insee/types.js'
 
 const entreprise = {
   siren: '729800706',
@@ -44,7 +41,7 @@ const entreprise = {
     nicSiegeUniteLegale: '00586',
     dateDernierTraitementUniteLegale: '2020-03-25T12:24:42',
     categorieEntreprise: 'GE',
-    anneeCategorieEntreprise: '2017'
+    anneeCategorieEntreprise: '2017',
   },
   adresseEtablissement: {
     complementAdresseEtablissement: 'TOUR SAINT GOBAIN',
@@ -60,7 +57,7 @@ const entreprise = {
     codeCedexEtablissement: null,
     libelleCedexEtablissement: null,
     codePaysEtrangerEtablissement: null,
-    libellePaysEtrangerEtablissement: null
+    libellePaysEtrangerEtablissement: null,
   },
   adresse2Etablissement: {
     complementAdresse2Etablissement: null,
@@ -76,7 +73,7 @@ const entreprise = {
     codeCedex2Etablissement: null,
     libelleCedex2Etablissement: null,
     codePaysEtranger2Etablissement: null,
-    libellePaysEtranger2Etablissement: null
+    libellePaysEtranger2Etablissement: null,
   },
   periodesEtablissement: [
     {
@@ -94,9 +91,9 @@ const entreprise = {
       nomenclatureActivitePrincipaleEtablissement: 'NAFRev2',
       changementActivitePrincipaleEtablissement: false,
       caractereEmployeurEtablissement: 'N',
-      changementCaractereEmployeurEtablissement: false
-    }
-  ]
+      changementCaractereEmployeurEtablissement: false,
+    },
+  ],
 } as unknown as IApiSirenEtablissement
 
 const entrepriseAndEtablissements = {
@@ -144,7 +141,7 @@ const entrepriseAndEtablissements = {
       economieSocialeSolidaireUniteLegale: 'N',
       changementEconomieSocialeSolidaireUniteLegale: true,
       caractereEmployeurUniteLegale: 'O',
-      changementCaractereEmployeurUniteLegale: false
+      changementCaractereEmployeurUniteLegale: false,
     },
     {
       dateFin: '2020-01-31',
@@ -171,7 +168,7 @@ const entrepriseAndEtablissements = {
       economieSocialeSolidaireUniteLegale: 'N',
       changementEconomieSocialeSolidaireUniteLegale: true,
       caractereEmployeurUniteLegale: 'O',
-      changementCaractereEmployeurUniteLegale: false
+      changementCaractereEmployeurUniteLegale: false,
     },
     {
       dateFin: '2018-12-31',
@@ -198,7 +195,7 @@ const entrepriseAndEtablissements = {
       economieSocialeSolidaireUniteLegale: null,
       changementEconomieSocialeSolidaireUniteLegale: false,
       caractereEmployeurUniteLegale: 'O',
-      changementCaractereEmployeurUniteLegale: false
+      changementCaractereEmployeurUniteLegale: false,
     },
     {
       dateFin: '2008-12-30',
@@ -225,7 +222,7 @@ const entrepriseAndEtablissements = {
       economieSocialeSolidaireUniteLegale: null,
       changementEconomieSocialeSolidaireUniteLegale: false,
       caractereEmployeurUniteLegale: 'O',
-      changementCaractereEmployeurUniteLegale: false
+      changementCaractereEmployeurUniteLegale: false,
     },
     {
       dateFin: '2008-08-19',
@@ -252,7 +249,7 @@ const entrepriseAndEtablissements = {
       economieSocialeSolidaireUniteLegale: null,
       changementEconomieSocialeSolidaireUniteLegale: false,
       caractereEmployeurUniteLegale: 'O',
-      changementCaractereEmployeurUniteLegale: false
+      changementCaractereEmployeurUniteLegale: false,
     },
     {
       dateFin: '2007-12-31',
@@ -279,7 +276,7 @@ const entrepriseAndEtablissements = {
       economieSocialeSolidaireUniteLegale: null,
       changementEconomieSocialeSolidaireUniteLegale: false,
       caractereEmployeurUniteLegale: 'O',
-      changementCaractereEmployeurUniteLegale: false
+      changementCaractereEmployeurUniteLegale: false,
     },
     {
       dateFin: '2004-12-24',
@@ -306,7 +303,7 @@ const entrepriseAndEtablissements = {
       economieSocialeSolidaireUniteLegale: null,
       changementEconomieSocialeSolidaireUniteLegale: false,
       caractereEmployeurUniteLegale: 'O',
-      changementCaractereEmployeurUniteLegale: false
+      changementCaractereEmployeurUniteLegale: false,
     },
     {
       dateFin: '1999-12-31',
@@ -333,7 +330,7 @@ const entrepriseAndEtablissements = {
       economieSocialeSolidaireUniteLegale: null,
       changementEconomieSocialeSolidaireUniteLegale: false,
       caractereEmployeurUniteLegale: 'O',
-      changementCaractereEmployeurUniteLegale: true
+      changementCaractereEmployeurUniteLegale: true,
     },
     {
       dateFin: '1997-12-24',
@@ -360,7 +357,7 @@ const entrepriseAndEtablissements = {
       economieSocialeSolidaireUniteLegale: null,
       changementEconomieSocialeSolidaireUniteLegale: false,
       caractereEmployeurUniteLegale: null,
-      changementCaractereEmployeurUniteLegale: false
+      changementCaractereEmployeurUniteLegale: false,
     },
     {
       dateFin: '1996-12-31',
@@ -387,9 +384,9 @@ const entrepriseAndEtablissements = {
       economieSocialeSolidaireUniteLegale: null,
       changementEconomieSocialeSolidaireUniteLegale: false,
       caractereEmployeurUniteLegale: null,
-      changementCaractereEmployeurUniteLegale: false
-    }
-  ]
+      changementCaractereEmployeurUniteLegale: false,
+    },
+  ],
 } as unknown as IApiSirenUniteLegale
 
 export { entreprise, entrepriseAndEtablissements }

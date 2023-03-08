@@ -4,16 +4,7 @@ import { subscribeUsersToGuyaneExploitants } from '../business/entreprises-guyan
 // Retourne tous les utilisateurs 'entreprise' et 'bureau d'études' associés à des entreprises de Guyane
 subscribeUsersToGuyaneExploitants()
   .then(users => {
-    console.info(
-      users
-        .map(
-          user =>
-            `${user.email},${user.nomUtilisateur},${user.prenom},${
-              user.role
-            },${user.entreprises.join(';')}`
-        )
-        .join('\n')
-    )
+    console.info(users.map(user => `${user.email},${user.nomUtilisateur},${user.prenom},${user.role},${user.entreprises.join(';')}`).join('\n'))
     process.exit(0)
   })
   .catch(e => {

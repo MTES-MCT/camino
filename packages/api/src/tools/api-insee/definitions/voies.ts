@@ -1,170 +1,170 @@
 export default [
   {
     id: 'ALL',
-    nom: 'Allée'
+    nom: 'Allée',
   },
   {
     id: 'AV',
-    nom: 'Avenue'
+    nom: 'Avenue',
   },
   {
     id: 'BD',
-    nom: 'Boulevard'
+    nom: 'Boulevard',
   },
   {
     id: 'CAR',
-    nom: 'Carrefour'
+    nom: 'Carrefour',
   },
   {
     id: 'CHE',
-    nom: 'Chemin'
+    nom: 'Chemin',
   },
   {
     id: 'CHS',
-    nom: 'Chaussée'
+    nom: 'Chaussée',
   },
   {
     id: 'CITE',
-    nom: 'Cité'
+    nom: 'Cité',
   },
   {
     id: 'COR',
-    nom: 'Corniche'
+    nom: 'Corniche',
   },
   {
     id: 'CRS',
-    nom: 'Cours'
+    nom: 'Cours',
   },
   {
     id: 'DOM',
-    nom: 'Domaine'
+    nom: 'Domaine',
   },
   {
     id: 'DSC',
-    nom: 'Descente'
+    nom: 'Descente',
   },
   {
     id: 'ECA',
-    nom: 'Ecart'
+    nom: 'Ecart',
   },
   {
     id: 'ESP',
-    nom: 'Esplanade'
+    nom: 'Esplanade',
   },
   {
     id: 'FG',
-    nom: 'Faubourg'
+    nom: 'Faubourg',
   },
   {
     id: 'GR',
-    nom: 'Grande Rue'
+    nom: 'Grande Rue',
   },
   {
     id: 'HAM',
-    nom: 'Hameau'
+    nom: 'Hameau',
   },
   {
     id: 'HLE',
-    nom: 'Halle'
+    nom: 'Halle',
   },
   {
     id: 'IMP',
-    nom: 'Impasse'
+    nom: 'Impasse',
   },
   {
     id: 'LD',
-    nom: 'Lieu-dit'
+    nom: 'Lieu-dit',
   },
   {
     id: 'LOT',
-    nom: 'Lotissement'
+    nom: 'Lotissement',
   },
   {
     id: 'MAR',
-    nom: 'Marché'
+    nom: 'Marché',
   },
   {
     id: 'MTE',
-    nom: 'Montée'
+    nom: 'Montée',
   },
   {
     id: 'PAS',
-    nom: 'Passage'
+    nom: 'Passage',
   },
   {
     id: 'PL',
-    nom: 'Place'
+    nom: 'Place',
   },
   {
     id: 'PLN',
-    nom: 'Plaine'
+    nom: 'Plaine',
   },
   {
     id: 'PLT',
-    nom: 'Plateau'
+    nom: 'Plateau',
   },
   {
     id: 'PRO',
-    nom: 'Promenade'
+    nom: 'Promenade',
   },
   {
     id: 'PRV',
-    nom: 'Parvis'
+    nom: 'Parvis',
   },
   {
     id: 'QUA',
-    nom: 'Quartier'
+    nom: 'Quartier',
   },
   {
     id: 'QUAI',
-    nom: 'Quai'
+    nom: 'Quai',
   },
   {
     id: 'RES',
-    nom: 'Résidence'
+    nom: 'Résidence',
   },
   {
     id: 'RLE',
-    nom: 'Ruelle'
+    nom: 'Ruelle',
   },
   {
     id: 'ROC',
-    nom: 'Rocade'
+    nom: 'Rocade',
   },
   {
     id: 'RPT',
-    nom: 'Rond-point'
+    nom: 'Rond-point',
   },
   {
     id: 'RTE',
-    nom: 'Route'
+    nom: 'Route',
   },
   {
     id: 'RUE',
-    nom: 'Rue'
+    nom: 'Rue',
   },
   {
     id: 'SEN',
-    nom: 'Sente - Sentier'
+    nom: 'Sente - Sentier',
   },
   {
     id: 'SQ',
-    nom: 'Square'
+    nom: 'Square',
   },
   {
     id: 'TPL',
-    nom: 'Terre-plein'
+    nom: 'Terre-plein',
   },
   {
     id: 'TRA',
-    nom: 'Traverse'
+    nom: 'Traverse',
   },
   {
     id: 'VLA',
-    nom: 'Villa'
+    nom: 'Villa',
   },
   {
     id: 'VLGE',
-    nom: 'Village'
-  }
+    nom: 'Village',
+  },
 ]

@@ -17,8 +17,8 @@ class Administrations extends Model {
     required: ['id'],
 
     properties: {
-      id: { type: 'string', maxLength: 64 }
-    }
+      id: { type: 'string', maxLength: 64 },
+    },
   }
 
   static relationMappings = () => ({
@@ -27,8 +27,8 @@ class Administrations extends Model {
       modelClass: AdministrationsTitresTypesTitresStatuts,
       join: {
         from: 'administrations.id',
-        to: 'administrations__titresTypes__titresStatuts.administrationId'
-      }
+        to: 'administrations__titresTypes__titresStatuts.administrationId',
+      },
     },
 
     titresTypesEtapesTypes: {
@@ -36,8 +36,8 @@ class Administrations extends Model {
       modelClass: AdministrationsTitresTypesEtapesTypes,
       join: {
         from: 'administrations.id',
-        to: 'administrations__titresTypes__etapesTypes.administrationId'
-      }
+        to: 'administrations__titresTypes__etapesTypes.administrationId',
+      },
     },
 
     utilisateurs: {
@@ -45,8 +45,8 @@ class Administrations extends Model {
       modelClass: Utilisateurs,
       join: {
         from: 'administrations.id',
-        to: 'utilisateurs.administrationId'
-      }
+        to: 'utilisateurs.administrationId',
+      },
     },
 
     activitesTypes: {
@@ -57,10 +57,10 @@ class Administrations extends Model {
         through: {
           from: 'administrations__activitesTypes.administrationId',
           to: 'administrations__activitesTypes.activiteTypeId',
-          extra: ['modificationInterdit', 'lectureInterdit']
+          extra: ['modificationInterdit', 'lectureInterdit'],
         },
-        to: 'activitesTypes.id'
-      }
+        to: 'activitesTypes.id',
+      },
     },
 
     activitesTypesEmails: {
@@ -71,11 +71,11 @@ class Administrations extends Model {
         through: {
           from: 'administrations__activitesTypes__emails.administrationId',
           to: 'administrations__activitesTypes__emails.activiteTypeId',
-          extra: ['email']
+          extra: ['email'],
         },
-        to: 'activitesTypes.id'
-      }
-    }
+        to: 'activitesTypes.id',
+      },
+    },
   })
 }
 

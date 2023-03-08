@@ -1,18 +1,9 @@
 import { ArmOctMachine } from './oct.machine.js'
 import { interpret } from 'xstate'
-import {
-  interpretMachine,
-  orderAndInterpretMachine as commonOrderAndInterpretMachine
-} from '../machine-test-helper.js'
+import { interpretMachine, orderAndInterpretMachine as commonOrderAndInterpretMachine } from '../machine-test-helper.js'
 import { IContenu } from '../../../types.js'
-import {
-  EtapeStatutId,
-  ETAPES_STATUTS
-} from 'camino-common/src/static/etapesStatuts.js'
-import {
-  ETAPES_TYPES,
-  EtapeTypeId
-} from 'camino-common/src/static/etapesTypes.js'
+import { EtapeStatutId, ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts.js'
+import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { Etape } from '../machine-common.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 import { describe, expect, test } from 'vitest'
@@ -39,19 +30,19 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-03')
+        date: toCaminoDate('2020-02-03'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-02')
+        date: toCaminoDate('2020-02-02'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: toCaminoDate('2020-01-01'),
-        contenu: { arm: { mecanise: true } }
-      }
+        contenu: { arm: { mecanise: true } },
+      },
     ])
 
     expect(service).canOnlyTransitionTo(armOctMachine, [
@@ -63,7 +54,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       'DEMANDER_COMPLEMENTS_DAE',
       'DEMANDER_COMPLEMENTS_RDE',
       'MODIFIER_DEMANDE',
-      'REFUSER_RDE'
+      'REFUSER_RDE',
     ])
   })
 
@@ -72,19 +63,19 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-03')
+        date: toCaminoDate('2020-02-03'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-02')
+        date: toCaminoDate('2020-02-02'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: toCaminoDate('2020-01-01'),
-        contenu: { arm: { mecanise: true, franchissements: 1 } }
-      }
+        contenu: { arm: { mecanise: true, franchissements: 1 } },
+      },
     ])
 
     expect(service).canOnlyTransitionTo(armOctMachine, [
@@ -96,7 +87,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       'DESISTER_PAR_LE_DEMANDEUR',
       'EXEMPTER_DAE',
       'MODIFIER_DEMANDE',
-      'REFUSER_RDE'
+      'REFUSER_RDE',
     ])
   })
 
@@ -107,28 +98,22 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-03')
+        date: toCaminoDate('2020-02-03'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-02')
+        date: toCaminoDate('2020-02-02'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: toCaminoDate('2020-01-01'),
-        contenu: { arm: { mecanise: false } }
-      }
+        contenu: { arm: { mecanise: false } },
+      },
     ])
 
-    expect(service).canOnlyTransitionTo(armOctMachine, [
-      'ACCEPTER_COMPLETUDE',
-      'CLASSER_SANS_SUITE',
-      'DESISTER_PAR_LE_DEMANDEUR',
-      'REFUSER_COMPLETUDE',
-      'MODIFIER_DEMANDE'
-    ])
+    expect(service).canOnlyTransitionTo(armOctMachine, ['ACCEPTER_COMPLETUDE', 'CLASSER_SANS_SUITE', 'DESISTER_PAR_LE_DEMANDEUR', 'REFUSER_COMPLETUDE', 'MODIFIER_DEMANDE'])
   })
 
   test('on peut faire une demande de compléments après une complétude incomplète', () => {
@@ -136,68 +121,56 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'inc',
-        date: toCaminoDate('2020-02-04')
+        date: toCaminoDate('2020-02-04'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-03')
+        date: toCaminoDate('2020-02-03'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-02')
+        date: toCaminoDate('2020-02-02'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: toCaminoDate('2020-01-01'),
-        contenu: { arm: { mecanise: false } }
-      }
+        contenu: { arm: { mecanise: false } },
+      },
     ])
 
-    expect(service).canOnlyTransitionTo(armOctMachine, [
-      'CLASSER_SANS_SUITE',
-      'DEMANDER_COMPLEMENTS_COMPLETUDE',
-      'DESISTER_PAR_LE_DEMANDEUR',
-      'MODIFIER_DEMANDE'
-    ])
+    expect(service).canOnlyTransitionTo(armOctMachine, ['CLASSER_SANS_SUITE', 'DEMANDER_COMPLEMENTS_COMPLETUDE', 'DESISTER_PAR_LE_DEMANDEUR', 'MODIFIER_DEMANDE'])
   })
 
   test.each([
     {
-      etapeTypeId:
-        ETAPES_TYPES.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
+      etapeTypeId: ETAPES_TYPES.demandeDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
       etapeStatutId: ETAPES_STATUTS.FAIT,
-      date: toCaminoDate('2020-01-01')
+      date: toCaminoDate('2020-01-01'),
     },
     {
-      etapeTypeId:
-        ETAPES_TYPES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_,
+      etapeTypeId: ETAPES_TYPES.demandeDeComplements_RecepisseDeDeclarationLoiSurLeau_,
       etapeStatutId: ETAPES_STATUTS.FAIT,
-      date: toCaminoDate('2020-01-01')
-    }
-  ])(
-    'ne peut pas créer une étape "%s" si il n’existe pas d’autres étapes',
-    (etape: Etape) => {
-      expect(() =>
-        orderAndInterpretMachine([etape])
-      ).toThrowErrorMatchingSnapshot()
-    }
-  )
+      date: toCaminoDate('2020-01-01'),
+    },
+  ])('ne peut pas créer une étape "%s" si il n’existe pas d’autres étapes', (etape: Etape) => {
+    expect(() => orderAndInterpretMachine([etape])).toThrowErrorMatchingSnapshot()
+  })
 
   test('peut créer une étape "mdp" juste après une "mfr"', () => {
     orderAndInterpretMachine([
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2022-04-14')
+        date: toCaminoDate('2022-04-14'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2022-04-15')
-      }
+        date: toCaminoDate('2022-04-15'),
+      },
     ])
   })
 
@@ -207,13 +180,13 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2022-04-14')
+          date: toCaminoDate('2022-04-14'),
         },
         {
           etapeTypeId: 'mcp',
           etapeStatutId: 'com',
-          date: toCaminoDate('2022-04-16')
-        }
+          date: toCaminoDate('2022-04-16'),
+        },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
@@ -224,18 +197,18 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01')
+          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'mdp',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-02')
+          date: toCaminoDate('2020-01-02'),
         },
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-03')
-        }
+          date: toCaminoDate('2020-01-03'),
+        },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
@@ -246,13 +219,13 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         {
           etapeTypeId: 'mdp',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-02-02')
+          date: toCaminoDate('2020-02-02'),
         },
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-02-03')
-        }
+          date: toCaminoDate('2020-02-03'),
+        },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
@@ -261,42 +234,33 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     {
       typeId: ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau,
       statutId: ETAPES_STATUTS.FAVORABLE,
-      contenu: { arm: { franchissements: 1 } }
+      contenu: { arm: { franchissements: 1 } },
     },
     {
-      typeId:
-        ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
-      statutId: ETAPES_STATUTS.EXEMPTE
-    }
+      typeId: ETAPES_TYPES.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_,
+      statutId: ETAPES_STATUTS.EXEMPTE,
+    },
   ])(
     'peut créer une étape "%s" juste après une "mdp" et que le titre est mécanisé avec franchissement d’eau',
-    ({
-      typeId,
-      statutId,
-      contenu
-    }: {
-      typeId: EtapeTypeId
-      statutId: EtapeStatutId
-      contenu?: IContenu
-    }) => {
+    ({ typeId, statutId, contenu }: { typeId: EtapeTypeId; statutId: EtapeStatutId; contenu?: IContenu }) => {
       orderAndInterpretMachine([
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
           date: toCaminoDate('2020-01-01'),
-          contenu: { arm: { mecanise: true, franchissements: 1 } }
+          contenu: { arm: { mecanise: true, franchissements: 1 } },
         },
         {
           etapeTypeId: 'mdp',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-02')
+          date: toCaminoDate('2020-01-02'),
         },
         {
           etapeTypeId: typeId,
           etapeStatutId: statutId,
           contenu,
-          date: toCaminoDate('2020-01-03')
-        }
+          date: toCaminoDate('2020-01-03'),
+        },
       ])
     }
   )
@@ -306,23 +270,23 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2020-02-03')
+        date: toCaminoDate('2020-02-03'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-03')
+        date: toCaminoDate('2020-02-03'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-02')
+        date: toCaminoDate('2020-02-02'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-01')
-      }
+        date: toCaminoDate('2020-01-01'),
+      },
     ])
   })
 
@@ -331,18 +295,18 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-01')
+        date: toCaminoDate('2020-01-01'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-02')
+        date: toCaminoDate('2020-01-02'),
       },
       {
         etapeTypeId: 'des',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-04')
-      }
+        date: toCaminoDate('2020-01-04'),
+      },
     ])
   })
 
@@ -352,23 +316,23 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01')
+          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'mdp',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-02')
+          date: toCaminoDate('2020-01-02'),
         },
         {
           etapeTypeId: 'des',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-03')
+          date: toCaminoDate('2020-01-03'),
         },
         {
           etapeTypeId: 'des',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-04')
-        }
+          date: toCaminoDate('2020-01-04'),
+        },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
@@ -378,23 +342,23 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01')
+          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'mdp',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-02')
+          date: toCaminoDate('2020-01-02'),
         },
         {
           etapeTypeId: 'des',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-04')
+          date: toCaminoDate('2020-01-04'),
         },
         {
           etapeTypeId: 'css',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-05')
-        }
+          date: toCaminoDate('2020-01-05'),
+        },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
@@ -404,73 +368,73 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: toCaminoDate('2020-01-01'),
-        contenu: { arm: { mecanise: true } }
+        contenu: { arm: { mecanise: true } },
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-02')
+        date: toCaminoDate('2020-01-02'),
       },
       {
         etapeTypeId: 'dae',
         etapeStatutId: 'exe',
-        date: toCaminoDate('2020-01-03')
+        date: toCaminoDate('2020-01-03'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-04')
+        date: toCaminoDate('2020-01-04'),
       },
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2020-01-05')
+        date: toCaminoDate('2020-01-05'),
       },
       {
         etapeTypeId: 'mod',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-06')
+        date: toCaminoDate('2020-01-06'),
       },
       {
         etapeTypeId: 'vfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-06')
+        date: toCaminoDate('2020-01-06'),
       },
       {
         etapeTypeId: 'mcr',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2020-01-07')
+        date: toCaminoDate('2020-01-07'),
       },
       {
         etapeTypeId: 'eof',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-08')
+        date: toCaminoDate('2020-01-08'),
       },
       {
         etapeTypeId: 'aof',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2020-01-09')
+        date: toCaminoDate('2020-01-09'),
       },
       {
         etapeTypeId: 'sca',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-10')
+        date: toCaminoDate('2020-01-10'),
       },
       {
         etapeTypeId: 'aca',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2020-01-11')
+        date: toCaminoDate('2020-01-11'),
       },
       {
         etapeTypeId: 'mnb',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-12')
+        date: toCaminoDate('2020-01-12'),
       },
       {
         etapeTypeId: 'des',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-01-13')
-      }
+        date: toCaminoDate('2020-01-13'),
+      },
     ])
   })
 
@@ -480,58 +444,58 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01')
+          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'mdp',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01')
+          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'pfd',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01')
+          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'mcp',
           etapeStatutId: 'com',
-          date: toCaminoDate('2020-01-01')
+          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'vfd',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01')
+          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'mcr',
           etapeStatutId: 'fav',
-          date: toCaminoDate('2020-01-01')
+          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'eof',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-01')
+          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'aof',
           etapeStatutId: 'fav',
-          date: toCaminoDate('2020-01-01')
+          date: toCaminoDate('2020-01-01'),
         },
         {
           etapeTypeId: 'sca',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-02')
+          date: toCaminoDate('2020-01-02'),
         },
         {
           etapeTypeId: 'aca',
           etapeStatutId: 'fav',
-          date: toCaminoDate('2020-01-03')
+          date: toCaminoDate('2020-01-03'),
         },
         {
           etapeTypeId: 'mnb',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2020-01-04')
-        }
+          date: toCaminoDate('2020-01-04'),
+        },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
@@ -541,58 +505,58 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'mnd',
         date: toCaminoDate('2020-08-18'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'aca',
         date: toCaminoDate('2020-08-18'),
-        etapeStatutId: 'def'
+        etapeStatutId: 'def',
       },
       {
         etapeTypeId: 'sca',
         date: toCaminoDate('2020-08-07'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'aof',
         date: toCaminoDate('2020-06-19'),
-        etapeStatutId: 'def'
+        etapeStatutId: 'def',
       },
       {
         etapeTypeId: 'eof',
         date: toCaminoDate('2020-06-19'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mcr',
         date: toCaminoDate('2020-06-15'),
-        etapeStatutId: 'fav'
+        etapeStatutId: 'fav',
       },
       {
         etapeTypeId: 'vfd',
         date: toCaminoDate('2020-06-15'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mcp',
         date: toCaminoDate('2020-05-29'),
-        etapeStatutId: 'com'
+        etapeStatutId: 'com',
       },
       {
         etapeTypeId: 'mdp',
         date: toCaminoDate('2020-05-04'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'pfd',
         date: toCaminoDate('2020-05-01'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mfr',
         date: toCaminoDate('2020-04-29'),
-        etapeStatutId: 'fai'
-      }
+        etapeStatutId: 'fai',
+      },
     ])
   })
 
@@ -601,48 +565,48 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'mfr',
         date: toCaminoDate('2019-12-12'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mdp',
         date: toCaminoDate('2019-12-12'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'pfd',
         date: toCaminoDate('2019-12-12'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mcp',
         date: toCaminoDate('2020-01-21'),
-        etapeStatutId: 'com'
+        etapeStatutId: 'com',
       },
       {
         etapeTypeId: 'vfd',
         date: toCaminoDate('2020-02-05'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mcr',
         date: toCaminoDate('2020-02-05'),
-        etapeStatutId: 'fav'
+        etapeStatutId: 'fav',
       },
       {
         etapeTypeId: 'eof',
         date: toCaminoDate('2020-02-05'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'aof',
         date: toCaminoDate('2020-02-05'),
-        etapeStatutId: 'fav'
+        etapeStatutId: 'fav',
       },
       {
         etapeTypeId: 'mod',
         date: toCaminoDate('2020-06-17'),
-        etapeStatutId: 'fai'
-      }
+        etapeStatutId: 'fai',
+      },
     ])
   })
 
@@ -651,23 +615,23 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'mfr',
         date: toCaminoDate('2020-01-30'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mdp',
         date: toCaminoDate('2020-02-23'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'pfd',
         date: toCaminoDate('2020-02-23'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mcp',
         date: toCaminoDate('2020-02-28'),
-        etapeStatutId: 'com'
-      }
+        etapeStatutId: 'com',
+      },
     ])
   })
 
@@ -676,60 +640,60 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'dae',
         date: toCaminoDate('2020-06-22'),
-        etapeStatutId: 'exe'
+        etapeStatutId: 'exe',
       },
       {
         etapeTypeId: 'mfr',
         date: toCaminoDate('2020-07-09'),
         etapeStatutId: 'fai',
-        contenu: { arm: { mecanise: true, franchissements: 3 } }
+        contenu: { arm: { mecanise: true, franchissements: 3 } },
       },
       {
         etapeTypeId: 'pfd',
         date: toCaminoDate('2020-07-10'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mdp',
         date: toCaminoDate('2020-07-17'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mcp',
         date: toCaminoDate('2020-07-17'),
-        etapeStatutId: 'com'
+        etapeStatutId: 'com',
       },
       {
         etapeTypeId: 'rde',
         date: toCaminoDate('2020-07-30'),
         etapeStatutId: 'fav',
-        contenu: { arm: { franchissements: 3 } }
+        contenu: { arm: { franchissements: 3 } },
       },
       {
         etapeTypeId: 'vfd',
         date: toCaminoDate('2020-07-31'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'mcr',
         date: toCaminoDate('2020-07-31'),
-        etapeStatutId: 'fav'
+        etapeStatutId: 'fav',
       },
       {
         etapeTypeId: 'eof',
         date: toCaminoDate('2020-08-10'),
-        etapeStatutId: 'fai'
+        etapeStatutId: 'fai',
       },
       {
         etapeTypeId: 'aof',
         date: toCaminoDate('2020-08-10'),
-        etapeStatutId: 'fav'
+        etapeStatutId: 'fav',
       },
       {
         etapeTypeId: 'sca',
         date: toCaminoDate('2020-09-04'),
-        etapeStatutId: 'fai'
-      }
+        etapeStatutId: 'fai',
+      },
     ])
   })
 
@@ -738,85 +702,85 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'sco',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-09-28')
+        date: toCaminoDate('2020-09-28'),
       },
       {
         etapeTypeId: 'vfc',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-07-17')
+        date: toCaminoDate('2020-07-17'),
       },
       {
         etapeTypeId: 'pfc',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-07-16')
+        date: toCaminoDate('2020-07-16'),
       },
       {
         etapeTypeId: 'mnb',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-07-09')
+        date: toCaminoDate('2020-07-09'),
       },
       {
         etapeTypeId: 'aca',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2020-06-17')
+        date: toCaminoDate('2020-06-17'),
       },
       {
         etapeTypeId: 'sca',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-06-15')
+        date: toCaminoDate('2020-06-15'),
       },
       {
         etapeTypeId: 'rde',
         etapeStatutId: 'fav',
         date: toCaminoDate('2020-02-11'),
-        contenu: { arm: { franchissements: 3 } }
+        contenu: { arm: { franchissements: 3 } },
       },
       {
         etapeTypeId: 'aof',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2020-02-08')
+        date: toCaminoDate('2020-02-08'),
       },
       {
         etapeTypeId: 'eof',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-07')
+        date: toCaminoDate('2020-02-07'),
       },
       {
         etapeTypeId: 'mcr',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2020-02-06')
+        date: toCaminoDate('2020-02-06'),
       },
       {
         etapeTypeId: 'vfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-02-05')
+        date: toCaminoDate('2020-02-05'),
       },
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2020-01-23')
+        date: toCaminoDate('2020-01-23'),
       },
       {
         etapeTypeId: 'dae',
         etapeStatutId: 'exe',
-        date: toCaminoDate('2020-01-14')
+        date: toCaminoDate('2020-01-14'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2019-12-13')
+        date: toCaminoDate('2019-12-13'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2019-12-11')
+        date: toCaminoDate('2019-12-11'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: toCaminoDate('2019-12-10'),
-        contenu: { arm: { mecanise: true, franchissements: 3 } }
-      }
+        contenu: { arm: { mecanise: true, franchissements: 3 } },
+      },
     ])
   })
 
@@ -825,55 +789,55 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'aof',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-06-08')
+        date: toCaminoDate('2021-06-08'),
       },
       {
         etapeTypeId: 'eof',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-06-02')
+        date: toCaminoDate('2021-06-02'),
       },
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2021-05-20')
+        date: toCaminoDate('2021-05-20'),
       },
       {
         etapeTypeId: 'mcr',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-05-20')
+        date: toCaminoDate('2021-05-20'),
       },
       {
         etapeTypeId: 'vfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-05-20')
+        date: toCaminoDate('2021-05-20'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-05-20')
+        date: toCaminoDate('2021-05-20'),
       },
       {
         etapeTypeId: 'dae',
         etapeStatutId: 'exe',
-        date: toCaminoDate('2021-05-20')
+        date: toCaminoDate('2021-05-20'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-05-20')
+        date: toCaminoDate('2021-05-20'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-05-20'),
-        contenu: { arm: { mecanise: true, franchissements: 3 } }
+        contenu: { arm: { mecanise: true, franchissements: 3 } },
       },
       {
         etapeTypeId: 'rde',
         etapeStatutId: 'fav',
         date: toCaminoDate('2021-04-09'),
-        contenu: { arm: { franchissements: 3 } }
-      }
+        contenu: { arm: { franchissements: 3 } },
+      },
     ])
   })
 
@@ -882,23 +846,23 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-09-03')
-      }
+        date: toCaminoDate('2020-09-03'),
+      },
     ])
   })
 
@@ -907,70 +871,70 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'sca',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-24')
+        date: toCaminoDate('2021-09-24'),
       },
       {
         etapeTypeId: 'aof',
         etapeStatutId: 'def',
-        date: toCaminoDate('2021-09-23')
+        date: toCaminoDate('2021-09-23'),
       },
       {
         etapeTypeId: 'rde',
         etapeStatutId: 'def',
         date: toCaminoDate('2021-09-22'),
-        contenu: { arm: { franchissements: 3 } }
+        contenu: { arm: { franchissements: 3 } },
       },
       {
         etapeTypeId: 'edm',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-04-30')
+        date: toCaminoDate('2021-04-30'),
       },
       {
         etapeTypeId: 'eof',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-17')
+        date: toCaminoDate('2021-03-17'),
       },
       {
         etapeTypeId: 'mcb',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-16')
+        date: toCaminoDate('2021-03-16'),
       },
       {
         etapeTypeId: 'mcr',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-03-11')
+        date: toCaminoDate('2021-03-11'),
       },
       {
         etapeTypeId: 'vfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-10')
+        date: toCaminoDate('2021-03-10'),
       },
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-26'),
-        contenu: { arm: { mecanise: true, franchissements: 3 } }
+        contenu: { arm: { mecanise: true, franchissements: 3 } },
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-09-03')
+        date: toCaminoDate('2020-09-03'),
       },
       {
         etapeTypeId: 'dae',
         etapeStatutId: 'exe',
-        date: toCaminoDate('2020-07-28')
-      }
+        date: toCaminoDate('2020-07-28'),
+      },
     ])
   })
 
@@ -979,53 +943,53 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'aof',
         etapeStatutId: 'def',
-        date: toCaminoDate('2021-09-23')
+        date: toCaminoDate('2021-09-23'),
       },
       {
         etapeTypeId: 'ria',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-21')
+        date: toCaminoDate('2021-09-21'),
       },
       {
         etapeTypeId: 'mia',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-20')
+        date: toCaminoDate('2021-09-20'),
       },
       {
         etapeTypeId: 'eof',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-17')
+        date: toCaminoDate('2021-03-17'),
       },
       {
         etapeTypeId: 'mcr',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-03-10')
+        date: toCaminoDate('2021-03-10'),
       },
       {
         etapeTypeId: 'vfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-10')
+        date: toCaminoDate('2021-03-10'),
       },
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-09-03')
-      }
+        date: toCaminoDate('2020-09-03'),
+      },
     ])
   })
 
@@ -1034,73 +998,73 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'sca',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-30')
+        date: toCaminoDate('2021-09-30'),
       },
       {
         etapeTypeId: 'rcs',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-28')
+        date: toCaminoDate('2021-09-28'),
       },
       {
         etapeTypeId: 'mcs',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-27')
+        date: toCaminoDate('2021-09-27'),
       },
       {
         etapeTypeId: 'mna',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-26')
+        date: toCaminoDate('2021-09-26'),
       },
       {
         etapeTypeId: 'aca',
         etapeStatutId: 'ajo',
-        date: toCaminoDate('2021-09-25')
+        date: toCaminoDate('2021-09-25'),
       },
       {
         etapeTypeId: 'sca',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-24')
+        date: toCaminoDate('2021-09-24'),
       },
       {
         etapeTypeId: 'aof',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-09-23')
+        date: toCaminoDate('2021-09-23'),
       },
       {
         etapeTypeId: 'eof',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-17')
+        date: toCaminoDate('2021-03-17'),
       },
       {
         etapeTypeId: 'mcr',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-03-10')
+        date: toCaminoDate('2021-03-10'),
       },
       {
         etapeTypeId: 'vfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-10')
+        date: toCaminoDate('2021-03-10'),
       },
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-09-03')
-      }
+        date: toCaminoDate('2020-09-03'),
+      },
     ])
   })
 
@@ -1109,73 +1073,73 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'mnv',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-29')
+        date: toCaminoDate('2021-09-29'),
       },
       {
         etapeTypeId: 'aco',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-28')
+        date: toCaminoDate('2021-09-28'),
       },
       {
         etapeTypeId: 'mns',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-27')
+        date: toCaminoDate('2021-09-27'),
       },
       {
         etapeTypeId: 'sco',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-26')
+        date: toCaminoDate('2021-09-26'),
       },
       {
         etapeTypeId: 'aca',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-09-25')
+        date: toCaminoDate('2021-09-25'),
       },
       {
         etapeTypeId: 'sca',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-24')
+        date: toCaminoDate('2021-09-24'),
       },
       {
         etapeTypeId: 'aof',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-09-23')
+        date: toCaminoDate('2021-09-23'),
       },
       {
         etapeTypeId: 'eof',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-17')
+        date: toCaminoDate('2021-03-17'),
       },
       {
         etapeTypeId: 'mcr',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-03-10')
+        date: toCaminoDate('2021-03-10'),
       },
       {
         etapeTypeId: 'vfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-10')
+        date: toCaminoDate('2021-03-10'),
       },
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-09-03')
-      }
+        date: toCaminoDate('2020-09-03'),
+      },
     ])
   })
 
@@ -1184,89 +1148,89 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'mnv',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-02')
+        date: toCaminoDate('2021-10-02'),
       },
       {
         etapeTypeId: 'aco',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-01')
+        date: toCaminoDate('2021-10-01'),
       },
       {
         etapeTypeId: 'sco',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-29')
+        date: toCaminoDate('2021-09-29'),
       },
       {
         etapeTypeId: 'vfc',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-28')
+        date: toCaminoDate('2021-09-28'),
       },
       {
         etapeTypeId: 'pfc',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-27')
+        date: toCaminoDate('2021-09-27'),
       },
       {
         etapeTypeId: 'mnb',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-26')
+        date: toCaminoDate('2021-09-26'),
       },
       {
         etapeTypeId: 'aca',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-09-25')
+        date: toCaminoDate('2021-09-25'),
       },
       {
         etapeTypeId: 'sca',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-09-24')
+        date: toCaminoDate('2021-09-24'),
       },
       {
         etapeTypeId: 'aof',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-09-23')
+        date: toCaminoDate('2021-09-23'),
       },
       {
         etapeTypeId: 'eof',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-17')
+        date: toCaminoDate('2021-03-17'),
       },
       {
         etapeTypeId: 'mcr',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-03-11')
+        date: toCaminoDate('2021-03-11'),
       },
       {
         etapeTypeId: 'vfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-10')
+        date: toCaminoDate('2021-03-10'),
       },
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-29')
+        date: toCaminoDate('2021-02-29'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-28')
+        date: toCaminoDate('2021-02-28'),
       },
       {
         etapeTypeId: 'dae',
         etapeStatutId: 'exe',
-        date: toCaminoDate('2021-02-27')
+        date: toCaminoDate('2021-02-27'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-25'),
-        contenu: { arm: { mecanise: true } }
-      }
+        contenu: { arm: { mecanise: true } },
+      },
     ])
   })
 
@@ -1278,34 +1242,34 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: toCaminoDate('2020-10-08'),
         contenu: {
           arm: {
-            franchissements: 4
-          }
-        }
+            franchissements: 4,
+          },
+        },
       },
       {
         etapeTypeId: 'mcb',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-10-05')
+        date: toCaminoDate('2020-10-05'),
       },
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2020-08-25')
+        date: toCaminoDate('2020-08-25'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-08-25')
+        date: toCaminoDate('2020-08-25'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2020-08-20')
+        date: toCaminoDate('2020-08-20'),
       },
       {
         etapeTypeId: 'dae',
         etapeStatutId: 'exe',
-        date: toCaminoDate('2020-07-30')
+        date: toCaminoDate('2020-07-30'),
       },
       {
         etapeTypeId: 'mfr',
@@ -1313,10 +1277,10 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         date: toCaminoDate('2020-07-14'),
         contenu: {
           arm: {
-            mecanise: true
-          }
-        }
-      }
+            mecanise: true,
+          },
+        },
+      },
     ])
   })
 
@@ -1326,14 +1290,14 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         {
           etapeTypeId: 'dae',
           etapeStatutId: 'exe',
-          date: toCaminoDate('2021-02-23')
+          date: toCaminoDate('2021-02-23'),
         },
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
           date: toCaminoDate('2021-02-25'),
-          contenu: { arm: { mecanise: false } }
-        }
+          contenu: { arm: { mecanise: false } },
+        },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
@@ -1345,14 +1309,14 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
           etapeTypeId: 'rde',
           etapeStatutId: 'fav',
           date: toCaminoDate('2021-02-23'),
-          contenu: { arm: { franchissements: 1 } }
+          contenu: { arm: { franchissements: 1 } },
         },
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
           date: toCaminoDate('2021-02-25'),
-          contenu: { arm: { mecanise: false } }
-        }
+          contenu: { arm: { mecanise: false } },
+        },
       ])
     ).toThrowErrorMatchingSnapshot()
   })
@@ -1362,215 +1326,215 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
       {
         etapeTypeId: 'vfc',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-04')
+        date: toCaminoDate('2021-10-04'),
       },
       {
         etapeTypeId: 'mnc',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-02')
+        date: toCaminoDate('2021-10-02'),
       },
       {
         etapeTypeId: 'css',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-01')
+        date: toCaminoDate('2021-10-01'),
       },
       {
         etapeTypeId: 'aof',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-09-23')
+        date: toCaminoDate('2021-09-23'),
       },
       {
         etapeTypeId: 'eof',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-17')
+        date: toCaminoDate('2021-03-17'),
       },
       {
         etapeTypeId: 'mcr',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-03-11')
+        date: toCaminoDate('2021-03-11'),
       },
       {
         etapeTypeId: 'vfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-10')
+        date: toCaminoDate('2021-03-10'),
       },
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-29')
+        date: toCaminoDate('2021-02-29'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-28')
+        date: toCaminoDate('2021-02-28'),
       },
       {
         etapeTypeId: 'dae',
         etapeStatutId: 'exe',
-        date: toCaminoDate('2021-02-27')
+        date: toCaminoDate('2021-02-27'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-25'),
-        contenu: { arm: { mecanise: true } }
-      }
+        contenu: { arm: { mecanise: true } },
+      },
     ])
 
     orderAndInterpretMachine([
       {
         etapeTypeId: 'vfc',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-05')
+        date: toCaminoDate('2021-10-05'),
       },
       {
         etapeTypeId: 'vfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-04')
+        date: toCaminoDate('2021-10-04'),
       },
       {
         etapeTypeId: 'mnc',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-02')
+        date: toCaminoDate('2021-10-02'),
       },
       {
         etapeTypeId: 'css',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-01')
+        date: toCaminoDate('2021-10-01'),
       },
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-29')
+        date: toCaminoDate('2021-02-29'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-28')
+        date: toCaminoDate('2021-02-28'),
       },
       {
         etapeTypeId: 'dae',
         etapeStatutId: 'exe',
-        date: toCaminoDate('2021-02-27')
+        date: toCaminoDate('2021-02-27'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-25'),
-        contenu: { arm: { mecanise: true } }
-      }
+        contenu: { arm: { mecanise: true } },
+      },
     ])
     orderAndInterpretMachine([
       {
         etapeTypeId: 'vfc',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-04')
+        date: toCaminoDate('2021-10-04'),
       },
       {
         etapeTypeId: 'des',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-01')
+        date: toCaminoDate('2021-10-01'),
       },
       {
         etapeTypeId: 'aof',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-09-23')
+        date: toCaminoDate('2021-09-23'),
       },
       {
         etapeTypeId: 'eof',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-17')
+        date: toCaminoDate('2021-03-17'),
       },
       {
         etapeTypeId: 'mcr',
         etapeStatutId: 'fav',
-        date: toCaminoDate('2021-03-11')
+        date: toCaminoDate('2021-03-11'),
       },
       {
         etapeTypeId: 'vfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-03-10')
+        date: toCaminoDate('2021-03-10'),
       },
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-29')
+        date: toCaminoDate('2021-02-29'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-28')
+        date: toCaminoDate('2021-02-28'),
       },
       {
         etapeTypeId: 'dae',
         etapeStatutId: 'exe',
-        date: toCaminoDate('2021-02-27')
+        date: toCaminoDate('2021-02-27'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-25'),
-        contenu: { arm: { mecanise: true } }
-      }
+        contenu: { arm: { mecanise: true } },
+      },
     ])
 
     orderAndInterpretMachine([
       {
         etapeTypeId: 'vfc',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-05')
+        date: toCaminoDate('2021-10-05'),
       },
       {
         etapeTypeId: 'vfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-04')
+        date: toCaminoDate('2021-10-04'),
       },
       {
         etapeTypeId: 'des',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-10-01')
+        date: toCaminoDate('2021-10-01'),
       },
       {
         etapeTypeId: 'mcp',
         etapeStatutId: 'com',
-        date: toCaminoDate('2021-02-29')
+        date: toCaminoDate('2021-02-29'),
       },
       {
         etapeTypeId: 'pfd',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-28')
+        date: toCaminoDate('2021-02-28'),
       },
       {
         etapeTypeId: 'dae',
         etapeStatutId: 'exe',
-        date: toCaminoDate('2021-02-27')
+        date: toCaminoDate('2021-02-27'),
       },
       {
         etapeTypeId: 'mdp',
         etapeStatutId: 'fai',
-        date: toCaminoDate('2021-02-26')
+        date: toCaminoDate('2021-02-26'),
       },
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: toCaminoDate('2021-02-25'),
-        contenu: { arm: { mecanise: true } }
-      }
+        contenu: { arm: { mecanise: true } },
+      },
     ])
   })
 
@@ -1580,8 +1544,8 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: toCaminoDate('2019-12-10'),
-        contenu: { arm: { mecanise: false, franchissements: 3 } }
-      }
+        contenu: { arm: { mecanise: false, franchissements: 3 } },
+      },
     ])
   })
 
@@ -1591,7 +1555,7 @@ describe('vérifie l’arbre d’octroi d’ARM', () => {
     interpretMachine(armOctMachine, demarche.etapes)
     expect(armOctMachine.demarcheStatut(demarche.etapes)).toStrictEqual({
       demarcheStatut: demarche.demarcheStatutId,
-      publique: demarche.demarchePublique
+      publique: demarche.demarchePublique,
     })
   })
 })

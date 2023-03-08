@@ -21,15 +21,15 @@ class TitresPoints extends Model {
       description: { type: ['string', 'null'] },
       coordonnees: {
         type: 'object',
-        properties: { x: { type: 'number' }, y: { type: 'number' } }
+        properties: { x: { type: 'number' }, y: { type: 'number' } },
       },
       groupe: { type: 'integer' },
       contour: { type: 'integer' },
       point: { type: 'integer' },
       lot: { type: ['integer', 'null'] },
       securite: { type: ['boolean', 'null'] },
-      subsidiaire: { type: ['boolean', 'null'] }
-    }
+      subsidiaire: { type: ['boolean', 'null'] },
+    },
   }
 
   static relationMappings = () => ({
@@ -38,37 +38,23 @@ class TitresPoints extends Model {
       modelClass: TitresPointsReferences,
       join: {
         from: 'titresPoints.id',
-        to: 'titresPointsReferences.titrePointId'
-      }
-    }
+        to: 'titresPointsReferences.titrePointId',
+      },
+    },
   })
 
   public static modifiers: Modifiers = {
     orderAsc: builder => {
-      builder.orderBy([
-        { column: 'groupe' },
-        { column: 'contour' },
-        { column: 'point' }
-      ])
-    }
+      builder.orderBy([{ column: 'groupe' }, { column: 'contour' }, { column: 'point' }])
+    },
   }
 
   async $beforeInsert(context: QueryContext) {
     if (!this.id) {
       this.id = idGenerate()
     }
-    if (
-      !this.slug &&
-      this.titreEtapeId &&
-      this.groupe &&
-      this.contour &&
-      this.point
-    ) {
-      this.slug = `${this.titreEtapeId}-g${this.groupe
-        .toString()
-        .padStart(2, '0')}-c${this.contour
-        .toString()
-        .padStart(2, '0')}-p${this.point.toString().padStart(3, '0')}`
+    if (!this.slug && this.titreEtapeId && this.groupe && this.contour && this.point) {
+      this.slug = `${this.titreEtapeId}-g${this.groupe.toString().padStart(2, '0')}-c${this.contour.toString().padStart(2, '0')}-p${this.point.toString().padStart(3, '0')}`
     }
 
     return super.$beforeInsert(context)

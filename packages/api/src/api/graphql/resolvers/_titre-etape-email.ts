@@ -7,18 +7,11 @@ import { titreUrlGet } from '../../../business/utils/urls-get.js'
 import { EmailAdministration } from '../../../tools/api-mailjet/types.js'
 import { UserNotNull } from 'camino-common/src/roles.js'
 
-const emailForAdministrationContentFormat = (
-  titreTypeId: string,
-  etapeNom: string,
-  titreId: string,
-  user: UserNotNull
-) => {
+const emailForAdministrationContentFormat = (titreTypeId: string, etapeNom: string, titreId: string, user: UserNotNull) => {
   const titreUrl = titreUrlGet(titreId)
 
   return `
-  <h3>L’étape « ${etapeNom} » d’une demande d’${
-    titreTypeId === 'arm' ? 'ARM' : 'AEX'
-  } vient d’être réalisée.</h3>
+  <h3>L’étape « ${etapeNom} » d’une demande d’${titreTypeId === 'arm' ? 'ARM' : 'AEX'} vient d’être réalisée.</h3>
   
   <hr>
   
@@ -28,15 +21,8 @@ const emailForAdministrationContentFormat = (
   `
 }
 
-const etapeStatusUpdated = (
-  etape: Pick<ITitreEtape, 'typeId' | 'statutId'>,
-  typeId: string,
-  statusId: string,
-  oldEtape?: Pick<ITitreEtape, 'statutId'>
-) =>
-  etape.typeId === typeId &&
-  (!oldEtape || oldEtape.statutId !== statusId) &&
-  etape.statutId === statusId
+const etapeStatusUpdated = (etape: Pick<ITitreEtape, 'typeId' | 'statutId'>, typeId: string, statusId: string, oldEtape?: Pick<ITitreEtape, 'statutId'>) =>
+  etape.typeId === typeId && (!oldEtape || oldEtape.statutId !== statusId) && etape.statutId === statusId
 
 // VisibleForTesting
 export const emailsForAdministrationsGet = (
@@ -91,12 +77,7 @@ export const emailsForAdministrationsGet = (
   }
 
   const subject = `${etapeType?.nom} | ${title}`
-  const content = emailForAdministrationContentFormat(
-    titreTypeId,
-    etapeType?.nom ?? '',
-    titreId,
-    user
-  )
+  const content = emailForAdministrationContentFormat(titreTypeId, etapeType?.nom ?? '', titreId, user)
 
   return { subject, content, emails }
 }
@@ -110,50 +91,27 @@ const titreEtapeAdministrationsEmailsSend = async (
   user: UserNotNull,
   oldEtape?: ITitreEtape
 ) => {
-  const emailsForAdministrations = emailsForAdministrationsGet(
-    etape,
-    etapeType,
-    demarcheTypeId,
-    titreId,
-    titreTypeId,
-    user,
-    oldEtape
-  )
+  const emailsForAdministrations = emailsForAdministrationsGet(etape, etapeType, demarcheTypeId, titreId, titreTypeId, user, oldEtape)
 
   if (emailsForAdministrations) {
-    await emailsSend(
-      emailsForAdministrations.emails,
-      emailsForAdministrations.subject,
-      emailsForAdministrations.content
-    )
+    await emailsSend(emailsForAdministrations.emails, emailsForAdministrations.subject, emailsForAdministrations.content)
   }
 }
 
-const titreEtapeUtilisateursEmailsSend = async (
-  etape: ITitreEtape,
-  etapeType: IEtapeType,
-  demarcheTypeId: string,
-  titreId: string
-) => {
+const titreEtapeUtilisateursEmailsSend = async (etape: ITitreEtape, etapeType: IEtapeType, demarcheTypeId: string, titreId: string) => {
   const utilisateursEmails = [] as string[]
 
   const utilisateursTitres = await utilisateursTitresGet(titreId, {
-    fields: { utilisateur: { id: {}, entreprises: { id: {} } } }
+    fields: { utilisateur: { id: {}, entreprises: { id: {} } } },
   })
 
-  const utilisateurs = utilisateursTitres
-    ?.map(utilisateurTitre => utilisateurTitre.utilisateur)
-    .filter(utilisateur => !!utilisateur && !!utilisateur.email)
+  const utilisateurs = utilisateursTitres?.map(utilisateurTitre => utilisateurTitre.utilisateur).filter(utilisateur => !!utilisateur && !!utilisateur.email)
 
   for (const utilisateur of utilisateurs) {
     if (utilisateur) {
       const user = formatUser(utilisateur)
       // On vérifie que l’utilisateur puisse voir l’étape
-      const titreEtape = await titreEtapeGet(
-        etape.id,
-        { fields: { id: {} } },
-        user
-      )
+      const titreEtape = await titreEtapeGet(etape.id, { fields: { id: {} } }, user)
       if (titreEtape) {
         utilisateursEmails.push(user.email)
       }

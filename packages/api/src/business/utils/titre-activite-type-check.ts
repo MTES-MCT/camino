@@ -1,8 +1,5 @@
 import { IActiviteTypePays, ICommune, ITitreType } from '../../types.js'
-import {
-  Departements,
-  isDepartementId
-} from 'camino-common/src/static/departement.js'
+import { Departements, isDepartementId } from 'camino-common/src/static/departement.js'
 import { Regions } from 'camino-common/src/static/region.js'
 
 /**
@@ -20,10 +17,7 @@ export interface TitreReduced {
   typeId: string
   communes?: Pick<ICommune, 'departementId'>[] | undefined | null
 }
-export const titreActiviteTypeCheck = (
-  activiteType: ActiviteTypeReduced,
-  titre: TitreReduced
-) => {
+export const titreActiviteTypeCheck = (activiteType: ActiviteTypeReduced, titre: TitreReduced) => {
   // si le type d'activité est relié au type de titre
 
   if (!activiteType.activitesTypesPays) {
@@ -34,9 +28,7 @@ export const titreActiviteTypeCheck = (
     throw new Error('les communes du titre ne sont pas chargées')
   }
 
-  if (
-    activiteType.titresTypes.some(titreType => titreType.id === titre.typeId)
-  ) {
+  if (activiteType.titresTypes.some(titreType => titreType.id === titre.typeId)) {
     const titrePaysIds = titre.communes
       ?.map(({ departementId }) => departementId)
       .filter(isDepartementId)
@@ -46,11 +38,7 @@ export const titreActiviteTypeCheck = (
     return (
       // et que le type d'activité n'est relié à aucun pays
       // ou que le type d'activite est relié à l'un des pays du titre
-      !activiteType.activitesTypesPays.length ||
-      (!!titrePaysIds?.length &&
-        activiteType.activitesTypesPays.some(({ paysId }) =>
-          titrePaysIds.some(titrePaysId => paysId === titrePaysId)
-        ))
+      !activiteType.activitesTypesPays.length || (!!titrePaysIds?.length && activiteType.activitesTypesPays.some(({ paysId }) => titrePaysIds.some(titrePaysId => paysId === titrePaysId)))
     )
   }
 

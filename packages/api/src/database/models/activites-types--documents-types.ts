@@ -14,8 +14,8 @@ class ActivitesTypesDocumentsTypes extends Model {
     properties: {
       activiteTypeId: { type: 'string', maxLength: 3 },
       documentTypeId: { type: 'string', maxLength: 3 },
-      optionnel: { type: ['boolean', 'null'] }
-    }
+      optionnel: { type: ['boolean', 'null'] },
+    },
   }
 
   public static idColumn = ['activiteTypeId', 'documentTypeId']

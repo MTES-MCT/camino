@@ -9,9 +9,7 @@ export type Props = {
 export const Pill: FunctionalComponent<Props> = (props, context) => {
   return (
     <span class={`cap-first small bold`}>
-      <span class={`${props.color ?? 'bg-neutral'} color-bg pill py-xs px-s`}>
-        {context.slots.default ? context.slots.default() : null}
-      </span>
+      <span class={`${props.color ?? 'bg-neutral'} color-bg pill py-xs px-s`}>{context.slots.default ? context.slots.default() : null}</span>
     </span>
   )
 }

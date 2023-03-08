@@ -19,8 +19,8 @@ class TitresTypes extends Model {
       typeId: { type: 'string', maxLength: 3 },
       domaineId: { type: 'string', maxLength: 3 },
       archive: { type: ['boolean', 'null'] },
-      contenuIds: { type: ['object', 'null'] }
-    }
+      contenuIds: { type: ['object', 'null'] },
+    },
   }
 
   static relationMappings = () => ({
@@ -29,8 +29,8 @@ class TitresTypes extends Model {
       modelClass: TitresTypesTypes,
       join: {
         from: 'titresTypes.typeId',
-        to: 'titresTypesTypes.id'
-      }
+        to: 'titresTypesTypes.id',
+      },
     },
 
     domaine: {
@@ -38,15 +38,15 @@ class TitresTypes extends Model {
       modelClass: Domaines,
       join: {
         from: 'titresTypes.domaineId',
-        to: 'domaines.id'
-      }
-    }
+        to: 'domaines.id',
+      },
+    },
   })
 
   public static modifiers: Modifiers = {
     orderAsc: builder => {
       builder.joinRelated('type').orderBy('type.ordre', 'asc')
-    }
+    },
   }
 }
 

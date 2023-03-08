@@ -29,8 +29,8 @@ class TitresDemarches extends Model {
       statutId: { type: 'string', maxLength: 3 },
       ordre: { type: 'integer' },
       description: { type: ['string', 'null'] },
-      archive: { type: 'boolean' }
-    }
+      archive: { type: 'boolean' },
+    },
   }
 
   static relationMappings = () => ({
@@ -40,8 +40,8 @@ class TitresDemarches extends Model {
       join: {
         from: 'titresDemarches.typeId',
         to: 'demarchesTypes.id',
-        extra: { titreId: 'titresDemarches.titreId' }
-      }
+        extra: { titreId: 'titresDemarches.titreId' },
+      },
     },
 
     // todo: pourquoi ne pas utiliser la relation `titre` ?
@@ -52,10 +52,10 @@ class TitresDemarches extends Model {
         from: 'titresDemarches.titreId',
         through: {
           from: 'titres.id',
-          to: 'titres.typeId'
+          to: 'titres.typeId',
         },
-        to: 'titresTypes.id'
-      }
+        to: 'titresTypes.id',
+      },
     },
 
     titre: {
@@ -63,8 +63,8 @@ class TitresDemarches extends Model {
       modelClass: Titres,
       join: {
         from: 'titresDemarches.titreId',
-        to: 'titres.id'
-      }
+        to: 'titres.id',
+      },
     },
 
     etapes: {
@@ -72,8 +72,8 @@ class TitresDemarches extends Model {
       modelClass: TitresEtapes,
       join: {
         from: 'titresDemarches.id',
-        to: 'titresEtapes.titreDemarcheId'
-      }
+        to: 'titresEtapes.titreDemarcheId',
+      },
     },
 
     phase: {
@@ -81,8 +81,8 @@ class TitresDemarches extends Model {
       modelClass: TitresPhases,
       join: {
         from: 'titresDemarches.id',
-        to: 'titresPhases.titreDemarcheId'
-      }
+        to: 'titresPhases.titreDemarcheId',
+      },
     },
 
     parents: {
@@ -92,10 +92,10 @@ class TitresDemarches extends Model {
         from: 'titresDemarches.id',
         through: {
           from: 'titresDemarchesLiens.enfantTitreDemarcheId',
-          to: 'titresDemarchesLiens.parentTitreDemarcheId'
+          to: 'titresDemarchesLiens.parentTitreDemarcheId',
         },
-        to: 'titresDemarches.id'
-      }
+        to: 'titresDemarches.id',
+      },
     },
 
     enfants: {
@@ -105,17 +105,17 @@ class TitresDemarches extends Model {
         from: 'titresDemarches.id',
         through: {
           from: 'titresDemarchesLiens.parentTitreDemarcheId',
-          to: 'titresDemarchesLiens.enfantTitreDemarcheId'
+          to: 'titresDemarchesLiens.enfantTitreDemarcheId',
         },
-        to: 'titresDemarches.id'
-      }
-    }
+        to: 'titresDemarches.id',
+      },
+    },
   })
 
   public static modifiers: Modifiers = {
     orderDesc: builder => {
       builder.orderBy('ordre', 'desc')
-    }
+    },
   }
 
   async $beforeInsert(context: QueryContext) {

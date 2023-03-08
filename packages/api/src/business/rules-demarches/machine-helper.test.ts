@@ -11,13 +11,13 @@ describe('isEtapesOk', () => {
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2021-02-26')
+          date: toCaminoDate('2021-02-26'),
         },
         {
           etapeTypeId: 'mdp',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2021-02-10')
-        }
+          date: toCaminoDate('2021-02-10'),
+        },
       ])
     ).toBe(false)
   })
@@ -31,100 +31,100 @@ describe('demarcheStatut', () => {
           date: toCaminoDate('2020-07-27'),
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          contenu: { arm: { mecanise: true, franchissements: 1 } }
+          contenu: { arm: { mecanise: true, franchissements: 1 } },
         },
         {
           date: toCaminoDate('2021-07-27'),
           etapeTypeId: 'mdp',
-          etapeStatutId: 'fai'
+          etapeStatutId: 'fai',
         },
         {
           date: toCaminoDate('2021-07-28'),
           etapeTypeId: 'dae',
-          etapeStatutId: 'exe'
+          etapeStatutId: 'exe',
         },
         {
           date: toCaminoDate('2021-07-28'),
           etapeTypeId: 'pfd',
-          etapeStatutId: 'fai'
+          etapeStatutId: 'fai',
         },
         {
           date: toCaminoDate('2021-07-28'),
           etapeTypeId: 'mcp',
-          etapeStatutId: 'com'
+          etapeStatutId: 'com',
         },
         {
           date: toCaminoDate('2021-07-29'),
           etapeTypeId: 'vfd',
-          etapeStatutId: 'fai'
+          etapeStatutId: 'fai',
         },
         {
           date: toCaminoDate('2021-09-16'),
           etapeTypeId: 'mcr',
-          etapeStatutId: 'fav'
+          etapeStatutId: 'fav',
         },
         {
           date: toCaminoDate('2021-09-16'),
           etapeTypeId: 'eof',
-          etapeStatutId: 'fai'
+          etapeStatutId: 'fai',
         },
         {
           date: toCaminoDate('2021-12-13'),
           etapeTypeId: 'rde',
           etapeStatutId: 'fav',
-          contenu: { arm: { franchissements: 1 } }
+          contenu: { arm: { franchissements: 1 } },
         },
         {
           date: toCaminoDate('2021-12-20'),
           etapeTypeId: 'aof',
-          etapeStatutId: 'def'
+          etapeStatutId: 'def',
         },
         {
           date: toCaminoDate('2022-02-11'),
           etapeTypeId: 'sca',
-          etapeStatutId: 'fai'
+          etapeStatutId: 'fai',
         },
         {
           date: toCaminoDate('2022-02-11'),
           etapeTypeId: 'aca',
-          etapeStatutId: 'ajo'
+          etapeStatutId: 'ajo',
         },
         {
           date: toCaminoDate('2022-02-23'),
           etapeTypeId: 'mna',
-          etapeStatutId: 'fai'
+          etapeStatutId: 'fai',
         },
         {
           date: toCaminoDate('2022-03-16'),
           etapeTypeId: 'sca',
-          etapeStatutId: 'fai'
+          etapeStatutId: 'fai',
         },
         {
           date: toCaminoDate('2022-03-16'),
           etapeTypeId: 'aca',
-          etapeStatutId: 'fav'
+          etapeStatutId: 'fav',
         },
         {
           date: toCaminoDate('2022-03-31'),
           etapeTypeId: 'mnb',
-          etapeStatutId: 'fai'
+          etapeStatutId: 'fai',
         },
         {
           date: toCaminoDate('2022-04-26'),
           etapeTypeId: 'pfc',
-          etapeStatutId: 'fai'
+          etapeStatutId: 'fai',
         },
         {
           date: toCaminoDate('2022-04-26'),
           etapeTypeId: 'vfc',
-          etapeStatutId: 'fai'
+          etapeStatutId: 'fai',
         },
         {
           date: toCaminoDate('2022-04-26'),
           etapeTypeId: 'sco',
           etapeStatutId: 'fai',
-          contenu: { arm: { mecanise: true } }
-        }
+          contenu: { arm: { mecanise: true } },
+        },
       ])
     ).toStrictEqual({ demarcheStatut: 'acc', publique: true })
   })
@@ -136,18 +136,18 @@ describe('whoIsBlocking', () => {
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2021-02-01')
+          date: toCaminoDate('2021-02-01'),
         },
         {
           etapeTypeId: 'mdp',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2021-02-02')
+          date: toCaminoDate('2021-02-02'),
         },
         {
           etapeTypeId: 'pfd',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2021-02-03')
-        }
+          date: toCaminoDate('2021-02-03'),
+        },
       ])
     ).toStrictEqual([ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']])
   })
@@ -158,23 +158,23 @@ describe('whoIsBlocking', () => {
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2021-02-01')
+          date: toCaminoDate('2021-02-01'),
         },
         {
           etapeTypeId: 'mdp',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2021-02-02')
+          date: toCaminoDate('2021-02-02'),
         },
         {
           etapeTypeId: 'pfd',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2021-02-03')
+          date: toCaminoDate('2021-02-03'),
         },
         {
           etapeTypeId: 'mcp',
           etapeStatutId: 'com',
-          date: toCaminoDate('2021-02-04')
-        }
+          date: toCaminoDate('2021-02-04'),
+        },
       ])
     ).toStrictEqual([ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']])
   })
@@ -185,33 +185,33 @@ describe('whoIsBlocking', () => {
         {
           etapeTypeId: 'mfr',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2021-02-01')
+          date: toCaminoDate('2021-02-01'),
         },
         {
           etapeTypeId: 'mdp',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2021-02-02')
+          date: toCaminoDate('2021-02-02'),
         },
         {
           etapeTypeId: 'pfd',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2021-02-03')
+          date: toCaminoDate('2021-02-03'),
         },
         {
           etapeTypeId: 'mcp',
           etapeStatutId: 'com',
-          date: toCaminoDate('2021-02-04')
+          date: toCaminoDate('2021-02-04'),
         },
         {
           etapeTypeId: 'vfd',
           etapeStatutId: 'fai',
-          date: toCaminoDate('2021-02-05')
+          date: toCaminoDate('2021-02-05'),
         },
         {
           etapeTypeId: 'mcr',
           etapeStatutId: 'fav',
-          date: toCaminoDate('2021-02-06')
-        }
+          date: toCaminoDate('2021-02-06'),
+        },
       ])
     ).toStrictEqual([])
   })

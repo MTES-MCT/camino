@@ -9,7 +9,7 @@ export const ACTIVITES_TYPES_IDS = {
   "rapport financier d'exploration": 'pmb',
   "rapport environnemental d'exploration": 'pmc',
   "rapport social et économique d'exploration": 'pmd',
-  "rapport d'exploitation (permis et concessions W)": 'wrp'
+  "rapport d'exploitation (permis et concessions W)": 'wrp',
 } as const
 
 export const ActivitesTypesIds = Object.values(ACTIVITES_TYPES_IDS)
@@ -53,7 +53,7 @@ export const ActivitesTypes: {
     sections: [
       {
         id: 'substancesFiscales',
-        nom: 'Production annuelle'
+        nom: 'Production annuelle',
       },
       {
         id: 'complement',
@@ -64,17 +64,17 @@ export const ActivitesTypes: {
             type: 'textarea',
             dateDebut: toCaminoDate('2018-01-01'),
             optionnel: true,
-            description: 'Toute information utile à la compréhension de la production déclarée.'
-          }
-        ]
-      }
+            description: 'Toute information utile à la compréhension de la production déclarée.',
+          },
+        ],
+      },
     ],
     frequenceId: 'ann',
     dateDebut: toCaminoDate('2020-01-01'),
     delaiMois: 11,
     ordre: 2,
     description:
-      '<p>La production annuelle est requise en vertu des <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006179968" target="_blank">article 1519</a>, <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663002" target="_blank">article 1587</a> et <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006162672?init=true&page=1&query=1588&searchField=ALL&tab_selection=all&anchor=LEGIARTI000006306371#LEGIARTI000006306371" target="_blank">article 1588</a> du code général des impôts relatifs au calcul de la redevance départementale et communale des mines (RDCM).</p><p>Le rapport annuel d\'exploitation est requis en vertu de l\'<a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000023505020/2021-04-14/" target="_blank">article L. 172-1</a> du code minier et <a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000033196097" target="_blank">article 35</a> du décret 2006/649 du 2 juin 2006.</p>'
+      '<p>La production annuelle est requise en vertu des <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006179968" target="_blank">article 1519</a>, <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663002" target="_blank">article 1587</a> et <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006162672?init=true&page=1&query=1588&searchField=ALL&tab_selection=all&anchor=LEGIARTI000006306371#LEGIARTI000006306371" target="_blank">article 1588</a> du code général des impôts relatifs au calcul de la redevance départementale et communale des mines (RDCM).</p><p>Le rapport annuel d\'exploitation est requis en vertu de l\'<a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000023505020/2021-04-14/" target="_blank">article L. 172-1</a> du code minier et <a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000033196097" target="_blank">article 35</a> du décret 2006/649 du 2 juin 2006.</p>',
   },
   grp: {
     id: 'grp',
@@ -88,67 +88,67 @@ export const ActivitesTypes: {
             nom: 'Or brut extrait (g)',
             type: 'number',
             dateDebut: toCaminoDate('2018-01-01'),
-            description: 'Masse d’or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).'
+            description: 'Masse d’or brut en sortie de mine extrait au cours du trimestre (exemple : masse sous la forme de concentré gravimétrique).',
           },
           {
             id: 'orExtrait',
             nom: 'Or extrait (g)',
             type: 'number',
             dateFin: toCaminoDate('2018-01-01'),
-            description: "Masse d'or brut en sortie de mine, ou nette obtenue  après traitement métallurgique, extrait au cours du trimestre."
+            description: "Masse d'or brut en sortie de mine, ou nette obtenue  après traitement métallurgique, extrait au cours du trimestre.",
           },
           {
             id: 'volumeMinerai',
             nom: 'Minerai extrait (m3)',
             type: 'number',
             dateFin: toCaminoDate('2018-01-01'),
-            description: 'Volume en mètre cube de minerai extrait au cours du trimestre.'
+            description: 'Volume en mètre cube de minerai extrait au cours du trimestre.',
           },
           {
             id: 'mercure',
             nom: 'Mercure récupéré (g)',
             type: 'number',
-            description: 'Masse en gramme de l’ensemble des produits contaminés envoyés en traitement au cours du trimestre.'
+            description: 'Masse en gramme de l’ensemble des produits contaminés envoyés en traitement au cours du trimestre.',
           },
           {
             id: 'carburantDetaxe',
             nom: 'Carburant détaxé (l)',
             type: 'number',
             dateDebut: toCaminoDate('2018-01-01'),
-            description: 'Volume total en litre de carburant détaxé consommé au cours du trimestre par les travaux réalisés sur le chantier.'
+            description: 'Volume total en litre de carburant détaxé consommé au cours du trimestre par les travaux réalisés sur le chantier.',
           },
           {
             id: 'carburantConventionnel',
             nom: 'Carburant conventionnel (l)',
             type: 'number',
-            description: 'Volume total en litre de carburant conventionnel consommé au cours du trimestre par les travaux réalisés sur le chantier.'
+            description: 'Volume total en litre de carburant conventionnel consommé au cours du trimestre par les travaux réalisés sur le chantier.',
           },
           {
             id: 'pompes',
             nom: 'Pompes actives',
             type: 'number',
             dateDebut: toCaminoDate('2018-01-01'),
-            description: 'Nombre moyen de pompes actives au cours du trimestre utilisées sur le chantier (pompe à gravier, pompe de relevage…).'
+            description: 'Nombre moyen de pompes actives au cours du trimestre utilisées sur le chantier (pompe à gravier, pompe de relevage…).',
           },
           {
             id: 'pelles',
             nom: 'Pelles actives',
             type: 'number',
             dateDebut: toCaminoDate('2018-01-01'),
-            description: 'Nombre moyen de pelles actives au cours du trimestre utilisées sur le chantier (aménagement, exploitation, réhabilitation).'
+            description: 'Nombre moyen de pelles actives au cours du trimestre utilisées sur le chantier (aménagement, exploitation, réhabilitation).',
           },
           {
             id: 'effectifs',
             nom: 'Effectifs',
             type: 'number',
-            description: 'Nombre moyen de salariés sur le chantier au cours du trimestre.'
+            description: 'Nombre moyen de salariés sur le chantier au cours du trimestre.',
           },
           {
             id: 'depensesTotales',
             nom: 'Dépenses totales (euros)',
             type: 'number',
             dateFin: toCaminoDate('2018-01-01'),
-            description: "Montant en euros des dépenses sur l'exploitation."
+            description: "Montant en euros des dépenses sur l'exploitation.",
           },
           {
             id: 'environnement',
@@ -156,9 +156,9 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2018-01-01'),
             description:
-              'Montant en euros des investissements consentis au cours du trimestre listés à l’<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" rel="noopener noreferrer">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.'
-          }
-        ]
+              'Montant en euros des investissements consentis au cours du trimestre listés à l’<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" rel="noopener noreferrer">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous êtres demandés par l’administration.',
+          },
+        ],
       },
       {
         id: 'travaux',
@@ -171,27 +171,27 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'nonDebutes',
-                nom: 'non débutés'
+                nom: 'non débutés',
               },
               {
                 id: 'exploitationEnCours',
-                nom: 'exploitation en cours'
+                nom: 'exploitation en cours',
               },
               {
                 id: 'arretTemporaire',
-                nom: 'arrêt temporaire'
+                nom: 'arrêt temporaire',
               },
               {
                 id: 'rehabilitation',
-                nom: 'réhabilitation'
+                nom: 'réhabilitation',
               },
               {
                 id: 'arretDefinitif',
-                nom: 'arrêt définitif (après réhabilitation)'
-              }
+                nom: 'arrêt définitif (après réhabilitation)',
+              },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [1]
+            periodesIds: [1],
           },
           {
             id: '2',
@@ -200,27 +200,27 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'nonDebutes',
-                nom: 'non débutés'
+                nom: 'non débutés',
               },
               {
                 id: 'exploitationEnCours',
-                nom: 'exploitation en cours'
+                nom: 'exploitation en cours',
               },
               {
                 id: 'arretTemporaire',
-                nom: 'arrêt temporaire'
+                nom: 'arrêt temporaire',
               },
               {
                 id: 'rehabilitation',
-                nom: 'réhabilitation'
+                nom: 'réhabilitation',
               },
               {
                 id: 'arretDefinitif',
-                nom: 'arrêt définitif (après réhabilitation)'
-              }
+                nom: 'arrêt définitif (après réhabilitation)',
+              },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [1]
+            periodesIds: [1],
           },
           {
             id: '3',
@@ -229,27 +229,27 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'nonDebutes',
-                nom: 'non débutés'
+                nom: 'non débutés',
               },
               {
                 id: 'exploitationEnCours',
-                nom: 'exploitation en cours'
+                nom: 'exploitation en cours',
               },
               {
                 id: 'arretTemporaire',
-                nom: 'arrêt temporaire'
+                nom: 'arrêt temporaire',
               },
               {
                 id: 'rehabilitation',
-                nom: 'réhabilitation'
+                nom: 'réhabilitation',
               },
               {
                 id: 'arretDefinitif',
-                nom: 'arrêt définitif (après réhabilitation)'
-              }
+                nom: 'arrêt définitif (après réhabilitation)',
+              },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [1]
+            periodesIds: [1],
           },
           {
             id: '4',
@@ -258,27 +258,27 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'nonDebutes',
-                nom: 'non débutés'
+                nom: 'non débutés',
               },
               {
                 id: 'exploitationEnCours',
-                nom: 'exploitation en cours'
+                nom: 'exploitation en cours',
               },
               {
                 id: 'arretTemporaire',
-                nom: 'arrêt temporaire'
+                nom: 'arrêt temporaire',
               },
               {
                 id: 'rehabilitation',
-                nom: 'réhabilitation'
+                nom: 'réhabilitation',
               },
               {
                 id: 'arretDefinitif',
-                nom: 'arrêt définitif (après réhabilitation)'
-              }
+                nom: 'arrêt définitif (après réhabilitation)',
+              },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [2]
+            periodesIds: [2],
           },
           {
             id: '5',
@@ -287,27 +287,27 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'nonDebutes',
-                nom: 'non débutés'
+                nom: 'non débutés',
               },
               {
                 id: 'exploitationEnCours',
-                nom: 'exploitation en cours'
+                nom: 'exploitation en cours',
               },
               {
                 id: 'arretTemporaire',
-                nom: 'arrêt temporaire'
+                nom: 'arrêt temporaire',
               },
               {
                 id: 'rehabilitation',
-                nom: 'réhabilitation'
+                nom: 'réhabilitation',
               },
               {
                 id: 'arretDefinitif',
-                nom: 'arrêt définitif (après réhabilitation)'
-              }
+                nom: 'arrêt définitif (après réhabilitation)',
+              },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [2]
+            periodesIds: [2],
           },
           {
             id: '6',
@@ -316,27 +316,27 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'nonDebutes',
-                nom: 'non débutés'
+                nom: 'non débutés',
               },
               {
                 id: 'exploitationEnCours',
-                nom: 'exploitation en cours'
+                nom: 'exploitation en cours',
               },
               {
                 id: 'arretTemporaire',
-                nom: 'arrêt temporaire'
+                nom: 'arrêt temporaire',
               },
               {
                 id: 'rehabilitation',
-                nom: 'réhabilitation'
+                nom: 'réhabilitation',
               },
               {
                 id: 'arretDefinitif',
-                nom: 'arrêt définitif (après réhabilitation)'
-              }
+                nom: 'arrêt définitif (après réhabilitation)',
+              },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [2]
+            periodesIds: [2],
           },
           {
             id: '7',
@@ -345,27 +345,27 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'nonDebutes',
-                nom: 'non débutés'
+                nom: 'non débutés',
               },
               {
                 id: 'exploitationEnCours',
-                nom: 'exploitation en cours'
+                nom: 'exploitation en cours',
               },
               {
                 id: 'arretTemporaire',
-                nom: 'arrêt temporaire'
+                nom: 'arrêt temporaire',
               },
               {
                 id: 'rehabilitation',
-                nom: 'réhabilitation'
+                nom: 'réhabilitation',
               },
               {
                 id: 'arretDefinitif',
-                nom: 'arrêt définitif (après réhabilitation)'
-              }
+                nom: 'arrêt définitif (après réhabilitation)',
+              },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [3]
+            periodesIds: [3],
           },
           {
             id: '8',
@@ -374,27 +374,27 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'nonDebutes',
-                nom: 'non débutés'
+                nom: 'non débutés',
               },
               {
                 id: 'exploitationEnCours',
-                nom: 'exploitation en cours'
+                nom: 'exploitation en cours',
               },
               {
                 id: 'arretTemporaire',
-                nom: 'arrêt temporaire'
+                nom: 'arrêt temporaire',
               },
               {
                 id: 'rehabilitation',
-                nom: 'réhabilitation'
+                nom: 'réhabilitation',
               },
               {
                 id: 'arretDefinitif',
-                nom: 'arrêt définitif (après réhabilitation)'
-              }
+                nom: 'arrêt définitif (après réhabilitation)',
+              },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [3]
+            periodesIds: [3],
           },
           {
             id: '9',
@@ -403,27 +403,27 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'nonDebutes',
-                nom: 'non débutés'
+                nom: 'non débutés',
               },
               {
                 id: 'exploitationEnCours',
-                nom: 'exploitation en cours'
+                nom: 'exploitation en cours',
               },
               {
                 id: 'arretTemporaire',
-                nom: 'arrêt temporaire'
+                nom: 'arrêt temporaire',
               },
               {
                 id: 'rehabilitation',
-                nom: 'réhabilitation'
+                nom: 'réhabilitation',
               },
               {
                 id: 'arretDefinitif',
-                nom: 'arrêt définitif (après réhabilitation)'
-              }
+                nom: 'arrêt définitif (après réhabilitation)',
+              },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [3]
+            periodesIds: [3],
           },
           {
             id: '10',
@@ -432,27 +432,27 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'nonDebutes',
-                nom: 'non débutés'
+                nom: 'non débutés',
               },
               {
                 id: 'exploitationEnCours',
-                nom: 'exploitation en cours'
+                nom: 'exploitation en cours',
               },
               {
                 id: 'arretTemporaire',
-                nom: 'arrêt temporaire'
+                nom: 'arrêt temporaire',
               },
               {
                 id: 'rehabilitation',
-                nom: 'réhabilitation'
+                nom: 'réhabilitation',
               },
               {
                 id: 'arretDefinitif',
-                nom: 'arrêt définitif (après réhabilitation)'
-              }
+                nom: 'arrêt définitif (après réhabilitation)',
+              },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [4]
+            periodesIds: [4],
           },
           {
             id: '11',
@@ -461,27 +461,27 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'nonDebutes',
-                nom: 'non débutés'
+                nom: 'non débutés',
               },
               {
                 id: 'exploitationEnCours',
-                nom: 'exploitation en cours'
+                nom: 'exploitation en cours',
               },
               {
                 id: 'arretTemporaire',
-                nom: 'arrêt temporaire'
+                nom: 'arrêt temporaire',
               },
               {
                 id: 'rehabilitation',
-                nom: 'réhabilitation'
+                nom: 'réhabilitation',
               },
               {
                 id: 'arretDefinitif',
-                nom: 'arrêt définitif (après réhabilitation)'
-              }
+                nom: 'arrêt définitif (après réhabilitation)',
+              },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [4]
+            periodesIds: [4],
           },
           {
             id: '12',
@@ -490,29 +490,29 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'nonDebutes',
-                nom: 'non débutés'
+                nom: 'non débutés',
               },
               {
                 id: 'exploitationEnCours',
-                nom: 'exploitation en cours'
+                nom: 'exploitation en cours',
               },
               {
                 id: 'arretTemporaire',
-                nom: 'arrêt temporaire'
+                nom: 'arrêt temporaire',
               },
               {
                 id: 'rehabilitation',
-                nom: 'réhabilitation'
+                nom: 'réhabilitation',
               },
               {
                 id: 'arretDefinitif',
-                nom: 'arrêt définitif (après réhabilitation)'
-              }
+                nom: 'arrêt définitif (après réhabilitation)',
+              },
             ],
             dateDebut: toCaminoDate('2018-01-01'),
-            periodesIds: [4]
-          }
-        ]
+            periodesIds: [4],
+          },
+        ],
       },
       {
         id: 'complement',
@@ -524,15 +524,15 @@ export const ActivitesTypes: {
             dateDebut: toCaminoDate('2018-01-01'),
             optionnel: true,
             description:
-              'Toute information sur les événements marquants du trimestre (accident, incident, arrêt ou suspension d’activité en précisant les raisons, évolution de l’exploitation, difficultés rencontrées, etc.).'
-          }
-        ]
-      }
+              'Toute information sur les événements marquants du trimestre (accident, incident, arrêt ou suspension d’activité en précisant les raisons, évolution de l’exploitation, difficultés rencontrées, etc.).',
+          },
+        ],
+      },
     ],
     frequenceId: 'tri',
     dateDebut: toCaminoDate('2018-01-01'),
     delaiMois: 19,
-    ordre: 1
+    ordre: 1,
   },
   grx: {
     id: 'grx',
@@ -540,7 +540,7 @@ export const ActivitesTypes: {
     sections: [
       {
         id: 'substancesFiscales',
-        nom: 'Production annuelle'
+        nom: 'Production annuelle',
       },
       {
         id: 'complement',
@@ -551,17 +551,17 @@ export const ActivitesTypes: {
             type: 'textarea',
             dateDebut: toCaminoDate('2018-01-01'),
             optionnel: true,
-            description: "Toute information utile à la compréhension de la production d'or net."
-          }
-        ]
-      }
+            description: "Toute information utile à la compréhension de la production d'or net.",
+          },
+        ],
+      },
     ],
     frequenceId: 'ann',
     dateDebut: toCaminoDate('2018-01-01'),
     delaiMois: 11,
     ordre: 2,
     description:
-      '<p>La production annuelle est requise en vertu des <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006179968" target="_blank">article 1519</a>, <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663002" target="_blank">article 1587</a> et <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006162672?init=true&page=1&query=1588&searchField=ALL&tab_selection=all&anchor=LEGIARTI000006306371#LEGIARTI000006306371" target="_blank">article 1588</a> du code général des impôts relatifs au calcul de la redevance départementale et communale des mines (RDCM).</p><p>Le rapport annuel d\'exploitation est requis en vertu de l\'<a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000023505020/2021-04-14/" target="_blank">article L. 172-1</a> du code minier et <a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000033196097" target="_blank">article 35</a> du décret 2006/649 du 2 juin 2006.</p>'
+      '<p>La production annuelle est requise en vertu des <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006179968" target="_blank">article 1519</a>, <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663002" target="_blank">article 1587</a> et <a href="https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006069577/LEGISCTA000006162672?init=true&page=1&query=1588&searchField=ALL&tab_selection=all&anchor=LEGIARTI000006306371#LEGIARTI000006306371" target="_blank">article 1588</a> du code général des impôts relatifs au calcul de la redevance départementale et communale des mines (RDCM).</p><p>Le rapport annuel d\'exploitation est requis en vertu de l\'<a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000023505020/2021-04-14/" target="_blank">article L. 172-1</a> du code minier et <a href="https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000033196097" target="_blank">article 35</a> du décret 2006/649 du 2 juin 2006.</p>',
   },
   pma: {
     id: 'pma',
@@ -577,7 +577,7 @@ export const ActivitesTypes: {
             type: 'text',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Exemples : LIDAR, géomètre…'
+            description: 'Exemples : LIDAR, géomètre…',
           },
           {
             id: 'surfaceLevesTopo',
@@ -585,7 +585,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Surface du titre couverte par des levés topographiques'
+            description: 'Surface du titre couverte par des levés topographiques',
           },
           {
             id: 'complementLevesTopo',
@@ -593,9 +593,9 @@ export const ActivitesTypes: {
             type: 'textarea',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Toute information complémentaire sur les levés topographiques'
-          }
-        ]
+            description: 'Toute information complémentaire sur les levés topographiques',
+          },
+        ],
       },
       {
         id: 'cartographieGeologique',
@@ -607,7 +607,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: "Surface du titre dont la cartographie géologique a été effectuée au cours de l'année"
+            description: "Surface du titre dont la cartographie géologique a été effectuée au cours de l'année",
           },
           {
             id: 'complementCartographie',
@@ -615,9 +615,9 @@ export const ActivitesTypes: {
             type: 'textarea',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Toute information complémentaire sur les activités de cartographie'
-          }
-        ]
+            description: 'Toute information complémentaire sur les activités de cartographie',
+          },
+        ],
       },
       {
         id: 'levesGeochimiques',
@@ -629,7 +629,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Surface du titre couverte par des levés géochimiques'
+            description: 'Surface du titre couverte par des levés géochimiques',
           },
           {
             id: 'lineaireLevesGeochimie',
@@ -637,7 +637,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Longueur de layon couverte par des levés géochimiques'
+            description: 'Longueur de layon couverte par des levés géochimiques',
           },
           {
             id: 'complementLevesGeochimie',
@@ -645,9 +645,9 @@ export const ActivitesTypes: {
             type: 'textarea',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Toute information complémentaire sur les levés géochimiques'
-          }
-        ]
+            description: 'Toute information complémentaire sur les levés géochimiques',
+          },
+        ],
       },
       {
         id: 'levesGeophysiques',
@@ -659,7 +659,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Surface du titre en kilomètre carré couverte par des levés de magnétisme '
+            description: 'Surface du titre en kilomètre carré couverte par des levés de magnétisme ',
           },
           {
             id: 'lineaireLevesMagnetisme',
@@ -667,7 +667,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Longueur de layon en kilomètre couverte par des levés de magnétisme'
+            description: 'Longueur de layon en kilomètre couverte par des levés de magnétisme',
           },
           {
             id: 'typeLevesMagnetisme',
@@ -676,15 +676,15 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'auSol',
-                nom: 'au sol'
+                nom: 'au sol',
               },
               {
                 id: 'aeroporte',
-                nom: 'aéroporté'
-              }
+                nom: 'aéroporté',
+              },
             ],
             dateDebut: toCaminoDate('2019-01-01'),
-            optionnel: true
+            optionnel: true,
           },
           {
             id: 'surfaceLevesSpectrometrie',
@@ -692,7 +692,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Surface du titre en kilomètre carré couverte par des levés de spectrométrie'
+            description: 'Surface du titre en kilomètre carré couverte par des levés de spectrométrie',
           },
           {
             id: 'lineaireLevesSpectrometrie',
@@ -700,7 +700,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Longueur de layon en kilomètre couverte par des levés de spectrométrie'
+            description: 'Longueur de layon en kilomètre couverte par des levés de spectrométrie',
           },
           {
             id: 'typeLevesSpectrometrie',
@@ -709,15 +709,15 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'auSol',
-                nom: 'au sol'
+                nom: 'au sol',
               },
               {
                 id: 'aeroporte',
-                nom: 'aéroporté'
-              }
+                nom: 'aéroporté',
+              },
             ],
             dateDebut: toCaminoDate('2019-01-01'),
-            optionnel: true
+            optionnel: true,
           },
           {
             id: 'surfaceLevesPolarisationProvoquee',
@@ -725,7 +725,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Surface du titre en kilomètre carré couverte par des levés de polarisation provoquée'
+            description: 'Surface du titre en kilomètre carré couverte par des levés de polarisation provoquée',
           },
           {
             id: 'lineaireLevesPolarisationProvoquee',
@@ -733,7 +733,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Longueur de layon en kilomètre couverte par des levés de polarisation provoquée'
+            description: 'Longueur de layon en kilomètre couverte par des levés de polarisation provoquée',
           },
           {
             id: 'typeLevesPolarisationProvoquee',
@@ -742,15 +742,15 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'auSol',
-                nom: 'au sol'
+                nom: 'au sol',
               },
               {
                 id: 'aeroporte',
-                nom: 'aéroporté'
-              }
+                nom: 'aéroporté',
+              },
             ],
             dateDebut: toCaminoDate('2019-01-01'),
-            optionnel: true
+            optionnel: true,
           },
           {
             id: 'surfaceLevesSismiques',
@@ -758,7 +758,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Surface du titre en kilomètre carré couverte par des levés sismiques'
+            description: 'Surface du titre en kilomètre carré couverte par des levés sismiques',
           },
           {
             id: 'lineaireLevesSismiques',
@@ -766,7 +766,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Longueur de layon en kilomètre couverte par des levés sismiques'
+            description: 'Longueur de layon en kilomètre couverte par des levés sismiques',
           },
           {
             id: 'typeLevesSismiques',
@@ -775,15 +775,15 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'auSol',
-                nom: 'au sol'
+                nom: 'au sol',
               },
               {
                 id: 'aeroporte',
-                nom: 'aéroporté'
-              }
+                nom: 'aéroporté',
+              },
             ],
             dateDebut: toCaminoDate('2019-01-01'),
-            optionnel: true
+            optionnel: true,
           },
           {
             id: 'surfaceLevesConductivite',
@@ -791,7 +791,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Surface du titre en kilomètre carré couverte par des levés de conductivité'
+            description: 'Surface du titre en kilomètre carré couverte par des levés de conductivité',
           },
           {
             id: 'lineaireLevesConductivite',
@@ -799,7 +799,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Longueur de layon en kilomètre couverte par des levés de conductivité'
+            description: 'Longueur de layon en kilomètre couverte par des levés de conductivité',
           },
           {
             id: 'typeLevesConductivite',
@@ -808,15 +808,15 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'auSol',
-                nom: 'au sol'
+                nom: 'au sol',
               },
               {
                 id: 'aeroporte',
-                nom: 'aéroporté'
-              }
+                nom: 'aéroporté',
+              },
             ],
             dateDebut: toCaminoDate('2019-01-01'),
-            optionnel: true
+            optionnel: true,
           },
           {
             id: 'surfaceLevesAutre',
@@ -824,7 +824,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: "Surface du titre en kilomètre carré couverte par des levés par d'autres méthodes"
+            description: "Surface du titre en kilomètre carré couverte par des levés par d'autres méthodes",
           },
           {
             id: 'lineaireLevesAutre',
@@ -832,7 +832,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: "Longueur de layon en kilomètre couverte par des levés par d'autres méthodes"
+            description: "Longueur de layon en kilomètre couverte par des levés par d'autres méthodes",
           },
           {
             id: 'typeLevesAutre',
@@ -841,15 +841,15 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'auSol',
-                nom: 'au sol'
+                nom: 'au sol',
               },
               {
                 id: 'aeroporte',
-                nom: 'aéroporté'
-              }
+                nom: 'aéroporté',
+              },
             ],
             dateDebut: toCaminoDate('2019-01-01'),
-            optionnel: true
+            optionnel: true,
           },
           {
             id: 'complementLevesGeochimie',
@@ -857,9 +857,9 @@ export const ActivitesTypes: {
             type: 'textarea',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Toute information complémentaire sur les levés géophysique'
-          }
-        ]
+            description: 'Toute information complémentaire sur les levés géophysique',
+          },
+        ],
       },
       {
         id: 'trancheesPuits',
@@ -871,7 +871,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Nombre de puits forés'
+            description: 'Nombre de puits forés',
           },
           {
             id: 'lineaireTranchees',
@@ -879,7 +879,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Longueur de tranchée de prospection ouverte'
+            description: 'Longueur de tranchée de prospection ouverte',
           },
           {
             id: 'complementTrancheesPuits',
@@ -887,9 +887,9 @@ export const ActivitesTypes: {
             type: 'textarea',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Toute information complémentaire sur les tranchées et puits'
-          }
-        ]
+            description: 'Toute information complémentaire sur les tranchées et puits',
+          },
+        ],
       },
       {
         id: 'sondages',
@@ -901,7 +901,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: "Nombre de sondages effectués à l'aide d'une tarière"
+            description: "Nombre de sondages effectués à l'aide d'une tarière",
           },
           {
             id: 'profondeurMaxSondagesTariere',
@@ -909,7 +909,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Profondeur maximale atteinte par les sondages tarière'
+            description: 'Profondeur maximale atteinte par les sondages tarière',
           },
           {
             id: 'profondeurMoySondagesTariere',
@@ -917,7 +917,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Profondeur moyenne atteinte par les sondages tarière'
+            description: 'Profondeur moyenne atteinte par les sondages tarière',
           },
           {
             id: 'lineaireSondagesTarieres',
@@ -925,7 +925,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Longueur du linéaire de sondages tarière'
+            description: 'Longueur du linéaire de sondages tarière',
           },
           {
             id: 'nombreSondagesDestructifs',
@@ -933,7 +933,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: "Nombre de sondages effectués à l'aide d'une destructifs"
+            description: "Nombre de sondages effectués à l'aide d'une destructifs",
           },
           {
             id: 'profondeurMaxSondagesDestructifs',
@@ -941,7 +941,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Profondeur maximale atteinte par les sondages destructifs'
+            description: 'Profondeur maximale atteinte par les sondages destructifs',
           },
           {
             id: 'profondeurMoySondagesDestructifs',
@@ -949,7 +949,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Profondeur moyenne atteinte par les sondages destructifs'
+            description: 'Profondeur moyenne atteinte par les sondages destructifs',
           },
           {
             id: 'lineaireSondagesDestructifss',
@@ -957,7 +957,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Longueur du linéaire de sondages destructifs'
+            description: 'Longueur du linéaire de sondages destructifs',
           },
           {
             id: 'nombreSondagesCarottes',
@@ -965,7 +965,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: "Nombre de sondages effectués à l'aide d'une carottés"
+            description: "Nombre de sondages effectués à l'aide d'une carottés",
           },
           {
             id: 'profondeurMaxSondagesCarottes',
@@ -973,7 +973,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Profondeur maximale atteinte par les sondages carottés'
+            description: 'Profondeur maximale atteinte par les sondages carottés',
           },
           {
             id: 'profondeurMoySondagesCarottes',
@@ -981,7 +981,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Profondeur moyenne atteinte par les sondages carottés'
+            description: 'Profondeur moyenne atteinte par les sondages carottés',
           },
           {
             id: 'lineaireSondagesCarottes',
@@ -989,7 +989,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Longueur du linéaire de sondages carottés'
+            description: 'Longueur du linéaire de sondages carottés',
           },
           {
             id: 'complementSondages',
@@ -997,9 +997,9 @@ export const ActivitesTypes: {
             type: 'textarea',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Toute information complémentaire sur les sondages'
-          }
-        ]
+            description: 'Toute information complémentaire sur les sondages',
+          },
+        ],
       },
       {
         id: 'Analyses',
@@ -1011,7 +1011,7 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: "Nombre d'analyses multi-éléments"
+            description: "Nombre d'analyses multi-éléments",
           },
           {
             id: 'listeAnalysesMultiElements',
@@ -1019,7 +1019,7 @@ export const ActivitesTypes: {
             type: 'textarea',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Précisions sur les éléments analysés et méthodes analytiques utilisées'
+            description: 'Précisions sur les éléments analysés et méthodes analytiques utilisées',
           },
           {
             id: 'listeTraitementMineralurgiques',
@@ -1028,38 +1028,38 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'analyseGranulometrie',
-                nom: 'analyse granulométrique'
+                nom: 'analyse granulométrique',
               },
               {
                 id: 'concassage',
-                nom: 'concassage'
+                nom: 'concassage',
               },
               {
                 id: 'broyage',
-                nom: 'broyage'
+                nom: 'broyage',
               },
               {
                 id: 'separationGravimetrique',
-                nom: 'séparation gravimétrique'
+                nom: 'séparation gravimétrique',
               },
               {
                 id: 'flottation',
-                nom: 'flottation'
+                nom: 'flottation',
               },
               {
                 id: 'cyanuration',
-                nom: 'cyanuration'
+                nom: 'cyanuration',
               },
               {
                 id: 'testLixiviation',
-                nom: 'test de lixiviation'
+                nom: 'test de lixiviation',
               },
               {
                 id: 'autre',
-                nom: 'autres'
-              }
+                nom: 'autres',
+              },
             ],
-            optionnel: true
+            optionnel: true,
           },
           {
             id: 'complementAnalyses',
@@ -1067,9 +1067,9 @@ export const ActivitesTypes: {
             type: 'textarea',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Toute information complémentaire sur les analyses (volumes traités, nombre de tests...)'
-          }
-        ]
+            description: 'Toute information complémentaire sur les analyses (volumes traités, nombre de tests...)',
+          },
+        ],
       },
       {
         id: 'etudes',
@@ -1082,32 +1082,32 @@ export const ActivitesTypes: {
             valeurs: [
               {
                 id: 'environnementale',
-                nom: 'environnementale'
+                nom: 'environnementale',
               },
               {
                 id: 'economiquePreliminaire',
-                nom: 'économique préliminaire'
+                nom: 'économique préliminaire',
               },
               {
                 id: 'economiquePreFaisabilite',
-                nom: 'économique pré-faisabilité'
+                nom: 'économique pré-faisabilité',
               },
               {
                 id: 'economiqueFaisabilité',
-                nom: 'économique faisabilité'
+                nom: 'économique faisabilité',
               },
               {
                 id: 'sociale',
-                nom: 'sociale'
+                nom: 'sociale',
               },
               {
                 id: 'autre',
-                nom: 'autres'
-              }
+                nom: 'autres',
+              },
             ],
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Nature des études effectuées'
+            description: 'Nature des études effectuées',
           },
           {
             id: 'complementEtudes',
@@ -1115,15 +1115,15 @@ export const ActivitesTypes: {
             type: 'textarea',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: 'Toute information complémentaire sur les études effectuées'
-          }
-        ]
-      }
+            description: 'Toute information complémentaire sur les études effectuées',
+          },
+        ],
+      },
     ],
     frequenceId: 'ann',
     dateDebut: toCaminoDate('2019-01-01'),
     delaiMois: 24,
-    ordre: 4
+    ordre: 4,
   },
   pmb: {
     id: 'pmb',
@@ -1138,9 +1138,9 @@ export const ActivitesTypes: {
             nom: 'Dépenses totales de prospection',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros de l'ensemble des dépenses effectuées au cours de l'année"
-          }
-        ]
+            description: "Montant en euros de l'ensemble des dépenses effectuées au cours de l'année",
+          },
+        ],
       },
       {
         id: 'indicateursFinanciersLevesTopographiques',
@@ -1151,9 +1151,9 @@ export const ActivitesTypes: {
             nom: 'Dépenses de levés topographiques (euros)',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses de levés topographiques au cours de l'année"
-          }
-        ]
+            description: "Montant en euros des dépenses de levés topographiques au cours de l'année",
+          },
+        ],
       },
       {
         id: 'indicateursFinanciersCartographieGeologique',
@@ -1164,9 +1164,9 @@ export const ActivitesTypes: {
             nom: 'Dépenses de cartographie géologique (euros)',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses de cartographie géologique au cours de l'année"
-          }
-        ]
+            description: "Montant en euros des dépenses de cartographie géologique au cours de l'année",
+          },
+        ],
       },
       {
         id: 'indicateursFinanciersLevesGeochimie',
@@ -1177,9 +1177,9 @@ export const ActivitesTypes: {
             nom: 'Dépenses de levés géochimiques (euros)',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses de levés géochimiques au cours de l'année"
-          }
-        ]
+            description: "Montant en euros des dépenses de levés géochimiques au cours de l'année",
+          },
+        ],
       },
       {
         id: 'indicateursFinanciersLevesGeophysique',
@@ -1190,9 +1190,9 @@ export const ActivitesTypes: {
             nom: 'Dépenses de levés géophysique (euros)',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses de levés géophysique au cours de l'année"
-          }
-        ]
+            description: "Montant en euros des dépenses de levés géophysique au cours de l'année",
+          },
+        ],
       },
       {
         id: 'indicateursFinanciersLevesTrancheesPuits',
@@ -1203,9 +1203,9 @@ export const ActivitesTypes: {
             nom: 'Dépenses de tranchées et puits (euros)',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses de tranchées et puits au cours de l'année"
-          }
-        ]
+            description: "Montant en euros des dépenses de tranchées et puits au cours de l'année",
+          },
+        ],
       },
       {
         id: 'indicateursFinanciersSondages',
@@ -1216,23 +1216,23 @@ export const ActivitesTypes: {
             nom: 'Dépenses de sondages tarières (euros)',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses de sondages tarières au cours de l'année"
+            description: "Montant en euros des dépenses de sondages tarières au cours de l'année",
           },
           {
             id: 'depensesLevesSondagesDestructifs',
             nom: 'Dépenses de sondages destructifs (euros)',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses de sondages destructifs au cours de l'année"
+            description: "Montant en euros des dépenses de sondages destructifs au cours de l'année",
           },
           {
             id: 'depensesLevesSondagesCarottés',
             nom: 'Dépenses de sondages carottés (euros)',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses de sondages carottés au cours de l'année"
-          }
-        ]
+            description: "Montant en euros des dépenses de sondages carottés au cours de l'année",
+          },
+        ],
       },
       {
         id: 'indicateursFinanciersAnalysesMultiElements',
@@ -1243,16 +1243,16 @@ export const ActivitesTypes: {
             nom: "Dépenses d'analyses multi-éléments (euros)",
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses d'analyses multi-éléments au cours de l'année"
+            description: "Montant en euros des dépenses d'analyses multi-éléments au cours de l'année",
           },
           {
             id: 'depensesTraitementMineralurgiques',
             nom: 'Dépenses de traitements minéralurgiques (euros)',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses de traitements minéralurgiques au cours de l'année"
-          }
-        ]
+            description: "Montant en euros des dépenses de traitements minéralurgiques au cours de l'année",
+          },
+        ],
       },
       {
         id: 'indicateursFinanciersEtudes',
@@ -1263,44 +1263,44 @@ export const ActivitesTypes: {
             nom: "Dépenses d'étude environnementale (euros)",
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses d'études environnementales au cours de l'année"
+            description: "Montant en euros des dépenses d'études environnementales au cours de l'année",
           },
           {
             id: 'depensesEtudeEconomiquePreliminaire',
             nom: "Dépenses d'étude économique préliminaire (euros)",
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses d'étude économique préliminaire au cours de l'année"
+            description: "Montant en euros des dépenses d'étude économique préliminaire au cours de l'année",
           },
           {
             id: 'depensesEtudeEconomiquePreFaisabilite',
             nom: "Dépenses d'étude économique pré-faisabilité (euros)",
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses d'étude économique pré-faisabilité au cours de l'année"
+            description: "Montant en euros des dépenses d'étude économique pré-faisabilité au cours de l'année",
           },
           {
             id: 'depensesEtudeEconomiqueFaisabilité',
             nom: "Dépenses d'étude économique faisabilité (euros)",
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses d'étude économique faisabilité au cours de l'année"
+            description: "Montant en euros des dépenses d'étude économique faisabilité au cours de l'année",
           },
           {
             id: 'depensesEtudeSociale',
             nom: "Dépenses d'étude sociale (euros)",
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses d'étude environnementales au cours de l'année"
+            description: "Montant en euros des dépenses d'étude environnementales au cours de l'année",
           },
           {
             id: 'depensesEtudessautres',
             nom: "Dépenses d'études autres (euros)",
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses d'études autres au cours de l'année"
-          }
-        ]
+            description: "Montant en euros des dépenses d'études autres au cours de l'année",
+          },
+        ],
       },
       {
         id: 'indicateursFinanciersEnvironnement',
@@ -1312,9 +1312,9 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             description:
-              'Montant en euros des investissements consentis au cours de l\'année listés à l’<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" rel="noopener noreferrer">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous être demandés par l’administration.'
-          }
-        ]
+              'Montant en euros des investissements consentis au cours de l\'année listés à l’<a href="https://www.legifrance.gouv.fr/affichCodeArticle.do?idArticle=LEGIARTI000021850940&cidTexte=LEGITEXT000006069569" target="_blank" rel="noopener noreferrer">article 318 C de l’annexe II du code général des impôts</a>. Afin de bénéficier des déductions fiscales afférentes, les justificatifs attestant de la réalisation effective des investissements sont susceptibles de vous être demandés par l’administration.',
+          },
+        ],
       },
       {
         id: 'indicateursFinanciersCommunication',
@@ -1325,9 +1325,9 @@ export const ActivitesTypes: {
             nom: "Dépenses de communication et d'information du public (euros)",
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des dépenses de communication et frais d'organisation de réunions publiques au cours de l'année"
-          }
-        ]
+            description: "Montant en euros des dépenses de communication et frais d'organisation de réunions publiques au cours de l'année",
+          },
+        ],
       },
       {
         id: 'complementFinancier',
@@ -1338,22 +1338,22 @@ export const ActivitesTypes: {
             nom: 'Autres dépenses (euros)',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Montant en euros des autres dépenses au cours de l'année"
+            description: "Montant en euros des autres dépenses au cours de l'année",
           },
           {
             id: 'texte',
             type: 'textarea',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: "Toute information sur les événements financiers marquants de l'année."
-          }
-        ]
-      }
+            description: "Toute information sur les événements financiers marquants de l'année.",
+          },
+        ],
+      },
     ],
     frequenceId: 'ann',
     dateDebut: toCaminoDate('2019-01-01'),
     delaiMois: 24,
-    ordre: 3
+    ordre: 3,
   },
   pmc: {
     id: 'pmc',
@@ -1368,20 +1368,20 @@ export const ActivitesTypes: {
             nom: 'Carburant détaxé (l)',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Volume total en litre de carburant détaxé consommé au cours de l'année par les travaux réalisés sur le chantier."
+            description: "Volume total en litre de carburant détaxé consommé au cours de l'année par les travaux réalisés sur le chantier.",
           },
           {
             id: 'carburantConventionnel',
             nom: 'Carburant conventionnel (l)',
             type: 'number',
-            description: "Volume total en litre de carburant conventionnel consommé au cours de l'année par les travaux réalisés sur le chantier."
+            description: "Volume total en litre de carburant conventionnel consommé au cours de l'année par les travaux réalisés sur le chantier.",
           },
           {
             id: 'pompes',
             nom: 'Pompes actives',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "<b>Dans le cas d'un chantier alluvionnaire</b>, nombre d'heure de fonctionnement de pompes au cours de l'année sur le chantier (pompe à gravier, pompe de relevage…)."
+            description: "<b>Dans le cas d'un chantier alluvionnaire</b>, nombre d'heure de fonctionnement de pompes au cours de l'année sur le chantier (pompe à gravier, pompe de relevage…).",
           },
           {
             id: 'pelles',
@@ -1389,21 +1389,21 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             description:
-              "<b>Dans le cas d'un chantier alluvionnaire</b>, nombre d'heure de fonctionnement de pelles mécaniques au cours de l'année sur le chantier (aménagement, exploitation, réhabilitation)."
+              "<b>Dans le cas d'un chantier alluvionnaire</b>, nombre d'heure de fonctionnement de pelles mécaniques au cours de l'année sur le chantier (aménagement, exploitation, réhabilitation).",
           },
           {
             id: 'mercure',
             nom: 'Mercure récupéré (g)',
             type: 'number',
-            description: "<b>En Guyane</b>, masse en gramme de l’ensemble des produits contaminés au mercure envoyés en traitement au cours de l'année."
+            description: "<b>En Guyane</b>, masse en gramme de l’ensemble des produits contaminés au mercure envoyés en traitement au cours de l'année.",
           },
           {
             id: 'surfaceDeforestee',
             nom: 'Surface déforestée (km²)',
             type: 'number',
-            description: "Surface déforestée en kilomètre carré au cours de l'année."
-          }
-        ]
+            description: "Surface déforestée en kilomètre carré au cours de l'année.",
+          },
+        ],
       },
       {
         id: 'complementEnvironnement',
@@ -1415,15 +1415,15 @@ export const ActivitesTypes: {
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
             description:
-              "Toute information sur les événements marquants l'année en matière de protection de l'environnement dont les actions entreprises pour réduire l'empreinte environnementale du projet."
-          }
-        ]
-      }
+              "Toute information sur les événements marquants l'année en matière de protection de l'environnement dont les actions entreprises pour réduire l'empreinte environnementale du projet.",
+          },
+        ],
+      },
     ],
     frequenceId: 'ann',
     dateDebut: toCaminoDate('2019-01-01'),
     delaiMois: 24,
-    ordre: 5
+    ordre: 5,
   },
   pmd: {
     id: 'pmd',
@@ -1438,21 +1438,21 @@ export const ActivitesTypes: {
             nom: 'Emplois directs salariés',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Nombre total de salariés de l'entreprise affectés aux activités sur le titre minier."
+            description: "Nombre total de salariés de l'entreprise affectés aux activités sur le titre minier.",
           },
           {
             id: 'etpDirectsTotal',
             nom: 'Equivalents temps plein salariés',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Nombre total d'équivalents temps plein salariés de l'entreprise affectés aux activités sur le titre minier."
+            description: "Nombre total d'équivalents temps plein salariés de l'entreprise affectés aux activités sur le titre minier.",
           },
           {
             id: 'emploisDirectsResidents',
             nom: 'Emplois directs salariés occupés par des résidents du département',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Nombre de salariés de l'entreprise, <b>français ou étrangers, résidant fiscalement dans le département</b>, affectés aux activités sur le titre minier."
+            description: "Nombre de salariés de l'entreprise, <b>français ou étrangers, résidant fiscalement dans le département</b>, affectés aux activités sur le titre minier.",
           },
           {
             id: 'etpDirectsResidents',
@@ -1460,23 +1460,23 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             description:
-              "Nombre d'équivalents temps plein salariés de l'entreprise, occupés par des <b>français ou étrangers, résidant fiscalement dans le département</b>, affectés aux activités sur le titre minier."
+              "Nombre d'équivalents temps plein salariés de l'entreprise, occupés par des <b>français ou étrangers, résidant fiscalement dans le département</b>, affectés aux activités sur le titre minier.",
           },
           {
             id: 'emploisDirectsFr',
             nom: 'Emplois directs salariés de nationalité française',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Nombre d'employés de <b>nationalité française</b> salariés de l'entreprise affectés aux activités sur le titre minier."
+            description: "Nombre d'employés de <b>nationalité française</b> salariés de l'entreprise affectés aux activités sur le titre minier.",
           },
           {
             id: 'etpDirectsFr',
             nom: 'Equivalents temps plein salariés de nationalité française',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Nombre d'équivalents temps plein salariés de l'entreprise occupés par des personnes de <b>nationalité française</b> affectés aux activités sur le titre minier."
-          }
-        ]
+            description: "Nombre d'équivalents temps plein salariés de l'entreprise occupés par des personnes de <b>nationalité française</b> affectés aux activités sur le titre minier.",
+          },
+        ],
       },
       {
         id: 'indicateursSocialEconomiqueInirects',
@@ -1487,35 +1487,35 @@ export const ActivitesTypes: {
             nom: 'Emplois salariés des sous-traitants',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Nombre total d'emplois salariés des sous-traitants et prestataires affectés aux activités sur le titre minier."
+            description: "Nombre total d'emplois salariés des sous-traitants et prestataires affectés aux activités sur le titre minier.",
           },
           {
             id: 'etpIndirectsTotal',
             nom: 'Equivalents temps plein salariés des sous-traitants',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Nombre total d'équivalents temps plein salariés des sous-traitants et prestataires, affectés aux activités sur le titre minier."
+            description: "Nombre total d'équivalents temps plein salariés des sous-traitants et prestataires, affectés aux activités sur le titre minier.",
           },
           {
             id: 'emploisIndirectsResidents',
             nom: 'Emplois salariés résidents du département des sous-traitants',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: 'Nombre de salariés des sous-traitants et prestataires, <b>résidant fiscalement dans le département</b>, affectés aux activités sur le titre minier.'
+            description: 'Nombre de salariés des sous-traitants et prestataires, <b>résidant fiscalement dans le département</b>, affectés aux activités sur le titre minier.',
           },
           {
             id: 'etpIndirectsResidents',
             nom: 'Equivalents temps plein des salariés des sous-traitants résidents du département',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Nombre d'équivalents temps plein des sous-traitants et prestataires, <b>résidant fiscalement dans le département</b>, affectés aux activités sur le titre minier."
+            description: "Nombre d'équivalents temps plein des sous-traitants et prestataires, <b>résidant fiscalement dans le département</b>, affectés aux activités sur le titre minier.",
           },
           {
             id: 'emploisIndirectsFr',
             nom: 'Emplois salariés de nationalité française des sous-traitants',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Nombre d'employés de <b>nationalité française</b> salariés des sous-traitants et prestataires de l'entreprise, affectés aux activités sur le titre minier."
+            description: "Nombre d'employés de <b>nationalité française</b> salariés des sous-traitants et prestataires de l'entreprise, affectés aux activités sur le titre minier.",
           },
           {
             id: 'etpIndirectsFr',
@@ -1523,9 +1523,9 @@ export const ActivitesTypes: {
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
             description:
-              "Nombre d'équivalents temps plein occupés par des personnes de <b>nationalité française</b> salariées des sous-traitants et prestataires de l'entreprise, affectées aux activités sur le titre minier."
-          }
-        ]
+              "Nombre d'équivalents temps plein occupés par des personnes de <b>nationalité française</b> salariées des sous-traitants et prestataires de l'entreprise, affectées aux activités sur le titre minier.",
+          },
+        ],
       },
       {
         id: 'indicateursConcertationAcceptabilite',
@@ -1536,23 +1536,23 @@ export const ActivitesTypes: {
             nom: 'Réunions publiques',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Nombre de réunions publiques consacrées aux projets sur le titre minier organisées au cours de l'année"
+            description: "Nombre de réunions publiques consacrées aux projets sur le titre minier organisées au cours de l'année",
           },
           {
             id: 'priseContact',
             nom: 'Rendez-vous',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Nombre de rendez-vous avec les parties prenantes concernées par le titre minier organisés au cours de l'année"
+            description: "Nombre de rendez-vous avec les parties prenantes concernées par le titre minier organisés au cours de l'année",
           },
           {
             id: 'communicationLocale',
             nom: 'Actions de communication à destination du public',
             type: 'number',
             dateDebut: toCaminoDate('2019-01-01'),
-            description: "Nombre d'actions de communication menées par le titulaire du titre à destination du public (hors publication et communication à destination des marchés) au cours de l'année"
-          }
-        ]
+            description: "Nombre d'actions de communication menées par le titulaire du titre à destination du public (hors publication et communication à destination des marchés) au cours de l'année",
+          },
+        ],
       },
       {
         id: 'complementSocialEconomique',
@@ -1563,15 +1563,15 @@ export const ActivitesTypes: {
             type: 'textarea',
             dateDebut: toCaminoDate('2019-01-01'),
             optionnel: true,
-            description: "Toute information sur les événements marquants de nature sociale ou économique de l'année."
-          }
-        ]
-      }
+            description: "Toute information sur les événements marquants de nature sociale ou économique de l'année.",
+          },
+        ],
+      },
     ],
     frequenceId: 'ann',
     dateDebut: toCaminoDate('2019-01-01'),
     delaiMois: 24,
-    ordre: 6
+    ordre: 6,
   },
   wrp: {
     id: 'wrp',
@@ -1585,9 +1585,9 @@ export const ActivitesTypes: {
             id: 'volumeGranulatsExtrait',
             nom: 'Volume de granulats marins extrait (m3)',
             type: 'number',
-            description: "Volume de granulats marins extrait, en mètre cube, au cours de l'année."
-          }
-        ]
+            description: "Volume de granulats marins extrait, en mètre cube, au cours de l'année.",
+          },
+        ],
       },
       {
         id: 'complementInformation',
@@ -1598,18 +1598,18 @@ export const ActivitesTypes: {
             type: 'textarea',
             optionnel: true,
             description:
-              "Toute information sur les événements marquants de l'année (arrêt ou suspension d’activité en précisant les raisons, évolution de l’exploitation, difficultés rencontrées, accident, incident, etc.)."
-          }
-        ]
-      }
+              "Toute information sur les événements marquants de l'année (arrêt ou suspension d’activité en précisant les raisons, évolution de l’exploitation, difficultés rencontrées, accident, incident, etc.).",
+          },
+        ],
+      },
     ],
     frequenceId: 'ann',
     dateDebut: toCaminoDate('2010-01-01'),
     delaiMois: 12,
     ordre: 7,
     description:
-      '<p>La production annuelle est requise en vertu des <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663105" target="_blank">article 1519</a>, <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663002" target="_blank">article 1587</a> et <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000006306371" target="_blank">article 1588</a> du code général des impôts relatifs au calcul de la redevance départementale et communale des mines (RDCM).</p><p><a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000021822128" target="_blank">article 47</a> du décret 2006-798 du 6 juillet 2006.</p>'
-  }
+      '<p>La production annuelle est requise en vertu des <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663105" target="_blank">article 1519</a>, <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000043663002" target="_blank">article 1587</a> et <a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000006306371" target="_blank">article 1588</a> du code général des impôts relatifs au calcul de la redevance départementale et communale des mines (RDCM).</p><p><a href="https://www.legifrance.gouv.fr/codes/id/LEGIARTI000021822128" target="_blank">article 47</a> du décret 2006-798 du 6 juillet 2006.</p>',
+  },
 }
 
 export const sortedActivitesTypes = Object.values(ActivitesTypes).sort((a, b) => a.ordre - b.ordre)

@@ -26,18 +26,11 @@
     </div>
 
     <Transition name="fade">
-      <div
-        v-if="!!popup.component"
-        class="absolute full bg-inverse-alpha z-2"
-      />
+      <div v-if="!!popup.component" class="absolute full bg-inverse-alpha z-2" />
     </Transition>
 
     <Transition name="slide-top">
-      <component
-        :is="popup.component"
-        v-bind="popup.props"
-        v-if="popup.component"
-      />
+      <component :is="popup.component" v-bind="popup.props" v-if="popup.component" />
     </Transition>
 
     <Transition name="fade">
@@ -49,9 +42,7 @@
               <div
                 class="loader-file-bar"
                 :style="{
-                  right: `${
-                    100 - 100 * (fileLoading.loaded / fileLoading.total)
-                  }%`
+                  right: `${100 - 100 * (fileLoading.loaded / fileLoading.total)}%`,
                 }"
               />
             </div>

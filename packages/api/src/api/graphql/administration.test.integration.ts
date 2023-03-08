@@ -16,9 +16,7 @@ afterAll(async () => {
 })
 
 describe('administrationTitreTypeTitreStatutModifier', () => {
-  const administrationTitreTypeTitreStatutModifierQuery = queryImport(
-    'administration-titre-type-titre-statut-modifier'
-  )
+  const administrationTitreTypeTitreStatutModifierQuery = queryImport('administration-titre-type-titre-statut-modifier')
 
   test("ne peut pas modifier les types de titre / statuts de titre d'une administration (anonyme)", async () => {
     const res = await graphQLCall(
@@ -30,8 +28,8 @@ describe('administrationTitreTypeTitreStatutModifier', () => {
           titreStatutId: 'val',
           titresModificationInterdit: true,
           demarchesModificationInterdit: true,
-          etapesModificationInterdit: true
-        }
+          etapesModificationInterdit: true,
+        },
       },
       undefined
     )
@@ -49,8 +47,8 @@ describe('administrationTitreTypeTitreStatutModifier', () => {
           titreStatutId: 'val',
           titresModificationInterdit: true,
           demarchesModificationInterdit: true,
-          etapesModificationInterdit: true
-        }
+          etapesModificationInterdit: true,
+        },
       },
       userSuper
     )
@@ -65,20 +63,18 @@ describe('administrationTitreTypeTitreStatutModifier', () => {
               titreStatutId: 'val',
               titresModificationInterdit: true,
               demarchesModificationInterdit: true,
-              etapesModificationInterdit: true
-            }
-          ]
-        }
-      }
+              etapesModificationInterdit: true,
+            },
+          ],
+        },
+      },
     })
     expect(res.body.errors).toBeUndefined()
   })
 })
 
 describe('administrationTitreTypeEtapeTypeModifier', () => {
-  const administrationTitreTypeEtapeTypeModifierQuery = queryImport(
-    'administration-titre-type-etape-type-modifier'
-  )
+  const administrationTitreTypeEtapeTypeModifierQuery = queryImport('administration-titre-type-etape-type-modifier')
 
   test("ne peut pas modifier les types de titre / types d'étape d'une administration (anonyme)", async () => {
     const res = await graphQLCall(
@@ -90,8 +86,8 @@ describe('administrationTitreTypeEtapeTypeModifier', () => {
           etapeTypeId: 'dex',
           lectureInterdit: true,
           modificationInterdit: true,
-          creationInterdit: true
-        }
+          creationInterdit: true,
+        },
       },
       undefined
     )
@@ -109,8 +105,8 @@ describe('administrationTitreTypeEtapeTypeModifier', () => {
           etapeTypeId: 'dex',
           lectureInterdit: true,
           modificationInterdit: true,
-          creationInterdit: true
-        }
+          creationInterdit: true,
+        },
       },
       userSuper
     )
@@ -125,11 +121,11 @@ describe('administrationTitreTypeEtapeTypeModifier', () => {
               etapeType: { id: 'dex' },
               lectureInterdit: true,
               modificationInterdit: true,
-              creationInterdit: true
-            }
-          ]
-        }
-      }
+              creationInterdit: true,
+            },
+          ],
+        },
+      },
     })
     expect(res.body.errors).toBeUndefined()
   })

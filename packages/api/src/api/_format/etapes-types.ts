@@ -1,11 +1,4 @@
-import {
-  DemarcheId,
-  IDemarcheType,
-  IEtapeType,
-  ISection,
-  ITitre,
-  ITitreEtape
-} from '../../types.js'
+import { DemarcheId, IDemarcheType, IEtapeType, ISection, ITitre, ITitreEtape } from '../../types.js'
 
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
 import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find.js'
@@ -20,10 +13,7 @@ import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { DemarcheTypeId } from 'camino-common/src/static/demarchesTypes.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 
-const etapeTypeSectionsFormat = (
-  sections: ISection[] | undefined | null,
-  sectionsSpecifiques: ISection[] | undefined | null
-) => {
+const etapeTypeSectionsFormat = (sections: ISection[] | undefined | null, sectionsSpecifiques: ISection[] | undefined | null) => {
   let result: ISection[] = []
 
   if (sectionsSpecifiques?.length) {
@@ -42,10 +32,7 @@ const etapeTypeSectionsFormat = (
   return titreSectionsFormat(result)
 }
 
-const documentsTypesFormat = (
-  documentsTypes: DocumentType[] | undefined | null,
-  documentsTypesSpecifiques: DocumentType[] | undefined | null
-): DocumentType[] => {
+const documentsTypesFormat = (documentsTypes: DocumentType[] | undefined | null, documentsTypesSpecifiques: DocumentType[] | undefined | null): DocumentType[] => {
   let result: DocumentType[] = []
 
   if (documentsTypes?.length) {
@@ -54,15 +41,12 @@ const documentsTypesFormat = (
 
   if (documentsTypesSpecifiques?.length) {
     documentsTypesSpecifiques.forEach(documentTypeSpecifique => {
-      const documentType = result.find(
-        ({ id }) => id === documentTypeSpecifique.id
-      )
+      const documentType = result.find(({ id }) => id === documentTypeSpecifique.id)
 
       // Si il est déjà présent, on override juste son attribut « optionnel » et sa description
       if (documentType) {
         documentType.optionnel = documentTypeSpecifique.optionnel
-        documentType.description =
-          documentTypeSpecifique.description || documentType.description
+        documentType.description = documentTypeSpecifique.description || documentType.description
       } else {
         result.push(documentTypeSpecifique)
       }
@@ -85,47 +69,28 @@ const etapeTypeFormat = (
 ) => {
   const etapeType = etape.type
   if (etapeType) {
-    etapeType.sections = etapeTypeSectionsFormat(
-      etapeType.sections,
-      sectionsSpecifiques
-    )
+    etapeType.sections = etapeTypeSectionsFormat(etapeType.sections, sectionsSpecifiques)
 
     if (documentTypeData === null) {
       const typeId = etape?.demarche?.titre?.typeId
       if (!typeId) {
-        throw new Error(
-          `le type du titre de l'étape ${etape.id} n'est pas chargé`
-        )
+        throw new Error(`le type du titre de l'étape ${etape.id} n'est pas chargé`)
       }
       const demarcheTypeId = etape?.demarche?.typeId
       const etapeTypeId = etape?.typeId
 
-      etapeType.documentsTypes = getDocuments(
-        typeId,
-        demarcheTypeId,
-        etapeTypeId
-      )
+      etapeType.documentsTypes = getDocuments(typeId, demarcheTypeId, etapeTypeId)
     } else {
-      etapeType.documentsTypes = getDocuments(
-        documentTypeData.titreTypeId,
-        documentTypeData.demarcheTypeId,
-        documentTypeData.etapeTypeId
-      )
+      etapeType.documentsTypes = getDocuments(documentTypeData.titreTypeId, documentTypeData.demarcheTypeId, documentTypeData.etapeTypeId)
     }
     // on ajoute les justificatifs spécifiques
-    etapeType.justificatifsTypes = documentsTypesFormat(
-      etapeType.justificatifsTypes,
-      justificatifsTypesSpecifiques
-    )
+    etapeType.justificatifsTypes = documentsTypesFormat(etapeType.justificatifsTypes, justificatifsTypesSpecifiques)
   }
 
   return etapeType
 }
 
-const etapeTypeDateFinCheck = (
-  etapeType: IEtapeType,
-  titreEtapes?: ITitreEtape[] | null
-) => {
+const etapeTypeDateFinCheck = (etapeType: IEtapeType, titreEtapes?: ITitreEtape[] | null) => {
   if (!etapeType.dateFin || !titreEtapes) return true
 
   const dateDemande = titreDemarcheDepotDemandeDateFind(titreEtapes)
@@ -159,18 +124,7 @@ const etapeTypeIsValidCheck = (
   titreEtape.typeId = etapeType.id
   titreEtape.date = date
 
-  return !titreDemarcheUpdatedEtatValidate(
-    demarcheType,
-    titre,
-    titreEtape,
-    demarcheId,
-    titreDemarcheEtapes
-  ).length
+  return !titreDemarcheUpdatedEtatValidate(demarcheType, titre, titreEtape, demarcheId, titreDemarcheEtapes).length
 }
 
-export {
-  etapeTypeIsValidCheck,
-  etapeTypeSectionsFormat,
-  etapeTypeFormat,
-  documentsTypesFormat
-}
+export { etapeTypeIsValidCheck, etapeTypeSectionsFormat, etapeTypeFormat, documentsTypesFormat }

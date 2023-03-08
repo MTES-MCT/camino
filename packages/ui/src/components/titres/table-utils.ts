@@ -9,36 +9,15 @@ import ActivitesPills from '../_common/pills.vue'
 import { Statut } from '../_common/statut'
 import { DomaineId } from 'camino-common/src/static/domaines'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
-import {
-  Departement,
-  DepartementId,
-  Departements
-} from 'camino-common/src/static/departement'
+import { Departement, DepartementId, Departements } from 'camino-common/src/static/departement'
 import { onlyUnique } from 'camino-common/src/typescript-tools'
 import { Regions } from 'camino-common/src/static/region'
-import {
-  SubstanceLegaleId,
-  SubstancesLegale
-} from 'camino-common/src/static/substancesLegales'
-import {
-  sortedTitresStatuts,
-  TitresStatuts,
-  TitreStatutId
-} from 'camino-common/src/static/titresStatuts'
-import {
-  ReferencesTypes,
-  ReferenceTypeId
-} from 'camino-common/src/static/referencesTypes'
+import { SubstanceLegaleId, SubstancesLegale } from 'camino-common/src/static/substancesLegales'
+import { sortedTitresStatuts, TitresStatuts, TitreStatutId } from 'camino-common/src/static/titresStatuts'
+import { ReferencesTypes, ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
 import { TitreReference } from 'camino-common/src/titres-references'
-import {
-  getDomaineId,
-  getTitreTypeType,
-  TitreTypeId
-} from 'camino-common/src/static/titresTypes'
-import {
-  getDepartementsBySecteurs,
-  SecteursMaritimes
-} from 'camino-common/src/static/facades'
+import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { getDepartementsBySecteurs, SecteursMaritimes } from 'camino-common/src/static/facades'
 import { Column } from '../_ui/table-auto'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 
@@ -69,7 +48,7 @@ const ordreStatut: { [key in TitreStatutId]: number } = {
   val: 2,
   dmc: 3,
   ech: 4,
-  ind: 5
+  ind: 5,
 }
 
 const ordreFromStatut = (entry: string) => {
@@ -80,25 +59,23 @@ const ordreFromStatut = (entry: string) => {
   return -1
 }
 
-const isTitreStatut = (
-  entry: string | number | string[] | undefined
-): entry is string => {
+const isTitreStatut = (entry: string | number | string[] | undefined): entry is string => {
   return sortedTitresStatuts.some(({ nom }) => nom === entry)
 }
 
 export const nomColumn: Column<'nom'> = {
   id: 'nom',
   name: 'Nom',
-  class: ['min-width-8']
+  class: ['min-width-8'],
 }
 export const domaineColumn: Column<'domaine'> = {
   id: 'domaine',
-  name: ''
+  name: '',
 }
 export const typeColumn: Column<'type'> = {
   id: 'type',
   name: 'Type',
-  class: ['min-width-8']
+  class: ['min-width-8'],
 }
 
 export const activiteColumn: Column<'activites'> = {
@@ -112,7 +89,7 @@ export const activiteColumn: Column<'activites'> = {
       return row1Statut - row2Statut
     }
     return 0
-  }
+  },
 }
 
 export const statutColumn: Column<'statut'> = {
@@ -126,18 +103,18 @@ export const statutColumn: Column<'statut'> = {
       return ordreFromStatut(row1Statut) - ordreFromStatut(row2Statut)
     }
     return 0
-  }
+  },
 }
 export const referencesColumn: Column<'references'> = {
   id: 'references',
   name: 'Références',
   class: ['min-width-8'],
-  noSort: true
+  noSort: true,
 }
 export const titulairesColumn: Column<'titulaires'> = {
   id: 'titulaires',
   name: 'Titulaires',
-  class: ['min-width-10']
+  class: ['min-width-10'],
 }
 export const titresColonnes: Column[] = [
   nomColumn,
@@ -149,77 +126,71 @@ export const titresColonnes: Column[] = [
     id: 'substances',
     name: 'Substances',
     class: ['min-width-6'],
-    noSort: true
+    noSort: true,
   },
   {
     id: 'coordonnees',
-    name: 'Carte'
+    name: 'Carte',
   },
   titulairesColumn,
   {
     id: 'regions',
     name: 'Régions',
     class: ['min-width-8'],
-    noSort: true
+    noSort: true,
   },
   {
     id: 'departements',
     name: 'Départements',
     class: ['min-width-8'],
-    noSort: true
+    noSort: true,
   },
-  referencesColumn
+  referencesColumn,
 ]
 
 export const nomCell = (titre: { nom: string }): ComponentColumnData => ({
   component: markRaw(TitreNom),
   props: { nom: titre.nom },
-  value: titre.nom
+  value: titre.nom,
 })
-export const statutCell = (titre: {
-  titreStatutId: TitreStatutId
-}): ComponentColumnData => {
+export const statutCell = (titre: { titreStatutId: TitreStatutId }): ComponentColumnData => {
   const statut = TitresStatuts[titre.titreStatutId]
   return {
     component: markRaw(Statut),
     props: {
       color: statut.couleur,
-      nom: statut.nom
+      nom: statut.nom,
     },
-    value: statut.nom
+    value: statut.nom,
   }
 }
 
-export const referencesCell = (titre: {
-  references?: { nom: string; referenceTypeId: ReferenceTypeId }[]
-}) => {
-  const references = titre.references?.map(
-    ref => `${ReferencesTypes[ref.referenceTypeId].nom} : ${ref.nom}`
-  )
+export const referencesCell = (titre: { references?: { nom: string; referenceTypeId: ReferenceTypeId }[] }) => {
+  const references = titre.references?.map(ref => `${ReferencesTypes[ref.referenceTypeId].nom} : ${ref.nom}`)
 
   return {
     component: List,
     props: {
       elements: references,
-      mini: true
+      mini: true,
     },
     class: 'mb--xs',
-    value: references
+    value: references,
   }
 }
 export const titulairesCell = (titre: { titulaires?: { nom?: string }[] }) => ({
   component: markRaw(List),
   props: {
     elements: titre.titulaires?.map(({ nom }) => nom ?? ''),
-    mini: true
+    mini: true,
   },
   class: 'mb--xs',
-  value: titre.titulaires?.map(({ nom }) => nom ?? '').join(', ')
+  value: titre.titulaires?.map(({ nom }) => nom ?? '').join(', '),
 })
 export const domaineCell = (titre: { domaineId: DomaineId }) => ({
   component: markRaw(CaminoDomaine),
   props: { domaineId: titre.domaineId },
-  value: titre.domaineId
+  value: titre.domaineId,
 })
 
 export const typeCell = (typeId: TitreTypeId) => {
@@ -227,37 +198,25 @@ export const typeCell = (typeId: TitreTypeId) => {
   return {
     component: markRaw(TitreTypeTypeNom),
     props: { nom: titreTypeType.nom },
-    value: titreTypeType.nom
+    value: titreTypeType.nom,
   }
 }
-export const activitesCell = (titre: {
-  activitesAbsentes: number | null
-  activitesEnConstruction: number | null
-}) => ({
+export const activitesCell = (titre: { activitesAbsentes: number | null; activitesEnConstruction: number | null }) => ({
   component: markRaw(ActivitesPills),
   props: {
     activitesAbsentes: titre.activitesAbsentes,
-    activitesEnConstruction: titre.activitesEnConstruction
+    activitesEnConstruction: titre.activitesEnConstruction,
   },
-  value: (titre?.activitesAbsentes ?? 0) + (titre?.activitesEnConstruction ?? 0)
+  value: (titre?.activitesAbsentes ?? 0) + (titre?.activitesEnConstruction ?? 0),
 })
-export const titresLignesBuild = (
-  titres: TitreEntreprise[],
-  activitesCol: boolean,
-  ordre = 'asc'
-): TableRow[] =>
+export const titresLignesBuild = (titres: TitreEntreprise[], activitesCol: boolean, ordre = 'asc'): TableRow[] =>
   titres.map(titre => {
-    const departements: Departement[] = [
-      ...(titre.communes?.map(({ departementId }) => departementId) ?? []),
-      ...getDepartementsBySecteurs(titre.secteursMaritime ?? [])
-    ]
+    const departements: Departement[] = [...(titre.communes?.map(({ departementId }) => departementId) ?? []), ...getDepartementsBySecteurs(titre.secteursMaritime ?? [])]
       .filter(onlyUnique)
       .map(departementId => Departements[departementId])
 
     const departementNoms: string[] = departements.map(({ nom }) => nom)
-    const regionNoms: string[] = departements
-      .map(({ regionId }) => Regions[regionId].nom)
-      .filter(onlyUnique)
+    const regionNoms: string[] = departements.map(({ regionId }) => Regions[regionId].nom).filter(onlyUnique)
 
     const columns: { [key in string]: ComponentColumnData | TextColumnData } = {
       nom: nomCell(titre),
@@ -265,43 +224,38 @@ export const titresLignesBuild = (
       coordonnees: {
         component: markRaw(CoordonneesIcone),
         props: { coordonnees: titre.coordonnees },
-        value: titre.coordonnees ? '·' : ''
+        value: titre.coordonnees ? '·' : '',
       },
       type: typeCell(titre.typeId),
       statut: statutCell(titre),
       substances: {
         component: markRaw(TagList),
         props: {
-          elements:
-            titre.substances?.map(
-              substanceId => SubstancesLegale[substanceId].nom
-            ) ?? []
+          elements: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom) ?? [],
         },
         class: 'mb--xs',
-        value: titre.substances
-          ?.map(substanceId => SubstancesLegale[substanceId].nom)
-          .join(', ')
+        value: titre.substances?.map(substanceId => SubstancesLegale[substanceId].nom).join(', '),
       },
       titulaires: titulairesCell(titre),
       regions: {
         component: markRaw(List),
         props: {
           elements: regionNoms,
-          mini: true
+          mini: true,
         },
         class: 'mb--xs',
-        value: regionNoms
+        value: regionNoms,
       },
       departements: {
         component: markRaw(List),
         props: {
           elements: departementNoms,
-          mini: true
+          mini: true,
         },
         class: 'mb--xs',
-        value: departementNoms
+        value: departementNoms,
       },
-      references: referencesCell(titre)
+      references: referencesCell(titre),
     }
 
     if (activitesCol) {
@@ -311,6 +265,6 @@ export const titresLignesBuild = (
     return {
       id: titre.id,
       link: { name: 'titre', params: { id: titre.slug } },
-      columns
+      columns,
     }
   })

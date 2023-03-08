@@ -1,25 +1,12 @@
-import {
-  DemarcheId,
-  ITitreEtape,
-  TitreEtapesTravauxTypes as Travaux
-} from '../../types.js'
+import { DemarcheId, ITitreEtape, TitreEtapesTravauxTypes as Travaux } from '../../types.js'
 
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { titreEtapePublicationCheck } from './titre-etape-publication-check.js'
-import {
-  demarcheDefinitionFind,
-  isDemarcheDefinitionMachine
-} from '../rules-demarches/definitions.js'
+import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../rules-demarches/definitions.js'
 import { toMachineEtapes } from '../rules-demarches/machine-common.js'
-import {
-  DemarcheStatutId,
-  DemarchesStatutsIds
-} from 'camino-common/src/static/demarchesStatuts.js'
+import { DemarcheStatutId, DemarchesStatutsIds } from 'camino-common/src/static/demarchesStatuts.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import {
-  DemarcheTypeId,
-  TravauxIds
-} from 'camino-common/src/static/demarchesTypes.js'
+import { DemarcheTypeId, TravauxIds } from 'camino-common/src/static/demarchesTypes.js'
 
 const titreEtapesDecisivesCommunesTypes = ['css', 'rtd', 'abd', 'and']
 
@@ -42,50 +29,18 @@ const titreEtapesDecisivesDemandesTypes = [
   'rpu',
   'dpu',
   'ihi',
-  ...titreEtapesDecisivesCommunesTypes
+  ...titreEtapesDecisivesCommunesTypes,
 ]
 
-const titreDemarchesDemandesTypes = [
-  'oct',
-  'pro',
-  'pr1',
-  'pr2',
-  'pre',
-  'ren',
-  'fus',
-  'exp',
-  'exs',
-  'mut',
-  'vut',
-  'amo',
-  'res',
-  'ces',
-  'dep',
-  'vus',
-  'vct'
-]
+const titreDemarchesDemandesTypes = ['oct', 'pro', 'pr1', 'pr2', 'pre', 'ren', 'fus', 'exp', 'exs', 'mut', 'vut', 'amo', 'res', 'ces', 'dep', 'vus', 'vct']
 
-const titreDemarchesTravauxTypes = [
-  'aom',
-  'dam',
-  'dot'
-] as const satisfies readonly TravauxIds[]
+const titreDemarchesTravauxTypes = ['aom', 'dam', 'dot'] as const satisfies readonly TravauxIds[]
 
-const titreEtapesDecisivesUnilateralesTypes = [
-  'ide',
-  'spp',
-  'dup',
-  'dux',
-  'aof',
-  'aco',
-  ...titreEtapesDecisivesCommunesTypes
-]
+const titreEtapesDecisivesUnilateralesTypes = ['ide', 'spp', 'dup', 'dux', 'aof', 'aco', ...titreEtapesDecisivesCommunesTypes]
 
 const titreDemarchesUnilateralesTypes = ['ret', 'prr', 'dec']
 
-const titresDemarcheCommunesStatutIdFind = (
-  titreEtapeRecent: Pick<ITitreEtape, 'typeId' | 'statutId'>
-): DemarcheStatutId | null => {
+const titresDemarcheCommunesStatutIdFind = (titreEtapeRecent: Pick<ITitreEtape, 'typeId' | 'statutId'>): DemarcheStatutId | null => {
   //  - le type de l’étape est classement sans suite (css)
   //  - le titre est une ARM
   //    - et le type de l’étape est avis de la commission ARM (aca)
@@ -121,25 +76,17 @@ const titresDemarcheCommunesStatutIdFind = (
   return null
 }
 
-const titreDemarcheUnilateralStatutIdFind = (
-  titreDemarcheEtapes: Pick<ITitreEtape, 'typeId' | 'ordre' | 'statutId'>[]
-): DemarcheStatutId => {
+const titreDemarcheUnilateralStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape, 'typeId' | 'ordre' | 'statutId'>[]): DemarcheStatutId => {
   // filtre les types d'étapes qui ont un impact
   // sur le statut de la démarche de demande
-  const titreEtapesDecisivesUnilaterale = titreDemarcheEtapes.filter(
-    titreEtape =>
-      titreEtapesDecisivesUnilateralesTypes.includes(titreEtape.typeId)
-  )
+  const titreEtapesDecisivesUnilaterale = titreDemarcheEtapes.filter(titreEtape => titreEtapesDecisivesUnilateralesTypes.includes(titreEtape.typeId))
 
   // si aucune étape décisive n'est présente dans la démarche
   // le statut est indétrminé
-  if (!titreEtapesDecisivesUnilaterale.length)
-    return DemarchesStatutsIds.Indetermine
+  if (!titreEtapesDecisivesUnilaterale.length) return DemarchesStatutsIds.Indetermine
 
   // l'étape la plus récente
-  const titreEtapeRecent = titreEtapesSortDescByOrdre(
-    titreEtapesDecisivesUnilaterale
-  )[0]
+  const titreEtapeRecent = titreEtapesSortDescByOrdre(titreEtapesDecisivesUnilaterale)[0]
 
   // calcule le statut de démarche pour les étapes communes
   const statutId = titresDemarcheCommunesStatutIdFind(titreEtapeRecent)
@@ -165,10 +112,7 @@ const titreDemarcheUnilateralStatutIdFind = (
   }
 
   // - le type de l’étape est l’avis de l’ONF défavorable
-  if (
-    titreEtapeRecent.typeId === 'aof' &&
-    titreEtapeRecent.statutId === 'def'
-  ) {
+  if (titreEtapeRecent.typeId === 'aof' && titreEtapeRecent.statutId === 'def') {
     // - le statut de la démarche est "classement sans suite"
     return DemarchesStatutsIds.ClasseSansSuite
   }
@@ -184,25 +128,17 @@ const titreDemarcheUnilateralStatutIdFind = (
   return DemarchesStatutsIds.Initie
 }
 
-const titreDemarcheDemandeStatutIdFind = (
-  titreDemarcheEtapes: Pick<ITitreEtape, 'typeId' | 'ordre' | 'statutId'>[],
-  titreTypeId: TitreTypeId
-): DemarcheStatutId => {
+const titreDemarcheDemandeStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape, 'typeId' | 'ordre' | 'statutId'>[], titreTypeId: TitreTypeId): DemarcheStatutId => {
   // filtre les types d'étapes qui ont un impact
   // sur le statut de la démarche de demande
-  const titreEtapesDecisivesDemande = titreDemarcheEtapes.filter(titreEtape =>
-    titreEtapesDecisivesDemandesTypes.includes(titreEtape.typeId)
-  )
+  const titreEtapesDecisivesDemande = titreDemarcheEtapes.filter(titreEtape => titreEtapesDecisivesDemandesTypes.includes(titreEtape.typeId))
 
   // si aucune étape décisive n'est présente dans la démarche
   // le statut est indéterminé
-  if (!titreEtapesDecisivesDemande.length)
-    return DemarchesStatutsIds.Indetermine
+  if (!titreEtapesDecisivesDemande.length) return DemarchesStatutsIds.Indetermine
 
   // l'étape la plus récente
-  const titreEtapeRecent = titreEtapesSortDescByOrdre(
-    titreEtapesDecisivesDemande
-  )[0]
+  const titreEtapeRecent = titreEtapesSortDescByOrdre(titreEtapesDecisivesDemande)[0]
 
   // calcule le statut de démarche pour les étapes communes
   const statutId = titresDemarcheCommunesStatutIdFind(titreEtapeRecent)
@@ -212,17 +148,11 @@ const titreDemarcheDemandeStatutIdFind = (
   //  - le type de l’étape est une publication
   //  - ou une décision implicite (dim)
   //  - ou des informations historiques incomplètes
-  const titreEtapesPublication = titreDemarcheEtapes.filter(
-    titreEtape =>
-      titreEtapePublicationCheck(titreEtape.typeId, titreTypeId) ||
-      ['dim', 'ihi'].includes(titreEtape.typeId)
-  )
+  const titreEtapesPublication = titreDemarcheEtapes.filter(titreEtape => titreEtapePublicationCheck(titreEtape.typeId, titreTypeId) || ['dim', 'ihi'].includes(titreEtape.typeId))
 
   if (titreEtapesPublication.length) {
     // si l'étape de publication la plus récente est
-    const titreEtapePublicationRecent = titreEtapesSortDescByOrdre(
-      titreEtapesPublication
-    )[0]
+    const titreEtapePublicationRecent = titreEtapesSortDescByOrdre(titreEtapesPublication)[0]
 
     // si l'étape de publication est de type unilatérale
     // alors la démarche a le statut accepté
@@ -240,10 +170,7 @@ const titreDemarcheDemandeStatutIdFind = (
 
   //  - le type de l’étape est décision expresse (dex)
   //  - et le statut de l’étape est rejeté (rej)
-  if (
-    ['dex', 'dux'].includes(titreEtapeRecent.typeId) &&
-    titreEtapeRecent.statutId === 'rej'
-  ) {
+  if (['dex', 'dux'].includes(titreEtapeRecent.typeId) && titreEtapeRecent.statutId === 'rej') {
     //  - le statut de la démarche est rejeté (rej)
     return DemarchesStatutsIds.Rejete
   }
@@ -258,11 +185,7 @@ const titreDemarcheDemandeStatutIdFind = (
   //  - le titre est une ARM
   //    - et le type de l’étape est avis de la commission ARM (aca)
   //    - et le statut de l’étape est défavorable (def)
-  if (
-    titreTypeId === 'arm' &&
-    titreEtapeRecent.typeId === 'aca' &&
-    titreEtapeRecent.statutId === 'def'
-  ) {
+  if (titreTypeId === 'arm' && titreEtapeRecent.typeId === 'aca' && titreEtapeRecent.statutId === 'def') {
     return DemarchesStatutsIds.Rejete
   }
 
@@ -273,13 +196,7 @@ const titreDemarcheDemandeStatutIdFind = (
   //  OU
   //  - le type de l’étape est avis de la commission ARM (aca) (non défavorable)
   //  - le type de l’étape est décision de l'ONF (def) (non défavorable)
-  if (
-    ['mcr', 'dex', 'dux'].includes(titreEtapeRecent.typeId) ||
-    (titreTypeId === 'arm' &&
-      ['mdp', 'men', 'meo', 'mcp', 'def', 'aca'].includes(
-        titreEtapeRecent.typeId
-      ))
-  ) {
+  if (['mcr', 'dex', 'dux'].includes(titreEtapeRecent.typeId) || (titreTypeId === 'arm' && ['mdp', 'men', 'meo', 'mcp', 'def', 'aca'].includes(titreEtapeRecent.typeId))) {
     //  - le statut de la démarche est “en instruction”
     return DemarchesStatutsIds.EnInstruction
   }
@@ -301,10 +218,7 @@ const titreDemarcheDemandeStatutIdFind = (
   return DemarchesStatutsIds.Indetermine
 }
 
-const titreDemarcheTravauxStatutIdFind = (
-  titreDemarcheEtapes: Pick<ITitreEtape, 'ordre' | 'typeId'>[],
-  demarcheTypeId: string
-): DemarcheStatutId => {
+const titreDemarcheTravauxStatutIdFind = (titreDemarcheEtapes: Pick<ITitreEtape, 'ordre' | 'typeId'>[], demarcheTypeId: string): DemarcheStatutId => {
   if (titreDemarcheEtapes.length === 0) {
     return DemarchesStatutsIds.Indetermine
   }
@@ -348,8 +262,7 @@ const titreDemarcheTravauxStatutIdFind = (
     [Travaux.AvisCODERST]: DemarchesStatutsIds.EnInstruction,
     [Travaux.AvisPrescriptionsDemandeur]: DemarchesStatutsIds.EnInstruction,
     [Travaux.RapportDREAL]: DemarchesStatutsIds.EnInstruction,
-    [Travaux.ArretePrescriptionComplementaire]:
-      DemarchesStatutsIds.EnInstruction,
+    [Travaux.ArretePrescriptionComplementaire]: DemarchesStatutsIds.EnInstruction,
     [Travaux.ArretePrefectDonneActe1]: DemarchesStatutsIds.EnInstruction,
     [Travaux.MemoireFinTravaux]: DemarchesStatutsIds.EnInstruction,
     [Travaux.Recolement]: DemarchesStatutsIds.EnInstruction,
@@ -357,7 +270,7 @@ const titreDemarcheTravauxStatutIdFind = (
     [Travaux.DonneActeDeclaration]: DemarchesStatutsIds.Accepte,
     [Travaux.Abandon]: DemarchesStatutsIds.Desiste,
     [Travaux.ArretePrefectDonneActe2]: DemarchesStatutsIds.FinPoliceMines,
-    [Travaux.PorterAConnaissance]: DemarchesStatutsIds.FinPoliceMines
+    [Travaux.PorterAConnaissance]: DemarchesStatutsIds.FinPoliceMines,
   }
 
   if (titreEtapesRecent.typeId === Travaux.PubliDecisionRecueilActesAdmin) {
@@ -381,10 +294,7 @@ const titreDemarcheTravauxStatutIdFind = (
 
 export const titreDemarcheStatutIdFind = (
   demarcheTypeId: DemarcheTypeId,
-  titreDemarcheEtapes: Pick<
-    ITitreEtape,
-    'typeId' | 'date' | 'ordre' | 'statutId' | 'contenu'
-  >[],
+  titreDemarcheEtapes: Pick<ITitreEtape, 'typeId' | 'date' | 'ordre' | 'statutId' | 'contenu'>[],
   titreTypeId: TitreTypeId,
   demarcheId: DemarcheId
 ): DemarcheStatutId => {
@@ -397,17 +307,10 @@ export const titreDemarcheStatutIdFind = (
     return titreDemarcheTravauxStatutIdFind(titreDemarcheEtapes, demarcheTypeId)
   }
 
-  const demarcheDefinition = demarcheDefinitionFind(
-    titreTypeId,
-    demarcheTypeId,
-    titreDemarcheEtapes,
-    demarcheId
-  )
+  const demarcheDefinition = demarcheDefinitionFind(titreTypeId, demarcheTypeId, titreDemarcheEtapes, demarcheId)
 
   if (isDemarcheDefinitionMachine(demarcheDefinition)) {
-    return demarcheDefinition.machine.demarcheStatut(
-      toMachineEtapes(titreDemarcheEtapes)
-    ).demarcheStatut
+    return demarcheDefinition.machine.demarcheStatut(toMachineEtapes(titreDemarcheEtapes)).demarcheStatut
   }
 
   //  si la démarche fait l’objet d’une demande

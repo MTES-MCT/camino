@@ -37,7 +37,7 @@ export const titreSectionsFormat = (sections: ISection[]) =>
       sections.push({
         id,
         nom,
-        elements: newElements.map(titreSectionElementFormat)
+        elements: newElements.map(titreSectionElementFormat),
       })
     }
 

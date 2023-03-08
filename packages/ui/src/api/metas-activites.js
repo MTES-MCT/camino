@@ -1,11 +1,7 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
-import {
-  fragmentActiviteType,
-  fragmentActiviteTypeDocumentType,
-  fragmentActiviteTypePays
-} from './fragments/metas-activites'
+import { fragmentActiviteType, fragmentActiviteTypeDocumentType, fragmentActiviteTypePays } from './fragments/metas-activites'
 
 const activitesMetas = apiGraphQLFetch(
   gql`
@@ -56,9 +52,4 @@ const activitesTypesPays = apiGraphQLFetch(
   `
 )
 
-export {
-  activitesMetas,
-  activitesTypes,
-  activitesTypesDocumentsTypes,
-  activitesTypesPays
-}
+export { activitesMetas, activitesTypes, activitesTypesDocumentsTypes, activitesTypesPays }

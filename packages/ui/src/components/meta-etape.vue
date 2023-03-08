@@ -8,7 +8,7 @@ import Metas from '@/components/metas/meta-page-template.vue'
 
 export default defineComponent({
   components: {
-    Metas
+    Metas,
   },
 
   data() {
@@ -21,19 +21,19 @@ export default defineComponent({
             id: 'etapes-statuts',
             foreignKey: 'etapeStatutId',
             joinTable: 'etapes-types--etapes-statuts',
-            definitions: []
+            definitions: [],
           },
           {
             id: 'documents-types',
             foreignKey: 'documentTypeId',
             joinTable: 'etapes-types--documents-types',
-            definitions: []
+            definitions: [],
           },
           {
             id: 'documents-types',
             foreignKey: 'documentTypeId',
             joinTable: 'etapes-types--justificatifs-types',
-            definitions: []
+            definitions: [],
           },
           {
             id: 'titres-types',
@@ -47,24 +47,22 @@ export default defineComponent({
                   {
                     id: 'documents-types',
                     foreignKey: 'documentTypeId',
-                    joinTable:
-                      'titres-types--demarches-types--etapes-types--documents-types',
-                    definitions: []
+                    joinTable: 'titres-types--demarches-types--etapes-types--documents-types',
+                    definitions: [],
                   },
                   {
                     id: 'documents-types',
                     foreignKey: 'documentTypeId',
-                    joinTable:
-                      'titres-types--demarches-types--etapes-types--justificatifs-types',
-                    definitions: []
-                  }
-                ]
-              }
-            ]
-          }
-        ]
-      }
+                    joinTable: 'titres-types--demarches-types--etapes-types--justificatifs-types',
+                    definitions: [],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
     }
-  }
+  },
 })
 </script>

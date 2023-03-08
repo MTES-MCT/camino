@@ -15,7 +15,7 @@ const store = useStore()
 
 const depose = async () => {
   await store.dispatch('titreActivite/depose', {
-    id: props.activite.id
+    id: props.activite.id,
   })
   props.onDepotDone()
 }

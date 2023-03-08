@@ -35,44 +35,28 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
       'displayItemInList',
       'onSelectItem',
       'onSelectItems',
-      'onInput'
+      'onInput',
     ] as unknown as undefined,
     setup(props) {
       const id = props.id ?? `typeahead_${(Math.random() * 1000).toFixed()}`
       const wrapperId = computed(() => `${id}_wrapper`)
-      const getItems = (items: (Pick<T, K> & Partial<Omit<T, K>>)[]): T[] =>
-        items
-          .map(o =>
-            props.items.find(i => i[props.itemKey] === o[props.itemKey])
-          )
-          .filter(isNotNullNorUndefined)
-      const selectedItems = ref<T[]>(
-        getItems(props.overrideItems ?? [])
-      ) as Ref<T[]>
+      const getItems = (items: (Pick<T, K> & Partial<Omit<T, K>>)[]): T[] => items.map(o => props.items.find(i => i[props.itemKey] === o[props.itemKey])).filter(isNotNullNorUndefined)
+      const selectedItems = ref<T[]>(getItems(props.overrideItems ?? [])) as Ref<T[]>
 
-      const input = ref<string>(
-        props.type === 'single' && props.overrideItems?.length
-          ? props.itemChipLabel(getItems(props.overrideItems)[0])
-          : ''
-      )
+      const input = ref<string>(props.type === 'single' && props.overrideItems?.length ? props.itemChipLabel(getItems(props.overrideItems)[0]) : '')
 
       watch(
         () => props.overrideItems,
         newItems => {
           selectedItems.value = getItems(newItems ?? [])
-          input.value =
-            props.type === 'single' && newItems?.length
-              ? props.itemChipLabel(getItems(newItems)[0])
-              : ''
+          input.value = props.type === 'single' && newItems?.length ? props.itemChipLabel(getItems(newItems)[0]) : ''
         },
         { deep: true }
       )
 
       const unselectItem = (item: T) => {
         const itemKey = item[props.itemKey]
-        selectedItems.value = selectedItems.value.filter(
-          i => i[props.itemKey] !== itemKey
-        )
+        selectedItems.value = selectedItems.value.filter(i => i[props.itemKey] !== itemKey)
         props.onSelectItems?.(selectedItems.value)
         props.onSelectItem?.(undefined)
       }
@@ -80,17 +64,10 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
       const currentSelectionIndex = ref<number>(0)
 
       const isListVisible = computed(() => {
-        return (
-          isInputFocused.value &&
-          input.value.length >= props.minInputLength &&
-          props.items.length
-        )
+        return isInputFocused.value && input.value.length >= props.minInputLength && props.items.length
       })
       const onInput = (payload: Event) => {
-        if (
-          isListVisible.value &&
-          currentSelectionIndex.value >= props.items.length
-        ) {
+        if (isListVisible.value && currentSelectionIndex.value >= props.items.length) {
           currentSelectionIndex.value = (props.items.length || 1) - 1
         }
         if (isEventWithTarget(payload)) {
@@ -101,27 +78,14 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
 
       const scrollSelectionIntoView = () => {
         setTimeout(() => {
-          const listNode = document.querySelector<HTMLElement>(
-            `#${wrapperId.value} .${styles['typeahead-list']}`
-          )
-          const activeNode = document.querySelector<HTMLElement>(
-            `#${wrapperId.value} .${styles['typeahead-list-item']}.${styles['typeahead-list-item-active']}`
-          )
+          const listNode = document.querySelector<HTMLElement>(`#${wrapperId.value} .${styles['typeahead-list']}`)
+          const activeNode = document.querySelector<HTMLElement>(`#${wrapperId.value} .${styles['typeahead-list-item']}.${styles['typeahead-list-item-active']}`)
 
           if (listNode && activeNode) {
-            if (
-              !(
-                activeNode.offsetTop >= listNode.scrollTop &&
-                activeNode.offsetTop + activeNode.offsetHeight <
-                  listNode.scrollTop + listNode.offsetHeight
-              )
-            ) {
+            if (!(activeNode.offsetTop >= listNode.scrollTop && activeNode.offsetTop + activeNode.offsetHeight < listNode.scrollTop + listNode.offsetHeight)) {
               let scrollTo = 0
               if (activeNode.offsetTop > listNode.scrollTop) {
-                scrollTo =
-                  activeNode.offsetTop +
-                  activeNode.offsetHeight -
-                  listNode.offsetHeight
+                scrollTo = activeNode.offsetTop + activeNode.offsetHeight - listNode.offsetHeight
               } else if (activeNode.offsetTop < listNode.scrollTop) {
                 scrollTo = activeNode.offsetTop
               }
@@ -133,10 +97,7 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
       }
 
       const onArrowDown = () => {
-        if (
-          isListVisible.value &&
-          currentSelectionIndex.value < props.items.length - 1
-        ) {
+        if (isListVisible.value && currentSelectionIndex.value < props.items.length - 1) {
           currentSelectionIndex.value++
         }
         scrollSelectionIntoView()
@@ -155,15 +116,10 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
       }
       const notSelectedItems = computed(() => {
         const selectItemKeys = selectedItems.value.map(i => i[props.itemKey])
-        return props.items.filter(
-          item => !selectItemKeys.includes(item[props.itemKey])
-        )
+        return props.items.filter(item => !selectItemKeys.includes(item[props.itemKey]))
       })
       const currentSelection = computed(() => {
-        return isListVisible.value &&
-          currentSelectionIndex.value < notSelectedItems.value.length
-          ? notSelectedItems.value[currentSelectionIndex.value]
-          : undefined
+        return isListVisible.value && currentSelectionIndex.value < notSelectedItems.value.length ? notSelectedItems.value[currentSelectionIndex.value] : undefined
       })
       const selectItem = (item: T) => {
         if (props.type === 'multiple') {
@@ -201,14 +157,7 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
             {props.type === 'multiple' ? (
               <>
                 {selectedItems.value.map(item => {
-                  return (
-                    <Chip
-                      key={item[props.itemKey]}
-                      nom={props.itemChipLabel(item)}
-                      class="mr-xs mb-xs mt-xs"
-                      onDeleteClicked={() => unselectItem(item)}
-                    />
-                  )
+                  return <Chip key={item[props.itemKey]} nom={props.itemChipLabel(item)} class="mr-xs mb-xs mt-xs" onDeleteClicked={() => unselectItem(item)} />
                 })}
               </>
             ) : null}
@@ -251,20 +200,12 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
                 return (
                   <div
                     key={index}
-                    class={`${styles['typeahead-list-item']} ${
-                      currentSelectionIndex.value === index
-                        ? styles['typeahead-list-item-active']
-                        : ''
-                    }`}
+                    class={`${styles['typeahead-list-item']} ${currentSelectionIndex.value === index ? styles['typeahead-list-item-active'] : ''}`}
                     onMousedown={payload => payload.preventDefault()}
                     onClick={() => selectItem(item)}
                     onMouseenter={() => (currentSelectionIndex.value = index)}
                   >
-                    <span>
-                      {props.displayItemInList
-                        ? props.displayItemInList(item)
-                        : props.itemChipLabel(item)}
-                    </span>
+                    <span>{props.displayItemInList ? props.displayItemInList(item) : props.itemChipLabel(item)}</span>
                   </div>
                 )
               })}
@@ -272,13 +213,11 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
           ) : null}
         </div>
       )
-    }
+    },
   })
 
 const HiddenTypeAhead = GenericTypeAhead()
-export const TypeAhead = <T extends TypeAheadRecord, K extends keyof T>(
-  props: Props<T, K>
-): JSX.Element => {
+export const TypeAhead = <T extends TypeAheadRecord, K extends keyof T>(props: Props<T, K>): JSX.Element => {
   return (
     <HiddenTypeAhead
       id={props.id}

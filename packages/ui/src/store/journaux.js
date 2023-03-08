@@ -9,13 +9,13 @@ const state = {
     { id: 'intervalle', type: 'number', min: 10, max: 500 },
     { id: 'ordre', type: 'string', values: ['asc', 'desc'] },
     { id: 'recherche', type: 'string' },
-    { id: 'titreId', type: 'string' }
+    { id: 'titreId', type: 'string' },
   ],
   params: {
     table: { page: 1, intervalle: 50 },
-    filtres: { recherche: '' }
+    filtres: { recherche: '' },
   },
-  initialized: false
+  initialized: false,
 }
 
 const actions = listeActionsBuild('journaux', 'journaux', journaux)

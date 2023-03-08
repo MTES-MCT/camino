@@ -19,7 +19,7 @@ const defaultOptions: { [key in keyof Omit<DemarcheType<DemarcheTypeId>, keyof D
   points: false,
   duree: false,
   exception: false,
-  auto: false
+  auto: false,
 }
 
 export const DEMARCHES_TYPES_IDS = {
@@ -45,7 +45,7 @@ export const DEMARCHES_TYPES_IDS = {
   ResiliationAnticipeeDAmodiation: 'res',
   Retrait: 'ret',
   DemandeDeTitreDExploitation: 'vct',
-  MutationPartielle: 'vut'
+  MutationPartielle: 'vut',
 } as const
 
 export const DemarchesTypesIds = Object.values(DEMARCHES_TYPES_IDS)
@@ -61,7 +61,7 @@ export const DemarchesTypes = {
       'Démarche co-initiée par le titulaire de certains titres miniers d’exploitation et l’entreprise souhaitant devenir amodiataire du titre. C’est une location de l’exploitation d’un gisement à un tiers par le titulaire du titre en contrepartie d’un loyer ou / et du versement d’une quantité donnée des substances extraites. L’amodiation donne lieu à un contrat entre le titulaire du titre et l’amodiataire pour une durée fixée. Afin d’en bénéficier, l’intéressé doit satisfaire aux critères d’attribution exigés pour être détenteurs du titre minier. L’amodiation n’est pas une sous-traitance. En effet, le sous-traitant est rémunéré par le titulaire du titre pour l’exécution de prestations sur la base d’une facture et non d’un loyer.',
     ordre: 12,
     titulaires: true,
-    renouvelable: true
+    renouvelable: true,
   },
   aom: {
     ...defaultOptions,
@@ -69,7 +69,7 @@ export const DemarchesTypes = {
     nom: "Autorisation d'ouverture de travaux",
     description: "Autorisation d'ouverture de travaux",
     ordre: 100,
-    travaux: true
+    travaux: true,
   },
   ces: {
     ...defaultOptions,
@@ -78,7 +78,7 @@ export const DemarchesTypes = {
     description:
       'Démarche obsolète. Co-initiée par le titulaire du titre minier et l’entreprise souhaitant devenir titulaire ou co-titulaire elle remplit une fonction proche de la mutation dans le code minier actuel.',
     ordre: 16,
-    titulaires: true
+    titulaires: true,
   },
   con: {
     ...defaultOptions,
@@ -87,7 +87,7 @@ export const DemarchesTypes = {
     description:
       'Démarche appliquée à un titre d’exploitation d’hydrocarbures liquides ou gazeux. Elle permet de substituer les substances initiales par d’autres substances de mines connexes aux hydrocarbures contenus dans le gisement ou bien par un autre usage du sous-sol. La demande de conversion peut être réalisée au plus tard 4 ans avant l’échéance de son titre. Elle doit de surcroît démontrer la rentabilité économique de la poursuite de l’exploitation du gisement, mais ne fait pas l’objet d’une mise en concurrence.',
     ordre: 11,
-    substances: true
+    substances: true,
   },
   dam: {
     ...defaultOptions,
@@ -95,7 +95,7 @@ export const DemarchesTypes = {
     nom: "Déclaration d'arrêt définitif des travaux",
     description: "Déclaration d'arrêt définitif des travaux",
     ordre: 120,
-    travaux: true
+    travaux: true,
   },
   dec: {
     ...defaultOptions,
@@ -104,7 +104,7 @@ export const DemarchesTypes = {
     description:
       'Démarche obsolète. L’autorité administrative pouvait retirer les droits liés aux autorisations et titres miniers en cours de validité si le titulaire ne remplissait plus certaines prescriptions légales. La déchéance avait pour effet de permettre à l’Etat de réattribuer le titre ou l’autorisation lors d’un appel d’offre.',
     ordre: 21,
-    titulaires: true
+    titulaires: true,
   },
   dep: {
     ...defaultOptions,
@@ -114,7 +114,7 @@ export const DemarchesTypes = {
       'Démarche appliquée aux autorisation d’exploitation de minéraux et métaux pour déplacer le centre du périmètre de celle-ci dans la limite de 200 mètres. Les zones déjà exploitées doivent être maintenues à l’intérieur du périmètre déplacé.',
     ordre: 8,
     points: true,
-    renouvelable: true
+    renouvelable: true,
   },
   dot: {
     ...defaultOptions,
@@ -122,7 +122,7 @@ export const DemarchesTypes = {
     nom: "Déclaration d'ouverture de travaux",
     description: "Déclaration d'ouverture de travaux",
     ordre: 110,
-    travaux: true
+    travaux: true,
   },
   exp: {
     ...defaultOptions,
@@ -132,7 +132,7 @@ export const DemarchesTypes = {
     ordre: 7,
     duree: true,
     points: true,
-    renouvelable: true
+    renouvelable: true,
   },
   exs: {
     ...defaultOptions,
@@ -143,7 +143,7 @@ export const DemarchesTypes = {
     ordre: 10,
     duree: true,
     substances: true,
-    renouvelable: true
+    renouvelable: true,
   },
   fus: {
     ...defaultOptions,
@@ -155,7 +155,7 @@ export const DemarchesTypes = {
     duree: true,
     points: true,
     titulaires: true,
-    renouvelable: true
+    renouvelable: true,
   },
   mut: {
     ...defaultOptions,
@@ -167,7 +167,7 @@ export const DemarchesTypes = {
     duree: true,
     points: true,
     titulaires: true,
-    renouvelable: true
+    renouvelable: true,
   },
   oct: {
     ...defaultOptions,
@@ -178,7 +178,7 @@ export const DemarchesTypes = {
     duree: true,
     points: true,
     substances: true,
-    titulaires: true
+    titulaires: true,
   },
   pr1: {
     ...defaultOptions,
@@ -188,7 +188,7 @@ export const DemarchesTypes = {
       "Démarche appliquée à une autorisation ou un titre minier qui a fait l’objet d’un octroi initial. Elle prolonge sa durée de validité. Une première prolongation est applicable aux permis exclusifs de recherches et aux permis d'exploitation de minéraux et métaux en outre-mer pour une durée de 5 ans maximum. Pour des permis exclusifs de recherches d’hydrocarbures liquides ou gazeux, la première prolongation s’accompagne obligatoirement d’une réduction de 50% de la surface du titre.",
     ordre: 3,
     duree: true,
-    points: true
+    points: true,
   },
   pr2: {
     ...defaultOptions,
@@ -198,7 +198,7 @@ export const DemarchesTypes = {
       "Démarche appliquée à une autorisation ou un titre minier qui a fait l’objet d’une première prolongation. Elle prolonge sa durée de validité. Une seconde prolongation est applicable aux permis exclusifs de recherches et aux permis d'exploitation de minéraux et métaux en outre-mer pour une durée de 5 ans maximum. Seules deux prolongations successives sont admises pour ces titres. A l’exception des permis exclusifs de recherches d’hydrocarbures liquides ou gazeux qui peuvent faire l’objet d’une prolongation exceptionnelle. Pour ces derniers, la seconde prolongation s’accompagne obligatoirement d’une réduction de 25% de la surface du titre.",
     ordre: 4,
     duree: true,
-    points: true
+    points: true,
   },
   pre: {
     ...defaultOptions,
@@ -208,7 +208,7 @@ export const DemarchesTypes = {
       'Démarche appliquée à un permis exclusif de recherches d’hydrocarbures liquides ou gazeux. Elle prolonge sa durée de validité de trois ans maximum. La prolongation exceptionnelle ne peut être mobilisée qu’une fois au cours de la vie du titres et ne s’accompagne pas nécessairement d’une réduction de sa surface.',
     ordre: 5,
     duree: true,
-    exception: true
+    exception: true,
   },
   pro: {
     ...defaultOptions,
@@ -219,7 +219,7 @@ export const DemarchesTypes = {
     ordre: 2,
     duree: true,
     points: true,
-    renouvelable: true
+    renouvelable: true,
   },
   prr: {
     ...defaultOptions,
@@ -230,7 +230,7 @@ export const DemarchesTypes = {
     ordre: 17,
     duree: true,
     points: true,
-    renouvelable: true
+    renouvelable: true,
   },
   ren: {
     ...defaultOptions,
@@ -242,7 +242,7 @@ export const DemarchesTypes = {
     duree: true,
     points: true,
     titulaires: true,
-    renouvelable: true
+    renouvelable: true,
   },
   res: {
     ...defaultOptions,
@@ -252,7 +252,7 @@ export const DemarchesTypes = {
       'Démarche co-initiée par le titulaire de certains titres miniers d’exploitation et l’entreprise amodiataire du titre. Elle conduit à une fin anticipée du contrat d’amodiation sur l’accord des deux parties sans affecter le statut du titre minier.',
     ordre: 13,
     titulaires: true,
-    renouvelable: true
+    renouvelable: true,
   },
   ret: {
     ...defaultOptions,
@@ -261,7 +261,7 @@ export const DemarchesTypes = {
     description:
       'Démarche initiée par l’autorité administrative. Le ministre chargé des mines pour les titres et le préfet pour les autorisations d’exploitation peuvent retirer les autorisations et les titres miniers en cours de validité si l’intéressé ne remplit plus certaines prescriptions légales.\r\nLe retrait a pour effet de replacer le gisement dans la situation de ceux ouverts aux recherches.',
     ordre: 20,
-    duree: true
+    duree: true,
   },
   vct: {
     ...defaultOptions,
@@ -275,7 +275,7 @@ export const DemarchesTypes = {
     substances: true,
     titulaires: true,
     renouvelable: true,
-    auto: true
+    auto: true,
   },
   vut: {
     ...defaultOptions,
@@ -288,8 +288,8 @@ export const DemarchesTypes = {
     points: true,
     titulaires: true,
     renouvelable: true,
-    auto: true
-  }
+    auto: true,
+  },
 } as const satisfies { [key in DemarcheTypeId]: DemarcheType<key> }
 
 type FilterSettings<S extends (typeof DemarchesTypes)[keyof typeof DemarchesTypes] = (typeof DemarchesTypes)[keyof typeof DemarchesTypes]> = S extends { travaux: true } ? S['id'] : never
@@ -311,7 +311,7 @@ export const isDemarcheTypeWithPhase = (demarcheTypeId: DemarcheTypeId): boolean
     DEMARCHES_TYPES_IDS.Prolongation,
     DEMARCHES_TYPES_IDS.Prolongation1,
     DEMARCHES_TYPES_IDS.Prolongation2,
-    DEMARCHES_TYPES_IDS.ProlongationExceptionnelle
+    DEMARCHES_TYPES_IDS.ProlongationExceptionnelle,
   ]
 
   return demarchesTypesWithPhases.includes(demarcheTypeId)

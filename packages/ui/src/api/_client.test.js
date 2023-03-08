@@ -9,7 +9,7 @@ vi.mock('./fragments/utilisateur', () => ({
       id
       email
     }
-  `
+  `,
 }))
 
 console.info = vi.fn()
@@ -29,7 +29,7 @@ describe('api client', () => {
 
   test('une réponse 200 du serveur ne génère pas d’erreur', async () => {
     fetch.mockResponseOnce(JSON.stringify({ data: { key: 'value' } }), {
-      status: 200
+      status: 200,
     })
 
     const res = await apiGraphQLFetch(gql`

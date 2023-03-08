@@ -18,21 +18,18 @@ export const main = async () => {
         // @ts-ignore
         hashedSaltedValue: u.motDePasse,
         hashIterations: 10,
-        type: 'password'
-      }
+        type: 'password',
+      },
     ],
     firstName: u.nom,
     lastName: u.prenom,
     email: u.email,
     clientRoles: {
-      account: ['manage-account', 'manage-account-links', 'view-profile']
-    }
+      account: ['manage-account', 'manage-account-links', 'view-profile'],
+    },
   }))
 
-  writeFileSync(
-    'keycloak.json',
-    JSON.stringify({ realm: 'Camino', users: kcUsers }, null, 2)
-  )
+  writeFileSync('keycloak.json', JSON.stringify({ realm: 'Camino', users: kcUsers }, null, 2))
 
   process.exit(0)
 }

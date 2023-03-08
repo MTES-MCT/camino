@@ -3,40 +3,13 @@ import { IFormat, Index } from '../types.js'
 import express from 'express'
 import { join } from 'path'
 
-import {
-  activites,
-  demarches,
-  entreprises,
-  titre,
-  titres
-} from '../api/rest/index.js'
-import {
-  etapeFichier,
-  etapeTelecharger,
-  fichier
-} from '../api/rest/fichiers.js'
-import {
-  getTitreLiaisons,
-  postTitreLiaisons,
-  titresDREAL,
-  titresONF,
-  titresPTMG
-} from '../api/rest/titres.js'
+import { activites, demarches, entreprises, titre, titres } from '../api/rest/index.js'
+import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers.js'
+import { getTitreLiaisons, postTitreLiaisons, titresDREAL, titresONF, titresPTMG } from '../api/rest/titres.js'
 import { fiscalite } from '../api/rest/entreprises.js'
-import {
-  generateQgisToken,
-  isSubscribedToNewsletter,
-  manageNewsletterSubscription,
-  moi,
-  utilisateurs
-} from '../api/rest/utilisateurs.js'
+import { generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
-import {
-  getDGTMStats,
-  getGranulatsMarinsStats,
-  getGuyaneStats,
-  getMinerauxMetauxMetropolesStats
-} from '../api/rest/statistiques/index.js'
+import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index.js'
 import { CaminoRestRoutes } from 'camino-common/src/rest.js'
 import { CaminoConfig } from 'camino-common/src/static/config.js'
 import { CustomResponse } from '../api/rest/express-type.js'
@@ -47,7 +20,7 @@ const contentTypes = {
   geojson: 'application/geojson',
   xlsx: 'application/xlsx',
   pdf: 'application/pdf',
-  json: 'application/json'
+  json: 'application/json',
 } as { [id in IFormat]: string }
 
 interface IRestResolverResult {
@@ -61,7 +34,7 @@ interface IRestResolverResult {
 type IRestResolver = (
   {
     params,
-    query
+    query,
   }: {
     params: Index<unknown>
     query: Index<unknown>
@@ -71,94 +44,69 @@ type IRestResolver = (
 
 export const rest = express.Router()
 
-type ExpressRoute = (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => Promise<void>
+type ExpressRoute = (req: express.Request, res: express.Response, next: express.NextFunction) => Promise<void>
 
-const restCatcher =
-  (expressCall: ExpressRoute) =>
-  async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    try {
-      await expressCall(req, res, next)
-    } catch (e) {
-      console.error('catching error', e)
-      next(e)
-    }
+const restCatcher = (expressCall: ExpressRoute) => async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  try {
+    await expressCall(req, res, next)
+  } catch (e) {
+    console.error('catching error', e)
+    next(e)
   }
+}
 
-const restDownload =
-  (resolver: IRestResolver) =>
-  async (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    try {
-      // TODO 2022-10-12 mieux typer
-      const user = req.user as User
+const restDownload = (resolver: IRestResolver) => async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  try {
+    // TODO 2022-10-12 mieux typer
+    const user = req.user as User
 
-      const result = await resolver(
-        { query: req.query, params: req.params },
-        user
-      )
+    const result = await resolver({ query: req.query, params: req.params }, user)
 
-      if (!result) {
-        throw new Error('erreur: aucun résultat')
+    if (!result) {
+      throw new Error('erreur: aucun résultat')
+    }
+
+    const { nom, format, contenu, filePath, buffer } = result
+
+    res.header('Content-disposition', `inline; filename=${encodeURIComponent(nom)}`)
+    res.header('Content-Type', contentTypes[format])
+
+    if (filePath || buffer) {
+      res.header('x-sent', 'true')
+      res.header('x-timestamp', Date.now().toString())
+      const options = {
+        dotfiles: 'deny',
+        root: join(process.cwd(), 'files'),
       }
 
-      const { nom, format, contenu, filePath, buffer } = result
-
-      res.header(
-        'Content-disposition',
-        `inline; filename=${encodeURIComponent(nom)}`
-      )
-      res.header('Content-Type', contentTypes[format])
-
-      if (filePath || buffer) {
-        res.header('x-sent', 'true')
-        res.header('x-timestamp', Date.now().toString())
-        const options = {
-          dotfiles: 'deny',
-          root: join(process.cwd(), 'files')
-        }
-
-        if (filePath) {
-          res.sendFile(filePath, options, err => {
-            if (err) console.error(`erreur de téléchargement ${err}`)
-            res.status(404).end()
-          })
-        }
-        if (buffer) {
-          res.header('Content-Length', `${buffer.length}`)
-          res.send(buffer)
-        }
-      } else {
-        res.send(contenu)
+      if (filePath) {
+        res.sendFile(filePath, options, err => {
+          if (err) console.error(`erreur de téléchargement ${err}`)
+          res.status(404).end()
+        })
       }
-    } catch (e) {
-      console.error(e)
-
-      next(e)
+      if (buffer) {
+        res.header('Content-Length', `${buffer.length}`)
+        res.send(buffer)
+      }
+    } else {
+      res.send(contenu)
     }
-  }
+  } catch (e) {
+    console.error(e)
 
-export const config = async (
-  _req: express.Request,
-  res: CustomResponse<CaminoConfig>
-) => {
+    next(e)
+  }
+}
+
+export const config = async (_req: express.Request, res: CustomResponse<CaminoConfig>) => {
   const config: CaminoConfig = {
     sentryDsn: process.env.SENTRY_DSN,
     caminoStage: process.env.CAMINO_STAGE,
     environment: process.env.ENV ?? 'dev',
     uiHost: process.env.UI_HOST,
     matomoHost: process.env.API_MATOMO_URL,
-    matomoSiteId: process.env.API_MATOMO_ID
+    matomoSiteId: process.env.API_MATOMO_ID,
   }
 
   res.json(config)
@@ -174,24 +122,15 @@ rest.get(CaminoRestRoutes.titreSections, restCatcher(getTitresSections))
 rest.get(CaminoRestRoutes.titresONF, restCatcher(titresONF))
 rest.get(CaminoRestRoutes.titresPTMG, restCatcher(titresPTMG))
 rest.get(CaminoRestRoutes.titresDREAL, restCatcher(titresDREAL))
-rest.get(
-  CaminoRestRoutes.statistiquesMinerauxMetauxMetropole,
-  restCatcher(getMinerauxMetauxMetropolesStats)
-)
+rest.get(CaminoRestRoutes.statistiquesMinerauxMetauxMetropole, restCatcher(getMinerauxMetauxMetropolesStats))
 rest.get(CaminoRestRoutes.statistiquesGuyane, restCatcher(getGuyaneStats))
-rest.get(
-  CaminoRestRoutes.statistiquesGranulatsMarins,
-  restCatcher(getGranulatsMarinsStats)
-)
+rest.get(CaminoRestRoutes.statistiquesGranulatsMarins, restCatcher(getGranulatsMarinsStats))
 
 rest.get(CaminoRestRoutes.statistiquesDGTM, restCatcher(getDGTMStats))
 rest.get('/demarches', restDownload(demarches))
 rest.get('/activites', restDownload(activites))
 rest.post(CaminoRestRoutes.generateQgisToken, restCatcher(generateQgisToken))
-rest.post(
-  CaminoRestRoutes.newsletter,
-  restCatcher(manageNewsletterSubscription)
-)
+rest.post(CaminoRestRoutes.newsletter, restCatcher(manageNewsletterSubscription))
 rest.get(CaminoRestRoutes.moi, restCatcher(moi))
 rest.get(CaminoRestRoutes.newsletter, restCatcher(isSubscribedToNewsletter))
 rest.get('/utilisateurs', restDownload(utilisateurs))
@@ -203,20 +142,13 @@ rest.get('/etape/:etapeId/:fichierNom', restDownload(etapeFichier))
 rest.get('/deconnecter', restCatcher(logout))
 rest.get('/changerMotDePasse', restCatcher(resetPassword))
 
-rest.use(
-  (
-    err: Error,
-    _req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    if (err) {
-      res.status(500)
-      res.send({ error: err.message })
+rest.use((err: Error, _req: express.Request, res: express.Response, next: express.NextFunction) => {
+  if (err) {
+    res.status(500)
+    res.send({ error: err.message })
 
-      return
-    }
-
-    next()
+    return
   }
-)
+
+  next()
+})

@@ -6,14 +6,14 @@ const meta: Meta = {
   title: 'Components/Common/Domaine',
   component: Domaine,
   argTypes: {
-    domaineId: { name: 'string', required: false }
-  }
+    domaineId: { name: 'string', required: false },
+  },
 }
 export default meta
 
 export const Default = () => ({
   components: { Domaine },
-  template: '<Domaine />'
+  template: '<Domaine />',
 })
 
 export const AllDomaines = () => ({
@@ -26,12 +26,9 @@ export const AllDomaines = () => ({
         <th>Rendu</th>
       </tr>
       ${Object.values(DOMAINES_IDS)
-        .map(
-          domaine =>
-            `<tr><td>${domaine}</td><td><Domaine domaineId="${domaine}" /></td></tr>`
-        )
+        .map(domaine => `<tr><td>${domaine}</td><td><Domaine domaineId="${domaine}" /></td></tr>`)
         .join('')}
     </table>
     </div>
-  `
+  `,
 })

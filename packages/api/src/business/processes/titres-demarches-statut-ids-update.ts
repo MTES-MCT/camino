@@ -15,24 +15,14 @@ export const titresDemarchesStatutIdUpdate = async (titresId?: string) => {
   const titresDemarchesUpdated: string[] = []
 
   for (const titreDemarche of Object.values(titresDemarches)) {
-    const titreDemarcheEtapes = titreEtapesSortAscByOrdre(
-      titreDemarche.etapes ?? []
-    )
+    const titreDemarcheEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes ?? [])
 
-    const statutId = titreDemarcheStatutIdFind(
-      titreDemarche.typeId,
-      titreDemarcheEtapes,
-      titreDemarche.titreTypeId,
-      titreDemarche.id
-    )
+    const statutId = titreDemarcheStatutIdFind(titreDemarche.typeId, titreDemarcheEtapes, titreDemarche.titreTypeId, titreDemarche.id)
 
     if (titreDemarche.statutId !== statutId) {
       await titreDemarcheUpdate(titreDemarche.id, { statutId })
 
-      console.info(
-        'titre / démarche : statut (mise à jour) ->',
-        `${titreDemarche.id}: ${statutId}`
-      )
+      console.info('titre / démarche : statut (mise à jour) ->', `${titreDemarche.id}: ${statutId}`)
 
       titresDemarchesUpdated.push(titreDemarche.id)
     }

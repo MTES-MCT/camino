@@ -22,7 +22,7 @@ export const toDbATE = () => {
             etape_type_id: etapeTypeId,
             lecture_interdit: value.lectureInterdit,
             creation_interdit: value.creationInterdit,
-            modification_interdit: value.modificationInterdit
+            modification_interdit: value.modificationInterdit,
           }
         })
       )
@@ -111,8 +111,8 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true }
-    }
+      [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
+    },
   },
   [ADMINISTRATION_IDS['MRAE GUYANE']]: {
     [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
@@ -162,8 +162,8 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
-    }
+      [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
+    },
   },
   [ADMINISTRATION_IDS['DGTM - GUYANE']]: {
     [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
@@ -193,7 +193,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
+      [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
     },
     [TITRES_TYPES_IDS.CONCESSION_METAUX]: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -218,7 +218,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLautoriteSignataire]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuConseilDEtat]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
+      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
     },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -244,7 +244,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.retraitDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLautoriteSignataire]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
+      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
     },
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -262,8 +262,8 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.retraitDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLautoriteSignataire]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
-    }
+      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
+    },
   },
   [ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON']]: {
     [TITRES_TYPES_IDS.CONCESSION_METAUX]: {
@@ -291,7 +291,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuConseilDEtat]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
+      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
     },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -320,8 +320,8 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLautoriteSignataire]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
-    }
+      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
+    },
   },
   [ADMINISTRATION_IDS['DREAL - BOURGOGNE-FRANCHE-COMTÉ - SIÈGE DE BESANÇON']]: {
     [TITRES_TYPES_IDS.CONCESSION_METAUX]: {
@@ -349,7 +349,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuConseilDEtat]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
+      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
     },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -378,8 +378,8 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLautoriteSignataire]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
-    }
+      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
+    },
   },
   [ADMINISTRATION_IDS['DREAL - GRAND EST - SIÈGE DE METZ']]: {
     [TITRES_TYPES_IDS.CONCESSION_METAUX]: {
@@ -407,7 +407,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuConseilDEtat]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
+      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
     },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -436,8 +436,8 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLautoriteSignataire]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
-    }
+      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
+    },
   },
   [ADMINISTRATION_IDS['DREAL - OCCITANIE - SIÈGE DE TOULOUSE']]: {
     [TITRES_TYPES_IDS.CONCESSION_METAUX]: {
@@ -465,7 +465,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuConseilDEtat]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
+      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
     },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -494,8 +494,8 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLautoriteSignataire]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuConseilGeneralDeLeconomie_CGE_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
-    }
+      [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
+    },
   },
   [ADMINISTRATION_IDS['BRGM - PROJET ZERCOA']]: {
     [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
@@ -547,7 +547,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true }
+      [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
     },
     [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: {
       [ETAPES_TYPES.avisDeDirectionRegionaleDesAffairesCulturelles]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
@@ -600,7 +600,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLautoriteSignataire]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDesCollectivitesLocales]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDesServices]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true }
+      [ETAPES_TYPES.saisineDesServices]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
     },
     [TITRES_TYPES_IDS.CONCESSION_METAUX]: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -654,7 +654,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDuConseilDEtat]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDesServices]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true }
+      [ETAPES_TYPES.saisineDesServices]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
     },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -704,7 +704,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDesCollectivitesLocales]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDesServices]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true }
+      [ETAPES_TYPES.saisineDesServices]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
     },
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: {
       [ETAPES_TYPES.abrogationDeLaDecision]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
@@ -752,8 +752,8 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDesCollectivitesLocales]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDuPrefet]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDesServices]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true }
-    }
+      [ETAPES_TYPES.saisineDesServices]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
+    },
   },
   [ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']]: {
     [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
@@ -774,7 +774,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.receptionDinformation]: { lectureInterdit: false, creationInterdit: false, modificationInterdit: false },
       [ETAPES_TYPES.receptionDinformation_RecevabiliteDeLaDemande_]: { lectureInterdit: false, creationInterdit: false, modificationInterdit: false },
       [ETAPES_TYPES.receptionDinformation_ExpertiseDeLOfficeNationalDesForets_]: { lectureInterdit: false, creationInterdit: false, modificationInterdit: false },
-      [ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_]: { lectureInterdit: false, creationInterdit: false, modificationInterdit: false }
+      [ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_]: { lectureInterdit: false, creationInterdit: false, modificationInterdit: false },
     },
     [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: {
       [ETAPES_TYPES.avisDeDirectionRegionaleDesAffairesCulturelles]: { lectureInterdit: true, creationInterdit: true, modificationInterdit: true },
@@ -827,9 +827,9 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLautoriteSignataire]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDesCollectivitesLocales]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.saisineDeLaCommissionDepartementaleDesMines_CDM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.saisineDesServices]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
+      [ETAPES_TYPES.saisineDesServices]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
     },
-    [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: { [ETAPES_TYPES.avisDeLOfficeNationalDesForets]: { lectureInterdit: false, creationInterdit: false, modificationInterdit: false } }
+    [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: { [ETAPES_TYPES.avisDeLOfficeNationalDesForets]: { lectureInterdit: false, creationInterdit: false, modificationInterdit: false } },
   },
   [ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']]: {
     [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
@@ -866,8 +866,8 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
-    }
+      [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
+    },
   },
   [ADMINISTRATION_IDS['PRÉFECTURE - GUYANE']]: {
     [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
@@ -917,7 +917,7 @@ const AdministrationsTitresTypesEtapesTypes: {
       [ETAPES_TYPES.saisineDeLaCommissionDesAutorisationsDeRecherchesMinieres_CARM_]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
       [ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
-      [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true }
-    }
-  }
+      [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: { lectureInterdit: false, creationInterdit: true, modificationInterdit: true },
+    },
+  },
 }

@@ -12,9 +12,9 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         type: {
           id: 'arm',
-          contenuIds: []
+          contenuIds: [],
         } as unknown as ITitreType,
-        demarches: [{ typeId: 'oct' }]
+        demarches: [{ typeId: 'oct' }],
       } as ITitre,
       { typeId: 'mfr', date: '2030-01-01' } as ITitreEtape,
       newDemarcheId(),
@@ -31,16 +31,14 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         type: {
           id: 'arm',
-          contenuIds: []
+          contenuIds: [],
         } as unknown as ITitreType,
-        demarches: [{ typeId: 'pro' }, { typeId: 'oct' }]
+        demarches: [{ typeId: 'pro' }, { typeId: 'oct' }],
       } as ITitre,
       { typeId: 'mdp', statutId: 'fai', date: '2022-05-04' } as ITitreEtape,
       newDemarcheId(),
 
-      [
-        { id: '1', typeId: 'mfr', statutId: 'fai', date: '2022-05-03' }
-      ] as ITitreEtape[]
+      [{ id: '1', typeId: 'mfr', statutId: 'fai', date: '2022-05-03' }] as ITitreEtape[]
     )
 
     expect(valid).toHaveLength(0)
@@ -53,21 +51,21 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         type: {
           id: 'arm',
-          contenuIds: []
+          contenuIds: [],
         } as unknown as ITitreType,
-        demarches: [{ typeId: 'oct' }]
+        demarches: [{ typeId: 'oct' }],
       } as ITitre,
       {
         id: '1',
         typeId: 'mfr',
         statutId: 'fai',
-        date: '2022-05-04'
+        date: '2022-05-04',
       } as ITitreEtape,
       newDemarcheId(),
 
       [
         { id: '1', typeId: 'mfr', date: '2022-05-03', statutId: 'fai' },
-        { id: '2', typeId: 'mdp', date: '2022-05-04', statutId: 'fai' }
+        { id: '2', typeId: 'mdp', date: '2022-05-04', statutId: 'fai' },
       ] as ITitreEtape[]
     )
 
@@ -81,9 +79,9 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         type: {
           id: 'arm',
-          contenuIds: []
+          contenuIds: [],
         } as unknown as ITitreType,
-        demarches: [{ typeId: 'oct' }]
+        demarches: [{ typeId: 'oct' }],
       } as ITitre,
       { id: '1', typeId: 'mfr' } as ITitreEtape,
       newDemarcheId(),
@@ -102,9 +100,9 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         type: {
           id: 'arm',
-          contenuIds: []
+          contenuIds: [],
         } as unknown as ITitreType,
-        demarches: [{ typeId: 'oct' }]
+        demarches: [{ typeId: 'oct' }],
       } as ITitre,
       { id: '1', typeId: 'mfr' } as ITitreEtape,
       newDemarcheId(),
@@ -123,9 +121,9 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           typeId: 'arm',
           type: {
             id: 'arm',
-            contenuIds: []
+            contenuIds: [],
           } as unknown as ITitreType,
-          demarches: [{ typeId: 'pro' }]
+          demarches: [{ typeId: 'pro' }],
         } as ITitre,
         { id: '1', typeId: 'mfr' } as ITitreEtape,
         newDemarcheId(),
@@ -141,8 +139,8 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           typeId: 'arm',
           type: {
             id: 'arm',
-            contenuIds: []
-          } as unknown as ITitreType
+            contenuIds: [],
+          } as unknown as ITitreType,
         } as ITitre,
         { id: '1', typeId: 'mfr' } as ITitreEtape,
         newDemarcheId(),
@@ -159,9 +157,9 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         type: {
           id: 'arm',
-          contenuIds: []
+          contenuIds: [],
         } as unknown as ITitreType,
-        demarches: [{ typeId: 'oct' }]
+        demarches: [{ typeId: 'oct' }],
       } as ITitre,
       { id: '1', typeId: 'mfr' } as ITitreEtape,
       newDemarcheId(),
@@ -180,7 +178,7 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'arm',
         type: {
           id: 'arm',
-          contenuIds: []
+          contenuIds: [],
         } as unknown as ITitreType,
         demarches: [
           {
@@ -188,12 +186,10 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
             type: {
               id: 'oct',
               nom: 'oct',
-              etapesTypes: [
-                { id: 'mfr', titreTypeId: 'arm', demarcheTypeId: 'oct' }
-              ]
-            } as IDemarcheType
-          }
-        ]
+              etapesTypes: [{ id: 'mfr', titreTypeId: 'arm', demarcheTypeId: 'oct' }],
+            } as IDemarcheType,
+          },
+        ],
       } as ITitre,
       { typeId: 'mfr', date: '1030-01-01', statutId: 'fai' } as ITitreEtape,
       newDemarcheId()
@@ -209,9 +205,9 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'axm',
         type: {
           id: 'axm',
-          contenuIds: []
+          contenuIds: [],
         } as unknown as ITitreType,
-        demarches: [{ typeId: 'oct' }]
+        demarches: [{ typeId: 'oct' }],
       } as ITitre,
       { typeId: 'mfr', statutId: 'aco', date: '2030-01-01' } as ITitreEtape,
       newDemarcheId()
@@ -227,9 +223,9 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'axm',
         type: {
           id: 'axm',
-          contenuIds: []
+          contenuIds: [],
         } as unknown as ITitreType,
-        demarches: [{ typeId: 'oct' }]
+        demarches: [{ typeId: 'oct' }],
       } as ITitre,
       { typeId: 'mfr', statutId: 'aco' } as ITitreEtape,
       newDemarcheId(),
@@ -247,16 +243,16 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
         typeId: 'axm',
         type: {
           id: 'axm',
-          contenuIds: []
+          contenuIds: [],
         } as unknown as ITitreType,
-        demarches: [{ typeId: 'oct' }]
+        demarches: [{ typeId: 'oct' }],
       } as ITitre,
       { id: '1', typeId: 'mfr', statutId: 'aco' } as ITitreEtape,
       newDemarcheId(),
 
       [
         { id: '1', typeId: 'mfr', statutId: 'aco' },
-        { id: '2', typeId: 'dae' }
+        { id: '2', typeId: 'dae' },
       ] as ITitreEtape[]
     )
 
@@ -271,16 +267,16 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           typeId: 'axm',
           type: {
             id: 'axm',
-            contenuIds: []
+            contenuIds: [],
           } as unknown as ITitreType,
-          demarches: [{ typeId: 'oct' }]
+          demarches: [{ typeId: 'oct' }],
         } as ITitre,
         { id: '3', typeId: 'mfr', statutId: 'aco' } as ITitreEtape,
         newDemarcheId(),
 
         [
           { id: '1', typeId: 'mfr', statutId: 'aco' },
-          { id: '2', typeId: 'dae' }
+          { id: '2', typeId: 'dae' },
         ] as ITitreEtape[]
       )
     ).toContain('il y a déjà une demande en construction')
@@ -294,38 +290,30 @@ describe('teste titreDemarcheUpdatedEtatValidate', () => {
           typeId: 'axm',
           type: {
             id: 'axm',
-            contenuIds: []
+            contenuIds: [],
           } as unknown as ITitreType,
-          demarches: [{ typeId: 'oct' }]
+          demarches: [{ typeId: 'oct' }],
         } as ITitre,
         {
           typeId: 'aaa',
           date: '2022-01-01',
-          statutId: 'fai'
+          statutId: 'fai',
         } as unknown as ITitreEtape,
         newDemarcheId(),
 
         [
           {
             id: '1',
-            typeId:
-              EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
-            statutId:
-              EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
-            date: '2021-01-01'
+            typeId: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeTypeId,
+            statutId: EtapesTypesEtapesStatuts.demande.EN_CONSTRUCTION.etapeStatutId,
+            date: '2021-01-01',
           },
           {
             id: '2',
-            typeId:
-              EtapesTypesEtapesStatuts
-                .decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_
-                .REQUIS.etapeTypeId,
-            statutId:
-              EtapesTypesEtapesStatuts
-                .decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_
-                .REQUIS.etapeStatutId,
-            date: '2021-01-02'
-          }
+            typeId: EtapesTypesEtapesStatuts.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS.etapeTypeId,
+            statutId: EtapesTypesEtapesStatuts.decisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_.REQUIS.etapeStatutId,
+            date: '2021-01-02',
+          },
         ] as ITitreEtape[]
       )
     ).toContain('la démarche n’est pas valide')

@@ -32,17 +32,7 @@ export const utilisateur = apiGraphQLFetch(
 
 export const utilisateurs = apiGraphQLFetch(
   gql`
-    query Utilisateurs(
-      $intervalle: Int
-      $page: Int
-      $colonne: String
-      $ordre: String
-      $entrepriseIds: [ID]
-      $administrationIds: [ID]
-      $roles: [ID]
-      $noms: String
-      $emails: String
-    ) {
+    query Utilisateurs($intervalle: Int, $page: Int, $colonne: String, $ordre: String, $entrepriseIds: [ID], $administrationIds: [ID], $roles: [ID], $noms: String, $emails: String) {
       utilisateurs(
         intervalle: $intervalle
         page: $page

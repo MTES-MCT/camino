@@ -22,8 +22,8 @@ vi.mock('./user', () => ({ default: { user: vi.fn() } }))
 vi.mock('./titre-activite', () => ({ default: { titreActivite: vi.fn() } }))
 vi.mock('./titre-activite-edition', () => ({
   default: {
-    titreActiviteEdition: vi.fn()
-  }
+    titreActiviteEdition: vi.fn(),
+  },
 }))
 vi.mock('./titres-activites', () => ({ default: { titresActivites: vi.fn() } }))
 vi.mock('./statistiques', () => ({ default: { statistiques: vi.fn() } }))
@@ -35,8 +35,8 @@ vi.mock('./journaux', () => ({ default: { journaux: vi.fn() } }))
 vi.mock('../router', () => ({
   default: {
     replace: vi.fn(),
-    push: vi.fn()
-  }
+    push: vi.fn(),
+  },
 }))
 
 console.info = vi.fn()
@@ -54,15 +54,15 @@ describe("état général de l'application", () => {
         namespaced: true,
         state: { element: null },
         actions: {
-          get: vi.fn()
-        }
+          get: vi.fn(),
+        },
       },
       route: {
         namespaced: true,
         state: {
-          query: {}
-        }
-      }
+          query: {},
+        },
+      },
     }
 
     state = {
@@ -75,15 +75,15 @@ describe("état général de l'application", () => {
       loaded: false,
       fileLoading: {
         loaded: 0,
-        total: 0
-      }
+        total: 0,
+      },
     }
 
     store = createStore({
       modules,
       state,
       actions,
-      mutations
+      mutations,
     })
 
     const app = createApp({})
@@ -123,7 +123,7 @@ describe("état général de l'application", () => {
       component: { _value: null },
       props: null,
       messages: [],
-      loading: false
+      loading: false,
     })
   })
 
@@ -159,8 +159,8 @@ describe("état général de l'application", () => {
       {
         id: 1487076708000,
         type: 'error',
-        value: 'Erreur : message'
-      }
+        value: 'Erreur : message',
+      },
     ])
   })
 
@@ -169,7 +169,7 @@ describe("état général de l'application", () => {
 
     expect(state.error).toEqual({
       type: 'error',
-      value: `Erreur: page introuvable`
+      value: `Erreur: page introuvable`,
     })
   })
 
@@ -242,7 +242,7 @@ describe("état général de l'application", () => {
   test("met à jour les paramètres d'url", async () => {
     await store.dispatch('urlQueryUpdate', {
       params: { typesIds: null },
-      definitions: [{ id: 'typesIds', type: 'strings', elements: [] }]
+      definitions: [{ id: 'typesIds', type: 'strings', elements: [] }],
     })
 
     expect(router.default.push).not.toHaveBeenCalled()
@@ -250,22 +250,22 @@ describe("état général de l'application", () => {
 
     await store.dispatch('urlQueryUpdate', {
       params: { typesIds: ['pr', 'ar'] },
-      definitions: [{ id: 'typesIds', type: 'strings', elements: [] }]
+      definitions: [{ id: 'typesIds', type: 'strings', elements: [] }],
     })
 
     expect(router.default.replace).toHaveBeenCalledWith({
-      query: { typesIds: 'pr,ar' }
+      query: { typesIds: 'pr,ar' },
     })
 
     store.state.route.query.typesIds = 'pr,ar'
 
     await store.dispatch('urlQueryUpdate', {
       params: { typesIds: ['cx'] },
-      definitions: [{ id: 'typesIds', type: 'strings', elements: [] }]
+      definitions: [{ id: 'typesIds', type: 'strings', elements: [] }],
     })
 
     expect(router.default.push).toHaveBeenCalledWith({
-      query: { typesIds: 'cx' }
+      query: { typesIds: 'cx' },
     })
   })
 })
@@ -280,8 +280,8 @@ describe("état général de l'application", () => {
       loading: [],
       fileLoading: {
         loaded: 0,
-        total: 0
-      }
+        total: 0,
+      },
     }
 
     localStorage.clear()
@@ -323,7 +323,7 @@ describe("état général de l'application", () => {
     store = createStore({ state, actions, mutations })
 
     await store.dispatch('downloadDocument', {
-      fichierNouveau: { name: 'document-titre' }
+      fichierNouveau: { name: 'document-titre' },
     })
 
     expect(fileSaver.saveAs).toHaveBeenCalled()
@@ -341,9 +341,7 @@ describe("état général de l'application", () => {
 
     await store.dispatch('download', `/${section}?${params}`)
 
-    expect(fileSaver.saveAs).toHaveBeenCalledWith(
-      `/apiUrl/${section}?${params}`
-    )
+    expect(fileSaver.saveAs).toHaveBeenCalledWith(`/apiUrl/${section}?${params}`)
     expect(messageAddMock).toHaveBeenCalled()
     expect(state.loading).toEqual([])
   })

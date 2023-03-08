@@ -12,7 +12,7 @@ export const ADMINISTRATION_TYPE_IDS: Record<string, AdministrationTypeId> = {
   DREAL: 'dre',
   MINISTERE: 'min',
   OPERATEUR: 'ope',
-  PREFECTURE: 'pre'
+  PREFECTURE: 'pre',
 } as const
 
 export type AdministrationType<T = AdministrationTypeId> = Omit<Definition<T>, 'description'>
@@ -22,33 +22,33 @@ export const ADMINISTRATION_TYPES: {
   aut: {
     id: 'aut',
     nom: 'Autorité',
-    ordre: 6
+    ordre: 6,
   },
   dea: {
     id: 'dea',
     nom: 'Déal',
-    ordre: 3
+    ordre: 3,
   },
   dre: {
     id: 'dre',
     nom: 'Dréal',
-    ordre: 2
+    ordre: 2,
   },
   min: {
     id: 'min',
     nom: 'Ministère',
-    ordre: 1
+    ordre: 1,
   },
   ope: {
     id: 'ope',
     nom: 'Opérateur',
-    ordre: 5
+    ordre: 5,
   },
   pre: {
     id: 'pre',
     nom: 'Préfecture',
-    ordre: 4
-  }
+    ordre: 4,
+  },
 }
 
 export const sortedAdministrationTypes = Object.values(ADMINISTRATION_TYPES).sort((a, b) => a.ordre - b.ordre)
@@ -184,7 +184,7 @@ export const ADMINISTRATION_IDS = {
   'PRÉFECTURE - MARTINIQUE': 'pre-97209-01',
   'PRÉFECTURE - GUYANE': 'pre-97302-01',
   'PRÉFECTURE - RÉUNION': 'pre-97411-01',
-  'PRÉFECTURE - MAYOTTE': 'pre-97611-01'
+  'PRÉFECTURE - MAYOTTE': 'pre-97611-01',
 } as const
 
 export type AdministrationId = (typeof ADMINISTRATION_IDS)[keyof typeof ADMINISTRATION_IDS]
@@ -228,7 +228,7 @@ export const Administrations: {
       adresse1: 'Caserne La Madeleine',
       adresse2: '1296 Route de la Madeleine',
       codePostal: '97300',
-      commune: 'Cayenne'
+      commune: 'Cayenne',
     },
     'aut-mrae-guyane-01': {
       id: 'aut-mrae-guyane-01',
@@ -242,7 +242,7 @@ export const Administrations: {
       codePostal: '97300',
       commune: 'Cayenne',
       cedex: 'Cedex',
-      regionId: '03'
+      regionId: '03',
     },
     'dea-guadeloupe-01': {
       id: 'dea-guadeloupe-01',
@@ -257,7 +257,7 @@ export const Administrations: {
       codePostal: '97102',
       commune: 'Basse-Terre',
       cedex: 'Cedex',
-      regionId: '01'
+      regionId: '01',
     },
     'dea-guyane-01': {
       id: 'dea-guyane-01',
@@ -271,7 +271,7 @@ export const Administrations: {
       codePostal: '97300',
       commune: 'Cayenne',
       cedex: 'Cedex',
-      regionId: '03'
+      regionId: '03',
     },
     'dea-martinique-01': {
       id: 'dea-martinique-01',
@@ -285,7 +285,7 @@ export const Administrations: {
       codePostal: '97274',
       commune: 'Schœlcher',
       cedex: 'Cedex',
-      regionId: '02'
+      regionId: '02',
     },
     'dea-mayotte-01': {
       id: 'dea-mayotte-01',
@@ -300,7 +300,7 @@ export const Administrations: {
       codePostal: '97600',
       commune: 'Mamoudzou',
       cedex: 'Cedex',
-      regionId: '06'
+      regionId: '06',
     },
     'dea-reunion-01': {
       id: 'dea-reunion-01',
@@ -314,7 +314,7 @@ export const Administrations: {
       codePostal: '97743',
       commune: 'Saint-Denis',
       cedex: 'Cedex',
-      regionId: '04'
+      regionId: '04',
     },
     'dre-aura-01': {
       id: 'dre-aura-01',
@@ -329,7 +329,7 @@ export const Administrations: {
       codePostal: '69006',
       commune: 'Lyon',
       cedex: 'Cedex',
-      regionId: '84'
+      regionId: '84',
     },
     'dre-bfc-01': {
       id: 'dre-bfc-01',
@@ -343,7 +343,7 @@ export const Administrations: {
       codePostal: '25005',
       commune: 'Besançon',
       cedex: 'Cedex',
-      regionId: '27'
+      regionId: '27',
     },
     'dre-bretagne-01': {
       id: 'dre-bretagne-01',
@@ -357,7 +357,7 @@ export const Administrations: {
       codePostal: '35065',
       commune: 'Rennes',
       cedex: 'Cedex',
-      regionId: '53'
+      regionId: '53',
     },
     'dre-centre-val-de-loire-01': {
       id: 'dre-centre-val-de-loire-01',
@@ -371,7 +371,7 @@ export const Administrations: {
       codePostal: '45064',
       commune: 'Orléans',
       cedex: 'Cedex',
-      regionId: '24'
+      regionId: '24',
     },
     'dre-corse-01': {
       id: 'dre-corse-01',
@@ -385,7 +385,7 @@ export const Administrations: {
       codePostal: '20704',
       commune: 'Ajaccio',
       cedex: 'Cedex',
-      regionId: '94'
+      regionId: '94',
     },
     'dre-grand-est-01': {
       id: 'dre-grand-est-01',
@@ -398,7 +398,7 @@ export const Administrations: {
       codePostal: '57071',
       commune: 'Metz',
       cedex: 'Cedex',
-      regionId: '44'
+      regionId: '44',
     },
     'dre-hauts-de-france-01': {
       id: 'dre-hauts-de-france-01',
@@ -411,7 +411,7 @@ export const Administrations: {
       codePostal: '59019',
       commune: 'Lille',
       cedex: 'Cedex',
-      regionId: '32'
+      regionId: '32',
     },
     'dre-ile-de-france-01': {
       id: 'dre-ile-de-france-01',
@@ -425,7 +425,7 @@ export const Administrations: {
       codePostal: '94307',
       commune: 'Vincennes',
       cedex: 'cedex',
-      regionId: '11'
+      regionId: '11',
     },
     'dre-normandie-01': {
       id: 'dre-normandie-01',
@@ -439,7 +439,7 @@ export const Administrations: {
       codePostal: '76032',
       commune: 'Rouen',
       cedex: 'Cedex',
-      regionId: '28'
+      regionId: '28',
     },
     'dre-nouvelle-aquitaine-01': {
       id: 'dre-nouvelle-aquitaine-01',
@@ -452,7 +452,7 @@ export const Administrations: {
       codePostal: '86020',
       commune: 'Poitiers',
       cedex: 'Cedex',
-      regionId: '75'
+      regionId: '75',
     },
     'dre-occitanie-01': {
       id: 'dre-occitanie-01',
@@ -465,7 +465,7 @@ export const Administrations: {
       codePostal: '31074',
       commune: 'Toulouse',
       cedex: 'Cedex',
-      regionId: '76'
+      regionId: '76',
     },
     'dre-paca-01': {
       id: 'dre-paca-01',
@@ -478,7 +478,7 @@ export const Administrations: {
       codePostal: '13331',
       commune: 'Marseille',
       cedex: 'Cedex',
-      regionId: '93'
+      regionId: '93',
     },
     'dre-pays-de-la-loire-01': {
       id: 'dre-pays-de-la-loire-01',
@@ -492,7 +492,7 @@ export const Administrations: {
       codePostal: '44263',
       commune: 'Nantes',
       cedex: 'Cedex',
-      regionId: '52'
+      regionId: '52',
     },
     'min-dajb-01': {
       id: 'min-dajb-01',
@@ -506,7 +506,7 @@ export const Administrations: {
       adresse2: 'Télédoc 342',
       codePostal: '75703',
       commune: 'Paris',
-      cedex: 'Cedex 13'
+      cedex: 'Cedex 13',
     },
     'min-mctrct-dgcl-01': {
       id: 'min-mctrct-dgcl-01',
@@ -518,7 +518,7 @@ export const Administrations: {
       telephone: '01 49 27 31 59',
       adresse1: '2 place des Saussaies',
       codePostal: '75800',
-      commune: 'Paris'
+      commune: 'Paris',
     },
     'min-mtes-dgaln-01': {
       id: 'min-mtes-dgaln-01',
@@ -533,7 +533,7 @@ export const Administrations: {
       adresse2: '1 place Carpeaux',
       codePostal: '92055',
       commune: 'Paris-La-Défense',
-      cedex: 'Cedex'
+      cedex: 'Cedex',
     },
     'min-mtes-dgec-01': {
       id: 'min-mtes-dgec-01',
@@ -548,7 +548,7 @@ export const Administrations: {
       adresse2: 'Adresse postale\r\n92055 Paris-La-Défense Cedex',
       codePostal: '92800',
       commune: 'Puteaux',
-      cedex: 'Cedex'
+      cedex: 'Cedex',
     },
     'min-mtes-dgpr-01': {
       id: 'min-mtes-dgpr-01',
@@ -562,7 +562,7 @@ export const Administrations: {
       adresse2: 'Adresse postale\n92055 Paris-La-Défense Cedex',
       codePostal: '92800',
       commune: 'Puteaux',
-      cedex: 'Cedex'
+      cedex: 'Cedex',
     },
     'ope-brgm-01': {
       id: 'ope-brgm-01',
@@ -575,7 +575,7 @@ export const Administrations: {
       adresse2: 'BP 36009',
       codePostal: '45060',
       commune: 'Orléans',
-      cedex: 'Cedex 2'
+      cedex: 'Cedex 2',
     },
     'ope-brgm-02': {
       id: 'ope-brgm-02',
@@ -589,7 +589,7 @@ export const Administrations: {
       adresse2: 'BP 36009',
       codePostal: '45060',
       commune: 'Orléans',
-      cedex: 'Cedex 2'
+      cedex: 'Cedex 2',
     },
     'ope-cacem-01': {
       id: 'ope-cacem-01',
@@ -602,7 +602,7 @@ export const Administrations: {
       adresse1: 'Centre régional opérationnel de surveillance et de sauvetage Atlantique',
       adresse2: '40 avenue L. Bougo',
       codePostal: '56410',
-      commune: 'Etel'
+      commune: 'Etel',
     },
     'ope-onf-973-01': {
       id: 'ope-onf-973-01',
@@ -617,7 +617,7 @@ export const Administrations: {
       adresse2: 'Adresse postale\r\n541 route de Montabo\nCS87002',
       codePostal: '97300',
       commune: 'Cayenne',
-      regionId: '03'
+      regionId: '03',
     },
     'ope-ptmg-973-01': {
       id: 'ope-ptmg-973-01',
@@ -628,7 +628,7 @@ export const Administrations: {
       adresse1: 'Hôtel de la Collectivité Territoriale de Guyane, Carrefour de Suzini',
       adresse2: '4179 route de Montabo',
       codePostal: '97307',
-      commune: 'Cayenne'
+      commune: 'Cayenne',
     },
     'pre-01053-01': {
       id: 'pre-01053-01',
@@ -641,7 +641,7 @@ export const Administrations: {
       telephone: '04 74 32 30 00',
       departementId: '01',
       email: 'prefecture@ain.gouv.fr',
-      url: 'http://www.ain.gouv.fr'
+      url: 'http://www.ain.gouv.fr',
     },
     'pre-02408-01': {
       id: 'pre-02408-01',
@@ -654,7 +654,7 @@ export const Administrations: {
       telephone: '03 23 21 82 82',
       departementId: '02',
       email: 'prefecture@aisne.gouv.fr',
-      url: 'http://www.aisne.gouv.fr'
+      url: 'http://www.aisne.gouv.fr',
     },
     'pre-03190-01': {
       id: 'pre-03190-01',
@@ -667,7 +667,7 @@ export const Administrations: {
       telephone: '04 70 48 30 00',
       departementId: '03',
       email: 'prefecture@allier.gouv.fr',
-      url: 'http://www.allier.gouv.fr'
+      url: 'http://www.allier.gouv.fr',
     },
     'pre-04070-01': {
       id: 'pre-04070-01',
@@ -679,7 +679,7 @@ export const Administrations: {
       commune: 'Digne-les-Bains Cedex',
       telephone: '04 92 36 72 00',
       departementId: '04',
-      url: 'http://www.alpes-de-haute-provence.gouv.fr'
+      url: 'http://www.alpes-de-haute-provence.gouv.fr',
     },
     'pre-05061-01': {
       id: 'pre-05061-01',
@@ -692,7 +692,7 @@ export const Administrations: {
       telephone: '04 92 40 48 00',
       departementId: '05',
       email: 'prefecture@hautes-alpes.gouv.fr',
-      url: 'http://www.hautes-alpes.gouv.fr'
+      url: 'http://www.hautes-alpes.gouv.fr',
     },
     'pre-06088-01': {
       id: 'pre-06088-01',
@@ -705,7 +705,7 @@ export const Administrations: {
       telephone: '04 93 72 20 00',
       departementId: '06',
       adresse2: "Services de l'État dans les Alpes-Maritimes, Préfecture, CADAM, 147, route de Grenoble",
-      url: 'http://www.alpes-maritimes.gouv.fr'
+      url: 'http://www.alpes-maritimes.gouv.fr',
     },
     'pre-07186-01': {
       id: 'pre-07186-01',
@@ -718,7 +718,7 @@ export const Administrations: {
       telephone: '04 75 66 50 00',
       departementId: '07',
       email: 'pref-courrier@ardeche.gouv.fr',
-      url: 'http://www.ardeche.gouv.fr'
+      url: 'http://www.ardeche.gouv.fr',
     },
     'pre-08105-01': {
       id: 'pre-08105-01',
@@ -731,7 +731,7 @@ export const Administrations: {
       telephone: '03 24 59 66 00',
       departementId: '08',
       email: 'prefecture@ardennes.gouv.fr',
-      url: 'http://www.ardennes.gouv.fr'
+      url: 'http://www.ardennes.gouv.fr',
     },
     'pre-09122-01': {
       id: 'pre-09122-01',
@@ -744,7 +744,7 @@ export const Administrations: {
       telephone: '05 61 02 10 00',
       departementId: '09',
       email: 'prefecture@ariege.gouv.fr',
-      url: 'http://www.ariege.gouv.fr'
+      url: 'http://www.ariege.gouv.fr',
     },
     'pre-10387-01': {
       id: 'pre-10387-01',
@@ -757,7 +757,7 @@ export const Administrations: {
       telephone: '03 25 42 35 00',
       departementId: '10',
       email: 'prefecture@aube.gouv.fr',
-      url: 'http://www.aube.gouv.fr'
+      url: 'http://www.aube.gouv.fr',
     },
     'pre-11069-01': {
       id: 'pre-11069-01',
@@ -770,7 +770,7 @@ export const Administrations: {
       telephone: '04 68 10 27 00',
       departementId: '11',
       email: 'prefecture@aude.gouv.fr',
-      url: 'http://www.aude.gouv.fr'
+      url: 'http://www.aude.gouv.fr',
     },
     'pre-12202-01': {
       id: 'pre-12202-01',
@@ -783,7 +783,7 @@ export const Administrations: {
       telephone: '05 65 75 71 71',
       departementId: '12',
       email: 'prefecture@aveyron.fr',
-      url: 'http://www.aveyron.gouv.fr'
+      url: 'http://www.aveyron.gouv.fr',
     },
     'pre-13203-01': {
       id: 'pre-13203-01',
@@ -796,7 +796,7 @@ export const Administrations: {
       telephone: '04 84 35 40 00',
       departementId: '13',
       email: 'contact@bouches-du-rhone.pref.gouv.fr',
-      url: 'http://www.bouches-du-rhone.gouv.fr'
+      url: 'http://www.bouches-du-rhone.gouv.fr',
     },
     'pre-14118-01': {
       id: 'pre-14118-01',
@@ -809,7 +809,7 @@ export const Administrations: {
       telephone: '02 31 30 64 00',
       departementId: '14',
       email: 'prefecture@calvados.gouv.fr',
-      url: 'http://www.calvados.gouv.fr'
+      url: 'http://www.calvados.gouv.fr',
     },
     'pre-15014-01': {
       id: 'pre-15014-01',
@@ -822,7 +822,7 @@ export const Administrations: {
       telephone: '04 71 46 23 00',
       departementId: '15',
       email: 'courrier@cantal.pref.gouv.fr',
-      url: 'http://www.cantal.gouv.fr'
+      url: 'http://www.cantal.gouv.fr',
     },
     'pre-16015-01': {
       id: 'pre-16015-01',
@@ -835,7 +835,7 @@ export const Administrations: {
       telephone: '05 45 97 61 00',
       departementId: '16',
       email: 'communication@charente.gouv.fr',
-      url: 'http://www.charente.gouv.fr'
+      url: 'http://www.charente.gouv.fr',
     },
     'pre-17300-01': {
       id: 'pre-17300-01',
@@ -848,7 +848,7 @@ export const Administrations: {
       telephone: '05 46 27 43 00',
       departementId: '17',
       email: 'prefecture@charente-maritime.gouv.fr',
-      url: 'http://www.charente-maritime.gouv.fr'
+      url: 'http://www.charente-maritime.gouv.fr',
     },
     'pre-18033-01': {
       id: 'pre-18033-01',
@@ -861,7 +861,7 @@ export const Administrations: {
       telephone: '02 48 67 18 18',
       departementId: '18',
       email: 'prefecture@cher.gouv.fr',
-      url: 'http://www.cher.gouv.fr'
+      url: 'http://www.cher.gouv.fr',
     },
     'pre-19272-01': {
       id: 'pre-19272-01',
@@ -874,7 +874,7 @@ export const Administrations: {
       telephone: '05 55 20 55 20',
       departementId: '19',
       email: 'prefecture@correze.gouv.fr',
-      url: 'http://www.correze.gouv.fr'
+      url: 'http://www.correze.gouv.fr',
     },
     'pre-21231-01': {
       id: 'pre-21231-01',
@@ -886,7 +886,7 @@ export const Administrations: {
       commune: 'Dijon Cedex',
       telephone: '03 80 44 64 00',
       departementId: '21',
-      url: 'http://www.cote-dor.gouv.fr'
+      url: 'http://www.cote-dor.gouv.fr',
     },
     'pre-22278-01': {
       id: 'pre-22278-01',
@@ -899,7 +899,7 @@ export const Administrations: {
       telephone: '02 96 62 44 22',
       departementId: '22',
       email: 'prefecture@cotes-darmor.gouv.fr',
-      url: 'http://www.cotes-darmor.gouv.fr'
+      url: 'http://www.cotes-darmor.gouv.fr',
     },
     'pre-23096-01': {
       id: 'pre-23096-01',
@@ -911,7 +911,7 @@ export const Administrations: {
       commune: 'Guéret Cedex',
       telephone: '05 55 51 59 00',
       departementId: '23',
-      url: 'http://www.creuse.gouv.fr'
+      url: 'http://www.creuse.gouv.fr',
     },
     'pre-24322-01': {
       id: 'pre-24322-01',
@@ -925,7 +925,7 @@ export const Administrations: {
       departementId: '24',
       adresse2: "Services de l'État - Préfecture de la Dordogne, Cité adminsitrative",
       email: 'prefecture@dordogne.gouv.fr',
-      url: 'http://www.dordogne.gouv.fr'
+      url: 'http://www.dordogne.gouv.fr',
     },
     'pre-25056-01': {
       id: 'pre-25056-01',
@@ -938,7 +938,7 @@ export const Administrations: {
       telephone: '03 81 25 10 00',
       departementId: '25',
       email: 'pref-courrier@doubs.gouv.fr',
-      url: 'http://www.doubs.gouv.fr'
+      url: 'http://www.doubs.gouv.fr',
     },
     'pre-26362-01': {
       id: 'pre-26362-01',
@@ -951,7 +951,7 @@ export const Administrations: {
       telephone: '04 75 79 28 00',
       departementId: '26',
       email: 'prefecture@drome.gouv.fr',
-      url: 'http://www.drome.gouv.fr'
+      url: 'http://www.drome.gouv.fr',
     },
     'pre-27229-01': {
       id: 'pre-27229-01',
@@ -964,7 +964,7 @@ export const Administrations: {
       telephone: '02 32 78 27 27',
       departementId: '27',
       email: 'courrier-web@eure.gouv.fr',
-      url: 'http://www.seine-maritime.gouv.fr/Outils/Horaires-et-coordonnees/Prefecture-de-l-Eure'
+      url: 'http://www.seine-maritime.gouv.fr/Outils/Horaires-et-coordonnees/Prefecture-de-l-Eure',
     },
     'pre-28085-01': {
       id: 'pre-28085-01',
@@ -976,7 +976,7 @@ export const Administrations: {
       commune: 'Chartres Cedex',
       telephone: '02 37 27 72 00',
       departementId: '28',
-      url: 'http://www.eure-et-loir.gouv.fr'
+      url: 'http://www.eure-et-loir.gouv.fr',
     },
     'pre-29232-01': {
       id: 'pre-29232-01',
@@ -989,7 +989,7 @@ export const Administrations: {
       telephone: '02 98 76 29 29',
       departementId: '29',
       email: 'prefecture@finistere.gouv.fr',
-      url: 'http://www.finistere.gouv.fr'
+      url: 'http://www.finistere.gouv.fr',
     },
     'pre-2A004-01': {
       id: 'pre-2A004-01',
@@ -1002,7 +1002,7 @@ export const Administrations: {
       telephone: '04 95 11 12 13',
       departementId: '2A',
       email: 'prefecture@corse-du-sud.gouv.fr',
-      url: 'http://www.corse-du-sud.gouv.fr'
+      url: 'http://www.corse-du-sud.gouv.fr',
     },
     'pre-2B033-01': {
       id: 'pre-2B033-01',
@@ -1015,7 +1015,7 @@ export const Administrations: {
       telephone: '04 95 34 50 00',
       departementId: '2B',
       email: 'prefecture.haute-corse@haute-corse.pref.gouv.fr',
-      url: 'http://www.haute-corse.gouv.fr'
+      url: 'http://www.haute-corse.gouv.fr',
     },
     'pre-30189-01': {
       id: 'pre-30189-01',
@@ -1029,7 +1029,7 @@ export const Administrations: {
       departementId: '30',
       adresse2: '10, avenue Feuchères',
       email: 'prefecture@gard.gouv.fr',
-      url: 'http://www.gard.gouv.fr'
+      url: 'http://www.gard.gouv.fr',
     },
     'pre-31555-01': {
       id: 'pre-31555-01',
@@ -1042,7 +1042,7 @@ export const Administrations: {
       telephone: '05 34 45 34 45',
       departementId: '31',
       adresse2: 'Place Saint-Étienne',
-      url: 'http://www.haute-garonne.gouv.fr'
+      url: 'http://www.haute-garonne.gouv.fr',
     },
     'pre-32013-01': {
       id: 'pre-32013-01',
@@ -1055,7 +1055,7 @@ export const Administrations: {
       telephone: '05 62 61 44 00',
       departementId: '32',
       email: 'prefecture@gers.gouv.fr',
-      url: 'http://www.gers.gouv.fr'
+      url: 'http://www.gers.gouv.fr',
     },
     'pre-33063-01': {
       id: 'pre-33063-01',
@@ -1068,7 +1068,7 @@ export const Administrations: {
       telephone: '05 56 90 60 60',
       departementId: '33',
       adresse2: '2, esplanade Charles-de-Gaulle, CS 41397',
-      url: 'http://www.gironde.gouv.fr'
+      url: 'http://www.gironde.gouv.fr',
     },
     'pre-34172-01': {
       id: 'pre-34172-01',
@@ -1080,7 +1080,7 @@ export const Administrations: {
       commune: 'Montpellier Cedex 2',
       telephone: '04 67 61 61 61',
       departementId: '34',
-      url: 'http://www.herault.gouv.fr'
+      url: 'http://www.herault.gouv.fr',
     },
     'pre-35238-01': {
       id: 'pre-35238-01',
@@ -1093,7 +1093,7 @@ export const Administrations: {
       telephone: '02 99 02 10 35',
       departementId: '35',
       email: 'prefecture@ille-et-vilaine.gouv.fr',
-      url: 'https://www.ille-et-vilaine.gouv.fr'
+      url: 'https://www.ille-et-vilaine.gouv.fr',
     },
     'pre-36044-01': {
       id: 'pre-36044-01',
@@ -1106,7 +1106,7 @@ export const Administrations: {
       telephone: '02 54 29 50 00',
       departementId: '36',
       adresse2: 'Place de la Victoire et des Alliés, CS 80583',
-      url: 'http://www.indre.gouv.fr'
+      url: 'http://www.indre.gouv.fr',
     },
     'pre-37261-01': {
       id: 'pre-37261-01',
@@ -1119,7 +1119,7 @@ export const Administrations: {
       telephone: '+ 33 2 47 64 37 37',
       departementId: '37',
       email: 'prefecture@indre-et-loire.gouv.fr',
-      url: 'http://www.indre-et-loire.gouv.fr'
+      url: 'http://www.indre-et-loire.gouv.fr',
     },
     'pre-38185-01': {
       id: 'pre-38185-01',
@@ -1131,7 +1131,7 @@ export const Administrations: {
       commune: 'Grenoble Cedex 1',
       telephone: '04 76 60 34 00',
       departementId: '38',
-      url: 'http://www.isere.gouv.fr'
+      url: 'http://www.isere.gouv.fr',
     },
     'pre-39300-01': {
       id: 'pre-39300-01',
@@ -1144,7 +1144,7 @@ export const Administrations: {
       telephone: '03 84 86 84 00',
       departementId: '39',
       email: 'prefecture@jura.gouv.fr',
-      url: 'http://www.jura.gouv.fr'
+      url: 'http://www.jura.gouv.fr',
     },
     'pre-40192-01': {
       id: 'pre-40192-01',
@@ -1157,7 +1157,7 @@ export const Administrations: {
       telephone: '05 58 06 58 06',
       departementId: '40',
       email: 'prefecture@landes.gouv.fr',
-      url: 'http://www.landes.gouv.fr'
+      url: 'http://www.landes.gouv.fr',
     },
     'pre-41018-01': {
       id: 'pre-41018-01',
@@ -1169,7 +1169,7 @@ export const Administrations: {
       commune: 'Blois Cedex',
       telephone: '0810 02 41 41',
       departementId: '41',
-      url: 'http://www.loir-et-cher.gouv.fr'
+      url: 'http://www.loir-et-cher.gouv.fr',
     },
     'pre-42218-01': {
       id: 'pre-42218-01',
@@ -1182,7 +1182,7 @@ export const Administrations: {
       telephone: '04 77 48 48 48',
       departementId: '42',
       email: 'pref-loire@loire.pref.gouv.fr',
-      url: 'http://www.loire.gouv.fr'
+      url: 'http://www.loire.gouv.fr',
     },
     'pre-43157-01': {
       id: 'pre-43157-01',
@@ -1195,7 +1195,7 @@ export const Administrations: {
       telephone: '04 71 09 43 43',
       departementId: '43',
       email: 'prefecture@haute-loire.gouv.fr',
-      url: 'http://www.haute-loire.gouv.fr'
+      url: 'http://www.haute-loire.gouv.fr',
     },
     'pre-44109-01': {
       id: 'pre-44109-01',
@@ -1207,7 +1207,7 @@ export const Administrations: {
       commune: 'Nantes Cedex 1',
       telephone: '02 40 41 20 20',
       departementId: '44',
-      url: 'http://www.loire-atlantique.gouv.fr'
+      url: 'http://www.loire-atlantique.gouv.fr',
     },
     'pre-45234-01': {
       id: 'pre-45234-01',
@@ -1219,7 +1219,7 @@ export const Administrations: {
       commune: 'Orléans Cedex 1',
       telephone: '0821 80 30 45',
       departementId: '45',
-      url: 'http://www.loiret.gouv.fr'
+      url: 'http://www.loiret.gouv.fr',
     },
     'pre-46042-01': {
       id: 'pre-46042-01',
@@ -1232,7 +1232,7 @@ export const Administrations: {
       telephone: '05 65 23 10 00',
       departementId: '46',
       email: 'prefecture@lot.gouv.fr',
-      url: 'http://www.lot.gouv.fr'
+      url: 'http://www.lot.gouv.fr',
     },
     'pre-47001-01': {
       id: 'pre-47001-01',
@@ -1244,7 +1244,7 @@ export const Administrations: {
       commune: 'Agen Cedex 9',
       telephone: '05 53 77 60 47',
       departementId: '47',
-      url: 'http://www.lot-et-garonne.gouv.fr'
+      url: 'http://www.lot-et-garonne.gouv.fr',
     },
     'pre-48095-01': {
       id: 'pre-48095-01',
@@ -1258,7 +1258,7 @@ export const Administrations: {
       departementId: '48',
       adresse2: 'BP 130',
       email: 'prefecture@lozere.gouv.fr',
-      url: 'http://www.lozere.gouv.fr'
+      url: 'http://www.lozere.gouv.fr',
     },
     'pre-49007-01': {
       id: 'pre-49007-01',
@@ -1271,7 +1271,7 @@ export const Administrations: {
       telephone: '02 41 81 81 81',
       departementId: '49',
       email: 'modernisation@maine-et-loire.pref.gouv.fr',
-      url: 'http://www.maine-et-loire.gouv.fr'
+      url: 'http://www.maine-et-loire.gouv.fr',
     },
     'pre-50502-01': {
       id: 'pre-50502-01',
@@ -1284,7 +1284,7 @@ export const Administrations: {
       telephone: '02 33 75 49 50',
       departementId: '50',
       email: 'prefecture@manche.gouv.fr',
-      url: 'http://www.manche.gouv.fr'
+      url: 'http://www.manche.gouv.fr',
     },
     'pre-51108-01': {
       id: 'pre-51108-01',
@@ -1297,7 +1297,7 @@ export const Administrations: {
       telephone: '03 26 26 10 10',
       departementId: '51',
       email: 'contact@marne.gouv.fr',
-      url: 'http://www.marne.gouv.fr'
+      url: 'http://www.marne.gouv.fr',
     },
     'pre-52121-01': {
       id: 'pre-52121-01',
@@ -1310,7 +1310,7 @@ export const Administrations: {
       telephone: '03 25 30 52 52',
       departementId: '52',
       email: 'prefecture@haute-marne.gouv.fr',
-      url: 'http://www.haute-marne.gouv.fr'
+      url: 'http://www.haute-marne.gouv.fr',
     },
     'pre-53130-01': {
       id: 'pre-53130-01',
@@ -1323,7 +1323,7 @@ export const Administrations: {
       telephone: '02 43 01 50 00',
       departementId: '53',
       email: 'pref-communication@mayenne.gouv.fr',
-      url: 'http://www.mayenne.gouv.fr'
+      url: 'http://www.mayenne.gouv.fr',
     },
     'pre-54395-01': {
       id: 'pre-54395-01',
@@ -1337,7 +1337,7 @@ export const Administrations: {
       departementId: '54',
       adresse2: 'CS 60031, 1, rue du Préfet-Claude-Érignac',
       email: 'pref-informations@meurthe-et-moselle.gouv.fr',
-      url: 'http://www.meurthe-et-moselle.gouv.fr'
+      url: 'http://www.meurthe-et-moselle.gouv.fr',
     },
     'pre-55029-01': {
       id: 'pre-55029-01',
@@ -1349,7 +1349,7 @@ export const Administrations: {
       commune: 'Bar-le-Duc Cedex',
       telephone: '03 29 77 55 55',
       departementId: '55',
-      url: 'http://www.meuse.gouv.fr'
+      url: 'http://www.meuse.gouv.fr',
     },
     'pre-56260-01': {
       id: 'pre-56260-01',
@@ -1362,7 +1362,7 @@ export const Administrations: {
       telephone: '02 97 54 84 00',
       departementId: '56',
       adresse2: 'Préfecture du Morbihan, BP 501',
-      url: 'http://www.morbihan.gouv.fr'
+      url: 'http://www.morbihan.gouv.fr',
     },
     'pre-57463-01': {
       id: 'pre-57463-01',
@@ -1373,7 +1373,7 @@ export const Administrations: {
       codePostal: '57034',
       commune: 'Metz Cedex 01',
       telephone: '03 87 34 87 34',
-      departementId: '57'
+      departementId: '57',
     },
     'pre-58194-01': {
       id: 'pre-58194-01',
@@ -1386,7 +1386,7 @@ export const Administrations: {
       telephone: '03 86 60 70 80',
       departementId: '58',
       email: 'courrier@nievre.pref.gouv.fr',
-      url: 'http://www.nievre.gouv.fr'
+      url: 'http://www.nievre.gouv.fr',
     },
     'pre-59350-01': {
       id: 'pre-59350-01',
@@ -1398,7 +1398,7 @@ export const Administrations: {
       commune: 'Lille Cedex',
       telephone: '03 20 30 59 59',
       departementId: '59',
-      url: 'http://www.nord.gouv.fr'
+      url: 'http://www.nord.gouv.fr',
     },
     'pre-60057-01': {
       id: 'pre-60057-01',
@@ -1410,7 +1410,7 @@ export const Administrations: {
       commune: 'Beauvais Cedex',
       telephone: '03 44 06 12 60',
       departementId: '60',
-      url: 'http://www.oise.gouv.fr'
+      url: 'http://www.oise.gouv.fr',
     },
     'pre-61001-01': {
       id: 'pre-61001-01',
@@ -1423,7 +1423,7 @@ export const Administrations: {
       telephone: '02 33 80 61 61',
       departementId: '61',
       email: 'pref-communication@orne.gouv.fr',
-      url: 'http://www.orne.gouv.fr'
+      url: 'http://www.orne.gouv.fr',
     },
     'pre-62041-01': {
       id: 'pre-62041-01',
@@ -1435,7 +1435,7 @@ export const Administrations: {
       commune: 'Arras Cedex 9',
       telephone: '03 21 21 20 00',
       departementId: '62',
-      url: 'http://www.pas-de-calais.gouv.fr'
+      url: 'http://www.pas-de-calais.gouv.fr',
     },
     'pre-63113-01': {
       id: 'pre-63113-01',
@@ -1447,7 +1447,7 @@ export const Administrations: {
       commune: 'Clermont-Ferrand Cedex 1',
       telephone: '04 73 98 63 63',
       departementId: '63',
-      url: 'http://www.puy-de-dome.gouv.fr'
+      url: 'http://www.puy-de-dome.gouv.fr',
     },
     'pre-64445-01': {
       id: 'pre-64445-01',
@@ -1460,7 +1460,7 @@ export const Administrations: {
       telephone: '05 59 98 24 24',
       departementId: '64',
       email: 'prefecture@pyrenees-atlantiques.gouv.fr',
-      url: 'http://www.pyrenees-atlantiques.gouv.fr'
+      url: 'http://www.pyrenees-atlantiques.gouv.fr',
     },
     'pre-65440-01': {
       id: 'pre-65440-01',
@@ -1473,7 +1473,7 @@ export const Administrations: {
       telephone: '05 62 56 65 65',
       departementId: '65',
       email: 'prefecture@hautes-pyrenees.gouv.fr',
-      url: 'http://www.hautes-pyrenees.gouv.fr'
+      url: 'http://www.hautes-pyrenees.gouv.fr',
     },
     'pre-66136-01': {
       id: 'pre-66136-01',
@@ -1485,7 +1485,7 @@ export const Administrations: {
       commune: 'Perpignan Cedex',
       telephone: '04 68 51 66 66',
       departementId: '66',
-      url: 'http://www.pyrenees-orientales.gouv.fr'
+      url: 'http://www.pyrenees-orientales.gouv.fr',
     },
     'pre-67482-01': {
       id: 'pre-67482-01',
@@ -1497,7 +1497,7 @@ export const Administrations: {
       commune: 'Strasbourg Cedex',
       telephone: '03 88 21 67 68',
       departementId: '67',
-      url: 'http://www.bas-rhin.gouv.fr'
+      url: 'http://www.bas-rhin.gouv.fr',
     },
     'pre-68066-01': {
       id: 'pre-68066-01',
@@ -1511,7 +1511,7 @@ export const Administrations: {
       departementId: '68',
       adresse2: '7, rue Bruat, BP 10489',
       email: 'pref-courrier@haut-rhin.gouv.fr',
-      url: 'http://www.haut-rhin.gouv.fr'
+      url: 'http://www.haut-rhin.gouv.fr',
     },
     'pre-69383-01': {
       id: 'pre-69383-01',
@@ -1524,7 +1524,7 @@ export const Administrations: {
       telephone: '0821 80 30 69',
       departementId: '69',
       adresse2: '106, rue Pierre-Corneille',
-      url: 'http://www.rhone.gouv.fr'
+      url: 'http://www.rhone.gouv.fr',
     },
     'pre-70550-01': {
       id: 'pre-70550-01',
@@ -1537,7 +1537,7 @@ export const Administrations: {
       telephone: '03 84 77 70 00',
       departementId: '70',
       email: 'prefecture@haute-saone.pref.gouv.fr',
-      url: 'http://www.haute-saone.gouv.fr'
+      url: 'http://www.haute-saone.gouv.fr',
     },
     'pre-71270-01': {
       id: 'pre-71270-01',
@@ -1549,7 +1549,7 @@ export const Administrations: {
       commune: 'Mâcon Cedex 9',
       telephone: '03 85 21 81 00',
       departementId: '71',
-      url: 'http://www.saone-et-loire.gouv.fr/prefecture-et-sous-prefectures-r1071.html'
+      url: 'http://www.saone-et-loire.gouv.fr/prefecture-et-sous-prefectures-r1071.html',
     },
     'pre-72181-01': {
       id: 'pre-72181-01',
@@ -1562,7 +1562,7 @@ export const Administrations: {
       telephone: '02 43 39 72 72',
       departementId: '72',
       email: 'pref-mail@sarthe.gouv.fr',
-      url: 'http://www.sarthe.gouv.fr'
+      url: 'http://www.sarthe.gouv.fr',
     },
     'pre-73065-01': {
       id: 'pre-73065-01',
@@ -1575,7 +1575,7 @@ export const Administrations: {
       telephone: '04 79 75 50 50',
       departementId: '73',
       email: 'prefecture@savoie.gouv.fr',
-      url: 'http://www.savoie.gouv.fr'
+      url: 'http://www.savoie.gouv.fr',
     },
     'pre-74010-01': {
       id: 'pre-74010-01',
@@ -1588,7 +1588,7 @@ export const Administrations: {
       telephone: '04 50 33 60 00',
       departementId: '74',
       email: 'prefecture@haute-savoie.gouv.fr',
-      url: 'http://www.haute-savoie.gouv.fr'
+      url: 'http://www.haute-savoie.gouv.fr',
     },
     'pre-75104-01': {
       id: 'pre-75104-01',
@@ -1600,7 +1600,7 @@ export const Administrations: {
       commune: 'Paris',
       telephone: '3430',
       departementId: '75',
-      url: 'http://www.prefecturedepolice.interieur.gouv.fr'
+      url: 'http://www.prefecturedepolice.interieur.gouv.fr',
     },
     'pre-76540-01': {
       id: 'pre-76540-01',
@@ -1612,7 +1612,7 @@ export const Administrations: {
       commune: 'Rouen Cedex',
       telephone: '02 32 76 50 00',
       departementId: '76',
-      url: 'http://www.seine-maritime.gouv.fr'
+      url: 'http://www.seine-maritime.gouv.fr',
     },
     'pre-77288-01': {
       id: 'pre-77288-01',
@@ -1624,7 +1624,7 @@ export const Administrations: {
       commune: 'Melun Cedex',
       telephone: '01 64 71 76 77',
       departementId: '77',
-      url: 'http://www.seine-et-marne.gouv.fr'
+      url: 'http://www.seine-et-marne.gouv.fr',
     },
     'pre-78646-01': {
       id: 'pre-78646-01',
@@ -1637,7 +1637,7 @@ export const Administrations: {
       telephone: '01 39 49 78 00',
       departementId: '78',
       email: 'pref-communication78@yvelines.gouv.fr',
-      url: 'http://www.yvelines.gouv.fr'
+      url: 'http://www.yvelines.gouv.fr',
     },
     'pre-79191-01': {
       id: 'pre-79191-01',
@@ -1650,7 +1650,7 @@ export const Administrations: {
       telephone: '05 49 08 68 68',
       departementId: '79',
       email: 'courrier@deux-sevres.pref.gouv.fr',
-      url: 'http://www.deux-sevres.gouv.fr'
+      url: 'http://www.deux-sevres.gouv.fr',
     },
     'pre-80021-01': {
       id: 'pre-80021-01',
@@ -1663,7 +1663,7 @@ export const Administrations: {
       telephone: '0821 80 30 80',
       departementId: '80',
       email: 'pref-courrier@somme.gouv.fr',
-      url: 'http://www.somme.gouv.fr'
+      url: 'http://www.somme.gouv.fr',
     },
     'pre-81004-01': {
       id: 'pre-81004-01',
@@ -1676,7 +1676,7 @@ export const Administrations: {
       telephone: '05 63 45 61 61',
       departementId: '81',
       email: 'courrier@tarn.pref.gouv.fr',
-      url: 'http://www.tarn.gouv.fr'
+      url: 'http://www.tarn.gouv.fr',
     },
     'pre-82121-01': {
       id: 'pre-82121-01',
@@ -1688,7 +1688,7 @@ export const Administrations: {
       commune: 'Montauban Cedex',
       telephone: '05 63 22 82 00',
       departementId: '82',
-      url: 'http://www.tarn-et-garonne.gouv.fr'
+      url: 'http://www.tarn-et-garonne.gouv.fr',
     },
     'pre-83137-01': {
       id: 'pre-83137-01',
@@ -1700,7 +1700,7 @@ export const Administrations: {
       commune: 'Toulon Cedex',
       telephone: '04 94 18 83 83',
       departementId: '83',
-      url: 'http://www.var.gouv.fr'
+      url: 'http://www.var.gouv.fr',
     },
     'pre-84007-01': {
       id: 'pre-84007-01',
@@ -1714,7 +1714,7 @@ export const Administrations: {
       departementId: '84',
       adresse2: "Services de l'Etat en Vaucluse Préfecture",
       email: 'pref-contact@vaucluse.gouv.fr',
-      url: 'http://www.vaucluse.gouv.fr'
+      url: 'http://www.vaucluse.gouv.fr',
     },
     'pre-85191-01': {
       id: 'pre-85191-01',
@@ -1727,7 +1727,7 @@ export const Administrations: {
       telephone: '02 51 36 70 85',
       departementId: '85',
       email: 'prefecture@vendee.gouv.fr',
-      url: 'http://www.vendee.gouv.fr'
+      url: 'http://www.vendee.gouv.fr',
     },
     'pre-86194-01': {
       id: 'pre-86194-01',
@@ -1740,7 +1740,7 @@ export const Administrations: {
       telephone: '05 49 55 70 00',
       departementId: '86',
       email: 'pref-courrier@vienne.gouv.fr',
-      url: 'http://www.vienne.gouv.fr'
+      url: 'http://www.vienne.gouv.fr',
     },
     'pre-87085-01': {
       id: 'pre-87085-01',
@@ -1752,7 +1752,7 @@ export const Administrations: {
       commune: 'Limoges',
       telephone: '05 55 44 18 00',
       departementId: '87',
-      url: 'http://www.haute-vienne.gouv.fr'
+      url: 'http://www.haute-vienne.gouv.fr',
     },
     'pre-88160-01': {
       id: 'pre-88160-01',
@@ -1765,7 +1765,7 @@ export const Administrations: {
       telephone: '03 29 69 88 88',
       departementId: '88',
       email: 'prefecture@vosges.gouv.fr',
-      url: 'http://www.vosges.gouv.fr'
+      url: 'http://www.vosges.gouv.fr',
     },
     'pre-89024-01': {
       id: 'pre-89024-01',
@@ -1778,7 +1778,7 @@ export const Administrations: {
       telephone: '03 86 72 79 89',
       departementId: '89',
       email: 'prefecture@yonne.gouv.fr',
-      url: 'http://www.yonne.gouv.fr'
+      url: 'http://www.yonne.gouv.fr',
     },
     'pre-90010-01': {
       id: 'pre-90010-01',
@@ -1791,7 +1791,7 @@ export const Administrations: {
       telephone: '03 84 57 00 07',
       departementId: '90',
       email: 'courrier90@territoire-de-belfort.pref.gouv.fr',
-      url: 'http://www.territoire-belfort.gouv.fr'
+      url: 'http://www.territoire-belfort.gouv.fr',
     },
     'pre-91228-01': {
       id: 'pre-91228-01',
@@ -1804,7 +1804,7 @@ export const Administrations: {
       telephone: '01 69 91 91 91',
       departementId: '91',
       email: 'prefecture@essonne.gouv.fr',
-      url: 'http://www.essonne.gouv.fr'
+      url: 'http://www.essonne.gouv.fr',
     },
     'pre-92050-01': {
       id: 'pre-92050-01',
@@ -1817,7 +1817,7 @@ export const Administrations: {
       telephone: '01 40 97 20 00',
       departementId: '92',
       email: 'prefecture@hauts-de-seine.gouv.fr',
-      url: 'http://www.hauts-de-seine.gouv.fr'
+      url: 'http://www.hauts-de-seine.gouv.fr',
     },
     'pre-93008-01': {
       id: 'pre-93008-01',
@@ -1830,7 +1830,7 @@ export const Administrations: {
       telephone: '01 41 60 60 60',
       departementId: '93',
       email: 'prefecture@seine-saint-denis.gouv.fr',
-      url: 'http://www.seine-saint-denis.gouv.fr'
+      url: 'http://www.seine-saint-denis.gouv.fr',
     },
     'pre-94028-01': {
       id: 'pre-94028-01',
@@ -1843,7 +1843,7 @@ export const Administrations: {
       telephone: '01 49 56 60 00',
       departementId: '94',
       email: 'prefecture@val-de-marne.gouv.fr',
-      url: 'http://www.val-de-marne.gouv.fr'
+      url: 'http://www.val-de-marne.gouv.fr',
     },
     'pre-95127-01': {
       id: 'pre-95127-01',
@@ -1856,7 +1856,7 @@ export const Administrations: {
       telephone: '01 34 20 95 95',
       departementId: '95',
       email: 'prefecture@val-doise.gouv.fr',
-      url: 'http://www.val-doise.gouv.fr'
+      url: 'http://www.val-doise.gouv.fr',
     },
     'pre-97105-01': {
       id: 'pre-97105-01',
@@ -1868,7 +1868,7 @@ export const Administrations: {
       commune: 'Basse-Terre Cedex',
       telephone: '+590 590 99 39 00',
       departementId: '971',
-      url: 'http://www.guadeloupe.pref.gouv.fr'
+      url: 'http://www.guadeloupe.pref.gouv.fr',
     },
     'pre-97209-01': {
       id: 'pre-97209-01',
@@ -1881,7 +1881,7 @@ export const Administrations: {
       telephone: '+596 596 39 36 00',
       departementId: '972',
       email: 'contact.prefecture@martinique.pref.gouv.fr',
-      url: 'http://www.martinique.pref.gouv.fr'
+      url: 'http://www.martinique.pref.gouv.fr',
     },
     'pre-97302-01': {
       id: 'pre-97302-01',
@@ -1894,7 +1894,7 @@ export const Administrations: {
       adresse1: 'BP 7008, Rue Fiedmond',
       codePostal: '97307',
       commune: 'Cayenne Cedex',
-      departementId: '973'
+      departementId: '973',
     },
     'pre-97411-01': {
       id: 'pre-97411-01',
@@ -1906,7 +1906,7 @@ export const Administrations: {
       commune: 'Saint-Denis Cedex',
       telephone: '+262 262 40 77 77',
       departementId: '974',
-      url: 'http://www.reunion.gouv.fr'
+      url: 'http://www.reunion.gouv.fr',
     },
     'pre-97611-01': {
       id: 'pre-97611-01',
@@ -1918,8 +1918,8 @@ export const Administrations: {
       commune: 'Mamoudzou',
       telephone: '+262 269 63 50 00',
       departementId: '976',
-      url: 'http://www.mayotte.pref.gouv.fr/'
-    }
+      url: 'http://www.mayotte.pref.gouv.fr/',
+    },
   } // ----- ne pas supprimer cette ligne : fin
 
 export const sortedAdministrations = Object.values(Administrations).sort((a, b) => a.abreviation.localeCompare(b.abreviation))

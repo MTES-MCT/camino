@@ -7,7 +7,7 @@ test('filesPathCheck', () => {
   const fileIndex = {
     file: 'file.pdf',
     file2: 'file2.pdf',
-    file3: 'demarches/file3.pdf'
+    file3: 'demarches/file3.pdf',
   }
 
   const documentIndex: IndexFile = {
@@ -15,18 +15,18 @@ test('filesPathCheck', () => {
       document: {
         id: 'file3',
         typeId: 'not',
-        date: toCaminoDate('2020-08-04')
+        date: toCaminoDate('2020-08-04'),
       },
-      path: 'demarches/anotherFolder/file3.pdf'
+      path: 'demarches/anotherFolder/file3.pdf',
     },
     file2: {
       document: {
         id: 'file2',
         typeId: 'not',
-        date: toCaminoDate('2020-08-04')
+        date: toCaminoDate('2020-08-04'),
       },
-      path: 'file2.pdf'
-    }
+      path: 'file2.pdf',
+    },
   }
   expect(filesPathCheck(documentIndex, fileIndex, false)).toEqual(['file3'])
 })

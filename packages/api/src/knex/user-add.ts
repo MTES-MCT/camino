@@ -3,10 +3,7 @@ import emailRegex from 'email-regex'
 import { IUtilisateur } from '../types.js'
 
 // TODO 2022-06-23 fixme
-export const userAdd = async (
-  knex: Knex,
-  user: Omit<IUtilisateur, 'administrationId'>
-): Promise<void> => {
+export const userAdd = async (knex: Knex, user: Omit<IUtilisateur, 'administrationId'>): Promise<void> => {
   const errors = []
 
   if (!user.email) {

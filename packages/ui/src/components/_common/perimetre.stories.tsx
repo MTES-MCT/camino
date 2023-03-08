@@ -6,7 +6,7 @@ import { MultiPolygon, Feature } from 'geojson'
 
 const meta: Meta = {
   title: 'Components/common/Perimetre',
-  component: Perimetre
+  component: Perimetre,
 }
 export default meta
 
@@ -27,9 +27,9 @@ const points = [
         id: 'LuCo981JNl3qxDPqbYrxrdsv',
         geoSystemeId: '2972',
         coordonnees: { x: 326189, y: 468770 },
-        opposable: true
-      }
-    ]
+        opposable: true,
+      },
+    ],
   },
   {
     id: 'kMuGGS0LvNBOzZQWtsEtwiiu',
@@ -47,9 +47,9 @@ const points = [
         id: '0sZpojhYRJj1vM1d8e5r3o6U',
         geoSystemeId: '2972',
         coordonnees: { x: 326648, y: 468956 },
-        opposable: true
-      }
-    ]
+        opposable: true,
+      },
+    ],
   },
   {
     id: 'LkkqNpE0NzNn7CtcMF3n0uPn',
@@ -67,9 +67,9 @@ const points = [
         id: 'jB79NK3nQxTH9cmU5TREvnzP',
         geoSystemeId: '2972',
         coordonnees: { x: 327407, y: 467103 },
-        opposable: true
-      }
-    ]
+        opposable: true,
+      },
+    ],
   },
   {
     id: 'xmoDhZYRLIR4jOcSl4Aidfeb',
@@ -87,10 +87,10 @@ const points = [
         id: 'kvBT0NDUT78EwrtRgWyCGvmx',
         geoSystemeId: '2972',
         coordonnees: { x: 326948, y: 466917 },
-        opposable: true
-      }
-    ]
-  }
+        opposable: true,
+      },
+    ],
+  },
 ]
 const geojsonMultiPolygon: Feature<MultiPolygon> = {
   type: 'Feature',
@@ -104,35 +104,24 @@ const geojsonMultiPolygon: Feature<MultiPolygon> = {
           [-52.5591878553913, 4.22269896902571],
           [-52.5550566725882, 4.22438936251509],
           [-52.5619271168799, 4.24113309117193],
-          [-52.5660583466962, 4.23944263425535]
-        ]
-      ]
-    ]
-  }
+          [-52.5660583466962, 4.23944263425535],
+        ],
+      ],
+    ],
+  },
 }
 
 const tabUpdate = action('tabUpdate')
 export const DefaultNoSnapshot: Story = () => (
   <>
     <MapPattern />
-    <Perimetre
-      titreTypeId="axm"
-      points={points}
-      geojsonMultiPolygon={geojsonMultiPolygon}
-      titreId="id"
-      tabUpdate={tabUpdate}
-    />
+    <Perimetre titreTypeId="axm" points={points} geojsonMultiPolygon={geojsonMultiPolygon} titreId="id" tabUpdate={tabUpdate} />
   </>
 )
 
 export const NoMap: Story = () => (
   <>
     <MapPattern />
-    <Perimetre
-      titreTypeId="axm"
-      geojsonMultiPolygon={geojsonMultiPolygon}
-      titreId="id"
-      tabUpdate={tabUpdate}
-    />
+    <Perimetre titreTypeId="axm" geojsonMultiPolygon={geojsonMultiPolygon} titreId="id" tabUpdate={tabUpdate} />
   </>
 )

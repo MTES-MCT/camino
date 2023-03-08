@@ -5,33 +5,19 @@ import { ITitre, ITitreActivite } from '../../../types.js'
 import { titresGet } from '../../../database/queries/titres.js'
 import { titresActivitesGet } from '../../../database/queries/titres-activites.js'
 import { userSuper } from '../../../database/user-super.js'
-import {
-  concessionsValidesBuild,
-  titresSurfaceIndexBuild
-} from '../../graphql/resolvers/statistiques.js'
+import { concessionsValidesBuild, titresSurfaceIndexBuild } from '../../graphql/resolvers/statistiques.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
-import {
-  StatistiqueGranulatsMarinsStatAnnee,
-  StatistiquesGranulatsMarins
-} from 'camino-common/src/statistiques.js'
+import { StatistiqueGranulatsMarinsStatAnnee, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques.js'
 
-const statistiquesGranulatsMarinsActivitesFind = (
-  titresActivites: ITitreActivite[],
-  props: string[]
-) =>
+const statistiquesGranulatsMarinsActivitesFind = (titresActivites: ITitreActivite[], props: string[]) =>
   titresActivites.reduce(
     (acc: { [key: string]: number }, ta) => {
       acc.rapportProductionCount++
 
-      if (ta.activiteStatutId === ACTIVITES_STATUTS_IDS.DEPOSE)
-        acc.activitesDeposesQuantiteCount++
+      if (ta.activiteStatutId === ACTIVITES_STATUTS_IDS.DEPOSE) acc.activitesDeposesQuantiteCount++
 
       props.forEach(prop => {
-        if (
-          ta.contenu &&
-          ta.contenu.renseignementsProduction &&
-          ta.contenu.renseignementsProduction[prop]
-        ) {
+        if (ta.contenu && ta.contenu.renseignementsProduction && ta.contenu.renseignementsProduction[prop]) {
           const value = ta.contenu!.renseignementsProduction[prop]
           acc[prop] += Math.abs(Number(value))
         }
@@ -42,29 +28,18 @@ const statistiquesGranulatsMarinsActivitesFind = (
     {
       rapportProductionCount: 0,
       activitesDeposesQuantiteCount: 0,
-      volumeGranulatsExtrait: 0
+      volumeGranulatsExtrait: 0,
     }
   )
 
-type IStatsGranulatsMarinsTitresTypesHistorique =
-  | 'titresPrw'
-  | 'titresPxw'
-  | 'titresCxw'
+type IStatsGranulatsMarinsTitresTypesHistorique = 'titresPrw' | 'titresPxw' | 'titresCxw'
 
-type IStatsGranulatsMarinsTitresTypesInstant =
-  | 'titresInstructionExploration'
-  | 'titresValPrw'
-  | 'titresInstructionExploitation'
-  | 'titresValCxw'
+type IStatsGranulatsMarinsTitresTypesInstant = 'titresInstructionExploration' | 'titresValPrw' | 'titresInstructionExploitation' | 'titresValCxw'
 
-const statistiquesGranulatsMarinsTitresGet = (
-  titres: { id: string; typeId: string; surface: number }[]
-) =>
+const statistiquesGranulatsMarinsTitresGet = (titres: { id: string; typeId: string; surface: number }[]) =>
   titres.reduce(
     (acc, titre) => {
-      const id = camelcase(
-        `titres-${titre.typeId}`
-      ) as IStatsGranulatsMarinsTitresTypesHistorique
+      const id = camelcase(`titres-${titre.typeId}`) as IStatsGranulatsMarinsTitresTypesHistorique
 
       acc[id].quantite++
       acc[id].surface += titre.surface
@@ -74,21 +49,14 @@ const statistiquesGranulatsMarinsTitresGet = (
     {
       titresPrw: { quantite: 0, surface: 0 },
       titresPxw: { quantite: 0, surface: 0 },
-      titresCxw: { quantite: 0, surface: 0 }
+      titresCxw: { quantite: 0, surface: 0 },
     }
   )
 
-const statistiquesGranulatsMarinsInstantBuild = (
-  titres: ITitre[]
-): Omit<StatistiquesGranulatsMarins, 'annees'> => {
+const statistiquesGranulatsMarinsInstantBuild = (titres: ITitre[]): Omit<StatistiquesGranulatsMarins, 'annees'> => {
   const statsInstant = titres.reduce(
     (acc, titre) => {
-      if (
-        titre.titreStatutId &&
-        ['val', 'mod', 'dmi'].includes(titre.titreStatutId) &&
-        titre.surfaceEtape &&
-        titre.surfaceEtape.surface
-      ) {
+      if (titre.titreStatutId && ['val', 'mod', 'dmi'].includes(titre.titreStatutId) && titre.surfaceEtape && titre.surfaceEtape.surface) {
         if (['arw', 'apw', 'prw'].includes(titre.typeId!)) {
           acc.surfaceExploration += titre.surfaceEtape.surface
           if (['mod', 'dmi'].includes(titre.titreStatutId!)) {
@@ -102,9 +70,7 @@ const statistiquesGranulatsMarinsInstantBuild = (
             acc.titresInstructionExploitation++
           }
         }
-        const id = camelcase(
-          `titres-${titre.titreStatutId!}-${titre.typeId!}`
-        ) as IStatsGranulatsMarinsTitresTypesInstant
+        const id = camelcase(`titres-${titre.titreStatutId!}-${titre.typeId!}`) as IStatsGranulatsMarinsTitresTypesInstant
 
         acc[id]++
       }
@@ -117,45 +83,28 @@ const statistiquesGranulatsMarinsInstantBuild = (
       titresInstructionExploration: 0,
       titresValPrw: 0,
       titresInstructionExploitation: 0,
-      titresValCxw: 0
+      titresValCxw: 0,
     }
   )
 
-  statsInstant.surfaceExploration = Math.floor(
-    statsInstant.surfaceExploration * 100
-  ) // conversion 1 km² = 100 ha
-  statsInstant.surfaceExploitation = Math.floor(
-    statsInstant.surfaceExploitation * 100
-  ) // conversion 1 km² = 100 ha
+  statsInstant.surfaceExploration = Math.floor(statsInstant.surfaceExploration * 100) // conversion 1 km² = 100 ha
+  statsInstant.surfaceExploitation = Math.floor(statsInstant.surfaceExploitation * 100) // conversion 1 km² = 100 ha
 
   return statsInstant
 }
 
-const statistiquesGranulatsMarinsAnneeBuild = (
-  titres: ITitre[],
-  titresActivites: ITitreActivite[],
-  annee: number
-): StatistiqueGranulatsMarinsStatAnnee => {
+const statistiquesGranulatsMarinsAnneeBuild = (titres: ITitre[], titresActivites: ITitreActivite[], annee: number): StatistiqueGranulatsMarinsStatAnnee => {
   // les titres créés dans l'année et leur surface lors de l'octroi
   const titresFiltered = titresSurfaceIndexBuild(titres, annee)
 
-  const { titresPrw, titresPxw, titresCxw } =
-    statistiquesGranulatsMarinsTitresGet(titresFiltered)
+  const { titresPrw, titresPxw, titresCxw } = statistiquesGranulatsMarinsTitresGet(titresFiltered)
 
   // les activités de l'année
-  const titresActivitesAnneeFiltered = titresActivites.filter(
-    ta => ta.annee === annee
-  )
-  const statistiquesActivites = statistiquesGranulatsMarinsActivitesFind(
-    titresActivitesAnneeFiltered,
-    ['volumeGranulatsExtrait']
-  )
+  const titresActivitesAnneeFiltered = titresActivites.filter(ta => ta.annee === annee)
+  const statistiquesActivites = statistiquesGranulatsMarinsActivitesFind(titresActivitesAnneeFiltered, ['volumeGranulatsExtrait'])
 
   const activitesDeposesRatio = statistiquesActivites.rapportProductionCount
-    ? Math.round(
-        (statistiquesActivites.activitesDeposesQuantiteCount * 100) /
-          statistiquesActivites.rapportProductionCount
-      )
+    ? Math.round((statistiquesActivites.activitesDeposesQuantiteCount * 100) / statistiquesActivites.rapportProductionCount)
     : 0
 
   const concessionsValides = concessionsValidesBuild(titres, annee)
@@ -167,59 +116,55 @@ const statistiquesGranulatsMarinsAnneeBuild = (
     titresCxw,
     volume: Math.floor(statistiquesActivites.volumeGranulatsExtrait),
     masse: Math.floor(statistiquesActivites.volumeGranulatsExtrait * 1.5),
-    activitesDeposesQuantite:
-      statistiquesActivites.activitesDeposesQuantiteCount,
+    activitesDeposesQuantite: statistiquesActivites.activitesDeposesQuantiteCount,
     activitesDeposesRatio,
-    concessionsValides
+    concessionsValides,
   }
 }
 
-export const statistiquesGranulatsMarins =
-  async (): Promise<StatistiquesGranulatsMarins> => {
-    try {
-      const anneeCurrent = new Date().getFullYear()
-      // un tableau avec les années depuis 2006
-      const annees = Array.from(Array(anneeCurrent - 2006 + 1).keys())
-        .map(e => anneeCurrent - e)
-        .reverse()
+export const statistiquesGranulatsMarins = async (): Promise<StatistiquesGranulatsMarins> => {
+  try {
+    const anneeCurrent = new Date().getFullYear()
+    // un tableau avec les années depuis 2006
+    const annees = Array.from(Array(anneeCurrent - 2006 + 1).keys())
+      .map(e => anneeCurrent - e)
+      .reverse()
 
-      const titres = await titresGet(
-        {
-          domainesIds: ['w'],
-          typesIds: ['ar', 'ap', 'pr', 'ax', 'px', 'cx']
+    const titres = await titresGet(
+      {
+        domainesIds: ['w'],
+        typesIds: ['ar', 'ap', 'pr', 'ax', 'px', 'cx'],
+      },
+      {
+        fields: {
+          surfaceEtape: { id: {} },
+          demarches: {
+            phase: { id: {} },
+            etapes: { id: {} },
+            type: { id: {} },
+          },
         },
-        {
-          fields: {
-            surfaceEtape: { id: {} },
-            demarches: {
-              phase: { id: {} },
-              etapes: { id: {} },
-              type: { id: {} }
-            }
-          }
+      },
+      userSuper
+    )
+
+    const titresActivites = await titresActivitesGet(
+      { annees, typesIds: ['wrp'] },
+      {
+        fields: {
+          titre: { id: {} },
         },
-        userSuper
-      )
+      },
+      userSuper
+    )
 
-      const titresActivites = await titresActivitesGet(
-        { annees, typesIds: ['wrp'] },
-        {
-          fields: {
-            titre: { id: {} }
-          }
-        },
-        userSuper
-      )
-
-      return {
-        annees: annees.map(annee =>
-          statistiquesGranulatsMarinsAnneeBuild(titres, titresActivites, annee)
-        ),
-        ...statistiquesGranulatsMarinsInstantBuild(titres)
-      }
-    } catch (e) {
-      console.error(e)
-
-      throw e
+    return {
+      annees: annees.map(annee => statistiquesGranulatsMarinsAnneeBuild(titres, titresActivites, annee)),
+      ...statistiquesGranulatsMarinsInstantBuild(titres),
     }
+  } catch (e) {
+    console.error(e)
+
+    throw e
   }
+}

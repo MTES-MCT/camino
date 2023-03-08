@@ -9,21 +9,9 @@ describe("trouve la date d'octroi d'un titre", () => {
   })
 
   test("retourne 0000 si les démarches ne contiennent pas d'octroi ou de mutation partielle", () => {
-    expect(
-      titreDemarcheOctroiDateDebutFind([
-        { typeId: 'rnd' }
-      ] as unknown as ITitreDemarche[])
-    ).toEqual('0000')
-    expect(
-      titreDemarcheOctroiDateDebutFind([
-        { typeId: 'oct' }
-      ] as unknown as ITitreDemarche[])
-    ).toEqual('0000')
-    expect(
-      titreDemarcheOctroiDateDebutFind([
-        { typeId: 'oct', etapes: [] }
-      ] as unknown as ITitreDemarche[])
-    ).toEqual('0000')
+    expect(titreDemarcheOctroiDateDebutFind([{ typeId: 'rnd' }] as unknown as ITitreDemarche[])).toEqual('0000')
+    expect(titreDemarcheOctroiDateDebutFind([{ typeId: 'oct' }] as unknown as ITitreDemarche[])).toEqual('0000')
+    expect(titreDemarcheOctroiDateDebutFind([{ typeId: 'oct', etapes: [] }] as unknown as ITitreDemarche[])).toEqual('0000')
   })
 
   test("retourne la date de l'étape acceptée de la démarche d'octroi", () => {
@@ -32,8 +20,8 @@ describe("trouve la date d'octroi d'un titre", () => {
         {
           typeId: 'oct',
           statutId: 'acc',
-          etapes: [{ typeId: 'dpu', date: '2002-02-02' }]
-        }
+          etapes: [{ typeId: 'dpu', date: '2002-02-02' }],
+        },
       ] as unknown as ITitreDemarche[])
     ).toEqual('2002-02-02')
   })
@@ -43,8 +31,8 @@ describe("trouve la date d'octroi d'un titre", () => {
       titreDemarcheOctroiDateDebutFind([
         {
           typeId: 'oct',
-          etapes: [{ typeId: 'mfr', dateDebut: '2002-02-02' }]
-        }
+          etapes: [{ typeId: 'mfr', dateDebut: '2002-02-02' }],
+        },
       ] as unknown as ITitreDemarche[])
     ).toEqual('2002-02-02')
   })
@@ -56,9 +44,9 @@ describe("trouve la date d'octroi d'un titre", () => {
           typeId: 'oct',
           etapes: [
             { typeId: 'rnb', dateDebut: '2003-03-03' },
-            { typeId: 'rnd', dateDebut: '2002-02-02' }
-          ]
-        }
+            { typeId: 'rnd', dateDebut: '2002-02-02' },
+          ],
+        },
       ] as unknown as ITitreDemarche[])
     ).toEqual('2002-02-02')
   })

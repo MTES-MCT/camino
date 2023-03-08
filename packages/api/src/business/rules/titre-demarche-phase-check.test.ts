@@ -21,8 +21,8 @@ describe('retourne si la démarche donne lieu à une étape ou non', () => {
           id: 'h-cx-courdemanges-1988-oct01-dex01',
           typeId: 'dex',
           statutId: 'acc',
-          ordre: 1
-        }
+          ordre: 1,
+        },
       ] as ITitreEtape[])
     ).toBeFalsy()
   })
@@ -35,8 +35,8 @@ describe('retourne si la démarche donne lieu à une étape ou non', () => {
           typeId: 'dpu',
           statutId: 'acc',
           ordre: 1,
-          dateFin: '2018-12-31'
-        }
+          dateFin: '2018-12-31',
+        },
       ] as ITitreEtape[])
     ).toBeTruthy()
   })
@@ -49,8 +49,8 @@ describe('retourne si la démarche donne lieu à une étape ou non', () => {
           typeId: 'dpu',
           statutId: 'acc',
           ordre: 1,
-          duree: 20
-        }
+          duree: 20,
+        },
       ] as ITitreEtape[])
     ).toBeTruthy()
   })
@@ -62,14 +62,14 @@ describe('retourne si la démarche donne lieu à une étape ou non', () => {
           id: 'h-cx-courdemanges-1988-oct01-dpu01',
           typeId: 'dpu',
           statutId: 'acc',
-          ordre: 2
+          ordre: 2,
         },
         {
           id: 'h-cx-courdemanges-1988-oct01-dex01',
           typeId: 'dex',
           statutId: 'acc',
-          ordre: 1
-        }
+          ordre: 1,
+        },
       ] as ITitreEtape[])
     ).toBeTruthy()
   })
@@ -81,14 +81,14 @@ describe('retourne si la démarche donne lieu à une étape ou non', () => {
           id: 'h-cx-courdemanges-1988-oct01-dpu01',
           typeId: 'dpu',
           statutId: 'rej',
-          ordre: 2
+          ordre: 2,
         },
         {
           id: 'h-cx-courdemanges-1988-oct01-dex01',
           typeId: 'dex',
           statutId: 'rej',
-          ordre: 1
-        }
+          ordre: 1,
+        },
       ] as ITitreEtape[])
     ).toBeFalsy()
   })
@@ -100,8 +100,8 @@ describe('retourne si la démarche donne lieu à une étape ou non', () => {
           id: 'm-ax-courdemanges-1988-oct01-dex01',
           typeId: 'dex',
           statutId: 'acc',
-          ordre: 1
-        }
+          ordre: 1,
+        },
       ] as ITitreEtape[])
     ).toBeTruthy()
   })
@@ -113,8 +113,8 @@ describe('retourne si la démarche donne lieu à une étape ou non', () => {
           id: 'm-ax-courdemanges-1988-oct01-dex01',
           typeId: 'dex',
           statutId: 'rej',
-          ordre: 1
-        }
+          ordre: 1,
+        },
       ] as ITitreEtape[])
     ).toBeFalsy()
   })
@@ -126,8 +126,8 @@ describe('retourne si la démarche donne lieu à une étape ou non', () => {
           id: 'm-pr-courdemanges-1988-oct01-rpu01',
           typeId: 'rpu',
           statutId: 'acc',
-          ordre: 1
-        }
+          ordre: 1,
+        },
       ] as ITitreEtape[])
     ).toBeTruthy()
   })
@@ -139,8 +139,8 @@ describe('retourne si la démarche donne lieu à une étape ou non', () => {
           id: 'm-pr-courdemanges-1988-oct01-rpu01',
           typeId: 'rpu',
           statutId: 'rej',
-          ordre: 1
-        }
+          ordre: 1,
+        },
       ] as ITitreEtape[])
     ).toBeFalsy()
   })
@@ -152,14 +152,14 @@ describe('retourne si la démarche donne lieu à une étape ou non', () => {
           id: 'h-cx-courdemanges-1988-pro01-dpu01',
           typeId: 'dpu',
           statutId: 'acc',
-          ordre: 2
+          ordre: 2,
         },
         {
           id: 'h-cx-courdemanges-1988-pro01-dex01',
           typeId: 'dex',
           statutId: 'acc',
-          ordre: 1
-        }
+          ordre: 1,
+        },
       ] as ITitreEtape[])
     ).toBeTruthy()
   })
@@ -171,14 +171,14 @@ describe('retourne si la démarche donne lieu à une étape ou non', () => {
           id: 'h-cx-courdemanges-1988-pr101-dpu01',
           typeId: 'dpu',
           statutId: 'acc',
-          ordre: 2
+          ordre: 2,
         },
         {
           id: 'h-cx-courdemanges-1988-pr101-dex01',
           typeId: 'dex',
           statutId: 'acc',
-          ordre: 1
-        }
+          ordre: 1,
+        },
       ] as ITitreEtape[])
     ).toBeTruthy()
   })
@@ -190,14 +190,14 @@ describe('retourne si la démarche donne lieu à une étape ou non', () => {
           id: 'h-cx-courdemanges-1988-pr201-dpu01',
           typeId: 'dpu',
           statutId: 'acc',
-          ordre: 2
+          ordre: 2,
         },
         {
           id: 'h-cx-courdemanges-1988-pr201-dex01',
           typeId: 'dex',
           statutId: 'acc',
-          ordre: 1
-        }
+          ordre: 1,
+        },
       ] as ITitreEtape[])
     ).toBeTruthy()
   })
@@ -209,14 +209,14 @@ describe('retourne si la démarche donne lieu à une étape ou non', () => {
           id: 'h-cx-courdemanges-1988-pre01-dpu01',
           typeId: 'dpu',
           statutId: 'acc',
-          ordre: 2
+          ordre: 2,
         },
         {
           id: 'h-cx-courdemanges-1988-pre01-dex01',
           typeId: 'dex',
           statutId: 'acc',
-          ordre: 1
-        }
+          ordre: 1,
+        },
       ] as ITitreEtape[])
     ).toBeTruthy()
   })

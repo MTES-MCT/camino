@@ -13,11 +13,7 @@
     @params-update="paramsUpdate"
   >
     <template v-if="activites.length" #downloads>
-      <Downloads
-        :formats="['csv', 'xlsx', 'ods']"
-        section="activites"
-        class="flex-right full-x"
-      />
+      <Downloads :formats="['csv', 'xlsx', 'ods']" section="activites" class="flex-right full-x" />
     </template>
   </liste>
 </template>
@@ -39,7 +35,7 @@ export default {
     return {
       filtres,
       colonnes: activitesColonnes,
-      visible: false
+      visible: false,
     }
   },
 
@@ -70,7 +66,7 @@ export default {
 
     initialized() {
       return this.$store.state.titresActivites.initialized
-    }
+    },
   },
 
   watch: {
@@ -79,8 +75,8 @@ export default {
     '$route.query': {
       handler: function () {
         this.$store.dispatch('titresActivites/routeUpdate')
-      }
-    }
+      },
+    },
   },
 
   async created() {
@@ -103,7 +99,7 @@ export default {
 
     async paramsUpdate(options) {
       await this.$store.dispatch(`titresActivites/paramsSet`, options)
-    }
-  }
+    },
+  },
 }
 </script>

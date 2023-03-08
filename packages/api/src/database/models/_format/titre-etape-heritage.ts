@@ -12,11 +12,7 @@ const heritagePropsFormat = async (heritageProps: IHeritageProps) => {
         fields[propId] = { id: {} }
       }
 
-      const titreEtape = await titreEtapeGet(
-        heritageProps[propId].etapeId!,
-        { fields },
-        userSuper
-      )
+      const titreEtape = await titreEtapeGet(heritageProps[propId].etapeId!, { fields }, userSuper)
 
       heritageProps[propId].etape = titreEtape
     }
@@ -31,11 +27,7 @@ const heritageContenuFormat = async (heritageContenu: IHeritageContenu) => {
     if (heritageContenu[sectionId]) {
       for (const elementId of Object.keys(heritageContenu[sectionId])) {
         if (heritageContenu[sectionId][elementId].etapeId) {
-          const titreEtape = await titreEtapeGet(
-            heritageContenu[sectionId][elementId].etapeId!,
-            { fields },
-            userSuper
-          )
+          const titreEtape = await titreEtapeGet(heritageContenu[sectionId][elementId].etapeId!, { fields }, userSuper)
 
           heritageContenu[sectionId][elementId].etape = titreEtape
         }

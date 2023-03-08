@@ -5,11 +5,7 @@
         <h5>Date</h5>
       </div>
       <div class="tablet-blob-2-3">
-        <InputDate
-          :initialValue="document.date"
-          :dateChanged="dateChanged"
-          class="mb"
-        />
+        <InputDate :initialValue="document.date" :dateChanged="dateChanged" class="mb" />
       </div>
     </div>
 
@@ -24,13 +20,7 @@
           <ul class="list-sans">
             <li v-for="visibilite in documentsVisibilites" :key="visibilite.id">
               <label class="small bold">
-                <input
-                  :value="visibilite.id"
-                  :checked="visibilite.id === visibiliteId"
-                  type="radio"
-                  class="mr-s"
-                  @change="visibiliteUpdate(visibilite.id)"
-                />
+                <input :value="visibilite.id" :checked="visibilite.id === visibiliteId" type="radio" class="mr-s" @change="visibiliteUpdate(visibilite.id)" />
                 {{ visibilite.nom }}
               </label>
             </li>
@@ -48,31 +38,19 @@
       <div class="tablet-blob-2-3">
         <div v-if="document.fichier || document.fichierNouveau" class="flex">
           <p class="mb-0 word-break">
-            {{
-              (document.fichierNouveau && document.fichierNouveau.name) ||
-              `${document.id}.${document.fichierTypeId}`
-            }}
+            {{ (document.fichierNouveau && document.fichierNouveau.name) || `${document.id}.${document.fichierTypeId}` }}
           </p>
           <div class="flex-right flex flex-center pl-s">
-            <button
-              class="btn-border py-s px-m my--xs rnd-l-xs"
-              @click="fileRemove"
-            >
+            <button class="btn-border py-s px-m my--xs rnd-l-xs" @click="fileRemove">
               <Icon size="M" name="delete" />
             </button>
-            <button
-              class="btn-border py-s px-m my--xs rnd-r-xs"
-              @click="fileDownload"
-            >
+            <button class="btn-border py-s px-m my--xs rnd-r-xs" @click="fileDownload">
               <Icon size="M" name="download" />
             </button>
           </div>
         </div>
         <div v-else>
-          <InputFile
-            class="btn-border small p-s full-x rnd-xs mb-s"
-            @change="fileChange"
-          />
+          <InputFile class="btn-border small p-s full-x rnd-xs mb-s" @change="fileChange" />
           <p class="h5 italic">30 Mo max.</p>
         </div>
       </div>
@@ -87,12 +65,7 @@
         </div>
         <div class="tablet-blob-2-3 mb">
           <select v-model="document.fichierTypeId" class="p-s">
-            <option
-              v-for="fichierTypeId in fichiersTypesIds"
-              :key="fichierTypeId"
-              :value="fichierTypeId"
-              :disabled="document.fichierTypeId === fichierTypeId"
-            >
+            <option v-for="fichierTypeId in fichiersTypesIds" :key="fichierTypeId" :value="fichierTypeId" :disabled="document.fichierTypeId === fichierTypeId">
               {{ fichierTypeId }}
             </option>
           </select>
@@ -134,12 +107,7 @@
           <p class="h6 italic mb-0">Optionnel</p>
         </div>
         <div class="mb tablet-blob-2-3">
-          <input
-            v-model="document.uri"
-            type="url"
-            class="p-s"
-            placeholder="https://…"
-          />
+          <input v-model="document.uri" type="url" class="p-s" placeholder="https://…" />
         </div>
       </div>
       <hr />
@@ -152,12 +120,7 @@
           <p class="h6 italic mb-0">Optionnel</p>
         </div>
         <div class="mb tablet-blob-2-3">
-          <input
-            v-model="document.url"
-            type="url"
-            class="p-s"
-            placeholder="https://…"
-          />
+          <input v-model="document.url" type="url" class="p-s" placeholder="https://…" />
         </div>
       </div>
       <hr />
@@ -185,13 +148,7 @@ import { InputDate } from '../_ui/input-date'
 import InputFile from '../_ui/input-file.vue'
 import { Messages } from '../_ui/messages'
 import { Icon } from '@/components/_ui/icon'
-import {
-  isAdministrationAdmin,
-  isAdministrationEditeur,
-  isBureauDEtudes,
-  isEntreprise,
-  isSuper
-} from 'camino-common/src/roles'
+import { isAdministrationAdmin, isAdministrationEditeur, isBureauDEtudes, isEntreprise, isSuper } from 'camino-common/src/roles'
 
 export default {
   components: { Icon, Messages, InputFile, InputDate },
@@ -199,13 +156,13 @@ export default {
   props: {
     document: { type: Object, required: true },
     repertoire: { type: String, required: true },
-    userIsAdmin: { type: Boolean, default: false }
+    userIsAdmin: { type: Boolean, default: false },
   },
 
   data() {
     return {
       fichiersTypesIds: ['pdf'],
-      warnings: []
+      warnings: [],
     }
   },
 
@@ -214,25 +171,19 @@ export default {
       const user = this.$store.state.user.element
       if (!user) return []
 
-      if (
-        isSuper(user) ||
-        isAdministrationAdmin(user) ||
-        isAdministrationEditeur(user)
-      ) {
+      if (isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
         return [
           { id: 'admin', nom: 'Administrations uniquement' },
           {
             id: 'entreprise',
-            nom: 'Administrations et entreprises titulaires'
+            nom: 'Administrations et entreprises titulaires',
           },
-          { id: 'public', nom: 'Public' }
+          { id: 'public', nom: 'Public' },
         ]
       }
 
       if (isEntreprise(user) || isBureauDEtudes(user)) {
-        return [
-          { id: 'entreprise', nom: 'Administrations et entreprises titulaires' }
-        ]
+        return [{ id: 'entreprise', nom: 'Administrations et entreprises titulaires' }]
       }
 
       return []
@@ -248,17 +199,13 @@ export default {
       }
 
       return 'admin'
-    }
+    },
   },
 
   async mounted() {
-    if (
-      this.documentsVisibilites.length &&
-      this.documentsVisibilites.length < 2
-    ) {
+    if (this.documentsVisibilites.length && this.documentsVisibilites.length < 2) {
       this.document.publicLecture = this.documentsVisibilites[0].id === 'public'
-      this.document.entreprisesLecture =
-        this.documentsVisibilites[0].id === 'entreprise'
+      this.document.entreprisesLecture = this.documentsVisibilites[0].id === 'entreprise'
     }
   },
 
@@ -269,8 +216,8 @@ export default {
     fileChange({
       target: {
         validity,
-        files: [file]
-      }
+        files: [file],
+      },
     }) {
       if (file && validity.valid && file.type === 'application/pdf') {
         this.warnings = []
@@ -278,9 +225,7 @@ export default {
         this.document.fichier = true
         this.document.fichierTypeId = 'pdf'
       } else {
-        this.warnings = [
-          { type: 'warning', value: 'seuls les fichiers pdf sont acceptés' }
-        ]
+        this.warnings = [{ type: 'warning', value: 'seuls les fichiers pdf sont acceptés' }]
       }
     },
 
@@ -298,7 +243,7 @@ export default {
     visibiliteUpdate(id) {
       this.document.publicLecture = id === 'public'
       this.document.entreprisesLecture = id === 'entreprise'
-    }
-  }
+    },
+  },
 }
 </script>

@@ -8,7 +8,7 @@ import {
   titreDemarchesDexDateDebut,
   titreDemarchesSansOctroi,
   titreDemarchesSansDateDebut,
-  titreDemarchesDateUndefined
+  titreDemarchesDateUndefined,
 } from './__mocks__/titre-date-debut-find-demarches.js'
 import { describe, expect, test } from 'vitest'
 describe("date de début d'une démarche", () => {
@@ -25,15 +25,11 @@ describe("date de début d'une démarche", () => {
   })
 
   test('retourne la date de début de la première étape de rpu dont le statut est acceptée', () => {
-    expect(titreDateDebutFind(titreDemarchesRpuDateDebut, 'prm')).toBe(
-      '1988-03-15'
-    )
+    expect(titreDateDebutFind(titreDemarchesRpuDateDebut, 'prm')).toBe('1988-03-15')
   })
 
   test("retourne la date de début de la première étape de dpu de la première démarche d'octroi dont le statut est acceptée", () => {
-    expect(titreDateDebutFind(titreDemarchesDexDateDebut, 'axm')).toBe(
-      '1988-03-15'
-    )
+    expect(titreDateDebutFind(titreDemarchesDexDateDebut, 'axm')).toBe('1988-03-15')
   })
 
   test("retourne null si il n'y a pas de démarche d'octroi", () => {
