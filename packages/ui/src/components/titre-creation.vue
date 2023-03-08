@@ -63,7 +63,7 @@
           <h5>Titre {{ linkConfig.count === 'multiple' ? 's' : '' }} à l’origine de cette nouvelle demande</h5>
         </div>
         <div class="tablet-blob-2-3">
-          <PureTitresLink :config="titreLinkConfig" :loadLinkableTitres="loadLinkableTitresByTypeId" @onSelectedTitres="onSelectedTitres" />
+          <TitresLink :config="titreLinkConfig" :loadLinkableTitres="loadLinkableTitresByTypeId" @onSelectedTitres="onSelectedTitres" />
         </div>
       </div>
       <hr />
@@ -84,7 +84,7 @@ import { ReferenceTypeId, sortedReferencesTypes } from 'camino-common/src/static
 import { TitreTypeSelect } from './_common/titre-type-select'
 import { Icon } from '@/components/_ui/icon'
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
-import PureTitresLink from '@/components/titre/pure-titres-link.vue'
+import { TitresLink } from '@/components/titre/pure-titres-link'
 import { getLinkConfig } from 'camino-common/src/permissions/titres'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
