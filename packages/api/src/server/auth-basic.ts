@@ -50,7 +50,7 @@ export const authBasic = async (req: express.Request, res: express.Response, nex
       }
 
       // on fait comme si le JWT avait été déchiffré pour que l’utilisateur soit chargé par userLoader
-      req.user = { email: user.email }
+      req.user = { email: user.email, family_name: user.nom, given_name: user.prenom }
       next()
 
       return
