@@ -36,7 +36,6 @@ import {
 import {
   utilisateur,
   utilisateurs,
-  utilisateurCreer,
   utilisateurModifier,
   utilisateurSupprimer,
   newsletterInscrire
@@ -193,7 +192,6 @@ export default {
   activiteSupprimer,
   activiteDeposer,
   utilisateurModifier,
-  utilisateurCreer,
   utilisateurSupprimer,
   utilisateurTitreAbonner,
   newsletterInscrire,

@@ -91,43 +91,6 @@ describe("état de l'utilisateur connecté", () => {
     expect(apiMock).toHaveBeenCalled()
   })
 
-  test('ajoute un utilisateur', async () => {
-    store = createStore({ modules: { user, map }, actions, mutations })
-    const apiMock = api.utilisateurCreer.mockResolvedValue(userInfo)
-    await store.dispatch('user/add', { utilisateur: userInfo, token: 'token' })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      utilisateur: userInfo,
-      token: 'token'
-    })
-    expect(actions.messageAdd).toHaveBeenCalled()
-  })
-
-  test("n'ajoute pas d'utilisateur", async () => {
-    const apiMock = api.utilisateurCreer.mockResolvedValue(null)
-    await store.dispatch('user/add', { utilisateur: userInfo, token: 'token' })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      utilisateur: userInfo,
-      token: 'token'
-    })
-    expect(actions.messageAdd).not.toHaveBeenCalled()
-  })
-
-  test("retourne une erreur api lors de l'ajout d'un utilisateur", async () => {
-    store = createStore({ modules: { user, map }, actions, mutations })
-    const apiMock = api.utilisateurCreer.mockRejectedValue(
-      new Error("erreur dans l'api")
-    )
-    await store.dispatch('user/add', { utilisateur: userInfo, token: 'token' })
-
-    expect(apiMock).toHaveBeenCalledWith({
-      utilisateur: userInfo,
-      token: 'token'
-    })
-    expect(actions.messageAdd).toHaveBeenCalled()
-  })
-
   test("initialise les preferences de l'utilisateur", async () => {
     const section = 'conditions'
     const value = 'conditionValue'

@@ -746,9 +746,6 @@ interface IUtilisateur {
   preferences?: any | null
   administrationId?: AdministrationId | null
   entreprises?: IEntreprise[] | null
-  modification?: boolean | null
-  suppression?: boolean | null
-  permissionModification?: boolean | null
   qgisToken?: string | null
 }
 

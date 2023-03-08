@@ -17,8 +17,5 @@ export const fragmentUtilisateur = gql`
     }
     administrationId
     role
-    modification
-    suppression
-    permissionModification
   }
 `

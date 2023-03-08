@@ -35,9 +35,10 @@
       <div class="tablet-blobs mt">
         <div v-if="inputs.length" class="tablet-blob-1-2 large-blob-1-3">
           <template v-for="input in inputs" :key="input.id">
-            <FiltersInputAutocomplete
+            <InputAutocomplete
               v-if="input.type === 'autocomplete'"
               :filter="input"
+              :onSelectItems="unused"
             />
             <FiltersInput v-else :filter="input" />
           </template>
@@ -89,7 +90,7 @@ import Accordion from './accordion.vue'
 import { FiltersInput } from './filters-input'
 import { FiltersCheckboxes } from './filters-checkboxes'
 import { FiltersSelects } from './filters-selects'
-import FiltersInputAutocomplete from './filters-input-autocomplete.vue'
+import { InputAutocomplete } from './filters-input-autocomplete'
 import { Icon } from '@/components/_ui/icon'
 
 export default {
@@ -99,7 +100,7 @@ export default {
     FiltersInput,
     FiltersCheckboxes,
     FiltersSelects,
-    FiltersInputAutocomplete
+    InputAutocomplete
   },
 
   props: {
@@ -184,6 +185,7 @@ export default {
         this.validate()
       }
     },
+    unused() {},
 
     inputsErase() {
       this.inputs.forEach(filter => {

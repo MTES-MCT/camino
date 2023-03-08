@@ -13,7 +13,10 @@ import TitreCreation from '../components/titre-creation.vue'
 import EtapeEdition from '../components/etape-edition.vue'
 import ActiviteEdition from '../components/activite-edition.vue'
 import Travaux from '../components/travaux.vue'
-const Utilisateur = () => import('../components/utilisateur.vue')
+const Utilisateur = async () => {
+  const { Utilisateur } = await import('../components/utilisateur')
+  return Utilisateur
+}
 const Utilisateurs = () => import('../components/utilisateurs.vue')
 const Entreprise = async () => {
   const { Entreprise } = await import('../components/entreprise')
@@ -35,7 +38,6 @@ const MetaEtape = () => import('../components/meta-etape.vue')
 const MetaActivite = () => import('../components/meta-activite.vue')
 const Metas = () => import('../components/metas.vue')
 const Error = () => import('../components/error.vue')
-const UserAdd = () => import('../components/user/add.vue')
 const StatistiquesGlobales = async () => {
   const { Globales } = await import('../components/statistiques/globales')
   return Globales
@@ -185,11 +187,6 @@ const routes: RouteRecordRaw[] = [
     path: '/activites/:id/edition',
     name: 'activite-edition',
     component: ActiviteEdition
-  },
-  {
-    path: '/creation-de-compte',
-    name: 'account-creation',
-    component: UserAdd
   },
   {
     path: '/statistiques',

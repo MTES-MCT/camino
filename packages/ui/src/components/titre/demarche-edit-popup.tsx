@@ -1,9 +1,4 @@
-import {
-  isTitreType,
-  TitresTypes,
-  TitreTypeId
-} from 'camino-common/src/static/titresTypes'
-import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
+import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { computed, defineComponent, inject, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import {
@@ -82,12 +77,6 @@ export const PureDemarcheEditPopup = defineComponent<Props>({
     const matomo = inject('matomo', null)
     const typeId = ref<DemarcheTypeId | null>(props.demarche.typeId ?? null)
     const description = ref<string>(props.demarche.description ?? '')
-
-    const titreTypeNom = computed(() => {
-      return isTitreType(props.titreTypeId)
-        ? TitresTypesTypes[TitresTypes[props.titreTypeId].typeId].nom
-        : ''
-    })
 
     const title = computed(() => {
       return `${

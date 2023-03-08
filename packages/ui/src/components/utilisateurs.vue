@@ -12,16 +12,6 @@
     :initialized="initialized"
     @params-update="paramsUpdate"
   >
-    <template v-if="canCreateUser" #addButton>
-      <button
-        class="btn small rnd-xs py-s px-m full-x flex mb-s"
-        @click="addPopupOpen"
-      >
-        <span class="mt-xxs">Ajouter un utilisateur</span>
-        <Icon name="plus" size="M" class="flex-right" />
-      </button>
-    </template>
-
     <template v-if="utilisateurs.length" #downloads>
       <Downloads
         :formats="['csv', 'xlsx', 'ods']"
@@ -35,23 +25,18 @@
 <script>
 import Liste from './_common/liste.vue'
 import { Downloads } from './_common/downloads'
-import UtilisateurEditPopup from './utilisateur/edit-popup.vue'
 
 import filtres from './utilisateurs/filtres'
 import {
   utilisateursColonnes,
   utilisateursLignesBuild
 } from './utilisateurs/table'
-import { Icon } from './_ui/icon'
-import {
-  canCreateUtilisateur,
-  canReadUtilisateurs
-} from 'camino-common/src/permissions/utilisateurs'
+import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 
 export default {
   name: 'Utilisateurs',
 
-  components: { Icon, Liste, Downloads },
+  components: { Liste, Downloads },
 
   data() {
     return {
@@ -64,10 +49,6 @@ export default {
   computed: {
     user() {
       return this.$store.state.user.element
-    },
-
-    canCreateUser() {
-      return canCreateUtilisateur(this.user)
     },
 
     utilisateurs() {
@@ -127,20 +108,6 @@ export default {
 
     async paramsUpdate(options) {
       await this.$store.dispatch(`utilisateurs/paramsSet`, options)
-    },
-
-    addPopupOpen() {
-      this.$store.commit('popupOpen', {
-        component: UtilisateurEditPopup,
-        props: {
-          utilisateur: {
-            role: 'defaut',
-            entreprises: []
-          },
-          subscription: { newsletter: false },
-          action: 'create'
-        }
-      })
     }
   }
 }

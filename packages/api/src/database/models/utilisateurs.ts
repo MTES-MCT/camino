@@ -51,20 +51,12 @@ class Utilisateurs extends Model {
   })
 
   public $parseJson(json: Pojo) {
-    delete json.modification
-    delete json.suppression
-    delete json.permissionModification
-
     json = super.$parseJson(json)
 
     return json
   }
 
   public $formatDatabaseJson(json: Pojo) {
-    delete json.modification
-    delete json.suppression
-    delete json.permissionModification
-
     json = super.$formatDatabaseJson(json)
 
     return json

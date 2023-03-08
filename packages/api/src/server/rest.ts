@@ -189,11 +189,11 @@ rest.get('/demarches', restDownload(demarches))
 rest.get('/activites', restDownload(activites))
 rest.post(CaminoRestRoutes.generateQgisToken, restCatcher(generateQgisToken))
 rest.post(
-  '/utilisateurs/:id/newsletter',
+  CaminoRestRoutes.newsletter,
   restCatcher(manageNewsletterSubscription)
 )
 rest.get(CaminoRestRoutes.moi, restCatcher(moi))
-rest.get('/utilisateurs/:id/newsletter', restCatcher(isSubscribedToNewsletter))
+rest.get(CaminoRestRoutes.newsletter, restCatcher(isSubscribedToNewsletter))
 rest.get('/utilisateurs', restDownload(utilisateurs))
 rest.get(CaminoRestRoutes.fiscaliteEntreprise, restCatcher(fiscalite))
 rest.get('/entreprises', restDownload(entreprises))

@@ -4,7 +4,7 @@ import { AdministrationId } from './static/administrations'
 export type TestUser = Pick<UserSuper, 'role'> | Pick<UserDefaut, 'role'> | Pick<AdminUserNotNull, 'role' | 'administrationId'> | Pick<EntrepriseUserNotNull, 'role' | 'entreprises'>
 export const testBlankUser: Omit<UserNotNull, 'role'> = {
   id: 'id',
-  email: 'email',
+  email: 'email@gmail.com',
   nom: 'nom',
   prenom: 'prenom'
 }

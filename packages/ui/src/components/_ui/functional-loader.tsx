@@ -10,7 +10,7 @@ export interface Props<T> {
 export const LoadingElement = <T,>(props: Props<T>) => {
   return (
     <div
-      class={styles['top-level']}
+      class={`${props.data.status === 'LOADING' ? styles['top-level'] : ''}`}
       style={
         props.data.status !== 'LOADED'
           ? 'display: flex; justify-content: center'

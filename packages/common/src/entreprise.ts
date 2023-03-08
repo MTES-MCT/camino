@@ -7,6 +7,7 @@ export interface Entreprise {
   id: EntrepriseId
   nom: string
   etablissements: EntrepriseEtablissement[]
+  legalSiren?: string
 }
 
 export const newEntrepriseId = (value: string): EntrepriseId => {

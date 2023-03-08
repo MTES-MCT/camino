@@ -259,7 +259,7 @@ exports[`Storybook Tests > Components/Administration > Default 1`] = `
     </div>
     <!--v-if-->
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <div class=\\"mb-xxl\\">
       <div class=\\"line-neutral width-full mb-xxl\\"></div>
       <h2>Utilisateurs</h2>
@@ -297,7 +297,7 @@ exports[`Storybook Tests > Components/Administration > Default 1`] = `
     <!---->
     <!---->
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <div class=\\"line-neutral width-full mb-xxl\\"></div>
     <h2>Emails</h2>
     <div class=\\"mb-xxl\\">
@@ -382,7 +382,7 @@ exports[`Storybook Tests > Components/Administration > Default 1`] = `
           </div>
         </div>
       </div>
-      <div class=\\"_top-level_3306d0\\" style=\\"\\">
+      <div class=\\"\\" style=\\"\\">
         <div class=\\"mb-xxl\\">
           <h3>Restrictions de l'édition des titres, démarches et étapes</h3>
           <div class=\\"h6\\">
@@ -681,7 +681,7 @@ exports[`Storybook Tests > Components/Administration/Permissions > Default 1`] =
       </div>
     </div>
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <div class=\\"mb-xxl\\">
       <h3>Restrictions de l'édition des titres, démarches et étapes</h3>
       <div class=\\"h6\\">
@@ -888,7 +888,7 @@ exports[`Storybook Tests > Components/Administration/Permissions > error 1`] = `
       </div>
     </div>
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+  <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
     <!---->
     <div>
       <div class=\\"_tooltip_4f6ea8\\">
@@ -2223,7 +2223,7 @@ exports[`Storybook Tests > Components/Dashboard/DGTMStats > Loading 1`] = `
 
 exports[`Storybook Tests > Components/Dashboard/DGTMStats > WithError 1`] = `
 "<div style=\\"display: grid; grid-template-columns: 1fr 1fr 1fr;\\">
-  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+  <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
     <!---->
     <div>
       <div class=\\"_tooltip_4f6ea8\\">
@@ -2234,7 +2234,7 @@ exports[`Storybook Tests > Components/Dashboard/DGTMStats > WithError 1`] = `
     </div>
     <!---->
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+  <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
     <!---->
     <div>
       <div class=\\"_tooltip_4f6ea8\\">
@@ -2245,7 +2245,7 @@ exports[`Storybook Tests > Components/Dashboard/DGTMStats > WithError 1`] = `
     </div>
     <!---->
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+  <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
     <!---->
     <div>
       <div class=\\"_tooltip_4f6ea8\\">
@@ -2299,7 +2299,7 @@ exports[`Storybook Tests > Components/Dashboard/DGTMStatsFull > Loading 1`] = `
 exports[`Storybook Tests > Components/Dashboard/DGTMStatsFull > WithError 1`] = `
 "<div class=\\"width-full-p\\">
   <div style=\\"display: grid; grid-template-columns: 1fr 1fr 1fr;\\">
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <div>
         <div class=\\"_tooltip_4f6ea8\\">
@@ -2310,7 +2310,7 @@ exports[`Storybook Tests > Components/Dashboard/DGTMStatsFull > WithError 1`] = 
       </div>
       <!---->
     </div>
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <div>
         <div class=\\"_tooltip_4f6ea8\\">
@@ -2321,7 +2321,7 @@ exports[`Storybook Tests > Components/Dashboard/DGTMStatsFull > WithError 1`] = 
       </div>
       <!---->
     </div>
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <div>
         <div class=\\"_tooltip_4f6ea8\\">
@@ -2332,7 +2332,7 @@ exports[`Storybook Tests > Components/Dashboard/DGTMStatsFull > WithError 1`] = 
       </div>
       <!---->
     </div>
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <div>
         <div class=\\"_tooltip_4f6ea8\\">
@@ -2343,7 +2343,7 @@ exports[`Storybook Tests > Components/Dashboard/DGTMStatsFull > WithError 1`] = 
       </div>
       <!---->
     </div>
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <div>
         <div class=\\"_tooltip_4f6ea8\\">
@@ -2354,7 +2354,7 @@ exports[`Storybook Tests > Components/Dashboard/DGTMStatsFull > WithError 1`] = 
       </div>
       <!---->
     </div>
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <div>
         <div class=\\"_tooltip_4f6ea8\\">
@@ -2403,7 +2403,7 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > Ok 1`] = `
   <!---->
   <div class=\\"line-neutral width-full mb-l\\"></div>
   <h3>Titres</h3>
-  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <h4>Titres en attente de la DREAL</h4>
     <div class=\\"mb-xxl\\">
       <div class=\\"overflow-scroll-x mb\\">
@@ -2450,7 +2450,7 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > Ok 1`] = `
     <!---->
   </div>
   <h4>Titres en cours d’instruction</h4>
-  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <div class=\\"width-full-p\\">
       <div class=\\"overflow-scroll-x mb\\">
         <div class=\\"table\\">
@@ -2552,13 +2552,13 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > OkWithoutBlockedTitres 1
   <!---->
   <div class=\\"line-neutral width-full mb-l\\"></div>
   <h3>Titres</h3>
-  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <!---->
     <!---->
     <!---->
   </div>
   <h4>Titres en cours d’instruction</h4>
-  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <div class=\\"width-full-p\\">
       <div class=\\"overflow-scroll-x mb\\">
         <div class=\\"table\\">
@@ -2660,7 +2660,7 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > WithError 1`] = `
   <!---->
   <div class=\\"line-neutral width-full mb-l\\"></div>
   <h3>Titres</h3>
-  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+  <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
     <!---->
     <div>
       <div class=\\"_tooltip_4f6ea8\\">
@@ -2672,7 +2672,7 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > WithError 1`] = `
     <!---->
   </div>
   <h4>Titres en cours d’instruction</h4>
-  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+  <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
     <!---->
     <div>
       <div class=\\"_tooltip_4f6ea8\\">
@@ -2714,7 +2714,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > Ok 1`] = `
           <use href=\\"#icon-plus\\"></use>
         </svg></button></div>
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <div class=\\"p-s bg-info color-bg mb\\">Découvrez l'estimation de votre fiscalité minière pour<a type=\\"primary\\" to=\\"/entreprises/id\\" target=\\"_blank\\" class=\\"p-s color-bg mb\\">entreprise1</a></div>
     <div class=\\"width-full-p\\">
       <div class=\\"overflow-scroll-x mb\\">
@@ -2850,7 +2850,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithMultipleEntre
           <use href=\\"#icon-plus\\"></use>
         </svg></button></div>
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <div class=\\"p-s bg-info color-bg mb\\">Découvrez l'estimation de votre fiscalité minière pour vos entreprises :<a type=\\"primary\\" to=\\"/entreprises/id\\" target=\\"_blank\\" class=\\"p-s color-bg mb\\">entreprise1</a><a type=\\"primary\\" to=\\"/entreprises/id2\\" target=\\"_blank\\" class=\\"p-s color-bg mb\\">entreprise2</a></div>
     <div class=\\"width-full-p\\">
       <div class=\\"overflow-scroll-x mb\\">
@@ -2986,7 +2986,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithoutActivities
           <use href=\\"#icon-plus\\"></use>
         </svg></button></div>
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <div class=\\"p-s bg-info color-bg mb\\">Découvrez l'estimation de votre fiscalité minière pour<a type=\\"primary\\" to=\\"/entreprises/id\\" target=\\"_blank\\" class=\\"p-s color-bg mb\\">entreprise1</a></div>
     <div class=\\"width-full-p\\">
       <div class=\\"overflow-scroll-x mb\\">
@@ -3111,7 +3111,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithoutFiscalite 
           <use href=\\"#icon-plus\\"></use>
         </svg></button></div>
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <!---->
     <div class=\\"width-full-p\\">
       <div class=\\"overflow-scroll-x mb\\">
@@ -3210,7 +3210,7 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > WithError 1`] = `
           <use href=\\"#icon-plus\\"></use>
         </svg></button></div>
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+  <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
     <!---->
     <div>
       <div class=\\"_tooltip_4f6ea8\\">
@@ -3563,7 +3563,7 @@ exports[`Storybook Tests > Components/Dashboard/PTMG > Ok 1`] = `
       <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord PTMG</h1>
     </div>
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <div class=\\"line-neutral width-full mb-l\\"></div>
     <h3>ARM en attente</h3>
     <div class=\\"mb-xxl\\">
@@ -3671,7 +3671,7 @@ exports[`Storybook Tests > Components/Dashboard/PTMG > WithError 1`] = `
       <h1 class=\\"mt-xs mb-xxl\\">Tableau de bord PTMG</h1>
     </div>
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+  <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
     <!---->
     <div>
       <div class=\\"_tooltip_4f6ea8\\">
@@ -5555,7 +5555,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
       <div class=\\"tablet-blobs\\">
         <div class=\\"tablet-blob-1-3\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -5567,7 +5567,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
             <!---->
           </div>
           </p>
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -5582,7 +5582,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
         </div>
         <div class=\\"tablet-blob-1-3\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -5599,7 +5599,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
         </div>
         <div class=\\"tablet-blob-1-3\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -5621,7 +5621,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
       <div class=\\"tablet-blobs\\">
         <div class=\\"tablet-blob-1-3\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -5633,7 +5633,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
             <!---->
           </div>
           </p>
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -5648,7 +5648,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
         </div>
         <div class=\\"tablet-blob-1-3\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -5660,7 +5660,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
             <!---->
           </div>
           </p>
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -5675,7 +5675,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
         </div>
         <div class=\\"tablet-blob-1-3\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -5696,7 +5696,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
   <h2>Production annuelle</h2><span class=\\"separator\\"></span>
   <p class=\\"mb-xl\\">Données contenues dans la base de données Camino, stabilisées pour l’année n-1.</p>
   <div class=\\"tablet-pt-s pb-s\\">
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <div>
         <div class=\\"_tooltip_4f6ea8\\">
@@ -5710,7 +5710,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
   </div>
   <div class=\\"line-neutral width-full mb-xl\\"></div>
   <h5>Sélectionner une année</h5>
-  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+  <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
     <!---->
     <div>
       <div class=\\"_tooltip_4f6ea8\\">
@@ -5730,7 +5730,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
     <div class=\\"tablet-float-blobs clearfix\\">
       <div class=\\"tablet-float-blob-1-3 mb-xl mt\\">
         <p class=\\"h0 text-center\\">
-        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
           <!---->
           <div>
             <div class=\\"_tooltip_4f6ea8\\">
@@ -5745,7 +5745,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
         <p>Permis exclusifs de recherches octroyés l’an dernier</p>
       </div>
       <div class=\\"tablet-float-blob-2-3 relative mb-xl\\">
-        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
           <!---->
           <div>
             <div class=\\"_tooltip_4f6ea8\\">
@@ -5758,7 +5758,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
         </div>
       </div>
     </div>
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <div>
         <div class=\\"_tooltip_4f6ea8\\">
@@ -5774,7 +5774,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
     <div class=\\"tablet-float-blobs clearfix\\">
       <div class=\\"tablet-float-blob-1-3 mb-xl mt\\">
         <p class=\\"h0 text-center\\">
-        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
           <!---->
           <div>
             <div class=\\"_tooltip_4f6ea8\\">
@@ -5789,7 +5789,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
         <p>Concessions octroyées l’an dernier</p>
       </div>
       <div class=\\"tablet-float-blob-2-3 relative mb-xl\\">
-        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
           <!---->
           <div>
             <div class=\\"_tooltip_4f6ea8\\">
@@ -5807,7 +5807,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
     <div class=\\"tablet-float-blobs clearfix\\">
       <div class=\\"tablet-float-blob-1-3 mb-xl mt\\">
         <p class=\\"h0 text-center\\">
-        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
           <!---->
           <div>
             <div class=\\"_tooltip_4f6ea8\\">
@@ -5822,7 +5822,7 @@ exports[`Storybook Tests > Components/Statistiques/GranulatsMarins > WithError 1
         <p>Concessions valides l’an dernier</p>
       </div>
       <div class=\\"tablet-float-blob-2-3 relative mb-xl\\">
-        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
           <!---->
           <div>
             <div class=\\"_tooltip_4f6ea8\\">
@@ -6003,7 +6003,7 @@ exports[`Storybook Tests > Components/Statistiques/Guyane > WithError 1`] = `
       <div class=\\"tablet-blobs\\">
         <div class=\\"tablet-blob-1-4\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -6020,7 +6020,7 @@ exports[`Storybook Tests > Components/Statistiques/Guyane > WithError 1`] = `
         </div>
         <div class=\\"tablet-blob-1-4\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -6037,7 +6037,7 @@ exports[`Storybook Tests > Components/Statistiques/Guyane > WithError 1`] = `
         </div>
         <div class=\\"tablet-blob-1-2\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -6059,7 +6059,7 @@ exports[`Storybook Tests > Components/Statistiques/Guyane > WithError 1`] = `
       <div class=\\"tablet-blobs\\">
         <div class=\\"tablet-blob-1-4\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -6076,7 +6076,7 @@ exports[`Storybook Tests > Components/Statistiques/Guyane > WithError 1`] = `
         </div>
         <div class=\\"tablet-blob-1-4\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -6093,7 +6093,7 @@ exports[`Storybook Tests > Components/Statistiques/Guyane > WithError 1`] = `
         </div>
         <div class=\\"tablet-blob-1-4\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -6130,7 +6130,7 @@ exports[`Storybook Tests > Components/Statistiques/Guyane > WithError 1`] = `
     </div>
   </div>
   <div class=\\"line-neutral width-full mb\\"></div>
-  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+  <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
     <!---->
     <div>
       <div class=\\"_tooltip_4f6ea8\\">
@@ -6148,7 +6148,7 @@ exports[`Storybook Tests > Components/Statistiques/Guyane > WithError 1`] = `
     <div class=\\"mb-xl\\">
       <h3>Autorisations de recherche</h3>
       <hr>
-      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
         <!---->
         <div>
           <div class=\\"_tooltip_4f6ea8\\">
@@ -6163,7 +6163,7 @@ exports[`Storybook Tests > Components/Statistiques/Guyane > WithError 1`] = `
     <div class=\\"mb-xl\\">
       <h3>Permis de recherches</h3>
       <hr>
-      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
         <!---->
         <div>
           <div class=\\"_tooltip_4f6ea8\\">
@@ -6178,7 +6178,7 @@ exports[`Storybook Tests > Components/Statistiques/Guyane > WithError 1`] = `
     <div class=\\"mb-xl\\">
       <h3>Autorisations d'exploitation</h3>
       <hr>
-      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
         <!---->
         <div>
           <div class=\\"_tooltip_4f6ea8\\">
@@ -6193,7 +6193,7 @@ exports[`Storybook Tests > Components/Statistiques/Guyane > WithError 1`] = `
     <div class=\\"mb-xl\\">
       <h3>Concessions</h3>
       <hr>
-      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
         <!---->
         <div>
           <div class=\\"_tooltip_4f6ea8\\">
@@ -6392,7 +6392,7 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
       <div class=\\"tablet-blobs\\">
         <div class=\\"tablet-blob-1-3\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -6411,7 +6411,7 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
         </div>
         <div class=\\"tablet-blob-1-3\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -6428,7 +6428,7 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
         </div>
         <div class=\\"tablet-blob-1-3\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -6450,7 +6450,7 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
       <div class=\\"tablet-blobs\\">
         <div class=\\"tablet-blob-1-3\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -6469,7 +6469,7 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
         </div>
         <div class=\\"tablet-blob-1-3\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -6488,7 +6488,7 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
         </div>
         <div class=\\"tablet-blob-1-3\\">
           <p class=\\"h0 text-center\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
             <!---->
             <div>
               <div class=\\"_tooltip_4f6ea8\\">
@@ -6514,7 +6514,7 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
       <hr>
     </div>
     <div>
-      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
         <!---->
         <div>
           <div class=\\"_tooltip_4f6ea8\\">
@@ -6533,7 +6533,7 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
       <div class=\\"line-neutral mb\\"></div>
       <p>Sommes dûes par les opérateurs miniers exploitant de la bauxite au titre des redevances départementale et communale des mines, hors frais de gestion</p>
       <p class=\\"h1 text-center color-info bold\\">
-      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
         <!---->
         <div>
           <div class=\\"_tooltip_4f6ea8\\">
@@ -6550,7 +6550,7 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
       <h3>Sels (sel de sodium, sel de potassium, sel gemme…)</h3>
       <hr>
     </div>
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <div>
         <div class=\\"_tooltip_4f6ea8\\">
@@ -6568,7 +6568,7 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
       <div class=\\"line-neutral mb\\"></div>
       <p>Sommes dûes par les opérateurs miniers exploitant des sels au titre des redevances départementale et communale des mines, hors frais de gestion</p>
       <p class=\\"h1 text-center color-info bold\\">
-      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+      <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
         <!---->
         <div>
           <div class=\\"_tooltip_4f6ea8\\">
@@ -6593,7 +6593,7 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
   <div class=\\"mb-xl\\">
     <h3>Permis Exclusif de Recherche (PER)</h3>
     <hr>
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <div>
         <div class=\\"_tooltip_4f6ea8\\">
@@ -6608,7 +6608,7 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
   <div class=\\"mb-xl\\">
     <h3>Concession</h3>
     <hr>
-    <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
       <!---->
       <div>
         <div class=\\"_tooltip_4f6ea8\\">
@@ -6654,7 +6654,7 @@ exports[`Storybook Tests > Components/Titre/DemarcheEditPopup > Create 1`] = `
       <div class=\\"tablet-blobs\\">
         <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
         <div class=\\"tablet-blob-2-3\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"\\"><button disabled=\\"\\" class=\\"disabled btn btn-primary\\">Enregistrer</button>
+          <div class=\\"\\" style=\\"\\"><button disabled=\\"\\" class=\\"disabled btn btn-primary\\">Enregistrer</button>
             <!---->
             <!---->
           </div>
@@ -6696,7 +6696,7 @@ exports[`Storybook Tests > Components/Titre/DemarcheEditPopup > Edit 1`] = `
       <div class=\\"tablet-blobs\\">
         <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
         <div class=\\"tablet-blob-2-3\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"\\"><button class=\\" btn btn-primary\\">Enregistrer</button>
+          <div class=\\"\\" style=\\"\\"><button class=\\" btn btn-primary\\">Enregistrer</button>
             <!---->
             <!---->
           </div>
@@ -6721,7 +6721,7 @@ exports[`Storybook Tests > Components/Titre/DemarcheRemovePopup > Main 1`] = `
       <div class=\\"tablet-blobs\\">
         <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
         <div class=\\"tablet-blob-2-3\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"\\"><button class=\\" btn btn-primary\\">Supprimer</button>
+          <div class=\\"\\" style=\\"\\"><button class=\\" btn btn-primary\\">Supprimer</button>
             <!---->
             <!---->
           </div>
@@ -6813,7 +6813,7 @@ exports[`Storybook Tests > Components/Titre/Infos > Default 1`] = `
           </a></li>
       </ul>
     </div>
-    <div class=\\"_top-level_3306d0\\" style=\\"\\">
+    <div class=\\"\\" style=\\"\\">
       <div>
         <!---->
         <div class=\\"tablet-blobs\\">
@@ -6863,7 +6863,7 @@ exports[`Storybook Tests > Components/Titre/Infos > Empty 1`] = `
     <!---->
     <!---->
     <!---->
-    <div class=\\"_top-level_3306d0\\" style=\\"\\">
+    <div class=\\"\\" style=\\"\\">
       <!---->
       <!---->
       <!---->
@@ -7229,11 +7229,11 @@ exports[`Storybook Tests > Components/UI/FunctionalLoader > All 1`] = `
     <!---->
     <div class=\\"_spinner_3306d0\\"></div>
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"\\">La valeur de l’item est : chargé
+  <div class=\\"\\" style=\\"\\">La valeur de l’item est : chargé
     <!---->
     <!---->
   </div>
-  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+  <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
     <!---->
     <div>
       <div class=\\"_tooltip_4f6ea8\\">
@@ -7324,7 +7324,7 @@ exports[`Storybook Tests > Components/UI/Popup > Main 1`] = `
       <div class=\\"tablet-blobs\\">
         <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
         <div class=\\"tablet-blob-2-3\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"\\"><button class=\\" btn btn-primary\\">Enregistrer</button>
+          <div class=\\"\\" style=\\"\\"><button class=\\" btn btn-primary\\">Enregistrer</button>
             <!---->
             <!---->
           </div>
@@ -7350,7 +7350,7 @@ exports[`Storybook Tests > Components/UI/Popup > NotValid 1`] = `
       <div class=\\"tablet-blobs\\">
         <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
         <div class=\\"tablet-blob-2-3\\">
-          <div class=\\"_top-level_3306d0\\" style=\\"\\"><button disabled=\\"\\" class=\\"disabled btn btn-primary\\">Enregistrer</button>
+          <div class=\\"\\" style=\\"\\"><button disabled=\\"\\" class=\\"disabled btn btn-primary\\">Enregistrer</button>
             <!---->
             <!---->
           </div>
@@ -7678,17 +7678,6 @@ exports[`Storybook Tests > Components/UI/TypeAhead > Single 1`] = `
     <!----><input id=\\"ello\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"placeholder\\" autocomplete=\\"off\\">
   </div>
   <!---->
-</div>"
-`;
-
-exports[`Storybook Tests > Components/Ui/FiltersInputAutoComplete > Default 1`] = `
-"<div class=\\"mb\\">
-  <h5>Items</h5>
-  <hr class=\\"mb-s\\">
-  <div id=\\"filters_autocomplete_Items_wrapper\\" class=\\"_typeahead_8eddf1\\">
-    <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\"><input id=\\"filters_autocomplete_Items\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Items\\" autocomplete=\\"off\\"></div>
-    <!---->
-  </div>
 </div>"
 `;
 
@@ -8030,6 +8019,17 @@ exports[`Storybook Tests > Components/Ui/Icons > IconAllSize 1`] = `
 </div>"
 `;
 
+exports[`Storybook Tests > Components/Ui/InputAutocomplete > Default 1`] = `
+"<div class=\\"mb\\">
+  <h5>Items</h5>
+  <hr class=\\"mb-s\\">
+  <div id=\\"filters_autocomplete_Items_wrapper\\" class=\\"_typeahead_8eddf1\\">
+    <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\"><input id=\\"filters_autocomplete_Items\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Items\\" autocomplete=\\"off\\"></div>
+    <!---->
+  </div>
+</div>"
+`;
+
 exports[`Storybook Tests > Components/Ui/Pill > Error 1`] = `"<span class=\\"cap-first small bold\\"><span class=\\"bg-error color-bg pill py-xs px-s\\">Hello</span></span>"`;
 
 exports[`Storybook Tests > Components/Ui/Pill > Primary 1`] = `"<span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">Hello</span></span>"`;
@@ -8038,18 +8038,929 @@ exports[`Storybook Tests > Components/User/Button > Connected 1`] = `"<div class
 
 exports[`Storybook Tests > Components/User/Button > NotConnected 1`] = `"<div class=\\"flex\\"><button id=\\"cmn-user-button-connexion\\" class=\\"btn btn-primary small lh-2\\"> Connexion </button></div>"`;
 
-exports[`Storybook Tests > Components/Utilisateur/QGISToken > Default 1`] = `
-"<div class=\\"tablet-blobs\\">
-  <div class=\\"tablet-blob-1-4\\">
-    <h5>Jeton QGIS</h5>
+exports[`Storybook Tests > Components/Utilisateur > AnotherUser 1`] = `
+"<div>
+  <h5>Utilisateur</h5>
+  <div class=\\"flex\\">
+    <h1>
+      <div class=\\"\\" style=\\"\\">prenom nom
+        <!---->
+        <!---->
+      </div>
+    </h1>
+    <!---->
   </div>
-  <div class=\\"tablet-blob-3-4\\">
-    <div class=\\"_top-level_3306d0\\" style=\\"\\">
-      <!----><button class=\\"btn btn-secondary\\">Générer un jeton QGIS</button>
-      <!---->
+  <div class=\\"flex flex-direction-column rnd-s border bg-bg mb\\">
+    <div class=\\"accordion-header flex rnd-t-s border-b-s\\">
+      <div class=\\"py-s px-m\\"><span> Profil </span></div>
+      <div class=\\"overflow-hidden flex flex-end flex-right\\">
+        <div class=\\"\\" style=\\"\\">
+          <!----><button id=\\"cmn-utilisateur-button-popup-editer\\" class=\\"btn-alt py-s px-m\\" title=\\"modifier le compte utilisateur\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+              <use href=\\"#icon-pencil\\"></use>
+            </svg></button><button id=\\"cmn-utilisateur-button-popup-supprimer\\" class=\\"btn-alt py-s px-m\\" title=\\"supprimer le compte utilisateur\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"delete\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+              <use href=\\"#icon-delete\\"></use>
+            </svg></button>
+          <!---->
+          <!---->
+        </div>
+        <div class=\\"py-s\\"></div>
+      </div>
+    </div>
+    <div class=\\"px-m pt-m\\">
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Prénom</h5>
+        </div>
+        <div class=\\"\\" style=\\"\\">
+          <p>prenom</p>
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Nom</h5>
+        </div>
+        <div class=\\"\\" style=\\"\\">
+          <p>nom</p>
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Email</h5>
+        </div>
+        <div>
+          <div class=\\"\\" style=\\"\\">
+            <p>email@gmail.com</p>
+            <!---->
+            <!---->
+          </div>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Téléphone fixe</h5>
+        </div>
+        <div class=\\"\\" style=\\"\\">
+          <p>–</p>
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Téléphone mobile</h5>
+        </div>
+        <div class=\\"\\" style=\\"\\">
+          <p>–</p>
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Permissions</h5>
+        </div>
+        <div class=\\"\\" style=\\"\\"><span class=\\"cap-first small bold mb\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">super</span></span>
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <div class=\\"\\" style=\\"\\">
+        <!---->
+        <!---->
+        <!---->
+        <!---->
+      </div>
       <!---->
     </div>
-    <transition-group-stub></transition-group-stub>
+    <!--v-if-->
+  </div>
+  <!---->
+  <!---->
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Utilisateur > Loading 1`] = `
+"<div>
+  <h5>Utilisateur</h5>
+  <div class=\\"flex\\">
+    <h1>
+      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+        <!---->
+        <!---->
+        <div class=\\"_spinner_3306d0\\"></div>
+      </div>
+    </h1><button id=\\"cmn-user-menu-button-deconnexion\\" class=\\"btn-menu text-decoration-none bold p-0 flex-right\\">Déconnexion</button>
+  </div>
+  <div class=\\"flex flex-direction-column rnd-s border bg-bg mb\\">
+    <div class=\\"accordion-header flex rnd-t-s border-b-s\\">
+      <div class=\\"py-s px-m\\"><span> Profil </span></div>
+      <div class=\\"overflow-hidden flex flex-end flex-right\\">
+        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <!---->
+          <!---->
+          <div class=\\"_spinner_3306d0\\"></div>
+        </div>
+        <div class=\\"py-s\\"></div>
+      </div>
+    </div>
+    <div class=\\"px-m pt-m\\">
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Prénom</h5>
+        </div>
+        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <!---->
+          <!---->
+          <div class=\\"_spinner_3306d0\\"></div>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Nom</h5>
+        </div>
+        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <!---->
+          <!---->
+          <div class=\\"_spinner_3306d0\\"></div>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Email</h5>
+        </div>
+        <div>
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <!---->
+            <div class=\\"_spinner_3306d0\\"></div>
+          </div>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Téléphone fixe</h5>
+        </div>
+        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <!---->
+          <!---->
+          <div class=\\"_spinner_3306d0\\"></div>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Téléphone mobile</h5>
+        </div>
+        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <!---->
+          <!---->
+          <div class=\\"_spinner_3306d0\\"></div>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Permissions</h5>
+        </div>
+        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <!---->
+          <!---->
+          <div class=\\"_spinner_3306d0\\"></div>
+        </div>
+      </div>
+      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+        <!---->
+        <!---->
+        <div class=\\"_spinner_3306d0\\"></div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Newsletter</h5>
+        </div>
+        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+          <!---->
+          <!---->
+          <div class=\\"_spinner_3306d0\\"></div>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs pb-m\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Jeton QGIS</h5>
+        </div>
+        <div class=\\"\\" style=\\"\\">
+          <!----><button class=\\"btn btn-secondary\\">Générer un jeton QGIS</button>
+          <!---->
+          <!---->
+        </div>
+        <transition-group-stub></transition-group-stub>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+  <!---->
+  <!---->
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Utilisateur > MySelf 1`] = `
+"<div>
+  <h5>Utilisateur</h5>
+  <div class=\\"flex\\">
+    <h1>
+      <div class=\\"\\" style=\\"\\">prenom nom
+        <!---->
+        <!---->
+      </div>
+    </h1><button id=\\"cmn-user-menu-button-deconnexion\\" class=\\"btn-menu text-decoration-none bold p-0 flex-right\\">Déconnexion</button>
+  </div>
+  <div class=\\"flex flex-direction-column rnd-s border bg-bg mb\\">
+    <div class=\\"accordion-header flex rnd-t-s border-b-s\\">
+      <div class=\\"py-s px-m\\"><span> Profil </span></div>
+      <div class=\\"overflow-hidden flex flex-end flex-right\\">
+        <div class=\\"\\" style=\\"\\"><button class=\\"btn-alt py-s px-m\\" title=\\"changer de mot de passe\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"key\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+              <use href=\\"#icon-key\\"></use>
+            </svg></button><button id=\\"cmn-utilisateur-button-popup-editer\\" class=\\"btn-alt py-s px-m\\" title=\\"modifier le compte utilisateur\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+              <use href=\\"#icon-pencil\\"></use>
+            </svg></button><button id=\\"cmn-utilisateur-button-popup-supprimer\\" class=\\"btn-alt py-s px-m\\" title=\\"supprimer le compte utilisateur\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"delete\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+              <use href=\\"#icon-delete\\"></use>
+            </svg></button>
+          <!---->
+          <!---->
+        </div>
+        <div class=\\"py-s\\"></div>
+      </div>
+    </div>
+    <div class=\\"px-m pt-m\\">
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Prénom</h5>
+        </div>
+        <div class=\\"\\" style=\\"\\">
+          <p>prenom</p>
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Nom</h5>
+        </div>
+        <div class=\\"\\" style=\\"\\">
+          <p>nom</p>
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Email</h5>
+        </div>
+        <div>
+          <div class=\\"\\" style=\\"\\">
+            <p>email@gmail.com</p>
+            <!---->
+            <!---->
+          </div>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Téléphone fixe</h5>
+        </div>
+        <div class=\\"\\" style=\\"\\">
+          <p>–</p>
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Téléphone mobile</h5>
+        </div>
+        <div class=\\"\\" style=\\"\\">
+          <p>–</p>
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Permissions</h5>
+        </div>
+        <div class=\\"\\" style=\\"\\"><span class=\\"cap-first small bold mb\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">super</span></span>
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <div class=\\"\\" style=\\"\\">
+        <!---->
+        <!---->
+        <!---->
+        <!---->
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Newsletter</h5>
+        </div>
+        <div class=\\"\\" style=\\"\\"><input type=\\"checkbox\\">
+          <!---->
+          <!---->
+        </div>
+      </div>
+      <div class=\\"tablet-blobs pb-m\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Jeton QGIS</h5>
+        </div>
+        <div class=\\"\\" style=\\"\\">
+          <!----><button class=\\"btn btn-secondary\\">Générer un jeton QGIS</button>
+          <!---->
+          <!---->
+        </div>
+        <transition-group-stub></transition-group-stub>
+      </div>
+    </div>
+    <!--v-if-->
+  </div>
+  <!---->
+  <!---->
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Utilisateur > error 1`] = `
+"<div>
+  <h5>Utilisateur</h5>
+  <div class=\\"flex\\">
+    <h1>
+      <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
+        <!---->
+        <div>
+          <div class=\\"_tooltip_4f6ea8\\">
+            <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+              <use href=\\"#icon-error-warning\\"></use>
+            </svg>
+          </div>
+        </div>
+        <!---->
+      </div>
+    </h1>
+    <!---->
+  </div>
+  <div class=\\"flex flex-direction-column rnd-s border bg-bg mb\\">
+    <div class=\\"accordion-header flex rnd-t-s border-b-s\\">
+      <div class=\\"py-s px-m\\"><span> Profil </span></div>
+      <div class=\\"overflow-hidden flex flex-end flex-right\\">
+        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
+          <!---->
+          <div>
+            <div class=\\"_tooltip_4f6ea8\\">
+              <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                <use href=\\"#icon-error-warning\\"></use>
+              </svg>
+            </div>
+          </div>
+          <!---->
+        </div>
+        <div class=\\"py-s\\"></div>
+      </div>
+    </div>
+    <div class=\\"px-m pt-m\\">
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Prénom</h5>
+        </div>
+        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
+          <!---->
+          <div>
+            <div class=\\"_tooltip_4f6ea8\\">
+              <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                <use href=\\"#icon-error-warning\\"></use>
+              </svg>
+            </div>
+          </div>
+          <!---->
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Nom</h5>
+        </div>
+        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
+          <!---->
+          <div>
+            <div class=\\"_tooltip_4f6ea8\\">
+              <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                <use href=\\"#icon-error-warning\\"></use>
+              </svg>
+            </div>
+          </div>
+          <!---->
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Email</h5>
+        </div>
+        <div>
+          <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
+            <!---->
+            <div>
+              <div class=\\"_tooltip_4f6ea8\\">
+                <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                  <use href=\\"#icon-error-warning\\"></use>
+                </svg>
+              </div>
+            </div>
+            <!---->
+          </div>
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Téléphone fixe</h5>
+        </div>
+        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
+          <!---->
+          <div>
+            <div class=\\"_tooltip_4f6ea8\\">
+              <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                <use href=\\"#icon-error-warning\\"></use>
+              </svg>
+            </div>
+          </div>
+          <!---->
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Téléphone mobile</h5>
+        </div>
+        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
+          <!---->
+          <div>
+            <div class=\\"_tooltip_4f6ea8\\">
+              <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                <use href=\\"#icon-error-warning\\"></use>
+              </svg>
+            </div>
+          </div>
+          <!---->
+        </div>
+      </div>
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-4\\">
+          <h5>Permissions</h5>
+        </div>
+        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
+          <!---->
+          <div>
+            <div class=\\"_tooltip_4f6ea8\\">
+              <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                <use href=\\"#icon-error-warning\\"></use>
+              </svg>
+            </div>
+          </div>
+          <!---->
+        </div>
+      </div>
+      <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
+        <!---->
+        <div>
+          <div class=\\"_tooltip_4f6ea8\\">
+            <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+              <use href=\\"#icon-error-warning\\"></use>
+            </svg>
+          </div>
+        </div>
+        <!---->
+      </div>
+      <!---->
+    </div>
+    <!--v-if-->
+  </div>
+  <!---->
+  <!---->
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Utilisateur/EditPopup > AdminEditLecteur 1`] = `
+"<div class=\\"absolute full bg-inverse-alpha z-2\\">
+  <div class=\\"popup fixed shadow full bg-bg\\">
+    <div class=\\"popup-header px-l pt-l\\">
+      <h2>Modification du compte email@gmail.fr</h2>
+    </div>
+    <div class=\\"popup-content px-l pt\\">
+      <div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
+            <h5>Téléphone fixe</h5>
+          </div>
+          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
+        </div>
+        <hr>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
+            <h5>Téléphone mobile</h5>
+          </div>
+          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
+        </div>
+        <div>
+          <hr>
+          <div class=\\"tablet-blobs\\">
+            <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
+              <h5>Rôles</h5>
+            </div>
+            <div class=\\"mb tablet-blob-2-3\\">
+              <ul class=\\"list-inline mb-0 tablet-pt-s\\">
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs active\\">lecteur</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">editeur</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">entreprise</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">bureau d’études</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">defaut</button></li>
+              </ul>
+            </div>
+          </div>
+          <!---->
+          <!---->
+        </div>
+      </div>
+    </div>
+    <div class=\\"popup-footer px-l pt pb-l\\">
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
+        <div class=\\"tablet-blob-2-3\\">
+          <div class=\\"\\" style=\\"\\"><button disabled=\\"\\" class=\\"disabled btn btn-primary\\">Enregistrer</button>
+            <!---->
+            <!---->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Utilisateur/EditPopup > SuperEditDefaut 1`] = `
+"<div class=\\"absolute full bg-inverse-alpha z-2\\">
+  <div class=\\"popup fixed shadow full bg-bg\\">
+    <div class=\\"popup-header px-l pt-l\\">
+      <h2>Modification du compte email@gmail.fr</h2>
+    </div>
+    <div class=\\"popup-content px-l pt\\">
+      <div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
+            <h5>Téléphone fixe</h5>
+          </div>
+          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
+        </div>
+        <hr>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
+            <h5>Téléphone mobile</h5>
+          </div>
+          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
+        </div>
+        <div>
+          <hr>
+          <div class=\\"tablet-blobs\\">
+            <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
+              <h5>Rôles</h5>
+            </div>
+            <div class=\\"mb tablet-blob-2-3\\">
+              <ul class=\\"list-inline mb-0 tablet-pt-s\\">
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">super</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">admin</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">editeur</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">lecteur</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">entreprise</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">bureau d’études</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs active\\">defaut</button></li>
+              </ul>
+            </div>
+          </div>
+          <!---->
+          <!---->
+        </div>
+      </div>
+    </div>
+    <div class=\\"popup-footer px-l pt pb-l\\">
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
+        <div class=\\"tablet-blob-2-3\\">
+          <div class=\\"\\" style=\\"\\"><button disabled=\\"\\" class=\\"disabled btn btn-primary\\">Enregistrer</button>
+            <!---->
+            <!---->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Utilisateur/EditPopup > SuperEditEntreprise 1`] = `
+"<div class=\\"absolute full bg-inverse-alpha z-2\\">
+  <div class=\\"popup fixed shadow full bg-bg\\">
+    <div class=\\"popup-header px-l pt-l\\">
+      <h2>Modification du compte email@gmail.fr</h2>
+    </div>
+    <div class=\\"popup-content px-l pt\\">
+      <div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
+            <h5>Téléphone fixe</h5>
+          </div>
+          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
+        </div>
+        <hr>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
+            <h5>Téléphone mobile</h5>
+          </div>
+          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
+        </div>
+        <div>
+          <hr>
+          <div class=\\"tablet-blobs\\">
+            <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
+              <h5>Rôles</h5>
+            </div>
+            <div class=\\"mb tablet-blob-2-3\\">
+              <ul class=\\"list-inline mb-0 tablet-pt-s\\">
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">super</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">admin</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">editeur</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">lecteur</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs active\\">entreprise</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">bureau d’études</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">defaut</button></li>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <hr>
+            <h3 class=\\"mb-s\\">Entreprises</h3>
+            <div class=\\"\\" style=\\"\\">
+              <div>
+                <div class=\\"mb\\">
+                  <h5>Entreprises</h5>
+                  <hr class=\\"mb-s\\">
+                  <div id=\\"filters_autocomplete_Entreprises_wrapper\\" class=\\"_typeahead_8eddf1\\">
+                    <div class=\\"flex _typeahead-wrapper_8eddf1 p-xs\\"><button class=\\"bg-neutral pl-m pr-m _chip_de71b9 mr-xs mb-xs mt-xs\\">Entreprise1 <span>x</span></button><input id=\\"filters_autocomplete_Entreprises\\" type=\\"text\\" class=\\"_typeahead-input_8eddf1\\" placeholder=\\"Entreprises\\" autocomplete=\\"off\\"></div>
+                    <!---->
+                  </div>
+                </div>
+              </div>
+              <!---->
+              <!---->
+            </div>
+          </div>
+          <!---->
+        </div>
+      </div>
+    </div>
+    <div class=\\"popup-footer px-l pt pb-l\\">
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
+        <div class=\\"tablet-blob-2-3\\">
+          <div class=\\"\\" style=\\"\\"><button disabled=\\"\\" class=\\"disabled btn btn-primary\\">Enregistrer</button>
+            <!---->
+            <!---->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Utilisateur/EditPopup > SuperEditLecteur 1`] = `
+"<div class=\\"absolute full bg-inverse-alpha z-2\\">
+  <div class=\\"popup fixed shadow full bg-bg\\">
+    <div class=\\"popup-header px-l pt-l\\">
+      <h2>Modification du compte email@gmail.fr</h2>
+    </div>
+    <div class=\\"popup-content px-l pt\\">
+      <div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
+            <h5>Téléphone fixe</h5>
+          </div>
+          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
+        </div>
+        <hr>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
+            <h5>Téléphone mobile</h5>
+          </div>
+          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
+        </div>
+        <div>
+          <hr>
+          <div class=\\"tablet-blobs\\">
+            <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
+              <h5>Rôles</h5>
+            </div>
+            <div class=\\"mb tablet-blob-2-3\\">
+              <ul class=\\"list-inline mb-0 tablet-pt-s\\">
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">super</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">admin</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">editeur</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs active\\">lecteur</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">entreprise</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">bureau d’études</button></li>
+                <li class=\\"mb-xs\\"><button class=\\"btn-flash small py-xs px-s pill cap-first mr-xs \\">defaut</button></li>
+              </ul>
+            </div>
+          </div>
+          <!---->
+          <div>
+            <hr>
+            <h3 class=\\"mb-s\\">Administration</h3>
+            <div class=\\"flex full-x mb\\"><select class=\\"p-s mr-s\\">
+                <option value=\\"ope-brgm-01\\">BRGM</option>
+                <option value=\\"ope-brgm-02\\">BRGM - Projet Zercoa</option>
+                <option value=\\"ope-cacem-01\\">Cacem</option>
+                <option value=\\"min-dajb-01\\">DAJ - Ministère de l'Economie, des Finances et de la Relance</option>
+                <option value=\\"dea-guadeloupe-01\\">DEAL - Guadeloupe</option>
+                <option value=\\"dea-reunion-01\\">DEAL - La Réunion</option>
+                <option value=\\"dea-martinique-01\\">DEAL - Martinique</option>
+                <option value=\\"dea-mayotte-01\\">DEAL - Mayotte</option>
+                <option value=\\"min-mtes-dgaln-01\\">DGALN/DEB/EARM2</option>
+                <option value=\\"min-mctrct-dgcl-01\\">DGCL/SDFLAE/FL1</option>
+                <option value=\\"min-mtes-dgec-01\\">DGEC/DE/SD2/2A</option>
+                <option value=\\"min-mtes-dgpr-01\\">DGPR/SRT/SDRCP/BSSS</option>
+                <option value=\\"dea-guyane-01\\">DGTM - Guyane</option>
+                <option value=\\"dre-aura-01\\">DREAL - Auvergne-Rhône-Alpes - Siège de Lyon</option>
+                <option value=\\"dre-bfc-01\\">DREAL - Bourgogne-Franche-Comté - Siège de Besançon</option>
+                <option value=\\"dre-bretagne-01\\">DREAL - Bretagne</option>
+                <option value=\\"dre-centre-val-de-loire-01\\">DREAL - Centre-Val-de-Loire</option>
+                <option value=\\"dre-corse-01\\">DREAL - Corse</option>
+                <option value=\\"dre-grand-est-01\\">DREAL - Grand Est - Siège de Metz</option>
+                <option value=\\"dre-hauts-de-france-01\\">DREAL - Hauts-de-France - Siège de Lille</option>
+                <option value=\\"dre-normandie-01\\">DREAL - Normandie - Siège de Rouen</option>
+                <option value=\\"dre-nouvelle-aquitaine-01\\">DREAL - Nouvelle-Aquitaine - Siège de Poitiers</option>
+                <option value=\\"dre-occitanie-01\\">DREAL - Occitanie - Siège de Toulouse</option>
+                <option value=\\"dre-pays-de-la-loire-01\\">DREAL - Pays de la Loire</option>
+                <option value=\\"dre-paca-01\\">DREAL - Provence-Alpes-Côte-d'Azur</option>
+                <option value=\\"dre-ile-de-france-01\\">DRIEE - Île-de-France</option>
+                <option value=\\"aut-97300-01\\">Gendarmerie Nationale - Guyane</option>
+                <option value=\\"aut-mrae-guyane-01\\">MRAE Guyane</option>
+                <option value=\\"ope-onf-973-01\\">Office national des forêts</option>
+                <option value=\\"ope-ptmg-973-01\\">Pôle Technique Minier de Guyane</option>
+                <option value=\\"pre-01053-01\\">Préfecture - Ain</option>
+                <option value=\\"pre-02408-01\\">Préfecture - Aisne</option>
+                <option value=\\"pre-03190-01\\">Préfecture - Allier</option>
+                <option value=\\"pre-04070-01\\">Préfecture - Alpes-de-Haute-Provence</option>
+                <option value=\\"pre-06088-01\\">Préfecture - Alpes-Maritimes</option>
+                <option value=\\"pre-07186-01\\">Préfecture - Ardèche</option>
+                <option value=\\"pre-08105-01\\">Préfecture - Ardennes</option>
+                <option value=\\"pre-09122-01\\">Préfecture - Ariège</option>
+                <option value=\\"pre-10387-01\\">Préfecture - Aube</option>
+                <option value=\\"pre-11069-01\\">Préfecture - Aude</option>
+                <option value=\\"pre-12202-01\\">Préfecture - Aveyron</option>
+                <option value=\\"pre-67482-01\\">Préfecture - Bas-Rhin</option>
+                <option value=\\"pre-13203-01\\">Préfecture - Bouches-du-Rhône</option>
+                <option value=\\"pre-14118-01\\">Préfecture - Calvados</option>
+                <option value=\\"pre-15014-01\\">Préfecture - Cantal</option>
+                <option value=\\"pre-16015-01\\">Préfecture - Charente</option>
+                <option value=\\"pre-17300-01\\">Préfecture - Charente-Maritime</option>
+                <option value=\\"pre-18033-01\\">Préfecture - Cher</option>
+                <option value=\\"pre-19272-01\\">Préfecture - Corrèze</option>
+                <option value=\\"pre-2A004-01\\">Préfecture - Corse-du-Sud</option>
+                <option value=\\"pre-21231-01\\">Préfecture - Côte-d'Or</option>
+                <option value=\\"pre-22278-01\\">Préfecture - Côtes-d'Armor</option>
+                <option value=\\"pre-23096-01\\">Préfecture - Creuse</option>
+                <option value=\\"pre-79191-01\\">Préfecture - Deux-Sèvres</option>
+                <option value=\\"pre-24322-01\\">Préfecture - Dordogne</option>
+                <option value=\\"pre-25056-01\\">Préfecture - Doubs</option>
+                <option value=\\"pre-26362-01\\">Préfecture - Drôme</option>
+                <option value=\\"pre-91228-01\\">Préfecture - Essonne</option>
+                <option value=\\"pre-27229-01\\">Préfecture - Eure</option>
+                <option value=\\"pre-28085-01\\">Préfecture - Eure-et-Loir</option>
+                <option value=\\"pre-29232-01\\">Préfecture - Finistère</option>
+                <option value=\\"pre-30189-01\\">Préfecture - Gard</option>
+                <option value=\\"pre-32013-01\\">Préfecture - Gers</option>
+                <option value=\\"pre-33063-01\\">Préfecture - Gironde</option>
+                <option value=\\"pre-97105-01\\">Préfecture - Guadeloupe</option>
+                <option value=\\"pre-97302-01\\">Préfecture - Guyane</option>
+                <option value=\\"pre-68066-01\\">Préfecture - Haut-Rhin</option>
+                <option value=\\"pre-2B033-01\\">Préfecture - Haute-Corse</option>
+                <option value=\\"pre-31555-01\\">Préfecture - Haute-Garonne</option>
+                <option value=\\"pre-43157-01\\">Préfecture - Haute-Loire</option>
+                <option value=\\"pre-52121-01\\">Préfecture - Haute-Marne</option>
+                <option value=\\"pre-70550-01\\">Préfecture - Haute-Saône</option>
+                <option value=\\"pre-74010-01\\">Préfecture - Haute-Savoie</option>
+                <option value=\\"pre-87085-01\\">Préfecture - Haute-Vienne</option>
+                <option value=\\"pre-05061-01\\">Préfecture - Hautes-Alpes</option>
+                <option value=\\"pre-65440-01\\">Préfecture - Hautes-Pyrénées</option>
+                <option value=\\"pre-92050-01\\">Préfecture - Hauts-de-Seine</option>
+                <option value=\\"pre-34172-01\\">Préfecture - Hérault</option>
+                <option value=\\"pre-35238-01\\">Préfecture - Ille-et-Vilaine</option>
+                <option value=\\"pre-36044-01\\">Préfecture - Indre</option>
+                <option value=\\"pre-37261-01\\">Préfecture - Indre-et-Loire</option>
+                <option value=\\"pre-38185-01\\">Préfecture - Isère</option>
+                <option value=\\"pre-39300-01\\">Préfecture - Jura</option>
+                <option value=\\"pre-97411-01\\">Préfecture - La Réunion</option>
+                <option value=\\"pre-40192-01\\">Préfecture - Landes</option>
+                <option value=\\"pre-41018-01\\">Préfecture - Loir-et-Cher</option>
+                <option value=\\"pre-42218-01\\">Préfecture - Loire</option>
+                <option value=\\"pre-44109-01\\">Préfecture - Loire-Atlantique</option>
+                <option value=\\"pre-45234-01\\">Préfecture - Loiret</option>
+                <option value=\\"pre-46042-01\\">Préfecture - Lot</option>
+                <option value=\\"pre-47001-01\\">Préfecture - Lot-et-Garonne</option>
+                <option value=\\"pre-48095-01\\">Préfecture - Lozère</option>
+                <option value=\\"pre-49007-01\\">Préfecture - Maine-et-Loire</option>
+                <option value=\\"pre-50502-01\\">Préfecture - Manche</option>
+                <option value=\\"pre-51108-01\\">Préfecture - Marne</option>
+                <option value=\\"pre-97209-01\\">Préfecture - Martinique</option>
+                <option value=\\"pre-53130-01\\">Préfecture - Mayenne</option>
+                <option value=\\"pre-97611-01\\">Préfecture - Mayotte</option>
+                <option value=\\"pre-54395-01\\">Préfecture - Meurthe-et-Moselle</option>
+                <option value=\\"pre-55029-01\\">Préfecture - Meuse</option>
+                <option value=\\"pre-56260-01\\">Préfecture - Morbihan</option>
+                <option value=\\"pre-57463-01\\">Préfecture - Moselle</option>
+                <option value=\\"pre-58194-01\\">Préfecture - Nièvre</option>
+                <option value=\\"pre-59350-01\\">Préfecture - Nord</option>
+                <option value=\\"pre-60057-01\\">Préfecture - Oise</option>
+                <option value=\\"pre-61001-01\\">Préfecture - Orne</option>
+                <option value=\\"pre-62041-01\\">Préfecture - Pas-de-Calais</option>
+                <option value=\\"pre-63113-01\\">Préfecture - Puy-de-Dôme</option>
+                <option value=\\"pre-64445-01\\">Préfecture - Pyrénées-Atlantiques</option>
+                <option value=\\"pre-66136-01\\">Préfecture - Pyrénées-Orientales</option>
+                <option value=\\"pre-69383-01\\">Préfecture - Rhône</option>
+                <option value=\\"pre-71270-01\\">Préfecture - Saône-et-Loire</option>
+                <option value=\\"pre-72181-01\\">Préfecture - Sarthe</option>
+                <option value=\\"pre-73065-01\\">Préfecture - Savoie</option>
+                <option value=\\"pre-77288-01\\">Préfecture - Seine-et-Marne</option>
+                <option value=\\"pre-76540-01\\">Préfecture - Seine-Maritime</option>
+                <option value=\\"pre-93008-01\\">Préfecture - Seine-Saint-Denis</option>
+                <option value=\\"pre-80021-01\\">Préfecture - Somme</option>
+                <option value=\\"pre-81004-01\\">Préfecture - Tarn</option>
+                <option value=\\"pre-82121-01\\">Préfecture - Tarn-et-Garonne</option>
+                <option value=\\"pre-90010-01\\">Préfecture - Territoire de Belfort</option>
+                <option value=\\"pre-95127-01\\">Préfecture - Val-d'Oise</option>
+                <option value=\\"pre-94028-01\\">Préfecture - Val-de-Marne</option>
+                <option value=\\"pre-83137-01\\">Préfecture - Var</option>
+                <option value=\\"pre-84007-01\\">Préfecture - Vaucluse</option>
+                <option value=\\"pre-85191-01\\">Préfecture - Vendée</option>
+                <option value=\\"pre-86194-01\\">Préfecture - Vienne</option>
+                <option value=\\"pre-88160-01\\">Préfecture - Vosges</option>
+                <option value=\\"pre-89024-01\\">Préfecture - Yonne</option>
+                <option value=\\"pre-78646-01\\">Préfecture - Yvelines</option>
+                <option value=\\"pre-75104-01\\">Préfecture de police de Paris</option>
+              </select></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class=\\"popup-footer px-l pt pb-l\\">
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
+        <div class=\\"tablet-blob-2-3\\">
+          <div class=\\"\\" style=\\"\\"><button disabled=\\"\\" class=\\"disabled btn btn-primary\\">Enregistrer</button>
+            <!---->
+            <!---->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Utilisateur/QGISToken > Default 1`] = `
+"<div class=\\"\\" style=\\"\\">
+  <!----><button class=\\"btn btn-secondary\\">Générer un jeton QGIS</button>
+  <!---->
+  <!---->
+</div>
+<transition-group-stub></transition-group-stub>"
+`;
+
+exports[`Storybook Tests > Components/Utilisateur/RemovePopup > Default 1`] = `
+"<div class=\\"absolute full bg-inverse-alpha z-2\\">
+  <div class=\\"popup fixed shadow full bg-bg\\">
+    <div class=\\"popup-header px-l pt-l\\">
+      <h2>Suppression du compte utilisateur</h2>
+    </div>
+    <div class=\\"popup-content px-l pt\\">
+      <p class=\\"bold\\">Souhaitez vous supprimer le compte de Prénom Nom ?</p>
+      <div class=\\"bg-warning color-bg p-s mb-l\\"><span class=\\"bold\\"> Attention </span>: cette opération est définitive et ne peut pas être annulée.</div>
+    </div>
+    <div class=\\"popup-footer px-l pt pb-l\\">
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
+        <div class=\\"tablet-blob-2-3\\">
+          <div class=\\"\\" style=\\"\\"><button class=\\" btn btn-primary\\">Supprimer</button>
+            <!---->
+            <!---->
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>"
 `;
