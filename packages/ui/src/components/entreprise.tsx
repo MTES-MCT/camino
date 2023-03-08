@@ -68,7 +68,7 @@ export const Entreprise = defineComponent({
       }
     )
     watch(
-      () => user.value,
+      () => user,
       _newUser => get()
     )
 

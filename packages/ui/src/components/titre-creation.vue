@@ -84,13 +84,13 @@ import { ReferenceTypeId, sortedReferencesTypes } from 'camino-common/src/static
 import { TitreTypeSelect } from './_common/titre-type-select'
 import { Icon } from '@/components/_ui/icon'
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
-import { TitresLink } from '@/components/titre/pure-titres-link'
+import { TitresLink } from '@/components/titre/titres-link'
 import { getLinkConfig } from 'camino-common/src/permissions/titres'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
 import { getDomaineId, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { apiClient } from '@/api/api-client'
-import { TitresLinkConfig } from '@/components/titre/pure-titres-link-form-api-client'
+import { TitresLinkConfig } from '@/components/titre/titres-link-form-api-client'
 import { entreprisesTitresCreation } from '@/api/entreprises'
 
 type Entreprise = {

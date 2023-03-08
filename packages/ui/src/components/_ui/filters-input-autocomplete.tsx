@@ -45,6 +45,7 @@ export const InputAutocomplete = caminoDefineComponent<Props>(['filter', 'onSele
   onMounted(async () => {
     if (props.filter.lazy && props.filter.value?.length) {
       const result = await props.filter.load(props.filter.value)
+      items.value = result.elements
       overrideItems.value = result.elements
       for (const element of result.elements) {
         allKnownItems.value[element.id] = element
@@ -91,13 +92,13 @@ export const InputAutocomplete = caminoDefineComponent<Props>(['filter', 'onSele
       <hr class="mb-s" />
 
       <TypeAhead
+        overrideItems={overrideItems.value}
         props={{
           id: 'filters_autocomplete_' + props.filter.name,
           itemKey: 'id',
           placeholder: props.filter.name,
           type: 'multiple',
           items: items.value,
-          overrideItems: overrideItems.value,
           minInputLength: props.filter.lazy ? 3 : 1,
           itemChipLabel: item => item.nom,
           onSelectItems: updateHandler,

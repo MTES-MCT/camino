@@ -6,13 +6,15 @@ import { AsyncData } from '@/api/client-rest'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { TitreLink } from 'camino-common/src/titres'
 import { TitresStatuts, TitreStatutId } from 'camino-common/src/static/titresStatuts'
-import { LinkableTitre, TitresLinkConfig } from '@/components/titre/pure-titres-link-form-api-client'
+import { LinkableTitre, TitresLinkConfig } from '@/components/titre/titres-link-form-api-client'
 
 interface Props {
   config: TitresLinkConfig
   loadLinkableTitres: () => Promise<LinkableTitre[]>
+  onSelectTitre: (titre: TitreLink | undefined) => void
+  onSelectTitres: (titres: TitreLink[]) => void
 }
-export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableTitres'], (props, context) => {
+export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableTitres', 'onSelectTitre', 'onSelectTitres'], (props) => {
   const display = (item: LinkableTitre) => {
     return (
       <div class="flex flex-center">
@@ -47,6 +49,7 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
       if (titreIds.length) {
         const selectedTitreList = data.value.value.filter(({ id }) => titreIds.includes(id))
         if (selectedTitreList) {
+          console.log('ici on fait des trucs')
           selectedTitres.value.push(...selectedTitreList)
         }
       }
@@ -58,15 +61,16 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
     }
   }
 
-  watch(
-    () => props.loadLinkableTitres,
-    async _ => {
-      selectedTitres.value.splice(0, selectedTitres.value.length)
-      onSelectItem(undefined)
-      onSelectItems([])
-      await init()
-    }
-  )
+  // watch(
+  //   () => props.loadLinkableTitres,
+  //   async _ => {
+  //     console.log('et tu splice')
+  //     selectedTitres.value.splice(0, selectedTitres.value.length)
+  //     props.onSelectTitre(undefined)
+  //     props.onSelectTitres([])
+  //     await init()
+  //   }
+  // )
 
   onMounted(async () => {
     await init()
@@ -74,20 +78,15 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
 
   const titresFiltered = computed(() => {
     if (data.value.status === 'LOADED') {
-      return search.value.length ? data.value.value.filter(({ nom }) => nom.toLowerCase().includes(search.value)) : data.value.value
+
+      return search.value.length ? data.value.value.filter(({ nom, id }) => nom.toLowerCase().includes(search.value) || selectedTitres.value.some( t => t.id === id)) : data.value.value
     }
     return []
   })
 
   const onSearch = (searchLabel: string) => {
+    console.log('search', searchLabel)
     search.value = searchLabel.toLowerCase()
-  }
-
-  const onSelectItem = (titre: TitreLink | undefined) => {
-    context.emit('onSelectedTitre', titre)
-  }
-  const onSelectItems = (titres: TitreLink[]) => {
-    context.emit('onSelectedTitres', titres)
   }
 
   const getDateDebutEtDateFin = (titre: LinkableTitre): string => {
@@ -105,8 +104,10 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
   return () => (
     <LoadingElement
       data={data.value}
-      renderItem={_item => (
+      renderItem={item => (
         <TypeAhead
+
+        overrideItems={selectedTitres.value}
           props={{
             id: 'titre-link-typeahead',
             itemKey: 'id',
@@ -114,10 +115,9 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
             type: props.config.type,
             items: titresFiltered.value,
             itemChipLabel: item => item.nom,
-            overrideItems: selectedTitres.value,
             minInputLength: 1,
-            onSelectItem,
-            onSelectItems,
+            onSelectItem: props.onSelectTitre,
+            onSelectItems: props.onSelectTitres,
             onInput: onSearch,
             displayItemInList: display,
           }}

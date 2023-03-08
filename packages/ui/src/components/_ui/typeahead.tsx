@@ -8,13 +8,14 @@ type TypeAheadRecord = Record<string | symbol | number, any>
 
 export type TypeAheadType = 'single' | 'multiple'
 export type Props<T extends TypeAheadRecord, K extends keyof T> = {
+
+  overrideItems?: (Pick<T, K> & Partial<Omit<T, K>>)[]
   props: {
     id?: string
     itemKey: K
     placeholder: string
     type: TypeAheadType
     items: T[]
-    overrideItems?: (Pick<T, K> & Partial<Omit<T, K>>)[]
     minInputLength: number
     itemChipLabel: (key: T) => string
     displayItemInList?: (item: T) => JSX.Element
@@ -25,17 +26,17 @@ export type Props<T extends TypeAheadRecord, K extends keyof T> = {
 }
 
 const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
-  caminoDefineComponent<Props<T, K>>(['props'], props => {
+  caminoDefineComponent<Props<T, K>>(['props', 'overrideItems'], props => {
     const id = props.props.id ?? `typeahead_${(Math.random() * 1000).toFixed()}`
     const wrapperId = computed(() => `${id}_wrapper`)
     const getItems = (items: (Pick<T, K> & Partial<Omit<T, K>>)[]): T[] => items.map(o => props.props.items.find(i => i[props.props.itemKey] === o[props.props.itemKey])).filter(isNotNullNorUndefined)
-    const selectedItems = ref<T[]>(getItems(props.props.overrideItems ?? [])) as Ref<T[]>
+    const selectedItems = ref<T[]>(getItems(props.overrideItems ?? [])) as Ref<T[]>
 
-    const input = ref<string>(props.props.type === 'single' && props.props.overrideItems?.length ? props.props.itemChipLabel(getItems(props.props.overrideItems)[0]) : '')
+    const input = ref<string>(props.props.type === 'single' && props.overrideItems?.length ? props.props.itemChipLabel(getItems(props.overrideItems)[0]) : '')
 
     watch(
-      () => props.props.overrideItems,
-      newItems => {
+      () => props.overrideItems,
+      (newItems) => {
         selectedItems.value = getItems(newItems ?? [])
         input.value = props.props.type === 'single' && newItems?.length ? props.props.itemChipLabel(getItems(newItems)[0]) : ''
       },
@@ -100,6 +101,7 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
       if (input.value === '') {
         selectedItems.value.pop()
         props.props.onSelectItems?.(selectedItems.value)
+        props.props.onSelectItem?.(undefined)
       }
     }
     const notSelectedItems = computed(() => {
@@ -205,5 +207,5 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
 
 const HiddenTypeAhead = GenericTypeAhead()
 export const TypeAhead = <T extends TypeAheadRecord, K extends keyof T>(props: Props<T, K>): JSX.Element => {
-  return <HiddenTypeAhead props={props.props} />
+  return <HiddenTypeAhead props={props.props} overrideItems={props.overrideItems} />
 }

@@ -72,6 +72,8 @@ export const Multiple: Story = () => (
 
 export const MultipleWithInitialItems: Story = () => (
   <TypeAhead
+  overrideItems={[{ id: 'idTitreItem1' }, { id: 'idTitreItemNotInItems' }, { id: 'idTitreItem2' }]}
+
     props={{
       id: 'plop',
       itemKey: 'id',
@@ -95,7 +97,6 @@ export const MultipleWithInitialItems: Story = () => (
       placeholder: 'placeholder',
       minInputLength: 3,
       type: 'multiple',
-      overrideItems: [{ id: 'idTitreItem1' }, { id: 'idTitreItemNotInItems' }, { id: 'idTitreItem2' }],
       itemChipLabel: item => item.titre,
       onInput,
       onSelectItem: selectItem,

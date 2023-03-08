@@ -6769,14 +6769,14 @@ exports[`Storybook Tests > Components/Titre/Infos > Default 1`] = `
   </div>
   <div class=\\"desktop-blob-1-2 mt\\">
     <div>
-      <div class=\\"top-level\\" style=\\"\\" data-v-b0094f72=\\"\\">
+      <div class=\\"\\" style=\\"\\">
         <div>
           <h5>Titre à l’origine de ce titre</h5>
           <div class=\\"flex flex-center\\">
             <ul class=\\"list-inline\\" style=\\"margin-bottom: 0px;\\">
               <li class=\\"mr-xs\\"><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"btn-border small p-s rnd-xs mr-xs\\"><span class=\\"mr-xs\\">Titre père</span></a></li>
             </ul>
-            <!--v-if-->
+            <!---->
           </div>
         </div>
         <div>
@@ -6787,6 +6787,8 @@ exports[`Storybook Tests > Components/Titre/Infos > Default 1`] = `
             </ul>
           </div>
         </div>
+        <!---->
+        <!---->
       </div>
     </div>
     <div class=\\"mb\\">
@@ -6858,7 +6860,12 @@ exports[`Storybook Tests > Components/Titre/Infos > Empty 1`] = `
   </div>
   <div class=\\"desktop-blob-1-2 mt\\">
     <div>
-      <div class=\\"top-level\\" style=\\"\\" data-v-b0094f72=\\"\\"></div>
+      <div class=\\"\\" style=\\"\\">
+        <!---->
+        <!---->
+        <!---->
+        <!---->
+      </div>
     </div>
     <!---->
     <!---->
@@ -7108,7 +7115,7 @@ exports[`Storybook Tests > Components/Titre/TitresLink > WithError 1`] = `
 
 exports[`Storybook Tests > Components/Titre/TitresLinkForm > AxmWithAlreadySelectedTitre 1`] = `
 "<div>
-  <div class=\\"top-level\\" style=\\"\\" data-v-b0094f72=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <div>
       <h5>Titre à l’origine de ce titre</h5>
       <div class=\\"flex flex-center\\">
@@ -7127,20 +7134,22 @@ exports[`Storybook Tests > Components/Titre/TitresLinkForm > AxmWithAlreadySelec
         </ul>
       </div>
     </div>
+    <!---->
+    <!---->
   </div>
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Titre/TitresLinkForm > DefautCantUpdateLinks 1`] = `
 "<div>
-  <div class=\\"top-level\\" style=\\"\\" data-v-b0094f72=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <div>
       <h5>Titre à l’origine de ce titre</h5>
       <div class=\\"flex flex-center\\">
         <ul class=\\"list-inline\\" style=\\"margin-bottom: 0px;\\">
           <li class=\\"mr-xs\\"><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"btn-border small p-s rnd-xs mr-xs\\"><span class=\\"mr-xs\\">Abttis Coucou</span></a></li>
         </ul>
-        <!--v-if-->
+        <!---->
       </div>
     </div>
     <div>
@@ -7151,13 +7160,15 @@ exports[`Storybook Tests > Components/Titre/TitresLinkForm > DefautCantUpdateLin
         </ul>
       </div>
     </div>
+    <!---->
+    <!---->
   </div>
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Titre/TitresLinkForm > FusionWithAlreadySelectedTitre 1`] = `
 "<div>
-  <div class=\\"top-level\\" style=\\"\\" data-v-b0094f72=\\"\\">
+  <div class=\\"\\" style=\\"\\">
     <div>
       <h5>Titres à l’origine de ce titre</h5>
       <div class=\\"flex flex-center\\">
@@ -7176,14 +7187,18 @@ exports[`Storybook Tests > Components/Titre/TitresLinkForm > FusionWithAlreadySe
         </ul>
       </div>
     </div>
+    <!---->
+    <!---->
   </div>
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Titre/TitresLinkForm > TitreWithTitreLinksLoading 1`] = `
 "<div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+    <!---->
+    <!---->
+    <div class=\\"_spinner_3306d0\\"></div>
   </div>
 </div>"
 `;

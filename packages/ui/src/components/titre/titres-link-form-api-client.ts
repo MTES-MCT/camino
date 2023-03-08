@@ -24,13 +24,13 @@ export type LinkableTitre = TitreLink & {
   titreStatutId: TitreStatutId
 }
 
-export interface PureTitresLinkFormApiClient {
+export interface TitresLinkFormApiClient {
   linkTitres: (titreId: string, titreFromIds: string[]) => Promise<TitreLinks>
   loadTitreLinks: (titreId: string) => Promise<TitreLinks>
   loadLinkableTitres: (titreTypeId: TitreTypeId, demarches: { typeId: DemarcheTypeId }[]) => () => Promise<LinkableTitre[]>
 }
 
-export const pureTitresLinkFormApiClient: PureTitresLinkFormApiClient = {
+export const titresLinkFormApiClient: TitresLinkFormApiClient = {
   linkTitres: async (titreId: string, titreFromIds: string[]): Promise<TitreLinks> => {
     return (
       await fetch(`/apiUrl/titres/${titreId}/titreLiaisons`, {

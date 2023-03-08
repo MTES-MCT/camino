@@ -5,7 +5,7 @@ import { TagList } from '../_ui/tag-list'
 import { Dot } from '../_ui/dot'
 import { Statut } from '../_common/statut'
 import { dateFormat } from '@/utils'
-import PureTitresLinkForm from './pure-titres-link-form.vue'
+import { TitresLinkForm } from './titres-link-form'
 import { User } from 'camino-common/src/roles'
 import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { DemarchesTypes, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
@@ -162,7 +162,7 @@ export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
       </div>
 
       <div class="desktop-blob-1-2 mt">
-        <PureTitresLinkForm
+        <TitresLinkForm
           user={user}
           titre={{
             id: titre.id,

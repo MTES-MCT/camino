@@ -1,7 +1,7 @@
 import { AdministrationApiClient, administrationApiClient } from '@/components/administration/administration-api-client'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { User } from 'camino-common/src/roles'
-import { PureTitresLinkFormApiClient, pureTitresLinkFormApiClient } from '@/components/titre/pure-titres-link-form-api-client'
+import { TitresLinkFormApiClient, titresLinkFormApiClient } from '@/components/titre/titres-link-form-api-client'
 import { TitreApiClient, titreApiClient } from '../components/titre/titre-api-client'
 import { UtilisateurApiClient, utilisateurApiClient } from '@/components/utilisateur/utilisateur-api-client'
 
@@ -15,11 +15,11 @@ export type Utilisateur = {
   entreprises?: Entreprise[]
 } & User
 
-export interface ApiClient extends AdministrationApiClient, PureTitresLinkFormApiClient, TitreApiClient, UtilisateurApiClient {}
+export interface ApiClient extends AdministrationApiClient, TitresLinkFormApiClient, TitreApiClient, UtilisateurApiClient {}
 
 export const apiClient: ApiClient = {
   ...administrationApiClient,
-  ...pureTitresLinkFormApiClient,
+  ...titresLinkFormApiClient,
   ...titreApiClient,
   ...utilisateurApiClient,
 }

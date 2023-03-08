@@ -16,7 +16,7 @@
         </button>
       </div>
     </div>
-    <TypeAhead :props="typeAheadProps" />
+    <TypeAhead :props="typeAheadProps" :overrideItems="overrideItems" />
   </div>
 </template>
 
@@ -93,7 +93,6 @@ const typeAheadProps = {
   placeholder: props.placeholder,
   type,
   items: selectableEntities.value,
-  overrideItems: overrideItems.value,
   minInputLength: 2,
   itemChipLabel: (item: Entreprise) => item.nom,
   onSelectItem: addEntity,
