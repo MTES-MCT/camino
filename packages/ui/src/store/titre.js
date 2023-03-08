@@ -9,9 +9,9 @@ const state = {
   opened: {
     etapes: {},
     activites: {},
-    travaux: {}
+    travaux: {},
   },
-  tabId: 'demarches'
+  tabId: 'demarches',
 }
 
 const getters = {
@@ -33,14 +33,7 @@ const getters = {
         tabs.push({ id: 'activites', nom: 'Activités' })
       }
 
-      if (
-        getters.travaux.length ||
-        canCreateTravaux(
-          rootState.user.element,
-          state.element.typeId,
-          state.element.administrations
-        )
-      ) {
+      if (getters.travaux.length || canCreateTravaux(rootState.user.element, state.element.typeId, state.element.administrations)) {
         tabs.push({ id: 'travaux', nom: 'Travaux' })
       }
     }
@@ -58,7 +51,7 @@ const getters = {
 
   travaux(state) {
     return state.element?.demarches?.filter(d => d.type.travaux) || []
-  }
+  },
 }
 
 const actions = {
@@ -96,7 +89,7 @@ const actions = {
         'messageAdd',
         {
           value: 'le titre a été créé',
-          type: 'success'
+          type: 'success',
         },
         { root: true }
       )
@@ -117,11 +110,7 @@ const actions = {
 
       commit('popupClose', null, { root: true })
       await dispatch('reload', { name: 'titre', id: data.slug }, { root: true })
-      dispatch(
-        'messageAdd',
-        { value: 'le titre a été mis à jour', type: 'success' },
-        { root: true }
-      )
+      dispatch('messageAdd', { value: 'le titre a été mis à jour', type: 'success' }, { root: true })
     } catch (e) {
       commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
     } finally {
@@ -142,7 +131,7 @@ const actions = {
         'messageAdd',
         {
           value: `le titre a été supprimé`,
-          type: 'success'
+          type: 'success',
         },
         { root: true }
       )
@@ -167,7 +156,7 @@ const actions = {
         'messageAdd',
         {
           value: `Vous êtes ${abonner ? 'abonné' : 'désabonné'} à ce titre`,
-          type: 'success'
+          type: 'success',
         },
         { root: true }
       )
@@ -176,7 +165,7 @@ const actions = {
     } finally {
       commit('loadingRemove', 'titreSubscribe', { root: true })
     }
-  }
+  },
 }
 
 const mutations = {
@@ -208,7 +197,7 @@ const mutations = {
 
   openTab(state, tabId) {
     state.tabId = tabId
-  }
+  },
 }
 
 export default {
@@ -216,5 +205,5 @@ export default {
   state,
   actions,
   mutations,
-  getters
+  getters,
 }

@@ -12,12 +12,7 @@
     @params-update="paramsUpdate"
   >
     <template v-if="demarches.length" #downloads>
-      <Downloads
-        :formats="['csv', 'xlsx', 'ods']"
-        section="demarches"
-        :params="{ travaux: travaux }"
-        class="flex-right full-x"
-      />
+      <Downloads :formats="['csv', 'xlsx', 'ods']" section="demarches" :params="{ travaux: travaux }" class="flex-right full-x" />
     </template>
   </liste>
 </template>
@@ -38,14 +33,14 @@ export default {
   props: {
     travaux: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
 
   data() {
     return {
       colonnes: demarchesColonnes,
-      filtres
+      filtres,
     }
   },
 
@@ -83,7 +78,7 @@ export default {
 
     initialized() {
       return this.$store.state.titresDemarches.initialized
-    }
+    },
   },
 
   watch: {
@@ -92,8 +87,8 @@ export default {
     '$route.query': {
       handler: function () {
         this.$store.dispatch('titresDemarches/routeUpdate')
-      }
-    }
+      },
+    },
   },
 
   async created() {
@@ -107,7 +102,7 @@ export default {
   methods: {
     async init() {
       await this.$store.dispatch('titresDemarches/init', {
-        travaux: this.travaux
+        travaux: this.travaux,
       })
     },
 
@@ -120,14 +115,8 @@ export default {
     },
 
     eventTrack(params) {
-      paramsEventTrack(
-        params,
-        this.definitions,
-        this.$matomo,
-        'demarches',
-        'filtres'
-      )
-    }
-  }
+      paramsEventTrack(params, this.definitions, this.$matomo, 'demarches', 'filtres')
+    },
+  },
 }
 </script>

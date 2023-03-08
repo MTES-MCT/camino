@@ -12,10 +12,7 @@ import { fetchWithJson, postWithJson } from '../../api/client-rest'
 export interface UtilisateurApiClient {
   getUtilisateur: (userId: string) => Promise<Utilisateur>
   getUtilisateurNewsletter: (userId: string) => Promise<boolean>
-  updateUtilisateurNewsletter: (
-    userId: string,
-    subscribe: boolean
-  ) => Promise<void>
+  updateUtilisateurNewsletter: (userId: string, subscribe: boolean) => Promise<void>
   removeUtilisateur: (userId: string) => Promise<void>
   updateUtilisateur: (user: Utilisateur) => Promise<void>
   getEntreprises: () => Promise<Entreprise[]>
@@ -33,23 +30,15 @@ export const utilisateurApiClient: UtilisateurApiClient = {
 
       ${fragmentUtilisateur}
     `)({
-      id: userId
+      id: userId,
     })
     return data
   },
   getUtilisateurNewsletter: async (userId: string) => {
-    return await fetchWithJson(
-      CaminoRestRoutes.newsletter,
-      { id: userId },
-      'get'
-    )
+    return await fetchWithJson(CaminoRestRoutes.newsletter, { id: userId }, 'get')
   },
   updateUtilisateurNewsletter: async (userId: string, newsletter: boolean) => {
-    return await postWithJson(
-      CaminoRestRoutes.newsletter,
-      { id: userId },
-      { newsletter }
-    )
+    return await postWithJson(CaminoRestRoutes.newsletter, { id: userId }, { newsletter })
   },
   removeUtilisateur: async (userId: string) => {
     await apiGraphQLFetch(gql`
@@ -64,9 +53,7 @@ export const utilisateurApiClient: UtilisateurApiClient = {
   },
   updateUtilisateur: async (utilisateur: Utilisateur) => {
     await apiGraphQLFetch(gql`
-      mutation UtilisateurModifier(
-        $utilisateur: InputUtilisateurModification!
-      ) {
+      mutation UtilisateurModifier($utilisateur: InputUtilisateurModification!) {
         utilisateurModifier(utilisateur: $utilisateur) {
           id
         }
@@ -89,6 +76,5 @@ export const utilisateurApiClient: UtilisateurApiClient = {
     )()
     return elements
   },
-  getQGISToken: async () =>
-    fetchWithJson(CaminoRestRoutes.generateQgisToken, {}, 'post')
+  getQGISToken: async () => fetchWithJson(CaminoRestRoutes.generateQgisToken, {}, 'post'),
 }

@@ -10,9 +10,7 @@ export const anneesBuild = (dateDebut: string, dateFin: string) => {
 
   if (anneeFin < anneeDebut) return []
 
-  const annees = [...new Array(anneeFin - anneeDebut + 1)].map(
-    (_, delta) => anneeDebut + delta
-  )
+  const annees = [...new Array(anneeFin - anneeDebut + 1)].map((_, delta) => anneeDebut + delta)
 
   return annees
 }

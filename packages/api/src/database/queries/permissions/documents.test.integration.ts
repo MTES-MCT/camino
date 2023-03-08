@@ -30,42 +30,39 @@ afterAll(async () => {
 describe('documentSupprimer', () => {
   test.each<[EtapeStatutId, boolean]>([
     ['aco', true],
-    ['fai', false]
-  ])(
-    'vérifie la possibilité de supprimer un document optionnel ou non d’une étape (utilisateur super)',
-    async (statutId, suppression) => {
-      // suppression de la clé étrangère sur la démarche pour ne pas avoir à tout créer
-      await TitresEtapes.query().delete()
-      await Document.query().delete()
-      await knex.schema.alterTable(TitresEtapes.tableName, table => {
-        table.dropColumns('titreDemarcheId')
-      })
+    ['fai', false],
+  ])('vérifie la possibilité de supprimer un document optionnel ou non d’une étape (utilisateur super)', async (statutId, suppression) => {
+    // suppression de la clé étrangère sur la démarche pour ne pas avoir à tout créer
+    await TitresEtapes.query().delete()
+    await Document.query().delete()
+    await knex.schema.alterTable(TitresEtapes.tableName, table => {
+      table.dropColumns('titreDemarcheId')
+    })
 
-      await knex.schema.alterTable(TitresEtapes.tableName, table => {
-        table.string('titreDemarcheId').index().notNullable()
-      })
+    await knex.schema.alterTable(TitresEtapes.tableName, table => {
+      table.string('titreDemarcheId').index().notNullable()
+    })
 
-      await TitresEtapes.query().insertGraph({
-        id: 'titreEtapeId',
-        typeId: 'dpu',
-        titreDemarcheId: newDemarcheId('titreDemarcheId'),
-        date: toCaminoDate('2022-01-01'),
-        statutId
-      })
+    await TitresEtapes.query().insertGraph({
+      id: 'titreEtapeId',
+      typeId: 'dpu',
+      titreDemarcheId: newDemarcheId('titreDemarcheId'),
+      date: toCaminoDate('2022-01-01'),
+      statutId,
+    })
 
-      const documentId = 'document-id'
-      await documentCreate({
-        id: documentId,
-        typeId: 'dec',
-        date: toCaminoDate('2023-01-12'),
-        titreEtapeId: 'titreEtapeId'
-      })
+    const documentId = 'document-id'
+    await documentCreate({
+      id: documentId,
+      typeId: 'dec',
+      date: toCaminoDate('2023-01-12'),
+      titreEtapeId: 'titreEtapeId',
+    })
 
-      const documentRes = await documentGet(documentId, {}, userSuper)
+    const documentRes = await documentGet(documentId, {}, userSuper)
 
-      expect(documentRes.suppression).toBe(suppression)
-    }
-  )
+    expect(documentRes.suppression).toBe(suppression)
+  })
 
   test.each<[boolean | undefined, ActivitesStatutId, boolean]>([
     [true, 'enc', true],
@@ -73,51 +70,48 @@ describe('documentSupprimer', () => {
     [undefined, 'enc', true],
     [true, 'dep', true],
     [false, 'dep', false],
-    [undefined, 'dep', false]
-  ])(
-    'vérifie la possibilité de supprimer un document optionnel ou non d’une activité (utilisateur super)',
-    async (optionnel, activiteStatutId, suppression) => {
-      // suppression de la clé étrangère sur le titre pour ne pas avoir à tout créer
-      await TitresActivites.query().delete()
-      await Document.query().delete()
-      await ActivitesTypesDocumentsTypes.query().delete()
-      await knex.schema.alterTable(TitresActivites.tableName, table => {
-        table.dropColumns('titreId')
-      })
+    [undefined, 'dep', false],
+  ])('vérifie la possibilité de supprimer un document optionnel ou non d’une activité (utilisateur super)', async (optionnel, activiteStatutId, suppression) => {
+    // suppression de la clé étrangère sur le titre pour ne pas avoir à tout créer
+    await TitresActivites.query().delete()
+    await Document.query().delete()
+    await ActivitesTypesDocumentsTypes.query().delete()
+    await knex.schema.alterTable(TitresActivites.tableName, table => {
+      table.dropColumns('titreId')
+    })
 
-      await knex.schema.alterTable(TitresActivites.tableName, table => {
-        table.string('titreId').index().notNullable()
-      })
+    await knex.schema.alterTable(TitresActivites.tableName, table => {
+      table.string('titreId').index().notNullable()
+    })
 
-      await TitresActivites.query().insertGraph({
-        id: 'titreActiviteId',
-        typeId: 'grx',
-        titreId: '',
-        date: getCurrent(),
-        activiteStatutId,
-        periodeId: 1,
-        annee: 2000
-      })
+    await TitresActivites.query().insertGraph({
+      id: 'titreActiviteId',
+      typeId: 'grx',
+      titreId: '',
+      date: getCurrent(),
+      activiteStatutId,
+      periodeId: 1,
+      annee: 2000,
+    })
 
-      const documentId = 'document-id'
-      await documentCreate({
-        id: documentId,
-        typeId: 'dec',
-        date: toCaminoDate('2023-01-12'),
-        titreActiviteId: 'titreActiviteId'
-      })
+    const documentId = 'document-id'
+    await documentCreate({
+      id: documentId,
+      typeId: 'dec',
+      date: toCaminoDate('2023-01-12'),
+      titreActiviteId: 'titreActiviteId',
+    })
 
-      await ActivitesTypesDocumentsTypes.query().insertGraph({
-        activiteTypeId: 'grx',
-        documentTypeId: 'dec',
-        optionnel
-      })
+    await ActivitesTypesDocumentsTypes.query().insertGraph({
+      activiteTypeId: 'grx',
+      documentTypeId: 'dec',
+      optionnel,
+    })
 
-      const documentRes = await documentGet(documentId, {}, userSuper)
+    const documentRes = await documentGet(documentId, {}, userSuper)
 
-      expect(documentRes.suppression).toBe(suppression)
-    }
-  )
+    expect(documentRes.suppression).toBe(suppression)
+  })
 })
 
 describe('etapeTypeDocumentTypeUsedCheck', () => {
@@ -138,7 +132,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
       typeId: 'dpu',
       titreDemarcheId: newDemarcheId('titreDemarcheId'),
       date: toCaminoDate('2022-01-01'),
-      statutId: 'aco'
+      statutId: 'aco',
     })
 
     const documentId = 'document-id'
@@ -146,7 +140,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
       id: documentId,
       typeId: 'dec',
       date: toCaminoDate('2023-01-12'),
-      titreEtapeId: 'titreEtapeId'
+      titreEtapeId: 'titreEtapeId',
     })
 
     const check = await etapeTypeDocumentTypeUsedCheck('dpu', 'dec')
@@ -171,7 +165,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
       typeId: 'dpu',
       titreDemarcheId: newDemarcheId('titreDemarcheId'),
       date: toCaminoDate('2022-01-01'),
-      statutId: 'aco'
+      statutId: 'aco',
     })
 
     const documentId = 'document-id'
@@ -179,7 +173,7 @@ describe('etapeTypeDocumentTypeUsedCheck', () => {
       id: documentId,
       typeId: 'arr',
       date: toCaminoDate('2023-01-12'),
-      titreEtapeId: 'titreEtapeId'
+      titreEtapeId: 'titreEtapeId',
     })
 
     const check = await etapeTypeDocumentTypeUsedCheck('dpu', 'dec')

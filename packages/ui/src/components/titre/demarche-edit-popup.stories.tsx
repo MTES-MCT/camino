@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
   title: 'Components/Titre/DemarcheEditPopup',
-  component: PureDemarcheEditPopup
+  component: PureDemarcheEditPopup,
 }
 export default meta
 
@@ -23,7 +23,7 @@ const apiClient: Props['apiClient'] = {
   updateDemarche: demarche => {
     update(demarche)
     return new Promise(resolve => setTimeout(() => resolve(), 1000))
-  }
+  },
 }
 
 export const Create: Story = () => (
@@ -48,7 +48,7 @@ export const Edit: Story = () => (
       titreId: 'titreId',
       id: 'demarcheId',
       typeId: 'amo',
-      description: 'description'
+      description: 'description',
     }}
     titreTypeId={'apc'}
     titreNom="Nom du titre"

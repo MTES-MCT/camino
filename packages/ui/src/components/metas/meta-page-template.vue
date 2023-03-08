@@ -25,21 +25,21 @@ import DefinitionEdit from '@/components/metas/definition-edit.vue'
 
 export default defineComponent({
   components: {
-    DefinitionEdit
+    DefinitionEdit,
   },
 
   props: {
     title: {
       type: String,
       required: true,
-      default: ''
+      default: '',
     },
 
     definitionsTree: {
       type: Object,
       required: true,
-      default: () => ({})
-    }
-  }
+      default: () => ({}),
+    },
+  },
 })
 </script>

@@ -1,30 +1,12 @@
-import {
-  ITitreEtape,
-  IEntreprise,
-  ITitrePoint,
-  ITitreIncertitudes,
-  ITitreEntreprise
-} from '../../types.js'
+import { ITitreEtape, IEntreprise, ITitrePoint, ITitreIncertitudes, ITitreEntreprise } from '../../types.js'
 import { objectClone } from '../../tools/index.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
 import { CaminoDate } from 'camino-common/src/date.js'
 
-const titreEtapePropsIds: (keyof ITitreEtape)[] = [
-  'points',
-  'titulaires',
-  'amodiataires',
-  'substances',
-  'surface',
-  'dateFin',
-  'dateDebut',
-  'duree'
-]
+const titreEtapePropsIds: (keyof ITitreEtape)[] = ['points', 'titulaires', 'amodiataires', 'substances', 'surface', 'dateFin', 'dateDebut', 'duree']
 
-const titrePointsIdsUpdate = (
-  titrePoints: ITitrePoint[],
-  newTitreEtapeId: string
-) =>
+const titrePointsIdsUpdate = (titrePoints: ITitrePoint[], newTitreEtapeId: string) =>
   titrePoints.map(p => {
     p.id = idGenerate()
     p.titreEtapeId = newTitreEtapeId
@@ -39,69 +21,41 @@ const titrePointsIdsUpdate = (
     return p
   })
 
-const propertyArrayCheck = (
-  newValue: IPropValueArray,
-  prevValue: IPropValueArray,
-  propId: string
-) => {
+const propertyArrayCheck = (newValue: IPropValueArray, prevValue: IPropValueArray, propId: string) => {
   if (prevValue?.length !== newValue?.length) {
     return false
   }
 
   if (prevValue?.length && newValue?.length) {
     if (propId === 'points') {
-      const comparator = ({ coordonnees }: ITitrePoint) =>
-        `(${coordonnees.x}, ${coordonnees.y})`
+      const comparator = ({ coordonnees }: ITitrePoint) => `(${coordonnees.x}, ${coordonnees.y})`
 
-      return (
-        (newValue as ITitrePoint[]).map(comparator).sort().toString() ===
-        (prevValue as ITitrePoint[]).map(comparator).sort().toString()
-      )
+      return (newValue as ITitrePoint[]).map(comparator).sort().toString() === (prevValue as ITitrePoint[]).map(comparator).sort().toString()
     } else if (propId === 'substances') {
       return newValue.toString() === prevValue.toString()
     } else if (['titulaires', 'amodiataires'].includes(propId)) {
-      const comparator = (propValueArray: ITitreEntreprise) =>
-        propValueArray.id + propValueArray.operateur
+      const comparator = (propValueArray: ITitreEntreprise) => propValueArray.id + propValueArray.operateur
 
-      return (
-        (newValue as ITitreEntreprise[]).map(comparator).sort().toString() ===
-        (prevValue as ITitreEntreprise[]).map(comparator).sort().toString()
-      )
+      return (newValue as ITitreEntreprise[]).map(comparator).sort().toString() === (prevValue as ITitreEntreprise[]).map(comparator).sort().toString()
     }
   }
 
   return true
 }
 
-type IPropValueArray =
-  | undefined
-  | null
-  | IEntreprise[]
-  | ITitrePoint[]
-  | SubstanceLegaleId[]
+type IPropValueArray = undefined | null | IEntreprise[] | ITitrePoint[] | SubstanceLegaleId[]
 
 type IPropValue = number | string | IPropValueArray
 
-const titreEtapePropCheck = (
-  propId: string,
-  oldValue?: IPropValue | null,
-  newValue?: IPropValue | null
-) => {
+const titreEtapePropCheck = (propId: string, oldValue?: IPropValue | null, newValue?: IPropValue | null) => {
   if (['titulaires', 'amodiataires', 'substances', 'points'].includes(propId)) {
-    return propertyArrayCheck(
-      oldValue as IPropValueArray,
-      newValue as IPropValueArray,
-      propId
-    )
+    return propertyArrayCheck(oldValue as IPropValueArray, newValue as IPropValueArray, propId)
   }
 
   return oldValue === newValue
 }
 
-const titreEtapeHeritagePropsFind = (
-  titreEtape: ITitreEtape,
-  prevTitreEtape?: ITitreEtape | null
-) => {
+const titreEtapeHeritagePropsFind = (titreEtape: ITitreEtape, prevTitreEtape?: ITitreEtape | null) => {
   let hasChanged = false
 
   let newTitreEtape = titreEtape
@@ -121,14 +75,9 @@ const titreEtapeHeritagePropsFind = (
       newTitreEtape.heritageProps![propId] = { actif: false, etapeId: null }
     }
 
-    const prevHeritage = prevTitreEtape?.heritageProps
-      ? prevTitreEtape?.heritageProps[propId]
-      : null
+    const prevHeritage = prevTitreEtape?.heritageProps ? prevTitreEtape?.heritageProps[propId] : null
 
-    const etapeId =
-      prevHeritage?.etapeId && prevHeritage?.actif
-        ? prevHeritage.etapeId
-        : prevTitreEtape?.id
+    const etapeId = prevHeritage?.etapeId && prevHeritage?.actif ? prevHeritage.etapeId : prevTitreEtape?.id
 
     if (heritage?.actif) {
       if (prevTitreEtape) {
@@ -140,10 +89,7 @@ const titreEtapeHeritagePropsFind = (
           newTitreEtape = objectClone(newTitreEtape)
 
           if (propId === 'points') {
-            newTitreEtape.points = titrePointsIdsUpdate(
-              newValue as ITitrePoint[],
-              newTitreEtape.id
-            )
+            newTitreEtape.points = titrePointsIdsUpdate(newValue as ITitrePoint[], newTitreEtape.id)
           } else if (propId === 'amodiataires' || propId === 'titulaires') {
             newTitreEtape[propId] = newValue as IEntreprise[]
           } else if (propId === 'substances') {
@@ -157,38 +103,24 @@ const titreEtapeHeritagePropsFind = (
 
         const incertitudePropId = propId as keyof ITitreIncertitudes
 
-        if (
-          newTitreEtape.incertitudes &&
-          prevTitreEtape.incertitudes &&
-          newTitreEtape.incertitudes[incertitudePropId] !==
-            prevTitreEtape.incertitudes[incertitudePropId]
-        ) {
+        if (newTitreEtape.incertitudes && prevTitreEtape.incertitudes && newTitreEtape.incertitudes[incertitudePropId] !== prevTitreEtape.incertitudes[incertitudePropId]) {
           hasChanged = true
           newTitreEtape = objectClone(newTitreEtape)
-          newTitreEtape.incertitudes![incertitudePropId] =
-            prevTitreEtape.incertitudes[incertitudePropId]
+          newTitreEtape.incertitudes![incertitudePropId] = prevTitreEtape.incertitudes[incertitudePropId]
         } else if (newTitreEtape.incertitudes && !prevTitreEtape.incertitudes) {
           newTitreEtape = objectClone(newTitreEtape)
-          if (
-            newTitreEtape.incertitudes &&
-            newTitreEtape.incertitudes[incertitudePropId]
-          ) {
+          if (newTitreEtape.incertitudes && newTitreEtape.incertitudes[incertitudePropId]) {
             hasChanged = true
             delete newTitreEtape.incertitudes[incertitudePropId]
             if (!Object.keys(newTitreEtape.incertitudes).length) {
               newTitreEtape.incertitudes = null
             }
           }
-        } else if (
-          prevTitreEtape.incertitudes &&
-          prevTitreEtape.incertitudes[incertitudePropId] &&
-          !newTitreEtape.incertitudes
-        ) {
+        } else if (prevTitreEtape.incertitudes && prevTitreEtape.incertitudes[incertitudePropId] && !newTitreEtape.incertitudes) {
           hasChanged = true
           newTitreEtape = objectClone(newTitreEtape)
           newTitreEtape.incertitudes = {}
-          newTitreEtape.incertitudes![incertitudePropId] =
-            prevTitreEtape.incertitudes[incertitudePropId]
+          newTitreEtape.incertitudes![incertitudePropId] = prevTitreEtape.incertitudes[incertitudePropId]
         }
       } else {
         // l’étape précédente a été supprimée, il faut donc désactiver l’héritage

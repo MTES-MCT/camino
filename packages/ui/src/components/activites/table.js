@@ -7,26 +7,26 @@ import { ActivitesStatuts } from 'camino-common/src/static/activitesStatuts'
 const activitesColonnes = [
   {
     id: 'titre',
-    name: 'Titre'
+    name: 'Titre',
   },
   {
     id: 'titulaires',
     name: 'Titulaires',
-    class: ['min-width-10']
+    class: ['min-width-10'],
   },
   {
     id: 'annee',
-    name: 'Année'
+    name: 'Année',
   },
   {
     id: 'periode',
-    name: 'Période'
+    name: 'Période',
   },
   {
     id: 'statut',
     name: 'Statut',
-    class: ['min-width-5']
-  }
+    class: ['min-width-5'],
+  },
 ]
 
 const activitesLignesBuild = activites =>
@@ -38,29 +38,29 @@ const activitesLignesBuild = activites =>
         component: markRaw(List),
         props: {
           elements: activite.titre.titulaires.map(({ nom }) => nom),
-          mini: true
+          mini: true,
         },
         class: 'mb--xs',
-        value: activite.titre.titulaires.map(({ nom }) => nom).join(', ')
+        value: activite.titre.titulaires.map(({ nom }) => nom).join(', '),
       },
       annee: { value: activite.annee },
       periode: {
-        value: getPeriode(activite.type.frequenceId, activite.periodeId)
+        value: getPeriode(activite.type.frequenceId, activite.periodeId),
       },
       statut: {
         component: markRaw(Statut),
         props: {
           color: activiteStatut.couleur,
-          nom: activiteStatut.nom
+          nom: activiteStatut.nom,
         },
-        value: activiteStatut.nom
-      }
+        value: activiteStatut.nom,
+      },
     }
 
     return {
       id: activite.id,
       link: { name: 'activite', params: { id: activite.slug } },
-      columns
+      columns,
     }
   })
 

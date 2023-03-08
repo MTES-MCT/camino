@@ -4,13 +4,7 @@ import { dbManager } from '../../../../tests/db-manager.js'
 
 import Titres from '../../models/titres.js'
 import { idGenerate } from '../../models/_format/id-create.js'
-import {
-  titresArmEnDemandeQuery,
-  titresConfidentielSelect,
-  titresModificationSelectQuery,
-  titresQueryModify,
-  titresVisibleByEntrepriseQuery
-} from './titres.js'
+import { titresArmEnDemandeQuery, titresConfidentielSelect, titresModificationSelectQuery, titresQueryModify, titresVisibleByEntrepriseQuery } from './titres.js'
 import AdministrationsTitresTypesTitresStatuts from '../../models/administrations-titres-types-titres-statuts.js'
 import { userSuper } from '../../user-super.js'
 import { AdministrationRole } from 'camino-common/src/roles.js'
@@ -39,48 +33,45 @@ describe('titresQueryModify', () => {
       [false, false, false],
       [false, true, false],
       [true, false, false],
-      [true, true, true]
-    ])(
-      'Vérifie la visibilité d’un titre par une entreprise',
-      async (entreprisesLecture, withTitulaire, visible) => {
-        const mockEntreprise1 = {
-          id: idGenerate(),
-          nom: 'monEntrepriseNom'
-        } as IEntreprise
+      [true, true, true],
+    ])('Vérifie la visibilité d’un titre par une entreprise', async (entreprisesLecture, withTitulaire, visible) => {
+      const mockEntreprise1 = {
+        id: idGenerate(),
+        nom: 'monEntrepriseNom',
+      } as IEntreprise
 
-        const etapeId = idGenerate()
+      const etapeId = idGenerate()
 
-        const mockTitre: Omit<ITitre, 'id'> = {
-          nom: 'titre1',
-          typeId: 'arm',
-          entreprisesLecture,
-          propsTitreEtapesIds: { titulaires: etapeId },
-          demarches: [
-            {
-              typeId: 'oct',
-              etapes: [
-                {
-                  id: etapeId,
-                  date: '2020-01-01',
-                  typeId: 'mfr',
-                  statutId: 'fai',
-                  titulaires: withTitulaire ? [mockEntreprise1] : []
-                }
-              ]
-            } as ITitreDemarche
-          ]
-        }
-
-        await Titres.query().insertGraph(mockTitre)
-
-        const q = Titres.query()
-        titresVisibleByEntrepriseQuery(q, [mockEntreprise1.id])
-
-        const res = await q
-
-        expect(res).toHaveLength(visible ? 1 : 0)
+      const mockTitre: Omit<ITitre, 'id'> = {
+        nom: 'titre1',
+        typeId: 'arm',
+        entreprisesLecture,
+        propsTitreEtapesIds: { titulaires: etapeId },
+        demarches: [
+          {
+            typeId: 'oct',
+            etapes: [
+              {
+                id: etapeId,
+                date: '2020-01-01',
+                typeId: 'mfr',
+                statutId: 'fai',
+                titulaires: withTitulaire ? [mockEntreprise1] : [],
+              },
+            ],
+          } as ITitreDemarche,
+        ],
       }
-    )
+
+      await Titres.query().insertGraph(mockTitre)
+
+      const q = Titres.query()
+      titresVisibleByEntrepriseQuery(q, [mockEntreprise1.id])
+
+      const res = await q
+
+      expect(res).toHaveLength(visible ? 1 : 0)
+    })
   })
 
   describe('titresArmEnDemandeQuery', () => {
@@ -91,7 +82,7 @@ describe('titresQueryModify', () => {
       demarcheTypeId = 'oct',
       demarcheStatutId = 'ins',
       etapeTypeId = 'mcr',
-      etapeStatutId = 'fav'
+      etapeStatutId = 'fav',
     }: {
       visible: boolean
       titreTypeId?: string
@@ -113,18 +104,16 @@ describe('titresQueryModify', () => {
               {
                 typeId: etapeTypeId,
                 statutId: etapeStatutId,
-                date: '2020-01-01'
-              }
-            ]
-          }
-        ]
+                date: '2020-01-01',
+              },
+            ],
+          },
+        ],
       } as ITitre
 
       const titre = await Titres.query().insertGraph(mockTitre)
 
-      const res = await Titres.query()
-        .where('id', titre.id)
-        .modify(titresArmEnDemandeQuery)
+      const res = await Titres.query().where('id', titre.id).modify(titresArmEnDemandeQuery)
 
       expect(res).toHaveLength(visible ? 1 : 0)
     }
@@ -133,62 +122,44 @@ describe('titresQueryModify', () => {
       ['axm', 'val', false],
       ['axm', 'dmi', false],
       ['arm', 'val', false],
-      ['arm', 'dmi', true]
-    ])(
-      'Vérifie si le titre est une ARM en cours de demande',
-      async (titreTypeId, titreStatutId, visible) => {
-        await titresArmEnDemandeQueryTest({
-          visible,
-          titreTypeId,
-          titreStatutId
-        })
-      }
-    )
+      ['arm', 'dmi', true],
+    ])('Vérifie si le titre est une ARM en cours de demande', async (titreTypeId, titreStatutId, visible) => {
+      await titresArmEnDemandeQueryTest({
+        visible,
+        titreTypeId,
+        titreStatutId,
+      })
+    })
 
     test.each<[DemarcheTypeId, DemarcheStatutId, boolean]>([
       ['pro', 'dep', false],
       ['pro', 'ins', false],
       ['oct', 'dep', false],
-      ['oct', 'ins', true]
-    ])(
-      'Vérifie si la démarche est un octroi en cours d’instruction',
-      async (demarcheTypeId, demarcheStatutId, visible) => {
-        await titresArmEnDemandeQueryTest({
-          visible,
-          demarcheTypeId,
-          demarcheStatutId
-        })
-      }
-    )
+      ['oct', 'ins', true],
+    ])('Vérifie si la démarche est un octroi en cours d’instruction', async (demarcheTypeId, demarcheStatutId, visible) => {
+      await titresArmEnDemandeQueryTest({
+        visible,
+        demarcheTypeId,
+        demarcheStatutId,
+      })
+    })
 
     test.each<[EtapeTypeId, EtapeStatutId, boolean]>([
       ['mdp', 'fai', false],
       ['mdp', 'fav', false],
       ['mcr', 'fai', false],
-      ['mcr', 'fav', true]
-    ])(
-      'Vérifie si il y a une « Recevabilité de la demande » favorable',
-      async (etapeTypeId, etapeStatutId, visible) => {
-        await titresArmEnDemandeQueryTest({
-          visible,
-          etapeTypeId,
-          etapeStatutId
-        })
-      }
-    )
+      ['mcr', 'fav', true],
+    ])('Vérifie si il y a une « Recevabilité de la demande » favorable', async (etapeTypeId, etapeStatutId, visible) => {
+      await titresArmEnDemandeQueryTest({
+        visible,
+        etapeTypeId,
+        etapeStatutId,
+      })
+    })
   })
 
   describe('titresConfidentielQuery', () => {
-    test.each<
-      [
-        boolean | undefined,
-        boolean,
-        boolean,
-        TitreTypeId,
-        TitreStatutId,
-        boolean
-      ]
-    >([
+    test.each<[boolean | undefined, boolean, boolean, TitreTypeId, TitreStatutId, boolean]>([
       [false, false, false, 'arm', 'dmi', true],
       [false, false, true, 'arm', 'dmi', true],
       [undefined, true, false, 'arm', 'dmi', true],
@@ -197,107 +168,92 @@ describe('titresQueryModify', () => {
       [false, false, false, 'arm', 'val', false],
       [true, false, false, 'arm', 'dmi', false],
       [true, false, true, 'arm', 'dmi', false],
-      [true, true, false, 'arm', 'dmi', false]
-    ])(
-      'Vérifie si le titre est confidentiel',
-      async (
+      [true, true, false, 'arm', 'dmi', false],
+    ])('Vérifie si le titre est confidentiel', async (publicLecture, entreprisesLecture, withTitulaire, typeId, statutId, confidentiel) => {
+      const mockEntreprise1 = {
+        id: idGenerate(),
+        nom: 'monEntrepriseNom',
+      } as IEntreprise
+
+      const etapeId = idGenerate()
+
+      const id = idGenerate()
+
+      const mockTitre: ITitre = {
+        id,
+        nom: 'titre1',
+        typeId,
+        titreStatutId: statutId,
         publicLecture,
         entreprisesLecture,
-        withTitulaire,
-        typeId,
-        statutId,
-        confidentiel
-      ) => {
-        const mockEntreprise1 = {
-          id: idGenerate(),
-          nom: 'monEntrepriseNom'
-        } as IEntreprise
-
-        const etapeId = idGenerate()
-
-        const id = idGenerate()
-
-        const mockTitre: ITitre = {
-          id,
-          nom: 'titre1',
-          typeId,
-          titreStatutId: statutId,
-          publicLecture,
-          entreprisesLecture,
-          propsTitreEtapesIds: { titulaires: etapeId },
-          demarches: [
-            {
-              typeId: 'oct',
-              statutId: 'ins',
-              etapes: [
-                {
-                  id: etapeId,
-                  date: '2020-01-01',
-                  typeId: 'mcr',
-                  statutId: 'fav',
-                  titulaires: withTitulaire ? [mockEntreprise1] : []
-                }
-              ]
-            } as ITitreDemarche
-          ]
-        }
-
-        await Titres.query().insertGraph(mockTitre)
-
-        const q = Titres.query()
-          .where('id', id)
-          .modify(titresConfidentielSelect, [mockEntreprise1.id])
-
-        const res = await q
-
-        expect(res).toHaveLength(1)
-        if (confidentiel) {
-          expect(res[0].confidentiel).toBeTruthy()
-        } else {
-          expect(res[0].confidentiel).toBeFalsy()
-        }
+        propsTitreEtapesIds: { titulaires: etapeId },
+        demarches: [
+          {
+            typeId: 'oct',
+            statutId: 'ins',
+            etapes: [
+              {
+                id: etapeId,
+                date: '2020-01-01',
+                typeId: 'mcr',
+                statutId: 'fav',
+                titulaires: withTitulaire ? [mockEntreprise1] : [],
+              },
+            ],
+          } as ITitreDemarche,
+        ],
       }
-    )
+
+      await Titres.query().insertGraph(mockTitre)
+
+      const q = Titres.query().where('id', id).modify(titresConfidentielSelect, [mockEntreprise1.id])
+
+      const res = await q
+
+      expect(res).toHaveLength(1)
+      if (confidentiel) {
+        expect(res[0].confidentiel).toBeTruthy()
+      } else {
+        expect(res[0].confidentiel).toBeFalsy()
+      }
+    })
   })
 
   describe('titresModificationSelectQuery', () => {
     test.each<[AdministrationRole, boolean]>([
       ['admin', true],
       ['editeur', true],
-      ['lecteur', false]
-    ])(
-      'un utilisateur $role d’une administration gestionnaire peut modifier un titre',
-      async (role, modification) => {
-        await Titres.query().insert({
-          nom: idGenerate(),
-          titreStatutId: 'val',
-          typeId: 'arm'
-        })
+      ['lecteur', false],
+    ])('un utilisateur $role d’une administration gestionnaire peut modifier un titre', async (role, modification) => {
+      await Titres.query().insert({
+        nom: idGenerate(),
+        titreStatutId: 'val',
+        typeId: 'arm',
+      })
 
-        const administrationId = 'ope-ptmg-973-01'
+      const administrationId = 'ope-ptmg-973-01'
 
-        await AdministrationsTitresTypesTitresStatuts.query().delete()
+      await AdministrationsTitresTypesTitresStatuts.query().delete()
 
-        const q = Titres.query()
-        q.select(
-          titresModificationSelectQuery(q, {
-            role,
-            ...testBlankUser,
-            administrationId
-          }).as('modification')
-        )
+      const q = Titres.query()
+      q.select(
+        titresModificationSelectQuery(q, {
+          role,
+          ...testBlankUser,
+          administrationId,
+        }).as('modification')
+      )
 
-        const titre = await q.first()
+      const titre = await q.first()
 
-        expect(titre?.modification).toBe(modification)
-      }
-    )
+      expect(titre?.modification).toBe(modification)
+    })
 
     test('une administration non gestionnaire ne peut pas modifier un titre', async () => {
       await Titres.query().insert({
         nom: idGenerate(),
         titreStatutId: 'val',
-        typeId: 'arm'
+        typeId: 'arm',
       })
 
       const administrationId = 'pre-97302-01'
@@ -310,7 +266,7 @@ describe('titresQueryModify', () => {
           nom: '',
           prenom: '',
           role: 'admin',
-          administrationId
+          administrationId,
         }).as('modification')
       )
 
@@ -323,27 +279,20 @@ describe('titresQueryModify', () => {
       [userSuper, true],
       [{ role: 'entreprise', entreprises: [] }, false],
       [{ role: 'lecteur', administrationId: 'dea-guyane-01' }, false],
-      [{ role: 'defaut' }, false]
-    ])(
-      'Vérifie si un profil $role peut modifier un titre',
-      async (user, modification) => {
-        await Titres.query().insert({
-          nom: idGenerate(),
-          titreStatutId: 'val',
-          typeId: 'arm'
-        })
-        const q = Titres.query()
-        q.select(
-          titresModificationSelectQuery(q, { ...user, ...testBlankUser }).as(
-            'modification'
-          )
-        )
+      [{ role: 'defaut' }, false],
+    ])('Vérifie si un profil $role peut modifier un titre', async (user, modification) => {
+      await Titres.query().insert({
+        nom: idGenerate(),
+        titreStatutId: 'val',
+        typeId: 'arm',
+      })
+      const q = Titres.query()
+      q.select(titresModificationSelectQuery(q, { ...user, ...testBlankUser }).as('modification'))
 
-        const titre = await q.first()
+      const titre = await q.first()
 
-        expect(titre?.modification).toBe(modification)
-      }
-    )
+      expect(titre?.modification).toBe(modification)
+    })
   })
 
   describe('titresArchive', () => {
@@ -356,15 +305,15 @@ describe('titresQueryModify', () => {
           nom: archivedTitreId,
           titreStatutId: 'val',
           typeId: 'arm',
-          archive: true
+          archive: true,
         },
         {
           id: titreId,
           nom: titreId,
           titreStatutId: 'val',
           typeId: 'arm',
-          archive: false
-        }
+          archive: false,
+        },
       ])
 
       const q = Titres.query().whereIn('id', [archivedTitreId, titreId])

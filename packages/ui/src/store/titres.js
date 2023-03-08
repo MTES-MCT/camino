@@ -26,28 +26,19 @@ const getDefaultState = () => {
       {
         id: 'colonne',
         type: 'string',
-        values: [
-          'nom',
-          'domaine',
-          'type',
-          'statut',
-          'activitesTotal',
-          'substances',
-          'titulaires',
-          'references'
-        ]
+        values: ['nom', 'domaine', 'type', 'statut', 'activitesTotal', 'substances', 'titulaires', 'references'],
       },
       {
         id: 'ordre',
         type: 'string',
-        values: ['asc', 'desc']
+        values: ['asc', 'desc'],
       },
-      { id: 'perimetre', type: 'numbers' }
+      { id: 'perimetre', type: 'numbers' },
     ],
     urlDefinitions: [
       { id: 'zoom', type: 'number', min: 1, max: 18 },
       { id: 'centre', type: 'tuple' },
-      { id: 'vueId', type: 'string', values: ['carte', 'table'] }
+      { id: 'vueId', type: 'string', values: ['carte', 'table'] },
     ],
     params: {
       table: { page: 1, intervalle: 200, ordre: 'asc', colonne: 'nom' },
@@ -63,10 +54,10 @@ const getDefaultState = () => {
         communes: '',
         departements: [],
         regions: [],
-        facadesMaritimes: []
-      }
+        facadesMaritimes: [],
+      },
     },
-    initialized: false
+    initialized: false,
   }
 }
 
@@ -108,10 +99,7 @@ const actions = {
       let data
 
       if (state.vueId === 'carte') {
-        const definitions = paramsBuild(
-          state.definitions,
-          Object.assign({}, state.params.filtres, state.params.carte)
-        )
+        const definitions = paramsBuild(state.definitions, Object.assign({}, state.params.filtres, state.params.carte))
 
         if (state.params.carte.zoom > 7) {
           data = await titresGeoPolygon(definitions)
@@ -119,10 +107,7 @@ const actions = {
           data = await titresGeo(definitions)
         }
       } else {
-        const definitions = paramsBuild(
-          state.definitions,
-          Object.assign({}, state.params.filtres, state.params.table)
-        )
+        const definitions = paramsBuild(state.definitions, Object.assign({}, state.params.filtres, state.params.table))
         data = await titres(definitions)
         if (!data.elements.length && data.total) {
           commit('paramsSet', { section: 'table', params: { page: 1 } })
@@ -152,10 +137,7 @@ const actions = {
     if (Object.keys(newParams).length) {
       commit('paramsSet', { section, params: newParams })
 
-      if (
-        section === 'carte' &&
-        !Object.keys(newParams).includes('perimetre')
-      ) {
+      if (section === 'carte' && !Object.keys(newParams).includes('perimetre')) {
         return
       }
 
@@ -204,7 +186,7 @@ const actions = {
       const carteParams = urlQueryParamsGet(
         {
           zoom: state.params.carte.zoom,
-          centre: state.params.carte.centre
+          centre: state.params.carte.centre,
         },
         rootState.route.query,
         state.urlDefinitions
@@ -217,11 +199,7 @@ const actions = {
     }
 
     if (state.vueId === 'table') {
-      const tableParams = urlQueryParamsGet(
-        state.params.table,
-        rootState.route.query,
-        state.definitions
-      )
+      const tableParams = urlQueryParamsGet(state.params.table, rootState.route.query, state.definitions)
 
       if (Object.keys(tableParams).length) {
         commit('paramsSet', { section: 'table', params: tableParams })
@@ -229,11 +207,7 @@ const actions = {
       }
     }
 
-    const filtresParams = urlQueryParamsGet(
-      state.params.filtres,
-      rootState.route.query,
-      state.definitions
-    )
+    const filtresParams = urlQueryParamsGet(state.params.filtres, rootState.route.query, state.definitions)
 
     if (Object.keys(filtresParams).length) {
       commit('paramsSet', { section: 'filtres', params: filtresParams })
@@ -248,41 +222,33 @@ const actions = {
       state.vueId === 'carte'
         ? {
             zoom: state.params.carte.zoom,
-            centre: state.params.carte.centre
+            centre: state.params.carte.centre,
           }
         : state.params.table
 
-    const params = Object.assign(
-      { vueId: state.vueId },
-      state.params.filtres,
-      paramsVue
-    )
+    const params = Object.assign({ vueId: state.vueId }, state.params.filtres, paramsVue)
 
     const definitions = [...state.definitions, ...state.urlDefinitions]
 
     await dispatch('urlQueryUpdate', { params, definitions }, { root: true })
-  }
+  },
 }
 
-const mutations = Object.assign(
-  {},
-  listeMutationsWithDefaultState(getDefaultState),
-  {
-    metasSet(state, data) {
-      state.metas.entreprises = data.elements
-      const definition = state.definitions.find(p => p.id === 'entreprisesIds')
-      definition.values = data.elements.map(e => e.id)
-    },
+const mutations = Object.assign({}, listeMutationsWithDefaultState(getDefaultState), {
+  metasSet(state, data) {
+    state.metas.entreprises = data.elements
+    const definition = state.definitions.find(p => p.id === 'entreprisesIds')
+    definition.values = data.elements.map(e => e.id)
+  },
 
-    vueSet(state, vueId) {
-      state.vueId = vueId
-    }
-  }
-)
+  vueSet(state, vueId) {
+    state.vueId = vueId
+  },
+})
 
 export default {
   namespaced: true,
   state,
   actions,
-  mutations
+  mutations,
 }

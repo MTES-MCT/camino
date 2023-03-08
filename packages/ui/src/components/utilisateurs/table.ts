@@ -1,50 +1,39 @@
 import List from '../_ui/list.vue'
-import {
-  isAdministration,
-  isBureauDEtudes,
-  isEntreprise
-} from 'camino-common/src/roles'
+import { isAdministration, isBureauDEtudes, isEntreprise } from 'camino-common/src/roles'
 import { Administrations } from 'camino-common/src/static/administrations'
 import { Utilisateur } from '@/api/api-client'
-import {
-  Column,
-  ComponentColumnData,
-  TableRow,
-  TextColumnData
-} from '../_ui/table'
+import { Column, ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
 import { markRaw } from 'vue'
 
 export const utilisateursColonnes: Column[] = [
   {
     id: 'nom',
     name: 'Nom',
-    class: ['min-width-6']
+    class: ['min-width-6'],
   },
   {
     id: 'prenom',
     name: 'Prénom',
-    class: ['min-width-6']
+    class: ['min-width-6'],
   },
   {
     id: 'email',
-    name: 'Email'
+    name: 'Email',
   },
   {
     id: 'role',
     name: 'Rôle',
-    class: ['min-width-6']
+    class: ['min-width-6'],
   },
   {
     id: 'lien',
     name: 'Lien',
     noSort: true,
-    class: ['min-width-6']
-  }
+    class: ['min-width-6'],
+  },
 ]
 
-export const utilisateursLignesBuild = (
-  utilisateurs: Utilisateur[]
-): TableRow[] =>
+export const utilisateursLignesBuild = (utilisateurs: Utilisateur[]): TableRow[] =>
   utilisateurs.map(utilisateur => {
     let elements
 
@@ -60,10 +49,10 @@ export const utilisateursLignesBuild = (
             component: markRaw(List),
             props: {
               elements,
-              mini: true
+              mini: true,
             },
             class: 'mb--xs',
-            value: elements.join(', ')
+            value: elements.join(', '),
           }
         : { value: '' }
 
@@ -73,22 +62,14 @@ export const utilisateursLignesBuild = (
       email: { value: utilisateur.email || '–', class: ['h6'] },
       role: {
         value: utilisateur.role,
-        class: [
-          'bg-neutral',
-          'color-bg',
-          'pill',
-          'py-xs',
-          'px-s',
-          'small',
-          'bold'
-        ]
+        class: ['bg-neutral', 'color-bg', 'pill', 'py-xs', 'px-s', 'small', 'bold'],
       },
-      lien
+      lien,
     }
 
     return {
       id: utilisateur.id,
       link: { name: 'utilisateur', params: { id: utilisateur.id } },
-      columns
+      columns,
     }
   })

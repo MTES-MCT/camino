@@ -13,8 +13,8 @@ class TitresTitres extends Model {
     required: ['titreFromId', 'titreToId'],
     properties: {
       titreFromId: { type: 'string' },
-      titreToId: { type: 'string' }
-    }
+      titreToId: { type: 'string' },
+    },
   }
 
   public static idColumn = ['titreFromId', 'titreToId']

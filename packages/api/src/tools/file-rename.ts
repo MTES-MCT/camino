@@ -15,9 +15,7 @@ const fileRename = async (oldFileName: string, newFileName: string) =>
         return reject(err)
       }
 
-      const log = `fichier renommé: ${basename(oldPath)} -> ${basename(
-        newPath
-      )}`
+      const log = `fichier renommé: ${basename(oldPath)} -> ${basename(newPath)}`
 
       console.info(log)
 

@@ -15,7 +15,7 @@ describe('matrices', () => {
           redevance_departementale_des_mines_aurifere_kg: { '2021': 56.27 },
           taxe_guyane_brute: { '2021': 852.29 },
           taxe_guyane_deduction: { '2021': 200 },
-          taxe_guyane: { '2021': 652.29 }
+          taxe_guyane: { '2021': 652.29 },
         },
         'titre2-auru-97358': {
           surface_communale: { '2020': 323907 },
@@ -25,7 +25,7 @@ describe('matrices', () => {
           redevance_departementale_des_mines_aurifere_kg: { '2021': 33.47 },
           taxe_guyane_brute: { '2021': 502.08 },
           taxe_guyane_deduction: { '2021': 0 },
-          taxe_guyane: { '2021': 502.08 }
+          taxe_guyane: { '2021': 502.08 },
         },
         'titre2-auru-97312': {
           surface_communale: { '2020': 691155 },
@@ -35,7 +35,7 @@ describe('matrices', () => {
           redevance_departementale_des_mines_aurifere_kg: { '2021': 71.41 },
           taxe_guyane_brute: { '2021': 1071.34 },
           taxe_guyane_deduction: { '2021': 0 },
-          taxe_guyane: { '2021': 1071.34 }
+          taxe_guyane: { '2021': 1071.34 },
         },
         'titre3-auru-97311': {
           surface_communale: { '2020': 1005053 },
@@ -45,8 +45,8 @@ describe('matrices', () => {
           redevance_departementale_des_mines_aurifere_kg: { '2021': 186.13 },
           taxe_guyane_brute: { '2021': 17950.27 },
           taxe_guyane_deduction: { '2021': 5000 },
-          taxe_guyane: { '2021': 12950.27 }
-        }
+          taxe_guyane: { '2021': 12950.27 },
+        },
       },
       titres: {
         titre1: {
@@ -55,7 +55,7 @@ describe('matrices', () => {
           operateur: { '2020': 'titulaire1' },
           investissement: { '2020': '131535' },
           categorie: { '2020': 'pme' },
-          articles: ['titre1-auru-97310']
+          articles: ['titre1-auru-97310'],
         },
         titre2: {
           commune_principale_exploitation: { '2020': '97312' },
@@ -63,7 +63,7 @@ describe('matrices', () => {
           operateur: { '2020': 'titulaire2' },
           investissement: { '2020': '0' },
           categorie: { '2020': 'pme' },
-          articles: ['titre2-auru-97358', 'titre2-auru-97312']
+          articles: ['titre2-auru-97358', 'titre2-auru-97312'],
         },
         titre3: {
           commune_principale_exploitation: { '2020': '97311' },
@@ -71,15 +71,15 @@ describe('matrices', () => {
           operateur: { '2020': 'titulaire3' },
           investissement: { '2020': '28000' },
           categorie: { '2020': 'pme' },
-          articles: ['titre3-auru-97311']
-        }
+          articles: ['titre3-auru-97311'],
+        },
       },
       communes: {
         '97310': { articles: ['titre1-auru-97310'] },
         '97311': { articles: ['titre3-auru-97311'] },
         '97312': { articles: ['titre2-auru-97312'] },
-        '97358': { articles: ['titre2-auru-97358'] }
-      }
+        '97358': { articles: ['titre2-auru-97358'] },
+      },
     }
     const titres: Pick<ITitre, 'id' | 'slug' | 'titulaires' | 'communes'>[] = [
       {
@@ -89,17 +89,17 @@ describe('matrices', () => {
             id: newEntrepriseId(''),
             nom: 'titulaire1',
             adresse: 'ladresse1',
-            legalSiren: 'legalSiren1'
-          }
+            legalSiren: 'legalSiren1',
+          },
         ],
         slug: 'slug-titre-1',
         communes: [
           {
             id: '97310',
             nom: 'Roura',
-            departementId: '973'
-          }
-        ]
+            departementId: '973',
+          },
+        ],
       },
       {
         id: 'titre2',
@@ -108,22 +108,22 @@ describe('matrices', () => {
             id: newEntrepriseId(''),
             nom: 'titulaire2',
             adresse: 'ladresse2',
-            legalSiren: 'legalSiren2'
-          }
+            legalSiren: 'legalSiren2',
+          },
         ],
         slug: 'slug-titre-2',
         communes: [
           {
             id: '97358',
             nom: 'Saint-Élie',
-            departementId: '973'
+            departementId: '973',
           },
           {
             id: '97312',
             nom: 'Sinnamary',
-            departementId: '973'
-          }
-        ]
+            departementId: '973',
+          },
+        ],
       },
       {
         id: 'titre3',
@@ -134,18 +134,18 @@ describe('matrices', () => {
             adresse: 'ladresse3',
             codePostal: checkCodePostal('97311'),
             commune: 'Saint-Laurent-du-Maroni',
-            legalSiren: 'legalSiren3'
-          }
+            legalSiren: 'legalSiren3',
+          },
         ],
         slug: 'slug-titre-3',
         communes: [
           {
             id: '97311',
             nom: 'Saint-Laurent-du-Maroni',
-            departementId: '973'
-          }
-        ]
-      }
+            departementId: '973',
+          },
+        ],
+      },
     ]
 
     expect(
@@ -183,10 +183,10 @@ describe('matrices', () => {
           souf: { tarifCommunal: 3.1, tarifDepartemental: 1.7 },
           uran: { tarifCommunal: 323.7, tarifDepartemental: 64.3 },
           wolf: { tarifCommunal: 148.7, tarifDepartemental: 29.1 },
-          zinc: { tarifCommunal: 545.3, tarifDepartemental: 111.4 }
+          zinc: { tarifCommunal: 545.3, tarifDepartemental: 111.4 },
         },
         tarifTaxeMinierePME: 498.06,
-        tarifTaxeMiniereAutre: 123.97
+        tarifTaxeMiniereAutre: 123.97,
       })
     ).toMatchSnapshot()
   })

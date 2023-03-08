@@ -1,12 +1,5 @@
 const fieldsOrderDesc = ['etablissements', 'demarches', 'activites']
-const fieldsOrderAsc = [
-  'domaines',
-  'points',
-  'references',
-  'etapesTypes',
-  'titresTypes',
-  'titresTypesEtapesTypes'
-]
+const fieldsOrderAsc = ['domaines', 'points', 'references', 'etapesTypes', 'titresTypes', 'titresTypesEtapesTypes']
 const fieldsToRemove = ['coordonnees', 'incertitudes', 'heritageProps']
 const titreFieldsToRemove: string[] = ['geojsonCentre', 'references']
 const geoFieldsToReplace = ['geojsonPoints', 'geojsonMultiPolygon']
@@ -20,18 +13,13 @@ const graphTitreAdministrationsFormat = (fields: IFields, type: string) => {
   if (!fields.administrations) return
 
   fields[`administrations${type}`] = {
-    ...fields.administrations
+    ...fields.administrations,
   }
 }
 
 // ajoute des propriétés requises par /database/queries/_format
 export const fieldsFormat = (fields: IFields, parent: string) => {
-  const isParentTitre = [
-    'titres',
-    'titre',
-    'amodiataireTitres',
-    'titulaireTitres'
-  ].includes(parent)
+  const isParentTitre = ['titres', 'titre', 'amodiataireTitres', 'titulaireTitres'].includes(parent)
 
   // ajoute la propriété `titreType` sur les démarches
   if (fields.demarches && !fields.demarches.titreType) {
@@ -46,11 +34,7 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
 
   // ajoute la propriété `etapesTypes` sur les démarches
   // pour pouvoir récupérer les types spécifiques
-  if (
-    fields.demarches &&
-    fields.demarches.type &&
-    !fields.demarches.type.etapesTypes
-  ) {
+  if (fields.demarches && fields.demarches.type && !fields.demarches.type.etapesTypes) {
     fields.demarches.type.etapesTypes = { id: {} }
   }
 
@@ -144,11 +128,7 @@ export const fieldsFormat = (fields: IFields, parent: string) => {
   // on a besoin des activités si elles sont absentes
   // pour calculer le nombre d'activités par type
   if (!fields.activites) {
-    if (
-      fields.activitesDeposees ||
-      fields.activitesEnConstruction ||
-      fields.activitesAbsentes
-    ) {
+    if (fields.activitesDeposees || fields.activitesEnConstruction || fields.activitesAbsentes) {
       fields.activites = { id: {} }
     }
   }

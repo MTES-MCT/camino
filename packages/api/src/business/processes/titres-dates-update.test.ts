@@ -8,19 +8,19 @@ import { toCaminoDate } from 'camino-common/src/date.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres', () => ({
   titreUpdate: vi.fn().mockResolvedValue(true),
-  titresGet: vi.fn()
+  titresGet: vi.fn(),
 }))
 
 vi.mock('../rules/titre-date-fin-find', () => ({
-  titreDateFinFind: vi.fn()
+  titreDateFinFind: vi.fn(),
 }))
 
 vi.mock('../rules/titre-date-debut-find', () => ({
-  titreDateDebutFind: vi.fn()
+  titreDateDebutFind: vi.fn(),
 }))
 
 vi.mock('../rules/titre-date-demande-find', () => ({
-  titreDateDemandeFind: vi.fn()
+  titreDateDemandeFind: vi.fn(),
 }))
 
 const titresGetMock = vi.mocked(titresGet, true)
@@ -48,8 +48,8 @@ describe("dates d'un titre", () => {
         id: 'titre-type-id',
         dateFin: '2019-01-01',
         dateDebut: null,
-        dateDemande: null
-      }
+        dateDemande: null,
+      },
     ] as Titres[])
     titreDateFinFindMock.mockReturnValue('2019-01-01')
     titreDateDebutFindMock.mockReturnValue(null)

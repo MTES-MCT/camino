@@ -13,11 +13,7 @@
     @params-update="paramsUpdate"
   >
     <template v-if="utilisateurs.length" #downloads>
-      <Downloads
-        :formats="['csv', 'xlsx', 'ods']"
-        section="utilisateurs"
-        class="flex-right full-x"
-      />
+      <Downloads :formats="['csv', 'xlsx', 'ods']" section="utilisateurs" class="flex-right full-x" />
     </template>
   </liste>
 </template>
@@ -27,10 +23,7 @@ import Liste from './_common/liste.vue'
 import { Downloads } from './_common/downloads'
 
 import filtres from './utilisateurs/filtres'
-import {
-  utilisateursColonnes,
-  utilisateursLignesBuild
-} from './utilisateurs/table'
+import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
 import { canReadUtilisateurs } from 'camino-common/src/permissions/utilisateurs'
 
 export default {
@@ -42,7 +35,7 @@ export default {
     return {
       filtres,
       colonnes: utilisateursColonnes,
-      visible: false
+      visible: false,
     }
   },
 
@@ -61,7 +54,7 @@ export default {
 
     metas() {
       return {
-        ...this.$store.state.utilisateurs.metas
+        ...this.$store.state.utilisateurs.metas,
       }
     },
 
@@ -75,7 +68,7 @@ export default {
 
     initialized() {
       return this.$store.state.utilisateurs.initialized
-    }
+    },
   },
 
   watch: {
@@ -84,8 +77,8 @@ export default {
     '$route.query': {
       handler: function () {
         this.$store.dispatch('utilisateurs/routeUpdate')
-      }
-    }
+      },
+    },
   },
 
   async created() {
@@ -108,7 +101,7 @@ export default {
 
     async paramsUpdate(options) {
       await this.$store.dispatch(`utilisateurs/paramsSet`, options)
-    }
-  }
+    },
+  },
 }
 </script>

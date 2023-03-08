@@ -2,20 +2,10 @@ import fs from 'fs'
 import decamelize from 'decamelize'
 import camelcase from 'camelcase'
 
-import {
-  IEtapeType,
-  ITitre,
-  ITitreDemarche,
-  ITitreEtape,
-  ITitreType,
-  ITitreTypeDemarcheTypeEtapeType
-} from '../../types.js'
+import { IEtapeType, ITitre, ITitreDemarche, ITitreEtape, ITitreType, ITitreTypeDemarcheTypeEtapeType } from '../../types.js'
 
 import { titreDemarcheEtatValidate } from '../validations/titre-demarche-etat-validate.js'
-import {
-  demarcheDefinitionFind,
-  isDemarcheDefinitionRestriction
-} from './definitions.js'
+import { demarcheDefinitionFind, isDemarcheDefinitionRestriction } from './definitions.js'
 import { contenusTitreEtapesIdsFind } from '../utils/props-titre-etapes-ids-find.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { newDemarcheId } from '../../database/models/_format/id-create.js'
@@ -31,18 +21,15 @@ test('teste EtatsValidate', () => {
 
 vi.mock('../../database/models/_format/titre-contenu', () => ({
   __esModule: true,
-  titreContenuFormat: vi.fn()
+  titreContenuFormat: vi.fn(),
 }))
 
 vi.mock('../utils/props-titre-etapes-ids-find', () => ({
   __esModule: true,
-  contenusTitreEtapesIdsFind: vi.fn()
+  contenusTitreEtapesIdsFind: vi.fn(),
 }))
 
-const contenusTitreEtapesIdsFindMock = vi.mocked(
-  contenusTitreEtapesIdsFind,
-  true
-)
+const contenusTitreEtapesIdsFindMock = vi.mocked(contenusTitreEtapesIdsFind, true)
 
 const elementsGet = <T>(fileName: string): T[] => {
   fileName = decamelize(fileName, { separator: '-' })
@@ -59,49 +46,28 @@ const elementsGet = <T>(fileName: string): T[] => {
 }
 
 export const etapesTypesGet = (demarcheTypeId: string, titreTypeId: string) => {
-  const titresTypesDemarchesTypesEtapesTypes =
-    elementsGet<ITitreTypeDemarcheTypeEtapeType>(
-      'titres-types--demarches-types--etapes-types.json'
-    ).filter(
-      tde =>
-        tde.titreTypeId === titreTypeId && tde.demarcheTypeId === demarcheTypeId
-    )
-
-  return elementsGet<IEtapeType>('etapes-types.json').reduce(
-    (acc, etapeType) => {
-      const tde = titresTypesDemarchesTypesEtapesTypes.find(
-        tde => tde.etapeTypeId === etapeType.id
-      )
-
-      if (tde) {
-        etapeType.titreTypeId = tde.titreTypeId
-        etapeType.ordre = tde.ordre
-        acc.push(etapeType)
-      }
-
-      return acc
-    },
-    [] as IEtapeType[]
+  const titresTypesDemarchesTypesEtapesTypes = elementsGet<ITitreTypeDemarcheTypeEtapeType>('titres-types--demarches-types--etapes-types.json').filter(
+    tde => tde.titreTypeId === titreTypeId && tde.demarcheTypeId === demarcheTypeId
   )
+
+  return elementsGet<IEtapeType>('etapes-types.json').reduce((acc, etapeType) => {
+    const tde = titresTypesDemarchesTypesEtapesTypes.find(tde => tde.etapeTypeId === etapeType.id)
+
+    if (tde) {
+      etapeType.titreTypeId = tde.titreTypeId
+      etapeType.ordre = tde.ordre
+      acc.push(etapeType)
+    }
+
+    return acc
+  }, [] as IEtapeType[])
 }
 
-export const demarcheEtatsValidate = (
-  demarcheTypeId: DemarcheTypeId,
-  titreTypeId: TitreTypeId,
-  date: string
-) => {
-  return (
-    titreDemarcheEtapes: Partial<ITitreEtape>[],
-    titre: Partial<ITitre> = {}
-  ) => {
+export const demarcheEtatsValidate = (demarcheTypeId: DemarcheTypeId, titreTypeId: TitreTypeId, date: string) => {
+  return (titreDemarcheEtapes: Partial<ITitreEtape>[], titre: Partial<ITitre> = {}) => {
     contenusTitreEtapesIdsFindMock.mockReturnValue({})
 
-    const demarcheDefinitions = demarcheDefinitionFind(
-      titreTypeId,
-      demarcheTypeId,
-      [{ typeId: 'mfr', date: toCaminoDate(date) }],
-      newDemarcheId()
-    )
+    const demarcheDefinitions = demarcheDefinitionFind(titreTypeId, demarcheTypeId, [{ typeId: 'mfr', date: toCaminoDate(date) }], newDemarcheId())
     if (!isDemarcheDefinitionRestriction(demarcheDefinitions)) {
       throw new Error('cette démarche n’a pas de restrictions')
     }
@@ -113,17 +79,11 @@ export const demarcheEtatsValidate = (
       typeId: titreTypeId,
       type: {
         id: titreTypeId,
-        contenuIds: []
+        contenuIds: [],
       } as unknown as ITitreType,
-      demarches: [titreDemarche] as ITitreDemarche[]
+      demarches: [titreDemarche] as ITitreDemarche[],
     }
 
-    return titreDemarcheEtatValidate(
-      demarcheDefinitionRestrictions!,
-      demarcheTypeId,
-      titreDemarche,
-      titreDemarcheEtapes as ITitreEtape[],
-      titre as ITitre
-    )
+    return titreDemarcheEtatValidate(demarcheDefinitionRestrictions!, demarcheTypeId, titreDemarche, titreDemarcheEtapes as ITitreEtape[], titre as ITitre)
   }
 }

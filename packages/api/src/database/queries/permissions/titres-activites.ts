@@ -7,57 +7,35 @@ import Documents from '../../models/documents.js'
 import TitresActivites from '../../models/titres-activites.js'
 
 import { documentsQueryModify } from './documents.js'
-import {
-  administrationsTitresQuery,
-  administrationsActivitesModify
-} from './administrations.js'
+import { administrationsTitresQuery, administrationsActivitesModify } from './administrations.js'
 import { entreprisesTitresQuery } from './entreprises.js'
-import {
-  isAdministration,
-  isAdministrationAdmin,
-  isAdministrationEditeur,
-  isEntreprise,
-  isSuper,
-  User
-} from 'camino-common/src/roles.js'
+import { isAdministration, isAdministrationAdmin, isAdministrationEditeur, isEntreprise, isSuper, User } from 'camino-common/src/roles.js'
 
 const activiteStatuts = [
   {
     id: 'abs',
-    name: 'activitesAbsentes'
+    name: 'activitesAbsentes',
   },
   {
     id: 'enc',
-    name: 'activitesEnConstruction'
+    name: 'activitesEnConstruction',
   },
   {
     id: 'dep',
-    name: 'activitesDeposees'
-  }
+    name: 'activitesDeposees',
+  },
 ]
 
-const titreActivitesCount = (
-  q: QueryBuilder<Titres, Titres | Titres[]>,
-  user: User
-) => {
+const titreActivitesCount = (q: QueryBuilder<Titres, Titres | Titres[]>, user: User) => {
   q.groupBy('titres.id')
 
   if (isSuper(user) || isAdministration(user) || isEntreprise(user)) {
-    const titresActivitesCountQuery = TitresActivites.query()
-      .alias('activitesCount')
-      .select('activitesCount.titreId')
-      .leftJoinRelated('titre')
+    const titresActivitesCountQuery = TitresActivites.query().alias('activitesCount').select('activitesCount.titreId').leftJoinRelated('titre')
 
     activiteStatuts.forEach(({ id, name }) => {
       q.select(`activitesCountJoin.${name}`)
 
-      titresActivitesCountQuery.select(
-        raw('count(??) FILTER (WHERE ?? = ?)', [
-          'activitesCount.activiteStatutId',
-          'activitesCount.activiteStatutId',
-          id
-        ]).as(name)
-      )
+      titresActivitesCountQuery.select(raw('count(??) FILTER (WHERE ?? = ?)', ['activitesCount.activiteStatutId', 'activitesCount.activiteStatutId', id]).as(name))
     })
 
     if (!isSuper(user)) {
@@ -67,21 +45,11 @@ const titreActivitesCount = (
           administrationsTitresQuery(user.administrationId, 'titre', {
             isGestionnaire: true,
             isAssociee: true,
-            isLocale: true
+            isLocale: true,
           })
             .leftJoin('administrations__activitesTypes as a_at', b => {
-              b.on(
-                knex.raw('?? = ??', [
-                  'a_at.administrationId',
-                  'administrations.id'
-                ])
-              )
-              b.andOn(
-                knex.raw('?? = ??', [
-                  'a_at.activiteTypeId',
-                  'activitesCount.typeId'
-                ])
-              )
+              b.on(knex.raw('?? = ??', ['a_at.administrationId', 'administrations.id']))
+              b.andOn(knex.raw('?? = ??', ['a_at.activiteTypeId', 'activitesCount.typeId']))
             })
             .whereRaw('?? is not true', ['a_at.lectureInterdit'])
         )
@@ -91,7 +59,7 @@ const titreActivitesCount = (
         titresActivitesCountQuery.whereExists(
           entreprisesTitresQuery(entreprisesIds, 'titre', {
             isTitulaire: true,
-            isAmodiataire: true
+            isAmodiataire: true,
           })
         )
       } else {
@@ -101,10 +69,7 @@ const titreActivitesCount = (
 
     titresActivitesCountQuery.groupBy('activitesCount.titreId')
 
-    q.leftJoin(
-      titresActivitesCountQuery.as('activitesCountJoin'),
-      raw('?? = ??', ['activitesCountJoin.titreId', 'titres.id'])
-    )
+    q.leftJoin(titresActivitesCountQuery.as('activitesCountJoin'), raw('?? = ??', ['activitesCountJoin.titreId', 'titres.id']))
   } else {
     // les utilisateurs non-authentifiés ou défaut ne peuvent voir aucune activité
     activiteStatuts.forEach(({ name }) => {
@@ -119,11 +84,7 @@ const titreActivitesCount = (
   return q
 }
 
-const titresActivitesQueryModify = (
-  q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>,
-  user: User,
-  select = true
-) => {
+const titresActivitesQueryModify = (q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user: User, select = true) => {
   if (select) {
     q.select('titresActivites.*')
   }
@@ -135,7 +96,7 @@ const titresActivitesQueryModify = (
       administrationsTitresQuery(user.administrationId, 'titre', {
         isGestionnaire: true,
         isAssociee: true,
-        isLocale: true
+        isLocale: true,
       }).modify(administrationsActivitesModify, { lecture: true })
     )
   } else if (isEntreprise(user) && user?.entreprises?.length) {
@@ -145,7 +106,7 @@ const titresActivitesQueryModify = (
     q.whereExists(
       entreprisesTitresQuery(entreprisesIds, 'titre', {
         isTitulaire: true,
-        isAmodiataire: true
+        isAmodiataire: true,
       })
     )
   } else if (!isSuper(user)) {
@@ -154,19 +115,13 @@ const titresActivitesQueryModify = (
   }
 
   q.modifyGraph('documents', b => {
-    documentsQueryModify(
-      b as QueryBuilder<Documents, Documents | Documents[]>,
-      user
-    )
+    documentsQueryModify(b as QueryBuilder<Documents, Documents | Documents[]>, user)
   })
 
   return q
 }
 
-const titresActivitesPropsQueryModify = (
-  q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>,
-  user: User
-) => {
+const titresActivitesPropsQueryModify = (q: QueryBuilder<TitresActivites, TitresActivites | TitresActivites[]>, user: User) => {
   q.select('titresActivites.*')
 
   if (isSuper(user)) {
@@ -176,11 +131,11 @@ const titresActivitesPropsQueryModify = (
       q.select(
         administrationsTitresQuery(user.administrationId, 'titre', {
           isGestionnaire: true,
-          isLocale: true
+          isLocale: true,
         })
           .modify(administrationsActivitesModify, {
             lecture: true,
-            modification: true
+            modification: true,
           })
           .select(raw('true'))
           .as('modification')
@@ -191,13 +146,7 @@ const titresActivitesPropsQueryModify = (
   } else if (isEntreprise(user) && user?.entreprises?.length) {
     // vérifie que l'utilisateur a les droits d'édition sur l'activité
     // l'activité doit avoir un statut `absente ou `en cours`
-    q.select(
-      raw('(case when ?? in (?, ?) then true else false end)', [
-        'titresActivites.activiteStatutId',
-        'abs',
-        'enc'
-      ]).as('modification')
-    )
+    q.select(raw('(case when ?? in (?, ?) then true else false end)', ['titresActivites.activiteStatutId', 'abs', 'enc']).as('modification'))
   }
 
   if (!isSuper(user)) {
@@ -209,8 +158,4 @@ const titresActivitesPropsQueryModify = (
   return q
 }
 
-export {
-  titresActivitesQueryModify,
-  titresActivitesPropsQueryModify,
-  titreActivitesCount
-}
+export { titresActivitesQueryModify, titresActivitesPropsQueryModify, titreActivitesCount }

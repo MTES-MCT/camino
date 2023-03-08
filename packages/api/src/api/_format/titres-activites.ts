@@ -5,11 +5,7 @@ import { titreSectionsFormat } from './titres-sections.js'
 import { titreActiviteCompleteCheck } from '../../business/validations/titre-activite-complete-check.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
-export const titreActiviteContenuFormat = (
-  sections: ISection[],
-  contenu: IContenu,
-  operation: 'read' | 'write'
-) => {
+export const titreActiviteContenuFormat = (sections: ISection[], contenu: IContenu, operation: 'read' | 'write') => {
   const section = sections.find(s => s.id === 'substancesFiscales')
 
   if (section?.elements?.length && contenu?.substancesFiscales) {
@@ -20,10 +16,7 @@ export const titreActiviteContenuFormat = (
       const ratio = element?.referenceUniteRatio
 
       if (ratio) {
-        contenu!.substancesFiscales[id] =
-          operation === 'read'
-            ? (contenu!.substancesFiscales[id] as number) / ratio
-            : (contenu!.substancesFiscales[id] as number) * ratio
+        contenu!.substancesFiscales[id] = operation === 'read' ? (contenu!.substancesFiscales[id] as number) / ratio : (contenu!.substancesFiscales[id] as number) * ratio
       }
     })
   }
@@ -41,16 +34,8 @@ export const titreActiviteFormat = (ta: ITitreActivite) => {
     ta.contenu = titreActiviteContenuFormat(ta.sections, ta.contenu, 'read')
   }
 
-  if (
-    ta.activiteStatutId === ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION &&
-    ta.modification
-  ) {
-    ta.deposable = titreActiviteCompleteCheck(
-      ta.sections,
-      ta.contenu,
-      ta.documents,
-      ta.type!.documentsTypes
-    )
+  if (ta.activiteStatutId === ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION && ta.modification) {
+    ta.deposable = titreActiviteCompleteCheck(ta.sections, ta.contenu, ta.documents, ta.type!.documentsTypes)
   }
 
   return ta

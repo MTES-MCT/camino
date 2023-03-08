@@ -9,9 +9,5 @@ export type Props = {
 } & HTMLAttributes
 
 export function Statut(props: Props) {
-  return (
-    <Pill color={`bg-${props.color ?? 'neutral'}`}>
-      {props.nom ?? 'indéfini'}
-    </Pill>
-  )
+  return <Pill color={`bg-${props.color ?? 'neutral'}`}>{props.nom ?? 'indéfini'}</Pill>
 }

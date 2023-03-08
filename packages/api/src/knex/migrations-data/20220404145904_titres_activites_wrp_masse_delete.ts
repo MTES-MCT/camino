@@ -13,14 +13,10 @@ export const up = async (knex: Knex) => {
     }
 
     if (activite.sections) {
-      const section = activite.sections.find(
-        (s: { id: string }) => s.id === 'renseignementsProduction'
-      )
+      const section = activite.sections.find((s: { id: string }) => s.id === 'renseignementsProduction')
 
       if (section) {
-        section.elements = section.elements.filter(
-          (element: { id: string }) => element.id !== 'masseGranulatsExtrait'
-        )
+        section.elements = section.elements.filter((element: { id: string }) => element.id !== 'masseGranulatsExtrait')
 
         updated = true
       }

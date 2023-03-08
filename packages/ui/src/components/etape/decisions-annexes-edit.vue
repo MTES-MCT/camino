@@ -13,9 +13,9 @@ export default {
   components: { SectionsEdit },
 
   props: {
-    etape: { type: Object, required: true }
+    etape: { type: Object, required: true },
   },
 
-  emits: ['complete-update']
+  emits: ['complete-update'],
 }
 </script>

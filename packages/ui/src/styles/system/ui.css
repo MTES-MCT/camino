@@ -135,13 +135,11 @@
 }
 
 .shadow {
-  box-shadow: var(--unit-xs) var(--unit-xs) var(--unit)
-    var(--color-neutral-transparent);
+  box-shadow: var(--unit-xs) var(--unit-xs) var(--unit) var(--color-neutral-transparent);
 }
 
 .shadow-inset {
-  box-shadow: inset var(--unit-xs) var(--unit-xs) var(--unit)
-    var(--color-neutral);
+  box-shadow: inset var(--unit-xs) var(--unit-xs) var(--unit) var(--color-neutral);
 }
 
 .fixed-width {

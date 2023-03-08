@@ -5,8 +5,8 @@ const meta: Meta = {
   title: 'Components/Ui/Pill',
   component: Pill,
   argTypes: {
-    color: String
-  }
+    color: String,
+  },
 }
 export default meta
 
@@ -15,7 +15,7 @@ const Template: Story<Props> = (args: Props) => ({
   setup() {
     return { args }
   },
-  template: '<Pill v-bind="args">Hello</Pill>'
+  template: '<Pill v-bind="args">Hello</Pill>',
 })
 
 export const Primary = Template.bind({})
@@ -23,6 +23,6 @@ export const Primary = Template.bind({})
 export const Error = Template.bind(
   {},
   {
-    color: 'bg-error'
+    color: 'bg-error',
   }
 )

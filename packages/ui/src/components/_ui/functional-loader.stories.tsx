@@ -4,7 +4,7 @@ import { AsyncData } from '@/api/client-rest'
 
 const meta: Meta = {
   title: 'Components/UI/FunctionalLoader',
-  component: LoadingElement
+  component: LoadingElement,
 }
 export default meta
 
@@ -15,10 +15,7 @@ const error: AsyncData<string> = { status: 'ERROR', message: 'Erreur' }
 export const All: StoryFn = args => (
   <div>
     <LoadingElement data={loading} renderItem={() => null} />
-    <LoadingElement
-      data={loaded}
-      renderItem={item => <>La valeur de l’item est : {item}</>}
-    />
+    <LoadingElement data={loaded} renderItem={item => <>La valeur de l’item est : {item}</>} />
     <LoadingElement data={error} renderItem={() => null} />
   </div>
 )

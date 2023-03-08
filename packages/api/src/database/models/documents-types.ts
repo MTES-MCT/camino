@@ -15,8 +15,8 @@ class DocumentsTypes extends Model {
     properties: {
       id: { type: 'string', maxLength: 3 },
       nom: { type: 'string', maxLength: 128 },
-      description: { type: ['string', 'null'] }
-    }
+      description: { type: ['string', 'null'] },
+    },
   }
 
   static relationMappings = () => ({
@@ -28,11 +28,11 @@ class DocumentsTypes extends Model {
         through: {
           from: 'activitesTypes__documentsTypes.documentTypeId',
           to: 'activitesTypes__documentsTypes.activiteTypeId',
-          extra: ['optionnel']
+          extra: ['optionnel'],
         },
-        to: 'activitesTypes.id'
-      }
-    }
+        to: 'activitesTypes.id',
+      },
+    },
   })
 }
 

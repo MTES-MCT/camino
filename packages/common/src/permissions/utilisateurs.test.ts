@@ -10,7 +10,7 @@ const users: Record<Role, User> = {
   lecteur: { ...testBlankUser, role: 'lecteur', administrationId: 'aut-97300-01' },
   entreprise: { ...testBlankUser, role: 'entreprise', entreprises: [] },
   'bureau d’études': { ...testBlankUser, role: 'bureau d’études', entreprises: [] },
-  defaut: { ...testBlankUser, role: 'defaut' }
+  defaut: { ...testBlankUser, role: 'defaut' },
 }
 
 test('getAssignableRoles', () => {

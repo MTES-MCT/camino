@@ -7,7 +7,7 @@ const apiUrl = '/apiUrl'
 
 const uploadCall = async (file, progressCb) => {
   const uppy = new Uppy({
-    autoProceed: true
+    autoProceed: true,
   })
 
   uppy.use(Tus, {
@@ -18,12 +18,12 @@ const uploadCall = async (file, progressCb) => {
     },
     onChunkComplete: (_, bytesAccepted, bytesTotal) => {
       progressCb((bytesAccepted / bytesTotal) * 100)
-    }
+    },
   })
 
   uppy.addFile({
     name: file.name,
-    data: file
+    data: file,
   })
 
   progressCb(0)

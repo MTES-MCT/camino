@@ -18,10 +18,7 @@ const titreDemarchePublicLectureFind = (
   // si le type d'étape est un classement sans suite
   // et le type de titre n'est ni ARM ni AXM
   // alors la démarche n'est pas publique
-  if (
-    titreEtape.typeId === 'css' &&
-    (!titreTypeId || !['arm', 'axm'].includes(titreTypeId))
-  ) {
+  if (titreEtape.typeId === 'css' && (!titreTypeId || !['arm', 'axm'].includes(titreTypeId))) {
     return false
   }
 
@@ -29,11 +26,7 @@ const titreDemarchePublicLectureFind = (
   // et que le type de titre n'est pas ARM
   // et que la démarche ne peut contenir de mise en concurrence au JORF ou JOUE
   // alors la démarche est publique
-  if (
-    titreEtape.typeId === 'mcr' &&
-    (!titreTypeId || titreTypeId !== 'arm') &&
-    !demarcheTypeEtapesTypes.find(et => ['anf', 'ane'].includes(et.id))
-  ) {
+  if (titreEtape.typeId === 'mcr' && (!titreTypeId || titreTypeId !== 'arm') && !demarcheTypeEtapesTypes.find(et => ['anf', 'ane'].includes(et.id))) {
     return true
   }
 
@@ -60,31 +53,21 @@ const titreDemarchePublicLectureFind = (
   //    ou avis de la commission des ARM (si pas de saisine)
   //    ou décision de l'ONF (étape historique)
   // alors la démarche est publique
-  if (
-    titreTypeId === 'arm' &&
-    ['sca', 'aca', 'def'].includes(titreEtape.typeId)
-  ) {
+  if (titreTypeId === 'arm' && ['sca', 'aca', 'def'].includes(titreEtape.typeId)) {
     return true
   }
 
   // si le type de titre est ARM ou AXM
   // et que le type d'étape est désistement du demandeur
   // alors la démarche est publique
-  if (
-    titreTypeId &&
-    ['arm', 'axm'].includes(titreTypeId) &&
-    titreEtape.typeId === 'des'
-  ) {
+  if (titreTypeId && ['arm', 'axm'].includes(titreTypeId) && titreEtape.typeId === 'des') {
     return true
   }
 
   // si le type d'étape est décision implicite
   //    ou décision de l'administration
   // et que le statut est rejeté
-  if (
-    ['dim', 'dex'].includes(titreEtape.typeId) &&
-    titreEtape.statutId === 'rej'
-  ) {
+  if (['dim', 'dex'].includes(titreEtape.typeId) && titreEtape.statutId === 'rej') {
     //   si le type de titre est AXM
     //   alors la démarche est publique
     //   sinon la démarche n'est pas (plus) publique
@@ -96,10 +79,7 @@ const titreDemarchePublicLectureFind = (
   //    ou publication au JORF
   // et que le statut est accepté
   // alors la démarche est publique
-  if (
-    ['dim', 'dex', 'dpu'].includes(titreEtape.typeId) &&
-    titreEtape.statutId === 'acc'
-  ) {
+  if (['dim', 'dex', 'dpu'].includes(titreEtape.typeId) && titreEtape.statutId === 'acc') {
     return true
   }
 
@@ -128,11 +108,7 @@ const titreDemarchePublicLectureFind = (
 
   // Si le type de titre est ARM et que le type de démarche est renonciation
   // et que l’expertise de l’onf est cours, ou si la démarche a été désistée ou si classée sans suite
-  if (
-    titreTypeId === 'arm' &&
-    ['ren', 'pro'].includes(demarcheTypeId) &&
-    ['eof', 'css', 'des'].includes(titreEtape.typeId)
-  ) {
+  if (titreTypeId === 'arm' && ['ren', 'pro'].includes(demarcheTypeId) && ['eof', 'css', 'des'].includes(titreEtape.typeId)) {
     return true
   }
 
@@ -149,32 +125,12 @@ const titreDemarchePublicLectureFind = (
   // clôture de l’enquête publique (epc)
 
   const domaineId = titreTypeId ? titreTypeId.substr(2) : null
-  if (
-    domaineId &&
-    ['m', 'w', 'c'].includes(domaineId) &&
-    [
-      'ane',
-      'anf',
-      'dex',
-      'dpu',
-      'dup',
-      'rpu',
-      'ppu',
-      'ppc',
-      'epu',
-      'epc'
-    ].includes(titreEtape.typeId)
-  ) {
+  if (domaineId && ['m', 'w', 'c'].includes(domaineId) && ['ane', 'anf', 'dex', 'dpu', 'dup', 'rpu', 'ppu', 'ppc', 'epu', 'epc'].includes(titreEtape.typeId)) {
     return true
   }
 
   // Pour les PRM d’un titre en survie provisoire, les demandes de prolongations sont public
-  if (
-    titreTypeId === 'prm' &&
-    titreEtape.typeId === 'mdp' &&
-    ['pr1', 'pr2'].includes(demarcheTypeId) &&
-    titreInSurvieProvisoire(demarches)
-  ) {
+  if (titreTypeId === 'prm' && titreEtape.typeId === 'mdp' && ['pr1', 'pr2'].includes(demarcheTypeId) && titreInSurvieProvisoire(demarches)) {
     return true
   }
 
@@ -205,25 +161,12 @@ export const titreDemarchePublicFind = (
   const publicLecture =
     titreId === 'WQaZgPfDcQw9tFliMgBIDH3Z'
       ? false
-      : titreEtapes.reduce(
-          (publicLecture, titreEtape) =>
-            titreDemarchePublicLectureFind(
-              publicLecture,
-              demarcheTypeId,
-              demarcheTypeEtapesTypes,
-              titreEtape,
-              titreDemarches,
-              titreTypeId
-            ),
-          false
-        )
+      : titreEtapes.reduce((publicLecture, titreEtape) => titreDemarchePublicLectureFind(publicLecture, demarcheTypeId, demarcheTypeEtapesTypes, titreEtape, titreDemarches, titreTypeId), false)
 
   // les entreprises titulaires ou amodiataires peuvent voir la démarche
   // si la démarche est visible au public
   // ou si la démarche contient une demande ou une décision de l'administration unilatérale
-  const entreprisesLecture =
-    publicLecture ||
-    titreEtapes.some(te => ['mfr', 'dex', 'dux'].includes(te.typeId))
+  const entreprisesLecture = publicLecture || titreEtapes.some(te => ['mfr', 'dex', 'dux'].includes(te.typeId))
 
   return { publicLecture, entreprisesLecture }
 }

@@ -1,30 +1,9 @@
-import {
-  BaseActionObject,
-  interpret,
-  ResolveTypegenMeta,
-  ServiceMap,
-  State,
-  StateMachine,
-  TypegenDisabled
-} from 'xstate'
+import { BaseActionObject, interpret, ResolveTypegenMeta, ServiceMap, State, StateMachine, TypegenDisabled } from 'xstate'
 import { EventObject } from 'xstate/lib/types.js'
-import {
-  CaminoCommonContext,
-  DBEtat,
-  Etape,
-  Intervenant,
-  intervenants,
-  tags
-} from './machine-common.js'
-import {
-  DemarchesStatutsIds,
-  DemarcheStatutId
-} from 'camino-common/src/static/demarchesStatuts.js'
+import { CaminoCommonContext, DBEtat, Etape, Intervenant, intervenants, tags } from './machine-common.js'
+import { DemarchesStatutsIds, DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 
-export abstract class CaminoMachine<
-  CaminoContext extends CaminoCommonContext,
-  CaminoEvent extends EventObject
-> {
+export abstract class CaminoMachine<CaminoContext extends CaminoCommonContext, CaminoEvent extends EventObject> {
   public readonly machine: StateMachine<
     CaminoContext,
     any,
@@ -32,12 +11,7 @@ export abstract class CaminoMachine<
     { value: any; context: CaminoContext },
     BaseActionObject,
     ServiceMap,
-    ResolveTypegenMeta<
-      TypegenDisabled,
-      CaminoEvent,
-      BaseActionObject,
-      ServiceMap
-    >
+    ResolveTypegenMeta<TypegenDisabled, CaminoEvent, BaseActionObject, ServiceMap>
   >
 
   private readonly trad: { [key in CaminoEvent['type']]: DBEtat }
@@ -51,12 +25,7 @@ export abstract class CaminoMachine<
       { value: any; context: CaminoContext },
       BaseActionObject,
       ServiceMap,
-      ResolveTypegenMeta<
-        TypegenDisabled,
-        CaminoEvent,
-        BaseActionObject,
-        ServiceMap
-      >
+      ResolveTypegenMeta<TypegenDisabled, CaminoEvent, BaseActionObject, ServiceMap>
     >,
     trad: { [key in CaminoEvent['type']]: DBEtat }
   ) {
@@ -67,21 +36,17 @@ export abstract class CaminoMachine<
 
   abstract eventFrom(etape: Etape): CaminoEvent
 
-  protected caminoXStateEventToEtapes(
-    event: CaminoEvent
-  ): Omit<Etape, 'date'>[] {
+  protected caminoXStateEventToEtapes(event: CaminoEvent): Omit<Etape, 'date'>[] {
     const dbEtat: DBEtat = this.trad[event.type as CaminoEvent['type']]
 
     return Object.values(dbEtat).map(({ etapeTypeId, etapeStatutId }) => ({
       etapeTypeId,
-      etapeStatutId
+      etapeStatutId,
     }))
   }
 
   // visibleForTesting
-  public toPotentialCaminoXStateEvent(
-    event: CaminoEvent['type']
-  ): CaminoEvent[] {
+  public toPotentialCaminoXStateEvent(event: CaminoEvent['type']): CaminoEvent[] {
     // related to https://github.com/microsoft/TypeScript/issues/46497  https://github.com/microsoft/TypeScript/issues/40803 :(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
@@ -94,9 +59,7 @@ export abstract class CaminoMachine<
   }
 
   public orderMachine(etapes: readonly Etape[]): readonly Etape[] {
-    const sortedEtapes = etapes
-      .slice()
-      .sort((a, b) => a.date.localeCompare(b.date))
+    const sortedEtapes = etapes.slice().sort((a, b) => a.date.localeCompare(b.date))
 
     const solution = this.findSolution(sortedEtapes)
 
@@ -107,10 +70,7 @@ export abstract class CaminoMachine<
     return solution
   }
 
-  private findSolution(
-    etapes: readonly Etape[],
-    temp: Etape[] = []
-  ): readonly Etape[] | undefined {
+  private findSolution(etapes: readonly Etape[], temp: Etape[] = []): readonly Etape[] | undefined {
     if (!etapes.length) {
       return this.isEtapesOk(temp) ? temp : undefined
     }
@@ -118,29 +78,18 @@ export abstract class CaminoMachine<
     const etape = etapes[0]
     // Une étape en conflit avec une autre peut être:
     // - une étape à la même date
-    const etapesAvecConflitPotentiel = etapes.filter(
-      ({ date }) => date === etape.date
-    )
+    const etapesAvecConflitPotentiel = etapes.filter(({ date }) => date === etape.date)
 
     if (etapesAvecConflitPotentiel.length) {
       for (let i = 0; i < etapesAvecConflitPotentiel.length; i++) {
         const e = etapesAvecConflitPotentiel[i]
         const tmp = [...temp]
         tmp.push(e)
-        const index = etapes.findIndex(
-          ({ date, etapeTypeId, etapeStatutId }) =>
-            date === e.date &&
-            etapeTypeId === e.etapeTypeId &&
-            etapeStatutId === e.etapeStatutId
-        )
+        const index = etapes.findIndex(({ date, etapeTypeId, etapeStatutId }) => date === e.date && etapeTypeId === e.etapeTypeId && etapeStatutId === e.etapeStatutId)
         if (index < 0) {
-          throw new Error(
-            `On n'arrive pas à trouver l'étape ${e} qu'on avait juste avant ${etapes}, cas impossible ?`
-          )
+          throw new Error(`On n'arrive pas à trouver l'étape ${e} qu'on avait juste avant ${etapes}, cas impossible ?`)
         }
-        const nextEtapes = etapes.filter(
-          (_element, elementIndex) => index !== elementIndex
-        )
+        const nextEtapes = etapes.filter((_element, elementIndex) => index !== elementIndex)
 
         if (this.isEtapesOk(tmp)) {
           const solution = this.findSolution(nextEtapes, tmp)
@@ -165,10 +114,7 @@ export abstract class CaminoMachine<
    * Cette function ne doit JAMAIS appeler orderMachine, car c'est orderMachine qui se sert de cette fonction.
    * Cette function ne fait que vérifier si les étapes qu'on lui donne sont valides dans l'ordre
    */
-  public isEtapesOk(
-    sortedEtapes: readonly Etape[],
-    initialState: State<CaminoContext, CaminoEvent> | null = null
-  ): boolean {
+  public isEtapesOk(sortedEtapes: readonly Etape[], initialState: State<CaminoContext, CaminoEvent> | null = null): boolean {
     if (sortedEtapes.length) {
       for (let i = 1; i < sortedEtapes.length; i++) {
         if (sortedEtapes[i - 1].date > sortedEtapes[i].date) {
@@ -194,18 +140,7 @@ export abstract class CaminoMachine<
     | { valid: false; etapeIndex: number }
     | {
         valid: true
-        state: State<
-          CaminoContext,
-          CaminoEvent,
-          any,
-          { value: any; context: CaminoContext },
-          ResolveTypegenMeta<
-            TypegenDisabled,
-            CaminoEvent,
-            BaseActionObject,
-            ServiceMap
-          >
-        >
+        state: State<CaminoContext, CaminoEvent, any, { value: any; context: CaminoContext }, ResolveTypegenMeta<TypegenDisabled, CaminoEvent, BaseActionObject, ServiceMap>>
       } {
     const service = interpret(this.machine)
 
@@ -237,35 +172,24 @@ export abstract class CaminoMachine<
   } {
     const value = this.goTo(etapes)
     if (!value.valid) {
-      console.error(
-        `impossible de trouver le demarcheStatus, cette liste d'étapes '${JSON.stringify(
-          etapes
-        )}' est incohérente à l'étape ${value.etapeIndex + 1}`
-      )
+      console.error(`impossible de trouver le demarcheStatus, cette liste d'étapes '${JSON.stringify(etapes)}' est incohérente à l'étape ${value.etapeIndex + 1}`)
 
       return {
         demarcheStatut: DemarchesStatutsIds.Indetermine,
-        publique: false
+        publique: false,
       }
     } else {
       return {
         demarcheStatut: value.state.context.demarcheStatut,
-        publique: value.state.context.visibilite === 'publique'
+        publique: value.state.context.visibilite === 'publique',
       }
     }
   }
 
-  private assertGoTo(
-    etapes: readonly Etape[],
-    initialState: State<CaminoContext, CaminoEvent> | null = null
-  ) {
+  private assertGoTo(etapes: readonly Etape[], initialState: State<CaminoContext, CaminoEvent> | null = null) {
     const value = this.goTo(etapes, initialState)
     if (!value.valid) {
-      throw new Error(
-        `Les étapes '${JSON.stringify(
-          etapes
-        )}' sont invalides à partir de l’étape ${value.etapeIndex}`
-      )
+      throw new Error(`Les étapes '${JSON.stringify(etapes)}' sont invalides à partir de l’étape ${value.etapeIndex}`)
     } else {
       return value.state
     }
@@ -287,9 +211,7 @@ export abstract class CaminoMachine<
       .flatMap(event => {
         const events = this.toPotentialCaminoXStateEvent(event)
 
-        return events
-          .filter(event => state.can(event))
-          .flatMap(event => this.caminoXStateEventToEtapes(event))
+        return events.filter(event => state.can(event)).flatMap(event => this.caminoXStateEventToEtapes(event))
       })
       .filter(event => event !== undefined)
   }

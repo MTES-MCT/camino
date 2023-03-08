@@ -2,18 +2,11 @@ import { CaminoDate } from 'camino-common/src/date'
 import { Section as ISection } from 'camino-common/src/titres'
 import { SectionElement } from './new-section-element'
 
-export const Sections = (props: {
-  sections: ISection[]
-}): JSX.Element | null => {
+export const Sections = (props: { sections: ISection[] }): JSX.Element | null => {
   return props.sections?.length ? (
     <>
       {props.sections.map(s => (
-        <NewSection
-          key={s.id}
-          entete={false}
-          section={s}
-          fileDownload={() => ({})}
-        />
+        <NewSection key={s.id} entete={false} section={s} fileDownload={() => ({})} />
       ))}
     </>
   ) : null
@@ -32,22 +25,15 @@ export const NewSection = (props: Props): JSX.Element => {
     e =>
       !props.date ||
       // si la date existe, vérifie qu'elle est dans les bornes de l'élément
-      ((!e.dateDebut || e.dateDebut < props.date) &&
-        (!e.dateFin || e.dateFin >= props.date))
+      ((!e.dateDebut || e.dateDebut < props.date) && (!e.dateFin || e.dateFin >= props.date))
   )
 
   return (
     <div>
-      {props.section.nom && entete ? (
-        <h4 class="cap-first">{props.section.nom}</h4>
-      ) : null}
+      {props.section.nom && entete ? <h4 class="cap-first">{props.section.nom}</h4> : null}
 
       {elements.map(e => (
-        <SectionElement
-          key={e.id}
-          element={e}
-          fileDownload={props.fileDownload}
-        />
+        <SectionElement key={e.id} element={e} fileDownload={props.fileDownload} />
       ))}
     </div>
   )

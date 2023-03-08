@@ -13,19 +13,14 @@
         class="mb"
         :class="{
           'tablet-blob-2-3': element.nom,
-          'tablet-blob-1': !element.nom
+          'tablet-blob-1': !element.nom,
         }"
         :propId="element.id"
         :sectionId="sectionId"
         :isArray="element.type === 'checkboxes'"
       >
         <template #write>
-          <SectionElementEdit
-            :contenu="contenu"
-            class="mb-s"
-            :element="element"
-            @update:contenu="newValue => $emit('update:contenu', newValue)"
-          />
+          <SectionElementEdit :contenu="contenu" class="mb-s" :element="element" @update:contenu="newValue => $emit('update:contenu', newValue)" />
         </template>
         <template #read>
           <p class="pt-s py-xs mb-0">
@@ -50,14 +45,14 @@ import SectionElementHeritageEdit from './section-element-heritage-edit.vue'
 export default {
   components: {
     SectionElementEdit,
-    SectionElementHeritageEdit
+    SectionElementHeritageEdit,
   },
 
   props: {
     contenu: { type: Object, required: true },
     element: { type: Object, required: true },
     heritage: { type: Object, required: true },
-    sectionId: { type: String, required: true }
+    sectionId: { type: String, required: true },
   },
   emits: ['update:contenu'],
 
@@ -67,11 +62,8 @@ export default {
     },
 
     valeur() {
-      return valeurFind(
-        this.element,
-        this.heritage[this.element.id].etape.contenu[this.sectionId]
-      )
-    }
-  }
+      return valeurFind(this.element, this.heritage[this.element.id].etape.contenu[this.sectionId])
+    },
+  },
 }
 </script>

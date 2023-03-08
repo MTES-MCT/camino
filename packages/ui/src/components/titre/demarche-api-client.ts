@@ -27,7 +27,7 @@ export const demarcheApiClient: DemarcheApiClient = {
         }
       }
     `)({
-      demarche
+      demarche,
     })
   },
 
@@ -39,7 +39,7 @@ export const demarcheApiClient: DemarcheApiClient = {
         }
       }
     `)({
-      demarche
+      demarche,
     })
   },
 
@@ -51,5 +51,5 @@ export const demarcheApiClient: DemarcheApiClient = {
         }
       }
     `)({ id: demarcheId })
-  }
+  },
 }

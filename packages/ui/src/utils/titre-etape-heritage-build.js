@@ -6,23 +6,17 @@ const etapeHeritageBuild = (stateEtape, apiEtape) => {
     type: apiEtape.type,
     statutId: '',
     incertitudes: { date: stateEtape.incertitudes.date },
-    titreDemarcheId: stateEtape.titreDemarcheId
+    titreDemarcheId: stateEtape.titreDemarcheId,
   }
 
   if (stateEtape.documents) {
     const documentsTypesIds = apiEtape.type.documentsTypes?.map(({ id }) => id)
-    newEtape.documents = stateEtape.documents.filter(document =>
-      documentsTypesIds?.includes(document.typeId)
-    )
+    newEtape.documents = stateEtape.documents.filter(document => documentsTypesIds?.includes(document.typeId))
   }
 
   if (stateEtape.justificatifs) {
-    const justificatifsTypesIds = apiEtape.type.justificatifsTypes?.map(
-      ({ id }) => id
-    )
-    newEtape.justificatifs = stateEtape.justificatifs.filter(justificatif =>
-      justificatifsTypesIds?.includes(justificatif.typeId)
-    )
+    const justificatifsTypesIds = apiEtape.type.justificatifsTypes?.map(({ id }) => id)
+    newEtape.justificatifs = stateEtape.justificatifs.filter(justificatif => justificatifsTypesIds?.includes(justificatif.typeId))
   }
 
   // si
@@ -58,10 +52,7 @@ const etapeHeritageBuild = (stateEtape, apiEtape) => {
     newEtape.geoSystemeOpposableId = stateEtape.geoSystemeOpposableId
   }
 
-  if (
-    apiEtape.heritageContenu &&
-    Object.keys(apiEtape.heritageContenu).length
-  ) {
+  if (apiEtape.heritageContenu && Object.keys(apiEtape.heritageContenu).length) {
     Object.keys(apiEtape.heritageContenu).forEach(sectionId => {
       if (Object.keys(apiEtape.heritageContenu[sectionId]).length) {
         Object.keys(apiEtape.heritageContenu[sectionId]).forEach(elementId => {
@@ -81,30 +72,18 @@ const etapeHeritageBuild = (stateEtape, apiEtape) => {
             newEtape.heritageContenu[sectionId] = {}
           }
 
-          if (
-            stateEtape.heritageContenu &&
-            stateEtape.heritageContenu[sectionId] &&
-            stateEtape.heritageContenu[sectionId][elementId]
-          ) {
-            if (
-              stateEtape.contenu &&
-              stateEtape.contenu[sectionId] &&
-              stateEtape.contenu[sectionId][elementId]
-            ) {
-              newEtape.contenu[sectionId][elementId] =
-                stateEtape.contenu[sectionId][elementId]
+          if (stateEtape.heritageContenu && stateEtape.heritageContenu[sectionId] && stateEtape.heritageContenu[sectionId][elementId]) {
+            if (stateEtape.contenu && stateEtape.contenu[sectionId] && stateEtape.contenu[sectionId][elementId]) {
+              newEtape.contenu[sectionId][elementId] = stateEtape.contenu[sectionId][elementId]
             }
 
-            newEtape.heritageContenu[sectionId][elementId] =
-              stateEtape.heritageContenu[sectionId][elementId]
+            newEtape.heritageContenu[sectionId][elementId] = stateEtape.heritageContenu[sectionId][elementId]
           } else {
             if (apiEtape.contenu[sectionId]) {
-              newEtape.contenu[sectionId][elementId] =
-                apiEtape.contenu[sectionId][elementId]
+              newEtape.contenu[sectionId][elementId] = apiEtape.contenu[sectionId][elementId]
             }
 
-            newEtape.heritageContenu[sectionId][elementId] =
-              apiEtape.heritageContenu[sectionId][elementId]
+            newEtape.heritageContenu[sectionId][elementId] = apiEtape.heritageContenu[sectionId][elementId]
           }
         })
       }

@@ -17,24 +17,11 @@ export const DateEdit: FunctionalComponent<Props> = props => {
         <h5>Date</h5>
       </div>
       <div class="tablet-blob-2-3">
-        <InputDate
-          dateChanged={props.onDateChanged}
-          initialValue={props.date}
-          class="mb-s"
-        />
+        <InputDate dateChanged={props.onDateChanged} initialValue={props.date} class="mb-s" />
         <div class="h6">
           {props.date ? (
             <label>
-              <input
-                checked={props.incertitude}
-                onChange={event =>
-                  isEventWithTarget(event)
-                    ? props.onIncertitudeChanged(event.target.checked)
-                    : null
-                }
-                type="checkbox"
-                class="mr-xs"
-              />
+              <input checked={props.incertitude} onChange={event => (isEventWithTarget(event) ? props.onIncertitudeChanged(event.target.checked) : null)} type="checkbox" class="mr-xs" />
               Incertain
             </label>
           ) : null}

@@ -4,24 +4,12 @@
       <div class="tablet-blob-1-4">
         <h5>
           Périmètre
-          <Tag
-            v-if="incertitude"
-            :mini="true"
-            color="bg-info"
-            class="ml-xs"
-            text="Incertain"
-          />
+          <Tag v-if="incertitude" :mini="true" color="bg-info" class="ml-xs" text="Incertain" />
         </h5>
       </div>
 
       <div class="tablet-blob-3-4">
-        <Perimetre
-          :titreTypeId="titreTypeId"
-          :points="etape.points"
-          :geojsonMultiPolygon="geojsonMultiPolygon"
-          :tabId="tabId"
-          :tabUpdate="tabUpdate"
-        />
+        <Perimetre :titreTypeId="titreTypeId" :points="etape.points" :geojsonMultiPolygon="geojsonMultiPolygon" :tabId="tabId" :tabUpdate="tabUpdate" />
       </div>
     </div>
 
@@ -29,13 +17,7 @@
       <div class="tablet-blob-1-4">
         <h5>
           Surface
-          <Tag
-            v-if="etape.incertitudes && etape.incertitudes.surface"
-            :mini="true"
-            color="bg-info"
-            class="ml-xs"
-            text="Incertain"
-          />
+          <Tag v-if="etape.incertitudes && etape.incertitudes.surface" :mini="true" color="bg-info" class="ml-xs" text="Incertain" />
         </h5>
       </div>
       <div class="tablet-blob-3-4">
@@ -57,12 +39,12 @@ export default {
     etape: { type: Object, required: true },
     geojsonMultiPolygon: { type: Object, required: true },
     titreTypeId: { type: String, required: true },
-    incertitude: { type: Boolean, default: false }
+    incertitude: { type: Boolean, default: false },
   },
 
   data() {
     return {
-      tabId: 'points'
+      tabId: 'points',
     }
   },
 
@@ -73,7 +55,7 @@ export default {
 
     numberFormat(number) {
       return numberFormat(number)
-    }
-  }
+    },
+  },
 }
 </script>

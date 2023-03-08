@@ -36,9 +36,7 @@ describe('crée des fichiers', () => {
   test('écrase le fichier si il existe déjà', async () => {
     await fileCreate(pathGet('toto.txt'), 'contenu du fichier')
     await fileCreate(pathGet('toto.txt'), 'nouveau contenu du fichier')
-    expect(readFileSync(pathGet('toto.txt'), 'utf8')).toBe(
-      'nouveau contenu du fichier'
-    )
+    expect(readFileSync(pathGet('toto.txt'), 'utf8')).toBe('nouveau contenu du fichier')
   })
 
   test('retourne une erreur si le répertoire n’existe pas', async () => {

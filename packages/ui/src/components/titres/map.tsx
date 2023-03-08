@@ -1,32 +1,13 @@
-import {
-  nextTick,
-  defineComponent,
-  ref,
-  Ref,
-  computed,
-  onMounted,
-  onBeforeUnmount,
-  inject,
-  watch
-} from 'vue'
+import { nextTick, defineComponent, ref, Ref, computed, onMounted, onBeforeUnmount, inject, watch } from 'vue'
 import { CaminoMap, Props as CaminoMapProps } from '../_map/index'
 import { leafletGeojsonBoundsGet } from '../_map/leaflet'
-import {
-  clustersBuild,
-  layersBuild,
-  zones,
-  CaminoMarker,
-  TitreWithPoint
-} from './mapUtil'
+import { clustersBuild, layersBuild, zones, CaminoMarker, TitreWithPoint } from './mapUtil'
 import { Icon } from '@/components/_ui/icon'
 import { isDomaineId } from 'camino-common/src/static/domaines'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { Layer, Marker, MarkerClusterGroup } from 'leaflet'
-import {
-  getKeys,
-  isNotNullNorUndefined
-} from 'camino-common/src/typescript-tools'
+import { getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 interface Props {
   titres: TitreWithPoint[]
 }
@@ -82,10 +63,7 @@ export const CaminoTitresMap = defineComponent<Props>({
     }
 
     const titresInit = (titres: TitreWithPoint[]) => {
-      const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(
-        titres,
-        router
-      )
+      const { geojsons: geojsonLayer, markers: markersLayer } = layersBuild(titres, router)
       const clustersBuilt = clustersBuild()
       geojsons.value = geojsonLayer
       markers.value = markersLayer
@@ -105,11 +83,7 @@ export const CaminoTitresMap = defineComponent<Props>({
       geojsonLayersDisplay()
     }
 
-    const titresPreferencesUpdate = (params: {
-      center?: number[]
-      zoom?: number
-      bbox?: number[]
-    }) => {
+    const titresPreferencesUpdate = (params: { center?: number[]; zoom?: number; bbox?: number[] }) => {
       if (params.center || params.zoom || params.bbox) {
         const myParams: {
           zoom?: number
@@ -126,7 +100,7 @@ export const CaminoTitresMap = defineComponent<Props>({
 
         store.dispatch('titres/paramsSet', {
           section: 'carte',
-          params: myParams
+          params: myParams,
         })
       }
     }
@@ -144,7 +118,7 @@ export const CaminoTitresMap = defineComponent<Props>({
 
       await store.dispatch('titres/paramsSet', {
         section: 'carte',
-        params
+        params,
       })
 
       if (map.value) {
@@ -178,9 +152,7 @@ export const CaminoTitresMap = defineComponent<Props>({
       })
     }
 
-    const markerLayersIdSet = (
-      markerLayersId: 'clusters' | 'markers' | 'none'
-    ) => {
+    const markerLayersIdSet = (markerLayersId: 'clusters' | 'markers' | 'none') => {
       const params = { markerLayersId }
       if (matomo) {
         // @ts-ignore
@@ -188,7 +160,7 @@ export const CaminoTitresMap = defineComponent<Props>({
       }
       store.dispatch('user/preferencesSet', {
         section: 'carte',
-        params
+        params,
       })
       geojsonLayersDisplay()
     }
@@ -210,23 +182,14 @@ export const CaminoTitresMap = defineComponent<Props>({
     )
     return () => (
       <div class="width-full bg-alt">
-        <CaminoMap
-          ref={map}
-          markerLayers={markerLayers.value}
-          geojsonLayers={geojsonLayers.value}
-          mapUpdate={titresPreferencesUpdate}
-          class="map map-view mb-s"
-        />
+        <CaminoMap ref={map} markerLayers={markerLayers.value} geojsonLayers={geojsonLayers.value} mapUpdate={titresPreferencesUpdate} class="map map-view mb-s" />
 
         <div class="container overflow-auto">
           <div class="desktop-blobs">
             <div class="desktop-blob-1-2 desktop-flex">
               <div class="mb-s">
                 <span class="mr-s">
-                  <button
-                    class="btn-border small rnd-m px-s py-xs"
-                    onClick={() => mapFrame()}
-                  >
+                  <button class="btn-border small rnd-m px-s py-xs" onClick={() => mapFrame()}>
                     Tout afficher
                   </button>
                 </span>
@@ -234,10 +197,7 @@ export const CaminoTitresMap = defineComponent<Props>({
               <ul class="list-inline pill-list mb-s">
                 {zones.map(z => (
                   <li key={z.id} class="mr-px mb-px">
-                    <button
-                      class="btn-border small pill-item px-s py-xs"
-                      onClick={() => mapCenter(z.id)}
-                    >
+                    <button class="btn-border small pill-item px-s py-xs" onClick={() => mapCenter(z.id)}>
                       {z.name}
                     </button>
                   </li>
@@ -247,42 +207,18 @@ export const CaminoTitresMap = defineComponent<Props>({
 
             <div class="desktop-blob-1-2 desktop-flex">
               <div class="flex mb-s">
-                <div
-                  class={`${
-                    markerLayersId.value === 'clusters' ? 'active' : ''
-                  }`}
-                >
-                  <button
-                    class="btn-border p-s rnd-l-s"
-                    title="regroupe les marqueurs"
-                    onClick={() => markerLayersIdSet('clusters')}
-                  >
+                <div class={`${markerLayersId.value === 'clusters' ? 'active' : ''}`}>
+                  <button class="btn-border p-s rnd-l-s" title="regroupe les marqueurs" onClick={() => markerLayersIdSet('clusters')}>
                     <Icon size="M" name="marker-cluster" />
                   </button>
                 </div>
-                <div
-                  class={`${
-                    markerLayersId.value === 'markers' ? 'active' : ''
-                  }`}
-                >
-                  <button
-                    class="btn-border p-s"
-                    title="affiche les marqueurs"
-                    onClick={() => markerLayersIdSet('markers')}
-                  >
+                <div class={`${markerLayersId.value === 'markers' ? 'active' : ''}`}>
+                  <button class="btn-border p-s" title="affiche les marqueurs" onClick={() => markerLayersIdSet('markers')}>
                     <Icon size="M" name="marker-ungrouped" />
                   </button>
                 </div>
-                <div
-                  class={`${
-                    markerLayersId.value === 'none' ? 'active' : ''
-                  } mr-s`}
-                >
-                  <button
-                    class="btn-border p-s rnd-r-s"
-                    title="affiche les contours uniquement"
-                    onClick={() => markerLayersIdSet('none')}
-                  >
+                <div class={`${markerLayersId.value === 'none' ? 'active' : ''} mr-s`}>
+                  <button class="btn-border p-s rnd-r-s" title="affiche les contours uniquement" onClick={() => markerLayersIdSet('none')}>
                     <Icon size="M" name="marker-none" />
                   </button>
                 </div>
@@ -292,5 +228,5 @@ export const CaminoTitresMap = defineComponent<Props>({
         </div>
       </div>
     )
-  }
+  },
 })

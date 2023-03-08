@@ -14,8 +14,8 @@ class EtapesTypesJustificatifsTypes extends Model {
       etapeTypeId: { type: 'string', maxLength: 3 },
       documentTypeId: { type: 'string', maxLength: 3 },
       optionnel: { type: 'boolean' },
-      description: { type: ['string', 'null'] }
-    }
+      description: { type: ['string', 'null'] },
+    },
   }
 
   public static idColumn = ['etapeTypeId', 'documentTypeId']

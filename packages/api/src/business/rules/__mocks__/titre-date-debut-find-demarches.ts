@@ -14,10 +14,10 @@ const titreDemarchesDpu = [
         typeId: 'dpu',
         statutId: 'acc',
         ordre: 1,
-        date: '1988-03-11'
-      }
-    ]
-  }
+        date: '1988-03-11',
+      },
+    ],
+  },
 ] as ITitreDemarche[]
 
 const titreDemarchesRpu = [
@@ -34,10 +34,10 @@ const titreDemarchesRpu = [
         typeId: 'rpu',
         statutId: 'acc',
         ordre: 1,
-        date: '1988-03-11'
-      }
-    ]
-  }
+        date: '1988-03-11',
+      },
+    ],
+  },
 ] as ITitreDemarche[]
 
 const titreDemarchesDex = [
@@ -54,10 +54,10 @@ const titreDemarchesDex = [
         typeId: 'dex',
         statutId: 'acc',
         ordre: 1,
-        date: '1988-03-11'
-      }
-    ]
-  }
+        date: '1988-03-11',
+      },
+    ],
+  },
 ] as ITitreDemarche[]
 
 const titreDemarchesRpuDateDebut = [
@@ -75,10 +75,10 @@ const titreDemarchesRpuDateDebut = [
         statutId: 'acc',
         ordre: 1,
         date: '1988-03-11',
-        dateDebut: '1988-03-15'
-      }
-    ]
-  }
+        dateDebut: '1988-03-15',
+      },
+    ],
+  },
 ] as ITitreDemarche[]
 
 const titreDemarchesDexDateDebut = [
@@ -96,10 +96,10 @@ const titreDemarchesDexDateDebut = [
         statutId: 'acc',
         ordre: 1,
         date: '1988-03-11',
-        dateDebut: '1988-03-15'
-      }
-    ]
-  }
+        dateDebut: '1988-03-15',
+      },
+    ],
+  },
 ] as ITitreDemarche[]
 
 const titreDemarchesSansOctroi = [
@@ -108,8 +108,8 @@ const titreDemarchesSansOctroi = [
     titreId: 'h-cx-courdemanges-1988',
     typeId: 'mut',
     statutId: 'acc',
-    ordre: 1
-  }
+    ordre: 1,
+  },
 ] as ITitreDemarche[]
 
 const titreDemarchesSansDateDebut = [
@@ -126,10 +126,10 @@ const titreDemarchesSansDateDebut = [
         typeId: 'dex',
         statutId: 'acc',
         ordre: 1,
-        date: '1988-03-06'
-      }
-    ]
-  }
+        date: '1988-03-06',
+      },
+    ],
+  },
 ] as ITitreDemarche[]
 
 const titreDemarchesDateUndefined = [
@@ -145,10 +145,10 @@ const titreDemarchesDateUndefined = [
         titreDemarcheId: 'h-cx-courdemanges-1988-oct01',
         typeId: 'dpu',
         statutId: 'acc',
-        ordre: 1
-      }
-    ]
-  }
+        ordre: 1,
+      },
+    ],
+  },
 ] as ITitreDemarche[]
 
 export {
@@ -159,5 +159,5 @@ export {
   titreDemarchesDexDateDebut,
   titreDemarchesSansOctroi,
   titreDemarchesSansDateDebut,
-  titreDemarchesDateUndefined
+  titreDemarchesDateUndefined,
 }

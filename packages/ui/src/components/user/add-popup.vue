@@ -14,33 +14,17 @@
         <h5>Email</h5>
       </div>
       <div class="mb tablet-blob-2-3">
-        <input
-          id="cmn-user-add-popup-input-email"
-          v-model="email"
-          type="email"
-          class="p-s"
-          placeholder="Email"
-        />
+        <input id="cmn-user-add-popup-input-email" v-model="email" type="email" class="p-s" placeholder="Email" />
       </div>
     </div>
 
     <template #footer>
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 mb tablet-mb-0">
-          <button class="btn-border rnd-xs p-s full-x" @click="cancel">
-            Annuler
-          </button>
+          <button class="btn-border rnd-xs p-s full-x" @click="cancel">Annuler</button>
         </div>
         <div class="tablet-blob-2-3">
-          <button
-            id="cmn-user-add-popup-button-valider"
-            :disabled="!complete"
-            :class="{ disabled: !complete }"
-            class="btn-flash rnd-xs p-s full-x"
-            @click="save"
-          >
-            Valider
-          </button>
+          <button id="cmn-user-add-popup-button-valider" :disabled="!complete" :class="{ disabled: !complete }" class="btn-flash rnd-xs p-s full-x" @click="save">Valider</button>
         </div>
       </div>
     </template>
@@ -55,12 +39,12 @@ export default {
   name: 'CaminoUserAccountCreatePopup',
 
   components: {
-    Popup
+    Popup,
   },
 
   data() {
     return {
-      email: ''
+      email: '',
     }
   },
 
@@ -71,7 +55,7 @@ export default {
 
     complete() {
       return emailValidator.validate(this.email)
-    }
+    },
   },
 
   created() {
@@ -106,7 +90,7 @@ export default {
 
     errorsRemove() {
       this.$store.commit('popupMessagesRemove')
-    }
-  }
+    },
+  },
 }
 </script>

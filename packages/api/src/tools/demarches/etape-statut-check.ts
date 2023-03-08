@@ -16,8 +16,8 @@ export const etapeStatutCheck = async () => {
     {
       fields: {
         type: { id: {} },
-        demarche: { type: { id: {} }, titre: { id: {} } }
-      }
+        demarche: { type: { id: {} }, titre: { id: {} } },
+      },
     },
     userSuper
   )
@@ -25,23 +25,11 @@ export const etapeStatutCheck = async () => {
   let errorsNb = 0
 
   etapes.forEach(etape => {
-    const tdeExists = !!tde.find(
-      t =>
-        t.titreTypeId === etape.demarche!.titre!.typeId &&
-        t.demarcheTypeId === etape.demarche!.typeId &&
-        t.etapeTypeId === etape.typeId
-    )
+    const tdeExists = !!tde.find(t => t.titreTypeId === etape.demarche!.titre!.typeId && t.demarcheTypeId === etape.demarche!.typeId && t.etapeTypeId === etape.typeId)
     const etapesStatuts = getEtapesStatuts(etape.typeId)
 
-    if (
-      tdeExists &&
-      !etapesStatuts!.map(es => es.id).includes(etape.statutId)
-    ) {
-      console.info(
-        `erreur sur le titre https://camino.beta.gouv.fr/titres/${
-          etape.demarche!.titreId
-        }, étape « ${etape.type!.nom} » a un statut inconnu`
-      )
+    if (tdeExists && !etapesStatuts!.map(es => es.id).includes(etape.statutId)) {
+      console.info(`erreur sur le titre https://camino.beta.gouv.fr/titres/${etape.demarche!.titreId}, étape « ${etape.type!.nom} » a un statut inconnu`)
       // console.infos(
       //   `https://camino.beta.gouv.fr/titres/${etape.demarche!.titreId}, ${
       //     etape.demarche!.type!.nom

@@ -3,23 +3,13 @@
     <div class="px">
       <div class="tablet-blobs flex-align-items-stretch">
         <div class="tablet-blob-1-2">
-          <select
-            v-if="geoSystemes.length > 1"
-            v-model="geoSystemeId"
-            class="p-s mr-s mb-s"
-          >
-            <option
-              v-for="systeme in geoSystemes"
-              :key="systeme.id"
-              :value="systeme.id"
-            >
+          <select v-if="geoSystemes.length > 1" v-model="geoSystemeId" class="p-s mr-s mb-s">
+            <option v-for="systeme in geoSystemes" :key="systeme.id" :value="systeme.id">
               {{ systeme.nom }} - {{ systeme.id }}
               {{ systeme.id === geoSystemeOpposableId ? '(opposable)' : '' }}
             </option>
           </select>
-          <div v-else class="full-x p-s bg-alt mb-s">
-            {{ geoSysteme.nom }} ({{ geoSysteme.id }})
-          </div>
+          <div v-else class="full-x p-s bg-alt mb-s">{{ geoSysteme.nom }} ({{ geoSysteme.id }})</div>
         </div>
         <div class="tablet-blob-1-2 flex flex-align-items-stretch">
           <div class="blobs-packed flex-grow flex-align-items-stretch mb-s">
@@ -43,19 +33,9 @@
         </div>
       </div>
     </div>
-    <div
-      v-for="(groupeContours, groupeIndex) in groupes"
-      :key="groupeIndex + 1"
-      class="geo-groupe mb"
-    >
-      <h4 v-if="groupes.length > 1" class="color-bg pt-s pl-m mb-s">
-        Groupe {{ groupeIndex + 1 }}
-      </h4>
-      <div
-        v-for="(contourPoints, contourIndex) in groupeContours"
-        :key="contourIndex + 1"
-        class="geo-contour"
-      >
+    <div v-for="(groupeContours, groupeIndex) in groupes" :key="groupeIndex + 1" class="geo-groupe mb">
+      <h4 v-if="groupes.length > 1" class="color-bg pt-s pl-m mb-s">Groupe {{ groupeIndex + 1 }}</h4>
+      <div v-for="(contourPoints, contourIndex) in groupeContours" :key="contourIndex + 1" class="geo-contour">
         <h4 v-if="groupeContours.length > 1" class="pt-xs pl-s mb-s">
           {{ contourIndex === 0 ? 'Contour' : `Lacune ${contourIndex}` }}
         </h4>
@@ -65,22 +45,9 @@
               <h4 v-if="point.nom" class="mb-s flex-self-start mr-xs">
                 {{ point.nom }}
               </h4>
-              <p
-                v-if="point.description || point.subsidiaire"
-                class="mb-s h6 flex-grow pt-xxs"
-              >
-                <Tag
-                  v-if="point.subsidiaire && !point.lot"
-                  :mini="true"
-                  text="Subsidiaire"
-                  color="bg-info"
-                />
-                <Tag
-                  v-if="point.lot"
-                  :mini="true"
-                  color="bg-info"
-                  text=" Lot "
-                />
+              <p v-if="point.description || point.subsidiaire" class="mb-s h6 flex-grow pt-xxs">
+                <Tag v-if="point.subsidiaire && !point.lot" :mini="true" text="Subsidiaire" color="bg-info" />
+                <Tag v-if="point.lot" :mini="true" color="bg-info" text=" Lot " />
                 {{ point.description }}
               </p>
             </div>
@@ -109,7 +76,7 @@ export default {
   components: { Tag, pointReference },
 
   props: {
-    points: { type: Array, required: true }
+    points: { type: Array, required: true },
   },
 
   data() {
@@ -134,10 +101,7 @@ export default {
     },
 
     geoSysteme() {
-      return (
-        this.geoSystemeId &&
-        this.geoSystemes.find(({ id }) => id === this.geoSystemeId)
-      )
+      return this.geoSystemeId && this.geoSystemes.find(({ id }) => id === this.geoSystemeId)
     },
 
     geoSystemeUniteNom() {
@@ -145,16 +109,12 @@ export default {
     },
 
     labels() {
-      return this.geoSysteme.uniteId === UNITE_IDS.mètre
-        ? ['X', 'Y']
-        : ['Longitude', 'Latitude']
-    }
+      return this.geoSysteme.uniteId === UNITE_IDS.mètre ? ['X', 'Y'] : ['Longitude', 'Latitude']
+    },
   },
 
   created() {
-    this.geoSystemeId =
-      this.geoSystemeOpposableId ||
-      (this.geoSystemes[0] && this.geoSystemes[0].id)
-  }
+    this.geoSystemeId = this.geoSystemeOpposableId || (this.geoSystemes[0] && this.geoSystemes[0].id)
+  },
 }
 </script>

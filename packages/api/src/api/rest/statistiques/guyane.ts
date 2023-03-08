@@ -12,19 +12,10 @@ import { titresActivitesGet } from '../../../database/queries/titres-activites.j
 import { userSuper } from '../../../database/user-super.js'
 import { titresSurfaceIndexBuild } from '../../graphql/resolvers/statistiques.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
-import {
-  anneePrecedente,
-  CaminoAnnee,
-  getCurrentAnnee,
-  toCaminoAnnee
-} from 'camino-common/src/date.js'
+import { anneePrecedente, CaminoAnnee, getCurrentAnnee, toCaminoAnnee } from 'camino-common/src/date.js'
 import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts.js'
 
-const statistiquesGuyaneActivitesBuild = (
-  sectionId: string,
-  titresActivites: ITitreActivite[],
-  init: { [key: string]: number }
-) =>
+const statistiquesGuyaneActivitesBuild = (sectionId: string, titresActivites: ITitreActivite[], init: { [key: string]: number }) =>
   titresActivites.reduce((acc: { [key: string]: number }, ta) => {
     acc.rapportProductionOrCount++
 
@@ -33,15 +24,7 @@ const statistiquesGuyaneActivitesBuild = (
     }
 
     Object.keys(acc).forEach(prop => {
-      if (
-        ta.contenu &&
-        ta.contenu[sectionId] &&
-        ta.contenu[sectionId][prop] &&
-        (prop !== 'effectifs' ||
-          ta.titre!.typeId === 'axm' ||
-          ta.titre!.typeId === 'pxm' ||
-          ta.titre!.typeId === 'cxm')
-      ) {
+      if (ta.contenu && ta.contenu[sectionId] && ta.contenu[sectionId][prop] && (prop !== 'effectifs' || ta.titre!.typeId === 'axm' || ta.titre!.typeId === 'pxm' || ta.titre!.typeId === 'cxm')) {
         const value = ta.contenu![sectionId][prop]
 
         acc[prop] += Number(value)
@@ -51,15 +34,9 @@ const statistiquesGuyaneActivitesBuild = (
     return acc
   }, init)
 
-type IStatsGuyaneTitresTypes =
-  | 'titresArm'
-  | 'titresPrm'
-  | 'titresAxm'
-  | 'titresCxm'
+type IStatsGuyaneTitresTypes = 'titresArm' | 'titresPrm' | 'titresAxm' | 'titresCxm'
 
-const statistiquesGuyaneTitresBuild = (
-  titres: { id: string; typeId: TitreTypeId; surface: number }[]
-): Record<string, { quantite: number; surface: number }> =>
+const statistiquesGuyaneTitresBuild = (titres: { id: string; typeId: TitreTypeId; surface: number }[]): Record<string, { quantite: number; surface: number }> =>
   titres.reduce(
     (acc, titre) => {
       const id = camelcase(`titres-${titre.typeId}`) as IStatsGuyaneTitresTypes
@@ -73,7 +50,7 @@ const statistiquesGuyaneTitresBuild = (
       titresArm: { quantite: 0, surface: 0 },
       titresPrm: { quantite: 0, surface: 0 },
       titresAxm: { quantite: 0, surface: 0 },
-      titresCxm: { quantite: 0, surface: 0 }
+      titresCxm: { quantite: 0, surface: 0 },
     }
   )
 
@@ -86,9 +63,7 @@ const statistiquesGuyaneInstantBuild = (titres: ITitre[]) => {
         } else {
           acc.surfaceExploitation += titre.surfaceEtape?.surface ?? 0
         }
-        const id = camelcase(
-          `titres-${titre.typeId}`
-        ) as IStatsGuyaneTitresTypes
+        const id = camelcase(`titres-${titre.typeId}`) as IStatsGuyaneTitresTypes
 
         acc[id]++
       }
@@ -101,60 +76,39 @@ const statistiquesGuyaneInstantBuild = (titres: ITitre[]) => {
       titresArm: 0,
       titresPrm: 0,
       titresAxm: 0,
-      titresCxm: 0
+      titresCxm: 0,
     }
   )
 
-  statsInstant.surfaceExploration = Math.floor(
-    statsInstant.surfaceExploration * 100
-  ) // conversion 1 km² = 100 ha
-  statsInstant.surfaceExploitation = Math.floor(
-    statsInstant.surfaceExploitation * 100
-  ) // conversion 1 km² = 100 ha
+  statsInstant.surfaceExploration = Math.floor(statsInstant.surfaceExploration * 100) // conversion 1 km² = 100 ha
+  statsInstant.surfaceExploitation = Math.floor(statsInstant.surfaceExploitation * 100) // conversion 1 km² = 100 ha
 
   return statsInstant
 }
 
-const statistiquesGuyaneAnneeBuild = (
-  titres: ITitre[],
-  titresActivites: ITitreActivite[],
-  annee: CaminoAnnee
-) => {
+const statistiquesGuyaneAnneeBuild = (titres: ITitre[], titresActivites: ITitreActivite[], annee: CaminoAnnee) => {
   const titresFiltered = titresSurfaceIndexBuild(titres, +annee)
 
-  const { titresArm, titresPrm, titresAxm, titresCxm } =
-    statistiquesGuyaneTitresBuild(titresFiltered)
+  const { titresArm, titresPrm, titresAxm, titresCxm } = statistiquesGuyaneTitresBuild(titresFiltered)
 
   // les activités de type grp de l'année
-  const titresActivitesGrpFiltered = titresActivites.filter(
-    ta => ta.annee === +annee && ta.typeId === 'grp'
-  )
-  const statistiquesActivitesGrp = statistiquesGuyaneActivitesBuild(
-    'renseignements',
-    titresActivitesGrpFiltered,
-    {
-      carburantConventionnel: 0,
-      carburantDetaxe: 0,
-      mercure: 0,
-      environnement: 0,
-      effectifs: 0,
-      activitesDeposesQuantiteCount: 0,
-      rapportProductionOrCount: 0
-    }
-  )
+  const titresActivitesGrpFiltered = titresActivites.filter(ta => ta.annee === +annee && ta.typeId === 'grp')
+  const statistiquesActivitesGrp = statistiquesGuyaneActivitesBuild('renseignements', titresActivitesGrpFiltered, {
+    carburantConventionnel: 0,
+    carburantDetaxe: 0,
+    mercure: 0,
+    environnement: 0,
+    effectifs: 0,
+    activitesDeposesQuantiteCount: 0,
+    rapportProductionOrCount: 0,
+  })
   // les activités de type gra et grx de l'année
-  const titresActivitesGraFiltered = titresActivites.filter(
-    ta => ta.annee === +annee && (ta.typeId === 'gra' || ta.typeId === 'grx')
-  )
-  const statistiquesActivitesGra = statistiquesGuyaneActivitesBuild(
-    'substancesFiscales',
-    titresActivitesGraFiltered,
-    {
-      auru: 0,
-      activitesDeposesQuantiteCount: 0,
-      rapportProductionOrCount: 0
-    }
-  )
+  const titresActivitesGraFiltered = titresActivites.filter(ta => ta.annee === +annee && (ta.typeId === 'gra' || ta.typeId === 'grx'))
+  const statistiquesActivitesGra = statistiquesGuyaneActivitesBuild('substancesFiscales', titresActivitesGraFiltered, {
+    auru: 0,
+    activitesDeposesQuantiteCount: 0,
+    rapportProductionOrCount: 0,
+  })
 
   // Pour les années 2017 et 2018, on affiche les chiffres "DRFIP" soit : pour 2017 : 1 485 kg  et pour 2018 : 1320 kg.
   if (annee === toCaminoAnnee(2017)) {
@@ -166,14 +120,10 @@ const statistiquesGuyaneAnneeBuild = (
   }
 
   const activitesDeposesRatio =
-    statistiquesActivitesGrp.rapportProductionOrCount +
-    statistiquesActivitesGra.rapportProductionOrCount
+    statistiquesActivitesGrp.rapportProductionOrCount + statistiquesActivitesGra.rapportProductionOrCount
       ? Math.round(
-          ((statistiquesActivitesGrp.activitesDeposesQuantiteCount +
-            statistiquesActivitesGra.activitesDeposesQuantiteCount) *
-            100) /
-            (statistiquesActivitesGrp.rapportProductionOrCount +
-              statistiquesActivitesGra.rapportProductionOrCount)
+          ((statistiquesActivitesGrp.activitesDeposesQuantiteCount + statistiquesActivitesGra.activitesDeposesQuantiteCount) * 100) /
+            (statistiquesActivitesGrp.rapportProductionOrCount + statistiquesActivitesGra.rapportProductionOrCount)
         )
       : 0
 
@@ -184,19 +134,13 @@ const statistiquesGuyaneAnneeBuild = (
     titresAxm,
     titresCxm,
     orNet: Math.floor(statistiquesActivitesGra.auru),
-    carburantConventionnel: Math.floor(
-      statistiquesActivitesGrp.carburantConventionnel / 1000
-    ), // milliers de litres
-    carburantDetaxe: Math.floor(
-      statistiquesActivitesGrp.carburantDetaxe / 1000
-    ), // milliers de litres
+    carburantConventionnel: Math.floor(statistiquesActivitesGrp.carburantConventionnel / 1000), // milliers de litres
+    carburantDetaxe: Math.floor(statistiquesActivitesGrp.carburantDetaxe / 1000), // milliers de litres
     mercure: Math.floor(statistiquesActivitesGrp.mercure),
     environnementCout: Math.floor(statistiquesActivitesGrp.environnement),
     effectifs: Math.round(statistiquesActivitesGrp.effectifs / 4), // somme des effectifs sur 4 trimestre
-    activitesDeposesQuantite:
-      statistiquesActivitesGrp.activitesDeposesQuantiteCount +
-      statistiquesActivitesGra.activitesDeposesQuantiteCount,
-    activitesDeposesRatio
+    activitesDeposesQuantite: statistiquesActivitesGrp.activitesDeposesQuantiteCount + statistiquesActivitesGra.activitesDeposesQuantiteCount,
+    activitesDeposesRatio,
   }
 }
 
@@ -217,13 +161,13 @@ export const statistiquesGuyane = async () => {
       {
         domainesIds: ['m'],
         typesIds: ['ar', 'pr', 'ax', 'px', 'cx'],
-        territoires: 'guyane'
+        territoires: 'guyane',
       },
       {
         fields: {
           surfaceEtape: { id: {} },
-          demarches: { phase: { id: {} }, etapes: { id: {} }, type: { id: {} } }
-        }
+          demarches: { phase: { id: {} }, etapes: { id: {} }, type: { id: {} } },
+        },
       },
       userSuper
     )
@@ -232,17 +176,15 @@ export const statistiquesGuyane = async () => {
       {
         titresTerritoires: 'guyane',
         annees: annees.map(annee => +annee),
-        typesIds: ['grp', 'gra', 'grx']
+        typesIds: ['grp', 'gra', 'grx'],
       },
       { fields: { titre: { id: {} } } },
       userSuper
     )
 
     return {
-      annees: annees.map(annee =>
-        statistiquesGuyaneAnneeBuild(titres, titresActivites, annee)
-      ),
-      ...statistiquesGuyaneInstantBuild(titres)
+      annees: annees.map(annee => statistiquesGuyaneAnneeBuild(titres, titresActivites, annee)),
+      ...statistiquesGuyaneInstantBuild(titres),
     }
   } catch (e) {
     console.error(e)
@@ -251,33 +193,20 @@ export const statistiquesGuyane = async () => {
   }
 }
 
-export const getGuyaneStatsInside =
-  async (): Promise<StatistiquesGuyaneData> => {
-    const guyane = [DEPARTEMENT_IDS.Guyane]
-    const armData = await evolutionTitres(
-      TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE,
-      guyane
-    )
-    const prmData = await evolutionTitres(
-      TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES,
-      guyane
-    )
-    const axmData = await evolutionTitres(
-      TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION,
-      guyane
-    )
-    const cxmData = await evolutionTitres(
-      TITRES_TYPES_TYPES_IDS.CONCESSION,
-      guyane
-    )
+export const getGuyaneStatsInside = async (): Promise<StatistiquesGuyaneData> => {
+  const guyane = [DEPARTEMENT_IDS.Guyane]
+  const armData = await evolutionTitres(TITRES_TYPES_TYPES_IDS.AUTORISATION_DE_RECHERCHE, guyane)
+  const prmData = await evolutionTitres(TITRES_TYPES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES, guyane)
+  const axmData = await evolutionTitres(TITRES_TYPES_TYPES_IDS.AUTORISATION_D_EXPLOITATION, guyane)
+  const cxmData = await evolutionTitres(TITRES_TYPES_TYPES_IDS.CONCESSION, guyane)
 
-    const fromObjection = await statistiquesGuyane()
+  const fromObjection = await statistiquesGuyane()
 
-    return {
-      arm: armData,
-      prm: prmData,
-      axm: axmData,
-      cxm: cxmData,
-      ...fromObjection
-    }
+  return {
+    arm: armData,
+    prm: prmData,
+    axm: axmData,
+    cxm: cxmData,
+    ...fromObjection,
   }
+}

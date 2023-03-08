@@ -6,42 +6,32 @@
           <h2 class="cap-first">
             {{ demarche.type.nom }}
           </h2>
-          <h3 v-if="demarche.description" class="ml-s">
-            ({{ demarche.description }})
-          </h3>
+          <h3 v-if="demarche.description" class="ml-s">({{ demarche.description }})</h3>
         </div>
         <div class="mb-s">
           <Statut :color="statut.couleur" :nom="statut.nom" />
         </div>
       </div>
       <div class="tablet-blob-1-2 flex">
-        <div
-          v-if="demarche.modification || demarche.suppression || canCreateEtape"
-          class="flex-right flex"
-        >
+        <div v-if="demarche.modification || demarche.suppression || canCreateEtape" class="flex-right flex">
           <button
             v-if="canCreateEtape"
             class="btn small rnd-l-xs py-s px-m flex mr-px"
             :class="{
-              'rnd-r-xs': !demarche.suppression && !demarche.modification
+              'rnd-r-xs': !demarche.suppression && !demarche.modification,
             }"
             @click="etapeAdd"
           >
             <span class="mt-xxs">Ajouter une étape…</span>
           </button>
-          <button
-            v-if="demarche.modification"
-            class="btn py-s px-m mr-px"
-            :class="{ 'rnd-l-xs': !canCreateEtape }"
-            @click="editPopupOpen"
-          >
+          <button v-if="demarche.modification" class="btn py-s px-m mr-px" :class="{ 'rnd-l-xs': !canCreateEtape }" @click="editPopupOpen">
             <Icon size="M" name="pencil" />
           </button>
           <button
             v-if="demarche.suppression"
             class="btn rnd-r-xs py-s px-m mr-px"
             :class="{
-              'rnd-l-xs': !demarche.modification && !canCreateEtape
+              'rnd-l-xs': !demarche.modification && !canCreateEtape,
             }"
             @click="removePopupOpen"
           >
@@ -108,7 +98,7 @@ export default {
     Statut,
     TitreEtape,
     DemarcheEditPopup,
-    DemarcheRemovePopup
+    DemarcheRemovePopup,
   },
 
   props: {
@@ -119,7 +109,7 @@ export default {
     titreStatutId: { type: String, required: true },
     titreAdministrations: { type: Array, required: true },
     tabId: { type: String, required: true },
-    user: { type: Object, required: true }
+    user: { type: Object, required: true },
   },
 
   emits: ['titre-event-track'],
@@ -147,9 +137,7 @@ export default {
     },
 
     eventPrefix() {
-      return this.tabId && this.tabId === 'travaux'
-        ? 'titre-travaux'
-        : 'titre-demarche'
+      return this.tabId && this.tabId === 'travaux' ? 'titre-travaux' : 'titre-demarche'
     },
 
     etapes() {
@@ -161,14 +149,8 @@ export default {
     },
 
     canCreateEtape() {
-      return canCreateEtapeByDemarche(
-        this.user,
-        this.titreTypeId,
-        this.demarche.type.id,
-        this.titreAdministrations,
-        this.titreStatutId
-      )
-    }
+      return canCreateEtapeByDemarche(this.user, this.titreTypeId, this.demarche.type.id, this.titreAdministrations, this.titreStatutId)
+    },
   },
 
   methods: {
@@ -177,7 +159,7 @@ export default {
       this.eventTrack({
         categorie: 'titre-sections',
         action: `${this.eventPrefix}_editer`,
-        nom: this.$route.params.id
+        nom: this.$route.params.id,
       })
     },
 
@@ -186,20 +168,20 @@ export default {
       this.eventTrack({
         categorie: 'titre-sections',
         action: `${this.eventPrefix}_supprimer`,
-        nom: this.$route.params.id
+        nom: this.$route.params.id,
       })
     },
 
     etapeAdd() {
       this.$router.push({
         name: 'etape-creation',
-        query: { 'demarche-id': this.demarche.slug }
+        query: { 'demarche-id': this.demarche.slug },
       })
 
       this.eventTrack({
         categorie: 'titre-sections',
         action: 'titre-etape_ajouter',
-        nom: this.$route.params.id
+        nom: this.$route.params.id,
       })
     },
 
@@ -213,7 +195,7 @@ export default {
 
     eventTrack(event) {
       this.$emit('titre-event-track', event)
-    }
-  }
+    },
+  },
 }
 </script>

@@ -12,8 +12,8 @@ class TitresForets extends Model {
 
     properties: {
       foretId: { type: 'string', maxLength: 8 },
-      titreEtapeId: { type: 'string', maxLength: 128 }
-    }
+      titreEtapeId: { type: 'string', maxLength: 128 },
+    },
   }
 
   public static idColumn = ['foretId', 'titreEtapeId']

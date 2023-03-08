@@ -21,11 +21,11 @@ class TitresPointsReferences extends Model {
         type: 'object',
         properties: {
           x: { type: 'number' },
-          y: { type: 'number' }
-        }
+          y: { type: 'number' },
+        },
       },
-      opposable: { type: ['boolean', 'null'] }
-    }
+      opposable: { type: ['boolean', 'null'] },
+    },
   }
 
   public static jsonAttributes = []
@@ -33,7 +33,7 @@ class TitresPointsReferences extends Model {
   public static modifiers: Modifiers = {
     orderAsc: builder => {
       builder.orderBy('geoSystemeId', 'asc')
-    }
+    },
   }
 
   async $beforeInsert(context: QueryContext) {

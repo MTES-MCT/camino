@@ -20,11 +20,11 @@ const titreAdd = async (titre: ITitre) =>
       type: { type: { id: {} } },
       demarches: {
         etapes: {
-          points: { references: { id: {} } }
-        }
+          points: { references: { id: {} } },
+        },
       },
-      activites: { id: {} }
-    }
+      activites: { id: {} },
+    },
   })
 
 describe('vérifie la mis à jour des slugs sur les relations d’un titre', () => {
@@ -35,7 +35,7 @@ describe('vérifie la mis à jour des slugs sur les relations d’un titre', () 
       nom: 'titre-nom',
       typeId: 'arm',
       propsTitreEtapesIds: {},
-      slug: 'toto'
+      slug: 'toto',
     } as ITitre)
 
     const { hasChanged, slug } = await titreSlugAndRelationsUpdate(titre)
@@ -53,7 +53,7 @@ describe('vérifie la mis à jour des slugs sur les relations d’un titre', () 
       nom: 'titre-nom',
       typeId: 'arm',
       propsTitreEtapesIds: {},
-      slug: 'm-ar-titre-nom-0000'
+      slug: 'm-ar-titre-nom-0000',
     } as ITitre)
 
     const { hasChanged, slug } = await titreSlugAndRelationsUpdate(titre)
@@ -70,16 +70,14 @@ describe('vérifie la mis à jour des slugs sur les relations d’un titre', () 
     const titrePojo = {
       nom: 'titre-nom',
       typeId: 'arm',
-      propsTitreEtapesIds: {}
+      propsTitreEtapesIds: {},
     } as ITitre
 
     let titre = await titreAdd(objectClone(titrePojo))
     const { slug: firstSlug } = await titreSlugAndRelationsUpdate(titre)
     titre = await titreAdd(titrePojo)
 
-    const { hasChanged, slug: secondSlug } = await titreSlugAndRelationsUpdate(
-      titre
-    )
+    const { hasChanged, slug: secondSlug } = await titreSlugAndRelationsUpdate(titre)
     expect(hasChanged).toEqual(true)
     expect(secondSlug).not.toEqual(firstSlug)
     expect(secondSlug.startsWith(firstSlug)).toBeTruthy()
@@ -91,16 +89,14 @@ describe('vérifie la mis à jour des slugs sur les relations d’un titre', () 
     const titrePojo = {
       nom: 'titre-nom',
       typeId: 'arm',
-      propsTitreEtapesIds: {}
+      propsTitreEtapesIds: {},
     } as ITitre
 
     let titre = await titreAdd(objectClone(titrePojo))
     const { slug: firstSlug } = await titreSlugAndRelationsUpdate(titre)
     titre = await titreAdd({ ...titrePojo, slug: `${firstSlug}-123123` })
 
-    const { hasChanged, slug: secondSlug } = await titreSlugAndRelationsUpdate(
-      titre
-    )
+    const { hasChanged, slug: secondSlug } = await titreSlugAndRelationsUpdate(titre)
     expect(hasChanged).toEqual(false)
     expect(secondSlug).toEqual(`${firstSlug}-123123`)
   })
@@ -117,9 +113,9 @@ describe('vérifie la mis à jour des slugs sur les relations d’un titre', () 
         {
           typeId: 'oct',
           statutId: 'dep',
-          slug: 'slug'
-        }
-      ]
+          slug: 'slug',
+        },
+      ],
     } as ITitre)
 
     const { slug, hasChanged } = await titreSlugAndRelationsUpdate(titre)
@@ -127,11 +123,7 @@ describe('vérifie la mis à jour des slugs sur les relations d’un titre', () 
     expect(hasChanged).toEqual(true)
     expect(slug).toEqual(titre.slug)
 
-    const titreDb = await titreGet(
-      titre.id,
-      { fields: { demarches: { id: {} } } },
-      userSuper
-    )
+    const titreDb = await titreGet(titre.id, { fields: { demarches: { id: {} } } }, userSuper)
     expect(titreDb!.slug).toEqual(slug)
     expect(titreDb!.demarches![0].slug).toEqual('m-ar-titre-nom-0000-oct01')
   })

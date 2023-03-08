@@ -16,12 +16,9 @@ describe('fiscalite', () => {
   test('un utilisateur defaut n’a pas les droits', async () => {
     const entreprise = await entrepriseUpsert({
       id: newEntrepriseId('plop'),
-      nom: 'Mon Entreprise'
+      nom: 'Mon Entreprise',
     })
-    const tested = await restCall(
-      `/entreprises/${entreprise.id}/fiscalite/2022`,
-      { role: 'defaut' }
-    )
+    const tested = await restCall(`/entreprises/${entreprise.id}/fiscalite/2022`, { role: 'defaut' })
 
     expect(tested.statusCode).toBe(403)
   })

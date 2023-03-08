@@ -6,6 +6,6 @@ test('filesIndexBuild', () => {
   expect(filesIndexBuild(`${dir}/src/tools/documents/_assets`)).toEqual({
     file: 'file.pdf',
     file2: 'file2.pdf',
-    file3: 'demarches/file3.pdf'
+    file3: 'demarches/file3.pdf',
   })
 })

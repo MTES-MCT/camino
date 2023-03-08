@@ -6,8 +6,8 @@ export const up = async (knex: Knex) => {
       nom: 'fin de la police des mines',
       description: 'Fin de la police des mines',
       couleur: 'success',
-      ordre: 11
-    }
+      ordre: 11,
+    },
   ])
 }
 

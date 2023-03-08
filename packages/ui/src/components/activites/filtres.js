@@ -16,35 +16,35 @@ const filtres = [
     name: 'Noms',
     lazy: true,
     search: value => titresRechercherByNom({ noms: value, intervalle: 100 }),
-    load: value => titresFiltres({ titresIds: value })
+    load: value => titresFiltres({ titresIds: value }),
   },
   {
     id: 'titresEntreprisesIds',
     type: 'autocomplete',
     value: [],
     name: 'Entreprises',
-    elementsFormat
+    elementsFormat,
   },
   {
     id: 'titresSubstancesIds',
     type: 'autocomplete',
     value: [],
     name: 'Substances',
-    elements: SubstancesLegales
+    elements: SubstancesLegales,
   },
   {
     id: 'titresReferences',
     type: 'input',
     value: '',
     name: 'Références',
-    placeholder: 'Référence DGEC, DEAL, DEB, BRGM, Ifremer, …'
+    placeholder: 'Référence DGEC, DEAL, DEB, BRGM, Ifremer, …',
   },
   {
     id: 'titresTerritoires',
     type: 'input',
     value: '',
     name: 'Territoires',
-    placeholder: 'Commune, département, région, …'
+    placeholder: 'Commune, département, région, …',
   },
   {
     id: 'titresDomainesIds',
@@ -52,7 +52,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedDomaines,
-    component: 'FiltreDomaine'
+    component: 'FiltreDomaine',
   },
   {
     id: 'titresTypesIds',
@@ -60,7 +60,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedTitreTypesTypes,
-    component: 'FiltresTypes'
+    component: 'FiltresTypes',
   },
   {
     id: 'titresStatutsIds',
@@ -68,14 +68,14 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedTitresStatuts,
-    component: 'FiltresStatuts'
+    component: 'FiltresStatuts',
   },
   {
     id: 'typesIds',
     name: 'Types',
     type: 'checkboxes',
     value: [],
-    elements: sortedActivitesTypes
+    elements: sortedActivitesTypes,
   },
   {
     id: 'statutsIds',
@@ -83,7 +83,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: activitesStatuts,
-    component: 'FiltresStatuts'
+    component: 'FiltresStatuts',
   },
   {
     id: 'annees',
@@ -94,8 +94,8 @@ const filtres = [
     elementName: 'nom',
     buttonAdd: 'Ajouter une année',
     isNumber: true,
-    elementsFormat
-  }
+    elementsFormat,
+  },
 ]
 
 export default filtres

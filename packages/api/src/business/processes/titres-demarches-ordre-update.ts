@@ -9,30 +9,21 @@ export const titresDemarchesOrdreUpdate = async (titresIds?: string[]) => {
   console.info()
   console.info('ordre des démarches…')
 
-  const titres = await titresGet(
-    { ids: titresIds },
-    { fields: { demarches: { etapes: { id: {} } } } },
-    userSuper
-  )
+  const titres = await titresGet({ ids: titresIds }, { fields: { demarches: { etapes: { id: {} } } } }, userSuper)
 
   const titresDemarchesIdsUpdated = [] as string[]
 
   for (const titre of titres) {
-    const titreDemarchesSorted: ITitreDemarche[] = titreDemarchesSortAsc(
-      titre.demarches!
-    )
+    const titreDemarchesSorted: ITitreDemarche[] = titreDemarchesSortAsc(titre.demarches!)
 
     for (const titreDemarche of titreDemarchesSorted) {
       const index = titreDemarchesSorted.indexOf(titreDemarche)
       if (titreDemarche.ordre !== index + 1) {
         await titreDemarcheUpdate(titreDemarche.id, {
-          ordre: index + 1
+          ordre: index + 1,
         })
 
-        console.info(
-          'titre / démarche : ordre (mise à jour) ->',
-          `${titreDemarche.id}: ${index + 1}`
-        )
+        console.info('titre / démarche : ordre (mise à jour) ->', `${titreDemarche.id}: ${index + 1}`)
 
         titresDemarchesIdsUpdated.push(titreDemarche.id)
       }

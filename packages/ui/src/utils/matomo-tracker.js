@@ -11,11 +11,7 @@ const paramsEventTrack = (params, definitions, matomo, category, action) => {
           values = params[id].map(e => e.typeId)
         }
         values.forEach(value => {
-          matomo.trackEvent(
-            `${category}-${action}`,
-            `${category}-${action}-${id}`,
-            value
-          )
+          matomo.trackEvent(`${category}-${action}`, `${category}-${action}-${id}`, value)
           matomo.trackSiteSearch(value, id)
         })
       })

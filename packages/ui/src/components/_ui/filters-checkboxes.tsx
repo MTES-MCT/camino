@@ -1,15 +1,6 @@
-import {
-  Props as FiltreDomaineProps,
-  FiltreDomaine
-} from '../_common/filtres/domaine'
-import {
-  Props as FiltresStatutsProps,
-  FiltresStatuts
-} from '../_common/filtres/statuts'
-import {
-  Props as FiltresTypesProps,
-  FiltresTypes
-} from '../_common/filtres/types'
+import { Props as FiltreDomaineProps, FiltreDomaine } from '../_common/filtres/domaine'
+import { Props as FiltresStatutsProps, FiltresStatuts } from '../_common/filtres/statuts'
+import { Props as FiltresTypesProps, FiltresTypes } from '../_common/filtres/types'
 
 type Props = {
   filter: {
@@ -17,40 +8,28 @@ type Props = {
     component?: 'FiltreDomaine' | 'FiltresTypes' | 'FiltresStatuts'
     isNumber: boolean
     value: any[]
-    elements: ({ id: string; nom: string } & (
-      | FiltreDomaineProps['element']
-      | FiltresStatutsProps['element']
-      | FiltresTypesProps['element']
-    ))[]
+    elements: ({ id: string; nom: string } & (FiltreDomaineProps['element'] | FiltresStatutsProps['element'] | FiltresTypesProps['element']))[]
   }
 }
 
-function DrawComponent(
-  component: Props['filter']['component'],
-  element:
-    | FiltreDomaineProps['element']
-    | FiltresStatutsProps['element']
-    | FiltresTypesProps['element']
-): JSX.Element | null {
+function DrawComponent(component: Props['filter']['component'], element: FiltreDomaineProps['element'] | FiltresStatutsProps['element'] | FiltresTypesProps['element']): JSX.Element | null {
   if (!component) return <span class="cap-first h6 bold">{element.nom}</span>
   switch (component) {
     case 'FiltreDomaine':
       return FiltreDomaine({
-        element: element as FiltreDomaineProps['element']
+        element: element as FiltreDomaineProps['element'],
       })
     case 'FiltresTypes':
       return FiltresTypes({ element: element as FiltresTypesProps['element'] })
     case 'FiltresStatuts':
       return FiltresStatuts({
-        element: element as FiltresStatutsProps['element']
+        element: element as FiltresStatutsProps['element'],
       })
   }
 }
 
 export function FiltersCheckboxes(props: Props) {
-  const isEventWithTarget = (
-    event: any
-  ): event is Event & { target: HTMLInputElement } => event.target
+  const isEventWithTarget = (event: any): event is Event & { target: HTMLInputElement } => event.target
 
   const idsSet = (v: any, values: any[]) => {
     const index = values.indexOf(v)
@@ -68,10 +47,7 @@ export function FiltersCheckboxes(props: Props) {
 
   const checkboxToggle = (e: Event) => {
     if (isEventWithTarget(e) && e.target.value !== null) {
-      const target =
-        props.filter?.isNumber === true
-          ? Number(e.target.value)
-          : e.target.value
+      const target = props.filter?.isNumber === true ? Number(e.target.value) : e.target.value
 
       props.filter.value = idsSet(target, props.filter.value)
     }
@@ -96,30 +72,16 @@ export function FiltersCheckboxes(props: Props) {
         {props.filter.elements.map(element => (
           <li key={element.id}>
             <label>
-              <input
-                value={element.id}
-                checked={props.filter.value.includes(element.id)}
-                type="checkbox"
-                class="mr-s"
-                onChange={event => checkboxToggle(event)}
-              />
+              <input value={element.id} checked={props.filter.value.includes(element.id)} type="checkbox" class="mr-s" onChange={event => checkboxToggle(event)} />
               {DrawComponent(props.filter.component, element)}
             </label>
           </li>
         ))}
       </ul>
-      <button
-        ref="button"
-        class="btn-border small px-s p-xs rnd-xs mr-xs"
-        onClick={() => checkboxesSelect('none')}
-      >
+      <button ref="button" class="btn-border small px-s p-xs rnd-xs mr-xs" onClick={() => checkboxesSelect('none')}>
         Aucun
       </button>
-      <button
-        ref="button"
-        class="btn-border small px-s p-xs rnd-xs mr-xs"
-        onClick={() => checkboxesSelect('all')}
-      >
+      <button ref="button" class="btn-border small px-s p-xs rnd-xs mr-xs" onClick={() => checkboxesSelect('all')}>
         Tous
       </button>
     </div>

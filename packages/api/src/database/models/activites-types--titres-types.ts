@@ -12,8 +12,8 @@ class ActivitesTypesTitresTypes extends Model {
 
     properties: {
       activiteTypeId: { type: 'string', maxLength: 3 },
-      titreTypeId: { type: 'string', maxLength: 3 }
-    }
+      titreTypeId: { type: 'string', maxLength: 3 },
+    },
   }
 
   public static idColumn = ['activiteTypeId', 'titreTypeId']

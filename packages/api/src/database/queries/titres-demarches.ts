@@ -1,33 +1,19 @@
 import { Transaction, QueryBuilder, RawBuilder, raw } from 'objection'
 
-import {
-  ITitreDemarche,
-  ITitreEtapeFiltre,
-  ITitreDemarcheColonneId,
-  IColonne,
-  IFields,
-  Index,
-  DemarcheId
-} from '../../types.js'
+import { ITitreDemarche, ITitreEtapeFiltre, ITitreDemarcheColonneId, IColonne, IFields, Index, DemarcheId } from '../../types.js'
 
 import options from './_options.js'
 import { fieldsFormat } from './graph/fields-format.js'
 import graphBuild from './graph/build.js'
 import { fieldsTitreAdd } from './graph/fields-add.js'
 
-import TitresDemarches, {
-  DBTitresDemarches
-} from '../models/titres-demarches.js'
+import TitresDemarches, { DBTitresDemarches } from '../models/titres-demarches.js'
 import { titresDemarchesQueryModify } from './permissions/titres-demarches.js'
 import { titresFiltersQueryModify } from './_titres-filters.js'
 import TitresEtapes from '../models/titres-etapes.js'
 import { User } from 'camino-common/src/roles'
 
-const etapesIncluesExcluesBuild = (
-  q: QueryBuilder<TitresDemarches, TitresDemarches[]>,
-  etapes: ITitreEtapeFiltre[],
-  mode: 'etapesInclues' | 'etapesExclues'
-) => {
+const etapesIncluesExcluesBuild = (q: QueryBuilder<TitresDemarches, TitresDemarches[]>, etapes: ITitreEtapeFiltre[], mode: 'etapesInclues' | 'etapesExclues') => {
   const raw = etapes
     .map(({ statutId, dateDebut, dateFin }) => {
       const statutCond = statutId ? 'and etapes.statut_id = ?' : ''
@@ -75,7 +61,7 @@ const titresDemarchesFiltersQueryModify = (
     titresSubstancesIds,
     titresReferences,
     titresTerritoires,
-    travaux
+    travaux,
   }: {
     typesIds?: string[] | null
     statutsIds?: string[] | null
@@ -136,7 +122,7 @@ const titresDemarchesFiltersQueryModify = (
       entreprisesIds: titresEntreprisesIds,
       substancesIds: titresSubstancesIds,
       references: titresReferences,
-      territoires: titresTerritoires
+      territoires: titresTerritoires,
     },
     q,
     'titre',
@@ -144,13 +130,8 @@ const titresDemarchesFiltersQueryModify = (
   )
 }
 
-const titresDemarchesQueryBuild = (
-  { fields }: { fields?: IFields },
-  user: User
-) => {
-  const graph = fields
-    ? graphBuild(fieldsTitreAdd(fields), 'demarches', fieldsFormat)
-    : options.titresDemarches.graph
+const titresDemarchesQueryBuild = ({ fields }: { fields?: IFields }, user: User) => {
+  const graph = fields ? graphBuild(fieldsTitreAdd(fields), 'demarches', fieldsFormat) : options.titresDemarches.graph
 
   const q = TitresDemarches.query().withGraphFetched(graph)
 
@@ -174,7 +155,7 @@ const titresDemarchesCount = async (
     titresSubstancesIds,
     titresReferences,
     titresTerritoires,
-    travaux
+    travaux,
   }: {
     typesIds?: string[] | null
     statutsIds?: string[] | null
@@ -211,7 +192,7 @@ const titresDemarchesCount = async (
       titresSubstancesIds,
       titresReferences,
       titresTerritoires,
-      travaux
+      travaux,
     },
     q
   )
@@ -223,12 +204,12 @@ const titresDemarchesColonnes = {
   titreNom: { id: 'titre.nom', relation: 'titre' },
   titreDomaine: {
     id: raw(`SUBSTRING( titre.type_id, 3, 1 )`),
-    relation: 'titre'
+    relation: 'titre',
   },
   titreType: { id: 'titre:type:type.nom', relation: 'titre.type.type' },
   titreStatut: { id: 'titre.titreStatutId', relation: 'titre' },
   type: { id: 'titresDemarches.typeId' },
-  statut: { id: 'titresDemarches.statutId' }
+  statut: { id: 'titresDemarches.statutId' },
 } as Index<IColonne<string | RawBuilder>>
 
 const titresDemarchesGet = async (
@@ -250,7 +231,7 @@ const titresDemarchesGet = async (
     titresSubstancesIds,
     titresReferences,
     titresTerritoires,
-    travaux
+    travaux,
   }: {
     intervalle?: number | null
     page?: number | null
@@ -291,7 +272,7 @@ const titresDemarchesGet = async (
       titresSubstancesIds,
       titresReferences,
       titresTerritoires,
-      travaux
+      travaux,
     },
     q
   )
@@ -331,11 +312,7 @@ const titresDemarchesGet = async (
   return q
 }
 
-const titreDemarcheGet = async (
-  titreDemarcheId: string,
-  { fields }: { fields?: IFields },
-  user: User
-) => {
+const titreDemarcheGet = async (titreDemarcheId: string, { fields }: { fields?: IFields }, user: User) => {
   const q = titresDemarchesQueryBuild({ fields }, user)
 
   return q
@@ -351,52 +328,23 @@ const titreDemarcheGet = async (
  * @param titreDemarche - démarche à créer
  * @returns la nouvelle démarche
  */
-const titreDemarcheCreate = async (
-  titreDemarche: Omit<ITitreDemarche, 'id'>
-): Promise<ITitreDemarche> =>
-  TitresDemarches.query().insertAndFetch(titreDemarche)
+const titreDemarcheCreate = async (titreDemarche: Omit<ITitreDemarche, 'id'>): Promise<ITitreDemarche> => TitresDemarches.query().insertAndFetch(titreDemarche)
 
-const titreDemarcheDelete = async (id: string, trx?: Transaction) =>
-  TitresDemarches.query(trx)
-    .deleteById(id)
-    .withGraphFetched(options.titresDemarches.graph)
-    .returning('*')
+const titreDemarcheDelete = async (id: string, trx?: Transaction) => TitresDemarches.query(trx).deleteById(id).withGraphFetched(options.titresDemarches.graph).returning('*')
 
-const titreDemarcheUpdate = async (
-  id: DemarcheId,
-  titreDemarche: Partial<DBTitresDemarches>
-): Promise<TitresDemarches> => {
+const titreDemarcheUpdate = async (id: DemarcheId, titreDemarche: Partial<DBTitresDemarches>): Promise<TitresDemarches> => {
   return TitresDemarches.query().patchAndFetchById(id, { ...titreDemarche, id })
 }
 
-const titreDemarcheUpsert = async (
-  titreDemarche: ITitreDemarche,
-  trx?: Transaction
-) =>
-  TitresDemarches.query(trx)
-    .upsertGraph(titreDemarche, options.titresDemarches.update)
-    .withGraphFetched(options.titresDemarches.graph)
-    .returning('*')
+const titreDemarcheUpsert = async (titreDemarche: ITitreDemarche, trx?: Transaction) =>
+  TitresDemarches.query(trx).upsertGraph(titreDemarche, options.titresDemarches.update).withGraphFetched(options.titresDemarches.graph).returning('*')
 
 export const titreDemarcheArchive = async (id: string) => {
   // archive la démarche
   await TitresDemarches.query().patch({ archive: true }).where('id', id)
 
   // archive les étapes de la démarche
-  await TitresEtapes.query()
-    .patch({ archive: true })
-    .whereIn(
-      'titreDemarcheId',
-      TitresDemarches.query().select('id').where('id', id)
-    )
+  await TitresEtapes.query().patch({ archive: true }).whereIn('titreDemarcheId', TitresDemarches.query().select('id').where('id', id))
 }
 
-export {
-  titresDemarchesGet,
-  titresDemarchesCount,
-  titreDemarcheGet,
-  titreDemarcheCreate,
-  titreDemarcheUpdate,
-  titreDemarcheUpsert,
-  titreDemarcheDelete
-}
+export { titresDemarchesGet, titresDemarchesCount, titreDemarcheGet, titreDemarcheCreate, titreDemarcheUpdate, titreDemarcheUpsert, titreDemarcheDelete }

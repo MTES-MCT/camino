@@ -18,17 +18,11 @@ Promise.resolve().then(async (): Promise<void> => {
   import('./styles/dsfr/dsfr.css')
   const app = createApp(App)
   sync(store, router)
-  const configFromJson: CaminoConfig = await fetchWithJson(
-    CaminoRestRoutes.config,
-    {}
-  )
+  const configFromJson: CaminoConfig = await fetchWithJson(CaminoRestRoutes.config, {})
   const eventSource = new EventSource('/stream/version')
 
   eventSource.addEventListener('version', event => {
-    if (
-      caminoApplicationVersion === null ||
-      caminoApplicationVersion === undefined
-    ) {
+    if (caminoApplicationVersion === null || caminoApplicationVersion === undefined) {
       localStorage.setItem('caminoApplicationVersion', event.data)
       caminoApplicationVersion = event.data
     } else if (event.data !== caminoApplicationVersion) {
@@ -49,22 +43,17 @@ Promise.resolve().then(async (): Promise<void> => {
         integrations: [
           new BrowserTracing({
             routingInstrumentation: Sentry.vueRouterInstrumentation(router),
-            tracingOrigins: ['localhost', configFromJson.uiHost, /^\//]
-          })
+            tracingOrigins: ['localhost', configFromJson.uiHost, /^\//],
+          }),
         ],
         release: `camino-ui-${caminoApplicationVersion}`,
-        logErrors: true
+        logErrors: true,
       })
     } catch (e) {
       console.error('erreur : Sentry :', e)
     }
     try {
-      if (
-        !configFromJson.matomoHost ||
-        !configFromJson.matomoSiteId ||
-        !configFromJson.environment
-      )
-        throw new Error('host et/ou siteId manquant(s)')
+      if (!configFromJson.matomoHost || !configFromJson.matomoSiteId || !configFromJson.environment) throw new Error('host et/ou siteId manquant(s)')
 
       const matomo = await VueMatomo({
         host: configFromJson.matomoHost,
@@ -77,7 +66,7 @@ Promise.resolve().then(async (): Promise<void> => {
         trackInitialView: true,
         trackerFileName: 'piwik',
         enableHeartBeatTimer: true,
-        enableLinkTracking: true
+        enableLinkTracking: true,
       })
       app.provide('matomo', matomo)
       app.config.globalProperties.$matomo = matomo

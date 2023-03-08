@@ -11,14 +11,12 @@ import { User } from 'camino-common/src/roles.js'
  */
 export const contenuFormat = ({
   demarches,
-  contenusTitreEtapesIds
+  contenusTitreEtapesIds,
 }: {
   demarches: {
     etapes?: Pick<ITitreEtape, 'id' | 'contenu'>[] | undefined | null
   }[]
-  contenusTitreEtapesIds: NonNullable<
-    Required<ITitre['contenusTitreEtapesIds']>
-  >
+  contenusTitreEtapesIds: NonNullable<Required<ITitre['contenusTitreEtapesIds']>>
 }): IContenu => {
   if (!demarches?.length) return {}
 
@@ -40,11 +38,7 @@ export const contenuFormat = ({
 
       const etape = etapesIndex[etapeId]
 
-      if (
-        etape?.contenu &&
-        etape.contenu[sectionId] &&
-        etape.contenu[sectionId][propId] !== undefined
-      ) {
+      if (etape?.contenu && etape.contenu[sectionId] && etape.contenu[sectionId][propId] !== undefined) {
         if (!contenu[sectionId]) {
           contenu[sectionId] = {}
         }
@@ -58,17 +52,11 @@ export const contenuFormat = ({
 }
 export const titreSectionsGet = ({
   demarches,
-  contenusTitreEtapesIds
+  contenusTitreEtapesIds,
 }: {
   demarches?:
     | {
-        etapes?:
-          | Pick<
-              ITitreEtape,
-              'id' | 'contenu' | 'type' | 'sectionsSpecifiques'
-            >[]
-          | undefined
-          | null
+        etapes?: Pick<ITitreEtape, 'id' | 'contenu' | 'type' | 'sectionsSpecifiques'>[] | undefined | null
       }[]
     | null
     | undefined
@@ -120,26 +108,15 @@ export const titreSectionsGet = ({
                 // sinon, si l'étape correspond à l'id de `contenusTitreEtapesIds`
                 // et que l'étape n'a ni contenu ni section ni l'élément qui nous intéresse
                 // on ne cherche pas plus loin
-                if (
-                  etape.contenu &&
-                  etape.contenu[sectionId] &&
-                  etape.contenu[sectionId][elementId] !== undefined &&
-                  etape.type?.sections
-                ) {
-                  const etapeSection = etape.type.sections.find(
-                    s => s.id === sectionId
-                  )
+                if (etape.contenu && etape.contenu[sectionId] && etape.contenu[sectionId][elementId] !== undefined && etape.type?.sections) {
+                  const etapeSection = etape.type.sections.find(s => s.id === sectionId)
 
                   if (etapeSection && etapeSection.elements) {
-                    const etapeElement = etapeSection.elements.find(
-                      e => e.id === elementId
-                    )
+                    const etapeElement = etapeSection.elements.find(e => e.id === elementId)
 
                     if (etapeElement) {
                       // ajoute la section dans le titre si elle n'existe pas encore
-                      let titreTypeSection = sections.find(
-                        s => s.id === sectionId
-                      )
+                      let titreTypeSection = sections.find(s => s.id === sectionId)
 
                       if (!titreTypeSection) {
                         titreTypeSection = { ...etapeSection, elements: [] }
@@ -152,9 +129,7 @@ export const titreSectionsGet = ({
                       }
 
                       // ajoute l'élément dans les sections du titre s'il n'existe pas encore
-                      const titreElement = titreTypeSection.elements.find(
-                        e => e.id === elementId
-                      )
+                      const titreElement = titreTypeSection.elements.find(e => e.id === elementId)
                       const value = etape.contenu[sectionId][elementId]
                       if (value !== null) {
                         if (!titreElement) {
@@ -162,7 +137,7 @@ export const titreSectionsGet = ({
                             ...etapeElement,
                             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                             // @ts-ignore
-                            value
+                            value,
                           })
                         }
                       }
@@ -180,10 +155,7 @@ export const titreSectionsGet = ({
   return sections
 }
 
-export const getTitresSections = async (
-  req: express.Request,
-  res: CustomResponse<Section[]>
-): Promise<void> => {
+export const getTitresSections = async (req: express.Request, res: CustomResponse<Section[]>): Promise<void> => {
   try {
     const titreId: string | undefined = req.params.titreId
     if (!titreId) {
@@ -200,10 +172,10 @@ export const getTitresSections = async (
           demarches: {
             type: { etapesTypes: { id: {} } },
             etapes: {
-              type: { id: {} }
-            }
-          }
-        }
+              type: { id: {} },
+            },
+          },
+        },
       },
       user
     )

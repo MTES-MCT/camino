@@ -16,14 +16,7 @@ class TitresActivites extends Model {
   public static jsonSchema = {
     type: 'object',
 
-    required: [
-      'titreId',
-      'date',
-      'typeId',
-      'activiteStatutId',
-      'periodeId',
-      'annee'
-    ],
+    required: ['titreId', 'date', 'typeId', 'activiteStatutId', 'periodeId', 'annee'],
 
     properties: {
       id: { type: 'string' },
@@ -37,8 +30,8 @@ class TitresActivites extends Model {
       activiteStatutId: { type: 'string', maxLength: 3 },
       periodeId: { type: 'integer' },
       annee: { type: 'integer' },
-      sections: {}
-    }
+      sections: {},
+    },
   }
 
   static relationMappings = () => ({
@@ -47,8 +40,8 @@ class TitresActivites extends Model {
       modelClass: ActivitesTypes,
       join: {
         from: 'titresActivites.typeId',
-        to: 'activitesTypes.id'
-      }
+        to: 'activitesTypes.id',
+      },
     },
 
     titre: {
@@ -56,8 +49,8 @@ class TitresActivites extends Model {
       modelClass: Titres,
       join: {
         from: 'titresActivites.titreId',
-        to: 'titres.id'
-      }
+        to: 'titres.id',
+      },
     },
 
     utilisateur: {
@@ -65,8 +58,8 @@ class TitresActivites extends Model {
       modelClass: Utilisateurs,
       join: {
         from: 'titresActivites.utilisateurId',
-        to: 'utilisateurs.id'
-      }
+        to: 'utilisateurs.id',
+      },
     },
 
     documentsTypes: {
@@ -74,8 +67,8 @@ class TitresActivites extends Model {
       modelClass: DocumentsTypes,
       join: {
         from: 'titresActivites.typeId',
-        to: 'activitesTypes__documentsTypes.activiteTypeId'
-      }
+        to: 'activitesTypes__documentsTypes.activiteTypeId',
+      },
     },
 
     documents: {
@@ -83,19 +76,15 @@ class TitresActivites extends Model {
       modelClass: Document,
       join: {
         from: 'titresActivites.id',
-        to: 'documents.titreActiviteId'
-      }
-    }
+        to: 'documents.titreActiviteId',
+      },
+    },
   })
 
   public static modifiers: Modifiers = {
     orderDesc: builder => {
-      builder
-        .joinRelated('type')
-        .orderByRaw(
-          "date desc, array_position(array['ann','tri','men']::varchar[], type.frequence_id), type.ordre"
-        )
-    }
+      builder.joinRelated('type').orderByRaw("date desc, array_position(array['ann','tri','men']::varchar[], type.frequence_id), type.ordre")
+    },
   }
 
   async $beforeInsert(context: QueryContext) {
@@ -103,9 +92,7 @@ class TitresActivites extends Model {
       this.id = idGenerate()
     }
     if (!this.slug && this.titreId && this.typeId && this.periodeId) {
-      this.slug = `${this.titreId}-${this.typeId}-${this.annee}-${this.periodeId
-        .toString()
-        .padStart(2, '0')}`
+      this.slug = `${this.titreId}-${this.typeId}-${this.annee}-${this.periodeId.toString().padStart(2, '0')}`
     }
 
     return super.$beforeInsert(context)

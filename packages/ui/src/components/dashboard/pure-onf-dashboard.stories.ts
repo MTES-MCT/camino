@@ -6,8 +6,8 @@ const meta: Meta = {
   title: 'Components/Dashboard/ONF',
   component: PureONFDashboard,
   argTypes: {
-    getOnfTitres: { name: 'function', required: true }
-  }
+    getOnfTitres: { name: 'function', required: true },
+  },
 }
 export default meta
 
@@ -21,13 +21,13 @@ const onfs: CommonTitreONF[] = [
     references: [],
     titulaires: [
       {
-        nom: 'Titulaire1'
-      }
+        nom: 'Titulaire1',
+      },
     ],
     dateCompletudePTMG: '',
     dateReceptionONF: '',
     dateCARM: '',
-    enAttenteDeONF: true
+    enAttenteDeONF: true,
   },
   {
     id: 'secondId',
@@ -38,19 +38,19 @@ const onfs: CommonTitreONF[] = [
     references: [
       {
         nom: '2010-001',
-        referenceTypeId: 'onf'
+        referenceTypeId: 'onf',
       },
-      { nom: '2010-000', referenceTypeId: 'ptm' }
+      { nom: '2010-000', referenceTypeId: 'ptm' },
     ],
     titulaires: [
       {
-        nom: 'Titulaire3'
-      }
+        nom: 'Titulaire3',
+      },
     ],
     dateCompletudePTMG: '2022-03-23',
     dateReceptionONF: '2022-03-24',
     dateCARM: '2022-04-12',
-    enAttenteDeONF: true
+    enAttenteDeONF: true,
   },
   {
     id: 'thirdId',
@@ -61,13 +61,13 @@ const onfs: CommonTitreONF[] = [
     references: [],
     titulaires: [
       {
-        nom: 'Titulaire1'
-      }
+        nom: 'Titulaire1',
+      },
     ],
     dateCompletudePTMG: '',
     dateReceptionONF: '',
     dateCARM: '',
-    enAttenteDeONF: false
+    enAttenteDeONF: false,
   },
   {
     id: 'fourthId',
@@ -78,20 +78,20 @@ const onfs: CommonTitreONF[] = [
     references: [
       {
         nom: '2010-001',
-        referenceTypeId: 'onf'
+        referenceTypeId: 'onf',
       },
-      { nom: '2010-000', referenceTypeId: 'ptm' }
+      { nom: '2010-000', referenceTypeId: 'ptm' },
     ],
     titulaires: [
       {
-        nom: 'Titulaire 8'
-      }
+        nom: 'Titulaire 8',
+      },
     ],
     dateCompletudePTMG: '2022-03-23',
     dateReceptionONF: '2022-03-24',
     dateCARM: '2022-04-12',
-    enAttenteDeONF: true
-  }
+    enAttenteDeONF: true,
+  },
 ]
 
 const Template: Story<Props> = (args: Props) => ({
@@ -99,33 +99,32 @@ const Template: Story<Props> = (args: Props) => ({
   setup() {
     return { args }
   },
-  template: '<div><PureONFDashboard v-bind="args" /></div>'
+  template: '<div><PureONFDashboard v-bind="args" /></div>',
 })
 
 export const Ok = Template.bind(
   {},
   {
-    getOnfTitres: () => Promise.resolve(onfs)
+    getOnfTitres: () => Promise.resolve(onfs),
   }
 )
 
 export const OkSansAttenteDeONF = Template.bind(
   {},
   {
-    getOnfTitres: () =>
-      Promise.resolve(onfs.map(titre => ({ ...titre, enAttenteDeONF: false })))
+    getOnfTitres: () => Promise.resolve(onfs.map(titre => ({ ...titre, enAttenteDeONF: false }))),
   }
 )
 
 export const Loading = Template.bind(
   {},
   {
-    getOnfTitres: () => new Promise<CommonTitreONF[]>(resolve => {})
+    getOnfTitres: () => new Promise<CommonTitreONF[]>(resolve => {}),
   }
 )
 export const WithError = Template.bind(
   {},
   {
-    getOnfTitres: () => Promise.reject(new Error('because reasons'))
+    getOnfTitres: () => Promise.reject(new Error('because reasons')),
   }
 )

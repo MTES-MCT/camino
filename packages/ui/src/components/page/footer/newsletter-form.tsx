@@ -10,11 +10,7 @@ type Props = {
   onSubscribe: () => void
 }
 
-export const PureNewsletterForm: FunctionalComponent<Props> = ({
-  state,
-  onEmailInput,
-  onSubscribe
-}: Props) => (
+export const PureNewsletterForm: FunctionalComponent<Props> = ({ state, onEmailInput, onSubscribe }: Props) => (
   <div class="fr-follow">
     <div class="fr-container">
       <div class="fr-grid-row">
@@ -38,27 +34,17 @@ export const PureNewsletterForm: FunctionalComponent<Props> = ({
                   </label>
                   <div class="fr-input-wrap fr-input-wrap--addon">
                     <input
-                      class={`fr-input ${
-                        state === 'ERROR' ? 'fr-input--error' : ''
-                      }`}
+                      class={`fr-input ${state === 'ERROR' ? 'fr-input--error' : ''}`}
                       title="Votre adresse électronique (ex. : nom@domaine.fr)"
                       autocomplete="email"
                       aria-describedby="newsletter-email-hint-text newsletter-email-messages"
                       placeholder="Votre adresse électronique (ex. : nom@domaine.fr)"
                       id="newsletter-email"
                       type="email"
-                      onInput={event =>
-                        isEventWithTarget(event)
-                          ? onEmailInput(event.target.value)
-                          : null
-                      }
+                      onInput={event => (isEventWithTarget(event) ? onEmailInput(event.target.value) : null)}
                     />
                     <button
-                      class={`fr-btn ${
-                        state === 'SUBSCRIBED'
-                          ? 'fr-btn--icon-left fr-icon-checkbox-circle-line'
-                          : ''
-                      }`}
+                      class={`fr-btn ${state === 'SUBSCRIBED' ? 'fr-btn--icon-left fr-icon-checkbox-circle-line' : ''}`}
                       id="newsletter-button"
                       title="S‘abonner à notre lettre d’information"
                       disabled={state === 'SUBSCRIBING'}
@@ -73,17 +59,11 @@ export const PureNewsletterForm: FunctionalComponent<Props> = ({
                       Une erreur est survenue.
                     </p>
                   ) : null}
-                  <div
-                    class="fr-messages-group"
-                    id="newsletter-email-messages"
-                    aria-live="assertive"
-                  ></div>
+                  <div class="fr-messages-group" id="newsletter-email-messages" aria-live="assertive"></div>
                 </div>
                 <p id="newsletter-email-hint-text" class="fr-hint-text">
-                  En renseignant votre adresse électronique, vous acceptez de
-                  recevoir nos actualités par courriel. Vous pouvez vous
-                  désinscrire à tout moment à l’aide des liens de désinscription
-                  ou en nous contactant.
+                  En renseignant votre adresse électronique, vous acceptez de recevoir nos actualités par courriel. Vous pouvez vous désinscrire à tout moment à l’aide des liens de désinscription ou
+                  en nous contactant.
                 </p>
               </form>
             </div>
@@ -104,7 +84,7 @@ export const NewsletterForm = defineComponent<void>({
         try {
           subscribed.value = 'SUBSCRIBING'
           await newsletterInscrire({
-            email: email.value
+            email: email.value,
           })
           email.value = ''
           subscribed.value = 'SUBSCRIBED'
@@ -117,12 +97,8 @@ export const NewsletterForm = defineComponent<void>({
 
     return () => (
       <div>
-        <PureNewsletterForm
-          state={subscribed.value}
-          onEmailInput={e => (email.value = e)}
-          onSubscribe={() => subscribe()}
-        />
+        <PureNewsletterForm state={subscribed.value} onEmailInput={e => (email.value = e)} onSubscribe={() => subscribe()} />
       </div>
     )
-  }
+  },
 })

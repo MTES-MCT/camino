@@ -8,7 +8,7 @@ import { UtilisateurApiClient } from './utilisateur/utilisateur-api-client'
 const meta: Meta = {
   title: 'Components/Utilisateur',
   component: PureUtilisateur,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -26,7 +26,7 @@ const apiClientMock: UtilisateurApiClient = {
       email: 'email@gmail.com',
       nom: 'nom',
       prenom: 'prenom',
-      role: 'super'
+      role: 'super',
     }),
   getUtilisateurNewsletter: () => Promise.resolve(true),
   removeUtilisateur: () => Promise.resolve(),
@@ -35,14 +35,8 @@ const apiClientMock: UtilisateurApiClient = {
     editNewsletter(values)
     return Promise.resolve()
   },
-  getEntreprises: () =>
-    Promise.resolve([
-      { id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }
-    ]),
-  getQGISToken: () =>
-    new Promise(resolve =>
-      setTimeout(() => resolve({ token: 'token123' }), 1000)
-    )
+  getEntreprises: () => Promise.resolve([{ id: newEntrepriseId('id'), nom: 'Entreprise1', etablissements: [] }]),
+  getQGISToken: () => new Promise(resolve => setTimeout(() => resolve({ token: 'token123' }), 1000)),
 }
 
 export const MySelf: Story = () => (
@@ -73,7 +67,7 @@ export const Loading: Story = () => (
     passwordUpdate={passwordUpdate}
     apiClient={{
       ...apiClientMock,
-      getUtilisateur: () => new Promise(() => ({}))
+      getUtilisateur: () => new Promise(() => ({})),
     }}
   />
 )
@@ -92,7 +86,7 @@ export const error: Story = () => (
     apiClient={{
       ...apiClientMock,
       getUtilisateurNewsletter: () => Promise.reject(new Error('Cassé')),
-      getUtilisateur: () => Promise.reject(new Error('Cassé'))
+      getUtilisateur: () => Promise.reject(new Error('Cassé')),
     }}
   />
 )

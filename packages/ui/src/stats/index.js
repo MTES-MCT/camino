@@ -9,7 +9,7 @@ const defaultOptions = {
   enableHeartBeatTimer: false,
   enableLinkTracking: false,
   heartBeatTimerInterval: 60,
-  environnement: 'dev'
+  environnement: 'dev',
 }
 
 const install = (setupOptions = {}) => {
@@ -17,10 +17,7 @@ const install = (setupOptions = {}) => {
 
   return bootstrap(options)
     .then(() => {
-      const matomo = window.Piwik.getTracker(
-        `${options.host}/${options.trackerFileName}.php`,
-        options.siteId
-      )
+      const matomo = window.Piwik.getTracker(`${options.host}/${options.trackerFileName}.php`, options.siteId)
 
       // dimension d'environnement : https://stats.data.gouv.fr/index.php?module=CustomDimensions&action=manage&idSite=70&period=day&date=yesterday#?idDimension=1&scope=visit
       matomo.setCustomDimension(1, options.environnement)

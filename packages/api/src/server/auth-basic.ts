@@ -27,32 +27,20 @@ const userQGISCredentialsCheck = async (email: string, qgisToken: string) => {
   return valid ? user : null
 }
 
-export const authBasic = async (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
+export const authBasic = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
   try {
     // basic auth est activé que pour la route titres_qgis
     if (req.url.includes('titres_qgis')) {
-      const credentials = req.headers.authorization
-        ? basicAuth.parse(req.headers.authorization)
-        : null
+      const credentials = req.headers.authorization ? basicAuth.parse(req.headers.authorization) : null
       if (!credentials) {
-        res.setHeader(
-          'WWW-Authenticate',
-          'Basic realm="Authentication Required"'
-        )
+        res.setHeader('WWW-Authenticate', 'Basic realm="Authentication Required"')
         res.status(401)
         res.send('Authentication Required')
 
         return
       }
 
-      const user = await userQGISCredentialsCheck(
-        credentials.name,
-        credentials.pass
-      )
+      const user = await userQGISCredentialsCheck(credentials.name, credentials.pass)
 
       if (!user) {
         res.status(401)

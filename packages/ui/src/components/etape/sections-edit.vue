@@ -3,47 +3,36 @@
     <div v-for="s in sections" :key="s.id">
       <h3 v-if="s.nom">{{ s.nom }}</h3>
 
-      <SectionElementEdit
-        v-for="e in s.elements"
-        :key="e.id"
-        v-model:contenu="contenu[s.id]"
-        :element="e"
-        :heritage="etape.heritageContenu[s.id]"
-        :sectionId="s.id"
-      />
+      <SectionElementEdit v-for="e in s.elements" :key="e.id" v-model:contenu="contenu[s.id]" :element="e" :heritage="etape.heritageContenu[s.id]" :sectionId="s.id" />
     </div>
   </div>
 </template>
 
 <script>
-import {
-  elementContenuBuild,
-  contenuBuild,
-  contenuCompleteCheck
-} from '@/utils/contenu'
+import { elementContenuBuild, contenuBuild, contenuCompleteCheck } from '@/utils/contenu'
 import SectionElementEdit from './section-element-edit.vue'
 
 export default {
   components: {
-    SectionElementEdit
+    SectionElementEdit,
   },
 
   props: {
     sections: { type: Array, required: true },
-    etape: { type: Object, required: true }
+    etape: { type: Object, required: true },
   },
 
   emits: ['complete-update', 'sections-update'],
   data() {
     return {
-      contenu: {}
+      contenu: {},
     }
   },
 
   computed: {
     complete() {
       return contenuCompleteCheck(this.sections, this.contenu)
-    }
+    },
   },
 
   watch: {
@@ -52,10 +41,10 @@ export default {
         this.etape.contenu = elementContenuBuild(this.sections, contenu)
         this.$emit('sections-update')
       },
-      deep: true
+      deep: true,
     },
 
-    complete: 'completeUpdate'
+    complete: 'completeUpdate',
   },
 
   created() {
@@ -66,7 +55,7 @@ export default {
   methods: {
     completeUpdate() {
       this.$emit('complete-update', this.complete)
-    }
-  }
+    },
+  },
 }
 </script>

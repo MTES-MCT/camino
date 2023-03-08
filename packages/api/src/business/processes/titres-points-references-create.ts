@@ -1,9 +1,6 @@
 import { ITitrePoint, ITitrePointReference } from '../../types.js'
 
-import {
-  titrePointReferenceCreate,
-  titresPointsGet
-} from '../../database/queries/titres-points.js'
+import { titrePointReferenceCreate, titresPointsGet } from '../../database/queries/titres-points.js'
 
 const titreEtapePointsReferencesNewFind = (titrePoints: ITitrePoint[]) =>
   titrePoints.reduce((acc: ITitrePointReference[], titrePoint) => {
@@ -14,8 +11,8 @@ const titreEtapePointsReferencesNewFind = (titrePoints: ITitrePoint[]) =>
         geoSystemeId: '4326',
         coordonnees: {
           x: titrePoint.coordonnees.x,
-          y: titrePoint.coordonnees.y
-        }
+          y: titrePoint.coordonnees.y,
+        },
       })
     }
 
@@ -33,10 +30,7 @@ export const titresPointsReferencesCreate = async () => {
 
   for (const r of pointsReferencesNew) {
     await titrePointReferenceCreate(r)
-    console.info(
-      'titre / démarche / étape / point / référence (création) ->',
-      JSON.stringify(r.id)
-    )
+    console.info('titre / démarche / étape / point / référence (création) ->', JSON.stringify(r.id))
 
     pointsReferencesCreated.push(r.id)
   }

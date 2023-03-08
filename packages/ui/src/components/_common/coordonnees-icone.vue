@@ -7,7 +7,7 @@ import { Icon } from '@/components/_ui/icon'
 export default {
   components: { Icon },
   props: {
-    coordonnees: { type: Object, default: null }
-  }
+    coordonnees: { type: Object, default: null },
+  },
 }
 </script>

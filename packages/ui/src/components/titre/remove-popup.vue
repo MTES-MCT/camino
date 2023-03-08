@@ -3,8 +3,7 @@
     <template #header>
       <div>
         <h6>
-          <span class="cap-first"> {{ titreNom }} </span
-          ><span class="color-neutral"> | </span
+          <span class="cap-first"> {{ titreNom }} </span><span class="color-neutral"> | </span
           ><span class="cap-first">
             {{ typeNom }}
           </span>
@@ -15,27 +14,18 @@
 
     <p class="bold">
       Souhaitez vous supprimer le titre
-      <span class="color-inverse">{{ titreNom }}</span> (<span
-        class="color-inverse"
-        >{{ typeNom }}</span
+      <span class="color-inverse">{{ titreNom }}</span> (<span class="color-inverse">{{ typeNom }}</span
       >) ?
     </p>
-    <div class="bg-warning color-bg p-s mb-l">
-      <span class="bold"> Attention </span>: cette opération est définitive et
-      ne peut pas être annulée.
-    </div>
+    <div class="bg-warning color-bg p-s mb-l"><span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.</div>
 
     <template #footer>
       <div v-if="!loading" class="tablet-blobs">
         <div class="tablet-blob-1-3 mb tablet-mb-0">
-          <button class="btn-border rnd-xs p-s full-x" @click="cancel">
-            Annuler
-          </button>
+          <button class="btn-border rnd-xs p-s full-x" @click="cancel">Annuler</button>
         </div>
         <div class="tablet-blob-2-3">
-          <button class="btn-flash rnd-xs p-s full-x" @click="remove">
-            Supprimer
-          </button>
+          <button class="btn-flash rnd-xs p-s full-x" @click="remove">Supprimer</button>
         </div>
       </div>
       <div v-else class="p-s full-x bold">Suppression en cours…</div>
@@ -50,24 +40,24 @@ export default {
   name: 'CaminoTitreRemovePopup',
 
   components: {
-    Popup
+    Popup,
   },
 
   props: {
     titreId: {
       type: String,
-      default: ''
+      default: '',
     },
 
     titreNom: {
       type: String,
-      default: ''
+      default: '',
     },
 
     typeNom: {
       type: String,
-      default: ''
-    }
+      default: '',
+    },
   },
 
   computed: {
@@ -77,7 +67,7 @@ export default {
 
     messages() {
       return this.$store.state.popup.messages
-    }
+    },
   },
 
   created() {
@@ -108,7 +98,7 @@ export default {
 
     errorsRemove() {
       // this.$store.commit('utilisateur/loginMessagesRemove')
-    }
-  }
+    },
+  },
 }
 </script>

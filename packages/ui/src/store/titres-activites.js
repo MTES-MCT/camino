@@ -16,7 +16,7 @@ const state = {
   total: 0,
   metas: {
     annees: anneesGet(new Date().getFullYear()),
-    titresEntreprises: []
+    titresEntreprises: [],
   },
   definitions: [
     { id: 'typesIds', type: 'strings', values: [] },
@@ -35,20 +35,20 @@ const state = {
     {
       id: 'colonne',
       type: 'string',
-      values: ['titreNom', 'titulaires', 'annee', 'periode', 'statut']
+      values: ['titreNom', 'titulaires', 'annee', 'periode', 'statut'],
     },
     {
       id: 'ordre',
       type: 'string',
-      values: ['asc', 'desc']
-    }
+      values: ['asc', 'desc'],
+    },
   ],
   params: {
     table: {
       page: 1,
       intervalle: 200,
       ordre: 'asc',
-      colonne: null
+      colonne: null,
     },
     filtres: {
       typesIds: [],
@@ -61,32 +61,25 @@ const state = {
       titresTerritoires: '',
       titresTypesIds: [],
       titresDomainesIds: [],
-      titresStatutsIds: []
-    }
+      titresStatutsIds: [],
+    },
   },
-  initialized: false
+  initialized: false,
 }
 
-const actions = listeActionsBuild(
-  'titresActivites',
-  'activités',
-  activites,
-  activitesMetas
-)
+const actions = listeActionsBuild('titresActivites', 'activités', activites, activitesMetas)
 
 const mutations = Object.assign({}, listeMutations, {
   metasSet(state, data) {
     state.metas.titresEntreprises = data.elements
-    const definition = state.definitions.find(
-      p => p.id === 'titresEntreprisesIds'
-    )
+    const definition = state.definitions.find(p => p.id === 'titresEntreprisesIds')
     definition.values = data.elements.map(e => e.id)
-  }
+  },
 })
 
 export default {
   namespaced: true,
   state,
   actions,
-  mutations
+  mutations,
 }

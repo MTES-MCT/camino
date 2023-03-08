@@ -6,11 +6,5 @@ export type Props = {
 }
 
 export function FiltresStatuts(props: Props) {
-  return (
-    <Statut
-      color={props.element.couleur}
-      nom={props.element.nom}
-      class="inline-block mb-s"
-    />
-  )
+  return <Statut color={props.element.couleur} nom={props.element.nom} class="inline-block mb-s" />
 }

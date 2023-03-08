@@ -1,12 +1,7 @@
 import gql from 'graphql-tag'
 import { apiGraphQLFetch } from './_client'
 
-import {
-  fragmentTitre,
-  fragmentTitres,
-  fragmentTitresGeo,
-  fragmentTitresGeoPolygon
-} from './fragments/titre'
+import { fragmentTitre, fragmentTitres, fragmentTitresGeo, fragmentTitresGeoPolygon } from './fragments/titre'
 
 const titresMetas = apiGraphQLFetch(
   gql`
@@ -232,15 +227,4 @@ const titreSupprimer = apiGraphQLFetch(gql`
   }
 `)
 
-export {
-  titresMetas,
-  titre,
-  titres,
-  titresGeo,
-  titresGeoPolygon,
-  titreCreer,
-  titreModifier,
-  titreSupprimer,
-  titresRechercherByNom,
-  titresFiltres
-}
+export { titresMetas, titre, titres, titresGeo, titresGeoPolygon, titreCreer, titreModifier, titreSupprimer, titresRechercherByNom, titresFiltres }

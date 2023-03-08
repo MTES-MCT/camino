@@ -1,9 +1,6 @@
 import { CaminoDate } from 'camino-common/src/date.js'
 
-import {
-  titreEtapesSortAscByOrdre,
-  titreEtapesSortDescByOrdre
-} from '../utils/titre-etapes-sort.js'
+import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { TitreEtapePhaseFind } from './titre-demarche-date-fin-duree-find.js'
 
 /**
@@ -12,9 +9,7 @@ import { TitreEtapePhaseFind } from './titre-demarche-date-fin-duree-find.js'
  * @param titreEtapes - les étapes de la démarche d'annulation
  * @returns la date de fin si elle existe
  */
-export const titreDemarcheAnnulationDateFinFind = (
-  titreEtapes: TitreEtapePhaseFind[]
-): CaminoDate | null | undefined => {
+export const titreDemarcheAnnulationDateFinFind = (titreEtapes: TitreEtapePhaseFind[]): CaminoDate | null | undefined => {
   // si l’étape valide l’annulation
   const etapeAnnulationValideCheck = (te: TitreEtapePhaseFind) =>
     // si on a une décision expresse (dex) ou unilatérale (dux) ou implicite (dim)
@@ -23,9 +18,7 @@ export const titreDemarcheAnnulationDateFinFind = (
     (te.typeId === 'aco' && te.statutId === 'fai')
 
   // la dernière étape qui valide l’annulation et qui contient une date de fin
-  const etapeAnnulationHasDateFin = titreEtapesSortDescByOrdre(
-    titreEtapes
-  ).find(te => te.dateFin && etapeAnnulationValideCheck(te))
+  const etapeAnnulationHasDateFin = titreEtapesSortDescByOrdre(titreEtapes).find(te => te.dateFin && etapeAnnulationValideCheck(te))
 
   // si la démarche contient une date de fin
   if (etapeAnnulationHasDateFin) {
@@ -34,9 +27,7 @@ export const titreDemarcheAnnulationDateFinFind = (
 
   // sinon,
   // trouve la première étape qui valide l’annulation
-  const etapeAnnulation = titreEtapesSortAscByOrdre(titreEtapes).find(
-    etapeAnnulationValideCheck
-  )
+  const etapeAnnulation = titreEtapesSortAscByOrdre(titreEtapes).find(etapeAnnulationValideCheck)
 
   // la date de fin est la date de l'étape
   return etapeAnnulation?.date ? etapeAnnulation.date : null

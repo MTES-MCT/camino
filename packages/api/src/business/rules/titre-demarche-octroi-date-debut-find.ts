@@ -4,21 +4,13 @@ import titreDemarchesSortAsc from '../utils/titre-elements-sort-asc.js'
 import { titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js'
 
-const titreDemarcheOctroiDateDebutFind = (
-  titreDemarches?: ITitreDemarche[] | null
-) => {
+const titreDemarcheOctroiDateDebutFind = (titreDemarches?: ITitreDemarche[] | null) => {
   if (!titreDemarches || !titreDemarches.length) return '0000'
 
   // récupère la démarche d'octroi (naturelle ou virtuelle)
-  const demarcheOctroi = titreDemarchesSortAsc(titreDemarches).find(
-    ({ typeId }) => isDemarcheTypeOctroi(typeId)
-  )
+  const demarcheOctroi = titreDemarchesSortAsc(titreDemarches).find(({ typeId }) => isDemarcheTypeOctroi(typeId))
 
-  if (
-    !demarcheOctroi ||
-    !demarcheOctroi.etapes ||
-    !demarcheOctroi.etapes.length
-  ) {
+  if (!demarcheOctroi || !demarcheOctroi.etapes || !demarcheOctroi.etapes.length) {
     return '0000'
   }
 
@@ -27,22 +19,7 @@ const titreDemarcheOctroiDateDebutFind = (
 
   // récupère l'étape la plus importante de l'octroi en premier
   const etapeOctroi =
-    etapes.find(
-      ({ typeId }) =>
-        ([
-          'dpu',
-          'dup',
-          'rpu',
-          'dex',
-          'dux',
-          'dim',
-          'def',
-          'sco',
-          'aco'
-        ].includes(typeId) &&
-          demarcheOctroi.statutId === 'acc') ||
-        typeId === 'mfr'
-    ) ||
+    etapes.find(({ typeId }) => (['dpu', 'dup', 'rpu', 'dex', 'dux', 'dim', 'def', 'sco', 'aco'].includes(typeId) && demarcheOctroi.statutId === 'acc') || typeId === 'mfr') ||
     // sinon utilise la première étape (chronologique) de l'octroi
     etapes[etapes.length - 1]
 

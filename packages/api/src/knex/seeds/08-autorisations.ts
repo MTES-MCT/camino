@@ -13,6 +13,6 @@ export const seed = seeding(async ({ insert }) => {
   await Promise.all([
     insert('administrations__titresTypes__titresStatuts', toDbATT()),
     insert('administrations__titresTypes__etapesTypes', toDbATE()),
-    insert('administrations__activitesTypes', administrations_activitesTypes)
+    insert('administrations__activitesTypes', administrations_activitesTypes),
   ])
 })

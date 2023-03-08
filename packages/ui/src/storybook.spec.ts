@@ -14,18 +14,14 @@ console.error = vi.fn()
 vi.mock('vue-router', () => ({
   useRoute: vi.fn(),
   useRouter: vi.fn(() => ({
-    push: () => {}
-  }))
+    push: () => {},
+  })),
 }))
 
 vi.mock('vuex', () => ({ useStore: vi.fn() }))
 
 describe('Storybook Tests', async () => {
-  const modules = await Promise.all(
-    Object.values(import.meta.glob<StoryFile>('../**/*.stories.ts(x)?')).map(
-      fn => fn()
-    )
-  )
+  const modules = await Promise.all(Object.values(import.meta.glob<StoryFile>('../**/*.stories.ts(x)?')).map(fn => fn()))
   describe.each(
     modules.map(module => {
       return { name: module.default.title, module }
@@ -34,15 +30,12 @@ describe('Storybook Tests', async () => {
     test.skipIf(name?.includes('NoStoryshots')).each(
       Object.entries<ContextedStory<unknown>>(composeStories(module))
         .map(([name, story]) => ({ name, story }))
-        .filter(
-          env =>
-            name?.includes('NoStoryshots') || !env.name?.includes('NoSnapshot')
-        )
+        .filter(env => name?.includes('NoStoryshots') || !env.name?.includes('NoSnapshot'))
     )('$name', async ({ story }) => {
       const mounted = render(story(), {
         global: {
-          components: { 'router-link': h('a', { type: 'primary' }) }
-        }
+          components: { 'router-link': h('a', { type: 'primary' }) },
+        },
       })
       await new Promise<void>(resolve => setTimeout(() => resolve(), 1))
       expect(mounted.html()).toMatchSnapshot()

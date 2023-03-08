@@ -1,10 +1,4 @@
-import {
-  IFormat,
-  ITitreColonneId,
-  ITitreDemarcheColonneId,
-  IUtilisateursColonneId,
-  ITitreActiviteColonneId
-} from '../../types.js'
+import { IFormat, ITitreColonneId, ITitreDemarcheColonneId, IUtilisateursColonneId, ITitreActiviteColonneId } from '../../types.js'
 
 import { titreGet, titresGet } from '../../database/queries/titres.js'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
@@ -20,11 +14,7 @@ import { entrepriseFormat } from '../_format/entreprises.js'
 import { tableConvert } from './_convert.js'
 import { fileNameCreate } from '../../tools/file-name-create.js'
 
-import {
-  titresGeojsonFormat,
-  titreGeojsonFormat,
-  titresTableFormat
-} from './format/titres.js'
+import { titresGeojsonFormat, titreGeojsonFormat, titresTableFormat } from './format/titres.js'
 import { titresDemarchesFormatTable } from './format/titres-demarches.js'
 import { titresActivitesFormatTable } from './format/titres-activites.js'
 import { entreprisesFormatTable } from './format/entreprises.js'
@@ -56,9 +46,9 @@ const titreFields = {
   demarches: {
     type: { etapesTypes: { id: {} } },
     etapes: {
-      type: { id: {} }
-    }
-  }
+      type: { id: {} },
+    },
+  },
 }
 
 interface ITitreInput {
@@ -66,10 +56,7 @@ interface ITitreInput {
   params: { id?: string | null }
 }
 
-export const titre = async (
-  { query: { format = 'json' }, params: { id } }: ITitreInput,
-  user: User
-) => {
+export const titre = async ({ query: { format = 'json' }, params: { id } }: ITitreInput, user: User) => {
   formatCheck(['geojson', 'json'], format)
 
   const titre = await titreGet(id!, { fields: titreFields }, user)
@@ -92,7 +79,7 @@ export const titre = async (
   return {
     nom: fileNameCreate(titre.id, format),
     format,
-    contenu
+    contenu,
   }
 }
 
@@ -133,8 +120,8 @@ export const titres = async (
       departements,
       regions,
       facadesMaritimes,
-      perimetre
-    }
+      perimetre,
+    },
   }: { query: ITitresQueryInput },
   user: User
 ) => {
@@ -157,7 +144,7 @@ export const titres = async (
       regions: regions?.split(',').filter(isRegionId),
       facadesMaritimes: facadesMaritimes?.split(',').filter(isFacade),
       perimetre,
-      demandeEnCours: true
+      demandeEnCours: true,
     },
     { fields: titreFields },
     user
@@ -191,7 +178,7 @@ export const titres = async (
       titresIds,
       entreprisesIds,
       references,
-      territoires
+      territoires,
     })
       .filter(param => param[1] !== undefined)
       .map(param => param.join('='))
@@ -200,7 +187,7 @@ export const titres = async (
     matomo.track({
       url: `${process.env.API_MATOMO_URL}/matomo.php?${url}`,
       e_c: 'camino-api',
-      e_a: `titres-flux-${format}`
+      e_a: `titres-flux-${format}`,
     })
   }
 
@@ -208,7 +195,7 @@ export const titres = async (
     ? {
         nom: fileNameCreate(`titres-${titres.length}`, format),
         format,
-        contenu
+        contenu,
       }
     : null
 }
@@ -250,8 +237,8 @@ export const demarches = async (
       titresSubstancesIds,
       titresReferences,
       titresTerritoires,
-      travaux
-    }
+      travaux,
+    },
   }: { query: ITitresDemarchesQueryInput },
   user: User
 ) => {
@@ -273,7 +260,7 @@ export const demarches = async (
       titresSubstancesIds: titresSubstancesIds?.split(','),
       titresReferences,
       titresTerritoires,
-      travaux: travaux ? travaux === 'true' : undefined
+      travaux: travaux ? travaux === 'true' : undefined,
     },
     {
       fields: {
@@ -281,24 +268,22 @@ export const demarches = async (
         titre: {
           id: {},
           titulaires: { id: {} },
-          amodiataires: { id: {} }
+          amodiataires: { id: {} },
         },
         etapes: {
           forets: { id: {} },
           communes: { id: {} },
           points: { id: {} },
           type: {
-            id: {}
-          }
-        }
-      }
+            id: {},
+          },
+        },
+      },
     },
     user
   )
 
-  const demarchesFormatted = titresDemarches.map(titreDemarche =>
-    titreDemarcheFormat(titreDemarche)
-  )
+  const demarchesFormatted = titresDemarches.map(titreDemarche => titreDemarcheFormat(titreDemarche))
 
   let contenu
 
@@ -312,14 +297,9 @@ export const demarches = async (
 
   return contenu
     ? {
-        nom: fileNameCreate(
-          `${travaux === 'true' ? 'travaux' : 'demarches'}-${
-            titresDemarches.length
-          }`,
-          format
-        ),
+        nom: fileNameCreate(`${travaux === 'true' ? 'travaux' : 'demarches'}-${titresDemarches.length}`, format),
         format,
-        contenu
+        contenu,
       }
     : null
 }
@@ -357,8 +337,8 @@ export const activites = async (
       titresTerritoires,
       titresTypesIds,
       titresDomainesIds,
-      titresStatutsIds
-    }
+      titresStatutsIds,
+    },
   }: { query: ITitresActivitesQueryInput },
   user: User
 ) => {
@@ -378,20 +358,18 @@ export const activites = async (
       titresTerritoires,
       titresTypesIds: titresTypesIds?.split(','),
       titresDomainesIds: titresDomainesIds?.split(','),
-      titresStatutsIds: titresStatutsIds?.split(',')
+      titresStatutsIds: titresStatutsIds?.split(','),
     },
     {
       fields: {
         type: { id: {} },
-        titre: { communes: { id: {} } }
-      }
+        titre: { communes: { id: {} } },
+      },
     },
     user
   )
 
-  const titresActivitesFormatted = titresActivites.map(a =>
-    titreActiviteFormat(a)
-  )
+  const titresActivitesFormatted = titresActivites.map(a => titreActiviteFormat(a))
 
   let contenu
 
@@ -407,7 +385,7 @@ export const activites = async (
     ? {
         nom: fileNameCreate(`activites-${titresActivites.length}`, format),
         format,
-        contenu
+        contenu,
       }
     : null
 }
@@ -424,21 +402,7 @@ interface IUtilisateursQueryInput {
   emails?: string | null
 }
 
-export const utilisateurs = async (
-  {
-    query: {
-      format = 'json',
-      colonne,
-      ordre,
-      entrepriseIds,
-      administrationIds,
-      roles,
-      noms,
-      emails
-    }
-  }: { query: IUtilisateursQueryInput },
-  user: User
-) => {
+export const utilisateurs = async ({ query: { format = 'json', colonne, ordre, entrepriseIds, administrationIds, roles, noms, emails } }: { query: IUtilisateursQueryInput }, user: User) => {
   formatCheck(['json', 'csv', 'ods', 'xlsx'], format)
 
   const utilisateurs = await utilisateursGet(
@@ -449,7 +413,7 @@ export const utilisateurs = async (
       administrationIds: administrationIds?.split(','),
       roles: roles?.split(',').filter(isRole) ?? [],
       noms,
-      emails
+      emails,
     },
     {},
     user
@@ -469,7 +433,7 @@ export const utilisateurs = async (
     ? {
         nom: fileNameCreate(`utilisateurs-${utilisateurs.length}`, format),
         format,
-        contenu
+        contenu,
       }
     : null
 }
@@ -479,10 +443,7 @@ interface IEntreprisesQueryInput {
   noms?: string | null
 }
 
-export const entreprises = async (
-  { query: { format = 'json', noms } }: { query: IEntreprisesQueryInput },
-  user: User
-) => {
+export const entreprises = async ({ query: { format = 'json', noms } }: { query: IEntreprisesQueryInput }, user: User) => {
   formatCheck(['json', 'csv', 'xlsx', 'ods'], format)
 
   const entreprises = await entreprisesGet({ noms }, {}, user)
@@ -503,7 +464,7 @@ export const entreprises = async (
     ? {
         nom: fileNameCreate(`entreprises-${entreprises.length}`, format),
         format,
-        contenu
+        contenu,
       }
     : null
 }

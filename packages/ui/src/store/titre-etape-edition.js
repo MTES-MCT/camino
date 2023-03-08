@@ -1,25 +1,10 @@
-import {
-  documentEtapeFormat,
-  etapeEditFormat,
-  etapePointsFormat
-} from '../utils/titre-etape-edit'
+import { documentEtapeFormat, etapeEditFormat, etapePointsFormat } from '../utils/titre-etape-edit'
 import { etapeSaveFormat, pointsBuild } from '../utils/titre-etape-save'
 import { etapeHeritageBuild } from '../utils/titre-etape-heritage-build'
 
-import {
-  etape,
-  etapeCreer,
-  etapeHeritage,
-  etapeModifier,
-  titreEtapeEtapesTypes,
-  titreEtapeMetas
-} from '../api/titres-etapes'
+import { etape, etapeCreer, etapeHeritage, etapeModifier, titreEtapeEtapesTypes, titreEtapeMetas } from '../api/titres-etapes'
 import { documentsRequiredAdd } from '../utils/documents'
-import {
-  pointsImporter,
-  perimetreInformations,
-  titreEtapePerimetreInformations
-} from '../api/geojson'
+import { pointsImporter, perimetreInformations, titreEtapePerimetreInformations } from '../api/geojson'
 
 const state = {
   element: null,
@@ -29,10 +14,10 @@ const state = {
     entreprises: [],
     documentsTypes: [],
     sdomZonesDocumentTypeIds: [],
-    alertes: []
+    alertes: [],
   },
   heritageLoaded: false,
-  loaded: false
+  loaded: false,
 }
 
 const getters = {
@@ -48,25 +33,19 @@ const getters = {
       return []
     }
 
-    const documentsTypes = JSON.parse(
-      JSON.stringify(state.element.type.documentsTypes)
-    )
+    const documentsTypes = JSON.parse(JSON.stringify(state.element.type.documentsTypes))
 
     // si la démarche est mécanisée il faut ajouter des documents obligatoires
     if (state.element.contenu && state.element.contenu.arm) {
-      documentsTypes
-        .filter(dt => ['doe', 'dep'].includes(dt.id))
-        .forEach(dt => (dt.optionnel = !state.element.contenu.arm.mecanise))
+      documentsTypes.filter(dt => ['doe', 'dep'].includes(dt.id)).forEach(dt => (dt.optionnel = !state.element.contenu.arm.mecanise))
     }
 
     if (state.metas.sdomZonesDocumentTypeIds?.length) {
-      documentsTypes
-        .filter(dt => state.metas.sdomZonesDocumentTypeIds.includes(dt.id))
-        .forEach(dt => (dt.optionnel = false))
+      documentsTypes.filter(dt => state.metas.sdomZonesDocumentTypeIds.includes(dt.id)).forEach(dt => (dt.optionnel = false))
     }
 
     return documentsTypes
-  }
+  },
 }
 
 const actions = {
@@ -91,14 +70,13 @@ const actions = {
       if (id) {
         await dispatch('dateUpdate', { date: state.element.date })
 
-        const { documentTypeIds, alertes } =
-          await titreEtapePerimetreInformations({
-            titreEtapeId: id
-          })
+        const { documentTypeIds, alertes } = await titreEtapePerimetreInformations({
+          titreEtapeId: id,
+        })
 
         commit('metasSet', {
           sdomZonesDocumentTypeIds: documentTypeIds,
-          alertes
+          alertes,
         })
 
         await dispatch('documentInit', state.element.documents)
@@ -118,7 +96,7 @@ const actions = {
 
       const metas = await titreEtapeMetas({
         titreDemarcheId,
-        id
+        id,
       })
 
       commit('metasSet', metas)
@@ -135,7 +113,7 @@ const actions = {
       const metas = await titreEtapeEtapesTypes({
         id: state.element?.id,
         date,
-        titreDemarcheId: state.metas.demarche.id
+        titreDemarcheId: state.metas.demarche.id,
       })
 
       commit('metasSet', { etapesTypes: metas })
@@ -155,7 +133,7 @@ const actions = {
       const data = await etapeHeritage({
         titreDemarcheId: state.metas.demarche.id,
         date: state.element.date,
-        typeId
+        typeId,
       })
 
       const apiEtape = etapeEditFormat(data)
@@ -167,10 +145,10 @@ const actions = {
       const { alertes } = await perimetreInformations({
         points: [],
         demarcheId: state.metas.demarche.id,
-        etapeTypeId: typeId
+        etapeTypeId: typeId,
       })
       commit('metasSet', {
-        alertes
+        alertes,
       })
 
       commit('heritageLoaded', true)
@@ -178,7 +156,7 @@ const actions = {
       dispatch('apiError', e, { root: true })
     } finally {
       commit('loadingRemove', 'titreEtapeHeritageGet', {
-        root: true
+        root: true,
       })
     }
   },
@@ -187,11 +165,7 @@ const actions = {
     if (!state.element.type) {
       commit('documentsSet', [])
     } else {
-      documents = documentsRequiredAdd(
-        documents,
-        getters.documentsTypes,
-        rootGetters['user/userIsAdmin']
-      )
+      documents = documentsRequiredAdd(documents, getters.documentsTypes, rootGetters['user/userIsAdmin'])
 
       commit('documentsSet', documents)
     }
@@ -242,13 +216,12 @@ const actions = {
     try {
       commit('loadingAdd', 'pointsImport', { root: true })
 
-      const { points, surface, documentTypeIds, alertes } =
-        await pointsImporter({
-          file,
-          geoSystemeId,
-          demarcheId: state.metas.demarche.id,
-          etapeTypeId: state.element.type.id
-        })
+      const { points, surface, documentTypeIds, alertes } = await pointsImporter({
+        file,
+        geoSystemeId,
+        demarcheId: state.metas.demarche.id,
+        etapeTypeId: state.element.type.id,
+      })
       const etape = etapePointsFormat(state.element, points)
       // pour modifier la surface, on doit désactiver l’héritage
       etape.heritageProps.surface.actif = false
@@ -257,7 +230,7 @@ const actions = {
 
       commit('metasSet', {
         sdomZonesDocumentTypeIds: documentTypeIds,
-        alertes
+        alertes,
       })
       await dispatch('documentInit', state.element.documents)
       commit('popupClose', null, { root: true })
@@ -265,7 +238,7 @@ const actions = {
         'messageAdd',
         {
           value: `${points.length} points ont été importés avec succès`,
-          type: 'success'
+          type: 'success',
         },
         { root: true }
       )
@@ -280,28 +253,19 @@ const actions = {
     try {
       commit('loadingAdd', 'surfaceRefresh', { root: true })
 
-      if (
-        etape.geoSystemeIds &&
-        etape.geoSystemeIds.length &&
-        etape.groupes.length
-      ) {
-        const points = pointsBuild(
-          etape.groupes,
-          etape.geoSystemeIds,
-          etape.geoSystemeOpposableId || etape.geoSystemeIds[0]
-        )
-        const { surface, documentTypeIds, alertes } =
-          await perimetreInformations({
-            points,
-            demarcheId: state.metas.demarche.id,
-            etapeTypeId: etape.type.id
-          })
+      if (etape.geoSystemeIds && etape.geoSystemeIds.length && etape.groupes.length) {
+        const points = pointsBuild(etape.groupes, etape.geoSystemeIds, etape.geoSystemeOpposableId || etape.geoSystemeIds[0])
+        const { surface, documentTypeIds, alertes } = await perimetreInformations({
+          points,
+          demarcheId: state.metas.demarche.id,
+          etapeTypeId: etape.type.id,
+        })
         state.element.surface = surface
         commit('set', state.element)
 
         commit('metasSet', {
           sdomZonesDocumentTypeIds: documentTypeIds,
-          alertes
+          alertes,
         })
         await dispatch('documentInit', state.element.documents)
 
@@ -310,7 +274,7 @@ const actions = {
           'messageAdd',
           {
             value: `la surface a été recalculée à partir du périmètre`,
-            type: 'success'
+            type: 'success',
           },
           { root: true }
         )
@@ -319,7 +283,7 @@ const actions = {
           'messageAdd',
           {
             value: `la surface ne peut-être calculée car le périmètre est invalide`,
-            type: 'warning'
+            type: 'warning',
           },
           { root: true }
         )
@@ -333,7 +297,7 @@ const actions = {
 
   entrepriseDocumentAdd({ commit }, { entrepriseId, document }) {
     commit('entrepriseDocumentAdd', { entrepriseId, document })
-  }
+  },
 }
 
 const mutations = {
@@ -357,7 +321,7 @@ const mutations = {
       entreprises: [],
       documentsTypes: [],
       sdomZonesDocumentTypeIds: [],
-      alertes: []
+      alertes: [],
     }
     state.heritageLoaded = false
     state.loaded = false
@@ -382,9 +346,7 @@ const mutations = {
   },
 
   entrepriseDocumentAdd(state, { entrepriseId, document }) {
-    const entreprise = state.metas.entreprises.find(
-      ({ id }) => id === entrepriseId
-    )
+    const entreprise = state.metas.entreprises.find(({ id }) => id === entrepriseId)
 
     entreprise.documents.push(document)
     state.element.justificatifs.push({ id: document.id })
@@ -392,7 +354,7 @@ const mutations = {
 
   documentsSet(state, documents) {
     state.element.documents = documents
-  }
+  },
 }
 
 export default {
@@ -400,5 +362,5 @@ export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 }

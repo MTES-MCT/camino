@@ -8,21 +8,11 @@ const meta: Meta = {
   component: DGTMStatsFull,
   argTypes: {
     getEntreprisesTitres: { name: 'function', required: true },
-    displayActivites: { name: 'boolean' }
-  }
+    displayActivites: { name: 'boolean' },
+  },
 }
 export default meta
 
-export const OkNoSnapshot: Story = () => (
-  <DGTMStatsFull getDgtmStats={() => Promise.resolve(statistiquesDGTMFake)} />
-)
-export const Loading: Story = () => (
-  <DGTMStatsFull
-    getDgtmStats={() => new Promise<StatistiquesDGTM>(resolve => {})}
-  />
-)
-export const WithError: Story = () => (
-  <DGTMStatsFull
-    getDgtmStats={() => Promise.reject(new Error('because reasons'))}
-  />
-)
+export const OkNoSnapshot: Story = () => <DGTMStatsFull getDgtmStats={() => Promise.resolve(statistiquesDGTMFake)} />
+export const Loading: Story = () => <DGTMStatsFull getDgtmStats={() => new Promise<StatistiquesDGTM>(resolve => {})} />
+export const WithError: Story = () => <DGTMStatsFull getDgtmStats={() => Promise.reject(new Error('because reasons'))} />

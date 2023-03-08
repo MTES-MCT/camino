@@ -1,11 +1,6 @@
 import { numberFormat } from '@/utils/number-format'
 import { Icon } from '@/components/_ui/icon'
-import {
-  ElementWithValue,
-  isFileElement,
-  isNumberElement,
-  valeurFind
-} from 'camino-common/src/titres'
+import { ElementWithValue, isFileElement, isNumberElement, valeurFind } from 'camino-common/src/titres'
 
 export interface Props {
   element: ElementWithValue
@@ -27,27 +22,15 @@ export const SectionElement = (props: Props): JSX.Element => {
               <Icon size="S" name="file" class="mr-xs" />
               {props.element.value.slice(5)}
             </span>
-            <button
-              class="btn-border py-xs px-s rnd-xs flex-right mt--xs"
-              onClick={() =>
-                props.element.value && isFileElement(props.element)
-                  ? props.fileDownload(props.element.value)
-                  : {}
-              }
-            >
+            <button class="btn-border py-xs px-s rnd-xs flex-right mt--xs" onClick={() => (props.element.value && isFileElement(props.element) ? props.fileDownload(props.element.value) : {})}>
               <Icon size="M" name="download" />
             </button>
           </div>
         ) : (
           <p class={`cap-first ${props.element.description ? 'mb-s' : ''}`}>
             {valeurFind(props.element)}
-            {props.element.id === 'volumeGranulatsExtrait' &&
-            props.element.value !== undefined &&
-            isNumberElement(props.element) ? (
-              <span>
-                m3. Soit l’équivalent de{' '}
-                {numberFormat(props.element.value * 1.5)} tonnes.
-              </span>
+            {props.element.id === 'volumeGranulatsExtrait' && props.element.value !== undefined && isNumberElement(props.element) ? (
+              <span>m3. Soit l’équivalent de {numberFormat(props.element.value * 1.5)} tonnes.</span>
             ) : null}
           </p>
         )}

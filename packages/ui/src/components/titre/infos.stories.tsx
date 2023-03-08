@@ -5,7 +5,7 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Titre/Infos',
-  component: Infos
+  component: Infos,
 }
 export default meta
 
@@ -15,10 +15,7 @@ const titresFrom: TitreLink[] = [{ id: 'id11', nom: 'Titre père' }]
 const apiClient: Props['apiClient'] = {
   loadLinkableTitres: () => () => Promise.resolve([]),
   loadTitreLinks: () => Promise.resolve({ aval: titresTo, amont: titresFrom }),
-  linkTitres: () =>
-    new Promise<TitreLinks>(resolve =>
-      resolve({ aval: titresTo, amont: titresFrom })
-    ),
+  linkTitres: () => new Promise<TitreLinks>(resolve => resolve({ aval: titresTo, amont: titresFrom })),
   loadTitreSections: (_titreId: string) =>
     new Promise<Section[]>(resolve =>
       resolve([
@@ -32,12 +29,12 @@ const apiClient: Props['apiClient'] = {
               nom: 'Second élément',
               description: 'avec description',
               type: 'radio',
-              value: true
-            }
-          ]
-        }
+              value: true,
+            },
+          ],
+        },
       ])
-    )
+    ),
 }
 
 export const Default: Story = () => (
@@ -53,19 +50,19 @@ export const Default: Story = () => (
           phase: {
             dateDebut: '2020-01-01',
             dateFin: '2022-01-01',
-            phaseStatutId: 'ech'
+            phaseStatutId: 'ech',
           },
-          type: { id: 'oct' }
+          type: { id: 'oct' },
         },
         {
           id: 'pro',
           phase: {
             dateDebut: '2022-01-01',
             dateFin: '2025-01-01',
-            phaseStatutId: 'val'
+            phaseStatutId: 'val',
           },
-          type: { id: 'pro' }
-        }
+          type: { id: 'pro' },
+        },
       ],
       administrations: ['ope-onf-973-01'],
       titulaires: [
@@ -73,25 +70,25 @@ export const Default: Story = () => (
           id: 'entreprise1',
           nom: 'Entreprise 1',
           legalSiren: 'Entreprise 1 Siren',
-          operateur: true
+          operateur: true,
         },
         {
           id: 'entreprise2',
           nom: 'Entreprise 2',
           legalSiren: 'Entreprise 2 Siren',
-          operateur: false
-        }
+          operateur: false,
+        },
       ],
       amodiataires: [
         {
           id: 'entreprise3',
           nom: 'Entreprise 3',
           legalSiren: 'Entreprise 3 Siren',
-          operateur: false
-        }
+          operateur: false,
+        },
       ],
       substances: ['auru', 'scoc'],
-      references: [{ nom: '2023/01', referenceTypeId: 'ifr' }]
+      references: [{ nom: '2023/01', referenceTypeId: 'ifr' }],
     }}
     user={{ role: 'super', ...testBlankUser }}
     apiClient={apiClient}
@@ -110,16 +107,14 @@ export const Empty: Story = () => (
       titulaires: [],
       amodiataires: [],
       substances: [],
-      references: []
+      references: [],
     }}
     user={{ role: 'super', ...testBlankUser }}
     apiClient={{
       loadLinkableTitres: () => () => Promise.resolve([]),
       loadTitreLinks: () => Promise.resolve({ aval: [], amont: [] }),
-      linkTitres: () =>
-        new Promise<TitreLinks>(resolve => resolve({ aval: [], amont: [] })),
-      loadTitreSections: (_titreId: string) =>
-        new Promise<Section[]>(resolve => resolve([]))
+      linkTitres: () => new Promise<TitreLinks>(resolve => resolve({ aval: [], amont: [] })),
+      loadTitreSections: (_titreId: string) => new Promise<Section[]>(resolve => resolve([])),
     }}
   ></Infos>
 )

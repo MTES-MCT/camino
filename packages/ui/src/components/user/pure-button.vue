@@ -1,22 +1,9 @@
 <template>
   <div :class="{ active: menuActive }" class="flex">
-    <button
-      v-if="user"
-      id="cmn-user-button-menu"
-      class="btn-menu text-decoration-none bold p-0"
-      aria-label="profil utilisateur"
-      @click="$emit('onUserClicked')"
-    >
+    <button v-if="user" id="cmn-user-button-menu" class="btn-menu text-decoration-none bold p-0" aria-label="profil utilisateur" @click="$emit('onUserClicked')">
       {{ user.prenom || '–' }} {{ user.nom || '–' }}
     </button>
-    <button
-      v-else
-      id="cmn-user-button-connexion"
-      class="btn btn-primary small lh-2"
-      @click="$emit('onConnectionClicked')"
-    >
-      Connexion
-    </button>
+    <button v-else id="cmn-user-button-connexion" class="btn btn-primary small lh-2" @click="$emit('onConnectionClicked')">Connexion</button>
   </div>
 </template>
 

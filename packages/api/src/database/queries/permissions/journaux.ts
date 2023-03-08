@@ -7,10 +7,7 @@ import { titresQueryModify } from './titres.js'
 import Titres from '../../models/titres.js'
 import { isSuper, User } from 'camino-common/src/roles.js'
 
-export const journauxQueryModify = (
-  q: QueryBuilder<Journaux, Journaux | Journaux[]>,
-  user: User
-) => {
+export const journauxQueryModify = (q: QueryBuilder<Journaux, Journaux | Journaux[]>, user: User) => {
   q.select('journaux.*')
 
   // Les journaux sont uniquement visibles par les super
@@ -19,10 +16,7 @@ export const journauxQueryModify = (
   }
 
   q.modifyGraph('utilisateur', b => {
-    utilisateursQueryModify(
-      b as QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>,
-      user
-    )
+    utilisateursQueryModify(b as QueryBuilder<Utilisateurs, Utilisateurs | Utilisateurs[]>, user)
   })
 
   q.modifyGraph('titre', b => {

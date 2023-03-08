@@ -2,16 +2,12 @@ import AutoCompleteEntrepriseComponent from './autocomplete-entreprise.vue'
 import { Meta, Story } from '@storybook/vue3'
 import { action } from '@storybook/addon-actions'
 import { EtapeEntreprise } from 'camino-common/src/etape'
-import {
-  EntrepriseId,
-  Entreprise,
-  newEntrepriseId
-} from 'camino-common/src/entreprise'
+import { EntrepriseId, Entreprise, newEntrepriseId } from 'camino-common/src/entreprise'
 
 const meta: Meta = {
   title: 'Components/Etape/AutoCompleteEntreprise',
   component: AutoCompleteEntrepriseComponent,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -26,26 +22,23 @@ const Template: Story<Props> = (args: Props) => ({
   setup() {
     return { args }
   },
-  template:
-    '<AutoCompleteEntrepriseComponent v-bind="args" @onEntreprisesUpdate="onEntreprisesUpdate" />',
+  template: '<AutoCompleteEntrepriseComponent v-bind="args" @onEntreprisesUpdate="onEntreprisesUpdate" />',
   methods: {
-    onEntreprisesUpdate: action('onEntreprisesUpdate')
-  }
+    onEntreprisesUpdate: action('onEntreprisesUpdate'),
+  },
 })
 
 export const Default = Template.bind({})
 Default.args = {
   placeholder: 'placeholder',
-  allEntities: [
-    { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }
-  ]
+  allEntities: [{ id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] }],
 }
 export const WithEntitiesAlreadyPresent = Template.bind({})
 WithEntitiesAlreadyPresent.args = {
   placeholder: 'placeholder',
   selectedEntities: [
     { id: newEntrepriseId('optionId10'), operateur: false },
-    { id: newEntrepriseId('optionId2'), operateur: true }
+    { id: newEntrepriseId('optionId2'), operateur: true },
   ],
   allEntities: [
     { id: newEntrepriseId('optionId1'), nom: 'optionNom1', etablissements: [] },
@@ -56,8 +49,8 @@ WithEntitiesAlreadyPresent.args = {
     {
       id: newEntrepriseId('optionId10'),
       nom: 'optionNom10',
-      etablissements: []
-    }
+      etablissements: [],
+    },
   ],
-  nonSelectableEntities: [newEntrepriseId('optionId1')]
+  nonSelectableEntities: [newEntrepriseId('optionId1')],
 }

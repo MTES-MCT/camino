@@ -86,10 +86,4 @@ const activite = apiGraphQLFetch(
   `
 )
 
-export {
-  activite,
-  activites,
-  activiteModifier,
-  activiteSupprimer,
-  activiteDeposer
-}
+export { activite, activites, activiteModifier, activiteSupprimer, activiteDeposer }

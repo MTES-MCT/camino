@@ -1,97 +1,42 @@
 <template>
   <div class="flex flex-direction-column">
-    <inputNumber
-      v-if="element.type === 'number'"
-      v-model="contenu[element.id]"
-      class="p-s"
-      placeholder="…"
-    />
+    <inputNumber v-if="element.type === 'number'" v-model="contenu[element.id]" class="p-s" placeholder="…" />
 
-    <inputNumber
-      v-if="element.type === 'integer'"
-      v-model="contenu[element.id]"
-      :integer="true"
-      class="p-s"
-      placeholder="…"
-    />
+    <inputNumber v-if="element.type === 'integer'" v-model="contenu[element.id]" :integer="true" class="p-s" placeholder="…" />
 
-    <div
-      v-if="element.id === 'volumeGranulatsExtrait' && contenu[element.id]"
-      class="flex-self-end pt-xxs"
-    >
-      Soit l’équivalent de {{ masseGranulatsExtraitValeur }} tonnes
-    </div>
+    <div v-if="element.id === 'volumeGranulatsExtrait' && contenu[element.id]" class="flex-self-end pt-xxs">Soit l’équivalent de {{ masseGranulatsExtraitValeur }} tonnes</div>
 
-    <InputDate
-      v-else-if="element.type === 'date'"
-      :inputValue="contenu[element.id]"
-      :dateChanged="dateChanged"
-    />
+    <InputDate v-else-if="element.type === 'date'" :inputValue="contenu[element.id]" :dateChanged="dateChanged" />
 
-    <textarea
-      v-else-if="element.type === 'textarea'"
-      v-model="contenu[element.id]"
-      class="p-s"
-    />
+    <textarea v-else-if="element.type === 'textarea'" v-model="contenu[element.id]" class="p-s" />
 
-    <input
-      v-else-if="element.type === 'text'"
-      v-model="contenu[element.id]"
-      type="text"
-      class="p-s"
-    />
+    <input v-else-if="element.type === 'text'" v-model="contenu[element.id]" type="text" class="p-s" />
 
     <div v-else-if="element.type === 'radio'">
       <label class="mr">
-        <input
-          v-model="contenu[element.id]"
-          :name="element.id"
-          :value="true"
-          type="radio"
-          class="p-s mt-s mb-s"
-        />
+        <input v-model="contenu[element.id]" :name="element.id" :value="true" type="radio" class="p-s mt-s mb-s" />
         Oui
       </label>
 
       <label>
-        <input
-          v-model="contenu[element.id]"
-          :name="element.id"
-          :value="false"
-          type="radio"
-          class="p-s mt-s mb-s"
-        />
+        <input v-model="contenu[element.id]" :name="element.id" :value="false" type="radio" class="p-s mt-s mb-s" />
         Non
       </label>
     </div>
 
-    <input
-      v-else-if="element.type === 'checkbox'"
-      v-model="contenu[element.id]"
-      type="checkbox"
-      class="p-s mt-s mb-s"
-    />
+    <input v-else-if="element.type === 'checkbox'" v-model="contenu[element.id]" type="checkbox" class="p-s mt-s mb-s" />
 
     <div v-else-if="element.type === 'checkboxes'">
       <div v-for="value in valeurs" :key="value.id">
         <label>
-          <input
-            v-model="contenu[element.id]"
-            type="checkbox"
-            :value="value.id"
-            class="mr-s"
-          />
+          <input v-model="contenu[element.id]" type="checkbox" :value="value.id" class="mr-s" />
           <span class="cap-first">{{ value.nom }}</span>
         </label>
       </div>
     </div>
 
     <div v-else-if="element.type === 'select'">
-      <select
-        v-if="valeurs && valeurs.length"
-        v-model="contenu[element.id]"
-        class="p-s mr-s"
-      >
+      <select v-if="valeurs && valeurs.length" v-model="contenu[element.id]" class="p-s mr-s">
         <option v-for="value in valeurs" :key="value.id" :value="value.id">
           {{ value.nom }}
         </option>
@@ -99,11 +44,7 @@
     </div>
 
     <div v-else-if="element.type === 'file'">
-      <SectionElementFileEdit
-        :contenu="contenu"
-        :elementId="element.id"
-        @update:contenu="newValue => emits('update:contenu', newValue)"
-      />
+      <SectionElementFileEdit :contenu="contenu" :elementId="element.id" @update:contenu="newValue => emits('update:contenu', newValue)" />
     </div>
   </div>
 </template>
@@ -118,12 +59,12 @@ export default {
   components: {
     InputDate,
     InputNumber,
-    SectionElementFileEdit
+    SectionElementFileEdit,
   },
 
   props: {
     contenu: { type: Object, required: true },
-    element: { type: Object, required: true }
+    element: { type: Object, required: true },
   },
 
   emits: ['update:contenu'],
@@ -135,7 +76,7 @@ export default {
 
     masseGranulatsExtraitValeur() {
       return numberFormat(this.contenu[this.element.id] * 1.5)
-    }
+    },
   },
 
   created() {
@@ -155,7 +96,7 @@ export default {
   methods: {
     dateChanged(date) {
       this.contenu[this.element.id] = date
-    }
-  }
+    },
+  },
 }
 </script>

@@ -13,8 +13,8 @@ class UtilisateursTitres extends Model {
 
     properties: {
       utilisateurId: { type: 'string' },
-      titreId: { type: 'string' }
-    }
+      titreId: { type: 'string' },
+    },
   }
 
   public static idColumn = ['utilisateurId', 'titreId']
@@ -25,9 +25,9 @@ class UtilisateursTitres extends Model {
       modelClass: Utilisateurs,
       join: {
         from: 'utilisateurs__titres.utilisateurId',
-        to: 'utilisateurs.id'
-      }
-    }
+        to: 'utilisateurs.id',
+      },
+    },
   })
 }
 

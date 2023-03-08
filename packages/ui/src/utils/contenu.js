@@ -24,13 +24,7 @@ const elementContenuBuild = (sections, contenu) =>
 
 const elementsCompleteCheck = (elements, sectionContenu, complete) =>
   elements.reduce((sectionComplete, e) => {
-    if (
-      !sectionComplete ||
-      !sectionContenu ||
-      e.optionnel ||
-      ['radio', 'checkbox'].includes(e.type)
-    )
-      return sectionComplete
+    if (!sectionComplete || !sectionContenu || e.optionnel || ['radio', 'checkbox'].includes(e.type)) return sectionComplete
 
     let elementComplete = false
 
@@ -39,10 +33,7 @@ const elementsCompleteCheck = (elements, sectionContenu, complete) =>
         elementComplete = true
       }
     } else {
-      elementComplete =
-        sectionContenu[e.id] !== undefined &&
-        sectionContenu[e.id] !== null &&
-        sectionContenu[e.id] !== ''
+      elementComplete = sectionContenu[e.id] !== undefined && sectionContenu[e.id] !== null && sectionContenu[e.id] !== ''
     }
 
     return elementComplete
@@ -94,24 +85,11 @@ const valeurFind = ({ id, type, valeurs }, contenu) => {
 const hasValeurCheck = (elementId, contenu) => {
   const valeur = contenu && contenu[elementId]
 
-  if (
-    (!Array.isArray(valeur) && (valeur || valeur === 0 || valeur === false)) ||
-    (Array.isArray(valeur) && valeur.length)
-  )
-    return true
+  if ((!Array.isArray(valeur) && (valeur || valeur === 0 || valeur === false)) || (Array.isArray(valeur) && valeur.length)) return true
 
   return false
 }
 
-const elementsVisibleCheck = (elements, contenu) =>
-  elements.some(e => hasValeurCheck(e.id, contenu) || !e.optionnel)
+const elementsVisibleCheck = (elements, contenu) => elements.some(e => hasValeurCheck(e.id, contenu) || !e.optionnel)
 
-export {
-  contenuBuild,
-  elementContenuBuild,
-  contenuCompleteCheck,
-  elementsCompleteCheck,
-  valeurFind,
-  hasValeurCheck,
-  elementsVisibleCheck
-}
+export { contenuBuild, elementContenuBuild, contenuCompleteCheck, elementsCompleteCheck, valeurFind, hasValeurCheck, elementsVisibleCheck }

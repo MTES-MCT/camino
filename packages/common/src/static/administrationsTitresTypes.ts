@@ -12,29 +12,29 @@ type AdministrationTitreType = PartialRecord<
 
 const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTitreType } = {
   'aut-97300-01': {
-    [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: false, associee: true }
+    [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: false, associee: true },
   },
   'aut-mrae-guyane-01': {
-    [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: false, associee: true }
+    [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: false, associee: true },
   },
   'dea-guyane-01': {
     [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: false, associee: true },
-    [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: { gestionnaire: true, associee: false }
+    [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: { gestionnaire: true, associee: false },
   },
   'dre-aura-01': {
     [TITRES_TYPES_IDS.CONCESSION_METAUX]: { gestionnaire: false, associee: false },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: { gestionnaire: false, associee: false },
-    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE]: { gestionnaire: true, associee: false }
+    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE]: { gestionnaire: true, associee: false },
   },
   'dre-bfc-01': {
     [TITRES_TYPES_IDS.CONCESSION_METAUX]: { gestionnaire: false, associee: false },
-    [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: { gestionnaire: false, associee: false }
+    [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: { gestionnaire: false, associee: false },
   },
   'dre-ile-de-france-01': {
-    [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_CARRIERES_CARRIERES]: { gestionnaire: true, associee: false }
+    [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_CARRIERES_CARRIERES]: { gestionnaire: true, associee: false },
   },
   'dre-nouvelle-aquitaine-01': {
-    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE]: { gestionnaire: true, associee: false }
+    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE]: { gestionnaire: true, associee: false },
   },
   'min-dajb-01': {
     [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES]: { gestionnaire: false, associee: true },
@@ -67,7 +67,7 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTi
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_HYDROCARBURE]: { gestionnaire: false, associee: true },
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: { gestionnaire: false, associee: true },
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_RADIOACTIF]: { gestionnaire: false, associee: true },
-    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: { gestionnaire: false, associee: true }
+    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: { gestionnaire: false, associee: true },
   },
   'min-mctrct-dgcl-01': {
     [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_METAUX]: { gestionnaire: false, associee: true },
@@ -80,7 +80,7 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTi
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: { gestionnaire: false, associee: true },
     [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS]: { gestionnaire: false, associee: true },
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: { gestionnaire: false, associee: true },
-    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: { gestionnaire: false, associee: true }
+    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: { gestionnaire: false, associee: true },
   },
   'min-mtes-dgaln-01': {
     [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES]: { gestionnaire: true, associee: false },
@@ -113,7 +113,7 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTi
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_HYDROCARBURE]: { gestionnaire: false, associee: true },
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: { gestionnaire: true, associee: false },
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_RADIOACTIF]: { gestionnaire: false, associee: true },
-    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: { gestionnaire: true, associee: false }
+    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: { gestionnaire: true, associee: false },
   },
   'min-mtes-dgec-01': {
     [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES]: { gestionnaire: false, associee: true },
@@ -146,7 +146,7 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTi
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_HYDROCARBURE]: { gestionnaire: true, associee: false },
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: { gestionnaire: false, associee: true },
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_RADIOACTIF]: { gestionnaire: false, associee: true },
-    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: { gestionnaire: false, associee: true }
+    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: { gestionnaire: false, associee: true },
   },
   'min-mtes-dgpr-01': {
     [TITRES_TYPES_IDS.AUTORISATION_DE_PROSPECTION_CARRIERES]: { gestionnaire: false, associee: true },
@@ -179,24 +179,24 @@ const AdministrationsTitresTypes: { [key in AdministrationId]?: AdministrationTi
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_HYDROCARBURE]: { gestionnaire: false, associee: true },
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: { gestionnaire: false, associee: true },
     [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_RADIOACTIF]: { gestionnaire: true, associee: false },
-    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: { gestionnaire: false, associee: true }
+    [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: { gestionnaire: false, associee: true },
   },
   'ope-brgm-01': {
-    [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_CARRIERES_CARRIERES]: { gestionnaire: false, associee: true }
+    [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_CARRIERES_CARRIERES]: { gestionnaire: false, associee: true },
   },
   'ope-brgm-02': {
-    [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: { gestionnaire: false, associee: true }
+    [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: { gestionnaire: false, associee: true },
   },
   'ope-onf-973-01': {
     [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: true, associee: false },
-    [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: { gestionnaire: true, associee: false }
+    [TITRES_TYPES_IDS.AUTORISATION_D_EXPLOITATION_METAUX]: { gestionnaire: true, associee: false },
   },
   'ope-ptmg-973-01': {
-    [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: true, associee: true }
+    [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: true, associee: true },
   },
   'pre-97302-01': {
-    [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: false, associee: true }
-  }
+    [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: { gestionnaire: false, associee: true },
+  },
 }
 
 export const getTitreTypeIdsByAdministration = (administrationId: AdministrationId): { titreTypeId: TitreTypeId; gestionnaire: boolean; associee: boolean }[] => {

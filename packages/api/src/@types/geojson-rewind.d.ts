@@ -12,10 +12,7 @@ declare module 'geojson-rewind' {
     coordinates: number[] | number[][] | number[][][] | number[][][][]
   }
 
-  function rewind(
-    gj: IGeoJson | IGeometry,
-    outer?: boolean
-  ): IGeoJson | IGeometry
+  function rewind(gj: IGeoJson | IGeometry, outer?: boolean): IGeoJson | IGeometry
   namespace rewind {}
   export = rewind
 }

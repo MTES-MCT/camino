@@ -15,9 +15,7 @@
     </div>
 
     <div class="h6 mb">
-      <label>
-        <input v-model="point.subsidiaire" type="checkbox" /> Subsidiaire
-      </label>
+      <label> <input v-model="point.subsidiaire" type="checkbox" /> Subsidiaire </label>
     </div>
 
     <PointReferenceEdit
@@ -40,17 +38,15 @@ export default {
   props: {
     point: { type: Object, default: () => ({}) },
     geoSystemeIds: { type: Array, required: true },
-    geoSystemeOpposableId: { type: String, required: false, default: undefined }
+    geoSystemeOpposableId: { type: String, required: false, default: undefined },
   },
 
   emits: ['update:point'],
 
   computed: {
     geoSystemes() {
-      return sortedGeoSystemes.filter(({ id }) =>
-        this.geoSystemeIds.includes(id)
-      )
-    }
-  }
+      return sortedGeoSystemes.filter(({ id }) => this.geoSystemeIds.includes(id))
+    },
+  },
 }
 </script>

@@ -12,14 +12,7 @@
       </div>
     </div>
 
-    <Filtres
-      v-if="filtres.length"
-      :filtres="filtres"
-      :initialized="initialized"
-      :metas="metas"
-      :params="params.filtres"
-      @params-update="paramsFiltresUpdate"
-    />
+    <Filtres v-if="filtres.length" :filtres="filtres" :initialized="initialized" :metas="metas" :params="params.filtres" @params-update="paramsFiltresUpdate" />
 
     <div class="tablet-blobs tablet-flex-direction-reverse">
       <div class="tablet-blob-1-3 flex mb-s">
@@ -67,24 +60,21 @@ export default {
     params: { type: Object, required: true },
     metas: { type: Object, default: () => ({}) },
     total: { type: Number, required: true },
-    initialized: { type: Boolean, default: false }
+    initialized: { type: Boolean, default: false },
   },
 
   emits: ['params-update'],
 
   computed: {
     resultat() {
-      const res =
-        this.total > this.elements.length
-          ? `${this.elements.length} / ${this.total}`
-          : this.elements.length
+      const res = this.total > this.elements.length ? `${this.elements.length} / ${this.total}` : this.elements.length
 
       return `${res} résultat${this.elements.length > 1 ? 's' : ''}`
     },
 
     pagination() {
       return !!this.params.table.page
-    }
+    },
   },
 
   methods: {
@@ -111,9 +101,9 @@ export default {
       this.$emit('params-update', {
         section: 'filtres',
         params,
-        pageReset: true
+        pageReset: true,
       })
-    }
-  }
+    },
+  },
 }
 </script>

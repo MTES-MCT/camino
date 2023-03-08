@@ -13,15 +13,15 @@ export const up = async (knex: Knex) => {
     nom: 'porter-à-connaissance',
     description: 'Porter-à-connaissance',
     ordre: 1029,
-    fondamentale: false
+    fondamentale: false,
   })
 
   await knex('etapes_types__etapes_statuts').insert([
     {
       etapeTypeId,
       etapeStatutId: 'fai',
-      ordre: 0
-    }
+      ordre: 0,
+    },
   ])
 
   for (const t of titresTypes) {
@@ -29,7 +29,7 @@ export const up = async (knex: Knex) => {
       titreTypeId: t.id,
       demarcheTypeId,
       etapeTypeId,
-      ordre: 240
+      ordre: 240,
     })
   }
 }

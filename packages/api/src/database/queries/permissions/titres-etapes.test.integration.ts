@@ -29,8 +29,8 @@ describe('titresEtapesQueryModify', () => {
           nom: titreId,
           titreStatutId: 'val',
           typeId: 'arm',
-          archive: false
-        }
+          archive: false,
+        },
       ])
 
       const titreDemarcheId = newDemarcheId()
@@ -39,7 +39,7 @@ describe('titresEtapesQueryModify', () => {
         typeId: 'oct',
         statutId: 'eco',
         titreId,
-        archive: false
+        archive: false,
       })
       const titreEtapeId = idGenerate()
       const archivedTitreEtapeId = idGenerate()
@@ -50,7 +50,7 @@ describe('titresEtapesQueryModify', () => {
           typeId: 'mfr',
           statutId: 'aco',
           titreDemarcheId,
-          archive: false
+          archive: false,
         },
         {
           id: archivedTitreEtapeId,
@@ -58,8 +58,8 @@ describe('titresEtapesQueryModify', () => {
           typeId: 'mfr',
           statutId: 'aco',
           titreDemarcheId,
-          archive: true
-        }
+          archive: true,
+        },
       ])
       const q = TitresEtapes.query()
       titresEtapesQueryModify(q, userSuper)

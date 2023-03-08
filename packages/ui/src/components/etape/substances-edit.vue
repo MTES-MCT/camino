@@ -6,26 +6,17 @@
         <div v-for="(_substance, n) in substances" :key="n">
           <div class="flex mb-s">
             <select v-model="substances[n]" class="p-s mr-s">
-              <option
-                v-for="s in substancesByDomaine"
-                :key="s.id"
-                :value="s.id"
-                :disabled="substances.some(substanceId => substanceId === s.id)"
-              >
+              <option v-for="s in substancesByDomaine" :key="s.id" :value="s.id" :disabled="substances.some(substanceId => substanceId === s.id)">
                 {{ s.nom }}
               </option>
             </select>
-            <button
-              v-if="substancesLength && n + 1 < substancesLength"
-              class="btn-border py-s px-m rnd-l-xs"
-              @click="substanceMoveDown(n)"
-            >
+            <button v-if="substancesLength && n + 1 < substancesLength" class="btn-border py-s px-m rnd-l-xs" @click="substanceMoveDown(n)">
               <Icon size="M" name="move-down" />
             </button>
             <button
               v-if="substancesLength && n > 0 && substances[n]"
               :class="{
-                'rnd-l-xs': !(substancesLength && n + 1 < substancesLength)
+                'rnd-l-xs': !(substancesLength && n + 1 < substancesLength),
               }"
               class="btn-border py-s px-m"
               @click="substanceMoveUp(n)"
@@ -34,7 +25,7 @@
             </button>
             <button
               :class="{
-                'rnd-l-xs': !substances[n] || substancesLength === 1
+                'rnd-l-xs': !substances[n] || substancesLength === 1,
               }"
               class="btn py-s px-m rnd-r-xs"
               @click="substanceRemove(n)"
@@ -44,22 +35,14 @@
           </div>
         </div>
 
-        <button
-          v-if="substances?.every(substanceId => !!substanceId)"
-          class="btn small rnd-xs py-s px-m full-x flex mb-s"
-          @click="substanceAdd"
-        >
+        <button v-if="substances?.every(substanceId => !!substanceId)" class="btn small rnd-xs py-s px-m full-x flex mb-s" @click="substanceAdd">
           <span class="mt-xxs">Ajouter une substance</span>
           <Icon name="plus" size="M" class="flex-right" />
         </button>
 
         <div v-if="substancesLength" class="h6">
           <label>
-            <input
-              v-model="incertitudes.substances"
-              type="checkbox"
-              class="mr-xs"
-            />
+            <input v-model="incertitudes.substances" type="checkbox" class="mr-xs" />
             Incertain
           </label>
         </div>
@@ -72,47 +55,28 @@
   </div>
 </template>
 <script setup lang="ts">
-import {
-  SubstancesLegales,
-  SubstancesLegale,
-  SubstanceLegaleId
-} from 'camino-common/src/static/substancesLegales'
+import { SubstancesLegales, SubstancesLegale, SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { computed } from 'vue'
 import HeritageEdit from '@/components/etape/heritage-edit.vue'
 import { TagList } from '@/components/_ui/tag-list'
 import { Icon } from '@/components/_ui/icon'
 import { DomaineId } from 'camino-common/src/static/domaines'
-import {
-  EtapeFondamentale,
-  EtapeWithIncertitudesAndHeritage
-} from 'camino-common/src/etape'
+import { EtapeFondamentale, EtapeWithIncertitudesAndHeritage } from 'camino-common/src/etape'
 
 export type Props = {
   substances: (SubstanceLegaleId | undefined)[]
-  heritageProps: EtapeWithIncertitudesAndHeritage<
-    Pick<EtapeFondamentale, 'substances' | 'type' | 'date'>
-  >['heritageProps']
+  heritageProps: EtapeWithIncertitudesAndHeritage<Pick<EtapeFondamentale, 'substances' | 'type' | 'date'>>['heritageProps']
   incertitudes: { substances: boolean }
   domaineId: DomaineId
 }
 const props = defineProps<Props>()
 
-const substancesLength = computed(
-  () => props.substances?.filter(substanceId => substanceId).length
-)
+const substancesLength = computed(() => props.substances?.filter(substanceId => substanceId).length)
 
-const substancesByDomaine = computed(() =>
-  SubstancesLegales.filter(({ domaineIds }) =>
-    domaineIds.includes(props.domaineId)
-  ).sort((a, b) => a.nom.localeCompare(b.nom))
-)
+const substancesByDomaine = computed(() => SubstancesLegales.filter(({ domaineIds }) => domaineIds.includes(props.domaineId)).sort((a, b) => a.nom.localeCompare(b.nom)))
 
 const substanceNoms = computed<string[]>(() => {
-  return (
-    props.heritageProps.substances.etape?.substances
-      .filter((substanceId): substanceId is SubstanceLegaleId => !!substanceId)
-      .map(substanceId => SubstancesLegale[substanceId].nom) || []
-  )
+  return props.heritageProps.substances.etape?.substances.filter((substanceId): substanceId is SubstanceLegaleId => !!substanceId).map(substanceId => SubstancesLegale[substanceId].nom) || []
 })
 
 const substanceAdd = () => {

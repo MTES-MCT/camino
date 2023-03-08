@@ -7,8 +7,8 @@ const meta: Meta = {
   component: PureDrealDashboard,
   argTypes: {
     getEntreprisesTitres: { name: 'function', required: true },
-    displayActivites: { name: 'boolean' }
-  }
+    displayActivites: { name: 'boolean' },
+  },
 }
 export default meta
 
@@ -22,7 +22,7 @@ export const Ok: Story = () => (
         sdom: {},
         delais: {},
         avisAXM: {},
-        producteursOr: {}
+        producteursOr: {},
       })
     }
   />
@@ -30,9 +30,7 @@ export const Ok: Story = () => (
 
 export const OkWithoutBlockedTitres: Story = () => (
   <PureDrealDashboard
-    getDrealTitres={() =>
-      Promise.resolve(titresDreal.filter(t => !t.enAttenteDeDREAL))
-    }
+    getDrealTitres={() => Promise.resolve(titresDreal.filter(t => !t.enAttenteDeDREAL))}
     isDGTM={false}
     getDgtmStats={() =>
       Promise.resolve({
@@ -40,19 +38,13 @@ export const OkWithoutBlockedTitres: Story = () => (
         sdom: {},
         delais: {},
         avisAXM: {},
-        producteursOr: {}
+        producteursOr: {},
       })
     }
   />
 )
 
-export const DGTMNoSnapshot: Story = () => (
-  <PureDrealDashboard
-    getDrealTitres={() => Promise.resolve(titresDreal)}
-    isDGTM={true}
-    getDgtmStats={() => Promise.resolve(statistiquesDGTMFake)}
-  />
-)
+export const DGTMNoSnapshot: Story = () => <PureDrealDashboard getDrealTitres={() => Promise.resolve(titresDreal)} isDGTM={true} getDgtmStats={() => Promise.resolve(statistiquesDGTMFake)} />
 
 export const Loading: Story = () => (
   <PureDrealDashboard
@@ -64,7 +56,7 @@ export const Loading: Story = () => (
         sdom: {},
         delais: {},
         avisAXM: {},
-        producteursOr: {}
+        producteursOr: {},
       })
     }
   />
@@ -79,7 +71,7 @@ export const WithError: Story = () => (
         sdom: {},
         delais: {},
         avisAXM: {},
-        producteursOr: {}
+        producteursOr: {},
       })
     }
   />

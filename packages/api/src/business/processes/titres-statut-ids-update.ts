@@ -13,9 +13,9 @@ export const titresStatutIdsUpdate = async (titresIds?: string[]) => {
       fields: {
         demarches: {
           phase: { id: {} },
-          etapes: { points: { id: {} } }
-        }
-      }
+          etapes: { points: { id: {} } },
+        },
+      },
     },
     userSuper
   )
@@ -29,10 +29,7 @@ export const titresStatutIdsUpdate = async (titresIds?: string[]) => {
     if (titreStatutId !== titre.titreStatutId) {
       await titreUpdate(titre.id, { titreStatutId })
 
-      console.info(
-        'titre : statut (mise à jour) ->',
-        `${titre.id} : ${titreStatutId}`
-      )
+      console.info('titre : statut (mise à jour) ->', `${titre.id} : ${titreStatutId}`)
 
       titresUpdated.push(titre.id)
     }

@@ -1,10 +1,7 @@
 import express from 'express'
 import { CustomResponse } from './express-type'
 
-export const logout = async (
-  req: express.Request,
-  res: CustomResponse<string>
-) => {
+export const logout = async (req: express.Request, res: CustomResponse<string>) => {
   const authorizationToken = req.header('authorization')
   if (!authorizationToken) {
     res.status(403)
@@ -22,24 +19,16 @@ export const logout = async (
     res.redirect(oauthLogoutUrl.href)
   }
 }
-export const resetPassword = async (
-  req: express.Request,
-  res: CustomResponse<string>
-) => {
+export const resetPassword = async (req: express.Request, res: CustomResponse<string>) => {
   const authorizationToken = req.header('authorization')
   if (!authorizationToken) {
     res.status(403)
   } else {
     const uiUrl = process.env.OAUTH_URL ?? ''
 
-    const resetPasswordUrl = new URL(
-      process.env.KEYCLOAK_RESET_PASSWORD_URL ?? ''
-    )
+    const resetPasswordUrl = new URL(process.env.KEYCLOAK_RESET_PASSWORD_URL ?? '')
     resetPasswordUrl.searchParams.append('response_type', 'code')
-    resetPasswordUrl.searchParams.append(
-      'client_id',
-      process.env.KEYCLOAK_CLIENT_ID ?? ''
-    )
+    resetPasswordUrl.searchParams.append('client_id', process.env.KEYCLOAK_CLIENT_ID ?? '')
     resetPasswordUrl.searchParams.append('kc_action', 'UPDATE_PASSWORD')
     resetPasswordUrl.searchParams.append('redirect_uri', uiUrl)
 

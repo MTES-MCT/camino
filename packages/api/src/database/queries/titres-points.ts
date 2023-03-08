@@ -5,28 +5,16 @@ import options from './_options.js'
 import TitresPoints from '../models/titres-points.js'
 import TitresPointsReferences from '../models/titres-points-references.js'
 
-const titresPointsGet = async () =>
-  TitresPoints.query().withGraphFetched(options.points.graph)
+const titresPointsGet = async () => TitresPoints.query().withGraphFetched(options.points.graph)
 
-const titrePointUpdate = async (id: string, titrePoint: Partial<ITitrePoint>) =>
-  TitresPoints.query().patchAndFetchById(id, { ...titrePoint, id })
+const titrePointUpdate = async (id: string, titrePoint: Partial<ITitrePoint>) => TitresPoints.query().patchAndFetchById(id, { ...titrePoint, id })
 
-const titrePointReferenceCreate = async (
-  titrePointReference: ITitrePointReference
-) => TitresPointsReferences.query().insert(titrePointReference)
+const titrePointReferenceCreate = async (titrePointReference: ITitrePointReference) => TitresPointsReferences.query().insert(titrePointReference)
 
-const titrePointReferenceUpdate = async (
-  id: string,
-  titrePointReference: Partial<ITitrePointReference>
-) =>
+const titrePointReferenceUpdate = async (id: string, titrePointReference: Partial<ITitrePointReference>) =>
   TitresPointsReferences.query().patchAndFetchById(id, {
     ...titrePointReference,
-    id
+    id,
   })
 
-export {
-  titresPointsGet,
-  titrePointUpdate,
-  titrePointReferenceCreate,
-  titrePointReferenceUpdate
-}
+export { titresPointsGet, titrePointUpdate, titrePointReferenceCreate, titrePointReferenceUpdate }

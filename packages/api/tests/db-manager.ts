@@ -26,9 +26,7 @@ class DbManager {
     const globalConnection = `postgres://${DbManager.getPgUser()}:${DbManager.getPgPassword()}@localhost/postgres`
     const globalClient = new Client(globalConnection)
     await globalClient.connect()
-    const queryResult = await globalClient.query(
-      `SELECT 1 FROM pg_database WHERE datname='${this.dbName}'`
-    )
+    const queryResult = await globalClient.query(`SELECT 1 FROM pg_database WHERE datname='${this.dbName}'`)
     let newDatabase = false
     if (queryResult.rowCount === 0) {
       await globalClient.query(`CREATE DATABASE ${this.dbName}`)
@@ -53,17 +51,17 @@ class DbManager {
         port: 5432,
         database: this.dbName,
         user: DbManager.getPgUser(),
-        password: DbManager.getPgPassword()
+        password: DbManager.getPgPassword(),
       },
       migrations: {
         directory: [join(__dirname, '../src/knex/migrations-schema')],
         loadExtensions: ['.ts'],
-        extension: 'ts'
+        extension: 'ts',
       },
       seeds: {
-        directory: join(__dirname, '../src/knex/seeds')
+        directory: join(__dirname, '../src/knex/seeds'),
       },
-      ...knexSnakeCaseMappers()
+      ...knexSnakeCaseMappers(),
     }
 
     return knex(knexConfig)
@@ -110,10 +108,7 @@ class DbManager {
 
   private async truncateSchema() {
     DbManager.checkKnexInstance(this.knexInstance)
-    const tables =
-      (await this.knexInstance('pg_tables')
-        .select('tablename')
-        .where('schemaname', 'public')) ?? []
+    const tables = (await this.knexInstance('pg_tables').select('tablename').where('schemaname', 'public')) ?? []
 
     await this.knexInstance.raw(
       `TRUNCATE TABLE "${tables

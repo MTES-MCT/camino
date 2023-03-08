@@ -3,7 +3,7 @@ import { nextTick } from 'vue'
 
 const state = {
   elementsIndex: {},
-  elementsSelectedIndex: {}
+  elementsSelectedIndex: {},
 }
 
 const idsFind = (element, definition) =>
@@ -17,7 +17,7 @@ const idsFind = (element, definition) =>
 
 const getters = {
   elements: state => id => state.elementsIndex[id],
-  elementSelected: state => id => state.elementsSelectedIndex[id]
+  elementSelected: state => id => state.elementsSelectedIndex[id],
 }
 
 const actions = {
@@ -31,11 +31,7 @@ const actions = {
         commit('set', { id, elements })
 
         for (const colonne of definition.colonnes) {
-          if (
-            colonne.type === 'entities' &&
-            colonne.entities &&
-            !state.elementsIndex[colonne.entities]
-          ) {
+          if (colonne.type === 'entities' && colonne.entities && !state.elementsIndex[colonne.entities]) {
             const entities = await metasIndex[colonne.entities].get()
 
             commit('set', { id: colonne.entities, elements: entities })
@@ -56,7 +52,7 @@ const actions = {
         commit('elementSelectedSet', { id, element })
       })
     }
-  }
+  },
 }
 
 const mutations = {
@@ -72,9 +68,9 @@ const mutations = {
   elementSelectedSet(state, { id, element }) {
     state.elementsSelectedIndex = {
       ...state.elementsSelectedIndex,
-      [id]: element
+      [id]: element,
     }
-  }
+  },
 }
 
 export default {
@@ -82,5 +78,5 @@ export default {
   state,
   actions,
   mutations,
-  getters
+  getters,
 }

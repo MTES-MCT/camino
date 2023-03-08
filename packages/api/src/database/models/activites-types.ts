@@ -22,8 +22,8 @@ class ActivitesTypes extends Model {
       frequenceId: { type: 'string', maxLength: 3 },
       dateDebut: { type: 'string' },
       delaiMois: { type: 'integer' },
-      ordre: { type: 'integer' }
-    }
+      ordre: { type: 'integer' },
+    },
   }
 
   static relationMappings = () => ({
@@ -34,10 +34,10 @@ class ActivitesTypes extends Model {
         from: 'activitesTypes.id',
         through: {
           from: 'activitesTypes__titresTypes.activiteTypeId',
-          to: 'activitesTypes__titresTypes.titreTypeId'
+          to: 'activitesTypes__titresTypes.titreTypeId',
         },
-        to: 'titresTypes.id'
-      }
+        to: 'titresTypes.id',
+      },
     },
 
     administrations: {
@@ -48,18 +48,18 @@ class ActivitesTypes extends Model {
         through: {
           from: 'administrations__activitesTypes.activiteTypeId',
           to: 'administrations__activitesTypes.administrationId',
-          extra: ['modificationInterdit', 'lectureInterdit']
+          extra: ['modificationInterdit', 'lectureInterdit'],
         },
-        to: 'administrations.id'
-      }
+        to: 'administrations.id',
+      },
     },
     activitesTypesPays: {
       relation: Model.HasManyRelation,
       modelClass: ActivitesTypesPays,
       join: {
         from: 'activitesTypes.id',
-        to: 'activitesTypes__pays.activiteTypeId'
-      }
+        to: 'activitesTypes__pays.activiteTypeId',
+      },
     },
     administrationsEmails: {
       relation: Model.ManyToManyRelation,
@@ -69,10 +69,10 @@ class ActivitesTypes extends Model {
         through: {
           from: 'administrations__activitesTypes__emails.activiteTypeId',
           to: 'administrations__activitesTypes__emails.administrationId',
-          extra: ['email']
+          extra: ['email'],
         },
-        to: 'administrations.id'
-      }
+        to: 'administrations.id',
+      },
     },
 
     documentsTypes: {
@@ -83,17 +83,17 @@ class ActivitesTypes extends Model {
         through: {
           from: 'activitesTypes__documentsTypes.activiteTypeId',
           to: 'activitesTypes__documentsTypes.documentTypeId',
-          extra: ['optionnel']
+          extra: ['optionnel'],
         },
-        to: 'documentsTypes.id'
-      }
-    }
+        to: 'documentsTypes.id',
+      },
+    },
   })
 
   public static modifiers: Modifiers = {
     orderAsc: builder => {
       builder.orderBy('activitesTypes.ordre', 'asc')
-    }
+    },
   }
 }
 

@@ -1,12 +1,6 @@
 import { raw, QueryBuilder, RawBuilder } from 'objection'
 
-import {
-  ITitreActivite,
-  IFields,
-  ITitreActiviteColonneId,
-  Index,
-  IColonne
-} from '../../types.js'
+import { ITitreActivite, IFields, ITitreActiviteColonneId, Index, IColonne } from '../../types.js'
 
 import options from './_options.js'
 import { fieldsFormat } from './graph/fields-format.js'
@@ -15,15 +9,8 @@ import graphBuild from './graph/build.js'
 
 import { titresFiltersQueryModify } from './_titres-filters.js'
 import TitresActivites from '../models/titres-activites.js'
-import {
-  titresActivitesQueryModify,
-  titresActivitesPropsQueryModify
-} from './permissions/titres-activites.js'
-import {
-  isAdministrationAdmin,
-  isAdministrationEditeur,
-  User
-} from 'camino-common/src/roles.js'
+import { titresActivitesQueryModify, titresActivitesPropsQueryModify } from './permissions/titres-activites.js'
+import { isAdministrationAdmin, isAdministrationEditeur, User } from 'camino-common/src/roles.js'
 
 /**
  * Modifie la requête en fonction des paramètres de filtre
@@ -53,7 +40,7 @@ const titresActivitesFiltersQueryModify = (
     titresTerritoires,
     titresTypesIds,
     titresDomainesIds,
-    titresStatutsIds
+    titresStatutsIds,
   }: {
     typesIds?: string[] | null
     statutsIds?: string[] | null
@@ -94,7 +81,7 @@ const titresActivitesFiltersQueryModify = (
       entreprisesIds: titresEntreprisesIds,
       substancesIds: titresSubstancesIds,
       references: titresReferences,
-      territoires: titresTerritoires
+      territoires: titresTerritoires,
     },
     q,
     'titre',
@@ -111,13 +98,8 @@ const titresActivitesFiltersQueryModify = (
  *
  */
 
-const titreActivitesQueryBuild = (
-  { fields }: { fields?: IFields },
-  user: User
-) => {
-  const graph = fields
-    ? graphBuild(fieldsTitreAdd(fields), 'activite', fieldsFormat)
-    : options.titresActivites.graph
+const titreActivitesQueryBuild = ({ fields }: { fields?: IFields }, user: User) => {
+  const graph = fields ? graphBuild(fieldsTitreAdd(fields), 'activite', fieldsFormat) : options.titresActivites.graph
 
   const q = TitresActivites.query().withGraphFetched(graph)
 
@@ -126,11 +108,7 @@ const titreActivitesQueryBuild = (
 
   // dans titresActivitesPropsQueryModify quand on est une administration on utilise les 3 colonnes suivantes pour une sous requête.
   if (isAdministrationAdmin(user) || isAdministrationEditeur(user)) {
-    q.groupBy(
-      'titresActivites.id',
-      'titre.type_id',
-      'titre.propsTitreEtapesIds'
-    )
+    q.groupBy('titresActivites.id', 'titre.type_id', 'titre.propsTitreEtapesIds')
   }
 
   return q
@@ -146,11 +124,7 @@ const titreActivitesQueryBuild = (
  *
  */
 
-const titreActiviteGet = async (
-  id: string,
-  { fields }: { fields?: IFields },
-  user: User
-) => {
+const titreActiviteGet = async (id: string, { fields }: { fields?: IFields }, user: User) => {
   const q = titreActivitesQueryBuild({ fields }, user)
 
   if (!q) return undefined
@@ -167,13 +141,13 @@ const titresActivitesColonnes = {
   titre: {
     id: 'titre.nom',
     relation: 'titre',
-    groupBy: true
+    groupBy: true,
   },
   titreDomaine: { id: 'titre.domaineId', relation: 'titre', groupBy: true },
   titreType: {
     id: 'titre:type:type.nom',
     relation: 'titre.type.type',
-    groupBy: true
+    groupBy: true,
   },
   titreStatut: { id: 'titre.titreStatutId', relation: 'titre', groupBy: true },
   titulaires: {
@@ -184,11 +158,11 @@ const titresActivitesColonnes = {
     order by "titre:titulaires"."nom"
   )`),
     relation: 'titre.titulaires',
-    groupBy: false
+    groupBy: false,
   },
   annee: { id: 'annee' },
   periode: { id: 'periodeId' },
-  statut: { id: 'activiteStatutId' }
+  statut: { id: 'activiteStatutId' },
 } as Index<IColonne<string | RawBuilder>>
 
 /**
@@ -231,7 +205,7 @@ const titresActivitesGet = async (
     titresTypesIds,
     titresDomainesIds,
     titresStatutsIds,
-    titresIds
+    titresIds,
   }: {
     page?: number | null
     intervalle?: number | null
@@ -266,7 +240,7 @@ const titresActivitesGet = async (
       titresTerritoires,
       titresTypesIds,
       titresDomainesIds,
-      titresStatutsIds
+      titresStatutsIds,
     },
     q
   )
@@ -330,7 +304,7 @@ const titresActivitesCount = async (
     titresTerritoires,
     titresTypesIds,
     titresDomainesIds,
-    titresStatutsIds
+    titresStatutsIds,
   }: {
     typesIds?: string[] | null
     statutsIds?: string[] | null
@@ -361,7 +335,7 @@ const titresActivitesCount = async (
       titresTerritoires,
       titresTypesIds,
       titresDomainesIds,
-      titresStatutsIds
+      titresStatutsIds,
     },
     q
   )
@@ -372,34 +346,14 @@ const titresActivitesCount = async (
 }
 
 const titresActivitesUpsert = async (titreActivites: ITitreActivite[]) =>
-  TitresActivites.query()
-    .withGraphFetched(options.titresActivites.graph)
-    .upsertGraph(titreActivites, options.titresActivites.update)
+  TitresActivites.query().withGraphFetched(options.titresActivites.graph).upsertGraph(titreActivites, options.titresActivites.update)
 
-const titreActiviteUpdate = async (
-  id: string,
-  titreActivite: Partial<ITitreActivite>
-) => TitresActivites.query().patchAndFetchById(id, { ...titreActivite, id })
+const titreActiviteUpdate = async (id: string, titreActivite: Partial<ITitreActivite>) => TitresActivites.query().patchAndFetchById(id, { ...titreActivite, id })
 
-const titreActiviteDelete = async (
-  id: string,
-  { fields }: { fields?: IFields }
-) => {
-  const graph = fields
-    ? graphBuild(fieldsTitreAdd(fields), 'activite', fieldsFormat)
-    : options.titresActivites.graph
+const titreActiviteDelete = async (id: string, { fields }: { fields?: IFields }) => {
+  const graph = fields ? graphBuild(fieldsTitreAdd(fields), 'activite', fieldsFormat) : options.titresActivites.graph
 
-  return TitresActivites.query()
-    .withGraphFetched(graph)
-    .deleteById(id)
-    .returning('*')
+  return TitresActivites.query().withGraphFetched(graph).deleteById(id).returning('*')
 }
 
-export {
-  titreActiviteGet,
-  titresActivitesCount,
-  titresActivitesUpsert,
-  titresActivitesGet,
-  titreActiviteUpdate,
-  titreActiviteDelete
-}
+export { titreActiviteGet, titresActivitesCount, titresActivitesUpsert, titresActivitesGet, titreActiviteUpdate, titreActiviteDelete }

@@ -21,8 +21,8 @@ class DemarchesTypes extends Model {
       substances: { type: ['boolean', 'null'] },
       titulaires: { type: ['boolean', 'null'] },
       renouvelable: { type: ['boolean', 'null'] },
-      exception: { type: ['boolean', 'null'] }
-    }
+      exception: { type: ['boolean', 'null'] },
+    },
   }
 
   static relationMappings = () => ({
@@ -38,18 +38,18 @@ class DemarchesTypes extends Model {
           extra: {
             ordre: 'ordre',
             titreTypeId: 'titreTypeId',
-            sectionsSpecifiques: 'sections'
-          }
+            sectionsSpecifiques: 'sections',
+          },
         },
-        to: 'etapesTypes.id'
-      }
-    }
+        to: 'etapesTypes.id',
+      },
+    },
   })
 
   public static modifiers: Modifiers = {
     orderAsc: builder => {
       builder.orderBy('ordre', 'asc')
-    }
+    },
   }
 }
 

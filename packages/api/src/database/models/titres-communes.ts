@@ -12,8 +12,8 @@ class TitresCommunes extends Model {
 
     properties: {
       communeId: { type: 'string', maxLength: 8 },
-      titreEtapeId: { type: 'string', maxLength: 128 }
-    }
+      titreEtapeId: { type: 'string', maxLength: 128 },
+    },
   }
 
   public static idColumn = ['communeId', 'titreEtapeId']

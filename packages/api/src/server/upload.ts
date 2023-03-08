@@ -4,11 +4,7 @@ import { graphqlUploadExpress } from 'graphql-upload'
 import { isDefault, User } from 'camino-common/src/roles.js'
 
 // Téléversement REST
-const uploadAllowedMiddleware = async (
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction
-) => {
+const uploadAllowedMiddleware = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
   try {
     if (isDefault(req.user as User)) {
       res.sendStatus(403)
@@ -39,7 +35,7 @@ const restUpload = () => {
 // Téléversement graphQL
 const graphqlUpload = graphqlUploadExpress({
   maxFileSize: Infinity,
-  maxFiles: 10
+  maxFiles: 10,
 })
 
 export { restUpload, uploadAllowedMiddleware, graphqlUpload }

@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
   title: 'Components/UI/Popup',
-  component: FunctionalPopup
+  component: FunctionalPopup,
 }
 export default meta
 
@@ -20,14 +20,13 @@ export const Main: StoryFn = () => (
       action: () => {
         doStuff()
         return Promise.resolve()
-      }
+      },
     }}
     content={() => (
       <div>
         <input type="text" class="tablet-blob-2-3 p-s" />
         <div class="bg-warning color-bg p-s mb-l">
-          <span class="bold"> Attention </span>: cette opération est définitive
-          et ne peut pas être annulée.
+          <span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.
         </div>
       </div>
     )}
@@ -43,14 +42,13 @@ export const NotValid: StoryFn = () => (
       action: () => {
         doStuff()
         return Promise.resolve()
-      }
+      },
     }}
     content={() => (
       <div>
         <input type="text" class="tablet-blob-2-3 p-s" />
         <div class="bg-warning color-bg p-s mb-l">
-          <span class="bold"> Attention </span>: cette opération est définitive
-          et ne peut pas être annulée.
+          <span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.
         </div>
       </div>
     )}

@@ -12,29 +12,13 @@ import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
  * @param titreTypeId - id du type de titre
  * @param hasDemarcheDeposee - si un titre échu avec une démarche déposée doit être pris en compte
  */
-export const titreValideCheck = (
-  titreDemarches: ITitreDemarche[],
-  dateDebut: string,
-  dateFin: string,
-  titreTypeId: TitreTypeId,
-  hasDemarcheDeposee = false
-) => {
+export const titreValideCheck = (titreDemarches: ITitreDemarche[], dateDebut: string, dateFin: string, titreTypeId: TitreTypeId, hasDemarcheDeposee = false) => {
   const demarches = titreDemarches.filter(d => !d.type!.travaux)
 
   // si le titre a une phase entre dateDebut et dateFin
-  if (
-    demarches.some(
-      ({ phase }) =>
-        phase && dateDebut <= phase.dateFin && dateFin >= phase.dateDebut
-    )
-  )
-    return true
+  if (demarches.some(({ phase }) => phase && dateDebut <= phase.dateFin && dateFin >= phase.dateDebut)) return true
 
-  const newTitreDemarches = titreDemarchesEtapesRebuild(
-    dateDebut,
-    demarches,
-    titreTypeId
-  )
+  const newTitreDemarches = titreDemarchesEtapesRebuild(dateDebut, demarches, titreTypeId)
 
   // si le titre a le statut "modification en instance" au moment de dateDebut
   const titreStatutId = titreStatutIdFind(dateDebut, newTitreDemarches)
@@ -46,12 +30,7 @@ export const titreValideCheck = (
   // - le titre a le statut échu
   // - le titre a plusieurs démarches
   // - la dernière démarche a le statut déposée
-  if (
-    hasDemarcheDeposee &&
-    titreStatutId === 'ech' &&
-    newTitreDemarches.length > 1 &&
-    newTitreDemarches[0].statutId === 'dep'
-  ) {
+  if (hasDemarcheDeposee && titreStatutId === 'ech' && newTitreDemarches.length > 1 && newTitreDemarches[0].statutId === 'dep') {
     return true
   }
 

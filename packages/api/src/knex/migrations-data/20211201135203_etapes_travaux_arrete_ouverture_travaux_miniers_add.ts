@@ -11,15 +11,15 @@ export const up = async (knex: Knex) => {
     nom: "arrêté d'ouverture des travaux miniers",
     description: "Arrêté d'ouverture des travaux miniers",
     ordre: 1028,
-    fondamentale: false
+    fondamentale: false,
   })
 
   await knex('etapes_types__etapes_statuts').insert([
     {
       etapeTypeId,
       etapeStatutId: 'fai',
-      ordre: 0
-    }
+      ordre: 0,
+    },
   ])
 
   for (const t of titresTypes) {
@@ -27,7 +27,7 @@ export const up = async (knex: Knex) => {
       titreTypeId: t.id,
       demarcheTypeId,
       etapeTypeId,
-      ordre: 260
+      ordre: 260,
     })
   }
 }

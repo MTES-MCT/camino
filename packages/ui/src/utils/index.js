@@ -16,13 +16,9 @@ const textNumberFormat = (text, options) => {
     .replace(/\s/, '')
     .replace(/\./, ',')
 
-  value = options.negative
-    ? value.replace(/^([\d-][\d,]*)(-)+/, '$1')
-    : value.replace(/-/g, '')
+  value = options.negative ? value.replace(/^([\d-][\d,]*)(-)+/, '$1') : value.replace(/-/g, '')
 
-  value = options.integer
-    ? value.replace(/\..*$/, '').replace(/,.*$/, '')
-    : value.replace(/(\d+,\d*)([,.]+)/, '$1')
+  value = options.integer ? value.replace(/\..*$/, '').replace(/,.*$/, '') : value.replace(/(\d+,\d*)([,.]+)/, '$1')
 
   return value
 }
@@ -65,13 +61,4 @@ const paramsBuild = (apiParams, preferences) =>
 
 const cap = string => string[0].toUpperCase() + string.slice(1)
 
-export {
-  dateFormat,
-  textNumberFormat,
-  textToNumberFormat,
-  cloneAndClean,
-  elementsFormat,
-  paramsBuild,
-  cap,
-  TODAY
-}
+export { dateFormat, textNumberFormat, textToNumberFormat, cloneAndClean, elementsFormat, paramsBuild, cap, TODAY }

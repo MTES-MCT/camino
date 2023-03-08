@@ -9,11 +9,11 @@ vi.mock('../api/documents', () => ({
   documentMetas: vi.fn(),
   documentCreer: vi.fn(),
   documentModifier: vi.fn(),
-  documentSupprimer: vi.fn()
+  documentSupprimer: vi.fn(),
 }))
 
 vi.mock('../api/_upload', () => ({
-  uploadCall: vi.fn()
+  uploadCall: vi.fn(),
 }))
 
 console.info = vi.fn()
@@ -28,7 +28,7 @@ describe('documents', () => {
 
     document.state = {
       metas: { documentsTypes: [] },
-      preferences: { types: [] }
+      preferences: { types: [] },
     }
 
     actions = {
@@ -36,7 +36,7 @@ describe('documents', () => {
       apiError: vi.fn(),
       reload: vi.fn(),
       messageAdd: vi.fn(),
-      test: vi.fn()
+      test: vi.fn(),
     }
 
     mutations = {
@@ -47,7 +47,7 @@ describe('documents', () => {
       popupMessagesRemove: vi.fn(),
       popupClose: vi.fn(),
       popupMessageAdd: vi.fn(),
-      fileLoad: vi.fn()
+      fileLoad: vi.fn(),
     }
 
     store = createStore({
@@ -57,9 +57,9 @@ describe('documents', () => {
         document,
         titre: {
           namespaced: true,
-          mutations: { open: vi.fn() }
-        }
-      }
+          mutations: { open: vi.fn() },
+        },
+      },
     })
 
     const app = createApp({})
@@ -68,7 +68,7 @@ describe('documents', () => {
   test('récupère les métas pour éditer un document', async () => {
     const apiMock = api.documentMetas.mockResolvedValueOnce([
       { id: 'arr', nom: 'Arrêté' },
-      { id: 'avi', nom: 'Avis' }
+      { id: 'avi', nom: 'Avis' },
     ])
 
     await store.dispatch('document/init')
@@ -76,15 +76,13 @@ describe('documents', () => {
     expect(apiMock).toHaveBeenCalled()
     expect(store.state.document.metas.documentsTypes).toEqual([
       { id: 'arr', nom: 'Arrêté' },
-      { id: 'avi', nom: 'Avis' }
+      { id: 'avi', nom: 'Avis' },
     ])
     expect(mutations.loadingRemove).toHaveBeenCalled()
   })
 
   test("retourne une erreur si l'api ne répond pas", async () => {
-    const apiMock = api.documentMetas.mockRejectedValue(
-      new Error("erreur de l'api")
-    )
+    const apiMock = api.documentMetas.mockRejectedValue(new Error("erreur de l'api"))
 
     await store.dispatch('document/init')
 
@@ -99,15 +97,15 @@ describe('documents', () => {
       typeId: 1,
       fichier: true,
       fichierNouveau: new Blob(),
-      nomTemporaire: null
+      nomTemporaire: null,
     }
     const apiMock = api.documentCreer.mockResolvedValue({
-      nom: 'champs'
+      nom: 'champs',
     })
 
     await store.dispatch('document/upsert', {
       document,
-      route: { name: 'titre', id: 'titre-id', section: 'etapes' }
+      route: { name: 'titre', id: 'titre-id', section: 'etapes' },
     })
     expect(upload.uploadCall).toHaveBeenCalled()
     const sentDocument = { ...document }
@@ -118,7 +116,7 @@ describe('documents', () => {
 
     await store.dispatch('document/upsert', {
       document,
-      route: 'something'
+      route: 'something',
     })
     expect(upload.uploadCall).toHaveBeenCalled()
     expect(apiMock).toHaveBeenCalledWith({ document: sentDocument })
@@ -129,11 +127,11 @@ describe('documents', () => {
       nom: 'champs',
       typeId: 1,
       fichier: true,
-      nomTemporaire: null
+      nomTemporaire: null,
     }
     await store.dispatch('document/upsert', {
       document,
-      route: { name: 'titre', id: 'titre-id', section: 'travaux' }
+      route: { name: 'titre', id: 'titre-id', section: 'travaux' },
     })
     expect(upload.uploadCall).not.toHaveBeenCalled()
     expect(apiMock).toHaveBeenCalledWith({ document })
@@ -142,7 +140,7 @@ describe('documents', () => {
   test("retourne une erreur si l'API retourne une erreur lors de l'ajout d'un document", async () => {
     api.documentCreer.mockRejectedValueOnce(() => new Error('erreur api'))
     await store.dispatch('document/upsert', {
-      document: { nom: 'champs', fichierNouveau: new Blob() }
+      document: { nom: 'champs', fichierNouveau: new Blob() },
     })
 
     expect(upload.uploadCall).toHaveBeenCalled()
@@ -156,16 +154,16 @@ describe('documents', () => {
       typeId: 1,
       fichier: true,
       fichierNouveau: new Blob(),
-      nomTemporaire: null
+      nomTemporaire: null,
     }
     const apiMock = api.documentModifier.mockResolvedValue({
       id: 14,
-      nom: 'champs'
+      nom: 'champs',
     })
 
     await store.dispatch('document/upsert', {
       document,
-      route: { name: 'titre', id: 'titre-id', section: 'etapes' }
+      route: { name: 'titre', id: 'titre-id', section: 'etapes' },
     })
     expect(upload.uploadCall).toHaveBeenCalled()
     let sentDocument = { ...document }
@@ -177,7 +175,7 @@ describe('documents', () => {
 
     await store.dispatch('document/upsert', {
       document,
-      route: 'something'
+      route: 'something',
     })
     expect(upload.uploadCall).toHaveBeenCalled()
     expect(apiMock).toHaveBeenCalledWith({ document: sentDocument })
@@ -189,11 +187,11 @@ describe('documents', () => {
       id: 14,
       typeId: 1,
       fichier: true,
-      nomTemporaire: null
+      nomTemporaire: null,
     }
     await store.dispatch('document/upsert', {
       document,
-      route: { name: 'titre', id: 'titre-id', section: 'travaux' }
+      route: { name: 'titre', id: 'titre-id', section: 'travaux' },
     })
     expect(upload.uploadCall).not.toHaveBeenCalled()
     sentDocument = { ...document }
@@ -207,16 +205,16 @@ describe('documents', () => {
       typeId: 1,
       fichier: true,
       fichierNouveau: new Blob(),
-      nomTemporaire: null
+      nomTemporaire: null,
     }
     const apiMock = api.documentCreer.mockResolvedValue({
       id: 14,
-      nom: 'champs'
+      nom: 'champs',
     })
 
     await store.dispatch('document/upsert', {
       document,
-      route: { name: 'titre', id: 'titre-id' }
+      route: { name: 'titre', id: 'titre-id' },
     })
     expect(upload.uploadCall).toHaveBeenCalled()
     const sentDocument = { ...document }
@@ -227,13 +225,13 @@ describe('documents', () => {
   test('applique une action au lieu d’être redirigé', async () => {
     api.documentCreer.mockImplementationOnce(async () => {
       await store.dispatch('document/refreshAfterUpsert', {
-        action: { name: 'test' }
+        action: { name: 'test' },
       })
     })
 
     await store.dispatch('document/upsert', {
       document: { id: 14, nom: 'champs', typeId: 1 },
-      action: { name: 'test' }
+      action: { name: 'test' },
     })
 
     expect(actions.test).toHaveBeenCalled()
@@ -242,7 +240,7 @@ describe('documents', () => {
   test("retourne une erreur si l'API retourne une erreur lors de la mise à jour d'un document", async () => {
     api.documentModifier.mockRejectedValue(new Error("erreur de l'api"))
     await store.dispatch('document/upsert', {
-      document: { id: 14, nom: 'champs' }
+      document: { id: 14, nom: 'champs' },
     })
 
     expect(mutations.popupMessageAdd).toHaveBeenCalled()
@@ -252,13 +250,13 @@ describe('documents', () => {
     const apiMock = api.documentSupprimer.mockResolvedValue(true)
     await store.dispatch('document/remove', {
       id: 62,
-      route: { name: 'titre', id: 'titre-id' }
+      route: { name: 'titre', id: 'titre-id' },
     })
 
     expect(apiMock).toHaveBeenCalledWith({ id: 62 })
     expect(mutations.popupClose).toHaveBeenCalled()
     await store.dispatch('document/remove', {
-      id: 62
+      id: 62,
     })
 
     expect(apiMock).toHaveBeenCalledWith({ id: 62 })
@@ -266,9 +264,7 @@ describe('documents', () => {
   })
 
   test("retourne une erreur si l'API retourne une erreur lors de la suppression d'un document", async () => {
-    const apiMock = api.documentSupprimer.mockRejectedValue(
-      new Error("erreur de l'api")
-    )
+    const apiMock = api.documentSupprimer.mockRejectedValue(new Error("erreur de l'api"))
     await store.dispatch('document/remove', { id: 62 })
 
     expect(apiMock).toHaveBeenCalledWith({ id: 62 })

@@ -4,17 +4,10 @@ export const up = async (knex: Knex) => {
     table.string('administrationId').index().references('administrations.id')
   })
 
-  const utilisateursAdministrations = await knex(
-    'utilisateurs__administrations'
-  )
+  const utilisateursAdministrations = await knex('utilisateurs__administrations')
 
-  for (const {
-    utilisateurId,
-    administrationId
-  } of utilisateursAdministrations) {
-    await knex('utilisateurs')
-      .where('id', utilisateurId)
-      .update({ administrationId })
+  for (const { utilisateurId, administrationId } of utilisateursAdministrations) {
+    await knex('utilisateurs').where('id', utilisateurId).update({ administrationId })
   }
 
   return knex.schema.dropTable('utilisateurs__administrations')

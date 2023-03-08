@@ -2,10 +2,7 @@ import gql from 'graphql-tag'
 
 import { fragmentTitreDemarche } from './titre-demarche'
 import { fragmentTitreActivite } from './titre-activite'
-import {
-  fragmentTitreEntreprises,
-  fragmentTitresEntreprises
-} from './entreprises'
+import { fragmentTitreEntreprises, fragmentTitresEntreprises } from './entreprises'
 
 import { fragmentPoint } from './point'
 
@@ -177,10 +174,4 @@ const fragmentDemarchesTitre = gql`
   }
 `
 
-export {
-  fragmentTitre,
-  fragmentTitres,
-  fragmentTitresGeo,
-  fragmentTitresGeoPolygon,
-  fragmentDemarchesTitre
-}
+export { fragmentTitre, fragmentTitres, fragmentTitresGeo, fragmentTitresGeoPolygon, fragmentDemarchesTitre }

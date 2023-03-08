@@ -2,20 +2,11 @@ import { GraphQLResolveInfo } from 'graphql'
 import { Context } from '../../../types.js'
 
 import { fieldsBuild } from './_fields-build.js'
-import {
-  activitesTypesDocumentsTypesGet,
-  activitesTypesGet,
-  activitesTypesPaysGet,
-  activitesTypesTitresTypesGet
-} from '../../../database/queries/metas-activites.js'
+import { activitesTypesDocumentsTypesGet, activitesTypesGet, activitesTypesPaysGet, activitesTypesTitresTypesGet } from '../../../database/queries/metas-activites.js'
 import { isSuper } from 'camino-common/src/roles.js'
 import { activitesStatuts as activitesStatutsList } from 'camino-common/src/static/activitesStatuts.js'
 
-const activitesTypes = async (
-  _: never,
-  _context: Context,
-  info: GraphQLResolveInfo
-) => {
+const activitesTypes = async (_: never, _context: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -77,10 +68,4 @@ const activitesTypesPays = async (_: never, { user }: Context) => {
   }
 }
 
-export {
-  activitesTypes,
-  activitesStatuts,
-  activitesTypesTitresTypes,
-  activitesTypesDocumentsTypes,
-  activitesTypesPays
-}
+export { activitesTypes, activitesStatuts, activitesTypesTitresTypes, activitesTypesDocumentsTypes, activitesTypesPays }

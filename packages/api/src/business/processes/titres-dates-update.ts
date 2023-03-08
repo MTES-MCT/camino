@@ -13,8 +13,8 @@ export const titresDatesUpdate = async (titresIds?: string[]) => {
     { ids: titresIds },
     {
       fields: {
-        demarches: { phase: { id: {} }, etapes: { points: { id: {} } } }
-      }
+        demarches: { phase: { id: {} }, etapes: { points: { id: {} } } },
+      },
     },
     userSuper
   )
@@ -44,10 +44,7 @@ export const titresDatesUpdate = async (titresIds?: string[]) => {
     if (Object.keys(patch).length) {
       await titreUpdate(titre.id, patch)
 
-      console.info(
-        'titre : dates (mise à jour) ->',
-        `${titre.id}: ${JSON.stringify(patch)}`
-      )
+      console.info('titre : dates (mise à jour) ->', `${titre.id}: ${JSON.stringify(patch)}`)
 
       titresUpdated.push(titre.id)
     }

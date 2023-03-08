@@ -6,7 +6,7 @@ import { ACTIVITES_STATUTS_IDS } from 'camino-common/src/static/activitesStatuts
 
 const meta: Meta = {
   title: 'Components/Activite/Preview',
-  component: Preview
+  component: Preview,
 }
 export default meta
 
@@ -21,7 +21,7 @@ const Template: Story<Props> = (args: Props) => ({
   setup() {
     return { args }
   },
-  template: '<Preview v-bind="args" />'
+  template: '<Preview v-bind="args" />',
 })
 
 const activite: Activite = {
@@ -34,7 +34,7 @@ const activite: Activite = {
     id: 'gra',
     nom: 'Gra',
     frequenceId: 'ann',
-    description: 'description du type'
+    description: 'description du type',
   },
   activiteStatutId: ACTIVITES_STATUTS_IDS.CLOTURE,
   deposable: false,
@@ -42,7 +42,7 @@ const activite: Activite = {
   periodeId: 1,
   documents: [],
   sections: [],
-  contenu: {}
+  contenu: {},
 }
 
 export const OuvertParDefaut = Template.bind(
@@ -50,7 +50,7 @@ export const OuvertParDefaut = Template.bind(
   {
     activite,
     route: 'fakeRoute',
-    initialOpened: true
+    initialOpened: true,
   }
 )
 
@@ -59,7 +59,7 @@ export const FermeParDefaut = Template.bind(
   {
     activite,
     route: 'fakeRoute',
-    initialOpened: false
+    initialOpened: false,
   }
 )
 
@@ -70,10 +70,10 @@ export const AideVisible = Template.bind(
       ...activite,
       deposable: true,
       modification: true,
-      activiteStatutId: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
+      activiteStatutId: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION,
     },
     route: 'fakeRoute',
-    initialOpened: false
+    initialOpened: false,
   }
 )
 
@@ -84,10 +84,10 @@ export const ACompleter = Template.bind(
       ...activite,
       deposable: false,
       modification: true,
-      activiteStatutId: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
+      activiteStatutId: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION,
     },
     route: 'fakeRoute',
-    initialOpened: false
+    initialOpened: false,
   }
 )
 
@@ -99,9 +99,9 @@ export const Supprimable = Template.bind(
       suppression: true,
       deposable: false,
       modification: true,
-      activiteStatutId: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION
+      activiteStatutId: ACTIVITES_STATUTS_IDS.EN_CONSTRUCTION,
     },
     route: 'fakeRoute',
-    initialOpened: false
+    initialOpened: false,
   }
 )

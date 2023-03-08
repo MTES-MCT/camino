@@ -2,11 +2,7 @@ import { Index } from '../../types.js'
 
 const hashGet = (str: string) => str.split('-').pop()
 
-export const matchFuzzy = (
-  name: string,
-  index: Index<any>,
-  partGet = hashGet
-) => {
+export const matchFuzzy = (name: string, index: Index<any>, partGet = hashGet) => {
   const hash = name.split('-').pop()
 
   return Object.keys(index).reduce((r: string[], key) => {

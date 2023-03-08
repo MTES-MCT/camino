@@ -43,7 +43,7 @@ export const substancesFiscalesStats = [
   SUBSTANCES_FISCALES_IDS.bauxite,
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodiumContenu_,
   SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitEnDissolutionParSondage,
-  SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage
+  SUBSTANCES_FISCALES_IDS.sel_ChlorureDeSodium_extraitParAbattage,
 ] as const
 
 export type SubstancesFiscalesStats = (typeof substancesFiscalesStats)[number]

@@ -1,9 +1,5 @@
-mutation AdministrationTitreTypeEtapeTypeModifier(
-  $administrationTitreTypeEtapeType: InputAdministrationTitreTypeEtapeType!
-) {
-  administrationTitreTypeEtapeTypeModifier(
-    administrationTitreTypeEtapeType: $administrationTitreTypeEtapeType
-  ) {
+mutation AdministrationTitreTypeEtapeTypeModifier($administrationTitreTypeEtapeType: InputAdministrationTitreTypeEtapeType!) {
+  administrationTitreTypeEtapeTypeModifier(administrationTitreTypeEtapeType: $administrationTitreTypeEtapeType) {
     ...administration
   }
 }

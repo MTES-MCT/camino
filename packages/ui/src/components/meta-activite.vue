@@ -8,7 +8,7 @@ import Metas from '@/components/metas/meta-page-template.vue'
 
 export default defineComponent({
   components: {
-    Metas
+    Metas,
   },
 
   data() {
@@ -20,21 +20,21 @@ export default defineComponent({
           {
             id: 'titres-types',
             foreignKey: 'titreTypeId',
-            joinTable: 'activites-types--titres-types'
+            joinTable: 'activites-types--titres-types',
           },
           {
             id: 'documents-types',
             foreignKey: 'documentTypeId',
-            joinTable: 'activites-types--documents-types'
+            joinTable: 'activites-types--documents-types',
           },
           {
             id: 'pays',
             foreignKey: 'paysId',
-            joinTable: 'activites-types--pays'
-          }
-        ]
-      }
+            joinTable: 'activites-types--pays',
+          },
+        ],
+      },
     }
-  }
+  },
 })
 </script>

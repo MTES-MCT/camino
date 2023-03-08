@@ -1,17 +1,6 @@
-import {
-  ITitreDemande,
-  ITitreEtape,
-  ISection,
-  ITitreEntreprise,
-  Context,
-  ISectionElement
-} from '../../../types.js'
+import { ITitreDemande, ITitreEtape, ISection, ITitreEntreprise, Context, ISectionElement } from '../../../types.js'
 import { etapeTypeGet } from '../../../database/queries/metas.js'
-import {
-  titreCreate,
-  titreGet,
-  titresGet
-} from '../../../database/queries/titres.js'
+import { titreCreate, titreGet, titresGet } from '../../../database/queries/titres.js'
 import { titreDemarcheCreate } from '../../../database/queries/titres-demarches.js'
 import { titreEtapeUpsert } from '../../../database/queries/titres-etapes.js'
 
@@ -21,10 +10,7 @@ import titreEtapeUpdateTask from '../../../business/titre-etape-update.js'
 import { userSuper } from '../../../database/user-super.js'
 import { isBureauDEtudes, isEntreprise } from 'camino-common/src/roles.js'
 import { linkTitres } from '../../../database/queries/titres-titres.js'
-import {
-  getLinkConfig,
-  assertsCanCreateTitre
-} from 'camino-common/src/permissions/titres.js'
+import { getLinkConfig, assertsCanCreateTitre } from 'camino-common/src/permissions/titres.js'
 import { checkTitreLinks } from '../../../business/validations/titre-links-validate.js'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
@@ -32,12 +18,7 @@ import { utilisateurTitreCreate } from '../../../database/queries/utilisateurs.j
 import { getDocuments } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/documents.js'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
-export const titreDemandeCreer = async (
-  {
-    titreDemande
-  }: { titreDemande: ITitreDemande & { titreFromIds?: string[] } },
-  { user }: Context
-) => {
+export const titreDemandeCreer = async ({ titreDemande }: { titreDemande: ITitreDemande & { titreFromIds?: string[] } }, { user }: Context) => {
   try {
     assertsCanCreateTitre(user, titreDemande.typeId)
 
@@ -53,7 +34,7 @@ export const titreDemandeCreer = async (
         nom: titreDemande.nom,
         typeId: titreDemande.typeId,
         references: titreDemande.references,
-        propsTitreEtapesIds: {}
+        propsTitreEtapesIds: {},
       },
       { fields: {} }
     )
@@ -62,23 +43,17 @@ export const titreDemandeCreer = async (
 
     const linkConfig = getLinkConfig(titreDemande.typeId, [])
     if (linkConfig && titreDemande.titreFromIds === undefined) {
-      throw new Error(
-        'Le champ titreFromIds est obligatoire pour ce type de titre'
-      )
+      throw new Error('Le champ titreFromIds est obligatoire pour ce type de titre')
     }
 
     if (titreDemande.titreFromIds !== undefined) {
-      const titresFrom = await titresGet(
-        { ids: titreDemande.titreFromIds },
-        { fields: { id: {} } },
-        user
-      )
+      const titresFrom = await titresGet({ ids: titreDemande.titreFromIds }, { fields: { id: {} } }, user)
 
       checkTitreLinks(titreDemande, titreDemande.titreFromIds, titresFrom, [])
 
       await linkTitres({
         linkTo: titre.id,
-        linkFrom: titreDemande.titreFromIds
+        linkFrom: titreDemande.titreFromIds,
       })
       delete titreDemande.titreFromIds
     }
@@ -86,16 +61,12 @@ export const titreDemandeCreer = async (
 
     const titreDemarche = await titreDemarcheCreate({
       titreId,
-      typeId: 'oct'
+      typeId: 'oct',
     })
 
     await titreDemarcheUpdateTask(titreDemarche.id, titreDemarche.titreId)
 
-    const updatedTitre = await titreGet(
-      titreId,
-      { fields: { demarches: { id: {} } } },
-      userSuper
-    )
+    const updatedTitre = await titreGet(titreId, { fields: { demarches: { id: {} } } }, userSuper)
 
     if (!updatedTitre) {
       throw new Error('recupération du titre nouvellement créé impossible')
@@ -111,7 +82,7 @@ export const titreDemandeCreer = async (
       statutId: 'aco',
       date,
       duree: titreDemande.typeId === 'arm' ? 4 : undefined,
-      titulaires: [titulaire]
+      titulaires: [titulaire],
     }
 
     if (isBureauDEtudes(user) || isEntreprise(user)) {
@@ -127,7 +98,7 @@ export const titreDemandeCreer = async (
 
         for (const etapeTypeId of decisionsAnnexesEtapeTypeIds) {
           const etapeType = await etapeTypeGet(etapeTypeId, {
-            fields: { id: {} }
+            fields: { id: {} },
           })
 
           const etapesStatuts = getEtapesStatuts(etapeTypeId)
@@ -148,7 +119,7 @@ export const titreDemandeCreer = async (
               {
                 id: 'date',
                 nom: 'Date',
-                type: 'date'
+                type: 'date',
               },
               {
                 id: 'statutId',
@@ -156,18 +127,14 @@ export const titreDemandeCreer = async (
                 type: 'select',
                 valeurs: etapesStatuts.map(statut => ({
                   id: statut.id,
-                  nom: statut.nom
-                }))
+                  nom: statut.nom,
+                })),
               },
-              ...elements
-            ]
+              ...elements,
+            ],
           }
 
-          const documents = getDocuments(
-            titreDemande.typeId,
-            titreDemarche.typeId,
-            etapeTypeId
-          )
+          const documents = getDocuments(titreDemande.typeId, titreDemarche.typeId, etapeTypeId)
 
           documents
             ?.filter(dt => !dt.optionnel)
@@ -175,7 +142,7 @@ export const titreDemandeCreer = async (
               decisionAnnexeSections.elements!.push({
                 id: dt.id,
                 nom: dt.nom!,
-                type: 'file'
+                type: 'file',
               })
             })
 
@@ -184,11 +151,7 @@ export const titreDemandeCreer = async (
       }
     }
     const updatedTitreEtape = await titreEtapeUpsert(titreEtape, user, titreId)
-    await titreEtapeUpdateTask(
-      updatedTitreEtape.id,
-      titreEtape.titreDemarcheId,
-      user
-    )
+    await titreEtapeUpdateTask(updatedTitreEtape.id, titreEtape.titreDemarcheId, user)
 
     const titreEtapeId = updatedTitreEtape.id
 
@@ -197,7 +160,7 @@ export const titreDemandeCreer = async (
 
     return {
       titreId,
-      titreEtapeId
+      titreEtapeId,
     }
   } catch (e) {
     console.error(e)

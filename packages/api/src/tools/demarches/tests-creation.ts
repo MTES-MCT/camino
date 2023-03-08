@@ -4,39 +4,27 @@ import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
 import { titreDemarcheDepotDemandeDateFind } from '../../business/rules/titre-demarche-depot-demande-date-find.js'
 import { writeFileSync } from 'fs'
-import {
-  Etape,
-  toMachineEtapes
-} from '../../business/rules-demarches/machine-common.js'
-import {
-  demarchesDefinitions,
-  isDemarcheDefinitionMachine
-} from '../../business/rules-demarches/definitions.js'
-import {
-  dateAddDays,
-  daysBetween,
-  setDayInMonth
-} from 'camino-common/src/date.js'
+import { Etape, toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
+import { demarchesDefinitions, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
+import { dateAddDays, daysBetween, setDayInMonth } from 'camino-common/src/date.js'
 import { ETAPES_TYPES } from 'camino-common/src/static/etapesTypes.js'
 
 const writeEtapesForTest = async () => {
-  const demarcheDefinitionMachines = demarchesDefinitions.filter(
-    isDemarcheDefinitionMachine
-  )
+  const demarcheDefinitionMachines = demarchesDefinitions.filter(isDemarcheDefinitionMachine)
 
   for (const demarcheDefinition of demarcheDefinitionMachines) {
     const demarches = await titresDemarchesGet(
       {
         titresTypesIds: [demarcheDefinition.titreTypeId.slice(0, 2)],
         titresDomainesIds: [demarcheDefinition.titreTypeId.slice(2)],
-        typesIds: demarcheDefinition.demarcheTypeIds
+        typesIds: demarcheDefinition.demarcheTypeIds,
       },
       {
         fields: {
           titre: { id: {}, demarches: { etapes: { id: {} } } },
           etapes: { id: {} },
-          type: { etapesTypes: { id: {} } }
-        }
+          type: { etapesTypes: { id: {} } },
+        },
       },
       userSuper
     )
@@ -46,10 +34,7 @@ const writeEtapesForTest = async () => {
       .filter(demarche => {
         const date = titreDemarcheDepotDemandeDateFind(demarche.etapes!)
 
-        return (
-          (date ?? '') > demarcheDefinition.dateDebut &&
-          !demarcheDefinition.demarcheIdExceptions?.includes(demarche.id)
-        )
+        return (date ?? '') > demarcheDefinition.dateDebut && !demarcheDefinition.demarcheIdExceptions?.includes(demarche.id)
       })
       .filter(({ titreId }) => {
         if (
@@ -61,7 +46,7 @@ const writeEtapesForTest = async () => {
             'z0DZo6TKEvP28D6oQyAuTvwA',
             'RGOrc6hTOErMD8SBkUChbTyg',
             '8KsDiNBHR9lAHv229GIqA7fw',
-            '8pY4eoUKtuR3is8l3Vy0vmJC'
+            '8pY4eoUKtuR3is8l3Vy0vmJC',
           ].includes(titreId)
         ) {
           console.info('On ignore le titre ' + titreId)
@@ -87,32 +72,18 @@ const writeEtapesForTest = async () => {
         )
         // Pour anonymiser la date en gardant les délai en mois entre la saisine et l'apd,
         // on trouve la date de saisine et on calcule un delta random pour tomber dans le même mois
-        const firstSaisineDate =
-          etapes.find(
-            etape => etape.etapeTypeId === ETAPES_TYPES.saisineDesServices
-          )?.date ?? etapes[0].date
-        const decalageJour = daysBetween(
-          firstSaisineDate,
-          setDayInMonth(firstSaisineDate, Math.floor(Math.random() * 28))
-        )
+        const firstSaisineDate = etapes.find(etape => etape.etapeTypeId === ETAPES_TYPES.saisineDesServices)?.date ?? etapes[0].date
+        const decalageJour = daysBetween(firstSaisineDate, setDayInMonth(firstSaisineDate, Math.floor(Math.random() * 28)))
         try {
           if (!demarcheDefinition.machine.isEtapesOk(etapes)) {
-            etapes.splice(
-              0,
-              etapes.length,
-              ...demarcheDefinition.machine.orderMachine(etapes)
-            )
+            etapes.splice(0, etapes.length, ...demarcheDefinition.machine.orderMachine(etapes))
             if (!demarcheDefinition.machine.isEtapesOk(etapes)) {
-              console.warn(
-                `https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} "${demarcheDefinition.titreTypeId}/${demarche.typeId}"`
-              )
+              console.warn(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} "${demarcheDefinition.titreTypeId}/${demarche.typeId}"`)
             }
           }
         } catch (e) {
           console.error('something went wrong', e)
-          console.error(
-            `https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} "${demarcheDefinition.titreTypeId}/${demarche.typeId}"`
-          )
+          console.error(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche N*${index} "${demarcheDefinition.titreTypeId}/${demarche.typeId}"`)
         }
 
         const etapesAnonymes = etapes.map(etape => {
@@ -123,13 +94,10 @@ const writeEtapesForTest = async () => {
           id: index,
           demarcheStatutId: demarche.statutId,
           demarchePublique: demarche.publicLecture ?? false,
-          etapes: etapesAnonymes
+          etapes: etapesAnonymes,
         }
       })
-    writeFileSync(
-      `src/business/rules-demarches/${demarcheDefinition.titreTypeId}/${demarcheDefinition.demarcheTypeIds[0]}.cas.json`,
-      JSON.stringify(toutesLesEtapes)
-    )
+    writeFileSync(`src/business/rules-demarches/${demarcheDefinition.titreTypeId}/${demarcheDefinition.demarcheTypeIds[0]}.cas.json`, JSON.stringify(toutesLesEtapes))
   }
 }
 

@@ -1,10 +1,7 @@
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { computed, defineComponent, inject, ref } from 'vue'
 import { FunctionalPopup } from '../_ui/functional-popup'
-import {
-  DemarcheTypeId,
-  isDemarcheTypeId
-} from 'camino-common/src/static/demarchesTypes'
+import { DemarcheTypeId, isDemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { getDemarchesTypesByTitreType } from 'camino-common/src/static/titresTypesDemarchesTypes'
 import { isEventWithTarget } from '@/utils/vue-tsx-utils'
 import { DemarcheApiClient } from './demarche-api-client'
@@ -26,17 +23,8 @@ export interface Props {
   displayMessage: () => void
 }
 
-export const DemarcheEditPopup = defineComponent<
-  Omit<Props, 'reload' | 'displayMessage'>
->({
-  props: [
-    'demarche',
-    'titreNom',
-    'titreTypeId',
-    'tabId',
-    'apiClient',
-    'close'
-  ] as unknown as undefined,
+export const DemarcheEditPopup = defineComponent<Omit<Props, 'reload' | 'displayMessage'>>({
+  props: ['demarche', 'titreNom', 'titreTypeId', 'tabId', 'apiClient', 'close'] as unknown as undefined,
   setup(props) {
     const store = useStore()
     return () => (
@@ -47,47 +35,26 @@ export const DemarcheEditPopup = defineComponent<
         titreTypeId={props.titreTypeId}
         titreNom={props.titreNom}
         tabId={props.tabId}
-        reload={() =>
-          store.dispatch('titre/get', props.demarche.titreId, { root: true })
-        }
-        displayMessage={() =>
-          store.dispatch(
-            'messageAdd',
-            { value: `le titre a été mis à jour`, type: 'success' },
-            { root: true }
-          )
-        }
+        reload={() => store.dispatch('titre/get', props.demarche.titreId, { root: true })}
+        displayMessage={() => store.dispatch('messageAdd', { value: `le titre a été mis à jour`, type: 'success' }, { root: true })}
       />
     )
-  }
+  },
 })
 
 export const PureDemarcheEditPopup = defineComponent<Props>({
-  props: [
-    'demarche',
-    'titreNom',
-    'titreTypeId',
-    'tabId',
-    'apiClient',
-    'close',
-    'reload',
-    'displayMessage'
-  ] as unknown as undefined,
+  props: ['demarche', 'titreNom', 'titreTypeId', 'tabId', 'apiClient', 'close', 'reload', 'displayMessage'] as unknown as undefined,
   setup(props) {
     const matomo = inject('matomo', null)
     const typeId = ref<DemarcheTypeId | null>(props.demarche.typeId ?? null)
     const description = ref<string>(props.demarche.description ?? '')
 
     const title = computed(() => {
-      return `${
-        props.demarche.id ? 'Modification de la' : "Ajout d'une"
-      } démarche ${props.tabId === 'travaux' ? 'de travaux' : ''}`
+      return `${props.demarche.id ? 'Modification de la' : "Ajout d'une"} démarche ${props.tabId === 'travaux' ? 'de travaux' : ''}`
     })
 
     const types = computed(() => {
-      return getDemarchesTypesByTitreType(props.titreTypeId).filter(t =>
-        props.tabId === 'travaux' ? t.travaux : !t.travaux
-      )
+      return getDemarchesTypesByTitreType(props.titreTypeId).filter(t => (props.tabId === 'travaux' ? t.travaux : !t.travaux))
     })
 
     const selectDemarcheTypeId = (e: Event) => {
@@ -113,18 +80,10 @@ export const PureDemarcheEditPopup = defineComponent<Props>({
             <h5>Type</h5>
           </div>
           <div class="mb tablet-blob-2-3">
-            <select
-              class="p-s mr"
-              disabled={!!props.demarche.id}
-              onChange={selectDemarcheTypeId}
-            >
+            <select class="p-s mr" disabled={!!props.demarche.id} onChange={selectDemarcheTypeId}>
               {!props.demarche?.typeId ? <option>-</option> : null}
               {types.value.map(demarcheType => (
-                <option
-                  key={demarcheType.id}
-                  value={demarcheType.id}
-                  selected={props.demarche?.typeId === demarcheType.id}
-                >
+                <option key={demarcheType.id} value={demarcheType.id} selected={props.demarche?.typeId === demarcheType.id}>
                   {demarcheType.nom}
                 </option>
               ))}
@@ -136,12 +95,7 @@ export const PureDemarcheEditPopup = defineComponent<Props>({
             <h5>Description</h5>
             <p class="h6 italic mb-0 flex-right mt-xs">Optionnel</p>
           </div>
-          <input
-            onInput={updateDescription}
-            type="text"
-            class="tablet-blob-2-3 p-s"
-            value={description.value}
-          />
+          <input onInput={updateDescription} type="text" class="tablet-blob-2-3 p-s" value={description.value} />
         </div>
       </div>
     )
@@ -151,12 +105,12 @@ export const PureDemarcheEditPopup = defineComponent<Props>({
         const demarche = {
           titreId: props.demarche.titreId,
           typeId: typeId.value,
-          description: description.value
+          description: description.value,
         }
         if (props.demarche.id) {
           await props.apiClient.updateDemarche({
             ...demarche,
-            id: props.demarche.id
+            id: props.demarche.id,
           })
         } else {
           await props.apiClient.createDemarche(demarche)
@@ -166,20 +120,9 @@ export const PureDemarcheEditPopup = defineComponent<Props>({
       }
       if (matomo) {
         // @ts-ignore
-        matomo.trackEvent(
-          'titre-sections',
-          `titre-${props.tabId}-enregistrer`,
-          props.demarche.id
-        )
+        matomo.trackEvent('titre-sections', `titre-${props.tabId}-enregistrer`, props.demarche.id)
       }
     }
-    return () => (
-      <FunctionalPopup
-        title={title.value}
-        content={content}
-        close={props.close}
-        validate={{ action: save, can: !!typeId.value }}
-      />
-    )
-  }
+    return () => <FunctionalPopup title={title.value} content={content} close={props.close} validate={{ action: save, can: !!typeId.value }} />
+  },
 })

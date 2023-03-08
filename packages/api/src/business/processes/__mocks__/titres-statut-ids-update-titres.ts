@@ -21,12 +21,12 @@ const titresValideStatutIdAJour = [
             ordre: 1,
             date: '2014-04-01',
             dateDebut: null,
-            dateFin: '3014-04-01'
-          }
-        ]
-      }
-    ]
-  } as Titres
+            dateFin: '3014-04-01',
+          },
+        ],
+      },
+    ],
+  } as Titres,
 ]
 
 const titresEchuStatutIdObselete = [
@@ -50,12 +50,12 @@ const titresEchuStatutIdObselete = [
             ordre: 1,
             date: '1014-04-01',
             dateDebut: null,
-            dateFin: '2014-04-01'
-          }
-        ]
-      }
-    ]
-  } as Titres
+            dateFin: '2014-04-01',
+          },
+        ],
+      },
+    ],
+  } as Titres,
 ]
 
 export { titresValideStatutIdAJour, titresEchuStatutIdObselete }

@@ -14,45 +14,20 @@ export const up = (knex: Knex) =>
       table.integer('ordre').notNullable()
     })
     .createTable('travauxTypes__travauxEtapesTypes', table => {
-      table
-        .string('travauxTypeId', 3)
-        .index()
-        .references('travauxTypes.id')
-        .notNullable()
-      table
-        .string('travauxEtapeTypeId', 3)
-        .index()
-        .references('travauxEtapesTypes.id')
-        .notNullable()
+      table.string('travauxTypeId', 3).index().references('travauxTypes.id').notNullable()
+      table.string('travauxEtapeTypeId', 3).index().references('travauxEtapesTypes.id').notNullable()
       table.integer('ordre').notNullable()
       table.primary(['travauxTypeId', 'travauxEtapeTypeId'])
     })
     .createTable('travauxEtapesTypes__etapesStatuts', table => {
-      table
-        .string('travauxEtapeTypeId', 3)
-        .index()
-        .references('travauxEtapesTypes.id')
-        .notNullable()
-      table
-        .string('etapeStatutId', 3)
-        .index()
-        .references('etapesStatuts.id')
-        .notNullable()
+      table.string('travauxEtapeTypeId', 3).index().references('travauxEtapesTypes.id').notNullable()
+      table.string('etapeStatutId', 3).index().references('etapesStatuts.id').notNullable()
       table.integer('ordre')
       table.primary(['travauxEtapeTypeId', 'etapeStatutId'])
     })
     .createTable('travauxEtapesTypes__documentsTypes', table => {
-      table
-        .string('travauxEtapeTypeId', 3)
-        .index()
-        .references('travauxEtapesTypes.id')
-        .notNullable()
-        .onDelete('CASCADE')
-      table
-        .string('documentTypeId', 3)
-        .index()
-        .references('documentsTypes.id')
-        .notNullable()
+      table.string('travauxEtapeTypeId', 3).index().references('travauxEtapesTypes.id').notNullable().onDelete('CASCADE')
+      table.string('documentTypeId', 3).index().references('documentsTypes.id').notNullable()
       table.boolean('optionnel')
       table.primary(['travauxEtapeTypeId', 'documentTypeId'])
     })

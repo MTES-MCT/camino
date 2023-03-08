@@ -3,20 +3,13 @@
   <div v-else>
     <div v-if="titre.doublonTitre?.id" class="p-m bg-warning color-bg mb">
       Ce titre est un doublon. Le titre déjà existant est :
-      <a class="color-bg" :href="`/titres/${titre.doublonTitre.id}`">{{
-        titre.doublonTitre.nom
-      }}</a
+      <a class="color-bg" :href="`/titres/${titre.doublonTitre.id}`">{{ titre.doublonTitre.nom }}</a
       >.
     </div>
 
     <TitreHeader :titre="titre" @titre-event-track="eventTrack" />
 
-    <TitreInfos
-      :titre="titre"
-      :user="user"
-      :apiClient="apiClient()"
-      class="mb"
-    />
+    <TitreInfos :titre="titre" :user="user" :apiClient="apiClient()" class="mb" />
 
     <Perimetre
       v-if="titre.geojsonMultiPolygon && titre.points"
@@ -39,61 +32,25 @@
 
     <div class="line width-full mb-xl" />
 
-    <TitreRepertoire
-      :titreTypeId="titre.typeId"
-      :titulaires="titre.titulaires"
-      :amodiataires="titre.amodiataires"
-      :administrations="titre.administrations"
-      @titre-event-track="eventTrack"
-    />
+    <TitreRepertoire :titreTypeId="titre.typeId" :titulaires="titre.titulaires" :amodiataires="titre.amodiataires" :administrations="titre.administrations" @titre-event-track="eventTrack" />
 
     <div v-if="tabs.length > 1">
       <div class="flex">
-        <div
-          v-for="tab in tabs"
-          :key="tab.id"
-          class="mr-xs"
-          :class="{ active: tabId === tab.id }"
-        >
-          <button
-            :id="`cmn-titre-tab-${tab.id}`"
-            class="p-m btn-tab rnd-t-s"
-            @click="tabUpdate(tab.id)"
-          >
+        <div v-for="tab in tabs" :key="tab.id" class="mr-xs" :class="{ active: tabId === tab.id }">
+          <button :id="`cmn-titre-tab-${tab.id}`" class="p-m btn-tab rnd-t-s" @click="tabUpdate(tab.id)">
             {{ tab.nom }}
-            <ActivitesPills
-              v-if="tab.id === 'activites'"
-              class="inline-block ml-s"
-              :activitesAbsentes="titre.activitesAbsentes"
-              :activitesEnConstruction="titre.activitesEnConstruction"
-            />
+            <ActivitesPills v-if="tab.id === 'activites'" class="inline-block ml-s" :activitesAbsentes="titre.activitesAbsentes" :activitesEnConstruction="titre.activitesEnConstruction" />
           </button>
         </div>
       </div>
       <div class="line-neutral width-full mb" />
     </div>
 
-    <TitreDemarches
-      v-if="tabId === 'demarches'"
-      :user="user"
-      :demarches="demarches"
-      :tabId="tabId"
-      @event-track="eventTrack"
-    />
+    <TitreDemarches v-if="tabId === 'demarches'" :user="user" :demarches="demarches" :tabId="tabId" @event-track="eventTrack" />
 
-    <TitreActivitesList
-      v-if="tabId === 'activites'"
-      :activites="titre.activites"
-      :titreId="titre.id"
-    />
+    <TitreActivitesList v-if="tabId === 'activites'" :activites="titre.activites" :titreId="titre.id" />
 
-    <TitreDemarches
-      v-if="tabId === 'travaux'"
-      :demarches="travaux"
-      :tabId="tabId"
-      :user="user"
-      @titre-event-track="eventTrack"
-    />
+    <TitreDemarches v-if="tabId === 'travaux'" :demarches="travaux" :tabId="tabId" :user="user" @titre-event-track="eventTrack" />
 
     <Journaux v-if="tabId === 'journaux'" :titreId="titre.id" />
   </div>
@@ -124,13 +81,13 @@ export default {
     TitreDemarches,
     TitreActivitesList,
     Perimetre,
-    Journaux
+    Journaux,
   },
 
   data() {
     return {
       geoTabId: 'carte',
-      show: false
+      show: false,
     }
   },
 
@@ -161,7 +118,7 @@ export default {
 
     travaux() {
       return this.$store.getters['titre/travaux']
-    }
+    },
   },
 
   watch: {
@@ -171,7 +128,7 @@ export default {
       }
     },
 
-    user: 'get'
+    user: 'get',
   },
 
   async created() {
@@ -182,8 +139,7 @@ export default {
       const id = this.$route.hash.substring(1)
       const element = document.getElementById(id)
       if (element) {
-        const y =
-          element.getBoundingClientRect().top + window.pageYOffset + yOffset
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset
 
         window.scrollTo({ top: y })
       }
@@ -207,7 +163,7 @@ export default {
       this.eventTrack({
         categorie: 'titre-sections',
         action: `titre-${this.tabId}_consulter`,
-        nom: this.$store.state.titre.element.id
+        nom: this.$store.state.titre.element.id,
       })
 
       this.$store.commit('titre/openTab', tabId)
@@ -217,7 +173,7 @@ export default {
       this.eventTrack({
         categorie: 'titre-sections',
         action: `titre-vue${this.tabId}_consulter`,
-        nom: this.$store.state.titre.element.id
+        nom: this.$store.state.titre.element.id,
       })
 
       this.geoTabId = tabId
@@ -227,7 +183,7 @@ export default {
       if (this.$matomo) {
         this.$matomo.trackEvent(event.categorie, event.action, event.nom)
       }
-    }
-  }
+    },
+  },
 }
 </script>

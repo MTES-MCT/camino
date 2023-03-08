@@ -20,16 +20,16 @@ const titreDemarchesOctPointsMut = {
           typeId: 'dpu',
           statutId: 'acc',
           ordre: 2,
-          points: [1, 2, 3]
+          points: [1, 2, 3],
         },
         {
           id: 'h-cx-courdemanges-1989-oct01-dex01',
           titreDemarcheId: 'h-cx-courdemanges-1989-oct01',
           typeId: 'dex',
           statutId: 'acc',
-          ordre: 1
-        }
-      ]
+          ordre: 1,
+        },
+      ],
     },
     {
       id: 'h-cx-courdemanges-1989-mut01',
@@ -43,18 +43,18 @@ const titreDemarchesOctPointsMut = {
           titreDemarcheId: 'h-cx-courdemanges-1989-mut01',
           typeId: 'dpu',
           statutId: 'acc',
-          ordre: 2
+          ordre: 2,
         },
         {
           id: 'h-cx-courdemanges-1989-mut01-dex01',
           titreDemarcheId: 'h-cx-courdemanges-1989-mut01',
           typeId: 'dex',
           statutId: 'acc',
-          ordre: 1
-        }
-      ]
-    }
-  ] as ITitreDemarche[]
+          ordre: 1,
+        },
+      ],
+    },
+  ] as ITitreDemarche[],
 }
 
 const titreDemarchesOctPointsVides = {
@@ -72,18 +72,18 @@ const titreDemarchesOctPointsVides = {
           typeId: 'dpu',
           statutId: 'acc',
           ordre: 2,
-          points: []
+          points: [],
         },
         {
           id: 'h-cx-courdemanges-1988-oct01-dex01',
           titreDemarcheId: 'h-cx-courdemanges-1988-oct01',
           typeId: 'dex',
           statutId: 'acc',
-          ordre: 1
-        }
-      ]
-    }
-  ] as ITitreDemarche[]
+          ordre: 1,
+        },
+      ],
+    },
+  ] as ITitreDemarche[],
 }
 
 const titreDemarchesOctMutPoints = {
@@ -100,16 +100,16 @@ const titreDemarchesOctMutPoints = {
           titreDemarcheId: 'h-cx-courdemanges-1986-oct01',
           typeId: 'dpu',
           statutId: 'acc',
-          ordre: 2
+          ordre: 2,
         },
         {
           id: 'h-cx-courdemanges-1986-oct01-dex01',
           titreDemarcheId: 'h-cx-courdemanges-1986-oct01',
           typeId: 'dex',
           statutId: 'acc',
-          ordre: 1
-        }
-      ]
+          ordre: 1,
+        },
+      ],
     },
     {
       id: 'h-cx-courdemanges-1986-mut01',
@@ -124,18 +124,18 @@ const titreDemarchesOctMutPoints = {
           typeId: 'dpu',
           statutId: 'acc',
           ordre: 2,
-          points: [1, 2, 3]
+          points: [1, 2, 3],
         },
         {
           id: 'h-cx-courdemanges-1986-mut01-dex01',
           titreDemarcheId: 'h-cx-courdemanges-1986-mut01',
           typeId: 'dex',
           statutId: 'acc',
-          ordre: 1
-        }
-      ]
-    }
-  ] as ITitreDemarche[]
+          ordre: 1,
+        },
+      ],
+    },
+  ] as ITitreDemarche[],
 }
 
 const titreDemarchesOctPointsMutInstruction = {
@@ -154,16 +154,16 @@ const titreDemarchesOctPointsMutInstruction = {
           typeId: 'dpu',
           statutId: 'acc',
           ordre: 2,
-          points: [1, 2, 3]
+          points: [1, 2, 3],
         },
         {
           id: 'h-cx-courdemanges-1985-mut01-dex01',
           titreDemarcheId: 'h-cx-courdemanges-1985-mut01',
           typeId: 'dex',
           statutId: 'acc',
-          ordre: 1
-        }
-      ]
+          ordre: 1,
+        },
+      ],
     },
     {
       id: 'h-cx-courdemanges-1985-oct01',
@@ -177,18 +177,18 @@ const titreDemarchesOctPointsMutInstruction = {
           typeId: 'dpu',
           statutId: 'acc',
           ordre: 2,
-          points: [1, 2, 3]
+          points: [1, 2, 3],
         },
         {
           id: 'h-cx-courdemanges-1985-oct01-dex01',
           titreDemarcheId: 'h-cx-courdemanges-1985-oct01',
           typeId: 'dex',
           statutId: 'acc',
-          ordre: 1
-        }
-      ]
-    }
-  ] as ITitreDemarche[]
+          ordre: 1,
+        },
+      ],
+    },
+  ] as ITitreDemarche[],
 }
 
 const titreDemarchesOctAccDpuRej = {
@@ -206,18 +206,18 @@ const titreDemarchesOctAccDpuRej = {
           typeId: 'dpu',
           statutId: 'rej',
           ordre: 2,
-          points: [1, 2, 3]
+          points: [1, 2, 3],
         },
         {
           id: 'h-cx-courdemanges-1984-oct01-dex01',
           titreDemarcheId: 'h-cx-courdemanges-1984-oct01',
           typeId: 'dex',
           statutId: 'rej',
-          ordre: 1
-        }
-      ]
-    }
-  ] as ITitreDemarche[]
+          ordre: 1,
+        },
+      ],
+    },
+  ] as ITitreDemarche[],
 }
 
 const titreDemarchesOctMfrPoints = {
@@ -244,13 +244,13 @@ const titreDemarchesOctMfrPoints = {
               contour: 1,
               point: 1,
               references: [],
-              coordonnees: { x: 0, y: 0 }
-            }
-          ]
-        } as ITitreEtape
-      ]
-    }
-  ] as ITitreDemarche[]
+              coordonnees: { x: 0, y: 0 },
+            },
+          ],
+        } as ITitreEtape,
+      ],
+    },
+  ] as ITitreDemarche[],
 }
 
 const titreDemarchesOctTitulairesACO = {
@@ -269,11 +269,11 @@ const titreDemarchesOctTitulairesACO = {
           statutId: 'aco',
           ordre: 1,
           dateFin: '2018-12-31',
-          titulaires: [{ id: 'fr-123456789' }]
-        }
-      ]
-    }
-  ] as ITitreDemarche[]
+          titulaires: [{ id: 'fr-123456789' }],
+        },
+      ],
+    },
+  ] as ITitreDemarche[],
 }
 
 const titreDemarchesOctAmodiatairesPassee = {
@@ -292,12 +292,12 @@ const titreDemarchesOctAmodiatairesPassee = {
           statutId: 'acc',
           ordre: 1,
           dateFin: '2018-12-31',
-          amodiataires: [{ id: 'fr-123456789' }]
-        }
+          amodiataires: [{ id: 'fr-123456789' }],
+        },
       ],
-      phase: { phaseStatutId: 'val' }
-    }
-  ] as ITitreDemarche[]
+      phase: { phaseStatutId: 'val' },
+    },
+  ] as ITitreDemarche[],
 }
 
 const titreDemarchesOctAmodiatairesValide = {
@@ -316,9 +316,9 @@ const titreDemarchesOctAmodiatairesValide = {
           statutId: 'acc',
           ordre: 1,
           dateFin: '4018-12-31',
-          amodiataires: [{ id: 'fr-123456789' }]
-        }
-      ]
+          amodiataires: [{ id: 'fr-123456789' }],
+        },
+      ],
     },
     {
       id: 'h-cx-courdemanges-1982-oct01',
@@ -326,9 +326,9 @@ const titreDemarchesOctAmodiatairesValide = {
       typeId: 'oct',
       statutId: 'acc',
       phase: { phaseStatutId: 'val' } as ITitrePhase,
-      etapes: []
-    }
-  ] as ITitreDemarche[]
+      etapes: [],
+    },
+  ] as ITitreDemarche[],
 }
 
 const titreDemarchesOctAmodiatairesMod = {
@@ -346,9 +346,9 @@ const titreDemarchesOctAmodiatairesMod = {
           typeId: 'dpu',
           statutId: 'acc',
           ordre: 1,
-          amodiataires: [{ id: 'fr-123456789' }]
-        }
-      ]
+          amodiataires: [{ id: 'fr-123456789' }],
+        },
+      ],
     },
     {
       id: 'h-cx-courdemanges-1981-pro01',
@@ -361,9 +361,9 @@ const titreDemarchesOctAmodiatairesMod = {
           titreDemarcheId: 'h-cx-courdemanges-1981-pro01',
           typeId: 'dpu',
           statutId: 'acc',
-          ordre: 1
-        }
-      ]
+          ordre: 1,
+        },
+      ],
     },
     {
       id: 'h-cx-courdemanges-1981-oct01',
@@ -376,11 +376,11 @@ const titreDemarchesOctAmodiatairesMod = {
           titreDemarcheId: 'h-cx-courdemanges-1981-oct01',
           typeId: 'dpu',
           statutId: 'acc',
-          ordre: 1
-        }
-      ]
-    }
-  ] as ITitreDemarche[]
+          ordre: 1,
+        },
+      ],
+    },
+  ] as ITitreDemarche[],
 }
 
 const titreDemarchesProPointsModPhaseEch = {
@@ -398,12 +398,12 @@ const titreDemarchesProPointsModPhaseEch = {
           typeId: 'dpu',
           statutId: 'acc',
           ordre: 1,
-          points: [1, 2, 3]
-        }
+          points: [1, 2, 3],
+        },
       ],
       phase: {
-        statutId: 'ech'
-      }
+        statutId: 'ech',
+      },
     },
     {
       id: 'h-cx-courdemanges-1981-oct01',
@@ -416,11 +416,11 @@ const titreDemarchesProPointsModPhaseEch = {
           titreDemarcheId: 'h-cx-courdemanges-1981-oct01',
           typeId: 'dpu',
           statutId: 'acc',
-          ordre: 1
-        }
-      ]
-    }
-  ] as ITitreDemarche[]
+          ordre: 1,
+        },
+      ],
+    },
+  ] as ITitreDemarche[],
 }
 
 const titreDemarchesProPointsModPhaseVal = {
@@ -438,12 +438,12 @@ const titreDemarchesProPointsModPhaseVal = {
           date: '1981-01-01',
           typeId: ETAPES_TYPES.publicationDeDecisionAuJORF,
           statutId: ETAPES_STATUTS.ACCEPTE,
-          ordre: 1
-        }
+          ordre: 1,
+        },
       ] as ITitreEtape[],
       phase: {
-        phaseStatutId: 'val'
-      }
+        phaseStatutId: 'val',
+      },
     },
     {
       id: 'h-cx-courdemanges-1981-oct01',
@@ -456,11 +456,11 @@ const titreDemarchesProPointsModPhaseVal = {
           titreDemarcheId: 'h-cx-courdemanges-1981-oct01',
           typeId: 'dpu',
           statutId: 'acc',
-          ordre: 1
-        }
-      ]
-    }
-  ] as ITitreDemarche[]
+          ordre: 1,
+        },
+      ],
+    },
+  ] as ITitreDemarche[],
 }
 
 const titreDemarchesMutPointsMod = {
@@ -478,12 +478,12 @@ const titreDemarchesMutPointsMod = {
           typeId: 'dpu',
           statutId: 'acc',
           ordre: 1,
-          points: [1, 2, 3]
-        }
+          points: [1, 2, 3],
+        },
       ],
       phase: {
-        statutId: 'val'
-      }
+        statutId: 'val',
+      },
     },
     {
       id: 'h-cx-courdemanges-1981-oct01',
@@ -496,11 +496,11 @@ const titreDemarchesMutPointsMod = {
           titreDemarcheId: 'h-cx-courdemanges-1981-oct01',
           typeId: 'dpu',
           statutId: 'acc',
-          ordre: 1
-        }
-      ]
-    }
-  ] as ITitreDemarche[]
+          ordre: 1,
+        },
+      ],
+    },
+  ] as ITitreDemarche[],
 }
 
 const titreDemarchesProModPhaseEch = {
@@ -526,12 +526,12 @@ const titreDemarchesProModPhaseEch = {
           communes: ['paris'],
           titulaires: ['titulaire2'],
           amodiataires: ['amodiataire2'],
-          administrations: ['administration2']
-        } as unknown as ITitreEtape
+          administrations: ['administration2'],
+        } as unknown as ITitreEtape,
       ],
       phase: {
-        phaseStatutId: 'ech'
-      }
+        phaseStatutId: 'ech',
+      },
     },
     {
       id: newDemarcheId('h-cx-courdemanges-1981-oct01'),
@@ -552,11 +552,11 @@ const titreDemarchesProModPhaseEch = {
           communes: ['tours'],
           titulaires: ['titulaire1'],
           amodiataires: ['amodiataire1'],
-          administrations: ['administration1']
-        }
-      ]
-    }
-  ] as ITitreDemarche[]
+          administrations: ['administration1'],
+        },
+      ],
+    },
+  ] as ITitreDemarche[],
 }
 
 export {
@@ -573,5 +573,5 @@ export {
   titreDemarchesProPointsModPhaseEch,
   titreDemarchesProPointsModPhaseVal,
   titreDemarchesMutPointsMod,
-  titreDemarchesProModPhaseEch
+  titreDemarchesProModPhaseEch,
 }

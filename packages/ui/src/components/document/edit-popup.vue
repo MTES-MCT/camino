@@ -7,9 +7,7 @@
             {{ title }}
           </span>
         </h6>
-        <h2 class="cap-first">
-          {{ document.id ? 'Modification du' : "Ajout d'un" }} document
-        </h2>
+        <h2 class="cap-first">{{ document.id ? 'Modification du' : "Ajout d'un" }} document</h2>
       </div>
     </template>
 
@@ -19,12 +17,7 @@
       </div>
       <div class="mb tablet-blob-2-3">
         <select v-if="!document.id" v-model="document.typeId" class="p-s">
-          <option
-            v-for="dt in types"
-            :key="dt.id"
-            :value="dt.id"
-            :disabled="document.typeId === dt.id"
-          >
+          <option v-for="dt in types" :key="dt.id" :value="dt.id" :disabled="document.typeId === dt.id">
             {{ dt.nom }}
           </option>
         </select>
@@ -36,34 +29,15 @@
 
     <hr />
 
-    <SectionsEdit
-      :document="document"
-      :repertoire="repertoire"
-      :userIsAdmin="userIsAdmin"
-      @update:document="newValue => emits('update:document', newValue)"
-    />
+    <SectionsEdit :document="document" :repertoire="repertoire" :userIsAdmin="userIsAdmin" @update:document="newValue => emits('update:document', newValue)" />
 
     <template #footer>
       <div class="tablet-blobs">
         <div class="tablet-blob-1-3 mb tablet-mb-0">
-          <button
-            v-if="!loading"
-            class="btn-border rnd-xs p-s full-x"
-            @click="cancel"
-          >
-            Annuler
-          </button>
+          <button v-if="!loading" class="btn-border rnd-xs p-s full-x" @click="cancel">Annuler</button>
         </div>
         <div class="tablet-blob-2-3">
-          <button
-            v-if="!loading"
-            ref="save-button"
-            class="btn btn-primary"
-            :disabled="!complete"
-            @click="save"
-          >
-            Enregistrer
-          </button>
+          <button v-if="!loading" ref="save-button" class="btn btn-primary" :disabled="!complete" @click="save">Enregistrer</button>
 
           <div v-else class="p-s full-x bold">Enregistrement en cours…</div>
         </div>
@@ -81,7 +55,7 @@ export default {
 
   components: {
     Popup,
-    SectionsEdit
+    SectionsEdit,
   },
 
   props: {
@@ -91,7 +65,7 @@ export default {
     document: { type: Object, required: true },
     repertoire: { type: String, required: true },
     parentTypeId: { type: String, default: '' },
-    documentsTypes: { type: Array, default: null }
+    documentsTypes: { type: Array, default: null },
   },
 
   emits: ['update:document'],
@@ -102,14 +76,7 @@ export default {
     },
 
     complete() {
-      return (
-        this.document.typeId &&
-        this.document.date &&
-        (this.document.uri ||
-          this.document.url ||
-          this.document.fichier ||
-          this.document.fichierNouveau)
-      )
+      return this.document.typeId && this.document.date && (this.document.uri || this.document.url || this.document.fichier || this.document.fichierNouveau)
     },
 
     messages() {
@@ -129,7 +96,7 @@ export default {
 
     userIsAdmin() {
       return this.$store.getters['user/userIsAdmin']
-    }
+    },
   },
 
   async created() {
@@ -158,13 +125,13 @@ export default {
       await this.$store.dispatch('document/upsert', {
         document: this.document,
         route: this.route,
-        action: this.action
+        action: this.action,
       })
 
       this.eventTrack({
         categorie: 'titre-sections',
         action: 'titre-etape-doc-enregistrer',
-        nom: this.document.titreEtapeId
+        nom: this.document.titreEtapeId,
       })
     },
 
@@ -190,7 +157,7 @@ export default {
       }
     },
 
-    errorsRemove() {}
-  }
+    errorsRemove() {},
+  },
 }
 </script>

@@ -1,16 +1,13 @@
 import { TypeEdit } from './type-edit'
 import { Meta, Story } from '@storybook/vue3'
 import { ETAPES_STATUTS } from 'camino-common/src/static/etapesStatuts'
-import {
-  ETAPES_TYPES,
-  etapesTypesIds
-} from 'camino-common/src/static/etapesTypes'
+import { ETAPES_TYPES, etapesTypesIds } from 'camino-common/src/static/etapesTypes'
 import { action } from '@storybook/addon-actions'
 
 const meta: Meta = {
   title: 'Components/Etape/TypeEdit',
   component: TypeEdit,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -24,7 +21,7 @@ export const Simple: Story = () => (
     etapesTypesIds={etapesTypesIds}
     etape={{
       statutId: ETAPES_STATUTS.EN_CONSTRUCTION,
-      type: { id: ETAPES_TYPES.demande }
+      type: { id: ETAPES_TYPES.demande },
     }}
   />
 )
@@ -36,7 +33,7 @@ export const DemandeAvecUnSeulStatut: Story = () => (
     etapesTypesIds={etapesTypesIds}
     etape={{
       statutId: null,
-      type: { id: ETAPES_TYPES.classementSansSuite }
+      type: { id: ETAPES_TYPES.classementSansSuite },
     }}
   />
 )
@@ -48,7 +45,7 @@ export const DemandeSansStatut: Story = () => (
     etapesTypesIds={etapesTypesIds}
     etape={{
       statutId: null,
-      type: { id: ETAPES_TYPES.demande }
+      type: { id: ETAPES_TYPES.demande },
     }}
   />
 )
@@ -60,7 +57,7 @@ export const DemandeEnConstruction: Story = () => (
     etapesTypesIds={etapesTypesIds}
     etape={{
       statutId: ETAPES_STATUTS.EN_CONSTRUCTION,
-      type: { id: ETAPES_TYPES.demande }
+      type: { id: ETAPES_TYPES.demande },
     }}
   />
 )

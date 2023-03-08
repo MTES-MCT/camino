@@ -4,7 +4,7 @@ import { FiltreDomaine, Props } from './domaine'
 
 const meta: Meta = {
   title: 'Components/Common/Filtres/Domaine',
-  component: FiltreDomaine
+  component: FiltreDomaine,
 }
 export default meta
 

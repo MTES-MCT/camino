@@ -22,7 +22,7 @@
         fichier: null,
         fichierNouveau: null,
         fichierTypeId: null,
-        typeId: ''
+        typeId: '',
       }"
       :action="addAction"
       :title="documentPopupTitle"
@@ -50,14 +50,14 @@ export default {
     documentPopupTitle: { type: String, required: true },
     addAction: { type: Object, default: null },
     removeAction: { type: Object, default: null },
-    repertoire: { type: String, required: true }
+    repertoire: { type: String, required: true },
   },
 
   emits: ['complete-update'],
 
   data() {
     return {
-      TODAY
+      TODAY,
     }
   },
 
@@ -66,26 +66,17 @@ export default {
       return this.documents.every(d => {
         const documentType = this.documentsTypes.find(dt => dt.id === d.typeId)
 
-        return (
-          !documentType ||
-          documentType.optionnel ||
-          !!(
-            (d.fichier ||
-              d.fichierNouveau ||
-              (this.userIsAdmin && (d.uri || d.url))) &&
-            d.date
-          )
-        )
+        return !documentType || documentType.optionnel || !!((d.fichier || d.fichierNouveau || (this.userIsAdmin && (d.uri || d.url))) && d.date)
       })
     },
 
     userIsAdmin() {
       return this.$store.getters['user/userIsAdmin']
-    }
+    },
   },
 
   watch: {
-    complete: 'completeUpdate'
+    complete: 'completeUpdate',
   },
 
   created() {
@@ -95,7 +86,7 @@ export default {
   methods: {
     completeUpdate() {
       this.$emit('complete-update', this.complete)
-    }
-  }
+    },
+  },
 }
 </script>

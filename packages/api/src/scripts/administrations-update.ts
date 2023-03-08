@@ -12,12 +12,10 @@ const administrationsUpdate = async () => {
   // // mise à jour de l'administrations grâce à l'API Administration
   const departementsIds = Object.values(Administrations)
     .map(a => a.departementId)
-    .filter(
-      (a: DepartementId | undefined): a is DepartementId => a !== undefined
-    )
+    .filter((a: DepartementId | undefined): a is DepartementId => a !== undefined)
     .map(departementId => ({
       departementId,
-      nom: departementId === '75' ? 'paris_ppp' : 'prefecture'
+      nom: departementId === '75' ? 'paris_ppp' : 'prefecture',
     }))
 
   const newAdministrations = await organismesDepartementsGet(departementsIds)
@@ -33,7 +31,7 @@ const administrationsUpdate = async () => {
   })
 
   const data = readFileSync('packages/common/src/administrations.ts', {
-    encoding: 'utf-8'
+    encoding: 'utf-8',
   })
 
   const startComment = '// ----- ne pas supprimer cette ligne : début'
@@ -44,10 +42,7 @@ const administrationsUpdate = async () => {
 
   const code = JSON.stringify(administrations, null, 3)
 
-  writeFileSync(
-    'packages/common/src/administrations.ts',
-    preCode + code + postCode
-  )
+  writeFileSync('packages/common/src/administrations.ts', preCode + code + postCode)
 }
 
 administrationsUpdate()

@@ -29,23 +29,14 @@ interface IMatomoResult {
   }
 }
 
-type IMatomoCache = Pick<
-  Statistiques,
-  | 'recherches'
-  | 'titresModifies'
-  | 'actions'
-  | 'sessionDuree'
-  | 'telechargements'
-  | 'signalements'
-  | 'reutilisations'
->
+type IMatomoCache = Pick<Statistiques, 'recherches' | 'titresModifies' | 'actions' | 'sessionDuree' | 'telechargements' | 'signalements' | 'reutilisations'>
 
 const matomoMainDataGet = async (duree: number) => {
   // Datas de la page 'Récapitulatif' des visites dans matomo
   // url
   const pathVisit = getPath('API.get', 'month', {
     date: `previous${duree}`,
-    format_metrics: 1
+    format_metrics: 1,
   })
 
   // Matomo retourne un objet dont
@@ -56,8 +47,7 @@ const matomoMainDataGet = async (duree: number) => {
   // avg_time_on_site : temps de session moyen (string)
   // nb_downloads : nombre de téléchargements
   const response = await fetch(pathVisit)
-  const matomoVisitData: IMatomoResult =
-    (await response.json()) as IMatomoResult
+  const matomoVisitData: IMatomoResult = (await response.json()) as IMatomoResult
 
   // Les clés de l’objet sont les mois { "2020-09": ...,}
   const monthsArray = Object.keys(matomoVisitData)
@@ -66,7 +56,7 @@ const matomoMainDataGet = async (duree: number) => {
   const recherches = monthsArray.map(key => {
     return {
       mois: key,
-      quantite: matomoVisitData[key].nb_searches || 0
+      quantite: matomoVisitData[key].nb_searches || 0,
     }
   })
 
@@ -74,15 +64,11 @@ const matomoMainDataGet = async (duree: number) => {
   const dataCurrent = matomoVisitData[monthsArray[monthsArray.length - 1]]
 
   // nombre d'action du dernier mois
-  const actions = dataCurrent.nb_actions_per_visit
-    ? dataCurrent.nb_actions_per_visit
-    : 0
+  const actions = dataCurrent.nb_actions_per_visit ? dataCurrent.nb_actions_per_visit : 0
   // temps de session du dernier mois
   const sessionDuree = timeFormat(dataCurrent.avg_time_on_site)
   // nombre de téléchargements du dernier mois
-  const telechargements = dataCurrent.nb_downloads
-    ? dataCurrent.nb_downloads
-    : 0
+  const telechargements = dataCurrent.nb_downloads ? dataCurrent.nb_downloads : 0
 
   return { recherches, actions, sessionDuree, telechargements }
 }
@@ -94,12 +80,11 @@ const nbEventsByLabelGet = async (label: string): Promise<number> => {
   // ces évenements ont débuté à partir de 2020
   const pathVisit = getPath('Events.getAction', 'range', {
     date: `2020-01-01,${tomorrowDate.toISOString().slice(0, 10)}`,
-    label
+    label,
   })
 
   const response = await fetch(pathVisit)
-  const matomoVisitData: IMatomoSectionData[] =
-    (await response.json()) as IMatomoSectionData[]
+  const matomoVisitData: IMatomoSectionData[] = (await response.json()) as IMatomoSectionData[]
 
   return matomoVisitData.length > 0 ? matomoVisitData[0].nb_events : 0
 }
@@ -118,10 +103,7 @@ const reutilisationsCountGet = async () => {
   return 6 + nbEvents
 }
 
-const nbEventsBySectionGet = (
-  monthData: IMatomoSectionData,
-  month: string
-): number => {
+const nbEventsBySectionGet = (monthData: IMatomoSectionData, month: string): number => {
   // Datas des évènements, catégorie 'titres-sections', actions:
   // titre-editer
   // titre-demarche_ajouter
@@ -145,7 +127,7 @@ const nbEventsBySectionGet = (
     'titre-etape_ajouter',
     'titre-etape_editer',
     'titre-etape_supprimer',
-    'titre-etape-doc_ajouter'
+    'titre-etape-doc_ajouter',
   ]
 
   //                           titre-                      |  commence par : titre-
@@ -184,34 +166,31 @@ const nbEventsBySectionGet = (
 }
 const titresModifiesCountGet = async (duree: number) => {
   const pathVisit = getPath('Events.getCategory', 'month', {
-    date: `previous${duree}`
+    date: `previous${duree}`,
   })
   const response = await fetch(pathVisit)
   const matomoVisitData: any = await response.json()
 
   // Retourne un tableau par mois
-  return Object.keys(matomoVisitData).reduce(
-    (acc: { mois: string; quantite: number }[], month) => {
-      const monthDataArray = matomoVisitData[month] as IMatomoSectionData[]
+  return Object.keys(matomoVisitData).reduce((acc: { mois: string; quantite: number }[], month) => {
+    const monthDataArray = matomoVisitData[month] as IMatomoSectionData[]
 
-      if (!monthDataArray) {
-        acc.push({ mois: month, quantite: 0 })
-
-        return acc
-      }
-
-      const nbEvents = monthDataArray.reduce((nbEventsByMonth, monthData) => {
-        const nbEventsBySection = nbEventsBySectionGet(monthData, month)
-
-        return nbEventsByMonth + nbEventsBySection
-      }, 0)
-
-      acc.push({ mois: month, quantite: nbEvents })
+    if (!monthDataArray) {
+      acc.push({ mois: month, quantite: 0 })
 
       return acc
-    },
-    []
-  )
+    }
+
+    const nbEvents = monthDataArray.reduce((nbEventsByMonth, monthData) => {
+      const nbEventsBySection = nbEventsBySectionGet(monthData, month)
+
+      return nbEventsByMonth + nbEventsBySection
+    }, 0)
+
+    acc.push({ mois: month, quantite: nbEvents })
+
+    return acc
+  }, [])
 }
 
 export const matomoCacheInit = async () => {
@@ -221,14 +200,8 @@ export const matomoCacheInit = async () => {
   // nombre de mois pour lesquels on souhaite des stats
   const duree = 12
 
-  const matomoResults = await Promise.all([
-    matomoMainDataGet(duree),
-    erreursSignaleesCountGet(),
-    reutilisationsCountGet(),
-    titresModifiesCountGet(duree)
-  ])
-  const { recherches, actions, sessionDuree, telechargements } =
-    matomoResults[0]
+  const matomoResults = await Promise.all([matomoMainDataGet(duree), erreursSignaleesCountGet(), reutilisationsCountGet(), titresModifiesCountGet(duree)])
+  const { recherches, actions, sessionDuree, telechargements } = matomoResults[0]
 
   // nombre d'erreurs signalées
   const signalements = matomoResults[1]
@@ -245,12 +218,12 @@ export const matomoCacheInit = async () => {
     sessionDuree,
     telechargements,
     signalements,
-    reutilisations
+    reutilisations,
   }
 
   await cacheUpsert({
     id: 'matomo',
-    valeur: matomoCacheValue
+    valeur: matomoCacheValue,
   })
 
   return matomoCacheValue
@@ -271,22 +244,11 @@ export const timeFormat = (time: string) => {
   // sinon, ne garder que les minutes
   const index = time.search('min')
 
-  return index === -1
-    ? 0
-    : Number.parseInt(time.substring(0, index).replace(' ', ''), 10)
+  return index === -1 ? 0 : Number.parseInt(time.substring(0, index).replace(' ', ''), 10)
 }
 
-const getPath = (
-  method: string,
-  period: string,
-  params?: { [param: string]: string | number }
-) => {
-  const _params = params
-    ? Object.entries(params).reduce(
-        (acc, param) => (acc = `${acc}&${param[0]}=${param[1]}`),
-        ''
-      )
-    : ''
+const getPath = (method: string, period: string, params?: { [param: string]: string | number }) => {
+  const _params = params ? Object.entries(params).reduce((acc, param) => (acc = `${acc}&${param[0]}=${param[1]}`), '') : ''
 
   return `${process.env.API_MATOMO_URL}/index.php?expanded=1${_params}&filter_limit=-1&format=JSON&idSite=${process.env.API_MATOMO_ID}&method=${method}&module=API&period=${period}&token_auth=${process.env.API_MATOMO_TOKEN}`
 }

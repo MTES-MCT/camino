@@ -17,14 +17,14 @@ class EntreprisesEtablissements extends Model {
       nom: { type: ['string', 'null'] },
       legalSiret: { type: ['string', 'null'] },
       dateDebut: { type: 'string' },
-      dateFin: { type: ['string', 'null'] }
-    }
+      dateFin: { type: ['string', 'null'] },
+    },
   }
 
   public static modifiers: Modifiers = {
     orderDesc: builder => {
       builder.orderBy('dateDebut', 'desc')
-    }
+    },
   }
 }
 

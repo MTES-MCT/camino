@@ -1,15 +1,5 @@
 <template>
-  <Liste
-    nom="journaux"
-    :colonnes="colonnes"
-    :lignes="lignes"
-    :elements="journaux"
-    :filtres="filtres"
-    :params="params"
-    :total="total"
-    :initialized="initialized"
-    @params-update="paramsUpdate"
-  />
+  <Liste nom="journaux" :colonnes="colonnes" :lignes="lignes" :elements="journaux" :filtres="filtres" :params="params" :total="total" :initialized="initialized" @params-update="paramsUpdate" />
 </template>
 
 <script lang="ts">
@@ -20,7 +10,7 @@ import Differences from './differences.vue'
 export default defineComponent({
   components: { Liste },
   props: {
-    titreId: { type: String, default: undefined }
+    titreId: { type: String, default: undefined },
   },
   computed: {
     journaux() {
@@ -43,8 +33,8 @@ export default defineComponent({
         { id: 'operation', name: 'Action' },
         {
           id: 'differences',
-          name: 'Modifications'
-        }
+          name: 'Modifications',
+        },
       ]
 
       if (!this.titreId) {
@@ -59,8 +49,8 @@ export default defineComponent({
               id: 'recherche',
               type: 'input',
               value: '',
-              name: 'Recherche'
-            }
+              name: 'Recherche',
+            },
           ]
         : []
     },
@@ -69,41 +59,39 @@ export default defineComponent({
         const date = new Date(Number.parseInt(journal.date))
         const columns = {
           date: {
-            value: date.toLocaleString('fr-FR')
+            value: date.toLocaleString('fr-FR'),
           },
           titre: {
-            value: journal.titre?.nom
+            value: journal.titre?.nom,
           },
           utilisateur: {
-            value: journal.utilisateur
-              ? `${journal.utilisateur.nom} ${journal.utilisateur.prenom}`
-              : 'Système'
+            value: journal.utilisateur ? `${journal.utilisateur.nom} ${journal.utilisateur.prenom}` : 'Système',
           },
           operation: {
-            value: journal.operation
+            value: journal.operation,
           },
           differences: {
             component: markRaw(Differences),
             props: {
-              journal
-            }
-          }
+              journal,
+            },
+          },
         }
 
         return {
           id: journal.id,
           link: { name: 'etape', params: { id: journal.elementId } },
-          columns
+          columns,
         }
       })
-    }
+    },
   },
 
   async created() {
     if (this.titreId) {
       this.paramsUpdate({
         section: 'filtres',
-        params: { titreId: this.titreId }
+        params: { titreId: this.titreId },
       })
     }
     await this.init()
@@ -119,7 +107,7 @@ export default defineComponent({
     },
     async paramsUpdate(options: any) {
       await this.$store.dispatch(`journaux/paramsSet`, options)
-    }
-  }
+    },
+  },
 })
 </script>

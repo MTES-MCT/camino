@@ -1,62 +1,27 @@
 import { GraphQLResolveInfo } from 'graphql'
 
-import {
-  Context,
-  IContenu,
-  IDecisionAnnexeContenu,
-  IDocument,
-  IEtapeType,
-  ISectionElement,
-  ITitreEtape,
-  ITitrePoint
-} from '../../../types.js'
+import { Context, IContenu, IDecisionAnnexeContenu, IDocument, IEtapeType, ISectionElement, ITitreEtape, ITitrePoint } from '../../../types.js'
 
 import { titreFormat } from '../../_format/titres.js'
 
-import {
-  titreEtapeCreate,
-  titreEtapeGet,
-  titreEtapeUpdate,
-  titreEtapeUpsert
-} from '../../../database/queries/titres-etapes.js'
+import { titreEtapeCreate, titreEtapeGet, titreEtapeUpdate, titreEtapeUpsert } from '../../../database/queries/titres-etapes.js'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
 import { titreGet } from '../../../database/queries/titres.js'
 
 import titreEtapeUpdateTask from '../../../business/titre-etape-update.js'
-import {
-  titreEtapeHeritageBuild,
-  titreEtapePointsCalc,
-  titreEtapeSdomZonesGet
-} from './_titre-etape.js'
+import { titreEtapeHeritageBuild, titreEtapePointsCalc, titreEtapeSdomZonesGet } from './_titre-etape.js'
 import { titreEtapeUpdationValidate } from '../../../business/validations/titre-etape-updation-validate.js'
 
 import { fieldsBuild } from './_fields-build.js'
 import { titreDemarcheUpdatedEtatValidate } from '../../../business/validations/titre-demarche-etat-validate.js'
 import { titreEtapeFormat } from '../../_format/titres-etapes.js'
-import {
-  etapeTypeGet,
-  titreTypeDemarcheTypeEtapeTypeGet
-} from '../../../database/queries/metas.js'
+import { etapeTypeGet, titreTypeDemarcheTypeEtapeTypeGet } from '../../../database/queries/metas.js'
 import { userSuper } from '../../../database/user-super.js'
 import { documentsLier } from './documents.js'
-import {
-  documentsTypesFormat,
-  etapeTypeSectionsFormat
-} from '../../_format/etapes-types.js'
-import {
-  contenuElementFilesCreate,
-  contenuElementFilesDelete,
-  contenuFilesPathGet,
-  sectionsContenuAndFilesGet
-} from '../../../business/utils/contenu-element-file-process.js'
-import {
-  documentCreate,
-  documentsGet
-} from '../../../database/queries/documents.js'
-import {
-  titreEtapeAdministrationsEmailsSend,
-  titreEtapeUtilisateursEmailsSend
-} from './_titre-etape-email.js'
+import { documentsTypesFormat, etapeTypeSectionsFormat } from '../../_format/etapes-types.js'
+import { contenuElementFilesCreate, contenuElementFilesDelete, contenuFilesPathGet, sectionsContenuAndFilesGet } from '../../../business/utils/contenu-element-file-process.js'
+import { documentCreate, documentsGet } from '../../../database/queries/documents.js'
+import { titreEtapeAdministrationsEmailsSend, titreEtapeUtilisateursEmailsSend } from './_titre-etape-email.js'
 import { objectClone } from '../../../tools/index.js'
 import { geojsonFeatureMultiPolygon } from '../../../tools/geojson.js'
 import { idGenerate } from '../../../database/models/_format/id-create.js'
@@ -74,11 +39,7 @@ import { titreEtapeFormatFields } from '../../_format/_fields.js'
 import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 import { TitresStatutIds } from 'camino-common/src/static/titresStatuts.js'
 
-const statutIdAndDateGet = (
-  etape: ITitreEtape,
-  user: User,
-  depose = false
-): { date: CaminoDate; statutId: EtapeStatutId } => {
+const statutIdAndDateGet = (etape: ITitreEtape, user: User, depose = false): { date: CaminoDate; statutId: EtapeStatutId } => {
   const result = { date: etape.date, statutId: etape.statutId }
 
   if (depose) {
@@ -97,11 +58,7 @@ const statutIdAndDateGet = (
   return result
 }
 
-const etape = async (
-  { id }: { id: string },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const etape = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -109,11 +66,7 @@ const etape = async (
       fields.type = { id: {} }
     }
 
-    const titreEtape = await titreEtapeGet(
-      id,
-      { fields, fetchHeritage: true },
-      user
-    )
+    const titreEtape = await titreEtapeGet(id, { fields, fetchHeritage: true }, user)
 
     if (!titreEtape) {
       throw new Error("l'étape n'existe pas")
@@ -123,8 +76,8 @@ const etape = async (
       titreEtape.titreDemarcheId,
       {
         fields: {
-          id: {}
-        }
+          id: {},
+        },
       },
       user
     )
@@ -139,20 +92,9 @@ const etape = async (
   }
 }
 
-const etapeHeritage = async (
-  {
-    date,
-    titreDemarcheId,
-    typeId
-  }: { date: string; titreDemarcheId: string; typeId: string },
-  { user }: Context
-) => {
+const etapeHeritage = async ({ date, titreDemarcheId, typeId }: { date: string; titreDemarcheId: string; typeId: string }, { user }: Context) => {
   try {
-    let titreDemarche = await titreDemarcheGet(
-      titreDemarcheId,
-      { fields: {} },
-      user
-    )
+    let titreDemarche = await titreDemarcheGet(titreDemarcheId, { fields: {} }, user)
 
     if (!titreDemarche) throw new Error("la démarche n'existe pas")
 
@@ -165,43 +107,29 @@ const etapeHeritage = async (
             type: { id: {} },
             titulaires: { id: {} },
             amodiataires: { id: {} },
-            points: { references: { id: {} } }
-          }
-        }
+            points: { references: { id: {} } },
+          },
+        },
       },
       userSuper
     )
 
     const etapeType = await etapeTypeGet(typeId, {
-      fields: { justificatifsTypes: { id: {} } }
+      fields: { justificatifsTypes: { id: {} } },
     })
 
-    const { sections, justificatifsTypes } = await specifiquesGet(
-      titreDemarche!.titre!.typeId,
-      titreDemarche!.typeId,
-      etapeType!
-    )
+    const { sections, justificatifsTypes } = await specifiquesGet(titreDemarche!.titre!.typeId, titreDemarche!.typeId, etapeType!)
 
-    const titreEtape = titreEtapeHeritageBuild(
-      date,
-      etapeType!,
-      titreDemarche!,
-      sections,
-      justificatifsTypes,
-      titreDemarche!.titre!.typeId,
-      titreDemarche!.typeId
-    )
+    const titreEtape = titreEtapeHeritageBuild(date, etapeType!, titreDemarche!, sections, justificatifsTypes, titreDemarche!.titre!.typeId, titreDemarche!.typeId)
     const titreTypeId = titreDemarche?.titre?.typeId
     if (!titreTypeId) {
-      throw new Error(
-        `le type du titre de l'étape ${titreEtape.id} n'est pas chargé`
-      )
+      throw new Error(`le type du titre de l'étape ${titreEtape.id} n'est pas chargé`)
     }
 
     return titreEtapeFormat(titreEtape, titreEtapeFormatFields, {
       titreTypeId,
       demarcheTypeId: titreDemarche!.typeId,
-      etapeTypeId: etapeType!.id
+      etapeTypeId: etapeType!.id,
     })
   } catch (e) {
     console.error(e)
@@ -210,45 +138,30 @@ const etapeHeritage = async (
   }
 }
 
-const specifiquesGet = async (
-  titreTypeId: string,
-  titreDemarcheTypeId: string,
-  etapeType: IEtapeType
-) => {
+const specifiquesGet = async (titreTypeId: string, titreDemarcheTypeId: string, etapeType: IEtapeType) => {
   const tde = await titreTypeDemarcheTypeEtapeTypeGet(
     {
       titreTypeId,
       demarcheTypeId: titreDemarcheTypeId,
-      etapeTypeId: etapeType.id
+      etapeTypeId: etapeType.id,
     },
     { fields: { justificatifsTypes: { id: {} } } }
   )
 
   const sections = etapeTypeSectionsFormat(etapeType.sections, tde?.sections)
 
-  const justificatifsTypes = documentsTypesFormat(
-    etapeType.justificatifsTypes,
-    tde?.justificatifsTypes
-  )
+  const justificatifsTypes = documentsTypesFormat(etapeType.justificatifsTypes, tde?.justificatifsTypes)
 
   return { sections, justificatifsTypes }
 }
 
-const etapeCreer = async (
-  { etape }: { etape: ITitreEtape },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const etapeCreer = async ({ etape }: { etape: ITitreEtape }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     if (!user) {
       throw new Error("la démarche n'existe pas")
     }
 
-    let titreDemarche = await titreDemarcheGet(
-      etape.titreDemarcheId,
-      { fields: {} },
-      user
-    )
+    let titreDemarche = await titreDemarcheGet(etape.titreDemarcheId, { fields: {} }, user)
 
     if (!titreDemarche) throw new Error("la démarche n'existe pas")
 
@@ -258,19 +171,18 @@ const etapeCreer = async (
         fields: {
           type: { etapesTypes: { id: {} } },
           titre: {
-            demarches: { etapes: { id: {} } }
+            demarches: { etapes: { id: {} } },
           },
-          etapes: { type: { id: {} } }
-        }
+          etapes: { type: { id: {} } },
+        },
       },
       userSuper
     )
 
-    if (!titreDemarche || !titreDemarche.titre)
-      throw new Error("le titre n'existe pas")
+    if (!titreDemarche || !titreDemarche.titre) throw new Error("le titre n'existe pas")
 
     const etapeType = await etapeTypeGet(etape.typeId, {
-      fields: { justificatifsTypes: { id: {} } }
+      fields: { justificatifsTypes: { id: {} } },
     })
 
     if (!etapeType) {
@@ -281,39 +193,21 @@ const etapeCreer = async (
     etape.statutId = statutId
     etape.date = date
 
-    const { sections, justificatifsTypes } = await specifiquesGet(
-      titreDemarche.titre!.typeId,
-      titreDemarche.typeId,
-      etapeType
-    )
+    const { sections, justificatifsTypes } = await specifiquesGet(titreDemarche.titre!.typeId, titreDemarche.typeId, etapeType)
 
-    const justificatifs = etape.justificatifIds?.length
-      ? await documentsGet(
-          { ids: etape.justificatifIds },
-          { fields: { type: { id: {} } } },
-          userSuper
-        )
-      : null
+    const justificatifs = etape.justificatifIds?.length ? await documentsGet({ ids: etape.justificatifIds }, { fields: { type: { id: {} } } }, userSuper) : null
     delete etape.justificatifIds
     etape.justificatifs = justificatifs
 
     const documentIds = etape.documentIds || []
-    const documents = documentIds.length
-      ? await documentsGet(
-          { ids: documentIds },
-          { fields: { type: { id: {} } } },
-          userSuper
-        )
-      : null
+    const documents = documentIds.length ? await documentsGet({ ids: documentIds }, { fields: { type: { id: {} } } }, userSuper) : null
     delete etape.documentIds
 
     const sdomZones: SDOMZoneId[] = []
     let titreEtapePoints = null
     if (etape.points?.length) {
       titreEtapePoints = titreEtapePointsCalc(etape.points)
-      const geojsonFeatures = geojsonFeatureMultiPolygon(
-        titreEtapePoints as ITitrePoint[]
-      ) as Feature
+      const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints as ITitrePoint[]) as Feature
 
       const geoJsonResult = await titreEtapeSdomZonesGet(geojsonFeatures)
       if (geoJsonResult.fallback) {
@@ -324,9 +218,7 @@ const etapeCreer = async (
 
     const typeId = titreDemarche?.titre?.typeId
     if (!typeId) {
-      throw new Error(
-        `le type du titre de la ${titreDemarche.id} n'est pas chargé`
-      )
+      throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
     const rulesErrors = titreEtapeUpdationValidate(
       etape,
@@ -353,8 +245,7 @@ const etapeCreer = async (
         titreDemarche.typeId,
         {
           typeId: titreDemarche.titre.typeId,
-          titreStatutId:
-            titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine
+          titreStatutId: titreDemarche.titre.titreStatutId ?? TitresStatutIds.Indetermine,
         },
         'creation'
       )
@@ -365,46 +256,23 @@ const etapeCreer = async (
     if (titreEtapePoints) {
       etape.points = titreEtapePoints
     }
-    const { contenu, newFiles } = sectionsContenuAndFilesGet(
-      etape.contenu,
-      sections
-    )
+    const { contenu, newFiles } = sectionsContenuAndFilesGet(etape.contenu, sections)
     etape.contenu = contenu
 
-    let etapeUpdated: ITitreEtape = await titreEtapeUpsert(
-      etape,
-      user!,
-      titreDemarche.titreId
-    )
+    let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
 
     await contenuElementFilesCreate(newFiles, 'demarches', etapeUpdated.id)
 
     await documentsLier({ user }, documentIds, etapeUpdated.id, 'titreEtapeId')
 
     try {
-      await titreEtapeUpdateTask(
-        etapeUpdated.id,
-        etapeUpdated.titreDemarcheId,
-        user
-      )
+      await titreEtapeUpdateTask(etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
     } catch (e) {
       console.error('une erreur est survenue lors des tâches annexes', e)
     }
 
-    await titreEtapeAdministrationsEmailsSend(
-      etapeUpdated,
-      etapeType,
-      titreDemarche.typeId,
-      titreDemarche.titreId,
-      titreDemarche.titre.typeId,
-      user
-    )
-    await titreEtapeUtilisateursEmailsSend(
-      etapeUpdated,
-      etapeType,
-      titreDemarche.typeId,
-      titreDemarche.titreId
-    )
+    await titreEtapeAdministrationsEmailsSend(etapeUpdated, etapeType, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user)
+    await titreEtapeUtilisateursEmailsSend(etapeUpdated, etapeType, titreDemarche.typeId, titreDemarche.titreId)
     const fields = fieldsBuild(info)
 
     etapeUpdated = await titreEtapeGet(etapeUpdated.id, { fields }, user)
@@ -417,11 +285,7 @@ const etapeCreer = async (
   }
 }
 
-const etapeModifier = async (
-  { etape }: { etape: ITitreEtape },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const etapeModifier = async ({ etape }: { etape: ITitreEtape }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     if (!user) {
       throw new Error("l'étape n'existe pas")
@@ -434,8 +298,8 @@ const etapeModifier = async (
           documents: { id: {} },
           titulaires: { id: {} },
           amodiataires: { id: {} },
-          demarche: { titre: { pointsEtape: { id: {} } } }
-        }
+          demarche: { titre: { pointsEtape: { id: {} } } },
+        },
       },
       user
     )
@@ -444,12 +308,7 @@ const etapeModifier = async (
     if (!titreEtapeOld.titulaires) {
       throw new Error('Les titulaires de l’étape ne sont pas chargés')
     }
-    if (
-      !titreEtapeOld.demarche ||
-      !titreEtapeOld.demarche.titre ||
-      !titreEtapeOld.demarche.titre.administrationsLocales ||
-      !titreEtapeOld.demarche.titre.titreStatutId
-    ) {
+    if (!titreEtapeOld.demarche || !titreEtapeOld.demarche.titre || !titreEtapeOld.demarche.titre.administrationsLocales || !titreEtapeOld.demarche.titre.titreStatutId) {
       throw new Error('la démarche n’est pas chargée complètement')
     }
 
@@ -463,15 +322,14 @@ const etapeModifier = async (
         titreEtapeOld.demarche.typeId,
         {
           typeId: titreEtapeOld.demarche.titre.typeId,
-          titreStatutId: titreEtapeOld.demarche.titre.titreStatutId
+          titreStatutId: titreEtapeOld.demarche.titre.titreStatutId,
         },
         'modification'
       )
     )
       throw new Error('droits insuffisants')
 
-    if (titreEtapeOld.titreDemarcheId !== etape.titreDemarcheId)
-      throw new Error("la démarche n'existe pas")
+    if (titreEtapeOld.titreDemarcheId !== etape.titreDemarcheId) throw new Error("la démarche n'existe pas")
 
     const titreDemarche = await titreDemarcheGet(
       etape.titreDemarcheId,
@@ -479,19 +337,18 @@ const etapeModifier = async (
         fields: {
           type: { etapesTypes: { id: {} } },
           titre: {
-            demarches: { etapes: { id: {} } }
+            demarches: { etapes: { id: {} } },
           },
-          etapes: { type: { id: {} } }
-        }
+          etapes: { type: { id: {} } },
+        },
       },
       userSuper
     )
 
-    if (!titreDemarche || !titreDemarche.titre)
-      throw new Error("le titre n'existe pas")
+    if (!titreDemarche || !titreDemarche.titre) throw new Error("le titre n'existe pas")
 
     const etapeType = await etapeTypeGet(etape.typeId, {
-      fields: { justificatifsTypes: { id: {} } }
+      fields: { justificatifsTypes: { id: {} } },
     })
     if (!etapeType) {
       throw new Error(`le type d'étape "${etape.typeId}" n'existe pas`)
@@ -501,39 +358,21 @@ const etapeModifier = async (
     etape.statutId = statutId
     etape.date = date
 
-    const { sections, justificatifsTypes } = await specifiquesGet(
-      titreDemarche.titre!.typeId,
-      titreDemarche.typeId,
-      etapeType
-    )
+    const { sections, justificatifsTypes } = await specifiquesGet(titreDemarche.titre!.typeId, titreDemarche.typeId, etapeType)
 
-    const justificatifs = etape.justificatifIds?.length
-      ? await documentsGet(
-          { ids: etape.justificatifIds },
-          { fields: { type: { id: {} } } },
-          userSuper
-        )
-      : null
+    const justificatifs = etape.justificatifIds?.length ? await documentsGet({ ids: etape.justificatifIds }, { fields: { type: { id: {} } } }, userSuper) : null
     delete etape.justificatifIds
     etape.justificatifs = justificatifs
 
     const documentIds = etape.documentIds || []
-    const documents = documentIds.length
-      ? await documentsGet(
-          { ids: documentIds },
-          { fields: { type: { id: {} } } },
-          userSuper
-        )
-      : null
+    const documents = documentIds.length ? await documentsGet({ ids: documentIds }, { fields: { type: { id: {} } } }, userSuper) : null
     delete etape.documentIds
 
     const sdomZones: SDOMZoneId[] = []
     let titreEtapePoints = null
     if (etape.points?.length) {
       titreEtapePoints = titreEtapePointsCalc(etape.points)
-      const geojsonFeatures = geojsonFeatureMultiPolygon(
-        titreEtapePoints as ITitrePoint[]
-      ) as Feature
+      const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints as ITitrePoint[]) as Feature
 
       const geoJsonResult = await titreEtapeSdomZonesGet(geojsonFeatures)
       if (geoJsonResult.fallback) {
@@ -545,9 +384,7 @@ const etapeModifier = async (
 
     const typeId = titreDemarche?.titre?.typeId
     if (!typeId) {
-      throw new Error(
-        `le type du titre de la ${titreDemarche.id} n'est pas chargé`
-      )
+      throw new Error(`le type du titre de la ${titreDemarche.id} n'est pas chargé`)
     }
     const rulesErrors = titreEtapeUpdationValidate(
       etape,
@@ -570,60 +407,25 @@ const etapeModifier = async (
     if (titreEtapePoints) {
       etape.points = titreEtapePoints
     }
-    await documentsLier(
-      { user },
-      documentIds,
-      etape.id,
-      'titreEtapeId',
-      titreEtapeOld
-    )
+    await documentsLier({ user }, documentIds, etape.id, 'titreEtapeId', titreEtapeOld)
 
-    const { contenu, newFiles } = sectionsContenuAndFilesGet(
-      etape.contenu,
-      sections
-    )
+    const { contenu, newFiles } = sectionsContenuAndFilesGet(etape.contenu, sections)
     etape.contenu = contenu
 
     if (titreEtapeOld.decisionsAnnexesSections) {
-      const {
-        contenu: decisionsAnnexesContenu,
-        newFiles: decisionsAnnexesNewFiles
-      } = sectionsContenuAndFilesGet(
-        etape.decisionsAnnexesContenu,
-        titreEtapeOld.decisionsAnnexesSections
-      )
-      etape.decisionsAnnexesContenu =
-        decisionsAnnexesContenu as IDecisionAnnexeContenu
-      await contenuElementFilesCreate(
-        decisionsAnnexesNewFiles,
-        'demarches',
-        etape.id
-      )
+      const { contenu: decisionsAnnexesContenu, newFiles: decisionsAnnexesNewFiles } = sectionsContenuAndFilesGet(etape.decisionsAnnexesContenu, titreEtapeOld.decisionsAnnexesSections)
+      etape.decisionsAnnexesContenu = decisionsAnnexesContenu as IDecisionAnnexeContenu
+      await contenuElementFilesCreate(decisionsAnnexesNewFiles, 'demarches', etape.id)
     }
 
-    let etapeUpdated: ITitreEtape = await titreEtapeUpsert(
-      etape,
-      user!,
-      titreDemarche.titreId
-    )
+    let etapeUpdated: ITitreEtape = await titreEtapeUpsert(etape, user!, titreDemarche.titreId)
 
     await contenuElementFilesCreate(newFiles, 'demarches', etapeUpdated.id)
 
     // après le recalcule de l’héritage, on recharge toutes les étapes de la démarche pour pouvoir récuperer
     // tous les fichiers tjrs présents dans le contenu de chaque étape
-    const demarche = await titreDemarcheGet(
-      etapeUpdated.titreDemarcheId,
-      { fields: { etapes: { id: {} } } },
-      userSuper
-    )
-    await contenuElementFilesDelete(
-      'demarches',
-      etapeUpdated.id,
-      sections,
-      etape => etape.contenu,
-      demarche!.etapes,
-      titreEtapeOld.contenu
-    )
+    const demarche = await titreDemarcheGet(etapeUpdated.titreDemarcheId, { fields: { etapes: { id: {} } } }, userSuper)
+    await contenuElementFilesDelete('demarches', etapeUpdated.id, sections, etape => etape.contenu, demarche!.etapes, titreEtapeOld.contenu)
 
     if (titreEtapeOld.decisionsAnnexesSections) {
       await contenuElementFilesDelete(
@@ -636,21 +438,9 @@ const etapeModifier = async (
       )
     }
 
-    await titreEtapeUpdateTask(
-      etapeUpdated.id,
-      etapeUpdated.titreDemarcheId,
-      user
-    )
+    await titreEtapeUpdateTask(etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
 
-    await titreEtapeAdministrationsEmailsSend(
-      etape,
-      etapeType,
-      titreDemarche.typeId,
-      titreDemarche.titreId,
-      titreDemarche.titre.typeId,
-      user,
-      titreEtapeOld
-    )
+    await titreEtapeAdministrationsEmailsSend(etape, etapeType, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre.typeId, user, titreEtapeOld)
 
     const fields = fieldsBuild(info)
     etapeUpdated = await titreEtapeGet(etapeUpdated.id, { fields }, user)
@@ -663,21 +453,13 @@ const etapeModifier = async (
   }
 }
 
-const etapeDeposer = async (
-  { id }: { id: string },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const etapeDeposer = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     if (!user) {
       throw new Error("l'étape n'existe pas")
     }
 
-    let titreEtape = await titreEtapeGet(
-      id,
-      { fields: { type: { id: {} } } },
-      user
-    )
+    let titreEtape = await titreEtapeGet(id, { fields: { type: { id: {} } } }, user)
 
     if (!titreEtape) throw new Error("l'étape n'existe pas")
     const titreEtapeOld = objectClone(titreEtape)
@@ -686,24 +468,20 @@ const etapeDeposer = async (
       titreEtape.titreDemarcheId,
       {
         fields: {
-          titre: { id: {} }
-        }
+          titre: { id: {} },
+        },
       },
       userSuper
     )
 
     titreEtape = titreEtapeFormat(titreEtape)
 
-    if (!titreEtape.deposable || !titreDemarche)
-      throw new Error('droits insuffisants')
+    if (!titreEtape.deposable || !titreDemarche) throw new Error('droits insuffisants')
 
     const statutIdAndDate = statutIdAndDateGet(titreEtape, user, true)
 
     let decisionsAnnexesContenu: IDecisionAnnexeContenu | null = null
-    if (
-      titreEtape.decisionsAnnexesSections &&
-      titreEtape.decisionsAnnexesContenu
-    ) {
+    if (titreEtape.decisionsAnnexesSections && titreEtape.decisionsAnnexesContenu) {
       decisionsAnnexesContenu = titreEtape.decisionsAnnexesContenu
     }
 
@@ -712,7 +490,7 @@ const etapeDeposer = async (
       {
         ...statutIdAndDate,
         decisionsAnnexesSections: null,
-        decisionsAnnexesContenu: null
+        decisionsAnnexesContenu: null,
       },
       user,
       titreDemarche.titreId
@@ -720,7 +498,7 @@ const etapeDeposer = async (
     const etapeUpdated = await titreEtapeGet(
       titreEtape.id,
       {
-        fields: { id: {} }
+        fields: { id: {} },
       },
       user
     )
@@ -742,14 +520,10 @@ const etapeDeposer = async (
           typeId: etapeTypeId,
           titreDemarcheId: titreDemarche.id,
           date: toCaminoDate(decisionContenu.date),
-          statutId: decisionContenu.statutId
+          statutId: decisionContenu.statutId,
         }
 
-        const contenu =
-          decisionAnnexesElements.filter(
-            (element): element is Required<ISectionElement> =>
-              element.type !== 'file' && !!element.sectionId
-          ) ?? []
+        const contenu = decisionAnnexesElements.filter((element): element is Required<ISectionElement> => element.type !== 'file' && !!element.sectionId) ?? []
 
         if (contenu) {
           etapeDecisionAnnexe.contenu = contenu.reduce<IContenu>((acc, e) => {
@@ -762,16 +536,9 @@ const etapeDeposer = async (
           }, {})
         }
 
-        etapeDecisionAnnexe = await titreEtapeCreate(
-          etapeDecisionAnnexe as ITitreEtape,
-          userSuper,
-          titreDemarche.titreId
-        )
+        etapeDecisionAnnexe = await titreEtapeCreate(etapeDecisionAnnexe as ITitreEtape, userSuper, titreDemarche.titreId)
 
-        const documentTypeIds =
-          decisionAnnexesElements
-            .filter(({ type }) => type === 'file')
-            .map(({ id }) => id) ?? []
+        const documentTypeIds = decisionAnnexesElements.filter(({ type }) => type === 'file').map(({ id }) => id) ?? []
         for (const documentTypeId of documentTypeIds) {
           const fileName = decisionContenu[documentTypeId]
 
@@ -783,13 +550,10 @@ const etapeDeposer = async (
             fichier: true,
             entreprisesLecture: true,
             titreEtapeId: etapeDecisionAnnexe.id,
-            fichierTypeId: 'pdf'
+            fichierTypeId: 'pdf',
           }
 
-          const filePath = `${contenuFilesPathGet(
-            'demarches',
-            titreEtape.id
-          )}/${fileName}`
+          const filePath = `${contenuFilesPathGet('demarches', titreEtape.id)}/${fileName}`
 
           const newDocumentPath = await documentFilePathFind(document, true)
 
@@ -800,21 +564,9 @@ const etapeDeposer = async (
       }
     }
 
-    await titreEtapeUpdateTask(
-      etapeUpdated.id,
-      etapeUpdated.titreDemarcheId,
-      user
-    )
+    await titreEtapeUpdateTask(etapeUpdated.id, etapeUpdated.titreDemarcheId, user)
 
-    await titreEtapeAdministrationsEmailsSend(
-      etapeUpdated,
-      titreEtape.type!,
-      titreDemarche.typeId,
-      titreDemarche.titreId,
-      titreDemarche.titre!.typeId,
-      user!,
-      titreEtapeOld
-    )
+    await titreEtapeAdministrationsEmailsSend(etapeUpdated, titreEtape.type!, titreDemarche.typeId, titreDemarche.titreId, titreDemarche.titre!.typeId, user!, titreEtapeOld)
 
     const fields = fieldsBuild(info)
     const titreUpdated = await titreGet(titreDemarche.titreId, { fields }, user)
@@ -827,11 +579,7 @@ const etapeDeposer = async (
   }
 }
 
-const etapeSupprimer = async (
-  { id }: { id: string },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const etapeSupprimer = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -844,8 +592,8 @@ const etapeSupprimer = async (
       {
         fields: {
           titulaires: { id: {} },
-          demarche: { titre: { pointsEtape: { id: {} } } }
-        }
+          demarche: { titre: { pointsEtape: { id: {} } } },
+        },
       },
       user
     )
@@ -854,12 +602,7 @@ const etapeSupprimer = async (
     if (!titreEtape.titulaires) {
       throw new Error('Les titulaires de l’étape ne sont pas chargés')
     }
-    if (
-      !titreEtape.demarche ||
-      !titreEtape.demarche.titre ||
-      !titreEtape.demarche.titre.administrationsLocales ||
-      !titreEtape.demarche.titre.titreStatutId
-    ) {
+    if (!titreEtape.demarche || !titreEtape.demarche.titre || !titreEtape.demarche.titre.administrationsLocales || !titreEtape.demarche.titre.titreStatutId) {
       throw new Error('la démarche n’est pas chargée complètement')
     }
 
@@ -873,7 +616,7 @@ const etapeSupprimer = async (
         titreEtape.demarche.typeId,
         {
           typeId: titreEtape.demarche.titre.typeId,
-          titreStatutId: titreEtape.demarche.titre.titreStatutId
+          titreStatutId: titreEtape.demarche.titre.titreStatutId,
         },
         'modification'
       )
@@ -886,10 +629,10 @@ const etapeSupprimer = async (
         fields: {
           type: { etapesTypes: { id: {} } },
           titre: {
-            demarches: { etapes: { id: {} } }
+            demarches: { etapes: { id: {} } },
           },
-          etapes: { type: { id: {} } }
-        }
+          etapes: { type: { id: {} } },
+        },
       },
       userSuper
     )
@@ -898,14 +641,7 @@ const etapeSupprimer = async (
 
     if (!titreDemarche.titre) throw new Error("le titre n'existe pas")
 
-    const rulesErrors = titreDemarcheUpdatedEtatValidate(
-      titreDemarche.type!,
-      titreDemarche.titre,
-      titreEtape,
-      titreDemarche.id,
-      titreDemarche.etapes!,
-      true
-    )
+    const rulesErrors = titreDemarcheUpdatedEtatValidate(titreDemarche.type!, titreDemarche.titre, titreEtape, titreDemarche.id, titreDemarche.etapes!, true)
 
     if (rulesErrors.length) {
       throw new Error(rulesErrors.join(', '))
@@ -924,12 +660,4 @@ const etapeSupprimer = async (
   }
 }
 
-export {
-  etape,
-  etapeHeritage,
-  etapeCreer,
-  etapeModifier,
-  etapeSupprimer,
-  etapeDeposer,
-  specifiquesGet
-}
+export { etape, etapeHeritage, etapeCreer, etapeModifier, etapeSupprimer, etapeDeposer, specifiquesGet }

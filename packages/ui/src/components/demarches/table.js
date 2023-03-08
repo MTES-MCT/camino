@@ -6,10 +6,7 @@ import List from '../_ui/list.vue'
 import { DemarchesStatuts } from 'camino-common/src/static/demarchesStatuts'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts'
 import { ReferencesTypes } from 'camino-common/src/static/referencesTypes'
-import {
-  getDomaineId,
-  getTitreTypeType
-} from 'camino-common/src/static/titresTypes'
+import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 
 const demarchesColonnes = [
@@ -19,68 +16,65 @@ const demarchesColonnes = [
   {
     id: 'titreStatut',
     name: 'Statut de titre',
-    class: ['nowrap', 'min-width-6']
+    class: ['nowrap', 'min-width-6'],
   },
   { id: 'type', name: 'Type' },
   { id: 'statut', name: 'Statut', class: ['nowrap'] },
-  { id: 'references', name: 'Références', class: ['nowrap'], noSort: true }
+  { id: 'references', name: 'Références', class: ['nowrap'], noSort: true },
 ]
 
 const demarchesLignesBuild = demarches =>
   demarches.map(demarche => {
     const titreStatut = TitresStatuts[demarche.titre.titreStatutId]
     const domaineId = getDomaineId(demarche.titre.typeId)
-    const titreTypeType =
-      TitresTypesTypes[getTitreTypeType(demarche.titre.typeId)]
+    const titreTypeType = TitresTypesTypes[getTitreTypeType(demarche.titre.typeId)]
     const columns = {
       titreNom: { value: demarche.titre.nom },
       titreDomaine: {
         component: markRaw(CaminoDomaine),
         props: { domaineId },
-        value: domaineId
+        value: domaineId,
       },
       titreType: {
         component: markRaw(Nom),
         props: { nom: titreTypeType.nom },
-        value: titreTypeType.nom
+        value: titreTypeType.nom,
       },
       titreStatut: {
         component: markRaw(Statut),
         props: {
           color: titreStatut.couleur,
-          nom: titreStatut.nom
+          nom: titreStatut.nom,
         },
-        value: titreStatut.nom
+        value: titreStatut.nom,
       },
       type: {
         component: markRaw(Nom),
         props: { nom: demarche.type.nom },
-        value: demarche.type.nom
+        value: demarche.type.nom,
       },
       statut: {
         component: markRaw(Statut),
         props: {
           color: DemarchesStatuts[demarche.statutId].couleur,
-          nom: DemarchesStatuts[demarche.statutId].nom
+          nom: DemarchesStatuts[demarche.statutId].nom,
         },
-        value: DemarchesStatuts[demarche.statutId].nom
+        value: DemarchesStatuts[demarche.statutId].nom,
       },
       references: {
         component: markRaw(List),
         props: {
-          elements: demarche.titre.references.map(
-            ref => `${ReferencesTypes[ref.referenceTypeId].nom} : ${ref.nom}`
-          ),
-          mini: true
+          elements: demarche.titre.references.map(ref => `${ReferencesTypes[ref.referenceTypeId].nom} : ${ref.nom}`),
+          mini: true,
         },
-        class: 'mb--xs'
-      }
+        class: 'mb--xs',
+      },
     }
 
     return {
       id: demarche.id,
       link: { name: 'titre', params: { id: demarche.titre.slug } },
-      columns
+      columns,
     }
   })
 

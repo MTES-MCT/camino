@@ -25,8 +25,5 @@ export const up = (knex: Knex) => {
 }
 
 export const down = (knex: Knex) => {
-  return knex.schema
-    .dropTable('mois')
-    .dropTable('trimestres')
-    .dropTable('frequences')
+  return knex.schema.dropTable('mois').dropTable('trimestres').dropTable('frequences')
 }

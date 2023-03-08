@@ -9,15 +9,15 @@ describe('toMachineEtapes', () => {
         {
           typeId: 'mfr',
           statutId: 'fai',
-          date: toCaminoDate('2022-01-01')
-        }
+          date: toCaminoDate('2022-01-01'),
+        },
       ])
     ).toEqual([
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
-        date: '2022-01-01'
-      }
+        date: '2022-01-01',
+      },
     ])
 
     expect(
@@ -26,16 +26,16 @@ describe('toMachineEtapes', () => {
           typeId: 'mfr',
           statutId: 'fai',
           date: toCaminoDate('2022-01-01'),
-          contenu: { arm: { mecanise: true } }
-        }
+          contenu: { arm: { mecanise: true } },
+        },
       ])
     ).toEqual([
       {
         etapeTypeId: 'mfr',
         etapeStatutId: 'fai',
         date: '2022-01-01',
-        contenu: { arm: { mecanise: true } }
-      }
+        contenu: { arm: { mecanise: true } },
+      },
     ])
   })
 
@@ -47,8 +47,8 @@ describe('toMachineEtapes', () => {
           typeId: 'iii',
           statutId: 'fai',
           date: '2022-01-01',
-          titreDemarcheId: 'idDemarche'
-        } as unknown as ITitreEtape
+          titreDemarcheId: 'idDemarche',
+        } as unknown as ITitreEtape,
       ])
     ).toThrowErrorMatchingInlineSnapshot(`"l'état iii est inconnu"`)
   })
@@ -61,8 +61,8 @@ describe('toMachineEtapes', () => {
           typeId: 'mfr',
           statutId: 'ffi',
           date: '2022-01-01',
-          titreDemarcheId: 'idDemarche'
-        } as unknown as ITitreEtape
+          titreDemarcheId: 'idDemarche',
+        } as unknown as ITitreEtape,
       ])
     ).toThrowErrorMatchingInlineSnapshot(
       `"le status ffi est inconnu, {\\"id\\":\\"id\\",\\"typeId\\":\\"mfr\\",\\"statutId\\":\\"ffi\\",\\"date\\":\\"2022-01-01\\",\\"titreDemarcheId\\":\\"idDemarche\\"}"`

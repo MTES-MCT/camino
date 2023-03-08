@@ -40,12 +40,10 @@ const tasks = async () => {
   }
 
   if (process.env.CAMINO_STAGE) {
-    const emailBody = `Résultats de ${process.env.ENV} \n${readFileSync(
-      logFile
-    ).toString()}`
+    const emailBody = `Résultats de ${process.env.ENV} \n${readFileSync(logFile).toString()}`
     await mailjetSend([process.env.ADMIN_EMAIL!], {
       Subject: `[Camino][${process.env.ENV}] Résultats du daily`,
-      'Text-part': emailBody
+      'Text-part': emailBody,
     })
   }
   console.info('Tâches quotidiennes : terminé')

@@ -1,27 +1,8 @@
 <template>
   <div class="mb">
-    <Accordion
-      v-if="stepType"
-      id="step-type"
-      :step="stepType"
-      :opened="opened['type']"
-      :complete="typeComplete"
-      :enConstruction="enConstruction"
-      @toggle="toggle('type')"
-    >
-      <DateEdit
-        v-if="userIsAdmin"
-        :date="etape.date"
-        :incertitude="etape.incertitudes.date"
-        :onDateChanged="onDateChanged"
-        :onIncertitudeChanged="onIncertitudeChanged"
-      />
-      <TypeEdit
-        :etape="etape"
-        :etapesTypesIds="etapesTypesIds"
-        :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction"
-        :onEtapeChange="onEtapeTypeChange"
-      />
+    <Accordion v-if="stepType" id="step-type" :step="stepType" :opened="opened['type']" :complete="typeComplete" :enConstruction="enConstruction" @toggle="toggle('type')">
+      <DateEdit v-if="userIsAdmin" :date="etape.date" :incertitude="etape.incertitudes.date" :onDateChanged="onDateChanged" :onIncertitudeChanged="onIncertitudeChanged" />
+      <TypeEdit :etape="etape" :etapesTypesIds="etapesTypesIds" :etapeIsDemandeEnConstruction="etapeIsDemandeEnConstruction" :onEtapeChange="onEtapeTypeChange" />
     </Accordion>
 
     <Accordion
@@ -44,15 +25,7 @@
       />
     </Accordion>
 
-    <Accordion
-      v-if="stepPoints"
-      id="step-points"
-      :step="stepPoints"
-      :opened="opened['points']"
-      :complete="stepPerimetreComplete"
-      :enConstruction="enConstruction"
-      @toggle="toggle('points')"
-    >
+    <Accordion v-if="stepPoints" id="step-points" :step="stepPoints" :opened="opened['points']" :complete="stepPerimetreComplete" :enConstruction="enConstruction" @toggle="toggle('points')">
       <PointsEdit
         :etape="etape"
         :events="events"
@@ -63,15 +36,7 @@
       />
     </Accordion>
 
-    <Accordion
-      v-if="stepSections"
-      id="step-sections"
-      :step="stepSections"
-      :opened="opened['sections']"
-      :complete="stepSectionsComplete"
-      :enConstruction="enConstruction"
-      @toggle="toggle('sections')"
-    >
+    <Accordion v-if="stepSections" id="step-sections" :step="stepSections" :opened="opened['sections']" :complete="stepSectionsComplete" :enConstruction="enConstruction" @toggle="toggle('sections')">
       <SectionsEdit
         :etape="etape"
         :sections="etape.type.sections"
@@ -128,10 +93,7 @@
       :enConstruction="enConstruction"
       @toggle="toggle('decisionsAnnexes')"
     >
-      <DecisionsAnnexesEdit
-        :etape="etape"
-        @complete-update="decisionsAnnexesComplete = $event"
-      />
+      <DecisionsAnnexesEdit :etape="etape" @complete-update="decisionsAnnexesComplete = $event" />
     </Accordion>
   </div>
 </template>
@@ -157,7 +119,7 @@ export default {
     SectionsEdit,
     DocumentsEdit,
     JustificatifsEdit,
-    DateEdit
+    DateEdit,
   },
 
   props: {
@@ -168,16 +130,10 @@ export default {
     events: { type: Object, required: true },
     user: { type: Object, required: true },
     etapeIsDemandeEnConstruction: { type: Boolean, required: true },
-    documentPopupTitle: { type: String, required: true }
+    documentPopupTitle: { type: String, required: true },
   },
 
-  emits: [
-    'complete-update',
-    'type-complete-update',
-    'change',
-    'update:etape',
-    'update:events'
-  ],
+  emits: ['complete-update', 'type-complete-update', 'change', 'update:etape', 'update:events'],
 
   data() {
     return {
@@ -195,17 +151,15 @@ export default {
         sections: false,
         documents: false,
         justificatifs: false,
-        decisionsAnnexes: false
+        decisionsAnnexes: false,
       },
-      help: {}
+      help: {},
     }
   },
 
   computed: {
     etapesTypesIds() {
-      return this.$store.state.titreEtapeEdition.metas.etapesTypes.map(
-        t => t.id
-      )
+      return this.$store.state.titreEtapeEdition.metas.etapesTypes.map(t => t.id)
     },
 
     documentsTypes() {
@@ -220,9 +174,7 @@ export default {
       const titulaireIds = this.etape.titulaires.map(({ id }) => id)
       const amodiatairesIds = this.etape.amodiataires.map(({ id }) => id)
 
-      return this.entreprises.filter(
-        ({ id }) => titulaireIds.includes(id) || amodiatairesIds.includes(id)
-      )
+      return this.entreprises.filter(({ id }) => titulaireIds.includes(id) || amodiatairesIds.includes(id))
     },
 
     heritageLoaded() {
@@ -291,18 +243,18 @@ export default {
       if (this.userIsAdmin) {
         steps.push({
           id: 'type',
-          name: 'Type'
+          name: 'Type',
         })
       }
 
       if (this.heritageLoaded && this.etapeType?.fondamentale) {
         steps.push({
           id: 'fondamentales',
-          name: 'Propriétés'
+          name: 'Propriétés',
         })
         steps.push({
           id: 'points',
-          name: 'Périmètre'
+          name: 'Périmètre',
         })
       }
 
@@ -313,7 +265,7 @@ export default {
       if (this.heritageLoaded && this.etape.type.documentsTypes?.length) {
         steps.push({
           id: 'documents',
-          name: `Documents liés à l’étape ${this.etape.type.nom}`
+          name: `Documents liés à l’étape ${this.etape.type.nom}`,
         })
       }
 
@@ -365,7 +317,7 @@ export default {
 
     userIsAdmin() {
       return this.$store.getters['user/userIsAdmin']
-    }
+    },
   },
 
   watch: {
@@ -375,8 +327,8 @@ export default {
       handler: function () {
         this.$emit('change')
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
 
   created() {
@@ -385,16 +337,13 @@ export default {
 
     if (this.etapeType?.id === 'mfr') {
       this.help.arm = {
-        fondamentales:
-          'Le renseignement d’une ou plusieurs substances est obligatoire.',
+        fondamentales: 'Le renseignement d’une ou plusieurs substances est obligatoire.',
         points:
           'Pour la Guyane, le système géographique de référence est le RGFG95 / UTM zone 22N (2972). Pour le renseigner, cliquez sur « ajouter un système géographique » et choisissez le système RGFG95. Vous pouvez ensuite cliquer sur « ajouter un point », renseigner le nom, (le décrire si besoin) et renseigner les coordonnées (l’abscisse « X » en coordonnées cartésiennes correspond à la longitude en coordonnées géographiques et l’ordonnée « Y » correspond à une  latitude ). Vous devez reproduire cette étape pour tous les sommets du ou des périmètres du titre. La surface du titre est calculée automatiquement d’après les sommets renseignés.',
-        sections:
-          'Ce bloc permet de savoir si la prospection est mécanisée ou non et s’il y a des franchissements de cours d’eau (si oui, combien ?)',
-        documents:
-          'Toutes les pièces obligatoires, spécifiques à la demande, doivent être déposées dans cette rubrique en format pdf.',
+        sections: 'Ce bloc permet de savoir si la prospection est mécanisée ou non et s’il y a des franchissements de cours d’eau (si oui, combien ?)',
+        documents: 'Toutes les pièces obligatoires, spécifiques à la demande, doivent être déposées dans cette rubrique en format pdf.',
         justificatifs:
-          "Les justificatifs sont des documents propres à l'entreprise, et pourront être réutilisés pour la création d'un autre dossier et mis à jour si nécessaire. Ces justificatifs sont consultables dans la fiche entreprise de votre société. Cette section permet de protéger et de centraliser les informations d'ordre privé relatives à la société et à son personnel."
+          "Les justificatifs sont des documents propres à l'entreprise, et pourront être réutilisés pour la création d'un autre dossier et mis à jour si nécessaire. Ces justificatifs sont consultables dans la fiche entreprise de votre société. Cette section permet de protéger et de centraliser les informations d'ordre privé relatives à la société et à son personnel.",
       }
 
       this.help.axm = this.help.arm
@@ -423,10 +372,7 @@ export default {
     },
 
     async sectionsUpdate() {
-      await this.$store.dispatch(
-        'titreEtapeEdition/documentInit',
-        this.etape.documents
-      )
+      await this.$store.dispatch('titreEtapeEdition/documentInit', this.etape.documents)
     },
 
     completeUpdate() {
@@ -445,9 +391,7 @@ export default {
 
     scrollToStep(stepId) {
       setTimeout(() => {
-        document
-          .getElementById(`step-${stepId}`)
-          .scrollIntoView({ behavior: 'smooth' })
+        document.getElementById(`step-${stepId}`).scrollIntoView({ behavior: 'smooth' })
       }, 500)
     },
 
@@ -467,7 +411,7 @@ export default {
           this.etape.type = {}
         }
         await this.$store.dispatch('titreEtapeEdition/heritageGet', {
-          typeId: etapeTypeId
+          typeId: etapeTypeId,
         })
       }
       // TODO 2023-01-13 Il faut que les données soient mises après l'appel au store, sinon l'étape est réinitialisée.
@@ -476,7 +420,7 @@ export default {
       this.etape.type.id = etapeTypeId
       this.$emit('type-complete-update', this.typeComplete)
       this.$emit('update:etape', this.etape)
-    }
-  }
+    },
+  },
 }
 </script>

@@ -11,12 +11,7 @@
         <h5>Téléphone</h5>
       </div>
       <div class="mb tablet-blob-2-3">
-        <input
-          v-model="entreprise.telephone"
-          type="text"
-          class="p-s"
-          placeholder="0100000000"
-        />
+        <input v-model="entreprise.telephone" type="text" class="p-s" placeholder="0100000000" />
       </div>
     </div>
 
@@ -26,12 +21,7 @@
         <h5>Adresse électronique</h5>
       </div>
       <div class="mb tablet-blob-2-3">
-        <input
-          v-model="entreprise.email"
-          type="text"
-          class="p-s"
-          placeholder="email@domain.tld"
-        />
+        <input v-model="entreprise.email" type="text" class="p-s" placeholder="email@domain.tld" />
       </div>
     </div>
 
@@ -41,12 +31,7 @@
         <h5>Site internet</h5>
       </div>
       <div class="mb tablet-blob-2-3">
-        <input
-          v-model="entreprise.url"
-          type="text"
-          class="p-s"
-          placeholder="http://…"
-        />
+        <input v-model="entreprise.url" type="text" class="p-s" placeholder="http://…" />
       </div>
     </div>
 
@@ -65,14 +50,10 @@
     <template #footer>
       <div v-if="!loading" class="tablet-blobs">
         <div class="tablet-blob-1-3 mb tablet-mb-0">
-          <button class="btn-border rnd-xs p-s full-x" @click="cancel">
-            Annuler
-          </button>
+          <button class="btn-border rnd-xs p-s full-x" @click="cancel">Annuler</button>
         </div>
         <div class="tablet-blob-2-3">
-          <button ref="save-button" class="btn btn-primary" @click="save">
-            Enregistrer
-          </button>
+          <button ref="save-button" class="btn btn-primary" @click="save">Enregistrer</button>
         </div>
       </div>
       <div v-else class="p-s full-x bold">Enregistrement en cours…</div>
@@ -88,14 +69,14 @@ export default {
   name: 'CaminoEntrepriseEditPopup',
 
   components: {
-    Popup
+    Popup,
   },
 
   props: {
     entreprise: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
 
   computed: {
@@ -109,7 +90,7 @@ export default {
 
     user() {
       return this.$store.state.user.element
-    }
+    },
   },
 
   created() {
@@ -147,7 +128,7 @@ export default {
 
     isSuper(user) {
       return isSuper(user)
-    }
-  }
+    },
+  },
 }
 </script>

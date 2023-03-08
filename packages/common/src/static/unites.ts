@@ -12,7 +12,7 @@ export const UNITE_IDS = {
   'millier de tonnes': 'mtk',
   tonne: 'mtt',
   'tonnes par an': 'txa',
-  '100 000 mètres cubes': 'vmd'
+  '100 000 mètres cubes': 'vmd',
 } as const
 
 export interface Unite<T = UniteId> {
@@ -42,7 +42,7 @@ export const Unites: { [key in UniteId]: Unite<key> } = {
   mtk: { id: 'mtk', nom: 'millier de tonnes', symbole: 'x 1000 t', referenceUniteId: 'mkg', referenceUniteRatio: 1000000, openfiscaId: 'kt' },
   mtt: { id: 'mtt', nom: 'tonne', symbole: 't', referenceUniteId: 'mkg', referenceUniteRatio: 1000, openfiscaId: 't' },
   txa: { id: 'txa', nom: 'tonnes par an', symbole: 't / an', referenceUniteId: null, referenceUniteRatio: null },
-  vmd: { id: 'vmd', nom: '100 000 mètres cubes', symbole: 'x 100 000 m³', referenceUniteId: 'm3x', referenceUniteRatio: 100000, openfiscaId: '100km3' }
+  vmd: { id: 'vmd', nom: '100 000 mètres cubes', symbole: 'x 100 000 m³', referenceUniteId: 'm3x', referenceUniteRatio: 100000, openfiscaId: '100km3' },
 }
 
 export const fromUniteFiscaleToUnite = (unite: UniteId, value: number): number => {

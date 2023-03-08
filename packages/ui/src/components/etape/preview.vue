@@ -1,23 +1,9 @@
 <template>
-  <Accordion
-    :id="etape.id"
-    :opened="opened"
-    class="mb-s"
-    :slotDefault="hasSections || hasFondamentales || hasDocuments"
-    :slotButtons="canEdit"
-    @close="close"
-    @toggle="toggle"
-  >
+  <Accordion :id="etape.id" :opened="opened" class="mb-s" :slotDefault="hasSections || hasFondamentales || hasDocuments" :slotButtons="canEdit" @close="close" @toggle="toggle">
     <template #title>
       <h5>
         {{ dateFormat(etape.date) }}
-        <Tag
-          v-if="etape.incertitudes && etape.incertitudes.date"
-          :mini="true"
-          color="bg-info"
-          class="ml-xs"
-          text="Incertain"
-        />
+        <Tag v-if="etape.incertitudes && etape.incertitudes.date" :mini="true" color="bg-info" class="ml-xs" text="Incertain" />
       </h5>
 
       <h3 class="cap-first mb-s">{{ etape.type.nom }}</h3>
@@ -30,13 +16,7 @@
     </template>
 
     <template v-if="canEdit" #buttons>
-      <button
-        v-if="etapeIsDemandeEnConstruction"
-        class="btn btn-primary flex small rnd-0"
-        :disabled="!etape.deposable"
-        :class="{ disabled: !etape.deposable }"
-        @click="etapeDepot"
-      >
+      <button v-if="etapeIsDemandeEnConstruction" class="btn btn-primary flex small rnd-0" :disabled="!etape.deposable" :class="{ disabled: !etape.deposable }" @click="etapeDepot">
         <span class="mt-xxs mb-xxs">Déposer…</span>
       </button>
 
@@ -53,25 +33,12 @@
       <div v-if="hasFondamentales">
         <Fondamentales :etape="etape" />
 
-        <Perimetre
-          v-if="etape.points && etape.points.length"
-          :etape="etape"
-          :titreTypeId="titreTypeId"
-          :geojsonMultiPolygon="etape.geojsonMultiPolygon"
-          :incertitude="!!etape.incertitudes?.points"
-        />
+        <Perimetre v-if="etape.points && etape.points.length" :etape="etape" :titreTypeId="titreTypeId" :geojsonMultiPolygon="etape.geojsonMultiPolygon" :incertitude="!!etape.incertitudes?.points" />
         <hr class="mx--" />
       </div>
 
       <div v-if="etape.type.sections?.length">
-        <UiSection
-          v-for="s in etape.type.sections"
-          :key="s.id"
-          :section="s"
-          :contenu="etape.contenu ? etape.contenu[s.id] : {}"
-          :date="etape.date"
-          @file-download="fileDownload($event)"
-        />
+        <UiSection v-for="s in etape.type.sections" :key="s.id" :section="s" :contenu="etape.contenu ? etape.contenu[s.id] : {}" :date="etape.date" @file-download="fileDownload($event)" />
 
         <hr class="mx--" />
       </div>
@@ -109,9 +76,7 @@
         <hr class="mx--" />
       </div>
 
-      <div
-        v-if="etape.decisionsAnnexesSections && etape.decisionsAnnexesContenu"
-      >
+      <div v-if="etape.decisionsAnnexesSections && etape.decisionsAnnexesContenu">
         <UiSection
           v-for="s in etape.decisionsAnnexesSections"
           :key="s.id"
@@ -125,13 +90,8 @@
       </div>
 
       <div v-if="canDownloadZip" class="flex">
-        <span class="small bold mb-0 mt-s flex-grow text-right mr-l pt-xs">
-          Télécharger l'ensemble de la demande dans un fichier .zip
-        </span>
-        <button
-          class="btn-border rnd-xs flex-right py-s px-m mb-m"
-          @click="demandeDownload"
-        >
+        <span class="small bold mb-0 mt-s flex-grow text-right mr-l pt-xs"> Télécharger l'ensemble de la demande dans un fichier .zip </span>
+        <button class="btn-border rnd-xs flex-right py-s px-m mb-m" @click="demandeDownload">
           <Icon size="M" name="download" />
         </button>
       </div>
@@ -167,7 +127,7 @@ export default {
     Perimetre,
     Fondamentales,
     UiSection,
-    Documents
+    Documents,
   },
 
   props: {
@@ -179,7 +139,7 @@ export default {
     opened: { type: Boolean, default: false },
     titreStatutId: { type: String, required: true },
     titreAdministrations: { type: Array, required: true },
-    user: { type: Object, required: true }
+    user: { type: Object, required: true },
   },
 
   emits: ['close', 'toggle'],
@@ -189,14 +149,12 @@ export default {
       return {
         name: 'titre',
         section: 'etapes',
-        id: this.titreId
+        id: this.titreId,
       }
     },
 
     documentPopupTitle() {
-      return `${cap(this.titreNom)} | ${cap(this.demarcheType.nom)} | ${cap(
-        this.etape.type.nom
-      )}`
+      return `${cap(this.titreNom)} | ${cap(this.demarcheType.nom)} | ${cap(this.etape.type.nom)}`
     },
 
     etapeIsDemandeEnConstruction() {
@@ -229,9 +187,7 @@ export default {
     },
 
     statutNom() {
-      return this.etapeIsDemandeEnConstruction && !this.etape.deposable
-        ? `${this.etapeStatut.nom} (incomplet)`
-        : this.etapeStatut.nom
+      return this.etapeIsDemandeEnConstruction && !this.etape.deposable ? `${this.etapeStatut.nom} (incomplet)` : this.etapeStatut.nom
     },
 
     userIsAdmin() {
@@ -239,10 +195,7 @@ export default {
     },
 
     canDownloadZip() {
-      return (
-        this.etape.type.id === 'mfr' &&
-        (this.hasDocuments || this.hasJustificatifs)
-      )
+      return this.etape.type.id === 'mfr' && (this.hasDocuments || this.hasJustificatifs)
     },
     etapeStatut() {
       return EtapesStatuts[this.etape.statutId]
@@ -271,7 +224,7 @@ export default {
         { typeId: this.titreTypeId, titreStatutId: this.titreStatutId },
         'modification'
       )
-    }
+    },
   },
 
   methods: {
@@ -294,13 +247,13 @@ export default {
     etapeEdit() {
       this.$router.push({
         name: 'etape-edition',
-        params: { id: this.etape.slug }
+        params: { id: this.etape.slug },
       })
 
       this.eventTrack({
         categorie: 'titre-etape',
         action: 'titre-etape_editer',
-        nom: this.$route.params.id
+        nom: this.$route.params.id,
       })
     },
 
@@ -309,14 +262,14 @@ export default {
         component: DeposePopup,
         props: {
           etapeId: this.etape.id,
-          onDepotDone: () => this.$store.dispatch(`titre/get`, this.titreId)
-        }
+          onDepotDone: () => this.$store.dispatch(`titre/get`, this.titreId),
+        },
       })
 
       this.eventTrack({
         categorie: 'titre-etape',
         action: 'titre-etape_depot',
-        nom: this.$route.params.id
+        nom: this.$route.params.id,
       })
     },
 
@@ -328,14 +281,14 @@ export default {
           etapeId: this.etape.id,
           demarcheTypeNom: this.demarcheType.nom,
           titreNom: this.titreNom,
-          titreTypeNom: TitresTypesTypes[getTitreTypeType(this.titreTypeId)].nom
-        }
+          titreTypeNom: TitresTypesTypes[getTitreTypeType(this.titreTypeId)].nom,
+        },
       })
 
       this.eventTrack({
         categorie: 'titre-etape',
         action: 'supprimer une étape',
-        nom: this.$route.params.id
+        nom: this.$route.params.id,
       })
     },
 
@@ -347,7 +300,7 @@ export default {
 
     fileDownload(fileName) {
       this.$store.dispatch('download', `/etape/${this.etape.id}/${fileName}`)
-    }
-  }
+    },
+  },
 }
 </script>

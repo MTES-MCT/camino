@@ -1,11 +1,6 @@
 import { defineComponent, computed, ref, markRaw } from 'vue'
 import Liste from './_common/liste.vue'
-import {
-  ADMINISTRATION_TYPES,
-  Administrations as Adms,
-  AdministrationTypeId,
-  sortedAdministrationTypes
-} from 'camino-common/src/static/administrations'
+import { ADMINISTRATION_TYPES, Administrations as Adms, AdministrationTypeId, sortedAdministrationTypes } from 'camino-common/src/static/administrations'
 import { elementsFormat } from '@/utils'
 import { Tag } from '@/components/_ui/tag'
 import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
@@ -13,16 +8,16 @@ import { ComponentColumnData, TableRow, TextColumnData } from './_ui/table'
 const colonnes = [
   {
     id: 'abreviation',
-    name: 'Abréviation'
+    name: 'Abréviation',
   },
   {
     id: 'nom',
-    name: 'Nom'
+    name: 'Nom',
   },
   {
     id: 'type',
-    name: 'Type'
-  }
+    name: 'Type',
+  },
 ] as const
 const filtres = [
   {
@@ -30,7 +25,7 @@ const filtres = [
     type: 'input',
     value: '',
     name: 'Nom',
-    placeholder: `Nom de l'administration`
+    placeholder: `Nom de l'administration`,
   },
   {
     id: 'typesIds',
@@ -38,8 +33,8 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: [],
-    elementsFormat
-  }
+    elementsFormat,
+  },
 ]
 type ColonneId = (typeof colonnes)[number]['id']
 
@@ -52,12 +47,10 @@ type ParamsTable = {
   params: { colonne: ColonneId; ordre: 'asc' | 'desc' }
 }
 
-const isParamsFiltre = (
-  options: ParamsFiltre | ParamsTable
-): options is ParamsFiltre => options.section === 'filtres'
+const isParamsFiltre = (options: ParamsFiltre | ParamsTable): options is ParamsFiltre => options.section === 'filtres'
 
 const metas = {
-  types: sortedAdministrationTypes
+  types: sortedAdministrationTypes,
 }
 
 const administrations = Object.values(Adms)
@@ -71,25 +64,21 @@ export const Administrations = defineComponent({
       table: {
         page: 0,
         colonne: 'abreviation',
-        ordre: 'asc'
+        ordre: 'asc',
       },
-      filtres
+      filtres,
     })
 
     const listState = ref<{ noms: string; typesIds: AdministrationTypeId[] }>({
       noms: '',
-      typesIds: []
+      typesIds: [],
     })
 
     const lignes = computed<TableRow[]>(() => {
       return [...administrations]
         .filter(a => {
           if (listState.value.noms.length) {
-            if (
-              !a.id.toLowerCase().includes(listState.value.noms) &&
-              !a.nom.toLowerCase().includes(listState.value.noms) &&
-              !a.abreviation.toLowerCase().includes(listState.value.noms)
-            ) {
+            if (!a.id.toLowerCase().includes(listState.value.noms) && !a.nom.toLowerCase().includes(listState.value.noms) && !a.abreviation.toLowerCase().includes(listState.value.noms)) {
               return false
             }
           }
@@ -121,22 +110,21 @@ export const Administrations = defineComponent({
         .map(administration => {
           const type = ADMINISTRATION_TYPES[administration.typeId]
 
-          const columns: Record<string, ComponentColumnData | TextColumnData> =
-            {
-              abreviation: { value: administration.abreviation },
-              nom: { value: administration.nom, class: ['h6'] },
-              type: {
-                component: markRaw(Tag),
-                props: { mini: true, text: type.nom },
-                class: 'mb--xs',
-                value: 'unused'
-              }
-            }
+          const columns: Record<string, ComponentColumnData | TextColumnData> = {
+            abreviation: { value: administration.abreviation },
+            nom: { value: administration.nom, class: ['h6'] },
+            type: {
+              component: markRaw(Tag),
+              props: { mini: true, text: type.nom },
+              class: 'mb--xs',
+              value: 'unused',
+            },
+          }
 
           return {
             id: administration.id,
             link: { name: 'administration', params: { id: administration.id } },
-            columns
+            columns,
           }
         })
     })
@@ -163,5 +151,5 @@ export const Administrations = defineComponent({
         onParamsUpdate={paramsUpdate}
       />
     )
-  }
+  },
 })

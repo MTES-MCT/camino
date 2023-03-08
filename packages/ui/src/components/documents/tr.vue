@@ -3,54 +3,28 @@
     <td class="nowrap pt-m flex flex-center">
       <span class="bold">{{ document.type.nom }}</span>
       <span>
-        <HelpTooltip
-          v-if="helpShow && document.type.description"
-          :text="document.type.description"
-          class="ml-xs"
-        />
+        <HelpTooltip v-if="helpShow && document.type.description" :text="document.type.description" class="ml-xs" />
       </span>
       <span v-if="etiquette">
-        <Tag
-          v-if="document.publicLecture"
-          :mini="true"
-          color="bg-info"
-          class="ml-xs"
-          text="Public"
-        />
+        <Tag v-if="document.publicLecture" :mini="true" color="bg-info" class="ml-xs" text="Public" />
 
-        <Tag
-          v-if="document.entreprisesLecture && !document.publicLecture"
-          :mini="true"
-          color="bg-info"
-          class="ml-xs"
-          text="Entreprise"
-        />
+        <Tag v-if="document.entreprisesLecture && !document.publicLecture" :mini="true" color="bg-info" class="ml-xs" text="Entreprise" />
       </span>
-      <Tag
-        v-if="manquant && manquantShow"
-        color="bg-warning"
-        class="ml-xs"
-        :mini="true"
-        text="Fichier manquant"
-      />
+      <Tag v-if="manquant && manquantShow" color="bg-warning" class="ml-xs" :mini="true" text="Fichier manquant" />
     </td>
     <td class="nowrap pt-m">
       {{ dateFormat(document.date) }}
     </td>
     <td class="pt-m">{{ document.description || '–' }}</td>
     <td class="flex text-right">
-      <button
-        v-if="boutonModification"
-        class="btn rnd-l-xs py-s px-m my--xs mr-px"
-        @click="editPopupOpen"
-      >
+      <button v-if="boutonModification" class="btn rnd-l-xs py-s px-m my--xs mr-px" @click="editPopupOpen">
         <Icon size="M" name="pencil" />
       </button>
       <button
         v-if="boutonSuppression"
         class="btn py-s px-m my--xs"
         :class="{
-          'rnd-r-xs': !document.url && !document.uri && !document.fichier
+          'rnd-r-xs': !document.url && !document.uri && !document.fichier,
         }"
         @click="removePopupOpen"
       >
@@ -61,11 +35,7 @@
         class="btn-border py-s px-m my--xs"
         :class="{
           'rnd-r-xs': !document.url && !document.uri,
-          'rnd-l-xs':
-            !boutonVisualisation &&
-            !boutonModification &&
-            !boutonSuppression &&
-            !boutonDissociation
+          'rnd-l-xs': !boutonVisualisation && !boutonModification && !boutonSuppression && !boutonDissociation,
         }"
         :href="`/apiUrl/fichiers/${document.id}`"
         :download="document.nom"
@@ -78,12 +48,7 @@
         class="btn-border py-s px-m my--xs"
         :class="{
           'rnd-r-xs': !document.uri,
-          'rnd-l-xs':
-            !document.fichier &&
-            !boutonVisualisation &&
-            !boutonModification &&
-            !boutonSuppression &&
-            !boutonDissociation
+          'rnd-l-xs': !document.fichier && !boutonVisualisation && !boutonModification && !boutonSuppression && !boutonDissociation,
         }"
         :href="document.url"
         target="_blank"
@@ -96,13 +61,7 @@
         v-if="document.uri"
         class="btn-border py-s px-m my--xs rnd-r-xs"
         :class="{
-          'rnd-l-xs':
-            !document.url &&
-            !document.fichier &&
-            !boutonVisualisation &&
-            !boutonModification &&
-            !boutonSuppression &&
-            !boutonDissociation
+          'rnd-l-xs': !document.url && !document.fichier && !boutonVisualisation && !boutonModification && !boutonSuppression && !boutonDissociation,
         }"
         :href="document.uri"
         target="_blank"
@@ -127,7 +86,7 @@ export default {
   components: {
     Icon,
     Tag,
-    HelpTooltip
+    HelpTooltip,
   },
 
   props: {
@@ -145,24 +104,19 @@ export default {
     boutonModification: { type: Boolean, default: false },
     boutonSuppression: { type: Boolean, default: false },
     manquantShow: { type: Boolean, default: false },
-    helpShow: { type: Boolean, default: false }
+    helpShow: { type: Boolean, default: false },
   },
 
   data() {
     return {
-      fileReader: null
+      fileReader: null,
     }
   },
 
   computed: {
     manquant() {
-      return !(
-        this.document.fichier ||
-        this.document.fichierNouveau ||
-        this.document.uri ||
-        this.document.url
-      )
-    }
+      return !(this.document.fichier || this.document.fichierNouveau || this.document.uri || this.document.url)
+    },
   },
 
   methods: {
@@ -193,33 +147,29 @@ export default {
           action: this.addAction,
           document,
           repertoire: this.repertoire,
-          parentTypeId: this.parentTypeId
-        }
+          parentTypeId: this.parentTypeId,
+        },
       })
     },
 
     removePopupOpen() {
       if (this.removeAction) {
-        this.$store.dispatch(
-          this.removeAction.name,
-          { id: this.document.id },
-          { root: true }
-        )
+        this.$store.dispatch(this.removeAction.name, { id: this.document.id }, { root: true })
       } else {
         this.$store.commit('popupOpen', {
           component: DocumentRemovePopup,
           props: {
             title: this.title,
             document: this.document,
-            route: this.route
-          }
+            route: this.route,
+          },
         })
       }
     },
 
     dateFormat(date) {
       return dateFormat(date)
-    }
-  }
+    },
+  },
 }
 </script>

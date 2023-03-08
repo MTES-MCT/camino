@@ -5,7 +5,7 @@ import { Couleur } from 'camino-common/src/static/couleurs'
 const meta: Meta = {
   title: 'Components/Error',
   component: Error,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -16,22 +16,10 @@ const Template: Story<Props> = (args: Props) => ({
   setup() {
     return { args }
   },
-  template: '<Error v-bind="args" />'
+  template: '<Error v-bind="args" />',
 })
 
-export const Success = Template.bind(
-  {},
-  { couleur: 'success', message: 'Bravo c’est un succès' }
-)
-export const Info = Template.bind(
-  {},
-  { couleur: 'info', message: 'Message à caractère informatif' }
-)
-export const Warning = Template.bind(
-  {},
-  { couleur: 'warning', message: 'Attention danger' }
-)
-export const Erreur = Template.bind(
-  {},
-  { couleur: 'error', message: 'Erreur, c’est cassé.' }
-)
+export const Success = Template.bind({}, { couleur: 'success', message: 'Bravo c’est un succès' })
+export const Info = Template.bind({}, { couleur: 'info', message: 'Message à caractère informatif' })
+export const Warning = Template.bind({}, { couleur: 'warning', message: 'Attention danger' })
+export const Erreur = Template.bind({}, { couleur: 'error', message: 'Erreur, c’est cassé.' })

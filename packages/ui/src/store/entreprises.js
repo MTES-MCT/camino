@@ -10,25 +10,25 @@ const state = {
     {
       id: 'colonne',
       type: 'string',
-      values: ['nom', 'siren']
+      values: ['nom', 'siren'],
     },
     {
       id: 'ordre',
       type: 'string',
-      values: ['asc', 'desc']
+      values: ['asc', 'desc'],
     },
-    { id: 'noms', type: 'string' }
+    { id: 'noms', type: 'string' },
   ],
   params: {
     table: {
       page: 1,
       intervalle: 200,
       ordre: 'asc',
-      colonne: null
+      colonne: null,
     },
-    filtres: { noms: '' }
+    filtres: { noms: '' },
   },
-  initialized: false
+  initialized: false,
 }
 
 const actions = listeActionsBuild('entreprises', 'entreprises', entreprises)
@@ -39,5 +39,5 @@ export default {
   namespaced: true,
   state,
   actions,
-  mutations
+  mutations,
 }

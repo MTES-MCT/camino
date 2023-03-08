@@ -9,25 +9,14 @@ export interface Props<T> {
 
 export const LoadingElement = <T,>(props: Props<T>) => {
   return (
-    <div
-      class={`${props.data.status === 'LOADING' ? styles['top-level'] : ''}`}
-      style={
-        props.data.status !== 'LOADED'
-          ? 'display: flex; justify-content: center'
-          : ''
-      }
-    >
-      {props.data.status === 'LOADED'
-        ? props.renderItem(props.data.value)
-        : null}
+    <div class={`${props.data.status === 'LOADING' ? styles['top-level'] : ''}`} style={props.data.status !== 'LOADED' ? 'display: flex; justify-content: center' : ''}>
+      {props.data.status === 'LOADED' ? props.renderItem(props.data.value) : null}
       {props.data.status === 'ERROR' ? (
         <div>
           <HelpTooltip icon="error-warning" text={props.data.message} />
         </div>
       ) : null}
-      {props.data.status === 'LOADING' ? (
-        <div class={styles.spinner}></div>
-      ) : null}
+      {props.data.status === 'LOADING' ? <div class={styles.spinner}></div> : null}
     </div>
   )
 }

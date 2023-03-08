@@ -14,8 +14,8 @@ class TitresPhases extends Model {
       titreDemarcheId: { type: 'string', maxLength: 128 },
       phaseStatutId: { type: 'string', maxLength: 3 },
       dateDebut: { type: 'string' },
-      dateFin: { type: 'string' }
-    }
+      dateFin: { type: 'string' },
+    },
   }
 
   public static idColumn = 'titreDemarcheId'

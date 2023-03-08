@@ -26,7 +26,7 @@ const mockUser: IUtilisateur = {
   nom: 'utilisateurNom',
   email: 'utilisateurEmail',
   administrationId: mockAdministration.id,
-  dateCreation: '2022-05-12'
+  dateCreation: '2022-05-12',
 }
 
 describe('utilisateursQueryModify', () => {
@@ -36,21 +36,14 @@ describe('utilisateursQueryModify', () => {
     [{ role: 'editeur', administrationId: mockAdministration.id }, true],
     [{ role: 'lecteur', administrationId: mockAdministration.id }, true],
     [{ role: 'entreprise', entreprises: [] }, true],
-    [{ role: 'defaut' }, false]
-  ])(
-    "Vérifie l'écriture de la requête sur un utilisateur",
-    async (user, voit) => {
-      const utilisateurs = await utilisateursGet(
-        { noms: mockUser.nom },
-        {},
-        { ...user, ...testBlankUser }
-      )
-      if (voit) {
-        expect(utilisateurs).toHaveLength(1)
-        expect(utilisateurs[0]).toMatchSnapshot()
-      } else {
-        expect(utilisateurs).toHaveLength(0)
-      }
+    [{ role: 'defaut' }, false],
+  ])("Vérifie l'écriture de la requête sur un utilisateur", async (user, voit) => {
+    const utilisateurs = await utilisateursGet({ noms: mockUser.nom }, {}, { ...user, ...testBlankUser })
+    if (voit) {
+      expect(utilisateurs).toHaveLength(1)
+      expect(utilisateurs[0]).toMatchSnapshot()
+    } else {
+      expect(utilisateurs).toHaveLength(0)
     }
-  )
+  })
 })

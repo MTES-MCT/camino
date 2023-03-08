@@ -1,10 +1,5 @@
 <template>
-  <pure-button
-    :menuActive="menuActive"
-    :user="user"
-    @onConnectionClicked="popupOpen"
-    @onUserClicked="goToUser"
-  />
+  <pure-button :menuActive="menuActive" :user="user" @onConnectionClicked="popupOpen" @onUserClicked="goToUser" />
 </template>
 
 <script>
@@ -19,14 +14,12 @@ export default {
     },
     menuActive() {
       return (this.$store.state.menu?.component?.name ?? '') === 'UserMenu'
-    }
+    },
   },
 
   methods: {
     popupOpen() {
-      window.location.replace(
-        '/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href)
-      )
+      window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
     },
     goToUser() {
       this.eventTrack()
@@ -36,7 +29,7 @@ export default {
       if (this.$matomo) {
         this.$matomo.trackEvent('menu', 'bouton', 'utilisateur')
       }
-    }
-  }
+    },
+  },
 }
 </script>

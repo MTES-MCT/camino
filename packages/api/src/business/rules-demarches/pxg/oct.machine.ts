@@ -46,87 +46,61 @@ type Event = PXGOctXStateEvent['type']
 const trad: { [key in Event]: DBEtat } = {
   FAIRE_DEMANDE: ETES.demande,
   DEPOSER_DEMANDE: ETES.depotDeLaDemande,
-  DEMANDER_COMPLEMENTS_POUR_RECEVABILITE:
-    ETES.demandeDeComplements_RecevabiliteDeLaDemande_,
+  DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: ETES.demandeDeComplements_RecevabiliteDeLaDemande_,
   FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
-    FAVORABLE: ETES.recevabiliteDeLaDemande.FAVORABLE
+    FAVORABLE: ETES.recevabiliteDeLaDemande.FAVORABLE,
   },
   FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: {
-    DEFAVORABLE: ETES.recevabiliteDeLaDemande.DEFAVORABLE
+    DEFAVORABLE: ETES.recevabiliteDeLaDemande.DEFAVORABLE,
   },
   RECEVOIR_MODIFICATION_DE_LA_DEMANDE: ETES.modificationDeLaDemande,
-  RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE:
-    ETES.receptionDeComplements_RecevabiliteDeLaDemande_,
+  RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: ETES.receptionDeComplements_RecevabiliteDeLaDemande_,
   FAIRE_SAISINES_DES_SERVICES: ETES.saisineDesServices,
-  RENDRE_AVIS_DGTM_MNBST:
-    ETES.avisDGTMServiceMilieuxNaturelsBiodiversiteSitesEtPaysages_MNBST_,
-  RENDRE_AVIS_DGTMAUCL:
-    ETES.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_,
-  RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI:
-    ETES.avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi,
-  RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET:
-    ETES.avisDeLaDirectionDalimentationDeLagricultureEtDeLaForet,
-  RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES:
-    ETES.avisDeDirectionRegionaleDesAffairesCulturelles,
+  RENDRE_AVIS_DGTM_MNBST: ETES.avisDGTMServiceMilieuxNaturelsBiodiversiteSitesEtPaysages_MNBST_,
+  RENDRE_AVIS_DGTMAUCL: ETES.avisDGTMServiceAmenagementUrbanismeConstructionLogement_AUCL_,
+  RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI: ETES.avisDeLaDirectionDesEntreprisesDeLaConcurrenceDeLaConsommationDuTravailEtDeLemploi,
+  RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET: ETES.avisDeLaDirectionDalimentationDeLagricultureEtDeLaForet,
+  RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES: ETES.avisDeDirectionRegionaleDesAffairesCulturelles,
   RENDRE_AVIS_AGENCE_REGIONALE_SANTE: ETES.avisDeLagenceRegionaleDeSante,
-  RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES:
-    ETES.avisDeLaDirectionRegionaleDesFinancesPubliques,
-  RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE:
-    ETES.avisDeLaCaisseGeneraleDeSecuriteSociale,
-  RENDRE_AVIS_DREAL:
-    ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement,
+  RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES: ETES.avisDeLaDirectionRegionaleDesFinancesPubliques,
+  RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE: ETES.avisDeLaCaisseGeneraleDeSecuriteSociale,
+  RENDRE_AVIS_DREAL: ETES.avisEtRapportDuDirecteurRegionalChargeDeLenvironnementDeLamenagementEtDuLogement,
   FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES: ETES.saisineDesCollectivitesLocales,
   RENDRE_CONSULTATION_DES_CONSEILS_MUNICIPAUX: ETES.avisDunMaire,
   FAIRE_CONSULTATION_CLE_DU_SAGE: ETES.consultationCLEDuSAGE,
-  FAIRE_SAISINE_AUTORITE_ENVIRONNEMENTALE:
-    ETES.saisineDeLautoriteEnvironnementale,
+  FAIRE_SAISINE_AUTORITE_ENVIRONNEMENTALE: ETES.saisineDeLautoriteEnvironnementale,
   RENDRE_AVIS_AUTORITE_ENVIRONNEMENTALE: ETES.avisDeLautoriteEnvironnementale,
   OUVRIR_ENQUETE_PUBLIQUE: ETES.ouvertureDeLenquetePublique,
   CLOTURER_ENQUETE_PUBLIQUE: ETES.clotureDeLenquetePublique,
-  TRANSMETTRE_PROJET_DE_PRESCRIPTIONS_AU_DEMANDEUR:
-    ETES.transmissionDuProjetDePrescriptionsAuDemandeur,
-  RENDRE_AVIS_DU_DEMANDEUR_SUR_LES_PRESCRIPTIONS_PROPOSEES:
-    ETES.avisDuDemandeurSurLesPrescriptionsProposees,
-  RENDRE_PASSAGE_CODERST:
-    ETES.avisDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst_,
+  TRANSMETTRE_PROJET_DE_PRESCRIPTIONS_AU_DEMANDEUR: ETES.transmissionDuProjetDePrescriptionsAuDemandeur,
+  RENDRE_AVIS_DU_DEMANDEUR_SUR_LES_PRESCRIPTIONS_PROPOSEES: ETES.avisDuDemandeurSurLesPrescriptionsProposees,
+  RENDRE_PASSAGE_CODERST: ETES.avisDuConseilDepartementalDeLenvironnementEtDesRisquesSanitairesEtTechnologiques_Coderst_,
   RENDRE_DECISION_ADMINISTRATION_FAVORABLE: {
-    ACCEPTE: ETES.decisionDeLadministration.ACCEPTE
+    ACCEPTE: ETES.decisionDeLadministration.ACCEPTE,
   },
   RENDRE_DECISION_ADMINISTRATION_DEFAVORABLE: {
-    REJETE: ETES.decisionDeLadministration.REJETE
+    REJETE: ETES.decisionDeLadministration.REJETE,
   },
   NOTIFICATION_DU_DEMANDEUR: ETES.notificationAuDemandeur,
-  PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS:
-    ETES.publicationDeDecisionAuRecueilDesActesAdministratifs,
+  PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS: ETES.publicationDeDecisionAuRecueilDesActesAdministratifs,
   FAIRE_DESISTEMENT_DEMANDEUR: ETES.desistementDuDemandeur,
-  FAIRE_CLASSEMENT_SANS_SUITE: ETES.classementSansSuite
+  FAIRE_CLASSEMENT_SANS_SUITE: ETES.classementSansSuite,
 }
 
 // Related to https://github.com/Microsoft/TypeScript/issues/12870
-export const EVENTS = Object.keys(trad) as Array<
-  Extract<keyof typeof trad, string>
->
+export const EVENTS = Object.keys(trad) as Array<Extract<keyof typeof trad, string>>
 
 // basé sur https://cacoo.com/diagrams/QDCLi7jxd3EUOOba/249D0
-export class PxgOctMachine extends CaminoMachine<
-  PxgContext,
-  PXGOctXStateEvent
-> {
+export class PxgOctMachine extends CaminoMachine<PxgContext, PXGOctXStateEvent> {
   constructor() {
     super(pxgOctMachine, trad)
   }
 
   eventFrom(etape: Etape): PXGOctXStateEvent {
-    const entries = Object.entries(trad).filter(
-      (entry): entry is [Event, DBEtat] => EVENTS.includes(entry[0])
-    )
+    const entries = Object.entries(trad).filter((entry): entry is [Event, DBEtat] => EVENTS.includes(entry[0]))
 
     const entry = entries.find(([_key, dbEtat]) => {
-      return Object.values(dbEtat).some(
-        dbEtatSingle =>
-          dbEtatSingle.etapeTypeId === etape.etapeTypeId &&
-          dbEtatSingle.etapeStatutId === etape.etapeStatutId
-      )
+      return Object.values(dbEtat).some(dbEtatSingle => dbEtatSingle.etapeTypeId === etape.etapeTypeId && dbEtatSingle.etapeStatutId === etape.etapeStatutId)
     })
 
     if (entry) {
@@ -151,11 +125,7 @@ interface PxgContext extends CaminoCommonContext {
 }
 
 const peutRendreAvisDREAL = (context: PxgContext): boolean => {
-  return (
-    context.saisineDesServicesFaite &&
-    context.saisineDesCollectivitesLocalesFaites &&
-    context.avisAutoriteEnvironnementaleFaite
-  )
+  return context.saisineDesServicesFaite && context.saisineDesCollectivitesLocalesFaites && context.avisAutoriteEnvironnementaleFaite
 }
 
 const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
@@ -168,74 +138,59 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
     saisineDesServicesFaite: false,
     saisineDesCollectivitesLocalesFaites: false,
     saisineAutoriteEnvironnementaleFaite: false,
-    avisAutoriteEnvironnementaleFaite: false
+    avisAutoriteEnvironnementaleFaite: false,
   },
   on: {
     FAIRE_DESISTEMENT_DEMANDEUR: {
-      cond: context =>
-        [
-          DemarchesStatutsIds.Depose,
-          DemarchesStatutsIds.EnInstruction
-        ].includes(context.demarcheStatut),
-      target: 'desistementDuDemandeurRendu'
+      cond: context => [DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
+      target: 'desistementDuDemandeurRendu',
     },
     FAIRE_CLASSEMENT_SANS_SUITE: {
-      cond: context =>
-        [
-          DemarchesStatutsIds.Depose,
-          DemarchesStatutsIds.EnInstruction
-        ].includes(context.demarcheStatut),
-      target: 'classementSansSuiteRendu'
-    }
+      cond: context => [DemarchesStatutsIds.Depose, DemarchesStatutsIds.EnInstruction].includes(context.demarcheStatut),
+      target: 'classementSansSuiteRendu',
+    },
   },
   states: {
     demandeAFaire: {
       on: {
-        FAIRE_DEMANDE: 'depotDeLaDemandeAFaire'
-      }
+        FAIRE_DEMANDE: 'depotDeLaDemandeAFaire',
+      },
     },
     depotDeLaDemandeAFaire: {
       on: {
-        DEPOSER_DEMANDE: 'recevabiliteDeLaDemandeAFaire'
-      }
+        DEPOSER_DEMANDE: 'recevabiliteDeLaDemandeAFaire',
+      },
     },
     recevabiliteDeLaDemandeAFaire: {
       on: {
-        DEMANDER_COMPLEMENTS_POUR_RECEVABILITE:
-          'complementsPourRecevabiliteAFaire',
+        DEMANDER_COMPLEMENTS_POUR_RECEVABILITE: 'complementsPourRecevabiliteAFaire',
         FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
           target: 'saisinesAFaire',
-          actions: assign<
-            PxgContext,
-            { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }
-          >({
+          actions: assign<PxgContext, { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }>({
             demarcheStatut: DemarchesStatutsIds.Depose,
-            visibilite: 'publique'
-          })
+            visibilite: 'publique',
+          }),
         },
-        FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire'
-      }
+        FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire',
+      },
     },
     complementsPourRecevabiliteAFaire: {
       on: {
         RECEVOIR_COMPLEMENTS_POUR_RECEVABILITE: 'recevabiliteDeLaDemandeAFaire',
         FAIRE_RECEVABILITE_DEMANDE_FAVORABLE: {
           target: 'saisinesAFaire',
-          actions: assign<
-            PxgContext,
-            { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }
-          >({
+          actions: assign<PxgContext, { type: 'FAIRE_RECEVABILITE_DEMANDE_FAVORABLE' }>({
             demarcheStatut: DemarchesStatutsIds.Depose,
-            visibilite: 'publique'
-          })
+            visibilite: 'publique',
+          }),
         },
-        FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire'
-      }
+        FAIRE_RECEVABILITE_DEMANDE_DEFAVORABLE: 'modificationDeLaDemandeAFaire',
+      },
     },
     modificationDeLaDemandeAFaire: {
       on: {
-        RECEVOIR_MODIFICATION_DE_LA_DEMANDE: 'recevabiliteDeLaDemandeAFaire'
-      }
+        RECEVOIR_MODIFICATION_DE_LA_DEMANDE: 'recevabiliteDeLaDemandeAFaire',
+      },
     },
     saisinesAFaire: {
       type: 'parallel',
@@ -246,19 +201,18 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
             rendreAvisDrealPasEncorePossible: {
               always: {
                 target: 'rendreAvisDrealAFaire',
-                cond: peutRendreAvisDREAL
-              }
+                cond: peutRendreAvisDREAL,
+              },
             },
             rendreAvisDrealAFaire: {
               on: {
                 RENDRE_AVIS_DREAL: {
                   cond: peutRendreAvisDREAL,
-                  target:
-                    '#transmissionDuProjetDePrescriptionsAuDemandeurAFaire'
-                }
-              }
-            }
-          }
+                  target: '#transmissionDuProjetDePrescriptionsAuDemandeurAFaire',
+                },
+              },
+            },
+          },
         },
         saisineDesServicesMachine: {
           initial: 'saisineDesServicesAFaire',
@@ -267,20 +221,14 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
               on: {
                 FAIRE_SAISINES_DES_SERVICES: {
                   target: 'avisDesServicesARendre',
-                  actions: assign<
-                    PxgContext,
-                    { type: 'FAIRE_SAISINES_DES_SERVICES' }
-                  >({
+                  actions: assign<PxgContext, { type: 'FAIRE_SAISINES_DES_SERVICES' }>({
                     saisineDesServicesFaite: true,
                     demarcheStatut: (context, _event) => {
-                      return context.saisineDesCollectivitesLocalesFaites &&
-                        context.saisineAutoriteEnvironnementaleFaite
-                        ? DemarchesStatutsIds.EnInstruction
-                        : context.demarcheStatut
-                    }
-                  })
-                }
-              }
+                      return context.saisineDesCollectivitesLocalesFaites && context.saisineAutoriteEnvironnementaleFaite ? DemarchesStatutsIds.EnInstruction : context.demarcheStatut
+                    },
+                  }),
+                },
+              },
             },
             avisDesServicesARendre: {
               type: 'parallel',
@@ -289,105 +237,95 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
                   initial: 'avisDgtmMNBSTARendre',
                   states: {
                     avisDgtmMNBSTARendre: {
-                      on: { RENDRE_AVIS_DGTM_MNBST: 'avisDgtmMNBSTRendu' }
+                      on: { RENDRE_AVIS_DGTM_MNBST: 'avisDgtmMNBSTRendu' },
                     },
-                    avisDgtmMNBSTRendu: { type: 'final' }
-                  }
+                    avisDgtmMNBSTRendu: { type: 'final' },
+                  },
                 },
                 avisDGTMAUCLMachine: {
                   initial: 'avisDGTMAUCLARendre',
                   states: {
                     avisDGTMAUCLARendre: {
-                      on: { RENDRE_AVIS_DGTMAUCL: 'avisDGTMAUCLRendu' }
+                      on: { RENDRE_AVIS_DGTMAUCL: 'avisDGTMAUCLRendu' },
                     },
-                    avisDGTMAUCLRendu: { type: 'final' }
-                  }
-                },
-                avisDirectionEntrepriseConcurrenceConsommationTravailEmploiMachine:
-                  {
-                    initial:
-                      'avisDirectionEntrepriseConcurrenceConsommationTravailEmploiARendre',
-                    states: {
-                      avisDirectionEntrepriseConcurrenceConsommationTravailEmploiARendre:
-                        {
-                          on: {
-                            RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI:
-                              'avisDirectionEntrepriseConcurrenceConsommationTravailEmploiRendu'
-                          }
-                        },
-                      avisDirectionEntrepriseConcurrenceConsommationTravailEmploiRendu:
-                        { type: 'final' }
-                    }
+                    avisDGTMAUCLRendu: { type: 'final' },
                   },
+                },
+                avisDirectionEntrepriseConcurrenceConsommationTravailEmploiMachine: {
+                  initial: 'avisDirectionEntrepriseConcurrenceConsommationTravailEmploiARendre',
+                  states: {
+                    avisDirectionEntrepriseConcurrenceConsommationTravailEmploiARendre: {
+                      on: {
+                        RENDRE_AVIS_DIRECTION_ENTREPRISE_CONCURRENCE_CONSOMMATION_TRAVAIL_EMPLOI: 'avisDirectionEntrepriseConcurrenceConsommationTravailEmploiRendu',
+                      },
+                    },
+                    avisDirectionEntrepriseConcurrenceConsommationTravailEmploiRendu: { type: 'final' },
+                  },
+                },
                 avisDirectionAlimentationAgricultureForetMachine: {
                   initial: 'avisDirectionAlimentationAgricultureForetARendre',
                   states: {
                     avisDirectionAlimentationAgricultureForetARendre: {
                       on: {
-                        RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET:
-                          'avisDirectionAlimentationAgricultureForetRendu'
-                      }
+                        RENDRE_AVIS_DIRECTION_ALIMENTATION_AGRICULTURE_FORET: 'avisDirectionAlimentationAgricultureForetRendu',
+                      },
                     },
                     avisDirectionAlimentationAgricultureForetRendu: {
-                      type: 'final'
-                    }
-                  }
+                      type: 'final',
+                    },
+                  },
                 },
                 avisDirectionRegionaleAffairesCulturellesMachine: {
                   initial: 'avisDirectionRegionaleAffairesCulturellesARendre',
                   states: {
                     avisDirectionRegionaleAffairesCulturellesARendre: {
                       on: {
-                        RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES:
-                          'avisDirectionRegionaleAffairesCulturellesRendu'
-                      }
+                        RENDRE_AVIS_DIRECTION_REGIONALE_AFFAIRES_CULTURELLES: 'avisDirectionRegionaleAffairesCulturellesRendu',
+                      },
                     },
                     avisDirectionRegionaleAffairesCulturellesRendu: {
-                      type: 'final'
-                    }
-                  }
+                      type: 'final',
+                    },
+                  },
                 },
                 avisAgenceRegionaleSanteMachine: {
                   initial: 'avisAgenceRegionaleSanteARendre',
                   states: {
                     avisAgenceRegionaleSanteARendre: {
                       on: {
-                        RENDRE_AVIS_AGENCE_REGIONALE_SANTE:
-                          'avisAgenceRegionaleSanteRendu'
-                      }
+                        RENDRE_AVIS_AGENCE_REGIONALE_SANTE: 'avisAgenceRegionaleSanteRendu',
+                      },
                     },
-                    avisAgenceRegionaleSanteRendu: { type: 'final' }
-                  }
+                    avisAgenceRegionaleSanteRendu: { type: 'final' },
+                  },
                 },
                 avisDirectionRegionaleFinancesPubliquesMachine: {
                   initial: 'avisDirectionRegionaleFinancesPubliquesARendre',
                   states: {
                     avisDirectionRegionaleFinancesPubliquesARendre: {
                       on: {
-                        RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES:
-                          'avisDirectionRegionaleFinancesPubliquesRendu'
-                      }
+                        RENDRE_AVIS_DIRECTION_REGIONALE_FINANCES_PUBLIQUES: 'avisDirectionRegionaleFinancesPubliquesRendu',
+                      },
                     },
                     avisDirectionRegionaleFinancesPubliquesRendu: {
-                      type: 'final'
-                    }
-                  }
+                      type: 'final',
+                    },
+                  },
                 },
                 avisCaisseGeneraleDeSecuriteSocialeMachine: {
                   initial: 'avisCaisseGeneraleDeSecuriteSocialeARendre',
                   states: {
                     avisCaisseGeneraleDeSecuriteSocialeARendre: {
                       on: {
-                        RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE:
-                          'avisCaisseGeneraleDeSecuriteSocialeRendu'
-                      }
+                        RENDRE_AVIS_CAISSE_GENERALE_DE_SECURITE_SOCIALE: 'avisCaisseGeneraleDeSecuriteSocialeRendu',
+                      },
                     },
-                    avisCaisseGeneraleDeSecuriteSocialeRendu: { type: 'final' }
-                  }
-                }
-              }
-            }
-          }
+                    avisCaisseGeneraleDeSecuriteSocialeRendu: { type: 'final' },
+                  },
+                },
+              },
+            },
+          },
         },
         saisineDesCollectivitesLocalesMachine: {
           initial: 'saisineDesCollectivitesLocalesAFaire',
@@ -396,20 +334,14 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
               on: {
                 FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES: {
                   target: 'consultationCLEEtConseilsMunicipauxAFaire',
-                  actions: assign<
-                    PxgContext,
-                    { type: 'FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES' }
-                  >({
+                  actions: assign<PxgContext, { type: 'FAIRE_SAISINE_DES_COLLECTIVITES_LOCALES' }>({
                     saisineDesCollectivitesLocalesFaites: true,
                     demarcheStatut: (context, _event) => {
-                      return context.saisineAutoriteEnvironnementaleFaite &&
-                        context.saisineDesServicesFaite
-                        ? DemarchesStatutsIds.EnInstruction
-                        : context.demarcheStatut
-                    }
-                  })
-                }
-              }
+                      return context.saisineAutoriteEnvironnementaleFaite && context.saisineDesServicesFaite ? DemarchesStatutsIds.EnInstruction : context.demarcheStatut
+                    },
+                  }),
+                },
+              },
             },
             consultationCLEEtConseilsMunicipauxAFaire: {
               type: 'parallel',
@@ -419,12 +351,11 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
                   states: {
                     consultationDesConseilsMunicipauxARendre: {
                       on: {
-                        RENDRE_CONSULTATION_DES_CONSEILS_MUNICIPAUX:
-                          'consultationDesConseilsMunicipauxRendu'
-                      }
+                        RENDRE_CONSULTATION_DES_CONSEILS_MUNICIPAUX: 'consultationDesConseilsMunicipauxRendu',
+                      },
                     },
-                    consultationDesConseilsMunicipauxRendu: { type: 'final' }
-                  }
+                    consultationDesConseilsMunicipauxRendu: { type: 'final' },
+                  },
                 },
                 consultationCLEDuSAGEMachine: {
                   initial: 'consultationCLEDuSAGEAFaire',
@@ -432,19 +363,17 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
                     consultationCLEDuSAGEAFaire: {
                       on: {
                         FAIRE_CONSULTATION_CLE_DU_SAGE: {
-                          cond: context =>
-                            context.saisineDesCollectivitesLocalesFaites &&
-                            context.avisAutoriteEnvironnementaleFaite,
-                          target: 'consultationCLEDuSAGEAFait'
-                        }
-                      }
+                          cond: context => context.saisineDesCollectivitesLocalesFaites && context.avisAutoriteEnvironnementaleFaite,
+                          target: 'consultationCLEDuSAGEAFait',
+                        },
+                      },
                     },
-                    consultationCLEDuSAGEAFait: { type: 'final' }
-                  }
-                }
-              }
-            }
-          }
+                    consultationCLEDuSAGEAFait: { type: 'final' },
+                  },
+                },
+              },
+            },
+          },
         },
         saisineAutoriteEnvironnementaleMachine: {
           initial: 'saisineAutoriteEnvironnementaleAFaire',
@@ -453,162 +382,132 @@ const pxgOctMachine = createMachine<PxgContext, PXGOctXStateEvent>({
               on: {
                 FAIRE_SAISINE_AUTORITE_ENVIRONNEMENTALE: {
                   target: 'avisAutoriteEnvironnementaleAFaire',
-                  actions: assign<
-                    PxgContext,
-                    { type: 'FAIRE_SAISINE_AUTORITE_ENVIRONNEMENTALE' }
-                  >({
+                  actions: assign<PxgContext, { type: 'FAIRE_SAISINE_AUTORITE_ENVIRONNEMENTALE' }>({
                     saisineAutoriteEnvironnementaleFaite: true,
                     demarcheStatut: (context, _event) => {
-                      return context.saisineDesCollectivitesLocalesFaites &&
-                        context.saisineDesServicesFaite
-                        ? DemarchesStatutsIds.EnInstruction
-                        : context.demarcheStatut
-                    }
-                  })
-                }
-              }
+                      return context.saisineDesCollectivitesLocalesFaites && context.saisineDesServicesFaite ? DemarchesStatutsIds.EnInstruction : context.demarcheStatut
+                    },
+                  }),
+                },
+              },
             },
             avisAutoriteEnvironnementaleAFaire: {
               on: {
                 RENDRE_AVIS_AUTORITE_ENVIRONNEMENTALE: {
                   target: 'ouvertureEnquetePubliqueAFaire',
-                  actions: assign<
-                    PxgContext,
-                    { type: 'RENDRE_AVIS_AUTORITE_ENVIRONNEMENTALE' }
-                  >({
-                    avisAutoriteEnvironnementaleFaite: true
-                  })
-                }
-              }
+                  actions: assign<PxgContext, { type: 'RENDRE_AVIS_AUTORITE_ENVIRONNEMENTALE' }>({
+                    avisAutoriteEnvironnementaleFaite: true,
+                  }),
+                },
+              },
             },
             ouvertureEnquetePubliqueAFaire: {
-              on: { OUVRIR_ENQUETE_PUBLIQUE: 'clotureEnquetePubliqueAFaire' }
+              on: { OUVRIR_ENQUETE_PUBLIQUE: 'clotureEnquetePubliqueAFaire' },
             },
             clotureEnquetePubliqueAFaire: {
-              on: { CLOTURER_ENQUETE_PUBLIQUE: 'clotureEnquetePubliqueFaite' }
+              on: { CLOTURER_ENQUETE_PUBLIQUE: 'clotureEnquetePubliqueFaite' },
             },
             clotureEnquetePubliqueFaite: {
-              type: 'final'
-            }
-          }
-        }
-      }
+              type: 'final',
+            },
+          },
+        },
+      },
     },
     avisDREALARendre: {
       on: {
         RENDRE_AVIS_DREAL: {
           cond: peutRendreAvisDREAL,
-          target: 'transmissionDuProjetDePrescriptionsAuDemandeurAFaire'
-        }
-      }
+          target: 'transmissionDuProjetDePrescriptionsAuDemandeurAFaire',
+        },
+      },
     },
     transmissionDuProjetDePrescriptionsAuDemandeurAFaire: {
       id: 'transmissionDuProjetDePrescriptionsAuDemandeurAFaire',
       on: {
-        TRANSMETTRE_PROJET_DE_PRESCRIPTIONS_AU_DEMANDEUR:
-          'avisDuDemandeurSurLesPrescriptionsProposeesAFaire'
-      }
+        TRANSMETTRE_PROJET_DE_PRESCRIPTIONS_AU_DEMANDEUR: 'avisDuDemandeurSurLesPrescriptionsProposeesAFaire',
+      },
     },
     avisDuDemandeurSurLesPrescriptionsProposeesAFaire: {
       on: {
-        RENDRE_AVIS_DU_DEMANDEUR_SUR_LES_PRESCRIPTIONS_PROPOSEES:
-          'passageCoderstOuDecisionDeLAdministrationARendre'
-      }
+        RENDRE_AVIS_DU_DEMANDEUR_SUR_LES_PRESCRIPTIONS_PROPOSEES: 'passageCoderstOuDecisionDeLAdministrationARendre',
+      },
     },
     passageCoderstOuDecisionDeLAdministrationARendre: {
       on: {
         RENDRE_PASSAGE_CODERST: 'decisionDeLAdministrationARendre',
         RENDRE_DECISION_ADMINISTRATION_FAVORABLE: {
-          target:
-            'notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
-          actions: assign<
-            PxgContext,
-            { type: 'RENDRE_DECISION_ADMINISTRATION_FAVORABLE' }
-          >({
-            demarcheStatut: DemarchesStatutsIds.Accepte
-          })
+          target: 'notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
+          actions: assign<PxgContext, { type: 'RENDRE_DECISION_ADMINISTRATION_FAVORABLE' }>({
+            demarcheStatut: DemarchesStatutsIds.Accepte,
+          }),
         },
         RENDRE_DECISION_ADMINISTRATION_DEFAVORABLE: {
-          target:
-            'notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
-          actions: assign<
-            PxgContext,
-            { type: 'RENDRE_DECISION_ADMINISTRATION_DEFAVORABLE' }
-          >({
-            demarcheStatut: DemarchesStatutsIds.Rejete
-          })
-        }
-      }
+          target: 'notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
+          actions: assign<PxgContext, { type: 'RENDRE_DECISION_ADMINISTRATION_DEFAVORABLE' }>({
+            demarcheStatut: DemarchesStatutsIds.Rejete,
+          }),
+        },
+      },
     },
     decisionDeLAdministrationARendre: {
       on: {
         RENDRE_DECISION_ADMINISTRATION_FAVORABLE: {
-          target:
-            'notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
-          actions: assign<
-            PxgContext,
-            { type: 'RENDRE_DECISION_ADMINISTRATION_FAVORABLE' }
-          >({
-            demarcheStatut: DemarchesStatutsIds.Accepte
-          })
+          target: 'notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
+          actions: assign<PxgContext, { type: 'RENDRE_DECISION_ADMINISTRATION_FAVORABLE' }>({
+            demarcheStatut: DemarchesStatutsIds.Accepte,
+          }),
         },
         RENDRE_DECISION_ADMINISTRATION_DEFAVORABLE: {
-          target:
-            'notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
-          actions: assign<
-            PxgContext,
-            { type: 'RENDRE_DECISION_ADMINISTRATION_DEFAVORABLE' }
-          >({
-            demarcheStatut: DemarchesStatutsIds.Rejete
-          })
-        }
-      }
-    },
-    notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire:
-      {
-        type: 'parallel',
-        states: {
-          notificationDuDemandeurMachine: {
-            initial: 'notificationDuDemandeurAFaire',
-            states: {
-              notificationDuDemandeurAFaire: {
-                on: {
-                  NOTIFICATION_DU_DEMANDEUR: 'notificationDuDemandeurFaite'
-                }
-              },
-              notificationDuDemandeurFaite: { type: 'final' }
-            }
-          },
-          publicationDeDecisionAuRecueilDesActesAdministratifsMachine: {
-            initial:
-              'publicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
-            states: {
-              publicationDeDecisionAuRecueilDesActesAdministratifsAFaire: {
-                on: {
-                  PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS:
-                    'publicationDeDecisionAuRecueilDesActesAdministratifsFaite'
-                }
-              },
-              publicationDeDecisionAuRecueilDesActesAdministratifsFaite: {
-                type: 'final'
-              }
-            }
-          }
-        }
+          target: 'notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
+          actions: assign<PxgContext, { type: 'RENDRE_DECISION_ADMINISTRATION_DEFAVORABLE' }>({
+            demarcheStatut: DemarchesStatutsIds.Rejete,
+          }),
+        },
       },
+    },
+    notificationDuDemandeurEtPublicationDeDecisionAuRecueilDesActesAdministratifsAFaire: {
+      type: 'parallel',
+      states: {
+        notificationDuDemandeurMachine: {
+          initial: 'notificationDuDemandeurAFaire',
+          states: {
+            notificationDuDemandeurAFaire: {
+              on: {
+                NOTIFICATION_DU_DEMANDEUR: 'notificationDuDemandeurFaite',
+              },
+            },
+            notificationDuDemandeurFaite: { type: 'final' },
+          },
+        },
+        publicationDeDecisionAuRecueilDesActesAdministratifsMachine: {
+          initial: 'publicationDeDecisionAuRecueilDesActesAdministratifsAFaire',
+          states: {
+            publicationDeDecisionAuRecueilDesActesAdministratifsAFaire: {
+              on: {
+                PUBLIER_DECISION_RECUEIL_DES_ACTES_ADMINISTRATIFS: 'publicationDeDecisionAuRecueilDesActesAdministratifsFaite',
+              },
+            },
+            publicationDeDecisionAuRecueilDesActesAdministratifsFaite: {
+              type: 'final',
+            },
+          },
+        },
+      },
+    },
     desistementDuDemandeurRendu: {
       type: 'final',
       entry: assign<PxgContext>({
         demarcheStatut: DemarchesStatutsIds.Desiste,
-        visibilite: 'publique'
-      })
+        visibilite: 'publique',
+      }),
     },
     classementSansSuiteRendu: {
       type: 'final',
       entry: assign<PxgContext>({
         demarcheStatut: DemarchesStatutsIds.ClasseSansSuite,
-        visibilite: 'publique'
-      })
-    }
-  }
+        visibilite: 'publique',
+      }),
+    },
+  },
 })

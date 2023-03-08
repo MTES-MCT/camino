@@ -6,7 +6,7 @@ export const testBlankUser: Omit<UserNotNull, 'role'> = {
   id: 'id',
   email: 'email@gmail.com',
   nom: 'nom',
-  prenom: 'prenom'
+  prenom: 'prenom',
 }
 export const getTestUser = (param: { role: 'super' | 'defaut' | 'entreprise' | 'bureau d’études' } | { role: AdministrationRole; administrationId: AdministrationId }): UserNotNull => {
   switch (param.role) {

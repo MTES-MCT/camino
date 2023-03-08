@@ -3,11 +3,7 @@
     <div class="mb tablet-blob-1-3">
       <h5>
         Système
-        <span
-          v-if="geoSystemeOpposableId === geoSysteme.id"
-          class="bg-info py-xxs px-xs rnd-xs color-bg ml-xxs"
-          >Opposable</span
-        >
+        <span v-if="geoSystemeOpposableId === geoSysteme.id" class="bg-info py-xxs px-xs rnd-xs color-bg ml-xxs">Opposable</span>
       </h5>
 
       <p class="py-s mb-0 h6 bold">
@@ -16,19 +12,11 @@
     </div>
     <div class="mb tablet-blob-1-3">
       <h5>X ({{ geoSystemeUniteNom }})</h5>
-      <inputNumber
-        v-model="pointReference.x"
-        :negative="true"
-        placeholder="0,01"
-      />
+      <inputNumber v-model="pointReference.x" :negative="true" placeholder="0,01" />
     </div>
     <div class="mb tablet-blob-1-3">
       <h5>Y ({{ geoSystemeUniteNom }})</h5>
-      <inputNumber
-        v-model="pointReference.y"
-        :negative="true"
-        placeholder="0,01"
-      />
+      <inputNumber v-model="pointReference.y" :negative="true" placeholder="0,01" />
     </div>
   </div>
 </template>
@@ -45,22 +33,20 @@ export default {
     geoSystemeOpposableId: {
       type: String,
       required: false,
-      default: undefined
+      default: undefined,
     },
-    pointReferences: { type: Object, required: true }
+    pointReferences: { type: Object, required: true },
   },
 
   emits: ['update:pointReferences'],
 
   computed: {
     pointReference() {
-      return this.pointReferences[this.geoSysteme.id]
-        ? this.pointReferences[this.geoSysteme.id]
-        : { id: undefined, x: 0, y: 0 }
+      return this.pointReferences[this.geoSysteme.id] ? this.pointReferences[this.geoSysteme.id] : { id: undefined, x: 0, y: 0 }
     },
     geoSystemeUniteNom() {
       return Unites[this.geoSysteme.uniteId].nom
-    }
-  }
+    },
+  },
 }
 </script>

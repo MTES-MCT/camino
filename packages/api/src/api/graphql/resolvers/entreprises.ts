@@ -1,13 +1,7 @@
 import { Context, IEntreprise, IEntrepriseColonneId } from '../../../types.js'
 import { GraphQLResolveInfo } from 'graphql'
 
-import {
-  entrepriseGet,
-  entreprisesCount,
-  entreprisesGet,
-  entrepriseUpsert,
-  titreDemandeEntreprisesGet
-} from '../../../database/queries/entreprises.js'
+import { entrepriseGet, entreprisesCount, entreprisesGet, entrepriseUpsert, titreDemandeEntreprisesGet } from '../../../database/queries/entreprises.js'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
 
 import { fieldsBuild } from './_fields-build.js'
@@ -19,11 +13,7 @@ import { EntrepriseId } from 'camino-common/src/entreprise.js'
 import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs.js'
 import { canEditEntreprise } from 'camino-common/src/permissions/entreprises.js'
 
-const entreprise = async (
-  { id }: { id: string },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const entreprise = async ({ id }: { id: string }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -39,11 +29,7 @@ const entreprise = async (
   }
 }
 
-const entreprisesTitresCreation = async (
-  _: never,
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const entreprisesTitresCreation = async (_: never, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -66,7 +52,7 @@ const entreprises = async (
     colonne,
     noms,
     archive,
-    etapeUniquement
+    etapeUniquement,
   }: {
     etapeId?: string | null
     page?: number | null
@@ -95,12 +81,12 @@ const entreprises = async (
             ordre,
             colonne,
             noms,
-            archive
+            archive,
           },
           { fields: fields.elements },
           user
         ),
-        entreprisesCount({ noms, archive }, { fields: {} }, user)
+        entreprisesCount({ noms, archive }, { fields: {} }, user),
       ])
     }
 
@@ -108,7 +94,7 @@ const entreprises = async (
       const titreEtape = await titreEtapeGet(
         etapeId,
         {
-          fields: { titulaires: fields.elements, amodiataires: fields.elements }
+          fields: { titulaires: fields.elements, amodiataires: fields.elements },
         },
         user
       )
@@ -140,7 +126,7 @@ const entreprises = async (
       intervalle,
       ordre,
       colonne,
-      total
+      total,
     }
   } catch (e) {
     console.error(e)
@@ -149,11 +135,7 @@ const entreprises = async (
   }
 }
 
-const entrepriseCreer = async (
-  { entreprise }: { entreprise: { legalSiren: string; paysId: string } },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const entrepriseCreer = async ({ entreprise }: { entreprise: { legalSiren: string; paysId: string } }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     if (!canCreateEntreprise(user)) throw new Error('droits insuffisants')
 
@@ -165,11 +147,7 @@ const entrepriseCreer = async (
 
     const fields = fieldsBuild(info)
 
-    const entrepriseOld = await entrepriseGet(
-      `${entreprise.paysId}-${entreprise.legalSiren}`,
-      { fields },
-      user
-    )
+    const entrepriseOld = await entrepriseGet(`${entreprise.paysId}-${entreprise.legalSiren}`, { fields }, user)
 
     if (entrepriseOld) {
       errors.push(`l'entreprise ${entrepriseOld.nom} existe déjà dans Camino`)
@@ -179,9 +157,7 @@ const entrepriseCreer = async (
       throw new Error(errors.join(', '))
     }
 
-    const entrepriseInsee = await apiInseeEntrepriseAndEtablissementsGet(
-      entreprise.legalSiren!
-    )
+    const entrepriseInsee = await apiInseeEntrepriseAndEtablissementsGet(entreprise.legalSiren!)
 
     if (!entrepriseInsee) {
       throw new Error('numéro de siren non reconnu dans la base Insee')
@@ -199,7 +175,7 @@ const entrepriseCreer = async (
 
 const entrepriseModifier = async (
   {
-    entreprise
+    entreprise,
   }: {
     entreprise: {
       id: EntrepriseId
@@ -212,8 +188,7 @@ const entrepriseModifier = async (
   info: GraphQLResolveInfo
 ) => {
   try {
-    if (!canEditEntreprise(user, entreprise.id))
-      throw new Error('droits insuffisants')
+    if (!canEditEntreprise(user, entreprise.id)) throw new Error('droits insuffisants')
 
     const errors = []
 
@@ -233,7 +208,7 @@ const entrepriseModifier = async (
 
     const entrepriseUpserted = await entrepriseUpsert({
       ...entrepriseOld,
-      ...entreprise
+      ...entreprise,
     })
 
     return entrepriseGet(entrepriseUpserted.id, { fields }, user)
@@ -244,10 +219,4 @@ const entrepriseModifier = async (
   }
 }
 
-export {
-  entreprise,
-  entreprises,
-  entrepriseCreer,
-  entrepriseModifier,
-  entreprisesTitresCreation
-}
+export { entreprise, entreprises, entrepriseCreer, entrepriseModifier, entreprisesTitresCreation }

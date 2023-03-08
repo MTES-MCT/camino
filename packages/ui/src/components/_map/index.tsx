@@ -1,11 +1,4 @@
-import type {
-  LatLngBoundsExpression,
-  LatLngExpression,
-  Map,
-  Layer,
-  LayersControlEvent,
-  LeafletEvent
-} from 'leaflet'
+import type { LatLngBoundsExpression, LatLngExpression, Map, Layer, LayersControlEvent, LeafletEvent } from 'leaflet'
 
 import { ref, onMounted, markRaw, watch, defineComponent } from 'vue'
 import { FeatureGroup, layerGroup } from 'leaflet'
@@ -13,11 +6,7 @@ import { FeatureGroup, layerGroup } from 'leaflet'
 export interface Props {
   markerLayers: Layer[]
   geojsonLayers: Layer[]
-  mapUpdate?: (data: {
-    center?: number[]
-    zoom?: number
-    bbox?: number[]
-  }) => void
+  mapUpdate?: (data: { center?: number[]; zoom?: number; bbox?: number[] }) => void
 }
 
 export const CaminoMap = defineComponent<Props>({
@@ -56,12 +45,7 @@ export const CaminoMap = defineComponent<Props>({
       if (leafletComponent.value !== null) {
         const bounds = leafletComponent.value.getBounds()
 
-        return [
-          bounds.getSouthWest().lng,
-          bounds.getSouthWest().lat,
-          bounds.getNorthEast().lng,
-          bounds.getNorthEast().lat
-        ]
+        return [bounds.getSouthWest().lng, bounds.getSouthWest().lat, bounds.getNorthEast().lng, bounds.getNorthEast().lat]
       }
       return []
     }
@@ -70,10 +54,7 @@ export const CaminoMap = defineComponent<Props>({
       leafletComponent.value?.fitBounds(bounds)
     }
 
-    const positionSet = (position: {
-      zoom: number
-      center: LatLngExpression
-    }) => {
+    const positionSet = (position: { zoom: number; center: LatLngExpression }) => {
       updateBboxOnly.value = true
 
       zoom.value = position.zoom
@@ -91,50 +72,42 @@ export const CaminoMap = defineComponent<Props>({
       { icon: 'icon-map-legend-sdom-zone-0', label: 'Zone 0' },
       {
         icon: 'icon-map-legend-sdom-zone-0-potentielle',
-        label: 'Zone 0 potentielle'
+        label: 'Zone 0 potentielle',
       },
       { icon: 'icon-map-legend-sdom-zone-1', label: 'Zone 1' },
-      { icon: 'icon-map-legend-sdom-zone-2', label: 'Zone 2' }
+      { icon: 'icon-map-legend-sdom-zone-2', label: 'Zone 2' },
     ]
 
     onMounted(() => {
       const L = window.L
 
-      const osm = L.tileLayer(
-        'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
-        {
-          maxZoom: 19,
-          attribution:
-            '&copy; Openstreetmap France | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        }
-      )
-      const hot = L.tileLayer(
-        'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-        {
-          maxZoom: 19,
-          attribution:
-            '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/">Humanitarian OpenStreetMap Team</a>'
-        }
-      )
+      const osm = L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; Openstreetmap France | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      })
+      const hot = L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, Tiles courtesy of <a href="http://hot.openstreetmap.org/">Humanitarian OpenStreetMap Team</a>',
+      })
       const geoIGN = L.tileLayer(
         'https://wxs.ign.fr/essentiels/geoportail/wmts?layer=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}',
         {
           maxZoom: 19,
-          attribution: 'IGN-F/Geoportail'
+          attribution: 'IGN-F/Geoportail',
         }
       )
       const geoAer = L.tileLayer(
         'https://wxs.ign.fr/essentiels/geoportail/wmts?&REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/jpeg&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',
         {
           maxZoom: 19,
-          attribution: 'IGN-F/Geoportail'
+          attribution: 'IGN-F/Geoportail',
         }
       )
       const geoCadastre = L.tileLayer(
         'https://wxs.ign.fr/essentiels/geoportail/wmts?&REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/jpeg&LAYER=ORTHOIMAGERY.ORTHOPHOTOS&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',
         {
           maxZoom: 19,
-          attribution: 'IGN-F/Geoportail'
+          attribution: 'IGN-F/Geoportail',
         }
       )
 
@@ -142,7 +115,7 @@ export const CaminoMap = defineComponent<Props>({
         layers: 'SCAN_H_GEOL50',
         format: 'image/png',
         attribution: 'BRGM',
-        version: '1.3.0'
+        version: '1.3.0',
       })
 
       const baseMaps = {
@@ -151,41 +124,33 @@ export const CaminoMap = defineComponent<Props>({
         'Géoportail / Plan IGN': geoIGN,
         'Géoportail / Photographies aériennes': geoAer,
         'Géoportail / Parcelles cadastrales': geoCadastre,
-        [brgmBaseLayerName]: BRGMGeo
+        [brgmBaseLayerName]: BRGMGeo,
       }
 
-      const SDOM = L.tileLayer.wms(
-        'https://datacarto.geoguyane.fr/wms/SDOM_GUYANE',
-        {
-          layers:
-            'ZONE2activiteminiereautoriseesouscontrainte,ZONE1activiteminiereinterditesaufexploitationsouterraineetrecherchesaeriennes,ZONE0activiteminiereinterdite,Zone0potentielle',
-          format: 'image/png',
-          attribution: 'GéoGuyane'
-        }
-      )
+      const SDOM = L.tileLayer.wms('https://datacarto.geoguyane.fr/wms/SDOM_GUYANE', {
+        layers: 'ZONE2activiteminiereautoriseesouscontrainte,ZONE1activiteminiereinterditesaufexploitationsouterraineetrecherchesaeriennes,ZONE0activiteminiereinterdite,Zone0potentielle',
+        format: 'image/png',
+        attribution: 'GéoGuyane',
+      })
 
-      const Facades = L.tileLayer.wms(
-        'https://gisdata.cerema.fr/arcgis/services/Carte_vocation_dsf_2020/MapServer/WMSServer',
-        {
-          layers: '0',
-          format: 'image/png',
-          transparent: true,
-          attribution: 'cerema'
-        }
-      )
+      const Facades = L.tileLayer.wms('https://gisdata.cerema.fr/arcgis/services/Carte_vocation_dsf_2020/MapServer/WMSServer', {
+        layers: '0',
+        format: 'image/png',
+        transparent: true,
+        attribution: 'cerema',
+      })
       const RedevanceArcheologiePreventive = L.tileLayer(
         'https://services.data.shom.fr/INSPIRE/wmts?layer=RAP_PYR_PNG_3857_WMTS&style=normal&tilematrixset=3857&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image/png&TileMatrix={z}&TileCol={x}&TileRow={y}',
         {
-          attribution: 'shom'
+          attribution: 'shom',
         }
       )
       const overlayMaps = {
         [sdomOverlayName]: SDOM,
         'Façades maritimes': Facades,
-        'Limite de la redevance d’archéologie préventive':
-          RedevanceArcheologiePreventive,
+        'Limite de la redevance d’archéologie préventive': RedevanceArcheologiePreventive,
         Contours: geojsonLayer,
-        Points: markerLayer
+        Points: markerLayer,
       }
       if (map.value !== null) {
         const leafletComponentOnMounted = markRaw(
@@ -197,9 +162,9 @@ export const CaminoMap = defineComponent<Props>({
             // @ts-ignore
             gestureHandling: true,
             fullscreenControl: {
-              pseudoFullscreen: true
+              pseudoFullscreen: true,
             },
-            layers: [osm, geojsonLayer, markerLayer]
+            layers: [osm, geojsonLayer, markerLayer],
           })
         )
         leafletComponent.value = leafletComponentOnMounted
@@ -213,10 +178,7 @@ export const CaminoMap = defineComponent<Props>({
 
             props.mapUpdate?.({ bbox })
           } else {
-            const center = [
-              leafletComponentOnMounted.getCenter().lat,
-              leafletComponentOnMounted.getCenter().lng
-            ]
+            const center = [leafletComponentOnMounted.getCenter().lat, leafletComponentOnMounted.getCenter().lng]
             const leafletZoom = leafletComponentOnMounted.getZoom()
             zoom.value = leafletZoom
 
@@ -251,14 +213,11 @@ export const CaminoMap = defineComponent<Props>({
             gauge.style.width = '70px'
             gauge.style.background = 'rgba(255,255,255,0.5)'
             gauge.style.textAlign = 'left'
-            leafletComponentOnMounted.on(
-              'zoomstart zoom zoomend zoomlevelschange load viewreset',
-              () => {
-                gauge.innerHTML = `Zoom: ${zoom.value}`
-              }
-            )
+            leafletComponentOnMounted.on('zoomstart zoom zoomend zoomlevelschange load viewreset', () => {
+              gauge.innerHTML = `Zoom: ${zoom.value}`
+            })
             return gauge
-          }
+          },
         })
 
         new ZoomViewer().addTo(leafletComponentOnMounted)
@@ -279,34 +238,25 @@ export const CaminoMap = defineComponent<Props>({
             })
             leafletComponentOnMounted.on('overlayadd overlayremove', layer => {
               if (isLayersControlEvent(layer)) {
-                if (
-                  layer.type === 'overlayadd' &&
-                  layer.name === sdomOverlayName
-                ) {
+                if (layer.type === 'overlayadd' && layer.name === sdomOverlayName) {
                   legend.style.display = 'block'
                 }
-                if (
-                  layer.type === 'overlayremove' &&
-                  layer.name === sdomOverlayName
-                ) {
+                if (layer.type === 'overlayremove' && layer.name === sdomOverlayName) {
                   legend.style.display = 'none'
                 }
               }
             })
             legend.style.display = 'none'
             return legend
-          }
+          },
         })
-        new SdomLegend({ position: 'topright' }).addTo(
-          leafletComponentOnMounted
-        )
+        new SdomLegend({ position: 'topright' }).addTo(leafletComponentOnMounted)
 
         const BRGMLegend = L.Control.extend({
           onAdd() {
             const legend = L.DomUtil.create('div')
             legend.className = 'bg-warning px py-s color-bg mb-s h6 bold'
-            legend.innerHTML =
-              'Fond de carte visible <br /> aux niveaux de zoom 12 à 16 en métropole'
+            legend.innerHTML = 'Fond de carte visible <br /> aux niveaux de zoom 12 à 16 en métropole'
             leafletComponentOnMounted.on('baselayerchange', layer => {
               if (isLayersControlEvent(layer)) {
                 if (layer.name === brgmBaseLayerName) {
@@ -318,19 +268,15 @@ export const CaminoMap = defineComponent<Props>({
             })
             legend.style.display = 'none'
             return legend
-          }
+          },
         })
-        new BRGMLegend({ position: 'topright' }).addTo(
-          leafletComponentOnMounted
-        )
+        new BRGMLegend({ position: 'topright' }).addTo(leafletComponentOnMounted)
       } else {
         console.error('Cas impossible ?')
       }
     })
-    const isLayersControlEvent = (
-      layer: LeafletEvent
-    ): layer is LayersControlEvent => 'type' in layer && 'name' in layer
+    const isLayersControlEvent = (layer: LeafletEvent): layer is LayersControlEvent => 'type' in layer && 'name' in layer
 
     return () => <div ref={map} />
-  }
+  },
 })

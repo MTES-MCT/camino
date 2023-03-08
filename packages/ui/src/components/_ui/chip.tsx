@@ -8,10 +8,7 @@ export type Props = {
   onDeleteClicked?: () => void
 } & HTMLAttributes
 
-export const Chip: FunctionalComponent<Props, ['onDelete']> = (
-  props,
-  context
-) => {
+export const Chip: FunctionalComponent<Props, ['onDelete']> = (props, context) => {
   return (
     <button
       class={`${props.color ?? 'bg-neutral'} pl-m pr-m ${styles.chip}`}

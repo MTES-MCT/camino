@@ -2,13 +2,7 @@
   <div>
     <div v-for="annee in activitesByYear" :key="annee.id">
       <h2>{{ annee.id }}</h2>
-      <Preview
-        v-for="activite in annee.activites"
-        :key="activite.id"
-        :activite="activite"
-        :route="{ name: 'titre', id: titreId }"
-        class="mb-s"
-      />
+      <Preview v-for="activite in annee.activites" :key="activite.id" :activite="activite" :route="{ name: 'titre', id: titreId }" class="mb-s" />
       <div class="line width-full my-xxl" />
     </div>
   </div>
@@ -22,7 +16,7 @@ export default {
 
   props: {
     activites: { type: Array, default: () => [] },
-    titreId: { type: String, required: true }
+    titreId: { type: String, required: true },
   },
 
   computed: {
@@ -32,7 +26,7 @@ export default {
         if (!annee) {
           annee = {
             id: activite.annee,
-            activites: []
+            activites: [],
           }
           annees.push(annee)
         }
@@ -40,7 +34,7 @@ export default {
         annee.activites.push(activite)
         return annees
       }, [])
-    }
-  }
+    },
+  },
 }
 </script>

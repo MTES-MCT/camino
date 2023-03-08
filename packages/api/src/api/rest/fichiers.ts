@@ -1,10 +1,4 @@
-import {
-  IContenuElement,
-  IContenuValeur,
-  IDocument,
-  IDocumentRepertoire,
-  IFormat
-} from '../../types.js'
+import { IContenuElement, IContenuValeur, IDocument, IDocumentRepertoire, IFormat } from '../../types.js'
 
 import { documentGet } from '../../database/queries/documents.js'
 import { titreEtapeGet } from '../../database/queries/titres-etapes.js'
@@ -15,10 +9,7 @@ import JSZip from 'jszip'
 import { statSync, readFileSync } from 'fs'
 import { User } from 'camino-common/src/roles'
 
-export const etapeTelecharger = async (
-  { params: { etapeId } }: { params: { etapeId?: string } },
-  user: User
-) => {
+export const etapeTelecharger = async ({ params: { etapeId } }: { params: { etapeId?: string } }, user: User) => {
   if (!etapeId) {
     throw new Error("id d'étape absent")
   }
@@ -27,12 +18,12 @@ export const etapeTelecharger = async (
     {
       fields: {
         documents: {
-          id: {}
+          id: {},
         },
         justificatifs: {
-          id: {}
-        }
-      }
+          id: {},
+        },
+      },
     },
     user
   )
@@ -41,10 +32,7 @@ export const etapeTelecharger = async (
 
   const documents = titreEtape!.documents
   const justificatifs = titreEtape!.justificatifs
-  if (
-    (!documents || !documents.length) &&
-    (!justificatifs || !justificatifs.length)
-  ) {
+  if ((!documents || !documents.length) && (!justificatifs || !justificatifs.length)) {
     throw new Error("aucun document n'a été trouvé pour cette demande")
   }
 
@@ -71,7 +59,7 @@ export const etapeTelecharger = async (
     return {
       nom,
       format: 'zip' as IFormat,
-      buffer: Buffer.from(base64Data, 'base64')
+      buffer: Buffer.from(base64Data, 'base64'),
     }
   } catch (e) {
     console.error(e)
@@ -80,10 +68,7 @@ export const etapeTelecharger = async (
   }
 }
 
-export const fichier = async (
-  { params: { documentId } }: { params: { documentId?: string } },
-  user: User
-) => {
+export const fichier = async ({ params: { documentId } }: { params: { documentId?: string } }, user: User) => {
   if (!documentId) {
     throw new Error('id du document absent')
   }
@@ -95,8 +80,8 @@ export const fichier = async (
         type: { id: {} },
         etape: { id: {} },
         activite: { id: {} },
-        entreprise: { id: {} }
-      }
+        entreprise: { id: {} },
+      },
     },
     user
   )
@@ -119,38 +104,24 @@ export const fichier = async (
     dossier = document.entreprise!.id
   }
 
-  const nom = `${document.date}-${dossier ? dossier + '-' : ''}${
-    document.typeId
-  }.${format}`
+  const nom = `${document.date}-${dossier ? dossier + '-' : ''}${document.typeId}.${format}`
 
-  const filePath = `${repertoire}/${dossier ? dossier + '/' : ''}${
-    document.id
-  }.${document.fichierTypeId}`
+  const filePath = `${repertoire}/${dossier ? dossier + '/' : ''}${document.id}.${document.fichierTypeId}`
 
   return {
     nom,
     format,
-    filePath
+    filePath,
   }
 }
 
-const etapeIdPathGet = (
-  etapeId: string,
-  fichierNom: string,
-  contenu: IContenuValeur,
-  heritageContenu: { actif: boolean; etapeId?: string | null }
-): null | string => {
+const etapeIdPathGet = (etapeId: string, fichierNom: string, contenu: IContenuValeur, heritageContenu: { actif: boolean; etapeId?: string | null }): null | string => {
   if (Array.isArray(contenu)) {
     const contenuArray = contenu as IContenuElement[]
     for (let i = 0; i < contenuArray.length; i++) {
       const contenuElement = contenuArray[i]
       for (const contenuElementAttr of Object.keys(contenuElement)) {
-        const etapeIdFound = etapeIdPathGet(
-          etapeId,
-          fichierNom,
-          contenuElement[contenuElementAttr],
-          heritageContenu
-        )
+        const etapeIdFound = etapeIdPathGet(etapeId, fichierNom, contenuElement[contenuElementAttr], heritageContenu)
         if (etapeIdFound) {
           return etapeIdFound
         }
@@ -167,12 +138,7 @@ const etapeIdPathGet = (
   return null
 }
 
-export const etapeFichier = async (
-  {
-    params: { etapeId, fichierNom }
-  }: { params: { etapeId?: string; fichierNom?: string } },
-  user: User
-) => {
+export const etapeFichier = async ({ params: { etapeId, fichierNom } }: { params: { etapeId?: string; fichierNom?: string } }, user: User) => {
   if (!etapeId) {
     throw new Error('id de l’étape absent')
   }
@@ -192,12 +158,7 @@ export const etapeFichier = async (
     // recherche dans quel élément de quelle section est stocké ce fichier, pour savoir si l’héritage est activé
     for (const sectionId of Object.keys(etape.contenu)) {
       for (const elementId of Object.keys(etape.contenu[sectionId])) {
-        etapeIdPath = etapeIdPathGet(
-          etape.id,
-          fichierNom,
-          etape.contenu[sectionId][elementId],
-          etape.heritageContenu![sectionId][elementId]
-        )
+        etapeIdPath = etapeIdPathGet(etape.id, fichierNom, etape.contenu[sectionId][elementId], etape.heritageContenu![sectionId][elementId])
       }
     }
   }
@@ -216,6 +177,6 @@ export const etapeFichier = async (
   return {
     nom: fichierNom.slice(5),
     format: 'pdf' as IFormat,
-    filePath
+    filePath,
   }
 }

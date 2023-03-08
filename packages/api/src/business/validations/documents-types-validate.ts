@@ -1,24 +1,14 @@
 import { IDocument } from '../../types.js'
 import { DocumentType } from 'camino-common/src/static/documentsTypes.js'
 
-export const documentsTypesValidate = (
-  documents?: IDocument[] | null,
-  documentsTypes?: DocumentType[]
-) => {
+export const documentsTypesValidate = (documents?: IDocument[] | null, documentsTypes?: DocumentType[]) => {
   const errors = [] as string[]
 
   if (documentsTypes) {
     documentsTypes
       .filter(dt => !dt.optionnel)
       .forEach(dt => {
-        if (
-          !documents?.find(
-            d =>
-              d.typeId === dt.id &&
-              !!(d.fichier || d.fichierNouveau || d.uri || d.url) &&
-              d.date
-          )
-        ) {
+        if (!documents?.find(d => d.typeId === dt.id && !!(d.fichier || d.fichierNouveau || d.uri || d.url) && d.date)) {
           errors.push(`le document "${dt.id}" est obligatoire`)
         }
       })

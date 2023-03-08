@@ -29,8 +29,8 @@ class Document extends Model {
       jorf: { type: ['string', 'null'] },
       nor: { type: ['string', 'null'] },
       publicLecture: { type: ['boolean', 'null'] },
-      entreprisesLecture: { type: ['boolean', 'null'] }
-    }
+      entreprisesLecture: { type: ['boolean', 'null'] },
+    },
   }
 
   static relationMappings = () => ({
@@ -39,8 +39,8 @@ class Document extends Model {
       modelClass: DocumentsTypes,
       join: {
         from: 'documents.typeId',
-        to: 'documentsTypes.id'
-      }
+        to: 'documentsTypes.id',
+      },
     },
 
     etape: {
@@ -48,8 +48,8 @@ class Document extends Model {
       modelClass: TitresEtapes,
       join: {
         from: 'documents.titreEtapeId',
-        to: 'titresEtapes.id'
-      }
+        to: 'titresEtapes.id',
+      },
     },
 
     activite: {
@@ -57,8 +57,8 @@ class Document extends Model {
       modelClass: TitresActivites,
       join: {
         from: 'documents.titreActiviteId',
-        to: 'titresActivites.id'
-      }
+        to: 'titresActivites.id',
+      },
     },
 
     entreprise: {
@@ -66,8 +66,8 @@ class Document extends Model {
       modelClass: Entreprises,
       join: {
         from: 'documents.entrepriseId',
-        to: 'entreprises.id'
-      }
+        to: 'entreprises.id',
+      },
     },
 
     // justificatifs
@@ -78,11 +78,11 @@ class Document extends Model {
         from: 'documents.id',
         through: {
           from: 'titresEtapesJustificatifs.documentId',
-          to: 'titresEtapesJustificatifs.titreEtapeId'
+          to: 'titresEtapesJustificatifs.titreEtapeId',
         },
-        to: 'titresEtapes.id'
-      }
-    }
+        to: 'titresEtapes.id',
+      },
+    },
   })
 
   public $formatDatabaseJson(json: Pojo): Pojo {

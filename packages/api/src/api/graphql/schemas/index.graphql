@@ -126,12 +126,7 @@ type Query {
   demarchesStatuts: [DemarcheStatut]
 
   "Types d'étapes"
-  etapesTypes(
-    titreDemarcheId: ID
-    titreEtapeId: ID
-    date: String
-    travaux: Boolean
-  ): [EtapeType]
+  etapesTypes(titreDemarcheId: ID, titreEtapeId: ID, date: String, travaux: Boolean): [EtapeType]
 
   "Status d'étapes"
   etapesStatuts: [EtapeStatut]
@@ -140,17 +135,7 @@ type Query {
   utilisateur(id: ID!): Utilisateur
 
   "Liste d'utilisateurs en fonction d'arguments (optionnels)"
-  utilisateurs(
-    intervalle: Int
-    page: Int
-    colonne: String
-    ordre: String
-    entrepriseIds: [ID]
-    administrationIds: [ID]
-    roles: [ID]
-    noms: String
-    emails: String
-  ): Utilisateurs
+  utilisateurs(intervalle: Int, page: Int, colonne: String, ordre: String, entrepriseIds: [ID], administrationIds: [ID], roles: [ID], noms: String, emails: String): Utilisateurs
 
   "Liste des substances"
   substances: [Substance]
@@ -185,16 +170,7 @@ type Query {
   entreprise(id: ID!): Entreprise
 
   "Liste des entreprises"
-  entreprises(
-    intervalle: Int
-    page: Int
-    colonne: String
-    ordre: String
-    noms: String
-    etapeId: ID
-    archive: Boolean
-    etapeUniquement: Boolean
-  ): Entreprises
+  entreprises(intervalle: Int, page: Int, colonne: String, ordre: String, noms: String, etapeId: ID, archive: Boolean, etapeUniquement: Boolean): Entreprises
 
   entreprisesTitresCreation: [Entreprise]
 
@@ -217,29 +193,15 @@ type Query {
   pays: [Pays]
 
   "Retourne des points et les informations du périmètre à partir d’un fichier GeoJson ou Shape"
-  pointsImporter(
-    fileUpload: FileUpload!
-    geoSystemeId: String!
-    demarcheId: String!
-    etapeTypeId: String!
-  ): PointsImport
+  pointsImporter(fileUpload: FileUpload!, geoSystemeId: String!, demarcheId: String!, etapeTypeId: String!): PointsImport
 
   "Calcule les informations relatives au périmètre d’une nouvelle étape"
-  perimetreInformations(
-    points: [InputPoint]!
-    demarcheId: String!
-    etapeTypeId: String!
-  ): PerimetreInformations
+  perimetreInformations(points: [InputPoint]!, demarcheId: String!, etapeTypeId: String!): PerimetreInformations
 
   "Calcule les informations relatives au périmètre d’une étape existante"
   titreEtapePerimetreInformations(titreEtapeId: String!): PerimetreInformations
 
-  journaux(
-    intervalle: Int!
-    page: Int!
-    recherche: String
-    titreId: String
-  ): Journaux
+  journaux(intervalle: Int!, page: Int!, recherche: String, titreId: String): Journaux
 }
 
 """
@@ -303,10 +265,7 @@ type Mutation {
   documentSupprimer(id: ID!): Boolean
 
   "Crée ou modifie une activité"
-  activiteModifier(
-    activite: InputActiviteModification!
-    depose: Boolean
-  ): Activite
+  activiteModifier(activite: InputActiviteModification!, depose: Boolean): Activite
 
   "Dépose une activité"
   activiteDeposer(id: ID!): Activite
@@ -320,25 +279,15 @@ type Mutation {
   "Modifie une entreprise"
   entrepriseModifier(entreprise: InputEntrepriseModification!): Entreprise
 
-  administrationActiviteTypeEmailCreer(
-    administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!
-  ): Administration
+  administrationActiviteTypeEmailCreer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Administration
 
-  administrationActiviteTypeEmailSupprimer(
-    administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!
-  ): Administration
+  administrationActiviteTypeEmailSupprimer(administrationActiviteTypeEmail: InputAdministrationActiviteTypeEmail!): Administration
 
-  administrationTitreTypeTitreStatutModifier(
-    administrationTitreTypeTitreStatut: InputAdministrationTitreTypeTitreStatut!
-  ): Administration
+  administrationTitreTypeTitreStatutModifier(administrationTitreTypeTitreStatut: InputAdministrationTitreTypeTitreStatut!): Administration
 
-  administrationTitreTypeEtapeTypeModifier(
-    administrationTitreTypeEtapeType: InputAdministrationTitreTypeEtapeType!
-  ): Administration
+  administrationTitreTypeEtapeTypeModifier(administrationTitreTypeEtapeType: InputAdministrationTitreTypeEtapeType!): Administration
 
-  administrationActiviteTypeModifier(
-    administrationActiviteType: InputAdministrationActiviteType!
-  ): Administration
+  administrationActiviteTypeModifier(administrationActiviteType: InputAdministrationActiviteType!): Administration
 
   titreDemandeCreer(titreDemande: InputTitreDemande): TitreDemandeIds
 }

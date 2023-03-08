@@ -11,6 +11,5 @@ export const titreDateFinFind = (titreDemarches: ITitreDemarche[]) => {
 
   if (!titreDemarche) return null
 
-  return titreDemarcheDateFinAndDureeFind(titreDemarches, titreDemarche.ordre!)
-    .dateFin
+  return titreDemarcheDateFinAndDureeFind(titreDemarches, titreDemarche.ordre!).dateFin
 }

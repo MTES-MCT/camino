@@ -1,27 +1,16 @@
 <template>
   <div v-if="contenuElement" class="flex">
     <p class="mb-0 h6 bold">
-      {{
-        contenuElement && contenuElement.name
-          ? contenuElement.name
-          : contenuElement.slice(5)
-      }}
+      {{ contenuElement && contenuElement.name ? contenuElement.name : contenuElement.slice(5) }}
     </p>
     <div class="flex-right mt--xs">
-      <button
-        class="btn-border py-s px-m my--xs rnd-xs flex-right"
-        @click="fileRemove"
-      >
+      <button class="btn-border py-s px-m my--xs rnd-xs flex-right" @click="fileRemove">
         <Icon size="M" name="delete" />
       </button>
     </div>
   </div>
   <div v-else>
-    <InputFile
-      class="btn-border small p-s full-x rnd-xs mb-s"
-      accept="application/pdf"
-      @change="fileChange"
-    />
+    <InputFile class="btn-border small p-s full-x rnd-xs mb-s" accept="application/pdf" @change="fileChange" />
     <p class="h5 italic">30 Mo max.</p>
   </div>
 </template>
@@ -35,21 +24,21 @@ export default {
 
   props: {
     contenu: { type: [Object], required: true },
-    elementId: { type: String, required: true }
+    elementId: { type: String, required: true },
   },
 
   computed: {
     contenuElement() {
       return this.contenu[this.elementId]
-    }
+    },
   },
 
   methods: {
     fileChange({
       target: {
         validity,
-        files: [file]
-      }
+        files: [file],
+      },
     }) {
       if (file && validity.valid) {
         this.contenu[this.elementId] = file
@@ -57,7 +46,7 @@ export default {
     },
     fileRemove() {
       this.contenu[this.elementId] = null
-    }
-  }
+    },
+  },
 }
 </script>

@@ -1,18 +1,8 @@
 import { TypeAhead } from '@/components/_ui/typeahead'
 import { Domaine } from '@/components/_common/domaine'
-import {
-  TitresTypesTypes,
-  TitreTypeTypeId
-} from 'camino-common/src/static/titresTypesTypes'
-import {
-  getDomaineId,
-  getTitreTypeType,
-  TitreTypeId
-} from 'camino-common/src/static/titresTypes'
-import {
-  titresRechercherByNom,
-  titresRechercherByReferences
-} from '@/api/titres'
+import { TitresTypesTypes, TitreTypeTypeId } from 'camino-common/src/static/titresTypesTypes'
+import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { titresRechercherByNom, titresRechercherByReferences } from '@/api/titres'
 import { useRouter } from 'vue-router'
 import { defineComponent, ref, inject } from 'vue'
 
@@ -39,13 +29,13 @@ export const QuickAccessTitre = defineComponent({
 
       let searchTitres = await titresRechercherByNom({
         intervalle,
-        noms: searchTerm
+        noms: searchTerm,
       })
 
       if (searchTitres.elements.length === 0) {
         searchTitres = await titresRechercherByReferences({
           intervalle,
-          references: searchTerm
+          references: searchTerm,
         })
       }
       titres.value.splice(0, titres.value.length, ...searchTitres.elements)
@@ -61,14 +51,8 @@ export const QuickAccessTitre = defineComponent({
       }
     }
 
-    return () => (
-      <PureQuickAccessTitre
-        titres={titres.value}
-        onSearch={search}
-        onSelectedTitre={onSelectedTitre}
-      />
-    )
-  }
+    return () => <PureQuickAccessTitre titres={titres.value} onSearch={search} onSelectedTitre={onSelectedTitre} />
+  },
 })
 
 interface Props {
@@ -84,10 +68,7 @@ export const PureQuickAccessTitre = defineComponent<Props>({
         <div class="flex flex-center">
           <Domaine domaineId={getDomaineId(item.typeId)} class="mr-s" />
           <span class="cap-first bold">{item.nom}</span>
-          <span class="ml-xs">
-            {' '}
-            ({TitresTypesTypes[getTitreTypeType(item.typeId)].nom}){' '}
-          </span>
+          <span class="ml-xs"> ({TitresTypesTypes[getTitreTypeType(item.typeId)].nom}) </span>
         </div>
       )
     }
@@ -125,5 +106,5 @@ export const PureQuickAccessTitre = defineComponent<Props>({
         displayItemInList={display}
       />
     )
-  }
+  },
 })

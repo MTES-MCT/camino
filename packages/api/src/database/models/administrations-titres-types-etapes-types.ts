@@ -3,22 +3,14 @@ import { IAdministrationTitreTypeEtapeType } from '../../types.js'
 import TitresTypes from './titres-types.js'
 import EtapesTypes from './etapes-types.js'
 
-interface AdministrationsTitresTypesEtapesTypes
-  extends IAdministrationTitreTypeEtapeType {}
+interface AdministrationsTitresTypesEtapesTypes extends IAdministrationTitreTypeEtapeType {}
 
 class AdministrationsTitresTypesEtapesTypes extends Model {
   public static tableName = 'administrations__titresTypes__etapesTypes'
 
   public static jsonSchema = {
     type: 'object',
-    required: [
-      'administrationId',
-      'titreTypeId',
-      'etapeTypeId',
-      'lectureInterdit',
-      'creationInterdit',
-      'modificationInterdit'
-    ],
+    required: ['administrationId', 'titreTypeId', 'etapeTypeId', 'lectureInterdit', 'creationInterdit', 'modificationInterdit'],
 
     properties: {
       administrationId: { type: 'string', maxLength: 64 },
@@ -26,8 +18,8 @@ class AdministrationsTitresTypesEtapesTypes extends Model {
       etapeTypeId: { type: 'string', maxLength: 3 },
       lectureInterdit: { type: 'boolean' },
       creationInterdit: { type: 'boolean' },
-      modificationInterdit: { type: 'boolean' }
-    }
+      modificationInterdit: { type: 'boolean' },
+    },
   }
 
   public static idColumn = ['administrationId', 'titreTypeId', 'etapeTypeId']
@@ -38,8 +30,8 @@ class AdministrationsTitresTypesEtapesTypes extends Model {
       modelClass: TitresTypes,
       join: {
         from: 'administrations__titresTypes__etapesTypes.titreTypeId',
-        to: 'titresTypes.id'
-      }
+        to: 'titresTypes.id',
+      },
     },
 
     etapeType: {
@@ -47,21 +39,15 @@ class AdministrationsTitresTypesEtapesTypes extends Model {
       modelClass: EtapesTypes,
       join: {
         from: 'administrations__titresTypes__etapesTypes.etapeTypeId',
-        to: 'etapesTypes.id'
-      }
-    }
+        to: 'etapesTypes.id',
+      },
+    },
   })
 
   public static modifiers: Modifiers = {
     orderAsc: builder => {
-      builder
-        .joinRelated('titreType.domaine')
-        .orderBy('titreType:domaine.id')
-        .joinRelated('titreType.type')
-        .orderBy('titreType:type.nom')
-        .joinRelated('etapeType')
-        .orderBy('etapeType.nom')
-    }
+      builder.joinRelated('titreType.domaine').orderBy('titreType:domaine.id').joinRelated('titreType.type').orderBy('titreType:type.nom').joinRelated('etapeType').orderBy('etapeType.nom')
+    },
   }
 }
 

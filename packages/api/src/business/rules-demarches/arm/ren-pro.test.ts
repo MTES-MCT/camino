@@ -8,7 +8,7 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
     expect(
       renProEtatsValidate([
         { typeId: 'mfr', date: toCaminoDate('2020-05-27') },
-        { typeId: 'mdp', date: toCaminoDate('2020-05-30') }
+        { typeId: 'mdp', date: toCaminoDate('2020-05-30') },
       ])
     ).toHaveLength(0)
   })
@@ -19,7 +19,7 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
         { typeId: 'mfr', date: toCaminoDate('2020-05-27') },
         { typeId: 'mdp', date: toCaminoDate('2020-05-30') },
         { typeId: 'mcr', date: toCaminoDate('2020-06-01') },
-        { typeId: 'mod', date: toCaminoDate('2020-06-03') }
+        { typeId: 'mod', date: toCaminoDate('2020-06-03') },
       ])
     ).toEqual(['l’étape "mod" n’est pas possible juste après "mcr"'])
   })
@@ -30,7 +30,7 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
         { typeId: 'mfr', date: toCaminoDate('2020-05-27') },
         { typeId: 'mdp', date: toCaminoDate('2020-05-30') },
         { typeId: 'mca', date: toCaminoDate('2020-06-03') },
-        { typeId: 'mca' }
+        { typeId: 'mca' },
       ])
     ).toEqual(['l’étape "mca" ne peut-être effecutée 2 fois d’affilée'])
   })
@@ -42,7 +42,7 @@ describe('vérifie l’arbre de renonciation et de prolongation d’ARM', () => 
         { typeId: 'mdp', date: toCaminoDate('2020-05-30') },
         { typeId: 'mcr', date: toCaminoDate('2020-06-03'), statutId: 'fav' },
         { typeId: 'eof', date: toCaminoDate('2020-07-03') },
-        { typeId: 'aof', date: toCaminoDate('2020-07-03') }
+        { typeId: 'aof', date: toCaminoDate('2020-07-03') },
       ])
     ).toHaveLength(0)
   })

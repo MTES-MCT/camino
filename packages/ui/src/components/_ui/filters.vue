@@ -1,12 +1,5 @@
 <template>
-  <Accordion
-    ref="accordion"
-    :opened="opened"
-    :slotSub="!!labels.length"
-    :slotDefault="true"
-    class="mb-s"
-    @toggle="toggle"
-  >
+  <Accordion ref="accordion" :opened="opened" :slotSub="!!labels.length" :slotDefault="true" class="mb-s" @toggle="toggle">
     <template #title>
       {{ title }}
     </template>
@@ -20,9 +13,7 @@
             class="rnd-m box btn-flash h6 pl-s pr-xs py-xs bold mr-xs mb-xs"
             :class="{ 'pr-xs': !opened, 'pr-s': opened }"
             @click="labelRemove(label)"
-            >{{ label.name }} : {{ label.valueName || label.value }}
-            <span v-if="!opened" class="inline-block align-y-top ml-xs">
-              <Icon size="S" name="x" color="white" /> </span
+            >{{ label.name }} : {{ label.valueName || label.value }} <span v-if="!opened" class="inline-block align-y-top ml-xs"> <Icon size="S" name="x" color="white" /> </span
           ></span>
         </div>
         <button class="flex-right btn-alt p-m" @click="labelsReset">
@@ -35,50 +26,21 @@
       <div class="tablet-blobs mt">
         <div v-if="inputs.length" class="tablet-blob-1-2 large-blob-1-3">
           <template v-for="input in inputs" :key="input.id">
-            <InputAutocomplete
-              v-if="input.type === 'autocomplete'"
-              :filter="input"
-              :onSelectItems="unused"
-            />
+            <InputAutocomplete v-if="input.type === 'autocomplete'" :filter="input" :onSelectItems="unused" />
             <FiltersInput v-else :filter="input" />
           </template>
 
-          <button
-            class="btn-border small px-s p-xs rnd-xs mb"
-            @click="inputsErase"
-          >
-            Tout effacer
-          </button>
+          <button class="btn-border small px-s p-xs rnd-xs mb" @click="inputsErase">Tout effacer</button>
         </div>
 
-        <FiltersCheckboxes
-          v-for="filter in checkboxes"
-          :key="filter.id"
-          :filter="filter"
-          class="tablet-blob-1-2 large-blob-1-3"
-        />
+        <FiltersCheckboxes v-for="filter in checkboxes" :key="filter.id" :filter="filter" class="tablet-blob-1-2 large-blob-1-3" />
 
-        <FiltersSelects
-          v-for="filter in selects"
-          :key="filter.id"
-          :filter="filter"
-          class="tablet-blob-1-2 large-blob-1-3"
-        />
+        <FiltersSelects v-for="filter in selects" :key="filter.id" :filter="filter" class="tablet-blob-1-2 large-blob-1-3" />
 
-        <component
-          :is="filter.component"
-          v-for="filter in customs"
-          :key="filter.id"
-          :filter="filter"
-          class="tablet-blob-1-2 large-blob-1-3"
-        />
+        <component :is="filter.component" v-for="filter in customs" :key="filter.id" :filter="filter" class="tablet-blob-1-2 large-blob-1-3" />
       </div>
 
-      <button
-        ref="button"
-        class="btn-flash p-s rnd-xs full-x mb"
-        @click="validate"
-      >
+      <button ref="button" class="btn-flash p-s rnd-xs full-x mb" @click="validate">
         {{ button }}
       </button>
     </div>
@@ -100,23 +62,21 @@ export default {
     FiltersInput,
     FiltersCheckboxes,
     FiltersSelects,
-    InputAutocomplete
+    InputAutocomplete,
   },
 
   props: {
     filters: { type: Array, default: () => [] },
     title: { type: String, default: 'Filters' },
     button: { type: String, default: 'Ok' },
-    opened: { type: Boolean, default: false }
+    opened: { type: Boolean, default: false },
   },
 
   emits: ['toggle', 'validate'],
 
   computed: {
     inputs() {
-      return this.filters.filter(
-        ({ type }) => type === 'input' || type === 'autocomplete'
-      )
+      return this.filters.filter(({ type }) => type === 'input' || type === 'autocomplete')
     },
 
     checkboxes() {
@@ -135,12 +95,7 @@ export default {
       return this.filters.reduce((acc, f) => {
         let labels = []
 
-        if (
-          (f.type === 'checkboxes' ||
-            f.type === 'select' ||
-            f.type === 'autocomplete') &&
-          f.value.length
-        ) {
+        if ((f.type === 'checkboxes' || f.type === 'select' || f.type === 'autocomplete') && f.value.length) {
           labels = f.value.map(v => {
             const element = f.elements.find(e => e.id === v)
 
@@ -148,17 +103,12 @@ export default {
               id: f.id,
               name: f.name,
               value: v,
-              valueName: element && element.nom
+              valueName: element && element.nom,
             }
           })
         } else if (f.type === 'input' && f.value) {
           labels = [{ id: f.id, name: f.name, value: f.value }]
-        } else if (
-          f.type === 'custom' &&
-          f.value &&
-          f.value.length &&
-          f.labelFormat
-        ) {
+        } else if (f.type === 'custom' && f.value && f.value.length && f.labelFormat) {
           labels = f.labelFormat(f)
         }
 
@@ -168,7 +118,7 @@ export default {
 
         return acc
       }, [])
-    }
+    },
   },
 
   created() {
@@ -210,12 +160,7 @@ export default {
         const filter = this.filters.find(({ id }) => id === label.id)
 
         if (Array.isArray(filter.value)) {
-          if (
-            filter.type === 'checkboxes' ||
-            filter.type === 'select' ||
-            filter.type === 'custom' ||
-            filter.type === 'autocomplete'
-          ) {
+          if (filter.type === 'checkboxes' || filter.type === 'select' || filter.type === 'custom' || filter.type === 'autocomplete') {
             const index = filter.value.indexOf(label.value)
             if (index > -1) {
               filter.value.splice(index, 1)
@@ -241,7 +186,7 @@ export default {
       if (!this.opened) {
         this.validate()
       }
-    }
-  }
+    },
+  },
 }
 </script>

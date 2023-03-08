@@ -11,28 +11,20 @@ import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { isAdministrationRole, Role } from 'camino-common/src/roles.js'
 import { userSuper } from '../../database/user-super'
 
-import {
-  afterAll,
-  beforeEach,
-  beforeAll,
-  describe,
-  test,
-  expect,
-  vi
-} from 'vitest'
+import { afterAll, beforeEach, beforeAll, describe, test, expect, vi } from 'vitest'
 import { toCaminoDate } from 'camino-common/src/date.js'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
-  default: vi.fn()
+  default: vi.fn(),
 }))
 vi.mock('../../tools/file-stream-create', () => ({
   __esModule: true,
-  default: vi.fn()
+  default: vi.fn(),
 }))
 vi.mock('../../tools/file-delete', () => ({
   __esModule: true,
-  default: vi.fn()
+  default: vi.fn(),
 }))
 console.info = vi.fn()
 console.error = vi.fn()
@@ -46,9 +38,7 @@ beforeAll(async () => {
     .andWhere('demarcheTypeId', 'oct')
     .andWhere('etapeTypeId', 'mfr')
     .first()) as TitresTypesDemarchesTypesEtapesTypes
-  mfrTDE!
-    .sections!.find(s => s.id === 'arm')!
-    .elements!.find(e => e.id === 'franchissements')!.optionnel = false
+  mfrTDE!.sections!.find(s => s.id === 'arm')!.elements!.find(e => e.id === 'franchissements')!.optionnel = false
   await TitresTypesDemarchesTypesEtapesTypes.query().upsertGraph(mfrTDE)
 })
 
@@ -65,14 +55,14 @@ const demarcheCreate = async () => {
     {
       nom: 'mon titre',
       typeId: 'arm',
-      propsTitreEtapesIds: {}
+      propsTitreEtapesIds: {},
     },
     {}
   )
 
   const titreDemarche = await titreDemarcheCreate({
     titreId: titre.id,
-    typeId: 'oct'
+    typeId: 'oct',
   })
 
   return titreDemarche.id
@@ -81,27 +71,18 @@ const demarcheCreate = async () => {
 describe('etapeCreer', () => {
   const etapeCreerQuery = queryImport('titre-etape-creer')
 
-  test.each([undefined, 'editeur' as Role])(
-    'ne peut pas créer une étape (utilisateur %s)',
-    async (role: Role | undefined) => {
-      const res = await graphQLCall(
-        etapeCreerQuery,
-        { etape: { typeId: '', statutId: '', titreDemarcheId: '', date: '' } },
-        role && isAdministrationRole(role)
-          ? { role, administrationId: 'ope-onf-973-01' }
-          : undefined
-      )
-
-      expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
-    }
-  )
-
-  test('ne peut pas créer une étape sur une démarche inexistante (utilisateur admin)', async () => {
+  test.each([undefined, 'editeur' as Role])('ne peut pas créer une étape (utilisateur %s)', async (role: Role | undefined) => {
     const res = await graphQLCall(
       etapeCreerQuery,
       { etape: { typeId: '', statutId: '', titreDemarcheId: '', date: '' } },
-      { role: 'admin', administrationId: 'ope-onf-973-01' }
+      role && isAdministrationRole(role) ? { role, administrationId: 'ope-onf-973-01' } : undefined
     )
+
+    expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
+  })
+
+  test('ne peut pas créer une étape sur une démarche inexistante (utilisateur admin)', async () => {
+    const res = await graphQLCall(etapeCreerQuery, { etape: { typeId: '', statutId: '', titreDemarcheId: '', date: '' } }, { role: 'admin', administrationId: 'ope-onf-973-01' })
 
     expect(res.body.errors[0].message).toBe("la démarche n'existe pas")
   })
@@ -116,18 +97,16 @@ describe('etapeCreer', () => {
           typeId: 'mia',
           statutId: 'fai',
           titreDemarcheId,
-          date: '2018-01-01'
-        }
+          date: '2018-01-01',
+        },
       },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       }
     )
 
-    expect(res.body.errors[0].message).toBe(
-      'droits insuffisants pour créer cette étape'
-    )
+    expect(res.body.errors[0].message).toBe('droits insuffisants pour créer cette étape')
   })
   test('ne peut pas créer une étape incohérente (mia avec statut fav) (utilisateur admin)', async () => {
     const titreDemarcheId = await demarcheCreate()
@@ -139,18 +118,16 @@ describe('etapeCreer', () => {
           typeId: 'mia',
           statutId: 'fav',
           titreDemarcheId,
-          date: '2018-01-01'
-        }
+          date: '2018-01-01',
+        },
       },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       }
     )
 
-    expect(res.body.errors[0].message).toBe(
-      'statut de l\'étape "fav" invalide pour une type d\'étape mia pour une démarche de type octroi'
-    )
+    expect(res.body.errors[0].message).toBe('statut de l\'étape "fav" invalide pour une type d\'étape mia pour une démarche de type octroi')
   })
 
   test('peut créer une étape mia avec un statut fai (utilisateur super)', async () => {
@@ -163,8 +140,8 @@ describe('etapeCreer', () => {
           typeId: 'mia',
           statutId: 'fai',
           titreDemarcheId,
-          date: '2018-01-01'
-        }
+          date: '2018-01-01',
+        },
       },
       userSuper
     )
@@ -181,12 +158,12 @@ describe('etapeCreer', () => {
           typeId: 'men',
           statutId: 'fai',
           titreDemarcheId,
-          date: '2018-01-01'
-        }
+          date: '2018-01-01',
+        },
       },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       }
     )
 
@@ -205,22 +182,20 @@ describe('etapeCreer', () => {
           titreDemarcheId,
           date: '2018-01-01',
           heritageContenu: {
-            deal: { motifs: { actif: false }, agent: { actif: false } }
+            deal: { motifs: { actif: false }, agent: { actif: false } },
           },
           contenu: {
-            deal: { motifs: 'motif', agent: 'agent' }
-          }
-        }
+            deal: { motifs: 'motif', agent: 'agent' },
+          },
+        },
       },
       {
         role: 'admin',
-        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
       }
     )
 
-    expect(res.body.errors[0].message).toBe(
-      'statut de l\'étape "fai" invalide pour une type d\'étape ede pour une démarche de type octroi'
-    )
+    expect(res.body.errors[0].message).toBe('statut de l\'étape "fai" invalide pour une type d\'étape ede pour une démarche de type octroi')
   })
 
   test('ne peut pas créer une étape mfr avec un statut fai avec un champ obligatoire manquant (utilisateur super)', async () => {
@@ -229,25 +204,25 @@ describe('etapeCreer', () => {
       id: 'dom',
       typeId: 'dom',
       date: toCaminoDate('2020-01-01'),
-      uri: 'https://camino.beta.gouv.fr'
+      uri: 'https://camino.beta.gouv.fr',
     })
     await documentCreate({
       id: 'for',
       typeId: 'for',
       date: toCaminoDate('2020-01-01'),
-      uri: 'https://camino.beta.gouv.fr'
+      uri: 'https://camino.beta.gouv.fr',
     })
     await documentCreate({
       id: 'jpa',
       typeId: 'jpa',
       date: toCaminoDate('2020-01-01'),
-      uri: 'https://camino.beta.gouv.fr'
+      uri: 'https://camino.beta.gouv.fr',
     })
     await documentCreate({
       id: 'car',
       typeId: 'car',
       date: toCaminoDate('2020-01-01'),
-      uri: 'https://camino.beta.gouv.fr'
+      uri: 'https://camino.beta.gouv.fr',
     })
     const res = await graphQLCall(
       etapeCreerQuery,
@@ -271,8 +246,8 @@ describe('etapeCreer', () => {
           heritageContenu: {
             arm: {
               mecanise: { actif: true },
-              franchissements: { actif: true }
-            }
+              franchissements: { actif: true },
+            },
           },
           substances: ['auru'],
           documentIds: ['dom', 'for', 'jpa', 'car'],
@@ -281,43 +256,33 @@ describe('etapeCreer', () => {
               groupe: 1,
               contour: 1,
               point: 1,
-              references: [
-                { geoSystemeId: '4326', coordonnees: { x: 1, y: 2 } }
-              ]
+              references: [{ geoSystemeId: '4326', coordonnees: { x: 1, y: 2 } }],
             },
             {
               groupe: 1,
               contour: 1,
               point: 2,
-              references: [
-                { geoSystemeId: '4326', coordonnees: { x: 2, y: 2 } }
-              ]
+              references: [{ geoSystemeId: '4326', coordonnees: { x: 2, y: 2 } }],
             },
             {
               groupe: 1,
               contour: 1,
               point: 3,
-              references: [
-                { geoSystemeId: '4326', coordonnees: { x: 2, y: 1 } }
-              ]
+              references: [{ geoSystemeId: '4326', coordonnees: { x: 2, y: 1 } }],
             },
             {
               groupe: 1,
               contour: 1,
               point: 4,
-              references: [
-                { geoSystemeId: '4326', coordonnees: { x: 1, y: 1 } }
-              ]
-            }
-          ]
-        }
+              references: [{ geoSystemeId: '4326', coordonnees: { x: 1, y: 1 } }],
+            },
+          ],
+        },
       },
       userSuper
     )
 
-    expect(res.body.errors[0].message).toMatchInlineSnapshot(
-      `"impossible d’éditer la durée, l’élément \\"Franchissements de cours d'eau\\" de la section \\"Caractéristiques ARM\\" est obligatoire"`
-    )
+    expect(res.body.errors[0].message).toMatchInlineSnapshot(`"impossible d’éditer la durée, l’élément \\"Franchissements de cours d'eau\\" de la section \\"Caractéristiques ARM\\" est obligatoire"`)
   })
 
   test('peut créer une étape mfr avec un statut aco avec un champ obligatoire manquant (utilisateur super)', async () => {
@@ -343,10 +308,10 @@ describe('etapeCreer', () => {
           heritageContenu: {
             arm: {
               mecanise: { actif: true },
-              franchissements: { actif: true }
-            }
-          }
-        }
+              franchissements: { actif: true },
+            },
+          },
+        },
       },
       userSuper
     )

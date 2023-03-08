@@ -1,14 +1,5 @@
 <template>
-  <Filters
-    v-if="initialized"
-    v-model:filters="filters"
-    class="flex-grow"
-    button="Valider"
-    :opened="opened"
-    title="Filtres"
-    @validate="validate"
-    @toggle="toggle"
-  />
+  <Filters v-if="initialized" v-model:filters="filters" class="flex-grow" button="Valider" :opened="opened" title="Filtres" @validate="validate" @toggle="toggle" />
   <div v-else class="py-s px-m mb-s border rnd-s">…</div>
 </template>
 
@@ -23,7 +14,7 @@ export default {
     filtres: { type: Array, required: true },
     params: { type: Object, required: true },
     metas: { type: Object, default: () => ({}) },
-    initialized: { type: Boolean, required: true }
+    initialized: { type: Boolean, required: true },
   },
 
   emits: ['toggle', 'params-update'],
@@ -31,7 +22,7 @@ export default {
   data() {
     return {
       opened: false,
-      filters: []
+      filters: [],
     }
   },
 
@@ -43,14 +34,14 @@ export default {
           this.validate()
         }
       },
-      deep: true
+      deep: true,
     },
 
     initialized: function (to, from) {
       if (!from) {
         this.init()
       }
-    }
+    },
   },
 
   methods: {
@@ -82,12 +73,7 @@ export default {
       const params = this.filters.reduce((params, filtre) => {
         let value
 
-        if (
-          filtre.type === 'custom' ||
-          filtre.type === 'select' ||
-          filtre.type === 'checkboxes' ||
-          filtre.type === 'autocomplete'
-        ) {
+        if (filtre.type === 'custom' || filtre.type === 'select' || filtre.type === 'checkboxes' || filtre.type === 'autocomplete') {
           value = valuesClean(filtre.value)
         } else {
           value = filtre.value
@@ -122,7 +108,7 @@ export default {
 
         filtre.value = preference
       })
-    }
-  }
+    },
+  },
 }
 </script>

@@ -1,12 +1,5 @@
-import {
-  DemarchesTypes,
-  DemarcheTypeId
-} from 'camino-common/src/static/demarchesTypes'
-import {
-  isTitreType,
-  TitresTypes,
-  TitreTypeId
-} from 'camino-common/src/static/titresTypes'
+import { DemarchesTypes, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
+import { isTitreType, TitresTypes, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
 import { defineComponent } from 'vue'
 import { useStore } from 'vuex'
@@ -25,18 +18,8 @@ export interface Props {
   displayMessage: () => void
 }
 
-export const DemarcheRemovePopup = defineComponent<
-  Omit<Props, 'reload' | 'displayMessage'>
->({
-  props: [
-    'titreTypeId',
-    'titreId',
-    'titreNom',
-    'demarcheTypeId',
-    'demarcheId',
-    'close',
-    'apiClient'
-  ] as unknown as undefined,
+export const DemarcheRemovePopup = defineComponent<Omit<Props, 'reload' | 'displayMessage'>>({
+  props: ['titreTypeId', 'titreId', 'titreNom', 'demarcheTypeId', 'demarcheId', 'close', 'apiClient'] as unknown as undefined,
   setup(props) {
     const store = useStore()
     return () => (
@@ -47,27 +30,15 @@ export const DemarcheRemovePopup = defineComponent<
         demarcheId={props.demarcheId}
         close={props.close}
         apiClient={props.apiClient}
-        reload={() =>
-          store.dispatch('titre/get', props.titreId, { root: true })
-        }
-        displayMessage={() =>
-          store.dispatch(
-            'messageAdd',
-            { value: `le titre a été mis à jour`, type: 'success' },
-            { root: true }
-          )
-        }
+        reload={() => store.dispatch('titre/get', props.titreId, { root: true })}
+        displayMessage={() => store.dispatch('messageAdd', { value: `le titre a été mis à jour`, type: 'success' }, { root: true })}
       />
     )
-  }
+  },
 })
 
-export const PureDemarcheRemovePopup = (
-  props: Omit<Props, 'titreId'>
-): JSX.Element => {
-  const titreTypeNom: string = isTitreType(props.titreTypeId)
-    ? TitresTypesTypes[TitresTypes[props.titreTypeId].typeId].nom
-    : ''
+export const PureDemarcheRemovePopup = (props: Omit<Props, 'titreId'>): JSX.Element => {
+  const titreTypeNom: string = isTitreType(props.titreTypeId) ? TitresTypesTypes[TitresTypes[props.titreTypeId].typeId].nom : ''
 
   const content = () => (
     <>
@@ -77,8 +48,7 @@ export const PureDemarcheRemovePopup = (
         <span> {props.titreNom} </span> (<span>{titreTypeNom}</span>) ?
       </p>
       <div class="bg-warning color-bg p-s mb-l">
-        <span class="bold"> Attention </span>: cette opération est définitive et
-        ne peut pas être annulée.
+        <span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.
       </div>
     </>
   )
@@ -89,12 +59,5 @@ export const PureDemarcheRemovePopup = (
     props.reload()
   }
 
-  return (
-    <FunctionalPopup
-      title="Suppression de la démarche"
-      content={content}
-      close={props.close}
-      validate={{ action: deleteDemarche, text: 'Supprimer' }}
-    />
-  )
+  return <FunctionalPopup title="Suppression de la démarche" content={content} close={props.close} validate={{ action: deleteDemarche, text: 'Supprimer' }} />
 }

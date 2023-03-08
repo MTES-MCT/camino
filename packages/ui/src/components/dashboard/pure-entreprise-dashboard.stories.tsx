@@ -11,8 +11,8 @@ const meta: Meta = {
   component: PureEntrepriseDashboard,
   argTypes: {
     getEntreprisesTitres: { name: 'function', required: true },
-    displayActivites: { name: 'boolean' }
-  }
+    displayActivites: { name: 'boolean' },
+  },
 }
 export default meta
 
@@ -24,7 +24,7 @@ const titres: TitreEntreprise[] = [
     typeId: 'cxm',
     coordonnees: {
       x: 6.049336777414595,
-      y: 49.45057350532248
+      y: 49.45057350532248,
     },
     titreStatutId: 'ech',
     substances: ['ferx'],
@@ -33,16 +33,16 @@ const titres: TitreEntreprise[] = [
     titulaires: [
       {
         id: 'fr-793025370',
-        nom: 'NINOR'
-      }
+        nom: 'NINOR',
+      },
     ],
     communes: [{ departementId: DEPARTEMENT_IDS.Moselle }],
     references: [
       {
         referenceTypeId: 'rnt',
-        nom: '57TM0014'
-      }
-    ]
+        nom: '57TM0014',
+      },
+    ],
   },
   {
     id: 'mlWyShEGu8v7eYmsUhfiAMbs',
@@ -56,21 +56,21 @@ const titres: TitreEntreprise[] = [
     titulaires: [
       {
         id: 'fr-838049344',
-        nom: "CHAMB'OR"
-      }
+        nom: "CHAMB'OR",
+      },
     ],
     communes: [{ departementId: DEPARTEMENT_IDS.Guyane }],
     references: [
       {
         referenceTypeId: 'dea',
-        nom: '01/2022'
+        nom: '01/2022',
       },
       {
         referenceTypeId: 'dea',
-        nom: 'X21-09'
-      }
-    ]
-  }
+        nom: 'X21-09',
+      },
+    ],
+  },
 ]
 
 const Template: Story<Props> = (args: Props) => ({
@@ -78,7 +78,7 @@ const Template: Story<Props> = (args: Props) => ({
   setup() {
     return { args }
   },
-  template: '<PureEntrepriseDashboard v-bind="args" />'
+  template: '<PureEntrepriseDashboard v-bind="args" />',
 })
 
 export const Ok: Story = () => (
@@ -96,7 +96,7 @@ export const OkWithMultipleEntreprises: Story = () => (
     displayActivites={true}
     entreprises={[
       { id: newEntrepriseId('id'), nom: 'entreprise1' },
-      { id: newEntrepriseId('id2'), nom: 'entreprise2' }
+      { id: newEntrepriseId('id2'), nom: 'entreprise2' },
     ]}
     getEntreprisesTitres={() => Promise.resolve(titres)}
   />
@@ -121,21 +121,21 @@ export const OkWithoutFiscalite: Story = () => (
           titulaires: [
             {
               id: 'fr-838049344',
-              nom: "CHAMB'OR"
-            }
+              nom: "CHAMB'OR",
+            },
           ],
           communes: [{ departementId: DEPARTEMENT_IDS.Guyane }],
           references: [
             {
               referenceTypeId: 'dea',
-              nom: '01/2022'
+              nom: '01/2022',
             },
             {
               referenceTypeId: 'dea',
-              nom: 'X21-09'
-            }
-          ]
-        }
+              nom: 'X21-09',
+            },
+          ],
+        },
       ])
     }
   />

@@ -15,14 +15,14 @@ import {
   dateFormat,
   checkValideAnnee,
   getMois,
-  getDay
+  getDay,
 } from './date.js'
 import { test, expect } from 'vitest'
 test.each([
   ['2020-06-02T13:35:11.366Z', '2021-06-03T13:35:11.366Z', 366],
   ['2021-06-02T13:35:11.366Z', '2021-06-03T13:35:11.366Z', 1],
   ['2021-06-02T13:35:11.366Z', '2021-06-02T13:40:11.366Z', 0],
-  ['2021-06-02T13:35:11.366Z', '2021-06-03T11:30:11.366Z', 0]
+  ['2021-06-02T13:35:11.366Z', '2021-06-03T11:30:11.366Z', 0],
 ])('calcul le nombre de jours entre 2 dates', (date1, date2, days) => {
   expect(datesDiffInDays(new Date(date1), new Date(date2))).toBe(days)
 })
@@ -117,7 +117,7 @@ test.each([
   ['2020-01-01', 1, '2020-01-02'],
   ['2020-01-01', 10, '2020-01-11'],
   ['2020-01-01', 31, '2020-02-01'],
-  ['2020-12-31', 1, '2021-01-01']
+  ['2020-12-31', 1, '2021-01-01'],
 ])('ajoute des jours à une date', (date, days, result) => {
   expect(dateAddDays(toCaminoDate(date), days)).toBe(result)
 })
@@ -128,7 +128,7 @@ test.each([
   ['2020-01-01', 3, '2020-04-01'],
   ['2020-01-30', 3, '2020-04-30'],
   ['2020-01-31', 3, '2020-05-01'],
-  ['2020-12-01', 3, '2021-03-01']
+  ['2020-12-01', 3, '2021-03-01'],
 ])('ajoute $months mois à la date $date', (date, months, result) => {
   expect(dateAddMonths(toCaminoDate(date), months)).toBe(result)
 })
@@ -141,7 +141,7 @@ test("la méthode dateAddMonths n'est pas idempotente", () => {
 
 test.each([
   ['2020-03-10', '2020-01-07', 2],
-  ['2021-01-01', '2020-01-01', 12]
+  ['2021-01-01', '2020-01-01', 12],
 ])('calcul le nombre de mois entre 2 dates', (dateFin, dateDebut, months) => {
   expect(monthsBetween(dateDebut, dateFin)).toBe(months)
 })

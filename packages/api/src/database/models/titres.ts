@@ -13,10 +13,7 @@ import { idGenerate } from './_format/id-create.js'
 import slugify from '@sindresorhus/slugify'
 import cryptoRandomString from 'crypto-random-string'
 import TitresActivites from './titres-activites.js'
-import {
-  getDomaineId,
-  getTitreTypeType
-} from 'camino-common/src/static/titresTypes.js'
+import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 
 export interface DBTitre extends ITitre {
   archive: boolean
@@ -43,25 +40,25 @@ class Titres extends Model {
       propsTitreEtapesIds: { type: 'object' },
       coordonnees: {
         type: ['object', 'null'],
-        properties: { x: { type: 'number' }, y: { type: 'number' } }
+        properties: { x: { type: 'number' }, y: { type: 'number' } },
       },
       doublonTitreId: { type: ['string', 'null'] },
       archive: { type: 'boolean' },
-      references: { type: ['array', 'null'] }
-    }
+      references: { type: ['array', 'null'] },
+    },
   }
 
   static relationMappings = () => ({
     type: {
       relation: Model.BelongsToOneRelation,
       modelClass: Types,
-      join: { from: 'titres.typeId', to: 'titresTypes.id' }
+      join: { from: 'titres.typeId', to: 'titresTypes.id' },
     },
 
     demarches: {
       relation: Model.HasManyRelation,
       modelClass: TitresDemarches,
-      join: { from: 'titres.id', to: 'titresDemarches.titreId' }
+      join: { from: 'titres.id', to: 'titresDemarches.titreId' },
     },
 
     surfaceEtape: {
@@ -69,8 +66,8 @@ class Titres extends Model {
       modelClass: TitresEtapes,
       join: {
         from: ref('titres.propsTitreEtapesIds:surface').castText(),
-        to: 'titresEtapes.id'
-      }
+        to: 'titresEtapes.id',
+      },
     },
 
     substancesEtape: {
@@ -78,8 +75,8 @@ class Titres extends Model {
       modelClass: TitresEtapes,
       join: {
         from: ref('titres.propsTitreEtapesIds:substances').castText(),
-        to: 'titresEtapes.id'
-      }
+        to: 'titresEtapes.id',
+      },
     },
 
     points: {
@@ -87,8 +84,8 @@ class Titres extends Model {
       modelClass: TitresPoints,
       join: {
         from: ref('titres.propsTitreEtapesIds:points').castText(),
-        to: 'titresPoints.titreEtapeId'
-      }
+        to: 'titresPoints.titreEtapeId',
+      },
     },
 
     pointsEtape: {
@@ -96,8 +93,8 @@ class Titres extends Model {
       modelClass: TitresEtapes,
       join: {
         from: ref('titres.propsTitreEtapesIds:points').castText(),
-        to: 'titresEtapes.id'
-      }
+        to: 'titresEtapes.id',
+      },
     },
 
     titulaires: {
@@ -108,10 +105,10 @@ class Titres extends Model {
         through: {
           from: 'titresTitulaires.titreEtapeId',
           to: 'titresTitulaires.entrepriseId',
-          extra: ['operateur']
+          extra: ['operateur'],
         },
-        to: 'entreprises.id'
-      }
+        to: 'entreprises.id',
+      },
     },
 
     amodiataires: {
@@ -122,10 +119,10 @@ class Titres extends Model {
         through: {
           from: 'titresAmodiataires.titreEtapeId',
           to: 'titresAmodiataires.entrepriseId',
-          extra: ['operateur']
+          extra: ['operateur'],
         },
-        to: 'entreprises.id'
-      }
+        to: 'entreprises.id',
+      },
     },
 
     communes: {
@@ -137,10 +134,10 @@ class Titres extends Model {
         through: {
           from: 'titresCommunes.titreEtapeId',
           to: 'titresCommunes.communeId',
-          extra: ['surface']
+          extra: ['surface'],
         },
-        to: 'communes.id'
-      }
+        to: 'communes.id',
+      },
     },
 
     forets: {
@@ -151,22 +148,22 @@ class Titres extends Model {
         from: ref('titres.propsTitreEtapesIds:points').castText(),
         through: {
           from: 'titresForets.titreEtapeId',
-          to: 'titresForets.foretId'
+          to: 'titresForets.foretId',
         },
-        to: 'forets.id'
-      }
+        to: 'forets.id',
+      },
     },
     activites: {
       relation: Model.HasManyRelation,
       modelClass: TitresActivites,
-      join: { from: 'titres.id', to: 'titresActivites.titreId' }
+      join: { from: 'titres.id', to: 'titresActivites.titreId' },
     },
 
     doublonTitre: {
       relation: Model.BelongsToOneRelation,
       modelClass: Titres,
-      join: { from: 'titres.doublonTitreId', to: 'titres.id' }
-    }
+      join: { from: 'titres.doublonTitreId', to: 'titres.id' },
+    },
   })
 
   async $beforeInsert(context: QueryContext) {
@@ -175,9 +172,7 @@ class Titres extends Model {
     }
 
     if (!this.slug && this.typeId && this.nom) {
-      this.slug = `${getDomaineId(this.typeId)}-${getTitreTypeType(
-        this.typeId
-      )}-${slugify(this.nom)}-${cryptoRandomString({ length: 4 })}`
+      this.slug = `${getDomaineId(this.typeId)}-${getTitreTypeType(this.typeId)}-${slugify(this.nom)}-${cryptoRandomString({ length: 4 })}`
     }
 
     return super.$beforeInsert(context)

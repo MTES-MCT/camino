@@ -1,13 +1,10 @@
 import { titresPointsReferencesCreate } from './titres-points-references-create.js'
-import {
-  titresPointsGet,
-  titrePointReferenceCreate
-} from '../../database/queries/titres-points.js'
+import { titresPointsGet, titrePointReferenceCreate } from '../../database/queries/titres-points.js'
 import TitresPoints from '../../database/models/titres-points.js'
 import { vi, afterEach, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres-points', () => ({
   titrePointReferenceCreate: vi.fn().mockResolvedValue(true),
-  titresPointsGet: vi.fn()
+  titresPointsGet: vi.fn(),
 }))
 
 const titresPointsGetMock = vi.mocked(titresPointsGet, true)
@@ -24,8 +21,8 @@ describe("références des points d'un titre", () => {
       {
         id: 'point-id-2',
         coordonnees: { x: 0.1, y: 0.2 },
-        references: [{}]
-      }
+        references: [{}],
+      },
     ] as TitresPoints[])
 
     const pointsReferencesCreated = await titresPointsReferencesCreate()

@@ -16,17 +16,17 @@ const gestionDeLaDemandeDeComplements: Section[] = [
         type: 'number',
         optionnel: true,
         description:
-          "Nombre de jours accordés pour produire les compléments demandés. Le delai au delà duquel une décision implicite se forme est suspendu dès réception de cette demande et jusqu'à la production des compléments. Au delà du délai fixé, la demande est suceptible d'être classée sans suite ou instruite en l'état."
+          "Nombre de jours accordés pour produire les compléments demandés. Le delai au delà duquel une décision implicite se forme est suspendu dès réception de cette demande et jusqu'à la production des compléments. Au delà du délai fixé, la demande est suceptible d'être classée sans suite ou instruite en l'état.",
       },
       {
         id: 'datear',
         nom: 'Accusé de réception',
         type: 'date',
         optionnel: true,
-        description: "Date de l'accusé de réception de la demande de compléments à compter de laquelle commence à courrir le délai accordé pour produire les compléments."
-      }
-    ]
-  }
+        description: "Date de l'accusé de réception de la demande de compléments à compter de laquelle commence à courrir le délai accordé pour produire les compléments.",
+      },
+    ],
+  },
 ]
 const suiviDeLaDemarche: Section[] = [
   {
@@ -38,10 +38,10 @@ const suiviDeLaDemarche: Section[] = [
         nom: 'Date de réception',
         type: 'date',
         optionnel: true,
-        description: "Date de réception à compter de laquelle commence à courir le délai imparti pour signer l'autorisation ou un avenant"
-      }
-    ]
-  }
+        description: "Date de réception à compter de laquelle commence à courir le délai imparti pour signer l'autorisation ou un avenant",
+      },
+    ],
+  },
 ]
 
 const EtapesTypesSections = {
@@ -55,10 +55,10 @@ const EtapesTypesSections = {
           nom: 'Arrêté préfectoral',
           type: 'text',
           optionnel: true,
-          description: "Numéro de l'arrêté préfectoral portant décision dans le cadre de l’examen au cas par cas du projet d’autorisation de recherche minière"
-        }
-      ]
-    }
+          description: "Numéro de l'arrêté préfectoral portant décision dans le cadre de l’examen au cas par cas du projet d’autorisation de recherche minière",
+        },
+      ],
+    },
   ],
   [ETAPES_TYPES.paiementDesFraisDeDossier]: [
     {
@@ -66,9 +66,9 @@ const EtapesTypesSections = {
       nom: 'Informations sur le paiement',
       elements: [
         { id: 'frais', nom: 'Frais de dossier', type: 'number', optionnel: true, description: 'Montant en euro des frais de dossier payés' },
-        { id: 'virement', nom: 'Virement banquaire ou postal', type: 'text', optionnel: true, description: 'Référence communiquée par le demandeur à sa banque' }
-      ]
-    }
+        { id: 'virement', nom: 'Virement banquaire ou postal', type: 'text', optionnel: true, description: 'Référence communiquée par le demandeur à sa banque' },
+      ],
+    },
   ],
   [ETAPES_TYPES.demandeDeComplements]: gestionDeLaDemandeDeComplements,
   [ETAPES_TYPES.demandeDeComplements_CompletudeDeLaDemande_]: gestionDeLaDemandeDeComplements,
@@ -82,12 +82,12 @@ const EtapesTypesSections = {
       nom: 'DEAL',
       elements: [
         { id: 'numero-dossier-deal-eau', nom: 'Numéro de dossier', type: 'text', optionnel: true, description: 'Numéro de dossier DEAL Service eau' },
-        { id: 'numero-recepisse', nom: 'Numéro de récépissé', type: 'text', optionnel: true, description: 'Numéro de récépissé émis par la DEAL Service eau' }
-      ]
-    }
+        { id: 'numero-recepisse', nom: 'Numéro de récépissé', type: 'text', optionnel: true, description: 'Numéro de récépissé émis par la DEAL Service eau' },
+      ],
+    },
   ],
   [ETAPES_TYPES.validationDuPaiementDesFraisDeDossier]: [
-    { id: 'paiement', nom: 'Informations sur le paiement', elements: [{ id: 'facture', nom: 'Facture ONF', type: 'text', optionnel: true, description: "Numéro de facture émise par l'ONF" }] }
+    { id: 'paiement', nom: 'Informations sur le paiement', elements: [{ id: 'facture', nom: 'Facture ONF', type: 'text', optionnel: true, description: "Numéro de facture émise par l'ONF" }] },
   ],
   [ETAPES_TYPES.expertiseDREALOuDGTMServiceEau]: [
     {
@@ -95,9 +95,9 @@ const EtapesTypesSections = {
       nom: 'DEAL service eau',
       elements: [
         { id: 'motifs', nom: 'Motifs', type: 'textarea', optionnel: true, description: "élément d'expertise" },
-        { id: 'agent', nom: 'Agent', type: 'text', optionnel: true, description: "Prénom et nom de l'agent chargé de l'expertise" }
-      ]
-    }
+        { id: 'agent', nom: 'Agent', type: 'text', optionnel: true, description: "Prénom et nom de l'agent chargé de l'expertise" },
+      ],
+    },
   ],
   [ETAPES_TYPES.expertiseDGTMServicePreventionDesRisquesEtIndustriesExtractives_DATE_]: [
     {
@@ -105,22 +105,22 @@ const EtapesTypesSections = {
       nom: 'DEAL service mines',
       elements: [
         { id: 'motifs', nom: 'Motifs', type: 'textarea', optionnel: true, description: "élément d'expertise" },
-        { id: 'agent', nom: 'Agent', type: 'text', optionnel: true, description: "Prénom et nom de l'agent chargé de l'expertise" }
-      ]
-    }
+        { id: 'agent', nom: 'Agent', type: 'text', optionnel: true, description: "Prénom et nom de l'agent chargé de l'expertise" },
+      ],
+    },
   ],
   [ETAPES_TYPES.notificationAuPrefet]: [
     {
       id: 'nppx',
       nom: 'Note au préfet',
       elements: [
-        { id: 'info', nom: 'Informations complémentaires', type: 'textarea', optionnel: true, description: 'Informations complémentaires accompagnant la notification de la décision au préfet' }
-      ]
-    }
+        { id: 'info', nom: 'Informations complémentaires', type: 'textarea', optionnel: true, description: 'Informations complémentaires accompagnant la notification de la décision au préfet' },
+      ],
+    },
   ],
   [ETAPES_TYPES.notificationAuDemandeur]: suiviDeLaDemarche,
   [ETAPES_TYPES.notificationAuDemandeur_AjournementDeLaCARM_]: [
-    { id: 'suivi', nom: 'Suivi de la démarche', elements: [{ id: 'dateReception', nom: 'Date de réception', type: 'date', optionnel: true, description: 'Date de réception de la notification' }] }
+    { id: 'suivi', nom: 'Suivi de la démarche', elements: [{ id: 'dateReception', nom: 'Date de réception', type: 'date', optionnel: true, description: 'Date de réception de la notification' }] },
   ],
   [ETAPES_TYPES.notificationAuDemandeur_AvisFavorableDeLaCARM_]: suiviDeLaDemarche,
   [ETAPES_TYPES.notificationAuDemandeur_ClassementSansSuite_]: suiviDeLaDemarche,
@@ -134,12 +134,12 @@ const EtapesTypesSections = {
       nom: 'Informations sur le paiement',
       elements: [
         { id: 'fraisComplementaires', nom: 'Frais de dossier complémentaires', type: 'number', optionnel: true, description: 'Montant en euro des frais de dossier complémentaires payés' },
-        { id: 'virement', nom: 'Virement banquaire ou postal', type: 'text', optionnel: true, description: 'Référence communiquée par le demandeur à sa banque' }
-      ]
-    }
+        { id: 'virement', nom: 'Virement banquaire ou postal', type: 'text', optionnel: true, description: 'Référence communiquée par le demandeur à sa banque' },
+      ],
+    },
   ],
   [ETAPES_TYPES.validationDuPaiementDesFraisDeDossierComplementaires]: [
-    { id: 'paiement', nom: 'Informations sur le paiement', elements: [{ id: 'facture', nom: 'Facture ONF', type: 'text', optionnel: true, description: "Numéro de facture émise par l'ONF" }] }
+    { id: 'paiement', nom: 'Informations sur le paiement', elements: [{ id: 'facture', nom: 'Facture ONF', type: 'text', optionnel: true, description: "Numéro de facture émise par l'ONF" }] },
   ],
   [ETAPES_TYPES.noteInterneSignalee]: [
     {
@@ -151,11 +151,11 @@ const EtapesTypesSections = {
           nom: "Notes réservées à l'administration",
           type: 'textarea',
           optionnel: true,
-          description: "Informations internes importantes pour la compréhension du suivi de l'instruction de la démarche"
-        }
-      ]
-    }
-  ]
+          description: "Informations internes importantes pour la compréhension du suivi de l'instruction de la démarche",
+        },
+      ],
+    },
+  ],
 } as const satisfies { [key in EtapeTypeId]?: DeepReadonly<Section[]> }
 
 const proprietesDeLaConcession: Section[] = [
@@ -164,9 +164,9 @@ const proprietesDeLaConcession: Section[] = [
     nom: 'Propriétés de la concession',
     elements: [
       { id: 'volume', nom: 'Volume', type: 'number', optionnel: true },
-      { id: 'volumeUniteId', nom: 'Unité du volume', type: 'select', optionnel: true, description: '', valeursMetasNom: 'unites' }
-    ]
-  }
+      { id: 'volumeUniteId', nom: 'Unité du volume', type: 'select', optionnel: true, description: '', valeursMetasNom: 'unites' },
+    ],
+  },
 ]
 
 const proprietesDuPermisExclusifDeRecherches: Section[] = [
@@ -175,9 +175,9 @@ const proprietesDuPermisExclusifDeRecherches: Section[] = [
     nom: 'Propriétés du permis exclusif de recherches',
     elements: [
       { id: 'engagement', nom: 'Engagement', type: 'number', optionnel: true },
-      { id: 'engagementDeviseId', nom: "Devise de l'engagement", type: 'select', optionnel: true, description: '', valeursMetasNom: 'devises' }
-    ]
-  }
+      { id: 'engagementDeviseId', nom: "Devise de l'engagement", type: 'select', optionnel: true, description: '', valeursMetasNom: 'devises' },
+    ],
+  },
 ]
 
 const proprietesDuPermisDExploitation: Section[] = [
@@ -186,9 +186,9 @@ const proprietesDuPermisDExploitation: Section[] = [
     nom: "Propriétés du permis d'exploitation",
     elements: [
       { id: 'volume', nom: 'Volume', type: 'number', optionnel: true, description: 'Volume' },
-      { id: 'volumeUniteId', nom: 'Unité du volume', type: 'select', optionnel: true, description: '', valeursMetasNom: 'unites' }
-    ]
-  }
+      { id: 'volumeUniteId', nom: 'Unité du volume', type: 'select', optionnel: true, description: '', valeursMetasNom: 'unites' },
+    ],
+  },
 ]
 
 const caracteristiquesARM: Section[] = [
@@ -197,30 +197,30 @@ const caracteristiquesARM: Section[] = [
     nom: 'Caractéristiques ARM',
     elements: [
       { id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio', description: '' },
-      { id: 'franchissements', nom: "Franchissements de cours d'eau", type: 'integer', optionnel: true, description: "Nombre de franchissements de cours d'eau" }
-    ]
-  }
+      { id: 'franchissements', nom: "Franchissements de cours d'eau", type: 'integer', optionnel: true, description: "Nombre de franchissements de cours d'eau" },
+    ],
+  },
 ]
 
 const TDESections = {
   [TITRES_TYPES_IDS.AUTORISATION_DE_RECHERCHE_METAUX]: {
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.receptionDeComplements_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet__]: [
-        { id: 'arm', nom: 'Caractéristiques ARM', elements: [{ id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio', description: '' }] }
+        { id: 'arm', nom: 'Caractéristiques ARM', elements: [{ id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio', description: '' }] },
       ],
       [ETAPES_TYPES.recepisseDeDeclarationLoiSurLeau]: [
         {
           id: 'arm',
           nom: 'Caractéristiques ARM',
-          elements: [{ id: 'franchissements', nom: "Franchissements de cours d'eau", type: 'integer', optionnel: true, description: "Nombre de franchissements de cours d'eau" }]
-        }
+          elements: [{ id: 'franchissements', nom: "Franchissements de cours d'eau", type: 'integer', optionnel: true, description: "Nombre de franchissements de cours d'eau" }],
+        },
       ],
       [ETAPES_TYPES.receptionDeComplements_RecepisseDeDeclarationLoiSurLeau_]: [
         {
           id: 'arm',
           nom: 'Caractéristiques ARM',
-          elements: [{ id: 'franchissements', nom: "Franchissements de cours d'eau", type: 'integer', optionnel: true, description: "Nombre de franchissements de cours d'eau" }]
-        }
+          elements: [{ id: 'franchissements', nom: "Franchissements de cours d'eau", type: 'integer', optionnel: true, description: "Nombre de franchissements de cours d'eau" }],
+        },
       ],
       [ETAPES_TYPES.demande]: caracteristiquesARM,
       [ETAPES_TYPES.modificationDeLaDemande_DecisionDeLaMissionAutoriteEnvironnementale_ExamenAuCasParCasDuProjet_]: caracteristiquesARM,
@@ -229,7 +229,7 @@ const TDESections = {
         {
           id: 'armInstructeurCompletude',
           nom: 'Instructeur Pôle technique minier de Guyane',
-          elements: [{ id: 'agent', nom: 'Agent', type: 'text', optionnel: true, description: "Prénom et nom de l'agent PTMG en charge d'établir la complétude de la demande" }]
+          elements: [{ id: 'agent', nom: 'Agent', type: 'text', optionnel: true, description: "Prénom et nom de l'agent PTMG en charge d'établir la complétude de la demande" }],
         },
         {
           id: 'armDemandeur',
@@ -240,17 +240,17 @@ const TDESections = {
               nom: 'Entreprise',
               type: 'checkbox',
               description:
-                "L'entreprise porteuse de la demande est identifiées (extrait Kbis de moins d’un an, déclaration INSEE du statut d’Auto Entrepreneur, justificatif de création de société en cours, (présence code SIRET et APE)."
+                "L'entreprise porteuse de la demande est identifiées (extrait Kbis de moins d’un an, déclaration INSEE du statut d’Auto Entrepreneur, justificatif de création de société en cours, (présence code SIRET et APE).",
             },
             {
               id: 'representantLegal',
               nom: 'Représentant légal',
               type: 'checkbox',
               description:
-                "Le réprésentant légal de l'entité porteuse de la demande est identifié (Identité, coordonnées, justificatif d'identité - CNI / passeport / carte de résident en cours de validité)."
+                "Le réprésentant légal de l'entité porteuse de la demande est identifié (Identité, coordonnées, justificatif d'identité - CNI / passeport / carte de résident en cours de validité).",
             },
-            { id: 'motifsIdentification', nom: 'Motifs identification demandeur', type: 'textarea', optionnel: true, description: '' }
-          ]
+            { id: 'motifsIdentification', nom: 'Motifs identification demandeur', type: 'textarea', optionnel: true, description: '' },
+          ],
         },
         {
           id: 'armCaracteristiques',
@@ -262,50 +262,51 @@ const TDESections = {
               id: 'descriptionProjet',
               nom: 'Description du projet de recherches minières ',
               type: 'checkbox',
-              description: 'Le projet de recherches minières est décrit : le programme de prospection, les méthodes de travail projetées, les moyens techniques mobilisés, les moyens humains employés.'
+              description:
+                'Le projet de recherches minières est décrit : le programme de prospection, les méthodes de travail projetées, les moyens techniques mobilisés, les moyens humains employés.',
             },
             {
               id: 'surfaceDemandee',
               nom: 'Surfaces demandées',
               type: 'checkbox',
               description:
-                "Les surfaces demandées n'excéde pas 3 km², sous la forme de 1 à 3 carrés ou rectangles d'une superficie de 1 km² chacun, tous situés sur le même bassin versant. Les carrés mesurent 1 km de côté et les rectangles 0,5 km de largeur et 2 km de longueur. L'espacement de leurs centres n'est pas supérieur à 4 km."
+                "Les surfaces demandées n'excéde pas 3 km², sous la forme de 1 à 3 carrés ou rectangles d'une superficie de 1 km² chacun, tous situés sur le même bassin versant. Les carrés mesurent 1 km de côté et les rectangles 0,5 km de largeur et 2 km de longueur. L'espacement de leurs centres n'est pas supérieur à 4 km.",
             },
             {
               id: 'surfaceMaximumDetenue',
               nom: 'Surfaces maximum détenues',
               type: 'checkbox',
-              description: "L'opérateur ne détient pas d'autorisation de recherches sur une surface supérieure à 3 km²."
+              description: "L'opérateur ne détient pas d'autorisation de recherches sur une surface supérieure à 3 km².",
             },
             {
               id: 'localisationPerimetres',
               nom: 'Localisation des périmètres',
               type: 'checkbox',
               description:
-                'Les périmètres est transmis dans un fichier numérique réutilisable (au format ".geojson"). Le système de coordonnées légal en vigueur est le RGFG95 (ESPG: 2972) avec une précision métrique.'
+                'Les périmètres est transmis dans un fichier numérique réutilisable (au format ".geojson"). Le système de coordonnées légal en vigueur est le RGFG95 (ESPG: 2972) avec une précision métrique.',
             },
             {
               id: 'cheminements',
               nom: 'Cheminements prévisionnels à emprunter',
               type: 'checkbox',
-              description: "Ces tracés sont élaborés uniquement à partir du réseau carrossable, jusqu'à et à l'intérieur de l'ARM."
+              description: "Ces tracés sont élaborés uniquement à partir du réseau carrossable, jusqu'à et à l'intérieur de l'ARM.",
             },
             {
               id: 'localisationCheminements',
               nom: 'Localisation des cheminements prévisionnels à emprunter',
               type: 'checkbox',
               description:
-                'L\'ensemble de ces tracés est transmis dans un fichier numérique réutilisable (au format ".geojson"). Le système de coordonnées légal en vigueur est le RGFG95 (ESPG: 2972) avec une précision métrique.'
+                'L\'ensemble de ces tracés est transmis dans un fichier numérique réutilisable (au format ".geojson"). Le système de coordonnées légal en vigueur est le RGFG95 (ESPG: 2972) avec une précision métrique.',
             },
             { id: 'carte500000', nom: 'Carte synthétique 1/500 000', type: 'checkbox', description: 'Le document cartographique inclut les périmètres demandés' },
             {
               id: 'carte50000',
               nom: 'Carte synthétique 1/50 000',
               type: 'checkbox',
-              description: 'Le document cartographique inclut les périmètres demandés, le tracé des cheminements prévisionnels à emprunter, la position des points de franchissement.'
+              description: 'Le document cartographique inclut les périmètres demandés, le tracé des cheminements prévisionnels à emprunter, la position des points de franchissement.',
             },
-            { id: 'motifsDemande', nom: 'Motifs caractéristiques de la demande', type: 'textarea', optionnel: true, description: '' }
-          ]
+            { id: 'motifsDemande', nom: 'Motifs caractéristiques de la demande', type: 'textarea', optionnel: true, description: '' },
+          ],
         },
         {
           id: 'armMecanisee',
@@ -316,7 +317,7 @@ const TDESections = {
               id: 'recepisseCasParCas',
               nom: "Décision d'examen au cas par cas",
               type: 'checkbox',
-              description: "L'étape de décision dans le cadre de l'examen au cas par cas est présente et favorable."
+              description: "L'étape de décision dans le cadre de l'examen au cas par cas est présente et favorable.",
             },
             { id: 'franchissementsCoursDeau', nom: "Franchissements de cours d'eau", type: 'checkbox', description: "Les franchissements de cours d'eau sont indiqués." },
             {
@@ -324,12 +325,12 @@ const TDESections = {
               nom: "Localisation des points de franchissement de cours d'eau",
               type: 'checkbox',
               description:
-                'L\'ensemble de ces point est transmis dans un fichier numérique réutilisable (au format ".geojson"). Le système de coordonnées légal en vigueur est le RGFG95 (ESPG: 2972) avec une précision métrique.'
+                'L\'ensemble de ces point est transmis dans un fichier numérique réutilisable (au format ".geojson"). Le système de coordonnées légal en vigueur est le RGFG95 (ESPG: 2972) avec une précision métrique.',
             },
             { id: 'descriptionMateriel', nom: 'Description du matériel', type: 'checkbox', description: 'Le matériel utilisé et son origine (acquisition, location) sont décrits.' },
             { id: 'tonnageMaximum', nom: 'Tonnage maximum autorisé', type: 'checkbox', description: 'Le tonnage maximum des pelles mécaniques autorisées fixé à 21 tonnes est respecté.' },
-            { id: 'motifsMateriel', nom: 'Motifs caractéristiques matériel', type: 'textarea', optionnel: true, description: '' }
-          ]
+            { id: 'motifsMateriel', nom: 'Motifs caractéristiques matériel', type: 'textarea', optionnel: true, description: '' },
+          ],
         },
         {
           id: 'armInformationTechniques',
@@ -340,16 +341,16 @@ const TDESections = {
               nom: 'Justificatifs des capacités techniques',
               type: 'checkbox',
               description:
-                "La justification des capacités techniques s'appuie sur la présentation de l'activité professionnelle actuelle et les références professionnelles en matière minière du demandeur (curriculum vitae, ou à défaut, les formations suivies). S'il s'agit d'une personne morale les références professionnelles des cadres chargés du suivi et de la conduite des travaux sont présentées."
+                "La justification des capacités techniques s'appuie sur la présentation de l'activité professionnelle actuelle et les références professionnelles en matière minière du demandeur (curriculum vitae, ou à défaut, les formations suivies). S'il s'agit d'une personne morale les références professionnelles des cadres chargés du suivi et de la conduite des travaux sont présentées.",
             },
             {
               id: 'responsableTravaux',
               nom: 'Responsable des travaux',
               type: 'checkbox',
-              description: "Le responsable des travaux est identifié (Identité, coordonnées, justificatif d'identité - CNI / passeport / carte de résident en cours de validité)."
+              description: "Le responsable des travaux est identifié (Identité, coordonnées, justificatif d'identité - CNI / passeport / carte de résident en cours de validité).",
             },
-            { id: 'motifsCapaciteTechniques', nom: 'Motifs capacité techniques', type: 'textarea', optionnel: true, description: '' }
-          ]
+            { id: 'motifsCapaciteTechniques', nom: 'Motifs capacité techniques', type: 'textarea', optionnel: true, description: '' },
+          ],
         },
         {
           id: 'armInformationFinancieres',
@@ -359,24 +360,24 @@ const TDESections = {
               id: 'planFinancement',
               nom: 'Plan de financement',
               type: 'checkbox',
-              description: 'Le plan inclut le montant de la dépense totale envisagée en euros pour conduire la prospection et le plan prévisionnel de financement associé.'
+              description: 'Le plan inclut le montant de la dépense totale envisagée en euros pour conduire la prospection et le plan prévisionnel de financement associé.',
             },
             {
               id: 'justificationCapacitesFinancieres',
               nom: 'Justificatifs des capacités financières',
               type: 'checkbox',
               description:
-                "La démonstration des capacités financières à exercer une activité d'exploration comporte la justification des ressources financières disponibles correspondant au plan de financement."
+                "La démonstration des capacités financières à exercer une activité d'exploration comporte la justification des ressources financières disponibles correspondant au plan de financement.",
             },
             {
               id: 'justificatifSituationFiscale',
               nom: 'Justificatif de situation fiscale',
               type: 'checkbox',
               description:
-                "La justification de situation fiscale régulière est présentée (attestation ou justificatif des services fiscaux, déclaration unique DGFIP, moratoire accordé par la même autorité) excepté pour les sociétés créées dans l'année."
+                "La justification de situation fiscale régulière est présentée (attestation ou justificatif des services fiscaux, déclaration unique DGFIP, moratoire accordé par la même autorité) excepté pour les sociétés créées dans l'année.",
             },
-            { id: 'motifsCapaciteFinancieres', nom: 'Motifs capacités financières', type: 'textarea', optionnel: true, description: '' }
-          ]
+            { id: 'motifsCapaciteFinancieres', nom: 'Motifs capacités financières', type: 'textarea', optionnel: true, description: '' },
+          ],
         },
         {
           id: 'armInformationComplétude',
@@ -387,10 +388,10 @@ const TDESections = {
               nom: 'Informations complémentaires',
               type: 'textarea',
               optionnel: true,
-              description: "Informations complémentaires à l'examen de la complétude de la demande portées à la connaissance du demandeur."
-            }
-          ]
-        }
+              description: "Informations complémentaires à l'examen de la complétude de la demande portées à la connaissance du demandeur.",
+            },
+          ],
+        },
       ],
       [ETAPES_TYPES.receptionDeComplements_RecevabiliteDeLaDemande_]: caracteristiquesARM,
       [ETAPES_TYPES.receptionDeComplements_CompletudeDeLaDemande_]: caracteristiquesARM,
@@ -410,10 +411,10 @@ const TDESections = {
               dateFin: toCaminoDate('2018-02-07'),
               dateDebut: toCaminoDate('2003-07-24'),
               optionnel: true,
-              description: 'Date de début de l’expertise'
-            }
-          ]
-        }
+              description: 'Date de début de l’expertise',
+            },
+          ],
+        },
       ],
       [ETAPES_TYPES.avisDeLOfficeNationalDesForets]: [
         {
@@ -426,10 +427,10 @@ const TDESections = {
               nom: 'Signataire',
               type: 'text',
               optionnel: true,
-              description: 'Directeur ONF ou responsable du service Service Aménagement du Territoire qui apparaitra sur les documents externe pour signature'
-            }
-          ]
-        }
+              description: 'Directeur ONF ou responsable du service Service Aménagement du Territoire qui apparaitra sur les documents externe pour signature',
+            },
+          ],
+        },
       ],
       [ETAPES_TYPES.signatureDeLautorisationDeRechercheMiniere]: [
         { id: 'arm', nom: 'Caractéristiques ARM', elements: [{ id: 'mecanise', nom: 'Prospection mécanisée', type: 'radio' }] },
@@ -438,11 +439,11 @@ const TDESections = {
           nom: 'Suivi de la démarche',
           elements: [
             { id: 'signataire', nom: 'Signataire ONF', type: 'text', optionnel: true, description: "Prénom et nom du représentant légal du titulaire de l'ONF" },
-            { id: 'titulaire', nom: 'Signataire titulaire', type: 'text', optionnel: true, description: "Prénom et nom du représentant légal du titulaire de l'autorisation" }
-          ]
-        }
-      ]
-    }
+            { id: 'titulaire', nom: 'Signataire titulaire', type: 'text', optionnel: true, description: "Prénom et nom du représentant légal du titulaire de l'autorisation" },
+          ],
+        },
+      ],
+    },
   },
   [TITRES_TYPES_IDS.CONCESSION_GRANULATS_MARINS]: {
     [DEMARCHES_TYPES_IDS.AutorisationDOuvertureDeTravaux]: {
@@ -452,25 +453,25 @@ const TDESections = {
           nom: "Propriétés de l'arrêté d'ouverture de travaux",
           elements: [
             { id: 'volume', nom: 'Volume', type: 'number', optionnel: true },
-            { id: 'volumeUniteId', nom: 'Unité du volume', type: 'select', optionnel: true, description: '', valeursMetasNom: 'unites' }
-          ]
-        }
-      ]
+            { id: 'volumeUniteId', nom: 'Unité du volume', type: 'select', optionnel: true, description: '', valeursMetasNom: 'unites' },
+          ],
+        },
+      ],
     },
     [DEMARCHES_TYPES_IDS.Amodiation]: {
       [ETAPES_TYPES.demande]: proprietesDeLaConcession,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDeLaConcession,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession,
     },
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: {
       [ETAPES_TYPES.demande]: proprietesDeLaConcession,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDeLaConcession,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession,
     },
     [DEMARCHES_TYPES_IDS.Mutation]: {
       [ETAPES_TYPES.demande]: proprietesDeLaConcession,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDeLaConcession,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession,
     },
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.demande]: proprietesDeLaConcession,
@@ -485,7 +486,7 @@ const TDESections = {
       [ETAPES_TYPES.retraitDeLaDecision]: proprietesDeLaConcession,
       [ETAPES_TYPES.abrogationDeLaDecision]: proprietesDeLaConcession,
       [ETAPES_TYPES.decisionDuJugeAdministratif]: proprietesDeLaConcession,
-      [ETAPES_TYPES.informationsHistoriquesIncompletes]: proprietesDeLaConcession
+      [ETAPES_TYPES.informationsHistoriquesIncompletes]: proprietesDeLaConcession,
     },
     [DEMARCHES_TYPES_IDS.Prolongation]: {
       [ETAPES_TYPES.demande]: proprietesDeLaConcession,
@@ -497,358 +498,358 @@ const TDESections = {
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDeLaConcession,
       [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession,
       [ETAPES_TYPES.decisionDuJugeAdministratif]: proprietesDeLaConcession,
-      [ETAPES_TYPES.informationsHistoriquesIncompletes]: proprietesDeLaConcession
+      [ETAPES_TYPES.informationsHistoriquesIncompletes]: proprietesDeLaConcession,
     },
     [DEMARCHES_TYPES_IDS.Renonciation]: {
       [ETAPES_TYPES.demande]: proprietesDeLaConcession,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDeLaConcession,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession,
     },
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: {
       [ETAPES_TYPES.demande]: proprietesDeLaConcession,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDeLaConcession,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDeLaConcession,
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDeLaConcession,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDeLaConcession
-    }
+      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDeLaConcession,
+    },
   },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE]: {
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Fusion]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Mutation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Prolongation1]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Prolongation2]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Renonciation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches
-    }
+      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches,
+    },
   },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_HYDROCARBURE]: {
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Fusion]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Mutation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Prolongation1]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Prolongation2]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.ProlongationExceptionnelle]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Renonciation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches
-    }
+      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches,
+    },
   },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: {
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Renonciation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.ExtensionDeSubstance]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Fusion]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Mutation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.modificationDeLaDemande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Prolongation1]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Prolongation2]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
-    }
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
+    },
   },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_RADIOACTIF]: {
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Fusion]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Mutation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Prolongation1]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Prolongation2]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Renonciation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches
-    }
+      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches,
+    },
   },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_SOUTERRAIN]: {
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Fusion]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Mutation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Prolongation1]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Prolongation2]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Renonciation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches
-    }
+      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches,
+    },
   },
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS]: {
     [DEMARCHES_TYPES_IDS.Renonciation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Fusion]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Mutation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Prolongation1]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Prolongation2]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisExclusifDeRecherches,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisExclusifDeRecherches,
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisExclusifDeRecherches,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches
-    }
+      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisExclusifDeRecherches,
+    },
   },
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: {
     [DEMARCHES_TYPES_IDS.Amodiation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.modificationDeLaDemande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisDExploitation,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation,
     },
     [DEMARCHES_TYPES_IDS.ExtensionDePerimetre]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.modificationDeLaDemande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisDExploitation,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation,
     },
     [DEMARCHES_TYPES_IDS.Renonciation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.modificationDeLaDemande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisDExploitation,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation,
     },
     [DEMARCHES_TYPES_IDS.Mutation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.modificationDeLaDemande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisDExploitation,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation,
     },
     [DEMARCHES_TYPES_IDS.Octroi]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.modificationDeLaDemande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisDExploitation,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation,
     },
     [DEMARCHES_TYPES_IDS.Prolongation1]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.modificationDeLaDemande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisDExploitation,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation,
     },
     [DEMARCHES_TYPES_IDS.Prolongation2]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.modificationDeLaDemande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisDExploitation,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation,
     },
     [DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation]: {
       [ETAPES_TYPES.demande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.modificationDeLaDemande]: proprietesDuPermisDExploitation,
       [ETAPES_TYPES.decisionDeLadministration]: proprietesDuPermisDExploitation,
-      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation
+      [ETAPES_TYPES.publicationDeDecisionAuJORF]: proprietesDuPermisDExploitation,
     },
     [DEMARCHES_TYPES_IDS.Prorogation]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisDExploitation,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisDExploitation
+      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisDExploitation,
     },
     [DEMARCHES_TYPES_IDS.Retrait]: {
       [ETAPES_TYPES.decisionAdministrative]: proprietesDuPermisDExploitation,
-      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisDExploitation
-    }
-  }
+      [ETAPES_TYPES.publicationDeDecisionAdministrativeAuJORF]: proprietesDuPermisDExploitation,
+    },
+  },
 } as const satisfies {
   [titreKey in keyof TDEType]?: {
     [demarcheKey in keyof TDEType[titreKey]]?: {

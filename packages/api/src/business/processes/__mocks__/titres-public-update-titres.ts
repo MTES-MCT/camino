@@ -5,12 +5,12 @@ export const titresPublicModifie = [
     typeId: 'cxh',
     type: {
       domaineId: 'h',
-      typeId: 'cx'
+      typeId: 'cx',
     },
     demarches: [],
     publicLecture: true,
-    entreprisesLecture: false
-  } as unknown as Titres
+    entreprisesLecture: false,
+  } as unknown as Titres,
 ]
 
 export const titresPublicIdentique = [
@@ -18,10 +18,10 @@ export const titresPublicIdentique = [
     typeId: 'cxh',
     type: {
       domaineId: 'h',
-      typeId: 'cx'
+      typeId: 'cx',
     },
     demarches: null,
     publicLecture: false,
-    entreprisesLecture: true
-  } as unknown as Titres
+    entreprisesLecture: true,
+  } as unknown as Titres,
 ]

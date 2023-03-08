@@ -1,19 +1,13 @@
 import { ITitrePhase } from '../../types.js'
 
-import {
-  titrePhasesUpsert,
-  titrePhasesDelete
-} from '../../database/queries/titres-phases.js'
+import { titrePhasesUpsert, titrePhasesDelete } from '../../database/queries/titres-phases.js'
 import { titrePhasesFind } from '../rules/titre-phases-find.js'
 import { titresGet } from '../../database/queries/titres.js'
 import { userSuper } from '../../database/user-super.js'
 import { getCurrent } from 'camino-common/src/date.js'
 
 // retourne une phase parmi les titrePhases en fonction de son id
-const titrePhaseEqualFind = (
-  titreDemarcheId: string,
-  titrePhases: ITitrePhase[]
-) => titrePhases.find(tp => tp.titreDemarcheId === titreDemarcheId)
+const titrePhaseEqualFind = (titreDemarcheId: string, titrePhases: ITitrePhase[]) => titrePhases.find(tp => tp.titreDemarcheId === titreDemarcheId)
 
 type TitrePhaseKey = keyof ITitrePhase
 type TitrePhaseValeur = ITitrePhase[TitrePhaseKey]
@@ -22,10 +16,7 @@ type IPhasePropChange = { [id: string]: [TitrePhaseValeur, TitrePhaseValeur] }
 
 // retourne les propriétés de la phase existante
 // qui sont différentes de la nouvelle phase
-const titrePhasePropsChangedFind = (
-  titrePhase: ITitrePhase,
-  titrePhaseOld: ITitrePhase
-) =>
+const titrePhasePropsChangedFind = (titrePhase: ITitrePhase, titrePhaseOld: ITitrePhase) =>
   Object.keys(titrePhase).reduce((res: IPhasePropChange, key: string) => {
     const valueOld = titrePhaseOld[key as TitrePhaseKey]
     const valueNew = titrePhase[key as TitrePhaseKey]
@@ -38,15 +29,9 @@ const titrePhasePropsChangedFind = (
     return res
   }, {} as IPhasePropChange)
 
-const titrePhasesUpdatedFind = (
-  titresPhasesOld: ITitrePhase[],
-  titrePhases: ITitrePhase[]
-) =>
+const titrePhasesUpdatedFind = (titresPhasesOld: ITitrePhase[], titrePhases: ITitrePhase[]) =>
   titrePhases.reduce((res: ITitrePhase[], titrePhase) => {
-    const titrePhaseOld = titrePhaseEqualFind(
-      titrePhase.titreDemarcheId,
-      titresPhasesOld
-    )
+    const titrePhaseOld = titrePhaseEqualFind(titrePhase.titreDemarcheId, titresPhasesOld)
 
     // si la phase n'existe pas
     // on l'ajoute à l'accumulateur
@@ -56,10 +41,7 @@ const titrePhasesUpdatedFind = (
       return res
     }
 
-    const titrePhasePropsChanged = titrePhasePropsChangedFind(
-      titrePhase,
-      titrePhaseOld
-    )
+    const titrePhasePropsChanged = titrePhasePropsChangedFind(titrePhase, titrePhaseOld)
 
     // si la phase existe et est modifiée
     if (Object.keys(titrePhasePropsChanged).length) {
@@ -69,15 +51,9 @@ const titrePhasesUpdatedFind = (
     return res
   }, [])
 
-const titrePhasesIdDeletedFind = (
-  titrePhasesOld: ITitrePhase[],
-  titresPhases: ITitrePhase[]
-) =>
+const titrePhasesIdDeletedFind = (titrePhasesOld: ITitrePhase[], titresPhases: ITitrePhase[]) =>
   titrePhasesOld.reduce((res: string[], titrePhaseOld) => {
-    const titrePhase = titrePhaseEqualFind(
-      titrePhaseOld.titreDemarcheId,
-      titresPhases
-    )
+    const titrePhase = titrePhaseEqualFind(titrePhaseOld.titreDemarcheId, titresPhases)
 
     if (!titrePhase) {
       res.push(titrePhaseOld.titreDemarcheId)
@@ -94,8 +70,8 @@ export const titresPhasesUpdate = async (titresIds?: string[]) => {
     { ids: titresIds },
     {
       fields: {
-        demarches: { phase: { id: {} }, etapes: { points: { id: {} } } }
-      }
+        demarches: { phase: { id: {} }, etapes: { points: { id: {} } } },
+      },
     },
     userSuper
   )
@@ -122,36 +98,22 @@ export const titresPhasesUpdate = async (titresIds?: string[]) => {
     // créées à partir des démarches
     const titrePhases = titrePhasesFind(demarches, aujourdhui, titre.typeId)
 
-    const titrePhasesToUpdate = titrePhasesUpdatedFind(
-      titrePhasesOld,
-      titrePhases
-    )
+    const titrePhasesToUpdate = titrePhasesUpdatedFind(titrePhasesOld, titrePhases)
 
     if (titrePhasesToUpdate.length) {
       await titrePhasesUpsert(titrePhasesToUpdate)
 
-      console.info(
-        'titre / démarche / phases (mise à jour) ->',
-        JSON.stringify(titrePhasesToUpdate)
-      )
+      console.info('titre / démarche / phases (mise à jour) ->', JSON.stringify(titrePhasesToUpdate))
 
-      titresPhasesIdsUpdated.push(
-        ...titrePhasesToUpdate.map(p => p.titreDemarcheId)
-      )
+      titresPhasesIdsUpdated.push(...titrePhasesToUpdate.map(p => p.titreDemarcheId))
     }
 
-    const titrePhasesToDeleteIds = titrePhasesIdDeletedFind(
-      titrePhasesOld,
-      titrePhases
-    )
+    const titrePhasesToDeleteIds = titrePhasesIdDeletedFind(titrePhasesOld, titrePhases)
 
     if (titrePhasesToDeleteIds.length) {
       await titrePhasesDelete(titrePhasesToDeleteIds)
 
-      console.info(
-        'titre / démarche / phases (suppression) ->',
-        titrePhasesToDeleteIds.join(', ')
-      )
+      console.info('titre / démarche / phases (suppression) ->', titrePhasesToDeleteIds.join(', '))
 
       titresPhasesIdsDeleted.push(...titrePhasesToDeleteIds)
     }

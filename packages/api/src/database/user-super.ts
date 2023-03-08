@@ -5,5 +5,5 @@ export const userSuper: UserNotNull = {
   email: 'camino@beta.gouv.fr',
   nom: 'Camino',
   prenom: '',
-  role: 'super'
+  role: 'super',
 }

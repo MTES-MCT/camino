@@ -1,21 +1,10 @@
-import {
-  DemarcheId,
-  IContenu,
-  IHeritageContenu,
-  ITitreEtape
-} from '../../types.js'
+import { DemarcheId, IContenu, IHeritageContenu, ITitreEtape } from '../../types.js'
 
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
 import { titreEtapeHeritageContenuFind } from '../utils/titre-etape-heritage-contenu-find.js'
-import {
-  titreEtapesSortAscByOrdre,
-  titreEtapesSortDescByOrdre
-} from '../utils/titre-etapes-sort.js'
+import { titreEtapesSortAscByOrdre, titreEtapesSortDescByOrdre } from '../utils/titre-etapes-sort.js'
 import { UserNotNull } from 'camino-common/src/roles'
-import {
-  getSections,
-  Section
-} from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
+import { getSections, Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
 import { EtapeStatutId } from 'camino-common/src/static/etapesStatuts.js'
@@ -25,10 +14,7 @@ import { knex } from '../../knex.js'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { DemarcheStatutId } from 'camino-common/src/static/demarchesStatuts.js'
 
-export const getDemarches = async (
-  demarcheId?: DemarcheId,
-  titreId?: string
-) => {
+export const getDemarches = async (demarcheId?: DemarcheId, titreId?: string) => {
   const etapes: {
     rows: {
       titre_id: string
@@ -59,17 +45,7 @@ export const getDemarches = async (
 
   return etapes.rows.reduce<{
     [key: DemarcheId]: {
-      etapes: Pick<
-        ITitreEtape,
-        | 'id'
-        | 'ordre'
-        | 'typeId'
-        | 'statutId'
-        | 'date'
-        | 'contenu'
-        | 'heritageContenu'
-        | 'titreDemarcheId'
-      >[]
+      etapes: Pick<ITitreEtape, 'id' | 'ordre' | 'typeId' | 'statutId' | 'date' | 'contenu' | 'heritageContenu' | 'titreDemarcheId'>[]
       id: DemarcheId
       typeId: DemarcheTypeId
       titreTypeId: TitreTypeId
@@ -84,7 +60,7 @@ export const getDemarches = async (
         titreId: row.titre_id,
         titreTypeId: row.titre_type_id,
         typeId: row.demarche_type_id,
-        statutId: row.demarche_statut_id
+        statutId: row.demarche_statut_id,
       }
     }
 
@@ -96,16 +72,13 @@ export const getDemarches = async (
       date: row.date,
       contenu: row.contenu,
       heritageContenu: row.heritage_contenu,
-      titreDemarcheId: row.demarche_id
+      titreDemarcheId: row.demarche_id,
     })
 
     return acc
   }, {})
 }
-export const titresEtapesHeritageContenuUpdate = async (
-  user: UserNotNull,
-  demarcheId?: DemarcheId
-) => {
+export const titresEtapesHeritageContenuUpdate = async (user: UserNotNull, demarcheId?: DemarcheId) => {
   console.info()
   console.info('héritage des contenus des étapes…')
 
@@ -122,47 +95,31 @@ export const titresEtapesHeritageContenuUpdate = async (
       const etapeSectionsDictionary = titreDemarche.etapes.reduce<{
         [etapeId: string]: DeepReadonly<Section>[]
       }>((acc, e) => {
-        acc[e.id] = getSections(
-          titreDemarche.titreTypeId,
-          titreDemarche.typeId,
-          e.typeId
-        )
+        acc[e.id] = getSections(titreDemarche.titreTypeId, titreDemarche.typeId, e.typeId)
 
         return acc
       }, {})
-      const titreEtapes = titreEtapesSortAscByOrdre(
-        titreDemarche.etapes?.filter(e => etapeSectionsDictionary[e.id]) ?? []
-      )
+      const titreEtapes = titreEtapesSortAscByOrdre(titreDemarche.etapes?.filter(e => etapeSectionsDictionary[e.id]) ?? [])
 
       if (titreEtapes) {
         for (let index = 0; index < titreEtapes.length; index++) {
           const titreEtape = titreEtapes[index]
-          const titreEtapesFiltered = titreEtapesSortDescByOrdre(
-            titreEtapes.slice(0, index)
-          )
+          const titreEtapesFiltered = titreEtapesSortDescByOrdre(titreEtapes.slice(0, index))
 
-          const { contenu, heritageContenu, hasChanged } =
-            titreEtapeHeritageContenuFind(
-              titreEtapesFiltered,
-              titreEtape,
-              etapeSectionsDictionary
-            )
+          const { contenu, heritageContenu, hasChanged } = titreEtapeHeritageContenuFind(titreEtapesFiltered, titreEtape, etapeSectionsDictionary)
 
           if (hasChanged) {
             await titreEtapeUpdate(
               titreEtape.id,
               {
                 contenu,
-                heritageContenu
+                heritageContenu,
               },
               user,
               titreDemarche.titreId
             )
 
-            console.info(
-              'titre / démarche / étape : héritage du contenu (mise à jour) ->',
-              titreEtape.id
-            )
+            console.info('titre / démarche / étape : héritage du contenu (mise à jour) ->', titreEtape.id)
 
             titresEtapesIdsUpdated.push(titreEtape.id)
 

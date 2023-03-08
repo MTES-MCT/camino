@@ -1,14 +1,6 @@
 import slugify from '@sindresorhus/slugify'
 
-import {
-  DemarcheId,
-  ITitre,
-  ITitreActivite,
-  ITitreDemarche,
-  ITitreEtape,
-  ITitrePoint,
-  ITitrePointReference
-} from '../../types.js'
+import { DemarcheId, ITitre, ITitreActivite, ITitreDemarche, ITitreEtape, ITitrePoint, ITitrePointReference } from '../../types.js'
 
 import titreDemarcheSortAsc from './titre-elements-sort-asc.js'
 import { titreEtapesSortAscByOrdre } from './titre-etapes-sort.js'
@@ -18,96 +10,43 @@ import { userSuper } from '../../database/user-super.js'
 import cryptoRandomString from 'crypto-random-string'
 import { titreDemarcheUpdate } from '../../database/queries/titres-demarches.js'
 import { titreEtapeUpdate } from '../../database/queries/titres-etapes.js'
-import {
-  titrePointReferenceUpdate,
-  titrePointUpdate
-} from '../../database/queries/titres-points.js'
+import { titrePointReferenceUpdate, titrePointUpdate } from '../../database/queries/titres-points.js'
 import { titreActiviteUpdate } from '../../database/queries/titres-activites.js'
 import { UserNotNull } from 'camino-common/src/roles'
-import {
-  getDomaineId,
-  getTitreTypeType
-} from 'camino-common/src/static/titresTypes.js'
+import { getDomaineId, getTitreTypeType } from 'camino-common/src/static/titresTypes.js'
 
 const titreSlugFind = (titre: ITitre) => {
   const { typeId, nom } = titre
-  const demarcheOctroiDateDebut = titreDemarcheOctroiDateDebutFind(
-    titre.demarches
-  )
+  const demarcheOctroiDateDebut = titreDemarcheOctroiDateDebutFind(titre.demarches)
 
-  return slugify(
-    `${getDomaineId(typeId)}-${getTitreTypeType(
-      typeId
-    )}-${nom}-${demarcheOctroiDateDebut.slice(0, 4)}`
-  )
+  return slugify(`${getDomaineId(typeId)}-${getTitreTypeType(typeId)}-${nom}-${demarcheOctroiDateDebut.slice(0, 4)}`)
 }
 
-const titreDemarcheSlugFind = (
-  titreDemarche: ITitreDemarche,
-  titre: ITitre
-) => {
-  const titreDemarcheTypeOrder =
-    titreDemarcheSortAsc(
-      titre.demarches!.filter(d => d.typeId === titreDemarche.typeId)
-    ).findIndex(d => d === titreDemarche) + 1
+const titreDemarcheSlugFind = (titreDemarche: ITitreDemarche, titre: ITitre) => {
+  const titreDemarcheTypeOrder = titreDemarcheSortAsc(titre.demarches!.filter(d => d.typeId === titreDemarche.typeId)).findIndex(d => d === titreDemarche) + 1
 
-  return `${titre.slug}-${titreDemarche.typeId}${titreDemarcheTypeOrder
-    .toString()
-    .padStart(2, '0')}`
+  return `${titre.slug}-${titreDemarche.typeId}${titreDemarcheTypeOrder.toString().padStart(2, '0')}`
 }
 
-const titreDemarcheEtapeSlugFind = (
-  titreEtape: ITitreEtape,
-  titreDemarche: ITitreDemarche
-) => titreEtapeSlugFind(titreEtape, titreDemarche, titreDemarche.etapes!)
+const titreDemarcheEtapeSlugFind = (titreEtape: ITitreEtape, titreDemarche: ITitreDemarche) => titreEtapeSlugFind(titreEtape, titreDemarche, titreDemarche.etapes!)
 
-const titreEtapeSlugFind = (
-  titreEtape: ITitreEtape,
-  titreDemarche: ITitreDemarche,
-  etapes: ITitreEtape[]
-) => {
-  const titreEtapeTypeOrder =
-    titreEtapesSortAscByOrdre(
-      etapes.filter(e => e.typeId === titreEtape.typeId)
-    ).findIndex(e => e === titreEtape) + 1
+const titreEtapeSlugFind = (titreEtape: ITitreEtape, titreDemarche: ITitreDemarche, etapes: ITitreEtape[]) => {
+  const titreEtapeTypeOrder = titreEtapesSortAscByOrdre(etapes.filter(e => e.typeId === titreEtape.typeId)).findIndex(e => e === titreEtape) + 1
 
-  return `${titreDemarche.slug}-${titreEtape.typeId}${titreEtapeTypeOrder
-    .toString()
-    .padStart(2, '0')}`
+  return `${titreDemarche.slug}-${titreEtape.typeId}${titreEtapeTypeOrder.toString().padStart(2, '0')}`
 }
 
 const titrePointSlugFind = (titrePoint: ITitrePoint, titreEtape: ITitreEtape) =>
-  `${titreEtape.slug}-g${titrePoint.groupe
-    .toString()
-    .padStart(2, '0')}-c${titrePoint.contour
-    .toString()
-    .padStart(2, '0')}-p${titrePoint.point.toString().padStart(3, '0')}`
+  `${titreEtape.slug}-g${titrePoint.groupe.toString().padStart(2, '0')}-c${titrePoint.contour.toString().padStart(2, '0')}-p${titrePoint.point.toString().padStart(3, '0')}`
 
-const titrePointReferenceSlugFind = (
-  titrePointReference: ITitrePointReference,
-  titrePoint: ITitrePoint
-) => `${titrePoint.slug}-${titrePointReference.geoSystemeId}`
+const titrePointReferenceSlugFind = (titrePointReference: ITitrePointReference, titrePoint: ITitrePoint) => `${titrePoint.slug}-${titrePointReference.geoSystemeId}`
 
-const titreActiviteSlugFind = (titreActivite: ITitreActivite, titre: ITitre) =>
-  `${titre.slug}-${titreActivite.typeId}-${
-    titreActivite.annee
-  }-${titreActivite.periodeId.toString().padStart(2, '0')}`
+const titreActiviteSlugFind = (titreActivite: ITitreActivite, titre: ITitre) => `${titre.slug}-${titreActivite.typeId}-${titreActivite.annee}-${titreActivite.periodeId.toString().padStart(2, '0')}`
 
 interface ITitreRelation<T extends string | DemarcheId = string> {
   name: string
   slugFind: (...args: any[]) => string
-  update:
-    | ((
-        id: T,
-        element: { slug: string },
-        user: UserNotNull
-      ) => Promise<{ id: T }>)
-    | ((
-        id: T,
-        element: { slug: string },
-        user: UserNotNull,
-        titreId: string
-      ) => Promise<{ id: T }>)
+  update: ((id: T, element: { slug: string }, user: UserNotNull) => Promise<{ id: T }>) | ((id: T, element: { slug: string }, user: UserNotNull, titreId: string) => Promise<{ id: T }>)
   relations?: ITitreRelation[]
 }
 
@@ -130,26 +69,22 @@ const titreRelations: (ITitreRelation<DemarcheId> | ITitreRelation)[] = [
               {
                 name: 'references',
                 update: titrePointReferenceUpdate,
-                slugFind: titrePointReferenceSlugFind
-              }
-            ]
-          }
-        ]
-      }
-    ]
+                slugFind: titrePointReferenceSlugFind,
+              },
+            ],
+          },
+        ],
+      },
+    ],
   },
   {
     name: 'activites',
     update: titreActiviteUpdate,
-    slugFind: titreActiviteSlugFind
-  }
+    slugFind: titreActiviteSlugFind,
+  },
 ]
 
-const relationsSlugsUpdate = async (
-  parent: any,
-  relations: (ITitreRelation<DemarcheId> | ITitreRelation)[],
-  titreId: string
-): Promise<boolean> => {
+const relationsSlugsUpdate = async (parent: any, relations: (ITitreRelation<DemarcheId> | ITitreRelation)[], titreId: string): Promise<boolean> => {
   let hasChanged = false
   for (const relation of relations) {
     for (const element of parent[relation.name]) {
@@ -159,12 +94,7 @@ const relationsSlugsUpdate = async (
         hasChanged = true
       }
       if (relation.relations) {
-        hasChanged =
-          (await relationsSlugsUpdate(
-            { ...element, slug },
-            relation.relations,
-            titreId
-          )) || hasChanged
+        hasChanged = (await relationsSlugsUpdate({ ...element, slug }, relation.relations, titreId)) || hasChanged
       }
     }
   }
@@ -172,24 +102,14 @@ const relationsSlugsUpdate = async (
   return hasChanged
 }
 
-export const titreSlugAndRelationsUpdate = async (
-  titre: ITitre
-): Promise<{ hasChanged: boolean; slug: string }> => {
+export const titreSlugAndRelationsUpdate = async (titre: ITitre): Promise<{ hasChanged: boolean; slug: string }> => {
   let slug = titreSlugFind(titre)
   let doublonTitreId: string | null = null
   let hasChanged = false
 
-  const titreWithTheSameSlug = await titresGet(
-    { slugs: [slug] },
-    { fields: { id: {} } },
-    userSuper
-  )
+  const titreWithTheSameSlug = await titresGet({ slugs: [slug] }, { fields: { id: {} } }, userSuper)
 
-  if (
-    titreWithTheSameSlug?.length > 1 ||
-    (titreWithTheSameSlug?.length === 1 &&
-      titreWithTheSameSlug[0].id !== titre.id)
-  ) {
+  if (titreWithTheSameSlug?.length > 1 || (titreWithTheSameSlug?.length === 1 && titreWithTheSameSlug[0].id !== titre.id)) {
     if (!titre.slug?.startsWith(slug)) {
       slug += `-${cryptoRandomString({ length: 8 })}`
       doublonTitreId = titreWithTheSameSlug[0].id
@@ -203,12 +123,7 @@ export const titreSlugAndRelationsUpdate = async (
     hasChanged = true
   }
 
-  hasChanged =
-    (await relationsSlugsUpdate(
-      { ...titre, slug },
-      titreRelations,
-      titre.id
-    )) || hasChanged
+  hasChanged = (await relationsSlugsUpdate({ ...titre, slug }, titreRelations, titre.id)) || hasChanged
 
   return { hasChanged, slug }
 }

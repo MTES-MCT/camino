@@ -1,15 +1,8 @@
 import { computed, defineComponent } from 'vue'
 import { useStore } from 'vuex'
-import {
-  Params,
-  TablePagination as UITablePagination
-} from '../_ui/table-pagination'
+import { Params, TablePagination as UITablePagination } from '../_ui/table-pagination'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
-import {
-  TitreEntreprise,
-  titresColonnes,
-  titresLignesBuild
-} from './table-utils'
+import { TitreEntreprise, titresColonnes, titresLignesBuild } from './table-utils'
 import { TableSortEvent } from '../_ui/table'
 
 interface Props {
@@ -17,9 +10,7 @@ interface Props {
   total: number
 }
 
-const isTableSortEvent = (
-  params: Params | TableSortEvent
-): params is TableSortEvent => {
+const isTableSortEvent = (params: Params | TableSortEvent): params is TableSortEvent => {
   return 'column' in params && 'order' in params
 }
 
@@ -49,7 +40,7 @@ export const TablePagination = defineComponent<Props>({
 
       store.dispatch('titres/paramsSet', {
         section: 'table',
-        params: newParams
+        params: newParams,
       })
     }
 
@@ -64,9 +55,7 @@ export const TablePagination = defineComponent<Props>({
     })
 
     const colonnes = computed(() => {
-      return titresColonnes.filter(({ id }) =>
-        activitesCol.value ? true : id !== 'activites'
-      )
+      return titresColonnes.filter(({ id }) => (activitesCol.value ? true : id !== 'activites'))
     })
 
     const lignes = computed(() => {
@@ -85,5 +74,5 @@ export const TablePagination = defineComponent<Props>({
         paramsUpdate={preferencesUpdate}
       />
     )
-  }
+  },
 })

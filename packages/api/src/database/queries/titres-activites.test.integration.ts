@@ -25,7 +25,7 @@ describe('teste les requêtes sur les activités', () => {
       id: titreId,
       nom: idGenerate(),
       titreStatutId: 'val',
-      typeId: 'arm'
+      typeId: 'arm',
     })
 
     const titreActiviteId = 'titreActiviteId'
@@ -36,7 +36,7 @@ describe('teste les requêtes sur les activités', () => {
       date: getCurrent(),
       activiteStatutId: 'dep',
       periodeId: 1,
-      annee: 2000
+      annee: 2000,
     })
 
     const adminDGALN: UserNotNull = {
@@ -45,14 +45,10 @@ describe('teste les requêtes sur les activités', () => {
       nom: 'utilisateurNom',
       prenom: 'utilisateurPrenom',
       email: 'utilisateurEmail',
-      administrationId: 'min-mtes-dgaln-01'
+      administrationId: 'min-mtes-dgaln-01',
     }
 
-    const actual = await titresActivitesGet(
-      {},
-      { fields: { id: {} } },
-      adminDGALN
-    )
+    const actual = await titresActivitesGet({}, { fields: { id: {} } }, adminDGALN)
 
     expect(actual).toHaveLength(1)
     expect(actual[0].id).toEqual(titreActiviteId)

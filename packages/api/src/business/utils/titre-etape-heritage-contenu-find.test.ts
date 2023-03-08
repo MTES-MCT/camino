@@ -2,10 +2,7 @@ import { IContenu, IHeritageContenu, ITitreEtape } from '../../types.js'
 
 import { objectClone } from '../../tools/index.js'
 
-import {
-  heritageContenuFind,
-  titreEtapeHeritageContenuFind
-} from './titre-etape-heritage-contenu-find.js'
+import { heritageContenuFind, titreEtapeHeritageContenuFind } from './titre-etape-heritage-contenu-find.js'
 import { describe, test, expect } from 'vitest'
 import { DeepReadonly } from 'camino-common/src/typescript-tools.js'
 import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_etapesTypes/sections.js'
@@ -13,173 +10,150 @@ import { Section } from 'camino-common/src/static/titresTypes_demarchesTypes_eta
 describe('retourne le contenu spécifique d’un élément d’une section en fonction de son héritage', () => {
   test('l’étape n’est pas modifiée si elle n’a pas d’étape précédente et qu’elle n’a aucun héritage d’actif', () => {
     const heritageContenu: IHeritageContenu = {
-      section: { element: { actif: false } }
+      section: { element: { actif: false } },
     }
     const titreEtape = {
-      heritageContenu
+      heritageContenu,
     } as ITitreEtape
 
     expect(heritageContenuFind('section', 'element', titreEtape)).toEqual({
       actif: false,
       hasChanged: false,
       value: undefined,
-      etapeId: undefined
+      etapeId: undefined,
     })
   })
 
   test('l’étape est modifiée si elle a une étape précédente et que son héritage n’est pas renseigné', () => {
     const heritageContenu: IHeritageContenu = {
-      section: { element: { actif: false } }
+      section: { element: { actif: false } },
     }
 
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
-      heritageContenu
+      heritageContenu,
     } as ITitreEtape
 
     const titreEtape = {
-      heritageContenu
+      heritageContenu,
     } as ITitreEtape
 
-    expect(
-      heritageContenuFind(
-        'section',
-        'element',
-        titreEtape,
-        titreEtapePrecedente
-      )
-    ).toEqual({
+    expect(heritageContenuFind('section', 'element', titreEtape, titreEtapePrecedente)).toEqual({
       actif: false,
       hasChanged: true,
       value: undefined,
-      etapeId: titreEtapePrecedente.id
+      etapeId: titreEtapePrecedente.id,
     })
   })
 
   test('l’étape est modifiée si elle a une étape précédente et que son héritage est actif', () => {
     const contenu: IContenu = {
-      section: { element: 'toto' }
+      section: { element: 'toto' },
     }
     const heritageContenu: IHeritageContenu = {
-      section: { element: { actif: false } }
+      section: { element: { actif: false } },
     }
 
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
       contenu,
-      heritageContenu
+      heritageContenu,
     } as ITitreEtape
 
     const titreEtape = {
-      heritageContenu
+      heritageContenu,
     } as ITitreEtape
     titreEtape.heritageContenu!.section.element.actif = true
 
-    expect(
-      heritageContenuFind(
-        'section',
-        'element',
-        titreEtape,
-        titreEtapePrecedente
-      )
-    ).toEqual({
+    expect(heritageContenuFind('section', 'element', titreEtape, titreEtapePrecedente)).toEqual({
       hasChanged: true,
       actif: true,
       value: contenu.section.element,
-      etapeId: titreEtapePrecedente.id
+      etapeId: titreEtapePrecedente.id,
     })
   })
 
   test('l’étape est modifiée et récupère l’héritage déjà présent sur l’étape précédente', () => {
     const contenu: IContenu = {
-      section: { element: 'toto' }
+      section: { element: 'toto' },
     }
     const heritageContenu: IHeritageContenu = {
-      section: { element: { actif: true, etapeId: 'firstEtapeId' } }
+      section: { element: { actif: true, etapeId: 'firstEtapeId' } },
     }
 
     const titreEtapePrecedente = {
       id: 'titreEtapePrecedenteId',
       contenu,
-      heritageContenu
+      heritageContenu,
     } as ITitreEtape
 
     const titreEtape = {
-      heritageContenu: objectClone(heritageContenu)
+      heritageContenu: objectClone(heritageContenu),
     } as ITitreEtape
     titreEtape.heritageContenu!.section.element.actif = true
     delete titreEtape.heritageContenu!.section.element.etapeId
 
-    expect(
-      heritageContenuFind(
-        'section',
-        'element',
-        titreEtape,
-        titreEtapePrecedente
-      )
-    ).toEqual({
+    expect(heritageContenuFind('section', 'element', titreEtape, titreEtapePrecedente)).toEqual({
       hasChanged: true,
       actif: true,
       value: contenu.section.element,
-      etapeId: 'firstEtapeId'
+      etapeId: 'firstEtapeId',
     })
   })
 
   test('l’héritage est désactivé si l’étape précédente n’existe plus', () => {
     const titreEtape = {
       contenu: {
-        section: { element: 'toto' }
+        section: { element: 'toto' },
       } as IContenu,
       heritageContenu: {
-        section: { element: { actif: true, etapeId: 'prevEtapeId' } }
-      } as IHeritageContenu
+        section: { element: { actif: true, etapeId: 'prevEtapeId' } },
+      } as IHeritageContenu,
     } as ITitreEtape
 
-    expect(heritageContenuFind('section', 'element', titreEtape, null)).toEqual(
-      {
-        hasChanged: true,
-        actif: false,
-        value: titreEtape.contenu!.section.element,
-        etapeId: undefined
-      }
-    )
+    expect(heritageContenuFind('section', 'element', titreEtape, null)).toEqual({
+      hasChanged: true,
+      actif: false,
+      value: titreEtape.contenu!.section.element,
+      etapeId: undefined,
+    })
   })
 })
 
 describe('retourne le contenu de l’étape en fonction de son héritage', () => {
   test('l’étape n’est pas modifiée si elle n’a pas d’étape précédente et qu’elle n’a aucun héritage d’actif', () => {
     const heritageContenu: IHeritageContenu = {
-      section: { element: { actif: false } }
+      section: { element: { actif: false } },
     }
     const titreEtape = {
       id: 'etapeId',
-      heritageContenu
+      heritageContenu,
     } as ITitreEtape
 
     expect(
       titreEtapeHeritageContenuFind([titreEtape], titreEtape, {
-        [titreEtape.id]: []
+        [titreEtape.id]: [],
       })
     ).toEqual({
       hasChanged: false,
       contenu: undefined,
-      heritageContenu
+      heritageContenu,
     })
   })
 
   test('l’étape est modifiée si elle un héritage actif et une étape précédente avec un élément d’une section en commun', () => {
     const heritageContenu: IHeritageContenu = {
-      section: { element: { actif: false } }
+      section: { element: { actif: false } },
     }
     const prevTitreEtape = {
       id: 'prevEtapeId',
       contenu: { section: { element: '2022-01-01' } } as IContenu,
-      heritageContenu
+      heritageContenu,
     } as ITitreEtape
 
     const titreEtape = {
       id: 'etapeId',
-      heritageContenu
+      heritageContenu,
     } as ITitreEtape
     titreEtape.heritageContenu!.section.element.actif = true
 
@@ -187,153 +161,117 @@ describe('retourne le contenu de l’étape en fonction de son héritage', () =>
       [prevTitreEtape.id]: [
         {
           id: 'section',
-          elements: [{ id: 'element', type: 'date' }]
-        }
+          elements: [{ id: 'element', type: 'date' }],
+        },
       ],
       [titreEtape.id]: [
         {
           id: 'section',
-          elements: [{ id: 'element', type: 'date' }]
-        }
-      ]
+          elements: [{ id: 'element', type: 'date' }],
+        },
+      ],
     }
 
-    expect(
-      titreEtapeHeritageContenuFind(
-        [prevTitreEtape, titreEtape],
-        titreEtape,
-        dictionary
-      )
-    ).toEqual({
+    expect(titreEtapeHeritageContenuFind([prevTitreEtape, titreEtape], titreEtape, dictionary)).toEqual({
       hasChanged: true,
       contenu: prevTitreEtape.contenu,
       heritageContenu: {
-        section: { element: { actif: true, etapeId: prevTitreEtape.id } }
-      }
+        section: { element: { actif: true, etapeId: prevTitreEtape.id } },
+      },
     })
   })
 
   test('l’étape est modifiée si elle un héritage actif et que son contenu est supprimé', () => {
     const heritageContenu: IHeritageContenu = {
-      section: { element: { actif: false } }
+      section: { element: { actif: false } },
     }
     const prevTitreEtape = {
       id: 'prevEtapeId',
-      heritageContenu
+      heritageContenu,
     } as ITitreEtape
 
     const titreEtape = {
       id: 'etapeId',
       contenu: { section: { element: 'toto' } } as IContenu,
-      heritageContenu
+      heritageContenu,
     } as ITitreEtape
     titreEtape.heritageContenu!.section.element.actif = true
 
     const dictionary: Record<string, DeepReadonly<Section>[]> = {
-      [prevTitreEtape.id]: [
-        { id: 'section', elements: [{ id: 'element', type: 'text' }] }
-      ],
-      [titreEtape.id]: [
-        { id: 'section', elements: [{ id: 'element', type: 'text' }] }
-      ]
+      [prevTitreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text' }] }],
+      [titreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text' }] }],
     }
 
-    expect(
-      titreEtapeHeritageContenuFind(
-        [prevTitreEtape, titreEtape],
-        titreEtape,
-        dictionary
-      )
-    ).toEqual({
+    expect(titreEtapeHeritageContenuFind([prevTitreEtape, titreEtape], titreEtape, dictionary)).toEqual({
       hasChanged: true,
       contenu: { section: {} },
       heritageContenu: {
-        section: { element: { actif: true, etapeId: prevTitreEtape.id } }
-      }
+        section: { element: { actif: true, etapeId: prevTitreEtape.id } },
+      },
     })
   })
 
   test('l’étape n’est pas modifiée si l’héritage est actif, la valeur est null et que le contenu de l’étape précédente est vide', () => {
     const heritageContenu: IHeritageContenu = {
-      section: { element: { actif: false, etapeId: null } }
+      section: { element: { actif: false, etapeId: null } },
     }
     const prevTitreEtape = {
       id: 'prevEtapeId',
       heritageContenu,
-      contenu: null
+      contenu: null,
     } as ITitreEtape
 
     const titreEtape = {
       id: 'etapeId',
       contenu: { section: {} } as IContenu,
-      heritageContenu
+      heritageContenu,
     } as ITitreEtape
     titreEtape.heritageContenu!.section.element.actif = true
     titreEtape.heritageContenu!.section.element.etapeId = 'prevEtapeId'
 
     const dictionary: Record<string, DeepReadonly<Section>[]> = {
-      [prevTitreEtape.id]: [
-        { id: 'section', elements: [{ id: 'element', type: 'text' }] }
-      ],
-      [titreEtape.id]: [
-        { id: 'section', elements: [{ id: 'element', type: 'text' }] }
-      ]
+      [prevTitreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text' }] }],
+      [titreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text' }] }],
     }
 
-    expect(
-      titreEtapeHeritageContenuFind(
-        [prevTitreEtape, titreEtape],
-        titreEtape,
-        dictionary
-      )
-    ).toEqual({
+    expect(titreEtapeHeritageContenuFind([prevTitreEtape, titreEtape], titreEtape, dictionary)).toEqual({
       hasChanged: false,
       contenu: { section: {} },
       heritageContenu: {
-        section: { element: { actif: true, etapeId: prevTitreEtape.id } }
-      }
+        section: { element: { actif: true, etapeId: prevTitreEtape.id } },
+      },
     })
   })
 
   test('l’étape n’est pas modifiée si l’héritage est actif, le contenu est vide et que la valeur de l’étape précédente est null', () => {
     const heritageContenu: IHeritageContenu = {
-      section: { element: { actif: false, etapeId: null } }
+      section: { element: { actif: false, etapeId: null } },
     }
     const prevTitreEtape = {
       id: 'prevEtapeId',
       heritageContenu,
-      contenu: { autre: {} } as IContenu
+      contenu: { autre: {} } as IContenu,
     } as ITitreEtape
 
     const titreEtape = {
       id: 'etapeId',
       contenu: null,
-      heritageContenu
+      heritageContenu,
     } as ITitreEtape
     titreEtape.heritageContenu!.section.element.actif = true
     titreEtape.heritageContenu!.section.element.etapeId = 'prevEtapeId'
 
     const dictionary: Record<string, DeepReadonly<Section>[]> = {
-      [prevTitreEtape.id]: [
-        { id: 'section', elements: [{ id: 'element', type: 'text' }] }
-      ],
-      [titreEtape.id]: [
-        { id: 'section', elements: [{ id: 'element', type: 'text' }] }
-      ]
+      [prevTitreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text' }] }],
+      [titreEtape.id]: [{ id: 'section', elements: [{ id: 'element', type: 'text' }] }],
     }
 
-    expect(
-      titreEtapeHeritageContenuFind(
-        [prevTitreEtape, titreEtape],
-        titreEtape,
-        dictionary
-      )
-    ).toEqual({
+    expect(titreEtapeHeritageContenuFind([prevTitreEtape, titreEtape], titreEtape, dictionary)).toEqual({
       hasChanged: false,
       contenu: null,
       heritageContenu: {
-        section: { element: { actif: true, etapeId: prevTitreEtape.id } }
-      }
+        section: { element: { actif: true, etapeId: prevTitreEtape.id } },
+      },
     })
   })
 })

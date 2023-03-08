@@ -1,16 +1,12 @@
-import {
-  entreprise,
-  entrepriseCreer,
-  entrepriseModifier
-} from '../api/entreprises'
+import { entreprise, entrepriseCreer, entrepriseModifier } from '../api/entreprises'
 
 import router from '../router'
 
 const state = {
   element: null,
   metas: {
-    domaines: []
-  }
+    domaines: [],
+  },
 }
 
 const actions = {
@@ -42,11 +38,7 @@ const actions = {
       commit('popupClose', null, { root: true })
 
       router.push({ name: 'entreprise', params: { id: data.id } })
-      dispatch(
-        'messageAdd',
-        { value: `l'entreprise a été créée`, type: 'success' },
-        { root: true }
-      )
+      dispatch('messageAdd', { value: `l'entreprise a été créée`, type: 'success' }, { root: true })
     } catch (e) {
       commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
     } finally {
@@ -63,23 +55,15 @@ const actions = {
 
       commit('popupClose', null, { root: true })
 
-      await dispatch(
-        'reload',
-        { name: 'entreprise', id: data.id },
-        { root: true }
-      )
+      await dispatch('reload', { name: 'entreprise', id: data.id }, { root: true })
 
-      dispatch(
-        'messageAdd',
-        { value: `l'entreprise a été mise à jour`, type: 'success' },
-        { root: true }
-      )
+      dispatch('messageAdd', { value: `l'entreprise a été mise à jour`, type: 'success' }, { root: true })
     } catch (e) {
       commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
     } finally {
       commit('loadingRemove', 'entrepriseUpdate', { root: true })
     }
-  }
+  },
 }
 
 const mutations = {
@@ -95,12 +79,12 @@ const mutations = {
 
   reset(state) {
     state.element = null
-  }
+  },
 }
 
 export default {
   namespaced: true,
   state,
   actions,
-  mutations
+  mutations,
 }

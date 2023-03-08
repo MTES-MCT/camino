@@ -28,7 +28,7 @@ describe('vérifie l’arbre d’octroi d’une PRM', () => {
         { typeId: 'dex', statutId: 'rej', date: toCaminoDate('2020-01-16') },
         { typeId: 'npp', date: toCaminoDate('2020-01-17') },
         { typeId: 'mno', date: toCaminoDate('2020-01-18') },
-        { typeId: 'rpu', date: toCaminoDate('2020-01-19') }
+        { typeId: 'rpu', date: toCaminoDate('2020-01-19') },
       ])
     ).toMatchInlineSnapshot(`
       [
@@ -62,7 +62,7 @@ describe('vérifie l’arbre d’octroi d’une PRM', () => {
         { typeId: 'dpu', statutId: 'acc', date: toCaminoDate('2020-01-17') },
         { typeId: 'npp', date: toCaminoDate('2020-01-18') },
         { typeId: 'mno', date: toCaminoDate('2020-01-19') },
-        { typeId: 'rpu', date: toCaminoDate('2020-01-19') }
+        { typeId: 'rpu', date: toCaminoDate('2020-01-19') },
       ])
     ).toHaveLength(0)
   })
@@ -74,7 +74,7 @@ describe('vérifie l’arbre d’octroi d’une PRM', () => {
         { typeId: 'mdp', date: toCaminoDate('2020-01-02') },
         { typeId: 'spp', date: toCaminoDate('2020-01-03') },
         { typeId: 'mcr', statutId: 'fav', date: toCaminoDate('2020-01-04') },
-        { typeId: 'ppu', date: toCaminoDate('2020-01-07') }
+        { typeId: 'ppu', date: toCaminoDate('2020-01-07') },
       ])
     ).toHaveLength(0)
   })
@@ -92,7 +92,7 @@ describe('vérifie l’arbre d’octroi d’une PRM', () => {
         { typeId: 'ppc', date: toCaminoDate('2020-01-08') },
         { typeId: 'scl', date: toCaminoDate('2020-01-07') },
         { typeId: 'ssr', date: toCaminoDate('2020-01-07') },
-        { typeId: 'apd', date: toCaminoDate('2020-01-09') }
+        { typeId: 'apd', date: toCaminoDate('2020-01-09') },
       ])
     ).toHaveLength(0)
   })

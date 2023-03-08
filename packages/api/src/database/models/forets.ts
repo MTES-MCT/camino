@@ -12,8 +12,8 @@ class Forets extends Model {
 
     properties: {
       id: { type: 'string', maxLength: 30 },
-      nom: { type: 'string' }
-    }
+      nom: { type: 'string' },
+    },
   }
 }
 

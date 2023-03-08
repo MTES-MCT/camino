@@ -45,7 +45,7 @@ const etapesLabelFormat = f =>
         })
         .sort((a, b) => a.order - b.order)
         .map(value => value.label)
-        .join(', ')
+        .join(', '),
     }))
 
 // supprime les clés dont les valeurs sont vides
@@ -87,7 +87,7 @@ const filtres = [
     name: 'Noms',
     lazy: true,
     search: value => titresRechercherByNom({ noms: value, intervalle: 100 }),
-    load: value => titresFiltres({ titresIds: value })
+    load: value => titresFiltres({ titresIds: value }),
   },
   {
     id: 'titresDomainesIds',
@@ -95,14 +95,14 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedDomaines,
-    component: 'FiltreDomaine'
+    component: 'FiltreDomaine',
   },
   {
     id: 'titresTypesIds',
     name: 'Types de titre',
     type: 'checkboxes',
     value: [],
-    elements: sortedTitreTypesTypes
+    elements: sortedTitreTypesTypes,
   },
   {
     id: 'titresStatutsIds',
@@ -110,42 +110,42 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedTitresStatuts,
-    component: 'FiltresStatuts'
+    component: 'FiltresStatuts',
   },
   {
     id: 'titresEntreprisesIds',
     type: 'autocomplete',
     value: [],
     name: 'Entreprises',
-    elementsFormat
+    elementsFormat,
   },
   {
     id: 'titresSubstancesIds',
     type: 'autocomplete',
     value: [],
     elements: SubstancesLegales,
-    name: 'Substances'
+    name: 'Substances',
   },
   {
     id: 'titresReferences',
     type: 'input',
     value: '',
     name: 'Références',
-    placeholder: 'Référence DGEC, DEAL, DEB, BRGM, Ifremer, …'
+    placeholder: 'Référence DGEC, DEAL, DEB, BRGM, Ifremer, …',
   },
   {
     id: 'titresTerritoires',
     type: 'input',
     value: '',
     name: 'Territoires',
-    placeholder: 'Commune, département, région, …'
+    placeholder: 'Commune, département, région, …',
   },
   {
     id: 'typesIds',
     name: 'Types',
     type: 'checkboxes',
     value: [],
-    elements: sortedDemarchesTypes
+    elements: sortedDemarchesTypes,
   },
   {
     id: 'statutsIds',
@@ -153,7 +153,7 @@ const filtres = [
     type: 'checkboxes',
     value: [],
     elements: sortedDemarchesStatuts,
-    component: 'FiltresStatuts'
+    component: 'FiltresStatuts',
   },
   {
     id: 'etapesInclues',
@@ -164,7 +164,7 @@ const filtres = [
     component: markRaw(FiltresEtapes),
     clean: etapesClean,
     elementsFormat: etapesElementsFormat,
-    labelFormat: etapesLabelFormat
+    labelFormat: etapesLabelFormat,
   },
   {
     id: 'etapesExclues',
@@ -175,8 +175,8 @@ const filtres = [
     component: markRaw(FiltresEtapes),
     clean: etapesClean,
     elementsFormat: etapesElementsFormat,
-    labelFormat: etapesLabelFormat
-  }
+    labelFormat: etapesLabelFormat,
+  },
 ]
 
 export default filtres

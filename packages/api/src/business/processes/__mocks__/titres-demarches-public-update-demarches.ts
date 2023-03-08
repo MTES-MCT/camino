@@ -12,10 +12,10 @@ const titresDemarchesPublicModifie = [
         ordre: 1,
         type: { etapesTypes: [{ id: 'dpu', titreTypeId: 'cxh' }] },
         publicLecture: true,
-        entreprisesLecture: true
-      }
-    ]
-  }
+        entreprisesLecture: true,
+      },
+    ],
+  },
 ] as Titres[]
 
 const titresDemarchesPublicIdentique = [
@@ -37,14 +37,14 @@ const titresDemarchesPublicIdentique = [
             statutId: 'rej',
             ordre: 1,
             date: '1988-03-06',
-            dateFin: '2013-03-11'
-          }
+            dateFin: '2013-03-11',
+          },
         ],
         publicLecture: false,
-        entreprisesLecture: true
-      }
-    ]
-  }
+        entreprisesLecture: true,
+      },
+    ],
+  },
 ] as unknown as Titres[]
 
 export { titresDemarchesPublicModifie, titresDemarchesPublicIdentique }

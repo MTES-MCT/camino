@@ -8,16 +8,8 @@
       <input v-model="point.description" type="text" class="p-s" />
     </div>
 
-    <h5>
-      Coordonnées en {{ etapeGeoSysteme.nom }} ({{ etapeGeoSystemeUniteNom }})
-    </h5>
-    <textarea
-      class="p-s mb-s mono"
-      :value="point.references.join('\n')"
-      placeholder="1,4769;47,3469"
-      @blur="pointsLotUpdate($event)"
-      @focus="pointsLotEdit"
-    />
+    <h5>Coordonnées en {{ etapeGeoSysteme.nom }} ({{ etapeGeoSystemeUniteNom }})</h5>
+    <textarea class="p-s mb-s mono" :value="point.references.join('\n')" placeholder="1,4769;47,3469" @blur="pointsLotUpdate($event)" @focus="pointsLotEdit" />
 
     <div class="h6 p-s">
       <ul class="list-prefix">
@@ -46,7 +38,7 @@ export default {
     point: { type: Object, default: () => ({}) },
     geoSystemeIds: { type: Array, required: true },
     geoSystemeOpposableId: { type: String, required: true },
-    events: { type: Object, default: () => ({ saveKeyUp: true }) }
+    events: { type: Object, default: () => ({ saveKeyUp: true }) },
   },
 
   computed: {
@@ -58,7 +50,7 @@ export default {
 
     etapeGeoSystemeUniteNom() {
       return Unites[this.etapeGeoSysteme.uniteId].nom
-    }
+    },
   },
 
   methods: {
@@ -76,7 +68,7 @@ export default {
       }
 
       this.events.saveKeyUp = true
-    }
-  }
+    },
+  },
 }
 </script>

@@ -22,26 +22,13 @@
       <h3 class="mb-s">Références</h3>
       <p class="h6 italic">Optionnel</p>
       <hr />
-      <div
-        v-for="(reference, index) in titre.references"
-        :key="index"
-        class="flex full-x mb-s"
-      >
+      <div v-for="(reference, index) in titre.references" :key="index" class="flex full-x mb-s">
         <select v-model="reference.referenceTypeId" class="p-s mr-s">
-          <option
-            v-for="referenceType in sortedReferencesTypes"
-            :key="referenceType.id"
-            :value="referenceType.id"
-          >
+          <option v-for="referenceType in sortedReferencesTypes" :key="referenceType.id" :value="referenceType.id">
             {{ referenceType.nom }}
           </option>
         </select>
-        <input
-          v-model="reference.nom"
-          type="text"
-          class="p-s mr-s"
-          placeholder="valeur"
-        />
+        <input v-model="reference.nom" type="text" class="p-s mr-s" placeholder="valeur" />
         <div class="flex-right">
           <button class="btn py-s px-m rnd-xs" @click="referenceRemove(index)">
             <Icon name="minus" size="M" />
@@ -49,14 +36,7 @@
         </div>
       </div>
 
-      <button
-        v-if="
-          titre.references &&
-          !titre.references.find(r => !r.referenceTypeId || !r.nom)
-        "
-        class="btn rnd-xs py-s px-m full-x mb flex h6"
-        @click="referenceAdd"
-      >
+      <button v-if="titre.references && !titre.references.find(r => !r.referenceTypeId || !r.nom)" class="btn rnd-xs py-s px-m full-x mb flex h6" @click="referenceAdd">
         <span class="mt-xxs">Ajouter une référence</span>
         <Icon name="plus" size="M" class="flex-right" />
       </button>
@@ -65,20 +45,10 @@
     <template #footer>
       <div v-if="!loading" class="tablet-blobs">
         <div class="tablet-blob-1-3 mb tablet-mb-0">
-          <button class="btn-border rnd-xs p-s full-x" @click="cancel">
-            Annuler
-          </button>
+          <button class="btn-border rnd-xs p-s full-x" @click="cancel">Annuler</button>
         </div>
         <div class="tablet-blob-2-3">
-          <button
-            :ref="saveRef"
-            class="btn btn-primary"
-            :disabled="!complete"
-            :class="{ disabled: !complete }"
-            @click="save"
-          >
-            Enregistrer
-          </button>
+          <button :ref="saveRef" class="btn btn-primary" :disabled="!complete" :class="{ disabled: !complete }" @click="save">Enregistrer</button>
         </div>
       </div>
       <div v-else class="p-s full-x bold">Enregistrement en cours…</div>
@@ -91,10 +61,7 @@ import Popup from '../_ui/popup.vue'
 
 import { Icon } from '@/components/_ui/icon'
 import { computed, ComputedRef, inject, onMounted, onUnmounted, ref } from 'vue'
-import {
-  ReferenceTypeId,
-  sortedReferencesTypes
-} from 'camino-common/src/static/referencesTypes'
+import { ReferenceTypeId, sortedReferencesTypes } from 'camino-common/src/static/referencesTypes'
 import { useStore } from 'vuex'
 
 export type Titre = {
@@ -157,7 +124,7 @@ const save = async () => {
     eventTrack({
       categorie: 'titre-sections',
       action: 'titre-enregistrer',
-      nom: titre.id
+      nom: titre.id,
     })
   }
 }
@@ -174,11 +141,7 @@ const referenceRemove = (index: number) => {
   props.titre.references.splice(index, 1)
 }
 
-const eventTrack = (event: {
-  categorie: string
-  action: string
-  nom: string
-}) => {
+const eventTrack = (event: { categorie: string; action: string; nom: string }) => {
   if (matomo) {
     // @ts-ignore
     matomo.trackEvent(event.categorie, event.action, event.nom)

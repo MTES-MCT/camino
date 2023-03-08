@@ -1,14 +1,6 @@
-import {
-  ITitreEtape,
-  ITitreDemarche,
-  ITitrePoint,
-  ITitre
-} from '../../types.js'
+import { ITitreEtape, ITitreDemarche, ITitrePoint, ITitre } from '../../types.js'
 
-import {
-  titreEtapeCompleteValidate,
-  titreEtapeUpdationValidate
-} from './titre-etape-updation-validate.js'
+import { titreEtapeCompleteValidate, titreEtapeUpdationValidate } from './titre-etape-updation-validate.js'
 import { SubstanceLegaleId } from 'camino-common/src/static/substancesLegales.js'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes.js'
 import { EtapeTypeId } from 'camino-common/src/static/etapesTypes.js'
@@ -22,36 +14,23 @@ describe('valide l’étape avant de l’enregistrer', () => {
     [[], 'mfr', 'prm', false],
     [['auru'], 'mfr', 'arm', false],
     [['auru'], 'mfr', 'axm', false],
-    [[], 'mfr', 'axm', true]
-  ])(
-    'teste la complétude des substances',
-    (substances, etapeType, titreType, error) => {
-      const titreEtape = {
-        substances,
-        typeId: etapeType
-      } as ITitreEtape
+    [[], 'mfr', 'axm', true],
+  ])('teste la complétude des substances', (substances, etapeType, titreType, error) => {
+    const titreEtape = {
+      substances,
+      typeId: etapeType,
+    } as ITitreEtape
 
-      const errors = titreEtapeCompleteValidate(
-        titreEtape,
-        titreType,
-        'oct',
-        [],
-        [],
-        null,
-        [],
-        null,
-        []
-      )
+    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], [], null, [], null, [])
 
-      const errorLabel = 'au moins une substance doit être renseignée'
+    const errorLabel = 'au moins une substance doit être renseignée'
 
-      if (error) {
-        expect(errors).toContain(errorLabel)
-      } else {
-        expect(errors).not.toContain(errorLabel)
-      }
+    if (error) {
+      expect(errors).toContain(errorLabel)
+    } else {
+      expect(errors).not.toContain(errorLabel)
     }
-  )
+  })
 
   test.each<[ITitrePoint[], EtapeTypeId, TitreTypeId, boolean]>([
     [[], 'mfr', 'arm', true],
@@ -60,40 +39,27 @@ describe('valide l’étape avant de l’enregistrer', () => {
     [[], 'mfr', 'prm', false],
     [[{}, {}, {}, {}] as ITitrePoint[], 'mfr', 'arm', false],
     [[{}, {}, {}, {}] as ITitrePoint[], 'mfr', 'axm', false],
-    [[{}, {}, {}] as ITitrePoint[], 'mfr', 'axm', true]
-  ])(
-    'teste la complétude du périmètre',
-    (points, etapeType, titreType, error) => {
-      const titreEtape = {
-        points,
-        typeId: etapeType
-      } as ITitreEtape
+    [[{}, {}, {}] as ITitrePoint[], 'mfr', 'axm', true],
+  ])('teste la complétude du périmètre', (points, etapeType, titreType, error) => {
+    const titreEtape = {
+      points,
+      typeId: etapeType,
+    } as ITitreEtape
 
-      const errors = titreEtapeCompleteValidate(
-        titreEtape,
-        titreType,
-        'oct',
-        [],
-        [],
-        null,
-        [],
-        null,
-        []
-      )
+    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], [], null, [], null, [])
 
-      const errorLabel = 'le périmètre doit comporter au moins 4 points'
-      if (error) {
-        expect(errors).toContain(errorLabel)
-      } else {
-        expect(errors).not.toContain(errorLabel)
-      }
+    const errorLabel = 'le périmètre doit comporter au moins 4 points'
+    if (error) {
+      expect(errors).toContain(errorLabel)
+    } else {
+      expect(errors).not.toContain(errorLabel)
     }
-  )
+  })
 
   test('une ARM mécanisée a des documents obligatoires supplémentaires', () => {
     const titreEtape = {
       typeId: 'mfr',
-      contenu: { arm: { mecanise: true } }
+      contenu: { arm: { mecanise: true } },
     } as unknown as ITitreEtape
 
     const errors = titreEtapeCompleteValidate(
@@ -104,7 +70,7 @@ describe('valide l’étape avant de l’enregistrer', () => {
       [
         { id: 'doe', optionnel: true, nom: 'doe' },
         { id: 'dep', optionnel: true, nom: 'doe' },
-        { id: 'tot', optionnel: true, nom: 'tot' }
+        { id: 'tot', optionnel: true, nom: 'tot' },
       ],
       null,
       [],
@@ -124,36 +90,23 @@ describe('valide l’étape avant de l’enregistrer', () => {
     [0, 'mfr', 'prm', false],
     [0, 'rde', 'arm', false],
     [3, 'mfr', 'arm', false],
-    [3, 'mfr', 'axm', false]
-  ])(
-    'teste la complétude de la durée',
-    (duree, etapeType, titreType, error) => {
-      const titreEtape = {
-        duree,
-        typeId: etapeType
-      } as ITitreEtape
+    [3, 'mfr', 'axm', false],
+  ])('teste la complétude de la durée', (duree, etapeType, titreType, error) => {
+    const titreEtape = {
+      duree,
+      typeId: etapeType,
+    } as ITitreEtape
 
-      const errors = titreEtapeCompleteValidate(
-        titreEtape,
-        titreType,
-        'oct',
-        [],
-        [],
-        null,
-        [],
-        null,
-        []
-      )
+    const errors = titreEtapeCompleteValidate(titreEtape, titreType, 'oct', [], [], null, [], null, [])
 
-      const errorLabel = 'la durée doit être renseignée'
+    const errorLabel = 'la durée doit être renseignée'
 
-      if (error) {
-        expect(errors).toContain(errorLabel)
-      } else {
-        expect(errors).not.toContain(errorLabel)
-      }
+    if (error) {
+      expect(errors).toContain(errorLabel)
+    } else {
+      expect(errors).not.toContain(errorLabel)
     }
-  )
+  })
 
   test("une ARM ou une AXM ne peuvent pas recevoir d'amodiataires", () => {
     const titreDemarche = {} as unknown as ITitreDemarche
@@ -161,103 +114,47 @@ describe('valide l’étape avant de l’enregistrer', () => {
     // ARM
     let titreEtape = {
       typeId: 'mfr',
-      amodiataires: []
+      amodiataires: [],
     } as unknown as ITitreEtape
 
     let titre = {
       id: 'foo',
-      typeId: 'arm'
+      typeId: 'arm',
     } as unknown as ITitre
 
-    let errors = titreEtapeUpdationValidate(
-      titreEtape,
-      titreDemarche,
-      titre,
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      userSuper
-    )
-    expect(errors).not.toContain(
-      "une autorisation de recherche ne peut pas inclure d'amodiataires"
-    )
-    expect(errors).not.toContain(
-      "une autorisation d'exploitation ne peut pas inclure d'amodiataires"
-    )
+    let errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
+    expect(errors).not.toContain("une autorisation de recherche ne peut pas inclure d'amodiataires")
+    expect(errors).not.toContain("une autorisation d'exploitation ne peut pas inclure d'amodiataires")
 
     titreEtape = {
       typeId: 'mfr',
-      amodiataires: [{ id: 'foo', nom: 'bar', operateur: true }]
+      amodiataires: [{ id: 'foo', nom: 'bar', operateur: true }],
     } as unknown as ITitreEtape
 
-    errors = titreEtapeUpdationValidate(
-      titreEtape,
-      titreDemarche,
-      titre,
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      userSuper
-    )
-    expect(errors).toContain(
-      "une autorisation de recherche ne peut pas inclure d'amodiataires"
-    )
+    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
+    expect(errors).toContain("une autorisation de recherche ne peut pas inclure d'amodiataires")
 
     // AXM
     titreEtape = {
       typeId: 'mfr',
-      amodiataires: []
+      amodiataires: [],
     } as unknown as ITitreEtape
 
     titre = {
       id: 'foo',
-      typeId: 'axm'
+      typeId: 'axm',
     } as unknown as ITitre
 
-    errors = titreEtapeUpdationValidate(
-      titreEtape,
-      titreDemarche,
-      titre,
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      userSuper
-    )
-    expect(errors).not.toContain(
-      "une autorisation d'exploitation ne peut pas inclure d'amodiataires"
-    )
-    expect(errors).not.toContain(
-      "une autorisation de recherche ne peut pas inclure d'amodiataires"
-    )
+    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
+    expect(errors).not.toContain("une autorisation d'exploitation ne peut pas inclure d'amodiataires")
+    expect(errors).not.toContain("une autorisation de recherche ne peut pas inclure d'amodiataires")
 
     titreEtape = {
       typeId: 'mfr',
-      amodiataires: [{ id: 'foo', nom: 'bar', operateur: true }]
+      amodiataires: [{ id: 'foo', nom: 'bar', operateur: true }],
     } as unknown as ITitreEtape
 
-    errors = titreEtapeUpdationValidate(
-      titreEtape,
-      titreDemarche,
-      titre,
-      [],
-      [],
-      [],
-      [],
-      [],
-      [],
-      userSuper
-    )
-    expect(errors).toContain(
-      "une autorisation d'exploitation ne peut pas inclure d'amodiataires"
-    )
+    errors = titreEtapeUpdationValidate(titreEtape, titreDemarche, titre, [], [], [], [], [], [], userSuper)
+    expect(errors).toContain("une autorisation d'exploitation ne peut pas inclure d'amodiataires")
   })
 })

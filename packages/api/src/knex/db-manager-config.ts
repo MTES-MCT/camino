@@ -5,6 +5,6 @@ export const dbManagerConfig = {
   knex: knexConfig,
   dbManager: {
     superUser: connection.user,
-    superPassword: connection.password
-  }
+    superPassword: connection.password,
+  },
 }

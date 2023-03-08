@@ -15,12 +15,7 @@
         <div class="overflow-scroll-x mb">
           <table>
             <tr>
-              <th
-                v-for="colonne in definition.colonnes"
-                :key="colonne.id"
-                class="min-width-5"
-                :class="colonne.class"
-              >
+              <th v-for="colonne in definition.colonnes" :key="colonne.id" class="min-width-5" :class="colonne.class">
                 {{ colonne.nom }}
               </th>
             </tr>
@@ -44,12 +39,12 @@ import { canReadMetas } from 'camino-common/src/permissions/metas'
 
 export default {
   components: {
-    Loader
+    Loader,
   },
 
   data() {
     return {
-      elementNew: {}
+      elementNew: {},
     }
   },
 
@@ -79,10 +74,8 @@ export default {
     },
 
     elementNewComplete() {
-      return this.definition.colonnes.every(
-        c => !!this.elementNew[c.id] || c.optional
-      )
-    }
+      return this.definition.colonnes.every(c => !!this.elementNew[c.id] || c.optional)
+    },
   },
 
   watch: {
@@ -92,7 +85,7 @@ export default {
       }
     },
 
-    user: 'get'
+    user: 'get',
   },
 
   created() {
@@ -116,7 +109,7 @@ export default {
       if (!this.definition.ids) return element.id
 
       return this.definition.ids.map(id => element[id]).join('-')
-    }
-  }
+    },
+  },
 }
 </script>

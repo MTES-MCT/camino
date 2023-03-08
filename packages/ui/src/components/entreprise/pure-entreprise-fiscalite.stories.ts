@@ -6,7 +6,7 @@ import { CaminoAnnee, toCaminoAnnee } from 'camino-common/src/date'
 const meta: Meta = {
   title: 'Components/Entreprise/Fiscalite',
   component: PureEntrepriseFiscalite,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -21,7 +21,7 @@ const Template: Story<Props> = (args: Props) => ({
   setup() {
     return { args }
   },
-  template: '<PureEntrepriseFiscalite v-bind="args" />'
+  template: '<PureEntrepriseFiscalite v-bind="args" />',
 })
 
 export const Ok = Template.bind({})
@@ -29,10 +29,10 @@ Ok.args = {
   getFiscaliteEntreprise: () =>
     Promise.resolve({
       redevanceCommunale: 1600.071,
-      redevanceDepartementale: 330.98
+      redevanceDepartementale: 330.98,
     }),
   anneeCourante: toCaminoAnnee('2022'),
-  annees: [toCaminoAnnee('2021'), toCaminoAnnee('2022')]
+  annees: [toCaminoAnnee('2021'), toCaminoAnnee('2022')],
 }
 
 export const Guyane = Template.bind({})
@@ -44,11 +44,11 @@ Guyane.args = {
       guyane: {
         taxeAurifereBrute: Number.parseInt(annee) * 4100,
         totalInvestissementsDeduits: Number.parseInt(annee) * 100,
-        taxeAurifere: Number.parseInt(annee) * 210
-      }
+        taxeAurifere: Number.parseInt(annee) * 210,
+      },
     }),
   anneeCourante: toCaminoAnnee('2022'),
-  annees: [toCaminoAnnee('2021'), toCaminoAnnee('2022')]
+  annees: [toCaminoAnnee('2021'), toCaminoAnnee('2022')],
 }
 
 export const GuyaneAnneePrecedente = Template.bind({})
@@ -60,22 +60,22 @@ GuyaneAnneePrecedente.args = {
       guyane: {
         taxeAurifereBrute: Number.parseInt(annee) * 4100,
         totalInvestissementsDeduits: Number.parseInt(annee) * 100,
-        taxeAurifere: Number.parseInt(annee) * 210
-      }
+        taxeAurifere: Number.parseInt(annee) * 210,
+      },
     }),
   anneeCourante: toCaminoAnnee('2021'),
-  annees: [toCaminoAnnee('2021'), toCaminoAnnee('2022')]
+  annees: [toCaminoAnnee('2021'), toCaminoAnnee('2022')],
 }
 
 export const Loading = Template.bind({})
 Loading.args = {
   getFiscaliteEntreprise: () => new Promise<Fiscalite>(resolve => {}),
   anneeCourante: toCaminoAnnee('2022'),
-  annees: [toCaminoAnnee('2021'), toCaminoAnnee('2022')]
+  annees: [toCaminoAnnee('2021'), toCaminoAnnee('2022')],
 }
 export const WithError = Template.bind({})
 WithError.args = {
   getFiscaliteEntreprise: () => Promise.reject(new Error('because reasons')),
   anneeCourante: toCaminoAnnee('2022'),
-  annees: [toCaminoAnnee('2021'), toCaminoAnnee('2022')]
+  annees: [toCaminoAnnee('2021'), toCaminoAnnee('2022')],
 }

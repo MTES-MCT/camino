@@ -26,9 +26,4 @@ export const up = (knex: Knex) =>
       table.string('nom').notNullable()
     })
 
-export const down = (knex: Knex) =>
-  knex.schema
-    .dropTable('devises')
-    .dropTable('geoSystemes')
-    .dropTable('unites')
-    .dropTable('referencesTypes')
+export const down = (knex: Knex) => knex.schema.dropTable('devises').dropTable('geoSystemes').dropTable('unites').dropTable('referencesTypes')

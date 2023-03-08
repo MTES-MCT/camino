@@ -15,8 +15,8 @@ class AdministrationsActivitesTypes extends Model {
       administrationId: { type: 'string', maxLength: 64 },
       activiteTypeId: { type: 'string', maxLength: 3 },
       lectureInterdit: { type: 'boolean' },
-      modificationInterdit: { type: 'boolean' }
-    }
+      modificationInterdit: { type: 'boolean' },
+    },
   }
 
   public static idColumn = ['administrationId', 'activiteTypeId']

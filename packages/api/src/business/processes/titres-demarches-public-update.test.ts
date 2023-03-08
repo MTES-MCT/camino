@@ -1,17 +1,14 @@
 import { titresDemarchesPublicUpdate } from './titres-demarches-public-update.js'
 import { titresGet } from '../../database/queries/titres.js'
 
-import {
-  titresDemarchesPublicModifie,
-  titresDemarchesPublicIdentique
-} from './__mocks__/titres-demarches-public-update-demarches.js'
+import { titresDemarchesPublicModifie, titresDemarchesPublicIdentique } from './__mocks__/titres-demarches-public-update-demarches.js'
 import { vi, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres', () => ({
-  titresGet: vi.fn()
+  titresGet: vi.fn(),
 }))
 
 vi.mock('../../database/queries/titres-demarches', () => ({
-  titreDemarcheUpdate: vi.fn().mockResolvedValue(true)
+  titreDemarcheUpdate: vi.fn().mockResolvedValue(true),
 }))
 
 const titresGetMock = vi.mocked(titresGet, true)

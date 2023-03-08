@@ -7,7 +7,7 @@ import { vi, describe, expect, beforeEach, test } from 'vitest'
 vi.mock('../api/titres-activites', () => ({
   activiteSupprimer: vi.fn(),
   activiteDeposer: vi.fn(),
-  activite: vi.fn()
+  activite: vi.fn(),
 }))
 console.info = vi.fn()
 
@@ -23,7 +23,7 @@ describe("état d'une activité", () => {
       reload: vi.fn(),
       messageAdd: vi.fn(),
       pageError: vi.fn(),
-      apiError: vi.fn()
+      apiError: vi.fn(),
     }
 
     mutations = {
@@ -32,7 +32,7 @@ describe("état d'une activité", () => {
       loadingRemove: vi.fn(),
       popupClose: vi.fn(),
       popupMessageAdd: vi.fn(),
-      popupLoad: vi.fn()
+      popupLoad: vi.fn(),
     }
 
     store = createStore({
@@ -41,11 +41,11 @@ describe("état d'une activité", () => {
         titre: {
           namespaced: true,
           state: { element: { id: 5 } },
-          mutations: { open: vi.fn() }
-        }
+          mutations: { open: vi.fn() },
+        },
       },
       mutations,
-      actions
+      actions,
     })
 
     const app = createApp({})
@@ -56,7 +56,7 @@ describe("état d'une activité", () => {
     api.activite.mockResolvedValue({
       id: 27,
       contenu: [],
-      activitesStatutId: 'dep'
+      activitesStatutId: 'dep',
     })
 
     await store.dispatch('titreActivite/get', 27)
@@ -64,7 +64,7 @@ describe("état d'une activité", () => {
     expect(store.state.titreActivite.element).toEqual({
       id: 27,
       contenu: [],
-      activitesStatutId: 'dep'
+      activitesStatutId: 'dep',
     })
 
     expect(mutations.loadingRemove).toHaveBeenCalled()
@@ -79,9 +79,7 @@ describe("état d'une activité", () => {
   })
 
   test("retourne une erreur de l'api dans l'obtention de l'activité", async () => {
-    const apiMock = api.activite.mockRejectedValue(
-      new Error("l'api ne répond pas")
-    )
+    const apiMock = api.activite.mockRejectedValue(new Error("l'api ne répond pas"))
     await store.dispatch('titreActivite/get', 'activite-id')
 
     expect(apiMock).toHaveBeenCalledWith({ id: 'activite-id' })
@@ -99,12 +97,12 @@ describe("état d'une activité", () => {
     api.activiteSupprimer.mockResolvedValue({ id: 71 })
     await store.dispatch('titreActivite/remove', {
       id: 71,
-      route: { name: 'titre', id: 'titre-id' }
+      route: { name: 'titre', id: 'titre-id' },
     })
 
     expect(actions.reload).toHaveBeenCalledWith(expect.anything(), {
       name: 'titre',
-      id: 'titre-id'
+      id: 'titre-id',
     })
     expect(api.activiteSupprimer).toHaveBeenCalled()
   })
@@ -113,11 +111,11 @@ describe("état d'une activité", () => {
     api.activiteSupprimer.mockResolvedValue({ id: 71 })
 
     await store.dispatch('titreActivite/remove', {
-      id: 71
+      id: 71,
     })
 
     expect(actions.reload).toHaveBeenCalledWith(expect.anything(), {
-      name: 'activites'
+      name: 'activites',
     })
 
     expect(api.activiteSupprimer).toHaveBeenCalled()
@@ -126,7 +124,7 @@ describe("état d'une activité", () => {
   test("retourne une erreur si l'api ne répond pas lors de la suppression d'une activité", async () => {
     api.activiteSupprimer.mockRejectedValue(new Error("l'api ne répond pas"))
     await store.dispatch('titreActivite/remove', {
-      id: 71
+      id: 71,
     })
 
     expect(api.activiteSupprimer).toHaveBeenCalled()
@@ -138,7 +136,7 @@ describe("état d'une activité", () => {
 
     await store.dispatch('titreActivite/depose', {
       id: 12,
-      route: null
+      route: null,
     })
 
     expect(mutations.loadingRemove).toHaveBeenCalled()
@@ -150,7 +148,7 @@ describe("état d'une activité", () => {
 
     await store.dispatch('titreActivite/depose', {
       id: 12,
-      route: null
+      route: null,
     })
 
     expect(mutations.loadingRemove).toHaveBeenCalled()

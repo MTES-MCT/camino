@@ -1,6 +1,6 @@
 import Titres from '../../../database/models/titres.js'
 const activiteType = {
-  frequenceId: 'tri'
+  frequenceId: 'tri',
 }
 
 const titresActivitesToUpdate = [
@@ -15,14 +15,14 @@ const titresActivitesToUpdate = [
         annee: 2019,
         periodeId: 3,
         type: activiteType,
-        suppression: true
+        suppression: true,
       },
       {
         id: 'titre-activite-id-2019-04',
         date: '2020-01-01',
         annee: 2019,
         periodeId: 4,
-        type: activiteType
+        type: activiteType,
       },
       {
         id: 'titre-activite-id-2020-01',
@@ -30,28 +30,28 @@ const titresActivitesToUpdate = [
         annee: 2020,
         periodeId: 1,
         type: activiteType,
-        suppression: true
+        suppression: true,
       },
       {
         id: 'titre-activite-id-2020-02',
         date: '2020-07-01',
         annee: 2020,
         periodeId: 2,
-        type: activiteType
-      }
-    ]
-  }
+        type: activiteType,
+      },
+    ],
+  },
 ] as unknown as Titres[]
 
 const titresActivitesNotToUpdate = [
   {
     id: 'titre-id',
-    typeId: 'axm'
+    typeId: 'axm',
   },
   {
     id: 'titre-id',
     typeId: 'axm',
-    activites: []
+    activites: [],
   },
   {
     id: 'titre-id',
@@ -63,9 +63,9 @@ const titresActivitesNotToUpdate = [
         annee: 2019,
         periodeId: 3,
         type: activiteType,
-        suppression: true
-      }
-    ]
+        suppression: true,
+      },
+    ],
   },
   {
     id: 'titre-id',
@@ -79,10 +79,10 @@ const titresActivitesNotToUpdate = [
         statutId: 'abs',
         periodeId: 3,
         type: activiteType,
-        suppression: true
-      }
-    ]
-  }
+        suppression: true,
+      },
+    ],
+  },
 ] as unknown as Titres[]
 
 export { titresActivitesToUpdate, titresActivitesNotToUpdate }

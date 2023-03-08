@@ -3,13 +3,7 @@ import { userSuper } from '../../database/user-super.js'
 import { emailsWithTemplateSend } from '../../tools/api-mailjet/emails.js'
 import { activitesUrlGet } from '../utils/urls-get.js'
 import { EmailTemplateId } from '../../tools/api-mailjet/types.js'
-import {
-  anneePrecedente,
-  dateAddDays,
-  dateAddMonths,
-  getAnnee,
-  getCurrent
-} from 'camino-common/src/date.js'
+import { anneePrecedente, dateAddDays, dateAddMonths, getAnnee, getCurrent } from 'camino-common/src/date.js'
 
 export const ACTIVITES_DELAI_RELANCE_JOURS = 14
 
@@ -24,17 +18,15 @@ export const titresActivitesRelanceSend = async (aujourdhui = getCurrent()) => {
     {
       fields: {
         type: { id: {} },
-        titre: { titulaires: { utilisateurs: { id: {} } } }
-      }
+        titre: { titulaires: { utilisateurs: { id: {} } } },
+      },
     },
     userSuper
   )
 
   const dateDelai = dateAddDays(aujourdhui, ACTIVITES_DELAI_RELANCE_JOURS)
 
-  const titresActivitesRelanceToSend = activites.filter(
-    ({ date }) => dateDelai === dateAddMonths(date, 3)
-  )
+  const titresActivitesRelanceToSend = activites.filter(({ date }) => dateDelai === dateAddMonths(date, 3))
   if (titresActivitesRelanceToSend.length) {
     // envoi d’email aux opérateurs pour les relancer ACTIVITES_DELAI_RELANCE_JOURS jours avant la fermeture automatique de l’activité
     const emails = new Set<string>()
@@ -49,23 +41,16 @@ export const titresActivitesRelanceSend = async (aujourdhui = getCurrent()) => {
       )
     }
     if (emails.size) {
-      await emailsWithTemplateSend(
-        [...emails],
-        EmailTemplateId.ACTIVITES_RELANCE,
-        {
-          activitesUrl: activitesUrlGet({
-            typesIds,
-            statutsIds,
-            annees: [anneePrecedente(getAnnee(aujourdhui))]
-          })
-        }
-      )
+      await emailsWithTemplateSend([...emails], EmailTemplateId.ACTIVITES_RELANCE, {
+        activitesUrl: activitesUrlGet({
+          typesIds,
+          statutsIds,
+          annees: [anneePrecedente(getAnnee(aujourdhui))],
+        }),
+      })
     }
 
-    console.info(
-      'titre / activités (relance) ->',
-      titresActivitesRelanceToSend.map(ta => ta.id).join(', ')
-    )
+    console.info('titre / activités (relance) ->', titresActivitesRelanceToSend.map(ta => ta.id).join(', '))
   }
 
   return titresActivitesRelanceToSend.map(ta => ta.id)

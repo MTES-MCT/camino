@@ -10,7 +10,7 @@ const facades = {
     'Large baie de Seine': { ids: [8], secteurId: '5', departementIds: [DEPARTEMENT_IDS['Seine-Maritime'], DEPARTEMENT_IDS.Calvados, DEPARTEMENT_IDS.Manche] },
     'Nord Cotentin': { ids: [6], secteurId: '6', departementIds: [DEPARTEMENT_IDS.Manche] },
     'Ouest Cotentin - Baie du Mont Saint-Michel': { ids: [7], secteurId: '7', departementIds: [DEPARTEMENT_IDS.Manche] },
-    'Manche Ouest au large des îles anglo-normandes': { ids: [1], secteurId: '8', departementIds: [DEPARTEMENT_IDS.Manche] }
+    'Manche Ouest au large des îles anglo-normandes': { ids: [1], secteurId: '8', departementIds: [DEPARTEMENT_IDS.Manche] },
   },
   'Nord Atlantique - Manche Ouest': {
     'Plaine abyssale': { ids: [9], secteurId: '1', departementIds: [] },
@@ -25,7 +25,7 @@ const facades = {
     'Bretagne sud': { ids: [21], secteurId: '5e', departementIds: [DEPARTEMENT_IDS.Finistère, DEPARTEMENT_IDS.Morbihan, DEPARTEMENT_IDS['Loire-Atlantique']] },
     'Estuaire de la Loire': { ids: [20], secteurId: '5f', departementIds: [DEPARTEMENT_IDS['Loire-Atlantique']] },
     'Baie de Bourgneuf et littoral vendéen': { ids: [19], secteurId: '5g', departementIds: [DEPARTEMENT_IDS['Loire-Atlantique'], DEPARTEMENT_IDS.Vendée] },
-    "Parc naturel marin de l'estuaire de la Gironde et de la mer des Pertuis": { ids: [16], secteurId: '5h', departementIds: [DEPARTEMENT_IDS.Vendée] }
+    "Parc naturel marin de l'estuaire de la Gironde et de la mer des Pertuis": { ids: [16], secteurId: '5h', departementIds: [DEPARTEMENT_IDS.Vendée] },
   },
   'Sud Atlantique': {
     "Parc Naturel Marin de l'estuaire de la Gironde et de la Mer des Pertuis": { ids: [22], secteurId: '1', departementIds: [DEPARTEMENT_IDS['Charente-Maritime'], DEPARTEMENT_IDS.Gironde] },
@@ -35,10 +35,10 @@ const facades = {
     'Plateau continental du Golfe de Gascogne': {
       ids: [23],
       secteurId: '5',
-      departementIds: [DEPARTEMENT_IDS['Charente-Maritime'], DEPARTEMENT_IDS.Gironde, DEPARTEMENT_IDS.Landes, DEPARTEMENT_IDS['Pyrénées-Atlantiques']]
+      departementIds: [DEPARTEMENT_IDS['Charente-Maritime'], DEPARTEMENT_IDS.Gironde, DEPARTEMENT_IDS.Landes, DEPARTEMENT_IDS['Pyrénées-Atlantiques']],
     },
     'Talus du Golfe de Gascogne': { ids: [26], secteurId: '6', departementIds: [] },
-    'Plaine abyssale du Golfe de Gascogne': { ids: [27], secteurId: '7', departementIds: [] }
+    'Plaine abyssale du Golfe de Gascogne': { ids: [27], secteurId: '7', departementIds: [] },
   },
   Méditerranée: {
     'Périmètre du Parc naturel marin du Golfe du Lion': { ids: [44], secteurId: '1', departementIds: [] },
@@ -70,8 +70,8 @@ const facades = {
     'Large côte occidental de la Corse': { ids: [53], secteurId: '27', departementIds: [] },
     'Bouches de Bonifacio Ouest': { ids: [33], secteurId: '28', departementIds: [] },
     'Bouches de Bonifacio Est - Porto-Vecchio': { ids: [57], secteurId: '29', departementIds: [] },
-    'Plaine orientale et large Est de la Corse': { ids: [34], secteurId: '30', departementIds: [] }
-  }
+    'Plaine orientale et large Est de la Corse': { ids: [34], secteurId: '30', departementIds: [] },
+  },
 }
 export const FACADES = Object.keys(facades) as FacadesMaritimes[]
 const SECTEURS = Object.values(facades).flatMap(f => Object.keys(f)) as SecteursMaritimes[]

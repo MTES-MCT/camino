@@ -14,8 +14,6 @@ export default function (options) {
     script.onload = resolve
     script.onerror = reject
   }).catch(error => {
-    console.info(
-      `Warning: ${error.target.src}. If the file exists, you may have a tracking blocker enabled.`
-    )
+    console.info(`Warning: ${error.target.src}. If the file exists, you may have a tracking blocker enabled.`)
   })
 }

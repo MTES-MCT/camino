@@ -7,12 +7,8 @@ import { isDemarcheTypeOctroi } from 'camino-common/src/static/demarchesTypes.js
 const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]) => {
   // trouve la démarche génératrice du titre
   // - première démarche d'octroi ou mutation partielle
-  const titreDemarchesSorted = titreDemarchesSortAsc(
-    titreDemarches
-  ) as ITitreDemarche[]
-  const titreDemarche = titreDemarchesSorted.find(titreDemarche =>
-    isDemarcheTypeOctroi(titreDemarche.typeId)
-  )
+  const titreDemarchesSorted = titreDemarchesSortAsc(titreDemarches) as ITitreDemarche[]
+  const titreDemarche = titreDemarchesSorted.find(titreDemarche => isDemarcheTypeOctroi(titreDemarche.typeId))
 
   // si
   // - il n'y a pas de démarche génératrice
@@ -24,9 +20,7 @@ const titreDateDemandeFind = (titreDemarches: ITitreDemarche[]) => {
   // - la demande déposée
   // - ou l'enregistrement de la demande (pour les anciennes ARM)
   const titreEtapesSorted = titreEtapesSortAscByOrdre(titreDemarche.etapes!)
-  const titreEtape = titreEtapesSorted.find(
-    te => te.typeId === 'mdp' || te.typeId === 'men'
-  )
+  const titreEtape = titreEtapesSorted.find(te => te.typeId === 'mdp' || te.typeId === 'men')
 
   // si
   // - il n'y a pas d'étape de dépôt ou d'enregistrement de la demande

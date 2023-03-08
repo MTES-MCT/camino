@@ -1,10 +1,4 @@
-import {
-  demarchesDefinitions,
-  IDemarcheDefinition,
-  IEtapeTypeIdCondition,
-  isDemarcheDefinitionRestriction,
-  DemarcheDefinitionRestriction
-} from '../../business/rules-demarches/definitions.js'
+import { demarchesDefinitions, IDemarcheDefinition, IEtapeTypeIdCondition, isDemarcheDefinitionRestriction, DemarcheDefinitionRestriction } from '../../business/rules-demarches/definitions.js'
 import { titresDemarchesGet } from '../../database/queries/titres-demarches.js'
 import { titreDemarcheUpdatedEtatValidate } from '../../business/validations/titre-demarche-etat-validate.js'
 import { userSuper } from '../../database/user-super.js'
@@ -26,12 +20,7 @@ const etapeTypeIdsGet = (contraintes?: IEtapeTypeIdCondition[][]) => {
 }
 
 const etapesTypesIdsGet = async (titreTypeId: string, demarcheTypeId: string) =>
-  (
-    await TitresTypesDemarchesTypesEtapesTypes.query()
-      .withGraphFetched('etapeType')
-      .where('titreTypeId', titreTypeId)
-      .andWhere('demarcheTypeId', demarcheTypeId)
-  )
+  (await TitresTypesDemarchesTypesEtapesTypes.query().withGraphFetched('etapeType').where('titreTypeId', titreTypeId).andWhere('demarcheTypeId', demarcheTypeId))
     .map(tde => tde.etapeType!)
     .filter(etapeType => !etapeType.dateFin || etapeType.dateFin === '')
     .map(etapeType => etapeType.id)
@@ -39,18 +28,13 @@ const etapesTypesIdsGet = async (titreTypeId: string, demarcheTypeId: string) =>
 const tdeValidate = async () => {
   const errors = [] as string[]
 
-  const definitionsWithRestrictions = demarchesDefinitions.filter(
-    (
-      demarcheDefinition: IDemarcheDefinition
-    ): demarcheDefinition is DemarcheDefinitionRestriction =>
-      isDemarcheDefinitionRestriction(demarcheDefinition)
+  const definitionsWithRestrictions = demarchesDefinitions.filter((demarcheDefinition: IDemarcheDefinition): demarcheDefinition is DemarcheDefinitionRestriction =>
+    isDemarcheDefinitionRestriction(demarcheDefinition)
   )
 
   for (const demarcheDefinition of definitionsWithRestrictions) {
     for (const demarcheTypeId of demarcheDefinition.demarcheTypeIds) {
-      const demarcheEtatsEtapeTypeIds = Object.keys(
-        demarcheDefinition.restrictions
-      )
+      const demarcheEtatsEtapeTypeIds = Object.keys(demarcheDefinition.restrictions)
         .reduce((acc, etapeTypeId) => {
           acc.push(etapeTypeId)
           const restriction = demarcheDefinition.restrictions[etapeTypeId]
@@ -65,26 +49,19 @@ const tdeValidate = async () => {
         }, [] as string[])
         .map(type => type.split('-')[0])
 
-      const tdeEtapeTypeIds = await etapesTypesIdsGet(
-        demarcheDefinition.titreTypeId,
-        demarcheTypeId
-      )
+      const tdeEtapeTypeIds = await etapesTypesIdsGet(demarcheDefinition.titreTypeId, demarcheTypeId)
 
       // on vérifie que toutes les étapes définies dans l’arbre existent dans TDE
       demarcheEtatsEtapeTypeIds.forEach(demarcheEtatsEtapeTypeId => {
         if (!tdeEtapeTypeIds.includes(demarcheEtatsEtapeTypeId)) {
-          errors.push(
-            `titre "${demarcheDefinition.titreTypeId}" démarche "${demarcheTypeId}" étape "${demarcheEtatsEtapeTypeId}" présent dans l’arbre d’instructions mais pas dans TDE`
-          )
+          errors.push(`titre "${demarcheDefinition.titreTypeId}" démarche "${demarcheTypeId}" étape "${demarcheEtatsEtapeTypeId}" présent dans l’arbre d’instructions mais pas dans TDE`)
         }
       })
 
       // on vérifie que toutes les étapes définies dans TDE existent dans l’arbre
       tdeEtapeTypeIds.forEach(tdeEtapeTypeId => {
         if (!demarcheEtatsEtapeTypeIds.includes(tdeEtapeTypeId)) {
-          errors.push(
-            `titre "${demarcheDefinition.titreTypeId}" démarche "${demarcheTypeId}" étape "${tdeEtapeTypeId}" présent dans TDE mais pas dans l’arbre d’instructions`
-          )
+          errors.push(`titre "${demarcheDefinition.titreTypeId}" démarche "${demarcheTypeId}" étape "${tdeEtapeTypeId}" présent dans TDE mais pas dans l’arbre d’instructions`)
         }
       })
     }
@@ -93,20 +70,13 @@ const tdeValidate = async () => {
   // on vérifie qu’il existe un bloc dans l’arbre par étapes définies dans TDE
   for (const demarcheDefinition of definitionsWithRestrictions) {
     for (const demarcheTypeId of demarcheDefinition.demarcheTypeIds) {
-      const demarcheEtatsEtapeTypeIds = Object.keys(
-        demarcheDefinition.restrictions
-      )
+      const demarcheEtatsEtapeTypeIds = Object.keys(demarcheDefinition.restrictions)
 
-      const tdeEtapeTypeIds = await etapesTypesIdsGet(
-        demarcheDefinition.titreTypeId,
-        demarcheTypeId
-      )
+      const tdeEtapeTypeIds = await etapesTypesIdsGet(demarcheDefinition.titreTypeId, demarcheTypeId)
 
       tdeEtapeTypeIds.forEach(tdeEtapeTypeId => {
         if (!demarcheEtatsEtapeTypeIds.includes(tdeEtapeTypeId)) {
-          errors.push(
-            `bloc manquant "${tdeEtapeTypeId}" dans l’arbre des démarches "${demarcheTypeId}" des titres "${demarcheDefinition.titreTypeId}"`
-          )
+          errors.push(`bloc manquant "${tdeEtapeTypeId}" dans l’arbre des démarches "${demarcheTypeId}" des titres "${demarcheDefinition.titreTypeId}"`)
         }
       })
     }
@@ -123,14 +93,14 @@ const demarchesValidate = async () => {
         {
           titresTypesIds: [demarcheDefinition.titreTypeId.slice(0, 2)],
           titresDomainesIds: [demarcheDefinition.titreTypeId.slice(2)],
-          typesIds: [demarcheTypeId]
+          typesIds: [demarcheTypeId],
         },
         {
           fields: {
             titre: { id: {}, demarches: { etapes: { id: {} } } },
             etapes: { id: {} },
-            type: { etapesTypes: { id: {} } }
-          }
+            type: { etapesTypes: { id: {} } },
+          },
         },
         userSuper
       )
@@ -139,18 +109,10 @@ const demarchesValidate = async () => {
         .filter(demarche => demarche.etapes?.length)
         .forEach(demarche => {
           try {
-            const errs = titreDemarcheUpdatedEtatValidate(
-              demarche.type!,
-              demarche.titre!,
-              demarche.etapes![0],
-              demarche.id,
-              demarche.etapes!
-            )
+            const errs = titreDemarcheUpdatedEtatValidate(demarche.type!, demarche.titre!, demarche.etapes![0], demarche.id, demarche.etapes!)
 
             if (errs.length) {
-              errors.push(
-                `https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche "${demarche.typeId}" : ${errs}`
-              )
+              errors.push(`https://camino.beta.gouv.fr/titres/${demarche.titreId} => démarche "${demarche.typeId}" : ${errs}`)
 
               // console.info(
               //   '[',

@@ -1,14 +1,5 @@
 <template>
-  <Liste
-    nom="métas"
-    :colonnes="colonnes"
-    :lignes="lignes"
-    :elements="metas"
-    :params="params"
-    :total="metas.length"
-    :initialized="initialized"
-    @params-update="paramsUpdate"
-  />
+  <Liste nom="métas" :colonnes="colonnes" :lignes="lignes" :elements="metas" :params="params" :total="metas.length" :initialized="initialized" @params-update="paramsUpdate" />
 </template>
 
 <script>
@@ -24,7 +15,7 @@ export default {
   data() {
     return {
       colonnes: metasColonnes,
-      visible: false
+      visible: false,
     }
   },
 
@@ -51,11 +42,11 @@ export default {
 
     initialized() {
       return this.$store.state.metas.initialized
-    }
+    },
   },
 
   watch: {
-    user: 'init'
+    user: 'init',
   },
 
   async created() {
@@ -77,7 +68,7 @@ export default {
 
     async paramsUpdate(options) {
       await this.$store.dispatch(`metas/paramsSet`, options)
-    }
-  }
+    },
+  },
 }
 </script>

@@ -6,15 +6,9 @@ import { PureDownloads, Props } from './pure-downloads'
 
 const meta: Meta = {
   title: 'Components/common/Downloads',
-  component: PureDownloads
+  component: PureDownloads,
 }
 export default meta
 
 const dispatch = action('dispatch')
-export const Default: Story = () => (
-  <PureDownloads
-    formats={['geojson', 'xlsx']}
-    section=""
-    route={{ query: {} } as RouteLocationNormalized}
-  />
-)
+export const Default: Story = () => <PureDownloads formats={['geojson', 'xlsx']} section="" route={{ query: {} } as RouteLocationNormalized} />

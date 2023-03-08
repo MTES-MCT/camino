@@ -13,8 +13,8 @@ class ActivitesTypesPays extends Model {
 
     properties: {
       activiteTypeId: { type: 'string', maxLength: 3 },
-      paysId: { type: 'string', maxLength: 3 }
-    }
+      paysId: { type: 'string', maxLength: 3 },
+    },
   }
 
   public static idColumn = ['activiteTypeId', 'paysId']

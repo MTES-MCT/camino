@@ -3,11 +3,7 @@ import fetch from 'node-fetch'
 
 import errorLog from '../error-log.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
-import {
-  Administration,
-  AdministrationId,
-  AdministrationTypeId
-} from 'camino-common/src/static/administrations.js'
+import { Administration, AdministrationId, AdministrationTypeId } from 'camino-common/src/static/administrations.js'
 
 const MAX_CALLS_MINUTE = 200
 
@@ -33,22 +29,17 @@ interface IOrganisme {
 
 const organismeFetch = async (departementId: string, nom: string) => {
   if (!API_ADMINISTRATION_URL) {
-    throw new Error(
-      "impossible de se connecter à l'API administration car la variable d'environnement est absente"
-    )
+    throw new Error("impossible de se connecter à l'API administration car la variable d'environnement est absente")
   }
 
   console.info(`API administration: requête ${departementId}, ${nom}`)
 
-  const response = await fetch(
-    `${API_ADMINISTRATION_URL}/v3/departements/${departementId}/${nom}`,
-    {
-      method: 'GET',
-      headers: {
-        accept: 'application/json'
-      }
-    }
-  )
+  const response = await fetch(`${API_ADMINISTRATION_URL}/v3/departements/${departementId}/${nom}`, {
+    method: 'GET',
+    headers: {
+      accept: 'application/json',
+    },
+  })
 
   if (response.status > 400) {
     throw response.statusText
@@ -58,9 +49,7 @@ const organismeFetch = async (departementId: string, nom: string) => {
 
   // attend quelques secondes après chaque appel
   // pour ne pas dépasser les quotas
-  await new Promise(resolve =>
-    setTimeout(resolve, (60 / MAX_CALLS_MINUTE) * 1000)
-  )
+  await new Promise(resolve => setTimeout(resolve, (60 / MAX_CALLS_MINUTE) * 1000))
 
   return result
 }
@@ -96,17 +85,14 @@ const organismeFormat = (e: IOrganisme, departementId: DepartementId) => {
 
   const organisme: Administration = {
     id: p.id.replace(/prefecture|paris_ppp/, 'pre') as AdministrationId,
-    typeId: p.pivotLocal.replace(
-      /prefecture|paris_ppp/,
-      'pre'
-    ) as AdministrationTypeId,
+    typeId: p.pivotLocal.replace(/prefecture|paris_ppp/, 'pre') as AdministrationTypeId,
     nom: p.nom,
     abreviation: p.nom,
     adresse1,
     codePostal: adresses[0].codePostal,
     commune: adresses[0].commune,
     telephone: p.telephone,
-    departementId
+    departementId,
   }
   const adresse2 = adresseB ? adresseB.lignes.join(', ') : null
   if (adresse2) {
@@ -124,23 +110,16 @@ const organismeFormat = (e: IOrganisme, departementId: DepartementId) => {
   return organisme
 }
 
-const organismeDepartementGet = async (
-  departementId: DepartementId,
-  nom: string
-) => {
+const organismeDepartementGet = async (departementId: DepartementId, nom: string) => {
   const organisme = await organismeDepartementCall(departementId, nom)
 
   return organisme ? organismeFormat(organisme, departementId) : null
 }
 
-export const organismesDepartementsGet = async (
-  departementsIdsNoms: { departementId: DepartementId; nom: string }[]
-): Promise<Administration[]> => {
+export const organismesDepartementsGet = async (departementsIdsNoms: { departementId: DepartementId; nom: string }[]): Promise<Administration[]> => {
   const organismesDepartements = []
   for (const { departementId, nom } of departementsIdsNoms) {
-    organismesDepartements.push(
-      await organismeDepartementGet(departementId, nom)
-    )
+    organismesDepartements.push(await organismeDepartementGet(departementId, nom))
   }
 
   return organismesDepartements.filter((o): o is Administration => !!o)

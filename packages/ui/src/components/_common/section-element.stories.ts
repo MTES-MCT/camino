@@ -4,7 +4,7 @@ import { Meta, Story } from '@storybook/vue3'
 const meta: Meta = {
   title: 'Components/common/OldSectionElement',
   component: SectionElement,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -23,7 +23,7 @@ const Template: Story<Props> = (args: Props) => ({
   setup() {
     return { args }
   },
-  template: '<SectionElement v-bind="args" />'
+  template: '<SectionElement v-bind="args" />',
 })
 
 export const Default = Template.bind({})
@@ -32,9 +32,9 @@ Default.args = {
     id: 'id',
     type: 'type',
     nom: "nom de l'élément",
-    description: 'description'
+    description: 'description',
   },
-  contenu: {}
+  contenu: {},
 }
 
 export const AucunFichier = Template.bind({})
@@ -43,9 +43,9 @@ AucunFichier.args = {
     id: 'id',
     type: 'file',
     nom: "nom de l'élément",
-    description: 'description'
+    description: 'description',
   },
-  contenu: {}
+  contenu: {},
 }
 
 export const UnFichier = Template.bind({})
@@ -54,7 +54,7 @@ UnFichier.args = {
     id: 'id',
     type: 'file',
     nom: "nom de l'élément",
-    description: 'description'
+    description: 'description',
   },
-  contenu: { id: '     nom du fichier' }
+  contenu: { id: '     nom du fichier' },
 }

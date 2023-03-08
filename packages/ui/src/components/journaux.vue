@@ -15,8 +15,8 @@ export default defineComponent({
     '$route.query': {
       handler: function () {
         this.$store.dispatch('journaux/routeUpdate')
-      }
-    }
+      },
+    },
   },
 
   unmounted() {
@@ -26,7 +26,7 @@ export default defineComponent({
   methods: {
     async refresh() {
       await this.$store.dispatch('journaux/init')
-    }
-  }
+    },
+  },
 })
 </script>

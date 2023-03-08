@@ -5,7 +5,7 @@ import { IconSprite } from '@/components/_ui/iconSprite'
 
 const meta: Meta = {
   title: 'Components/Ui/Icons',
-  component: Icon
+  component: Icon,
 }
 export default meta
 
@@ -19,7 +19,7 @@ export const IconAllSize = () => ({
         <tr><td>m</td><td><Icon size="M" name="download" /></td></tr>
       </table>
     </div>
-        `
+        `,
 })
 
 export const AllIcons = () => ({
@@ -29,13 +29,8 @@ export const AllIcons = () => ({
       <IconSprite/>
       <table>
       <tr><th>Name</th><th>Component</th></tr>
-        ${icons
-          .map(
-            iconName =>
-              `<tr><td>${iconName}</td><td><Icon size="M" name="${iconName}" /></td></tr>`
-          )
-          .join('')}
+        ${icons.map(iconName => `<tr><td>${iconName}</td><td><Icon size="M" name="${iconName}" /></td></tr>`).join('')}
       </table>
     </div>
-    `
+    `,
 })

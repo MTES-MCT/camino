@@ -3,8 +3,7 @@
     <template #header>
       <div>
         <h6>
-          <span class="cap-first"> {{ typeNom }} </span
-          ><span class="color-neutral"> | </span
+          <span class="cap-first"> {{ typeNom }} </span><span class="color-neutral"> | </span
           ><span class="cap-first">
             {{ periodeNom }}
           </span>
@@ -19,22 +18,15 @@
       <span class="color-inverse">{{ periodeNom }} {{ annee }}</span>
       ?
     </p>
-    <div class="bg-warning color-bg p-s mb-l">
-      <span class="bold"> Attention </span>: cette opération est définitive et
-      ne peut pas être annulée.
-    </div>
+    <div class="bg-warning color-bg p-s mb-l"><span class="bold"> Attention </span>: cette opération est définitive et ne peut pas être annulée.</div>
 
     <template #footer>
       <div v-if="!loading" class="tablet-blobs">
         <div class="tablet-blob-1-3 mb tablet-mb-0">
-          <button class="btn-border rnd-xs p-s full-x" @click="cancel">
-            Annuler
-          </button>
+          <button class="btn-border rnd-xs p-s full-x" @click="cancel">Annuler</button>
         </div>
         <div class="tablet-blob-2-3">
-          <button class="btn-flash rnd-xs p-s full-x" @click="remove">
-            Supprimer
-          </button>
+          <button class="btn-flash rnd-xs p-s full-x" @click="remove">Supprimer</button>
         </div>
       </div>
       <div v-else class="p-s full-x bold">Suppression en cours…</div>
@@ -49,7 +41,7 @@ export default {
   name: 'CaminoTitreActiviteRemovePopup',
 
   components: {
-    Popup
+    Popup,
   },
 
   props: {
@@ -57,7 +49,7 @@ export default {
     typeNom: { type: String, required: true },
     periodeNom: { type: String, required: true },
     annee: { type: Number, required: true },
-    route: { type: Object, required: true }
+    route: { type: Object, required: true },
   },
 
   computed: {
@@ -67,7 +59,7 @@ export default {
 
     messages() {
       return this.$store.state.popup.messages
-    }
+    },
   },
 
   created() {
@@ -82,7 +74,7 @@ export default {
     async remove() {
       await this.$store.dispatch('titreActivite/remove', {
         id: this.activiteId,
-        route: this.route
+        route: this.route,
       })
     },
 
@@ -101,7 +93,7 @@ export default {
 
     errorsRemove() {
       // this.$store.commit('utilisateur/loginMessagesRemove')
-    }
-  }
+    },
+  },
 }
 </script>

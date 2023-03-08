@@ -10,29 +10,29 @@ test.each<[TestUser, boolean]>([
   [
     {
       role: 'admin',
-      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
     },
-    true
+    true,
   ],
   [
     {
       role: 'editeur',
-      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
     },
-    true
+    true,
   ],
   [
     {
       role: 'lecteur',
-      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
     },
-    false
+    false,
   ],
   [{ role: 'entreprise', entreprises: [{ id: entrepriseId }] }, true],
   [{ role: 'bureau d’études', entreprises: [{ id: entrepriseId }] }, true],
   [{ role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('autreEntrepriseId') }] }, false],
   [{ role: 'bureau d’études', entreprises: [] }, false],
-  [{ role: 'defaut' }, false]
+  [{ role: 'defaut' }, false],
 ])('l’utilisateur %p peut modifier une entreprise %p', async (user, modification) => {
   expect(canEditEntreprise({ ...user, ...testBlankUser }, entrepriseId)).toEqual(modification)
 })
@@ -42,29 +42,29 @@ test.each<[TestUser, boolean]>([
   [
     {
       role: 'admin',
-      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
     },
-    true
+    true,
   ],
   [
     {
       role: 'editeur',
-      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
     },
-    true
+    true,
   ],
   [
     {
       role: 'lecteur',
-      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
     },
-    false
+    false,
   ],
   [{ role: 'entreprise', entreprises: [{ id: entrepriseId }] }, false],
   [{ role: 'bureau d’études', entreprises: [{ id: entrepriseId }] }, false],
   [{ role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('autreEntrepriseId') }] }, false],
   [{ role: 'bureau d’études', entreprises: [] }, false],
-  [{ role: 'defaut' }, false]
+  [{ role: 'defaut' }, false],
 ])('l’utilisateur %p peut créer une entreprise %p', async (user, creation) => {
   expect(canCreateEntreprise({ ...user, ...testBlankUser })).toEqual(creation)
 })
@@ -74,29 +74,29 @@ test.each<[TestUser, boolean]>([
   [
     {
       role: 'admin',
-      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
     },
-    true
+    true,
   ],
   [
     {
       role: 'editeur',
-      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
     },
-    true
+    true,
   ],
   [
     {
       role: 'lecteur',
-      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
+      administrationId: ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS'],
     },
-    false
+    false,
   ],
   [{ role: 'entreprise', entreprises: [{ id: entrepriseId }] }, false],
   [{ role: 'bureau d’études', entreprises: [{ id: entrepriseId }] }, false],
   [{ role: 'bureau d’études', entreprises: [{ id: newEntrepriseId('autreEntrepriseId') }] }, false],
   [{ role: 'bureau d’études', entreprises: [] }, false],
-  [{ role: 'defaut' }, false]
+  [{ role: 'defaut' }, false],
 ])('l’utilisateur %p peut créer une entreprise %p', async (user, modification) => {
   expect(canCreateEntreprise({ ...user, ...testBlankUser })).toEqual(modification)
 })

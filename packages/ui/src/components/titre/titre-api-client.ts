@@ -9,5 +9,5 @@ export interface TitreApiClient {
 export const titreApiClient: TitreApiClient = {
   loadTitreSections: async (titreId: string): Promise<Section[]> => {
     return fetchWithJson(CaminoRestRoutes.titreSections, { titreId })
-  }
+  },
 }

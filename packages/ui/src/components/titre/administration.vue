@@ -1,11 +1,5 @@
 <template>
-  <Accordion
-    class="mb"
-    :opened="opened"
-    :slotDefault="true"
-    @close="close"
-    @toggle="toggle"
-  >
+  <Accordion class="mb" :opened="opened" :slotDefault="true" @close="close" @toggle="toggle">
     <template #title>
       <span>{{ administration.nom }}</span>
     </template>
@@ -21,19 +15,14 @@
           </p>
         </div>
       </div>
-      <div
-        v-if="administration.adresse1 || administration.adresse2"
-        class="large-blobs"
-      >
+      <div v-if="administration.adresse1 || administration.adresse2" class="large-blobs">
         <div class="large-blob-1-6">
           <h5>Adresse</h5>
         </div>
         <div class="large-blob-5-6">
           <p>
             {{ administration.adresse1 }}
-            <span v-if="administration.adresse2"
-              ><br />{{ administration.adresse2 }}</span
-            >
+            <span v-if="administration.adresse2"><br />{{ administration.adresse2 }}</span>
             <br />{{ administration.codePostal }}
             {{ administration.commune }}
           </p>
@@ -55,10 +44,7 @@
         </div>
         <div class="large-blob-5-6">
           <p class="word-break">
-            <a
-              :href="`mailto:${administration.email}`"
-              class="btn small bold py-xs px-s rnd"
-            >
+            <a :href="`mailto:${administration.email}`" class="btn small bold py-xs px-s rnd">
               {{ administration.email }}
             </a>
           </p>
@@ -70,12 +56,7 @@
         </div>
         <div class="large-blob-5-6">
           <p class="word-break">
-            <a
-              :href="administration.url"
-              class="btn small bold py-xs px-s rnd"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a :href="administration.url" class="btn small bold py-xs px-s rnd" target="_blank" rel="noopener noreferrer">
               {{ administration.url }}
             </a>
           </p>
@@ -91,28 +72,28 @@ import Accordion from '../_ui/accordion.vue'
 
 export default {
   components: {
-    Accordion
+    Accordion,
   },
 
   props: {
     administrationId: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
 
   emits: ['titre-event-track'],
 
   data() {
     return {
-      opened: false
+      opened: false,
     }
   },
 
   computed: {
     administration() {
       return Administrations[this.administrationId]
-    }
+    },
   },
 
   methods: {
@@ -131,9 +112,9 @@ export default {
       this.$emit('titre-event-track', {
         categorie: 'titre-sections',
         action: 'titre-administration_consulter',
-        nom: this.$route.params.id
+        nom: this.$route.params.id,
       })
-    }
-  }
+    },
+  },
 }
 </script>

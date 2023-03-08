@@ -4,17 +4,17 @@ const state = {
   total: 0,
   definitions: [
     { id: 'colonne', type: 'string', elements: ['id', 'nom'] },
-    { id: 'ordre', type: 'string', elements: ['asc', 'desc'] }
+    { id: 'ordre', type: 'string', elements: ['asc', 'desc'] },
   ],
   params: {
-    table: { ordre: 'asc', colonne: null }
-  }
+    table: { ordre: 'asc', colonne: null },
+  },
 }
 
 const actions = {
   async paramsSet({ commit }, { section, params }) {
     commit('paramsSet', { section, params })
-  }
+  },
 }
 
 const getters = {
@@ -22,11 +22,11 @@ const getters = {
     const elements = Object.keys(metasIndex).map(id => ({
       id,
       nom: metasIndex[id].nom,
-      linkName: metasIndex[id].linkName
+      linkName: metasIndex[id].linkName,
     }))
 
     return state.params.table.ordre === 'desc' ? elements.reverse() : elements
-  }
+  },
 }
 
 const mutations = {
@@ -44,7 +44,7 @@ const mutations = {
     Object.keys(params).forEach(id => {
       state.params[section][id] = params[id]
     })
-  }
+  },
 }
 
 export default {
@@ -52,5 +52,5 @@ export default {
   state,
   getters,
   actions,
-  mutations
+  mutations,
 }

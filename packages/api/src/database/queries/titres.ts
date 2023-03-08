@@ -1,12 +1,6 @@
 import { raw, RawBuilder, Transaction } from 'objection'
 
-import {
-  IColonne,
-  IFields,
-  Index,
-  ITitre,
-  ITitreColonneId
-} from '../../types.js'
+import { IColonne, IFields, Index, ITitre, ITitreColonneId } from '../../types.js'
 
 import options from './_options.js'
 import graphBuild from './graph/build.js'
@@ -32,14 +26,8 @@ import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
  * @returns la requête
  *
  */
-const titresQueryBuild = (
-  { fields }: { fields?: IFields },
-  user: User,
-  demandeEnCours?: boolean | null
-) => {
-  const graph = fields
-    ? graphBuild(titresFieldsAdd(fields), 'titre', fieldsFormat)
-    : options.titres.graph
+const titresQueryBuild = ({ fields }: { fields?: IFields }, user: User, demandeEnCours?: boolean | null) => {
+  const graph = fields ? graphBuild(titresFieldsAdd(fields), 'titre', fieldsFormat) : options.titres.graph
 
   const q = Titres.query().withGraphFetched(graph)
 
@@ -57,11 +45,7 @@ const titresQueryBuild = (
  * @returns un titre
  *
  */
-const titreGet = async (
-  id: string,
-  { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean },
-  user: User
-): Promise<DBTitre | undefined> => {
+const titreGet = async (id: string, { fields, fetchHeritage }: { fields?: IFields; fetchHeritage?: boolean }, user: User): Promise<DBTitre | undefined> => {
   const q = titresQueryBuild({ fields }, user)
 
   q.context({ fetchHeritage })
@@ -84,8 +68,8 @@ const titresColonnes = {
   titulaires: {
     id: raw(`STRING_AGG("titulaires"."nom", ' ; ')`),
     relation: 'titulaires',
-    groupBy: []
-  }
+    groupBy: [],
+  },
 } as Index<IColonne<string | RawBuilder>>
 
 /**
@@ -119,7 +103,7 @@ const titresGet = async (
     regions,
     facadesMaritimes,
     slugs,
-    demandeEnCours
+    demandeEnCours,
   }: {
     intervalle?: number | null
     page?: number | null
@@ -168,7 +152,7 @@ const titresGet = async (
       communes,
       departements,
       regions,
-      facadesMaritimes
+      facadesMaritimes,
     },
     q
   )
@@ -194,11 +178,7 @@ const titresGet = async (
     // dans le tri sur les activités
     // sinon les résultats 'null' apparaissent toujours en premier
     if (colonne === 'activites') {
-      q.orderByRaw(
-        `"activites_absentes" + "activites_en_construction" ${
-          ordre === 'asc' ? 'asc nulls first' : 'desc nulls last'
-        }`
-      )
+      q.orderByRaw(`"activites_absentes" + "activites_en_construction" ${ordre === 'asc' ? 'asc nulls first' : 'desc nulls last'}`)
     } else if (colonne === 'coordonnees') {
       q.orderByRaw(`"coordonnees" notnull ${ordre}`)
     } else {
@@ -206,10 +186,7 @@ const titresGet = async (
     }
   } else {
     if (noms?.length) {
-      q.orderByRaw(
-        'case when LOWER(titres.nom) LIKE LOWER(?) then 0 else 1 end, titres.nom',
-        [`${noms}%`]
-      )
+      q.orderByRaw('case when LOWER(titres.nom) LIKE LOWER(?) then 0 else 1 end, titres.nom', [`${noms}%`])
     } else {
       q.orderBy('titres.nom')
     }
@@ -251,7 +228,7 @@ const titresCount = async (
     departements,
     regions,
     facadesMaritimes,
-    demandeEnCours
+    demandeEnCours,
   }: {
     ids?: string[] | null
     domainesIds?: string[] | null
@@ -289,7 +266,7 @@ const titresCount = async (
       communes,
       departements,
       regions,
-      facadesMaritimes
+      facadesMaritimes,
     },
     q
   )
@@ -306,21 +283,13 @@ const titresCount = async (
  * @returns le nouveau titre
  *
  */
-const titreCreate = async (
-  titre: Omit<ITitre, 'id'>,
-  { fields }: { fields?: IFields }
-): Promise<DBTitre> => {
-  const graph = fields
-    ? graphBuild(titresFieldsAdd(fields), 'titre', fieldsFormat)
-    : options.titres.graph
+const titreCreate = async (titre: Omit<ITitre, 'id'>, { fields }: { fields?: IFields }): Promise<DBTitre> => {
+  const graph = fields ? graphBuild(titresFieldsAdd(fields), 'titre', fieldsFormat) : options.titres.graph
 
-  return Titres.query()
-    .withGraphFetched(graph)
-    .insertGraph(titre, options.titres.update)
+  return Titres.query().withGraphFetched(graph).insertGraph(titre, options.titres.update)
 }
 
-const titreUpdate = async (id: string, titre: Partial<DBTitre>) =>
-  Titres.query().patchAndFetchById(id, { ...titre, id })
+const titreUpdate = async (id: string, titre: Partial<DBTitre>) => Titres.query().patchAndFetchById(id, { ...titre, id })
 
 export const titreArchive = async (id: string) => {
   // archive le titre
@@ -330,33 +299,15 @@ export const titreArchive = async (id: string) => {
   await TitresDemarches.query().patch({ archive: true }).where('titreId', id)
 
   // archive les étapes des démarches du titre
-  await TitresEtapes.query()
-    .patch({ archive: true })
-    .whereIn(
-      'titreDemarcheId',
-      TitresDemarches.query().select('id').where('titreId', id)
-    )
+  await TitresEtapes.query().patch({ archive: true }).whereIn('titreDemarcheId', TitresDemarches.query().select('id').where('titreId', id))
 }
 
-const titreUpsert = async (
-  titre: ITitre,
-  { fields }: { fields?: IFields },
-  tr?: Transaction
-) => {
-  const graph = fields
-    ? graphBuild(titresFieldsAdd(fields), 'titre', fieldsFormat)
-    : options.titres.graph
+const titreUpsert = async (titre: ITitre, { fields }: { fields?: IFields }, tr?: Transaction) => {
+  const graph = fields ? graphBuild(titresFieldsAdd(fields), 'titre', fieldsFormat) : options.titres.graph
 
   const q = Titres.query(tr).withGraphFetched(graph)
 
   return q.upsertGraph(titre, options.titres.update)
 }
 
-export {
-  titreGet,
-  titresGet,
-  titresCount,
-  titreUpdate,
-  titreCreate,
-  titreUpsert
-}
+export { titreGet, titresGet, titresCount, titreUpdate, titreCreate, titreUpsert }

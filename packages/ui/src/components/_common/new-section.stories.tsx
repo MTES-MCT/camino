@@ -5,7 +5,7 @@ import { toCaminoDate } from 'camino-common/src/date'
 
 const meta: Meta = {
   title: 'Components/common/Section',
-  component: NewSection
+  component: NewSection,
 }
 export default meta
 
@@ -25,9 +25,9 @@ export const Default: Story = () => (
           nom: "Franchissements de cours d'eau",
           type: 'integer',
           value: 3,
-          description: "Nombre de franchissements de cours d'eau"
-        }
-      ]
+          description: "Nombre de franchissements de cours d'eau",
+        },
+      ],
     }}
   />
 )
@@ -45,16 +45,16 @@ export const WithoutContent: Story = () => (
           id: 'mecanisation',
           type: 'radio',
           nom: 'Mécanisation',
-          value: undefined
+          value: undefined,
         },
         {
           id: 'franchissements',
           nom: "Franchissements de cours d'eau",
           type: 'integer',
           description: "Nombre de franchissements de cours d'eau",
-          value: undefined
-        }
-      ]
+          value: undefined,
+        },
+      ],
     }}
   />
 )

@@ -15,7 +15,7 @@ import 'jsondiffpatch/dist/formatters-styles/html.css'
 
 export default defineComponent({
   props: {
-    journal: { type: Object, required: true }
+    journal: { type: Object, required: true },
   },
 
   computed: {
@@ -27,8 +27,8 @@ export default defineComponent({
       }
 
       return ''
-    }
-  }
+    },
+  },
 })
 </script>
 <style>

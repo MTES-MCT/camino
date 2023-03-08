@@ -1,31 +1,14 @@
 <template>
-  <Liste
-    nom="entreprises"
-    :filtres="filtres"
-    :colonnes="colonnes"
-    :lignes="lignes"
-    :elements="entreprises"
-    :params="params"
-    :total="total"
-    :initialized="initialized"
-    @params-update="paramsUpdate"
-  >
+  <Liste nom="entreprises" :filtres="filtres" :colonnes="colonnes" :lignes="lignes" :elements="entreprises" :params="params" :total="total" :initialized="initialized" @params-update="paramsUpdate">
     <template v-if="canCreateEntreprise" #addButton>
-      <button
-        class="btn small rnd-xs py-s px-m full-x flex mb-s"
-        @click="addPopupOpen"
-      >
+      <button class="btn small rnd-xs py-s px-m full-x flex mb-s" @click="addPopupOpen">
         <span class="mt-xxs">Ajouter une entreprise</span>
         <Icon name="plus" size="M" class="flex-right" />
       </button>
     </template>
 
     <template v-if="entreprises.length" #downloads>
-      <Downloads
-        :formats="['csv', 'xlsx', 'ods']"
-        section="entreprises"
-        class="flex-right full-x"
-      />
+      <Downloads :formats="['csv', 'xlsx', 'ods']" section="entreprises" class="flex-right full-x" />
     </template>
   </Liste>
 </template>
@@ -36,10 +19,7 @@ import { Downloads } from './_common/downloads'
 import EntrepriseAddPopup from './entreprise/add-popup.vue'
 
 import filtres from './entreprises/filtres'
-import {
-  entreprisesColonnes,
-  entreprisesLignesBuild
-} from './entreprises/table'
+import { entreprisesColonnes, entreprisesLignesBuild } from './entreprises/table'
 import { Icon } from './_ui/icon'
 import { canCreateEntreprise } from 'camino-common/src/permissions/utilisateurs'
 
@@ -52,7 +32,7 @@ export default {
     return {
       filtres,
       colonnes: entreprisesColonnes,
-      visible: false
+      visible: false,
     }
   },
 
@@ -83,15 +63,15 @@ export default {
 
     initialized() {
       return this.$store.state.entreprises.initialized
-    }
+    },
   },
 
   watch: {
     '$route.query': {
       handler: function () {
         this.$store.dispatch('entreprises/routeUpdate')
-      }
-    }
+      },
+    },
   },
 
   async created() {
@@ -113,7 +93,7 @@ export default {
 
     addPopupOpen() {
       this.$store.commit('popupOpen', { component: EntrepriseAddPopup })
-    }
-  }
+    },
+  },
 }
 </script>

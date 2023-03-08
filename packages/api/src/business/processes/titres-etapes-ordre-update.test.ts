@@ -5,21 +5,21 @@ import TitresDemarches from '../../database/models/titres-demarches.js'
 import { userSuper } from '../../database/user-super.js'
 import { vi, afterEach, describe, expect, test } from 'vitest'
 vi.mock('../../database/queries/titres-etapes', () => ({
-  titreEtapeUpdate: vi.fn().mockResolvedValue(true)
+  titreEtapeUpdate: vi.fn().mockResolvedValue(true),
 }))
 
 const titresDemarchesEtapes = {
   '': {
     etapes: [
       { ordre: 1, date: '1988-03-06' },
-      { ordre: 1, date: '1988-03-08' }
+      { ordre: 1, date: '1988-03-08' },
     ],
-    titre: null
-  } as TitresDemarches
+    titre: null,
+  } as TitresDemarches,
 }
 
 const titresDemarchesEtapesVides = {
-  '': { etapes: [], titre: { typeId: '' } } as unknown as TitresDemarches
+  '': { etapes: [], titre: { typeId: '' } } as unknown as TitresDemarches,
 }
 
 console.info = vi.fn()
@@ -28,28 +28,19 @@ afterEach(() => {
 })
 describe('ordre des étapes', () => {
   test("met à jour l'ordre de deux étapes", async () => {
-    const titresEtapesUpdated = await titresEtapesOrdreUpdateVisibleForTesting(
-      userSuper,
-      titresDemarchesEtapes
-    )
+    const titresEtapesUpdated = await titresEtapesOrdreUpdateVisibleForTesting(userSuper, titresDemarchesEtapes)
     expect(titresEtapesUpdated.length).toEqual(1)
     expect(titreEtapeUpdate).toHaveBeenCalled()
   })
 
   test("ne met aucun ordre d'étape à jour", async () => {
-    const titresEtapesUpdated = await titresEtapesOrdreUpdateVisibleForTesting(
-      userSuper,
-      titresDemarchesEtapesVides
-    )
+    const titresEtapesUpdated = await titresEtapesOrdreUpdateVisibleForTesting(userSuper, titresDemarchesEtapesVides)
     expect(titresEtapesUpdated.length).toEqual(0)
     expect(titreEtapeUpdate).not.toHaveBeenCalled()
   })
 
   test("ne met aucun ordre d'étape à jour (démarche sans étape)", async () => {
-    const titresEtapesUpdated = await titresEtapesOrdreUpdateVisibleForTesting(
-      userSuper,
-      {}
-    )
+    const titresEtapesUpdated = await titresEtapesOrdreUpdateVisibleForTesting(userSuper, {})
 
     expect(titresEtapesUpdated.length).toEqual(0)
     expect(titreEtapeUpdate).not.toHaveBeenCalled()

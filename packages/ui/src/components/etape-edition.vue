@@ -2,27 +2,17 @@
   <Loader v-if="!loaded" />
   <div v-else>
     <h6>
-      <router-link
-        :to="{ name: 'titre', params: { id: titre.slug } }"
-        class="cap-first"
-      >
+      <router-link :to="{ name: 'titre', params: { id: titre.slug } }" class="cap-first">
         {{ titre.nom }}
       </router-link>
       <span class="color-neutral"> | </span>
-      <span class="cap-first">
-        {{ demarcheType.nom }} {{ demarcheDescription }}
-      </span>
+      <span class="cap-first"> {{ demarcheType.nom }} {{ demarcheDescription }} </span>
     </h6>
     <h1>Étape</h1>
 
     <div v-if="helpVisible" class="p-s bg-info color-bg mb">
       Besoin d'aide pour déposer votre demande ?
-      <router-link
-        to="/contacts"
-        target="_blank"
-        class="p-s bg-info color-bg mb"
-        >Contactez-nous</router-link
-      >
+      <router-link to="/contacts" target="_blank" class="p-s bg-info color-bg mb">Contactez-nous</router-link>
     </div>
 
     <div v-if="dateIsVisible" class="tablet-blobs">
@@ -30,11 +20,7 @@
         <h5>Date</h5>
       </div>
       <div class="tablet-blob-2-3">
-        <InputDate
-          :initialValue="newDate"
-          :dateChanged="dateChanged"
-          class="mb"
-        />
+        <InputDate :initialValue="newDate" :dateChanged="dateChanged" class="mb" />
       </div>
     </div>
 
@@ -63,33 +49,13 @@
     <div v-else-if="dateIsVisible" class="tablet-blobs mb">
       <div class="tablet-blob-1-3" />
       <div class="tablet-blob-2-3">
-        <button
-          ref="date-button"
-          class="btn btn-primary"
-          :disabled="!newDate"
-          :class="{ disabled: !newDate }"
-          @click="dateUpdate"
-        >
-          Valider
-        </button>
+        <button ref="date-button" class="btn btn-primary" :disabled="!newDate" :class="{ disabled: !newDate }" @click="dateUpdate">Valider</button>
       </div>
     </div>
 
-    <div
-      v-else
-      ref="save-btn-container"
-      class="tablet-blobs pb-m pt-m bg-bg b-0 sticky"
-    >
+    <div v-else ref="save-btn-container" class="tablet-blobs pb-m pt-m bg-bg b-0 sticky">
       <div class="tablet-blob-1-3" />
-      <FormSaveBtn
-        ref="save-btn"
-        :alertes="alertes"
-        :canSave="isFormComplete"
-        :canDepose="complete"
-        :showDepose="etapeIsDemandeEnConstruction"
-        @save="save"
-        @depose="depose"
-      />
+      <FormSaveBtn ref="save-btn" :alertes="alertes" :canSave="isFormComplete" :canDepose="complete" :showDepose="etapeIsDemandeEnConstruction" @save="save" @depose="depose" />
     </div>
   </div>
 </template>
@@ -121,7 +87,7 @@ export default {
       typeComplete: false,
       promptMsg: 'Quitter le formulaire sans enregistrer les changements ?',
       newDate: getCurrent(),
-      events: { saveKeyUp: true }
+      events: { saveKeyUp: true },
     }
   },
 
@@ -180,9 +146,7 @@ export default {
     },
 
     etapeIsDemandeEnConstruction() {
-      return (
-        this.etapeType?.id === 'mfr' && this.editedEtape?.statutId === 'aco'
-      )
+      return this.etapeType?.id === 'mfr' && this.editedEtape?.statutId === 'aco'
     },
 
     isPopupOpen() {
@@ -190,16 +154,11 @@ export default {
     },
 
     isFormComplete() {
-      return (
-        (this.etapeIsDemandeEnConstruction && this.typeComplete) ||
-        this.complete
-      )
+      return (this.etapeIsDemandeEnConstruction && this.typeComplete) || this.complete
     },
 
     documentPopupTitle() {
-      return `${cap(this.titre.nom)} | ${cap(this.demarcheType.nom)} | ${
-        this.etapeType ? cap(this.etapeType.nom) : ''
-      }`
+      return `${cap(this.titre.nom)} | ${cap(this.demarcheType.nom)} | ${this.etapeType ? cap(this.etapeType.nom) : ''}`
     },
 
     userIsAdmin() {
@@ -207,16 +166,12 @@ export default {
     },
 
     helpVisible() {
-      return (
-        !this.userIsAdmin &&
-        ['axm', 'arm'].includes(this.titre.typeId) &&
-        this.etapeType.id === 'mfr'
-      )
-    }
+      return !this.userIsAdmin && ['axm', 'arm'].includes(this.titre.typeId) && this.etapeType.id === 'mfr'
+    },
   },
 
   watch: {
-    user: 'init'
+    user: 'init',
   },
 
   async created() {
@@ -243,7 +198,7 @@ export default {
       await this.$store.dispatch('titreEtapeEdition/init', {
         titreDemarcheId: this.$route.query['demarche-id'],
         id: this.etapeId,
-        date: this.newDate
+        date: this.newDate,
       })
     },
 
@@ -254,8 +209,7 @@ export default {
     },
 
     async reroute(titreEtapeId) {
-      const tabId =
-        this.demarcheType?.travaux === true ? 'travaux' : 'demarches'
+      const tabId = this.demarcheType?.travaux === true ? 'travaux' : 'demarches'
 
       this.$store.commit('titre/open', { section: 'etapes', id: titreEtapeId })
       this.$store.commit('titre/openTab', tabId)
@@ -263,7 +217,7 @@ export default {
       await this.$router.push({
         name: 'titre',
         params: { id: this.titre.id },
-        hash: `#${titreEtapeId}`
+        hash: `#${titreEtapeId}`,
       })
     },
 
@@ -271,12 +225,9 @@ export default {
       this.isFormDirty = false
 
       if (this.isFormComplete) {
-        const titreEtapeId = await this.$store.dispatch(
-          'titreEtapeEdition/upsert',
-          {
-            etape: this.editedEtape
-          }
-        )
+        const titreEtapeId = await this.$store.dispatch('titreEtapeEdition/upsert', {
+          etape: this.editedEtape,
+        })
 
         if (titreEtapeId) {
           if (reroute) {
@@ -286,7 +237,7 @@ export default {
           this.eventTrack({
             categorie: 'titre-etape',
             action: 'titre-etape-enregistrer',
-            nom: titreEtapeId
+            nom: titreEtapeId,
           })
         }
         return titreEtapeId
@@ -309,10 +260,10 @@ export default {
                 this.eventTrack({
                   categorie: 'titre-etape',
                   action: 'titre-etape_depot',
-                  nom: this.$route.params.id
+                  nom: this.$route.params.id,
                 })
-              }
-            }
+              },
+            },
           })
         }
       }
@@ -325,20 +276,11 @@ export default {
     },
 
     keyUp(e) {
-      if (
-        (e.which || e.keyCode) === 13 &&
-        this.events.saveKeyUp &&
-        this.complete &&
-        !this.isPopupOpen
-      ) {
+      if ((e.which || e.keyCode) === 13 && this.events.saveKeyUp && this.complete && !this.isPopupOpen) {
         if (this.dateIsVisible && this.newDate) {
           this.$refs['date-button'].focus()
           this.dateUpdate()
-        } else if (
-          !this.dateIsVisible &&
-          !this.loading &&
-          this.isFormComplete
-        ) {
+        } else if (!this.dateIsVisible && !this.loading && this.isFormComplete) {
           this.$refs['save-btn'].focusBtn()
           this.save()
         }
@@ -360,13 +302,13 @@ export default {
 
     async dateUpdate() {
       await this.$store.dispatch('titreEtapeEdition/dateUpdate', {
-        date: this.newDate
+        date: this.newDate,
       })
     },
 
     dateFormat(date) {
       return dateFormat(date)
-    }
-  }
+    },
+  },
 }
 </script>

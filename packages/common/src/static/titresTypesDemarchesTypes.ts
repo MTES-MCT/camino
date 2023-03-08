@@ -7,7 +7,7 @@ const demarchesEverywhere = [
   DEMARCHES_TYPES_IDS.DeclarationDOuvertureDeTravaux,
   DEMARCHES_TYPES_IDS.Octroi,
   DEMARCHES_TYPES_IDS.Renonciation,
-  DEMARCHES_TYPES_IDS.Retrait
+  DEMARCHES_TYPES_IDS.Retrait,
 ]
 
 const TITRES_TYPES_DEMARCHES_TYPES = {
@@ -22,7 +22,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     ...demarchesEverywhere,
     DEMARCHES_TYPES_IDS.DeplacementDePerimetre,
     DEMARCHES_TYPES_IDS.Prolongation,
-    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation
+    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation,
   ],
   [TITRES_TYPES_IDS.CONCESSION_FOSSILES]: [
     ...demarchesEverywhere,
@@ -30,7 +30,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.ExtensionDePerimetre,
     DEMARCHES_TYPES_IDS.Mutation,
     DEMARCHES_TYPES_IDS.Prolongation,
-    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation
+    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
   ],
   [TITRES_TYPES_IDS.CONCESSION_GEOTHERMIE]: [
     ...demarchesEverywhere,
@@ -38,7 +38,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.ExtensionDePerimetre,
     DEMARCHES_TYPES_IDS.Mutation,
     DEMARCHES_TYPES_IDS.Prolongation,
-    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation
+    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
   ],
   [TITRES_TYPES_IDS.CONCESSION_HYDROCARBURE]: [
     ...demarchesEverywhere,
@@ -47,7 +47,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.ExtensionDePerimetre,
     DEMARCHES_TYPES_IDS.Mutation,
     DEMARCHES_TYPES_IDS.Prolongation,
-    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation
+    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
   ],
   [TITRES_TYPES_IDS.CONCESSION_METAUX]: [
     ...demarchesEverywhere,
@@ -59,7 +59,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Mutation,
     DEMARCHES_TYPES_IDS.Prolongation,
     DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
-    DEMARCHES_TYPES_IDS.MutationPartielle
+    DEMARCHES_TYPES_IDS.MutationPartielle,
   ],
   [TITRES_TYPES_IDS.CONCESSION_RADIOACTIF]: [
     ...demarchesEverywhere,
@@ -67,7 +67,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.ExtensionDePerimetre,
     DEMARCHES_TYPES_IDS.Mutation,
     DEMARCHES_TYPES_IDS.Prolongation,
-    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation
+    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
   ],
   [TITRES_TYPES_IDS.CONCESSION_SOUTERRAIN]: [
     ...demarchesEverywhere,
@@ -75,7 +75,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.ExtensionDePerimetre,
     DEMARCHES_TYPES_IDS.Mutation,
     DEMARCHES_TYPES_IDS.Prolongation,
-    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation
+    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
   ],
   [TITRES_TYPES_IDS.CONCESSION_GRANULATS_MARINS]: [
     ...demarchesEverywhere,
@@ -83,7 +83,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.ExtensionDePerimetre,
     DEMARCHES_TYPES_IDS.Mutation,
     DEMARCHES_TYPES_IDS.Prolongation,
-    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation
+    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
   ],
   [TITRES_TYPES_IDS.INDETERMINE_METAUX]: [DEMARCHES_TYPES_IDS.Octroi],
   [TITRES_TYPES_IDS.INDETERMINE_RADIOACTIF]: [DEMARCHES_TYPES_IDS.Octroi],
@@ -93,7 +93,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.ExtensionDePerimetre,
     DEMARCHES_TYPES_IDS.Mutation,
     DEMARCHES_TYPES_IDS.Prolongation,
-    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation
+    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
   ],
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_FOSSILES]: [
     ...demarchesEverywhere,
@@ -102,7 +102,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Mutation,
     DEMARCHES_TYPES_IDS.Prolongation1,
     DEMARCHES_TYPES_IDS.Prolongation2,
-    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation
+    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation,
   ],
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GEOTHERMIE]: [
     ...demarchesEverywhere,
@@ -112,7 +112,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Prolongation1,
     DEMARCHES_TYPES_IDS.Prolongation2,
     DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation,
-    DEMARCHES_TYPES_IDS.MutationPartielle
+    DEMARCHES_TYPES_IDS.MutationPartielle,
   ],
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_HYDROCARBURE]: [
     ...demarchesEverywhere,
@@ -121,7 +121,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Mutation,
     DEMARCHES_TYPES_IDS.Prolongation1,
     DEMARCHES_TYPES_IDS.Prolongation2,
-    DEMARCHES_TYPES_IDS.ProlongationExceptionnelle
+    DEMARCHES_TYPES_IDS.ProlongationExceptionnelle,
   ],
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_METAUX]: [
     ...demarchesEverywhere,
@@ -131,7 +131,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Mutation,
     DEMARCHES_TYPES_IDS.Prolongation1,
     DEMARCHES_TYPES_IDS.Prolongation2,
-    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation
+    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation,
   ],
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_RADIOACTIF]: [
     ...demarchesEverywhere,
@@ -142,7 +142,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Prolongation1,
     DEMARCHES_TYPES_IDS.Prolongation2,
     DEMARCHES_TYPES_IDS.Prorogation,
-    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation
+    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation,
   ],
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_SOUTERRAIN]: [
     ...demarchesEverywhere,
@@ -151,7 +151,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Mutation,
     DEMARCHES_TYPES_IDS.Prolongation1,
     DEMARCHES_TYPES_IDS.Prolongation2,
-    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation
+    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation,
   ],
   [TITRES_TYPES_IDS.PERMIS_EXCLUSIF_DE_RECHERCHES_GRANULATS_MARINS]: [
     ...demarchesEverywhere,
@@ -160,7 +160,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Mutation,
     DEMARCHES_TYPES_IDS.Prolongation1,
     DEMARCHES_TYPES_IDS.Prolongation2,
-    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation
+    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation,
   ],
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_FOSSILES]: [DEMARCHES_TYPES_IDS.Octroi],
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GEOTHERMIE]: [
@@ -170,7 +170,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Fusion,
     DEMARCHES_TYPES_IDS.Mutation,
     DEMARCHES_TYPES_IDS.Prolongation,
-    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation
+    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
   ],
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_HYDROCARBURE]: [
     ...demarchesEverywhere,
@@ -181,7 +181,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Prolongation2,
     DEMARCHES_TYPES_IDS.Prorogation,
     DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
-    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation
+    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation,
   ],
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_METAUX]: [
     ...demarchesEverywhere,
@@ -192,7 +192,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Prolongation1,
     DEMARCHES_TYPES_IDS.Prolongation2,
     DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
-    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation
+    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation,
   ],
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_RADIOACTIF]: [
     ...demarchesEverywhere,
@@ -204,7 +204,7 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Prolongation2,
     DEMARCHES_TYPES_IDS.Prorogation,
     DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
-    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation
+    DEMARCHES_TYPES_IDS.DemandeDeTitreDExploitation,
   ],
   [TITRES_TYPES_IDS.PERMIS_D_EXPLOITATION_GRANULATS_MARINS]: [
     ...demarchesEverywhere,
@@ -214,8 +214,8 @@ const TITRES_TYPES_DEMARCHES_TYPES = {
     DEMARCHES_TYPES_IDS.Prolongation1,
     DEMARCHES_TYPES_IDS.Prolongation2,
     DEMARCHES_TYPES_IDS.Prorogation,
-    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation
-  ]
+    DEMARCHES_TYPES_IDS.ResiliationAnticipeeDAmodiation,
+  ],
 } as const
 
 export type TitresTypesDemarchesTypes = typeof TITRES_TYPES_DEMARCHES_TYPES

@@ -17,61 +17,41 @@ export const titresActivitesPropsUpdate = async (titresIds?: string[]) => {
       fields: {
         demarches: { phase: { id: {} }, etapes: { id: {} }, type: { id: {} } },
         activites: {
-          type: { id: {} }
-        }
-      }
+          type: { id: {} },
+        },
+      },
     },
     userSuper
   )
 
-  const titresActivitesUpdated = titres.reduce(
-    (acc: ITitreActivite[], titre) => {
-      if (!titre.activites?.length) return acc
+  const titresActivitesUpdated = titres.reduce((acc: ITitreActivite[], titre) => {
+    if (!titre.activites?.length) return acc
 
-      return titre.activites.reduce((acc, titreActivite) => {
-        const dateDebut = toCaminoDate(
-          new Date(
-            titreActivite.annee,
-            getMonth(titreActivite.type?.frequenceId, titreActivite.periodeId),
-            1
-          )
-        )
+    return titre.activites.reduce((acc, titreActivite) => {
+      const dateDebut = toCaminoDate(new Date(titreActivite.annee, getMonth(titreActivite.type?.frequenceId, titreActivite.periodeId), 1))
 
-        const titreIsValide =
-          titre.demarches?.length &&
-          titreValideCheck(
-            titre.demarches!,
-            dateDebut,
-            titreActivite.date,
-            titre.typeId,
-            true
-          )
+      const titreIsValide = titre.demarches?.length && titreValideCheck(titre.demarches!, dateDebut, titreActivite.date, titre.typeId, true)
 
-        if (titreIsValide && titreActivite.suppression) {
-          titreActivite.suppression = null
+      if (titreIsValide && titreActivite.suppression) {
+        titreActivite.suppression = null
 
-          acc.push(titreActivite)
-        }
+        acc.push(titreActivite)
+      }
 
-        if (!titreIsValide && !titreActivite.suppression) {
-          titreActivite.suppression = true
+      if (!titreIsValide && !titreActivite.suppression) {
+        titreActivite.suppression = true
 
-          acc.push(titreActivite)
-        }
+        acc.push(titreActivite)
+      }
 
-        return acc
-      }, acc)
-    },
-    []
-  )
+      return acc
+    }, acc)
+  }, [])
 
   if (titresActivitesUpdated.length) {
     await titresActivitesUpsert(titresActivitesUpdated)
 
-    console.info(
-      'titre / activités / propriétés (mise à jour) ->',
-      titresActivitesUpdated.map(ta => ta.id).join(', ')
-    )
+    console.info('titre / activités / propriétés (mise à jour) ->', titresActivitesUpdated.map(ta => ta.id).join(', '))
   }
 
   return titresActivitesUpdated.map(ta => ta.id)

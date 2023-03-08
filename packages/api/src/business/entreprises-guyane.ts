@@ -1,8 +1,4 @@
-import {
-  toDepartementId,
-  Departements,
-  CodePostal
-} from 'camino-common/src/static/departement.js'
+import { toDepartementId, Departements, CodePostal } from 'camino-common/src/static/departement.js'
 import { PAYS_IDS } from 'camino-common/src/static/pays.js'
 import { Regions } from 'camino-common/src/static/region.js'
 import { knex } from '../knex.js'
@@ -22,43 +18,18 @@ type ResultAggregated = {
   entreprises: string[]
 } & Omit<Result, 'id' | 'nomEntreprise' | 'codePostal'>
 
-export const subscribeUsersToGuyaneExploitants = async (): Promise<
-  ResultAggregated[]
-> => {
-  console.info(
-    `inscription des utilisateurs d'entreprise de Guyane à la liste de diffusion`
-  )
+export const subscribeUsersToGuyaneExploitants = async (): Promise<ResultAggregated[]> => {
+  console.info(`inscription des utilisateurs d'entreprise de Guyane à la liste de diffusion`)
 
   const result: Result[] = await knex
-    .select(
-      'utilisateurs.id',
-      'utilisateurs.email',
-      { nomUtilisateur: 'utilisateurs.nom' },
-      'prenom',
-      'role',
-      { nomEntreprise: 'entreprises.nom' },
-      'codePostal'
-    )
+    .select('utilisateurs.id', 'utilisateurs.email', { nomUtilisateur: 'utilisateurs.nom' }, 'prenom', 'role', { nomEntreprise: 'entreprises.nom' }, 'codePostal')
     .from('utilisateurs')
-    .leftJoin(
-      'utilisateurs__entreprises',
-      'id',
-      'utilisateurs__entreprises.utilisateur_id'
-    )
-    .leftJoin(
-      'entreprises',
-      'utilisateurs__entreprises.entreprise_id',
-      'entreprises.id'
-    )
+    .leftJoin('utilisateurs__entreprises', 'id', 'utilisateurs__entreprises.utilisateur_id')
+    .leftJoin('entreprises', 'utilisateurs__entreprises.entreprise_id', 'entreprises.id')
     .whereIn('role', ['entreprise', 'bureau d’études'])
     .andWhereNot('utilisateurs.email', null)
   const reduced = result
-    .filter(
-      ({ codePostal }) =>
-        codePostal !== null &&
-        Regions[Departements[toDepartementId(codePostal)].regionId].paysId ===
-          PAYS_IDS['Département de la Guyane']
-    )
+    .filter(({ codePostal }) => codePostal !== null && Regions[Departements[toDepartementId(codePostal)].regionId].paysId === PAYS_IDS['Département de la Guyane'])
     .reduce<Record<string, ResultAggregated>>((acc, user) => {
       if (!acc[user.id]) {
         acc[user.id] = {
@@ -66,7 +37,7 @@ export const subscribeUsersToGuyaneExploitants = async (): Promise<
           entreprises: [user.nomEntreprise],
           nomUtilisateur: user.nomUtilisateur,
           prenom: user.prenom,
-          role: user.role
+          role: user.role,
         }
       } else {
         acc[user.id].entreprises.push(user.nomEntreprise)
@@ -74,13 +45,11 @@ export const subscribeUsersToGuyaneExploitants = async (): Promise<
 
       return acc
     }, {})
-  const users = Object.values(reduced).sort((a, b) =>
-    a.email.localeCompare(b.email)
-  )
+  const users = Object.values(reduced).sort((a, b) => a.email.localeCompare(b.email))
   await exploitantsGuyaneSubscriberUpdate(
     users.map(user => ({
       email: user.email,
-      nom: `${user.nomUtilisateur} ${user.prenom}`
+      nom: `${user.nomUtilisateur} ${user.prenom}`,
     }))
   )
 

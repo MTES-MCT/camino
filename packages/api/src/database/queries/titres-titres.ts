@@ -10,7 +10,7 @@ export const linkTitres = async (link: LinkTitre): Promise<void> => {
     await TitresTitres.query().insert(
       link.linkFrom.map(titreFromId => ({
         titreFromId,
-        titreToId: link.linkTo
+        titreToId: link.linkTo,
       }))
     )
   }

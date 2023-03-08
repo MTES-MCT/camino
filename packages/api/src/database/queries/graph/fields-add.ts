@@ -5,7 +5,7 @@ import { IFields } from '../../../types.js'
 export const fieldsTitreAdd = (fields: IFields) => {
   if (!fields.titre) {
     fields.titre = {
-      id: {}
+      id: {},
     }
   }
 
@@ -39,12 +39,7 @@ export const titresFieldsAdd = (fields: IFields) => {
     }
   }
 
-  if (
-    fields.secteursMaritime ||
-    fields.administrationsLocale ||
-    fields.administrations ||
-    fields.sdomZones
-  ) {
+  if (fields.secteursMaritime || fields.administrationsLocale || fields.administrations || fields.sdomZones) {
     if (!fields.pointsEtape) {
       fields.pointsEtape = { id: {} }
     }

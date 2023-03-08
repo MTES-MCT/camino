@@ -1,22 +1,14 @@
-import {
-  ADMINISTRATION_IDS,
-  ADMINISTRATION_TYPES,
-  Administrations
-} from 'camino-common/src/static/administrations'
-import {
-  isAdministrationAdmin,
-  isAdministrationEditeur,
-  isSuper
-} from 'camino-common/src/roles'
+import { ADMINISTRATION_IDS, ADMINISTRATION_TYPES, Administrations } from 'camino-common/src/static/administrations'
+import { isAdministrationAdmin, isAdministrationEditeur, isSuper } from 'camino-common/src/roles'
 import { fetchWithJson } from '@/api/client-rest'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
 
 const state = {
   element: null,
   preferences: {
-    carte: { markerLayersId: 'clusters' }
+    carte: { markerLayersId: 'clusters' },
   },
-  loaded: false
+  loaded: false,
 }
 
 const actions = {
@@ -41,7 +33,7 @@ const actions = {
     } else {
       commit('preferencesSet', { section, params })
     }
-  }
+  },
 }
 
 const getters = {
@@ -62,11 +54,7 @@ const getters = {
 
     const threedays = 1000 * 60 * 60
 
-    if (
-      localStorage.getItem('conditions') &&
-      Number(localStorage.getItem('conditions')) + threedays >
-        new Date().getTime()
-    ) {
+    if (localStorage.getItem('conditions') && Number(localStorage.getItem('conditions')) + threedays > new Date().getTime()) {
       return true
     }
 
@@ -76,49 +64,28 @@ const getters = {
   / @deprecated
   */
   userIsAdmin(state) {
-    return (
-      isSuper(state.element) ||
-      isAdministrationAdmin(state.element) ||
-      isAdministrationEditeur(state.element)
-    )
+    return isSuper(state.element) || isAdministrationAdmin(state.element) || isAdministrationEditeur(state.element)
   },
 
   isONF(state) {
-    return (
-      (isAdministrationAdmin(state.element) ||
-        isAdministrationEditeur(state.element)) &&
-      state.element.administrationId ===
-        ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
-    )
+    return (isAdministrationAdmin(state.element) || isAdministrationEditeur(state.element)) && state.element.administrationId === ADMINISTRATION_IDS['OFFICE NATIONAL DES FORÊTS']
   },
   isPTMG(state) {
-    return (
-      (isAdministrationAdmin(state.element) ||
-        isAdministrationEditeur(state.element)) &&
-      state.element.administrationId ===
-        ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
-    )
+    return (isAdministrationAdmin(state.element) || isAdministrationEditeur(state.element)) && state.element.administrationId === ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE']
   },
   isDREAL(state) {
     return (
-      (isAdministrationAdmin(state.element) ||
-        isAdministrationEditeur(state.element)) &&
-      [ADMINISTRATION_TYPES.dea.id, ADMINISTRATION_TYPES.dre.id].includes(
-        Administrations[state.element.administrationId].typeId
-      )
+      (isAdministrationAdmin(state.element) || isAdministrationEditeur(state.element)) &&
+      [ADMINISTRATION_TYPES.dea.id, ADMINISTRATION_TYPES.dre.id].includes(Administrations[state.element.administrationId].typeId)
     )
   },
   isDGTM(state) {
-    return (
-      (isAdministrationAdmin(state.element) ||
-        isAdministrationEditeur(state.element)) &&
-      state.element.administrationId === ADMINISTRATION_IDS['DGTM - GUYANE']
-    )
+    return (isAdministrationAdmin(state.element) || isAdministrationEditeur(state.element)) && state.element.administrationId === ADMINISTRATION_IDS['DGTM - GUYANE']
   },
 
   userIsSuper(state) {
     return isSuper(state.element)
-  }
+  },
 }
 
 const mutations = {
@@ -138,7 +105,7 @@ const mutations = {
 
   reset(state) {
     state.element = null
-  }
+  },
 }
 
 export default {
@@ -146,5 +113,5 @@ export default {
   state,
   actions,
   getters,
-  mutations
+  mutations,
 }

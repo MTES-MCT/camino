@@ -24,14 +24,8 @@ export const up = async (knex: Knex) => {
             )`
   )
 
-  await knex.raw(
-    'CREATE INDEX index_geo_communes on communes_postgis using spgist (geometry)'
-  )
-  await knex.raw(
-    'CREATE INDEX index_geo_forets on forets_postgis using spgist (geometry)'
-  )
-  await knex.raw(
-    'CREATE INDEX index_geo_sdom_zones on sdom_zones_postgis using spgist (geometry)'
-  )
+  await knex.raw('CREATE INDEX index_geo_communes on communes_postgis using spgist (geometry)')
+  await knex.raw('CREATE INDEX index_geo_forets on forets_postgis using spgist (geometry)')
+  await knex.raw('CREATE INDEX index_geo_sdom_zones on sdom_zones_postgis using spgist (geometry)')
 }
 export const down = () => ({})

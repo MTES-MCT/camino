@@ -19,7 +19,7 @@ export default {
     repertoire: { type: String, required: true },
     title: { type: String, required: true },
     large: { type: Boolean, default: false },
-    documentsTypes: { type: Array, default: null }
+    documentsTypes: { type: Array, default: null },
   },
 
   emits: ['titre-event-track'],
@@ -35,16 +35,16 @@ export default {
           parentTypeId: this.parentTypeId,
           repertoire: this.repertoire,
           title: this.title,
-          documentsTypes: this.documentsTypes
-        }
+          documentsTypes: this.documentsTypes,
+        },
       })
 
       this.$emit('titre-event-track', {
         categorie: 'titre-sections',
         action: 'titre-etape-doc_ajouter',
-        nom: this.$route.params.id
+        nom: this.$route.params.id,
       })
-    }
-  }
+    },
+  },
 }
 </script>

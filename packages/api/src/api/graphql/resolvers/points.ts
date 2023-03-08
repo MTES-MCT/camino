@@ -3,46 +3,20 @@ import { ITitrePoint, Context } from '../../../types.js'
 import { FileUpload } from 'graphql-upload'
 import { Stream } from 'stream'
 import shpjs from 'shpjs'
-import {
-  FeatureCollection,
-  MultiPolygon,
-  Polygon,
-  Position,
-  Feature
-} from 'geojson'
-import {
-  documentTypeIdsBySdomZonesGet,
-  titreEtapePointsCalc,
-  titreEtapeSdomZonesGet
-} from './_titre-etape.js'
-import {
-  geojsonFeatureMultiPolygon,
-  geojsonSurface
-} from '../../../tools/geojson.js'
+import { FeatureCollection, MultiPolygon, Polygon, Position, Feature } from 'geojson'
+import { documentTypeIdsBySdomZonesGet, titreEtapePointsCalc, titreEtapeSdomZonesGet } from './_titre-etape.js'
+import { geojsonFeatureMultiPolygon, geojsonSurface } from '../../../tools/geojson.js'
 import { titreEtapeGet } from '../../../database/queries/titres-etapes.js'
 import { etapeTypeGet } from '../../../database/queries/metas.js'
 import { titreGet, titresGet } from '../../../database/queries/titres.js'
 import { userSuper } from '../../../database/user-super.js'
 import intersect from '@turf/intersect'
-import {
-  assertGeoSystemeId,
-  GeoSystemes
-} from 'camino-common/src/static/geoSystemes.js'
-import {
-  isSuper,
-  isAdministrationAdmin,
-  isAdministrationEditeur,
-  User
-} from 'camino-common/src/roles.js'
+import { assertGeoSystemeId, GeoSystemes } from 'camino-common/src/static/geoSystemes.js'
+import { isSuper, isAdministrationAdmin, isAdministrationEditeur, User } from 'camino-common/src/roles.js'
 import { titreDemarcheGet } from '../../../database/queries/titres-demarches.js'
 import { TitresStatuts } from 'camino-common/src/static/titresStatuts.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
-import {
-  SDOMZone,
-  SDOMZoneId,
-  SDOMZoneIds,
-  SDOMZones
-} from 'camino-common/src/static/sdom.js'
+import { SDOMZone, SDOMZoneId, SDOMZoneIds, SDOMZones } from 'camino-common/src/static/sdom.js'
 
 const stream2buffer = async (stream: Stream): Promise<Buffer> => {
   return new Promise<Buffer>((resolve, reject) => {
@@ -50,9 +24,7 @@ const stream2buffer = async (stream: Stream): Promise<Buffer> => {
 
     stream.on('data', chunk => _buf.push(chunk))
     stream.on('end', () => resolve(Buffer.concat(_buf)))
-    stream.on('error', err =>
-      reject(new Error(`error converting stream - ${err}`))
-    )
+    stream.on('error', err => reject(new Error(`error converting stream - ${err}`)))
   })
 }
 
@@ -73,7 +45,7 @@ export const pointsImporter = async (
     fileUpload,
     geoSystemeId,
     demarcheId,
-    etapeTypeId
+    etapeTypeId,
   }: {
     fileUpload: { file: FileUpload }
     geoSystemeId: string
@@ -93,10 +65,7 @@ export const pointsImporter = async (
       throw new Error('fichier vide')
     }
 
-    if (
-      !file.filename.endsWith('.geojson') &&
-      !file.filename.endsWith('.shp')
-    ) {
+    if (!file.filename.endsWith('.geojson') && !file.filename.endsWith('.shp')) {
       throw new Error('seul les fichiers geojson ou shape sont acceptés')
     }
 
@@ -109,14 +78,10 @@ export const pointsImporter = async (
 
     let geojson: Position[][][]
     if (file.filename.endsWith('.geojson')) {
-      const features = JSON.parse(
-        buffer.toString()
-      ) as FeatureCollection<MultiPolygon>
+      const features = JSON.parse(buffer.toString()) as FeatureCollection<MultiPolygon>
       geojson = (features.features[0].geometry as MultiPolygon).coordinates
     } else {
-      geojson = ((await shpjs.parseShp(buffer, 'EPSG:4326')) as Polygon[]).map(
-        p => p.coordinates
-      )
+      geojson = ((await shpjs.parseShp(buffer, 'EPSG:4326')) as Polygon[]).map(p => p.coordinates)
     }
 
     const points = [] as Omit<ITitrePoint, 'id' | 'titreEtapeId'>[]
@@ -125,13 +90,7 @@ export const pointsImporter = async (
       groupe.forEach((contour, contourIndex) => {
         contour.forEach((point, pointIndex) => {
           // Si le point n’a pas déjà été ajouté. Souvent le dernier point est le même que le premier.
-          if (
-            !points.some(
-              p =>
-                p.references[0].coordonnees.x === point[0] &&
-                p.references[0].coordonnees.y === point[1]
-            )
-          ) {
+          if (!points.some(p => p.references[0].coordonnees.x === point[0] && p.references[0].coordonnees.y === point[1])) {
             points.push({
               groupe: groupeIndex + 1,
               contour: contourIndex + 1,
@@ -142,9 +101,9 @@ export const pointsImporter = async (
                   id: '',
                   titrePointId: '',
                   coordonnees: { x: point[0], y: point[1] },
-                  geoSystemeId: geoSysteme.id
-                }
-              ]
+                  geoSystemeId: geoSysteme.id,
+                },
+              ],
             })
           }
         })
@@ -155,7 +114,7 @@ export const pointsImporter = async (
       {
         points: points as ITitrePoint[],
         demarcheId,
-        etapeTypeId
+        etapeTypeId,
       },
       context
     )
@@ -186,56 +145,27 @@ const sdomZonesInformationsGet = async (
 
   // si c’est une demande d’AXM, on doit afficher une alerte si on est en zone 0 ou 1 du Sdom
   if (titreTypeId === 'axm' && ['mfr', 'mcr'].includes(etapeTypeId)) {
-    const zoneId = zones.find(id =>
-      [
-        SDOMZoneIds.Zone0,
-        SDOMZoneIds.Zone0Potentielle,
-        SDOMZoneIds.Zone1
-      ].includes(id)
-    )
+    const zoneId = zones.find(id => [SDOMZoneIds.Zone0, SDOMZoneIds.Zone0Potentielle, SDOMZoneIds.Zone1].includes(id))
     if (zoneId) {
       alertes.push({
-        message: `Le périmètre renseigné est dans une zone du Sdom interdite à l’exploitation minière : ${SDOMZones[zoneId].nom}`
+        message: `Le périmètre renseigné est dans une zone du Sdom interdite à l’exploitation minière : ${SDOMZones[zoneId].nom}`,
       })
     }
 
-    if (
-      (isSuper(user) ||
-        isAdministrationAdmin(user) ||
-        isAdministrationEditeur(user)) &&
-      points?.length > 2
-    ) {
+    if ((isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)) && points?.length > 2) {
       // vérifie qu’il n’existe pas de demandes de titres en cours sur ce périmètre
-      const titres = await titresGet(
-        { statutsIds: ['val', 'mod', 'dmi'], domainesIds: ['m'] },
-        { fields: { points: { id: {} } } },
-        userSuper
-      )
-      const geojsonFeatures = geojsonFeatureMultiPolygon(
-        points as ITitrePoint[]
-      )
+      const titres = await titresGet({ statutsIds: ['val', 'mod', 'dmi'], domainesIds: ['m'] }, { fields: { points: { id: {} } } }, userSuper)
+      const geojsonFeatures = geojsonFeatureMultiPolygon(points as ITitrePoint[])
 
       // TODO 2022-08-30 utiliser postgis au lieu de turf/intersect
       titres
         ?.filter(t => t.id !== titreId)
         ?.filter(t => t.points && t.points.length > 2)
-        .filter(
-          t =>
-            !!intersect(
-              geojsonFeatures as Feature<Polygon>,
-              geojsonFeatureMultiPolygon(
-                t.points as ITitrePoint[]
-              ) as Feature<Polygon>
-            )
-        )
+        .filter(t => !!intersect(geojsonFeatures as Feature<Polygon>, geojsonFeatureMultiPolygon(t.points as ITitrePoint[]) as Feature<Polygon>))
         .forEach(t =>
           alertes.push({
-            message: `Le titre ${t.nom} au statut « ${
-              isNotNullNorUndefined(t.titreStatutId)
-                ? TitresStatuts[t.titreStatutId].nom
-                : ''
-            } » est superposé à ce titre`,
-            url: `/titres/${t.slug}`
+            message: `Le titre ${t.nom} au statut « ${isNotNullNorUndefined(t.titreStatutId) ? TitresStatuts[t.titreStatutId].nom : ''} » est superposé à ce titre`,
+            url: `/titres/${t.slug}`,
           })
         )
     }
@@ -248,12 +178,7 @@ const sdomZonesInformationsGet = async (
 
   const surface = await geojsonSurface(geojsonFeatures as Feature)
 
-  const documentTypeIds = documentTypeIdsBySdomZonesGet(
-    etapeSdomZones,
-    titreTypeId,
-    demarcheTypeId,
-    etapeTypeId
-  )
+  const documentTypeIds = documentTypeIdsBySdomZonesGet(etapeSdomZones, titreTypeId, demarcheTypeId, etapeTypeId)
 
   return { surface, documentTypeIds, alertes }
 }
@@ -262,7 +187,7 @@ export const perimetreInformations = async (
   {
     points,
     demarcheId,
-    etapeTypeId
+    etapeTypeId,
   }: {
     points: ITitrePoint[] | undefined | null
     demarcheId: string
@@ -280,9 +205,7 @@ export const perimetreInformations = async (
     if (points && points.length > 2) {
       titreEtapePoints = titreEtapePointsCalc(points)
 
-      const geojsonFeatures = geojsonFeatureMultiPolygon(
-        titreEtapePoints
-      ) as Feature
+      const geojsonFeatures = geojsonFeatureMultiPolygon(titreEtapePoints) as Feature
 
       const result = await titreEtapeSdomZonesGet(geojsonFeatures)
       if (result.fallback) {
@@ -291,11 +214,7 @@ export const perimetreInformations = async (
       sdomZones.push(...result.data)
     }
 
-    const demarche = await titreDemarcheGet(
-      demarcheId,
-      { fields: { id: {} } },
-      userSuper
-    )
+    const demarche = await titreDemarcheGet(demarcheId, { fields: { id: {} } }, userSuper)
 
     if (!demarche) {
       throw new Error('droits insuffisants')
@@ -304,27 +223,17 @@ export const perimetreInformations = async (
     const titre = await titreGet(
       demarche.titreId,
       {
-        fields: { points: { id: {} } }
+        fields: { points: { id: {} } },
       },
       userSuper
     )
 
-    const informations = await sdomZonesInformationsGet(
-      titreEtapePoints,
-      sdomZones,
-      titre!.typeId,
-      demarche.typeId,
-      etapeTypeId,
-      titre!.points || [],
-      titre?.sdomZones ?? [],
-      titre!.id,
-      user
-    )
+    const informations = await sdomZonesInformationsGet(titreEtapePoints, sdomZones, titre!.typeId, demarche.typeId, etapeTypeId, titre!.points || [], titre?.sdomZones ?? [], titre!.id, user)
 
     return {
       ...informations,
       sdomZones: sdomZones.map(id => SDOMZones[id]),
-      points: titreEtapePoints
+      points: titreEtapePoints,
     }
   } catch (e) {
     console.error(e)
@@ -335,7 +244,7 @@ export const perimetreInformations = async (
 
 export const titreEtapePerimetreInformations = async (
   {
-    titreEtapeId
+    titreEtapeId,
   }: {
     titreEtapeId: string
   },
@@ -350,8 +259,8 @@ export const titreEtapePerimetreInformations = async (
       titreEtapeId,
       {
         fields: {
-          demarche: { titre: { points: { id: {} } } }
-        }
+          demarche: { titre: { points: { id: {} } } },
+        },
       },
       user
     )

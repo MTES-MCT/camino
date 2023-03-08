@@ -4,11 +4,7 @@ import { afterEach, vi, describe, test, expect } from 'vitest'
 
 import { IContenu, ISection, ITitreEtape } from '../../types.js'
 
-import {
-  contenuElementFilesCreate,
-  contenuElementFilesDelete,
-  sectionsContenuAndFilesGet
-} from './contenu-element-file-process.js'
+import { contenuElementFilesCreate, contenuElementFilesDelete, sectionsContenuAndFilesGet } from './contenu-element-file-process.js'
 
 import { objectClone } from '../../tools/index.js'
 import dirCreate from '../../tools/dir-create.js'
@@ -17,19 +13,19 @@ import fileDelete from '../../tools/file-delete.js'
 
 vi.mock('../../tools/dir-create', () => ({
   __esModule: true,
-  default: vi.fn()
+  default: vi.fn(),
 }))
 const dirCreateMock = vi.mocked(dirCreate, true)
 
 vi.mock('../../tools/file-stream-create', () => ({
   __esModule: true,
-  default: vi.fn()
+  default: vi.fn(),
 }))
 const fileStreamCreateMock = vi.mocked(fileStreamCreate, true)
 
 vi.mock('../../tools/file-delete', () => ({
   __esModule: true,
-  default: vi.fn()
+  default: vi.fn(),
 }))
 const fileDeleteMock = vi.mocked(fileDelete, true)
 
@@ -43,7 +39,7 @@ describe('sectionsContenuAndFilesGet', () => {
   test('si pas de contenu alors pas de contenu ni de fichier', () => {
     expect(sectionsContenuAndFilesGet(null, [])).toEqual({
       contenu: null,
-      newFiles: []
+      newFiles: [],
     })
   })
 
@@ -52,8 +48,8 @@ describe('sectionsContenuAndFilesGet', () => {
       arm: {
         mecanise: true,
         franchissements: 3,
-        justificatif: 'nomdefichier.pdf'
-      }
+        justificatif: 'nomdefichier.pdf',
+      },
     }
     expect(
       sectionsContenuAndFilesGet(contenu, [
@@ -62,13 +58,13 @@ describe('sectionsContenuAndFilesGet', () => {
           elements: [
             { id: 'mecanise', nom: 'mecanise', type: 'checkbox' },
             { id: 'franchissements', nom: 'franchissements', type: 'number' },
-            { id: 'justificatif', nom: 'justificatif', type: 'file' }
-          ]
-        }
+            { id: 'justificatif', nom: 'justificatif', type: 'file' },
+          ],
+        },
       ])
     ).toMatchObject({
       contenu: objectClone(contenu),
-      newFiles: []
+      newFiles: [],
     })
   })
 
@@ -77,8 +73,8 @@ describe('sectionsContenuAndFilesGet', () => {
       arm: {
         mecanise: true,
         franchissements: 3,
-        justificatif: { file: { filename: 'super.pdf' } as FileUpload }
-      }
+        justificatif: { file: { filename: 'super.pdf' } as FileUpload },
+      },
     }
 
     const newContenu = objectClone(contenu) as IContenu
@@ -90,13 +86,13 @@ describe('sectionsContenuAndFilesGet', () => {
         elements: [
           { id: 'mecanise', nom: 'mecanise', type: 'checkbox' },
           { id: 'franchissements', nom: 'franchissements', type: 'number' },
-          { id: 'justificatif', nom: 'justificatif', type: 'file' }
-        ]
-      }
+          { id: 'justificatif', nom: 'justificatif', type: 'file' },
+        ],
+      },
     ])
     expect(res).toMatchObject({
       contenu: newContenu,
-      newFiles: [{ filename: 'prefix-super.pdf' }]
+      newFiles: [{ filename: 'prefix-super.pdf' }],
     })
   })
 })
@@ -107,7 +103,7 @@ describe('contenuElementFileProcess', () => {
       createReadStream: () => ({} as unknown as ReadStream),
       filename: 'toto.pdf',
       encoding: 'utf-8',
-      mimetype: 'application/pdf'
+      mimetype: 'application/pdf',
     }
 
     await contenuElementFilesCreate([file, file], 'demarches', 'etapeId')
@@ -124,34 +120,27 @@ describe('contenuElementFileProcess', () => {
           { id: 'mecanise', nom: 'mecanise', type: 'checkbox' },
           { id: 'franchissements', nom: 'franchissements', type: 'number' },
           { id: 'justificatif', nom: 'justificatif', type: 'file' },
-          { id: 'facture', nom: 'facture', type: 'file' }
-        ]
-      }
+          { id: 'facture', nom: 'facture', type: 'file' },
+        ],
+      },
     ]
 
     const oldContenu = {
       arm: {
         mecanise: true,
         justificatif: 'fichier.pdf',
-        facture: 'facture.pdf'
-      }
+        facture: 'facture.pdf',
+      },
     } as IContenu
     const contenu = {
       arm: {
         mecanise: true,
         justificatif: 'newfichier.pdf',
-        facture: 'facture.pdf'
-      }
+        facture: 'facture.pdf',
+      },
     }
 
-    await contenuElementFilesDelete(
-      'demarches',
-      'etapeId',
-      sections,
-      etape => etape.contenu,
-      [{ contenu } as unknown as ITitreEtape],
-      oldContenu
-    )
+    await contenuElementFilesDelete('demarches', 'etapeId', sections, etape => etape.contenu, [{ contenu } as unknown as ITitreEtape], oldContenu)
 
     expect(fileDeleteMock).toHaveBeenCalledTimes(1)
   })

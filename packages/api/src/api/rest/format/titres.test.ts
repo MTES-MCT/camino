@@ -9,14 +9,14 @@ describe('titreTerritoiresFind', () => {
         {
           nom: 'Montval-sur-loir',
           surface: 105020,
-          departementId: DEPARTEMENT_IDS.Sarthe
+          departementId: DEPARTEMENT_IDS.Sarthe,
         },
 
         {
           nom: 'Tours',
           surface: 99999,
-          departementId: DEPARTEMENT_IDS['Indre-et-Loire']
-        }
+          departementId: DEPARTEMENT_IDS['Indre-et-Loire'],
+        },
       ])
     ).toMatchInlineSnapshot(`
       {
@@ -37,8 +37,7 @@ describe('titreTerritoiresFind', () => {
     `)
   })
   test('titreTerritoiresFind uniquement des secteurs maritimes', () => {
-    expect(titreTerritoiresFind(null, ['Baie de Seine']))
-      .toMatchInlineSnapshot(`
+    expect(titreTerritoiresFind(null, ['Baie de Seine'])).toMatchInlineSnapshot(`
         {
           "communes": [],
           "departements": [
@@ -59,8 +58,8 @@ describe('titreTerritoiresFind', () => {
           {
             nom: 'Tours',
             surface: 99999,
-            departementId: DEPARTEMENT_IDS['Indre-et-Loire']
-          }
+            departementId: DEPARTEMENT_IDS['Indre-et-Loire'],
+          },
         ],
 
         ['Baie de Seine']

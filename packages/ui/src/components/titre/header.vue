@@ -14,39 +14,27 @@
               class="btn small rnd-0 rnd-l-xs px-m py-s lh-2 mr-px"
               :class="{
                 'btn-primary': !titre.abonnement,
-                'btn-secondary': titre.abonnement
+                'btn-secondary': titre.abonnement,
               }"
               @click="subscribe(!titre.abonnement)"
             >
-              <span class="mt-xs"
-                >{{ titre.abonnement ? 'Se désabonner' : 'S’abonner' }} au
-                titre</span
-              >
+              <span class="mt-xs">{{ titre.abonnement ? 'Se désabonner' : 'S’abonner' }} au titre</span>
             </button>
             <button
               class="btn-border small px-m py-s lh-2"
               :class="{
                 'rnd-l-xs': !user,
                 'rnd-r-xs': !suppression || !titre.modification,
-                'mr-px': suppression || titre.modification
+                'mr-px': suppression || titre.modification,
               }"
               @click="emailSend"
             >
               <span class="mt-xs nowrap">Signaler une erreur…</span>
             </button>
-            <button
-              v-if="titre.modification"
-              class="btn py-s px-m mr-px"
-              :class="{ 'rnd-r-xs': !suppression }"
-              @click="editPopupOpen"
-            >
+            <button v-if="titre.modification" class="btn py-s px-m mr-px" :class="{ 'rnd-r-xs': !suppression }" @click="editPopupOpen">
               <Icon size="M" name="pencil" />
             </button>
-            <button
-              v-if="suppression"
-              class="btn rnd-r-xs py-s px-m"
-              @click="removePopupOpen"
-            >
+            <button v-if="suppression" class="btn rnd-r-xs py-s px-m" @click="removePopupOpen">
               <Icon size="M" name="delete" />
             </button>
           </div>
@@ -69,8 +57,8 @@ export default {
   props: {
     titre: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
 
   emits: ['titre-event-track'],
@@ -81,7 +69,7 @@ export default {
     },
     suppression() {
       return canDeleteTitre(this.user)
-    }
+    },
   },
   methods: {
     editPopupOpen() {
@@ -93,14 +81,14 @@ export default {
       this.$store.commit('popupOpen', {
         component: EditPopup,
         props: {
-          titre
-        }
+          titre,
+        },
       })
 
       this.eventTrack({
         categorie: 'titre-sections',
         action: 'titre-editer',
-        nom: this.$route.params.id
+        nom: this.$route.params.id,
       })
     },
 
@@ -110,14 +98,14 @@ export default {
         props: {
           titreNom: this.titre.nom,
           titreId: this.titre.id,
-          typeNom: this.titre.type.type.nom
-        }
+          typeNom: this.titre.type.type.nom,
+        },
       })
 
       this.eventTrack({
         categorie: 'titre-sections',
         action: 'titre-supprimer',
-        nom: this.$route.params.id
+        nom: this.$route.params.id,
       })
     },
 
@@ -125,7 +113,7 @@ export default {
       this.eventTrack({
         categorie: 'titre-sections',
         action: 'titre-erreur_signaler',
-        nom: this.$route.params.id
+        nom: this.$route.params.id,
       })
       window.location.href = `mailto:camino@beta.gouv.fr?subject=Erreur ${this.$route.params.id}&body=Bonjour, j'ai repéré une erreur sur le titre ${window.location.href} : `
     },
@@ -133,13 +121,13 @@ export default {
     subscribe(abonner) {
       this.$store.dispatch('titre/subscribe', {
         titreId: this.titre.id,
-        abonner
+        abonner,
       })
     },
 
     eventTrack(event) {
       this.$emit('titre-event-track', event)
-    }
-  }
+    },
+  },
 }
 </script>

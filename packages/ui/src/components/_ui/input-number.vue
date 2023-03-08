@@ -1,11 +1,5 @@
 <template>
-  <input
-    :value="valueFormatted"
-    type="text"
-    pattern="([0-9]{1,3}[\s]?)*([.,][0-9]*)?"
-    class="p-s text-right"
-    @blur="textToNumberFormatFunc($event)"
-  />
+  <input :value="valueFormatted" type="text" pattern="([0-9]{1,3}[\s]?)*([.,][0-9]*)?" class="p-s text-right" @blur="textToNumberFormatFunc($event)" />
 </template>
 
 <script setup lang="ts">
@@ -23,7 +17,7 @@ const props = withDefaults(
   {
     integer: false,
     negative: false,
-    modelValue: undefined
+    modelValue: undefined,
   }
 )
 
@@ -43,7 +37,7 @@ const textToNumberFormatFunc = (event: FocusEvent) => {
   if (isEventWithTarget(event) && event.target !== null) {
     event.target.value = textNumberFormat(event.target.value, {
       negative: props.negative,
-      integer: props.integer
+      integer: props.integer,
     })
 
     const number = textToNumberFormat(event.target.value)

@@ -7,7 +7,7 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 
 const meta: Meta = {
   title: 'Components/Entreprise',
-  component: PureEntreprise
+  component: PureEntreprise,
 }
 export default meta
 
@@ -19,7 +19,7 @@ const getFiscaliteEntreprise = action('getFiscaliteEntreprise')
 const items: Item[] = [
   { id: 'id1', titre: 'titreItem1' },
   { id: 'id2', titre: 'titreItem2' },
-  { id: 'id3', titre: 'titreItem3' }
+  { id: 'id3', titre: 'titreItem3' },
 ]
 
 const annee = toCaminoAnnee('2023')
@@ -39,7 +39,7 @@ const entreprise = {
   titulaireTitres: [],
   amodiataireTitres: [],
   utilisateurs: [],
-  etablissements: []
+  etablissements: [],
 }
 export const Loading: Story = () => (
   <PureEntreprise
@@ -50,7 +50,7 @@ export const Loading: Story = () => (
       getFiscaliteEntreprise(data)
       return Promise.resolve({
         redevanceCommunale: 0,
-        redevanceDepartementale: 0
+        redevanceDepartementale: 0,
       })
     }}
     user={null}
@@ -66,7 +66,7 @@ export const NonConnecte: Story = () => (
       getFiscaliteEntreprise(data)
       return Promise.resolve({
         redevanceCommunale: 0,
-        redevanceDepartementale: 0
+        redevanceDepartementale: 0,
       })
     }}
     user={null}
@@ -78,7 +78,7 @@ const entrepriseId = newEntrepriseId('1')
 const entrepriseFull: Entreprise = {
   id: entrepriseId,
   nom: 'nom entreprise',
-  etablissements: []
+  etablissements: [],
 }
 
 const completeEntreprise: EntrepriseType = {
@@ -99,15 +99,15 @@ const completeEntreprise: EntrepriseType = {
       nom: 'Nouvel établissement',
       dateDebut: '2013-09-16',
       dateFin: null,
-      legalSiret: 'SIRET'
+      legalSiret: 'SIRET',
     },
     {
       id: '',
       nom: 'Ancien établissement',
       dateDebut: '2013-02-01',
       dateFin: '2013-09-15',
-      legalSiret: 'siret'
-    }
+      legalSiret: 'siret',
+    },
   ],
   utilisateurs: [
     {
@@ -118,10 +118,10 @@ const completeEntreprise: EntrepriseType = {
       entreprises: [
         {
           id: newEntrepriseId('1'),
-          nom: 'Nom entreprise'
-        }
+          nom: 'Nom entreprise',
+        },
       ] as Entreprise[],
-      role: 'entreprise'
+      role: 'entreprise',
     },
     {
       id: 'anotherId',
@@ -131,11 +131,11 @@ const completeEntreprise: EntrepriseType = {
       entreprises: [
         {
           id: 'fr-791652399',
-          nom: 'Nom entreprise'
-        }
+          nom: 'Nom entreprise',
+        },
       ] as Entreprise[],
-      role: 'entreprise'
-    }
+      role: 'entreprise',
+    },
   ],
   titulaireTitres: [
     {
@@ -145,7 +145,7 @@ const completeEntreprise: EntrepriseType = {
       typeId: 'arm',
       coordonnees: {
         x: -52.2567292479798,
-        y: 4.21739209644104
+        y: 4.21739209644104,
       },
       titreStatutId: 'ech',
       substances: ['auru'],
@@ -154,14 +154,14 @@ const completeEntreprise: EntrepriseType = {
       titulaires: [
         {
           id: '',
-          nom: 'Nom entreprise'
-        }
+          nom: 'Nom entreprise',
+        },
       ],
       communes: [
         {
-          departementId: '973'
-        }
-      ]
+          departementId: '973',
+        },
+      ],
     },
     {
       id: 'idTitre2',
@@ -170,7 +170,7 @@ const completeEntreprise: EntrepriseType = {
       typeId: 'axm',
       coordonnees: {
         x: -52.501264330237845,
-        y: 4.270507245123385
+        y: 4.270507245123385,
       },
       titreStatutId: 'ech',
       substances: ['auru'],
@@ -179,20 +179,20 @@ const completeEntreprise: EntrepriseType = {
       titulaires: [
         {
           id: 'entrepriseId',
-          nom: 'Nom entreprise'
-        }
+          nom: 'Nom entreprise',
+        },
       ],
       communes: [
         {
-          departementId: '973'
-        }
+          departementId: '973',
+        },
       ],
       references: [
         {
           referenceTypeId: 'dea',
-          nom: 'plop/toto'
-        }
-      ]
+          nom: 'plop/toto',
+        },
+      ],
     },
     {
       id: 'idTitre3',
@@ -201,7 +201,7 @@ const completeEntreprise: EntrepriseType = {
       typeId: 'arm',
       coordonnees: {
         x: -52.2331344122413,
-        y: 4.225520523981365
+        y: 4.225520523981365,
       },
       titreStatutId: 'ech',
       substances: ['auru'],
@@ -210,15 +210,15 @@ const completeEntreprise: EntrepriseType = {
       titulaires: [
         {
           id: 'idEntreprise',
-          nom: 'Nom entreprise'
-        }
+          nom: 'Nom entreprise',
+        },
       ],
       communes: [
         {
-          departementId: '973'
-        }
-      ]
-    }
+          departementId: '973',
+        },
+      ],
+    },
   ],
   amodiataireTitres: [
     {
@@ -228,7 +228,7 @@ const completeEntreprise: EntrepriseType = {
       typeId: 'arm',
       coordonnees: {
         x: -52.2331344122413,
-        y: 4.225520523981365
+        y: 4.225520523981365,
       },
       titreStatutId: 'ech',
       substances: ['auru'],
@@ -237,22 +237,22 @@ const completeEntreprise: EntrepriseType = {
       titulaires: [
         {
           id: 'idEntreprise',
-          nom: 'Nom entreprise'
-        }
+          nom: 'Nom entreprise',
+        },
       ],
       communes: [
         {
-          departementId: '973'
-        }
-      ]
-    }
+          departementId: '973',
+        },
+      ],
+    },
   ],
   documents: [
     {
       id: 'idDocument',
       type: {
         id: 'kbi',
-        nom: 'Kbis'
+        nom: 'Kbis',
       },
       date: '2019-08-26',
       description: 'Kbis',
@@ -260,13 +260,13 @@ const completeEntreprise: EntrepriseType = {
       fichierTypeId: 'pdf',
       entreprisesLecture: true,
       modification: true,
-      suppression: true
+      suppression: true,
     },
     {
       id: 'idDocument2',
       type: {
         id: 'idm',
-        nom: 'Identification de matériel'
+        nom: 'Identification de matériel',
       },
       date: '2019-08-26',
       description: 'Identification pelle mécanique',
@@ -274,9 +274,9 @@ const completeEntreprise: EntrepriseType = {
       fichierTypeId: 'pdf',
       entreprisesLecture: true,
       modification: false,
-      suppression: false
-    }
-  ]
+      suppression: false,
+    },
+  ],
 }
 
 export const Complet: Story = () => (
@@ -290,10 +290,10 @@ export const Complet: Story = () => (
         guyane: {
           taxeAurifere: 12,
           taxeAurifereBrute: 38,
-          totalInvestissementsDeduits: 1
+          totalInvestissementsDeduits: 1,
         },
         redevanceCommunale: 200,
-        redevanceDepartementale: 78
+        redevanceDepartementale: 78,
       })
     }}
     user={{ role: 'super', ...testBlankUser }}

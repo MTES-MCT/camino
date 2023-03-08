@@ -6,15 +6,14 @@ const geojsonFeatureMultiPolygon = points => ({
   properties: { etapeId: points[0].titreEtapeId },
   geometry: {
     type: 'MultiPolygon',
-    coordinates: geojsonMultiPolygonCoordinates(points)
-  }
+    coordinates: geojsonMultiPolygonCoordinates(points),
+  },
 })
 
 // convertit une liste de points
 // en un tableau 'coordinates' geoJson
 // (le premier et le dernier point d'un contour ont les mêmes coordonnées)
-const geojsonMultiPolygonCoordinates = points =>
-  multiPolygonContoursClose(multiPolygonCoordinates(points))
+const geojsonMultiPolygonCoordinates = points => multiPolygonContoursClose(multiPolygonCoordinates(points))
 
 // convertit une liste de points
 // [{groupe: 1, contour: 1, point: 1, coordonnees: {x: 1.111111, y: 1.111111}}]
@@ -23,10 +22,7 @@ const multiPolygonCoordinates = points =>
   points.reduce((res, p) => {
     res[p.groupe - 1] = res[p.groupe - 1] || []
     res[p.groupe - 1][p.contour - 1] = res[p.groupe - 1][p.contour - 1] || []
-    res[p.groupe - 1][p.contour - 1][p.point - 1] = [
-      p.coordonnees.x,
-      p.coordonnees.y
-    ]
+    res[p.groupe - 1][p.contour - 1][p.point - 1] = [p.coordonnees.x, p.coordonnees.y]
 
     return res
   }, [])

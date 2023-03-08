@@ -6,8 +6,8 @@ const meta: Meta = {
   title: 'Components/Page/QuickAccessTitre',
   component: PureQuickAccessTitre,
   argTypes: {
-    titres: { name: 'array', value: 'string', required: true }
-  }
+    titres: { name: 'array', value: 'string', required: true },
+  },
 }
 export default meta
 
@@ -20,23 +20,17 @@ export const Simple: Story = () => (
       {
         id: '1',
         nom: 'monTitre',
-        typeId: 'arm'
+        typeId: 'arm',
       },
       {
         id: '1',
         nom: 'monSecondTitre',
-        typeId: 'arg'
-      }
+        typeId: 'arg',
+      },
     ]}
     onSearch={onSearch}
     onSelectedTitre={onSelectedTitre}
   />
 )
 
-export const Empty: Story = () => (
-  <PureQuickAccessTitre
-    titres={[]}
-    onSearch={onSearch}
-    onSelectedTitre={onSelectedTitre}
-  />
-)
+export const Empty: Story = () => <PureQuickAccessTitre titres={[]} onSearch={onSearch} onSelectedTitre={onSelectedTitre} />

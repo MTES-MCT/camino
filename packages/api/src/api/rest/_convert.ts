@@ -2,16 +2,7 @@ import xlsx from 'xlsx'
 
 import { IFormat, Index } from '../../types.js'
 
-const tableConvert = (
-  section:
-    | 'titres'
-    | 'demarches'
-    | 'activites'
-    | 'utilisateurs'
-    | 'entreprises',
-  elements: Index<any>[],
-  format: IFormat
-) => {
+const tableConvert = (section: 'titres' | 'demarches' | 'activites' | 'utilisateurs' | 'entreprises', elements: Index<any>[], format: IFormat) => {
   let contenu = ''
 
   const sheet = xlsx.utils.json_to_sheet(elements as Index<any>[])
@@ -20,8 +11,7 @@ const tableConvert = (
     const cells = Object.keys(sheet)
     for (const cell of cells) {
       if (typeof sheet[cell].v === 'string' && sheet[cell].v.length > 32767) {
-        sheet[cell].v =
-          'la cellule est trop grosse pour le format xlsx, veuillez télécharger le document en ods si vous voulez y accéder'
+        sheet[cell].v = 'la cellule est trop grosse pour le format xlsx, veuillez télécharger le document en ods si vous voulez y accéder'
       }
     }
   }

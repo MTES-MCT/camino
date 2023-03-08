@@ -2,59 +2,25 @@
   <div>
     <LoadingElement v-slot="{ item }" :data="titresLinks">
       <div v-if="item.amont.length || canLink">
-        <h5>
-          Titre{{ linkConfig && linkConfig.count === 'multiple' ? 's' : '' }} à
-          l’origine de ce titre
-        </h5>
+        <h5>Titre{{ linkConfig && linkConfig.count === 'multiple' ? 's' : '' }} à l’origine de ce titre</h5>
         <div v-if="mode === 'edit'">
-          <PureTitresLink
-            v-if="titreLinkConfig"
-            :config="titreLinkConfig"
-            :loadLinkableTitres="
-              apiClient.loadLinkableTitres(titre.typeId, titre.demarches)
-            "
-            @onSelectedTitres="onSelectedTitres"
-          />
+          <PureTitresLink v-if="titreLinkConfig" :config="titreLinkConfig" :loadLinkableTitres="apiClient.loadLinkableTitres(titre.typeId, titre.demarches)" @onSelectedTitres="onSelectedTitres" />
           <div class="flex mt-m" style="flex-direction: row-reverse">
-            <button
-              class="btn-primary ml-s"
-              style="flex: 0 1 min-content"
-              @click="saveLink"
-            >
-              Enregistrer
-            </button>
-            <button
-              class="btn-secondary"
-              style="flex: 0 1 min-content"
-              @click="mode = 'read'"
-            >
-              Annuler
-            </button>
+            <button class="btn-primary ml-s" style="flex: 0 1 min-content" @click="saveLink">Enregistrer</button>
+            <button class="btn-secondary" style="flex: 0 1 min-content" @click="mode = 'read'">Annuler</button>
           </div>
         </div>
 
         <div v-else class="flex flex-center">
           <ul class="list-inline" style="margin-bottom: 0">
-            <li
-              v-for="titreFrom in item.amont"
-              :key="titreFrom.id"
-              class="mr-xs"
-            >
-              <router-link
-                :to="{ name: 'titre', params: { id: titreFrom.id } }"
-                class="btn-border small p-s rnd-xs mr-xs"
-              >
+            <li v-for="titreFrom in item.amont" :key="titreFrom.id" class="mr-xs">
+              <router-link :to="{ name: 'titre', params: { id: titreFrom.id } }" class="btn-border small p-s rnd-xs mr-xs">
                 <span class="mr-xs">{{ titreFrom.nom }}</span>
               </router-link>
             </li>
           </ul>
 
-          <button
-            v-if="canLink"
-            class="btn-alt p-xs rnd-s"
-            title="modifie les titres liés"
-            @click="mode = 'edit'"
-          >
+          <button v-if="canLink" class="btn-alt p-xs rnd-s" title="modifie les titres liés" @click="mode = 'edit'">
             <Icon size="M" name="pencil" />
           </button>
         </div>
@@ -65,10 +31,7 @@
         <div class="flex flex-center">
           <ul class="list-inline" style="margin-bottom: 0">
             <li v-for="titreTo in item.aval" :key="titreTo.id" class="mr-xs">
-              <router-link
-                :to="{ name: 'titre', params: { id: titreTo.id } }"
-                class="btn-border small p-s rnd-xs mr-xs"
-              >
+              <router-link :to="{ name: 'titre', params: { id: titreTo.id } }" class="btn-border small p-s rnd-xs mr-xs">
                 <span class="mr-xs">{{ titreTo.nom }}</span>
               </router-link>
             </li>
@@ -80,10 +43,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  canLinkTitres,
-  getLinkConfig
-} from 'camino-common/src/permissions/titres'
+import { canLinkTitres, getLinkConfig } from 'camino-common/src/permissions/titres'
 import { computed, onMounted, ref, watch } from 'vue'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { User } from 'camino-common/src/roles'
@@ -105,10 +65,7 @@ const props = defineProps<{
     administrations: AdministrationId[]
     demarches: { typeId: DemarcheTypeId }[]
   }
-  apiClient: Pick<
-    ApiClient,
-    'loadTitreLinks' | 'loadLinkableTitres' | 'linkTitres'
-  >
+  apiClient: Pick<ApiClient, 'loadTitreLinks' | 'loadLinkableTitres' | 'linkTitres'>
 }>()
 
 const emit = defineEmits<{
@@ -120,9 +77,7 @@ const mode = ref<'read' | 'edit'>('read')
 const selectedTitres = ref<TitreLink[]>([])
 const titresLinks = ref<AsyncData<TitreLinks>>({ status: 'LOADING' })
 
-const linkConfig = computed(() =>
-  getLinkConfig(props.titre.typeId, props.titre.demarches)
-)
+const linkConfig = computed(() => getLinkConfig(props.titre.typeId, props.titre.demarches))
 
 onMounted(async () => {
   await init()
@@ -143,7 +98,7 @@ const init = async () => {
   } catch (e: any) {
     titresLinks.value = {
       status: 'ERROR',
-      message: e.message ?? 'something wrong happened'
+      message: e.message ?? 'something wrong happened',
     }
   }
 }
@@ -166,13 +121,13 @@ const titreLinkConfig = computed<TitresLinkConfig | null>(() => {
   if (linkConfig.value?.count === 'single') {
     return {
       type: 'single',
-      selectedTitreId: titreFromIds.length === 1 ? titreFromIds[0] : null
+      selectedTitreId: titreFromIds.length === 1 ? titreFromIds[0] : null,
     }
   }
 
   return {
     type: 'multiple',
-    selectedTitreIds: titreFromIds
+    selectedTitreIds: titreFromIds,
   }
 })
 
@@ -190,12 +145,12 @@ const saveLink = async () => {
     mode.value = 'read'
     titresLinks.value = {
       status: 'LOADED',
-      value: links
+      value: links,
     }
   } catch (e: any) {
     titresLinks.value = {
       status: 'ERROR',
-      message: e.message ?? 'something wrong happened'
+      message: e.message ?? 'something wrong happened',
     }
   }
 }

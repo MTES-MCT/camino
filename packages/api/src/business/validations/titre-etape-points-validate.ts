@@ -2,14 +2,8 @@ import { ITitrePoint } from '../../types.js'
 
 export const titreEtapePointsValidate = (titrePoints: ITitrePoint[]) => {
   const errors = titrePoints.reduce((errors: string[], point) => {
-    if (
-      !point.references.every(
-        ref => ref.coordonnees && ref.coordonnees.x && ref.coordonnees.y
-      )
-    ) {
-      errors.push(
-        `coordonnées du point ${point.point} / contour ${point.contour} / groupe ${point.groupe} manquantes`
-      )
+    if (!point.references.every(ref => ref.coordonnees && ref.coordonnees.x && ref.coordonnees.y)) {
+      errors.push(`coordonnées du point ${point.point} / contour ${point.contour} / groupe ${point.groupe} manquantes`)
     }
 
     // TODO:

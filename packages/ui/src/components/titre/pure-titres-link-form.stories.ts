@@ -12,7 +12,7 @@ import { testBlankUser } from 'camino-common/src/tests-utils'
 const meta: Meta = {
   title: 'Components/Titre/TitresLinkForm',
   component: PureTitresLinkForm,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 
@@ -25,17 +25,14 @@ type Props = {
     demarches: { typeId: DemarcheTypeId }[]
   }
 
-  apiClient: Pick<
-    ApiClient,
-    'loadTitreLinks' | 'loadLinkableTitres' | 'linkTitres'
-  >
+  apiClient: Pick<ApiClient, 'loadTitreLinks' | 'loadLinkableTitres' | 'linkTitres'>
 }
 const Template: Story<Props> = (args: Props) => ({
   components: { PureTitresLinkForm },
   setup() {
     return { args }
   },
-  template: '<PureTitresLinkForm v-bind="args" />'
+  template: '<PureTitresLinkForm v-bind="args" />',
 })
 const linkableTitres: LinkableTitre[] = [
   {
@@ -46,10 +43,10 @@ const linkableTitres: LinkableTitre[] = [
       {
         phase: {
           dateDebut: '2016-10-28',
-          dateFin: '2017-03-17'
-        }
-      }
-    ]
+          dateFin: '2017-03-17',
+        },
+      },
+    ],
   },
   {
     id: 'id2',
@@ -59,10 +56,10 @@ const linkableTitres: LinkableTitre[] = [
       {
         phase: {
           dateDebut: '2008-11-30',
-          dateFin: '2019-02-27'
-        }
-      }
-    ]
+          dateFin: '2019-02-27',
+        },
+      },
+    ],
   },
   {
     id: 'id3',
@@ -72,11 +69,11 @@ const linkableTitres: LinkableTitre[] = [
       {
         phase: {
           dateDebut: '2008-11-30',
-          dateFin: '2019-02-27'
-        }
-      }
-    ]
-  }
+          dateFin: '2019-02-27',
+        },
+      },
+    ],
+  },
 ]
 
 const titresTo: TitreLink[] = [{ id: 'id10', nom: 'Titre fils' }]
@@ -85,17 +82,14 @@ const titresFrom: TitreLink[] = [linkableTitres[0]]
 const apiClient: Props['apiClient'] = {
   loadLinkableTitres: () => () => Promise.resolve(linkableTitres),
   loadTitreLinks: () => Promise.resolve({ aval: titresTo, amont: titresFrom }),
-  linkTitres: () =>
-    new Promise<TitreLinks>(resolve =>
-      resolve({ aval: titresTo, amont: titresFrom })
-    )
+  linkTitres: () => new Promise<TitreLinks>(resolve => resolve({ aval: titresTo, amont: titresFrom })),
 }
 
 export const AxmWithAlreadySelectedTitre = Template.bind({})
 AxmWithAlreadySelectedTitre.args = {
   user: { role: 'super', ...testBlankUser },
   titre: { typeId: 'axm', administrations: [], id: 'titreId', demarches: [] },
-  apiClient
+  apiClient,
 }
 
 export const FusionWithAlreadySelectedTitre = Template.bind({})
@@ -105,9 +99,9 @@ FusionWithAlreadySelectedTitre.args = {
     typeId: 'cxm',
     administrations: [],
     id: 'titreId',
-    demarches: [{ typeId: 'fus' }]
+    demarches: [{ typeId: 'fus' }],
   },
-  apiClient
+  apiClient,
 }
 
 export const TitreWithTitreLinksLoading = Template.bind({})
@@ -116,13 +110,13 @@ TitreWithTitreLinksLoading.args = {
   titre: { typeId: 'axm', administrations: [], id: 'titreId', demarches: [] },
   apiClient: {
     ...apiClient,
-    loadTitreLinks: () => new Promise<TitreLinks>(() => ({}))
-  }
+    loadTitreLinks: () => new Promise<TitreLinks>(() => ({})),
+  },
 }
 
 export const DefautCantUpdateLinks = Template.bind({})
 DefautCantUpdateLinks.args = {
   user: { role: 'defaut', ...testBlankUser },
   titre: { typeId: 'axm', administrations: [], id: 'titreId', demarches: [] },
-  apiClient
+  apiClient,
 }

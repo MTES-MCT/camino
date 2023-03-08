@@ -15,29 +15,16 @@ import { titreStatutIdFind } from './titre-statut-id-find.js'
  * @param titreTypeId - id du type du titre
  * @returns la ou les propriétés recherchées ou null
  */
-const titreEtapePropFind = (
-  propId: IPropId,
-  date: string,
-  titreDemarches: ITitreDemarche[],
-  titreTypeId: TitreTypeId
-) => {
+const titreEtapePropFind = (propId: IPropId, date: string, titreDemarches: ITitreDemarche[], titreTypeId: TitreTypeId) => {
   // reconstruit les démarches et étapes antérieures à la date
-  const titreDemarchesFiltered = titreDemarchesEtapesRebuild(
-    date,
-    titreDemarches,
-    titreTypeId
-  )
+  const titreDemarchesFiltered = titreDemarchesEtapesRebuild(date, titreDemarches, titreTypeId)
 
   // calcule le statut du titre
   const titreStatutId = titreStatutIdFind(date, titreDemarchesFiltered)
 
   // cherche la première occurrence de la propriété
   // dans une démarche et une étape valides
-  const titreEtape = titrePropTitreEtapeFind(
-    propId,
-    titreDemarchesFiltered,
-    titreStatutId
-  )
+  const titreEtape = titrePropTitreEtapeFind(propId, titreDemarchesFiltered, titreStatutId)
 
   if (titreEtape) {
     return propValueFind(titreEtape, propId)

@@ -8,13 +8,7 @@ import { Context, IDocument, ITitreEtape } from '../../../types.js'
 import fileDelete from '../../../tools/file-delete.js'
 import fileStreamCreate from '../../../tools/file-stream-create.js'
 
-import {
-  documentsGet,
-  documentGet,
-  documentCreate,
-  documentUpdate,
-  documentDelete
-} from '../../../database/queries/documents.js'
+import { documentsGet, documentGet, documentCreate, documentUpdate, documentDelete } from '../../../database/queries/documents.js'
 
 import { documentTypeGet } from '../../../database/queries/metas.js'
 
@@ -32,32 +26,17 @@ import { isBureauDEtudes, isEntreprise, User } from 'camino-common/src/roles.js'
 import { canEditEntreprise } from 'camino-common/src/permissions/entreprises.js'
 import { canCreateOrEditEtape } from 'camino-common/src/permissions/titres-etapes.js'
 
-const errorEtapesAssocieesUpdate = (
-  etapesAssociees: ITitreEtape[],
-  action: 'supprimer' | 'modifier'
-) =>
-  `impossible de ${action} ce document lié ${
-    etapesAssociees.length > 1 ? 'aux étapes' : 'à l’étape'
-  } ${etapesAssociees.map(e => e.id).join(', ')}`
+const errorEtapesAssocieesUpdate = (etapesAssociees: ITitreEtape[], action: 'supprimer' | 'modifier') =>
+  `impossible de ${action} ce document lié ${etapesAssociees.length > 1 ? 'aux étapes' : 'à l’étape'} ${etapesAssociees.map(e => e.id).join(', ')}`
 
-const documentFileCreate = async (
-  document: IDocument,
-  fileUpload: FileUpload
-) => {
+const documentFileCreate = async (document: IDocument, fileUpload: FileUpload) => {
   const documentFilePath = await documentFilePathFind(document, true)
   const { createReadStream } = await fileUpload
 
-  await fileStreamCreate(
-    createReadStream(),
-    join(process.cwd(), documentFilePath)
-  )
+  await fileStreamCreate(createReadStream(), join(process.cwd(), documentFilePath))
 }
 
-const documents = async (
-  { entreprisesIds }: { entreprisesIds?: string[] },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const documents = async ({ entreprisesIds }: { entreprisesIds?: string[] }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
     const documents = await documentsGet({ entreprisesIds }, { fields }, user)
@@ -79,8 +58,8 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
       {
         fields: {
           titulaires: { id: {} },
-          demarche: { titre: { pointsEtape: { id: {} } } }
-        }
+          demarche: { titre: { pointsEtape: { id: {} } } },
+        },
       },
       user
     )
@@ -90,12 +69,7 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
     if (!titreEtape.titulaires) {
       throw new Error('Les titulaires de l’étape ne sont pas chargés')
     }
-    if (
-      !titreEtape.demarche ||
-      !titreEtape.demarche.titre ||
-      !titreEtape.demarche.titre.administrationsLocales ||
-      !titreEtape.demarche.titre.titreStatutId
-    ) {
+    if (!titreEtape.demarche || !titreEtape.demarche.titre || !titreEtape.demarche.titre.administrationsLocales || !titreEtape.demarche.titre.titreStatutId) {
       throw new Error('la démarche n’est pas chargée complètement')
     }
 
@@ -109,7 +83,7 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
         titreEtape.demarche.typeId,
         {
           typeId: titreEtape.demarche.titre.typeId,
-          titreStatutId: titreEtape.demarche.titre.titreStatutId
+          titreStatutId: titreEtape.demarche.titre.titreStatutId,
         },
         'modification'
       )
@@ -117,24 +91,15 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
       throw new Error('droits insuffisants')
     }
   } else if (document.entrepriseId) {
-    const entreprise = await entrepriseGet(
-      document.entrepriseId,
-      { fields: {} },
-      user
-    )
+    const entreprise = await entrepriseGet(document.entrepriseId, { fields: {} }, user)
 
     if (!entreprise) throw new Error("l'entreprise n'existe pas")
 
-    if (!canEditEntreprise(user, entreprise.id))
-      throw new Error('droits insuffisants')
+    if (!canEditEntreprise(user, entreprise.id)) throw new Error('droits insuffisants')
   } else if (document.titreActiviteId) {
     // si l'activité est récupérée depuis la base
     // alors on a le droit de la visualiser, donc de l'éditer
-    const activite = await titreActiviteGet(
-      document.titreActiviteId,
-      { fields: { type: { titresTypes: { id: {} } }, titre: { id: {} } } },
-      user
-    )
+    const activite = await titreActiviteGet(document.titreActiviteId, { fields: { type: { titresTypes: { id: {} } }, titre: { id: {} } } }, user)
 
     if (!activite) throw new Error("l'activité n'existe pas")
 
@@ -142,11 +107,7 @@ const documentPermissionsCheck = async (document: IDocument, user: User) => {
   }
 }
 
-const documentCreer = async (
-  { document }: { document: IDocument },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const documentCreer = async ({ document }: { document: IDocument }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -202,11 +163,7 @@ const documentCreer = async (
   }
 }
 
-const documentModifier = async (
-  { document }: { document: IDocument },
-  { user }: Context,
-  info: GraphQLResolveInfo
-) => {
+const documentModifier = async ({ document }: { document: IDocument }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
     const fields = fieldsBuild(info)
 
@@ -220,9 +177,7 @@ const documentModifier = async (
     await documentPermissionsCheck(document, user)
 
     if (documentOld.etapesAssociees && documentOld.etapesAssociees.length > 0) {
-      throw new Error(
-        errorEtapesAssocieesUpdate(documentOld.etapesAssociees, 'modifier')
-      )
+      throw new Error(errorEtapesAssocieesUpdate(documentOld.etapesAssociees, 'modifier'))
     }
 
     const errors = await documentInputValidate(document)
@@ -244,18 +199,13 @@ const documentModifier = async (
     const documentUpdated = await documentUpdate(document.id, document)
 
     // supprime de l'ancien fichier
-    if (
-      (documentFichierNouveau || !documentUpdated.fichier) &&
-      documentOld.fichier
-    ) {
+    if ((documentFichierNouveau || !documentUpdated.fichier) && documentOld.fichier) {
       const documentOldFilePath = await documentFilePathFind(documentOld)
 
       try {
         await fileDelete(join(process.cwd(), documentOldFilePath))
       } catch (e) {
-        console.info(
-          `impossible de supprimer le fichier: ${documentOldFilePath}`
-        )
+        console.info(`impossible de supprimer le fichier: ${documentOldFilePath}`)
       }
     }
 
@@ -290,10 +240,10 @@ const documentSupprimer = async ({ id }: { id: string }, { user }: Context) => {
       {
         fields: {
           type: {
-            activitesTypes: { id: {} }
+            activitesTypes: { id: {} },
           },
-          etapesAssociees: { id: {} }
-        }
+          etapesAssociees: { id: {} },
+        },
       },
       user
     )
@@ -303,9 +253,7 @@ const documentSupprimer = async ({ id }: { id: string }, { user }: Context) => {
     }
 
     if (documentOld.etapesAssociees && documentOld.etapesAssociees.length > 0) {
-      throw new Error(
-        errorEtapesAssocieesUpdate(documentOld.etapesAssociees, 'supprimer')
-      )
+      throw new Error(errorEtapesAssocieesUpdate(documentOld.etapesAssociees, 'supprimer'))
     }
 
     if (!documentOld.suppression) {
@@ -320,9 +268,7 @@ const documentSupprimer = async ({ id }: { id: string }, { user }: Context) => {
       try {
         await fileDelete(join(process.cwd(), documentOldFilePath))
       } catch (e) {
-        console.info(
-          `impossible de supprimer le fichier: ${documentOldFilePath}`
-        )
+        console.info(`impossible de supprimer le fichier: ${documentOldFilePath}`)
       }
     }
 
@@ -336,13 +282,7 @@ const documentSupprimer = async ({ id }: { id: string }, { user }: Context) => {
   }
 }
 
-const documentsLier = async (
-  { user }: Context,
-  documentIds: string[],
-  parentId: string,
-  propParentId: 'titreActiviteId' | 'titreEtapeId',
-  oldParent?: { documents?: IDocument[] | null }
-) => {
+const documentsLier = async ({ user }: Context, documentIds: string[], parentId: string, propParentId: 'titreActiviteId' | 'titreEtapeId', oldParent?: { documents?: IDocument[] | null }) => {
   if (oldParent?.documents?.length) {
     // supprime les anciens documents ou ceux qui n'ont pas de fichier
     const oldDocumentsIds = oldParent.documents.map(d => d.id)
@@ -374,10 +314,4 @@ const documentsLier = async (
   }
 }
 
-export {
-  documents,
-  documentCreer,
-  documentModifier,
-  documentSupprimer,
-  documentsLier
-}
+export { documents, documentCreer, documentModifier, documentSupprimer, documentsLier }

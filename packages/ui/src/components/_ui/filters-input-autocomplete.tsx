@@ -35,10 +35,7 @@ export const InputAutocomplete = defineComponent<Props>({
       () => props.filter.value,
       newValues => {
         if (newValues) {
-          overrideItems.value =
-            newValues
-              .map(id => allKnownItems.value[id])
-              .filter(isNotNullNorUndefined) ?? []
+          overrideItems.value = newValues.map(id => allKnownItems.value[id]).filter(isNotNullNorUndefined) ?? []
 
           selectedItems.value = overrideItems.value
         }
@@ -62,11 +59,7 @@ export const InputAutocomplete = defineComponent<Props>({
       }
       // TODO 2022-04-08 des fois, ceci est une chaine vide, des fois un objet. Il faudra supprimer tout ça une fois les composants parents refactorés
       if (Array.isArray(props?.filter?.value)) {
-        overrideItems.value = props?.filter?.value
-          .map(id => allKnownItems.value[id])
-          .filter(
-            (elem: Element | undefined): elem is Element => elem !== undefined
-          )
+        overrideItems.value = props?.filter?.value.map(id => allKnownItems.value[id]).filter((elem: Element | undefined): elem is Element => elem !== undefined)
         selectedItems.value = overrideItems.value
       }
     })
@@ -89,11 +82,7 @@ export const InputAutocomplete = defineComponent<Props>({
         // C'est étrange, il va falloir corriger tout ça un jour
         props.filter.elements = [...Object.values(allKnownItems.value)]
       } else {
-        items.value = props.filter.elements.filter(
-          item =>
-            item.nom.toLowerCase().includes(value.toLowerCase()) ||
-            selectedItems.value.some(({ id }) => id === item.id)
-        )
+        items.value = props.filter.elements.filter(item => item.nom.toLowerCase().includes(value.toLowerCase()) || selectedItems.value.some(({ id }) => id === item.id))
       }
     }
 
@@ -116,5 +105,5 @@ export const InputAutocomplete = defineComponent<Props>({
         />
       </div>
     )
-  }
+  },
 })

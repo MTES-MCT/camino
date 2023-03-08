@@ -37,7 +37,7 @@ test.each<[TestUser, AdministrationId[], boolean]>([
   [{ role: 'super' }, [], true],
   [{ role: 'admin', administrationId: ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON'] }, [ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON']], true],
   [{ role: 'admin', administrationId: ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON'] }, [ADMINISTRATION_IDS['DREAL - PAYS DE LA LOIRE']], false],
-  [{ role: 'defaut' }, [ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON']], false]
+  [{ role: 'defaut' }, [ADMINISTRATION_IDS['DREAL - AUVERGNE-RHÔNE-ALPES - SIÈGE DE LYON']], false],
 ])('un utilisateur $user peut modifier les liaisons d’un titre: $can ', (user, administrationIds, can) => {
   expect(canLinkTitres({ ...user, ...testBlankUser }, administrationIds)).toBe(can)
 })

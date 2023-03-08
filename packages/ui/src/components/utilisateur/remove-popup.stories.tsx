@@ -5,7 +5,7 @@ import { RemovePopup } from './remove-popup'
 const meta: Meta = {
   title: 'Components/Utilisateur/RemovePopup',
   component: RemovePopup,
-  argTypes: {}
+  argTypes: {},
 }
 export default meta
 

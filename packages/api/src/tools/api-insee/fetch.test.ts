@@ -3,9 +3,7 @@ import { expect, test, vi } from 'vitest'
 import { dateAddDays, toCaminoDate } from 'camino-common/src/date.js'
 
 test('tokenInitialize', async () => {
-  const fetchMocked = vi
-    .fn()
-    .mockImplementation(() => Promise.resolve({ access_token: 'token' }))
+  const fetchMocked = vi.fn().mockImplementation(() => Promise.resolve({ access_token: 'token' }))
   const today = toCaminoDate('2023-01-12')
   const later = dateAddDays(today, 3)
   expect(await tokenInitialize(fetchMocked, today)).toEqual('token')

@@ -4,15 +4,7 @@ import { expect, test } from 'vitest'
 import { UserNotNull } from 'camino-common/src/roles.js'
 
 test('envoie un email sur une étape non existante', () => {
-  const actual = emailsForAdministrationsGet(
-    undefined,
-    undefined,
-    '',
-    '',
-    '',
-    userSuper,
-    undefined
-  )
+  const actual = emailsForAdministrationsGet(undefined, undefined, '', '', '', userSuper, undefined)
 
   expect(actual).toBe(null)
 })
@@ -22,14 +14,14 @@ const user: UserNotNull = {
   email: 'camino@beta.gouv.fr',
   nom: 'Camino',
   prenom: '',
-  role: 'super'
+  role: 'super',
 }
 
 test("envoie un email sur un octroi d'AEX", () => {
   const actual = emailsForAdministrationsGet(
     {
       typeId: 'mfr',
-      statutId: 'fai'
+      statutId: 'fai',
     },
     { nom: 'demande' },
     'oct',
@@ -46,7 +38,7 @@ test("envoie un email sur un octroi d'ARM", () => {
   const actual = emailsForAdministrationsGet(
     {
       typeId: 'mdp',
-      statutId: 'fai'
+      statutId: 'fai',
     },
     { nom: 'dépôt de la demande' },
     'oct',

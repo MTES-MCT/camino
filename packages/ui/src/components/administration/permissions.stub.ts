@@ -5,33 +5,33 @@ export const administrationMetas: ApiClient['administrationMetas'] = () =>
     titresTypesTitresStatuts: [
       {
         titreType: {
-          id: 'axm'
+          id: 'axm',
         },
         titreStatutId: 'val',
         titresModificationInterdit: true,
         etapesModificationInterdit: false,
-        demarchesModificationInterdit: true
-      }
+        demarchesModificationInterdit: true,
+      },
     ],
     activitesTypes: [
       {
         id: 'gra',
         modificationInterdit: true,
-        lectureInterdit: false
-      }
+        lectureInterdit: false,
+      },
     ],
     titresTypesEtapesTypes: [
       {
         etapeType: {
-          id: 'dpu'
+          id: 'dpu',
         },
         titreType: {
-          id: 'axm'
+          id: 'axm',
         },
         titreStatutId: 'val',
         creationInterdit: true,
         modificationInterdit: false,
-        lectureInterdit: true
-      }
-    ]
+        lectureInterdit: true,
+      },
+    ],
   })

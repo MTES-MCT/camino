@@ -1,11 +1,7 @@
-import {
-  activite,
-  activiteDeposer,
-  activiteSupprimer
-} from '../api/titres-activites'
+import { activite, activiteDeposer, activiteSupprimer } from '../api/titres-activites'
 
 const state = {
-  element: null
+  element: null,
 }
 
 const actions = {
@@ -39,11 +35,7 @@ const actions = {
 
       await dispatch('reloadRoute', route)
 
-      dispatch(
-        'messageAdd',
-        { value: `l'activité à été supprimée`, type: 'success' },
-        { root: true }
-      )
+      dispatch('messageAdd', { value: `l'activité à été supprimée`, type: 'success' }, { root: true })
     } catch (e) {
       commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
     } finally {
@@ -69,17 +61,13 @@ const actions = {
 
       commit('popupClose', null, { root: true })
 
-      dispatch(
-        'messageAdd',
-        { value: `la demande a été déposée`, type: 'success' },
-        { root: true }
-      )
+      dispatch('messageAdd', { value: `la demande a été déposée`, type: 'success' }, { root: true })
     } catch (e) {
       commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
     } finally {
       commit('loadingRemove', 'titreActiviteDepose', { root: true })
     }
-  }
+  },
 }
 
 const mutations = {
@@ -89,12 +77,12 @@ const mutations = {
 
   reset(state) {
     state.element = null
-  }
+  },
 }
 
 export default {
   namespaced: true,
   actions,
   mutations,
-  state
+  state,
 }

@@ -4,7 +4,7 @@ const entreprisesFormatTable = (entreprises: IEntreprise[]) =>
   entreprises.map(entreprise => {
     const entrepriseNew = {
       nom: entreprise.nom,
-      siren: entreprise.legalSiren
+      siren: entreprise.legalSiren,
     }
 
     return entrepriseNew

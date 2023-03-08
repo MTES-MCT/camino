@@ -20,14 +20,8 @@ describe('sépare les groupes de mots', () => {
     ['Saint-Élie', ['Saint-Élie']],
     ['"Saint-Élie"', ['Saint-Élie']],
     ["'Saint-Élie'", ['Saint-Élie']],
-    [
-      'andalousite / sillimanite / kyanite - (cyanite - disthène)',
-      ['andalousite', 'sillimanite', 'kyanite', 'cyanite', 'disthène']
-    ],
-    [
-      'cendres volcaniques riches en silice',
-      ['cendres', 'volcaniques', 'riches', 'en', 'silice']
-    ],
+    ['andalousite / sillimanite / kyanite - (cyanite - disthène)', ['andalousite', 'sillimanite', 'kyanite', 'cyanite', 'disthène']],
+    ['cendres volcaniques riches en silice', ['cendres', 'volcaniques', 'riches', 'en', 'silice']],
     ['2013-0021-MI', ['2013-0021-MI']],
     ['\\2013-0021-MI', ['2013-0021-MI']],
     ['DEB 2013-0021-MI', ['DEB', '2013-0021-MI']],
@@ -38,11 +32,8 @@ describe('sépare les groupes de mots', () => {
     ['TEREGA (TIGF)', ['TEREGA', 'TIGF']],
     ['EnCore (E&P) Limited', ['EnCore', 'E&P', 'Limited']],
     ['nom1, nom2, nom3', ['nom1', 'nom2', 'nom3']],
-    ['nom1*nom2', ['nom1*nom2']]
-  ])(
-    'convertit la chaîne de caractères $input en liste de mots : $output',
-    (input, output) => {
-      expect(stringSplit(input)).toEqual(output)
-    }
-  )
+    ['nom1*nom2', ['nom1*nom2']],
+  ])('convertit la chaîne de caractères $input en liste de mots : $output', (input, output) => {
+    expect(stringSplit(input)).toEqual(output)
+  })
 })

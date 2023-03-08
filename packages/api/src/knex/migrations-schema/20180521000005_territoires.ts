@@ -21,11 +21,7 @@ export const up = (knex: Knex) => {
     .createTable('communes', table => {
       table.string('id', 5).primary()
       table.string('nom').notNullable()
-      table
-        .string('departementId', 3)
-        .notNullable()
-        .index()
-        .references('departements.id')
+      table.string('departementId', 3).notNullable().index().references('departements.id')
     })
     .createTable('forets', table => {
       table.string('id', 30).primary()
@@ -34,10 +30,5 @@ export const up = (knex: Knex) => {
 }
 
 export const down = (knex: Knex) => {
-  return knex.schema
-    .dropTable('communes')
-    .dropTable('departements')
-    .dropTable('regions')
-    .dropTable('pays')
-    .dropTable('forets')
+  return knex.schema.dropTable('communes').dropTable('departements').dropTable('regions').dropTable('pays').dropTable('forets')
 }

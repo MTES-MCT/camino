@@ -1,17 +1,10 @@
 import { contenuDatesCheck } from './contenu-dates-check.js'
 import { describe, test, expect } from 'vitest'
-import {
-  sections,
-  sectionsSansElement,
-  contenuDatesValides,
-  contenuDatesInvalides
-} from '../__mocks__/contenu-dates-check-contenus.js'
+import { sections, sectionsSansElement, contenuDatesValides, contenuDatesInvalides } from '../__mocks__/contenu-dates-check-contenus.js'
 
 describe("vérifie la validité des propriétés dont le type est date d'une étape", () => {
   test("la sections n'a pas d'éléments", () => {
-    expect(contenuDatesCheck(sectionsSansElement, contenuDatesValides)).toEqual(
-      null
-    )
+    expect(contenuDatesCheck(sectionsSansElement, contenuDatesValides)).toEqual(null)
   })
 
   test('les propriétés de type date ne contiennent pas de valeur négative', () => {
@@ -19,8 +12,6 @@ describe("vérifie la validité des propriétés dont le type est date d'une ét
   })
 
   test("les dates n'ont pas de coordonnées de référence", () => {
-    expect(contenuDatesCheck(sections, contenuDatesInvalides)).toBe(
-      'le champ "date" n\'est pas une date valide'
-    )
+    expect(contenuDatesCheck(sections, contenuDatesInvalides)).toBe('le champ "date" n\'est pas une date valide')
   })
 })

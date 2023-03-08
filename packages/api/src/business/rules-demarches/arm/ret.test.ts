@@ -8,12 +8,7 @@ describe('vérifie l’arbre de retrait d’ARM', () => {
     expect(retEtatsValidate([{ typeId: 'ide' }])).toHaveLength(0)
   })
   test('ne peut pas créer une étape "ide" si il y a déjà une "ide"', () => {
-    expect(
-      retEtatsValidate([
-        { typeId: 'ide', date: toCaminoDate('2020-01-01') },
-        { typeId: 'ide' }
-      ])
-    ).toEqual(['l’étape "ide" ne peut-être effecutée 2 fois d’affilée'])
+    expect(retEtatsValidate([{ typeId: 'ide', date: toCaminoDate('2020-01-01') }, { typeId: 'ide' }])).toEqual(['l’étape "ide" ne peut-être effecutée 2 fois d’affilée'])
   })
 
   test('ne peut pas faire 2 ide', () => {
@@ -21,7 +16,7 @@ describe('vérifie l’arbre de retrait d’ARM', () => {
       retEtatsValidate([
         { typeId: 'ide', date: toCaminoDate('2020-05-27') },
         { typeId: 'mni', date: toCaminoDate('2020-06-03') },
-        { typeId: 'ide', date: toCaminoDate('2020-07-07') }
+        { typeId: 'ide', date: toCaminoDate('2020-07-07') },
       ])
     ).toEqual(['l’étape "ide" existe déjà'])
   })
@@ -33,42 +28,21 @@ describe('vérifie l’arbre de retrait d’ARM', () => {
         { typeId: 'mni', date: toCaminoDate('2020-01-02') },
         { typeId: 'rif', date: toCaminoDate('2020-01-03') },
         { typeId: 'eof', date: toCaminoDate('2020-01-04') },
-        { typeId: 'mni', date: toCaminoDate('2020-01-05') }
+        { typeId: 'mni', date: toCaminoDate('2020-01-05') },
       ])
     ).toEqual(['l’étape "mni" n’est pas possible juste après "eof"'])
   })
 
   test('ne peut pas créer une étape "mnc" après la "mnc"', () => {
-    expect(
-      retEtatsValidate([
-        { typeId: 'ide' },
-        { typeId: 'mni' },
-        { typeId: 'css' },
-        { typeId: 'mnc' },
-        { typeId: 'mnc' }
-      ])
-    ).toEqual(['l’étape "mnc" ne peut-être effecutée 2 fois d’affilée'])
+    expect(retEtatsValidate([{ typeId: 'ide' }, { typeId: 'mni' }, { typeId: 'css' }, { typeId: 'mnc' }, { typeId: 'mnc' }])).toEqual(['l’étape "mnc" ne peut-être effecutée 2 fois d’affilée'])
   })
 
   test('peut créer une "aof" juste après une "mno"', () => {
-    expect(
-      retEtatsValidate([
-        { typeId: 'ide' },
-        { typeId: 'mni' },
-        { typeId: 'aof' }
-      ])
-    ).toHaveLength(0)
+    expect(retEtatsValidate([{ typeId: 'ide' }, { typeId: 'mni' }, { typeId: 'aof' }])).toHaveLength(0)
   })
 
   test('ne peut pas créer une "aof" juste après une "rif"', () => {
-    expect(
-      retEtatsValidate([
-        { typeId: 'ide' },
-        { typeId: 'mni' },
-        { typeId: 'rif' },
-        { typeId: 'aof' }
-      ])
-    ).toEqual(['l’étape "aof" n’est pas possible juste après "rif"'])
+    expect(retEtatsValidate([{ typeId: 'ide' }, { typeId: 'mni' }, { typeId: 'rif' }, { typeId: 'aof' }])).toEqual(['l’étape "aof" n’est pas possible juste après "rif"'])
   })
 
   test('ne peut pas créer une "aof" après une "css"', () => {
@@ -77,15 +51,13 @@ describe('vérifie l’arbre de retrait d’ARM', () => {
         { typeId: 'ide', date: toCaminoDate('2020-01-01') },
         { typeId: 'mni', date: toCaminoDate('2020-01-02') },
         { typeId: 'css', date: toCaminoDate('2020-01-03') },
-        { typeId: 'aof', date: toCaminoDate('2020-01-04') }
+        { typeId: 'aof', date: toCaminoDate('2020-01-04') },
       ])
     ).toEqual(['l’étape "aof" n’est pas possible juste après "css"'])
   })
 
   test('ne peut pas créer une "css" juste après une "ide"', () => {
-    expect(retEtatsValidate([{ typeId: 'ide' }, { typeId: 'css' }])).toEqual([
-      'l’étape "css" n’est pas possible après "ide"'
-    ])
+    expect(retEtatsValidate([{ typeId: 'ide' }, { typeId: 'css' }])).toEqual(['l’étape "css" n’est pas possible après "ide"'])
   })
 
   test('peut créer une "mio" juste après une "rif"', () => {
@@ -94,7 +66,7 @@ describe('vérifie l’arbre de retrait d’ARM', () => {
         { typeId: 'ide', date: toCaminoDate('2020-01-01') },
         { typeId: 'mni', date: toCaminoDate('2020-01-02') },
         { typeId: 'rif', date: toCaminoDate('2020-01-03') },
-        { typeId: 'mio', date: toCaminoDate('2020-01-04') }
+        { typeId: 'mio', date: toCaminoDate('2020-01-04') },
       ])
     ).toHaveLength(0)
   })
@@ -106,7 +78,7 @@ describe('vérifie l’arbre de retrait d’ARM', () => {
         { typeId: 'mni', date: toCaminoDate('2020-01-02') },
         { typeId: 'rif', date: toCaminoDate('2020-01-03') },
         { typeId: 'mio', date: toCaminoDate('2020-01-04') },
-        { typeId: 'rif', date: toCaminoDate('2020-01-05') }
+        { typeId: 'rif', date: toCaminoDate('2020-01-05') },
       ])
     ).toEqual(['l’étape "rif" n’est pas possible juste après "mio"'])
   })
@@ -119,7 +91,7 @@ describe('vérifie l’arbre de retrait d’ARM', () => {
         { typeId: 'rif', date: toCaminoDate('2020-01-03') },
         { typeId: 'mio', date: toCaminoDate('2020-01-04') },
         { typeId: 'rio', date: toCaminoDate('2020-01-05') },
-        { typeId: 'eof' }
+        { typeId: 'eof' },
       ])
     ).toHaveLength(0)
   })
@@ -131,30 +103,17 @@ describe('vérifie l’arbre de retrait d’ARM', () => {
         { typeId: 'mni', date: toCaminoDate('2020-01-02') },
         { typeId: 'rif', date: toCaminoDate('2020-01-03') },
         { typeId: 'mio', date: toCaminoDate('2020-01-04') },
-        { typeId: 'eof', date: toCaminoDate('2020-01-05') }
+        { typeId: 'eof', date: toCaminoDate('2020-01-05') },
       ])
     ).toEqual(['l’étape "eof" n’est pas possible juste après "mio"'])
   })
 
   test('peut créer une "css" apres une "mni"', () => {
-    expect(
-      retEtatsValidate([
-        { typeId: 'ide' },
-        { typeId: 'mni' },
-        { typeId: 'css' }
-      ])
-    ).toHaveLength(0)
+    expect(retEtatsValidate([{ typeId: 'ide' }, { typeId: 'mni' }, { typeId: 'css' }])).toHaveLength(0)
   })
 
   test('peut créer une "css" apres une "rif"', () => {
-    expect(
-      retEtatsValidate([
-        { typeId: 'ide' },
-        { typeId: 'mni' },
-        { typeId: 'rif' },
-        { typeId: 'css' }
-      ])
-    ).toHaveLength(0)
+    expect(retEtatsValidate([{ typeId: 'ide' }, { typeId: 'mni' }, { typeId: 'rif' }, { typeId: 'css' }])).toHaveLength(0)
   })
 
   test('peut créer une "css" apres une "mio"', () => {
@@ -164,20 +123,12 @@ describe('vérifie l’arbre de retrait d’ARM', () => {
         { typeId: 'mni', date: toCaminoDate('2020-01-02') },
         { typeId: 'rif', date: toCaminoDate('2020-01-03') },
         { typeId: 'mio', date: toCaminoDate('2020-01-04') },
-        { typeId: 'css', date: toCaminoDate('2020-01-05') }
+        { typeId: 'css', date: toCaminoDate('2020-01-05') },
       ])
     ).toHaveLength(0)
   })
   test('peut créer une "css" apres une "eof"', () => {
-    expect(
-      retEtatsValidate([
-        { typeId: 'ide' },
-        { typeId: 'mni' },
-        { typeId: 'rif' },
-        { typeId: 'eof' },
-        { typeId: 'css' }
-      ])
-    ).toHaveLength(0)
+    expect(retEtatsValidate([{ typeId: 'ide' }, { typeId: 'mni' }, { typeId: 'rif' }, { typeId: 'eof' }, { typeId: 'css' }])).toHaveLength(0)
   })
 
   test('ne peut pas créer une "css" apres une "css"', () => {
@@ -186,7 +137,7 @@ describe('vérifie l’arbre de retrait d’ARM', () => {
         { typeId: 'ide', date: toCaminoDate('2020-01-01') },
         { typeId: 'mni', date: toCaminoDate('2020-01-01') },
         { typeId: 'css', date: toCaminoDate('2020-01-01') },
-        { typeId: 'css' }
+        { typeId: 'css' },
       ])
     ).toEqual(['l’étape "css" ne peut-être effecutée 2 fois d’affilée'])
   })
@@ -197,7 +148,7 @@ describe('vérifie l’arbre de retrait d’ARM', () => {
         { typeId: 'css', date: toCaminoDate('2020-01-02') },
         { typeId: 'mni', date: toCaminoDate('2020-01-01') },
         { typeId: 'ide', date: toCaminoDate('2020-01-01') },
-        { typeId: 'mni', date: toCaminoDate('2020-01-03') }
+        { typeId: 'mni', date: toCaminoDate('2020-01-03') },
       ])
     ).toEqual(['l’étape "mni" n’est pas possible juste après "css"'])
   })

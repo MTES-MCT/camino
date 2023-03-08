@@ -8,21 +8,21 @@ const utilisateursFiltres = [
     type: 'input',
     value: '',
     name: 'Noms, prénoms',
-    placeholder: '...'
+    placeholder: '...',
   },
   {
     id: 'emails',
     type: 'input',
     value: '',
     name: 'Emails',
-    placeholder: 'prenom.nom@domaine.fr, ...'
+    placeholder: 'prenom.nom@domaine.fr, ...',
   },
   {
     id: 'roles',
     name: 'Rôles',
     type: 'checkboxes',
     value: [],
-    elements: ROLES.map(r => ({ id: r, nom: r }))
+    elements: ROLES.map(r => ({ id: r, nom: r })),
   },
   {
     id: 'administrationIds',
@@ -31,15 +31,15 @@ const utilisateursFiltres = [
     value: [],
     elements: sortedAdministrations,
     buttonAdd: 'Ajouter une administration',
-    elementName: 'abreviation'
+    elementName: 'abreviation',
   },
   {
     id: 'entrepriseIds',
     type: 'autocomplete',
     value: [],
     name: 'Entreprises',
-    elementsFormat
-  }
+    elementsFormat,
+  },
 ]
 
 export default utilisateursFiltres

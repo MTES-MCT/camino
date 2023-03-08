@@ -4,7 +4,7 @@ import { CommonTitrePTMG } from 'camino-common/src/titres'
 
 const meta: Meta = {
   title: 'Components/Dashboard/PTMG',
-  component: PurePTMGDashboard
+  component: PurePTMGDashboard,
 }
 export default meta
 
@@ -18,10 +18,10 @@ const titres: CommonTitrePTMG[] = [
     typeId: 'arm',
     titulaires: [
       {
-        nom: 'Titulaire1'
-      }
+        nom: 'Titulaire1',
+      },
     ],
-    enAttenteDePTMG: true
+    enAttenteDePTMG: true,
   },
   {
     id: 'secondId',
@@ -32,16 +32,16 @@ const titres: CommonTitrePTMG[] = [
     references: [
       {
         nom: '2010-001',
-        referenceTypeId: 'ptm'
+        referenceTypeId: 'ptm',
       },
-      { nom: '2010-000', referenceTypeId: 'ptm' }
+      { nom: '2010-000', referenceTypeId: 'ptm' },
     ],
     titulaires: [
       {
-        nom: 'Titulaire3'
-      }
+        nom: 'Titulaire3',
+      },
     ],
-    enAttenteDePTMG: true
+    enAttenteDePTMG: true,
   },
   {
     id: 'thirdId',
@@ -52,10 +52,10 @@ const titres: CommonTitrePTMG[] = [
     references: [],
     titulaires: [
       {
-        nom: 'Titulaire1'
-      }
+        nom: 'Titulaire1',
+      },
     ],
-    enAttenteDePTMG: false
+    enAttenteDePTMG: false,
   },
   {
     id: 'fourthId',
@@ -66,29 +66,19 @@ const titres: CommonTitrePTMG[] = [
     references: [
       {
         nom: '2010-001',
-        referenceTypeId: 'ptm'
+        referenceTypeId: 'ptm',
       },
-      { nom: '2010-000', referenceTypeId: 'ptm' }
+      { nom: '2010-000', referenceTypeId: 'ptm' },
     ],
     titulaires: [
       {
-        nom: 'Titulaire 8'
-      }
+        nom: 'Titulaire 8',
+      },
     ],
-    enAttenteDePTMG: true
-  }
+    enAttenteDePTMG: true,
+  },
 ]
 
-export const Ok: Story = () => (
-  <PurePTMGDashboard getPtmgTitres={() => Promise.resolve(titres)} />
-)
-export const Loading: Story = () => (
-  <PurePTMGDashboard
-    getPtmgTitres={() => new Promise<CommonTitrePTMG[]>(resolve => {})}
-  />
-)
-export const WithError: Story = () => (
-  <PurePTMGDashboard
-    getPtmgTitres={() => Promise.reject(new Error('because reasons'))}
-  />
-)
+export const Ok: Story = () => <PurePTMGDashboard getPtmgTitres={() => Promise.resolve(titres)} />
+export const Loading: Story = () => <PurePTMGDashboard getPtmgTitres={() => new Promise<CommonTitrePTMG[]>(resolve => {})} />
+export const WithError: Story = () => <PurePTMGDashboard getPtmgTitres={() => Promise.reject(new Error('because reasons'))} />

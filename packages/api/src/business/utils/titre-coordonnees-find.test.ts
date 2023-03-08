@@ -5,7 +5,7 @@ import { titrePoints } from './__mocks__/titre-coordonnees-find.js'
 import { vi, describe, test, expect } from 'vitest'
 
 vi.mock('../../tools/geojson', () => ({
-  geojsonCenter: vi.fn()
+  geojsonCenter: vi.fn(),
 }))
 
 const geojsonCenterMock = vi.mocked(geojsonCenter, true)

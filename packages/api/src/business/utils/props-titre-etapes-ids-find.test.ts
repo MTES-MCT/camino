@@ -13,8 +13,8 @@ describe("liste des propriétés et les étapes qui en sont à l'origine", () =>
             titreId: 'titre-id',
             typeId: 'oct',
             statutId: 'acc',
-            etapes: []
-          }
+            etapes: [],
+          },
         ],
         [{ elementId: 'mecanise', sectionId: 'arm' }]
       )

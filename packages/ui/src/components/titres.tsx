@@ -13,10 +13,7 @@ import { TablePagination } from './titres/table-pagination'
 function DemandeTitreButton(user: User, router: Router) {
   if (TitresTypesIds.some(titreTypeId => canCreateTitre(user, titreTypeId))) {
     return (
-      <button
-        class="btn btn-primary small flex"
-        onClick={() => router.push({ name: 'titre-creation' })}
-      >
+      <button class="btn btn-primary small flex" onClick={() => router.push({ name: 'titre-creation' })}>
         <span class="mt-xxs">Demander un titre…</span>
         <Icon name="plus" size="M" class="flex-right" color="white" />
       </button>
@@ -27,17 +24,12 @@ function DemandeTitreButton(user: User, router: Router) {
 
 const vues = [
   { id: 'carte', icon: 'globe' },
-  { id: 'table', icon: 'list' }
+  { id: 'table', icon: 'list' },
 ] as const
 
 type VueId = (typeof vues)[number]['id']
 
-function AfficheData(
-  initialized: boolean,
-  vueId: VueId,
-  titres: any,
-  total: number
-): JSX.Element {
+function AfficheData(initialized: boolean, vueId: VueId, titres: any, total: number): JSX.Element {
   if (initialized) {
     switch (vueId) {
       case 'carte':
@@ -61,18 +53,13 @@ export const Titres = defineComponent({
 
     const user = computed<User>(() => store.state.user.element)
     const initialized = computed<boolean>(() => store.state.titres.initialized)
-    const loading = computed<boolean>(() =>
-      store.state.loading.includes('titres')
-    )
+    const loading = computed<boolean>(() => store.state.loading.includes('titres'))
     const titres = computed<any[]>(() => store.state.titres.elements)
     const total = computed<number>(() => store.state.titres.total)
 
     const vueId = computed<VueId>(() => store.state.titres.vueId)
     const resultat = computed<string>(() => {
-      const res =
-        total.value > titres.value.length
-          ? `${titres.value.length} / ${total.value}`
-          : titres.value.length
+      const res = total.value > titres.value.length ? `${titres.value.length} / ${total.value}` : titres.value.length
 
       return `${res} résultat${titres.value.length > 1 ? 's' : ''}`
     })
@@ -98,35 +85,18 @@ export const Titres = defineComponent({
             <h1 class="mt-xs mb-m">Titres miniers et autorisations</h1>
           </div>
 
-          <div class="desktop-blob-1-3">
-            {DemandeTitreButton(user.value, router)}
-          </div>
+          <div class="desktop-blob-1-3">{DemandeTitreButton(user.value, router)}</div>
         </div>
 
         <Filtres initialized={initialized.value} />
         <div class="tablet-blobs tablet-flex-direction-reverse">
-          <div class="tablet-blob-1-3 flex mb-s">
-            {titres.value.length > 0 ? (
-              <Downloads
-                formats={['geojson', 'csv', 'xlsx', 'ods']}
-                section="titres"
-                class="flex-right full-x downloads"
-              />
-            ) : null}
-          </div>
+          <div class="tablet-blob-1-3 flex mb-s">{titres.value.length > 0 ? <Downloads formats={['geojson', 'csv', 'xlsx', 'ods']} section="titres" class="flex-right full-x downloads" /> : null}</div>
 
           <div class="tablet-blob-2-3 flex">
             {vues.map(vue => {
               return (
-                <div
-                  key={vue.id}
-                  class={vueId.value === vue.id ? 'active mr-xs' : 'mr-xs'}
-                >
-                  <button
-                    class="p-m btn-tab rnd-t-s"
-                    style={vueId.value === vue.id ? { cursor: 'default' } : {}}
-                    onClick={() => vueId.value !== vue.id && vueClick(vue.id)}
-                  >
+                <div key={vue.id} class={vueId.value === vue.id ? 'active mr-xs' : 'mr-xs'}>
+                  <button class="p-m btn-tab rnd-t-s" style={vueId.value === vue.id ? { cursor: 'default' } : {}} onClick={() => vueId.value !== vue.id && vueClick(vue.id)}>
                     <Icon name={vue.icon} size="M" />
                   </button>
                 </div>
@@ -139,5 +109,5 @@ export const Titres = defineComponent({
         {AfficheData(initialized.value, vueId.value, titres.value, total.value)}
       </div>
     )
-  }
+  },
 })

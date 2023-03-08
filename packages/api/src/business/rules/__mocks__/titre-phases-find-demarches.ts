@@ -13,7 +13,7 @@ const titreDemarcheOctDpuAcc = {
       statutId: 'acc',
       ordre: 2,
       date: '2200-01-01',
-      duree: 2 * 12
+      duree: 2 * 12,
     },
     {
       id: 'h-cx-courdemanges-1988-oct01-dex01',
@@ -21,9 +21,9 @@ const titreDemarcheOctDpuAcc = {
       statutId: 'acc',
       ordre: 1,
       date: '2200-01-01',
-      duree: 2 * 12
-    }
-  ]
+      duree: 2 * 12,
+    },
+  ],
 } as ITitreDemarche
 
 const titreDemarcheOctDpuInexistante = {
@@ -31,7 +31,7 @@ const titreDemarcheOctDpuInexistante = {
   titreId: 'h-cx-courdemanges-1988',
   typeId: 'oct',
   statutId: 'acc',
-  etapes: []
+  etapes: [],
 } as ITitreDemarche
 
 const titreAxmDemarcheOctDexAcc = {
@@ -46,9 +46,9 @@ const titreAxmDemarcheOctDexAcc = {
       statutId: 'acc',
       ordre: 1,
       date: '2200-01-01',
-      duree: 2 * 12
-    }
-  ]
+      duree: 2 * 12,
+    },
+  ],
 } as ITitreDemarche
 
 const titrePrmDemarcheOctRpuAcc = {
@@ -63,9 +63,9 @@ const titrePrmDemarcheOctRpuAcc = {
       statutId: 'acc',
       ordre: 1,
       date: '2200-01-01',
-      dateFin: '2200-01-02'
-    }
-  ]
+      dateFin: '2200-01-02',
+    },
+  ],
 } as ITitreDemarche
 
 const titreDemarcheOctDpuDateDebut = {
@@ -81,7 +81,7 @@ const titreDemarcheOctDpuDateDebut = {
       ordre: 2,
       date: '2200-01-01',
       dateDebut: '2200-01-02',
-      duree: 2 * 12
+      duree: 2 * 12,
     },
     {
       id: 'h-cx-courdemanges-1988-oct01-dex01',
@@ -90,9 +90,9 @@ const titreDemarcheOctDpuDateDebut = {
       ordre: 1,
       date: '2200-01-01',
       dateDebut: '2200-01-02',
-      duree: 2 * 12
-    }
-  ]
+      duree: 2 * 12,
+    },
+  ],
 } as ITitreDemarche
 
 const titreDemarchesOctProlongation = [
@@ -109,7 +109,7 @@ const titreDemarchesOctProlongation = [
         statutId: 'acc',
         ordre: 2,
         date: '2200-01-01',
-        dateFin: '2500-01-01'
+        dateFin: '2500-01-01',
       },
       {
         id: 'h-cx-courdemanges-1988-oct01-dex01',
@@ -117,9 +117,9 @@ const titreDemarchesOctProlongation = [
         statutId: 'acc',
         ordre: 1,
         date: '2200-01-01',
-        dateFin: '2500-01-01'
-      }
-    ]
+        dateFin: '2500-01-01',
+      },
+    ],
   },
   {
     id: 'h-cx-courdemanges-1988-pro01',
@@ -134,7 +134,7 @@ const titreDemarchesOctProlongation = [
         statutId: 'acc',
         ordre: 2,
         date: '2019-01-02',
-        dateFin: '3000-01-01'
+        dateFin: '3000-01-01',
       },
       {
         id: 'h-cx-courdemanges-1988-pro01-dex01',
@@ -142,10 +142,10 @@ const titreDemarchesOctProlongation = [
         statutId: 'acc',
         ordre: 1,
         date: '2019-01-02',
-        dateFin: '3000-01-01'
-      }
-    ]
-  }
+        dateFin: '3000-01-01',
+      },
+    ],
+  },
 ] as ITitreDemarche[]
 
 const titreDemarchesOctAnnulation = [
@@ -162,7 +162,7 @@ const titreDemarchesOctAnnulation = [
         statutId: 'acc',
         ordre: 2,
         date: '2000-01-02',
-        duree: 20 * 12
+        duree: 20 * 12,
       },
       {
         id: 'h-cx-courdemanges-1988-oct01-dex01',
@@ -170,9 +170,9 @@ const titreDemarchesOctAnnulation = [
         statutId: 'acc',
         ordre: 1,
         date: '2000-01-01',
-        duree: 20 * 12
-      }
-    ]
+        duree: 20 * 12,
+      },
+    ],
   },
   {
     id: 'h-cx-courdemanges-1988-ren01',
@@ -186,17 +186,17 @@ const titreDemarchesOctAnnulation = [
         typeId: 'dpu',
         statutId: 'acc',
         ordre: 2,
-        date: '2019-01-03'
+        date: '2019-01-03',
       },
       {
         id: 'h-cx-courdemanges-1988-ren01-dex01',
         typeId: 'dex',
         statutId: 'acc',
         ordre: 1,
-        date: '2019-01-02'
-      }
-    ]
-  }
+        date: '2019-01-02',
+      },
+    ],
+  },
 ] as ITitreDemarche[]
 
 const titreDemarchesOctAnnulationSansPoints = [
@@ -213,7 +213,7 @@ const titreDemarchesOctAnnulationSansPoints = [
         statutId: 'acc',
         ordre: 2,
         date: '2000-01-02',
-        duree: 20 * 12
+        duree: 20 * 12,
       },
       {
         id: 'h-cx-courdemanges-1988-oct01-dex01',
@@ -221,9 +221,9 @@ const titreDemarchesOctAnnulationSansPoints = [
         statutId: 'acc',
         ordre: 1,
         date: '2000-01-01',
-        duree: 20 * 12
-      }
-    ]
+        duree: 20 * 12,
+      },
+    ],
   },
   {
     id: 'h-cx-courdemanges-1988-ren01',
@@ -237,7 +237,7 @@ const titreDemarchesOctAnnulationSansPoints = [
         typeId: 'dpu',
         statutId: 'acc',
         ordre: 2,
-        date: '2019-01-03'
+        date: '2019-01-03',
       },
       {
         id: 'h-cx-courdemanges-1988-ren01-dex01',
@@ -245,10 +245,10 @@ const titreDemarchesOctAnnulationSansPoints = [
         statutId: 'acc',
         ordre: 1,
         date: '2019-01-02',
-        points: [{ id: 'point' }]
-      }
-    ]
-  }
+        points: [{ id: 'point' }],
+      },
+    ],
+  },
 ] as ITitreDemarche[]
 
 export {
@@ -259,5 +259,5 @@ export {
   titreDemarcheOctDpuDateDebut,
   titreDemarchesOctProlongation,
   titreDemarchesOctAnnulation,
-  titreDemarchesOctAnnulationSansPoints
+  titreDemarchesOctAnnulationSansPoints,
 }

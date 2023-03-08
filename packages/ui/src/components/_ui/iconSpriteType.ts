@@ -28,6 +28,6 @@ export const icons = [
   'pencil',
   'plus',
   'refresh',
-  'x'
+  'x',
 ] as const
 export type Icon = (typeof icons)[number]

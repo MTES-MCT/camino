@@ -19,15 +19,12 @@ export const seed = seeding(async ({ insert }) => {
     insert('titresTypesTypes', titresTypesTypes),
     insert('demarchesTypes', demarchesTypes),
     insert('etapesTypes', etapesTypes),
-    insert('documentsTypes', documentsTypes)
+    insert('documentsTypes', documentsTypes),
   ])
   await Promise.all([insert('titresTypes', titresTypes)])
   await Promise.all([
-    insert(
-      'titresTypes__demarchesTypes__etapesTypes',
-      titresTypes_demarchesTypes_etapesTypes
-    ),
+    insert('titresTypes__demarchesTypes__etapesTypes', titresTypes_demarchesTypes_etapesTypes),
     insert('entreprises__documents_types', entreprises_documentsTypes),
-    insert('etapesTypes__justificatifsTypes', etapesTypes_justificatifsTypes)
+    insert('etapesTypes__justificatifsTypes', etapesTypes_justificatifsTypes),
   ])
 })
