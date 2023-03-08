@@ -5,6 +5,7 @@ import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/s
 import { titresRechercherByNom, titresRechercherByReferences } from '@/api/titres'
 import { useRouter } from 'vue-router'
 import { defineComponent, ref, inject } from 'vue'
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
 export interface Titre {
   id: string
@@ -60,51 +61,48 @@ interface Props {
   onSelectedTitre: (titre: Titre | undefined) => void
   onSearch: (searchTerm: string) => void
 }
-export const PureQuickAccessTitre = defineComponent<Props>({
-  props: ['titres', 'onSelectedTitre', 'onSearch'] as unknown as undefined,
-  setup(props) {
-    const display = (item: Titre) => {
-      return (
-        <div class="flex flex-center">
-          <Domaine domaineId={getDomaineId(item.typeId)} class="mr-s" />
-          <span class="cap-first bold">{item.nom}</span>
-          <span class="ml-xs"> ({TitresTypesTypes[getTitreTypeType(item.typeId)].nom}) </span>
-        </div>
-      )
-    }
-
-    const createDebounce = () => {
-      let timeout: ReturnType<typeof setTimeout>
-      return function (fnc: Function, delayMs = 500) {
-        clearTimeout(timeout)
-        timeout = setTimeout(() => {
-          fnc()
-        }, delayMs)
-      }
-    }
-
-    const overrideItems = ref<Titre[]>([])
-    const selectItem = (item: Titre | undefined) => {
-      overrideItems.value = []
-      props.onSelectedTitre(item)
-    }
-
-    const debounce = createDebounce()
-
-    return () => (
-      <TypeAhead
-        id="quick-access-titre"
-        itemKey="id"
-        placeholder="Rechercher un titre"
-        type="single"
-        items={props.titres}
-        overrideItems={overrideItems.value}
-        minInputLength={3}
-        itemChipLabel={item => item.nom}
-        onSelectItem={selectItem}
-        onInput={event => debounce(() => props.onSearch(event))}
-        displayItemInList={display}
-      />
+export const PureQuickAccessTitre = caminoDefineComponent<Props>(['titres', 'onSelectedTitre', 'onSearch'], props => {
+  const display = (item: Titre) => {
+    return (
+      <div class="flex flex-center">
+        <Domaine domaineId={getDomaineId(item.typeId)} class="mr-s" />
+        <span class="cap-first bold">{item.nom}</span>
+        <span class="ml-xs"> ({TitresTypesTypes[getTitreTypeType(item.typeId)].nom}) </span>
+      </div>
     )
-  },
+  }
+
+  const createDebounce = () => {
+    let timeout: ReturnType<typeof setTimeout>
+    return function (fnc: Function, delayMs = 500) {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => {
+        fnc()
+      }, delayMs)
+    }
+  }
+
+  const overrideItems = ref<Titre[]>([])
+  const selectItem = (item: Titre | undefined) => {
+    overrideItems.value = []
+    props.onSelectedTitre(item)
+  }
+
+  const debounce = createDebounce()
+
+  return () => (
+    <TypeAhead
+      id="quick-access-titre"
+      itemKey="id"
+      placeholder="Rechercher un titre"
+      type="single"
+      items={props.titres}
+      overrideItems={overrideItems.value}
+      minInputLength={3}
+      itemChipLabel={item => item.nom}
+      onSelectItem={selectItem}
+      onInput={event => debounce(() => props.onSearch(event))}
+      displayItemInList={display}
+    />
+  )
 })

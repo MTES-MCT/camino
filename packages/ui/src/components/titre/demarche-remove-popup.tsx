@@ -1,7 +1,7 @@
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { DemarchesTypes, DemarcheTypeId } from 'camino-common/src/static/demarchesTypes'
 import { isTitreType, TitresTypes, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { TitresTypesTypes } from 'camino-common/src/static/titresTypesTypes'
-import { defineComponent } from 'vue'
 import { useStore } from 'vuex'
 import { FunctionalPopup } from '../_ui/functional-popup'
 import { DemarcheApiClient } from './demarche-api-client'
@@ -18,9 +18,9 @@ export interface Props {
   displayMessage: () => void
 }
 
-export const DemarcheRemovePopup = defineComponent<Omit<Props, 'reload' | 'displayMessage'>>({
-  props: ['titreTypeId', 'titreId', 'titreNom', 'demarcheTypeId', 'demarcheId', 'close', 'apiClient'] as unknown as undefined,
-  setup(props) {
+export const DemarcheRemovePopup = caminoDefineComponent<Omit<Props, 'reload' | 'displayMessage'>>(
+  ['titreTypeId', 'titreNom', 'titreId', 'demarcheTypeId', 'demarcheId', 'close', 'apiClient'],
+  props => {
     const store = useStore()
     return () => (
       <PureDemarcheRemovePopup
@@ -34,8 +34,8 @@ export const DemarcheRemovePopup = defineComponent<Omit<Props, 'reload' | 'displ
         displayMessage={() => store.dispatch('messageAdd', { value: `le titre a été mis à jour`, type: 'success' }, { root: true })}
       />
     )
-  },
-})
+  }
+)
 
 export const PureDemarcheRemovePopup = (props: Omit<Props, 'titreId'>): JSX.Element => {
   const titreTypeNom: string = isTitreType(props.titreTypeId) ? TitresTypesTypes[TitresTypes[props.titreTypeId].typeId].nom : ''

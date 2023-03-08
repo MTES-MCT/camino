@@ -1,7 +1,7 @@
-import { computed, defineComponent, Ref, ref, watch } from 'vue'
+import { computed, Ref, ref, watch } from 'vue'
 import { Chip } from './chip'
 import styles from './typeahead.module.css'
-import { isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { isEventWithTarget, caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
 type TypeAheadRecord = Record<string | symbol | number, any>
@@ -22,22 +22,9 @@ export type Props<T extends TypeAheadRecord, K extends keyof T> = {
 }
 
 const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
-  defineComponent<Props<T, K>>({
-    props: [
-      'id',
-      'placeholder',
-      'itemKey',
-      'type',
-      'items',
-      'overrideItems',
-      'minInputLength',
-      'itemChipLabel',
-      'displayItemInList',
-      'onSelectItem',
-      'onSelectItems',
-      'onInput',
-    ] as unknown as undefined,
-    setup(props) {
+  caminoDefineComponent<Props<T, K>>(
+    ['id', 'placeholder', 'itemKey', 'type', 'items', 'overrideItems', 'minInputLength', 'itemChipLabel', 'displayItemInList', 'onSelectItem', 'onSelectItems', 'onInput'],
+    props => {
       const id = props.id ?? `typeahead_${(Math.random() * 1000).toFixed()}`
       const wrapperId = computed(() => `${id}_wrapper`)
       const getItems = (items: (Pick<T, K> & Partial<Omit<T, K>>)[]): T[] => items.map(o => props.items.find(i => i[props.itemKey] === o[props.itemKey])).filter(isNotNullNorUndefined)
@@ -213,8 +200,8 @@ const GenericTypeAhead = <T extends TypeAheadRecord, K extends keyof T>() =>
           ) : null}
         </div>
       )
-    },
-  })
+    }
+  )
 
 const HiddenTypeAhead = GenericTypeAhead()
 export const TypeAhead = <T extends TypeAheadRecord, K extends keyof T>(props: Props<T, K>): JSX.Element => {

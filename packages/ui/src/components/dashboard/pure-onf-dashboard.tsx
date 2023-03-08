@@ -1,4 +1,4 @@
-import { defineComponent, inject, markRaw, onMounted, ref } from 'vue'
+import { markRaw, onMounted, ref } from 'vue'
 import { TableAuto } from '../_ui/table-auto'
 import { Date as DateComponent } from '../_ui/date'
 
@@ -8,6 +8,7 @@ import Error from '@/components/error.vue'
 import { CommonTitreONF } from 'camino-common/src/titres'
 import { datesDiffInDays } from 'camino-common/src/date'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 export interface Props {
   getOnfTitres: () => Promise<CommonTitreONF[]>
 }
@@ -86,55 +87,51 @@ const titresLignesBuild = (titres: CommonTitreONF[]): TableRow<Columns>[] => {
   })
 }
 
-export const PureONFDashboard = defineComponent<Props>({
-  setup(props) {
-    const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
-    const onfTitres = ref<TableRow[]>([])
-    const onfTitresBloques = ref<TableRow[]>([])
-    onMounted(async () => {
-      try {
-        const titres = await props.getOnfTitres()
-        onfTitres.value.push(...titresLignesBuild(titres.filter(titre => !titre.enAttenteDeONF)))
-        onfTitresBloques.value.push(...titresLignesBuild(titres.filter(titre => titre.enAttenteDeONF)))
-        status.value = 'LOADED'
-      } catch (e) {
-        console.error('error', e)
-        status.value = 'ERROR'
-      }
-    })
+export const PureONFDashboard = caminoDefineComponent<Props>(['getOnfTitres'], props => {
+  const status = ref<'LOADING' | 'LOADED' | 'ERROR'>('LOADING')
+  const onfTitres = ref<TableRow[]>([])
+  const onfTitresBloques = ref<TableRow[]>([])
+  onMounted(async () => {
+    try {
+      const titres = await props.getOnfTitres()
+      onfTitres.value.push(...titresLignesBuild(titres.filter(titre => !titre.enAttenteDeONF)))
+      onfTitresBloques.value.push(...titresLignesBuild(titres.filter(titre => titre.enAttenteDeONF)))
+      status.value = 'LOADED'
+    } catch (e) {
+      console.error('error', e)
+      status.value = 'ERROR'
+    }
+  })
 
-    return () => (
-      <div>
-        <div class="desktop-blobs">
-          <div class="desktop-blob-2-3">
-            <h1 class="mt-xs mb-xxl">Tableau de bord ONF</h1>
-          </div>
+  return () => (
+    <div>
+      <div class="desktop-blobs">
+        <div class="desktop-blob-2-3">
+          <h1 class="mt-xs mb-xxl">Tableau de bord ONF</h1>
         </div>
-        {status.value === 'LOADING' ? (
-          <div class="loaders fixed p">
-            <div class="loader" />
-          </div>
-        ) : null}
-
-        {status.value === 'LOADED' ? (
-          <div>
-            {onfTitresBloques.value.length > 0 ? (
-              <>
-                <div class="line-neutral width-full mb-l"></div>
-                <h3>ARM en attente</h3>
-                <TableAuto class="mb-xxl" columns={columns.slice(0, 5)} rows={onfTitresBloques.value} initialSort={{ column: initialColumnId, order: 'asc' }} />
-              </>
-            ) : null}
-            <div class="line-neutral width-full mb-l"></div>
-            <h3>ARM en cours d’instruction</h3>
-            <TableAuto columns={columns} rows={onfTitres.value} initialSort={{ column: initialColumnId, order: 'asc' }} class="width-full-p" />
-          </div>
-        ) : null}
-
-        {status.value === 'ERROR' ? <Error couleur="error" message="Le serveur est inaccessible, veuillez réessayer plus tard" /> : null}
       </div>
-    )
-  },
-})
+      {status.value === 'LOADING' ? (
+        <div class="loaders fixed p">
+          <div class="loader" />
+        </div>
+      ) : null}
 
-PureONFDashboard.props = ['getOnfTitres']
+      {status.value === 'LOADED' ? (
+        <div>
+          {onfTitresBloques.value.length > 0 ? (
+            <>
+              <div class="line-neutral width-full mb-l"></div>
+              <h3>ARM en attente</h3>
+              <TableAuto class="mb-xxl" columns={columns.slice(0, 5)} rows={onfTitresBloques.value} initialSort={{ column: initialColumnId, order: 'asc' }} />
+            </>
+          ) : null}
+          <div class="line-neutral width-full mb-l"></div>
+          <h3>ARM en cours d’instruction</h3>
+          <TableAuto columns={columns} rows={onfTitres.value} initialSort={{ column: initialColumnId, order: 'asc' }} class="width-full-p" />
+        </div>
+      ) : null}
+
+      {status.value === 'ERROR' ? <Error couleur="error" message="Le serveur est inaccessible, veuillez réessayer plus tard" /> : null}
+    </div>
+  )
+})

@@ -1,9 +1,10 @@
-import { computed, defineComponent } from 'vue'
+import { computed } from 'vue'
 import { useStore } from 'vuex'
 import { Params, TablePagination as UITablePagination } from '../_ui/table-pagination'
 import { canReadActivites } from 'camino-common/src/permissions/activites'
 import { TitreEntreprise, titresColonnes, titresLignesBuild } from './table-utils'
 import { TableSortEvent } from '../_ui/table'
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
 interface Props {
   titres: TitreEntreprise[]
@@ -14,65 +15,62 @@ const isTableSortEvent = (params: Params | TableSortEvent): params is TableSortE
   return 'column' in params && 'order' in params
 }
 
-export const TablePagination = defineComponent<Props>({
-  props: ['titres', 'total'] as unknown as undefined,
-  setup(props) {
-    const store = useStore()
+export const TablePagination = caminoDefineComponent<Props>(['titres', 'total'], props => {
+  const store = useStore()
 
-    const preferencesUpdate = (params: Params | TableSortEvent) => {
-      // TODO 2023-03-01 better type this when we remove the store
-      const newParams: any = { ...params }
-      if (isTableSortEvent(params)) {
-        if (params.column) {
-          newParams.colonne = params.column
-          delete newParams.column
-        }
-        if (params.order) {
-          newParams.ordre = params.order
-          delete newParams.order
-        }
-      } else {
-        if (params.range) {
-          newParams.intervalle = params.range
-          delete newParams.range
-        }
+  const preferencesUpdate = (params: Params | TableSortEvent) => {
+    // TODO 2023-03-01 better type this when we remove the store
+    const newParams: any = { ...params }
+    if (isTableSortEvent(params)) {
+      if (params.column) {
+        newParams.colonne = params.column
+        delete newParams.column
       }
-
-      store.dispatch('titres/paramsSet', {
-        section: 'table',
-        params: newParams,
-      })
+      if (params.order) {
+        newParams.ordre = params.order
+        delete newParams.order
+      }
+    } else {
+      if (params.range) {
+        newParams.intervalle = params.range
+        delete newParams.range
+      }
     }
 
-    const preferences = computed(() => {
-      return store.state.titres.params.table
+    store.dispatch('titres/paramsSet', {
+      section: 'table',
+      params: newParams,
     })
+  }
 
-    const activitesCol = computed(() => {
-      const user = store.state.user.element
+  const preferences = computed(() => {
+    return store.state.titres.params.table
+  })
 
-      return canReadActivites(user)
-    })
+  const activitesCol = computed(() => {
+    const user = store.state.user.element
 
-    const colonnes = computed(() => {
-      return titresColonnes.filter(({ id }) => (activitesCol.value ? true : id !== 'activites'))
-    })
+    return canReadActivites(user)
+  })
 
-    const lignes = computed(() => {
-      return titresLignesBuild(props.titres, activitesCol.value)
-    })
+  const colonnes = computed(() => {
+    return titresColonnes.filter(({ id }) => (activitesCol.value ? true : id !== 'activites'))
+  })
 
-    return () => (
-      <UITablePagination
-        column={preferences.value.colonne}
-        columns={colonnes.value}
-        order={preferences.value.ordre}
-        page={preferences.value.page}
-        range={preferences.value.intervalle}
-        rows={lignes.value}
-        total={props.total}
-        paramsUpdate={preferencesUpdate}
-      />
-    )
-  },
+  const lignes = computed(() => {
+    return titresLignesBuild(props.titres, activitesCol.value)
+  })
+
+  return () => (
+    <UITablePagination
+      column={preferences.value.colonne}
+      columns={colonnes.value}
+      order={preferences.value.ordre}
+      page={preferences.value.page}
+      range={preferences.value.intervalle}
+      rows={lignes.value}
+      total={props.total}
+      paramsUpdate={preferencesUpdate}
+    />
+  )
 })

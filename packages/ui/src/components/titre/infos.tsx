@@ -18,9 +18,10 @@ import { TitreReference } from 'camino-common/src/titres-references'
 import { ApiClient } from '@/api/api-client'
 import { LoadingElement } from '@/components/_ui/functional-loader'
 import { Sections } from '../_common/new-section'
-import { defineComponent, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { AsyncData } from '../../api/client-rest'
 import { Section } from 'camino-common/src/titres'
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
 export interface Entreprise {
   id: string
@@ -77,26 +78,23 @@ type InfosSectionsProps = {
   titre: Pick<Props['titre'], 'id' | 'contenu'>
   apiClient: Pick<ApiClient, 'loadTitreSections'>
 }
-const InfosSections = defineComponent<InfosSectionsProps>({
-  props: ['titre', 'apiClient'] as unknown as undefined,
-  setup(props) {
-    const load = ref<AsyncData<Section[]>>({ status: 'LOADING' })
+const InfosSections = caminoDefineComponent<InfosSectionsProps>(['titre', 'apiClient'], props => {
+  const load = ref<AsyncData<Section[]>>({ status: 'LOADING' })
 
-    onMounted(async () => {
-      try {
-        const data = await props.apiClient.loadTitreSections(props.titre.id)
-        load.value = { status: 'LOADED', value: data }
-      } catch (e: any) {
-        console.error('error', e)
-        load.value = {
-          status: 'ERROR',
-          message: e.message ?? "Une erreur s'est produite",
-        }
+  onMounted(async () => {
+    try {
+      const data = await props.apiClient.loadTitreSections(props.titre.id)
+      load.value = { status: 'LOADED', value: data }
+    } catch (e: any) {
+      console.error('error', e)
+      load.value = {
+        status: 'ERROR',
+        message: e.message ?? "Une erreur s'est produite",
       }
-    })
+    }
+  })
 
-    return () => <LoadingElement data={load.value} renderItem={item => <Sections sections={item} />} />
-  },
+  return () => <LoadingElement data={load.value} renderItem={item => <Sections sections={item} />} />
 })
 
 export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {

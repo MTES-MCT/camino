@@ -1,9 +1,9 @@
 import { EtapeStatut, EtapeStatutId, isStatut } from 'camino-common/src/static/etapesStatuts'
 import { EtapesTypes, EtapeType, EtapeTypeId } from 'camino-common/src/static/etapesTypes'
 import { getEtapesStatuts } from 'camino-common/src/static/etapesTypesEtapesStatuts'
-import { computed, ref, FunctionalComponent, defineComponent } from 'vue'
+import { computed, ref, FunctionalComponent } from 'vue'
 import { TypeAhead } from '../_ui/typeahead'
-import { isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
 
 export type Props = {
   etape: {
@@ -49,71 +49,67 @@ const SelectStatut: FunctionalComponent<SelectStatutProps> = (props: SelectStatu
   )
 }
 
-export const TypeEdit = defineComponent<Props>({
-  setup(props: Props) {
-    const etapeTypeSearch = ref<string>('')
-    const etapeTypeId = ref<EtapeTypeId | null>(props.etape.type?.id ?? null)
-    const etapeStatutId = ref<EtapeStatutId | null>(props.etape.statutId)
+export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapesTypesIds', 'etapeIsDemandeEnConstruction', 'onEtapeChange'], props => {
+  const etapeTypeSearch = ref<string>('')
+  const etapeTypeId = ref<EtapeTypeId | null>(props.etape.type?.id ?? null)
+  const etapeStatutId = ref<EtapeStatutId | null>(props.etape.statutId)
 
-    const etapesTypesFiltered = computed<EtapeType[]>(() =>
-      props.etapesTypesIds
-        .map(id => EtapesTypes[id])
-        .filter(({ nom }) => {
-          return nom.toLowerCase().includes(etapeTypeSearch.value)
-        })
-    )
+  const etapesTypesFiltered = computed<EtapeType[]>(() =>
+    props.etapesTypesIds
+      .map(id => EtapesTypes[id])
+      .filter(({ nom }) => {
+        return nom.toLowerCase().includes(etapeTypeSearch.value)
+      })
+  )
 
-    const etapeTypeExistante = computed<Pick<EtapeType, 'id'>[]>(() => (etapeTypeId.value ? [{ id: etapeTypeId.value }] : []))
+  const etapeTypeExistante = computed<Pick<EtapeType, 'id'>[]>(() => (etapeTypeId.value ? [{ id: etapeTypeId.value }] : []))
 
-    return () => (
-      <div>
-        <div class="tablet-blobs">
-          <div class="tablet-blob-1-3 tablet-pt-s pb-s">
-            <h5>Type</h5>
-          </div>
-          <div class="mb tablet-blob-2-3">
-            <TypeAhead
-              id="select-etape-type"
-              type="single"
-              placeholder=""
-              items={etapesTypesFiltered.value}
-              overrideItems={etapeTypeExistante.value}
-              minInputLength={0}
-              itemKey="id"
-              itemChipLabel={item => item.nom}
-              onSelectItem={(type: EtapeType | undefined) => {
-                if (type) {
-                  etapeTypeSearch.value = ''
-                  const statuts = getEtapesStatuts(type.id)
-                  if (statuts.length === 1) {
-                    etapeStatutId.value = statuts[0].id
-                  } else {
-                    etapeStatutId.value = null
-                  }
-
-                  etapeTypeId.value = type.id
-                  props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
-                }
-              }}
-              onInput={(searchTerm: string) => (etapeTypeSearch.value = searchTerm)}
-            />
-          </div>
+  return () => (
+    <div>
+      <div class="tablet-blobs">
+        <div class="tablet-blob-1-3 tablet-pt-s pb-s">
+          <h5>Type</h5>
         </div>
-        <hr />
+        <div class="mb tablet-blob-2-3">
+          <TypeAhead
+            id="select-etape-type"
+            type="single"
+            placeholder=""
+            items={etapesTypesFiltered.value}
+            overrideItems={etapeTypeExistante.value}
+            minInputLength={0}
+            itemKey="id"
+            itemChipLabel={item => item.nom}
+            onSelectItem={(type: EtapeType | undefined) => {
+              if (type) {
+                etapeTypeSearch.value = ''
+                const statuts = getEtapesStatuts(type.id)
+                if (statuts.length === 1) {
+                  etapeStatutId.value = statuts[0].id
+                } else {
+                  etapeStatutId.value = null
+                }
 
-        {props.etapeIsDemandeEnConstruction ? null : (
-          <SelectStatut
-            typeId={etapeTypeId.value}
-            statutId={etapeStatutId.value}
-            onStatutChange={statutId => {
-              etapeStatutId.value = statutId
-              props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
+                etapeTypeId.value = type.id
+                props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
+              }
             }}
+            onInput={(searchTerm: string) => (etapeTypeSearch.value = searchTerm)}
           />
-        )}
+        </div>
       </div>
-    )
-  },
-})
+      <hr />
 
-TypeEdit.props = ['etape', 'onEtapeChange', 'etapesTypesIds', 'etapeIsDemandeEnConstruction']
+      {props.etapeIsDemandeEnConstruction ? null : (
+        <SelectStatut
+          typeId={etapeTypeId.value}
+          statutId={etapeStatutId.value}
+          onStatutChange={statutId => {
+            etapeStatutId.value = statutId
+            props.onEtapeChange(etapeStatutId.value, etapeTypeId.value)
+          }}
+        />
+      )}
+    </div>
+  )
+})

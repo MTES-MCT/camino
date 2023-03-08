@@ -16,7 +16,9 @@ import {
   ArcElement,
   ChartType,
 } from 'chart.js'
-import { ref, onMounted, onUnmounted, defineComponent } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
 Chart.register(LinearScale, PieController, ArcElement, BarController, CategoryScale, BarElement, LineController, PointElement, LineElement, Filler, Legend, Tooltip, Title)
 interface Props<TType extends ChartType> {
@@ -24,29 +26,26 @@ interface Props<TType extends ChartType> {
 }
 
 const GenericConfigurableChart = <TType extends ChartType>() =>
-  defineComponent<Props<TType>>({
-    props: ['chartConfiguration'] as unknown as undefined,
-    setup(props) {
-      const myCanvas = ref<HTMLCanvasElement | null>(null)
-      let chart: Chart<TType> | null = null
-      onMounted(() => {
-        const context = myCanvas.value?.getContext('2d')
-        if (!context) {
-          console.error('le canvas ne devrait pas être null')
-        } else {
-          chart = new Chart(context, props.chartConfiguration)
-        }
-      })
+  caminoDefineComponent<Props<TType>>(['chartConfiguration'], props => {
+    const myCanvas = ref<HTMLCanvasElement | null>(null)
+    let chart: Chart<TType> | null = null
+    onMounted(() => {
+      const context = myCanvas.value?.getContext('2d')
+      if (!context) {
+        console.error('le canvas ne devrait pas être null')
+      } else {
+        chart = new Chart(context, props.chartConfiguration)
+      }
+    })
 
-      onUnmounted(() => {
-        if (chart !== null) {
-          chart.destroy()
-          chart = null
-        }
-      })
+    onUnmounted(() => {
+      if (chart !== null) {
+        chart.destroy()
+        chart = null
+      }
+    })
 
-      return () => <canvas ref={myCanvas} />
-    },
+    return () => <canvas ref={myCanvas} />
   })
 
 const HiddenConfigurableChart = GenericConfigurableChart()
