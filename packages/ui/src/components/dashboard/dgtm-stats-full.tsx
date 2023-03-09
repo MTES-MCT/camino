@@ -13,42 +13,40 @@ import {
   producteursOrChartConfiguration,
   avisAXMChartConfiguration,
 } from './dgtm-stats'
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
 export interface Props {
   getDgtmStats?: () => Promise<StatistiquesDGTM>
 }
-export const DGTMStatsFull = defineComponent<Props>({
-  props: ['getDgtmStats'] as unknown as undefined,
-  setup(props) {
-    const data = ref<AsyncData<StatistiquesDGTM>>({ status: 'LOADING' })
+export const DGTMStatsFull = caminoDefineComponent<Props>(['getDgtmStats'], props => {
+  const data = ref<AsyncData<StatistiquesDGTM>>({ status: 'LOADING' })
 
-    const charts = [sdomChartConfiguration, depotChartConfiguration, delaiChartConfiguration, delaiPerConcessionChartConfiguration, producteursOrChartConfiguration, avisAXMChartConfiguration]
+  const charts = [sdomChartConfiguration, depotChartConfiguration, delaiChartConfiguration, delaiPerConcessionChartConfiguration, producteursOrChartConfiguration, avisAXMChartConfiguration]
 
-    onMounted(async () => {
-      try {
-        if (props.getDgtmStats) {
-          const stats = await props.getDgtmStats()
-          data.value = { status: 'LOADED', value: stats }
-        } else {
-          const stats = await fetchWithJson(CaminoRestRoutes.statistiquesDGTM, {})
-          data.value = { status: 'LOADED', value: stats }
-        }
-      } catch (e: any) {
-        console.log('error', e)
-        data.value = {
-          status: 'ERROR',
-          message: e.message ?? 'something wrong happened',
-        }
+  onMounted(async () => {
+    try {
+      if (props.getDgtmStats) {
+        const stats = await props.getDgtmStats()
+        data.value = { status: 'LOADED', value: stats }
+      } else {
+        const stats = await fetchWithJson(CaminoRestRoutes.statistiquesDGTM, {})
+        data.value = { status: 'LOADED', value: stats }
       }
-    })
-    return () => (
-      <div class="width-full-p">
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr">
-          {charts.map(chart => (
-            <ChartWithExport data={data.value} getConfiguration={data => chart(data)} />
-          ))}
-        </div>
+    } catch (e: any) {
+      console.log('error', e)
+      data.value = {
+        status: 'ERROR',
+        message: e.message ?? 'something wrong happened',
+      }
+    }
+  })
+  return () => (
+    <div class="width-full-p">
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr">
+        {charts.map(chart => (
+          <ChartWithExport data={data.value} getConfiguration={data => chart(data)} />
+        ))}
       </div>
-    )
-  },
+    </div>
+  )
 })

@@ -74,7 +74,7 @@ export const PureNewsletterForm: FunctionalComponent<Props> = ({ state, onEmailI
   </div>
 )
 
-export const NewsletterForm = defineComponent<void>({
+export const NewsletterForm = defineComponent({
   setup() {
     const email = ref<string>('')
     const subscribed = ref<SubscribeState>('NOT_SUBSCRIBED')

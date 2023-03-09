@@ -1,5 +1,6 @@
-import { defineComponent, watch } from 'vue'
+import { watch } from 'vue'
 import { Icon } from '@/components/_ui/icon'
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
 type SortOrder = 'asc' | 'desc'
 
@@ -57,62 +58,59 @@ interface Props {
   order: 'asc' | 'desc'
 }
 
-export const Table = defineComponent<Props>({
-  props: ['columns', 'rows', 'update', 'column', 'order'] as unknown as undefined,
-  setup(props) {
-    const sort = (colId: Props['column']) => {
-      if (!props.columns.find(c => c.id === colId)?.noSort) {
-        if (props.column === colId) {
-          const order = props.order === 'asc' ? 'desc' : 'asc'
-          props.update({ column: props.column, order })
-        } else {
-          props.update({ column: colId, order: props.order })
-        }
+export const Table = caminoDefineComponent<Props>(['columns', 'rows', 'update', 'column', 'order'], props => {
+  const sort = (colId: Props['column']) => {
+    if (!props.columns.find(c => c.id === colId)?.noSort) {
+      if (props.column === colId) {
+        const order = props.order === 'asc' ? 'desc' : 'asc'
+        props.update({ column: props.column, order })
+      } else {
+        props.update({ column: colId, order: props.order })
       }
     }
+  }
 
-    const columnInit = () => {
-      if (props.rows.length && !props.columns.some(c => c.id === props.column)) {
-        sort(props.columns[0].id)
-      }
+  const columnInit = () => {
+    if (props.rows.length && !props.columns.some(c => c.id === props.column)) {
+      sort(props.columns[0].id)
     }
+  }
 
-    watch(
-      () => props.columns,
-      _columns => {
-        columnInit()
-      },
-      { immediate: true }
-    )
-    return () => (
-      <div>
-        <div class="overflow-scroll-x mb">
-          <div class="table">
-            <div class="tr">
-              {props.columns.map(col => (
-                <div key={col.id} class={`th nowrap ${(col.class ?? []).join(' ')}`} onClick={() => sort(col.id)}>
-                  <button class={`btn-menu full-x p-0${col.noSort ? ' disabled' : ''}`}>
-                    {col.name || (props.column === col.id ? '' : '–')}
-                    {!col.noSort && props.column === col.id ? <Icon class="right" size="M" name={props.order === 'asc' ? 'chevron-bas' : 'chevron-haut'} /> : null}
-                  </button>
-                </div>
-              ))}
-            </div>
-
-            {props.rows.map(row => (
-              <router-link key={row.id} to={row.link} class="tr tr-link text-decoration-none">
-                {props.columns.map(col => (
-                  <div key={col.id} class={`td ${(col.class ?? []).join(' ')}`}>
-                    <DisplayColumn data={row.columns[col.id]} />
-                  </div>
-                ))}
-              </router-link>
+  watch(
+    () => props.columns,
+    _columns => {
+      columnInit()
+    },
+    { immediate: true }
+  )
+  return () => (
+    <div>
+      <div class="overflow-scroll-x mb">
+        <div class="table">
+          <div class="tr">
+            {props.columns.map(col => (
+              <div key={col.id} class={`th nowrap ${(col.class ?? []).join(' ')}`} onClick={() => sort(col.id)}>
+                <button class={`btn-menu full-x p-0${col.noSort ? ' disabled' : ''}`}>
+                  {col.name || (props.column === col.id ? '' : '–')}
+                  {!col.noSort && props.column === col.id ? <Icon class="right" size="M" name={props.order === 'asc' ? 'chevron-bas' : 'chevron-haut'} /> : null}
+                </button>
+              </div>
             ))}
           </div>
+
+          {props.rows.map(row => (
+            <router-link key={row.id} to={row.link} class="tr tr-link text-decoration-none">
+              {props.columns.map(col => (
+                <div key={col.id} class={`td ${(col.class ?? []).join(' ')}`}>
+                  <DisplayColumn data={row.columns[col.id]} />
+                </div>
+              ))}
+            </router-link>
+          ))}
         </div>
       </div>
-    )
-  },
+    </div>
+  )
 })
 
 const DisplayColumn = (props: { data: ComponentColumnData | TextColumnData }): JSX.Element => {

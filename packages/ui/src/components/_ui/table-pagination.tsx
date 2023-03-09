@@ -1,6 +1,6 @@
-import { computed, defineComponent, FunctionalComponent, ref } from 'vue'
+import { computed, FunctionalComponent, ref } from 'vue'
 import { Column, Table, TableRow, TableSortEvent } from './table'
-import { isEventWithTarget } from '@/utils/vue-tsx-utils'
+import { caminoDefineComponent, isEventWithTarget } from '@/utils/vue-tsx-utils'
 import Accordion from './accordion.vue'
 
 const ranges = [10, 50, 200, 500] as const
@@ -11,70 +11,71 @@ export interface Params {
   range?: number
 }
 interface Props {
-  columns: readonly Column[]
-  rows: TableRow[]
-  total: number
-  range?: Range
-  page?: number
+  data: {
+    columns: readonly Column[]
+    rows: TableRow[]
+    total: number
+  }
+  pagination: {
+    active?: boolean
+    range?: Range
+    page?: number
+  }
   column?: string
   order?: 'asc' | 'desc'
-  pagination?: boolean
   paramsUpdate: (params: Params | TableSortEvent) => void
 }
 
-export const TablePagination = defineComponent<Props>({
-  props: ['columns', 'rows', 'total', 'range', 'page', 'column', 'order', 'pagination', 'paramsUpdate'] as unknown as undefined,
-  setup(props) {
-    const update = (params: Params | TableSortEvent) => {
-      if (!Object.keys(params).includes('page') && pagination.value) {
-        Object.assign(params, { page: 1 })
-      }
-
-      props.paramsUpdate(params)
+export const TablePagination = caminoDefineComponent<Props>(['data', 'column', 'order', 'pagination', 'paramsUpdate'], props => {
+  const update = (params: Params | TableSortEvent) => {
+    if (!Object.keys(params).includes('page') && pagination.value) {
+      Object.assign(params, { page: 1 })
     }
 
-    const rangeUpdate = (range: number) => {
-      update({ range })
-    }
-    const pageUpdate = (page: number) => {
-      update({ page })
-    }
-    const range = computed(() => {
-      return props.range ?? 200
-    })
-    const page = computed(() => {
-      return props.page ?? 1
-    })
+    props.paramsUpdate(params)
+  }
 
-    const column = computed(() => {
-      return props.column ?? ''
-    })
+  const rangeUpdate = (range: number) => {
+    update({ range })
+  }
+  const pageUpdate = (page: number) => {
+    update({ page })
+  }
+  const range = computed(() => {
+    return props.pagination.range ?? 200
+  })
+  const page = computed(() => {
+    return props.pagination.page ?? 1
+  })
 
-    const order = computed(() => {
-      return props.order ?? 'asc'
-    })
+  const column = computed(() => {
+    return props.column ?? ''
+  })
 
-    const pagination = computed(() => {
-      return props.pagination ?? true
-    })
-    const pages = computed(() => {
-      return Math.ceil(props.total / range.value)
-    })
-    return () => (
-      <div>
-        <Table column={column.value} columns={props.columns} order={order.value} rows={props.rows} class="width-full-p" update={update} />
+  const order = computed(() => {
+    return props.order ?? 'asc'
+  })
 
-        {pagination.value ? (
-          <div class="desktop-blobs">
-            <div class="desktop-blob-3-4">
-              <Pagination active={page.value} total={pages.value} visibles={5} pageChange={pageUpdate} />
-            </div>
-            <div class="desktop-blob-1-4">{props.total > 10 ? <Ranges range={range.value} rangeUpdate={rangeUpdate} /> : null}</div>
+  const pagination = computed(() => {
+    return props.pagination.active ?? true
+  })
+  const pages = computed(() => {
+    return Math.ceil(props.data.total / range.value)
+  })
+  return () => (
+    <div>
+      <Table column={column.value} columns={props.data.columns} order={order.value} rows={props.data.rows} class="width-full-p" update={update} />
+
+      {pagination.value ? (
+        <div class="desktop-blobs">
+          <div class="desktop-blob-3-4">
+            <Pagination active={page.value} total={pages.value} visibles={5} pageChange={pageUpdate} />
           </div>
-        ) : null}
-      </div>
-    )
-  },
+          <div class="desktop-blob-1-4">{props.data.total > 10 ? <Ranges range={range.value} rangeUpdate={rangeUpdate} /> : null}</div>
+        </div>
+      ) : null}
+    </div>
+  )
 })
 
 interface RangeProps {
@@ -83,48 +84,45 @@ interface RangeProps {
 }
 
 const isRange = (range: number): range is Range => ranges.includes(range)
-const Ranges = defineComponent<RangeProps>({
-  props: ['range', 'rangeUpdate'] as unknown as undefined,
-  setup(props) {
-    const opened = ref(false)
+const Ranges = caminoDefineComponent<RangeProps>(['range', 'rangeUpdate'], props => {
+  const opened = ref(false)
 
-    const toggle = () => {
-      opened.value = !opened.value
-    }
+  const toggle = () => {
+    opened.value = !opened.value
+  }
 
-    return () => (
-      <Accordion class="mb" opened={opened.value} slotDefault={true} onToggle={toggle}>
-        {{
-          title: () => <span> Éléments </span>,
-          default: () => (
-            <ul class="list-sans mt-m px-m">
-              {ranges.map(r => (
-                <li key={r}>
-                  <label>
-                    <input
-                      checked={r === props.range}
-                      value={r}
-                      type="radio"
-                      class="mr-s"
-                      onChange={e => {
-                        if (isEventWithTarget(e)) {
-                          const value = Number(e.target.value)
-                          if (isRange(value)) {
-                            props.rangeUpdate(value)
-                          }
+  return () => (
+    <Accordion class="mb" opened={opened.value} slotDefault={true} onToggle={toggle}>
+      {{
+        title: () => <span> Éléments </span>,
+        default: () => (
+          <ul class="list-sans mt-m px-m">
+            {ranges.map(r => (
+              <li key={r}>
+                <label>
+                  <input
+                    checked={r === props.range}
+                    value={r}
+                    type="radio"
+                    class="mr-s"
+                    onChange={e => {
+                      if (isEventWithTarget(e)) {
+                        const value = Number(e.target.value)
+                        if (isRange(value)) {
+                          props.rangeUpdate(value)
                         }
-                      }}
-                    />
-                    {r}
-                  </label>
-                </li>
-              ))}
-            </ul>
-          ),
-        }}
-      </Accordion>
-    )
-  },
+                      }
+                    }}
+                  />
+                  {r}
+                </label>
+              </li>
+            ))}
+          </ul>
+        ),
+      }}
+    </Accordion>
+  )
 })
 
 interface PaginationProps {

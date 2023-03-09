@@ -28,17 +28,7 @@
 
     <div class="line-neutral width-full" />
 
-    <TablePagination
-      :columns="colonnes"
-      :rows="lignes"
-      :column="params.table.colonne"
-      :range="params.table.intervalle"
-      :order="params.table.ordre"
-      :page="params.table.page"
-      :pagination="pagination"
-      :total="total"
-      :paramsUpdate="paramsTableUpdate"
-    />
+    <TablePagination :data="data" :column="params.table.colonne" :order="params.table.ordre" :pagination="pagination" :paramsUpdate="paramsTableUpdate" />
   </div>
 </template>
 
@@ -66,13 +56,28 @@ export default {
   emits: ['params-update'],
 
   computed: {
+    data() {
+      return {
+        columns: this.colonnes,
+        rows: this.lignes,
+        total: this.total,
+      }
+    },
+
+    pagination() {
+      return {
+        active: this.paginationValue,
+        range: this.params.table.intervalle,
+        page: this.params.table.page,
+      }
+    },
     resultat() {
       const res = this.total > this.elements.length ? `${this.elements.length} / ${this.total}` : this.elements.length
 
       return `${res} résultat${this.elements.length > 1 ? 's' : ''}`
     },
 
-    pagination() {
+    paginationValue() {
       return !!this.params.table.page
     },
   },
