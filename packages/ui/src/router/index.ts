@@ -37,7 +37,10 @@ const MetaDemarche = () => import('../components/meta-demarche.vue')
 const MetaEtape = () => import('../components/meta-etape.vue')
 const MetaActivite = () => import('../components/meta-activite.vue')
 const Metas = () => import('../components/metas.vue')
-const Error = () => import('../components/error.vue')
+const Error = async () => {
+  const { Error } = await import('../components/error')
+  return Error
+}
 const StatistiquesGlobales = async () => {
   const { Globales } = await import('../components/statistiques/globales')
   return Globales

@@ -60,7 +60,7 @@ import { Footer } from './components/page/footer'
 import { MapPattern } from './components/_map/pattern'
 import { IconSprite } from './components/_ui/iconSprite'
 
-import Error from './components/error.vue'
+import { Error } from './components/error'
 import { computed, inject } from 'vue'
 import { useStore } from 'vuex'
 
