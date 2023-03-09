@@ -39,9 +39,9 @@ const isUser = (utilisateur: Pick<IUtilisateur, 'email' | 'role' | 'administrati
   return false
 }
 
-const userIsCorrect = (utilisateur: Pick<IUtilisateur, 'email' | 'role' | 'administrationId' | 'entreprises'>): boolean => isUser(utilisateur)
+const userIsCorrect = (utilisateur: Pick<IUtilisateur, 'email' | 'role' | 'administrationId' | 'entreprises' | 'id'>): boolean => isUser(utilisateur)
 
-export const utilisateurUpdationValidate = (user: User, utilisateur: Pick<IUtilisateur, 'email' | 'role' | 'administrationId' | 'entreprises'>, utilisateurOld: User) => {
+export const utilisateurUpdationValidate = (user: UserNotNull, utilisateur: Pick<IUtilisateur, 'email' | 'role' | 'administrationId' | 'entreprises' | 'id'>, utilisateurOld: User) => {
   if (!userIsCorrect(utilisateur)) {
     throw new Error('utilisateur incorrect')
   }
@@ -54,11 +54,15 @@ export const utilisateurUpdationValidate = (user: User, utilisateur: Pick<IUtili
     throw new Error('droits insuffisants')
   }
 
-  if (!isSuper(user)) {
-    if (utilisateur.role !== utilisateurOld.role && !getAssignableRoles(user).includes(utilisateur.role)) {
+  if (utilisateur.role !== utilisateurOld.role) {
+    if (user.id === utilisateur.id) {
+      throw new Error('impossible de modifier son propre rôle')
+    } else if (!getAssignableRoles(user).includes(utilisateur.role)) {
       throw new Error('droits insuffisants pour modifier les rôles')
     }
+  }
 
+  if (!isSuper(user)) {
     if (isAdministration(utilisateurOld) && utilisateur.administrationId !== utilisateurOld.administrationId) {
       throw new Error('droits insuffisants pour modifier les administrations')
     }
