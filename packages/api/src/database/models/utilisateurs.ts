@@ -21,7 +21,6 @@ class Utilisateurs extends Model {
       telephoneFixe: { type: ['string', 'null'] },
       telephoneMobile: { type: ['string', 'null'] },
       role: { type: 'string' },
-      preferences: { type: ['object', 'null'] },
       administrationId: { type: ['string', 'null'] },
     },
   }

@@ -13,7 +13,6 @@ type Utilisateur {
   administrationId: ID
   entreprises: [Entreprise]
   role: ID
-  preferences: Json
 }
 
 type Utilisateurs {
@@ -35,5 +34,4 @@ input InputUtilisateurModification {
   role: ID!
   entreprises: [InputId]
   administrationId: ID
-  preferences: Json
 }

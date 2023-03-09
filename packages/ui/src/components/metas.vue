@@ -28,10 +28,6 @@ export default {
       return this.$store.getters['metas/elements']
     },
 
-    preferences() {
-      return this.$store.state.metas.preferences
-    },
-
     params() {
       return this.$store.state.metas.params
     },

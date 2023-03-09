@@ -684,8 +684,6 @@ interface IUtilisateur {
   telephoneFixe?: string | null
   telephoneMobile?: string | null
   role: Role
-  // TODO: définir une interface IUtilisateurPreferences
-  preferences?: any | null
   administrationId?: AdministrationId | null
   entreprises?: IEntreprise[] | null
   qgisToken?: string | null
