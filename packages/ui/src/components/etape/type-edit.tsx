@@ -72,8 +72,7 @@ export const TypeEdit = caminoDefineComponent<Props>(['etape', 'etapesTypesIds',
         </div>
         <div class="mb tablet-blob-2-3">
           <TypeAhead
-                        overrideItems={etapeTypeExistante.value}
-
+            overrideItems={etapeTypeExistante.value}
             props={{
               id: 'select-etape-type',
               type: 'single',

@@ -53,13 +53,21 @@ const titres: LinkableTitre[] = [
 ]
 const onSelectTitre = action('onSelectTitre')
 const onSelectTitres = action('onSelectTitres')
-export const AXM: Story = () => <TitresLink config={{ type: 'single', selectedTitreId: null }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres} />
+export const AXM: Story = () => (
+  <TitresLink config={{ type: 'single', selectedTitreId: null }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres} />
+)
 
-export const AXMWithAlreadySelectedTitre: Story = () => <TitresLink config={{ type: 'single', selectedTitreId: 'id1' }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres}/>
+export const AXMWithAlreadySelectedTitre: Story = () => (
+  <TitresLink config={{ type: 'single', selectedTitreId: 'id1' }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres} />
+)
 
-export const DemarcheFusion: Story = () => <TitresLink config={{ type: 'multiple', selectedTitreIds: [] }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres}/>
+export const DemarcheFusion: Story = () => (
+  <TitresLink config={{ type: 'multiple', selectedTitreIds: [] }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres} />
+)
 
-export const DemarcheFusionWithAlreadySelectedTitre: Story = () => <TitresLink config={{ type: 'multiple', selectedTitreIds: ['id1', 'id2'] }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres}/>
+export const DemarcheFusionWithAlreadySelectedTitre: Story = () => (
+  <TitresLink config={{ type: 'multiple', selectedTitreIds: ['id1', 'id2'] }} loadLinkableTitres={() => Promise.resolve(titres)} onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres} />
+)
 
 export const Loading: Story = () => (
   <TitresLink
@@ -68,7 +76,8 @@ export const Loading: Story = () => (
       selectedTitreIds: ['id1'],
     }}
     loadLinkableTitres={() => new Promise<LinkableTitre[]>(resolve => {})}
-    onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres}
+    onSelectTitre={onSelectTitre}
+    onSelectTitres={onSelectTitres}
   />
 )
 
@@ -79,6 +88,7 @@ export const WithError: Story = () => (
       selectedTitreIds: ['id1'],
     }}
     loadLinkableTitres={() => Promise.reject(new Error('because reasons'))}
-    onSelectTitre={onSelectTitre} onSelectTitres={onSelectTitres}
+    onSelectTitre={onSelectTitre}
+    onSelectTitres={onSelectTitres}
   />
 )

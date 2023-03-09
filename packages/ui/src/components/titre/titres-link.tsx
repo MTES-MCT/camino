@@ -14,7 +14,7 @@ interface Props {
   onSelectTitre: (titre: TitreLink | undefined) => void
   onSelectTitres: (titres: TitreLink[]) => void
 }
-export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableTitres', 'onSelectTitre', 'onSelectTitres'], (props) => {
+export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableTitres', 'onSelectTitre', 'onSelectTitres'], props => {
   const display = (item: LinkableTitre) => {
     return (
       <div class="flex flex-center">
@@ -78,8 +78,7 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
 
   const titresFiltered = computed(() => {
     if (data.value.status === 'LOADED') {
-
-      return search.value.length ? data.value.value.filter(({ nom, id }) => nom.toLowerCase().includes(search.value) || selectedTitres.value.some( t => t.id === id)) : data.value.value
+      return search.value.length ? data.value.value.filter(({ nom, id }) => nom.toLowerCase().includes(search.value) || selectedTitres.value.some(t => t.id === id)) : data.value.value
     }
     return []
   })
@@ -106,8 +105,7 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
       data={data.value}
       renderItem={item => (
         <TypeAhead
-
-        overrideItems={selectedTitres.value}
+          overrideItems={selectedTitres.value}
           props={{
             id: 'titre-link-typeahead',
             itemKey: 'id',

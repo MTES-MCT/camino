@@ -92,8 +92,7 @@ export const PureQuickAccessTitre = caminoDefineComponent<Props>(['titres', 'onS
 
   return () => (
     <TypeAhead
-    overrideItems={overrideItems.value}
-
+      overrideItems={overrideItems.value}
       props={{
         id: 'quick-access-titre',
         itemKey: 'id',

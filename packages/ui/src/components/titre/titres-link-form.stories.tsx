@@ -62,27 +62,34 @@ const apiClient: Props['apiClient'] = {
   linkTitres: () => new Promise<TitreLinks>(resolve => resolve({ aval: titresTo, amont: titresFrom })),
 }
 
-export const AxmWithAlreadySelectedTitre: Story = () => (<TitresLinkForm  user={{ role: 'super', ...testBlankUser }}
-titre={{ typeId: 'axm', administrations: [], id: 'titreId', demarches: [] }}
-apiClient={apiClient} />) 
+export const AxmWithAlreadySelectedTitre: Story = () => (
+  <TitresLinkForm user={{ role: 'super', ...testBlankUser }} titre={{ typeId: 'axm', administrations: [], id: 'titreId', demarches: [] }} apiClient={apiClient} />
+)
 
-export const FusionWithAlreadySelectedTitre: Story = () => (<TitresLinkForm  user={{ role: 'super', ...testBlankUser }}
-titre={{
-  typeId: 'cxm',
-  administrations: [],
-  id: 'titreId',
-  demarches: [{ typeId: 'fus' }],
-}}
-apiClient={apiClient} />) 
+export const FusionWithAlreadySelectedTitre: Story = () => (
+  <TitresLinkForm
+    user={{ role: 'super', ...testBlankUser }}
+    titre={{
+      typeId: 'cxm',
+      administrations: [],
+      id: 'titreId',
+      demarches: [{ typeId: 'fus' }],
+    }}
+    apiClient={apiClient}
+  />
+)
 
-export const TitreWithTitreLinksLoading: Story = () => (<TitresLinkForm  user={{ role: 'super', ...testBlankUser }}
-titre={{ typeId: 'axm', administrations: [], id: 'titreId', demarches: [] }}
-apiClient={{
-  ...apiClient,
-  loadTitreLinks: () => new Promise<TitreLinks>(() => ({})),
-}} />) 
+export const TitreWithTitreLinksLoading: Story = () => (
+  <TitresLinkForm
+    user={{ role: 'super', ...testBlankUser }}
+    titre={{ typeId: 'axm', administrations: [], id: 'titreId', demarches: [] }}
+    apiClient={{
+      ...apiClient,
+      loadTitreLinks: () => new Promise<TitreLinks>(() => ({})),
+    }}
+  />
+)
 
-
-export const DefautCantUpdateLinks: Story = () => (<TitresLinkForm  user={{ role: 'defaut', ...testBlankUser }}
-titre={{ typeId: 'axm', administrations: [], id: 'titreId', demarches: [] }}
-apiClient={apiClient} />) 
+export const DefautCantUpdateLinks: Story = () => (
+  <TitresLinkForm user={{ role: 'defaut', ...testBlankUser }} titre={{ typeId: 'axm', administrations: [], id: 'titreId', demarches: [] }} apiClient={apiClient} />
+)
