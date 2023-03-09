@@ -114,6 +114,9 @@ export const utilisateurs = async (
 
 export const utilisateurModifier = async ({ utilisateur }: { utilisateur: IUtilisateur }, { user }: Context, info: GraphQLResolveInfo) => {
   try {
+    if (!user) {
+      throw new Error('droits insuffisants')
+    }
     const utilisateurOld = await userGet(utilisateur.id)
 
     utilisateurUpdationValidate(user, utilisateur, utilisateurOld)

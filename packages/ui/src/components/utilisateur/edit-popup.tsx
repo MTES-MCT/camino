@@ -45,12 +45,6 @@ export const EditPopup = caminoDefineComponent<Props>(['user', 'getEntreprises',
     }
   })
   const complete = computed(() => {
-    const formComplete = utilisateurPopup.value.nom && utilisateurPopup.value.prenom && utilisateurPopup.value.id && utilisateurPopup.value.email
-
-    if (!formComplete) {
-      return false
-    }
-
     if (isEntrepriseOrBureauDetudeRole(utilisateurPopup.value.role) && !utilisateurPopup.value.entreprises?.length) {
       return false
     }
@@ -106,7 +100,7 @@ export const EditPopup = caminoDefineComponent<Props>(['user', 'getEntreprises',
         </div>
       </div>
 
-      {assignableRoles.length > 0 ? (
+      {!!props.user && props.user.id !== utilisateurPopup.value.id && assignableRoles.length > 0 ? (
         <div>
           <hr />
           <div class="tablet-blobs">

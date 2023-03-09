@@ -31,7 +31,7 @@ const fakeAdministrationId = 'fakeAdminId' as AdministrationId
 
 test('utilisateurUpdationValidate privilege escalation forbidden', () => {
   expect(() => utilisateurUpdationValidate(users.defaut, { ...users.defaut, role: 'super', entreprises: [] }, users.defaut)).toThrowErrorMatchingInlineSnapshot(
-    '"droits insuffisants pour modifier les rôles"'
+    '"impossible de modifier son propre rôle"'
   )
   expect(() =>
     utilisateurUpdationValidate(
@@ -44,7 +44,7 @@ test('utilisateurUpdationValidate privilege escalation forbidden', () => {
       },
       users.admin
     )
-  ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants pour modifier les rôles"')
+  ).toThrowErrorMatchingInlineSnapshot('"impossible de modifier son propre rôle"')
   expect(() =>
     utilisateurUpdationValidate(
       users.lecteur,
@@ -56,7 +56,7 @@ test('utilisateurUpdationValidate privilege escalation forbidden', () => {
       },
       users.lecteur
     )
-  ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants pour modifier les rôles"')
+  ).toThrowErrorMatchingInlineSnapshot('"impossible de modifier son propre rôle"')
   expect(() =>
     utilisateurUpdationValidate(
       users.editeur,
@@ -68,12 +68,12 @@ test('utilisateurUpdationValidate privilege escalation forbidden', () => {
       },
       users.editeur
     )
-  ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants pour modifier les rôles"')
+  ).toThrowErrorMatchingInlineSnapshot('"impossible de modifier son propre rôle"')
   expect(() => utilisateurUpdationValidate(users.entreprise, { ...users.entreprise, role: 'super', entreprises: [] }, users.entreprise)).toThrowErrorMatchingInlineSnapshot(
-    '"droits insuffisants pour modifier les rôles"'
+    '"impossible de modifier son propre rôle"'
   )
   expect(() => utilisateurUpdationValidate(users['bureau d’études'], { ...users['bureau d’études'], role: 'super', entreprises: [] }, users.entreprise)).toThrowErrorMatchingInlineSnapshot(
-    '"droits insuffisants pour modifier les rôles"'
+    '"impossible de modifier son propre rôle"'
   )
 
   expect(() =>
@@ -87,7 +87,7 @@ test('utilisateurUpdationValidate privilege escalation forbidden', () => {
       },
       users.editeur
     )
-  ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants pour modifier les rôles"')
+  ).toThrowErrorMatchingInlineSnapshot('"impossible de modifier son propre rôle"')
   expect(() =>
     utilisateurUpdationValidate(
       users.defaut,
@@ -98,15 +98,25 @@ test('utilisateurUpdationValidate privilege escalation forbidden', () => {
       },
       users.defaut
     )
-  ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants pour modifier les rôles"')
+  ).toThrowErrorMatchingInlineSnapshot('"impossible de modifier son propre rôle"')
 })
 
 test('utilisateurUpdationValidate incorrect users throw error', () => {
-  expect(() => utilisateurUpdationValidate(users.super, { role: 'super' }, undefined)).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
   expect(() =>
     utilisateurUpdationValidate(
       users.super,
       {
+        id: 'utilisateurId',
+        role: 'super',
+      },
+      undefined
+    )
+  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() =>
+    utilisateurUpdationValidate(
+      users.super,
+      {
+        id: 'utilisateurId',
         role: 'super',
         email: 'toto@gmail.com',
         entreprises: [{ id: newEntrepriseId('entrepriseId') }],
@@ -118,6 +128,7 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
     utilisateurUpdationValidate(
       users.super,
       {
+        id: 'utilisateurId',
         role: 'super',
         email: 'toto@gmail.com',
         administrationId: 'aut-97300-01',
@@ -126,11 +137,21 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
     )
   ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
 
-  expect(() => utilisateurUpdationValidate(users.super, { role: 'defaut' }, undefined)).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
   expect(() =>
     utilisateurUpdationValidate(
       users.super,
       {
+        id: 'utilisateurId',
+        role: 'defaut',
+      },
+      undefined
+    )
+  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() =>
+    utilisateurUpdationValidate(
+      users.super,
+      {
+        id: 'utilisateurId',
         role: 'defaut',
         email: 'toto@gmail.com',
         entreprises: [{ id: newEntrepriseId('entrepriseId') }],
@@ -142,6 +163,7 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
     utilisateurUpdationValidate(
       users.super,
       {
+        id: 'utilisateurId',
         role: 'defaut',
         email: 'toto@gmail.com',
         administrationId: 'aut-97300-01',
@@ -150,11 +172,21 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
     )
   ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
 
-  expect(() => utilisateurUpdationValidate(users.super, { role: 'admin' }, undefined)).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
   expect(() =>
     utilisateurUpdationValidate(
       users.super,
       {
+        id: 'utilisateurId',
+        role: 'admin',
+      },
+      undefined
+    )
+  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() =>
+    utilisateurUpdationValidate(
+      users.super,
+      {
+        id: 'utilisateurId',
         role: 'admin',
         email: 'toto@gmail.com',
         entreprises: [{ id: newEntrepriseId('entrepriseId') }],
@@ -166,6 +198,7 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
     utilisateurUpdationValidate(
       users.super,
       {
+        id: 'utilisateurId',
         role: 'admin',
         email: 'toto@gmail.com',
         administrationId: fakeAdministrationId,
@@ -174,12 +207,33 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
     )
   ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
 
-  expect(() => utilisateurUpdationValidate(users.super, { role: 'entreprise' }, undefined)).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
-  expect(() => utilisateurUpdationValidate(users.super, { role: 'entreprise', email: 'toto@gmail.com', entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
   expect(() =>
     utilisateurUpdationValidate(
       users.super,
       {
+        id: 'utilisateurId',
+        role: 'entreprise',
+      },
+      undefined
+    )
+  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() =>
+    utilisateurUpdationValidate(
+      users.super,
+      {
+        id: 'utilisateurId',
+        role: 'entreprise',
+        email: 'toto@gmail.com',
+        entreprises: [],
+      },
+      undefined
+    )
+  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() =>
+    utilisateurUpdationValidate(
+      users.super,
+      {
+        id: 'utilisateurId',
         role: 'entreprise',
         email: 'toto@gmail.com',
         administrationId: fakeAdministrationId,
@@ -189,12 +243,24 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
     )
   ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
 
-  expect(() => utilisateurUpdationValidate(users.super, { role: 'super', email: 'toto@gmail.com', entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot('"l\'utilisateur n\'existe pas"')
+  expect(() =>
+    utilisateurUpdationValidate(
+      users.super,
+      {
+        id: 'utilisateurId',
+        role: 'super',
+        email: 'toto@gmail.com',
+        entreprises: [],
+      },
+      undefined
+    )
+  ).toThrowErrorMatchingInlineSnapshot('"l\'utilisateur n\'existe pas"')
 
   expect(() =>
     utilisateurUpdationValidate(
       users.admin,
       {
+        id: 'utilisateurId',
         role: 'editeur',
         administrationId: 'aut-97300-01',
         email: 'toto@gmail.com',
@@ -212,6 +278,7 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
     utilisateurUpdationValidate(
       users.admin,
       {
+        id: 'utilisateurId',
         role: 'admin',
         administrationId: 'aut-97300-01',
         email: 'toto@gmail.com',
@@ -229,6 +296,7 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
     utilisateurUpdationValidate(
       users.admin,
       {
+        id: 'utilisateurId',
         role: 'editeur',
         administrationId: 'aut-mrae-guyane-01',
         email: 'toto@gmail.com',
@@ -246,6 +314,7 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
     utilisateurUpdationValidate(
       users.admin,
       {
+        id: 'utilisateurId',
         role: 'editeur',
         administrationId: 'aut-97300-01',
         email: 'toto@gmail.com',
