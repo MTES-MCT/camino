@@ -1,11 +1,12 @@
 import { AsyncData } from '@/api/client-rest'
 import { HelpTooltip } from '@/components/_ui/help-tooltip'
+import { HTMLAttributes } from 'vue'
 import styles from './functional-loader.module.css'
 
-export interface Props<T> {
+export type Props<T> = {
   data: AsyncData<T>
   renderItem: (item: T) => JSX.Element | null
-}
+} & HTMLAttributes
 
 export const LoadingElement = <T,>(props: Props<T>) => {
   return (

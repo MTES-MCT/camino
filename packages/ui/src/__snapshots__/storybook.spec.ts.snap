@@ -3817,27 +3817,39 @@ exports[`Storybook Tests > Components/Entreprise > Complet 1`] = `
   <div class=\\"mb-xxl\\">
     <div class=\\"line-neutral width-full mb-xxl\\"></div>
     <h3>Fiscalité</h3>
-    <div data-v-b91681b0=\\"\\"> Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère) <div class=\\"flex\\" data-v-b91681b0=\\"\\">
-        <div class=\\"mr-xs\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2021\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2021</button></div>
-        <div class=\\"mr-xs\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2022\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2022</button></div>
-        <div class=\\"mr-xs active\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2023\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2023</button></div>
+    <div>Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère)<div class=\\"flex\\">
+        <div class=\\"mr-xs  \\"><button id=\\"cmn-titre-tab-2021\\" class=\\"p-m btn-tab rnd-t-s\\">2021</button></div>
+        <div class=\\"mr-xs  \\"><button id=\\"cmn-titre-tab-2022\\" class=\\"p-m btn-tab rnd-t-s\\">2022</button></div>
+        <div class=\\"mr-xs active \\"><button id=\\"cmn-titre-tab-2023\\" class=\\"p-m btn-tab rnd-t-s\\">2023</button></div>
       </div>
-      <div class=\\"line-neutral mb\\" data-v-b91681b0=\\"\\"></div>Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2022 <br data-v-b91681b0=\\"\\"><strong data-v-b91681b0=\\"\\">Cotisations</strong>
-      <div class=\\"fiscalite-table\\" data-v-b91681b0=\\"\\">
-        <div data-v-b91681b0=\\"\\">a. Redevance communale</div>
-        <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">200,00&nbsp;€</div>
-        <div data-v-b91681b0=\\"\\">b. Redevance départementale</div>
-        <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">78,00&nbsp;€</div>
-        <div data-v-b91681b0=\\"\\">c. Taxe minière sur l’or de Guyane</div>
-        <div class=\\"fiscalite-value\\" data-v-b91681b0=\\"\\">38,00&nbsp;€</div>
-        <div data-v-b91681b0=\\"\\">d. Investissements déductibles de la taxe perçue pour la région de Guyane</div>
-        <div class=\\"fiscalite-value\\" data-v-b91681b0=\\"\\">1,00&nbsp;€</div>
-        <div data-v-b91681b0=\\"\\">e. Montant net de taxe minière sur l’or de Guyane (c-d)</div>
-        <div class=\\"fiscalite-value\\" data-v-b91681b0=\\"\\">12,00&nbsp;€</div>
-        <div data-v-b91681b0=\\"\\">f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%</div>
-        <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">23,20&nbsp;€</div>
-        <div data-v-b91681b0=\\"\\">Somme à payer auprès du comptable (2)</div>
-        <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">313,20&nbsp;€</div>
+      <div class=\\"line-neutral mb\\"></div>Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2022 <br><strong>Cotisations</strong>
+      <div class=\\"_fiscalite-table_16f3a1\\">
+        <div>a. Redevance communale</div>
+        <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">200,00&nbsp;€
+          <!---->
+          <!---->
+        </div>
+        <div>b. Redevance départementale</div>
+        <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">78,00&nbsp;€
+          <!---->
+          <!---->
+        </div>
+        <div>c. Taxe minière sur l’or de Guyane</div>
+        <div class=\\"_fiscalite-value_16f3a1\\">38,00&nbsp;€</div>
+        <div>d. Investissements déductibles de la taxe perçue pour la région de Guyane</div>
+        <div class=\\"_fiscalite-value_16f3a1\\">1,00&nbsp;€</div>
+        <div>e. Montant net de taxe minière sur l’or de Guyane (c-d)</div>
+        <div class=\\"_fiscalite-value_16f3a1\\">12,00&nbsp;€</div>
+        <div>f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%</div>
+        <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">23,20&nbsp;€
+          <!---->
+          <!---->
+        </div>
+        <div>Somme à payer auprès du comptable (2)</div>
+        <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">313,20&nbsp;€
+          <!---->
+          <!---->
+        </div>
       </div>
     </div>
   </div>
@@ -4232,151 +4244,205 @@ exports[`Storybook Tests > Components/Entreprise > NonConnecte 1`] = `
 `;
 
 exports[`Storybook Tests > Components/Entreprise/Fiscalite > Guyane 1`] = `
-"<div data-v-b91681b0=\\"\\"> Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère) <div class=\\"flex\\" data-v-b91681b0=\\"\\">
-    <div class=\\"mr-xs\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2021\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2021</button></div>
-    <div class=\\"mr-xs active\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2022\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2022</button></div>
+"<div>Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère)<div class=\\"flex\\">
+    <div class=\\"mr-xs  \\"><button id=\\"cmn-titre-tab-2021\\" class=\\"p-m btn-tab rnd-t-s\\">2021</button></div>
+    <div class=\\"mr-xs active \\"><button id=\\"cmn-titre-tab-2022\\" class=\\"p-m btn-tab rnd-t-s\\">2022</button></div>
   </div>
-  <div class=\\"line-neutral mb\\" data-v-b91681b0=\\"\\"></div>Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2021 <br data-v-b91681b0=\\"\\"><strong data-v-b91681b0=\\"\\">Cotisations</strong>
-  <div class=\\"fiscalite-table\\" data-v-b91681b0=\\"\\">
-    <div data-v-b91681b0=\\"\\">a. Redevance communale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">3 235 343,56&nbsp;€</div>
-    <div data-v-b91681b0=\\"\\">b. Redevance départementale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">669 241,56&nbsp;€</div>
-    <div data-v-b91681b0=\\"\\">c. Taxe minière sur l’or de Guyane</div>
-    <div class=\\"fiscalite-value\\" data-v-b91681b0=\\"\\">8 290 200,00&nbsp;€</div>
-    <div data-v-b91681b0=\\"\\">d. Investissements déductibles de la taxe perçue pour la région de Guyane</div>
-    <div class=\\"fiscalite-value\\" data-v-b91681b0=\\"\\">202 200,00&nbsp;€</div>
-    <div data-v-b91681b0=\\"\\">e. Montant net de taxe minière sur l’or de Guyane (c-d)</div>
-    <div class=\\"fiscalite-value\\" data-v-b91681b0=\\"\\">424 620,00&nbsp;€</div>
-    <div data-v-b91681b0=\\"\\">f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">346 336,41&nbsp;€</div>
-    <div data-v-b91681b0=\\"\\">Somme à payer auprès du comptable (2)</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">4 675 541,53&nbsp;€</div>
+  <div class=\\"line-neutral mb\\"></div>Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2021 <br><strong>Cotisations</strong>
+  <div class=\\"_fiscalite-table_16f3a1\\">
+    <div>a. Redevance communale</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">3 235 343,56&nbsp;€
+      <!---->
+      <!---->
+    </div>
+    <div>b. Redevance départementale</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">669 241,56&nbsp;€
+      <!---->
+      <!---->
+    </div>
+    <div>c. Taxe minière sur l’or de Guyane</div>
+    <div class=\\"_fiscalite-value_16f3a1\\">8 290 200,00&nbsp;€</div>
+    <div>d. Investissements déductibles de la taxe perçue pour la région de Guyane</div>
+    <div class=\\"_fiscalite-value_16f3a1\\">202 200,00&nbsp;€</div>
+    <div>e. Montant net de taxe minière sur l’or de Guyane (c-d)</div>
+    <div class=\\"_fiscalite-value_16f3a1\\">424 620,00&nbsp;€</div>
+    <div>f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">346 336,41&nbsp;€
+      <!---->
+      <!---->
+    </div>
+    <div>Somme à payer auprès du comptable (2)</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">4 675 541,53&nbsp;€
+      <!---->
+      <!---->
+    </div>
   </div>
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Entreprise/Fiscalite > GuyaneAnneePrecedente 1`] = `
-"<div data-v-b91681b0=\\"\\"> Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère) <div class=\\"flex\\" data-v-b91681b0=\\"\\">
-    <div class=\\"mr-xs active\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2021\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2021</button></div>
-    <div class=\\"mr-xs\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2022\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2022</button></div>
+"<div>Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère)<div class=\\"flex\\">
+    <div class=\\"mr-xs active \\"><button id=\\"cmn-titre-tab-2021\\" class=\\"p-m btn-tab rnd-t-s\\">2021</button></div>
+    <div class=\\"mr-xs  \\"><button id=\\"cmn-titre-tab-2022\\" class=\\"p-m btn-tab rnd-t-s\\">2022</button></div>
   </div>
-  <div class=\\"line-neutral mb\\" data-v-b91681b0=\\"\\"></div>
-  <!--v-if--><strong data-v-b91681b0=\\"\\">Cotisations</strong>
-  <div class=\\"fiscalite-table\\" data-v-b91681b0=\\"\\">
-    <div data-v-b91681b0=\\"\\">a. Redevance communale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">3 233 743,49&nbsp;€</div>
-    <div data-v-b91681b0=\\"\\">b. Redevance départementale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">668 910,58&nbsp;€</div>
-    <div data-v-b91681b0=\\"\\">c. Taxe minière sur l’or de Guyane</div>
-    <div class=\\"fiscalite-value\\" data-v-b91681b0=\\"\\">8 286 100,00&nbsp;€</div>
-    <div data-v-b91681b0=\\"\\">d. Investissements déductibles de la taxe perçue pour la région de Guyane</div>
-    <div class=\\"fiscalite-value\\" data-v-b91681b0=\\"\\">202 100,00&nbsp;€</div>
-    <div data-v-b91681b0=\\"\\">e. Montant net de taxe minière sur l’or de Guyane (c-d)</div>
-    <div class=\\"fiscalite-value\\" data-v-b91681b0=\\"\\">424 410,00&nbsp;€</div>
-    <div data-v-b91681b0=\\"\\">f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">346 165,13&nbsp;€</div>
-    <div data-v-b91681b0=\\"\\">Somme à payer auprès du comptable (2)</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">4 673 229,20&nbsp;€</div>
+  <div class=\\"line-neutral mb\\"></div>
+  <!----><strong>Cotisations</strong>
+  <div class=\\"_fiscalite-table_16f3a1\\">
+    <div>a. Redevance communale</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">3 233 743,49&nbsp;€
+      <!---->
+      <!---->
+    </div>
+    <div>b. Redevance départementale</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">668 910,58&nbsp;€
+      <!---->
+      <!---->
+    </div>
+    <div>c. Taxe minière sur l’or de Guyane</div>
+    <div class=\\"_fiscalite-value_16f3a1\\">8 286 100,00&nbsp;€</div>
+    <div>d. Investissements déductibles de la taxe perçue pour la région de Guyane</div>
+    <div class=\\"_fiscalite-value_16f3a1\\">202 100,00&nbsp;€</div>
+    <div>e. Montant net de taxe minière sur l’or de Guyane (c-d)</div>
+    <div class=\\"_fiscalite-value_16f3a1\\">424 410,00&nbsp;€</div>
+    <div>f. Frais de gestion de fiscalité directe locale (a+b+e)X 8%</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">346 165,13&nbsp;€
+      <!---->
+      <!---->
+    </div>
+    <div>Somme à payer auprès du comptable (2)</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">4 673 229,20&nbsp;€
+      <!---->
+      <!---->
+    </div>
   </div>
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Entreprise/Fiscalite > Loading 1`] = `
-"<div data-v-b91681b0=\\"\\"> Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère) <div class=\\"flex\\" data-v-b91681b0=\\"\\">
-    <div class=\\"mr-xs\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2021\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2021</button></div>
-    <div class=\\"mr-xs active\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2022\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2022</button></div>
+"<div>Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère)<div class=\\"flex\\">
+    <div class=\\"mr-xs active \\"><button id=\\"cmn-titre-tab-2021\\" class=\\"p-m btn-tab rnd-t-s\\">2021</button></div>
+    <div class=\\"mr-xs  \\"><button id=\\"cmn-titre-tab-2022\\" class=\\"p-m btn-tab rnd-t-s\\">2022</button></div>
   </div>
-  <div class=\\"line-neutral mb\\" data-v-b91681b0=\\"\\"></div>Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2021 <br data-v-b91681b0=\\"\\"><strong data-v-b91681b0=\\"\\">Cotisations</strong>
-  <div class=\\"fiscalite-table\\" data-v-b91681b0=\\"\\">
-    <div data-v-b91681b0=\\"\\">a. Redevance communale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+  <div class=\\"line-neutral mb\\"></div>
+  <!----><strong>Cotisations</strong>
+  <div class=\\"_fiscalite-table_16f3a1\\">
+    <div>a. Redevance communale</div>
+    <div class=\\"_top-level_3306d0 _fiscalite-value_16f3a1\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_3306d0\\"></div>
     </div>
-    <div data-v-b91681b0=\\"\\">b. Redevance départementale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div>b. Redevance départementale</div>
+    <div class=\\"_top-level_3306d0 _fiscalite-value_16f3a1\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_3306d0\\"></div>
     </div>
-    <!--v-if-->
-    <div data-v-b91681b0=\\"\\">f. Frais de gestion de fiscalité directe locale (a+b)X 8%</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <!---->
+    <div>f. Frais de gestion de fiscalité directe locale (a+b)X 8%</div>
+    <div class=\\"_top-level_3306d0 _fiscalite-value_16f3a1\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_3306d0\\"></div>
     </div>
-    <div data-v-b91681b0=\\"\\">Somme à payer auprès du comptable (2)</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
+    <div>Somme à payer auprès du comptable (2)</div>
+    <div class=\\"_top-level_3306d0 _fiscalite-value_16f3a1\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <!---->
+      <div class=\\"_spinner_3306d0\\"></div>
     </div>
   </div>
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Entreprise/Fiscalite > Ok 1`] = `
-"<div data-v-b91681b0=\\"\\"> Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère) <div class=\\"flex\\" data-v-b91681b0=\\"\\">
-    <div class=\\"mr-xs\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2021\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2021</button></div>
-    <div class=\\"mr-xs active\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2022\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2022</button></div>
+"<div>Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère)<div class=\\"flex\\">
+    <div class=\\"mr-xs  \\"><button id=\\"cmn-titre-tab-2021\\" class=\\"p-m btn-tab rnd-t-s\\">2021</button></div>
+    <div class=\\"mr-xs active \\"><button id=\\"cmn-titre-tab-2022\\" class=\\"p-m btn-tab rnd-t-s\\">2022</button></div>
   </div>
-  <div class=\\"line-neutral mb\\" data-v-b91681b0=\\"\\"></div>Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2021 <br data-v-b91681b0=\\"\\"><strong data-v-b91681b0=\\"\\">Cotisations</strong>
-  <div class=\\"fiscalite-table\\" data-v-b91681b0=\\"\\">
-    <div data-v-b91681b0=\\"\\">a. Redevance communale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">1 600,07&nbsp;€</div>
-    <div data-v-b91681b0=\\"\\">b. Redevance départementale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">330,98&nbsp;€</div>
-    <!--v-if-->
-    <div data-v-b91681b0=\\"\\">f. Frais de gestion de fiscalité directe locale (a+b)X 8%</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">154,48&nbsp;€</div>
-    <div data-v-b91681b0=\\"\\">Somme à payer auprès du comptable (2)</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">2 085,53&nbsp;€</div>
+  <div class=\\"line-neutral mb\\"></div>Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2021 <br><strong>Cotisations</strong>
+  <div class=\\"_fiscalite-table_16f3a1\\">
+    <div>a. Redevance communale</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">1 600,07&nbsp;€
+      <!---->
+      <!---->
+    </div>
+    <div>b. Redevance départementale</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">330,98&nbsp;€
+      <!---->
+      <!---->
+    </div>
+    <!---->
+    <div>f. Frais de gestion de fiscalité directe locale (a+b)X 8%</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">154,48&nbsp;€
+      <!---->
+      <!---->
+    </div>
+    <div>Somme à payer auprès du comptable (2)</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"\\">2 085,53&nbsp;€
+      <!---->
+      <!---->
+    </div>
   </div>
 </div>"
 `;
 
 exports[`Storybook Tests > Components/Entreprise/Fiscalite > WithError 1`] = `
-"<div data-v-b91681b0=\\"\\"> Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère) <div class=\\"flex\\" data-v-b91681b0=\\"\\">
-    <div class=\\"mr-xs\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2021\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2021</button></div>
-    <div class=\\"mr-xs active\\" data-v-b91681b0=\\"\\"><button id=\\"cmn-titre-tab-2022\\" class=\\"p-m btn-tab rnd-t-s\\" data-v-b91681b0=\\"\\">2022</button></div>
+"<div>Calcul, à titre indicatif, du montant de l'imposition minière de votre entreprise (redevance départementale et communale des mines pour les substances non énergétiques et taxe aurifère)<div class=\\"flex\\">
+    <div class=\\"mr-xs active \\"><button id=\\"cmn-titre-tab-2021\\" class=\\"p-m btn-tab rnd-t-s\\">2021</button></div>
+    <div class=\\"mr-xs  \\"><button id=\\"cmn-titre-tab-2022\\" class=\\"p-m btn-tab rnd-t-s\\">2022</button></div>
   </div>
-  <div class=\\"line-neutral mb\\" data-v-b91681b0=\\"\\"></div>Estimation effectuée sur la base des tarifs et des productions déclarées pour l'année 2021 <br data-v-b91681b0=\\"\\"><strong data-v-b91681b0=\\"\\">Cotisations</strong>
-  <div class=\\"fiscalite-table\\" data-v-b91681b0=\\"\\">
-    <div data-v-b91681b0=\\"\\">a. Redevance communale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div data-v-b0094f72=\\"\\">
-        <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+  <div class=\\"line-neutral mb\\"></div>
+  <!----><strong>Cotisations</strong>
+  <div class=\\"_fiscalite-table_16f3a1\\">
+    <div>a. Redevance communale</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <div>
+        <div class=\\"_tooltip_4f6ea8\\">
           <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
             <use href=\\"#icon-error-warning\\"></use>
           </svg>
         </div>
       </div>
+      <!---->
     </div>
-    <div data-v-b91681b0=\\"\\">b. Redevance départementale</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div data-v-b0094f72=\\"\\">
-        <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+    <div>b. Redevance départementale</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <div>
+        <div class=\\"_tooltip_4f6ea8\\">
           <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
             <use href=\\"#icon-error-warning\\"></use>
           </svg>
         </div>
       </div>
+      <!---->
     </div>
-    <!--v-if-->
-    <div data-v-b91681b0=\\"\\">f. Frais de gestion de fiscalité directe locale (a+b)X 8%</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div data-v-b0094f72=\\"\\">
-        <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+    <!---->
+    <div>f. Frais de gestion de fiscalité directe locale (a+b)X 8%</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <div>
+        <div class=\\"_tooltip_4f6ea8\\">
           <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
             <use href=\\"#icon-error-warning\\"></use>
           </svg>
         </div>
       </div>
+      <!---->
     </div>
-    <div data-v-b91681b0=\\"\\">Somme à payer auprès du comptable (2)</div>
-    <div class=\\"top-level fiscalite-value\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\" data-v-b91681b0=\\"\\">
-      <div data-v-b0094f72=\\"\\">
-        <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
+    <div>Somme à payer auprès du comptable (2)</div>
+    <div class=\\"_fiscalite-value_16f3a1\\" style=\\"display: flex; justify-content: center;\\">
+      <!---->
+      <div>
+        <div class=\\"_tooltip_4f6ea8\\">
           <h6 class=\\"_tooltip-content_4f6ea8\\">because reasons</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
             <use href=\\"#icon-error-warning\\"></use>
           </svg>
         </div>
       </div>
+      <!---->
     </div>
   </div>
 </div>"
