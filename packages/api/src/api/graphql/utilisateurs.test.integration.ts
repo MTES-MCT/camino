@@ -38,7 +38,7 @@ describe('utilisateurModifier', () => {
       undefined
     )
 
-    expect(res.body.errors[0].message).toMatchInlineSnapshot('"l\'utilisateur n\'existe pas"')
+    expect(res.body.errors[0].message).toMatchInlineSnapshot('"droits insuffisants"')
   })
 
   test('peut modifier son compte utilisateur', async () => {

@@ -25,29 +25,29 @@ export const EditPopup = caminoDefineComponent<Props>(['user', 'getEntreprises',
   const onSelectEntreprises = (elements: Element[], entreprises: Entreprise[]) => {
     const entrs = elements.map(({ id }) => entreprises.find(({ id: entrId }) => id === entrId)).filter(isNotNullNorUndefined)
 
-      if (!utilisateurPopup.value.entreprises) {
-        utilisateurPopup.value.entreprises = entrs
-      } else {
-        utilisateurPopup.value.entreprises.splice(0, utilisateurPopup.value.entreprises.length, ...entrs)
+    if (!utilisateurPopup.value.entreprises) {
+      utilisateurPopup.value.entreprises = entrs
+    } else {
+      utilisateurPopup.value.entreprises.splice(0, utilisateurPopup.value.entreprises.length, ...entrs)
+    }
+  }
+  const entreprises = ref<AsyncData<Entreprise[]>>({ status: 'LOADING' })
+  onMounted(async () => {
+    try {
+      const entreprisesApi = await props.getEntreprises()
+      entreprises.value = { status: 'LOADED', value: entreprisesApi }
+    } catch (e: any) {
+      console.error('error', e)
+      entreprises.value = {
+        status: 'ERROR',
+        message: e.message ?? "Une erreur s'est produite",
       }
     }
-    const entreprises = ref<AsyncData<Entreprise[]>>({ status: 'LOADING' })
-    onMounted(async () => {
-      try {
-        const entreprisesApi = await props.getEntreprises()
-        entreprises.value = { status: 'LOADED', value: entreprisesApi }
-      } catch (e: any) {
-        console.error('error', e)
-        entreprises.value = {
-          status: 'ERROR',
-          message: e.message ?? "Une erreur s'est produite",
-        }
-      }
-    })
-    const complete = computed(() => {
-      if (isEntrepriseOrBureauDetudeRole(utilisateurPopup.value.role) && !utilisateurPopup.value.entreprises?.length) {
-        return false
-      }
+  })
+  const complete = computed(() => {
+    if (isEntrepriseOrBureauDetudeRole(utilisateurPopup.value.role) && !utilisateurPopup.value.entreprises?.length) {
+      return false
+    }
 
     if (isAdministration(utilisateurPopup.value) && !utilisateurPopup.value.administrationId) {
       return false
