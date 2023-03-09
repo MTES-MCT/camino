@@ -29,12 +29,12 @@ export const ChartWithExport = <T,>(props: Props<T>): JSX.Element => {
       data={props.data}
       renderItem={item => {
         return (
-          <>
+          <div style="position: relative">
             <ConfigurableChart chartConfiguration={props.getConfiguration(item)} />
             <button class="btn-border py-xs px-s rnd-xs" style="position: absolute; top: 4px; right: 10px" title="Export CSV" onClick={() => exportCsv(props.getConfiguration(item))}>
               <Icon size="S" name="download" />
             </button>
-          </>
+          </div>
         )
       }}
     />
