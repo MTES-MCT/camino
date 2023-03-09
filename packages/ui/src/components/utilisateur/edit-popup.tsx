@@ -77,14 +77,14 @@ export const EditPopup = caminoDefineComponent<Props>(['user', 'getEntreprises',
         </div>
         <div class="mb tablet-blob-2-3">
           <input
-              value={utilisateurPopup.value.telephoneFixe}
-              onInput={e => {
-                utilisateurPopup.value.telephoneFixe = isEventWithTarget(e) ? e.target.value : ''
-              }}
-              type="text"
-              class="p-s"
-              placeholder="0100000000"
-            />
+            value={utilisateurPopup.value.telephoneFixe}
+            onInput={e => {
+              utilisateurPopup.value.telephoneFixe = isEventWithTarget(e) ? e.target.value : ''
+            }}
+            type="text"
+            class="p-s"
+            placeholder="0100000000"
+          />
         </div>
       </div>
 
@@ -95,14 +95,14 @@ export const EditPopup = caminoDefineComponent<Props>(['user', 'getEntreprises',
         </div>
         <div class="mb tablet-blob-2-3">
           <input
-              value={utilisateurPopup.value.telephoneMobile}
-              onInput={e => {
-                utilisateurPopup.value.telephoneMobile = isEventWithTarget(e) ? e.target.value : ''
-              }}
-              type="text"
-              class="p-s"
-              placeholder="0100000000"
-            />
+            value={utilisateurPopup.value.telephoneMobile}
+            onInput={e => {
+              utilisateurPopup.value.telephoneMobile = isEventWithTarget(e) ? e.target.value : ''
+            }}
+            type="text"
+            class="p-s"
+            placeholder="0100000000"
+          />
         </div>
       </div>
 

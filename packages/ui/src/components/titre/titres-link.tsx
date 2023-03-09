@@ -61,17 +61,6 @@ export const TitresLink = caminoDefineComponent<Props>(['config', 'loadLinkableT
     }
   }
 
-  // watch(
-  //   () => props.loadLinkableTitres,
-  //   async _ => {
-  //     console.log('et tu splice')
-  //     selectedTitres.value.splice(0, selectedTitres.value.length)
-  //     props.onSelectTitre(undefined)
-  //     props.onSelectTitres([])
-  //     await init()
-  //   }
-  // )
-
   onMounted(async () => {
     await init()
   })
