@@ -364,7 +364,7 @@ export const PureUtilisateur = defineComponent<Props>({
         {removePopup.value && utilisateur.value.status === 'LOADED' ? (
           <RemovePopup close={() => (removePopup.value = !removePopup.value)} utilisateur={utilisateur.value.value} deleteUser={deleteUser} />
         ) : null}
-        {editPopup.value && utilisateur.value.status === 'LOADED' && subscription.value.status === 'LOADED' ? (
+        {editPopup.value && utilisateur.value.status === 'LOADED' ? (
           <EditPopup
             close={() => (editPopup.value = !editPopup.value)}
             utilisateur={utilisateur.value.value}
