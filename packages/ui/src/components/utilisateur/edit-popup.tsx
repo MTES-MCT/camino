@@ -78,7 +78,15 @@ export const EditPopup = defineComponent<Props>({
             <h5>Téléphone fixe</h5>
           </div>
           <div class="mb tablet-blob-2-3">
-            <input value={utilisateurPopup.value.telephoneFixe} type="text" class="p-s" placeholder="0100000000" />
+            <input
+              value={utilisateurPopup.value.telephoneFixe}
+              onInput={e => {
+                utilisateurPopup.value.telephoneFixe = isEventWithTarget(e) ? e.target.value : ''
+              }}
+              type="text"
+              class="p-s"
+              placeholder="0100000000"
+            />
           </div>
         </div>
 
@@ -88,7 +96,15 @@ export const EditPopup = defineComponent<Props>({
             <h5>Téléphone mobile</h5>
           </div>
           <div class="mb tablet-blob-2-3">
-            <input value={utilisateurPopup.value.telephoneMobile} type="text" class="p-s" placeholder="0100000000" />
+            <input
+              value={utilisateurPopup.value.telephoneMobile}
+              onInput={e => {
+                utilisateurPopup.value.telephoneMobile = isEventWithTarget(e) ? e.target.value : ''
+              }}
+              type="text"
+              class="p-s"
+              placeholder="0100000000"
+            />
           </div>
         </div>
 
