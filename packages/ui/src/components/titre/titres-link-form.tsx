@@ -46,6 +46,7 @@ export const TitresLinkForm = caminoDefineComponent<Props>(['apiClient', 'titre'
     try {
       const result = await props.apiClient.loadTitreLinks(props.titre.id)
       titresLinks.value = { status: 'LOADED', value: result }
+      selectedTitres.value = titresLinks.value.value.amont
     } catch (e: any) {
       titresLinks.value = {
         status: 'ERROR',
