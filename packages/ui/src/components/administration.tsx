@@ -1,4 +1,4 @@
-import Error from './error.vue'
+import { Error } from './error'
 import { apiClient, ApiClient, Utilisateur } from '@/api/api-client'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'

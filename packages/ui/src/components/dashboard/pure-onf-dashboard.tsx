@@ -4,7 +4,7 @@ import { Date as DateComponent } from '../_ui/date'
 
 import { nomColumn, nomCell, referencesColumn, statutColumn, titulairesColumn, statutCell, referencesCell, titulairesCell } from '@/components/titres/table-utils'
 
-import Error from '@/components/error.vue'
+import { Error } from '@/components/error'
 import { CommonTitreONF } from 'camino-common/src/titres'
 import { datesDiffInDays } from 'camino-common/src/date'
 import { ComponentColumnData, TableRow, TextColumnData } from '../_ui/table'
