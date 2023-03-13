@@ -30,7 +30,7 @@ const users: Record<Role, UserNotNull> = {
 const fakeAdministrationId = 'fakeAdminId' as AdministrationId
 
 test('utilisateurUpdationValidate privilege escalation forbidden', () => {
-  expect(() => utilisateurUpdationValidate(users.defaut, { ...users.defaut, role: 'super', entreprises: [] }, users.defaut)).toThrowErrorMatchingInlineSnapshot(
+  expect(() => utilisateurUpdationValidate(users.defaut, { ...users.defaut, role: 'super', administrationId: null, entreprises: [] }, users.defaut)).toThrowErrorMatchingInlineSnapshot(
     '"impossible de modifier son propre rôle"'
   )
   expect(() =>
@@ -40,7 +40,7 @@ test('utilisateurUpdationValidate privilege escalation forbidden', () => {
         ...users.admin,
         role: 'super',
         entreprises: [],
-        administrationId: undefined,
+        administrationId: null,
       },
       users.admin
     )
@@ -52,7 +52,7 @@ test('utilisateurUpdationValidate privilege escalation forbidden', () => {
         ...users.lecteur,
         role: 'super',
         entreprises: [],
-        administrationId: undefined,
+        administrationId: null,
       },
       users.lecteur
     )
@@ -64,17 +64,17 @@ test('utilisateurUpdationValidate privilege escalation forbidden', () => {
         ...users.editeur,
         role: 'super',
         entreprises: [],
-        administrationId: undefined,
+        administrationId: null,
       },
       users.editeur
     )
   ).toThrowErrorMatchingInlineSnapshot('"impossible de modifier son propre rôle"')
-  expect(() => utilisateurUpdationValidate(users.entreprise, { ...users.entreprise, role: 'super', entreprises: [] }, users.entreprise)).toThrowErrorMatchingInlineSnapshot(
+  expect(() => utilisateurUpdationValidate(users.entreprise, { ...users.entreprise, role: 'super', entreprises: [], administrationId: null }, users.entreprise)).toThrowErrorMatchingInlineSnapshot(
     '"impossible de modifier son propre rôle"'
   )
-  expect(() => utilisateurUpdationValidate(users['bureau d’études'], { ...users['bureau d’études'], role: 'super', entreprises: [] }, users.entreprise)).toThrowErrorMatchingInlineSnapshot(
-    '"impossible de modifier son propre rôle"'
-  )
+  expect(() =>
+    utilisateurUpdationValidate(users['bureau d’études'], { ...users['bureau d’études'], role: 'super', entreprises: [], administrationId: null }, users.entreprise)
+  ).toThrowErrorMatchingInlineSnapshot('"impossible de modifier son propre rôle"')
 
   expect(() =>
     utilisateurUpdationValidate(
@@ -82,8 +82,8 @@ test('utilisateurUpdationValidate privilege escalation forbidden', () => {
       {
         ...users.editeur,
         role: 'entreprise',
-        administrationId: undefined,
-        entreprises: [{ id: newEntrepriseId('id') }],
+        administrationId: null,
+        entreprises: [newEntrepriseId('id')],
       },
       users.editeur
     )
@@ -94,7 +94,8 @@ test('utilisateurUpdationValidate privilege escalation forbidden', () => {
       {
         ...users.defaut,
         role: 'entreprise',
-        entreprises: [{ id: newEntrepriseId('id') }],
+        administrationId: null,
+        entreprises: [newEntrepriseId('id')],
       },
       users.defaut
     )
@@ -108,6 +109,8 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       {
         id: 'utilisateurId',
         role: 'super',
+        administrationId: null,
+        entreprises: [],
       },
       undefined
     )
@@ -118,8 +121,8 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       {
         id: 'utilisateurId',
         role: 'super',
-        email: 'toto@gmail.com',
-        entreprises: [{ id: newEntrepriseId('entrepriseId') }],
+        entreprises: [newEntrepriseId('entrepriseId')],
+        administrationId: null,
       },
       undefined
     )
@@ -130,8 +133,8 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       {
         id: 'utilisateurId',
         role: 'super',
-        email: 'toto@gmail.com',
         administrationId: 'aut-97300-01',
+        entreprises: [],
       },
       undefined
     )
@@ -143,6 +146,8 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       {
         id: 'utilisateurId',
         role: 'defaut',
+        administrationId: null,
+        entreprises: [],
       },
       undefined
     )
@@ -153,8 +158,8 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       {
         id: 'utilisateurId',
         role: 'defaut',
-        email: 'toto@gmail.com',
-        entreprises: [{ id: newEntrepriseId('entrepriseId') }],
+        entreprises: [newEntrepriseId('entrepriseId')],
+        administrationId: null,
       },
       undefined
     )
@@ -165,8 +170,8 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       {
         id: 'utilisateurId',
         role: 'defaut',
-        email: 'toto@gmail.com',
         administrationId: 'aut-97300-01',
+        entreprises: [],
       },
       undefined
     )
@@ -178,6 +183,8 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       {
         id: 'utilisateurId',
         role: 'admin',
+        administrationId: null,
+        entreprises: [],
       },
       undefined
     )
@@ -188,8 +195,8 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       {
         id: 'utilisateurId',
         role: 'admin',
-        email: 'toto@gmail.com',
-        entreprises: [{ id: newEntrepriseId('entrepriseId') }],
+        entreprises: [newEntrepriseId('entrepriseId')],
+        administrationId: null,
       },
       undefined
     )
@@ -200,8 +207,8 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       {
         id: 'utilisateurId',
         role: 'admin',
-        email: 'toto@gmail.com',
         administrationId: fakeAdministrationId,
+        entreprises: [],
       },
       undefined
     )
@@ -213,17 +220,7 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       {
         id: 'utilisateurId',
         role: 'entreprise',
-      },
-      undefined
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
-  expect(() =>
-    utilisateurUpdationValidate(
-      users.super,
-      {
-        id: 'utilisateurId',
-        role: 'entreprise',
-        email: 'toto@gmail.com',
+        administrationId: null,
         entreprises: [],
       },
       undefined
@@ -235,9 +232,20 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       {
         id: 'utilisateurId',
         role: 'entreprise',
-        email: 'toto@gmail.com',
+        administrationId: null,
+        entreprises: [],
+      },
+      undefined
+    )
+  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() =>
+    utilisateurUpdationValidate(
+      users.super,
+      {
+        id: 'utilisateurId',
+        role: 'entreprise',
         administrationId: fakeAdministrationId,
-        entreprises: [{ id: newEntrepriseId('entrepriseId') }],
+        entreprises: [newEntrepriseId('entrepriseId')],
       },
       undefined
     )
@@ -249,8 +257,8 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       {
         id: 'utilisateurId',
         role: 'super',
-        email: 'toto@gmail.com',
         entreprises: [],
+        administrationId: null,
       },
       undefined
     )
@@ -263,7 +271,6 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
         id: 'utilisateurId',
         role: 'editeur',
         administrationId: 'aut-97300-01',
-        email: 'toto@gmail.com',
         entreprises: [],
       },
       {
@@ -281,7 +288,6 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
         id: 'utilisateurId',
         role: 'admin',
         administrationId: 'aut-97300-01',
-        email: 'toto@gmail.com',
         entreprises: [],
       },
       {
@@ -299,7 +305,6 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
         id: 'utilisateurId',
         role: 'editeur',
         administrationId: 'aut-mrae-guyane-01',
-        email: 'toto@gmail.com',
         entreprises: [],
       },
       {
@@ -317,7 +322,6 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
         id: 'utilisateurId',
         role: 'editeur',
         administrationId: 'aut-97300-01',
-        email: 'toto@gmail.com',
         entreprises: [],
       },
       {
@@ -341,7 +345,8 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       users.entreprise,
       {
         ...users.entreprise,
-        entreprises: [{ id: newEntrepriseId('newEntreprise') }],
+        administrationId: null,
+        entreprises: [newEntrepriseId('newEntreprise')],
       },
       { ...users.entreprise }
     )
@@ -351,7 +356,8 @@ test('utilisateurUpdationValidate incorrect users throw error', () => {
       users['bureau d’études'],
       {
         ...users['bureau d’études'],
-        entreprises: [{ id: newEntrepriseId('newEntreprise') }],
+        administrationId: null,
+        entreprises: [newEntrepriseId('newEntreprise')],
       },
       { ...users['bureau d’études'] }
     )

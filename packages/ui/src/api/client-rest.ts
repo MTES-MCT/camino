@@ -44,8 +44,11 @@ export const fetchWithJson = async <U, T extends CaminoRestRoute>(path: T, param
     headers: { 'Content-Type': 'application/json' },
   })
   if (fetched.ok) {
-    const body = await fetched.json()
-    return body
+    if (fetched.status === 200) {
+      const body = await fetched.json()
+      return body
+    }
+    return
   }
   if (fetched.status === 403) {
     window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))

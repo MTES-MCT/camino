@@ -227,12 +227,7 @@ const utilisateurCreate = async (utilisateur: IUtilisateur, { fields }: { fields
     .withGraphFetched(fields ? graphBuild(fields, 'utilisateur', fieldsFormat) : options.utilisateurs.graph)
     .first()
 
-const utilisateurUpsert = async (utilisateur: IUtilisateur, { fields }: { fields?: IFields }) =>
-  Utilisateurs.query()
-    .upsertGraphAndFetch(utilisateur, options.utilisateurs.update)
-    .withGraphFetched(fields ? graphBuild(fields, 'utilisateur', fieldsFormat) : options.utilisateurs.graph)
-
-const utilisateurUpdate = async (id: string, utilisateur: Partial<IUtilisateur>) => Utilisateurs.query().patch(utilisateur).findById(id)
+const utilisateurUpsert = async (utilisateur: Pick<IUtilisateur, 'id'> & Partial<Omit<IUtilisateur, 'id'>>) => Utilisateurs.query().upsertGraph(utilisateur, options.utilisateurs.update)
 
 const utilisateurTitreCreate = async (utilisateurTitre: IUtilisateurTitre) => UtilisateursTitres.query().insert(utilisateurTitre)
 
@@ -243,16 +238,4 @@ const utilisateursTitresGet = async (titreId: string, { fields }: { fields?: IFi
     .where('titreId', titreId)
     .withGraphFetched(fields ? graphBuild(fields, 'utilisateursTitres', fieldsFormat) : options.utilisateursTitres.graph)
 
-export {
-  userGet,
-  utilisateurGet,
-  userByEmailGet,
-  utilisateursGet,
-  utilisateursCount,
-  utilisateurCreate,
-  utilisateurUpsert,
-  utilisateurUpdate,
-  utilisateurTitreCreate,
-  utilisateurTitreDelete,
-  utilisateursTitresGet,
-}
+export { userGet, utilisateurGet, userByEmailGet, utilisateursGet, utilisateursCount, utilisateurCreate, utilisateurUpsert, utilisateurTitreCreate, utilisateurTitreDelete, utilisateursTitresGet }

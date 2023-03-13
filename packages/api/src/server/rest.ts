@@ -7,7 +7,7 @@ import { activites, demarches, entreprises, titre, titres } from '../api/rest/in
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers.js'
 import { getTitreLiaisons, postTitreLiaisons, titresDREAL, titresONF, titresPTMG } from '../api/rest/titres.js'
 import { fiscalite } from '../api/rest/entreprises.js'
-import { generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, utilisateurs } from '../api/rest/utilisateurs.js'
+import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
 import { getDGTMStats, getGranulatsMarinsStats, getGuyaneStats, getMinerauxMetauxMetropolesStats } from '../api/rest/statistiques/index.js'
 import { CaminoRestRoutes } from 'camino-common/src/rest.js'
@@ -131,6 +131,8 @@ rest.get('/demarches', restDownload(demarches))
 rest.get('/activites', restDownload(activites))
 rest.post(CaminoRestRoutes.generateQgisToken, restCatcher(generateQgisToken))
 rest.post(CaminoRestRoutes.newsletter, restCatcher(manageNewsletterSubscription))
+rest.post(CaminoRestRoutes.utilisateurPermission, restCatcher(updateUtilisateurPermission))
+rest.delete(CaminoRestRoutes.utilisateur, restCatcher(deleteUtilisateur))
 rest.get(CaminoRestRoutes.moi, restCatcher(moi))
 rest.get(CaminoRestRoutes.newsletter, restCatcher(isSubscribedToNewsletter))
 rest.get('/utilisateurs', restDownload(utilisateurs))

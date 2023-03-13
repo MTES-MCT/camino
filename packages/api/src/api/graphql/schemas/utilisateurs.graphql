@@ -23,15 +23,3 @@ type Utilisateurs {
   ordre: String
   total: Int
 }
-
-input InputUtilisateurModification {
-  id: ID!
-  email: String!
-  nom: String!
-  prenom: String!
-  telephoneMobile: String
-  telephoneFixe: String
-  role: ID!
-  entreprises: [InputId]
-  administrationId: ID
-}

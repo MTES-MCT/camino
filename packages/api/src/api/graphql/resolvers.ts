@@ -9,7 +9,7 @@ import { documents, documentCreer, documentModifier, documentSupprimer } from '.
 
 import { demarche, demarches, demarcheCreer, demarcheModifier, demarcheSupprimer } from './resolvers/titres-demarches.js'
 
-import { utilisateur, utilisateurs, utilisateurModifier, utilisateurSupprimer, newsletterInscrire } from './resolvers/utilisateurs.js'
+import { utilisateur, utilisateurs, newsletterInscrire } from './resolvers/utilisateurs.js'
 
 import {
   devises,
@@ -139,8 +139,6 @@ export default {
   activiteModifier,
   activiteSupprimer,
   activiteDeposer,
-  utilisateurModifier,
-  utilisateurSupprimer,
   utilisateurTitreAbonner,
   newsletterInscrire,
   entrepriseCreer,
