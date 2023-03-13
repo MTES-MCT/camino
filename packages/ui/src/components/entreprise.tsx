@@ -6,7 +6,7 @@ import EntrepriseEditPopup from './entreprise/edit-popup.vue'
 import DocumentAddButton from './document/button-add.vue'
 import Documents from './documents/list.vue'
 import { dateFormat } from '../utils/index'
-import EntrepriseFiscalite from './entreprise/pure-entreprise-fiscalite.vue'
+import { EntrepriseFiscalite } from './entreprise/entreprise-fiscalite'
 
 import { utilisateursColonnes, utilisateursLignesBuild } from './utilisateurs/table'
 import { Fiscalite, fiscaliteVisible as fiscaliteVisibleFunc } from 'camino-common/src/fiscalite'

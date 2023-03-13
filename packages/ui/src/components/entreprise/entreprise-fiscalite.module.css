@@ -1,0 +1,11 @@
+.fiscalite-table {
+  display: grid;
+  grid-template-columns: fit-content(100%) fit-content(100%);
+  grid-row-gap: var(--unit-xs);
+  grid-column-gap: var(--unit-l);
+}
+
+.fiscalite-value {
+  justify-self: end;
+  font-weight: bold;
+}
