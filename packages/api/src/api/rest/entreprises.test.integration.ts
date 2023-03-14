@@ -3,6 +3,7 @@ import { dbManager } from '../../../tests/db-manager.js'
 import { restCall } from '../../../tests/_utils/index.js'
 import { entrepriseUpsert } from '../../database/queries/entreprises.js'
 import { afterAll, beforeAll, describe, test, expect } from 'vitest'
+import { CaminoRestRoutes } from 'camino-common/src/rest.js'
 
 beforeAll(async () => {
   await dbManager.populateDb()
@@ -18,7 +19,7 @@ describe('fiscalite', () => {
       id: newEntrepriseId('plop'),
       nom: 'Mon Entreprise',
     })
-    const tested = await restCall(`/entreprises/${entreprise.id}/fiscalite/2022`, { role: 'defaut' })
+    const tested = await restCall(CaminoRestRoutes.fiscaliteEntreprise, { entrepriseId: entreprise.id, annee: '2022' }, { role: 'defaut' })
 
     expect(tested.statusCode).toBe(403)
   })
