@@ -107,9 +107,7 @@ export const Infos = ({ titre, user, apiClient }: Props): JSX.Element => {
       <div class="desktop-blob-1-2">
         <div class="rnd-b-s bg-alt pt px overflow-auto">
           <h4 class="mb">
-            <Pill color={`bg-domaine-${getDomaineId(titre.typeId)}`} class="mono mr-s">
-              {getDomaineId(titre.typeId)}
-            </Pill>
+            <Pill color={`bg-domaine-${getDomaineId(titre.typeId)}`} class="mono mr-s" text={getDomaineId(titre.typeId)} />
             <span class="cap-first">{TitresTypesTypes[getTitreTypeType(titre.typeId)].nom}</span>
           </h4>
 

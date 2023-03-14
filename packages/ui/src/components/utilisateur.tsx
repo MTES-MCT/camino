@@ -33,16 +33,24 @@ export const Utilisateur = defineComponent({
       }
       window.location.replace('/apiUrl/deconnecter')
     }
-    const deleteUtilisateur = (utilisateur: ApiUser) => {
-      store.dispatch(
-        'messageAdd',
-        {
-          value: `l'utilisateur ${utilisateur.prenom} ${utilisateur.nom} a été supprimé`,
-          type: 'success',
-        },
-        { root: true }
-      )
-      router.push({ name: 'utilisateurs' })
+
+    const deleteUtilisateur = async (userId: string) => {
+      await utilisateurApiClient.removeUtilisateur(userId)
+
+      const isMe: boolean = (user.value && userId === user.value.id) ?? false
+      if (isMe) {
+        logout()
+      } else {
+        store.dispatch(
+          'messageAdd',
+          {
+            value: `l'utilisateur a été supprimé`,
+            type: 'success',
+          },
+          { root: true }
+        )
+        router.push({ name: 'utilisateurs' })
+      }
     }
     const updateUtilisateur = async (utilisateur: UtilisateurToEdit) => {
       try {
@@ -80,11 +88,10 @@ export const Utilisateur = defineComponent({
     return () => (
       <PureUtilisateur
         passwordUpdate={passwordUpdate}
-        apiClient={{ ...utilisateurApiClient, updateUtilisateur }}
+        apiClient={{ ...utilisateurApiClient, updateUtilisateur, removeUtilisateur: deleteUtilisateur }}
         utilisateurId={utilisateurId.value}
         user={user.value}
         logout={logout}
-        deleteUtilisateur={deleteUtilisateur}
       />
     )
   },
@@ -92,13 +99,12 @@ export const Utilisateur = defineComponent({
 interface Props {
   user: User
   logout: () => void
-  deleteUtilisateur: (utilisateur: ApiUser) => void
   utilisateurId: string
   apiClient: UtilisateurApiClient
   passwordUpdate: () => void
 }
 
-export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'logout', 'deleteUtilisateur', 'utilisateurId', 'apiClient', 'passwordUpdate'], props => {
+export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'logout', 'utilisateurId', 'apiClient', 'passwordUpdate'], props => {
   watch(
     () => props.user,
     () => get()
@@ -150,17 +156,6 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'logout', '
     }
   }
 
-  const deleteUser = async () => {
-    if (utilisateur.value.status === 'LOADED') {
-      await props.apiClient.removeUtilisateur(utilisateur.value.value.id)
-
-      if (isMe.value) {
-        props.logout()
-      } else {
-        props.deleteUtilisateur(utilisateur.value.value)
-      }
-    }
-  }
   const updateUtilisateur = async (utilisateur: UtilisateurToEdit) => {
     await props.apiClient.updateUtilisateur(utilisateur)
     await get()
@@ -304,7 +299,15 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'logout', '
         }}
       </Accordion>
       {removePopup.value && utilisateur.value.status === 'LOADED' ? (
-        <RemovePopup close={() => (removePopup.value = !removePopup.value)} utilisateur={utilisateur.value.value} deleteUser={deleteUser} />
+        <RemovePopup
+          close={() => (removePopup.value = !removePopup.value)}
+          utilisateur={utilisateur.value.value}
+          deleteUser={async () => {
+            if (utilisateur.value.status === 'LOADED') {
+              await props.apiClient.removeUtilisateur(utilisateur.value.value.id)
+            }
+          }}
+        />
       ) : null}
     </div>
   )

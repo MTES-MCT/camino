@@ -15,7 +15,7 @@ const update = action('update')
 export const Default: Story = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'super' }}
-    utilisateur={{ ...testBlankUser, id: 'utilisateurIdFake', role: 'defaut' }}
+    utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: 'utilisateurIdFake', role: 'defaut' } }}
     apiClient={{
       getEntreprises: () => new Promise(resolve => setTimeout(() => resolve([]), 1000)),
       updateUtilisateur: user =>
@@ -32,7 +32,7 @@ export const Default: Story = () => (
 export const Entreprise: Story = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'super' }}
-    utilisateur={{ ...testBlankUser, id: 'utilisateurIdFake', role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1') }] }}
+    utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: 'utilisateurIdFake', role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1') }] } }}
     apiClient={{
       getEntreprises: () => Promise.resolve([{ id: newEntrepriseId('entrepriseId1'), nom: 'Nom entreprise', etablissements: [] }]),
       updateUtilisateur: user =>
@@ -49,7 +49,7 @@ export const Entreprise: Story = () => (
 export const EntrepriseLoading: Story = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'super' }}
-    utilisateur={{ ...testBlankUser, id: 'utilisateurIdFake', role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1') }] }}
+    utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: 'utilisateurIdFake', role: 'entreprise', entreprises: [{ id: newEntrepriseId('entrepriseId1') }] } }}
     apiClient={{
       getEntreprises: () => new Promise(() => ({})),
       updateUtilisateur: user =>
@@ -66,7 +66,7 @@ export const EntrepriseLoading: Story = () => (
 export const UserAdminCanEditDefautIntoLecteur: Story = () => (
   <PermissionDisplay
     user={{ ...testBlankUser, role: 'admin', administrationId: 'ope-onf-973-01' }}
-    utilisateur={{ ...testBlankUser, id: 'utilisateurIdFake', role: 'defaut' }}
+    utilisateur={{ status: 'LOADED', value: { ...testBlankUser, id: 'utilisateurIdFake', role: 'defaut' } }}
     apiClient={{
       getEntreprises: () => new Promise(resolve => setTimeout(() => resolve([]), 1000)),
       updateUtilisateur: user =>

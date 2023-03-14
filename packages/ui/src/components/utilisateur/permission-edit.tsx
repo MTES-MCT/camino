@@ -54,7 +54,7 @@ export const PermissionDisplay = caminoDefineComponent<Props>(['user', 'utilisat
                 data={props.utilisateur}
                 renderItem={item => (
                   <>
-                    <Pill>{item.role}</Pill>{' '}
+                    <Pill text={item.role} />{' '}
                     {canEditPermission(props.user, item) ? (
                       <button class="btn-alt p-xs rnd-s" title="modifie les permissions" onClick={() => (mode.value = 'edit')}>
                         <Icon size="M" name="pencil" />

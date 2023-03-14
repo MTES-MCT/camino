@@ -8,7 +8,8 @@ exports[`Storybook Tests > Components/Activite/Preview > ACompleter 1`] = `
       <div class=\\"flex\\">
         <h3 class=\\"mb-s\\"><span class=\\"cap-first\\">Gra</span></h3>
         <!--v-if-->
-      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">en construction (incomplet)</span></span>
+      </div>
+      <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s mb-xs\\">En construction (incomplet)</div>
     </div>
     <div class=\\"overflow-hidden flex flex-end flex-right\\">
       <!--v-if-->
@@ -52,7 +53,8 @@ exports[`Storybook Tests > Components/Activite/Preview > AideVisible 1`] = `
             <use href=\\"#icon-help\\"></use>
           </svg>
         </div>
-      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">en construction</span></span>
+      </div>
+      <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s mb-xs\\">En construction</div>
     </div>
     <div class=\\"overflow-hidden flex flex-end flex-right\\">
       <!--v-if-->
@@ -92,7 +94,8 @@ exports[`Storybook Tests > Components/Activite/Preview > FermeParDefaut 1`] = `
       <div class=\\"flex\\">
         <h3 class=\\"mb-s\\"><span class=\\"cap-first\\">Gra</span></h3>
         <!--v-if-->
-      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">cloturé</span></span>
+      </div>
+      <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s mb-xs\\">Cloturé</div>
     </div>
     <div class=\\"overflow-hidden flex flex-end flex-right\\"><button class=\\"btn-alt py-s px-m rnd-br-s\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-bas\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-chevron-bas\\"></use>
@@ -127,7 +130,8 @@ exports[`Storybook Tests > Components/Activite/Preview > OuvertParDefaut 1`] = `
       <div class=\\"flex\\">
         <h3 class=\\"mb-s\\"><span class=\\"cap-first\\">Gra</span></h3>
         <!--v-if-->
-      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">cloturé</span></span>
+      </div>
+      <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s mb-xs\\">Cloturé</div>
     </div>
     <div class=\\"overflow-hidden flex flex-end flex-right\\"><button class=\\"btn-alt py-s px-m\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"chevron-haut\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-chevron-haut\\"></use>
@@ -162,7 +166,8 @@ exports[`Storybook Tests > Components/Activite/Preview > Supprimable 1`] = `
       <div class=\\"flex\\">
         <h3 class=\\"mb-s\\"><span class=\\"cap-first\\">Gra</span></h3>
         <!--v-if-->
-      </div><span class=\\"cap-first small bold mb-xs\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">en construction (incomplet)</span></span>
+      </div>
+      <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s mb-xs\\">En construction (incomplet)</div>
     </div>
     <div class=\\"overflow-hidden flex flex-end flex-right\\"><button class=\\"cmn-activite-btn-supprimer btn small py-s px-m flex mr-px\\" title=\\"supprimer l'activité'\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"delete\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
           <use href=\\"#icon-delete\\"></use>
@@ -369,7 +374,9 @@ exports[`Storybook Tests > Components/Administration > Default 1`] = `
                 <th>Associée</th>
               </tr>
               <tr>
-                <td><span class=\\"cap-first small bold mono mt-s\\"><span class=\\"bg-domaine-c color-bg pill py-xs px-s\\">c</span></span></td>
+                <td>
+                  <div class=\\"bg-domaine-c inline-block small bold color-bg pill py-xs px-s mono mt-s\\">C</div>
+                </td>
                 <td><span class=\\"small bold cap-first mt-s\\">permis exclusif de carrières</span></td>
                 <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox-blank\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                     <use href=\\"#icon-checkbox-blank\\"></use>
@@ -406,9 +413,13 @@ exports[`Storybook Tests > Components/Administration > Default 1`] = `
                   <th>Étapes</th>
                 </tr>
                 <tr>
-                  <td><span class=\\"cap-first small bold mono mt-s\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></td>
+                  <td>
+                    <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+                  </td>
                   <td><span class=\\"small bold cap-first mt-s\\">autorisation d'exploitation</span></td>
-                  <td><span class=\\"cap-first small bold mt-s\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">valide</span></span></td>
+                  <td>
+                    <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s mt-s\\">Valide</div>
+                  </td>
                   <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                       <use href=\\"#icon-checkbox\\"></use>
                     </svg></td>
@@ -442,7 +453,9 @@ exports[`Storybook Tests > Components/Administration > Default 1`] = `
                   <th>Création</th>
                 </tr>
                 <tr>
-                  <td><span class=\\"cap-first small bold mono mt-s\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></td>
+                  <td>
+                    <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+                  </td>
                   <td><span class=\\"small bold cap-first mt-s\\">autorisation d'exploitation</span></td>
                   <td><span class=\\"small bold cap-first mt-s\\">publication de décision au JORF</span></td>
                   <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
@@ -658,7 +671,9 @@ exports[`Storybook Tests > Components/Administration/Permissions > Default 1`] =
             <th>Associée</th>
           </tr>
           <tr>
-            <td><span class=\\"cap-first small bold mono mt-s\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></td>
+            <td>
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+            </td>
             <td><span class=\\"small bold cap-first mt-s\\">autorisation de recherches</span></td>
             <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                 <use href=\\"#icon-checkbox\\"></use>
@@ -668,7 +683,9 @@ exports[`Storybook Tests > Components/Administration/Permissions > Default 1`] =
               </svg></td>
           </tr>
           <tr>
-            <td><span class=\\"cap-first small bold mono mt-s\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></td>
+            <td>
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+            </td>
             <td><span class=\\"small bold cap-first mt-s\\">autorisation d'exploitation</span></td>
             <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                 <use href=\\"#icon-checkbox\\"></use>
@@ -705,9 +722,13 @@ exports[`Storybook Tests > Components/Administration/Permissions > Default 1`] =
               <th>Étapes</th>
             </tr>
             <tr>
-              <td><span class=\\"cap-first small bold mono mt-s\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></td>
+              <td>
+                <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+              </td>
               <td><span class=\\"small bold cap-first mt-s\\">autorisation d'exploitation</span></td>
-              <td><span class=\\"cap-first small bold mt-s\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">valide</span></span></td>
+              <td>
+                <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s mt-s\\">Valide</div>
+              </td>
               <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                   <use href=\\"#icon-checkbox\\"></use>
                 </svg></td>
@@ -741,7 +762,9 @@ exports[`Storybook Tests > Components/Administration/Permissions > Default 1`] =
               <th>Création</th>
             </tr>
             <tr>
-              <td><span class=\\"cap-first small bold mono mt-s\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></td>
+              <td>
+                <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+              </td>
               <td><span class=\\"small bold cap-first mt-s\\">autorisation d'exploitation</span></td>
               <td><span class=\\"small bold cap-first mt-s\\">publication de décision au JORF</span></td>
               <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
@@ -813,7 +836,9 @@ exports[`Storybook Tests > Components/Administration/Permissions > Loading 1`] =
             <th>Associée</th>
           </tr>
           <tr>
-            <td><span class=\\"cap-first small bold mono mt-s\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></td>
+            <td>
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+            </td>
             <td><span class=\\"small bold cap-first mt-s\\">autorisation de recherches</span></td>
             <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                 <use href=\\"#icon-checkbox\\"></use>
@@ -823,7 +848,9 @@ exports[`Storybook Tests > Components/Administration/Permissions > Loading 1`] =
               </svg></td>
           </tr>
           <tr>
-            <td><span class=\\"cap-first small bold mono mt-s\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></td>
+            <td>
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+            </td>
             <td><span class=\\"small bold cap-first mt-s\\">autorisation d'exploitation</span></td>
             <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                 <use href=\\"#icon-checkbox\\"></use>
@@ -865,7 +892,9 @@ exports[`Storybook Tests > Components/Administration/Permissions > error 1`] = `
             <th>Associée</th>
           </tr>
           <tr>
-            <td><span class=\\"cap-first small bold mono mt-s\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></td>
+            <td>
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+            </td>
             <td><span class=\\"small bold cap-first mt-s\\">autorisation de recherches</span></td>
             <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                 <use href=\\"#icon-checkbox\\"></use>
@@ -875,7 +904,9 @@ exports[`Storybook Tests > Components/Administration/Permissions > error 1`] = `
               </svg></td>
           </tr>
           <tr>
-            <td><span class=\\"cap-first small bold mono mt-s\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></td>
+            <td>
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+            </td>
             <td><span class=\\"small bold cap-first mt-s\\">autorisation d'exploitation</span></td>
             <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                 <use href=\\"#icon-checkbox\\"></use>
@@ -922,7 +953,9 @@ exports[`Storybook Tests > Components/Administration/TitresTypes > ONF 1`] = `
           <th>Associée</th>
         </tr>
         <tr>
-          <td><span class=\\"cap-first small bold mono mt-s\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></td>
+          <td>
+            <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+          </td>
           <td><span class=\\"small bold cap-first mt-s\\">autorisation de recherches</span></td>
           <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
               <use href=\\"#icon-checkbox\\"></use>
@@ -932,7 +965,9 @@ exports[`Storybook Tests > Components/Administration/TitresTypes > ONF 1`] = `
             </svg></td>
         </tr>
         <tr>
-          <td><span class=\\"cap-first small bold mono mt-s\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></td>
+          <td>
+            <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+          </td>
           <td><span class=\\"small bold cap-first mt-s\\">autorisation d'exploitation</span></td>
           <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
               <use href=\\"#icon-checkbox\\"></use>
@@ -1537,41 +1572,57 @@ exports[`Storybook Tests > Components/Common/Domaine > AllDomaines 1`] = `
     </tr>
     <tr>
       <td>m</td>
-      <td><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></td>
+      <td>
+        <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+      </td>
     </tr>
     <tr>
       <td>c</td>
-      <td><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-c color-bg pill py-xs px-s\\">c</span></span></td>
+      <td>
+        <div class=\\"bg-domaine-c inline-block small bold color-bg pill py-xs px-s mono\\">C</div>
+      </td>
     </tr>
     <tr>
       <td>f</td>
-      <td><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-f color-bg pill py-xs px-s\\">f</span></span></td>
+      <td>
+        <div class=\\"bg-domaine-f inline-block small bold color-bg pill py-xs px-s mono\\">F</div>
+      </td>
     </tr>
     <tr>
       <td>g</td>
-      <td><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-g color-bg pill py-xs px-s\\">g</span></span></td>
+      <td>
+        <div class=\\"bg-domaine-g inline-block small bold color-bg pill py-xs px-s mono\\">G</div>
+      </td>
     </tr>
     <tr>
       <td>h</td>
-      <td><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-h color-bg pill py-xs px-s\\">h</span></span></td>
+      <td>
+        <div class=\\"bg-domaine-h inline-block small bold color-bg pill py-xs px-s mono\\">H</div>
+      </td>
     </tr>
     <tr>
       <td>r</td>
-      <td><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-r color-bg pill py-xs px-s\\">r</span></span></td>
+      <td>
+        <div class=\\"bg-domaine-r inline-block small bold color-bg pill py-xs px-s mono\\">R</div>
+      </td>
     </tr>
     <tr>
       <td>s</td>
-      <td><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-s color-bg pill py-xs px-s\\">s</span></span></td>
+      <td>
+        <div class=\\"bg-domaine-s inline-block small bold color-bg pill py-xs px-s mono\\">S</div>
+      </td>
     </tr>
     <tr>
       <td>w</td>
-      <td><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-w color-bg pill py-xs px-s\\">w</span></span></td>
+      <td>
+        <div class=\\"bg-domaine-w inline-block small bold color-bg pill py-xs px-s mono\\">W</div>
+      </td>
     </tr>
   </table>
 </div>"
 `;
 
-exports[`Storybook Tests > Components/Common/Domaine > Default 1`] = `"<span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span>"`;
+exports[`Storybook Tests > Components/Common/Domaine > Default 1`] = `"<div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>"`;
 
 exports[`Storybook Tests > Components/Common/Filtres/Domaine > AllDomaines 1`] = `
 "<div style=\\"height: 100%; width: 100%; background: white;\\">
@@ -1582,35 +1633,75 @@ exports[`Storybook Tests > Components/Common/Filtres/Domaine > AllDomaines 1`] =
     </tr>
     <tr>
       <td>m</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m </span></span><span class=\\"cap-first h6 bold\\">minéraux et métaux</span></span></td>
+      <td>
+        <div>
+          <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mr-xs mono\\">M </div>
+          <div class=\\"cap-first h6 bold\\">minéraux et métaux</div>
+        </div>
+      </td>
     </tr>
     <tr>
       <td>w</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-w color-bg pill py-xs px-s\\">w </span></span><span class=\\"cap-first h6 bold\\">granulats marins</span></span></td>
+      <td>
+        <div>
+          <div class=\\"bg-domaine-w inline-block small bold color-bg pill py-xs px-s mr-xs mono\\">W </div>
+          <div class=\\"cap-first h6 bold\\">granulats marins</div>
+        </div>
+      </td>
     </tr>
     <tr>
       <td>c</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-c color-bg pill py-xs px-s\\">c </span></span><span class=\\"cap-first h6 bold\\">carrières</span></span></td>
+      <td>
+        <div>
+          <div class=\\"bg-domaine-c inline-block small bold color-bg pill py-xs px-s mr-xs mono\\">C </div>
+          <div class=\\"cap-first h6 bold\\">carrières</div>
+        </div>
+      </td>
     </tr>
     <tr>
       <td>h</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-h color-bg pill py-xs px-s\\">h </span></span><span class=\\"cap-first h6 bold\\">hydrocarbures liquides ou gazeux</span></span></td>
+      <td>
+        <div>
+          <div class=\\"bg-domaine-h inline-block small bold color-bg pill py-xs px-s mr-xs mono\\">H </div>
+          <div class=\\"cap-first h6 bold\\">hydrocarbures liquides ou gazeux</div>
+        </div>
+      </td>
     </tr>
     <tr>
       <td>f</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-f color-bg pill py-xs px-s\\">f </span></span><span class=\\"cap-first h6 bold\\">combustibles fossiles</span></span></td>
+      <td>
+        <div>
+          <div class=\\"bg-domaine-f inline-block small bold color-bg pill py-xs px-s mr-xs mono\\">F </div>
+          <div class=\\"cap-first h6 bold\\">combustibles fossiles</div>
+        </div>
+      </td>
     </tr>
     <tr>
       <td>r</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-r color-bg pill py-xs px-s\\">r </span></span><span class=\\"cap-first h6 bold\\">éléments radioactifs</span></span></td>
+      <td>
+        <div>
+          <div class=\\"bg-domaine-r inline-block small bold color-bg pill py-xs px-s mr-xs mono\\">R </div>
+          <div class=\\"cap-first h6 bold\\">éléments radioactifs</div>
+        </div>
+      </td>
     </tr>
     <tr>
       <td>g</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-g color-bg pill py-xs px-s\\">g </span></span><span class=\\"cap-first h6 bold\\">géothermie</span></span></td>
+      <td>
+        <div>
+          <div class=\\"bg-domaine-g inline-block small bold color-bg pill py-xs px-s mr-xs mono\\">G </div>
+          <div class=\\"cap-first h6 bold\\">géothermie</div>
+        </div>
+      </td>
     </tr>
     <tr>
       <td>s</td>
-      <td><span><span class=\\"cap-first small bold mr-xs mono\\"><span class=\\"bg-domaine-s color-bg pill py-xs px-s\\">s </span></span><span class=\\"cap-first h6 bold\\">stockages souterrains</span></span></td>
+      <td>
+        <div>
+          <div class=\\"bg-domaine-s inline-block small bold color-bg pill py-xs px-s mr-xs mono\\">S </div>
+          <div class=\\"cap-first h6 bold\\">stockages souterrains</div>
+        </div>
+      </td>
     </tr>
   </table>
 </div>"
@@ -1625,27 +1716,39 @@ exports[`Storybook Tests > Components/Common/Filtres/Statuts > AllStatuts 1`] = 
     </tr>
     <tr>
       <td>dmc</td>
-      <td><span class=\\"cap-first small bold inline-block mb-s\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">demande classée</span></span></td>
+      <td>
+        <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s inline-block mb-s\\">Demande classée</div>
+      </td>
     </tr>
     <tr>
       <td>dmi</td>
-      <td><span class=\\"cap-first small bold inline-block mb-s\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></td>
+      <td>
+        <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s inline-block mb-s\\">Demande initiale</div>
+      </td>
     </tr>
     <tr>
       <td>ech</td>
-      <td><span class=\\"cap-first small bold inline-block mb-s\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></td>
+      <td>
+        <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s inline-block mb-s\\">Échu</div>
+      </td>
     </tr>
     <tr>
       <td>ind</td>
-      <td><span class=\\"cap-first small bold inline-block mb-s\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">indéterminé</span></span></td>
+      <td>
+        <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s inline-block mb-s\\">Indéterminé</div>
+      </td>
     </tr>
     <tr>
       <td>mod</td>
-      <td><span class=\\"cap-first small bold inline-block mb-s\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">modification en instance</span></span></td>
+      <td>
+        <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s inline-block mb-s\\">Modification en instance</div>
+      </td>
     </tr>
     <tr>
       <td>val</td>
-      <td><span class=\\"cap-first small bold inline-block mb-s\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">valide</span></span></td>
+      <td>
+        <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s inline-block mb-s\\">Valide</div>
+      </td>
     </tr>
   </table>
 </div>"
@@ -2430,7 +2533,9 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > Ok 1`] = `
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Second Nom de titre</span></div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">permis exclusif de recherches</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-10\\">
               <ul class=\\"list-prefix mb--xs\\">
                 <li class=\\"h6\\">Titulaire3</li>
@@ -2479,7 +2584,9 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > Ok 1`] = `
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">permis exclusif de recherches</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
                 <!--v-if-->
@@ -2498,10 +2605,12 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > Ok 1`] = `
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">third-name</span></div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">permis exclusif de recherches</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if--><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">3</span></span></span>
+                <!--v-if--><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">3</div></span>
               </div>
             </div>
             <div class=\\"td min-width-8\\">
@@ -2516,9 +2625,11 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > Ok 1`] = `
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Quatrième Nom de titre</span></div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-5\\">
-              <div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-error color-bg pill py-xs px-s\\">2</span></span></span><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">8</span></span></span></div>
+              <div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><div class=\\"bg-error inline-block small bold color-bg pill py-xs px-s\\">2</div></span><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">8</div></span></div>
             </div>
             <div class=\\"td min-width-8\\">
               <ul class=\\"list-prefix mb--xs\\">
@@ -2587,7 +2698,9 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > OkWithoutBlockedTitres 1
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">permis exclusif de recherches</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
                 <!--v-if-->
@@ -2606,10 +2719,12 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > OkWithoutBlockedTitres 1
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">third-name</span></div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">permis exclusif de recherches</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if--><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">3</span></span></span>
+                <!--v-if--><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">3</div></span>
               </div>
             </div>
             <div class=\\"td min-width-8\\">
@@ -2624,9 +2739,11 @@ exports[`Storybook Tests > Components/Dashboard/DREAL > OkWithoutBlockedTitres 1
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Quatrième Nom de titre</span></div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-5\\">
-              <div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-error color-bg pill py-xs px-s\\">2</span></span></span><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">8</span></span></span></div>
+              <div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><div class=\\"bg-error inline-block small bold color-bg pill py-xs px-s\\">2</div></span><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">8</div></span></div>
             </div>
             <div class=\\"td min-width-8\\">
               <ul class=\\"list-prefix mb--xs\\">
@@ -2755,12 +2872,16 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > Ok 1`] = `
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Amadis 5</span></div>
-            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\">
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+            </div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">valide</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s\\">Valide</div>
+            </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if--><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">1</span></span></span>
+                <!--v-if--><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">1</div></span>
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -2794,11 +2915,15 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > Ok 1`] = `
             </div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Aachen</span></div>
-            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\">
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+            </div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">concession</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Échu</div>
+            </div>
             <div class=\\"td min-width-5\\">
-              <div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-error color-bg pill py-xs px-s\\">3</span></span></span><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">2</span></span></span></div>
+              <div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><div class=\\"bg-error inline-block small bold color-bg pill py-xs px-s\\">3</div></span><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">2</div></span></div>
             </div>
             <div class=\\"td min-width-6\\">
               <ul class=\\"list-inline mb--xs\\">
@@ -2891,12 +3016,16 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithMultipleEntre
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Amadis 5</span></div>
-            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\">
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+            </div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">valide</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s\\">Valide</div>
+            </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
-                <!--v-if--><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">1</span></span></span>
+                <!--v-if--><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">1</div></span>
               </div>
             </div>
             <div class=\\"td min-width-6\\">
@@ -2930,11 +3059,15 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithMultipleEntre
             </div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Aachen</span></div>
-            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\">
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+            </div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">concession</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Échu</div>
+            </div>
             <div class=\\"td min-width-5\\">
-              <div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-error color-bg pill py-xs px-s\\">3</span></span></span><span class=\\"mr-xs inline-block\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">2</span></span></span></div>
+              <div class=\\"mb--s\\"><span class=\\"mr-xs inline-block\\"><div class=\\"bg-error inline-block small bold color-bg pill py-xs px-s\\">3</div></span><span class=\\"mr-xs inline-block\\"><div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">2</div></span></div>
             </div>
             <div class=\\"td min-width-6\\">
               <ul class=\\"list-inline mb--xs\\">
@@ -3024,9 +3157,13 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithoutActivities
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Amadis 5</span></div>
-            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\">
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+            </div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">valide</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s\\">Valide</div>
+            </div>
             <div class=\\"td min-width-6\\">
               <ul class=\\"list-inline mb--xs\\">
                 <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">or</span></span></li>
@@ -3058,9 +3195,13 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithoutActivities
             </div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Aachen</span></div>
-            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\">
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+            </div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">concession</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Échu</div>
+            </div>
             <div class=\\"td min-width-6\\">
               <ul class=\\"list-inline mb--xs\\">
                 <li class=\\"mr-xs mb-xs\\"><span class=\\"bold cap-first small lh-2\\"><span class=\\"bg-neutral py-xs px-s rnd-xs color-bg box\\">fer</span></span></li>
@@ -3152,9 +3293,13 @@ exports[`Storybook Tests > Components/Dashboard/Entreprise > OkWithoutFiscalite 
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Amadis 5</span></div>
-            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-w color-bg pill py-xs px-s\\">w</span></span></div>
+            <div class=\\"td \\">
+              <div class=\\"bg-domaine-w inline-block small bold color-bg pill py-xs px-s mono\\">W</div>
+            </div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de prospections préalables</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">valide</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s\\">Valide</div>
+            </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
                 <!--v-if-->
@@ -3271,7 +3416,9 @@ exports[`Storybook Tests > Components/Dashboard/ONF > Ok 1`] = `
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-8\\">
               <ul class=\\"list-prefix mb--xs\\"></ul>
             </div>
@@ -3285,7 +3432,9 @@ exports[`Storybook Tests > Components/Dashboard/ONF > Ok 1`] = `
             </div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Second Nom de titre</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-8\\">
               <ul class=\\"list-prefix mb--xs\\">
                 <li class=\\"h6\\">ONF : 2010-001</li>
@@ -3302,7 +3451,9 @@ exports[`Storybook Tests > Components/Dashboard/ONF > Ok 1`] = `
             </div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Quatrième Nom de titre</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-8\\">
               <ul class=\\"list-prefix mb--xs\\">
                 <li class=\\"h6\\">ONF : 2010-001</li>
@@ -3353,7 +3504,9 @@ exports[`Storybook Tests > Components/Dashboard/ONF > Ok 1`] = `
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">third-name</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-8\\">
               <ul class=\\"list-prefix mb--xs\\"></ul>
             </div>
@@ -3423,7 +3576,9 @@ exports[`Storybook Tests > Components/Dashboard/ONF > OkSansAttenteDeONF 1`] = `
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-8\\">
               <ul class=\\"list-prefix mb--xs\\"></ul>
             </div>
@@ -3444,7 +3599,9 @@ exports[`Storybook Tests > Components/Dashboard/ONF > OkSansAttenteDeONF 1`] = `
             <div class=\\"td \\"><span class=\\"\\"></span></div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Second Nom de titre</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-8\\">
               <ul class=\\"list-prefix mb--xs\\">
                 <li class=\\"h6\\">ONF : 2010-001</li>
@@ -3468,7 +3625,9 @@ exports[`Storybook Tests > Components/Dashboard/ONF > OkSansAttenteDeONF 1`] = `
             <div class=\\"td \\"><span class=\\"\\">19</span></div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">third-name</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-8\\">
               <ul class=\\"list-prefix mb--xs\\"></ul>
             </div>
@@ -3489,7 +3648,9 @@ exports[`Storybook Tests > Components/Dashboard/ONF > OkSansAttenteDeONF 1`] = `
             <div class=\\"td \\"><span class=\\"\\"></span></div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Quatrième Nom de titre</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-8\\">
               <ul class=\\"list-prefix mb--xs\\">
                 <li class=\\"h6\\">ONF : 2010-001</li>
@@ -3576,7 +3737,9 @@ exports[`Storybook Tests > Components/Dashboard/PTMG > Ok 1`] = `
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">first-name</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-8\\">
               <ul class=\\"list-prefix mb--xs\\"></ul>
             </div>
@@ -3587,7 +3750,9 @@ exports[`Storybook Tests > Components/Dashboard/PTMG > Ok 1`] = `
             </div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Second Nom de titre</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-8\\">
               <ul class=\\"list-prefix mb--xs\\">
                 <li class=\\"h6\\">PTMG : 2010-001</li>
@@ -3601,7 +3766,9 @@ exports[`Storybook Tests > Components/Dashboard/PTMG > Ok 1`] = `
             </div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Quatrième Nom de titre</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-8\\">
               <ul class=\\"list-prefix mb--xs\\">
                 <li class=\\"h6\\">PTMG : 2010-001</li>
@@ -3637,7 +3804,9 @@ exports[`Storybook Tests > Components/Dashboard/PTMG > Ok 1`] = `
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">third-name</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+            </div>
             <div class=\\"td min-width-8\\">
               <ul class=\\"list-prefix mb--xs\\"></ul>
             </div>
@@ -3944,9 +4113,13 @@ exports[`Storybook Tests > Components/Entreprise > Complet 1`] = `
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Nom titre 3</span></div>
-            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\">
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+            </div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Échu</div>
+            </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
                 <!--v-if-->
@@ -3983,9 +4156,13 @@ exports[`Storybook Tests > Components/Entreprise > Complet 1`] = `
             </div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">NomTitre</span></div>
-            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\">
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+            </div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Échu</div>
+            </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
                 <!--v-if-->
@@ -4024,9 +4201,13 @@ exports[`Storybook Tests > Components/Entreprise > Complet 1`] = `
             </div>
           </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">titre 1 nom</span></div>
-            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\">
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+            </div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Échu</div>
+            </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
                 <!--v-if-->
@@ -4109,9 +4290,13 @@ exports[`Storybook Tests > Components/Entreprise > Complet 1`] = `
               </button></div>
           </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
             <div class=\\"td min-width-8\\"><span class=\\"bold\\">Nom titre 3</span></div>
-            <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+            <div class=\\"td \\">
+              <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+            </div>
             <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">autorisation de recherches</span></div>
-            <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">échu</span></span></div>
+            <div class=\\"td nowrap min-width-5\\">
+              <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Échu</div>
+            </div>
             <div class=\\"td min-width-5\\">
               <div class=\\"mb--s\\">
                 <!--v-if-->
@@ -6794,8 +6979,12 @@ exports[`Storybook Tests > Components/Titre/Infos > Default 1`] = `
 "<div class=\\"desktop-blobs\\">
   <div class=\\"desktop-blob-1-2\\">
     <div class=\\"rnd-b-s bg-alt pt px overflow-auto\\">
-      <h4 class=\\"mb\\"><span class=\\"cap-first small bold mono mr-s\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span><span class=\\"cap-first\\">autorisation de recherches</span></h4>
-      <div class=\\"mb\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">valide</span></span></div>
+      <h4 class=\\"mb\\">
+        <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mr-s\\">M</div><span class=\\"cap-first\\">autorisation de recherches</span>
+      </h4>
+      <div class=\\"mb\\">
+        <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s\\">Valide</div>
+      </div>
       <div class=\\"mb bg-bg mx--m px-m pt-xs pb-s rnd-xs\\">
         <table class=\\"table-xxs full-x mb-0\\">
           <tr>
@@ -6910,8 +7099,12 @@ exports[`Storybook Tests > Components/Titre/Infos > Empty 1`] = `
 "<div class=\\"desktop-blobs\\">
   <div class=\\"desktop-blob-1-2\\">
     <div class=\\"rnd-b-s bg-alt pt px overflow-auto\\">
-      <h4 class=\\"mb\\"><span class=\\"cap-first small bold mono mr-s\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span><span class=\\"cap-first\\">autorisation de recherches</span></h4>
-      <div class=\\"mb\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">demande initiale</span></span></div>
+      <h4 class=\\"mb\\">
+        <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mr-s\\">M</div><span class=\\"cap-first\\">autorisation de recherches</span>
+      </h4>
+      <div class=\\"mb\\">
+        <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale</div>
+      </div>
       <!---->
       <!---->
     </div>
@@ -7376,24 +7569,6 @@ exports[`Storybook Tests > Components/UI/InputDate > WithDateAlreadySet 1`] = `
 </div>"
 `;
 
-exports[`Storybook Tests > Components/UI/Loader > All 1`] = `
-"<div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div class=\\"spinner\\" data-v-b0094f72=\\"\\"></div>
-  </div>
-  <div class=\\"top-level\\" style=\\"\\" data-v-b0094f72=\\"\\">La valeur de l’item est : chargé</div>
-  <div class=\\"top-level\\" style=\\"display: flex; justify-content: center;\\" data-v-b0094f72=\\"\\">
-    <div data-v-b0094f72=\\"\\">
-      <div class=\\"_tooltip_4f6ea8\\" data-v-b0094f72=\\"\\">
-        <h6 class=\\"_tooltip-content_4f6ea8\\">Erreur</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-          <use href=\\"#icon-error-warning\\"></use>
-        </svg>
-      </div>
-    </div>
-  </div>
-</div>"
-`;
-
 exports[`Storybook Tests > Components/UI/Popup > Main 1`] = `
 "<div class=\\"absolute full bg-inverse-alpha z-2\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
@@ -7469,75 +7644,123 @@ exports[`Storybook Tests > Components/UI/Table > PaginationSimple 1`] = `
             </button></div>
         </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
           <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_0</span></div>
-          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td \\">
+            <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+          </div>
           <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 0</span></span></div>
+          <div class=\\"td nowrap min-width-5\\">
+            <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 0</div>
+          </div>
           <div class=\\"td \\"><span class=\\"\\">Test value 0</span></div>
         </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
           <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_1</span></div>
-          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td \\">
+            <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+          </div>
           <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 1</span></span></div>
+          <div class=\\"td nowrap min-width-5\\">
+            <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 1</div>
+          </div>
           <div class=\\"td \\"><span class=\\"\\">Test value 1</span></div>
         </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
           <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_2</span></div>
-          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td \\">
+            <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+          </div>
           <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 2</span></span></div>
+          <div class=\\"td nowrap min-width-5\\">
+            <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 2</div>
+          </div>
           <div class=\\"td \\"><span class=\\"\\">Test value 2</span></div>
         </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
           <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_3</span></div>
-          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td \\">
+            <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+          </div>
           <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 3</span></span></div>
+          <div class=\\"td nowrap min-width-5\\">
+            <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 3</div>
+          </div>
           <div class=\\"td \\"><span class=\\"\\">Test value 3</span></div>
         </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
           <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_4</span></div>
-          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td \\">
+            <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+          </div>
           <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 4</span></span></div>
+          <div class=\\"td nowrap min-width-5\\">
+            <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 4</div>
+          </div>
           <div class=\\"td \\"><span class=\\"\\">Test value 4</span></div>
         </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
           <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_5</span></div>
-          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td \\">
+            <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+          </div>
           <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 5</span></span></div>
+          <div class=\\"td nowrap min-width-5\\">
+            <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 5</div>
+          </div>
           <div class=\\"td \\"><span class=\\"\\">Test value 5</span></div>
         </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
           <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_6</span></div>
-          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td \\">
+            <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+          </div>
           <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 6</span></span></div>
+          <div class=\\"td nowrap min-width-5\\">
+            <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 6</div>
+          </div>
           <div class=\\"td \\"><span class=\\"\\">Test value 6</span></div>
         </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
           <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_7</span></div>
-          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td \\">
+            <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+          </div>
           <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 7</span></span></div>
+          <div class=\\"td nowrap min-width-5\\">
+            <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 7</div>
+          </div>
           <div class=\\"td \\"><span class=\\"\\">Test value 7</span></div>
         </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
           <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_8</span></div>
-          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td \\">
+            <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+          </div>
           <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 8</span></span></div>
+          <div class=\\"td nowrap min-width-5\\">
+            <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 8</div>
+          </div>
           <div class=\\"td \\"><span class=\\"\\">Test value 8</span></div>
         </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
           <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_9</span></div>
-          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td \\">
+            <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+          </div>
           <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 9</span></span></div>
+          <div class=\\"td nowrap min-width-5\\">
+            <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 9</div>
+          </div>
           <div class=\\"td \\"><span class=\\"\\">Test value 9</span></div>
         </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
           <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_10</span></div>
-          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td \\">
+            <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+          </div>
           <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 10</span></span></div>
+          <div class=\\"td nowrap min-width-5\\">
+            <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 10</div>
+          </div>
           <div class=\\"td \\"><span class=\\"\\">Test value 10</span></div>
         </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
           <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_11</span></div>
-          <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+          <div class=\\"td \\">
+            <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+          </div>
           <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-          <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 11</span></span></div>
+          <div class=\\"td nowrap min-width-5\\">
+            <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 11</div>
+          </div>
           <div class=\\"td \\"><span class=\\"\\">Test value 11</span></div>
         </a>
       </div>
@@ -7609,27 +7832,43 @@ exports[`Storybook Tests > Components/UI/Table > Simple 1`] = `
           </button></div>
       </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_0</span></div>
-        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\">
+          <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+        </div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 0</span></span></div>
+        <div class=\\"td nowrap min-width-5\\">
+          <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 0</div>
+        </div>
         <div class=\\"td \\"><span class=\\"\\">Test value 0</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_1</span></div>
-        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\">
+          <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+        </div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 1</span></span></div>
+        <div class=\\"td nowrap min-width-5\\">
+          <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 1</div>
+        </div>
         <div class=\\"td \\"><span class=\\"\\">Test value 1</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_2</span></div>
-        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\">
+          <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+        </div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 2</span></span></div>
+        <div class=\\"td nowrap min-width-5\\">
+          <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 2</div>
+        </div>
         <div class=\\"td \\"><span class=\\"\\">Test value 2</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_3</span></div>
-        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\">
+          <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+        </div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 3</span></span></div>
+        <div class=\\"td nowrap min-width-5\\">
+          <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 3</div>
+        </div>
         <div class=\\"td \\"><span class=\\"\\">Test value 3</span></div>
       </a>
     </div>
@@ -7659,27 +7898,43 @@ exports[`Storybook Tests > Components/UI/Table > TableAutoSimple 1`] = `
           </button></div>
       </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_0</span></div>
-        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\">
+          <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+        </div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 0</span></span></div>
+        <div class=\\"td nowrap min-width-5\\">
+          <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 0</div>
+        </div>
         <div class=\\"td \\"><span class=\\"\\">Test value 0</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_1</span></div>
-        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\">
+          <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+        </div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 1</span></span></div>
+        <div class=\\"td nowrap min-width-5\\">
+          <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 1</div>
+        </div>
         <div class=\\"td \\"><span class=\\"\\">Test value 1</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_2</span></div>
-        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\">
+          <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+        </div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 2</span></span></div>
+        <div class=\\"td nowrap min-width-5\\">
+          <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 2</div>
+        </div>
         <div class=\\"td \\"><span class=\\"\\">Test value 2</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_3</span></div>
-        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\">
+          <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+        </div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 3</span></span></div>
+        <div class=\\"td nowrap min-width-5\\">
+          <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 3</div>
+        </div>
         <div class=\\"td \\"><span class=\\"\\">Test value 3</span></div>
       </a>
     </div>
@@ -7709,27 +7964,43 @@ exports[`Storybook Tests > Components/UI/Table > TableAutoSortedByStatusAsc 1`] 
           </button></div>
       </div><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_3</span></div>
-        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\">
+          <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+        </div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 3</span></span></div>
+        <div class=\\"td nowrap min-width-5\\">
+          <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 3</div>
+        </div>
         <div class=\\"td \\"><span class=\\"\\">Test value 3</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_2</span></div>
-        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\">
+          <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+        </div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 2</span></span></div>
+        <div class=\\"td nowrap min-width-5\\">
+          <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 2</div>
+        </div>
         <div class=\\"td \\"><span class=\\"\\">Test value 2</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_1</span></div>
-        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\">
+          <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+        </div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 1</span></span></div>
+        <div class=\\"td nowrap min-width-5\\">
+          <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 1</div>
+        </div>
         <div class=\\"td \\"><span class=\\"\\">Test value 1</span></div>
       </a><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"tr tr-link text-decoration-none\\">
         <div class=\\"td min-width-8\\"><span class=\\"bold\\">220222_0</span></div>
-        <div class=\\"td \\"><span class=\\"cap-first small bold mono\\"><span class=\\"bg-domaine-m color-bg pill py-xs px-s\\">m</span></span></div>
+        <div class=\\"td \\">
+          <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
+        </div>
         <div class=\\"td min-width-8\\"><span class=\\"small bold cap-first\\">Autorisation de recherches</span></div>
-        <div class=\\"td nowrap min-width-5\\"><span class=\\"cap-first small bold\\"><span class=\\"bg-warning color-bg pill py-xs px-s\\">Demande initiale 0</span></span></div>
+        <div class=\\"td nowrap min-width-5\\">
+          <div class=\\"bg-warning inline-block small bold color-bg pill py-xs px-s\\">Demande initiale 0</div>
+        </div>
         <div class=\\"td \\"><span class=\\"\\">Test value 0</span></div>
       </a>
     </div>
@@ -8115,9 +8386,9 @@ exports[`Storybook Tests > Components/Ui/InputAutocomplete > Default 1`] = `
 </div>"
 `;
 
-exports[`Storybook Tests > Components/Ui/Pill > Error 1`] = `"<span class=\\"cap-first small bold\\"><span class=\\"bg-error color-bg pill py-xs px-s\\">Hello</span></span>"`;
+exports[`Storybook Tests > Components/Ui/Pill > Error 1`] = `"<div class=\\"bg-error inline-block small bold color-bg pill py-xs px-s\\">Hello</div>"`;
 
-exports[`Storybook Tests > Components/Ui/Pill > Primary 1`] = `"<span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">Hello</span></span>"`;
+exports[`Storybook Tests > Components/Ui/Pill > Primary 1`] = `"<div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Hello</div>"`;
 
 exports[`Storybook Tests > Components/User/Button > Connected 1`] = `"<div class=\\"flex\\"><button id=\\"cmn-user-button-menu\\" class=\\"btn-menu text-decoration-none bold p-0\\" aria-label=\\"profil utilisateur\\">prenom Nom</button></div>"`;
 
@@ -8140,9 +8411,7 @@ exports[`Storybook Tests > Components/Utilisateur > AnotherUser 1`] = `
       <div class=\\"py-s px-m\\"><span> Profil </span></div>
       <div class=\\"overflow-hidden flex flex-end flex-right\\">
         <div class=\\"\\" style=\\"\\">
-          <!----><button id=\\"cmn-utilisateur-button-popup-editer\\" class=\\"btn-alt py-s px-m\\" title=\\"modifier le compte utilisateur\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-              <use href=\\"#icon-pencil\\"></use>
-            </svg></button><button id=\\"cmn-utilisateur-button-popup-supprimer\\" class=\\"btn-alt py-s px-m\\" title=\\"supprimer le compte utilisateur\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"delete\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <!----><button id=\\"cmn-utilisateur-button-popup-supprimer\\" class=\\"btn-alt py-s px-m\\" title=\\"supprimer le compte utilisateur\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"delete\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
               <use href=\\"#icon-delete\\"></use>
             </svg></button>
           <!---->
@@ -8205,25 +8474,25 @@ exports[`Storybook Tests > Components/Utilisateur > AnotherUser 1`] = `
         </div>
       </div>
       <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Permissions</h5>
+        <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
+          <h5>Rôles</h5>
         </div>
-        <div class=\\"\\" style=\\"\\"><span class=\\"cap-first small bold mb\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">super</span></span>
-          <!---->
-          <!---->
+        <div class=\\"tablet-blob-3-4\\">
+          <div class=\\"\\" style=\\"display: flex; flex-direction: row; align-content: center; align-items: center;\\">
+            <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Super</div> <button class=\\"btn-alt p-xs rnd-s\\" title=\\"modifie les permissions\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                <use href=\\"#icon-pencil\\"></use>
+              </svg></button>
+            <!---->
+            <!---->
+          </div>
         </div>
       </div>
-      <div class=\\"\\" style=\\"\\">
-        <!---->
-        <!---->
-        <!---->
-        <!---->
-      </div>
+      <!---->
+      <!---->
       <!---->
     </div>
     <!--v-if-->
   </div>
-  <!---->
   <!---->
 </div>"
 `;
@@ -8306,20 +8575,19 @@ exports[`Storybook Tests > Components/Utilisateur > Loading 1`] = `
         </div>
       </div>
       <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Permissions</h5>
+        <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
+          <h5>Rôles</h5>
         </div>
-        <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
-          <!---->
-          <!---->
-          <div class=\\"_spinner_3306d0\\"></div>
+        <div class=\\"tablet-blob-3-4\\">
+          <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center; flex-direction: row; align-content: center; align-items: center;\\">
+            <!---->
+            <!---->
+            <div class=\\"_spinner_3306d0\\"></div>
+          </div>
         </div>
       </div>
-      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
-        <!---->
-        <!---->
-        <div class=\\"_spinner_3306d0\\"></div>
-      </div>
+      <!---->
+      <!---->
       <div class=\\"tablet-blobs\\">
         <div class=\\"tablet-blob-1-4\\">
           <h5>Newsletter</h5>
@@ -8345,7 +8613,6 @@ exports[`Storybook Tests > Components/Utilisateur > Loading 1`] = `
     <!--v-if-->
   </div>
   <!---->
-  <!---->
 </div>"
 `;
 
@@ -8366,8 +8633,6 @@ exports[`Storybook Tests > Components/Utilisateur > MySelf 1`] = `
       <div class=\\"overflow-hidden flex flex-end flex-right\\">
         <div class=\\"\\" style=\\"\\"><button class=\\"btn-alt py-s px-m\\" title=\\"changer de mot de passe\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"key\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
               <use href=\\"#icon-key\\"></use>
-            </svg></button><button id=\\"cmn-utilisateur-button-popup-editer\\" class=\\"btn-alt py-s px-m\\" title=\\"modifier le compte utilisateur\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-              <use href=\\"#icon-pencil\\"></use>
             </svg></button><button id=\\"cmn-utilisateur-button-popup-supprimer\\" class=\\"btn-alt py-s px-m\\" title=\\"supprimer le compte utilisateur\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"delete\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
               <use href=\\"#icon-delete\\"></use>
             </svg></button>
@@ -8431,20 +8696,20 @@ exports[`Storybook Tests > Components/Utilisateur > MySelf 1`] = `
         </div>
       </div>
       <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Permissions</h5>
+        <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
+          <h5>Rôles</h5>
         </div>
-        <div class=\\"\\" style=\\"\\"><span class=\\"cap-first small bold mb\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">super</span></span>
-          <!---->
-          <!---->
+        <div class=\\"tablet-blob-3-4\\">
+          <div class=\\"\\" style=\\"display: flex; flex-direction: row; align-content: center; align-items: center;\\">
+            <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Super</div>
+            <!---->
+            <!---->
+            <!---->
+          </div>
         </div>
       </div>
-      <div class=\\"\\" style=\\"\\">
-        <!---->
-        <!---->
-        <!---->
-        <!---->
-      </div>
+      <!---->
+      <!---->
       <div class=\\"tablet-blobs\\">
         <div class=\\"tablet-blob-1-4\\">
           <h5>Newsletter</h5>
@@ -8468,7 +8733,6 @@ exports[`Storybook Tests > Components/Utilisateur > MySelf 1`] = `
     </div>
     <!--v-if-->
   </div>
-  <!---->
   <!---->
 </div>"
 `;
@@ -8594,194 +8858,30 @@ exports[`Storybook Tests > Components/Utilisateur > error 1`] = `
         </div>
       </div>
       <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-4\\">
-          <h5>Permissions</h5>
+        <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
+          <h5>Rôles</h5>
         </div>
-        <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
-          <!---->
-          <div>
-            <div class=\\"_tooltip_4f6ea8\\">
-              <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-                <use href=\\"#icon-error-warning\\"></use>
-              </svg>
+        <div class=\\"tablet-blob-3-4\\">
+          <div class=\\"\\" style=\\"display: flex; justify-content: center; flex-direction: row; align-content: center; align-items: center;\\">
+            <!---->
+            <div>
+              <div class=\\"_tooltip_4f6ea8\\">
+                <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                  <use href=\\"#icon-error-warning\\"></use>
+                </svg>
+              </div>
             </div>
-          </div>
-          <!---->
-        </div>
-      </div>
-      <div class=\\"\\" style=\\"display: flex; justify-content: center;\\">
-        <!---->
-        <div>
-          <div class=\\"_tooltip_4f6ea8\\">
-            <h6 class=\\"_tooltip-content_4f6ea8\\">Cassé</h6><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"error-warning\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
-              <use href=\\"#icon-error-warning\\"></use>
-            </svg>
+            <!---->
           </div>
         </div>
-        <!---->
       </div>
+      <!---->
+      <!---->
       <!---->
     </div>
     <!--v-if-->
   </div>
   <!---->
-  <!---->
-</div>"
-`;
-
-exports[`Storybook Tests > Components/Utilisateur/EditPopup > AdminEditLecteur 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\">
-  <div class=\\"popup fixed shadow full bg-bg\\">
-    <div class=\\"popup-header px-l pt-l\\">
-      <h2>Modification du compte email@gmail.fr</h2>
-    </div>
-    <div class=\\"popup-content px-l pt\\">
-      <div>
-        <div class=\\"tablet-blobs\\">
-          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
-            <h5>Téléphone fixe</h5>
-          </div>
-          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
-        </div>
-        <hr>
-        <div class=\\"tablet-blobs\\">
-          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
-            <h5>Téléphone mobile</h5>
-          </div>
-          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
-        </div>
-        <!---->
-      </div>
-    </div>
-    <div class=\\"popup-footer px-l pt pb-l\\">
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
-        <div class=\\"tablet-blob-2-3\\">
-          <div class=\\"\\" style=\\"\\"><button class=\\" btn btn-primary\\">Enregistrer</button>
-            <!---->
-            <!---->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>"
-`;
-
-exports[`Storybook Tests > Components/Utilisateur/EditPopup > SuperEditDefaut 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\">
-  <div class=\\"popup fixed shadow full bg-bg\\">
-    <div class=\\"popup-header px-l pt-l\\">
-      <h2>Modification du compte email@gmail.fr</h2>
-    </div>
-    <div class=\\"popup-content px-l pt\\">
-      <div>
-        <div class=\\"tablet-blobs\\">
-          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
-            <h5>Téléphone fixe</h5>
-          </div>
-          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
-        </div>
-        <hr>
-        <div class=\\"tablet-blobs\\">
-          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
-            <h5>Téléphone mobile</h5>
-          </div>
-          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
-        </div>
-        <!---->
-      </div>
-    </div>
-    <div class=\\"popup-footer px-l pt pb-l\\">
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
-        <div class=\\"tablet-blob-2-3\\">
-          <div class=\\"\\" style=\\"\\"><button class=\\" btn btn-primary\\">Enregistrer</button>
-            <!---->
-            <!---->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>"
-`;
-
-exports[`Storybook Tests > Components/Utilisateur/EditPopup > SuperEditEntreprise 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\">
-  <div class=\\"popup fixed shadow full bg-bg\\">
-    <div class=\\"popup-header px-l pt-l\\">
-      <h2>Modification du compte email@gmail.fr</h2>
-    </div>
-    <div class=\\"popup-content px-l pt\\">
-      <div>
-        <div class=\\"tablet-blobs\\">
-          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
-            <h5>Téléphone fixe</h5>
-          </div>
-          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
-        </div>
-        <hr>
-        <div class=\\"tablet-blobs\\">
-          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
-            <h5>Téléphone mobile</h5>
-          </div>
-          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
-        </div>
-        <!---->
-      </div>
-    </div>
-    <div class=\\"popup-footer px-l pt pb-l\\">
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
-        <div class=\\"tablet-blob-2-3\\">
-          <div class=\\"\\" style=\\"\\"><button class=\\" btn btn-primary\\">Enregistrer</button>
-            <!---->
-            <!---->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>"
-`;
-
-exports[`Storybook Tests > Components/Utilisateur/EditPopup > SuperEditLecteur 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\">
-  <div class=\\"popup fixed shadow full bg-bg\\">
-    <div class=\\"popup-header px-l pt-l\\">
-      <h2>Modification du compte email@gmail.fr</h2>
-    </div>
-    <div class=\\"popup-content px-l pt\\">
-      <div>
-        <div class=\\"tablet-blobs\\">
-          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
-            <h5>Téléphone fixe</h5>
-          </div>
-          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
-        </div>
-        <hr>
-        <div class=\\"tablet-blobs\\">
-          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
-            <h5>Téléphone mobile</h5>
-          </div>
-          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" class=\\"p-s\\" placeholder=\\"0100000000\\"></div>
-        </div>
-        <!---->
-      </div>
-    </div>
-    <div class=\\"popup-footer px-l pt pb-l\\">
-      <div class=\\"tablet-blobs\\">
-        <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
-        <div class=\\"tablet-blob-2-3\\">
-          <div class=\\"\\" style=\\"\\"><button class=\\" btn btn-primary\\">Enregistrer</button>
-            <!---->
-            <!---->
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>"
 `;
 
@@ -8791,8 +8891,10 @@ exports[`Storybook Tests > Components/Utilisateur/Permissions > Default 1`] = `
     <h5>Rôles</h5>
   </div>
   <div class=\\"tablet-blob-3-4\\">
-    <div class=\\"\\" style=\\"display: flex; justify-content: center; flex-direction: row; align-content: center; align-items: center;\\">
-      <!---->
+    <div class=\\"\\" style=\\"display: flex; flex-direction: row; align-content: center; align-items: center;\\">
+      <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Defaut</div> <button class=\\"btn-alt p-xs rnd-s\\" title=\\"modifie les permissions\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <use href=\\"#icon-pencil\\"></use>
+        </svg></button>
       <!---->
       <!---->
     </div>
@@ -8806,11 +8908,27 @@ exports[`Storybook Tests > Components/Utilisateur/Permissions > Entreprise 1`] =
     <h5>Rôles</h5>
   </div>
   <div class=\\"tablet-blob-3-4\\">
-    <div class=\\"\\" style=\\"display: flex; justify-content: center; flex-direction: row; align-content: center; align-items: center;\\">
-      <!---->
+    <div class=\\"\\" style=\\"display: flex; flex-direction: row; align-content: center; align-items: center;\\">
+      <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Entreprise</div> <button class=\\"btn-alt p-xs rnd-s\\" title=\\"modifie les permissions\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <use href=\\"#icon-pencil\\"></use>
+        </svg></button>
       <!---->
       <!---->
     </div>
+  </div>
+</div>
+<div class=\\"tablet-blobs\\">
+  <div class=\\"tablet-blob-1-4\\">
+    <h5>Entreprise</h5>
+  </div>
+  <div>
+    <ul class=\\"list-inline\\">
+      <div class=\\"\\" style=\\"\\">
+        <li class=\\"mb-xs\\"><a type=\\"primary\\" to=\\"[object Object]\\" class=\\"btn-border small p-s rnd-xs mr-xs\\">Nom entreprise</a></li>
+        <!---->
+        <!---->
+      </div>
+    </ul>
   </div>
 </div>"
 `;
@@ -8821,11 +8939,27 @@ exports[`Storybook Tests > Components/Utilisateur/Permissions > EntrepriseLoadin
     <h5>Rôles</h5>
   </div>
   <div class=\\"tablet-blob-3-4\\">
-    <div class=\\"\\" style=\\"display: flex; justify-content: center; flex-direction: row; align-content: center; align-items: center;\\">
-      <!---->
+    <div class=\\"\\" style=\\"display: flex; flex-direction: row; align-content: center; align-items: center;\\">
+      <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Entreprise</div> <button class=\\"btn-alt p-xs rnd-s\\" title=\\"modifie les permissions\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <use href=\\"#icon-pencil\\"></use>
+        </svg></button>
       <!---->
       <!---->
     </div>
+  </div>
+</div>
+<div class=\\"tablet-blobs\\">
+  <div class=\\"tablet-blob-1-4\\">
+    <h5>Entreprise</h5>
+  </div>
+  <div>
+    <ul class=\\"list-inline\\">
+      <div class=\\"_top-level_3306d0\\" style=\\"display: flex; justify-content: center;\\">
+        <!---->
+        <!---->
+        <div class=\\"_spinner_3306d0\\"></div>
+      </div>
+    </ul>
   </div>
 </div>"
 `;
@@ -8836,8 +8970,10 @@ exports[`Storybook Tests > Components/Utilisateur/Permissions > UserAdminCanEdit
     <h5>Rôles</h5>
   </div>
   <div class=\\"tablet-blob-3-4\\">
-    <div class=\\"\\" style=\\"display: flex; justify-content: center; flex-direction: row; align-content: center; align-items: center;\\">
-      <!---->
+    <div class=\\"\\" style=\\"display: flex; flex-direction: row; align-content: center; align-items: center;\\">
+      <div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Defaut</div> <button class=\\"btn-alt p-xs rnd-s\\" title=\\"modifie les permissions\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+          <use href=\\"#icon-pencil\\"></use>
+        </svg></button>
       <!---->
       <!---->
     </div>
@@ -9381,9 +9517,9 @@ exports[`Storybook Tests > Components/common/SectionElement > Text 1`] = `
 </div>"
 `;
 
-exports[`Storybook Tests > Components/common/Statut > Default 1`] = `"<span class=\\"cap-first small bold\\"><span class=\\"bg-neutral color-bg pill py-xs px-s\\">indéfini</span></span>"`;
+exports[`Storybook Tests > Components/common/Statut > Default 1`] = `"<div class=\\"bg-neutral inline-block small bold color-bg pill py-xs px-s\\">Indéfini</div>"`;
 
-exports[`Storybook Tests > Components/common/Statut > WithColor 1`] = `"<span class=\\"cap-first small bold\\"><span class=\\"bg-success color-bg pill py-xs px-s\\">Mon statut</span></span>"`;
+exports[`Storybook Tests > Components/common/Statut > WithColor 1`] = `"<div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s\\">Mon statut</div>"`;
 
 exports[`Storybook Tests > Components/common/TitreTypeSelect > Default 1`] = `
 "<div>
