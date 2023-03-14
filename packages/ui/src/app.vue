@@ -6,11 +6,7 @@
       <component :is="menu.component" v-if="menu.component" />
     </Transition>
 
-    <header class="header">
-      <div class="container">
-        <Header :loaded="loaded" />
-      </div>
-    </header>
+    <Header :loaded="loaded" :user="user" :routeName="route.name" />
 
     <main class="main">
       <div class="container">
@@ -63,9 +59,11 @@ import { IconSprite } from './components/_ui/iconSprite'
 import { Error } from './components/error'
 import { computed, inject } from 'vue'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 
 const store = useStore()
 const matomo = inject('matomo', null)
+const route = useRoute()
 
 const user = computed(() => store.state.user.element)
 
