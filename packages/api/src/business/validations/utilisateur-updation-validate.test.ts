@@ -57,7 +57,7 @@ test('utilisateurUpdationValidate privilege escalation forbidden', () => {
   ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants"')
 })
 
-test.only('utilisateurUpdationValidate incorrect users throw error', () => {
+test('utilisateurUpdationValidate incorrect users throw error', () => {
   expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'super', administrationId: null, entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
     '"l\'utilisateur n\'existe pas"'
   )
