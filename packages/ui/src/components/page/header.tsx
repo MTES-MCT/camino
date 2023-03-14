@@ -1,5 +1,5 @@
-import { computed, defineComponent } from 'vue'
-import UserButton from '../user/button.vue'
+import { computed } from 'vue'
+import { Button } from '../user/button'
 import { MenuButton } from '../menu/button'
 import { QuickAccessTitre } from '@/components/page/quick-access-titre'
 import { useStore } from 'vuex'
@@ -41,7 +41,7 @@ export const Header = caminoDefineComponent<Props>(['loaded'], props => {
           <div class="flex-right">
             <div class="mt-m tablet-mb-m flex">
               <div class="ml-xs flex">
-                <UserButton />
+                <Button />
               </div>
               <div class="ml-xs">
                 <MenuButton />

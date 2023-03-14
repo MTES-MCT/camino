@@ -1,6 +1,5 @@
 import { createStore } from 'vuex'
 import { createApp } from 'vue'
-import * as api from '../api/utilisateurs'
 import { fetchWithJson } from '../api/client-rest'
 import user from './user'
 

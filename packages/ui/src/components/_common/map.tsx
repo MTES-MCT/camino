@@ -5,7 +5,6 @@ import { leafletMarkerBuild, leafletGeojsonBuild, leafletDivIconBuild } from '..
 import { Icon } from '@/components/_ui/icon'
 import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { GeoJsonObject } from 'geojson'
-import { useRoute } from 'vue-router'
 import { LatLngTuple, Marker } from 'leaflet'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
@@ -24,8 +23,6 @@ export const CamionCommonMap = caminoDefineComponent<Props>(['geojson', 'points'
   const isMain = computed(() => props.isMain ?? false)
 
   const points = computed(() => props.points ?? [])
-
-  const route = useRoute()
 
   const centrer = () => {
     map.value?.boundsFit(bounds.value)

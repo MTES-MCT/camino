@@ -1,5 +1,5 @@
 import { Pill } from '@/components/_ui/pill'
-import { Domaine, Domaines } from 'camino-common/src/static/domaines'
+import { Domaine } from 'camino-common/src/static/domaines'
 
 export interface Props {
   // TODO 2023-01-03 utilisé dans les filters.js avec des markraw, assez sale, à renommer
