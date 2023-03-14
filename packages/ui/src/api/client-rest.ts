@@ -1,4 +1,4 @@
-import { CaminoRestRoute, ALL_CAMINO_REST_ROUTES, getRestRoute, ParseUrlParams } from 'camino-common/src/rest'
+import { CaminoRestRoute, getRestRoute, ParseUrlParams } from 'camino-common/src/rest'
 
 type Loading = { status: 'LOADING' }
 type Error = { status: 'ERROR'; message: string }
