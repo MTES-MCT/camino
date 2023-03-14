@@ -76,7 +76,7 @@ export const deleteUtilisateur = async (req: express.Request<{ id?: string }>, r
     try {
       const utilisateur = await utilisateurGet(req.params.id, { fields: { id: {} } }, user)
       if (!utilisateur) {
-        throw new Error('aucun utilisateur avec cet id')
+        throw new Error('aucun utilisateur avec cet id ou droits insuffisants pour voir cet utilisateur')
       }
 
       if (!canDeleteUtilisateur(user, utilisateur.id)) {
@@ -93,10 +93,10 @@ export const deleteUtilisateur = async (req: express.Request<{ id?: string }>, r
       await utilisateurUpsert(utilisateur)
 
       res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
-    } catch (e) {
+    } catch (e: any) {
       console.error(e)
 
-      res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ error: e.message ?? `Une erreur s'est produite` })
     }
   }
 }

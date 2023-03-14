@@ -14,6 +14,7 @@ export const CaminoRestRoutes = {
   titresONF: '/titresONF',
   titresPTMG: '/titresPTMG',
   titresDREAL: '/titresDREAL',
+  titresLiaisons: '/titres/:id/titreLiaisons',
   statistiquesDGTM: '/statistiques/dgtm',
   fiscaliteEntreprise: '/entreprises/:entrepriseId/fiscalite/:annee',
   generateQgisToken: '/utilisateur/generateQgisToken',
@@ -21,3 +22,24 @@ export const CaminoRestRoutes = {
 
 export type CaminoRestRoute = (typeof CaminoRestRoutes)[keyof typeof CaminoRestRoutes]
 export const ALL_CAMINO_REST_ROUTES: CaminoRestRoute[] = Object.values(CaminoRestRoutes)
+
+export type ParseUrlParams<url> = url extends `${infer path}(${infer optionalPath})`
+  ? ParseUrlParams<path> & Partial<ParseUrlParams<optionalPath>>
+  : url extends `${infer start}/${infer rest}`
+  ? ParseUrlParams<start> & ParseUrlParams<rest>
+  : url extends `:${infer param}`
+  ? { [k in param]: string }
+  : Record<string, never>
+
+const isRestRoute = (route: string): route is CaminoRestRoute => {
+  return ALL_CAMINO_REST_ROUTES.includes(route)
+}
+
+export const getRestRoute = <T extends CaminoRestRoute>(path: T, params: ParseUrlParams<T>) => {
+  if (!isRestRoute(path)) {
+    throw new Error(`la route ${path} est inconnue`)
+  }
+  const url = Object.entries<string>(params).reduce<string>((uiPath, [key, value]) => uiPath.replace(`:${key}`, value), path)
+  // clean url
+  return url.replace(/(\(|\)|\/?:[^/]+)/g, '')
+}

@@ -8,10 +8,13 @@ export const canDeleteUtilisateur = (user: User, id: string) => {
   if (isSuper(user)) {
     return true
   }
-  
-return user?.id === id
+
+  return user?.id === id
 }
 export const canEditPermission = (user: User, utilisateur: UserNotNull) => {
+  if (user?.id === utilisateur.id) {
+    return false
+  }
   if (getAssignableRoles(user).includes(utilisateur.role)) {
     if (isAdministrationAdmin(user) && (isAdministrationEditeur(utilisateur) || isAdministrationLecteur(utilisateur)) && user.administrationId !== utilisateur.administrationId) {
       return false

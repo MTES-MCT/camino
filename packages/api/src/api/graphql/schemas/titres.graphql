@@ -149,11 +149,6 @@ input InputTitreModification {
   references: [InputReference]
 }
 
-input InputTitreLiaisonsModification {
-  id: ID!
-  titreFromIds: [ID]!
-}
-
 input InputId {
   id: ID
 }

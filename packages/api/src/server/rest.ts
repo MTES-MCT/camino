@@ -112,8 +112,8 @@ export const config = async (_req: express.Request, res: CustomResponse<CaminoCo
   res.json(config)
 }
 rest.get('/config', restCatcher(config))
-rest.post('/titres/:id/titreLiaisons', restCatcher(postTitreLiaisons))
-rest.get('/titres/:id/titreLiaisons', restCatcher(getTitreLiaisons))
+rest.post(CaminoRestRoutes.titresLiaisons, restCatcher(postTitreLiaisons))
+rest.get(CaminoRestRoutes.titresLiaisons, restCatcher(getTitreLiaisons))
 rest.get('/titres/:id', restDownload(titre))
 rest.get('/titres', restDownload(titres))
 rest.get('/titres_qgis', restDownload(titres))

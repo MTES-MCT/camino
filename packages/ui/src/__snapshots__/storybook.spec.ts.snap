@@ -8785,6 +8785,66 @@ exports[`Storybook Tests > Components/Utilisateur/EditPopup > SuperEditLecteur 1
 </div>"
 `;
 
+exports[`Storybook Tests > Components/Utilisateur/Permissions > Default 1`] = `
+"<div class=\\"tablet-blobs\\">
+  <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
+    <h5>Rôles</h5>
+  </div>
+  <div class=\\"tablet-blob-3-4\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center; flex-direction: row; align-content: center; align-items: center;\\">
+      <!---->
+      <!---->
+      <!---->
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Utilisateur/Permissions > Entreprise 1`] = `
+"<div class=\\"tablet-blobs\\">
+  <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
+    <h5>Rôles</h5>
+  </div>
+  <div class=\\"tablet-blob-3-4\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center; flex-direction: row; align-content: center; align-items: center;\\">
+      <!---->
+      <!---->
+      <!---->
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Utilisateur/Permissions > EntrepriseLoading 1`] = `
+"<div class=\\"tablet-blobs\\">
+  <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
+    <h5>Rôles</h5>
+  </div>
+  <div class=\\"tablet-blob-3-4\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center; flex-direction: row; align-content: center; align-items: center;\\">
+      <!---->
+      <!---->
+      <!---->
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Utilisateur/Permissions > UserAdminCanEditDefautIntoLecteur 1`] = `
+"<div class=\\"tablet-blobs\\">
+  <div class=\\"tablet-blob-1-4 tablet-pt-s pb-s\\">
+    <h5>Rôles</h5>
+  </div>
+  <div class=\\"tablet-blob-3-4\\">
+    <div class=\\"\\" style=\\"display: flex; justify-content: center; flex-direction: row; align-content: center; align-items: center;\\">
+      <!---->
+      <!---->
+      <!---->
+    </div>
+  </div>
+</div>"
+`;
+
 exports[`Storybook Tests > Components/Utilisateur/QGISToken > Default 1`] = `
 "<div class=\\"\\" style=\\"\\">
   <!----><button class=\\"btn btn-secondary\\">Générer un jeton QGIS</button>

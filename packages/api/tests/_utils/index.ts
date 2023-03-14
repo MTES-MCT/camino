@@ -11,6 +11,7 @@ import { userSuper } from '../../src/database/user-super'
 import { AdminUserNotNull, isAdministrationRole, isSuperRole } from 'camino-common/src/roles.js'
 import { TestUser } from 'camino-common/src/tests-utils.js'
 import { getCurrent } from 'camino-common/src/date.js'
+import { CaminoRestRoute, getRestRoute, ParseUrlParams } from 'camino-common/src/rest.js'
 
 export const queryImport = (nom: string) =>
   fs
@@ -37,14 +38,25 @@ export const restUploadCall = async (user: TestUser) => {
   return jwtSet(req, user)
 }
 
-export const restCall = async (path: string, user: TestUser | undefined): Promise<request.Test> => {
-  const req = request(app).get(path)
+export const restCall = async <Path extends CaminoRestRoute>(path: Path, params: ParseUrlParams<Path>, user: TestUser | undefined): Promise<request.Test> => {
+  const req = request(app).get(getRestRoute(path, params))
 
   return jwtSet(req, user)
 }
 
-export const restPostCall = async <T extends string | object | undefined>(path: string, user: TestUser | undefined, body: T): Promise<request.Test> => {
-  const req = request(app).post(path).send(body)
+export const restPostCall = async <Path extends CaminoRestRoute, T extends string | object | undefined>(
+  path: Path,
+  params: ParseUrlParams<Path>,
+  user: TestUser | undefined,
+  body: T
+): Promise<request.Test> => {
+  const req = request(app).post(getRestRoute(path, params)).send(body)
+
+  return jwtSet(req, user)
+}
+
+export const restDeleteCall = async <Path extends CaminoRestRoute>(path: Path, params: ParseUrlParams<Path>, user: TestUser | undefined): Promise<request.Test> => {
+  const req = request(app).delete(getRestRoute(path, params)).send()
 
   return jwtSet(req, user)
 }
