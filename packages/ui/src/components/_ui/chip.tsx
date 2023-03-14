@@ -5,16 +5,15 @@ import styles from './chip.module.css'
 export type Props = {
   color?: `bg-${Couleur}`
   nom: string
-  onDeleteClicked?: () => void
+  onDeleteClicked: () => void
 } & HTMLAttributes
 
-export const Chip: FunctionalComponent<Props, ['onDelete']> = (props, context) => {
+export const Chip: FunctionalComponent<Props, ['onDelete']> = props => {
   return (
     <button
       class={`${props.color ?? 'bg-neutral'} pl-m pr-m ${styles.chip}`}
       onClick={() => {
-        props.onDeleteClicked?.()
-        context.emit('onDelete')
+        props.onDeleteClicked()
       }}
     >
       {props.nom} <span>x</span>
