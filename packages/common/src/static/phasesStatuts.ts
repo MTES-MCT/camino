@@ -14,16 +14,8 @@ interface Definition<T> {
 }
 
 export const phaseStatuts: { [key in PhaseStatutId]: Definition<key> } = {
-  ech: {
-    id: 'ech',
-    nom: 'échu',
-    couleur: 'neutral',
-  },
-  val: {
-    id: 'val',
-    nom: 'valide',
-    couleur: 'success',
-  },
+  ech: { id: 'ech', nom: 'échu', couleur: 'neutral' },
+  val: { id: 'val', nom: 'valide', couleur: 'success' },
 } as const
 
 export const phasesStatuts = Object.values(phaseStatuts)

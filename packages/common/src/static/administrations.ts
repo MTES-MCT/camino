@@ -19,36 +19,12 @@ export type AdministrationType<T = AdministrationTypeId> = Omit<Definition<T>, '
 export const ADMINISTRATION_TYPES: {
   [key in AdministrationTypeId]: AdministrationType<key>
 } = {
-  aut: {
-    id: 'aut',
-    nom: 'Autorité',
-    ordre: 6,
-  },
-  dea: {
-    id: 'dea',
-    nom: 'Déal',
-    ordre: 3,
-  },
-  dre: {
-    id: 'dre',
-    nom: 'Dréal',
-    ordre: 2,
-  },
-  min: {
-    id: 'min',
-    nom: 'Ministère',
-    ordre: 1,
-  },
-  ope: {
-    id: 'ope',
-    nom: 'Opérateur',
-    ordre: 5,
-  },
-  pre: {
-    id: 'pre',
-    nom: 'Préfecture',
-    ordre: 4,
-  },
+  aut: { id: 'aut', nom: 'Autorité', ordre: 6 },
+  dea: { id: 'dea', nom: 'Déal', ordre: 3 },
+  dre: { id: 'dre', nom: 'Dréal', ordre: 2 },
+  min: { id: 'min', nom: 'Ministère', ordre: 1 },
+  ope: { id: 'ope', nom: 'Opérateur', ordre: 5 },
+  pre: { id: 'pre', nom: 'Préfecture', ordre: 4 },
 }
 
 export const sortedAdministrationTypes = Object.values(ADMINISTRATION_TYPES).sort((a, b) => a.ordre - b.ordre)
