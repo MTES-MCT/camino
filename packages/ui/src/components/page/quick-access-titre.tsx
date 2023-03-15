@@ -4,7 +4,7 @@ import { TitresTypesTypes, TitreTypeTypeId } from 'camino-common/src/static/titr
 import { getDomaineId, getTitreTypeType, TitreTypeId } from 'camino-common/src/static/titresTypes'
 import { titresRechercherByNom, titresRechercherByReferences } from '@/api/titres'
 import { useRouter } from 'vue-router'
-import { defineComponent, ref, inject } from 'vue'
+import { ref, inject } from 'vue'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 
 export interface Titre {
@@ -19,49 +19,48 @@ export interface Titre {
   }
 }
 
-export const QuickAccessTitre = defineComponent({
-  setup() {
-    const router = useRouter()
-    const titres = ref<Titre[]>([])
+export const QuickAccessTitre = caminoDefineComponent<{ id?: string }>(['id'], props => {
+  const router = useRouter()
+  const titres = ref<Titre[]>([])
 
-    const matomo = inject('matomo', null)
-    const search = async (searchTerm: string): Promise<void> => {
-      const intervalle = 10
+  const matomo = inject('matomo', null)
+  const search = async (searchTerm: string): Promise<void> => {
+    const intervalle = 10
 
-      let searchTitres = await titresRechercherByNom({
+    let searchTitres = await titresRechercherByNom({
+      intervalle,
+      noms: searchTerm,
+    })
+
+    if (searchTitres.elements.length === 0) {
+      searchTitres = await titresRechercherByReferences({
         intervalle,
-        noms: searchTerm,
+        references: searchTerm,
       })
-
-      if (searchTitres.elements.length === 0) {
-        searchTitres = await titresRechercherByReferences({
-          intervalle,
-          references: searchTerm,
-        })
-      }
-      titres.value.splice(0, titres.value.length, ...searchTitres.elements)
     }
+    titres.value.splice(0, titres.value.length, ...searchTitres.elements)
+  }
 
-    const onSelectedTitre = (titre: Titre | undefined) => {
-      if (titre) {
-        if (matomo) {
-          // @ts-ignore
-          matomo.trackEvent('navigation', 'navigation-rapide', titre.id)
-        }
-        router.push({ name: 'titre', params: { id: titre.id } })
+  const onSelectedTitre = (titre: Titre | undefined) => {
+    if (titre) {
+      if (matomo) {
+        // @ts-ignore
+        matomo.trackEvent('navigation', 'navigation-rapide', titre.id)
       }
+      router.push({ name: 'titre', params: { id: titre.id } })
     }
+  }
 
-    return () => <PureQuickAccessTitre titres={titres.value} onSearch={search} onSelectedTitre={onSelectedTitre} />
-  },
+  return () => <PureQuickAccessTitre titres={titres.value} onSearch={search} onSelectedTitre={onSelectedTitre} id={props.id} />
 })
 
 interface Props {
+  id?: string
   titres: Titre[]
   onSelectedTitre: (titre: Titre | undefined) => void
   onSearch: (searchTerm: string) => void
 }
-export const PureQuickAccessTitre = caminoDefineComponent<Props>(['titres', 'onSelectedTitre', 'onSearch'], props => {
+export const PureQuickAccessTitre = caminoDefineComponent<Props>(['id', 'titres', 'onSelectedTitre', 'onSearch'], props => {
   const display = (item: Titre) => {
     return (
       <div class="flex flex-center">
@@ -94,7 +93,7 @@ export const PureQuickAccessTitre = caminoDefineComponent<Props>(['titres', 'onS
     <TypeAhead
       overrideItems={overrideItems.value}
       props={{
-        id: 'quick-access-titre',
+        id: props.id,
         itemKey: 'id',
         placeholder: 'Rechercher un titre',
         type: 'single',

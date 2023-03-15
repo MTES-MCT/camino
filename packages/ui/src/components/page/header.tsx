@@ -1,6 +1,8 @@
 import { FunctionalComponent } from 'vue'
 import './dsfr.module'
 import { Role, User } from 'camino-common/src/roles'
+import { QuickAccessTitre } from '@/components/page/quick-access-titre'
+
 interface Props {
   loaded?: boolean
   user: User
@@ -117,7 +119,7 @@ export const Header: FunctionalComponent<Props> = props => {
                   <HeaderLinks user={props.user} />
                 </div>
                 <div class="fr-header__search fr-modal" id="modal-474">
-                  <div class="fr-container fr-container-lg--fluid">
+                  <div class="fr-container">
                     <button class="fr-btn--close fr-btn" aria-controls="modal-474" title="Fermer">
                       Fermer
                     </button>
@@ -125,7 +127,7 @@ export const Header: FunctionalComponent<Props> = props => {
                       <label class="fr-label" for="search-473-input">
                         Rechercher
                       </label>
-                      <input class="fr-input" placeholder="Rechercher" type="search" id="search-473-input" name="search-473-input" />
+                      <QuickAccessTitre id="search-473-input" />
                       <button class="fr-btn" title="Rechercher">
                         Rechercher
                       </button>

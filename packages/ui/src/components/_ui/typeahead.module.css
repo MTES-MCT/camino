@@ -2,14 +2,6 @@
   position: relative;
   width: 100%;
 }
-.typeahead-wrapper {
-  border: 0 none;
-  background-color: var(--color-alt);
-  height: auto;
-  color: inherit;
-  box-shadow: 0 2px 0 0 var(--dsfr-g600);
-  flex-wrap: wrap;
-}
 input.typeahead-input {
   margin-bottom: 0;
 
@@ -31,7 +23,7 @@ input.typeahead-input:focus {
   max-height: 400px;
   overflow-y: auto;
   border-bottom: 0.1rem solid #d1d1d1;
-  z-index: 9;
+  z-index: 509;
 }
 .typeahead .typeahead-list .typeahead-list-item {
   cursor: pointer;
