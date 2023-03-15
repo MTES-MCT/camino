@@ -12,9 +12,5 @@ export const Domaine: FunctionalComponent<Props> = props => {
     domaine = DOMAINES_IDS.METAUX
   }
 
-  return (
-    <Pill color={`bg-domaine-${domaine}`} class="mono">
-      {domaine}
-    </Pill>
-  )
+  return <Pill color={`bg-domaine-${domaine}`} class="mono" text={domaine} />
 }

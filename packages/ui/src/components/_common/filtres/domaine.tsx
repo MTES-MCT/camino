@@ -8,11 +8,9 @@ export interface Props {
 
 export function FiltreDomaine(props: Props) {
   return (
-    <span>
-      <Pill color={`bg-domaine-${props.element.id}`} class="mr-xs mono">
-        {props.element.id}{' '}
-      </Pill>
-      <span class="cap-first h6 bold">{props.element.nom}</span>
-    </span>
+    <div>
+      <Pill color={`bg-domaine-${props.element.id}`} class="mr-xs mono" text={`${props.element.id} `} />
+      <div class="cap-first h6 bold">{props.element.nom}</div>
+    </div>
   )
 }

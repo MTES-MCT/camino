@@ -1,6 +1,8 @@
+import { z } from 'zod'
 import { CaminoDate } from './date.js'
 
-export type EntrepriseId = string & { __camino: 'entrepriseId' }
+export const eidValidator = z.string().brand<'EntrepriseId'>()
+export type EntrepriseId = z.infer<typeof eidValidator>
 
 export type EntrepriseEtablissement = { dateDebut: CaminoDate; dateFin: CaminoDate; nom: string }
 export interface Entreprise {
@@ -11,5 +13,5 @@ export interface Entreprise {
 }
 
 export const newEntrepriseId = (value: string): EntrepriseId => {
-  return value as EntrepriseId
+  return eidValidator.parse(value)
 }

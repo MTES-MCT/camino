@@ -1,4 +1,4 @@
-import { CaminoRestRoute, ALL_CAMINO_REST_ROUTES } from 'camino-common/src/rest'
+import { CaminoRestRoute, getRestRoute, ParseUrlParams } from 'camino-common/src/rest'
 
 type Loading = { status: 'LOADING' }
 type Error = { status: 'ERROR'; message: string }
@@ -9,43 +9,22 @@ type UiRestRoute = string & { __camino: 'RestRoute' }
 
 const baseRoute = '/apiUrl'
 
-const isUiRestRoute = (route: string): route is UiRestRoute => {
-  if (route.startsWith(baseRoute)) {
-    return ALL_CAMINO_REST_ROUTES.includes(route.substring(baseRoute.length))
-  }
-  return false
+const getUiRestRoute = <T extends CaminoRestRoute>(route: T, params: ParseUrlParams<T>): UiRestRoute => {
+  return `${baseRoute}${getRestRoute(route, params)}` as UiRestRoute
 }
 
-// VisibleForTesting
-export const getUiRestRoute = (route: CaminoRestRoute): UiRestRoute => {
-  const uiRoute = `${baseRoute}${route}`
-  if (!isUiRestRoute(uiRoute)) {
-    throw new Error(`la route ${route} n'est pas une route connue`)
-  } else {
-    return uiRoute
-  }
-}
-
-type ParseUrlParams<url> = url extends `${infer path}(${infer optionalPath})`
-  ? ParseUrlParams<path> & Partial<ParseUrlParams<optionalPath>>
-  : url extends `${infer start}/${infer rest}`
-  ? ParseUrlParams<start> & ParseUrlParams<rest>
-  : url extends `:${infer param}`
-  ? { [k in param]: string }
-  : {}
-
-export const fetchWithJson = async <U, T extends CaminoRestRoute>(path: T, params: ParseUrlParams<T>, method: 'post' | 'get' | 'put' | 'delete' = 'get'): Promise<any> => {
-  const uiPath = getUiRestRoute(path)
-  let url = Object.entries<string>(params).reduce<string>((uiPath, [key, value]) => uiPath.replace(`:${key}`, value), uiPath)
-  // clean url
-  url = url.replace(/(\(|\)|\/?:[^/]+)/g, '')
+export const fetchWithJson = async <T extends CaminoRestRoute>(path: T, params: ParseUrlParams<T>, method: 'post' | 'get' | 'put' | 'delete' = 'get'): Promise<any> => {
+  const url = getUiRestRoute(path, params)
   const fetched = await fetch(url, {
     method,
     headers: { 'Content-Type': 'application/json' },
   })
   if (fetched.ok) {
-    const body = await fetched.json()
-    return body
+    if (fetched.status === 200) {
+      const body = await fetched.json()
+      return body
+    }
+    return
   }
   if (fetched.status === 403) {
     window.location.replace('/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href))
@@ -55,10 +34,8 @@ export const fetchWithJson = async <U, T extends CaminoRestRoute>(path: T, param
 }
 
 export const postWithJson = async <U, T extends CaminoRestRoute>(path: T, params: ParseUrlParams<T>, body: unknown): Promise<any> => {
-  const uiPath = getUiRestRoute(path)
-  let url = Object.entries<string>(params).reduce<string>((uiPath, [key, value]) => uiPath.replace(`:${key}`, value), uiPath)
-  // clean url
-  url = url.replace(/(\(|\)|\/?:[^/]+)/g, '')
+  const url = getUiRestRoute(path, params)
+
   const fetched = await fetch(url, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },

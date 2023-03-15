@@ -10,5 +10,5 @@ const meta: Meta = {
 }
 export default meta
 
-export const Primary: Story = () => <Pill>Hello</Pill>
-export const Error: Story = () => <Pill color="bg-error">Hello</Pill>
+export const Primary: Story = () => <Pill text="Hello" />
+export const Error: Story = () => <Pill color="bg-error" text="hello" />

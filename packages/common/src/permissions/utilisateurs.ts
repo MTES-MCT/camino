@@ -1,17 +1,25 @@
-import { isSuper, isAdministrationAdmin, isAdministrationEditeur, User, isAdministration, isEntreprise, isBureauDEtudes, isAdministrationLecteur, ROLES, Role } from '../roles.js'
+import { isSuper, isAdministrationAdmin, isAdministrationEditeur, User, isAdministration, isEntreprise, isBureauDEtudes, isAdministrationLecteur, ROLES, Role, UserNotNull } from '../roles.js'
 
 export const canCreateEntreprise = (user: User): boolean => isSuper(user) || isAdministrationAdmin(user) || isAdministrationEditeur(user)
 export const canReadUtilisateurs = (user: User) => isSuper(user) || isAdministration(user) || isEntreprise(user) || isBureauDEtudes(user)
 
 export const canReadUtilisateur = (user: User, id: string) => user?.id === id || canReadUtilisateurs(user)
-export const canEditUtilisateur = (user: User, utilisateur: User) => {
+export const canDeleteUtilisateur = (user: User, id: string) => {
   if (isSuper(user)) {
     return true
   }
-  if (isAdministrationAdmin(user) && (isAdministrationEditeur(utilisateur) || isAdministrationLecteur(utilisateur)) && user.administrationId === utilisateur.administrationId) {
-    return true
+
+  return user?.id === id
+}
+export const canEditPermission = (user: User, utilisateur: UserNotNull) => {
+  if (user?.id === utilisateur.id) {
+    return false
   }
-  if (user?.id === utilisateur?.id) {
+  if (getAssignableRoles(user).includes(utilisateur.role)) {
+    if (isAdministrationAdmin(user) && (isAdministrationEditeur(utilisateur) || isAdministrationLecteur(utilisateur)) && user.administrationId !== utilisateur.administrationId) {
+      return false
+    }
+
     return true
   }
 

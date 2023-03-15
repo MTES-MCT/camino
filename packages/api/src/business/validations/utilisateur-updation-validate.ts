@@ -1,5 +1,3 @@
-import { IUtilisateur } from '../../types.js'
-
 import {
   isAdministrationRole,
   isAdministrationAdmin,
@@ -13,35 +11,30 @@ import {
   isSuperRole,
   isRole,
 } from 'camino-common/src/roles.js'
-import { canEditUtilisateur, getAssignableRoles } from 'camino-common/src/permissions/utilisateurs.js'
+import { canEditPermission, getAssignableRoles } from 'camino-common/src/permissions/utilisateurs.js'
 import { equalStringArrays } from '../../tools/index.js'
-import { emailCheck } from '../../tools/email-check.js'
 import { isAdministrationId } from 'camino-common/src/static/administrations.js'
+import { UtilisateurToEdit } from 'camino-common/src/utilisateur.js'
 
-const isUser = (utilisateur: Pick<IUtilisateur, 'email' | 'role' | 'administrationId' | 'entreprises'>): utilisateur is UserNotNull => {
-  if (!utilisateur.email || !emailCheck(utilisateur.email)) {
-    return false
-  }
+const userIsCorrect = (utilisateur: UtilisateurToEdit): boolean => {
   if (!isRole(utilisateur.role)) {
     return false
   }
-  if ((isSuperRole(utilisateur.role) || isDefautRole(utilisateur.role)) && utilisateur.administrationId === undefined && utilisateur.entreprises?.length === 0) {
+  if ((isSuperRole(utilisateur.role) || isDefautRole(utilisateur.role)) && utilisateur.administrationId === null && utilisateur.entreprises?.length === 0) {
     return true
   }
 
   if (isAdministrationRole(utilisateur.role) && isAdministrationId(utilisateur.administrationId) && utilisateur.entreprises?.length === 0) {
     return true
   }
-  if (isEntrepriseOrBureauDetudeRole(utilisateur.role) && utilisateur.administrationId === undefined && (utilisateur.entreprises?.length ?? 0) > 0) {
+  if (isEntrepriseOrBureauDetudeRole(utilisateur.role) && utilisateur.administrationId === null && (utilisateur.entreprises?.length ?? 0) > 0) {
     return true
   }
 
   return false
 }
 
-const userIsCorrect = (utilisateur: Pick<IUtilisateur, 'email' | 'role' | 'administrationId' | 'entreprises' | 'id'>): boolean => isUser(utilisateur)
-
-export const utilisateurUpdationValidate = (user: UserNotNull, utilisateur: Pick<IUtilisateur, 'email' | 'role' | 'administrationId' | 'entreprises' | 'id'>, utilisateurOld: User) => {
+export const utilisateurUpdationValidate = (user: UserNotNull, utilisateur: UtilisateurToEdit, utilisateurOld: User): void => {
   if (!userIsCorrect(utilisateur)) {
     throw new Error('utilisateur incorrect')
   }
@@ -50,7 +43,7 @@ export const utilisateurUpdationValidate = (user: UserNotNull, utilisateur: Pick
     throw new Error("l'utilisateur n'existe pas")
   }
 
-  if (!canEditUtilisateur(user, utilisateurOld) || (isUser(utilisateur) && !canEditUtilisateur(user, utilisateur))) {
+  if (!canEditPermission(user, utilisateurOld) || !canEditPermission(user, utilisateur as unknown as UserNotNull)) {
     throw new Error('droits insuffisants')
   }
 
@@ -63,15 +56,11 @@ export const utilisateurUpdationValidate = (user: UserNotNull, utilisateur: Pick
   }
 
   if (!isSuper(user)) {
-    if (isAdministration(utilisateurOld) && utilisateur.administrationId !== utilisateurOld.administrationId) {
+    if (isAdministration(utilisateurOld) && utilisateur.administrationId && utilisateur.administrationId !== utilisateurOld.administrationId) {
       throw new Error('droits insuffisants pour modifier les administrations')
     }
 
-    if (
-      !isAdministrationAdmin(user) &&
-      isEntrepriseOrBureauDEtude(utilisateurOld) &&
-      !equalStringArrays(utilisateurOld.entreprises.map(({ id }) => id).sort(), (utilisateur.entreprises ?? []).map(({ id }) => id).sort())
-    ) {
+    if (!isAdministrationAdmin(user) && isEntrepriseOrBureauDEtude(utilisateurOld) && !equalStringArrays(utilisateurOld.entreprises.map(({ id }) => id).sort(), utilisateur.entreprises.sort())) {
       throw new Error('droits insuffisants pour modifier les entreprises')
     }
   }

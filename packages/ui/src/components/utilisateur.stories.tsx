@@ -29,8 +29,14 @@ const apiClientMock: UtilisateurApiClient = {
       role: 'super',
     }),
   getUtilisateurNewsletter: () => Promise.resolve(true),
-  removeUtilisateur: () => Promise.resolve(),
-  updateUtilisateur: () => Promise.resolve(),
+  removeUtilisateur: params => {
+    deleteUtilisateur(params)
+    return Promise.resolve()
+  },
+  updateUtilisateur: params => {
+    updateUtilisateur(params)
+    return Promise.resolve()
+  },
   updateUtilisateurNewsletter: (...values) => {
     editNewsletter(values)
     return Promise.resolve()
@@ -39,31 +45,13 @@ const apiClientMock: UtilisateurApiClient = {
   getQGISToken: () => new Promise(resolve => setTimeout(() => resolve({ token: 'token123' }), 1000)),
 }
 
-export const MySelf: Story = () => (
-  <PureUtilisateur
-    user={{ ...testBlankUser, id: 'id', role: 'super' }}
-    logout={logout}
-    utilisateurId="id"
-    deleteUtilisateur={deleteUtilisateur}
-    updateUtilisateur={params => {
-      updateUtilisateur(params)
-      return Promise.resolve()
-    }}
-    passwordUpdate={passwordUpdate}
-    apiClient={apiClientMock}
-  />
-)
+export const MySelf: Story = () => <PureUtilisateur user={{ ...testBlankUser, id: 'id', role: 'super' }} logout={logout} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
 
 export const Loading: Story = () => (
   <PureUtilisateur
     user={{ ...testBlankUser, id: 'id', role: 'super' }}
     logout={logout}
     utilisateurId="id"
-    deleteUtilisateur={deleteUtilisateur}
-    updateUtilisateur={params => {
-      updateUtilisateur(params)
-      return Promise.resolve()
-    }}
     passwordUpdate={passwordUpdate}
     apiClient={{
       ...apiClientMock,
@@ -77,11 +65,6 @@ export const error: Story = () => (
     user={{ ...testBlankUser, id: 'anotherId', role: 'super' }}
     logout={logout}
     utilisateurId="id"
-    deleteUtilisateur={deleteUtilisateur}
-    updateUtilisateur={params => {
-      updateUtilisateur(params)
-      return Promise.resolve()
-    }}
     passwordUpdate={passwordUpdate}
     apiClient={{
       ...apiClientMock,
@@ -92,16 +75,5 @@ export const error: Story = () => (
 )
 
 export const AnotherUser: Story = () => (
-  <PureUtilisateur
-    user={{ ...testBlankUser, id: 'anotherId', role: 'super' }}
-    logout={logout}
-    utilisateurId="id"
-    deleteUtilisateur={deleteUtilisateur}
-    updateUtilisateur={params => {
-      updateUtilisateur(params)
-      return Promise.resolve()
-    }}
-    passwordUpdate={passwordUpdate}
-    apiClient={apiClientMock}
-  />
+  <PureUtilisateur user={{ ...testBlankUser, id: 'anotherId', role: 'super' }} logout={logout} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
 )

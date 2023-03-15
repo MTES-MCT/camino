@@ -30,330 +30,119 @@ const users: Record<Role, UserNotNull> = {
 const fakeAdministrationId = 'fakeAdminId' as AdministrationId
 
 test('utilisateurUpdationValidate privilege escalation forbidden', () => {
-  expect(() => utilisateurUpdationValidate(users.defaut, { ...users.defaut, role: 'super', entreprises: [] }, users.defaut)).toThrowErrorMatchingInlineSnapshot(
-    '"impossible de modifier son propre rôle"'
+  expect(() => utilisateurUpdationValidate(users.defaut, { ...users.defaut, role: 'super', administrationId: null, entreprises: [] }, users.defaut)).toThrowErrorMatchingInlineSnapshot(
+    '"droits insuffisants"'
+  )
+  expect(() => utilisateurUpdationValidate(users.admin, { ...users.admin, role: 'super', entreprises: [], administrationId: null }, users.admin)).toThrowErrorMatchingInlineSnapshot(
+    '"droits insuffisants"'
+  )
+  expect(() => utilisateurUpdationValidate(users.lecteur, { ...users.lecteur, role: 'super', entreprises: [], administrationId: null }, users.lecteur)).toThrowErrorMatchingInlineSnapshot(
+    '"droits insuffisants"'
+  )
+  expect(() => utilisateurUpdationValidate(users.editeur, { ...users.editeur, role: 'super', entreprises: [], administrationId: null }, users.editeur)).toThrowErrorMatchingInlineSnapshot(
+    '"droits insuffisants"'
+  )
+  expect(() => utilisateurUpdationValidate(users.entreprise, { ...users.entreprise, role: 'super', entreprises: [], administrationId: null }, users.entreprise)).toThrowErrorMatchingInlineSnapshot(
+    '"droits insuffisants"'
   )
   expect(() =>
-    utilisateurUpdationValidate(
-      users.admin,
-      {
-        ...users.admin,
-        role: 'super',
-        entreprises: [],
-        administrationId: undefined,
-      },
-      users.admin
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"impossible de modifier son propre rôle"')
-  expect(() =>
-    utilisateurUpdationValidate(
-      users.lecteur,
-      {
-        ...users.lecteur,
-        role: 'super',
-        entreprises: [],
-        administrationId: undefined,
-      },
-      users.lecteur
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"impossible de modifier son propre rôle"')
-  expect(() =>
-    utilisateurUpdationValidate(
-      users.editeur,
-      {
-        ...users.editeur,
-        role: 'super',
-        entreprises: [],
-        administrationId: undefined,
-      },
-      users.editeur
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"impossible de modifier son propre rôle"')
-  expect(() => utilisateurUpdationValidate(users.entreprise, { ...users.entreprise, role: 'super', entreprises: [] }, users.entreprise)).toThrowErrorMatchingInlineSnapshot(
-    '"impossible de modifier son propre rôle"'
-  )
-  expect(() => utilisateurUpdationValidate(users['bureau d’études'], { ...users['bureau d’études'], role: 'super', entreprises: [] }, users.entreprise)).toThrowErrorMatchingInlineSnapshot(
-    '"impossible de modifier son propre rôle"'
-  )
+    utilisateurUpdationValidate(users['bureau d’études'], { ...users['bureau d’études'], role: 'super', entreprises: [], administrationId: null }, users.entreprise)
+  ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants"')
 
   expect(() =>
-    utilisateurUpdationValidate(
-      users.editeur,
-      {
-        ...users.editeur,
-        role: 'entreprise',
-        administrationId: undefined,
-        entreprises: [{ id: newEntrepriseId('id') }],
-      },
-      users.editeur
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"impossible de modifier son propre rôle"')
+    utilisateurUpdationValidate(users.editeur, { ...users.editeur, role: 'entreprise', administrationId: null, entreprises: [newEntrepriseId('id')] }, users.editeur)
+  ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants"')
   expect(() =>
-    utilisateurUpdationValidate(
-      users.defaut,
-      {
-        ...users.defaut,
-        role: 'entreprise',
-        entreprises: [{ id: newEntrepriseId('id') }],
-      },
-      users.defaut
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"impossible de modifier son propre rôle"')
+    utilisateurUpdationValidate(users.defaut, { ...users.defaut, role: 'entreprise', administrationId: null, entreprises: [newEntrepriseId('id')] }, users.defaut)
+  ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants"')
 })
 
 test('utilisateurUpdationValidate incorrect users throw error', () => {
-  expect(() =>
-    utilisateurUpdationValidate(
-      users.super,
-      {
-        id: 'utilisateurId',
-        role: 'super',
-      },
-      undefined
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
-  expect(() =>
-    utilisateurUpdationValidate(
-      users.super,
-      {
-        id: 'utilisateurId',
-        role: 'super',
-        email: 'toto@gmail.com',
-        entreprises: [{ id: newEntrepriseId('entrepriseId') }],
-      },
-      undefined
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
-  expect(() =>
-    utilisateurUpdationValidate(
-      users.super,
-      {
-        id: 'utilisateurId',
-        role: 'super',
-        email: 'toto@gmail.com',
-        administrationId: 'aut-97300-01',
-      },
-      undefined
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'super', administrationId: null, entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
+    '"l\'utilisateur n\'existe pas"'
+  )
 
   expect(() =>
-    utilisateurUpdationValidate(
-      users.super,
-      {
-        id: 'utilisateurId',
-        role: 'defaut',
-      },
-      undefined
-    )
+    utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'super', entreprises: [newEntrepriseId('entrepriseId')], administrationId: null }, undefined)
   ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'super', administrationId: 'aut-97300-01', entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
+    '"utilisateur incorrect"'
+  )
+
+  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'defaut', administrationId: null, entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
+    '"l\'utilisateur n\'existe pas"'
+  )
   expect(() =>
-    utilisateurUpdationValidate(
-      users.super,
-      {
-        id: 'utilisateurId',
-        role: 'defaut',
-        email: 'toto@gmail.com',
-        entreprises: [{ id: newEntrepriseId('entrepriseId') }],
-      },
-      undefined
-    )
+    utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'defaut', entreprises: [newEntrepriseId('entrepriseId')], administrationId: null }, undefined)
   ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'defaut', administrationId: 'aut-97300-01', entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
+    '"utilisateur incorrect"'
+  )
+
+  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'admin', administrationId: null, entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
+    '"utilisateur incorrect"'
+  )
   expect(() =>
-    utilisateurUpdationValidate(
-      users.super,
-      {
-        id: 'utilisateurId',
-        role: 'defaut',
-        email: 'toto@gmail.com',
-        administrationId: 'aut-97300-01',
-      },
-      undefined
-    )
+    utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'admin', entreprises: [newEntrepriseId('entrepriseId')], administrationId: null }, undefined)
+  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
+  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'admin', administrationId: fakeAdministrationId, entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
+    '"utilisateur incorrect"'
+  )
+
+  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'entreprise', administrationId: null, entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
+    '"utilisateur incorrect"'
+  )
+  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'entreprise', administrationId: null, entreprises: [] }, undefined)).toThrowErrorMatchingInlineSnapshot(
+    '"utilisateur incorrect"'
+  )
+  expect(() =>
+    utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'entreprise', administrationId: fakeAdministrationId, entreprises: [newEntrepriseId('entrepriseId')] }, undefined)
   ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
 
-  expect(() =>
-    utilisateurUpdationValidate(
-      users.super,
-      {
-        id: 'utilisateurId',
-        role: 'admin',
-      },
-      undefined
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
-  expect(() =>
-    utilisateurUpdationValidate(
-      users.super,
-      {
-        id: 'utilisateurId',
-        role: 'admin',
-        email: 'toto@gmail.com',
-        entreprises: [{ id: newEntrepriseId('entrepriseId') }],
-      },
-      undefined
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
-  expect(() =>
-    utilisateurUpdationValidate(
-      users.super,
-      {
-        id: 'utilisateurId',
-        role: 'admin',
-        email: 'toto@gmail.com',
-        administrationId: fakeAdministrationId,
-      },
-      undefined
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
-
-  expect(() =>
-    utilisateurUpdationValidate(
-      users.super,
-      {
-        id: 'utilisateurId',
-        role: 'entreprise',
-      },
-      undefined
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
-  expect(() =>
-    utilisateurUpdationValidate(
-      users.super,
-      {
-        id: 'utilisateurId',
-        role: 'entreprise',
-        email: 'toto@gmail.com',
-        entreprises: [],
-      },
-      undefined
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
-  expect(() =>
-    utilisateurUpdationValidate(
-      users.super,
-      {
-        id: 'utilisateurId',
-        role: 'entreprise',
-        email: 'toto@gmail.com',
-        administrationId: fakeAdministrationId,
-        entreprises: [{ id: newEntrepriseId('entrepriseId') }],
-      },
-      undefined
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"utilisateur incorrect"')
-
-  expect(() =>
-    utilisateurUpdationValidate(
-      users.super,
-      {
-        id: 'utilisateurId',
-        role: 'super',
-        email: 'toto@gmail.com',
-        entreprises: [],
-      },
-      undefined
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"l\'utilisateur n\'existe pas"')
+  expect(() => utilisateurUpdationValidate(users.super, { id: 'utilisateurId', role: 'super', entreprises: [], administrationId: null }, undefined)).toThrowErrorMatchingInlineSnapshot(
+    '"l\'utilisateur n\'existe pas"'
+  )
 
   expect(() =>
     utilisateurUpdationValidate(
       users.admin,
-      {
-        id: 'utilisateurId',
-        role: 'editeur',
-        administrationId: 'aut-97300-01',
-        email: 'toto@gmail.com',
-        entreprises: [],
-      },
-      {
-        ...testBlankUser,
-        id: 'fakeId',
-        role: 'admin',
-        administrationId: 'aut-97300-01',
-      }
+      { id: 'utilisateurId', role: 'editeur', administrationId: 'aut-97300-01', entreprises: [] },
+      { ...testBlankUser, id: 'fakeId', role: 'admin', administrationId: 'aut-97300-01' }
     )
   ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants"')
   expect(() =>
     utilisateurUpdationValidate(
       users.admin,
-      {
-        id: 'utilisateurId',
-        role: 'admin',
-        administrationId: 'aut-97300-01',
-        email: 'toto@gmail.com',
-        entreprises: [],
-      },
-      {
-        ...testBlankUser,
-        id: 'fakeId',
-        role: 'editeur',
-        administrationId: 'aut-97300-01',
-      }
+      { id: 'utilisateurId', role: 'admin', administrationId: 'aut-97300-01', entreprises: [] },
+      { ...testBlankUser, id: 'fakeId', role: 'editeur', administrationId: 'aut-97300-01' }
     )
   ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants"')
   expect(() =>
     utilisateurUpdationValidate(
       users.admin,
-      {
-        id: 'utilisateurId',
-        role: 'editeur',
-        administrationId: 'aut-mrae-guyane-01',
-        email: 'toto@gmail.com',
-        entreprises: [],
-      },
-      {
-        ...testBlankUser,
-        id: 'fakeId',
-        role: 'editeur',
-        administrationId: 'aut-97300-01',
-      }
+      { id: 'utilisateurId', role: 'editeur', administrationId: 'aut-mrae-guyane-01', entreprises: [] },
+      { ...testBlankUser, id: 'fakeId', role: 'editeur', administrationId: 'aut-97300-01' }
     )
   ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants"')
   expect(() =>
     utilisateurUpdationValidate(
       users.admin,
-      {
-        id: 'utilisateurId',
-        role: 'editeur',
-        administrationId: 'aut-97300-01',
-        email: 'toto@gmail.com',
-        entreprises: [],
-      },
-      {
-        ...testBlankUser,
-        id: 'fakeId',
-        role: 'editeur',
-        administrationId: 'aut-mrae-guyane-01',
-      }
+      { id: 'utilisateurId', role: 'editeur', administrationId: 'aut-97300-01', entreprises: [] },
+      { ...testBlankUser, id: 'fakeId', role: 'editeur', administrationId: 'aut-mrae-guyane-01' }
     )
   ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants"')
 
   expect(() => utilisateurUpdationValidate(users.editeur, { ...users.editeur, administrationId: 'dea-reunion-01', entreprises: [] }, { ...users.editeur })).toThrowErrorMatchingInlineSnapshot(
-    '"droits insuffisants pour modifier les administrations"'
+    '"droits insuffisants"'
   )
   expect(() => utilisateurUpdationValidate(users.lecteur, { ...users.lecteur, administrationId: 'dea-reunion-01', entreprises: [] }, { ...users.lecteur })).toThrowErrorMatchingInlineSnapshot(
-    '"droits insuffisants pour modifier les administrations"'
+    '"droits insuffisants"'
   )
 
   expect(() =>
-    utilisateurUpdationValidate(
-      users.entreprise,
-      {
-        ...users.entreprise,
-        entreprises: [{ id: newEntrepriseId('newEntreprise') }],
-      },
-      { ...users.entreprise }
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants pour modifier les entreprises"')
+    utilisateurUpdationValidate(users.entreprise, { ...users.entreprise, administrationId: null, entreprises: [newEntrepriseId('newEntreprise')] }, { ...users.entreprise })
+  ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants"')
   expect(() =>
-    utilisateurUpdationValidate(
-      users['bureau d’études'],
-      {
-        ...users['bureau d’études'],
-        entreprises: [{ id: newEntrepriseId('newEntreprise') }],
-      },
-      { ...users['bureau d’études'] }
-    )
-  ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants pour modifier les entreprises"')
+    utilisateurUpdationValidate(users['bureau d’études'], { ...users['bureau d’études'], administrationId: null, entreprises: [newEntrepriseId('newEntreprise')] }, { ...users['bureau d’études'] })
+  ).toThrowErrorMatchingInlineSnapshot('"droits insuffisants"')
 })

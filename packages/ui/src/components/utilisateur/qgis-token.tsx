@@ -52,7 +52,7 @@ export const QGisToken = caminoDefineComponent<Props>(['apiClient'], props => {
           <>
             {item.token ? (
               <div class="mb-s">
-                Voici le jeton généré <Pill onClick={() => copyToClipboard(item.token)}>{item.token}</Pill>
+                Voici le jeton généré <Pill noCapitalize onClick={() => copyToClipboard(item.token)} text={item.token} />
                 <br />
                 Assurez-vous de le copier, vous ne pourrez plus le revoir !
               </div>

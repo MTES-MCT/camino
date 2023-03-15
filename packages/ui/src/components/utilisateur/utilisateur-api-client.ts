@@ -4,7 +4,7 @@ import { fragmentUtilisateur } from '@/api/fragments/utilisateur'
 import { apiGraphQLFetch } from '@/api/_client'
 import { Entreprise } from 'camino-common/src/entreprise'
 import { CaminoRestRoutes } from 'camino-common/src/rest'
-import { QGISToken } from 'camino-common/src/utilisateur'
+import { QGISToken, UtilisateurToEdit } from 'camino-common/src/utilisateur'
 
 import gql from 'graphql-tag'
 import { fetchWithJson, postWithJson } from '../../api/client-rest'
@@ -14,7 +14,7 @@ export interface UtilisateurApiClient {
   getUtilisateurNewsletter: (userId: string) => Promise<boolean>
   updateUtilisateurNewsletter: (userId: string, subscribe: boolean) => Promise<void>
   removeUtilisateur: (userId: string) => Promise<void>
-  updateUtilisateur: (user: Utilisateur) => Promise<void>
+  updateUtilisateur: (user: UtilisateurToEdit) => Promise<void>
   getEntreprises: () => Promise<Entreprise[]>
   getQGISToken: () => Promise<QGISToken>
 }
@@ -41,24 +41,10 @@ export const utilisateurApiClient: UtilisateurApiClient = {
     return await postWithJson(CaminoRestRoutes.newsletter, { id: userId }, { newsletter })
   },
   removeUtilisateur: async (userId: string) => {
-    await apiGraphQLFetch(gql`
-      mutation UtilisateurSupprimer($id: ID!) {
-        utilisateurSupprimer(id: $id) {
-          ...utilisateur
-        }
-      }
-
-      ${fragmentUtilisateur}
-    `)({ id: userId })
+    return await fetchWithJson(CaminoRestRoutes.utilisateur, { id: userId }, 'delete')
   },
-  updateUtilisateur: async (utilisateur: Utilisateur) => {
-    await apiGraphQLFetch(gql`
-      mutation UtilisateurModifier($utilisateur: InputUtilisateurModification!) {
-        utilisateurModifier(utilisateur: $utilisateur) {
-          id
-        }
-      }
-    `)({ utilisateur })
+  updateUtilisateur: async (utilisateur: UtilisateurToEdit) => {
+    return await postWithJson(CaminoRestRoutes.utilisateurPermission, { id: utilisateur.id }, utilisateur)
   },
   getEntreprises: async () => {
     const { elements } = await apiGraphQLFetch(

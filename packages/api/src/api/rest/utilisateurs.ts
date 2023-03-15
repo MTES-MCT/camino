@@ -1,17 +1,19 @@
-import { utilisateurGet, utilisateursGet } from '../../database/queries/utilisateurs.js'
+import { userGet, utilisateurGet, utilisateursGet, utilisateurUpsert } from '../../database/queries/utilisateurs.js'
 import express from 'express'
 import { CustomResponse } from './express-type.js'
 import { formatUser, IFormat, IUtilisateursColonneId } from '../../types.js'
 import { constants } from 'http2'
 import { isSubscribedToNewsLetter, newsletterSubscriberUpdate } from '../../tools/api-mailjet/newsletter.js'
-import { isRole, User } from 'camino-common/src/roles.js'
+import { isAdministrationRole, isEntrepriseOrBureauDetudeRole, isRole, User } from 'camino-common/src/roles.js'
 import { utilisateursFormatTable } from './format/utilisateurs.js'
 import { tableConvert } from './_convert.js'
 import { fileNameCreate } from '../../tools/file-name-create.js'
-import { QGISToken } from 'camino-common/src/utilisateur.js'
+import { QGISToken, utilisateurToEdit } from 'camino-common/src/utilisateur.js'
 import { knex } from '../../knex.js'
 import { idGenerate } from '../../database/models/_format/id-create.js'
 import bcrypt from 'bcryptjs'
+import { utilisateurUpdationValidate } from '../../business/validations/utilisateur-updation-validate.js'
+import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs.js'
 
 export const isSubscribedToNewsletter = async (req: express.Request<{ id?: string }>, res: CustomResponse<boolean>) => {
   const user = req.user as User
@@ -26,6 +28,75 @@ export const isSubscribedToNewsletter = async (req: express.Request<{ id?: strin
     } else {
       const subscribed = await isSubscribedToNewsLetter(utilisateur.email)
       res.json(subscribed)
+    }
+  }
+}
+export const updateUtilisateurPermission = async (req: express.Request<{ id?: string }>, res: CustomResponse<void>) => {
+  const user = req.user as User
+
+  if (!req.params.id) {
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else {
+    const utilisateurOld = await userGet(req.params.id)
+
+    if (!user || !utilisateurOld) {
+      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    } else {
+      try {
+        const utilisateur = utilisateurToEdit.parse(req.body)
+
+        utilisateurUpdationValidate(user, utilisateur, utilisateurOld)
+
+        // Thanks Objection
+        if (!isAdministrationRole(utilisateur.role)) {
+          utilisateur.administrationId = null
+        }
+        if (!isEntrepriseOrBureauDetudeRole(utilisateur.role)) {
+          utilisateur.entreprises = []
+        }
+
+        // TODO 2023-03-13: le jour où les entreprises sont un tableau d'ids dans la table user, passer à knex
+        await utilisateurUpsert({ ...utilisateur, entreprises: utilisateur.entreprises.map(id => ({ id })) })
+
+        res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+      } catch (e) {
+        console.error(e)
+
+        res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+      }
+    }
+  }
+}
+export const deleteUtilisateur = async (req: express.Request<{ id?: string }>, res: CustomResponse<void>) => {
+  const user = req.user as User
+
+  if (!req.params.id) {
+    res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+  } else {
+    try {
+      const utilisateur = await utilisateurGet(req.params.id, { fields: { id: {} } }, user)
+      if (!utilisateur) {
+        throw new Error('aucun utilisateur avec cet id ou droits insuffisants pour voir cet utilisateur')
+      }
+
+      if (!canDeleteUtilisateur(user, utilisateur.id)) {
+        throw new Error('droits insuffisants')
+      }
+
+      utilisateur.email = null
+      utilisateur.telephoneFixe = ''
+      utilisateur.telephoneMobile = ''
+      utilisateur.role = 'defaut'
+      utilisateur.entreprises = []
+      utilisateur.administrationId = undefined
+
+      await utilisateurUpsert(utilisateur)
+
+      res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+    } catch (e: any) {
+      console.error(e)
+
+      res.status(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR).send({ error: e.message ?? `Une erreur s'est produite` })
     }
   }
 }
