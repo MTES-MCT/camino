@@ -63,7 +63,7 @@
           <h5>Titre {{ linkConfig.count === 'multiple' ? 's' : '' }} à l’origine de cette nouvelle demande</h5>
         </div>
         <div class="tablet-blob-2-3">
-          <TitresLink :config="titreLinkConfig" :loadLinkableTitres="loadLinkableTitresByTypeId" @onSelectedTitres="onSelectedTitres" />
+          <TitresLink :config="titreLinkConfig" :loadLinkableTitres="loadLinkableTitresByTypeId" :onSelectTitres="onSelectedTitres" :onSelectTitre="unused" />
         </div>
       </div>
       <hr />
@@ -168,6 +168,7 @@ onBeforeUnmount(() => {
 const onSelectedTitres = (titres: { id: string }[]) => {
   titreDemande.value.titreFromIds = titres.map(({ id }) => id)
 }
+const unused = () => {}
 const keyUp = (e: KeyboardEvent) => {
   if ((e.which || e.keyCode) === 13 && complete.value && !loading.value) {
     saveRef.value?.focus()
