@@ -151,7 +151,7 @@ export const Header: FunctionalComponent<Props> = props => {
                 {linksByRole[props.user?.role ?? 'defaut'].map((link, index) => (
                   <li key={link.label} class="fr-nav__item">
                     {isDirectLink(link) ? (
-                      <router-link class="fr-nav__link" to={link.path} target="_self">
+                      <router-link class="fr-nav__link" to={{ name: link.path }} target="_self">
                         {link.label}
                       </router-link>
                     ) : (
@@ -163,7 +163,7 @@ export const Header: FunctionalComponent<Props> = props => {
                           <ul class="fr-menu__list">
                             {link.sublinks.map((sublink, subIndex) => (
                               <li key={sublink.label}>
-                                <router-link class="fr-nav__link" to={sublink.path} target="_self" id={`nav-${index}-${subIndex}`}>
+                                <router-link class="fr-nav__link" to={{ name: sublink.path }} target="_self" id={`nav-${index}-${subIndex}`}>
                                   {sublink.label}
                                 </router-link>
                               </li>
