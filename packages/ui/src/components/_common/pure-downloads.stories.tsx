@@ -1,8 +1,7 @@
 import { action } from '@storybook/addon-actions'
 import { Meta, Story } from '@storybook/vue3'
 import { RouteLocationNormalized } from 'vue-router'
-import { Store } from 'vuex'
-import { PureDownloads, Props } from './pure-downloads'
+import { PureDownloads } from './pure-downloads'
 
 const meta: Meta = {
   title: 'Components/common/Downloads',
