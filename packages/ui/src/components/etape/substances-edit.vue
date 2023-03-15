@@ -57,7 +57,7 @@
 <script setup lang="ts">
 import { SubstancesLegales, SubstancesLegale, SubstanceLegaleId } from 'camino-common/src/static/substancesLegales'
 import { computed } from 'vue'
-import HeritageEdit from '@/components/etape/heritage-edit.vue'
+import { HeritageEdit } from '@/components/etape/heritage-edit'
 import { TagList } from '@/components/_ui/tag-list'
 import { Icon } from '@/components/_ui/icon'
 import { DomaineId } from 'camino-common/src/static/domaines'

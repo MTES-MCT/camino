@@ -26,6 +26,7 @@
     </Accordion>
 
     <Accordion v-if="stepPoints" id="step-points" :step="stepPoints" :opened="opened['points']" :complete="stepPerimetreComplete" :enConstruction="enConstruction" @toggle="toggle('points')">
+    Coucou
       <PointsEdit
         :etape="etape"
         :events="events"
@@ -102,8 +103,8 @@
 import Accordion from './accordion.vue'
 import { TypeEdit } from './type-edit'
 import { DateEdit } from './date-edit'
-import FondamentalesEdit from './fondamentales-edit.vue'
-import PointsEdit from './points-edit.vue'
+import { FondamentalesEdit } from './fondamentales-edit'
+import { PointsEdit } from './points-edit'
 import SectionsEdit from './sections-edit.vue'
 import DocumentsEdit from '../document/multi-edit.vue'
 import JustificatifsEdit from './justificatifs-edit.vue'

@@ -33,9 +33,12 @@ export interface GeoSysteme<T = GeoSystemeId> {
   definitionProj4: string // https://github.com/josueggh/proj4-list/blob/master/list.js
 }
 
+const GEO_SYSTEME_KEYS = Object.values(GEO_SYSTEME_IDS)
 export type GeoSystemeId = (typeof GEO_SYSTEME_IDS)[keyof typeof GEO_SYSTEME_IDS]
 
-export const GeoSystemes: { [key in GeoSystemeId]: GeoSysteme<key> } = {
+export const isGeoSystemeId = (entry: string): entry is GeoSystemeId => GEO_SYSTEME_KEYS.includes(entry)
+
+export const GeoSystemes = {
   '2154': {
     id: '2154',
     nom: 'RGF93 / Lambert-93',
@@ -224,7 +227,7 @@ export const GeoSystemes: { [key in GeoSystemeId]: GeoSysteme<key> } = {
     zone: 'Réuinon',
     definitionProj4: '+proj=utm +zone=40 +south +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs ',
   },
-}
+} as const satisfies { [key in GeoSystemeId]: GeoSysteme<key> }
 
 export const sortedGeoSystemes = Object.values(GeoSystemes).sort((a, b) => a.ordre - b.ordre)
 

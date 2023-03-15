@@ -222,7 +222,10 @@ const actions = {
         demarcheId: state.metas.demarche.id,
         etapeTypeId: state.element.type.id,
       })
-      const etape = etapePointsFormat(state.element, points)
+      const {groupes, geoSystemeIds, geoSystemeOpposableId} = etapePointsFormat(points)
+      state.element.groupes = groupes
+      state.element.geoSystemeIds = geoSystemeIds
+      state.element.geoSystemeOpposableId = geoSystemeOpposableId
       // pour modifier la surface, on doit désactiver l’héritage
       etape.heritageProps.surface.actif = false
       etape.surface = surface
