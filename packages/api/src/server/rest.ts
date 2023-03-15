@@ -1,6 +1,7 @@
 import { IFormat, Index } from '../types.js'
 
 import express from 'express'
+import {Request} from 'express-jwt'
 import { join } from 'path'
 
 import { activites, demarches, entreprises, titre, titres } from '../api/rest/index.js'
@@ -55,10 +56,9 @@ const restCatcher = (expressCall: ExpressRoute) => async (req: express.Request, 
   }
 }
 
-const restDownload = (resolver: IRestResolver) => async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+const restDownload = (resolver: IRestResolver) => async (req: Request<User>, res: express.Response, next: express.NextFunction) => {
   try {
-    // TODO 2022-10-12 mieux typer
-    const user = req.user as User
+    const user = req.auth
 
     const result = await resolver({ query: req.query, params: req.params }, user)
 

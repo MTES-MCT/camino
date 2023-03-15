@@ -1,4 +1,4 @@
-import express from 'express'
+import { Request as JWTRequest } from "express-jwt";
 import { Fiscalite, FiscaliteFrance, FiscaliteGuyane, fiscaliteVisible, isFiscaliteGuyane } from 'camino-common/src/fiscalite.js'
 import { ICommune, IContenuValeur, IEntreprise } from '../../types'
 import { constants } from 'http2'
@@ -21,8 +21,8 @@ import { SubstanceFiscale, substancesFiscalesBySubstanceLegale } from 'camino-co
 import { Departements } from 'camino-common/src/static/departement.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { Regions } from 'camino-common/src/static/region.js'
-import { CaminoAnnee, isAnnee } from 'camino-common/src/date.js'
-import { EntrepriseId } from 'camino-common/src/entreprise.js'
+import { anneePrecedente, CaminoAnnee, caminoAnneeToNumber, isAnnee } from 'camino-common/src/date.js'
+import { eidValidator, EntrepriseId } from 'camino-common/src/entreprise.js'
 import { User } from 'camino-common/src/roles'
 
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): number => {
@@ -268,8 +268,8 @@ export const responseExtractor = (result: Pick<OpenfiscaResponse, 'articles'>, a
   return redevances.fiscalite
 }
 
-export const fiscalite = async (req: express.Request<{ entrepriseId?: EntrepriseId; annee?: CaminoAnnee }>, res: CustomResponse<Fiscalite>) => {
-  const user = req.user as User
+export const fiscalite = async (req: JWTRequest<User>, res: CustomResponse<Fiscalite>) => {
+  const user = req.auth
   if (!user) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
   } else {
@@ -286,10 +286,8 @@ export const fiscalite = async (req: express.Request<{ entrepriseId?: Entreprise
       const entreprise = await entrepriseGet(entrepriseId, { fields: { id: {} } }, user)
       if (!entreprise) {
         throw new Error(`l’entreprise ${entrepriseId} est inconnue`)
-      }
-
-      const annee = Number.parseInt(caminoAnnee, 10)
-      const anneePrecedente = annee - 1
+      }    
+      const anneeMoins1 = anneePrecedente(caminoAnnee)
 
       const titres = await titresGet(
         { entreprisesIds: [entrepriseId] },
@@ -305,7 +303,7 @@ export const fiscalite = async (req: express.Request<{ entrepriseId?: Entreprise
       )
 
       // TODO 2022-09-26 feature https://trello.com/c/VnlFB6Z1/294-featfiscalit%C3%A9-masquer-la-section-fiscalit%C3%A9-de-la-fiche-entreprise-pour-les-autres-domaines-que-m
-      if (!fiscaliteVisible(user, entrepriseId, titres)) {
+      if (!fiscaliteVisible(user, eidValidator.parse(entrepriseId), titres)) {
         console.warn(`la fiscalité n'est pas visible pour l'utilisateur ${user} et l'entreprise ${entrepriseId}`)
         res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
       } else {
@@ -315,7 +313,7 @@ export const fiscalite = async (req: express.Request<{ entrepriseId?: Entreprise
             typesIds: ['grx', 'gra', 'wrp'],
             // TODO 2022-07-25 Laure, que les déposées ? Pas les « en construction » ?
             statutsIds: ['dep'],
-            annees: [anneePrecedente],
+            annees: [caminoAnneeToNumber(anneeMoins1)],
             titresIds: titres.map(({ id }) => id),
           },
           { fields: { id: {} } },
@@ -325,20 +323,20 @@ export const fiscalite = async (req: express.Request<{ entrepriseId?: Entreprise
           {
             typesIds: ['grp'],
             statutsIds: ['dep'],
-            annees: [anneePrecedente],
+            annees: [caminoAnneeToNumber(anneeMoins1)],
             titresIds: titres.map(({ id }) => id),
           },
           { fields: { id: {} } },
           user
         )
 
-        const body = bodyBuilder(activites, activitesTrimestrielles, titres, annee, [entreprise])
+        const body = bodyBuilder(activites, activitesTrimestrielles, titres, caminoAnneeToNumber(caminoAnnee), [entreprise])
         console.info('body', JSON.stringify(body))
         if (Object.keys(body.articles).length > 0) {
           const result = await apiOpenfiscaCalculate(body)
           console.info('result', JSON.stringify(result))
 
-          const redevances = responseExtractor(result, annee)
+          const redevances = responseExtractor(result, caminoAnneeToNumber(caminoAnnee))
 
           res.json(redevances)
         } else {

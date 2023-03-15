@@ -1,4 +1,4 @@
-// Vitest Snapshot v1
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`utilisateursQueryModify > Vérifie l'écriture de la requête sur un utilisateur 1`] = `
 {

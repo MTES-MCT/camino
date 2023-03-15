@@ -69,6 +69,8 @@ export const isAnnee = (annee: string): annee is CaminoAnnee => {
 export const anneeSuivante = (annee: CaminoAnnee): CaminoAnnee => toCaminoAnnee(Number(annee) + 1)
 export const anneePrecedente = (annee: CaminoAnnee): CaminoAnnee => toCaminoAnnee(Number(annee) - 1)
 
+export const caminoAnneeToNumber = (annee: CaminoAnnee): number => Number.parseInt(annee, 10)
+
 export function checkValideAnnee(annee: string): asserts annee is CaminoAnnee {
   if (!isAnnee(annee)) {
     throw new Error(`l'année ${annee} n'est pas une année valide`)

@@ -1,7 +1,7 @@
 import { titreArchive, titreGet, titresGet, titreUpsert } from '../../database/queries/titres.js'
 import { z } from 'zod'
 import { ADMINISTRATION_IDS, ADMINISTRATION_TYPE_IDS, AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
-import express from 'express'
+import { Request } from "express-jwt";
 import { constants } from 'http2'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
@@ -34,8 +34,8 @@ const etapesAMasquer = [
   ETAPES_TYPES.demandeDeComplements_RecevabiliteDeLaDemande_,
 ]
 
-export const titresONF = async (req: express.Request, res: CustomResponse<CommonTitreONF[]>) => {
-  const user = req.user as User
+export const titresONF = async (req: Request<User>, res: CustomResponse<CommonTitreONF[]>) => {
+  const user = req.auth
 
   if (!user) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
@@ -159,8 +159,8 @@ async function titresArmAvecOctroi(user: User, administrationId: AdministrationI
   return titresAvecOctroiArm
 }
 
-export const titresPTMG = async (req: express.Request, res: CustomResponse<CommonTitrePTMG[]>) => {
-  const user = req.user as User
+export const titresPTMG = async (req: Request<User>, res: CustomResponse<CommonTitrePTMG[]>) => {
+  const user = req.auth
 
   if (!user) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
@@ -197,8 +197,8 @@ type TitreDrealAvecReferences = {
   titre: DrealTitreSanitize
   references: TitreReference[]
 } & Pick<CommonTitreDREAL, 'prochainesEtapes' | 'derniereEtape' | 'enAttenteDeDREAL'>
-export const titresDREAL = async (req: express.Request, res: CustomResponse<CommonTitreDREAL[]>) => {
-  const user = req.user as User
+export const titresDREAL = async (req: Request<User>, res: CustomResponse<CommonTitreDREAL[]>) => {
+  const user = req.auth
 
   if (!user) {
     res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
@@ -343,10 +343,10 @@ export const titresDREAL = async (req: express.Request, res: CustomResponse<Comm
 const isStringArray = (stuff: any): stuff is string[] => {
   return stuff instanceof Array && stuff.every(value => typeof value === 'string')
 }
-export const postTitreLiaisons = async (req: express.Request<{ id?: string }>, res: CustomResponse<TitreLinks>) => {
-  const user = req.user as User
+export const postTitreLiaisons = async (req: Request<User>, res: CustomResponse<TitreLinks>) => {
+  const user = req.auth
 
-  const titreId: string | undefined = req.params.id
+  const titreId = req.params.id
   const titreFromIds = req.body
 
   if (!isStringArray(titreFromIds)) {
@@ -388,10 +388,10 @@ export const postTitreLiaisons = async (req: express.Request<{ id?: string }>, r
     aval: await titreLinksGet(titreId, 'titreToId', user),
   })
 }
-export const getTitreLiaisons = async (req: express.Request<{ id?: string }>, res: CustomResponse<TitreLinks>) => {
-  const user = req.user as User
+export const getTitreLiaisons = async (req: Request<User>, res: CustomResponse<TitreLinks>) => {
+  const user = req.auth
 
-  const titreId: string | undefined = req.params.id
+  const titreId = req.params.id
 
   if (!titreId) {
     res.json({ amont: [], aval: [] })

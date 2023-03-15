@@ -11,13 +11,13 @@
     "lint": "prettier --check src && eslint src"
   },
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.52.0",
-    "@typescript-eslint/parser": "^5.52.0",
-    "@vitest/coverage-c8": "^0.25.2",
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "@vitest/coverage-c8": "^0.29.2",
     "prettier": "^2.8.4",
     "typescript": "^4.9.5",
-    "vite": "^3.2.4",
-    "vitest": "^0.25.2"
+    "vite": "^4.1.4",
+    "vitest": "^0.29.2"
   },
   "prettier": {
     "semi": false,

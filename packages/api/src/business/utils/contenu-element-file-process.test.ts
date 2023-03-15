@@ -104,7 +104,7 @@ describe('contenuElementFileProcess', () => {
       filename: 'toto.pdf',
       encoding: 'utf-8',
       mimetype: 'application/pdf',
-    }
+    } as unknown as FileUpload
 
     await contenuElementFilesCreate([file, file], 'demarches', 'etapeId')
 
