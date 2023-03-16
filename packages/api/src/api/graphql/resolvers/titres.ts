@@ -6,7 +6,7 @@ import { titreFormat, titresFormat } from '../../_format/titres.js'
 
 import { fieldsBuild } from './_fields-build.js'
 
-import { titreCreate, titreGet, titresCount, titresGet, titreUpsert } from '../../../database/queries/titres.js'
+import { titreCreate, titreGet, titresCount, titresGet } from '../../../database/queries/titres.js'
 
 import titreUpdateTask from '../../../business/titre-update.js'
 import { assertsCanCreateTitre } from 'camino-common/src/permissions/titres.js'
@@ -173,30 +173,4 @@ const titreCreer = async ({ titre }: { titre: ITitre }, { user }: Context, info:
   }
 }
 
-const titreModifier = async ({ titre }: { titre: ITitre }, { user }: Context, info: GraphQLResolveInfo) => {
-  try {
-    const titreOld = await titreGet(titre.id, { fields: {} }, user)
-
-    if (!titreOld) throw new Error("le titre n'existe pas")
-
-    if (!titreOld.modification) throw new Error('droits insuffisants')
-
-    const fields = fieldsBuild(info)
-
-    // on doit utiliser upsert (plutôt qu'un simple update)
-    // car le titre contient des références (tableau d'objet)
-    await titreUpsert(titre, { fields })
-
-    await titreUpdateTask(titre.id)
-
-    const titreUpdated = await titreGet(titre.id, { fields }, user)
-
-    return titreUpdated && titreFormat(titreUpdated)
-  } catch (e) {
-    console.error(e)
-
-    throw e
-  }
-}
-
-export { titre, titres, titreCreer, titreModifier }
+export { titre, titres, titreCreer }

@@ -219,9 +219,6 @@ type Mutation {
   "Crée un titre minier"
   titreCreer(titre: InputTitreCreation!): Titre
 
-  "Modifie un titre minier"
-  titreModifier(titre: InputTitreModification!): Titre
-
   "Crée une démarche et met à jour le titre minier"
   demarcheCreer(demarche: InputDemarcheCreation!): Titre
 

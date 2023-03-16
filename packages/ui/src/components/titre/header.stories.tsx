@@ -14,6 +14,7 @@ export default meta
 const emailSend = action('emailSend')
 const removeTitre = action('removeTitre')
 const titreUtilisateurAbonne = action('titreUtilisateurAbonne')
+const editTitre = action('editTitre')
 
 const apiClientMock: Omit<TitreApiClient, 'loadTitreSections'> = {
   removeTitre: async titreId => {
@@ -24,12 +25,17 @@ const apiClientMock: Omit<TitreApiClient, 'loadTitreSections'> = {
     titreUtilisateurAbonne(params)
     return Promise.resolve()
   },
+  editTitre: async (...params) => {
+    editTitre(params)
+    return Promise.resolve()
+  },
 }
 export const Default: Story = () => (
   <PureHeader
     titre={{
-      abonnement: false,
       id: 'id',
+      references: [],
+      abonnement: false,
       modification: false,
       nom: 'Nom titre',
       typeId: 'arm',
@@ -43,8 +49,9 @@ export const Default: Story = () => (
 export const AbonneAuTitre: Story = () => (
   <PureHeader
     titre={{
-      abonnement: true,
       id: 'id',
+      references: [],
+      abonnement: true,
       modification: false,
       nom: 'Nom titre',
       typeId: 'arm',
@@ -58,8 +65,9 @@ export const AbonneAuTitre: Story = () => (
 export const CanDeleteTitre: Story = () => (
   <PureHeader
     titre={{
-      abonnement: false,
       id: 'id',
+      references: [],
+      abonnement: false,
       modification: false,
       nom: 'Nom titre',
       typeId: 'arm',
@@ -73,8 +81,9 @@ export const CanDeleteTitre: Story = () => (
 export const CanEditTitre: Story = () => (
   <PureHeader
     titre={{
-      abonnement: false,
       id: 'id',
+      references: [{ nom: 'cette-ref', referenceTypeId: 'brg' }],
+      abonnement: false,
       modification: true,
       nom: 'Nom titre',
       typeId: 'arm',

@@ -7,6 +7,8 @@ import { numberFormat } from './number.js'
 import { CheckboxesElement, DateElement, FileElement, NumberElement, RadioElement, SelectElement, TextElement } from './static/titresTypes_demarchesTypes_etapesTypes/sections.js'
 import { UniteId, Unites } from './static/unites.js'
 import { DeviseId, Devises } from './static/devise.js'
+import { z } from 'zod'
+import { REFERENCES_TYPES_KEYS, ReferenceTypeId } from './static/referencesTypes.js'
 
 export interface CommonTitre {
   id: string
@@ -17,6 +19,13 @@ export interface CommonTitre {
   references: TitreReference[]
   titulaires: { nom?: string }[]
 }
+export type EditableTitre = Pick<CommonTitre, 'id' | 'nom' | 'references'>
+
+export const editableTitreCheck = z.object({
+  id: z.string(),
+  nom: z.string(),
+  references: z.array(z.object({ nom: z.string(), referenceTypeId: z.enum<ReferenceTypeId, typeof REFERENCES_TYPES_KEYS>(REFERENCES_TYPES_KEYS) })),
+})
 
 export interface CommonTitrePTMG extends CommonTitre {
   enAttenteDePTMG: boolean

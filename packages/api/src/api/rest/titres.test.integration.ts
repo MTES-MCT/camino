@@ -3,15 +3,18 @@ import { titreCreate } from '../../database/queries/titres.js'
 import { titreDemarcheCreate } from '../../database/queries/titres-demarches.js'
 import { titreEtapeCreate } from '../../database/queries/titres-etapes.js'
 import { userSuper } from '../../database/user-super.js'
-import { restCall, restPostCall } from '../../../tests/_utils/index.js'
+import { restCall, restDeleteCall, restPostCall } from '../../../tests/_utils/index.js'
 import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { ITitreDemarche, ITitreEtape } from '../../types.js'
 import { entreprisesUpsert } from '../../database/queries/entreprises.js'
 import { Knex } from 'knex'
 import { toCaminoDate } from 'camino-common/src/date.js'
-import { afterAll, beforeAll, describe, test, expect } from 'vitest'
+import { afterAll, beforeAll, beforeEach, describe, test, expect, vi } from 'vitest'
 import { newEntrepriseId } from 'camino-common/src/entreprise.js'
 import { CaminoRestRoutes } from 'camino-common/src/rest.js'
+
+console.info = vi.fn()
+console.error = vi.fn()
 
 let knex: Knex<any, unknown[]>
 beforeAll(async () => {
@@ -242,5 +245,117 @@ describe('titresLiaisons', () => {
       id: axm.id,
       nom: axm.nom,
     })
+  })
+})
+
+describe('titreModifier', () => {
+  let id = ''
+
+  beforeEach(async () => {
+    const titre = await titreCreate(
+      {
+        nom: 'mon titre',
+        typeId: 'arm',
+        propsTitreEtapesIds: {},
+      },
+      {}
+    )
+    id = titre.id
+  })
+
+  test('ne peut pas modifier un titre (utilisateur anonyme)', async () => {
+    const tested = await restPostCall(CaminoRestRoutes.titre, { titreId: id }, undefined, { id, nom: 'mon titre modifié', references: [] })
+
+    expect(tested.statusCode).toBe(404)
+  })
+
+  test("ne peut pas modifier un titre (un utilisateur 'entreprise')", async () => {
+    const tested = await restPostCall(CaminoRestRoutes.titre, { titreId: id }, { role: 'entreprise', entreprises: [] }, { id, nom: 'mon titre modifié', references: [] })
+
+    expect(tested.statusCode).toBe(404)
+  })
+
+  test('modifie un titre (un utilisateur userSuper)', async () => {
+    const tested = await restPostCall(CaminoRestRoutes.titre, { titreId: id }, { role: 'super' }, { id, nom: 'mon titre modifié', references: [] })
+    expect(tested.statusCode).toBe(204)
+  })
+
+  test("modifie un titre ARM (un utilisateur 'admin' PTMG)", async () => {
+    const tested = await restPostCall(
+      CaminoRestRoutes.titre,
+      { titreId: id },
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+      },
+      { id, nom: 'mon titre modifié', references: [] }
+    )
+    expect(tested.statusCode).toBe(204)
+  })
+
+  test("ne peut pas modifier un titre ARM échu (un utilisateur 'admin' PTMG)", async () => {
+    const titre = await titreCreate(
+      {
+        nom: 'mon titre échu',
+        typeId: 'arm',
+        titreStatutId: 'ech',
+        propsTitreEtapesIds: {},
+      },
+      {}
+    )
+
+    const tested = await restPostCall(
+      CaminoRestRoutes.titre,
+      { titreId: titre.id },
+      {
+        role: 'admin',
+        administrationId: ADMINISTRATION_IDS['PÔLE TECHNIQUE MINIER DE GUYANE'],
+      },
+      { id: titre.id, nom: 'mon titre modifié', references: [] }
+    )
+    expect(tested.statusCode).toBe(403)
+  })
+
+  test("ne peut pas modifier un titre ARM (un utilisateur 'admin' DGTM)", async () => {
+    const tested = await restPostCall(
+      CaminoRestRoutes.titre,
+      { titreId: id },
+      { role: 'admin', administrationId: ADMINISTRATION_IDS['DGTM - GUYANE'] },
+      { id, nom: 'mon titre modifié', references: [] }
+    )
+    expect(tested.statusCode).toBe(403)
+  })
+})
+
+describe('titreSupprimer', () => {
+  let id = ''
+
+  beforeEach(async () => {
+    const titre = await titreCreate(
+      {
+        nom: 'mon titre',
+        typeId: 'arm',
+        propsTitreEtapesIds: {},
+      },
+      {}
+    )
+    id = titre.id
+  })
+
+  test('ne peut pas supprimer un titre (utilisateur anonyme)', async () => {
+    const tested = await restDeleteCall(CaminoRestRoutes.titre, { titreId: id }, undefined)
+
+    expect(tested.statusCode).toBe(404)
+  })
+
+  test('peut supprimer un titre (utilisateur super)', async () => {
+    const tested = await restDeleteCall(CaminoRestRoutes.titre, { titreId: id }, userSuper)
+
+    expect(tested.statusCode).toBe(204)
+  })
+
+  test('ne peut pas supprimer un titre inexistant (utilisateur super)', async () => {
+    const tested = await restDeleteCall(CaminoRestRoutes.titre, { titreId: 'toto' }, userSuper)
+    expect(tested.statusCode).toBe(404)
   })
 })

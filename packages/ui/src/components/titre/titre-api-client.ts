@@ -1,11 +1,12 @@
 import { CaminoRestRoutes } from 'camino-common/src/rest'
-import { Section } from 'camino-common/src/titres'
+import { EditableTitre, Section } from 'camino-common/src/titres'
 import { fetchWithJson, postWithJson } from '../../api/client-rest'
 
 export interface TitreApiClient {
   loadTitreSections: (titreId: string) => Promise<Section[]>
   removeTitre: (titreId: string) => Promise<void>
   titreUtilisateurAbonne: (titreId: string, abonne: boolean) => Promise<void>
+  editTitre: (titre: EditableTitre) => Promise<void>
 }
 
 export const titreApiClient: TitreApiClient = {
@@ -17,5 +18,8 @@ export const titreApiClient: TitreApiClient = {
   },
   titreUtilisateurAbonne: async (titreId: string, abonne: boolean): Promise<void> => {
     return postWithJson(CaminoRestRoutes.titreUtilisateurAbonne, { titreId }, { abonne })
+  },
+  editTitre: (titre: EditableTitre): Promise<void> => {
+    return postWithJson(CaminoRestRoutes.titre, { titreId: titre.id }, titre)
   },
 }

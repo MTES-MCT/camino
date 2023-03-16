@@ -5,7 +5,7 @@ import { join } from 'path'
 
 import { activites, demarches, entreprises, titre, titres } from '../api/rest/index.js'
 import { etapeFichier, etapeTelecharger, fichier } from '../api/rest/fichiers.js'
-import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresDREAL, titresONF, titresPTMG, utilisateurTitreAbonner } from '../api/rest/titres.js'
+import { getTitreLiaisons, postTitreLiaisons, removeTitre, titresDREAL, titresONF, titresPTMG, updateTitre, utilisateurTitreAbonner } from '../api/rest/titres.js'
 import { fiscalite } from '../api/rest/entreprises.js'
 import { deleteUtilisateur, generateQgisToken, isSubscribedToNewsletter, manageNewsletterSubscription, moi, updateUtilisateurPermission, utilisateurs } from '../api/rest/utilisateurs.js'
 import { logout, resetPassword } from '../api/rest/keycloak.js'
@@ -120,6 +120,8 @@ rest.get('/titres_qgis', restDownload(titres))
 rest.get(CaminoRestRoutes.titreSections, restCatcher(getTitresSections))
 
 rest.delete(CaminoRestRoutes.titre, restCatcher(removeTitre))
+rest.post(CaminoRestRoutes.titre, restCatcher(updateTitre))
+
 rest.post(CaminoRestRoutes.titreUtilisateurAbonne, restCatcher(utilisateurTitreAbonner))
 rest.get(CaminoRestRoutes.titresONF, restCatcher(titresONF))
 rest.get(CaminoRestRoutes.titresPTMG, restCatcher(titresPTMG))

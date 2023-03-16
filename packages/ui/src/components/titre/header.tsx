@@ -1,11 +1,15 @@
+import { apiClient } from '@/api/api-client'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
 import { canDeleteTitre } from 'camino-common/src/permissions/titres'
 import { User } from 'camino-common/src/roles'
+import { ReferenceTypeId } from 'camino-common/src/static/referencesTypes'
 import { TitreTypeId } from 'camino-common/src/static/titresTypes'
+import { EditableTitre } from 'camino-common/src/titres'
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { Icon } from '../_ui/icon'
+import { EditPopup } from './edit-popup'
 import { RemovePopup } from './remove-popup'
 import { titreApiClient, TitreApiClient } from './titre-api-client'
 
@@ -16,6 +20,7 @@ interface Props {
     typeId: TitreTypeId
     abonnement: boolean
     modification: boolean
+    references: { referenceTypeId: ReferenceTypeId; nom: string }[]
   }
 }
 
@@ -54,6 +59,17 @@ export const Header = caminoDefineComponent<Props>(['titre'], (props, context) =
     router.push({ name: 'titres' })
   }
 
+  const editTitre = async (titre: EditableTitre) => {
+    eventTrack({
+      categorie: 'titre-sections',
+      action: 'titre-enregistrer',
+      nom: titre.id,
+    })
+    await titreApiClient.editTitre(titre)
+    await store.dispatch('reload', { name: 'titre', id: titre.id }, { root: true })
+    store.dispatch('messageAdd', { value: 'le titre a été mis à jour', type: 'success' }, { root: true })
+  }
+
   const abonne = async (titreId: string, abonner: boolean) => {
     await titreApiClient.titreUtilisateurAbonne(titreId, abonner)
     store.commit('titre/set', { ...props.titre, abonnement: abonner })
@@ -77,34 +93,15 @@ export const Header = caminoDefineComponent<Props>(['titre'], (props, context) =
     window.location.href = `mailto:camino@beta.gouv.fr?subject=Erreur ${route.params.id}&body=Bonjour, j'ai repéré une erreur sur le titre ${window.location.href} : `
   }
 
-  return () => <PureHeader {...props} user={user.value} apiClient={{ ...titreApiClient, removeTitre, titreUtilisateurAbonne: abonne }} emailSend={emailSend} />
+  return () => <PureHeader {...props} user={user.value} apiClient={{ editTitre, removeTitre, titreUtilisateurAbonne: abonne }} emailSend={emailSend} />
 })
 
 export const PureHeader = caminoDefineComponent<PureProps>(['titre', 'apiClient', 'user', 'emailSend'], props => {
   const suppression = computed(() => {
     return canDeleteTitre(props.user)
   })
-  // const editPopupOpen = () => {
-  //   const titre = {}
-  //   titre.id = props.titre.id
-  //   titre.nom = props.titre.nom
-  //   titre.references = props.titre.references
-
-  //   store.commit('popupOpen', {
-  //     component: EditPopup,
-  //     props: {
-  //       titre,
-  //     },
-  //   })
-
-  //   eventTrack({
-  //     categorie: 'titre-sections',
-  //     action: 'titre-editer',
-  //     nom: route.params.id,
-  //   })
-  // }
-
   const removePopup = ref<boolean>(false)
+  const editPopup = ref<boolean>(false)
 
   return () => (
     <div class="sticky-header width-full">
@@ -127,9 +124,16 @@ export const PureHeader = caminoDefineComponent<PureProps>(['titre', 'apiClient'
               <button class={`btn-border small px-m py-s lh-2 ${suppression.value || props.titre.modification ? 'mr-px' : 'rnd-r-xs'} ${!props.user ? 'rnd-l-xs' : null}`} onClick={props.emailSend}>
                 <span class="mt-xs nowrap">Signaler une erreur…</span>
               </button>
-              {/* {props.titre.modification ? (<button class={`btn py-s px-m mr-px ${!suppression.value ? 'rnd-r-xs' : null}`} onClick={editPopupOpen}>
-            <Icon size="M" name="pencil" />
-          </button>) : null} */}
+              {props.titre.modification ? (
+                <button
+                  class={`btn py-s px-m mr-px ${!suppression.value ? 'rnd-r-xs' : null}`}
+                  onClick={() => {
+                    editPopup.value = true
+                  }}
+                >
+                  <Icon size="M" name="pencil" />
+                </button>
+              ) : null}
 
               {suppression.value ? (
                 <button
@@ -155,6 +159,16 @@ export const PureHeader = caminoDefineComponent<PureProps>(['titre', 'apiClient'
           titreTypeId={props.titre.typeId}
           deleteTitre={async () => {
             await props.apiClient.removeTitre(props.titre.id)
+          }}
+        />
+      ) : null}
+
+      {editPopup.value ? (
+        <EditPopup
+          close={() => (editPopup.value = !editPopup.value)}
+          titre={props.titre}
+          editTitre={async titre => {
+            await props.apiClient.editTitre(titre)
           }}
         />
       ) : null}

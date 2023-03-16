@@ -1,4 +1,4 @@
-import { titre, titreCreer, titreModifier } from '../api/titres'
+import { titre, titreCreer } from '../api/titres'
 
 import router from '../router'
 import { canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
@@ -96,24 +96,6 @@ const actions = {
       commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
     } finally {
       commit('loadingRemove', 'titreAdd', { root: true })
-    }
-  },
-
-  async update({ commit, dispatch }, titre) {
-    try {
-      commit('popupMessagesRemove', null, { root: true })
-      commit('popupLoad', null, { root: true })
-      commit('loadingAdd', 'totreUpdate', { root: true })
-
-      const data = await titreModifier({ titre })
-
-      commit('popupClose', null, { root: true })
-      await dispatch('reload', { name: 'titre', id: data.slug }, { root: true })
-      dispatch('messageAdd', { value: 'le titre a été mis à jour', type: 'success' }, { root: true })
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'totreUpdate', { root: true })
     }
   },
 }

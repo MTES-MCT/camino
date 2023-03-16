@@ -7444,7 +7444,7 @@ exports[`Storybook Tests > Components/Statistiques/MinerauxMetauxMetropole > Wit
 `;
 
 exports[`Storybook Tests > Components/Titre/DemarcheEditPopup > Create 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\">
+"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Ajout d'une démarche </h2>
@@ -7486,7 +7486,7 @@ exports[`Storybook Tests > Components/Titre/DemarcheEditPopup > Create 1`] = `
 `;
 
 exports[`Storybook Tests > Components/Titre/DemarcheEditPopup > Edit 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\">
+"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Modification de la démarche </h2>
@@ -7528,7 +7528,7 @@ exports[`Storybook Tests > Components/Titre/DemarcheEditPopup > Edit 1`] = `
 `;
 
 exports[`Storybook Tests > Components/Titre/DemarcheRemovePopup > Main 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\">
+"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Suppression de la démarche</h2>
@@ -7549,6 +7549,186 @@ exports[`Storybook Tests > Components/Titre/DemarcheRemovePopup > Main 1`] = `
       </div>
     </div>
   </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Titre/EditPopup > DefaultNoReference 1`] = `
+"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
+  <div class=\\"popup fixed shadow full bg-bg\\">
+    <div class=\\"popup-header px-l pt-l\\">
+      <h2>Modification du titre</h2>
+    </div>
+    <div class=\\"popup-content px-l pt\\">
+      <div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
+            <h5>Nom</h5>
+          </div>
+          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" placeholder=\\"Nom\\" class=\\"p-s\\"></div>
+        </div>
+        <hr>
+      </div>
+      <div>
+        <h3 class=\\"mb-s\\">Références</h3>
+        <p class=\\"h6 italic\\">Optionnel</p>
+        <hr><button class=\\"btn rnd-xs py-s px-m full-x mb flex h6\\"><span class=\\"mt-xxs\\">Ajouter une référence</span><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"plus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"flex-right\\">
+            <use href=\\"#icon-plus\\"></use>
+          </svg></button>
+      </div>
+    </div>
+    <div class=\\"popup-footer px-l pt pb-l\\">
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
+        <div class=\\"tablet-blob-2-3\\">
+          <div class=\\"\\" style=\\"\\"><button class=\\" btn btn-primary\\">Enregistrer</button>
+            <!---->
+            <!---->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Titre/EditPopup > OneReference 1`] = `
+"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
+  <div class=\\"popup fixed shadow full bg-bg\\">
+    <div class=\\"popup-header px-l pt-l\\">
+      <h2>Modification du titre</h2>
+    </div>
+    <div class=\\"popup-content px-l pt\\">
+      <div>
+        <div class=\\"tablet-blobs\\">
+          <div class=\\"tablet-blob-1-3 tablet-pt-s pb-s\\">
+            <h5>Nom</h5>
+          </div>
+          <div class=\\"mb tablet-blob-2-3\\"><input type=\\"text\\" placeholder=\\"Nom\\" class=\\"p-s\\"></div>
+        </div>
+        <hr>
+      </div>
+      <div>
+        <h3 class=\\"mb-s\\">Références</h3>
+        <p class=\\"h6 italic\\">Optionnel</p>
+        <hr>
+        <div class=\\"flex full-x mb-s\\"><select class=\\"p-s mr-s\\">
+            <option value=\\"brg\\">BRGM</option>
+            <option value=\\"dea\\">DEAL</option>
+            <option value=\\"deb\\">DEB</option>
+            <option value=\\"dge\\">DGEC</option>
+            <option value=\\"ifr\\">Ifremer</option>
+            <option value=\\"irs\\">IRSN</option>
+            <option value=\\"nus\\">Nom d'usage</option>
+            <option value=\\"onf\\">ONF</option>
+            <option value=\\"ptm\\">PTMG</option>
+            <option value=\\"rnt\\">RNTM</option>
+          </select><input type=\\"text\\" class=\\"p-s mr-s\\" placeholder=\\"valeur\\">
+          <div class=\\"flex-right\\"><button class=\\"btn py-s px-m rnd-xs\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"minus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+                <use href=\\"#icon-minus\\"></use>
+              </svg></button></div>
+        </div><button class=\\"btn rnd-xs py-s px-m full-x mb flex h6\\"><span class=\\"mt-xxs\\">Ajouter une référence</span><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"plus\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\" class=\\"flex-right\\">
+            <use href=\\"#icon-plus\\"></use>
+          </svg></button>
+      </div>
+    </div>
+    <div class=\\"popup-footer px-l pt pb-l\\">
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
+        <div class=\\"tablet-blob-2-3\\">
+          <div class=\\"\\" style=\\"\\"><button class=\\" btn btn-primary\\">Enregistrer</button>
+            <!---->
+            <!---->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Titre/Header > AbonneAuTitre 1`] = `
+"<div class=\\"sticky-header width-full\\">
+  <div class=\\"container\\">
+    <div class=\\"tablet-blobs\\">
+      <div class=\\"tablet-blob-1-2\\">
+        <h1 class=\\"mt-m mb-m\\">Nom titre</h1>
+      </div>
+      <div class=\\"tablet-blob-1-2 flex\\">
+        <div class=\\"flex-right flex my-s\\"><button class=\\"btn small rnd-0 rnd-l-xs px-m py-s lh-2 mr-px btn-secondary\\"><span class=\\"mt-xs\\">Se désabonner du titre</span></button><button class=\\"btn-border small px-m py-s lh-2 rnd-r-xs null\\"><span class=\\"mt-xs nowrap\\">Signaler une erreur…</span></button>
+          <!---->
+          <!---->
+        </div>
+      </div>
+    </div>
+    <div class=\\"line width-full\\"></div>
+  </div>
+  <!---->
+  <!---->
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Titre/Header > CanDeleteTitre 1`] = `
+"<div class=\\"sticky-header width-full\\">
+  <div class=\\"container\\">
+    <div class=\\"tablet-blobs\\">
+      <div class=\\"tablet-blob-1-2\\">
+        <h1 class=\\"mt-m mb-m\\">Nom titre</h1>
+      </div>
+      <div class=\\"tablet-blob-1-2 flex\\">
+        <div class=\\"flex-right flex my-s\\"><button class=\\"btn small rnd-0 rnd-l-xs px-m py-s lh-2 mr-px btn-primary\\"><span class=\\"mt-xs\\">S’abonner au titre</span></button><button class=\\"btn-border small px-m py-s lh-2 mr-px null\\"><span class=\\"mt-xs nowrap\\">Signaler une erreur…</span></button>
+          <!----><button class=\\"btn rnd-r-xs py-s px-m\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"delete\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+              <use href=\\"#icon-delete\\"></use>
+            </svg></button>
+        </div>
+      </div>
+    </div>
+    <div class=\\"line width-full\\"></div>
+  </div>
+  <!---->
+  <!---->
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Titre/Header > CanEditTitre 1`] = `
+"<div class=\\"sticky-header width-full\\">
+  <div class=\\"container\\">
+    <div class=\\"tablet-blobs\\">
+      <div class=\\"tablet-blob-1-2\\">
+        <h1 class=\\"mt-m mb-m\\">Nom titre</h1>
+      </div>
+      <div class=\\"tablet-blob-1-2 flex\\">
+        <div class=\\"flex-right flex my-s\\"><button class=\\"btn small rnd-0 rnd-l-xs px-m py-s lh-2 mr-px btn-primary\\"><span class=\\"mt-xs\\">S’abonner au titre</span></button><button class=\\"btn-border small px-m py-s lh-2 mr-px null\\"><span class=\\"mt-xs nowrap\\">Signaler une erreur…</span></button><button class=\\"btn py-s px-m mr-px null\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"pencil\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+              <use href=\\"#icon-pencil\\"></use>
+            </svg></button><button class=\\"btn rnd-r-xs py-s px-m\\"><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"delete\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
+              <use href=\\"#icon-delete\\"></use>
+            </svg></button></div>
+      </div>
+    </div>
+    <div class=\\"line width-full\\"></div>
+  </div>
+  <!---->
+  <!---->
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Titre/Header > Default 1`] = `
+"<div class=\\"sticky-header width-full\\">
+  <div class=\\"container\\">
+    <div class=\\"tablet-blobs\\">
+      <div class=\\"tablet-blob-1-2\\">
+        <h1 class=\\"mt-m mb-m\\">Nom titre</h1>
+      </div>
+      <div class=\\"tablet-blob-1-2 flex\\">
+        <div class=\\"flex-right flex my-s\\"><button class=\\"btn small rnd-0 rnd-l-xs px-m py-s lh-2 mr-px btn-primary\\"><span class=\\"mt-xs\\">S’abonner au titre</span></button><button class=\\"btn-border small px-m py-s lh-2 rnd-r-xs null\\"><span class=\\"mt-xs nowrap\\">Signaler une erreur…</span></button>
+          <!---->
+          <!---->
+        </div>
+      </div>
+    </div>
+    <div class=\\"line width-full\\"></div>
+  </div>
+  <!---->
+  <!---->
 </div>"
 `;
 
@@ -7702,6 +7882,31 @@ exports[`Storybook Tests > Components/Titre/Infos > Empty 1`] = `
       <!---->
       <!---->
       <!---->
+    </div>
+  </div>
+</div>"
+`;
+
+exports[`Storybook Tests > Components/Titre/RemovePopup > Default 1`] = `
+"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
+  <div class=\\"popup fixed shadow full bg-bg\\">
+    <div class=\\"popup-header px-l pt-l\\">
+      <h2>Suppression du titre</h2>
+    </div>
+    <div class=\\"popup-content px-l pt\\">
+      <p class=\\"bold\\">Souhaitez vous supprimer le titre<span class=\\"color-inverse\\">Nom du titre</span> (<span class=\\"color-inverse\\">autorisation de recherches</span>) ?</p>
+      <div class=\\"bg-warning color-bg p-s mb-l\\"><span class=\\"bold\\"> Attention </span>: cette opération est définitive et ne peut pas être annulée.</div>
+    </div>
+    <div class=\\"popup-footer px-l pt pb-l\\">
+      <div class=\\"tablet-blobs\\">
+        <div class=\\"tablet-blob-1-3 mb tablet-mb-0\\"><button class=\\"btn-border rnd-xs p-s full-x\\">Annuler</button></div>
+        <div class=\\"tablet-blob-2-3\\">
+          <div class=\\"\\" style=\\"\\"><button class=\\" btn btn-primary\\">Supprimer</button>
+            <!---->
+            <!---->
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>"
@@ -8147,7 +8352,7 @@ exports[`Storybook Tests > Components/UI/InputDate > WithDateAlreadySet 1`] = `
 `;
 
 exports[`Storybook Tests > Components/UI/Popup > Main 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\">
+"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Titre de la popup</h2>
@@ -8173,7 +8378,7 @@ exports[`Storybook Tests > Components/UI/Popup > Main 1`] = `
 `;
 
 exports[`Storybook Tests > Components/UI/Popup > NotValid 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\">
+"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Titre de la popup</h2>
@@ -9568,7 +9773,7 @@ exports[`Storybook Tests > Components/Utilisateur/QGISToken > Default 1`] = `
 `;
 
 exports[`Storybook Tests > Components/Utilisateur/RemovePopup > Default 1`] = `
-"<div class=\\"absolute full bg-inverse-alpha z-2\\">
+"<div class=\\"absolute full bg-inverse-alpha z-2\\" style=\\"position: fixed;\\">
   <div class=\\"popup fixed shadow full bg-bg\\">
     <div class=\\"popup-header px-l pt-l\\">
       <h2>Suppression du compte utilisateur</h2>

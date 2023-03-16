@@ -1,4 +1,4 @@
-import { titreArchive, titreGet, titresGet } from '../../database/queries/titres.js'
+import { titreArchive, titreGet, titresGet, titreUpsert } from '../../database/queries/titres.js'
 import { z } from 'zod'
 import { ADMINISTRATION_IDS, ADMINISTRATION_TYPE_IDS, AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
 import express from 'express'
@@ -6,7 +6,7 @@ import { constants } from 'http2'
 import { DOMAINES_IDS } from 'camino-common/src/static/domaines.js'
 import { TITRES_TYPES_TYPES_IDS } from 'camino-common/src/static/titresTypesTypes.js'
 import { ITitre, ITitreDemarche } from '../../types.js'
-import { CommonTitreDREAL, CommonTitreONF, CommonTitrePTMG, TitreLink, TitreLinks } from 'camino-common/src/titres.js'
+import { CommonTitreDREAL, CommonTitreONF, CommonTitrePTMG, editableTitreCheck, TitreLink, TitreLinks } from 'camino-common/src/titres.js'
 import { demarcheDefinitionFind, isDemarcheDefinitionMachine } from '../../business/rules-demarches/definitions.js'
 import { CustomResponse } from './express-type.js'
 import { userSuper } from '../../database/user-super.js'
@@ -24,6 +24,7 @@ import { CaminoDate } from 'camino-common/src/date.js'
 import { isAdministration, User } from 'camino-common/src/roles.js'
 import { canCreateDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches.js'
 import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs.js'
+import titreUpdateTask from '../../business/titre-update.js'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,
@@ -471,6 +472,42 @@ export const utilisateurTitreAbonner = async (req: express.Request<{ titreId?: s
           }
         }
         res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+      }
+    } catch (e) {
+      console.error(e)
+
+      res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+    }
+  }
+}
+
+export const updateTitre = async (req: express.Request<{ titreId?: string }>, res: CustomResponse<void>) => {
+  const titreId: string | undefined = req.params.titreId
+  const user = req.user as User
+  const parsedBody = editableTitreCheck.safeParse(req.body)
+  if (!titreId) {
+    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+  } else if (!parsedBody.success) {
+    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+  } else if (titreId !== parsedBody.data.id) {
+    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+  } else {
+    try {
+      const titreOld = await titreGet(titreId, { fields: {} }, user)
+
+      if (!titreOld) {
+        res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+      } else {
+        if (!titreOld.modification) {
+          res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+        } else {
+          // on doit utiliser upsert (plutôt qu'un simple update)
+          // car le titre contient des références (tableau d'objet)
+          await titreUpsert(parsedBody.data)
+
+          await titreUpdateTask(titreId)
+          res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+        }
       }
     } catch (e) {
       console.error(e)
