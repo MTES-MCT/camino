@@ -18,6 +18,7 @@
   "devDependencies": {
     "@babel/eslint-parser": "^7.18.9",
     "@babel/preset-env": "^7.18.10",
+    "@gouvfr/dsfr": "^1.9.0",
     "@rollup/plugin-inject": "^4.0.4",
     "@sentry/tracing": "^7.11.1",
     "@sentry/vue": "^7.11.1",
@@ -92,7 +93,8 @@
       "defineEmits": "readonly",
       "T": "readonly",
       "K": "readonly",
-      "P": "readonly"
+      "P": "readonly",
+      "dsfr":"readonly"
     },
     "extends": [
       "plugin:vue/vue3-recommended",

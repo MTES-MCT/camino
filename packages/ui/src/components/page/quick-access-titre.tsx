@@ -19,7 +19,7 @@ export interface Titre {
   }
 }
 
-export const QuickAccessTitre = caminoDefineComponent<{ id?: string }>(['id'], props => {
+export const QuickAccessTitre = caminoDefineComponent<{ id: string; onSelectTitre: () => void }>(['id', 'onSelectTitre'], props => {
   const router = useRouter()
   const titres = ref<Titre[]>([])
 
@@ -48,6 +48,7 @@ export const QuickAccessTitre = caminoDefineComponent<{ id?: string }>(['id'], p
         matomo.trackEvent('navigation', 'navigation-rapide', titre.id)
       }
       router.push({ name: 'titre', params: { id: titre.id } })
+      props.onSelectTitre()
     }
   }
 

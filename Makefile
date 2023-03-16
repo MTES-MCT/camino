@@ -162,7 +162,6 @@ deploy/prod:
 
 dsfr/generate:
 	mkdir tmp
-	npm install @gouvfr/dsfr@1.8.5 --no-save
 	cp node_modules/@gouvfr/dsfr/dist/dsfr.css tmp/_dsfr.scss
 	cp node_modules/@gouvfr/dsfr/dist/utility/utility.css tmp/_utility.scss
 	sed -i 's/..\/icons/.\/icons/g' tmp/_utility.scss

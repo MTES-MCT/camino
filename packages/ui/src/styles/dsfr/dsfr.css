@@ -71,7 +71,7 @@
 }
 .dsfr {
   /*!
- * DSFR v1.8.5 | SPDX-License-Identifier: MIT | License-Filename: LICENSE.md | restricted use (see terms and conditions)
+ * DSFR v1.9.0 | SPDX-License-Identifier: MIT | License-Filename: LICENSE.md | restricted use (see terms and conditions)
  */
   /* ¯¯¯¯¯¯¯¯¯ *\
     CORE
@@ -302,7 +302,7 @@
   * Mixin d'ajout des icones des réseaux sociaux
   **/
   /*!
-   * DSFR v1.8.5 | SPDX-License-Identifier: MIT | License-Filename: LICENSE.md | restricted use (see terms and conditions)
+   * DSFR v1.9.0 | SPDX-License-Identifier: MIT | License-Filename: LICENSE.md | restricted use (see terms and conditions)
    */
   /* ¯¯¯¯¯¯¯¯¯ *\
     ICON BUILDINGS
@@ -367,6 +367,7 @@
   --underline-hover-width: 0;
   --underline-idle-width: var(--underline-max-width);
   --underline-x: calc(var(--underline-max-width) * 0);
+  --underline-thickness: max(1px, 0.0625em);
   --underline-img: linear-gradient(0deg, currentColor, currentColor);
   --external-link-content: '';
   --ul-type: disc;
@@ -908,10 +909,66 @@
   --artwork-minor-brown-caramel: var(--brown-caramel-main-648);
   --artwork-minor-brown-opera: var(--brown-opera-main-680);
   --artwork-minor-beige-gris-galet: var(--beige-gris-galet-main-702);
+  --artwork-decorative-grey: var(--grey-950-100);
   --artwork-decorative-blue-france: var(--blue-france-950-100);
   --artwork-decorative-red-marianne: var(--red-marianne-950-100);
+  --artwork-decorative-green-tilleul-verveine: var(--green-tilleul-verveine-950-100);
+  --artwork-decorative-green-bourgeon: var(--green-bourgeon-950-100);
+  --artwork-decorative-green-emeraude: var(--green-emeraude-950-100);
+  --artwork-decorative-green-menthe: var(--green-menthe-950-100);
+  --artwork-decorative-green-archipel: var(--green-archipel-950-100);
+  --artwork-decorative-blue-ecume: var(--blue-ecume-950-100);
+  --artwork-decorative-blue-cumulus: var(--blue-cumulus-950-100);
+  --artwork-decorative-purple-glycine: var(--purple-glycine-950-100);
+  --artwork-decorative-pink-macaron: var(--pink-macaron-950-100);
+  --artwork-decorative-pink-tuile: var(--pink-tuile-950-100);
+  --artwork-decorative-yellow-tournesol: var(--yellow-tournesol-950-100);
+  --artwork-decorative-yellow-moutarde: var(--yellow-moutarde-950-100);
+  --artwork-decorative-orange-terre-battue: var(--orange-terre-battue-950-100);
+  --artwork-decorative-brown-cafe-creme: var(--brown-cafe-creme-950-100);
+  --artwork-decorative-brown-caramel: var(--brown-caramel-950-100);
+  --artwork-decorative-brown-opera: var(--brown-opera-950-100);
+  --artwork-decorative-beige-gris-galet: var(--beige-gris-galet-950-100);
   --artwork-background-grey: var(--grey-975-75);
+  --artwork-background-blue-france: var(--blue-france-975-75);
+  --artwork-background-red-marianne: var(--red-marianne-975-75);
+  --artwork-background-green-tilleul-verveine: var(--green-tilleul-verveine-975-75);
+  --artwork-background-green-bourgeon: var(--green-bourgeon-975-75);
+  --artwork-background-green-emeraude: var(--green-emeraude-975-75);
+  --artwork-background-green-menthe: var(--green-menthe-975-75);
+  --artwork-background-green-archipel: var(--green-archipel-975-75);
+  --artwork-background-blue-ecume: var(--blue-ecume-975-75);
+  --artwork-background-blue-cumulus: var(--blue-cumulus-975-75);
+  --artwork-background-purple-glycine: var(--purple-glycine-975-75);
+  --artwork-background-pink-macaron: var(--pink-macaron-975-75);
+  --artwork-background-pink-tuile: var(--pink-tuile-975-75);
+  --artwork-background-yellow-tournesol: var(--yellow-tournesol-975-75);
+  --artwork-background-yellow-moutarde: var(--yellow-moutarde-975-75);
+  --artwork-background-orange-terre-battue: var(--orange-terre-battue-975-75);
+  --artwork-background-brown-cafe-creme: var(--brown-cafe-creme-975-75);
+  --artwork-background-brown-caramel: var(--brown-caramel-975-75);
+  --artwork-background-brown-opera: var(--brown-opera-975-75);
+  --artwork-background-beige-gris-galet: var(--beige-gris-galet-975-75);
   --artwork-motif-grey: var(--grey-925-125);
+  --artwork-motif-blue-france: var(--blue-france-925-125);
+  --artwork-motif-red-marianne: var(--red-marianne-925-125);
+  --artwork-motif-green-tilleul-verveine: var(--green-tilleul-verveine-925-125);
+  --artwork-motif-green-bourgeon: var(--green-bourgeon-925-125);
+  --artwork-motif-green-emeraude: var(--green-emeraude-925-125);
+  --artwork-motif-green-menthe: var(--green-menthe-925-125);
+  --artwork-motif-green-archipel: var(--green-archipel-925-125);
+  --artwork-motif-blue-ecume: var(--blue-ecume-925-125);
+  --artwork-motif-blue-cumulus: var(--blue-cumulus-925-125);
+  --artwork-motif-purple-glycine: var(--purple-glycine-925-125);
+  --artwork-motif-pink-macaron: var(--pink-macaron-925-125);
+  --artwork-motif-pink-tuile: var(--pink-tuile-925-125);
+  --artwork-motif-yellow-tournesol: var(--yellow-tournesol-925-125);
+  --artwork-motif-yellow-moutarde: var(--yellow-moutarde-925-125);
+  --artwork-motif-orange-terre-battue: var(--orange-terre-battue-925-125);
+  --artwork-motif-brown-cafe-creme: var(--brown-cafe-creme-925-125);
+  --artwork-motif-brown-caramel: var(--brown-caramel-925-125);
+  --artwork-motif-brown-opera: var(--brown-opera-925-125);
+  --artwork-motif-beige-gris-galet: var(--beige-gris-galet-925-125);
   --grey-1000-50: #fff;
   --grey-1000-50-hover: #f6f6f6;
   --grey-1000-50-active: #ededed;
@@ -1249,10 +1306,10 @@
 }
 .dsfr [href] {
   background-image: var(--underline-img), var(--underline-img);
-  background-position: var(--underline-x) 100%, var(--underline-x) calc(100% - 0.0625em);
+  background-position: var(--underline-x) 100%, var(--underline-x) calc(100% - var(--underline-thickness));
   background-repeat: no-repeat, no-repeat;
   transition: background-size 0s;
-  background-size: var(--underline-hover-width) 0.125em, var(--underline-idle-width) 0.0625em;
+  background-size: var(--underline-hover-width) calc(var(--underline-thickness) * 2), var(--underline-idle-width) var(--underline-thickness);
 }
 .dsfr [target='_blank']::after {
   flex: 0 0 auto;
@@ -1429,7 +1486,6 @@
 .dsfr input[type='reset'],
 .dsfr input[type='submit'],
 .dsfr select,
-.dsfr textarea,
 .dsfr video[controls],
 .dsfr audio[controls],
 .dsfr details,
@@ -1784,8 +1840,7 @@ body {
   margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  /* added line */
+  white-space: nowrap; /* added line */
   border: 0;
 }
 .dsfr hr {
@@ -8020,10 +8075,10 @@ body {
 }
 .dsfr .fr-breadcrumb__button {
   background-image: var(--underline-img), var(--underline-img);
-  background-position: var(--underline-x) 100%, var(--underline-x) calc(100% - 0.0625em);
+  background-position: var(--underline-x) 100%, var(--underline-x) calc(100% - var(--underline-thickness));
   background-repeat: no-repeat, no-repeat;
   transition: background-size 0s;
-  background-size: var(--underline-hover-width) 0.125em, var(--underline-idle-width) 0.0625em;
+  background-size: var(--underline-hover-width) calc(var(--underline-thickness) * 2), var(--underline-idle-width) var(--underline-thickness);
   font-size: 0.75rem;
   line-height: 1.25rem;
   margin: 0;
@@ -9840,8 +9895,7 @@ body {
   margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  /* added line */
+  white-space: nowrap; /* added line */
   border: 0;
   height: 0;
 }
@@ -11403,9 +11457,9 @@ body {
 .dsfr .fr-radio-group input[type='radio'] {
   position: absolute;
   margin: 0;
+  width: 1.5rem;
+  height: 1.5rem;
   opacity: 0;
-  top: 50%;
-  transform: translateY(-50%);
 }
 .dsfr .fr-radio-group input[type='radio'] + label {
   position: relative;
@@ -11433,7 +11487,16 @@ body {
   border-radius: 50%;
   box-shadow: inset 0 0 0 1px var(--border-action-high-grey), inset 0 0 0 12px var(--background-default-grey), inset 0 0 0 12px var(--background-action-high-blue-france);
 }
+.dsfr .fr-radio-group--sm input[type='radio'] {
+  width: 1rem;
+  height: 1rem;
+  top: 0.25rem;
+}
+.dsfr .fr-radio-group--sm input[type='radio'] + label {
+  margin-left: 1.5rem;
+}
 .dsfr .fr-radio-group--sm input[type='radio'] + label::before {
+  left: -1.5rem;
   width: 1rem;
   height: 1rem;
   margin-top: 0.25rem;
@@ -11441,6 +11504,12 @@ body {
 }
 .dsfr .fr-radio-rich {
   position: relative;
+}
+.dsfr .fr-radio-rich input[type='radio'] {
+  width: 1rem;
+  height: 1rem;
+  left: 1.75rem;
+  top: calc(50% - 0.5rem);
 }
 .dsfr .fr-radio-rich input[type='radio'] + label {
   padding-left: 3.5rem;
@@ -11943,9 +12012,9 @@ body {
 .dsfr .fr-checkbox-group input[type='checkbox'] {
   position: absolute;
   margin: 0;
+  width: 1.5rem;
+  height: 1.5rem;
   opacity: 0;
-  top: 50%;
-  transform: translateY(-50%);
   /**
   * On applique les styles au pseudo élément before du label quand l'input présente
   * un état check ou active
@@ -11993,11 +12062,19 @@ body {
   border-radius: 0.25rem;
   box-shadow: inset 0 0 0 1px var(--border-action-high-grey);
 }
+.dsfr .fr-checkbox-group--sm input[type='checkbox'] {
+  top: 0.25rem;
+  width: 1rem;
+  height: 1rem;
+}
+.dsfr .fr-checkbox-group--sm input[type='checkbox'] + label {
+  margin-left: 1.5rem;
+}
 .dsfr .fr-checkbox-group--sm input[type='checkbox'] + label::before {
   width: 1rem;
   height: 1rem;
   margin-top: 0.25rem;
-  left: -1.75rem;
+  left: -1.5rem;
 }
 .dsfr .fr-checkbox-group--error::before {
   content: '';
@@ -13742,12 +13819,14 @@ body {
   background-repeat: no-repeat;
   background-position: calc(100% - 0.75rem) 50%;
   background-size: 1rem 1rem;
+  padding-right: 2.25rem;
   --data-uri-svg: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' x='0px' y='0px' viewBox='0 0 24 24'><path fill='%23161616' d='M17 3h4c.55 0 1 .45 1 1v16c0 .55-.45 1-1 1H3c-.55 0-1-.45-1-1V4c0-.55.45-1 1-1h4V1h2v2h6V1h2v2zm-2 2H9v2H7V5H4v4h16V5h-3v2h-2V5zm5 6H4v8h16v-8z'/></svg>");
   background-image: var(--data-uri-svg);
 }
 .dsfr .fr-input[type='date']::-webkit-calendar-picker-indicator {
   display: block;
-  margin-right: -0.375rem;
+  padding: 1rem;
+  margin-right: -2.5rem;
   opacity: 0;
 }
 .dsfr .fr-input-wrap {
@@ -13834,8 +13913,7 @@ body {
   margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  /* added line */
+  white-space: nowrap; /* added line */
   border: 0;
 }
 .dsfr .fr-search-bar .fr-input {
@@ -14134,10 +14212,10 @@ body {
   --hover-tint: var(--idle);
   --active-tint: var(--idle);
   background-image: var(--underline-img), var(--underline-img);
-  background-position: var(--underline-x) 100%, var(--underline-x) calc(100% - 0.0625em);
+  background-position: var(--underline-x) 100%, var(--underline-x) calc(100% - var(--underline-thickness));
   background-repeat: no-repeat, no-repeat;
   transition: background-size 0s;
-  background-size: var(--underline-hover-width) 0.125em, var(--underline-idle-width) 0.0625em;
+  background-size: var(--underline-hover-width) calc(var(--underline-thickness) * 2), var(--underline-idle-width) var(--underline-thickness);
 }
 .dsfr .fr-consent-service .fr-consent-service__collapse-btn::before,
 .dsfr .fr-consent-service .fr-consent-service__collapse-btn::after {
@@ -14224,8 +14302,7 @@ body {
   margin: -1px;
   overflow: hidden;
   clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  /* added line */
+  white-space: nowrap; /* added line */
   border: 0;
 }
 .dsfr .fr-follow__newsletter .fr-input-wrap {
@@ -14785,29 +14862,7 @@ body {
 .dsfr .fr-header__navbar .fr-btn--search::before {
   content: '';
 }
-.dsfr
-  .fr-header
-  .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-'])
-  .fr-btn:not([class^='fr-icon-']):not([class*=' fr-icon-']):not([class^='fr-fi-']):not([class*=' fr-fi-']):not(.fr-btn--display) {
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-  min-height: 2rem;
-  padding: 0.25rem 0.75rem;
-}
-.dsfr
-  .fr-header
-  .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-'])
-  .fr-btn:not([class^='fr-icon-']):not([class*=' fr-icon-']):not([class^='fr-fi-']):not([class*=' fr-fi-']):not(.fr-btn--display)::before,
-.dsfr
-  .fr-header
-  .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-'])
-  .fr-btn:not([class^='fr-icon-']):not([class*=' fr-icon-']):not([class^='fr-fi-']):not([class*=' fr-fi-']):not(.fr-btn--display)::after {
-  --icon-size: 1rem;
-}
-.dsfr .fr-header .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-']) .fr-btn[class^='fr-icon-'],
-.dsfr .fr-header .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-']) .fr-btn[class*=' fr-icon-'],
-.dsfr .fr-header .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-']) .fr-btn[class^='fr-fi-'],
-.dsfr .fr-header .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-']) .fr-btn[class*=' fr-fi-'] {
+.dsfr .fr-header .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-']) .fr-btn {
   font-size: 0.875rem;
   line-height: 1.5rem;
   min-height: 2rem;
@@ -14815,25 +14870,9 @@ body {
   overflow: initial;
   max-width: 100%;
   max-height: none;
+  justify-content: flex-start;
 }
-.dsfr .fr-header .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-']) .fr-btn[class^='fr-icon-']::before,
-.dsfr .fr-header .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-']) .fr-btn[class*=' fr-icon-']::before,
-.dsfr .fr-header .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-']) .fr-btn[class^='fr-fi-']::before,
-.dsfr .fr-header .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-']) .fr-btn[class*=' fr-fi-']::before {
-  --icon-size: 1rem;
-  margin-left: -0.125rem;
-  margin-right: 0.5rem;
-}
-.dsfr .fr-header .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-']) .fr-btn.fr-btn--display {
-  font-size: 0.875rem;
-  line-height: 1.5rem;
-  min-height: 2rem;
-  padding: 0.25rem 0.75rem;
-  overflow: initial;
-  max-width: 100%;
-  max-height: none;
-}
-.dsfr .fr-header .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-']) .fr-btn.fr-btn--display::before {
+.dsfr .fr-header .fr-btns-group:not(.fr-btns-group--sm):not(.fr-btns-group--lg):not([class^='fr-btns-group--icon-']):not([class*=' fr-btns-group--icon-']) .fr-btn::before {
   --icon-size: 1rem;
   margin-left: -0.125rem;
   margin-right: 0.5rem;
@@ -15114,8 +15153,7 @@ body {
     margin: -1px;
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    /* added line */
+    white-space: nowrap; /* added line */
     border: 0;
   }
   .dsfr .fr-container-sm {
@@ -15519,8 +15557,7 @@ body {
     margin: -1px;
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    /* added line */
+    white-space: nowrap; /* added line */
     border: 0;
   }
   .dsfr .fr-container-md {
@@ -18263,8 +18300,7 @@ body {
     margin: -1px;
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    /* added line */
+    white-space: nowrap; /* added line */
     border: 0;
   }
   .dsfr .fr-container,
@@ -19037,8 +19073,7 @@ body {
     margin: -1px;
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    /* added line */
+    white-space: nowrap; /* added line */
     border: 0;
   }
   .dsfr .fr-container,
@@ -23409,17 +23444,185 @@ body {
 .dsfr .fr-artwork-minor--beige-gris-galet {
   fill: var(--artwork-minor-beige-gris-galet) !important;
 }
+.dsfr .fr-artwork-decorative--grey {
+  fill: var(--artwork-decorative-grey) !important;
+}
 .dsfr .fr-artwork-decorative--blue-france {
   fill: var(--artwork-decorative-blue-france) !important;
 }
 .dsfr .fr-artwork-decorative--red-marianne {
   fill: var(--artwork-decorative-red-marianne) !important;
 }
+.dsfr .fr-artwork-decorative--green-tilleul-verveine {
+  fill: var(--artwork-decorative-green-tilleul-verveine) !important;
+}
+.dsfr .fr-artwork-decorative--green-bourgeon {
+  fill: var(--artwork-decorative-green-bourgeon) !important;
+}
+.dsfr .fr-artwork-decorative--green-emeraude {
+  fill: var(--artwork-decorative-green-emeraude) !important;
+}
+.dsfr .fr-artwork-decorative--green-menthe {
+  fill: var(--artwork-decorative-green-menthe) !important;
+}
+.dsfr .fr-artwork-decorative--green-archipel {
+  fill: var(--artwork-decorative-green-archipel) !important;
+}
+.dsfr .fr-artwork-decorative--blue-ecume {
+  fill: var(--artwork-decorative-blue-ecume) !important;
+}
+.dsfr .fr-artwork-decorative--blue-cumulus {
+  fill: var(--artwork-decorative-blue-cumulus) !important;
+}
+.dsfr .fr-artwork-decorative--purple-glycine {
+  fill: var(--artwork-decorative-purple-glycine) !important;
+}
+.dsfr .fr-artwork-decorative--pink-macaron {
+  fill: var(--artwork-decorative-pink-macaron) !important;
+}
+.dsfr .fr-artwork-decorative--pink-tuile {
+  fill: var(--artwork-decorative-pink-tuile) !important;
+}
+.dsfr .fr-artwork-decorative--yellow-tournesol {
+  fill: var(--artwork-decorative-yellow-tournesol) !important;
+}
+.dsfr .fr-artwork-decorative--yellow-moutarde {
+  fill: var(--artwork-decorative-yellow-moutarde) !important;
+}
+.dsfr .fr-artwork-decorative--orange-terre-battue {
+  fill: var(--artwork-decorative-orange-terre-battue) !important;
+}
+.dsfr .fr-artwork-decorative--brown-cafe-creme {
+  fill: var(--artwork-decorative-brown-cafe-creme) !important;
+}
+.dsfr .fr-artwork-decorative--brown-caramel {
+  fill: var(--artwork-decorative-brown-caramel) !important;
+}
+.dsfr .fr-artwork-decorative--brown-opera {
+  fill: var(--artwork-decorative-brown-opera) !important;
+}
+.dsfr .fr-artwork-decorative--beige-gris-galet {
+  fill: var(--artwork-decorative-beige-gris-galet) !important;
+}
 .dsfr .fr-artwork-background--grey {
   fill: var(--artwork-background-grey) !important;
 }
+.dsfr .fr-artwork-background--blue-france {
+  fill: var(--artwork-background-blue-france) !important;
+}
+.dsfr .fr-artwork-background--red-marianne {
+  fill: var(--artwork-background-red-marianne) !important;
+}
+.dsfr .fr-artwork-background--green-tilleul-verveine {
+  fill: var(--artwork-background-green-tilleul-verveine) !important;
+}
+.dsfr .fr-artwork-background--green-bourgeon {
+  fill: var(--artwork-background-green-bourgeon) !important;
+}
+.dsfr .fr-artwork-background--green-emeraude {
+  fill: var(--artwork-background-green-emeraude) !important;
+}
+.dsfr .fr-artwork-background--green-menthe {
+  fill: var(--artwork-background-green-menthe) !important;
+}
+.dsfr .fr-artwork-background--green-archipel {
+  fill: var(--artwork-background-green-archipel) !important;
+}
+.dsfr .fr-artwork-background--blue-ecume {
+  fill: var(--artwork-background-blue-ecume) !important;
+}
+.dsfr .fr-artwork-background--blue-cumulus {
+  fill: var(--artwork-background-blue-cumulus) !important;
+}
+.dsfr .fr-artwork-background--purple-glycine {
+  fill: var(--artwork-background-purple-glycine) !important;
+}
+.dsfr .fr-artwork-background--pink-macaron {
+  fill: var(--artwork-background-pink-macaron) !important;
+}
+.dsfr .fr-artwork-background--pink-tuile {
+  fill: var(--artwork-background-pink-tuile) !important;
+}
+.dsfr .fr-artwork-background--yellow-tournesol {
+  fill: var(--artwork-background-yellow-tournesol) !important;
+}
+.dsfr .fr-artwork-background--yellow-moutarde {
+  fill: var(--artwork-background-yellow-moutarde) !important;
+}
+.dsfr .fr-artwork-background--orange-terre-battue {
+  fill: var(--artwork-background-orange-terre-battue) !important;
+}
+.dsfr .fr-artwork-background--brown-cafe-creme {
+  fill: var(--artwork-background-brown-cafe-creme) !important;
+}
+.dsfr .fr-artwork-background--brown-caramel {
+  fill: var(--artwork-background-brown-caramel) !important;
+}
+.dsfr .fr-artwork-background--brown-opera {
+  fill: var(--artwork-background-brown-opera) !important;
+}
+.dsfr .fr-artwork-background--beige-gris-galet {
+  fill: var(--artwork-background-beige-gris-galet) !important;
+}
 .dsfr .fr-artwork-motif--grey {
   fill: var(--artwork-motif-grey) !important;
+}
+.dsfr .fr-artwork-motif--blue-france {
+  fill: var(--artwork-motif-blue-france) !important;
+}
+.dsfr .fr-artwork-motif--red-marianne {
+  fill: var(--artwork-motif-red-marianne) !important;
+}
+.dsfr .fr-artwork-motif--green-tilleul-verveine {
+  fill: var(--artwork-motif-green-tilleul-verveine) !important;
+}
+.dsfr .fr-artwork-motif--green-bourgeon {
+  fill: var(--artwork-motif-green-bourgeon) !important;
+}
+.dsfr .fr-artwork-motif--green-emeraude {
+  fill: var(--artwork-motif-green-emeraude) !important;
+}
+.dsfr .fr-artwork-motif--green-menthe {
+  fill: var(--artwork-motif-green-menthe) !important;
+}
+.dsfr .fr-artwork-motif--green-archipel {
+  fill: var(--artwork-motif-green-archipel) !important;
+}
+.dsfr .fr-artwork-motif--blue-ecume {
+  fill: var(--artwork-motif-blue-ecume) !important;
+}
+.dsfr .fr-artwork-motif--blue-cumulus {
+  fill: var(--artwork-motif-blue-cumulus) !important;
+}
+.dsfr .fr-artwork-motif--purple-glycine {
+  fill: var(--artwork-motif-purple-glycine) !important;
+}
+.dsfr .fr-artwork-motif--pink-macaron {
+  fill: var(--artwork-motif-pink-macaron) !important;
+}
+.dsfr .fr-artwork-motif--pink-tuile {
+  fill: var(--artwork-motif-pink-tuile) !important;
+}
+.dsfr .fr-artwork-motif--yellow-tournesol {
+  fill: var(--artwork-motif-yellow-tournesol) !important;
+}
+.dsfr .fr-artwork-motif--yellow-moutarde {
+  fill: var(--artwork-motif-yellow-moutarde) !important;
+}
+.dsfr .fr-artwork-motif--orange-terre-battue {
+  fill: var(--artwork-motif-orange-terre-battue) !important;
+}
+.dsfr .fr-artwork-motif--brown-cafe-creme {
+  fill: var(--artwork-motif-brown-cafe-creme) !important;
+}
+.dsfr .fr-artwork-motif--brown-caramel {
+  fill: var(--artwork-motif-brown-caramel) !important;
+}
+.dsfr .fr-artwork-motif--brown-opera {
+  fill: var(--artwork-motif-brown-opera) !important;
+}
+.dsfr .fr-artwork-motif--beige-gris-galet {
+  fill: var(--artwork-motif-beige-gris-galet) !important;
 }
 .dsfr .fr-icon-ancient-gate-fill::before,
 .dsfr .fr-icon-ancient-gate-fill::after {
@@ -26366,6 +26569,11 @@ body {
   -webkit-mask-image: url('./icons/system/fr--arrow-left-s-line-double.svg');
   mask-image: url('./icons/system/fr--arrow-left-s-line-double.svg');
 }
+.dsfr .fr-icon-arrow-right-down-circle-fill::before,
+.dsfr .fr-icon-arrow-right-down-circle-fill::after {
+  -webkit-mask-image: url('./icons/system/fr--arrow-right-down-circle-fill.svg');
+  mask-image: url('./icons/system/fr--arrow-right-down-circle-fill.svg');
+}
 .dsfr .fr-icon-arrow-right-s-last-line::before,
 .dsfr .fr-icon-arrow-right-s-last-line::after {
   -webkit-mask-image: url('./icons/system/fr--arrow-right-s-last-line.svg');
@@ -26376,10 +26584,20 @@ body {
   -webkit-mask-image: url('./icons/system/fr--arrow-right-s-line-double.svg');
   mask-image: url('./icons/system/fr--arrow-right-s-line-double.svg');
 }
+.dsfr .fr-icon-arrow-right-up-circle-fill::before,
+.dsfr .fr-icon-arrow-right-up-circle-fill::after {
+  -webkit-mask-image: url('./icons/system/fr--arrow-right-up-circle-fill.svg');
+  mask-image: url('./icons/system/fr--arrow-right-up-circle-fill.svg');
+}
 .dsfr .fr-icon-capslock-line::before,
 .dsfr .fr-icon-capslock-line::after {
   -webkit-mask-image: url('./icons/system/fr--capslock-line.svg');
   mask-image: url('./icons/system/fr--capslock-line.svg');
+}
+.dsfr .fr-icon-equal-circle-fill::before,
+.dsfr .fr-icon-equal-circle-fill::after {
+  -webkit-mask-image: url('./icons/system/fr--equal-circle-fill.svg');
+  mask-image: url('./icons/system/fr--equal-circle-fill.svg');
 }
 .dsfr .fr-icon-error-fill::before,
 .dsfr .fr-icon-error-fill::after {
@@ -28491,17 +28709,185 @@ body {
   .dsfr .fr-artwork-minor--beige-gris-galet {
     fill: #aea397 !important;
   }
+  .dsfr .fr-artwork-decorative--grey {
+    fill: #eee !important;
+  }
   .dsfr .fr-artwork-decorative--blue-france {
     fill: #ececfe !important;
   }
   .dsfr .fr-artwork-decorative--red-marianne {
     fill: #fee9e9 !important;
   }
+  .dsfr .fr-artwork-decorative--green-tilleul-verveine {
+    fill: #fceeac !important;
+  }
+  .dsfr .fr-artwork-decorative--green-bourgeon {
+    fill: #c9fcac !important;
+  }
+  .dsfr .fr-artwork-decorative--green-emeraude {
+    fill: #c3fad5 !important;
+  }
+  .dsfr .fr-artwork-decorative--green-menthe {
+    fill: #bafaee !important;
+  }
+  .dsfr .fr-artwork-decorative--green-archipel {
+    fill: #c7f6fc !important;
+  }
+  .dsfr .fr-artwork-decorative--blue-ecume {
+    fill: #e9edfe !important;
+  }
+  .dsfr .fr-artwork-decorative--blue-cumulus {
+    fill: #e6eefe !important;
+  }
+  .dsfr .fr-artwork-decorative--purple-glycine {
+    fill: #fee7fc !important;
+  }
+  .dsfr .fr-artwork-decorative--pink-macaron {
+    fill: #fee9e6 !important;
+  }
+  .dsfr .fr-artwork-decorative--pink-tuile {
+    fill: #fee9e7 !important;
+  }
+  .dsfr .fr-artwork-decorative--yellow-tournesol {
+    fill: #feecc2 !important;
+  }
+  .dsfr .fr-artwork-decorative--yellow-moutarde {
+    fill: #feebd0 !important;
+  }
+  .dsfr .fr-artwork-decorative--orange-terre-battue {
+    fill: #fee9e5 !important;
+  }
+  .dsfr .fr-artwork-decorative--brown-cafe-creme {
+    fill: #f7ecdb !important;
+  }
+  .dsfr .fr-artwork-decorative--brown-caramel {
+    fill: #f7ebe5 !important;
+  }
+  .dsfr .fr-artwork-decorative--brown-opera {
+    fill: #f7ece4 !important;
+  }
+  .dsfr .fr-artwork-decorative--beige-gris-galet {
+    fill: #f3ede5 !important;
+  }
   .dsfr .fr-artwork-background--grey {
     fill: #f6f6f6 !important;
   }
+  .dsfr .fr-artwork-background--blue-france {
+    fill: #f5f5fe !important;
+  }
+  .dsfr .fr-artwork-background--red-marianne {
+    fill: #fef4f4 !important;
+  }
+  .dsfr .fr-artwork-background--green-tilleul-verveine {
+    fill: #fef7da !important;
+  }
+  .dsfr .fr-artwork-background--green-bourgeon {
+    fill: #e6feda !important;
+  }
+  .dsfr .fr-artwork-background--green-emeraude {
+    fill: #e3fdeb !important;
+  }
+  .dsfr .fr-artwork-background--green-menthe {
+    fill: #dffdf7 !important;
+  }
+  .dsfr .fr-artwork-background--green-archipel {
+    fill: #e5fbfd !important;
+  }
+  .dsfr .fr-artwork-background--blue-ecume {
+    fill: #f4f6fe !important;
+  }
+  .dsfr .fr-artwork-background--blue-cumulus {
+    fill: #f3f6fe !important;
+  }
+  .dsfr .fr-artwork-background--purple-glycine {
+    fill: #fef3fd !important;
+  }
+  .dsfr .fr-artwork-background--pink-macaron {
+    fill: #fef4f2 !important;
+  }
+  .dsfr .fr-artwork-background--pink-tuile {
+    fill: #fef4f3 !important;
+  }
+  .dsfr .fr-artwork-background--yellow-tournesol {
+    fill: #fef6e3 !important;
+  }
+  .dsfr .fr-artwork-background--yellow-moutarde {
+    fill: #fef5e8 !important;
+  }
+  .dsfr .fr-artwork-background--orange-terre-battue {
+    fill: #fef4f2 !important;
+  }
+  .dsfr .fr-artwork-background--brown-cafe-creme {
+    fill: #fbf6ed !important;
+  }
+  .dsfr .fr-artwork-background--brown-caramel {
+    fill: #fbf5f2 !important;
+  }
+  .dsfr .fr-artwork-background--brown-opera {
+    fill: #fbf5f2 !important;
+  }
+  .dsfr .fr-artwork-background--beige-gris-galet {
+    fill: #f9f6f2 !important;
+  }
   .dsfr .fr-artwork-motif--grey {
     fill: #e5e5e5 !important;
+  }
+  .dsfr .fr-artwork-motif--blue-france {
+    fill: #e3e3fd !important;
+  }
+  .dsfr .fr-artwork-motif--red-marianne {
+    fill: #fddede !important;
+  }
+  .dsfr .fr-artwork-motif--green-tilleul-verveine {
+    fill: #fbe769 !important;
+  }
+  .dsfr .fr-artwork-motif--green-bourgeon {
+    fill: #a9fb68 !important;
+  }
+  .dsfr .fr-artwork-motif--green-emeraude {
+    fill: #9ef9be !important;
+  }
+  .dsfr .fr-artwork-motif--green-menthe {
+    fill: #8bf8e7 !important;
+  }
+  .dsfr .fr-artwork-motif--green-archipel {
+    fill: #a6f2fa !important;
+  }
+  .dsfr .fr-artwork-motif--blue-ecume {
+    fill: #dee5fd !important;
+  }
+  .dsfr .fr-artwork-motif--blue-cumulus {
+    fill: #dae6fd !important;
+  }
+  .dsfr .fr-artwork-motif--purple-glycine {
+    fill: #fddbfa !important;
+  }
+  .dsfr .fr-artwork-motif--pink-macaron {
+    fill: #fddfda !important;
+  }
+  .dsfr .fr-artwork-motif--pink-tuile {
+    fill: #fddfdb !important;
+  }
+  .dsfr .fr-artwork-motif--yellow-tournesol {
+    fill: #fde39c !important;
+  }
+  .dsfr .fr-artwork-motif--yellow-moutarde {
+    fill: #fde2b5 !important;
+  }
+  .dsfr .fr-artwork-motif--orange-terre-battue {
+    fill: #fddfd8 !important;
+  }
+  .dsfr .fr-artwork-motif--brown-cafe-creme {
+    fill: #f4e3c7 !important;
+  }
+  .dsfr .fr-artwork-motif--brown-caramel {
+    fill: #f3e2d9 !important;
+  }
+  .dsfr .fr-artwork-motif--brown-opera {
+    fill: #f3e2d7 !important;
+  }
+  .dsfr .fr-artwork-motif--beige-gris-galet {
+    fill: #eee4d9 !important;
   }
   .dsfr .fr-icon-ancient-gate-fill::before,
   .dsfr .fr-icon-ancient-gate-fill::after {
@@ -30781,6 +31167,10 @@ body {
   .dsfr .fr-icon-arrow-left-s-line-double::after {
     background-image: url('./icons/system/fr--arrow-left-s-line-double.svg');
   }
+  .dsfr .fr-icon-arrow-right-down-circle-fill::before,
+  .dsfr .fr-icon-arrow-right-down-circle-fill::after {
+    background-image: url('./icons/system/fr--arrow-right-down-circle-fill.svg');
+  }
   .dsfr .fr-icon-arrow-right-s-last-line::before,
   .dsfr .fr-icon-arrow-right-s-last-line::after {
     background-image: url('./icons/system/fr--arrow-right-s-last-line.svg');
@@ -30789,9 +31179,17 @@ body {
   .dsfr .fr-icon-arrow-right-s-line-double::after {
     background-image: url('./icons/system/fr--arrow-right-s-line-double.svg');
   }
+  .dsfr .fr-icon-arrow-right-up-circle-fill::before,
+  .dsfr .fr-icon-arrow-right-up-circle-fill::after {
+    background-image: url('./icons/system/fr--arrow-right-up-circle-fill.svg');
+  }
   .dsfr .fr-icon-capslock-line::before,
   .dsfr .fr-icon-capslock-line::after {
     background-image: url('./icons/system/fr--capslock-line.svg');
+  }
+  .dsfr .fr-icon-equal-circle-fill::before,
+  .dsfr .fr-icon-equal-circle-fill::after {
+    background-image: url('./icons/system/fr--equal-circle-fill.svg');
   }
   .dsfr .fr-icon-error-fill::before,
   .dsfr .fr-icon-error-fill::after {

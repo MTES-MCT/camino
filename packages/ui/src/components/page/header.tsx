@@ -1,20 +1,20 @@
-import { FunctionalComponent } from 'vue'
-import './dsfr.module'
+import { FunctionalComponent, onMounted } from 'vue'
+import '@gouvfr/dsfr/dist/core/core.module'
+import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
+import '@gouvfr/dsfr/dist/component/modal/modal.module'
+import '@gouvfr/dsfr/dist/component/header/header.module'
 import { Role, User } from 'camino-common/src/roles'
 import { QuickAccessTitre } from '@/components/page/quick-access-titre'
+import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
+import { MatomoEventParam, TrackEventFunction } from '@/utils/matomo'
 
 interface Props {
-  loaded?: boolean
   user: User
   routeName: string
+  trackEvent: TrackEventFunction
 }
 
-// FIXME
-// @ts-ignore
-// eslint-disable-next-line no-undef
-dsfr.start()
-
-type Link = { label: string; path: string }
+type Link = { label: string; path: MatomoEventParam<'menu-sections', 'menu-section'> | 'journaux' }
 type LinkList = { label: string; sublinks: Link[] }
 const links = {
   TITRES_ET_AUTORISATIONS: { label: 'Titres et autorisations', path: 'titres' },
@@ -42,9 +42,17 @@ const linksByRole: Record<Role, (Link | LinkList)[]> = {
   defaut: [links.TITRES_ET_AUTORISATIONS, links.DEMARCHES, { label: 'Annuaire', sublinks: [links.ENTREPRISES, links.ADMINISTRATIONS] }],
 }
 
-const HeaderLinks: FunctionalComponent<Pick<Props, 'user'>> = props => {
+const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent'>> = props => {
   const loginUrl = '/oauth2/sign_in?rd=' + encodeURIComponent(window.location.href)
   const logoutUrl = '/apiUrl/deconnecter'
+
+  const logout = () => {
+    props.trackEvent('menu-utilisateur', 'menu-utilisateur', 'deconnexion')
+  }
+
+  const login = () => {
+    props.trackEvent('menu', 'bouton', 'utilisateur')
+  }
 
   return (
     <ul class="fr-btns-group">
@@ -56,14 +64,14 @@ const HeaderLinks: FunctionalComponent<Pick<Props, 'user'>> = props => {
             </router-link>
           </li>
           <li>
-            <a class="fr-btn fr-icon-lock-line" href={logoutUrl}>
+            <a class="fr-btn fr-icon-lock-line" href={logoutUrl} onClick={logout}>
               Se déconnecter
             </a>
           </li>
         </>
       ) : (
         <li>
-          <a class="fr-btn fr-icon-lock-fill" href={loginUrl}>
+          <a class="fr-btn fr-icon-lock-fill" href={loginUrl} onClick={login}>
             Se connecter / S’enregistrer
           </a>
         </li>
@@ -72,18 +80,51 @@ const HeaderLinks: FunctionalComponent<Pick<Props, 'user'>> = props => {
   )
 }
 
-export const Header: FunctionalComponent<Props> = props => {
-  // FIXME
-  // const logout = () => {
-  //   if (matomo) {
-  //     // @ts-ignore
-  //     matomo.trackEvent('menu-utilisateur', 'menu-utilisateur', 'deconnexion')
-  //   }
-  // }
-
+export const Header = caminoDefineComponent<Props>(['user', 'routeName', 'trackEvent'], props => {
   const getAriaCurrent = (link: LinkList): { 'aria-current'?: true } => (link.sublinks.some(({ path }) => path === props.routeName) ? { 'aria-current': true } : {})
 
-  return (
+  // Permet d'activer le menu déroulant sur annuaire
+  onMounted(() => {
+    setTimeout(() => {
+      dsfr.start()
+    }, 1000)
+  })
+
+  const navigationModalId = 'headerNavigationModalId'
+  const searchModalId = 'headerSearchModalId'
+  const navigationId = 'headerNavigationId'
+
+  const linkClick = (path: Link['path']) => {
+    // On ferme la modale
+    const navigationModalElement = document.getElementById(navigationModalId)
+    if (navigationModalElement) {
+      dsfr(navigationModalElement).modal.conceal()
+    }
+    if (path !== 'journaux') {
+      props.trackEvent('menu-sections', 'menu-section', path)
+    }
+  }
+
+  const sublinkClick = (path: Link['path']) => {
+    // On ferme le menu déroulant d’annuaire
+    const navigationElement = document.getElementById(navigationId)
+    if (navigationElement && navigationElement) {
+      const members = dsfr(navigationElement).navigation.members
+      if (members && members.length) {
+        members[0].conceal()
+      }
+    }
+    linkClick(path)
+  }
+  const closeSearchModal = () => {
+    // On ferme la modale de recherche
+    const searchModalElement = document.getElementById(searchModalId)
+    if (searchModalElement) {
+      dsfr(searchModalElement).modal.conceal()
+    }
+  }
+
+  return () => (
     <div class="dsfr" style={{ paddingBottom: '20px' }}>
       <header role="banner" class="fr-header">
         <div class="fr-header__body">
@@ -99,10 +140,10 @@ export const Header: FunctionalComponent<Props> = props => {
                     </p>
                   </div>
                   <div class="fr-header__navbar">
-                    <button class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls="modal-474" id="button-475" title="Rechercher">
+                    <button class="fr-btn--search fr-btn" data-fr-opened="false" aria-controls={searchModalId} id="button-475" title="Rechercher">
                       Rechercher
                     </button>
-                    <button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls="modal-476" aria-haspopup="menu" id="button-477" title="Menu">
+                    <button class="fr-btn--menu fr-btn" data-fr-opened="false" aria-controls={navigationModalId} aria-haspopup="menu" id="button-477" title="Menu">
                       Menu
                     </button>
                   </div>
@@ -116,18 +157,18 @@ export const Header: FunctionalComponent<Props> = props => {
               </div>
               <div class="fr-header__tools">
                 <div class="fr-header__tools-links">
-                  <HeaderLinks user={props.user} />
+                  <HeaderLinks user={props.user} trackEvent={props.trackEvent} />
                 </div>
-                <div class="fr-header__search fr-modal" id="modal-474">
+                <div class="fr-header__search fr-modal" id={searchModalId}>
                   <div class="fr-container">
-                    <button class="fr-btn--close fr-btn" aria-controls="modal-474" title="Fermer">
+                    <button class="fr-btn--close fr-btn" aria-controls={searchModalId} title="Fermer">
                       Fermer
                     </button>
                     <div class="fr-search-bar" id="search-473" role="search">
                       <label class="fr-label" for="search-473-input">
                         Rechercher
                       </label>
-                      <QuickAccessTitre id="search-473-input" />
+                      <QuickAccessTitre id="search-473-input" onSelectTitre={closeSearchModal} />
                       <button class="fr-btn" title="Rechercher">
                         Rechercher
                       </button>
@@ -138,20 +179,20 @@ export const Header: FunctionalComponent<Props> = props => {
             </div>
           </div>
         </div>
-        <div class="fr-header__menu fr-modal" id="modal-476" aria-labelledby="button-477">
+        <div class="fr-header__menu fr-modal" id={navigationModalId} aria-labelledby="button-477">
           <div class="fr-container">
-            <button class="fr-btn--close fr-btn" aria-controls="modal-476" title="Fermer">
+            <button class="fr-btn--close fr-btn" aria-controls={navigationModalId} title="Fermer">
               Fermer
             </button>
             <div class="fr-header__menu-links">
-              <HeaderLinks user={props.user} />
+              <HeaderLinks user={props.user} trackEvent={props.trackEvent} />
             </div>
-            <nav class="fr-nav" id="navigation-478" role="navigation" aria-label="Menu principal">
+            <nav class="fr-nav" id={navigationId} role="navigation" aria-label="Menu principal">
               <ul class="fr-nav__list">
                 {linksByRole[props.user?.role ?? 'defaut'].map((link, index) => (
                   <li key={link.label} class="fr-nav__item">
                     {isDirectLink(link) ? (
-                      <router-link class="fr-nav__link" to={{ name: link.path }} target="_self">
+                      <router-link class="fr-nav__link" to={{ name: link.path }} target="_self" onClick={() => linkClick(link.path)}>
                         {link.label}
                       </router-link>
                     ) : (
@@ -163,7 +204,7 @@ export const Header: FunctionalComponent<Props> = props => {
                           <ul class="fr-menu__list">
                             {link.sublinks.map((sublink, subIndex) => (
                               <li key={sublink.label}>
-                                <router-link class="fr-nav__link" to={{ name: sublink.path }} target="_self" id={`nav-${index}-${subIndex}`}>
+                                <router-link onClick={() => sublinkClick(sublink.path)} class="fr-nav__link" to={{ name: sublink.path }} target="_self" id={`nav-${index}-${subIndex}`}>
                                   {sublink.label}
                                 </router-link>
                               </li>
@@ -181,4 +222,4 @@ export const Header: FunctionalComponent<Props> = props => {
       </header>
     </div>
   )
-}
+})
