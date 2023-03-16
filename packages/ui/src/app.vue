@@ -6,7 +6,7 @@
       <component :is="menu.component" v-if="menu.component" />
     </Transition>
 
-    <Header :user="user" :routeName="route.name" :trackEvent="trackEvent" />
+    <Header :user="user" :currentMenuSection="currentMenuSection" :trackEvent="trackEvent" />
 
     <main class="main">
       <div class="container">
@@ -50,6 +50,10 @@
 </template>
 
 <script lang="ts" setup>
+import '@gouvfr/dsfr/dist/core/core.module'
+import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
+import '@gouvfr/dsfr/dist/component/modal/modal.module'
+import '@gouvfr/dsfr/dist/component/header/header.module'
 import { Messages } from './components/_ui/messages'
 import { Header } from './components/page/header'
 import { Footer } from './components/page/footer'
@@ -57,7 +61,7 @@ import { MapPattern } from './components/_map/pattern'
 import { IconSprite } from './components/_ui/iconSprite'
 
 import { Error } from './components/error'
-import { computed, inject, onMounted } from 'vue'
+import { computed, inject } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { TrackEventFunction } from '@/utils/matomo'
@@ -81,6 +85,8 @@ const menu = computed(() => store.state.menu)
 const loading = computed(() => store.state.loading.length > 0)
 
 const fileLoading = computed(() => store.state.fileLoading)
+
+const currentMenuSection = computed(() => route.meta?.menuSection)
 
 if (matomo) {
   // @ts-ignore

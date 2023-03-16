@@ -13,6 +13,7 @@ import TitreCreation from '../components/titre-creation.vue'
 import EtapeEdition from '../components/etape-edition.vue'
 import ActiviteEdition from '../components/activite-edition.vue'
 import Travaux from '../components/travaux.vue'
+import { MenuSection } from '@/utils/matomo'
 const Utilisateur = async () => {
   const { Utilisateur } = await import('../components/utilisateur')
   return Utilisateur
@@ -61,131 +62,212 @@ const StatistiquesMinerauxMetauxMetropole = async () => {
 const Journaux = () => import('../components/journaux.vue')
 const About = () => import('../components/content/about.vue')
 
+declare module 'vue-router' {
+  interface RouteMeta {
+    menuSection: MenuSection
+  }
+}
+
 const routes: RouteRecordRaw[] = [
   {
     path: '/dashboard',
     name: 'dashboard',
     component: Dashboard,
+    meta: {
+      menuSection: 'dashboard',
+    },
   },
   {
     path: '/dashboard/dgtmstats',
     name: 'Stats DGTM',
     component: DGTMStatsFull,
+    meta: {
+      menuSection: 'dashboard',
+    },
   },
   {
     path: '/titres',
     name: 'titres',
     component: Titres,
+    meta: {
+      menuSection: 'titres',
+    },
   },
   {
     path: '/titres/creation',
     name: 'titre-creation',
     component: TitreCreation,
+    meta: {
+      menuSection: 'titres',
+    },
   },
   {
     path: '/titres/:id',
     name: 'titre',
     component: Titre,
+    meta: {
+      menuSection: 'titres',
+    },
   },
   {
     path: '/demarches',
     name: 'demarches',
     component: Demarches,
+    meta: {
+      menuSection: 'demarches',
+    },
   },
   {
     path: '/travaux',
     name: 'travaux',
     component: Travaux,
+    meta: {
+      menuSection: 'travaux',
+    },
   },
   {
     path: '/etapes/:id',
     name: 'etape',
     component: Etape,
+    meta: {
+      menuSection: 'titres',
+    },
   },
   {
     path: '/etapes/creation',
     name: 'etape-creation',
     component: EtapeEdition,
+    meta: {
+      menuSection: 'titres',
+    },
   },
   {
     path: '/etapes/:id/edition',
     name: 'etape-edition',
     component: EtapeEdition,
+    meta: {
+      menuSection: 'titres',
+    },
   },
   {
     path: '/utilisateurs',
     name: 'utilisateurs',
     component: Utilisateurs,
+    meta: {
+      menuSection: 'utilisateurs',
+    },
   },
   {
     path: '/utilisateurs/:id',
     name: 'utilisateur',
     component: Utilisateur,
+    meta: {
+      menuSection: 'utilisateurs',
+    },
   },
   {
     path: '/entreprises',
     name: 'entreprises',
     component: Entreprises,
+    meta: {
+      menuSection: 'entreprises',
+    },
   },
   {
     path: '/entreprises/:id',
     name: 'entreprise',
     component: Entreprise,
+    meta: {
+      menuSection: 'entreprises',
+    },
   },
   {
     path: '/administrations',
     name: 'administrations',
     component: Administrations,
+    meta: {
+      menuSection: 'administrations',
+    },
   },
   {
     path: '/administrations/:id',
     name: 'administration',
     component: Administration,
+    meta: {
+      menuSection: 'administrations',
+    },
   },
   {
     path: '/metas',
     name: 'metas',
     component: Metas,
+    meta: {
+      menuSection: 'metas',
+    },
   },
   {
     path: '/metas/titre',
     name: 'meta-titre',
     component: MetaTitre,
+    meta: {
+      menuSection: 'metas',
+    },
   },
   {
     path: '/metas/demarche',
     name: 'meta-demarche',
     component: MetaDemarche,
+    meta: {
+      menuSection: 'metas',
+    },
   },
   {
     path: '/metas/etape',
     name: 'meta-etape',
     component: MetaEtape,
+    meta: {
+      menuSection: 'metas',
+    },
   },
   {
     path: '/metas/activite',
     name: 'meta-activite',
     component: MetaActivite,
+    meta: {
+      menuSection: 'metas',
+    },
   },
   {
     path: '/metas/:id',
     name: 'meta',
     component: Meta,
+    meta: {
+      menuSection: 'metas',
+    },
   },
   {
     path: '/activites',
     name: 'activites',
     component: Activites,
+    meta: {
+      menuSection: 'activites',
+    },
   },
   {
     path: '/activites/:id',
     name: 'activite',
     component: Activite,
+    meta: {
+      menuSection: 'activites',
+    },
   },
   {
     path: '/activites/:id/edition',
     name: 'activite-edition',
     component: ActiviteEdition,
+    meta: {
+      menuSection: 'activites',
+    },
   },
   {
     path: '/statistiques',
@@ -214,7 +296,14 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-  { path: '/journaux', name: 'journaux', component: Journaux },
+  {
+    path: '/journaux',
+    name: 'journaux',
+    component: Journaux,
+    meta: {
+      menuSection: 'journaux',
+    },
+  },
   // url /stats : demande de Samuel
   // pour avoir une uniformité entre toutes les start-ups
   {

@@ -1,20 +1,16 @@
 import { FunctionalComponent, onMounted } from 'vue'
-import '@gouvfr/dsfr/dist/core/core.module'
-import '@gouvfr/dsfr/dist/component/navigation/navigation.module'
-import '@gouvfr/dsfr/dist/component/modal/modal.module'
-import '@gouvfr/dsfr/dist/component/header/header.module'
 import { Role, User } from 'camino-common/src/roles'
 import { QuickAccessTitre } from '@/components/page/quick-access-titre'
 import { caminoDefineComponent } from '@/utils/vue-tsx-utils'
-import { MatomoEventParam, TrackEventFunction } from '@/utils/matomo'
+import { MenuSection, TrackEventFunction } from '@/utils/matomo'
 
 interface Props {
   user: User
-  routeName: string
+  currentMenuSection: MenuSection | undefined
   trackEvent: TrackEventFunction
 }
 
-type Link = { label: string; path: MatomoEventParam<'menu-sections', 'menu-section'> | 'journaux' }
+type Link = { label: string; path: MenuSection }
 type LinkList = { label: string; sublinks: Link[] }
 const links = {
   TITRES_ET_AUTORISATIONS: { label: 'Titres et autorisations', path: 'titres' },
@@ -80,8 +76,12 @@ const HeaderLinks: FunctionalComponent<Pick<Props, 'user' | 'trackEvent'>> = pro
   )
 }
 
-export const Header = caminoDefineComponent<Props>(['user', 'routeName', 'trackEvent'], props => {
-  const getAriaCurrent = (link: LinkList): { 'aria-current'?: true } => (link.sublinks.some(({ path }) => path === props.routeName) ? { 'aria-current': true } : {})
+export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection', 'trackEvent'], props => {
+  const getAriaCurrent = (link: LinkList): { 'aria-current'?: true } => (link.sublinks.some(({ path }) => path === props.currentMenuSection) ? { 'aria-current': true } : {})
+
+  const getAriaPage = (link: Link): { 'aria-current'?: 'page' } => {
+    return link.path === props.currentMenuSection ? { 'aria-current': 'page' } : {}
+  }
 
   // Permet d'activer le menu déroulant sur annuaire
   onMounted(() => {
@@ -108,7 +108,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'routeName', 'trackE
   const sublinkClick = (path: Link['path']) => {
     // On ferme le menu déroulant d’annuaire
     const navigationElement = document.getElementById(navigationId)
-    if (navigationElement && navigationElement) {
+    if (navigationElement) {
       const members = dsfr(navigationElement).navigation.members
       if (members && members.length) {
         members[0].conceal()
@@ -192,7 +192,7 @@ export const Header = caminoDefineComponent<Props>(['user', 'routeName', 'trackE
                 {linksByRole[props.user?.role ?? 'defaut'].map((link, index) => (
                   <li key={link.label} class="fr-nav__item">
                     {isDirectLink(link) ? (
-                      <router-link class="fr-nav__link" to={{ name: link.path }} target="_self" onClick={() => linkClick(link.path)}>
+                      <router-link class="fr-nav__link" to={{ name: link.path }} target="_self" onClick={() => linkClick(link.path)} {...getAriaPage(link)}>
                         {link.label}
                       </router-link>
                     ) : (
