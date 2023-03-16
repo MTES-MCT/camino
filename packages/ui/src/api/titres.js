@@ -221,10 +221,4 @@ const titreModifier = apiGraphQLFetch(gql`
   }
 `)
 
-const titreSupprimer = apiGraphQLFetch(gql`
-  mutation TitreSupprimer($id: ID!) {
-    titreSupprimer(id: $id)
-  }
-`)
-
-export { titresMetas, titre, titres, titresGeo, titresGeoPolygon, titreCreer, titreModifier, titreSupprimer, titresRechercherByNom, titresFiltres }
+export { titresMetas, titre, titres, titresGeo, titresGeoPolygon, titreCreer, titreModifier, titresRechercherByNom, titresFiltres }

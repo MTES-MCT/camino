@@ -13,8 +13,6 @@ vi.mock('../api/titres', () => ({
   titre: vi.fn(),
   titreCreer: vi.fn(),
   titreModifier: vi.fn(),
-  titreSupprimer: vi.fn(),
-  utilisateurTitreAbonner: vi.fn(),
 }))
 
 console.info = vi.fn()

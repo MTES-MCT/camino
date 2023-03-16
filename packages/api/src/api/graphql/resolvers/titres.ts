@@ -6,10 +6,10 @@ import { titreFormat, titresFormat } from '../../_format/titres.js'
 
 import { fieldsBuild } from './_fields-build.js'
 
-import { titreArchive, titreCreate, titreGet, titresCount, titresGet, titreUpsert } from '../../../database/queries/titres.js'
+import { titreCreate, titreGet, titresCount, titresGet, titreUpsert } from '../../../database/queries/titres.js'
 
 import titreUpdateTask from '../../../business/titre-update.js'
-import { assertsCanCreateTitre, canDeleteTitre } from 'camino-common/src/permissions/titres.js'
+import { assertsCanCreateTitre } from 'camino-common/src/permissions/titres.js'
 import { DepartementId } from 'camino-common/src/static/departement.js'
 import { RegionId } from 'camino-common/src/static/region.js'
 import { FacadesMaritimes } from 'camino-common/src/static/facades.js'
@@ -199,25 +199,4 @@ const titreModifier = async ({ titre }: { titre: ITitre }, { user }: Context, in
   }
 }
 
-const titreSupprimer = async ({ id }: { id: string }, { user }: Context) => {
-  const titreOld = await titreGet(
-    id,
-    {
-      fields: {
-        demarches: { etapes: { id: {} } },
-        activites: { id: {} },
-      },
-    },
-    user
-  )
-
-  if (!titreOld) throw new Error("le titre n'existe pas")
-
-  if (!canDeleteTitre(user)) throw new Error('droits insuffisants')
-
-  await titreArchive(id)
-
-  return titreOld.slug
-}
-
-export { titre, titres, titreCreer, titreModifier, titreSupprimer }
+export { titre, titres, titreCreer, titreModifier }

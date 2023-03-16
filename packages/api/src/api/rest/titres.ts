@@ -1,5 +1,5 @@
-import { titreGet, titresGet } from '../../database/queries/titres.js'
-
+import { titreArchive, titreGet, titresGet } from '../../database/queries/titres.js'
+import { z } from 'zod'
 import { ADMINISTRATION_IDS, ADMINISTRATION_TYPE_IDS, AdministrationId, Administrations } from 'camino-common/src/static/administrations.js'
 import express from 'express'
 import { constants } from 'http2'
@@ -13,7 +13,7 @@ import { userSuper } from '../../database/user-super.js'
 import { NotNullableKeys, onlyUnique } from 'camino-common/src/typescript-tools.js'
 import TitresTitres from '../../database/models/titres--titres.js'
 import { titreAdministrationsGet } from '../_format/titres.js'
-import { canLinkTitres } from 'camino-common/src/permissions/titres.js'
+import { canDeleteTitre, canLinkTitres } from 'camino-common/src/permissions/titres.js'
 import { linkTitres } from '../../database/queries/titres-titres.js'
 import { checkTitreLinks } from '../../business/validations/titre-links-validate.js'
 import { toMachineEtapes } from '../../business/rules-demarches/machine-common.js'
@@ -23,6 +23,7 @@ import { ETAPES_TYPES, EtapeTypeId } from 'camino-common/src/static/etapesTypes.
 import { CaminoDate } from 'camino-common/src/date.js'
 import { isAdministration, User } from 'camino-common/src/roles.js'
 import { canCreateDemarche, canCreateTravaux } from 'camino-common/src/permissions/titres-demarches.js'
+import { utilisateurTitreCreate, utilisateurTitreDelete } from '../../database/queries/utilisateurs.js'
 
 const etapesAMasquer = [
   ETAPES_TYPES.classementSansSuite,
@@ -413,4 +414,68 @@ const titreLinksGet = async (titreId: string, link: 'titreToId' | 'titreFromId',
   const titres = await titresGet({ ids: titreIds }, { fields: { id: {} } }, user)
 
   return titres.map(({ id, nom }) => ({ id, nom }))
+}
+
+export const removeTitre = async (req: express.Request<{ titreId?: string }>, res: CustomResponse<void>) => {
+  const user = req.user as User
+
+  const titreId: string | undefined = req.params.titreId
+  if (!titreId) {
+    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+  } else {
+    const titreOld = await titreGet(
+      titreId,
+      {
+        fields: {
+          demarches: { etapes: { id: {} } },
+          activites: { id: {} },
+        },
+      },
+      user
+    )
+
+    if (!titreOld) {
+      res.sendStatus(constants.HTTP_STATUS_NOT_FOUND)
+    } else if (!canDeleteTitre(user)) {
+      res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+    } else {
+      await titreArchive(titreId)
+      res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+    }
+  }
+}
+
+export const utilisateurTitreAbonner = async (req: express.Request<{ titreId?: string }>, res: CustomResponse<void>) => {
+  const user = req.user as User
+  const body = z.object({ abonne: z.boolean() })
+  const parsedBody = body.safeParse(req.body)
+  const titreId: string | undefined = req.params.titreId
+  if (!titreId) {
+    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+  } else if (!parsedBody.success) {
+    res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+  } else {
+    try {
+      if (!user) {
+        res.sendStatus(constants.HTTP_STATUS_BAD_REQUEST)
+      } else {
+        const titre = await titreGet(titreId, { fields: { id: {} } }, user)
+
+        if (!titre) {
+          res.sendStatus(constants.HTTP_STATUS_FORBIDDEN)
+        } else {
+          if (parsedBody.data.abonne) {
+            await utilisateurTitreCreate({ utilisateurId: user.id, titreId })
+          } else {
+            await utilisateurTitreDelete(user.id, titreId)
+          }
+        }
+        res.sendStatus(constants.HTTP_STATUS_NO_CONTENT)
+      }
+    } catch (e) {
+      console.error(e)
+
+      res.sendStatus(constants.HTTP_STATUS_INTERNAL_SERVER_ERROR)
+    }
+  }
 }

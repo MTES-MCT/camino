@@ -214,9 +214,6 @@ type Query {
 Ces requêtes sont __protégées__. Elles nécessitent une authentification par token (jwt) et un niveau de permission suffisant.
 """
 type Mutation {
-  "Abonne ou désabonne l’utilisateur à un titre"
-  utilisateurTitreAbonner(titreId: String!, abonner: Boolean!): Boolean
-
   newsletterInscrire(email: String!): String
 
   "Crée un titre minier"
@@ -224,9 +221,6 @@ type Mutation {
 
   "Modifie un titre minier"
   titreModifier(titre: InputTitreModification!): Titre
-
-  "Supprime un titre minier"
-  titreSupprimer(id: ID!): String
 
   "Crée une démarche et met à jour le titre minier"
   demarcheCreer(demarche: InputDemarcheCreation!): Titre

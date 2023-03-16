@@ -61,7 +61,7 @@ import Loader from './_ui/loader.vue'
 import { Perimetre } from './_common/perimetre'
 import ActivitesPills from './_common/pills.vue'
 
-import TitreHeader from './titre/header.vue'
+import { Header as TitreHeader } from './titre/header'
 import { Infos as TitreInfos } from './titre/infos'
 import { Territoires as TitreTerritoires } from './titre/territoires'
 import TitreRepertoire from './titre/repertoire.vue'

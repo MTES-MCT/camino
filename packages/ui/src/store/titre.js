@@ -1,7 +1,6 @@
-import { titre, titreCreer, titreModifier, titreSupprimer } from '../api/titres'
+import { titre, titreCreer, titreModifier } from '../api/titres'
 
 import router from '../router'
-import { utilisateurTitreAbonner } from '../api/utilisateurs-titres'
 import { canCreateTravaux } from 'camino-common/src/permissions/titres-demarches'
 
 const state = {
@@ -115,55 +114,6 @@ const actions = {
       commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
     } finally {
       commit('loadingRemove', 'totreUpdate', { root: true })
-    }
-  },
-
-  async remove({ commit, dispatch }, id) {
-    try {
-      commit('popupMessagesRemove', null, { root: true })
-      commit('popupLoad', null, { root: true })
-      commit('loadingAdd', 'titreRemove', { root: true })
-
-      await titreSupprimer({ id })
-
-      commit('popupClose', null, { root: true })
-      dispatch(
-        'messageAdd',
-        {
-          value: `le titre a été supprimé`,
-          type: 'success',
-        },
-        { root: true }
-      )
-      router.push({ name: 'titres' })
-    } catch (e) {
-      commit('popupMessageAdd', { value: e, type: 'error' }, { root: true })
-    } finally {
-      commit('loadingRemove', 'titreRemove', { root: true })
-    }
-  },
-
-  async subscribe({ state, commit, dispatch }, { titreId, abonner }) {
-    try {
-      commit('loadingAdd', 'titreSubscribe', { root: true })
-
-      await utilisateurTitreAbonner({ titreId, abonner })
-
-      state.element.abonnement = abonner
-      commit('set', state.element)
-
-      dispatch(
-        'messageAdd',
-        {
-          value: `Vous êtes ${abonner ? 'abonné' : 'désabonné'} à ce titre`,
-          type: 'success',
-        },
-        { root: true }
-      )
-    } catch (e) {
-      dispatch('apiError', e, { root: true })
-    } finally {
-      commit('loadingRemove', 'titreSubscribe', { root: true })
     }
   },
 }
