@@ -52,7 +52,7 @@ const filtres = [
     name: 'Départements',
     type: 'autocomplete',
     value: [],
-    elements: departements,
+    elements: departements.map(d => ({ ...d, nom: `${d.nom} (${d.id})` })),
   },
   {
     id: 'regions',
