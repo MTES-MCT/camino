@@ -149,9 +149,9 @@ export const Header = caminoDefineComponent<Props>(['user', 'currentMenuSection'
                   </div>
                 </div>
                 <div class="fr-header__service">
-                  <a href="/" title="Accueil - Camino - République Française">
+                  <router-link to={{ name: 'homepage' }} title="Accueil - Camino - République Française">
                     <p class="fr-header__service-title">Camino</p>
-                  </a>
+                  </router-link>
                   <p class="fr-header__service-tagline">Le cadastre minier numérique</p>
                 </div>
               </div>

@@ -26,20 +26,16 @@ export const Utilisateur = defineComponent({
       return store.state.user.element
     })
 
-    const logout = () => {
-      if (matomo) {
-        // @ts-ignore
-        matomo.trackEvent('menu-utilisateur', 'menu-utilisateur', 'deconnexion')
-      }
-      window.location.replace('/apiUrl/deconnecter')
-    }
-
     const deleteUtilisateur = async (userId: string) => {
       await utilisateurApiClient.removeUtilisateur(userId)
 
       const isMe: boolean = (user.value && userId === user.value.id) ?? false
       if (isMe) {
-        logout()
+        if (matomo) {
+          // @ts-ignore
+          matomo.trackEvent('menu-utilisateur', 'menu-utilisateur', 'deconnexion')
+        }
+        window.location.replace('/apiUrl/deconnecter')
       } else {
         store.dispatch(
           'messageAdd',
@@ -91,20 +87,18 @@ export const Utilisateur = defineComponent({
         apiClient={{ ...utilisateurApiClient, updateUtilisateur, removeUtilisateur: deleteUtilisateur }}
         utilisateurId={utilisateurId.value}
         user={user.value}
-        logout={logout}
       />
     )
   },
 })
 interface Props {
   user: User
-  logout: () => void
   utilisateurId: string
   apiClient: UtilisateurApiClient
   passwordUpdate: () => void
 }
 
-export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'logout', 'utilisateurId', 'apiClient', 'passwordUpdate'], props => {
+export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'utilisateurId', 'apiClient', 'passwordUpdate'], props => {
   watch(
     () => props.user,
     () => get()
@@ -186,12 +180,6 @@ export const PureUtilisateur = caminoDefineComponent<Props>(['user', 'logout', '
         <h1>
           <LoadingElement data={utilisateur.value} renderItem={item => <>{item ? `${item.prenom || '–'} ${item.nom || '–'}` : '–'}</>} />
         </h1>
-
-        {isMe.value ? (
-          <button id="cmn-user-menu-button-deconnexion" class="btn-menu text-decoration-none bold p-0 flex-right" onClick={() => props.logout()}>
-            Déconnexion
-          </button>
-        ) : null}
       </div>
 
       <Accordion class="mb" slotSub={true} slotButtons={true}>
