@@ -53,8 +53,6 @@ export const titresDemarchesQueryModify = (q: QueryBuilder<TitresDemarches, Titr
 
   q.modifyGraph('titre', a => titresQueryModify(a as QueryBuilder<Titres, Titres | Titres[]>, user))
 
-  // fileCreate('sql.sql', format(q.toKnexQuery().toString()))
-
   return q
 }
 

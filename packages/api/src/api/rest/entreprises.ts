@@ -1,4 +1,4 @@
-import { Request as JWTRequest } from "express-jwt";
+import { Request as JWTRequest } from 'express-jwt'
 import { Fiscalite, FiscaliteFrance, FiscaliteGuyane, fiscaliteVisible, isFiscaliteGuyane } from 'camino-common/src/fiscalite.js'
 import { ICommune, IContenuValeur, IEntreprise } from '../../types'
 import { constants } from 'http2'
@@ -21,8 +21,8 @@ import { SubstanceFiscale, substancesFiscalesBySubstanceLegale } from 'camino-co
 import { Departements } from 'camino-common/src/static/departement.js'
 import { isNotNullNorUndefined } from 'camino-common/src/typescript-tools.js'
 import { Regions } from 'camino-common/src/static/region.js'
-import { anneePrecedente, CaminoAnnee, caminoAnneeToNumber, isAnnee } from 'camino-common/src/date.js'
-import { eidValidator, EntrepriseId } from 'camino-common/src/entreprise.js'
+import { anneePrecedente, caminoAnneeToNumber, isAnnee } from 'camino-common/src/date.js'
+import { eidValidator } from 'camino-common/src/entreprise.js'
 import { User } from 'camino-common/src/roles'
 
 const conversion = (substanceFiscale: SubstanceFiscale, quantite: IContenuValeur): number => {
@@ -286,7 +286,7 @@ export const fiscalite = async (req: JWTRequest<User>, res: CustomResponse<Fisca
       const entreprise = await entrepriseGet(entrepriseId, { fields: { id: {} } }, user)
       if (!entreprise) {
         throw new Error(`l’entreprise ${entrepriseId} est inconnue`)
-      }    
+      }
       const anneeMoins1 = anneePrecedente(caminoAnnee)
 
       const titres = await titresGet(

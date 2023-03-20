@@ -153,8 +153,6 @@ const titresActivitesPropsQueryModify = (q: QueryBuilder<TitresActivites, Titres
     q.select(raw('false').as('suppression'))
   }
 
-  // fileCreate('dev/tmp/titres-activites.sql', format(q.toKnexQuery().toString()))
-
   return q
 }
 

@@ -1,5 +1,5 @@
 import express from 'express'
-import { Request } from "express-jwt";
+import { Request } from 'express-jwt'
 
 import basicAuth from 'basic-auth'
 import bcrypt from 'bcryptjs'

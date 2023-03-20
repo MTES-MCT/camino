@@ -1,8 +1,6 @@
 import { raw, QueryBuilder } from 'objection'
 
 import { knex } from '../../../knex.js'
-// import fileCreate from '../../../tools/file-create'
-// import { format } from 'sql-formatter'
 
 import EtapesTypes from '../../models/etapes-types.js'
 import TitresEtapes from '../../models/titres-etapes.js'
@@ -114,7 +112,6 @@ const etapesTypesQueryModify = (
       b.orWhere('td.publicLecture', true)
     })
   }
-  // fileCreate('dev/tmp/etapes-types.sql', format(q.toKnexQuery().toString()))
 }
 
 export { administrationsEtapesTypesPropsQuery, entreprisesEtapesTypesPropsQuery, etapesTypesQueryModify }

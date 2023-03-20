@@ -1,5 +1,5 @@
 import express from 'express'
-import { Request as JWTRequest } from "express-jwt";
+import { Request as JWTRequest } from 'express-jwt'
 import { knex } from '../knex.js'
 import { userIdGenerate } from '../api/graphql/resolvers/utilisateurs.js'
 import { userByEmailGet, utilisateurCreate } from '../database/queries/utilisateurs.js'

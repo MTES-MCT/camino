@@ -1,7 +1,11 @@
-import express from 'express'
+import { Response } from 'express'
+import { Request } from 'express-jwt'
+import { User } from 'camino-common/src/roles'
 
-type MyResponse<T, U = express.Response> = (body?: T) => U
+type MyResponse<T, U = Response> = (body?: T) => U
 
-export interface CustomResponse<T> extends express.Response {
+export interface CustomResponse<T> extends Response {
   json: MyResponse<T, this>
 }
+
+export type CaminoRequest = Request<User>

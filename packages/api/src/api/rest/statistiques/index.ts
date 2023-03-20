@@ -1,5 +1,4 @@
-import { CustomResponse } from '../express-type.js'
-import { Request } from "express-jwt";
+import { CaminoRequest, CustomResponse } from '../express-type.js'
 import { StatistiquesMinerauxMetauxMetropole, StatistiquesDGTM, StatistiquesGuyaneData, StatistiquesGranulatsMarins } from 'camino-common/src/statistiques.js'
 import { getMinerauxMetauxMetropolesStatsInside } from './metaux-metropole.js'
 
@@ -7,10 +6,10 @@ import { ADMINISTRATION_IDS } from 'camino-common/src/static/administrations.js'
 import { constants } from 'http2'
 import { getDGTMStatsInside } from './dgtm.js'
 import { getGuyaneStatsInside } from './guyane.js'
-import { isAdministration, User } from 'camino-common/src/roles.js'
+import { isAdministration } from 'camino-common/src/roles.js'
 import { statistiquesGranulatsMarins } from './granulats-marins.js'
 
-export const getDGTMStats = async (req: Request<User>, res: CustomResponse<StatistiquesDGTM>) => {
+export const getDGTMStats = async (req: CaminoRequest, res: CustomResponse<StatistiquesDGTM>) => {
   const user = req.auth
 
   const administrationId = ADMINISTRATION_IDS['DGTM - GUYANE']
@@ -24,7 +23,7 @@ export const getDGTMStats = async (req: Request<User>, res: CustomResponse<Stati
   }
 }
 
-export const getMinerauxMetauxMetropolesStats = async (_req: Request, res: CustomResponse<StatistiquesMinerauxMetauxMetropole>): Promise<void> => {
+export const getMinerauxMetauxMetropolesStats = async (_req: CaminoRequest, res: CustomResponse<StatistiquesMinerauxMetauxMetropole>): Promise<void> => {
   try {
     res.json(await getMinerauxMetauxMetropolesStatsInside())
   } catch (e) {
@@ -34,7 +33,7 @@ export const getMinerauxMetauxMetropolesStats = async (_req: Request, res: Custo
   }
 }
 
-export const getGuyaneStats = async (_req: Request, res: CustomResponse<StatistiquesGuyaneData>): Promise<void> => {
+export const getGuyaneStats = async (_req: CaminoRequest, res: CustomResponse<StatistiquesGuyaneData>): Promise<void> => {
   try {
     res.json(await getGuyaneStatsInside())
   } catch (e) {
@@ -44,7 +43,7 @@ export const getGuyaneStats = async (_req: Request, res: CustomResponse<Statisti
   }
 }
 
-export const getGranulatsMarinsStats = async (_req: Request, res: CustomResponse<StatistiquesGranulatsMarins>): Promise<void> => {
+export const getGranulatsMarinsStats = async (_req: CaminoRequest, res: CustomResponse<StatistiquesGranulatsMarins>): Promise<void> => {
   try {
     res.json(await statistiquesGranulatsMarins())
   } catch (e) {

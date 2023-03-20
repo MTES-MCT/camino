@@ -1,8 +1,5 @@
 import { QueryBuilder, raw, RawBuilder } from 'objection'
 
-// import sqlFormatter from 'sql-formatter'
-// import fileCreate from '../../../tools/file-create'
-
 import Titres from '../../models/titres.js'
 import TitresDemarches from '../../models/titres-demarches.js'
 import TitresActivites from '../../models/titres-activites.js'
@@ -139,8 +136,6 @@ const titresQueryModify = (q: QueryBuilder<Titres, Titres | Titres[]>, user: Use
         )
       }
     })
-
-    // fileCreate('test.sql', sqlFormatter.format(q.toKnexQuery().toString()))
   }
 
   q.select(titresModificationSelectQuery(q, user).as('modification'))

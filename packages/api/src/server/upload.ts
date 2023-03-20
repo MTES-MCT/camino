@@ -1,12 +1,12 @@
 import express from 'express'
-import { Request } from 'express-jwt'
+import { CaminoRequest } from '../api/rest/express-type'
 
 import { Server, FileStore } from 'tus-node-server'
 import { graphqlUploadExpress } from 'graphql-upload'
-import { isDefault, User } from 'camino-common/src/roles.js'
+import { isDefault } from 'camino-common/src/roles.js'
 
 // Téléversement REST
-const uploadAllowedMiddleware = async (req: Request<User>, res: express.Response, next: express.NextFunction) => {
+const uploadAllowedMiddleware = async (req: CaminoRequest, res: express.Response, next: express.NextFunction) => {
   try {
     if (isDefault(req.auth)) {
       res.sendStatus(403)

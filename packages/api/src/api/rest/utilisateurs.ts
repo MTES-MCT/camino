@@ -1,7 +1,5 @@
 import { userGet, utilisateurGet, utilisateursGet, utilisateurUpsert } from '../../database/queries/utilisateurs.js'
-import { Request } from "express-jwt";
-
-import { CustomResponse } from './express-type.js'
+import { CaminoRequest, CustomResponse } from './express-type.js'
 import { formatUser, IFormat, IUtilisateursColonneId } from '../../types.js'
 import { constants } from 'http2'
 import { isSubscribedToNewsLetter, newsletterSubscriberUpdate } from '../../tools/api-mailjet/newsletter.js'
@@ -16,7 +14,7 @@ import bcrypt from 'bcryptjs'
 import { utilisateurUpdationValidate } from '../../business/validations/utilisateur-updation-validate.js'
 import { canDeleteUtilisateur } from 'camino-common/src/permissions/utilisateurs.js'
 
-export const isSubscribedToNewsletter = async (req: Request<User>, res: CustomResponse<boolean>) => {
+export const isSubscribedToNewsletter = async (req: CaminoRequest, res: CustomResponse<boolean>) => {
   const user = req.auth
 
   if (!req.params.id) {
@@ -32,7 +30,7 @@ export const isSubscribedToNewsletter = async (req: Request<User>, res: CustomRe
     }
   }
 }
-export const updateUtilisateurPermission = async (req: Request<User>, res: CustomResponse<void>) => {
+export const updateUtilisateurPermission = async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 
   if (!req.params.id) {
@@ -68,7 +66,7 @@ export const updateUtilisateurPermission = async (req: Request<User>, res: Custo
     }
   }
 }
-export const deleteUtilisateur = async (req: Request<User>, res: CustomResponse<void>) => {
+export const deleteUtilisateur = async (req: CaminoRequest, res: CustomResponse<void>) => {
   const user = req.auth
 
   if (!req.params.id) {
@@ -102,7 +100,7 @@ export const deleteUtilisateur = async (req: Request<User>, res: CustomResponse<
   }
 }
 
-export const moi = async (req: Request<User>, res: CustomResponse<User>) => {
+export const moi = async (req: CaminoRequest, res: CustomResponse<User>) => {
   res.clearCookie('shouldBeConnected')
   const user = req.auth
   if (!user) {
@@ -120,7 +118,7 @@ export const moi = async (req: Request<User>, res: CustomResponse<User>) => {
   }
 }
 
-export const manageNewsletterSubscription = async (req: Request<User>, res: CustomResponse<boolean>) => {
+export const manageNewsletterSubscription = async (req: CaminoRequest, res: CustomResponse<boolean>) => {
   const user = req.auth
 
   if (!req.params.id) {
@@ -143,7 +141,7 @@ export const manageNewsletterSubscription = async (req: Request<User>, res: Cust
   }
 }
 
-export const generateQgisToken = async (req: Request<User>, res: CustomResponse<QGISToken>) => {
+export const generateQgisToken = async (req: CaminoRequest, res: CustomResponse<QGISToken>) => {
   const user = req.auth
 
   if (!user) {
