@@ -18,7 +18,7 @@ export interface EtapeEntreprise {
 }
 
 export interface CaminoDocument {
-  type: {id: DocumentTypeId}
+  type: { id: DocumentTypeId }
 }
 
 type EtapeBase = {
@@ -41,8 +41,18 @@ type EtapeBase = {
 } & ({ duree: number; dateFin: CaminoDate | undefined } | { duree: number | undefined; dateFin: CaminoDate })
 
 export type EtapeWithIncertitudesAndHeritage<T extends Pick<EtapeBase, 'type' | 'date'>> = T & {
-  incertitudes: { [key in keyof Omit<T, 'incertitudes' | 'type' | 'heritageProps' | 'contenu' | 'administrations' | 'documents' | 'justificatifs' | 'communes' | 'geojsonPoints' | 'geojsonMultiPolygon' | 'id' >]: boolean }
-  heritageProps: { [key in keyof Omit<T, 'incertitudes' | 'type' | 'heritageProps' | 'contenu' | 'date' | 'administrations'| 'documents' | 'justificatifs' | 'communes' | 'geojsonPoints' | 'geojsonMultiPolygon' | 'id'>]: HeritageProp<Pick<T, 'type' | 'date' | key> & { incertitudes: { [k in key]: boolean } }> }
+  incertitudes: {
+    [key in keyof Omit<
+      T,
+      'incertitudes' | 'type' | 'heritageProps' | 'contenu' | 'administrations' | 'documents' | 'justificatifs' | 'communes' | 'geojsonPoints' | 'geojsonMultiPolygon' | 'id'
+    >]: boolean
+  }
+  heritageProps: {
+    [key in keyof Omit<
+      T,
+      'incertitudes' | 'type' | 'heritageProps' | 'contenu' | 'date' | 'administrations' | 'documents' | 'justificatifs' | 'communes' | 'geojsonPoints' | 'geojsonMultiPolygon' | 'id'
+    >]: HeritageProp<Pick<T, 'type' | 'date' | key> & { incertitudes: { [k in key]: boolean } }>
+  }
 }
 
 export type Etape = EtapeWithIncertitudesAndHeritage<EtapeBase>

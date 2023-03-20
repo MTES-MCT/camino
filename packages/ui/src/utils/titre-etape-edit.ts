@@ -4,15 +4,55 @@ import { CaminoDocument, Etape } from 'camino-common/src/etape'
 import { DocumentTypeId } from 'camino-common/src/static/documentsTypes'
 import { getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
-const referencesBuild = (references: PointReference[]): {pointGeoSystemesIndex: {[key in GeoSystemeId]?: GeoSysteme}, pointReferences: {[key in GeoSystemeId]?: {id?: string } & object}} =>
-  references.reduce<{pointGeoSystemesIndex: {[key in GeoSystemeId]?: GeoSysteme}, pointReferences: {[key in GeoSystemeId]?: {id?: string } & object}}>(
+interface PointReference {
+  opposable: boolean
+  geoSystemeId: GeoSystemeId
+  coordonnees: object
+  id: string
+}
+
+interface Point {
+  id: string
+  references: PointReference[]
+  contour: number
+  groupe: number
+  lot: number | null
+  subsidiaire: boolean | null
+  nom: string
+  description: string
+}
+
+export interface GroupeBuildPoint {
+  id?: string
+  nom?: string
+  lot?: number | null
+  subsidiaire?: boolean | null
+  description?: string
+  references: ({ id?: string } & object)[] | { [key in GeoSystemeId]?: { id?: string } & object }
+  // used by points-edit ?
+  groupe?: number
+  contour?: number
+  point?: number
+}
+
+interface GroupeBuild {
+  groupes: GroupeBuildPoint[][][]
+  geoSystemesIndex: { [key in GeoSystemeId]?: GeoSysteme }
+  lotCurrent: null | number
+  pointIndex: number | null
+  contourIndexPrevious: number
+  groupeIndexPrevious: number
+}
+
+const referencesBuild = (references: PointReference[]): { pointGeoSystemesIndex: { [key in GeoSystemeId]?: GeoSysteme }; pointReferences: { [key in GeoSystemeId]?: { id?: string } & object } } =>
+  references.reduce<{ pointGeoSystemesIndex: { [key in GeoSystemeId]?: GeoSysteme }; pointReferences: { [key in GeoSystemeId]?: { id?: string } & object } }>(
     ({ pointGeoSystemesIndex, pointReferences }, { geoSystemeId, coordonnees, id }) => {
       pointGeoSystemesIndex[geoSystemeId] = GeoSystemes[geoSystemeId]
 
       pointReferences[geoSystemeId] = { ...coordonnees }
 
       if (id) {
-        ;(pointReferences[geoSystemeId]??={}).id = id
+        ;(pointReferences[geoSystemeId] ??= {}).id = id
       }
 
       return { pointGeoSystemesIndex, pointReferences }
@@ -26,27 +66,6 @@ const geoSystemeOpposableIdFind = (references: PointReference[]): GeoSystemeId |
   return referenceOpposable ? referenceOpposable.geoSystemeId : undefined
 }
 
-interface GroupeBuild {
-    groupes: GroupeBuildPoint[][][]
-    geoSystemesIndex: {[key in GeoSystemeId]?: GeoSysteme}
-    lotCurrent: null | number
-    pointIndex: number | null
-    contourIndexPrevious: number
-    groupeIndexPrevious: number
-}
-
-export interface GroupeBuildPoint {
-  id?: string
-  nom?: string
-  lot?: number | null
-  subsidiaire?: boolean | null
-  description?: string
-  references: ({id?: string } & object)[] | {[key in GeoSystemeId]?: {id?: string } & object}
-  // used by points-edit ?
-  groupe?: number
-  contour?: number
-  point?: number
-}
 const groupeBuild = (points: Point[], geoSystemeOpposableId: GeoSystemeId | undefined) =>
   points.reduce<GroupeBuild>(
     ({ groupes, geoSystemesIndex, lotCurrent, pointIndex, contourIndexPrevious, groupeIndexPrevious }, { nom, description, contour, groupe, references, lot, subsidiaire, id }) => {
@@ -111,28 +130,11 @@ const groupeBuild = (points: Point[], geoSystemeOpposableId: GeoSystemeId | unde
     }
   )
 
-interface PointReference {
-  opposable: boolean
-  geoSystemeId: GeoSystemeId
-  coordonnees: object
-  id: string
-}
-interface Point {
-  id: string
-  references: PointReference[]
-  contour: number
-  groupe: number
-  lot: number | null
-  subsidiaire: boolean | null
-  nom: string
-  description: string
-}
-
-export const etapeGroupesBuild = (points: Point[]): {groupes: GroupeBuildPoint[][][], geoSystemes: (GeoSysteme | undefined)[], geoSystemeOpposableId: GeoSystemeId | undefined} => {
+export const etapeGroupesBuild = (points: Point[]): { groupes: GroupeBuildPoint[][][]; geoSystemes: (GeoSysteme | undefined)[]; geoSystemeOpposableId: GeoSystemeId | undefined } => {
   const geoSystemeOpposableId = geoSystemeOpposableIdFind(points[0].references)
 
   const { groupes, geoSystemesIndex } = groupeBuild(points, geoSystemeOpposableId)
-  
+
   return {
     groupes,
     geoSystemes: getKeys(geoSystemesIndex, isGeoSystemeId).map(id => geoSystemesIndex[id]),
@@ -149,10 +151,9 @@ interface EtapePointEnhanced {
 export const etapePointsFormat = (points: Point[] | null): EtapePointEnhanced => {
   if (points && points.length) {
     const { groupes, geoSystemes, geoSystemeOpposableId } = etapeGroupesBuild(points)
-    return {groupes, geoSystemeIds: geoSystemes.filter(isNotNullNorUndefined).map(({ id }) => id), geoSystemeOpposableId}
-
+    return { groupes, geoSystemeIds: geoSystemes.filter(isNotNullNorUndefined).map(({ id }) => id), geoSystemeOpposableId }
   } else {
-    return {groupes: [], geoSystemeIds: [], geoSystemeOpposableId: null}
+    return { groupes: [], geoSystemeIds: [], geoSystemeOpposableId: null }
   }
 }
 
@@ -161,9 +162,9 @@ type CaminoDocumentEdit = CaminoDocument & {
   fichierNouveau: null
 }
 
-export type EtapeEdit = Omit<Etape, 'administrations' | 'documents' | 'communes' | 'points'> & {documents: CaminoDocument[]} & EtapePointEnhanced
-export const etapeEditFormat = (etape: Etape & {id?: string}): EtapeEdit => {
-  let newEtape: Etape = cloneAndClean(etape)
+export type EtapeEdit = Omit<Etape, 'administrations' | 'documents' | 'communes' | 'points'> & { documents: CaminoDocument[] } & EtapePointEnhanced
+export const etapeEditFormat = (etape: Etape): EtapeEdit => {
+  const newEtape: Etape = cloneAndClean(etape)
 
   delete newEtape.administrations
   delete newEtape.communes
@@ -186,8 +187,8 @@ export const etapeEditFormat = (etape: Etape & {id?: string}): EtapeEdit => {
     newEtape.substances = []
   }
 
-  let newEtapePointEnhanced: EtapeEdit = newEtape as unknown as EtapeEdit
-  const {groupes, geoSystemeIds, geoSystemeOpposableId} = etapePointsFormat(newEtape.points)
+  const newEtapePointEnhanced: EtapeEdit = newEtape as unknown as EtapeEdit
+  const { groupes, geoSystemeIds, geoSystemeOpposableId } = etapePointsFormat(newEtape.points)
   newEtapePointEnhanced.groupes = groupes
   newEtapePointEnhanced.geoSystemeIds = geoSystemeIds
   newEtapePointEnhanced.geoSystemeOpposableId = geoSystemeOpposableId
@@ -220,7 +221,6 @@ export const etapeEditFormat = (etape: Etape & {id?: string}): EtapeEdit => {
     newEtapePointEnhanced.justificatifs = []
   }
 
-
   // @ts-ignore
   delete newEtapePointEnhanced.points
 
@@ -228,8 +228,6 @@ export const etapeEditFormat = (etape: Etape & {id?: string}): EtapeEdit => {
   return newEtapePointEnhanced
 }
 
-
-
 export const documentEtapeFormat = (document: CaminoDocument): CaminoDocumentEdit => {
-  return {...document, typeId: document.type.id, fichierNouveau: null}
+  return { ...document, typeId: document.type.id, fichierNouveau: null }
 }

@@ -1,4 +1,4 @@
-import  {FondamentalesEdit} from './fondamentales-edit'
+import { FondamentalesEdit } from './fondamentales-edit'
 import { Meta, Story } from '@storybook/vue3'
 import { EtapeFondamentale } from 'camino-common/src/etape'
 import { Entreprise, newEntrepriseId } from 'camino-common/src/entreprise'
@@ -24,6 +24,7 @@ type Props = {
 }
 
 const etape: EtapeFondamentale = {
+  id: 'id',
   type: {
     id: 'mfr',
     nom: 'demande',

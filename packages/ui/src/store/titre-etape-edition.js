@@ -222,7 +222,7 @@ const actions = {
         demarcheId: state.metas.demarche.id,
         etapeTypeId: state.element.type.id,
       })
-      const {groupes, geoSystemeIds, geoSystemeOpposableId} = etapePointsFormat(points)
+      const { groupes, geoSystemeIds, geoSystemeOpposableId } = etapePointsFormat(points)
       state.element.groupes = groupes
       state.element.geoSystemeIds = geoSystemeIds
       state.element.geoSystemeOpposableId = geoSystemeOpposableId

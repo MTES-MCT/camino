@@ -1,5 +1,5 @@
-import { expect, test } from "vitest"
-import { isGeoSystemeId } from "./geoSystemes"
+import { expect, test } from 'vitest'
+import { isGeoSystemeId } from './geoSystemes'
 
 test('isGeoSystemeId', () => {
   expect(isGeoSystemeId('12')).toBe(false)

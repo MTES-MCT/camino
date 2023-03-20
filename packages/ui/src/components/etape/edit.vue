@@ -26,7 +26,7 @@
     </Accordion>
 
     <Accordion v-if="stepPoints" id="step-points" :step="stepPoints" :opened="opened['points']" :complete="stepPerimetreComplete" :enConstruction="enConstruction" @toggle="toggle('points')">
-    Coucou
+      Coucou
       <PointsEdit
         :etape="etape"
         :events="events"
