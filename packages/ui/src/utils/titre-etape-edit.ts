@@ -4,13 +4,6 @@ import { CaminoDocument, Etape } from 'camino-common/src/etape'
 import { DocumentTypeId } from 'camino-common/src/static/documentsTypes'
 import { getKeys, isNotNullNorUndefined } from 'camino-common/src/typescript-tools'
 
-interface PointReference {
-  opposable: boolean
-  geoSystemeId: GeoSystemeId
-  coordonnees: object
-  id: string
-}
-
 interface Point {
   id: string
   references: PointReference[]
@@ -20,6 +13,13 @@ interface Point {
   subsidiaire: boolean | null
   nom: string
   description: string
+}
+
+interface PointReference {
+  opposable: boolean
+  geoSystemeId: GeoSystemeId
+  coordonnees: object
+  id: string
 }
 
 export interface GroupeBuildPoint {

@@ -114,7 +114,8 @@
       "vue/v-on-event-hyphenation": 0,
       "no-unused-vars": 0,
       "vue/multi-word-component-names": 0,
-      "vue/one-component-per-file": 0
+      "vue/one-component-per-file": 0,
+      "no-use-before-define": 0
     },
     "overrides": [
       {
@@ -138,6 +139,7 @@
     "bracketSpacing": true,
     "trailingComma": "es5",
     "printWidth": 200
+  
   },
   "postcss": {
     "plugins": {
