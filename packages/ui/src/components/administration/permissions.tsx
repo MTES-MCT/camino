@@ -76,13 +76,13 @@ export const Permissions = caminoDefineComponent<Props>(['administrationId', 'ap
                     {item.titresTypesTitresStatuts.map(ttts => (
                       <tr key={`${ttts.titreType.id}-${ttts.titreStatutId}`}>
                         <td>
-                          <CaminoDomaine domaineId={TT[ttts.titreType.id].domaineId} class="mt-s" />
+                          <CaminoDomaine domaineId={TT[ttts.titreType.id].domaineId} />
                         </td>
                         <td>
-                          <span class="small bold cap-first mt-s">{TitresTypesTypes[TT[ttts.titreType.id].typeId].nom}</span>
+                          <span class="small bold cap-first">{TitresTypesTypes[TT[ttts.titreType.id].typeId].nom}</span>
                         </td>
                         <td>
-                          <Statut color={getTitreStatut(ttts.titreStatutId).couleur} nom={getTitreStatut(ttts.titreStatutId).nom} class="mt-s" />
+                          <Statut color={getTitreStatut(ttts.titreStatutId).couleur} nom={getTitreStatut(ttts.titreStatutId).nom} />
                         </td>
                         <td>
                           <Icon name={ttts.titresModificationInterdit ? 'checkbox' : 'checkbox-blank'} size="M" />
@@ -124,13 +124,13 @@ export const Permissions = caminoDefineComponent<Props>(['administrationId', 'ap
                     {item.titresTypesEtapesTypes.map(ttet => (
                       <tr key={`${ttet.titreType.id}-${ttet.etapeType.id}`}>
                         <td>
-                          <CaminoDomaine domaineId={TT[ttet.titreType.id].domaineId} class="mt-s" />
+                          <CaminoDomaine domaineId={TT[ttet.titreType.id].domaineId} />
                         </td>
                         <td>
-                          <span class="small bold cap-first mt-s">{TitresTypesTypes[TT[ttet.titreType.id].typeId].nom}</span>
+                          <span class="small bold cap-first">{TitresTypesTypes[TT[ttet.titreType.id].typeId].nom}</span>
                         </td>
                         <td>
-                          <span class="small bold cap-first mt-s">{EtapesTypes[ttet.etapeType.id].nom}</span>
+                          <span class="small bold cap-first">{EtapesTypes[ttet.etapeType.id].nom}</span>
                         </td>
                         <td>
                           <Icon name={ttet.lectureInterdit ? 'checkbox' : 'checkbox-blank'} size="M" />

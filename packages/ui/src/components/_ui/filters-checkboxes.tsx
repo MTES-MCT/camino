@@ -71,7 +71,7 @@ export function FiltersCheckboxes(props: Props) {
       <ul class="list-sans">
         {props.filter.elements.map(element => (
           <li key={element.id}>
-            <label>
+            <label style={{ display: 'flex', flexDirection: 'row' }}>
               <input value={element.id} checked={props.filter.value.includes(element.id)} type="checkbox" class="mr-s" onChange={event => checkboxToggle(event)} />
               {DrawComponent(props.filter.component, element)}
             </label>
