@@ -414,11 +414,11 @@ exports[`Storybook Tests > Components/Administration > Default 1`] = `
                 </tr>
                 <tr>
                   <td>
-                    <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+                    <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
                   </td>
-                  <td><span class=\\"small bold cap-first mt-s\\">autorisation d'exploitation</span></td>
+                  <td><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></td>
                   <td>
-                    <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s mt-s\\">Valide</div>
+                    <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s\\">Valide</div>
                   </td>
                   <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                       <use href=\\"#icon-checkbox\\"></use>
@@ -454,10 +454,10 @@ exports[`Storybook Tests > Components/Administration > Default 1`] = `
                 </tr>
                 <tr>
                   <td>
-                    <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+                    <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
                   </td>
-                  <td><span class=\\"small bold cap-first mt-s\\">autorisation d'exploitation</span></td>
-                  <td><span class=\\"small bold cap-first mt-s\\">publication de décision au JORF</span></td>
+                  <td><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></td>
+                  <td><span class=\\"small bold cap-first\\">publication de décision au JORF</span></td>
                   <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                       <use href=\\"#icon-checkbox\\"></use>
                     </svg></td>
@@ -723,11 +723,11 @@ exports[`Storybook Tests > Components/Administration/Permissions > Default 1`] =
             </tr>
             <tr>
               <td>
-                <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+                <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
               </td>
-              <td><span class=\\"small bold cap-first mt-s\\">autorisation d'exploitation</span></td>
+              <td><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></td>
               <td>
-                <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s mt-s\\">Valide</div>
+                <div class=\\"bg-success inline-block small bold color-bg pill py-xs px-s\\">Valide</div>
               </td>
               <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                   <use href=\\"#icon-checkbox\\"></use>
@@ -763,10 +763,10 @@ exports[`Storybook Tests > Components/Administration/Permissions > Default 1`] =
             </tr>
             <tr>
               <td>
-                <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono mt-s\\">M</div>
+                <div class=\\"bg-domaine-m inline-block small bold color-bg pill py-xs px-s mono\\">M</div>
               </td>
-              <td><span class=\\"small bold cap-first mt-s\\">autorisation d'exploitation</span></td>
-              <td><span class=\\"small bold cap-first mt-s\\">publication de décision au JORF</span></td>
+              <td><span class=\\"small bold cap-first\\">autorisation d'exploitation</span></td>
+              <td><span class=\\"small bold cap-first\\">publication de décision au JORF</span></td>
               <td><svg style=\\"display: block;\\" xmlns=\\"http://www.w3.org/2000/svg\\" width=\\"24px\\" height=\\"24px\\" viewBox=\\"0 0 24 24\\" aria-labelledby=\\"checkbox\\" role=\\"application\\" fill=\\"#666\\" tabindex=\\"-1\\">
                   <use href=\\"#icon-checkbox\\"></use>
                 </svg></td>
