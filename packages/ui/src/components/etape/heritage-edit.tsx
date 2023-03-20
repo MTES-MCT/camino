@@ -2,11 +2,11 @@ import { caminoDefineComponent } from "@/utils/vue-tsx-utils";
 import { hasValeurCheck } from '@/utils/contenu'
 import { Tag } from '@/components/_ui/tag'
 import { dateFormat } from '@/utils'
-import { computed } from 'vue'
+import { computed, FunctionalComponent, HTMLAttributes, HtmlHTMLAttributes } from 'vue'
 import { HeritageProp } from 'camino-common/src/etape'
 import { EtapeHeritageProps, EtapeHeritage } from './heritage-edit.types'
 
-interface Props<P extends EtapeHeritageProps, T extends EtapeHeritage> {
+type Props<P extends EtapeHeritageProps, T extends EtapeHeritage> = {
   prop: HeritageProp<T>
   propId: P
   write?: () => JSX.Element
@@ -20,9 +20,7 @@ const HeritageEditGeneric =  <P extends EtapeHeritageProps, T extends EtapeHerit
     return hasValeurCheck(props.propId, props.prop.etape)
   })
   return () => (<div class="mb-s">
-    WRITE {props.prop.actif} {props.read}
-    hasHeritage {hasHeritage.value}
-    {props.prop.actif && props.write ? props.write() : (
+    {!props.prop.actif && props.write ? props.write() : (
       <div>
         {hasHeritage.value && props.read ? props.read(props.prop.etape) : (<div class="border p-s mb-s">Non renseigné</div>)}
       
@@ -45,7 +43,8 @@ const HeritageEditGeneric =  <P extends EtapeHeritageProps, T extends EtapeHerit
 </div>)
 })
 
-export const HeritageEdit = <P extends EtapeHeritageProps, T extends EtapeHeritage>(props: Props<P, T>): JSX.Element => {
+export const HeritageEdit = <P extends EtapeHeritageProps, T extends EtapeHeritage>(props: Props<P, T> & HTMLAttributes): JSX.Element => {
   const HiddenHeritageEdit = HeritageEditGeneric<P, T>()
+  // @ts-ignore
   return <HiddenHeritageEdit {...props} />
 }

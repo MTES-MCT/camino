@@ -191,7 +191,6 @@ export const PointsEdit = caminoDefineComponent<Props>(['showTitle', 'etape', 'e
   })
   return () => (<div>
     {showTitle ? (<h4 class="mb-s">Périmètre</h4>) : null}
-    BITE
     <HeritageEdit prop={props.etape.heritageProps.points} propId="points" write={() => (<>
     <button class="btn small rnd-xs py-s px-m full-x flex mb-s" onClick={pointsImport}>
           <span class="mt-xxs">Importer depuis un fichier…</span>

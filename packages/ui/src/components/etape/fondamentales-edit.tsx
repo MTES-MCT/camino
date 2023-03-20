@@ -9,7 +9,7 @@ import AutocompleteEntreprise from './autocomplete-entreprise.vue'
 import { CaminoDate } from 'camino-common/src/date'
 
 import { etablissementNameFind } from '@/utils/entreprise'
-import SubstancesEdit from '@/components/etape/substances-edit.vue'
+import { SubstancesEdit } from './substances-edit'
 import { dureeOptionalCheck as titreEtapesDureeOptionalCheck, canEditAmodiataires, canEditTitulaires, canEditDuree, canEditDates } from 'camino-common/src/permissions/titres-etapes'
 
 import { EtapeEntreprise, EtapeFondamentale } from 'camino-common/src/etape'
@@ -136,10 +136,10 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
   {canEditDuree(props.titreTypeId, props.demarcheTypeId) ? (<div class="tablet-blobs">
       <div class="tablet-blob-1-3 tablet-pt-s pb-s">
         <h5 class="mb-0">Durée (années / mois)</h5>
-        <p v-if="dureeOptionalCheck" class="h6 italic mb-0">Optionnel</p>
+        {dureeOptionalCheck.value ? (<p class="h6 italic mb-0">Optionnel</p>) : null}
       </div>
 
-      <HeritageEdit v-model:prop={props.etape.heritageProps.duree} class="tablet-blob-2-3" propId="duree" write={() => (<><div class="blobs-mini">
+      <HeritageEdit prop={props.etape.heritageProps.duree} class="tablet-blob-2-3" propId="duree" write={() => (<><div class="blobs-mini">
           <div class="blob-mini-1-2">
             <InputNumber v-model={ans.value} integer={true} placeholder="années" class="py-s mb-s" onBlur={updateDuree} />
           </div>
@@ -147,12 +147,12 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
             <InputNumber v-model={mois.value} integer={true} placeholder="mois" class="p-s" onBlur={updateDuree} />
           </div>
         </div>
-        <div v-if="ans || mois" class="h6">
+       { ans.value || mois.value  ? (<div class="h6">
           <label>
             <input v-model={props.etape.incertitudes.duree} type="checkbox" class="mr-xs" />
             Incertain
           </label>
-        </div></>)} read={( heritagePropEtape ) => (<div class="border p-s mb-s bold">
+        </div>) : null}</>)} read={( heritagePropEtape ) => (<div class="border p-s mb-s bold">
         <PropDuree duree={heritagePropEtape?.duree} />
       </div>)} />
       <hr />
@@ -166,7 +166,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
           <h5 class="mb-0">Date de début</h5>
           <p class="h6 italic mb-0">Optionnel</p>
         </div>
-        <HeritageEdit v-model:prop={props.etape.heritageProps.dateDebut} class="tablet-blob-2-3" propId="dateDebut" write={() => (<><InputDate initialValue={props.etape.dateDebut} dateChanged={dateDebutChanged} class="mb-s" />
+        <HeritageEdit prop={props.etape.heritageProps.dateDebut} class="tablet-blob-2-3" propId="dateDebut" write={() => (<><InputDate initialValue={props.etape.dateDebut} dateChanged={dateDebutChanged} class="mb-s" />
             {props.etape.dateDebut ? (<div class="h6">
               <label>
                 <input v-model={props.etape.incertitudes.dateDebut} type="checkbox" class="mr-xs" />
@@ -191,7 +191,7 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
           <h5 class="mb-0">Date d'échéance</h5>
           <p class="h6 italic mb-0">Optionnel</p>
         </div>
-        <HeritageEdit v-model:prop={props.etape.heritageProps.dateFin} class="tablet-blob-2-3" propId="dateFin" write={() => (<><InputDate initialValue={props.etape.dateFin} dateChanged={dateFinChanged} class="mb-s" />
+        <HeritageEdit prop={props.etape.heritageProps.dateFin} class="tablet-blob-2-3" propId="dateFin" write={() => (<><InputDate initialValue={props.etape.dateFin} dateChanged={dateFinChanged} class="mb-s" />
             {props.etape.dateFin ? (<div class="h6">
               <label>
                 <input v-model={props.etape.incertitudes.dateFin} type="checkbox" class="mr-xs" />
@@ -209,7 +209,6 @@ export const FondamentalesEdit = caminoDefineComponent<Props>(['etape', 'demarch
 {canEditTitulaires(props.titreTypeId, props.user) ? (
   <><h3 class="mb-s">Titulaires</h3>
   <p class="h6 italic">Optionnel</p>
-  {/* FIXME this prop should update itself (v-model stuff) */}
   <HeritageEdit prop={props.etape.heritageProps.titulaires} propId="titulaires" write={() => (<><AutocompleteEntreprise
         allEntities={props.entreprises}
         selectedEntities={props.etape.titulaires}

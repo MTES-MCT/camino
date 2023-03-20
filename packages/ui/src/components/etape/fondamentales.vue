@@ -52,7 +52,7 @@
         <ul class="list-prefix mb">
           <li v-for="t in etape.titulaires" :key="t.id">
             {{ etablissementNameFind(t.etablissements, etape.date) || t.nom }}
-            <Tag v-if="t.operateur" :mini="true" color="bg-info" class="ml-xs"> Opérateur </Tag>
+            <Tag v-if="t.operateur" :mini="true" color="bg-info" class="ml-xs" text="Opérateur"/>
           </li>
         </ul>
       </div>

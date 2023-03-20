@@ -1,16 +1,7 @@
-import SubstancesEdit from './substances-edit.vue'
+import { SubstancesEdit, Props } from './substances-edit'
 import { Meta, Story } from '@storybook/vue3'
 import { toCaminoDate } from 'camino-common/src/date'
-import { EtapeWithIncertitudesAndHeritage, EtapeFondamentale } from 'camino-common/src/etape'
-import { DomaineId } from 'camino-common/src/static/domaines'
-import { SubstanceLegaleId, SubstancesLegale } from 'camino-common/src/static/substancesLegales'
-
-type Props = {
-  substances: (SubstanceLegaleId | undefined)[]
-  heritageProps: EtapeWithIncertitudesAndHeritage<Pick<EtapeFondamentale, 'substances' | 'type' | 'date'>>['heritageProps']
-  incertitudes: { substances: boolean }
-  domaineId: DomaineId
-}
+import { SubstancesLegale } from 'camino-common/src/static/substancesLegales'
 
 const meta: Meta = {
   title: 'Components/Etape/SubstancesEdit',

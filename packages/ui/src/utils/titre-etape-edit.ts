@@ -162,7 +162,7 @@ type CaminoDocumentEdit = CaminoDocument & {
 }
 
 export type EtapeEdit = Omit<Etape, 'administrations' | 'documents' | 'communes' | 'points'> & {documents: CaminoDocument[]} & EtapePointEnhanced
-export const etapeEditFormat = (etape: Etape): EtapeEdit => {
+export const etapeEditFormat = (etape: Etape & {id?: string}): EtapeEdit => {
   let newEtape: Etape = cloneAndClean(etape)
 
   delete newEtape.administrations

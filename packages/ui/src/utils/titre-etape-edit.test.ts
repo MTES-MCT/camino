@@ -1,13 +1,14 @@
 import { etapeEditFormat } from './titre-etape-edit'
 import { GEO_SYSTEME_IDS } from 'camino-common/src/static/geoSystemes'
 import { describe, expect, test } from 'vitest'
+import { newEntrepriseId } from 'camino-common/src/entreprise'
 
 // dateFormat
 describe('etapeEditFormat', () => {
   test("formate une étape pour l'éditer", () => {
     expect(
+      // @ts-ignore
       etapeEditFormat({
-        __typename: 'etape',
         id: 'etape-id',
       })
     ).toEqual({
@@ -35,8 +36,8 @@ describe('etapeEditFormat', () => {
     })
 
     expect(
+      // @ts-ignore
       etapeEditFormat({
-        __typename: 'etape',
         id: 'etape-id',
         points: [
           {
@@ -97,13 +98,13 @@ describe('etapeEditFormat', () => {
 
     expect(
       etapeEditFormat({
-        __typename: 'etape',
         id: 'etape-id',
-        type: { id: 'etape-type-id' },
+        type: { id: 'aac', nom: 'plop' },
+        // @ts-ignore
         statutId: 'etape-statut-id',
         duree: 240,
-        administrations: ['administration'],
-        titulaires: [{ id: 'titulaire-id', prop: 'titulaire-prop' }],
+        administrations: ['aut-97300-01'],
+        titulaires: [{ id: newEntrepriseId('titulaire-id'), operateur: false }],
         points: [
           {
             id: 'point-id-111',
@@ -161,11 +162,11 @@ describe('etapeEditFormat', () => {
           "titulaires": false,
         },
         substances: ['auru'],
-        documents: [{ type: { id: 'act' } }],
+        documents: [{ type: { id: 'aac' } }],
       })
     ).toEqual({
       id: 'etape-id',
-      type: { id: 'etape-type-id' },
+      type: { id: 'aac' },
       statutId: 'etape-statut-id',
       duree: 240,
       amodiataires: [],
@@ -211,7 +212,7 @@ describe('etapeEditFormat', () => {
         "surface": false,
         "titulaires": false,
       },
-      documents: [{ fichierNouveau: null, typeId: 'act', type: { id: 'act' } }],
+      documents: [{ fichierNouveau: null, typeId: 'act', type: { id: 'aac' } }],
       justificatifs: [],
     })
   })
