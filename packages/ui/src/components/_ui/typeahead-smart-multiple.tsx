@@ -98,7 +98,7 @@ const GenericTypeAheadSmartMultiple = <ID extends string>() =>
           placeholder: props.filter.name,
           type: 'multiple',
           items: items.value,
-          minInputLength: props.filter.lazy ? 3 : 1,
+          minInputLength: props.filter.lazy ? 3 : 0,
           itemChipLabel: item => item.nom,
           onSelectItems: updateHandler,
           onInput: search,
