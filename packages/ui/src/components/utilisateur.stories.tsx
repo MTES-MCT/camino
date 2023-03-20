@@ -12,7 +12,6 @@ const meta: Meta = {
 }
 export default meta
 
-const logout = action('logout')
 const deleteUtilisateur = action('deleteUtilisateur')
 const updateUtilisateur = action('updateUtilisateur')
 const passwordUpdate = action('passwordUpdate')
@@ -45,12 +44,11 @@ const apiClientMock: UtilisateurApiClient = {
   getQGISToken: () => new Promise(resolve => setTimeout(() => resolve({ token: 'token123' }), 1000)),
 }
 
-export const MySelf: Story = () => <PureUtilisateur user={{ ...testBlankUser, id: 'id', role: 'super' }} logout={logout} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
+export const MySelf: Story = () => <PureUtilisateur user={{ ...testBlankUser, id: 'id', role: 'super' }} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
 
 export const Loading: Story = () => (
   <PureUtilisateur
     user={{ ...testBlankUser, id: 'id', role: 'super' }}
-    logout={logout}
     utilisateurId="id"
     passwordUpdate={passwordUpdate}
     apiClient={{
@@ -63,7 +61,6 @@ export const Loading: Story = () => (
 export const error: Story = () => (
   <PureUtilisateur
     user={{ ...testBlankUser, id: 'anotherId', role: 'super' }}
-    logout={logout}
     utilisateurId="id"
     passwordUpdate={passwordUpdate}
     apiClient={{
@@ -74,6 +71,4 @@ export const error: Story = () => (
   />
 )
 
-export const AnotherUser: Story = () => (
-  <PureUtilisateur user={{ ...testBlankUser, id: 'anotherId', role: 'super' }} logout={logout} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
-)
+export const AnotherUser: Story = () => <PureUtilisateur user={{ ...testBlankUser, id: 'anotherId', role: 'super' }} utilisateurId="id" passwordUpdate={passwordUpdate} apiClient={apiClientMock} />
